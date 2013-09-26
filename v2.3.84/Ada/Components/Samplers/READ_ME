@@ -1,0 +1,82 @@
+Sampling module for positive dimensional solution components with PHCv2.3.80
+
+This directory is entirely new in release 2.1, with no changes in
+release 2.2.  Intrinsic samplers were added in release 2.3.
+
+There are four parts in this library:
+  1) definition of witness sets as solutions to embedded systems;
+  2) the sampling machine, sample points, lists, and grids;
+  3) sampling of solution clusters for multiple components;
+  4) sampling a hypersurface reduces to univariate solver: p(b+t*v) = 0.
+Almost all sampling is done "extrinsically", using the explicit equations
+of the linear hyperplanes instead of the generators of the linear spaces.
+Intrinsic samplers which use these generators are still under development.
+New since 2.3.53 are the use of local intrinsic coordinates, see ts_ilocal.
+
+------------------------------------------------------------------------------
+file name                        : short description
+------------------------------------------------------------------------------
+standard_plane_representations   : convert representations of planes
+standard_point_coordinates       : coordinates of points in planes
+standard_plane_operations        : utilities to work with planes
+ts_planes                        : test on manipulating planes
+standard_flag_representations    : intrinsic format of a flag
+ts_flag                          : test on formats of flags
+standard_intrinsic_solutions     : format conversions of witness points
+standard_affine_solutions        : convert solutions in affine planes
+planes_and_polynomials           : operations on planes and polynomials
+witness_sets                     : main tools to create an embedding
+witness_sets_io                  : utilities to read embedded systems
+witness_sets_formats             : from intrinsic to extrinsic formats
+intrinsic_witness_sets_io        : writes intrinsic sets to extrinsic format
+ts_coords                        : test representations of witness points
+ts_square                        : test on making polynomial systems square
+ts_embed                         : test on embedding a polynomial system
+ts_squemb                        : test on squaring and embedding
+ts_locdim                        : attempt at a local dimension test
+------------------------------------------------------------------------------
+standard_intrinsic_newton        : Newton's method for intrinsic coordinates
+standard_intrinsic_trackers      : tracking paths in intrinsic coordinates
+standard_intrinsic_continuation  : calls trackers on a list of solutions
+standard_moving_planes           : define path of linear spaces
+ts_iwset                         : convert to intrinsic witness sets
+ts_inewt                         : test on intrinsic Newton's method
+ts_itrack                        : test on intrinsic path trackers
+standard_linear_span             : determine linear span of component
+ts_ispan                         : test on determining linear span
+standard_recentering_coordinates : work with local intrinsic coordinates
+ts_ilocal                        : test local intrinsic coordinates
+affine_sampling_machine          : sampling using affine planes
+ts_sampar                        : interactive testing of affine sampler
+sampling_machine                 : interface to homotopy continuation
+sample_points                    : points sampled from a component
+sample_points_io                 : input-output for sampled points
+sample_point_lists               : lists of sampled points
+sample_point_lists_io            : input-output for sampled point lists
+sample_point_grids               : grids are lists of sampled point lists
+sample_point_grids_io            : input-output for sampled point grids
+ts_sample                        : interactive testing facility for sampler
+------------------------------------------------------------------------------
+rectangular_sample_grids         : sampling on parallel slices
+standard_stacked_sample_grids    : grids for general dimensions
+multprec_stacked_sample_grids    : multiprecision version of stacked grids
+drivers_to_grid_creators         : create grids with extra tests
+------------------------------------------------------------------------------
+standard_solution_clusters       : managing clusters of solutions
+extrapolate_solution_clusters    : refining solutions by extrapolation
+multiplicity_homotopies          : homotopy to sample multiple components
+ts_mulhom                        : test on multiplicity samplers
+------------------------------------------------------------------------------
+ts_unisam                        : test on the use of Weierstrass method
+hypersurface_samplers            : sample points on hypersurface
+hypersurface_sample_grids        : building grids for interpolation
+ts_hypsam                        : test on hypersurface sampler
+polynomial_roots                 : homotopies to solve p(x) = 0
+ts_roots                         : calls root finder
+hypersurface_points              : homotopies to solve p(b+t*v) = 0
+ts_hyppts                        : test on solving p(b+t*v) = 0
+hypersurface_roots               : homotopies to solve p(t*v) = 0
+ts_hyprts                        : test on solving p(t*v) = 0
+------------------------------------------------------------------------------
+mainsam                          : main driver implements phc -y
+------------------------------------------------------------------------------

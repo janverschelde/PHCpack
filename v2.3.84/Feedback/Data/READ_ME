@@ -1,0 +1,27 @@
+This directory contains some test data for computing 
+dynamic output feedback laws with ts_feedback.
+----------------------------------------------------------------------------
+       Applications               input file name       output file name 
+----------------------------------------------------------------------------
+6.1 Satellite Trajectory Control     app_sate             output_sate
+6.2 Numeric Example A                app_numA             output_numA
+6.2 Numeric Example B                app_numB             output_numB
+6.3 Aircraft Control                 app_air           output_air_s(static) 
+                                                       output_air_d(dynamic)
+----------------------------------------------------------------------------
+
+This directory also contains some test data for the 
+subroutines in the Feedback directory.
+----------------------------------------------------------------------------
+           file name                 corresponding test files(functions)
+----------------------------------------------------------------------------
+              deter                        ts_dc_determinant   
+              gcd                          ts_gcd
+             hermite                       ts_hermite
+          interpolation                    ts_interpolation
+             inverse                       ts_poly_inverse
+              pieri                        ts_pieri_solver  
+            read_input                     read_input
+           realization                     ts_realization
+              smith                        ts_smith
+----------------------------------------------------------------------------

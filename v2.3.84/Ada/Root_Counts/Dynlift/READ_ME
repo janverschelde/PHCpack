@@ -1,0 +1,59 @@
+Mixed-volume computation by dynamic lifting in PHCv2.3.80
+
+The aim of dynamic lifting is to control the heights of the lifting values,
+to obtain a stable evaluation of the polyhedral homotopy.
+
+When all supports are equal, then the mixed volume is reduced to an
+ordinary volume, which is computed by a regular triangulation.
+
+1. Dynamic construction of regular triangulations :
+2. The Cayley trick
+3. Dynamic construction of mixed subdivision
+4. The drivers and black-box computation
+
+A 64-bit version of the dynamic lifting algorithm was provided
+in version 2.3.71.
+
+-------------------------------------------------------------------------------
+file name                            : short descriptio
+-------------------------------------------------------------------------------
+standard_integer_simplices           : simplices of integer polytopes
+standard_integer64_simplices         : 64-bit version of simplices
+standard_integer_simplices_io        : input/output of simplices
+standard_integer64_simplices_io      : input/output of 64-bit simplices
+standard_integer_triangulations      : triangulations of integer polytopes
+standard_integer64_triangulations    : 64-bit version of triangulations
+standard_integer64_triangulations_io : input/output of 64-bit triangulations
+global_dynamic_triangulation         : global aspects of dynamic lifting
+global_dynamic64_triangulation       : 64-bit version of global dynamic lifting
+dynamic_lifting_functions            : dynamic lifting functions
+dynamic64_lifting_functions          : 64-bit dynamic lifting functions
+standard_dynamic_triangulations      : construction of placing triangulation
+standard64_dynamic_triangulations    : 64-bit placing triangulation algorithm
+ts_dyntri                            : test on dynamic lifting
+-------------------------------------------------------------------------------
+cayley_embedding                 : embeds tuple in one support 
+cayley_trick                     : computing mixed subdivisions
+minkowski_polynomials            : volume polynomials
+driver_for_minkowski_polynomials : driver to the volume polynomials
+ts_drivmink                      : calls the driver for volume polynomials
+-------------------------------------------------------------------------------
+common_faces_of_polytope         : computation of neighboring faces
+enumerate_faces_of_polytope      : extract faces of a triangulation
+face_structures                  : management of faces of triangulations
+frequency_graph                  : computes occurencies of points in supports
+initial_mixed_cell               : finds an initial mixed cell
+flatten_mixed_subdivisions       : flattening of mixed subdivisions
+unfolding_subdivisions           : re-lifting flattened parts of subdivisions
+triangulations_and_subdivisions  : convert triangulations <> subdivisions
+dynamic_mixed_subdivisions       : dynamic lifting in the mixed case
+dynamic_polyhedral_continuation  : incremental polyhedral continuation
+-------------------------------------------------------------------------------
+drivers_for_dynamic_lifting      : menu-driver for dynamic lifting
+ts_drivdynl                      : calls the menu-driver
+black_mixed_volume_computations  : black-box polyhedral methods
+babldmvc                         : calls the black-box mixed-volume computation
+-------------------------------------------------------------------------------
+
+The Cayley trick is an efficient way to construct all cells in a mixed
+subdivision with the corresponding Minkowksi polynomial.

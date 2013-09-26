@@ -1,0 +1,382 @@
+with Communications_with_User;           use Communications_with_User;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
+with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
+with Standard_Natural_Vectors;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Complex_Vectors;
+with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
+with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Prod_Systems;      use Standard_Complex_Prod_Systems;
+with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with m_Homogeneous_Bezout_Numbers;       use m_Homogeneous_Bezout_Numbers;
+with Total_Degree_Start_Systems;         use Total_Degree_Start_Systems;
+with Lists_of_Integer_Vectors;           use Lists_of_Integer_Vectors;
+with Driver_for_Own_Start_System;
+with Drivers_for_m_Homogenization;       use Drivers_for_m_Homogenization;
+with Drivers_for_Multi_Homogenization;   use Drivers_for_Multi_Homogenization;
+with Drivers_for_Set_Structures;         use Drivers_for_Set_Structures;
+with Driver_for_Symmetric_Set_Structure; use Driver_for_Symmetric_Set_Structure;
+with Drivers_for_Implicit_Lifting;       use Drivers_for_Implicit_Lifting;
+with Drivers_for_Static_Lifting;         use Drivers_for_Static_Lifting;
+with Drivers_for_Dynamic_Lifting;        use Drivers_for_Dynamic_Lifting;
+with Drivers_for_Symmetric_Lifting;      use Drivers_for_Symmetric_Lifting;
+with Drivers_for_MixedVol_Algorithm;     use Drivers_for_MixedVol_Algorithm;
+
+package body Drivers_for_Root_Counts is
+
+  procedure High_Total_Degree ( file : in file_type; p : in Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Displays a warning about a total degree, higher than what can be
+  --   represented exactly by integers supported by hardware.
+
+    totdeg : Natural_Number;
+
+  begin
+    put("The total degree : ");
+    for i in p'range loop
+      put(Degree(p(i)),1);    put(file,Degree(p(i)),1);
+      exit when i = p'last;
+      put("*");               put(file,"*");
+    end loop;
+    totdeg := Total_Degree(p);
+    put(file," = "); put(file,totdeg); new_line(file);
+    put(" = "); put(totdeg); new_line;
+    new_line;
+    put_line("  this is larger than the largest machine integer...");
+    Clear(totdeg);
+  end High_Total_Degree;
+
+  procedure Display_General_Menu
+               ( rc : in natural64; own : in boolean;
+                 method : in character ) is
+
+  -- DESCRIPTION :
+  --   Shows the menu to count roots and construct start systems
+  --   for general polynomial systems.
+
+    m : array(0..10) of string(1..66);
+
+  begin
+    new_line;
+    put_line("MENU with ROOT COUNTS and Methods to Construct START SYSTEMS :");
+    put("  0. exit - current root count is ");
+    case method is
+      when '0' => put("based on total degree : ");
+      when '1' => put("based on multi-homogenization : ");
+      when '2' => put("based on partitioned linear-product : ");
+      when '3' => put("based on set structure : ");
+      when '4' => put("based on symmetric set structure : ");
+      when '5' => put("based on Bezout and BKK Bound : ");
+      when '6' => put("based on static mixed-volume computation : ");
+      when '7' => put("based on dynamic mixed-volume computation : ");
+      when '8' => put("based on symmetric mixed-volume computation : ");
+      when '9' => put("based on the mixed volume (via MixedVol) : ");
+      when others => put("based on your start system : ");
+    end case;
+    put(rc,1); new_line;
+    m(0):="PRODUCT HOMOTOPIES based on DEGREES ------------------------------";
+    m(1):="  1. multi-homogeneous Bezout number               (one partition)";
+    m(2):="  2. partitioned linear-product Bezout number    (many partitions)";
+    m(3):="  3. general linear-product Bezout number          (set structure)";
+    m(4):="  4. symmetric general linear-product Bezout number (group action)";
+    m(5):="POLYHEDRAL HOMOTOPIES based on NEWTON POLYTOPES ------------------";
+    m(6):="  5. combination between Bezout and BKK Bound   (implicit lifting)";
+    m(7):="  6. mixed-volume computation                     (static lifting)";
+    m(8):="  7. incremental mixed-volume computation        (dynamic lifting)";
+    m(9):="  8. symmetric mixed-volume computation        (symmetric lifting)";
+   m(10):="  9. using MixedVol Algorithm to compute the mixed volume fast (!)";
+    for i in m'range loop
+      put_line(m(i));
+    end loop;
+    if own then
+      put_line
+        ("START SYSTEM DEFINED BY USER -------------------------------------");
+      put_line("  A. you can give your own start system");
+    else
+      put_line
+        ("------------------------------------------------------------------");
+    end if;
+  end Display_General_Menu;
+
+  procedure Display_Laurent_Menu
+              ( rc : in natural32; method : in character ) is
+
+  -- DESCRIPTION :
+  --   Shows the menu to count roots and construct start systems
+  --   for Laurent polynomial systems.
+
+    m : array(0..4) of string(1..66);
+
+  begin
+    new_line;
+    put_line("MENU for MIXED VOLUMES and POLYHEDRAL HOMOTOPIES :");
+    put("  0. exit - current root count is ");
+    case method is
+      when '1' => put("based on the mixed volume (via MixedVol) : ");
+      when '2' => put("based on Bezout and BKK Bound : ");
+      when '3' => put("based on static mixed-volume computation : ");
+      when '4' => put("based on dynamic mixed-volume computation : ");
+      when '5' => put("based on symmetric mixed-volume computation : ");
+      when others =>  null;
+    end case;
+    put(rc,1); new_line;
+    m(0):="  1. using MixedVol Algorithm to compute the mixed volume fast (!)";
+    m(1):="  2. combination between Bezout and BKK Bound   (implicit lifting)";
+    m(2):="  3. mixed-volume computation                     (static lifting)";
+    m(3):="  4. incremental mixed-volume computation        (dynamic lifting)";
+    m(4):="  5. symmetric mixed-volume computation        (symmetric lifting)";
+    for i in m'range loop
+      put_line(m(i));
+    end loop;
+    put_line
+        ("------------------------------------------------------------------");
+  end Display_Laurent_Menu;
+
+  procedure Display_Info ( method : in character ) is
+
+  -- DESCRIPTION :
+  --   Displays the information that corresponds with the current method.
+
+  begin
+    new_line;
+    case method is
+      when '0' => Total_Degree_Info;
+      when '1' => m_Homogenization_Info;
+      when '2' => Multi_Homogenization_Info;
+      when '3' => Set_Structure_Info;
+      when '4' => Symmetric_Set_Structure_Info;
+      when '5' => Implicit_Lifting_Info;
+      when '6' => Static_Lifting_Info;
+      when '7' => Dynamic_Lifting_Info;
+      when '8' => Symmetric_Lifting_Info;
+      when '9' => MixedVol_Algorithm_Info;
+      when others => put_line("No information available.");
+    end case;
+    new_line;
+  end Display_Info;
+
+  procedure Write_Start_System
+               ( q : in Poly_Sys; qsols : in Solution_List ) is
+
+  -- DESCRIPTION :
+  --   This procedures asks the user if the start system needs
+  --   to be written on a separate file.  This routine is needed
+  --   only in case of a total degree start system.
+
+    qfile : file_type;
+    ans : character;
+
+  begin
+    put("Do you wish start system and solutions on separate file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      new_line;
+      put_line("Reading file name to write start system.");
+      Read_Name_and_Create_File(qfile);
+      put_line(qfile,q);
+      new_line(qfile);
+      put_line(qfile,"TITLE : start system based on total degree");
+      new_line(qfile);
+      if not Is_Null(qsols) then
+        put_line(qfile,"THE SOLUTIONS : ");
+        new_line(qfile);
+        put(qfile,Length_Of(qsols),natural32(Head_Of(qsols).n),qsols);
+      end if;
+      Close(qfile);
+    end if;
+  end Write_Start_System;
+
+  procedure Driver_for_Total_Degree_Start_System 
+              ( p : in Poly_Sys; rc : in natural32;
+                q : out Poly_Sys; qsols : out Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Offers the user the choice whether or not to compute all
+  --   start solutions, which may be a high number.
+
+    cq : Standard_Complex_Vectors.Vector(q'range);
+    dp : Standard_Natural_Vectors.Vector(p'range);
+    ans : character;
+
+  begin
+    q := Total_Degree_Start_Systems.Start_System(p);
+    put("There are "); put(rc,1); put_line(" start solutions.");
+    put_line("phc -q can compute start solutions later whenever needed.");
+    put("Do you want to compute all solutions now ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      dp := Total_Degree_Start_Systems.Degrees(p);
+      cq := Coefficients(q);
+      qsols := Solve(dp,cq);
+    end if;
+    Write_Start_System(q,qsols);
+  end Driver_for_Total_Degree_Start_System;
+
+  function To32Bit ( n : natural64 ) return natural32 is
+
+  -- DESCRIPTION :
+  --   Graceful conversion to 32-bit natural number.
+  --   If n is out of the 32-bit range, 0 is returned.
+
+  begin
+    if n > natural64(natural'last)
+     then return 0;
+     else return natural32(n);
+    end if;
+  end To32Bit;
+
+  procedure Apply_General_Method
+              ( file : in file_type; p,q : in out Poly_Sys;
+                qsols : in out Solution_List; method : in character;
+                irc : in out natural64; lpos : out List ) is
+
+  -- DESCRIPTION :
+  --   Applies the root count that corresponds with the current method,
+  --   for general polynomial systems.
+
+    rc : natural32 := To32Bit(irc);
+    rq : Prod_Sys(p'range);
+    qsols0 : Solution_List;
+    smv,tmv : natural32;
+
+  begin
+    case method is
+      when '0' => Driver_for_Total_Degree_Start_System(p,rc,q,qsols);
+      when '1' => Driver_for_m_Homogenization(file,p,irc,q,qsols);
+      when '2' => Driver_for_Multi_Homogenization(file,p,rc,q,rq,qsols);
+      when '3' => Driver_for_Set_Structure(file,p,rc,lpos,q,qsols);
+      when '4' => Driver_for_Symmetric_Random_Product_Systems
+                    (file,p,q,qsols,rc,lpos);
+      when '5' => Driver_for_Mixture_Bezout_BKK(file,p,false,q,qsols,rc);
+      when '6' => Driver_for_Mixed_Volume_Computation
+                    (file,0,p,false,q,qsols,qsols0,rc,smv,tmv);
+      when '7' => Driver_for_Dynamic_Mixed_Volume_Computation
+                    (file,p,false,q,qsols,rc);
+      when '8' => Driver_for_Symmetric_Mixed_Volume_Computation
+                    (file,p,false,q,qsols,rc);
+      when '9' => Driver_for_MixedVol_Algorithm
+                    (file,0,p,false,q,qsols,qsols0,rc,smv,tmv);
+      when 'A' => Driver_for_Own_Start_System(file,p,q,qsols);
+                  rc := Length_of(qsols);
+      when others => null;
+    end case;
+  end Apply_General_Method;
+
+  procedure Apply_Laurent_Method
+              ( file : in file_type; p,q : in out Laur_Sys;
+                qsols : in out Solution_List; method : in character;
+                rc : in out natural32 ) is
+
+  -- DESCRIPTION :
+  --   Applies the root count that corresponds with the current method,
+  --   for Laurent polynomial systems.
+
+    qsols0 : Solution_List;
+    smv,tmv : natural32;
+
+  begin
+    case method is
+      when '1' => Driver_for_MixedVol_Algorithm
+                    (file,0,p,false,q,qsols,qsols0,rc,smv,tmv);
+      when '2' => Driver_for_Mixture_Bezout_BKK(file,p,false,q,qsols,rc);
+      when '3' => Driver_for_Mixed_Volume_Computation
+                    (file,0,p,false,q,qsols,qsols0,rc,smv,tmv);
+      when '4' => Driver_for_Dynamic_Mixed_Volume_Computation
+                    (file,p,false,q,qsols,rc);
+      when '5' => Driver_for_Symmetric_Mixed_Volume_Computation
+                    (file,p,false,q,qsols,rc);
+      when others => null;
+    end case;
+  end Apply_Laurent_Method;
+
+  procedure Driver_for_Root_Counts 
+               ( file : in file_type; p,q : in out Poly_Sys;
+                 own : in boolean;
+                 qsols : in out Solution_List; roco : out natural32 ) is
+
+    rc : natural64;
+    lpos : List;
+    choice : string(1..2) := "  ";
+    ans : character := 'y';
+    method : character := '0';
+    noqsols : natural32 := 0;
+
+  begin
+    declare
+    begin
+      rc := Total_Degree(p);
+    exception
+      when others => rc := 0;
+    end;
+    new_line(file); put_line(file,"ROOT COUNTS :"); new_line(file);
+    put(file,"total degree : ");
+    if rc > 0
+     then put(file,rc,1); -- put(rc,1);
+     else High_Total_Degree(file,p);
+    end if;
+    new_line(file);
+    loop
+      Display_General_Menu(rc,own,method);
+      if own then
+        put("Type a number between 0 and 9, or A" 
+            & " preceded by i for info : ");
+        Ask_Alternative(choice,"0123456789A",'i');
+      else
+        put("Type a number between 0 and 9," 
+            & " preceded by i for info : ");
+        Ask_Alternative(choice,"0123456789",'i');
+      end if;
+      if choice(1) = 'i' then
+        method := choice(2);
+        Display_Info(method);
+        put("Do you want to apply this root count ? (y/n) ");
+        Ask_Yes_or_No(ans);
+      else
+        method := choice(1);
+      end if;
+      if ans = 'y' then
+        Apply_General_Method(file,p,q,qsols,method,rc,lpos);
+        noqsols := Length_Of(qsols);
+        if method /= '0' then
+          new_line;
+          put("The current root count equals "); put(rc,1); put_line(".");
+          if noqsols /= 0 then
+            put("The number of start solutions equals ");
+            put(noqsols,1); put_line(".");
+          end if;
+          put("Do you want to perform more root counting ? (y/n) ");
+          Ask_Yes_or_No(ans);
+        else
+          ans := 'n';
+        end if;
+      else
+        ans := 'y';
+      end if;
+      exit when ans /= 'y';
+    end loop;
+    roco := natural32(rc);
+    Clear(lpos);
+  end Driver_for_Root_Counts;
+
+  procedure Driver_for_Root_Counts
+               ( file : in file_type; p,q : in out Laur_Sys;
+                 qsols : in out Solution_List; roco : out natural32 ) is
+
+    rc : natural32 := 0;
+    choice : character := '0';
+
+  begin
+    loop
+      Display_Laurent_Menu(rc,choice);
+      put("Type a number in the range from 0 to 5 : ");
+      Ask_Alternative(choice,"012345");
+      exit when (choice = '0');
+      Apply_Laurent_Method(file,p,q,qsols,choice,rc);
+    end loop;
+    roco := rc;
+  end Driver_for_Root_Counts;
+
+end Drivers_for_Root_Counts;

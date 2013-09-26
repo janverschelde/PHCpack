@@ -1,0 +1,61 @@
+8 3 3 0 -1 0 4
+     0    -1     0     0     0     0     0     1
+     1     2     0     0     1     0     0    -2
+     0    -1     0     0     5     0     0     0
+     0     0     1     0    -7     0     0    -2
+     0    -1     0     1     4     0     0     2
+     0    -2     0     0     2     0     0     3
+     0     0     0     0    -1     1     0    -2
+     0    -1     0     0     1     0     1    -1
+
+
+     0     1     2
+     1     0     1
+    -1    -1    -3
+     1     0     1
+     0     2     4
+     2     1     5
+    -1     1     1
+     1    -1    -1
+
+
+     0     1     0     0    -2     0     0     0
+     0     0     0     0     1     0     0     0
+     0     0     0     0     0     0     0     1
+
+
+-8.090169943749473e-01  5.877852522924732e-01
+-9.510565162951536e-01  -3.090169943749473e-01
+-3.090169943749476e-01  -9.510565162951535e-01
+-3.090169943749473e-01  9.510565162951536e-01
+-9.510565162951535e-01  3.090169943749475e-01
+-8.090169943749476e-01  -5.877852522924730e-01
+-5.877852522924730e-01  8.090169943749475e-01
+-5.877852522924732e-01  -8.090169943749473e-01
+
+----------------------------------------------------------------------
+Application 6.2 Numeric Example B
+
+The meaning of the input parameter(in order):
+The number of the internal states for the given plant (A, B, C) n = 8
+The system's input dimension m = 3.
+The system's output dimension p = 3.
+The number of the internal states for the dynamic compensators q = 0.
+Give the number of maps wanted (<0 for all) : -1
+Type 0, 1, 2, or 3 to select output level :
+  0. no intermediate output;
+  1. only final determinant validation;
+  2. + validation of all intermediate determinants;
+  3. + intermediate output of all path trackers.
+The amount of the intermediate output: 0
+Type 0, 1, 2 to select input :
+  0. interactive input of real numbers
+  1. interactive input of complex numbers
+  2. random input of complex numbers
+  3. random input of real numbers
+  4. interactive input of real numbers for matrices and complex numbers for poles
+The selected input is: 4
+The given matrix A(8*8)
+The given matrix B(8*3)
+The given matrix C(3*8)
+The given poles

@@ -1,0 +1,469 @@
+%!PS-Adobe-2.0
+%%Title: Untitled (1) - [Server 1]
+%%Creator: Maple 7.00 SUN SPARC SOLARIS
+%%DocumentFonts: Times-Roman Courier Times-Italic Symbol Times-Bold 
+%%Pages: 1
+%%EndComments
+% /sc { setrgbcolor } def % color
+% /stc { setrgbcolor } def % color
+/sc { 11 mul exch 59 mul add exch 30 mul add 100 div setgray } def % b&w
+/stc { pop pop pop 0 setgray } def % b&w
+/fsf    %% stk: size font 
+{ findfont exch scalefont setfont } def 
+/line   %% stk: width x1 y1 x2 y2 
+{ gsave newpath 4 2 roll moveto lineto setlinewidth 
+  stroke grestore } def 
+/underline   %% stk: string ulOffset ulThickness 
+{ gsave setlinewidth 0 exch rmoveto  %% stk: string 
+  dup stringwidth pop 0 rlineto stroke       %% stk: string 
+  grestore show } def 
+/pagenum   %% stk: x y string 
+{ gsave 10 /Times-Roman fsf 
+  3 1 roll moveto 
+  dup stringwidth pop       %% stk: string wx 
+  2 div neg -14 rmoveto     %% stk: string 
+  show grestore 
+} def 
+/solid { [] 0 setdash } def 
+/dot { [1 3] 0 setdash } def 
+/dash { [5 5] 0 setdash } def 
+/dashdot { [5 3 1 3] 0 setdash } def 
+% ReEncodeSmall is copied from the Postscript Tutorial and Cookbook 
+% Adobe Systems Inc., Addison-Wesley, page 211-212 
+/reencsmalldict 12 dict def 
+/ReEncodeSmall 
+{ reencsmalldict begin 
+  /newcodesandnames exch def 
+  /newfontname exch def 
+  /basefontname exch def 
+  /basefontdict basefontname findfont def 
+  /newfont basefontdict maxlength dict def 
+  basefontdict 
+  { exch dup /FID ne 
+    { dup /Encoding eq 
+      { exch dup length array copy newfont 3 1 roll put } 
+      { exch newfont 3 1 roll put } 
+      ifelse 
+    } 
+    {pop pop} 
+    ifelse 
+  } forall 
+  newfont /FontName newfontname put 
+  newcodesandnames aload pop 
+  newcodesandnames length 2 idiv 
+  { newfont /Encoding get 3 1 roll put } repeat 
+  newfontname newfont definefont pop 
+  end 
+} def 
+/ExtraChars [ 
+] def
+/Times-Roman /Times-Roman-Maple ExtraChars ReEncodeSmall
+/Courier /Courier-Maple ExtraChars ReEncodeSmall
+/Times-Italic /Times-Italic-Maple ExtraChars ReEncodeSmall
+/Times-Bold /Times-Bold-Maple ExtraChars ReEncodeSmall
+%%EndProlog
+%%Page: 1 1
+ gsave  newpath
+54 720 moveto
+504 0 rlineto
+0 -648 rlineto
+-504 0 rlineto
+0 648 rlineto
+closepath clip newpath
+gsave
+0 setgray
+0 setlinewidth
+solid
+12 /Courier-Maple fsf
+gsave
+0 setgray
+64 711 moveto
+(> ) show
+grestore
+12 /Courier-Maple fsf
+gsave
+1 0 0 stc
+78 711 moveto
+(read\(run_phc_maple6\):) show
+grestore
+newpath
+59 718 moveto
+56 718 lineto
+56 710 lineto
+59 710 lineto
+stroke
+12 /Courier-Maple fsf
+gsave
+0 setgray
+64 698 moveto
+(> ) show
+grestore
+12 /Courier-Maple fsf
+gsave
+1 0 0 stc
+78 698 moveto
+(op\(eval\(run_phc\)\);) show
+grestore
+12 /Times-Roman-Maple fsf
+gsave
+0 0 1 stc
+95 681 moveto
+(::) show
+grestore
+12 /Times-Italic-Maple fsf
+gsave
+0 0 1 stc
+64 681 moveto
+(phcloc) show
+grestore
+gsave
+0 0 1 stc
+101 681 moveto
+(string) show
+grestore
+12 /Times-Roman-Maple fsf
+gsave
+0 0 1 stc
+141 681 moveto
+(::) show
+grestore
+12 /Times-Italic-Maple fsf
+gsave
+0 0 1 stc
+135 681 moveto
+(p) show
+grestore
+gsave
+0 0 1 stc
+147 681 moveto
+(list) show
+grestore
+gsave
+0 0 1 stc
+167 681 moveto
+(i) show
+grestore
+gsave
+0 0 1 stc
+176 681 moveto
+(n) show
+grestore
+gsave
+0 0 1 stc
+188 681 moveto
+(sp) show
+grestore
+gsave
+0 0 1 stc
+204 681 moveto
+(semcol) show
+grestore
+gsave
+0 0 1 stc
+243 681 moveto
+(sr) show
+grestore
+gsave
+0 0 1 stc
+258 681 moveto
+(infile) show
+grestore
+gsave
+0 0 1 stc
+288 681 moveto
+(outfile) show
+grestore
+gsave
+0 0 1 stc
+324 681 moveto
+(solfile) show
+grestore
+gsave
+0 0 1 stc
+359 681 moveto
+(cmd1) show
+grestore
+gsave
+0 0 1 stc
+390 681 moveto
+(cmd2) show
+grestore
+gsave
+0 0 1 stc
+421 681 moveto
+(sols) show
+grestore
+gsave
+0 0 1 stc
+445 681 moveto
+(Calls phc fro) show
+grestore
+12 /Times-Roman-Maple fsf
+gsave
+0 0 1 stc
+505 681 moveto
+(\\) show
+grestore
+gsave
+0 0 1 stc
+129 681 moveto
+(,) show
+grestore
+gsave
+0 0 1 stc
+161 681 moveto
+(,) show
+grestore
+gsave
+0 0 1 stc
+170 681 moveto
+(,) show
+grestore
+gsave
+0 0 1 stc
+182 681 moveto
+(,) show
+grestore
+gsave
+0 0 1 stc
+198 681 moveto
+(,) show
+grestore
+gsave
+0 0 1 stc
+237 681 moveto
+(,) show
+grestore
+gsave
+0 0 1 stc
+252 681 moveto
+(,) show
+grestore
+gsave
+0 0 1 stc
+282 681 moveto
+(,) show
+grestore
+gsave
+0 0 1 stc
+318 681 moveto
+(,) show
+grestore
+gsave
+0 0 1 stc
+353 681 moveto
+(,) show
+grestore
+gsave
+0 0 1 stc
+384 681 moveto
+(,) show
+grestore
+gsave
+0 0 1 stc
+415 681 moveto
+(,) show
+grestore
+gsave
+0 0 1 stc
+439 681 moveto
+(,) show
+grestore
+12 /Times-Italic-Maple fsf
+gsave
+0 0 1 stc
+84 663 moveto
+(m Maple6 or 7 session. The name of file with the executable version of phc should be provided i) show
+grestore
+12 /Times-Roman-Maple fsf
+gsave
+0 0 1 stc
+525 663 moveto
+(\\) show
+grestore
+12 /Times-Italic-Maple fsf
+gsave
+0 0 1 stc
+84 645 moveto
+(n the string phcloc. The second input argument p is a list of polynomials. On return is a list of a) show
+grestore
+12 /Times-Roman-Maple fsf
+gsave
+0 0 1 stc
+524 645 moveto
+(\\) show
+grestore
+12 /Times-Italic-Maple fsf
+gsave
+0 0 1 stc
+84 627 moveto
+(pproximations to all isolated roots of the system defined by p.) show
+grestore
+newpath
+59 705 moveto
+56 705 lineto
+56 626 lineto
+59 626 lineto
+stroke
+12 /Courier-Maple fsf
+gsave
+0 setgray
+64 614 moveto
+(> ) show
+grestore
+12 /Courier-Maple fsf
+gsave
+1 0 0 stc
+78 614 moveto
+(run_phc\("../bin/phc",[x^2 - 1, x*y - 1]\);) show
+grestore
+12 /Times-Roman-Maple fsf
+gsave
+0 0 1 stc
+68 597 moveto
+([) show
+grestore
+gsave
+0 0 1 stc
+319 597 moveto
+(]) show
+grestore
+gsave
+0 0 1 stc
+192 597 moveto
+(,) show
+grestore
+12 /Symbol fsf
+gsave
+0 0 1 stc
+168 597 moveto
+(+) show
+grestore
+12 /Times-Roman-Maple fsf
+gsave
+0 0 1 stc
+72 597 moveto
+(1.00000000000000) show
+grestore
+gsave
+0 0 1 stc
+177 597 moveto
+(0.) show
+grestore
+12 /Times-Italic-Maple fsf
+gsave
+0 0 1 stc
+189 597 moveto
+(I) show
+grestore
+12 /Symbol fsf
+gsave
+0 0 1 stc
+294 597 moveto
+(+) show
+grestore
+12 /Times-Roman-Maple fsf
+gsave
+0 0 1 stc
+198 597 moveto
+(1.00000000000000) show
+grestore
+gsave
+0 0 1 stc
+303 597 moveto
+(0.) show
+grestore
+12 /Times-Italic-Maple fsf
+gsave
+0 0 1 stc
+315 597 moveto
+(I) show
+grestore
+12 /Times-Roman-Maple fsf
+gsave
+0 0 1 stc
+322 597 moveto
+(,) show
+grestore
+gsave
+0 0 1 stc
+64 597 moveto
+([) show
+grestore
+gsave
+0 0 1 stc
+84 579 moveto
+([) show
+grestore
+gsave
+0 0 1 stc
+341 579 moveto
+(]) show
+grestore
+gsave
+0 0 1 stc
+211 579 moveto
+(,) show
+grestore
+12 /Symbol fsf
+gsave
+0 0 1 stc
+187 579 moveto
+(+) show
+grestore
+12 /Times-Roman-Maple fsf
+gsave
+0 0 1 stc
+88 579 moveto
+(-1.00000000000000) show
+grestore
+gsave
+0 0 1 stc
+196 579 moveto
+(0.) show
+grestore
+12 /Times-Italic-Maple fsf
+gsave
+0 0 1 stc
+208 579 moveto
+(I) show
+grestore
+12 /Symbol fsf
+gsave
+0 0 1 stc
+316 579 moveto
+(+) show
+grestore
+12 /Times-Roman-Maple fsf
+gsave
+0 0 1 stc
+217 579 moveto
+(-1.00000000000000) show
+grestore
+gsave
+0 0 1 stc
+325 579 moveto
+(0.) show
+grestore
+12 /Times-Italic-Maple fsf
+gsave
+0 0 1 stc
+337 579 moveto
+(I) show
+grestore
+12 /Times-Roman-Maple fsf
+gsave
+0 0 1 stc
+345 579 moveto
+(]) show
+grestore
+newpath
+59 621 moveto
+56 621 lineto
+56 578 lineto
+59 578 lineto
+stroke
+grestore
+ grestore showpage
+%%Trailer
+%% END of Maple Session Output

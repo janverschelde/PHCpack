@@ -1,0 +1,46 @@
+Exploitation of permutation symmetry for symmetric homotopies in PHCv2.3.80
+
+If the polynomial system is invariant under permutations of its unknowns,
+then it suffices to compute the generators of the solution set.
+This is accomplished by the construction of a homotopy that has the
+same symmetric structure as the polynomial system.
+
+This library is organized in four parts :
+1) permutations, symmetry groups and equivariant systems
+2) symmetric linear-product start systems with drivers
+3) symmetric integer and floating-point lifting
+4) main driver, as called by phc
+
+-------------------------------------------------------------------------------
+file name                          : short description
+-------------------------------------------------------------------------------
+permutations                       : data abstraction for permutations
+permute_operations                 : permutations acting on vectors/polynomials
+symmetry_group                     : list of permutations with some operations
+symmetry_group_io                  : input/output of lists of permutations
+ts_group                           : test on group operations
+symbolic_symmetry_group_io         : uses symbol table for input/output
+equivariant_polynomial_systems     : (G,V,W)-symmetric polynomial systems
+drivers_for_symmetric_group_io     : user-friendly input of symmetry groups
+ts_equpol                          : test (G,V,W)-symmetric polynomial systems
+-------------------------------------------------------------------------------
+templates                          : auxiliary for symmetric start systems
+symmetric_set_structure            : construct (G,V,W)-symmetric set structure
+linear_symmetric_reduction         : reducing number of linear systems to solve
+orbits_of_solutions                : extracting generators from solution list
+orbits_of_solutions_io             : writing information about orbits
+drivers_for_orbits_of_solutions    : report on orbit computations
+driver_for_symmetric_set_structure : driver for symmetric start systems
+ts_drivsss                         : calls the driver
+-------------------------------------------------------------------------------
+permutations_of_faces              : permute faces of polytopes
+faces_of_symmetric_polytopes       : generating faces of polytopes
+generating_mixed_cells             : extract generators in mixed subdivision
+symmetric_lifting_functions        : lift orbits with same lifting
+symmetric_randomize                : symmetric random choice of coefficients
+symmetric_polyhedral_continuation  : polyhedral continuation w.r.t. symmetry
+symmetric_bkk_bound_solvers        : black-box computations
+drivers_for_symmetric_lifting      : menu-driver for symmetric lifting
+-------------------------------------------------------------------------------
+mainsmvc                           : mixed-volume-computation, as called by phc
+-------------------------------------------------------------------------------

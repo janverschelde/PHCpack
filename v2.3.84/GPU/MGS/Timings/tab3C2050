@@ -1,0 +1,47 @@
+Wall clock times for table III in the paper with C2050
+and 3.47 GHz CPU.  Note that this requires a modification
+of the code as no back substitutions are done.
+
+On the GPU:
+
+[jan@dezon MGS]$ time ./run_mgs_d 32 32 10000 0
+
+real	0m5.339s   -> 5.34
+user	0m1.959s
+sys	0m2.467s
+[jan@dezon MGS]$ time ./run_mgs_dd 32 32 10000 0
+
+real	0m14.291s  -> 14.29
+user	0m6.090s
+sys	0m7.263s
+[jan@dezon MGS]$ time ./run_mgs_qd 32 32 10000 0
+
+real	2m5.949s   -> 125.95
+user	1m4.610s
+sys	1m0.306s
+
+On the CPU:
+
+[jan@dezon MGS]$ time ./run_mgs_d 32 32 10000 1
+
+real	0m14.433s   -> 14.43
+user	0m14.364s
+sys	0m0.057s
+[jan@dezon MGS]$ time ./run_mgs_dd 32 32 10000 1
+
+real	2m2.340s    -> 122.34
+user	2m2.119s
+sys	0m0.130s
+[jan@dezon MGS]$ time ./run_mgs_qd 32 32 10000 1
+
+real	13m19.747s   -> 799.75
+user	13m18.772s
+sys	0m0.323s
+[jan@dezon MGS]$ 
+
+data for Table III for C2050 :
+
+                            CPU        GPU       speedup
+complex double         :   14.43      5.34         2.70
+complex double double  :  122.34     14.29         8.56
+complex quad double    :  799.75    125.95         6.35

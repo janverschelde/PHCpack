@@ -1,0 +1,30 @@
+Univariate solvers and plane algebraic curves in PHCpack version 2.3.80
+
+The numerical treatment of plane algebraic curves needs the solution of
+polynomial equations in one variable.  To solve univariate polynomials,
+the method of Durand-Kerner (also called the method of Weierstrass) is
+implemented.  Release 2.2 added blackbox solvers, double double and
+quad double versions were provided in version 2.3.79.
+
+For plane algebraic curves, no particular homotopy is needed and sampling
+curves provides good development and testing cases for the predictors.
+New in 2.3.79 is the introduction of higher-order extrapolators.
+
+-------------------------------------------------------------------------------
+file name                        : short description
+-------------------------------------------------------------------------------
+standard_durand_kerner           : solves univariate polynomial equations
+dobldobl_durand_kerner           : double double Durand-Kerner method
+quaddobl_durand_kerner           : quad double Durand-Kerner method
+multprec_durand_kerner           : multi-precision Durand-Kerner method
+hybrid_durand_kerner             : hybrid standard/multi-precision version
+ts_durker                        : test polynomial equation solver
+black_box_univariate_solvers     : called by the black-box solver (phc -b)
+-------------------------------------------------------------------------------
+standard_extrapolators           : divided differences to extrapolate
+dobldobl_extrapolators           : extrapolation with double doubles
+quaddobl_extrapolators           : extrapolation with quad doubles
+sample_plane_curves              : tools to compute points on curves
+ts_extrapol                      : test on extrapolation
+ts_extrapts                      : points on skew line
+-------------------------------------------------------------------------------

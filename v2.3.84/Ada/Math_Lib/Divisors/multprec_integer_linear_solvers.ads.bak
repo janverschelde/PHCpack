@@ -1,0 +1,16 @@
+with Multprec_Integer_Ring;
+with Multprec_Integer_Ring.DDomain;
+with Multprec_Integer_Vectors;
+with Multprec_Integer_Matrices;
+with Multprec_Common_Divisors;
+with Generic_Integer_LInear_Solvers;
+
+package Multprec_Integer_Linear_Solvers is
+  new Generic_Integer_Linear_Solvers(Multprec_Integer_Ring,
+                                     Multprec_Integer_Ring.DDomain,
+                                     Multprec_Integer_Vectors,
+                                     Multprec_Integer_Matrices,
+                                     Multprec_Common_Divisors);
+
+-- DESCRIPTION :
+--   Defines solvers for multi-precision integer linear systems.

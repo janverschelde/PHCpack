@@ -1,0 +1,61 @@
+{VERSION 3 0 "IBM INTEL LINUX" "3.0" }
+{USTYLETAB {CSTYLE "Maple Input" -1 0 "Courier" 0 1 255 0 0 1 0 1 0 0 
+1 0 0 0 0 }{CSTYLE "2D Math" -1 2 "Times" 0 1 0 0 0 0 0 0 2 0 0 0 0 0 
+0 }{CSTYLE "2D Output" 2 20 "" 0 1 0 0 255 1 0 0 0 0 0 0 0 0 0 }
+{PSTYLE "Normal" -1 0 1 {CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 0 0 0 0 0 0 
+0 0 }0 0 0 -1 -1 -1 0 0 0 0 0 0 -1 0 }{PSTYLE "Heading 1" 0 3 1 
+{CSTYLE "" -1 -1 "" 1 18 0 0 0 0 0 1 0 0 0 0 0 0 0 }1 0 0 0 6 6 0 0 0 
+0 0 0 -1 0 }{PSTYLE "Heading 2" 3 4 1 {CSTYLE "" -1 -1 "" 1 14 0 0 0 
+0 0 0 0 0 0 0 0 0 0 }0 0 0 -1 4 4 0 0 0 0 0 0 -1 0 }{PSTYLE "Maple Out
+put" 0 11 1 {CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 }3 3 0 
+-1 -1 -1 0 0 0 0 0 0 -1 0 }}
+{SECT 0 {SECT 0 {PARA 3 "" 0 "" {TEXT -1 20 "Using phc with Maple" }}
+{PARA 0 "" 0 "" {TEXT -1 64 "Assume phc is on the /tmp of your machine
+ which should run unix." }}{SECT 0 {PARA 4 "" 0 "" {TEXT -1 27 "1. Pre
+paring the input file" }}{PARA 0 "" 0 "" {TEXT -1 163 "The input file \+
+to phc consists of a sequence of polynomials separated by semicolons. \+
+ The first element in the file should be the number of equations and u
+nknowns." }}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 14 "p1 := x*y - 1:" 
+}}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 15 "p2 := x**2 - 1:" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 49 "dim := 2:      # number of e
+quations and unknowns" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 28 "sp
+1 := convert(p1,'string'):" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+28 "sp2 := convert(p2,'string'):" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 14 "semcol := `;`:" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 
+1 0 60 "sp1 := ` `.sp1.semcol:   # appending semicolons to equations" 
+}}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 22 "sp2 := ` `.sp2.semcol:" }
+}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 63 "ssystem(`/bin/rm -f input`
+): # removing any previous input file" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 42 "fprintf(input,`%d\\n%s\\n%s\\n`,dim,sp1,sp2):" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 14 "fclose(input);" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 56 "show_input := ssystem(`cat input`):
+  # testing the input" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 17 "op
+(2,show_input);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#Q32|+~x*y-1;|+~x^2-
+1;|+6\"" }}}}{SECT 0 {PARA 4 "" 0 "" {TEXT -1 14 "2. Calling phc" }}
+{PARA 0 "" 0 "" {TEXT -1 261 "The main trouble is that phc is an inter
+active program and Maple (at least on a Sun workstation) is not very g
+ood in releasing the control.  So make absolutely sure that the file \+
+\"input\" is correct and there is not other file \"output\" in the cur
+rent directory. " }}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 29 "ssystem(
+`/bin/rm -f output`):" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 36 "ss
+ystem(`/tmp/phc -b input output`):" }}}{EXCHG {PARA 0 "" 0 "" {TEXT 
+-1 151 "If phc takes control, you have to go to your window where you \+
+launched Maple in the background and explicitly tell unix to run Maple
+ in the foreground." }{MPLTEXT 1 0 0 "" }}}}{SECT 0 {PARA 4 "" 0 "" 
+{TEXT -1 29 "3. Processing the output file" }}{PARA 0 "" 0 "" {TEXT 
+-1 45 "Here we invoke a new option of phc, the \"-z\"." }}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 41 "ssystem(`/tmp/phc -z output maple_s
+ols`):" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 16 "read maple_sols;
+" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#7$7$$\"+++++5!\"*F%7$$!+++++5F'F)
+" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 10 "sols := %:" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 25 "op(sols[1]); op(sols[2]);" }}{PARA 
+11 "" 1 "" {XPPMATH 20 "6$$\"+++++5!\"*F#" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6$$!+++++5!\"*F#" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 
+0 47 "fp1 := unapply(p1,x,y); fp2 := unapply(p2,x,y);" }}{PARA 11 "" 
+1 "" {XPPMATH 20 "6#>%$fp1GR6$%\"xG%\"yG6\"6$%)operatorG%&arrowGF),&*&
+9$\"\"\"9%F0F0!\"\"F0F)F)F)" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#>%$fp2G
+R6$%\"xG%\"yG6\"6$%)operatorG%&arrowGF),&*$)9$\"\"#\"\"\"\"\"\"!\"\"F3
+F)F)F)" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 35 "fp1(op(sols[1]));
+ fp2(op(sols[1]));" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#\"\"!" }}{PARA 
+11 "" 1 "" {XPPMATH 20 "6#\"\"!" }}}}}}{MARK "1" 0 }{VIEWOPTS 1 1 0 1 
+1 1803 }

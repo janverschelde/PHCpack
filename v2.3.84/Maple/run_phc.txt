@@ -1,0 +1,28 @@
+run_phc := proc(p::list)
+  description `prepares the input file for phc \
+               creates the file with name "input"`:
+  local i,n,sp,semcol,sr,infile,outfile,solfile,cmd1,cmd2,sols:
+  n := nops(p):             # number of polynomials
+  semcol := `;`:
+  sr := convert(rand(),string):
+  infile := input||sr:      # randomized file names
+  outfile := output||sr:
+  solfile := sols||sr:
+  fopen(infile,WRITE):
+  fprintf(infile,`%d\n`,n):
+  for i from 1 to n do
+    sp := convert(p[i],string):
+    sp := ` `||sp||semcol:  # append semicolon
+    fprintf(infile,`%s\n`,sp):
+  od:
+  fclose(infile):
+  cmd1 := `C:/PHCv2/bin/phc -b `||infile||` `||outfile:
+  cmd2 := `C:/PHCv2/bin/phc -z `||outfile||` `||solfile:
+  ssystem(cmd1):
+  ssystem(cmd2):
+  read(solfile): sols := %:
+  fremove(infile):
+  fremove(outfile):
+  fremove(solfile):
+  RETURN(sols);
+end proc:

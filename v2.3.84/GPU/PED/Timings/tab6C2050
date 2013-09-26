@@ -1,0 +1,40 @@
+Running times for Table 6 with C2050 versus 3.47 GHz CPU
+
+[jan@dezon PED]$ time ./run_ped_d 32 32 1024 3 4 10000 0
+
+real	0m1.706s  -> 1.71
+user	0m0.116s
+sys	0m0.701s
+[jan@dezon PED]$ time ./run_ped_dd 32 32 1024 3 4 10000 0
+
+real	0m2.466s  -> 2.47
+user	0m0.398s
+sys	0m1.182s
+[jan@dezon PED]$ time ./run_ped_qd 32 32 1024 3 4 10000 0
+
+real	0m9.825s    -> 9.83
+user	0m3.611s
+sys	0m5.273s
+[jan@dezon PED]$ time ./run_ped_d 32 32 1024 3 4 10000 1
+
+real	0m5.537s  -> 5.54
+user	0m5.526s
+sys	0m0.006s
+[jan@dezon PED]$ time ./run_ped_dd 32 32 1024 3 4 10000 1
+
+real	0m43.514s  -> 43.51
+user	0m43.472s
+sys	0m0.007s
+[jan@dezon PED]$ time ./run_ped_qd 32 32 1024 3 4 10000 1
+
+real	4m49.662s   -> 289.66
+user	4m49.419s
+sys	0m0.009s
+[jan@dezon PED]$ 
+
+data for first part of Table 6 :
+
+                         CPU PED      C2050 PED   speedup
+complex double        :    5.54         1.71        3.24
+complex double double :   43.51         2.47       17.62
+complex quad double   :  289.66         9.83       29.47

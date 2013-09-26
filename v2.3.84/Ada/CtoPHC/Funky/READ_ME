@@ -1,0 +1,100 @@
+Calling PHCpack from C functions in PHCv2.3.81
+
+This directory was originally created in release 2.1,
+to use the Pieri homotopies in linear systems control.
+
+This directory is entirely new in release 2.1 and contains
+several upgrades in PHCpack 2.2.  The latest upgrade being
+the gateway to PHCpack as a machine with internal states, 
+which was used to create a parallel path tracker with MPI.
+Improvements to the gateway interface were made in release 2.3.
+
+There are two ways to pass polynomials from C to Ada :
+1) strings rely on the parsing routines in PHCpack;
+2) arrays of doubles and integers allow a more basic encoding of a polynomial.
+
+The first representation might be suitable if the C routines is merely
+passing polynomials to PHCpack in a form ready to be read by humans,
+while the second representation can also be used for future processing.
+
+The file ts_getsys.c illustrates how to use the parsing capabilities
+of PHCpack and the printing of polynomial systems, the arrows indicate
+the direction of the call:
+
+  ts_getsys.c        reading/writing of a polynomial system
+    -> getsys1.adb   user-friendly reading of polynomial system
+    -> getsys2.c     system is in low-level C format
+    -> getsys3.adb   printing on screen of system in nice format
+
+A more useful routine is "phc_sys_rw" which avoids the chain,
+at the expense of building a very long (sometimes too long!)
+array of doubles.
+
+There are three main targets in this directory :
+  1) ts_pieri_solver : interface to numerical Schubert calculus
+  2) ts_phc_solver : calls black-box solver of PHCpack
+  3) ts_path_tracker : implements coefficient polynomial continuation
+These targets are templates for future applications and interfaces.
+
+The default extension is .ads (specification of Ada package).
+In mixing C with Ada we give the extension, because sometimes we give
+the same name (but different suffix) to related C and Ada routines.
+
+------------------------------------------------------------------------------
+file name                        : short description
+------------------------------------------------------------------------------
+pass_poly.c                      : passing polynomial as a string
+print_poly.adb                   : routine called by pass_poly
+------------------------------------------------------------------------------
+c_integer_io                     : input/output of C integers
+c_integer_arrays                 : defines arrays of C integers
+c_integer_arrays_io              : output of arrays of C integers
+c_double_io                      : input/output of C doubles
+c_double_arrays                  : defines arrays of C doubles
+c_double_arrays_io               : output of arrays of C doubles
+c_to_ada_arrays                  : converting arrays between C and Ada
+ts_arrays                        : interactive test of array conversions
+------------------------------------------------------------------------------
+coefficient_support_polynomials  : convert between polynomials and vectors
+coefficient_support_poly_systems : convert between systems and vectors
+ts_cosup                         : interactive testing facility
+ts_cosuptoc                      : Ada procedure to pass polynomials to C
+cosupoly                         : Ada procedure called by ts_cosupoly.c
+ts_cosupoly.c                    : C program calling the conversions
+cosupsys                         : Ada procedure called by ts_cosupsys.c
+ts_cosupsys.c                    : C program to pass system from C to Ada
+cosupoly_to_c.c                  : C function receiving an Ada polynomial
+cosupsys_to_c.c                  : C function receiving an Ada poly system
+ts_cosuptoc                      : Ada test program to pass from Ada to C
+getsys3.adb                      : writes polynomial system to screen
+getsys2.c                        : calls getsys3.adb
+getsys1.adb                      : reads a polynomial system from user
+ts_getsys.c                      : test on reading/writing systems
+phc_sys_rw.ads                   : read/write of systems prototype
+phc_sys_rw.adb                   : read/write of polynomial systems
+ts_phc_sys_rw.c                  : test on read/write of systems in C
+coefficient_solution_vectors     : coefficient representation of solutions
+ts_csols                         : test on conversion operations
+phc_sol_rw.ads                   : read/write of solutions prototype
+phc_sol_rw.adb                   : read/write of solution lists
+ts_phc_sol_rw.c                  : test on read/write of solutions in C
+------------------------------------------------------------------------------
+pieri_count.adb                  : returns Pieri root count, given (m,p,q)
+ts_pieri_count.c                 : C function calls Ada Pieri_Count
+pieri_sols.c                     : C function takes output of Pieri_Solver
+complex_polynomial_matrices      : matrices of univariate complex polynomials
+complex_polynomial_matrices_io   : i/o of complex polynomial matrices
+ts_cpm                           : test on complex polynomial matrices
+verify_solution_maps             : test interpolation-intersection conditions
+pieri_solver.adb                 : applies Pieri homotopies
+ts_pieri_solver.c                : C function calls Ada Pieri_Solver
+------------------------------------------------------------------------------
+phc_sols.c                       : C function takes output of phc_solver
+phc_solver.adb                   : blackbox solver in PHCpack
+ts_phc_solver.c                  : C function calls Ada phc_solver
+------------------------------------------------------------------------------
+path_sols.c                      : C program called by track_paths.adb
+track_paths.adb                  : Ada path tracking on coefficient homotopy
+path_tracker.c                   : C program calling track_paths.adb
+ts_path_tracker.adb              : Ada program calling path_tracker.c
+------------------------------------------------------------------------------

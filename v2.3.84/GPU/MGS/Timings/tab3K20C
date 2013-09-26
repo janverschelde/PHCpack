@@ -1,0 +1,47 @@
+Wall clock times for table III in the paper with K20C
+and 2.60 GHz CPU.  Note that this requires a modification
+of the code as no back substitutions are done.
+
+On the GPU:
+
+[jan@kepler MGS]$ time ./run_mgs_d 32 32 10000 0
+
+real	0m5.749s
+user	0m3.464s
+sys	0m2.098s
+[jan@kepler MGS]$ time ./run_mgs_dd 32 32 10000 0
+
+real	0m17.100s
+user	0m9.986s
+sys	0m6.837s
+[jan@kepler MGS]$ time ./run_mgs_qd 32 32 10000 0
+
+real	1m59.099s
+user	1m12.848s
+sys	0m45.774s
+
+On the CPU:
+
+[jan@kepler MGS]$ time ./run_mgs_d 32 32 10000 1
+
+real	0m16.188s
+user	0m16.095s
+sys	0m0.070s
+[jan@kepler MGS]$ time ./run_mgs_dd 32 32 10000 1
+
+real	2m29.694s
+user	2m28.878s
+sys	0m0.605s
+[jan@kepler MGS]$ time ./run_mgs_qd 32 32 10000 1
+
+real	14m10.547s
+user	14m7.943s
+sys	0m1.293s
+[jan@kepler MGS]$ 
+
+data for table III in the paper
+ 
+                         2.60GHz CPU    GPU    speedup
+complex double        :       16.19    5.75      2.82
+complex double double :      149.69   17.10      8.75   
+complex quad double   :      850.55  119.10      7.14

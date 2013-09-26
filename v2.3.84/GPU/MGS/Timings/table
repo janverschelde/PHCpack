@@ -1,0 +1,18 @@
+Over 10 runs, we list the real, user, and system time,
+as reported by the "time" command.
+
+The real time does not improve much because the host
+for the K20C run slower than the host for the C2050.
+
+              double     dd      qd
+
+real  C2050  236.734  161.384  666.713
+       K20C  164.340  143.316  563.783
+
+user  C2050   92.150   60.967  244.498
+       K20C   98.250   84.243  327.091
+
+ sys  C2050  143.216   99.078  420.405
+       K20C   65.576   58.655  235.692
+
+sys speedup    2.184    1.689    1.784

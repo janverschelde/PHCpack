@@ -1,0 +1,80 @@
+Static lifting for mixed volumes and polyhedral continuation in PHCv2.3.80
+
+In release 2.3, one file had to be changed for the optimizer in Mac OS X
+and default options were set to floating-point point-wise lifting.
+Release 2.3.16 has new facilities to jumpstart the polyhedral homotopies,
+along with an exponential continuation parameter.  
+The direct input of Laurent systems led to changes in release 2.3.26.
+Support for stable mixed volumes was added in release 2.3.31.
+
+The algorithm used is based on the construction of a mixed subdivision,
+based on Betke's formula for mixed volumes and the polyhedral homotopy
+continuation methods developed by Huber and Sturmfels.
+
+This library features integer-valued and floating-point lifting functions.
+The implementation of integer static lifting typically induces nested
+subdivisions, with non-fine cells recursively refined by subdivisions.
+
+There are four parts in this library:
+
+1. Integer-valued lifting, mixed subdivisions and polyhedral continuation
+2. Floating-point lifting, mixed subdivisions and polyhedral continuation
+3. Influence of points to mixed volume: a simple criterion
+4. Driver packages
+
+-------------------------------------------------------------------------------
+file name                         : short description
+-------------------------------------------------------------------------------
+random_coefficient_systems        : create random systems with given supports
+ts_rndcff                         : test creation of random systems
+integer_mixed_subdivisions        : mixed subdivisions with integer lifting
+integer_mixed_subdivisions_io     : input/output of mixed subdivisions
+integer_lifting_functions         : lifting supports with integer values
+integer_lifting_utilities         : utilities for integer lifting functions
+integer_pruning_methods           : pruning methods for integer subdivisions
+integer_polyhedral_continuation   : polyhedral continuation by integer lifting
+mixed_volume_computation          : functions to compute mixed volumes
+ts_mixvol                         : mixed volume of supports
+bkk_bound_computations            : black-box mixed volumes and solvers
+-------------------------------------------------------------------------------
+floating_integer_convertors       : convertors integer<->floating data
+floating_mixed_subdivisions       : mixed subdivisions with floating lifting
+floating_mixed_subdivisions_io    : input/output of mixed subdivisions
+floating_lifting_functions        : lifting supports with floating values
+floating_lifting_utilities        : utilities for floating lifting functions
+induced_permutations              : deal with permuted supports
+floating_pruning_methods          : pruning methods for floating subdivisions
+floating_polyhedral_continuation  : polyhedral continuation by floating lifting
+stable_polyhedral_continuation    : to compute solutions with zero components
+ts_stable                         : test on stable mixed volumes
+-------------------------------------------------------------------------------
+inner_normal_cones                : representations of cones of inner normals
+normal_cone_intersections         : taking intersections of normal cones
+contributions_to_mixed_volume     : contributions of points to mixed volume
+-------------------------------------------------------------------------------
+drivers_for_mixed_contributions   : application of the contribution checks
+driver_for_criterion              : driver for the criterion
+ts_drivcrit                       : calls the menu-driver for the criterion
+driver_for_lifting_functions      : menu-driver for selecting lifting function
+pruning_statistics                : writes pruning statistics
+drivers_for_static_lifting        : menu-driver for static lifting
+ts_drivstal                       : calls the driver for static lifting
+drivers_for_mixedvol_algorithm    : drivers to MixedVol Algorithm
+ts_mvasta                         : calls MixedVol algorithm
+-------------------------------------------------------------------------------
+ts_mixlab                         : coordinate/labeled subdivision convertors
+ts_jpmix                          : template to prepare jumpstarting
+polyhedral_coefficient_homotopies : for efficient evaluation of the homotopies
+polyhedral_coefficient_parameters : default values of numerical tolerances
+polyhedral_coefficient_predictors : step control and predictors
+polyhedral_coefficient_correctors : correctors for polyhedral homotopies
+polyhedral_coefficient_tracking   : path tracking with coefficient homotopies
+jumpstart_polyhedral_homotopies   : drivers to jumpstart polyhedral trackers
+ts_exptrack                       : test exponential continuation parameters
+-------------------------------------------------------------------------------
+lifted_configurations             : for balancing the lifting values
+ts_balance                        : development of balancing lifting values
+-------------------------------------------------------------------------------
+
+Subdivisions induced by integer lifting functions have to be recursive,
+since one cannot guarantee that all cells will be fine mixed.

@@ -1,0 +1,13 @@
+This directory will contain all .o and .ali files, which are intermediate
+in the gnat compilation system to arrive at the executable files.
+
+To create phc, simply type "make phc" (or make) at the command prompt 
+and the instructions defined in the makefile will be executed.
+The makefile determines the location of the executable file.
+
+By default, makefile will use makefile_unix.
+For windows and itanium machines, change the beginning of the
+file makefile so that makefile_windows will be used.
+
+The makefile_copper and makefile_tungsten contain some specific 
+directives for the respective NCSA machines copper and tungsten.

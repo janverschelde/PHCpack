@@ -1,0 +1,39 @@
+{VERSION 5 0 "SUN SPARC SOLARIS" "5.0" }
+{USTYLETAB {CSTYLE "Maple Input" -1 0 "Courier" 0 1 255 0 0 1 0 1 0 0 
+1 0 0 0 0 1 }{CSTYLE "2D Math" -1 2 "Times" 0 1 0 0 0 0 0 0 2 0 0 0 0 
+0 0 1 }{CSTYLE "2D Output" 2 20 "" 0 1 0 0 255 1 0 0 0 0 0 0 0 0 0 1 }
+{PSTYLE "Normal" -1 0 1 {CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 }0 0 0 -1 -1 -1 0 0 0 0 0 0 -1 0 }{PSTYLE "Maple Output" 0 11 1 
+{CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }3 3 0 -1 -1 -1 0 
+0 0 0 0 0 -1 0 }{PSTYLE "" 11 12 1 {CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 }1 0 0 -1 -1 -1 0 0 0 0 0 0 -1 0 }}
+{SECT 0 {EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 12 "with(stats);" }}
+{PARA 11 "" 1 "" {XPPMATH 20 "6#7*%&anovaG%)describeG%$fitG%+importdat
+aG%'randomG%*statevalfG%*statplotsG%*transformG" }}}{EXCHG {PARA 0 "> \+
+" 0 "" {MPLTEXT 1 0 15 "p := 0: q := 0:" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 20 "for k from 0 to 2 do" }}{PARA 0 "> " 0 "" {MPLTEXT 1 
+0 25 "   for j from 0 to 2-k do" }}{PARA 0 "> " 0 "" {MPLTEXT 1 0 50 "
+      q := q + (stats[random,normald](1))*x^j*y^k;" }}{PARA 0 "> " 0 "
+" {MPLTEXT 1 0 50 "      p := p + (stats[random,normald](1))*x^j*y^k;
+" }}{PARA 0 "> " 0 "" {MPLTEXT 1 0 6 "   od;" }}{PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 3 "od;" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 9 "print
+(p);" }}{PARA 11 "" 1 "" {XPPMATH 20 "6#,.$\"+(Qb\"G:!\"*\"\"\"*&$\"+E
+:#yw\"F&F'%\"xGF'!\"\"*&$\"*i!R(e'!#5F')F+\"\"#F'F,*&$\"+_!H>m$F0F'%\"
+yGF'F,*($\"+YfX]=F0F'F+F'F6F'F'*&$\"+QB0)e&F0F')F6F2F'F'" }}}{EXCHG 
+{PARA 0 "> " 0 "" {MPLTEXT 1 0 9 "print(q);" }}{PARA 11 "" 1 "" 
+{XPPMATH 20 "6#,.$!+EvmH(*!#5\"\"\"*&$\")KzCDF&F'%\"xGF'F'*&$\"+62X];!
+\"*F')F+\"\"#F'!\"\"*&$\"*IQE2$F/F'%\"yGF'F2*($\"+_&zoD&F&F'F+F'F6F'F2
+*&$\"+Nh`!4)F&F')F6F1F'F'" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+21 "read(run_phc_maple6);" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 
+18 "op(eval(run_phc));" }}{PARA 12 "" 1 "" {XPPMATH 20 "60'%'phclocG%'
+stringG'%\"pG%%listG%\"iG%\"nG%#spG%'semcolG%#srG%'infileG%(outfileG%(
+solfileG%%cmd1G%%cmd2G%%solsG%i[lCalls~phc~from~Maple6~or~7~session.~T
+he~name~of~file~with~the~executable~version~of~phc~should~be~provided~
+in~the~string~phcloc.~The~second~input~argument~p~is~a~list~of~polynom
+ials.~On~return~is~a~list~of~approximations~to~all~isolated~roots~of~t
+he~system~defined~by~p.G" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 43 
+"run_phc(\"/home/6/jan/PHCv2/bin/phc\",[p,q]);" }}}{EXCHG {PARA 0 "> \+
+" 0 "" {MPLTEXT 1 0 44 "StringTools[SubstituteAll](\"abede\",\"e\",\"E
+\");" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 18 "with(StringTools);
+" }}}}{MARK "9 0 0" 18 }{VIEWOPTS 1 1 0 1 1 1803 1 1 1 1 }
+{PAGENUMBERS 0 1 2 33 1 1 }

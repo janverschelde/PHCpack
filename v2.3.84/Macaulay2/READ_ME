@@ -1,0 +1,28 @@
+This directory contains two Macaulay2 packages exporting some of the
+functionality of phc to the M2 user: PHCpack.m2 and LRhomotopies.m2.
+
+(1) PHCpack.m2 (along with its documentation in PHCpackDoc.m2 in the
+    directory PHCpack).  This M2 interface was developed jointly with
+    Elizabeth Gross and Sonja Petrovic, with contributions of Anton Leykin.
+
+    To install this interface, in an M2 session started in a terminal
+    in this directory, type
+
+installPackage("PHCpack", RemakeAllDocumentation=>true, RerunExamples => true, UserMode=>true,DebuggingMode => true)
+
+(2) LRhomotopies.m2 gives access to the Littlewood-Richardson homotopies
+    to solve Schubert problems.  This package was created during an exciting
+    week at AIM on implementing algebraic algorithms, 26-30 October 2009.
+    The package was updated during the week of July 24-29, 2011,
+    at a Macaulay 2 workshop held at the IMA.
+
+    See rule.m2 for a very basic use as a script, run it as 
+    $ M2 --rule.m2
+    on the command prompt $.
+
+    To install the package, in an M2 session, type
+
+installPackage("LRhomotopies", RemakeAllDocumentation=>true, RerunExamples => true, UserMode=>true,DebuggingMode => true)
+
+After successful installation, typing viewHelp() launches a browser to view
+the documentation and examples of its use.

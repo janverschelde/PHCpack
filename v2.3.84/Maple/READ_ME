@@ -1,0 +1,17 @@
+This directory contains a basic interface of phc with Maple.
+The files are
+
+  run_phc_mapleV        procedure run_phc in MapleV for unix
+  use_phc_mapleV.mws    illustrative worksheet to use run_phc in MapleV
+
+  run_phc_maple6        procedure run_phc in Maple6 for unix
+  use_phc_maple6.mws    illustrative worksheet to use run_phc in Maple6
+
+  run_phc_maple7        latest and shortest version of run_phc
+  use_phc_maple7.mws
+
+The differences between the versions is mainly due to the % symbol
+and string manipulations.
+
+PHCmaple, developed in collaboration with Anton Leykin,
+is available separately.

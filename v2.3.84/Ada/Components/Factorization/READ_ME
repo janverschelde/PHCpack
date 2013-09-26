@@ -1,0 +1,58 @@
+Factorization into Irreducible Components with PHCv2.3.80
+
+This directory is entirely new in release 2.1.  Changes in release 2.2:
+* random polynomials are now in Math_Lib/Polynomials;
+* black_box_factorization has been added.
+Monodromy in intrinsic coordinates was added in release 2.3.
+A seventh option was added to mainfac (phc -f) in release 3.4.48.
+
+There are three algorithms to decompose a pure dimensional solution set
+into irreducible components:
+  1) by incremental interpolation, with multi-precision for high degrees
+  2) using monodromy, validated by linear traces
+  3) enumerating all factorizations and prune with linear traces.
+A particular case is the factorization of multivariate polynomials,
+which is now directly accessible from the black-box solver.
+
+------------------------------------------------------------------------------
+file name                        : short description
+------------------------------------------------------------------------------
+irreducible_components           : representation of irreducible component
+irreducible_components_io        : input-output for irreducible components
+irreducible_component_creators   : interpolating facilities
+irreducible_component_lists      : decomposition of equidim solution set
+irreducible_component_lists_io   : input-output of list of components
+monodromy_group_actions          : records actions of monodromy group
+monodromy_group_actions_io       : i/o for monodromy group
+monodromy_actions_breakup        : breakup with actions of monodromy group
+drivers_to_factor_components     : tuning of parameters and summary reports
+drivers_to_component_creators    : utilities for ts_irco
+driver_to_factor_components      : intermediate driver called by ts_irco
+ts_irco                          : test on irreducible components
+------------------------------------------------------------------------------
+rewrite_polynomials              : implementation of telescope system
+ts_rwpoly                        : test on rewriting
+------------------------------------------------------------------------------
+combinatorial_factorization      : factorization with linear traces only
+ts_combfac                       : test on combinatorial factorization
+------------------------------------------------------------------------------
+homotopy_memberhip_tests         : test to decide membership to witness set
+ts_mbthom                        : test on the homotopy membership test
+------------------------------------------------------------------------------
+monodromy_partitions             : management of partitions of witness points
+monodromy_polynomial_breakup     : monodromy to factor polynomials
+monodromy_component_breakup      : monodromy to factor solution sets
+multivariate_factorization       : factorization of multivariate polynomials
+drivers_to_factor_polynomials    : provides main driver, needed in mainfac
+sensitivity_of_factorization     : experiment on sensitivity of factorization
+ts_factor                        : interactive testing routine
+ts_hypfac                        : test on factoring hypersurfaces
+ts_newfac                        : calls monodromy component breakup routines
+------------------------------------------------------------------------------
+ts_ifactor                       : factorization in intrinsic coordinates
+------------------------------------------------------------------------------
+homotopy_membership_tests        : membership test using sampling homotopy
+mainfac                          : routine called by main dispatcher
+black_box_factorization          : routine called by black-box solver (phc -b)
+phc_factor                       : Ada routine for C interface
+------------------------------------------------------------------------------
