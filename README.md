@@ -1,4 +1,4 @@
 PHCpack
 =======
 
-solving polynomial system with homotopy continuation methods
+solving polynomial systems with homotopy continuation methods
