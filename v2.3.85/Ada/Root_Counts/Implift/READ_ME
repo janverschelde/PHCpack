@@ -1,0 +1,60 @@
+Polyhedral homotopies by implicit lifting in PHCpack version 2.3.85
+
+This directory contains software for the computation of mixed volumes,
+according to the recursive formula Bershtein used in his proof.
+Also the homotopy method of Bernshtein has been implemented.
+
+The minor modification in release 2.2 is the addition of a black-box
+routine to solve polynomials in one variable, using Durand-Kerner
+(a.k.a. the method of Weierstrass), and a black-box solver for systems
+with few monomials.  Since 2.3.06 a new fewnomial system solver exists,
+and in release 2.3.11, the old fewnomial solvers were removed.
+
+Support for 64-bit integer arithmetic was added in version 2.3.71.
+Double double and quad double versions of the method of Weierstrass
+(aka Durand-Kerner) were provided in version 2.3.79 and moved to a
+new separate directory Curves.
+
+-------------------------------------------------------------------------------
+file name                           : short description
+-------------------------------------------------------------------------------
+supports_of_polynomial_systems      : manipulating support sets of polynomials
+ts_supports                         : test the power lists
+standard_integer32_vertices         : extracting vertices from supports
+standard_integer64_vertices         : 64-bit version of vertices computation
+drivers_for_vertex_points           : drivers to the vertex extraction
+ts_drivpts                          : calls the driver to vertices
+-------------------------------------------------------------------------------
+standard_integer32_transformations  : unimodular transformations on monomials
+standard_integer64_transformations  : 64-bit unimodular transformations
+standard_integer_transformations_io : i/o of unimodular transformations
+ts_transfo                          : shows transformations from vectors
+integer32_vectors_utilities         : utilities to manipulate integer vectors
+integer64_vectors_utilities         : utilities for 64-bit integer vectors
+transforming_solutions              : transformations on solution lists
+transforming_integer32_vector_lists : transforming lists of integer vectors
+transforming_integer64_vector_lists : transforming lists of 64-bit vectors
+transforming_laurent_systems        : transformations on Laurent systems
+-------------------------------------------------------------------------------
+trees_of_vectors                    : data structure to hold outer normals
+trees_of_vectors_io                 : input/output of trees of vectors
+lists_of_vectors_utilities          : utilities to manipulate lists of vectors
+arrays_of_lists_utilities           : utilities to manipulate arrays of lists
+volumes                             : compute volumes and mixed volumes
+ts_impvol                           : test on mixed-volume computation
+-------------------------------------------------------------------------------
+mixed_homotopy_continuation         : polyhedral continuation 
+set_structures_and_volumes          : combines product and polyhedral methods
+generic_position                    : test on genericity of system
+drivers_for_coefficient_systems     : set up polyhedral continuation
+drivers_for_implicit_lifting        : main driver for implicit lifting
+ts_drivimpl                         : calls main driver for implicit lifting
+-------------------------------------------------------------------------------
+span_of_supports                    : to compute the span of a support set
+ts_supspan                          : test on span computation
+-------------------------------------------------------------------------------
+
+This is the first implementation of polyhedral homotopy continuation.
+Some design mistakes make it inefficient and hard to maintain, although
+there is progress: fewnomial system solvers are revised and out.
+Also the univariate solvers have been moved out.

@@ -1,0 +1,45 @@
+Running times for Table 6 with K20C versus 2.60 GHz CPU
+
+GPU K20C:
+
+[jan@kepler PED]$ time ./run_ped_d 32 32 1024 3 4 10000 0
+
+real	0m1.514s   -> 1.51
+user	0m0.463s
+sys	0m0.862s
+[jan@kepler PED]$ time ./run_ped_dd 32 32 1024 3 4 10000 0
+
+real	0m2.248s   -> 2.25
+user	0m0.904s
+sys	0m1.176s
+[jan@kepler PED]$ time ./run_ped_qd 32 32 1024 3 4 10000 0
+
+real	0m8.973s   -> 8.97
+user	0m4.781s
+sys	0m3.960s
+
+2.60 GHz CPU:
+
+[jan@kepler PED]$ time ./run_ped_d 32 32 1024 3 4 10000 1
+
+real	0m6.831s   -> 6.83
+user	0m6.810s
+sys	0m0.010s
+[jan@kepler PED]$ time ./run_ped_dd 32 32 1024 3 4 10000 1
+
+real	0m50.900s  -> 50.90
+user	0m50.811s
+sys	0m0.016s
+[jan@kepler PED]$ time ./run_ped_qd 32 32 1024 3 4 10000 1
+
+real	5m3.007s   -> 303.01
+user	5m2.540s
+sys	0m0.035s
+[jan@kepler PED]$ 
+
+data for first part of Table 6 :
+
+                         2.60 GHz PED   K20C PED   speedup
+complex double        :    6.83           1.51       4.52
+complex double double :   50.90           2.25      22.62
+complex quad double   :  303.01           8.97      33.78

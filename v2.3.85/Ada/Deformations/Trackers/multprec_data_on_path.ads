@@ -1,0 +1,364 @@
+with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
+with Multprec_Floating_Vectors;
+with Multprec_Floating_VecVecs;
+with Multprec_Complex_Numbers;           use Multprec_Complex_Numbers;
+with Multprec_Complex_Vectors;
+with Multprec_Complex_Solutions;         use Multprec_Complex_Solutions;
+with Multprec_Continuation_Data;         use Multprec_Continuation_Data;
+
+package Multprec_Data_on_Path is
+
+-- DESCRIPTION :
+--   This package provides data management operations for path tracking
+--   in multiprecision arithmetic.
+
+-- UTILITIES :
+
+  function At_End ( t,target : Complex_Number;
+                    distance,tol : Floating_Number ) return boolean;
+
+  -- DESCRIPTION :
+  --   Decides whether at end of continuation stage.
+
+  -- ON ENTRY :
+  --   t        current value of the continuation parameter;
+  --   target   target value for t;
+  --   distance is the distance to invoke the end game;
+  --   tol      numbers less than tol are considered zero.
+
+  function Stop ( p : Pred_Pars; t,target : Complex_Number;
+                  step : Floating_Number ) return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true if either the step size is smaller than p.minstep, or
+  --   or alternatively, in case of geometric predictor, if the distance to
+  --   the target has become smaller than p.minstep.
+
+  -- ON ENTRY :
+  --   p        settings of the predictor;
+  --   t        current value of the continuation parameter;
+  --   target   target value for t;
+  --   step     current step size.
+
+  function Is_Multiple ( a,b,tol : Floating_Number ) return natural32;
+
+  -- DESCRIPTION :
+  --   Returns a/b if a is a multiple of b, returns 0 in the other case,
+  --   using the tolerance in tol to decide whether a number is zero or not.
+
+  procedure Linear_Step_Control 
+              ( success : in boolean; p : in Pred_Pars;
+                step : in out Floating_Number;
+                nsuccess : in out natural32; trial : in natural32 );
+
+  -- DESCRIPTION :
+  --   Control of step size for linear path following.
+  --   With geometric prediction, the ratio (=step) will be enlarged
+  --   when not success.  In order not to break the sequence, the ratio
+  --   is not reduced when success.
+
+  -- ON ENTRY :
+  --   success  indicates whether the previous correction failed or not,
+  --            success means no failure in previous correction stage;
+  --   p        settings of the predictor;
+  --   step     current step size;
+  --   nsuccess counts the number of consecutive successes;
+  --   trial    counts the number of trials after a failed correction,
+  --            used only for complex predictors.
+
+  procedure Circular_Step_Control
+              ( success : in boolean; p : in Pred_Pars;
+                twopi : in Floating_Number;
+                step : in out Floating_Number; nsuccess : in out natural32 );
+
+  -- DESCRIPTION :
+  --   Control of step size for circular path following, note that the
+  --   step size should be some multiple of pi.
+
+  procedure Set_Corrector_Parameters
+              ( c : in out Corr_Pars; eps : Floating_Number );
+
+  -- DESCRIPTION :
+  --   All eps* parameters in c are set to eps.
+
+  function End_Game_Corrector_Parameters
+              ( current : Corr_Pars; distance,tol : Floating_Number ) 
+              return Corr_Pars;
+
+  -- DESCRIPTION :
+  --   Returns corrector parameters for the end game of the first or the 
+  --   second continuation stage, depending on the distance from the target.
+
+-- MANAGEMENT OF DATA DURING PATH FOLLOWING :
+
+  procedure Linear_Single_Initialize 
+              ( s : in Solu_Info; p : in Pred_Pars;
+                old_t,prev_t : out Complex_Number;
+                prev_v,old_solution,prev_solution
+                  : out Multprec_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Initialization for linear path following of one path.
+
+  -- ON ENTRY :
+  --   s                solution at beginning of path;
+  --   p                predictor parameters.
+
+  -- ON RETURN :
+  --   old_t            back up value for continuation parameter;
+  --   prev_t           previous value of continuation parameter;
+  --   old_solution     back up value for solution vector;
+  --   prev_solution    previous value of solution vector;
+
+  procedure Linear_Single_Management
+              ( s : in out Solu_Info; p : in Pred_Pars; c : in Corr_Pars;
+                old_t,prev_t : in out Complex_Number;
+                old_solution,prev_solution,old_v,prev_v,vv
+                  : in out Multprec_Complex_Vectors.Vector;
+                step : in out Floating_Number;
+                nsuccess,trial : in out natural32;
+                success : in out boolean );
+
+  -- DESCRIPTION :
+  --   Management of data after correction during linear path following.
+
+  -- PARAMETERS :
+  --   s                current solution;
+  --   p                predictor parameters;
+  --   c                corrector parameters;
+  --   old_t            back up value for continuation parameter;
+  --   prev_t           previous value of continuation parameter;
+  --   old_solution     back up value for solution vector;
+  --   prev_solution    previous value of solution vector;
+  --   old_v            back up value for tangent direction;
+  --   prev_v           previous value for tangent direction;
+  --   vv               current tangent direction;
+  --   step             current step size;
+  --   nsuccess         number of consecutive successes;
+  --   trial            number of trials after failure;
+  --   success          successful correction step.
+
+  procedure Linear_Single_Quadratic_Management
+              ( s : in out Solu_Info; p : in Pred_Pars; c : in Corr_Pars;
+                old_t,prev_t,prev_t0 : in out Complex_Number;
+                old_s,prev_s,prev_s0 : in out Multprec_Complex_Vectors.Vector;
+                step : in out Floating_Number;
+                nsuccess,trial : in out natural32;
+                success : in out boolean );
+
+  -- DESCRIPTION :
+  --   Management of data after correction during linear path following
+  --   for a quadratic predictor.
+
+  -- PARAMETERS :
+  --   s           current solution;
+  --   p           predictor parameters;
+  --   c           corrector parameters;
+  --   old_t       back up value for continuation parameter;
+  --   prev_t      previous value of continuation parameter;
+  --   prev_t0     value of continuation parameter prior to prev_t;
+  --   old_s       back up value for solution vector;
+  --   prev_s      previous value of solution vector for t = prev_t;
+  --   prev_s0     previous value of solution vector for t = prev_t0;
+  --   step        current step size;
+  --   nsuccess    number of consecutive successes;
+  --   trial       number of trials after failure;
+  --   success     successful correction step.
+
+  procedure Linear_Single_Cubic_Management
+              ( s : in out Solu_Info; p : in Pred_Pars; c : in Corr_Pars;
+                old_t,prev_t,prev_t1,prev_t0 : in out Complex_Number;
+                old_s,prev_s,prev_s1,prev_s0
+                  : in out Multprec_Complex_Vectors.Vector;
+                step : in out Floating_Number;
+                nsuccess,trial : in out natural32;
+                success : in out boolean );
+
+  -- DESCRIPTION :
+  --   Management of data after correction during linear path following
+  --   for a cubic predictor.
+
+  -- PARAMETERS :
+  --   s           current solution;
+  --   p           predictor parameters;
+  --   c           corrector parameters;
+  --   old_t       back up value for continuation parameter;
+  --   prev_t      previous value of continuation parameter;
+  --   prev_t1     value of continuation parameter prior to prev_t;
+  --   prev_t0     value of continuation parameter prior to prev_t1;
+  --   old_s       back up value for solution vector;
+  --   prev_s      previous value of solution vector for t = prev_t;
+  --   prev_s1     previous value of solution vector for t = prev_t1;
+  --   prev_s0     previous value of solution vector for t = prev_t0;
+  --   step        current step size;
+  --   nsuccess    number of consecutive successes;
+  --   trial       number of trials after failure;
+  --   success     successful correction step.
+
+  procedure Linear_Single_Quartic_Management
+              ( s : in out Solu_Info; p : in Pred_Pars; c : in Corr_Pars;
+                old_t,prv_t,prv_t2,prv_t1,prv_t0 : in out Complex_Number;
+                old_s,prv_s,prv_s2,prv_s1,prv_s0
+                  : in out Multprec_Complex_Vectors.Vector;
+                step : in out Floating_Number;
+                nsuccess,trial : in out natural32;
+                success : in out boolean );
+
+  -- DESCRIPTION :
+  --   Management of data after correction during linear path following
+  --   for a quartic predictor.
+
+  -- PARAMETERS :
+  --   s           current solution;
+  --   p           predictor parameters;
+  --   c           corrector parameters;
+  --   old_t       back up value for continuation parameter;
+  --   prv_t       previous value of continuation parameter;
+  --   prv_t2      value of continuation parameter prior to prv_t;
+  --   prv_t1      value of continuation parameter prior to prv_t2;
+  --   prv_t0      value of continuation parameter prior to prv_t1;
+  --   old_s       back up value for solution vector;
+  --   prv_s       previous value of solution vector for t = prv_t;
+  --   prv_s2      previous value of solution vector for t = prv_t2;
+  --   prv_s1      previous value of solution vector for t = prv_t1;
+  --   prv_s0      previous value of solution vector for t = prv_t0;
+  --   step        current step size;
+  --   nsuccess    number of consecutive successes;
+  --   trial       number of trials after failure;
+  --   success     successful correction step.
+
+  procedure Linear_Multiple_Initialize 
+              ( s : in Solu_Info_Array; p : in Pred_Pars;
+                t,old_t,prev_t : out Complex_Number;
+                sa,old_sa,prev_sa : in out Solution_Array );
+
+  -- DECRIPTION :
+  --   Initialization for linear path following for more than one path.
+
+  procedure Linear_Multiple_Management
+              ( s : in out Solu_Info_array;
+                sa,old_sa,prev_sa : in out Solution_Array;
+                t,old_t,prev_t : in out Complex_Number; p : in Pred_Pars; 
+                step : in out Floating_Number; pivot : in integer32; 
+                nsuccess,trial : in out natural32;
+                success : in boolean );
+
+  -- DESCRIPTION :
+  --   Management of data after correction during linear path following.
+
+  -- PARAMETERS :
+  --   s            current solutions with information statistics;
+  --   sa           current solutions;
+  --   old_sa       back up value for solutions;
+  --   prev_sa      previous solutions;
+  --   t            current value of continuation parameter;
+  --   old_t        back up value for continuation parameter;
+  --   prev_t       previous value of continuation parameter;
+  --   p            predictor parameters;
+  --   step         current step size;
+  --   pivot        solution where correction is started;
+  --   nsuccess     number of consecutive successes;
+  --   trial        number of trials after failure;
+  --   success      successful correction step.
+
+  procedure Circular_Management
+              ( s : in out Solu_Info; p : in Pred_Pars; c : in Corr_Pars;
+                old_t,prev_t : in out Complex_Number;
+                start_solution : in Multprec_Complex_Vectors.Vector;
+                old_solution,prev_solution,w_sum,w_all_sum
+                  : in out Multprec_Complex_Vectors.Vector;
+                twopi,epslop,tol : in Floating_Number;
+                theta,old_theta,step : in out Floating_Number;
+                nsuccess,n_sum,n_all_sum,w_c : in out natural32;
+                max_wc : in natural32; stop,success : in out boolean );
+
+  -- DESCRIPTION :
+  --   Management of circular path following.
+
+  -- PARAMETERS :
+  --   s                current solution;
+  --   p                predictor parameters;
+  --   c                corrector parameters;
+  --   old_t            back up value for continuation parameter;
+  --   prev_t           previous value of continuation parameter;
+  --   start_solution   solution vector at start of continuation;
+  --   old_solution     back up value for solution vector;
+  --   prev_solution    previous value of solution vector;
+  --   w_sum            sum of cycle;
+  --   w_all_sum        sum of all cycles;
+  --   twopi            two times PI;
+  --   epslop           tolerance to decide whether two vectors are equal;
+  --   theta            current value of theta;
+  --   old_theta        back up value for theta;
+  --   step             current step size;
+  --   nsuccess         number of consecutive successes;
+  --   n_sum            number of cycles;
+  --   n_all_sum        total number of cycles;
+  --   w_c              winding number;
+  --   max_wc           upper bound on winding number;
+  --   stop             true when winding number has been computed;
+  --   success          successful correction step.
+
+-- UPDATE OF PATH DIRECTION :
+
+  procedure Update_Direction
+               ( proj : in boolean;
+                 freqcnt,defer : in out natural32;
+                 r,m,estm : in out integer32;
+                 cntm : in out natural32; thresm : in natural32;
+                 er : in out integer32;
+                 t,target : in Complex_Number;
+                 x : in Multprec_Complex_Vectors.Vector; 
+                 dt,s,logs : in out Multprec_Floating_Vectors.Vector;
+                 logx,wvl0,wvl1,wvl2 : in out Multprec_Floating_VecVecs.VecVec;
+                 v,errv : in out Multprec_Floating_Vectors.Vector;
+                 err : in out Floating_Number );
+
+  -- DESCRIPTION :
+  --   Computes an approximation of the direction of the path.
+
+  -- ON ENTRY :
+  --   file      to write intermediate data on, may be omitted;
+  --   proj      whether solution vector lies in projective space;
+  --   freqcnt   counts the frequency of calls;
+  --   defer     only if freqcnt = defer, calculations are done;
+  --   r         current order in extrapolation formula;
+  --   m         current value for multiplicity;
+  --   estm      current estimated for multiplicity;
+  --   cntm      number of consecutive times estm has been guessed;
+  --   thresm    threshold for augmenting m to estm;
+  --   er        order of extrapolator on the errors;
+  --   t         current value of continuation parameter;
+  --   target    target value of continuation parameter;
+  --   x         current solution vector;
+  --   dt        vector with distances to target;
+  --   s         s-values w.r.t. the current value m;
+  --   logs      logarithms of the s-values;
+  --   logx      logarithms of the solution vectors;
+  --   wvl0      consecutive estimates for previous direction;
+  --   wvl1      consecutive estimates for current direction;
+  --   wvl2      used as work space for wvl0 and wvl1;
+  --   v         current approximate direction of the path;
+  --   errv      vector of errors used to estimate m;
+  --   err       norm of errv.
+
+  procedure Update_Direction
+               ( file : in file_type; proj : in boolean;
+                 freqcnt,defer : in out natural32;
+                 r,m,estm : in out integer32; cntm : in out natural32;
+                 thresm : in natural32; er : in out integer32;
+                 t,target : in Complex_Number;
+                 x : in Multprec_Complex_Vectors.Vector; 
+                 dt,s,logs : in out Multprec_Floating_Vectors.Vector;
+                 logx,wvl0,wvl1,wvl2 : in out Multprec_Floating_VecVecs.VecVec;
+                 v,errv : in out Multprec_Floating_Vectors.Vector;
+                 err : in out Floating_Number );
+
+  -- DESCRIPTION :
+  --   Computes an approximation of the direction of the path and produces
+  --   intermediate output to the file.
+
+end Multprec_Data_on_Path;

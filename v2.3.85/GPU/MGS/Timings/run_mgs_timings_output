@@ -1,0 +1,13 @@
+running the modified Gram-Schmidt method
+type precision level (d, dd, or qd) : give start dimension (>= 2) : give stop dimension (<= 63) : give the step : give frequency per dimension (>= 1) : give the name of the output file : running for dimension 16 and frequency 10000 on CPU
+['real 113.51', 'user 112.21', 'sys 0.05']
+running for dimension 16 and frequency 10000 on GPU
+['real 143.07', 'user 95.34', 'sys 46.03']
+running for dimension 32 and frequency 10000 on CPU
+['real 813.65', 'user 812.80', 'sys 0.22']
+running for dimension 32 and frequency 10000 on GPU
+['real 155.32', 'user 68.08', 'sys 85.56']
+running for dimension 48 and frequency 10000 on CPU
+['real 2656.36', 'user 2653.69', 'sys 0.57']
+running for dimension 48 and frequency 10000 on GPU
+['real 266.55', 'user 117.05', 'sys 148.14']

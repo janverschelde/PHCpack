@@ -1,0 +1,191 @@
+[jan@kepler Timings]$ python run_mgs_maxdim.py
+running ../run_mgs_d for dimension 256 ...
+launching time ../run_mgs_d 256 256 10000 0
+
+real	2m44.308s
+user	1m36.782s
+sys	1m7.016s
+running ../run_mgs_dd for dimension 128 ...
+launching time ../run_mgs_dd 128 128 10000 0
+
+real	2m23.335s
+user	1m24.326s
+sys	0m58.493s
+running ../run_mgs_qd for dimension 85 ...
+launching time ../run_mgs_qd 85 85 10000 0
+
+real	9m23.748s
+user	5m33.092s
+sys	3m49.601s
+[jan@kepler Timings]$ python run_mgs_maxdim.py
+running ../run_mgs_d for dimension 256 ...
+launching time ../run_mgs_d 256 256 10000 0
+
+real	2m44.368s
+user	1m38.062s
+sys	1m5.663s
+running ../run_mgs_dd for dimension 128 ...
+launching time ../run_mgs_dd 128 128 10000 0
+
+real	2m23.286s
+user	1m23.755s
+sys	0m59.125s
+running ../run_mgs_qd for dimension 85 ...
+launching time ../run_mgs_qd 85 85 10000 0
+
+real	9m23.687s
+user	5m29.009s
+sys	3m53.849s
+[jan@kepler Timings]$ python run_mgs_maxdim.py
+running ../run_mgs_d for dimension 256 ...
+launching time ../run_mgs_d 256 256 10000 0
+
+real	2m44.353s
+user	1m37.999s
+sys	1m5.957s
+running ../run_mgs_dd for dimension 128 ...
+launching time ../run_mgs_dd 128 128 10000 0
+
+real	2m23.308s
+user	1m23.742s
+sys	0m59.148s
+running ../run_mgs_qd for dimension 85 ...
+launching time ../run_mgs_qd 85 85 10000 0
+
+real	9m23.668s
+user	5m23.443s
+sys	3m59.116s
+[jan@kepler Timings]$ python run_mgs_maxdim.py
+running ../run_mgs_d for dimension 256 ...
+launching time ../run_mgs_d 256 256 10000 0
+
+real	2m44.432s
+user	1m38.193s
+sys	1m5.768s
+running ../run_mgs_dd for dimension 128 ...
+launching time ../run_mgs_dd 128 128 10000 0
+
+real	2m23.360s
+user	1m24.422s
+sys	0m58.631s
+running ../run_mgs_qd for dimension 85 ...
+launching time ../run_mgs_qd 85 85 10000 0
+
+real	9m24.233s
+user	5m28.469s
+sys	3m54.889s
+[jan@kepler Timings]$ python run_mgs_maxdim.py
+running ../run_mgs_d for dimension 256 ...
+launching time ../run_mgs_d 256 256 10000 0
+
+real	2m44.286s
+user	1m38.510s
+sys	1m5.386s
+running ../run_mgs_dd for dimension 128 ...
+launching time ../run_mgs_dd 128 128 10000 0
+
+real	2m23.279s
+user	1m24.647s
+sys	0m58.213s
+running ../run_mgs_qd for dimension 85 ...
+launching time ../run_mgs_qd 85 85 10000 0
+
+real	9m23.741s
+user	5m23.170s
+sys	3m59.720s
+[jan@kepler Timings]$ python run_mgs_maxdim.py
+running ../run_mgs_d for dimension 256 ...
+launching time ../run_mgs_d 256 256 10000 0
+
+real	2m44.304s
+user	1m38.315s
+sys	1m5.546s
+running ../run_mgs_dd for dimension 128 ...
+launching time ../run_mgs_dd 128 128 10000 0
+
+real	2m23.307s
+user	1m24.661s
+sys	0m58.283s
+running ../run_mgs_qd for dimension 85 ...
+launching time ../run_mgs_qd 85 85 10000 0
+
+real	9m23.812s
+user	5m23.802s
+sys	3m58.971s
+[jan@kepler Timings]$ python run_mgs_maxdim.py
+running ../run_mgs_d for dimension 256 ...
+launching time ../run_mgs_d 256 256 10000 0
+
+real	2m44.353s
+user	1m37.976s
+sys	1m5.770s
+running ../run_mgs_dd for dimension 128 ...
+launching time ../run_mgs_dd 128 128 10000 0
+
+real	2m23.284s
+user	1m24.632s
+sys	0m58.343s
+running ../run_mgs_qd for dimension 85 ...
+launching time ../run_mgs_qd 85 85 10000 0
+
+real	9m23.704s
+user	5m23.448s
+sys	3m59.010s
+[jan@kepler Timings]$ python run_mgs_maxdim.py
+running ../run_mgs_d for dimension 256 ...
+launching time ../run_mgs_d 256 256 10000 0
+
+real	2m44.326s
+user	1m38.197s
+sys	1m5.514s
+running ../run_mgs_dd for dimension 128 ...
+launching time ../run_mgs_dd 128 128 10000 0
+
+real	2m23.349s
+user	1m23.963s
+sys	0m58.839s
+running ../run_mgs_qd for dimension 85 ...
+launching time ../run_mgs_qd 85 85 10000 0
+
+real	9m23.805s
+user	5m28.907s
+sys	3m53.797s
+[jan@kepler Timings]$ python run_mgs_maxdim.py
+running ../run_mgs_d for dimension 256 ...
+launching time ../run_mgs_d 256 256 10000 0
+
+real	2m44.325s
+user	1m39.346s
+sys	1m4.389s
+running ../run_mgs_dd for dimension 128 ...
+launching time ../run_mgs_dd 128 128 10000 0
+
+real	2m23.361s
+user	1m24.103s
+sys	0m58.718s
+running ../run_mgs_qd for dimension 85 ...
+launching time ../run_mgs_qd 85 85 10000 0
+
+real	9m23.670s
+user	5m29.003s
+sys	3m53.721s
+[jan@kepler Timings]$ python run_mgs_maxdim.py
+running ../run_mgs_d for dimension 256 ...
+launching time ../run_mgs_d 256 256 10000 0
+  
+real	2m44.348s
+user	1m39.116s
+sys	1m4.746s
+running ../run_mgs_dd for dimension 128 ...
+launching time ../run_mgs_dd 128 128 10000 0
+
+real	2m23.288s
+user	1m24.181s
+sys	0m58.754s
+running ../run_mgs_qd for dimension 85 ...
+launching time ../run_mgs_qd 85 85 10000 0
+
+real	9m23.765s
+user	5m28.569s
+sys	3m54.248s
+[jan@kepler Timings]$ 

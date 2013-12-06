@@ -1,0 +1,67 @@
+This directory contains experimental code to solve linear systems through
+QR factorization via the modified Gram-Schmidt orthogonalization method.
+
+The are two versions of the code:
+(1) CPU for correctness comparison and speedup of timings
+(2) GPU for acceleration to compensate for multiprecision arithmetic.
+The multiprecision arithmetic is provided by the QD library on the CPU,
+and the GQD library on the GPU.
+
+The code is written in C++ with the use of templates for the precision,
+as defined by the DefineType.h in the directories DefineTypes*.
+
+The makefile defines the location of the installed QD and GQD libraries.
+Type "make" to compile all programs and "make clean" to remove object files
+and the executable programs.
+The code works for double, double double, quad double arithmetic,
+and runs as run_mgs_d, run_mgs_dd, and run_mgs_qd respectively.
+
+The directory Timings contains experimental data and Python scripts
+to process the timings.
+
+------------------------------------------------------------------------------
+file name          : short description
+------------------------------------------------------------------------------
+run_mgs.cpp        : main program
+DefineType.h       : defines the precision in the respective directories
+                     DefineTypesD, DefineTypesDD, and DefineTypesQD, for
+                     double, double double, and quad double precision
+mgs_kernelsT.cu    : kernels of the GPU solver
+mgs_kernelsT_qd.cu : kernels of the GPU solver
+separate.h         : headers for separate library of functions
+separate.cpp       : definitions of a separate library of functions
+------------------------------------------------------------------------------
+complex.h          : complex types for GPU
+complexH.h         : complex types for CPU (H = host)
+gqd_qd_util.h      : headers of type conversions and command line parsing
+gqd_qd_util.cpp    : definitions of type conversions and command line parsing
+------------------------------------------------------------------------------
+
+The capacity of shared memory imposes a limit on the dimension n:
+n = 256, for double precision, n = 128, for double double, 
+and n = 85 for quad double precision, see mgs_kernelsT.cu.
+
+The name of the executable file is run_mgs.
+To run the program, type at the command prompt
+time ./run_mgs 4 4 1 2
+
+The first parameter is the size of the thread block for the GPU execution,
+the second parameter is the dimension of the system.
+In the current version, the first two parameters must be the same.
+The third parameter specifies how many times the same system with 
+randomly generated coefficients is supposed to be solved.
+The fourth parameter specifies the mode of execution:
+fourth parameter = 0 launches the GPU execution;
+fourth parameter = 1 launches the CPU execution;
+fourth parameter = 2 launches both GPU and CPU executions.
+
+To verify correctness for dimension 32 ./run_mgs 32 32 1 2.
+This will solve the system once on GPU and once on CPU and l2 squared measure
+of the discrepancy between the two results will be provided.   
+
+To compute speedups of the GPU acceleration for dimension 32, compare
+the outcome of "time ./run_sqrt_gqd_kernel 32 32 100000 0"
+with that of "time ./run_sqrt_gqd_kernel 32 32 100000 1".
+
+The first command will launch solving the system 100000 on GPU,
+The second command will launch solving the system 100000 on CPU.

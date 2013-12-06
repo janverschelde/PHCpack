@@ -1,0 +1,154 @@
+Multivariate polynomials and polynomial systems over rings in PHCv2.3.85.
+
+New in release 2 is the availability of multiprecision numbers.
+The data structures are entirely redefined using Ada 95 concepts.
+The graded lexicographic order of monomials was inlined in release 2.3.
+Polynomials and systems with real coefficients were added in v2.3.22.
+New in release 2.3.26 is the i/o for genuine Laurent polynomials.
+Polynomials with double and quad double coefficients are new in v2.3.55.
+In v2.3.69, the algorithms to evaluate polynomials was moved to the new
+Functions directory.  Code for phc -g was added in version 2.3.80.
+
+This library is organized in three parts:
+1) generic packages: polynomials and systems
+2) instantiations
+3) utilities
+
+-------------------------------------------------------------------------------
+file name                         : short description
+-------------------------------------------------------------------------------
+generic_lists                     : lists of items
+graded_lexicographic_order        : defines the order of monomials
+generic_polynomials               : generic polynomials in several variables
+generic_laurent_polynomials       : generic polynomials with integer exponents
+generic_polynomial_systems        : systems of polynomials
+generic_laur_poly_systems         : systems of Laurent polynomials
+generic_jacobian_matrices         : Jacobian matrices of polynomial systems
+generic_laur_jaco_matrices        : Jacobian matrices of Laurent systems
+symbol_table                      : management of table of symbols
+symbol_table_io                   : input/output of symbols
+parse_polynomial_exceptions       : defines exceptions for parsing polynomials
+line_breaks                       : counts number of characters to break lines
+-------------------------------------------------------------------------------
+standard_complex_polynomials      : polynomials over standard complex numbers
+standard_floating_polynomials     : polynomials with real coefficients
+standard_complex_to_real_poly     : type conversions between complex/real
+standard_complex_polynomials_io   : input/output of complex polynomials
+standard_random_polynomials       : generate sparse and dense polynomials
+standard_complex_poly_strings     : string representations of polynomials
+standard_complex_laurentials      : Laurent polynomials with standard complex
+standard_complex_laurentials_io   : i/o for Laurent polynomials
+standard_random_laurentials       : random Laurent polynomials
+standard_complex_laur_strings     : string representations of Laurentials
+standard_complex_poly_ring        : abstract_ring(standard complex poly)
+standard_complex_poly_ring_io     : abstract_ring_io(standard complex poly)
+standard_complex_poly_vectors     : generic_vectors(standard complex poly)
+standard_complex_poly_vectors_io  : generic_vectors_io(standard complex poly)
+standard_complex_poly_matrices    : generic_matrices(standard complex poly)
+standard_complex_poly_matrices_io : generic_matrices_io(standard complex poly)
+standard_complex_poly_systems     : generic_polynomial_systems instantiated
+standard_complex_poly_systems_io  : input/output for complex polynomial systems
+standard_floating_poly_systems    : systems with real coefficients
+standard_floating_poly_systems_io : input/output for real polynomial systems
+standard_tableau_formats          : simple tableau format for polynomials
+standard_complex_laur_systems     : generic_laur_poly_systems instantiated
+standard_complex_laur_systems_io  : input/output for Laurent systems
+standard_complex_jaco_matrices    : generic_jacobian_matrices instantiated
+standard_floating_jaco_matrices   : Jacobi matrices with real coefficients
+standard_complex_poly_randomizers : randomize coefficients of polynomials
+standard_complex_laur_randomizers : randomize coefficients of polynomials
+standard_complex_substitutors     : substitute equations into polynomials
+standard_poly_laur_convertors     : convert polynomials to Laurent polynomials
+standard_laur_poly_convertors     : convert Laurent polynomials to polynomials
+multprec_laur_poly_convertors     : multiprecision "is_genuine_Laurent"
+standard_to_multprec_convertors   : convert from standard to multiprecision
+double_double_polynomials         : polynomials with double double coefficients
+double_double_poly_systems        : systems of double double polynomials
+double_double_jaco_matrices       : Jacobian matrices of double doubles
+dobldobl_complex_polynomials      : polynomials over complex double doubles
+dobldobl_complex_polynomials_io   : basic output for dobldobl complex poly
+dobldobl_random_polynomials       : random sparse or dense dd complex poly
+dobldobl_complex_poly_strings     : string representations of dd complex poly
+dobldobl_complex_poly_systems     : systems of double complex polynomials
+dobldobl_complex_poly_systems_io  : basic output for dd complex poly systems
+dobldobl_complex_jaco_matrices    : Jacobian matrices of double complex
+dobldobl_complex_laurentials      : Laurent polynomials for dd complex
+dobldobl_complex_laurentials_io   : basic output for dd complex Laurentials
+dobldobl_complex_laur_systems     : double double Laurent systems
+dobldobl_complex_laur_systems_io  : basic output for dd complex Laur systems
+dobldobl_complex_laur_jacomats    : Jacobians of double double Laurent systems
+dobldobl_polynomial_convertors    : standard poly <-> double double poly
+quad_double_polynomials           : polynomials with quad double coefficients
+quad_double_poly_systems          : quad double polynomial systems
+quad_double_jaco_systems          : Jacobian matrices of double doubles
+quaddobl_complex_polynomials      : polynomials over complex quad doubles
+quaddobl_complex_polynomials_io   : basic output for qd complex polynomials
+quaddobl_random_polynomials       : random sparse or dense qd complex poly
+quaddobl_complex_poly_strings     : string representations of qd complex poly
+quaddobl_complex_poly_systems     : systems of quad double complex polys
+quaddobl_complex_poly_systems_io  : basic output for qd complex poly systems
+quaddobl_complex_jaco_matrices    : Jacobian matrices of quad double complex
+quaddobl_complex_laurentials      : Laurent polynomials for qd complex
+quaddobl_complex_laurentials_io   : basic output for qd complex Laurentials
+quaddobl_complex_laur_systems     : systems of quad double Laurent polynomials
+quaddobl_complex_laur_systems_io  : basic output for qd complex laur systems
+quaddobl_complex_laur_jacomats    : Jacobians of quad double Laurent systems
+quaddobl_polynomial_convertors    : standard poly <-> quad double poly
+multprec_to_standard_convertors   : convert from multiprecision to standard
+multprec_complex_polynomials      : polynomials over multprec complex numbers
+multprec_floating_polynomials     : polynomials with multprec real coefficients
+multprec_random_polynomials       : random sparse or dense multiprec poly
+multprec_complex_to_real_poly     : type conversions for complex/real poly
+multprec_complex_laurentials      : Laurent polynomials over multprec complex
+multprec_complex_poly_ring        : abstract_ring(multprec complex poly)
+multprec_complex_poly_ring_io     : abstract_ring_io(multprec complex poly)
+multprec_complex_poly_vectors     : generic_vectors(multprec complex poly)
+multprec_complex_poly_vectors_io  : generic_vectors_io(multprec complex poly)
+multprec_complex_poly_matrices    : generic_matrices(multprec complex poly)
+multprec_complex_poly_matrices_io : generic_matrices_io(multprec complex poly)
+multprec_complex_poly_systems     : systems of multiprec complex polynomials
+multprec_complex_poly_systems_io  : simple output of multiprec complex systems
+multprec_floating_poly_systems    : systems of multiprec floating polynomials
+multprec_floating_poly_systems_io : simple output for multiprec real systems
+multprec_complex_jaco_matrices    : Jacobi matrices for multiprecision complex
+multprec_floating_jaco_matrices   : Jacobi matrices for multiprecision real
+multprec_complex_laur_systems     : multiprecision Laurent systems
+multprec_complex_laur_systems_io  : i/o for multiprecision Laurent systems
+exponent_vectors                  : management of exponents of a system
+matrix_indeterminates             : manipulate symbols for xij
+standard_system_readers           : interactive reading from file
+multprec_system_readers           : multiprecision version of system readers
+string_system_readers             : reading strings from file
+standard_complex_laur_lists       : lists of standard complex Laurentials
+-------------------------------------------------------------------------------
+ts_poly                           : test on polynomials and polynomial systems
+ts_rpol                           : test polynomials with real coefficients
+ts_laurpoly                       : test on Laurent polynomials and systems
+ts_laurlist                       : basic test on lists of Laurent polynomials
+ts_randpoly                       : test on random polynomial generation
+ts_tabform                        : test on tableau format
+ts_jaco                           : test on Jacobian matrices
+ts_parse                          : test on poly-string conversions
+ts_subs                           : test on substitution of variables
+ts_ddpol                          : test on double double polynomials
+ts_qdpol                          : test on quad double polynomials
+-------------------------------------------------------------------------------
+parse_strings_to_polynomials      : to parse strings into a system
+maingood                          : code for the phc -g
+-------------------------------------------------------------------------------
+The i/o-routines provide readable formats in symbolic form.
+
+We can take advantage of the way vectors and matrices have been created:
+a polynomial system is an instance of a polynomial vector and
+a matrix with all partial derivatives is an instance of a polynomial matrix.
+
+The package generic_polynomials allow to define polynomial rings.
+Jacobian matrices are implemented by means of generics.  Their main usage
+is towards evaluation.  Therefore, the type to represent a Jacobian matrix
+is just a two-dimensional array of polynomials.  To perform algebraic
+manipulations, one should convert to the matrix type of the package matrices
+instantiated with the polynomial ring.
+
+The Laurent polynomials only differ from the usual polynomials by the
+type definition of the exponents and require the instantiation of a field
+for evaluation.

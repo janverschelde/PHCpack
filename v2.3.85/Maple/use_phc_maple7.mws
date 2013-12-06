@@ -1,0 +1,29 @@
+{VERSION 5 0 "SUN SPARC SOLARIS" "5.0" }
+{USTYLETAB {CSTYLE "Maple Input" -1 0 "Courier" 0 1 255 0 0 1 0 1 0 0 
+1 0 0 0 0 1 }{CSTYLE "2D Math" -1 2 "Times" 0 1 0 0 0 0 0 0 2 0 0 0 0 
+0 0 1 }{CSTYLE "2D Output" 2 20 "" 0 1 0 0 255 1 0 0 0 0 0 0 0 0 0 1 }
+{PSTYLE "Normal" -1 0 1 {CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 }0 0 0 -1 -1 -1 0 0 0 0 0 0 -1 0 }{PSTYLE "Maple Output" 0 11 1 
+{CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }3 3 0 -1 -1 -1 0 
+0 0 0 0 0 -1 0 }{PSTYLE "" 11 12 1 {CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 }1 0 0 -1 -1 -1 0 0 0 0 0 0 -1 0 }}
+{SECT 0 {EXCHG {PARA 0 "" 0 "" {TEXT -1 66 "This worksheet shows how t
+o use the procedure \"run_phc\" in Maple7." }{MPLTEXT 1 0 0 "" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 68 "read `run_phc_maple7`:      \+
+   # read the procedure in the worksheet" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 61 "print(run_phc);                # verify whether read \+
+was okay" }}{PARA 12 "" 1 "" {XPPMATH 20 "6#f*6$'%'phclocG%'stringG'%
+\"pG%%listG6(%\"iG%#srG%'infileG%(outfileG%(solfileG%%solsG6\"F2C2>8%-
+%(convertG6$-%%randGF2F'>8((8)F5>8&(%&inputGF5>8'(%'outputGF5-%&fopenG
+6$F@%&WRITEG-%(fprintfG6%F@%$%d|+G-%%nopsG6#9%?(8$\"\"\"FUFO%%trueG-FL
+6%F@%%%s;|+G-F76$&FR6#FTF'-%'fcloseG6#F@-%(ssystemG6#((((9$%%~-b~GF@%
+\"~GFD-F\\o6#((((Fbo%%~-z~GFDFdoF<AF<>F>%\"%G-%(fremoveGFjn-F`p6#FD-F`
+p6#F<-%'RETURNG6#F>6#%`zCalls~phc~from~within~a~Maple~7~session.~The~f
+irst~argument~is~the~file~name~of~the~executable~version~of~phc.~~The~
+second~argument~is~a~list~of~polynomials.~On~return~is~a~list~of~appro
+ximations~to~all~isolated~roots~of~the~system~defined~by~p.GF2F2" }}}
+{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 65 "s := run_phc(\"../bin/phc\",
+[x*y - 1, x**2 - 1]);  # solve a system" }}{PARA 12 "" 1 "" {XPPMATH 
+20 "6#>%\"sG7$7$^$$\"0+++++++\"!#9$\"\"!F,F'7$^$$!0+++++++\"F*F+F." }}
+}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 0 "" }}}}{MARK "4 0 0" 0 }
+{VIEWOPTS 1 1 0 1 1 1803 1 1 1 1 }{PAGENUMBERS 0 1 2 33 1 1 }

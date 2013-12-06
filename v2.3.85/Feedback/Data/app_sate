@@ -1,0 +1,48 @@
+4 2 2 1 -1 0 1
+
+  0       0     1    0    0   0    0     0
+0.3578    0     0    0    0   0  0.8525  0
+  0       0     0    0    0   0    1     0
+  0       0  -0.5596 0    0   0    0     0
+
+  0       0     0    0  
+1.3411    0     0    0
+  0       0     0    0
+  0       0   1.0867 0   
+
+0.1234    0   0.7934 0   0.8322 0  0.7979 0
+0.3434    0   0.4232 0   0.0233 0  0.9232 0
+
+-0.8945    0.4472
+-0.8945   -0.4472
+-5.0     0
+-7.0     0
+-3.0     0
+
+--------------------------------------------------
+Application 6.1 Satellite Trajectory Control
+
+The meaning of the input parameter(in order):
+
+The number of the internal states for the given plant (A, B, C) n = 4
+The system's input dimension m = 2.
+The system's output dimension p = 2.
+The number of the internal states for the dynamic compensators q = 1.
+Give the number of maps wanted (<0 for all) : -1
+Type 0, 1, 2, or 3 to select output level :
+  0. no intermediate output;
+  1. only final determinant validation;
+  2. + validation of all intermediate determinants;
+  3. + intermediate output of all path trackers.
+The amount of the intermediate output: 0
+Type 0, 1, 2 to select input :
+  0. interactive input of real numbers
+  1. interactive input of complex numbers
+  2. random input of complex numbers
+  3. random input of real numbers
+  4. interactive input of real numbers for matrices and complex numbers for poles
+The selected input is: 1
+The given matrix A(4*4)
+The given matrix B(4*2)
+The given matrix C(2*4)
+The given poles

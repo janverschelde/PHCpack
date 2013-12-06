@@ -1,0 +1,11 @@
+with Multprec_Integer_Ring;
+with Multprec_Integer_Ring.DDomain;
+with Greatest_Common_Divisors;
+
+package Multprec_Common_Divisors is
+  new Greatest_Common_Divisors(Multprec_Integer_Ring,
+                               Multprec_Integer_Ring.DDomain);
+
+-- DESCRIPTION :
+--   Defines greatest common divisors over the euclidean domain of
+--   multi-precision integer numbers.

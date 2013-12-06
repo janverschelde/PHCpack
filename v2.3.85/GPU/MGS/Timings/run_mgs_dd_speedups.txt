@@ -1,0 +1,16 @@
+asterix:MGS jan$ python run_mgs_dd_speedups.py
+
+ n     CPU      GPU  speedup
+ 16    17.17   11.85   1.45
+ 32   125.06   22.44   5.57
+ 48   408.20   35.88  11.38
+ 64   952.35   55.18  17.26
+ 80  1841.07   79.11  23.27
+ 96  3159.93  105.67  29.90
+112  4994.48  143.60  34.78
+
+Wall clock times for 10,000 runs 
+of the modified Gram-Schmidt method
+(followed by one backsubstitution)
+for various dimensions n on CPU and GPU,
+with corresponding speedups.

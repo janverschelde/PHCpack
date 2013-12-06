@@ -1,0 +1,13 @@
+This directory contains code for the GPU, developed in collaboration
+with Genady Yoffe, and mainly for the NVIDIA Tesla C2050 and K20C.
+
+The directories are organized in chronological order:
+
+PED : Polynomial Evaluation and Differentiation,
+      the paper was presented at PDSEC 2012 in Shanghai.
+
+MGS : version of modified Gram-Schmidt method,
+      the corresponding paper is accepted by PDSEC 2013 in Boston.
+
+This code is distributed under the GNU GENERAL PUBLIC LICENSE,
+see the file COPYING.txt for version 3 of this license.

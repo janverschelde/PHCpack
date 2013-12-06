@@ -1,0 +1,52 @@
+Generalized Bezout numbers and linear-product start systems in PHCv2.3.83
+
+Four types of start systems are implemented, based on total degree,
+m-homogeneous, multi-homegenous, and generalized Bezout number.
+
+Release v2.3.07 involved a rewrite of the total degree and linear-product
+start systems to allow the jumpstarting of homotopies.  This was made
+available in phc -r in release v2.3.16.  New in v2.3.50 is the use of 64-bit
+arithmetic in the computation of m-homogeneous Bezout numbers.
+
+------------------------------------------------------------------------------
+file name                          : short description
+------------------------------------------------------------------------------
+lexicographic_root_enumeration     : lexicographic enumeration of roots
+total_degree_start_systems         : start systems based on total degree
+ts_startsys                        : test on total-degree based start systems
+------------------------------------------------------------------------------
+sets_of_unknowns                   : set of unknowns of polynomials
+sets_of_unknowns_io                : input/output for sets of unknowns
+partitions_of_sets_of_unknowns     : partitions of sets of unknowns
+partitions_of_sets_of_unknowns_io  : input/output for partitions
+degrees_in_sets_of_unknowns        : compute degrees and degree tables
+m_homogeneous_bezout_numbers       : calculation of m-homogeneous bounds
+ts_permanent                       : simple test program to seek for bug
+standard_complex_poly_lists        : lists of polynomials for products
+standard_complex_poly_lists_io     : i/o for products of polynomials
+standard_complex_prod_systems      : systems of products of polynomials
+standard_complex_prod_systems_io   : i/o for systems of product polynomials
+standard_linear_product_system     : systems of products of hyperplanes
+dobldobl_linear_product_system     : double double products of hyperplanes
+quaddobl_linear_product_system     : quad double products of hyperplanes
+standard_linear_product_system_io  : input/output for product systems
+m_homogeneous_start_systems        : creation of m-homogeneous start systems
+interpolating_homotopies           : homotopies based on interpolation
+interpolating_homotopies_driver    : driver for interpolating homotopies
+drivers_for_m_homogenization       : menu-driver for m-homogenization
+ts_drivmhom                        : calls the driver for m-homogenization
+------------------------------------------------------------------------------
+generate_unions                    : all unions of k numbers from a range
+degree_structure                   : model for multi-homogeneous structure
+multi_homogeneous_start_systems    : construct multi-homogeneous start systems
+drivers_for_multi_homogenization   : menu-driver for multi-homogenization
+ts_drivmuho                        : calls the driver for multi-homogenization
+------------------------------------------------------------------------------
+set_structure                      : model of general degree structure
+set_structure_io                   : input/output of set structures
+degree_sets_tables                 : generalized permanents
+random_product_start_systems       : construct random linear-product systems
+drivers_for_set_structures         : menu-driver for set structures
+ts_drivss                          : calls the driver for set structures
+ts_prodsys                         : test on jumpstarting product systems
+------------------------------------------------------------------------------
