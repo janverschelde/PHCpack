@@ -1,0 +1,22 @@
+An interface to call PHCpack from C functions in PHCv2.3.86
+
+This directory was created in release 2.1 to call the Pieri homotopies
+from C programs and for parallel implementations of the path trackers.
+In release 2.3, the code was splitted among two subdirectories:
+(1) Funky, a functional interface: C -> Ada -> C; and
+(2) State, a state machine usage:  C <-> Ada.
+
+While in both cases, the main program is written in C and calls an
+Ada procedure, the two subdirectories implement two fundamentally
+different types of interfaces.  
+
+In (1), actual data is passed from the C function to the Ada procedure.
+To process the results, the Ada procedure calls another C function. 
+The interface programmer thus provides the main program and functions
+to process the output provided by the Ada software.  This type of
+interface is efficient, but requires either a programmer knowledgable
+of both C and Ada, or two programmers collaborating with each other.
+
+In (2), the data passed from the C function to the Ada procedure is
+more generic in nature.  The Ada procedure operates as a gateway
+interface to PHCpack.

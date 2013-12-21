@@ -1,0 +1,25 @@
+Treatment and representation of solution components with PHCv2.3.86
+
+This directory was new in release 2.1 and under continueing development.
+Release 2.2 offered a blackbox factorization for multivariate polynomials,
+a first implementation of diagonal homotopies in extrinsic coordinates,
+and a first attempt for an equation-by-equation solver.
+Release 2.3 introduced intrinsic coordinates to sample and to intersect
+varieties.  The subdirectory Solver was added in release 2.3 and contains
+a preliminary version of a new equation-by-equation solver.
+Release 2.3.48 contained the new directory Tropical.
+Release 2.3.70 offered a first version of an irreducible decomposition
+of the solution set of a binomial system.
+
+The organization of the library is organized as follows:
+
+  Components           : 5. numerical irreducible decomposition 
+     |-- Samplers      : 5.1 computing witness points
+     |-- Interpolators : 5.2 finding equations for components
+     |-- Factorization : 5.3 factorization into irreducible components
+     |-- Decomposition : 5.4 sequence of homotopies to filter and factor
+     |-- Solver        : 5.5 incremental equation by equation solver
+     |-- Tropical      : 5.6 tropical view on witness sets
+
+The goal of the numerical irreducible decomposition is to decompose the
+solution sets of various dimensions and degrees into irreducible components.

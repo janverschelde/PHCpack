@@ -1,0 +1,20 @@
+run_phc := proc(phcloc::string,p::list)
+  description `Calls phc from within a Maple 7 session. \
+The first argument is the file name of the executable version \
+of phc.  The second argument is a list of polynomials. \
+On return is a list of approximations to all isolated \
+roots of the system defined by p.`:
+  local i,sr,infile,outfile,solfile,sols:
+  sr := convert(rand(),string): solfile := sols||sr:
+  infile := input||sr: outfile := output||sr:
+  fopen(infile,WRITE): fprintf(infile,`%d\n`,nops(p)):
+  for i from 1 to nops(p) do
+    fprintf(infile,`%s;\n`,convert(p[i],string)):
+  end do;
+  fclose(infile):
+  ssystem(phcloc||` -b `||infile||` `||outfile):
+  ssystem(phcloc||` -z `||outfile||` `||solfile):
+  read(solfile): sols := %:
+  fremove(infile): fremove(outfile): fremove(solfile):
+  RETURN(sols);
+end proc:

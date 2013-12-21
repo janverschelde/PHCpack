@@ -1,0 +1,64 @@
+A Numerical Irreducible Decomposition with PHCv2.3.86
+
+This directory is entirely new in release 2.1 and contains homotopies to
+compute witness points on all positive dimensional solution components.
+There are two approaches:
+  1) using a sequence of homotopies starting at the top dimension;
+  2) with diagonal homotopies we incrementally compute witness point sets.
+The extrinsic/intrinsic approach to implement diagonal homotopies is
+under development and is improved in release 2.2.
+The binomial solver was added as an option to phc -c in release 2.3.70.
+
+------------------------------------------------------------------------------
+file name                        : short description
+------------------------------------------------------------------------------
+irreducible_decompositions       : data representation + primitives
+irreducible_decompositions_io    : input-output facilities
+filtered_points                  : structure to collect filtering data
+witness_generate_and_classify    : creators of irreducible decomposition
+ts_irdeco                        : test on witness generate and classify
+------------------------------------------------------------------------------
+standard_affine_planes           : intrinsic <-> extrinsic affine planes
+standard_affine_solutions        : intrinsic <-> extrinsic solutions
+multihomogeneous_solutions       : representing multi-homogeneous solutions
+extrinsic_diagonal_homotopies    : extrinsic version of diagonal homotopies 
+extrinsic_diagonal_homotopies_io : tools to double symbol table
+extrinsic_diagonal_solvers       : drivers for extrinsic diagonal homotopies
+p_intrinsic_diagonal_continuation: premature intrinsic diagonal continuation
+p_intrinsic_diagonal_homotopies  : premature intrinsic diagonal homotopies
+p_intrinsic_diagonal_solvers     : solving with intrinsic diagonal homotopies
+ts_diahom                        : test on diagonal homotopies
+diagonal_homotopy_continuation   : diagonal homotopies to intersect witsets
+driver_to_intersect_varieties    : driver to intrinsic diagonal homotopies
+ts_intdia                        : test to intersect varieties intrinsically
+jumpstart_diagonal_homotopies    : jumpstart to intersect varieties
+ts_jmpdia                        : jumpstarting diagonal homotopies
+------------------------------------------------------------------------------
+maindeco                         : dispatcher calls decomposition (all dim)
+------------------------------------------------------------------------------
+ts_dimred                          : test on dimension determination
+------------------------------------------------------------------------------
+the remaining part is no longer actively maintained :
+------------------------------------------------------------------------------
+standard_membership_tests          : membership for point in component or not
+standard_breakup_components        : component interpolation in standard arith
+multprec_membership_tests          : membership for point in component or not
+multprec_breakup_components        : component interpolation in multprec arith
+------------------------------------------------------------------------------
+drivers_to_breakup_components      : drivers to construct interpolators
+ts_breakup                         : test on breaking up components
+------------------------------------------------------------------------------
+standard_irreducible_decomp        : data structure for solution components
+standard_irreducible_decomp_io     : output of hypersurfaces and components
+multprec_irreducible_decomp        : data structure for solution components
+multprec_irreducible_decomp_io     : output of hypersurfaces and components
+homotopy_cascade_filter            : witness generate + classify
+drivers_to_cascade_filtering       : drivers to cascade of homotopies 
+ts_cascade                         : calls the cascade routine
+------------------------------------------------------------------------------
+Positive dimensional components of solutions are represented in the
+package Standard/Multprec_Irreducible_Decomp by means of a list of
+generic points, projection operators, and interpolating hypersurfaces.
+The cascade of homotopies runs from the top dimensional components
+down to the isolated solutions.  The multi-precision facilities are
+needed to deal with curves and surfaces of high degree.

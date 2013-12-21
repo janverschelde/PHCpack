@@ -1,0 +1,3 @@
+include *.txt
+include phcpy/phcpy2c.so
+recursive-include doc *

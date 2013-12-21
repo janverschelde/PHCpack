@@ -1,0 +1,94 @@
+Quad double arithmetic for PHCv2.3.80
+
+This directory was added to version 2.3.55 of PHCpack, departing from
+a standalone C version of a part of the QD software library.
+This standalone C version serves as a bridge to an Ada translation.
+
+Work with Genady Yoffe led to this directory in PHCpack.
+
+The main reference for the QD-2.3.9 library is
+Y. Hida, X.S. Li, and D.H. Bailey:
+"Algorithms for quad-double precision floating point arithmetic."
+In 15th IEEE Symposium on Computer Arithmetic (Arith-15 2001),
+11-17 June 2001, Vail, CO, USA, pages 155-162. IEEE Computer Society, 2001.
+Shortened version of Technical Report LBNL-46996,
+software at http://crd.lbl.gov/~dhbailey/mpdist/qd-2.3.9.tar.gz.
+
+Note that the "BSD-LBNL-License" is GPL compatible, although 
+"If you wish to use the software for commercial purposes
+please contact the Technology Transfer Department at TTD@lbl.gov or
+call 510-286-6457."
+
+The standalone C version is a derivative of the double doubles
+in the QD library.  Because its main purpose is to serve the move
+to an Ada translation, several features are omitted:
+(1) no inline, the header files are like Ada package specification
+(2) no treatment of NAN and INF
+(3) no sin, cos, tan, sqrt, etc...
+Although sqrt, sin, and cos were added in version 2.3.56.
+A first basic version of double_double.c occupies around 1000 lines
+and also quad_double.c is of the same relatively small size.
+See the makefile to compile dd_test.c and qd_test.c.
+
+Trigonometric functions were put to good use in version 2.3.65 to
+compute powers of complex numbers with huge exponents.
+
+------------------------------------------------------------------------------
+file name                    : short description
+------------------------------------------------------------------------------
+double_double.h              : prototypes of the double double operations
+double_double.c              : defines the operations in double_double.h
+dd_test.c                    : test on basic operations in double_double
+quad_double.h                : prototypes of the quad double operations
+quad_double.c                : definitions of the operations in quad_double.h
+qd_test.c                    : test on basic operations in quad_double
+------------------------------------------------------------------------------
+double_double_basics         : basic inline functions for double double numbers
+double_double_numbers        : defines double double arithmetic
+double_double_numbers_io     : provides input/output of double double numbers
+ts_dbldbl                    : test on double double arithmetic
+quad_double_renormalizations : basic inline functions for quad double numbers
+quad_double_numbers          : defines quad double arithmetic
+quad_double_numbers_io       : input/output for quad double numbers
+ts_qddbl                     : test on quad double arithmetic
+------------------------------------------------------------------------------
+double_double_ring           : ring of double double numbers
+double_double_ring_io        : input/output for ring of double double numbers
+double_double_ring-ffield    : field of double double numbers
+dobldobl_complex_numbers     : complex arithmetic with double doubles
+dobldobl_complex_numbers_io  : input/output for double double complex
+dobldobl_random_numbers      : random number generators for double doubles
+dobldobl_complex_ring        : ring of double double complex numbers
+dobldobl_complex_ring_io     : input/output for ring of double double complex
+dobldobl_complex_ring-ffield : field of double double complex numbers
+ts_ddcmplx                   : test on double double complex arithmetic
+quad_double_ring             : ring of quad double numbers
+quad_double_ring_io          : input/output for ring of quad double numbers
+quad_double_ring-ffield      : field of quad double numbers
+quaddobl_complex_numbers     : complex arithmetic with quad doubles
+quaddobl_complex_numbers_io  : input/output for quad double complex
+quaddobl_random_numbers      : random number generators for quad doubles
+quaddobl_complex_ring        : ring of quad double complex numbers
+quaddobl_complex_ring_io     : input/output for ring of quad double complex
+quaddobl_complex_ring-ffield : field of quad double complex numbers
+ts_qdcmplx                   : test on quad double complex arithmetic
+------------------------------------------------------------------------------
+multprec_dobldobl_convertors : convert double double <-> multiprecision float
+dobldobl_complex_numbers_cv  : convert complex <-> double double complex
+ts_mpddcv                    : test double double multiprecision conversions
+multprec_quaddobl_convertors : convert double double <-> multiprecision float
+quaddobl_complex_numbers_cv  : convert complex <-> quad double complex
+ts_mpqdcv                    : test quad double multiprecision conversions
+------------------------------------------------------------------------------
+double_double_constants         : collects double double constants
+dobldobl_mathematical_functions : dd sqrt and trigonometric functions
+dobldobl_complex_numbers_polar  : polar representations of dd complex
+quad_double_constants           : collects quad double constants
+quaddobl_mathematical_functions : qd sqrt and trigonometric functions
+quaddobl_complex_numbers_polar  : polar representations of qd complex
+ts_ddfun                        : tests dd math functions
+ts_qdfun                        : tests qd math functions
+------------------------------------------------------------------------------
+standard_complex_exponentiation : high powers of complex numbers
+ts_cmpexp                       : test on complex exponentiation
+------------------------------------------------------------------------------

@@ -1,0 +1,72 @@
+Solvers for binomial and simplex systems in PHCv2.3.83
+
+Systems with exactly two monomials in every equation are called "binomial".
+Systems in n variables with no more than n+1 monomials (eventually after 
+division) are called "simplex systems".  Because of this extreme sparsity, 
+we can solve such system much more efficiently than general systems.
+A simpomial solver solves simplex and binomial systems efficiently.
+
+This directory was introduced in release 2.3.06 to organize the new code
+which resulted from a bug fix.  Improved numerical stability in v2.3.07.
+Detected zero components in the intermediate y vector in v2.3.16.
+Renaming of "fewnomial" into "simplex", following terminology in the
+book of A.D. Bruno on "Power Geometry in Algebraic and Differential
+Equations", Elsevier 2000, happened in release v2.3.43.
+
+Support for double double arithmetic was added in version 2.3.56.
+
+Nontrivial solutions to underdetermined binomial systems are rational,
+i.e.: they have explicit parameter representations, in particular:
+solution sets of binomial systems admit monomial parametrizations.
+The solvers for general binomial systems are based on new algorithms
+developed jointly with Danko Adrovic.  Version 2.3.68 extended phc -b
+with a new solver, developed in this directory with ts_binset.
+
+-------------------------------------------------------------------------------
+file name                          : short description
+-------------------------------------------------------------------------------
+standard_radial_solvers            : compute radius of roots of binomial system
+dobldobl_radial_solvers            : radial solvers with double double numbers
+standard_binomial_systems          : parsing and evaluation of binomial systems
+dobldobl_binomial_systems          : binomial systems with double doubles
+standard_binomial_solvers          : solve binomial systems standard arithmetic
+dobldobl_binomial_solvers          : double double binomial system solvers
+ts_binsys                          : basis test on binomial solvers
+standard_simplex_systems           : parsing and evaluation of simplex systems
+standard_simplex_solvers           : solving simplex systems
+ts_simsys                          : test program on simplex systems
+standard_simpomial_solvers         : parsing and solving simplex systems
+ts_simposol                        : simple test routine on simpomial solvers
+ts_cspsol                          : solving initial cell systems efficiently
+black_box_simplex_solvers          : as called by main program
+-------------------------------------------------------------------------------
+standard_power_transformations     : unimodular transformations standard arith
+multprec_power_transformations     : unimodular transformations multprec arith
+ts_powtrans                        : test on the power transformations
+ts_binpser                         : preliminary test on Puiseux series
+standard_integer_kernel            : kernel of 32-bit integer matrix 
+standard_integer64_kernel          : kernel of 64-bit integer matrix
+multprec_integer_kernel            : kernel of multiprecision integer matrix
+ts_kernel                          : testing calculations of a kernel
+standard_exponent_transformations  : extends the power transformations to cones
+ts_unimod                          : tests unimodular exponent transformations
+standard_binomial_varieties        : algebraic sets defined by binomial systems
+standard_binomial_varieties_io     : output of binomial varieties
+multprec_binomial_varieties        : multiprecision exponent matrices
+standard_floating_column_span      : test if vector in column span
+ts_incols                          : test on column span tests
+-------------------------------------------------------------------------------
+standard_monomial_maps             : solution sets stored as monomial maps
+standard_monomial_maps_io          : input and output of monomial maps
+standard_monomial_map_solvers      : wraps binomial solver to return maps
+standard_monomial_map_ideals       : equations as defined by the maps
+standard_monomial_map_filters      : filtering maps for inclusion
+standard_affine_binomials          : affine solutions of binomial systems
+standard_permanent_factors         : factors contributing to the permanent
+ts_binset                          : test on standard binomial varieties
+ts_binsol                          : test on affine solution sets of binomials
+black_box_binomial_solvers         : wrapping the solver & filter method
+ts_monmap                          : test monomial maps
+standard_monomial_map_substitutors : substitute map into Laurent polynomials
+ts_mapsubs                         : test on map substitution
+-------------------------------------------------------------------------------

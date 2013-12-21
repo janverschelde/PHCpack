@@ -1,0 +1,77 @@
+Numerical Linear Algebra in PHCv2.3.85
+
+This "Reduction" directory implements "row reduction" on linear systems
+of floating-point number of various precisions: double, double double,
+quad double, and arbitrary precision.  When the "Matrices" directory became
+too full in version 2.3.71, this new directory was made.  Below are some
+milestones in the development of numerical linear algebra in PHCpack.
+
+Version 2.2 contains singular value decomposition, which was extended
+to multiprecision in version 2.3.  
+In v2.3.55, double double and quad double numbers were introducted.
+The modified Gram-Schmidt method was added in version 2.3.70.
+
+-------------------------------------------------------------------------------
+file name                          : short description
+-------------------------------------------------------------------------------
+standard_floating_vector_norms     : norms of vectors of double floats
+standard_complex_vector_norms      : norms of standard complex vectors
+double_double_vector_norms         : norms of double double vectors
+dobldobl_complex_vector_norms      : vector norms for double double complex
+quad_double_vector_norms           : norms of vectors of quad doubles
+quaddobl_complex_vector_norms      : vector norms for quad double complex
+standard_floating_two_norms        : Euclidean norms for standard floating vecs
+-------------------------------------------------------------------------------
+generic_norms_equals               : norms and equality routines
+standard_floating_norms_equals     : norms/equals for standard floating numbers
+multprec_floating_norms_equals     : norms/equals for multprec floating numbers
+standard_complex_norms_equals      : norms/equals for standard complex numbers
+multprec_complex_norms_equals      : norms/equals for multprec complex numbers
+-------------------------------------------------------------------------------
+generic_floating_linear_solvers    : solvers of linear systems of floats
+standard_floating_linear_solvers   : linear-system solvers for standard floats
+double_double_linear_solvers       : linear-system solvers for double doubles
+quad_double_linear_solvers         : linear-system solvers for quad doubles
+multprec_floating_linear_solvers   : linear-system solvers for multprec floats
+multprec_floating64_linear_solvers : linear-system solvers for multprec floats
+standard_complex_linear_solvers    : linear-system solvers for standard complex
+dobldobl_complex_linear_solvers    : linear solvers for double double complex
+quaddobl_complex_linear_solvers    : linear solvers for quad double complex
+multprec_complex_linear_solvers    : linear-system solvers for multprec complex
+test_lu_decompositions             : test accuracy of LU factorization
+ts_fltdls                          : test dynamic matrix triangulators
+ts_fltlu                           : test on floating-point LU factorization
+ts_cmplu                           : test on complex LU factorization
+ts_ddlu                            : test on double double LU factorization
+ts_qdlu                            : test on quad double LU factorization
+-------------------------------------------------------------------------------
+standard_complex_row_reduction     : tools for incremental row reduction
+dobldobl_complex_row_reduction     : row reduction with double doubles
+quaddobl_complex_row_reduction     : row reduction with quad doubles
+ts_rowred                          : test incremental row reduction
+-------------------------------------------------------------------------------
+standard_floating_qr_least_squares : QR + least squares for standard floats
+standard_complex_qr_least_squares  : QR + least squares for standard complex #s
+multprec_complex_qr_least_squares  : QR + least squares for multprec complex #s
+ts_qrd                             : test QR-decomposition and least squares
+-------------------------------------------------------------------------------
+standard_floating_gramschmidt      : modified Gram-Schmidt QR on doubles
+standard_complex_gramschmidt       : Gram-Schmidt QR on complex numbers
+dobldobl_complex_gramschmidt       : Gram-Schmidt QR on double double complex
+quaddobl_complex_gramschmidt       : Gram-Schmidt QR on quad double complex
+ts_mgs                             : test on modified Gram-Schmidt
+ts_mgsrnk                          : Gram-Schmidt for rank determination
+-------------------------------------------------------------------------------
+standard_complex_singular_values   : SVD in standard arithmetic
+multprec_complex_singular_values   : SVD in multiprecision arithmetic
+ts_svd                             : test singular value decomposition
+-------------------------------------------------------------------------------
+standard_floating_eigenvalues      : eigenvalues of floating-point matrices
+ts_eigval                          : test on eigenvalue computation
+-------------------------------------------------------------------------------
+
+The LU-factorizations for real and complex numbers have been translated from
+the LINPACK f66 library.  Adaptions have been made for multiprecision.
+The LINPACK f66 library was also the source for QR and least squares,
+and the singular values decomposition.  EISPACK was the source for the
+eigenvalue computations.

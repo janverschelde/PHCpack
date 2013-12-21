@@ -1,0 +1,25 @@
+A new and progressive equation-by-equation solver with PHCv2.3.80
+
+This directory was created for release 2.3 of PHCpack.
+The straight-line versions to run the nine-point problem
+(and the five-point version) were provided by Charles Wampler.
+
+------------------------------------------------------------------------------
+file name                        : short description
+------------------------------------------------------------------------------
+hypersurface_witness_sets        : witness set for hypersurface
+hypersurface_witness_sets_io     : drivers to witness set for one polynomial
+ts_hypwit                        : test on hypersurface witness sets
+shuffle_polynomials              : utilities to rearrange the order
+hypersurfaces_and_filters        : hypersurface representations and filters
+equation_by_equation_solvers     : solve equation by equation
+drivers_to_eqn_by_eqn_solvers    : helps to call the solvers
+ts_solver                        : stand-alone interactive test program
+testnine.adb, testnine.m         : straight-line progs for 9-point problem
+testninehom1.adb                 : 1-homogeneous coordinates of 9-pt problem
+testfivehom1.adb                 : 1-homogeneous coordinates of 5-pt problem
+bablsolve                        : call by blackbox solver of PHCpack
+mainsolve                        : call by main dispatcher of PHCpack
+mainwit                          : witness set intersection main driver
+mainhyp                          : witness set creation for hypersurface
+------------------------------------------------------------------------------

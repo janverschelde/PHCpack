@@ -1,0 +1,191 @@
+Sun 30 Jun 2013 : updated ts_inform.adb, standard_pretropical_facets,
+  and ts_pretrop.adb, also ts_tropisms.adb and ts_tropawit.adb.
+
+Sat 29 Jun 2013 : updated ts_intorto.adb.
+
+Fri 28 Jun 2013 : modified ts_convhull.adb and almost all of its dependencies
+  for the new 32-bit integer data types.
+
+Thu 27 Jun 2013 : to get ts_comfac.adb compiled again, modified
+  driver_for_common_factor.adb, standard_lattice_polygones,
+  standard_initial_forms, standard_binomial_factors,
+  standard_binomial_factors_io.adb, standard_puiseux_certifications.adb,
+  and standard_puiseux_certificates_io.adb.
+
+Wed 26 Jun 2013 : updated driver_for_common_factor for integer32, natural32
+  and standard_puiseux_certificates.
+
+Mon 29 Apr 2013 : extended ts_inform.adb with elimination function.
+
+Thu 28 Mar 2013 : ts_inform.adb writes system at end.
+
+Wed 27 Mar 2013 : extended ts_inform.adb to read matrix of tropisms from file.
+
+Fri 22 Mar 2013 : extended ts_inform.adb to compute initial form for surfaces.
+
+Mon 3 Jan 2011 : experiments added in ts_inform.adb.
+
+Sun 2 Jan 2011 : moved code from ts_inform into standard_initial_forms.
+
+Sat 1 Jan 2011 : bug fix in standard_lattice_3d_facets.adb, changed also
+  standard_lattice_4d_facets.ad*, standard_lattice_polytopes.adb,
+  convex_hull_methods.adb and standard_lattice_3d_facets_io.a*; 
+  added fvector function in standard_lattice_facets.
+
+Tue 28 Dec 2010 : updates in standard_lattice_{3d,4d,}_facets.adb for bugs,
+  also in {standard,multprec}_lattice_polytopes.adb, and in
+  multprec_lattice_3d_facets.adb, and in ts_convhull.adb. 
+
+Mon 27 Dec 2010 : on more bug fix: {standard,multprec}_lattice_3d_facets.adb,
+  {standard,multprec}_lattice_polytopes.adb, and ts_convhull.adb.
+  Also changed multprec_lattice_supports.adb, added cyclic d-polytopes
+  to convex_hull_methods, tested by ts_convhull.adb.
+  New package standard_lattice_facets with its _io for general case.
+
+Sun 26 Dec 2010 : changed {standard,multprec}_lattice_polytopes.adb and
+  {standard,multprec}_lattice_4d_facets.adb, multprec_lattice_supports.adb,
+  and multprec_lattice_4d_facets_io.adb.
+
+Sat 25 Dec 2010 : bug fixes in standard_lattice_{3d,4d}_facets.a*,
+  with change in {standard,multprec}_lattice_4d_facets_io.adb, 
+  tried to fix multprec_lattice_{3d,4d}_facets.a*...
+  changed convex_hull_methods.adb.
+
+Thu 23 Dec 2010 : bug fix in {standard,multprec}_lattice_4d_facets.ad*,
+  changes in standard_lattice_3d_facets.adb, convex_hull_methods.adb
+
+Wed 22 Dec 2010 : bug fix in multprec_lattice_3d_facets.adb,
+  changes in {standard,multprec}_lattice_4d_facets.adb and its _io.adb;
+  new package convex_hull_methods, splitted off from ts_convhull.adb.
+
+Tue 21 Dec 2010 : fixed bug in check_edge in ts_convhull.adb and in
+  multprec_lattice_4d_facets.adb (no clear of shared facet normal).
+
+Thu 3 Dec 2009 : introducing *_3d_facets_* broke ts_pretrop.adb and
+  standard_pretropical_facets.a*.
+
+Sat 17 Oct 2009 : added procedure to multprec_lattice_3d_facets_io,
+  updated {standard,multprec}_lattice_polytopes.adb, added functions to
+  test Euler characteristic to {standard,multprec}_lattice_4d_facets,
+  tested by ts_convhull.adb.
+
+Fri 16 Oct 2009 : to make room for the general implementation, renamed
+  standard_lattice_facets* into standard_lattice_3d_facets* which caused
+  changes in standard_lattice_edges, standard_lattice_4d_facets,
+  and standard_lattice_polytopes.  Did the same for multprec_*_facets + _io,
+  changing multprec_lattice_edges*, multprec_lattice_polytopes.adb, and
+  also ts_convhull.adb.  Created multprec_lattice_4d_facets and changed
+  multprec_lattice_polytopes, taking rank from multprec_*3d_facets.
+
+Thu 15 Oct 2009 : updates in standard_lattice_4d_facets and ts_convhull.
+
+Wed 14 Oct 2009 : moved Rank out standard_lattice_facets and into
+  standard_lattice_polytopes, extended standard_lattice_4d_facets,
+  tested by ts_convhull.adb.
+
+Fri 9 Oct 2009 : all multprec_* files changes because of backshifting from
+  multprec_integer64 to multprec_integer arithmetic.  Also ts_intorto.adb
+  and ts_convhull.adb changed.
+
+Wed 16 Sep 2009 : created package standard_lattice_4d_facets, tested by
+  ts_convhull.adb.  Made change in standard_lattice_facets.adb.
+
+Tue 15 Sep 2009 : fixed bug in standard_lattice_edges.adb, minor changes
+  in standard_lattice_facets.a* and ts_convhull.adb.  Also checked the
+  multiprecision version with multprec_lattice_edges.a*.
+
+Mon 14 Sep 2009 : new package standard_lattice_edges shows bug detected by
+  ts_convhull.adb.
+
+Fri 4 Sep 2009 : renaming of standard_power_transformations caused changes
+  in standard_binomial_factors.adb, standard_binomial_factors_io.adb,
+  standard_puiseux_certificates.adb, standard_puiseux_certificates_io.adb,
+  and standard_lattice_facets.adb.  New package standard_integer_orthogonals
+  tested by ts_intorto.  Also new is the package standard_lattice_polytopes, 
+  tested by ts_convhull.
+
+Wed 2 Sep 2009 : bug fixes in standard_pretropical_facets, modifications
+  in ts_pretrop.adb.
+
+Tue 1 Sep 2009 : fixed bug in multprec_lattice_facets.adb,
+  seems to run fine but not tested for memory leaks.
+
+Mon 31 Aug 2009 : fixed multprec_lattice_polygons.adb, modified ts_convhull,
+  change in documentation in standard_lattice_supports.ads,
+  created multprec_lattice_supports.  Moved code from ts_pretrop.adb
+  to ts_convhull.adb.  New packages: multprec_lattice_facets + io.
+
+Sun 30 Aug 2009 : started multprec_lattice_polygons, new ts_convhull.
+
+Wed 26 Aug 2009 : updates in standard_{lattice,pretropical}_facets.a*,
+  extended ts_pretrop.adb, we are almost there...
+
+Thu 27 Aug 2009 : ts_pretrop.adb allows the computation of tropisms to
+  a space curve, updated standard_{lattice,pretropical}_facets, and also
+  standard_lattice_supports.a*.
+
+Wed 26 Aug 2009 : updates in standard_{lattice,pretropical}_facets.a*,
+  extended ts_pretrop.adb.
+
+Tue 25 Aug 2009 : created standard_pretropical_facets, tested by ts_pretrop.
+
+Mon 24 Aug 2009 : extended ts_pretrop.adb, adding array type to
+  standard_lattice_facets.ads.
+
+Fri 21 Aug 2009 : fixed last bug from standard_lattice_facets.adb,
+  minor change in ts_pretrop.adb.
+
+Thu 20 Aug 2009 : updated standard_lattice_polygons with 64-bit arithmetic,
+  which changed standard_binomial_factors.  Also used 64-bit arithmetic in
+  standard_lattice_supports, standard_lattice_facets + i/o and ts_pretrop.
+  There is still a bug ...
+
+Wed 19 Aug 2009 : updates in standard_lattice_facets + i/o, ts_pretrop.adb.
+
+Tue 18 Aug 2009 : updates in standard_lattice_supports, ts_pretrop.adb.
+
+Mon 17 Aug 2009 : new package standard_lattice_supports, updates in
+  standard_lattice_facets, tested by ts_pretrop.adb.
+
+Sun 16 Aug 2009 : fixed bugs in standard_lattice_facets, ts_pretrop.adb,
+  so initial facet is computed correctly for 3d polytope.
+
+Fri 14 Aug 2009 : updates in standard_lattice_facets and ts_pretrop.adb.
+
+Thu 13 Aug 2009 : new package standard_lattice_facets develops the giftwrapping
+  algorithm in 3 dimensions.
+
+Tue 11 Aug 2009 : new ts_pretrop.adb for tropisms in 3 dimensions.
+
+Wed 29 Jul 2009 : changes in driver_for_common_factor.adb for output.
+
+Tue 28 Jul 2009 : added driver_for_common_factor, for use in mainfac.
+
+Tue 21 Jul 2009 : fixed standard_puiseux_certificates.adb, and modified
+  ts_comfac.adb, so the evaluate confirms the order of evaluation.
+
+Mon 20 Jul 2009 : output error in standard_binomial_factors.adb
+  and fixes in standard_puiseux_certificates, tested by ts_comfac.adb.
+
+Fri 17 Jul 2009 : bug fix in standard_binomial_factors.adb and its _io.adb
+  to deal with zero first component in tropism, modified ts_comfac,
+  new package standard_puiseux_certificates, with its _io.
+
+Thu 16 Jul 2009 : updates in standard_binomial_factors and ts_comfac.
+  Also changed standad_binomial_factors_io.
+
+Wed 15 Jul 2009 : added wrapper function to standard_lattice_polygons
+  fixed bug in standard_binomial_factors.adb and its _io.adb,
+  tested by ts_comfac.adb.
+
+Tue 14 Jul 2009 : new packages standard_binomial_factors and _io,
+  updates in standard_lattice_polygons and standard_initial_forms,
+  tested by ts_comfac.adb.
+
+Mon 13 Jul 2009 : new package standard_lattice_polygons, separated from
+  ts_comfac.adb.  New package standard_initial_forms, from ts_inform.adb.
+
+Fri 10 Jul 2009 : ts_comfac.adb develops code to find a common factor of
+  two multivariate polynomials, using polyhedral methods.
+
+Tue 14 Oct 2008 : ts_inform.adb selects initial form systems.

@@ -1,0 +1,31 @@
+{VERSION 5 0 "IBM INTEL NT" "5.0" }
+{USTYLETAB {CSTYLE "Maple Input" -1 0 "Courier" 0 1 255 0 0 1 0 1 0 0 
+1 0 0 0 0 1 }{CSTYLE "2D Math" -1 2 "Times" 0 1 0 0 0 0 0 0 2 0 0 0 0 
+0 0 1 }{CSTYLE "2D Output" 2 20 "" 0 1 0 0 255 1 0 0 0 0 0 0 0 0 0 1 }
+{PSTYLE "Normal" -1 0 1 {CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 0 0 0 0 0 0 
+0 0 0 }0 0 0 -1 -1 -1 0 0 0 0 0 0 -1 0 }{PSTYLE "Maple Output" 0 11 1 
+{CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 }3 3 0 -1 -1 -1 0 
+0 0 0 0 0 -1 0 }{PSTYLE "" 11 12 1 {CSTYLE "" -1 -1 "" 0 1 0 0 0 0 0 
+0 0 0 0 0 0 0 0 0 }1 0 0 -1 -1 -1 0 0 0 0 0 0 -1 0 }}
+{SECT 0 {EXCHG {PARA 0 "" 0 "" {TEXT -1 77 "This worksheet shows how t
+o use the procedure \"run_phc\" in Maple6 and Maple7." }{MPLTEXT 1 0 
+0 "" }}}{EXCHG {PARA 0 "> " 0 "" {MPLTEXT 1 0 68 "read `run_phc_maple6
+`:         # read the procedure in the worksheet" }}}{EXCHG {PARA 0 ">
+ " 0 "" {MPLTEXT 1 0 61 "print(run_phc);                # verify wheth
+er read was okay" }}{PARA 12 "" 1 "" {XPPMATH 20 "6#f*6$'%'phclocG%'st
+ringG'%\"pG%%listG6-%\"iG%\"nG%#spG%'semcolG%#srG%'infileG%(outfileG%(
+solfileG%%cmd1G%%cmd2G%%solsG6\"F7C6>8%-%%nopsG6#9%>8'%\";G>8(-%(conve
+rtG6$-%%randGF7F'>8)(%&inputGFC>8*(%'outputGFC>8+(8.FC-%&fopenG6$FJ%&W
+RITEG-%(fprintfG6%FJ%$%d|+GF:?(8$\"\"\"FinF:%%trueGC%>8&-FE6$&F>6#FhnF
+'>F]o((%\"~GF]oF@-FZ6%FJ%$%s|+GF]o-%'fcloseG6#FJ>8,((((9$%%~-b~GFJFeoF
+N>8-((((Fbp%%~-z~GFNFeoFR-%(ssystemG6#F]p-F\\q6#FepAFR>FT%\"%G-%(fremo
+veGF[p-Fdq6#FN-Fdq6#FR-%'RETURNG6#FT6#%d[lCalls~phc~from~Maple6~sessio
+n.~The~name~of~file~with~the~executable~version~of~phc~should~be~provi
+ded~in~the~string~phcloc.~The~second~input~argument~p~is~a~list~of~pol
+ynomials.~On~return~is~a~list~of~approximations~to~all~isolated~roots~
+of~the~system~defined~by~p.GF7F7" }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 61 "s := run_phc(\"C:/phc\",[x*y - 1, x**2 - 1]);  # solv
+e a system" }}{PARA 12 "" 1 "" {XPPMATH 20 "6#>%\"sG7$7$^$$\"0+++++++
+\"!#9$\"\"!F,F'7$^$$!0+++++++\"F*F+F." }}}{EXCHG {PARA 0 "> " 0 "" 
+{MPLTEXT 1 0 0 "" }}}}{MARK "0 0 0" 77 }{VIEWOPTS 1 1 0 1 1 1803 1 1 
+1 1 }{PAGENUMBERS 0 1 2 33 1 1 }

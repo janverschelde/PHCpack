@@ -1,0 +1,147 @@
+with Characters_and_Numbers; use Characters_and_Numbers;
+
+-- with GNAT.Float_Control;
+
+with text_io;                           use text_io;
+with Interfaces.C;                      use Interfaces.C;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
+with Standard_Complex_Jaco_Matrices;    use Standard_Complex_Jaco_Matrices;
+with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
+with Standard_Root_Refiners;            use Standard_Root_Refiners;
+with PHCpack_Operations;                use PHCpack_Operations;
+with Standard_PolySys_Container;
+with Systems_Pool;
+with Solutions_Pool;
+with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
+
+function use_syspool ( job : integer32;
+                       a : C_intarrs.Pointer;
+		       b : C_intarrs.Pointer;
+                       c : C_dblarrs.Pointer ) return integer32 is
+
+  function Job0 return integer32 is -- initialize pool with n = a[0]
+
+    v : constant C_Integer_Array := C_intarrs.Value(a);
+    n : constant integer32 := integer32(v(v'first));
+
+  begin
+    Systems_Pool.Initialize(n);
+    return 0;
+  end Job0;
+
+  function Job1 return integer32 is -- returns the size of the pool in a[0]
+
+    n : constant natural32 := Systems_Pool.Size;
+
+  begin
+    Assign(integer32(n),a);
+    return 0;
+  end Job1;
+
+  function Job2 return integer32 is -- read and create k-th system, k = a[0]
+
+    v : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant integer32 := integer32(v(v'first));
+    p : Link_to_Poly_Sys;
+    
+  begin
+    new_line;
+    put_line("Reading a polynomial system ...");
+    get(p);
+    Systems_Pool.Create(k,p.all);
+    return 0;
+  end Job2;
+
+  function Job3 return integer32 is -- write k-th system, k = a[0]
+
+    v : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant integer32 := integer32(v(v'first));
+    p : constant Link_to_Poly_Sys := Systems_Pool.Retrieve(k);
+
+  begin
+    if p /= null then
+      if PHCpack_Operations.Is_File_Defined
+       then put(PHCpack_Operations.output_file,natural32(p'last),p.all);
+       else put(standard_output,natural32(p'last),p.all);
+      end if;
+    end if;
+    return 0;
+  end Job3;
+
+  function Job4 return integer32 is -- creates k-th system from container
+
+    v : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant integer32 := integer32(v(v'first));
+    p : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+
+  begin
+    if p /= null
+     then Systems_Pool.Create(k,p.all);
+    end if;
+    return 0;
+  end Job4;
+
+  function Job5 return integer32 is -- refines a solution using k-th system
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    k : constant integer32 := integer32(v_a(v_a'first));
+   -- n : constant integer32 := integer32(v_a(v_a'first+1));
+    f : constant Link_to_Eval_Poly_Sys := Systems_Pool.Evaluator(k);
+    jf : constant Link_to_Eval_Jaco_Mat := Systems_Pool.Jacobian_Evaluator(k);
+    sols : constant Solution_List := Solutions_Pool.Retrieve(k);
+    len : constant natural32 := Solutions_Pool.Length(k);
+    tmp : Solution_List;
+   -- sol : Solution(n) := Convert_to_Solution(b,c);
+    ls : Link_to_Solution; -- := Convert_to_Solution(b,c);
+    epsxa : constant double_float := 1.0E-14;
+    epsfa : constant double_float := 1.0E-14;
+    max : constant natural32 := 3;
+    cnt : natural32 := 0;
+    numit : natural32 := 0;
+    fail : boolean;
+   -- x : Standard_Complex_Vectors.Vector(1..n) := (1..n => Create(1.0));
+   -- y : Standard_Complex_Vectors.Vector(f'range);
+
+  begin
+   -- GNAT.Float_Control.Reset;
+    put_line("Thread " & convert(k) & " starts refining " 
+                       & convert(integer32(len)) & " solutions.");
+    tmp := sols;
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp); cnt := cnt + 1;
+      put_line("Thread " & convert(k) & " refines solution "
+                         & convert(integer32(cnt)));
+      Silent_Newton(f.all,jf.all,ls.all,epsxa,epsfa,numit,max,fail);
+     -- y := Eval(f.all,ls.v);
+      tmp := Tail_Of(tmp);
+    end loop;
+   -- Assign_Solution(sol,b,c);
+   -- Assign_Solution(ls,b,c);
+    put_line(" done");
+    return 0;
+  exception
+    when others => put_line("exception occurred in root refiner...");
+                   return 305;
+  end Job5;
+
+  function Handle_Jobs return integer32 is
+  begin
+    case job is
+      when 0 => return Job0; -- initialize pool with a[0]
+      when 1 => return Job1; -- returns size of pool in a[0]
+      when 2 => return Job2; -- read and create k-th system, k = a[0]
+      when 3 => return Job3; -- write k-th system, k = a[0]
+      when 4 => return Job4; -- creates k-th system from container
+      when 5 => return Job5; -- refine a root with k-th system
+      when others => put_line("invalid operation"); return 1;
+    end case;
+  end Handle_Jobs;
+
+begin
+  return Handle_Jobs;
+end use_syspool;

@@ -1,0 +1,53 @@
+Multitasking linear algebra, evaluation and path tracking in PHCv2.3.85
+
+This directory is entirely new in release 2.3.45 of PHCpack.
+Tasks in Ada are mapped to kernel threads.
+
+Version 2.3.56 released test programs to time the performance of
+multithreaded linear system solving and polynomial evaluation,
+described in the paper with Genady Yoffe on
+on "Polynomial Homotopies on Multicore Workstations" 
+published in the proceedings of PASCO 2010.
+
+An important side effect of this paper is the realization that the evaluation
+of a polynomial system and all its derivatives can be performed much faster
+than when evaluated as separated polynomials (even with nested Horner).
+In v2.3.69, this code was moved to the new directory Functions.
+
+Release 2.3.78 offered a new multithreaded implementation
+of polyhedral homotopies.  New in release 2.3.79 are the
+multitasking root refiners.
+
+-------------------------------------------------------------------------------
+file name                         : short description
+-------------------------------------------------------------------------------
+multitasking                      : exports generic task creation
+ts_tasking                        : basic test on task creation
+semaphore                         : lock to guard a critical section
+ts_mutex                          : basic test on mutual exclusion
+ts_jobs                           : dynamic job scheduler
+-------------------------------------------------------------------------------
+multitasking_matrix_x_vector      : matrix times vector with multitasking
+ts_mtmatvec                       : test multitasked matrix*vector
+multitasking_polynomial_functions : evaluation with multiple tasks
+ts_mtpolval                       : test multitasked polynomial evaluation
+multitasking_linear_solvers       : linear system solving with multitasking
+ts_mtlinsol                       : test multitasked linear system solving
+-------------------------------------------------------------------------------
+ts_mtsols                         : multitasking on solutions
+ts_mtstref                        : multitasking solution refinement
+ts_mtddref                        : multitasking refiner with dd cmplx numbers
+ts_mtqdref                        : multitasking refiner with qd cmplx numbers
+ts_mtsharp                        : multitasking multiprecision refinement
+multitasking_continuation         : path trackers with multiple tasks
+ts_mtcont                         : test on multitasking continuation
+multitasking_sampling             : sampling solution sets with tasks
+ts_mtsam                          : test on multitasking sampling
+-------------------------------------------------------------------------------
+multitasking_volume_computation   : computing mixed volumes with threads
+ts_mtvol                          : test on multitasking volume computation
+multitasking_polyhedral_trackers  : multithreaded polyhedral continuation
+ts_mtvolcon                       : test on polyhedral path trackers
+multitasking_root_refiners        : root refinement by multiple tasks
+ts_mtverify                       : test on multitasked root refinement
+-------------------------------------------------------------------------------
