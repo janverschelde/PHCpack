@@ -5,8 +5,8 @@
 # swap the # symbol in the following lines to use makefile_windows
 # or to use makefile_copper on NCSA machine copper
 
-MAKEFILE = makefile_unix
-# MAKEFILE = makefile_mac
+# MAKEFILE = makefile_unix
+MAKEFILE = makefile_mac
 # MAKEFILE = makefile_windows
 # MAKEFILE = makefile_copper
 
@@ -596,8 +596,8 @@ test_root_counts: test_product test_binomials test_implift test_mixedvol \
 
 # Test programs for the Root_Counts/Product homotopies library :
 
-test_product: ts_startsys ts_permanent ts_prodsys \
-              ts_drivmhom ts_drivmuho ts_drivss ts_strset ts_strpart
+test_product: ts_startsys ts_permanent ts_prodsys ts_drivmhom ts_drivmuho \
+              ts_drivss ts_strset ts_strpart ts_permstar
 
 ts_startsys:
 	make -f $(MAKEFILE) ts_startsys
@@ -607,6 +607,9 @@ ts_permanent:
 
 ts_prodsys:
 	make -f $(MAKEFILE) ts_prodsys
+
+ts_strpart:
+	make -f $(MAKEFILE) ts_strpart
 
 ts_drivmhom:
 	make -f $(MAKEFILE) ts_drivmhom
@@ -620,8 +623,8 @@ ts_drivss:
 ts_strset:
 	make -f $(MAKEFILE) ts_strset
 
-ts_strpart:
-	make -f $(MAKEFILE) ts_strpart
+ts_permstar:
+	make -f $(MAKEFILE) ts_permstar
 
 # Test programs in the Root_Counts/Binomials library :
 

@@ -652,6 +652,10 @@ ts_drivss:
 ts_strset:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_strset.adb -o $(BIN)/ts_strset
 
+ts_permstar:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_permstar.adb \
+              -o $(BIN)/ts_permstar
+
 # Test programs in the Root_Counts/Binomials library :
 
 ts_binsys:
