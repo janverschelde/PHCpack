@@ -8,7 +8,7 @@ with Degrees_in_Sets_of_Unknowns;        use Degrees_in_Sets_of_Unknowns;
 
 package body m_Homogeneous_Bezout_Numbers is
 
--- UTILITIES :
+-- UTILITIY :
 
   function Create ( p : Poly_Sys ) return Set is
 
@@ -24,10 +24,9 @@ package body m_Homogeneous_Bezout_Numbers is
     return s;
   end Create;
 
-  function Cardinalities ( z : Partition ) return Vector is
+-- TARGET ROUTINES :
 
-  -- DESCRIPTION :
-  --   Returns a vector which contains the cardinality of each set.
+  function Cardinalities ( z : Partition ) return Vector is
 
     res : Vector(integer32(z'first)..integer32(z'last));
 
@@ -37,8 +36,6 @@ package body m_Homogeneous_Bezout_Numbers is
     end loop;
     return res;
   end Cardinalities;
-
--- TARGET ROUTINES :
 
   function Total_Degree ( p : Poly_Sys ) return natural32 is
 
@@ -462,12 +459,11 @@ package body m_Homogeneous_Bezout_Numbers is
   procedure Patch ( p : in Poly_Sys; z : in out Partition;
                     nz : in natural32; bz : in out natural64 ) is
 
-    dim : natural32;
+    dim : natural32 := natural32(p'last);
 
   begin
     if nz = 1 then
       if Extent_Of(z(1)) < dim then
-        dim := natural32(p'last);
         Clear(z(1));
         z(1) := Universe(dim);
         bz := Total_Degree(p);

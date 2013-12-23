@@ -1,4 +1,4 @@
-Generalized Bezout numbers and linear-product start systems in PHCv2.3.86
+Generalized Bezout numbers and linear-product start systems in PHCv2.3.87
 
 Four types of start systems are implemented, based on total degree,
 m-homogeneous, multi-homegenous, and generalized Bezout number.
@@ -17,8 +17,11 @@ ts_startsys                        : test on total-degree based start systems
 ------------------------------------------------------------------------------
 sets_of_unknowns                   : set of unknowns of polynomials
 sets_of_unknowns_io                : input/output for sets of unknowns
+sets_of_unknowns_strings           : string representations of sets
 partitions_of_sets_of_unknowns     : partitions of sets of unknowns
 partitions_of_sets_of_unknowns_io  : input/output for partitions
+partitions_of_sets_strings         : string representations of partitions
+ts_strpart                         : tests on sets and partitions strings
 degrees_in_sets_of_unknowns        : compute degrees and degree tables
 m_homogeneous_bezout_numbers       : calculation of m-homogeneous bounds
 ts_permanent                       : simple test program to seek for bug
@@ -30,6 +33,8 @@ standard_linear_product_system     : systems of products of hyperplanes
 dobldobl_linear_product_system     : double double products of hyperplanes
 quaddobl_linear_product_system     : quad double products of hyperplanes
 standard_linear_product_system_io  : input/output for product systems
+m_homogeneous_permanent_factors    : solving m-homogeneous start systems
+ts_permstar                        : mirroring permanent computations
 m_homogeneous_start_systems        : creation of m-homogeneous start systems
 interpolating_homotopies           : homotopies based on interpolation
 interpolating_homotopies_driver    : driver for interpolating homotopies

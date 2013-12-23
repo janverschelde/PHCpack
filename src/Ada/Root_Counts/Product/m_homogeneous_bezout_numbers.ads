@@ -1,4 +1,5 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Vectors;           use Standard_Integer_Vectors;
 with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Partitions_of_Sets_Of_Unknowns;     use Partitions_of_Sets_of_Unknowns;
@@ -9,6 +10,11 @@ package m_Homogeneous_Bezout_Numbers is
 --   This package allows the computation of m-homogeneous Bezout numbers.
 --   It provides various enumeration strategies for computing a minimal
 --   m-homogeneous Bezout number.
+
+  function Cardinalities ( z : Partition ) return Vector;
+
+  -- DESCRIPTION :
+  --   Returns a vector which contains the cardinality of each set.
 
   function Total_Degree ( p : Poly_Sys ) return natural32;
   function Total_Degree ( p : Poly_Sys ) return natural64;
