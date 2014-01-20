@@ -1,0 +1,50 @@
+[jan@kepler MGS2]$ time ./run_mgs2_d 32 2048 1 7
+
+real	5m23.402s
+user	5m22.850s
+sys	0m0.075s
+[jan@kepler MGS2]$ time ./run_mgs2_d 32 2048 1 6
+
+real	0m31.037s
+user	0m18.917s
+sys	0m11.821s
+[jan@kepler MGS2]$ time ./run_mgs2_d 64 2048 1 6
+
+real	0m18.112s
+user	0m10.892s
+sys	0m6.950s
+[jan@kepler MGS2]$ time ./run_mgs2_d 96 2048 1 6
+
+real	0m14.568s
+user	0m8.866s
+sys	0m5.516s
+[jan@kepler MGS2]$ time ./run_mgs2_d 128 2048 1 6
+
+real	0m11.414s
+user	0m6.841s
+sys	0m4.342s
+[jan@kepler MGS2]$ time ./run_mgs2_d 160 2048 1 6
+
+real	0m10.610s
+user	0m6.335s
+sys	0m4.042s
+[jan@kepler MGS2]$ time ./run_mgs2_d 192 2048 1 6
+
+real	0m9.595s
+user	0m5.717s
+sys	0m3.634s
+[jan@kepler MGS2]$ time ./run_mgs2_d 224 2048 1 6
+
+real	0m9.244s
+user	0m5.530s
+sys	0m3.461s
+[jan@kepler MGS2]$ time ./run_mgs2_d 256 2048 1 6
+
+real	0m8.098s
+user	0m4.768s
+sys	0m3.147s
+[jan@kepler MGS2]$ 
+
+
+Notice: the 32 2048 1 6 run is most likely wrong,
+as one would need 64 rounds to get to 2048 = 64*32.

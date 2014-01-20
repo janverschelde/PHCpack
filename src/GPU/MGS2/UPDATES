@@ -1,0 +1,51 @@
+Thu 9 Jan 2014 : updates in mgs2_host.h, mgs2_host.cpp, mgs2_kernels.h,
+  mgs2_kernels.cu, and run_mgs2.cpp for the least squares solving,
+  which works for small dimensions.
+
+Wed 8 Jan 2014 : fixed bug in control structure of mgs2_kernels.cu,
+  in the main QR decomposition routine.  Also changes in run_mgs2.cpp
+  and mgs2_host.cpp.
+
+Tue 7 Jan 2014 : the QR decomposition now also works on the GPU,
+  changed mgs2_kernels, mgs_host, and run_mgs2.cpp.
+  Added backsubstitution for execution on the host to mgs2_host.
+
+Mon 6 Jan 2014 : added extra kernel to mgs2_kernels.h, mgs2_kernels.cu to
+  implement the delayed normalization for several blocks.
+  Extended code mgs2_host.h and mgs2_host.cpp to compute also the R matrix.
+
+Fri 3 Jan 2014 : fixed one bug and made some arrangements in mgs2_kernels.cu,
+  before realizing how flawed the entire design really is...
+
+Thu 2 Jan 2014 : new run_mgs2.cpp, mgs2_host.h, mgs2_host.cpp, mgs2_kernels.h,
+  and mgs2_kernels.cu for the second version of modified Gram-Schmidt.
+
+Tue 31 Dec 2013 : made updates in gram_host, run_gram with the introduction
+  of the gram_kernels.h and gram_kernels.cu.
+
+Mon 30 Dec 2013 : new code gram_host.h, gram_host.cpp, and run_gram.cpp
+  for the computation of a Gram matrix of a sequence of complex vectors.
+
+Sun 29 Dec 2013 : modified norm_kernels so it works for any dimension,
+  also touched complex.h for constructor, made changes to norm_host.cpp.
+
+Fri 27 Dec 2013 : stripped down version to compute the norm of a vector:
+  norm_host, norm_kernels, with the main program in run_norm.cpp.
+  Renamed the "separate" into mgs_host.
+  Added division by a real number to complex and complexH,
+  as needed for the normalization of a vector.
+  Improved error message in gqd_qd_util.cpp when parsing of arguments.
+
+Thu 26 Dec 2013 : new directory MGS2 to start the modification process,
+  added checks on normality and orthogonality to "separate", called in
+  the run_mgs.cpp main program.
+
+Tue 24 Dec 2013 : uncommented the lines after "table III in the paper"
+  to perform the back substitution in run_mgs.cpp, also in the kernels,
+  the back substitution in mgs_kernelsT.cu and mgs_kernelsT_qd.cu must
+  be performed for the comparision between CPU and GPU.
+
+Wed 6 Mar 2013 : for timings of Table III in the paper, commented out the
+  back substitution in mgs_kernelsT.cu and run_mgs.cpp. 
+  Note that for quad doubles, the kernel is in mgs_kernelsT_qd.cu
+  and should also be changed for Table III.

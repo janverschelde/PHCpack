@@ -1,0 +1,27 @@
+[jan@kepler MGS2]$ time ./run_mgs2_dd 32 1024 1 7
+
+real	7m1.064s
+user	7m0.199s
+sys	0m0.055s
+
+[jan@kepler MGS2]$ time ./run_mgs2_dd 32 1024 1 6
+
+real	0m11.846s
+user	0m8.563s
+sys	0m3.050s
+[jan@kepler MGS2]$ time ./run_mgs2_dd 64 1024 1 6
+
+real	0m6.608s
+user	0m4.437s
+sys	0m1.967s
+[jan@kepler MGS2]$ time ./run_mgs2_dd 96 1024 1 6
+
+real	0m5.359s
+user	0m3.440s
+sys	0m1.665s
+[jan@kepler MGS2]$ time ./run_mgs2_dd 128 1024 1 6
+
+real	0m4.270s
+user	0m2.749s
+sys	0m1.320s
+

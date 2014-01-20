@@ -1,0 +1,6 @@
+[jave@node4 MGS2]$ time  ./run_mgs2_dd 128 4096 1 6
+
+real	2m39.031s
+user	1m37.148s
+sys	1m1.397s
+[jave@node4 MGS2]$ 

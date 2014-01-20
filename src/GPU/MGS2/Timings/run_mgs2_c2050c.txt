@@ -1,0 +1,71 @@
+[jan@dezon MGS2]$ time ./run_mgs2_d 32 1024 1 6
+
+real	0m5.012s
+user	0m2.654s
+sys	0m1.861s
+[jan@dezon MGS2]$ time ./run_mgs2_d 64 1024 1 6
+
+real	0m3.494s
+user	0m1.533s
+sys	0m1.451s
+[jan@dezon MGS2]$ time ./run_mgs2_d 96 1024 1 6
+
+real	0m3.154s
+user	0m1.501s
+sys	0m1.596s
+[jan@dezon MGS2]$ time ./run_mgs2_d 128 1024 1 6
+
+real	0m2.902s
+user	0m1.072s
+sys	0m1.247s
+[jan@dezon MGS2]$ time ./run_mgs2_d 160 1024 1 6
+
+real	0m3.125s
+user	0m1.229s
+sys	0m1.236s
+[jan@dezon MGS2]$ time ./run_mgs2_d 192 1024 1 6
+
+real	0m3.126s
+user	0m1.450s
+sys	0m1.427s
+[jan@dezon MGS2]$ time ./run_mgs2_d 224 1024 1 6
+
+real	0m3.184s
+user	0m1.534s
+sys	0m1.594s
+[jan@dezon MGS2]$ time ./run_mgs2_d 256 1024 1 6
+
+real	0m3.029s
+user	0m1.430s
+sys	0m1.542s
+[jan@dezon MGS2]$ time ./run_mgs2_dd 32 1024 1 6
+
+real	0m10.866s
+user	0m7.260s
+sys	0m3.468s
+[jan@dezon MGS2]$ time ./run_mgs2_dd 64 1024 1 6
+
+real	0m6.834s
+user	0m4.042s
+sys	0m2.339s
+[jan@dezon MGS2]$ time ./run_mgs2_dd 96 1024 1 6
+
+real	0m6.259s
+user	0m3.421s
+sys	0m2.128s
+[jan@dezon MGS2]$ time ./run_mgs2_dd 128 1024 1 6
+
+real	0m5.880s
+user	0m3.543s
+sys	0m2.218s
+[jan@dezon MGS2]$ time ./run_mgs2_qd 32 1024 1 6
+
+real	3m47.729s
+user	2m58.814s
+sys	0m48.703s
+[jan@dezon MGS2]$ time ./run_mgs2_qd 64 1024 1 6
+
+real	2m34.034s
+user	1m50.693s
+sys	0m41.865s
+[jan@dezon MGS2]$ 

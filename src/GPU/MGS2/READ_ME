@@ -1,0 +1,87 @@
+This directory contains version 2 of the modified Gram-Schmidt algorithm
+to accelerate the solving of linear systems.  The main goal is to remove
+the restrictions on the dimensions.
+
+This directory contains experimental code to solve linear systems through
+QR factorization via the modified Gram-Schmidt orthogonalization method.
+
+The are two versions of the code:
+(1) CPU for correctness comparison and speedup of timings
+(2) GPU for acceleration to compensate for multiprecision arithmetic.
+The multiprecision arithmetic is provided by the QD library on the CPU,
+and the GQD library on the GPU.
+
+The code is written in C++ with the use of templates for the precision,
+as defined by the DefineType.h in the directories DefineTypes*.
+
+The makefile defines the location of the installed QD and GQD libraries.
+Type "make" to compile all programs and "make clean" to remove object files
+and the executable programs.
+The code works for double, double double, quad double arithmetic,
+and runs as run_mgs2_d, run_mgs2_dd, and run_mgs2_qd respectively.
+The code for normalization of one vector and the Gram matrix were
+used as stepping stones for version 2 of the modified Gram-Schmidt.
+
+The directory Timings contains experimental data and Python scripts
+to process the timings.
+
+------------------------------------------------------------------------------
+file name          : short description
+------------------------------------------------------------------------------
+DefineType.h       : defines the precision in the respective directories
+                     DefineTypesD, DefineTypesDD, and DefineTypesQD, for
+                     double, double double, and quad double precision
+complex.h          : complex types for GPU
+complexH.h         : complex types for CPU (H = host)
+gqd_qd_util.h      : headers of type conversions and command line parsing
+gqd_qd_util.cpp    : definitions of type conversions and command line parsing
+gqd_qd_utilT.cpp   : templated complex type conversions and random points
+------------------------------------------------------------------------------
+run_norm.cpp       : main program for the normalization of a vector
+norm_kernels.h     : prototypes of the kernels of the normalization
+norm_kernels.cu    : definitions of the kernels of the normalization
+norm_host.h        : prototypes of normalization for execution on the host 
+norm_host.cpp      : definitions of normalization on the host
+---------------------------------------------------------------------------
+run_gram.cpp       : main program for the calculation of a Gram matrix
+gram_kernels.h     : prototypes of the kernels for the Gram matrix
+gram_kernels.cu    : definitions of the kernels for the Gram matrix
+gram_host.h        : prototypes of Gram matrix for execution on the host 
+gram_host.cpp      : definitions of Gram matrix on the host
+---------------------------------------------------------------------------
+chandra.h          : prototypes to evaluate the Chandrasekhar H-equation
+chandra.cpp        : definition of evaluation and differentiation routines
+chandra_test.cpp   : small test on the correctness
+---------------------------------------------------------------------------
+run_mgs2.cpp       : main program for the modified Gram-Schmidt method
+mgs2_kernels.cu    : prototypes of the kernels of the GPU solver
+mgs2_host.h        : prototypes of CPU solver, for execution on the host 
+mgs2_host.cpp      : definitions of CPU solver
+------------------------------------------------------------------------------
+run_mgs3.cpp       : modification for GPU eval+diff of chandra
+mgs3_kernels.h     : prototypes for GPU eval+diff of chandra
+mgs3_kernels.cu    : kernels for eval+diff of chandra
+------------------------------------------------------------------------------
+run_mgs.cpp        : original main for the modified Gram-Schmidt method
+mgs_kernelsT.cu    : prototypes of the kernels of the GPU solver
+mgs_kernelsT_qd.cu : definitions of the kernels of the GPU solver, for QD
+mgs_host.h         : prototypes of CPU solver, for execution on the host 
+mgs_host.cpp       : definitions of CPU solver
+------------------------------------------------------------------------------
+
+The capacity of shared memory imposes a limit on the dimension n:
+n = 256, for double precision, n = 128, for double double, 
+and n = 85 for quad double precision, see mgs_kernelsT.cu.
+
+The name of the executable file is run_mgs_d.
+To run the program, type at the command prompt
+time ./run_mgs_d 4 4 1 2
+
+The are four parameters to each executable:
+(1) the size of the thread block for the GPU execution;
+(2) the dimension of the problem;
+(3) the number of instances that are to be computed;
+(4) the mode of execution: 0 for GPU, 1 for CPU,
+    2 for GPU and CPU correctness comparisons.
+
+See the commentary in run_mgs2.cpp for further explanations.

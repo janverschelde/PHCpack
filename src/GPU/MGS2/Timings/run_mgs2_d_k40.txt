@@ -1,0 +1,26 @@
+jave@node4 MGS2]$ time ./run_mgs2_d 256 1024 1 6
+
+real	0m1.303s
+user	0m0.697s
+sys	0m0.496s
+[jave@node4 MGS2]$ time ./run_mgs2_d 256 2048 1 6
+
+real	0m6.673s
+user	0m4.136s
+sys	0m2.428s
+[jave@node4 MGS2]$ time ./run_mgs2_d 256 3072 1 6
+
+real	0m20.342s
+user	0m12.577s
+sys	0m7.628s
+[jave@node4 MGS2]$ time ./run_mgs2_d 256 4096 1 6
+
+real	0m46.284s
+user	0m28.287s
+sys	0m17.823s
+[jave@node4 MGS2]$ time ./run_mgs2_d 256 5120 1 6
+
+real	1m29.107s
+user	0m54.447s
+sys	0m34.407s
+[jave@node4 MGS2]$ 

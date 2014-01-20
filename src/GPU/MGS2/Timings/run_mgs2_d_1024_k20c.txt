@@ -1,0 +1,46 @@
+[jan@kepler MGS2]$ time ./run_mgs2_d 32 1024 1 7
+
+real	0m39.872s
+user	0m39.649s
+sys	0m0.028s
+[jan@kepler MGS2]$ time ./run_mgs2_d 32 1024 1 6
+
+real	0m5.067s
+user	0m3.138s
+sys	0m1.501s
+[jan@kepler MGS2]$ time ./run_mgs2_d 64 1024 1 6
+
+real	0m3.045s
+user	0m1.747s
+sys	0m1.099s
+[jan@kepler MGS2]$ time ./run_mgs2_d 96 1024 1 6
+
+real	0m2.544s
+user	0m1.434s
+sys	0m0.966s
+[jan@kepler MGS2]$ time ./run_mgs2_d 128 1024 1 6
+
+real	0m2.159s
+user	0m1.116s
+sys	0m0.801s
+[jan@kepler MGS2]$ time ./run_mgs2_d 160 1024 1 6
+
+real	0m2.140s
+user	0m1.083s
+sys	0m0.859s
+[jan@kepler MGS2]$ time ./run_mgs2_d 192 1024 1 6
+
+real	0m1.971s
+user	0m1.039s
+sys	0m0.782s
+[jan@kepler MGS2]$ time ./run_mgs2_d 224 1024 1 6
+
+real	0m1.862s
+user	0m0.874s
+sys	0m0.794s
+[jan@kepler MGS2]$ time ./run_mgs2_d 256 1024 1 6
+
+real	0m1.712s
+user	0m0.807s
+sys	0m0.744s
+[jan@kepler MGS2]$ 
