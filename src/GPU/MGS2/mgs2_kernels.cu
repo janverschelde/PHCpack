@@ -447,13 +447,11 @@ __global__ void large_backsubstitution
       if(j < k+1)
       {
          ind = (dim - k - offset)*(dim + 3 + k + offset)/2 + j; 
-         __syncthreads();
          Rcl[j] = R[ind+offset];
-         __syncthreads();
-         if(j == k) sol[j] = update/Rcl[j]; // all other threads wait
-         __syncthreads();
-         if(j < k) update = update - sol[k]*Rcl[j];  // update
       }
+      if(j == k) sol[j] = update/Rcl[j]; // all other threads wait
+      __syncthreads();
+      if(j < k) update = update - sol[k]*Rcl[j];  // update     
       __syncthreads();
    }
    if(b == 0) x[offset+j] = sol[j];
@@ -464,6 +462,7 @@ __global__ void large_backsubstitution
          update = R[offset-block_offset+j];
       else
          update = x[offset-block_offset+j];
+      __syncthreads();
       for(int k=BS-1; k>=0; k--)  // continue updates
       {
          ind = (dim - k - offset)*(dim + 3 + k + offset)/2 + j; 
