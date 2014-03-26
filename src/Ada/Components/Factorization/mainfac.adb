@@ -18,9 +18,15 @@ with Multprec_Complex_Polynomials;
 with Multprec_Complex_Polynomials_io;    use Multprec_Complex_Polynomials_io;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Sampling_Machine;
 with Sample_Point_Lists;                 use Sample_Point_Lists;
 with Standard_Stacked_Sample_Grids;
@@ -97,7 +103,12 @@ procedure mainfac ( infilename,outfilename : in string ) is
     end loop;
   end Tune_Member_Tolerances;
 
-  procedure Homotopy_Membership_Test is
+  procedure Standard_Homotopy_Membership_Test is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a witness set, a list of test points,
+  --   and then applies the homotopy membership test
+  --   using standard double precision arithmetic.
 
     file : file_type;
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -107,11 +118,6 @@ procedure mainfac ( infilename,outfilename : in string ) is
     homtol : double_float := 1.0E-6;
 
   begin
-    new_line;
-    put_line("Membership test with homotopy :");
-    put_line("  Input : embedded polynomial system with generic points, and");
-    put_line("          list of test points.");
-    put_line("  Output : decision whether test point lies on component.");
     Standard_Read_Embedding(lp,genpts,dim);
     new_line;
     Read(sols);
@@ -123,6 +129,87 @@ procedure mainfac ( infilename,outfilename : in string ) is
     put_line("See the output file for results...");
     new_line;
     Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+  end Standard_Homotopy_Membership_Test;
+
+  procedure DoblDobl_Homotopy_Membership_Test is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a witness set, a list of test points,
+  --   and then applies the homotopy membership test
+  --   using double double precision arithmetic.
+
+    file : file_type;
+    lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    genpts,sols : DoblDobl_Complex_Solutions.Solution_List;
+    dim : natural32;
+    restol : double_float := 1.0E-10;
+    homtol : double_float := 1.0E-6;
+
+  begin
+    DoblDobl_Read_Embedding(lp,genpts,dim);
+    new_line;
+    Read(sols);
+    new_line;
+    put_line("Reading the name of the output file.");
+    Read_Name_and_Create_File(file);
+    Tune_Member_Tolerances(restol,homtol);
+    new_line;
+    put_line("See the output file for results...");
+    new_line;
+    Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+  end DoblDobl_Homotopy_Membership_Test;
+
+  procedure QuadDobl_Homotopy_Membership_Test is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a witness set, a list of test points,
+  --   and then applies the homotopy membership test
+  --   using quad double precision arithmetic.
+
+    file : file_type;
+    lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    genpts,sols : QuadDobl_Complex_Solutions.Solution_List;
+    dim : natural32;
+    restol : double_float := 1.0E-10;
+    homtol : double_float := 1.0E-6;
+
+  begin
+    QuadDobl_Read_Embedding(lp,genpts,dim);
+    new_line;
+    Read(sols);
+    new_line;
+    put_line("Reading the name of the output file.");
+    Read_Name_and_Create_File(file);
+    Tune_Member_Tolerances(restol,homtol);
+    new_line;
+    put_line("See the output file for results...");
+    new_line;
+    Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+  end QuadDobl_Homotopy_Membership_Test;
+
+  procedure Homotopy_Membership_Test is
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("Membership test with homotopy :");
+    put_line("  Input : embedded polynomial system with generic points, and");
+    put_line("          list of test points.");
+    put_line("  Output : decision whether test point lies on component.");
+    new_line;
+    put_line("MENU to choose the precision : ");
+    put_line("  0. standard double precision homotopy continuation; or");
+    put_line("  1. double double precision homotopy continuation; or");
+    put_line("  2. quad double precision homotopy continuation.");
+    put("Type 0, 1, or 2 to select the precision : ");
+    Ask_Alternative(ans,"012");
+    case ans is
+      when '0' => Standard_Homotopy_Membership_Test;
+      when '1' => DoblDobl_Homotopy_Membership_Test;
+      when '2' => QuadDobl_Homotopy_Membership_Test;
+      when others => null;
+    end case;
   end Homotopy_Membership_Test;
 
   function Create ( file : file_type; p : Poly_Sys;
