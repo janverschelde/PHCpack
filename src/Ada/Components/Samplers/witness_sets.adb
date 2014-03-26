@@ -3,7 +3,11 @@ with Standard_Random_Numbers;            use Standard_Random_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Standard_Random_Vectors;            use Standard_Random_Vectors;
+with DoblDobl_Random_Vectors;            use DoblDobl_Random_Vectors;
+with QuadDobl_Random_Vectors;            use QuadDobl_Random_Vectors;
 with Multprec_Complex_Vectors;
 with Multprec_Random_Vectors;            use Multprec_Random_Vectors;
 with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
@@ -24,6 +28,32 @@ package body Witness_Sets is
   begin
     for i in res'range loop
       res(i) := new Standard_Complex_Vectors.Vector'
+                      (Random_Vector(0,integer32(n)));
+    end loop;
+    return res;
+  end Random_Hyperplanes;
+
+  function Random_Hyperplanes ( k,n : natural32 )
+                              return DoblDobl_Complex_VecVecs.VecVec is
+
+    res : DoblDobl_Complex_VecVecs.VecVec(1..integer32(k));
+
+  begin
+    for i in res'range loop
+      res(i) := new DoblDobl_Complex_Vectors.Vector'
+                      (Random_Vector(0,integer32(n)));
+    end loop;
+    return res;
+  end Random_Hyperplanes;
+
+  function Random_Hyperplanes ( k,n : natural32 )
+                              return QuadDobl_Complex_VecVecs.VecVec is
+
+    res : QuadDobl_Complex_VecVecs.VecVec(1..integer32(k));
+
+  begin
+    for i in res'range loop
+      res(i) := new QuadDobl_Complex_Vectors.Vector'
                       (Random_Vector(0,integer32(n)));
     end loop;
     return res;
@@ -148,7 +178,7 @@ package body Witness_Sets is
   end Make_Square;
 
   function Add_Slice ( p : Standard_Complex_Poly_Systems.Poly_Sys;
-                       hyp : Vector )
+                       hyp : Standard_Complex_Vectors.Vector )
                      return Standard_Complex_Poly_Systems.Poly_Sys is
 
     res : Standard_Complex_Poly_Systems.Poly_Sys(p'first..p'last+1);
@@ -259,7 +289,7 @@ package body Witness_Sets is
   end Embed;
 
   function Embed ( p : Standard_Complex_Poly_Systems.Poly_Sys;
-                   gamma : Vector )
+                   gamma : Standard_Complex_Vectors.Vector )
                  return Standard_Complex_Poly_Systems.Poly_Sys is
 
     use Standard_Complex_Polynomials;
@@ -279,9 +309,10 @@ package body Witness_Sets is
     return res;
   end Embed;
 
-  function Slice_and_Embed1 ( p : Standard_Complex_Poly_Systems.Poly_Sys;
-                              hyp : Vector )
-                            return Standard_Complex_Poly_Systems.Poly_Sys is
+  function Slice_and_Embed1
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+               hyp : Standard_Complex_Vectors.Vector )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
 
   -- DESCRIPTION :
   --   Adds one random hyperplane to the system and does an embedding
@@ -289,7 +320,8 @@ package body Witness_Sets is
 
     sli : Standard_Complex_Poly_Systems.Poly_Sys(p'first..p'last+1)
         := Add_Slice(p,hyp); 
-    gam : constant Vector(p'first..p'last+1) := Random_Vector(1,p'last+1);
+    gam : constant Standard_Complex_Vectors.Vector(p'first..p'last+1)
+        := Random_Vector(1,p'last+1);
     res : constant Standard_Complex_Poly_Systems.Poly_Sys(p'first..p'last+1)
         := Embed(sli,gam);
 
@@ -298,9 +330,10 @@ package body Witness_Sets is
     return res;
   end Slice_and_Embed1;
 
-  function Slice_and_Embed ( p : Standard_Complex_Poly_Systems.Poly_Sys;
-                             k : natural32 )
-                           return Standard_Complex_Poly_Systems.Poly_Sys is
+  function Slice_and_Embed
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+               k : natural32 )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
 
     use Standard_Complex_Polynomials;
     res : Standard_Complex_Poly_Systems.Poly_Sys
@@ -327,7 +360,7 @@ package body Witness_Sets is
     end if;
     for i in 1..integer32(k) loop
       declare
-        hyp : Vector(0..p'last+integer32(k));
+        hyp : Standard_Complex_Vectors.Vector(0..p'last+integer32(k));
       begin
         for j in hyp'range loop
           hyp(j) := slices(j+1,i);
@@ -377,7 +410,7 @@ package body Witness_Sets is
     res(0) := new Poly_Sys'(p);
     for i in 1..integer32(k) loop
       declare
-        hyp : Vector(0..res(i-1)'last);
+        hyp : Standard_Complex_Vectors.Vector(0..res(i-1)'last);
       begin
         for j in hyp'range loop
           hyp(j) := slices(j+1,i);
@@ -396,7 +429,8 @@ package body Witness_Sets is
   --   Copies the last equation and embeds everything.
 
     res : Standard_Complex_Poly_Systems.Poly_Sys(p'first..p'last+1);
-    gam : constant Vector(p'first..p'last+1) := Random_Vector(1,p'last+1);
+    gam : constant Standard_Complex_Vectors.Vector(p'first..p'last+1)
+        := Random_Vector(1,p'last+1);
 
   begin
     res(p'range) := p;
@@ -424,7 +458,7 @@ package body Witness_Sets is
     end loop;
     for i in integer32(l)+1..integer32(k) loop
       declare
-        hyp : constant Vector(0..res(i-1)'last)
+        hyp : constant Standard_Complex_Vectors.Vector(0..res(i-1)'last)
             := Random_Vector(0,res(i-1)'last);
       begin
         res(i) := new Poly_Sys'(Slice_and_Embed1(res(i-1).all,hyp));
@@ -434,13 +468,40 @@ package body Witness_Sets is
   end Slice_and_Embed;
 
   function Slices ( p : Standard_Complex_Poly_Systems.Poly_Sys;
-                    k : natural32 ) return VecVec is
+                    k : natural32 ) return Standard_Complex_VecVecs.VecVec is
 
-    res : VecVec(1..integer32(k));
+    res : Standard_Complex_VecVecs.VecVec(1..integer32(k));
 
   begin
     for i in res'range loop
-      res(i) := new Vector'(Polynomial(p(p'last-integer32(k)+i)));
+      res(i) := new Standard_Complex_Vectors.Vector'
+                      (Polynomial(p(p'last-integer32(k)+i)));
+    end loop;
+    return res;
+  end Slices;
+
+  function Slices ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    k : natural32 ) return DoblDobl_Complex_VecVecs.VecVec is
+
+    res : DoblDobl_Complex_VecVecs.VecVec(1..integer32(k));
+
+  begin
+    for i in res'range loop
+      res(i) := new DoblDobl_Complex_Vectors.Vector'
+                      (Polynomial(p(p'last-integer32(k)+i)));
+    end loop;
+    return res;
+  end Slices;
+
+  function Slices ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    k : natural32 ) return QuadDobl_Complex_VecVecs.VecVec is
+
+    res : QuadDobl_Complex_VecVecs.VecVec(1..integer32(k));
+
+  begin
+    for i in res'range loop
+      res(i) := new QuadDobl_Complex_Vectors.Vector'
+                      (Polynomial(p(p'last-integer32(k)+i)));
     end loop;
     return res;
   end Slices;
@@ -456,7 +517,7 @@ package body Witness_Sets is
     if n < m then
       declare
         res : Poly_Sys(1..m);
-        hyp : Vector(0..m);
+        hyp : Standard_Complex_Vectors.Vector(0..m);
       begin
         res(1..n) := p;
         for i in 1..m-n loop

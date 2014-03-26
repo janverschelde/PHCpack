@@ -3,10 +3,14 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Multprec_Complex_Vectors;
 with Multprec_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Polynomials;
+with DoblDobl_Complex_Polynomials;
+with QuadDobl_Complex_Polynomials;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
@@ -26,6 +30,12 @@ package Planes_and_Polynomials is
                         tol : double_float )
                       return Standard_Complex_Polynomials.Poly;
 
+  function Hyperplane ( cff : DoblDobl_Complex_Vectors.Vector )
+                      return DoblDobl_Complex_Polynomials.Poly;
+
+  function Hyperplane ( cff : QuadDobl_Complex_Vectors.Vector )
+                      return QuadDobl_Complex_Polynomials.Poly;
+
   function Hyperplane ( cff : Multprec_Complex_Vectors.Vector )
                       return Multprec_Complex_Polynomials.Poly;
 
@@ -41,6 +51,10 @@ package Planes_and_Polynomials is
 
   function Polynomial ( p : Standard_Complex_Polynomials.Poly )
                       return Standard_Complex_Vectors.Vector;
+  function Polynomial ( p : DoblDobl_Complex_Polynomials.Poly )
+                      return DoblDobl_Complex_Vectors.Vector;
+  function Polynomial ( p : QuadDobl_Complex_Polynomials.Poly )
+                      return QuadDobl_Complex_Vectors.Vector;
   function Polynomial ( p : Multprec_Complex_Polynomials.Poly )
                       return Multprec_Complex_Vectors.Vector;
 

@@ -1,7 +1,9 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Complex_Numbers;
-with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
-with Standard_Complex_VecVecs;           use Standard_Complex_VecVecs;
+with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
+with DoblDobl_Complex_VecVecs;
+with QuadDobl_Complex_VecVecs;
 with Multprec_Complex_VecVecs;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
@@ -26,6 +28,10 @@ package Witness_Sets is
 
   function Random_Hyperplanes ( k,n : natural32 )
                               return Standard_Complex_VecVecs.VecVec;
+  function Random_Hyperplanes ( k,n : natural32 )
+                              return DoblDobl_Complex_VecVecs.VecVec;
+  function Random_Hyperplanes ( k,n : natural32 )
+                              return QuadDobl_Complex_VecVecs.VecVec;
   function Random_Hyperplanes ( k,n,size : natural32 )
                               return Multprec_Complex_VecVecs.VecVec;
 
@@ -77,7 +83,7 @@ package Witness_Sets is
   --   The system on return is always a copy, independent of f.
 
   function Add_Slice ( p : Standard_Complex_Poly_Systems.Poly_Sys;
-                       hyp : Vector )
+                       hyp : Standard_Complex_Vectors.Vector )
                      return Standard_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
@@ -116,7 +122,7 @@ package Witness_Sets is
   --   every monomial is multiplied with z^0.
 
   function Embed ( p : Standard_Complex_Poly_Systems.Poly_Sys;
-                   gamma : Vector )
+                   gamma : Standard_Complex_Vectors.Vector )
                  return Standard_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
@@ -167,7 +173,11 @@ package Witness_Sets is
   -- REQUIRED : l <= k.
 
   function Slices ( p : Standard_Complex_Poly_Systems.Poly_Sys;
-                    k : natural32 ) return VecVec;
+                    k : natural32 ) return Standard_Complex_VecVecs.VecVec;
+  function Slices ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    k : natural32 ) return DoblDobl_Complex_VecVecs.VecVec;
+  function Slices ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    k : natural32 ) return QuadDobl_Complex_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Returns the vector representation of the k slices added to p.

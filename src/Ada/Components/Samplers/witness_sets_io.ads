@@ -6,6 +6,8 @@ with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Witness_Sets_io is
 
@@ -74,6 +76,14 @@ package Witness_Sets_io is
               ( n,k : in natural32; s : in string;
                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List );
+  procedure Swap_Symbols_to_End
+              ( n,k : in natural32; s : in string;
+                p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Swap_Symbols_to_End
+              ( n,k : in natural32; s : in string;
+                p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Swaps the k symbols whose initial characters match s completely,
@@ -93,6 +103,14 @@ package Witness_Sets_io is
               ( nv,n,d : in natural32;
                 f : in out Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List );
+  procedure Sort_Embed_Symbols
+              ( nv,n,d : in natural32;
+                f : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Sort_Embed_Symbols
+              ( nv,n,d : in natural32;
+                f : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Sorts the embedded symbols in ascending order.
@@ -113,18 +131,54 @@ package Witness_Sets_io is
                  lp : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                  sols : in out Standard_Complex_Solutions.Solution_List;
                  dim : out natural32 );
+  procedure DoblDobl_Read_Embedding
+               ( file : in file_type;
+                 lp : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
+  procedure QuadDobl_Read_Embedding
+               ( file : in file_type;
+                 lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
   procedure Standard_Read_Embedding
                ( file : in file_type;
                  lp : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                  sols : in out Standard_Complex_Solutions.Solution_List;
                  dim,nsl : out natural32 );
+  procedure DoblDobl_Read_Embedding
+               ( file : in file_type;
+                 lp : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 dim,nsl : out natural32 );
+  procedure QuadDobl_Read_Embedding
+               ( file : in file_type;
+                 lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 dim,nsl : out natural32 );
   procedure Standard_Read_Embedding
                ( lp : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                  sols : in out Standard_Complex_Solutions.Solution_List;
                  dim : out natural32 );
+  procedure DoblDobl_Read_Embedding
+               ( lp : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
+  procedure QuadDobl_Read_Embedding
+               ( lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 dim : out natural32 );
   procedure Standard_Read_Embedding
                ( lp : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                  sols : in out Standard_Complex_Solutions.Solution_List;
+                 dim,nsl : out natural32 );
+  procedure DoblDobl_Read_Embedding
+               ( lp : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 dim,nsl : out natural32 );
+  procedure QuadDobl_Read_Embedding
+               ( lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                  dim,nsl : out natural32 );
 
   -- DESCRIPTION :

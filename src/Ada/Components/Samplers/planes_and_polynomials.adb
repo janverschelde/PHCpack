@@ -1,5 +1,9 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Multprec_Complex_Numbers;           use Multprec_Complex_Numbers;
 with Standard_Natural_Vectors;
@@ -191,6 +195,59 @@ package body Planes_and_Polynomials is
     return res;
   end Hyperplane;
 
+  function Hyperplane ( cff : DoblDobl_Complex_Vectors.Vector )
+                      return DoblDobl_Complex_Polynomials.Poly is
+
+    use DoblDobl_Complex_Numbers,DoblDobl_Complex_Polynomials;
+    ddzero : constant double_double := Double_Double_Numbers.Create(0.0);
+    res : Poly := Null_Poly;
+    t : Term;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..cff'last => 0);
+    if cff(0) /= Create(ddzero) then
+      t.cf := cff(0);
+      Add(res,t);
+    end if;
+    for i in 1..cff'last loop
+      if cff(i) /= Create(ddzero) then
+        t.dg(i) := 1;
+        t.cf := cff(i);
+        Add(res,t);
+        t.dg(i) := 0;
+      end if;
+    end loop;
+    Clear(t);
+    return res;
+  end Hyperplane;
+
+  function Hyperplane ( cff : QuadDobl_Complex_Vectors.Vector )
+                      return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Numbers,QuadDobl_Complex_Polynomials;
+    ddzero : constant quad_double
+           := Quad_Double_Numbers.Create(0.0);
+    res : Poly := Null_Poly;
+    t : Term;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..cff'last => 0);
+    if cff(0) /= Create(ddzero) then
+      t.cf := cff(0);
+      Add(res,t);
+    end if;
+    for i in 1..cff'last loop
+      if cff(i) /= Create(ddzero) then
+        t.dg(i) := 1;
+        t.cf := cff(i);
+        Add(res,t);
+        t.dg(i) := 0;
+      end if;
+    end loop;
+    Clear(t);
+    return res;
+  end Hyperplane;
+
   function Hyperplane ( cff : Multprec_Complex_Vectors.Vector )
                       return Multprec_Complex_Polynomials.Poly is
 
@@ -255,6 +312,72 @@ package body Planes_and_Polynomials is
     use Standard_Complex_Polynomials;
     n : constant integer32 := integer32(Number_of_Unknowns(p));
     res : Standard_Complex_Vectors.Vector(0..n) := (0..n => Create(0.0));
+
+    procedure Scan_Term ( t : in Term; continue : out boolean ) is
+
+      found : boolean := false;
+
+    begin
+      for i in t.dg'range loop
+        if t.dg(i) = 1 then
+          res(i) := t.cf;
+          found := true;
+        end if;
+        exit when found;
+      end loop;
+      if not found
+       then res(0) := t.cf;
+      end if;     
+      continue := true;
+    end Scan_Term;
+    procedure Scan_Terms is new Visiting_Iterator(Scan_Term);
+
+  begin
+    Scan_Terms(p);
+    return res;
+  end Polynomial;
+
+  function Polynomial ( p : DoblDobl_Complex_Polynomials.Poly )
+                      return DoblDobl_Complex_Vectors.Vector is
+
+    use DoblDobl_Complex_Polynomials;
+    n : constant integer32 := integer32(Number_of_Unknowns(p));
+    ddzero : constant double_double := Double_Double_Numbers.Create(0.0);
+    res : DoblDobl_Complex_Vectors.Vector(0..n)
+        := (0..n => DoblDobl_Complex_Numbers.Create(ddzero));
+
+    procedure Scan_Term ( t : in Term; continue : out boolean ) is
+
+      found : boolean := false;
+
+    begin
+      for i in t.dg'range loop
+        if t.dg(i) = 1 then
+          res(i) := t.cf;
+          found := true;
+        end if;
+        exit when found;
+      end loop;
+      if not found
+       then res(0) := t.cf;
+      end if;     
+      continue := true;
+    end Scan_Term;
+    procedure Scan_Terms is new Visiting_Iterator(Scan_Term);
+
+  begin
+    Scan_Terms(p);
+    return res;
+  end Polynomial;
+
+  function Polynomial ( p : QuadDobl_Complex_Polynomials.Poly )
+                      return QuadDobl_Complex_Vectors.Vector is
+
+    use QuadDobl_Complex_Polynomials;
+    n : constant integer32 := integer32(Number_of_Unknowns(p));
+    qdzero : constant quad_double := Quad_Double_Numbers.Create(0.0);
+    res : QuadDobl_Complex_Vectors.Vector(0..n)
+        := (0..n => QuadDobl_Complex_Numbers.Create(qdzero));
 
     procedure Scan_Term ( t : in Term; continue : out boolean ) is
 

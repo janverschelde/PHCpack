@@ -1,4 +1,4 @@
-Sampling module for positive dimensional solution components with PHCv2.3.80
+Sampling module for positive dimensional solution components with PHCv2.3.87
 
 This directory is entirely new in release 2.1, with no changes in
 release 2.2.  Intrinsic samplers were added in release 2.3.
@@ -12,6 +12,8 @@ Almost all sampling is done "extrinsically", using the explicit equations
 of the linear hyperplanes instead of the generators of the linear spaces.
 Intrinsic samplers which use these generators are still under development.
 New since 2.3.53 are the use of local intrinsic coordinates, see ts_ilocal.
+Samplers in double double and quad double arithmetic were added in
+version 2.3.87 of PHCpack.
 
 ------------------------------------------------------------------------------
 file name                        : short description
@@ -56,6 +58,16 @@ sample_point_lists_io            : input-output for sampled point lists
 sample_point_grids               : grids are lists of sampled point lists
 sample_point_grids_io            : input-output for sampled point grids
 ts_sample                        : interactive testing facility for sampler
+------------------------------------------------------------------------------
+dobldobl_sampling_machine        : sampling in double double precision
+quaddobl_sampling_machine        : sampling in quad double precision
+dobldobl_sample_points           : sampled points in double double precision
+dobldobl_sample_grids            : grids of double double precision samples
+dobldobl_sample_lists            : lists of double double sample points
+quaddobl_sample_points           : sampled points in quad double precision
+quaddobl_sample_lists            : lists of quad double sample points
+quaddobl_sample_grids            : grids of quad double precision samples
+ts_ddqdsam                       : test double double & quad double sampling
 ------------------------------------------------------------------------------
 rectangular_sample_grids         : sampling on parallel slices
 standard_stacked_sample_grids    : grids for general dimensions

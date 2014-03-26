@@ -241,7 +241,6 @@ package body Sampling_Machine is
     use Standard_Complex_Poly_Functions;
 
     res : Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat(p'range,p'range);
-    jac : Poly;
 
   begin
     if restricted then
@@ -259,9 +258,13 @@ package body Sampling_Machine is
     end if;
     for i in p'last-k+1..p'last loop
       for j in p'range loop
-        jac := Diff(p(i),j);
-        res(i,j) := Create(jac);
-        Clear(jac);
+        declare
+          jac : Poly;
+        begin
+          jac := Diff(p(i),j);
+          res(i,j) := Create(jac);
+          Clear(jac);
+        end;
       end loop;
     end loop;
     return res;
