@@ -8,7 +8,8 @@ gram: run_gram_d run_gram_dd run_gram_qd
 mgs2: run_mgs2_d run_mgs2_dd run_mgs2_qd
 mgs3: run_mgs3_d run_mgs3_dd run_mgs3_qd
 mgs: run_mgs_d run_mgs_dd run_mgs_qd
-all: norm gram mgs3 mgs2 mgs
+chan: chandra_d chandra_dd chandra_qd
+all: norm gram mgs3 mgs2 mgs chan
 
 chandra_d:
 	@-echo ">>> compiling evaluation and differentiation routines ..."
@@ -44,26 +45,26 @@ chandra_qd:
 
 run_mgs2_d:
 	@-echo ">>> compiling kernels ..."
-	nvcc --define-macro precision=d -I./DefineTypesD \
+	nvcc -O2 --define-macro precision=d -I./DefineTypesD \
              -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
              -I/usr/local/cuda/include -o mgs2_kernels_d.o \
              -c mgs2_kernels.cu -arch=sm_13 --ptxas-options=-v
 	@-echo "compiling code for execution on the host ..."
-	g++ -I./DefineTypesD \
+	g++ -O2 -I./DefineTypesD \
             -Wall -c mgs2_host.cpp -I/usr/local/gqd_1_2/inc \
             -I/usr/local/cuda/include -I/usr/local/include \
             -o mgs2_host_d.o
 	@-echo ">>> compiling utilities ..."
-	g++ -I/usr/local/cuda/include -I$(GQD_HOME)/inc \
+	g++ -O2 -I/usr/local/cuda/include -I$(GQD_HOME)/inc \
             -I$(QD_ROOT)/include -c gqd_qd_util.cpp
 	@-echo ">>> compiling run_mgs2 ..."
-	g++ -I$(GQD_HOME)/inc -I$(QD_ROOT)/include -I./DefineTypesD \
+	g++ -O2 -I$(GQD_HOME)/inc -I$(QD_ROOT)/include -I./DefineTypesD \
             -I/usr/local/cuda/include -c run_mgs2.cpp -o run_mgs2_d.o
 	@-echo ">>> compiling chandra evaluation and differentiation ..."
-	g++ -I./DefineTypesD -c chandra.cpp -I/usr/local/cuda/include \
+	g++ -O2 -I./DefineTypesD -c chandra.cpp -I/usr/local/cuda/include \
             -I$(QD_ROOT)/include -I$(GQD_HOME)/inc -o chandra_d.o
 	@-echo ">>> linking ..."
-	g++ -I$(GQD_HOME)/inc -I$(QD_ROOT)/include \
+	g++ -O2 -I$(GQD_HOME)/inc -I$(QD_ROOT)/include \
 		mgs2_kernels_d.o mgs2_host_d.o gqd_qd_util.o chandra_d.o \
                 run_mgs2_d.o $(QD_LIB)/libqd.a -o run_mgs2_d \
             -lcuda -lcutil_x86_64 -lcudart \
@@ -98,26 +99,26 @@ run_mgs3_d:
 
 run_mgs2_dd:
 	@-echo ">>> compiling kernels ..."
-	nvcc --define-macro precision=dd -I./DefineTypesDD \
+	nvcc -O2 --define-macro precision=dd -I./DefineTypesDD \
              -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
              -I/usr/local/cuda/include -o mgs2_kernels_dd.o \
              -c mgs2_kernels.cu -arch=sm_13 --ptxas-options=-v
 	@-echo "compiling code for execution on the host ..."
-	g++ -I./DefineTypesDD \
+	g++ -O2 -I./DefineTypesDD \
             -Wall -c mgs2_host.cpp -I/usr/local/gqd_1_2/inc \
             -I/usr/local/cuda/include -I/usr/local/include \
             -o mgs2_host_dd.o
 	@-echo ">>> compiling utilities ..."
-	g++ -I/usr/local/cuda/include -I$(GQD_HOME)/inc \
+	g++ -O2 -I/usr/local/cuda/include -I$(GQD_HOME)/inc \
             -I$(QD_ROOT)/include -c gqd_qd_util.cpp
 	@-echo ">>> compiling run_mgs2 ..."
-	g++ -I$(GQD_HOME)/inc -I$(QD_ROOT)/include -I./DefineTypesDD \
+	g++ -O2 -I$(GQD_HOME)/inc -I$(QD_ROOT)/include -I./DefineTypesDD \
             -I/usr/local/cuda/include -c run_mgs2.cpp -o run_mgs2_dd.o
 	@-echo ">>> compiling chandra evaluation and differentiation ..."
-	g++ -I./DefineTypesDD -c chandra.cpp -I/usr/local/cuda/include \
+	g++ -O2 -I./DefineTypesDD -c chandra.cpp -I/usr/local/cuda/include \
             -I$(QD_ROOT)/include -I$(GQD_HOME)/inc -o chandra_dd.o
 	@-echo ">>> linking ..."
-	g++ -I$(GQD_HOME)/inc -I$(QD_ROOT)/include \
+	g++ -O2 -I$(GQD_HOME)/inc -I$(QD_ROOT)/include \
 		mgs2_kernels_dd.o mgs2_host_dd.o gqd_qd_util.o chandra_dd.o \
                 run_mgs2_dd.o $(QD_LIB)/libqd.a -o run_mgs2_dd \
             -lcuda -lcutil_x86_64 -lcudart \
@@ -152,26 +153,26 @@ run_mgs3_dd:
 
 run_mgs2_qd:
 	@-echo ">>> compiling kernels ..."
-	nvcc --define-macro precision=qd -I./DefineTypesQD \
+	nvcc -O2 --define-macro precision=qd -I./DefineTypesQD \
              -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
              -I/usr/local/cuda/include -o mgs2_kernels_qd.o \
              -c mgs2_kernels.cu -arch=sm_13 --ptxas-options=-v
 	@-echo "compiling code for execution on the host ..."
-	g++ -I./DefineTypesQD \
+	g++ -O2 -I./DefineTypesQD \
             -Wall -c mgs2_host.cpp -I/usr/local/gqd_1_2/inc \
             -I/usr/local/cuda/include -I/usr/local/include \
             -o mgs2_host_qd.o
 	@-echo ">>> compiling utilities ..."
-	g++ -I/usr/local/cuda/include -I$(GQD_HOME)/inc \
+	g++ -O2 -I/usr/local/cuda/include -I$(GQD_HOME)/inc \
             -I$(QD_ROOT)/include -c gqd_qd_util.cpp
 	@-echo ">>> compiling run_mgs2 ..."
-	g++ -I$(GQD_HOME)/inc -I$(QD_ROOT)/include -I./DefineTypesQD \
+	g++ -O2 -I$(GQD_HOME)/inc -I$(QD_ROOT)/include -I./DefineTypesQD \
             -I/usr/local/cuda/include -c run_mgs2.cpp -o run_mgs2_qd.o
 	@-echo ">>> compiling chandra evaluation and differentiation ..."
-	g++ -I./DefineTypesQD -c chandra.cpp -I/usr/local/cuda/include \
+	g++ -O2 -I./DefineTypesQD -c chandra.cpp -I/usr/local/cuda/include \
             -I$(QD_ROOT)/include -I$(GQD_HOME)/inc -o chandra_qd.o
 	@-echo ">>> linking ..."
-	g++ -I$(GQD_HOME)/inc -I$(QD_ROOT)/include \
+	g++ -O2 -I$(GQD_HOME)/inc -I$(QD_ROOT)/include \
 		mgs2_kernels_qd.o mgs2_host_qd.o gqd_qd_util.o chandra_qd.o \
                 run_mgs2_qd.o $(QD_LIB)/libqd.a -o run_mgs2_qd \
             -lcuda -lcutil_x86_64 -lcudart \
@@ -455,4 +456,10 @@ clean_mgs:
 	test -z "run_mgs_qd" || rm -f run_mgs_qd
 	rm -f *.o
 
-clean: clean_norm clean_gram clean_mgs3 clean_mgs2 clean_mgs
+clean_chan:
+	test -z "chandra_d" || rm -f chandra_d
+	test -z "chandra_dd" || rm -f chandra_dd
+	test -z "chandra_qd" || rm -f chandra_qd
+	rm -f *.o
+
+clean: clean_norm clean_gram clean_mgs3 clean_mgs2 clean_mgs clean_chan

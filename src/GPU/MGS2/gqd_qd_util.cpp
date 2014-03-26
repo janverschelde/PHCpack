@@ -47,6 +47,37 @@ void gqd2qd ( double *a, double *b )
    *b = *a;
 }
 
+int print_modes ( void )
+{
+   cout << "The modes to the modified Gram-Schmidt method are\n";
+   cout << " 0 : GPU accelerated orthonormalization of complex vectors\n";
+   cout << " 1 : CPU computed orthonormalization of complex vectors\n";
+   cout << " 2 : GPU+CPU complex orthonormalization with checks\n";
+   cout << " 3 : GPU accelerated QR decomposition of complex vectors\n";
+   cout << " 4 : CPU computed QR decomposition of complex vectors\n";
+   cout << " 5 : GPU+CPU complex QR decomposition with checks\n";
+   cout << " 6 : GPU accelerated complex least squares solving\n";
+   cout << " 7 : CPU computed complex least squares solving\n";
+   cout << " 8 : GPU+CPU complex least squares solving with checks\n";
+   cout << " 9 : GPU accelerated complex Newton on H-Chandrasekhar\n";
+   cout << "10 : CPU computed complex Newton on H-Chandrasekhar\n";
+   cout << "11 : GPU+CPU complex Newton on H-Chandrasekhar with checks\n";
+   cout << "12 : GPU accelerated orthonormalization of real vectors\n";
+   cout << "13 : CPU computed orthonormalization of real vectors\n";
+   cout << "14 : GPU+CPU orthonormalization of real vectors with checks\n";
+   cout << "15 : GPU accelerated QR decomposition of real vectors\n";
+   cout << "16 : CPU computed QR decomposition of real vectors\n";
+   cout << "17 : GPU+CPU QR decomposition of real vectors with checks\n";
+   cout << "18 : GPU accelerated real least squares solving\n";
+   cout << "19 : CPU computed real least squares solving\n";
+   cout << "20 : GPU+CPU real least squares solving with checks\n";
+   cout << "21 : GPU accelerated real Newton on H-Chandrasekhar\n";
+   cout << "22 : CPU computed real Newton on H-Chandrasekhar\n";
+   cout << "23 : GPU+CPU real Newton on H-Chandrasekhar with checks\n";
+   cout << "24 : GPU full complex Newton on H-Chandrasekhar\n";
+   cout << "25 : GPU full complex Newton on H-Chandrasekhar with output\n";
+}
+
 int parse_arguments
  ( int argc, char *argv[],
    int *BS, int *dim, int *r, int *mode )
@@ -58,7 +89,8 @@ int parse_arguments
       cout << " where BS is the number of threads in a block," << endl;
       cout << "       dim is the dimension of the problem," << endl;
       cout << "       r is the number of repeated runs, and" << endl;
-      cout << "       mode is the execution mode (0, 1, or 2)." << endl;
+      cout << "       mode is the execution mode." << endl;
+      print_modes();
       cout << "Please try again ..." << endl; return 1;
    }
    *BS = atoi(argv[1]);     // block size

@@ -1,3 +1,11 @@
+Tue 25 Mar 2014 : gqd_qd_util.h exports function print_modes, defined
+  in gqd_qd_util.cpp to explain the 23 modes.  Continued extension to
+  the reals in mgs2_kernels, mgs2_host, chandra, chandra_test,
+  and run_mgs2.cpp.
+
+Mon 24 Mar 2014 : updated mgs2_host.h,cpp and mgs2_kernels.h,cu
+  and run_mgs2.cpp to run for real numbers.
+
 Thu 9 Jan 2014 : updates in mgs2_host.h, mgs2_host.cpp, mgs2_kernels.h,
   mgs2_kernels.cu, and run_mgs2.cpp for the least squares solving,
   which works for small dimensions.

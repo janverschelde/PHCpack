@@ -2,7 +2,7 @@
 
 #include "chandra.h"
 
-void chandra_evaluate
+void complex_chandra_evaluate
  ( complexH<T1> c, int dim, int i, complexH<T1>* x, complexH<T1>* y )
 {
    complexH<T1> onedim,two,twodim,sum;
@@ -31,13 +31,42 @@ void chandra_evaluate
    *y = *y - twodim;
 }
 
-void chandra_evaluate
- ( complexH<T1> c, int dim, complexH<T1>* x, complexH<T1>* y )
+void real_chandra_evaluate ( T1 c, int dim, int i, T1* x, T1* y )
 {
-   for(int i=0; i<dim; i++) chandra_evaluate(c,dim,i,x,&y[i]);
+   T1 onedim,two,twodim,sum;
+
+   two = 2.0;
+   onedim = dim;
+   twodim = two*onedim;
+
+   *y = twodim*x[i];
+   sum = 1.0;
+   for(int j=0; j<dim-1; j++)
+   {
+      T1 cff;
+      double d_i = (double) (i+1);
+      double d_ipj = (double) (i+1+j+1);
+      T1 c_a = d_i;
+      T1 c_b = d_ipj;
+      cff = c_a/c_b;
+      sum = sum + cff*x[j];
+   } 
+   *y = *y - c*x[i]*sum;
+   *y = *y - twodim;
 }
 
-void chandra_differentiate
+void complex_chandra_evaluate
+ ( complexH<T1> c, int dim, complexH<T1>* x, complexH<T1>* y )
+{
+   for(int i=0; i<dim; i++) complex_chandra_evaluate(c,dim,i,x,&y[i]);
+}
+
+void real_chandra_evaluate ( T1 c, int dim, T1* x, T1* y )
+{
+   for(int i=0; i<dim; i++) real_chandra_evaluate(c,dim,i,x,&y[i]);
+}
+
+void complex_chandra_differentiate
  ( complexH<T1> c, int dim, int i, int j, complexH<T1>* x, complexH<T1>* y )
 {
    complexH<T1> onedim,two,twodim,sum,cff;
@@ -86,18 +115,72 @@ void chandra_differentiate
    }
 }
 
-void chandra_evaluate_and_differentiate
- ( complexH<T1> c, int dim, complexH<T1>*x, complexH<T1>** v )
+void real_chandra_differentiate ( T1 c, int dim, int i, int j, T1* x, T1* y )
+{
+   T1 onedim,two,twodim,sum,cff;
+
+   two = 2.0;
+   onedim = dim;
+   twodim = two*onedim;
+
+   if(i == j)
+   {
+      sum = 1.0;
+      for(int k=0; k<dim-1; k++)
+      {
+         double d_i = (double) (i+1);
+         double d_ipk = (double) (i+1+k+1);
+         T1 c_a = d_i;
+         T1 c_b = d_ipk;
+         cff = c_a/c_b;
+         sum = sum + cff*x[k];
+      }
+      *y = twodim - c*sum;
+      if(i < dim-1)
+         *y = *y - (c/two)*x[i];
+   }
+   else
+   {
+      if(j == dim-1)
+         (*y) = 0.0;
+      else
+      {
+         double d_i = (double) (-i-1);
+         double d_ipj = (double) (i+1+j+1);
+         T1 c_a = d_i;
+         T1 c_b = d_ipj;
+         cff = c_a/c_b;
+         *y = cff*c*x[i];
+      }
+   }
+}
+
+void complex_chandra_evaluate_and_differentiate
+ ( complexH<T1> c, int dim, complexH<T1>* x, complexH<T1>** v )
 {
    for(int j=0; j<dim; j++)
       for(int i=0; i<dim; i++)
-         chandra_differentiate(c,dim,i,j,x,&v[j][i]);
+         complex_chandra_differentiate(c,dim,i,j,x,&v[j][i]);
 
    complexH<T1> zero;
    zero.init(0.0,0.0);
    for(int i=0; i<dim; i++)
    {
-      chandra_evaluate(c,dim,i,x,&v[dim][i]);
+      complex_chandra_evaluate(c,dim,i,x,&v[dim][i]);
+      v[dim][i] = zero - v[dim][i];
+   }
+}
+
+void real_chandra_evaluate_and_differentiate ( T1 c, int dim, T1* x, T1** v )
+{
+   for(int j=0; j<dim; j++)
+      for(int i=0; i<dim; i++)
+         real_chandra_differentiate(c,dim,i,j,x,&v[j][i]);
+
+   T1 zero = 0.0;
+   for(int i=0; i<dim; i++)
+   {
+      real_chandra_evaluate(c,dim,i,x,&v[dim][i]);
       v[dim][i] = zero - v[dim][i];
    }
 }
