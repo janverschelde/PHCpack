@@ -161,6 +161,23 @@ function use_syscon ( job : integer32;
 --          =  17 : replaces the system in the quad double container
 --                  by a system with variable with name in b and
 --                  number of characters in a[0] removed;
+--
+-- operations on reading systems with given file name :
+--
+--   job    = 540 : reads a standard system into the container where the
+--                  file name is given as a string of n = a[0] characters,
+--                  with the n characters are stored in given b on input;
+--   job    = 541 : reads a double double system into the container where the
+--                  file name is given as a string of n = a[0] characters,
+--                  with the n characters are stored in given b on input;
+--   job    = 542 : reads a quad double system into the container where the
+--                  file name is given as a string of n = a[0] characters,
+--                  with the n characters are stored in given b on input;
+--   job    = 543 : reads a multiprecision system into the container where the
+--                  file name is given as a string of n = a[0] characters,
+--                  with the n characters are stored in given b on input,
+--                  the value of a[1] stores the number of decimal places
+--                  as the precision for parsing the numbers;
 -- 
 --   a        memory allocated for array of integers, a = (n,i,j),
 --            where n is the dimension,
@@ -169,7 +186,6 @@ function use_syscon ( job : integer32;
 --   b        memory allocated for array of integers, used for exponents;
 --   c        memory allocated for array of double floating-point numbers,
 --            used for real and imaginary part of complex coefficient.
-
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
 --   e.g.: indices to monomial out of range, or job not in the proper range.

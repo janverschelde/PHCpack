@@ -89,7 +89,7 @@ function use_track ( job : integer32;
   begin
     Assign(2,c,g);
     gamma := Standard_Complex_Numbers.Create(g(1),g(2));
-    PHCpack_Operations.Create_Homotopy(gamma);
+    PHCpack_Operations.Create_Standard_Homotopy(gamma);
     return 0;
   end Job3;
 
@@ -767,7 +767,7 @@ function use_track ( job : integer32;
                 return 0;
       when 1 => PHCpack_Operations_io.Read_Start_System_without_Solutions;
                 return 0;
-      when 2 => PHCpack_Operations.Create_Homotopy; return 0;
+      when 2 => PHCpack_Operations.Create_Standard_Homotopy; return 0;
       when 3 => return Job3;   -- create homotopy with given gamma
       when 4 => Standard_Homotopy.Clear; return 0;
       when 5 => return Job5;   -- track one path silently

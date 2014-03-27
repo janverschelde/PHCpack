@@ -967,12 +967,12 @@ package body PHCpack_Operations_io is
     PHCpack_Operations.Retrieve_Target_Solutions(sols);
     if not Standard_Complex_Solutions.Is_Null(sols) then
       if PHCpack_Operations.Is_File_Defined then
-        put(PHCpack_Operations.output_file,"THE TARGET SOLUTIONS :");
+        put_line(PHCpack_Operations.output_file,"THE TARGET SOLUTIONS :");
         put(PHCpack_Operations.output_file,
             Standard_Complex_Solutions.Length_Of(sols),
             natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
       else
-        put(standard_output,"THE TARGET SOLUTIONS :");
+        put_line(standard_output,"THE TARGET SOLUTIONS :");
         put(standard_output,
             Standard_Complex_Solutions.Length_Of(sols),
             natural32(Standard_Complex_Solutions.Head_Of(sols).n),sols);
@@ -988,12 +988,12 @@ package body PHCpack_Operations_io is
     PHCpack_Operations.Retrieve_Target_Solutions(sols);
     if not DoblDobl_Complex_Solutions.Is_Null(sols) then
       if PHCpack_Operations.Is_File_Defined then
-        put(PHCpack_Operations.output_file,"THE TARGET SOLUTIONS :");
+        put_line(PHCpack_Operations.output_file,"THE TARGET SOLUTIONS :");
         put(PHCpack_Operations.output_file,
             DoblDobl_Complex_Solutions.Length_Of(sols),
             natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
       else
-        put(standard_output,"THE TARGET SOLUTIONS :");
+        put_line(standard_output,"THE TARGET SOLUTIONS :");
         put(standard_output,
             DoblDobl_Complex_Solutions.Length_Of(sols),
             natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
@@ -1009,12 +1009,12 @@ package body PHCpack_Operations_io is
     PHCpack_Operations.Retrieve_Target_Solutions(sols);
     if not QuadDobl_Complex_Solutions.Is_Null(sols) then
       if PHCpack_Operations.Is_File_Defined then
-        put(PHCpack_Operations.output_file,"THE TARGET SOLUTIONS :");
+        put_line(PHCpack_Operations.output_file,"THE TARGET SOLUTIONS :");
         put(PHCpack_Operations.output_file,
             QuadDobl_Complex_Solutions.Length_Of(sols),
             natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
       else
-        put(standard_output,"THE TARGET SOLUTIONS :");
+        put_line(standard_output,"THE TARGET SOLUTIONS :");
         put(standard_output,
             QuadDobl_Complex_Solutions.Length_Of(sols),
             natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
@@ -1030,12 +1030,12 @@ package body PHCpack_Operations_io is
     PHCpack_Operations.Retrieve_Target_Solutions(sols);
     if not Multprec_Complex_Solutions.Is_Null(sols) then
       if PHCpack_Operations.Is_File_Defined then
-        put(PHCpack_Operations.output_file,"THE TARGET SOLUTIONS :");
+        put_line(PHCpack_Operations.output_file,"THE TARGET SOLUTIONS :");
         put(PHCpack_Operations.output_file,
             Multprec_Complex_Solutions.Length_Of(sols),
             natural32(Multprec_Complex_Solutions.Head_Of(sols).n),sols);
       else
-        put(standard_output,"THE TARGET SOLUTIONS :");
+        put_line(standard_output,"THE TARGET SOLUTIONS :");
         put(standard_output,
             Multprec_Complex_Solutions.Length_Of(sols),
             natural32(Multprec_Complex_Solutions.Head_Of(sols).n),sols);

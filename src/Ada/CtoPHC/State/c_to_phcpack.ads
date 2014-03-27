@@ -1,9 +1,11 @@
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 
-function C_to_PHCpack ( job : integer32 ) return integer32;
+function C_to_PHCpack ( job : integer32;
+                        number_of_tasks : natural32 ) return integer32;
 
 -- DESCRIPTION :
---   Interactive gateway to the core operations in PHCpack.
+--   Interactive gateway to the basic path tracking operations in PHCpack.
 --   Calling this routine with n = 0 displays the menu.
 
 -- ON ENTRY :
@@ -13,7 +15,9 @@ function C_to_PHCpack ( job : integer32 ) return integer32;
 --            =  3 : read start polynomial system;
 --            =  4 : write start polynomial system;
 --            =  5 : write start solutions;
---            =  6 : solve by homotopy continuation;
+--            =  6 : solve by standard homotopy continuation,
+--                   using as many tasks as the value of number_of_tasks,
+--                   if that value is zero, then no multitasking is used;
 --            =  7 : write the target solutions;
 --            =  8 : clear the data in PHCpack_Operations;
 --            =  9 : define the output file;
@@ -22,7 +26,9 @@ function C_to_PHCpack ( job : integer32 ) return integer32;
 --            = 13 : read double double start polynomial system;
 --            = 14 : write double double start polynomial system;
 --            = 15 : write double double start solutions;
---            = 16 : solve by double double homotopy continuation;
+--            = 16 : solve by double double homotopy continuation,
+--                   using as many tasks as the value of number_of_tasks,
+--                   if that value is zero, then no multitasking is used;
 --            = 17 : write the double double target solutions;
 --            = 18 : clear the double double data;
 --            = 21 : read quad double target polynomial system;
@@ -30,7 +36,9 @@ function C_to_PHCpack ( job : integer32 ) return integer32;
 --            = 23 : read quad double start polynomial system;
 --            = 24 : write quad double start polynomial system;
 --            = 25 : write quad double start solutions;
---            = 26 : solve by quad double homotopy continuation;
+--            = 26 : solve by quad double homotopy continuation,
+--                   using as many tasks as the value of number_of_tasks,
+--                   if that value is zero, then no multitasking is used;
 --            = 27 : write the quad double target solutions;
 --            = 28 : clear the quad double data.
 

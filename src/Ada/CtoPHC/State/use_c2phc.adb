@@ -1626,6 +1626,33 @@ function use_c2phc ( job : integer32;
     return 0;
   end Job493;
 
+  function Job16 return integer32 is -- call standard path trackers
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nbt : constant natural32 := natural32(v_a(v_a'first)); -- #tasks
+
+  begin
+    return PHCpack_Operations.Solve_by_Standard_Homotopy_Continuation(nbt);
+  end Job16;
+
+  function Job236 return integer32 is -- call double double path trackers
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nbt : constant natural32 := natural32(v_a(v_a'first)); -- #tasks
+
+  begin
+    return PHCpack_Operations.Solve_by_DoblDobl_Homotopy_Continuation(nbt);
+  end Job236;
+
+  function Job246 return integer32 is -- call quad double path trackers
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nbt : constant natural32 := natural32(v_a(v_a'first)); -- #tasks
+
+  begin
+    return PHCpack_Operations.Solve_by_QuadDobl_Homotopy_Continuation(nbt);
+  end Job246;
+
   function Job496 return integer32 is -- call multiprecision trackers
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
@@ -1648,7 +1675,9 @@ function use_c2phc ( job : integer32;
       when 7 => return Job7; -- copy start solutions to container
       when 8 => return Job8; -- copy container to start solutions
       when 9 => return Job9; -- verify the solutions in the container
-      when 10..19 => return C_to_PHCpack(job-10);
+      when 10..15 => return C_to_PHCpack(job-10,0);
+      when 16 => return Job16; -- call standard path trackers
+      when 17..19 => return C_to_PHCpack(job-10,0);
       when 20..29 => return use_syscon(job-20,a,b,c);
       when 30..38 => return use_solcon(job-30,a,b,c);
       when 39 => return use_c2fac(28,a,b,c); -- set state to silent
@@ -1696,8 +1725,12 @@ function use_c2phc ( job : integer32;
       when 199 => return Job199; -- 1 Newton step on standard containers
       when 200..209 => return use_solcon(job-170,a,b,c);
       when 210..227 => return use_c2pieri(job-210,a,b,c);
-      when 231..238 => return C_to_PHCpack(job-220);
-      when 241..248 => return C_to_PHCpack(job-220);
+      when 231..235 => return C_to_PHCpack(job-220,0);
+      when 236 => return Job236; -- solve by double double path tracking
+      when 237..238 => return C_to_PHCpack(job-220,0);
+      when 241..245 => return C_to_PHCpack(job-220,0);
+      when 246 => return Job246; -- solve by quad double path tracking
+      when 247..248 => return C_to_PHCpack(job-220,0);
      -- double double versions for jobs 1 to 8
       when 251 => return Job251; -- copy target system to container
       when 252 => return Job252; -- copy target system from container
@@ -1779,6 +1812,10 @@ function use_c2phc ( job : integer32;
       when 522..524 => return use_track(job-470,a,b,c);
      -- multihomogeneous Bezout numbers and start systems
       when 530..532 => return use_roco(job-520,a,b,c);
+     -- operations to read systems into the containers
+      when 540..543 => return use_syscon(job,a,b,c);
+     -- operations to read systems and solutions into the containers
+      when 544..547 => return use_solcon(job,a,b,c);
      -- setting seed and producing version string
       when 998 => return Set_Seed;
       when 999 => return Version_String;

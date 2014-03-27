@@ -41,7 +41,7 @@ function use_nxtsol ( job : integer32;
    -- new_line;
    -- put_line("The target system : "); put(target.all);
    -- put_line("The start system : "); put(start.all);
-    Standard_Path_Tracker.Init(target,start);
+    Standard_Path_Tracker.Init(target,start,true);
     return 0;
   end Job0;
  
@@ -55,7 +55,7 @@ function use_nxtsol ( job : integer32;
    -- new_line;
    -- put_line("The target system : "); put(target.all);
    -- put_line("The start system : "); put(start.all);
-    DoblDobl_Path_Tracker.Init(target,start);
+    DoblDobl_Path_Tracker.Init(target,start,true);
     return 0;
   end Job1;
  
@@ -69,7 +69,7 @@ function use_nxtsol ( job : integer32;
    -- new_line;
    -- put_line("The target system : "); put(target.all);
    -- put_line("The start system : "); put(start.all);
-    QuadDobl_Path_Tracker.Init(target,start);
+    QuadDobl_Path_Tracker.Init(target,start,true);
     return 0;
   end Job2;
 
@@ -187,7 +187,7 @@ function use_nxtsol ( job : integer32;
   begin
     PHCpack_Operations.Retrieve_Start_System(start);
     PHCpack_Operations.Retrieve_Target_System(target);
-    Multprec_Path_Tracker.Init(target,start,deci);
+    Multprec_Path_Tracker.Init(target,start,true,deci);
     return 0;
   end Job12;
 

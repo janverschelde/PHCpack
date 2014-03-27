@@ -48,6 +48,7 @@ with Multprec_IncFix_Continuation;
 with Standard_Root_Refiners;
 with Witness_Sets,Witness_Sets_io;
 with Extrinsic_Diagonal_Homotopies;      use Extrinsic_Diagonal_Homotopies;
+with Multitasking_Continuation;          use Multitasking_Continuation;
 
 package body PHCpack_Operations is
 
@@ -482,14 +483,14 @@ package body PHCpack_Operations is
     end loop;
   end Copy_QuadDobl_Labels;
 
-  procedure Create_Homotopy is
+  procedure Create_Standard_Homotopy is
 
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := Standard_Random_Numbers.Random1;
 
   begin
-    Create_Homotopy(gamma);
-  end Create_Homotopy;
+    Create_Standard_Homotopy(gamma);
+  end Create_Standard_Homotopy;
 
   procedure Create_DoblDobl_Homotopy is
 
@@ -511,8 +512,6 @@ package body PHCpack_Operations is
 
   procedure Create_Multprec_Homotopy is
 
-    use Multprec_Floating_Numbers;
-
     df_gamma : constant Standard_Complex_Numbers.Complex_Number
           := Standard_Random_Numbers.Random1;
     mp_re : Floating_Number 
@@ -528,7 +527,7 @@ package body PHCpack_Operations is
     Multprec_Floating_Numbers.Clear(mp_im);
   end Create_Multprec_Homotopy;
 
-  procedure Create_Homotopy
+  procedure Create_Standard_Homotopy
               ( gamma : in Standard_Complex_Numbers.Complex_Number ) is
   begin
     if not empty_homotopy then
@@ -555,7 +554,7 @@ package body PHCpack_Operations is
   exception
     when others => put_line("exception raised when creating a homotopy");
                    raise;
-  end Create_Homotopy;
+  end Create_Standard_Homotopy;
 
   procedure Create_DoblDobl_Homotopy
               ( gamma : in DoblDobl_Complex_Numbers.Complex_Number ) is
@@ -605,14 +604,14 @@ package body PHCpack_Operations is
                    raise;
   end Create_Multprec_Homotopy;
 
-  procedure Clear_Homotopy is
+  procedure Clear_Standard_Homotopy is
   begin
     Standard_Homotopy.Clear;
     empty_homotopy := true;
   exception 
     when others => put_line("exception raised when clearing a homotopy");
                    raise;
-  end Clear_Homotopy;
+  end Clear_Standard_Homotopy;
 
   procedure Clear_DoblDobl_Homotopy is
   begin
@@ -706,7 +705,7 @@ package body PHCpack_Operations is
         when others => put_line("raised exception when removing slice...");
                        raise;
       end;
-      PHCpack_Operations.Create_Homotopy(gamma);
+      PHCpack_Operations.Create_Standard_Homotopy(gamma);
     elsif st_target_sys /= null then
       Swap_Embed_Symbols(st_target_sys.all);
       st_start_sys := new Poly_Sys(st_target_sys'range);
@@ -714,7 +713,7 @@ package body PHCpack_Operations is
       Clear(st_target_sys);
       st_target_sys
         := new Poly_Sys'(Witness_Sets.Remove_Slice(st_start_sys.all));
-      PHCpack_Operations.Create_Homotopy(gamma);
+      PHCpack_Operations.Create_Standard_Homotopy(gamma);
     end if;
   end Create_Cascade_Homotopy;
 
@@ -840,7 +839,7 @@ package body PHCpack_Operations is
         Clear(st_target_sys); st_target_sys := new Poly_Sys'(target);
       end;
     end if;
-    PHCpack_Operations.Create_Homotopy(gamma);
+    PHCpack_Operations.Create_Standard_Homotopy(gamma);
   end Create_Diagonal_Homotopy;
 
   procedure Start_Diagonal_Cascade_Solutions ( a,b : in natural32 ) is
@@ -1303,7 +1302,8 @@ package body PHCpack_Operations is
     when others => crash := true;
   end Reporting_Laurent_Path_Tracker;
 
-  function Solve_by_Homotopy_Continuation return integer32 is
+  function Solve_by_Standard_Homotopy_Continuation
+             ( number_of_tasks : natural32 ) return integer32 is
 
     use Standard_Complex_Numbers,Standard_Complex_Norms_Equals;
     use Standard_IncFix_Continuation;
@@ -1352,7 +1352,12 @@ package body PHCpack_Operations is
       (st_target_sols,Create(0.0));
     if file_okay then
       tstart(timer);
-      Rep_Cont(output_file,st_target_sols,false,Create(1.0));
+      if number_of_tasks = 0 then
+        Rep_Cont(output_file,st_target_sols,false,Create(1.0));
+      else
+        Silent_Multitasking_Path_Tracker
+          (st_target_sols,integer32(number_of_tasks));
+      end if;
       Standard_Root_Refiners.Reporting_Root_Refiner
         (output_file,st_target_sys.all,st_target_sols,epsxa,epsfa,
          tolsing,numit,max,deflate,false);
@@ -1360,18 +1365,25 @@ package body PHCpack_Operations is
       new_line(output_file);
       print_times(output_file,timer,"Solving by Homotopy Continuation");
     else
-      Sil_Cont(st_target_sols,false,Create(1.0));
+      if number_of_tasks = 0 then
+        Sil_Cont(st_target_sols,false,Create(1.0));
+      else
+        Silent_Multitasking_Path_Tracker
+          (st_target_sols,integer32(number_of_tasks));
+      end if;
       Standard_Root_Refiners.Silent_Root_Refiner
-        (st_target_sys.all,st_target_sols,epsxa,epsfa,tolsing,numit,max,deflate);
+        (st_target_sys.all,st_target_sols,epsxa,epsfa,tolsing,
+         numit,max,deflate);
     end if;
     Copy_Labels;
    -- Standard_Homotopy.Clear;  -- for dynamic load balancing
     return 0;
   exception
     when others => return 1;
-  end Solve_by_Homotopy_Continuation;
+  end Solve_by_Standard_Homotopy_Continuation;
 
-  function Solve_by_DoblDobl_Homotopy_Continuation return integer32 is
+  function Solve_by_DoblDobl_Homotopy_Continuation
+             ( number_of_tasks : natural32 ) return integer32 is
 
     use DoblDobl_Complex_Numbers,DoblDobl_Complex_Vector_Norms;
     use DoblDobl_IncFix_Continuation;
@@ -1422,7 +1434,12 @@ package body PHCpack_Operations is
       (dd_target_sols,Create(integer(0)));
     if file_okay then
       tstart(timer);
-      Rep_Cont(output_file,dd_target_sols,Create(integer(1)));
+      if number_of_tasks = 0 then
+        Rep_Cont(output_file,dd_target_sols,Create(integer(1)));
+      else
+        Silent_Multitasking_Path_Tracker
+          (dd_target_sols,integer32(number_of_tasks));
+      end if;
      -- Standard_Root_Refiners.Reporting_Root_Refiner
      --   (output_file,st_target_sys.all,st_target_sols,epsxa,epsfa,
      --    tolsing,numit,max,deflate,false);
@@ -1430,7 +1447,12 @@ package body PHCpack_Operations is
       new_line(output_file);
       print_times(output_file,timer,"Solving by Homotopy Continuation");
     else
-      Sil_Cont(dd_target_sols,Create(integer(1)));
+      if number_of_tasks = 0 then
+        Sil_Cont(dd_target_sols,Create(integer(1)));
+      else
+        Silent_Multitasking_Path_Tracker
+          (dd_target_sols,integer32(number_of_tasks));
+      end if;
      -- Standard_Root_Refiners.Silent_Root_Refiner
      --   (st_target_sys.all,st_target_sols,epsxa,epsfa,
      --    tolsing,numit,max,deflate);
@@ -1442,7 +1464,8 @@ package body PHCpack_Operations is
     when others => return 1;
   end Solve_by_DoblDobl_Homotopy_Continuation;
 
-  function Solve_by_QuadDobl_Homotopy_Continuation return integer32 is
+  function Solve_by_QuadDobl_Homotopy_Continuation
+             ( number_of_tasks : natural32 ) return integer32 is
 
     use QuadDobl_Complex_Numbers,QuadDobl_Complex_Vector_Norms;
     use QuadDobl_IncFix_Continuation;
@@ -1493,7 +1516,12 @@ package body PHCpack_Operations is
       (qd_target_sols,Create(integer(0)));
     if file_okay then
       tstart(timer);
-      Rep_Cont(output_file,qd_target_sols,Create(integer(1)));
+      if number_of_tasks = 0 then
+        Rep_Cont(output_file,qd_target_sols,Create(integer(1)));
+      else
+        Silent_Multitasking_Path_Tracker
+          (qd_target_sols,integer32(number_of_tasks));
+      end if;
      -- Standard_Root_Refiners.Reporting_Root_Refiner
      --   (output_file,st_target_sys.all,st_target_sols,epsxa,epsfa,
      --    tolsing,numit,max,deflate,false);
@@ -1501,7 +1529,12 @@ package body PHCpack_Operations is
       new_line(output_file);
       print_times(output_file,timer,"Solving by Homotopy Continuation");
     else
-      Sil_Cont(qd_target_sols,Create(integer(1)));
+      if number_of_tasks = 0 then
+        Sil_Cont(qd_target_sols,Create(integer(1)));
+      else
+        Silent_Multitasking_Path_Tracker
+          (qd_target_sols,integer32(number_of_tasks));
+      end if;
      -- Standard_Root_Refiners.Silent_Root_Refiner
      --   (st_target_sys.all,st_target_sols,epsxa,epsfa,
      --   tolsing,numit,max,deflate);
@@ -1576,7 +1609,7 @@ package body PHCpack_Operations is
     return 0;
   end Solve_by_Multprec_Homotopy_Continuation;
 
-  procedure Clear is
+  procedure Standard_Clear is
   begin
     Standard_Complex_Poly_Systems.Clear(st_start_sys);
     Standard_Complex_Solutions.Clear(st_start_sols);
@@ -1586,7 +1619,7 @@ package body PHCpack_Operations is
       Standard_Homotopy.Clear;
       empty_homotopy := true;
     end if;
-  end Clear;
+  end Standard_Clear;
 
   procedure DoblDobl_Clear is
   begin

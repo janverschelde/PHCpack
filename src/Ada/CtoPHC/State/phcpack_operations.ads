@@ -125,8 +125,8 @@ package PHCpack_Operations is
   procedure Store_Gamma_Constant
               ( gamma : in Multprec_Complex_Numbers.Complex_Number );
 
-  procedure Create_Homotopy;
-  procedure Create_Homotopy
+  procedure Create_Standard_Homotopy;
+  procedure Create_Standard_Homotopy
               ( gamma : in Standard_Complex_Numbers.Complex_Number );
   procedure Create_DoblDobl_Homotopy;
   procedure Create_DoblDobl_Homotopy
@@ -145,7 +145,7 @@ package PHCpack_Operations is
 
   -- REQUIRED : start and target system have been stored.
 
-  procedure Clear_Homotopy;
+  procedure Clear_Standard_Homotopy;
   procedure Clear_DoblDobl_Homotopy;
   procedure Clear_QuadDobl_Homotopy;
 
@@ -283,9 +283,12 @@ package PHCpack_Operations is
   --   nbsyst    number of linear systems solved along the path;
   --   crash     true if some exception occurred.
 
-  function Solve_by_Homotopy_Continuation return integer32;
-  function Solve_by_DoblDobl_Homotopy_Continuation return integer32;
-  function Solve_by_QuadDobl_Homotopy_Continuation return integer32;
+  function Solve_by_Standard_Homotopy_Continuation 
+             ( number_of_tasks : natural32 ) return integer32;
+  function Solve_by_DoblDobl_Homotopy_Continuation
+             ( number_of_tasks : natural32 ) return integer32;
+  function Solve_by_QuadDobl_Homotopy_Continuation
+             ( number_of_tasks : natural32 ) return integer32;
   function Solve_by_Multprec_Homotopy_Continuation
              ( decimals : natural32 ) return integer32;
 
@@ -293,10 +296,13 @@ package PHCpack_Operations is
   --   Tracks the paths starting at the current start solutions.
   --   A normal termination returns 0.  Otherwise, the return value
   --   of this function signals an exception.
+  --   If the number_of_tasks equals 0, then no multicore will be used,
+  --   otherwise as many tasks as the value of number_of_tasks will be
+  --   launched to do the path tracking.
   --   The number of decimal places in the working precision for the
   --   multiprecision version equals the value of decimals.
 
-  procedure Clear;
+  procedure Standard_Clear;
 
   -- DESCRIPTION :
   --   Deallocation of the persistent data for standard homotopies.

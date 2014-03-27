@@ -4,10 +4,15 @@ with File_Scanning;                     use File_Scanning;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Multprec_Floating_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
-with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
+with Multprec_Complex_Polynomials_io;
+with Multprec_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions;
@@ -22,10 +27,18 @@ with QuadDobl_Solution_Strings;
 with Multprec_Solution_Strings;
 with Symbol_Table;
 with Solution_Drops;
+with Standard_System_and_Solutions_io;
+with DoblDobl_System_and_Solutions_io;
+with QuadDobl_System_and_Solutions_io;
+with Multprec_System_and_Solutions_io;
 with Total_Degree_Start_Systems;        use Total_Degree_Start_Systems;
 with Lexicographic_Root_Enumeration;    use Lexicographic_Root_Enumeration;
 with Drivers_to_Track_Standard_Paths;   use Drivers_to_Track_Standard_Paths;
 with PHCpack_Operations;
+with Standard_PolySys_Container;
+with DoblDobl_PolySys_Container;
+with QuadDobl_PolySys_Container;
+with Multprec_PolySys_Container;
 with Standard_Solutions_Container;
 with DoblDobl_Solutions_Container;
 with QuadDobl_Solutions_Container;
@@ -403,7 +416,7 @@ function use_solcon ( job : integer32;
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
     n : constant natural32 := natural32(v_a(v_a'first));
     i : constant natural32 := natural32(v_a(v_a'first+1));
-    lq : Link_to_Poly_Sys;
+    lq : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     d,s : Standard_Natural_Vectors.Vector(1..integer32(n));
     cff,sol : Standard_Complex_Vectors.Vector(1..integer32(n));
     ls : Link_to_Solution;
@@ -429,7 +442,7 @@ function use_solcon ( job : integer32;
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
     n : constant natural32 := natural32(v_a(v_a'first));
     i : constant natural32 := natural32(v_a(v_a'first+1));
-    lq : Link_to_Poly_Sys;
+    lq : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     d : Standard_Natural_Vectors.Vector(1..integer32(n));
    -- cp : Standard_Natural_Vectors.Vector(1..n-1);
     ls : Link_to_Solution;
@@ -468,7 +481,7 @@ function use_solcon ( job : integer32;
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
     n : constant natural32 := natural32(v_a(v_a'first));
     i : constant natural32 := natural32(v_a(v_a'first+1));
-    lq : Link_to_Poly_Sys;
+    lq : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     d : Standard_Natural_Vectors.Vector(1..integer32(n));
     cp : Standard_Natural_Vectors.Vector(1..integer32(n)-1);
     ls : Link_to_Solution;
@@ -1136,6 +1149,143 @@ function use_solcon ( job : integer32;
     return 0;
   end Job89;
 
+  function Job544 return integer32 is -- read standard sys+sols from file
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+    new_line;
+    put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+      sols : Standard_Complex_Solutions.Solution_List;
+    begin
+      Open(file,in_file,sv);
+      Standard_System_and_Solutions_io.get(file,p,sols);
+      Standard_PolySys_Container.Clear;
+      Standard_PolySys_Container.Initialize(p.all);
+      Standard_Solutions_Container.Clear;
+      Standard_Solutions_Container.Initialize(sols);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 544;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 544;
+    end;
+    return 0;
+  end Job544;
+
+  function Job545 return integer32 is -- read double double sys+sols from file
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+    new_line;
+    put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+      sols : DoblDobl_Complex_Solutions.Solution_List;
+    begin
+      Open(file,in_file,sv);
+      DoblDobl_System_and_Solutions_io.get(file,p,sols);
+      DoblDobl_PolySys_Container.Clear;
+      DoblDobl_PolySys_Container.Initialize(p.all);
+      DoblDobl_Solutions_Container.Clear;
+      DoblDobl_Solutions_Container.Initialize(sols);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 545;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 545;
+    end;
+    return 0;
+  end Job545;
+
+  function Job546 return integer32 is -- read quad double sys+sols from file
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+    new_line;
+    put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+      sols : QuadDobl_Complex_Solutions.Solution_List;
+    begin
+      Open(file,in_file,sv);
+      QuadDobl_System_and_Solutions_io.get(file,p,sols);
+      QuadDobl_PolySys_Container.Clear;
+      QuadDobl_PolySys_Container.Initialize(p.all);
+      QuadDobl_Solutions_Container.Clear;
+      QuadDobl_Solutions_Container.Initialize(sols);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 546;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 546;
+    end;
+    return 0;
+  end Job546;
+
+  function Job547 return integer32 is -- read multiprecision sys+sols from file
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nc : constant natural := natural(v_a(v_a'first));
+    use Interfaces.C;
+    nbdeci : constant natural32 := natural32(v_a(v_a'first+1));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+    size : constant natural32
+         := Multprec_Floating_Numbers.Decimal_to_Size(nbdeci);
+
+  begin
+    Multprec_Complex_Polynomials_io.Set_Working_Precision(size);
+    new_line;
+    put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      p : Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;
+      sols : Multprec_Complex_Solutions.Solution_List;
+    begin
+      Open(file,in_file,sv);
+      Multprec_System_and_Solutions_io.get(file,p,sols);
+      Multprec_PolySys_Container.Clear;
+      Multprec_PolySys_Container.Initialize(p.all);
+      Multprec_Solutions_Container.Clear;
+      Multprec_Solutions_Container.Initialize(sols);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 547;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 547;
+    end;
+    return 0;
+  end Job547;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -1218,6 +1368,11 @@ function use_solcon ( job : integer32;
       when 150 => return Job150; -- returns size of solution string
       when 151 => return Job151; -- returns solution string
       when 158 => return Job158; -- append solution string to container
+     -- reading system and solutions from given file name
+      when 544 => return Job544; -- read standard system and solutions
+      when 545 => return Job545; -- read double double system and solutions
+      when 546 => return Job546; -- read quad double system and solutions
+      when 547 => return Job547; -- read multiprecision system and solutions
       when others => put_line("invalid operation"); return 1;
     end case;
   end Handle_Jobs;

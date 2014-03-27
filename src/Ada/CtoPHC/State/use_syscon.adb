@@ -1,6 +1,7 @@
 with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Complex_Polynomials;
@@ -977,6 +978,132 @@ function use_syscon ( job : integer32;
     return 0;
   end Job17;
 
+  function Job540 return integer32 is -- read standard system from file
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    begin
+      Open(file,in_file,sv);
+      get(file,p);
+      Standard_PolySys_Container.Clear;
+      Standard_PolySys_Container.Initialize(p.all);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 540;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 540;
+    end;
+    return 0;
+  end Job540;
+
+  function Job541 return integer32 is -- read double double system from file
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    begin
+      Open(file,in_file,sv);
+      get(file,p);
+      DoblDobl_PolySys_Container.Clear;
+      DoblDobl_PolySys_Container.Initialize(p.all);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 541;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 541;
+    end;
+    return 0;
+  end Job541;
+
+  function Job542 return integer32 is -- read quad double system from file
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nc : constant natural := natural(v_a(v_a'first));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+
+  begin
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
+    declare
+      file : file_type;
+      p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    begin
+      Open(file,in_file,sv);
+      get(file,p);
+      QuadDobl_PolySys_Container.Clear;
+      QuadDobl_PolySys_Container.Initialize(p.all);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 542;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 542;
+    end;
+    return 0;
+  end Job542;
+
+  function Job543 return integer32 is -- read multiprecision system from file
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nc : constant natural := natural(v_a(v_a'first));
+    use Interfaces.C;
+    nbdeci : constant natural32 := natural32(v_a(v_a'first+1));
+    vb : constant C_Integer_Array(0..Interfaces.C.size_t(nc))
+       := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc+1));
+    sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
+    size : constant natural32
+         := Multprec_Floating_Numbers.Decimal_to_Size(nbdeci);
+
+  begin
+    Multprec_Complex_Polynomials_io.Set_Working_Precision(size);
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
+   -- put("number of decimal places : "); put(nbdeci,1); new_line;
+    declare
+      file : file_type;
+      p : Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;
+    begin
+      Open(file,in_file,sv);
+      get(file,p);
+      Multprec_PolySys_Container.Clear;
+      Multprec_PolySys_Container.Initialize(p.all);
+      exception 
+        when NAME_ERROR =>
+          put_line("File with name " & sv & " could not be found!");
+          return 543;
+        when USE_ERROR =>
+          put_line("File with name " & sv & " could not be read!");
+          return 543;
+    end;
+    return 0;
+  end Job543;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -1048,6 +1175,11 @@ function use_syscon ( job : integer32;
       when 70 => return Job70; -- load multprec polynomial from container
       when 74 => return Job74; -- store standard Laurential in container
       when 76 => return Job76; -- store standard polynomial in container
+     -- reading systems into the containers :
+      when 540 => return Job540; -- read standard system from file
+      when 541 => return Job541; -- read double double system from file
+      when 542 => return Job542; -- read quad double system from file
+      when 543 => return Job543; -- read multiprecision system from file
       when others => put_line("invalid operation"); return 1;
     end case;
   end Handle_Jobs;

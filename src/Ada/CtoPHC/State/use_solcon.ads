@@ -184,6 +184,27 @@ function use_solcon ( job : integer32;
 --                   representation of a solution stored in b, the solution
 --                   will be appended to the solutions container.
 --
+-- operations to read a system and its solutions into the containers :
+--
+--   job    = 544 : reads a standard system into the systems container 
+--                  and its solutions into the solutions container where the
+--                  file name is given as a string of n = a[0] characters,
+--                  with the n characters are stored in given b on input;
+--   job    = 545 : reads a double double system into the systems container
+--                  and its solutions into the solutions container where the
+--                  file name is given as a string of n = a[0] characters,
+--                  with the n characters are stored in given b on input;
+--   job    = 546 : reads a quad double system into the systems container
+--                  and its solutions into the solutions container where the
+--                  file name is given as a string of n = a[0] characters,
+--                  with the n characters are stored in given b on input;
+--   job    = 547 : reads a multiprecision system into the systems container
+--                  and its solutions into the solutions container where the
+--                  file name is given as a string of n = a[0] characters,
+--                  with the n characters are stored in given b on input,
+--                  the value of a[1] stores the number of decimal places
+--                  as the precision for parsing the numbers;
+--
 --   a       indicates the number of solution to work on;
 --   b       array with allocated memory for integers,
 --           usually only len, n, m, or the array (n,m),
