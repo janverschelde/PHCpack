@@ -1,0 +1,415 @@
+Tue 25 Mar 2014 : new packages {dobldobl,quaddobl}_sample_grids,
+  to be tested in ts_ddqdsam.adb.
+
+Mon 24 Mar 2014 : new packages {dobldobl,quaddobl}_sample_{points,lists},
+  to be tested in ts_ddqdsam.adb.
+
+Sun 23 Mar 2014 : extended witness_sets and planes_and_polynomials with
+  methods in quad double arithmetic.  Updates in dobldobl_sampling_machine
+  and new quaddobl_sampling_machine, tested by ts_ddqdsam, renamed from the
+  former tester ts_ddsam.  Edited sampling_machine.adb to trace the correct
+  way of calling the sample routine...  Extended planes_and_polynomials
+  and witness_sets with dobldobl and quaddobl versions.
+
+Sat 22 Mar 2014 : extended witness_sets_io for double double and quad double
+  witness sets.  Extended planes_and_polynomials for double doubles.
+  New package dobldobl_sampling_machine, tested by ts_ddsam.
+
+Thu 27 Jun 2013 : updated witness_sets_formats for integer32.
+
+Wed 26 Jun 2013 : updated mainsam.adb for natural32 and integer32 data types.
+
+Mon 24 Jun 2013 : updated hypersurface_sample_grids,
+  standard_stacked_sample_grids, multprec_stacked_sample_grids.adb,
+  and rectangular_sample_grids.adb.
+
+Fri 21 Jun 2013 : started rewriting because of integer32 and natural32 types.
+
+Wed 19 Jun 2013 : planes_and_polynomials is needed in ../Schubert/Induction.
+
+Thu 14 Feb 2013 : extended witness_sets_io with swap & sort embed symbols
+  for double double and quad double systems.
+
+Wed 13 Feb 2013 : extended witness_sets with remove slice for double double
+  and quad double polynomial systems.
+
+Mon 14 Jan 2013 : changed intrinsic_witness_sets_io.adb for the printing
+  of empty witness sets.
+
+Fri 12 Aug 2011 : changes in standard_intrinsic_trackers.adb, ts_ilocal.adb,
+  and tuning in mainsam.adb.
+
+Thu 11 Aug 2011 : cleaning up standard_intrinsic_trackers.adb.
+
+Wed 10 Aug 2011 : fixed a bug in standard_intrinsic_trackers.adb.
+
+Tue 9 Aug 2011 : updates in standard_intrinsic_{newton,trackers}.adb and
+  standard_moving_planes.a*.
+
+Mon 8 Aug 2011 : changes in standard_intrinsic_{trackers,continuation}.adb,
+  ts_ilocal.adb and mainsam.adb.
+
+Sun 7 Aug 2011 : moved One_Random_Direction from ts_ilocal to the package
+  standard_moving_planes.  Moved Write_Witness_Set_to_File from ts_ilocal
+  to intrinsic_witness_sets_io.  Created mainsam for phc -y.
+
+Thu 4 Aug 2011 : added normalize to standard_moving_planes, updated
+  standard_intrinsic_trackers, standard_intrinsic_continuation,
+  and ts_ilocal.adb.
+
+Sun 31 Jul 2011 : from Decomposition/standard_cascading_planes, moved
+  intersect into standard_plane_operations, tested by ts_planes.adb.
+
+Fri 29 Jul 2011 : fixed bug in witness_sets_io.adb when embedding was
+  given with double numbering on the first line, e.g.: 4 4.
+
+Wed 27 Jul 2011 : added recentered write to intrinsic_witness_sets_io.
+  Modified standard_intrinsic_{trackers,continuation}.adb and ts_ilocal.adb.
+
+Sun 24 Jul 2011 : fixed one bug in standard_intrinsic_trackers.adb.
+
+Wed 20 Jul 2011 : more updates in standard_intrinsic_trackers.adb.
+
+Tue 19 Jul 2011 : updates in standard_intrinsic_trackers.adb for bug...
+
+Fri 15 Jul 2011 : new Orthogonalize procedure in standard_plane_representations
+  and updates in standard_intrinsic_trackers.adb.
+
+Mon 27 Jun 2011 : added routine to standard_moving_planes.
+
+Sun 26 Jun 2011 : updated standard_intrinsic_trackers.adb and 
+  standard_intrinsic_trackers, tested by ts_ilocal.adb.
+
+Fri 24 Jun 2011 : added recentered to standard_intrinsic_trackers.
+
+Thu 23 Jun 2011 : updated ts_ilocal.adb, standard_intrinsic_trackers.adb
+  and standard_intrinsic_continuation.adb.
+
+Wed 22 Jun 2011 : added use of Process_io in standard_intrinsic_newton.adb
+  and standard_intrinsic_trackers.adb.
+
+Sun 19 Jun 2011 : moved "check_orthonormality" from ts_ilocal.adb into
+  standard_rescaling_coordinates.
+
+Fri 17 Jun 2011 : modified standard_intrinsic_continuation.adb.
+
+Thu 16 Jun 2011 : updated standard_intrinsic_continuation to track paths
+  using local intrinsic coordinates.
+
+Thu 2 Jun 2011 : changed witness_sets_formats.adb and hypersurface_roots.adb
+  for warnings.
+
+Wed 1 Jun 2011 : changed sample_point_grids.adb, sample_point_grids_io.adb,
+  multprec_stacked_sample_grids.adb, and sample_point_lists_io.adb for warnings.
+
+Sun 30 May 2011 : renamed standard_rescaling_coordinates into
+  standard_recentering_coordinates.  Fixed ts_iwset.adb, ts_ispan.adb,
+  ts_inewt.adb, ts_itrack.adb; modified ts_unisam.adb, ts_coords.adb,
+  ts_embed.adb, ts_endgm.adb, ts_locdim.adb, ts_flag.adb,
+  standard_solution_clusters.adb, standard_flag_representations.adb,
+  intrinsic_witness_sets_io.adb, drivers_for_grid_creators.adb,
+  standard_stacked_sample_grids.adb, sample_points.adb, 
+  and sample_point_lists.adb for warnings.
+
+Mon 25 Apr 2011 : updated ts_ilocal.adb for changed pred_pars/corr_pars
+  in continuation_parameters.
+
+Tue 14 Sep 2010 : updated headers of standard_intrinsic_trackers.ads
+  and standard_intrinsic_continuation.ads.
+
+Tue 23 Feb 2010 : small formatting changes in ts_sample.adb.
+
+Wed 18 Nov 2009 : timers in ts_inewt.adb and ts_ilocal.adb.
+
+Tue 17 Nov 2009 : evaluation of predictor in standard_intrinsic_trackers.adb.
+
+Mon 16 Nov 2009 : updates in standard_intrinsic_trackers and ts_ilocal.adb.
+
+Fri 13 Nov 2009 : updates in standard_rescaling_coordinates and ts_ilocal.adb,
+  the idea seems to work.
+
+Wed 11 Nov 2009 : updates in standard_intrinsic_newton.adb and ts_ilocal.adb.
+
+Tue 10 Nov 2009 : updates in ts_ilocal.adb and new package
+  standard_rescaling_coordinates.
+
+Mon 9 Nov 2009 : updates in standard_moving_planes.a*, witness_sets.a*,
+  ts_iwset, ts_ispan, ts_itrack, ts_inewt, new ts_ilocal.
+
+Fri 6 Nov 2009 : for GNAT GPL warnings, update ts_inewt.adb,
+  standard_intrinsic_newton.adb, standard_linear_span.adb,
+  standard_moving_planes.adb, standard_plane_representations,
+  standard_intrinsic_solutions.adb, standard_point_coordinates.adb,
+  planes_and_polynomials, witness_sets_io.adb, standard_sampling_machine.adb,
+  hypersurface_samplers.adb, standard_intrinsic_continuation.adb.
+
+Wed 4 Nov 2009 : updated ts_unisam.adb, polynomial_roots.adb,
+  standard_plane_operations, ts_iwset.adb did no longer compile.
+
+Fri 19 Jun 2009 : updated ts_coords.adb, ts_itrack.adb, ts_ispan.adb,
+  ts_inewt.adb, ts_mulsam.adb, ts_endgm.adb.
+
+Fri 28 Nov 2008 : adjusted formatting in planes_and_polynomials.adb.
+
+Sun 26 Oct 2008 : witness_sets_io.adb must scan for "THE SOLUTIONS"
+  instead for "SOLUTIONS", otherwise checking for "START SOLUTIONS".
+
+Thu 20 Dec 2007 : exported sort_embed_symbols in witness_sets_io, tested
+  by ts_embed.adb as needed in lib_track for parallel diagonal homotopy.
+
+Tue 27 Nov 2007 : improved witness_sets.adb without sharing when removing
+  or adding a slice.
+
+Mon 26 Nov 2007 : modified complete in witness_sets.adb so no sharing occurs,
+  also remove_embedding was modified into remove_embedding1.
+
+Mon 20 Aug 2007 : adding projective versions to standard_intrinsic_trackers
+  and standard_intrinsic_continuation changed ts_inewt, ts_ispan, ts_iwset,
+  and ts_itrack.
+
+Tue 10 Jul 2007 : renamed the Add_Embedding of witness_sets to Add_Dummies
+  and added an "Add_Dummy" operation to witness_sets.
+
+Mon 9 Jul 2007 : added to witness_sets an Add_Embedding for zero polynomials.
+
+Mon 8 Jan 2007 : added function to witness_sets_io.
+
+Mon 18 Dec 2006 : moved "Swap_Symbols_to_End" to witness_sets_io.ads,
+  for use in the jumpstarting of the diagonal homotopies.
+
+Fri 15 Dec 2006 : changed witness_sets_io.ad* to jumpstart the diagonal
+  homotopies.
+
+Thu 14 Dec 2006 : renamed packages containing "witness_points" into
+  "witness_sets".  Recompiled all ts_ programs, patched ts_multhom.adb, 
+  but ts_sampar.adb failed to compile.  Also intrinsic_witness_sets_io.adb
+  changed.
+
+Wed 14 Jun 2006 : because of warnings on AIX, changed witness_points_io.adb
+  and the package hypersurface_samplers.
+
+Sat 10 Dec 2005 : reading an embedding recognizes extra "ss" slack variables,
+  added to witness_points_io.ads, tested by ts_embed.adb.
+
+Wed 7 Dec 2005 : added removal of embedding to ts_embed.adb; now we can
+  find initial solutions to the simple staircase system automatically.
+
+Tue 29 Nov 2005 : modified ts_embed.adb to fix bug in the embedding of
+  overdetermined polynomial systems.
+
+Mon 11 Jul 2005 : attempted a local dimension test in ts_locdim.adb
+
+Thu 24 Mar 2005 : changed standard_intrinsic_trackers.adb, using process_io.
+  removed extra output in standard_intrinsic_newton.adb.
+
+Sun 16 Jan 2005 : changed stop conditions in standard_intrinsic_newton.adb
+
+Thu 13 Jan 2005 : made some changes to standard_intrinsic_trackers.adb and
+  standard_intrinsic_continuation.adb to look for a bug....
+
+Sun 19 Dec 2004 : moved intrinsic_witness_sets_io from Solver to here.
+
+Mon 19 Jul 2004 : reduced output in standard_intrinsic_continuation.
+
+Wed 14 Jul 2004 : fixed the step_control in standard_intrinsic_trackers.
+
+Tue 13 Jul 2004 : added one Affine_Expand to standard_point_coordinates.
+
+Wed 16 Jun 2004 : splitted off the monodromy test from ts_inewt and
+  created ts_ifactor.
+
+Mon 14 Jun 2004 : added generic versions to standard_intrinsic_newton.
+
+Wed 24 Mar 2004 : added "Transform" to standard_intrinsic_solutions.
+
+Sun 14 Mar 2004 : updated witness_point_io with Sort_Embedded_Symbols
+
+Mon 8 Mar 2004 : created the package standard_flag_representations,
+  tested by ts_flag.
+
+Mon 12 Jan 2004 : prepared for intrinsic Newton in projective coordinates
+
+Tue 30 Dec 2003 : created ts_ispan and standard_linear_span to
+  find the linear span of a solution component.
+
+Tue 23 Dec 2003 : changed the intrinsic trackers to make room for
+  more advanced predictors, more testing in ts_inewt.adb
+
+Fri 19 Dec 2003 : created standard_moving_planes to define paths of
+  linear spaces, as generic parameters to the intrinsic trackers;
+  first experiments with monodromy
+
+Thu 18 Dec 2003 : added validate to standard_intrinsic_continuation,
+  updates in intrinsic newton, trackers, and massive test in ts_inewt.
+
+Wed 17 Dec 2003 : created standard_intrinsic_trackers and
+  standard_intrinsic_continuation, tested by ts_inewt.
+
+Tue 16 Dec 2003 : splitted standard_affine_solutions into
+  standard_intrinsic_solutions; created standard_intrinsic_newton,
+  tested by ts_inewt.adb
+
+Mon 15 Dec 2003 : splitted standard_affine_planes into
+  standard_plane_representations, standard_point_coordinates, and
+  standard_plane_operations.  Update of hypersurface_sample_grids.adb,
+  ts_planes and a new ts_coords.
+
+Mon 1 Sep 2003 : removed "Add_Variables" from Witness_Points package
+  because now available in extra package in Homotopy library.
+
+Tue 3 June 2003 : upgraded witness_points_io with "Add_Extra_Symbols"
+  to deal with embedding of a cylinder
+
+*** more adequate bookkeeping needed since release v2.2alpha on 5/30/03 ***
+*** from now on, write the updates putting the most recent date first ****
+
+Wed 31 May 2000 : due to modified Newton, changed component_scanners.adb
+
+Sun 4 June 2000 : reorganization of cascade_of_homotopies, broken up into
+  two separate modules: homotopy_cascade_filter and driver_for_cascade_filter.
+
+Tue 19 June 2000 : new package "Standard_Classify_Points", split off
+  from the "Standard_Irreducible_Decomp".  Did the same for multprec.
+  Added the test facility ts_classify.
+
+Wed 21 June 2000 : new package "Standard_Linear_Spaces" to compute spaces
+  that contain the components.
+
+Sat 9 Sep 2000 : restructuring component_scanners with more efficient
+  homotopy continuation
+
+Sun 10 Sep 2000 : refinement on the original generic points for a reliable
+  membership test affects multprec_classify_points, component_scanners,
+  and sample_generic_points.adb
+
+Mon 11 Sep 2000 : fixed calls to dynamic interpolator in *Irred_Decomp.adb;
+  limit on degree and #samples to prevent too huge memory usage;
+  created new small program ts_nbterms to illustrate complexity growth.
+
+Tue 12 Sep 2000 : preprocessor to membership test is container subspace
+  inclusion, modified multprec_classify_points.
+
+Sat 23 Sep 2000 : new sampling module, created the packages sampling_machine,
+  sample_points, sample_points_io, sample_point_lists, sample_point_lists_io,
+  and the testing facility ts_sample.
+Sun 24 Sep 2000 : completed the sampling module as standalone unit
+Mon 25 Sep 2000 : added sample_point_grids + io to the sampling module
+Tue 26 Sep 2000 : added sampler to sample_point_grids, adjusted the
+  standard_classify_points to use the new sampling module
+Wed 27 Sep 2000 : adjusted multprec_classify_points to use new sampling
+  so that now old component_scanners+sample_generic_points are obsolete
+Thu 28 Sep 2000 : added diagnostics reporting to multprec_classify_points,
+  central projections now also work in standard arithmetic, changed
+  standard_classify_points.ads and its .adb
+Fri 29 Sep 2000 : split off component tests from classify_points.
+
+Sat 30 Sep 2000 : split off from drivers_to_breakup_components the
+  routines to read in the embedding: drivers_to_embed_components.
+  This causes ts_sample to change.
+  Created "span module": span_of_component + io + ts_span.
+Sun 1 Oct 2000 : new filtering module leads to the packages
+  interpolation_points, interpolation_point_lists, interpolation_filters,
+  and the testing facility ts_filter.
+  To implement the homotopy membership test, changed sampling_machine
+  and the sample_point_lists, tested this new feature in ts_sample.
+
+Wed 4 Oct 2000 : created projection_operators, extended on Thu.
+Fri 6 Oct 2000 : memory leaks fixed in sample_point_lists: Deep_Clear(sols)!
+Tue 10 Oct 2000 : completion of the functionality of the filtering module:
+  now it is possible to interactive and dynamically build up the filter
+  using central projections.
+Wed 11 Oct 2000 : started the creation of irreducible components
+
+Wed 18 Oct 2000 : monodromy_group_actions (+io) to clean out ts_probdeco
+
+Tue 24 Oct 2000 : added validation+rerun in samplers on two levels:
+  sampling_machine and sample_points.
+  Moved monodromy decomposition into drivers_to_breakup_components.
+
+Thu 26 Oct 2000 : ts_irco runs now with subspace restriction,
+  worked on On_Component tests in span_of_component, interpolation_filters,
+  irreducible_components, and irreducible_component_lists.
+Fri 27 Oct 2000 : ts_irco can now also do central projections.
+
+Sat 4 Nov 2000 : fixed bug in Collapse_Equations in
+  standard_subspace_restrictions.adb; taking samples in restricted subspace
+  works now.
+
+Sun 12 Nov 2000 : interpolation_filters "Sample_Update" puts invcond on file.
+
+Sun 26 Nov 2000 : ts_divdif.adb contains now also comparison with the
+  direct interpolation method on the test polynomial with all ones.
+Mon 27 Nov 2000 : created rectangular_sample_grids
+
+Sat 9 Dec 2000 : created divided_differences to shadow multi-precision
+  calculations with standard arithmetic
+
+Fri 15 Dec 2000 : created ts_dvdexp.adb to perform a structured experiment
+
+Fri 29 Dec 2000 : replaced "Number_of_Terms" in the standard_ and multprec_
+  polynomial_interpolators.adb.  Created "stacked_sample_grids".
+
+Sun 28 Jan 2001 : standard_divided_differences works for k=3 !
+
+Sat 3 Feb 2001 : finally got the Newton interpolation to run for any k
+
+Sat 17 Feb 2001 : fixed loss of precision in Newton interpolation,
+  updated interfaces in both standard and multprec divided differences.
+
+Sat 21 Apr 2001 : started implementation of trace interpolation
+  new .adb files : ts_traces, drivers_to_grid_creators, ts_unint,
+  standard_univariate_interpolators.
+
+Mon 7 May 2001 : modified standard_trace_interpolators.adb
+Wed 9 May 2001 : fixed bug from standard_trace_interpolators to make it work;
+  started multprec_* analogues
+
+Wed 23 May 2001 : modifications in trace interpolation module
+
+Fri 25 May 2001 : new package standard_nvariate_interpolators to implement
+  the generalizations of trace forms for arbitrary dimensions.
+
+Sun 27 May 2001 : ts_newint and standard_nvariate_interpolators work almost.
+
+Sat 9 June 2001 : ts_elim implements numerical elimination tool;
+  Expand works for the trace interpolators.
+
+Fri 20 July 2001 : updated drivers_to_embed_components with new read
+  for the embedding.
+
+Sat 21 July 2001 : changed rectangular_sample_grids.adb so that only one
+  constant term moves when applied to multi dimensional components.
+
+Mon 23 July 2001 : updates ts_dvdexp.adb and ts_difdvi.adb.
+Tue 24 July 2001 : changed rectangular_sample_grids,
+  standard_trace_interpolators, and ts_powtrc.
+
+Sun 29 July 2001 : changed rectangular_sample_grids,
+  {standard,multprec}_trace_interpolators.adb, and ts_powtrc, to
+  make interpolation with Newton identities work
+
+Mon 30 July 2001 : created the package "multivariate_factorization" with
+  test routine ts_mulfac, starting with taking out code from ts_unisam.
+
+Thu 2 Aug 2001 : created package "drivers_to_polynomial_factorization" to
+  link the factorization of polynomials with phc.  Monodromy runs but has
+  problems, because of poor hypersurface_samplers.
+
+Fri 21 Dec 2001 : added Extract_Samples to standard_stacked_sample_grids
+  to enable plain multivariate interpolation
+
+Fri 28 Dec 2001 : polished version of ts_embed.adb required modification
+  in slice_and_embed_components.ads and .adb.
+
+Sun 30 Dec 2001 : create ts_squemb.adb to combine squaring and embedding.
+
+Thu 21 Mar 2002 : slice_and_embed_components contains now the routine
+  embed_with_dummies, also ts_embed.adb is changed
+
+Mon 27 May 2002 : changed slice_and_embed_components into witness_points,
+  this caused the headers of many files to change.
+
+Tue 28 May 2002 : created standard_affine_planes and ts_planes as tester.
+
+Thu 21 Nov 2002 : added witness_points_formats, as needed in Decomposition.
+
