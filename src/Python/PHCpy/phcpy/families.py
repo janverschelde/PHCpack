@@ -238,18 +238,93 @@ def chandra(dim, par=0.51234):
     cff = str(2*dim)
     for k in range(1, dim+1):
         equ = cff + '*H' + str(k) + ' - ' + str(par) + '*H' + str(k) + '*(1'
-        if(k > 1):
-            equ = equ + '/' + str(k)
         for i in range(1,dim):
-            equ = equ + '+(1/' + str(i+k) + str(')*H') + str(i)
+            equ = equ + '+(' + str(k) + '/' + str(i+k) + str(')*H') + str(i)
         equ = equ + ') - ' + cff + ';' 
         result.append(equ)
     return result
 
+def strvar(name, i, j):
+    """
+    Returns the string representation for the variable with the given name
+    and indices i and j, i != j.  Swaps the values for i and j if i > j.
+    """
+    result = name + '_'
+    if(i < j):
+        result = result + str(i) + '_' + str(j)
+    else:
+        result = result + str(j) + '_' + str(i)
+    return result
+
+def firsteqs(dim):
+    """
+    Returns the list of equations defining the relations between the
+    S[i,j] and the r[i,j] variables, for all i < j, for i from 1 to dim-1.
+    Since the S[i,j] variables occur linearly, with these equations we
+    can rewrite S[i,j] in terms of the corresponding r[i,j] variables.
+    The elimination of the S[i,j] comes at the expense of high degrees
+    in the r[i,j] variables of the remaining equations.
+    """
+    result = []
+    for i in range(1, dim):
+        for j in range(i+1, dim+1):
+            equ = strvar('r', i, j) + '**3*('
+            equ = equ + strvar('S', i, j) + ' + 1) - 1;'
+            result.append(equ)
+    return result
+
+def poleqs(dim, masses):
+    """
+    Returns the list of polynomial equations for the central configurations,
+    for as many masses as the dimension dim.
+    """
+    result = []
+    for i in range(1, dim):
+        for j in range(i+1, dim+1):
+            equ = ''
+            for k in range(1, dim+1):
+                if(k > 1):
+                    equ = equ + ' + '
+                equ = equ + str(masses[k-1]) + '*('
+                if(k != i):
+                    equ = equ + strvar('S', i, k) + '*('
+                    if(k != j):
+                        equ = equ + strvar('r', j, k) + '**2'
+                    equ = equ + ' - ' + strvar('r', i, k) + '**2'
+                    equ = equ + ' - ' + strvar('r', i, j) + '**2)'
+                if(k != j):
+                    if(equ[-1] != '('):
+                        equ = equ + ' + '
+                    equ = equ + strvar('S', j, k) + '*('
+                    if(k != i):
+                        equ = equ + strvar('r', i, k) + '**2'
+                    equ = equ + ' - ' + strvar('r', j, k) + '**2'
+                    equ = equ + ' - ' + strvar('r', i, j) + '**2)'
+                equ = equ + ')'
+            equ = equ + ';'
+            result.append(equ)
+    return result
+
+def nbodyeqs(dim, mas):
+    """
+    The central configurations of the n-body problem can be defined via the
+    Albouy-Chenciner equations, by A. Albouy and A. Chenciner: Le probleme
+    des n corps et les distances mutuelles. Inv. Math. 131, 151-184, 1998;
+    and the paper by M. Hampton and R. Moeckel on Finiteness of relative 
+    equilibria of the four-body problem. Inv. Math. 163, 289-312, 2006.
+    Returns a list of strings, representing the central configurations
+    for the n-body problem, where n = dim and with masses in the list mas.
+    We require that len(mas) == dim.
+    """
+    result = firsteqs(dim)
+    polsys = poleqs(dim, mas)
+    for pol in polsys:
+        result.append(pol)
+    return result
+
 def test():
     """
-    Writes particular instances of the systems
-    in the families.
+    Writes particular instances of the systems in the families.
     """
     print '\ncyclic 5-roots :\n'
     for pol in cyclic(5):
@@ -271,6 +346,9 @@ def test():
         print pol
     print '\nChandrasekhar H-equation for dimension 4 :\n'
     for pol in chandra(4):
+        print pol
+    print '\nCentral configurations for 3 equal masses :\n'
+    for pol in nbodyeqs(3, [1, 1, 1]):
         print pol
 
 if __name__ == "__main__":

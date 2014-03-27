@@ -5,6 +5,9 @@ the desired solutions of a target system.
 The path tracking functions in this module can track all solution paths
 in several levels of precision: standard double, double double,
 quad double, or arbitrary multiprecision arithmetic.
+For standard double, double double, and quad double arithmetic,
+multitasking is supported which could give a good speedup
+if sufficiently many cores are available on the processor.
 """
 
 def tune_track_parameters(difficulty=0, digits=16, \
@@ -33,11 +36,11 @@ def tune_track_parameters(difficulty=0, digits=16, \
     elif not silent:
         py2c_show_continuation_parameters()
 
-def standard_double_track(target, start, sols, gamma=0):
+def standard_double_track(target, start, sols, gamma=0, tasks=0):
     """
     Does path tracking with standard double precision.
     On input are a target system, a start system with solutions,
-    and optionally a (random) gamma constant.
+    optionally: a (random) gamma constant and the number of tasks.
     The target is a list of strings representing the polynomials
     of the target system (which has to be solved).
     The start is a list of strings representing the polynomials
@@ -53,7 +56,7 @@ def standard_double_track(target, start, sols, gamma=0):
     from phcpy2c import py2c_copy_container_to_start_solutions
     from phcpy2c import py2c_create_homotopy
     from phcpy2c import py2c_create_homotopy_with_gamma
-    from phcpy2c import py2c_solve_by_homotopy_continuation
+    from phcpy2c import py2c_solve_by_standard_homotopy_continuation
     from phcpy2c import py2c_solcon_clear_solutions
     from phcpy2c import py2c_copy_target_solutions_to_container
     from solver import store_standard_system
@@ -70,16 +73,16 @@ def standard_double_track(target, start, sols, gamma=0):
     dim = len(start)
     store_standard_solutions(dim, sols)
     py2c_copy_container_to_start_solutions()
-    py2c_solve_by_homotopy_continuation()
+    py2c_solve_by_standard_homotopy_continuation(tasks)
     py2c_solcon_clear_solutions()
     py2c_copy_target_solutions_to_container()
     return load_standard_solutions()
 
-def double_double_track(target, start, sols, gamma=0):
+def double_double_track(target, start, sols, gamma=0, tasks=0):
     """
     Does path tracking with double double precision.
     On input are a target system, a start system with solutions,
-    and optionally a (random) gamma constant.
+    optionally a (random) gamma constant and the number of tasks.
     The target is a list of strings representing the polynomials
     of the target system (which has to be solved).
     The start is a list of strings representing the polynomials
@@ -112,16 +115,16 @@ def double_double_track(target, start, sols, gamma=0):
     dim = len(start)
     store_dobldobl_solutions(dim, sols)
     py2c_copy_dobldobl_container_to_start_solutions()
-    py2c_solve_by_dobldobl_homotopy_continuation()
+    py2c_solve_by_dobldobl_homotopy_continuation(tasks)
     py2c_solcon_clear_dobldobl_solutions()
     py2c_copy_dobldobl_target_solutions_to_container()
     return load_dobldobl_solutions()
 
-def quad_double_track(target, start, sols, gamma=0):
+def quad_double_track(target, start, sols, gamma=0, tasks=0):
     """
     Does path tracking with quad double precision.
     On input are a target system, a start system with solutions,
-    and optionally a (random) gamma constant.
+    optionally a (random) gamma constant and the number of tasks.
     The target is a list of strings representing the polynomials
     of the target system (which has to be solved).
     The start is a list of strings representing the polynomials
@@ -154,7 +157,7 @@ def quad_double_track(target, start, sols, gamma=0):
     dim = len(start)
     store_quaddobl_solutions(dim, sols)
     py2c_copy_quaddobl_container_to_start_solutions()
-    py2c_solve_by_quaddobl_homotopy_continuation()
+    py2c_solve_by_quaddobl_homotopy_continuation(tasks)
     py2c_solcon_clear_quaddobl_solutions()
     py2c_copy_quaddobl_target_solutions_to_container()
     return load_quaddobl_solutions()
@@ -203,7 +206,7 @@ def multiprecision_track(target, start, sols, gamma=0, decimals=80):
     py2c_copy_multprec_target_solutions_to_container()
     return load_multprec_solutions()
 
-def track(target, start, sols, precision='d', decimals=80, gamma=0):
+def track(target, start, sols, precision='d', decimals=80, gamma=0, tasks=0):
     """
     Runs the path trackers to track solutions in sols
     at the start system in start to the target system
@@ -216,26 +219,33 @@ def track(target, start, sols, precision='d', decimals=80, gamma=0):
     qd : quad double precision (1.2e-63 or 2^(-209)).
     mp : arbitrary multiprecision, with as many decimal places
     in the working precision as the value of decimals.
-    The last parameter is optional.  By default,
+    The next to last parameter is optional.  By default,
     a random complex number will be used for gamma,
     otherwise, gamma can be any nonzero complex number.
+    The last parameter equals the number of tasks.
+    By default, for tasks equal to 0 there is no multitasking.
+    For positive values of tasks, the multitasking could give
+    a speedup of up to the number of tasks, depending how may
+    cores are available on the processor.
     """
     if(precision == 'd'):
-        return standard_double_track(target, start, sols, gamma)
+        return standard_double_track(target, start, sols, gamma, tasks)
     elif(precision == 'dd'):
-        return double_double_track(target, start, sols, gamma)
+        return double_double_track(target, start, sols, gamma, tasks)
     elif(precision == 'qd'):
-        return quad_double_track(target, start, sols, gamma)
+        return quad_double_track(target, start, sols, gamma, tasks)
     elif(precision == 'mp'):
         return multiprecision_track(target, start, sols, gamma, decimals)
     else:
         print 'wrong argument for precision'
         return None
 
-def initialize_standard_tracker(target, start):
+def initialize_standard_tracker(target, start, fixedGamma=True):
     """
     Initializes a path tracker with a generator for a target
     and start system given in standard double precision.
+    If fixedGamma, then gamma will be a fixed default value,
+    otherwise, a random complex constant for gamma is generated.
     """
     from phcpy2c import py2c_copy_container_to_target_system
     from phcpy2c import py2c_copy_container_to_start_system
@@ -245,12 +255,17 @@ def initialize_standard_tracker(target, start):
     py2c_copy_container_to_target_system()
     store_standard_system(start)
     py2c_copy_container_to_start_system()
-    py2c_initialize_standard_homotopy()
+    if fixedGamma:
+        py2c_initialize_standard_homotopy(1)
+    else:
+        py2c_initialize_standard_homotopy(0)
 
-def initialize_dobldobl_tracker(target, start):
+def initialize_dobldobl_tracker(target, start, fixedGamma=True):
     """
     Initializes a path tracker with a generator for a target
     and start system given in double double precision.
+    If fixedGamma, then gamma will be a fixed default value,
+    otherwise, a random complex constant for gamma is generated.
     """
     from phcpy2c import py2c_copy_dobldobl_container_to_target_system
     from phcpy2c import py2c_copy_dobldobl_container_to_start_system
@@ -260,12 +275,17 @@ def initialize_dobldobl_tracker(target, start):
     py2c_copy_dobldobl_container_to_target_system()
     store_dobldobl_system(start)
     py2c_copy_dobldobl_container_to_start_system()
-    py2c_initialize_dobldobl_homotopy()
+    if fixedGamma:
+        py2c_initialize_dobldobl_homotopy(1)
+    else:
+        py2c_initialize_dobldobl_homotopy(0)
 
-def initialize_quaddobl_tracker(target, start):
+def initialize_quaddobl_tracker(target, start, fixedGamma=True):
     """
     Initializes a path tracker with a generator for a target
     and start system given in quad double precision.
+    If fixedGamma, then gamma will be a fixed default value,
+    otherwise, a random complex constant for gamma is generated.
     """
     from phcpy2c import py2c_copy_quaddobl_container_to_target_system
     from phcpy2c import py2c_copy_quaddobl_container_to_start_system
@@ -275,14 +295,19 @@ def initialize_quaddobl_tracker(target, start):
     py2c_copy_quaddobl_container_to_target_system()
     store_quaddobl_system(start)
     py2c_copy_quaddobl_container_to_start_system()
-    py2c_initialize_quaddobl_homotopy()
+    if fixedGamma:
+        py2c_initialize_quaddobl_homotopy(1)
+    else:
+        py2c_initialize_quaddobl_homotopy(0)
 
-def initialize_multprec_tracker(target, start, decimals=100):
+def initialize_multprec_tracker(target, start, fixedGamma=True, decimals=100):
     """
     Initializes a path tracker with a generator for a target
     and start system given in arbitrary multiprecision, with
     the number of decimal places in the working precision
     given by the value of decimals.
+    If fixedGamma, then gamma will be a fixed default value,
+    otherwise, a random complex constant for gamma is generated.
     """
     from phcpy2c import py2c_copy_multprec_container_to_target_system
     from phcpy2c import py2c_copy_multprec_container_to_start_system
@@ -292,7 +317,10 @@ def initialize_multprec_tracker(target, start, decimals=100):
     py2c_copy_multprec_container_to_target_system()
     store_multprec_system(start, decimals)
     py2c_copy_multprec_container_to_start_system()
-    py2c_initialize_multprec_homotopy(decimals)
+    if fixedGamma:
+        py2c_initialize_multprec_homotopy(1, decimals)
+    else:
+        py2c_initialize_multprec_homotopy(0, decimals)
 
 def initialize_standard_solution(nvar, sol):
     """

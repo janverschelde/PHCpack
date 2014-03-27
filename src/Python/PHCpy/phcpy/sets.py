@@ -47,8 +47,8 @@ def witness_set_of_hypersurface(nvar, hpol):
     import solver
     from phcpy2c import py2c_witness_set_of_hypersurface
     py2c_witness_set_of_hypersurface(nvar, len(hpol), hpol)
-    pols = solver.load_system()
-    sols = solver.load_solutions()
+    pols = solver.load_standard_system()
+    sols = solver.load_standard_solutions()
     return (pols, sols)
 
 def drop_variable_from_polynomials(pols, svar):
@@ -60,10 +60,10 @@ def drop_variable_from_polynomials(pols, svar):
     import solver
     from phcpy2c import py2c_syscon_standard_drop_variable_by_name
     from phcpy2c import py2c_syscon_remove_symbol_name
-    solver.store_system(pols)
+    solver.store_standard_system(pols)
     py2c_syscon_standard_drop_variable_by_name(len(svar), svar)
     py2c_syscon_remove_symbol_name(len(svar), svar)
-    return solver.load_system()
+    return solver.load_standard_system()
 
 def drop_coordinate_from_solutions(sols, nbvar, svar):
     """
@@ -76,10 +76,10 @@ def drop_coordinate_from_solutions(sols, nbvar, svar):
     from phcpy2c import py2c_solcon_standard_drop_coordinate_by_name
     from phcpy2c import py2c_syscon_remove_symbol_name
     py2c_syscon_clear_symbol_table()
-    solver.store_solutions(nbvar, sols)
+    solver.store_standard_solutions(nbvar, sols)
     py2c_solcon_standard_drop_coordinate_by_name(len(svar), svar)
     py2c_syscon_remove_symbol_name(len(svar), svar)
-    return solver.load_solutions()
+    return solver.load_standard_solutions()
 
 def standard_double_cascade_step(embsys, esols):
     """
@@ -97,15 +97,15 @@ def standard_double_cascade_step(embsys, esols):
     from phcpy2c import py2c_solve_by_homotopy_continuation
     from phcpy2c import py2c_solcon_clear_solutions
     from phcpy2c import py2c_copy_target_solutions_to_container
-    solver.store_system(embsys)
+    solver.store_standard_system(embsys)
     py2c_copy_container_to_start_system()
-    solver.store_solutions(len(embsys), esols)
+    solver.store_standard_solutions(len(embsys), esols)
     py2c_copy_container_to_start_solutions()
     py2c_standard_cascade_homotopy()
     py2c_solve_by_homotopy_continuation()
     py2c_solcon_clear_solutions()
     py2c_copy_target_solutions_to_container()
-    return solver.load_solutions()
+    return solver.load_standard_solutions()
 
 def double_double_cascade_step(embsys, esols):
     """
@@ -260,7 +260,7 @@ def monodromy_breakup(embsys, esols, dim):
     from phcpy2c import py2c_factor_set_trace_slice
     from phcpy2c import py2c_factor_store_gammas
     from phcpy2c import py2c_factor_track_paths
-    from phcpy2c import py2c_factor_store_solutions
+    from phcpy2c import py2c_factor_store_standard_solutions
     from phcpy2c import py2c_factor_restore_solutions
     from phcpy2c import py2c_factor_new_slices
     from phcpy2c import py2c_factor_swap_slices
@@ -273,19 +273,19 @@ def monodromy_breakup(embsys, esols, dim):
     deg = len(esols)
     nvar = len(embsys)
     print 'dim =', dim
-    solver.store_solutions(nvar, esols)
+    solver.store_standard_solutions(nvar, esols)
     py2c_factor_assign_labels(nvar, deg)
     # py2c_solcon_write_solutions()
     py2c_factor_initialize_sampler(dim)
     nbloops = input('give the maximum number of loops : ')
     py2c_factor_initialize_monodromy(nbloops, deg, dim)
-    py2c_factor_store_solutions()
+    py2c_factor_store_standard_solutions()
     print '... initializing the grid ...'
     for i in range(1, 3):
         py2c_factor_set_trace_slice(i)
         py2c_factor_store_gammas(nvar)
         py2c_factor_track_paths()
-        py2c_factor_store_solutions()
+        py2c_factor_store_standard_solutions()
         py2c_factor_restore_solutions()
         py2c_factor_swap_slices()
     for i in range(1, nbloops+1):
@@ -296,7 +296,7 @@ def monodromy_breakup(embsys, esols, dim):
         py2c_solcon_clear_solutions()
         py2c_factor_store_gammas(nvar)
         py2c_factor_track_paths()
-        py2c_factor_store_solutions()
+        py2c_factor_store_standard_solutions()
         sprm = py2c_factor_permutation_after_loop(deg)
         perm = eval(sprm)
         print 'the permutation :', perm
