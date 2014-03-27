@@ -1,6 +1,8 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Random_Numbers;
 with Standard_Mathematical_Functions;
+with Double_Double_Constants;
+with DoblDobl_Mathematical_Functions;
 
 package body DoblDobl_Random_Numbers is
 
@@ -40,17 +42,14 @@ package body DoblDobl_Random_Numbers is
   function Random1 return Complex_Number is
 
     res : Complex_Number;
-    arg : double_float := Standard_Random_Numbers.Random;
-    cs,sn : double_float;
-    rlp,imp : double_double;
+    arg : double_double := DoblDobl_Random_Numbers.Random;
+    cs,sn : double_double;
 
   begin
-    arg := arg*Standard_Mathematical_Functions.PI;
-    cs := Standard_Mathematical_Functions.cos(arg);
-    sn := Standard_Mathematical_Functions.sin(arg);
-    rlp := create(cs);
-    imp := create(sn);
-    res := create(rlp,imp);
+    arg := arg*Double_Double_Constants.pi;
+    cs := DoblDobl_Mathematical_Functions.cos(arg);
+    sn := DoblDobl_Mathematical_Functions.sin(arg);
+    res := create(cs,sn);
     return res;
   end Random1;
 

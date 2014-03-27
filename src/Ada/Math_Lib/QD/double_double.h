@@ -481,6 +481,23 @@ void dd_floor ( const double *a, double *b );
  * DESCRIPTION :
  *   Returns the largest integer to a as the double double b. */
 
+/************************** sin and cos ********************************/  
+
+void dd_sin_taylor ( const double *a, double *b );
+/*
+ * DESCRIPTION :
+ *   Returns in b = sin(a) using Taylor series, assuming |a| <= pi/32. */ 
+
+void dd_cos_taylor ( const double *a, double *b );
+/*
+ * DESCRIPTION :
+ *   Returns in b = cos(a) using Taylor series. */ 
+
+void dd_sincos_taylor ( const double *a, double *sin_a, double *cos_a );
+/*
+ * DESCRIPTION :
+ *   Returns sin_a = sin(a), cos_a = cos(a) for |a| <= pi/32. */
+
 /********************* input/output operations *************************/
 
 int dd_read ( const char *s, double *a );

@@ -2,6 +2,8 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Random_Numbers;
 with Standard_Mathematical_Functions;
 with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Constants;
+with QuadDobl_Mathematical_Functions;
 
 package body QuadDobl_Random_Numbers is
 
@@ -41,17 +43,14 @@ package body QuadDobl_Random_Numbers is
   function Random1 return Complex_Number is
 
     res : Complex_Number;
-    arg : double_float := Standard_Random_Numbers.Random;
-    cs,sn : double_float;
-    rlp,imp : quad_double;
+    arg : quad_double := QuadDobl_Random_Numbers.Random;
+    cs,sn : quad_double;
 
   begin
-    arg := arg*Standard_Mathematical_Functions.PI;
-    cs := Standard_Mathematical_Functions.cos(arg);
-    sn := Standard_Mathematical_Functions.sin(arg);
-    rlp := create(cs);
-    imp := create(sn);
-    res := create(rlp,imp);
+    arg := arg*Quad_Double_Constants.pi;
+    cs := QuadDobl_Mathematical_Functions.cos(arg);
+    sn := QuadDobl_Mathematical_Functions.sin(arg);
+    res := create(cs,sn);
     return res;
   end Random1;
 

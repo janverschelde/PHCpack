@@ -5,9 +5,9 @@
 
 /* basic functions */
 
-#include<math.h>
-#include<stdlib.h>
-#include<stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 /* Part I: basic functions from inline.h */
 
@@ -660,7 +660,6 @@ void dd_log10 ( const double *a, double *b )
    dd_log(a,b);
    dd_div(b,logten,b);   /* b = log(a)/log(10) */
 }
-
 /****************** copy, type casts, abs, and floor *****************/
 
 void dd_copy ( const double *a, double *b )
@@ -707,6 +706,122 @@ void dd_floor ( const double *a, double *b )
    {
       b[0] = hi;
       b[1] = lo;
+   }
+}
+
+
+/************************ sin and cos ********************************/  
+
+void dd_sin_taylor ( const double *a, double *b )
+{
+   if(dd_is_zero(a) == 1)
+   {
+      b[0] = 0.0; b[1] = 0.0;
+   }
+   else
+   {
+      const int n_inv_fact = 15;
+      double *inv_fac;
+      double i_fac[30];  /* inverse factorials for Taylor expansion */
+      i_fac[0] = 1.66666666666666657e-01;  i_fac[1] =  9.25185853854297066e-18;
+      i_fac[2] = 4.16666666666666644e-02;  i_fac[3] =  2.31296463463574266e-18;
+      i_fac[4] = 8.33333333333333322e-03;  i_fac[5] =  1.15648231731787138e-19;
+      i_fac[6] = 1.38888888888888894e-03;  i_fac[7] = -5.30054395437357706e-20;
+      i_fac[8] = 1.98412698412698413e-04;  i_fac[9] =  1.72095582934207053e-22;
+      i_fac[10] = 2.48015873015873016e-05; i_fac[11] =  2.15119478667758816e-23;
+      i_fac[12] = 2.75573192239858925e-06; i_fac[13] = -1.85839327404647208e-22;
+      i_fac[14] = 2.75573192239858883e-07; i_fac[15] =  2.37677146222502973e-23;
+      i_fac[16] = 2.50521083854417202e-08; i_fac[17] = -1.44881407093591197e-24;
+      i_fac[18] = 2.08767569878681002e-09; i_fac[19] = -1.20734505911325997e-25;
+      i_fac[20] = 1.60590438368216133e-10; i_fac[21] =  1.25852945887520981e-26;
+      i_fac[22] = 1.14707455977297245e-11; i_fac[23] =  2.06555127528307454e-28;
+      i_fac[24] = 7.64716373181981641e-13; i_fac[25] =  7.03872877733453001e-30;
+      i_fac[26] = 4.77947733238738525e-14; i_fac[27] =  4.39920548583408126e-31;
+      i_fac[28] = 2.81145725434552060e-15; i_fac[29] =  1.65088427308614326e-31;
+      const double dd_eps = 4.93038065763132e-32;     /* 2^-104 */
+      const double thresh = 0.5*a[0]*dd_eps;
+      double x[2], r[2], s[2], t[2];
+      int i = 0;
+      dd_sqr(a,x);     /* x = -sqr(a) */
+      dd_minus(x);
+      dd_copy(a,s);
+      dd_copy(a,r);
+      do
+      {
+         dd_mlt(r,x);             /* r *= x */
+         inv_fac = &i_fac[2*i];
+         dd_mul(r,inv_fac,t);     /* t = r * inv_fact[i] */
+         dd_inc(s,t);             /* s += t */
+         i += 2;
+      }
+      while((i < n_inv_fact) && (t[0] > thresh));
+      dd_copy(s,b);
+   }
+}
+
+void dd_cos_taylor ( const double *a, double *b )
+{
+   if(dd_is_zero(a) == 1)
+   {
+      b[0] = 1.0; b[1] = 0.0;
+   }
+   else
+   {
+      const int n_inv_fact = 15;
+      double *inv_fac;
+      double i_fac[30];  /* inverse factorials for Taylor expansion */
+      i_fac[0] = 1.66666666666666657e-01;  i_fac[1] =  9.25185853854297066e-18;
+      i_fac[2] = 4.16666666666666644e-02;  i_fac[3] =  2.31296463463574266e-18;
+      i_fac[4] = 8.33333333333333322e-03;  i_fac[5] =  1.15648231731787138e-19;
+      i_fac[6] = 1.38888888888888894e-03;  i_fac[7] = -5.30054395437357706e-20;
+      i_fac[8] = 1.98412698412698413e-04;  i_fac[9] =  1.72095582934207053e-22;
+      i_fac[10] = 2.48015873015873016e-05; i_fac[11] =  2.15119478667758816e-23;
+      i_fac[12] = 2.75573192239858925e-06; i_fac[13] = -1.85839327404647208e-22;
+      i_fac[14] = 2.75573192239858883e-07; i_fac[15] =  2.37677146222502973e-23;
+      i_fac[16] = 2.50521083854417202e-08; i_fac[17] = -1.44881407093591197e-24;
+      i_fac[18] = 2.08767569878681002e-09; i_fac[19] = -1.20734505911325997e-25;
+      i_fac[20] = 1.60590438368216133e-10; i_fac[21] =  1.25852945887520981e-26;
+      i_fac[22] = 1.14707455977297245e-11; i_fac[23] =  2.06555127528307454e-28;
+      i_fac[24] = 7.64716373181981641e-13; i_fac[25] =  7.03872877733453001e-30;
+      i_fac[26] = 4.77947733238738525e-14; i_fac[27] =  4.39920548583408126e-31;
+      i_fac[28] = 2.81145725434552060e-15; i_fac[29] =  1.65088427308614326e-31;
+      const double dd_eps = 4.93038065763132e-32;     /* 2^-104 */
+      const double thresh = 0.5*a[0]*dd_eps;
+      double x[2], r[2], s[2], t[2];
+      int i = 1;
+      dd_sqr(a,x);                /* x = -sqr(a) */
+      dd_minus(x);
+      dd_copy(x,r);
+      dd_mul_pwr2(r, 0.5, s);     /* s = 1.0 + mul_pwr2(r, 0.5) */
+      dd_inc_d(s, 1.0);
+      do
+      {
+         dd_mlt(r,x);             /* r *= x */
+         inv_fac = &i_fac[2*i];
+         dd_mul(r, inv_fac, t);   /* t = r * inv_fact[i] */
+         dd_inc(s,t);             /* s += t */
+         i += 2;
+      }
+      while((i < n_inv_fact) && (t[0] > thresh));
+      dd_copy(s,b);
+   }
+}
+
+void dd_sincos_taylor ( const double *a, double *sin_a, double *cos_a )
+{
+   if(dd_is_zero(a) == 1)
+   {
+      sin_a[0] = 0.0; sin_a[1] = 0.0;
+      cos_a[0] = 1.0; cos_a[1] = 0.0;
+   }
+   else
+   {
+      double tmp[2];
+      dd_sin_taylor(a, sin_a);
+      dd_sqr(sin_a, tmp);       /* tmp = sqr(sin_a) */
+      dd_minus(tmp);            /* tmp = -sqr(sin_a) */
+      dd_inc_d(tmp, 1.0);       /* tmp = 1.0 - sqr(sin_a) */
+      // dd_sqrt(tmp, cos_a);      /* cos_a = sqrt(1.0 - sqr(sin_a) */
    }
 }
 
