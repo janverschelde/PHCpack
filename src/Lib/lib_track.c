@@ -283,8 +283,8 @@ int create_the_homotopy ( int kind )
 
    if(fail == 0)
    {
-      fail = write_target_system();
-      fail = write_start_system();
+      fail = write_standard_target_system();
+      fail = write_standard_start_system();
    }
 
    return fail;
@@ -297,8 +297,8 @@ int create_the_diagonal_homotopy ( int a, int b )
    fail = create_diagonal_homotopy(a,b);
    if(fail == 0)
    {
-      fail = write_target_system();
-      fail = write_start_system();
+      fail = write_standard_target_system();
+      fail = write_standard_start_system();
    }
    return fail;
 }
@@ -389,8 +389,8 @@ int prepare_for_next_level_down ( int dimension )
    fail = solcon_scan_solution_banner();
    printf("\ncreating the cascade homotopy ...\n\n");
    fail = create_cascade_homotopy();
-   fail = write_target_system();
-   fail = write_start_system();
+   fail = write_standard_target_system();
+   fail = write_standard_start_system();
 }
 
 int run_cascade ( int monitor )

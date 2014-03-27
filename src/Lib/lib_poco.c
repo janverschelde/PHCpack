@@ -51,28 +51,30 @@ int main ( int argc, char *argv[] )
 
 int run_standard_continuation ( void )
 {
-   int fail;
+   int fail, nbtasks;
 
    printf("\nCalling the standard path trackers in PHCpack...\n");
-   fail = read_target_system();
-   fail = read_start_system();
+   fail = read_standard_target_system();
+   fail = read_standard_start_system();
    fail = define_output_file();
-   fail = write_target_system();
-   fail = write_start_system();
+   fail = write_standard_target_system();
+   fail = write_standard_start_system();
    fail = write_start_solutions();
    printf("\n");
    fail = tune_continuation_parameters();
    printf("\n");
    fail = determine_output_during_continuation();
+   printf("\nGive the number of tasks (0 for no multitasking ) : ");
+   scanf("%d", &nbtasks);
    printf("\nSee the output file for results ...\n");
-   fail = solve_by_homotopy_continuation();
+   fail = solve_by_standard_homotopy_continuation(nbtasks);
 
    return fail;
 }
 
 int run_dobldobl_continuation ( void )
 {
-   int fail;
+   int fail, nbtasks;
 
    printf("\nCalling the double double path trackers in PHCpack...\n");
    fail = read_dobldobl_target_system();
@@ -86,15 +88,18 @@ int run_dobldobl_continuation ( void )
    fail = tune_continuation_parameters();
    printf("\n");
    fail = determine_output_during_continuation();
+   printf("\nGive the number of tasks (0 for no multitasking ) : ");
+   scanf("%d", &nbtasks);
    printf("\nSee the output file for results ...\n");
-   fail = solve_by_dobldobl_homotopy_continuation();
+   fail = solve_by_dobldobl_homotopy_continuation(nbtasks);
+   fail = write_dobldobl_target_solutions();
 
    return fail;
 }
 
 int run_quaddobl_continuation ( void )
 {
-   int fail;
+   int fail, nbtasks;
 
    printf("\nCalling the quad double path trackers in PHCpack...\n");
    fail = read_quaddobl_target_system();
@@ -108,8 +113,11 @@ int run_quaddobl_continuation ( void )
    fail = tune_continuation_parameters();
    printf("\n");
    fail = determine_output_during_continuation();
+   printf("\nGive the number of tasks (0 for no multitasking ) : ");
+   scanf("%d", &nbtasks);
    printf("\nSee the output file for results ...\n");
-   fail = solve_by_quaddobl_homotopy_continuation();
+   fail = solve_by_quaddobl_homotopy_continuation(nbtasks);
+   fail = write_quaddobl_target_solutions();
 
    return fail;
 }

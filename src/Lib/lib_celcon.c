@@ -1,12 +1,13 @@
 /* simple test program in C on the operations in the cells container */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "phcpack.h"
 #include "solcon.h"
 #include "syscon.h"
 #include "celcon.h"
 
-int compute_mixed_volume( void );
+int compute_mixed_volume ( void );
 /*
  * DESCRIPTION :
  *   prompts the user for a polynomial system and then computes
@@ -351,7 +352,7 @@ void read_cells_and_create_start_system ( void )
 
    fail = celcon_read_mixed_cell_configuration();
    printf("\nReading a system to initialize the symbol table...");
-   fail = read_target_system();
+   fail = read_standard_target_system();
    fail = celcon_dimension_of_points(&dim);
    printf("dimension of the lifted points : %d\n",dim);
    fail = show_mixture(dim,&r);
@@ -385,7 +386,7 @@ void read_cells_and_solve_start_system ( void )
 
    fail = celcon_read_mixed_cell_configuration();
    printf("\nReading a system to initialize the symbol table...");
-   fail = read_target_system();
+   fail = read_standard_target_system();
    fail = define_output_file();
    fail = celcon_dimension_of_points(&dim);
    printf("dimension of the lifted points : %d\n",dim);

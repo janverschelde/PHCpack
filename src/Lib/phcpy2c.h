@@ -5,8 +5,30 @@ void initialize ( void );
 static PyObject *py2c_PHCpack_version_string
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_set_seed ( PyObject *self, PyObject *args );
-static PyObject *py2c_read_target_system ( PyObject *self, PyObject *args );
-static PyObject *py2c_read_start_system ( PyObject *self, PyObject *args );
+static PyObject *py2c_read_standard_target_system
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_read_standard_target_system_from_file
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_read_standard_start_system
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_read_standard_start_system_from_file
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_read_dobldobl_target_system
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_read_dobldobl_target_system_from_file
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_read_dobldobl_start_system
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_read_dobldobl_start_system_from_file
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_read_quaddobl_target_system
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_read_quaddobl_target_system_from_file
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_read_quaddobl_start_system
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_read_quaddobl_start_system_from_file
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_define_output_file ( PyObject *self, PyObject *args );
 static PyObject *py2c_write_target_system ( PyObject *self, PyObject *args );
 static PyObject *py2c_write_start_system ( PyObject *self, PyObject *args );
@@ -75,7 +97,7 @@ static PyObject *py2c_autotune_continuation_parameters
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_determine_output_during_continuation
  ( PyObject *self, PyObject *args );
-static PyObject *py2c_solve_by_homotopy_continuation
+static PyObject *py2c_solve_by_standard_homotopy_continuation
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_solve_by_dobldobl_homotopy_continuation
  ( PyObject *self, PyObject *args );

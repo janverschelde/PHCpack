@@ -1,0 +1,351 @@
+Thu 27 Mar 2014 : extended next_track with the fixed_gamma option to init
+  a path tracker, tested in lib_nxtsol, and used in phcpy2c.c
+
+Fri 7 Mar 2014 : extended phcpack with operations to read (start) systems
+  (and start solutions) from file, as tested by lib_read.c.
+  Because of name changes, lib_celcon.c, lib_newton.c, lib_nxtsol.c,
+  lib_track.c, lib_poco.c, and phcpy2c.c also changed.
+  Added operations to phcpy2c.h and phcpy2c.c, not fully tested yet...
+
+Thu 6 Mar 2014 : extended phcpack.h and phcpack.c with number_of_tasks
+  for multitasking homotopy continuation, tested by lib_poco.c.
+  Also phcpy2c.c needed changes because of extra parameter in the
+  solve_by_*_homotopy_continuation functions, which then caused updates
+  in the header phcpy2c.h.
+
+Thu 19 Dec 2013 : changed names of wrapped Python bindings for the
+  Schubert calculus, inserting _schubert_ in phcpy2c.
+
+Tue 17 Dec 2013 : extended product with m_homogeneous_start_system,
+  tested by lib_roco.  Added this function to phcpy2c.
+
+Mon 16 Dec 2013 : added m_partition_Bezout_number to product, 
+  tested by lib_roco and updated phcpy2c.
+
+Sun 15 Dec 2013 : extend m_homogeneous_Bezout_number in product with the
+  partition of the set of unknowns, tested in lib_roco, and updated phcpy2c.
+
+Fri 13 Dec 2013 : added m_homogeneous_Bezout_number to product, tested
+  in lib_roco.
+
+Thu 12 Dec 2013 : added string representations and supporting check 
+  to product, tested by lib_roco, and extended phcpy2c as well.
+
+Wed 4 Dec 2013 : updated phcpack and phcpy2c.c to pass the number of decimal
+  places to the multiprecision path tracker.
+
+Tue 3 Dec 2013 : extended phcpack, phcpy2c, and lib_poco.c for
+  multiprecision path tracking.  Updated lib_nxtsol.c for multiprecision.
+
+Mon 2 Dec 2013 : extended next_track with multiprecision path tracker.
+
+Thu 28 Nov 2013 : extended syscon, tested by lib_syscon, lib_newton now does
+  a multiprecision Newton step, upgraded phcpy2c.
+
+Wed 27 Nov 2013 : updated solcon with multiprecision operations, tested
+  by lib_solcon.
+
+Tue 26 Nov 2013 : extended solcon, phcpack with multiprecision Newton step,
+  tested by lib_newton.
+
+Mon 25 Nov 2013 : updates in syscon.h, syscon.c, and lib_newton.c.
+
+Sun 24 Nov 2013 : updated syscon.h, syscon.c, and lib_syscon.c
+  with operations to read and write multiprecision systems.
+
+Tue 24 Sep 2013 : new next_track library called by lib_nxtsol.c.
+  Added the corresponding function to phcpy2c.h and phcpy2c.c.
+
+Wed 18 Sep 2013 : fixed bug in syscon_string_of_symbols of phcpy2c.c.
+
+Tue 17 Sep 2013 : added the option puretopdim to mapcon and phcpy2c.c.
+
+Wed 4 Sep 2013 : updated mapcon and phcpy2c to write monomial maps.
+
+Tue 3 Sep 2013 : extended syscon with operation to return number of terms
+  in a Laurent polynomial, stored in the systems container, and added the
+  corresponding operation to phcpy2c.  New mapcon, interfaced with phcpy2c.
+
+Fri 9 Aug 2013 : PHCpack version string printed in phc_solve.c and added
+  function to get that string in phcpy2c.
+  Added set_seed() function to phcpack and phcpy2c.
+
+Wed 27 Feb 2013 : added function to witset and phcpy2c.
+
+Tue 26 Feb 2013 : added three functions to phcpy2c for diagonal homotopies.
+
+Wed 20 Feb 2013 : added function to witset, tested by lib_witset,
+  and extended phcpy2c with py2c_witness_set_of_hypersurface.
+
+Thu 14 Feb 2013 : extended witset with operations to make double double and
+  quad double cascade homotopies, used in phcpy2c.  Extended solcon and
+  phcpy2c with operations to drop a coordinate from a solution list.
+  Extended syscon and phcpy2c with removal of symbol name functions
+  for solutions and polynomials.
+
+Wed 13 Feb 2013 : py2c_create_cascade_homotopy in phcpy2c.
+
+Tue 12 Feb 2013 : wrapped create_homotopy_with_given_gamma in phcpy2c.
+  Updated phcpack with create_{dobldobl,quaddobl}_homotopy_with_given_gamma
+  and wrapped the functions in phcpy2c.
+
+Sun 10 Feb 2013 : added deflate function to phcpack, tested by lib_newton,
+  updated phcpy2c.  Degree of polynomials added to syscon and phcpy2c.
+
+Thu 7 Feb 2013 : added syscon_total_degree to phcpy2c.  Extended phcpack 
+  with functions to autotune and show the continuation parameters.
+  Updated lib_poco.c and extended phcpy2c with the 2 new functions.
+
+Wed 6 Feb 2013 : added wrappers to retrieve and add terms with complex
+  double double and quad double coefficients to syscon.  Wrappers are
+  added to solcon for retrieve and append solutions with complex double
+  double and quad double coefficients.  Extended phcpack with functions to
+  move double double and quad double data between containers and PHCpack
+  and with functions to make double double and quad double homotopies,
+  for use in phcpy2c.  Extended jump_track with path trackers for
+  double double and quad double precision.
+
+Tue 5 Feb 2013 : extended phcpack and lib_poco for interactive
+  double double and quad double continuation.  Added the solve by
+  dobldobl and quaddobl homotopy continuation to phcpy2c.
+
+Mon 4 Feb 2013 : added subroutines to lib_poco.c to prepare to test the
+  solve by homotopy continuation with double doubles and quad doubles.
+
+Fri 1 Feb 2013 : extended phcpy2c to do an interactive Newton step
+  with double double and quad double arithmetic.
+  Wrapped solution strings operations in solcon, tested by lib_solcon,
+  and continued to phcpy2c.  Extended syscon and phcpy2c with operations
+  to store string representations of polynomials with double double and
+  quad double coefficients into the system containers.
+
+Thu 31 Jan 2013 : extended syscon with symbol table functions, tested
+  by lib_sycon and exported by phcpy2c.
+
+Wed 30 Jan 2013 : wrapped operations in systems and solutions containers 
+  in syscon and solcon, tested by lib_syscon and lib_solcon.
+  Added Newton_step for double doubles and quad doubles to phcpack,
+  extend lib_newton.c with tests.
+
+Mon 28 Jan 2013 : refactored phcpack into jump_start change lib_factor.c.
+
+Fri 18 Jan 2013 : removed the mt_*.c files as this approach did not work
+  in combination with Ada.  Refactored phcpack into witset, changing
+  lib_track.c and lib_factor.c.
+
+Wed 16 Jan 2013 : new directory doc to record design decisions.
+
+Tue 15 Jan 2013 : new product.h, product.c, and lib_roco.c for linear-product
+  root counts and random linear-product systems. 
+  The new operations are wrapped in phcpy2c.h and phcpy2c.c.
+
+Fri 28 Dec 2012 : more functions in phcpy2c for the monodromy breakup.
+
+Thu 27 Dec 2012 : updates in phcpy2c.c, diagnostic printing in lib_factor.c.
+
+Tue 25 Dec 2012 : extended phcpack.h and phcpack.c with functions,
+  used in lib_factor.c, updated phcpy2c.h and phcpy2c.c.
+
+Fri 21 Dec 2012 : permute and clear operations in celcon.h, celcon.c,
+  updated phcpy2c.h and phcpy2c.c.
+
+Wed 19 Dec 2012 : added Newton_step to phcpack.h and phcpack.c,
+  for use in py2c_newton_step in phcpy2c.h and phcpy2c.c.
+  Touched solcon.c in search of bugs.  Wrapping of celcon in phcpy2c.
+
+Tue 18 Dec 2012 : fixed bug in schubert.c with scanning of planes,
+  also modified phcpy2c.c in the process of debugging.
+
+Mon 17 Dec 2012 : extended schubert.(h,c) and phcpy2c.(h,c) with Pieri system.
+
+Thu 13 Dec 2012 : extended number of characters to 25600 when loading a
+  polynomial in syscon.c and phcpy2c.c.
+
+Wed 12 Dec 2012 : schubert and phcpy2c now have a run_Pieri_homotopies job.
+
+Tue 11 Dec 2012 : copied tree.h, tree.c, and ts_tree.c from ../MPI into
+  pieri_tree.h, pieri_tree.c, and ts_pieri_tree.c to this directory,
+  because the Pieri root count is independent of the MPI bindings.
+  New schubert.h and schubert.c exports Pieri root count and posets,
+  added to phcpy2c.h and phcpy2c.c.
+
+Mon 10 Dec 2012 : new program lib_pieri.c to export Pieri homotopies to
+  the C programmer without the MPI...
+
+Sun 9 Dec 2012 : extra operations in syscon, phcpack, and phcpy2c.
+
+Tue 4 Dec 2012 : updated syscon.h, syscon.h, phcpy2c.h, and phcpy2c.c
+  to deal with Laurent systems.  Update phc_solve.c because of silent flag.
+  Added stable_mixed_volume function to phcpack, extended phcpy2c.c
+  with an option stable.
+
+Mon 3 Dec 2012 : updated syscon.h, syscon.c, phcpack.h, phcpack.c,
+  and phc_solve.c for Laurent polynomial systems.
+
+Tue 12 May 2009 : updated syspool.*, phcpack.h, mt_solpool.c, and
+  created mt_refine.c.
+
+Fri 8 May 2009 : updated solpool.* and created mt_solpool.c,
+  minor documentation change in mt_syspool.c.
+
+Wed 6 May 2009 : created syspool.h and syspool.c, along with mt_syspool.c.
+
+Wed 24 Dec 2008 : updated phcpack, syscon, mt_newton and mt_cheater.
+
+Thu 18 Dec 2008 : added refine_root to phcpack, renamed mt_jump to 
+  mt_newton to get a multithreaded root refiner with jumpstarting.
+  Changed mt_read.c and mt_cheater.c as well.
+
+Wed 17 Dec 2008 : in lib_read, placed an explicit include of string.h
+  and swapped writing with reading so it no longer crashes.
+  Added explicit include of stdlib.h to lib_celcon.c and lib_syscon.c.
+  Developed mt_read.c: multithreaded analogue of lib_read.c
+  mt_jump.c: multithreaded reading of solutions from file, and
+  mt_cheater.c: multithreaded cheater homotopy.
+
+Fri 6 Jun 2008 : extended phcpy2c.c and phcpy2c.h with mixed_volume.
+
+Tue 3 Jun 2008 : phcpy2c.c contains a wrapping of the append of a
+  solution string to the container.  Started with phcpy2c.h.
+
+Tue 27 May 2008 : extended solcon.h and solcon.c with two operations to
+  enter solution strings to the container, tested by lib_solcon.c.
+
+Mon 26 May 2008 : added #include<stdio.h> to phcpack.c, because a newer
+  gcc on a debian/linux distribution complained against it.
+  Extended lib_solcon.c with test for parsing of solution strings.
+
+Fri 16 May 2008 : documented in syscon.h initialization of symbol table
+  when initializing system container.  Lots of editing in phcpy2c.c.
+
+The 15 May 2008 : adjusted the READ_ME file for v2.3.41 and phcpy2c.c
+  a little bit, the new phc_solve.c tests the writing of solutions.
+
+Tue 13 May 2008 : copied phcpy2c.c from Kathy's directory.
+
+Mon 5 May 2008 : updated lib_solcon.c and solcon.c because gcc on Mac OS X
+  warned against implicitly using stdlib.h and stdio.h.
+
+Sun 4 May 2008 : fixed bug in lib_solcon.c, close of input file,
+  added option to test writing to solution strings.
+  Extended solcon with operations to write solutions to strings.
+
+Thu 20 Dec 2007 : added sort_embed_symbols to syscon, used in lib_track.c.
+
+Wed 19 Dec 2007 : added operation to remove a symbol from the table
+  in syscon, this changed lib_track.c.
+
+Tue 27 Nov 2007 : added clearing of the symbol table to syscon and
+  extended the running of the cascade to more levels down in lib_track.
+
+Tue 13 Nov 2007 : added option #8 to lib_track, after adding one function
+  to phcpack.h and phcpack.c to remove the last slack variable.
+
+Wed 7 Nov 2007 : added k parameter to closing of input file in solcon.
+
+Tue 23 Oct 2007 : added operations to phcpack to define the output file
+  for a given string, and to close the defined output file,
+  tested in lib_read.c.
+
+Sun 14 Oct 2007 : added write_witness_set_to_file to phcpack, for the
+  benefit of lib_track.c.
+
+Sat 13 Oct 2007 : added collapse_extrinsic_diagonal to phcpack,
+  called in lib_track.c.
+
+Thu 11 Oct 2007 : added hypersurface_witness_set to phcpack, tested
+  by lib_track.c.
+
+Wed 15 Aug 2007 : following suggestions of Anton, replaced in solcon
+  all sol[2*n+5] by *sol, also s1[2*n1+5], s2[2*n2+5], and ps[2*pn+5]
+  are replaced respectively by *s1, *s2, and *pn; also did this in
+  sol1[], sol2[], and ps[]...  Same in syscon, phcpack, and celcon
+  replaced all instances of the vanilla pointer notation by the * operator.
+
+Mon 11 Jun 2007 : added mixed_volume routine to phcpack.h (and .c),
+  tested by lib_celcon.c.
+
+Sat 3 Feb 2007 : extend syscon with a routine to pass polynomials
+  as string to the system container, for use in phc_solve.
+
+Thu 25 Jan 2007 : created phc_solve, which calls the blackbox solver
+  in PHCpack, with added "solve_system" in phcpack.
+
+Sun 14 Jan 2007 : inverted the double loop in lib_track.c to intersect
+  witness sets, moved the auxiliary routines off to solcon.
+
+Fri 12 Jan 2007 : moved operations from lib_track.c to solcon.h and -.c.
+
+Thu 11 Jan 2007 : modified lib_track.c to deal with case a < b.
+
+Wed 10 Jan 2007 : lib_track.c does diagonal homotopy continuation!
+
+Tue 9 Jan 2007 : extended solcon, phcpack, for lib_track.c. 
+
+Mon 8 Jan 2007 : extended phcpack and lib_track for the diagonal homotopy
+  and added solcon_read_next_witness_point to solcon.
+
+Sun 7 Jan 2007 : extended phcpack with create_diagonal_homotopy.
+
+Wed 3 Jan 2007 : modified lib_track.c, it must terminate as soon as one
+  start solution is wrong for the new linear-product start systems.
+
+Tue 2 Jan 2007 : improved lib_track.c for linear-product start systems.
+
+Wed 28 Jun 2006 : fixed minor error in phcpack.h.
+
+Tue 27 Jun 2006 : modified lib_celcon.c, to initialize the symbol table,
+  the user is prompted for a polynomial system.
+
+Thu 27 Apr 2006 : upgraded phcpack.c, solcon.h and solcon.c for lib_track.c.
+
+Tue 18 Apr 2006 : added syscon_total_degree to syscon, updated phcpack.h
+  and solcon.h to upgrade lib_track.c.
+
+Sun 16 Apr 2006 : modified lib_track.c to write solution number in front
+  of the monitoring information.
+
+Thu 6 Apr 2006 : updates in phcpack.h and phcpack.c for lib_track.c.
+
+Tue 4 Apr 2006 : upgraded lib_track.c, changed solcon.h and solcon.c.
+
+Fri 24 Mar 2006 : small cosmetic change in lib_conpar.c to match small
+  change in output format of continuation parameters.  Added routines to
+  phcpack.h and phcpack.c to write data to the defined output file.
+
+Sun 19 Feb 2006 : solcon.h and solcon.c are extended with operations for
+  incremental read/write of solution from/to file, tested by lib_solcon.c.
+  Extended phcpack.h and phcpack.c for lib_track.c.
+
+Thu 9 Feb 2006 : extended phcpack.h with routines to retrieve and set
+  the continuation parameters, tested by lib_conpar.c.
+
+Sat 21 Jan 2006 : lib_newton.c is a new routine in the library.
+
+Thu 5 Jan 2006 : updates in celcon.h, celcon.c, and lib_celcon.c.
+
+Mon 2 Jan 2006 : updates in celcon.h, celcon.c, and lib_celcon.c.
+
+Sat 10 Sep 2005 : added "retrieve_solutions_on_grid" to phcpack.h.
+
+Thu 8 Sep 2005 : added hyperplane sections management to phcpack.h.
+
+Tue 6 Sep 2005 : added function to phcpack.h for ../MPI/mpi2fac_d.c.
+
+Mon 5 Sep 2005 : changed to phcpack.h and phcpack.c for ../MPI/mpi2fac_s.c.
+
+Fri 2 Sep 2005 : lib_factor.c now writes to file, small adjustments to
+  phcpack.c using verbose flag.
+
+Tue 30 Aug 2005 : lib_factor.c now works!
+
+Thu 18 Aug 2005 : lib_celcon.c changed because of append_lifted_point,
+  which now matches its documentation in celcon.h.  Polished "lib_read.c"
+  with a verbose code.  Changes in phcpack.c and lib_factor.c.
+
+Sat 13 Aug 2005 : created syscon.h, syscon.c, lib_syscon.c, solcon.h,
+  solcon.c, lib_solcon.c.
+
+Thu 11 Aug 2005 : updated phcpack.h, phcpack.c to create lib_factor.c.
+
+Wed 3 Aug 2005 : changed phcpack.h, phcpack.c, lib_read.c, lib_poco.c.

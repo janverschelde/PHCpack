@@ -50,24 +50,152 @@ static PyObject *py2c_set_seed( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_read_target_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_read_standard_target_system
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = read_target_system();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = read_standard_target_system();
    
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_read_start_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_read_standard_target_system_from_file
+ ( PyObject *self, PyObject *args )
+{
+   int nc,fail;
+   char *name;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&nc,&name)) return NULL;
+   fail = read_standard_target_system_from_file(nc,name);
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_read_standard_start_system
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = read_start_system();
+   fail = read_standard_start_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_read_standard_start_system_from_file
+ ( PyObject *self, PyObject *args )
+{
+   int nc,fail;
+   char *name;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&nc,&name)) return NULL;   
+   fail = read_standard_start_system_from_file(nc,name);
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_read_dobldobl_target_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = read_dobldobl_target_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_read_dobldobl_target_system_from_file
+ ( PyObject *self, PyObject *args )
+{
+   int nc,fail;
+   char *name;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&nc,&name)) return NULL;
+   fail = read_dobldobl_target_system_from_file(nc,name);
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_read_dobldobl_start_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = read_dobldobl_start_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_read_dobldobl_start_system_from_file
+ ( PyObject *self, PyObject *args )
+{
+   int nc,fail;
+   char *name;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&nc,&name)) return NULL;   
+   fail = read_dobldobl_start_system_from_file(nc,name);
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_read_quaddobl_target_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = read_quaddobl_target_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_read_quaddobl_target_system_from_file
+ ( PyObject *self, PyObject *args )
+{
+   int nc,fail;
+   char *name;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&nc,&name)) return NULL;
+   fail = read_quaddobl_target_system_from_file(nc,name);
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_read_quaddobl_start_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = read_quaddobl_start_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_read_quaddobl_start_system_from_file
+ ( PyObject *self, PyObject *args )
+{
+   int nc,fail;
+   char *name;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&nc,&name)) return NULL;   
+   fail = read_quaddobl_start_system_from_file(nc,name);
    
    return Py_BuildValue("i",fail);
 }
@@ -83,24 +211,26 @@ static PyObject *py2c_define_output_file ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_write_target_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_write_standard_target_system
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = write_target_system();
+   fail = write_standard_target_system();
    
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_write_start_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_write_standard_start_system
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = write_start_system();
+   fail = write_standard_start_system();
    
    return Py_BuildValue("i",fail);
 }
@@ -507,14 +637,14 @@ static PyObject *py2c_determine_output_during_continuation
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_solve_by_homotopy_continuation
+static PyObject *py2c_solve_by_standard_homotopy_continuation
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail, nbtasks = 0;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = solve_by_homotopy_continuation();
+   if(!PyArg_ParseTuple(args,"i",&nbtasks)) return NULL;   
+   fail = solve_by_standard_homotopy_continuation(nbtasks);
 
    return Py_BuildValue("i",fail);
 }
@@ -522,11 +652,11 @@ static PyObject *py2c_solve_by_homotopy_continuation
 static PyObject *py2c_solve_by_dobldobl_homotopy_continuation
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail, nbtasks = 0;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = solve_by_dobldobl_homotopy_continuation();
+   if(!PyArg_ParseTuple(args,"i",&nbtasks)) return NULL;   
+   fail = solve_by_dobldobl_homotopy_continuation(nbtasks);
 
    return Py_BuildValue("i",fail);
 }
@@ -534,11 +664,11 @@ static PyObject *py2c_solve_by_dobldobl_homotopy_continuation
 static PyObject *py2c_solve_by_quaddobl_homotopy_continuation
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail, nbtasks = 0;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = solve_by_quaddobl_homotopy_continuation();
+   if(!PyArg_ParseTuple(args,"i",&nbtasks)) return NULL;   
+   fail = solve_by_quaddobl_homotopy_continuation(nbtasks);
 
    return Py_BuildValue("i",fail);
 }
@@ -2807,44 +2937,44 @@ static PyObject *py2c_mapcon_exponents_of_map
 static PyObject *py2c_initialize_standard_homotopy
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail,fixed;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = initialize_standard_homotopy();
+   if(!PyArg_ParseTuple(args,"i",&fixed)) return NULL;
+   fail = initialize_standard_homotopy(fixed);
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_initialize_dobldobl_homotopy
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail,fixed;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = initialize_dobldobl_homotopy();
+   if(!PyArg_ParseTuple(args,"i",&fixed)) return NULL;
+   fail = initialize_dobldobl_homotopy(fixed);
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_initialize_quaddobl_homotopy
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail,fixed;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = initialize_quaddobl_homotopy();
+   if(!PyArg_ParseTuple(args,"i",&fixed)) return NULL;
+   fail = initialize_quaddobl_homotopy(fixed);
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_initialize_multprec_homotopy
  ( PyObject *self, PyObject *args )
 {
-   int fail,deci;
+   int fail,deci,fixed;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&deci)) return NULL;
-   fail = initialize_multprec_homotopy(deci);
+   if(!PyArg_ParseTuple(args,"ii",&fixed,&deci)) return NULL;
+   fail = initialize_multprec_homotopy(fixed,deci);
    return Py_BuildValue("i",fail);
 }
 
@@ -2994,16 +3124,43 @@ static PyMethodDef phcpy2c_methods[] =
      METH_VARARGS, "returns the version string of PHCpack"},
    {"py2c_set_seed", py2c_set_seed,
      METH_VARARGS, "sets the given seed for the random number generator"},
-   {"py2c_read_target_system", py2c_read_target_system,
-     METH_VARARGS, "reads the target system from file"},
-   {"py2c_read_start_system", py2c_read_start_system,
-     METH_VARARGS, "reads the start system from file"},
+
+   {"py2c_read_standard_target_system", py2c_read_standard_target_system,
+     METH_VARARGS, "reads the target system in standard doubles"},
+   {"py2c_read_standard_target_system_from_file",
+     py2c_read_standard_target_system_from_file,
+     METH_VARARGS, "reads the target system in standard doubles from file"},
+   {"py2c_read_standard_start_system", py2c_read_standard_start_system,
+     METH_VARARGS, "reads the start system in standard doubles"},
+   {"py2c_read_standard_start_system_from_file",
+     py2c_read_standard_start_system_from_file,
+     METH_VARARGS, "reads the start system in standard doubles from file"},
+   {"py2c_read_dobldobl_target_system", py2c_read_dobldobl_target_system,
+     METH_VARARGS, "reads the target system in double doubles"},
+   {"py2c_read_dobldobl_target_system_from_file",
+     py2c_read_dobldobl_target_system_from_file,
+     METH_VARARGS, "reads the target system in double doubles from file"},
+   {"py2c_read_dobldobl_start_system", py2c_read_dobldobl_start_system,
+     METH_VARARGS, "reads the start system in double doubles"},
+   {"py2c_read_dobldobl_start_system_from_file",
+     py2c_read_dobldobl_start_system_from_file,
+     METH_VARARGS, "reads the start system in double doubles from file"},
+   {"py2c_read_quaddobl_target_system", py2c_read_quaddobl_target_system,
+     METH_VARARGS, "reads the target system in double doubles"},
+   {"py2c_read_quaddobl_target_system_from_file",
+     py2c_read_quaddobl_target_system_from_file,
+     METH_VARARGS, "reads the target system in double doubles from file"},
+   {"py2c_read_quaddobl_start_system", py2c_read_quaddobl_start_system,
+     METH_VARARGS, "reads the start system in double doubles"},
+   {"py2c_read_quaddobl_start_system_from_file",
+     py2c_read_quaddobl_start_system_from_file,
+     METH_VARARGS, "reads the start system in double doubles from file"},
    {"py2c_define_output_file", py2c_define_output_file,
      METH_VARARGS, "defines the output file"},
-   {"py2c_write_target_system", py2c_write_target_system,
-     METH_VARARGS, "writes the target system to file"},
-   {"py2c_write_start_system", py2c_write_start_system,
-     METH_VARARGS, "writes the start system to file"},
+   {"py2c_write_standard_target_system", py2c_write_standard_target_system,
+     METH_VARARGS, "writes the target system in standard doubles to file"},
+   {"py2c_write_standard_start_system", py2c_write_standard_start_system,
+     METH_VARARGS, "writes the start system in standard doubles to file"},
    {"py2c_write_start_solutions", py2c_write_start_solutions,
     METH_VARARGS, "writes the start solution to file"},
    {"py2c_copy_target_system_to_container",
@@ -3098,9 +3255,9 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_determine_output_during_continuation", 
      py2c_determine_output_during_continuation,
     METH_VARARGS, "determines the output"},
-   {"py2c_solve_by_homotopy_continuation",
-     py2c_solve_by_homotopy_continuation,
-    METH_VARARGS, "homotopy continuation in double precision"},
+   {"py2c_solve_by_standard_homotopy_continuation",
+     py2c_solve_by_standard_homotopy_continuation,
+    METH_VARARGS, "homotopy continuation in standard double precision"},
    {"py2c_solve_by_dobldobl_homotopy_continuation",
      py2c_solve_by_dobldobl_homotopy_continuation,
     METH_VARARGS, "homotopy continuation in double double precision"},

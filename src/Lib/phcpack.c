@@ -110,11 +110,23 @@ int multprec_Newton_step ( int deci )
 
 /* wrapping the operations from C_to_PHCpack */
 
-int read_target_system ( void )
+int read_standard_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
    fail = _ada_use_c2phc(11,a,b,c);
+   return fail;
+}
+
+int read_standard_target_system_from_file ( int n, char* filename )
+{
+   int b[n],i,fail;
+   double *c;
+
+   for(i=0; i<n; i++) b[i] = (int) filename[i];
+
+   fail = _ada_use_c2phc(540,&n,b,c);
+
    return fail;
 }
 
@@ -126,11 +138,35 @@ int read_dobldobl_target_system ( void )
    return fail;
 }
 
+int read_dobldobl_target_system_from_file ( int n, char* filename )
+{
+   int b[n],i,fail;
+   double *c;
+
+   for(i=0; i<n; i++) b[i] = (int) filename[i];
+
+   fail = _ada_use_c2phc(541,&n,b,c);
+
+   return fail;
+}
+
 int read_quaddobl_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
    fail = _ada_use_c2phc(241,a,b,c);
+   return fail;
+}
+
+int read_quaddobl_target_system_from_file ( int n, char* filename )
+{
+   int b[n],i,fail;
+   double *c;
+
+   for(i=0; i<n; i++) b[i] = (int) filename[i];
+
+   fail = _ada_use_c2phc(542,&n,b,c);
+
    return fail;
 }
 
@@ -142,7 +178,23 @@ int read_multprec_target_system ( int decimals )
    return fail;
 }
 
-int write_target_system ( void )
+int read_multprec_target_system_from_file
+  ( int decimals, int n, char* filename )
+{
+   int b[n],i,fail;
+   int a[2];
+   double *c;
+
+   a[0] = n;
+   a[1] = decimals;
+   for(i=0; i<n; i++) b[i] = (int) filename[i];
+
+   fail = _ada_use_c2phc(543,a,b,c);
+
+   return fail;
+}
+
+int write_standard_target_system ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -174,11 +226,23 @@ int write_multprec_target_system ( void )
    return fail;
 }
 
-int read_start_system ( void )
+int read_standard_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
    fail = _ada_use_c2phc(13,a,b,c);
+   return fail;
+}
+
+int read_standard_start_system_from_file ( int n, char* filename )
+{
+   int b[n],i,fail;
+   double *c;
+
+   for(i=0; i<n; i++) b[i] = (int) filename[i];
+
+   fail = _ada_use_c2phc(544,&n,b,c);
+
    return fail;
 }
 
@@ -190,11 +254,35 @@ int read_dobldobl_start_system ( void )
    return fail;
 }
 
+int read_dobldobl_start_system_from_file ( int n, char* filename )
+{
+   int b[n],i,fail;
+   double *c;
+
+   for(i=0; i<n; i++) b[i] = (int) filename[i];
+
+   fail = _ada_use_c2phc(545,&n,b,c);
+
+   return fail;
+}
+
 int read_quaddobl_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
    fail = _ada_use_c2phc(243,a,b,c);
+   return fail;
+}
+
+int read_quaddobl_start_system_from_file ( int n, char* filename )
+{
+   int b[n],i,fail;
+   double *c;
+
+   for(i=0; i<n; i++) b[i] = (int) filename[i];
+
+   fail = _ada_use_c2phc(546,&n,b,c);
+
    return fail;
 }
 
@@ -206,7 +294,23 @@ int read_multprec_start_system ( int decimals )
    return fail;
 }
 
-int write_start_system ( void )
+int read_multprec_start_system_from_file
+ ( int decimals, int n, char* filename )
+{
+   int b[n],i,fail;
+   int a[2];
+   double *c;
+
+   a[0] = n;
+   a[1] = decimals;
+   for(i=0; i<n; i++) b[i] = (int) filename[i];
+
+   fail = _ada_use_c2phc(547,a,b,c);
+
+   return fail;
+}
+
+int write_standard_start_system ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -432,27 +536,27 @@ int refine_root ( int n, int *m, double *c )
    return fail;
 }
 
-int solve_by_homotopy_continuation ( void )
+int solve_by_standard_homotopy_continuation ( int number_of_tasks )
 {
-   int *a,*b,fail;
+   int *b,fail;
    double *c;
-   fail = _ada_use_c2phc(16,a,b,c);
+   fail = _ada_use_c2phc(16,&number_of_tasks,b,c);
    return fail;
 }
 
-int solve_by_dobldobl_homotopy_continuation ( void )
+int solve_by_dobldobl_homotopy_continuation ( int number_of_tasks )
 {
-   int *a,*b,fail;
+   int *b,fail;
    double *c;
-   fail = _ada_use_c2phc(236,a,b,c);
+   fail = _ada_use_c2phc(236,&number_of_tasks,b,c);
    return fail;
 }
 
-int solve_by_quaddobl_homotopy_continuation ( void )
+int solve_by_quaddobl_homotopy_continuation ( int number_of_tasks )
 {
-   int *a,*b,fail;
+   int *b,fail;
    double *c;
-   fail = _ada_use_c2phc(246,a,b,c);
+   fail = _ada_use_c2phc(246,&number_of_tasks,b,c);
    return fail;
 }
 

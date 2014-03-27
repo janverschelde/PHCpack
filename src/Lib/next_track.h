@@ -1,34 +1,42 @@
 /* The file next_track.h contains prototypes for the operations to
  * track a solution path with a generator, i.e.: a get_next() method. */
 
-int initialize_standard_homotopy ( void );
+int initialize_standard_homotopy ( int fixed_gamma );
 /*
  * DESCRIPTION :
  *   Takes start and target system as stored in standard double precision
  *   in the PHCpack containers and initializes the homotopy for tracking
- *   in standard double complex arithmetic. */
+ *   in standard double complex arithmetic. 
+ *   If fixed_gamma equals 1 (true), then gamma will be a fixed default,
+ *   otherwise, a new random complex constant for gamma is generated. */
 
-int initialize_dobldobl_homotopy ( void );
+int initialize_dobldobl_homotopy ( int fixed_gamma );
 /*
  * DESCRIPTION :
  *   Takes start and target system as stored in double double precision
  *   in the PHCpack containers and initializes the homotopy for tracking
- *   in double double complex arithmetic. */
+ *   in double double complex arithmetic.
+ *   If fixed_gamma equals 1 (true), then gamma will be a fixed default,
+ *   otherwise, a new random complex constant for gamma is generated. */
 
-int initialize_quaddobl_homotopy ( void );
+int initialize_quaddobl_homotopy ( int fixed_gamma );
 /*
  * DESCRIPTION :
  *   Takes start and target system as stored in quad double precision
  *   in the PHCpack containers and initializes the homotopy for tracking
- *   in quad double complex arithmetic. */
+ *   in quad double complex arithmetic.
+ *   If fixed_gamma equals 1 (true), then gamma will be a fixed default,
+ *   otherwise, a new random complex constant for gamma is generated. */
 
-int initialize_multprec_homotopy ( int decimals );
+int initialize_multprec_homotopy ( int fixed_gamma, int decimals );
 /*
  * DESCRIPTION :
  *   Takes start and target system as stored in multiprecision
  *   in the PHCpack containers and initializes the homotopy for tracking
  *   in multiprecision complex arithmetic with in the working precision
- *   as many decimal places as the value of decimals. */
+ *   as many decimal places as the value of decimals.
+ *   If fixed_gamma equals 1 (true), then gamma will be a fixed default,
+ *   otherwise, a new random complex constant for gamma is generated. */
 
 int initialize_standard_solution ( int k );
 /*

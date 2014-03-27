@@ -147,15 +147,16 @@ int prompt_for_precision ( void )
 
 int call_initialize_standard_homotopy ( int *index )
 {
-   int fail,len;
+   int fail,len,fixed;
 
    fail = read_target_system_without_solutions();
-   fail = read_start_system();
+   fail = read_standard_start_system();
    fail = copy_start_solutions_to_container();
    fail = solcon_number_of_solutions(&len);
-   printf("number of start solutions : %d\n",len);
+   printf("Number of start solutions : %d\n",len);
    printf("-> give index of solution : "); scanf("%d",index);
-   fail = initialize_standard_homotopy();
+   printf("Fixed gamma constant ? (1 = yes/0 = no) "); scanf("%d",&fixed);
+   fail = initialize_standard_homotopy(fixed);
    fail = initialize_standard_solution(*index);
 
    return fail;
@@ -163,15 +164,16 @@ int call_initialize_standard_homotopy ( int *index )
 
 int call_initialize_dobldobl_homotopy ( int *index )
 {
-   int fail,len;
+   int fail,len,fixed;
 
    fail = read_dobldobl_target_system(); /* no _without_solutions ! */
    fail = read_dobldobl_start_system();
    fail = copy_dobldobl_start_solutions_to_container();
    fail = solcon_number_of_dobldobl_solutions(&len);
-   printf("number of start solutions : %d\n",len);
+   printf("Number of start solutions : %d\n",len);
    printf("-> give index of solution : "); scanf("%d",index);
-   fail = initialize_dobldobl_homotopy();
+   printf("Fixed gamma constant ? (1 = yes/0 = no) "); scanf("%d",&fixed);
+   fail = initialize_dobldobl_homotopy(fixed);
    fail = initialize_dobldobl_solution(*index);
 
    return fail;
@@ -179,15 +181,16 @@ int call_initialize_dobldobl_homotopy ( int *index )
 
 int call_initialize_quaddobl_homotopy ( int *index )
 {
-   int fail,len;
+   int fail,len,fixed;
 
    fail = read_quaddobl_target_system(); /* no _without_solutions ! */
    fail = read_quaddobl_start_system();
    fail = copy_quaddobl_start_solutions_to_container();
    fail = solcon_number_of_quaddobl_solutions(&len);
-   printf("number of start solutions : %d\n",len);
+   printf("Number of start solutions : %d\n",len);
    printf("-> give index of solution : "); scanf("%d",index);
-   fail = initialize_quaddobl_homotopy();
+   printf("Fixed gamma constant ? (1 = yes/0 = no) "); scanf("%d",&fixed);
+   fail = initialize_quaddobl_homotopy(fixed);
    fail = initialize_quaddobl_solution(*index);
 
    return fail;
@@ -195,7 +198,7 @@ int call_initialize_quaddobl_homotopy ( int *index )
 
 int call_initialize_multprec_homotopy ( int *index )
 {
-   int fail,len,deci;
+   int fail,len,deci,fixed;
    char nlc;
 
    printf("\ngive the number of decimal places in the working precision : ");
@@ -206,9 +209,10 @@ int call_initialize_multprec_homotopy ( int *index )
    fail = read_multprec_start_system(deci);
    fail = copy_multprec_start_solutions_to_container();
    fail = solcon_number_of_multprec_solutions(&len);
-   printf("number of start solutions : %d\n",len);
+   printf("Number of start solutions : %d\n",len);
    printf("-> give index of solution : "); scanf("%d",index);
-   fail = initialize_multprec_homotopy(deci);
+   printf("Fixed gamma constant ? (1 = yes/0 = no) "); scanf("%d",&fixed);
+   fail = initialize_multprec_homotopy(fixed,deci);
    fail = initialize_multprec_solution(*index);
 
    return fail;

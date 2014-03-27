@@ -68,7 +68,7 @@ void test_validate ( void )
    int fail;
 
    printf("\nCalling Newton validation in PHCpack...\n");
-   fail = read_start_system();
+   fail = read_standard_start_system();
    fail = define_output_file();
    printf("\nSee the output file results ...\n\n");
    fail = copy_start_system_to_container();
@@ -155,7 +155,7 @@ void test_deflate ( void )
    int fail,dim,len;
 
    printf("\nRunning deflation ...\n");
-   fail = read_start_system();
+   fail = read_standard_start_system();
    fail = copy_start_system_to_container();
    fail = copy_start_solutions_to_container();
    fail = syscon_number_of_polynomials(&dim);

@@ -86,11 +86,18 @@ int multprec_Newton_step ( int deci );
  *   The input parameter gives the number of decimal places in the
  *   working precision. */
 
-int read_target_system ( void );
+int read_standard_target_system ( void );
 /*
  * DESCRIPTION :
  *   Prompts the user for a file name and reads the target system from file.
  *   If available on file, also its solutions will be read and stored. */
+
+int read_standard_target_system_from_file ( int n, char* filename );
+/*
+ * DESCRIPTION :
+ *   Opens the file with name given in the n characters stored in filename,
+ *   reads the polynomial system with standard double precision coefficients
+ *   from the file and stores that system into the systems container. */
 
 int read_dobldobl_target_system ( void );
 /*
@@ -99,12 +106,26 @@ int read_dobldobl_target_system ( void );
  *   If available on file, also its solutions will be read and stored.
  *   All data is parsed to double double precision. */
 
+int read_dobldobl_target_system_from_file ( int n, char* filename );
+/*
+ * DESCRIPTION :
+ *   Opens the file with name given in the n characters stored in filename,
+ *   reads the polynomial system with double double precision coefficients
+ *   from the file and stores that system into the systems container. */
+
 int read_quaddobl_target_system ( void );
 /*
  * DESCRIPTION :
  *   Prompts the user for a file name and reads the target system from file.
  *   If available on file, also its solutions will be read and stored.
  *   All data is parsed to quad double precision. */
+
+int read_quaddobl_target_system_from_file ( int n, char* filename );
+/*
+ * DESCRIPTION :
+ *   Opens the file with name given in the n characters stored in filename,
+ *   reads the polynomial system with quad double precision coefficients
+ *   from the file and stores that system into the systems container. */
 
 int read_multprec_target_system ( int decimals );
 /*
@@ -114,7 +135,17 @@ int read_multprec_target_system ( int decimals );
  *   All data is parsed to multiple precision with as many decimal
  *   places as the value of decimals. */
 
-int write_target_system ( void );
+int read_multprec_target_system_from_file
+  ( int decimals, int n, char* filename );
+/*
+ * DESCRIPTION :
+ *   Opens the file with name given in the n characters stored in filename,
+ *   reads the polynomial system with multiprecision coefficients
+ *   from the file and stores that system into the systems container.
+ *   All data is parsed to multiple precision with as many decimal
+ *   places as the value of decimals. */
+
+int write_standard_target_system ( void );
 /*
  * DESCRIPTION :
  *   Writes the target polynomial system. */
@@ -134,11 +165,19 @@ int write_multprec_target_system ( void );
  * DESCRIPTION :
  *   Writes the target polynomial system in multiprecision. */
 
-int read_start_system ( void );
+int read_standard_start_system ( void );
 /* 
  * DESCRIPTION :
  *   Prompts the user for a file name and reads the start system from file. 
  *   If available, then also start solutions will be read and stored. */
+
+int read_standard_start_system_from_file ( int n, char* filename );
+/*
+ * DESCRIPTION :
+ *   Opens the file with name given in the n characters stored in filename,
+ *   reads the polynomial system with standard double precision coefficients
+ *   and the solutions from the file and stores that system into the 
+ *   systems container and the solutions in the solution container. */
 
 int read_dobldobl_start_system ( void );
 /* 
@@ -147,12 +186,28 @@ int read_dobldobl_start_system ( void );
  *   If available, then also start solutions will be read and stored.
  *   All data is parsed to double double precision. */
 
+int read_dobldobl_start_system_from_file ( int n, char* filename );
+/*
+ * DESCRIPTION :
+ *   Opens the file with name given in the n characters stored in filename,
+ *   reads the polynomial system with double double precision coefficients
+ *   and the solutions from the file and stores that system into the 
+ *   systems container and the solutions in the solution container. */
+
 int read_quaddobl_start_system ( void );
 /* 
  * DESCRIPTION :
  *   Prompts the user for a file name and reads the start system from file. 
  *   If available, then also start solutions will be read and stored.
  *   All data is parsed to quad double precision. */
+
+int read_quaddobl_start_system_from_file ( int n, char* filename );
+/*
+ * DESCRIPTION :
+ *   Opens the file with name given in the n characters stored in filename,
+ *   reads the polynomial system with double double precision coefficients
+ *   and the solutions from the file and stores that system into the 
+ *   systems container and the solutions in the solution container. */
 
 int read_multprec_start_system ( int decimals );
 /*
@@ -162,7 +217,18 @@ int read_multprec_start_system ( int decimals );
  *   All data is parsed to multiple precision with as many decimal
  *   places as the value of decimals. */
 
-int write_start_system ( void ) ;
+int read_multprec_start_system_from_file
+ ( int decimals, int n, char* filename );
+/*
+ * DESCRIPTION :
+ *   Opens the file with name given in the n characters stored in filename,
+ *   reads the polynomial system with double double precision coefficients
+ *   and the solutions from the file and stores that system into the 
+ *   systems container and the solutions in the solution container.
+ *   All data is parsed to multiple precision with as many decimal
+ *   places as the value of decimals. */
+
+int write_standard_start_system ( void ) ;
 /* 
  * DESCRIPTION :
  *   Writes the start polynomial system. */
@@ -334,23 +400,29 @@ int refine_root ( int n, int *m, double *c );
  *           the real and imaginary parts of the solution coordinates,
  *           diagnostics: (err,rco,res) as the last 3 doubles. */
 
-int solve_by_homotopy_continuation ( void );
+int solve_by_standard_homotopy_continuation ( int number_of_tasks );
 /* 
  * DESCRIPTION :
  *   Solves the target system using the start system
- *   and its corresponding start solutions. */
+ *   and its corresponding start solutions, using as many tasks
+ *   as the value of number_of_tasks (if positive).
+ *   If number_of_tasks is zero, then no multitasking is used. */
 
-int solve_by_dobldobl_homotopy_continuation ( void );
+int solve_by_dobldobl_homotopy_continuation ( int number_of_tasks );
 /* 
  * DESCRIPTION :
  *   Solves the target system using the start system and its
- *   corresponding start solutions with double double arithmetic. */
+ *   corresponding start solutions with double double arithmetic,
+ *   using as many tasks as the value of number_of_tasks (if positive).
+ *   If number_of_tasks is zero, then no multitasking is used. */
 
-int solve_by_quaddobl_homotopy_continuation ( void );
+int solve_by_quaddobl_homotopy_continuation ( int number_of_tasks );
 /* 
  * DESCRIPTION :
  *   Solves the target system using the start system and its
- *   corresponding start solutions with quad double arithmetic. */
+ *   corresponding start solutions with quad double arithmetic,
+ *   using as many tasks as the value of number_of_tasks (if positive).
+ *   If number_of_tasks is zero, then no multitasking is used. */
 
 int solve_by_multprec_homotopy_continuation ( int decimals );
 /* 

@@ -4,42 +4,42 @@ extern void adainit ( void );
 extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
 extern void adafinal ( void );
 
-int initialize_standard_homotopy ( void )
-{
-   int fail,*a,*b;
-   double *c;
-
-   fail = _ada_use_c2phc(500,a,b,c);
-
-   return fail;
-}
-
-int initialize_dobldobl_homotopy ( void )
-{
-   int fail,*a,*b;
-   double *c;
-
-   fail = _ada_use_c2phc(501,a,b,c);
-
-   return fail;
-}
-
-int initialize_quaddobl_homotopy ( void )
-{
-   int fail,*a,*b;
-   double *c;
-
-   fail = _ada_use_c2phc(502,a,b,c);
-
-   return fail;
-}
-
-int initialize_multprec_homotopy ( int decimals )
+int initialize_standard_homotopy ( int fixed_gamma )
 {
    int fail,*b;
    double *c;
 
-   fail = _ada_use_c2phc(512,&decimals,b,c);
+   fail = _ada_use_c2phc(500,&fixed_gamma,b,c);
+
+   return fail;
+}
+
+int initialize_dobldobl_homotopy ( int fixed_gamma )
+{
+   int fail,*b;
+   double *c;
+
+   fail = _ada_use_c2phc(501,&fixed_gamma,b,c);
+
+   return fail;
+}
+
+int initialize_quaddobl_homotopy ( int fixed_gamma )
+{
+   int fail,*b;
+   double *c;
+
+   fail = _ada_use_c2phc(502,&fixed_gamma,b,c);
+
+   return fail;
+}
+
+int initialize_multprec_homotopy ( int fixed_gamma, int decimals )
+{
+   int fail;
+   double *c;
+
+   fail = _ada_use_c2phc(512,&fixed_gamma,&decimals,c);
 
    return fail;
 }
