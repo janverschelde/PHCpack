@@ -45,6 +45,7 @@ procedure ts_nxtsol is
 
     tgt_sys,sta_sys : Link_to_Poly_Sys;
     sols : Solution_List;
+    ans : character;
 
   begin
     new_line;
@@ -53,7 +54,13 @@ procedure ts_nxtsol is
     new_line;
     put_line("Reading the start system and its solutions...");
     get(sta_sys,sols);
-    Standard_Path_Tracker.Init(tgt_sys,sta_sys,Head_Of(sols));
+    new_line;
+    put("Fixed gamma constant ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' 
+     then Standard_Path_Tracker.Init(tgt_sys,sta_sys,true,Head_Of(sols));
+     else Standard_Path_Tracker.Init(tgt_sys,sta_sys,false,Head_Of(sols));
+    end if;
   end Standard_Initialize_Path_Tracker;
 
   procedure DoblDobl_Initialize_Path_Tracker is
@@ -66,6 +73,7 @@ procedure ts_nxtsol is
 
     tgt_sys,sta_sys : Link_to_Poly_Sys;
     sols : Solution_List;
+    ans : character;
 
   begin
     new_line;
@@ -74,7 +82,13 @@ procedure ts_nxtsol is
     new_line;
     put_line("Reading the start system and its solutions...");
     get(sta_sys,sols);
-    DoblDobl_Path_Tracker.Init(tgt_sys,sta_sys,Head_Of(sols));
+    new_line;
+    put("Fixed gamma constant ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then DoblDobl_Path_Tracker.Init(tgt_sys,sta_sys,true,Head_Of(sols));
+     else DoblDobl_Path_Tracker.Init(tgt_sys,sta_sys,false,Head_Of(sols));
+    end if;
   end DoblDobl_Initialize_Path_Tracker;
 
   procedure QuadDobl_Initialize_Path_Tracker is
@@ -87,6 +101,7 @@ procedure ts_nxtsol is
 
     tgt_sys,sta_sys : Link_to_Poly_Sys;
     sols : Solution_List;
+    ans : character;
 
   begin
     new_line;
@@ -95,7 +110,13 @@ procedure ts_nxtsol is
     new_line;
     put_line("Reading the start system and its solutions...");
     get(sta_sys,sols);
-    QuadDobl_Path_Tracker.Init(tgt_sys,sta_sys,Head_Of(sols));
+    new_line;
+    put("Fixed gamma constant ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then QuadDobl_Path_Tracker.Init(tgt_sys,sta_sys,true,Head_Of(sols));
+     else QuadDobl_Path_Tracker.Init(tgt_sys,sta_sys,false,Head_Of(sols));
+    end if;
   end QuadDobl_Initialize_Path_Tracker;
 
   procedure Multprec_Initialize_Path_Tracker ( deci : in natural32 ) is
@@ -108,6 +129,7 @@ procedure ts_nxtsol is
 
     tgt_sys,sta_sys : Link_to_Poly_Sys;
     sols : Solution_List;
+    ans : character;
     size : constant natural32
          := Multprec_Floating_Numbers.Decimal_to_Size(deci);
 
@@ -121,7 +143,13 @@ procedure ts_nxtsol is
     get(sta_sys,sols);
     Standard_to_Multprec_Convertors.Set_Size(sta_sys.all,size);
     Multprec_Complex_Solutions.Set_Size(sols,size);
-    Multprec_Path_Tracker.Init(tgt_sys,sta_sys,Head_Of(sols),deci);
+    new_line;
+    put("Fixed gamma constant ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' 
+     then Multprec_Path_Tracker.Init(tgt_sys,sta_sys,true,Head_Of(sols),deci);
+     else Multprec_Path_Tracker.Init(tgt_sys,sta_sys,false,Head_Of(sols),deci);
+    end if;
   end Multprec_Initialize_Path_Tracker;
 
   procedure Standard_Run_Path_Tracker is

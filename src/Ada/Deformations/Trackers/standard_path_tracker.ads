@@ -17,13 +17,16 @@ package Standard_Path_Tracker is
   --   Stores s as the current solution, leaves the homotopy as it is.
   --   This is useful for tracking the next path in the same homotopy.
 
-  procedure Init ( p,q : in Link_to_Poly_sys );
-  procedure Init ( p,q : in Link_to_Poly_sys; s : in Link_to_Solution );
+  procedure Init ( p,q : in Link_to_Poly_sys; fixed_gamma : in boolean );
+  procedure Init ( p,q : in Link_to_Poly_sys; fixed_gamma : in boolean;
+                   s : in Link_to_Solution );
 
   -- DESCRIPTION :
   --   Initializes the homotopy with target system p, start system q,
-  --   and stores the start solution s (if given).  Fixed default values
-  --   will be used for the gamma and k constants in the homotopy.
+  --   and stores the start solution s (if given).
+  --   If fixed_gamma is true, then the gamma will be a fixed default value,
+  --   otherwise, a new random gamma will be generated. 
+  --   The k constants in the homotopy is set to a good value as well.
   --   The condition of the continuation parameters is set to zero.
 
   procedure Init ( p,q : in Link_to_Poly_sys;

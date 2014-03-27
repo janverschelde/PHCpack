@@ -1,4 +1,5 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Random_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
 with Standard_Homotopy;
@@ -68,21 +69,28 @@ package body Standard_Path_Tracker is
     prev_v.all := (prev_v'range => Create(0.0));
   end Init;
 
-  procedure Init ( p,q : in Link_to_Poly_sys ) is
+  procedure Init ( p,q : in Link_to_Poly_sys; fixed_gamma : in boolean ) is
 
-    gamma : constant Complex_Number
-          := Create(0.57670012968461137, 0.8169559109411918);
+    gamma : Complex_Number;
 
   begin
+    if fixed_gamma
+     then gamma := Create(0.57670012968461137, 0.8169559109411918);
+     else gamma := Standard_Random_Numbers.Random1;
+    end if;
     Init(p,q,gamma,2);
   end Init;
 
-  procedure Init ( p,q : in Link_to_Poly_sys; s : in Link_to_Solution ) is
+  procedure Init ( p,q : in Link_to_Poly_sys; fixed_gamma : in boolean;
+                   s : in Link_to_Solution ) is
 
-    gamma : constant Complex_Number
-          := Create(0.57670012968461137, 0.8169559109411918);
+    gamma : Complex_Number;
 
   begin
+    if fixed_gamma
+     then gamma := Create(0.57670012968461137, 0.8169559109411918);
+     else gamma := Standard_Random_Numbers.Random1;
+    end if;
     Init(p,q,s,gamma,2);
   end Init;
 

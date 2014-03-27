@@ -1,4 +1,6 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;
+with Standard_Random_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Multprec_Complex_Vectors;
 with Multprec_Complex_Norms_Equals;      use Multprec_Complex_Norms_Equals;
@@ -82,25 +84,60 @@ package body Multprec_Path_Tracker is
     end loop;
   end Init;
 
-  procedure Init ( p,q : in Link_to_Poly_sys; deci : in natural32 ) is
+  procedure Init ( p,q : in Link_to_Poly_sys; fixed_gamma : in boolean;
+                   deci : in natural32 ) is
 
-    mp_re : Floating_Number := create(0.57670012968461137);
-    mp_im : Floating_Number := create(0.8169559109411918);
+    mp_re : Floating_Number;
+    mp_im : Floating_Number;
     gamma : Complex_Number := Create(mp_re,mp_im);
 
   begin
+    if fixed_gamma then
+      mp_re := create(0.57670012968461137);
+      mp_im := create(0.8169559109411918);
+    else
+      declare
+        st_gamma : constant Standard_Complex_Numbers.Complex_Number
+                 := Standard_Random_Numbers.Random1;
+        st_re : constant double_float
+              := Standard_Complex_Numbers.REAL_PART(st_gamma);
+        st_im : constant double_float
+              := Standard_Complex_Numbers.IMAG_PART(st_gamma);
+      begin
+        mp_re := create(st_re);
+        mp_im := create(st_im);
+      end;
+    end if;
+    gamma := Create(mp_re,mp_im);
     Init(p,q,gamma,2,deci);
     Clear(mp_re); Clear(mp_im);
   end Init;
 
-  procedure Init ( p,q : in Link_to_Poly_sys; s : in Link_to_Solution;
-                   deci : in natural32 ) is
+  procedure Init ( p,q : in Link_to_Poly_sys; fixed_gamma : in boolean;
+                   s : in Link_to_Solution; deci : in natural32 ) is
 
-    mp_re : Floating_Number := create(0.57670012968461137);
-    mp_im : Floating_Number := create(0.8169559109411918);
+    mp_re : Floating_Number;
+    mp_im : Floating_Number;
     gamma : Complex_Number := Create(mp_re,mp_im);
 
   begin
+    if fixed_gamma then
+      mp_re := create(0.57670012968461137);
+      mp_im := create(0.8169559109411918);
+    else
+      declare
+        st_gamma : constant Standard_Complex_Numbers.Complex_Number
+                 := Standard_Random_Numbers.Random1;
+        st_re : constant double_float
+              := Standard_Complex_Numbers.REAL_PART(st_gamma);
+        st_im : constant double_float
+              := Standard_Complex_Numbers.IMAG_PART(st_gamma);
+      begin
+        mp_re := create(st_re);
+        mp_im := create(st_im);
+      end;
+    end if;
+    gamma := Create(mp_re,mp_im);
     Init(p,q,s,gamma,2,deci);
     Clear(mp_re); Clear(mp_im);
   end Init;

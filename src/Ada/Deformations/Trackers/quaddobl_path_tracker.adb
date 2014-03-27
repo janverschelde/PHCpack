@@ -1,6 +1,7 @@
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with QuadDobl_Random_Numbers;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vector_Norms;      use QuadDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Equality_Tests;    use QuadDobl_Complex_Equality_Tests;
@@ -75,27 +76,44 @@ package body QuadDobl_Path_Tracker is
     prev_v.all := (prev_v'range => Create(zero));
   end Init;
 
-  procedure Init ( p,q : in Link_to_Poly_sys ) is
+  procedure Init ( p,q : in Link_to_Poly_sys; fixed_gamma : in boolean ) is
 
-    dd_re : constant double_double := create(0.57670012968461137);
-    dd_im : constant double_double := create(0.8169559109411918);
-    qd_re : constant quad_double := create(dd_re);
-    qd_im : constant quad_double := create(dd_re);
-    gamma : constant Complex_Number := Create(qd_re,qd_im);
+    gamma : Complex_Number;
 
   begin
+    if fixed_gamma then
+      declare
+        dd_re : constant double_double := create(0.57670012968461137);
+        dd_im : constant double_double := create(0.8169559109411918);
+        qd_re : constant quad_double := create(dd_re);
+        qd_im : constant quad_double := create(dd_re);
+      begin
+        gamma := Create(qd_re,qd_im);
+      end;
+    else
+      gamma := QuadDobl_Random_Numbers.Random1;
+    end if;
     Init(p,q,gamma,2);
   end Init;
 
-  procedure Init ( p,q : in Link_to_Poly_sys; s : in Link_to_Solution ) is
+  procedure Init ( p,q : in Link_to_Poly_sys; fixed_gamma : in boolean;
+                   s : in Link_to_Solution ) is
 
-    dd_re : constant double_double := create(0.57670012968461137);
-    dd_im : constant double_double := create(0.8169559109411918);
-    qd_re : constant quad_double := create(dd_re);
-    qd_im : constant quad_double := create(dd_re);
-    gamma : constant Complex_Number := Create(qd_re,qd_im);
+    gamma : Complex_Number;
 
   begin
+    if fixed_gamma then
+      declare
+        dd_re : constant double_double := create(0.57670012968461137);
+        dd_im : constant double_double := create(0.8169559109411918);
+        qd_re : constant quad_double := create(dd_re);
+        qd_im : constant quad_double := create(dd_re);
+      begin
+        gamma := Create(qd_re,qd_im);
+      end;
+    else
+      gamma := QuadDobl_Random_Numbers.Random1;
+    end if;
     Init(p,q,s,gamma,2);
   end Init;
 
