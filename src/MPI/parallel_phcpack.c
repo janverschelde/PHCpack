@@ -74,7 +74,7 @@ int start_system_broadcast ( int myid, int n, int *nbsols )
 
    if(myid == 0)                           /* manager reads start system */
    {
-      fail = read_start_system();
+      fail = read_standard_start_system();
       fail = copy_start_system_to_container();
       fail = copy_start_solutions_to_container();
    }

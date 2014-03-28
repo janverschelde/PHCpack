@@ -633,8 +633,8 @@ int print_homotopy ( int kind )
 {
    int fail;
 
-   if(kind != 4) fail = write_target_system();
-   fail = write_start_system();
+   if(kind != 4) fail = write_standard_target_system();
+   fail = write_standard_start_system();
    fail = write_start_solutions();
 
    return fail;

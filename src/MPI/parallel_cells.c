@@ -20,7 +20,7 @@ void retrieve_dimensions ( int myid, int *nspt, int *dim )
    {  
       fail = celcon_read_mixed_cell_configuration();
       printf("\nReading a system to initialize the symbol table...");
-      fail = read_target_system();
+      fail = read_standard_target_system();
       fail = define_output_file();
       fail = celcon_dimension_of_points(dim);
       mix = (int*)calloc((*dim-1), sizeof(int));

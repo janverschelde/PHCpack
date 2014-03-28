@@ -1151,8 +1151,8 @@ void start_a_diagonal_homotopy(int myid, int numbprocs, char *name_1,
      fail = create_diagonal_homotopy(dim1,dim2);
      if(fail == 0)
      {
-      fail = write_target_system();
-      fail = write_start_system();
+      fail = write_standard_target_system();
+      fail = write_standard_start_system();
      }
      /*fail = tune_continuation_parameters(); printf("\n");*/
      fail = retrieve_continuation_parameters(vcp);
@@ -1282,8 +1282,8 @@ void cascade_one_level_down(int myid, int numbprocs, char *infile,
       if(v>3) printf("# paths to track : %d\n",nbsols);
       fail = define_output_file_with_string ((int)strlen(outfile), outfile);
       
-      fail = write_target_system();
-      fail = write_start_system(); 
+      fail = write_standard_target_system();
+      fail = write_standard_start_system(); 
       /*fail = tune_continuation_parameters(); printf("\n");*/
       fail = retrieve_continuation_parameters(vcp);     
       write_solution_banner_to_defined_output_file(nbsols,n);

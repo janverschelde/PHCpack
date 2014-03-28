@@ -1,4 +1,4 @@
-phcpy 0.1.6 offers a simple Python interface to PHCv2.3.86
+phcpy 0.1.7 offers a simple Python interface to PHCv2.3.87
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -23,18 +23,20 @@ file name                        : short description
 examples.py                      : some interesting benchmark examples
 families.py                      : a couple of families of systems
 solver.py                        : use of C extension module phcpy2c
-phcmaps.py                       : monomial maps as solutions of binomials
-phcsols.py                       : PHCpack solution string into dictionary
+solutions.py                     : PHCpack solution string into dictionary
+trackers.py                      : path trackers
+maps.py                          : monomial maps as solutions of binomials
 phcwulf.py                       : client/server for beowulf clusters
-phcsets.py                       : manipulate algebraic sets
+sets.py                          : manipulate algebraic sets
 schubert.py                      : numerical Schubert calculus
 ------------------------------------------------------------------------------
 
 The modules examples, solver, phcsols provide tests which are executed
 by "python examples.py" (regression test), "python solver.py" (tests solver),
-and "python phcsols.py" (test on checking the solutions dictionaries).
+and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.1.7 : 2013-03-28 : multicore path tracking
 0.1.6 : 2013-12-20 : m-homogenization, trackers in separate module
 0.1.5 : 2013-12-06 : arbitrary multiprecision Newton and path trackers
 0.1.4 : 2013-09-25 : path trackers with generators, bug fix
