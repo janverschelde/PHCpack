@@ -3,6 +3,8 @@ with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
@@ -29,8 +31,15 @@ package Permute_Operations is
   function "*" ( p : Permutation; v : Standard_Complex_Vectors.Vector )
 	       return Standard_Complex_Vectors.Vector;
 
+  function "*" ( p : Permutation; v : DoblDobl_Complex_Vectors.Vector )
+	       return DoblDobl_Complex_Vectors.Vector;
+
+  function "*" ( p : Permutation; v : QuadDobl_Complex_Vectors.Vector )
+	       return QuadDobl_Complex_Vectors.Vector;
+
   -- DESCRIPTION :
-  --   returns the result of the permutation of p on the vector v.
+  --   Returns the result of the permutation of p on the vector v.
+
   -- REQUIRED :
   --   p'range = v'range
 

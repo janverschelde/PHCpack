@@ -67,6 +67,38 @@ package body Permute_Operations is
     return r;
   end "*";
 
+  function "*" ( p : Permutation; v : DoblDobl_Complex_Vectors.Vector )
+               return DoblDobl_Complex_Vectors.Vector is
+
+    r : DoblDobl_Complex_Vectors.Vector(v'range);
+    use DoblDobl_Complex_Numbers;
+
+  begin
+    for i in p'range loop
+      if p(i) >= 0
+       then r(i) := v(p(i));
+       else r(i) := -v(-p(i));
+      end if;
+    end loop;
+    return r;
+  end "*";
+
+  function "*" ( p : Permutation; v : QuadDobl_Complex_Vectors.Vector )
+               return QuadDobl_Complex_Vectors.Vector is
+
+    r : QuadDobl_Complex_Vectors.Vector(v'range);
+    use QuadDobl_Complex_Numbers;
+
+  begin
+    for i in p'range loop
+      if p(i) >= 0
+       then r(i) := v(p(i));
+       else r(i) := -v(-p(i));
+      end if;
+    end loop;
+    return r;
+  end "*";
+
   function Permutable ( v1,v2 : Standard_Natural_Vectors.Vector )
                       return boolean is
   begin
