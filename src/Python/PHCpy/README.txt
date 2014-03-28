@@ -53,8 +53,6 @@ Version 0.0.1 originated at lecture 40 of MCS 507 in the Fall of 2012,
 as an illustration of Sphinx.  In Spring of 2013, version 0.5.0 was
 presented at a graduate computational algebraic geometry seminar.
 Version 0.1.0 was prepared for presentation at EuroSciPy 2013 (August 2013).
-Improvements using pylint led to version 0.1.1
-and the module phcmaps was added in version 0.1.2.
 
 References
 ==========
@@ -71,21 +69,32 @@ References
    IEEE Computer Society, 2001.
    Shortened version of Technical Report LBNL-46996.
 
-3. K. Piret:
+3. A. Leykin and J. Verschelde.
+   **Interfacing with the numerical homotopy algorithms in PHCpack.**
+   In N. Takayama and A. Iglesias, editors, *Proceedings of ICMS 2006*,
+   volume 4151 of *Lecture Notes in Computer Science*,
+   pages 354--360. Springer-Verlag, 2006.
+
+4. K. Piret:
    **Computing Critical Points of Polynomial Systems 
    using PHCpack and Python.**
    PhD Thesis, University of Illinois at Chicago, 2008.
 
-4. A. J. Sommese, J. Verschelde, and C. W. Wampler.
+5. A. J. Sommese, J. Verschelde, and C. W. Wampler.
    **Numerical irreducible decomposition using PHCpack.**
    In *Algebra, Geometry, and Software Systems*, 
    edited by M. Joswig and N. Takayama,
    pages 109-130. Springer-Verlag, 2003.
 
-5. J. Verschelde:
+6. J. Verschelde:
    **Algorithm 795: PHCpack: A general-purpose solver for polynomial
    systems by homotopy continuation.**
    *ACM Transactions on Mathematical Software*, 25(2):251--276, 1999.
+
+7. J. Verschelde:
+   **Modernizing PHCpack through phcpy.**
+   Preprint arXiv:1310.0056v1 [cs.MS] on a poster presented at
+   EuroSciPy 2013, 21-24 August, Brussels, Belgium.
 
 Acknowledgments
 ===============

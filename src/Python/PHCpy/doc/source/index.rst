@@ -80,7 +80,7 @@ of variables in the polynomials.  The blackbox solver then returns
 a list of numerical approximations to the isolated solutions of the
 input polynomial system.  Some capabilities of PHCpack to deal with
 positive dimensional solution sets are exported by 
-the module **phcpy.phcsets**.
+the module **phcpy.sets**.
 
 Polynomials and solutions are represented as strings.
 Below is an illustration of a session with the blackbox solver
@@ -125,7 +125,7 @@ To solve the system defined by f, we call the blackbox solver:
 
 The *solve* command returned a list of 15 strings in s,
 each string represents a solution that makes the polynomials in f vanish.
-The module **phcpy.phcsols** (documented below)
+The module **phcpy.solutions** (documented below)
 offers a function to evaluate the solutions
 in the polynomials given as strings.
 
@@ -224,7 +224,7 @@ of Newton's method:
 ::
 
    >>> p = ['(29/16)*x^3 - 2*x*y;', 'x^2 - y;']
-   >>> from phcpy.phcsols import make_solution
+   >>> from phcpy.solutions import make_solution
    >>> s = make_solution(['x','y'],[1.0e-6,1.0e-6])
    >>> print s
    t : 0.0 0.0
@@ -273,17 +273,17 @@ representations of solutions of polynomial systems
 --------------------------------------------------
 
 Solutions of phcpy.solve are returned as lists of PHCpack
-solution strings.  The phcsols module contains functions to
+solution strings.  The solutions module contains functions to
 parse a PHCpack solution string into a dictionary.
 
-The phcsols module exports operations 
+The solutions module exports operations 
 
 1. to parse strings in the PHCpack solution format into dictionaries;
 
 2. to evaluate these dictionaries into polynomials substituting the
    values for the variables into the strings representing the polynomials.
 
-The main test in the module phcsols is the solution of a small
+The main test in the module solutions is the solution of a small
 trinomial system and the evaluation of the computed solutions
 at the trinomial system.
 
@@ -328,7 +328,7 @@ we convert the PHCpack format solution string to a dictionary as follows:
     x2 :  8.98653694263692E-01  -3.48820047576431E-01
     x3 :  8.98653694263692E-01  -3.48820047576431E-01
    == err :  3.034E-16 = rco :  2.761E-01 = res :  5.974E-16 =
-   >>> from phcpy.phcsols import strsol2dict
+   >>> from phcpy.solutions import strsol2dict
    >>> d = strsol2dict(s[0])
    >>> d.keys()
    ['err', 'res', 'm', 'rco', 't', 'x2', 'x3', 'x1']
@@ -346,7 +346,7 @@ close to the numerical working precision:
 
 ::
 
-   >>> from phcpy.phcsols import evaluate
+   >>> from phcpy.solutions import evaluate
    >>> e = evaluate(f,d)
    >>> for x in e: print x
    ... 
@@ -359,11 +359,11 @@ A more elaborate verification of the solution is provided by
 the function **newton_step** of the module ``solver`` of phcpy.
 
 The documentation strings of the functions
-exported by the module ``phcsols`` are listed below.
-The script **test()** runs when typing **python phcsols.py**
+exported by the module ``solutions`` are listed below.
+The script **test()** runs when typing **python solutions.py**
 at the command prompt.
 
-.. automodule:: phcsols
+.. automodule:: solutions
    :members:
 
 the path trackers
@@ -549,7 +549,7 @@ and view all values for ``x`` of the solutions:
 
    >>> initialize_standard_solution(len(p),s[1])
    >>> points = [next_standard_solution() for i in range(11)]
-   >>> from phcpy.phcsols import strsol2dict
+   >>> from phcpy.solutions import strsol2dict
    >>> dicpts = [strsol2dict(sol) for sol in points]
    >>> xvals = [sol['x'] for sol in dicpts]
    >>> for x in xvals: print x
@@ -571,6 +571,66 @@ We see that the last two values differ little from each other
 because we arrived at the end of the path.  
 To test whether at the end of a path, it suffices to check
 whether the value for t equals one.
+
+The image below plots the real parts of the four paths.
+Three of the paths converge to the triple solution (1,2).
+
+.. image:: ./plotpaths.png
+
+The code used to make the plot (using matplotlib) is below:
+
+::
+
+   p = ['x^2 + y - 3;', 'x + 0.125*y^2 - 1.5;']
+   print 'constructing a total degree start system ...'
+   from phcpy.solver import total_degree_start_system as tds
+   q, qsols = tds(p)
+   print 'number of start solutions :', len(qsols)
+   from phcpy.trackers import initialize_standard_tracker
+   from phcpy.trackers import initialize_standard_solution
+   from phcpy.trackers import next_standard_solution
+   initialize_standard_tracker(p, q, False)
+   from phcpy.solutions import strsol2dict
+   import matplotlib.pyplot as plt
+   plt.ion()
+   fig = plt.figure()
+   for k in range(len(qsols)):
+       if(k == 0):
+           axs = fig.add_subplot(221)
+       elif(k == 1):
+           axs = fig.add_subplot(222)
+       elif(k == 2):
+           axs = fig.add_subplot(223)
+       elif(k == 3):
+           axs = fig.add_subplot(224)
+       startsol = qsols[k]
+       initialize_standard_solution(len(p),startsol)
+       dictsol = strsol2dict(startsol)
+       xpoints =  [dictsol['x']]
+       ypoints =  [dictsol['y']]
+       for k in range(300):
+           ns = next_standard_solution()
+           dictsol = strsol2dict(ns)
+           xpoints.append(dictsol['x'])
+           ypoints.append(dictsol['y'])
+           tval = eval(dictsol['t'].lstrip().split(' ')[0])
+           if(tval == 1.0):
+               break
+       print ns
+       xre = [point.real for point in xpoints]
+       yre = [point.real for point in ypoints]
+       axs.set_xlim(min(xre)-0.3, max(xre)+0.3)
+       axs.set_ylim(min(yre)-0.3, max(yre)+0.3)
+       dots, = axs.plot(xre,yre,'r-')
+       fig.canvas.draw()
+   fig.canvas.draw()
+   ans = raw_input('hit return to exit')
+
+With *False* in
+*initialize_standard_tracker(p, q, False)*
+the option to generate a fixed gamma constant was turned off,
+so rerunning the same code will generate other random constants
+and produce different plots.
 
 Below is an interactive session to illustrate the solving 
 with polyhedral homotopies.
@@ -655,6 +715,63 @@ Below is an illustration of the use of linear-product start systems:
 Looking at the values for *err* and *res* we see huge values
 for two solutions which are spurious.
 
+Last but certainly not least, consider the application of multitasking
+to path tracking.  On the benchmark problem of cyclic 7-roots:
+
+::
+
+   $ time python trackcyclic7.py
+   number of start solutions : 924
+   starting the path tracking with 1 task(s) ...
+   tracked 924 solution paths
+
+   real    0m7.147s
+   user    0m7.126s
+   sys     0m0.016s
+   $ time python trackcyclic7.py 2
+   number of start solutions : 924
+   starting the path tracking with 2 task(s) ...
+   tracked 924 solution paths
+
+   real    0m3.927s
+   user    0m7.640s
+   sys     0m0.017s
+   $ 
+
+Observe that the wall clock time (the time following the *real*),
+is cut almost in half when 2 tasks are used.
+The script is below:
+
+::
+
+   from sys import argv
+   if(len(argv) == 1):
+       nbtasks = 1
+   else:
+       nbtasks = eval(argv[1])
+   from phcpy.phcpy2c import py2c_read_standard_target_system_from_file
+   from phcpy.phcpy2c import py2c_read_standard_start_system_from_file
+   from phcpy.phcpy2c import py2c_copy_target_system_to_container
+   from phcpy.phcpy2c import py2c_copy_start_system_to_container
+   from phcpy.phcpy2c import py2c_copy_start_solutions_to_container
+   from phcpy.phcpy2c import py2c_solcon_number_of_solutions
+   from phcpy.solver import load_standard_system, load_standard_solutions
+   from phcpy.trackers import standard_double_track
+   cyclic7 = '/Users/jan/PHCv2/Demo/cyclic7'
+   cyclic7q = '/Users/jan/PHCv2/Demo/cyclic7q'
+   fail = py2c_read_standard_target_system_from_file(len(cyclic7),cyclic7)
+   fail = py2c_copy_target_system_to_container()
+   target = load_standard_system()
+   fail = py2c_read_standard_start_system_from_file(len(cyclic7q),cyclic7q)
+   fail = py2c_copy_start_system_to_container()
+   start = load_standard_system()
+   fail = py2c_copy_start_solutions_to_container()
+   sols = load_standard_solutions()
+   print 'number of start solutions :', py2c_solcon_number_of_solutions()
+   print 'starting the path tracking with', nbtasks, 'task(s) ...'
+   endsols = standard_double_track(target, start, sols, 0, nbtasks)
+   print 'tracked', len(endsols), 'solution paths'
+   
 The documentation strings of the functions
 exported by the module ``trackers`` of the package phcpy are listed below.
 
@@ -702,7 +819,7 @@ If we want to solve the system defined by f, we continue the above session as
    == err :  3.034E-16 = rco :  2.761E-01 = res :  5.974E-16 =
    >>> 
 
-The example session continues in the description of the module phcsols.
+The example session continues in the description of the module solutions.
 
 The documentation strings of the functions that
 return the polynomials of the example systems as strings of characters
@@ -766,7 +883,7 @@ The methods exported by the schubert module do the following:
 
 3. Compute all solutions with the Pieri homotopies.
 
-4. Verify the solutions with phcsols.
+4. Verify the solutions with solutions.
 
 5. Generate a instance of the problem known to be fully real.
 
@@ -804,7 +921,7 @@ are fully real (in case q = 0).
 positive dimensional solution sets
 ----------------------------------
 
-The module phcsets.py provides some functionality of PHCpack
+The module sets.py provides some functionality of PHCpack
 to work with positive dimensional solution sets.
 
 A witness set is a data structure to represent a positive dimensional
@@ -820,7 +937,7 @@ In the example below we consider the twisted cubic:
 ::
 
    >>> twisted = ['x^2 - y;', 'x^3 - z;']
-   >>> from phcpy.phcsets import embed
+   >>> from phcpy.sets import embed
    >>> e = embed(3,1,twisted)
    >>> e[0]
    'x^2 - y + (-8.23538851649530E-01-5.67259869745581E-01*i)*zz1;'
@@ -877,7 +994,7 @@ to make overdetermined polynomial systems *square*,
 that is: having as many equations as unknowns.
 Only solutions with zero slack variables matter.
 
-.. automodule:: phcsets
+.. automodule:: sets
    :members:
 
 monomial maps
@@ -893,7 +1010,7 @@ positive dimensional solution sets of binomial systems
 have coordinates that can be represented by maps of monomials 
 in free independent variables.  In this representation, there
 are as many free variables as the dimension of the solution set.
-The module ``phcmaps`` exports a solver for binomial systems.
+The module ``maps`` exports a solver for binomial systems.
 
 In the example below, we consider a simple system
 of two binomials in three variables:
@@ -901,8 +1018,8 @@ of two binomials in three variables:
 ::
 
    >>> f = [ 'x**2*y - z*x;', 'x**2*z - y**2*x;' ]
-   >>> from phcpy.phcmaps import binomial_solver
-   >>> from phcpy.phcmaps import solve_binomials
+   >>> from phcpy.maps import binomial_solver
+   >>> from phcpy.maps import solve_binomials
    >>> maps = solve_binomials(3,f)
    >>> for map in maps: print map
    ... 
@@ -914,7 +1031,7 @@ of two binomials in three variables:
 In the output above we recognize the twisted cubic,
 the x-axis, and the yz-plane as the three solution sets.
 
-.. automodule:: phcmaps
+.. automodule:: maps
    :members:
 
 the module phcwulf
@@ -1028,9 +1145,13 @@ as an illustration of Sphinx.  In Spring of 2013, version 0.5.0 was
 presented at a graduate computational algebraic geometry seminar.
 Version 0.1.0 was prepared for presentation at EuroSciPy 2013 (August 2013).
 Improvements using pylint led to version 0.1.1
-and the module phcmaps was added in version 0.1.2.
+and the module maps was added in version 0.1.2.
 Version 0.1.4 added path trackers with a generator
 so all solutions along a path are returned to the user.
+
+The paper **Modernizing PHCpack through phcpy**
+written for the EuroSciPy 2013 proceedings describes
+the design of phcpy.
 
 References
 ==========

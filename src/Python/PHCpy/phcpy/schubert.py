@@ -139,7 +139,7 @@ def verify(pols, sols):
     Verifies whether the solutions in sols
     satisfy the polynomials of the system in pols.
     """
-    from phcsols import strsol2dict, evaluate
+    from solutions import strsol2dict, evaluate
     dictsols = [strsol2dict(sol) for sol in sols]
     checksum = 0
     for sol in dictsols:

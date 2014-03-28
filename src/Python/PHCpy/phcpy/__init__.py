@@ -19,17 +19,17 @@ solver
    exports the blackbox solver of PHCpack, a mixed volume calculator,
    a path tracker, functions to construct start systems, and deflation
    to recondition isolated singular solutions.
-phcsols
+solutions
    solutions of phcpy.solve are lists of PHCpack solution strings
    and the phcsols module exports operations to convert the solution
    strings into Python dictionaries, e.g. for evaluation.
 trackers
    offers functions to track solution paths defined by a homotopy between
    a given start system with known solutions and a target system  
-phcmaps
+maps
    module to work with monomial maps, defined as solution of systems
    that have exactly two monomials in every equation (binomial systems).
-phcsets
+sets
    offers tools to work with positive dimensional solution sets.
 examples
    defines some interesting examples taken from the research literature,
@@ -86,4 +86,4 @@ except:
     print 'Is the phcpy2c.so not suited for this platform?'
 
 # Definition of the version number
-__version__ = '0.1.6'
+__version__ = '0.1.7'
