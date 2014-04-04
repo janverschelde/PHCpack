@@ -536,7 +536,7 @@ function use_c2pieri ( job : integer32;
                  top,bot,solplanes(1).all);
     sols : Solution_List
          := Determinantal_Systems.Solution_Planes
-              (top,bot,locmap,solplanes(1..n));
+              (top,bot,locmap,solplanes);
     locsys : constant Poly_Sys(planes'range)
            := Determinantal_Systems.Create_Polynomial_System
                 (top,bot,locmap,xpm,points,planes);
