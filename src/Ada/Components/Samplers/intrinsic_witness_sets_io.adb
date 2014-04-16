@@ -5,6 +5,7 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
+with Standard_Random_Numbers;
 with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;           use Standard_Complex_VecVecs;
 --with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
@@ -397,9 +398,25 @@ package body Intrinsic_Witness_Sets_io is
     sys : constant Poly_Sys(1..integer32(nv+d)) := Embed_System(f,nv,d,slices);
 
   begin
-    put(file,"See the file " & witname & " for solutions of dimension ");
-    put(file,d,1); put_line(file,".");
-    Create(witfile,out_file,witname);
+    declare
+    begin
+      Create(witfile,out_file,witname);
+      put(file,"See the file " & witname & " for solutions of dimension ");
+      put(file,d,1); put_line(file,".");
+    exception
+      when others =>
+         put_line("Could not create the file " & witname & "...");
+         declare
+           pin : integer32 := Standard_Random_Numbers.Random(1000,9999);
+           new_witname : constant string := Append_wd(witname,natural32(pin));
+         begin
+           Create(witfile,out_file,new_witname);
+           put(file,"See the file " & new_witname
+                  & " for solutions of dimension ");
+           put(file,d,1); put_line(file,".");
+           put_line("...created the file " & new_witname & " instead.");
+         end;
+    end;
     if Symbol_Table.Number < nv+d
      then Add_Embed_Symbols(d);
     end if;
