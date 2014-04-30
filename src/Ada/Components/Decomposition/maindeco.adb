@@ -1,6 +1,7 @@
 with text_io;                           use text_io;
 with String_Splitters;                  use String_Splitters;
 with Communications_with_User;          use Communications_with_User;
+with Timing_Package;                    use Timing_Package;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
@@ -236,6 +237,7 @@ procedure maindeco ( infilename,outfilename : in string ) is
     sols : Link_to_Array_of_Monomial_Map_Lists;
     fail : boolean;
     nv : natural32;
+    timer : Timing_Widget;
 
   begin
     if infilename /= ""
@@ -252,17 +254,30 @@ procedure maindeco ( infilename,outfilename : in string ) is
     put(file,nv,1); new_line(file);
     put(file,lp.all);
     new_line;
-    put("Do you want intermediate output ? ");
+    put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
-    if ans = 'y'
-     then Black_Box_Binomial_Solver(standard_output,lp.all,sols,fail);
-     else Black_Box_Binomial_Solver(lp.all,false,sols,fail);
+    if ans = 'y' then
+      Black_Box_Binomial_Solver(standard_output,lp.all,sols,fail);
+    else
+      put("Is the solution set pure dimensional ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      new_line;
+      put_line("See the output file for results ...");
+      new_line;
+      tstart(timer);
+      if ans = 'y'
+       then Black_Box_Binomial_Solver(lp.all,true,sols,fail);
+       else Black_Box_Binomial_Solver(lp.all,false,sols,fail);
+      end if;
+      tstop(timer);
     end if;
     if not fail and sols /= null then
       new_line(file);
       put_line(file,"THE SOLUTIONS :");
       put(file,sols.all);
     end if;
+    new_line(file);
+    print_times(file,timer,"the blackbox binomial system solver");
   end Call_Binomial_Solver;
 
   procedure Degrees_of_Monomial_Maps is
