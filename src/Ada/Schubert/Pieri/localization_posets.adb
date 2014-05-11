@@ -523,7 +523,7 @@ package body Localization_Posets is
 
 -- CREATOR PRIMITIVES II : DERIVE CHILD FROM NODE
 
-  procedure Create_Top_Child ( root,nd : in out Link_to_Node;
+  procedure Create_Top_Child ( root,nd : in Link_to_Node;
                                i : in integer32; share : in boolean ) is
 
   -- DESCRIPTION :
@@ -540,8 +540,9 @@ package body Localization_Posets is
     nd.children(i,0) := Create_Child(root,child,share);
   end Create_Top_Child;
 
-  procedure Create_Bottom_Child ( root,nd : in out Link_to_Node;
-                                  i : in integer32; share : in boolean ) is
+  procedure Create_Bottom_Child
+              ( root : in Link_to_Node; nd : in Link_to_Node;
+                i : in integer32; share : in boolean ) is
 
   -- DESCRIPTION :
   --   Creates a child of the node nd by decrementing the i-th bottom pivot.
@@ -558,7 +559,7 @@ package body Localization_Posets is
   end Create_Bottom_Child;
 
   procedure Create_Top_Bottom_Child
-               ( root,nd : in out Link_to_Node;
+               ( root,nd : in Link_to_Node;
                  i,j : in integer32; share : in boolean ) is
   
   -- DESCRIPTION :
@@ -579,7 +580,7 @@ package body Localization_Posets is
 
 -- CREATOR PRIMITIVES III : TREAT ONE/TWO DEGREE(S) OF FREEDOM
 
-  procedure Top_Create1 ( root,nd : in out Link_to_Node; n : in integer32 ) is
+  procedure Top_Create1 ( root,nd : in Link_to_Node; n : in integer32 ) is
 
   -- DESCRIPTION :
   --   Creates new nodes by incrementing the top pivots, bounded by n.
@@ -595,7 +596,7 @@ package body Localization_Posets is
     end loop;
   end Top_Create1;
 
-  procedure Q_Top_Create1 ( root,nd : in out Link_to_Node;
+  procedure Q_Top_Create1 ( root,nd : in Link_to_Node;
                             n,lag : in integer32 ) is
 
   -- DESCRIPTION :
@@ -612,7 +613,7 @@ package body Localization_Posets is
     end loop;
   end Q_Top_Create1;
 
-  procedure Top_Create1 ( root,nd : in out Link_to_Node;
+  procedure Top_Create1 ( root,nd : in Link_to_Node;
                           k,n,c : in integer32 ) is
 
   -- DESCRIPTION :
@@ -635,7 +636,7 @@ package body Localization_Posets is
     end if;
   end Top_Create1;
 
-  procedure Q_Top_Create1 ( root,nd : in out Link_to_Node;
+  procedure Q_Top_Create1 ( root,nd : in Link_to_Node;
                             first : in boolean; space : in Bracket;
                             k,n,lag : in integer32 ) is
 
@@ -695,7 +696,7 @@ package body Localization_Posets is
     end if;
   end Q_Top_Create1;
 
-  procedure Bottom_Create1 ( root,nd : in out Link_to_Node ) is
+  procedure Bottom_Create1 ( root,nd : in Link_to_Node ) is
 
   -- DESCRIPTION :
   --   Creates new nodes by decrementing the bottom pivots.
@@ -712,7 +713,7 @@ package body Localization_Posets is
   end Bottom_Create1;
 
   procedure Q_Bottom_Create1
-                ( root,nd : in out Link_to_Node; lag : in integer32 ) is
+                ( root,nd : in Link_to_Node; lag : in integer32 ) is
 
   -- DESCRIPTION :
   --   Creates new nodes by decrementing the bottom pivots for general q,
@@ -727,7 +728,7 @@ package body Localization_Posets is
     end loop;
   end Q_Bottom_Create1;
 
-  procedure Bottom_Create1 ( root,nd : in out Link_to_Node;
+  procedure Bottom_Create1 ( root,nd : in Link_to_Node;
                              k,c : in integer32 ) is
 
   -- DESCRIPTION :
@@ -750,7 +751,7 @@ package body Localization_Posets is
     end if;
   end Bottom_Create1;
 
-  procedure Q_Bottom_Create1 ( root,nd : in out Link_to_Node;
+  procedure Q_Bottom_Create1 ( root,nd : in Link_to_Node;
                                first : in boolean; space : in Bracket;
                                k,lag : in integer32 ) is
 
@@ -809,7 +810,7 @@ package body Localization_Posets is
     end if;
   end Q_Bottom_Create1;
 
-  procedure Top_Bottom_Create1 ( root,nd : in out Link_to_Node;
+  procedure Top_Bottom_Create1 ( root,nd : in Link_to_Node;
                                  n : in integer32 ) is
 
   -- DESCRIPTION :
@@ -838,7 +839,7 @@ package body Localization_Posets is
     end if;
   end Top_Bottom_Create1;
 
-  procedure Q_Top_Bottom_Create1 ( root,nd : in out Link_to_Node;
+  procedure Q_Top_Bottom_Create1 ( root,nd : in Link_to_Node;
                                    n,lag : in integer32 ) is
 
   -- DESCRIPTION :
@@ -867,7 +868,8 @@ package body Localization_Posets is
     end if;
   end Q_Top_Bottom_Create1;
 
-  procedure Top_Bottom_Create1 ( root,nd : in out Link_to_Node;
+  procedure Top_Bottom_Create1 ( root : in out Link_to_Node;
+                                 nd : in Link_to_Node;
                                  k1,k2,n,c1,c2 : in integer32 ) is
 
   -- DESCRIPTION :
@@ -900,7 +902,7 @@ package body Localization_Posets is
   end Top_Bottom_Create1;
 
   procedure Recursive_Top_Bottom_Create
-              ( root,nd : in out Link_to_Node;
+              ( root,nd : in Link_to_Node;
                 codim : in Bracket; ind,k1,k2,n,c1,c2 : in integer32;
                 hyper : in boolean ) is
 
@@ -931,7 +933,7 @@ package body Localization_Posets is
           if Top_Bottom_Creatable(nd.all,n,i,j) then
             Create_Top_Bottom_Child(root,nd,i,j,hyper);
             Recursive_Top_Bottom_Create
-             (root,nd.children(i,j),codim,ind,k1-1,k2-1,n,i,j,false);
+              (root,nd.children(i,j),codim,ind,k1-1,k2-1,n,i,j,false);
           end if;
         end loop;
       end loop;
@@ -965,7 +967,7 @@ package body Localization_Posets is
   end Recursive_Top_Bottom_Create;
 
   procedure Q_Recursive_Top_Bottom_Create
-              ( root,nd : in out Link_to_Node; codim : in Bracket;
+              ( root,nd : in Link_to_Node; codim : in Bracket;
                 fsttop : in boolean; topspc : in Bracket;
                 fstbot : in boolean; botspc : in Bracket;
                 ind,k1,k2,n,lag : in integer32; hyper : in boolean ) is
@@ -1050,7 +1052,7 @@ package body Localization_Posets is
        then Q_Recursive_Top_Bottom_Create
                (root,nd,codim,true,topspc,fstbot,botspc,
                 ind-1,integer32(codim(ind-1)),k2,n,lag,false);
-      else Q_Bottom_Create1(root,nd,fstbot,botspc,k2,lag);
+       else Q_Bottom_Create1(root,nd,fstbot,botspc,k2,lag);
       end if;
     elsif ((k1 > 0) and (k2 = 0)) then
       if ind > codim'first
@@ -1107,9 +1109,9 @@ package body Localization_Posets is
     return nd;
   end Trivial_Root;
 
-  procedure Top_Create ( root : in out Link_to_Node; n : in natural32 ) is
+  procedure Top_Create ( root : in Link_to_Node; n : in natural32 ) is
 
-    procedure Create_Next ( root,nd : in out Link_to_Node ) is
+    procedure Create_Next ( root,nd : in Link_to_Node ) is
     begin
       if ((nd.level > 0) and (nd.roco >= 0)) then
         Top_Create1(root,nd,integer32(n));
@@ -1129,7 +1131,8 @@ package body Localization_Posets is
   procedure Q_Top_Create ( root : in out Link_to_Node;
                            n,lag : in natural32 ) is
 
-    procedure Create_Next ( root,nd : in out Link_to_Node ) is
+    procedure Create_Next ( root : in out Link_to_Node;
+                            nd : in Link_to_Node ) is
     begin
       if ((nd.level > 0) and (nd.roco >= 0)) then
         Q_Top_Create1(root,nd,integer32(n),integer32(lag));
@@ -1146,15 +1149,15 @@ package body Localization_Posets is
     Create_Next(root,root);
   end Q_Top_Create;
 
-  procedure Top_Create ( root : in out Link_to_Node;
+  procedure Top_Create ( root : in Link_to_Node;
                          k : in Bracket; n : in natural32 ) is
 
-    procedure Create ( current : in out Link_to_Node; ind : in integer32 );
+    procedure Create ( current : in Link_to_Node; ind : in integer32 );
 
     -- DESCRIPTION :
     --   Creates k(ind) levels above the current node.
 
-    procedure Create_Children ( child : in out Link_to_Node;
+    procedure Create_Children ( child : in Link_to_Node;
                                 cnt,ind : in integer32 ) is
 
     -- DESCRIPTION :
@@ -1172,7 +1175,7 @@ package body Localization_Posets is
       end if;
     end Create_Children;
 
-    procedure Create ( current : in out Link_to_Node; ind : in integer32 ) is
+    procedure Create ( current : in Link_to_Node; ind : in integer32 ) is
     begin
       if ((current.level > 0) and (ind <= k'last) and (current.roco >= 0)) then
         Top_Create1(root,current,integer32(k(ind)),integer32(n),1);
@@ -1191,15 +1194,15 @@ package body Localization_Posets is
     Create(root,k'last);
   end Top_Create;
 
-  procedure Q_Top_Create ( root : in out Link_to_Node;
+  procedure Q_Top_Create ( root : in Link_to_Node;
                            k : in Bracket; n,lag : in natural32 ) is
 
-    procedure Create ( current : in out Link_to_Node; ind : in integer32 );
+    procedure Create ( current : in Link_to_Node; ind : in integer32 );
 
     -- DESCRIPTION :
     --   Creates k(ind) levels above the current node.
 
-    procedure Create_Children ( child : in out Link_to_Node;
+    procedure Create_Children ( child : in Link_to_Node;
                                 cnt,ind : in integer32 ) is
 
     -- DESCRIPTION :
@@ -1217,7 +1220,7 @@ package body Localization_Posets is
       end if;
     end Create_Children;
 
-    procedure Create ( current : in out Link_to_Node; ind : in integer32 ) is
+    procedure Create ( current : in Link_to_Node; ind : in integer32 ) is
 
       space : constant Bracket(1..integer32(lag)-current.p)
             := (1..integer32(lag)-current.p => 0);
@@ -1241,9 +1244,9 @@ package body Localization_Posets is
     Create(root,k'last);
   end Q_Top_Create;
 
-  procedure Bottom_Create ( root : in out Link_to_Node ) is
+  procedure Bottom_Create ( root : in Link_to_Node ) is
 
-    procedure Create_Next ( root,nd : in out Link_to_Node ) is
+    procedure Create_Next ( root,nd : in Link_to_Node ) is
     begin
       if ((nd.level > 0) and (nd.roco >= 0)) then
         Bottom_Create1(root,nd);
@@ -1260,10 +1263,10 @@ package body Localization_Posets is
     Create_Next(root,root);
   end Bottom_Create;
 
-  procedure Q_Bottom_Create ( root : in out Link_to_Node;
+  procedure Q_Bottom_Create ( root : in Link_to_Node;
                               lag : in natural32 ) is
 
-    procedure Create_Next ( root,nd : in out Link_to_Node ) is
+    procedure Create_Next ( root,nd : in Link_to_Node ) is
     begin
       if ((nd.level > 0) and (nd.roco >= 0)) then
         Q_Bottom_Create1(root,nd,integer32(lag));
@@ -1280,14 +1283,14 @@ package body Localization_Posets is
     Create_Next(root,root);
   end Q_Bottom_Create;
 
-  procedure Bottom_Create ( root : in out Link_to_Node; k : in Bracket ) is
+  procedure Bottom_Create ( root : in Link_to_Node; k : in Bracket ) is
 
-    procedure Create ( current : in out Link_to_Node; ind : in integer32 );
+    procedure Create ( current : in Link_to_Node; ind : in integer32 );
 
     -- DESCRIPTION :
     --   Creates k(ind) levels above the current node.
 
-    procedure Create_Children ( child : in out Link_to_Node;
+    procedure Create_Children ( child : in Link_to_Node;
                                 cnt,ind : in integer32 ) is
 
     -- DESCRIPTION :
@@ -1305,7 +1308,7 @@ package body Localization_Posets is
       end if;
     end Create_Children;
 
-    procedure Create ( current : in out Link_to_Node; ind : in integer32 ) is
+    procedure Create ( current : in Link_to_Node; ind : in integer32 ) is
     begin
       if ((current.level > 0) and (ind <= k'last) and (current.roco >= 0)) then
         Bottom_Create1(root,current,integer32(k(ind)),current.p);
@@ -1324,15 +1327,15 @@ package body Localization_Posets is
     Create(root,k'last);
   end Bottom_Create;
 
-  procedure Q_Bottom_Create ( root : in out Link_to_Node; k : in Bracket;
+  procedure Q_Bottom_Create ( root : in Link_to_Node; k : in Bracket;
                               lag : in natural32 ) is
 
-    procedure Create ( current : in out Link_to_Node; ind : in integer32 );
+    procedure Create ( current : in Link_to_Node; ind : in integer32 );
 
     -- DESCRIPTION :
     --   Creates k(ind) levels above the current node.
 
-    procedure Create_Children ( child : in out Link_to_Node;
+    procedure Create_Children ( child : in Link_to_Node;
                                 cnt,ind : in integer32 ) is
 
     -- DESCRIPTION :
@@ -1350,7 +1353,7 @@ package body Localization_Posets is
       end if;
     end Create_Children;
 
-    procedure Create ( current : in out Link_to_Node; ind : in integer32 ) is
+    procedure Create ( current : in Link_to_Node; ind : in integer32 ) is
 
       space : constant Bracket(1..integer32(lag)-current.p)
             := (1..integer32(lag)-current.p => 0);
@@ -1374,10 +1377,10 @@ package body Localization_Posets is
     Create(root,k'last);
   end Q_Bottom_Create;
 
-  procedure Top_Bottom_Create ( root : in out Link_to_Node;
+  procedure Top_Bottom_Create ( root : in Link_to_Node;
                                 n : in natural32 ) is
 
-    procedure Create_Next ( root,nd : in out Link_to_Node ) is
+    procedure Create_Next ( root,nd : in Link_to_Node ) is
     begin
       if ((nd.level > 0) and (nd.roco >= 0)) then
         Top_Bottom_Create1(root,nd,integer32(n));
@@ -1396,10 +1399,10 @@ package body Localization_Posets is
     Create_Next(root,root);
   end Top_Bottom_Create;
 
-  procedure Q_Top_Bottom_Create ( root : in out Link_to_Node;
+  procedure Q_Top_Bottom_Create ( root : in Link_to_Node;
                                   n,lag : in natural32 ) is
 
-    procedure Create_Next ( root,nd : in out Link_to_Node ) is
+    procedure Create_Next ( root,nd : in Link_to_Node ) is
     begin
       if ((nd.level > 0) and (nd.roco >= 0)) then
         Q_Top_Bottom_Create1(root,nd,integer32(n),integer32(lag));
@@ -1418,7 +1421,7 @@ package body Localization_Posets is
     Create_Next(root,root);
   end Q_Top_Bottom_Create;
 
-  procedure Top_Bottom_Create ( root : in out Link_to_Node;
+  procedure Top_Bottom_Create ( root : in Link_to_Node;
                                 k : in Bracket; n : in natural32 ) is
 
     ind : constant integer32 := k'last;
@@ -1435,7 +1438,7 @@ package body Localization_Posets is
     end if;
   end Top_Bottom_Create;
 
-  procedure Q_Top_Bottom_Create ( root : in out Link_to_Node;
+  procedure Q_Top_Bottom_Create ( root : in Link_to_Node;
                                   k : in Bracket; n,lag : in natural32 ) is
 
     ind : constant integer32 := k'last;

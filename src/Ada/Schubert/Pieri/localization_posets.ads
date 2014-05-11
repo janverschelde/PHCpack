@@ -65,7 +65,7 @@ package Localization_Posets is
   --   Returns the root for the poset to count all curves of degree q.
   --   The case q = 0 is the default, as implemented by the routine above.
 
-  procedure Top_Create ( root : in out Link_to_Node; n : in natural32 );
+  procedure Top_Create ( root : in Link_to_Node; n : in natural32 );
 
   -- DESCRIPTION :
   --   Creates a poset consistently incrementing top pivots,
@@ -80,7 +80,7 @@ package Localization_Posets is
   --   For root = Trivial_Root(m,p,q) this poset will serve to count all
   --   maps of degree q in G(p,m+p) that meet m*p+q*(m+p) general m-planes.
 
-  procedure Top_Create ( root : in out Link_to_Node;
+  procedure Top_Create ( root : in Link_to_Node;
                          k : in Bracket; n : in natural32 );
 
   -- DESCRIPTION :
@@ -88,45 +88,45 @@ package Localization_Posets is
   --   By default, compared to the other Top_Create, all k's are one.
   --   So all nodes created are of type "top".
 
-  procedure Q_Top_Create ( root : in out Link_to_Node;
+  procedure Q_Top_Create ( root : in Link_to_Node;
                            k : in Bracket; n,lag : in natural32 );
 
   -- DESCRIPTION :
   --   Quantum analogue for creation of poset incrementing top pivots
   --   for given co-dimension conditions.
 
-  procedure Bottom_Create ( root : in out Link_to_Node );
+  procedure Bottom_Create ( root : in Link_to_Node );
 
   -- DESCRIPTION :
   --   Creates a poset consistently decrementing bottom pivots.
   --   So all nodes created are of type "bottom".
 
-  procedure Q_Bottom_Create ( root : in out Link_to_Node; lag : in natural32 );
+  procedure Q_Bottom_Create ( root : in Link_to_Node; lag : in natural32 );
 
   -- DESCRIPTION :
   --   Creates a poset consistently decrementing bottom pivots for counting
   --   all maps of degree q with root = Trivial_Root(m,p,q).
   --   The parameter lag > max space between first and last entry in brackets.
 
-  procedure Bottom_Create ( root : in out Link_to_Node; k : in Bracket );
+  procedure Bottom_Create ( root : in Link_to_Node; k : in Bracket );
 
   -- DESCRIPTION :
   --   Creates the poset by decrementing bottom pivots, k = co-dimensions.
   --   By default, compared to the other Bottom_Create, all k's are one.
 
-  procedure Q_Bottom_Create ( root : in out Link_to_Node; k : in Bracket;
+  procedure Q_Bottom_Create ( root : in Link_to_Node; k : in Bracket;
                               lag : in natural32 );
 
   -- DESCRIPTION :
   --   Quantum analogue for creation of poset decrementing bottom pivots
   --   for given co-dimension conditions.
 
-  procedure Top_Bottom_Create ( root : in out Link_to_Node; n : in natural32 );
+  procedure Top_Bottom_Create ( root : in Link_to_Node; n : in natural32 );
 
   -- DESCRIPTION :
   --    Creates a poset by incrementing top and decrementing bottom pivots.
 
-  procedure Q_Top_Bottom_Create ( root : in out Link_to_Node;
+  procedure Q_Top_Bottom_Create ( root : in Link_to_Node;
                                   n,lag : in natural32 );
 
   -- DESCRIPTION :
@@ -134,14 +134,14 @@ package Localization_Posets is
   --    to count all maps of degree q in G(p,m+p) that meet m*p+q*(m+p)
   --    general m-planes.
 
-  procedure Top_Bottom_Create ( root : in out Link_to_Node;
+  procedure Top_Bottom_Create ( root : in Link_to_Node;
                                 k : in Bracket; n : in natural32 );
 
   -- DESCRIPTION :
   --   Creates a poset by incrementing top and decrementing bottom pivots.
   --   The vector k contains co-dimensions.  All nodes are of type "mixed".
 
-  procedure Q_Top_Bottom_Create ( root : in out Link_to_Node;
+  procedure Q_Top_Bottom_Create ( root : in Link_to_Node;
                                   k : in Bracket; n,lag : in natural32 );
 
   -- DESCRIPTION :
