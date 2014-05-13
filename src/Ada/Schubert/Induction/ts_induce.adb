@@ -178,7 +178,7 @@ procedure ts_induce is
     stay : boolean;
     ans : character;
     np : natural32;
-    kp,ht,ct : integer32;
+    kp,ht,ct : integer32 := 0;
     parent : Link_to_Node;
     b : Board(1..n,1..n);
     f : Matrix(1..n,1..n);
@@ -236,7 +236,7 @@ procedure ts_induce is
   -- DESCRIPTION :
   --   Prompts the user to give a leaf in the poset to start the descent.
 
-    ind : integer32;
+    ind : integer32 := 0;
     lnd : Link_to_Node;
 
   begin
@@ -343,7 +343,7 @@ procedure ts_induce is
     rows,cols : Vector(1..k);
     ps : Poset;
     ips : Intersection_Poset(m-1);
-    ind : integer32;
+    ind : integer32 := 0;
     leaf : Link_to_Poset_Node;
 
   begin
