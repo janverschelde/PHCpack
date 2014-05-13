@@ -727,7 +727,7 @@ package body Drivers_for_Pieri_Homotopies is
   --   The range of the posets on return is 0..m*p.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
 
   begin
     Top_Create(lnkroot,m+p);
@@ -746,7 +746,7 @@ package body Drivers_for_Pieri_Homotopies is
 
     timer : Timing_Widget;
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     level_poset : Array_of_Nodes(0..integer32(m*p));
     index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
 
@@ -777,7 +777,7 @@ package body Drivers_for_Pieri_Homotopies is
   --   The range of the posets on return is 0..m*p.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
 
   begin
     Bottom_Create(lnkroot);
@@ -796,7 +796,7 @@ package body Drivers_for_Pieri_Homotopies is
 
     timer : Timing_Widget;
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     level_poset : Array_of_Nodes(0..integer32(m*p));
     index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
 
@@ -827,7 +827,7 @@ package body Drivers_for_Pieri_Homotopies is
   --   The posets on return are of range 0..m*p.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
 
   begin
     Top_Bottom_Create(lnkroot,m+p);
@@ -846,7 +846,7 @@ package body Drivers_for_Pieri_Homotopies is
 
     timer : Timing_Widget;
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     level_poset : Array_of_Nodes(0..integer32(m*p));
     index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
 
@@ -889,7 +889,7 @@ package body Drivers_for_Pieri_Homotopies is
   --   index_poset is poset of range 0..m*p.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     codim : constant Bracket := Read_Codimensions(m,p,0);
 
   begin
@@ -911,7 +911,7 @@ package body Drivers_for_Pieri_Homotopies is
 
     timer : Timing_Widget;
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     codim : constant Bracket := Read_Codimensions(m,p,0);
     level_poset : Array_of_Nodes(0..integer32(m*p));
     index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
@@ -953,7 +953,7 @@ package body Drivers_for_Pieri_Homotopies is
   --   index_poset is poset of range 0..m*p.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     codim : constant Bracket := Read_Codimensions(m,p,0);
 
   begin
@@ -975,7 +975,7 @@ package body Drivers_for_Pieri_Homotopies is
 
     timer : Timing_Widget;
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     codim : constant Bracket := Read_Codimensions(m,p,0);
     level_poset : Array_of_Nodes(0..integer32(m*p));
     index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
@@ -1017,7 +1017,7 @@ package body Drivers_for_Pieri_Homotopies is
   --   index_poset is poset of range 0..m*p.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     codim : constant Bracket := Read_Codimensions(m,p,0);
 
   begin
@@ -1039,7 +1039,7 @@ package body Drivers_for_Pieri_Homotopies is
 
     timer : Timing_Widget;
     root : constant Node(integer32(p)) := Trivial_Root(m,p);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     codim : constant Bracket := Read_Codimensions(m,p,0);
     level_poset : Array_of_Nodes(0..integer32(m*p));
     index_poset : Array_of_Array_of_Nodes(0..integer32(m*p));
