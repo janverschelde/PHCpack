@@ -1,5 +1,6 @@
 with generic_lists;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Natural_Vectors;           use Standard_Natural_Vectors;
 with Checker_Posets;                     use Checker_Posets;
@@ -78,6 +79,11 @@ package Intersection_Posets is
   -- DESCRIPTION :
   --   Returns the degree of freedom of the nodes in the poset at
   --   the current level, i.e.: at ips.level.
+
+  function Final_Sum ( ips : Intersection_Poset ) return Natural_Number;
+
+  -- DESCRIPTION :
+  --   Returns the final sum as the root count of the intersection poset.
 
   function Retrieve ( pl : Poset_List; k : integer32 )
                     return Link_to_Poset_Node;

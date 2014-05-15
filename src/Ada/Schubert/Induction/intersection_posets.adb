@@ -113,6 +113,26 @@ package body Intersection_Posets is
     return Degree_of_Freedom(ips,ips.level);
   end Degree_of_Freedom;
 
+  function Final_Sum ( ips : Intersection_Poset ) return Natural_Number is
+
+    res : Natural_Number := create(natural32(0));
+    pl : Poset_List;
+    tmp : Poset_List;
+    pnd : Link_to_Poset_Node;
+
+  begin
+    if ips.level > 0 then
+      pl := ips.nodes(ips.level);
+      tmp := pl;
+      while not Is_Null(tmp) loop
+        pnd := Head_Of(tmp);
+        Add(res,pnd.ps.white(pnd.ps.white'last).coeff);
+        tmp := Tail_Of(tmp);
+      end loop;
+    end if;
+    return res;
+  end Final_Sum;
+
   function Retrieve ( pl : Poset_List; k : integer32 )
                     return Link_to_Poset_Node is
 

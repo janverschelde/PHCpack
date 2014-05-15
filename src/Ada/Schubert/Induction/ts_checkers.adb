@@ -2,8 +2,11 @@ with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
+with Multprec_Natural_Numbers;          use Multprec_Natural_Numbers;
+with Multprec_Natural_Numbers_io;       use Multprec_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Random_Numbers;
 with Standard_Natural_Vectors;          use Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 with Standard_Natural_VecVecs;          use Standard_Natural_VecVecs;
@@ -572,10 +575,14 @@ procedure ts_checkers is
   end Count_Planes;
 
   procedure Create_Intersection_Poset
-              ( n : in integer32; bm : in Bracket_Monomial ) is
+              ( n,nb : in integer32; cd : in Array_of_Brackets;
+                finsum : out Natural_Number ) is
 
-    nb : constant integer32 := integer32(Number_of_Brackets(bm));
-    cd : constant Array_of_Brackets(1..nb) := Create(bm);
+  -- DESCRIPTION :
+  --   Creates the intersection poset defined by the nb brackets in cd
+  --   for planes in n-space and resolves the intersection condition
+  --   imposed by the brackets in cd.
+
     k : constant integer32 := cd(1)'last;
     p : constant Vector(1..n) := Identity_Permutation(natural32(n));
     r,c,w : Vector(1..k);
@@ -583,6 +590,7 @@ procedure ts_checkers is
     ips : Intersection_Poset(nb-1);
 
   begin
+    ips.level := 0;
     put("  the dimension of the planes : "); put(k,1); new_line;
     put("  the number of conditions : "); put(nb,1); new_line;
     if nb >= 2 then
@@ -608,6 +616,18 @@ procedure ts_checkers is
         Write_Expansion(ips);
       end if;
     end if;
+    finsum := Final_Sum(ips);
+  end Create_Intersection_Poset;
+
+  procedure Create_Intersection_Poset
+              ( n : in integer32; bm : in Bracket_Monomial ) is
+
+    nb : constant integer32 := integer32(Number_of_Brackets(bm));
+    cd : constant Array_of_Brackets(1..nb) := Create(bm);
+    fs : Natural_Number;
+
+  begin
+    Create_Intersection_Poset(n,nb,cd,fs);
   end Create_Intersection_Poset;
 
   procedure Resolve_Intersection_Condition ( n : in integer32 ) is
@@ -728,7 +748,124 @@ procedure ts_checkers is
     end if;
   end Enumerate_Paths_in_Poset;
 
+  procedure Flip ( b : in out Bracket ) is
+
+  -- DESCRIPTION :
+  --   Flips the order of the numbers in the bracket.
+
+    tmp : natural32;
+
+  begin
+    for i in b'first..(b'last/2) loop
+      tmp := b(i);
+      b(i) := b(b'last - i + 1);
+      b(b'last - i + 1) := tmp;
+    end loop;
+  end Flip;
+
+  function Partition_to_Bracket
+             ( k,n : integer32; p : Bracket ) return Bracket is
+
+  -- DESCRIPTION :
+  --   Turns a partition p into a bracket, for a k-plane in n-space.
+
+    res : Bracket(1..k);
+
+  begin
+    for j in 1..k loop 
+      res(j) := natural32(n - k + j - integer32(p(j))); 
+    end loop;
+    return res;
+  end Partition_to_Bracket;
+
+  procedure Generate_Intersection_Problem
+              ( k,n,m : in integer32; roco : out Natural_Number ) is
+
+  -- DESCRIPTION :
+  --   Generates m conditions on a k-plane in n-space
+  --   and returns the final sum as root count in roco.
+
+    cd : Array_of_Brackets(1..m);
+    choice : Standard_Natural_Vectors.Vector(1..k);
+    invpart,cond : Bracket(1..k);
+    upper : integer32 := n-k;
+    restsum : integer32 := k*(n-k) - 1; -- degree of freedom minus one
+    sign : integer32;
+    cnt : integer32 := 0;
+
+  begin
+    for i in 1..m-1 loop
+      for j in 1..k loop
+        if upper > restsum
+         then upper := restsum;
+        end if;
+        exit when (upper = 0);
+        if j = 1  -- prevent from generating zero condition
+         then choice(j) := natural32(Standard_Random_Numbers.Random(1,upper));
+         else choice(j) := natural32(Standard_Random_Numbers.Random(0,upper));
+        end if;
+        restsum := restsum - integer32(choice(j));
+      end loop;
+      Create(choice,invpart,sign);
+      Flip(invpart);
+      put("Partition : "); put(invpart);
+      cond := Partition_to_Bracket(k,n,invpart);
+      put(" -> condition : "); put(cond); new_line;
+      cnt := cnt + 1;
+      cd(cnt) := new Bracket'(cond);
+      exit when (restsum = 0);
+    end loop;
+    restsum := restsum + 1;  -- at least one degree of freedom left
+   -- put("restsum : "); put(restsum,1); new_line;
+    invpart := (1..k => 0);
+    for j in 1..k loop
+      if restsum > n-k 
+       then invpart(j) := natural32(n-k);
+       else invpart(j) := natural32(restsum);
+      end if;
+      restsum := restsum - integer32(invpart(j));
+      exit when (restsum = 0);
+    end loop;
+    put("Partition : "); put(invpart);
+    cond := Partition_to_Bracket(k,n,invpart);
+    put(" -> condition : "); put(cond); new_line;
+    cnt := cnt + 1;
+    cd(cnt) := new Bracket'(cond);
+    Create_Intersection_Poset(n,cnt,cd(1..cnt),roco);
+  end Generate_Intersection_Problem;
+
+  procedure Random_Intersection_Problem ( k,n : integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random intersection problem on k-planes in n-space.
+
+    m : integer32 := 0;
+    roco : Natural_Number;
+    ans : character;
+
+  begin
+    loop
+      loop
+        put("Give the number of conditions (>= 3) : "); get(m);
+        exit when (m >= 3);
+       put_line("-> number must be at least 3.  Please try again ...");
+      end loop;
+      Generate_Intersection_Problem(k,n,m,roco);
+      new_line;
+      put("The root count : "); put(roco); new_line;
+      put("Generate another intersection problem ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      Clear(roco);
+    end loop;
+  end Random_Intersection_Problem;
+
   procedure Main is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the ambient dimension n,
+  --   for a menu selection, and depending on the selection also
+  --   for the dimension k of the planes.
 
     n,k : integer32 := 0;
     ans : character;
@@ -747,15 +884,16 @@ procedure ts_checkers is
     put_line("  7. resolve intersection condition given by brackets");
     put_line("  8. enumerate all paths from leaves to root of poset");
     put_line("  9. group black checkers into four zones");
-    put("Type 1, 2, 3, 4, 5, 6, 7, 8, or 9 to make a choice : ");
-    Ask_Alternative(ans,"123456789");
+    put_line("  A. generate a random intersection problem");
+    put("Type 1, 2, 3, 4, 5, 6, 7, 8, 9, or A to make a choice : ");
+    Ask_Alternative(ans,"123456789A");
     new_line;
     put("Give n (dimension of ambient space) : "); get(n);
     case ans is
       when '1' => Interactive_Test(n);
       when '2' => Specialization_Order(n);
       when '3' => Show_All_Moves(natural32(n));
-      when '4' | '5' | '6' | '8' | '9' =>
+      when '4' | '5' | '6' | '8' | '9' | 'A' =>
         put("Give k (dimension of subspace) : "); get(k);
         case ans is
           when '4' => Test_White_Moves(k,n);
@@ -763,6 +901,7 @@ procedure ts_checkers is
           when '6' => Count_Planes(k,n);
           when '8' => Enumerate_Paths_in_Poset(k,n);
           when '9' => Group_Black_Checkers(k,n);
+          when 'A' => Random_Intersection_Problem(k,n);
           when others => null;
         end case;
       when '7' => Resolve_Intersection_Condition(n);
