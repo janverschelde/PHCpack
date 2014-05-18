@@ -1,26 +1,33 @@
-with text_io;                           use text_io;
-with Communications_with_User;          use Communications_with_User;
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers; 
-with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io; 
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
-with Standard_Natural_Vectors;          use Standard_Natural_Vectors;
-with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
+with text_io;                            use text_io;
+with Communications_with_User;           use Communications_with_User;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers; 
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io; 
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Standard_Natural_Vectors;           use Standard_Natural_Vectors;
+with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Standard_Natural_VecVecs;
-with Standard_Natural_VecVecs_io;       use Standard_Natural_VecVecs_io;
-with Standard_Natural_Matrices;         use Standard_Natural_Matrices;
-with Standard_Natural_Matrices_io;      use Standard_Natural_Matrices_io;
+with Standard_Natural_VecVecs_io;        use Standard_Natural_VecVecs_io;
+with Standard_Natural_Matrices;          use Standard_Natural_Matrices;
+with Standard_Natural_Matrices_io;       use Standard_Natural_Matrices_io;
+with Standard_Integer_Vectors;
+with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
-with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
-with Checker_Boards,Checker_Boards_io;  use Checker_Boards,Checker_Boards_io;
-with Checker_Moves;                     use Checker_Moves;
-with Checker_Localization_Patterns;     use Checker_Localization_Patterns;
-with Checker_Posets,Checker_Posets_io;  use Checker_Posets,Checker_Posets_io;
+with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
+with Standard_Random_Matrices;
+with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
+with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
+with Checker_Boards,Checker_Boards_io;   use Checker_Boards,Checker_Boards_io;
+with Checker_Moves;                      use Checker_Moves;
+with Checker_Localization_Patterns;      use Checker_Localization_Patterns;
+with Checker_Posets,Checker_Posets_io;   use Checker_Posets,Checker_Posets_io;
 with Checker_Homotopies;
-with Intersection_Posets;               use Intersection_Posets;
-with Intersection_Posets_io;            use Intersection_Posets_io;
-with Moving_Flag_Homotopies;            use Moving_Flag_Homotopies;
+with Intersection_Posets;                use Intersection_Posets;
+with Intersection_Posets_io;             use Intersection_Posets_io;
+with Moving_Flag_Homotopies;             use Moving_Flag_Homotopies;
 
 procedure ts_induce is
 
@@ -424,6 +431,276 @@ procedure ts_induce is
     Localization_along_Paths(n,k,ps);
   end Run_along_Paths_in_Poset;
 
+  function Flag_Transformation_Coefficient_Matrix
+             ( n : integer32;
+               f1,f2,g1,g2 : Standard_Complex_Matrices.Matrix )
+             return Standard_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the coefficient matrix to compute the matrix A
+  --   and the upper triangular matrices T1 and T2 in the transformation
+  --   defined by A*f1 = g1*T1, A*f2 = g2*T2.
+  --   The square matrix on return has dimension 2*n^2.
+
+    dim : constant integer32 := 2*n*n;
+    res : Standard_Complex_Matrices.Matrix(1..dim,1..dim);
+    offset : integer32 := 0;
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        res(i,j) := Create(0.0);
+      end loop;
+    end loop;
+    for k in 0..(n-1) loop
+      for i in 1..n loop
+        for j in 1..n loop
+          res(k*n+i,k*n+j) := f1(j,i);
+          res(n*(n+k)+i,k*n+j) := f2(j,i);
+        end loop;
+      end loop;
+    end loop;
+    for i in 1..n-1 loop
+      for j in 1..n-i loop
+        for k in 0..(n-1) loop
+          put("i = "); put(i,1);
+          put("  j = "); put(j,1); put("  k = "); put(k,1);
+          put("  row : "); put(k*n+i+j,1);
+          put("  col : "); put(offset+n*n+j,1); new_line;
+          res(k*n+i+j,offset+n*n+j) := -g1(k+1,i);
+        end loop;
+      end loop;
+      offset := offset + n - i;
+    end loop;
+    new_line;
+    for i in 1..n loop
+      for j in 1..n-i+1 loop
+        for k in 0..(n-1) loop
+          put("i = "); put(i,1);
+          put("  j = "); put(j,1); put("  k = "); put(k,1);
+          put("  row : "); put(n*(n+k)+i+j-1,1);
+          put("  col : "); put(offset+n*n+j,1); new_line;
+          res(n*(n+k)+i+j-1,offset+n*n+j) := -g2(k+1,i);
+        end loop;
+      end loop;
+      offset := offset + n - i + 1;
+    end loop;
+    return res;
+  end Flag_Transformation_Coefficient_Matrix;
+
+  function Flag_Transformation_Right_Hand_Side
+             ( n : integer32; g : Standard_Complex_Matrices.Matrix )
+             return Standard_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns the right hand side vector in the linear system to
+  --   compute a transformation between two flags.
+
+    dim : constant integer32 := 2*n*n;
+    res : Standard_Complex_Vectors.Vector(1..dim);
+    ind : integer32 := 0;
+
+  begin
+    for i in g'range(1) loop
+      for j in g'range(2) loop
+        ind := ind + 1;
+        res(ind) := g(i,j);
+      end loop;
+    end loop;
+    for i in ind+1..res'last loop
+      res(i) := Create(0.0);
+    end loop;
+    return res;
+  end Flag_Transformation_Right_Hand_Side;
+
+  procedure real_small_put ( A : in Standard_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Writes the real part of the matrix A with only one decimal place
+  --   of precision, enough to see the structure of the matrix.
+
+    rp : double_float;
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        rp := REAL_PART(A(i,j));
+        if rp < 0.0
+         then put(" "); 
+         else put("  ");
+        end if;
+        put(REAL_PART(A(i,j)),1);
+      end loop;
+      new_line;
+    end loop;
+  end real_small_put;
+
+  procedure Extract_Matrices
+              ( n : in integer32; sol : in Standard_Complex_Vectors.Vector;
+                A,T1,T2 : out Standard_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Given a vector sol of size 2*n*n, extracts three n-dimensional 
+  --   matrices: A, T1, and T2, where T1 and T2 are upper triangular
+  --   and T1 has ones on its diagonal.
+
+    idx : integer32 := 0;
+
+  begin
+    for i in 1..n loop
+      for j in 1..n loop
+        idx := idx + 1;
+        A(i,j) := sol(idx);
+      end loop;
+    end loop;
+    for i in 1..n loop
+      for j in 1..(i-1) loop
+        T1(i,j) := Create(0.0);
+      end loop;
+      T1(i,i) := Create(1.0);
+      for j in (i+1)..n loop
+        idx := idx + 1;
+        T1(i,j) := sol(idx);
+      end loop;
+    end loop;
+    for i in 1..n loop
+      for j in 1..(i-1) loop
+        T2(i,j) := Create(0.0);
+      end loop;
+      for j in i..n loop
+        idx := idx + 1;
+        T2(i,j) := sol(idx);
+      end loop;
+    end loop;
+  end Extract_Matrices;
+
+  procedure Test_Flag_Transformation
+              ( f1,f2,g1,g2,A,T1,T2 : in Standard_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Tests whether A*f1 = g1*T1 and A*f2 = g2*T2.
+
+    use Standard_Complex_Matrices;
+
+  begin
+    put_line("A*f1 : "); put(A*f1);
+    put_line("g1*T1 : "); put(g1*T1);
+    put_line("A*f2 : "); put(A*f2);
+    put_line("g2*T2 : "); put(g2*T2);
+  end Test_Flag_Transformation;
+
+  procedure Test_Random_Flags2Flags ( n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates two pairs of random flags (F1, F2) and (G1, G2) in n-space
+  --   and computes the matrix A, upper triangular matrices T1 and T2
+  --   so that A*F1 = G1*T1 and A*F2 = G2*T2.
+
+    f1 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+       := Standard_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
+    f2 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+       := Standard_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
+    g1 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+       := Standard_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
+    g2 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+       := Standard_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
+    dim : constant integer32 := 2*n*n;
+    mat : constant Standard_Complex_Matrices.Matrix(1..dim,1..dim)
+        := Flag_Transformation_Coefficient_Matrix(n,f1,f2,g1,g2);
+    rhs : constant Standard_Complex_Vectors.Vector(1..dim)
+        := Flag_Transformation_Right_Hand_Side(n,g1);
+    wrk : Standard_Complex_Matrices.Matrix(1..dim,1..dim) := mat;
+    sol : Standard_Complex_Vectors.Vector(1..dim) := rhs;
+    res : Standard_Complex_Vectors.Vector(1..dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info : integer32;
+    nrm : double_float;
+    A,T1,T2 : Standard_Complex_Matrices.Matrix(1..n,1..n);
+
+    use Standard_Complex_Vectors,Standard_Complex_Matrices;
+
+  begin
+    put_line("The flag f1 : "); put(f1,1); new_line;
+    put_line("The flag f2 : "); put(f2,1); new_line;
+    put_line("The flag g1 : "); put(g1,1); new_line;
+    put_line("The flag g2 : "); put(g2,1); new_line;
+    put_line("The coefficient matrix "); real_small_put(mat); new_line;
+    lufac(wrk,dim,ipvt,info);
+    lusolve(wrk,dim,ipvt,sol);
+    res := rhs - mat*sol;
+    nrm := Max_Norm(res);
+    put("The norm of the residual : "); put(nrm); new_line;
+    Extract_Matrices(n,sol,A,T1,T2);
+    Test_Flag_Transformation(f1,f2,g1,g2,A,T1,T2);
+  end Test_Random_Flags2Flags;
+
+  function Moved_Flag
+             ( n : integer32 ) return Standard_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the coordinates for the moved flag in n-space.
+
+    res : Standard_Complex_Matrices.Matrix(1..n,1..n);
+
+  begin
+    for i in 1..n loop
+      for j in 1..n-i+1 loop
+        res(i,j) := Create(1.0);
+      end loop;
+      for j in (n-i+2)..n loop
+        res(i,j) := Create(0.0);
+      end loop;
+    end loop;
+    return res;
+  end Moved_Flag;
+
+  procedure Test_Specific_Flags2Flags ( n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   For two pairs of flags (M, I) and (I, F) in n-space
+  --   where M is the moved flags, I the identity matrix,
+  --   and F some random n-dimensional matrix,
+  --   computes the matrix A, upper triangular matrices T1 and T2
+  --   so that A*F1 = G1*T1 and A*F2 = G2*T2.
+
+    f1 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+       := Moved_Flag(n);
+    f2 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+       := Moving_Flag_Homotopies.Identity(n);
+    g1 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+       := Moving_Flag_Homotopies.Identity(n);
+    g2 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+       := Standard_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
+    dim : constant integer32 := 2*n*n;
+    mat : constant Standard_Complex_Matrices.Matrix(1..dim,1..dim)
+        := Flag_Transformation_Coefficient_Matrix(n,f1,f2,g1,g2);
+    rhs : constant Standard_Complex_Vectors.Vector(1..dim)
+        := Flag_Transformation_Right_Hand_Side(n,g1);
+    wrk : Standard_Complex_Matrices.Matrix(1..dim,1..dim) := mat;
+    sol : Standard_Complex_Vectors.Vector(1..dim) := rhs;
+    res : Standard_Complex_Vectors.Vector(1..dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info : integer32;
+    nrm : double_float;
+    A,T1,T2 : Standard_Complex_Matrices.Matrix(1..n,1..n);
+
+    use Standard_Complex_Vectors,Standard_Complex_Matrices;
+
+  begin
+    put_line("The flag f1 : "); put(f1,1); new_line;
+    put_line("The flag f2 : "); put(f2,1); new_line;
+    put_line("The flag g1 : "); put(g1,1); new_line;
+    put_line("The flag g2 : "); put(g2,1); new_line;
+    put_line("The coefficient matrix "); real_small_put(mat); new_line;
+    lufac(wrk,dim,ipvt,info);
+    lusolve(wrk,dim,ipvt,sol);
+    res := rhs - mat*sol;
+    nrm := Max_Norm(res);
+    put("The norm of the residual : "); put(nrm); new_line;
+    Extract_Matrices(n,sol,A,T1,T2);
+    Test_Flag_Transformation(f1,f2,g1,g2,A,T1,T2);
+  end Test_Specific_Flags2Flags;
+
   procedure Main is
  
     n,k,m : integer32 := 0;
@@ -431,18 +708,21 @@ procedure ts_induce is
 
   begin
     new_line;
-    put("Give n (ambient dimension) : "); get(n);
-    put("Give k (subspace dimension): "); get(k);
-    new_line;
     put_line("Choose one of the following operations : ");
     put_line("  1. see generalizing moving flag in numeric form;");
     put_line("  2. test homotopy definition for specific coordinates;");
     put_line("  3. create a poset and run through specialization;");
     put_line("  4. create a poset and deform from leaves to the root;");
     put_line("  5. let intersection poset define the deformations;");
-    put_line("  6. run along paths in a checker poset.");
-    put("Type 1, 2, 3, 4, 5, or 6 to make your choice : ");
-    Ask_Alternative(ans,"123456");
+    put_line("  6. run along paths in a checker poset;");
+    put_line("  7. test transformation of pair of flags.");
+    put("Type 1, 2, 3, 4, 5, 6, or 7 to make your choice : ");
+    Ask_Alternative(ans,"1234567");
+    new_line;
+    put("Give n (ambient dimension) : "); get(n);
+    if ans /= '1' and ans /= '7'
+     then put("Give k (subspace dimension): "); get(k);
+    end if;
     case ans is
       when '1' => Generalizing_Moving_Flags(n);
       when '2' => Test_Coordinates(n,k);
@@ -453,6 +733,8 @@ procedure ts_induce is
                   get(m);
                   Intersecting_Homotopies(n,k,m);
       when '6' => Run_along_Paths_in_Poset(n,k);
+      when '7' => Test_Random_Flags2Flags(n);
+                  Test_Specific_Flags2Flags(n);
       when others => null;
     end case;
   end Main;
