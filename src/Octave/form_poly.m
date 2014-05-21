@@ -22,6 +22,9 @@ function [f]=form_poly(n_var,coeff,exponent)
 %             0 2 0]
 % function returns a polynomial x1*x3**2 + x2*x4**2 + (0.16009+0.9871*i)
 %
+% This version of form_poly uses cmplx2str provided by Bor Plestenjak
+% on Monday 19 May 2014.
+%
 r=size(exponent,1);
 c=size(exponent,2);
 m=size(coeff,1);
@@ -64,46 +67,17 @@ for ii=1:1
       end
     end
     if (coeff(jj,1)~=1)
-      if (coeff(jj,1)<0)
+      if (jj == 1)
         if (isempty(temp))
-          monomial{ii,jj}=[' ' num2str(real(coeff(jj,1)),'%16.14e')];
+          monomial{ii,jj}=[' ' cmplx2str(coeff(jj,1))];
         else
-          monomial{ii,jj}=[' ' num2str(real(coeff(jj,1)),'%16.14e') '*' temp];
+          monomial{ii,jj}=[' ' cmplx2str(coeff(jj,1)) '*' temp];
         end
-      else % >0 case, coeff. is not possible to be 0
+      else
         if (isempty(temp))
-          monomial{ii,jj}=[' + ' num2str(real(coeff(jj,1)),'%16.14e')];
+          monomial{ii,jj}=[' + ' cmplx2str(coeff(jj,1))];
         else
-          monomial{ii,jj}=[' + ' num2str(real(coeff(jj,1)),'%16.14e') '*' temp];
-        end
-      end
-      if (imag(coeff(jj,1))~=0) % complex coeff.
-        if (isempty(temp))
-          if(jj~=1)
-            if (imag(coeff(jj,1))<0)
-              if (abs(imag(coeff(jj,1)))~=1)
-                monomial{ii,jj}=[' + (' num2str(real(coeff(jj,1)),'%16.14e') num2str(imag(coeff(jj,1)),'%16.14e') '*i)'];
-              else
-                monomial{ii,jj}=[' + (' num2str(real(coeff(jj,1)),'%16.14e') '-i)'];
-              end
-            else
-              if (imag(coeff(jj,1))~=1)
-                monomial{ii,jj}=[' + (' num2str(real(coeff(jj,1)),'%16.14e') '+' num2str(imag(coeff(jj,1)),'%16.14e') '*i)'];
-              else
-                monomial{ii,jj}=[' + (' num2str(real(coeff(jj,1)),'%16.14e') '+'  'i)'];
-              end
-            end    
-          else 
-            monomial{ii,jj}=['(' num2str(real(coeff(jj,1)),'%16.14e') '+' num2str(imag(coeff(jj,1)),'%16.14e') '*i)'];
-          end
-        elseif(jj~=1)
-          if (imag(coeff(jj,1))<0)
-            monomial{ii,jj}=[' + (' num2str(real(coeff(jj,1)),'%16.14e') ' ' num2str(imag(coeff(jj,1)),'%16.14e') '*i)' '*' temp];
-          else
-            monomial{ii,jj}=[' + (' num2str(real(coeff(jj,1)),'%16.14e') '+' num2str(imag(coeff(jj,1)),'%16.14e') '*i)' '*' temp];
-          end
-        else 
-          monomial{ii,jj}=['(' num2str(real(coeff(jj,1)),'%16.14e') '+' num2str(imag(coeff(jj,1)),'%16.14e') '*i)' '*' temp];
+          monomial{ii,jj}=[' + ' cmplx2str(coeff(jj,1)) '*' temp];
         end
       end
     else % coeff ==1
