@@ -31,15 +31,15 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/Components/Samplers -I$(PHCAda)/Components/Interpolators \
  -I$(PHCAda)/Components/Factorization -I$(PHCAda)/Components/Decomposition \
  -I$(PHCAda)/Components/Solver -I$(PHCAda)/Components/Tropical \
- -I$(PHCAda)/Tasking -I$(PHCAda)/Main \
- -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State -I$(MPILib)
+ -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State -I$(MPILib) \
+ -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
 GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flag with gnat95 restriction for CtoPHC 
 GNATOPT95FLAGS=-gnat95 -gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
 # GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
-GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
+# GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
 # GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
 COFLAGS = -O2
@@ -305,6 +305,10 @@ ts_mgs:
 
 ts_mgsrnk:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mgsrnk.adb -o $(BIN)/ts_mgsrnk
+
+ts_backsubs:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_backsubs.adb \
+              -o $(BIN)/ts_backsubs
 
 # Test programs for Math_Lib/Polynomials :
 
@@ -982,6 +986,10 @@ ts_endgm:
 ts_locdim:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_locdim.adb -o $(BIN)/ts_locdim
 
+ts_ddqdsam:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_ddqdsam.adb \
+              -o $(BIN)/ts_ddqdsam
+
 # Test programs for the Components/Interpolators libary :
 
 ts_stpolin:
@@ -1362,6 +1370,41 @@ ts_feedback: lib.a get_clock.o get_clocks_per_sec.o
 feedback.o:
 	gcc -c $(PHCAda)/../Feedback/feedback.c
 
+# Test program to test the C interface to GPU acceleration :
+
+ts_gpu2norm_d:
+	gcc -c $(PHCAda)/PHCtoC/ts_gpu2norm_d_in_c.c -o ts_gpu2norm_d_in_c.o
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_gpu2norm_d.adb \
+              -o $(BIN)/ts_gpu2norm_d -largs ts_gpu2norm_d_in_c.o -lm
+
+ts_gpu2norm_dd:
+	gcc -I $(PHCAda)/Math_Lib/QD \
+            -c $(PHCAda)/Math_Lib/QD/double_double.c -o double_double.o
+	gcc -I $(PHCAda)/Math_Lib/QD \
+            -c $(PHCAda)/PHCtoC/ts_gpu2norm_dd_in_c.c \
+            -o ts_gpu2norm_dd_in_c.o
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_gpu2norm_dd.adb \
+              -o $(BIN)/ts_gpu2norm_dd \
+              -largs double_double.o ts_gpu2norm_dd_in_c.o -lm
+
+ts_gpu2norm_qd:
+	gcc -I $(PHCAda)/Math_Lib/QD \
+            -c $(PHCAda)/Math_Lib/QD/double_double.c -o double_double.o
+	gcc -I $(PHCAda)/Math_Lib/QD \
+            -c $(PHCAda)/Math_Lib/QD/quad_double.c -o quad_double.o
+	gcc -I $(PHCAda)/Math_Lib/QD \
+            -c $(PHCAda)/PHCtoC/ts_gpu2norm_qd_in_c.c \
+            -o ts_gpu2norm_qd_in_c.o
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_gpu2norm_qd.adb \
+              -o $(BIN)/ts_gpu2norm_qd \
+              -largs double_double.o quad_double.o ts_gpu2norm_qd_in_c.o -lm
+
+
+ts_gpu2norm_Cmain:
+	g++ -c $(PHCAda)/PHCtoC/callGPUnorm.cpp -o callGPUnorm.o
+	gcc $(PHCAda)/PHCtoC/ts_gpu2norm_Cmain.c callGPUnorm.o \
+         -o $(BIN)/ts_gpu2norm_Cmain -lm
+
 # Test programs for the Tasking :
 
 ts_mtmatvec:
@@ -1376,9 +1419,29 @@ ts_mtlinsol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtlinsol.adb \
                  -o $(BIN)/ts_mtlinsol
 
+ts_mtlinsolV0:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtlinsolV0.adb \
+                 -o $(BIN)/ts_mtlinsolV0
+
+ts_mtlinsolV1:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtlinsolV1.adb \
+                 -o $(BIN)/ts_mtlinsolV1
+
+ts_mtlinsolV2:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtlinsolV2.adb \
+                 -o $(BIN)/ts_mtlinsolV2
+
 ts_tasking:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_tasking.adb \
                  -o $(BIN)/ts_tasking
+
+ts_protect:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_protect.adb \
+              -o $(BIN)/ts_protect
+
+ts_access:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_access.adb \
+              -o $(BIN)/ts_access
 
 ts_mutex:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mutex.adb -o $(BIN)/ts_mutex
@@ -1450,9 +1513,10 @@ use_c2phc.o:
 lib_read:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(PHCLib)/lib_read.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc phcpack.o lib_read.o -o ../bin/lib_read
+	gnatlink -C use_c2phc phcpack.o solcon.o lib_read.o -o ../bin/lib_read
 
 lib_syscon:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
@@ -1564,8 +1628,16 @@ ts_pieri_tree:
 
 lib_pieri:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2pieri.adb
+	gcc -c -O2 $(PHCLib)/lib_pieri.c
 	gnatbind -n use_c2pieri
 	gnatlink -C use_c2pieri lib_pieri.o -o ../bin/lib_pieri
+
+lib_lrhom:
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gcc -c -O2 $(PHCLib)/lib_lrhom.c
+	gcc -c -O2 $(PHCLib)/schubert.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc schubert.o lib_lrhom.o -o $(BIN)/lib_lrhom
 
 phc_solve: standard_solutions_container.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb

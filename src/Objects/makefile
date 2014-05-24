@@ -3,12 +3,11 @@
 # modules in the library) which can be made.
 
 # swap the # symbol in the following lines to use makefile_windows
-# or to use makefile_copper on NCSA machine copper
+# or to use makefile_mac on a Mac OS x computer
 
 # MAKEFILE = makefile_unix
 MAKEFILE = makefile_mac
 # MAKEFILE = makefile_windows
-# MAKEFILE = makefile_copper
 
 # the main executable is phc
 
@@ -241,7 +240,7 @@ ts_circuit:
 # Test programs for Math_Lib/Reduction :
 
 test_reduction: ts_fltlu ts_cmplu ts_ddlu ts_qdlu ts_qrd ts_svd ts_eigval \
-                ts_mgs ts_mgsrnk
+                ts_mgs ts_mgsrnk ts_backsubs
 
 ts_fltlu:
 	make -f $(MAKEFILE) ts_fltlu
@@ -272,6 +271,9 @@ ts_mgs:
 
 ts_mgsrnk:
 	make -f $(MAKEFILE) ts_mgsrnk
+
+ts_backsubs:
+	make -f $(MAKEFILE) ts_backsubs
 
 # Test programs for Math_Lib/Polynomials :
 
@@ -899,7 +901,7 @@ test_components: test_samplers test_interpolators test_factorization \
 test_samplers: ts_roots ts_hypsam ts_hyprts ts_hyppts ts_unisam \
                ts_planes ts_flag ts_coords \
                ts_itrack ts_ispan ts_inewt ts_iwset ts_ilocal \
-               ts_sample ts_endgm ts_locdim
+               ts_sample ts_endgm ts_locdim ts_ddqdsam
 
 ts_roots:
 	make -f $(MAKEFILE) ts_roots
@@ -957,6 +959,9 @@ ts_endgm:
 
 ts_locdim:
 	make -f $(MAKEFILE) ts_locdim
+
+ts_ddqdsam:
+	make -f $(MAKEFILE) ts_ddqdsam
 
 # Test programs for the Components/Interpolators libary :
 
@@ -1250,10 +1255,29 @@ ts_use_celcon:
 ts_feedback:
 	make -f $(MAKEFILE) ts_feedback
 
+# Test programs for the C interface to GPU acceleration :
+
+test_phctoc: ts_gpu2norm
+
+ts_gpu2norm_d:
+	make -f $(MAKEFILE) ts_gpu2norm_d
+
+ts_gpu2norm_dd:
+	make -f $(MAKEFILE) ts_gpu2norm_dd
+
+ts_gpu2norm_qd:
+	make -f $(MAKEFILE) ts_gpu2norm_qd
+
+ts_gpu2norm_Cmain:
+	make -f $(MAKEFILE) ts_gpu2norm_Cmain
+
+ts_gpu2norm_call:
+	make -f $(MAKEFILE) ts_gpu2norm_call
+
 # Test programs for the Tasking:
 
-test_tasking: ts_mutex ts_jobs ts_mtvol ts_mtvolcon ts_mtverify
-#             ts_mtmatvec ts_mtpolval ts_mtlinsol ts_mtverify
+test_tasking: ts_mutex ts_jobs ts_mtvol ts_mtvolcon ts_mtverify ts_mtcont
+#             ts_mtmatvec ts_mtpolval ts_mtlinsol
 
 ts_mtmatvec:
 	make -f $(MAKEFILE) ts_mtmatvec
@@ -1263,6 +1287,12 @@ ts_mtpolval:
 
 ts_mtlinsol:
 	make -f $(MAKEFILE) ts_mtlinsol
+
+ts_mtlinsolV0:
+	make -f $(MAKEFILE) ts_mtlinsolV0
+
+ts_mtlinsolv1:
+	make -f $(MAKEFILE) ts_mtlinsolv1
 
 ts_tasking:
 	make -f $(MAKEFILE) ts_tasking
@@ -1353,6 +1383,12 @@ lib_nxtsol:
 
 lib_poco:
 	make -f $(MAKEFILE) lib_poco
+
+lib_pieri:
+	make -f $(MAKEFILE) lib_pieri
+
+lib_lrhom:
+	make -f $(MAKEFILE) lib_lrhom
 
 lib_factor:
 	make -f $(MAKEFILE) lib_factor
