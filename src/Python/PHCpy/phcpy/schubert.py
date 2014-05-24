@@ -27,6 +27,27 @@ def pieri_root_count(mdim, pdim, qdeg):
     print 'the localization poset :'
     print poset
 
+def resolve_schubert_conditions(ndim, kdim, brackets, verbose=True):
+    """
+    In n-dimensional space we consider k-dimensional planes,
+    subject to intersection conditions represented by brackets.
+    The brackets is a list of brackets.  A bracket is a list
+    of as many natural numbers (in the range 1..ndim) as kdim.
+    On return is the formal root count, sharp for general flags.
+    """
+    from phcpy2c import py2c_schubert_resolve_conditions as resolve
+    nbc = len(brackets)
+    cds = ''
+    for bracket in brackets:
+        for num in bracket:
+            cds = cds + ' ' + str(num)
+    # print 'the condition string :', cds
+    if verbose:
+        roco = resolve(ndim, kdim, nbc, len(cds), cds, 1)
+    else:
+        roco = resolve(ndim, kdim, nbc, len(cds), cds, 0)
+    return roco
+
 def random_complex_matrix(nbrows, nbcols):
     """
     Returns a random nbrows-by-nbcols matrix
