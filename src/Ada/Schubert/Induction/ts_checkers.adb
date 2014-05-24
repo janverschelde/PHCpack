@@ -22,6 +22,7 @@ with Checker_Posets,Checker_Posets_io;  use Checker_Posets,Checker_Posets_io;
 with Checker_Localization_Patterns;     use Checker_Localization_Patterns;
 with Intersection_Posets;               use Intersection_Posets;
 with Intersection_Posets_io;            use Intersection_Posets_io;
+with Drivers_for_Schubert_Induction;
 
 procedure ts_checkers is
 
@@ -533,7 +534,7 @@ procedure ts_checkers is
         end if;
         put_line("Reading an intersection condition...");
         Read_Permutation(w);
-        Intersect(ips,w);
+        Intersect(ips,w,false); -- be not silent
         put_line("The new formal equations : ");
         Write_Formal_Equations(ips,ips.level);
         d := Degree_of_Freedom(ips);
@@ -575,59 +576,22 @@ procedure ts_checkers is
   end Count_Planes;
 
   procedure Create_Intersection_Poset
-              ( n,nb : in integer32; cd : in Array_of_Brackets;
-                finsum : out Natural_Number ) is
-
-  -- DESCRIPTION :
-  --   Creates the intersection poset defined by the nb brackets in cd
-  --   for planes in n-space and resolves the intersection condition
-  --   imposed by the brackets in cd.
-
-    k : constant integer32 := cd(1)'last;
-    p : constant Vector(1..n) := Identity_Permutation(natural32(n));
-    r,c,w : Vector(1..k);
-    ps : Poset;
-    ips : Intersection_Poset(nb-1);
-
-  begin
-    ips.level := 0;
-    put("  the dimension of the planes : "); put(k,1); new_line;
-    put("  the number of conditions : "); put(nb,1); new_line;
-    if nb >= 2 then
-      r := Standard_Natural_Vectors.Vector(cd(1).all);
-      c := Standard_Natural_Vectors.Vector(cd(2).all);
-      put(cd(1).all); put(" and "); put(cd(2).all);
-      if not Happy_Checkers(p,r,c) then
-        put_line(" are not happy together.  Please try again.");
-      else
-        put_line(" form a happy configuration.");
-        ps := Create(n,r,c);              -- create the first poset
-        Write_Formal_Equation(ps);
-        ips := Create(nb-1,ps);           -- first poset becomes root
-        for i in 3..nb loop
-          w := Standard_Natural_Vectors.Vector(cd(i).all);
-          Intersect(ips,w);
-          put_line("The new formal equations : ");
-          Write_Formal_Equations(ips,ips.level);
-        end loop;
-        put_line("All formal equations in the intersection poset :");
-        Write_Formal_Equations(ips);
-        put_line("The intersection condition resolved :");
-        Write_Expansion(ips);
-      end if;
-    end if;
-    finsum := Final_Sum(ips);
-  end Create_Intersection_Poset;
-
-  procedure Create_Intersection_Poset
               ( n : in integer32; bm : in Bracket_Monomial ) is
 
     nb : constant integer32 := integer32(Number_of_Brackets(bm));
     cd : constant Array_of_Brackets(1..nb) := Create(bm);
     fs : Natural_Number;
+    ans : character;
+    use Drivers_for_Schubert_Induction;
 
   begin
-    Create_Intersection_Poset(n,nb,cd,fs);
+    put("Do you want intermediate output ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Create_Intersection_Poset(n,nb,cd,false,fs);
+     else Create_Intersection_Poset(n,nb,cd,true,fs);
+    end if;
+    put("The number of solutions : "); put(fs); new_line;
   end Create_Intersection_Poset;
 
   procedure Resolve_Intersection_Condition ( n : in integer32 ) is
@@ -793,6 +757,8 @@ procedure ts_checkers is
     sign : integer32;
     cnt : integer32 := 0;
 
+    use Drivers_for_Schubert_Induction;
+
   begin
     for i in 1..m-1 loop
       for j in 1..k loop
@@ -831,7 +797,7 @@ procedure ts_checkers is
     put(" -> condition : "); put(cond); new_line;
     cnt := cnt + 1;
     cd(cnt) := new Bracket'(cond);
-    Create_Intersection_Poset(n,cnt,cd(1..cnt),roco);
+    Create_Intersection_Poset (n,cnt,cd(1..cnt),false,roco);
   end Generate_Intersection_Problem;
 
   procedure Random_Intersection_Problem ( k,n : integer32 ) is

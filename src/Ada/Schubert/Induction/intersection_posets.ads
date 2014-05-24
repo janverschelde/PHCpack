@@ -48,21 +48,27 @@ package Intersection_Posets is
   --   initialized at the root with the given poset.
 
   procedure Intersect ( ips : in out Intersection_Poset;
-                        pnd : in Link_to_Poset_Node; w : in Vector ); 
+                        pnd : in Link_to_Poset_Node; w : in Vector;
+                        silent : in boolean ); 
 
   -- DESCRIPTION :
   --   Starting at the poset node pnd at ips.level, new poset nodes
   --   are added to the next level in the intersection poset to deal
   --   with the intersection condition imposed by w.
+  --   When silent is true, no information is printed,
+  --   otherwise one can track the progress of the resolution.
 
   -- REQUIRED : 1 <= ips.level < m and pnd belongs to ips.nodes(ips.level).
 
-  procedure Intersect ( ips : in out Intersection_Poset; w : in Vector );
+  procedure Intersect ( ips : in out Intersection_Poset; w : in Vector;
+                        silent : in boolean );
 
   -- DESCRIPTION :
   --   Starting at the leaves of all poset nodes at ips.level,
   --   a new level in the poset is created to deal with the intersection
   --   condition imposed by the k-vector w.
+  --   If silent then no extra information is printed,
+  --   otherwise the outcome of each bracket intersection is shown.
 
   -- REQUIRED : 1 <= ips.level < m.
 

@@ -7,6 +7,7 @@ with Standard_Natural_VecVecs;
 with Standard_Complex_VecMats;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with Brackets;                           use Brackets;
 with Bracket_Monomials;                  use Bracket_Monomials;
 with Intersection_Posets;                use Intersection_Posets;
 
@@ -34,6 +35,24 @@ package Drivers_for_Schubert_Induction is
   -- DECRIPTION :
   --   Returns the number of isolated solutions at the top level
   --   of an intersection poset of a resolved intersection condition.
+
+  procedure Create_Intersection_Poset
+              ( n,nb : in integer32; cd : in Array_of_Brackets;
+                silent : in boolean; finsum : out Natural_Number );
+
+  -- DESCRIPTION :
+  --   Creates the intersection poset defined by the nb brackets in cd
+  --   for planes in n-space and resolves the intersection condition
+  --   imposed by the brackets in cd.
+
+  -- ON ENTRY :
+  --   n        the ambient dimension where the solution planes live;
+  --   nb       the number of intersection conditions, defined by brackets;
+  --   cd       array of range 1..nb with the conditions as brackets;
+  --   silent   if true, then no output will be written to screen.
+
+  -- ON RETURN :
+  --   finsum   the final sum of solutions.
 
   procedure Resolve_Intersection_Condition ( n : in natural32 );
 

@@ -16,7 +16,7 @@ with Matrix_Indeterminates;
 with Standard_Homotopy;
 with Standard_IncFix_Continuation;       use Standard_IncFix_Continuation;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
-with Brackets,Brackets_io;               use Brackets,Brackets_io;
+with Brackets_io;                        use Brackets_io;
 with Bracket_Monomials_io;               use Bracket_Monomials_io;
 with Drivers_for_Pieri_Homotopies;       use Drivers_for_Pieri_Homotopies;
 with Checker_Boards_io;                  use Checker_Boards_io;
@@ -79,11 +79,14 @@ package body Drivers_for_Schubert_Induction is
   end Number_of_Isolated_Solutions;
 
   procedure Create_Intersection_Poset
-              ( n : in integer32; bm : in Bracket_Monomial;
-                nbsols : out Natural_Number ) is
+              ( n,nb : in integer32; cd : in Array_of_Brackets;
+                silent : in boolean; finsum : out Natural_Number ) is
 
-    nb : constant integer32 := integer32(Number_of_Brackets(bm));
-    cd : constant Array_of_Brackets(1..nb) := Create(bm);
+  -- DESCRIPTION :
+  --   Creates the intersection poset defined by the nb brackets in cd
+  --   for planes in n-space and resolves the intersection condition
+  --   imposed by the brackets in cd.
+
     k : constant integer32 := cd(1)'last;
     p : constant Standard_Natural_Vectors.Vector(1..n)
       := Identity_Permutation(natural32(n));
@@ -92,35 +95,58 @@ package body Drivers_for_Schubert_Induction is
     ips : Intersection_Poset(nb-1);
 
   begin
-    put("  the dimension of the planes : "); put(k,1); new_line;
-    put("  the number of conditions : "); put(nb,1); new_line;
+    ips.level := 0;
+    if not silent then
+      put("  the dimension of the planes : "); put(k,1); new_line;
+      put("  the number of conditions : "); put(nb,1); new_line;
+    end if;
     if nb >= 2 then
       r := Standard_Natural_Vectors.Vector(cd(1).all);
       c := Standard_Natural_Vectors.Vector(cd(2).all);
-      put(cd(1).all); put(" and "); put(cd(2).all);
+      if not silent
+       then put(cd(1).all); put(" and "); put(cd(2).all);
+      end if;
       if not Happy_Checkers(p,r,c) then
-        put_line(" are not happy together.  Please try again.");
-        nbsols := Create(integer(0));
+        if not silent
+         then put_line(" are not happy together.  Please try again.");
+        end if;
       else
-        put_line(" form a happy configuration.");
+        if not silent
+         then put_line(" form a happy configuration.");
+        end if;
         ps := Create(n,r,c);              -- create the first poset
-        Write_Formal_Equation(ps);
+        if not silent
+         then Write_Formal_Equation(ps);
+        end if;
         ips := Create(nb-1,ps);           -- first poset becomes root
         for i in 3..nb loop
           w := Standard_Natural_Vectors.Vector(cd(i).all);
-          Intersect(ips,w);
-          put_line("The new formal equations : ");
-          Write_Formal_Equations(ips,ips.level);
+          Intersect(ips,w,silent);
+          if not silent then
+            put_line("The new formal equations : ");
+            Write_Formal_Equations(ips,ips.level);
+          end if;
         end loop;
-        put_line("All formal equations in the intersection poset :");
-        Write_Formal_Equations(ips);
-        put_line("The intersection condition resolved :");
-        Write_Expansion(ips);
-        nbsols := Number_of_Isolated_Solutions(ips);
+        if not silent then
+          put_line("All formal equations in the intersection poset :");
+          Write_Formal_Equations(ips);
+          put_line("The intersection condition resolved :");
+          Write_Expansion(ips);
+        end if;
       end if;
-    else
-      nbsols := Create(integer(0));
     end if;
+    finsum := Final_Sum(ips);
+  end Create_Intersection_Poset;
+
+  procedure Create_Intersection_Poset
+              ( n : in integer32; bm : in Bracket_Monomial;
+                nbsols : out Natural_Number ) is
+
+    nb : constant integer32 := integer32(Number_of_Brackets(bm));
+    cd : constant Array_of_Brackets(1..nb) := Create(bm);
+
+  begin
+    Create_Intersection_Poset(n,nb,cd,false,nbsols);
   end Create_Intersection_Poset;
 
   procedure Intersection_Conditions 

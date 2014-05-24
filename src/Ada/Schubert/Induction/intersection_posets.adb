@@ -1,6 +1,5 @@
 with unchecked_deallocation;
 with text_io;                           use text_io;
-with Multprec_Natural_Numbers;          use Multprec_Natural_Numbers;
 with Checker_Moves;                     use Checker_Moves;
 with Checker_Boards_io;                 use Checker_Boards_io;
 
@@ -34,7 +33,8 @@ package body Intersection_Posets is
   end Create;
 
   procedure Intersect ( ips : in out Intersection_Poset; 
-                        pnd : in Link_to_Poset_Node; w : in Vector ) is
+                        pnd : in Link_to_Poset_Node; w : in Vector;
+                        silent : in boolean ) is
 
     ps : constant Poset := pnd.ps;
     tmp : Link_to_Node := ps.white(ps.white'last);
@@ -47,11 +47,15 @@ package body Intersection_Posets is
 
   begin
     while tmp /= null loop
-      Write_Bracket(tmp.cols); put(" and "); Write_Bracket(w); 
+      if not silent
+       then Write_Bracket(tmp.cols); put(" and "); Write_Bracket(w); 
+      end if;
       if Happy_Checkers(ps.black(ps.black'first).all,tmp.cols,w) then
         Retrieve(ips.nodes(lp1),tmp.cols,w,isin,pnd_child);
         if isin then
-          put_line(" are happy and have already created children.");
+          if not silent
+           then put_line(" are happy and have already created children.");
+          end if;
           if pnd.first_child = null
            then pnd.first_child := pnd_child;
           end if;
@@ -62,7 +66,9 @@ package body Intersection_Posets is
          -- new_line;
           Add_Multiplicity(pnd_child.ps,m);
         else
-          put_line(" are happy and will create children...");
+          if not silent
+           then put_line(" are happy and will create children...");
+          end if;
           declare
             child : constant Poset := Create(n,tmp.coeff,tmp.cols,w);
             child_node : constant Link_to_Poset_Node
@@ -77,13 +83,16 @@ package body Intersection_Posets is
           end;
         end if;
       else
-        put_line(" are not happy and will not create any children.");
+        if not silent
+         then put_line(" are not happy and will not create any children.");
+        end if;
       end if;
       tmp := tmp.next_sibling;
     end loop;
   end Intersect;
 
-  procedure Intersect ( ips : in out Intersection_Poset; w : in Vector ) is
+  procedure Intersect ( ips : in out Intersection_Poset; w : in Vector;
+                        silent : in boolean ) is
 
     tmp : Poset_List := ips.nodes(ips.level);
     pnd : Link_to_Poset_Node;
@@ -91,7 +100,7 @@ package body Intersection_Posets is
   begin
     while not Is_Null(tmp) loop
       pnd := Head_Of(tmp);
-      Intersect(ips,pnd,w);
+      Intersect(ips,pnd,w,silent);
       tmp := Tail_Of(tmp);
     end loop;
     ips.level := ips.level + 1;
