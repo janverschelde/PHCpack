@@ -413,10 +413,12 @@ static PyObject *py2c_extrinsic_top_diagonal_dimension
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_collapse_diagonal ( PyObject *self, PyObject *args );
 
-/* wrapping of Pieri homotopies */
+/* wrapping of Pieri and Littlewood-Richardson homotopies */
 
 static PyObject *py2c_schubert_pieri_count
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_schubert_resolve_conditions
+ ( PyObject *self, PyObject *args )
 static PyObject *py2c_schubert_localization_poset
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_schubert_pieri_homotopies

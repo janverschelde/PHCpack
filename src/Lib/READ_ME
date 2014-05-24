@@ -1,4 +1,4 @@
-PHCpack as a library of C functions with a state machine in PHCv2.3.87
+PHCpack as a library of C functions with a state machine in PHCv2.3.88
 
 This directory collects header files and definitions of C which bind the
 operations of PHCpack as a state machine in a systematic manner.
@@ -60,6 +60,7 @@ pieri_tree.h                     : prototypes for Pieri tree
 pieri_tree.c                     : definitions of the Pieri tree operations
 ts_pieri_tree.c                  : Pieri root count with the Pieri tree
 lib_pieri.c                      : test on Pieri homotopies
+lib_lrhom.c                      : calls Littlewood-Richardson homotopies
 ------------------------------------------------------------------------------
 phc_solve.c                      : test on the blackbox solver in PHCpack
 phcpy2c.c                        : C extension module for Python

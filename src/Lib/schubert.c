@@ -19,6 +19,25 @@ int Pieri_root_count ( int m, int p, int q, int *r )
    return fail;
 }
 
+int resolve_Schubert_conditions
+ ( int n, int k, int c, int *brackets, int verbose, int *r )
+{
+   int fail;
+   double rc;
+   int dim[4];
+
+   dim[0] = n;
+   dim[1] = k;
+   dim[2] = c;
+   dim[3] = verbose;
+
+   fail = _ada_use_c2phc(228,dim,brackets,&rc);
+
+   (*r) = (int) rc;
+
+   return fail;
+}
+
 int localization_poset ( int m, int p, int q, int *nc, char *ps )
 {
    int i,fail;

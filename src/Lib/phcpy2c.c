@@ -2733,7 +2733,7 @@ static PyObject *py2c_collapse_diagonal ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-/* wrapping of Pieri homotopies */
+/* wrapping of Pieri and Littlewood-Richardson homotopies */
 
 static PyObject *py2c_schubert_pieri_count ( PyObject *self, PyObject *args )
 {
@@ -2743,6 +2743,42 @@ static PyObject *py2c_schubert_pieri_count ( PyObject *self, PyObject *args )
    if(!PyArg_ParseTuple(args,"iii",&m,&p,&q)) return NULL;
    fail = Pieri_root_count(m,p,q,&r);
 
+   return Py_BuildValue("i",r);
+}
+
+static PyObject *py2c_schubert_resolve_conditions
+ ( PyObject *self, PyObject *args )
+{
+   int n,k,nbc,nc,fail,r,vrb;
+   char *cond;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiisi",&n,&k,&nbc,&nc,&cond,&vrb)) return NULL;
+/*
+   printf("the number of characters : %d\n", nc);
+   printf("the conditions : %s\n", cond);
+   printf("the conditions parsed : ");
+*/
+   {
+      int cds[nbc];
+      int pos = 0;
+      int idx = 0;
+      while((idx < k*nbc) && (pos < nc))
+      {
+         while(cond[pos] == ' ' && pos < nc) pos++;
+         cds[idx] = 0;
+         while(cond[pos] != ' ')
+         {
+            if(cond[pos] == '\0') break;
+            cds[idx] = cds[idx]*10 + (cond[pos] - '0');
+            pos = pos + 1;
+            if(pos >= nc) break;
+         }
+         /* printf(" %d", cds[idx]); */
+         idx = idx + 1;
+      }
+      fail = resolve_Schubert_conditions(n,k,nbc,cds,vrb,&r);
+   }
    return Py_BuildValue("i",r);
 }
 
@@ -3709,6 +3745,8 @@ static PyMethodDef phcpy2c_methods[] =
     METH_VARARGS, "eliminates extrinsic diagonal from system and solutions"},
    {"py2c_schubert_pieri_count", py2c_schubert_pieri_count,
     METH_VARARGS, "the combinatorial Pieri root count"},
+   {"py2c_schubert_resolve_conditions", py2c_schubert_resolve_conditions,
+    METH_VARARGS, "resolve general Schubert intersection conditions"},
    {"py2c_schubert_localization_poset", py2c_schubert_localization_poset,
     METH_VARARGS, "localization poset for the Pieri root count"},
    {"py2c_schubert_pieri_homotopies", py2c_schubert_pieri_homotopies,
