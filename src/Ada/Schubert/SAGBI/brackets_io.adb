@@ -28,6 +28,7 @@ package body Brackets_io is
 
   begin
     for i in b'range loop
+      v(i) := 0;
       get(file,v(i));
     end loop;
     Create(v,b,sign);
