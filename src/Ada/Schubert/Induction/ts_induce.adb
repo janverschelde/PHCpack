@@ -365,7 +365,7 @@ procedure ts_induce is
       for k in 3..m loop
         put("Reading intersection condition "); put(k,1); put_line("...");
         Read_Permutation(cols);
-        Intersect(ips,cols);
+        Intersect(ips,cols,false);
       end loop;
     end if;
     put_line("All formal equations in the intersection poset :");
