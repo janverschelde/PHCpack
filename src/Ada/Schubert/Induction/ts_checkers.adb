@@ -742,6 +742,144 @@ procedure ts_checkers is
     return res;
   end Partition_to_Bracket;
 
+  function Random_Partition ( k,n : integer32 ) return Bracket is
+
+  -- DESCRIPTION :
+  --   Returns a decreasing sequence of k numbers with entries of at
+  --   most n-k-1, generated uniformly with the first number at least 1.
+
+    res : Bracket(1..k);
+    bnd : integer32;
+
+  begin
+    res(1) := natural32(Standard_Random_Numbers.Random(1,n-k-1));
+    for i in 2..k loop
+      bnd := integer32(res(i-1));
+      res(i) := natural32(Standard_Random_Numbers.Random(0,bnd));
+    end loop;
+    return res;
+  end Random_Partition;
+
+  function Random_Complement ( k,n : integer32; p : Bracket ) return Bracket is
+
+  -- DESCRIPTION :
+  --   Returns an increasing list q of k numbers with the restriction that
+  --   p[i] + q[i] < n-k for all i, the last element is at least 1.
+
+    res : Bracket(1..k);
+    low,upp : integer32;
+
+  begin
+    upp := n - k - integer32(p(p'first)) - 1;
+    res(1) := natural32(Standard_Random_Numbers.Random(0,upp));
+    for i in 2..k loop
+      low := integer32(res(i-1));
+      upp := n - k - integer32(p(i)) - 1;
+      res(i) := natural32(Standard_Random_Numbers.Random(low,upp));
+    end loop;
+    if res(k) = 0
+     then res(k) := 1;
+    end if;
+    return res;
+  end Random_Complement;
+
+  function Difference ( k,n : integer32; p,q : Bracket ) return Bracket is
+
+  -- DECRIPTION :
+  --   Returns the bracket with i-th entry n - k - p(i) - q(i).
+
+    res : Bracket(1..k);
+    val : integer32;
+
+  begin
+    for i in 1..k loop
+      val := n - k - integer32(p(i)) - integer32(q(i));
+      res(i) := natural32(val);
+    end loop;
+    return res;
+  end Difference;
+
+  procedure Sort_into_Partition ( b : in out Bracket ) is
+
+  -- DESCRIPTION :
+  --   In a partition, the conditions appear in decreasing order,
+  --   so the numbers in b will be sorted accordingly.
+
+    max : natural32;
+
+  begin
+    for i in b'range loop
+      max := b(i);
+      for j in i+1..b'last loop
+        if b(j) > max then
+          b(i) := b(j);
+          b(j) := max;
+          max := b(i);
+        end if;
+      end loop;
+    end loop;
+  end Sort_into_Partition;
+
+  function Random_Redistribute
+             ( k,n : integer32; b : Bracket ) return Bracket is
+
+  -- DESCRIPTION :
+  --   Takes the sum of the conditions imposed by the bracket
+  --   and redistributes this sum randomly into a partition.
+
+    res : Bracket(b'range);
+    s : integer32 := integer32(Sum(b));
+    upp : integer32;
+
+  begin
+    for i in 1..(b'last-1) loop
+      if s > n - k 
+       then upp := n-k;
+       else upp := s;
+      end if;
+      res(i) := natural32(Standard_Random_Numbers.Random(0,upp));
+      s := s - integer32(res(i));
+    end loop;
+    res(b'last) := natural32(s);
+    Sort_into_Partition(res);
+    return res;
+  end Random_Redistribute;
+
+  procedure Random_Triplet ( k,n : in integer32; roco : out Natural_Number ) is
+
+  -- DECRIPTION :
+  --   Returns 3 conditions on a k-plane in n-space with formal root count
+  --   returned in roco.
+
+    p,q,r,bp,bq,br : Bracket(1..k);
+    cd : Array_of_Brackets(1..3);
+
+    use Drivers_for_Schubert_Induction;
+ 
+  begin
+    p := Random_Partition(k,n);
+    q := Random_Complement(k,n,p);
+    r := Difference(k,n,p,q);
+    Flip(q);
+    bp := Partition_to_Bracket(k,n,p);
+    bq := Partition_to_Bracket(k,n,q);
+    cd(1) := new Bracket'(bp);
+    cd(2) := new Bracket'(bq);
+    Sort_into_Partition(r);
+    loop
+      r := Random_Redistribute(k,n,r);
+      put("The three partitions : ");
+      put(p); put(q); put(r); new_line;
+      br := Partition_to_Bracket(k,n,r);
+      put("The three brackets : ");
+      put(bp); put(bq); put(br); new_line;
+      cd(3) := new Bracket'(br);
+      Create_Intersection_Poset(n,3,cd,false,roco);
+      exit when (roco > 0);
+      Clear(cd(3));
+    end loop;
+  end Random_Triplet;
+
   procedure Generate_Intersection_Problem
               ( k,n,m : in integer32; roco : out Natural_Number ) is
 
@@ -797,7 +935,7 @@ procedure ts_checkers is
     put(" -> condition : "); put(cond); new_line;
     cnt := cnt + 1;
     cd(cnt) := new Bracket'(cond);
-    Create_Intersection_Poset (n,cnt,cd(1..cnt),false,roco);
+    Create_Intersection_Poset(n,cnt,cd(1..cnt),false,roco);
   end Generate_Intersection_Problem;
 
   procedure Random_Intersection_Problem ( k,n : integer32 ) is
@@ -816,7 +954,10 @@ procedure ts_checkers is
         exit when (m >= 3);
        put_line("-> number must be at least 3.  Please try again ...");
       end loop;
-      Generate_Intersection_Problem(k,n,m,roco);
+      if m = 3
+       then Random_Triplet(k,n,roco);
+       else Generate_Intersection_Problem(k,n,m,roco);
+      end if;
       new_line;
       put("The root count : "); put(roco); new_line;
       put("Generate another intersection problem ? (y/n) ");
