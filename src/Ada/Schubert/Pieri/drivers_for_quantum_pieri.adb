@@ -295,7 +295,7 @@ package body Drivers_for_Quantum_Pieri is
 
     level_poset : Array_of_Nodes(0..integer32(nq));
     index_poset : Array_of_Array_of_Nodes(0..integer32(nq));
-    nbp,nb : natural32;
+    nbp,nb : natural32 := 0;
 
   begin
     level_poset := Create_Leveled_Poset(lnkroot);
@@ -407,7 +407,7 @@ package body Drivers_for_Quantum_Pieri is
   --   Creates the poset by decrementing only bottom pivots.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
 
   begin
     Q_Bottom_Create(lnkroot,m+p);
@@ -424,7 +424,7 @@ package body Drivers_for_Quantum_Pieri is
 
     timer : Timing_Widget;
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
 
   begin
     tstart(timer);
@@ -445,7 +445,7 @@ package body Drivers_for_Quantum_Pieri is
   --   Creates the poset by incrementing top and decrementing bottom pivots.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
 
   begin
     Q_Top_Bottom_Create(lnkroot,root.bottom(integer32(p)),m+p);
@@ -462,7 +462,7 @@ package body Drivers_for_Quantum_Pieri is
 
     timer : Timing_Widget;
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
 
   begin
     tstart(timer);
@@ -484,7 +484,7 @@ package body Drivers_for_Quantum_Pieri is
   --   Creates the poset by incrementing top pivots.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     codim : constant Bracket := Read_Codimensions(m,p,q);
 
   begin
@@ -502,7 +502,7 @@ package body Drivers_for_Quantum_Pieri is
 
     timer : Timing_Widget;
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     codim : constant Bracket := Read_Codimensions(m,p,q);
 
   begin
@@ -525,7 +525,7 @@ package body Drivers_for_Quantum_Pieri is
   --   Creates the poset by decrementing bottom pivots.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     codim : constant Bracket := Read_Codimensions(m,p,q);
 
   begin
@@ -543,7 +543,7 @@ package body Drivers_for_Quantum_Pieri is
 
     timer : Timing_Widget;
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     codim : constant Bracket := Read_Codimensions(m,p,q);
 
   begin
@@ -566,7 +566,7 @@ package body Drivers_for_Quantum_Pieri is
   --   Creates the poset by incrementing top and decrementing bottom pivots.
 
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     codim : constant Bracket := Read_Codimensions(m,p,q);
 
   begin
@@ -584,7 +584,7 @@ package body Drivers_for_Quantum_Pieri is
 
     timer : Timing_Widget;
     root : constant Node(integer32(p)) := Trivial_Root(m,p,q);
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     codim : constant Bracket := Read_Codimensions(m,p,q);
 
   begin
@@ -624,7 +624,7 @@ package body Drivers_for_Quantum_Pieri is
                 index_poset : in out Array_of_Array_of_Nodes ) is
 
     timer : Timing_Widget;
-    nbp,nb : natural32;
+    nbp,nb : natural32 := 0;
 
   begin
     put(file,"Quantum Pieri for m = "); put(file,m,1);
