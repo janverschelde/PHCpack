@@ -114,7 +114,7 @@ package body Intersection_Posets_io is
       new_line;
     end loop;
     if Is_Null(ips.nodes(ips.level)) then
-      put(" = 0");
+      put_line(" = 0");
     else
       put(" = ");
       Write_Final_Sum(ips.nodes(ips.level));

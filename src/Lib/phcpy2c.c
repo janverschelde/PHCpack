@@ -2760,12 +2760,13 @@ static PyObject *py2c_schubert_resolve_conditions
    printf("the conditions parsed : ");
 */
    {
-      int cds[nbc];
+      int cds[k*nbc];
       int pos = 0;
       int idx = 0;
       while((idx < k*nbc) && (pos < nc))
       {
          while(cond[pos] == ' ' && pos < nc) pos++;
+         if(pos > nc) break;
          cds[idx] = 0;
          while(cond[pos] != ' ')
          {

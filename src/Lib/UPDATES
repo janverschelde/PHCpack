@@ -1,3 +1,8 @@
+Wed 28 May 2014 : allocation bug for bracket conditions fixed in phcpy2c.c.
+
+Fri 23 May 2014 : new lib_lrhom.c calls the updated schubert.h,c to
+  resolve Schubert conditions.  Added function to phcpy2c.h,c.
+
 Thu 27 Mar 2014 : extended next_track with the fixed_gamma option to init
   a path tracker, tested in lib_nxtsol, and used in phcpy2c.c
 
