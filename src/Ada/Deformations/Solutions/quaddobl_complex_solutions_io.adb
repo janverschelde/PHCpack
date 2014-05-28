@@ -312,7 +312,7 @@ package body QuadDobl_Complex_Solutions_io is
   procedure get ( file : in file_type;
                   sols,sols_last : in out Solution_List ) is
 
-    len,n : natural32;
+    len,n : natural32 := 0;
 
   begin
     get(file,len); get(file,n);
