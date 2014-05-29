@@ -58,7 +58,7 @@ package body Sample_Point_Lists_io is
   procedure get ( file : in file_type;
                   samples,samples_last : in out Multprec_Sample_List ) is
 
-    len,n,k : natural32;
+    len,n,k : natural32 := 0;
 
   begin
     get(file,len); get(file,n); get(file,k);
