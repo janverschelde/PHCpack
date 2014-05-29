@@ -384,6 +384,7 @@ package body Multprec_Complex_Laurentials_io is
 
   procedure get ( file : in file_type; n : out natural32; p : out Poly ) is
   begin
+    n := 0;
     get(file,n);
     if Symbol_Table.Empty
      then Symbol_Table.Init(n);
