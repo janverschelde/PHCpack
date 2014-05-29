@@ -394,9 +394,9 @@ package body Drivers_to_Track_Standard_Paths is
 
   begin
     Scan_and_Skip(file,"SOLUTIONS",found);
-    if not found
-     then len := 0;
-     else get(file,len); get(file,dim);
+    len := 0; dim := 0;
+    if found
+     then get(file,len); get(file,dim);
     end if;
   exception
     when others => put_line("Exception raised while scanning for solutions.");
