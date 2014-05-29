@@ -456,6 +456,7 @@ package body DoblDobl_Complex_Solutions_io is
 
   procedure Read_First ( file : in file_type; len,dim : out natural32 ) is
   begin
+    len := 0; dim := 0;
     get(file,len); get(file,dim);
   exception
     when others => new_line;
