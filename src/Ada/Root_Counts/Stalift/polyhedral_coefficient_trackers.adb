@@ -360,7 +360,7 @@ package body Polyhedral_Coefficient_Trackers is
 
     vs : Standard_Floating_VecVecs.Array_of_VecVecs(mix'range);
     ls : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
-    m : integer32;
+    m : integer32 := 0;
     lq : Laur_Sys(1..n);
     hq : Eval_Coeff_Laur_Sys(1..n);
     expvec : Exponent_Vectors_Array(1..n);
