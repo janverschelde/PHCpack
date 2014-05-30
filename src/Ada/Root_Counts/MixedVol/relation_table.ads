@@ -129,7 +129,7 @@ package Relation_Table is
                  Bidx : in out Standard_Integer_Vectors.Link_to_Vector;
                  x : in out Standard_Floating_Vectors.Link_to_Vector;
                  Binv : in out Standard_Floating_Matrices.Link_to_Matrix;
-                 RelTab : out Boolean_Matrix );
+                 RelTab : in out Boolean_Matrix );
 
   -- DESCRIPTION :
   --   Applies LP to perform a 1-point test in case the current support
@@ -168,7 +168,7 @@ package Relation_Table is
                  Bidx : in out Standard_Integer_Vectors.Link_to_Vector;
                  x : in Standard_Floating_Vectors.Link_to_Vector;
                  Binv : in out Standard_Floating_Matrices.Link_to_Matrix;
-                 RelTab : out Boolean_Matrix;
+                 RelTab : in out Boolean_Matrix;
                  L0 : in out Link_to_L0_IML );
 
   -- DESCRIPTION :
@@ -211,7 +211,7 @@ package Relation_Table is
                  Bidx : in out Standard_Integer_Vectors.Link_to_Vector;
                  x : in out Standard_Floating_Vectors.Link_to_Vector;
                  Binv : in out Standard_Floating_Matrices.Link_to_Matrix;
-                 RelTab : out Boolean_Matrix );
+                 RelTab : in out Boolean_Matrix );
 
   -- DESCRIPTION :
   --   Applies LP to perform a 1-point test when the current support
@@ -251,7 +251,7 @@ package Relation_Table is
                  Bidx : in out Standard_Integer_Vectors.Link_to_Vector;
                  x : in out Standard_Floating_Vectors.Link_to_Vector;
                  Binv : in out Standard_Floating_Matrices.Link_to_Matrix;
-                 RelTab : out Boolean_Matrix;
+                 RelTab : in out Boolean_Matrix;
                  L0 : in out Link_to_L0_IML );
 
   -- DESCRIPTION :

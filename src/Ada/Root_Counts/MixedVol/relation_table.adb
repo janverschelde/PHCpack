@@ -598,7 +598,7 @@ package body Relation_Table is
                  Bidx : in out Standard_Integer_Vectors.Link_to_Vector;
                  x : in out Standard_Floating_Vectors.Link_to_Vector;
                  Binv : in out Standard_Floating_Matrices.Link_to_Matrix;
-                 RelTab : out Boolean_Matrix ) is
+                 RelTab : in out Boolean_Matrix ) is
 
     k,ell : integer32;
     vmax,sigj : double_float;
@@ -640,7 +640,7 @@ package body Relation_Table is
                  Bidx : in out Standard_Integer_Vectors.Link_to_Vector;
                  x : in Standard_Floating_Vectors.Link_to_Vector;
                  Binv : in out Standard_Floating_Matrices.Link_to_Matrix;
-                 RelTab : out Boolean_Matrix;
+                 RelTab : in out Boolean_Matrix;
                  L0 : in out Link_to_L0_IML ) is
 
     k,ell : integer32;
@@ -651,8 +651,9 @@ package body Relation_Table is
   begin 
     loop
       Search_Outgoing(na,c,Bidx,Binv,vmax,k);
-      if vmax < eps
-       then return;                           -- leave with optimal solution
+      if vmax < eps then
+        Standard_Integer_Vectors.Clear(labels);
+        return;                               -- leave with optimal solution
       end if;
       Search_Incoming(ma,na,nv1,k,LPidx,Bidx,x,a,Binv,sigj,ell);
       for i in 0..(na-1) loop                        -- update x, Bidx, Binv
@@ -667,7 +668,6 @@ package body Relation_Table is
          L0_Add2(L0,labels,na,Bidx,x,Binv);                  -- add 2 points
       end if;
     end loop;
-    Standard_Integer_Vectors.Clear(labels);
   end dlp2_1pt_s;
 
   procedure dlp1_1pt_i
@@ -680,7 +680,7 @@ package body Relation_Table is
                  Bidx : in out Standard_Integer_Vectors.Link_to_Vector;
                  x : in out Standard_Floating_Vectors.Link_to_Vector;
                  Binv : in out Standard_Floating_Matrices.Link_to_Matrix;
-                 RelTab : out Boolean_Matrix ) is
+                 RelTab : in out Boolean_Matrix ) is
 
     k,ell : integer32;
     vmax,sigj : double_float;
@@ -721,7 +721,7 @@ package body Relation_Table is
                  Bidx : in out Standard_Integer_Vectors.Link_to_Vector;
                  x : in out Standard_Floating_Vectors.Link_to_Vector;
                  Binv : in out Standard_Floating_Matrices.Link_to_Matrix;
-                 RelTab : out Boolean_Matrix;
+                 RelTab : in out Boolean_Matrix;
                  L0 : in out Link_to_L0_IML ) is
 
     k,ell : integer32;
