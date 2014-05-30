@@ -94,7 +94,7 @@ package body Form_LP is
       end if;
     end loop;
     if((ynFixLstPt = 0) and nPtIn-Strt1Pt < MinNumPt(Lvl)-1) then
-      info := 1; return;                         -- not enough pts to extend
+      info := 1; End1pt := Strt1Pt; return;     -- not enough pts to extend
     end if;
     End1Pt := nPtIn;
     EndOldPart := nPtIn;
