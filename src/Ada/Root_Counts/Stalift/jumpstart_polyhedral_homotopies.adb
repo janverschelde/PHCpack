@@ -55,6 +55,7 @@ package body Jumpstart_Polyhedral_Homotopies is
     put("Do you know the mixed volume ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
+      mv := 0;
       put("Give the mixed volume : "); get(mv);
     else
       mv := Mixed_Volume(file,n,r,mix);
