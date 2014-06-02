@@ -103,6 +103,12 @@ package Drivers_for_Schubert_Induction is
   --   vfs      fixed flags, vfs'range = cnds'range;
   --   sols     solution k-planes.
 
+  function Random_Flags
+             ( n,m : integer32 ) return Standard_Complex_VecMats.VecMat;
+
+  -- DESCRIPTION :
+  --   Returns a vector of range 1..m with n-dimensional random flags.
+
   procedure Run_Moving_Flag_Continuation ( n,k : in integer32 );
 
   -- DESCRIPTION :
@@ -110,7 +116,7 @@ package Drivers_for_Schubert_Induction is
   --   intersection condition on k-planes and n-space before calling
   --   the other Run_Moving_Flag_Continuation below.
 
-  procedure Run_Moving_Flag_Continuation
+  procedure Reporting_Moving_Flag_Continuation
               ( n,k : in integer32;
                 rows,cols : in Standard_Natural_Vectors.Vector;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec );
@@ -121,6 +127,24 @@ package Drivers_for_Schubert_Induction is
   --   All output is written to a solution file.
 
   -- ON ENTRY :
+  --   n        ambient dimension;
+  --   k        dimension of the solution planes;
+  --   rows     row positions for white checkers
+  --   cols     columns of white checkers of resolved condition;
+  --   cnds     conditions kept fixed during flag continuation.
+
+  procedure Reporting_Moving_Flag_Continuation
+              ( file : in file_type; n,k : in integer32;
+                rows,cols : in Standard_Natural_Vectors.Vector;
+                cnds : in Standard_Natural_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Runs the Littlewood-Richardson homotopies to compute k-planes
+  --   meeting generic flags in n-space along a specific attitude.
+  --   All output is written to a solution file.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
   --   n        ambient dimension;
   --   k        dimension of the solution planes;
   --   rows     row positions for white checkers

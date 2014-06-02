@@ -305,8 +305,40 @@ package body Drivers_for_Schubert_Induction is
     end if;
   end Write_Results;
 
-  procedure Run_Moving_Flag_Continuation
+  function Random_Flags
+             ( n,m : integer32 ) return Standard_Complex_VecMats.VecMat is
+
+    res : Standard_Complex_VecMats.VecMat(1..m);
+
+  begin
+    for i in res'range loop
+      declare
+        rf : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+           := Moving_Flag_Homotopies.Random_Flag(n);
+      begin
+        res(i) := new Standard_Complex_Matrices.Matrix'(rf);
+      end;
+    end loop;
+    return res;
+  end Random_Flags;
+
+  procedure Reporting_Moving_Flag_Continuation
               ( n,k : in integer32;
+                rows,cols : in Standard_Natural_Vectors.Vector;
+                cnds : in Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+    file : file_type;
+
+  begin
+    new_line;
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    new_line;
+    Reporting_Moving_Flag_Continuation(file,n,k,rows,cols,cnds);
+  end Reporting_Moving_Flag_Continuation;
+
+  procedure Reporting_Moving_Flag_Continuation
+              ( file : in file_type; n,k : in integer32;
                 rows,cols : in Standard_Natural_Vectors.Vector;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec ) is
 
@@ -318,28 +350,16 @@ package body Drivers_for_Schubert_Induction is
        -- one_flag is closer to symbolic representation
     ps : Poset;
     report : boolean;
-    file : file_type;
     timer : Timing_Widget;
     sols : Solution_List;
 
   begin
-    new_line;
-    put_line("Reading the name of the output file ...");
-    Read_Name_and_Create_File(file);
-    new_line;
     Moving_Flag_Continuation.Set_Parameters(file,report);
     ps := Create(n,rows,cols);
     declare
       vfs,tvf : Standard_Complex_VecMats.VecMat(cnds'range);
     begin
-      for i in vfs'range loop
-        declare
-          rf : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-             := Moving_Flag_Homotopies.Random_Flag(n);
-        begin
-          vfs(i) := new Standard_Complex_Matrices.Matrix'(rf);
-        end;
-      end loop;
+      vfs := Random_Flags(n,cnds'last);
       tstart(timer);
       Moving_Flag_Continuation.Track_All_Paths_in_Poset
         (file,n,k,ps,cnds.all,vfs,mf,tvf,sols);
@@ -348,7 +368,7 @@ package body Drivers_for_Schubert_Induction is
       print_times(file,timer,"tracking all paths");
       Write_Results(file,n,k,ip,rows,cols,cnds,tvf,sols);
     end;
-  end Run_Moving_Flag_Continuation;
+  end Reporting_Moving_Flag_Continuation;
 
   procedure Run_Moving_Flag_Continuation ( n,k : in integer32 ) is
 
@@ -373,7 +393,7 @@ package body Drivers_for_Schubert_Induction is
     cnds := new Standard_Natural_VecVecs.VecVec(1..1);
     cnds(1) := new Standard_Natural_Vectors.Vector'(cond);
     skip_line; -- skip enter symbol
-    Run_Moving_Flag_Continuation(n,k,rows,cols,cnds);
+    Reporting_Moving_Flag_Continuation(n,k,rows,cols,cnds);
   end Run_Moving_Flag_Continuation;
 
 
@@ -648,7 +668,7 @@ package body Drivers_for_Schubert_Induction is
       put("Type 0, 1, or 2 to select from menu : ");
       Ask_Alternative(ans,"012");
       if ans = '0' then
-        Run_Moving_Flag_Continuation(n,k,rows.all,cols.all,cnds);
+        Reporting_Moving_Flag_Continuation(n,k,rows.all,cols.all,cnds);
       else
         inpt := (ans = '2');
         Run_Cheater_Flag_Homotopy(n,k,rows.all,cols.all,cnds,inpt);
