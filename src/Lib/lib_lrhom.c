@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "schubert.h"
 
 extern void adainit();
@@ -12,6 +13,7 @@ int main ( int argc, char *argv[] )
    int fail,n,k,c,i,j,r;
    int *brackets;
    int verbose=0;
+   char ans;
 
    printf("\nresolving a general Schubert intersection condition ...\n");
    printf("  give the ambient dimension of the space : "); scanf("%d",&n);
@@ -34,9 +36,31 @@ int main ( int argc, char *argv[] )
    }
    printf("\n");
 
+   scanf("%c",&ans); /* read the new line character */
+   printf("Run the Littlewood-Richardson homotopies ? (y/n) ");
+   scanf("%c",&ans);
+
    adainit();
 
-   fail = resolve_Schubert_conditions(n,k,c,brackets,verbose,&r);
+   if(ans != 'y')
+      fail = resolve_Schubert_conditions(n,k,c,brackets,verbose,&r);
+   else
+   {
+      double flags[2*(c-2)*n*n]; /* real + imaginary parts stored rowwise */
+      char filename[80];
+      int nbname;
+
+      scanf("%c",&ans); /* skip newline symbol */
+      printf("Give the name of the output file : ");
+      scanf("%s",filename);
+      scanf("%c",&ans); /* skip newline symbol */
+
+      nbname = strlen(filename);
+      printf("Number of characters in %s is %d\n",filename,nbname);
+
+      fail = Littlewood_Richardson_homotopies
+               (n,k,c,brackets,verbose,nbname,filename,&r,flags);
+   }
    printf("The formal root count : %d\n",r);
 
    adafinal();

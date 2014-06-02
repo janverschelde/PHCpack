@@ -38,6 +38,29 @@ int resolve_Schubert_conditions
    return fail;
 }
 
+int Littlewood_Richardson_homotopies
+ ( int n, int k, int c, int *brackets, int verbose, 
+   int nbchar, char *filename, int *r, double *flags )
+{
+   int fail,i;
+   double rc[nbchar]; /* filename on input, root count on return */
+   int dim[5];
+
+   dim[0] = n;
+   dim[1] = k;
+   dim[2] = c;
+   dim[3] = verbose;
+   dim[4] = nbchar;
+
+   for(i=0; i<nbchar; i++) rc[i] = (double) filename[i];
+
+   fail = _ada_use_c2phc(229,dim,brackets,rc);
+
+   (*r) = (int) rc[0];
+
+   return fail;
+}
+
 int localization_poset ( int m, int p, int q, int *nc, char *ps )
 {
    int i,fail;

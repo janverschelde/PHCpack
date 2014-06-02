@@ -1,3 +1,7 @@
+Mon 2 Jun 2014 : updates in schubert.h, schubert.c and lib_lrhom.c.
+
+Sun 1 Jun 2014 : function in schubert for Littlewood-Richardson homotopies.
+
 Wed 28 May 2014 : allocation bug for bracket conditions fixed in phcpy2c.c.
 
 Fri 23 May 2014 : new lib_lrhom.c calls the updated schubert.h,c to
