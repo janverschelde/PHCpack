@@ -324,7 +324,8 @@ function use_c2phc ( job : integer32;
     put_line("225. run the Pieri homotopies on random input data;");
     put_line("226. generate real planes osculating a rational curve;");
     put_line("227. put Schubert polynomial system in container.");
-    put_line("228. resolve general Schubert intersection condition.");
+    put_line("228. resolve general Schubert intersection condition;");
+    put_line("229. Littlewood-Richardson homotopies for Schubert problems.");
     put_line("MENU for double double & quad double plain C to PHCpack :");
     put_line("231. read double double target system;");
     put_line("232. write double double target system;");
@@ -1726,7 +1727,7 @@ function use_c2phc ( job : integer32;
       when 199 => return Job199; -- 1 Newton step on standard containers
       when 200..209 => return use_solcon(job-170,a,b,c);
       when 210..227 => return use_c2pieri(job-210,a,b,c);
-      when 228 => return use_c2lrhom(job-228,a,b,c);
+      when 228..229 => return use_c2lrhom(job-228,a,b,c);
       when 231..235 => return C_to_PHCpack(job-220,0);
       when 236 => return Job236; -- solve by double double path tracking
       when 237..238 => return C_to_PHCpack(job-220,0);

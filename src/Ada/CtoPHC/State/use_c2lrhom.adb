@@ -1,10 +1,14 @@
 with text_io;                           use text_io;
 with Interfaces.C;                      use Interfaces.C;
+with Communications_with_User;
+with Characters_and_Numbers;            use Characters_and_Numbers;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 -- with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Multprec_Natural_Numbers;          use Multprec_Natural_Numbers;
 -- with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Natural_Vectors;
+with Standard_Natural_VecVecs;
 with Brackets;                          use Brackets;
 -- with Brackets_io;                       use Brackets_io;
 with Drivers_for_Schubert_Induction;    use Drivers_for_Schubert_Induction;
@@ -20,7 +24,7 @@ function use_c2lrhom ( job : integer32;
                 verbose : out boolean ) is
 
   -- DESCRIPTION :
-  --   Extracts the dimension (n,k,c) from the array a,
+  --   Extracts the dimensions (n,k,c) from the array a,
   --   where n is the ambient dimension, k the dimension of the solution
   --   planes, c the number of intersection conditions, and verbose flags
   --   whether addition output should be written during the resolution.
@@ -37,6 +41,32 @@ function use_c2lrhom ( job : integer32;
      else verbose := false;
     end if;
   end Get_Dimensions;
+
+  procedure Get_Dimensions2
+              ( a : C_intarrs.Pointer; n,k,c,nchar : out integer32;
+                verbose : out boolean ) is
+
+  -- DESCRIPTION :
+  --   Extracts the dimensions (n,k,c) from the array a,
+  --   where n is the ambient dimension, k the dimension of the solution
+  --   planes, c the number of intersection conditions, and verbose flags
+  --   whether addition output should be written during the resolution.
+  --   The last value in a is the number of characters in the string
+  --   for the output file.
+
+    v : constant C_Integer_Array(0..4)
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(5));
+
+  begin
+    n := integer32(v(0));
+    k := integer32(v(1));
+    c := integer32(v(2));
+    if integer32(v(3)) = 1
+     then verbose := true;
+     else verbose := false;
+    end if;
+    nchar := integer32(v(4));
+  end Get_Dimensions2;
 
   function Get_Conditions
              ( b : C_intarrs.Pointer; k,nb : integer32 )
@@ -76,6 +106,26 @@ function use_c2lrhom ( job : integer32;
     return res;
   end Get_Conditions;
 
+  function Get_File_Name 
+             ( c : C_dblarrs.Pointer; nbchar : integer32 ) return string is
+
+  -- DESCRIPTION :
+  --   Extracts the file name (as many characters as the value of nbchar)
+  --   from the input parameter c.
+
+    res : string(1..integer(nbchar)) := (1..integer(nbchar) => ' ');
+    val : constant C_Double_Array(0..Interfaces.C.size_t(nbchar-1))
+        := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(nbchar));
+    ind : Interfaces.C.size_t := 0;
+
+  begin
+    for i in res'range loop
+      res(i) := Integer_to_Character(integer32(val(ind)));
+      ind := ind + 1;
+    end loop;
+    return res;
+  end Get_File_Name;
+
   function Job0 return integer32 is -- resolve Schubert intersection conditions
 
     n,k,nbc : integer32;
@@ -110,10 +160,60 @@ function use_c2lrhom ( job : integer32;
     return 0;
   end Job0;
 
+  function Job1 return integer32 is -- Littlewood-Richardson homotopies
+
+    n,k,nbc,nbchar : integer32;
+    otp : boolean;
+    rc : Natural_Number;
+    nrc : natural32;
+
+  begin
+    Get_Dimensions2(a,n,k,nbc,nbchar,otp);
+   -- new_line;
+   -- put_line("The dimensions : ");
+   -- put("  n = "); put(n,1);
+   -- put("  k = "); put(k,1);
+   -- put("  c = "); put(nbc,1);
+   -- if otp
+   --  then put_line("  output wanted");
+   --  else put_line("  in silent mode");
+   -- end if;
+   -- put("Number of characters : "); put(nbchar,1); new_line;
+    declare
+      cond : constant Array_of_Brackets(1..nbc) := Get_Conditions(b,k,nbc);
+      rows,cols : Standard_Natural_Vectors.Vector(1..k);
+      cnds : Standard_Natural_VecVecs.Link_to_VecVec;
+      name : constant string := Get_File_Name(c,nbchar);
+      file : file_type;
+    begin
+     -- put("The file name : "); put(name); new_line;
+     -- put_line("The brackets : ");
+     -- for i in cond'range loop
+     --   put(cond(i).all);
+     -- end loop;
+     -- new_line;
+      Create_Intersection_Poset(n,nbc,cond,not otp,rc);
+      cnds := new Standard_Natural_VecVecs.VecVec(1..1);
+      cnds(1) := new Standard_Natural_Vectors.Vector(1..k);
+      for i in 1..k loop
+        rows(i) := cond(1)(i);
+        cols(i) := cond(2)(i);
+        cnds(1)(i) := cond(3)(i);
+      end loop;
+      Communications_with_User.Create_Output_File(file,name);
+      Reporting_Moving_Flag_Continuation(file,n,k,rows,cols,cnds);
+    end;
+    nrc := Multprec_Natural_Numbers.Create(rc);
+   -- put("The formal root count : "); put(nrc,1); new_line;
+    Assign(double_float(nrc),c);
+    return 0;
+  end Job1;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
       when 0 => return Job0; -- resolve Schubert intersection conditions
+      when 1 => return Job1; -- Littlewood-Richardson homotopies
       when others => put_line("  Sorry.  Invalid operation in use_c2lrhom.");
                      return 1;
     end case;
