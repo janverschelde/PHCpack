@@ -9,9 +9,13 @@ with Multprec_Natural_Numbers;          use Multprec_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 with Brackets;                          use Brackets;
 -- with Brackets_io;                       use Brackets_io;
 with Drivers_for_Schubert_Induction;    use Drivers_for_Schubert_Induction;
+with Standard_PolySys_Container;
+with Standard_Solutions_Container;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 
 function use_c2lrhom ( job : integer32;
@@ -185,6 +189,8 @@ function use_c2lrhom ( job : integer32;
       cnds : Standard_Natural_VecVecs.Link_to_VecVec;
       name : constant string := Get_File_Name(c,nbchar);
       file : file_type;
+      sols : Solution_List;
+      fsys : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     begin
      -- put("The file name : "); put(name); new_line;
      -- put_line("The brackets : ");
@@ -201,7 +207,11 @@ function use_c2lrhom ( job : integer32;
         cnds(1)(i) := cond(3)(i);
       end loop;
       Communications_with_User.Create_Output_File(file,name);
-      Reporting_Moving_Flag_Continuation(file,n,k,rows,cols,cnds);
+      Reporting_Moving_Flag_Continuation
+        (file,false,n,k,rows,cols,cnds,sols,fsys);
+      Standard_PolySys_Container.Initialize(fsys.all);
+      Standard_Solutions_Container.Initialize(sols);
+      Close(file);
     end;
     nrc := Multprec_Natural_Numbers.Create(rc);
    -- put("The formal root count : "); put(nrc,1); new_line;
