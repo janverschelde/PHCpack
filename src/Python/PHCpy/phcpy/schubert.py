@@ -57,6 +57,7 @@ def littlewood_richardson_homotopies(ndim, kdim, brackets, \
     meet the flags at spaces of dimensions prescribed by the brackets.
     """
     from phcpy2c import py2c_schubert_littlewood_richardson_homotopies as lrhom
+    from solver import load_standard_solutions, load_standard_system
     nbc = len(brackets)
     cds = ''
     for bracket in brackets:
@@ -65,7 +66,9 @@ def littlewood_richardson_homotopies(ndim, kdim, brackets, \
     # print 'the condition string :', cds
     roco = lrhom(ndim, kdim, nbc, len(cds), cds, int(verbose), \
                  len(outputfilename), outputfilename)
-    return roco
+    fsys = load_standard_system()
+    sols = load_standard_solutions()
+    return (roco, fsys, sols)
 
 def random_complex_matrix(nbrows, nbcols):
     """
@@ -276,7 +279,19 @@ def osculating_input(mdim, pdim, qdeg, start, startsols):
         print sol
     verify(target_system, target_solutions)
 
-def test():
+def test_lrhom():
+    """
+    Performs a test on the Littlewood-Richardson homotopies.
+    """
+    brk = [[2, 4, 6], [2, 4, 6], [2, 4, 6]]
+    (roco, fsys, sols) = littlewood_richardson_homotopies(6, 3, brk)
+    print 'the root count :', roco
+    print 'the solutions :'
+    for sol in sols:
+        print sol
+    verify(fsys, sols)
+
+def test_pieri():
     """
     Does a test on the Pieri homotopies.
     """
@@ -306,4 +321,5 @@ def test():
         osculating_input(mdim, pdim, qdeg, system, sols)
 
 if __name__ == "__main__":
-    test()
+    test_lrhom()
+    test_pieri()
