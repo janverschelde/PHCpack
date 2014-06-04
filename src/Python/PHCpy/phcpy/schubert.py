@@ -42,10 +42,29 @@ def resolve_schubert_conditions(ndim, kdim, brackets, verbose=True):
         for num in bracket:
             cds = cds + ' ' + str(num)
     # print 'the condition string :', cds
-    if verbose:
-        roco = resolve(ndim, kdim, nbc, len(cds), cds, 1)
-    else:
-        roco = resolve(ndim, kdim, nbc, len(cds), cds, 0)
+    roco = resolve(ndim, kdim, nbc, len(cds), cds, int(verbose))
+    return roco
+
+def littlewood_richardson_homotopies(ndim, kdim, brackets, \
+    verbose=True, outputfilename='/tmp/output'):
+    """
+    In n-dimensional space we consider k-dimensional planes,
+    subject to intersection conditions represented by brackets.
+    The brackets is a list of brackets.  A bracket is a list
+    of as many natural numbers (in the range 1..ndim) as kdim.
+    On return is the formal root count, sharp for general flags.
+    The Littlewood-Richardson homotopies compute k-planes that
+    meet the flags at spaces of dimensions prescribed by the brackets.
+    """
+    from phcpy2c import py2c_schubert_littlewood_richardson_homotopies as lrhom
+    nbc = len(brackets)
+    cds = ''
+    for bracket in brackets:
+        for num in bracket:
+            cds = cds + ' ' + str(num)
+    # print 'the condition string :', cds
+    roco = lrhom(ndim, kdim, nbc, len(cds), cds, int(verbose), \
+                 len(outputfilename), outputfilename)
     return roco
 
 def random_complex_matrix(nbrows, nbcols):
