@@ -1,3 +1,8 @@
+Wed 4 Jun 2014 : change in phcpy2c.c for a basic interface in phcpy2c to the
+  Littlewood-Richardson homotopies.
+
+Tue 3 Jun 2014 : new function in phcpy2c for LR homotopies.
+
 Mon 2 Jun 2014 : updates in schubert.h, schubert.c and lib_lrhom.c.
 
 Sun 1 Jun 2014 : function in schubert for Littlewood-Richardson homotopies.

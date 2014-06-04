@@ -7,9 +7,12 @@
 #include "solcon.h"
 #include "product.h"
 #include "celcon.h"
+#include "witset.h"
 #include "mapcon.h"
 #include "next_track.h"
 #include "structmember.h"
+
+extern void adainit ( void );
 
 int g_ada_initialized = 0;
 
@@ -2783,6 +2786,47 @@ static PyObject *py2c_schubert_resolve_conditions
    return Py_BuildValue("i",r);
 }
 
+static PyObject *py2c_schubert_littlewood_richardson_homotopies
+ ( PyObject *self, PyObject *args )
+{
+   int n,k,nbc,nc,fail,r,vrb,szn;
+   char *cond;
+   char *name;
+
+   initialize();
+   if(!PyArg_ParseTuple
+         (args,"iiiisiis",&n,&k,&nbc,&nc,&cond,&vrb,&szn,&name)) return NULL;
+/*
+   printf("name of the output file : %s\n", name);
+   printf("the number of characters : %d\n", nc);
+   printf("the conditions : %s\n", cond);
+   printf("the conditions parsed : ");
+*/
+   {
+      int cds[k*nbc];
+      int pos = 0;
+      int idx = 0;
+      while((idx < k*nbc) && (pos < nc))
+      {
+         while(cond[pos] == ' ' && pos < nc) pos++;
+         if(pos > nc) break;
+         cds[idx] = 0;
+         while(cond[pos] != ' ')
+         {
+            if(cond[pos] == '\0') break;
+            cds[idx] = cds[idx]*10 + (cond[pos] - '0');
+            pos = pos + 1;
+            if(pos >= nc) break;
+         }
+         /* printf(" %d", cds[idx]); */
+         idx = idx + 1;
+      }
+      double fg[2*(nbc-2)*n*n];
+      fail = Littlewood_Richardson_homotopies(n,k,nbc,cds,vrb,szn,name,&r,fg);
+   }
+   return Py_BuildValue("i",r);
+}
+
 static PyObject *py2c_schubert_localization_poset
  ( PyObject *self, PyObject *args )
 {
@@ -3748,6 +3792,9 @@ static PyMethodDef phcpy2c_methods[] =
     METH_VARARGS, "the combinatorial Pieri root count"},
    {"py2c_schubert_resolve_conditions", py2c_schubert_resolve_conditions,
     METH_VARARGS, "resolve general Schubert intersection conditions"},
+   {"py2c_schubert_littlewood_richardson_homotopies",
+     py2c_schubert_littlewood_richardson_homotopies,
+    METH_VARARGS, "Littlewood-Richardson homotopies for Schubert problems"},
    {"py2c_schubert_localization_poset", py2c_schubert_localization_poset,
     METH_VARARGS, "localization poset for the Pieri root count"},
    {"py2c_schubert_pieri_homotopies", py2c_schubert_pieri_homotopies,

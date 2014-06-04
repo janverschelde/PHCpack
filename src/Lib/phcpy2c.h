@@ -419,6 +419,8 @@ static PyObject *py2c_schubert_pieri_count
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_schubert_resolve_conditions
  ( PyObject *self, PyObject *args )
+static PyObject *py2c_schubert_littlewood_richardson_homotopies
+ ( PyObject *self, PyObject *args )
 static PyObject *py2c_schubert_localization_poset
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_schubert_pieri_homotopies
