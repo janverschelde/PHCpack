@@ -274,7 +274,7 @@ package body Drivers_for_Schubert_Induction is
                  q,rows,cols : in Standard_Natural_Vectors.Vector;
                  cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                  vfs : in Standard_Complex_VecMats.VecMat;
-                 sols : in Solution_List ) is
+                 sols : in Solution_List; fsys : out Link_to_Poly_Sys ) is
 
     f : Link_to_Poly_Sys;
 
@@ -303,6 +303,7 @@ package body Drivers_for_Schubert_Induction is
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     end if;
+    fsys := f;
   end Write_Results;
 
   function Random_Flags
@@ -338,9 +339,10 @@ package body Drivers_for_Schubert_Induction is
   end Reporting_Moving_Flag_Continuation;
 
   procedure Reporting_Moving_Flag_Continuation
-              ( file : in file_type; n,k : in integer32;
+              ( file : in file_type; tune : in boolean; n,k : in integer32;
                 rows,cols : in Standard_Natural_Vectors.Vector;
-                cnds : in Standard_Natural_VecVecs.Link_to_VecVec ) is
+                cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
+                sols : out Solution_List; fsys : out Link_to_Poly_Sys ) is
 
     ip : constant Standard_Natural_Vectors.Vector(1..n)
        := Identity_Permutation(natural32(n));
@@ -351,10 +353,11 @@ package body Drivers_for_Schubert_Induction is
     ps : Poset;
     report : boolean;
     timer : Timing_Widget;
-    sols : Solution_List;
 
   begin
-    Moving_Flag_Continuation.Set_Parameters(file,report);
+    if tune
+     then Moving_Flag_Continuation.Set_Parameters(file,report);
+    end if;
     ps := Create(n,rows,cols);
     declare
       vfs,tvf : Standard_Complex_VecMats.VecMat(cnds'range);
@@ -366,8 +369,20 @@ package body Drivers_for_Schubert_Induction is
       tstop(timer);
       new_line(file);
       print_times(file,timer,"tracking all paths");
-      Write_Results(file,n,k,ip,rows,cols,cnds,tvf,sols);
+      Write_Results(file,n,k,ip,rows,cols,cnds,tvf,sols,fsys);
     end;
+  end Reporting_Moving_Flag_Continuation;
+
+  procedure Reporting_Moving_Flag_Continuation
+              ( file : in file_type; n,k : in integer32;
+                rows,cols : in Standard_Natural_Vectors.Vector;
+                cnds : in Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+    sols : Solution_List;
+    fsys : Link_to_Poly_Sys;
+
+  begin
+    Reporting_Moving_Flag_Continuation(file,true,n,k,rows,cols,cnds,sols,fsys);
   end Reporting_Moving_Flag_Continuation;
 
   procedure Run_Moving_Flag_Continuation ( n,k : in integer32 ) is

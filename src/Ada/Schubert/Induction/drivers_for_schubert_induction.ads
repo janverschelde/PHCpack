@@ -87,7 +87,7 @@ package Drivers_for_Schubert_Induction is
                 q,rows,cols : in Standard_Natural_Vectors.Vector;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 vfs : in Standard_Complex_VecMats.VecMat;
-                sols : in Solution_List );
+                sols : in Solution_List; fsys : out Link_to_Poly_Sys );
 
   -- DESCRIPTION :
   --   Writes the polynomial system and the solutions to file.
@@ -102,6 +102,9 @@ package Drivers_for_Schubert_Induction is
   --   cnds     conditions kept fixed during flag continuation;
   --   vfs      fixed flags, vfs'range = cnds'range;
   --   sols     solution k-planes.
+
+  -- ON RETURN :
+  --   fsys     the polynomial system representing the conditions.
 
   function Random_Flags
              ( n,m : integer32 ) return Standard_Complex_VecMats.VecMat;
@@ -150,6 +153,31 @@ package Drivers_for_Schubert_Induction is
   --   rows     row positions for white checkers
   --   cols     columns of white checkers of resolved condition;
   --   cnds     conditions kept fixed during flag continuation.
+
+  procedure Reporting_Moving_Flag_Continuation
+              ( file : in file_type; tune : in boolean; n,k : in integer32;
+                rows,cols : in Standard_Natural_Vectors.Vector;
+                cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
+                sols : out Solution_list; fsys : out Link_to_Poly_Sys );
+
+  -- DESCRIPTION :
+  --   Runs the Littlewood-Richardson homotopies to compute k-planes
+  --   meeting generic flags in n-space along a specific attitude.
+  --   All output is written to a solution file.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   tune     flag for interactive tuning of the parameters if true,
+  --            if false, then tuning is not done;
+  --   n        ambient dimension;
+  --   k        dimension of the solution planes;
+  --   rows     row positions for white checkers
+  --   cols     columns of white checkers of resolved condition;
+  --   cnds     conditions kept fixed during flag continuation.
+
+  -- ON RETURN :
+  --   sols     the solution planes;
+  --   fsys     polynomial system that represents the conditions.
 
   procedure Set_Symbol_Table
               ( n,k : in integer32;
