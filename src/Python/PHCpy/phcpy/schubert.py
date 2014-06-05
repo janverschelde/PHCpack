@@ -33,7 +33,9 @@ def resolve_schubert_conditions(ndim, kdim, brackets, verbose=True):
     subject to intersection conditions represented by brackets.
     The brackets is a list of brackets.  A bracket is a list
     of as many natural numbers (in the range 1..ndim) as kdim.
-    On return is the formal root count, sharp for general flags.
+    On return is the formal root count, sharp for general flags,
+    and the coordinates of the flags, stored row wise in a list
+    of real and imaginary parts.
     """
     from phcpy2c import py2c_schubert_resolve_conditions as resolve
     nbc = len(brackets)
@@ -64,11 +66,15 @@ def littlewood_richardson_homotopies(ndim, kdim, brackets, \
         for num in bracket:
             cds = cds + ' ' + str(num)
     # print 'the condition string :', cds
-    roco = lrhom(ndim, kdim, nbc, len(cds), cds, int(verbose), \
-                 len(outputfilename), outputfilename)
+    (roco, sflags) = lrhom(ndim, kdim, nbc, len(cds), cds, int(verbose), \
+        len(outputfilename), outputfilename)
+    rflags = eval(sflags)
+    flgs = []
+    for k in range(len(rflags)/2):
+        flgs.append(complex(rflags[2*k],rflags[2*k+1]))
     fsys = load_standard_system()
     sols = load_standard_solutions()
-    return (roco, fsys, sols)
+    return (roco, flgs, fsys, sols)
 
 def random_complex_matrix(nbrows, nbcols):
     """
@@ -284,8 +290,9 @@ def test_lrhom():
     Performs a test on the Littlewood-Richardson homotopies.
     """
     brk = [[2, 4, 6], [2, 4, 6], [2, 4, 6]]
-    (roco, fsys, sols) = littlewood_richardson_homotopies(6, 3, brk)
+    (roco, flags, fsys, sols) = littlewood_richardson_homotopies(6, 3, brk)
     print 'the root count :', roco
+    print 'the flags :', flags
     print 'the solutions :'
     for sol in sols:
         print sol

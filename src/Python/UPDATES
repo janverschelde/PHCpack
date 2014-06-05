@@ -1,0 +1,188 @@
+Thu 5 Jun 2014 : schubert.py now also shows the coordinates of the flags.
+
+Wed 4 Jun 2014 : added littlewood_richardson_homotopies to schubert.py,
+  and a simple test function test_lrhom.
+
+Fri 23 May 2014 : added resolve_schubert_conditions to schubert.py.
+
+Thu 27 Mar 2014 : fixed_gamma option added to trackers.py.
+
+Thu 6 Mar 2014 : added multitasking to trackers.py, the test script is in
+  Tests/testpoco.py.
+
+Mon 23 Dec 2013 : renamed phcsols, phcsets, phcmaps into solutions, sets,
+  and maps respectively, changing schubert.py.  Also updated __init__.py,
+  the documentation in doc/source and conf.py (for version 0.1.7).
+  Updated PHCpy/setup.py.  Added nbodyeqs to families.py.
+
+Thu 19 Dec 2013 : updated documentation and schubert.py.
+
+Wed 18 Dec 2013 : documentation day!  The extra module trackers.py created
+  severe inconsistencies in the index.rst in the PHCpy/doc/source directory.
+  Modified solver.py and trackers.py for inserting _standard_ into the
+  load and store operations for systems and solutions.
+
+Tue 17 Dec 2013 : added three functions to solver.py to compute m-homogeneous
+  Bezout numbers and construct m-homogeneous start systems.
+  Separate module trackers.py (with code taken from solver.py).
+  Updated setup.py for the trackers.py and the version number: 0.1.6.
+  Also modified schubert.py and __init__.py.
+  Added the chandra function to the families.py, modified the documentation.
+
+Fri 6 Dec 2013 : changed almost all .py files so that localized run works,
+  removing the "import phcpy" and "from phcpy import" constructions.
+
+Wed 4 Dec 2013 : the auto tuning of the continuation parameters for the
+  multiprecision tracker needs the number of decimal places.
+  Added next() for multiprecision to solver.py.  Added to families.py
+  the function Pieri_problem() to generate Pieri intersection problems,
+  after extending schubert.py with the function random_complex_matrices.
+
+Tue 3 Dec 2013 : added first version of multiprecision_track to solver.py.
+
+Thu 28 Nov 2013 : extended solver.py with multiprecision operations on
+  systems, solutions, and a newton_step in arbitrary precision.
+
+Wed 25 Sep 2013 : fixed a bug in phcsols.py and updated documentation
+  string in families.py.  Documented generators in the index.rst and
+  adjusted conf.py in the Sphinx documentation for version 0.1.4.
+
+Tue 24 Sep 2013 : added routines to phcpy.solver for path trackers with
+  a generator, tested by test_next_track(), __init__.py ready for 0.1.4.
+
+Wed 18 Sep 2013 : moved all test scripts into the directory Tests.
+  Touched phcmaps.py for chasing a bug.
+
+Tue 17 Sep 2013 : added references to families.py.  Added puretopdim as
+  option to the solver in phcmaps.py; upgraded version number to 0.1.3
+  in setup.py and __init__.py.
+
+Thu 5 Sep 2013 : improved phcmaps.py with pylint and functions to return
+  string representations of monomial maps.  Updated the index.rst in doc,
+  ready for release 0.1.2, scheduled for tomorrow...
+
+Wed 4 Sep 2013 : more adjustments in phcmaps.py, added two lines of
+  documentation in __init__.py; added adjacent minors to families.py.
+
+Tue 3 Sep 2013 : new module phcmaps.py, __init__.py has version 0.1.2.
+
+Fri 30 Aug 2013 : updated schubert.py, phcsets.py, phcwulf.py, and
+  solver.py so pylint gives almost no warnings.
+  The rating of pylint *py has now increased to 9.73/10.
+
+Thu 29 Aug 2013 : updated solver.py and __init__.py to get a global rating
+  of 9.14/10.  Also updated phcsets.py.
+
+Wed 28 Aug 2013 : modified schubert.py to raise the score to 8.41/10
+  and improved phcsets.py and phcwulf.py as well.
+
+Tue 27 Aug 2013 : modified solver.py so the code has pylint score of 8.77/10
+  and examples.py now has an almost perfect pylint score of 9.93.
+  Modified __init__.py, solver.py, phcwulf.py and schubert.py so that
+  pylint *py gives a global score of 7.52/10.
+
+Mon 26 Aug 2013 : to improve the pylint score for phcsols.py, lengthened
+  the names of some of the variables, e.g.: "sol" instead of "s".
+  Modified solver.py so its pylint score is now positive.
+
+Sat 24 Aug 2013 : running pylint on setup.py warns for docstring and I put
+  the comments previously preceded by # into a docstring.
+  On families.py raised the pylint score to 5+ from a negative score.
+  Also edited phcsols.py, schubert.py, and phcsets.py.
+
+Wed 21 Aug 2013 : added __version__ to __init__.py of phcpy
+
+Thu 8 Aug 2013 : made directory PHCpy to prepare for packaged distribution.
+
+Wed 20 Feb 2013 : added witness_set_of_hypersurface function to phcsets.py.
+  Added function noon to families.py.
+
+Tue 19 Feb 2013 : new families.py exports the function cyclic.
+
+Fri 15 Feb 2013 : added drop functions to phcsets.py and test_cascade.
+
+Thu 14 Feb 2013 : added filters to phcsols.py and cascade_step to phcsets.py,
+  made a change in phcpy.py.
+
+Wed 13 Feb 2013 : added a session on the use of embed on twisted cubic.
+
+Tue 12 Feb 2013 : extended the track functions in phcpy.py with the
+  optional gamma constant.
+
+Sun 10 Feb 2013 : added a deflate() and test_deflate() to phcpy.py.
+  Function total_degree_start_system() added to phcpy.py.
+  Used this function to solve the "mickey" system in the documentation.
+  Added make_solution function to phcsols.py.
+
+Thu 7 Feb 2013 : added total degree to phcpy.py and added one interactive
+  session illustrating the root counts to the documentation.
+  Fixed some typos in examples.py and updated the documentation.
+  Added tune_track_parameters function to phcpy.py.
+
+Wed 6 Feb 2013 : extended phcpy.py with double double and quad double track.
+
+Fri 1 Feb 2013 : added {store,load}_{dobl,quad}dobl_solutions,
+  store_{dobl,quad}dobl_system to phcpy.py, for a newton_step
+  with double double and quad double arithmetic.
+
+Sun 27 Jan 2013 : adding clears at the start of test_polyhedral_homotopy
+  in phcpy.py allows for successful consecutive runs.
+
+Tue 15 Jan 2013 : added linear_product_root_count function to phcpy.py,
+  and a random_linear_product_system.
+
+Fri 28 Dec 2012 : phcsets.py has the same functionality as lib_factor.c.
+
+Thu 27 Dec 2012 : added monodromy_breakup to phcsets.py.
+
+Wed 19 Dec 2012 : added Newton_step to phcpy.py and changed schubert.py.
+  Wrapping of celcon led to random_coefficient_system in phcpy.py.
+
+Tue 18 Dec 2012 : updates in schubert.py
+
+Thu 13 Dec 2012 : the run_pieri_homotopies gets system and solutions
+  from the containers which can then be tested with phcsols.
+
+Wed 12 Dec 2012 : random input data is generated by schubert.py
+  and passed to the run_Pieri_homotopies method.
+
+Tue 11 Dec 2012 : new schubert.py exports Pieri root count.
+
+Sun 9 Dec 2012 : new phcsets.py to manipulate algebraic sets.
+
+Wed 5 Dec 2012 : extended phcpy.py with test_track, improved phcsols.py.
+
+Tue 4 Dec 2012 : updates in phcpy.py and examples.py.
+  Added a silent flag to phcpy.solve and stable flag to phcpy.mixed_volume.
+
+Sun 2 Dec 2012 : added banners to the tests in examples.py.
+
+Sat 1 Dec 2012 : added "binomials", "d1", "game4two", katsura6", "noon3",
+  "rps10", and "tangents" to examples.py, so now there are 10 examples.
+
+Fri 30 Nov 2012 : added "stewgou40" to examples.py and then discovered
+  that this example no longer works!
+
+Thu 29 Nov 2012 : added "test" function to phcpy.p and fixed phcwulf.py
+  on dezon: closing the server before all handler threads are finished
+  is a very bad thing to do!  Replaced "remove_padding" by "strip".
+  Added examples.py and the doc directory to generate documentation
+  with sphinx.
+
+Wed 28 Nov 2012 : updated makefile_unix so the python interface works
+  on Redhat 6.3 with python2.6 and GNAT GPL 2012.  New module phcsols.py
+  to convert solutions in PHCpack string format to dictionaries.
+
+Tue 6 Sep 2011 : updated makefile_mac so the python interface works
+  on MacOS X!
+
+Wed 30 Jul 2008 : added line to print number of solutions client sends
+  in phcwulf.py to track down a bug.
+
+Thu 5 Jun 2008 : random_trinomials() added to phcpy.py and used in
+  the server in phcwulf.py.  Extended phcwulf.py with multithreading.
+
+Tue 3 Jun 2008 : added a basic track function to phcpy.py.
+
+Mon 2 Jun 2008 : phcwulf.py export basic client/server routines to solve
+  many polynomial systems in a distributed manner.
