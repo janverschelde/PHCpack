@@ -7,8 +7,10 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Multprec_Natural_Numbers;          use Multprec_Natural_Numbers;
 -- with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
+with Standard_Complex_VecMats;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 with Brackets;                          use Brackets;
@@ -130,6 +132,38 @@ function use_c2lrhom ( job : integer32;
     return res;
   end Get_File_Name;
 
+  procedure Assign_Count_and_Flags
+              ( n : in integer32; cnt : in double_float;
+                f : in Standard_Complex_VecMats.VecMat;
+                c_d : in C_DblArrs.Pointer ) is
+
+  -- DESCRIPTION :
+  --   Assigns the real and imaginary parts of the n-dimensional flags 
+  --   in row wise fashion to the C pointer, starting at position 1,
+  --   because at position 0, the root count cnt will be placed.
+
+    m : constant integer32 := f'last;
+    size : constant integer32 := 2*m*n*n+1;
+    val : C_Double_Array(0..Interfaces.C.size_t(size-1))
+        := C_dblarrs.Value(c_d);
+    ind : Interfaces.C.size_t := 0;
+    cff : Complex_Number;
+
+  begin
+    val(ind) := Interfaces.C.double(cnt); ind := ind + 1;
+    for k in 1..m loop
+      for i in 1..n loop
+        for j in 1..n loop
+          cff := f(k)(i,j);
+          val(ind) := Interfaces.C.double(REAL_PART(cff)); ind := ind + 1;
+          val(ind) := Interfaces.C.double(IMAG_PART(cff)); ind := ind + 1;
+        end loop;
+      end loop;
+    end loop;
+    C_dblarrs.Copy_Array(val(0)'unchecked_access,c_d,
+                         Interfaces.C.ptrdiff_t(size));
+  end Assign_Count_and_Flags;
+
   function Job0 return integer32 is -- resolve Schubert intersection conditions
 
     n,k,nbc : integer32;
@@ -187,6 +221,7 @@ function use_c2lrhom ( job : integer32;
       cond : constant Array_of_Brackets(1..nbc) := Get_Conditions(b,k,nbc);
       rows,cols : Standard_Natural_Vectors.Vector(1..k);
       cnds : Standard_Natural_VecVecs.Link_to_VecVec;
+      flgs : Standard_Complex_VecMats.VecMat(1..nbc-2);
       name : constant string := Get_File_Name(c,nbchar);
       file : file_type;
       sols : Solution_List;
@@ -208,14 +243,14 @@ function use_c2lrhom ( job : integer32;
       end loop;
       Communications_with_User.Create_Output_File(file,name);
       Reporting_Moving_Flag_Continuation
-        (file,false,n,k,rows,cols,cnds,sols,fsys);
+        (file,false,n,k,rows,cols,cnds,sols,fsys,flgs);
       Standard_PolySys_Container.Initialize(fsys.all);
       Standard_Solutions_Container.Initialize(sols);
       Close(file);
+      nrc := Multprec_Natural_Numbers.Create(rc);
+     -- put("The formal root count : "); put(nrc,1); new_line;
+      Assign_Count_and_Flags(n,double_float(nrc),flgs,c);
     end;
-    nrc := Multprec_Natural_Numbers.Create(rc);
-   -- put("The formal root count : "); put(nrc,1); new_line;
-    Assign(double_float(nrc),c);
     return 0;
   end Job1;
 

@@ -43,7 +43,8 @@ int Littlewood_Richardson_homotopies
    int nbchar, char *filename, int *r, double *flags )
 {
    int fail,i;
-   double rc[nbchar]; /* filename on input, root count on return */
+   int size = 2*(c-2)*n*n+1;
+   double rc[size]; /* filename on input, count & flags on return */
    int dim[5];
 
    dim[0] = n;
@@ -57,6 +58,8 @@ int Littlewood_Richardson_homotopies
    fail = _ada_use_c2phc(229,dim,brackets,rc);
 
    (*r) = (int) rc[0];
+
+   for(i=1; i<size; i++) flags[i-1] = rc[i];
 
    return fail;
 }

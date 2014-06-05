@@ -8,6 +8,22 @@
 extern void adainit();
 extern void adafinal();
 
+int call_Littlewood_Richardson_homotopies
+ ( int n, int k, int c, int *brackets, int verbose, int *r );
+/*
+ * DESCRIPTION :
+ *   Tests the call to the Littlewood-Richardson homotopies.
+ *
+ * ON ENTRY :
+ *   n         dimension of the ambient space;
+ *   k         dimension of the solution planes;
+ *   c         number of intersection conditions;
+ *   brackets  contains c*k integer numbers with the intersection conditions;
+ *   verbose   1 if intermediate output is needed, 0 to be silent.
+ *
+ * ON RETURN :
+ *   r         the formal root count.  */
+
 int main ( int argc, char *argv[] )
 {
    int fail,n,k,c,i,j,r;
@@ -45,25 +61,40 @@ int main ( int argc, char *argv[] )
    if(ans != 'y')
       fail = resolve_Schubert_conditions(n,k,c,brackets,verbose,&r);
    else
-   {
-      double flags[2*(c-2)*n*n]; /* real + imaginary parts stored rowwise */
-      char filename[80];
-      int nbname;
+      fail = call_Littlewood_Richardson_homotopies(n,k,c,brackets,verbose,&r);
 
-      scanf("%c",&ans); /* skip newline symbol */
-      printf("Give the name of the output file : ");
-      scanf("%s",filename);
-      scanf("%c",&ans); /* skip newline symbol */
-
-      nbname = strlen(filename);
-      printf("Number of characters in %s is %d\n",filename,nbname);
-
-      fail = Littlewood_Richardson_homotopies
-               (n,k,c,brackets,verbose,nbname,filename,&r,flags);
-   }
    printf("The formal root count : %d\n",r);
 
    adafinal();
 
    return 0;
+}
+
+int call_Littlewood_Richardson_homotopies
+ ( int n, int k, int c, int *brackets, int verbose, int *r )
+{
+   const int size = 2*(c-2)*n*n;
+   double flags[size]; /* real + imaginary parts stored rowwise */
+   char ans,filename[80];
+   int i,fail,nbname;
+
+   scanf("%c",&ans); /* skip newline symbol */
+   printf("Give the name of the output file : ");
+   scanf("%s",filename);
+   scanf("%c",&ans); /* skip newline symbol */
+
+   nbname = strlen(filename);
+   printf("Number of characters in %s is %d\n",filename,nbname);
+
+   fail = Littlewood_Richardson_homotopies
+            (n,k,c,brackets,verbose,nbname,filename,r,flags);
+
+   printf("\nThe coefficients of the fixed flag :");
+   for(i=0; i<size; i++)
+   {
+      if(i % (2*n) == 0) printf("\n");
+      printf(" %+.1e", flags[i]);
+   }
+   printf("\n");
+   return fail;
 }

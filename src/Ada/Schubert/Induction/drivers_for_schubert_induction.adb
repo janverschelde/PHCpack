@@ -342,7 +342,8 @@ package body Drivers_for_Schubert_Induction is
               ( file : in file_type; tune : in boolean; n,k : in integer32;
                 rows,cols : in Standard_Natural_Vectors.Vector;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
-                sols : out Solution_List; fsys : out Link_to_Poly_Sys ) is
+                sols : out Solution_List; fsys : out Link_to_Poly_Sys;
+                flags : out Standard_Complex_VecMats.VecMat ) is
 
     ip : constant Standard_Natural_Vectors.Vector(1..n)
        := Identity_Permutation(natural32(n));
@@ -360,16 +361,16 @@ package body Drivers_for_Schubert_Induction is
     end if;
     ps := Create(n,rows,cols);
     declare
-      vfs,tvf : Standard_Complex_VecMats.VecMat(cnds'range);
+      vfs : Standard_Complex_VecMats.VecMat(cnds'range);
     begin
       vfs := Random_Flags(n,cnds'last);
       tstart(timer);
       Moving_Flag_Continuation.Track_All_Paths_in_Poset
-        (file,n,k,ps,cnds.all,vfs,mf,tvf,sols);
+        (file,n,k,ps,cnds.all,vfs,mf,flags,sols);
       tstop(timer);
       new_line(file);
       print_times(file,timer,"tracking all paths");
-      Write_Results(file,n,k,ip,rows,cols,cnds,tvf,sols,fsys);
+      Write_Results(file,n,k,ip,rows,cols,cnds,flags,sols,fsys);
     end;
   end Reporting_Moving_Flag_Continuation;
 
@@ -380,9 +381,11 @@ package body Drivers_for_Schubert_Induction is
 
     sols : Solution_List;
     fsys : Link_to_Poly_Sys;
+    flgs : Standard_Complex_VecMats.VecMat(cnds'range);
 
   begin
-    Reporting_Moving_Flag_Continuation(file,true,n,k,rows,cols,cnds,sols,fsys);
+    Reporting_Moving_Flag_Continuation
+      (file,true,n,k,rows,cols,cnds,sols,fsys,flgs);
   end Reporting_Moving_Flag_Continuation;
 
   procedure Run_Moving_Flag_Continuation ( n,k : in integer32 ) is
@@ -410,7 +413,6 @@ package body Drivers_for_Schubert_Induction is
     skip_line; -- skip enter symbol
     Reporting_Moving_Flag_Continuation(n,k,rows,cols,cnds);
   end Run_Moving_Flag_Continuation;
-
 
   procedure Set_Symbol_Table
               ( n,k : in integer32;

@@ -1,3 +1,6 @@
+Thu 5 Jun 2014 : changes in schubert.c and lib_lrhom.c for the passing of
+  the coordinates of the flags.
+
 Wed 4 Jun 2014 : change in phcpy2c.c for a basic interface in phcpy2c to the
   Littlewood-Richardson homotopies.
 

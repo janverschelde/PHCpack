@@ -158,7 +158,8 @@ package Drivers_for_Schubert_Induction is
               ( file : in file_type; tune : in boolean; n,k : in integer32;
                 rows,cols : in Standard_Natural_Vectors.Vector;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
-                sols : out Solution_list; fsys : out Link_to_Poly_Sys );
+                sols : out Solution_list; fsys : out Link_to_Poly_Sys;
+                flags : out Standard_Complex_VecMats.VecMat );
 
   -- DESCRIPTION :
   --   Runs the Littlewood-Richardson homotopies to compute k-planes
@@ -177,7 +178,8 @@ package Drivers_for_Schubert_Induction is
 
   -- ON RETURN :
   --   sols     the solution planes;
-  --   fsys     polynomial system that represents the conditions.
+  --   fsys     polynomial system that represents the conditions;
+  --   flags    the coordinates for the fixed random flags.
 
   procedure Set_Symbol_Table
               ( n,k : in integer32;
