@@ -2789,7 +2789,7 @@ static PyObject *py2c_schubert_resolve_conditions
 static PyObject *py2c_schubert_littlewood_richardson_homotopies
  ( PyObject *self, PyObject *args )
 {
-   int n,k,nbc,nc,fail,r,vrb,szn;
+   int i,n,k,nbc,nc,fail,r,vrb,szn;
    char *cond;
    char *name;
 
@@ -2821,10 +2821,23 @@ static PyObject *py2c_schubert_littlewood_richardson_homotopies
          /* printf(" %d", cds[idx]); */
          idx = idx + 1;
       }
-      double fg[2*(nbc-2)*n*n];
+      const int fgsize = 2*(nbc-2)*n*n;
+      double fg[fgsize];
+      char stfg[fgsize*24+2];
       fail = Littlewood_Richardson_homotopies(n,k,nbc,cds,vrb,szn,name,&r,fg);
+      stfg[0] = '[';
+      idx = 1;
+      for(i=0; i<fgsize; i++)
+      {
+         sprintf(&stfg[idx],"%+.16e",fg[i]); idx = idx + 23;
+         stfg[idx] = ','; idx = idx + 1;
+      }
+      stfg[idx-1] = ']';
+      stfg[idx] = '\0';
+      /* printf("The string with flag coefficients :\n%s\n", stfg); */
+
+      return Py_BuildValue("(i,s)",r,stfg);
    }
-   return Py_BuildValue("i",r);
 }
 
 static PyObject *py2c_schubert_localization_poset
