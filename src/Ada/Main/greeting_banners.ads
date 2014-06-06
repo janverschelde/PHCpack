@@ -4,7 +4,7 @@ package Greeting_Banners is
 --   Defines banners to greet the user of phc.
 
   welcome : constant string :=
-    "Welcome to PHC (Polynomial Homotopy Continuation) v2.3.86 20 Dec 2013";
+    "Welcome to PHC (Polynomial Homotopy Continuation) v2.3.88  6 Jun 2014";
 
   compban : constant string :=
     "A numerical irreducible decomposition for the solution components.";

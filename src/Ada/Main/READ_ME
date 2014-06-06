@@ -1,4 +1,4 @@
-Main interactive drivers and dispatcher for the software package PHCv2.3.86
+Main interactive drivers and dispatcher for the software package PHCv2.3.87
 
 New in release 2.1 in this directory is the conversion between symbolic 
 and tableau formats, plus the interface of the solutions in Maple format.
