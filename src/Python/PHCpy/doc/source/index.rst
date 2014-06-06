@@ -1148,10 +1148,12 @@ Improvements using pylint led to version 0.1.1
 and the module maps was added in version 0.1.2.
 Version 0.1.4 added path trackers with a generator
 so all solutions along a path are returned to the user.
+Multicore path tracking was added in version 0.1.7.
 
 The paper **Modernizing PHCpack through phcpy**
-written for the EuroSciPy 2013 proceedings describes
-the design of phcpy.
+written for the EuroSciPy 2013 proceedings 
+and available at <http://arxiv.org/abs/1310.0056>
+describes the design of phcpy.
 
 References
 ==========
@@ -1192,8 +1194,10 @@ References
 
 7. J. Verschelde:
    **Modernizing PHCpack through phcpy.**
-   Preprint arXiv:1310.0056v1 [cs.MS] on a poster presented at
-   EuroSciPy 2013, 21-24 August, Brussels, Belgium.
+   In Proceedings of the 6th European Conference on Python in Science
+   (EuroSciPy 2013), edited by Pierre de Buyl and Nelle Varoquaux,
+   pages 71-76, 2014, available at
+   <http://arxiv.org/abs/1310.0056>.
 
 Acknowledgments
 ===============
