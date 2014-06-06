@@ -53,6 +53,10 @@ Version 0.0.1 originated at lecture 40 of MCS 507 in the Fall of 2012,
 as an illustration of Sphinx.  In Spring of 2013, version 0.5.0 was
 presented at a graduate computational algebraic geometry seminar.
 Version 0.1.0 was prepared for presentation at EuroSciPy 2013 (August 2013).
+Improvements using pylint led to version 0.1.1
+and the module maps was added in version 0.1.2.
+Version 0.1.4 added path trackers with a generator
+so all solutions along a path are returned to the user.
 
 References
 ==========
@@ -93,8 +97,9 @@ References
 
 7. J. Verschelde:
    **Modernizing PHCpack through phcpy.**
-   Preprint arXiv:1310.0056v1 [cs.MS] on a poster presented at
-   EuroSciPy 2013, 21-24 August, Brussels, Belgium.
+   In Proceedings of the 6th European Conference on Python in Science
+   (EuroSciPy 2013), edited by Pierre de Buyl and Nelle Varoquaux,
+   pages 71-76, 2014.
 
 Acknowledgments
 ===============

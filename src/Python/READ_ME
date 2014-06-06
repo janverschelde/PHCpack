@@ -1,4 +1,4 @@
-phcpy 0.1.7 offers a simple Python interface to PHCv2.3.87
+phcpy 0.1.8 offers a simple Python interface to PHCv2.3.88
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -36,7 +36,8 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
-0.1.7 : 2013-03-28 : multicore path tracking
+0.1.8 : 2014-06-06 : schubert.py exports Littlewood-Richardson homotopies
+0.1.7 : 2014-03-28 : multicore path tracking
 0.1.6 : 2013-12-20 : m-homogenization, trackers in separate module
 0.1.5 : 2013-12-06 : arbitrary multiprecision Newton and path trackers
 0.1.4 : 2013-09-25 : path trackers with generators, bug fix
