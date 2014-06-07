@@ -170,42 +170,59 @@ package body Generic_Complex_Numbers is
   function "/" ( x : number; y : Complex_Number ) return Complex_Number is
 
     res : Complex_Number;
-    acc,avyim,avyre : Number;
+    acc,nrm : number;
 
   begin
-    if Equal(y.IM,zero) then
-      res.RE := x/y.RE;
-      res.IM := +zero;
-    elsif Equal(y.RE,zero) then
-      res.RE := +zero;
-      res.IM := x/y.IM; Min(res.IM);
-    else
-      avyim := AbsVal(y.IM); avyre := AbsVal(y.RE);
-      if avyim < avyre then
-        acc := y.IM/y.RE;
-        res.RE := x*acc; Mul(acc,y.IM); Add(acc,y.RE); Div(res.RE,acc);
-        res.IM := x/acc; Min(res.IM);
-        Clear(acc);
-      elsif avyim > avyre then
-        acc := y.RE/y.IM;
-        res.IM := x*acc; Min(res.IM); Mul(acc,y.RE); Add(acc,y.IM);
-        res.RE := x/acc;
-        Clear(acc);
-      elsif Equal(y.IM,y.RE) then
-        acc := TWO*y.IM;
-        res.RE := x/acc;
-        res.IM := -res.RE;
-        Clear(acc);
-      else -- y.IM = -y.RE then
-        acc := TWO*y.IM;
-        res.RE := x/acc; Min(res.RE);
-        res.IM := x/acc; Min(res.IM);
-        Clear(acc);
-      end if;
-      Clear(avyim); Clear(avyre);
-    end if;
+    nrm := y.RE*y.RE;
+    acc := y.IM*y.IM;
+    Add(nrm,acc);
+    Clear(acc);
+    acc := x/nrm;
+    res.RE := acc*y.RE;
+    res.IM := acc*y.IM;
+    Clear(nrm);
     return res;
   end "/";
+
+--  function "/" ( x : number; y : Complex_Number ) return Complex_Number is
+--
+--    res : Complex_Number;
+--    acc,avyim,avyre : Number;
+--
+--  begin
+--    if Equal(y.IM,zero) then
+--      res.RE := x/y.RE;
+--      res.IM := +zero;
+--    elsif Equal(y.RE,zero) then
+--      res.RE := +zero;
+--      res.IM := x/y.IM; Min(res.IM);
+--    else
+--      avyim := AbsVal(y.IM); avyre := AbsVal(y.RE);
+--      if avyim < avyre then
+--        acc := y.IM/y.RE;
+--        res.RE := x*acc; Mul(acc,y.IM); Add(acc,y.RE); Div(res.RE,acc);
+--        res.IM := x/acc; Min(res.IM);
+--        Clear(acc);
+--      elsif avyim > avyre then
+--        acc := y.RE/y.IM;
+--        res.IM := x*acc; Min(res.IM); Mul(acc,y.RE); Add(acc,y.IM);
+--        res.RE := x/acc;
+--        Clear(acc);
+--      elsif Equal(y.IM,y.RE) then
+--        acc := TWO*y.IM;
+--        res.RE := x/acc;
+--        res.IM := -res.RE;
+--        Clear(acc);
+--      else -- y.IM = -y.RE then
+--        acc := TWO*y.IM;
+--        res.RE := x/acc; Min(res.RE);
+--        res.IM := x/acc; Min(res.IM);
+--        Clear(acc);
+--      end if;
+--      Clear(avyim); Clear(avyre);
+--    end if;
+--    return res;
+--  end "/";
 
   function "+" ( x : Complex_Number ) return Complex_Number is
   begin
@@ -230,84 +247,125 @@ package body Generic_Complex_Numbers is
   function "*" ( x,y : Complex_Number ) return Complex_Number is
 
     res : Complex_Number;
-    acc,avyim,avyre : number;
+    acc : number;
 
   begin
-    if Equal(y.IM,zero) then
-      res.RE := x.RE*y.RE;
-      res.IM := x.IM*y.RE;
-    elsif Equal(y.RE,zero) then
-      res.RE := x.IM*y.IM; Min(res.RE); 
-      res.IM := x.RE*y.IM;
-    else
-      avyre := AbsVal(y.RE); avyim := AbsVal(y.IM);
-      if avyre < avyim then
-        acc := y.RE/y.IM;
-        res.RE := x.RE*acc; Sub(res.RE,x.IM); Mul(res.RE,y.IM);
-        res.IM := x.IM*acc; Add(res.IM,x.RE); Mul(res.IM,y.IM);
-        Clear(acc);
-      elsif avyre > avyim then
-        acc := y.IM/y.RE;
-        res.RE := x.IM*acc; Sub(res.RE,x.RE); Min(res.RE); Mul(res.RE,y.RE);
-        res.IM := x.RE*acc; Add(res.IM,x.IM); Mul(res.IM,y.RE);
-        Clear(acc);
-      elsif Equal(y.RE,y.IM) then
-        res.RE := x.RE - x.IM; Mul(res.RE,y.RE);
-        res.IM := x.IM + x.RE; Mul(res.IM,y.RE);
-      else -- y.RE = -y.IM then
-        res.RE := x.RE + x.IM; Mul(res.RE,y.RE);
-        res.IM := x.IM - x.RE; Mul(res.IM,y.RE); 
-      end if;
-      Clear(avyre); Clear(avyim);
-    end if;
+    acc := x.IM*y.IM;
+    res.RE := x.RE*y.RE;
+    Sub(res.RE,acc);
+    Clear(acc);
+    acc := x.IM*y.RE;
+    res.IM := x.RE*y.IM;
+    Add(res.IM,acc);
+    Clear(acc);
     return res;
   end "*";
+
+--  function "*" ( x,y : Complex_Number ) return Complex_Number is
+--
+--    res : Complex_Number;
+--    acc,avyim,avyre : number;
+--
+--  begin
+--    if Equal(y.IM,zero) then
+--      res.RE := x.RE*y.RE;
+--      res.IM := x.IM*y.RE;
+--    elsif Equal(y.RE,zero) then
+--      res.RE := x.IM*y.IM; Min(res.RE); 
+--      res.IM := x.RE*y.IM;
+--    else
+--      avyre := AbsVal(y.RE); avyim := AbsVal(y.IM);
+--      if avyre < avyim then
+--        acc := y.RE/y.IM;
+--        res.RE := x.RE*acc; Sub(res.RE,x.IM); Mul(res.RE,y.IM);
+--        res.IM := x.IM*acc; Add(res.IM,x.RE); Mul(res.IM,y.IM);
+--        Clear(acc);
+--      elsif avyre > avyim then
+--        acc := y.IM/y.RE;
+--        res.RE := x.IM*acc; Sub(res.RE,x.RE); Min(res.RE); Mul(res.RE,y.RE);
+--        res.IM := x.RE*acc; Add(res.IM,x.IM); Mul(res.IM,y.RE);
+--        Clear(acc);
+--      elsif Equal(y.RE,y.IM) then
+--        res.RE := x.RE - x.IM; Mul(res.RE,y.RE);
+--        res.IM := x.IM + x.RE; Mul(res.IM,y.RE);
+--      else -- y.RE = -y.IM then
+--        res.RE := x.RE + x.IM; Mul(res.RE,y.RE);
+--        res.IM := x.IM - x.RE; Mul(res.IM,y.RE); 
+--      end if;
+--      Clear(avyre); Clear(avyim);
+--    end if;
+--    return res;
+--  end "*";
 
   function "/"  ( x,y : Complex_Number ) return Complex_Number is
 
     res : Complex_Number;
-    acc,avyre,avyim : number;
+    acc,nrm : number;
 
   begin
-    if Equal(y.IM,zero) then
-      res.RE := x.RE/y.RE;
-      res.IM := x.IM/y.RE;
-    elsif Equal(y.RE,zero) then
-      res.RE := x.IM/y.IM;
-      res.IM := x.RE/y.IM; Min(res.IM);
-    else
-      avyre := AbsVal(y.RE); avyim := AbsVal(y.IM);
-      if avyre < avyim then
-        acc := y.RE/y.IM;
-        res.RE := x.RE*acc; Add(res.RE,x.IM);
-        res.IM := x.IM*acc; Sub(res.IM,x.RE);
-        Mul(acc,y.RE); Add(acc,y.IM);
-        Div(res.RE,acc);
-        Div(res.IM,acc);
-        Clear(acc);
-      elsif avyre > avyim then
-        acc := y.IM/y.RE;
-        res.RE := x.IM*acc; Add(res.RE,x.RE);
-        res.IM := x.RE*acc; Sub(res.IM,x.IM); Min(res.IM);
-        Mul(acc,y.IM); Add(acc,y.RE);
-        Div(res.RE,acc);
-        Div(res.IM,acc);
-        Clear(acc);
-      elsif Equal(y.RE,y.IM) then
-        acc := TWO*y.RE;
-        res.RE := x.RE + x.IM; Div(res.RE,acc);
-        res.IM := x.IM - x.RE; Div(res.IM,acc);
-        Clear(acc);
-      else -- y.RE = -y.IM then
-        acc := TWO*y.RE;
-        res.RE := x.RE - x.IM; Div(res.RE,acc);
-        res.IM := x.IM + x.RE; Div(res.IM,acc);
-        Clear(acc);
-      end if;
-      Clear(avyre); Clear(avyim);
-    end if;
+    nrm := y.RE*y.RE;
+    acc := y.IM*y.IM;
+    Add(nrm,acc);
+    Clear(acc);
+    res.RE := x.RE*y.RE;
+    acc := x.IM*y.IM;
+    Add(res.RE,acc);
+    Clear(acc);
+    res.IM := x.IM*y.RE;
+    acc := x.RE*y.IM;
+    Sub(res.IM,acc);
+    Clear(acc);
+    Div(res.RE,nrm);
+    Div(res.IM,nrm);
+    Clear(nrm);
     return res;
   end "/";
+
+--  function "/"  ( x,y : Complex_Number ) return Complex_Number is
+--
+--    res : Complex_Number;
+--    acc,avyre,avyim : number;
+--
+--  begin
+--    if Equal(y.IM,zero) then
+--      res.RE := x.RE/y.RE;
+--      res.IM := x.IM/y.RE;
+--    elsif Equal(y.RE,zero) then
+--      res.RE := x.IM/y.IM;
+--      res.IM := x.RE/y.IM; Min(res.IM);
+--    else
+--      avyre := AbsVal(y.RE); avyim := AbsVal(y.IM);
+--      if avyre < avyim then
+--        acc := y.RE/y.IM;
+--        res.RE := x.RE*acc; Add(res.RE,x.IM);
+--        res.IM := x.IM*acc; Sub(res.IM,x.RE);
+--        Mul(acc,y.RE); Add(acc,y.IM);
+--        Div(res.RE,acc);
+--        Div(res.IM,acc);
+--        Clear(acc);
+--      elsif avyre > avyim then
+--        acc := y.IM/y.RE;
+--        res.RE := x.IM*acc; Add(res.RE,x.RE);
+--        res.IM := x.RE*acc; Sub(res.IM,x.IM); Min(res.IM);
+--        Mul(acc,y.IM); Add(acc,y.RE);
+--        Div(res.RE,acc);
+--        Div(res.IM,acc);
+--        Clear(acc);
+--      elsif Equal(y.RE,y.IM) then
+--        acc := TWO*y.RE;
+--        res.RE := x.RE + x.IM; Div(res.RE,acc);
+--        res.IM := x.IM - x.RE; Div(res.IM,acc);
+--        Clear(acc);
+--      else -- y.RE = -y.IM then
+--        acc := TWO*y.RE;
+--        res.RE := x.RE - x.IM; Div(res.RE,acc);
+--        res.IM := x.IM + x.RE; Div(res.IM,acc);
+--        Clear(acc);
+--      end if;
+--      Clear(avyre); Clear(avyim);
+--    end if;
+--    return res;
+--  end "/";
 
   function "**" ( x : Complex_Number; m : integer ) return Complex_Number is
 
@@ -375,86 +433,129 @@ package body Generic_Complex_Numbers is
   procedure Mul ( x : in out Complex_Number; y : in Complex_Number ) is
 
     res : Complex_Number;
-    acc,avyim,avyre : number;
+    acc : number;
 
   begin
-    if Equal(y.IM,zero) then
-      Mul(x.RE,y.RE);
-      Mul(x.IM,y.RE);
-    elsif Equal(y.RE,zero) then
-      res.RE := x.IM*y.IM; Min(res.RE);
-      res.IM := x.RE*y.IM;
-      Clear(x); x := res;
-    else
-      avyre := AbsVal(y.RE); avyim := AbsVal(y.IM);
-      if avyre < avyim then
-        acc := y.RE/y.IM;
-        res.RE := x.RE*acc; Sub(res.RE,x.IM); Mul(res.RE,y.IM);
-        res.IM := x.IM*acc; Add(res.IM,x.RE); Mul(res.IM,y.IM);
-        Clear(acc);
-      elsif avyre > avyim then
-        acc := y.IM/y.RE;
-        res.RE := x.IM*acc; Sub(res.RE,x.RE); Min(res.RE); Mul(res.RE,y.RE);
-        res.IM := x.RE*acc; Add(res.IM,x.IM); Mul(res.IM,y.RE);
-        Clear(acc);
-      elsif Equal(y.RE,y.IM) then
-        res.RE := x.RE - x.IM; Mul(res.RE,y.RE);
-        res.IM := x.IM + x.RE; Mul(res.IM,y.RE);
-      else -- y.RE = -y.IM then
-        res.RE := x.RE + x.IM; Mul(res.RE,y.RE);
-        res.IM := x.IM - x.RE; Mul(res.IM,y.RE);
-      end if;
-      Clear(avyre); Clear(avyim);
-      Clear(x); x := res;
-    end if;
+    acc := x.IM*y.IM;
+    res.RE := x.RE*y.RE;
+    Sub(res.RE,acc);
+    Clear(acc);
+    acc := x.IM*y.RE;
+    res.IM := x.RE*y.IM;
+    Add(res.IM,acc);
+    Clear(acc);
+    Clear(x);
+    x := res;   
   end Mul;
+
+--  procedure Mul ( x : in out Complex_Number; y : in Complex_Number ) is
+--
+--    res : Complex_Number;
+--    acc,avyim,avyre : number;
+--
+--  begin
+--    if Equal(y.IM,zero) then
+--      Mul(x.RE,y.RE);
+--      Mul(x.IM,y.RE);
+--    elsif Equal(y.RE,zero) then
+--      res.RE := x.IM*y.IM; Min(res.RE);
+--      res.IM := x.RE*y.IM;
+--      Clear(x); x := res;
+--    else
+--      avyre := AbsVal(y.RE); avyim := AbsVal(y.IM);
+--      if avyre < avyim then
+--        acc := y.RE/y.IM;
+--        res.RE := x.RE*acc; Sub(res.RE,x.IM); Mul(res.RE,y.IM);
+--        res.IM := x.IM*acc; Add(res.IM,x.RE); Mul(res.IM,y.IM);
+--        Clear(acc);
+--      elsif avyre > avyim then
+--        acc := y.IM/y.RE;
+--        res.RE := x.IM*acc; Sub(res.RE,x.RE); Min(res.RE); Mul(res.RE,y.RE);
+--        res.IM := x.RE*acc; Add(res.IM,x.IM); Mul(res.IM,y.RE);
+--        Clear(acc);
+--      elsif Equal(y.RE,y.IM) then
+--        res.RE := x.RE - x.IM; Mul(res.RE,y.RE);
+--        res.IM := x.IM + x.RE; Mul(res.IM,y.RE);
+--      else -- y.RE = -y.IM then
+--        res.RE := x.RE + x.IM; Mul(res.RE,y.RE);
+--        res.IM := x.IM - x.RE; Mul(res.IM,y.RE);
+--      end if;
+--      Clear(avyre); Clear(avyim);
+--      Clear(x); x := res;
+--    end if;
+--  end Mul;
 
   procedure Div ( x : in out Complex_Number; y : in Complex_Number ) is
 
     res : Complex_Number;
-    acc,avyre,avyim : number;
+    acc,nrm : number;
 
   begin
-    if Equal(y.IM,zero) then
-      Div(x.RE,y.RE);
-      Div(x.IM,y.RE);
-    elsif Equal(y.IM,zero) then
-      res.RE := x.IM/y.IM;
-      res.IM := x.RE/y.IM; Min(res.IM);
-      Clear(x); x := res;
-    else
-      avyre := AbsVal(y.RE); avyim := AbsVal(y.IM);
-      if avyre < avyim then
-        acc := y.RE/y.IM;
-        res.RE := x.RE*acc; Add(res.RE,x.IM);
-        res.IM := x.IM*acc; Sub(res.IM,x.RE);
-        Mul(acc,y.RE); Add(acc,y.IM);
-        Div(res.RE,acc);
-        Div(res.IM,acc);
-        Clear(acc);
-      elsif avyre > avyim then
-        acc := y.IM/y.RE;
-        res.RE := x.IM*acc; Add(res.RE,x.RE);
-        res.IM := x.RE*acc; Sub(res.IM,x.IM); Min(res.IM);
-        Mul(acc,y.IM); Add(acc,y.RE);
-        Div(res.RE,acc);
-        Div(res.IM,acc);
-        Clear(acc);
-      elsif Equal(y.RE,y.IM) then
-        acc := TWO*y.RE;
-        res.RE := x.RE + x.IM; Div(res.RE,acc);
-        res.IM := x.IM - x.RE; Div(res.IM,acc);
-        Clear(acc);
-      else -- y.RE = -y.IM then
-        acc := TWO*y.RE;
-        res.RE := x.RE - x.IM; Div(res.RE,acc);
-        res.IM := x.IM + x.RE; Div(res.IM,acc);
-        Clear(acc);
-      end if;
-      Clear(avyre); Clear(avyim);
-      Clear(x); x := res;
-    end if;
+    nrm := y.RE*y.RE;
+    acc := y.IM*y.IM;
+    Add(nrm,acc);
+    Clear(acc);
+    res.RE := x.RE*y.RE;
+    acc := x.IM*y.IM;
+    Add(res.RE,acc);
+    Clear(acc);
+    res.IM := x.IM*y.RE;
+    acc := x.RE*y.IM;
+    Sub(res.IM,acc);
+    Clear(acc);
+    Div(res.RE,nrm);
+    Div(res.IM,nrm);
+    Clear(nrm);
+    Clear(x);
+    x := res;
   end Div;
+
+--  procedure Div ( x : in out Complex_Number; y : in Complex_Number ) is
+--
+--    res : Complex_Number;
+--    acc,avyre,avyim : number;
+--
+--  begin
+--    if Equal(y.IM,zero) then
+--      Div(x.RE,y.RE);
+--      Div(x.IM,y.RE);
+--    elsif Equal(y.IM,zero) then
+--      res.RE := x.IM/y.IM;
+--      res.IM := x.RE/y.IM; Min(res.IM);
+--      Clear(x); x := res;
+--    else
+--      avyre := AbsVal(y.RE); avyim := AbsVal(y.IM);
+--      if avyre < avyim then
+--        acc := y.RE/y.IM;
+--        res.RE := x.RE*acc; Add(res.RE,x.IM);
+--        res.IM := x.IM*acc; Sub(res.IM,x.RE);
+--        Mul(acc,y.RE); Add(acc,y.IM);
+--        Div(res.RE,acc);
+--        Div(res.IM,acc);
+--        Clear(acc);
+--      elsif avyre > avyim then
+--        acc := y.IM/y.RE;
+--        res.RE := x.IM*acc; Add(res.RE,x.RE);
+--        res.IM := x.RE*acc; Sub(res.IM,x.IM); Min(res.IM);
+--        Mul(acc,y.IM); Add(acc,y.RE);
+--        Div(res.RE,acc);
+--        Div(res.IM,acc);
+--        Clear(acc);
+--      elsif Equal(y.RE,y.IM) then
+--        acc := TWO*y.RE;
+--        res.RE := x.RE + x.IM; Div(res.RE,acc);
+--        res.IM := x.IM - x.RE; Div(res.IM,acc);
+--        Clear(acc);
+--      else -- y.RE = -y.IM then
+--        acc := TWO*y.RE;
+--        res.RE := x.RE - x.IM; Div(res.RE,acc);
+--        res.IM := x.IM + x.RE; Div(res.IM,acc);
+--        Clear(acc);
+--      end if;
+--      Clear(avyre); Clear(avyim);
+--      Clear(x); x := res;
+--    end if;
+--  end Div;
 
 -- DESTRUCTOR :
 
