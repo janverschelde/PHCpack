@@ -151,49 +151,6 @@ package body QuadDobl_Speelpenning_Products is
     return res;
   end Indexed_Speel;
 
-  function Reverse_Speel0
-             ( e : Standard_Natural_Vectors.Vector;
-               x : QuadDobl_Complex_Vectors.Vector )
-             return QuadDobl_Complex_Vectors.Vector is
-
-    n : constant integer32 := x'last;
-    res : QuadDobl_Complex_Vectors.Vector(0..n);
-    nz : constant integer32
-       := integer32(Standard_Speelpenning_Products.Number_of_Nonzeroes(e));
-
-  begin
-    if nz = 0 then
-      res(0) := Create(integer(1));
-      res(1..n) := (1..n => Create(integer(0)));
-    elsif nz = 1 then
-      declare
-        ind : constant integer32
-            := Standard_Speelpenning_Products.Nonzero_Index(e);
-      begin
-        res(0) := x(ind);
-        res(1..n) := (1..n => Create(integer(0)));
-        res(ind) := Create(integer(1));
-      end;
-    else
-      declare
-        nze : Standard_Natural_Vectors.Vector(1..nz);
-        ind : Standard_Integer_Vectors.Vector(1..nz);
-        nzx : QuadDobl_Complex_Vectors.Vector(1..nz);
-       -- eva : QuadDobl_Complex_Vectors.Vector(0..nz);
-      begin
-        Nonzeroes(e,x,ind,nze,nzx);
-        res := Indexed_Speel(n,nz,ind,x);
-       -- eva := Reverse_Speel(nzx);
-       -- res(0) := eva(0);
-       -- res(1..n) := (1..n => Create(integer(0)));
-       -- for i in ind'range loop
-       --   res(integer32(ind(i))) := eva(i);
-       -- end loop;
-      end;
-    end if;
-    return res;
-  end Reverse_Speel0;
-
   function Reverse_Speel
              ( e : Standard_Natural_Vectors.Vector;
                x : QuadDobl_Complex_Vectors.Vector )
