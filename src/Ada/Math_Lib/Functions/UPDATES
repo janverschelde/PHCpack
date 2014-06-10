@@ -1,0 +1,26 @@
+Tue 10 Jun 2014 : eliminate bck vector in the reverse_speel function in
+  standard_speelpenning_products.
+
+Sun 6 Apr 2014 : refactored function of standard_speelpenning_products.a*.
+  Did the same for the double double and quad double versions.
+
+Thu 27 Mar 2014 : updated standard_{gradient,jacobian}_evaluations
+  for performance testing in ts_speelsys.adb.
+
+Tue 25 Feb 2014 : updated ts_speelsys.adb to allow for benchmarking on the
+  cyclic n-roots systems.  Extended standard_polynomial_flatteners with
+  functions to concatenate supports of a polynomial system.
+
+Sun 9 Jun 2013 : about half of the files in this directory changes because
+  of the introduction of natural32 and integer32 types.
+
+Fri 6 Jul 2012 : extended ts_perfeval.adb to measure the performance of
+  the Jacobian evaluations.  Updates in standard_jacobian_evaluations.
+
+Thu 5 Jul 2012 : creation of this new directory.  Changes to
+  {dobldobl,quaddobl}_monomial_evaluations.adb and
+  {dobldobl,quaddobl}_speelpenning_products.adb to deal with cases of
+  constant monomials and monomials consisting of one variable.
+  Changes to standard_polynomial_flatteners because of warnings.
+  New packages {dobldobl,quaddobl}_jacobian_evaluations, tested
+  by ts_speelsys.adb.

@@ -1,4 +1,4 @@
-Polynomial evaluation and differentiation algorithms in PHCv2.3.69.
+Polynomial evaluation and differentiation algorithms in PHCv2.3.89.
 
 This directory was created new in v2.3.69, collecting the former nested 
 Horner scheme algorithms of the directory polynomials, and with the new
