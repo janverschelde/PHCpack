@@ -1,4 +1,6 @@
+with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Natural_Vectors;
+with Standard_Integer_Vectors;
 with DoblDobl_Complex_Vectors;
 
 package DoblDobl_Speelpenning_Products is
@@ -51,13 +53,13 @@ package DoblDobl_Speelpenning_Products is
 
   -- REQUIRED : n > 1.
 
-  -- COST : n-1 + n-2 + n - 2  = 3*n - 5 multiplications,
-  --   with 2*n-1 additional storage for intermediate results.
+  -- COST : n-1 + n-2 + n-2  = 3*n - 5 multiplications,
+  --   with n-1 additional storage for intermediate results.
 
   procedure Nonzeroes
              ( e : in Standard_Natural_Vectors.Vector;
                x : in DoblDobl_Complex_Vectors.Vector;
-               idx : out Standard_Natural_Vectors.Vector;
+               idx : out Standard_Integer_Vectors.Vector;
                enz : out Standard_Natural_Vectors.Vector;
                xnz : out DoblDobl_Complex_Vectors.Vector );
 
@@ -76,6 +78,24 @@ package DoblDobl_Speelpenning_Products is
   --   idx     indices of the nonzero elements in e;
   --   enz     nonzero elements in e;
   --   xnz     values of x corresponding to nonzero exponents of e.
+
+  function Indexed_Speel
+             ( nx,nz : integer32;
+               indnz : Standard_Integer_Vectors.Vector;
+               x : DoblDobl_Complex_Vectors.Vector )
+             return DoblDobl_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns a vector of range 0..nx = x'last with
+  --   at position 0 the product of the values in x; and
+  --   at position i the i-th derivative of the product.
+
+  -- ON ENTRY :
+  --   nx      the number of elements in x, x is of range 1..nx;
+  --   nz      the number of participating indices (nonzero exponents);
+  --   indnz   has range 1..nz indicates the participating variables
+  --           in the product, those that occur with nonzero exponent;
+  --   x       values for all elements, of range 1..nx.
 
   function Reverse_Speel
              ( e : Standard_Natural_Vectors.Vector;
