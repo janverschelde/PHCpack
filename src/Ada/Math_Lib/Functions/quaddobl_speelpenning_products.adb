@@ -151,7 +151,7 @@ package body QuadDobl_Speelpenning_Products is
     return res;
   end Indexed_Speel;
 
-  function Reverse_Speel
+  function Reverse_Speel0
              ( e : Standard_Natural_Vectors.Vector;
                x : QuadDobl_Complex_Vectors.Vector )
              return QuadDobl_Complex_Vectors.Vector is
@@ -190,6 +190,54 @@ package body QuadDobl_Speelpenning_Products is
        --   res(integer32(ind(i))) := eva(i);
        -- end loop;
       end;
+    end if;
+    return res;
+  end Reverse_Speel0;
+
+  function Reverse_Speel
+             ( e : Standard_Natural_Vectors.Vector;
+               x : QuadDobl_Complex_Vectors.Vector )
+             return QuadDobl_Complex_Vectors.Vector is
+
+    n : constant integer32 := x'last;
+    cntnz : integer32 := 0;         -- counts nonzero exponents in e
+    res : QuadDobl_Complex_Vectors.Vector(0..n);
+    fwd : QuadDobl_Complex_Vectors.Vector(1..n);
+    idx : Standard_Integer_Vectors.Vector(1..n);
+    ind : integer32 := 0;
+    back : Complex_Number;
+
+  begin
+    for i in e'range loop             -- initialize forward products
+      if e(i) /= 0
+       then fwd(1) := x(i); ind := i+1; idx(1) := i; exit; 
+      end if;
+    end loop;
+    res(1..n) := (1..n => Create(integer(0)));
+    if ind = 0 then              -- case of a constant: all e(i) = 0
+      res(0) := Create(integer(1));
+    else
+      cntnz := 1;
+      for i in ind..e'last loop             -- make forward products
+        if e(i) /= 0 then             -- skipping the zero exponents
+          cntnz := cntnz + 1; idx(cntnz) := i;
+          fwd(cntnz) := fwd(cntnz-1)*x(i);
+        end if;
+      end loop;
+      if cntnz = 1 then
+        res(0) := x(ind-1);
+        res(1..n) := (1..n => Create(integer(0)));
+        res(ind-1) := Create(integer(1));
+      else
+        res(0) := fwd(cntnz);                   -- value of monomial
+        res(idx(cntnz)) := fwd(cntnz-1);          -- last derivative
+        back := x(idx(cntnz));      -- accumulates backward products
+        for i in reverse 2..cntnz-1 loop   
+          res(idx(i)) := fwd(i-1)*back;
+          back := x(idx(i))*back;
+        end loop;
+        res(idx(1)) := back;
+      end if;
     end if;
     return res;
   end Reverse_Speel;

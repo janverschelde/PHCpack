@@ -1,6 +1,6 @@
 Tue 10 Jun 2014 : eliminate bck vector in the reverse_speel function in
   standard_speelpenning_products, did the same for dobldobl and quaddobl.
-  Improved the implementation in the general case.
+  Improved the implementation in the general case for all precisions.
 
 Sun 6 Apr 2014 : refactored function of standard_speelpenning_products.a*.
   Did the same for the double double and quad double versions.
