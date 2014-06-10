@@ -179,37 +179,44 @@ package body Standard_Speelpenning_Products is
              return Standard_Complex_Vectors.Vector is
 
     n : constant integer32 := x'last;
+    cntnz : integer32 := 0;         -- counts nonzero exponents in e
     res : Standard_Complex_Vectors.Vector(0..n);
-    nz : constant integer32 := integer32(Number_of_Nonzeroes(e));
+    fwd : Standard_Complex_Vectors.Vector(1..n);
+    idx : Standard_Integer_Vectors.Vector(1..n);
+    ind : integer32 := 0;
+    back : Complex_Number;
 
   begin
-    if nz = 0 then
+    for i in e'range loop             -- initialize forward products
+      if e(i) /= 0
+       then fwd(1) := x(i); ind := i+1; idx(1) := i; exit; 
+      end if;
+    end loop;
+    res(1..n) := (1..n => Create(0.0));
+    if ind = 0 then              -- case of a constant: all e(i) = 0
       res(0) := Create(1.0);
-      res(1..n) := (1..n => Create(0.0));
-    elsif nz = 1 then
-      declare
-        ind : constant integer32 := Nonzero_Index(e);
-      begin
-        res(0) := x(ind);
-        res(1..n) := (1..n => Create(0.0));
-        res(ind) := Create(1.0);
-      end;
     else
-      declare
-        nze : Standard_Natural_Vectors.Vector(1..nz);
-        ind : Standard_Integer_Vectors.Vector(1..nz);
-        nzx : Standard_Complex_Vectors.Vector(1..nz);
-       -- eva : Standard_Complex_Vectors.Vector(0..nz);
-      begin
-        Nonzeroes(e,x,ind,nze,nzx);
-        res := Indexed_Speel(n,nz,ind,x);
-       -- eva := Reverse_Speel(nzx);
-       -- res(0) := eva(0);
-       -- res(1..n) := (1..n => Create(0.0));
-       -- for i in ind'range loop
-       --   res(ind(i)) := eva(i);
-       -- end loop;
-      end;
+      cntnz := 1;
+      for i in ind..e'last loop             -- make forward products
+        if e(i) /= 0 then             -- skipping the zero exponents
+          cntnz := cntnz + 1; idx(cntnz) := i;
+          fwd(cntnz) := fwd(cntnz-1)*x(i);
+        end if;
+      end loop;
+      if cntnz = 1 then
+        res(0) := x(ind-1);
+        res(1..n) := (1..n => Create(0.0));
+        res(ind-1) := Create(1.0);
+      else
+        res(0) := fwd(cntnz);                   -- value of monomial
+        res(idx(cntnz)) := fwd(cntnz-1);          -- last derivative
+        back := x(idx(cntnz));      -- accumulates backward products
+        for i in reverse 2..cntnz-1 loop   
+          res(idx(i)) := fwd(i-1)*back;
+          back := x(idx(i))*back;
+        end loop;
+        res(idx(1)) := back;
+      end if;
     end if;
     return res;
   end Reverse_Speel;
