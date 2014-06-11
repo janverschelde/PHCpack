@@ -1,3 +1,12 @@
+Wed 11 Jun 2014 : no endgame in polyhedral path trackers, modified
+  black_mixed_volume_computations.adb.
+
+Tue 19 Nov 2013 : because of package name changes in Implift, modified
+  dynamic_mixed_subdivisions.adb, triangulations_and_subdivisions.adb,
+  global_dynamic_triangulation.adb, standard_integer_simplices.adb,
+  initial_mixed_cell.adb, black_mixed_volume_computations.adb.
+  Then renamed packages for which there was a 64-bit version.
+
 Tue 25 Jun 2013 : changed the type for nt from natural32 to integer32
   in black_box_mixed_volume_computations.
 

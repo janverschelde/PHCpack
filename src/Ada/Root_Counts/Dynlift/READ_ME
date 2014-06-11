@@ -1,4 +1,4 @@
-Mixed-volume computation by dynamic lifting in PHCv2.3.85
+Mixed-volume computation by dynamic lifting in PHCv2.3.89
 
 The aim of dynamic lifting is to control the heights of the lifting values,
 to obtain a stable evaluation of the polyhedral homotopy.

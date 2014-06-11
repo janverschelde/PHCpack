@@ -227,7 +227,6 @@ package body Black_Mixed_Volume_Computations is
     Clear(lq); Clear(q);
     lq := Eval(llq,Create(1.0),n+1);
     q := Laurent_to_Polynomial_System(lq);
-    Continuation_Parameters.Tune(0);
    -- Mixed_Solve(llq,mix,mixsub,qsols);   too expensive !!!!
     h := Create(lq);
     for i in c'range loop
@@ -242,8 +241,11 @@ package body Black_Mixed_Volume_Computations is
     end loop;
     e := Create(lq);
     Create(lq,j,m);
+    Continuation_Parameters.Tune(0);
+    Continuation_Parameters.start_end_game := 0.0;
     Mixed_Solve(llq,lifsup,h,c,e,j,m,mix,mixsub,qsols);
     Set_Continuation_Parameter(qsols,Create(0.0));
+    Continuation_Parameters.start_end_game := 0.1;
     Clear(lq); Clear(llq);
     Clear(h); Clear(j); Clear(m);
     Standard_Complex_VecVecs.Clear(c);
@@ -268,7 +270,6 @@ package body Black_Mixed_Volume_Computations is
     llq := Perform_Lifting(n,mix,lifsup,lq);
     Clear(lq); Clear(q);
     q := Eval(llq,Create(1.0),n+1);
-    Continuation_Parameters.Tune(0);
    -- Mixed_Solve(llq,mix,mixsub,qsols);   too expensive !!!!
     h := Create(q);
     for i in c'range loop
@@ -283,8 +284,11 @@ package body Black_Mixed_Volume_Computations is
     end loop;
     e := Create(q);
     Create(q,j,m);
+    Continuation_Parameters.Tune(0);
+    Continuation_Parameters.start_end_game := 0.0;
     Mixed_Solve(llq,lifsup,h,c,e,j,m,mix,mixsub,qsols);
     Set_Continuation_Parameter(qsols,Create(0.0));
+    Continuation_Parameters.start_end_game := 0.1;
     Clear(llq); Clear(h); Clear(j); Clear(m);
     Standard_Complex_VecVecs.Clear(c);
   end Black_Box_Polyhedral_Continuation;
@@ -317,6 +321,8 @@ package body Black_Mixed_Volume_Computations is
       end;
     end loop;
     Create(q,jacmat,mulfac);
+    Continuation_Parameters.Tune(0);
+    Continuation_Parameters.start_end_game := 0.0;
     if nt = 0 then
       Mixed_Solve(q,lifsup,hq,coeffv,expvec,jacmat,mulfac,
                   mix.all,mcc,qsols);
@@ -326,6 +332,7 @@ package body Black_Mixed_Volume_Computations is
          hq,coeffv,expvec,jacmat,mulfac,qsols);
     end if;
     Set_Continuation_Parameter(qsols,Create(0.0));
+    Continuation_Parameters.start_end_game := 0.1;
     Clear(hq); Clear(jacmat); Clear(mulfac);
     Standard_Complex_VecVecs.Clear(coeffv);
   end Black_Box_Polyhedral_Continuation;
@@ -363,6 +370,8 @@ package body Black_Mixed_Volume_Computations is
       end;
     end loop;
     Create(lq,jacmat,mulfac);
+    Continuation_Parameters.Tune(0);
+    Continuation_Parameters.start_end_game := 0.0;
     if nt = 0 then
       Mixed_Solve(lq,lifsup,hq,coeffv,expvec,jacmat,mulfac,
                   mix.all,orgmcc,qsols);
@@ -382,6 +391,7 @@ package body Black_Mixed_Volume_Computations is
    -- else
    --   put_line("no stable mixed cells");
     end if;
+    Set_Continuation_Parameter(qsols,Create(0.0));
     Clear(lq); Clear(hq); Clear(jacmat); Clear(mulfac);
     Standard_Complex_VecVecs.Clear(coeffv);
   end Black_Box_Polyhedral_Continuation;
