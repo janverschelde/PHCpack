@@ -630,6 +630,7 @@ package body Standard_Root_Refiners is
 
   begin
     nbitr := 0;
+    nbdef := 0;
     loop
       if k = 0 then
         Apply_Newton(max,f,jf,ls,tolrnk,rank);
@@ -693,6 +694,7 @@ package body Standard_Root_Refiners is
 
   begin
     nbitr := 0;
+    nbdef := 0;
     loop
       if k = 0 then
         Apply_Newton(file,output,max,f,jf,ls,tolrnk,rank);

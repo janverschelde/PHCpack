@@ -1,0 +1,364 @@
+Wed 11 Jun 2014 : initialization of nbdef in standard_root_refiners.adb
+  for when underflow is handled gracefully in deflation.
+
+Tue 26 Nov 2013 : updated multprec_root_refiners with one Newton step.
+
+Thu 27 Jun 2013 : updated drivers_to_dd_qd_root_refiners.adb for warning.
+
+Wed 26 Jun 2013 : updated root_refining_parameters for use in mainvali.adb.
+
+Thu 20 Jun 2013 : updated multprec_complex_newton_steps.adb because of
+  compiler warnings.
+
+Mon 10 - Tue 11 Jun 2013 : almost all files changed because of the new
+  natural32 and integer32 data types.
+
+Tue 14 May 2013 : added new interfaces to the double double and quad double
+  root refiners in {dobldobl,quaddobl}_root_refiners.
+
+Wed 8 May 2013 : new package root_refining_parameters and exported members
+  of standard_root_refiners for use in the multitasking version.
+
+Thu 25 Apr 2013 : some edits in standard_root_refiners.adb.
+
+Sun 10 Feb 2013 : some editing in ts_deflate.adb, added silent driver
+  to drivers_to_deflate_singularities and standard_deflate_singularities.
+
+Tue 1 Jan 2013 : fixed ts_defmat.adb, because it no longer compiled.
+
+Sun 30 Dec 2012 : ts_deflate.adb, ts_rootrefi.adb no longer compiled, fixed.
+
+Thu 9 Jun 2011 : changed standard_root_refiners to gracefully handle an
+  exception when the system is too large to deflate.
+  Commented out stuff in exception handler of monomial_hashing.adb.
+
+Wed 1 Jun 2011 : changed multprec_evalate_deflation_io.adb,
+  {standard,multprec}_numerical_rank.adb, standard_deflate_singularities.adb,
+  standard_multiple_solutions.add, multprec_jacobian_trees.adb,
+  standard_nullity_polynomials.adb and dobldobl_root_refiners.ads for warnings.
+
+Sun 29 May 2011 : changed {standard,multprec}_root_refiners.adb and
+  standard_multiplicity_structure.adb for warnings.
+
+Fri 20 May 2011 : for warnings, changed ts_deftrees and {standard,
+  multprec}_derivative_trees.adb, also modified {standard,multprec}_
+  multiple_deflation.adb, multprec_nullity_polynomials.adb, and
+  multprec_nullity_matrices.adb.
+
+Mon 27 Sep 2010 : updated drivers_to_dd_qd_root_refiners.adb to use
+  multiprecision convertors with proper working precision set.
+
+Mon 6 Sep 2010 : adjustment in MENU of drivers_to_dd_qd_root_refiners.adb.
+
+Sun 6 Jun 2010 : extended {dobldobl,quaddobl}_root_refiners.ad* for
+  ts_mtddref and ts_mtqdref.
+
+Fri 28 May 2010 : {dobldobl,quaddobl}_root_refiners are tested by
+  ts_ddnewt and ts_qdnewt.
+
+Wed 28 Oct 2009 : added "sharpeners" to standard_root_refiners
+  to deal with overdetermined polynomial systems.
+  Added also Gauss-Newton and sharpeners to multprec_root_refiners.
+
+Sun 11 Oct 2009 : experimented with toggling off root accounting in
+  multprec_root_refiners.adb, but to no avail.
+
+Fri 9 Oct 2009 : update {standard,multprec}_root_refiners.adb with new
+  Write_Tables that omit the distance tables.  Solutions of Laurent systems
+  can now be refined with standard_root_refiners.
+
+Thu 8 Oct 2009 : formatting in multprec_root_refiners.adb and removal
+  of Distances_Tables, also in standard_root_refiners.adb.
+
+Wed 30 Sep 2009 : added storage threshold to standard_deflation_matrices,
+  removed tracing output from standard_root_refiners.adb, 
+  standard_deflation_methods.adb, standard_evaluate_deflation.adb,
+  and standard_complex_newton_steps.adb.
+
+Tue 29 Sep 2009 : changes in standard_root_refiners.adb to fix bug with
+  deflation, also changes in standard_deflation_methods.adb and
+  standard_complex_newton_steps.adb to track the infinite loop...
+
+Mon 21 Sep 2009 : added exception handler to monomial_hashing.adb
+  to track a bug.  Introduced 64-bit arithmetic to monomial_hashing,
+  changing {standard,multprec}_deflation_matrices.a*,
+  {standard,multprec}_evaluate_deflation.a*,
+  {standard,multprec}_deflation_methods.a*, and standard_root_refiners.adb.
+
+Fri 11 Sep 2009 : added exception handlers to standard_root_refiners.adb
+  because of crash with unoptimized phc -0 -b cyclic7 /tmp/out.
+
+Fri 19 Jun 2009 : changed standard_multiple_deflation.adb because of bug
+  when recompiling ts_muldef.adb.
+
+Mon 27 Oct 2008 : created ts_deflop.adb to make systems to seek singularities.
+
+Thu 14 Aug 2008 : fixed bug in standard_deflation_methods.adb, discovered
+  while looking for infinite loop with random trinomials.
+
+Fri 1 Aug 2008 : changed standard_root_refiners.adb to handle underflow
+  gracefully also in the deflate routines, like in Newton.
+  The crash occurred when dealing with monomial equations.
+
+Wed 23 Apr 2008 : to fix a crash in deflation, standard_root_refiners.adb,
+  handle_underflow_gracefully.adb, and standard_deflation_methods.a*
+  all changed.  Crash followed wrong multiplier computations.
+
+Mon 21 Jan 2008 : underflow causes problems in standard_root_refiners.adb,
+  commented out the ineffective exception handlers.
+
+Sun 20 Jan 2008 : created package handle_underflow_gracefully to deal
+  with underflow in root refiners, modified standard_root_refiners.adb.
+  Note that underflow only occurs when -gnatp is not an option.
+
+Thu 19 Jan 2008 : when constraint_error happens it might be underflow,
+  therefore: changed standard_root_refiners.adb to check residual in
+  the exception handlers.
+
+Mon 7 Jan 2008 : changed standard_deflation_methods.adb and
+  standard_root_refiners.adb, to find the cause of a crash originating
+  in standard_complex_newton_steps.adb.
+
+Thu 3 Jan 2008 : warnings in GNAT GPL 2006 caused changes in
+  standard_root_refines.adb, standard_complex_newton_steps.adb,
+  standard_deflation_methods.a*, and standard_deflate_singularities.adb,
+  standard_deflation_matrices.adb, standard_evaluate_deflation_io.adb.
+
+Wed 2 Jan 2008 : changed standard_jacobian_trees.adb
+  standard_evaluate_deflation.adb, and drivers_to_deflate_singularities.a*,
+  for warnings in GNAT GPL 2006.
+
+Wed 25 Dec 2007 : fixed memory leak with clearing of Jacobi matrices,
+  standard_jacobian_trees.adb and standard_root_refiners.adb changed.
+
+Sat 8 Dec 2007 : clearing the evaluation tree of Jacobian matrices
+  in standard_root_refiners.adb did not work... oops: could be source
+  of a huge memory leak and many problems...
+
+Fri 13 Jul 2007 : if the multiplicity field of a solution on input is > 1,
+  then root accounting standard_root_refiners.adb will not change it.
+
+Tue 26 Jun 2007 : initialization of nbdef in standard_root_refiners.adb
+  so it makes for a more accurate accounting.
+
+Fri 22 Jun 2007 : another fix to standard_root_refiners.adb.
+
+Thu 21 Jun 2007 : backup before deflation in standard_root_refiners.adb
+  to be able to restore in case deflation fails.
+
+Fri 1 Jun 2007 : modifications to standard_root_refiners.adb for correct
+  root accounting when deflation is applied.
+
+Sat 26 May 2007 : one Newton iteration after the deflation in
+  standard_root_refiners.adb shows the condition number.
+
+Mon 19 May 2007 : updated drivers_to_deflate_singularities.adb so that
+  Algorithm_Deflation_and_Clustering is now called (better #6 in phc -v).
+  Modified standard_root_refiners.adb.
+
+Fri 18 May 2007 : added clear in {standard,multprec}_jacobian_trees for
+  Jacobian remember tables, used in {standard,multprec}_evaluate_deflation.
+  Updated {standard,multprec}_deflation_methods.adb and ts_deflate.adb
+  Created new package standard_multiple_solutions.
+
+Thu 17 May 2007 : continued modification of standard_deflation_methods.a*,
+  ts_deflate.adb now works fine with automatic algorithmic deflation.
+  Added some memory management to standard_evaluate_deflation.a*...
+
+Wed 16 May 2007 : updated standard_deflation_methods.a* with routines for
+  automatic algorithmic deflation, tested by ts_deflate.adb.
+
+Sat 12 May 2007 : prepared standard_root_refiners.adb for deflation.
+
+Wed 28 Mar 2007 : ts_realnewt.adb does one Newton step fine for systems
+  with standard floating-point coefficients.
+
+Tue 27 Mar 2007 : ts_realnewt.adb develops Newton for real systems.
+
+Sun 4 Feb 2007 : because of change in naming of "newton_steps", 
+  changed drivers_to_deflate_singularities.adb and
+  {standard,multprec}_deflation_methods.adb.
+
+Sat 3 Feb 2007 : inserted "complex" in {standard,multprec}_newton_steps to
+  create {standard,multprec}_floating_newton_steps, tested by ts_newton.adb.
+
+Tue 12 Dec 2006 : modifications to *aitken* and ts_newton.adb.
+
+Mon 11 Dec 2006 : removed "classify" from ts_newton.adb to make room for
+  Aitken extrapolation: "standard_aitken_extrpolation" is new package.
+
+Wed 14 Jun 2006 : because of warnings on AIX, changed standard_ and
+  multprec_evaluate_deflation.adb.
+
+Wed 3 May 2006 : created {standard,multprec}_solution_diagnostics,
+  relieving {standard,multprec}_root_refiners.adb from auxiliary code.
+
+Mon 6 Feb 2006 : because of renamings in standard_condition_tables,
+  {standard,multprec}_root_refiners.adb changed.
+
+Mon 26 Dec 2005 : created {standard,multprec}_probe_kernel to determine
+  minimal order for multiple_deflation.  Changed *multiple_deflation.a*
+  and ts_muldef.adb.
+
+Thu 22 Dec 2005 : inserted exception handlers in standard_newton_steps.adb
+  and standard_deflation_methods.adb; updated standard_multiple_deflation
+  and ts_muldef.adb.
+
+Wed 21 Dec 2005 : created multprec_nullity* and *multiple_deflation*,
+  all tested by ts_muldef.adb. 
+
+Tue 20 Dec 2005 : standard_nullity_matrices and standard_nullity_polynomials
+  are new packages, originating from standard_multiplicity_structure.
+
+Mon 19 Dec 2005 : updated ts_multip.adb to use get from the new package
+  standard_system_and_solutions_io; new ts_muldef for higher-order deflation.
+
+Fri 16 Dec 2005 : fixed output in standard_multiplicity_structure.adb.
+
+Sun 11 Dec 2005 : added diagnostics to standard_deflation_matrices.adb
+  and standard_evaluate_deflation.adb to start working on A(4);
+  patched bugs in standard_deflation_matrices.adb to avoid crashes.
+
+Sun 13 Nov 2005 : changed standard_deflate_singularities.a* for corank 1,
+  also modified standard_deflation_methods.a*.
+
+Sun 29 Oct 2005 : changed standard_deflation_methods.adb for corank one.
+
+Thu 27 Oct 2005 : for corank one, changed standard_deflate_singularities.*
+  and standard_deflation_methods.adb.
+
+Sat 6 Aug 2005 : added a special corank one deflation case in
+  {standard,multprec}_deflate_singularities and *_deflation_methods.adb.
+
+Mon 11 Jul 2005 : changed standard_deflation_methods for one solution.
+
+Sat 9 Jul 2005 : fixed bug in standard_deflation_methods.adb
+  and multprec_deflation_methods.adb.
+
+Sun 3 Jul 2005 : added driver to standard_multiplicity_structure,
+  tested in ts_multip.adb.
+
+Fri 1 Jul 2005 : interactive algorithmic deflation works up to k = 3,
+  changed *evaluate_deflation.a* and *deflation_methods.a*.
+
+Thu 30 Jun 2005 : created {standard,multprec}_deflation_methods with the
+  code from drivers_to_deflate_singularities.adb, changed ts_deflate.adb.
+
+Mon 27 Jun 2005 : added multprec_ to _derivative_trees, _jacobian_trees
+  (see ts_jactrees), to _deflation_matrices, _evaluate_deflation (+i/o),
+  _query_matrices, tested by ts_defmat.adb.
+
+Sun 26 Jun 2005 : "Two_Right_Multiply*" is out of standard_deflation_matrices,
+  A(3) works! cleaned up standard_evaluation_matrices, autotest in ts_defmat.
+
+Fri 24 Jun 2005 : patched standard_deflation_matrices so A(3) works
+  for all two dimensional systems
+
+Sun 19 Jun 2005 : prepared standard_deflation_matrices for higher order
+  right multiplications, changed standard_evaluate_deflation.adb too.
+
+Sat 18 Jun 2005 : standard_deflation_matrices.adb works for A(3), for all
+  second degrees systems, changed standard_evaluate_deflation.adb a little.
+
+Fri 10 Jun 2005 : simplified standard_deflation_matrices, fixed bug
+  in ts_jactrees.adb.
+
+Mon 6 Jun 2005 : messed with Right_Multiply_Deflation and added one
+  routine to standard_query_matrices.
+
+Sun 5 Jun 2005 : fixed Right_Multiply_Jacobian with B-matrix and changed
+  standard_deflation_matrices
+
+Thu 2 Jun 2005 : bug in Number_of_Columns changed ts_defmat.adb and
+  standard_deflation_matrices.adb.
+
+Wed 1 Jun 2005 : bugs changed standard_deflation_matrices and ts_defmat.adb.
+
+Mon 30 May 2005 : added strip_multipliers to standard_deflate_singularities
+  and multprec_deflate_singularities, changed ts_deflate.adb, ts_multip.adb.
+
+Sun 29 May 2005 : fixed indexing bug in standard_deflation_matrices.adb.
+
+Fri 27 May 2005 : trying "Right_Multiply" in standard_deflation_matrices
+  and standard_evaluate_deflation.adb.
+
+Wed 25 May 2005 : changed standard_deflation_matrices.adb: A(2) is okay.
+
+Tue 24 May 2005 : created "Right_Multiply" in standard_deflation_matrices.adb,
+  also changed .ads and standard_evaluate_deflation.adb.
+
+Sat 21 May 2005 : work on structural flaw in standard_deflation_matrices.adb
+  reduces number of errors in A(2).
+
+Fri 20 May 2005 : fixed one more bug and discovered structural flaw in
+  standard_deflation_matrices.adb.
+
+Thu 19 May 2005 : changed standard_evaluation_deflation.ads, .adb, and
+  standard_deflation_matrices.adb to discover a new bug.
+
+Wed 18 May 2005 : fixed one bug in standard_evaluate_deflation.adb.
+
+Wed 11 May 2005 : package standard_multiplicity_structure tested by ts_multip.
+  Moved numerical_rank out of standard_newton_steps into a new package,
+  standard_numerical_rank, similarly for multiprecision version;
+  fixed compilation error in ts_newton.adb.
+
+Tue 10 May 2005 : created standard_query_matrices, for sharing between
+  ts_defmat.adb and ts_multip.adb.
+
+Mon 25 Apr 2005 : stored assignments in standard_deflation_matrices,
+  changed standard_jacobian_trees, deflation_matrices(+io) and ts_defmat.
+
+Wed 20 Apr 2005 : added "monkeys" or monomial keys to ts_defmat.adb and
+  standard_evaluate_deflation.ads.
+
+Tue 19 Apr 2005 : added "Number_of_Columns" to count dimensions properly
+  to the standard_evaluate_deflation.ads, also ts_defmat.adb changed.
+
+Sat 16 Apr 2005 : updated standard_evaluate_deflation.adb and ts_defmat.adb.
+
+Thu 14 Apr 2005 : eval in standard_evaluate_deflation.adb shows numbers;
+  also changed ts_defmat.adb.
+
+Sun 10 Apr 2005 : put evaluation of symbolic deflation matrix in ts_defmat.
+
+Sat 9 Apr 2005 : created standard_evaluate_deflation_io and developed
+  the eval in standard_evaluate_deflation, tested by ts_defmat.adb.
+
+Fri 8 Apr 2005 : minor changes in ts_defmat.adb
+
+Thu 7 Apr 2005 : added dimension to enumeration of tree in ts_defmat.adb.
+
+Tue 5 Apr 2005 : removed bug from standard_evaluate_deflation.adb.
+
+Wed 23 Feb 2005 : changed *root_refiners.adb to give reciprocal negative
+  field with clustered solutions.
+
+Sun 20 Feb 2005 : changed *root_refiners.adb to report clustered solutions
+  with a negative multiplicity field.
+
+Sun 9 Jan 2005 : Eval_Tree from ts_defmat in standard_evaluate_deflation,
+  data structure is as efficient as enumeration.
+
+Tue 4 Jan 2005 : introduced "Eval" in standard_evaluate_deflation,
+  adjusted ts_defmat
+
+Mon 3 Jan 2005 : created the package standard_evaluate_deflation,
+  to be tested by ts_defmat
+
+Sat 1 Jan 2005 : updated standard_jacobian_trees with Eval_Node.
+
+Fri 31 Dec 2004 : renamed ts_dertrees into ts_jactrees and updated.
+
+Tue 28 Dec 2004 : create ts_defmat.adb to work with deflation matrices.
+
+Fri 27 Aug 2004 : fixed bug of 2nd deflation in ts_straight.adb.
+
+Tue 24 Aug 2004 : created ts_straight.adb to experiment with straight-line
+  version of the evaluation and differentiation of deflated systems
+
+Tue 10 Aug 2004 : added timer in drivers_to_deflate_singularities.adb and
+  created standard_jacobian_trees, tested by ts_dertrees.
+
+Mon 9 Aug 2004 : create standard_derivative_trees, tested by ts_dertrees,
+  which replaces ts_allder, also renamed ts_dtrees into ts_deftrees.
