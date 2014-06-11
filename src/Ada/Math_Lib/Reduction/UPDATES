@@ -1,0 +1,85 @@
+Wed 11 Jun 2014 : found the reason why ts_perflu does not work that well
+  for complex vectors: gcc auto vectorization does not support complex.
+
+Fri 6 Jun 2014 : ts_perflu to measure performance of lufac with the
+  matrix type and the vector of vectors type.
+
+Thu 27 Mar 2014 : small optimization change in the lufac of
+  standard_complex_linear_solvers.adb, with change in ts_mgs.adb.
+
+Tue 28 Jan 2014 : new ts_backsubs.adb to illustrate insufficiency
+  of double precision arithmetic when solving larger linear systems.
+
+Thu 14 Nov 2013 : for GNAT GPL 2013 warnings, modified
+  generic_floating_linear_solvers.
+
+Thu 13 Jun 2013 : in updating {dobldobl,quaddobl}_complex_row_reduction,
+  extended ts_rowred.adb for interactive testing in extended precision.
+
+Fri 7 Jun 2013 : the introduction of integer32 types led to many changes:
+  ts_fltdls.adb, multprec_complex_norms_equals.adb
+  multprec_complex_linear_solvers.a*, tested by ts_cmplu, ts_fltlu.adb.
+  standard_{floating,complex}_qr_least_squares.a*, tested by ts_qrd.
+  quaddobl_complex_vector_norms.adb, quaddobl_complex_linear_solvers.a*
+  quad_double_vector_norms.adb, tested by ts_qdlu.
+  generic_norms_equals.adb, generic_floating_linear_solvers.a*
+  standard_complex_norms_equals.adb, standard_complex_linear_solvers.a*
+  double_double_vector_norms.a*, dobldobl_complex_linear_solvers.a*,
+  tested by test_lu_decompositions.a* and ts_ddlu.adb.
+  Other updates occurred in standard_{floating,complex}_vector_norms.adb,
+  standard_complex_row_reduction, tested by ts_rowred,
+  standard_floating_eigenvalues, tested by ts_eigval,
+  {standard,complex}_singular_values, tested by ts_svd,
+  multprec_complex_qr_least_squares, tested by ts_qrd, and all versions
+  of the modified Gram-Schmidt method, tested by ts_mgs and ts_mgsrnk, in
+  standard_{floating,complex}_gramschmidt
+  and {dobldobl,quaddobl}_complex_gramschmidt.
+
+Thu 6 Jun 2013 : copied ../Matrices/ts_fltdls.adb to here.
+
+Thu 27 Dec 2012 : copied ts_{flt,cmp,dd,qd}mat.adb from ../Matrices 
+  into ts_{flt,cmp,dd,qd}lu.adb and added tests on the LU factorizations.
+  New package test_lu_decompositions, for use in ts_{flt,dd,qd}lu.adb.
+  New test functions in generic_floating_linear_solvers and also updated
+  {standard,dobldobl,quaddobl}_complex_linear_solvers with test functions.
+  Added accuracy tests on LU to ts_mgs.
+
+Wed 21 Nov 2012 : new directory with code copied from Matrices, the files are
+
+dobldobl_complex_gramschmidt.adb
+dobldobl_complex_gramschmidt.ads       standard_complex_gramschmidt.adb
+dobldobl_complex_linear_solvers.adb    standard_complex_gramschmidt.ads
+dobldobl_complex_linear_solvers.ads    standard_complex_linear_solvers.adb
+dobldobl_complex_row_reduction.adb     standard_complex_linear_solvers.ads
+dobldobl_complex_row_reduction.ads     standard_complex_norms_equals.adb
+dobldobl_complex_vector_norms.adb      standard_complex_norms_equals.ads
+dobldobl_complex_vector_norms.ads      standard_complex_qr_least_squares.adb
+double_double_linear_solvers.ads       standard_complex_qr_least_squares.ads
+double_double_vector_norms.adb         standard_complex_row_reduction.adb
+double_double_vector_norms.ads         standard_complex_row_reduction.ads
+generic_floating_linear_solvers.adb    standard_complex_singular_values.adb
+generic_floating_linear_solvers.ads    standard_complex_singular_values.ads
+generic_norms_equals.adb               standard_complex_vector_norms.adb
+generic_norms_equals.ads               standard_complex_vector_norms.ads
+multprec_complex_linear_solvers.adb    standard_floating_eigenvalues.adb
+multprec_complex_linear_solvers.ads    standard_floating_eigenvalues.ads
+multprec_complex_norms_equals.adb      standard_floating_gramschmidt.adb
+multprec_complex_norms_equals.ads      standard_floating_gramschmidt.ads
+multprec_complex_qr_least_squares.adb  standard_floating_linear_solvers.ads
+multprec_complex_qr_least_squares.ads  standard_floating_norms_equals.ads
+multprec_complex_singular_values.adb   standard_floating_qr_least_squares.adb
+multprec_complex_singular_values.ads   standard_floating_qr_least_squares.ads
+multprec_floating_linear_solvers.ads   standard_floating_singular_values.adb
+multprec_floating_norms_equals.ads     standard_floating_singular_values.ads
+quaddobl_complex_gramschmidt.adb       standard_floating_two_norms.adb
+quaddobl_complex_gramschmidt.ads       standard_floating_two_norms.ads
+quaddobl_complex_linear_solvers.adb    standard_floating_vector_norms.adb
+quaddobl_complex_linear_solvers.ads    standard_floating_vector_norms.ads
+quaddobl_complex_row_reduction.adb     ts_eigval.adb
+quaddobl_complex_row_reduction.ads     ts_mgs.adb
+quaddobl_complex_vector_norms.adb      ts_mgsrnk.adb
+quaddobl_complex_vector_norms.ads      ts_qrd.adb
+quad_double_linear_solvers.ads         ts_rowred.adb
+quad_double_vector_norms.adb           ts_svd.adb
+quad_double_vector_norms.ads
+

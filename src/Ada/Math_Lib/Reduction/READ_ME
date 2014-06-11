@@ -1,4 +1,4 @@
-Numerical Linear Algebra in PHCv2.3.85
+Numerical Linear Algebra in PHCv2.3.89
 
 This "Reduction" directory implements "row reduction" on linear systems
 of floating-point number of various precisions: double, double double,
@@ -44,6 +44,8 @@ ts_fltlu                           : test on floating-point LU factorization
 ts_cmplu                           : test on complex LU factorization
 ts_ddlu                            : test on double double LU factorization
 ts_qdlu                            : test on quad double LU factorization
+ts_backsubs                        : test on accuracy of back substitution
+ts_perflu                          : performance test on lufac
 -------------------------------------------------------------------------------
 standard_complex_row_reduction     : tools for incremental row reduction
 dobldobl_complex_row_reduction     : row reduction with double doubles
