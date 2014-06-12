@@ -145,7 +145,7 @@ package Standard_Speelpenning_Products is
   --   The index vector idx defines which variables in x
   --   participate to the product of the variables.
   --   It is computed as idx = Nonzero_Indices(e),
-  --   or an exponent vector that has the same range as x.
+  --   for an exponent vector that has the same range as x.
   --   The derivatives are in y(idx(i)) for i in idx'range.
 
 end Standard_Speelpenning_Products;
