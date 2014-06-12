@@ -11,6 +11,7 @@ with Standard_Complex_Numbers_io;         use Standard_Complex_Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;         use Standard_Natural_Vectors_io;
 with Standard_Natural_VecVecs;
+with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;         use Standard_Complex_Vectors_io;
 with Standard_Complex_Norms_Equals;       use Standard_Complex_Norms_Equals;
@@ -196,13 +197,30 @@ procedure ts_speel is
     put("give complete product of all variables : "); get(p);
   end Initialize_Symbol_Table;
 
+  procedure Compare ( x,y : in Standard_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Prints the componentwise differences between the vectors x and y
+  --   and the sum of this differences.
+
+    sum,d : double_float := 0.0;
+
+  begin
+    for i in x'range loop
+      d := AbsVal(x(i) - y(i));
+      sum := sum + d;
+    end loop;
+    put("Sum of differences : "); put(sum); new_line;
+  end Compare;
+
   procedure Run_Standard_Speelpenning_Monomial
               ( n : in integer32; e : in Standard_Natural_Vectors.Vector ) is
 
     x : constant Standard_Complex_Vectors.Vector(1..n)
       := Standard_Random_Vectors.Random_Vector(1,n);
-    y,z : Standard_Complex_Vectors.Vector(0..n);
-    sum,d : double_float;
+    y,z,z2 : Standard_Complex_Vectors.Vector(0..n);
+    idx : constant Standard_Integer_Vectors.Vector
+        := Standard_Speelpenning_Products.Nonzero_Indices(e);
 
     use Standard_Speelpenning_Products;
 
@@ -211,12 +229,10 @@ procedure ts_speel is
     y := Straight_Speel(e,x); put_line(y);
     put_line("Running Speelspenning's example in reverse mode :");
     z := Reverse_Speel(e,x); put_line(z);
-    sum := 0.0;
-    for i in 0..n loop
-      d := AbsVal(y(i) - z(i));
-      sum := sum + d;
-    end loop;
-    put("Sum of differences : "); put(sum); new_line;
+    Compare(y,z);
+    put_line("Running indexed version of Speelpenning's example :");
+    z2 := Indexed_Reverse_Speel(idx,x); put_line(z2);
+    Compare(y,z2);
   end Run_Standard_Speelpenning_Monomial;
 
   procedure Run_DoblDobl_Speelpenning_Monomial

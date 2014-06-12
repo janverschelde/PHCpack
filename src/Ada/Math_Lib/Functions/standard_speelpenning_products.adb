@@ -203,9 +203,8 @@ package body Standard_Speelpenning_Products is
           fwd(cntnz) := fwd(cntnz-1)*x(i);
         end if;
       end loop;
-      if cntnz = 1 then
+      if cntnz = 1 then       -- case of one variable: one e(i) /= 0
         res(0) := x(ind-1);
-        res(1..n) := (1..n => Create(0.0));
         res(ind-1) := Create(1.0);
       else
         res(0) := fwd(cntnz);                   -- value of monomial
@@ -220,5 +219,56 @@ package body Standard_Speelpenning_Products is
     end if;
     return res;
   end Reverse_Speel;
+
+  function Nonzero_Indices
+             ( e : Standard_Natural_Vectors.Vector )
+             return Standard_Integer_Vectors.Vector is
+
+    res : Standard_Integer_Vectors.Vector(e'range);
+    ind : integer32 := res'first-1;
+
+  begin
+    for i in e'range loop
+      if e(i) /= 0 then
+        ind := ind + 1;
+        res(ind) := i;
+      end if;
+    end loop;
+    return res(res'first..ind);
+  end Nonzero_Indices;
+
+  function Indexed_Reverse_Speel
+             ( idx : Standard_Integer_Vectors.Vector;
+               x : Standard_Complex_Vectors.Vector )
+             return Standard_Complex_Vectors.Vector is
+
+    n : constant integer32 := x'last;
+    res : Standard_Complex_Vectors.Vector(0..n);
+    fwd : Standard_Complex_Vectors.Vector(idx'range);
+    back : Complex_Number;
+
+  begin
+    res(1..n) := (1..n => Create(0.0));
+    if idx'last < idx'first then               -- case of a constant
+      res(0) := Create(1.0);
+    elsif idx'last = idx'first then          -- case of one variable
+      res(0) := x(idx(idx'first));
+      res(idx(idx'first)) := Create(1.0);
+    else
+      fwd(1) := x(idx(idx'first));
+      for i in idx'first+1..idx'last loop   -- make forward products
+         fwd(i) := fwd(i-1)*x(idx(i));
+      end loop;
+      res(0) := fwd(idx'last);                  -- value of monomial
+      res(idx(idx'last)) := fwd(idx'last-1);      -- last derivative
+      back := x(idx(idx'last));     -- accumulates backward products
+      for i in reverse 2..idx'last-1 loop   
+        res(idx(i)) := fwd(i-1)*back;              -- cross products
+        back := x(idx(i))*back;
+      end loop;
+      res(idx(1)) := back;
+    end if;
+    return res;
+  end Indexed_Reverse_Speel;
 
 end Standard_Speelpenning_Products;
