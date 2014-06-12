@@ -111,7 +111,21 @@ package DoblDobl_Speelpenning_Products is
   -- REQUIRED : n = e'last = x'last > 1, and nz > 1
   --   where nz equals the number of nonzero elements in e.
 
-  -- COST : at most nz-1 + nz-2 + nz - 2  = 3*nz - 5 multiplications,
+  -- COST : at most nz-1 + nz-2 + nz-2  = 3*nz - 5 multiplications,
   --   with 2*nz-1 additional storage for intermediate results.
+
+  function Indexed_Reverse_Speel
+             ( idx : Standard_Integer_Vectors.Vector;
+               x : DoblDobl_Complex_Vectors.Vector )
+             return DoblDobl_Complex_Vectors.Vector;
+
+  -- DECRIPTION :
+  --   Returns a vector y of range 0..x'last where y(0) contains
+  --   the product of the values in x as indexed by idx.
+  --   The index vector idx defines which variables in x
+  --   participate to the product of the variables, computed as
+  --   idx = Standard_Speelpenning_Products.Nonzero_Indices(e),
+  --   for an exponent vector that has the same range as x.
+  --   The derivatives are in y(idx(i)) for i in idx'range.
 
 end DoblDobl_Speelpenning_Products;

@@ -1,3 +1,6 @@
+Thu 12 Jun 2014 : indexed version in standard_speelpenning_products,
+  tested by ts_speel.  Also updated dobldobl_ and quaddobl_ versions.
+
 Tue 10 Jun 2014 : eliminate bck vector in the reverse_speel function in
   standard_speelpenning_products, did the same for dobldobl and quaddobl.
   Improved the implementation in the general case for all precisions.

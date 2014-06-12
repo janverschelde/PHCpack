@@ -213,6 +213,38 @@ procedure ts_speel is
     put("Sum of differences : "); put(sum); new_line;
   end Compare;
 
+  procedure Compare ( x,y : in DoblDobl_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Prints the componentwise differences between the vectors x and y
+  --   and the sum of this differences.
+
+    sum,d : double_double := create(integer(0));
+
+  begin
+    for i in x'range loop
+      d := AbsVal(x(i) - y(i));
+      sum := sum + d;
+    end loop;
+    put("Sum of differences : "); put(sum); new_line;
+  end Compare;
+
+  procedure Compare ( x,y : in QuadDobl_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Prints the componentwise differences between the vectors x and y
+  --   and the sum of this differences.
+
+    sum,d : quad_double := create(integer(0));
+
+  begin
+    for i in x'range loop
+      d := AbsVal(x(i) - y(i));
+      sum := sum + d;
+    end loop;
+    put("Sum of differences : "); put(sum); new_line;
+  end Compare;
+
   procedure Run_Standard_Speelpenning_Monomial
               ( n : in integer32; e : in Standard_Natural_Vectors.Vector ) is
 
@@ -240,8 +272,9 @@ procedure ts_speel is
 
     x : constant DoblDobl_Complex_Vectors.Vector(1..n)
       := DoblDobl_Random_Vectors.Random_Vector(1,n);
-    y,z : DoblDobl_Complex_Vectors.Vector(0..n);
-    sum,d : double_double;
+    y,z,z2 : DoblDobl_Complex_Vectors.Vector(0..n);
+    idx : constant Standard_Integer_Vectors.Vector
+        := Standard_Speelpenning_Products.Nonzero_Indices(e);
 
     use DoblDobl_Speelpenning_Products;
 
@@ -250,12 +283,10 @@ procedure ts_speel is
     y := Straight_Speel(e,x); put_line(y);
     put_line("Running Speelspenning's example in reverse mode :");
     z := Reverse_Speel(e,x); put_line(z);
-    sum := Create(integer(0));
-    for i in 0..n loop
-      d := AbsVal(y(i) - z(i));
-      sum := sum + d;
-    end loop;
-    put("Sum of differences : "); put(sum); new_line;
+    Compare(y,z);
+    put_line("Running indexed version of Speelpenning's example :");
+    z2 := Indexed_Reverse_Speel(idx,x); put_line(z2);
+    Compare(y,z2);
   end Run_DoblDobl_Speelpenning_Monomial;
 
   procedure Run_QuadDobl_Speelpenning_Monomial
@@ -263,8 +294,9 @@ procedure ts_speel is
 
     x : constant QuadDobl_Complex_Vectors.Vector(1..n)
       := QuadDobl_Random_Vectors.Random_Vector(1,n);
-    y,z : QuadDobl_Complex_Vectors.Vector(0..n);
-    sum,d : quad_double;
+    y,z,z2 : QuadDobl_Complex_Vectors.Vector(0..n);
+    idx : constant Standard_Integer_Vectors.Vector
+        := Standard_Speelpenning_Products.Nonzero_Indices(e);
 
     use QuadDobl_Speelpenning_Products;
 
@@ -273,12 +305,10 @@ procedure ts_speel is
     y := Straight_Speel(e,x); put_line(y);
     put_line("Running Speelspenning's example in reverse mode :");
     z := Reverse_Speel(e,x); put_line(z);
-    sum := Create(integer(0));
-    for i in 0..n loop
-      d := AbsVal(y(i) - z(i));
-      sum := sum + d;
-    end loop;
-    put("Sum of differences : "); put(sum); new_line;
+    Compare(y,z);
+    put_line("Running indexed version of Speelpenning's example :");
+    z2 := Indexed_Reverse_Speel(idx,x); put_line(z2);
+    Compare(y,z2);
   end Run_QuadDobl_Speelpenning_Monomial;
 
   procedure Monomial_Evaluation is
