@@ -1,0 +1,23 @@
+Fri 13 Jun 2014 : modified pieri_solver.adb for compiler warning.
+
+Thu 5 Dec 2013 : updated print_poly.adb for natural32 types.
+
+Fri 30 Aug 2013 : updated ts_arrays.adb and ts_cpm.adb 
+  for 32-bit natural/integer.  Also updated ts_csols.adb...
+
+Wed 19 Jun 2013 : updates in complex_polynomial_matrices.a*,
+  complex_polynomial_matrices_io.adb, verify_solution_maps.adb,
+  and pieri_solver.adb.
+
+Fri 14 Jun 2013 : updated c_to_ada_arrays.adb because of integer32 type.
+
+Tue 9 Jun 2011 : changed pieri_solver.adb because of changed specifications
+  in standard_root_refiners.adb and resolved the 2 remaining warnings!
+
+Sun 29 May 2011 : many warnings to pieri_solver.adb, only 2 remain...
+
+Wed 2 Jan 2008 : changed pieri_solver.adb, complex_polynomial_matrices.adb,
+  and complex_polynomial_matrices_io.adb because of GNAT GPL 2006 warnings.
+
+Wed 16 Mar 2005 : creation of "Funky" as subdirectory of "CtoPHC",
+  in addition to shuffling files around, this involved editing of READ_ME.

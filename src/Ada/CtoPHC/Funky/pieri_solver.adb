@@ -470,7 +470,7 @@ function Pieri_Solver ( m,p,q,nb,output_level : integer32;
 
     root : constant Node(p)
          := Trivial_Root(natural32(m),natural32(p),natural32(q));
-    lnkroot : Link_to_Node := new Node'(root);
+    lnkroot : constant Link_to_Node := new Node'(root);
     level_poset : Array_of_Nodes(0..nq);
     index_poset : Array_of_Array_of_Nodes(0..nq);
 
