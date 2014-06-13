@@ -1,0 +1,79 @@
+Mon 24 Mar 2014 : mainfac.adb adjusted so membership homotopy test
+  enabled for double double and quad double precision.
+
+Sun 23 Mar 2014 : updated homotopy_membership_tests with routines for
+  double double and quad double precision, with changed ts_mbthom.adb.
+
+Wed 26 Jun 2013 : updated drivers_to_factor_components and
+  drivers_to_factor_polynomials as need in mainfac.adb.
+
+Mon 24, Tue 25 2013 : more reorganization to rebuilt ts_irco.
+  Copied ts_mbthom.adb from ../Decomposition to this directory,
+  because homotopy membership test is historically related to monodromy.
+
+Fri 21 Jun 2013 : because of natural32 and integer32, updated ts_monfac,
+  monodromy_partitions, combinatorial_factorization, ts_combfac...
+
+Tue 1 Jan 2013 : ts_monfac.adb no longer compiled, fixed...
+
+Sun 30 Dec 2012 : sensitivity_of_factorization.adb no longer compiled,
+  fixed.
+
+Thu 2 Jun 2011 : changed ts_combfac.adb, ts_factor.adb, ts_ifactor.adb,
+  ts_hypfac.adb for warnings.
+
+Wed 1 Jun 2011 : changed combinatorial_factorization.adb,
+  drivers_to_factor_{polynomials,components}.adb for warnings.
+
+Sun 29 May 2011 : too many warnings for irreducible_component_creators.adb
+  to be fixed in one time...  Modified homotopy_membership_tests.* for warnings.
+
+Mon 2 May 2011 : fixed ts_ifactor.adb because it no longer compiled.
+
+Fri 24 Sep 2010 : updated mainfac.adb because of string_splitters.
+
+Tue 28 Jul 2009 : extended mainfac.adb with 7th option.
+
+Sun 29 Apr 2007 : fixed homotopy_membership_tests.adb so that eventually
+  test solutions may have already an embedding.
+
+Sat 28 Apr 2007 : the user can now control the tolerances in membership test,
+  changed mainfac.adb.  Copied homotopy_membership_tests from ../Decomposition.
+
+Thu 14 Dec 2006 : because witness_points* became *sets*, mainfac.adb changed;
+  also drivers_to_factor_components.adb, irreducible_component_lists.adb,
+  monodromy_component_breakup.adb, monodromy_actions_breakup.adb, ts_ifactor,
+  ts_combfac, ts_irco, driver_to_factor_components.adb, ts_rwpoly, ts_newfac
+  changed.  ts_monfac.adb seems obsolete...
+
+Tue 12 Dec 2006 : updated monodromy_polynomial_breakup.adb because renamed
+  lists_of_complex_vectors into standard_complex_veclists.
+
+Thu 15 Jun 2006 : updated mainfac.adb because standard_complex_solutions.get
+  has become obsolete.
+
+Wed 14 Jun 2006 : because of warnings on AIX, changed the files
+  irreducible_component_lists.a* and irreducible_component_creators.adb.
+
+Fri 12 May 2006 : added option #0 to phc -f to filter solution lists,
+  subject to criteria provided by the user.
+
+Tue 10 Jan 2006 : removed old_driver* from mainfac.adb, allowed user to tune
+  the continuation parameters in the driver_to_factor_components.adb.
+
+Tue 6 Sep 2005 : added "Trace_Sum_Difference" to monodromy_component_breakup.
+
+Thu 24 Jun 2004 : monodromy with intrinsic coordinates entered
+
+Tue 8 Jun 2004 : changed drivers_to_factor_components and mainfac.adb
+  to create separate files for witness sets of factors.
+
+Tue 11 May 2004 : blackbox factorization writes factors
+  to separate files
+
+Mon 25 Aug 2003 : black_box_factorization has been added,
+  multivariate_factorization.adb slightly modified.
+
+Fri 23 May 2003 : changed ts_factor and ts_hypfac so that they use
+  standard_random_polynomials instead of random_complex_polynomials.
+  The latter package should disappear...

@@ -1,0 +1,52 @@
+Thu 29 May 2014 : changed {standard,dobldobl,quaddobl,multprec}_complex_
+  solutions_io.adb to remove all compiler warnings.
+
+Wed 28 May 2014 : changed {standard,dobldobl,quaddobl,multprec}_complex_
+  solutions_io.adb for compiler warnings.
+
+Fri 29 Nov 2013 : changed copy of multprec_complex_solutions.adb 
+  and fixed a bug in the copy of lists of multiprecision solutions,
+  which occurred while upgrading ts_extrapol to multiprecision.
+
+Thu 27 Jun 2013 : updated drivers_for_solution_filters.adb for a warning.
+
+Wed 26 Jun 2013 : updated mainfilt.adb for natural32 data type.
+
+Tue 25 Jun 2013 : standard_solution_splitters got updated with integer32.
+
+Wed 12 Jun 2013 : updated {dobldobl,quaddobl}_systems_and_solutions_io.adb.
+
+Mon 10 Jun 2013 : copied lists_of_symbols from ../Homotopy to here
+  and completed reorganzation for all ts_ files.
+
+Sun 9 Jun 2013 : about half of the files in this directory changed
+  because of the introduction of natural32 and integer32 types.
+
+Fri 10 May 2013 : new package standard_condition_report to avoid the
+  confusion in drivers_for_condition_tables, tested by ts_quad.adb,
+  also additions to standard_select_solutions.
+
+Thu 9 May 2013 : copied from ../Homotopy the standard_point_lists.a*
+  because there are needed by standard_quad_trees.
+  Modified ts_selsol.adb to allow for interactive input of indices.
+  New package standard_select_solutions, used in ts_quad.adb.
+  Copied from ../Homotopy the mainfilt.a* and modified mainfilt.adb,
+  because of changes in drivers_for_condition_tables.
+  Also ts_grepsols.adb changed.
+
+Fri 15 Feb 2013 : the parse operations in *_solution_strings* now
+  initialize the symbol table.
+
+Thu 14 Feb 2013 : new package solution_drops tested by ts_soldrop.
+
+Fri 1 Feb 2013 : fixed bug in dobldobl_solution_strings.adb,
+  the same bug appeared in quadobl_solution_strings.adb.
+
+Tue 29 Jan 2013 : multprec_solution_strings.adb got fixed.
+  New packages {dobldobl,quaddobl}_solution_strings, tested by ts_solstr.
+
+Mon 28 Jan 2013 : changed standard_solution_strings.ads, new package
+  multprec_solution_strings, tested by ts_solstr.adb.
+
+Sun 20 Jan 2013 : created this new directory from code of Homotopy:
+  all that concerns the representation of solutions.

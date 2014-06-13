@@ -1,0 +1,100 @@
+Tue 18 Feb 2013 : extended double_double.h and double_double.c with
+  dd_sin_taylor and dd_cos_taylor functions...
+  Changed dobldobl_random_numbers.adb so the precision is respected
+  when generating random complex numbers on the unit circle,
+  also changed quaddobl_random_numbers.adb accordingly.
+
+Thu 6 Jun 2013 : because of the natural32 and integer32 data types, updated
+ standard_complex_exponentiation.a*, tested by ts_cmpexp.adb,
+ multprec_quaddobl_convertors.adb, quaddobl_complex_numbers_io.a*,
+ quaddobl_complex_numbers_polar.a*, tested by ts_qdcmplx.adb
+ quad_double_numbers_io.a*, quad_double_numbers.a*,
+ quaddobl_random_numbers.a*, quad_double_ring.ads, tested by ts_qddbl,
+ double_double_numbers.a*, double_double_numbers_io.a*,
+ dobldobl_random_numbers.a*, double_double_ring.ads, tested by ts_dbldbl,
+ dobldobl_complex_numbers_io.a*, dobldobl_complex_numbers_polar.a*,
+ multprec_dobldobl_convertors.adb, tested by ts_ddcmplx.
+
+Tue 12 Feb 2013 : corrected error in documentation string of qd_test.c
+  and a much more serious error: forgotten to assign qd_pi!
+
+Wed 26 Sep 2012 : added routines to {dobldobl,quaddobl}_random_numbers 
+  to generate numbers with a magnitude within a given range, tested by 
+  ts_dbldbl.adb, ts_qddbl.adb, ts_ddcmplx.adb, and ts_qdcmplx.adb.
+
+Thu 9 Jun 2011 : new changes in standard_complex_exponentiation.adb lead
+  to a correct binomial solvers, tested by ts_cmpexp.adb.
+
+Wed 8 Jun 2011 : adjusted standard_complex_exponentiation.adb.
+
+Tue 7 Jun 2011 : changed double_double_numbers_io.adb for a warning.  Added
+  conversion from integer number to multprec_{dobldobl,quaddobl}_convertors.
+  Updated standard_complex_exponentiation.adb, tested by ts_cmpexp.adb.
+
+Mon 6 Jun 2011 : updated ts_ddcmplx.adb for warnings.  New package
+  standard_complex_exponentiation tested by ts_cmpexp.adb.
+
+Wed 1 Jun 2011 : changed {dobldobl,quaddobl}_mathematical_functions.adb 
+  for warnings.
+
+Sun 14 Nov 2010 : bug fix in quad_double_numbers.adb: "x <= y" and "x >= y"
+  for x and y both quad doubles.
+
+Sun 19 Sep 2010 : fixed bug in double_double_numbers_io.adb: return without
+  adjusting sign of the exponent.
+
+Fri 17 Sep 2010 : added get(x,y) to {double,quad}_double_numbers_io,
+  for use in {quaddobl,dobldobl}_complex_numbers_io.adb, with tests in
+  ts_dbldbl.adb, ts_qddbl.adb, ts_ddcmplx.adb and ts_qdcmplx.adb.
+
+Mon 6 Sep 2010 :  bug fix in double_double_numbers_io.adb, crash on full
+  set of cyclic 10-roots, with dd but not in qd.
+
+Fri 25 Jun 2010 : fixed bug in read of {double,quad}_double_numbers_io.adb
+  with modified ts_dbldbl.adb and ts_qddbl.adb for testing.
+  Added tan, arctan, sin, arcsin, cos, arcos, radius and angle
+  to dobldobl_mathematical_functions, tested by ts_ddfun,
+  and did likewise to quaddobl_mathematical_functions and ts_qdfun.
+  New packages {dobldobl,quaddobl}_complex_numbers_polar for primitive roots,
+  tested by ts_ddcmplx and ts_qdcmplx.
+
+Thu 24 Jun 2010 : added nint to quad_double_numbers and extended
+  quaddobl_mathematical_functions with SIN & COS, tested by ts_qdfun.adb.
+
+Wed 23 Jun 2010 : quaddobl_mathematical_functions exports SQRT,
+  tested by ts_qdfun.adb.  Added nint to double_double_numbers.
+  The sin and cos in dobldobl_mathematical_functions are available
+  for testing in ts_ddfun.adb, with new package double_double_constants.
+  Also new package quad_double_constants collects quad double constants.
+
+Tue 22 Jun 2010 : started dobldobl_mathematical_functions because will be
+  needed in simplicial solvers, tested by ts_ddfun.adb.
+
+Tue 8 Jun 2010 : changed multprec_{dobldobl,quaddobl}_convertors.adb
+  for a GNAT GPL 2009 warning about unused with/use clause.
+
+Fri 4 Jun 2010 : double_double_numbers.ads was touched to test inline
+  pragma, but it did not help, so removed it.
+
+Fri 28 May 2010 : added convertors between complex number types in
+  the packages {dobldobl,quaddobl}_complex_numbers_cv, called by
+  ts_mpddcv and ts_mpqdcv.  Instantiated field extensions 
+  {dobldobl,quaddobl}_complex_ring-ffield.
+
+Thu 27 May 2010 : added multprec_dobldobl_convertors, tested by ts_mpddcv,
+  to convert between multiprecision floats and double doubles.
+  Likewise for multprec_quaddobl_convertors, tested by ts_mpqdcv.
+  Added get/put for standard input/output to double_double_numbers_io 
+  and to quad_double_numbers_io.  
+
+Tue 25 May 2010 : quad_double_numbers completed, tested by ts_qddbl.adb.
+  Updates in documentation of double_double_numbers_io.ads,
+  new quad_double_numbers_io package.  After ring and field instantiations,
+  created complex and random numbers, tested by ts_ddcmplx and ts_qdcmplx.
+  Packages {quaddobl,dobldobl}_complex_ring + io are needed for vectors.
+
+Mon 24 May 2010 : ts_dbldbl.adb works as well as dd_test.c,
+  created quad_*ad* files, tested by ts_qddbl.adb.
+
+Fri 21 May 2010 : creation of directory with C code and starting of the
+  translations into Ada.

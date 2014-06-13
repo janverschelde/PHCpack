@@ -874,7 +874,7 @@ package body Standard_Intrinsic_Newton is
       nit := nit + 1;
       m := Affine_Eval(jf,p,z); Min(y);
       QRD(m,qraux,jpvt,false);
-      QRLS(m,n1,n1,n2,qraux,y,dum,dum,s,rsd,dum,110,info);  
+      QRLS(m,n1,n2,qraux,y,dum,dum,s,rsd,dum,110,info);  
       Add(x,s);
       nx := Max_Norm(x);
       incax := Max_Norm(s);
@@ -928,7 +928,7 @@ package body Standard_Intrinsic_Newton is
       nit := nit + 1;
       m := Affine_Eval(jf,p,z); Min(y);
       QRD(m,qraux,jpvt,false);
-      QRLS(m,n1,n1,n2,qraux,y,dum,dum,s,rsd,dum,110,info);  
+      QRLS(m,n1,n2,qraux,y,dum,dum,s,rsd,dum,110,info);  
       Add(x,s);
       nx := Max_Norm(x);
       incax := Max_Norm(s);
@@ -987,7 +987,7 @@ package body Standard_Intrinsic_Newton is
       nit := nit + 1;
       m := Projective_Eval(jf,p,z,k); Min(y);
       QRD(m,qraux,jpvt,false);
-      QRLS(m,n1,n1,n2,qraux,y,dum,dum,s,rsd,dum,110,info);  
+      QRLS(m,n1,n2,qraux,y,dum,dum,s,rsd,dum,110,info);  
       Add(x,s,k);
       nx := Max_Norm(x);
       incax := Max_Norm(s);
@@ -1041,7 +1041,7 @@ package body Standard_Intrinsic_Newton is
       nit := nit + 1;
       m := Projective_Eval(jf,p,z,k); Min(y);
       QRD(m,qraux,jpvt,false);
-      QRLS(m,n1,n1,n2,qraux,y,dum,dum,s,rsd,dum,110,info);  
+      QRLS(m,n1,n2,qraux,y,dum,dum,s,rsd,dum,110,info);  
       Add(x,s,k);
       nx := Max_Norm(x);
       incax := Max_Norm(s);
@@ -1553,7 +1553,7 @@ package body Standard_Intrinsic_Newton is
       nit := nit + 1;
       m := Jacobi_Eval(p,z); Min(y);
       QRD(m,qraux,jpvt,false);
-      QRLS(m,n1,n1,n2,qraux,y,dum,dum,s,rsd,dum,110,info);  
+      QRLS(m,n1,n2,qraux,y,dum,dum,s,rsd,dum,110,info);  
       Add(x,s);
       nx := Max_Norm(x);
       incax := Max_Norm(s);
@@ -1608,7 +1608,7 @@ package body Standard_Intrinsic_Newton is
       nit := nit + 1;
       m := Jacobi_Eval(p,z); Min(y);
       QRD(m,qraux,jpvt,false);
-      QRLS(m,n1,n1,n2,qraux,y,dum,dum,s,rsd,dum,110,info);  
+      QRLS(m,n1,n2,qraux,y,dum,dum,s,rsd,dum,110,info);  
       Add(x,s);
       nx := Max_Norm(x);
       incax := Max_Norm(s);

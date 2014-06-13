@@ -78,7 +78,7 @@ package Standard_Complex_QR_Least_Squares is
   --   qr         orthogonal part of the QR-decomposition.
 
   procedure QRLS ( x : in out Standard_Complex_Matrices.Matrix;
-                   ldx,n,k : in integer32;
+                   n,k : in integer32;
                    qraux,y : in Standard_Complex_Vectors.Vector;
                    qy,qty,b,rsd,xb : out Standard_Complex_Vectors.Vector;
                    job : in integer32; info : out integer32 );
@@ -100,8 +100,7 @@ package Standard_Complex_QR_Least_Squares is
   --   this information is contained in coded form in x and qraux.
 
   -- ON ENTRY :
-  --   x         contains the output of QRD, of size ldx times p;
-  --   ldx       leading dimension of x;
+  --   x         contains the output of QRD, of size n times p;
   --   n         number of rows in the matrix xk, must be same as in QRD
   --   k         number of columns of the matrix xk, k <= min(n,p)
   --   qraux     contains p entries, auxiliary output from QRD;
@@ -157,7 +156,7 @@ package Standard_Complex_QR_Least_Squares is
   -- providing separate arrays for anything else that is to be computed.
   -- Thus the calling sequence
   --
-  --     QRLS(x,ldx,n,k,qraux,y,dum,y,b,y,dum,110,info)
+  --     QRLS(x,n,k,qraux,y,dum,y,b,y,dum,110,info)
   --
   -- will result in the computation of b and rsd, with rsd overwriting y.
   -- More generally, each item in the following list contains groups of

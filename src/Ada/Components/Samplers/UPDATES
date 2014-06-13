@@ -1,4 +1,5 @@
 Fri 13 Jun 2014 : modified sample_point_lists.adb for compiler warning.
+  Changed standard_intrinsic_newton.adb for changed QRLS.
 
 Thu 29 May 2014 : changed sample_point_lists_io.adb for a compiler warning.
 

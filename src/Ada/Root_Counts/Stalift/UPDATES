@@ -1,0 +1,313 @@
+Fri 30 May 2014 : change in jumpstart_polyhedral_homotopies.adb for a
+  compiler warning.
+
+Thu 29 May 2014 : change in polyhedral_coefficient_trackers.adb for a
+  compiler warning.
+
+Tue 19 Nov 2013 : because of package name changes, modifications in 
+  integer_polyhedral_continuation.adb, mixed_volume_computation.adb,
+  inner_normal_cones.adb, contributions_to_mixed_volume.adb.
+
+Thu 14 Nov 2013 : changed floating_lifting_utilities.adb for GNAT GPL 2013
+  warning.
+
+Tue 25 Jun 2013 : updated induced_permutations.adb for integer32, natural32.
+
+Fri 14 Jun 2013 : about half of the files in this directory changed because
+  of the new natural32 and integer32 types.
+
+Thu 13 Jun 2013 : the compilation of test program in Implift forced already
+  modifications in floating_integer_convertors, flaoting_lifting_utilities,
+  floating_mixed_subdivisions, and integer_mixed_subdivisions.adb.
+
+Tue 7 May 2013 : added multitasking to drivers_for_mixedvol_algorithm.
+
+Mon 6 May 2013 : adjustments to lifted_configurations.adb and ts_balance.adb.
+
+Sat 4 May 2013 : copied ts_balance.adb and dependencies from the
+  Experiments directory, only to find that is does not scale for cyclic10.
+
+Thu 25 Apr 2013 : drivers for_static_lifting.adb calls the
+  multitasking_polyhedral_trackers.
+
+Wed 24 Apr 2013 : changed in polyhedral_coefficient_homotopies.adb the
+  upper limit for points that do not belong in the lower hull.
+
+Tue 23 Apr 2013 : more additions in polyhedral_coefficient_homotopies.
+
+Mon 22 Apr 2013 : extended polyhedral_coefficient_homotopies with procedural
+  version of the power_transform.
+
+Mon 15 Apr 2013 : added write_to_file procedure to ts_rndcff.adb.
+
+Wed 13 Feb 2013 : changed drivers_for_mixedvol_algorithm.adb to avoid
+  printing out of the permutation.
+
+Fri 21 Dec 2012 : takes smallest enclosing list in induced_permutations.
+
+Thu 20 Dec 2012 : new package induced_permutations.
+
+Sat 1 Dec 2012 : bug fix in drivers_for_mixedvol_algorithm.adb, no permutation
+  when r < n and output was written directly to screen.
+
+Sat 10 Nov 2012 : modified floating_polyhedral_continuation.adb for warning,
+  changed inner_normal_cones.adb for name change of transformations.
+  The name change of vertices into standard_integer_vertices changed
+  contributions_to_mixed_volume.adb.
+
+Wed 8 Aug 2012 : changes in stable_polyhedral_continuation.adb.  Because of
+  bug with katsura6 (stable mixed volume 64, mixed volume 54), reverted to
+  the use of Occurred_Lifting so solutions with zero components are computed.
+  Commented out put() statements from drivers_for_mixedvol_algorithm.adb.
+
+Mon 6 Aug 2012 : update in stable_polyhedral_continuation.adb for bug hunt.
+
+Thu 22 Sep 2011 : updated drivers_for_mixedvol_algorithm.adb for bug hunt.
+
+Fri 16 Sep 2011 : commented out all permutations of the start system in
+  drivers_for_mixedvol_algorithm.adb.
+
+Thu 15 Sep 2011 : changed drivers_for_mixedvol_algorithm.adb for use of
+  permutation when creating mixed-cell configurations for semi-mixed systems.
+
+Fri 9 Sep 2011 : changed floating_polyhedral_continuation.adb, commenting
+  out about multprec_hermite option, found a bug with permutations in phc -b.
+
+Wed 7 Sep 2011 : made changes to floating_polyhedral_continuation.adb
+  (commenting out a clear(q) in Mixed_Solve) for multithreading.
+
+Fri 10 Jun 2011 : ts_drivstal.adb did not compile anymore because of
+  the added #tasks parameter to driver_to_mixed_volume_computation.
+  Changed ts_conint.adb, ts_exptrack.adb, ts_mvasta.adb, ts_stable.adb
+  for warnings.  Updated mixed_volume_computation, drivers_for_static_lifting,
+  and drivers_for_mixedvol_algorithm to use multiprecision Hermite form.
+  Updated floating_mixed_subdivisions_io and floating_polyhedral_continuation.
+
+Fri 3 Jun 2011 : for a crash, changed mixed_volume_computation.adb
+  and floating_mixed_subdivisions_io.adb.  Added exception handler
+  to floating_polyhedral_continuation.adb to catch binomial system.
+
+Wed 1 Jun 2011 : changed drivers_for_static_lifting.adb, 
+  normal_cone_intersections.adb, driver_for_criterion.adb,
+  floating_mixed_subdivisions.adb, and floating_mixed_subdivisions_io.adb 
+  for warnings.
+
+Sun 29 May 2011 : changed integer_polyhedral_continuation.adb,
+  integer_mixed_subdivisions.adb and standard_coefficient_systems.adb 
+  for warnings; only 3 left in drivers_for_static_lifting.adb...
+  Changed floating_lifting_{functions,utilities}.adb,
+  mixed_volume_computation.adb and floating_polyhedral_continuation.adb
+  for warnings.
+
+Fri 20 May 2011 : ts_stable.adb no longer compiled, modified 
+  stable_polyhedral_continuation.a* , changed ts_mixvol.adb, ts_rndcff.adb,
+  supported_subsystems.adb, ts_jpmix.adb for warnings.
+
+Tue 14 Sep 2010 : updated polyhedral_coefficient_trackers.adb for a
+  GNAT GPL 2010 warning.
+
+Fri 9 Oct 2009 : touched drivers_for_mixedvol_algorithm.adb to chase a bug.
+
+Sun 5 Jul 2009 : extended drivers_for_static_lifting with multitasking.
+
+Mon 22 Jun 2009 : extended ts_rndcff.adb with one option to create random
+  coefficient start systems, given a polynomial system.
+
+Sun 21 Jun 2009 : updated drivers_for_mixedvol_algorithm.adb, commenting out
+  a debugging put_line.
+
+Fri 19 Jun 2009 : updated ts_drivstal.adb with extra parameters for
+  calling the driver routine.
+
+Tue 12 Aug 2008 : after renaming "sparse solvers" into "simpomial solvers",
+  floating_ and integer_polyhedral_continuation.adb, and
+  polyhedral_coefficient_trackers.adb changed.
+
+Wed 6 Aug 2008 : commented out put_line in drivers_to_mixedvol_algorithm.adb.
+
+Sun 3 Aug 2008 : change stable_polyhedral_continuation.adb again to deal
+  now with cases when the supports are degenerate: main cause was the
+  disagreement of array dimensions after filtering.
+
+Fri 1 Aug 2008 : changed stable_polyhedral_continuation.adb to deal with
+  the degenerate case when after filtering fq has zero polynomials.
+
+Mon 21 Jul 2008 : in drivers_for_mixedvol_algorithm.adb replaced the calls
+  to "occurred_lifting" by "lifted_supports" because of "robspat".
+  Apparently something is wrong with the computation of the permutations
+  with semimixed systems like robspat...
+
+Fri 6 Jun 2008 : changed floating_polyhedral_continuation.adb to chase
+  a bug for Laurent systems.
+
+Wed 2 Jan 2008 : because of warnings in GNAT GPL 2006, changed
+  jumpstart_polyhedral_homotopies.adb.
+
+Thu 20 Dec 2007 : stable_polynomial_continuation.adb now uses the
+  Merge_and_Concat operation from standard_stable_homotopies.
+
+Sat 8 Dec 2007 : stable_polyhedral_continuation.adb wrote output to screen
+  in its silent version, commented out those put statements, then removed
+  code into standard_stable_homotopies, also its specification changed.
+  Fixed a warning in drivers_for_mixedvol_algorithm.adb.
+
+Fri 7 Dec 2007 : the stable lifting bound is capped at a default maximum
+  of 10^8, with larger values numerical instabilities show up.
+
+Wed 15 Aug 2007 : changed stable_polyhedral_continuation, adding functions
+  for polynomials (complementing existing ones for Laurentials), 
+  drivers_for_static_lifting and drivers_for_mixedvol_algorithm now both
+  export stable mixed volumes and solutions with zero components.
+
+Tue 14 Aug 2007 : bug fix in stable_polyhedral_continuation.adb, changes
+  in drivers_for_static_lifting.adb and drivers_for_mixedvol_algorithm,
+  so that now also zero component sols are computed in phc -m option #4.
+
+Mon 13 Aug 2007 : ts_stable works on bivariate, after changing ts_stable.adb
+  and stable_polyhedral_continuation once more.
+
+Sun 12 Aug 2007 : stable_polyhedral_continuation and ts_stable.adb are almost
+  ready to set up the complete polyhedral homotopies.
+
+Thu 9 Aug 2007 : worked further on ts_stable.adb...
+
+Tue 7 Aug 2007 : changed stable_polyhedral_continuation.adb and ts_stable.adb.
+
+Fri 3 Aug 2007 : created the package stable_polyhedral_continuation,
+  lifting routines from ts_stable.adb.  Changed random_coefficient_systems,
+  integer_lifting_utilities, {integer,floating}_lifting_functions, 
+  drivers_for_static_lifting.adb, 
+  {integer,floating}_polyhedral_continuation.adb
+
+Thu 2 Aug 2007 : modified ts_stable.adb to substitute zeroes along type.
+
+Wed 25 Jul 2007 : added Zero_Type function to floating_mixed_subdivisions,
+  ts_stable prints the zero type for the cells given on file.
+
+Mon 9 Jul 2007 : added facility to floating_lifting_functions to compute
+  the lifting bound, minor change to floating_lifting_utilities.adb,
+  and to drivers_for_static_lifting.adb.
+
+Sun 8 Jul 2007 : added to floating_mixed_subdivisions.a* a more robust
+  criterium to decide whether a cell is stable or not, also changed
+  floating_mixed_subdivisions_io.adb when testing the new criterium.
+
+Thu 5 Jul 2007 : changed drivers_for_lifting_functions.adb to take genuine
+  Laurent systems into account, moved code from ts_stable.adb.
+  The drivers_for_mixedvol_algorithm.a* prompt for stable mixed volumes.
+
+Tue 3 Jul 2007 : bug fix in floating_pruning_methods.adb for unmixed case,
+  changed floating_mixed_subdivisions.a* and its _io.a*, also
+  drivers_for_static_lifting.a* and drivers_for_mixedvol_algorithm.adb,
+  so that now phc -m option #0 computes stable mixed volumes.
+
+Mon 2 Jul 2007 : added stable lifting to floating_lifting_functions,
+  drivers_for_lifting_functions, and drivers_for_static_lifting;
+  ts_stable.adb prepared the way.
+
+Mon 18 Jun 2007 : upgraded drivers_for_static_lifting.adb, added Permute
+  operation to mixed_volume_computation.  Added Laurent polynomials to
+  {integer,floating}_lifting_functions, changed drivers_for_lifting_functions.
+
+Thu 14 Jun 2007 : from drivers_for_static_lifting.adb, removed one
+  Select_Terms into supports_of_polynomial_systems.
+
+Mon 11 Jun 2007 : drivers_for_static_lifting contains a driver that takes
+  in Laurent polynomial systems directly.
+
+Tue 1 May 2007 : extended random_coefficient_systems to Laurent systems,
+  used in drivers_for_mixedvol_algorithm, cleaned up the package
+  drivers_for_static_lifting, but still not okay...
+
+Wed 18 Oct 2006 : implemented tuner in polyhedral_coefficient_parameters
+  which improved jumpstart_polyhedral_homotopies.adb and _trackers.adb.
+  Also ts_exptrack.adb changed.
+
+Tue 17 Oct 2006 : modified polyhedral_coefficient_trackers and ts_exptrack
+  to prepare for jumpstarting.  Package jumpstart_polyhedral_homotopies
+  collects drivers developed with ts_exptrack, available for maintrack.
+  Created polyhedral_coefficient_parameters for numerical tuning.
+
+Fri 13 Oct 2006 : new package polyhedral_coefficient_correctors, splitted
+  off from polyhedral_coefficient_tracking, renamed into _trackers,
+  Created polyhedral_coefficient_predictors.
+
+Tue 10 Oct 2006 : developed ts_mixlab.adb into data conversion routine,
+  to convert between coordinate and labeled mixed-cell configurations,
+  new data types in floating_mixed_subdivisions.ads and changed the
+  corresponding i/o in floating_mixed_subdivisions_io.  ts_jpmix is a
+  template for how to process mixed-cell configurations incrementally.
+  Used this in polyhedral_coefficient_tracking, tested by ts_exptrack.
+
+Sun 8 Oct 2006 : the new ts_mixlab.adb is a shell to develop the notion of
+  labeled mixed-cell configuration, for use in jumpstarting homotopies.
+
+Sat 7 Oct 2006 : created ts_jpmix.adb to develop jumpstart processing of
+  mixed-cell configurations.  Cosmetic change in mixed_volume_computation.ads.
+  Added some routines to floating_mixed_subdivisions_io.
+  Started jumpstarting in polyhedral_coefficient_trackers, but this
+  requires the format of a mixed-cell configuration on file to change!
+
+Thu 5 Oct 2006 : ts_exptrack spawned "polyhedral_coefficient_tracking",
+  a new package with basic path trackers, ts_exptrack is lean.
+  Made some changes to polyhedral_coefficient_homotopies.a*.
+
+Wed 4 Oct 2006 : extended supported_subsystems to work also with Laurent
+  polynomials, this led to changes in floating_polyhedral_continuation.adb.
+  Later replaced by supports_of_polynomial_systems, which changed 
+  drivers_for_mixedvol_algorithm.adb, integer_polyhedral_continuation.adb,
+  floating_polyhedral_continuation.adb, bkk_bound_computations.adb
+  Removed supported_subsystems, changed ts_conint.adb, ts_drivcrit.adb,
+  ts_mixture.adb.  Moved ts_supsub.adb in ../Implift/ts_supports.adb.
+  Created new package "polyhedral_coefficient_homotopies", splitted off
+  from code used in {integer,floating}_polyhedral_continuation.adb.
+ 
+Tue 3 Oct 2006 : {integer,floating}_polyhedral_continuation.adb changed
+  because of changed interface (extra test on y=0) in sparse system solvers.
+  Moved an auxiliary routine from floating_mixed_subdivisions_io
+  to mixed_volume_computation, for use in the new ts_exptrack.adb.
+  Fixed a spelling mistake in floating_lifting_utilities, which changed
+  drivers_for_mixedvol_algorithm.adb and drivers_for_static_lifting.adb
+
+Fri 8 Sep 2006 : changed drivers_for_mixedvol_algorithm to allow for
+  tuning of parameters and extra intermediate output.
+
+Mon 28 Aug 2006 : changed drivers_for_mixedvol_algorithm.ads, so that
+  the mixed volume is explicitly returned as a parameter.
+
+Fri 25 Aug 2006 : volume computation of mixed cells available now in
+  drivers_for_static_lifting.ads, also updated corresponding .adb.
+  Updated drivers_for_mixedvol_algorithm.
+
+Thu 24 Aug 2006 : created Drivers_for_MixedVol_Algorithm for phc -m.
+
+Wed 23 Aug 2006 : created ts_mvasta to integrate MixedVol algorithm.
+
+Thu 16 Mar 2006 : changed {integer,floating}_polyhedral_continuation.adb
+  to use the standard_sparse_solvers.
+
+Mon 2 Jan 2006 : created random_coefficient_systems, tested by ts_rndcff,
+  and supported_subsystems, tested by ts_supsub, for cells container.
+
+Fri 25 Mar 2005 : added "lifting_supports" to floating_lifting_utilities,
+  because needed in the cells container.
+
+Thu 17 Mar 2005 : changed driver_for_criterion.adb to have removal of
+  nonvertex points as the default, drivers_for_lifting_functions.adb
+  has point-wise floating lifting set as the default.
+
+Fri 26 May 2000 : rearranged subroutines in drivers_for_static_lifting.adb.
+  Removed mixed_coherent_subdivisions and added to mixed_volume_computation.
+
+Thu 30 Nov 2000 : changed integer_pruning_methods.adb, contained variables
+  that where never assigned a value.  Also floating_pruning_methods.adb
+  had such variables.  Also contributions_to_mixed_volume.adb changed
+
+Fixed bug in recursive mixed solve of integer_polyhedral_continuation on
+Sunday June 13, 1999.  Copied new version of the body to public directory.
+Copied new version of floating_polyhedral_continuation to public directory,
+after commenting out all the output.
+
+In integer_polyhedral_continuation.adb : removed in the body "Power"
+and the useless Chebychev interpolation experiment on Sun 29 August 1999.
+

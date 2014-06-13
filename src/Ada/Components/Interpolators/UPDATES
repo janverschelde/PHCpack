@@ -1,3 +1,6 @@
+Fri 13 Jun 2014 : changed standard_polynomial_interpolators.adb for change
+  in the specification of QRLS.
+
 Sun 29 May 2011 : changed {standard,multprec}_trace_interpolators.adb
   for warnings.
 

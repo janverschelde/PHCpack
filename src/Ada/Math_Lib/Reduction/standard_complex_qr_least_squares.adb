@@ -214,51 +214,52 @@ package body Standard_Complex_QR_Least_Squares is
       work(j) := qraux(j);
     end loop;
     lup := min0(n,p);                -- perform the householder reduction of x
-    for l in 1..lup loop
-      if (l >= pl and l < pu) then
+    for ell in 1..lup loop
+      if (ell >= pl and ell < pu) then
         maxnrm := 0.0;                  -- locate column with largest norm and
-        maxj := l;                           -- bring it in the pivot position
-        for j in l..pu loop
+        maxj := ell;                         -- bring it in the pivot position
+        for j in ell..pu loop
           if REAL_PART(qraux(j)) > maxnrm
            then maxnrm := REAL_PART(qraux(j)); maxj := j;
           end if;
         end loop;
-        if maxj /= l then
-          zswap(x,l,maxj);
-          qraux(maxj) := qraux(l);
-          work(maxj) := work(l);
+        if maxj /= ell then
+          zswap(x,ell,maxj);
+          qraux(maxj) := qraux(ell);
+          work(maxj) := work(ell);
           jp := jpvt(maxj);
-          jpvt(maxj) := jpvt(l);
-          jpvt(l) := jp;
+          jpvt(maxj) := jpvt(ell);
+          jpvt(ell) := jp;
         end if;
       end if;
-      qraux(l) := Create(0.0);
-      if l /= n then
-        nrmxl := Create(znrm2(x,l,l));          -- householder transformation
-        if AbsVal(nrmxl) /= 0.0 then                          -- for column l
-          if cdabs(x(l,l)) /= 0.0
-           then nrmxl := csign(nrmxl,x(l,l));
+      qraux(ell) := Create(0.0);
+      if ell /= n then
+        nrmxl := Create(znrm2(x,ell,ell));      -- householder transformation
+        if AbsVal(nrmxl) /= 0.0 then                        -- for column ell
+          if cdabs(x(ell,ell)) /= 0.0
+           then nrmxl := csign(nrmxl,x(ell,ell));
           end if;
-          zscal(x,Create(1.0)/nrmxl,l,l);
-          x(l,l) := Create(1.0) + x(l,l);
-          lp1 := l + 1;         --  apply the transformation to the remaining
+          zscal(x,Create(1.0)/nrmxl,ell,ell);
+          x(ell,ell) := Create(1.0) + x(ell,ell);
+          lp1 := ell + 1;       --  apply the transformation to the remaining
           for j in lp1..p loop                --  columns, updating the norms
-            t := -zdot(x,l,l,j)/x(l,l);
-            zaxpy(x,t,l,l,j);
+            t := -zdot(x,ell,ell,j)/x(ell,ell);
+            zaxpy(x,t,ell,ell,j);
             if (j >= pl) and (j <= pu) and (AbsVal(qraux(j)) /= 0.0) then
-              tt := 1.0 - (cdabs(x(l,j))/REAL_PART(qraux(j)))**2;
+              tt := 1.0 - (cdabs(x(ell,j))/REAL_PART(qraux(j)))**2;
               tt := dmax1(tt,0.0);
               t := Create(tt);
               tt := 1.0 + 0.05*tt*(REAL_PART(qraux(j))/REAL_PART(work(j)))**2;
-              if tt /= 1.0
-               then qraux(j) := qraux(j)*Create(SQRT(REAL_PART(t)));
-               else qraux(j) := Create(znrm2(x,l+1,j));
-                    work(j) := qraux(j);
+              if tt /= 1.0 then
+                qraux(j) := qraux(j)*Create(SQRT(REAL_PART(t)));
+              else 
+                qraux(j) := Create(znrm2(x,ell+1,j));
+                work(j) := qraux(j);
               end if;
             end if;
           end loop;
-          qraux(l) := x(l,l);                      -- save the transformation
-          x(l,l) := -nrmxl;
+          qraux(ell) := x(ell,ell);               -- save the transformation
+          x(ell,ell) := -nrmxl;
         end if;
       end if;
     end loop;
@@ -286,7 +287,7 @@ package body Standard_Complex_QR_Least_Squares is
   end Basis;
 
   procedure QRLS ( x : in out Standard_Complex_Matrices.Matrix;
-                   ldx,n,k : in integer32;
+                   n,k : in integer32;
                    qraux,y : in Standard_Complex_Vectors.Vector;
                    qy,qty,b,rsd,xb : out Standard_Complex_Vectors.Vector;
                    job : in integer32; info : out integer32 ) is

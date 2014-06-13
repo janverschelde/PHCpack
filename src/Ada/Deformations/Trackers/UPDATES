@@ -1,0 +1,49 @@
+Thu 29 May 2014 : changed drivers_to_track_{standard, quaddobl}_paths.adb
+  for compiler warnings.
+
+Thu 27 Mar 2014 : allowing random gamma constants in the generators led
+  to changes in the init of all *path_tracker.a* and ts_nxtsol.adb.
+
+Mon 2 Dec 2013 : multprec_data_on_path.a* extended with data management
+  for quadratic, cubic, and quartic predictors for use in the
+  multprec_path_trackers.adb, fixing a bug in phc -p for precision > 64.
+
+Sun 1 Dec 2013 : extended multprec_dispatch_predictors.a* with higher-order
+  predictors.  New pacakge multprec_data_on_path to refactor the
+  multprec_path_trackers, similar as done on Mon 23 Sep 2013.
+
+Sat 30 Nov 2013 : updated with multprec_predictors.a* with higher-order
+  predictors.
+
+Tue 24 Sep 2013 : {standard,dobldobl,quaddobl}_path_tracker.adb are
+  updated to form a basic path tracker with a generator, and updated
+  also ts_nxtsol.adb as well.
+
+Mon 23 Sep 2013 : new package standard_data_on_path, refactored from
+  standard_path_trackers for use in standard_path_tracker, tested by
+  ts_nxtsol, to add generator to path trackers.
+  Refactored {dobldobl,quaddobl}_path_trackers extracting new packages
+  {dobldobl,quaddobl}_data_on_path.
+
+Thu 13 Jun 2013 : because of natural32 and integer32, more than half of all
+  files were updated.
+
+Thu 16 May 2013 : changes in *dobl_dispatch_predictors.a* and in
+  {standard,dobldobl,quaddobl}_path_trackers.adb.
+
+Wed 15 May 2013 : added quadratic & cubic predictors to standard_predictors,
+  standard_dispatch_predictors and standard_path_trackers.adb.
+
+Tue 14 May 2013 : new {dobldobl,quaddobl}_extrapolators, tested by
+  ts_extrapol.adb.  Moved the *extra* code to the new directory ../Curves.
+
+Mon 13 May 2013 : new test program ts_extrapol.adb to develop extrapolation
+  methods and higher-order predictors.  New package standard_extrapolators.
+
+Mon 21 Jan 2013 : creation of this directory, moving code involving tracking
+  from Continuation to this new directory Trackers.
+  Added callback functions to the Linear_Single* routines in the
+  standard_path_trackers and drivers_to_path_trackers,
+  tested the writing to screen with a callback in ts_track.adb.
+  Similarly, updated {dobldobl,quaddobl}_path_trackers.a* and the
+  drivers_to_track_{dobldobl,quaddobl}_paths.a*.

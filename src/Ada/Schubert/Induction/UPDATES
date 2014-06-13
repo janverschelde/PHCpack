@@ -1,0 +1,294 @@
+Thu 5 Jun 2014 : adjusted drivers_for_schubert_induction to pass the 
+  coefficients of the fixed flags.
+
+Wed 4 Jun 2014 : more changes to drivers_for_schubert_induction, now for
+  the Python interface.
+
+Mon 2 Jun 2014 : changed drivers_for_schubert_induction.
+
+Sun 1 Jun 2014 : updated drivers_for_schubert_induction to prepare for the
+  C interface.
+
+Wed 28 May 2014 : put_line to write of "= 0" in intersection_posets_io.adb
+  and added random_triplet to ts_checkers.adb.
+
+Tue 27 May 2014 : fix in ts_induce.adb for extra "silent" parameter in
+  the intersect of intersection_posets.
+
+Fri 23 May 2014 : updates in drivers_for_schubert_induction for the
+  resolution of a general Schubert problem, with code from ts_checkers.adb.
+  Modifications in intersection_posets to make it silent.
+
+Sat 17 May 2014 : code to transform a pair of flags added to ts_induce.
+
+Wed 14 May 2014 : extra function in ts_checkers.adb to generate a random
+  intersection condition, extra Final_Sum in intersection_posets.
+
+Tue 13 May 2014 : small changes to ts_induce.adb for compiler warnings.
+
+Tue 25 Jun 2012 : updated mainenum.adb for natural32 and integer32.
+
+Wed 19 Jun 2012 : Almost all files changes because of natural32 & integer32.
+
+Thu 9 Jun 2011 : changed moving_flag_continuation.adb for changed
+  specifications of standard_root_refiners.
+
+Wed 1 Jun 2011 : for warnings, changed drivers_for_schubert_induction.adb.
+
+Sun 29 May 2011 : for GNAT GPL 2010 warnings, modified checker_moves.adb
+  and moving_flag_continuation.adb; only 2 warnings left 
+  with moving_flag_homotopies.adb and checker_posets.adb...
+
+Wed 6 Jan 2010 : for GNAT GPL 2009 warnings, modified intersection_posets.adb
+  and intersection_posets_io.adb.  Extended schubert_posets.a*.
+
+Tue 5 Jan 2010 : minor modifications in schubert_posets and ts_flagcond.adb.
+
+Mon 4 Jan 2010 : created schubert_posets, tested by ts_flagcond.adb.
+
+Fri 1 Jan 2010 : updated in ts_flagcond.adb.
+
+Thu 31 Dec 2009 : updates in ts_checkers.adb and ts_flagcond.adb.
+
+Tue 29 Dec 2009 : for GNAT GPL 2009 warnings: change in ts_checkers.adb,
+  numeric_schubert_conditions.a*.  Fixed ts_flagcond.adb, extending
+  drivers_for_schubert_conditions.adb.
+
+Fri 30 Oct 2009 : updates in numeric_schubert_conditions for bug chases,
+  moving_flag_homotopies and drivers_for_schubert_induction to make
+  cheater's homotopy between Schubert problems work.
+  Last minute change to drivers_for_schubert_induction.adb.
+
+Thu 29 Oct 2009 : the fixed flags are written in full by
+  drivers_for_schubert_induction.adb
+
+Wed 28 Oct 2009 : phc -e runs what was in ts_flagcond #5, updated
+  drivers_for_schubert_induction.
+
+Tue 27 Oct 2009 : updated moving_flag_continuation to return also solutions,
+  tested by ts_flagcond.adb.  Added fifth option to mainenum.adb, moved code
+  from ts_flagcond.adb to drivers_for_schubert_induction.
+
+Fri 19 Jun 2009 : updated ts_induce.adb.
+
+Tue 16 Jun 2009 : updated checker_homotopies.a*, ts_flagcond.adb, and
+  moving_flag_continuation.adb.
+
+Mon 15 Jun 2009 : updates in checker_boards_io.a*, checker_posets_io.adb,
+  checker_localization_patterns.adb, moving_flag_homotopies.adb,
+  checker_homotopies.a* and moving_flag_continuation.a*.
+
+Sun 14 Jun 2009 : changes in moving_flag_continuation.adb and
+  checker_homotopies.adb.
+
+Fri 12 Jun 2009 : updates in checker_homotopies.a* and
+  moving_flag_continuation.a*, so finally [2 4]^4 works in ts_flagcond!
+
+Thu 11 Jun 2009 : updates in checker_homotopies.a* and
+  moving_flag_continuation.a* and moving_flag_homotopies.adb.
+
+Wed 10 Jun 2009 : updates in checker_homotopies.a* and
+  moving_flag_continuation.adb.
+
+Tue 9 Jun 2009 : updates in checker_boards.a*, checker_posets_io.adb,
+  checker_localization_patterns.a*, checker_homotopies.a*, ts_checkers.adb,
+  and moving_flag_continuation.adb.
+
+Mon 8 Jun 2009 : updates in checker_homotopies.a*,
+  moving_flag_homotopies.a*, and moving_flag_continuation.adb
+
+Fri 5 Jun 2009 : upgrades in checker_homtopies.a*, moving_flag_homotopie.a*,
+  checker_localization_patterns.a*, moving_flag_continuation.a*.
+
+Thu 4 Jun 2009 : updates in moving_flag_continuation.adb and
+  checker_homotopies.a*
+
+Wed 3 Jun 2009 : updates in moving_flag_homotopies.a*
+  and moving_flag_continuation.a*
+
+Tue 2 Jun 2009 : updates in moving_flag_homotopies.a*
+  and moving_flag_continuation.a*
+
+Mon 1 Jun 2009 : updated ts_induce.adb, moving_flag_homotopies.a*,
+  and moving_flag_continuation.adb.
+
+Thu 28 May 2009 : changes in checker_homotopies.a*, ts_flagcond.adb,
+  moving_flag_homotopies.adb and moving_flag_continuation.a*
+
+Tue 26 May 2009 : changes in moving_flag_continuation.adb and ts_flagcond.adb.
+
+Mon 25 May 2009 : updated moving_flag_{continuation,homotopies},
+  for multiple intersection conditions in ts_flagcond.adb.
+  
+Thu 21 May 2009 : changed moving_flag_homotopies.a*, ts_flagcond.adb,
+  and moving_flag_continuation.adb.
+
+Wed 20 May 2009 : changed moving_flag_homotopies.a*, ts_flagcond.adb,
+  and moving_flag_continuation.adb.
+
+Tue 19 May 2009 : updates in checker_homotopies.a*, ts_induce.adb,
+  and moving_flag_continuation.adb
+
+Mon 18 May 2009 : removed from symbolic_schubert_conditions.adb redundant
+  with/use clauses.  Code from ts_induce.adb into checker_homotopies.
+  Updated checker_moves.a* and moving_flag_continuation.adb.
+
+Tue 31 Mar 2009 : replaced standard_natural_vectors.io.get from the
+  checker_boards_io, changes in ts_flagcond.adb.
+
+Mon 30 Mar 2009 : extended ts_flagcond.adb with previous transformation
+  and localization patterns in option #6.
+
+Thu 26 Mar 2009 : extended checker_boards_io with procedure to write
+  along the localization pattern, used in ts_flagcond.adb.  Also changed
+  are moving_flag_continuation.adb and moving_flag_homotopies.
+  Added inverse symbolic transformation to moving_flag_homotopies.
+
+Wed 25 Mar 2009 : extra function in checker_localization_patterns,
+  updates in moving_flag_homotopies.adb and moving_flag_continuation.adb,
+  tested by ts_flagcond.adb, which has one extra test function.
+
+Tue 24 Mar 2009 : new procedure in moving_flag_continuation.adb,
+  ts_flagcond.adb change documents Random_Flag versus One_Flag.
+
+Tue 27 Jan 2009 : moved code from ts_induce.adb into checker_posets_io,
+  updates in moving_flag_homotopies.adb and moving_flag_continuation,
+  tested by ts_flagcond: now ready to track all moves in a path...
+
+Mon 26 Jan 2009 : added enumeration of all paths to checker_posets,
+  tested by new option #8 in ts_checkers.  The new #6 in ts_induce
+  writes all localizations for all paths in a checker poset.
+
+Tue 13 Jan 2009 : added root refiners and more diagnostics to
+  moving_flag_homotopies.adb and moving_flag_continuation.adb now
+  contains a working path tracker to start the [2 4 6]^3 condition.
+
+Thu 8 Jan 2009 : made moving_flag_continuation.track_game interactive
+  and added function to moving_flag_homotopies.
+
+Thu 11 Dec 2008 : added path trackers to moving_flag_continuation.
+
+Tue 2 Dec 2008 : updates of moving_flag_homotopies, moving_flag_continuation,
+  tested by ts_flagcond.adb, also code from ts_induce.adb is moved.
+
+Fri 28 Nov 2008 : moving_flag_homotopies now contains start_solution,
+  new package moving_flag_continuation, tested by ts_flagcond.adb.
+  Added writing to file routines to checker_boards_io.
+
+Wed 26 Nov 2008 : bug fix in one_flag_homotopy in moving_flag_homotopies.adb,
+  tested by ts_flagcond.adb.
+
+Tue 25 Nov 2008 : added one_flag_homotopy to moving_flag_homotopies.
+
+Mon 24 Nov 2008 : created package moving_flag_homotopies, moving code
+  from ts_induce.adb and ts_flagcond.adb.
+
+Sun 23 Nov 2008 : ts_flagcond.adb shows the effect of transformations
+  on a generalizing moving flag in symbolic form.  The numeric form of
+  the transformations is in ts_induce.adb.
+
+Fri 21 Nov 2008 : update of ts_flagcond.adb with symbolic form of flag.
+
+Thu 20 Nov 2008 : moved pattern for moving flag from checker_boards
+  to checker_localization_patterns and added a transformation routine.
+  Updated checker_boards_io, checker_posets_io.adb, and ts_checkers.adb.
+  Also ts_induce.adb changed and ts_flagcond.adb is updated.
+
+Wed 19 Nov 2008 : started definition of a moving flag homotopy
+  in ts_flagcond.adb.  Updated ts_checkers.adb after additions to
+  checker_moves.a* and checker_posets.a* to see generalizing moves.
+
+Tue 18 Nov 2008 : fixed reporting error in ts_induce.adb.
+  Added to checker_boards* and ts_induced.adb to see pattern of the
+  moving flag in the specializing and generalizing homotopies.
+  Also changed ts_checkers.adb so the moving flag patterns shows.
+
+Thu 13 Nov 2008 : formatting in checker_localization_patterns.adb,
+  checker_moves.adb, checker_posets.adb, checker_posets_io.adb,
+  intersection_posets.adb, intersection_posets_io.adb,
+  symbolic_schubert_conditions.adb, ts_checkers.adb
+
+Fri 14 Dec 2007 : mainenum.ads got copied over from ../Pieri.
+
+Fri 8 Jun 2007 : more updates in numeric_schubert_conditions.a*,
+  so ts_flagcond.adb is now doing the point test on the equations.
+
+Thu 7 Jun 2007 : debugged numeric_schubert_conditions.adb, removed output
+  from remember_symbolic_minors.adb, and now ts_flagcond.adb writes system.
+
+Wed 6 Jun 2007 : updated remember* and {symbolic,numeric}_schubert*,
+  tested by ts_flagcond.adb.
+
+Tue 5 Jun 2007 : created remember_numeric_minors and added "symbolic_"
+  to the minor_table data type in remember_symbolic_minors.
+  Adjusted {symbolic,numeric}_schubert_conditions and ts_flagcond.adb.
+
+Mon 4 Jun 2007 : adjusted (symbolic,numeric}_schubert_conditions and
+  created new remember_symbolic_minors, tested by ts_flagcond.adb.
+
+Thu 24 May 2007 : mv numeric_schubert_conditions evaluate_schubert_conditions
+  and started the specifications of numeric_schubert_conditions.
+
+Tue 3 Apr 2007 : changed checker_posets.a* and checker_posets_io.adb,
+  intersection_posets.adb and intersection_posets_io.adb to work with
+  coefficients of arbitrary length; also fixed ungraceful exit.
+
+Thu 29 mar 2007 : fixed another bug in checker_posets.adb, minor change
+  in ts_checkers.adb.
+
+Tue 27 Mar 2007 : fixed bug in checker_posets, adding new Add_Multiplicity
+  procedure, and a 7th option in ts_checkers.
+
+Mon 26 Mar 2007 : fixed bug in intersection_posets.adb, the .ads changed
+  in the testing process as well.
+
+Fri 23 Mar 2007 : flag_minor_system added to symbolic_schubert_conditions,
+  tested by ts_flagcond.
+
+Tue 20 Mar 2007 : computed the #equations in symbolic_schubert_conditions
+  and also the enumeration of the minors, tested by ts_flagcond.adb.
+
+Fri 9 Mar 2007 : made a modest start at numeric_schubert_conditions.ad*,
+  tested by ts_flagcond.adb.
+
+Thu 8 Mar 2007 : created ts_flagcond.adb to test the operations in
+  {symbolic,numeric}_schubert_conditions.
+
+Fri 17 Nov 2006 : modified Add_Multiplicity in checker_posets, which 
+  fixed a bug in intersection_posets.adb, reported by Frank.
+ 
+Mon 2 Oct 2006 : ts_induce allows to create an intersection poset,
+  fixed typo in intersection_posets.adb.  New operations in checker_posets
+  and intersection_posets_io to allow homotopy navigation in ts_induce.
+
+Thu 28 Sep 2006 : extra procedure "Add_Multiplicity" in checker_posets,
+  changed checker_posets_io.adb and intersection_posets.adb.
+
+Wed 27 Sep 2006 : intersection_posets (+io) replaces checker_poset_trees
+  (+io), ts_chekcers now prints out the complete expansion.
+  Altered the package description in checker_posets.ads.
+
+Tue 26 Sep 2006 : except for checker_boards and its io, every file got
+  changed.  Debugged checker_localization_patterns and created
+  checker_poset_trees + io to combine several intersection conditions.
+
+Mon 25 Sep 2006 : updated checker_moves with debugging option for happiness,
+  added one function to checker_localization_patterns.adb, ts_checkers is
+  modified so that it allows only happy checkers on input.
+
+Fri 15 Sep 2006 : extra parenting functions to checker_posets to make
+  walk in ts_induce.adb with generalizing_homotopies more complete.
+
+Thu 14 Sep 2006 : changed checker_posets and _io, for ts_checkers.adb and
+  ts_induce.adb which now traverses the poset from the leaves to the root.
+
+Wed 13 Sep 2006 : tweaked checker_boards_io.ads and .adb, modified
+  checker_posets.ads and its .adb, also checker_posets_io.adb, and
+  the test program ts_checkers.adb, so posets are now also printed
+  with their interconnectivity information.
+
+Tue 12 Sep 2006 : added comments to "Number_of_Moves" in checker_moves.ads,
+  minor change in checker_moves.adb; extra info in ts_checkers.adb, nicer 
+  output by checker_boards_io, added explanations in checker_boards.ads.
+  New "checker_localization_patterns" package, split off from ts_checkers.
+  Updated ts_induce.

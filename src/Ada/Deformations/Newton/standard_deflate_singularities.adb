@@ -370,7 +370,7 @@ package body Standard_Deflate_Singularities is
     Multiplier_System(f,z,n,m,A,b);
     wrk := A;
     QRD(wrk,qraux,jpvt,false);
-    QRLS(wrk,integer32(n),integer32(n),integer32(m),qraux,b,
+    QRLS(wrk,integer32(n),integer32(m),qraux,b,
          dum,dum,lambda,rsd,dum,110,info);
     dum := b - A*lambda;
     resid := Max_Norm(dum);

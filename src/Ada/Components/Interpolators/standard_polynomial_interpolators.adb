@@ -400,7 +400,7 @@ package body Standard_Polynomial_Interpolators is
    -- put("rcond of coeffmat : "); put(rcond,3); new_line;
    -- QR decomposition followed by Least Squares :
     QRD(mat,qraux,ipvt,false);                         -- QR without pivoting
-    QRLS(mat,n,n,n,qraux,rhs,dum,dum,rhs,dum,dum,100,info);  -- least squares
+    QRLS(mat,n,n,qraux,rhs,dum,dum,rhs,dum,dum,100,info);  -- least squares
    -- Scale_Coefficients(rhs,maxcols);
     res := Assign_Coefficients(p,rhs);
     return res;

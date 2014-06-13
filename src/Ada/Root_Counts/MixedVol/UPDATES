@@ -1,0 +1,188 @@
+Fri 30 May 2014 : modification in form_lp.adb for compiler warning and
+  changed "out Boolean_Matrix" into "in out Boolean_Matrix" in the
+  relation_table.ads and relation_table.adb for compiler warnings.
+
+Fri 14 Jun 2013 : all Ada routines changed because of natural32 and integer32.
+
+Wed 8 Aug 2012 : commented out put() statements of mixedvol_algorithm.adb.
+
+Thu 22 Sep 2011 : updates in mixedvol_algorithm.adb for bug hunt.
+
+Thu 15 Sep 2011 : modified mixedvol_algorithm.adb for selecting points
+  for the supports of the mixed cells for permuted semi-mixed systems.
+
+Fri 10 Jun 2011 : extended mixed_volume and mixedvol_algorithm with
+  routines to use a multiprecision Hermite normal form for the volume.
+
+Fri 3 Jun 2011 : changed mixed_volume.a* for a crash and warnings.
+
+Wed 18 May 2011 : updated mixed_volume.c to avoid writing the
+  relation table.  On line 78 of mv.c, added the ! in the cleaning
+  and made the corresponding change in mv.adb.
+
+Mon 16 May 2011 : updated ts_mv.adb and ts_mv2c.adb to include the
+  package string_splitters in the declaration.
+
+Fri 24 Sep 2010 : updated mixed_volume.adb for string_splitters.
+
+Tue 14 Sep 2010 : updated prepare_for_mv.adb, one_level_lp.adb, and
+  relation_table.adb for GNAT GPL 2010 warnings.
+
+Fri 9 Oct 2009 : uncommented a line in mixed_volume.adb to compute the
+  volume of the cells, toggled off by the tropism computation...
+
+Wed 1 Oct 2008 : extended mixedvol_algorithm.ads with uliftmv to implement
+  a special lifting for use to compute tropisms.  This update also changed
+  mixedvol_algorithm.adb, mv.adb, and ts_mva.adb.
+
+Tue 14 Aug 2007 : fixed bug in mixedvol_algorithm.adb that occurred when
+  adding artificial origins was not needed in all equations.
+
+Thu 5 Jul 2007 : mixedvol_algorithm now computes also stable mixed volumes,
+  modified mixedvol_algorithm.ads and mixedvol_algorithm.adb.
+
+Tue 1 May 2007 : mixedvol_algorithm now accepts Laurent systems,
+  tested by ts_mva.adb.
+
+Tue 20 Feb 2007 : changed ts_mv.adb and ts_mv2c.adb so that they also
+  use supports_of_polynomials instead of the old power_lists.
+
+Wed 4 Oct 2006 : upgrade of power_lists to supports_of_polynomial_systems
+  changed mixedvol_algorithm.adb.
+
+Tue 12 Sep 2006 : removed extra output written to screen in prepare_for_mv.adb.
+
+Fri 25 Aug 2006 : removed output of cells in mixedvol_algorithm.adb.
+
+Thu 24 Aug 2006 : changed prepare_for_mv.adb and ts_mva.adb.
+
+Wed 23 Aug 2006 : added another Extract_Supports to MixedVol_Algorithm.
+
+Fri 18 Aug 2006 : changed ts_mva.adb for error in writing subdivision.
+
+Thu 17 Aug 2006 : Pre4MV in prepare for_mv now returns a permtutation,
+  also changed mixedvol_algorithm, mv.adb and ts_mva.  OK for fully mixed.
+
+Mon 14 Aug 2006 : continued conversion into mixed subdivision format,
+  changing mixed_volume, mixedvol_algorithm, and ts_mva, 
+  still left to do is to take care of the permutations of the equations.
+
+Sun 13 Aug 2006 : changed mixedvol_algorithm, mixed_volume.adb, and ts_mva
+  to prepare for the integration into PHCpack.
+
+Fri 11 Aug 2006 : the last bugs in form_lp.adb and zero_index_tree.adb died!
+  Also changed mixed_volume.adb, index_tree_lp.adb, simplex_pivoting,
+  one_level_lp.adb, prepare_for_mv.adb, and mv.adb.
+  Some .c files got changed for printing diagnostic tracing messages.
+  Created the package MixedVol_Algorithm, to be tested by ts_mva.
+
+Thu 10 Aug 2006 : fixed bugs in mixed_volume.adb, index_tree_lp.adb,
+  and one_level_lp.adb; added printfs in mixed_volume.c.
+  Created new package simplex_pivoting, cut from relation_table.adb.
+
+Wed 9 Aug 2006 : found bug in relation_table.adb, changed mixed_volume.adb,
+  mv.adb, mixed_volume.adb, and mixed_volume.c (for diagnostic output).
+  While cleaning up relation_table.adb, found error in relation_table.ads.
+  Found errors in mixed_volume.adb and changed index_tree_lp.adb.
+
+Tue 8 Aug 2006 : discovered bug in relation_table.adb, also changed mv.adb.
+
+Sun 6 Aug 2006 : started debugging ts_mv.adb, changed prepare_for_mv.a*,
+  index_tree_lp.a*, relation_table.c, relation_table.adb, mixed_volume.adb,
+  ts_mv2c.adb and mv.adb.
+
+Fri 4 Aug 2006 : added to index_tree_lp.adb, changed index_tree_lp.ads,
+  some small changes in index_tree_lp.c, tested by ts_mv2c.adb.
+  Completed mixed_volume.adb and index_tree_lp.adb!  ts_mv.adb tests...
+
+Thu 3 Aug 2006 : except for the quick_return, mv.adb translates mv.c.
+
+Sun 30 Jul 2006 : created mv.ads, specifications of mv.h.
+
+Sat 29 Jul 2006 : started the translation of mixed_volume.adb.
+
+Fri 28 Jul 2006 : tranlated form_lp.c and prepare_for_mv.c, changing these
+  files slightly, and defining form_lp.adb and prepare_for_mv.adb,
+  with modifications in form_lp.ads and prepare_for_mv.ads.
+
+Thu 27 Jul 2006 : translated relation_table.adb, changed also the .ads
+  and made some small cosmetic changes to relation_table.c.  Translated 
+  one_level_lp.adb, changed one_level_lp.ads and one_level_lp.c.
+
+Wed 26 Jul 2006 : cell_stack.adb, changed cell_stack.ads, also changed
+  all zero_index_tree* files and index_tree_lp.a*.
+
+Tue 25 Jul 2006 : created dummy bodies for all the eight .ads files,
+  which now all compile correctly, changed prepare_for_mv.h/c.
+
+Mon 24 Jul 2006 : in updating all eight .ads files, changed prepare_for_mv.h,
+  index_tree_lp.h, and cell_stack.h and cell_stack.c.
+  With ts_mv2c.adb we can compile the .ads files.
+
+Sun 23 Jul 2006 : copied all eight .h files of MixedVol into .ads files
+  with corresponding names.  Started editing work.
+
+Wed 19 Jul 2006 : updated "sort" specifications in one_level_lp.h,
+  altered mv.h.  Completed index_tree_lp.h, changed index_tree_lp.c.
+  Also zero_index_tree.h is completed with changes in zero_index_tree.c.
+
+Tue 18 Jul 2006 : changed index_tree_lp.h with the proper documentation,
+  cosmetic changes in index_tree_lp.c, zero_index_tree.h and its .c file.
+
+Mon 17 Jul 2006 : one_level_lp.h and form_lp.h are now fully documented,
+  made also changes in their .c files and in mixed_volume.c;
+  discovered that the matrix LPidx was not used at all!
+
+Sun 16 Jul 2006 : form_lp and one_level_lp are linked, changed the
+  documentations in the header files: form_lp.h and one_level_lp.h.
+  Also form_lp.c, mixed_volume.c and one_level_lp.c are changed.
+
+Sat 15 Jul 2006 : updated index_tree_lp.h and index_tree_lp.c.
+
+Fri 14 Jul 2006 : simplified interfaces in form_lp.h, form_lp.c,
+  mixed_volume.c changed as well.
+
+Thu 13 Jul 2006 : eliminated the use of all global variables,
+  all files changed when the dos formatting was removed.
+
+Wed 12 Jul 2006 : changed relation_table* and mixed_volume*, so that
+  relation_table.c no longer uses external global variables.
+
+Tue 11 Jul 2006 : removed the global variable from prepare_to_mv.h and
+  did some rewritings and edits in prepare_to_mv.c.
+  Fixed the memory allocations of matrices in relation_table.c.
+
+Mon 10 Jul 2006 : more formatting and editing in mv.h and mv.c, also in
+  prepare_for_mv.c and in relation_table.h and relation_table.c.
+
+Sun 9 Jul 2006 : added printing of relation table in "relation_table.c",
+  added some documentation to "relation_table.h".  Removed "sort" from
+  mixed_volume into one_level_lp where it was used and cleaned up the
+  CellVol function in mixed_volume, avoiding the global variable.
+
+Fri 7 Jul 2006 : cosmetic changes in one_level_lp.c, and also in
+  relation_table* and index_tree_lp*.  Created "write_cells" in
+  mixed_volume.c, with prototype in mixed_volume.h.
+
+Thu 6 Jul 2006 : changed prepare_for_mv.h and the corresponding .c file,
+  made smaller changes to mixed_volume.h and .c, and mv.c.
+  Also upgraded cell_stack.h and cell_stack.c with more documentation.
+
+Wed 5 Jul 2006 : separated "quick_return" case of mv.c in function,
+  did editing in "prepare_for_mv.h" and "prepare_for_mv.c".
+  Touched almost every file to set the formatting right...
+
+Tue 4 Jul 2006 : editing in cell_stack.h and cell_stack.c.
+
+Fri 30 Jun 2006 : fixed bug with name of output file on MacOS X, changed
+  prepare_for_mv.c, mv.c, mixed_volume.h, mixed_volume.c, and ts_mv2c.adb.
+
+Wed 14 Jun 2006 : Yan avoided stdbool.h, all files under mv.c changed.
+
+Sun 11 Jun 2006 : renamed files, avoiding capital letters and moved
+  source code from Mix_Nex/SRC to current directory.
+
+Tue 23 May 2006 : copied code from Yan's directory, modified makefile
+  and tested on cyclic5, it seems to work.
+
+Thu 11 May 2006 : created ts_mv2c, which calls mv.c, documented in mv.h.

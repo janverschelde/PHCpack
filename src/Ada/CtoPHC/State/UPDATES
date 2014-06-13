@@ -1,0 +1,501 @@
+Thu 5 Jun 2014 : adjusted use_c2lrhom.adb to pass coordinates of flags.
+
+Wed 4 Jun 2014 : updates in use_c2lrhom.adb for Python interface.
+
+Mon 2 Jun 2014 : updates in use_c2lrhom.adb.
+
+Sun 1 Jun 2014 : updates in use_c2lrhom and use_c2phc.adb for the solving
+  with Littlewood-Richardson homotopies.
+
+Fri 23 May 2014 : new use_c2lrhom, called in use_c2phc.adb.
+
+Fri 4 Apr 2014 : bug fix in use_c2pieri.adb for q > 0 case.
+
+Thu 27 Mar 2014 : random gamma constant in generators led to changes
+  in use_nxtsol.adb.
+
+Fri 7 Mar 2014 : updated use_syscon.adb and use_solcon.adb to add
+  operations to read (start) systems (and start solutions) from file.
+  These operations are tested by PHCv2/Lib/lib_read.c.
+
+Thu 6 Mar 2014 : name changes in phcpack_operations led to changes in
+  c_to_phcpack.adb, use_track.adb.  Changing c_to_phcpack.ads led to
+  more changes in use_c2phc.adb.  In phcpack_operations_io.adb forgotten
+  to write a newline when writing dobldobl/quaddobl target solutions.
+  To read systems and solutions from a file given by its name,
+  added 8 extra operations in use_c2phc, defined by the corresponding
+  jobs in use_syscon and use_solcon.
+
+Tue 17 Dec 2013 : extended use_roco with m_homogeneous_start_system,
+  with corresponding changes in use_c2phc.
+
+Mon 16 Dec 2013 : started modifying use_roco and use_c2phc for the
+  computation of an m-homogeneous Bezout number for a given partition.
+
+Fri 13 Dec 2013 : updates in use_roco and use_c2phc for m-homogenization.
+
+Thu 12 Dec 2013 : updates in use_roco and use_c2phc with operations to
+  write set structures to string and parse strings into set structures.
+
+Wed 4 Dec 2013 : for auto tuning, the multiprecision version of the solve
+  by homotopy continuation in phcpack_operations needs the number of
+  decimal places, also updated use_c2phc.adb.
+
+Tue 3 Dec 2013 : extended phcpack_operations with multiprecision solutions,
+  also updated phcpack_operations_io and use_c2phc.
+  For the creation of multiprecision homotopies, use_track changed.
+
+Mon 2 Dec 2013 : extended phcpack_operations with multiprecision systems,
+  needed in use_nxtsol, fixed documentation in use_c2phc.ads.
+
+Thu 28 Nov 2013 : extended use_syscon and use_c2phc with operations for
+  the implementation of multiprecision Newton step.
+
+Wed 27 Nov 2013 : extended use_solcon with routines to pass strings
+  and updated the corresponding places in use_c2phc.
+  Note that the append in lib_solcon does not work without -O3!
+  Fixed bug in the Pad_with_Spaces of assignments_in_ada_and_c.adb.
+
+Tue 26 Nov 2013 : extended use_solcon and use_c2phc for multiprecision sols.
+
+Mon 25 Nov 2013 : updates in use_sycon and use_c2phc.ads.
+
+Sun 24 Nov 2013 : Update use_syscon and use_c2phc with operations
+  to read and write multiprecision polynomial systems.
+
+Sat 23 Nov 2013 : new container for multiprecision polynomial systems:
+  multprec_polysys_container, tested by ts_syscon.adb.
+  new container for multprecision solutions: multprec_solutions_container,
+  tested by ts_solcon.adb.
+
+Wed 18 Sep 2013 : clear the maps before initialization in the
+  monomial_maps_container.adb, touched use_mapcon.adb for debugging.
+
+Tue 17 Sep 2013 : changed use_mapcon to add the option puretopdim,
+  also documented in use_c2phc.ads.
+
+Wed 4 Sep 2013 : extended monomial_maps_container, use_mapcon, and
+  use_c2phc for the writing of monomial maps.
+  Fixed bug in use_syscon.adb with parsing of string into polynomial
+  and resetting the symbol table.
+
+Tue 3 Sep 2013 : removed solutions_container.a* because this package is
+  now replaced by standard_solutions_container.
+  Updated use_syscon.adb for entering polynomials with a different number
+  of variables than equations.  New monomial_maps_container with as
+  interface use_mapcon, updated use_c2phc.
+
+Fri 30 Aug 2013 : fixed ts_solcon.adb, ts_syscon.adb, ts_celcon.adb,
+  ts_solpool.adb, ts_syspool.adb, and ts_pirhom.adb for natural32/integer32
+  types, so "make test_state" works again!
+
+Fri 9 Aug 2013 : added function to use_c2phc to return version string
+  and another function to set the seed for the random number generators.
+
+Mon 1 Jul 2013 : updated pieri_homotopy, use_c2pieri.adb, use_celcon.adb.
+
+Sun 30 Jun 2013 : in an effort to rebuild mpi2track, all use_*a files changed
+  and also all *container.a* files were updated, with as well the
+  c_to_phcpack, assignments_in_ada_and_c, monodromy_permutations, and
+  sampling_operations.
+
+Tue 25 Jun 2013 : updated phcpack_operations for natural32 and integer32.
+
+Fri 29 Mar 2013 : made use_roco.adb to use a more efficient linear-product
+  root count.
+
+Wed 27 Feb 2013 : added procedure to phcpack_operations, modified
+  use_track and use_c2phc.
+
+Tue 26 Feb 2013 : commented out printing in phcpack_operations.adb.
+
+Fri 22 Feb 2013 : to use_c2phc.adb added exception handler to ignore
+  all exceptions...
+
+Wed 20 Feb 2013 : changed use_track and use_c2phc to add the construction
+  of a witness set of a hypersurface.
+
+Fri 15 Feb 2013 : fixed a bug in use_syscon.adb and touched use_solcon.adb
+  to chase another bug.
+
+Thu 14 Feb 2013 : updated phcpack_operations.adb, added more jobs to
+  use_track, use_c2phc for double double & quad double cascades.
+  Extended use_solcon with jobs to drop a coordinate, adjusted use_c2phc.
+  Extended use_c2phc with dropping a symbol name from the table.
+  Extended use_syscon and use_c2phc to drop a variable.
+
+Wed 13 Feb 2013 : extended phcpack_operations with creation of cascade
+  homotopy for double double and quad double precision.
+
+Tue 12 Feb 2013 : extended use_track with operations to create double double
+  and quad double homotopies with given gamma constant, updated use_c2phc.
+
+Sun 10 Feb 2013 : added deflation as job 196 to use_c2phc.
+  Added degree of polynomial function to all systems containers, changing
+  {standard,dobldobl,quaddobl}_polysys_container.a*, use_syscon.a*, and
+  use_c2phc.a*.
+
+Thu 7 Feb 2013 : added autotune and show continuation parameters jobs
+  to use_c2phc.
+
+Wed 6 Feb 2013 : extended use_c2phc with operations to move data
+  (double double and quad double) between containers and PHCpack.
+  Extended use_track with create homotopy for double double and quad double,
+  with corresponding jobs in use_c2phc.  Updated use_track and use_c2phc 
+  with tracking for double doubles and quad doubles.
+
+Tue 5 Feb 2013 : extended phcpack_operations_io and c_to_phcpack for
+  input/output for double double and quad double data, added job codes
+  to use_c2phc.  Also updates in phcpack_operations.adb.
+  Extended use_syscon.adb with operations to transfer polynomials with
+  complex double double and complex quad double coefficients,
+  extended assignment_in_ada_and_c for double doubles and quad doubles.
+  Made the corresponding updates in use_c2phc.
+  Extended use_solcon with operations to retrieve and append solutions
+  with double double and quad double precision, adjusted also use_c2phc.
+  Fixed a bug in assignments_of_solutions.adb.
+
+Mon 4 Feb 2013 : extended phcpack_operations_io and c_to_phcpack for
+  double double and quad double solve by homotopy continuation.
+  
+Sun 3 Feb 2013 : extended phcpack_operations for double double and quad
+  double path trackers.
+
+Fri 1 Feb 2013 : modified use_solcon.adb in search for a bug.
+  Moved string operations with polynomials from use_c2phc to use_syscon
+  Extended use_syscon and use_c2phc with store_{dobl,quad}dobl_polynomials.
+
+Thu 31 Jan 2013 : extended assignments_of_solutions with conversion
+  routines for double double and quad double solutions.
+  Added functions to use_c2phc to export the string of symbols in phcpy.
+
+Wed 30 Jan 2013 : new function in assignments_in_ada_and_c,
+  extended use_solcon for dobldobl and quaddobl solution containers,
+  tested by ts_use_solcon.c.  Updated use_syscon and use_c2phc.
+  Added Newton_step to use_c2phc for double doubles and quad doubles.
+
+Mon 28 Jan 2013 : introduced {dobldobl,quaddobl}_systems_container,
+  tested by ts_syscon and renamed polynomial_systems_container into
+  standard_polysys_container, which led to changes in use_syscon,
+  use_syspool, use_celcon, use_c2pieri, use_c2phc, use_c2fac, use_roco,
+  use_track, and monodromy_permutations.
+  New {dobldobl,quaddobl}_solutions_container, tested by ts_solcon.
+  Moved solutions_container to standard_solutions_container.
+  This move changed use_solcon, use_celcon, use_c2pieri, use_c2phc,
+  use_c2fac, use_roco, use_track, phcpack_operations_io.adb, 
+  sampling_operations.adb and monodromy_permutations.adb.
+  Extended use_syscon.adb and use_c2phc with operations for reading
+  and writing double double complex polynomial systems.
+
+Sun 27 Jan 2013 : patched the clear in laurent_systems_container.adb.
+  Commented out the puts in phcpack_operations.adb and use_celcon.adb.
+
+Sat 26 Jan 2013 : initialized "err" in pieri_homotopy for warning and
+  modified phcpack_operations.adb and use_celcon.adb to track a bug,
+  mainly removing commented put statements.  
+
+Mon 21 Jan 2013 : touched solutions_container.a* and phcpack_operations.adb
+  to remedy the problems with Ada2005, with the limited file_type.
+
+Tue 15 Jan 2013 : updated use_syspool.adb for a warning.
+  New use_roco for linear-product root counts and systems,
+  used in use_c2phc.adb, also updated use_c2phc.ads.
+
+Thu 27 Dec 2012 : modification in use_c2phc.adb, diagnostic printing in
+  use_c2fac.adb.
+
+Tue 25 Dec 2012 : extra functions to monodromy_permutations, modifications
+  in phcpack_operations, and extra jobs to use_c2fac.ad* and use_c2phc.ad*.
+
+Fri 21 Dec 2012 : updates in cells_container.adb, use_celcon.adb,
+  phcpack_operations.adb, and use_c2phc.adb.
+
+Wed 19 Dec 2012 : add job199 to do one Newton step to use_c2phc.adb,
+  removed output from use_c2pieri.adb.  Touched use_solcon.adb to trace bugs.
+
+Mon 17 Dec 2012 : updates in use_c2pieri.adb and c2phc.adb with jobs to
+  make a Pieri polynomial system.
+
+Thu 13 Dec 2012 : updates use_c2pieri.adb with extract system & solutions
+  after run of Pieri homotopy for the hypersurface and quantum case.
+
+Wed 12 Dec 2012 : updated use_c2pieri.adb and use_c2phc.adb with a job
+  to run the Pieri homotopies.
+
+Tue 11 Dec 2012 : reorganization and addition to use_c2pieri.adb,
+  used in use_c2phc.adb.
+
+Mon 10 Dec 2012 : pieri_homotopy.adb no longer compiled...  Fixed it.
+
+Sun 9 Dec 2012 : added embedding of system to use_c2phc.adb.
+
+Tue 4 Dec 2012 : updates in use_syscon.adb and use_c2phc.adb for Laurent
+  polynomial systems.  A silent and stable flag in use_c2phc.adb.
+
+Mon 3 Dec 2012 : changed phcpack_operations_io.adb, cells_container.adb,
+  assignments_in_ada_and_c.adb, assignments_of_solutions.adb,
+  solutions_container.adb, and use_c2phc.adb for GNAT GPL 2012 warnings.
+  Renamed systems_container to polynomial_systems_container.
+  This renaming changed ts_syscon.adb, use_track.adb, use_syspool.adb,
+  use_syscon.adb, use_celcon.adb, use_c2fac.adb, use_c2phc.adb, and
+  monodromy_permutations.adb.  Updated use_syscon.adb for warnings.
+  New package Laurent_Systems_Container, used in use_c2phc.adb.
+
+Tue 6 Sep 2011 : fixed use_c2phc.adb because changed "deflate" as inout
+  parameter in standard_root_refiners.
+
+Thu 9 Jun 2011 : changed phcpack_operations.adb for warnings and for
+  changed specifications of standard_root_refiners.
+
+Wed 1 Jun 2011 : modified phcpack_operations.adb because of warnings.
+
+Tue 14 Sep 2010 : updated phcpack_operations.adb because of changes
+  in standard_continuation_data and continuation_parameters.
+
+Fri 9 Oct 2009 : extended phcpack_operations with path trackers for
+  Laurent polynomial systems.
+
+Mon 6 Jul 2009 : updated phcpack_operations.a*, phcpack_operations_io.adb,
+  cells_container.adb, use_solcon.adb, use_celcon.adb, use_track.adb,
+  use_syspool.adb, use_syscon.adb, use_c2phc.adb, monodromy_permutations.adb,
+  and use_c2fac.adb for change in Ada 2005.
+
+Tue 12 May 2009 : updated use_solpool.*, use_syspooladb, use_c2phc.adb,
+   and use_track.adb.
+
+Fri 8 May 2009 : updated use_solpool.a* and use_c2phc.a*.
+
+Wed 6 May 2009 : added package systems_pool, tested by ts_syspool.adb,
+  ts_use_syspool.c tests use_syspool.ads and use_syspool.adb.
+  Added package solutions_pool, tested by ts_solpool.adb,
+  ts_use_solpool.c tests use_solpool.ads and use_solpool.adb.
+  Updated use_c2phc.ads and use_c2phc.adb make pool available to Lib.
+
+Wed 24 Dec 2008 : added evaluator to the systems container, changed files
+  are systems_container, use_syscon, and use_c2phc.  Also modified
+  assignments_of_solutions and use_track.adb.
+
+Thu 18 Dec 2008 : added root refiner function to use_track, made
+  available through use_c2phc.
+
+Tue 12 Aug 2008 : renaming "sparse solvers" into "simpomial solvers"
+  caused changes in cells_container.adb.
+
+Fri 1 Aug 2008 : adding perm as argument of Black_Box_Mixed_Volume_Computation
+  procedure caused change in use_c2phc.adb.
+
+Wed 4 Jun 2008 : changed use_solcon.adb for the parallel subsystem solver,
+  in order for it to run on toto.
+
+Tue 27 May 2008 : extended use_solcon and use_c2phc with operations
+  to enter solution strings to the solutions container.
+
+Fri 16 May 2008 : fixed bug in use_syscon.adb: when initializing the
+  systems container with the number of polynomials, also the symbol
+  table must be initialized with the right number of symbols.
+
+Sun 4 May 2008 : changed use_solcon and use_c2phc to write solutions to 
+  strings.  Also assignments_in_ada_and_c got extended.
+
+Thu 3 Jan 2008 : fixed bug in use_solcon.adb.
+
+Thu 20 Dec 2007 : added job #292 to use_c2phc.ads.
+
+Wed 19 Dec 2007 : job #291 to use_c2phc.ads.
+
+Tue 27 Nov 2007 : added a function to clear the symbol table in use_syscon,
+  available via use_c2phc.  More exception handlers in phcpack_operations.adb,
+  modifications in phcpack_operations_io.adb and solutions_container.adb.
+
+Mon 26 Nov 2007 : added extra tracking information in use_track.adb
+  and phcpack_operations.adb.
+
+Fri 23 Nov 2007 : removed patch in phcpack_operations.adb.
+
+Tue 13 Nov 2007 : added extra functionality to use_track and use_c2phc
+  to remove the last slack variable from an embedding in a cascade.
+
+Thu 8 Nov 2007 : patched phcpack_operations.adb because of convoluted
+  creation of the diagonal homotopy.
+
+Wed 7 Nov 2007 : modified use_solcon.adb to allow to close the solution
+  input files used to read in witness sets.
+
+Tue 23 Oct 2007 : added operations to use_c2phc to open a defined output
+  file from a string, and to close the defined output file.
+  Added the corresponding operations to phcpack_operations.
+
+Wed 17 Oct 2007 : closed a file in hypersurface_witness_set of use_track.adb.
+
+Sun 14 Oct 2007 : added writing of witness set to file as Job25 in use_c2fac
+  job 65 in use_c2phc.  Fixed bug in use_track.adb.
+ 
+Sat 13 Oct 2007 : job170 in use_c2phc and job20 in use_track give access
+  to the elimination of the extrinsic diagonal.  Revised use_c2fac.adb
+  according to the functional Job style.
+
+Thu 11 Oct 2007 : job169 in use_c2phc and job19 in use_track will compute
+  a witness set for one polynomial in the systems container.
+
+Mon 11 Jun 2007 : added job78 to use_c2phc to compute mixed volume and a
+  regular mixed-cell configuration for the system in the container.
+
+Tue 20 Mar 2007 : minor change in use_c2phc.adb for debugging of job77.
+
+Sat 3 Feb 2007 : added job #76 in use_c2phc to pass polynomials as strings
+  into the systems container of PHCpack.
+  Moved integer array to string conversion from use_track.adb into
+  assignments_in_ada_and_c for use in use_c2phc.adb.  Added initialization
+  of all polynomials in systems_container to the Null_Poly.
+
+Thu 25 Jan 2007 : added blackbox solver as job #77 to use_c2phc.
+
+Thu 11 Jan 2007 : to handle the case when a < b, phcpack_operations.adb and
+  use_track.adb changed.
+
+Wed 10 Jan 2007 : modified solutions_container.a*, use_solcon.adb, 
+  phcpack_operations.adb and phcpack_operations_io.adb.
+
+Tue 9 Jan 2007 : changed solutions_container.a*, phcpack_operations_io.a*,
+  use_solcon.adb, use_track.a*, and use_c2phc.a*, all for lib_track.c.
+
+Mon 8 Jan 2007 : extended phcpack_operations (+io) and solutions_container
+  with new functions accessible via use_strack and use_c2phc;
+  also use_solcon is extended with a read_next_witness_point procedure.
+
+Sun 7 Jan 2007 : added create_diagonal_homotopy to phcpack_operations,
+  with access provided to it via use_track and use_c2phc.
+
+Fri 5 Jan 2007 : changed phcpack_operations to have a fixed gamma
+  in the create_cascade_homotopy, for use in mpi2track.
+
+Wed 3 Jan 2007 : created use_track.ads moved out of use_c2phc.adb,
+  added create_cascade_homotopy to PHCpack_Operations.
+
+Tue 2 Jan 2007 : ts_use_solcon.c fixed call to _ada_use_solcon on line 270
+  according to a compiler warning.
+
+Mon 1 Jan 2007 : updated use_solcon.adb with better get_next for the
+  solutions of a linear-product start system.
+
+Thu 14 Dec 2006 : because witness_points* became *sets*, changed
+  use_c2fac.adb and sampling_operations.adb.
+
+Wed 4 Oct 2006 : upgrades in use_celcon.adb and cells_container.adb
+  because of updates in sparse solvers and mixed volume computations.
+
+Mon 19 Jun 2006 : minor change in use_c2phc.adb for a warning on AIX.
+
+Thu 27 Apr 2006 : upgraded use_solcon and use_c2phc for lib_track.
+
+Tue 18 Apr 2006 : added total degree to use_c2phc via use_syscon,
+  modified use_solcon.adb to solve linear-product start system.
+
+Thu 6 Apr 2006 : upgraded phcpack_operations_io, solutions_container.ads,
+  to include delayed opening of files given by names in use_c2phc.
+
+Tue 4 Apr 2006 : phcpack_operations_io.ads and solutions_container.ads
+  changed for lib_track.c, modified use_solcon and use_c2phc.
+
+Mon 3 Apr 2006 : cleared up memory in cells_container.adb.
+
+Mon 27 Mar 2006 : update in use_c2phc.adb because of Write_Next_Solution
+  returning "kind" as an extra parameter.
+
+Fri 24 Mar 2006 : changed phcpack_operations_io.adb for reading systems
+  which is by default always from file.  Added extra job to use_c2phc to
+  write a string to the defined output file, created ts_c2str.c to test it.
+  The new use_c2phc.adb looks better and has better exception handling.
+
+Thu 16 Mar 2006 : cells_container.adb must use standard_sparse_solvers!
+
+Sat 11 Mar 2006 : added exception handlers to Solve_Start_System of
+  cells_container to track a bug when solving prs10.
+
+Wed 8 Mar 2006 : added exception handlers to use_celcon.adb to patch
+  a bug in the solution of the binomial systems, occurred with prs10.
+
+Wed 22 Feb 2006 : following a crash with mpi2track.c on cyclic 12-roots
+  (with causes unknown), added exception handlers to the path trackers.
+  Changed phcpack_operations.a*, c_to_phcpack.adb, and use_c2phc.adb.
+
+Sun 19 Feb 2006 : updated use_solcon and ts_use_solcon.c for incremental
+  read/write of solutions from/to file, tested with copy of solution list;
+  added the operations to use_c2phc.ads and use_c2phc.adb.
+  Splitted convert/assign for solutions off from use_solcon into a new
+  package: "assignments_of_solutions", because needed in use_c2phc.
+  Updated phcpack_operations.a* and phcpack_operations_io.a*.
+
+Sat 18 Feb 2006 : added operations to solutions_container and use_solcon to
+  enable the incremental reading of solutions, tested in ts_use_solcon.c.
+
+Thu 9 Feb 2006 : added retrieve and set continuation parameters functions 
+  to use_c2phc.  Cosmetic change in use_celcon.adb.
+
+Sat 21 Jan 2006 : validate_solutions in use_c2phc.adb writes to file
+  when the user has defined the output file.
+
+Thu 5 Jan 2006 : changed cells_container, use_celcon, and use_c2phc.
+
+Mon 2 Jan 2006 : updates in cells_container, use_celcon, and use_c2phc.
+
+Thu 15 Dec 2005 : replaced use of explicit array bounds in use_c2fac.adb
+  by constant arrays and added argument to Value.  Changed use_syscon.adb,
+  use_solcon.adb, and assignments_in_ada_and_c.adb.
+
+Mon 19 Sep 2005 : monodromy_permutations.adb needs a Sort before the
+  linear trace certificate of a factor!
+
+Sat 17 Sep 2005 : changed sampling_operations.adb and use_c2phc.adb,
+  for debugging mpi2fac_d.c.
+
+Sun 11 Sep 2005 : removed debugging tests from sampling_operations.adb,
+  same for use_c2fac.adb and use_c2phc.adb.
+
+Sat 10 Sep 2005 : added "Retrieve" to monodromy_permutations.ads, 
+  changed "sampling_operations.ads", so use_c2fac and use_c2phc changed.
+
+Thu 8 Sep 2005 : changed sampling_operations for mpi2phc_d.c, carried
+  through to use_c2fac and use_c2phc.
+
+Tue 6 Sep 2005 : added diagnostics to monodromy_permutation.ads,
+  made available through use_c2fac and use_c2phc.
+
+Fri 2 Sep 2005 : changed use_c2fac.adb and monodromy_permutations.adb,
+  cleaning out more debugging information.
+
+Tue 30 Aug 2005 : monodromy_permutations.adb, sampling_operations.adb,
+  use_c2fac.adb are cleaned from debugging after lib_factor.c is okay.
+
+Thu 18 Aug 2005 : changed use_celcon.a* to meet specification in celcon.h,
+  tested by ts_use_celcon.c.  Changes in sampling_operations.adb,
+  monodromy_permutations.a*, use_c2fac.adb, and solutions_container.ads,
+  all needed to get lib_factor.c running.
+
+Sun 14 Aug 2005 : changed use_c2phc.a*, to integrate use_celcon.
+
+Sat 13 Aug 2005 : changed line 70 and 71 in use_solcon.adb, to fix error on
+  Mac OS X; changed ts_use_solcon.c for a warning about multiple write's.
+  Also changed use_syscon.adb.
+
+Wed 3 Aug 2005 : updated phcpack_operations.ads, phcpack_operations_io.adb,
+  use_syscon.adb, and use_c2phc.ads for lib_poco.
+
+Tue 2 Aug 2005 : added tuning of continuation parameters and determination
+  of the output file to use_c2phc.ads and .adb.
+  Declared ind in monodromy_permutations.adb as integer.
+
+Tue 12 Apr 2005 : added retrieve_mixed_cells to cells_container, updated
+  ts_celcon.adb, changed use_celcon, tested by ts_use_celcon.c.
+
+Wed 30 Mar 2005 : retrievals in ts_use_celcon.c and use_celcon done.
+
+Tue 29 Mar 2005 : created ts_use_celcon.c, upgrading use_celcon.
+
+Fri 25 Mar 2005 : upgraded cell_container with ts_celcon.adb as tester.
+
+Thu 17 Mar 2005 : created "cells_container", use_celcon.adb, tested by
+  ts_celcon.adb for a parallel polyhedral homotopy continuation.
+
+Wed 16 Mar 2005 : creation of "State" as subdirectory of "CtoPHC",
+  in addition to shuffling files around, this involved editing of READ_ME.

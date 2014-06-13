@@ -84,9 +84,6 @@ package body Standard_Deflation_Methods is
 
   begin
     Newton(file,natural32(ep'last),z,tol,err,rco,res,s,rank);
- -- exception 
- --   when others =>
- --     put_line("exception in one symbolic Newton step"); raise;
   end One_Symbolic_Newton_Step;
 
   procedure One_Symbolic_Newton_Step
@@ -372,7 +369,7 @@ package body Standard_Deflation_Methods is
     rhs(rhs'last) := Create(1.0);
     wrk := A;
     QRD(wrk,qraux,jpvt,false);
-    QRLS(wrk,integer32(n),integer32(n),integer32(m),qraux,rhs,
+    QRLS(wrk,integer32(n),integer32(m),qraux,rhs,
          dum,dum,lambda,rsd,dum,110,info);
     dum := rhs - A*lambda;
     res := Max_Norm(dum);
@@ -434,7 +431,7 @@ package body Standard_Deflation_Methods is
     rhs(rhs'last) := Create(1.0);
     wrk := A;
     QRD(wrk,qraux,jpvt,false);
-    QRLS(wrk,n,n,integer32(m),qraux,rhs,dum,dum,lambda,rsd,dum,110,info);
+    QRLS(wrk,n,integer32(m),qraux,rhs,dum,dum,lambda,rsd,dum,110,info);
     dum := rhs - A*lambda;
     res := Max_Norm(dum);
     if output then

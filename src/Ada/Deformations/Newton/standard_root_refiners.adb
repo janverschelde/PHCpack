@@ -728,7 +728,7 @@ package body Standard_Root_Refiners is
   exception
    -- when constraint_error -- same underflow as in Reporting_Newton may occur
     when others -- 
-       => --put_line("exception raised in reporting deflate");
+       => put_line("exception raised in reporting deflate");
           Handle_Underflow_Gracefully.Underflow_to_Zero(ls.v);
           ls.rco := Handle_Underflow_Gracefully.Underflow_to_Zero(ls.rco);
           fail := not done;
@@ -1171,7 +1171,6 @@ package body Standard_Root_Refiners is
     sa : Solution_Array(1..integer32(nbtot)) := Create(sols);
     initres : Standard_Floating_Vectors.Vector(sa'range);
     refsols_last : Solution_List;
-   -- t_err,t_rco,t_dis,t_res : Standard_Natural_Vectors.Vector(0..15)
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..15)
                       := Standard_Condition_Tables.Create(15); 
     tolrnk : constant double_float := tolsing*100.0;
@@ -1288,11 +1287,8 @@ package body Standard_Root_Refiners is
     sa : Solution_Array(1..integer32(nbtot)) := Create(sols);
     initres : Standard_Floating_Vectors.Vector(sa'range);
     refsols_last : Solution_List;
-   -- t_err,t_rco,t_dis,t_res : Standard_Natural_Vectors.Vector(0..15)
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..15)
                       := Standard_Condition_Tables.Create(15); 
-   -- tolrnk : constant double_float := tolsing*100.0;
-   -- backup : Solution(n);
 
   begin
     new_line(file);
