@@ -1,0 +1,376 @@
+Fri 13 Jun 2014 : bug fix in Conjugate of standard_complex_numbers.adb.
+
+Wed 11 Jun 2014 : specific standard_complex_numbers.adb works better for
+  optimization.
+
+Fri 6 Jun 2014 : simpler complex multiplication in generic_complex_numbers.adb
+  saves time!
+
+Wed 4 Dec 2013 : fixed bug with 0.1 in the function
+  multprec_floating_numbers_io.character_size, was okay with 64-bit...
+
+Thu 6 Jun 2013 : updated multprec_natural_coefficients.adb for warnings.
+  Introducted natural32 in standard_{floating,complex}_numbers_io.a*.
+  Changed ts_longflt.adb.  Added natural32 to abstract_ring.ads and its io,
+  used in standard_interval_numbers.a* and its io, tested by ts_intval.adb.
+  Because conversions between natural32 and integer32 are not as automatic
+  as between natural and integer, the abstract_ring now contains two
+  creators, one for natural32 and the other for integer32, so this has
+  changed {standard,multprec}_floating_numbers.* and also the
+  generic_complex_numbers.a*, along with their corresponding rings
+  {standard,multprec}_floating_ring.ads which are instantiated with
+  two creators.  Also *ring_io expects now natural32 for the number
+  of decimal places, tested by ts_fltnum.  The update of ts_cmpnum.adb
+  required changes to multprec_complex_number_tools.a*, the
+  {standard,multprec}_complex_number_polar and with ts_matfun.adb
+  the multprec_mathematical_functions and multprec_floating_constants
+  changed, as tested by ts_mpcst.adb.  With ts_numbio.adb, changes were
+  made to {standard,multprec}_parse_numbers.  Changes were made to
+  extended_random_numbers, ts_extran, ts_plrexp, and ts_natdiv.
+  Only ts_longflt.adb uses integer_io.
+  The double create in the instantiation in the rings was abandoned
+  because it led to circular dependencies between standard_natural_numbers
+  and standard_integer_numbers.
+  
+Wed 5 Jun 2013 : With systematic introduction of natural32, integer32,
+  updated ts_intnum.adb, multprec_natural_coefficients.a*,
+  multprec_natural_coefficients_io.adb, multprec_natural_numbers.a*
+  standard_natural_numbers_io.a*, multprec_natural_numbers_io.a*,
+  standard_integer_numbers_io.a*, multprec_integer_numbers.a*,
+  multprec_integer_numbers_io.a*, multprec_integer64_numbers.a*,
+  multprec_integer64_numbers_io.a*, multprec_random_numbers.a*,
+  ts_fltnum.adb, multprec_floating_numbers.a*, multprec_floating_numbers_io.a*,
+  multprec_floating64_numbers.a*, multprec_floating64_numbers_io.a*,
+  multprec_complex_numbers_polar.adb, multprec_complex_number_tools.adb,
+  characters_and_numbers.adb, strings_and_numbers.a*
+  multprec_complex_numbers_io.a*, and ts_cmpnum.adb.
+
+Tue 4 Jun 2013 : Because of compilation errors with GNAT GPL 2013,
+  introduced natural32 and integer32 as new types in standard_natural_numbers
+  and standard_integer_numbers.  This led to changes in the io:
+  standard_{natural,integer}_numbers_io, standard_{natural,natural64}_ring.ads,
+  multprec_natural64_coefficients.adb (output in exception handlers), and
+  ts_natnum, ts_intnum, ts_fltnum, and ts_random.
+
+Thu 23 May 2013 : fixed bug in standard_parse_numbers.adb with
+  skipping of spaces and CR.
+
+Tue 29 Jan 2013 : further completed strings_and_numbers.adb for some
+  compiler warnings.
+
+Mon 28 Jan 2013 : updated strings_and_numbers with routines to write
+  complex numbers and coefficients to strings.
+
+Tue 1 Jan 2013 : standard_natural64_ring_io.ads depended wrongly on a
+  nonexisting standard_natural64_numbers_io, fixed.
+
+Sun 30 Dec 2012 : fixed multprec_integer64_numbers_io.ads exporting get
+  from string into a multiprecision integer, checked by ts_intnum.adb.
+
+Wed 26 Sep 2012 : added random_magnitude to standard_random_numbers
+  and updated ts_random.adb.
+
+Thu 14 Jun 2012 : write_number in standard_write_numbers.adb wrote -i
+  with one extra minus sign.
+  
+Tue 26 Jul 2011 : added "Set_Min" to multprec_integer{64}_numbers and
+  extra get procedures in multprec_integer{64}_numbers_io, for use in
+  multprec_floating{64}_numbers_io.adb to fix bug with reading -0.3 or -.3.
+
+Mon 25 Jul 2011 : changed multprec_floating_numbers{_io}.adb for possible
+  regression, but to fix .4 input of multprecision floats.
+  Fixed a bug in the size of multprec_natural{64}_numbers_io.adb,
+  subtracting -1 from the natural number 0 cannot return a natural number!
+
+Sat 18 Jun 2011 : new ts_numbio.adb to prepare for better numbers_io
+  that shows the user the information typed in when errors.
+
+Fri 10 Jun 2011 : went back to the old multprec_parse_nubmers.adb because
+  of wrong results in ts_binsys.adb???
+
+Thu 9 Jun 2011 : fixed a bug in multprec_parse_numbers because limited
+  to parsing of 293 characters into multiprecision floats.
+
+Wed 8 Jun 2011 : changed multprec_write_numbers.adb for a warning.
+  New package multprec_floating_constants, tested by ts_mpcst.adb.
+
+Tue 7 Jun 2011 : changed standard_mathematical_functions.adb,
+  multprec_natural_coefficients.adb and multprec_floating_numbers.adb
+  for warnings.  Added truncate_to_nearest_integer to the packages
+  multprec_floating{64}_numbers, tested by ts_fltnum.adb.
+
+Mon 6 Jun 2011 : augmented standard_complex_numbers_polar with a routine
+  for exponentiation via polar coordinates.
+
+Sun 5 Jun 2011 : updated ts_plrexp.adb with more tests.
+
+Fri 3 Jun 2011 : created ts_plrexp.adb to test exponentiation of complex
+  numbers using their polar representation.
+
+Thu 2 Jun 2011 : fixed bug in numbers_io.adb.
+
+Wed 1 Jun 2011 : changed multprec_floating_numbers_io.adb and
+  numbers_io.adb for a warning.
+
+Fri 20 May 2011 : changed ts_printf.adb for warning.
+
+Thu 19 May 2011 : changed ts_strnum.adb to test writing of floats to
+  strings and fixed a bug in strings_and_numbers, changing .ads and .adb.
+
+Sun 15 May 2011 : added "Parse_also_Brackets" to multprec_parse_numbers
+  for parsing from file and from string.
+
+Mon 9 May 2011 : fixed bug in multprec_floating_numbers.adb while
+  modifying multprec_parse_numbers.adb in search for bug parsing
+  strings into polynomials.
+
+Sun 26 Dec 2010 : added debugging info to multprec_natural_numbers.adb,
+  and changed not Empty() to not Equal(,0) in one of the "-" operators
+  in multprec_integer_numbers.adb.
+
+Sat 24 Sep 2010 : updated multprec_parse_numbers.a* with adding size parameter
+  to the parsing function of a complex number.  Extended the package
+  multprec_complex_number_tools with creators for complex numbers.
+  Added routines to strings_and_numbers.
+
+Fri 4 Jun 2010 : generic_complex_numbers.ads was touched to experiment
+  with effect of adding pragma inline to arithmetical operations.
+  The effect measured by ts_ddmat.adb was negative!
+
+Thu 27 May 2010 : added initializations to standard_parse_numbers.adb
+  because of GNAT GPL 2009 warnings, also done in multprec_parse_numbers.adb.
+  Added "write_coefficient" to multprec_write_numbers.
+  Fixed bug 1.000000000000000000000000000000000000000000234*y
+  in multprec_parse_nubmers.adb.
+
+Mon 30 Nov 2009 : multprec_floating_numbers.Pos_Div2 causes bug in SVD,
+  caused by bug in multprec_natural_coefficients.Div2, which got fixed.
+
+Fri 6 Nov 2009 : changes in multprec_complex_number_tools.adb,
+  standard_write_numbers.adb, {standard,multprec}_parse_numbers.adb,
+  multprec_complex_numbers_polar.adb for GNAT GPL 2009 warnings.
+
+Wed 4 Nov 2009 : multprec_random_numbers.adb, multprec_write_numbers.adb
+  changed for warnings by GNAT GPL 2009.
+
+Sat 31 Oct 2009 : modified ts_natnum.adb, ts_intnum.adb, ts_cmpnum.adb,
+  ts_matfun.adb for GNAT GPL 2009 warnings.
+
+Thu 8 Oct 2009 : fixed another bug in multprec_natural_coefficients.adb.
+
+Wed 7 Oct 2009 : 3 bug fixes in multprec_natural_coefficients.adb,
+  also changes in multprec_floating_numbers.adb.
+
+Tue 6 Oct 2009 : introducted Div2 in multprec_natural_coefficients.a*,
+  multprec_natural_numbers.adb and multprec_floating_numbers.adb.
+
+Mon 5 Oct 2009 : changes in multprec_natural_coefficients.adb and _io.adb.
+  Changed multprec_natural_numbers_io.adb to deal with 10000 digits on input.
+
+Sat 3 Oct 2009 : modification in ts_natnum.adb.
+
+Fri 2 Oct 2009 : added "Short_Div2" to multprec_natural_coefficients.a*
+  and multprec_natural_numbers.adb.
+
+Wed 30 Sep 2009 : standard_random_numbers.adb: set pid to 186 for bug.
+
+Mon 21 Sep 2009 : instantiated standard_natural64_ring.ads and
+  standard_natural64_ring_io.ads.
+
+Thu 10 Sep 2009 : added "Get_Seed" to standard_random_numbers.
+
+Wed 9 Sep 2009 : updates in multprec_random_numbers.a*, ts_fltnum.adb,
+  ts_cmpnum.adb, multprec_natural*_coefficients.a*, ts_natnum.adb,
+  multprec_natural_numbers.adb, multprec_floating_numbers.adb,
+  and ts_intnum.adb.
+
+Tue 8 Sep 2009 : fixed bugs in multprec_natural_coefficients.adb and
+  multprec_natural64_coefficients.adb, new multprec_natural_coefficients_io,
+  modified ts_natnum.adb.  Reformats in multprec_floating_numbers.adb,
+  creation of multprec_floating64_numbers and its _io, tested by ts_fltnum.adb.
+  Instantiated multprec_floating64_ring, its _io, and the package
+  multprec_floating64_ring-ffield.ads.  Defined also multprec_complex64*.
+
+Mon 7 Sep 2009 : bug fixes in multprec_natural[64]_coefficients.adb, 
+  multprec_natural[64]_numbers.adb, and 64-bit versions.
+
+Mon 31 Aug 2009 : bug in multprec_integer*_numbers_io.adb: output of numbers
+  with "dp" as extra parameter.
+
+Sun 30 Aug 2009 : instantiated multprec_integer64_ring and _io and added
+  create to multprec_integer64_numbers.
+
+Sun 23 Aug 2009 : formatting in multprec_integer_numbers.adb, before copy 
+  to multprec_integer64_numbers, tested by ts_intnum.adb.
+  Also created multprec_integer64_numbers_io and extended
+  multprec_random_numbers, tested by ts_random.adb.
+  Adjusted some of the formatting in multprec_floating_numbers.adb.
+
+Sat 22 Aug 2009 : fixed bug in multprec_natural64_numbers_io.adb.
+
+Fri 21 Aug 2009 : extended standard_natural_numbers + i/o with natural64,
+  created multprec_natural64_coefficients, multprec_natural64_numbers,
+  and multprec_natural64_numbers_io, tested by ts_natnum.adb.
+  Also characters_and_numbers changed.
+
+Thu 20 Aug 2009 : introduced long_long_integers in standard_integer_numbers,
+  changed standard_integer_numbers_io, standard_random_numbers, ts_random.adb.
+  New are standard_integer64_ring.ads, standard_integer64_ring_io.ads,
+  and standard_integer64_ring-ddomain.ads.
+
+Thu 6 Aug 2009 : because of GNAT GPL 2009 warnings, made changes in
+  strings_and_numbers.adb.  Integer->string added to characters_and_numbers.
+
+Thu 18 Jun 2009 : added extra comment line in standard_floating_numbers.ads
+  to have double_float with the maximum of 18 digits.
+
+Fri 5 Jun 2009 : better if-elsif-else formatting in generic_complex_numbers.adb.
+
+Mon 13 Apr 2009 : moved "Read_Positive_Float" from "Continuation_Parameters_io"
+  to "Numbers_io".
+
+Mon 27 Oct 2008 : the use of tasking in ts_natdiv.adb gives good results
+  on Linux, but not (yet) on mac os x, no speedup there yet...
+
+Sun 26 Oct 2008 : modified ts_natdiv.adb in another attempt to use the
+  GNAT.threads ...
+
+Wed 11 Jun 2008 : extended multprec_natural_numbers_io with put to string
+  and get from string, tested in ts_natnum.adb.  Added also put and get
+  for strings to multprec_integer_io, tested in ts_intnum.adb, continued
+  this to multprec_floating_numbers_io, tested by ts_fltnum.adb.
+
+Thu 15 May 2008 : modified ts_strnum.adb to see output format of floats,
+  but this will need changing...
+
+Sun 4 May 2008 : updated standard_floating_numbers_io with procedures to
+  read floating-point numbers from a string.
+
+Sat 26 Apr 2008 : changed standard_floating_numbers_io.a* with procedures
+  that can write to string.
+
+Sat 22 Mar 2008 : formatted if-then-else in multprec_natural_numbers.adb.
+  New ts_natdiv.adb enumerates all divisors of multiprecision number.
+
+Mon 7 Jan 2008 : in standard_floating_numbers.ads, commented the use
+  of Max_Digits out, as a type "extra_float".
+
+Sun 6 Jan 2008 : ts_longflt experiments with long long doubles...
+  formatting in multprec_natural_coefficients.adb.
+  Redefined double_float using system.Max_Digits: 15 -> 18.
+
+Thu 3 Jan 2008 : because of warnings in GNAT GPL 2006, changed
+  generic_complex_numbers.adb, standard_mathematical_functions.adb,
+  multprec_random_numbers.adb, multprec_natural_numbers_io.adb, ts_strnum.adb,
+  standard_floating_numbers_io.a*, multprec_floating_numbers_io.adb,
+  multprec_integer_numbers_io.adb, multprec_natural_numbers.adb,
+  multprec_integer_numbers.adb, multprec_floating_numbers.a*, ts_fltnum.adb,
+  multprec_mathematical_functions.adb, ts_random.adb,
+  standard_natural_numbers.adb, and standard_integer_numbers.adb
+ 
+Wed 2 Jan 2008 : changed characters_and_numbers.adb because of warnings
+  in GNAT GPL 2006.
+
+Fri 7 Dec 2007 : extended standard_interval_numbers with more operations,
+  also changed the corresponding standard_interval_numbers_io.a*
+  defined the standard_interval_ring, its _io, and field extension.
+
+Wed 5 Dec 2007 : added standard_interval_numbers + i/o and ts_intval as
+  a modest beginning of interval arithmetic...
+
+Sun 19 Aug 2007 : added routines to standard_parse_number to parse exponents
+  enclosed by round brackets (for Laurentials).
+
+Wed 2 May 2007 : added ASCII.LF to the symbols to be skipped in
+  standard_parse_numbers, as encountered in parsing of strings.
+
+Tue 1 May 2007 : extended standard_write_numbers with Write_Coefficient
+  and Length functions to compute the length of a number before writing it.
+
+Mon 30 Apr 2007 : added "Skip_Spaces_and_CR" to standard_parse_numbers.ads,
+  and rearranged also multprec_parse_numbers.  The new package 
+  multprec_write_numbers mirrors standard_write_numbers.
+
+Mon 23 Apr 2007 : added to {standard,multprec}_parse_numbers to parse
+  strings for numbers, tested by ../Polynomials/ts_parse.
+
+Sat 21 Apr 2007 : added Write_Plus to standard_write_numbers.ads and .adb.
+
+Thu 19 Apr 2007 : new package standard_write_numbers harbors code taken
+  from standard_complex_polynomials_io.
+
+Sat 14 Apr 2007 : added {standard,multprec}_parse_numbers as new package,
+  copied code from {standard,multprec}_complex_polynomials_io.
+
+Thu 22 Feb 2007 : changed multprec_floating_numbers_io.adb so that also
+  numbers like 3.14e-3 are parsed correctly, i.e.: "e" is treated as "E".
+  This was needed as phc -z produced some funny results on octave output.
+
+Sat 3 Feb 2007 : created package strings_and_numbers, off loading code
+  from standard_complex_poly_strings, tested by ts_strnum.adb.
+
+Fri 8 Sep 2006 : in standard_mathematical_functions.adb, uncommented the
+  patch for gcc 3.2.2...
+
+Wed 14 Jun 2006 : because of warnings on AIX, changed numbers_io.adb,
+  standard_complex_numbers_io.adb and multprec_natural_numbers_io.adb.
+
+Sun 26 Mar 2006 : added number_of_decimal_places function to numbers_io.
+
+Fri 24 Mar 2006 : added integer to character and character to integer
+  conversions to characters_and_numbers.
+
+Sun 5 Feb 2006 : patched standard_mathematical_functions.adb with direct
+  call to C functions cos and sin; changed ts_matfun.adb as well.
+  Adjusted choice of multiplier and modulus in standard_random_numbers.adb,
+  and added a "Modulus" function ts_random.adb.
+
+Tue 21 Dec 2004 : added "Set_Seed" procedure to Standard_Random_Numbers.
+
+Thu 26 Aug 2004 : the clear operation in standard_floating_numbers now
+  sets the value of the variable to zero, instead of a null statement.
+
+Tue 8 Jun 2004 : added get(f,c) to multprec_floating_numbers_io to recover
+  the nondigit immediately following a floating-point number f.
+
+Tue 16 May 2000 : fixed bug in division (unnormalized) and memory leak in
+  Create of double_floats.   Also memory was leaking in complex numbers:
+  i/o of complex numbers forgot to clean up real and imaginary parts.
+
+Thu 1 June 2000 : changed the multi-precision SQRT so that now it takes
+  the size of the number into account to determine the precision.
+Fri 2 June 2000 : changed again multprec_mathematical_functions.adb,
+  ts_matfun and fixed memory leak in Expand of multprec_floating_numbers.adb.
+
+Wed 28 June 2000 : fixed bug in Trunc and Round of mpfloat to double_float
+  in mulprec_floating_numbers.adb: forgot to adjust sign of the result.
+
+Thu 14 Sep 2000 : fixed a bug in multprec_natural_coefficients.adb:
+  leadn1 in Div could become negative!
+Fri 15 Sep 2000 : fixed a bug in multprec_floating_coefficients.adb:
+  no check on overflow in shift with remainder in Pos_Div.
+
+Wed 20 Sep 2000 : added extra timers to ts_natnum and ts_fltnum.
+
+Sun 24 Sep 2000 : added Size_to_Decimal in multprec_floating_point_numbers.
+
+Fri 24 Nov 2000 : added package Extended_Random_Numbers and ts_extrand.adb
+
+Thu 30 Nov 2000 : multprec_natural_numbers.adb contained variables that
+  were never assigned a value.
+
+Wed 13 Dec 2000 : created multprec_complex_numbers_polar and tested
+  roots of unity with ts_cmpnum.adb
+
+Thu 14 Dec 2000 : fixed bug in Pos_Div of multprec_floating_numbers.adb
+
+Sun 10 June 2001 : the output of multi-precision complex numbers requires
+  an efficient sign determination of multi-precision floating numbers, so
+  added Positive, Negative and Sign to multprec_floating_numbers
+
+Thu 7 Aug 2001 : discovered bug in the Truncate of multprec_floating_numbers,
+  this might have caused the troubles in the hybrid durand-kerner method...
+  Add converter to characters_and_numbers.
+
+Thu 15 Aug 2002 : added LN and EXP to the mathematical functions, both
+  standard and multi-precision, also ts_matfun.adb got changed.

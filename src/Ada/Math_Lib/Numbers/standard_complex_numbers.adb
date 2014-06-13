@@ -17,14 +17,8 @@ package body Standard_Complex_Numbers is
     res : Complex_Number;
 
   begin
-    if i = 0 then
-      res.re := 0.0;
-    elsif i = 1 then
-      res.re := 1.0;
-    else 
-      res.re := Create(integer(i));
-    end if;
-    res.im := 0.0;
+    res.RE := Create(integer(i));
+    res.IM := 0.0;
     return res;
   end Create;
 
@@ -33,8 +27,8 @@ package body Standard_Complex_Numbers is
     res : Complex_Number;
 
   begin
-    res.re := f;
-    res.im := 0.0;
+    res.RE := f;
+    res.IM := 0.0;
     return res;
   end Create;
 
@@ -54,7 +48,7 @@ package body Standard_Complex_Numbers is
 
   begin
     res.RE := c.RE;
-    res.IM := c.IM;
+    res.IM := -c.IM;
     return res;
   end Conjugate;
 
