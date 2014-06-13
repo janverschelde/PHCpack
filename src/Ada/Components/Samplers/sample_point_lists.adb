@@ -458,7 +458,7 @@ package body Sample_Point_Lists is
                   s2,s2_last : in out Standard_Sample_List ) is
 
     n : constant integer32 := x'last;
-    m : constant integer32 := integer32(Number_of_Slices(Head_Of(s1)));
+    m : constant integer32 := Number_of_Slices(Head_Of(s1));
     nor : Standard_Complex_Vectors.Vector(1..n);
     hyps : Standard_Complex_VecVecs.VecVec(1..m);
     use Standard_Complex_Vectors;

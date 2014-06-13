@@ -1,3 +1,5 @@
+Fri 13 Jun 2014 : modified sample_point_lists.adb for compiler warning.
+
 Thu 29 May 2014 : changed sample_point_lists_io.adb for a compiler warning.
 
 Wed 16 Apr 2014 : added exception handler to intrinsic_witness_sets_io.adb.
