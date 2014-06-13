@@ -1,0 +1,553 @@
+Fri 13 Jun 2014 : lowered default number of corrector iterations to 3,
+  instead of 4 in continuation_parameters.ads.
+
+Sun 23 Mar 2014 : added _with_Stop routines to the packages
+  {dobldobl,quaddobl}_incfix_continuation, as needed in samplers for
+  the homotopy membership tests.
+
+Wed 26 Jun 2013 : updated mainpoco.adb for natural32 and integer32.
+
+Tue 25 Jun 2013 : updated black_box_poly_continuations for integer32.
+
+Wed 19 Jun 2013 : changed mainpoco for natural32.
+
+Wed 12 Jun 2013 : about half of all files changes because of natural32
+  and integer32 types.
+
+Thu 16 May 2013 : changes in continuation_parameters and its _io.adb.
+
+Wed 15 May 2013 : set the quadratic predictor as default in the
+  continuation_parameters, changed continuation_parameters_io.adb.
+  In black_box_poly_continuations.adb, changed Tune(2) back to Tune(0).
+
+Fri 10 May 2013 : added multitasking root refiners to the
+  black_box_poly_continuations.adb.
+
+Sat 16 Feb 2013 : changed mainpoco.adb for multitasking dd & qd tracking
+  and exported Ask_Symbol in drivers_for_poly_continuation.
+
+Fri 8 Feb 2013 : updates in mainpoco.adb and drivers_for_poly_continuation
+  for multiprecision path tracking.  Updates in ts_poco.adb.
+
+Thu 7 Feb 2013 : new test program "ts_autotune.adb" to get a feeling of
+  the automatic tuning of the continuation parameters.
+
+Tue 5 Feb 2013 : tol_zero in {dobldobl,quaddobl}_incfix_continuation.adb
+  must depend on the settings in the continuation parameters.
+
+Mon 21 Jan 2013 : moved code to the new directories ../End_Games, ../Sweep,
+  and ../Trackers for clarity.
+
+Mon 8 Aug 2011 : added to standard_continuation_data a procedure to
+  compute and write path tracking statistics.
+
+Wed 22 Jun 2011 : added function to process_io.
+
+Thu 9 Jun 2011 : changed black_box_poly_continuations.adb, mainpoco.adb, 
+  and parameter_homotopy_continuation.adb
+  for changed specifications in standard_root_refiners.
+
+Thu 2 Jun 2011 : added output to {dobldobl,quaddobl}_incfix_continuation.adb
+  and updated drivers_for_poly_continuation.
+  Added "working_precision" as a variable in continuation_parameters.
+
+Wed 1 Jun 2011 : changed process_io.adb, multprec_incfix_continuation.adb
+  multprec_predictors.adb, {dobldobl,quaddobl}_vlprs_algorithm.adb
+  for warnings; further work on drivers_for_poly_continuation.
+  Changed driver_for_winding_numbers.adb for warnings.
+
+Tue 31 May 2011 : updated drivers_for_poly_continuation,
+  tested by ts_poco.adb.
+
+Mon 30 May 2011 : for warnings, changed {dobldobl,quaddobl}_path_trackers.adb,
+  standard_quad_turn_points.a* and directions_of_dobldobl_paths.adb.
+  New packages {dobldobl,quaddobl}_incfix_continuation change
+  drivers_for_poly_continuation.adb, tested by ts_poco.
+  Fixed bug in drivers_to_track_{dobldobl,quaddobl}_paths.adb.
+  Added "Write_Solution" to multprec_incfix_continuation.adb.
+  Formatting code in standard_continuation_data_io.adb.
+
+Sun 29 May 2011 : for warnings, changed drivers_for_poly_continuation.adb,
+  only 1 warning left in increment_and_fix_continuation.adb.
+  Modified standard_path_trackers.adb to remove one warning.
+  Changed valipoco.adb for warnings.
+
+Mon 23 May 2011 : added driver to drivers_for_poly_continuation.
+  Upgraded drivers_to_track_{dobldobl,quaddobl}_paths for total degree
+  start systems, changed drivers_to_track_paths.adb as well.
+
+Fri 20 May 2011 : fixed type error in drivers_to_track_paths.ads.
+  New packages: drivers_to_track_{dobldobl,quaddobl}_paths,
+  {dobldobl,quaddobl}_continuation_data_io, tested by ts_track.
+  Changed ts_path.adb because of so many warnings.
+
+Sun 14 Nov 2010 : updates in drivers_for_poly_continuation, ts_path,
+  and continuation_parameters for path tracking with double doubles,
+  touched quaddobl_predictors.adb to trace bug in quad_double_numbers.
+
+Sat 9 Oct 2010 : added Tune to ts_correct.adb to adjust tolerance for
+  corrector depending on the working precision.  Changed the creators in
+  {standard,dobldobl,quaddobl}_continuation_data.adb to update (err,rco,res).
+
+Fri 8 Oct 2010 : updates in ts_path.adb for path tracking in double doubles,
+  made modifications in process_io for quad doubles.  Changed
+  directors_of_quaddobl_paths.adb.
+
+Thu 7 Oct 2010 : added stubs to dobldobl_correctors, modified process_io
+  for writing info during path tracking with double doubles.
+  Altered directions_of_dobldobl_paths.adb, ts_path.adb compiles!
+
+Wed 6 Oct 2010 : extended ts_preco.adb with tests on dobldobl_predictors,
+  and on the new quaddobl_predictors, created dobldobl_dispatch_predictors
+  and quaddobl_dispatch_predictors.  Renamed directions_of_solution_paths
+  into directions_of_standard_paths, to replace the standard by dobldobl
+  and quaddobl, created dobldobl_path_trackers, tested by ts_path.adb.
+
+Wed 22 Sep 2010 : created {dobldobl,quaddobl}_vlprs_tables, tested for
+  compilation by ts_vlprs.adb, upaded standard_winding_numbers.adb,
+  created {dobldobl,quaddobl}_vlprs_algorithm
+  and {dobldobl,quaddobl}_winding_numbers.
+
+Tue 21 Sep 2010 : fixed compiler errors in dobldobl_predictors.adb.
+
+Mon 20 Sep 2010 : created dobldobl_predictors, tested by ts_preco.adb.
+
+Sun 19 Sep 2010 : created quaddobl_continuation_data, and updated the
+  dobldobl_continuation_data, updates in dobldobl_correctors.adb and
+  created the new quaddobl_correctors, tested by ts_correct.adb.
+
+Sat 18 Sep 2010 : updated ts_correct.adb.
+
+Wed 15 Sep 2010 : added code to dobldobl_correctors.adb.
+
+Tue 14 Sep 2010 : types {pred,corr}_pars moved from standard_continuation_data
+  into continuation_parameters.  This move affected *_continuation_data.ads
+  and multprec_continuation_data.adb, {standard,dobldobl}_correctors.ads,
+  ts_correct.adb, ts_preco.adb, standard_path_trackers.*,
+  multprec_path_trackers.adb, standard_dispatch_predictors.a*,
+  drivers_to_track_paths.adb, and also updated ts_exp.adb, ts_vlprs.adb.
+
+Mon 13 Sep 2010 : created dobldobl_continuation_data, for use in the new
+  dobldobl_correctors, tested by ts_correct.adb.
+
+Tue 10 Aug 2010 : new package standard_monomial_correctors, tested by
+  ts_correct.adb.
+
+Wed 2 Jun 2010 : because phc -p offers no support for Laurent systems,
+  changed drivers_for_poly_continuation.a*, black_box_poly_continuations.adb,
+  and mainpoco.adb.
+
+Fri 6 Nov 2009 : changed drivers_for_path_directions.adb,
+  solutions_with_parameters.adb, multprec_correctors.a*,
+  black_box_poly_continuations.adb and standard_path_trackers.a*,
+  standard_predictors.a*, continuation_parameters_io.adb,
+  for GNAT GPL 2009 warnings.
+
+Fri 9 Oct 2009 : extended black_box_poly_continuations with continuation for
+  Laurent polynomial systems.
+
+Wed 30 Sep 2009 : commented out exception handlers in
+  black_box_poly_continuations.adb.
+
+Tue 29 Sep 2009 : changes in black_box_polynomial_continuations.adb for some
+  warnings and to fix bug in deflation.
+
+Thu 10 Sep 2009 : exception handlers to black_box_polynomial_continuations.adb
+  to check crash with phc -0 -b cyclic7 /tmp/output
+
+Fri 3 Jul 2009 : updated parameter_homotopy_continuation.adb for a better
+  interface to the sweep homotopies.
+  
+Wed 1 Jul 2009 : updated standard_quad_turn_points.a* and its _io.*,
+  used by standard_quad_sweepers.adb, tested by ts_realcont.adb.
+
+Fri 19 Jun 2009 : parameter_homotopy_continuation.adb now prints out the
+  solutions at the end of a sweep.
+
+Wed 17 Jun 2009 : updated black_box_poly_continuations.a* with routines
+  for multitasking.
+
+Fri 15 May 2009 : updated parameter_homotopy_continuation.adb because of the
+  new package standard_quad_sweepers.  For tasking mainpoco.a* was changed.
+
+Mon 11 May 2009 : splitted off code from standard_quad_turn_points to
+  the new package standard_quad_sweepers.
+
+Tue 5 May 2009 : updated standard_quad_turn_points.a* with a bisection
+  method for the noon4A case when the determinant flips sign.
+
+Mon 4 May 2009 : updated standard_quad_parameters.a*,
+  standard_quad_turn_points.adb, parameters_homotopy_continuation.adb,
+  and ts_realcont.adb.
+
+Fri 1 May 2009 : updated standard_quad_turn_points.a* and its *_io.a*
+  for the backup with quadratic interpolation
+
+Tue 14 Apr 2009 : moved "Write_Sweep_Summary" from the "Parameter_Homotopy_
+  Continuation" package to "Standard_Quad_Turn_Points_io" for use in the
+  ts_realcont.adb.  Updated standard_quad_parameters.ads and also
+  standard_quad_turn_points.adb to backup at a critical point.
+
+Mon 13 Apr 2009 : moved "Read_Positive_Float" from "Continuation_Parameters_io"
+  into "Numbers_io" of the "Math_Lib/Numbers" directory.
+  New package "standard_quad_parameters" manages values of the numerical
+  parameters for the sweep, used in standard_quad_turn_points, with tuning
+  done by ts_realcont.adb.  Also parameter_homotopy_continuation.adb changed.
+
+Tue 10 Mar 2009 : updated standard_quad_turn_points.a* and ts_realcont.adb
+  so user no longer has to provide start solutions.
+
+Fri 15 Aug 2008 : blackbox solver must write homotopy parameters (gamma)
+  to file, changed black_box_poly_continuations.adb to do this.
+
+Thu 14 Aug 2008 : put "toggle" commments in black_box_poly_continuations
+  to toggle off deflation, for bugs with trinomials...
+
+Tue 1 Jul 2008 : in black_box_poly_continuations.adb fixed crash when 
+  there are no general start solutions.
+
+Sun 13 Apr 2008 : in black_box_poly_continuations.adb, added "flush"
+  statements before the root refinement phase.
+ 
+Thu 14 Feb 2008 : added counters to the sweep routines in
+  parameter_homotopy_continuation.
+
+Tue 12 Feb 2008 : fixed bug in sweep summary 
+  of parameter_homotopy_continuation.adb.
+
+Fri 8 Feb 2008 : in parameter_homotopy_continuation, a new procedure
+  writes a sweep summary a the end.
+
+Mon 21 Jan 2008 : commented out those exception handlers that were not
+  deemed effective in standard_predictors.adb, standard_correctors.adb,
+  standard_path_trackers.adb, and increment_and_fix_continuation.adb.
+
+Sun 20 Jan 2008 : fixed some indendation formatting in 
+  increment_and_fix_continuation.adb, added exception handlers in
+  standard_predictors.adb, standard_correctors.adb, and
+  standard_path_trackers.adb, for when -gnatp is not switched on.
+
+Thu 10 Jan 2008 : removed from parameter_homotopy_continuation.adb
+  the root refining because it turned out too fragile.
+
+Wed 9 Jan 2008 : changed standard_quad_turn_points.a* and
+  parameter_homotopy_continuation.a* to allow to avoid extra output.
+
+Mon 7 Jan 2008 : changed black_box_poly_continuations.adb in search for
+  the cause of a crash.  Modified mainpoco.adb because of warnings,
+  added root refiners to sweep in parameter_homotopy_continuation.a*.
+
+Thu 3 Jan 2008 : because of warnings in GNAT GPL 2006, changed
+  standard_continuation_data.adb and drivers_for_poly_continuation.adb.
+
+Wed 2 Jan 2008 : changed standard_correctors.ads, and
+  systems_with_parameters.adb, black_box_poly_continuations.a*
+  because of warnings in GNAT GPL 2006.
+
+Sat 29 Dec 2007 : changed standard_quad_turn_points and
+  parameter_homotopy_continuation, both .ads and .adb files.
+
+Fri 28 Dec 2007 : to make the sweep also accessible through ts_parcon,
+  changed parameter_homotopy_contination, ts_parcon.adb and mainpoco.adb.
+
+Thu 27 Dec 2007 : to prepare the phc -p for the real sweep, modified
+  systems_with_parameters, solutions_with_parameters,
+  parameter_homotopy_continuation, and mainpoco.adb.
+
+Sat 8 Dec 2007 : changed multprec_path_trackers.adb because of warnings.
+  Revamped black_box_poly_continuations to deal with start solutions
+  with zero components.
+
+Wed 26 Sep 2007 : ts_realcont.adb reads solutions from input file.
+
+Tue 25 Sep 2007 : minimizing parabolic determinant interpolation added
+  to standard_quad_turn_points.adb.
+
+Mon 24 Sep 2007 : improved eigenvalue computation in 
+  standard_quad_turn_points.
+
+Mon 10 Sep 2007 : added switch to standard_quad_turn_points.a* to turn
+  off the eigenvalue computation, also ts_realcont.adb changed.
+
+Mon 3 Sep 2007 : added monitoring of eigenvalues along path, changed
+  standard_quad_turn_points.a*. 
+
+Sun 2 Sep 2007 : added monitoring of determinant along path, changed
+  ts_realcont.adb, standard_quad_turn_points + i/o.
+
+Tue 28 Aug 2007 : added some options to ts_realcont.adb, and changed
+  standard_quad_turn_points.adb.
+
+Sun 1 Jul 2007 : more changes to standard_quad_turn_points.a* and
+  ts_realcont.adb, does not work for quadruple points...
+
+Fri 29 Jun 2007 : prepared standard_quad_turn_points.a* to pass through
+  quadratic turning points, also modified ts_realcont.adb.
+
+Thu 28 Jun 2007 : for a more useful ts_realcont.adb, changed 
+  standard_quad_turn_points* and its i/o.
+
+Fri 22 Jun 2007 : to have dimension of system written to file, made changes 
+  in mainpoco.adb and drivers_for_poly_continuation.adb.
+  In standard_path_trackers.adb, success is now an input parameter for
+  the single predictors, so that now the Hermite predictor works.
+
+Tue 22 May 2007 : updated black_box_poly_continuations.adb to deflate
+  by default in root refinement.
+
+Fri 4 May 2007 : x^2 = 0 and y^2 = 0 made scaling crash in the file
+  black_box_poly_continuations.adb, discovered via phc_solve.
+
+Sat 7 Apr 2007 : prepared standard_quad_turn_points for adaptive step size.
+
+Wed 4 Apr 2007 : added "Shoot_Turn" to standard_quad_turn_points,
+  quadratic turning points are now computed quite fast.
+
+Mon 2 Apr 2007 : extended standard_quad_turn_points (and its _io) so
+  that also quadratic turning points from a complex path are located
+  and computed accurately via a plain bisection method.
+
+Sat 31 Mar 2007 : added bisection method to seek turning points
+  to standard_quad_turn_points, also the _io package changed.
+
+Fri 30 Mar 2007 : created package standard_quad_turn_points + _io,
+  from the code in ts_realcont.adb, which now locates turning points,
+  interactively, for small examples like the circle...
+
+Wed 28 Mar 2007 : started the creation of ts_realcont.adb to develop
+  a real sweep for parameter continuation.
+
+Tue 20 Mar 2007 : black_box_polynomials_continuations.adb did not contain
+  a silent black_box_refine which caused different outputs in phc -b...
+
+Sun 18 Feb 2007 : max step size in endgame should be 0.01 not 0.05.
+  Changes continuation_parameters.a*.  This should decrease path crossings.
+
+Thu 1 Feb 2007 : bug in black_box_poly_continuations.adb, instead of
+  Random1 one was taken as the value for the gamma constant.
+
+Mon 1 Jan 2007 : drivers_to_track_paths changed for more efficient
+  solving of linear-product start systems.
+
+Tue 17 Oct 2006 : changed drivers_to_track_paths.ads and .adb, moved
+  maintrack to the Main directory for jumpstarting polyhedral homotopies.
+
+Thu 28 Sep 2006 : changed drivers_for_poly_continuation.adb to help the
+  user to set t to zero by suggesting default values in case t = 1.0.
+
+Fri 23 Jun 2006 : changed drivers_for_poly_continuation.adb to fix a bug.
+
+Thu 15 Jun 2006 : changed increment_and_fix_continuation.adb because of
+  elimnation of standard_complex_solutions.get.
+
+Wed 14 Jun 2006 : because of warning of AIX, changed valipoco.adb,
+  standard_continuation_data.adb, drivers_to_track_paths.adb,
+  parameter_homotopy_continuation.adb, drivers_for_poly_continuation.adb,
+  black_box_poly_continuations.adb.
+
+Thu 27 Apr 2006 : added another procedure for the next solution of
+  a linear-product start system to drivers_to_track_paths.ads.
+
+Tue 18 Apr 2006 : updated drivers_to_track_paths.ads and its adb.
+
+Sun 26 Mar 2006 : updated standard_continuation_data_io with extra output
+  when preliminary diagnostics of path; drivers_to_track_paths now supports
+  jumpstarting from total degree and linear product start systems.
+
+Sat 25 Mar 2006 : extended drivers_to_track_paths to work with start
+  systems based on the total degree.
+
+Fri 24 Mar 2006 : minor change in continuation_parameters_io.adb to allow
+  for scanning of solution banner in the output of mpi2track.
+  Discovered "black_polynomial_continuations" package to be obsolete.
+  Modified black_box_poly_continuations.adb to write banner to file.
+
+Sun 19 Feb 2006 : updated standard_continuation_data_io.ad* for lib_track.
+
+Thu 16 Feb 2006 : created the file ts_track.adb to do simple path tracking
+  with incremental read and write of the start solutions.  For extra output,
+  created the package standard_continuation_data_io.  For maintrack, added
+  the new package drivers_to_path_trackers.  Changed default for #corrector
+  iterations back to 4 (from 3) because of decreased performance.
+
+Thu 9 Feb 2006 : created the package pack_continuation_parameters, tested
+  by ts_pactun, as needed to tune the parameters with the C interface;
+  changed continuation_parameters.ads: 10^4 -> 10^8 for divergence along path
+
+Tue 24 Jan 2006 : made some simplications in standard_predictors.adb to
+  hunt for the bug in the Hermite predictor at the end of the paths.
+
+Thu 19 Jan 2006 : updated continuation_parameters.ads, for the default
+  predictor to be the Hermite cubic predictor, but it crashed!
+
+Tue 17 Jan 2006 : updated continuation_parameters.ads, limiting the default
+  number of corrector steps from 4 to 3.
+
+Thu 24 Mar 2004 : extended process_io with some extra functions.
+
+Mon 13 Dec 2004 : in Set_Homotopy_Parameters of black_box_poly_continuations,
+  made sure the constant a was random1 to fix x*y = 2 and x+y = 3.
+
+Thu 26 Aug 2004 : initialized err and dumbv in 
+  increment_and_fix_continuation.adb to reduce errors reported by valgrind
+
+Thu 12 Aug 2004 : updated ts_vlprs.adb to test pipelining and fixed
+  ew estimate in {standard,multprec}_winding_numbers.adb.
+
+Fri 6 Aug 2004 : moved the routines to extrapolate for winding number
+  from ts_vlprs into {standard,multprec}_winding_numbers.
+
+Thu 5 Aug 2004 : modified ts_vlprs to estimate winding number.
+
+Wed 4 Aug 2004 : modified ts_vlprs and inserted standard_ to the
+  packages vlprs_tables and vlprs_algorithm, created multprec versions.
+
+Thu 29 Jul 2004 : added condition tables to the standard_root_refiners
+  and multprec_root_refiners.
+
+Tue 29 Jun 2004 : replaced deflation sequences by deflation trees,
+  integrated *deflate_symbols in the standard_deflation_trees_io,
+  updated drivers_to_deflate_singularities accordingly.
+
+Fri 25 Jun 2004 : created standard and multprec deflation sequences,
+  adjusted *deflate_singularties packages and ts_deflate.
+
+Thu 24 Jun 2004 : changed drivers_to_deflate_singularities and ts_deflate
+  to implement a deflation method operating on a list of solutions.
+
+Sat 19 Jun 2004 : tolerance in Numerical_Rank in *newton_steps is parameter,
+  changed also ts_deflate.adb accordingly.
+
+Sat 8 May 2004 : added "Numerical_Rank" to *newton_steps, and updated
+  ts_newton and ts_deflate accordingly.
+
+Tue 4 May 2004 : wrote ts_deflate.adb, combining deflation with Newton,
+  and also using multi-precision.
+
+Sun 25 Apr 2004 : updated standard_deflate_singularities and ts_deflate.adb
+  to have a variable number of multipliers in the deflated system.
+
+Thu 22 Apr 2004 : updated ts_newton.adb, as a result of changes in
+  standard_newton_steps and multprec_newton_steps.
+
+Wed 3 Mar 2004 : in black_box_poly_continuations, changed the a := Random1
+  to a := Create(1.0) to make sure no monodromy would happen.
+
+Fri 27 Feb 2004 : changed bablpoco to have three file names as arguments
+  and renamed black_polynomial_continuations into 
+  black_box_poly_continuations; updated black_box routine.
+
+Thu 18 Dec 2003 : fixed bug in Clear of standard_continuation_data.adb.
+
+Fri 24 Oct 2003 : fixed bug in parameter_homotopy_continuation.adb,
+  the example with the triangle in the book now works well
+
+Fri 17 Oct 2003 : updated parameter_homotopy_continuation with a
+  circular interpolate to force complex arithmetic
+
+Sun 5 Oct 2003 : first try to have parameter continuation in phc -p,
+  updated mainpoco.adb and systems_with_parameters.ads and .adb.
+
+Wed 24 Sep 2003 : changed parameter_homotopy_continuation.adb
+
+Tue 23 Sep 2003 : extra output with Hermite predictor removed from
+  standard_path_trackers.adb and multprec_path_trackers.adb
+  Also changed ts_deflate and standard_deflate_singularities.
+
+Mon 22 Sep 2003 : ts_parcon.adb was splitted into systems_with_parameters,
+  solutions_with_parameters, and parameter_homotopy_continuation.
+
+Tue 8 Sep 2003 : continued development of standard_deflate_singularities
+  and copied parts of ts_newton to ts_deflate.
+
+Mon 1 Sep 2003 : started development of standard_deflate_singularities,
+  standard_deflate_symbols and ts_deflate.
+
+Fri 11 July 2003 : changed ts_numdif.adb and 
+  standard_evaluation_machine.adb to deflate on a simple multiplicity.
+
+************* most recent updates above this line *****************
+
+Fri 23 May 2003 : standard_evaluation_machine,
+  standard_numerical_derivatives, and ts_numdif are a first start
+  to implement a Newton's method to treat singularities better.
+
+Correctors :
+  QR-decompostion in end of path following
+
+Old_Correctors : no QR with conditioned
+New_Correctors : QR when condition number is requested
+
+Predictors : made the predictors for t visible
+Dispatch_Predictors : "xt" = true pred for x+t, otherwise for t only
+Continuation_Parameters.Tune : adapt reduction_*_factor with condition
+
+Tue 10 August, 1999 : removed the infile from the parameter list of the
+  Black_Box_Polynomial_Continuation that also has the start system as
+  parameter, since the Tuning of the continuation parameters is not
+  done from scanning the input file.
+  Modification not copied to the public distribution directory.
+
+Sat 14 August, 1999 : "put(outfile,p'last,p.all)" so that now also
+  the dimension will appear when the system is put on outfile
+  in the routine Black_Box_Polynomial_Continuation.
+  Copied the file black_polynomial_continuations.ads and .adb to
+  the public distribution directory.
+
+Tue 16 May 2000 : ts_rootrefi.adb gave compilation error, because of missing
+  alternative in case.  Changed the standard and multi-precision root refiners
+  so that they print the correct start residual and the number of iterations.
+
+Tue 30 May 2000 : implemented the method of Peter Kravanja, updated
+  standard and multprec root refiners and ts_rootrefi.
+
+Wed 31 May 2000 : modified specifications of existing routines in the
+  root refiners, which led to changes in the following 12 files :
+    Continuation/black_polynomial_continuations.adb
+    Continuation/mainpoco.adb
+    Root_Counts/Implift/mixed_homotopy_continuation.adb
+    Root_Counts/Symmetry/mainsmvc.adb
+    Schubert/pieri_continuation.adb
+    Schubert/driver_for_sagbi_homotopies.adb
+    Schubert/driver_for_pieri_homotopies.adb
+    Schubert/driver_for_quantum_pieri.adb
+    Components/component_scanners.adb
+    Main/driver_for_root_refining.adb
+    Main/bablvali.adb
+    Main/mainvali.adb
+
+Thu 8 June 2000 : started transition to multi-precision path tracking...
+  created ts_preco, packages splitted into Standard and Multprec are
+  Continuation_Data, Predictors, Dispatch_Predictors, Correctors,
+  and Path_Trackers
+
+Thu 15 June 2000 : ts_path works also for multi-precision numbers.
+
+Sat 23 Sep 2000 : modified drivers_for_poly_continuation with an
+  additional driver to tune the continuation  parameters.
+
+Thu 5 Oct 2000 : added stop test to increment_and_fix_continuation
+
+Wed 15 Nov 2000 : ts_path.adb used Homotopy instead of Standard_Homotopy.
+
+Thu 30 Nov 2000 : directions_of_solution_paths.adb weeded out variables
+  that were never assigned a value.
+
+Thu 24 May 2001 : updated ts_path and drivers_for_poly_continuation to
+  deal with multi-precision path tracking in a more user friendly way.
+  Created new package multprec_incfix_continuation.
+
+Fri 22 Mar 2002 : changed black_polynomial_continuations.adb so that
+  the sols on return is not the list of end points, but the filtered
+  list of true solutions, obtained after root refinement
+
+Tue 30 July 2002 : scaling -> standard_scaling changes 
+   black_polynomial_continuations.adb
+
+Wed 25 Dec 2002 : changed continuation_data, adding lists of arrays
+  of solu_info to deal with segmentation faults when tracking huge
+  lists of solution paths.  Changed increment_and_fix_continuation
+  which should to run with these lists of arrays of solu_info.
+
+Fri 16 May 2003 : mainpoco.adb, cosmetic change: 
+  "Reading target polynomial system..."

@@ -96,8 +96,8 @@ package Continuation_Parameters is
 
 -- PATH CLOSENESS (CORRECTOR) :
 
-  max_path_iter : natural32 := 4;                                       -- 19
-  max_endg_iter : natural32 := 4;                                       -- 20
+  max_path_iter : natural32 := 3;                                       -- 19
+  max_endg_iter : natural32 := 3;                                       -- 20
             -- maximum number of iterations for one corrector step
             -- along the path and at the end of the path
 
