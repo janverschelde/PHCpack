@@ -383,7 +383,7 @@ procedure ts_shapiro is
 
     n,d,m,nb : natural32 := 0;
     ans : character;
-    inc,mindist,ratio,bestratio : double_float;
+    inc,mindist,ratio,bestratio : double_float := 0.0;
     first : boolean;
 
   begin
@@ -416,7 +416,7 @@ procedure ts_shapiro is
   procedure Interactive_Generation is
 
     n,d : natural32 := 0;
-    s : double_float;
+    s : double_float := 0.0;
     ans : character;
 
   begin

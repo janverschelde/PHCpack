@@ -1,0 +1,65 @@
+Sun 15 Jun 2014 : modified ts_shapiro.adb for a compiler warning.
+
+Tue 27 May 2014 : small change in brackets_io.adb for a compiler warning.
+
+Tue 19 Nov 2013 : because of name changes in Dynlift, modified
+  drivers_for_sagbi_homotopies.adb, ts_detrock.adb, and ts_eremenko.adb.
+
+Thu 27 Jun 2013 : updated matrix_homotopies_io.adb.
+
+Wed 26 Jun 2013 : updated drivers_for_sagbi_homotopies.adb.
+
+Tue 18 Jun 2013 : updated bracket_systems, as needed in Pieri homotopies.
+
+Mon 17 Jun 2013 : because of natural32 and integer32, more than half of all
+  files in this directory changed.
+
+Sun 30 Dec 2012 : ts_erememko.adb and ts_detrock.adb no longer compiled,
+  fixed this.
+
+Sat 10 Nov 2012 : changed drivers_for_sagbi_homotopies.adb for change in
+  name of triangulations into standard_integer_triangulations.
+
+Thu 9 Jun 2011 : changed drivers_for_sagbi_homotopies.adb for changed
+  specifications of standard_root_refiners.
+
+Wed 1 Jun 2011 : changed straightening_syzygies.adb for warning.
+
+Sun 29 May 2011 : for GNAT GPL 2010 warnings, changed matrix_homotopies.adb,
+  bracket_expansions.adb, and drivers_for_sagbi_homotopies.adb.
+
+Tue 29 Dec 2009 : for GNAT GPL 2009 warnings: changed ts_brackets.adb,
+  ts_brackmons.adb, ts_cheby.adb, ts_detrock.adb, sagbi_homotopies.adb,
+  ts_local.adb, ts_sagbi.adb, ts_straighten, and bracket_monoials_io.adb.
+
+Thu 3 Jan 2008 : updated brackets.adb, bracket_monomials.adb,
+  bracket_polynomials.ad*, and bracket_systems.adb
+  because of warnings of GNAT GPL 2006.
+
+Wed 6 Jun 2007 : added put_line to bracket_systems_io.
+
+Tue 5 Jun 2007 : fixed bug in bracket_polynomials_io and added put_line.
+
+Mon 4 Jun 2007 : added a function "Dimension" to bracket_monomials and
+  to bracket_polynomials.
+
+Tue 27 Mar 2007 : get in bracket_monomials_io, tested by ts_brackmons.adb.
+  Added type array_of_brackets to the brackets package.
+
+Fri 23 Mar 2007 : added Null_Bracket_Poly to bracket_polynomials.
+
+Wed 21 Mar 2007 : moved driver_for_sagbi_homotopies into drivers_for_* to
+  postpone the reading of the name of the output file.
+  The test programs ts_sagbi, ts_straighten, ts_detrock, and ts_eremenko
+  changed as well.
+
+Tue 20 Mar 2007 : extended bracket_monomials with array type and a function
+  "Is_Null" to test whether a bracket monomials is null.  The distinction
+  between copy_multiply and copy_append of bracket monomials also caused
+  updates in bracket_polynomials, leading to a new frontal_add procedure.
+
+Wed 4 Oct 2006 : upgrade of power_lists into supports_of_polynomial_systems
+  caused change in driver_for_sagbi_homotopies.adb.
+
+Wed 14 Jun 2006 : because of warnings on AIX, changed bracket_polynomials.adb
+  and the package complex_osculating_planes.
