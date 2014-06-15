@@ -240,7 +240,7 @@ ts_circuit:
 # Test programs for Math_Lib/Reduction :
 
 test_reduction: ts_fltlu ts_cmplu ts_ddlu ts_qdlu ts_qrd ts_svd ts_eigval \
-                ts_mgs ts_mgsrnk ts_backsubs
+                ts_mgs ts_mgsrnk ts_backsubs ts_perflu
 
 ts_fltlu:
 	make -f $(MAKEFILE) ts_fltlu
@@ -274,6 +274,9 @@ ts_mgsrnk:
 
 ts_backsubs:
 	make -f $(MAKEFILE) ts_backsubs
+
+ts_perflu:
+	make -f $(MAKEFILE) ts_perflu
 
 # Test programs for Math_Lib/Polynomials :
 
@@ -354,6 +357,9 @@ ts_speel:
 
 ts_speelsys:
 	make -f $(MAKEFILE) ts_speelsys
+
+ts_cycfun:
+	make -f $(MAKEFILE) ts_cycfun
 
 # Test programs for Math_Lib/Supports :
 
