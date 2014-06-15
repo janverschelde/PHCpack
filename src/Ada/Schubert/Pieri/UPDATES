@@ -1,0 +1,73 @@
+Sun 15 Jun 2014 : changed ts_detsys.adb for a compiler warning.
+
+Wed 28 May 2014 : changed drivers_for_quantum_pieri.adb for compiler warnings.
+
+Tue 13 May 2014 : changes to drivers_for_pieri_homotopies.adb for compiler
+  warnings.
+
+Sun 11 May 2014 : changed "in out" to "in" parameters in localization_posets,
+  to fix compiler warnings.
+
+Fri 9 May 2014 : updated localization_posets.adb for warnings and compilation
+  error with strictly enforced Ada 2012 rules.
+
+Wed 19 Jun 2013 : updated bablenum.
+
+Tue 18 Jun 2013 : most of the files changed because of natural32 and integer32.
+
+Thu 13 Dec 2012 : made some routines in drivers_for_pieri_homotopies
+  visible through the specification.  Both .ads and .adb changed.
+  Made silent version of hypersurface solver in deformation_posets.
+
+Tue 11 Dec 2012 : new package localization_poset_strings, tested by
+  ts_piroco.adb for string representation of root counting posets.
+
+Thu 9 Jun 2011 : updated pieri_continuation, drivers_for_pieri_homotopies,
+  and drivers_for_quantum_pieri.adb  for changed specifications
+  in standard_root_refiners.
+
+Wed 1 Jun 2011 : changed deformation_posets.adb, determinantal_systems.adb,
+  specialization_of_planes.adb, drivers_for_pieri_homotopies.adb,
+  localization_posets_io.adb, and pieri_homotopies.adb for warnings.
+
+Sun 29 May 2011 : only two warnings left with deformation_posets.adb...
+
+Sun 12 Sep 2010 : changed drivers_for_input_planes.ad* to write coordinates
+  of all target planes, also updated drivers_for_pieri_homotopies.adb.
+
+Tue 29 Dec 2009 : changed standard_matrix_inversion.adb and ts_matinv.adb
+  for GNAT GPL 2009 warnings.
+
+Thu 29 Oct 2009 : exported cheater homotopies of drivers_for_pieri_homotopies.
+
+Thu 3 Jan 2008 : warnings in GNAT GPL 2006 caused changes in
+  verification_with_determinants.adb and curves_into_grassmannian.adb,
+  drivers_for_input_planes.a*, bablenum.adb.
+
+Wed 2 Jan 2008 : changed localization_posets.adb, deformation_posets.adb,
+  pieri_continuation.adb, and curves_into_grassmannian_io.adb,
+  curves_into_grassmannian.adb, determinantal_systems.adb, and
+  {numeric,symbolic}_minor_equations.adb, pieri_homotopies.a*,
+  drivers_for_pieri_homotopies.adb, drivers_for_quantum_pieri.adb,
+  for warnings in GNAT GPL 2006.
+ 
+Fri 14 Dec 2007 : moved mainenum.ads to ../Induction
+
+Mon 30 Apr 2007 : moved mainenum.adb to ../Induction
+
+Wed 21 Mar 2007 : driver_for_pieri_homotopies is replaced by drivers_for_*
+  to have a better interface.  Also mainenum.adb and ts_pieri.adb changed,
+  and also driver_for_quantum_pieri became drivers_for_quantum_pieri.
+
+Tue 20 Mar 2007 : extended symbolic_minor_equations to deal with general
+  intersection conditions.
+
+Wed 14 Jun 2006 : because of a warnings on AIX, changed the file
+  specialization_of_planes.adb.
+
+Sat 28 Feb 2004 : created bablenum.
+
+Mon 5 Jan 2004 : fixed a tabbing formatting uglyness in
+  curves_into_grassmannian_io.ads
+  changed specification of pieri_homotopies.ads, making
+  one auxiliary routine in the body visible to all clients

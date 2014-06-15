@@ -88,7 +88,7 @@ procedure ts_detsys is
     jaceva : Standard_Complex_Matrices.Matrix
                (1..integer32(mp),1..integer32(n*p))
            := Eval(sysjac,xvec);
-    nb : natural32;
+    nb : natural32 := 0;
     timer : Timing_Widget;
 
   begin
