@@ -71,4 +71,5 @@ ts_perfeval                       : performance testing on poly evaluation
 ts_cffsup                         : test on coefficient supported polynomials
 ts_speel                          : development of Speelpenning product
 ts_speelsys                       : test on eval and diff of systems
+ts_cycfun                         : on the cyclic n-roots problems
 -------------------------------------------------------------------------------
