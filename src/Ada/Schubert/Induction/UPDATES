@@ -1,3 +1,6 @@
+Sun 15 Jun 2014 : refactored ts_induce.adb into the new package 
+  flag_transformations to transform pair of flags.
+
 Thu 5 Jun 2014 : adjusted drivers_for_schubert_induction to pass the 
   coefficients of the fixed flags.
 

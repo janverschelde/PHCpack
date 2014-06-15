@@ -16,6 +16,7 @@ intersection_posets            : combine posets for several conditions
 intersection_posets_io         : output of formal sums and equations
 ts_checkers                    : interactive test program
 moving_flag_homotopies         : defines homotopies in one checker game
+flag_transformations           : transforming pairs of flags
 ts_induce                      : interactive test program for homotopies
 numeric_schubert_conditions    : numerical evaluation of Schubert conditions
 symbolic_schubert_conditions   : symbolic definition of Schubert conditions
