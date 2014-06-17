@@ -1,3 +1,5 @@
+Mon 16 Jun 2014 : changes in ts_perfeval.adb for compiler warnings.
+
 Thu 12 Jun 2014 : indexed version in standard_speelpenning_products,
   tested by ts_speel.  Also updated dobldobl_ and quaddobl_ versions.
   New test function ts_cycfun.adb to test on the cyclic n-roots problem.

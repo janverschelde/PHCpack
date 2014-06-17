@@ -272,8 +272,8 @@ procedure ts_perfeval is
       res(i) := p(i);
     end loop;
     ind := p'last;
-    for i in jm'range loop
-      for j in jm'range loop
+    for i in jm'range(1) loop
+      for j in jm'range(2) loop
         ind := ind + 1;
         res(ind) := jm(i,j);
       end loop;
@@ -303,8 +303,8 @@ procedure ts_perfeval is
       res(i) := p(i);
     end loop;
     ind := p'last;
-    for i in jm'range loop
-      for j in jm'range loop
+    for i in jm'range(1) loop
+      for j in jm'range(2) loop
         ind := ind + 1;
         res(ind) := jm(i,j);
       end loop;
@@ -334,8 +334,8 @@ procedure ts_perfeval is
       res(i) := p(i);
     end loop;
     ind := p'last;
-    for i in jm'range loop
-      for j in jm'range loop
+    for i in jm'range(1) loop
+      for j in jm'range(2) loop
         ind := ind + 1;
         res(ind) := jm(i,j);
       end loop;
