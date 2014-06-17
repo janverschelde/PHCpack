@@ -2,6 +2,7 @@ with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Natural_Vectors;
+with Standard_Complex_Vectors;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Standard_Point_Lists;               use Standard_Point_Lists;
 with Standard_Quad_Trees;                use Standard_Quad_Trees;
@@ -113,6 +114,37 @@ package Standard_Condition_Report is
   --   sols      list of solutions;
   --   pl        projected list of points;
   --   tol       tolerance for clustering.
+
+  procedure Is_Clustered
+               ( s : in Solution; nb : in natural32;
+                 sols : in Solution_List; tol : in double_float; 
+                 h1,h2 : in Standard_Complex_Vectors.Vector;
+                 pl : in out Point_List; val : out natural32 );
+  procedure Is_Clustered
+               ( s : in Solution; nb : in natural32;
+                 sols : in Solution_Array; tol : in double_float; 
+                 h1,h2 : in Standard_Complex_Vectors.Vector;
+                 pl : in out Point_List; val : out natural32 );
+
+  -- DESCRIPTION :
+  --   Compared to the function Standard_Solution_Diagnostics.Is_Clustered,
+  --   this procedure scales better for larger solution lists.
+
+  -- ON ENTRY :
+  --   s         a solution which occurs in sols at position nb;
+  --   nb        position of the solution s in the list or array sols;
+  --   sols      list or array of solutions;
+  --   tol       tolerance to decide whether two solutions are clustered.
+  --   h1        first hash key for the point list;
+  --   h2        second has key for the point list;
+  --   pl        list of points updated up to position nb-1.
+  
+  -- ON RETURN :
+  --   pl        the hashed version of the solution has been inserted
+  --             into the point list pl;
+  --   val       if equal to nb, then the solution is not clustered,
+  --             else, val is the index of the first other occurrence
+  --             of the solution s in sols.
 
   procedure Scan_for_Condition_Tables 
                ( infile : in out file_type; outfile : in file_type;

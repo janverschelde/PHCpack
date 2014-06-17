@@ -293,6 +293,52 @@ package body Standard_Condition_Report is
     Count_Clusters(outfile,to_file,sols,root,tol);
   end Write_Cluster_Report;
 
+  procedure Is_Clustered
+               ( s : in Solution; nb : in natural32;
+                 sols : in Solution_List; tol : in double_float; 
+                 h1,h2 : in Standard_Complex_Vectors.Vector;
+                 pl : in out Point_List; val : out natural32 ) is
+
+    pt : constant Point := Create(s.v,h1,h2,integer32(nb));
+    lpt : constant Link_to_Point := new Point'(pt);
+    lbl : integer32;
+    ls : Link_to_Solution;
+
+  begin
+    Insert_no_Duplicates(pl,lpt,tol,lbl);
+    if lbl = lpt.label then
+      val := nb;
+    else
+      ls := Standard_Complex_Solutions.Retrieve(sols,natural32(lbl));
+      if Standard_Solution_Diagnostics.Equal(ls.all,s,tol)
+       then val := natural32(lbl);
+       else val := nb;
+      end if;
+    end if;
+  end Is_Clustered;
+
+  procedure Is_Clustered
+               ( s : in Solution; nb : in natural32;
+                 sols : in Solution_Array; tol : in double_float; 
+                 h1,h2 : in Standard_Complex_Vectors.Vector;
+                 pl : in out Point_List; val : out natural32 ) is
+
+    pt : constant Point := Create(s.v,h1,h2,integer32(nb));
+    lpt : constant Link_to_Point := new Point'(pt);
+    lbl : integer32;
+
+  begin
+    Insert_no_Duplicates(pl,lpt,tol,lbl);
+    if lbl = lpt.label then
+      val := nb;
+    else
+      if Standard_Solution_Diagnostics.Equal(sols(lbl).all,s,tol)
+       then val := natural32(lbl);
+       else val := nb;
+      end if;
+    end if;
+  end Is_Clustered;
+
   procedure Scan_for_Condition_Tables 
                ( infile : in out file_type; outfile : in file_type; 
                  bannered,to_file : in boolean;
