@@ -1,0 +1,134 @@
+Mon 16 Jun 2014 : fixed compilation errors (due to renaming of functions)
+  in parallel_phcpack.c and mpi2track.c.
+
+Tue 12 Feb 2013 : updated mpi2phc_d2, new mpi2phc_dd and mpi2phc_qd has
+  the double double and quad double versions of mpi2phc_d2.
+
+Mon 11 Feb 2013 : updated mpi2phc_d2.c so the solutions are written
+  to file with a name specified by the user instead of written to screen.
+  Started construction of mpi2phc_dd.c, the double double mpi2phc_d2.c.
+
+Tue 5 Feb 2013 : extended mpi2sys.c to broadcast systems with double double
+  and quad double precision, did the same for mpi2sol.c.
+
+Mon 28 Jan 2013 : modified mpi2track.c for new jump_track.h,
+  after refactoring phcpack once more.
+
+Fri 18 Jan 2013 : updated mpi2track.c for a refactoring of phcpack.h,
+  fixed compilation error in mpi2phc_d2.c, updated parallel_subsystem.c
+  and parallel_monodromy because of new witset, refactored from phcpack.
+
+Wed 2 Jan 2013 : include stdio.h in merge_components.c for warnings and
+  memcpy belongs to string.h, which is now included in merge_components.c.
+  For gcc warnings, included stdlib.h in parallel_cells.c and string.h
+  in adatest.c.  Also includes in queue.c and parallel_tree.c.
+
+Tue 11 Dec 2012 : include stdlib.h in parallel_pieri.c.
+
+Tue 23 Jun 2009 : updated mpi2cell_d.c so it stays silent when v = 0.
+
+Thu 5 Jun 2008 : new parallel_subsystem.c copied over from Yun's directory.
+
+Wed 11 Jul 2007 : fixed mpi2track.c, writes target system when starting
+  the diagonal homotopy.
+
+Sun 14 Jan 2006 : mpi2track.c runs the diagonal homotopy!
+
+Fri 12 Jan 2006 : extended parallel_phcpack.h with homotopy_broadcast
+  needed for diagonal homotopy in mpi2track.c.
+
+Fri 5 Jan 2006 : fixed bugs in mpi2track, did not stop for total degree and
+  cheater's homotopy; extended with cascade homotopy.
+
+Wed 3 Jan 2006 : fixed bug in mpi2track.c: did not stop!
+
+Tue 2 Jan 2006 : more efficient mpi2track.c for linear-product start systems.
+
+Fri 8 Dec 2006 : removed print_monomials from mpi2phc_d.c, because
+  already in parallel_phcpack.h.
+
+Mon 26 Jun 2006 : cleaned up mpi2cell_s.c and mpi2cell_d.c, created 
+  "parallel_cells.h" and "parallel_cells.c" for common functions.
+  Removed lis.h, stat_cell.c, and mpi2cell.c.  Fixed a spelling mistake
+  in "parallel_phcpack.h".
+
+Tue 2 May 2006 : modified parallel_phcpack.c, mpi2track.c works!
+   Copied mpi2cell_d.c from Yan's directory.
+
+Mon 1 May 2006 : added one routine to parallel_phcpack for mpi2track.c.
+
+Thu 27 Apr 2006 : prepared mpi2track.c for linear-product start systems.
+
+Tue 18 Apr 2006 : updated mpi2track.c to search for memory leak...
+
+Sun 16 Apr 2006 : modified mpi2track.c for total degree start systems.
+
+Wed 5 Apr 2006 : modified mpi2track.c, no longer reads in the solution
+  file separately, thanks to modifications in lib_track.c
+
+Fri 24 Mar 2006 : parallel_phcpack has extra function to write timings
+  and path statistics to file, mpi2track.c looks very good now.
+
+Tue 21 Mar 2006 : Yan has created mpi2cell_s.c and mpi2cell_d.c,
+  using respectively static and dyanmic load balancing, but crashes...
+
+Sat 11 Mar 2006 : copied stat_cell.c to mpi2cell.c, integrating the code
+  of "lis.h" into it -- still needs some cleaning, but works otherwise.
+
+Thu 8 Mar 2006 : provided exception handlers in stat_cell.c, for prs10.
+
+Tue 21 Feb 2006 : removed all _ada_use_c2phc calls from mpi2phc_d.c,
+  updated parallel_phcpack.h and parallel_phcpack.c.
+
+Sun 5 Feb 2006 : copied stat_cell.c from /huis/yan/PHCv2/MPI,
+  together with lis.h!
+
+Tue 24 Jan 2006 : copied stat_cell.c from /huis/yan/PHCv2/MPI.
+
+Mon 2 Jan 2006 : updates in stat_cell for parallel polyhedral continuation.
+
+Tue 20 Sep 2005 : changes in manage_components.h/c and mpi2phc_d.c by Anton 
+
+Sat 17 Sep 2005 : changed parallel_phcpack.c, parallel_monodromy.c, and
+  mpi2fac_d.c, manage_components.h/c is splitted from monodromyMPI.c.
+
+Thu 15 Sep 2005 : moved initialization of sampler from build trace grid
+  into the main routine of mpi2fac_d.c.
+
+Tue 13 Sep 2005 : moved routines in mpi2fac_d.c into parallel_monodromy.
+
+Sun 11 Sep 2005 : mpi2fac_d.c works now; made some small changes to
+  mpi2fac_s, parallel_phcpack and parallel_monodromy concerning labels.
+
+Sat 10 Sep 2005 : added solutions_broadcast to parallel_phcpack.
+
+Fri 9 Sep 2005 : mpi2phc_d.c writes all target solutions to file.
+
+Thu 8 Sep 2005 : mpi2fac_d.c is now broadcasting all slices.
+
+Tue 6 Sep 2005 : created parallel_phcpack.c, parallel_monodromy, with
+  shared routines between mpi2fac_s.c and mpi2fac_d.c.
+
+Mon 5 Sep 2005 : copied stat_cell.h, stat_cell.c from /huis/yan/PHCv2/MPI.
+  Created mpi2fac_s.c from mpi2fac.c, for rewriting using Lib.
+
+Thu 31 Mar 2005 : changed mpi2phc.c into mpi2phc_s.c (s for static).
+
+Fri 25 Feb 2005 : mpi2fac seems to get in stable condition.
+
+Sun 7 Nov 2004 : mpi2phc writes solutions to output file.
+
+Tue 21 Sep 2004 : mpi2fac uses sampling machine
+
+Sun 19 Sep 2004 : mpi2fac now also computes one permutation
+
+Thu 16 Sep 2004 : mpi2fac now makes one loop
+
+Wed 15 Sep 2004 : changed mpi2phc so root prints final solutions at the end,
+  and updated mpi2fac in the same way.
+
+Mon 13 Sep 2004 : mpi2fac can do the path tracking to new slices.
+
+Tue 20 Apr 2004 : updated parallel pieri code
+
+Wed 21 Jan 2004 : copied "parallel_pieri.c" to this directory.
