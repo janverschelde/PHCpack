@@ -1,6 +1,7 @@
 with Ada.Calendar;
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Timing_Package,Time_Stamps;         use Timing_Package,Time_Stamps;
@@ -114,7 +115,7 @@ procedure babldmvc ( nt : in natural32; infilename,outfilename : in string ) is
     end if;
     Close(infile);
     Create_Output_File(outfile,outfilename);
-    put(outfile,lp.all);
+    put(outfile,natural32(lp'last),lp.all);
     Polyhedral_Solver(outfile,lp.all);
     ended_moment := Ada.Calendar.Clock;
     new_line(outfile);
