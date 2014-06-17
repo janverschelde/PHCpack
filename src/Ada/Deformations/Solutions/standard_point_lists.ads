@@ -100,11 +100,29 @@ package Standard_Point_Lists is
   -- DESCRIPTION :
   --   Sorts the list in increasing order, first on x, then on y.
 
+  procedure Insert ( pl : in out Point_List; pt : in Link_to_Point );
+
+  -- DESCRIPTION :
+  --   For a given list pl, sorted in increasing order,
+  --   the point pt is inserted into pl so that pl remains sorted.
+
   function Equal ( lp1,lp2 : Link_to_Point;
                    tol : double_float ) return boolean;
 
   -- DESCRIPTION :
   --   Returns true if the x and y coordinate are within tol distance.
+
+  procedure Insert_no_Duplicates
+              ( pl : in out Point_List; pt : in Link_to_Point;
+                tol : in double_float; lbl : out integer32 );
+
+  -- DESCRIPTION :
+  --   For a given list pl, sorted in increasing order,
+  --   the point pt is inserted into pl so that pl remains sorted.
+  --   If the point pt is equal to any other point q in pl
+  --   (with respect to the tolerance), then the point is not
+  --   inserted and on return the value of the label lbl is q.label.
+  --   If the point pt is inserted, the lbl equals pt.label on return.
 
   generic
     with procedure Report ( lp1,lp2 : in Link_to_Point );

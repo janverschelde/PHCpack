@@ -1,3 +1,6 @@
+Tue 17 Jun 2014 : added insert routines to standard_point_lists,
+  tested with ts_ptlists.
+
 Thu 29 May 2014 : changed {standard,dobldobl,quaddobl,multprec}_complex_
   solutions_io.adb to remove all compiler warnings.
 

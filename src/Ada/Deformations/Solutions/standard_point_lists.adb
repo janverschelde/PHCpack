@@ -136,6 +136,43 @@ package body Standard_Point_Lists is
     end loop;
   end Sort;
 
+  procedure Insert ( pl : in out Point_List; pt : in Link_to_Point ) is
+
+    first,second : Point_List;
+    lpt : Link_to_Point;
+    done : boolean;
+
+  begin
+    if Is_Null(pl) then                -- first special case: list is empty
+      Construct(pt,pl);
+    else
+      first := pl;
+      lpt := Head_Of(first);
+      if pt < lpt then         -- second special case: first element larger
+        Construct(pt,pl);
+      else
+        second := Tail_Of(first);    -- initialize pair of chasing pointers
+        done := false;
+        while not Is_Null(second) loop
+          lpt := Head_Of(second);
+          if lpt < pt then           -- point is larger than current lpt
+            first := second;
+            second := Tail_Of(second);
+          else
+            Construct(pt,second);    -- insert point into the list
+            Swap_Tail(first,second);
+            done := true;
+          end if;
+          exit when done;
+        end loop;
+        if not done then -- first points to the last element of the list
+          Construct(pt,second);
+          Swap_Tail(first,second);
+        end if;
+      end if;
+    end if;
+  end Insert;
+
   function Equal ( lp1,lp2 : Link_to_Point;
                    tol : double_float ) return boolean is
   begin
@@ -147,6 +184,54 @@ package body Standard_Point_Lists is
       return true;
     end if;
   end Equal;
+
+  procedure Insert_no_Duplicates
+              ( pl : in out Point_List; pt : in Link_to_Point;
+                tol : in double_float; lbl : out integer32 ) is
+
+    first,second : Point_List;
+    lpt : Link_to_Point;
+    done : boolean;
+
+  begin
+    if Is_Null(pl) then                -- first special case: list is empty
+      Construct(pt,pl);
+      lbl := pt.label;
+    else
+      first := pl;
+      lpt := Head_Of(first);
+      if Equal(pt,lpt,tol) then  -- second special case: pt already in list
+        lbl := lpt.label;
+      elsif pt < lpt then       -- third special case: first element larger
+        Construct(pt,pl);
+        lbl := pt.label;
+      else
+        second := Tail_Of(first);    -- initialize pair of chasing pointers
+        done := false;
+        while not Is_Null(second) loop
+          lpt := Head_Of(second);
+          if Equal(pt,lpt,tol) then  -- point already belongs to the list
+            lbl := lpt.label;
+            done := true;
+          elsif lpt < pt then        -- point is larger than current lpt
+            first := second;
+            second := Tail_Of(second);
+          else
+            Construct(pt,second);    -- insert point into the list
+            Swap_Tail(first,second);
+            lbl := pt.label;
+            done := true;
+          end if;
+          exit when done;
+        end loop;
+        if not done then -- first points to the last element of the list
+          Construct(pt,second);
+          Swap_Tail(first,second);
+          lbl := pt.label;
+        end if;
+      end if;
+    end if;
+  end Insert_no_Duplicates;
 
   procedure Clusters ( pl : in Point_List; tol : in double_float ) is
 
