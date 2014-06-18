@@ -95,6 +95,7 @@ package body Standard_Root_Refiners is
           nbsing := nbsing + 1;
         end if;
       elsif sa(integer32(nb)).rco > tolsing then
+       -- put_line("calling Is_Clustered in Root_Accounting...");
         declare
           nb2 : constant natural32 := Is_Clustered(ls.all,nb,sa,tolclus);
         begin
@@ -142,6 +143,7 @@ package body Standard_Root_Refiners is
           if ls.m = 1 then
             put_line(file,"single ==");
           else
+           -- put_line("Calling Is_Clustered in Write_Type...");
             nb2 := Is_Clustered(ls.all,nb,sa,tolclus);
             if nb2 = nb 
              then put_line(file,"multiple ==");
@@ -205,6 +207,7 @@ package body Standard_Root_Refiners is
       ls.m := 0;
     elsif sa(integer32(nb)).rco < tolsing or deflate then
       if ls.m <= 1 then -- do not change input multiplicity field
+       -- put_line("Calling Multiplicity on array in Multiplicity ...");
         declare   -- to determine multiplicity count clustered solutions
           m : constant natural32 := Multiplicity(ls.all,sa,tolclus);
         begin
@@ -215,6 +218,7 @@ package body Standard_Root_Refiners is
         end;
       end if;
     else  -- sa(nb).rco > tolsing, check for clustering
+     -- put_line("Calling Is_Clustered in Multiplicity...");
       declare
         nb2 : constant natural32 := Is_Clustered(ls.all,nb,sa,tolclus);
       begin
@@ -237,6 +241,7 @@ package body Standard_Root_Refiners is
       ls.m := 0;
     elsif ls.rco < tolsing or deflate then
       if ls.m <= 1 then -- do not change input multiplicity field
+       -- put_line("Calling multiplicity on list in Multiplicity...");
         declare   -- to determine multiplicity count clustered solutions
           m : constant natural32 := Multiplicity(ls.all,sols,tolclus);
         begin
@@ -247,6 +252,7 @@ package body Standard_Root_Refiners is
         end;
       end if;
     else  -- ls.rco > tolsing, check for clustering
+     -- put_line("Calling Is_Clustered in Multiplicity...");
       declare
         nb2 : constant natural32 := Is_Clustered(ls.all,nb,sols,tolclus);
       begin
@@ -759,6 +765,7 @@ package body Standard_Root_Refiners is
     monkeys : Standard_Natural64_VecVecs.VecVec(1..order);
     nd : Link_to_Eval_Node;
     backup : Solution(n);
+    merge : boolean := false; -- to merge clustered solutions
 
   begin
     if deflate then
@@ -796,12 +803,17 @@ package body Standard_Root_Refiners is
       end if;
       Multiplicity
         (sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,tolsing,epsxa);
+      if not fail and then deflate
+       then merge := merge or (sa(i).m > 1);
+      end if;
       numit := numit + numb;
     end loop;
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
     if deflate then
       Standard_Natural64_VecVecs.Clear(monkeys);
-      Merge_Multiple_Solutions(sols,tolsing);
+      if merge
+       then Merge_Multiple_Solutions(sols,tolsing);
+      end if;
       Standard_Jacobian_Trees.Clear(nd);
     else
       Clear(jac); -- otherwise crash after Clear(nd)
@@ -863,6 +875,7 @@ package body Standard_Root_Refiners is
     monkeys : Standard_Natural64_VecVecs.VecVec(1..order);
     nd : Link_to_Eval_Node;
     backup : Solution(n);
+    merge : boolean := false;  -- flag to merge clustered solutions
 
   begin
     if deflate then
@@ -900,8 +913,11 @@ package body Standard_Root_Refiners is
       end if;
       Multiplicity
         (sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,tolsing,epsxa);
-      if not fail
-       then Append(refsols,refsols_last,sa(i).all);
+      if not fail then
+        Append(refsols,refsols_last,sa(i).all);
+        if deflate
+         then merge := merge or (sa(i).m > 1);
+        end if;
       end if;
       numit := numit + numb;
     end loop;
@@ -909,8 +925,10 @@ package body Standard_Root_Refiners is
     if deflate then
       Standard_Natural64_VecVecs.Clear(monkeys);
       Standard_Jacobian_Trees.Clear(nd);
-      Merge_Multiple_Solutions(refsols,tolsing);
-      Merge_Multiple_Solutions(sols,tolsing);
+      if merge then
+        Merge_Multiple_Solutions(refsols,tolsing);
+        Merge_Multiple_Solutions(sols,tolsing);
+      end if;
     else
       Clear(jac); -- otherwise crash after clear(nd)
     end if;
@@ -1018,8 +1036,10 @@ package body Standard_Root_Refiners is
     monkeys : Standard_Natural64_VecVecs.VecVec(1..order);
     nd : Link_to_Eval_Node;
     backup : Solution(n);
+    merge : boolean := false;  -- flag to merge clustered solutions
 
   begin
+   -- put_line("in this reporting root refiner ...");
     if deflate then
       declare
       begin
@@ -1080,23 +1100,31 @@ package body Standard_Root_Refiners is
       Write_Type
         (file,sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,tolsing,
          epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+      if not fail and then deflate 
+       then merge := merge or (sa(i).m > 1);
+      end if;
       Standard_Condition_Tables.Update_Corrector(t_err,sa(i).all);
       Standard_Condition_Tables.Update_Condition(t_rco,sa(i).all);
       Standard_Condition_Tables.Update_Residuals(t_res,sa(i).all);
       numit := numit + numb;
     end loop;
+   -- put_line("done with the loop, writing global info ...");
     Write_Global_Info
       (file,nbtot,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
+   -- put_line("cleaning up ...");
     if deflate then
       Standard_Natural64_VecVecs.Clear(monkeys);
       Standard_Jacobian_Trees.Clear(nd);
-      Merge_Multiple_Solutions(sols,tolsing);
+      if merge
+       then Merge_Multiple_Solutions(sols,tolsing);
+      end if;
     else
       Clear(jac); -- otherwise crash after clear(nd)
     end if;
     Clear(p_eval); Clear(jac_eval);
    -- Distances_Table(t_dis,sols);
+   -- put_line("writing the condition tables ...");
     Standard_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco); --,t_dis);
   --exception
   --  when others => put_line("Exception raised in reporting root refiner 1");
@@ -1181,6 +1209,7 @@ package body Standard_Root_Refiners is
     monkeys : Standard_Natural64_VecVecs.VecVec(1..order);
     nd : Link_to_Eval_Node;
     backup : Solution(n);
+    merge : boolean := false;  -- to merge clustered solutions
 
   begin
     if deflate then
@@ -1240,8 +1269,11 @@ package body Standard_Root_Refiners is
       Write_Type
         (file,sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,tolsing,
          epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
-      if not fail
-       then Append(refsols,refsols_last,sa(i).all);
+      if not fail then
+        Append(refsols,refsols_last,sa(i).all);
+        if deflate
+         then merge := merge and (sa(i).m > 1);
+        end if;
       end if;
       Standard_Condition_Tables.Update_Corrector(t_err,sa(i).all);
       Standard_Condition_Tables.Update_Condition(t_rco,sa(i).all);
@@ -1254,8 +1286,10 @@ package body Standard_Root_Refiners is
     if deflate then
       Standard_Natural64_VecVecs.Clear(monkeys);
       Standard_Jacobian_Trees.Clear(nd);
-      Merge_Multiple_Solutions(sols,tolsing);
-      Merge_Multiple_Solutions(refsols,tolsing);
+      if merge then
+        Merge_Multiple_Solutions(sols,tolsing);
+        Merge_Multiple_Solutions(refsols,tolsing);
+      end if;
     else
       Clear(jac); -- otherwise crash after Clear(nd)
     end if;

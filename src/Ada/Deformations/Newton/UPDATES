@@ -1,3 +1,9 @@
+Wed 18 Jun 2014 : added extra flag "merge" to standard_root_refiners.adb
+  to avoid merging clusters when no multiplicity was raised.
+
+Tue 17 Jun 2014 : messages in standard_root_refiners.adb to find out
+  an inefficiency in case the deflate flag is turned on.
+
 Fri 13 Jun 2014 : updated standard_deflation_methods.adb 
   and standard_deflate_singularities.adb for changed QRLS.
   Formatting changes in standard_root_refiners.adb.
