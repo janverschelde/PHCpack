@@ -339,6 +339,42 @@ package body Standard_Condition_Report is
     end if;
   end Is_Clustered;
 
+  procedure Multiplicity
+               ( s : in Solution; nb : in natural32;
+                 sols : in Solution_List; tol : in double_float; 
+                 h1,h2 : in Standard_Complex_Vectors.Vector;
+                 pl : in out Point_List; val : out natural32 ) is
+
+    pt : constant Point := Create(s.v,h1,h2,integer32(nb));
+    lpt : constant Link_to_Point := new Point'(pt);
+    cnt : integer32;
+
+  begin
+    Insert_with_Duplicates(pl,lpt,tol,cnt);
+    if cnt = 1
+     then val := 1;
+     else val := natural32(cnt);
+    end if;
+  end Multiplicity;
+
+  procedure Multiplicity
+               ( s : in Solution; nb : in natural32;
+                 sols : in Solution_Array; tol : in double_float; 
+                 h1,h2 : in Standard_Complex_Vectors.Vector;
+                 pl : in out Point_List; val : out natural32 ) is
+
+    pt : constant Point := Create(s.v,h1,h2,integer32(nb));
+    lpt : constant Link_to_Point := new Point'(pt);
+    cnt : integer32;
+
+  begin
+    Insert_with_Duplicates(pl,lpt,tol,cnt);
+    if cnt = 1
+     then val := 1;
+     else val := natural32(cnt);
+    end if;
+  end Multiplicity;
+
   procedure Scan_for_Condition_Tables 
                ( infile : in out file_type; outfile : in file_type; 
                  bannered,to_file : in boolean;

@@ -1,4 +1,5 @@
-Wed 18 Jun 2014 : added another insert to standard_point_lists.
+Wed 18 Jun 2014 : added another insert to standard_point_lists for use
+  in the Multiplicity of standard_condition_report.
 
 Tue 17 Jun 2014 : added insert routines to standard_point_lists,
   tested with ts_ptlists.  Added more efficient Is_Clustered to
