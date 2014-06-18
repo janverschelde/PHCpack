@@ -124,6 +124,18 @@ package Standard_Point_Lists is
   --   inserted and on return the value of the label lbl is q.label.
   --   If the point pt is inserted, the lbl equals pt.label on return.
 
+  procedure Insert_with_Duplicates
+              ( pl : in out Point_List; pt : in Link_to_Point;
+                tol : in double_float; cnt : out integer32 );
+
+  -- DESCRIPTION :
+  --   For a given list pl, sorted in increasing order,
+  --   the point pt is inserted into pl so that pl remains sorted.
+  --   If the point pt is equal to any other point q in pl
+  --   (with respect to the tolerance), then the point is
+  --   inserted and on return the value of the cnt counts
+  --   the number of occurrences of the point pt in the list.
+
   generic
     with procedure Report ( lp1,lp2 : in Link_to_Point );
   procedure Clusters ( pl : in Point_List; tol : in double_float );

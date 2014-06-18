@@ -233,6 +233,67 @@ package body Standard_Point_Lists is
     end if;
   end Insert_no_Duplicates;
 
+  procedure Insert_with_Duplicates
+              ( pl : in out Point_List; pt : in Link_to_Point;
+                tol : in double_float; cnt : out integer32 ) is
+
+    first,second : Point_List;
+    lpt : Link_to_Point;
+    done : boolean;
+
+  begin
+    if Is_Null(pl) then                -- first special case: list is empty
+      Construct(pt,pl);
+      cnt := 1;
+    else
+      first := pl;
+      lpt := Head_Of(first);
+      if Equal(pt,lpt,tol) then  -- second special case: pt already in list
+        cnt := 2;                -- multiplicity is at least two
+        loop
+          first := Tail_Of(first);
+          exit when Is_Null(first);
+          cnt := cnt + 1;
+        end loop;
+        Construct(pt,pl);
+      elsif pt < lpt then       -- third special case: first element larger
+        Construct(pt,pl);
+        cnt := 1;
+      else
+        second := Tail_Of(first);    -- initialize pair of chasing pointers
+        done := false;
+        while not Is_Null(second) loop
+          lpt := Head_Of(second);
+          if Equal(pt,lpt,tol) then  -- point already belongs to the list
+            Construct(pt,second);
+            Swap_Tail(first,second);
+            cnt := 2;                -- multiplicity is at least two
+            loop
+              second := Tail_Of(second);
+              exit when Is_Null(second);
+              cnt := cnt + 1;
+            end loop;
+            done := true;
+          elsif lpt < pt then        -- point is larger than current lpt
+            first := second;
+            second := Tail_Of(second);
+          else
+            Construct(pt,second);    -- insert point into the list
+            Swap_Tail(first,second);
+            cnt := 1;
+            done := true;
+          end if;
+          exit when done;
+        end loop;
+        if not done then -- first points to the last element of the list
+          Construct(pt,second);
+          Swap_Tail(first,second);
+          cnt := 1;
+        end if;
+      end if;
+    end if;
+  end Insert_with_Duplicates;
+
   procedure Clusters ( pl : in Point_List; tol : in double_float ) is
 
     t1,t2 : Point_List;
