@@ -6,6 +6,7 @@ with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Natural64_VecVecs;
 with Standard_Floating_Vectors;
+with Standard_Random_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
@@ -13,7 +14,9 @@ with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_Solution_Diagnostics;      use Standard_Solution_Diagnostics;
+with Standard_Point_Lists;               use Standard_Point_Lists;
 with Standard_Condition_Tables; --         use Standard_Condition_Tables;
+with Standard_Condition_Report;
 with Handle_Underflow_Gracefully;
 with Standard_Jacobian_Trees;            use Standard_Jacobian_Trees;
 with Monomial_Hashing;                   use Monomial_Hashing;
@@ -48,7 +51,9 @@ package body Standard_Root_Refiners is
   end Write_Info;
 
   procedure Root_Accounting
-               ( file : in file_type; ls : in Link_to_Solution;
+               ( file : in file_type;
+                 h1,h2 : in Standard_Complex_Vectors.Vector;
+                 pl : in out Point_List; ls : in Link_to_Solution;
                  nb : in natural32; sa : in out Solution_Array;
                  fail,infty,deflate : in boolean;
                  tolsing,tolclus : in double_float; nbfail,nbinfty,
@@ -97,8 +102,11 @@ package body Standard_Root_Refiners is
       elsif sa(integer32(nb)).rco > tolsing then
        -- put_line("calling Is_Clustered in Root_Accounting...");
         declare
-          nb2 : constant natural32 := Is_Clustered(ls.all,nb,sa,tolclus);
+         -- nb2 : constant natural32 := Is_Clustered(ls.all,nb,sa,tolclus);
+          nb2 : natural32;
         begin
+          Standard_Condition_Report.Is_Clustered
+            (ls.all,nb,sa,tolclus,h1,h2,pl,nb2);
           if nb2 = nb then
             put_line(file,"regular ==");
             nbreg := nbreg + 1;
@@ -1147,6 +1155,11 @@ package body Standard_Root_Refiners is
     fail,infty : boolean;
     sa : Solution_Array(1..integer32(nbtot)) := Create(sols);
     initres : Standard_Floating_Vectors.Vector(sa'range);
+    h1 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    h2 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    pl : Point_List;
 
   begin
     new_line(file);
@@ -1169,8 +1182,8 @@ package body Standard_Root_Refiners is
       end if;
       Write_Info(file,sa(i).all,initres(i),natural32(i),numb,0,fail,infty);
       Root_Accounting
-        (file,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,tolsing,
-         epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
+         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
       numit := numit + numb;
     end loop;
     Write_Global_Info
@@ -1384,6 +1397,11 @@ package body Standard_Root_Refiners is
     sa : Solution_Array(1..integer32(nbtot)) := Create(sols);
     initres : Standard_Floating_Vectors.Vector(sa'range);
     refsols_last : Solution_List;
+    h1 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    h2 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    pl : Point_List;
 
   begin
     new_line(file);
@@ -1405,8 +1423,8 @@ package body Standard_Root_Refiners is
       end if;
       Write_Info(file,sa(i).all,initres(i),natural32(i),numb,0,fail,infty);
       Root_Accounting
-        (file,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,tolsing,
-         epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
+         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
       if not fail
        then Append(refsols,refsols_last,sa(i).all);
       end if;

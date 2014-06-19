@@ -1,3 +1,5 @@
+Thu 19 Jun 2014 : new version of is_clustered in standard_root_refiners.adb.
+
 Wed 18 Jun 2014 : added extra flag "merge" to standard_root_refiners.adb
   to avoid merging clusters when no multiplicity was raised.
 
