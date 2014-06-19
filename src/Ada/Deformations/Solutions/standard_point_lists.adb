@@ -235,7 +235,8 @@ package body Standard_Point_Lists is
 
   procedure Insert_with_Duplicates
               ( pl : in out Point_List; pt : in Link_to_Point;
-                tol : in double_float; cnt : out integer32 ) is
+                tol : in double_float; cnt : out integer32;
+                ptpl  : out Point_List ) is
 
     first,second : Point_List;
     lpt : Link_to_Point;
@@ -243,7 +244,7 @@ package body Standard_Point_Lists is
 
   begin
     if Is_Null(pl) then                -- first special case: list is empty
-      Construct(pt,pl);
+      Construct(pt,pl); ptpl := pl;
       cnt := 1;
     else
       first := pl;
@@ -255,9 +256,9 @@ package body Standard_Point_Lists is
           exit when Is_Null(first);
           cnt := cnt + 1;
         end loop;
-        Construct(pt,pl);
+        Construct(pt,pl); ptpl := pl;
       elsif pt < lpt then       -- third special case: first element larger
-        Construct(pt,pl);
+        Construct(pt,pl); ptpl := pl;
         cnt := 1;
       else
         second := Tail_Of(first);    -- initialize pair of chasing pointers
@@ -265,7 +266,7 @@ package body Standard_Point_Lists is
         while not Is_Null(second) loop
           lpt := Head_Of(second);
           if Equal(pt,lpt,tol) then  -- point already belongs to the list
-            Construct(pt,second);
+            Construct(pt,second); ptpl := second;
             Swap_Tail(first,second);
             cnt := 2;                -- multiplicity is at least two
             loop
@@ -279,6 +280,7 @@ package body Standard_Point_Lists is
             second := Tail_Of(second);
           else
             Construct(pt,second);    -- insert point into the list
+            ptpl := second;
             Swap_Tail(first,second);
             cnt := 1;
             done := true;
@@ -286,7 +288,7 @@ package body Standard_Point_Lists is
           exit when done;
         end loop;
         if not done then -- first points to the last element of the list
-          Construct(pt,second);
+          Construct(pt,second); ptpl := second;
           Swap_Tail(first,second);
           cnt := 1;
         end if;

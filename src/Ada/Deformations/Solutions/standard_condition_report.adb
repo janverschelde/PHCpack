@@ -348,9 +348,10 @@ package body Standard_Condition_Report is
     pt : constant Point := Create(s.v,h1,h2,integer32(nb));
     lpt : constant Link_to_Point := new Point'(pt);
     cnt : integer32;
+    ptpos : Point_List;
 
   begin
-    Insert_with_Duplicates(pl,lpt,tol,cnt);
+    Insert_with_Duplicates(pl,lpt,tol,cnt,ptpos);
     if cnt = 1
      then val := 1;
      else val := natural32(cnt);
@@ -366,9 +367,10 @@ package body Standard_Condition_Report is
     pt : constant Point := Create(s.v,h1,h2,integer32(nb));
     lpt : constant Link_to_Point := new Point'(pt);
     cnt : integer32;
+    ptpos : Point_List;
 
   begin
-    Insert_with_Duplicates(pl,lpt,tol,cnt);
+    Insert_with_Duplicates(pl,lpt,tol,cnt,ptpos);
     if cnt = 1
      then val := 1;
      else val := natural32(cnt);

@@ -1,3 +1,6 @@
+Thu 19 Jun 2014 : insert with duplicates in standard_point_lists is extended
+  with extra parameter for the position of the added point.
+
 Wed 18 Jun 2014 : added another insert to standard_point_lists for use
   in the Multiplicity of standard_condition_report.
 

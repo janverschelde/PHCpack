@@ -126,7 +126,8 @@ package Standard_Point_Lists is
 
   procedure Insert_with_Duplicates
               ( pl : in out Point_List; pt : in Link_to_Point;
-                tol : in double_float; cnt : out integer32 );
+                tol : in double_float; cnt : out integer32;
+                ptpl  : out Point_List );
 
   -- DESCRIPTION :
   --   For a given list pl, sorted in increasing order,
@@ -135,6 +136,16 @@ package Standard_Point_Lists is
   --   (with respect to the tolerance), then the point is
   --   inserted and on return the value of the cnt counts
   --   the number of occurrences of the point pt in the list.
+
+  -- ON ENTRY :
+  --   pl       list of hashed coordinates as points;
+  --   pt       hash point;
+  --   tol      tolerance to decide whether two points are equal.
+
+  -- ON RETURN :
+  --   cnt      number of occurrences of the point pt in the list
+  --            is an upper bound on the multiplicity;
+  --   ptpl     points to the place in pl where pt was inserted.
 
   generic
     with procedure Report ( lp1,lp2 : in Link_to_Point );
