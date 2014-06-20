@@ -340,40 +340,60 @@ package body Standard_Condition_Report is
   end Is_Clustered;
 
   procedure Multiplicity
-               ( s : in Solution; nb : in natural32;
+               ( s : in out Solution; nb : in natural32;
                  sols : in Solution_List; tol : in double_float; 
                  h1,h2 : in Standard_Complex_Vectors.Vector;
                  pl : in out Point_List; val : out natural32 ) is
 
     pt : constant Point := Create(s.v,h1,h2,integer32(nb));
     lpt : constant Link_to_Point := new Point'(pt);
-    cnt : integer32;
+    cnt,lbl : integer32;
     ptpos : Point_List;
+    ls : Link_to_Solution;
 
   begin
     Insert_with_Duplicates(pl,lpt,tol,cnt,ptpos);
-    if cnt = 1
-     then val := 1;
-     else val := natural32(cnt);
+    val := 1;
+    if cnt > 1 then
+      for i in 1..cnt loop
+        ptpos := Tail_Of(ptpos);
+        exit when Is_Null(ptpos);
+        lbl := Head_Of(ptpos).label;
+        ls := Standard_Complex_Solutions.Retrieve(sols,natural32(lbl));
+        if Standard_Solution_Diagnostics.Equal(ls.all,s,tol) then
+          ls.m := ls.m + 1;
+          val := val + 1;
+        end if;
+      end loop;
+      s.m := integer32(val);
     end if;
   end Multiplicity;
 
   procedure Multiplicity
-               ( s : in Solution; nb : in natural32;
+               ( s : in out Solution; nb : in natural32;
                  sols : in Solution_Array; tol : in double_float; 
                  h1,h2 : in Standard_Complex_Vectors.Vector;
                  pl : in out Point_List; val : out natural32 ) is
 
     pt : constant Point := Create(s.v,h1,h2,integer32(nb));
     lpt : constant Link_to_Point := new Point'(pt);
-    cnt : integer32;
+    cnt,lbl : integer32;
     ptpos : Point_List;
 
   begin
     Insert_with_Duplicates(pl,lpt,tol,cnt,ptpos);
-    if cnt = 1
-     then val := 1;
-     else val := natural32(cnt);
+    val := 1;
+    if cnt > 1 then
+      for i in 1..cnt loop
+        ptpos := Tail_Of(ptpos);
+        exit when Is_Null(ptpos);
+        lbl := Head_Of(ptpos).label;
+        if Standard_Solution_Diagnostics.Equal(sols(lbl).all,s,tol) then
+          sols(lbl).m := sols(lbl).m + 1;
+          val := val + 1;
+        end if;
+      end loop;
+      s.m := integer32(val);
     end if;
   end Multiplicity;
 

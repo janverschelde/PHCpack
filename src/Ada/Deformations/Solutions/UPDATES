@@ -1,3 +1,6 @@
+Fri 20 Jun 2014 : proper adjustment of multiplicity field in the procedure
+  Multiplicity of standard_condition_report.
+
 Thu 19 Jun 2014 : insert with duplicates in standard_point_lists is extended
   with extra parameter for the position of the added point.
 

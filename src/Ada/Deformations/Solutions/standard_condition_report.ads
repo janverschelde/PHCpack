@@ -147,12 +147,12 @@ package Standard_Condition_Report is
   --             of the solution s in sols.
 
   procedure Multiplicity
-               ( s : in Solution; nb : in natural32;
+               ( s : in out Solution; nb : in natural32;
                  sols : in Solution_List; tol : in double_float; 
                  h1,h2 : in Standard_Complex_Vectors.Vector;
                  pl : in out Point_List; val : out natural32 );
   procedure Multiplicity
-               ( s : in Solution; nb : in natural32;
+               ( s : in out Solution; nb : in natural32;
                  sols : in Solution_Array; tol : in double_float; 
                  h1,h2 : in Standard_Complex_Vectors.Vector;
                  pl : in out Point_List; val : out natural32 );
@@ -171,6 +171,8 @@ package Standard_Condition_Report is
   --   pl        list of points updated up to position nb-1.
   
   -- ON RETURN :
+  --   s         multiplicity field of s may have been increased to val;
+  --   sols      adjusted multiplicity field for clusters;
   --   pl        the hashed version of the solution has been inserted
   --             into the point list pl;
   --   val       if equal to 1, if the solution s is not clustered,
