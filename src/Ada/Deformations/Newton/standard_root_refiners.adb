@@ -14,7 +14,6 @@ with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_Solution_Diagnostics;      use Standard_Solution_Diagnostics;
-with Standard_Point_Lists;               use Standard_Point_Lists;
 with Standard_Condition_Tables; --         use Standard_Condition_Tables;
 with Standard_Condition_Report;
 with Handle_Underflow_Gracefully;
@@ -80,8 +79,10 @@ package body Standard_Root_Refiners is
       if deflate or sa(integer32(nb)).rco < tolsing then
         if ls.m <= 1 then  -- do not change input multiplicity field
           declare       -- to determine multiplicity, count clusters
-            m : natural32 := Multiplicity(ls.all,sa,tolclus);
+            m : natural32; -- := Multiplicity(ls.all,sa,tolclus);
           begin
+            Standard_Condition_Report.Multiplicity
+              (ls.all,nb,sa,tolclus,h1,h2,pl,m);
             if ((m = 1) and (not deflate))
              then m := 0;
             end if;
@@ -100,7 +101,6 @@ package body Standard_Root_Refiners is
           nbsing := nbsing + 1;
         end if;
       elsif sa(integer32(nb)).rco > tolsing then
-       -- put_line("calling Is_Clustered in Root_Accounting...");
         declare
          -- nb2 : constant natural32 := Is_Clustered(ls.all,nb,sa,tolclus);
           nb2 : natural32;
@@ -125,7 +125,9 @@ package body Standard_Root_Refiners is
   end Root_Accounting;
 
   procedure Write_Type
-               ( file : in file_type; ls : in Link_to_Solution;
+               ( file : in file_type; 
+                 h1,h2 : in Standard_Complex_Vectors.Vector;
+                 pl : in out Point_List; ls : in Link_to_Solution;
                  nb : in natural32; sa : in out Solution_Array;
                  fail,infty,deflate : in boolean;
                  tolsing,tolclus : in double_float; nbfail,nbinfty,
@@ -151,13 +153,15 @@ package body Standard_Root_Refiners is
           if ls.m = 1 then
             put_line(file,"single ==");
           else
-           -- put_line("Calling Is_Clustered in Write_Type...");
             nb2 := Is_Clustered(ls.all,nb,sa,tolclus);
-            if nb2 = nb 
-             then put_line(file,"multiple ==");
-             else put(file,"multiple: ");
-                  put(file,nb2,1); put_line(file," ==");
-                  nbsing := nbsing + 1;
+           -- Standard_Condition_Report.Is_Clustered
+           --   (ls.all,nb,sa,tolclus,h1,h2,pl,nb2);
+            if nb2 = nb then
+              put_line(file,"multiple ==");
+            else
+              put(file,"multiple: ");
+              put(file,nb2,1); put_line(file," ==");
+              nbsing := nbsing + 1;
             end if;
           end if;
           nbreg := nbreg + 1;
@@ -204,8 +208,9 @@ package body Standard_Root_Refiners is
   end Write_Type;
 
   procedure Multiplicity
-                ( ls : in Link_to_Solution; nb : in natural32;
-                  sa : in out Solution_Array;
+                ( h1,h2 : in Standard_Complex_Vectors.Vector;
+                  pl : in out Point_List; ls : in Link_to_Solution;
+                  nb : in natural32; sa : in out Solution_Array;
                   fail,infty,deflate : in boolean;
                   tolsing,tolclus : in double_float ) is
   begin
@@ -215,10 +220,12 @@ package body Standard_Root_Refiners is
       ls.m := 0;
     elsif sa(integer32(nb)).rco < tolsing or deflate then
       if ls.m <= 1 then -- do not change input multiplicity field
-       -- put_line("Calling Multiplicity on array in Multiplicity ...");
         declare   -- to determine multiplicity count clustered solutions
-          m : constant natural32 := Multiplicity(ls.all,sa,tolclus);
+         -- m : constant natural32 := Multiplicity(ls.all,sa,tolclus);
+          m : natural32;
         begin
+          Standard_Condition_Report.Multiplicity
+            (ls.all,nb,sa,tolclus,h1,h2,pl,m);
           if ((m = 1) and (not deflate))
            then ls.m := 0;
            else ls.m := integer32(m);
@@ -226,7 +233,6 @@ package body Standard_Root_Refiners is
         end;
       end if;
     else  -- sa(nb).rco > tolsing, check for clustering
-     -- put_line("Calling Is_Clustered in Multiplicity...");
       declare
         nb2 : constant natural32 := Is_Clustered(ls.all,nb,sa,tolclus);
       begin
@@ -238,8 +244,9 @@ package body Standard_Root_Refiners is
   end Multiplicity;
 
   procedure Multiplicity
-                ( ls : in Link_to_Solution; nb : in natural32;
-                  sols : in out Solution_List;
+                ( h1,h2 : in Standard_Complex_Vectors.Vector;
+                  pl : in out Point_List; ls : in Link_to_Solution;
+                  nb : in natural32; sols : in out Solution_List;
                   fail,infty,deflate : in boolean;
                   tolsing,tolclus : in double_float ) is
   begin
@@ -249,10 +256,12 @@ package body Standard_Root_Refiners is
       ls.m := 0;
     elsif ls.rco < tolsing or deflate then
       if ls.m <= 1 then -- do not change input multiplicity field
-       -- put_line("Calling multiplicity on list in Multiplicity...");
         declare   -- to determine multiplicity count clustered solutions
-          m : constant natural32 := Multiplicity(ls.all,sols,tolclus);
+         -- m : constant natural32 := Multiplicity(ls.all,sols,tolclus);
+          m : natural32;
         begin
+          Standard_Condition_Report.Multiplicity
+            (ls.all,nb,sols,tolclus,h1,h2,pl,m);
           if ((m = 1) and (not deflate))
            then ls.m := 0;
            else ls.m := integer32(m);
@@ -260,10 +269,12 @@ package body Standard_Root_Refiners is
         end;
       end if;
     else  -- ls.rco > tolsing, check for clustering
-     -- put_line("Calling Is_Clustered in Multiplicity...");
       declare
-        nb2 : constant natural32 := Is_Clustered(ls.all,nb,sols,tolclus);
+       -- nb2 : constant natural32 := Is_Clustered(ls.all,nb,sols,tolclus);
+        nb2 : natural32;
       begin
+        Standard_Condition_Report.Is_Clustered
+          (ls.all,nb,sols,tolclus,h1,h2,pl,nb2);
         if nb2 /= nb then
           ls.m := -integer32(nb2);
           Change_Multiplicity(sols,nb2,-integer32(nb));
@@ -774,6 +785,11 @@ package body Standard_Root_Refiners is
     nd : Link_to_Eval_Node;
     backup : Solution(n);
     merge : boolean := false; -- to merge clustered solutions
+    h1 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    h2 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    pl : Point_List;
 
   begin
     if deflate then
@@ -809,8 +825,8 @@ package body Standard_Root_Refiners is
       else
         fail := true;
       end if;
-      Multiplicity
-        (sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,deflate,tolsing,epsxa);
       if not fail and then deflate
        then merge := merge or (sa(i).m > 1);
       end if;
@@ -827,6 +843,7 @@ package body Standard_Root_Refiners is
       Clear(jac); -- otherwise crash after Clear(nd)
     end if;
     Clear(p_eval); Clear(jac_eval);
+    Clear(pl);
   --exception
   --  when others => put_line("exception raised in silent root refiner 1");
   --                 raise;
@@ -842,6 +859,12 @@ package body Standard_Root_Refiners is
     numb : natural32;
     fail,infty : boolean;
     sa : Solution_Array(1..integer32(Length_Of(sols))) := Create(sols);
+    n : constant integer32 := Head_Of(sols).n;
+    h1 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    h2 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    pl : Point_List;
 
   begin
     for i in sa'range loop
@@ -852,11 +875,12 @@ package body Standard_Root_Refiners is
        then Silent_Newton(p,j,sa(i).all,epsxa,epsfa,numb,max,fail);
        else fail := true;
       end if;
-      Multiplicity
-        (sa(i),natural32(i),sa(sa'first..i),fail,infty,false,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,epsxa);
       numit := numit + numb;
     end loop;
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
+    Clear(pl);
   end Silent_Root_Refiner;
 
   procedure Silent_Root_Refiner
@@ -884,6 +908,11 @@ package body Standard_Root_Refiners is
     nd : Link_to_Eval_Node;
     backup : Solution(n);
     merge : boolean := false;  -- flag to merge clustered solutions
+    h1 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    h2 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    pl : Point_List;
 
   begin
     if deflate then
@@ -919,8 +948,8 @@ package body Standard_Root_Refiners is
       else
         fail := true;
       end if;
-      Multiplicity
-        (sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,deflate,tolsing,epsxa);
       if not fail then
         Append(refsols,refsols_last,sa(i).all);
         if deflate
@@ -941,6 +970,7 @@ package body Standard_Root_Refiners is
       Clear(jac); -- otherwise crash after clear(nd)
     end if;
     Clear(p_eval); Clear(jac_eval);
+    Clear(pl);
   --exception
   --  when others => put_line("exception raised in silent root refiner 2");
   --                 raise;
@@ -961,6 +991,11 @@ package body Standard_Root_Refiners is
     fail,infty : boolean;
     sa : Solution_Array(1..integer32(Length_Of(sols))) := Create(sols);
     refsols_last : Solution_List;
+    h1 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    h2 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    pl : Point_List;
 
   begin
     for i in sa'range loop
@@ -972,8 +1007,8 @@ package body Standard_Root_Refiners is
       else
         fail := true;
       end if;
-      Multiplicity
-        (sa(i),natural32(i),sa(sa'first..i),fail,infty,false,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,epsxa);
       if not fail
        then Append(refsols,refsols_last,sa(i).all);
       end if;
@@ -981,6 +1016,7 @@ package body Standard_Root_Refiners is
     end loop;
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
     Clear(jac); Clear(p_eval); Clear(jac_eval);
+    Clear(pl);
   end Silent_Root_Refiner;
 
   procedure Silent_Root_Refiner
@@ -994,6 +1030,12 @@ package body Standard_Root_Refiners is
     fail,infty : boolean;
     sa : Solution_Array(1..integer32(Length_Of(sols))) := Create(sols);
     refsols_last : Solution_List;
+    n : constant integer32 := Head_Of(sols).n;
+    h1 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    h2 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    pl : Point_List;
 
   begin
     for i in sa'range loop
@@ -1004,14 +1046,15 @@ package body Standard_Root_Refiners is
        then Silent_Newton(p,j,sa(i).all,epsxa,epsfa,numb,max,fail);
        else fail := true;
       end if;
-      Multiplicity
-        (sa(i),natural32(i),sa(sa'first..i),fail,infty,false,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,epsxa);
       if not fail
        then Append(refsols,refsols_last,sa(i).all);
       end if;
       numit := numit + numb;
     end loop;
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
+    Clear(pl);
   end Silent_Root_Refiner;
 
   procedure Reporting_Root_Refiner
@@ -1045,6 +1088,11 @@ package body Standard_Root_Refiners is
     nd : Link_to_Eval_Node;
     backup : Solution(n);
     merge : boolean := false;  -- flag to merge clustered solutions
+    h1 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    h2 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    pl : Point_List;
 
   begin
    -- put_line("in this reporting root refiner ...");
@@ -1102,12 +1150,12 @@ package body Standard_Root_Refiners is
       else
         fail := true;
       end if;
-      Multiplicity
-        (sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,deflate,tolsing,epsxa);
       Write_Info(file,sa(i).all,initres(i),natural32(i),numb,nbdef,fail,infty);
       Write_Type
-        (file,sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,tolsing,
-         epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,
+         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
       if not fail and then deflate 
        then merge := merge or (sa(i).m > 1);
       end if;
@@ -1134,6 +1182,7 @@ package body Standard_Root_Refiners is
    -- Distances_Table(t_dis,sols);
    -- put_line("writing the condition tables ...");
     Standard_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco); --,t_dis);
+    Clear(pl);
   --exception
   --  when others => put_line("Exception raised in reporting root refiner 1");
   --                 raise;
@@ -1189,6 +1238,7 @@ package body Standard_Root_Refiners is
     Write_Global_Info
       (file,nbtot,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
+    Clear(pl);
   end Reporting_Root_Refiner;
 
   procedure Reporting_Root_Refiner
@@ -1223,6 +1273,11 @@ package body Standard_Root_Refiners is
     nd : Link_to_Eval_Node;
     backup : Solution(n);
     merge : boolean := false;  -- to merge clustered solutions
+    h1 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    h2 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    pl : Point_List;
 
   begin
     if deflate then
@@ -1276,12 +1331,12 @@ package body Standard_Root_Refiners is
       else
         fail := true;
       end if;
-      Multiplicity
-        (sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,deflate,tolsing,epsxa);
       Write_Info(file,sa(i).all,initres(i),natural32(i),numb,nbdef,fail,infty);
       Write_Type
-        (file,sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,tolsing,
-         epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,
+         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
       if not fail then
         Append(refsols,refsols_last,sa(i).all);
         if deflate
@@ -1307,6 +1362,7 @@ package body Standard_Root_Refiners is
       Clear(jac); -- otherwise crash after Clear(nd)
     end if;
     Clear(p_eval); Clear(jac_eval);
+    Clear(pl);
    -- Distances_Table(t_dis,sols);
     Standard_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco); -- ,t_dis);
   --exception
@@ -1336,6 +1392,11 @@ package body Standard_Root_Refiners is
     refsols_last : Solution_List;
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..15)
                       := Standard_Condition_Tables.Create(15); 
+    h1 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    h2 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,n);
+    pl : Point_List;
 
   begin
     new_line(file);
@@ -1358,12 +1419,12 @@ package body Standard_Root_Refiners is
       else
         fail := true;
       end if;
-      Multiplicity
-        (sa(i),natural32(i),sa(sa'first..i),fail,infty,false,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,epsxa);
       Write_Info(file,sa(i).all,initres(i),natural32(i),numb,nbdef,fail,infty);
       Write_Type
-        (file,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,tolsing,
-         epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
+         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
       if not fail
        then Append(refsols,refsols_last,sa(i).all);
       end if;
@@ -1378,6 +1439,7 @@ package body Standard_Root_Refiners is
     Clear(jac); Clear(p_eval); Clear(jac_eval);
    -- Distances_Table(t_dis,sols);
     Standard_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco); -- ,t_dis);
+    Clear(pl);
   end Reporting_Root_Refiner;
 
   procedure Reporting_Root_Refiner
@@ -1433,6 +1495,7 @@ package body Standard_Root_Refiners is
     Write_Global_Info
       (file,nbtot,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
+    Clear(pl);
   end Reporting_Root_Refiner;
 
 -- APPLICATION of Gauss-Newton for overdetermined systems
@@ -1594,6 +1657,11 @@ package body Standard_Root_Refiners is
     tol_rnk : constant double_float := 1.0E-6;
     fail,infty : boolean;
     sa : Solution_Array(1..integer32(Length_Of(sols))) := Create(sols);
+    h1 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,nv);
+    h2 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,nv);
+    pl : Point_List;
 
   begin
     if deflate
@@ -1609,12 +1677,13 @@ package body Standard_Root_Refiners is
       else
         fail := true;
       end if;
-      Multiplicity
-        (sa(i),natural32(i),sa(sa'first..i),fail,infty,false,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,epsxa);
       numit := numit + numb;
     end loop;
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
     Clear(jac); Clear(p_eval); Clear(jac_eval);
+    Clear(pl);
   end Silent_Root_Sharpener;
 
   procedure Silent_Root_Sharpener
@@ -1635,6 +1704,11 @@ package body Standard_Root_Refiners is
     fail,infty : boolean;
     sa : Solution_Array(1..integer32(Length_Of(sols))) := Create(sols);
     refsols_last : Solution_List;
+    h1 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,nv);
+    h2 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,nv);
+    pl : Point_List;
 
   begin
     if deflate
@@ -1650,8 +1724,8 @@ package body Standard_Root_Refiners is
       else
         fail := true;
       end if;
-      Multiplicity
-        (sa(i),natural32(i),sa(sa'first..i),fail,infty,false,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,epsxa);
       if not fail
        then Append(refsols,refsols_last,sa(i).all);
       end if;
@@ -1659,6 +1733,7 @@ package body Standard_Root_Refiners is
     end loop;
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
     Clear(jac); Clear(p_eval); Clear(jac_eval);
+    Clear(pl);
   end Silent_Root_Sharpener;
 
   procedure Silent_Root_Sharpener
@@ -1678,6 +1753,11 @@ package body Standard_Root_Refiners is
     fail,infty : boolean;
     sa : Solution_Array(1..integer32(Length_Of(sols))) := Create(sols);
     refsols_last : Solution_List;
+    h1 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,nv);
+    h2 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,nv);
+    pl : Point_List;
 
   begin
     for i in sa'range loop
@@ -1690,8 +1770,8 @@ package body Standard_Root_Refiners is
       else
         fail := true;
       end if;
-      Multiplicity
-        (sa(i),natural32(i),sa(sa'first..i),fail,infty,false,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,epsxa);
       if not fail
        then Append(refsols,refsols_last,sa(i).all);
       end if;
@@ -1699,6 +1779,7 @@ package body Standard_Root_Refiners is
     end loop;
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
     Clear(jac); Clear(p_eval); Clear(jac_eval);
+    Clear(pl);
   end Silent_Root_Sharpener;
 
   procedure Reporting_Root_Sharpener
@@ -1725,6 +1806,11 @@ package body Standard_Root_Refiners is
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..15)
                       := Standard_Condition_Tables.Create(15); 
     tolrnk : constant double_float := tolsing*100.0;
+    h1 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,nv);
+    h2 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,nv);
+    pl : Point_List;
 
   begin
     if deflate
@@ -1752,12 +1838,12 @@ package body Standard_Root_Refiners is
       else
         fail := true;
       end if;
-      Multiplicity
-        (sa(i),natural32(i),sa(sa'first..i),fail,infty,false,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,epsxa);
       Write_Info(file,sa(i).all,initres(i),natural32(i),numb,nbdef,fail,infty);
       Write_Type
-        (file,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,tolsing,
-         epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
+         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
       Standard_Condition_Tables.Update_Corrector(t_err,sa(i).all);
       Standard_Condition_Tables.Update_Condition(t_rco,sa(i).all);
       Standard_Condition_Tables.Update_Residuals(t_res,sa(i).all);
@@ -1768,6 +1854,7 @@ package body Standard_Root_Refiners is
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
     Clear(jac); Clear(p_eval); Clear(jac_eval);
     Standard_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
+    Clear(pl);
   end Reporting_Root_Sharpener;
 
   procedure Reporting_Root_Sharpener
@@ -1795,6 +1882,11 @@ package body Standard_Root_Refiners is
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..15)
                       := Standard_Condition_Tables.Create(15); 
     tolrnk : constant double_float := tolsing*100.0;
+    h1 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,nv);
+    h2 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,nv);
+    pl : Point_List;
 
   begin
     if deflate
@@ -1821,12 +1913,12 @@ package body Standard_Root_Refiners is
       else
         fail := true;
       end if;
-      Multiplicity
-        (sa(i),natural32(i),sa(sa'first..i),fail,infty,false,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,epsxa);
       Write_Info(file,sa(i).all,initres(i),natural32(i),numb,nbdef,fail,infty);
       Write_Type
-        (file,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,tolsing,
-         epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
+         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
       if not fail
        then Append(refsols,refsols_last,sa(i).all);
       end if;
@@ -1840,6 +1932,7 @@ package body Standard_Root_Refiners is
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
     Clear(jac); Clear(p_eval); Clear(jac_eval);
     Standard_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
+    Clear(pl);
   end Reporting_Root_Sharpener;
 
   procedure Reporting_Root_Sharpener
@@ -1867,6 +1960,11 @@ package body Standard_Root_Refiners is
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..15)
                       := Standard_Condition_Tables.Create(15); 
     tolrnk : constant double_float := tolsing*100.0;
+    h1 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,nv);
+    h2 : constant Standard_Complex_Vectors.Vector
+       := Standard_Random_Vectors.Random_Vector(1,nv); 
+    pl : Point_List;
 
   begin
     new_line(file);
@@ -1890,11 +1988,11 @@ package body Standard_Root_Refiners is
       else
         fail := true;
       end if;
-      Multiplicity
-        (sa(i),natural32(i),sa(sa'first..i),fail,infty,false,tolsing,epsxa);
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,epsxa);
       Write_Info(file,sa(i).all,initres(i),natural32(i),numb,nbdef,fail,infty);
       Write_Type
-       (file,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
+       (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
       if not fail
        then Append(refsols,refsols_last,sa(i).all);
@@ -1909,6 +2007,7 @@ package body Standard_Root_Refiners is
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
     Clear(jac); Clear(p_eval); Clear(jac_eval);
     Standard_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
+    Clear(pl);
   end Reporting_Root_Sharpener;
 
 end Standard_Root_Refiners;

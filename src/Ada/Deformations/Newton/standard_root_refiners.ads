@@ -9,6 +9,7 @@ with Standard_Complex_Laur_SysFun;       use Standard_Complex_Laur_SysFun;
 with Standard_Complex_Jaco_Matrices;
 with Standard_Complex_Laur_Jacomats;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with Standard_Point_Lists;               use Standard_Point_Lists;
 
 package Standard_Root_Refiners is
 
@@ -46,8 +47,9 @@ package Standard_Root_Refiners is
   --   infty    at infinity or not.
 
   procedure Multiplicity
-              ( ls : in Link_to_Solution; nb : in natural32;
-                sa : in out Solution_Array;
+              ( h1,h2 : in Standard_Complex_Vectors.Vector;
+                pl : in out Point_List; ls : in Link_to_Solution;
+                nb : in natural32; sa : in out Solution_Array;
                 fail,infty,deflate : in boolean;
                 tolsing,tolclus : in double_float );
 
@@ -55,6 +57,9 @@ package Standard_Root_Refiners is
   --   Checks whether the solution ls at position nb in sa is clustered.
 
   -- ON ENTRY :
+  --   h1       first hash function for solution vectors;
+  --   h2       second hash function for solution vectors;
+  --   pl       list of hashed points;
   --   ls       current solution;
   --   nb       position of the solution ls in sa;
   --   sa       array of solutions;
@@ -65,13 +70,15 @@ package Standard_Root_Refiners is
   --   tolclus  tolerance for two solutions to be clustered.
 
   -- ON RETURN :
+  --   pl       updated list of hashed points;
   --   ls       ls.m will reflect if multiple or clustered:
   --            if clustered, then ls.m < 0 and refers to the
   --            other solution in sa that is equal to ls.
 
   procedure Multiplicity
-              ( ls : in Link_to_Solution; nb : in natural32;
-                sols : in out Solution_List;
+              ( h1,h2 : in Standard_Complex_Vectors.Vector;
+                pl : in out Point_List; ls : in Link_to_Solution;
+                nb : in natural32; sols : in out Solution_List;
                 fail,infty,deflate : in boolean;
                 tolsing,tolclus : in double_float );
 
@@ -79,6 +86,9 @@ package Standard_Root_Refiners is
   --   Checks whether the solution ls at position nb in sa is clustered.
 
   -- ON ENTRY :
+  --   h1       first hash function for solution vectors;
+  --   h2       second hash function for solution vectors;
+  --   pl       list of hashed points;
   --   ls       current solution;
   --   nb       position of the solution ls in sa;
   --   sols     list of solutions;
@@ -89,12 +99,15 @@ package Standard_Root_Refiners is
   --   tolclus  tolerance for two solutions to be clustered.
 
   -- ON RETURN :
+  --   pl       updated list of hashed points;
   --   ls       ls.m will reflect if multiple or clustered:
   --            if clustered, then ls.m < 0 and refers to the
   --            other solution in sols that is equal to ls.
 
   procedure Write_Type
-               ( file : in file_type; ls : in Link_to_Solution;
+               ( file : in file_type;
+                 h1,h2 : in Standard_Complex_Vectors.Vector;
+                 pl : in out Point_List; ls : in Link_to_Solution;
                  nb : in natural32; sa : in out Solution_Array;
                  fail,infty,deflate : in boolean;
                  tolsing,tolclus : in double_float; nbfail,nbinfty,
@@ -105,6 +118,9 @@ package Standard_Root_Refiners is
 
   -- ON ENTRY :
   --   file      file opened for output;
+  --   h1        first hash function on a solution vector;
+  --   h2        second hash function on a solution vector;
+  --   pl        list of hashed points;
   --   ls        the current solution;
   --   nb        index of the solution in the array sa;
   --   sa        solution array;
@@ -122,6 +138,9 @@ package Standard_Root_Refiners is
   --   nbclus    current number of clustered solutions.
 
   -- ON RETURN :
+  --   pl        list with new hashed point;
+  --   ls        multiplicity field may be adjusted;
+  --   sa        some solution may have increased multiplicities;
   --   nbfail    updated number of failures;
   --   nbinfty   updated number of at infinity;
   --   nbreal    updated number of real solutions;
