@@ -1,0 +1,380 @@
+Fri 20 Jun 2014 : new test function ts_evalhomt, with new package
+  standard_coefficient_homotopy.
+
+Thu 27 Jun 2013 : updated reduction_of_polynomial_systems.adb and
+  reduction_of_nonsquare_systems.adb.
+
+Wed 26 Jun 2013 : updated mainred.adb and mainscal.adb for natural32.
+
+Sun 16 Jun 2013 : updated standard_stable_homotopies for integer32.
+
+Wed 12 Jun 2013 : updated drivers_for_homotopy_creation.
+
+Mon 10 Jun 2013 : moved lists_of_symbols to ../Solutions and updated about
+  half of the files for the natural32 and integer32 types.
+
+Sat 25 May 2013 : some editing and write number of equations in the result
+  of drivers_for_reduciton.a*.  Also updated mainred.adb.
+
+Thu 9 May 2013 : moved standard_point_lists.a* to ../Solutions.
+  Also moved mainfilt.a* to ../Solutions.
+
+Mon 29 Apr 2013 : extended polynomial_drops with remove_variable functions
+  for standard Laurent polynomials and systems.
+
+Fri 15 Feb 2013 : dropping a variable is settings its value to zero!
+  Fixed this bug in polynomial_drops.
+
+Thu 14 Feb 2013 : new package polynomial_drops to remove a variable
+  from a polynomial system, tested by ts_poldrop.
+
+Fri 8 Feb 2013 : extra argument in drivers_for_homotopy_creation.adb to
+  get the target system accurately with multiprecision continuation into
+  the homotopy, passing the string representations of the polynomials.
+
+Thu 7 Feb 2013 : small changes in menus of drivers_for_homotopy_creation.adb.
+
+Wed 6 Feb 2013 : modified standard_homotopy.adb in an attempt to fix a bug
+  occurring the py2c_clear_homotopy.
+
+Sun 20 Jan 2013 : moved all that is *sol* to ../Solutions, and also
+  the *quad_trees* and ts_quad.adb.  Note that ts_linsol.adb and
+  standard_linear_poly_solvers belong to this Homotopy directory.
+
+Wed 19 Dec 2012 : fixed two bugs in standard_solution_strings.adb. 
+
+Mon 25 Jul 2011 : touched multprec_complex_solutions_io.adb because of
+  a regression to version 2.3.64.
+
+Sun 19 Jun 2011 : added "write_warning" to standard_complex_solutions_io.adb
+  to reduce the number of GNAT GPL 2011 warnings to 8...  Exported 
+  "write_warning" to {dobldobl,quaddobl,multprec}_complex_solutions_io.adb
+  changing standard_complex_solutions.ads.
+
+Sat 18 Jun 2011 : updated standard_dictionary_solutions_io.adb to
+  capture exception in phc -x...  Added try_get routines to
+  standard_complex_solutions_io to skip solutions where NaN occurred.
+
+Thu 2 Jun 2011 : updated drivers_for_homotopy_creation for double double
+  and quad double homotopies.
+
+Wed 1 Jun 2011 : changed standard_point_lists.adb and mainred.adb
+  for warnings.
+
+Sun 29 May 2011 : for warnings, changed quaddobl_complex_solutions.adb
+  standard_stable_homotopies.ads, standard_solution_splitters.adb,
+  dobldobl_complex_solutions.adb and homogenization.adb.
+
+Thu 5 May 2011 : new package list_of_symbols extracted from the code in
+  {standard,multprec}_maple_solutions_io.adb for the dictionary conversions.
+  Added to standard_dictionary_solution_io.adb to other conversion.
+
+Tue 3 May 2011 : new package standard_dictionary_solutions_io to convert
+  solutions into dictionary formats a loose Python interface.
+  Changed standard_maple_solutions_io.* to fix a bug
+  and also modified multprec_maple_solutions_io.adb.
+
+Tue 12 Oct 2010 : created ts_qdhom.adb to compare eval & diff for double
+  double and quad double homotopies.
+
+Fri 8 Oct 2010 : extended dobldobl_system_and_solutions_io with get to
+  read from file.  Created the packages {dobldobl,quaddobl}_homotopy.
+  Also extended the get of quaddobl_system_and_solutions_io.
+
+Sun 26 Sep 2010 : extended {standard,multprec}_system_and_solutions_io
+  with get for link_to_array_of_strings for further parsing.
+
+Sun 19 Sep 2010 : {standard,dobldobl,quaddobl}_system_and_solution_io.adb
+  scan for "SOLUTIONS" instead of "THE SOLUTIONS" because of symmetry,
+  the demonstration database often stores "THE GENERATING SOLUTIONS".
+
+Sat 18 Sep 2010 : bug in scan_diagnostics of dobldobl_complex_solution_io.adb
+  fixed: read (err,rco,res) in as double_floats and then convert.
+  Made similar fix in quaddobl_complex_solutions_io.adb.  
+  Added a get operation to the quaddobl_system_and_solutions_io.
+
+Wed 15 Sep 2010 : fixed bug in dobldobl_system_and_solutions_io.adb and 
+  added exceptions to dobldobl_complex_solutions_io.adb to retrace the
+  omission in reading a double double complex number.
+
+Tue 14 Sep 2010 : changed drivers_for_homotopy_creation.adb because
+  of GNAT GPL 2010 warning.
+
+Mon 13 Sep 2010 : extended dobldobl_system_and_solutions_io with get
+  specification and body to test corrector compilation.
+
+Sun 6 Jun 2010 : new packages dobldobl_system_and_solutions_io and
+  quaddobl_system_and_solutions_io to write output of root refiners.
+
+Wed 2 Jun 2010 : extended drivers_for_homotopy_creation with a driver for
+  homotopies of Laurent systems, changes in standard_laurent_homotopy.adb
+  to search for a bug...
+
+Fri 28 May 2010 : created {dobldobl,quaddobl}_complex_solutions + io,
+  tested by ts_ddsols and ts_qdsols.  Upgraded the package
+  multprec_system_and_solutions_io with io for Laurent systems.
+
+Fri 6 Nov 2009 : updates in standard_complex_solutions.adb,
+  multprec_complex_solutions.a* and multprec_complex_solutions_io.adb,
+  projective_transformations.adb, drivers_for_homotopy_creation.adb,
+  multprec_homotopy.adb, mainfilt.adb, because of GNAT GPL 2009 warnings.
+
+Fri 9 Oct 2009 : in {standard,multprec}_condition_tables, added a 
+  write_tables function without the writing of the distances tables.
+  New package "standard_laurent_homotopy" for Laurent continuation.
+
+Thu 10 Sep 2009 : updated in {standard,multprec}_condition_tables.adb
+  with guards around table updates because of crash with new multiprecision.
+  Minor formatting of code in drivers_for_condition_tables.adb.
+
+Fri 29 May 2009 : ts_solfilt.adb changed because of gnat warning.
+
+Thu 20 Nov 2008 : in standard_embed_polynomials added a routine for
+  matrices of polynomials.
+
+Sun 26 Oct 2008 : standard_system_and_solutions_io.adb must scan for
+  "THE SOLUTIONS" instead of scanning for "SOLUTIONS"
+
+Fri 16 May 2008 : parsing of solutions into strings now works fine,
+  modified standard_solution_strings, tested by ts_solstr.adb.
+
+Thu 15 May 2008 : fixed bug in standard_solution_strings, in calculating
+  length of floats for writing to strings.
+
+Sun 4 May 2008 : added parsing to standard_solution_strings.
+
+Sat 26 Apr 2008 : created package standard_solution_strings, tested by
+  ts_solstr.adb to write solutions to strings.
+
+Thu 3 Jan 2008 : changed standard_condition_tables.adb and
+  standard_complex_solutions_io.adb for warnings given by GNAT GPL 2006.
+
+Wed 2 Jan 2008 : changed standard_homotopy.adb for warnings in GNAT GPL 2006.
+
+Thu 20 Dec 2007 : added Merge_and_Concat to standard_stable_homotopies.
+
+Sat 8 Dec 2007 : added a push operations to standard_complex_solutions.a*.
+  New package standard_stable_homotopies for solutions with zero components.
+
+Sun 14 Oct 2007 : the put in standard_system_and_solutions_io.adb did NOT
+  write the number of equations!  Fixed it.
+
+Thu 9 Aug 2007 : fixed intendation in standard_complex_solutions.adb, and
+  did likewise in multprec_complex_solutions.adb.
+
+Sat 12 May 2007 : added "put_bar" to standard_complex_solutions_io.ads,
+  also changed standard_complex_solutions_io.adb,
+  and used in multprec_complex_solutions_io.adb.
+
+Tue 1 May 2007 : extended standard_system_and_solutions to Laurent systems,
+  also updated multprec_complex_solution_io.adb for ASCII.CR.
+
+Fri 27 Apr 2007 : ASCII.CR test in standard_complex_solutions_io.adb
+  makes that solution files from Windows machines can be read fine.
+
+Wed 7 Feb 2007 : bug fix in standard_linear_poly_solvers, forgot to
+  swap the sign of the constant coefficient when parsing.
+
+Sat 3 Feb 2007 : added a "Write" in standard_maple_solutions_io.ads,
+  with a dummy implementation in standard_maple_solutions_io.adb...
+
+Fri 12 Jan 2007 : grepsols -> ts_grepsols, standard_solution_filters now
+  contains select_solutions.  Renamed drivers_for_solution_filtering into
+  drivers_for_solution_filters.  Updated ts_solfilt.adb and mainfilt.adb.
+  Added an option 'A' to drivers_for_solution_filter.adb to allow phc -f
+  to select specific solutions.
+
+Thu 11 Jan 2007 : added exception handlers in the scanning solution filters
+  of standard_solution_filters.adb.
+
+Mon 18 Dec 2006 : added array_of_symbols as argument to get and put
+  operations in standard_complex_solutions_io.
+
+Fri 10 Nov 2006 : extended standard_solution_filters with a real filter;
+  updated drivers_for_solution_filtering.adb with option #9.
+
+Fri 13 Oct 2006 : inserted "candidate" in cluster report in the
+  file drivers_for_condition_tables.adb.
+
+Wed 23 Aug 2006 : added put_line to standard_system_and_solutions_io.
+
+Sun 2 Jul 2006 : created "ts_selsol.adb" to select solutions from file.
+
+Thu 15 Jun 2006 : removed "Get" from {standard,multprec}_complex_solutions
+  and rewrote the "Equals" for solution lists.
+
+Wed 14 Jun 2006 : because of warnings on AIX, changed standard_ and multprec_
+  complex_solutions.adb.
+
+Fri 9 Jun 2006 : upgraded standard_solution_filters for phc -f, also
+  drivers_for_solution_filtering and mainfilt.adb.
+
+Thu 8 Jun 2006 : modified standard_point_lists and ts_quad; phc -v now
+  reports clustering thanks to a better drivers_for_condition_tables.
+  Changed drivers_for_soution_filtering and mainfilt for incremental read.
+
+Wed 7 Jun 2006 : created "standard_point_lists", a first quad tree is made
+  via standard_quad_trees, ready for cluster analysis in ts_quad.adb.
+  Removed the *hash* files, quadtrees are a better terminology.
+
+Tue 6 Jun 2006 : started "standard_quad_trees", tested by ts_quad.adb. 
+
+Mon 5 Jun 2006 : fixed a bug in "drivers_for_condition_tables.adb" and
+  developed standard_hash_trees, tested by ts_hash.
+  The "hash_table" package is by now utterly obsolete and removed.
+
+Sun 4 Jun 2006 : lifted "Prompt_to_Scan_Banner" to specification of
+  drivers_for_condition_tables for use in mainfilt.adb (phc -f option #0).
+  Started the creation of standard_hash_trees, tested by ts_hash.adb.
+
+Fri 12 May 2006 : moved solution filters and splitters from Decomposition,
+  tested by ts_solfilt, which must become part of phc -f or phc -v.
+  Removed useless "split_or_join_solution_lists" and "ts_splitjoin.adb".
+  Created "drivers_to_solution_filtering" from the code in ts_solfilt.adb,
+  and wrote mainfilt, now called by mainfac, but that could change.
+
+Wed 3 May 2006 : created packages {standard,multprec}_solution_diagnostics
+  for phc -v to compute the number of real solutions.
+
+Tue 18 Apr 2006 : doubling of the frequency updater for huge lists
+  in drivers_for_condition_tables.adb.
+
+Fri 24 Mar 2006 : extended ts_contab to scan also for banners, and ransacked
+  it off into the new drivers_for_condition_tables, for inclusion in v2.3.07.
+
+Thu 16 Feb 2006 : completed incremental read/write of solution lists,
+  updated {standard,multprec}_complex_solutions_io and ts_sols.adb.
+
+Wed 15 Feb 2006 : added incremental reading of solution lists to
+  standard_complex_solutions_io, tested by ts_sols.adb; also updated
+  the multprec_complex_solutions_io.
+
+Tue 7 Feb 2006 : modified standard_condition_tables and ts_contab so it
+  can now handle huge lists of solutions like for cyclic 12-roots;
+  also upgraded multprec_condition_tables.
+
+Mon 6 Feb 2006 : created "ts_contab" to see its performance on huge lists.
+
+Tue 3 Jan 2006 : added "retrieve" operation in *complex_solutions, which
+  returns a pointer instead of a record, as needed in cells container.
+
+Mon 2 Jan 2006 : added Link_to_Array_of_Solution_Lists to *complex_solutions,
+  as needed in the cells container.
+
+Wed 21 Dec 2005 : added the package multprec_system_and_solutions_io.
+
+Mon 19 Dec 2005 : created the package "standard_system_and_solutions_io"
+  to read a system and solutions from file.
+
+Fri 16 Dec 2005 : added to standard_complex_solutions_io.adb extra
+  information about errors in reading solutions; mirrored the changes
+  in multprec_complex_solutions_io.adb.
+
+Sun 20 Feb 2005 : changed type of m-field of solution into integer, to
+  serve better as flag to indicate clustered solutions.
+
+Thu 29 Jul 2004 : added distance freq table to standard_condition_tables
+  and created the package multprec_condition_tables.
+
+Mon 19 Jul 2004 : created standard_condition_tables to create a frequency
+  table for the logarithms of the condition numbers of a list of solutions.
+  Added the procedure put_diagnostics to standard_complex_solutions_io.
+
+Tue 22 Jun 2004 : modified ts_homotopy.adb to find bug on spinner.
+
+Tue 8 Jun 2004 : fixed multprec_maple_solutions_io.adb.
+
+Thu 3 Jun 2004 : changed multprec_complex_solutions_io to scan diagnostics,
+  and created multprec_maple_solutions_io, tested by ts_mapsols_io.
+  Minding end of multprec floats, also standard_maple_solutions_io.adb
+  got changed for consistency.
+
+Wed 5 May 2004 : chanded standard_maple_solutions_io because "error"
+  is a reserved word in Maple
+
+Sun 2 May 2004 : changed standard_maple_solutions_io so that also
+  the fields t, m, err, rco, and res of solutions are recognized.
+
+Tue 27 Apr 2004 : added multprec_embed_polynomials, mirror of
+  standard_embed_polynomials.
+
+Sun 7 Mar 2004 : fixed bug in standard_maple_solutions_io.adb.
+
+Fri 5 Mar 2004 : updated standard_maple_solutions_io so that now the
+  solutions are lists of equations, showing the symbol table.
+
+Wed 3 Mar 2004 : updated ts_mapsols_io and standard_maple_solutions_io
+  to be able to convert solutions from Maple into PHCpack format.
+
+Tue 23 Dec 2003 : changed drivers_for_homotopy_creation.adb following
+  warning of gnat3.14p compiler about runtime constraint error.
+
+Mon 1 Sep 2003 : created package standard_embed_polynomials to releave
+  the package Witness_Points in Components library and use the Add_Variables
+  in the Standard_Deflate_Singularities.
+
+************** most recent updates above this line *****************
+
+Wed 14 June 2000 : created the package multprec_homotopy.
+
+Fri 16 June 2000 : homotopy becomes standard_homotopy, changed 12 files :
+  Homotopy/drivers_for_homotopy.creation.adb
+  Continuation/mainpoco.adb, black_polynomial_continuations.adb,
+               drivers_for_poly_continuation.adb,
+               drivers_for_winding_numbers.adb,
+               drivers_for_path_directions.adb
+  Schubert/driver_for_pieri_homotopies.adb, driver_for_quantum_pieri.adb,
+           driver_for_sagbi_homotopies.adb, pieri_continuation.adb
+  Components/component_scanners.adb
+  Main/mainphc.adb
+
+Thu 22 June 2000 : changed reduction_of_polynomial_systems.adb due to
+  change in specification of Standard_Complex_Linear_Solvers.Triangulate.
+
+Thu 30 Nov 2000 : changed standard_complex_solutions.adb, line 207
+  contained "ls : Link_to_Solution" never assigned a value.
+  multprec_complex_solutions.adb had the same problem
+
+Thu 4 Jan 2001 : created ts_splitjoin.adb to split and join lists of
+  solutions.  The "mergesols.adb" may actually be deleted.
+
+Thu 24 May 2001 : modified drivers_for_homotopy_creation to handle
+  multi-precision homotopies from within the main drivers.
+
+Sun 10 June 2001 : fixed bug in drivers_for_homotopy_creation: forgot
+  to assign deci at the end for standard arithmetic
+
+Wed 18 July 2001 : created standard_maple_solutions_io and ts_mapsols_io
+  to convert solution lists into format digestable by Maple
+
+Fri 19 July 2001 : eliminated new_line from mainscal.adb.
+
+Thu 20 Sep 2001 : created the procedure split_or_join_solution_lists
+  to use as tool in phc.
+
+Sun 30 Sep 2001 : driver_for_homotopy_creation switched by default ot
+  multi-precision when called from mainphc.adb.
+
+Thu 1 Nov 2001 : added user friendly Write to the i/o of standard and
+  multi-precision complex solutions.
+
+Mon 7 Jan 2002 : changed the range type from positive to integer in the
+  Solution_Array in both standard and multprec_complex_solutions 
+
+Thu 7 June 2002 : modified standard_complex_solutions_io.adb so that now
+  the symbol table is initialized when it is empty; also the multi-precision
+  versions of solutions_io is adapted accordingly.
+
+Wed 19 June 2002 : changed the scaling module for nonsquare systems.
+
+Wed 24 July 2002 : standard_complex_solutions_io.adb is changed to also
+  recognize the (err,rco,res) on input.
+
+Tue 30 July 2002 : note that ts_scal and multprec_scaling has been added.
+  Scaling -> Standard_Scaling, this changes mainscal.adb and drivers_for_scaling.adb.
+  Added type "Array_of_Solution_Lists" to standard and multprec solutions.
+
+Mon 19 Aug 2002 : revision of scaling procedures under construction...
+
+Tue 24 Dec 2002 : created package to handle lists of solution arrays,
+  see standard_solutution_array_lists and ts_solar.

@@ -1,4 +1,4 @@
-Homotopies, scaling and reduction in PHCv2.3.80
+Homotopies, scaling and reduction in PHCv2.3.89
 
 The Creators in the package Homotopy allow more accessibility constants for
 the Cheater's homotopy.  A multiprecision version of the homotopy package
@@ -23,6 +23,8 @@ ts_qdhom                           : compares eval & diff for dd & qd
 multprec_homotopy                  : homotopy for multiprecision numbers
 drivers_for_homotopy_creation      : menu-driven homotopy construction
 standard_stable_homotopies         : for solutions with zero components
+standard_coefficient_homotopy      : coefficient-parameter homotopy
+ts_evalhomt                        : test on coefficient-parameter homotopy
 ------------------------------------------------------------------------------
 standard_scaling                   : scaling standard systems and solutions
 multprec_scaling                   : scaling multprec systems
