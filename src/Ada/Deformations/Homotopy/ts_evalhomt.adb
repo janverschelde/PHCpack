@@ -23,6 +23,7 @@ with Standard_Complex_Poly_Functions;   use Standard_Complex_Poly_Functions;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
+with Standard_Complex_Jaco_Matrices;    use Standard_Complex_Jaco_Matrices;
 with Standard_Coefficient_Homotopy;     use Standard_Coefficient_Homotopy;
 
 procedure ts_evalhomt is
@@ -129,6 +130,8 @@ procedure ts_evalhomt is
     f : Eval_Coeff_Poly_Sys(p'range) := Create(h);
     c : Standard_Complex_VecVecs.VecVec(f'range);
     z : Standard_Complex_Vectors.Vector(f'range);
+    m : Mult_Factors(p'range,x'range);
+    jf : Eval_Coeff_Jaco_Mat(p'range,x'range);
 
   begin
     put("A random t : "); put(t); new_line;
@@ -145,6 +148,7 @@ procedure ts_evalhomt is
     Evaluated_Coefficients(c,cp,cq,ip,iq,t);
     z := Eval(f,c,x);
     put_line("-> z = "); put_line(z);
+    Standard_Complex_Jaco_Matrices.Create(h,jf,m);
   end Eval;
 
   procedure Test_Evaluation ( n : in natural32; p,q : in Poly ) is
