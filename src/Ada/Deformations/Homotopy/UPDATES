@@ -1,4 +1,5 @@
-Sun 22 Jun 2014 : updates in ts_evalhomt for Jacobian matrices.
+Sun 22 Jun 2014 : updates in ts_evalhomt for Jacobian matrices
+  and did encapsulation in standard_coefficient_homotopy.
 
 Fri 20 Jun 2014 : new test function ts_evalhomt, with new package
   standard_coefficient_homotopy.

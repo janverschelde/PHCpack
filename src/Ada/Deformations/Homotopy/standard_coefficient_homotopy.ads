@@ -1,9 +1,12 @@
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with Standard_Complex_Matrices;         use Standard_Complex_Matrices;
 with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 
@@ -132,5 +135,33 @@ package Standard_Coefficient_Homotopy is
 
   -- ON RETURN :
   --   cff     evaluated coefficients of (1-t)*p + t*q.
-  --
+
+-- PART III : encapsulation
+
+  procedure Create ( p,q : in Poly_Sys; k : in natural32;
+                     a : in Complex_Number );
+
+  -- DESCRIPTION :
+  --   The following artificial-parameter homotopy is constructed:
+  --     H(x,t) = a * ((1 - t)^k) * q + (t^k) * p.
+
+  function Eval ( x : Standard_Complex_Vectors.Vector;
+                  t : Complex_Number )
+                return Standard_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   The homotopy is evaluated in x and t and a vector is returned.
+
+  function Diff ( x : Standard_Complex_Vectors.Vector;
+                  t : Complex_Number ) return Matrix;
+
+  -- DESCRIPTION :
+  --   The homotopy is differentiated to x and the Jacobi matrix
+  --   of H(x,t) is returned.
+
+  procedure Clear;
+
+  -- DESCRIPTION :
+  --   The homotopy is cleared.
+
 end Standard_Coefficient_Homotopy;

@@ -1,7 +1,25 @@
+with unchecked_deallocation;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
+with Standard_Complex_Jaco_Matrices;    use Standard_Complex_Jaco_Matrices;
 
 package body Standard_Coefficient_Homotopy is
+
+-- INTERNAL DATA STRUCTURES :
+
+  type homdata ( n : integer32 ) is record
+    k : natural32;
+    gamma : Standard_Complex_Vectors.Vector(1..n);
+    htcff : Standard_Complex_VecVecs.VecVec(1..n);
+    cp,cq : Standard_Complex_VecVecs.VecVec(1..n);
+    ip,iq : Standard_Integer_VecVecs.VecVec(1..n);
+    hf : Eval_Coeff_Poly_Sys(1..n);
+    jf : Eval_Coeff_Jaco_Mat(1..n,1..n);
+    mf : Mult_Factors(1..n,1..n);
+  end record;
+
+  type homtp is access homdata;
+  hom : homtp;
 
 -- PART I : for one pair of polynomials 
 
@@ -189,5 +207,73 @@ package body Standard_Coefficient_Homotopy is
       Evaluated_Coefficients(cffk,cp(i),cq(i),ip(i),iq(i),t);
     end loop;
   end Evaluated_Coefficients;
+
+-- PART III : encapsulation
+
+  procedure Create ( p,q : in Poly_Sys; k : in natural32;
+                     a : in Complex_Number ) is
+
+    n : constant integer32 := p'last;
+    lp,lq,lh : Poly_Sys(p'range);
+    hd : homdata(n);
+
+  begin
+    hd.k := k;
+    for i in 1..n loop
+      hd.gamma(i) := a;
+    end loop;
+    hd.cp := Coefficients(p);
+    hd.cq := Coefficients(q);
+    lp := Labeled_Coefficients(p,true);
+    lq := Labeled_Coefficients(q,false);
+    lh := lp + lq;
+    hd.htcff := Coefficients(lh);
+    hd.ip := Index_of_Labels(hd.htcff,true);
+    hd.iq := Index_of_Labels(hd.htcff,false);
+    hom := new homdata'(hd);
+    Clear(lp); Clear(lq); Clear(lh);
+  end Create;
+
+  function Eval ( x : Standard_Complex_Vectors.Vector;
+                  t : Complex_Number )
+                return Standard_Complex_Vectors.Vector is
+
+    res : Standard_Complex_Vectors.Vector(x'range);
+
+  begin
+    Evaluated_Coefficients
+      (hom.htcff,hom.cp,hom.cq,hom.ip,hom.iq,REAL_PART(t));
+    res := Eval(hom.hf,hom.htcff,x);
+    return res;
+  end Eval;
+
+  function Diff ( x : Standard_Complex_Vectors.Vector;
+                  t : Complex_Number ) return Matrix is
+
+    res : Matrix(x'range,x'range);
+ 
+  begin
+    Evaluated_Coefficients
+      (hom.htcff,hom.cp,hom.cq,hom.ip,hom.iq,REAL_PART(t));
+    res := Eval(hom.jf,hom.mf,hom.htcff,x);
+    return res;
+  end Diff;
+
+  procedure free is new unchecked_deallocation (homdata,homtp);
+
+  procedure Clear is
+  begin
+    if hom /= null then
+      Clear(hom.hf);
+      Clear(hom.jf);
+      Clear(hom.mf);
+      Standard_Complex_VecVecs.Clear(hom.htcff);
+      Standard_Complex_VecVecs.Clear(hom.cp);
+      Standard_Complex_VecVecs.Clear(hom.cq);
+      Standard_Integer_VecVecs.Clear(hom.ip);
+      Standard_Integer_VecVecs.Clear(hom.iq);
+      free(hom);
+    end if;
+  end Clear;
 
 end Standard_Coefficient_Homotopy;
