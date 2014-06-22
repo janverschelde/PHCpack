@@ -3,6 +3,7 @@ with Communications_with_User;          use Communications_with_User;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
@@ -15,6 +16,7 @@ with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
 with Standard_Random_Vectors;
+with Standard_Complex_Matrices;         use Standard_Complex_Matrices;
 with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
 with Symbol_Table;
 with Standard_Complex_Polynomials_io;   use Standard_Complex_Polynomials_io;
@@ -50,6 +52,9 @@ procedure ts_evalhomt is
                   t : double_float )
                 return Standard_Complex_Vectors.Vector is
 
+  -- DESCRIPTION :
+  --   Returns the value of (1-t)*p + t*q, evaluated at x.
+
     res : Standard_Complex_Vectors.Vector(p'range);
     px : constant Standard_Complex_Vectors.Vector := Eval(p,x);
     qx : constant Standard_Complex_Vectors.Vector := Eval(q,x);
@@ -60,6 +65,26 @@ procedure ts_evalhomt is
     end loop;
     return res;
   end Eval;
+
+  function Diff ( p,q : Poly_Sys;
+                  x : Standard_Complex_Vectors.Vector;
+                  t : double_float ) return Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the Jacobian matrix of (1-t)*p + t*q, evaluated at x.
+
+    res : Matrix(p'range,x'range);
+    pjm : Jaco_Mat(p'range,x'range) := Create(p);
+    qjm : Jaco_Mat(p'range,x'range) := Create(q);
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        res(i,j) := (1.0-t)*Eval(pjm(i,j),x) + t*Eval(qjm(i,j),x);
+      end loop;
+    end loop;
+    return res;
+  end Diff;
 
   procedure Eval ( n : in natural32; p,q,h : in Poly;
                    cp,cq,ch : in Standard_Complex_Vectors.Vector;
@@ -100,6 +125,22 @@ procedure ts_evalhomt is
     put("-> z = "); put(z); new_line;
   end Eval;
 
+  procedure Write_Elements ( A,B : in Matrix ) is
+
+  -- DESCRIPTION :
+  --   Writes the elements of the matrices A and B to screen.
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        put("A("); put(i,1); put(","); put(j,1); put(") = ");
+        put(A(i,j)); new_line;
+        put("B("); put(i,1); put(","); put(j,1); put(") = ");
+        put(B(i,j)); new_line;
+      end loop;
+    end loop;
+  end Write_Elements;
+
   procedure Eval ( n : in natural32; p,q,h : in Poly_Sys;
                    cp,cq,ch : in Standard_Complex_VecVecs.VecVec;
                    ip,iq : in Standard_Integer_VecVecs.VecVec ) is
@@ -132,6 +173,8 @@ procedure ts_evalhomt is
     z : Standard_Complex_Vectors.Vector(f'range);
     m : Mult_Factors(p'range,x'range);
     jf : Eval_Coeff_Jaco_Mat(p'range,x'range);
+    A : Matrix(p'range,x'range) := Diff(p,q,x,t);
+    B : Matrix(p'range,x'range);
 
   begin
     put("A random t : "); put(t); new_line;
@@ -149,6 +192,8 @@ procedure ts_evalhomt is
     z := Eval(f,c,x);
     put_line("-> z = "); put_line(z);
     Standard_Complex_Jaco_Matrices.Create(h,jf,m);
+    B := Eval(jf,m,c,x);
+    Write_Elements(A,B);
   end Eval;
 
   procedure Test_Evaluation ( n : in natural32; p,q : in Poly ) is
