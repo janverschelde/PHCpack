@@ -110,6 +110,37 @@ package body Standard_Coefficient_Homotopy is
   end Evaluated_Coefficients;
 
   procedure Evaluated_Coefficients
+             ( cff : in out Standard_Complex_Vectors.Vector;
+               cp,cq : in Standard_Complex_Vectors.Vector;
+               ip,iq : in Standard_Integer_Vectors.Vector;
+               k : in natural32;
+               gamma : in Standard_Complex_Vectors.Vector;
+               t : in Complex_Number ) is
+
+    idx : integer32;
+    pfac : Complex_Number := gamma(gamma'first);
+    onemint : constant Complex_Number := 1.0 - t;
+    powtk1 : Complex_Number := onemint;
+    powtk2 : Complex_Number := t;
+
+  begin
+    if k > 1 then
+      for i in 1..k loop
+        powtk1 := onemint*powtk1;
+        powtk2 := t*powtk2;
+      end loop;
+    end if;
+    pfac := powtk1*pfac;
+    for i in cp'range loop
+      cff(ip(i)) := pfac*cp(i);
+    end loop;
+    for i in cq'range loop
+      idx := iq(i);
+      cff(idx) := cff(idx) + powtk2*cq(i);
+    end loop;
+  end Evaluated_Coefficients;
+
+  procedure Evaluated_Coefficients
              ( cff : in out Standard_Complex_Vectors.Link_to_Vector;
                cp,cq : in Standard_Complex_Vectors.Link_to_Vector;
                ip,iq : in Standard_Integer_Vectors.Link_to_Vector;
@@ -124,6 +155,37 @@ package body Standard_Coefficient_Homotopy is
     for i in cq'range loop
       idx := iq(i);
       cff(idx) := cff(idx) + t*cq(i);
+    end loop;
+  end Evaluated_Coefficients;
+
+  procedure Evaluated_Coefficients
+             ( cff : in out Standard_Complex_Vectors.Link_to_Vector;
+               cp,cq : in Standard_Complex_Vectors.Link_to_Vector;
+               ip,iq : in Standard_Integer_Vectors.Link_to_Vector;
+               k : in natural32;
+               gamma : in Standard_Complex_Vectors.Vector;
+               t : in Complex_Number ) is
+
+    idx : integer32;
+    pfac : Complex_Number := gamma(gamma'first);
+    onemint : constant Complex_Number := 1.0 - t;
+    powtk1 : Complex_Number := onemint;
+    powtk2 : Complex_Number := t;
+
+  begin
+    if k > 1 then
+      for i in 1..k loop
+        powtk1 := onemint*powtk1;
+        powtk2 := t*powtk2;
+      end loop;
+    end if;
+    pfac := powtk1*pfac;
+    for i in cp'range loop
+      cff(ip(i)) := pfac*cp(i);
+    end loop;
+    for i in cq'range loop
+      idx := iq(i);
+      cff(idx) := cff(idx) + powtk2*cq(i);
     end loop;
   end Evaluated_Coefficients;
 
@@ -208,6 +270,26 @@ package body Standard_Coefficient_Homotopy is
     end loop;
   end Evaluated_Coefficients;
 
+  procedure Evaluated_Coefficients
+             ( cff : in out Standard_Complex_VecVecs.VecVec;
+               cp,cq : in Standard_Complex_VecVecs.VecVec;
+               ip,iq : in Standard_Integer_VecVecs.VecVec;
+               k : in natural32;
+               gamma : in Standard_Complex_Vectors.Vector;
+               t : in Complex_Number ) is
+
+    cffk : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in cff'range loop
+      cffk := cff(i);
+      for j in cffk'range loop
+        cffk(j) := Create(0.0);
+      end loop;
+      Evaluated_Coefficients(cffk,cp(i),cq(i),ip(i),iq(i),k,gamma,t);
+    end loop;
+  end Evaluated_Coefficients;
+
 -- PART III : encapsulation
 
   procedure Create ( p,q : in Poly_Sys; k : in natural32;
@@ -244,7 +326,8 @@ package body Standard_Coefficient_Homotopy is
 
   begin
     Evaluated_Coefficients
-      (hom.htcff,hom.cp,hom.cq,hom.ip,hom.iq,REAL_PART(t));
+     -- (hom.htcff,hom.cp,hom.cq,hom.ip,hom.iq,REAL_PART(t));
+      (hom.htcff,hom.cp,hom.cq,hom.ip,hom.iq,hom.k,hom.gamma,t);
     res := Eval(hom.hf,hom.htcff,x);
     return res;
   end Eval;
@@ -256,7 +339,8 @@ package body Standard_Coefficient_Homotopy is
  
   begin
     Evaluated_Coefficients
-      (hom.htcff,hom.cp,hom.cq,hom.ip,hom.iq,REAL_PART(t));
+     -- (hom.htcff,hom.cp,hom.cq,hom.ip,hom.iq,REAL_PART(t));
+      (hom.htcff,hom.cp,hom.cq,hom.ip,hom.iq,hom.k,hom.gamma,t);
     res := Eval(hom.jf,hom.mf,hom.htcff,x);
     return res;
   end Diff;

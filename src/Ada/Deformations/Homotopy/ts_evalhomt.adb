@@ -220,7 +220,7 @@ procedure ts_evalhomt is
       := Standard_Coefficient_Homotopy.Diff(x,ct);
 
   begin
-    put("A random t : "); put(t); new_line;
+    put("A random t : "); put(ct); new_line;
     put_line("A random point : "); put_line(x);
     put_line("-> y = "); put_line(y);
     put_line("-> z = "); put_line(z);

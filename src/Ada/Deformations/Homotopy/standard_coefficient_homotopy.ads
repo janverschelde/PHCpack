@@ -43,10 +43,24 @@ package Standard_Coefficient_Homotopy is
                ip,iq : in Standard_Integer_Vectors.Vector;
                t : in double_float );
   procedure Evaluated_Coefficients
+             ( cff : in out Standard_Complex_Vectors.Vector;
+               cp,cq : in Standard_Complex_Vectors.Vector;
+               ip,iq : in Standard_Integer_Vectors.Vector;
+               k : in natural32;
+               gamma : in Standard_Complex_Vectors.Vector;
+               t : in Complex_Number );
+  procedure Evaluated_Coefficients
              ( cff : in out Standard_Complex_Vectors.Link_to_Vector;
                cp,cq : in Standard_Complex_Vectors.Link_to_Vector;
                ip,iq : in Standard_Integer_Vectors.Link_to_Vector;
                t : in double_float );
+  procedure Evaluated_Coefficients
+             ( cff : in out Standard_Complex_Vectors.Link_to_Vector;
+               cp,cq : in Standard_Complex_Vectors.Link_to_Vector;
+               ip,iq : in Standard_Integer_Vectors.Link_to_Vector;
+               k : in natural32;
+               gamma : in Standard_Complex_Vectors.Vector;
+               t : in Complex_Number );
 
   -- DESCRIPTION :
   --   Evaluates the coefficients of the polynomial (1-t)*p + t*q.
@@ -62,6 +76,8 @@ package Standard_Coefficient_Homotopy is
   --   iq      index of the labels of coefficients of q in h:
   --           ip(k) locates in ch the k-th coefficient of q,
   --           in particular: ch(iq(k)) := cq(k) sets h to q;
+  --   k       power of t and (1-t) is one if omitted;
+  --   gamma   gamma constants are one if omitted;
   --   t       some double float, typically in [0,1].
 
   -- ON RETURN :
@@ -116,6 +132,13 @@ package Standard_Coefficient_Homotopy is
                cp,cq : in Standard_Complex_VecVecs.VecVec;
                ip,iq : in Standard_Integer_VecVecs.VecVec;
                t : in double_float );
+  procedure Evaluated_Coefficients
+             ( cff : in out Standard_Complex_VecVecs.VecVec;
+               cp,cq : in Standard_Complex_VecVecs.VecVec;
+               ip,iq : in Standard_Integer_VecVecs.VecVec;
+               k : in natural32;
+               gamma : in Standard_Complex_Vectors.Vector;
+               t : in Complex_Number );
 
   -- DESCRIPTION :
   --   Evaluates the coefficients of the system (1-t)*p + t*q.
@@ -131,6 +154,8 @@ package Standard_Coefficient_Homotopy is
   --   iq      index of the labels of coefficients of q in h:
   --           ip(k) locates in ch the k-th coefficient of q,
   --           in particular: ch(iq(k)) := cq(k) sets h to q;
+  --   k       power of t and (1-t) is one if omitted;
+  --   gamma   gamma constants are one if omitted;
   --   t       some double float, typically in [0,1].
 
   -- ON RETURN :
@@ -143,7 +168,8 @@ package Standard_Coefficient_Homotopy is
 
   -- DESCRIPTION :
   --   The following artificial-parameter homotopy is constructed:
-  --     H(x,t) = a * ((1 - t)^k) * q + (t^k) * p.
+  --     H(x,t) = a * ((1 - t)^k) * p + (t^k) * q.
+  --   Note that p is the start system and q the target!
 
   function Eval ( x : Standard_Complex_Vectors.Vector;
                   t : Complex_Number )
@@ -156,7 +182,7 @@ package Standard_Coefficient_Homotopy is
                   t : Complex_Number ) return Matrix;
 
   -- DESCRIPTION :
-  --   The homotopy is differentiated to x and the Jacobi matrix
+  --   The homotopy is differentiated to x and the Jacobian matrix
   --   of H(x,t) is returned.
 
   procedure Clear;
