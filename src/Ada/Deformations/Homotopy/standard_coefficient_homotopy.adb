@@ -230,6 +230,8 @@ package body Standard_Coefficient_Homotopy is
     hd.htcff := Coefficients(lh);
     hd.ip := Index_of_Labels(hd.htcff,true);
     hd.iq := Index_of_Labels(hd.htcff,false);
+    hd.hf := Create(lh); 
+    Standard_Complex_Jaco_Matrices.Create(lh,hd.jf,hd.mf);
     hom := new homdata'(hd);
     Clear(lp); Clear(lq); Clear(lh);
   end Create;

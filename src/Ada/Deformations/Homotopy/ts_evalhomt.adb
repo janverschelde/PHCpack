@@ -196,6 +196,37 @@ procedure ts_evalhomt is
     Write_Elements(A,B);
   end Eval;
 
+  procedure Encapsulated_Eval
+              ( n : in natural32; p,q : in Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Evaluates (1-t)*p + t*q at some random t in [0,1]
+  --   and at a random vector.
+
+  -- ON ENTRY :
+  --   n        number of variables;
+  --   p        first polynomial in several variables;
+  --   q        second polynomial in several variables.
+
+    t : constant double_float := abs(Standard_Random_Numbers.Random);
+    ct : constant Complex_Number := Create(t);
+    x : constant Standard_Complex_Vectors.Vector(1..integer32(n))
+      := Standard_Random_Vectors.Random_Vector(1,integer32(n));
+    y : constant Standard_Complex_Vectors.Vector := Eval(p,q,x,t);
+    z : constant Standard_Complex_Vectors.Vector
+      := Standard_Coefficient_Homotopy.Eval(x,ct);
+    A : Matrix(p'range,x'range) := Diff(p,q,x,t);
+    B : Matrix(p'range,x'range)
+      := Standard_Coefficient_Homotopy.Diff(x,ct);
+
+  begin
+    put("A random t : "); put(t); new_line;
+    put_line("A random point : "); put_line(x);
+    put_line("-> y = "); put_line(y);
+    put_line("-> z = "); put_line(z);
+    Write_Elements(A,B);
+  end Encapsulated_Eval;
+
   procedure Test_Evaluation ( n : in natural32; p,q : in Poly ) is
 
   -- DESCRIPTION :
@@ -291,31 +322,62 @@ procedure ts_evalhomt is
     Test_Evaluation(n,p,q);
   end Random_Test;
 
+  procedure Random_Systems
+              ( n : in integer32; p,q : out Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Generates two n-dimensional systems p and q.
+
+    m,d : natural32 := 0;
+
+  begin
+    put("Give the number of monomials : "); get(m);
+    put("Give upper bound on degree : "); get(d);
+    for i in p'range loop
+      p(i) := Random_Sparse_Poly(natural32(n),d,m,0);
+      q(i) := Random_Sparse_Poly(natural32(n),d,m,0);
+    end loop;
+    put_line("-> p = "); put(p);
+    put_line("-> q = "); put(q);
+  end Random_Systems;
+
   procedure Random_System_Test is
 
   -- DESCRIPTION :
   --   Performs the evaluation test on randomly generated systems.
 
-    n,m,d : natural32 := 0;
-    p,q : Poly;
+    n : natural32 := 0;
 
   begin
     put("Give the number variables : "); get(n);
     Symbol_Table.Init(n);
-    put("Give the number of monomials : "); get(m);
-    put("Give upper bound on degree : "); get(d);
     declare
       p,q : Poly_Sys(1..integer32(n));
     begin
-      for i in p'range loop
-        p(i) := Random_Sparse_Poly(n,d,m,0);
-        q(i) := Random_Sparse_Poly(n,d,m,0);
-      end loop;
-      put_line("-> p = "); put(p);
-      put_line("-> q = "); put(q);
+      Random_Systems(integer32(n),p,q);
       Test_System_Evaluation(n,p,q);
     end;
   end Random_System_Test;
+
+  procedure Random_Encapsulation_Test is
+
+  -- DESCRIPTION :
+  --   Performs the evaluation test on randomly generated systems.
+
+    n : natural32 := 0;
+
+  begin
+    put("Give the number variables : "); get(n);
+    Symbol_Table.Init(n);
+    declare
+      p,q : Poly_Sys(1..integer32(n));
+      gamma : Complex_Number := Create(1.0);
+    begin
+      Random_Systems(integer32(n),p,q);
+      Standard_Coefficient_Homotopy.Create(p,q,1,gamma);
+      Encapsulated_Eval(n,p,q);
+    end;
+  end Random_Encapsulation_Test;
 
   procedure Main is
 
@@ -328,13 +390,15 @@ procedure ts_evalhomt is
     put_line("Evaluating a homotopy pair of polynomials ...");
     put_line("  1. interactive test on user given polynomials;");
     put_line("  2. test on randomly generated polynomials;");
-    put_line("  3. test on randomly generated polynomial systems.");
-    put("Type 1, 2 or 3 to choose a test : ");
-    Ask_Alternative(ans,"123");
+    put_line("  3. test on randomly generated polynomial systems;");
+    put_line("  4. test on encapsulation for random systems.");
+    put("Type 1, 2, 3, or 4 to choose a test : ");
+    Ask_Alternative(ans,"1234");
     case ans is
       when '1' => Interactive_Test;
       when '2' => Random_Test;
       when '3' => Random_System_Test;
+      when '4' => Random_Encapsulation_Test;
       when others => null;
     end case;
   end Main;
