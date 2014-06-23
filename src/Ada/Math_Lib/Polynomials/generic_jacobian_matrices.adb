@@ -84,17 +84,20 @@ package body Generic_Jacobian_Matrices is
                   c : VecVec; x : Vector ) return Matrix is
  
     res : Matrix(j'range(1),j'range(2));
+    ck,mkl : Link_to_Vector;
 
   begin
     for k in j'range(1) loop
+      ck := c(k);
       declare
-        cm : Vector(c(k)'range);
+        cm : Vector(ck'range);
       begin
-        for l in j'range(2) loop
+        for ell in j'range(2) loop
+          mkl := m(k,ell);
           for i in cm'range loop
-            cm(i) := m(k,l)(i)*c(k)(i);
+            cm(i) := mkl(i)*ck(i);
           end loop;
-          res(k,l) := Eval(j(k,l),cm,x);
+          res(k,ell) := Eval(j(k,ell),cm,x);
         end loop;
       end;
     end loop;
