@@ -1,5 +1,6 @@
 with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
+with Timing_Package;                    use Timing_Package;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
@@ -21,6 +22,7 @@ with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
 with Symbol_Table;
 with Standard_Complex_Polynomials_io;   use Standard_Complex_Polynomials_io;
 with Standard_Random_Polynomials;       use Standard_Random_Polynomials;
+with Standard_Complex_Poly_Randomizers;
 with Standard_Complex_Poly_Functions;   use Standard_Complex_Poly_Functions;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
@@ -228,17 +230,14 @@ procedure ts_evalhomt is
     Write_Elements(A,B);
   end Encapsulated_Eval;
 
-  procedure Compared_Encapsulated_Eval
-              ( n : in natural32; p,q : in Poly_Sys ) is
+  procedure Compared_Encapsulated_Eval ( n : in natural32 ) is
 
   -- DESCRIPTION :
   --   Evaluates (1-t)*p + t*q at some random t in [0,1]
   --   and at a random vector.
 
   -- ON ENTRY :
-  --   n        number of variables;
-  --   p        first polynomial in several variables;
-  --   q        second polynomial in several variables.
+  --   n        number of variables.
 
     t : constant double_float := abs(Standard_Random_Numbers.Random);
     ct : constant Complex_Number := Create(t);
@@ -248,8 +247,8 @@ procedure ts_evalhomt is
       := Standard_Homotopy.Eval(x,ct);
     z : constant Standard_Complex_Vectors.Vector
       := Standard_Coefficient_Homotopy.Eval(x,ct);
-    A : Matrix(p'range,x'range) := Standard_Homotopy.Diff(x,ct);
-    B : Matrix(p'range,x'range)
+    A : Matrix(x'range,x'range) := Standard_Homotopy.Diff(x,ct);
+    B : Matrix(x'range,x'range)
       := Standard_Coefficient_Homotopy.Diff(x,ct);
 
   begin
@@ -374,6 +373,26 @@ procedure ts_evalhomt is
     put_line("-> q = "); put(q);
   end Random_Systems;
 
+  procedure Random_Coefficient_Systems
+              ( n : in integer32; p,q : out Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Generates two n-dimensional systems p and q,
+  --   with the same supports.
+
+    m,d : natural32 := 0;
+
+  begin
+    put("Give the number of monomials : "); get(m);
+    put("Give upper bound on degree : "); get(d);
+    for i in p'range loop
+      p(i) := Random_Sparse_Poly(natural32(n),d,m,0);
+      q(i) := Standard_Complex_Poly_Randomizers.Complex_Randomize1(p(i));
+    end loop;
+    put_line("-> p = "); put(p);
+    put_line("-> q = "); put(q);
+  end Random_Coefficient_Systems;
+
   procedure Random_System_Test is
 
   -- DESCRIPTION :
@@ -431,9 +450,85 @@ procedure ts_evalhomt is
       Random_Systems(integer32(n),p,q);
       Standard_Coefficient_Homotopy.Create(p,q,2,gamma);
       Standard_Homotopy.Create(q,p,2,gamma);
-      Compared_Encapsulated_Eval(n,p,q);
+      Compared_Encapsulated_Eval(n);
     end;
   end Compared_Encapsulation_Test;
+
+  procedure Standard_Homotopy_Performance ( n,m : natural32 ) is
+
+  -- DESCRIPTION :
+  --   Generates m random values for x and t
+  --   for evaluation in the homotopy with timings taken.
+
+    t : double_float;
+    ct : Complex_Number;
+    x,y : Standard_Complex_Vectors.Vector(1..integer32(n));
+    A : Matrix(x'range,x'range);
+    timer : Timing_Widget;
+
+  begin
+    tstart(timer);
+    for i in 1..m loop
+      t := abs(Standard_Random_Numbers.Random);
+      ct := Create(t);
+      x := Standard_Random_Vectors.Random_Vector(1,integer32(n));
+      y := Standard_Homotopy.Eval(x,ct);
+      A := Standard_Homotopy.Diff(x,ct);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"eval & diff of standard homotopy");
+  end Standard_Homotopy_Performance;
+
+  procedure Standard_Coefficient_Homotopy_Performance ( n,m : natural32 ) is
+
+  -- DESCRIPTION :
+  --   Generates m random values for x and t
+  --   for evaluation in the coefficient homotopy with timings taken.
+
+    t : double_float;
+    ct : Complex_Number;
+    x,y : Standard_Complex_Vectors.Vector(1..integer32(n));
+    A : Matrix(x'range,x'range);
+    timer : Timing_Widget;
+
+  begin
+    tstart(timer);
+    for i in 1..m loop
+      t := abs(Standard_Random_Numbers.Random);
+      ct := Create(t);
+      x := Standard_Random_Vectors.Random_Vector(1,integer32(n));
+      y := Standard_Coefficient_Homotopy.Eval(x,ct);
+      A := Standard_Coefficient_Homotopy.Diff(x,ct);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"eval & diff of coefficient homotopy");
+  end Standard_Coefficient_Homotopy_Performance;
+
+  procedure Performance_Test is
+
+  -- DESCRIPTION :
+  --   Performs the evaluation test on randomly generated systems,
+  --   comparing with the Standard_Homotopy package.
+
+    n,m : natural32 := 0;
+
+  begin
+    put("Give the number of evaluations : "); get(m);
+    put("Give the number variables : "); get(n);
+    Symbol_Table.Init(n);
+    declare
+      p,q : Poly_Sys(1..integer32(n));
+      gamma : Complex_Number := Standard_Random_Numbers.Random1;
+    begin
+      Random_Coefficient_Systems(integer32(n),p,q);
+      Standard_Coefficient_Homotopy.Create(p,q,2,gamma);
+      Standard_Homotopy.Create(q,p,2,gamma);
+    end;
+    Standard_Homotopy_Performance(n,m);
+    Standard_Coefficient_Homotopy_Performance(n,m);
+  end Performance_Test;
 
   procedure Main is
 
@@ -449,15 +544,18 @@ procedure ts_evalhomt is
     put_line("  2. test on randomly generated polynomials;");
     put_line("  3. test on randomly generated polynomial systems;");
     put_line("  4. test on encapsulation for random systems;");
-    put_line("  5. compare with homotopy package for random systems.");
-    put("Type 1, 2, 3, 4, or 5 to choose a test : ");
-    Ask_Alternative(ans,"12345");
+    put_line("  5. compare with homotopy package for random systems;");
+    put_line("  6. performance test on evaluations of homotopies.");
+    put("Type 1, 2, 3, 4, 5, or 6 to choose a test : ");
+    Ask_Alternative(ans,"123456");
+    new_line;
     case ans is
       when '1' => Interactive_Test;
       when '2' => Random_Test;
       when '3' => Random_System_Test;
       when '4' => Random_Encapsulation_Test;
       when '5' => Compared_Encapsulation_Test;
+      when '6' => Performance_Test;
       when others => null;
     end case;
   end Main;

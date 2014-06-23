@@ -1,3 +1,5 @@
+Mon 23 Jun 2014 : added performance test to ts_evalhomt.adb.
+
 Sun 22 Jun 2014 : updates in ts_evalhomt for Jacobian matrices
   and did encapsulation in standard_coefficient_homotopy.
 
