@@ -125,7 +125,7 @@ package body Standard_Coefficient_Homotopy is
 
   begin
     if k > 1 then
-      for i in 1..k loop
+      for i in 2..k loop
         powtk1 := onemint*powtk1;
         powtk2 := t*powtk2;
       end loop;
@@ -174,7 +174,7 @@ package body Standard_Coefficient_Homotopy is
 
   begin
     if k > 1 then
-      for i in 1..k loop
+      for i in 2..k loop
         powtk1 := onemint*powtk1;
         powtk2 := t*powtk2;
       end loop;

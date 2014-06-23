@@ -26,6 +26,7 @@ with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;    use Standard_Complex_Jaco_Matrices;
+with Standard_Homotopy;
 with Standard_Coefficient_Homotopy;     use Standard_Coefficient_Homotopy;
 
 procedure ts_evalhomt is
@@ -227,6 +228,38 @@ procedure ts_evalhomt is
     Write_Elements(A,B);
   end Encapsulated_Eval;
 
+  procedure Compared_Encapsulated_Eval
+              ( n : in natural32; p,q : in Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Evaluates (1-t)*p + t*q at some random t in [0,1]
+  --   and at a random vector.
+
+  -- ON ENTRY :
+  --   n        number of variables;
+  --   p        first polynomial in several variables;
+  --   q        second polynomial in several variables.
+
+    t : constant double_float := abs(Standard_Random_Numbers.Random);
+    ct : constant Complex_Number := Create(t);
+    x : constant Standard_Complex_Vectors.Vector(1..integer32(n))
+      := Standard_Random_Vectors.Random_Vector(1,integer32(n));
+    y : constant Standard_Complex_Vectors.Vector
+      := Standard_Homotopy.Eval(x,ct);
+    z : constant Standard_Complex_Vectors.Vector
+      := Standard_Coefficient_Homotopy.Eval(x,ct);
+    A : Matrix(p'range,x'range) := Standard_Homotopy.Diff(x,ct);
+    B : Matrix(p'range,x'range)
+      := Standard_Coefficient_Homotopy.Diff(x,ct);
+
+  begin
+    put("A random t : "); put(ct); new_line;
+    put_line("A random point : "); put_line(x);
+    put_line("-> y = "); put_line(y);
+    put_line("-> z = "); put_line(z);
+    Write_Elements(A,B);
+  end Compared_Encapsulated_Eval;
+
   procedure Test_Evaluation ( n : in natural32; p,q : in Poly ) is
 
   -- DESCRIPTION :
@@ -362,7 +395,8 @@ procedure ts_evalhomt is
   procedure Random_Encapsulation_Test is
 
   -- DESCRIPTION :
-  --   Performs the evaluation test on randomly generated systems.
+  --   Performs the evaluation test on randomly generated systems,
+  --   using the encapsulated interface.
 
     n : natural32 := 0;
 
@@ -379,6 +413,28 @@ procedure ts_evalhomt is
     end;
   end Random_Encapsulation_Test;
 
+  procedure Compared_Encapsulation_Test is
+
+  -- DESCRIPTION :
+  --   Performs the evaluation test on randomly generated systems,
+  --   comparing with the Standard_Homotopy package.
+
+    n : natural32 := 0;
+
+  begin
+    put("Give the number variables : "); get(n);
+    Symbol_Table.Init(n);
+    declare
+      p,q : Poly_Sys(1..integer32(n));
+      gamma : Complex_Number := Standard_Random_Numbers.Random1;
+    begin
+      Random_Systems(integer32(n),p,q);
+      Standard_Coefficient_Homotopy.Create(p,q,2,gamma);
+      Standard_Homotopy.Create(q,p,2,gamma);
+      Compared_Encapsulated_Eval(n,p,q);
+    end;
+  end Compared_Encapsulation_Test;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -387,18 +443,21 @@ procedure ts_evalhomt is
     ans : character;
 
   begin
+    new_line;
     put_line("Evaluating a homotopy pair of polynomials ...");
     put_line("  1. interactive test on user given polynomials;");
     put_line("  2. test on randomly generated polynomials;");
     put_line("  3. test on randomly generated polynomial systems;");
-    put_line("  4. test on encapsulation for random systems.");
-    put("Type 1, 2, 3, or 4 to choose a test : ");
-    Ask_Alternative(ans,"1234");
+    put_line("  4. test on encapsulation for random systems;");
+    put_line("  5. compare with homotopy package for random systems.");
+    put("Type 1, 2, 3, 4, or 5 to choose a test : ");
+    Ask_Alternative(ans,"12345");
     case ans is
       when '1' => Interactive_Test;
       when '2' => Random_Test;
       when '3' => Random_System_Test;
       when '4' => Random_Encapsulation_Test;
+      when '5' => Compared_Encapsulation_Test;
       when others => null;
     end case;
   end Main;
