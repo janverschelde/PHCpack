@@ -17,6 +17,7 @@ with Standard_Scaling;                   use Standard_Scaling;
 with Continuation_Parameters;
 with Continuation_Parameters_io;
 with Standard_Homotopy;
+with Standard_Coefficient_Homotopy;
 with Standard_Laurent_Homotopy;
 with Standard_Stable_Homotopies;         use Standard_Stable_Homotopies;
 with Process_io;                         use Process_io;
@@ -311,14 +312,15 @@ package body Black_Box_Poly_Continuations is
 
     procedure Cont is
       new Reporting_Continue(Max_Norm,
-                             Standard_Homotopy.Eval,
+                             Standard_Coefficient_Homotopy.Eval,
                              Standard_Homotopy.Diff,
-                             Standard_Homotopy.Diff);
+                             Standard_Coefficient_Homotopy.Diff);
 
   begin
     Scan_Input(targetfile,startfile,outfile,p,q,sols);
     Set_Homotopy_Parameters(outfile,k,a,target,proj);
     Standard_Homotopy.Create(p.all,q.all,k,a);
+    Standard_Coefficient_Homotopy.Create(q.all,p.all,k,a);
     Tune_Continuation_Parameters(outfile);
     tstart(timer);
     Cont(outfile,sols,proj,target);
@@ -344,9 +346,9 @@ package body Black_Box_Poly_Continuations is
 
     procedure Cont is
       new Reporting_Continue(Max_Norm,
-                             Standard_Homotopy.Eval,
+                             Standard_Coefficient_Homotopy.Eval,
                              Standard_Homotopy.Diff,
-                             Standard_Homotopy.Diff);
+                             Standard_Coefficient_Homotopy.Diff);
 
   begin
     Scan_Input(infile,outfile,p,q,sols,artificial);
@@ -357,6 +359,7 @@ package body Black_Box_Poly_Continuations is
     Set_Homotopy_Parameters(outfile,k,a,target,proj);
     if artificial then
       Standard_Homotopy.Create(sp.all,q.all,k,a);
+      Standard_Coefficient_Homotopy.Create(q.all,sp.all,k,a);
     else
       Standard_Homotopy.Create(sp.all,integer32(k));
       target := a;
@@ -393,17 +396,19 @@ package body Black_Box_Poly_Continuations is
 
     procedure Cont is
       new Silent_Continue(Max_Norm,
-                          Standard_Homotopy.Eval,
+                          Standard_Coefficient_Homotopy.Eval,
                           Standard_Homotopy.Diff,
-                          Standard_Homotopy.Diff);
+                          Standard_Coefficient_Homotopy.Diff);
 
   begin
     Standard_Homotopy.Create(p,q,k,gamma);
+    Standard_Coefficient_Homotopy.Create(q,p,k,gamma);
     Add(sols,sol);
     Cont(sols,proj,target);
     sol := Head_Of(sols).all;
     Deep_Clear(sols);
     Standard_Homotopy.Clear;
+    Standard_Coefficient_Homotopy.Clear;
   end Stable_Poly_Continuation;
 
   procedure Stable_Poly_Continuation
@@ -421,16 +426,18 @@ package body Black_Box_Poly_Continuations is
 
     procedure Cont is
       new Reporting_Continue
-            (Max_Norm,Standard_Homotopy.Eval,
-             Standard_Homotopy.Diff,Standard_Homotopy.Diff);
+            (Max_Norm,Standard_Coefficient_Homotopy.Eval,
+             Standard_Homotopy.Diff,Standard_Coefficient_Homotopy.Diff);
 
   begin
     Standard_Homotopy.Create(p,q,k,gamma);
+    Standard_Coefficient_Homotopy.Create(q,p,k,gamma);
     Add(sols,sol);
     Cont(file,sols,proj,target);
     sol := Head_Of(sols).all;
     Deep_Clear(sols);
     Standard_Homotopy.Clear;
+    Standard_Coefficient_Homotopy.Clear;
   end Stable_Poly_Continuation;
 
   procedure Black_Box_Stable_Poly_Continuation
@@ -594,11 +601,12 @@ package body Black_Box_Poly_Continuations is
 
     procedure Cont is
       new Silent_Continue
-            (Max_Norm,Standard_Homotopy.Eval,
-             Standard_Homotopy.Diff,Standard_Homotopy.Diff);
+            (Max_Norm,Standard_Coefficient_Homotopy.Eval,
+             Standard_Homotopy.Diff,Standard_Coefficient_Homotopy.Diff);
 
   begin
     Standard_Homotopy.Create(p,q,k,gamma);
+    Standard_Coefficient_Homotopy.Create(q,p,k,gamma);
     Continuation_Parameters.Tune(0);
     tstart(timer);
     Cont(sols,proj,target);
@@ -606,6 +614,7 @@ package body Black_Box_Poly_Continuations is
     pocotime := Elapsed_User_Time(timer);
     Silent_Black_Box_Refine(p,sols);
     Standard_Homotopy.Clear;
+    Standard_Coefficient_Homotopy.Clear;
   --exception  
   --  when others =>
   --    put_line("exception raised in first black box poly continuation");
@@ -623,6 +632,7 @@ package body Black_Box_Poly_Continuations is
 
   begin
     Standard_Homotopy.Create(p,q,k,gamma);
+    Standard_Coefficient_Homotopy.Create(q,p,k,gamma);
     Continuation_Parameters.Tune(0);
     tstart(timer);
     Silent_Multitasking_Path_Tracker(sols,nt);
@@ -630,6 +640,7 @@ package body Black_Box_Poly_Continuations is
     pocotime := Elapsed_User_Time(timer);
     Silent_Black_Box_Refine(p,sols);
     Standard_Homotopy.Clear;
+    Standard_Coefficient_Homotopy.Clear;
   end Black_Box_Polynomial_Continuation;
 
   procedure Black_Box_Polynomial_Continuation
@@ -645,12 +656,13 @@ package body Black_Box_Poly_Continuations is
 
     procedure Cont is
       new Reporting_Continue
-            (Max_Norm,Standard_Homotopy.Eval,
-             Standard_Homotopy.Diff,Standard_Homotopy.Diff);
+            (Max_Norm,Standard_Coefficient_Homotopy.Eval,
+             Standard_Homotopy.Diff,Standard_Coefficient_Homotopy.Diff);
 
   begin
     Write_Homotopy_Parameters(file,k,gamma,target,proj);
     Standard_Homotopy.Create(p,q,k,gamma);
+    Standard_Coefficient_Homotopy.Create(q,p,k,gamma);
     Tune_Continuation_Parameters(file);
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
@@ -673,6 +685,7 @@ package body Black_Box_Poly_Continuations is
    --     raise;    
     end;
     Standard_Homotopy.Clear;
+    Standard_Coefficient_Homotopy.Clear;
   --exception
   --  when others => put_line("exception in this routine..."); raise;
   end Black_Box_Polynomial_Continuation;
@@ -691,6 +704,7 @@ package body Black_Box_Poly_Continuations is
   begin
     Write_Homotopy_Parameters(file,k,gamma,target,proj);
     Standard_Homotopy.Create(p,q,k,gamma);
+    Standard_Coefficient_Homotopy.Create(q,p,k,gamma);
     Tune_Continuation_Parameters(file);
    -- new_line(file);
    -- put_line(file,"THE SOLUTIONS :");
@@ -706,6 +720,7 @@ package body Black_Box_Poly_Continuations is
     flush(file);
     Reporting_Black_Box_Refine(file,nt,p,sols);
     Standard_Homotopy.Clear;
+    Standard_Coefficient_Homotopy.Clear;
   end Black_Box_Polynomial_Continuation;
 
 -- GENERAL AND STABLE CONTINUATION :

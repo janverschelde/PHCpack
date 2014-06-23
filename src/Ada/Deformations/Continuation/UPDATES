@@ -1,3 +1,5 @@
+Mon 23 Jun 2014 : black_box_poly_continuations.adb used coefficient homotopy.
+
 Fri 13 Jun 2014 : lowered default number of corrector iterations to 3,
   instead of 4 in continuation_parameters.ads.
 
