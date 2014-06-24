@@ -1,4 +1,6 @@
 Tue 24 Jun 2014 : double double versions of coefficient homotopies.
+  In drivers_for_homotopy_creation, also the coefficient homotopies are
+  created for standard complex polynomial systems.
 
 Mon 23 Jun 2014 : added performance test to ts_evalhomt.adb.
 

@@ -34,6 +34,7 @@ with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Multprec_Complex_Solutions_io;      use Multprec_Complex_Solutions_io;
 with Standard_Homotopy;
+with Standard_Coefficient_Homotopy;
 with Standard_Laurent_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
@@ -97,11 +98,17 @@ package body Drivers_for_Poly_Continuation is
     timer : timing_widget;
 
     procedure Sil_Cont is
-      new Silent_Continue(Max_Norm,Standard_Homotopy.Eval,
-                          Standard_Homotopy.Diff,Standard_Homotopy.Diff);
+     -- new Silent_Continue(Max_Norm,Standard_Homotopy.Eval,
+     --                     Standard_Homotopy.Diff,Standard_Homotopy.Diff);
+      new Silent_Continue(Max_Norm,Standard_Coefficient_Homotopy.Eval,
+                          Standard_Homotopy.Diff,
+                          Standard_Coefficient_Homotopy.Diff);
     procedure Rep_Cont is
-      new Reporting_Continue(Max_Norm,Standard_Homotopy.Eval,
-                             Standard_Homotopy.Diff,Standard_Homotopy.Diff);
+     -- new Reporting_Continue(Max_Norm,Standard_Homotopy.Eval,
+     --                        Standard_Homotopy.Diff,Standard_Homotopy.Diff);
+      new Reporting_Continue(Max_Norm,Standard_Coefficient_Homotopy.Eval,
+                             Standard_Homotopy.Diff,
+                             Standard_Coefficient_Homotopy.Diff);
 
   begin
     tstart(timer);

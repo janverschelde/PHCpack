@@ -20,6 +20,7 @@ with QuadDobl_Polynomial_Convertors;     use QuadDobl_Polynomial_Convertors;
 with Multprec_Complex_Poly_Strings;
 with Standard_to_Multprec_Convertors;    use Standard_to_Multprec_Convertors;
 with Standard_Homotopy;
+with Standard_Coefficient_Homotopy;
 with Standard_Laurent_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
@@ -455,10 +456,12 @@ package body Drivers_for_Homotopy_Creation is
           pp := Add_Random_Hyperplanes(p,1,true);
           sysp := Add_Standard_Hyperplanes(q,1);
           Standard_Homotopy.Create(pp,sysp,k,a);
+          Standard_Homotopy.Create(sysp,pp,k,a);
           Clear(pp); Clear(sysp);
         end;
       else
         Standard_Homotopy.Create(p,q,k,a);
+        Standard_Coefficient_Homotopy.Create(q,p,k,a);
       end if;
     elsif d <= 32 then
       declare
