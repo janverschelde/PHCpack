@@ -1,3 +1,5 @@
+Tue 24 Jun 2014 : new package dobldobl_complex_poly_randomizers.
+
 Mon 23 Jun 2014 : improved access of data in generic_jacobian_matrices.adb.
 
 Thu 29 May 2014 : modified multprec_complex_laurentials_io.adb for a
