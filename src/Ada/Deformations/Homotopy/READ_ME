@@ -24,6 +24,7 @@ multprec_homotopy                  : homotopy for multiprecision numbers
 drivers_for_homotopy_creation      : menu-driven homotopy construction
 standard_stable_homotopies         : for solutions with zero components
 standard_coefficient_homotopy      : coefficient-parameter homotopy
+dobldobl_coefficient_homotopy      : double double coeff-parameter homotopy
 ts_evalhomt                        : test on coefficient-parameter homotopy
 ------------------------------------------------------------------------------
 standard_scaling                   : scaling standard systems and solutions
