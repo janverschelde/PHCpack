@@ -1,3 +1,6 @@
+Tue 24 Jun 2014 : simpler complex arithmetic for double doubles without
+  use of a generic package.
+
 Tue 18 Feb 2013 : extended double_double.h and double_double.c with
   dd_sin_taylor and dd_cos_taylor functions...
   Changed dobldobl_random_numbers.adb so the precision is respected
