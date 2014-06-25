@@ -38,6 +38,16 @@ int syscon_read_multprec_system ( int deci );
  *   the coefficients is given by the value of deci.
  *   Returns 0 if okay, otherwise returns the fail value. */
 
+int syscon_random_system ( int n, int m, int d, int c );
+/*
+ * DESCRIPTION :
+ *   Puts in the system container a system of n equations in n variables,
+ *   with at most m monomials per equation and where each monomial has
+ *   degree no larger then d.  The coefficient type c is 0, 1, or 2:
+ *   c = 0 : complex coefficients on the unit circle;
+ *   c = 1 : all coefficients are equal to one;
+ *   c = 2 : coefficients are random floats, uniform in [-1,+1]. */
+
 int syscon_write_system ( void );
 /*
  * DESCRIPTION :

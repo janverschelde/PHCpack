@@ -37,14 +37,20 @@ void test_dobldobl_container ( void );
 
 void test_quaddobl_container ( void );
 /* test operations of the quad double system container */
+
 void test_multprec_container ( void );
 /* test operations of the quad double system container */
+
+void show_random_system ( void );
+/* prompts the user for the dimensions of a random system
+ * generates it and writes it to screen */
 
 int main(void)
 {
    int choice;
 
    printf("\nMENU for testing the systems containers :\n");
+   printf("  0. show a random polynomial system;\n");
    printf("  1. test with standard double coefficients;\n");
    printf("  2. test with double double coefficients;\n");
    printf("  3. test with quad double coefficients;\n");
@@ -53,7 +59,9 @@ int main(void)
    scanf("%d",&choice);
 
    adainit();
-   if(choice == 1)
+   if(choice == 0)
+      show_random_system();
+   else if(choice == 1)
       test_standard_container();
    else if(choice == 2)
       test_dobldobl_container();
@@ -280,4 +288,18 @@ void test_multprec_container ( void )
    }
    printf("\n");
    test_symbol_table();
+}
+
+void show_random_system ( void )
+{
+   int n,m,d,c;
+
+   printf("\nGenerating a random system ...\n");
+   printf("-> enter the dimension : "); scanf("%d", &n);
+   printf("-> enter the number of monomials : "); scanf("%d", &m);
+   printf("-> enter the degree bound : "); scanf("%d", &d);
+   printf("-> enter the coefficient type : "); scanf("%d", &c);
+
+   syscon_random_system(n,m,d,c);
+   syscon_write_system();
 }
