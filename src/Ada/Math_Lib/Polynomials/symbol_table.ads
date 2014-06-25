@@ -34,6 +34,11 @@ package Symbol_Table is
   -- DESCRIPTION :
   --   A new symbol table is created with place for max symbols.
 
+  function Standard_Symbols ( n : integer32 ) return Array_of_Symbols;
+
+  -- DESCRIPTION :
+  --   Returns the array of symbols x1, x2, .., xn.
+
   procedure Init ( s : in Array_of_Symbols );
 
   -- DESCRIPTION :

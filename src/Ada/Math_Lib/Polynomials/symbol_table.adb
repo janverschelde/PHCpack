@@ -22,6 +22,27 @@ package body Symbol_Table is
     st.all.number := 0;
   end Init;
 
+  function Standard_Symbols ( n : integer32 ) return Array_of_Symbols is
+
+    res : Array_of_Symbols(1..n);
+
+  begin
+    for i in 1..n loop
+      declare
+        nb : constant string := Characters_and_Numbers.Convert(i);
+        sb : Symbol;
+      begin
+        sb := (sb'range => ' ');
+        sb(sb'first) := 'x';
+        for j in nb'range loop
+          sb(sb'first+1+j-nb'first) := nb(j);
+        end loop;
+        res(i) := sb;
+      end;
+    end loop;
+    return res;
+  end Standard_Symbols;
+
   procedure Init ( s : in Array_of_Symbols ) is
 
     max : constant integer32 := s'last - s'first + 1;

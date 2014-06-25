@@ -1,3 +1,6 @@
+Wed 25 Jun 2014 : extended symbol_table with a function to return the
+  standard variables x1, x2, ... useful for random systems.
+
 Tue 24 Jun 2014 : new package dobldobl_complex_poly_randomizers.
 
 Mon 23 Jun 2014 : improved access of data in generic_jacobian_matrices.adb.
