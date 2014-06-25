@@ -205,6 +205,45 @@ procedure Dispatch is
     return res;
   end Number_of_Tasks;
 
+  function Find_Seed return natural32 is
+
+  -- DESCRIPTION :
+  --   Reads the digits after the '-0' and returns the seed.
+  --   If there is nothing after the '-0' then 0 is returned.
+
+    res : natural32 := 0;
+
+  begin
+    for i in 1..Unix_Command_Line.Number_of_Arguments loop
+      declare
+        s : constant string := Unix_Command_Line.Argument(i);
+      begin
+        if s(2) = '0'
+         then res := Convert(s(3..s'last)); exit;
+        end if;
+      end;
+    end loop;
+    return res;
+  end Find_Seed;
+
+  procedure Find_and_Set_Seed is
+
+  -- DESCRIPTION :
+  --   In case the '-0' option is on, the value of the seed
+  --   will be extracted from the command line, and if nonzero
+  --   it will be used to set the seed.
+  --   If there is no value at the command line after '-0',
+  --   then a fixed constant value is used as seed.
+
+    seed_found : constant natural32 := Find_Seed;
+
+  begin
+    if seed_found = 0
+     then Standard_Random_Numbers.Set_Seed(fixed_seed);
+     else Standard_Random_Numbers.Set_Seed(seed_found);
+    end if;
+  end Find_and_Set_Seed;
+
 -- DISPATCHING ACCORDING TO OPTIONS :
 
   procedure Black_Box_Dispatcher
@@ -540,32 +579,32 @@ procedure Dispatch is
       put_line("The first two file names are the same.");
       put_line("Will ignore the second file name...");
       if option1 = '0' then
-        Standard_Random_Numbers.Set_Seed(fixed_seed);
+        Find_and_Set_Seed;
         General_Dispatcher(option2,option3,option4,file1,"",file3);
       elsif option2 = '0' then
-        Standard_Random_Numbers.Set_Seed(fixed_seed);
+        Find_and_Set_Seed;
         General_Dispatcher(option1,option3,option4,file1,"",file3);
       elsif option3 = '0' then
-        Standard_Random_Numbers.Set_Seed(fixed_seed);
+        Find_and_Set_Seed;
         General_Dispatcher(option1,option2,option4,file1,"",file3);
       elsif option4 = '0' then
-        Standard_Random_Numbers.Set_Seed(fixed_seed);
+        Find_and_Set_Seed;
         General_Dispatcher(option1,option2,option3,file1,"",file3);
       else
         General_Dispatcher(option1,option2,option3,file1,"",file3);
       end if;
     else
       if option1 = '0' then
-        Standard_Random_Numbers.Set_Seed(fixed_seed);
+        Find_and_Set_Seed;
         General_Dispatcher(option2,option3,option4,file1,file2,file3);
       elsif option2 = '0' then
-        Standard_Random_Numbers.Set_Seed(fixed_seed);
+        Find_and_Set_Seed;
         General_Dispatcher(option1,option3,option4,file1,file2,file3);
       elsif option3 = '0' then
-        Standard_Random_Numbers.Set_Seed(fixed_seed);
+        Find_and_Set_Seed;
         General_Dispatcher(option1,option2,option4,file1,file2,file3);
       elsif option4 = '0' then
-        Standard_Random_Numbers.Set_Seed(fixed_seed);
+        Find_and_Set_Seed;
         General_Dispatcher(option1,option2,option3,file1,file2,file3);
       else
         General_Dispatcher(option1,option2,option3,file1,file2,file3);
