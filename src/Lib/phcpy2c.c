@@ -1018,6 +1018,17 @@ static PyObject *py2c_syscon_read_multprec_system
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_syscon_random_system ( PyObject *self, PyObject *args )
+{
+   int fail,n,m,d,c;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiii",&n,&m,&d,&c)) return NULL;   
+   fail = syscon_random_system(n,m,d,c);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_syscon_write_system ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -3435,6 +3446,8 @@ static PyMethodDef phcpy2c_methods[] =
     METH_VARARGS, "reads system with quad doubles in container"},
    {"py2c_syscon_read_multprec_system", py2c_syscon_read_multprec_system,
     METH_VARARGS, "reads system with multiprecision numbers in container"},
+   {"py2c_syscon_random_system", py2c_syscon_random_system,
+    METH_VARARGS, "stores a random system in the container"},
    {"py2c_syscon_write_system", py2c_syscon_write_system,
     METH_VARARGS, "writes Laurent system in container on screen"},
    {"py2c_syscon_write_Laurent_system", py2c_syscon_write_Laurent_system,

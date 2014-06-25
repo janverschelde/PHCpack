@@ -1,5 +1,5 @@
 Wed 25 Jun 2014 : added function to syscon to generate a random system,
-  tested by lib_syscon.c.
+  tested by lib_syscon.c; added corresponding routine to phcpy2c.
 
 Thu 5 Jun 2014 : changes in schubert.c and lib_lrhom.c for the passing of
   the coordinates of the flags, passed in phcpy2c.c as one long string. 

@@ -157,6 +157,7 @@ static PyObject *py2c_syscon_read_quaddobl_system
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_read_multprec_system
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_random_system ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_write_system ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_write_Laurent_system
  ( PyObject *self, PyObject *args );
