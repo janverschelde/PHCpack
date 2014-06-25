@@ -5,6 +5,12 @@ with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Complex_Polynomials;
+
+   with Standard_Integer_Numbers_io;
+    use Standard_Integer_Numbers_io;
+   with Standard_Complex_Polynomials_io;
+    use Standard_Complex_Polynomials_io;
+
 with Standard_Random_Polynomials;
 with Standard_Complex_Poly_Strings;
 with Standard_Complex_Laurentials;
@@ -552,7 +558,6 @@ function use_syscon ( job : integer32;
     sv : constant Standard_Integer_Vectors.Vector
        := String_to_Integer_Vector(s);
     slast : constant integer32 := integer32(s'last);
-
   begin
    -- put("Polynomial "); put(equ,1); put(" : "); put_line(s);
    -- put("#characters : "); put(s'last,1); new_line;
@@ -647,6 +652,8 @@ function use_syscon ( job : integer32;
     end loop;
     Standard_PolySys_Container.Clear; 
     Standard_PolySys_Container.Initialize(p); 
+   -- must initialize the symbol table with actual symbols for printing
+    Symbol_Table.Init(Symbol_Table.Standard_Symbols(integer32(n)));
     return 0;
   exception
     when others => return 71;

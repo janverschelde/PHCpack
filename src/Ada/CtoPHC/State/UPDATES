@@ -1,5 +1,6 @@
 Wed 25 Jun 2014 : added operations to use_syscon and use_c2phc
-  to generate a random polynomial system.
+  to generate a random polynomial system.  Note that the random_system
+  function must then properly fill up the symbol table.
 
 Thu 5 Jun 2014 : adjusted use_c2lrhom.adb to pass coordinates of flags.
 
