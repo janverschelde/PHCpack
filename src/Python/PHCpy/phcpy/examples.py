@@ -856,7 +856,7 @@ def test():
     Solves the systems and tests on their number of solutions.
     """
     from phcpy2c import py2c_set_seed
-    py2c_set_seed(234798272)
+    py2c_set_seed(834798272)
     import solver
     print '\nsolving a random binomial system...'
     pols = binomials()

@@ -1,3 +1,6 @@
+Wed 25 Jun 2014 : modified seed constant in examples.py
+  and added random_system function solver.py.
+
 Thu 5 Jun 2014 : schubert.py now also shows the coordinates of the flags
   and adjusted __init__.py for the version number 0.1.8.
   Updated setup.py and README.txt for version 0.1.8.

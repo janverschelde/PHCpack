@@ -48,6 +48,21 @@ def real_random_trinomials(sys):
         result.append(rpol)
     return result
 
+def random_system(dim, nbrmon, deg, cff):
+    """
+    Generates a random polynomial system based on the following:
+    dim : number of equations and variables,
+    nbrmon : maximum number of monomials per equation,
+    deg : upper bound on the degree of the monomials,
+    cff : type of coefficients, must be 0, 1, or 2,
+    if 0, then random complex numbers on the unit circle,
+    if 1, then coefficients are one (or integer multiples of one),
+    if 2, then coefficients are floats in [-1,+1].
+    """
+    from phcpy2c import py2c_syscon_random_system
+    fail = py2c_syscon_random_system(dim, nbrmon, deg, cff)
+    return load_standard_system()
+
 def store_standard_system(polsys):
     """
     Stores the polynomials represented by the list of
