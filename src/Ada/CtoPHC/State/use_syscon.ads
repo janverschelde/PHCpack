@@ -132,6 +132,16 @@ function use_syscon ( job : integer32;
 --                    b : characters in the string representation of
 --                        the k-th polynomial in the container,
 --                  this is the reverse of operation 228,    
+--          =  71 : stores a random polynomial system in the container
+--                  for systems with standard complex coefficients,
+--                  the parameters on input should be as follows:
+--                    a[0] : n, the dimension of the system;
+--                    b[0] : m, the number of monomials per equations;
+--                    b[1] : d, the degree bound on the monomials;
+--                    b[2] : c, type of coefficient: 0, 1, or 2:
+--                    c = 0 : default complex coefficient on unit circle,
+--                    c = 1 : all coefficients are equal to one,
+--                    c = 2 : real coefficients in [-1,+1].
 --          =  74 : puts a Laurent polynomial given as a string in the system 
 --                  container, with the input parameters as follows:
 --                    a[0] : number of characters in the string,

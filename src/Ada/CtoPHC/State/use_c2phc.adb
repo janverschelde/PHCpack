@@ -231,6 +231,7 @@ function use_c2phc ( job : integer32;
     put_line("103. track a path starting at a solution for a mixed cell;");
     put_line("104. copy a target solution to the solutions container;");
     put_line("105. permute a given target system.");
+    put_line("109. random polynomial system in the systems container.");
     put_line("MENU for linear-product root counts and start systems :");
     put_line("110. create a supporting set structure;");
     put_line("111. write the created set structure;");
@@ -1702,6 +1703,7 @@ function use_c2phc ( job : integer32;
       when 106 => return use_syscon(68,a,b,c); -- load dobldobl poly as string
       when 107 => return use_syscon(69,a,b,c); -- load quaddobl poly as string
       when 108 => return use_syscon(70,a,b,c); -- load multprec poly as string
+      when 109 => return use_syscon(71,a,b,c); -- random system in container
       when 110..118 => return use_roco(job-110,a,b,c);
       when 119 => return use_syscon(20,a,b,c); -- degree of standard polynomial
      -- operations on Laurent systems :

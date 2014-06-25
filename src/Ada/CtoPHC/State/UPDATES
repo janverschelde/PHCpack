@@ -1,3 +1,6 @@
+Wed 25 Jun 2014 : added operations to use_syscon and use_c2phc
+  to generate a random polynomial system.
+
 Thu 5 Jun 2014 : adjusted use_c2lrhom.adb to pass coordinates of flags.
 
 Wed 4 Jun 2014 : updates in use_c2lrhom.adb for Python interface.

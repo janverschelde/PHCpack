@@ -5,6 +5,7 @@ with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Complex_Polynomials;
+with Standard_Random_Polynomials;
 with Standard_Complex_Poly_Strings;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Strings;
@@ -628,6 +629,29 @@ function use_syscon ( job : integer32;
     when others => return 70;
   end Job70;
 
+  function Job71 return integer32 is -- puts random system in the container
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    n : constant natural32 := natural32(v_a(v_a'first));
+    p : Standard_Complex_Poly_Systems.Poly_Sys(1..integer32(n));
+    v_b : constant C_Integer_Array
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(3));
+    m : constant natural32 := natural32(v_b(v_b'first));
+    use Interfaces.C;
+    d : constant natural32 := natural32(v_b(v_b'first+1));
+    c : constant natural32 := natural32(v_b(v_b'first+2));
+
+  begin
+    for i in p'range loop
+      p(i) := Standard_Random_Polynomials.Random_Sparse_Poly(n,d,m,c);
+    end loop;
+    Standard_PolySys_Container.Clear; 
+    Standard_PolySys_Container.Initialize(p); 
+    return 0;
+  exception
+    when others => return 71;
+  end Job71;
+
   function Job74 return integer32 is -- Laurential as string to container
 
     use Interfaces.C;
@@ -1173,6 +1197,7 @@ function use_syscon ( job : integer32;
       when 68 => return Job68; -- load dobldobl polynomial from container
       when 69 => return Job69; -- load quaddobl polynomial from container
       when 70 => return Job70; -- load multprec polynomial from container
+      when 71 => return Job71; -- store random system in container
       when 74 => return Job74; -- store standard Laurential in container
       when 76 => return Job76; -- store standard polynomial in container
      -- reading systems into the containers :
