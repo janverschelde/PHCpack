@@ -3,6 +3,7 @@ with Standard_Integer_Numbers;         use Standard_Integer_Numbers;
 with Double_Double_Numbers;            use Double_Double_Numbers;
 with DoblDobl_Complex_Vectors;
 with Standard_Integer64_Matrices;
+with Multprec_Integer_Matrices;
 with DoblDobl_Complex_Solutions;       use DoblDobl_Complex_Solutions;
 
 package DoblDobl_Binomial_Solvers is
@@ -28,8 +29,15 @@ package DoblDobl_Binomial_Solvers is
              ( U : Standard_Integer64_Matrices.Matrix;
                c : DoblDobl_Complex_Vectors.Vector ) return Solution_List;
   function Solve_Upper_Square
+             ( U : Multprec_Integer_Matrices.Matrix;
+               c : DoblDobl_Complex_Vectors.Vector ) return Solution_List;
+  function Solve_Upper_Square
              ( file : file_type;
                U : Standard_Integer64_Matrices.Matrix;
+               c : DoblDobl_Complex_Vectors.Vector ) return Solution_List;
+  function Solve_Upper_Square
+             ( file : file_type;
+               U : Multprec_Integer_Matrices.Matrix;
                c : DoblDobl_Complex_Vectors.Vector ) return Solution_List;
 
   -- DESCRIPTION :
@@ -113,9 +121,17 @@ package DoblDobl_Binomial_Solvers is
                     c : in DoblDobl_Complex_Vectors.Vector; r : out integer32;
                     M,U : out Standard_Integer64_Matrices.Matrix;
                     Asols : out Solution_List );
+  procedure Solve ( A : in Multprec_Integer_Matrices.Matrix;
+                    c : in DoblDobl_Complex_Vectors.Vector; r : out integer32;
+                    M,U : out Multprec_Integer_Matrices.Matrix;
+                    Asols : out Solution_List );
   procedure Solve ( A : in Standard_Integer64_Matrices.Matrix;
                     c : in DoblDobl_Complex_Vectors.Vector; r : out integer32;
                     M,U : out Standard_Integer64_Matrices.Matrix;
+                    Usols,Asols : out Solution_List );
+  procedure Solve ( A : in Multprec_Integer_Matrices.Matrix;
+                    c : in DoblDobl_Complex_Vectors.Vector; r : out integer32;
+                    M,U : out Multprec_Integer_Matrices.Matrix;
                     Usols,Asols : out Solution_List );
   procedure Solve ( file : in file_type;
                     A : in Standard_Integer64_Matrices.Matrix;
@@ -123,9 +139,19 @@ package DoblDobl_Binomial_Solvers is
                     M,U : out Standard_Integer64_Matrices.Matrix;
                     Asols : out Solution_List );
   procedure Solve ( file : in file_type;
+                    A : in Multprec_Integer_Matrices.Matrix;
+                    c : in DoblDobl_Complex_Vectors.Vector; r : out integer32;
+                    M,U : out Multprec_Integer_Matrices.Matrix;
+                    Asols : out Solution_List );
+  procedure Solve ( file : in file_type;
                     A : in Standard_Integer64_Matrices.Matrix;
                     c : in DoblDobl_Complex_Vectors.Vector; r : out integer32;
                     M,U : out Standard_Integer64_Matrices.Matrix;
+                    Usols,Asols : out Solution_List );
+  procedure Solve ( file : in file_type;
+                    A : in Multprec_Integer_Matrices.Matrix;
+                    c : in DoblDobl_Complex_Vectors.Vector; r : out integer32;
+                    M,U : out Multprec_Integer_Matrices.Matrix;
                     Usols,Asols : out Solution_List );
 
   -- DESCRIPTION :

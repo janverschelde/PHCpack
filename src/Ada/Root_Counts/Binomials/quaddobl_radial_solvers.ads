@@ -1,6 +1,7 @@
 with Quad_Double_Vectors;
 with QuadDobl_Complex_Vectors;
 with Standard_Integer64_Matrices;
+with Multprec_Integer_Matrices;
 with QuadDobl_Complex_Solutions;       use QuadDobl_Complex_Solutions;
 
 package QuadDobl_Radial_Solvers is
@@ -40,6 +41,10 @@ package QuadDobl_Radial_Solvers is
               ( U : Standard_Integer64_Matrices.Matrix;
                 logr : Quad_Double_Vectors.Vector )
               return Quad_Double_Vectors.Vector;
+  function Radial_Upper_Solve
+              ( U : Multprec_Integer_Matrices.Matrix;
+                logr : Quad_Double_Vectors.Vector )
+              return Quad_Double_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Solves U*log(x) = logr, for U an upper triangular exponent matrix.
@@ -47,10 +52,16 @@ package QuadDobl_Radial_Solvers is
   function Multiply ( A : in Standard_Integer64_Matrices.Matrix;
                       x : in Quad_Double_Vectors.Vector )
                     return Quad_Double_Vectors.Vector;
+  function Multiply ( A : in Multprec_Integer_Matrices.Matrix;
+                      x : in Quad_Double_Vectors.Vector )
+                    return Quad_Double_Vectors.Vector;
 
   -- DESCRIPTION : returns A*x, taking the transpose of A.
 
   function Eval ( A : in Standard_Integer64_Matrices.Matrix;
+                  x : in Quad_Double_Vectors.Vector )
+                return Quad_Double_Vectors.Vector;
+  function Eval ( A : in Multprec_Integer_Matrices.Matrix;
                   x : in Quad_Double_Vectors.Vector )
                 return Quad_Double_Vectors.Vector;
 

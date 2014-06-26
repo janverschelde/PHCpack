@@ -1,5 +1,6 @@
-Thu 26 Jun 2014 : updates in ts_simsys.adb to allow for testing on
-  double double versions of the code.
+Thu 26 Jun 2014 : Quad double solver for binomial systems, tested by ts_binsys.
+  Updated double_simplex_systems, tested by ts_simsys.
+  Extended dobldobl_{radial,binomial,simplex}_solvers.
 
 Tue 19 Nov 2013 : because of package name changes in Implift and Dynlift
   modified ts_binpser.adb and standard_binomial_varieties.adb.

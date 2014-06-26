@@ -1,11 +1,11 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Standard_Integer64_Matrices;
-with DoblDobl_Complex_Matrices;
-with DoblDobl_Complex_Poly_Systems;     use DoblDobl_Complex_Poly_Systems;
-with DoblDobl_Complex_Laur_Systems;     use DoblDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Matrices;
+with QuadDobl_Complex_Poly_Systems;     use QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;     use QuadDobl_Complex_Laur_Systems;
 
-package DoblDobl_Simplex_Systems is
+package QuadDobl_Simplex_Systems is
 
 -- DESCRIPTION :
 --   We call a polynomial system a simplex system if by row reduction on 
@@ -19,14 +19,14 @@ package DoblDobl_Simplex_Systems is
 
   procedure Parse ( p : in Poly_Sys; nv : in integer32;
                     A : out Standard_Integer64_Matrices.Matrix;
-                    C : out DoblDobl_Complex_Matrices.Matrix;
-                    b : out DoblDobl_Complex_Vectors.Vector;
+                    C : out QuadDobl_Complex_Matrices.Matrix;
+                    b : out QuadDobl_Complex_Vectors.Vector;
                     fail : out boolean );
 
   procedure Parse ( p : in Laur_Sys; nv : in integer32;
                     A : out Standard_Integer64_Matrices.Matrix;
-                    C : out DoblDobl_Complex_Matrices.Matrix;
-                    b : out DoblDobl_Complex_Vectors.Vector;
+                    C : out QuadDobl_Complex_Matrices.Matrix;
+                    b : out QuadDobl_Complex_Vectors.Vector;
                     fail : out boolean );
 
   -- DESCRIPTION :
@@ -48,12 +48,12 @@ package DoblDobl_Simplex_Systems is
   --            for it to be a simplex system.
 
   function Create ( A : Standard_Integer64_Matrices.Matrix;
-                    C : DoblDobl_Complex_Matrices.Matrix;
-                    b : DoblDobl_Complex_Vectors.Vector ) return Poly_Sys;
+                    C : QuadDobl_Complex_Matrices.Matrix;
+                    b : QuadDobl_Complex_Vectors.Vector ) return Poly_Sys;
 
   function Create ( A : Standard_Integer64_Matrices.Matrix;
-                    C : DoblDobl_Complex_Matrices.Matrix;
-                    b : DoblDobl_Complex_Vectors.Vector ) return Laur_Sys;
+                    C : QuadDobl_Complex_Matrices.Matrix;
+                    b : QuadDobl_Complex_Vectors.Vector ) return Laur_Sys;
 
   -- DESCRIPTION :
   --   Returns the system p(x) = C*x^A - b = 0, eventually after
@@ -62,11 +62,11 @@ package DoblDobl_Simplex_Systems is
 -- EVALUATION of a SIMPLEX SYSTEM :
 
   function Eval ( A : Standard_Integer64_Matrices.Matrix;
-                  C : DoblDobl_Complex_Matrices.Matrix;
-                  b,x : DoblDobl_Complex_Vectors.Vector )
-                return DoblDobl_Complex_Vectors.Vector;
+                  C : QuadDobl_Complex_Matrices.Matrix;
+                  b,x : QuadDobl_Complex_Vectors.Vector )
+                return QuadDobl_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Returns the value of C*x^A - b.
 
-end DoblDobl_Simplex_Systems;
+end QuadDobl_Simplex_Systems;

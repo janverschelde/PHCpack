@@ -1,6 +1,7 @@
 with Standard_Integer_Numbers;         use Standard_Integer_Numbers;
 with QuadDobl_Complex_Vectors;         use QuadDobl_Complex_Vectors;
-with Standard_Integer64_Matrices;      use Standard_Integer64_Matrices;
+with Standard_Integer64_Matrices;
+with Multprec_Integer_Matrices;
 with QuadDobl_Complex_Solutions;       use QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Poly_Systems;    use QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Laur_Systems;    use QuadDobl_Complex_Laur_Systems;
@@ -17,10 +18,12 @@ package QuadDobl_Binomial_Systems is
 -- FORMAT of a BINOMIAL SYSTEM :  p(x) = 0 => x^A = c
 
   procedure Parse ( p : in Poly_Sys; nq : in integer32;
-                    A : out Matrix; c : out Vector; fail : out boolean );
+                    A : out Standard_Integer64_Matrices.Matrix;
+                    c : out Vector; fail : out boolean );
 
   procedure Parse ( p : in Laur_Sys; nq : in integer32;
-                    A : out Matrix; c : out Vector; fail : out boolean );
+                    A : out Standard_Integer64_Matrices.Matrix;
+                    c : out Vector; fail : out boolean );
 
   -- DESCRIPTION :
   --   Parses the equations of p into the format x^A = c.
@@ -39,8 +42,10 @@ package QuadDobl_Binomial_Systems is
   --   fail     true if not exactly two monomials in every equation,
   --            false otherwise.
 
-  function Create ( A : Matrix; c : Vector ) return Poly_Sys;
-  function Create ( A : Matrix; c : Vector ) return Laur_Sys;
+  function Create ( A : Standard_Integer64_Matrices.Matrix;
+                    c : Vector ) return Poly_Sys;
+  function Create ( A : Standard_Integer64_Matrices.Matrix;
+                    c : Vector ) return Laur_Sys;
 
   -- DESCRIPTION :
   --   Returns the system p(x) = x^A - c = 0,
@@ -50,17 +55,25 @@ package QuadDobl_Binomial_Systems is
 
 -- EVALUATION of a BINOMIAL SYSTEM :
 
-  function Eval ( A : Matrix; x : Vector ) return Vector;
+  function Eval ( A : Standard_Integer64_Matrices.Matrix;
+                  x : Vector ) return Vector;
+  function Eval ( A : Multprec_Integer_Matrices.Matrix;
+                  x : Vector ) return Vector;
 
   -- DESCRIPTION : returns x^A.
 
-  function Eval ( A : Matrix; c,x : Vector ) return Vector;
+  function Eval ( A : Standard_Integer64_Matrices.Matrix;
+                  c,x : Vector ) return Vector;
 
   -- DESCRIPTION : returns x^A - c.
 
-  function Eval ( A : Matrix; s : Solution_List ) return Solution_List;
+  function Eval ( A : Standard_Integer64_Matrices.Matrix;
+                  s : Solution_List ) return Solution_List;
+  function Eval ( A : Multprec_Integer_Matrices.Matrix;
+                  s : Solution_List ) return Solution_List;
 
   -- DESCRIPTION :
   --   The solutions on return are vectors Eval(A,x), for all x in s.
+  --   For a multiprecision A, all components of x must have modulus 1.
 
 end QuadDobl_Binomial_Systems;

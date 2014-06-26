@@ -1,13 +1,13 @@
 with Standard_Natural_Numbers;         use Standard_Natural_Numbers;
-with DoblDobl_Complex_Numbers;         use DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;         use QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Integer64_Vectors;
-with DoblDobl_Complex_Laurentials;
-with DoblDobl_Complex_Polynomials;
-with DoblDobl_Binomial_Systems;        use DoblDobl_Binomial_Systems;
+with QuadDobl_Complex_Laurentials;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Binomial_Systems;        use QuadDobl_Binomial_Systems;
 
-package body DoblDobl_Simplex_Systems is
+package body QuadDobl_Simplex_Systems is
 
 -- UTILITIES :
 
@@ -55,14 +55,14 @@ package body DoblDobl_Simplex_Systems is
     return 0;
   end Is_In;
 
-  function Least ( p : DoblDobl_Complex_Polynomials.Poly )
-                 return DoblDobl_Complex_Polynomials.Term is
+  function Least ( p : QuadDobl_Complex_Polynomials.Poly )
+                 return QuadDobl_Complex_Polynomials.Term is
 
   -- DESCRIPTION :
   --   Returns the last term of the polynomial p,
   --   which is least in the graded lexicographic ordering.
 
-    use DoblDobl_Complex_Polynomials;
+    use QuadDobl_Complex_Polynomials;
 
     res : Term;
 
@@ -78,14 +78,14 @@ package body DoblDobl_Simplex_Systems is
     return res;
   end Least;
 
-  function Least ( p : DoblDobl_Complex_Laurentials.Poly )
-                 return DoblDobl_Complex_Laurentials.Term is
+  function Least ( p : QuadDobl_Complex_Laurentials.Poly )
+                 return QuadDobl_Complex_Laurentials.Term is
 
   -- DESCRIPTION :
   --   Returns the last term of the polynomial p,
   --   which is least in the graded lexicographic ordering.
 
-    use DoblDobl_Complex_Laurentials;
+    use QuadDobl_Complex_Laurentials;
 
     res : Term;
 
@@ -101,12 +101,12 @@ package body DoblDobl_Simplex_Systems is
     return res;
   end Least;
 
-  procedure Parse ( p : in DoblDobl_Complex_Polynomials.Poly;
+  procedure Parse ( p : in QuadDobl_Complex_Polynomials.Poly;
                     row : in integer32;
                     shift : in Standard_Natural_Vectors.Vector;
 		    cnt : in out integer32;
                     A : in out Standard_Integer64_Matrices.Matrix;
-                    C : in out DoblDobl_Complex_Matrices.Matrix;
+                    C : in out QuadDobl_Complex_Matrices.Matrix;
                     fail : out boolean ) is
 
   -- DESCRIPTION :
@@ -128,7 +128,7 @@ package body DoblDobl_Simplex_Systems is
   --   C        updated coefficient matrix;
   --   fail     true if too many monomials.
 
-    use DoblDobl_Complex_Polynomials;
+    use QuadDobl_Complex_Polynomials;
 
     procedure Scan_Term ( t : in Term; continue : out boolean ) is
 
@@ -166,12 +166,12 @@ package body DoblDobl_Simplex_Systems is
     Scan_Terms(p);
   end Parse;
 
-  procedure Parse ( p : in DoblDobl_Complex_Laurentials.Poly;
+  procedure Parse ( p : in QuadDobl_Complex_Laurentials.Poly;
                     row : in integer32;
                     shift : in Standard_Integer_Vectors.Vector;
 		    cnt : in out integer32;
                     A : in out Standard_Integer64_Matrices.Matrix;
-                    C : in out DoblDobl_Complex_Matrices.Matrix;
+                    C : in out QuadDobl_Complex_Matrices.Matrix;
                     fail : out boolean ) is
 
   -- DESCRIPTION :
@@ -193,7 +193,7 @@ package body DoblDobl_Simplex_Systems is
   --   C        updated coefficient matrix;
   --   fail     true if too many monomials.
 
-    use DoblDobl_Complex_Laurentials;
+    use QuadDobl_Complex_Laurentials;
 
     procedure Scan_Term ( t : in Term; continue : out boolean ) is
 
@@ -235,11 +235,11 @@ package body DoblDobl_Simplex_Systems is
 
   procedure Parse ( p : in Poly_Sys; nv : in integer32;
                     A : out Standard_Integer64_Matrices.Matrix;
-                    C : out DoblDobl_Complex_Matrices.Matrix;
-                    b : out DoblDobl_Complex_Vectors.Vector;
+                    C : out QuadDobl_Complex_Matrices.Matrix;
+                    b : out QuadDobl_Complex_Vectors.Vector;
                     fail : out boolean ) is
 
-    use DoblDobl_Complex_Polynomials;
+    use QuadDobl_Complex_Polynomials;
 
     cnt : integer32 := 0;
     tb : Term;
@@ -268,11 +268,11 @@ package body DoblDobl_Simplex_Systems is
 
   procedure Parse ( p : in Laur_Sys; nv : in integer32;
                     A : out Standard_Integer64_Matrices.Matrix;
-                    C : out DoblDobl_Complex_Matrices.Matrix;
-                    b : out DoblDobl_Complex_Vectors.Vector;
+                    C : out QuadDobl_Complex_Matrices.Matrix;
+                    b : out QuadDobl_Complex_Vectors.Vector;
                     fail : out boolean ) is
 
-    use DoblDobl_Complex_Laurentials;
+    use QuadDobl_Complex_Laurentials;
 
     cnt : integer32 := 0;
     tb : Term;
@@ -300,10 +300,10 @@ package body DoblDobl_Simplex_Systems is
   end Parse;
 
   function Create ( A : Standard_Integer64_Matrices.Matrix;
-                    C : DoblDobl_Complex_Matrices.Matrix;
-                    b : DoblDobl_Complex_Vectors.Vector ) return Poly_Sys is
+                    C : QuadDobl_Complex_Matrices.Matrix;
+                    b : QuadDobl_Complex_Vectors.Vector ) return Poly_Sys is
 
-    use DoblDobl_Complex_Polynomials;
+    use QuadDobl_Complex_Polynomials;
 
     res : Poly_Sys(C'range(1));
     ta,tb : Term;
@@ -343,10 +343,10 @@ package body DoblDobl_Simplex_Systems is
   end Create;
 
   function Create ( A : Standard_Integer64_Matrices.Matrix;
-                    C : DoblDobl_Complex_Matrices.Matrix;
-                    b : DoblDobl_Complex_Vectors.Vector ) return Laur_Sys is
+                    C : QuadDobl_Complex_Matrices.Matrix;
+                    b : QuadDobl_Complex_Vectors.Vector ) return Laur_Sys is
 
-    use DoblDobl_Complex_Laurentials;
+    use QuadDobl_Complex_Laurentials;
 
     res : Laur_Sys(C'range(1));
     ta,tb : Term;
@@ -372,19 +372,19 @@ package body DoblDobl_Simplex_Systems is
 -- EVALUATION of a SIMPLEX SYSTEM :
 
   function Eval ( A : Standard_Integer64_Matrices.Matrix;
-                  C : DoblDobl_Complex_Matrices.Matrix;
-                  b,x : DoblDobl_Complex_Vectors.Vector )
-                return DoblDobl_Complex_Vectors.Vector is
+                  C : QuadDobl_Complex_Matrices.Matrix;
+                  b,x : QuadDobl_Complex_Vectors.Vector )
+                return QuadDobl_Complex_Vectors.Vector is
 
-    y : constant DoblDobl_Complex_Vectors.Vector(A'range(2)) := Eval(A,x);
-    r : DoblDobl_Complex_Vectors.Vector(C'range(1));
+    y : constant QuadDobl_Complex_Vectors.Vector(A'range(2)) := Eval(A,x);
+    r : QuadDobl_Complex_Vectors.Vector(C'range(1));
 
-    use DoblDobl_Complex_Vectors;
-    use DoblDobl_Complex_Matrices;
+    use QuadDobl_Complex_Vectors;
+    use QuadDobl_Complex_Matrices;
 
   begin
     r := C*y;
     return r - b;
   end Eval;
 
-end DoblDobl_Simplex_Systems;
+end QuadDobl_Simplex_Systems;

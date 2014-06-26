@@ -1,6 +1,7 @@
 with Standard_Natural_Numbers;         use Standard_Natural_Numbers;
 with Double_Double_Numbers;            use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;         use DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Exponentiation;  use DoblDobl_Complex_Exponentiation;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with DoblDobl_Complex_Polynomials;
@@ -11,7 +12,8 @@ package body DoblDobl_Binomial_Systems is
 -- FORMAT of a BINOMIAL SYSTEM :  p(x) = 0 => x^A = c
 
   procedure Parse ( p : in Poly_Sys; nq : in integer32;
-                    A : out Matrix; c : out Vector; fail : out boolean ) is
+                    A : out Standard_Integer64_Matrices.Matrix;
+                    c : out Vector; fail : out boolean ) is
 
     use DoblDobl_Complex_Polynomials;
 
@@ -50,7 +52,8 @@ package body DoblDobl_Binomial_Systems is
   end Parse;
 
   procedure Parse ( p : in Laur_Sys; nq : in integer32;
-                    A : out Matrix; c : out Vector; fail : out boolean ) is
+                    A : out Standard_Integer64_Matrices.Matrix;
+                    c : out Vector; fail : out boolean ) is
 
     use DoblDobl_Complex_Laurentials;
 
@@ -88,7 +91,8 @@ package body DoblDobl_Binomial_Systems is
     end loop;
   end Parse;
 
-  function Create ( A : Matrix; c : Vector ) return Poly_Sys is
+  function Create ( A : Standard_Integer64_Matrices.Matrix;
+                    c : Vector ) return Poly_Sys is
 
     use DoblDobl_Complex_Polynomials;
 
@@ -115,7 +119,8 @@ package body DoblDobl_Binomial_Systems is
     return res;
   end Create;
 
-  function Create ( A : Matrix; c : Vector ) return Laur_Sys is
+  function Create ( A : Standard_Integer64_Matrices.Matrix;
+                    c : Vector ) return Laur_Sys is
 
     use DoblDobl_Complex_Laurentials;
 
@@ -142,7 +147,8 @@ package body DoblDobl_Binomial_Systems is
 
 -- EVALUATION of a BINOMIAL SYSTEM :
 
-  function Eval ( A : Matrix; x : Vector ) return Vector is
+  function Eval ( A : Standard_Integer64_Matrices.Matrix;
+                  x : Vector ) return Vector is
 
     res : Vector(A'range(2));
     one : constant double_double := Double_Double_Numbers.create(1.0);
@@ -159,7 +165,28 @@ package body DoblDobl_Binomial_Systems is
     return res;
   end Eval;
 
-  function Eval ( A : Matrix; c,x : Vector ) return Vector is
+  function Eval ( A : Multprec_Integer_Matrices.Matrix; x : Vector )
+                return Vector is
+
+    res : Vector(A'range(2));
+    pwr : Complex_Number;
+    one : constant double_double := create(1.0);
+
+  begin
+    for i in res'range loop
+      res(i) := create(one);
+    end loop;
+    for j in A'range(2) loop
+      for i in A'range(1) loop
+        pwr := Polar_Exponentiation_ModTwoPi_of_Unit(x(i),A(i,j));
+        res(j) := res(j)*pwr; -- res(j)*(x(i)**A(i,j));
+      end loop;
+    end loop;
+    return res;
+  end Eval;
+
+  function Eval ( A : Standard_Integer64_Matrices.Matrix;
+                  c,x : Vector ) return Vector is
 
     res : constant Vector(A'range(2)) := Eval(A,x) - c;
 
@@ -167,7 +194,34 @@ package body DoblDobl_Binomial_Systems is
     return res;
   end Eval;
 
-  function Eval ( A : Matrix; s : Solution_List ) return Solution_List is
+  function Eval ( A : Standard_Integer64_Matrices.Matrix;
+                  s : Solution_List ) return Solution_List is
+
+    res,res_last : Solution_List;
+    tmp : Solution_List := s;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      declare
+        res_ls : Solution(ls.n);
+      begin
+        res_ls.t := ls.t;
+        res_ls.m := ls.m;
+        res_ls.v := Eval(A,ls.v);
+        res_ls.err := ls.err;
+        res_ls.rco := ls.rco;
+        res_ls.res := ls.res;
+        Append(res,res_last,res_ls);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Eval;
+
+  function Eval ( A : Multprec_Integer_Matrices.Matrix;
+                  s : Solution_List ) return Solution_List is
 
     res,res_last : Solution_List;
     tmp : Solution_List := s;

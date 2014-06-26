@@ -1,6 +1,7 @@
 with Double_Double_Vectors;
 with DoblDobl_Complex_Vectors;
 with Standard_Integer64_Matrices;
+with Multprec_Integer_Matrices;
 with DoblDobl_Complex_Solutions;       use DoblDobl_Complex_Solutions;
 
 package DoblDobl_Radial_Solvers is
@@ -40,6 +41,10 @@ package DoblDobl_Radial_Solvers is
               ( U : Standard_Integer64_Matrices.Matrix;
                 logr : Double_Double_Vectors.Vector )
               return Double_Double_Vectors.Vector;
+  function Radial_Upper_Solve
+              ( U : Multprec_Integer_Matrices.Matrix;
+                logr : Double_Double_Vectors.Vector )
+              return Double_Double_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Solves U*log(x) = logr, for U an upper triangular exponent matrix.
@@ -47,10 +52,16 @@ package DoblDobl_Radial_Solvers is
   function Multiply ( A : in Standard_Integer64_Matrices.Matrix;
                       x : in Double_Double_Vectors.Vector )
                     return Double_Double_Vectors.Vector;
+  function Multiply ( A : in Multprec_Integer_Matrices.Matrix;
+                      x : in Double_Double_Vectors.Vector )
+                    return Double_Double_Vectors.Vector;
 
   -- DESCRIPTION : returns A*x, taking the transpose of A.
 
   function Eval ( A : in Standard_Integer64_Matrices.Matrix;
+                  x : in Double_Double_Vectors.Vector )
+                return Double_Double_Vectors.Vector;
+  function Eval ( A : in Multprec_Integer_Matrices.Matrix;
                   x : in Double_Double_Vectors.Vector )
                 return Double_Double_Vectors.Vector;
 
