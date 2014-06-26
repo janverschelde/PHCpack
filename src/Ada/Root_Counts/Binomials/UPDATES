@@ -1,0 +1,271 @@
+Thu 26 Jun 2014 : updates in ts_simsys.adb to allow for testing on
+  double double versions of the code.
+
+Tue 19 Nov 2013 : because of package name changes in Implift and Dynlift
+  modified ts_binpser.adb and standard_binomial_varieties.adb.
+  Updated multprec_power_transformations.adb.
+
+Tue 17 Sep 2013 : added the option pure to standard_permanent_factors
+  and black_box_binomial_solvers, updated ts_monmap.adb.
+
+Tue 3 Sep 2013 : fixed bug on line 77 of standard_monomial_maps_io.adb.
+
+Thu 27 Jun 2013 : updated black_box_simplex_solvers.adb with natural32.
+
+Thu 13 Jun 2013 : almost the entire directory changed because of the new
+  types natural32 and integer32.
+
+Thu 18 Apr 2013 : modifications to standard_binomial_systems.
+
+Wed 17 Apr 2013 : added inplace Eval to standard_binomial_systems and an
+  inplace upper triangular solver to standard_binomial_solvers.
+
+Thu 28 Mar 2013 : printed number of remaining equations in ts_mapsubs.adb
+  after filtering.
+
+Wed 27 Mar 2013 : new package standard_monomial_map_substitutors,
+  tested by ts_mapsubs.
+
+Mon 25 Mar 2013 : new package standard_exponent_transformations after
+  refactoring standard_binomial_varieties, tested by ts_unimod.adb.
+  This refactoring changed ts_binset.adb.
+
+Tue 19 Feb 2013 : moved binomial solver in ts_cspsol.adb.
+
+Mon 18 Feb 2013 : new ts_cspsol.adb to develop efficient solving of initial
+  form systems given a mixed-cell configuration.
+
+Sun 30 Dec 2012 : ts_affpol.adb and ts_binpser.adb no longer compiled, fixed.
+
+Mon 3 Dec 2012 : added root_refiner to Laurent binomial system case in
+  black_box_simplex_solvers.adb, changed ts_simsys.adb and ts_binsys.adb.
+
+Fri 23 Nov 2012 : new package standard_monomial_map_circuits with changes
+  in standard_monomial_maps, and tested by ts_monmap.adb.
+
+Tue 13 Nov 2012 : the code for standard_monomial_relations got absorbed
+  in the new package standard_monomial_map_ideals, ts_binset.adb changed.
+  Moved code from standard_monomial_map_filters into standard_monomial_maps,
+  changed standard_monomial_maps_io, all tested by ts_monmap.
+
+Mon 12 Nov 2012 : changed standard_monomial_map_filters.ads to correct
+  mistake in the documentation of Is_Zero_Submap filter.
+  New package standard_monomial_relations, with code from ts_binset.adb,
+  to compute the ideal defined by a monomial map correctly.
+
+Sat 10 Nov 2012 : changed standard_binomial_varieties.adb for a name change
+  of triangulations into standard_integer_triangulations and the change of
+  dynamic_triangulations into standard_dynamic_triangulations.
+
+Wed 7 Nov 2012 : equality and is_in test in standard_monomial_maps with
+  corresponding filters in standard_monomial_map_filters, tested in ts_monmap.
+  New package black_box_binomial_solvers, changes in ts_binset, binsol.
+
+Mon 5 Nov 2012 : updates in standard_permanent_factors, ts_binsol,
+  and ts_monmap.  Bug fix in standard_monomial_map_filters.adb.
+  Added "append" to standard_monomial_maps_io.
+  Fixed memory leak in the append of standard_monomial_maps.
+ 
+Sun 4 Nov 2012 : new tests in standard_monomial_filters, show ideals in
+  standard_monomial_maps_io, tested by ts_monmap.
+
+Fri 2 Nov 2012 : updates in standard_monomial_{maps,map_filters},
+  ts_monmap and new package standard_floating_column_span, tested
+  by ts_incols.adb.
+  
+Thu 1 Nov 2012 : new package standard_monomial_map_filters, tests in ts_monmap.
+  Updates in standard_monomial_maps.
+
+Wed 31 Oct 2012 : new package standard_permanent_factors, updates
+  in standard_monomial_{maps,map_solvers}, tests in ts_binsol and ts_monmap
+  are updated as well.
+
+Tue 30 Oct 2012 : new package standard_monomial_map + _io, tested by
+  ts_monmap.adb.  Change in standard_binomial_varieties_io.adb.
+  The new package standard_monomial_map_solvers wraps the solver
+  in standard_binomial_varieties.
+
+Mon 29 Oct 2012 : added Write_System to standard_binomial_varieties_io.
+
+Sun 28 Oct 2012 : moved affine solver from ts_binset into the new ts_binsol.
+  Updated standard_binomial_varieties_io.adb.
+
+Fri 26 Oct 2012 : output for adjacent minors of 2-by-n is okay, updated 
+  standard_binomial_varieties_io.a*, standard_affine_binomials.a*,
+  and ts_binset.adb.
+
+Thu 25 Oct 2012 : for a warning, updated standard_binomial_solvers.adb.
+  Equation selection and solving in standard_affine_binomials,
+  tested by ts_binset.adb
+
+Tue 23 Oct 2012 : basic version of iterator works!
+
+Mon 22 Oct 2012 : bug fixes in affine_binomial iterator, tested by ts_binset.
+
+Sun 21 Oct 2012 : iterator "Next_Subset" in affine_binomial_iterator.
+
+Sat 20 Oct 2012 : changed adjacency into incidence in standard_affine_binomials
+  and ts_binset.  Updated standard_binomial_varieties.adb for a warning.
+  New package affine_binomial_iterator, off spin of standard_affine_binommials,
+  tested by ts_binset.
+
+Thu 18 Oct 2012 : modified ts_binset.adb for extra output for option #7.
+
+Sun 16 Sep 2012 : extracted code from ts_binset.adb to form the new package
+  standard_affine_binomials for compute affine solutions of binomial systems.
+  Added degree computation to standard_binomial_varieties.
+
+Fri 14 Sep 2012 : skipping equations added to enumerate in ts_binset.adb.
+
+Tue 11 Sep 2012 : added compute_degree function to ts_binset.adb.
+
+Mon 10 Sep 2012 : frequency table and adjacency matrix in ts_binset.adb.
+
+Sun 2 Sep 2012 : small changes in ts_binset.adb for a bug.
+
+Sun 22 Jul 2012 : changes in standard_binomial_varieties and its _io
+  so the general rational representation is written plainly.
+
+Mon 16 Jul 2012 : updates in standard_binomial_varieties.
+
+Sat 14 Jul 2012 : updated standard_binomial_varieties and ts_binset to
+  compute a general rational coordinate transformation.
+
+Fri 22 Jun 2012 : added facility to ts_binset to compute relations between
+  the variables, given a solution curve.
+
+Thu 14 Jun 2012 : bug fix in standard_binomial_varieties_io.adb.
+
+Wed 13 Jun 2012 : new standard_binomial_varieties_io to write algebraic sets
+  defined by binomial systems, called by ts_binset.adb.
+  Many updates to standard_binomial_varieties.
+
+Tue 12 Jun 2012 : updated standard_binomial_varieties with code taken from
+  ts_binset.adb.
+
+Mon 11 Jun 2012 : new multprec_binomial_varieties, tested by ts_binset.adb.
+
+Sun 10 Jun 2012 : updated standard_binomial_varieties and ts_binset.adb.
+
+Sat 9 Jun 2012 : new package standard_binomial_varieties to compute with
+  algebraic sets defined by binomial systems, tested by ts_binset.adb.
+
+Fri 8 Jun 2012 : further development of ts_binset.adb.
+
+Thu 7 Jun 2012 : new ts_binset for positive dimensional solution sets of
+  binomial systems.
+
+Wed 6 Jun 2012 : fixed bugs in ts_kernel.adb and create new packages:
+  standard_{integer,integer64}_kernel and multprec_integer_kernel.
+
+Tue 5 Jun 2012 : extracted code from ts_binwit.adb into ts_kernel.adb to
+  compute the kernel of an integer matrix.
+
+Fri 1 Jun 2012 : some more changes in ts_binwit.adb, does not crash
+  on dezon (as it did on getafix), but results are suspicious.
+
+Thu 31 May 2012 : some changes in ts_binwit.adb to track a crash.
+
+Fri 10 Jun 2011 : updated standard_{binomial,simplex,simpomail}_solvers
+  for use of multiprecision Hermite normal form.
+
+Thu 9 Jun 2011 : changed black_box_simplex_solvers.adb for changed
+  specifications of standard_root_refiners; standard_binomial_solvers.adb
+  can now solve the binomial system that caused a crash.
+
+Wed 8 Jun 2011 : changed standard_binomial_systems, and
+  standard_{radial,binomial}_solvers.a*, tested by ts_binsys.adb.
+
+Fri 3 Jun 2011 : changed standard_simplex_solvers.adb for crash,
+  updated standard_{radial,binomial}_solvers for multiprecision exponents.
+
+Sun 29 May 2011 : changed black_box_simplex_solvers.adb for warnings of
+  the GNAT GPL 2010 compiler.
+
+Mon 28 Jun 2010 : updates in dobldobl_{radial_solvers,binomial_systems}.adb
+  and dobldobl_binomial_solvers.a*, tested by ts_binsys.adb.
+
+Sun 27 Jun 2010 : new packages dobldobl_{radial_solvers,binomial_systems},
+  dobldobl_{binomial_solvers,simplex_systems}.
+
+Fri 9 Oct 2009 : changed multprec_power_transformations to go back to
+  multprec_integer away from the multprec_integer64.  Extended the
+  black_box_simplex_solvers with routines for Laurent systems.
+
+Fri 4 Sep 2009 : power_transformations ->o standard_power_transformations
+  changed ts_powtrans.adb and ts_binpser.adb.
+
+Mon 31 Aug 2009 : created multprec_power_transformations.
+
+Thu 20 Aug 2009 : extended power_transformations with 64-bit arithmetic,
+  tested by ts_powtrans.adb.
+
+Wed 19 Aug 2009 : small change in power_transformations.adb.
+
+Tue 14 Jul 2009 : update in power_transformations.adb 
+  for a gnat gpl 2009 warning.
+
+Thu 30 Oct 2008 : update of ts_binwit.adb for more general solution
+  sets defined by binomial systems.
+
+Tue 12 Aug 2008 : new package power_transformations extracted from
+  the code in ts_binpser.adb.  Renaming "fewnomial system" into 
+  "simplex system" caused all files to change, except those with
+  names *radial*, *binomial*, and ts_binwit.adb.
+
+Fri 6 Jun 2008 : changed ts_fewsys.adb so it works with Laurent systems
+  instead of polynomial systems.
+
+Thu 29 May 2008 : started changing ts_binwit.adb, but then created
+  ts_binpser.adb to compute tropisms and leading terms in the Puiseux
+  series of space curves defined by binomial systems.
+
+Thu 3 Jan 2008 : because of warnings in GNAT GPL 2006, changed
+  standard_binomials_systems.a*, standard_fewnomial_systems.a*,
+  standard_sparse_solvers.adb, standard_binomial_solvers.adb,
+  ts_binwit.adb and ts_fewsys.adb.
+
+Fri 3 Aug 2007 : the "Laurentials" changed standard_sparse_solvere.adb,
+  standard_binomial_systems.adb and standard_fewnomial_systems.adb.
+
+Fri 4 May 2007 : added to black_box_fewnomial_solvers.adb the test
+  if Length_Of(sols) > 0.
+
+Thu 25 Jan 2006 : turned black_box_fewnomial_solver into the package
+  black_box_fewnomial_solvers, adding a silent blackbox solver to it.
+
+Wed 27 Dec 2006 : updated ts_fewsys to compile after the changed made
+  to standard_fewnonial_solvers.ads (on Tue 3 Oct 2006), see below.
+
+Tue 3 Oct 2006 : changed standard_fewnomial_solvers.a* to detect zero
+  components in the intermediate y solution vector.  Also changed 
+  standard_sparse_solvers.a*, ts_spasol.adb, black_box_fewnomial_solver.adb.
+
+Thu 15 Jun 2006 : found bug in standard_fewnomial_systems.adb,
+  forgotten "continue := true", discovered by new compilers.
+
+Wed 14 Jun 2006 : because of a warning on AIX, changed the file
+  black_box_fewnomial_solver.adb.
+
+Wed 22 Mar 2006 : added condition number estimator to the solvers in
+  standard_fewnomial_solvers.  New package "standard_radial_solvers"
+  provides utilities to solve magnitude of roots of binomial systems
+  separately from the arguments of the solution.  Changed the package
+  standard_binomial_solvers, ts_binwit and ts_fewsys.
+
+Thu 16 Mar 2006 : fixed Standard_Fewnomial_Systems.Parse and adjusted all
+  the solvers, tested by ts_fewsys.adb to fix all bugs with prs10;
+  standard_sparse_solvers is used in black_box_fewnomial_solver.
+
+Tue 14 Mar 2006 : modified Parse in standard_binomial_systems, ts_binwit.adb
+  is changed; started creation of standard_fewnomial_systems, parsing seems
+  okay now, tested by ts_fewsys.adb; created standard_fewnomial_solvers.
+
+Tue 23 Aug 2005 : completed Create in standard_binomial_systems, added to
+  standard_binomial_solvers, and streamlined ts_binwit.adb.
+
+Sun 21 Aug 2005 : rearranged standard_binomial_solvers.ads, ts_binwit.adb,
+  added Solve_Upper_General; create standard_binomial_systems.
+
+Wed 17 Aug 2005 : fixed Solve_Upper_Square in standard_binomial_solvers,
+  tested by ts_binwit.adb
