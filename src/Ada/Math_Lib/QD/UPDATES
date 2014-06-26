@@ -1,5 +1,6 @@
 Thu 26 Jun 2014 : new package dobldobl_complex_exponentiation as needed
-  by the binomial solvers for multiprecision exponent matrices.
+  by the binomial solvers for multiprecision exponent matrices and
+  quaddobl_complex_exponentiation is the version for quad doubles.
 
 Tue 18 Feb 2013 : extended double_double.h and double_double.c with
   dd_sin_taylor and dd_cos_taylor functions...

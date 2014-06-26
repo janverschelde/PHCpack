@@ -91,5 +91,6 @@ ts_qdfun                        : tests qd math functions
 ------------------------------------------------------------------------------
 standard_complex_exponentiation : high powers of double complex numbers
 dobldobl_complex_exponentiation : high powers of double double complex numbers
+quaddobl_complex_exponentiation : high powers of quad double complex numbers
 ts_cmpexp                       : test on complex exponentiation
 ------------------------------------------------------------------------------
