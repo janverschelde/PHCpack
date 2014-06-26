@@ -89,6 +89,7 @@ quaddobl_complex_numbers_polar  : polar representations of qd complex
 ts_ddfun                        : tests dd math functions
 ts_qdfun                        : tests qd math functions
 ------------------------------------------------------------------------------
-standard_complex_exponentiation : high powers of complex numbers
+standard_complex_exponentiation : high powers of double complex numbers
+dobldobl_complex_exponentiation : high powers of double double complex numbers
 ts_cmpexp                       : test on complex exponentiation
 ------------------------------------------------------------------------------
