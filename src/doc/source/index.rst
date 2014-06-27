@@ -231,7 +231,7 @@ Running the program in toolbox mode
 
 To avoid the preconditioning stage (scaling and reduction) we can
 compute root counts and construct start systems via the option -r,
-thus calling the progam as phc -r.  One important submenu is
+thus calling the program as phc -r.  One important submenu is
 the mixed-volume computation, invoked via phc -m.
 
 Once we created an appropriate start system, we can call the path
@@ -271,9 +271,24 @@ Many homotopy algorithms generate random constants.
 With each run, the current time is used to generate
 another seed for the random number generator, leading
 to different random constants in each run.
+As different random values give different random start systems,
+this may cause differences in the solution paths and fluctuations
+in the executation time.  Another notable effect of generating a
+different random constant each time is that the order of the
+solutions in the list may differ.  Although the same solutions
+should be found with each run, a solution that appears first
+in one run may turn out last in another run.
+
 With the option -0, a fixed seed is used in each run.
 This option can be combined with the blackbox solver (phc -b),
 e.g.: phc -b -0 or phc -0 -b.
+
+Since version 2.3.89, the option -0 is extended so the user may
+give the digits of the seed to be used.  For example, 
+calling phc as phc -089348224 will initialize the random
+number generator with the seed 89348224.
+Just calling phc as phc -0 will still result in using the same
+fixed seed as before in each run.
 
 phc -a : Solving polynomial systems equation-by-equation       
 --------------------------------------------------------
@@ -569,7 +584,7 @@ solutions in PHCpack format.  For example:
    phc -x /tmp/cyclic5.dic
 
 The first phc -x writes to the file /tmp/cyclic5.dic a list of
-dictories, ready for processing by a Python script.
+dictionaries, ready for processing by a Python script.
 If no output file is given as second argument, then the output
 is written to screen.  The second phc -x writes a solution list
 to PHCpack format, because a list of dictionaries is given on input.
@@ -670,6 +685,13 @@ References
 9. J. Verschelde:
    **Polynomial homotopy continuation with PHCpack.**
    *ACM Communications in Computer Algebra*, 44(4):217-220, 2010.
+
+10. J. Verschelde:
+    **Modernizing PHCpack through phcpy.**
+    In Proceedings of the 6th European Conference on Python in Science
+    (EuroSciPy 2013), edited by Pierre de Buyl and Nelle Varoquaux,
+    pages 71-76, 2014, available at
+    <http://arxiv.org/abs/1310.0056>.
 
 Acknowledgments
 ===============
