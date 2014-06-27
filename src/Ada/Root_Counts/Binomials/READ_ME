@@ -37,9 +37,15 @@ dobldobl_binomial_solvers          : double double binomial system solvers
 quaddobl_binomial_solvers          : quad double binomial system solvers
 ts_binsys                          : basis test on binomial solvers
 standard_simplex_systems           : parsing and evaluation of simplex systems
-standard_simplex_solvers           : solving simplex systems
+dobldobl_simplex_systems           : parse & eval double double simplex systems
+quaddobl_simplex_systems           : parse & eval quad double simplex systems
+standard_simplex_solvers           : solving simplex systems with double
+dobldobl_simplex_solvers           : solving simplex systems with double double
+quaddobl_simplex_solvers           : solving simplex systems with quad double
 ts_simsys                          : test program on simplex systems
 standard_simpomial_solvers         : parsing and solving simplex systems
+dobldobl_simpomial_solvers         : solving simplex systems with double double
+quaddobl_simpomial_solvers         : solving simplex systems with quad double
 ts_simposol                        : simple test routine on simpomial solvers
 ts_cspsol                          : solving initial cell systems efficiently
 black_box_simplex_solvers          : as called by main program

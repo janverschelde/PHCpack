@@ -1,3 +1,6 @@
+Fri 27 Jun 2014 : new packages {dobldobl,quaddobl}_simpomial_solvers tested
+  by ts_simposol to solve simplex systems with double doubles and quad doubles.
+
 Thu 26 Jun 2014 : Quad double solver for binomial systems, tested by ts_binsys.
   Updated double_simplex_systems, tested by ts_simsys.
   Extended dobldobl_{radial,binomial,simplex}_solvers.
