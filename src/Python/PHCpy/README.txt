@@ -99,7 +99,8 @@ References
    **Modernizing PHCpack through phcpy.**
    In Proceedings of the 6th European Conference on Python in Science
    (EuroSciPy 2013), edited by Pierre de Buyl and Nelle Varoquaux,
-   pages 71-76, 2014.
+   pages 71-76, 2014, available at
+   <http://arxiv.org/abs/1310.0056>.
 
 Acknowledgments
 ===============
