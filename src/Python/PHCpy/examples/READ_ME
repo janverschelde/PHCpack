@@ -1,0 +1,15 @@
+examples of phcpy
+
+This directory is new in release 2.3.89 of PHCpack.
+The purpose of this directory is to store Python modules that illustrate
+and test the use of the capabilities of phcpy.
+While not strictly part of the phcpy core distribution, the goal of this
+directory is to document the development process, with regression tests,
+and to collect use cases with applications.
+
+-------------------------------------------------------------------------------
+file name    : short description
+-------------------------------------------------------------------------------
+randlrhom    : generate and enumerate random Schubert problems
+             : for the Littlewood-Richardson homotopies (lrhom)
+-------------------------------------------------------------------------------
