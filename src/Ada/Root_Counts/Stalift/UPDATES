@@ -1,3 +1,6 @@
+Sun 29 Jun 2014 : added double double quad quad double versions to
+  random_coefficient_systems, tested by ts_rndcff.adb.
+
 Fri 30 May 2014 : change in jumpstart_polyhedral_homotopies.adb for a
   compiler warning.
 

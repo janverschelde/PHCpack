@@ -14,10 +14,18 @@ with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Integer_Vector_Lists_io;  use Arrays_of_Integer_Vector_Lists_io;
 with Arrays_of_Floating_Vector_Lists;
 with Arrays_of_Floating_Vector_Lists_io; use Arrays_of_Floating_Vector_Lists_io;
-with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
+with Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;    use Standard_Complex_Polynomials_io;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Polynomials_io;    use DoblDobl_Complex_Polynomials_io;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Polynomials_io;    use QuadDobl_Complex_Polynomials_io;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Floating_Integer_Convertors;        use Floating_Integer_Convertors;
 with Supports_of_Polynomial_Systems;
 with Random_Coefficient_Systems;
@@ -28,7 +36,7 @@ procedure ts_rndcff is
 --   Test on the generation of polynomials and systems with given
 --   supports and with random coefficients.
 
-  procedure Write_to_File ( p : in Poly_Sys ) is
+  procedure Write_to_File ( p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
   --   Gives the user the opportunity to write the system q to file,
@@ -48,12 +56,57 @@ procedure ts_rndcff is
     end if;
   end Write_to_File;
 
-  procedure Test_Creation_of_Random_Polynomials is
+  procedure Write_to_File ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Gives the user the opportunity to write the system q to file,
+  --   prompting for a file name.
+
+    file : file_type;
+    ans : character;
+
+  begin
+    new_line;
+    put("Write the random coefficient system to file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Read_Name_and_Create_File(file);
+      put_line(file,p);
+      close(file);
+    end if;
+  end Write_to_File;
+
+  procedure Write_to_File ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Gives the user the opportunity to write the system q to file,
+  --   prompting for a file name.
+
+    file : file_type;
+    ans : character;
+
+  begin
+    new_line;
+    put("Write the random coefficient system to file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Read_Name_and_Create_File(file);
+      put_line(file,p);
+      close(file);
+    end if;
+  end Write_to_File;
+
+  procedure Standard_Creation_of_Random_Polynomials is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a list of exponents and then generates
+  --   a system with random standard double complex coefficients
+  --   with the given list of exponents.
 
     n,k : natural32 := 0;
     support : Lists_of_Integer_Vectors.List;
     fltsupp : Lists_of_Floating_Vectors.List;
-    p : Poly;
+    p : Standard_Complex_Polynomials.Poly;
 
   begin
     put("Give the number of variables : "); get(n);
@@ -64,30 +117,95 @@ procedure ts_rndcff is
     put("The random polynomial :"); put_line(p);
     fltsupp := Convert(support);
     put_line("The floating point support list : "); put(fltsupp);
-    Clear(p);
+    Standard_Complex_Polynomials.Clear(p);
     p := Random_Coefficient_Systems.Create(n,fltsupp);
     put("The random polynomial created from a floating support list :");
     put_line(p);
-  end Test_Creation_of_Random_Polynomials;
+  end Standard_Creation_of_Random_Polynomials;
 
-  procedure Test_Creation_of_Random_Polynomial_System 
-              ( n,r : integer32 ) is
+  procedure DoblDobl_Creation_of_Random_Polynomials is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a list of exponents and then generates
+  --   a system with random double double complex coefficients
+  --   with the given list of exponents.
+
+    n,k : natural32 := 0;
+    support : Lists_of_Integer_Vectors.List;
+    fltsupp : Lists_of_Floating_Vectors.List;
+    p : DoblDobl_Complex_Polynomials.Poly;
+
+  begin
+    put("Give the number of variables : "); get(n);
+    put("Give the number of monomials : "); get(k);
+    put("Give "); put(k,1); put(" natural vectors of length ");
+    put(n,1); put_line(" : "); get(n,k,support);
+    p := Random_Coefficient_Systems.Create(n,support);
+    put("The random polynomial :"); put_line(p);
+    fltsupp := Convert(support);
+    put_line("The floating point support list : "); put(fltsupp);
+    DoblDobl_Complex_Polynomials.Clear(p);
+    p := Random_Coefficient_Systems.Create(n,fltsupp);
+    put("The random polynomial created from a floating support list :");
+    put_line(p);
+  end DoblDobl_Creation_of_Random_Polynomials;
+
+  procedure QuadDobl_Creation_of_Random_Polynomials is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a list of exponents and then generates
+  --   a system with random quad double complex coefficients
+  --   with the given list of exponents.
+
+    n,k : natural32 := 0;
+    support : Lists_of_Integer_Vectors.List;
+    fltsupp : Lists_of_Floating_Vectors.List;
+    p : QuadDobl_Complex_Polynomials.Poly;
+
+  begin
+    put("Give the number of variables : "); get(n);
+    put("Give the number of monomials : "); get(k);
+    put("Give "); put(k,1); put(" natural vectors of length ");
+    put(n,1); put_line(" : "); get(n,k,support);
+    p := Random_Coefficient_Systems.Create(n,support);
+    put("The random polynomial :"); put_line(p);
+    fltsupp := Convert(support);
+    put_line("The floating point support list : "); put(fltsupp);
+    QuadDobl_Complex_Polynomials.Clear(p);
+    p := Random_Coefficient_Systems.Create(n,fltsupp);
+    put("The random polynomial created from a floating support list :");
+    put_line(p);
+  end QuadDobl_Creation_of_Random_Polynomials;
+
+  procedure Read_Supports
+              ( dim : in natural32;
+                s : out Arrays_of_Integer_Vector_Lists.Array_of_Lists ) is             
+  -- DESCRIPTION :
+  --   Prompts the user for as many lists of exponents as the range of s.
+
+    n,k : natural32 := 0;
+
+  begin
+    for i in s'range loop
+      put("Give the cardinality of support "); put(i,1); put(" : ");
+      get(k);
+      put("Give "); put(k,1); put(" natural vectors of length ");
+      n := dim;
+      put(dim,1); put_line(" : "); get(n,k,s(i));
+    end loop;
+  end Read_Supports;
+
+  procedure Standard_Random_Polynomial_System ( n,r : integer32 ) is
 
     mix : Standard_Integer_Vectors.Vector(1..r);
     int_supports : Arrays_of_Integer_Vector_Lists.Array_of_Lists(1..r);
     flt_supports : Arrays_of_Floating_Vector_Lists.Array_of_Lists(1..r);
-    k : natural32 := 0;
-    p : Poly_Sys(1..n);
+    p : Standard_Complex_Poly_Systems.Poly_Sys(1..n);
 
   begin
     put("Give the type of mixture : "); get(mix);
     put("The type of mixture is "); put(mix); new_line;
-    for i in 1..r loop
-      put("Give the cardinality of support "); put(i,1); put(" : ");
-      get(k);
-      put("Give "); put(k,1); put(" natural vectors of length ");
-      put(n,1); put_line(" : "); get(natural32(n),k,int_supports(i));
-    end loop;
+    Read_Supports(natural32(n),int_supports);
     put_line("The supports : "); put(int_supports);
     p := Random_Coefficient_Systems.Create(natural32(n),mix,int_supports);
     put_line("The random coefficient system : "); put_line(p);
@@ -96,21 +214,74 @@ procedure ts_rndcff is
     p := Random_Coefficient_Systems.Create(natural32(n),mix,flt_supports);
     put_line("The random coefficient system : "); put_line(p);
     Write_to_File(p);
-  end Test_Creation_of_Random_Polynomial_System;
+  end Standard_Random_Polynomial_System;
 
-  procedure Test_Creation_of_Random_Polynomial_Systems is
+  procedure DoblDobl_Random_Polynomial_System ( n,r : integer32 ) is
+
+    mix : Standard_Integer_Vectors.Vector(1..r);
+    int_supports : Arrays_of_Integer_Vector_Lists.Array_of_Lists(1..r);
+    flt_supports : Arrays_of_Floating_Vector_Lists.Array_of_Lists(1..r);
+    p : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..n);
+
+  begin
+    put("Give the type of mixture : "); get(mix);
+    put("The type of mixture is "); put(mix); new_line;
+    Read_Supports(natural32(n),int_supports);
+    put_line("The supports : "); put(int_supports);
+    p := Random_Coefficient_Systems.Create(natural32(n),mix,int_supports);
+    put_line("The random coefficient system : "); put_line(p);
+    flt_supports := Convert(int_supports);
+    put_line("The floating supports : "); put(flt_supports);
+    p := Random_Coefficient_Systems.Create(natural32(n),mix,flt_supports);
+    put_line("The random coefficient system : "); put_line(p);
+    Write_to_File(p);
+  end DoblDobl_Random_Polynomial_System;
+
+  procedure QuadDobl_Random_Polynomial_System ( n,r : integer32 ) is
+
+    mix : Standard_Integer_Vectors.Vector(1..r);
+    int_supports : Arrays_of_Integer_Vector_Lists.Array_of_Lists(1..r);
+    flt_supports : Arrays_of_Floating_Vector_Lists.Array_of_Lists(1..r);
+    p : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..n);
+
+  begin
+    put("Give the type of mixture : "); get(mix);
+    put("The type of mixture is "); put(mix); new_line;
+    Read_Supports(natural32(n),int_supports);
+    put_line("The supports : "); put(int_supports);
+    p := Random_Coefficient_Systems.Create(natural32(n),mix,int_supports);
+    put_line("The random coefficient system : "); put_line(p);
+    flt_supports := Convert(int_supports);
+    put_line("The floating supports : "); put(flt_supports);
+    p := Random_Coefficient_Systems.Create(natural32(n),mix,flt_supports);
+    put_line("The random coefficient system : "); put_line(p);
+    Write_to_File(p);
+  end QuadDobl_Random_Polynomial_System;
+
+  procedure Random_Polynomial_System ( precision : in character ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the dimension and different supports
+  --   and creates a random coefficient system with standard double,
+  --   double double, or quad double coefficient, depending whether
+  --   precision is '0', '1', or '2'.
 
     n,r : integer32 := 0;
 
   begin
     put("Give the number of variables : "); get(n);
     put("Give the number of different supports : "); get(r);
-    Test_Creation_of_Random_Polynomial_System(n,r);
-  end Test_Creation_of_Random_Polynomial_Systems;
+    case precision is
+      when '0' => Standard_Random_Polynomial_System(n,r);
+      when '1' => DoblDobl_Random_Polynomial_System(n,r);
+      when '2' => QuadDobl_Random_Polynomial_System(n,r);
+      when others => null;
+    end case;
+  end Random_Polynomial_System;
 
-  procedure Test_Random_Coefficient_System is
+  procedure Standard_Random_Coefficient_System is
 
-    p : Link_to_Poly_Sys;
+    p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
 
   begin
     get(p);
@@ -118,17 +289,53 @@ procedure ts_rndcff is
       s : constant Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range)
         := Supports_of_Polynomial_Systems.Create(p.all);
       n : constant integer32 := p'last;
-      q : constant Poly_Sys(p'range)
+      q : constant Standard_Complex_Poly_Systems.Poly_Sys(p'range)
         := Random_Coefficient_Systems.Create(natural32(n),s);
     begin
       put_line(q);
       Write_to_File(q);
     end;
-  end Test_Random_Coefficient_System;
+  end Standard_Random_Coefficient_System;
+
+  procedure DoblDobl_Random_Coefficient_System is
+
+    p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    get(p);
+    declare
+      s : constant Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range)
+        := Supports_of_Polynomial_Systems.Create(p.all);
+      n : constant integer32 := p'last;
+      q : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range)
+        := Random_Coefficient_Systems.Create(natural32(n),s);
+    begin
+      put_line(q);
+      Write_to_File(q);
+    end;
+  end DoblDobl_Random_Coefficient_System;
+
+  procedure QuadDobl_Random_Coefficient_System is
+
+    p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    get(p);
+    declare
+      s : constant Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range)
+        := Supports_of_Polynomial_Systems.Create(p.all);
+      n : constant integer32 := p'last;
+      q : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range)
+        := Random_Coefficient_Systems.Create(natural32(n),s);
+    begin
+      put_line(q);
+      Write_to_File(q);
+    end;
+  end QuadDobl_Random_Coefficient_System;
 
   procedure Main is
 
-    ans : character;
+    ans,dqd : character;
 
   begin
     new_line;
@@ -139,10 +346,29 @@ procedure ts_rndcff is
     put("Type 1, 2, or 3 to make your choice : ");
     Ask_Alternative(ans,"123");
     new_line;
+    put_line("MENU for the precision : ");
+    put_line("  0. standard double complex numbers;");
+    put_line("  1. double double complex numbers;");
+    put_line("  2. quad double complex numbers.");
+    put("Type 0, 2, or 2 to make your choice : ");
+    Ask_Alternative(dqd,"012");
+    new_line;
     case ans is
-      when '1' => Test_Creation_of_Random_Polynomials;
-      when '2' => Test_Creation_of_Random_Polynomial_Systems;
-      when '3' => Test_Random_Coefficient_System;
+      when '1' =>
+        case dqd is
+          when '0' => Standard_Creation_of_Random_Polynomials;
+          when '1' => DoblDobl_Creation_of_Random_Polynomials;
+          when '2' => QuadDobl_Creation_of_Random_Polynomials;
+          when others => null;
+        end case;
+      when '2' => Random_Polynomial_System(dqd);
+      when '3' =>
+        case dqd is
+          when '0' => Standard_Random_Coefficient_System;
+          when '1' => DoblDobl_Random_Coefficient_System;
+          when '2' => QuadDobl_Random_Coefficient_System;
+          when others => null;
+        end case;
       when others => null;
     end case;
   end Main;
