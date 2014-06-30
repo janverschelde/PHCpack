@@ -1,3 +1,5 @@
+Mon 30 Jun 2014 : adjusted greeting_banners for version 2.3.89.
+
 Tue 24 Jun 2014 : added extra function to dispatch.adb to extract the
   digits after '-0' for use as a fixed seed.
 
