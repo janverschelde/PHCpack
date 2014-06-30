@@ -1,3 +1,8 @@
+Mon 30 Jun 2014 : updates in __init__.py, setup.py for version 0.1.9.
+
+Sat 28 Jun 2014 : new directory "examples" in PHCpy directory with the
+  randlrhom.py module.
+
 Wed 25 Jun 2014 : modified seed constant in examples.py
   and added random_system function solver.py.
 
