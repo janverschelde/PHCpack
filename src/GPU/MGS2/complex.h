@@ -29,10 +29,16 @@ class complex
       DEVICE complex();
       DEVICE complex(double,double);
       DEVICE complex(double,double,double,double);
+      DEVICE complex(double,double,double,double,
+                     double,double,double,double);
       DEVICE void init(double,double);
       DEVICE void init(double,double,double,double);
+      DEVICE void init(double,double,double,double,
+                       double,double,double,double);
       void initH(double,double);
       void initH(double,double,double,double);
+      void initH(double,double,double,double,
+                 double,double,double,double);
  
       DEVICE complex operator+(complex);
       DEVICE complex operator-(complex);
@@ -107,11 +113,31 @@ DEVICE void complex<T>::init(double ahi, double alo,
    real = temp.real; imag = temp.imag;   
 }
 
+template <class T>
+DEVICE void complex<T>::init(double ahihi, double ahilo,
+                             double alohi, double alolo,
+                             double bhihi, double bhilo,
+                             double blohi, double blolo)
+{
+   complex<T> temp(ahihi,ahilo,alohi,alolo,bhihi,bhilo,blohi,blolo);
+   real = temp.real; imag = temp.imag;   
+}
+
 template <>
 inline void complex<gqd_real>::initH(double a, double b)
 {
    real.x = a; real.y = 0.0; real.z = 0.0; real.w = 0.0;
    imag.x = b; imag.y = 0.0; imag.z = 0.0; imag.w = 0.0; 
+}
+
+template <>
+inline void complex<gqd_real>::initH(double ahihi, double alohi,
+                                     double ahilo, double alolo,
+                                     double bhihi, double blohi,
+                                     double bhilo, double blolo)
+{
+   real.x = ahihi; real.y = alohi; real.z = ahilo; real.w = alolo;
+   imag.x = bhihi; imag.y = blohi; imag.z = bhilo; imag.w = blolo; 
 }
 
 template <>

@@ -37,9 +37,13 @@ class complexH
       complexH(T,T,bool);
       complexH(double,double);
       complexH(double,double,double,double);
+      complexH(double,double,double,double,
+               double,double,double,double);
       complexH(const complexH<T> &);
       void init(double,double);
       void init(double,double,double,double);
+      void init(double,double,double,double,
+                double,double,double,double);
 
       complexH() {};
       complexH operator+(complexH);
@@ -133,6 +137,18 @@ inline complexH<qd_real>::complexH(double a, double b)
 }
 
 template <>
+inline complexH<qd_real>::complexH(double ahihi, double alohi,
+                                   double ahilo, double alolo,
+                                   double bhihi, double blohi,
+                                   double bhilo, double blolo)
+{
+   real.x[0] = ahihi; real.x[1] = alohi;
+   real.x[2] = ahilo; real.x[3] = alolo;
+   imag.x[0] = bhihi; imag.x[1] = blohi;
+   imag.x[2] = bhilo; imag.x[3] = blolo;
+}
+
+template <>
 inline complexH<dd_real>::complexH(double a, double b)
 {
    real.x[0] = a; real.x[1] = 0.0;
@@ -168,6 +184,18 @@ void complexH<T>::init(double ahi, double alo,
                        double bhi, double blo)
 {
    complexH<T> temp(ahi,alo,bhi,blo);
+
+   real = temp.real;
+   imag = temp.imag;   
+}
+
+template <class T>
+void complexH<T>::init(double ahihi, double alohi,
+                       double ahilo, double alolo,
+                       double bhihi, double blohi,
+                       double bhilo, double blolo)
+{
+   complexH<T> temp(ahihi,alohi,ahilo,alolo,bhihi,blohi,bhilo,blolo);
 
    real = temp.real;
    imag = temp.imag;   
