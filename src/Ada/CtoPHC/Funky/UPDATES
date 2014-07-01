@@ -1,3 +1,6 @@
+Tue 1 Jul 2014 : extended c_to_ada_arrays with convertors for double double
+  and quad double complex vectors.
+
 Fri 13 Jun 2014 : modified pieri_solver.adb for compiler warning.
 
 Thu 5 Dec 2013 : updated print_poly.adb for natural32 types.

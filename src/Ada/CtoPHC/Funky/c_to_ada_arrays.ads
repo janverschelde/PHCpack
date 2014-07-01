@@ -3,6 +3,8 @@ with C_Double_Arrays;                     use C_Double_Arrays;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Standard_Complex_Matrices;
 
 package C_to_Ada_Arrays is
@@ -38,6 +40,10 @@ package C_to_Ada_Arrays is
   -- REQUIRED : v'length mod 2 = 0.
 
   function Convert ( v : Standard_Complex_Vectors.Vector )
+                   return C_Double_Array;
+  function Convert ( v : DoblDobl_Complex_Vectors.Vector )
+                   return C_Double_Array;
+  function Convert ( v : QuadDobl_Complex_Vectors.Vector )
                    return C_Double_Array;
 
   -- DESCRIPTION :
