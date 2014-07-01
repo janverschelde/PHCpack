@@ -1,4 +1,4 @@
-Ada source code of Polynomial Homotopy Continuation version 2.3.86
+Ada source code of Polynomial Homotopy Continuation version 2.3.90
 
 The same hierarchical structure as in the original version is preserved,
 with the addition of numerical Schubert calculus in release 2,
@@ -68,8 +68,9 @@ The Ada sources are organized in a tree of directories:
   |-- CtoPHC               : 6. interface from C to phc
   |      |-- Funky         : 6.1. functional interface, C -> Ada -> C 
   |      |-- State         : 6.2. state machine gateway, C <-> Ada
-  |-- Tasking              : 7. multitasking
-  |-- Main                 : 8. main dispatcher
+  |-- PHCtoC               : 7. GPU acceleration via a C interface
+  |-- Tasking              : 8. multitasking
+  |-- Main                 : 9. main dispatcher
 
 To create the executable version, do cd ../Objects and type make phc.
 
