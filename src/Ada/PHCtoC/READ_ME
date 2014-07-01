@@ -1,0 +1,30 @@
+GPU acceleration of Newton's method and path tracking in PHCv2.3.90
+
+This directory is newly created in release 2.3.90 of PHCpack.
+At this point it consists of a collection of test programs to 
+to call the GPU code via a C interface.
+Code that starts as ts_cpu tests the calling of C code from Ada,
+using the C versions of the double_double and quad_double libraries,
+as a preparation for the ts_gpu tests that call the GPU.
+
+The code has been developed on the NVIDIA C2050 and K20C,
+using version 5.5 of nvcc and the GNAT GPL 2014 compiler.
+
+-------------------------------------------------------------------------------
+file name              : short description
+-------------------------------------------------------------------------------
+cpu2norm_d_in_c.c      : C function called by ts_gpu2norm_d.adb
+cpu2norm_dd_in_c.c     : C function called by ts_gpu2norm_dd.adb
+cpu2norm_qd_in_c.c     : C function called by ts_gpu2norm_qd.adb
+ts_cpu2norm_d.adb      : 2-norm of a random complex double vector
+ts_cpu2norm_dd.adb     : 2-norm of a random complex double double vector
+ts_cpu2norm_qd.adb     : 2-norm of a random complex quad double vector
+-------------------------------------------------------------------------------
+gpu2norm_d.cpp         : GPU computes 2-norm of complex double vector
+gpu2norm_dd.cpp        : GPU computes 2-norm of complex double double vector
+gpu2norm_qd.cpp        : GPU computes 2-norm of complex quad double vector
+ts_gpu2norm_d_in_c.c   : calling gpu2norm_d from main C program
+ts_gpu2norm_d.adb      : Ada calls 2-norm of complex double vector
+ts_gpu2norm_dd.adb     : Ada calls 2-norm of complex double double vector
+ts_gpu2norm_qd.adb     : Ada calls 2-norm of complex quad double vector
+-------------------------------------------------------------------------------
