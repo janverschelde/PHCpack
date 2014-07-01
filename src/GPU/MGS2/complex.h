@@ -28,8 +28,11 @@ class complex
       DEVICE complex(T,T,bool);
       DEVICE complex();
       DEVICE complex(double,double);
+      DEVICE complex(double,double,double,double);
       DEVICE void init(double,double);
+      DEVICE void init(double,double,double,double);
       void initH(double,double);
+      void initH(double,double,double,double);
  
       DEVICE complex operator+(complex);
       DEVICE complex operator-(complex);
@@ -96,6 +99,14 @@ DEVICE void complex<T>::init(double a, double b)
    real = temp.real; imag = temp.imag;   
 }
 
+template <class T>
+DEVICE void complex<T>::init(double ahi, double alo,
+                             double bhi, double blo)
+{
+   complex<T> temp(ahi,alo,bhi,blo);
+   real = temp.real; imag = temp.imag;   
+}
+
 template <>
 inline void complex<gqd_real>::initH(double a, double b)
 {
@@ -107,6 +118,13 @@ template <>
 inline void complex<gdd_real>::initH(double a, double b)
 {
    real.x = a; real.y = 0.0; imag.x = b; imag.y = 0.0;
+}
+
+template <>
+inline void complex<gdd_real>::initH(double ahi, double alo,
+                                     double bhi, double blo)
+{
+   real.x = ahi; real.y = alo; imag.x = bhi; imag.y = blo;
 }
 
 template <>

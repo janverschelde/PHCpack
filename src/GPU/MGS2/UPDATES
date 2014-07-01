@@ -1,3 +1,10 @@
+Tue 1 Jul 2014 : extended constructors in complex.h and complexH.h
+  to add the low part of double doubles (instead of just default 0.0).
+
+Wed 26 Mar 2014 : adjusted shared memory size for real versions
+  and integrated the code for mgs3 into mgs2, updating the mgs2_kernels
+  and run_mgs2.  The makefile got adjusted with '-O2' optimizations.
+
 Tue 25 Mar 2014 : gqd_qd_util.h exports function print_modes, defined
   in gqd_qd_util.cpp to explain the 23 modes.  Continued extension to
   the reals in mgs2_kernels, mgs2_host, chandra, chandra_test,
