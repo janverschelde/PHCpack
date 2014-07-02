@@ -1,11 +1,17 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Floating_VecVecs;
 with Standard_Complex_VecVecs;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_VecVecs;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_VecVecs;
 with Lists_of_Integer_Vectors;
 with Lists_of_Floating_Vectors;
 with Arrays_of_Integer_Vector_Lists;
@@ -166,7 +172,7 @@ package Polyhedral_Coefficient_Homotopies is
 -- EVALUATION ROUTINES :
 --   for integer and floating point exponents m,
 --   implemented as procedures or as functions below.
-
+-- for standard double precision :
   procedure Eval ( c : in Standard_Complex_Vectors.Vector;
                    t : in double_float;
                    m : in Standard_Integer_Vectors.Vector;
@@ -183,6 +189,40 @@ package Polyhedral_Coefficient_Homotopies is
                    t : in double_float;
                    m : in Standard_Floating_VecVecs.VecVec;
                    ctm : in out Standard_Complex_VecVecs.VecVec );
+-- for double double precision :
+  procedure Eval ( c : in DoblDobl_Complex_Vectors.Vector;
+                   t : in double_double;
+                   m : in Standard_Integer_Vectors.Vector;
+                   ctm : in out DoblDobl_Complex_Vectors.Vector );
+  procedure Eval ( c : in DoblDobl_Complex_Vectors.Vector;
+                   t : in double_double;
+                   m : in Standard_Floating_Vectors.Vector;
+                   ctm : in out DoblDobl_Complex_Vectors.Vector );
+  procedure Eval ( c : in DoblDobl_Complex_VecVecs.VecVec;
+                   t : in double_double; 
+                   m : in Standard_Integer_VecVecs.VecVec;
+                   ctm : in out DoblDobl_Complex_VecVecs.VecVec );
+  procedure Eval ( c : in DoblDobl_Complex_VecVecs.VecVec;
+                   t : in double_double;
+                   m : in Standard_Floating_VecVecs.VecVec;
+                   ctm : in out DoblDobl_Complex_VecVecs.VecVec );
+-- for quad double precision :
+  procedure Eval ( c : in QuadDobl_Complex_Vectors.Vector;
+                   t : in quad_double;
+                   m : in Standard_Integer_Vectors.Vector;
+                   ctm : in out QuadDobl_Complex_Vectors.Vector );
+  procedure Eval ( c : in QuadDobl_Complex_Vectors.Vector;
+                   t : in quad_double;
+                   m : in Standard_Floating_Vectors.Vector;
+                   ctm : in out QuadDobl_Complex_Vectors.Vector );
+  procedure Eval ( c : in QuadDobl_Complex_VecVecs.VecVec;
+                   t : in quad_double; 
+                   m : in Standard_Integer_VecVecs.VecVec;
+                   ctm : in out QuadDobl_Complex_VecVecs.VecVec );
+  procedure Eval ( c : in QuadDobl_Complex_VecVecs.VecVec;
+                   t : in quad_double;
+                   m : in Standard_Floating_VecVecs.VecVec;
+                   ctm : in out QuadDobl_Complex_VecVecs.VecVec );
 
   -- DESCRIPTION :
   --   Returns ctm = c*t**m in ctm.  The implementation as a procedure

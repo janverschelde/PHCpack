@@ -1,5 +1,9 @@
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Standard_Complex_Numbers;
 with Standard_Mathematical_Functions;
+with DoblDobl_Complex_Numbers;
+with DoblDobl_Mathematical_Functions;
+with QuadDobl_Complex_Numbers;
+with QuadDobl_Mathematical_Functions;
 with Integer_Lifting_Utilities;          use Integer_Lifting_Utilities;
 --with Floating_Lifting_Utilities;         use Floating_Lifting_Utilities;
 --with Floating_Integer_Convertors;        use Floating_Integer_Convertors;
@@ -398,6 +402,9 @@ package body Polyhedral_Coefficient_Homotopies is
                    t : in double_float;
                    m : in Standard_Integer_Vectors.Vector;
                    ctm : in out Standard_Complex_Vectors.Vector ) is
+
+    use Standard_Complex_Numbers;
+
   begin
     for i in ctm'range loop
       ctm(i) := c(i)*Create((t**integer(m(i))));
@@ -409,7 +416,7 @@ package body Polyhedral_Coefficient_Homotopies is
                    m : in Standard_Floating_Vectors.Vector;
                    ctm : in out Standard_Complex_Vectors.Vector ) is
 
-    use Standard_Mathematical_Functions;
+    use Standard_Complex_Numbers,Standard_Mathematical_Functions;
 
   begin
     for i in ctm'range loop
@@ -434,6 +441,108 @@ package body Polyhedral_Coefficient_Homotopies is
                    t : in double_float;
                    m : in Standard_Floating_VecVecs.VecVec;
                    ctm : in out Standard_Complex_VecVecs.VecVec ) is
+  begin
+    for i in ctm'range loop
+      Eval(c(i).all,t,m(i).all,ctm(i).all);
+    end loop;
+  end Eval;
+
+  procedure Eval ( c : in DoblDobl_Complex_Vectors.Vector;
+                   t : in double_double;
+                   m : in Standard_Integer_Vectors.Vector;
+                   ctm : in out DoblDobl_Complex_Vectors.Vector ) is
+
+    use DoblDobl_Complex_Numbers;
+
+  begin
+    for i in ctm'range loop
+      ctm(i) := c(i)*Create((t**integer(m(i))));
+    end loop;
+  end Eval;
+
+  procedure Eval ( c : in DoblDobl_Complex_Vectors.Vector;
+                   t : in double_double;
+                   m : in Standard_Floating_Vectors.Vector;
+                   ctm : in out DoblDobl_Complex_Vectors.Vector ) is
+
+    use DoblDobl_Complex_Numbers,DoblDobl_Mathematical_Functions;
+    zero : constant double_double := create(0.0);
+    tmi : double_double;
+
+  begin
+    for i in ctm'range loop
+      if (REAL_PART(c(i)) = zero) and (IMAG_PART(c(i)) = zero)
+       then ctm(i) := Create(zero);
+       else tmi := t**integer(m(i)); ctm(i) := c(i)*Create(tmi);
+      end if;
+    end loop;
+  end Eval;
+
+  procedure Eval ( c : in DoblDobl_Complex_VecVecs.VecVec;
+                   t : in double_double; 
+                   m : in Standard_Integer_VecVecs.VecVec;
+                   ctm : in out DoblDobl_Complex_VecVecs.VecVec ) is
+  begin
+    for i in ctm'range loop
+      Eval(c(i).all,t,m(i).all,ctm(i).all);
+    end loop;
+  end Eval;
+
+  procedure Eval ( c : in DoblDobl_Complex_VecVecs.VecVec;
+                   t : in double_double;
+                   m : in Standard_Floating_VecVecs.VecVec;
+                   ctm : in out DoblDobl_Complex_VecVecs.VecVec ) is
+  begin
+    for i in ctm'range loop
+      Eval(c(i).all,t,m(i).all,ctm(i).all);
+    end loop;
+  end Eval;
+
+  procedure Eval ( c : in QuadDobl_Complex_Vectors.Vector;
+                   t : in quad_double;
+                   m : in Standard_Integer_Vectors.Vector;
+                   ctm : in out QuadDobl_Complex_Vectors.Vector ) is
+
+    use QuadDobl_Complex_Numbers;
+
+  begin
+    for i in ctm'range loop
+      ctm(i) := c(i)*Create((t**integer(m(i))));
+    end loop;
+  end Eval;
+
+  procedure Eval ( c : in QuadDobl_Complex_Vectors.Vector;
+                   t : in quad_double;
+                   m : in Standard_Floating_Vectors.Vector;
+                   ctm : in out QuadDobl_Complex_Vectors.Vector ) is
+
+    use QuadDobl_Complex_Numbers,QuadDobl_Mathematical_Functions;
+    zero : constant quad_double := create(0.0);
+    tmi : quad_double;
+
+  begin
+    for i in ctm'range loop
+      if (REAL_PART(c(i)) = zero) and (IMAG_PART(c(i)) = zero)
+       then ctm(i) := Create(zero);
+       else tmi := t**integer(m(i)); ctm(i) := c(i)*Create(tmi);
+      end if;
+    end loop;
+  end Eval;
+
+  procedure Eval ( c : in QuadDobl_Complex_VecVecs.VecVec;
+                   t : in quad_double; 
+                   m : in Standard_Integer_VecVecs.VecVec;
+                   ctm : in out QuadDobl_Complex_VecVecs.VecVec ) is
+  begin
+    for i in ctm'range loop
+      Eval(c(i).all,t,m(i).all,ctm(i).all);
+    end loop;
+  end Eval;
+
+  procedure Eval ( c : in QuadDobl_Complex_VecVecs.VecVec;
+                   t : in quad_double;
+                   m : in Standard_Floating_VecVecs.VecVec;
+                   ctm : in out QuadDobl_Complex_VecVecs.VecVec ) is
   begin
     for i in ctm'range loop
       Eval(c(i).all,t,m(i).all,ctm(i).all);

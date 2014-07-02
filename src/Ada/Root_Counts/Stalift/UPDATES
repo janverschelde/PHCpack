@@ -1,5 +1,6 @@
 Wed 2 Jul 2014 : small change in ts_jpmix.adb for compiler warning.
-  Editing in floating_polyhedral_continuation.adb.
+  Editing in floating_polyhedral_continuation.adb.  Extended 
+  polyhedral_coefficient_homotopies for double double and quad doubles.
 
 Sun 29 Jun 2014 : added double double quad quad double versions to
   random_coefficient_systems, tested by ts_rndcff.adb.
