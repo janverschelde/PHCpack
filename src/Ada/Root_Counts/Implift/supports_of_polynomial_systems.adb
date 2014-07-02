@@ -312,6 +312,102 @@ package body Supports_of_Polynomial_Systems is
     return res;
   end Select_Terms;
 
+  function Select_Terms ( p : DoblDobl_Complex_Polynomials.Poly;
+                          s : Lists_of_Floating_Vectors.List )
+                        return DoblDobl_Complex_Polynomials.Poly is
+
+    use DoblDobl_Complex_Polynomials;
+    res : Poly := Null_Poly;
+
+    procedure Visit_Term ( t : in Term; continue : out boolean ) is
+
+      v : constant Standard_Natural_Vectors.Vector(t.dg'range) := t.dg.all;
+
+    begin
+      if Is_In(s,v)
+       then Add(res,t);
+      end if;
+      continue := true;
+    end Visit_Term;
+    procedure Visit_Terms is new Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+    return res;
+  end Select_Terms;
+
+  function Select_Terms ( p : DoblDobl_Complex_Laurentials.Poly;
+                          s : Lists_of_Floating_Vectors.List )
+                        return DoblDobl_Complex_Laurentials.Poly is
+
+    use DoblDobl_Complex_Laurentials;
+    res : Poly := Null_Poly;
+
+    procedure Visit_Term ( t : in Term; continue : out boolean ) is
+
+      v : constant Standard_Integer_Vectors.Vector(t.dg'range) := t.dg.all;
+
+    begin
+      if Is_In(s,v)
+       then Add(res,t);
+      end if;
+      continue := true;
+    end Visit_Term;
+    procedure Visit_Terms is new Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+    return res;
+  end Select_Terms;
+
+  function Select_Terms ( p : QuadDobl_Complex_Polynomials.Poly;
+                          s : Lists_of_Floating_Vectors.List )
+                        return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Polynomials;
+    res : Poly := Null_Poly;
+
+    procedure Visit_Term ( t : in Term; continue : out boolean ) is
+
+      v : constant Standard_Natural_Vectors.Vector(t.dg'range) := t.dg.all;
+
+    begin
+      if Is_In(s,v)
+       then Add(res,t);
+      end if;
+      continue := true;
+    end Visit_Term;
+    procedure Visit_Terms is new Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+    return res;
+  end Select_Terms;
+
+  function Select_Terms ( p : QuadDobl_Complex_Laurentials.Poly;
+                          s : Lists_of_Floating_Vectors.List )
+                        return QuadDobl_Complex_Laurentials.Poly is
+
+    use QuadDobl_Complex_Laurentials;
+    res : Poly := Null_Poly;
+
+    procedure Visit_Term ( t : in Term; continue : out boolean ) is
+
+      v : constant Standard_Integer_Vectors.Vector(t.dg'range) := t.dg.all;
+
+    begin
+      if Is_In(s,v)
+       then Add(res,t);
+      end if;
+      continue := true;
+    end Visit_Term;
+    procedure Visit_Terms is new Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+    return res;
+  end Select_Terms;
+
   function Create ( p : Standard_Complex_Poly_Systems.Poly_Sys )
                   return Arrays_of_Integer_Vector_Lists.Array_of_Lists is
 
@@ -451,6 +547,138 @@ package body Supports_of_Polynomial_Systems is
                         return Standard_Complex_Laur_Systems.Laur_Sys is
 
     use Standard_Complex_Laur_Systems;
+    res : Laur_Sys(p'range);
+    ind : integer32 := 0;
+
+  begin
+    for i in m'range loop
+      for j in 1..m(i) loop
+        ind := ind + 1;
+        res(ind) := Select_Terms(p(ind),s(i));
+      end loop;
+    end loop;
+    return res;
+  end Select_Terms;
+
+  function Select_Terms ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                          s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+    use DoblDobl_Complex_Poly_Systems;
+    res : Poly_Sys(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := Select_Terms(p(i),s(i));
+    end loop;
+    return res;
+  end Select_Terms;
+
+  function Select_Terms ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                          s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+    use DoblDobl_Complex_Laur_Systems;
+    res : Laur_Sys(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := Select_Terms(p(i),s(i));
+    end loop;
+    return res;
+  end Select_Terms;
+
+  function Select_Terms ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                          m : Standard_Integer_Vectors.Vector; 
+                          s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+    use DoblDobl_Complex_Poly_Systems;
+    res : Poly_Sys(p'range);
+    ind : integer32 := 0;
+
+  begin
+    for i in m'range loop
+      for j in 1..m(i) loop
+        ind := ind + 1;
+        res(ind) := Select_Terms(p(ind),s(i));
+      end loop;
+    end loop;
+    return res;
+  end Select_Terms;
+
+  function Select_Terms ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                          m : Standard_Integer_Vectors.Vector;
+                          s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+    use DoblDobl_Complex_Laur_Systems;
+    res : Laur_Sys(p'range);
+    ind : integer32 := 0;
+
+  begin
+    for i in m'range loop
+      for j in 1..m(i) loop
+        ind := ind + 1;
+        res(ind) := Select_Terms(p(ind),s(i));
+      end loop;
+    end loop;
+    return res;
+  end Select_Terms;
+
+  function Select_Terms ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                          s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+    use QuadDobl_Complex_Poly_Systems;
+    res : Poly_Sys(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := Select_Terms(p(i),s(i));
+    end loop;
+    return res;
+  end Select_Terms;
+
+  function Select_Terms ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                          s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+    use QuadDobl_Complex_Laur_Systems;
+    res : Laur_Sys(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := Select_Terms(p(i),s(i));
+    end loop;
+    return res;
+  end Select_Terms;
+
+  function Select_Terms ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                          m : Standard_Integer_Vectors.Vector; 
+                          s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+    use QuadDobl_Complex_Poly_Systems;
+    res : Poly_Sys(p'range);
+    ind : integer32 := 0;
+
+  begin
+    for i in m'range loop
+      for j in 1..m(i) loop
+        ind := ind + 1;
+        res(ind) := Select_Terms(p(ind),s(i));
+      end loop;
+    end loop;
+    return res;
+  end Select_Terms;
+
+  function Select_Terms ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                          m : Standard_Integer_Vectors.Vector;
+                          s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+    use QuadDobl_Complex_Laur_Systems;
     res : Laur_Sys(p'range);
     ind : integer32 := 0;
 

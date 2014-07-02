@@ -13,6 +13,14 @@ with Standard_Complex_Polynomials;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
+with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Laurentials;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Laurentials;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;
 
 package Supports_of_Polynomial_Systems is
 
@@ -102,6 +110,19 @@ package Supports_of_Polynomial_Systems is
                           s : Lists_of_Floating_Vectors.List )
                         return Standard_Complex_Laurentials.Poly;
 
+  function Select_Terms ( p : DoblDobl_Complex_Polynomials.Poly;
+                          s : Lists_of_Floating_Vectors.List )
+                        return DoblDobl_Complex_Polynomials.Poly;
+  function Select_Terms ( p : DoblDobl_Complex_Laurentials.Poly;
+                          s : Lists_of_Floating_Vectors.List )
+                        return DoblDobl_Complex_Laurentials.Poly;
+  function Select_Terms ( p : QuadDobl_Complex_Polynomials.Poly;
+                          s : Lists_of_Floating_Vectors.List )
+                        return QuadDobl_Complex_Polynomials.Poly;
+  function Select_Terms ( p : QuadDobl_Complex_Laurentials.Poly;
+                          s : Lists_of_Floating_Vectors.List )
+                        return QuadDobl_Complex_Laurentials.Poly;
+
   -- DESCRIPTION :
   --   Returns those terms in p whose exponent vector occurs in the list s.
 
@@ -146,6 +167,36 @@ package Supports_of_Polynomial_Systems is
                           m : Standard_Integer_Vectors.Vector;
                           s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
                         return Standard_Complex_Laur_Systems.Laur_Sys;
+
+  function Select_Terms ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                          s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Select_Terms ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                          m : Standard_Integer_Vectors.Vector; 
+                          s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Select_Terms ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                          s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return DoblDobl_Complex_Laur_Systems.Laur_Sys;
+  function Select_Terms ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                          m : Standard_Integer_Vectors.Vector;
+                          s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return DoblDobl_Complex_Laur_Systems.Laur_Sys;
+
+  function Select_Terms ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                          s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function Select_Terms ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                          m : Standard_Integer_Vectors.Vector; 
+                          s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function Select_Terms ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                          s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return QuadDobl_Complex_Laur_Systems.Laur_Sys;
+  function Select_Terms ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                          m : Standard_Integer_Vectors.Vector;
+                          s : Arrays_of_Floating_Vector_Lists.Array_of_Lists )
+                        return QuadDobl_Complex_Laur_Systems.Laur_Sys;
 
   -- DESCRIPTION :
   --   Returns those terms of the polynomials in p whose exponent vectors

@@ -1,0 +1,159 @@
+Wed 2 Jul 2014 : extended supports_of_polynomial_systems with routines
+  for double double and quad double coefficients.
+
+Fri 20 Dec 2013 : added functions to supports_of_polynomial_systems,
+  with ts_supspan almost complete.  New package transformation_of_supports
+  and for use in maindeco: driver_to_rank_supports.
+
+Thu 19 Dec 2013 : extended supports_of_polynomial_systems and ts_supspan.
+
+Tue 19 Nov 2013 : extended span_of_supports with 64-bit arithmetic,
+  tested by ts_supspan.  Package renaming: for every "64" in a package
+  name, there should be a "32" to make the difference explicit,
+  and also for future refactoring of the code!
+
+Fri 15 Nov 2013 : extended span_of_supports with Cayley embedding,
+  tested by ts_supspan.
+
+Thu 14 Nov 2013 : "in out" to "in" in supports_of_polynomial_systems
+  for GNAT GPL 2013 warnings.  New package span_of_supports,
+  tested by ts_supspan.
+
+Thu 13 Jun 2013 : because of natural32 and integer32 types, updated
+  trees_of_vectors_io.a*, trees_of_vectors.adb, volumes, ts_impvol,
+  lists_of_vectors_utilities, standard_integer_vertices,
+  standard_integer_vertices, drivers_for_vertex_points,
+  standard_integer_transformations_io, standard_integer_transformations
+  integer_vectors_utilities, transforming_integer_vector_lists, ts_transfo.adb
+  supports_of_polynomial_systems, ts_supports.adb, and ts_supspan.adb.
+
+Tue 4 Jun 2013 : new ts_supspan.adb to compute span of supports.
+
+Tue 14 May 2013 : moved out the *durand* files and black_box_solvers,
+  with the ts_durker.adb test file to a new directory Curves.
+
+Mon 13 May 2013 : bug in black_box_univariate_solvers.adb when the polynomial
+  is not monic!  Changed black_box_univariate_solvers.ads to export the
+  coefficient_vector function.  New {dobldobl,quaddobl}_durand_kerner,
+  tested by ts_durker.adb.
+
+Mon 15 Apr 2013 : extended ts_supports.adb with an extra test procedure.
+
+Sun 17 Feb 2013 : extended supports_of_polynomial_systems with procedures
+  to select coefficients of the polynomials, tested by ts_supports.adb.
+
+Mon 12 Nov 2012 : changed ts_transfo.adb because of a warning.
+
+Sat 10 Nov 2012 : because of compiler warnings changed transformations.ads,
+  transformations.adb, transforming_integer_vector_lists.adb,
+  lists_of_vector_utilities.adb and integer_vectors_utilities.adb.
+  Changed transformations into standard_integer_transformations and this
+  causes changes in arrays_of_lists_utilities.adb, volumes.adb,
+  transforming_solutions.ads, mixed_homotopy_continuation.adb,
+  transforming_laurent_systems.ads, standard_integer_transformations_io.adb
+  standard_integer_transformations_io.ads, vertices.adb,
+  transforming_integer_vector_lists.ads, integer_vectors_utilities.ads,
+  ts_supports.adb, ts_transfo.adb, ts_impvol.adb.
+  New package standard_integer64_transformations.
+  Renamed vertices into standard_integer_vertices, which changed
+  drivers_for_vertex_points.adb.  New packages integer64_vectors_utilities,
+  list_of_vectors64_utilities, transforming_integer64_vector_lists,
+  and standard_integer64_vectors.  Also the original 32-bit packages
+  are modified: integer_vectors_utilities,lists_of_vectors_utilities,
+  and transforming_integer_vectors_lists.
+
+Thu 9 Jun 2011 : changed mixed_homotopy_continuation.adb for changed
+  specifiations of standard_root_refiners.
+
+Wed 1 Jun 2011 : for warnings, changed mixed_homotopy_continuation.adb,
+  hybrid_durand_kerner.adb, arrays_of_lists_utilities.adb, 
+  transforming_solutions.adb, set_structures_and_volumes.adb,
+  and drivers_for_coefficient_systems.adb.
+
+Sun 29 May 2011 : changed supports_of_polynomial_systems.adb, vertices.adb,
+  black_box_univariate_solvers.adb for warnings of the GNAT GPL 2010 compiler.
+
+Thu 29 May 2008 : ts_transfo.adb shows results of various ways to create
+  transformations from a vector.
+
+Thu 11 Oct 2007 : fixed bug in black_box_univariate_solvers to deal with
+  linear polynomial equations, probably still wrong for Laurentials....
+
+Thu 9 Aug 2007 : extended black_box_univariate_solvers to Laurentials.
+
+Fri 3 Aug 2007 : supports_of_polynomial_systems changed because of the
+  "Laurentials".  Also changed transforming_laurent_systems.ads and
+  mixed_homotopy_continuation.adb.
+
+Wed 20 Jun 2007 : fixed bug in mixed_homotopy_continuation.adb, replacing
+  the faulty "Evaluate" by "Eval" of Laurent polynomial functions.
+
+Mon 18 Jun 2007 : driver_for_polyhedral_continuation has become the package
+  drivers_for_coefficient_systems; changed drivers_for_implicit_lifting.adb.
+  Extended supports_of_polynomial_systems with "Select_Lifted".
+  Did some formatting in mixed_homotopy_continuation.adb.
+
+Thu 14 Jun 2007 : extended supports_of_polynomial_systems with two
+  Select_Terms functions that take type of mixture into account.
+
+Mon 11 Jun 2007 : drivers_for_implicit_lifting have extra procedure to
+  accept also Laurent polynomial systems on input.
+
+Thu 25 Jan 2007 : with the need to have a silent blackbox durand_kerner,
+  renamed the files black_box_durand_kerner into black_box_univariate_solvers,
+  note that the latter is now a package, not anymore a procedure.
+
+Thu 30 Nov 2006 : back_box_durand_kerner.adb now also writes the solution
+  list to the output file.
+
+Fri 24 Nov 2006 : added Newton to standard_durand_kerner.ads as a
+  validation in black_box_durand_kerner.adb.
+
+Thu 23 Nov 2006 : changed standard_durand_kerner.ad* and
+  black_box_durand_kerner.ad* to convert to solution list.
+
+Wed 18 Oct 2006 : moved definition of representation of a transfo
+  from transformations.adb to transformations.ads,
+  because of GNAT 3.3.5 20050117 (prerelease) (SUSE Linux).
+
+Wed 4 Oct 2006 : replaced power_lists by the more extended package
+  supports_of_polynomial_systems, changed ts_powlis in ts_supports;
+  drivers_for_vertex_points.adb, set_structures_and_volumes.adb,
+  generic_position.adb, mixed_homotopy_continuation.adb, and also
+  ts_impvol.adb changed as well.
+
+Thu 15 Jun 2006 : removed binomial_system_solvers, ts_binsolve,
+  fewnomial_system_solvers and ts_fewsolve because now obsolete.
+
+Wed 14 Jun 2006 : because of a warning on AIX, changed the file
+  transforming_solutions.adb.
+
+Thu 23 Mar 2006 : updated set_structures_and_volumes.adb because of a
+  changed standard_linear_product_system.
+
+Thu 16 Mar 2006 : rewrote the black_box_fewnomial_solver.adb to use
+  the new standard_sparse_solvers and moved it to ../Fewnomials
+
+Tue 2 Sep 2003 : changed ts_fewsolve.adb, wrong root refiner call
+
+Wed 10 Sep 2003 : created black_box_fewnomial_solver from the code
+  in ts_fewsolve, which now calls it in a loop.
+
+******************* updates since version 2.2 beta ****************
+
+Wed 31 May 2000 : due to modified Newton in root refiners, changed
+  mixed_homotopy_continuation.adb
+
+Fri 21 July 2000 : changed the procedure durand_kerner into the
+  package standard_durand_kerner, with a reporting and silent version
+  of the Durand-Kerner method.  Changed ts_durker and
+  mixed_homotopy_continuation.adb.
+
+Thu 30 Nov 2000 : changed vertices.adb because of never assigned variables.
+
+Thu 21 June 2001 : exception handler in standard_durand_kerner now permits
+  to treat polynomials of large degrees
+
+Fri 3 Aug 2001 : developed in ts_durker.adb a hybrid standard/multi-precision
+  method of Durand-Kerner.  This method is available in the new package
+  hybrid_durand_kerner.

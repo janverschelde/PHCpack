@@ -1,4 +1,4 @@
-Polyhedral homotopies by implicit lifting in PHCpack version 2.3.86
+Polyhedral homotopies by implicit lifting in PHCpack version 2.3.90
 
 This directory contains software for the computation of mixed volumes,
 according to the recursive formula Bershtein used in his proof.
