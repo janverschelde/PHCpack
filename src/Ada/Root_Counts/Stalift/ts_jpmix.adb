@@ -67,7 +67,7 @@ procedure ts_jpmix is
   --   memory efficient polyhedral continuation.
 
     file : file_type;
-    n,r,m,sum : natural32;
+    n,r,m,sum : natural32 := 0;
     mv : natural32 := 0;
     mix : Standard_Integer_Vectors.Link_to_Vector;
     mlb : Mixed_Labels;
