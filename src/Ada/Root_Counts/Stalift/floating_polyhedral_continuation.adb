@@ -26,27 +26,6 @@ with Standard_Complex_Laur_Systems_io;
 
 package body Floating_Polyhedral_Continuation is
 
--- UTILITIES FOR POLYHEDRAL COEFFICIENT HOMOTOPY :
-
---  procedure put ( file : in file_type;
---                  v : in Standard_Floating_Vectors.Vector;
---                  fore,aft,exp : in natural32 ) is
---  begin
---    for i in v'range loop
---      put(file,v(i),fore,aft,exp);
---    end loop;
---  end put;
-
---  procedure put ( file : in file_type;
---                  v : in Standard_Complex_Vectors.Vector;
---                  fore,aft,exp : in natural32 ) is
---  begin
---    for i in v'range loop
---      put(file,REAL_PART(v(i)),fore,aft,exp);
---      put(file,IMAG_PART(v(i)),fore,aft,exp);
---    end loop;
---  end put;
-
 -- SANITY CHECKS :
 
   procedure Extract_Regular ( sols : in out Solution_List ) is
@@ -61,27 +40,6 @@ package body Floating_Polyhedral_Continuation is
   begin
     Extract_Regular_Solutions(sols);
   end Extract_Regular;
-
---  procedure Refine ( file : in file_type; p : in Laur_Sys;
---                     sols : in out Solution_List ) is
---
---  -- DESCRIPTION :
---  --   Given a polyhedral homotopy p and a list of solution for t=1,
---  --   this list of solutions will be refined.
---
---    pp : Poly_Sys(p'range) := Laurent_to_Polynomial_System(p);
---    n : constant integer32 := p'length;
---   -- eps : constant double_float := 10.0**(-12);
---   -- tolsing : constant double_float := 10.0**(-8);
---   -- max : constant natural32 := 3;
---   -- numb : natural32 := 0;
---
---  begin
---    pp := Laurent_to_Polynomial_System(p);
---    Substitute(n+1,Create(1.0),pp);
---   -- Reporting_Root_Refiner(file,pp,sols,eps,eps,tolsing,numb,max,false);
---    Clear(pp); Extract_Regular(sols);
---  end Refine;
 
 -- FIRST LAYER OF CONTINUATION ROUTINES :
 
