@@ -1,5 +1,6 @@
 Wed 2 Jul 2014 : extended supports_of_polynomial_systems with routines
-  for double double and quad double coefficients.
+  for double double and quad double coefficients.  Prepared the package
+  transforming_laurent_systems for double double and quad doubles.
 
 Fri 20 Dec 2013 : added functions to supports_of_polynomial_systems,
   with ts_supspan almost complete.  New package transformation_of_supports
