@@ -1,4 +1,4 @@
-Multivariate polynomials and polynomial systems over rings in PHCv2.3.89.
+Multivariate polynomials and polynomial systems over rings in PHCv2.3.90.
 
 New in release 2 is the availability of multiprecision numbers.
 The data structures are entirely redefined using Ada 95 concepts.
@@ -60,6 +60,8 @@ standard_complex_laur_randomizers : randomize coefficients of polynomials
 standard_complex_substitutors     : substitute equations into polynomials
 standard_poly_laur_convertors     : convert polynomials to Laurent polynomials
 standard_laur_poly_convertors     : convert Laurent polynomials to polynomials
+dobldobl_laur_poly_convertors     : convert Laurent polynomials for dobldobl
+quaddobl_laur_poly_convertors     : convert Laurent polynomials for quaddobl
 multprec_laur_poly_convertors     : multiprecision "is_genuine_Laurent"
 standard_to_multprec_convertors   : convert from standard to multiprecision
 double_double_polynomials         : polynomials with double double coefficients

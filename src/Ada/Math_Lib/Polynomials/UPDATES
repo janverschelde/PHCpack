@@ -1,3 +1,8 @@
+Thu 3 Jul 2014 : fixed compilation error in dobldobl_laur_poly_convertors.adb
+  and in quaddobl_laur_poly_convertors.adb.
+
+Wed 2 Jul 2014 : new packages {dobl,quad}dobl_laur_poly_convertors.
+
 Wed 25 Jun 2014 : extended symbol_table with a function to return the
   standard variables x1, x2, ... useful for random systems.
 
