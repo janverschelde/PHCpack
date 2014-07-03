@@ -25,6 +25,50 @@ package body Transforming_Laurent_Systems is
     return init;
   end Initial_Link_to_Vector;
 
+  function Initial_Link_to_Vector
+             ( p : DoblDobl_Complex_Laurentials.Poly )
+             return Link_to_Vector is
+
+  -- DESCRIPTION :
+  --   Returns the initial degrees of the polynomial p.
+
+    use DoblDobl_Complex_Laurentials;
+    init : Link_to_Vector;
+
+    procedure Init_Term ( t : in Term; cont : out boolean ) is
+    begin
+      init := new Standard_Integer_Vectors.Vector'(t.dg.all);
+      cont := false;
+    end Init_Term;
+    procedure Initial_Term is new Visiting_Iterator (Init_Term);
+
+  begin
+    Initial_Term(p);
+    return init;
+  end Initial_Link_to_Vector;
+
+  function Initial_Link_to_Vector
+             ( p : QuadDobl_Complex_Laurentials.Poly )
+             return Link_to_Vector is
+
+  -- DESCRIPTION :
+  --   Returns the initial degrees of the polynomial p.
+
+    use QuadDobl_Complex_Laurentials;
+    init : Link_to_Vector;
+
+    procedure Init_Term ( t : in Term; cont : out boolean ) is
+    begin
+      init := new Standard_Integer_Vectors.Vector'(t.dg.all);
+      cont := false;
+    end Init_Term;
+    procedure Initial_Term is new Visiting_Iterator (Init_Term);
+
+  begin
+    Initial_Term(p);
+    return init;
+  end Initial_Link_to_Vector;
+
   procedure Shift ( p : in out Standard_Complex_Laurentials.Poly ) is
 
     use Standard_Complex_Laurentials;
@@ -72,6 +116,100 @@ package body Transforming_Laurent_Systems is
     return res;
   end Shift;
 
+  procedure Shift ( p : in out DoblDobl_Complex_Laurentials.Poly ) is
+
+    use DoblDobl_Complex_Laurentials;
+    init : Link_to_Vector := Initial_Link_to_Vector(p);
+
+    procedure Shift_Term ( t : in out Term; cont : out boolean ) is
+    begin
+      Sub(Link_to_Vector(t.dg),init);
+      cont := true;
+    end Shift_Term;
+    procedure Shift_Terms is new Changing_Iterator (Shift_Term);
+
+  begin
+    if p /= Null_Poly
+     then Shift_Terms(p);
+    end if;
+    Clear(init);
+  end Shift;
+
+  function Shift ( p : DoblDobl_Complex_Laurentials.Poly )
+                 return DoblDobl_Complex_Laurentials.Poly is
+
+    use DoblDobl_Complex_Laurentials;
+    res : Poly := Null_Poly;
+    init : Link_to_Vector := Initial_Link_to_Vector(p);
+
+    procedure Shift_Term ( t : in Term; cont : out boolean ) is
+
+      rt : Term;
+
+    begin
+      rt.cf := t.cf;
+      rt.dg := t.dg - Degrees(init);
+      Add(res,rt);
+      Clear(rt);
+      cont := true;
+    end Shift_Term;
+    procedure Shift_Terms is new Visiting_Iterator (Shift_Term);
+
+  begin
+    if p /= Null_Poly
+     then Shift_Terms(p);
+    end if;
+    Clear(init);
+    return res;
+  end Shift;
+
+  procedure Shift ( p : in out QuadDobl_Complex_Laurentials.Poly ) is
+
+    use QuadDobl_Complex_Laurentials;
+    init : Link_to_Vector := Initial_Link_to_Vector(p);
+
+    procedure Shift_Term ( t : in out Term; cont : out boolean ) is
+    begin
+      Sub(Link_to_Vector(t.dg),init);
+      cont := true;
+    end Shift_Term;
+    procedure Shift_Terms is new Changing_Iterator (Shift_Term);
+
+  begin
+    if p /= Null_Poly
+     then Shift_Terms(p);
+    end if;
+    Clear(init);
+  end Shift;
+
+  function Shift ( p : QuadDobl_Complex_Laurentials.Poly )
+                 return QuadDobl_Complex_Laurentials.Poly is
+
+    use QuadDobl_Complex_Laurentials;
+    res : Poly := Null_Poly;
+    init : Link_to_Vector := Initial_Link_to_Vector(p);
+
+    procedure Shift_Term ( t : in Term; cont : out boolean ) is
+
+      rt : Term;
+
+    begin
+      rt.cf := t.cf;
+      rt.dg := t.dg - Degrees(init);
+      Add(res,rt);
+      Clear(rt);
+      cont := true;
+    end Shift_Term;
+    procedure Shift_Terms is new Visiting_Iterator (Shift_Term);
+
+  begin
+    if p /= Null_Poly
+     then Shift_Terms(p);
+    end if;
+    Clear(init);
+    return res;
+  end Shift;
+
   procedure Shift ( L : in out Standard_Complex_Laur_Systems.Laur_Sys ) is
   begin
     for k in L'range loop
@@ -83,6 +221,44 @@ package body Transforming_Laurent_Systems is
                  return Standard_Complex_Laur_Systems.Laur_Sys is
 
     res : Standard_Complex_Laur_Systems.Laur_Sys(L'range);
+
+  begin
+    for k in L'range loop
+      res(k) := Shift(L(k));
+    end loop;
+    return res;
+  end Shift;
+
+  procedure Shift ( L : in out DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
+  begin
+    for k in L'range loop
+      Shift(l(k));
+    end loop;
+  end Shift;
+
+  function Shift ( L : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                 return DoblDobl_Complex_Laur_Systems.Laur_Sys is
+
+    res : DoblDobl_Complex_Laur_Systems.Laur_Sys(L'range);
+
+  begin
+    for k in L'range loop
+      res(k) := Shift(L(k));
+    end loop;
+    return res;
+  end Shift;
+
+  procedure Shift ( L : in out QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
+  begin
+    for k in L'range loop
+      Shift(l(k));
+    end loop;
+  end Shift;
+
+  function Shift ( L : QuadDobl_Complex_Laur_Systems.Laur_Sys )
+                 return QuadDobl_Complex_Laur_Systems.Laur_Sys is
+
+    res : QuadDobl_Complex_Laur_Systems.Laur_Sys(L'range);
 
   begin
     for k in L'range loop

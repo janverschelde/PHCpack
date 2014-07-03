@@ -2,6 +2,10 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;           use Standard_Integer_Vectors;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Systems;
+with DoblDobl_Complex_Laurentials;
+with DoblDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Laurentials;
+with QuadDobl_Complex_Laur_Systems;
 with Standard_Integer32_Transformations; 
  use Standard_Integer32_Transformations;
 
@@ -13,10 +17,22 @@ package Transforming_Laurent_Systems is
   procedure Shift ( p : in out Standard_Complex_Laurentials.Poly );
   function  Shift ( p : Standard_Complex_Laurentials.Poly )
                   return Standard_Complex_Laurentials.Poly;
+  procedure Shift ( p : in out DoblDobl_Complex_Laurentials.Poly );
+  function  Shift ( p : DoblDobl_Complex_Laurentials.Poly )
+                  return DoblDobl_Complex_Laurentials.Poly;
+  procedure Shift ( p : in out QuadDobl_Complex_Laurentials.Poly );
+  function  Shift ( p : QuadDobl_Complex_Laurentials.Poly )
+                  return QuadDobl_Complex_Laurentials.Poly;
 
   procedure Shift ( L : in out Standard_Complex_Laur_Systems.Laur_Sys );
   function  Shift ( L : Standard_Complex_Laur_Systems.Laur_Sys )
                   return Standard_Complex_Laur_Systems.Laur_Sys;
+  procedure Shift ( L : in out DoblDobl_Complex_Laur_Systems.Laur_Sys );
+  function  Shift ( L : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                  return DoblDobl_Complex_Laur_Systems.Laur_Sys;
+  procedure Shift ( L : in out QuadDobl_Complex_Laur_Systems.Laur_Sys );
+  function  Shift ( L : QuadDobl_Complex_Laur_Systems.Laur_Sys )
+                  return QuadDobl_Complex_Laur_Systems.Laur_Sys;
 
   -- DESCRIPTION :
   --   Shifts the support of the polynomial so that the constant term
