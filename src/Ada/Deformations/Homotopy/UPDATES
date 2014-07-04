@@ -1,3 +1,6 @@
+Fri 4 Jul 2014 : new package dobldobl_stable_homotopies.adb for stable
+  polyhedral continuation with double double complex arithmetic.
+
 Tue 24 Jun 2014 : double double versions of coefficient homotopies.
   In drivers_for_homotopy_creation, also the coefficient homotopies are
   created for standard complex polynomial systems.
