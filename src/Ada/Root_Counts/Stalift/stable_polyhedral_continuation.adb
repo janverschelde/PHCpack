@@ -2,15 +2,29 @@ with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors_io;
 with Standard_Complex_VecVecs;
+with DoblDobl_Complex_VecVecs;
+with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Laur_Functions;
-with Standard_Complex_Laur_SysFun;      use Standard_Complex_Laur_SysFun;
-with Standard_Complex_Laur_Jacomats;    use Standard_Complex_Laur_Jacomats;
+with Standard_Complex_Laur_SysFun;
+with Standard_Complex_Laur_Jacomats;
+with DoblDobl_Complex_Laur_Functions;
+with DoblDobl_Complex_Laur_SysFun;
+with DoblDobl_Complex_Laur_Jacomats;
+with QuadDobl_Complex_Laur_Functions;
+with QuadDobl_Complex_Laur_SysFun;
+with QuadDobl_Complex_Laur_Jacomats;
 with Exponent_Vectors;                  use Exponent_Vectors;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
-with Standard_Stable_Homotopies;        use Standard_Stable_Homotopies;
+with DoblDobl_Complex_Laur_Systems_io;  use DoblDobl_Complex_Laur_Systems_io;
+with QuadDobl_Complex_Laur_Systems_io;  use QuadDobl_Complex_Laur_Systems_io;
+with Standard_Stable_Homotopies;
+with DoblDobl_Stable_Homotopies;
+with QuadDobl_Stable_Homotopies;
 with Floating_Mixed_Subdivisions_io;    use Floating_Mixed_Subdivisions_io;
 with Mixed_Volume_Computation;          use Mixed_Volume_Computation;
 with Floating_Polyhedral_Continuation;  use Floating_Polyhedral_Continuation;
+with DoblDobl_Polyhedral_Continuation;  use DoblDobl_Polyhedral_Continuation;
+with QuadDobl_Polyhedral_Continuation;  use QuadDobl_Polyhedral_Continuation;
 
 package body Stable_Polyhedral_Continuation is
 
@@ -188,8 +202,10 @@ package body Stable_Polyhedral_Continuation is
 -- DEFINING POLYHEDRAL HOMOTOPIES :
 
   procedure Assign_Multiplicity
-               ( s : in out Solution_List; vol : in natural32 ) is
+               ( s : in out Standard_Complex_Solutions.Solution_List;
+                 vol : in natural32 ) is
 
+    use Standard_Complex_Solutions;
     m : integer32;
     tmp : Solution_List;
     ls : Link_to_Solution;
@@ -207,7 +223,51 @@ package body Stable_Polyhedral_Continuation is
     end if;
   end Assign_Multiplicity;
 
-  function Create ( q : in Laur_Sys )
+  procedure Assign_Multiplicity
+               ( s : in out DoblDobl_Complex_Solutions.Solution_List;
+                 vol : in natural32 ) is
+
+    use DoblDobl_Complex_Solutions;
+    m : integer32;
+    tmp : Solution_List;
+    ls : Link_to_Solution;
+
+  begin
+    if vol > Length_Of(s) then
+      m := integer32(vol/Length_Of(s));
+      tmp := s;
+      while not Is_Null(tmp) loop
+        ls := Head_Of(tmp);
+        ls.m := m;
+        Set_Head(tmp,ls);
+        tmp := Tail_Of(tmp);
+      end loop;
+    end if;
+  end Assign_Multiplicity;
+
+  procedure Assign_Multiplicity
+               ( s : in out QuadDobl_Complex_Solutions.Solution_List;
+                 vol : in natural32 ) is
+
+    use QuadDobl_Complex_Solutions;
+    m : integer32;
+    tmp : Solution_List;
+    ls : Link_to_Solution;
+
+  begin
+    if vol > Length_Of(s) then
+      m := integer32(vol/Length_Of(s));
+      tmp := s;
+      while not Is_Null(tmp) loop
+        ls := Head_Of(tmp);
+        ls.m := m;
+        Set_Head(tmp,ls);
+        tmp := Tail_Of(tmp);
+      end loop;
+    end if;
+  end Assign_Multiplicity;
+
+  function Create ( q : in Standard_Complex_Laur_Systems.Laur_Sys )
                   return Standard_Complex_VecVecs.VecVec is
 
   -- DESCRIPTION :
@@ -230,12 +290,100 @@ package body Stable_Polyhedral_Continuation is
     return res;
   end Create;
 
-  function Number_of_Zero_Polynomials ( q : Laur_Sys ) return integer32 is
+  function Create ( q : in DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                  return DoblDobl_Complex_VecVecs.VecVec is
+
+  -- DESCRIPTION :
+  --   Returns the coefficient vectors of the polynomials in q.
+
+    res : DoblDobl_Complex_VecVecs.VecVec(q'range);
+
+  begin
+    for i in q'range loop
+      declare
+        coeff_q : constant DoblDobl_Complex_Vectors.Vector
+                := DoblDobl_Complex_Laur_Functions.Coeff(q(i));
+      begin
+        res(i) := new DoblDobl_Complex_Vectors.Vector(coeff_q'range);
+        for k in coeff_q'range loop
+          res(i)(k) := coeff_q(k);
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Create;
+
+  function Create ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys )
+                  return QuadDobl_Complex_VecVecs.VecVec is
+
+  -- DESCRIPTION :
+  --   Returns the coefficient vectors of the polynomials in q.
+
+    res : QuadDobl_Complex_VecVecs.VecVec(q'range);
+
+  begin
+    for i in q'range loop
+      declare
+        coeff_q : constant QuadDobl_Complex_Vectors.Vector
+                := QuadDobl_Complex_Laur_Functions.Coeff(q(i));
+      begin
+        res(i) := new QuadDobl_Complex_Vectors.Vector(coeff_q'range);
+        for k in coeff_q'range loop
+          res(i)(k) := coeff_q(k);
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Create;
+
+  function Number_of_Zero_Polynomials
+             ( q : Standard_Complex_Laur_Systems.Laur_Sys )
+             return integer32 is
 
   -- DESCRIPTION :
   --   Returns the number of zero polynomials in q.
 
     use Standard_Complex_Laurentials;
+
+    res : integer32 := 0;
+
+  begin
+    for i in q'range loop
+      if q(i) = Null_Poly
+       then res := res + 1;
+      end if;
+    end loop;
+    return res;
+  end Number_of_Zero_Polynomials;
+
+  function Number_of_Zero_Polynomials
+             ( q : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+             return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the number of zero polynomials in q.
+
+    use DoblDobl_Complex_Laurentials;
+
+    res : integer32 := 0;
+
+  begin
+    for i in q'range loop
+      if q(i) = Null_Poly
+       then res := res + 1;
+      end if;
+    end loop;
+    return res;
+  end Number_of_Zero_Polynomials;
+
+  function Number_of_Zero_Polynomials
+             ( q : QuadDobl_Complex_Laur_Systems.Laur_Sys )
+             return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the number of zero polynomials in q.
+
+    use QuadDobl_Complex_Laurentials;
 
     res : integer32 := 0;
 
@@ -267,14 +415,17 @@ package body Stable_Polyhedral_Continuation is
   end Number_of_Invalid_Supports;
 
   procedure Silent_Polyhedral_Continuation
-              ( q : in Laur_Sys; b : in double_float; 
+              ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                b : in double_float; 
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in Mixed_Cell; k,nbz : in integer32; vol : in natural32;
                 ztp : in Standard_Integer_Vectors.Vector;
-                sols : out Solution_List ) is
+                sols : out Standard_Complex_Solutions.Solution_List ) is
 
-    use Arrays_of_Floating_Vector_Lists;
+    use Arrays_of_Floating_Vector_Lists,Standard_Complex_Solutions;
+    use Standard_Complex_Laur_Systems,Standard_Complex_Laur_SysFun;
+    use Standard_Complex_Laur_Jacomats,Standard_Stable_Homotopies;
 
    -- n : constant natural := q'last;
     sq : Laur_Sys(q'range) := Substitute_Zeroes(q,ztp,nbz);
@@ -334,15 +485,161 @@ package body Stable_Polyhedral_Continuation is
                    raise;
   end Silent_Polyhedral_Continuation;
 
-  procedure Reporting_Polyhedral_Continuation
-              ( file : in file_type; q : in Laur_Sys; b : in double_float; 
+  procedure Silent_Polyhedral_Continuation
+              ( q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                b : in double_float; 
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in Mixed_Cell; k,nbz : in integer32; vol : in natural32;
                 ztp : in Standard_Integer_Vectors.Vector;
-                sols : out Solution_List ) is
+                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
 
-    use Arrays_of_Floating_Vector_Lists;
+    use Arrays_of_Floating_Vector_Lists,DoblDobl_Complex_Solutions;
+    use DoblDobl_Complex_Laur_Systems,DoblDobl_Complex_Laur_SysFun;
+    use DoblDobl_Complex_Laur_Jacomats,DoblDobl_Stable_Homotopies;
+
+   -- n : constant natural := q'last;
+    sq : Laur_Sys(q'range) := Substitute_Zeroes(q,ztp,nbz);
+
+  begin
+   -- if Number_of_Zero_Polynomials(sq) /= nbz then
+   --   put_line("Degenerate subsystem, there are no isolated solutions.");
+   -- else
+    if Number_of_Zero_Polynomials(sq) = nbz then
+     -- put_line("Nondegenerate subsystem, there are isolated solutions.");
+      declare
+        fq : constant Laur_Sys(q'first..q'last-nbz) := Filter(sq);
+        smic : constant Mixed_Cell := Substitute_Zeroes(mic,nbz,ztp);
+        fmic : constant Mixed_Cell := Filter(smic);
+        slif : constant Array_of_Lists(lif'range)
+             := Substitute_Zeroes(lif,nbz,ztp);
+        flif : Array_of_Lists(lif'first..lif'last-nbz);
+        fmix : Standard_Integer_Vectors.Link_to_Vector;
+        h : Eval_Coeff_Laur_Sys(fq'range);
+        c : DoblDobl_Complex_VecVecs.VecVec(h'range);
+        e : Exponent_Vectors_Array(h'range);
+        j : Eval_Coeff_Jaco_Mat(h'range,h'first..h'last+1);
+        m : Mult_Factors(j'range(1),j'range(2));
+        sols1,sols1_last : Solution_List;
+      begin
+       -- put_line("The original lifted points : "); put(lif);
+       -- put_line("After substituting zeroes : "); put(slif);
+        if Number_of_Invalid_Supports(slif) = nbz then
+          flif := Filter(slif);
+          fmix := Filter(slif,mix);
+         -- put_line("The lifted points after substitution : "); put(flif);
+         -- put("The new type of mixture : ");
+         -- Standard_Integer_Vectors_io.put(fmix.all); new_line;
+         -- put_line("The system after substituting zeroes : "); put_line(fq);
+         -- put_line("The cell after elimination :"); put(n,mix.all,fmic);
+          if Number_of_Invalid_Supports(flif) = 0 and then
+             Number_of_Zero_Polynomials(fq) = 0 then
+            h := Create(fq); c := Create(fq); e := Create(fq);
+            Create(fq,j,m);
+            Mixed_Solve(fq,flif,h,c,e,j,m,fmix.all,fmic,sols1,sols1_last);
+            sols := Insert_Zeroes(sols1,ztp);
+            if not Is_Null(sols)
+             then Assign_Multiplicity(sols,vol);
+            end if;
+            Deep_Clear(sols1);
+            Clear(h); Clear(j); Clear(m); Clear(e);
+            DoblDobl_Complex_VecVecs.Clear(c);
+          end if;
+        end if;
+      exception 
+        when others => put_line("exception in declare block..."); raise;
+      end;
+    end if;
+    Clear(sq);
+  exception
+    when others => put_line("exception in silent polyhedral continuation");
+                   raise;
+  end Silent_Polyhedral_Continuation;
+
+  procedure Silent_Polyhedral_Continuation
+              ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                b : in double_float; 
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                mic : in Mixed_Cell; k,nbz : in integer32; vol : in natural32;
+                ztp : in Standard_Integer_Vectors.Vector;
+                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use Arrays_of_Floating_Vector_Lists,QuadDobl_Complex_Solutions;
+    use QuadDobl_Complex_Laur_Systems,QuadDobl_Complex_Laur_SysFun;
+    use QuadDobl_Complex_Laur_Jacomats,QuadDobl_Stable_Homotopies;
+
+   -- n : constant natural := q'last;
+    sq : Laur_Sys(q'range) := Substitute_Zeroes(q,ztp,nbz);
+
+  begin
+   -- if Number_of_Zero_Polynomials(sq) /= nbz then
+   --   put_line("Degenerate subsystem, there are no isolated solutions.");
+   -- else
+    if Number_of_Zero_Polynomials(sq) = nbz then
+     -- put_line("Nondegenerate subsystem, there are isolated solutions.");
+      declare
+        fq : constant Laur_Sys(q'first..q'last-nbz) := Filter(sq);
+        smic : constant Mixed_Cell := Substitute_Zeroes(mic,nbz,ztp);
+        fmic : constant Mixed_Cell := Filter(smic);
+        slif : constant Array_of_Lists(lif'range)
+             := Substitute_Zeroes(lif,nbz,ztp);
+        flif : Array_of_Lists(lif'first..lif'last-nbz);
+        fmix : Standard_Integer_Vectors.Link_to_Vector;
+        h : Eval_Coeff_Laur_Sys(fq'range);
+        c : QuadDobl_Complex_VecVecs.VecVec(h'range);
+        e : Exponent_Vectors_Array(h'range);
+        j : Eval_Coeff_Jaco_Mat(h'range,h'first..h'last+1);
+        m : Mult_Factors(j'range(1),j'range(2));
+        sols1,sols1_last : Solution_List;
+      begin
+       -- put_line("The original lifted points : "); put(lif);
+       -- put_line("After substituting zeroes : "); put(slif);
+        if Number_of_Invalid_Supports(slif) = nbz then
+          flif := Filter(slif);
+          fmix := Filter(slif,mix);
+         -- put_line("The lifted points after substitution : "); put(flif);
+         -- put("The new type of mixture : ");
+         -- Standard_Integer_Vectors_io.put(fmix.all); new_line;
+         -- put_line("The system after substituting zeroes : "); put_line(fq);
+         -- put_line("The cell after elimination :"); put(n,mix.all,fmic);
+          if Number_of_Invalid_Supports(flif) = 0 and then
+             Number_of_Zero_Polynomials(fq) = 0 then
+            h := Create(fq); c := Create(fq); e := Create(fq);
+            Create(fq,j,m);
+            Mixed_Solve(fq,flif,h,c,e,j,m,fmix.all,fmic,sols1,sols1_last);
+            sols := Insert_Zeroes(sols1,ztp);
+            if not Is_Null(sols)
+             then Assign_Multiplicity(sols,vol);
+            end if;
+            Deep_Clear(sols1);
+            Clear(h); Clear(j); Clear(m); Clear(e);
+            QuadDobl_Complex_VecVecs.Clear(c);
+          end if;
+        end if;
+      exception 
+        when others => put_line("exception in declare block..."); raise;
+      end;
+    end if;
+    Clear(sq);
+  exception
+    when others => put_line("exception in silent polyhedral continuation");
+                   raise;
+  end Silent_Polyhedral_Continuation;
+
+  procedure Reporting_Polyhedral_Continuation
+              ( file : in file_type;
+                q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                b : in double_float; 
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                mic : in Mixed_Cell; k,nbz : in integer32; vol : in natural32;
+                ztp : in Standard_Integer_Vectors.Vector;
+                sols : out Standard_Complex_Solutions.Solution_List ) is
+
+    use Arrays_of_Floating_Vector_Lists,Standard_Complex_Solutions;
+    use Standard_Complex_Laur_Systems,Standard_Complex_Laur_SysFun;
+    use Standard_Complex_Laur_Jacomats,Standard_Stable_Homotopies;
 
     n : constant integer32 := q'last;
     sq : Laur_Sys(q'range) := Substitute_Zeroes(q,ztp,nbz);
@@ -409,12 +706,243 @@ package body Stable_Polyhedral_Continuation is
     Clear(sq);
   end Reporting_Polyhedral_Continuation;
 
+  procedure Reporting_Polyhedral_Continuation
+              ( file : in file_type;
+                q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                b : in double_float; 
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                mic : in Mixed_Cell; k,nbz : in integer32; vol : in natural32;
+                ztp : in Standard_Integer_Vectors.Vector;
+                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use Arrays_of_Floating_Vector_Lists,DoblDobl_Complex_Solutions;
+    use DoblDobl_Complex_Laur_Systems,DoblDobl_Complex_Laur_SysFun;
+    use DoblDobl_Complex_Laur_Jacomats,DoblDobl_Stable_Homotopies;
+
+    n : constant integer32 := q'last;
+    sq : Laur_Sys(q'range) := Substitute_Zeroes(q,ztp,nbz);
+
+  begin
+    if Number_of_Zero_Polynomials(sq) /= nbz then
+      put_line(file,"Degenerate subsystem, there are no isolated solutions.");
+      put_line(file,"the Laurent system after substitution : ");
+      put(file,sq);
+    else
+      put_line(file,"Nondegenerate subsystem, there are isolated solutions.");
+      declare
+        fq : constant Laur_Sys(q'first..q'last-nbz) := Filter(sq);
+        smic : constant Mixed_Cell := Substitute_Zeroes(mic,nbz,ztp);
+        fmic : constant Mixed_Cell := Filter(smic);
+        slif : constant Array_of_Lists(lif'range)
+             := Substitute_Zeroes(lif,nbz,ztp);
+        flif : Array_of_Lists(lif'first..lif'last-nbz);
+        fmix : Standard_Integer_Vectors.Link_to_Vector;
+        h : Eval_Coeff_Laur_Sys(fq'range);
+        c : DoblDobl_Complex_VecVecs.VecVec(h'range);
+        e : Exponent_Vectors_Array(h'range);
+        j : Eval_Coeff_Jaco_Mat(h'range,h'first..h'last+1);
+        m : Mult_Factors(j'range(1),j'range(2));
+        sols1,sols1_last : Solution_List;
+        nbzp : integer32;
+        nbis : constant integer32 := Number_of_Invalid_Supports(slif);
+      begin
+        if nbis /= nbz then
+          put_line(file,"The number of invalid supports : ");
+          put(file,nbis,1); put_line(" degenerate case...");
+        else
+          flif := Filter(slif);
+          fmix := Filter(slif,mix);
+          put_line(file,"The original lifted points : "); put(file,lif);
+          put_line(file,"The lifted points after substitution : ");
+          put(file,flif);
+          put(file,"The new type of mixture : ");
+          Standard_Integer_Vectors_io.put(file,fmix.all); new_line(file);
+          put_line(file,"The system after substituting zeroes : ");
+          put_line(file,fq);
+          nbzp := Number_of_Zero_Polynomials(fq);
+          if nbzp > 0 then
+            put(file,"Number of zero polynomials : "); put(file,nbzp,1);
+            put_line(file," degenerate case.");
+          else
+            h := Create(fq); c := Create(fq); e := Create(fq);
+            put_line(file,"The cell after elimination :");
+            put(file,natural32(n),mix.all,fmic);
+            Create(fq,j,m);
+            Mixed_Solve(file,fq,flif,h,c,e,j,m,fmix.all,fmic,sols1,sols1_last);
+            sols := Insert_Zeroes(sols1,ztp);
+            if not Is_Null(sols)
+             then Assign_Multiplicity(sols,vol);
+            end if;
+            Deep_Clear(sols1);
+            Clear(j); Clear(m);
+            Clear(h); Clear(e);
+            DoblDobl_Complex_VecVecs.Clear(c);
+          end if;
+        end if;
+      end;
+    end if;
+    Clear(sq);
+  end Reporting_Polyhedral_Continuation;
+
+  procedure Reporting_Polyhedral_Continuation
+              ( file : in file_type;
+                q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                b : in double_float; 
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                mic : in Mixed_Cell; k,nbz : in integer32; vol : in natural32;
+                ztp : in Standard_Integer_Vectors.Vector;
+                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use Arrays_of_Floating_Vector_Lists,QuadDobl_Complex_Solutions;
+    use QuadDobl_Complex_Laur_Systems,QuadDobl_Complex_Laur_SysFun;
+    use QuadDobl_Complex_Laur_Jacomats,QuadDobl_Stable_Homotopies;
+
+    n : constant integer32 := q'last;
+    sq : Laur_Sys(q'range) := Substitute_Zeroes(q,ztp,nbz);
+
+  begin
+    if Number_of_Zero_Polynomials(sq) /= nbz then
+      put_line(file,"Degenerate subsystem, there are no isolated solutions.");
+      put_line(file,"the Laurent system after substitution : ");
+      put(file,sq);
+    else
+      put_line(file,"Nondegenerate subsystem, there are isolated solutions.");
+      declare
+        fq : constant Laur_Sys(q'first..q'last-nbz) := Filter(sq);
+        smic : constant Mixed_Cell := Substitute_Zeroes(mic,nbz,ztp);
+        fmic : constant Mixed_Cell := Filter(smic);
+        slif : constant Array_of_Lists(lif'range)
+             := Substitute_Zeroes(lif,nbz,ztp);
+        flif : Array_of_Lists(lif'first..lif'last-nbz);
+        fmix : Standard_Integer_Vectors.Link_to_Vector;
+        h : Eval_Coeff_Laur_Sys(fq'range);
+        c : QuadDobl_Complex_VecVecs.VecVec(h'range);
+        e : Exponent_Vectors_Array(h'range);
+        j : Eval_Coeff_Jaco_Mat(h'range,h'first..h'last+1);
+        m : Mult_Factors(j'range(1),j'range(2));
+        sols1,sols1_last : Solution_List;
+        nbzp : integer32;
+        nbis : constant integer32 := Number_of_Invalid_Supports(slif);
+      begin
+        if nbis /= nbz then
+          put_line(file,"The number of invalid supports : ");
+          put(file,nbis,1); put_line(" degenerate case...");
+        else
+          flif := Filter(slif);
+          fmix := Filter(slif,mix);
+          put_line(file,"The original lifted points : "); put(file,lif);
+          put_line(file,"The lifted points after substitution : ");
+          put(file,flif);
+          put(file,"The new type of mixture : ");
+          Standard_Integer_Vectors_io.put(file,fmix.all); new_line(file);
+          put_line(file,"The system after substituting zeroes : ");
+          put_line(file,fq);
+          nbzp := Number_of_Zero_Polynomials(fq);
+          if nbzp > 0 then
+            put(file,"Number of zero polynomials : "); put(file,nbzp,1);
+            put_line(file," degenerate case.");
+          else
+            h := Create(fq); c := Create(fq); e := Create(fq);
+            put_line(file,"The cell after elimination :");
+            put(file,natural32(n),mix.all,fmic);
+            Create(fq,j,m);
+            Mixed_Solve(file,fq,flif,h,c,e,j,m,fmix.all,fmic,sols1,sols1_last);
+            sols := Insert_Zeroes(sols1,ztp);
+            if not Is_Null(sols)
+             then Assign_Multiplicity(sols,vol);
+            end if;
+            Deep_Clear(sols1);
+            Clear(j); Clear(m);
+            Clear(h); Clear(e);
+            QuadDobl_Complex_VecVecs.Clear(c);
+          end if;
+        end if;
+      end;
+    end if;
+    Clear(sq);
+  end Reporting_Polyhedral_Continuation;
+
   procedure Silent_Polyhedral_Continuation
-              ( q : in Laur_Sys; b : in double_float; 
+              ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                b : in double_float; 
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in out Mixed_Cell; k : in integer32;
-                sols : out Solution_List ) is
+                sols : out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Solutions,Standard_Stable_Homotopies;
+
+    ztp : constant Standard_Integer_Vectors.Vector(q'range)
+        := Zero_Type(mic.nor.all,b,mic.pts.all);
+    nbz : constant integer32 := Number_of_Zeroes(ztp);
+    vol : natural32;
+    ls : Link_to_Solution;
+
+  begin
+   -- put("Type of Cell "); put(k,1); put(" : ");
+   -- Standard_Integer_Vectors_io.put(ztp); 
+   -- put("  #zeroes : "); put(nbz,1); new_line;
+    Mixed_Volume(q'last,mix.all,mic,vol);
+    if nbz = q'last then
+     -- put("Origin is solution with multiplicity "); put(vol,1); new_line;
+      ls := new Solution'(Origin(q'last,integer32(vol)));
+      Construct(ls,sols);
+    else
+     -- put("Solution with "); put(nbz,1); put(" zeroes and volume ");
+     -- put(vol,1); new_line;
+      Silent_Polyhedral_Continuation(q,b,mix,lif,mic,k,nbz,vol,ztp,sols);
+    end if;
+  exception
+    when others => put_line("exception in main silent polyhedral continuation");
+                   raise;
+  end Silent_Polyhedral_Continuation;
+
+  procedure Silent_Polyhedral_Continuation
+              ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                b : in double_float; 
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                mic : in out Mixed_Cell; k : in integer32;
+                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Solutions,QuadDobl_Stable_Homotopies;
+
+    ztp : constant Standard_Integer_Vectors.Vector(q'range)
+        := Zero_Type(mic.nor.all,b,mic.pts.all);
+    nbz : constant integer32 := Number_of_Zeroes(ztp);
+    vol : natural32;
+    ls : Link_to_Solution;
+
+  begin
+   -- put("Type of Cell "); put(k,1); put(" : ");
+   -- Standard_Integer_Vectors_io.put(ztp); 
+   -- put("  #zeroes : "); put(nbz,1); new_line;
+    Mixed_Volume(q'last,mix.all,mic,vol);
+    if nbz = q'last then
+     -- put("Origin is solution with multiplicity "); put(vol,1); new_line;
+      ls := new Solution'(Origin(q'last,integer32(vol)));
+      Construct(ls,sols);
+    else
+     -- put("Solution with "); put(nbz,1); put(" zeroes and volume ");
+     -- put(vol,1); new_line;
+      Silent_Polyhedral_Continuation(q,b,mix,lif,mic,k,nbz,vol,ztp,sols);
+    end if;
+  exception
+    when others => put_line("exception in main silent polyhedral continuation");
+                   raise;
+  end Silent_Polyhedral_Continuation;
+
+  procedure Silent_Polyhedral_Continuation
+              ( q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                b : in double_float; 
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                mic : in out Mixed_Cell; k : in integer32;
+                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Solutions,DoblDobl_Stable_Homotopies;
 
     ztp : constant Standard_Integer_Vectors.Vector(q'range)
         := Zero_Type(mic.nor.all,b,mic.pts.all);
@@ -442,11 +970,87 @@ package body Stable_Polyhedral_Continuation is
   end Silent_Polyhedral_Continuation;
 
   procedure Reporting_Polyhedral_Continuation
-              ( file : in file_type; q : in Laur_Sys; b : in double_float; 
+              ( file : in file_type;
+                q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                b : in double_float; 
                 mix : in Standard_Integer_Vectors.Link_to_Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 mic : in out Mixed_Cell; k : in integer32;
-                sols : in out Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Solutions,Standard_Stable_Homotopies;
+
+    ztp : constant Standard_Integer_Vectors.Vector(q'range)
+        := Zero_Type(mic.nor.all,b,mic.pts.all);
+    nbz : constant integer32 := Number_of_Zeroes(ztp);
+    vol : natural32;
+    ls : Link_to_Solution;
+
+  begin
+    put(file,"Type of Cell "); put(file,k,1); put(file," : ");
+    Standard_Integer_Vectors_io.put(file,ztp); 
+    put(file,"  #zeroes : "); put(file,nbz,1); new_line(file);
+    Mixed_Volume(q'last,mix.all,mic,vol);
+    if nbz = q'last then
+      put(file,"Origin is solution with multiplicity ");
+      put(file,vol,1); new_line(file);
+      ls := new Solution'(Origin(q'last,integer32(vol)));
+      Construct(ls,sols);
+    else
+      put(file,"Solution with "); put(file,nbz,1);
+      put(file," zeroes and volume "); 
+      put(file,vol,1); new_line(file);
+      Reporting_Polyhedral_Continuation
+        (file,q,b,mix,lif,mic,k,nbz,vol,ztp,sols);
+    end if;
+  end Reporting_Polyhedral_Continuation;
+
+  procedure Reporting_Polyhedral_Continuation
+              ( file : in file_type;
+                q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                b : in double_float; 
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                mic : in out Mixed_Cell; k : in integer32;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Solutions,DoblDobl_Stable_Homotopies;
+
+    ztp : constant Standard_Integer_Vectors.Vector(q'range)
+        := Zero_Type(mic.nor.all,b,mic.pts.all);
+    nbz : constant integer32 := Number_of_Zeroes(ztp);
+    vol : natural32;
+    ls : Link_to_Solution;
+
+  begin
+    put(file,"Type of Cell "); put(file,k,1); put(file," : ");
+    Standard_Integer_Vectors_io.put(file,ztp); 
+    put(file,"  #zeroes : "); put(file,nbz,1); new_line(file);
+    Mixed_Volume(q'last,mix.all,mic,vol);
+    if nbz = q'last then
+      put(file,"Origin is solution with multiplicity ");
+      put(file,vol,1); new_line(file);
+      ls := new Solution'(Origin(q'last,integer32(vol)));
+      Construct(ls,sols);
+    else
+      put(file,"Solution with "); put(file,nbz,1);
+      put(file," zeroes and volume "); 
+      put(file,vol,1); new_line(file);
+      Reporting_Polyhedral_Continuation
+        (file,q,b,mix,lif,mic,k,nbz,vol,ztp,sols);
+    end if;
+  end Reporting_Polyhedral_Continuation;
+
+  procedure Reporting_Polyhedral_Continuation
+              ( file : in file_type;
+                q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                b : in double_float; 
+                mix : in Standard_Integer_Vectors.Link_to_Vector;
+                lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                mic : in out Mixed_Cell; k : in integer32;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Solutions,QuadDobl_Stable_Homotopies;
 
     ztp : constant Standard_Integer_Vectors.Vector(q'range)
         := Zero_Type(mic.nor.all,b,mic.pts.all);
@@ -474,10 +1078,68 @@ package body Stable_Polyhedral_Continuation is
   end Reporting_Polyhedral_Continuation;
 
   procedure Silent_Polyhedral_Continuation
-               ( q : in Laur_Sys; b : in double_float; 
+               ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                 b : in double_float; 
                  mix : in Standard_Integer_Vectors.Link_to_Vector;
                  lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
-                 mcc : in Mixed_Subdivision; sols : in out Solution_List ) is
+                 mcc : in Mixed_Subdivision;
+                 sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Solutions,Standard_Stable_Homotopies;
+
+    tmp : Mixed_Subdivision := mcc;
+    last : Solution_List := sols;
+
+  begin
+    for i in 1..Length_Of(mcc) loop
+      declare
+        mic : Mixed_Cell := Head_Of(tmp);
+        csols : Solution_List;
+      begin
+        Silent_Polyhedral_Continuation(q,b,mix,lif,mic,integer32(i),csols);
+        Merge_and_Concat(sols,last,csols);
+        Clear(csols);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Silent_Polyhedral_Continuation;
+
+  procedure Silent_Polyhedral_Continuation
+               ( q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 b : in double_float; 
+                 mix : in Standard_Integer_Vectors.Link_to_Vector;
+                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                 mcc : in Mixed_Subdivision;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Solutions,DoblDobl_Stable_Homotopies;
+
+    tmp : Mixed_Subdivision := mcc;
+    last : Solution_List := sols;
+
+  begin
+    for i in 1..Length_Of(mcc) loop
+      declare
+        mic : Mixed_Cell := Head_Of(tmp);
+        csols : Solution_List;
+      begin
+        Silent_Polyhedral_Continuation(q,b,mix,lif,mic,integer32(i),csols);
+        Merge_and_Concat(sols,last,csols);
+        Clear(csols);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Silent_Polyhedral_Continuation;
+
+  procedure Silent_Polyhedral_Continuation
+               ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 b : in double_float; 
+                 mix : in Standard_Integer_Vectors.Link_to_Vector;
+                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                 mcc : in Mixed_Subdivision;
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Solutions,QuadDobl_Stable_Homotopies;
 
     tmp : Mixed_Subdivision := mcc;
     last : Solution_List := sols;
@@ -497,10 +1159,73 @@ package body Stable_Polyhedral_Continuation is
   end Silent_Polyhedral_Continuation;
 
   procedure Reporting_Polyhedral_Continuation
-               ( file : in file_type; q : in Laur_Sys; b : in double_float; 
+               ( file : in file_type;
+                 q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                 b : in double_float; 
                  mix : in Standard_Integer_Vectors.Link_to_Vector;
                  lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
-                 mcc : in Mixed_Subdivision; sols : in out Solution_List ) is
+                 mcc : in Mixed_Subdivision;
+                 sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Solutions,Standard_Stable_Homotopies;
+
+    tmp : Mixed_Subdivision := mcc;
+    last : Solution_List := sols;
+
+  begin
+    for i in 1..Length_Of(mcc) loop
+      declare
+        mic : Mixed_Cell := Head_Of(tmp);
+        csols : Solution_List;
+      begin
+        Reporting_Polyhedral_Continuation
+          (file,q,b,mix,lif,mic,integer32(i),csols);
+        Merge_and_Concat(sols,last,csols);
+        Clear(csols);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Reporting_Polyhedral_Continuation;
+
+  procedure Reporting_Polyhedral_Continuation
+               ( file : in file_type;
+                 q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 b : in double_float; 
+                 mix : in Standard_Integer_Vectors.Link_to_Vector;
+                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                 mcc : in Mixed_Subdivision;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Solutions,DoblDobl_Stable_Homotopies;
+
+    tmp : Mixed_Subdivision := mcc;
+    last : Solution_List := sols;
+
+  begin
+    for i in 1..Length_Of(mcc) loop
+      declare
+        mic : Mixed_Cell := Head_Of(tmp);
+        csols : Solution_List;
+      begin
+        Reporting_Polyhedral_Continuation
+          (file,q,b,mix,lif,mic,integer32(i),csols);
+        Merge_and_Concat(sols,last,csols);
+        Clear(csols);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Reporting_Polyhedral_Continuation;
+
+  procedure Reporting_Polyhedral_Continuation
+               ( file : in file_type;
+                 q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 b : in double_float; 
+                 mix : in Standard_Integer_Vectors.Link_to_Vector;
+                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                 mcc : in Mixed_Subdivision;
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Solutions,QuadDobl_Stable_Homotopies;
 
     tmp : Mixed_Subdivision := mcc;
     last : Solution_List := sols;

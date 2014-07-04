@@ -1,6 +1,14 @@
+Fri 4 Jul 2014 : extended stable_polyhedral_continuation to systems with
+  double double and quad double complex coefficients.
+
+Thu 3 Jul 2014 : more edits in dobldobl_polyhedral_continuation.adb,
+  leaving the recursive solving off as not implemented yet.
+
 Wed 2 Jul 2014 : small change in ts_jpmix.adb for compiler warning.
   Editing in floating_polyhedral_continuation.adb.  Extended 
   polyhedral_coefficient_homotopies for double double and quad doubles.
+  Started dobldobl_polyhedral_continuation with compilation tests via
+  ts_drivstal.adb.
 
 Sun 29 Jun 2014 : added double double quad quad double versions to
   random_coefficient_systems, tested by ts_rndcff.adb.

@@ -45,6 +45,8 @@ floating_lifting_utilities        : utilities for floating lifting functions
 induced_permutations              : deal with permuted supports
 floating_pruning_methods          : pruning methods for floating subdivisions
 floating_polyhedral_continuation  : polyhedral continuation by floating lifting
+dobldobl_polyhedral_continuation  : versions for double double coefficients
+quaddobl_polyhedral_continuation  : versions for quad double coefficients
 stable_polyhedral_continuation    : to compute solutions with zero components
 ts_stable                         : test on stable mixed volumes
 -------------------------------------------------------------------------------
