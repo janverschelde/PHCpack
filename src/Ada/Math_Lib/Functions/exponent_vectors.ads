@@ -12,6 +12,10 @@ with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Laurentials;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;
 
 package Exponent_Vectors is
 
@@ -34,6 +38,10 @@ package Exponent_Vectors is
                   return Standard_Integer_VecVecs.VecVec;
   function Create ( p : DoblDobl_Complex_Polynomials.Poly )
                   return Standard_Integer_VecVecs.VecVec;
+  function Create ( p : QuadDobl_Complex_Laurentials.Poly )
+                  return Standard_Integer_VecVecs.VecVec;
+  function Create ( p : QuadDobl_Complex_Polynomials.Poly )
+                  return Standard_Integer_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   The range of the vector on return is 1..Number_of_Terms(p).
@@ -46,6 +54,10 @@ package Exponent_Vectors is
   function Create ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
                   return Exponent_Vectors_Array;
   function Create ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                  return Exponent_Vectors_Array;
+  function Create ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
+                  return Exponent_Vectors_Array;
+  function Create ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys )
                   return Exponent_Vectors_Array;
 
 -- SELECTOR :

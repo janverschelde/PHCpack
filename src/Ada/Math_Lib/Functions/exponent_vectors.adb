@@ -96,6 +96,52 @@ package body Exponent_Vectors is
     return res;
   end Create;
 
+  function Create ( p : QuadDobl_Complex_Laurentials.Poly )
+                  return Standard_Integer_VecVecs.VecVec is
+
+    use QuadDobl_Complex_Laurentials;
+    res : Standard_Integer_VecVecs.VecVec(1..integer32(Number_of_Terms(p)));
+    ind : integer32 := 0;
+    
+    procedure Add_Exponent ( t : in Term; continue : out boolean ) is
+    begin
+      ind := ind + 1;
+      res(ind) := new Standard_Integer_Vectors.Vector(t.dg'range);
+      for i in t.dg'range loop
+        res(ind)(i) := t.dg(i);
+      end loop;
+      continue := true;
+    end Add_Exponent;
+    procedure Add_Exponents is new Visiting_Iterator(Add_Exponent);
+
+  begin
+    Add_Exponents(p);
+    return res;
+  end Create;
+
+  function Create ( p : QuadDobl_Complex_Polynomials.Poly )
+                  return Standard_Integer_VecVecs.VecVec is
+
+    use QuadDobl_Complex_Polynomials;
+    res : Standard_Integer_VecVecs.VecVec(1..integer32(Number_of_Terms(p)));
+    ind : integer32 := 0;
+    
+    procedure Add_Exponent ( t : in Term; continue : out boolean ) is
+    begin
+      ind := ind + 1;
+      res(ind) := new Standard_Integer_Vectors.Vector(t.dg'range);
+      for i in t.dg'range loop
+        res(ind)(i) := integer32(t.dg(i));
+      end loop;
+      continue := true;
+    end Add_Exponent;
+    procedure Add_Exponents is new Visiting_Iterator(Add_Exponent);
+
+  begin
+    Add_Exponents(p);
+    return res;
+  end Create;
+
   function Create ( p : Standard_Complex_Poly_Systems.Poly_Sys )
                   return Exponent_Vectors_Array is
 
@@ -157,6 +203,46 @@ package body Exponent_Vectors is
   end Create;
 
   function Create ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                  return Exponent_Vectors_Array is
+
+    res : Exponent_Vectors_Array(p'range);
+
+  begin
+    for i in p'range loop
+      declare
+        cpi : constant Standard_Integer_VecVecs.VecVec := Create(p(i));
+      begin
+        res(i) := new Standard_Integer_VecVecs.VecVec(cpi'range);
+        for j in cpi'range loop
+          res(i)(j) := cpi(j);
+        end loop;
+      end;  -- a detour for GNAT 3.07
+     -- res(i) := new VecVec'(Create(p(i)));
+    end loop;
+    return res;
+  end Create;
+
+  function Create ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
+                  return Exponent_Vectors_Array is
+
+    res : Exponent_Vectors_Array(p'range);
+
+  begin
+    for i in p'range loop
+      declare
+        cpi : constant Standard_Integer_VecVecs.VecVec := Create(p(i));
+      begin
+        res(i) := new Standard_Integer_VecVecs.VecVec(cpi'range);
+        for j in cpi'range loop
+          res(i)(j) := cpi(j);
+        end loop;
+      end;  -- a detour for GNAT 3.07
+     -- res(i) := new VecVec'(Create(p(i)));
+    end loop;
+    return res;
+  end Create;
+
+  function Create ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys )
                   return Exponent_Vectors_Array is
 
     res : Exponent_Vectors_Array(p'range);

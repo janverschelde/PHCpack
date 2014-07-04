@@ -1,4 +1,5 @@
-Fri 4 Jul 2014 : extended exponent_vectors for double double coefficients.
+Fri 4 Jul 2014 : extended exponent_vectors for double double coefficients
+  and for quad double coefficients.
 
 Mon 16 Jun 2014 : changes in ts_perfeval.adb for compiler warnings.
 
