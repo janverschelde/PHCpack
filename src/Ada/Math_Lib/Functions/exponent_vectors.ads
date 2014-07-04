@@ -1,13 +1,17 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
-with Standard_Integer_Vectors;           use Standard_Integer_Vectors;
+with Standard_Complex_Numbers;
+with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
-with Standard_Integer_VecVecs;           use Standard_Integer_VecVecs;
+with Standard_Integer_VecVecs;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Laurentials;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
-with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
+with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Laurentials;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
 
 package Exponent_Vectors is
 
@@ -17,24 +21,37 @@ package Exponent_Vectors is
 -- DATA STRUCTURE : array of exponent vectors
 
   type Exponent_Vectors_Array is
-    array ( integer32 range <> ) of Link_to_VecVec;
+    array ( integer32 range <> ) of Standard_Integer_VecVecs.Link_to_VecVec;
   type Link_to_Exponent_Vectors_Array is access Exponent_Vectors_Array;
 
 -- CREATORS :
 
-  function Create ( p : Standard_Complex_Laurentials.Poly ) return VecVec;
-  function Create ( p : Standard_Complex_Polynomials.Poly ) return VecVec;
+  function Create ( p : Standard_Complex_Laurentials.Poly )
+                  return Standard_Integer_VecVecs.VecVec;
+  function Create ( p : Standard_Complex_Polynomials.Poly )
+                  return Standard_Integer_VecVecs.VecVec;
+  function Create ( p : DoblDobl_Complex_Laurentials.Poly )
+                  return Standard_Integer_VecVecs.VecVec;
+  function Create ( p : DoblDobl_Complex_Polynomials.Poly )
+                  return Standard_Integer_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   The range of the vector on return is 1..Number_of_Terms(p).
   --   This vector contains copies of all exponents of p, as ordered in p.
 
-  function Create ( p : Poly_Sys ) return Exponent_Vectors_Array;
-  function Create ( p : Laur_Sys ) return Exponent_Vectors_Array;
+  function Create ( p : Standard_Complex_Poly_Systems.Poly_Sys )
+                  return Exponent_Vectors_Array;
+  function Create ( p : Standard_Complex_Laur_Systems.Laur_Sys )
+                  return Exponent_Vectors_Array;
+  function Create ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
+                  return Exponent_Vectors_Array;
+  function Create ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                  return Exponent_Vectors_Array;
 
 -- SELECTOR :
 
-  function Position ( ev : VecVec; v : Vector ) return integer32;
+  function Position ( ev : Standard_Integer_VecVecs.VecVec;
+                      v : Standard_Integer_Vectors.Vector ) return integer32;
 
   -- DESCRIPTION :
   --   Returns the position of v in the vector ev.
@@ -42,14 +59,17 @@ package Exponent_Vectors is
 
 -- EVALUATORS :
 
-  function Eval ( e : Vector; c : Complex_Number;
-                  x : Standard_Complex_Vectors.Vector ) return Complex_Number;
+  function Eval ( e : Standard_Integer_Vectors.Vector;
+                  c : Standard_Complex_Numbers.Complex_Number;
+                  x : Standard_Complex_Vectors.Vector )
+                return Standard_Complex_Numbers.Complex_Number;
 
   -- DESCRIPTION :
   --   Evaluates the term c*x^e.
 
-  function Eval ( ev : VecVec; c,x : Standard_Complex_Vectors.Vector )
-                return Complex_Number;
+  function Eval ( ev : Standard_Integer_VecVecs.VecVec;
+                  c,x : Standard_Complex_Vectors.Vector )
+                return Standard_Complex_Numbers.Complex_Number;
 
   -- DESCRIPTION :
   --   Evaluates the polynomial with coefficients in c and exponents in ev.

@@ -1,3 +1,5 @@
+Fri 4 Jul 2014 : extended exponent_vectors for double double coefficients.
+
 Mon 16 Jun 2014 : changes in ts_perfeval.adb for compiler warnings.
 
 Thu 12 Jun 2014 : indexed version in standard_speelpenning_products,
