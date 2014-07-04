@@ -222,12 +222,13 @@ package body DoblDobl_Stable_Homotopies is
 
     res : DoblDobl_Complex_Polynomials.Term;
     ind : integer32;
+    zero : constant double_double := create(0.0);
 
   begin
     if nbz <= 0 then
       return t;
     elsif Vanish_by_Zeroes(t,z,nbz) then
-      res.cf := Create(0.0);
+      res.cf := Create(zero);
       return res;
     else
       res.cf := t.cf;
