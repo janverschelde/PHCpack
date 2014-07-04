@@ -24,6 +24,7 @@ multprec_homotopy                  : homotopy for multiprecision numbers
 drivers_for_homotopy_creation      : menu-driven homotopy construction
 standard_stable_homotopies         : for solutions with zero components
 dobldobl_stable_homotopies         : version for double doubles
+quaddobl_stable_homotopies         : version for quad doubles
 standard_coefficient_homotopy      : coefficient-parameter homotopy
 dobldobl_coefficient_homotopy      : double double coeff-parameter homotopy
 quaddobl_coefficient_homotopy      : quad double coeff-parameter homotopy

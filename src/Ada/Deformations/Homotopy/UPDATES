@@ -1,5 +1,6 @@
-Fri 4 Jul 2014 : new package dobldobl_stable_homotopies.adb for stable
+Fri 4 Jul 2014 : new package dobldobl_stable_homotopies for stable
   polyhedral continuation with double double complex arithmetic.
+  Similar for quad doubles with quaddobl_stable_homotopies.
 
 Tue 24 Jun 2014 : double double versions of coefficient homotopies.
   In drivers_for_homotopy_creation, also the coefficient homotopies are
