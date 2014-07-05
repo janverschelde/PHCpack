@@ -5,9 +5,12 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Floating_Vector_Lists;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
-with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 
 package Drivers_for_MixedVol_Algorithm is
@@ -53,14 +56,32 @@ package Drivers_for_MixedVol_Algorithm is
                 mix : in Standard_Integer_Vectors.Vector;
                 ls : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 sub : in Mixed_Subdivision;
-                q : out Poly_Sys; qsols : out Solution_List;
+                q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                qsols : out Standard_Complex_Solutions.Solution_List;
                 multprec_hermite : in boolean := false );
   procedure Random_Coefficient_System
               ( nt,n : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
                 ls : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 sub : in Mixed_Subdivision;
-                q : out Laur_Sys; qsols : out Solution_List;
+                q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                qsols : out DoblDobl_Complex_Solutions.Solution_List;
+                multprec_hermite : in boolean := false );
+  procedure Random_Coefficient_System
+              ( nt,n : in integer32;
+                mix : in Standard_Integer_Vectors.Vector;
+                ls : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                sub : in Mixed_Subdivision;
+                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                qsols : out Standard_Complex_Solutions.Solution_List;
+                multprec_hermite : in boolean := false );
+  procedure Random_Coefficient_System
+              ( nt,n : in integer32;
+                mix : in Standard_Integer_Vectors.Vector;
+                ls : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                sub : in Mixed_Subdivision;
+                q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                qsols : out DoblDobl_Complex_Solutions.Solution_List;
                 multprec_hermite : in boolean := false );
 
   -- DESCRIPTION :
@@ -87,7 +108,8 @@ package Drivers_for_MixedVol_Algorithm is
                 mix : in Standard_Integer_Vectors.Vector;
                 ls : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 sub : in Mixed_Subdivision;
-                q : out Poly_Sys; qsols : out Solution_List;
+                q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                qsols : out Standard_Complex_Solutions.Solution_List;
                 multprec_hermite : in boolean := false );
   procedure Random_Coefficient_System
               ( file : in file_type;
@@ -95,7 +117,26 @@ package Drivers_for_MixedVol_Algorithm is
                 mix : in Standard_Integer_Vectors.Vector;
                 ls : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 sub : in Mixed_Subdivision;
-                q : out Laur_Sys; qsols : out Solution_List;
+                q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                qsols : out DoblDobl_Complex_Solutions.Solution_List;
+                multprec_hermite : in boolean := false );
+  procedure Random_Coefficient_System
+              ( file : in file_type;
+                nt,n : in integer32;
+                mix : in Standard_Integer_Vectors.Vector;
+                ls : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                sub : in Mixed_Subdivision;
+                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                qsols : out Standard_Complex_Solutions.Solution_List;
+                multprec_hermite : in boolean := false );
+  procedure Random_Coefficient_System
+              ( file : in file_type;
+                nt,n : in integer32;
+                mix : in Standard_Integer_Vectors.Vector;
+                ls : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                sub : in Mixed_Subdivision;
+                q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                qsols : out DoblDobl_Complex_Solutions.Solution_List;
                 multprec_hermite : in boolean := false );
 
   -- DESCRIPTION :
@@ -119,9 +160,17 @@ package Drivers_for_MixedVol_Algorithm is
   --   qsols    solutions to q, as many as its mixed volume.
 
   procedure Polyhedral_Homotopies
-              ( cfile,qfile : in file_type; p : in Poly_Sys );
+              ( cfile,qfile : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys );
   procedure Polyhedral_Homotopies
-              ( cfile,qfile : in file_type; p : in Laur_Sys );
+              ( cfile,qfile : in file_type;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys );
+  procedure Polyhedral_Homotopies
+              ( cfile,qfile : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure Polyhedral_Homotopies
+              ( cfile,qfile : in file_type;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys );
 
   -- DESCRIPTION :
   --   Interactive driver to the polyhedral homotopies to create
@@ -137,22 +186,24 @@ package Drivers_for_MixedVol_Algorithm is
                 stable,contrep : in boolean;
                 n,r : in integer32; stlb : in double_float;
                 mix,perm : in Standard_Integer_Vectors.Link_to_Vector;
-                p : in Poly_Sys; 
+                p : in Standard_Complex_Poly_Systems.Poly_Sys; 
                 s : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 sub,mcc,stbmcc : in Mixed_Subdivision;
                -- mcc,stbmcc : in Mixed_Subdivision;
-                q : out Poly_Sys; qsols,qsols0 : out Solution_List;
+                q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                 multprec_hermite : in boolean := false );
   procedure Polyhedral_Continuation
               ( file : in file_type; nt : in integer32;
                 stable,contrep : in boolean;
                 n,r : in integer32; stlb : in double_float;
                 mix,perm : in Standard_Integer_Vectors.Link_to_Vector;
-                p : in Laur_Sys; 
+                p : in Standard_Complex_Laur_Systems.Laur_Sys; 
                 s : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 sub,mcc,stbmcc : in Mixed_Subdivision;
                -- mcc,stbmcc : in Mixed_Subdivision;
-                q : out Laur_Sys; qsols,qsols0 : out Solution_List;
+                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                 multprec_hermite : in boolean := false );
 
   -- DESCRIPTION :
@@ -186,14 +237,18 @@ package Drivers_for_MixedVol_Algorithm is
   procedure Polyhedral_Homotopies
               ( file,cfile,qfile : in file_type; nt : in integer32;
                 stable,misufile,ranstart,contrep : in boolean;
-                p : in Poly_Sys; mv,smv,tmv : out natural32;
-                q : out Poly_Sys; qsols,qsols0 : out Solution_List;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                mv,smv,tmv : out natural32;
+                q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                 multprec_hermite : in boolean := false );
   procedure Polyhedral_Homotopies
               ( file,cfile,qfile : in file_type; nt : in integer32;
                 stable,misufile,ranstart,contrep : in boolean;
-                p : in Laur_Sys; mv,smv,tmv : out natural32;
-                q : out Laur_Sys; qsols,qsols0 : out Solution_List;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                mv,smv,tmv : out natural32;
+                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                 multprec_hermite : in boolean := false );
 
   -- DESCRIPTION :
@@ -229,14 +284,18 @@ package Drivers_for_MixedVol_Algorithm is
 
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
-                p : in Poly_Sys; byebye : in boolean;
-                q : out Poly_Sys; qsols,qsols0 : out Solution_List;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                byebye : in boolean;
+                q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
                 multprec_hermite : in boolean := false );
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
-                p : in Laur_Sys; byebye : in boolean;
-                q : out Laur_Sys; qsols,qsols0 : out Solution_List;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                byebye : in boolean;
+                q : out Standard_Complex_Laur_Systems.Laur_Sys;
+                qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
                 multprec_hermite : in boolean := false );
 

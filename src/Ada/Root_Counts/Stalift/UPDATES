@@ -1,3 +1,8 @@
+Sat 5 Jul 2014 : modified drivers_for_mixedvol_algorithm to prepare for
+  systems with double double and quad double coefficients, tested by
+  ts_mvasta, which has extra option to run polyhedral homotopies in
+  double double precision.
+
 Fri 4 Jul 2014 : extended stable_polyhedral_continuation to systems with
   double double and quad double complex coefficients.
 
