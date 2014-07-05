@@ -37,6 +37,10 @@ package Supports_of_Polynomial_Systems is
                   return Lists_of_Integer_Vectors.List;
   function Create ( p : Standard_Complex_Laurentials.Poly )
                   return Lists_of_Integer_Vectors.List;
+  function Create ( p : DoblDobl_Complex_Polynomials.Poly )
+                  return Lists_of_Integer_Vectors.List;
+  function Create ( p : DoblDobl_Complex_Laurentials.Poly )
+                  return Lists_of_Integer_Vectors.List;
 
   -- DESCRIPTION : Returns the support of p.
 
@@ -129,6 +133,10 @@ package Supports_of_Polynomial_Systems is
   function Create ( p : Standard_Complex_Poly_Systems.Poly_Sys )
                   return Arrays_of_Integer_Vector_Lists.Array_of_Lists;
   function Create ( p : Standard_Complex_Laur_Systems.Laur_Sys )
+                  return Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+  function Create ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
+                  return Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+  function Create ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys )
                   return Arrays_of_Integer_Vector_Lists.Array_of_Lists;
 
   -- DESCRIPTION :

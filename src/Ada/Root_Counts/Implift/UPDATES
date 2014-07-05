@@ -1,3 +1,6 @@
+Sat 5 Jul 2014 : extended support_of_polynomial_systems with routines for
+  systems with double double coefficients.
+
 Thu 3 Jul 2014 : extended transforming_laurent_systems with shift operations
   for systems with double double and quad double precision coefficients.
 

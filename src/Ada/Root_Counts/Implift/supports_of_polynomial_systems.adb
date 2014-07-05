@@ -62,6 +62,62 @@ package body Supports_of_Polynomial_Systems is
     return res;
   end Create;
 
+  function Create ( p : DoblDobl_Complex_Polynomials.Poly )
+                  return Lists_of_Integer_Vectors.List is
+
+    use Standard_Integer_Vectors;
+    use Lists_of_Integer_Vectors;
+    res,res_last : List;
+
+    procedure Visit_Term ( t : in DoblDobl_Complex_Polynomials.Term;
+                           cont : out boolean ) is
+
+      h : Link_to_Vector;
+
+    begin
+      h := new Standard_Integer_Vectors.Vector(t.dg'range);
+      for j in h'range loop
+        h(j) := integer32(t.dg(j));
+      end loop;
+      Append(res,res_last,h);
+      cont := true;
+    end Visit_Term;
+    procedure Visit_Terms is
+      new DoblDobl_Complex_Polynomials.Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+    return res;
+  end Create;
+
+  function Create ( p : DoblDobl_Complex_Laurentials.Poly )
+                  return Lists_of_Integer_Vectors.List is
+
+    use Standard_Integer_Vectors;
+    use Lists_of_Integer_Vectors;
+    res,res_last : List;
+
+    procedure Visit_Term ( t : in DoblDobl_Complex_Laurentials.Term;
+                           cont : out boolean ) is
+
+      h : Link_to_Vector;
+
+    begin
+      h := new Standard_Integer_Vectors.Vector(t.dg'range);
+      for j in h'range loop
+        h(j) := t.dg(j);
+      end loop;
+      Append(res,res_last,h);
+      cont := true;
+    end Visit_Term;
+    procedure Visit_Terms is
+      new DoblDobl_Complex_Laurentials.Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+    return res;
+  end Create;
+
   function Random_Complex_Polynomial
              ( s : Lists_of_Integer_Vectors.List )
              return Standard_Complex_Polynomials.Poly is
@@ -421,6 +477,30 @@ package body Supports_of_Polynomial_Systems is
   end Create;
 
   function Create ( p : Standard_Complex_Laur_Systems.Laur_Sys )
+                  return Arrays_of_Integer_Vector_Lists.Array_of_Lists is
+
+    res : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := Create(p(i));
+    end loop;
+    return res;
+  end Create;
+
+  function Create ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
+                  return Arrays_of_Integer_Vector_Lists.Array_of_Lists is
+
+    res : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := Create(p(i));
+    end loop;
+    return res;
+  end Create;
+
+  function Create ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys )
                   return Arrays_of_Integer_Vector_Lists.Array_of_Lists is
 
     res : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
