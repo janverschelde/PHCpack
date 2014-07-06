@@ -6,6 +6,8 @@ Release 2.3.16 has new facilities to jumpstart the polyhedral homotopies,
 along with an exponential continuation parameter.  
 The direct input of Laurent systems led to changes in release 2.3.26.
 Support for stable mixed volumes was added in release 2.3.31.
+In release 2.3.90, versions of polyhedral homotopies in double double
+and quad double precision were provided.
 
 The algorithm used is based on the construction of a mixed subdivision,
 based on Betke's formula for mixed volumes and the polyhedral homotopy

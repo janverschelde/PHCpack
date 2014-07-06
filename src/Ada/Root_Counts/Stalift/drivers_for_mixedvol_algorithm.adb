@@ -7,6 +7,8 @@ with Standard_Integer_VecVecs;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_VecVecs;
 with Standard_Complex_Laur_Functions;
 with Standard_Complex_Laur_SysFun;
 with Standard_Complex_Laur_JacoMats;
@@ -16,10 +18,15 @@ with DoblDobl_Poly_Laur_Convertors;      use DoblDobl_Poly_Laur_Convertors;
 with DoblDobl_Complex_Laur_Functions;
 with DoblDobl_Complex_Laur_SysFun;
 with DoblDobl_Complex_Laur_JacoMats;
+with QuadDobl_Poly_Laur_Convertors;      use QuadDobl_Poly_Laur_Convertors;
+with QuadDobl_Complex_Laur_Functions;
+with QuadDobl_Complex_Laur_SysFun;
+with QuadDobl_Complex_Laur_JacoMats;
 with Exponent_Vectors;                   use Exponent_Vectors;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_System_and_Solutions_io;
 with DoblDobl_System_and_Solutions_io;
+with QuadDobl_System_and_Solutions_io;
 with Supports_of_Polynomial_Systems;
 with Floating_Mixed_Subdivisions_io;     use Floating_Mixed_Subdivisions_io;
 with Floating_Integer_Convertors;
@@ -29,6 +36,7 @@ with Random_Coefficient_Systems;
 with Drivers_for_Poly_Continuation;
 with Floating_Polyhedral_Continuation;   use Floating_Polyhedral_Continuation;
 with DoblDobl_Polyhedral_Continuation;   use DoblDobl_Polyhedral_Continuation;
+with QuadDobl_Polyhedral_Continuation;   use QuadDobl_Polyhedral_Continuation;
 with Stable_Polyhedral_Continuation;     use Stable_Polyhedral_Continuation;
 with Drivers_for_Static_Lifting;         use Drivers_for_Static_Lifting;
 with Cell_Stack;                         use Cell_Stack;
@@ -195,6 +203,56 @@ package body Drivers_for_mixedvol_algorithm is
                  mix : in Standard_Integer_Vectors.Vector;
                  ls : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                  sub : in Mixed_Subdivision;
+                 q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
+                 multprec_hermite : in boolean := false ) is
+
+   -- fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range)
+   --    := Floating_Integer_Convertors.Convert(s);
+   -- ls : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
+   --    := Floating_Lifting_Utilities.Occurred_Lifting(n,mix,fs,sub);
+
+    use QuadDobl_Complex_Laur_JacoMats;
+
+    lq : QuadDobl_Complex_Laur_Systems.Laur_Sys(1..n);
+    hq : QuadDobl_Complex_Laur_SysFun.Eval_Coeff_Laur_Sys(1..n);
+    expvec : Exponent_Vectors_Array(1..n);
+    coeffv : QuadDobl_Complex_VecVecs.VecVec(1..n);
+    jacmat : Eval_Coeff_Jaco_Mat(q'range,q'first..q'last+1);
+    mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
+
+  begin
+    q := Random_Coefficient_Systems.Create(natural32(n),mix,ls);
+   -- put_line("a random coefficient system "); put_line(q);
+    lq := Polynomial_to_Laurent_System(q);
+    hq := QuadDobl_Complex_Laur_SysFun.Create(lq);
+    expvec := Create(q);
+    for i in q'range loop
+      declare
+        c : constant QuadDobl_Complex_Vectors.Vector
+          := QuadDobl_Complex_Laur_Functions.Coeff(lq(i));
+      begin
+        coeffv(i) := new QuadDobl_Complex_Vectors.Vector(c'range);
+        for j in c'range loop
+          coeffv(i)(j) := c(j);
+        end loop;
+      end;
+    end loop;
+    Create(lq,jacmat,mulfac);
+   -- if nt = 0 then
+      Mixed_Solve(lq,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
+                  multprec_hermite);
+   -- else
+   --   Silent_Multitasking_Path_Tracker
+   --     (lq,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
+   -- end if;
+  end Random_Coefficient_System;
+
+  procedure Random_Coefficient_System
+               ( nt,n : in integer32;
+                 mix : in Standard_Integer_Vectors.Vector;
+                 ls : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                 sub : in Mixed_Subdivision;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
                  multprec_hermite : in boolean := false ) is
@@ -269,6 +327,53 @@ package body Drivers_for_mixedvol_algorithm is
           := DoblDobl_Complex_Laur_Functions.Coeff(q(i));
       begin
         coeffv(i) := new DoblDobl_Complex_Vectors.Vector(c'range);
+        for j in c'range loop
+          coeffv(i)(j) := c(j);
+        end loop;
+      end;
+    end loop;
+    Create(q,jacmat,mulfac);
+   -- if nt = 0 then
+      Mixed_Solve(q,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
+                  multprec_hermite);
+   -- else
+   --   Silent_Multitasking_Path_Tracker
+   --     (q,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
+   -- end if;
+  end Random_Coefficient_System;
+
+  procedure Random_Coefficient_System
+               ( nt,n : in integer32;
+                 mix : in Standard_Integer_Vectors.Vector;
+                 ls : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                 sub : in Mixed_Subdivision;
+                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
+                 multprec_hermite : in boolean := false ) is
+
+   -- fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range)
+   --    := Floating_Integer_Convertors.Convert(s);
+   -- ls : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
+   --    := Floating_Lifting_Utilities.Occurred_Lifting(n,mix,fs,sub);
+
+    use QuadDobl_Complex_Laur_JacoMats;
+
+    hq : QuadDobl_Complex_Laur_SysFun.Eval_Coeff_Laur_Sys(1..n);
+    expvec : Exponent_Vectors_Array(1..n);
+    coeffv : QuadDobl_Complex_VecVecs.VecVec(1..n);
+    jacmat : Eval_Coeff_Jaco_Mat(q'range,q'first..q'last+1);
+    mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
+
+  begin
+    q := Random_Coefficient_Systems.Create(natural32(n),mix,ls);
+    hq := QuadDobl_Complex_Laur_SysFun.Create(q);
+    expvec := Create(q);
+    for i in q'range loop
+      declare
+        c : constant QuadDobl_Complex_Vectors.Vector
+          := QuadDobl_Complex_Laur_Functions.Coeff(q(i));
+      begin
+        coeffv(i) := new QuadDobl_Complex_Vectors.Vector(c'range);
         for j in c'range loop
           coeffv(i)(j) := c(j);
         end loop;
@@ -392,6 +497,57 @@ package body Drivers_for_mixedvol_algorithm is
                  mix : in Standard_Integer_Vectors.Vector;
                  ls : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                  sub : in Mixed_Subdivision;
+                 q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
+                 multprec_hermite : in boolean := false ) is
+
+   -- fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range)
+   --    := Floating_Integer_Convertors.Convert(s);
+   -- ls : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
+   --    := Floating_Lifting_Utilities.Occurred_Lifting(n,mix,fs,sub);
+
+    use QuadDobl_Complex_Laur_JacoMats;
+
+    lq : QuadDobl_Complex_Laur_Systems.Laur_Sys(1..n);
+    hq : QuadDobl_Complex_Laur_SysFun.Eval_Coeff_Laur_Sys(1..n);
+    expvec : Exponent_Vectors_Array(1..n);
+    coeffv : QuadDobl_Complex_VecVecs.VecVec(1..n);
+    jacmat : Eval_Coeff_Jaco_Mat(q'range,q'first..q'last+1);
+    mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
+
+  begin
+    q := Random_Coefficient_Systems.Create(natural32(n),mix,ls);
+   -- put_line("a random coefficient system "); put_line(q);
+    lq := Polynomial_to_Laurent_System(q);
+    hq := QuadDobl_Complex_Laur_SysFun.Create(lq);
+    expvec := Create(q);
+    for i in q'range loop
+      declare
+        c : constant QuadDobl_Complex_Vectors.Vector
+          := QuadDobl_Complex_Laur_Functions.Coeff(lq(i));
+      begin
+        coeffv(i) := new QuadDobl_Complex_Vectors.Vector(c'range);
+        for j in c'range loop
+          coeffv(i)(j) := c(j);
+        end loop;
+      end;
+    end loop;
+    Create(lq,jacmat,mulfac);
+   -- if nt = 0 then
+      Mixed_Solve(file,lq,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
+                  multprec_hermite);
+   -- else
+   --   Silent_Multitasking_Path_Tracker
+   --     (lq,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
+   -- end if;
+  end Random_Coefficient_System;
+
+  procedure Random_Coefficient_System
+               ( file : in file_type;
+                 nt,n : in integer32;
+                 mix : in Standard_Integer_Vectors.Vector;
+                 ls : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                 sub : in Mixed_Subdivision;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
                  qsols : out Standard_Complex_Solutions.Solution_List;
                  multprec_hermite : in boolean := false ) is
@@ -438,7 +594,6 @@ package body Drivers_for_mixedvol_algorithm is
     end if;
   end Random_Coefficient_System;
 
-
   procedure Random_Coefficient_System
                ( file : in file_type;
                  nt,n : in integer32;
@@ -476,6 +631,58 @@ package body Drivers_for_mixedvol_algorithm is
           := DoblDobl_Complex_Laur_Functions.Coeff(q(i));
       begin
         coeffv(i) := new DoblDobl_Complex_Vectors.Vector(c'range);
+        for j in c'range loop
+          coeffv(i)(j) := c(j);
+        end loop;
+      end;
+    end loop;
+    Create(q,jacmat,mulfac);
+   -- if nt = 0 then
+      Mixed_Solve(file,q,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
+                  multprec_hermite);
+   -- else
+   --   Silent_Multitasking_Path_Tracker
+   --     (q,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
+   -- end if;
+  end Random_Coefficient_System;
+
+  procedure Random_Coefficient_System
+               ( file : in file_type;
+                 nt,n : in integer32;
+                 mix : in Standard_Integer_Vectors.Vector;
+                 ls : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                 sub : in Mixed_Subdivision;
+                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
+                 multprec_hermite : in boolean := false ) is
+
+   -- fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range)
+   --    := Floating_Integer_Convertors.Convert(s);
+   -- ls : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
+   --    := Floating_Lifting_Utilities.Occurred_Lifting(n,mix,fs,sub);
+
+    use QuadDobl_Complex_Laur_JacoMats;
+
+    hq : QuadDobl_Complex_Laur_SysFun.Eval_Coeff_Laur_Sys(1..n);
+    expvec : Exponent_Vectors_Array(1..n);
+    coeffv : QuadDobl_Complex_VecVecs.VecVec(1..n);
+    jacmat : Eval_Coeff_Jaco_Mat(q'range,q'first..q'last+1);
+    mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
+
+  begin
+   -- put_line("inside random_coefficient_system ...");
+   -- put_line("The lifted supports : "); 
+   -- Floating_Mixed_Subdivisions_io.put(ls);
+    q := Random_Coefficient_Systems.Create(natural32(n),mix,ls);
+   -- put_line("a random coefficient system : "); put_line(q);
+    hq := QuadDobl_Complex_Laur_SysFun.Create(q);
+    expvec := Create(q);
+    for i in q'range loop
+      declare
+        c : constant QuadDobl_Complex_Vectors.Vector
+          := QuadDobl_Complex_Laur_Functions.Coeff(q(i));
+      begin
+        coeffv(i) := new QuadDobl_Complex_Vectors.Vector(c'range);
         for j in c'range loop
           coeffv(i)(j) := c(j);
         end loop;
@@ -593,6 +800,56 @@ package body Drivers_for_mixedvol_algorithm is
 
   procedure Polyhedral_Homotopies
               ( cfile,qfile : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is 
+
+    q,pq : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+    n : constant integer32 := p'last;
+    r : integer32;
+    mixvol : natural32;
+    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    sub : Mixed_Subdivision;
+    s : constant Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range)
+      := Supports_of_Polynomial_Systems.Create(p);
+    fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range);
+    ps : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+    qsols : QuadDobl_Complex_Solutions.Solution_List;
+
+  begin
+    Mixed_Volume_Computation(n,s,0.0,r,mix,perm,sub,mixvol);
+    new_line;
+    put_line("See the output file for a regular mixed-cell configuration ...");
+    new_line;
+    put(cfile,natural32(n),mix.all,sub);
+    if r = n then
+      fs := Floating_Integer_Convertors.Convert(s);
+    else
+      for i in s'range loop
+        ps(i) := s(perm(i-1)+1);
+      end loop;
+      fs := Floating_Integer_Convertors.Convert(ps);
+    end if;
+    declare
+      ls : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
+    begin
+      ls := Floating_Lifting_Utilities.Occurred_Lifting(n,mix.all,fs,sub);
+     -- ls := Floating_Lifting_Utilities.Lifted_Supports(mix'last,sub);
+      Random_Coefficient_System(0,n,mix.all,ls,sub,q,qsols);
+    end;
+    new_line;
+    put_line("See the output file for a random coefficient start system ...");
+    new_line;
+    if r = n then
+      QuadDobl_System_and_Solutions_io.put_line(qfile,q,qsols);
+    else
+      for i in q'range loop
+        pq(i) := q(perm(i-1)+1);
+      end loop;
+      QuadDobl_System_and_Solutions_io.put_line(qfile,pq,qsols);
+    end if;
+  end Polyhedral_Homotopies;
+
+  procedure Polyhedral_Homotopies
+              ( cfile,qfile : in file_type;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys ) is 
 
     q,pq : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
@@ -688,6 +945,56 @@ package body Drivers_for_mixedvol_algorithm is
         pq(i) := q(perm(i-1)+1);
       end loop;
       DoblDobl_System_and_Solutions_io.put_line(qfile,pq,qsols);
+    end if;
+  end Polyhedral_Homotopies;
+
+  procedure Polyhedral_Homotopies
+              ( cfile,qfile : in file_type;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys ) is 
+
+    q,pq : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    n : constant integer32 := p'last;
+    r : integer32;
+    mixvol : natural32;
+    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    sub : Mixed_Subdivision;
+    s : constant Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range)
+      := Supports_of_Polynomial_Systems.Create(p);
+    ps : Arrays_of_Integer_Vector_Lists.Array_of_Lists(p'range);
+    fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(s'range);
+    qsols : QuadDobl_Complex_Solutions.Solution_List;
+
+  begin
+    Mixed_Volume_Computation(n,s,0.0,r,mix,perm,sub,mixvol);
+    new_line;
+    put_line("See the output file for a regular mixed-cell configuration ...");
+    new_line;
+    put(cfile,natural32(n),mix.all,sub);
+    if r = n then
+      fs := Floating_Integer_Convertors.Convert(s);
+    else
+      for i in s'range loop
+        ps(i) := s(perm(i-1)+1);
+      end loop;
+      fs := Floating_Integer_Convertors.Convert(ps);
+    end if;
+    declare
+      ls : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
+    begin
+      ls := Floating_Lifting_Utilities.Occurred_Lifting(n,mix.all,fs,sub);
+     -- ls := Floating_Lifting_Utilities.Lifted_Supports(mix'last,sub);
+      Random_Coefficient_System(0,n,mix.all,ls,sub,q,qsols);
+    end;
+    new_line;
+    put_line("See the output file for a random coefficient start system ...");
+    new_line;
+    if r = n then
+      QuadDobl_System_and_Solutions_io.put_line(qfile,q,qsols);
+    else
+      for i in q'range loop
+        pq(i) := q(perm(i-1)+1);
+      end loop;
+      QuadDobl_System_and_Solutions_io.put_line(qfile,pq,qsols);
     end if;
   end Polyhedral_Homotopies;
 

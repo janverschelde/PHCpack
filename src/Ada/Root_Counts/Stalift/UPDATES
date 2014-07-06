@@ -1,3 +1,7 @@
+Sun 6 Jul 2014 : extended drivers_for_mixedvol_algorithm with procedures
+  to solve a random coefficient system in quad double precision, tested
+  by ts_mvasta.
+
 Sat 5 Jul 2014 : modified drivers_for_mixedvol_algorithm to prepare for
   systems with double double and quad double coefficients, tested by
   ts_mvasta, which has extra option to run polyhedral homotopies in
