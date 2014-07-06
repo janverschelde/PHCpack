@@ -1,4 +1,7 @@
-Sat 5 Jul 2014 : extended support_of_polynomial_systems with routines for
+Sun 6 Jul 2014 : added routines to create lists of supports from systems with
+  quad double coefficients in supports_of_polynomial_systems.
+
+Sat 5 Jul 2014 : extended supports_of_polynomial_systems with routines for
   systems with double double coefficients.
 
 Thu 3 Jul 2014 : extended transforming_laurent_systems with shift operations
