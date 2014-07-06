@@ -62,6 +62,7 @@ standard_poly_laur_convertors     : convert polynomials to Laurent polynomials
 standard_laur_poly_convertors     : convert Laurent polynomials to polynomials
 dobldobl_poly_laur_convertors     : convert polynomials to Laurent for dobldobl
 dobldobl_laur_poly_convertors     : convert Laurent polynomials for dobldobl
+quaddobl_poly_laur_convertors     : convert polynomials to Laurent for quaddobl
 quaddobl_laur_poly_convertors     : convert Laurent polynomials for quaddobl
 multprec_laur_poly_convertors     : multiprecision "is_genuine_Laurent"
 standard_to_multprec_convertors   : convert from standard to multiprecision
