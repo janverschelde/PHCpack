@@ -185,6 +185,20 @@ package body DoblDobl_Binomial_Systems is
     return res;
   end Eval;
 
+  procedure Eval ( A : in Standard_Integer64_Matrices.Matrix;
+                   x : in Vector; y : out Vector ) is
+
+    one : constant double_double := create(1.0);
+
+  begin
+    y := (y'range => Create(one));
+    for j in A'range(2) loop
+      for i in A'range(1) loop
+        y(j) := y(j)*(x(i)**integer(A(i,j)));
+      end loop;
+    end loop;
+  end Eval;
+
   function Eval ( A : Standard_Integer64_Matrices.Matrix;
                   c,x : Vector ) return Vector is
 
