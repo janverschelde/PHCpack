@@ -1,21 +1,17 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
-with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
-with Standard_Integer_Matrices;
-with Standard_Complex_Matrices;
 with Arrays_of_Floating_Vector_Lists;
-with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
-with Standard_Complex_Laur_SysFun;       use Standard_Complex_Laur_SysFun;
-with Standard_Complex_Laur_Jacomats;     use Standard_Complex_Laur_Jacomats;
+with Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_SysFun;
+with Standard_Complex_Laur_JacoMats;
 with Exponent_Vectors;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with Standard_Complex_Solutions;
 
 package Multitasking_Polyhedral_Trackers is
 
@@ -23,24 +19,93 @@ package Multitasking_Polyhedral_Trackers is
 --   This package offers routines to implement polyhedral continuation
 --   methods for multithreading (shared memory parallel computing).
 
+  procedure Reporting_Multithreaded_Solve_Start_Systems
+              ( nt : in integer32;
+                q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                r : in integer32; mix : in Standard_Integer_Vectors.Vector;
+                mcc : in out Mixed_Subdivision;
+                mixvol : out natural32;
+                sols : out Standard_Complex_Solutions.Array_of_Solution_Lists;
+                res : out Standard_Floating_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Solves the start systems of q defined by the mixed cells in mcc,
+  --   using nt threads of execution.
+  --   Intermediate output is written to screen.
+
+  -- REQUIRED : the system is fully mixed and all cells are fine, and
+  --   sols is an array of range 1..nt = res'range.
+
+  -- ON ENTRY :
+  --   nt       the number of tasks;
+  --   q        a random coefficient start system;
+  --   r        number of distinct supports;
+  --   mix      type of mixture;
+  --   mcc      a regular mixed-cell configuration.
+
+  -- ON RETURN :
+  --   mixvol   sum of the mixed volumes of the cells in mcc;
+  --   sols     the start solutions computed by the tasks,
+  --            in particular sols(i) is computed by task i,
+  --            following a static workload assignment.
+  --   res      res(i) contains the sums of all residuals of
+  --            the start solutions computed by task i.
+
+  procedure Silent_Multithreaded_Solve_Start_Systems
+              ( nt : in integer32;
+                q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                r : in integer32; mix : in Standard_Integer_Vectors.Vector;
+                mcc : in out Mixed_Subdivision;
+                mixvol : out natural32;
+                sols : out Standard_Complex_Solutions.Array_of_Solution_Lists;
+                res : out Standard_Floating_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Solves the start systems of q defined by the mixed cells in mcc,
+  --   using nt threads of execution.  There is no intermediate output.
+
+  -- REQUIRED : the system is fully mixed and all cells are fine, and
+  --   sols is an array of range 1..nt = res'range.
+
+  -- ON ENTRY :
+  --   nt       the number of tasks;
+  --   q        a random coefficient start system;
+  --   r        number of distinct supports;
+  --   mix      type of mixture;
+  --   mcc      a regular mixed-cell configuration.
+
+  -- ON RETURN :
+  --   mixvol   sum of the mixed volumes of the cells in mcc;
+  --   sols     the start solutions computed by the tasks,
+  --            in particular sols(i) is computed by task i,
+  --            following a static workload assignment.
+  --   res      res(i) contains the sums of all residuals of
+  --            the start solutions computed by task i.
+
   procedure Silent_Multitasking_Path_Tracker
-              ( q : in Laur_Sys; nt,n,r : in integer32;
+              ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                nt,n,r : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
-                mcc : in Mixed_Subdivision; h : in Eval_Coeff_Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                h : in Standard_Complex_Laur_SysFun.Eval_Coeff_Laur_Sys;
                 c : in Standard_Complex_VecVecs.VecVec;
                 e : in Exponent_Vectors.Exponent_Vectors_Array;
-                j : in Eval_Coeff_Jaco_Mat; mf : in Mult_Factors;
-                sols : out Solution_List );
+                j : in Standard_Complex_Laur_JacoMats.Eval_Coeff_Jaco_Mat;
+                mf : in Standard_Complex_Laur_JacoMats.Mult_Factors;
+                sols : out Standard_Complex_Solutions.Solution_List );
   procedure Reporting_Multitasking_Path_Tracker
-              ( q : in Laur_Sys; nt,n,r : in integer32;
+              ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                nt,n,r : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
-                mcc : in Mixed_Subdivision; h : in Eval_Coeff_Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                h : in Standard_Complex_Laur_SysFun.Eval_Coeff_Laur_Sys;
                 c : in Standard_Complex_VecVecs.VecVec;
                 e : in Exponent_Vectors.Exponent_Vectors_Array;
-                j : in Eval_Coeff_Jaco_Mat; mf : in Mult_Factors;
-                sols : out Solution_List );
+                j : in Standard_Complex_Laur_JacoMats.Eval_Coeff_Jaco_Mat;
+                mf : in Standard_Complex_Laur_JacoMats.Mult_Factors;
+                sols : out Standard_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Uses nt tasks to solve a random coefficient system q.
@@ -64,13 +129,18 @@ package Multitasking_Polyhedral_Trackers is
   --   sols     all solutions of the system q.
 
   procedure Silent_Multitasking_Path_Tracker
-              ( q : in Laur_Sys; nt,n,m : in integer32;
+              ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                nt,n,m : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
-                mcc : in Mixed_Subdivision; sols : out Solution_List );
+                mcc : in Mixed_Subdivision;
+                sols : out Standard_Complex_Solutions.Solution_List );
   procedure Reporting_Multitasking_Path_Tracker
-              ( file : in file_type; q : in Laur_Sys; nt,n,m : in integer32;
+              ( file : in file_type; 
+                q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                nt,n,m : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
-                mcc : in Mixed_Subdivision; sols : out Solution_List );
+                mcc : in Mixed_Subdivision;
+                sols : out Standard_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Uses nt tasks to solve a random coefficient system q.

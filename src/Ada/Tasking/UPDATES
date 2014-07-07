@@ -1,5 +1,5 @@
 Mon 7 Jul 2014 : new package polyhedral_start_systems with code taken from
-  multitasking_polyhedral_trackers.
+  multitasking_polyhedral_trackers.  Fixed ts_mtvolcon.
 
 Thu 6 Mar 2014 : fixed ts_mtcont.adb for natural32/integer32.
 

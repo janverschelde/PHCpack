@@ -2,12 +2,16 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Floating_Vectors_io;       use Standard_Floating_Vectors_io;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_Norms_Equals;
+with StandarD_Integer_VecVecs;
+with Standard_Integer_Matrices;
 with Standard_Integer_Matrices_io;       use Standard_Integer_Matrices_io;
+with Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
 with Standard_Integer_Linear_Solvers;
 with Standard_Complex_Linear_Solvers;
@@ -37,12 +41,15 @@ with Polyhedral_Start_Systems;           use Polyhedral_Start_Systems;
 package body Multitasking_Polyhedral_Trackers is
 
   procedure Reporting_Multithreaded_Solve_Start_Systems
-              ( nt : in integer32; q : in Laur_Sys;
+              ( nt : in integer32;
+                q : in Standard_Complex_Laur_Systems.Laur_Sys;
                 r : in integer32; mix : in Standard_Integer_Vectors.Vector;
                 mcc : in out Mixed_Subdivision;
                 mixvol : out natural32;
-                sols : out Array_of_Solution_Lists;
+                sols : out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 res : out Standard_Floating_Vectors.Vector ) is
+
+    use Standard_Complex_Solutions;
 
     n : constant integer32 := q'last;
     vol : Standard_Integer_Vectors.Vector(1..nt);
@@ -169,11 +176,12 @@ package body Multitasking_Polyhedral_Trackers is
   end Reporting_Multithreaded_Solve_Start_Systems;
 
   procedure Silent_Multithreaded_Solve_Start_Systems
-              ( nt : in integer32; q : in Laur_Sys;
+              ( nt : in integer32;
+                q : in Standard_Complex_Laur_Systems.Laur_Sys;
                 r : in integer32; mix : in Standard_Integer_Vectors.Vector;
                 mcc : in out Mixed_Subdivision;
                 mixvol : out natural32;
-                sols : out Array_of_Solution_Lists;
+                sols : out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 res : out Standard_Floating_Vectors.Vector ) is
 
   -- NOTE :
@@ -182,6 +190,8 @@ package body Multitasking_Polyhedral_Trackers is
   --   (1) every task has its own copy of the tableau data structure;
   --   (2) every task has a deep copy of the tableau data structure;
   --   (3) the mixed cells are distributed in advance of task launch.
+
+    use Standard_Complex_Solutions;
 
     n : constant integer32 := q'last;
     cells,cells_last : array(1..nt) of Mixed_Subdivision;
@@ -288,17 +298,21 @@ package body Multitasking_Polyhedral_Trackers is
     Main;
   end Silent_Multithreaded_Solve_Start_Systems;
 
--- (3) TRACKING PATHS DEFINED BY A POLYHEDRAL HOMOTOPY :
-
   procedure Silent_Multitasking_Path_Tracker
-              ( q : in Laur_Sys; nt,n,r : in integer32;
+              ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                nt,n,r : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
-                mcc : in Mixed_Subdivision; h : in Eval_Coeff_Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                h : in Standard_Complex_Laur_SysFun.Eval_Coeff_Laur_Sys;
                 c : in Standard_Complex_VecVecs.VecVec;
                 e : in Exponent_Vectors.Exponent_Vectors_Array;
-                j : in Eval_Coeff_Jaco_Mat; mf : in Mult_Factors;
-                sols : out Solution_List ) is
+                j : in Standard_Complex_Laur_JacoMats.Eval_Coeff_Jaco_Mat;
+                mf : in Standard_Complex_Laur_JacoMats.Mult_Factors;
+                sols : out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Numbers,Standard_Complex_Solutions;
+    use Standard_Complex_Laur_SysFun,Standard_Complex_Laur_JacoMats;
 
     cell_ptr : Mixed_Subdivision := mcc;
     first : boolean := true;
@@ -356,7 +370,7 @@ package body Multitasking_Polyhedral_Trackers is
         end Eval;
 
         function dHt ( x : Standard_Complex_Vectors.Vector;
-                       t : Complex_Number )
+                       t : Standard_Complex_Numbers.Complex_Number )
                      return Standard_Complex_Vectors.Vector is
 
           res : Standard_Complex_Vectors.Vector(h'range);
@@ -487,14 +501,20 @@ package body Multitasking_Polyhedral_Trackers is
   end Silent_Multitasking_Path_Tracker;
 
   procedure Reporting_Multitasking_Path_Tracker
-              ( q : in Laur_Sys; nt,n,r : in integer32;
+              ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                nt,n,r : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
                 lif : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
-                mcc : in Mixed_Subdivision; h : in Eval_Coeff_Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                h : in Standard_Complex_Laur_SysFun.Eval_Coeff_Laur_Sys;
                 c : in Standard_Complex_VecVecs.VecVec;
                 e : in Exponent_Vectors.Exponent_Vectors_Array;
-                j : in Eval_Coeff_Jaco_Mat; mf : in Mult_Factors;
-                sols : out Solution_List ) is
+                j : in Standard_Complex_Laur_JacoMats.Eval_Coeff_Jaco_Mat;
+                mf : in Standard_Complex_Laur_JacoMats.Mult_Factors;
+                sols : out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Numbers,Standard_Complex_Solutions;
+    use Standard_Complex_Laur_SysFun,Standard_Complex_Laur_JacoMats;
 
     cell_ptr : Mixed_Subdivision := mcc;
     cell_ind : integer32 := 0;
@@ -728,9 +748,13 @@ package body Multitasking_Polyhedral_Trackers is
   end Reporting_Multitasking_Path_Tracker;
 
   procedure Silent_Multitasking_Path_Tracker
-              ( q : in Laur_Sys; nt,n,m : in integer32;
+              ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                nt,n,m : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
-                mcc : in Mixed_Subdivision; sols : out Solution_List ) is
+                mcc : in Mixed_Subdivision;
+                sols : out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Laur_SysFun,Standard_Complex_Laur_JacoMats;
 
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(q'range);
     pts : Arrays_of_Floating_Vector_Lists.Array_of_Lists(q'range);
@@ -762,9 +786,14 @@ package body Multitasking_Polyhedral_Trackers is
   end Silent_Multitasking_Path_Tracker;
 
   procedure Reporting_Multitasking_Path_Tracker
-              ( file : in file_type; q : in Laur_Sys; nt,n,m : in integer32;
+              ( file : in file_type;
+                q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                nt,n,m : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
-                mcc : in Mixed_Subdivision; sols : out Solution_List ) is
+                mcc : in Mixed_Subdivision;
+                sols : out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Laur_SysFun,Standard_Complex_Laur_JacoMats;
 
     sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(q'range);
     pts : Arrays_of_Floating_Vector_Lists.Array_of_Lists(q'range);
