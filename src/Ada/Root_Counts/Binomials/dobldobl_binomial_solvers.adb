@@ -156,6 +156,52 @@ package body DoblDobl_Binomial_Solvers is
     return res;
   end Solve_Upper_Square;
 
+  procedure Solve_Upper_Square
+              ( U : in Standard_Integer64_Matrices.Matrix;
+                c : in DoblDobl_Complex_Vectors.Vector;
+                s : in Solution_List ) is
+
+    accu : Link_to_Solution;
+    tmp : Solution_List := s;
+    one : constant double_double := create(1.0);
+
+    procedure Enumerate_Roots ( k : in integer32 ) is
+
+      eva : Complex_Number;
+
+    begin
+      if k > c'last then
+        tmp := Tail_Of(tmp);
+        if not Is_Null(tmp) then          -- move to next location
+          for i in accu.v'range loop
+            Head_Of(tmp).v(i) := accu.v(i); -- copy current values
+          end loop;
+          accu := Head_Of(tmp);
+        end if;
+      else
+        eva := Create(one);
+        for j in 1..k-1 loop
+          eva := eva*(accu.v(j)**integer(U(j,k)));
+        end loop;
+        if U(k,k) > 0 then
+          for j in 0..U(k,k)-1 loop
+            accu.v(k) := Root(c(k)/eva,natural32(U(k,k)),natural32(j));
+            Enumerate_Roots(k+1);
+          end loop;
+        else
+          for j in 0..(-U(k,k)-1) loop
+            accu.v(k) := Root(eva/c(k),natural32(-U(k,k)),natural32(j));
+            Enumerate_Roots(k+1);
+          end loop;
+        end if;
+      end if;
+    end Enumerate_Roots;
+
+  begin
+    accu := Head_Of(tmp);
+    Enumerate_Roots(1);
+  end Solve_Upper_Square;
+
   procedure Write_Vector_and_Modulus
               ( file : in file_type;
                 x : in DoblDobl_Complex_Vectors.Vector ) is

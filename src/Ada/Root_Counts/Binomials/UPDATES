@@ -1,4 +1,5 @@
 Mon 7 Jul 2014 : extended dobldobl_binomial_systems with Eval procedure.
+  Added Solve_Upper_Square procedure to dobldobl_binomial_solvers.
 
 Fri 27 Jun 2014 : new packages {dobldobl,quaddobl}_simpomial_solvers tested
   by ts_simposol to solve simplex systems with double doubles and quad doubles.
