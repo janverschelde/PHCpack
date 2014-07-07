@@ -1,4 +1,4 @@
-Multitasking linear algebra, evaluation and path tracking in PHCv2.3.85
+Multitasking linear algebra, evaluation and path tracking in PHCv2.3.90
 
 This directory is entirely new in release 2.3.45 of PHCpack.
 Tasks in Ada are mapped to kernel threads.
@@ -46,6 +46,7 @@ ts_mtsam                          : test on multitasking sampling
 -------------------------------------------------------------------------------
 multitasking_volume_computation   : computing mixed volumes with threads
 ts_mtvol                          : test on multitasking volume computation
+polyhedral_start_systems          : inline binomial solvers
 multitasking_polyhedral_trackers  : multithreaded polyhedral continuation
 ts_mtvolcon                       : test on polyhedral path trackers
 multitasking_root_refiners        : root refinement by multiple tasks

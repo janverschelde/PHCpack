@@ -1,0 +1,157 @@
+Mon 7 Jul 2014 : new package polyhedral_start_systems with code taken from
+  multitasking_polyhedral_trackers.
+
+Thu 6 Mar 2014 : fixed ts_mtcont.adb for natural32/integer32.
+
+Sun 2 Feb 2014 : further experimentation with V1 and V2 of the
+  multitasking_linear_solvers, with tests in ts_mtlinsol{V1,V2}.adb.
+  Test programs ts_protect.adb and ts_access.adb.
+
+Fri 31 Jan 2014 : experimenting to resolve a hanging in ts_mtlinsol,
+  cloned off multitasking_linear_solvers in multitasking_linear_solvers0
+  with corresponding tests in ts_mtlinsol.adb and ts_mtlinsol0.adb;
+  and then also multitasking_linear_solversV0 and ts_mtlinsolV0.adb.
+
+Wed 29 Jan 2014 : extended multitasking with operation to_string for
+  integer32 types.   Updated multitasking_linear_solvers and ts_mtlinsol.adb.
+
+Thu 5 Dec 2013 : for natural32 and integer32, updated ts_jobs.adb,
+  ts_mtvol.adb, ts_mtvolcon.ada, ts_mutex, ts_mtverify.adb, and also
+  ts_mtmatvec.adb, even as the multitasking packages were not okay...
+
+Tue 25 Jun 2013 : updated multitasking_root_refiners and _continuation
+  for the new data types natural32 and integer32.
+
+Sun 16 Jun 2013 : updated multitasking_polyhedral_trackers for new data types
+  natural32 and integer32.
+
+Thu 9 May 2013 : naming in multitasking_root_refiners to make room for
+  extensions to double double and quad double arithmetic.
+
+Wed 8 May 2013 : new package multitasking_root_refiners, tested by
+  ts_mtverify.
+
+Thu 25 Apr 2013 : merged Math_Lib/Tasking with this directories.
+  Entries below till Mon 7 Jun 2010 are the UPDATES of that directory.
+  Note that some of that code was also moved to the Functions directory.
+
+Thu 5 Jul 2012 : new package standard_jacobian_evaluations, with code
+  extracted from ts_speelsys.adb.  With the new directory Functions,
+  move this new code and the flatteners to Functions so only the tasking
+  code remains in this directory.
+
+Wed 4 Jul 2012 : new ts_speelsys.adb to develop Jacobian evaluations.
+
+Wed 11 Aug 2010 : add factoring and compression to the evaluators in
+  {dobldobl,quaddobl}_polynomial_flatteners, updated ts_polyflat and
+  tested performance with ts_perfeval.
+
+Sun 8 Aug 2010 : added compression to lexicographical_supports and to
+  standard_polynomial_flatteners, tested by ts_polyflat and ts_perfeval.
+
+Wed 4 Aug 2010 : updates in lexicographical_supports.a* tested by
+  ts_perfeval.adb. 
+
+Wed 16 Jun 2010 : minor changes in multitasking_linear_solvers.adb in
+  an attempt to improve the performance.
+
+Mon 14 Jun 2010 : moved flags out of multitasking_linear_solvers.adb.
+
+Sun 13 Jun 2010 : new package multitasking_linear_solvers, tested by
+  ts_mtlinsol.adb.
+
+Thu 10 Jun 2010 : added performance testers to ts_mtpolval.
+
+Wed 9 Jun 2010 : extended *polynomial_flatteners with sparse representation,
+  tested by ts_polyflat.adb.  Also sparse representations were added to
+  multitasking_polynomial_functions, tested by ts_mtpolval.
+
+Tue 8 Jun 2010 : extended *polynomial_flatteners with Flatten wrapper,
+  update in ts_polyflat.adb and new ts_mtpolval.adb.  New package
+  multitasking_polynomial_functions is tested by ts_mtpolval.
+
+Mon 7 Jun 2010 : new directory with packages lexicographical_supports,
+  {standard,dobldobl,quaddobl}_polynomial_flatteners, tested by ts_polyflat,
+  ts_mtmatvec tests the package multitasking_matrix_x_vector.
+
+Thu 25 Apr 2013 : merged Root_Counts/Tasking with this directory.
+  Entries below till Sun 14 Apr 2013 are the UPDATES of that temporarily
+  new directory Tasking in Root_Counts.
+
+Wed 24 Apr 2013 : extended multitasking_polyhedral_trackers for it to
+  work too for semi-mixed inputs, tested by ts_mtvolcon.adb.
+
+Tue 23 Apr 2013 : multitasking_polyhedral_trackers.adb works! tested by
+  ts_mtvolcon.adb.
+
+Mon 22 Apr 2013 : modifications in multitasking_polyhedral_trackers,
+  tested by ts_mtvolcon.adb.
+
+Sun 21 Apr 2013 : cleaned up multitasking_volume_computation.adb.
+
+Fri 19 Apr 2013 : added dynamic scheduling to multitasking_volume_computation
+  tested by ts_mtvol.adb, and discovered a bug in the use of semaphores!
+
+Thu 18 Apr 2013 : extensions and bug fixes in multitasking_polyhedral_trackers
+  tested by ts_mtvolcon.
+
+Wed 17 Apr 2013 : refactored code in ts_mtvolcon.adb to compute the
+  solutions of the start system defined by mixed cells.
+  New package multitasking_polyhedral_trackers with code from ts_mtvolcon.
+
+Tue 16 Apr 2013 : updated ts_mtvolcon.adb.
+
+Mon 15 Apr 2013 : new ts_mtvolcon.adb.
+
+Sun 14 Apr 2013 : new directory starting with ts_mtvol.adb, which gave rise
+  to the multitasking_volume_computation.
+
+Fri 19 Apr 2013 : implemented semaphore with protected type, bug fixes in
+  mt_polyhedral_continuation.adb and multitasking_polynomial_continuation.adb.
+
+Sat 16 Feb 2013 : updates in multitasking_continuation to prepare for
+  double double and quad double path tracking.
+
+Wed 7 Sep 2011 : changed mt_polyhedral_continuation because of problems
+  with cyclic10 on dezon.
+
+Wed 1 Jun 2011 : changed multitasking_continuation.adb for warnings.
+
+Tue 15 Jun 2010 : added guessing game in ts_tasking.adb to test looping
+  workers, fixed bugs in multitasking.adb.
+
+Mon 14 Jun 2010 : updated multitasking with looping workers.
+
+Wed 9 Jun 2010 : added option to ts_mtddref and ts_mtqdref to toggle of
+  the monitoring of the progress of the root refiner.
+
+Sun 6 Jun 2010 : new ts_mtddref and ts_mtqdref to develop multitasking root
+  refiner with complex double double and quad double arithmetic.
+
+Sun 11 Apr 2010 : extended multitasking_sampling.adb with 10 monodromy loops.
+
+Sun 4 Apr 2010 : extended multitasking_sampling with driver for monodromy
+  loops, tested by ts_mtsam.adb.
+
+Sat 27 Feb 2010 : updates in multitasking_sampling.
+
+Thu 25 Feb 2010 : new ts_mtsam tests multitasking_sampling package.
+
+Fri 9 Oct 2009 : extended mt_polyhedral_continuation with trackers for
+  Laurent polynomial systems.  Extended multitasking_continuation also.
+
+Thu 16 Jul 2009 : added done array in multitasking.adb for main task to
+  enter a busy loop waiting, but showed not to be effective
+  => not in the the main distribution!
+
+Sun 5 Jul 2009 : fixed type error in mt_polyhedral_continuation.ads.
+
+Mon 22 Jun 2009 : updates in mt_polyhedral_continuation.adb and ts_mtpolco.
+
+Sun 21 Jun 2009 : created mt_polyhedral_continuation, tested by ts_mtpolco.
+
+Thu 14 May 2009 : ts_mtsols, ts_mtstref, ts_mtsharp, and ts_mtcont add
+  to the development.
+
+Wed 13 May 2009 : creation of this directory, the packages multitasking and
+  semaphore are tested by ts_tasking, ts_mutex, and ts_jobs.
