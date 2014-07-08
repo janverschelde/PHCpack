@@ -62,6 +62,14 @@ package QuadDobl_Binomial_Systems is
 
   -- DESCRIPTION : returns x^A.
 
+  procedure Eval ( A : in Standard_Integer64_Matrices.Matrix;
+                   x : in Vector; y : out Vector );
+
+  -- DESCRIPTION :
+  --   Returns in y = x^A.
+
+  -- REQUIRED : y'range = A'range(2).
+
   function Eval ( A : Standard_Integer64_Matrices.Matrix;
                   c,x : Vector ) return Vector;
 

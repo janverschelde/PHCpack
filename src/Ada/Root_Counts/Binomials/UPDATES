@@ -1,3 +1,6 @@
+Tue 8 Jul 2014 : extended quaddobl_binomial_{systems,solvers} with
+  procedures as needed in the multitasked versions.
+
 Mon 7 Jul 2014 : extended dobldobl_binomial_systems with Eval procedure.
   Added Solve_Upper_Square procedure to dobldobl_binomial_solvers.
 

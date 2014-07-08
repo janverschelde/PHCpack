@@ -54,6 +54,27 @@ package QuadDobl_Binomial_Solvers is
   -- ON RETURN :
   --   list of solutions to x^U = c, as many as |det(U)|.
 
+  procedure Solve_Upper_Square
+             ( U : in Standard_Integer64_Matrices.Matrix;
+               c : in QuadDobl_Complex_Vectors.Vector;
+               s : in Solution_List );
+
+  -- DESCRIPTION :
+  --   Computes the solutions to x^U = c.
+
+  -- REQUIRED : U is upper triangular and the system is square,
+  --            and det(U) /= 0; U'range(2) = c'range,
+  --   moreover: Length_Of(s) >= |det(U)|.
+
+  -- ON ENTRY :
+  --   U       exponent matrix of x^U, columnwise orientation;
+  --   c       right-hand side coefficient vector;
+  --   s       list of at least |det(U)| solutions of dimension n,
+  --           where n equals c'length.
+
+  -- ON RETURN :
+  --   s       list of solutions to x^U = c, as many as |det(U)|.
+
   function Extend_to_Square
              ( U : Standard_Integer64_Matrices.Matrix )
              return Standard_Integer64_Matrices.Matrix;
