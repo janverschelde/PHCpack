@@ -2,18 +2,29 @@ with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_VecVecs;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_VecVecs;
 with Standard_Integer_Matrices;
+with Standard_Integer64_Matrices;
 with Standard_Complex_Matrices;
+with DoblDobl_Complex_Matrices;
+with QuadDobl_Complex_Matrices;
 with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Laur_Systems;
 with Exponent_Vectors;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Polyhedral_Start_Systems is
 
@@ -39,6 +50,16 @@ package Polyhedral_Start_Systems is
                 exp : Standard_Integer_VecVecs.Link_to_VecVec;
                 pt : Standard_Floating_Vectors.Link_to_Vector )
               return Standard_Complex_Numbers.Complex_Number;
+  function Coefficient
+              ( cff : DoblDobl_Complex_Vectors.Link_to_Vector;
+                exp : Standard_Integer_VecVecs.Link_to_VecVec;
+                pt : Standard_Floating_Vectors.Link_to_Vector )
+              return DoblDobl_Complex_Numbers.Complex_Number;
+  function Coefficient
+              ( cff : QuadDobl_Complex_Vectors.Link_to_Vector;
+                exp : Standard_Integer_VecVecs.Link_to_VecVec;
+                pt : Standard_Floating_Vectors.Link_to_Vector )
+              return QuadDobl_Complex_Numbers.Complex_Number;
 
   -- DESCRIPTION :
   --   Returns the coefficient in cff matching with the exponent
@@ -54,6 +75,26 @@ package Polyhedral_Start_Systems is
                 q_e : in Exponent_Vectors.Exponent_Vectors_Array;
                 pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 cff : out Standard_Complex_Vectors.Vector );
+  procedure Select_Coefficients
+              ( q_c : in DoblDobl_Complex_VecVecs.VecVec;
+                q_e : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                cff : out DoblDobl_Complex_Vectors.Vector );
+  procedure Select_Coefficients
+              ( q_c : in DoblDobl_Complex_VecVecs.VecVec;
+                q_e : in Exponent_Vectors.Exponent_Vectors_Array;
+                pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                cff : out DoblDobl_Complex_Vectors.Vector );
+  procedure Select_Coefficients
+              ( q_c : in QuadDobl_Complex_VecVecs.VecVec;
+                q_e : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                cff : out QuadDobl_Complex_Vectors.Vector );
+  procedure Select_Coefficients
+              ( q_c : in QuadDobl_Complex_VecVecs.VecVec;
+                q_e : in Exponent_Vectors.Exponent_Vectors_Array;
+                pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                cff : out QuadDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Selects the coefficients cff corresponding to the points in pts,
@@ -92,6 +133,16 @@ package Polyhedral_Start_Systems is
                 e : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 A : out Standard_Integer_Matrices.Matrix;
                 b : out Standard_Complex_Vectors.Vector );
+  procedure Fully_Mixed_to_Binomial_Format
+              ( c : in DoblDobl_Complex_Vectors.Vector;
+                e : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                A : out Standard_Integer64_Matrices.Matrix;
+                b : out DoblDobl_Complex_Vectors.Vector );
+  procedure Fully_Mixed_to_Binomial_Format
+              ( c : in QuadDobl_Complex_Vectors.Vector;
+                e : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                A : out Standard_Integer64_Matrices.Matrix;
+                b : out QuadDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Converts the coefficients and supports from the tableau format
@@ -128,6 +179,38 @@ package Polyhedral_Start_Systems is
                 A : out Standard_Integer_Matrices.Matrix;
                 C : out Standard_Complex_Matrices.Matrix;
                 b : out Standard_Complex_Vectors.Vector );
+  procedure Select_Subsystem_to_Matrix_Format 
+              ( q_c : in DoblDobl_Complex_VecVecs.VecVec;
+                q_e : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                mix : in Standard_Integer_Vectors.Vector;
+                pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                A : out Standard_Integer64_Matrices.Matrix;
+                C : out DoblDobl_Complex_Matrices.Matrix;
+                b : out DoblDobl_Complex_Vectors.Vector );
+  procedure Select_Subsystem_to_Matrix_Format 
+              ( q_c : in DoblDobl_Complex_VecVecs.VecVec;
+                q_e : in Exponent_Vectors.Exponent_Vectors_Array;
+                mix : in Standard_Integer_Vectors.Vector;
+                pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                A : out Standard_Integer64_Matrices.Matrix;
+                C : out DoblDobl_Complex_Matrices.Matrix;
+                b : out DoblDobl_Complex_Vectors.Vector );
+  procedure Select_Subsystem_to_Matrix_Format 
+              ( q_c : in QuadDobl_Complex_VecVecs.VecVec;
+                q_e : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                mix : in Standard_Integer_Vectors.Vector;
+                pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                A : out Standard_Integer64_Matrices.Matrix;
+                C : out QuadDobl_Complex_Matrices.Matrix;
+                b : out QuadDobl_Complex_Vectors.Vector );
+  procedure Select_Subsystem_to_Matrix_Format 
+              ( q_c : in QuadDobl_Complex_VecVecs.VecVec;
+                q_e : in Exponent_Vectors.Exponent_Vectors_Array;
+                mix : in Standard_Integer_Vectors.Vector;
+                pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                A : out Standard_Integer64_Matrices.Matrix;
+                C : out QuadDobl_Complex_Matrices.Matrix;
+                b : out QuadDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Selects the coefficients of q_c corresponding to the points in pts
@@ -162,6 +245,10 @@ package Polyhedral_Start_Systems is
 
   function Create ( n,m : integer32 )
                   return Standard_Complex_Solutions.Solution_List;
+  function Create ( n,m : integer32 )
+                  return DoblDobl_Complex_Solutions.Solution_List;
+  function Create ( n,m : integer32 )
+                  return QuadDobl_Complex_Solutions.Solution_List;
 
   -- DESCRIPTION :
   --   Returns a list of m solutions of dimension n.
@@ -174,6 +261,8 @@ package Polyhedral_Start_Systems is
 
   function Volume_of_Diagonal
              ( A : Standard_Integer_Matrices.Matrix ) return natural32;
+  function Volume_of_Diagonal
+             ( A : Standard_Integer64_Matrices.Matrix ) return natural64;
 
   -- DESCRIPTION :
   --   Returns the product of the elements on the diagonal of A,

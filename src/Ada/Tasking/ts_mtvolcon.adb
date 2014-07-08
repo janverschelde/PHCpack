@@ -5,33 +5,25 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
-with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Integer_Vectors;
-with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
-with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
-with Standard_Complex_Vectors;
-with Standard_Complex_VecVecs;
-with Standard_Integer_Matrices;
-with Standard_Integer_Linear_Solvers;
 with Lists_of_Floating_Vectors;          use Lists_of_Floating_Vectors;
-with Arrays_of_Floating_Vector_Lists;
-with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
-with Standard_Tableau_Formats;
+with DoblDobl_Complex_Laur_Systems;
+with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
+with QuadDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
+with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;     use Floating_Mixed_Subdivisions_io;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
-with Standard_Radial_Solvers;
-with Standard_Binomial_Systems;
-with Standard_Binomial_Solvers;
 with Continuation_Parameters;
-with Multitasking;
-with Multitasking_Volume_Computation;    use Multitasking_Volume_Computation;
 with Polyhedral_Start_Systems;           use Polyhedral_Start_Systems;
 with Multitasking_Polyhedral_Trackers;   use Multitasking_Polyhedral_Trackers;
 
@@ -40,10 +32,18 @@ procedure ts_mtvolcon is
 -- DESCRIPTION :
 --   Development of multithreaded polyhedral continuation.
 
-  procedure Solve_Start_Systems
-              ( nt : in integer32; q : in Laur_Sys;
+  procedure Standard_Solve_Start_Systems
+              ( nt : in integer32;
+                q : in Standard_Complex_Laur_Systems.Laur_Sys;
                 m : in integer32; mix : in Standard_Integer_Vectors.Vector;
                 mcc : in out Mixed_Subdivision ) is
+
+  -- DESCRIPTION :
+  --   Solves all initial form systems defined by the mixed-cell
+  --   configuration in mcc to start the polyhedral homotopies in q,
+  --   in standard double precision.
+
+    use Standard_Complex_Solutions;
 
     mv : natural32;
     sols : Array_of_Solution_Lists(1..nt);
@@ -69,12 +69,19 @@ procedure ts_mtvolcon is
       put(res(i),3);
     end loop;
     new_line;
-  end Solve_Start_Systems;
+  end Standard_Solve_Start_Systems;
 
-  procedure Compute_Start_Solutions
-              ( q : in Laur_Sys; m : in integer32;
+  procedure Standard_Compute_Start_Solutions
+              ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                m : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
                 mcc : in out Mixed_Subdivision ) is
+
+  -- DESCRIPTION :
+  --   First solves all initial form systems defined by the mixed-cell
+  --   configuration in mcc by one single thread, then prompts the user
+  --   for the number of tasks for multithreaded solving,
+  --   in standard double precision.
 
     timer : Timing_Widget;
     nt : integer32 := 0;
@@ -95,13 +102,21 @@ procedure ts_mtvolcon is
     end if;
     new_line;
     put("Give the number of threads : "); get(nt);
-    Solve_Start_Systems(nt,q,m,mix,mcc);
-  end Compute_Start_Solutions;
+    Standard_Solve_Start_Systems(nt,q,m,mix,mcc);
+  end Standard_Compute_Start_Solutions;
 
-  procedure Track_Paths
-              ( q : in Laur_Sys; n,m : in integer32;
+  procedure Standard_Track_Paths
+              ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
+                n,m : in integer32;
                 mix : in Standard_Integer_Vectors.Vector;
                 mcc : in out Mixed_Subdivision ) is
+
+  -- DESCRIPTION :
+  --   Prompts the suesr for an output file, the number of tasks,
+  --   and whether intermediate output is needed before launching
+  --   the multitasked polyhedral trackers in standard double precision.
+
+    use Standard_Complex_Solutions;
 
     nt : integer32 := 0;
     ans : character;
@@ -123,12 +138,87 @@ procedure ts_mtvolcon is
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-  end Track_Paths;
+  end Standard_Track_Paths;
 
-  procedure Main is
+  procedure DoblDobl_Track_Paths
+              ( q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                n,m : in integer32;
+                mix : in Standard_Integer_Vectors.Vector;
+                mcc : in out Mixed_Subdivision ) is
+
+  -- DESCRIPTION :
+  --   Prompts the suesr for an output file, the number of tasks,
+  --   and whether intermediate output is needed before launching
+  --   the multitasked polyhedral trackers in double double precision.
+
+    use DoblDobl_Complex_Solutions;
+
+    nt : integer32 := 0;
+    ans : character;
+    sols : Solution_List;
+    file : file_type;
+ 
+  begin
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    put_line(file,q);
+    new_line;
+    put("Give the number of threads : "); get(nt);
+    put("Do you want output to screen ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'n'
+     then Silent_Multitasking_Path_Tracker(q,nt,n,m,mix,mcc,sols);
+     else Reporting_Multitasking_Path_Tracker(file,q,nt,n,m,mix,mcc,sols);
+    end if;
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+  end DoblDobl_Track_Paths;
+
+  procedure QuadDobl_Track_Paths
+              ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                n,m : in integer32;
+                mix : in Standard_Integer_Vectors.Vector;
+                mcc : in out Mixed_Subdivision ) is
+
+  -- DESCRIPTION :
+  --   Prompts the suesr for an output file, the number of tasks,
+  --   and whether intermediate output is needed before launching
+  --   the multitasked polyhedral trackers in double double precision.
+
+    use QuadDobl_Complex_Solutions;
+
+    nt : integer32 := 0;
+    ans : character;
+    sols : Solution_List;
+    file : file_type;
+ 
+  begin
+    put_line("Reading the name of the output file ...");
+    Read_Name_and_Create_File(file);
+    put_line(file,q);
+    new_line;
+    put("Give the number of threads : "); get(nt);
+    put("Do you want output to screen ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'n'
+     then Silent_Multitasking_Path_Tracker(q,nt,n,m,mix,mcc,sols);
+     else Reporting_Multitasking_Path_Tracker(file,q,nt,n,m,mix,mcc,sols);
+    end if;
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+  end QuadDobl_Track_Paths;
+
+  procedure Standard_Test is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a random coefficient polynomial system,
+  --   a mixed-cell configuration, and then tests the multitasked
+  --   polyhedral homotopies in standard double precision.
 
     file : file_type;
-    q : Link_to_Laur_Sys;
+    q : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
     n,m : integer32;
     mix : Standard_Integer_Vectors.Link_to_Vector;
     mcc : Mixed_Subdivision;
@@ -155,11 +245,115 @@ procedure ts_mtvolcon is
     Ask_Alternative(ans,"12");
     new_line;
     if ans = '1' then
-      Compute_Start_Solutions(q.all,m,mix.all,mcc);
+      Standard_Compute_Start_Solutions(q.all,m,mix.all,mcc);
     else
-      Continuation_Parameters.Tune(2);
-      Track_Paths(q.all,n,m,mix.all,mcc);
+      Continuation_Parameters.Tune(0);
+      Standard_Track_Paths(q.all,n,m,mix.all,mcc);
     end if;
+  end Standard_Test;
+
+  procedure DoblDobl_Test is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a random coefficient polynomial system,
+  --   a mixed-cell configuration, and then tests the multitasked
+  --   polyhedral homotopies in double double precision.
+
+    file : file_type;
+    q : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    n,m : integer32;
+    mix : Standard_Integer_Vectors.Link_to_Vector;
+    mcc : Mixed_Subdivision;
+   -- ans : character;
+
+  begin
+    new_line;
+    put_line("Reading a random coefficient system ...");
+    Read_Name_and_Open_File(file);
+    get(file,q);
+    close(file);
+    new_line;
+    put_line("Reading a file for a mixed cell configuration ...");
+    Read_Name_and_Open_File(file);
+    get(file,natural32(n),natural32(m),mix,mcc);
+    close(file);
+    new_line;
+    put("Read "); put(Length_Of(mcc),1); put_line(" cells.");
+   -- new_line;
+   -- put_line("MENU to test polyhedral homotopies : ");
+   -- put_line("  1. solve only the start systems;");
+   -- put_line("  2. solve the start systems and track all paths.");
+   -- put("Type 1 or 2 to make your choice : ");
+   -- Ask_Alternative(ans,"12");
+   -- new_line;
+   -- if ans = '1' then
+   --   Standard_Compute_Start_Solutions(q.all,m,mix.all,mcc);
+   -- else
+      Continuation_Parameters.Tune(0);
+      DoblDobl_Track_Paths(q.all,n,m,mix.all,mcc);
+   -- end if;
+  end DoblDobl_Test;
+
+  procedure QuadDobl_Test is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a random coefficient polynomial system,
+  --   a mixed-cell configuration, and then tests the multitasked
+  --   polyhedral homotopies in quad double precision.
+
+    file : file_type;
+    q : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    n,m : integer32;
+    mix : Standard_Integer_Vectors.Link_to_Vector;
+    mcc : Mixed_Subdivision;
+   -- ans : character;
+
+  begin
+    new_line;
+    put_line("Reading a random coefficient system ...");
+    Read_Name_and_Open_File(file);
+    get(file,q);
+    close(file);
+    new_line;
+    put_line("Reading a file for a mixed cell configuration ...");
+    Read_Name_and_Open_File(file);
+    get(file,natural32(n),natural32(m),mix,mcc);
+    close(file);
+    new_line;
+    put("Read "); put(Length_Of(mcc),1); put_line(" cells.");
+   -- new_line;
+   -- put_line("MENU to test polyhedral homotopies : ");
+   -- put_line("  1. solve only the start systems;");
+   -- put_line("  2. solve the start systems and track all paths.");
+   -- put("Type 1 or 2 to make your choice : ");
+   -- Ask_Alternative(ans,"12");
+   -- new_line;
+   -- if ans = '1' then
+   --   Standard_Compute_Start_Solutions(q.all,m,mix.all,mcc);
+   -- else
+      Continuation_Parameters.Tune(0);
+      QuadDobl_Track_Paths(q.all,n,m,mix.all,mcc);
+   -- end if;
+  end QuadDobl_Test;
+
+  procedure Main is
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU to test multitasked polyhedral homotopies :");
+    put_line("  1. in standard double precision;");
+    put_line("  2. in double double precision;");
+    put_line("  3. in quad double precision.");
+    put("Type 1, 2, or 3 to select the precision : ");
+    Ask_Alternative(ans,"123");
+    case ans is
+      when '1' => Standard_Test;
+      when '2' => DoblDobl_Test;
+      when '3' => QuadDobl_Test;
+      when others => null;
+    end case;
   end Main;
 
 begin

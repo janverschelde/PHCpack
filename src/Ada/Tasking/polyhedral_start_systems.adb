@@ -2,6 +2,8 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Floating_Vectors_io;       use Standard_Floating_Vectors_io;
@@ -67,6 +69,46 @@ package body Polyhedral_Start_Systems is
     return res;
   end Coefficient;
 
+  function Coefficient
+              ( cff : DoblDobl_Complex_Vectors.Link_to_Vector;
+                exp : Standard_Integer_VecVecs.Link_to_VecVec;
+                pt : Standard_Floating_Vectors.Link_to_Vector )
+              return DoblDobl_Complex_Numbers.Complex_Number is
+
+    use DoblDobl_Complex_Numbers;
+
+    zero : constant double_double := create(0.0);
+    res : Complex_Number := Create(zero);
+
+  begin
+    for i in exp'range loop
+      if Is_Equal(exp(i),pt)
+       then res := cff(i); exit;
+      end if;
+    end loop;
+    return res;
+  end Coefficient;
+
+  function Coefficient
+              ( cff : QuadDobl_Complex_Vectors.Link_to_Vector;
+                exp : Standard_Integer_VecVecs.Link_to_VecVec;
+                pt : Standard_Floating_Vectors.Link_to_Vector )
+              return QuadDobl_Complex_Numbers.Complex_Number is
+
+    use QuadDobl_Complex_Numbers;
+
+    zero : constant quad_double := create(0.0);
+    res : Complex_Number := Create(zero);
+
+  begin
+    for i in exp'range loop
+      if Is_Equal(exp(i),pt)
+       then res := cff(i); exit;
+      end if;
+    end loop;
+    return res;
+  end Coefficient;
+
   procedure Select_Coefficients
               ( q_c : in Standard_Complex_VecVecs.VecVec;
                 q_e : in Standard_Integer_VecVecs.Array_of_VecVecs;
@@ -94,6 +136,94 @@ package body Polyhedral_Start_Systems is
                 q_e : in Exponent_Vectors.Exponent_Vectors_Array;
                 pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
                 cff : out Standard_Complex_Vectors.Vector ) is
+
+    ind : integer32 := cff'first-1;
+    tmp : List;
+    lpt : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    for i in pts'range loop
+      tmp := pts(i);
+      while not Is_Null(tmp) loop
+        lpt := Head_Of(tmp);
+        ind := ind + 1;
+        cff(ind) := Coefficient(q_c(i),q_e(i),lpt);
+        tmp := Tail_Of(tmp);
+      end loop;
+    end loop;
+  end Select_Coefficients;
+
+  procedure Select_Coefficients
+              ( q_c : in DoblDobl_Complex_VecVecs.VecVec;
+                q_e : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                cff : out DoblDobl_Complex_Vectors.Vector ) is
+
+    ind : integer32 := cff'first-1;
+    tmp : List;
+    lpt : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    for i in pts'range loop
+      tmp := pts(i);
+      while not Is_Null(tmp) loop
+        lpt := Head_Of(tmp);
+        ind := ind + 1;
+        cff(ind) := Coefficient(q_c(i),q_e(i),lpt);
+        tmp := Tail_Of(tmp);
+      end loop;
+    end loop;
+  end Select_Coefficients;
+
+  procedure Select_Coefficients
+              ( q_c : in DoblDobl_Complex_VecVecs.VecVec;
+                q_e : in Exponent_Vectors.Exponent_Vectors_Array;
+                pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                cff : out DoblDobl_Complex_Vectors.Vector ) is
+
+    ind : integer32 := cff'first-1;
+    tmp : List;
+    lpt : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    for i in pts'range loop
+      tmp := pts(i);
+      while not Is_Null(tmp) loop
+        lpt := Head_Of(tmp);
+        ind := ind + 1;
+        cff(ind) := Coefficient(q_c(i),q_e(i),lpt);
+        tmp := Tail_Of(tmp);
+      end loop;
+    end loop;
+  end Select_Coefficients;
+
+  procedure Select_Coefficients
+              ( q_c : in QuadDobl_Complex_VecVecs.VecVec;
+                q_e : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                cff : out QuadDobl_Complex_Vectors.Vector ) is
+
+    ind : integer32 := cff'first-1;
+    tmp : List;
+    lpt : Standard_Floating_Vectors.Link_to_Vector;
+
+  begin
+    for i in pts'range loop
+      tmp := pts(i);
+      while not Is_Null(tmp) loop
+        lpt := Head_Of(tmp);
+        ind := ind + 1;
+        cff(ind) := Coefficient(q_c(i),q_e(i),lpt);
+        tmp := Tail_Of(tmp);
+      end loop;
+    end loop;
+  end Select_Coefficients;
+
+  procedure Select_Coefficients
+              ( q_c : in QuadDobl_Complex_VecVecs.VecVec;
+                q_e : in Exponent_Vectors.Exponent_Vectors_Array;
+                pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                cff : out QuadDobl_Complex_Vectors.Vector ) is
 
     ind : integer32 := cff'first-1;
     tmp : List;
@@ -168,6 +298,52 @@ package body Polyhedral_Start_Systems is
       second := Head_Of(Tail_Of(e(i)));
       for j in A'range(2) loop
         A(j,i) := integer32(first(j)) - integer32(second(j));
+      end loop;
+      b(i) := (-c(ind+1))/c(ind);
+      ind := ind + 2;
+    end loop;
+  end Fully_Mixed_to_Binomial_Format;
+
+  procedure Fully_Mixed_to_Binomial_Format
+              ( c : in DoblDobl_Complex_Vectors.Vector;
+                e : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                A : out Standard_Integer64_Matrices.Matrix;
+                b : out DoblDobl_Complex_Vectors.Vector ) is
+
+    use DoblDobl_Complex_Numbers;
+
+    first,second : Standard_Floating_Vectors.Link_to_Vector;
+    ind : integer32 := c'first;
+
+  begin
+    for i in e'range loop
+      first := Head_Of(e(i));
+      second := Head_Of(Tail_Of(e(i)));
+      for j in A'range(2) loop
+        A(j,i) := integer64(first(j)) - integer64(second(j));
+      end loop;
+      b(i) := (-c(ind+1))/c(ind);
+      ind := ind + 2;
+    end loop;
+  end Fully_Mixed_to_Binomial_Format;
+
+  procedure Fully_Mixed_to_Binomial_Format
+              ( c : in QuadDobl_Complex_Vectors.Vector;
+                e : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                A : out Standard_Integer64_Matrices.Matrix;
+                b : out QuadDobl_Complex_Vectors.Vector ) is
+
+    use QuadDobl_Complex_Numbers;
+
+    first,second : Standard_Floating_Vectors.Link_to_Vector;
+    ind : integer32 := c'first;
+
+  begin
+    for i in e'range loop
+      first := Head_Of(e(i));
+      second := Head_Of(Tail_Of(e(i)));
+      for j in A'range(2) loop
+        A(j,i) := integer64(first(j)) - integer64(second(j));
       end loop;
       b(i) := (-c(ind+1))/c(ind);
       ind := ind + 2;
@@ -260,6 +436,182 @@ package body Polyhedral_Start_Systems is
     end loop;
   end Select_Subsystem_to_Matrix_Format;
 
+  procedure Select_Subsystem_to_Matrix_Format 
+              ( q_c : in DoblDobl_Complex_VecVecs.VecVec;
+                q_e : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                mix : in Standard_Integer_Vectors.Vector;
+                pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                A : out Standard_Integer64_Matrices.Matrix;
+                C : out DoblDobl_Complex_Matrices.Matrix;
+                b : out DoblDobl_Complex_Vectors.Vector ) is
+
+    use DoblDobl_Complex_Numbers;
+
+    ind : integer32 := q_c'first-1;
+    first,second : Standard_Floating_Vectors.Link_to_Vector;
+    tmp : List;
+    col : integer32 := A'first(2) - 1;
+    zero : constant double_double := create(0.0);
+
+  begin
+    for i in C'range(1) loop
+      for j in C'range(2) loop
+        C(i,j) := Create(zero);
+      end loop;
+    end loop;
+    for i in mix'range loop
+      first := Head_Of(pts(i));
+      for k in 1..mix(i) loop
+        b(ind+k) := -Coefficient(q_c(ind+k),q_e(ind+k),first);
+      end loop;
+      tmp := Tail_Of(pts(i));
+      while not Is_Null(tmp) loop
+        second := Head_Of(tmp);
+        col := col + 1;
+        for row in A'range(1) loop
+          A(row,col) := integer64(second(row)) - integer64(first(row));
+        end loop;
+        for k in 1..mix(i) loop
+          C(ind+k,col) := Coefficient(q_c(ind+k),q_e(ind+k),second);
+        end loop;
+        tmp := Tail_Of(tmp);
+      end loop;
+      ind := ind + mix(i);
+    end loop;
+  end Select_Subsystem_to_Matrix_Format;
+
+  procedure Select_Subsystem_to_Matrix_Format 
+              ( q_c : in DoblDobl_Complex_VecVecs.VecVec;
+                q_e : in Exponent_Vectors.Exponent_Vectors_Array;
+                mix : in Standard_Integer_Vectors.Vector;
+                pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                A : out Standard_Integer64_Matrices.Matrix;
+                C : out DoblDobl_Complex_Matrices.Matrix;
+                b : out DoblDobl_Complex_Vectors.Vector ) is
+
+    use DoblDobl_Complex_Numbers;
+
+    ind : integer32 := q_c'first-1;
+    first,second : Standard_Floating_Vectors.Link_to_Vector;
+    tmp : List;
+    col : integer32 := A'first(2) - 1;
+    zero : constant double_double := create(0.0);
+
+  begin
+    for i in C'range(1) loop
+      for j in C'range(2) loop
+        C(i,j) := Create(zero);
+      end loop;
+    end loop;
+    for i in mix'range loop
+      first := Head_Of(pts(i));
+      for k in 1..mix(i) loop
+        b(ind+k) := -Coefficient(q_c(ind+k),q_e(ind+k),first);
+      end loop;
+      tmp := Tail_Of(pts(i));
+      while not Is_Null(tmp) loop
+        second := Head_Of(tmp);
+        col := col + 1;
+        for row in A'range(1) loop
+          A(row,col) := integer64(second(row)) - integer64(first(row));
+        end loop;
+        for k in 1..mix(i) loop
+          C(ind+k,col) := Coefficient(q_c(ind+k),q_e(ind+k),second);
+        end loop;
+        tmp := Tail_Of(tmp);
+      end loop;
+      ind := ind + mix(i);
+    end loop;
+  end Select_Subsystem_to_Matrix_Format;
+
+  procedure Select_Subsystem_to_Matrix_Format 
+              ( q_c : in QuadDobl_Complex_VecVecs.VecVec;
+                q_e : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                mix : in Standard_Integer_Vectors.Vector;
+                pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                A : out Standard_Integer64_Matrices.Matrix;
+                C : out QuadDobl_Complex_Matrices.Matrix;
+                b : out QuadDobl_Complex_Vectors.Vector ) is
+
+    use QuadDobl_Complex_Numbers;
+
+    ind : integer32 := q_c'first-1;
+    first,second : Standard_Floating_Vectors.Link_to_Vector;
+    tmp : List;
+    col : integer32 := A'first(2) - 1;
+    zero : constant quad_double := create(0.0);
+
+  begin
+    for i in C'range(1) loop
+      for j in C'range(2) loop
+        C(i,j) := Create(zero);
+      end loop;
+    end loop;
+    for i in mix'range loop
+      first := Head_Of(pts(i));
+      for k in 1..mix(i) loop
+        b(ind+k) := -Coefficient(q_c(ind+k),q_e(ind+k),first);
+      end loop;
+      tmp := Tail_Of(pts(i));
+      while not Is_Null(tmp) loop
+        second := Head_Of(tmp);
+        col := col + 1;
+        for row in A'range(1) loop
+          A(row,col) := integer64(second(row)) - integer64(first(row));
+        end loop;
+        for k in 1..mix(i) loop
+          C(ind+k,col) := Coefficient(q_c(ind+k),q_e(ind+k),second);
+        end loop;
+        tmp := Tail_Of(tmp);
+      end loop;
+      ind := ind + mix(i);
+    end loop;
+  end Select_Subsystem_to_Matrix_Format;
+
+  procedure Select_Subsystem_to_Matrix_Format 
+              ( q_c : in QuadDobl_Complex_VecVecs.VecVec;
+                q_e : in Exponent_Vectors.Exponent_Vectors_Array;
+                mix : in Standard_Integer_Vectors.Vector;
+                pts : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                A : out Standard_Integer64_Matrices.Matrix;
+                C : out QuadDobl_Complex_Matrices.Matrix;
+                b : out QuadDobl_Complex_Vectors.Vector ) is
+
+    use QuadDobl_Complex_Numbers;
+
+    ind : integer32 := q_c'first-1;
+    first,second : Standard_Floating_Vectors.Link_to_Vector;
+    tmp : List;
+    col : integer32 := A'first(2) - 1;
+    zero : constant quad_double := create(0.0);
+
+  begin
+    for i in C'range(1) loop
+      for j in C'range(2) loop
+        C(i,j) := Create(zero);
+      end loop;
+    end loop;
+    for i in mix'range loop
+      first := Head_Of(pts(i));
+      for k in 1..mix(i) loop
+        b(ind+k) := -Coefficient(q_c(ind+k),q_e(ind+k),first);
+      end loop;
+      tmp := Tail_Of(pts(i));
+      while not Is_Null(tmp) loop
+        second := Head_Of(tmp);
+        col := col + 1;
+        for row in A'range(1) loop
+          A(row,col) := integer64(second(row)) - integer64(first(row));
+        end loop;
+        for k in 1..mix(i) loop
+          C(ind+k,col) := Coefficient(q_c(ind+k),q_e(ind+k),second);
+        end loop;
+        tmp := Tail_Of(tmp);
+      end loop;
+      ind := ind + mix(i);
+    end loop;
+  end Select_Subsystem_to_Matrix_Format;
+
 -- (2) INPLACE BINOMIAL SYSTEM SOLVERS FOR START SOLUTIONS :
 
   function Create ( n : integer32 )
@@ -290,6 +642,66 @@ package body Polyhedral_Start_Systems is
     return res;
   end Create;
 
+  function Create ( n : integer32 )
+                  return DoblDobl_Complex_Solutions.Solution is
+
+    res : DoblDobl_Complex_Solutions.Solution(n);
+    zero : constant double_double := create(0.0);
+    one : constant double_double := create(1.0);
+
+  begin
+    res.t := DoblDobl_Complex_Numbers.Create(zero);
+    res.m := 1;
+    res.v := (1..n => DoblDobl_Complex_Numbers.Create(zero));
+    res.err := zero;
+    res.rco := one;
+    res.res := zero;
+    return res;
+  end Create;
+
+  function Create ( n,m : integer32 )
+                  return DoblDobl_Complex_Solutions.Solution_List is
+
+    use DoblDobl_Complex_Solutions;
+    res,res_last : Solution_List;
+
+  begin
+    for i in 1..m loop
+      Append(res,res_last,Create(n));
+    end loop;
+    return res;
+  end Create;
+
+  function Create ( n : integer32 )
+                  return QuadDobl_Complex_Solutions.Solution is
+
+    res : QuadDobl_Complex_Solutions.Solution(n);
+    zero : constant quad_double := create(0.0);
+    one : constant quad_double := create(1.0);
+
+  begin
+    res.t := QuadDobl_Complex_Numbers.Create(zero);
+    res.m := 1;
+    res.v := (1..n => QuadDobl_Complex_Numbers.Create(zero));
+    res.err := zero;
+    res.rco := one;
+    res.res := zero;
+    return res;
+  end Create;
+
+  function Create ( n,m : integer32 )
+                  return QuadDobl_Complex_Solutions.Solution_List is
+
+    use QuadDobl_Complex_Solutions;
+    res,res_last : Solution_List;
+
+  begin
+    for i in 1..m loop
+      Append(res,res_last,Create(n));
+    end loop;
+    return res;
+  end Create;
+
   function Product_of_Diagonal
              ( A : Standard_Integer_Matrices.Matrix ) return integer32 is
 
@@ -311,6 +723,21 @@ package body Polyhedral_Start_Systems is
     if res >= 0
      then return natural32(res);
      else return natural32(-res);
+    end if;
+  end Volume_of_Diagonal;
+
+  function Volume_of_Diagonal
+             ( A : Standard_Integer64_Matrices.Matrix ) return natural64 is
+
+    res : integer64 := 1; -- constant integer64 := Product_of_Diagonal(A);
+
+  begin
+    for i in A'range(1) loop
+      res := res*A(i,i);
+    end loop;
+    if res >= 0
+     then return natural64(res);
+     else return natural64(-res);
     end if;
   end Volume_of_Diagonal;
 
