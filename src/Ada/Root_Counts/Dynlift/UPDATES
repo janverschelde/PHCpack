@@ -1,3 +1,6 @@
+Wed 9 Jul 2014 : fixed resetting of start_end_game parameters in one of
+  the procedures of black_mixed_volume_computations.adb.
+
 Tue 17 Jun 2014 : updated babldmvc.adb so number of equations is written 
   to the output file, when phc -b -m is called.
 

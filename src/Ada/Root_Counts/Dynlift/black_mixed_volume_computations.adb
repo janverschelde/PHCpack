@@ -392,6 +392,7 @@ package body Black_Mixed_Volume_Computations is
    --   put_line("no stable mixed cells");
     end if;
     Set_Continuation_Parameter(qsols,Create(0.0));
+    Continuation_Parameters.start_end_game := 0.1;
     Clear(lq); Clear(hq); Clear(jacmat); Clear(mulfac);
     Standard_Complex_VecVecs.Clear(coeffv);
   end Black_Box_Polyhedral_Continuation;
