@@ -289,7 +289,7 @@ procedure ts_mtvolcon is
    -- if ans = '1' then
    --   Standard_Compute_Start_Solutions(q.all,m,mix.all,mcc);
    -- else
-      Continuation_Parameters.Tune(0);
+      Continuation_Parameters.Tune(0,32);
       DoblDobl_Track_Paths(q.all,n,m,mix.all,mcc);
    -- end if;
   end DoblDobl_Test;
@@ -331,7 +331,7 @@ procedure ts_mtvolcon is
    -- if ans = '1' then
    --   Standard_Compute_Start_Solutions(q.all,m,mix.all,mcc);
    -- else
-      Continuation_Parameters.Tune(0);
+      Continuation_Parameters.Tune(0,64);
       QuadDobl_Track_Paths(q.all,n,m,mix.all,mcc);
    -- end if;
   end QuadDobl_Test;

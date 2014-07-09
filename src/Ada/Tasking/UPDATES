@@ -1,3 +1,6 @@
+Wed 9 Jul 2014 : in ts_mtvolcon.adb, the tuning of continuation parameters
+  must take into account the number of decimal places!
+
 Tue 8 Jul 2014 : upgrades in polyhedral_start_systems and 
   multitasking_polyhedral_trackers for quad doubles, tested by ts_mtvolcon,
   works for fully mixed polynomial systems.
