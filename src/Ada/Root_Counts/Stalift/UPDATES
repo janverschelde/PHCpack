@@ -1,3 +1,6 @@
+Wed 9 Jul 2014 : enabled dd/qd multitasked polyhedral trackers in 
+  drivers_for_mixedvol_algorithm.adb and adjusted start_end_game.
+
 Sun 6 Jul 2014 : extended drivers_for_mixedvol_algorithm with procedures
   to solve a random coefficient system in quad double precision, tested
   by ts_mvasta.

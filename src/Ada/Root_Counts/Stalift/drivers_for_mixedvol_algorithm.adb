@@ -33,6 +33,7 @@ with Floating_Integer_Convertors;
 with Floating_Lifting_Functions;
 with Floating_Lifting_Utilities;
 with Random_Coefficient_Systems;
+with Continuation_Parameters;
 with Drivers_for_Poly_Continuation;
 with Floating_Polyhedral_Continuation;   use Floating_Polyhedral_Continuation;
 with DoblDobl_Polyhedral_Continuation;   use DoblDobl_Polyhedral_Continuation;
@@ -139,6 +140,7 @@ package body Drivers_for_mixedvol_algorithm is
       end;
     end loop;
     Create(lq,jacmat,mulfac);
+    Continuation_Parameters.start_end_game := 0.0;
     if nt = 0 then
       Mixed_Solve(lq,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
                   multprec_hermite);
@@ -146,6 +148,7 @@ package body Drivers_for_mixedvol_algorithm is
       Silent_Multitasking_Path_Tracker
         (lq,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
     end if;
+    Continuation_Parameters.start_end_game := 0.1;
   end Random_Coefficient_System;
 
   procedure Random_Coefficient_System
@@ -189,13 +192,15 @@ package body Drivers_for_mixedvol_algorithm is
       end;
     end loop;
     Create(lq,jacmat,mulfac);
-   -- if nt = 0 then
+    Continuation_Parameters.start_end_game := 0.0;
+    if nt = 0 then
       Mixed_Solve(lq,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
                   multprec_hermite);
-   -- else
-   --   Silent_Multitasking_Path_Tracker
-   --     (lq,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
-   -- end if;
+    else
+      Silent_Multitasking_Path_Tracker
+        (lq,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
+    end if;
+    Continuation_Parameters.start_end_game := 0.0;
   end Random_Coefficient_System;
 
   procedure Random_Coefficient_System
@@ -239,13 +244,15 @@ package body Drivers_for_mixedvol_algorithm is
       end;
     end loop;
     Create(lq,jacmat,mulfac);
-   -- if nt = 0 then
+    Continuation_Parameters.start_end_game := 0.0;
+    if nt = 0 then
       Mixed_Solve(lq,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
                   multprec_hermite);
-   -- else
-   --   Silent_Multitasking_Path_Tracker
-   --     (lq,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
-   -- end if;
+    else
+      Silent_Multitasking_Path_Tracker
+        (lq,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
+    end if;
+    Continuation_Parameters.start_end_game := 0.1;
   end Random_Coefficient_System;
 
   procedure Random_Coefficient_System
@@ -286,6 +293,7 @@ package body Drivers_for_mixedvol_algorithm is
       end;
     end loop;
     Create(q,jacmat,mulfac);
+    Continuation_Parameters.start_end_game := 0.0;
     if nt = 0 then
       Mixed_Solve(q,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
                   multprec_hermite);
@@ -293,6 +301,7 @@ package body Drivers_for_mixedvol_algorithm is
       Silent_Multitasking_Path_Tracker
         (q,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
     end if;
+    Continuation_Parameters.start_end_game := 0.1;
   end Random_Coefficient_System;
 
   procedure Random_Coefficient_System
@@ -333,13 +342,15 @@ package body Drivers_for_mixedvol_algorithm is
       end;
     end loop;
     Create(q,jacmat,mulfac);
-   -- if nt = 0 then
+    Continuation_Parameters.start_end_game := 0.0;
+    if nt = 0 then
       Mixed_Solve(q,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
                   multprec_hermite);
-   -- else
-   --   Silent_Multitasking_Path_Tracker
-   --     (q,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
-   -- end if;
+    else
+      Silent_Multitasking_Path_Tracker
+        (q,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
+    end if;
+    Continuation_Parameters.start_end_game := 0.1;
   end Random_Coefficient_System;
 
   procedure Random_Coefficient_System
@@ -380,13 +391,15 @@ package body Drivers_for_mixedvol_algorithm is
       end;
     end loop;
     Create(q,jacmat,mulfac);
-   -- if nt = 0 then
+    Continuation_Parameters.start_end_game := 0.0;
+    if nt = 0 then
       Mixed_Solve(q,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
                   multprec_hermite);
-   -- else
-   --   Silent_Multitasking_Path_Tracker
-   --     (q,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
-   -- end if;
+    else
+      Silent_Multitasking_Path_Tracker
+        (q,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
+    end if;
+    Continuation_Parameters.start_end_game := 0.1;
   end Random_Coefficient_System;
 
   procedure Random_Coefficient_System
@@ -431,6 +444,7 @@ package body Drivers_for_mixedvol_algorithm is
       end;
     end loop;
     Create(lq,jacmat,mulfac);
+    Continuation_Parameters.start_end_game := 0.0;
     if nt = 0 then
       Mixed_Solve(file,lq,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
                   multprec_hermite);
@@ -438,6 +452,7 @@ package body Drivers_for_mixedvol_algorithm is
       Silent_Multitasking_Path_Tracker
         (lq,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
     end if;
+    Continuation_Parameters.start_end_game := 0.1;
   end Random_Coefficient_System;
 
   procedure Random_Coefficient_System
@@ -482,13 +497,15 @@ package body Drivers_for_mixedvol_algorithm is
       end;
     end loop;
     Create(lq,jacmat,mulfac);
-   -- if nt = 0 then
+    Continuation_Parameters.start_end_game := 0.0;
+    if nt = 0 then
       Mixed_Solve(file,lq,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
                   multprec_hermite);
-   -- else
-   --   Silent_Multitasking_Path_Tracker
-   --     (lq,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
-   -- end if;
+    else
+      Silent_Multitasking_Path_Tracker
+        (lq,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
+    end if;
+    Continuation_Parameters.start_end_game := 0.1;
   end Random_Coefficient_System;
 
   procedure Random_Coefficient_System
@@ -533,13 +550,15 @@ package body Drivers_for_mixedvol_algorithm is
       end;
     end loop;
     Create(lq,jacmat,mulfac);
-   -- if nt = 0 then
+    Continuation_Parameters.start_end_game := 0.0;
+    if nt = 0 then
       Mixed_Solve(file,lq,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
                   multprec_hermite);
-   -- else
-   --   Silent_Multitasking_Path_Tracker
-   --     (lq,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
-   -- end if;
+    else
+      Silent_Multitasking_Path_Tracker
+        (lq,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
+    end if;
+    Continuation_Parameters.start_end_game := 0.1;
   end Random_Coefficient_System;
 
   procedure Random_Coefficient_System
@@ -585,6 +604,7 @@ package body Drivers_for_mixedvol_algorithm is
       end;
     end loop;
     Create(q,jacmat,mulfac);
+    Continuation_Parameters.start_end_game := 0.0;
     if nt = 0 then
       Mixed_Solve(file,q,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
                   multprec_hermite);
@@ -592,6 +612,7 @@ package body Drivers_for_mixedvol_algorithm is
       Silent_Multitasking_Path_Tracker
         (q,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
     end if;
+    Continuation_Parameters.start_end_game := 0.1;
   end Random_Coefficient_System;
 
   procedure Random_Coefficient_System
@@ -637,13 +658,15 @@ package body Drivers_for_mixedvol_algorithm is
       end;
     end loop;
     Create(q,jacmat,mulfac);
-   -- if nt = 0 then
+    Continuation_Parameters.start_end_game := 0.0;
+    if nt = 0 then
       Mixed_Solve(file,q,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
                   multprec_hermite);
-   -- else
-   --   Silent_Multitasking_Path_Tracker
-   --     (q,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
-   -- end if;
+    else
+      Silent_Multitasking_Path_Tracker
+        (q,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
+    end if;
+    Continuation_Parameters.start_end_game := 0.1;
   end Random_Coefficient_System;
 
   procedure Random_Coefficient_System
@@ -689,13 +712,15 @@ package body Drivers_for_mixedvol_algorithm is
       end;
     end loop;
     Create(q,jacmat,mulfac);
-   -- if nt = 0 then
+    Continuation_Parameters.start_end_game := 0.0;
+    if nt = 0 then
       Mixed_Solve(file,q,ls,hq,coeffv,expvec,jacmat,mulfac,mix,sub,qsols,
                   multprec_hermite);
-   -- else
-   --   Silent_Multitasking_Path_Tracker
-   --     (q,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
-   -- end if;
+    else
+      Silent_Multitasking_Path_Tracker
+        (q,nt,n,mix'last,mix,ls,sub,hq,coeffv,expvec,jacmat,mulfac,qsols);
+    end if;
+    Continuation_Parameters.start_end_game := 0.1;
   end Random_Coefficient_System;
 
   procedure Polyhedral_Homotopies
