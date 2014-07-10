@@ -5,10 +5,14 @@ with Standard_Complex_Polynomials;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Functions;
 with Standard_Complex_Laur_Functions;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_SysFun;       use Standard_Complex_Poly_SysFun;
-with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_SysFun;       use Standard_Complex_Laur_SysFun;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;
 with Lists_of_Floating_Vectors;          use Lists_of_Floating_Vectors;
 with Arrays_of_Floating_Vector_Lists;    use Arrays_of_Floating_Vector_Lists;
 with Floating_Faces_of_Polytope;         use Floating_Faces_of_Polytope;
@@ -61,9 +65,11 @@ package Floating_Lifting_Functions is
                              L : List ) return List;
   function Polynomial_Lift ( lf : Standard_Complex_Poly_Functions.Eval_Poly;
                              L : List ) return List;
-  function Polynomial_Lift ( lf : Poly_Sys; L : Array_of_Lists )
+  function Polynomial_Lift ( lf : Standard_Complex_Poly_Systems.Poly_Sys;
+                             L : Array_of_Lists )
                            return Array_of_Lists;
-  function Polynomial_Lift ( lf : Laur_Sys; L : Array_of_Lists )
+  function Polynomial_Lift ( lf : Standard_Complex_Laur_Systems.Laur_Sys;
+                             L : Array_of_Lists )
                            return Array_of_Lists;
   function Polynomial_Lift ( lf : Eval_Poly_Sys; L : Array_of_Lists )
                            return Array_of_Lists;
@@ -72,9 +78,39 @@ package Floating_Lifting_Functions is
 
 -- FOR STABLE MIXED VOLUMES :
 
-  function Lifting_Bound ( p : Poly_Sys; max : double_float := 1.0E+8 )
+  function Max_Degree ( p : in Standard_Complex_Poly_Systems.Poly_Sys )
+                      return integer32;
+  function Max_Degree ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys )
+                      return integer32;
+  function Max_Degree ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys )
+                      return integer32;
+  function Max_Degree ( p : in Standard_Complex_Laur_Systems.Laur_Sys )
+                      return integer32;
+  function Max_Degree ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                      return integer32;
+  function Max_Degree ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys )
+                      return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the maximal degree of all polynomials in the system p.
+
+  function Lifting_Bound ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+                           max : double_float := 1.0E+8 )
                          return double_float;
-  function Lifting_Bound ( p : Laur_Sys; max : double_float := 1.0E+8 )
+  function Lifting_Bound ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                           max : double_float := 1.0E+8 )
+                         return double_float;
+  function Lifting_Bound ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                           max : double_float := 1.0E+8 )
+                         return double_float;
+  function Lifting_Bound ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                           max : double_float := 1.0E+8 )
+                         return double_float;
+  function Lifting_Bound ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                           max : double_float := 1.0E+8 )
+                         return double_float;
+  function Lifting_Bound ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                           max : double_float := 1.0E+8 )
                          return double_float;
 
   -- DESCRIPTION :

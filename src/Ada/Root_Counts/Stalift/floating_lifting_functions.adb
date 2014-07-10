@@ -2,6 +2,10 @@ with Standard_Random_Numbers;            use Standard_Random_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Floating_VecVecs;          use Standard_Floating_VecVecs;
+with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Laurentials;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Laurentials;
 
 package body Floating_Lifting_Functions is
 
@@ -258,7 +262,8 @@ package body Floating_Lifting_Functions is
     return res;
   end Polynomial_Lift;
 
-  function Polynomial_Lift ( lf : Poly_Sys; L : Array_of_Lists )
+  function Polynomial_Lift ( lf : Standard_Complex_Poly_Systems.Poly_Sys;
+                             L : Array_of_Lists )
                            return Array_of_Lists is
 
     res : Array_of_Lists(L'range);
@@ -270,7 +275,8 @@ package body Floating_Lifting_Functions is
     return res;
   end Polynomial_Lift;
 
-  function Polynomial_Lift ( lf : Laur_Sys; L : Array_of_Lists )
+  function Polynomial_Lift ( lf : Standard_Complex_Laur_Systems.Laur_Sys;
+                             L : Array_of_Lists )
                            return Array_of_Lists is
 
     res : Array_of_Lists(L'range);
@@ -308,10 +314,8 @@ package body Floating_Lifting_Functions is
 
 -- FOR STABLE MIXED VOLUMES :
 
-  function Max_Degree ( p : in Poly_Sys ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Returns the maximal degree of all polynomials in the system p.
+  function Max_Degree ( p : in Standard_Complex_Poly_Systems.Poly_Sys )
+                      return integer32 is
 
     use Standard_Complex_Polynomials;
 
@@ -328,10 +332,44 @@ package body Floating_Lifting_Functions is
     return max;
   end Max_Degree;
 
-  function Max_Degree ( p : in Laur_Sys ) return integer32 is
+  function Max_Degree ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys )
+                      return integer32 is
 
-  -- DESCRIPTION :
-  --   Returns the maximal degree of all polynomials in the system p.
+    use DoblDobl_Complex_Polynomials;
+
+    max : integer32 := Degree(p(p'first));
+    deg : integer32;
+
+  begin
+    for i in p'first+1..p'last loop
+      deg := Degree(p(i));
+      if deg > max
+       then max := deg;
+      end if;
+    end loop;
+    return max;
+  end Max_Degree;
+
+  function Max_Degree ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys )
+                      return integer32 is
+
+    use QuadDobl_Complex_Polynomials;
+
+    max : integer32 := Degree(p(p'first));
+    deg : integer32;
+
+  begin
+    for i in p'first+1..p'last loop
+      deg := Degree(p(i));
+      if deg > max
+       then max := deg;
+      end if;
+    end loop;
+    return max;
+  end Max_Degree;
+
+  function Max_Degree ( p : in Standard_Complex_Laur_Systems.Laur_Sys )
+                      return integer32 is
 
     use Standard_Complex_Laurentials;
 
@@ -348,7 +386,44 @@ package body Floating_Lifting_Functions is
     return max;
   end Max_Degree;
 
-  function Lifting_Bound ( p : Poly_Sys; max : double_float := 1.0E+8 )
+  function Max_Degree ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                      return integer32 is
+
+    use DoblDobl_Complex_Laurentials;
+
+    max : integer32 := Degree(p(p'first));
+    deg : integer32;
+
+  begin
+    for i in p'first+1..p'last loop
+      deg := Degree(p(i));
+      if deg > max
+       then max := deg;
+      end if;
+    end loop;
+    return max;
+  end Max_Degree;
+
+  function Max_Degree ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys )
+                      return integer32 is
+
+    use QuadDobl_Complex_Laurentials;
+
+    max : integer32 := Degree(p(p'first));
+    deg : integer32;
+
+  begin
+    for i in p'first+1..p'last loop
+      deg := Degree(p(i));
+      if deg > max
+       then max := deg;
+      end if;
+    end loop;
+    return max;
+  end Max_Degree;
+
+  function Lifting_Bound ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+                           max : double_float := 1.0E+8 )
                          return double_float is
 
     use Standard_Complex_Polynomials;
@@ -361,14 +436,57 @@ package body Floating_Lifting_Functions is
     res := double_float(n*(n+1));
     for i in 1..n loop
       res := res*double_float(d);
+      if res > max
+       then return max;
+      end if;
     end loop;
-    if res > max
-     then return max;
-     else return res;
-    end if;
+    return res;
   end Lifting_Bound;
 
-  function Lifting_Bound ( p : Laur_Sys; max : double_float := 1.0E+8 )
+  function Lifting_Bound ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                           max : double_float := 1.0E+8 )
+                         return double_float is
+
+    use DoblDobl_Complex_Polynomials;
+
+    res : double_float;
+    n : constant integer32 := p'last;
+    d : constant integer32 := Max_Degree(p);
+
+  begin
+    res := double_float(n*(n+1));
+    for i in 1..n loop
+      res := res*double_float(d);
+      if res > max
+       then return max;
+      end if;
+    end loop;
+    return res;
+  end Lifting_Bound;
+
+  function Lifting_Bound ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                           max : double_float := 1.0E+8 )
+                         return double_float is
+
+    use QuadDobl_Complex_Polynomials;
+
+    res : double_float;
+    n : constant integer32 := p'last;
+    d : constant integer32 := Max_Degree(p);
+
+  begin
+    res := double_float(n*(n+1));
+    for i in 1..n loop
+      res := res*double_float(d);
+      if res > max
+       then return max;
+      end if;
+    end loop;
+    return res;
+  end Lifting_Bound;
+
+  function Lifting_Bound ( p : Standard_Complex_Laur_Systems.Laur_Sys;
+                           max : double_float := 1.0E+8 )
                          return double_float is
 
     use Standard_Complex_Laurentials;
@@ -381,11 +499,53 @@ package body Floating_Lifting_Functions is
     res := double_float(n*(n+1));
     for i in 1..n loop
       res := res*double_float(d);
+      if res > max
+       then return max;
+      end if;
     end loop;
-    if res > max
-     then return max;
-     else return res;
-    end if;
+    return res;
+  end Lifting_Bound;
+
+  function Lifting_Bound ( p : DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                           max : double_float := 1.0E+8 )
+                         return double_float is
+
+    use DoblDobl_Complex_Laurentials;
+
+    res : double_float;
+    n : constant integer32 := p'last;
+    d : constant integer32 := Max_Degree(p);
+
+  begin
+    res := double_float(n*(n+1));
+    for i in 1..n loop
+      res := res*double_float(d);
+      if res > max
+       then return max;
+      end if;
+    end loop;
+    return res;
+  end Lifting_Bound;
+
+  function Lifting_Bound ( p : QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                           max : double_float := 1.0E+8 )
+                         return double_float is
+
+    use QuadDobl_Complex_Laurentials;
+
+    res : double_float;
+    n : constant integer32 := p'last;
+    d : constant integer32 := Max_Degree(p);
+
+  begin
+    res := double_float(n*(n+1));
+    for i in 1..n loop
+      res := res*double_float(d);
+      if res > max
+       then return max;
+      end if;
+    end loop;
+    return res;
   end Lifting_Bound;
 
   function Stable_Lift ( L : List; b : double_float ) return List is

@@ -1,3 +1,6 @@
+Thu 10 Jul 2014 : extended floating_lifting_functions with Lifting_Bound
+  for double double and quad double systems.
+
 Wed 9 Jul 2014 : enabled dd/qd multitasked polyhedral trackers in 
   drivers_for_mixedvol_algorithm.adb and adjusted start_end_game.
 
