@@ -245,12 +245,60 @@ package Drivers_for_MixedVol_Algorithm is
                 stable,contrep : in boolean;
                 n,r : in integer32; stlb : in double_float;
                 mix,perm : in Standard_Integer_Vectors.Link_to_Vector;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys; 
+                s : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                sub,mcc,stbmcc : in Mixed_Subdivision;
+               -- mcc,stbmcc : in Mixed_Subdivision;
+                q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
+                multprec_hermite : in boolean := false );
+  procedure Polyhedral_Continuation
+              ( file : in file_type; nt : in integer32;
+                stable,contrep : in boolean;
+                n,r : in integer32; stlb : in double_float;
+                mix,perm : in Standard_Integer_Vectors.Link_to_Vector;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys; 
+                s : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                sub,mcc,stbmcc : in Mixed_Subdivision;
+               -- mcc,stbmcc : in Mixed_Subdivision;
+                q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
+                multprec_hermite : in boolean := false );
+  procedure Polyhedral_Continuation
+              ( file : in file_type; nt : in integer32;
+                stable,contrep : in boolean;
+                n,r : in integer32; stlb : in double_float;
+                mix,perm : in Standard_Integer_Vectors.Link_to_Vector;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys; 
                 s : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
                 sub,mcc,stbmcc : in Mixed_Subdivision;
                -- mcc,stbmcc : in Mixed_Subdivision;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
+                multprec_hermite : in boolean := false );
+  procedure Polyhedral_Continuation
+              ( file : in file_type; nt : in integer32;
+                stable,contrep : in boolean;
+                n,r : in integer32; stlb : in double_float;
+                mix,perm : in Standard_Integer_Vectors.Link_to_Vector;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys; 
+                s : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                sub,mcc,stbmcc : in Mixed_Subdivision;
+               -- mcc,stbmcc : in Mixed_Subdivision;
+                q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
+                multprec_hermite : in boolean := false );
+  procedure Polyhedral_Continuation
+              ( file : in file_type; nt : in integer32;
+                stable,contrep : in boolean;
+                n,r : in integer32; stlb : in double_float;
+                mix,perm : in Standard_Integer_Vectors.Link_to_Vector;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys; 
+                s : in Arrays_of_Integer_Vector_Lists.Array_of_Lists;
+                sub,mcc,stbmcc : in Mixed_Subdivision;
+               -- mcc,stbmcc : in Mixed_Subdivision;
+                q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                 multprec_hermite : in boolean := false );
 
   -- DESCRIPTION :
@@ -292,10 +340,42 @@ package Drivers_for_MixedVol_Algorithm is
   procedure Polyhedral_Homotopies
               ( file,cfile,qfile : in file_type; nt : in integer32;
                 stable,misufile,ranstart,contrep : in boolean;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                mv,smv,tmv : out natural32;
+                q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
+                multprec_hermite : in boolean := false );
+  procedure Polyhedral_Homotopies
+              ( file,cfile,qfile : in file_type; nt : in integer32;
+                stable,misufile,ranstart,contrep : in boolean;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                mv,smv,tmv : out natural32;
+                q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
+                multprec_hermite : in boolean := false );
+  procedure Polyhedral_Homotopies
+              ( file,cfile,qfile : in file_type; nt : in integer32;
+                stable,misufile,ranstart,contrep : in boolean;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 mv,smv,tmv : out natural32;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
+                multprec_hermite : in boolean := false );
+  procedure Polyhedral_Homotopies
+              ( file,cfile,qfile : in file_type; nt : in integer32;
+                stable,misufile,ranstart,contrep : in boolean;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mv,smv,tmv : out natural32;
+                q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
+                multprec_hermite : in boolean := false );
+  procedure Polyhedral_Homotopies
+              ( file,cfile,qfile : in file_type; nt : in integer32;
+                stable,misufile,ranstart,contrep : in boolean;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mv,smv,tmv : out natural32;
+                q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                 multprec_hermite : in boolean := false );
 
   -- DESCRIPTION :
@@ -339,10 +419,42 @@ package Drivers_for_MixedVol_Algorithm is
                 multprec_hermite : in boolean := false );
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                byebye : in boolean;
+                q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
+                mv,smv,tmv : out natural32;
+                multprec_hermite : in boolean := false );
+  procedure Driver_for_MixedVol_Algorithm
+              ( file : in file_type; nt : in integer32;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                byebye : in boolean;
+                q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
+                mv,smv,tmv : out natural32;
+                multprec_hermite : in boolean := false );
+  procedure Driver_for_MixedVol_Algorithm
+              ( file : in file_type; nt : in integer32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 byebye : in boolean;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
+                mv,smv,tmv : out natural32;
+                multprec_hermite : in boolean := false );
+  procedure Driver_for_MixedVol_Algorithm
+              ( file : in file_type; nt : in integer32;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                byebye : in boolean;
+                q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
+                mv,smv,tmv : out natural32;
+                multprec_hermite : in boolean := false );
+  procedure Driver_for_MixedVol_Algorithm
+              ( file : in file_type; nt : in integer32;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                byebye : in boolean;
+                q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
                 multprec_hermite : in boolean := false );
 
