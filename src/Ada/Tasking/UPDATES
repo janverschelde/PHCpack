@@ -1,3 +1,6 @@
+Fri 11 Jul 2014 : modifications in multitasking_polyhedral_trackers.adb
+  concerning distance to target before end game.
+  
 Wed 9 Jul 2014 : in ts_mtvolcon.adb, the tuning of continuation parameters
   must take into account the number of decimal places!
 

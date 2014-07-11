@@ -349,7 +349,7 @@ package body Multitasking_Polyhedral_Trackers is
     t1 : constant Complex_Number := Create(1.0);
     tol : constant double_float := 1.0E-12;
    -- tol_zero : constant double_float := 1.0E-8;
-    pp1 : constant Continuation_Parameters.Pred_Pars
+    pp1 : Continuation_Parameters.Pred_Pars
         := Continuation_Parameters.Create_for_Path;
     pp2 : constant Continuation_Parameters.Pred_Pars
         := Continuation_Parameters.Create_End_Game;
@@ -441,6 +441,7 @@ package body Multitasking_Polyhedral_Trackers is
           v : Standard_Floating_Vectors.Link_to_Vector;
           e : double_float := 0.0;
         begin
+          pp1.dist_target := 0.0;
           Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
           Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
           ls.err := s.cora; ls.rco := s.rcond; ls.res := s.resa;
@@ -551,7 +552,7 @@ package body Multitasking_Polyhedral_Trackers is
     t1 : constant Complex_Number := Create(1.0);
     tol : constant double_float := 1.0E-12;
    -- tol_zero : constant double_float := 1.0E-8;
-    pp1 : constant Continuation_Parameters.Pred_Pars
+    pp1 : Continuation_Parameters.Pred_Pars
         := Continuation_Parameters.Create_for_Path;
     pp2 : constant Continuation_Parameters.Pred_Pars
         := Continuation_Parameters.Create_End_Game;
@@ -644,6 +645,7 @@ package body Multitasking_Polyhedral_Trackers is
           v : Standard_Floating_Vectors.Link_to_Vector;
           e : double_float := 0.0;
         begin
+          pp1.dist_target := 0.0;
           Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
           Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
           ls.err := s.cora; ls.rco := s.rcond; ls.res := s.resa;
@@ -800,7 +802,7 @@ package body Multitasking_Polyhedral_Trackers is
     t1 : constant Complex_Number := Create(one);
     tol : constant double_float := 1.0E-12;
    -- tol_zero : constant double_float := 1.0E-8;
-    pp1 : constant Continuation_Parameters.Pred_Pars
+    pp1 : Continuation_Parameters.Pred_Pars
         := Continuation_Parameters.Create_for_Path;
     pp2 : constant Continuation_Parameters.Pred_Pars
         := Continuation_Parameters.Create_End_Game;
@@ -892,6 +894,7 @@ package body Multitasking_Polyhedral_Trackers is
           v : Double_Double_Vectors.Link_to_Vector;
           e : double_double := zero;
         begin
+          pp1.dist_target := 0.0;
           Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
           Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
           ls.err := create(s.cora);
@@ -1006,7 +1009,7 @@ package body Multitasking_Polyhedral_Trackers is
     t1 : constant Complex_Number := Create(one);
     tol : constant double_float := 1.0E-12;
    -- tol_zero : constant double_float := 1.0E-8;
-    pp1 : constant Continuation_Parameters.Pred_Pars
+    pp1 : Continuation_Parameters.Pred_Pars
         := Continuation_Parameters.Create_for_Path;
     pp2 : constant Continuation_Parameters.Pred_Pars
         := Continuation_Parameters.Create_End_Game;
@@ -1099,6 +1102,7 @@ package body Multitasking_Polyhedral_Trackers is
           v : Double_Double_Vectors.Link_to_Vector;
           e : double_double := zero;
         begin
+          pp1.dist_target := 0.0;
           Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
           Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
           ls.err := create(s.cora);
@@ -1257,7 +1261,7 @@ package body Multitasking_Polyhedral_Trackers is
     t1 : constant Complex_Number := Create(one);
     tol : constant double_float := 1.0E-12;
    -- tol_zero : constant double_float := 1.0E-8;
-    pp1 : constant Continuation_Parameters.Pred_Pars
+    pp1 : Continuation_Parameters.Pred_Pars
         := Continuation_Parameters.Create_for_Path;
     pp2 : constant Continuation_Parameters.Pred_Pars
         := Continuation_Parameters.Create_End_Game;
@@ -1349,6 +1353,7 @@ package body Multitasking_Polyhedral_Trackers is
           v : Quad_Double_Vectors.Link_to_Vector;
           e : quad_double := zero;
         begin
+          pp1.dist_target := 0.0;
           Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
           Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
           ls.err := create(s.cora);
@@ -1463,7 +1468,7 @@ package body Multitasking_Polyhedral_Trackers is
     t1 : constant Complex_Number := Create(one);
     tol : constant double_float := 1.0E-12;
    -- tol_zero : constant double_float := 1.0E-8;
-    pp1 : constant Continuation_Parameters.Pred_Pars
+    pp1 : Continuation_Parameters.Pred_Pars
         := Continuation_Parameters.Create_for_Path;
     pp2 : constant Continuation_Parameters.Pred_Pars
         := Continuation_Parameters.Create_End_Game;
@@ -1556,6 +1561,7 @@ package body Multitasking_Polyhedral_Trackers is
           v : Quad_Double_Vectors.Link_to_Vector;
           e : quad_double := zero;
         begin
+          pp1.dist_target := 0.0;
           Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
           Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
           ls.err := create(s.cora);
