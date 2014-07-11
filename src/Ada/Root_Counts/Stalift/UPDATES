@@ -1,3 +1,6 @@
+Fri 11 Jul 2014 : called new drivers in drivers_for_mixedvol_algorithm.adb
+  for double double and quad double precision tuning of parameters.
+
 Thu 10 Jul 2014 : extended floating_lifting_functions with Lifting_Bound
   for double double and quad double systems, for use in the upgraded
   drivers_for_mixedvol_algorithm, tested by ts_drivstal.adb.
