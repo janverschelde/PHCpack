@@ -1,3 +1,6 @@
+Fri 11 Jul 2014 : added option to the drivers_for_continuation_parameters
+  to add the precision level, in the file drivers_for_poly_continuation.
+
 Tue 24 Jun 2014 : drivers_for_poly_continuation.adb use coefficient homotopy.
 
 Mon 23 Jun 2014 : black_box_poly_continuations.adb use coefficient homotopy.

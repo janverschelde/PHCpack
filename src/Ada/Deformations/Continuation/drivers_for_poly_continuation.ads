@@ -47,10 +47,16 @@ package Drivers_for_Poly_Continuation is
 
   procedure Driver_for_Continuation_Parameters;
   procedure Driver_for_Continuation_Parameters ( file : in file_type );
+  procedure Driver_for_Continuation_Parameters ( precision : in natural32 );
+  procedure Driver_for_Continuation_Parameters
+                ( file : in file_type; precision : in natural32 );
 
   -- DESCRIPTION :
   --   This procedure allows to determine all continuation parameters.
   --   Writes the final settings on file when there is a file given.
+  --   If the precision is given (number of decimal places),
+  --   then the default settings for that value of the precision are set
+  --   first before allowing the user to interactively change them.
 
   procedure Check_Continuation_Parameter
                 ( sols : in out Standard_Complex_Solutions.Solution_List );

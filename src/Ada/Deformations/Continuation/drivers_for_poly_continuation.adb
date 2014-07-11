@@ -330,6 +330,32 @@ package body Drivers_for_Poly_Continuation is
     End_Banner(file);
   end Driver_for_Continuation_Parameters;
 
+  procedure Driver_for_Continuation_Parameters
+              ( precision : in natural32) is
+
+    nb : natural32 := 0;
+
+  begin
+    Continuation_Parameters.Tune(0,precision);
+    loop
+      Begin_Banner(Standard_Output);
+      Continuation_Parameters_io.put;
+      End_Banner(Standard_Output);
+      Continuation_Parameters_io.get(nb);
+      exit when (nb = 0);
+    end loop;
+  end Driver_for_Continuation_Parameters;
+
+  procedure Driver_for_Continuation_Parameters
+              ( file : in file_type; precision : in natural32 ) is
+  begin
+    Driver_for_Continuation_Parameters(precision);
+    new_line(file);
+    Begin_Banner(file);
+    Continuation_Parameters_io.put(file);
+    End_Banner(file);
+  end Driver_for_Continuation_Parameters;
+
   procedure Check_Continuation_Parameter
                 ( sols : in out Standard_Complex_Solutions.Solution_List ) is
 
