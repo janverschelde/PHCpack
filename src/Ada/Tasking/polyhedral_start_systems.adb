@@ -1,37 +1,40 @@
+with text_io;                            use text_io;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
+with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
-with Standard_Floating_Vectors_io;       use Standard_Floating_Vectors_io;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_Norms_Equals;
+with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_Vector_Norms;
 with Standard_Integer_Matrices_io;       use Standard_Integer_Matrices_io;
+with Standard_Integer64_Matrices_io;     use Standard_Integer64_Matrices_io;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
+with DoblDobl_Complex_Matrices_io;       use DoblDobl_Complex_Matrices_io;
 with Standard_Integer_Linear_Solvers;
+with Standard_Integer64_Linear_Solvers;
 with Standard_Complex_Linear_Solvers;
-with Standard_Floating_VecVecs;
+with DoblDobl_Complex_Linear_Solvers;
 with Lists_of_Floating_Vectors;          use Lists_of_Floating_Vectors;
-with Arrays_of_Integer_Vector_Lists;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
-with Standard_Complex_Laur_Functions;
 with Standard_Complex_Laur_SysFun;
 with Standard_Tableau_Formats;
-with Continuation_Parameters;
-with Standard_Continuation_Data;
-with Standard_Path_Trackers;
+with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
+with DoblDobl_Complex_Laur_SysFun;
+with DoblDobl_Tableau_Formats;
 with Supports_of_Polynomial_Systems;
-with Floating_Mixed_Subdivisions_io;
 --with Mixed_Volume_Computation;
 with Standard_Radial_Solvers;
 with Standard_Binomial_Systems;
 with Standard_Binomial_Solvers;
-with Floating_Integer_Convertors;
-with Floating_Lifting_Utilities;
-with Polyhedral_Coefficient_Homotopies;
+with DoblDobl_Radial_Solvers;
+with DoblDobl_Binomial_Systems;
+with DoblDobl_Binomial_Solvers;
 
 package body Polyhedral_Start_Systems is
 
@@ -714,6 +717,18 @@ package body Polyhedral_Start_Systems is
     return res;
   end Product_of_Diagonal;
 
+  function Product_of_Diagonal
+             ( A : Standard_Integer64_Matrices.Matrix ) return integer64 is
+
+    res : integer64 := 1;
+
+  begin
+    for i in A'range loop
+      res := res*A(i,i);
+    end loop;
+    return res;
+  end Product_of_Diagonal;
+
   function Volume_of_Diagonal
              ( A : Standard_Integer_Matrices.Matrix ) return natural32 is
 
@@ -751,6 +766,19 @@ package body Polyhedral_Start_Systems is
     if res >= 0
      then return natural32(res);
      else return natural32(-res);
+    end if;
+  end Volume_of_Cell;
+
+  function Volume_of_Cell
+             ( A : Standard_Integer64_Matrices.Matrix ) return natural64 is
+
+    res : constant integer64
+        := Standard_Integer64_Linear_Solvers.Det(A);
+
+  begin
+    if res >= 0
+     then return natural64(res);
+     else return natural64(-res);
     end if;
   end Volume_of_Cell;
 
@@ -810,6 +838,73 @@ package body Polyhedral_Start_Systems is
       len := Length_Of(sols);
       res := Standard_Binomial_Solvers.Sum_Residuals(A,b,Asols);
       put(" det(A) = "); put(Standard_Integer_Linear_Solvers.Det(A),1);
+      put(", found "); put(len,1);
+      put(" solutions, residual = "); put(res,3); new_line;
+      Clear(sols); Clear(Asols);
+      chksum := chksum + res;
+      totlen := totlen + len;
+      tmp := Tail_Of(tmp);
+    end loop;
+    put("number of solutions found : "); put(totlen,1); new_line;
+    put("total sum over all residuals : "); put(chksum,3); new_line;
+  end Fully_Mixed_Start_Systems;
+
+  procedure Fully_Mixed_Start_Systems
+              ( q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mcc : in Mixed_Subdivision ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    n : constant integer32 := q'last;
+    cff : DoblDobl_Complex_VecVecs.VecVec(q'range);
+    exp : Standard_Integer_VecVecs.Array_of_VecVecs(q'range);
+    mic : Mixed_Cell;
+    tmp : Mixed_Subdivision := mcc;
+    s_c : DoblDobl_Complex_Vectors.Vector(1..2*n); -- fully mixed
+    A,M,U : Standard_Integer64_Matrices.Matrix(q'range,q'range);
+    prod : integer64;
+    b,wrk : DoblDobl_Complex_Vectors.Vector(q'range);
+    brd,logbrd,logx,e10x : Double_Double_Vectors.Vector(b'range);
+    bsc : DoblDobl_Complex_Vectors.Vector(b'range);
+    rnk : integer32 := 0;
+    len,totlen : natural32 := 0;
+    res,chksum : double_double := create(0.0);
+    sols,Asols : Solution_List;
+
+  begin
+    DoblDobl_Tableau_Formats.Extract_Coefficients_and_Exponents(q,cff,exp);
+   -- put_line("The tableau format : "); Write_Tableau(cff,exp);
+    for i in 1..Length_Of(mcc) loop
+      mic := Head_Of(tmp);
+     -- setting up the binomial system
+      Select_Coefficients(cff,exp,mic.pts.all,s_c);
+      put("sys "); put(i,1); -- put_line(" :"); Write_Tableau(s_c,mic.pts.all);
+      Fully_Mixed_To_Binomial_Format(s_c,mic.pts.all,A,b);
+     -- solving in place :
+      U := A;
+      Standard_Integer64_Linear_Solvers.Upper_Triangulate(M,U);
+      prod := Product_of_Diagonal(U);
+      if prod < 0
+       then Asols := Create(n,integer32(-prod));
+       else Asols := Create(n,integer32(prod));
+      end if;
+      put(" : det : "); put(prod,1);
+      brd := DoblDobl_Radial_Solvers.Radii(b);
+      bsc := DoblDobl_Radial_Solvers.Scale(b,brd);
+     -- Asols := DoblDobl_Binomial_Solvers.Solve_Upper_Square(U,bsc);
+      DoblDobl_Binomial_Solvers.Solve_Upper_Square(U,bsc,Asols);
+      logbrd := DoblDobl_Radial_Solvers.Log10(brd);
+      logx := DoblDobl_Radial_Solvers.Radial_Upper_Solve(U,logbrd);
+      logx := DoblDobl_Radial_Solvers.Multiply(M,logx);
+      e10x := DoblDobl_Radial_Solvers.Exp10(logx);
+      DoblDobl_Binomial_Systems.Eval(M,Asols,wrk);
+      DoblDobl_Radial_Solvers.Multiply(Asols,e10x);
+     -- solving with one call :
+      DoblDobl_Binomial_Solvers.Solve(A,b,rnk,M,U,sols);
+     -- checking the solutions :
+      len := Length_Of(sols);
+      res := DoblDobl_Binomial_Solvers.Sum_Residuals(A,b,Asols);
+      put(" det(A) = "); put(Standard_Integer64_Linear_Solvers.Det(A),1);
       put(", found "); put(len,1);
       put(" solutions, residual = "); put(res,3); new_line;
       Clear(sols); Clear(Asols);
@@ -889,6 +984,74 @@ package body Polyhedral_Start_Systems is
     put("sum of residuals : "); put(chksum); new_line;
   end Semi_Mixed_Start_Systems;
 
+  procedure Semi_Mixed_Start_Systems
+              ( q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                m : in natural32;
+                mix : in Standard_Integer_Vectors.Vector;
+                mcc : in Mixed_Subdivision ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    n : constant integer32 := q'last;
+    cff : DoblDobl_Complex_VecVecs.VecVec(q'range);
+    exp : Standard_Integer_VecVecs.Array_of_VecVecs(q'range);
+    mic : Mixed_Cell;
+    tmp : Mixed_Subdivision := mcc;
+    A,T,U : Standard_Integer64_Matrices.Matrix(q'range,q'range);
+    C : DoblDobl_Complex_Matrices.Matrix(q'range,q'range);
+    b : DoblDobl_Complex_Vectors.Vector(q'range);
+    piv : Standard_Integer_Vectors.Vector(q'range);
+    info : integer32;
+    vol,mv : natural64 := 0;
+    sq : DoblDobl_Complex_Laur_Systems.Laur_Sys(q'range);
+    brd,logbrd,logx,e10x : Double_Double_Vectors.Vector(b'range);
+    wrk,bsc : DoblDobl_Complex_Vectors.Vector(b'range);
+    res,chksum : double_double := create(0.0);
+    sols,sols_ptr : Solution_List;
+    ls : Link_to_Solution;
+
+  begin
+    DoblDobl_Tableau_Formats.Extract_Coefficients_and_Exponents(q,cff,exp);
+    for i in 1..Length_Of(mcc) loop
+      put("processing cell "); put(i,1); put_line(" :");
+      mic := Head_Of(tmp);
+      Select_Subsystem_to_Matrix_Format(cff,exp,mix,mic.pts.all,A,C,b);
+      sq := Supports_of_Polynomial_Systems.Select_Terms(q,mix,mic.pts.all);
+      put_line("The subsystem : "); put_line(sq);
+      put_line("The matrix A :"); put(A);
+      put_line("The matrix C :"); put(C);
+      put_line("The right hand side vector b :"); put_line(b);
+      DoblDobl_Complex_Linear_Solvers.lufac(C,n,piv,info);
+      DoblDobl_Complex_Linear_Solvers.lusolve(C,n,piv,b);
+      U := A;
+      Standard_Integer64_Linear_Solvers.Upper_Triangulate(T,U);
+      vol := Volume_of_Diagonal(U); mv := mv + vol;
+      sols := Create(n,integer32(vol));
+      brd := DoblDobl_Radial_Solvers.Radii(b);
+      bsc := DoblDobl_Radial_Solvers.Scale(b,brd);
+      DoblDobl_Binomial_Solvers.Solve_Upper_Square(U,bsc,sols);
+      logbrd := DoblDobl_Radial_Solvers.Log10(brd);
+      logx := DoblDobl_Radial_Solvers.Radial_Upper_Solve(U,logbrd);
+      logx := DoblDobl_Radial_Solvers.Multiply(T,logx);
+      e10x := DoblDobl_Radial_Solvers.Exp10(logx);
+      DoblDobl_Binomial_Systems.Eval(T,sols,wrk);
+      DoblDobl_Radial_Solvers.Multiply(sols,e10x);
+      sols_ptr := sols;
+      while not Is_Null(sols_ptr) loop
+        ls := Head_Of(sols_ptr);
+        wrk := DoblDobl_Complex_Laur_SysFun.Eval(sq,ls.v);
+        res := DoblDobl_Complex_Vector_Norms.Max_Norm(wrk);
+        put("residual : "); put(res); new_line;
+        chksum := chksum + res;
+        sols_ptr := Tail_Of(sols_ptr);
+      end loop;
+      Clear(sols); DoblDobl_Complex_Laur_Systems.Clear(sq);
+      tmp := Tail_Of(tmp);
+    end loop;
+    put("the mixed volume : "); put(mv,1); new_line;
+    put("sum of residuals : "); put(chksum); new_line;
+  end Semi_Mixed_Start_Systems;
+
   procedure Check_Solutions
               ( cff : in Standard_Complex_VecVecs.VecVec;
                 exp : in Standard_Integer_VecVecs.Array_of_VecVecs;
@@ -934,6 +1097,50 @@ package body Polyhedral_Start_Systems is
   end Check_Solutions;
 
   procedure Check_Solutions
+              ( cff : in DoblDobl_Complex_VecVecs.VecVec;
+                exp : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                mcc : in Mixed_Subdivision;
+                sols : in DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                res : out Double_Double_Vectors.Vector ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    n : constant integer32 := cff'last;
+    nt : constant integer32 := sols'last;
+    tmp : Mixed_Subdivision := mcc;
+    mic : Mixed_Cell;
+    s_c : DoblDobl_Complex_Vectors.Vector(1..2*n); -- fully mixed
+    A : Standard_Integer64_Matrices.Matrix(1..n,1..n);
+    b : DoblDobl_Complex_Vectors.Vector(1..n);
+    pdetA : natural64;
+    ptrs : Array_of_Solution_Lists(sols'range);
+    Asols,Asols_last : Solution_List;
+    ind : integer32;
+    r : double_double;
+
+  begin
+    for i in sols'range loop
+      ptrs(i) := sols(i);
+      res(i) := create(0.0);
+    end loop;
+    for k in 1..Length_Of(mcc) loop
+      mic := Head_Of(tmp);
+      Select_Coefficients(cff,exp,mic.pts.all,s_c);
+      Fully_Mixed_To_Binomial_Format(s_c,mic.pts.all,A,b);
+      pdetA := Volume_of_Cell(A);
+      ind := (integer32(k) mod nt) + 1;     -- task index tells where computed
+      for i in 1..pdetA loop   -- select next pdetA solutions
+        Append(Asols,Asols_last,Head_Of(ptrs(ind)).all);
+        ptrs(ind) := Tail_Of(ptrs(ind));
+      end loop;
+      r := DoblDobl_Binomial_Solvers.Sum_Residuals(A,b,Asols);
+      res(ind) := res(ind) + r;
+      Clear(Asols);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Check_Solutions;
+
+  procedure Check_Solutions
               ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
                 mcc : in Mixed_Subdivision;
                 sols : in Standard_Complex_Solutions.Array_of_Solution_Lists;
@@ -944,6 +1151,20 @@ package body Polyhedral_Start_Systems is
 
   begin
     Standard_Tableau_Formats.Extract_Coefficients_and_Exponents(q,cff,exp);
+    Check_Solutions(cff,exp,mcc,sols,res);
+  end Check_Solutions;
+
+  procedure Check_Solutions
+              ( q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                sols : in DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                res : out Double_Double_Vectors.Vector ) is
+
+    cff : DoblDobl_Complex_VecVecs.VecVec(q'range);
+    exp : Standard_Integer_VecVecs.Array_of_VecVecs(q'range);
+
+  begin
+    DoblDobl_Tableau_Formats.Extract_Coefficients_and_Exponents(q,cff,exp);
     Check_Solutions(cff,exp,mcc,sols,res);
   end Check_Solutions;
 
@@ -987,6 +1208,53 @@ package body Polyhedral_Start_Systems is
         ls := Head_Of(ptrs(ind));
         b := Standard_Complex_Laur_SysFun.Eval(sq,ls.v);
         r := Standard_Complex_Norms_Equals.Max_Norm(b);
+        res(ind) := res(ind) + r;
+        ptrs(ind) := Tail_Of(ptrs(ind));
+      end loop;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Check_Solutions;
+
+  procedure Check_Solutions
+              ( q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                mix : in Standard_Integer_Vectors.Vector;
+                mcc : in Mixed_Subdivision;
+                sols : in DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                res : out Double_Double_Vectors.Vector ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    nt : constant integer32 := sols'last;
+    ptrs : Array_of_Solution_Lists(sols'range);
+    ls : Link_to_Solution;
+    cff : DoblDobl_Complex_VecVecs.VecVec(q'range);
+    exp : Standard_Integer_VecVecs.Array_of_VecVecs(q'range);
+    tmp : Mixed_Subdivision := mcc;
+    mic : Mixed_Cell;
+    A : Standard_Integer64_Matrices.Matrix(q'range,q'range);
+    C : DoblDobl_Complex_Matrices.Matrix(q'range,q'range);
+    b : DoblDobl_Complex_Vectors.Vector(q'range);
+    vol : natural64;
+    ind : integer32;
+    r : double_double;
+    sq : DoblDobl_Complex_Laur_Systems.Laur_Sys(q'range);
+
+  begin
+    DoblDobl_Tableau_Formats.Extract_Coefficients_and_Exponents(q,cff,exp);
+    for i in sols'range loop
+      ptrs(i) := sols(i);
+      res(i) := create(0.0);
+    end loop;
+    for k in 1..Length_Of(mcc) loop
+      mic := Head_Of(tmp);
+      ind := (integer32(k) mod nt) + 1;
+      Select_Subsystem_to_Matrix_Format(cff,exp,mix,mic.pts.all,A,C,b);
+      vol := Volume_of_Cell(A);
+      sq := Supports_of_Polynomial_Systems.Select_Terms(q,mix,mic.pts.all);
+      for i in 1..vol loop
+        ls := Head_Of(ptrs(ind));
+        b := DoblDobl_Complex_Laur_SysFun.Eval(sq,ls.v);
+        r := DoblDobl_Complex_Vector_Norms.Max_Norm(b);
         res(ind) := res(ind) + r;
         ptrs(ind) := Tail_Of(ptrs(ind));
       end loop;

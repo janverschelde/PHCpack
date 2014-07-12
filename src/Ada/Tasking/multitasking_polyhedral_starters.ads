@@ -2,10 +2,12 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
-with Standard_Complex_Vectors;
+with Double_Double_Vectors;
 with Standard_Complex_Laur_Systems;
+with DoblDobl_Complex_Laur_Systems;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
 
 package Multitasking_Polyhedral_Starters is
 
@@ -32,6 +34,22 @@ package Multitasking_Polyhedral_Starters is
                 mixvol : out natural32;
                 sols : out Standard_Complex_Solutions.Array_of_Solution_Lists;
                 res : out Standard_Floating_Vectors.Vector );
+  procedure Silent_Multithreaded_Solve_Start_Systems
+              ( nt : in integer32;
+                q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                r : in integer32; mix : in Standard_Integer_Vectors.Vector;
+                mcc : in out Mixed_Subdivision;
+                mixvol : out natural32;
+                sols : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                res : out Double_Double_Vectors.Vector );
+  procedure Reporting_Multithreaded_Solve_Start_Systems
+              ( nt : in integer32;
+                q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                r : in integer32; mix : in Standard_Integer_Vectors.Vector;
+                mcc : in out Mixed_Subdivision;
+                mixvol : out natural32;
+                sols : out DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
+                res : out Double_Double_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Solves the start systems of q defined by the mixed cells in mcc,

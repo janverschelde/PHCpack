@@ -1,5 +1,6 @@
 Sat 12 Jul 2014 : new package multitasking_polyhedral_starters with code
   taken from multitasking_polyhedral_trackers, tested by ts_mtvolcon.adb.
+  Updated test on start systems in double double precision.
 
 Fri 11 Jul 2014 : modifications in multitasking_polyhedral_trackers.adb
   concerning distance to target before end game.
