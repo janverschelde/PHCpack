@@ -84,4 +84,11 @@ package DoblDobl_Binomial_Systems is
   --   The solutions on return are vectors Eval(A,x), for all x in s.
   --   For a multiprecision A, all components of x must have modulus 1.
 
+  procedure Eval ( A : in Standard_Integer64_Matrices.Matrix;
+                   s : in Solution_List; w : in out Vector );
+
+  -- DESCRIPTION :
+  --   Replaces the solutions x in sols by Eval(A,x), for all x in s,
+  --   using w as a work vector for intermediate products.
+
 end DoblDobl_Binomial_Systems;

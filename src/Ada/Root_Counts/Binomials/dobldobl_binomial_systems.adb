@@ -260,4 +260,41 @@ package body DoblDobl_Binomial_Systems is
     return res;
   end Eval;
 
+  procedure Eval ( A : in Standard_Integer64_Matrices.Matrix;
+                   s : in Solution_List; w : in out Vector ) is
+
+    tmp : Solution_List := s;
+    ls : Link_to_Solution;
+    one : constant double_double := create(1.0);
+    wj : Complex_Number;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      for j in w'range loop
+        w(j) := Create(one);
+      end loop;
+      for j in A'range(2) loop
+        wj := w(j);
+        for i in A'range(1) loop
+         --  wj := wj*(ls.v(i)**(A(i,j)));
+          if A(i,j) > 0 then
+            for k in 1..A(i,j) loop
+              wj := wj*ls.v(i);
+            end loop;
+          elsif A(i,j) < 0 then
+            for k in 1..(-A(i,j)) loop
+              wj := wj/ls.v(i);
+            end loop;
+          end if;
+        end loop;
+        w(j) := wj;
+      end loop;
+      for i in ls.v'range loop
+        ls.v(i) := w(i);
+      end loop;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Eval;
+
 end DoblDobl_Binomial_Systems;
