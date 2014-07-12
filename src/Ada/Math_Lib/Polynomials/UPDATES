@@ -1,3 +1,5 @@
+Sat 12 Jul 2014 : new package dobldobl_tableau_formats, tested by ts_tabform.
+
 Sun 6 Jul 2014 : new package quaddobl_poly_laur_convertors to convert poly
   systems with quad double coefficients into Laurent polynomial systems.
 
