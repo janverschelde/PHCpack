@@ -23,6 +23,7 @@ package body DoblDobl_Tableau_Formats is
 
   begin
     f := REAL_PART(t.cf); put(file,f);
+    put(file," ");
     f := IMAG_PART(t.cf); put(file,f);
     for i in t.dg'range loop
       put(file," "); put(file,t.dg(i),1);
@@ -38,6 +39,7 @@ package body DoblDobl_Tableau_Formats is
 
   begin
     f := REAL_PART(t.cf); put(file,f);
+    put(file," ");
     f := IMAG_PART(t.cf); put(file,f);
     for i in t.dg'range loop
       put(file," "); put(file,t.dg(i),1);

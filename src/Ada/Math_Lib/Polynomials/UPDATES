@@ -1,4 +1,6 @@
 Sun 13 Jul 2014 : new package quaddobl_tableau_formats, tested by ts_tabform.
+  In dobldobl_tableau_formats.adb, added writing of separating space between
+  real and imaginary part of complex number.
 
 Sat 12 Jul 2014 : new package dobldobl_tableau_formats, tested by ts_tabform.
 
