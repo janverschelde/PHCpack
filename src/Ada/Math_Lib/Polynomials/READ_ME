@@ -52,6 +52,7 @@ standard_floating_poly_systems    : systems with real coefficients
 standard_floating_poly_systems_io : input/output for real polynomial systems
 standard_tableau_formats          : simple tableau format for polynomials
 dobldobl_tableau_formats          : poly tableau format for double doubles
+quaddobl_tableau_formats          : poly tableau format for quad doubles
 standard_complex_laur_systems     : generic_laur_poly_systems instantiated
 standard_complex_laur_systems_io  : input/output for Laurent systems
 standard_complex_jaco_matrices    : generic_jacobian_matrices instantiated
