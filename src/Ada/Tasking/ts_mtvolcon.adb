@@ -7,9 +7,11 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Double_Double_Vectors;
+with Quad_Double_Vectors;
 with Lists_of_Floating_Vectors;          use Lists_of_Floating_Vectors;
 with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
@@ -142,10 +144,49 @@ procedure ts_mtvolcon is
     new_line;
     put("residuals : ");
     for i in res'range loop
-      put(res(i),3);
+      put(" "); put(res(i),3);
     end loop;
     new_line;
   end DoblDobl_Solve_Start_Systems;
+
+  procedure QuadDobl_Solve_Start_Systems
+              ( nt : in integer32;
+                q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                m : in integer32; mix : in Standard_Integer_Vectors.Vector;
+                mcc : in out Mixed_Subdivision ) is
+
+  -- DESCRIPTION :
+  --   Solves all initial form systems defined by the mixed-cell
+  --   configuration in mcc to start the polyhedral homotopies in q,
+  --   in double double precision using nt tasks.
+
+    use QuadDobl_Complex_Solutions;
+
+    mv : natural32;
+    sols : Array_of_Solution_Lists(1..nt);
+    res : Quad_Double_Vectors.Vector(1..nt);
+    ans : character;
+    timer : Timing_Widget;
+
+  begin
+    put("Intermediate output during computation wanted ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then    
+      Reporting_Multithreaded_Solve_Start_Systems(nt,q,m,mix,mcc,mv,sols,res);
+    else
+      tstart(timer);
+      Silent_Multithreaded_Solve_Start_Systems(nt,q,m,mix,mcc,mv,sols,res);
+      tstop(timer);
+      new_line;
+      print_times(standard_output,timer,"multithreaded start solutions");
+    end if;
+    new_line;
+    put("residuals : ");
+    for i in res'range loop
+      put(" "); put(res(i),3);
+    end loop;
+    new_line;
+  end QuadDobl_Solve_Start_Systems;
 
   procedure DoblDobl_Compute_Start_Solutions
               ( q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
@@ -180,6 +221,40 @@ procedure ts_mtvolcon is
     put("Give the number of threads : "); get(nt);
     DoblDobl_Solve_Start_Systems(nt,q,m,mix,mcc);
   end DoblDobl_Compute_Start_Solutions;
+
+  procedure QuadDobl_Compute_Start_Solutions
+              ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                m : in integer32;
+                mix : in Standard_Integer_Vectors.Vector;
+                mcc : in out Mixed_Subdivision ) is
+
+  -- DESCRIPTION :
+  --   First solves all initial form systems defined by the mixed-cell
+  --   configuration in mcc by one single thread, then prompts the user
+  --   for the number of tasks for multithreaded solving,
+  --   in standard double precision.
+
+    timer : Timing_Widget;
+    nt : integer32 := 0;
+
+  begin
+    if m = q'last then
+      tstart(timer);
+      Fully_Mixed_Start_Systems(q,mcc);
+      tstop(timer);
+      new_line;
+      print_times(standard_output,timer,"single thread start solutions");
+    else
+      tstart(timer);
+      Semi_Mixed_Start_Systems(q,natural32(m),mix,mcc);
+      tstop(timer);
+      new_line;
+      print_times(standard_output,timer,"single thread start solutions");
+    end if;
+    new_line;
+    put("Give the number of threads : "); get(nt);
+    QuadDobl_Solve_Start_Systems(nt,q,m,mix,mcc);
+  end QuadDobl_Compute_Start_Solutions;
 
   procedure Standard_Track_Paths
               ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
@@ -382,7 +457,7 @@ procedure ts_mtvolcon is
     n,m : integer32;
     mix : Standard_Integer_Vectors.Link_to_Vector;
     mcc : Mixed_Subdivision;
-   -- ans : character;
+    ans : character;
 
   begin
     new_line;
@@ -397,19 +472,19 @@ procedure ts_mtvolcon is
     close(file);
     new_line;
     put("Read "); put(Length_Of(mcc),1); put_line(" cells.");
-   -- new_line;
-   -- put_line("MENU to test polyhedral homotopies : ");
-   -- put_line("  1. solve only the start systems;");
-   -- put_line("  2. solve the start systems and track all paths.");
-   -- put("Type 1 or 2 to make your choice : ");
-   -- Ask_Alternative(ans,"12");
-   -- new_line;
-   -- if ans = '1' then
-   --   Standard_Compute_Start_Solutions(q.all,m,mix.all,mcc);
-   -- else
+    new_line;
+    put_line("MENU to test polyhedral homotopies : ");
+    put_line("  1. solve only the start systems;");
+    put_line("  2. solve the start systems and track all paths.");
+    put("Type 1 or 2 to make your choice : ");
+    Ask_Alternative(ans,"12");
+    new_line;
+    if ans = '1' then
+      QuadDobl_Compute_Start_Solutions(q.all,m,mix.all,mcc);
+    else
       Continuation_Parameters.Tune(0,64);
       QuadDobl_Track_Paths(q.all,n,m,mix.all,mcc);
-   -- end if;
+    end if;
   end QuadDobl_Test;
 
   procedure Main is

@@ -7,6 +7,7 @@ with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
 with Double_Double_Vectors;
+with Quad_Double_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
@@ -21,6 +22,7 @@ with QuadDobl_Complex_Matrices;
 with Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Laur_Systems;
 with Exponent_Vectors;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Standard_Complex_Solutions;
@@ -288,6 +290,9 @@ package Polyhedral_Start_Systems is
   procedure Fully_Mixed_Start_Systems
               ( q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 mcc : in Mixed_Subdivision );
+  procedure Fully_Mixed_Start_Systems
+              ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mcc : in Mixed_Subdivision );
 
   -- DESCRIPTION :
   --   Solves the start systems of q defined by the mixed cells in mcc,
@@ -302,6 +307,11 @@ package Polyhedral_Start_Systems is
                 mcc : in Mixed_Subdivision );
   procedure Semi_Mixed_Start_Systems
               ( q : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                m : in natural32;
+                mix : in Standard_Integer_Vectors.Vector;
+                mcc : in Mixed_Subdivision );
+  procedure Semi_Mixed_Start_Systems
+              ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 m : in natural32;
                 mix : in Standard_Integer_Vectors.Vector;
                 mcc : in Mixed_Subdivision );
@@ -335,6 +345,17 @@ package Polyhedral_Start_Systems is
                 mcc : in Mixed_Subdivision;
                 sols : in DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
                 res : out Double_Double_Vectors.Vector );
+  procedure Check_Solutions
+              ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                sols : in QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                res : out Quad_Double_Vectors.Vector );
+  procedure Check_Solutions
+              ( cff : in QuadDobl_Complex_VecVecs.VecVec;
+                exp : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                mcc : in Mixed_Subdivision;
+                sols : in QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                res : out Quad_Double_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Computes the residuals for the solution computed in sols.
@@ -362,6 +383,12 @@ package Polyhedral_Start_Systems is
                 mcc : in Mixed_Subdivision;
                 sols : in DoblDobl_Complex_Solutions.Array_of_Solution_Lists;
                 res : out Double_Double_Vectors.Vector );
+  procedure Check_Solutions
+              ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mix : in Standard_Integer_Vectors.Vector;
+                mcc : in Mixed_Subdivision;
+                sols : in QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                res : out Quad_Double_Vectors.Vector );
 
   -- DESCRIPTION :
   --   For semi-mixed systems q, the residuals of sols are computed.

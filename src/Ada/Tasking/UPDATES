@@ -1,3 +1,7 @@
+Mon 14 Jul 2014 : updated test on start systems in quad double precision,
+  in ts_mtvolcon.adb, which required modifications in the packages
+  polyhedral_start_systems and multitasking_polyhedral_starters.
+
 Sat 12 Jul 2014 : new package multitasking_polyhedral_starters with code
   taken from multitasking_polyhedral_trackers, tested by ts_mtvolcon.adb.
   Updated test on start systems in double double precision.

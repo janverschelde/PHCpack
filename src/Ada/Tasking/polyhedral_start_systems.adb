@@ -6,20 +6,25 @@ with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_Norms_Equals;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vector_Norms;
 with Standard_Integer_Matrices_io;       use Standard_Integer_Matrices_io;
 with Standard_Integer64_Matrices_io;     use Standard_Integer64_Matrices_io;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
 with DoblDobl_Complex_Matrices_io;       use DoblDobl_Complex_Matrices_io;
+with QuadDobl_Complex_Matrices_io;       use QuadDobl_Complex_Matrices_io;
 with Standard_Integer_Linear_Solvers;
 with Standard_Integer64_Linear_Solvers;
 with Standard_Complex_Linear_Solvers;
 with DoblDobl_Complex_Linear_Solvers;
+with QuadDobl_Complex_Linear_Solvers;
 with Lists_of_Floating_Vectors;          use Lists_of_Floating_Vectors;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Complex_Laur_SysFun;
@@ -27,6 +32,9 @@ with Standard_Tableau_Formats;
 with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Laur_SysFun;
 with DoblDobl_Tableau_Formats;
+with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
+with QuadDobl_Complex_Laur_SysFun;
+with QuadDobl_Tableau_Formats;
 with Supports_of_Polynomial_Systems;
 --with Mixed_Volume_Computation;
 with Standard_Radial_Solvers;
@@ -35,6 +43,9 @@ with Standard_Binomial_Solvers;
 with DoblDobl_Radial_Solvers;
 with DoblDobl_Binomial_Systems;
 with DoblDobl_Binomial_Solvers;
+with QuadDobl_Radial_Solvers;
+with QuadDobl_Binomial_Systems;
+with QuadDobl_Binomial_Solvers;
 
 package body Polyhedral_Start_Systems is
 
@@ -916,6 +927,73 @@ package body Polyhedral_Start_Systems is
     put("total sum over all residuals : "); put(chksum,3); new_line;
   end Fully_Mixed_Start_Systems;
 
+  procedure Fully_Mixed_Start_Systems
+              ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mcc : in Mixed_Subdivision ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    n : constant integer32 := q'last;
+    cff : QuadDobl_Complex_VecVecs.VecVec(q'range);
+    exp : Standard_Integer_VecVecs.Array_of_VecVecs(q'range);
+    mic : Mixed_Cell;
+    tmp : Mixed_Subdivision := mcc;
+    s_c : QuadDobl_Complex_Vectors.Vector(1..2*n); -- fully mixed
+    A,M,U : Standard_Integer64_Matrices.Matrix(q'range,q'range);
+    prod : integer64;
+    b,wrk : QuadDobl_Complex_Vectors.Vector(q'range);
+    brd,logbrd,logx,e10x : Quad_Double_Vectors.Vector(b'range);
+    bsc : QuadDobl_Complex_Vectors.Vector(b'range);
+    rnk : integer32 := 0;
+    len,totlen : natural32 := 0;
+    res,chksum : quad_double := create(0.0);
+    sols,Asols : Solution_List;
+
+  begin
+    QuadDobl_Tableau_Formats.Extract_Coefficients_and_Exponents(q,cff,exp);
+   -- put_line("The tableau format : "); Write_Tableau(cff,exp);
+    for i in 1..Length_Of(mcc) loop
+      mic := Head_Of(tmp);
+     -- setting up the binomial system
+      Select_Coefficients(cff,exp,mic.pts.all,s_c);
+      put("sys "); put(i,1); -- put_line(" :"); Write_Tableau(s_c,mic.pts.all);
+      Fully_Mixed_To_Binomial_Format(s_c,mic.pts.all,A,b);
+     -- solving in place :
+      U := A;
+      Standard_Integer64_Linear_Solvers.Upper_Triangulate(M,U);
+      prod := Product_of_Diagonal(U);
+      if prod < 0
+       then Asols := Create(n,integer32(-prod));
+       else Asols := Create(n,integer32(prod));
+      end if;
+      put(" : det : "); put(prod,1);
+      brd := QuadDobl_Radial_Solvers.Radii(b);
+      bsc := QuadDobl_Radial_Solvers.Scale(b,brd);
+     -- Asols := QuadDobl_Binomial_Solvers.Solve_Upper_Square(U,bsc);
+      QuadDobl_Binomial_Solvers.Solve_Upper_Square(U,bsc,Asols);
+      logbrd := QuadDobl_Radial_Solvers.Log10(brd);
+      logx := QuadDobl_Radial_Solvers.Radial_Upper_Solve(U,logbrd);
+      logx := QuadDobl_Radial_Solvers.Multiply(M,logx);
+      e10x := QuadDobl_Radial_Solvers.Exp10(logx);
+      QuadDobl_Binomial_Systems.Eval(M,Asols,wrk);
+      QuadDobl_Radial_Solvers.Multiply(Asols,e10x);
+     -- solving with one call :
+      QuadDobl_Binomial_Solvers.Solve(A,b,rnk,M,U,sols);
+     -- checking the solutions :
+      len := Length_Of(sols);
+      res := QuadDobl_Binomial_Solvers.Sum_Residuals(A,b,Asols);
+      put(" det(A) = "); put(Standard_Integer64_Linear_Solvers.Det(A),1);
+      put(", found "); put(len,1);
+      put(" solutions, residual = "); put(res,3); new_line;
+      Clear(sols); Clear(Asols);
+      chksum := chksum + res;
+      totlen := totlen + len;
+      tmp := Tail_Of(tmp);
+    end loop;
+    put("number of solutions found : "); put(totlen,1); new_line;
+    put("total sum over all residuals : "); put(chksum,3); new_line;
+  end Fully_Mixed_Start_Systems;
+
   procedure Semi_Mixed_Start_Systems
               ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
                 m : in natural32;
@@ -1052,6 +1130,74 @@ package body Polyhedral_Start_Systems is
     put("sum of residuals : "); put(chksum); new_line;
   end Semi_Mixed_Start_Systems;
 
+  procedure Semi_Mixed_Start_Systems
+              ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                m : in natural32;
+                mix : in Standard_Integer_Vectors.Vector;
+                mcc : in Mixed_Subdivision ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    n : constant integer32 := q'last;
+    cff : QuadDobl_Complex_VecVecs.VecVec(q'range);
+    exp : Standard_Integer_VecVecs.Array_of_VecVecs(q'range);
+    mic : Mixed_Cell;
+    tmp : Mixed_Subdivision := mcc;
+    A,T,U : Standard_Integer64_Matrices.Matrix(q'range,q'range);
+    C : QuadDobl_Complex_Matrices.Matrix(q'range,q'range);
+    b : QuadDobl_Complex_Vectors.Vector(q'range);
+    piv : Standard_Integer_Vectors.Vector(q'range);
+    info : integer32;
+    vol,mv : natural64 := 0;
+    sq : QuadDobl_Complex_Laur_Systems.Laur_Sys(q'range);
+    brd,logbrd,logx,e10x : Quad_Double_Vectors.Vector(b'range);
+    wrk,bsc : QuadDobl_Complex_Vectors.Vector(b'range);
+    res,chksum : quad_double := create(0.0);
+    sols,sols_ptr : Solution_List;
+    ls : Link_to_Solution;
+
+  begin
+    QuadDobl_Tableau_Formats.Extract_Coefficients_and_Exponents(q,cff,exp);
+    for i in 1..Length_Of(mcc) loop
+      put("processing cell "); put(i,1); put_line(" :");
+      mic := Head_Of(tmp);
+      Select_Subsystem_to_Matrix_Format(cff,exp,mix,mic.pts.all,A,C,b);
+      sq := Supports_of_Polynomial_Systems.Select_Terms(q,mix,mic.pts.all);
+      put_line("The subsystem : "); put_line(sq);
+      put_line("The matrix A :"); put(A);
+      put_line("The matrix C :"); put(C);
+      put_line("The right hand side vector b :"); put_line(b);
+      QuadDobl_Complex_Linear_Solvers.lufac(C,n,piv,info);
+      QuadDobl_Complex_Linear_Solvers.lusolve(C,n,piv,b);
+      U := A;
+      Standard_Integer64_Linear_Solvers.Upper_Triangulate(T,U);
+      vol := Volume_of_Diagonal(U); mv := mv + vol;
+      sols := Create(n,integer32(vol));
+      brd := QuadDobl_Radial_Solvers.Radii(b);
+      bsc := QuadDobl_Radial_Solvers.Scale(b,brd);
+      QuadDobl_Binomial_Solvers.Solve_Upper_Square(U,bsc,sols);
+      logbrd := QuadDobl_Radial_Solvers.Log10(brd);
+      logx := QuadDobl_Radial_Solvers.Radial_Upper_Solve(U,logbrd);
+      logx := QuadDobl_Radial_Solvers.Multiply(T,logx);
+      e10x := QuadDobl_Radial_Solvers.Exp10(logx);
+      QuadDobl_Binomial_Systems.Eval(T,sols,wrk);
+      QuadDobl_Radial_Solvers.Multiply(sols,e10x);
+      sols_ptr := sols;
+      while not Is_Null(sols_ptr) loop
+        ls := Head_Of(sols_ptr);
+        wrk := QuadDobl_Complex_Laur_SysFun.Eval(sq,ls.v);
+        res := QuadDobl_Complex_Vector_Norms.Max_Norm(wrk);
+        put("residual : "); put(res); new_line;
+        chksum := chksum + res;
+        sols_ptr := Tail_Of(sols_ptr);
+      end loop;
+      Clear(sols); QuadDobl_Complex_Laur_Systems.Clear(sq);
+      tmp := Tail_Of(tmp);
+    end loop;
+    put("the mixed volume : "); put(mv,1); new_line;
+    put("sum of residuals : "); put(chksum); new_line;
+  end Semi_Mixed_Start_Systems;
+
   procedure Check_Solutions
               ( cff : in Standard_Complex_VecVecs.VecVec;
                 exp : in Standard_Integer_VecVecs.Array_of_VecVecs;
@@ -1141,6 +1287,50 @@ package body Polyhedral_Start_Systems is
   end Check_Solutions;
 
   procedure Check_Solutions
+              ( cff : in QuadDobl_Complex_VecVecs.VecVec;
+                exp : in Standard_Integer_VecVecs.Array_of_VecVecs;
+                mcc : in Mixed_Subdivision;
+                sols : in QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                res : out Quad_Double_Vectors.Vector ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    n : constant integer32 := cff'last;
+    nt : constant integer32 := sols'last;
+    tmp : Mixed_Subdivision := mcc;
+    mic : Mixed_Cell;
+    s_c : QuadDobl_Complex_Vectors.Vector(1..2*n); -- fully mixed
+    A : Standard_Integer64_Matrices.Matrix(1..n,1..n);
+    b : QuadDobl_Complex_Vectors.Vector(1..n);
+    pdetA : natural64;
+    ptrs : Array_of_Solution_Lists(sols'range);
+    Asols,Asols_last : Solution_List;
+    ind : integer32;
+    r : quad_double;
+
+  begin
+    for i in sols'range loop
+      ptrs(i) := sols(i);
+      res(i) := create(0.0);
+    end loop;
+    for k in 1..Length_Of(mcc) loop
+      mic := Head_Of(tmp);
+      Select_Coefficients(cff,exp,mic.pts.all,s_c);
+      Fully_Mixed_To_Binomial_Format(s_c,mic.pts.all,A,b);
+      pdetA := Volume_of_Cell(A);
+      ind := (integer32(k) mod nt) + 1;     -- task index tells where computed
+      for i in 1..pdetA loop   -- select next pdetA solutions
+        Append(Asols,Asols_last,Head_Of(ptrs(ind)).all);
+        ptrs(ind) := Tail_Of(ptrs(ind));
+      end loop;
+      r := QuadDobl_Binomial_Solvers.Sum_Residuals(A,b,Asols);
+      res(ind) := res(ind) + r;
+      Clear(Asols);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Check_Solutions;
+
+  procedure Check_Solutions
               ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
                 mcc : in Mixed_Subdivision;
                 sols : in Standard_Complex_Solutions.Array_of_Solution_Lists;
@@ -1165,6 +1355,20 @@ package body Polyhedral_Start_Systems is
 
   begin
     DoblDobl_Tableau_Formats.Extract_Coefficients_and_Exponents(q,cff,exp);
+    Check_Solutions(cff,exp,mcc,sols,res);
+  end Check_Solutions;
+
+  procedure Check_Solutions
+              ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mcc : in Mixed_Subdivision;
+                sols : in QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                res : out Quad_Double_Vectors.Vector ) is
+
+    cff : QuadDobl_Complex_VecVecs.VecVec(q'range);
+    exp : Standard_Integer_VecVecs.Array_of_VecVecs(q'range);
+
+  begin
+    QuadDobl_Tableau_Formats.Extract_Coefficients_and_Exponents(q,cff,exp);
     Check_Solutions(cff,exp,mcc,sols,res);
   end Check_Solutions;
 
@@ -1255,6 +1459,53 @@ package body Polyhedral_Start_Systems is
         ls := Head_Of(ptrs(ind));
         b := DoblDobl_Complex_Laur_SysFun.Eval(sq,ls.v);
         r := DoblDobl_Complex_Vector_Norms.Max_Norm(b);
+        res(ind) := res(ind) + r;
+        ptrs(ind) := Tail_Of(ptrs(ind));
+      end loop;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Check_Solutions;
+
+  procedure Check_Solutions
+              ( q : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                mix : in Standard_Integer_Vectors.Vector;
+                mcc : in Mixed_Subdivision;
+                sols : in QuadDobl_Complex_Solutions.Array_of_Solution_Lists;
+                res : out Quad_Double_Vectors.Vector ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    nt : constant integer32 := sols'last;
+    ptrs : Array_of_Solution_Lists(sols'range);
+    ls : Link_to_Solution;
+    cff : QuadDobl_Complex_VecVecs.VecVec(q'range);
+    exp : Standard_Integer_VecVecs.Array_of_VecVecs(q'range);
+    tmp : Mixed_Subdivision := mcc;
+    mic : Mixed_Cell;
+    A : Standard_Integer64_Matrices.Matrix(q'range,q'range);
+    C : QuadDobl_Complex_Matrices.Matrix(q'range,q'range);
+    b : QuadDobl_Complex_Vectors.Vector(q'range);
+    vol : natural64;
+    ind : integer32;
+    r : quad_double;
+    sq : QuadDobl_Complex_Laur_Systems.Laur_Sys(q'range);
+
+  begin
+    QuadDobl_Tableau_Formats.Extract_Coefficients_and_Exponents(q,cff,exp);
+    for i in sols'range loop
+      ptrs(i) := sols(i);
+      res(i) := create(0.0);
+    end loop;
+    for k in 1..Length_Of(mcc) loop
+      mic := Head_Of(tmp);
+      ind := (integer32(k) mod nt) + 1;
+      Select_Subsystem_to_Matrix_Format(cff,exp,mix,mic.pts.all,A,C,b);
+      vol := Volume_of_Cell(A);
+      sq := Supports_of_Polynomial_Systems.Select_Terms(q,mix,mic.pts.all);
+      for i in 1..vol loop
+        ls := Head_Of(ptrs(ind));
+        b := QuadDobl_Complex_Laur_SysFun.Eval(sq,ls.v);
+        r := QuadDobl_Complex_Vector_Norms.Max_Norm(b);
         res(ind) := res(ind) + r;
         ptrs(ind) := Tail_Of(ptrs(ind));
       end loop;
