@@ -1,3 +1,5 @@
+Mon 14 Jul 2014 : extended quaddobl_binomial_systems with Eval procedure.
+
 Sat 12 Jul 2014 : extended dobldobl_binomial_systems with Eval procedure.
 
 Tue 8 Jul 2014 : extended quaddobl_binomial_{systems,solvers} with
