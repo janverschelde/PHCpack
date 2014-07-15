@@ -1,0 +1,87 @@
+Tue 15 Jul 2014 : added main procedure to mainsmvc.adb.
+
+Sat 22 Mar 2013 : added operations in permute_operations to permute
+  double double and quad double complex vectors.
+
+Tue 19 Nov 2013 : modifications in symmetric_polyhedral_continuation.adb
+  because of package name changes.
+
+Thu 27 Jun 2013 : updated drivers_for_symmetric_lifting.adb,
+  symmetric_polyhedral_continuation.adb and symmetric_lifting_functions.
+  Updated drivers_for_orbits_of_solutions.adb, generating_mixed_cells,
+  symmetric_lifting_functions.adb and symmetric_polyhedral_continuation.adb,
+  symmetric_randomize.adb, permutations_of_faces, 
+  faces_of_symmetric_polytopes.adb, and at last:
+  symmetric_bkk_bound_solvers.adb
+
+Wed 19 Jun 2013 : updated mainsmvc for natural32 and the package
+  drivers_for_symmetric_lifting.
+
+Thu 13 Jun 2013 : because of natural32 and integer32 data types, updated
+  permutations, symmetry_group and its io and ts_group.
+
+Tue 7 May 2013 : adjusted mainsmvc.adb for number of tasks.
+
+Thu 4 Apr 2013 : ts_group decomposes any permutation into swaps.
+
+Wed 3 Apr 2013 : reformatting edits in symmetry_group.adb and new ts_group
+  to develop sorting algorithm.
+
+Thu 14 Feb 2013 : extended permute_operations with some "*" for terms
+  with double double and quad double precision coefficients.
+
+Thu 9 Jun 2011 : changed mainsmvc.adb for changed specifications of
+  standard_root_refiners.
+
+Wed 1 Jun 2011 : changed drivers_for_symmetric_lifting.adb for warnings.
+
+Sun 29 May 2011 : changed mainsmvc.adb for GNAT GPL 2010 warnings.
+
+Fri 12 Nov 2010 : fixed mainsmvc for bug with command line argument
+  of phc -m, reported by Ehsan Ullah of Passau.
+
+Sun 5 Jul 2009 : updated mainsmvc for multitasking.
+
+Tue 12 Aug 2008 : renaming "sparse solvers" into "simpomial solvers"
+  changed symmetric_polyhedral_continuation.adb.
+
+Thu 3 Jan 2008 : because of warnings in GNAT GPL 2006, changed
+  symbolic_symmetry_group_io.adb, linear_symmetric_reduction.adb,
+  and orbits_of_solutions.a*, driver_for_symmetric_set_structure.adb,
+  symmetry_group.adb.
+
+Wed 15 Aug 2007 : changed mainsmvc.adb for altered interface in
+  drivers_for_static_lifting and drivers_for_mixedvol_algorithm.
+
+Fri 3 Aug 2007 : changed permute_operations because of "Laurentials",
+  also in symmetric_polyhedral_continuation.adb and symmetric_randomize.adb.
+
+Mon 11 Jun 2007 : added procedure to drivers_for_symmetric_lifting to
+  allow Laurent polynomial systems, changed mainsmvc.adb.
+
+Fri 25 Aug 2006 : changed mainsmvc.adb again for MixedVol.
+
+Thu 24 Aug 2006 : changed mainsmvc.adb to call MixedVol Algorithm.
+
+Thu 23 Mar 2006 : updated driver_for_symmetric_set_structure.adb
+  because of changed standard_linear_product_system, also updated
+  linear_symmetric_reduction.adb and templates.adb.
+
+Thu 16 Mar 2006 : used standard_sparse_solvers
+  in symmetric_polyhedral_continuation.adb.
+
+Thu 17 Mar 2005 : made static lifting default (0-th option) in phc -m.
+
+Sat 14 Aug 1999 : put(outft,lp'last,lp.all); in mainsmvc
+  so that also the dimension appears when the system is written.
+  Copied mainsmvc.adb to the public distribution directory.
+
+Fri 26 May 2000 : changed symmetric_bkk_bound_solvers because
+  mixed_coherent_subdivisions has disappeared.
+
+Wed 31 May 2000 : due to modified Newton in root refiners,
+  changed mainsmvc.adb.
+
+Thu 30 Nov 2000 : symmetric_polyhedral_continuation.adb had "cnt"
+  that was not initialized!  permutation_of_faces.adb had bug:
+  no "return false" in one of the Permutable routines.

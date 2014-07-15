@@ -16,11 +16,8 @@ with Drivers_for_MixedVol_Algorithm;     use Drivers_for_MixedVol_Algorithm;
 
 procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
 
-  outft : file_type;
-  lq : Link_to_Laur_Sys;
-  ans : character;
-
-  procedure Read_System ( filename : in string ) is
+  procedure Read_System
+              ( filename : in string; lq : in out Link_to_Laur_Sys ) is
 
   -- DESCRIPTION :
   --   Attempts to open the file with the given name for reading of
@@ -46,6 +43,7 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
   --   choice as a natural number between 0 and 4.
 
     choice : string(1..2) := "  ";
+    ans : character;
 
   begin
     loop
@@ -111,8 +109,9 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
     end case;
   end Lifting_Strategy;
 
-  procedure Ask_and_Dispatch_Lifting_Strategy is
+  procedure Ask_and_Dispatch_Lifting_Strategy ( lq : in Link_to_Laur_Sys ) is
 
+    outft : file_type;
     pq : Poly_Sys(lq'range);
     qq : Laur_Sys(lq'range);
     qsols,qsols0 : Solution_List;
@@ -157,10 +156,18 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
     Close(outft);
   end Ask_and_Dispatch_Lifting_Strategy;
 
+  procedure Main is
+
+    lq : Link_to_Laur_Sys := null;
+
+  begin
+    Read_System(infilename,lq);
+    if lq = null
+     then new_line; get(lq);
+    end if;
+    Ask_and_Dispatch_Lifting_Strategy(lq);
+  end Main;
+
 begin
-  Read_System(infilename);
-  if lq = null
-   then new_line; get(lq);
-  end if;
-  Ask_and_Dispatch_Lifting_Strategy;
+  Main;
 end mainsmvc;
