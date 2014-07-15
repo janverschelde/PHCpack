@@ -409,6 +409,20 @@ package Drivers_for_MixedVol_Algorithm is
   --   multprec_hermite indicates whether multiprecision arithmetic
   --            must be used for the Hermite normal form.
 
+  procedure Ask_for_Stable_and_Cells_File
+              ( stable,onfile : out boolean; file : in out file_type );
+
+  -- DESCRIPTION :
+  --   Asks the user if the stable mixed volume is wanted and whether
+  --   the mixed-cell configuration needs to be written to a separate file.
+
+  -- ON RETURN :
+  --   stable   true if the stable mixed volume is wanted,
+  --            false if the user does not wants the stable mixed volume;
+  --   onfile   true if the mixed-cell configuration needs to written
+  --            to a separate file, false otherwise;
+  --   file     opened for output if onfile is true.
+
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
