@@ -1,5 +1,6 @@
 Tue 15 Jul 2014 : refactored code in drivers_for_mixedvol_algorithm,
-  making new procedure to ask for stable mv and cells on file.
+  making new procedure to ask for stable mv and cells on file,
+  for ordinary and for Laurent polynomial systems.
 
 Fri 11 Jul 2014 : called new drivers in drivers_for_mixedvol_algorithm.adb
   for double double and quad double precision tuning of parameters.

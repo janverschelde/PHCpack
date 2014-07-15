@@ -423,6 +423,29 @@ package Drivers_for_MixedVol_Algorithm is
   --            to a separate file, false otherwise;
   --   file     opened for output if onfile is true.
 
+  procedure Ask_only_if_Stable_and_Cells_File
+              ( stable : in out boolean; onfile : out boolean;
+                file : in out file_type );
+
+  -- DESCRIPTION :
+  --   Asks the user if the stable mixed volume is wanted, 
+  --   only if stable is true on entry, and if the mixed-cell
+  --   configuration needs to be written to a separate file.
+
+  -- ON ENTRY :
+  --   stable   if false, then no question about stable mixed volume is asked,
+  --            as is useful when the system is a genuine Laurent system and
+  --            therefore, because of negative exponents, a stable mixed
+  --            volumes does not make sense, otherwise,
+  --            if true, then the user is asked about stable mixed volumes.
+
+  -- ON RETURN :
+  --   stable   true if the stable mixed volume is wanted,
+  --            false if the user does not wants the stable mixed volume;
+  --   onfile   true if the mixed-cell configuration needs to written
+  --            to a separate file, false otherwise;
+  --   file     opened for output if onfile is true.
+
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;

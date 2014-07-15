@@ -1831,17 +1831,6 @@ package body Drivers_for_mixedvol_algorithm is
   procedure Ask_for_Stable_and_Cells_File
               ( stable,onfile : out boolean; file : in out file_type ) is
 
-  -- DESCRIPTION :
-  --   Asks the user if the stable mixed volume is wanted and whether
-  --   the mixed-cell configuration needs to be written to a separate file.
-
-  -- ON RETURN :
-  --   stable   true if the stable mixed volume is wanted,
-  --            false if the user does not wants the stable mixed volume;
-  --   onfile   true if the mixed-cell configuration needs to written
-  --            to a separate file, false otherwise;
-  --   file     opened for output if onfile is true.
-
     ans : character;
 
   begin
@@ -1859,6 +1848,30 @@ package body Drivers_for_mixedvol_algorithm is
       Read_Name_and_Create_File(file);
     end if;
   end Ask_for_Stable_and_Cells_File;
+
+  procedure Ask_only_if_Stable_and_Cells_File
+              ( stable : in out boolean; onfile : out boolean;
+                file : in out file_type ) is
+
+    ans : character;
+
+  begin
+    if stable then
+      new_line;
+      put("Do you want stable mixed volumes ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      stable := (ans = 'y');
+    end if;
+    new_line;
+    put("Do you wish the mixed-cell configuration on separate file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    onfile := (ans = 'y');
+    if ans = 'y' then
+      new_line;
+      put_line("Reading the name of the file to write the cells ...");
+      Read_Name_and_Create_File(file);
+    end if;
+  end Ask_only_if_Stable_and_Cells_File;
 
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
@@ -2007,23 +2020,8 @@ package body Drivers_for_mixedvol_algorithm is
     oc : natural32;
 
   begin
-    if Is_Genuine_Laurent(p) then
-      stable := false;
-    else
-      new_line;
-      put("Do you want stable mixed volumes ? (y/n) ");
-      Ask_Yes_or_No(ans);
-      stable := (ans = 'y');
-    end if;
-    new_line;
-    put("Do you wish the mixed-cell configuration on separate file ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    misufile := (ans = 'y');
-    if misufile then
-      new_line;
-      put_line("Reading the name of the file to write the cells ...");
-      Read_Name_and_Create_File(cellfile);
-    end if;
+    stable := not Is_Genuine_Laurent(p);
+    Ask_only_if_Stable_and_Cells_File(stable,misufile,cellfile);
     new_line;
     put("Do you want a random coefficient start system ? (y/n) ");
     Ask_Yes_or_No(ans);
@@ -2068,23 +2066,8 @@ package body Drivers_for_mixedvol_algorithm is
     oc : natural32;
 
   begin
-    if Is_Genuine_Laurent(p) then
-      stable := false;
-    else
-      new_line;
-      put("Do you want stable mixed volumes ? (y/n) ");
-      Ask_Yes_or_No(ans);
-      stable := (ans = 'y');
-    end if;
-    new_line;
-    put("Do you wish the mixed-cell configuration on separate file ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    misufile := (ans = 'y');
-    if misufile then
-      new_line;
-      put_line("Reading the name of the file to write the cells ...");
-      Read_Name_and_Create_File(cellfile);
-    end if;
+    stable := not Is_Genuine_Laurent(p);
+    Ask_only_if_Stable_and_Cells_File(stable,misufile,cellfile);
     new_line;
     put("Do you want a random coefficient start system ? (y/n) ");
     Ask_Yes_or_No(ans);
@@ -2103,7 +2086,6 @@ package body Drivers_for_mixedvol_algorithm is
     if byebye 
      then put_line("See the output file(s) for results ..."); new_line;
     end if;
-   -- put_line("calling polyhedral homotopies ...");
     Polyhedral_Homotopies
       (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
        p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
@@ -2129,23 +2111,8 @@ package body Drivers_for_mixedvol_algorithm is
     oc : natural32;
 
   begin
-    if Is_Genuine_Laurent(p) then
-      stable := false;
-    else
-      new_line;
-      put("Do you want stable mixed volumes ? (y/n) ");
-      Ask_Yes_or_No(ans);
-      stable := (ans = 'y');
-    end if;
-    new_line;
-    put("Do you wish the mixed-cell configuration on separate file ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    misufile := (ans = 'y');
-    if misufile then
-      new_line;
-      put_line("Reading the name of the file to write the cells ...");
-      Read_Name_and_Create_File(cellfile);
-    end if;
+    stable := not Is_Genuine_Laurent(p);
+    Ask_only_if_Stable_and_Cells_File(stable,misufile,cellfile);
     new_line;
     put("Do you want a random coefficient start system ? (y/n) ");
     Ask_Yes_or_No(ans);
