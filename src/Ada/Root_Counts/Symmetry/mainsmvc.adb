@@ -3,10 +3,16 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
-with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Laur_Poly_Convertors;      use Standard_Laur_Poly_Convertors;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with DoblDobl_Complex_Laur_Systems;
+with DoblDobl_Polynomial_Convertors;     use DoblDobl_Polynomial_Convertors;
+with QuadDobl_Complex_Laur_Systems;
+with QuadDobl_Polynomial_Convertors;     use QuadDobl_Polynomial_Convertors;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 with Standard_Root_Refiners;             use Standard_Root_Refiners;
 with Drivers_for_Implicit_Lifting;       use Drivers_for_Implicit_Lifting;
 with Drivers_for_Static_Lifting;         use Drivers_for_Static_Lifting;
@@ -17,7 +23,8 @@ with Drivers_for_MixedVol_Algorithm;     use Drivers_for_MixedVol_Algorithm;
 procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
 
   procedure Read_System
-              ( filename : in string; lq : in out Link_to_Laur_Sys ) is
+              ( filename : in string;
+                lq : in out Standard_Complex_Laur_Systems.Link_to_Laur_Sys ) is
 
   -- DESCRIPTION :
   --   Attempts to open the file with the given name for reading of
@@ -109,12 +116,58 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
     end case;
   end Lifting_Strategy;
 
-  procedure Ask_and_Dispatch_Lifting_Strategy ( lq : in Link_to_Laur_Sys ) is
+  procedure Call_MixedVol
+               ( file : in file_type;
+                 lq : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Asks for the precision and then calls the MixedVol driver.
+  --
+    d_qq : Standard_Complex_Laur_Systems.Laur_Sys(lq'range);
+    d_qsols,d_qsols0 : Standard_Complex_Solutions.Solution_List;
+    dd_p,dd_qq : DoblDobl_Complex_Laur_Systems.Laur_Sys(lq'range);
+    dd_qsols,dd_qsols0 : DoblDobl_Complex_Solutions.Solution_List;
+    qd_p,qd_qq : QuadDobl_Complex_Laur_Systems.Laur_Sys(lq'range);
+    qd_qsols,qd_qsols0 : QuadDobl_Complex_Solutions.Solution_List;
+    mv,smv,tmv : natural32;
+    ans : character;
+  
+  begin
+    new_line;
+    put_line("MENU for precision to compute random coefficient system :");
+    put_line("  0. do not solve a random coefficient system;");
+    put_line("  1. run polyhedral homotopies in standard double precision;");
+    put_line("  2. run polyhedral homotopies in double double precision;");
+    put_line("  3. run polyhedral homotopies in quad double precision.");
+    put("Type 0, 1, 2, or 3 to select the precision : ");
+    Ask_Alternative(ans,"0123");
+    case ans is
+      when '0' | '1' =>
+        Driver_for_MixedVol_Algorithm
+          (file,integer32(nt),lq.all,true,d_qq,d_qsols,d_qsols0,mv,smv,tmv);
+      when '2' =>
+        dd_p := Standard_Laur_Sys_to_DoblDobl_Complex(lq.all);
+        Driver_for_MixedVol_Algorithm
+          (file,integer32(nt),dd_p,true,dd_qq,dd_qsols,dd_qsols0,mv,smv,tmv);
+      when '3' =>
+        qd_p := Standard_Laur_Sys_to_QuadDobl_Complex(lq.all);
+        Driver_for_MixedVol_Algorithm
+          (file,integer32(nt),qd_p,true,qd_qq,qd_qsols,qd_qsols0,mv,smv,tmv);
+      when others => null;
+    end case;
+  end Call_MixedVol;
+
+  procedure Ask_and_Dispatch_Lifting_Strategy 
+              ( lq : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Opens file for output and asks for the lifting strategy,
+  --   then calls the appropriate drivers.
 
     outft : file_type;
     pq : Poly_Sys(lq'range);
-    qq : Laur_Sys(lq'range);
-    qsols,qsols0 : Solution_List;
+    qq : Standard_Complex_Laur_Systems.Laur_Sys(lq'range);
+    qsols,qsols0 : Standard_Complex_Solutions.Solution_List;
     mv,smv,tmv : natural32;
     strategy : natural32;
     deflate : boolean := false;
@@ -137,11 +190,10 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
                 Driver_for_Symmetric_Mixed_Volume_Computation
                   (outft,lq.all,true,qq,qsols,mv);
       when 4 => put_line(outft,"MixedVol Algorithm to compute mixed volume");
-                Driver_for_MixedVol_Algorithm
-                  (outft,integer32(nt),lq.all,true,qq,qsols,qsols0,mv,smv,tmv);
+                Call_MixedVol(outft,lq);
       when others => null;
     end case;
-    if Length_Of(qsols) > 0 then
+    if Standard_Complex_Solutions.Length_Of(qsols) > 0 then
       pq := Laurent_to_Polynomial_System(qq);
       declare
         epsxa,epsfa : constant double_float := 1.0E-8;
@@ -158,6 +210,7 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
 
   procedure Main is
 
+    use Standard_Complex_Laur_Systems;
     lq : Link_to_Laur_Sys := null;
 
   begin

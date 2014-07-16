@@ -1,3 +1,6 @@
+Wed 16 Jul 2014 : mainsmvc is modified to provide double double and
+  quad double precision via phc -m for polyhedral continuation.
+
 Tue 15 Jul 2014 : added main procedure to mainsmvc.adb.
 
 Sat 22 Mar 2013 : added operations in permute_operations to permute
