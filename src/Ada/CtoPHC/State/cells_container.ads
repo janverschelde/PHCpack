@@ -2,7 +2,9 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Arrays_of_Floating_Vector_Lists;   use Arrays_of_Floating_Vector_Lists;
-with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 with Floating_Mixed_Subdivisions;       use Floating_Mixed_Subdivisions;
 
@@ -40,6 +42,8 @@ package Cells_Container is
   --   Initializes the container with a mixed-cell configuration.
 
   procedure Generate_Random_Coefficient_System;
+  procedure Generate_Random_DoblDobl_Coefficient_System;
+  procedure Generate_Random_QuadDobl_Coefficient_System;
 
   -- DESCRIPTION :
   --   Generates a random coefficient system for polyhedral continuation.
@@ -47,7 +51,12 @@ package Cells_Container is
   -- REQUIRED :
   --   The type of mixture and lifted supports are initialized.
 
-  procedure Initialize_Random_Coefficient_System ( q : in Poly_Sys );
+  procedure Initialize_Random_Coefficient_System
+              ( q : in Standard_Complex_Poly_Systems.Poly_Sys );
+  procedure Initialize_Random_DoblDobl_Coefficient_System
+              ( q : in DoblDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure Initialize_Random_QuadDobl_Coefficient_System
+              ( q : in QuadDobl_Complex_Poly_Systems.Poly_Sys );
 
   -- DESCRIPTION :
   --   Initializes the random coefficient system with the given system q.
@@ -116,8 +125,18 @@ package Cells_Container is
   -- DESCRIPTION :
   --   Returns the mixed subdivision stored in the container.
 
-  function Retrieve_Random_Coefficient_System return Poly_Sys;
-  function Retrieve_Random_Coefficient_System return Link_to_Poly_Sys;
+  function Retrieve_Random_Coefficient_System
+             return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Retrieve_Random_Coefficient_System
+             return Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+  function Retrieve_Random_DoblDobl_Coefficient_System
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Retrieve_Random_DoblDobl_Coefficient_System
+             return DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+  function Retrieve_Random_QuadDobl_Coefficient_System
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function Retrieve_Random_QuadDobl_Coefficient_System
+             return QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
 
   -- DESCRIPTION :
   --   Returns the random coefficient system in the container.

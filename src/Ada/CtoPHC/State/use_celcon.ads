@@ -68,6 +68,30 @@ function use_celcon ( job : integer32;
 --                   on return: a target solution has been added;
 --            = 24 : copy i-th target solution of the k-th cell to the
 --                   solutions container, on entry: a = k and b = i.
+--            = 26 : creates a random coefficient system, using the
+--                   type of mixture and supports in the cells container,
+--                   with double double coefficients;
+--            = 27 : prompts the user for a polynomial system with 
+--                   double double complex coefficients and stores it
+--                   as random coefficient system in the cells container;
+--            = 28 : writes the random coefficient system with double
+--                   double complex coefficients to the output;
+--            = 29 : copy random coefficient system to systems container
+--                   of polynomial systems with double double coefficients;
+--            = 30 : copy system in systems container for double double
+--                   complex coefficients into the cells container.
+--            = 36 : creates a random coefficient system, using the
+--                   type of mixture and supports in the cells container,
+--                   with double double coefficients;
+--            = 37 : prompts the user for a polynomial system with 
+--                   double double complex coefficients and stores it
+--                   as random coefficient system in the cells container;
+--            = 38 : writes the random coefficient system with double
+--                   double complex coefficients to the output;
+--            = 39 : copy random coefficient system to systems container
+--                   of polynomial systems with double double coefficients;
+--            = 40 : copy system in systems container for double double
+--                   complex coefficients into the cells container.
 
 -- ON RETURN :
 --   0 if operation was successful, otherwise something went wrong...

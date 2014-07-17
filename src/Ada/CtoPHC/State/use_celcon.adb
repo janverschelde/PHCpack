@@ -10,8 +10,12 @@ with Standard_Floating_Vectors;
 with Lists_of_Floating_Vectors;         use Lists_of_Floating_Vectors;
 with Arrays_of_Integer_Vector_Lists;
 with Arrays_of_Floating_Vector_Lists;   use Arrays_of_Floating_Vector_Lists;
-with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems_io;  use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 with Supports_of_Polynomial_Systems;
@@ -24,6 +28,8 @@ with Induced_Permutations;
 with Mixed_Volume_Computation;          use Mixed_Volume_Computation;
 with PHCpack_Operations;
 with Standard_PolySys_Container;
+with DoblDobl_PolySys_Container;
+with QuadDobl_PolySys_Container;
 with Laurent_Systems_Container;
 with Standard_Solutions_Container;
 with Cells_Container;                   use Cells_Container;
@@ -342,9 +348,9 @@ function use_celcon ( job : integer32;
     end if;
   end Job15;
 
-  function Job17 return integer32 is -- initialize random coefficient system
+  function Job17 return integer32 is -- init random coefficient system
 
-    q : Link_to_Poly_Sys;
+    q : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
 
   begin
     new_line;
@@ -354,9 +360,33 @@ function use_celcon ( job : integer32;
     return 0;
   end Job17;
 
+  function Job27 return integer32 is -- init random dd coefficient system
+
+    q : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    new_line;
+    put_line("Reading a random coefficient polynomial system ...");
+    get(q);
+    Cells_Container.Initialize_Random_DoblDobl_Coefficient_System(q.all);
+    return 0;
+  end Job27;
+
+  function Job37 return integer32 is -- init random qd coefficient system
+
+    q : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    new_line;
+    put_line("Reading a random coefficient polynomial system ...");
+    get(q);
+    Cells_Container.Initialize_Random_QuadDobl_Coefficient_System(q.all);
+    return 0;
+  end Job37;
+
   function Job18 return integer32 is -- write random coefficient system
 
-    q : constant Link_to_Poly_Sys
+    q : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
       := Cells_Container.Retrieve_Random_Coefficient_System;
 
   begin
@@ -372,9 +402,45 @@ function use_celcon ( job : integer32;
     return 0;
   end Job18;
 
-  function Job19 return integer32 is -- copy into systems container
+  function Job28 return integer32 is -- write random dd coefficient system
 
-    q : constant Link_to_Poly_Sys
+    q : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+      := Cells_Container.Retrieve_Random_DoblDobl_Coefficient_System;
+
+  begin
+    if PHCpack_Operations.Is_File_Defined then
+      put_line(PHCpack_Operations.output_file,q.all);
+      new_line(PHCpack_Operations.output_file);
+      put_line(PHCpack_Operations.output_file,"THE SOLUTIONS :");
+    else
+      put_line(standard_output,q.all);
+      new_line(standard_output);
+      put_line(standard_output,"THE SOLUTIONS :");
+    end if;
+    return 0;
+  end Job28;
+
+  function Job38 return integer32 is -- write random qd coefficient system
+
+    q : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+      := Cells_Container.Retrieve_Random_QuadDobl_Coefficient_System;
+
+  begin
+    if PHCpack_Operations.Is_File_Defined then
+      put_line(PHCpack_Operations.output_file,q.all);
+      new_line(PHCpack_Operations.output_file);
+      put_line(PHCpack_Operations.output_file,"THE SOLUTIONS :");
+    else
+      put_line(standard_output,q.all);
+      new_line(standard_output);
+      put_line(standard_output,"THE SOLUTIONS :");
+    end if;
+    return 0;
+  end Job38;
+
+  function Job19 return integer32 is -- copy into st systems container
+
+    q : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
       := Cells_Container.Retrieve_Random_Coefficient_System;
 
   begin
@@ -382,14 +448,55 @@ function use_celcon ( job : integer32;
     return 0;
   end Job19;
 
+  function Job29 return integer32 is -- copy into dd systems container
+
+    q : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+      := Cells_Container.Retrieve_Random_DoblDobl_Coefficient_System;
+
+  begin
+    DoblDobl_PolySys_Container.Initialize(q.all);
+    return 0;
+  end Job29;
+
+  function Job39 return integer32 is -- copy into qd systems container
+
+    q : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+      := Cells_Container.Retrieve_Random_QuadDobl_Coefficient_System;
+
+  begin
+    QuadDobl_PolySys_Container.Initialize(q.all);
+    return 0;
+  end Job39;
+
   function Job20 return integer32 is -- copy from systems container
 
-    q : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    q : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+      := Standard_PolySys_Container.Retrieve;
 
   begin
     Cells_Container.Initialize_Random_Coefficient_System(q.all);
     return 0;
   end Job20;
+
+  function Job30 return integer32 is -- copy from dd systems container
+
+    q : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+      := DoblDobl_PolySys_Container.Retrieve;
+
+  begin
+    Cells_Container.Initialize_Random_DoblDobl_Coefficient_System(q.all);
+    return 0;
+  end Job30;
+
+  function Job40 return integer32 is -- copy from qd systems container
+
+    q : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+      := QuadDobl_PolySys_Container.Retrieve;
+
+  begin
+    Cells_Container.Initialize_Random_QuadDobl_Coefficient_System(q.all);
+    return 0;
+  end Job40;
 
   function Job22 return integer32 is -- solve a start system
 
@@ -438,8 +545,10 @@ function use_celcon ( job : integer32;
     mixsub : constant Mixed_Subdivision := Cells_Container.Retrieve;
     mix : constant Standard_Integer_Vectors.Link_to_Vector
         := Cells_Container.Type_of_Mixture;
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+       := Standard_PolySys_Container.Retrieve;
     lq : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+    use Standard_Complex_Poly_Systems;
 
   begin
     if lp /= null then
@@ -514,6 +623,18 @@ function use_celcon ( job : integer32;
       when 23 => return Job23; -- track a solution path
       when 24 => return Job24; -- copy target solution to container
       when 25 => return Job25; -- permute a given target system
+      when 26 => Cells_Container.Generate_Random_DoblDobl_Coefficient_System;
+                 return 0;
+      when 27 => return Job27; -- init random dobldobl coefficient system
+      when 28 => return Job28; -- write random dobldobl coefficient system
+      when 29 => return Job29; -- copy into dobldobl systems container
+      when 30 => return Job30; -- copy from dobldobl systems container
+      when 36 => Cells_Container.Generate_Random_QuadDobl_Coefficient_System;
+                 return 0;
+      when 37 => return Job37; -- init random quaddobl coefficient system
+      when 38 => return Job38; -- write random quaddobl coefficient system
+      when 39 => return Job39; -- copy into quaddobl systems container
+      when 40 => return Job40; -- copy from quaddobl systems container
       when others => put_line("invalid operation"); return 1;
     end case;
   exception

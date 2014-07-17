@@ -1,3 +1,7 @@
+Thu 17 Jul 2014 : extended cells container with routines for random
+  double double and quad double coefficient systems, with matching
+  operations in use_celcon.
+
 Wed 25 Jun 2014 : added operations to use_syscon and use_c2phc
   to generate a random polynomial system.  Note that the random_system
   function must then properly fill up the symbol table.

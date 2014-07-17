@@ -8,7 +8,9 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Lists_of_Floating_Vectors;          use Lists_of_Floating_Vectors;
-with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
+with Standard_Complex_Polynomials;
+with DoblDobl_Complex_Polynomials;
+with QuadDobl_Complex_Polynomials;
 with Standard_Complex_Laur_Functions;    use Standard_Complex_Laur_Functions;
 with Exponent_Vectors;                   use Exponent_Vectors;
 with Random_Coefficient_Systems;
@@ -29,7 +31,9 @@ package body Cells_Container is
   mix : Standard_Integer_Vectors.Link_to_Vector;
   lifsup,lifsup_last : Link_to_Array_of_Lists;
   cells,cells_last : Mixed_Subdivision;
-  rndcffsys : Link_to_Poly_Sys;
+  st_rndcffsys : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+  dd_rndcffsys : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+  qd_rndcffsys : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
   lq : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
   hq : Standard_Complex_Laur_SysFun.Link_to_Eval_Coeff_Laur_Sys;
   homty_expvec : Link_to_Exponent_Vectors_Array;
@@ -114,24 +118,63 @@ package body Cells_Container is
   procedure Generate_Random_Coefficient_System is
 
     n : constant natural32 := Cells_Container.Dimension-1;
-    q : constant Poly_Sys(1..integer32(n))
+    q : constant Standard_Complex_Poly_Systems.Poly_Sys(1..integer32(n))
       := Random_Coefficient_Systems.Create(n,mix.all,lifsup.all);
 
   begin
-    rndcffsys := new Poly_Sys'(q);
+    st_rndcffsys := new Standard_Complex_Poly_Systems.Poly_Sys'(q);
   end Generate_Random_Coefficient_System;
 
-  procedure Initialize_Random_Coefficient_System ( q : in Poly_Sys ) is
+  procedure Generate_Random_DoblDobl_Coefficient_System is
+
+    n : constant natural32 := Cells_Container.Dimension-1;
+    q : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(n))
+      := Random_Coefficient_Systems.Create(n,mix.all,lifsup.all);
+
   begin
-    rndcffsys := new Poly_Sys(q'range);
+    dd_rndcffsys := new DoblDobl_Complex_Poly_Systems.Poly_Sys'(q);
+  end Generate_Random_DoblDobl_Coefficient_System;
+
+  procedure Generate_Random_QuadDobl_Coefficient_System is
+
+    n : constant natural32 := Cells_Container.Dimension-1;
+    q : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(n))
+      := Random_Coefficient_Systems.Create(n,mix.all,lifsup.all);
+
+  begin
+    qd_rndcffsys := new QuadDobl_Complex_Poly_Systems.Poly_Sys'(q);
+  end Generate_Random_QuadDobl_Coefficient_System;
+
+  procedure Initialize_Random_Coefficient_System
+              ( q : in Standard_Complex_Poly_Systems.Poly_Sys ) is
+  begin
+    st_rndcffsys := new Standard_Complex_Poly_Systems.Poly_Sys(q'range);
     for i in q'range loop
-      Copy(q(i),rndcffsys(i));
+      Standard_Complex_Polynomials.Copy(q(i),st_rndcffsys(i));
     end loop;
   end Initialize_Random_Coefficient_System;
 
+  procedure Initialize_Random_DoblDobl_Coefficient_System
+              ( q : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
+  begin
+    dd_rndcffsys := new DoblDobl_Complex_Poly_Systems.Poly_Sys(q'range);
+    for i in q'range loop
+      DoblDobl_Complex_Polynomials.Copy(q(i),dd_rndcffsys(i));
+    end loop;
+  end Initialize_Random_DoblDobl_Coefficient_System;
+
+  procedure Initialize_Random_QuadDobl_Coefficient_System
+              ( q : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
+  begin
+    qd_rndcffsys := new QuadDobl_Complex_Poly_Systems.Poly_Sys(q'range);
+    for i in q'range loop
+      QuadDobl_Complex_Polynomials.Copy(q(i),qd_rndcffsys(i));
+    end loop;
+  end Initialize_Random_QuadDobl_Coefficient_System;
+
   procedure Create_Polyhedral_Homotopy is
 
-    q : Link_to_Poly_Sys renames rndcffsys;
+    q : Standard_Complex_Poly_Systems.Link_to_Poly_Sys renames st_rndcffsys;
     use Standard_Complex_Vectors,Standard_Complex_VecVecs;
     len : constant integer32 := integer32(Cells_Container.Length);
 
@@ -277,15 +320,41 @@ package body Cells_Container is
     return cells;
   end Retrieve;
 
-  function Retrieve_Random_Coefficient_System return Poly_Sys is
+  function Retrieve_Random_Coefficient_System
+             return Standard_Complex_Poly_Systems.Poly_Sys is
   begin
-    return rndcffsys.all;
+    return st_rndcffsys.all;
   end Retrieve_Random_Coefficient_System;
 
-  function Retrieve_Random_Coefficient_System return Link_to_Poly_Sys is
+  function Retrieve_Random_Coefficient_System
+             return Standard_Complex_Poly_Systems.Link_to_Poly_Sys is
   begin
-    return rndcffsys;
+    return st_rndcffsys;
   end Retrieve_Random_Coefficient_System;
+
+  function Retrieve_Random_DoblDobl_Coefficient_System
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+  begin
+    return dd_rndcffsys.all;
+  end Retrieve_Random_DoblDobl_Coefficient_System;
+
+  function Retrieve_Random_DoblDobl_Coefficient_System
+             return DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys is
+  begin
+    return dd_rndcffsys;
+  end Retrieve_Random_DoblDobl_Coefficient_System;
+
+  function Retrieve_Random_QuadDobl_Coefficient_System
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+  begin
+    return qd_rndcffsys.all;
+  end Retrieve_Random_QuadDobl_Coefficient_System;
+
+  function Retrieve_Random_QuadDobl_Coefficient_System
+             return QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys is
+  begin
+    return qd_rndcffsys;
+  end Retrieve_Random_QuadDobl_Coefficient_System;
 
   function Retrieve_Start_Solution
              ( k,i : natural32 ) return Link_to_Solution is
@@ -377,9 +446,10 @@ package body Cells_Container is
     else
      -- put("... retrieval of cell "); put(k,1); put_line(" succeeded.");
       declare
-        q : Link_to_Poly_Sys renames rndcffsys;
-        sub_q : Poly_Sys(q'range);
-        lau_q : Laur_Sys(q'range);
+        q : Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+            renames st_rndcffsys;
+        sub_q : Standard_Complex_Poly_Systems.Poly_Sys(q'range);
+        lau_q : Standard_Complex_Laur_Systems.Laur_Sys(q'range);
         sols : Solution_List;
       begin
         sub_q := Select_Terms(q.all,mix.all,mic.pts.all);
@@ -394,7 +464,8 @@ package body Cells_Container is
           mv := Length_Of(sols);
           start_sols(integer32(k)) := sols;
         end if;
-        Clear(sub_q); Clear(lau_q);
+        Standard_Complex_Poly_Systems.Clear(sub_q);
+        Standard_Complex_Laur_Systems.Clear(lau_q);
       exception
         when others =>
           put_line("Exception raised for supported subsystem :");
@@ -446,7 +517,7 @@ package body Cells_Container is
     Deep_Clear(lifsup);
     Deep_Clear(cells);
     Standard_Integer_Vectors.Clear(mix);
-    Clear(rndcffsys);
+    Standard_Complex_Poly_Systems.Clear(st_rndcffsys);
     Standard_Complex_Laur_Systems.Clear(lq);
     Standard_Complex_Laur_SysFun.Clear(hq);
     Clear(homty_expvec);
