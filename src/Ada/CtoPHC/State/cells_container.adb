@@ -962,6 +962,7 @@ package body Cells_Container is
     Clear_Cell_Data;
     Clear_Standard_Data;
     Clear_DoblDobl_Data;
+    Clear_QuadDobl_Data;
   end Clear;
 
 end Cells_Container;

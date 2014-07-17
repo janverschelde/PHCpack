@@ -1795,9 +1795,14 @@ function use_c2phc ( job : integer32;
      -- operations on multiprecision system container
       when 440..444 => return use_syscon(job-220,a,b,c);
       when 447..449 => return use_syscon(job-220,a,b,c);
-     -- operations on multiprecision solutions
+     -- operations on multiprecision solutions :
       when 450..453 => return use_solcon(job-330,a,b,c);
       when 457 => return use_solcon(job-330,a,b,c);
+     -- polyhedral homotopies in double double precision :
+      when 460..468 => return use_celcon(job-434,a,b,c);
+     -- polyhedral homotopies in quad double precision :
+      when 470..478 => return use_celcon(job-434,a,b,c);
+     -- string representations of multiprecision solutions :
       when 480..481 => return use_solcon(job-330,a,b,c);
       when 488 => return use_solcon(job-330,a,b,c);
      -- PHCpack operations for multiprecision arithmetic

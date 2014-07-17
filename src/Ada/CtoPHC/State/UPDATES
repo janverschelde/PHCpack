@@ -1,6 +1,7 @@
 Thu 17 Jul 2014 : extended cells container to solve random coefficient
   systems with polyhedral homotopies in double double and quad double
   precision, with matching operations in use_celcon.
+  Added the extra 18 functions to use_c2phc.
 
 Wed 25 Jun 2014 : added operations to use_syscon and use_c2phc
   to generate a random polynomial system.  Note that the random_system
