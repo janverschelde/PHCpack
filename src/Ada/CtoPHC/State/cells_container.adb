@@ -1,27 +1,49 @@
 -- for exception handlers only :
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Arrays_of_Floating_Vector_Lists_io; use Arrays_of_Floating_Vector_Lists_io;
 -- normal dependencies :
 with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_VecVecs;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_VecVecs;
 with Lists_of_Floating_Vectors;          use Lists_of_Floating_Vectors;
 with Standard_Complex_Polynomials;
 with DoblDobl_Complex_Polynomials;
 with QuadDobl_Complex_Polynomials;
-with Standard_Complex_Laur_Functions;    use Standard_Complex_Laur_Functions;
+with Standard_Complex_Laur_Functions;
+with DoblDobl_Complex_Laur_Functions;
+with QuadDobl_Complex_Laur_Functions;
 with Exponent_Vectors;                   use Exponent_Vectors;
 with Random_Coefficient_Systems;
 with Supports_of_Polynomial_Systems;     use Supports_of_Polynomial_Systems;
-with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
-with Standard_Complex_Laur_SysFun;       use Standard_Complex_Laur_SysFun;
-with Standard_Complex_Laur_Jacomats;     use Standard_Complex_Laur_Jacomats;
-with Standard_Poly_Laur_Convertors;      use Standard_Poly_Laur_Convertors;
-with Transforming_Laurent_Systems;       use Transforming_Laurent_Systems;
+with Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_SysFun;
+with Standard_Complex_Laur_JacoMats;
+with Standard_Poly_Laur_Convertors;
+with DoblDobl_Complex_Laur_Systems;
+with DoblDobl_Complex_Laur_SysFun;
+with DoblDobl_Complex_Laur_JacoMats;
+with DoblDobl_Poly_Laur_Convertors;
+with QuadDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Laur_SysFun;
+with QuadDobl_Complex_Laur_JacoMats;
+with QuadDobl_Poly_Laur_Convertors;
+with Transforming_Laurent_Systems;
 with Standard_Simpomial_Solvers;
+with DoblDobl_Simpomial_Solvers;
+with QuadDobl_Simpomial_Solvers;
 with Floating_Polyhedral_Continuation;   use Floating_Polyhedral_Continuation;
+with DoblDobl_Polyhedral_Continuation;   use DoblDobl_Polyhedral_Continuation;
+with QuadDobl_Polyhedral_Continuation;   use QuadDobl_Polyhedral_Continuation;
 with PHCpack_Operations;
 
 package body Cells_Container is
@@ -34,13 +56,30 @@ package body Cells_Container is
   st_rndcffsys : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
   dd_rndcffsys : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
   qd_rndcffsys : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-  lq : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
-  hq : Standard_Complex_Laur_SysFun.Link_to_Eval_Coeff_Laur_Sys;
-  homty_expvec : Link_to_Exponent_Vectors_Array;
-  homty_coeffv : Standard_Complex_VecVecs.Link_to_VecVec;
-  homty_jacmat : Link_to_Eval_Coeff_Jaco_Mat;
-  homty_mulfac : Link_to_Mult_Factors;
-  start_sols,target_sols,target_last : Link_to_Array_of_Solution_Lists;
+  st_lq : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+  dd_lq : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+  qd_lq : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+  st_hq : Standard_Complex_Laur_SysFun.Link_to_Eval_Coeff_Laur_Sys;
+  dd_hq : DoblDobl_Complex_Laur_SysFun.Link_to_Eval_Coeff_Laur_Sys;
+  qd_hq : QuadDobl_Complex_Laur_SysFun.Link_to_Eval_Coeff_Laur_Sys;
+  st_homty_expvec : Link_to_Exponent_Vectors_Array;
+  dd_homty_expvec : Link_to_Exponent_Vectors_Array;
+  qd_homty_expvec : Link_to_Exponent_Vectors_Array;
+  st_homty_coeffv : Standard_Complex_VecVecs.Link_to_VecVec;
+  dd_homty_coeffv : DoblDobl_Complex_VecVecs.Link_to_VecVec;
+  qd_homty_coeffv : QuadDobl_Complex_VecVecs.Link_to_VecVec;
+  st_homty_jacmat : Standard_Complex_Laur_JacoMats.Link_to_Eval_Coeff_Jaco_Mat;
+  dd_homty_jacmat : DoblDobl_Complex_Laur_JacoMats.Link_to_Eval_Coeff_Jaco_Mat;
+  qd_homty_jacmat : QuadDobl_Complex_Laur_JacoMats.Link_to_Eval_Coeff_Jaco_Mat;
+  st_homty_mulfac : Standard_Complex_Laur_JacoMats.Link_to_Mult_Factors;
+  dd_homty_mulfac : DoblDobl_Complex_Laur_JacoMats.Link_to_Mult_Factors;
+  qd_homty_mulfac : QuadDobl_Complex_Laur_JacoMats.Link_to_Mult_Factors;
+  st_start_sols,st_target_sols,st_target_last :
+     Standard_Complex_Solutions.Link_to_Array_of_Solution_Lists;
+  dd_start_sols,dd_target_sols,dd_target_last :
+     DoblDobl_Complex_Solutions.Link_to_Array_of_Solution_Lists;
+  qd_start_sols,qd_target_sols,qd_target_last :
+     QuadDobl_Complex_Solutions.Link_to_Array_of_Solution_Lists;
 
 -- AUXILIARIES :
 
@@ -115,7 +154,7 @@ package body Cells_Container is
     cells := mcc;
   end Initialize;
 
-  procedure Generate_Random_Coefficient_System is
+  procedure Generate_Random_Standard_Coefficient_System is
 
     n : constant natural32 := Cells_Container.Dimension-1;
     q : constant Standard_Complex_Poly_Systems.Poly_Sys(1..integer32(n))
@@ -123,7 +162,7 @@ package body Cells_Container is
 
   begin
     st_rndcffsys := new Standard_Complex_Poly_Systems.Poly_Sys'(q);
-  end Generate_Random_Coefficient_System;
+  end Generate_Random_Standard_Coefficient_System;
 
   procedure Generate_Random_DoblDobl_Coefficient_System is
 
@@ -145,14 +184,14 @@ package body Cells_Container is
     qd_rndcffsys := new QuadDobl_Complex_Poly_Systems.Poly_Sys'(q);
   end Generate_Random_QuadDobl_Coefficient_System;
 
-  procedure Initialize_Random_Coefficient_System
+  procedure Initialize_Random_Standard_Coefficient_System
               ( q : in Standard_Complex_Poly_Systems.Poly_Sys ) is
   begin
     st_rndcffsys := new Standard_Complex_Poly_Systems.Poly_Sys(q'range);
     for i in q'range loop
       Standard_Complex_Polynomials.Copy(q(i),st_rndcffsys(i));
     end loop;
-  end Initialize_Random_Coefficient_System;
+  end Initialize_Random_Standard_Coefficient_System;
 
   procedure Initialize_Random_DoblDobl_Coefficient_System
               ( q : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
@@ -172,63 +211,200 @@ package body Cells_Container is
     end loop;
   end Initialize_Random_QuadDobl_Coefficient_System;
 
-  procedure Create_Polyhedral_Homotopy is
+  procedure Standard_Polyhedral_Homotopy is
+
+    use Standard_Complex_Solutions;
+    use Standard_Complex_Laur_Functions;
+    use Standard_Complex_Laur_Systems;
+    use Standard_Complex_Laur_SysFun;
+    use Standard_Complex_Laur_JacoMats;
+    use Standard_Poly_Laur_Convertors;
 
     q : Standard_Complex_Poly_Systems.Link_to_Poly_Sys renames st_rndcffsys;
     use Standard_Complex_Vectors,Standard_Complex_VecVecs;
     len : constant integer32 := integer32(Cells_Container.Length);
 
   begin
-    if lq /= null
-     then Clear(lq);
+    if st_lq /= null
+     then Clear(st_lq);
     end if;
-    lq := new Laur_Sys'(Polynomial_to_Laurent_System(q.all));
-    if hq /= null
-     then Clear(hq);
+    st_lq := new Laur_Sys'(Polynomial_to_Laurent_System(q.all));
+    if st_hq /= null
+     then Clear(st_hq);
     end if;
-    hq := new Eval_Coeff_Laur_Sys'(Create(lq.all));
-    if homty_expvec /= null
-     then Clear(homty_expvec);
+    st_hq := new Eval_Coeff_Laur_Sys'(Create(st_lq.all));
+    if st_homty_expvec /= null
+     then Clear(st_homty_expvec);
     end if;
-    homty_expvec := new Exponent_Vectors_Array'(Create(q.all));
-    if homty_coeffv /= null then
-      for i in homty_coeffv'range loop
-        if homty_coeffv(i) /= null
-         then Clear(homty_coeffv(i));
+    st_homty_expvec := new Exponent_Vectors_Array'(Create(q.all));
+    if st_homty_coeffv /= null then
+      for i in st_homty_coeffv'range loop
+        if st_homty_coeffv(i) /= null
+         then Clear(st_homty_coeffv(i));
         end if;
       end loop;
     end if;
-    homty_coeffv := new Standard_Complex_VecVecs.VecVec(q'range);
+    st_homty_coeffv := new Standard_Complex_VecVecs.VecVec(q'range);
     for i in q'range loop
       declare
-        c : constant Standard_Complex_Vectors.Vector := Coeff(lq(i));
+        c : constant Standard_Complex_Vectors.Vector := Coeff(st_lq(i));
       begin
-        homty_coeffv(i) := new Standard_Complex_Vectors.Vector(c'range);
+        st_homty_coeffv(i) := new Standard_Complex_Vectors.Vector(c'range);
         for j in c'range loop
-          homty_coeffv(i)(j) := c(j);
+          st_homty_coeffv(i)(j) := c(j);
         end loop;
       end;
     end loop;
-    if homty_jacmat /= null
-     then Clear(homty_jacmat);
+    if st_homty_jacmat /= null
+     then Clear(st_homty_jacmat);
     end if;
-    homty_jacmat := new Eval_Coeff_Jaco_Mat(q'range,q'first..q'last+1);
-    if homty_mulfac /= null
-     then Clear(homty_mulfac);
+    st_homty_jacmat := new Eval_Coeff_Jaco_Mat(q'range,q'first..q'last+1);
+    if st_homty_mulfac /= null
+     then Clear(st_homty_mulfac);
     end if;
-    homty_mulfac
-      := new Mult_Factors(homty_jacmat'range(1),homty_jacmat'range(2));
-    Create(lq.all,homty_jacmat.all,homty_mulfac.all);
-    if start_sols /= null
-     then Clear(start_sols);
+    st_homty_mulfac
+      := new Mult_Factors(st_homty_jacmat'range(1),st_homty_jacmat'range(2));
+    Create(st_lq.all,st_homty_jacmat.all,st_homty_mulfac.all);
+    if st_start_sols /= null
+     then Clear(st_start_sols);
     end if;
-    start_sols := new Array_of_Solution_Lists(1..len);
-    if target_sols /= null
-     then Clear(target_sols);
+    st_start_sols := new Array_of_Solution_Lists(1..len);
+    if st_target_sols /= null
+     then Clear(st_target_sols);
     end if;
-    target_sols := new Array_of_Solution_Lists(1..len);
-    target_last := new Array_of_Solution_Lists(1..len);
-  end Create_Polyhedral_Homotopy;
+    st_target_sols := new Array_of_Solution_Lists(1..len);
+    st_target_last := new Array_of_Solution_Lists(1..len);
+  end Standard_Polyhedral_Homotopy;
+
+  procedure DoblDobl_Polyhedral_Homotopy is
+
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Complex_Laur_Functions;
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Complex_Laur_SysFun;
+    use DoblDobl_Complex_Laur_JacoMats;
+    use DoblDobl_Poly_Laur_Convertors;
+
+    q : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys renames dd_rndcffsys;
+    use DoblDobl_Complex_Vectors,DoblDobl_Complex_VecVecs;
+    len : constant integer32 := integer32(Cells_Container.Length);
+
+  begin
+    if dd_lq /= null
+     then Clear(dd_lq);
+    end if;
+    dd_lq := new Laur_Sys'(Polynomial_to_Laurent_System(q.all));
+    if dd_hq /= null
+     then Clear(dd_hq);
+    end if;
+    dd_hq := new Eval_Coeff_Laur_Sys'(Create(dd_lq.all));
+    if dd_homty_expvec /= null
+     then Clear(dd_homty_expvec);
+    end if;
+    dd_homty_expvec := new Exponent_Vectors_Array'(Create(q.all));
+    if dd_homty_coeffv /= null then
+      for i in dd_homty_coeffv'range loop
+        if dd_homty_coeffv(i) /= null
+         then Clear(dd_homty_coeffv(i));
+        end if;
+      end loop;
+    end if;
+    dd_homty_coeffv := new DoblDobl_Complex_VecVecs.VecVec(q'range);
+    for i in q'range loop
+      declare
+        c : constant DoblDobl_Complex_Vectors.Vector := Coeff(dd_lq(i));
+      begin
+        dd_homty_coeffv(i) := new DoblDobl_Complex_Vectors.Vector(c'range);
+        for j in c'range loop
+          dd_homty_coeffv(i)(j) := c(j);
+        end loop;
+      end;
+    end loop;
+    if dd_homty_jacmat /= null
+     then Clear(dd_homty_jacmat);
+    end if;
+    dd_homty_jacmat := new Eval_Coeff_Jaco_Mat(q'range,q'first..q'last+1);
+    if dd_homty_mulfac /= null
+     then Clear(dd_homty_mulfac);
+    end if;
+    dd_homty_mulfac
+      := new Mult_Factors(dd_homty_jacmat'range(1),dd_homty_jacmat'range(2));
+    Create(dd_lq.all,dd_homty_jacmat.all,dd_homty_mulfac.all);
+    if dd_start_sols /= null
+     then Clear(dd_start_sols);
+    end if;
+    dd_start_sols := new Array_of_Solution_Lists(1..len);
+    if dd_target_sols /= null
+     then Clear(dd_target_sols);
+    end if;
+    dd_target_sols := new Array_of_Solution_Lists(1..len);
+    dd_target_last := new Array_of_Solution_Lists(1..len);
+  end DoblDobl_Polyhedral_Homotopy;
+
+  procedure QuadDobl_Polyhedral_Homotopy is
+
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Complex_Laur_Functions;
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Complex_Laur_SysFun;
+    use QuadDobl_Complex_Laur_JacoMats;
+    use QuadDobl_Poly_Laur_Convertors;
+
+    q : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys renames qd_rndcffsys;
+    use QuadDobl_Complex_Vectors,QuadDobl_Complex_VecVecs;
+    len : constant integer32 := integer32(Cells_Container.Length);
+
+  begin
+    if qd_lq /= null
+     then Clear(qd_lq);
+    end if;
+    qd_lq := new Laur_Sys'(Polynomial_to_Laurent_System(q.all));
+    if qd_hq /= null
+     then Clear(qd_hq);
+    end if;
+    qd_hq := new Eval_Coeff_Laur_Sys'(Create(qd_lq.all));
+    if qd_homty_expvec /= null
+     then Clear(qd_homty_expvec);
+    end if;
+    qd_homty_expvec := new Exponent_Vectors_Array'(Create(q.all));
+    if qd_homty_coeffv /= null then
+      for i in qd_homty_coeffv'range loop
+        if qd_homty_coeffv(i) /= null
+         then Clear(qd_homty_coeffv(i));
+        end if;
+      end loop;
+    end if;
+    qd_homty_coeffv := new QuadDobl_Complex_VecVecs.VecVec(q'range);
+    for i in q'range loop
+      declare
+        c : constant QuadDobl_Complex_Vectors.Vector := Coeff(qd_lq(i));
+      begin
+        qd_homty_coeffv(i) := new QuadDobl_Complex_Vectors.Vector(c'range);
+        for j in c'range loop
+          qd_homty_coeffv(i)(j) := c(j);
+        end loop;
+      end;
+    end loop;
+    if qd_homty_jacmat /= null
+     then Clear(qd_homty_jacmat);
+    end if;
+    qd_homty_jacmat := new Eval_Coeff_Jaco_Mat(q'range,q'first..q'last+1);
+    if qd_homty_mulfac /= null
+     then Clear(qd_homty_mulfac);
+    end if;
+    qd_homty_mulfac
+      := new Mult_Factors(qd_homty_jacmat'range(1),qd_homty_jacmat'range(2));
+    Create(qd_lq.all,qd_homty_jacmat.all,qd_homty_mulfac.all);
+    if qd_start_sols /= null
+     then Clear(qd_start_sols);
+    end if;
+    qd_start_sols := new Array_of_Solution_Lists(1..len);
+    if qd_target_sols /= null
+     then Clear(qd_target_sols);
+    end if;
+    qd_target_sols := new Array_of_Solution_Lists(1..len);
+    qd_target_last := new Array_of_Solution_Lists(1..len);
+  end QuadDobl_Polyhedral_Homotopy;
 
 -- SELECTORS :
 
@@ -320,17 +496,17 @@ package body Cells_Container is
     return cells;
   end Retrieve;
 
-  function Retrieve_Random_Coefficient_System
+  function Retrieve_Random_Standard_Coefficient_System
              return Standard_Complex_Poly_Systems.Poly_Sys is
   begin
     return st_rndcffsys.all;
-  end Retrieve_Random_Coefficient_System;
+  end Retrieve_Random_Standard_Coefficient_System;
 
-  function Retrieve_Random_Coefficient_System
+  function Retrieve_Random_Standard_Coefficient_System
              return Standard_Complex_Poly_Systems.Link_to_Poly_Sys is
   begin
     return st_rndcffsys;
-  end Retrieve_Random_Coefficient_System;
+  end Retrieve_Random_Standard_Coefficient_System;
 
   function Retrieve_Random_DoblDobl_Coefficient_System
              return DoblDobl_Complex_Poly_Systems.Poly_Sys is
@@ -356,25 +532,71 @@ package body Cells_Container is
     return qd_rndcffsys;
   end Retrieve_Random_QuadDobl_Coefficient_System;
 
-  function Retrieve_Start_Solution
-             ( k,i : natural32 ) return Link_to_Solution is
+  function Retrieve_Standard_Start_Solution
+             ( k,i : natural32 )
+             return Standard_Complex_Solutions.Link_to_Solution is
   begin
-    if Is_Null(start_sols(integer32(k)))
+    if Standard_Complex_Solutions.Is_Null(st_start_sols(integer32(k)))
      then return null;
      else return Standard_Complex_Solutions.Retrieve
-                   (start_sols(integer32(k)),i);
+                   (st_start_sols(integer32(k)),i);
     end if;
-  end Retrieve_Start_Solution;
+  end Retrieve_Standard_Start_Solution;
 
-  function Retrieve_Target_Solution
-             ( k,i : natural32 ) return Link_to_Solution is
+  function Retrieve_Standard_Target_Solution
+             ( k,i : natural32 )
+             return Standard_Complex_Solutions.Link_to_Solution is
   begin
-    if Is_Null(target_sols(integer32(k)))
+    if Standard_Complex_Solutions.Is_Null(st_target_sols(integer32(k)))
      then return null;
      else return Standard_Complex_Solutions.Retrieve
-                   (target_sols(integer32(k)),i);
+                   (st_target_sols(integer32(k)),i);
     end if;
-  end Retrieve_Target_Solution;
+  end Retrieve_Standard_Target_Solution;
+
+  function Retrieve_DoblDobl_Start_Solution
+             ( k,i : natural32 )
+             return DoblDobl_Complex_Solutions.Link_to_Solution is
+  begin
+    if DoblDobl_Complex_Solutions.Is_Null(dd_start_sols(integer32(k)))
+     then return null;
+     else return DoblDobl_Complex_Solutions.Retrieve
+                   (dd_start_sols(integer32(k)),i);
+    end if;
+  end Retrieve_DoblDobl_Start_Solution;
+
+  function Retrieve_DoblDobl_Target_Solution
+             ( k,i : natural32 )
+             return DoblDobl_Complex_Solutions.Link_to_Solution is
+  begin
+    if DoblDobl_Complex_Solutions.Is_Null(dd_target_sols(integer32(k)))
+     then return null;
+     else return DoblDobl_Complex_Solutions.Retrieve
+                   (dd_target_sols(integer32(k)),i);
+    end if;
+  end Retrieve_DoblDobl_Target_Solution;
+
+  function Retrieve_QuadDobl_Start_Solution
+             ( k,i : natural32 )
+             return QuadDobl_Complex_Solutions.Link_to_Solution is
+  begin
+    if QuadDobl_Complex_Solutions.Is_Null(qd_start_sols(integer32(k)))
+     then return null;
+     else return QuadDobl_Complex_Solutions.Retrieve
+                   (qd_start_sols(integer32(k)),i);
+    end if;
+  end Retrieve_QuadDobl_Start_Solution;
+
+  function Retrieve_QuadDobl_Target_Solution
+             ( k,i : natural32 )
+             return QuadDobl_Complex_Solutions.Link_to_Solution is
+  begin
+    if QuadDobl_Complex_Solutions.Is_Null(qd_target_sols(integer32(k)))
+     then return null;
+     else return QuadDobl_Complex_Solutions.Retrieve
+                   (qd_target_sols(integer32(k)),i);
+    end if;
+  end Retrieve_QuadDobl_Target_Solution;
 
 -- CONSTRUCTOR :
 
@@ -432,7 +654,11 @@ package body Cells_Container is
     Cells_Container.Append(mic);
   end Append_Mixed_Cell;
 
-  procedure Solve_Start_System ( k : in natural32; mv : out natural32 ) is
+  procedure Solve_Standard_Start_System
+              ( k : in natural32; mv : out natural32 ) is
+
+    use Standard_Complex_Solutions;
+    use Standard_Poly_Laur_Convertors;
 
     mic : Mixed_Cell;
     tol_zero : constant double_float := 1.0E-12;
@@ -454,7 +680,7 @@ package body Cells_Container is
       begin
         sub_q := Select_Terms(q.all,mix.all,mic.pts.all);
         lau_q := Polynomial_to_Laurent_System(sub_q);
-        Shift(lau_q);
+        Transforming_Laurent_Systems.Shift(lau_q);
        -- put_line("The supported start system : "); put_line(sub_q);
         Standard_Simpomial_Solvers.Solve(lau_q,tol_zero,sols,fail,zero_y);
         if fail then
@@ -462,7 +688,7 @@ package body Cells_Container is
          -- put_line("The system is not a fewnomial system!");
         else
           mv := Length_Of(sols);
-          start_sols(integer32(k)) := sols;
+          st_start_sols(integer32(k)) := sols;
         end if;
         Standard_Complex_Poly_Systems.Clear(sub_q);
         Standard_Complex_Laur_Systems.Clear(lau_q);
@@ -478,13 +704,119 @@ package body Cells_Container is
       put_line("Exception raised for mixed cell with supports :");
       put(mic.pts.all);
       raise;
-  end Solve_Start_System;
+  end Solve_Standard_Start_System;
 
-  procedure Track_Solution_Path ( k,i,otp : in natural32 ) is
+  procedure Solve_DoblDobl_Start_System
+              ( k : in natural32; mv : out natural32 ) is
+
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Poly_Laur_Convertors;
+
+    mic : Mixed_Cell;
+    tol_zero : constant double_double := create(1.0E-12);
+    fail,zero_y : boolean;
+
+  begin
+   -- put("Before retrieval of mixed cell k = "); put(k,1); put_line(" ...");
+    Retrieve(k,mic,fail);
+    if fail then
+      mv := 0;
+    else
+     -- put("... retrieval of cell "); put(k,1); put_line(" succeeded.");
+      declare
+        q : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+            renames dd_rndcffsys;
+        sub_q : DoblDobl_Complex_Poly_Systems.Poly_Sys(q'range);
+        lau_q : DoblDobl_Complex_Laur_Systems.Laur_Sys(q'range);
+        sols : Solution_List;
+      begin
+        sub_q := Select_Terms(q.all,mix.all,mic.pts.all);
+        lau_q := Polynomial_to_Laurent_System(sub_q);
+        Transforming_Laurent_Systems.Shift(lau_q);
+       -- put_line("The supported start system : "); put_line(sub_q);
+        DoblDobl_Simpomial_Solvers.Solve(lau_q,tol_zero,sols,fail,zero_y);
+        if fail then
+          mv := 0;
+         -- put_line("The system is not a fewnomial system!");
+        else
+          mv := Length_Of(sols);
+          dd_start_sols(integer32(k)) := sols;
+        end if;
+        DoblDobl_Complex_Poly_Systems.Clear(sub_q);
+        DoblDobl_Complex_Laur_Systems.Clear(lau_q);
+      exception
+        when others =>
+          put_line("Exception raised for supported subsystem :");
+          put_line(sub_q);
+          raise;
+      end;
+    end if;
+  exception
+    when others =>
+      put_line("Exception raised for mixed cell with supports :");
+      put(mic.pts.all);
+      raise;
+  end Solve_DoblDobl_Start_System;
+
+  procedure Solve_QuadDobl_Start_System
+              ( k : in natural32; mv : out natural32 ) is
+
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Poly_Laur_Convertors;
+
+    mic : Mixed_Cell;
+    tol_zero : constant quad_double := create(1.0E-12);
+    fail,zero_y : boolean;
+
+  begin
+   -- put("Before retrieval of mixed cell k = "); put(k,1); put_line(" ...");
+    Retrieve(k,mic,fail);
+    if fail then
+      mv := 0;
+    else
+     -- put("... retrieval of cell "); put(k,1); put_line(" succeeded.");
+      declare
+        q : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+            renames qd_rndcffsys;
+        sub_q : QuadDobl_Complex_Poly_Systems.Poly_Sys(q'range);
+        lau_q : QuadDobl_Complex_Laur_Systems.Laur_Sys(q'range);
+        sols : Solution_List;
+      begin
+        sub_q := Select_Terms(q.all,mix.all,mic.pts.all);
+        lau_q := Polynomial_to_Laurent_System(sub_q);
+        Transforming_Laurent_Systems.Shift(lau_q);
+       -- put_line("The supported start system : "); put_line(sub_q);
+        QuadDobl_Simpomial_Solvers.Solve(lau_q,tol_zero,sols,fail,zero_y);
+        if fail then
+          mv := 0;
+         -- put_line("The system is not a fewnomial system!");
+        else
+          mv := Length_Of(sols);
+          qd_start_sols(integer32(k)) := sols;
+        end if;
+        QuadDobl_Complex_Poly_Systems.Clear(sub_q);
+        QuadDobl_Complex_Laur_Systems.Clear(lau_q);
+      exception
+        when others =>
+          put_line("Exception raised for supported subsystem :");
+          put_line(sub_q);
+          raise;
+      end;
+    end if;
+  exception
+    when others =>
+      put_line("Exception raised for mixed cell with supports :");
+      put(mic.pts.all);
+      raise;
+  end Solve_QuadDobl_Start_System;
+
+  procedure Track_Standard_Solution_Path ( k,i,otp : in natural32 ) is
+
+    use Standard_Complex_Solutions;
 
     fail : boolean;
     mic : Mixed_Cell;
-    ls : constant Link_to_Solution := Retrieve_Start_Solution(k,i);
+    ls : constant Link_to_Solution := Retrieve_Standard_Start_Solution(k,i);
     ns : constant Link_to_Solution := new Solution'(ls.all);
     s : Solution_List;
 
@@ -493,38 +825,143 @@ package body Cells_Container is
     Construct(ns,s);
     if otp = 0 then
       Mixed_Continuation
-        (mix.all,lifsup.all,hq.all,homty_coeffv.all,homty_expvec.all,
-         homty_jacmat.all,homty_mulfac.all,mic.nor.all,s);
+        (mix.all,lifsup.all,st_hq.all,st_homty_coeffv.all,st_homty_expvec.all,
+         st_homty_jacmat.all,st_homty_mulfac.all,mic.nor.all,s);
     else
       if PHCpack_Operations.Is_File_Defined then
-        Mixed_Continuation(PHCpack_Operations.Output_File,
-           mix.all,lifsup.all,hq.all,homty_coeffv.all,homty_expvec.all,
-           homty_jacmat.all,homty_mulfac.all,mic.nor.all,s);
+        Mixed_Continuation(PHCpack_Operations.Output_File,mix.all,
+           lifsup.all,st_hq.all,st_homty_coeffv.all,st_homty_expvec.all,
+           st_homty_jacmat.all,st_homty_mulfac.all,mic.nor.all,s);
       else
-        Mixed_Continuation(standard_output,
-           mix.all,lifsup.all,hq.all,homty_coeffv.all,homty_expvec.all,
-           homty_jacmat.all,homty_mulfac.all,mic.nor.all,s);
+        Mixed_Continuation(standard_output,mix.all,
+           lifsup.all,st_hq.all,st_homty_coeffv.all,st_homty_expvec.all,
+           st_homty_jacmat.all,st_homty_mulfac.all,mic.nor.all,s);
       end if;
     end if;
-    Append(target_sols(integer32(k)),target_last(integer32(k)),Head_Of(s).all);
+    Append(st_target_sols(integer32(k)),st_target_last(integer32(k)),
+           Head_Of(s).all);
     Clear(s);
-  end Track_Solution_Path;
+  end Track_Standard_Solution_Path;
 
--- DESTRUCTOR :
+  procedure Track_DoblDobl_Solution_Path ( k,i,otp : in natural32 ) is
 
-  procedure Clear is
+    use DoblDobl_Complex_Solutions;
+
+    fail : boolean;
+    mic : Mixed_Cell;
+    ls : constant Link_to_Solution := Retrieve_DoblDobl_Start_Solution(k,i);
+    ns : constant Link_to_Solution := new Solution'(ls.all);
+    s : Solution_List;
+
+  begin
+    Retrieve(k,mic,fail);
+    Construct(ns,s);
+    if otp = 0 then
+      Mixed_Continuation
+        (mix.all,lifsup.all,dd_hq.all,dd_homty_coeffv.all,dd_homty_expvec.all,
+         dd_homty_jacmat.all,dd_homty_mulfac.all,mic.nor.all,s);
+    else
+      if PHCpack_Operations.Is_File_Defined then
+        Mixed_Continuation(PHCpack_Operations.Output_File,mix.all,
+           lifsup.all,dd_hq.all,dd_homty_coeffv.all,dd_homty_expvec.all,
+           dd_homty_jacmat.all,dd_homty_mulfac.all,mic.nor.all,s);
+      else
+        Mixed_Continuation(standard_output,mix.all,
+           lifsup.all,dd_hq.all,dd_homty_coeffv.all,dd_homty_expvec.all,
+           dd_homty_jacmat.all,dd_homty_mulfac.all,mic.nor.all,s);
+      end if;
+    end if;
+    Append(dd_target_sols(integer32(k)),dd_target_last(integer32(k)),
+           Head_Of(s).all);
+    Clear(s);
+  end Track_DoblDobl_Solution_Path;
+
+  procedure Track_QuadDobl_Solution_Path ( k,i,otp : in natural32 ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    fail : boolean;
+    mic : Mixed_Cell;
+    ls : constant Link_to_Solution := Retrieve_QuadDobl_Start_Solution(k,i);
+    ns : constant Link_to_Solution := new Solution'(ls.all);
+    s : Solution_List;
+
+  begin
+    Retrieve(k,mic,fail);
+    Construct(ns,s);
+    if otp = 0 then
+      Mixed_Continuation
+        (mix.all,lifsup.all,qd_hq.all,qd_homty_coeffv.all,qd_homty_expvec.all,
+         qd_homty_jacmat.all,qd_homty_mulfac.all,mic.nor.all,s);
+    else
+      if PHCpack_Operations.Is_File_Defined then
+        Mixed_Continuation(PHCpack_Operations.Output_File,mix.all,
+           lifsup.all,qd_hq.all,qd_homty_coeffv.all,qd_homty_expvec.all,
+           qd_homty_jacmat.all,qd_homty_mulfac.all,mic.nor.all,s);
+      else
+        Mixed_Continuation(standard_output,mix.all,
+           lifsup.all,qd_hq.all,qd_homty_coeffv.all,qd_homty_expvec.all,
+           qd_homty_jacmat.all,qd_homty_mulfac.all,mic.nor.all,s);
+      end if;
+    end if;
+    Append(qd_target_sols(integer32(k)),qd_target_last(integer32(k)),
+           Head_Of(s).all);
+    Clear(s);
+  end Track_QuadDobl_Solution_Path;
+
+-- DESTRUCTORS :
+
+  procedure Clear_Cell_Data is
   begin
     Deep_Clear(lifsup);
     Deep_Clear(cells);
     Standard_Integer_Vectors.Clear(mix);
+  end Clear_Cell_Data;
+
+  procedure Clear_Standard_Data is
+  begin
+    Clear(st_homty_expvec);
     Standard_Complex_Poly_Systems.Clear(st_rndcffsys);
-    Standard_Complex_Laur_Systems.Clear(lq);
-    Standard_Complex_Laur_SysFun.Clear(hq);
-    Clear(homty_expvec);
-    Standard_Complex_VecVecs.Deep_Clear(homty_coeffv);
-    Clear(homty_jacmat);
-    Clear(homty_mulfac);
-    Clear(start_sols); Clear(target_sols);
+    Standard_Complex_Laur_Systems.Clear(st_lq);
+    Standard_Complex_Laur_SysFun.Clear(st_hq);
+    Standard_Complex_VecVecs.Deep_Clear(st_homty_coeffv);
+    Standard_Complex_Laur_JacoMats.Clear(st_homty_jacmat);
+    Standard_Complex_Laur_JacoMats.Clear(st_homty_mulfac);
+    Standard_Complex_Solutions.Clear(st_start_sols);
+    Standard_Complex_Solutions.Clear(st_target_sols);
+  end Clear_Standard_Data;
+
+  procedure Clear_DoblDobl_Data is
+  begin
+    Clear(dd_homty_expvec);
+    DoblDobl_Complex_Poly_Systems.Clear(dd_rndcffsys);
+    DoblDobl_Complex_Laur_Systems.Clear(dd_lq);
+    DoblDobl_Complex_Laur_SysFun.Clear(dd_hq);
+    DoblDobl_Complex_VecVecs.Deep_Clear(dd_homty_coeffv);
+    DoblDobl_Complex_Laur_JacoMats.Clear(dd_homty_jacmat);
+    DoblDobl_Complex_Laur_JacoMats.Clear(dd_homty_mulfac);
+    DoblDobl_Complex_Solutions.Clear(dd_start_sols);
+    DoblDobl_Complex_Solutions.Clear(dd_target_sols);
+  end Clear_DoblDobl_Data;
+
+  procedure Clear_QuadDobl_Data is
+  begin
+    Clear(qd_homty_expvec);
+    QuadDobl_Complex_Poly_Systems.Clear(qd_rndcffsys);
+    QuadDobl_Complex_Laur_Systems.Clear(qd_lq);
+    QuadDobl_Complex_Laur_SysFun.Clear(qd_hq);
+    QuadDobl_Complex_VecVecs.Deep_Clear(qd_homty_coeffv);
+    QuadDobl_Complex_Laur_JacoMats.Clear(qd_homty_jacmat);
+    QuadDobl_Complex_Laur_JacoMats.Clear(qd_homty_mulfac);
+    QuadDobl_Complex_Solutions.Clear(qd_start_sols);
+    QuadDobl_Complex_Solutions.Clear(qd_target_sols);
+  end Clear_QuadDobl_Data;
+
+  procedure Clear is
+  begin
+    Clear_Cell_Data;
+    Clear_Standard_Data;
+    Clear_DoblDobl_Data;
   end Clear;
 
 end Cells_Container;

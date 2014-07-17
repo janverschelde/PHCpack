@@ -5,7 +5,9 @@ with Arrays_of_Floating_Vector_Lists;   use Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
-with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 with Floating_Mixed_Subdivisions;       use Floating_Mixed_Subdivisions;
 
 package Cells_Container is
@@ -41,7 +43,7 @@ package Cells_Container is
   -- DESCRIPTION :
   --   Initializes the container with a mixed-cell configuration.
 
-  procedure Generate_Random_Coefficient_System;
+  procedure Generate_Random_Standard_Coefficient_System;
   procedure Generate_Random_DoblDobl_Coefficient_System;
   procedure Generate_Random_QuadDobl_Coefficient_System;
 
@@ -51,7 +53,7 @@ package Cells_Container is
   -- REQUIRED :
   --   The type of mixture and lifted supports are initialized.
 
-  procedure Initialize_Random_Coefficient_System
+  procedure Initialize_Random_Standard_Coefficient_System
               ( q : in Standard_Complex_Poly_Systems.Poly_Sys );
   procedure Initialize_Random_DoblDobl_Coefficient_System
               ( q : in DoblDobl_Complex_Poly_Systems.Poly_Sys );
@@ -64,12 +66,23 @@ package Cells_Container is
   -- REQUIRED :
   --   The given system must match the type of mixture and supports.
 
-  procedure Create_Polyhedral_Homotopy;
+  procedure Standard_Polyhedral_Homotopy;
 
   -- DESCRIPTION :
-  --   Using the lifting and random coefficient system,
-  --   the polyhedral homotopy is created.
-  --   Also the data structure for the solution lists are initialized.
+  --   Using the lifting and random coefficient system, sets up the
+  --   data for polyhedral homotopy continuation in standard precision.
+
+  procedure DoblDobl_Polyhedral_Homotopy;
+
+  -- DESCRIPTION :
+  --   Using the lifting and random coefficient system, sets up the
+  --   data for polyhedral homotopy continuation in double double precision.
+
+  procedure QuadDobl_Polyhedral_Homotopy;
+
+  -- DESCRIPTION :
+  --   Using the lifting and random coefficient system, sets up the
+  --   data for polyhedral homotopy continuation in double double precision.
 
 -- SELECTORS :
 
@@ -125,9 +138,9 @@ package Cells_Container is
   -- DESCRIPTION :
   --   Returns the mixed subdivision stored in the container.
 
-  function Retrieve_Random_Coefficient_System
+  function Retrieve_Random_Standard_Coefficient_System
              return Standard_Complex_Poly_Systems.Poly_Sys;
-  function Retrieve_Random_Coefficient_System
+  function Retrieve_Random_Standard_Coefficient_System
              return Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
   function Retrieve_Random_DoblDobl_Coefficient_System
              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -141,13 +154,42 @@ package Cells_Container is
   -- DESCRIPTION :
   --   Returns the random coefficient system in the container.
 
-  function Retrieve_Start_Solution
-             ( k,i : natural32 ) return Link_to_Solution;
-  function Retrieve_Target_Solution
-             ( k,i : natural32 ) return Link_to_Solution;
+  function Retrieve_Standard_Start_Solution
+             ( k,i : natural32 )
+             return Standard_Complex_Solutions.Link_to_Solution;
+  function Retrieve_Standard_Target_Solution
+             ( k,i : natural32 )
+             return Standard_Complex_Solutions.Link_to_Solution;
 
   -- DESCRIPTION :
-  --   Returns a pointer to the i-th solution of the k-th cell.
+  --   Returns a pointer to the i-th solution of the k-th cell,
+  --   as computed in standard precision.
+
+  -- REQUIRED : k <= Length.
+
+  function Retrieve_DoblDobl_Start_Solution
+             ( k,i : natural32 )
+             return DoblDobl_Complex_Solutions.Link_to_Solution;
+  function Retrieve_DoblDobl_Target_Solution
+             ( k,i : natural32 )
+             return DoblDobl_Complex_Solutions.Link_to_Solution;
+
+  -- DESCRIPTION :
+  --   Returns a pointer to the i-th solution of the k-th cell,
+  --   as computed in double double precision.
+
+  -- REQUIRED : k <= Length.
+
+  function Retrieve_QuadDobl_Start_Solution
+             ( k,i : natural32 )
+             return QuadDobl_Complex_Solutions.Link_to_Solution;
+  function Retrieve_QuadDobl_Target_Solution
+             ( k,i : natural32 )
+             return QuadDobl_Complex_Solutions.Link_to_Solution;
+
+  -- DESCRIPTION :
+  --   Returns a pointer to the i-th solution of the k-th cell,
+  --   as computed in quad double precision.
 
   -- REQUIRED : k <= Length.
 
@@ -183,20 +225,44 @@ package Cells_Container is
   --   lab     lab(i) is the label for the i-th points in the cell;
   --   normal  is the inner normal to the mixed cell.
 
-  procedure Solve_Start_System ( k : in natural32; mv : out natural32 );
+  procedure Solve_Standard_Start_System
+              ( k : in natural32; mv : out natural32 );
 
   -- DESCRIPTION :
-  --   Solves the start system defined by the k-th mixed cell.
-  --   Returns in "mv" the number of solutions, which should equal
-  --   the mixed volume of the cell.
+  --   Solves the start system defined by the k-th mixed cell in
+  --   standard precision.  Returns in "mv" the number of solutions,
+  --   which should equal the mixed volume of the cell.
 
   -- REQUIRED :
-  --   The polyhedral homotopy has been created.
+  --   The standard polyhedral homotopy has been created.
 
-  procedure Track_Solution_Path ( k,i,otp : in natural32 );
+  procedure Solve_DoblDobl_Start_System
+              ( k : in natural32; mv : out natural32 );
 
   -- DESCRIPTION :
-  --   Tracks the path originating at the i-th solution of the k-th cell.
+  --   Solves the start system defined by the k-th mixed cell in
+  --   double double precision.  Returns in "mv" the number of solutions,
+  --   which should equal the mixed volume of the cell.
+
+  -- REQUIRED :
+  --   The dobldobl polyhedral homotopy has been created.
+
+  procedure Solve_QuadDobl_Start_System
+              ( k : in natural32; mv : out natural32 );
+
+  -- DESCRIPTION :
+  --   Solves the start system defined by the k-th mixed cell in
+  --   quad double precision.  Returns in "mv" the number of solutions,
+  --   which should equal the mixed volume of the cell.
+
+  -- REQUIRED :
+  --   The quaddobl polyhedral homotopy has been created.
+
+  procedure Track_Standard_Solution_Path ( k,i,otp : in natural32 );
+
+  -- DESCRIPTION :
+  --   Tracks the path originating at the i-th solution of the k-th cell,
+  --   in standard double precision.
 
   -- REQUIRED : 
   --   The start system corresponding to the k-th mixed cell is solved.
@@ -210,11 +276,62 @@ package Cells_Container is
   -- ON RETURN :
   --   A target solution corresponding the k-th cell is added.
 
--- DESTRUCTOR :
+  procedure Track_DoblDobl_Solution_Path ( k,i,otp : in natural32 );
+
+  -- DESCRIPTION :
+  --   Tracks the path originating at the i-th solution of the k-th cell,
+  --   in double double precision.
+
+  -- REQUIRED : 
+  --   The start system corresponding to the k-th mixed cell is solved.
+
+  -- ON ENTRY :
+  --   k       number of a mixed cell in the configuration;
+  --   i       index to a solution of a binomial start system;
+  --   otp     output level, no output if zero, otherwise the number
+  --           confirms to the output code of path trackers.
+
+  -- ON RETURN :
+  --   A target solution corresponding the k-th cell is added.
+
+  procedure Track_QuadDobl_Solution_Path ( k,i,otp : in natural32 );
+
+  -- DESCRIPTION :
+  --   Tracks the path originating at the i-th solution of the k-th cell,
+  --   in quad double precision.
+
+  -- REQUIRED : 
+  --   The start system corresponding to the k-th mixed cell is solved.
+
+  -- ON ENTRY :
+  --   k       number of a mixed cell in the configuration;
+  --   i       index to a solution of a binomial start system;
+  --   otp     output level, no output if zero, otherwise the number
+  --           confirms to the output code of path trackers.
+
+  -- ON RETURN :
+  --   A target solution corresponding the k-th cell is added.
+
+-- DESTRUCTORS :
+
+  procedure Clear_Cell_Data;
+
+  -- DESCRIPTION :
+  --   Clears the cells in the container.
+
+  procedure Clear_Standard_Data;
+
+  -- DESCRIPTION :
+  --   Clears data for polyhedral homotopies in standard precision.
+
+  procedure Clear_DoblDobl_Data;
+
+  -- DESCRIPTION :
+  --   Clears data for polyhedral homotopies in double double precision.
 
   procedure Clear;
 
   -- DESCRIPTION :
-  --   Clears the cells in the container.
+  --   Clears all data stored in the container.
 
 end Cells_Container;

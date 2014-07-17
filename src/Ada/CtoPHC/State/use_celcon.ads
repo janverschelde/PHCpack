@@ -49,6 +49,9 @@ function use_celcon ( job : integer32;
 --                   b[k] = number of points in k-th support,
 --                   b[1+r+k] = label for the k-th point in cell,
 --                   c = coordinates for the inner normal to the cell.
+--
+-- operations for polyhedral homotopy in standard double precision :
+--
 --            = 16 : creates a random coefficient system, using the
 --                   type of mixture and supports in the cells container;
 --            = 17 : prompts the user for a polynomial system and stores it
@@ -56,18 +59,27 @@ function use_celcon ( job : integer32;
 --            = 18 : writes the random coefficient system to the output;
 --            = 19 : copy random coefficient system to systems container;
 --            = 20 : copy system in systems container to cells container;
---            = 21 : create a polyhedral homotopy to solve a random system;
+--            = 21 : create a polyhedral homotopy to solve a random system
+--                   in standard precision;
 --            = 22 : solve start system corresponding with the k-th cell,
+--                   in standard precision,
 --                   where k is given on input as the value of a,
 --                   on return in b is the number of solutions found;
 --            = 23 : track the path starting at the i-th start solution 
---                   corresponding to the k-th mixed cell, on entry:
+--                   corresponding to the k-th mixed cell, 
+--                   in standard double precision, on entry:
 --                   a[0] = k, index to the corresponding mixed cell,
 --                   b[0] = i, index to a start solution,
 --                   b[1] = output code for the path trackers,
 --                   on return: a target solution has been added;
 --            = 24 : copy i-th target solution of the k-th cell to the
---                   solutions container, on entry: a = k and b = i.
+--                   standard solutions container, on entry: a = k and b = i;
+--            = 25 : permutes the systems in the containers for standard
+--                   complex polynomial and Laurent systems based on
+--                   the induced permutation of the supports.
+--
+-- operations for polyhedral homotopy in double double precision :
+--
 --            = 26 : creates a random coefficient system, using the
 --                   type of mixture and supports in the cells container,
 --                   with double double coefficients;
@@ -80,6 +92,24 @@ function use_celcon ( job : integer32;
 --                   of polynomial systems with double double coefficients;
 --            = 30 : copy system in systems container for double double
 --                   complex coefficients into the cells container.
+--            = 31 : create a polyhedral homotopy to solve a random system
+--                   in double double precision;
+--            = 32 : solve start system corresponding with the k-th cell,
+--                   in double double precision,
+--                   where k is given on input as the value of a,
+--                   on return in b is the number of solutions found;
+--            = 33 : track the path starting at the i-th start solution 
+--                   corresponding to the k-th mixed cell, 
+--                   in standard double precision, on entry:
+--                   a[0] = k, index to the corresponding mixed cell,
+--                   b[0] = i, index to a start solution,
+--                   b[1] = output code for the path trackers,
+--                   on return: a target solution has been added;
+--            = 34 : copy i-th target solution of the k-th cell to the
+--                   dobldobl solutions container, on entry: a = k and b = i.
+--
+-- operations for polyhedral homotopy in quad double precision :
+--
 --            = 36 : creates a random coefficient system, using the
 --                   type of mixture and supports in the cells container,
 --                   with double double coefficients;
@@ -91,7 +121,22 @@ function use_celcon ( job : integer32;
 --            = 39 : copy random coefficient system to systems container
 --                   of polynomial systems with double double coefficients;
 --            = 40 : copy system in systems container for double double
---                   complex coefficients into the cells container.
+--                   complex coefficients into the cells container;
+--            = 41 : create a polyhedral homotopy to solve a random system
+--                   in quad double precision;
+--            = 42 : solve start system corresponding with the k-th cell,
+--                   in double double precision,
+--                   where k is given on input as the value of a,
+--                   on return in b is the number of solutions found;
+--            = 43 : track the path starting at the i-th start solution 
+--                   corresponding to the k-th mixed cell, 
+--                   in standard double precision, on entry:
+--                   a[0] = k, index to the corresponding mixed cell,
+--                   b[0] = i, index to a start solution,
+--                   b[1] = output code for the path trackers,
+--                   on return: a target solution has been added;
+--            = 44 : copy i-th target solution of the k-th cell to the
+--                   quaddobl solutions container, on entry: a = k and b = i.
 
 -- ON RETURN :
 --   0 if operation was successful, otherwise something went wrong...

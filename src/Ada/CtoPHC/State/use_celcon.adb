@@ -17,7 +17,9 @@ with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;  use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
-with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 with Supports_of_Polynomial_Systems;
 with Floating_Mixed_Subdivisions;       use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;    use Floating_Mixed_Subdivisions_io;
@@ -32,6 +34,8 @@ with DoblDobl_PolySys_Container;
 with QuadDobl_PolySys_Container;
 with Laurent_Systems_Container;
 with Standard_Solutions_Container;
+with DoblDobl_Solutions_Container;
+with QuadDobl_Solutions_Container;
 with Cells_Container;                   use Cells_Container;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 
@@ -356,7 +360,7 @@ function use_celcon ( job : integer32;
     new_line;
     put_line("Reading a random coefficient polynomial system ...");
     get(q);
-    Cells_Container.Initialize_Random_Coefficient_System(q.all);
+    Cells_Container.Initialize_Random_Standard_Coefficient_System(q.all);
     return 0;
   end Job17;
 
@@ -387,7 +391,7 @@ function use_celcon ( job : integer32;
   function Job18 return integer32 is -- write random coefficient system
 
     q : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
-      := Cells_Container.Retrieve_Random_Coefficient_System;
+      := Cells_Container.Retrieve_Random_Standard_Coefficient_System;
 
   begin
     if PHCpack_Operations.Is_File_Defined then
@@ -441,7 +445,7 @@ function use_celcon ( job : integer32;
   function Job19 return integer32 is -- copy into st systems container
 
     q : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
-      := Cells_Container.Retrieve_Random_Coefficient_System;
+      := Cells_Container.Retrieve_Random_Standard_Coefficient_System;
 
   begin
     Standard_PolySys_Container.Initialize(q.all);
@@ -474,7 +478,7 @@ function use_celcon ( job : integer32;
       := Standard_PolySys_Container.Retrieve;
 
   begin
-    Cells_Container.Initialize_Random_Coefficient_System(q.all);
+    Cells_Container.Initialize_Random_Standard_Coefficient_System(q.all);
     return 0;
   end Job20;
 
@@ -498,7 +502,7 @@ function use_celcon ( job : integer32;
     return 0;
   end Job40;
 
-  function Job22 return integer32 is -- solve a start system
+  function Job22 return integer32 is -- solve a standard start system
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     k : constant natural32 := natural32(va(va'first));
@@ -506,11 +510,39 @@ function use_celcon ( job : integer32;
 
   begin
    -- put("Entering Job22 with k = "); put(k,1); put_line(" ...");
-    Cells_Container.Solve_Start_System(k,mv);
+    Cells_Container.Solve_Standard_Start_System(k,mv);
     Assign(integer32(mv),b);
    -- put("... leaving Job22 with mv = "); put(mv,1); put_line(".");
     return 0;
   end Job22;
+
+  function Job32 return integer32 is -- solve a dobldobl start system
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant natural32 := natural32(va(va'first));
+    mv : natural32;
+
+  begin
+   -- put("Entering Job22 with k = "); put(k,1); put_line(" ...");
+    Cells_Container.Solve_DoblDobl_Start_System(k,mv);
+    Assign(integer32(mv),b);
+   -- put("... leaving Job22 with mv = "); put(mv,1); put_line(".");
+    return 0;
+  end Job32;
+
+  function Job42 return integer32 is -- solve a quaddobl start system
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant natural32 := natural32(va(va'first));
+    mv : natural32;
+
+  begin
+   -- put("Entering Job22 with k = "); put(k,1); put_line(" ...");
+    Cells_Container.Solve_QuadDobl_Start_System(k,mv);
+    Assign(integer32(mv),b);
+   -- put("... leaving Job22 with mv = "); put(mv,1); put_line(".");
+    return 0;
+  end Job42;
 
   function Job23 return integer32 is -- track a solution path
 
@@ -522,23 +554,79 @@ function use_celcon ( job : integer32;
     otp : constant natural32 := natural32(vb(vb'first+1));
 
   begin
-    Cells_Container.Track_Solution_Path(k,i,otp);
+    Cells_Container.Track_Standard_Solution_Path(k,i,otp);
     return 0;
   end Job23;
 
-  function Job24 return integer32 is -- copy target solution to container
+  function Job33 return integer32 is -- track a solution path
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant natural32 := natural32(va(va'first));
+    vb : constant C_Integer_Array
+       := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
+    i : constant natural32 := natural32(vb(vb'first));
+    otp : constant natural32 := natural32(vb(vb'first+1));
+
+  begin
+    Cells_Container.Track_DoblDobl_Solution_Path(k,i,otp);
+    return 0;
+  end Job33;
+
+  function Job43 return integer32 is -- track a solution path
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant natural32 := natural32(va(va'first));
+    vb : constant C_Integer_Array
+       := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
+    i : constant natural32 := natural32(vb(vb'first));
+    otp : constant natural32 := natural32(vb(vb'first+1));
+
+  begin
+    Cells_Container.Track_QuadDobl_Solution_Path(k,i,otp);
+    return 0;
+  end Job43;
+
+  function Job24 return integer32 is -- copy target solution to st container
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     vb : constant C_Integer_Array := C_intarrs.Value(b);
     k : constant natural32 := natural32(va(va'first));
     i : constant natural32 := natural32(vb(vb'first));
-    ls : Link_to_Solution;
+    ls : Standard_Complex_Solutions.Link_to_Solution;
 
   begin
-    ls := Cells_Container.Retrieve_Target_Solution(k,i);
+    ls := Cells_Container.Retrieve_Standard_Target_Solution(k,i);
     Standard_Solutions_Container.Append(ls.all);
     return 0;
   end Job24;
+
+  function Job34 return integer32 is -- copy target solution to dd container
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    vb : constant C_Integer_Array := C_intarrs.Value(b);
+    k : constant natural32 := natural32(va(va'first));
+    i : constant natural32 := natural32(vb(vb'first));
+    ls : DoblDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    ls := Cells_Container.Retrieve_DoblDobl_Target_Solution(k,i);
+    DoblDobl_Solutions_Container.Append(ls.all);
+    return 0;
+  end Job34;
+
+  function Job44 return integer32 is -- copy target solution to qd container
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    vb : constant C_Integer_Array := C_intarrs.Value(b);
+    k : constant natural32 := natural32(va(va'first));
+    i : constant natural32 := natural32(vb(vb'first));
+    ls : QuadDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    ls := Cells_Container.Retrieve_QuadDobl_Target_Solution(k,i);
+    QuadDobl_Solutions_Container.Append(ls.all);
+    return 0;
+  end Job44;
 
   function Job25 return integer32 is -- permute system in container 
 
@@ -613,15 +701,16 @@ function use_celcon ( job : integer32;
       when 13 => return Job13; -- append mixed cell to container
       when 14 => Cells_Container.Clear; return 0;
       when 15 => return Job15; -- retrieve a mixed cell
-      when 16 => Cells_Container.Generate_Random_Coefficient_System; return 0;
+      when 16 => Cells_Container.Generate_Random_Standard_Coefficient_System;
+                 return 0;
       when 17 => return Job17; -- initialize random coefficient system
       when 18 => return Job18; -- write random coefficient system
       when 19 => return Job19; -- copy into systems container
       when 20 => return Job20; -- copy from systems container
-      when 21 => Cells_Container.Create_Polyhedral_Homotopy; return 0;
-      when 22 => return Job22; -- solve a start system
-      when 23 => return Job23; -- track a solution path
-      when 24 => return Job24; -- copy target solution to container
+      when 21 => Cells_Container.Standard_Polyhedral_Homotopy; return 0;
+      when 22 => return Job22; -- solve a standard start system
+      when 23 => return Job23; -- track path in standard precision
+      when 24 => return Job24; -- copy target solution to st container
       when 25 => return Job25; -- permute a given target system
       when 26 => Cells_Container.Generate_Random_DoblDobl_Coefficient_System;
                  return 0;
@@ -629,12 +718,20 @@ function use_celcon ( job : integer32;
       when 28 => return Job28; -- write random dobldobl coefficient system
       when 29 => return Job29; -- copy into dobldobl systems container
       when 30 => return Job30; -- copy from dobldobl systems container
+      when 31 => Cells_Container.DoblDobl_Polyhedral_Homotopy; return 0;
+      when 32 => return Job32; -- solve a dobldobl start system
+      when 33 => return Job33; -- track path in double double precision
+      when 34 => return Job34; -- copy target solution to dd container
       when 36 => Cells_Container.Generate_Random_QuadDobl_Coefficient_System;
                  return 0;
       when 37 => return Job37; -- init random quaddobl coefficient system
       when 38 => return Job38; -- write random quaddobl coefficient system
       when 39 => return Job39; -- copy into quaddobl systems container
       when 40 => return Job40; -- copy from quaddobl systems container
+      when 41 => Cells_Container.QuadDobl_Polyhedral_Homotopy; return 0;
+      when 42 => return Job42; -- solve a quaddobl start system
+      when 43 => return Job43; -- track path in quad double precision
+      when 44 => return Job44; -- copy target solution to qd container
       when others => put_line("invalid operation"); return 1;
     end case;
   exception
