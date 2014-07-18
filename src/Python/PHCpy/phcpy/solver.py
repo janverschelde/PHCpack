@@ -332,7 +332,7 @@ def newton_step(system, solutions, precision='d', decimals=100):
     """
     Applies one Newton step to the solutions of the system.
     For each solution, prints its last line of diagnostics.
-    Three levels of precision are supported:
+    Four levels of precision are supported:
     d  : standard double precision (1.1e-15 or 2^(-53)),
     dd : double double precision (4.9e-32 or 2^(-104)),
     qd : quad double precision (1.2e-63 or 2^(-209)).
@@ -535,10 +535,11 @@ def mixed_volume(pols, stable=False):
             py2c_syscon_store_Laurential(nchar, dim, ind+1, lpol)
     return py2c_mixed_volume(stable)
 
-def random_coefficient_system(silent=False):
+def standard_random_coefficient_system(silent=False):
     """
     Runs the polyhedral homotopies and returns a random coefficient
-    system based on the contents of the cell container.
+    system based on the contents of the cell container,
+    in standard double precision arithmetic.
     For this to work, the mixed_volume function must be called first.
     """
     from phcpy2c import py2c_celcon_create_random_coefficient_system
@@ -571,6 +572,97 @@ def random_coefficient_system(silent=False):
     # newton_step(result, sols)
     return (result, sols)
 
+def dobldobl_random_coefficient_system(silent=False):
+    """
+    Runs the polyhedral homotopies and returns a random coefficient
+    system based on the contents of the cell container,
+    in double double precision arithmetic.
+    For this to work, the mixed_volume function must be called first.
+    """
+    from phcpy2c import py2c_celcon_dobldobl_random_coefficient_system
+    from phcpy2c import py2c_celcon_copy_into_dobldobl_systems_container
+    from phcpy2c import py2c_celcon_dobldobl_polyhedral_homotopy
+    from phcpy2c import py2c_celcon_number_of_cells
+    from phcpy2c import py2c_solcon_clear_dobldobl_solutions
+    from phcpy2c import py2c_celcon_solve_dobldobl_start_system
+    from phcpy2c import py2c_celcon_track_dobldobl_solution_path
+    from phcpy2c \
+        import py2c_celcon_copy_target_dobldobl_solution_to_container
+    py2c_celcon_dobldobl_random_coefficient_system()
+    py2c_celcon_copy_into_dobldobl_systems_container()
+    # py2c_syscon_write_dobldobl_system()
+    result = load_dobldobl_system()
+    # print result
+    py2c_celcon_dobldobl_polyhedral_homotopy()
+    nbcells = py2c_celcon_number_of_cells()
+    py2c_solcon_clear_dobldobl_solutions()
+    for cell in range(1, nbcells+1):
+        mixvol = py2c_celcon_solve_dobldobl_start_system(cell)
+        if not silent:
+            print 'system %d has %d solutions' % (cell, mixvol)
+        for j in range(1, mixvol+1):
+            if not silent:
+                print '-> tracking path %d out of %d' % (j, mixvol)
+            py2c_celcon_track_dobldobl_solution_path(cell, j, 0)
+            py2c_celcon_copy_target_dobldobl_solution_to_container(cell, j)
+    sols = load_dobldobl_solutions()
+    # print sols
+    # newton_step(result, sols)
+    return (result, sols)
+
+def quaddobl_random_coefficient_system(silent=False):
+    """
+    Runs the polyhedral homotopies and returns a random coefficient
+    system based on the contents of the cell container,
+    in quad double precision arithmetic.
+    For this to work, the mixed_volume function must be called first.
+    """
+    from phcpy2c import py2c_celcon_quaddobl_random_coefficient_system
+    from phcpy2c import py2c_celcon_copy_into_quaddobl_systems_container
+    from phcpy2c import py2c_celcon_quaddobl_polyhedral_homotopy
+    from phcpy2c import py2c_celcon_number_of_cells
+    from phcpy2c import py2c_solcon_clear_quaddobl_solutions
+    from phcpy2c import py2c_celcon_solve_quaddobl_start_system
+    from phcpy2c import py2c_celcon_track_quaddobl_solution_path
+    from phcpy2c \
+        import py2c_celcon_copy_target_quaddobl_solution_to_container
+    py2c_celcon_quaddobl_random_coefficient_system()
+    py2c_celcon_copy_into_quaddobl_systems_container()
+    # py2c_syscon_write_dobldobl_system()
+    result = load_quaddobl_system()
+    # print result
+    py2c_celcon_quaddobl_polyhedral_homotopy()
+    nbcells = py2c_celcon_number_of_cells()
+    py2c_solcon_clear_quaddobl_solutions()
+    for cell in range(1, nbcells+1):
+        mixvol = py2c_celcon_solve_quaddobl_start_system(cell)
+        if not silent:
+            print 'system %d has %d solutions' % (cell, mixvol)
+        for j in range(1, mixvol+1):
+            if not silent:
+                print '-> tracking path %d out of %d' % (j, mixvol)
+            py2c_celcon_track_quaddobl_solution_path(cell, j, 0)
+            py2c_celcon_copy_target_quaddobl_solution_to_container(cell, j)
+    sols = load_quaddobl_solutions()
+    # print sols
+    # newton_step(result, sols)
+    return (result, sols)
+
+def random_coefficient_system(silent=False, precision='d'):
+    """
+    Runs the polyhedral homotopies and returns a random coefficient
+    system based on the contents of the cell container.
+    For this to work, the mixed_volume function must be called first.
+    Three levels of precision are supported:
+    d  : standard double precision (1.1e-15 or 2^(-53)),
+    dd : double double precision (4.9e-32 or 2^(-104)),
+    qd : quad double precision (1.2e-63 or 2^(-209)).
+    """
+    if(precision == 'd'):
+        return standard_random_coefficient_system(silent)
+    elif(precision == 'dd'):
+        return dobldobl_random_coefficient_system(silent)
+
 def permute_system(pols):
     """
     Permutes the equations in the list of polynomials in pols
@@ -581,9 +673,42 @@ def permute_system(pols):
     py2c_celcon_permute_system()
     return load_standard_system()
 
-def test_polyhedral_homotopy():
+def test_dobldobl_polyhedral_homotopy():
     """
-    Test on jumpstarting a polyhedral homotopy.
+    Test polyhedral homotopy in double double precision
+    on a small random polynomial system.
+    """
+    qrt = random_system(2, 3, 3, 1)
+    print 'a random system :', qrt
+    mixvol = mixed_volume(qrt)
+    print 'the mixed volume is', mixvol
+    (rqs, rsols) = dobldobl_random_coefficient_system()
+    print 'the random coefficient system:'
+    for pol in rqs:
+        print pol
+    print 'found %d solutions' % len(rsols)
+    newton_step(rqs, rsols, precision='dd')
+
+def test_quaddobl_polyhedral_homotopy():
+    """
+    Test polyhedral homotopy in quad double precision
+    on a small random polynomial system.
+    """
+    qrt = random_system(2, 3, 3, 1)
+    print 'a random system :', qrt
+    mixvol = mixed_volume(qrt)
+    print 'the mixed volume is', mixvol
+    (rqs, rsols) = quaddobl_random_coefficient_system()
+    print 'the random coefficient system:'
+    for pol in rqs:
+        print pol
+    print 'found %d solutions' % len(rsols)
+    newton_step(rqs, rsols, precision='qd')
+
+def test_standard_polyhedral_homotopy():
+    """
+    Test on jumpstarting a polyhedral homotopy
+    in standard precision.
     """
     from phcpy2c import py2c_syscon_clear_system
     from phcpy2c import py2c_syscon_clear_Laurent_system
@@ -600,6 +725,21 @@ def test_polyhedral_homotopy():
     pqr = permute_system(qrt)
     qsols = track(pqr, rqs, rsols)
     newton_step(qrt, qsols)
+
+def test_polyhedral_homotopy(precision='d'):
+    """
+    Test polyhedral homotopy on small random systems
+    for standard double precision (d), double double precision (dd),
+    or quad double precision (qd).
+    """
+    if(precision == 'd'):
+        test_standard_polyhedral_homotopy()
+    elif(precision == 'dd'):
+        test_dobldobl_polyhedral_homotopy()
+    elif(precision == 'qd'):
+        test_quaddobl_polyhedral_homotopy()
+    else:
+        print 'precision not recognized'
 
 def test_solver():
     """
