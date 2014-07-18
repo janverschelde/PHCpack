@@ -60,6 +60,24 @@ void read_cells_and_create_start_system ( void );
  *   reads a mixed-cell configuration, initializes the cells container
  *   and creates a start system which is then written to screen. */
 
+void solve_standard_start_system ( int len );
+/*
+ * DESCRIPTION :
+ *   Solves a random coefficient system in standard double precions.
+ *   The input parameter in the number of cells in the container. */
+
+void solve_dobldobl_start_system ( int len );
+/*
+ * DESCRIPTION :
+ *   Solves a random coefficient system in double double precions.
+ *   The input parameter in the number of cells in the container. */
+
+void solve_quaddobl_start_system ( int len );
+/*
+ * DESCRIPTION :
+ *   Solves a random coefficient system in quad double precions.
+ *   The input parameter in the number of cells in the container. */
+
 void read_cells_and_solve_start_system ( void );
 /* 
  * DESCRIPTION :
@@ -70,6 +88,12 @@ void read_and_construct ( void );
 /*
  * DESCRIPTION :
  *   prompts the user to provide data for a mixed-cell configuration. */
+
+int prompt_for_precision ( void );
+/*
+ * DESCRIPTION :
+ *   prompts the user to select a precision level which is returned
+ *   as an int: 0 for double, 1 for double double, and 2 for quad double */
 
 int main ( void )
 {
@@ -379,21 +403,12 @@ void read_cells_and_create_start_system ( void )
    }
 }
 
-void read_cells_and_solve_start_system ( void )
+void solve_standard_start_system ( int len ) 
 {
-   int dim,n,fail,*d,r,len,k,nb,mv,tnb,tmv,i;
-   double *c;
+   int fail,nb,tnb,k,tmv,mv,i;
 
-   fail = celcon_read_mixed_cell_configuration();
-   printf("\nReading a system to initialize the symbol table...");
-   fail = read_standard_target_system();
-   fail = define_output_file();
-   fail = celcon_dimension_of_points(&dim);
-   printf("dimension of the lifted points : %d\n",dim);
-   fail = show_mixture(dim,&r);
-   fail = celcon_number_of_cells(&len);
-   printf("number of cells in the configuration : %d\n",len);
    printf("creating a random coefficient system ...\n");
+
    fail = celcon_create_random_coefficient_system();
    fail = celcon_create_polyhedral_homotopy();
 
@@ -435,4 +450,141 @@ void read_cells_and_solve_start_system ( void )
    printf("writing random coefficient system and its solutions to file ...\n");
    fail = celcon_write_random_coefficient_system();
    fail = solcon_write_solutions();
+}
+
+void solve_dobldobl_start_system ( int len ) 
+{
+   int fail,nb,tnb,k,tmv,mv,i;
+
+   printf("solving a random coefficient system with double doubles ...\n");
+
+   fail = celcon_dobldobl_random_coefficient_system();
+   fail = celcon_dobldobl_polyhedral_homotopy();
+
+   printf("solving the binomial start systems ...\n");
+   tnb = 0; tmv = 0;
+   for(k=1; k<=len; k++)
+   {
+      fail = celcon_solve_dobldobl_start_system(k,&nb);
+      printf(" -> found %d start solutions from cell %d\n",nb,k);
+      fail = celcon_mixed_volume(k,&mv);
+      if (nb == mv)
+         printf("#start solutions equals mixed volume %d, OK\n",mv);
+      else
+         printf("#start solutions does not equal mixed volume %d!!!\n",mv);
+      tnb += nb; tmv += mv;
+   }
+   if (tnb == tmv)
+      printf("Total #start solutions : %d = %d mixed volume, OK.\n",tnb,tmv);
+   else
+      printf("Total #start solutions : %d /= %d mixed volume!!!\n",tnb,tmv);
+
+   printf("tracking the solution paths ...\n");
+   for(k=1; k<=len; k++)
+   {
+      fail = celcon_mixed_volume(k,&mv);
+      for(i=1; i<=mv; i++)
+      {
+         printf("Tracking path %d corresponding to cell %d ...\n",i,k);
+         fail = celcon_track_dobldobl_solution_path(k,i,0);
+      }
+   }
+   printf("copying the target solutions to the solution container ...\n");
+   for(k=1; k<=len; k++)
+   {
+      fail = celcon_mixed_volume(k,&mv);
+      for(i=1; i<=mv; i++)
+         fail = celcon_copy_target_dobldobl_solution_to_container(k,i);
+   }
+   printf("writing random coefficient system and its solutions to file ...\n");
+   fail = celcon_write_dobldobl_random_coefficient_system();
+   fail = solcon_write_dobldobl_solutions();
+}
+
+void solve_quaddobl_start_system ( int len ) 
+{
+   int fail,nb,tnb,k,tmv,mv,i;
+
+   printf("solving a random coefficient system with quad doubles ...\n");
+
+   fail = celcon_quaddobl_random_coefficient_system();
+   fail = celcon_quaddobl_polyhedral_homotopy();
+
+   printf("solving the binomial start systems ...\n");
+   tnb = 0; tmv = 0;
+   for(k=1; k<=len; k++)
+   {
+      fail = celcon_solve_quaddobl_start_system(k,&nb);
+      printf(" -> found %d start solutions from cell %d\n",nb,k);
+      fail = celcon_mixed_volume(k,&mv);
+      if (nb == mv)
+         printf("#start solutions equals mixed volume %d, OK\n",mv);
+      else
+         printf("#start solutions does not equal mixed volume %d!!!\n",mv);
+      tnb += nb; tmv += mv;
+   }
+   if (tnb == tmv)
+      printf("Total #start solutions : %d = %d mixed volume, OK.\n",tnb,tmv);
+   else
+      printf("Total #start solutions : %d /= %d mixed volume!!!\n",tnb,tmv);
+
+   printf("tracking the solution paths ...\n");
+   for(k=1; k<=len; k++)
+   {
+      fail = celcon_mixed_volume(k,&mv);
+      for(i=1; i<=mv; i++)
+      {
+         printf("Tracking path %d corresponding to cell %d ...\n",i,k);
+         fail = celcon_track_quaddobl_solution_path(k,i,0);
+      }
+   }
+   printf("copying the target solutions to the solution container ...\n");
+   for(k=1; k<=len; k++)
+   {
+      fail = celcon_mixed_volume(k,&mv);
+      for(i=1; i<=mv; i++)
+         fail = celcon_copy_target_quaddobl_solution_to_container(k,i);
+   }
+   printf("writing random coefficient system and its solutions to file ...\n");
+   fail = celcon_write_quaddobl_random_coefficient_system();
+   fail = solcon_write_quaddobl_solutions();
+}
+
+void read_cells_and_solve_start_system ( void )
+{
+   int fail,dim,r,len,prcs;
+
+   fail = celcon_read_mixed_cell_configuration();
+   printf("\nReading a system to initialize the symbol table...");
+   fail = read_standard_target_system();
+   fail = define_output_file();
+   fail = celcon_dimension_of_points(&dim);
+   printf("dimension of the lifted points : %d\n",dim);
+   fail = show_mixture(dim,&r);
+   fail = celcon_number_of_cells(&len);
+   printf("number of cells in the configuration : %d\n",len);
+
+   prcs = prompt_for_precision();
+   if(prcs == 0)
+      solve_standard_start_system(len);
+   else if(prcs == 1)
+      solve_dobldobl_start_system(len);
+   else if(prcs == 2)
+      solve_quaddobl_start_system(len);
+   else
+      printf("invalid precision level\n");
+}
+
+int prompt_for_precision ( void )
+{
+   int result;
+
+   printf("\nMENU to select precision : \n");
+   printf("  0. standard double precision;\n");
+   printf("  1. double double precision;\n");
+   printf("  2. quad double precision;\n");
+   printf("Type 0, 1, or 2 to select the precision : ");
+   scanf("%d", &result);
+
+   return result;
 }
