@@ -352,15 +352,39 @@ static PyObject *py2c_product_m_homogeneous_start_system
 static PyObject *py2c_celcon_number_of_cells ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_create_random_coefficient_system 
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_dobldobl_random_coefficient_system 
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_quaddobl_random_coefficient_system 
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_copy_into_systems_container
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_copy_into_dobldobl_systems_container
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_copy_into_quaddobl_systems_container
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_create_polyhedral_homotopy
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_dobldobl_polyhedral_homotopy
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_quaddobl_polyhedral_homotopy
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_solve_start_system
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_solve_dobldobl_start_system
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_solve_quaddobl_start_system
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_track_solution_path
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_track_dobldobl_solution_path
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_track_quaddobl_solution_path
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_copy_target_solution_to_container
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_copy_target_dobldobl_solution_to_container
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_copy_target_quaddobl_solution_to_container
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_permute_system
  ( PyObject *self, PyObject *args );

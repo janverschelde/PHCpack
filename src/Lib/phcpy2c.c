@@ -2276,6 +2276,30 @@ static PyObject *py2c_celcon_create_random_coefficient_system
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_celcon_dobldobl_random_coefficient_system 
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = celcon_dobldobl_random_coefficient_system();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_celcon_quaddobl_random_coefficient_system 
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = celcon_quaddobl_random_coefficient_system();
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_celcon_copy_into_systems_container
  ( PyObject *self, PyObject *args )
 {
@@ -2284,6 +2308,30 @@ static PyObject *py2c_celcon_copy_into_systems_container
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
    fail = celcon_copy_into_systems_container();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_celcon_copy_into_dobldobl_systems_container
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = celcon_copy_into_dobldobl_systems_container();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_celcon_copy_into_quaddobl_systems_container
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = celcon_copy_into_quaddobl_systems_container();
 
    return Py_BuildValue("i",fail);
 }
@@ -2300,6 +2348,30 @@ static PyObject *py2c_celcon_create_polyhedral_homotopy
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_celcon_dobldobl_polyhedral_homotopy
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+  
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = celcon_dobldobl_polyhedral_homotopy();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_celcon_quaddobl_polyhedral_homotopy
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+  
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = celcon_quaddobl_polyhedral_homotopy();
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_celcon_solve_start_system
  ( PyObject *self, PyObject *args )
 {
@@ -2308,6 +2380,30 @@ static PyObject *py2c_celcon_solve_start_system
    initialize();
    if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
    fail = celcon_solve_start_system(k,&nb);
+
+   return Py_BuildValue("i",nb);
+}
+
+static PyObject *py2c_celcon_solve_dobldobl_start_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail,k,nb;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
+   fail = celcon_solve_dobldobl_start_system(k,&nb);
+
+   return Py_BuildValue("i",nb);
+}
+
+static PyObject *py2c_celcon_solve_quaddobl_start_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail,k,nb;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
+   fail = celcon_solve_quaddobl_start_system(k,&nb);
 
    return Py_BuildValue("i",nb);
 }
@@ -2324,6 +2420,30 @@ static PyObject *py2c_celcon_track_solution_path
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_celcon_track_dobldobl_solution_path
+ ( PyObject *self, PyObject *args )
+{
+   int fail,k,i,otp;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&k,&i,&otp)) return NULL;
+   fail = celcon_track_dobldobl_solution_path(k,i,otp);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_celcon_track_quaddobl_solution_path
+ ( PyObject *self, PyObject *args )
+{
+   int fail,k,i,otp;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&k,&i,&otp)) return NULL;
+   fail = celcon_track_quaddobl_solution_path(k,i,otp);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_celcon_copy_target_solution_to_container
  ( PyObject *self, PyObject *args )
 {
@@ -2332,6 +2452,30 @@ static PyObject *py2c_celcon_copy_target_solution_to_container
    initialize();
    if(!PyArg_ParseTuple(args,"ii",&k,&i)) return NULL;
    fail = celcon_copy_target_solution_to_container(k,i);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_celcon_copy_target_dobldobl_solution_to_container
+ ( PyObject *self, PyObject *args )
+{
+   int fail,k,i;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&k,&i)) return NULL;
+   fail = celcon_copy_target_dobldobl_solution_to_container(k,i);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_celcon_copy_target_quaddobl_solution_to_container
+ ( PyObject *self, PyObject *args )
+{
+   int fail,k,i;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&k,&i)) return NULL;
+   fail = celcon_copy_target_quaddobl_solution_to_container(k,i);
 
    return Py_BuildValue("i",fail);
 }
@@ -3739,21 +3883,57 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_celcon_create_random_coefficient_system",
      py2c_celcon_create_random_coefficient_system,
     METH_VARARGS, "takes cell data to make a random coefficient system"},
+   {"py2c_celcon_dobldobl_random_coefficient_system",
+     py2c_celcon_dobldobl_random_coefficient_system,
+    METH_VARARGS, "use cell data for a random dobldobl coefficient system"},
+   {"py2c_celcon_quaddobl_random_coefficient_system",
+     py2c_celcon_quaddobl_random_coefficient_system,
+    METH_VARARGS, "use cell data for a random quaddobl coefficient system"},
    {"py2c_celcon_copy_into_systems_container",
-     py2c_celcon_copy_into_systems_container,
-    METH_VARARGS, "copy random coefficient system into the system container"},
+     py2c_celcon_copy_into_systems_container, METH_VARARGS,
+    "copy random coefficient system into the standard double system container"},
+   {"py2c_celcon_copy_into_dobldobl_systems_container",
+     py2c_celcon_copy_into_dobldobl_systems_container, METH_VARARGS,
+    "copy random coefficient system into the double double system container"},
+   {"py2c_celcon_copy_into_quaddobl_systems_container",
+     py2c_celcon_copy_into_quaddobl_systems_container, METH_VARARGS,
+    "copy random coefficient system into the quad double system container"},
    {"py2c_celcon_create_polyhedral_homotopy",
-     py2c_celcon_create_polyhedral_homotopy,
-    METH_VARARGS, "polyhedral homotopy to solve a random coefficient system"},
+     py2c_celcon_create_polyhedral_homotopy, METH_VARARGS, 
+    "polyhedral homotopy to solve a standard random coefficient system"},
+   {"py2c_celcon_dobldobl_polyhedral_homotopy",
+     py2c_celcon_dobldobl_polyhedral_homotopy, METH_VARARGS, 
+    "polyhedral homotopy to solve a dobldobl random coefficient system"},
+   {"py2c_celcon_quaddobl_polyhedral_homotopy",
+     py2c_celcon_quaddobl_polyhedral_homotopy, METH_VARARGS, 
+    "polyhedral homotopy to solve a quaddobl random coefficient system"},
    {"py2c_celcon_solve_start_system",
-     py2c_celcon_solve_start_system,
-    METH_VARARGS, "solve start system for a given mixed cell number"},
+     py2c_celcon_solve_start_system, METH_VARARGS, 
+    "solve start system for a given mixed cell number in standard precision"},
+   {"py2c_celcon_solve_dobldobl_start_system",
+     py2c_celcon_solve_dobldobl_start_system, METH_VARARGS, 
+    "solve start system for a given mixed cell number with double doubles"},
+   {"py2c_celcon_solve_quaddobl_start_system",
+     py2c_celcon_solve_quaddobl_start_system, METH_VARARGS, 
+    "solve start system for a given mixed cell number with quad doubles"},
    {"py2c_celcon_track_solution_path",
-     py2c_celcon_track_solution_path,
-    METH_VARARGS, "tracks a solution path for one solution of a cell"},
+     py2c_celcon_track_solution_path, METH_VARARGS, 
+    "tracks a solution path for one solution of a cell in standard precision"},
+   {"py2c_celcon_track_dobldobl_solution_path",
+     py2c_celcon_track_dobldobl_solution_path, METH_VARARGS, 
+    "tracks a solution path for one solution of a cell with double doubles"},
+   {"py2c_celcon_track_quaddobl_solution_path",
+     py2c_celcon_track_quaddobl_solution_path, METH_VARARGS, 
+    "tracks a solution path for one solution of a cell with quad doubles"},
    {"py2c_celcon_copy_target_solution_to_container",
-     py2c_celcon_copy_target_solution_to_container,
-    METH_VARARGS, "copies one end solution of a cell to solution container"},
+     py2c_celcon_copy_target_solution_to_container, METH_VARARGS, 
+    "copies one end solution of a cell to standard double solution container"},
+   {"py2c_celcon_copy_target_dobldobl_solution_to_container",
+     py2c_celcon_copy_target_dobldobl_solution_to_container, METH_VARARGS, 
+    "copies one end solution of a cell to double double solution container"},
+   {"py2c_celcon_copy_target_quaddobl_solution_to_container",
+     py2c_celcon_copy_target_quaddobl_solution_to_container, METH_VARARGS, 
+    "copies one end solution of a cell to quad double solution container"},
    {"py2c_celcon_permute_system", py2c_celcon_permute_system,
     METH_VARARGS, "permutes system in systems container"},
    {"py2c_celcon_clear_container", py2c_celcon_clear_container,
