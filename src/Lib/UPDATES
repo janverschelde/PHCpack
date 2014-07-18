@@ -1,3 +1,6 @@
+Fri 18 Jul 2014 : extended celcon with functions to run the polyhedral
+  homotopies in double double and quad double precision.
+
 Wed 25 Jun 2014 : added function to syscon to generate a random system,
   tested by lib_syscon.c; added corresponding routine to phcpy2c.
 

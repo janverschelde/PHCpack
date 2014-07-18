@@ -1,4 +1,4 @@
-PHCpack as a library of C functions with a state machine in PHCv2.3.89
+PHCpack as a library of C functions with a state machine in PHCv2.3.90
 
 This directory collects header files and definitions of C which bind the
 operations of PHCpack as a state machine in a systematic manner.

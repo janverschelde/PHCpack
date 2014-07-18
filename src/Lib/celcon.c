@@ -135,11 +135,43 @@ int celcon_create_random_coefficient_system ( void )
    return fail;
 }
 
+int celcon_dobldobl_random_coefficient_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(460,a,b,c);
+   return fail;
+}
+
+int celcon_quaddobl_random_coefficient_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(470,a,b,c);
+   return fail;
+}
+
 int celcon_read_random_coefficient_system ( void )
 {
    int *a,*b,fail;
    double *c;
    fail = _ada_use_c2phc(97,a,b,c);
+   return fail;
+}
+
+int celcon_read_dobldobl_random_coefficient_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(461,a,b,c);
+   return fail;
+}
+
+int celcon_read_quaddobl_random_coefficient_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(471,a,b,c);
    return fail;
 }
 
@@ -151,11 +183,43 @@ int celcon_write_random_coefficient_system ( void )
    return fail;
 }
 
+int celcon_write_dobldobl_random_coefficient_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(462,a,b,c);
+   return fail;
+}
+
+int celcon_write_quaddobl_random_coefficient_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(472,a,b,c);
+   return fail;
+}
+
 int celcon_copy_into_systems_container ( void )
 {
    int *a,*b,fail;
    double *c;
    fail = _ada_use_c2phc(99,a,b,c);
+   return fail;
+}
+
+int celcon_copy_into_dobldobl_systems_container ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(463,a,b,c);
+   return fail;
+}
+
+int celcon_copy_into_quaddobl_systems_container ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(473,a,b,c);
    return fail;
 }
 
@@ -167,6 +231,22 @@ int celcon_copy_from_systems_container ( void )
    return fail;
 }
 
+int celcon_copy_from_dobldobl_systems_container ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(464,a,b,c);
+   return fail;
+}
+
+int celcon_copy_from_quaddobl_systems_container ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(474,a,b,c);
+   return fail;
+}
+
 int celcon_create_polyhedral_homotopy ( void )
 {
    int *a,*b,fail;
@@ -175,11 +255,43 @@ int celcon_create_polyhedral_homotopy ( void )
    return fail;
 }
 
+int celcon_dobldobl_polyhedral_homotopy ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(465,a,b,c);
+   return fail;
+}
+
+int celcon_quaddobl_polyhedral_homotopy ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(475,a,b,c);
+   return fail;
+}
+
 int celcon_solve_start_system ( int k, int *mv )
 {
    int fail;
    double *c;
    fail = _ada_use_c2phc(102,&k,mv,c);
+   return fail;
+}
+
+int celcon_solve_dobldobl_start_system ( int k, int *mv )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(466,&k,mv,c);
+   return fail;
+}
+
+int celcon_solve_quaddobl_start_system ( int k, int *mv )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(476,&k,mv,c);
    return fail;
 }
 
@@ -193,11 +305,47 @@ int celcon_track_solution_path ( int k, int i, int otp )
    return fail;
 }
 
+int celcon_track_dobldobl_solution_path ( int k, int i, int otp )
+{
+   int b[2],fail;
+   double *c;
+   b[0] = i;
+   b[1] = otp;
+   fail = _ada_use_c2phc(467,&k,b,c);
+   return fail;
+}
+
+int celcon_track_quaddobl_solution_path ( int k, int i, int otp )
+{
+   int b[2],fail;
+   double *c;
+   b[0] = i;
+   b[1] = otp;
+   fail = _ada_use_c2phc(477,&k,b,c);
+   return fail;
+}
+
 int celcon_copy_target_solution_to_container ( int k, int i )
 {
    int fail;
    double *c;
    fail = _ada_use_c2phc(104,&k,&i,c);
+   return fail;
+}
+
+int celcon_copy_target_dobldobl_solution_to_container ( int k, int i )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(468,&k,&i,c);
+   return fail;
+}
+
+int celcon_copy_target_quaddobl_solution_to_container ( int k, int i )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(478,&k,&i,c);
    return fail;
 }
 

@@ -148,15 +148,55 @@ int celcon_create_random_coefficient_system ( void );
 /*
  * DESCRIPTION :
  *   Creates a random coefficient system using the type of mixture
- *   and the supports in the cells container. */
+ *   and the supports in the cells container.
+ *   The coefficients are complex numbers in standard double precision. */
+
+int celcon_dobldobl_random_coefficient_system ( void );
+/*
+ * DESCRIPTION :
+ *   Creates a random coefficient system using the type of mixture
+ *   and the supports in the cells container.
+ *   The coefficients are complex numbers in double double precision. */
+
+int celcon_quaddobl_random_coefficient_system ( void );
+/*
+ * DESCRIPTION :
+ *   Creates a random coefficient system using the type of mixture
+ *   and the supports in the cells container.
+ *   The coefficients are complex numbers in quad double precision. */
 
 int celcon_read_random_coefficient_system ( void );
 /*
  * DESCRIPTION :
  *   Prompts the user for a random coefficient system 
+ *   with coefficients as complex numbers in standard double precision
+ *   and stores it into the cells container. */
+
+int celcon_read_dobldobl_random_coefficient_system ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a random coefficient system 
+ *   with coefficients as complex numbers in double double precision
+ *   and stores it into the cells container. */
+
+int celcon_read_quaddobl_random_coefficient_system ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for a random coefficient system 
+ *   with coefficients as complex numbers in quad double precision
  *   and stores it into the cells container. */
 
 int celcon_write_random_coefficient_system ( void );
+/*
+ * DESCRIPTION :
+ *   Writes the random coefficient system to standard output. */
+
+int celcon_write_dobldobl_random_coefficient_system ( void );
+/*
+ * DESCRIPTION :
+ *   Writes the random coefficient system to standard output. */
+
+int celcon_write_quaddobl_random_coefficient_system ( void );
 /*
  * DESCRIPTION :
  *   Writes the random coefficient system to standard output. */
@@ -167,17 +207,66 @@ int celcon_copy_into_systems_container ( void );
  *   Copies the random coefficient system from the cells container
  *   into the systems container. */
 
+int celcon_copy_into_dobldobl_systems_container ( void );
+/*
+ * DESCRIPTION :
+ *   Copies the random coefficient system from the cells container
+ *   into the systems container for double double precision. */
+
+int celcon_copy_into_quaddobl_systems_container ( void );
+/*
+ * DESCRIPTION :
+ *   Copies the random coefficient system from the cells container
+ *   into the systems container for quad double precision. */
+
 int celcon_copy_from_systems_container ( void );
 /*
  * DESCRIPTION :
  *    Copies the system from the systems container as a random coefficient
- *    system into the cells container. */
+ *    system (in standard double precision) into the cells container. */
+
+int celcon_copy_from_dobldobl_systems_container ( void );
+/*
+ * DESCRIPTION :
+ *    Copies the system from the systems container as a random coefficient
+ *    system (in double double precision) into the cells container. */
+
+int celcon_copy_from_quaddobl_systems_container ( void );
+/*
+ * DESCRIPTION :
+ *    Copies the system from the systems container as a random coefficient
+ *    system (in quad double precision) into the cells container. */
 
 int celcon_create_polyhedral_homotopy ( void );
 /*
  * DESCRIPTION :
- *   Based on the lifting and the random coefficient system, the polyhedral
- *   homotopy to solve the random coefficient system is created. 
+ *   Based on the lifting and the random coefficient system,
+ *   the polyhedral homotopy to solve the random coefficient system 
+ *   in standard double precision is constructed.
+ *   This function also initializes the internal data structures to store
+ *   the solutions of start and target systems.
+ *
+ * REQUIRED :
+ *   The lifted supports and the random coefficient system are defined. */
+
+int celcon_dobldobl_polyhedral_homotopy ( void );
+/*
+ * DESCRIPTION :
+ *   Based on the lifting and the random coefficient system,
+ *   the polyhedral homotopy to solve the random coefficient system 
+ *   in double double precision is constructed.
+ *   This function also initializes the internal data structures to store
+ *   the solutions of start and target systems.
+ *
+ * REQUIRED :
+ *   The lifted supports and the random coefficient system are defined. */
+
+int celcon_quaddobl_polyhedral_homotopy ( void );
+/*
+ * DESCRIPTION :
+ *   Based on the lifting and the random coefficient system,
+ *   the polyhedral homotopy to solve the random coefficient system 
+ *   in quad double precision is constructed.
  *   This function also initializes the internal data structures to store
  *   the solutions of start and target systems.
  *
@@ -188,6 +277,29 @@ int celcon_solve_start_system ( int k, int *mv );
 /*
  * DESCRIPTION :
  *   Solves the start system corresponding to the k-th mixed cell,
+ *   using standard double precision arithmetic,
+ *   returns in mv the number of solution found, which must equal
+ *   the mixed volume of the k-th mixed cell.
+ *
+ * REQUIRED :
+ *   The creation of the polyhedral homotopy terminated successfully. */
+
+int celcon_solve_dobldobl_start_system ( int k, int *mv );
+/*
+ * DESCRIPTION :
+ *   Solves the start system corresponding to the k-th mixed cell,
+ *   using double double precision arithmetic,
+ *   returns in mv the number of solution found, which must equal
+ *   the mixed volume of the k-th mixed cell.
+ *
+ * REQUIRED :
+ *   The creation of the polyhedral homotopy terminated successfully. */
+
+int celcon_solve_quaddobl_start_system ( int k, int *mv );
+/*
+ * DESCRIPTION :
+ *   Solves the start system corresponding to the k-th mixed cell,
+ *   using quad double precision arithmetic,
  *   returns in mv the number of solution found, which must equal
  *   the mixed volume of the k-th mixed cell.
  *
@@ -198,6 +310,29 @@ int celcon_track_solution_path ( int k, int i, int otp );
 /*
  * DESCRIPTION :
  *   Tracks a solution path starting at the i-th solution of the k-th cell,
+ *   using standard double precision arithmetic,
+ *   with output level for the path trackers defined by the value of otp.
+ *   A target solution corresponding to the k-th cell is added on return.
+ *
+ * REQUIRED :
+ *   The start system corresponding to the k-th mixed cell is solved. */
+
+int celcon_track_dobldobl_solution_path ( int k, int i, int otp );
+/*
+ * DESCRIPTION :
+ *   Tracks a solution path starting at the i-th solution of the k-th cell,
+ *   using double double precision arithmetic,
+ *   with output level for the path trackers defined by the value of otp.
+ *   A target solution corresponding to the k-th cell is added on return.
+ *
+ * REQUIRED :
+ *   The start system corresponding to the k-th mixed cell is solved. */
+
+int celcon_track_quaddobl_solution_path ( int k, int i, int otp );
+/*
+ * DESCRIPTION :
+ *   Tracks a solution path starting at the i-th solution of the k-th cell,
+ *   using quad double precision arithmetic,
  *   with output level for the path trackers defined by the value of otp.
  *   A target solution corresponding to the k-th cell is added on return.
  *
@@ -208,7 +343,19 @@ int celcon_copy_target_solution_to_container ( int k, int i );
 /*
  * DECRIPTION :
  *   Copies the i-th target solution corresponding to the k-th mixed cell
- *   to the solutions container. */
+ *   to the container for solutions in standard double precision. */
+
+int celcon_copy_target_dobldobl_solution_to_container ( int k, int i );
+/*
+ * DECRIPTION :
+ *   Copies the i-th target solution corresponding to the k-th mixed cell
+ *   to the container for solutions in double double precision. */
+
+int celcon_copy_target_quaddobl_solution_to_container ( int k, int i );
+/*
+ * DECRIPTION :
+ *   Copies the i-th target solution corresponding to the k-th mixed cell
+ *   to the container for solutions in quad double precision. */
 
 int celcon_permute_system ( void );
 /*
