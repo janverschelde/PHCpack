@@ -1,3 +1,5 @@
+Fri 18 Jul 2014 : fixed some documentation errors in use_c2phc.ads.
+
 Thu 17 Jul 2014 : extended cells container to solve random coefficient
   systems with polyhedral homotopies in double double and quad double
   precision, with matching operations in use_celcon.

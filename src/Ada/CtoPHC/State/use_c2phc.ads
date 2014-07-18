@@ -579,7 +579,7 @@ function use_c2phc ( job : integer32;
 --                 on return in b is the number of solutions found;
 --         = 467 : track the path starting at the i-th start solution 
 --                 corresponding to the k-th mixed cell, 
---                 in standard double precision, on entry:
+--                 in double double precision, on entry:
 --                 a[0] = k, index to the corresponding mixed cell,
 --                 b[0] = i, index to a start solution,
 --                 b[1] = output code for the path trackers,
@@ -591,25 +591,25 @@ function use_c2phc ( job : integer32;
 --
 --         = 470 : creates a random coefficient system, using the
 --                 type of mixture and supports in the cells container,
---                 with double double coefficients;
+--                 with quad double coefficients;
 --         = 471 : prompts the user for a polynomial system with 
---                 double double complex coefficients and stores it
+--                 quad double complex coefficients and stores it
 --                 as random coefficient system in the cells container;
---         = 472 : writes the random coefficient system with double
+--         = 472 : writes the random coefficient system with quad
 --                 double complex coefficients to the output;
 --         = 473 : copy random coefficient system to systems container
---                 of polynomial systems with double double coefficients;
---         = 474 : copy system in systems container for double double
+--                 of polynomial systems with quad double coefficients;
+--         = 474 : copy system in systems container for quad double
 --                 complex coefficients into the cells container;
 --         = 475 : create a polyhedral homotopy to solve a random system
 --                 in quad double precision;
 --         = 476 : solve start system corresponding with the k-th cell,
---                 in double double precision,
+--                 in quad double precision,
 --                 where k is given on input as the value of a,
 --                 on return in b is the number of solutions found;
 --         = 477 : track the path starting at the i-th start solution 
 --                 corresponding to the k-th mixed cell, 
---                 in standard double precision, on entry:
+--                 in quad double precision, on entry:
 --                 a[0] = k, index to the corresponding mixed cell,
 --                 b[0] = i, index to a start solution,
 --                 b[1] = output code for the path trackers,
