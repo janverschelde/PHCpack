@@ -1,5 +1,5 @@
-Sat 19 Jul 2014 : new container dobldobl_laursys_container for Laurent
-  polynomial systems with complex double double coefficients.
+Sat 19 Jul 2014 : new packages {dobldobl,quaddobl}_laursys_container for
+  Laurent systems with complex double double and quad double coefficients.
 
 Fri 18 Jul 2014 : fixed some documentation errors in use_c2phc.ads.
 
