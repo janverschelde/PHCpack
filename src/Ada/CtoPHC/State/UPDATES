@@ -1,3 +1,5 @@
+Sun 20 Jul 2014 : added test on Laurent systems in ts_syscon.adb.
+
 Sat 19 Jul 2014 : new packages {dobldobl,quaddobl}_laursys_container for
   Laurent systems with complex double double and quad double coefficients.
 

@@ -8,14 +8,20 @@ with Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;   use Standard_Complex_Polynomials_io;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Polynomials_io;   use DoblDobl_Complex_Polynomials_io;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Laur_Systems;
+with DoblDobl_Complex_Laur_Systems_io;  use DoblDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Polynomials_io;   use QuadDobl_Complex_Polynomials_io;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;  use QuadDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Laur_Systems_io;  use QuadDobl_Complex_Laur_Systems_io;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Polynomials_io;   use Multprec_Complex_Polynomials_io;
 with Multprec_Complex_Poly_Systems;
@@ -24,6 +30,9 @@ with Standard_PolySys_Container;
 with DoblDobl_PolySys_Container;
 with QuadDobl_PolySys_Container;
 with Multprec_PolySys_Container;
+with Laurent_Systems_Container;
+with DoblDobl_LaurSys_Container;
+with QuadDobl_LaurSys_Container;
 
 procedure ts_syscon is
 
@@ -163,6 +172,51 @@ procedure ts_syscon is
     end loop;
   end Multprec_Test_Retrievals;
 
+  procedure Standard_Test_Laurent_Retrievals is
+
+  -- DESCRIPTION :
+  --   Test on retrieving data from the Laurent system container,
+  --   for coefficients in standard double precision.
+
+    n : constant natural32 := Laurent_Systems_Container.Dimension;
+    lp : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    put("Dimension of the system : "); put(n,1); new_line;
+    lp := Laurent_Systems_Container.Retrieve;
+    put_line("The Laurent polynomial system : "); put(lp.all);
+  end Standard_Test_Laurent_Retrievals;
+
+  procedure DoblDobl_Test_Laurent_Retrievals is
+
+  -- DESCRIPTION :
+  --   Test on retrieving data from the Laurent system container,
+  --   for coefficients in double double precision.
+
+    n : constant natural32 := DoblDobl_LaurSys_Container.Dimension;
+    lp : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    put("Dimension of the system : "); put(n,1); new_line;
+    lp := DoblDobl_LaurSys_Container.Retrieve;
+    put_line("The Laurent polynomial system : "); put(lp.all);
+  end DoblDobl_Test_Laurent_Retrievals;
+
+  procedure QuadDobl_Test_Laurent_Retrievals is
+
+  -- DESCRIPTION :
+  --   Test on retrieving data from the Laurent system container,
+  --   for coefficients in double double precision.
+
+    n : constant natural32 := QuadDobl_LaurSys_Container.Dimension;
+    lp : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    put("Dimension of the system : "); put(n,1); new_line;
+    lp := QuadDobl_LaurSys_Container.Retrieve;
+    put_line("The Laurent polynomial system : "); put(lp.all);
+  end QuadDobl_Test_Laurent_Retrievals;
+
   procedure Standard_Test_Additions
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
 
@@ -277,6 +331,9 @@ procedure ts_syscon is
     dd_lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     qd_lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     mp_lp : Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;
+    st_lq : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+    dd_lq : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    qd_lq : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
     ans : character;
 
   begin
@@ -285,9 +342,12 @@ procedure ts_syscon is
     put_line("  1. test with standard double complex numbers;");
     put_line("  2. test with double double complex numbers;");
     put_line("  3. test with quad double complex numbers;");
-    put_line("  4. test with arbitrary precision complex numbers.");
-    put("Type 1, 2, 3, or 4 to select the precision : ");
-    Ask_Alternative(ans,"1234");
+    put_line("  4. test with arbitrary precision complex numbers;");
+    put_line("  5. test Laurent systems in standard double precision;");
+    put_line("  6. test Laurent systems in double double precision;");
+    put_line("  7. test Laurent systems in quad double precision;");
+    put("Type 1, 2, 3, 4, 5, 6, or 7 to select the precision : ");
+    Ask_Alternative(ans,"1234567");
     new_line;
     case ans is
       when '1' =>
@@ -314,6 +374,18 @@ procedure ts_syscon is
         Multprec_Test_Retrievals;
         Multprec_PolySys_Container.Clear;
         Multprec_Test_Additions(mp_lp.all);
+      when '5' =>
+        get(st_lq);
+        Laurent_Systems_Container.Initialize(st_lq.all);
+        Standard_Test_Laurent_Retrievals;
+      when '6' =>
+        get(dd_lq);
+        DoblDobl_LaurSys_Container.Initialize(dd_lq.all);
+        DoblDobl_Test_Laurent_Retrievals;
+      when '7' =>
+        get(qd_lq);
+        QuadDobl_LaurSys_Container.Initialize(qd_lq.all);
+        QuadDobl_Test_Laurent_Retrievals;
       when others => null;
     end case;
   end Main;
