@@ -10,8 +10,19 @@ with Multprec_Complex_Laur_Systems_io;
 package body DoblDobl_Complex_Laur_Systems_io is
 
   procedure get ( p : out Link_to_Laur_Sys ) is
+
+    lp : Multprec_Complex_Laur_Systems.Link_to_Laur_Sys;
+
   begin
-    get(standard_input,p);
+    Multprec_Complex_Laurentials_io.Set_Working_Precision(5);
+    Multprec_Complex_Laur_Systems_io.get(lp);
+    declare
+      dp : constant DoblDobl_Complex_Laur_Systems.Laur_Sys
+         := Multprec_Laur_Sys_to_DoblDobl_Complex(lp.all);
+    begin
+      p := new DoblDobl_Complex_Laur_Systems.Laur_Sys'(dp);
+    end;
+    Multprec_Complex_Laur_Systems.Clear(lp);
   end get;
 
   procedure get ( file : in file_type; p : out Link_to_Laur_Sys ) is

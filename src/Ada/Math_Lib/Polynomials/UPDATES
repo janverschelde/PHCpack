@@ -1,3 +1,6 @@
+Sun 20 Jul 2014 : reading of double double and quad double Laurent polynomials
+  improved in {dobldobl,quaddobl}_complex_laur_systems_io.adb.
+
 Sun 13 Jul 2014 : new package quaddobl_tableau_formats, tested by ts_tabform.
   In dobldobl_tableau_formats.adb, added writing of separating space between
   real and imaginary part of complex number.

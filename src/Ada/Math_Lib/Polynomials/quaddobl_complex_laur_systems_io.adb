@@ -10,8 +10,19 @@ with Multprec_Complex_Laur_Systems_io;
 package body QuadDobl_Complex_Laur_Systems_io is
 
   procedure get ( p : out Link_to_Laur_Sys ) is
+
+    lp : Multprec_Complex_Laur_Systems.Link_to_Laur_Sys;
+
   begin
-    get(standard_input,p);
+    Multprec_Complex_Laurentials_io.Set_Working_Precision(10);
+    Multprec_Complex_Laur_Systems_io.get(lp);
+    declare
+      dp : constant QuadDobl_Complex_Laur_Systems.Laur_Sys
+         := Multprec_Laur_Sys_to_QuadDobl_Complex(lp.all);
+    begin
+      p := new QuadDobl_Complex_Laur_Systems.Laur_Sys'(dp);
+    end;
+    Multprec_Complex_Laur_Systems.Clear(lp);
   end get;
 
   procedure get ( file : in file_type; p : out Link_to_Laur_Sys ) is
