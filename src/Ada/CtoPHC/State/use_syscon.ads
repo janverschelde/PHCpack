@@ -29,7 +29,7 @@ function use_syscon ( job : integer32;
 --          =  20 : returns in b[0] the degree of polynomial with index a[0]
 --                  stored in the standard polynomial systems container.
 --
--- the operations in the Laurent systems container :
+-- the operations in the Laurent systems container with standard doubles :
 --
 --   job    = 100 : read polynomial system and put in container;
 --          = 101 : write the polynomial system in the container;
@@ -42,6 +42,34 @@ function use_syscon ( job : integer32;
 --          = 106 : add to the i-th polynomial the term with coefficient
 --                      in c and exponent vector in b;
 --          = 107 : the systems container is cleared;
+--
+-- the operations in the Laurent systems container with double doubles :
+--
+--   job    = 110 : read polynomial system and put in container;
+--          = 111 : write the polynomial system in the container;
+--          = 112 : return in a[0] the dimension of the polynomial system;
+--          = 113 : initializes the container with the dimension in a[0];
+--          = 114 : return in a[0] the number of terms in the i-th polynomial;
+--          = 115 : return in c the coefficient (real and imaginary part),
+--                    and in b the exponent vector (i = a[1], j = a[2])
+--                  of the j-th term in the i-th polynomial;
+--          = 116 : add to the i-th polynomial the term with coefficient
+--                      in c and exponent vector in b;
+--          = 117 : the systems container is cleared;
+--
+-- the operations in the Laurent systems container with quad doubles :
+--
+--   job    = 120 : read polynomial system and put in container;
+--          = 121 : write the polynomial system in the container;
+--          = 122 : return in a[0] the dimension of the polynomial system;
+--          = 123 : initializes the container with the dimension in a[0];
+--          = 124 : return in a[0] the number of terms in the i-th polynomial;
+--          = 125 : return in c the coefficient (real and imaginary part),
+--                  and in b the exponent vector (i = a[1], j = a[2])
+--                  of the j-th term in the i-th polynomial;
+--          = 126 : add to the i-th polynomial the term with coefficient
+--                      in c and exponent vector in b;
+--          = 127 : the systems container is cleared;
 
 -- the operations in the double double polynomial systems container :
 -- 

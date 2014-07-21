@@ -1,22 +1,20 @@
 with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
+-- with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Complex_Polynomials;
-
-   with Standard_Integer_Numbers_io;
-    use Standard_Integer_Numbers_io;
-   with Standard_Complex_Polynomials_io;
-    use Standard_Complex_Polynomials_io;
-
+--   with Standard_Integer_Numbers_io;
+--    use Standard_Integer_Numbers_io;
+--   with Standard_Complex_Polynomials_io;
+--    use Standard_Complex_Polynomials_io;
 with Standard_Random_Polynomials;
 with Standard_Complex_Poly_Strings;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Laur_Strings;
 with Standard_Complex_Poly_Systems;
-with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems;
 with Symbol_Table;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
@@ -24,10 +22,16 @@ with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Strings;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Laurentials;
+with DoblDobl_Complex_Laur_Systems;
+with DoblDobl_Complex_Laur_Systems_io;  use DoblDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Strings;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;  use QuadDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Laurentials;
+with QuadDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Laur_Systems_io;  use QuadDobl_Complex_Laur_Systems_io;
 with Multprec_Floating_Numbers;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Polynomials_io;
@@ -42,6 +46,8 @@ with DoblDobl_PolySys_Container;
 with QuadDobl_PolySys_Container;
 with Multprec_PolySys_Container;
 with Laurent_Systems_Container;
+with DoblDobl_LaurSys_Container;
+with QuadDobl_LaurSys_Container;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 
 function use_syscon ( job : integer32;
@@ -61,17 +67,41 @@ function use_syscon ( job : integer32;
     return 0;
   end Job0;
 
-  function Job100 return integer32 is -- read Laurent system into container
+  function Job100 return integer32 is -- read Laurent sys into st container
 
     lp : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
 
   begin
     new_line;
-    put_line("Reading a polynomial system...");
+    put_line("Reading a Laurent polynomial system...");
     get(lp);
     Laurent_Systems_Container.Initialize(lp.all);
     return 0;
   end Job100;
+
+  function Job110 return integer32 is -- read Laurent sys into dd container
+
+    lp : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    new_line;
+    put_line("Reading a Laurent polynomial system...");
+    get(lp);
+    DoblDobl_LaurSys_Container.Initialize(lp.all);
+    return 0;
+  end Job110;
+
+  function Job120 return integer32 is -- read Laurent sys into qd container
+
+    lp : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    new_line;
+    put_line("Reading a Laurent polynomial system...");
+    get(lp);
+    QuadDobl_LaurSys_Container.Initialize(lp.all);
+    return 0;
+  end Job120;
 
   function Job200 return integer32 is -- read dobldobl system into container
 
@@ -130,7 +160,8 @@ function use_syscon ( job : integer32;
   end Job1;
 
   function Job101 return integer32 is -- write system in container
- 
+   
+    use Standard_Complex_Laur_Systems;
     lp : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
 
   begin
@@ -142,6 +173,36 @@ function use_syscon ( job : integer32;
     end if;
     return 0;
   end Job101;
+
+  function Job111 return integer32 is -- write system in container
+ 
+    use DoblDobl_Complex_Laur_Systems;
+    lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
+
+  begin
+    if lp /= null then
+      if PHCpack_Operations.file_okay
+       then put(PHCpack_Operations.output_file,lp.all);
+       else put(standard_output,lp.all);
+      end if;
+    end if;
+    return 0;
+  end Job111;
+
+  function Job121 return integer32 is -- write system in container
+ 
+    use QuadDobl_Complex_Laur_Systems;
+    lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
+
+  begin
+    if lp /= null then
+      if PHCpack_Operations.file_okay
+       then put(PHCpack_Operations.output_file,lp.all);
+       else put(standard_output,lp.all);
+      end if;
+    end if;
+    return 0;
+  end Job121;
 
   function Job201 return integer32 is -- write system in container
  
@@ -206,6 +267,18 @@ function use_syscon ( job : integer32;
     return 0;
   end Job102;
 
+  function Job112 return integer32 is -- return dimension of Laurent system
+  begin
+    Assign(integer32(DoblDobl_LaurSys_Container.Dimension),a);
+    return 0;
+  end Job112;
+
+  function Job122 return integer32 is -- return dimension of Laurent system
+  begin
+    Assign(integer32(QuadDobl_LaurSys_Container.Dimension),a);
+    return 0;
+  end Job122;
+
   function Job202 return integer32 is -- return dimension of system
   begin
     Assign(integer32(DoblDobl_PolySys_Container.Dimension),a);
@@ -245,6 +318,28 @@ function use_syscon ( job : integer32;
     Symbol_Table.Init(natural32(n));
     return 0;
   end Job103;
+
+  function Job113 return integer32 is -- initialize container with dimension
+
+    v : constant C_Integer_Array := C_intarrs.Value(a);
+    n : constant integer32 := integer32(v(v'first));
+
+  begin
+    DoblDobl_LaurSys_Container.Initialize(n);
+    Symbol_Table.Init(natural32(n));
+    return 0;
+  end Job113;
+
+  function Job123 return integer32 is -- initialize container with dimension
+
+    v : constant C_Integer_Array := C_intarrs.Value(a);
+    n : constant integer32 := integer32(v(v'first));
+
+  begin
+    QuadDobl_LaurSys_Container.Initialize(n);
+    Symbol_Table.Init(natural32(n));
+    return 0;
+  end Job123;
 
   function Job203 return integer32 is -- initialize container with dimension
 
@@ -302,6 +397,30 @@ function use_syscon ( job : integer32;
     Assign(integer32(Laurent_Systems_Container.Number_of_Terms(i)),a);
     return 0;
   end Job104;
+
+  function Job114 return integer32 is -- returns #terms of a Laurential
+
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    use Interfaces.C;
+    i : constant integer32 := integer32(v(v'first+1));
+
+  begin
+    Assign(integer32(DoblDobl_LaurSys_Container.Number_of_Terms(i)),a);
+    return 0;
+  end Job114;
+
+  function Job124 return integer32 is -- returns #terms of a Laurential
+
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    use Interfaces.C;
+    i : constant integer32 := integer32(v(v'first+1));
+
+  begin
+    Assign(integer32(QuadDobl_LaurSys_Container.Number_of_Terms(i)),a);
+    return 0;
+  end Job124;
 
   function Job204 return integer32 is -- returns #terms of a polynomial
 
@@ -369,6 +488,36 @@ function use_syscon ( job : integer32;
     return 0;
   end Job105;
 
+  function Job115 return integer32 is -- returns a term of a polynomial
+
+    v : constant C_Integer_Array(0..2)
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+    i : constant integer32 := integer32(v(1));
+    j : constant natural32 := natural32(v(2));
+    t : constant DoblDobl_Complex_Laurentials.Term 
+      := DoblDobl_LaurSys_Container.Retrieve_Term(i,j);
+
+  begin
+    Assign(t.cf,c);
+    Assign(t.dg.all,b);
+    return 0;
+  end Job115;
+
+  function Job125 return integer32 is -- returns a term of a polynomial
+
+    v : constant C_Integer_Array(0..2)
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+    i : constant integer32 := integer32(v(1));
+    j : constant natural32 := natural32(v(2));
+    t : constant QuadDobl_Complex_Laurentials.Term 
+      := QuadDobl_LaurSys_Container.Retrieve_Term(i,j);
+
+  begin
+    Assign(t.cf,c);
+    Assign(t.dg.all,b);
+    return 0;
+  end Job125;
+
   function Job205 return integer32 is -- returns a term of a polynomial
 
     v : constant C_Integer_Array(0..2)
@@ -433,6 +582,40 @@ function use_syscon ( job : integer32;
     return 0;
   end Job106;
 
+  function Job116 return integer32 is -- add a term to a polynomial
+
+    v : constant C_Integer_Array(0..1)
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    n : constant integer32 := integer32(v(0));
+    i : constant integer32 := integer32(v(1));
+    e : Standard_Integer_Vectors.Vector(1..n);
+    t : DoblDobl_Complex_Laurentials.Term;
+
+  begin
+    Assign(c,t.cf);
+    Assign(natural32(n),b,e);
+    t.dg := new Standard_Integer_Vectors.Vector'(e);
+    DoblDobl_LaurSys_Container.Add_Term(i,t);
+    return 0;
+  end Job116;
+
+  function Job126 return integer32 is -- add a term to a polynomial
+
+    v : constant C_Integer_Array(0..1)
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    n : constant integer32 := integer32(v(0));
+    i : constant integer32 := integer32(v(1));
+    e : Standard_Integer_Vectors.Vector(1..n);
+    t : QuadDobl_Complex_Laurentials.Term;
+
+  begin
+    Assign(c,t.cf);
+    Assign(natural32(n),b,e);
+    t.dg := new Standard_Integer_Vectors.Vector'(e);
+    QuadDobl_LaurSys_Container.Add_Term(i,t);
+    return 0;
+  end Job126;
+
   function Job206 return integer32 is -- add a term to a polynomial
 
     v : constant C_Integer_Array(0..1)
@@ -478,6 +661,18 @@ function use_syscon ( job : integer32;
     Laurent_Systems_Container.Clear;
     return 0;
   end Job107;
+
+  function Job117 return integer32 is -- clears the container
+  begin
+    DoblDobl_LaurSys_Container.Clear;
+    return 0;
+  end Job117;
+
+  function Job127 return integer32 is -- clears the container
+  begin
+    QuadDobl_LaurSys_Container.Clear;
+    return 0;
+  end Job127;
 
   function Job207 return integer32 is -- clears the container
   begin
@@ -1159,7 +1354,7 @@ function use_syscon ( job : integer32;
       when 17 => return Job17; -- quaddobl drop variable by name
      -- degrees of polynomials :
       when 20 => return Job20;   -- degree of standard polynomial
-     -- jobs for Laurent polynomials :
+     -- jobs for standard double complex Laurent polynomials :
       when 100 => return Job100; -- read system into container
       when 101 => return Job101; -- write system in container
       when 102 => return Job102; -- return dimension of system
@@ -1168,6 +1363,24 @@ function use_syscon ( job : integer32;
       when 105 => return Job105; -- return a term of a polynomial
       when 106 => return Job106; -- add a term to a polynomial
       when 107 => return Job107; -- clear the container
+     -- jobs for double double complex Laurent polynomials :
+      when 110 => return Job110; -- read system into container
+      when 111 => return Job111; -- write system in container
+      when 112 => return Job112; -- return dimension of system
+      when 113 => return Job113; -- initialize container with dimension
+      when 114 => return Job114; -- return #terms of a polynomial
+      when 115 => return Job115; -- return a term of a polynomial
+      when 116 => return Job116; -- add a term to a polynomial
+      when 117 => return Job117; -- clear the container
+     -- jobs for quad double complex Laurent polynomials :
+      when 120 => return Job120; -- read system into container
+      when 121 => return Job121; -- write system in container
+      when 122 => return Job122; -- return dimension of system
+      when 123 => return Job123; -- initialize container with dimension
+      when 124 => return Job124; -- return #terms of a polynomial
+      when 125 => return Job125; -- return a term of a polynomial
+      when 126 => return Job126; -- add a term to a polynomial
+      when 127 => return Job127; -- clear the container
      -- jobs for double double complex polynomials
       when 200 => return Job200; -- read system into container
       when 201 => return Job201; -- write system in container
