@@ -1,3 +1,6 @@
+Mon 21 Jul 2014 : added to syscon functions on the systems containers for
+  Laurent systems with double double and quad double coefficients.
+
 Fri 18 Jul 2014 : extended celcon with functions to run the polyhedral
   homotopies in double double and quad double precision.
   The polyhedral homotopies are tested by lib_celcon.c and phcpy2c got

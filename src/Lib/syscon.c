@@ -29,11 +29,27 @@ int syscon_read_dobldobl_system ( void )
    return fail;
 }
 
+int syscon_read_dobldobl_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(550,a,b,c);
+   return fail;
+}
+
 int syscon_read_quaddobl_system ( void )
 {
    int *a,*b,fail;
    double *c;
    fail = _ada_use_c2phc(380,a,b,c);
+   return fail;
+}
+
+int syscon_read_quaddobl_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(560,a,b,c);
    return fail;
 }
 
@@ -80,11 +96,27 @@ int syscon_write_dobldobl_system ( void )
    return fail;
 }
 
+int syscon_write_dobldobl_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(551,a,b,c);
+   return fail;
+}
+
 int syscon_write_quaddobl_system ( void )
 {
    int *a,*b,fail;
    double *c;
    fail = _ada_use_c2phc(381,a,b,c);
+   return fail;
+}
+
+int syscon_write_quaddobl_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(561,a,b,c);
    return fail;
 }
 
@@ -120,11 +152,27 @@ int syscon_number_of_dobldobl_polynomials ( int *length )
    return fail;
 }
 
+int syscon_number_of_dobldobl_Laurentials ( int *length )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(552,length,b,c);
+   return fail;
+}
+
 int syscon_number_of_quaddobl_polynomials ( int *length )
 {
    int *b,fail;
    double *c;
    fail = _ada_use_c2phc(382,length,b,c);
+   return fail;
+}
+
+int syscon_number_of_quaddobl_Laurentials ( int *length )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(562,length,b,c);
    return fail;
 }
 
@@ -160,11 +208,27 @@ int syscon_initialize_number_of_dobldobl_polynomials ( int length )
    return fail;
 }
 
+int syscon_initialize_number_of_dobldobl_Laurentials ( int length )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(553,&length,b,c);
+   return fail;
+}
+
 int syscon_initialize_number_of_quaddobl_polynomials ( int length )
 {
    int *b,fail;
    double *c;
    fail = _ada_use_c2phc(383,&length,b,c);
+   return fail;
+}
+
+int syscon_initialize_number_of_quaddobl_Laurentials ( int length )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(563,&length,b,c);
    return fail;
 }
 
@@ -395,12 +459,32 @@ int syscon_number_of_dobldobl_terms ( int i, int *nt )
    return fail;
 }
 
+int syscon_number_of_dobldobl_Laurent_terms ( int i, int *nt )
+{
+   int a[2],*b,fail;
+   double *c;
+   a[1] = i;
+   fail = _ada_use_c2phc(554,a,b,c);
+   *nt = a[0];
+   return fail;
+}
+
 int syscon_number_of_quaddobl_terms ( int i, int *nt )
 {
    int a[2],*b,fail;
    double *c;
    a[1] = i;
    fail = _ada_use_c2phc(384,a,b,c);
+   *nt = a[0];
+   return fail;
+}
+
+int syscon_number_of_quaddobl_Laurent_terms ( int i, int *nt )
+{
+   int a[2],*b,fail;
+   double *c;
+   a[1] = i;
+   fail = _ada_use_c2phc(564,a,b,c);
    *nt = a[0];
    return fail;
 }
@@ -436,6 +520,17 @@ int syscon_retrieve_dobldobl_term
    return fail;
 }
 
+int syscon_retrieve_dobldobl_Laurent_term
+ ( int i, int j, int n, int *exp, double *c )
+{
+   int a[3],fail;
+   a[0] = n;
+   a[1] = i;
+   a[2] = j;
+   fail = _ada_use_c2phc(555,a,exp,c);  
+   return fail;
+}
+
 int syscon_retrieve_quaddobl_term
  ( int i, int j, int n, int *exp, double *c )
 {
@@ -444,6 +539,17 @@ int syscon_retrieve_quaddobl_term
    a[1] = i;
    a[2] = j;
    fail = _ada_use_c2phc(385,a,exp,c);  
+   return fail;
+}
+
+int syscon_retrieve_quaddobl_Laurent_term
+ ( int i, int j, int n, int *exp, double *c )
+{
+   int a[3],fail;
+   a[0] = n;
+   a[1] = i;
+   a[2] = j;
+   fail = _ada_use_c2phc(565,a,exp,c);  
    return fail;
 }
 
@@ -465,12 +571,30 @@ int syscon_add_dobldobl_term ( int i, int n, int *exp, double *c )
    return fail;
 }
 
+int syscon_add_dobldobl_Laurent_term ( int i, int n, int *exp, double *c )
+{
+   int a[2],fail;
+   a[0] = n;
+   a[1] = i;
+   fail = _ada_use_c2phc(556,a,exp,c); 
+   return fail;
+}
+
 int syscon_add_quaddobl_term ( int i, int n, int *exp, double *c )
 {
    int a[2],fail;
    a[0] = n;
    a[1] = i;
    fail = _ada_use_c2phc(386,a,exp,c); 
+   return fail;
+}
+
+int syscon_add_quaddobl_Laurent_term ( int i, int n, int *exp, double *c )
+{
+   int a[2],fail;
+   a[0] = n;
+   a[1] = i;
+   fail = _ada_use_c2phc(566,a,exp,c); 
    return fail;
 }
 
@@ -506,11 +630,27 @@ int syscon_clear_dobldobl_system ( void )
    return fail;
 }
 
+int syscon_clear_dobldobl_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(557,a,b,c);
+   return fail;
+}
+
 int syscon_clear_quaddobl_system ( void )
 {
    int *a,*b,fail;
    double *c;
    fail = _ada_use_c2phc(387,a,b,c);
+   return fail;
+}
+
+int syscon_clear_quaddobl_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(567,a,b,c);
    return fail;
 }
 

@@ -22,11 +22,27 @@ int syscon_read_dobldobl_system ( void );
  *   system in the container for systems with double double coefficients;
  *   returns 0 if okay, otherwise returns the fail value. */
 
+int syscon_read_dobldobl_Laurent_system ( void );
+/* 
+ * DESCRIPTION :
+ *   Prompts the user for a file, reads Laurent system from file,
+ *   and puts the system in the container for Laurent polynomials
+ *   with complex double double coefficients;
+ *   returns 0 if okay, otherwise returns the fail value. */
+
 int syscon_read_quaddobl_system ( void );
 /* 
  * DESCRIPTION :
  *   Prompts the user for a file, reads system from file, and puts the
  *   system in the container for systems with quad double coefficients;
+ *   returns 0 if okay, otherwise returns the fail value. */
+
+int syscon_read_quaddobl_Laurent_system ( void );
+/* 
+ * DESCRIPTION :
+ *   Prompts the user for a file, reads Laurent system from file,
+ *   and puts the system in the container for Laurent polynomials
+ *   with complex quad double coefficients;
  *   returns 0 if okay, otherwise returns the fail value. */
 
 int syscon_read_multprec_system ( int deci );
@@ -65,11 +81,23 @@ int syscon_write_dobldobl_system ( void );
  *   Writes the system in the container of systems 
  *   with double double coefficients to screen. */
 
+int syscon_write_dobldobl_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Writes the Laurent system in the container for systems
+ *   with complex double double coefficients to screen. */
+
 int syscon_write_quaddobl_system ( void );
 /*
  * DESCRIPTION :
  *   Writes the system in the container of systems 
  *   with quad double coefficients to screen. */
+
+int syscon_write_quaddobl_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Writes the Laurent system in the container for systems
+ *   with complex double double coefficients to screen. */
 
 int syscon_write_multprec_system ( void );
 /*
@@ -91,13 +119,25 @@ int syscon_number_of_dobldobl_polynomials ( int *length );
 /*
  * DESCRIPTION :
  *   Returns in length the number of polynomials in the container
- *   for systems with double double coefficients. */
+ *   for systems with complex double double coefficients. */
+
+int syscon_number_of_dobldobl_Laurentials ( int *length );
+/*
+ * DESCRIPTION :
+ *   Returns in length the number of Laurent polynomials in the container
+ *   for Laurent systems with complex double double coefficients. */
 
 int syscon_number_of_quaddobl_polynomials ( int *length );
 /*
  * DESCRIPTION :
  *   Returns in length the number of polynomials in the container
  *   for systems with quad double coefficients. */
+
+int syscon_number_of_quaddobl_Laurentials ( int *length );
+/*
+ * DESCRIPTION :
+ *   Returns in length the number of Laurent polynomials in the container
+ *   for Laurent systems with complex quad double coefficients. */
 
 int syscon_number_of_multprec_polynomials ( int *length );
 /*
@@ -120,13 +160,29 @@ int syscon_initialize_number_of_Laurentials ( int length );
 int syscon_initialize_number_of_dobldobl_polynomials ( int length );
 /*
  * DESCRIPTION :
- *   Initializes the container with length, the number of polynomials. 
+ *   Initializes the container with length, the number of polynomials
+ *   with complex double double coefficients.
+ *   Also initializes the symbol table. */
+
+int syscon_initialize_number_of_dobldobl_Laurentials ( int length );
+/*
+ * DESCRIPTION :
+ *   Initializes the container with length, the number of Laurent 
+ *   polynomials with complex double double coefficients.
  *   Also initializes the symbol table. */
 
 int syscon_initialize_number_of_quaddobl_polynomials ( int length );
 /*
  * DESCRIPTION :
- *   Initializes the container with length, the number of polynomials. 
+ *   Initializes the container with length, the number of polynomials
+ *   with complex quad double coefficients.
+ *   Also initializes the symbol table. */
+
+int syscon_initialize_number_of_quaddobl_Laurentials ( int length );
+/*
+ * DESCRIPTION :
+ *   Initializes the container with length, the number of Laurent
+ *   polynomials with complex quad double coefficients.
  *   Also initializes the symbol table. */
 
 int syscon_initialize_number_of_multprec_polynomials ( int length );
@@ -291,12 +347,14 @@ int syscon_create_Jacobian_evaluator ( void );
 int syscon_number_of_terms ( int i, int *nt );
 /*
  * DESCRIPTION :
- *   Returns in nt the number of terms in the i-th polynomial. */
+ *   Returns in nt the number of terms in the i-th polynomial
+ *   with complex standard double coefficients. */
 
 int syscon_number_of_Laurent_terms ( int i, int *nt );
 /*
  * DESCRIPTION :
- *   Returns in nt the number of terms in the i-th polynomial. */
+ *   Returns in nt the number of terms in the i-th Laurent polynomial
+ *   with complex standard double coefficients. */
 
 int syscon_number_of_dobldobl_terms ( int i, int *nt );
 /*
@@ -304,11 +362,25 @@ int syscon_number_of_dobldobl_terms ( int i, int *nt );
  *   Returns in nt the number of terms in the i-th polynomial
  *   in the constainer for systems with double double coefficients. */
 
+int syscon_number_of_dobldobl_Laurent_terms ( int i, int *nt );
+/*
+ * DESCRIPTION :
+ *   Returns in nt the number of terms in the i-th Laurent polynomial
+ *   in the constainer for Laurent systems with complex
+ *   double double coefficients. */
+
 int syscon_number_of_quaddobl_terms ( int i, int *nt );
 /*
  * DESCRIPTION :
  *   Returns in nt the number of terms in the i-th polynomial
  *   in the constainer for systems with quad double coefficients. */
+
+int syscon_number_of_quaddobl_Laurent_terms ( int i, int *nt );
+/*
+ * DESCRIPTION :
+ *   Returns in nt the number of terms in the i-th Laurent polynomial
+ *   in the constainer for Laurent systems with complex
+ *   quad double coefficients. */
 
 int syscon_number_of_multprec_terms ( int i, int *nt );
 /*
@@ -334,7 +406,22 @@ int syscon_retrieve_dobldobl_term
 /*
  * DESCRIPTION :
  *   Retrieves the j-th term of the i-th polynomial in the system
- *   with complex double double coefficients;
+ *   container with complex double double coefficients;
+ *   returns 0 if okay, otherwise returns the fail value.
+ *
+ * ON ENTRY :
+ *   i        index to the polynomial of the system to consider;
+ *   j        index to the term in the i-th polynomial of the system;
+ *   n        number of variables in the polynomial;
+ *   exp      exponents of the variables, of dimension n;
+ *   c        real and imaginary part of the coefficient. */
+
+int syscon_retrieve_dobldobl_Laurent_term
+ ( int i, int j, int n, int *exp, double *c );
+/*
+ * DESCRIPTION :
+ *   Retrieves the j-th term of the i-th Laurent polynomial in the 
+ *   Laurent system container with complex double double coefficients;
  *   returns 0 if okay, otherwise returns the fail value.
  *
  * ON ENTRY :
@@ -349,7 +436,22 @@ int syscon_retrieve_quaddobl_term
 /*
  * DESCRIPTION :
  *   Retrieves the j-th term of the i-th polynomial in the system
- *   with complex quad double coefficients;
+ *   constainer with complex quad double coefficients;
+ *   returns 0 if okay, otherwise returns the fail value.
+ *
+ * ON ENTRY :
+ *   i        index to the polynomial of the system to consider;
+ *   j        index to the term in the i-th polynomial of the system;
+ *   n        number of variables in the polynomial;
+ *   exp      exponents of the variables, of dimension n;
+ *   c        real and imaginary part of the coefficient. */
+
+int syscon_retrieve_quaddobl_Laurent_term
+ ( int i, int j, int n, int *exp, double *c );
+/*
+ * DESCRIPTION :
+ *   Retrieves the j-th term of the i-th Laurent polynomial in the
+ *   Laurent system constainer with complex quad double coefficients;
  *   returns 0 if okay, otherwise returns the fail value.
  *
  * ON ENTRY :
@@ -384,6 +486,19 @@ int syscon_add_dobldobl_term ( int i, int n, int *exp, double *c );
  *   exp      exponents of the variables, of dimension n;
  *   c        real and imaginary part of the coefficient. */
 
+int syscon_add_dobldobl_Laurent_term ( int i, int n, int *exp, double *c );
+/*
+ * DESCRIPTION :
+ *   Adds to the i-th Laurent polynomial the term with coefficients in c
+ *   (real and imaginary part as consecutive two double doubles) 
+ *   and n exponents in exp.
+ *
+ * ON ENTRY :
+ *   i        index to the Laurent polynomial of the system to consider;
+ *   n        number of variables in the Laurent polynomial;
+ *   exp      exponents of the variables, of dimension n;
+ *   c        real and imaginary part of the coefficient. */
+
 int syscon_add_quaddobl_term ( int i, int n, int *exp, double *c );
 /*
  * DESCRIPTION :
@@ -394,6 +509,19 @@ int syscon_add_quaddobl_term ( int i, int n, int *exp, double *c );
  * ON ENTRY :
  *   i        index to the polynomial of the system to consider;
  *   n        number of variables in the polynomial;
+ *   exp      exponents of the variables, of dimension n;
+ *   c        real and imaginary part of the coefficient. */
+
+int syscon_add_quaddobl_Laurent_term ( int i, int n, int *exp, double *c );
+/*
+ * DESCRIPTION :
+ *   Adds to the i-th Laurent polynomial the term with coefficients in c
+ *   (real and imaginary part as consecutive two quad doubles) 
+ *   and n exponents in exp.
+ *
+ * ON ENTRY :
+ *   i        index to the Laurent polynomial of the system to consider;
+ *   n        number of variables in the Laurent polynomial;
  *   exp      exponents of the variables, of dimension n;
  *   c        real and imaginary part of the coefficient. */
 
@@ -410,19 +538,32 @@ int syscon_clear_system ( void );
 int syscon_clear_Laurent_system ( void );
 /*
  * DESCRIPTION :
- *   Clears the content of the Laurent systems container. */
+ *   Clears the content of the Laurent systems container,
+ *   for systems with complex standard double coefficients. */
 
 int syscon_clear_dobldobl_system ( void );
 /*
  * DESCRIPTION :
  *   Clears the content of the systems container
- *   for systems with double double coefficients. */
+ *   for systems with complex double double coefficients. */
+
+int syscon_clear_dobldobl_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Clears the content of the Laurent systems container
+ *   for Laurent systems with complex double double coefficients. */
 
 int syscon_clear_quaddobl_system ( void );
 /*
  * DESCRIPTION :
  *   Clears the content of the systems container
- *   for systems with quad double coefficients. */
+ *   for systems with complex quad double coefficients. */
+
+int syscon_clear_quaddobl_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Clears the content of the Laurent systems container
+ *   for Laurent systems with complex quad double coefficients. */
 
 int syscon_clear_multprec_system ( void );
 /*
