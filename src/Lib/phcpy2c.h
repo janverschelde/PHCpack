@@ -153,7 +153,11 @@ static PyObject *py2c_syscon_read_Laurent_system
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_read_dobldobl_system
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_read_dobldobl_Laurent_system
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_read_quaddobl_system
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_read_quaddobl_Laurent_system
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_read_multprec_system
  ( PyObject *self, PyObject *args );
@@ -163,7 +167,11 @@ static PyObject *py2c_syscon_write_Laurent_system
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_write_dobldobl_system
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_write_dobldobl_Laurent_system
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_write_quaddobl_system
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_write_quaddobl_Laurent_system
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_write_multprec_system
  ( PyObject *self, PyObject *args );
@@ -172,7 +180,11 @@ static PyObject *py2c_syscon_clear_Laurent_system
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_clear_dobldobl_system
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_clear_dobldobl_Laurent_system
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_clear_quaddobl_system
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_clear_quaddobl_Laurent_system
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_clear_multprec_system
  ( PyObject *self, PyObject *args );
@@ -196,6 +208,10 @@ static PyObject *py2c_syscon_number_of_multprec_polynomials
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_number_of_Laurentials
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_number_of_dobldobl_Laurentials
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_number_of_quaddobl_Laurentials
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_initialize_number
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_initialize_number_of_dobldobl_polynomials
@@ -205,6 +221,10 @@ static PyObject *py2c_syscon_initialize_number_of_quaddobl_polynomials
 static PyObject *py2c_syscon_initialize_number_of_multprec_polynomials
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_initialize_number_of_Laurentials
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_initialize_number_of_dobldobl_Laurentials
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_initialize_number_of_quaddobl_Laurentials
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_degree_of_polynomial
  ( PyObject *self, PyObject *args );
