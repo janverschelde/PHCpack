@@ -1,5 +1,5 @@
 Mon 21 Jul 2014 : access to double double and quad double Laurent polynomials
-  container via use_syscon.
+  container via use_syscon and use_c2phc.
 
 Sun 20 Jul 2014 : reading of double double and quad double Laurent polynomials
   improved in {dobldobl,quaddobl}_complex_laur_systems_io.adb.

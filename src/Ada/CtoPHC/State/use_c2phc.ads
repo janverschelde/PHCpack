@@ -679,6 +679,34 @@ function use_c2phc ( job : integer32;
 --                     in c and exponent vector in b;
 --         = 127 : the systems container is cleared;
 --
+-- the operations in the Laurent systems container with double doubles :
+--
+--   job   = 550 : read polynomial system and put in container;
+--         = 551 : write the polynomial system in the container;
+--         = 552 : return in a[0] the dimension of the polynomial system;
+--         = 553 : initializes the container with the dimension in a[0];
+--         = 554 : return in a[0] the number of terms in the i-th polynomial;
+--         = 555 : return in c the coefficient (real and imaginary part),
+--                    and in b the exponent vector (i = a[1], j = a[2])
+--                 of the j-th term in the i-th polynomial;
+--         = 556 : add to the i-th polynomial the term with coefficient
+--                     in c and exponent vector in b;
+--         = 557 : the systems container is cleared;
+--
+-- the operations in the Laurent systems container with quad doubles :
+--
+--   job   = 560 : read polynomial system and put in container;
+--         = 561 : write the polynomial system in the container;
+--         = 562 : return in a[0] the dimension of the polynomial system;
+--         = 563 : initializes the container with the dimension in a[0];
+--         = 564 : return in a[0] the number of terms in the i-th polynomial;
+--         = 565 : return in c the coefficient (real and imaginary part),
+--                    and in b the exponent vector (i = a[1], j = a[2])
+--                 of the j-th term in the i-th polynomial;
+--         = 566 : add to the i-th polynomial the term with coefficient
+--                     in c and exponent vector in b;
+--         = 567 : the systems container is cleared;
+--
 -- operations to incrementally read/write solution from/to file :
 --
 --   job   = 130 : prompts the user for a file name for solutions,
