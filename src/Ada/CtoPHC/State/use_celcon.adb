@@ -16,7 +16,9 @@ with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;  use QuadDobl_Complex_Poly_Systems_io;
-with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems;
+with DoblDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
@@ -33,6 +35,8 @@ with Standard_PolySys_Container;
 with DoblDobl_PolySys_Container;
 with QuadDobl_PolySys_Container;
 with Laurent_Systems_Container;
+with DoblDobl_LaurSys_Container;
+with QuadDobl_LaurSys_Container;
 with Standard_Solutions_Container;
 with DoblDobl_Solutions_Container;
 with QuadDobl_Solutions_Container;
@@ -628,15 +632,16 @@ function use_celcon ( job : integer32;
     return 0;
   end Job44;
 
-  function Job25 return integer32 is -- permute system in container 
+  function Job25 return integer32 is -- permute system in st container 
 
     mixsub : constant Mixed_Subdivision := Cells_Container.Retrieve;
     mix : constant Standard_Integer_Vectors.Link_to_Vector
         := Cells_Container.Type_of_Mixture;
     lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
        := Standard_PolySys_Container.Retrieve;
-    lq : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
-    use Standard_Complex_Poly_Systems;
+    lq : constant Standard_Complex_Laur_Systems.Link_to_Laur_Sys
+       := Laurent_Systems_Container.Retrieve;
+    use Standard_Complex_Poly_Systems,Standard_Complex_Laur_Systems;
 
   begin
     if lp /= null then
@@ -681,6 +686,116 @@ function use_celcon ( job : integer32;
     end if;
     return 0;
   end Job25;
+
+  function Job35 return integer32 is -- permute system in dd container 
+
+    mixsub : constant Mixed_Subdivision := Cells_Container.Retrieve;
+    mix : constant Standard_Integer_Vectors.Link_to_Vector
+        := Cells_Container.Type_of_Mixture;
+    lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := DoblDobl_PolySys_Container.Retrieve;
+    lq : constant DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys
+       := DoblDobl_LaurSys_Container.Retrieve;
+    use DoblDobl_Complex_Poly_Systems,DoblDobl_Complex_Laur_Systems;
+
+  begin
+    if lp /= null then
+      declare
+        sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(lp'range)
+            := Supports_of_Polynomial_Systems.Create(lp.all);
+        stlb : constant double_float 
+             := Floating_Lifting_Functions.Lifting_Bound(lp.all);
+        fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(sup'range)
+           := Floating_Integer_Convertors.Convert(sup);
+        ls : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
+           := Floating_Lifting_Utilities.Lifted_Supports(mix'last,mixsub);
+        ip : Standard_Integer_Vectors.Vector(fs'range);
+      begin
+        Induced_Permutations.Remove_Artificial_Origin(ls,stlb);
+        ip := Induced_Permutations.Permutation(fs,ls,mix.all);
+       -- put("the permutation : "); put(ip); new_line;
+       -- put_line("before permute :"); put(lp.all);
+        Induced_Permutations.Permute(ip,lp.all);
+       -- put_line("after permute :"); put(lp.all);
+        Arrays_of_Floating_Vector_Lists.Deep_Clear(fs);
+        Arrays_of_Floating_Vector_Lists.Deep_Clear(ls);
+        Arrays_of_Integer_Vector_Lists.Deep_Clear(sup);
+      end;
+    end if;
+    if lq /= null then
+      declare
+        sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(lq'range)
+            := Supports_of_Polynomial_Systems.Create(lq.all);
+        fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(sup'range)
+           := Floating_Integer_Convertors.Convert(sup);
+        ls : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
+           := Floating_Lifting_Utilities.Lifted_Supports(mix'last,mixsub);
+        ip : Standard_Integer_Vectors.Vector(fs'range);
+      begin
+        ip := Induced_Permutations.Permutation(fs,ls,mix.all);
+        Induced_Permutations.Permute(ip,lq.all);
+        Arrays_of_Floating_Vector_Lists.Deep_Clear(fs);
+        Arrays_of_Floating_Vector_Lists.Deep_Clear(ls);
+        Arrays_of_Integer_Vector_Lists.Deep_Clear(sup);
+      end;
+    end if;
+    return 0;
+  end Job35;
+
+  function Job45 return integer32 is -- permute system in qd container 
+
+    mixsub : constant Mixed_Subdivision := Cells_Container.Retrieve;
+    mix : constant Standard_Integer_Vectors.Link_to_Vector
+        := Cells_Container.Type_of_Mixture;
+    lp : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := QuadDobl_PolySys_Container.Retrieve;
+    lq : constant QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys
+       := QuadDobl_LaurSys_Container.Retrieve;
+    use QuadDobl_Complex_Poly_Systems,QuadDobl_Complex_Laur_Systems;
+
+  begin
+    if lp /= null then
+      declare
+        sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(lp'range)
+            := Supports_of_Polynomial_Systems.Create(lp.all);
+        stlb : constant double_float 
+             := Floating_Lifting_Functions.Lifting_Bound(lp.all);
+        fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(sup'range)
+           := Floating_Integer_Convertors.Convert(sup);
+        ls : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
+           := Floating_Lifting_Utilities.Lifted_Supports(mix'last,mixsub);
+        ip : Standard_Integer_Vectors.Vector(fs'range);
+      begin
+        Induced_Permutations.Remove_Artificial_Origin(ls,stlb);
+        ip := Induced_Permutations.Permutation(fs,ls,mix.all);
+       -- put("the permutation : "); put(ip); new_line;
+       -- put_line("before permute :"); put(lp.all);
+        Induced_Permutations.Permute(ip,lp.all);
+       -- put_line("after permute :"); put(lp.all);
+        Arrays_of_Floating_Vector_Lists.Deep_Clear(fs);
+        Arrays_of_Floating_Vector_Lists.Deep_Clear(ls);
+        Arrays_of_Integer_Vector_Lists.Deep_Clear(sup);
+      end;
+    end if;
+    if lq /= null then
+      declare
+        sup : Arrays_of_Integer_Vector_Lists.Array_of_Lists(lq'range)
+            := Supports_of_Polynomial_Systems.Create(lq.all);
+        fs : Arrays_of_Floating_Vector_Lists.Array_of_Lists(sup'range)
+           := Floating_Integer_Convertors.Convert(sup);
+        ls : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
+           := Floating_Lifting_Utilities.Lifted_Supports(mix'last,mixsub);
+        ip : Standard_Integer_Vectors.Vector(fs'range);
+      begin
+        ip := Induced_Permutations.Permutation(fs,ls,mix.all);
+        Induced_Permutations.Permute(ip,lq.all);
+        Arrays_of_Floating_Vector_Lists.Deep_Clear(fs);
+        Arrays_of_Floating_Vector_Lists.Deep_Clear(ls);
+        Arrays_of_Integer_Vector_Lists.Deep_Clear(sup);
+      end;
+    end if;
+    return 0;
+  end Job45;
  
   function Handle_Jobs return integer32 is
   begin
@@ -711,7 +826,7 @@ function use_celcon ( job : integer32;
       when 22 => return Job22; -- solve a standard start system
       when 23 => return Job23; -- track path in standard precision
       when 24 => return Job24; -- copy target solution to st container
-      when 25 => return Job25; -- permute a given target system
+      when 25 => return Job25; -- permute a standard target system
       when 26 => Cells_Container.Generate_Random_DoblDobl_Coefficient_System;
                  return 0;
       when 27 => return Job27; -- init random dobldobl coefficient system
@@ -722,6 +837,7 @@ function use_celcon ( job : integer32;
       when 32 => return Job32; -- solve a dobldobl start system
       when 33 => return Job33; -- track path in double double precision
       when 34 => return Job34; -- copy target solution to dd container
+      when 35 => return Job35; -- permute dobldobl target system
       when 36 => Cells_Container.Generate_Random_QuadDobl_Coefficient_System;
                  return 0;
       when 37 => return Job37; -- init random quaddobl coefficient system
@@ -732,6 +848,7 @@ function use_celcon ( job : integer32;
       when 42 => return Job42; -- solve a quaddobl start system
       when 43 => return Job43; -- track path in quad double precision
       when 44 => return Job44; -- copy target solution to qd container
+      when 45 => return Job45; -- permute quaddobl target system
       when others => put_line("invalid operation"); return 1;
     end case;
   exception

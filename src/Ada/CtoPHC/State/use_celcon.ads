@@ -106,7 +106,10 @@ function use_celcon ( job : integer32;
 --                   b[1] = output code for the path trackers,
 --                   on return: a target solution has been added;
 --            = 34 : copy i-th target solution of the k-th cell to the
---                   dobldobl solutions container, on entry: a = k and b = i.
+--                   dobldobl solutions container, on entry: a = k and b = i;
+--            = 35 : permutes the systems in the containers for double
+--                   double complex polynomial and Laurent systems based on
+--                   the induced permutation of the supports.
 --
 -- operations for polyhedral homotopy in quad double precision :
 --
@@ -136,7 +139,10 @@ function use_celcon ( job : integer32;
 --                   b[1] = output code for the path trackers,
 --                   on return: a target solution has been added;
 --            = 44 : copy i-th target solution of the k-th cell to the
---                   quaddobl solutions container, on entry: a = k and b = i.
+--                   quaddobl solutions container, on entry: a = k and b = i;
+--            = 45 : permutes the systems in the containers for quad
+--                   double complex polynomial and Laurent systems based on
+--                   the induced permutation of the supports.
 
 -- ON RETURN :
 --   0 if operation was successful, otherwise something went wrong...

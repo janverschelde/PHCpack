@@ -1,3 +1,6 @@
+Tue 22 Jul 2014 : added permute operations for double double and quad double
+  polynomial and Laurent systems to use_celcon and use_c2phc.
+
 Mon 21 Jul 2014 : access to double double and quad double Laurent polynomials
   container via use_syscon and use_c2phc.
 

@@ -1799,9 +1799,9 @@ function use_c2phc ( job : integer32;
       when 450..453 => return use_solcon(job-330,a,b,c);
       when 457 => return use_solcon(job-330,a,b,c);
      -- polyhedral homotopies in double double precision :
-      when 460..468 => return use_celcon(job-434,a,b,c);
+      when 460..469 => return use_celcon(job-435,a,b,c);
      -- polyhedral homotopies in quad double precision :
-      when 470..478 => return use_celcon(job-434,a,b,c);
+      when 470..479 => return use_celcon(job-435,a,b,c);
      -- string representations of multiprecision solutions :
       when 480..481 => return use_solcon(job-330,a,b,c);
       when 488 => return use_solcon(job-330,a,b,c);
