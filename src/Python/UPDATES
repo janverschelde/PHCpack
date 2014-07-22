@@ -1,4 +1,7 @@
-Fri 18 Jun 2014 : extended solver.py with polyhedral homotopies in 
+Tue 22 Jul 2014 : added permute operations to solver.py for systems with
+  coefficients in double double and quad double precision.
+
+Fri 18 Jul 2014 : extended solver.py with polyhedral homotopies in 
   double double and quad double precision.
 
 Mon 30 Jun 2014 : updates in __init__.py, setup.py for version 0.1.9.

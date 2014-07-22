@@ -663,15 +663,38 @@ def random_coefficient_system(silent=False, precision='d'):
     elif(precision == 'dd'):
         return dobldobl_random_coefficient_system(silent)
 
-def permute_system(pols):
+def permute_standard_system(pols):
     """
     Permutes the equations in the list of polynomials in pols
+    with coefficients in standard double precision,
     along the permutation used in the mixed volume computation.
     """
     from phcpy2c import py2c_celcon_permute_system
     store_standard_system(pols)
     py2c_celcon_permute_system()
     return load_standard_system()
+
+def permute_dobldobl_system(pols):
+    """
+    Permutes the equations in the list of polynomials in pols
+    with coefficients in double double precision,
+    along the permutation used in the mixed volume computation.
+    """
+    from phcpy2c import py2c_celcon_permute_dobldobl_system
+    store_dobldobl_system(pols)
+    py2c_celcon_permute_dobldobl_system()
+    return load_dobldobl_system()
+
+def permute_quaddobl_system(pols):
+    """
+    Permutes the equations in the list of polynomials in pols
+    with coefficients in quad double precision,
+    along the permutation used in the mixed volume computation.
+    """
+    from phcpy2c import py2c_celcon_permute_quaddobl_system
+    store_quaddobl_system(pols)
+    py2c_celcon_permute_quaddobl_system()
+    return load_quaddobl_system()
 
 def test_dobldobl_polyhedral_homotopy():
     """
@@ -722,7 +745,7 @@ def test_standard_polyhedral_homotopy():
     print 'found %d solutions' % len(rsols)
     newton_step(rqs, rsols)
     print 'tracking to target...'
-    pqr = permute_system(qrt)
+    pqr = permute_standard_system(qrt)
     qsols = track(pqr, rqs, rsols)
     newton_step(qrt, qsols)
 
