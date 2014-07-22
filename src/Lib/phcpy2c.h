@@ -408,6 +408,10 @@ static PyObject *py2c_celcon_copy_target_quaddobl_solution_to_container
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_permute_system
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_permute_dobldobl_system
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_permute_quaddobl_system
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_clear_container
  ( PyObject *self, PyObject *args );
 

@@ -360,7 +360,22 @@ int celcon_copy_target_quaddobl_solution_to_container ( int k, int i );
 int celcon_permute_system ( void );
 /*
  * DESCRIPTION :
- *   Permutes the system in the container corresponding to the permutation
+ *   Permutes the systems in the container for polynomial and Laurent systems
+ *   with standard double coefficients corresponding to the permutation
+ *   used to compute the mixed-cell configuration. */
+
+int celcon_permute_dobldobl_system ( void );
+/*
+ * DESCRIPTION :
+ *   Permutes the systems in the container for polynomial and Laurent systems
+ *   with double double coefficients corresponding to the permutation
+ *   used to compute the mixed-cell configuration. */
+
+int celcon_permute_quaddobl_system ( void );
+/*
+ * DESCRIPTION :
+ *   Permutes the systems in the container for polynomial and Laurent systems
+ *   with double double coefficients corresponding to the permutation
  *   used to compute the mixed-cell configuration. */
 
 int celcon_clear_mixed_cell_configuration ( void );

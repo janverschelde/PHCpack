@@ -357,6 +357,22 @@ int celcon_permute_system ( void )
    return fail;
 }
 
+int celcon_permute_dobldobl_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(469,a,b,c);
+   return fail;
+}
+
+int celcon_permute_quaddobl_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(479,a,b,c);
+   return fail;
+}
+
 int celcon_clear_mixed_cell_configuration ( void )
 {
    int *a,*b,fail;

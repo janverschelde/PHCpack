@@ -2612,6 +2612,30 @@ static PyObject *py2c_celcon_permute_system
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_celcon_permute_dobldobl_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail,k,i;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = celcon_permute_dobldobl_system();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_celcon_permute_quaddobl_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail,k,i;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = celcon_permute_quaddobl_system();
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_celcon_clear_container
  ( PyObject *self, PyObject *args )
 {
@@ -4085,7 +4109,13 @@ static PyMethodDef phcpy2c_methods[] =
      py2c_celcon_copy_target_quaddobl_solution_to_container, METH_VARARGS, 
     "copies one end solution of a cell to quad double solution container"},
    {"py2c_celcon_permute_system", py2c_celcon_permute_system,
-    METH_VARARGS, "permutes system in systems container"},
+    METH_VARARGS, "permutes system in standard double systems container"},
+   {"py2c_celcon_permute_dobldobl_system",
+     py2c_celcon_permute_dobldobl_system,
+    METH_VARARGS, "permutes system in double double systems container"},
+   {"py2c_celcon_permute_quaddobl_system",
+     py2c_celcon_permute_quaddobl_system,
+    METH_VARARGS, "permutes system in quad double systems container"},
    {"py2c_celcon_clear_container", py2c_celcon_clear_container,
     METH_VARARGS, "clears the cell container"},
    {"py2c_embed_system", py2c_embed_system,
