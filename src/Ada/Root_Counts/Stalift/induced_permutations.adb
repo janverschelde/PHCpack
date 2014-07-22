@@ -99,9 +99,9 @@ package body Induced_Permutations is
   end Permutation;
 
   procedure Permute ( p : in Standard_Integer_Vectors.Vector;
-                      f : in out Poly_Sys ) is
+                      f : in out Standard_Complex_Poly_Systems.Poly_Sys ) is
 
-    pf : Poly_Sys(f'range);
+    pf : Standard_Complex_Poly_Systems.Poly_Sys(f'range);
 
   begin
     for i in p'range loop
@@ -111,9 +111,57 @@ package body Induced_Permutations is
   end Permute;
 
   procedure Permute ( p : in Standard_Integer_Vectors.Vector;
-                      f : in out Laur_Sys ) is
+                      f : in out Standard_Complex_Laur_Systems.Laur_Sys ) is
 
-    pf : Laur_Sys(f'range);
+    pf : Standard_Complex_Laur_Systems.Laur_Sys(f'range);
+
+  begin
+    for i in p'range loop
+      pf(p(i)) := f(i);
+    end loop;
+    f := pf;
+  end Permute;
+
+  procedure Permute ( p : in Standard_Integer_Vectors.Vector;
+                      f : in out DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+    pf : DoblDobl_Complex_Poly_Systems.Poly_Sys(f'range);
+
+  begin
+    for i in p'range loop
+      pf(p(i)) := f(i);
+    end loop;
+    f := pf;
+  end Permute;
+
+  procedure Permute ( p : in Standard_Integer_Vectors.Vector;
+                      f : in out DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
+
+    pf : DoblDobl_Complex_Laur_Systems.Laur_Sys(f'range);
+
+  begin
+    for i in p'range loop
+      pf(p(i)) := f(i);
+    end loop;
+    f := pf;
+  end Permute;
+
+  procedure Permute ( p : in Standard_Integer_Vectors.Vector;
+                      f : in out QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+    pf : QuadDobl_Complex_Poly_Systems.Poly_Sys(f'range);
+
+  begin
+    for i in p'range loop
+      pf(p(i)) := f(i);
+    end loop;
+    f := pf;
+  end Permute;
+
+  procedure Permute ( p : in Standard_Integer_Vectors.Vector;
+                      f : in out QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
+
+    pf : QuadDobl_Complex_Laur_Systems.Laur_Sys(f'range);
 
   begin
     for i in p'range loop

@@ -2,8 +2,12 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Lists_of_Floating_Vectors;
 with Arrays_of_Floating_Vector_Lists;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
-with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Laur_Systems;
 
 package Induced_Permutations is
 
@@ -45,9 +49,17 @@ package Induced_Permutations is
   --   of the lifted support is selected.
 
   procedure Permute ( p : in Standard_Integer_Vectors.Vector;
-                      f : in out Poly_Sys );
+                      f : in out Standard_Complex_Poly_Systems.Poly_Sys );
   procedure Permute ( p : in Standard_Integer_Vectors.Vector;
-                      f : in out Laur_Sys );
+                      f : in out Standard_Complex_Laur_Systems.Laur_Sys );
+  procedure Permute ( p : in Standard_Integer_Vectors.Vector;
+                      f : in out DoblDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure Permute ( p : in Standard_Integer_Vectors.Vector;
+                      f : in out DoblDobl_Complex_Laur_Systems.Laur_Sys );
+  procedure Permute ( p : in Standard_Integer_Vectors.Vector;
+                      f : in out QuadDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure Permute ( p : in Standard_Integer_Vectors.Vector;
+                      f : in out QuadDobl_Complex_Laur_Systems.Laur_Sys );
 
   -- DESCRIPTION :
   --   Applies the permutation p to the system f.
