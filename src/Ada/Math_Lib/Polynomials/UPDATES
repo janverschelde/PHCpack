@@ -1,3 +1,6 @@
+Wed 23 Jul 2014 : bug fix in dobldobl_laurentials_io.adb and new package
+  dobldobl_complex_laur_strings, tested by ts_parse.adb.
+
 Sun 20 Jul 2014 : reading of double double and quad double Laurent polynomials
   improved in {dobldobl,quaddobl}_complex_laur_systems_io.adb.
 

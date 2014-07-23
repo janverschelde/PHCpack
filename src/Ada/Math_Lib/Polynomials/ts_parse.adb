@@ -24,7 +24,10 @@ with Standard_Complex_Poly_Strings;    use Standard_Complex_Poly_Strings;
 with Standard_Complex_Laur_Strings;    use Standard_Complex_Laur_Strings;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Polynomials_io;  use DoblDobl_Complex_Polynomials_io;
+with DoblDobl_Complex_Laurentials;
+with DoblDobl_Complex_Laurentials_io;  use DoblDobl_Complex_Laurentials_io;
 with DoblDobl_Complex_Poly_Strings;    use DoblDobl_Complex_Poly_Strings;
+with DoblDobl_Complex_Laur_Strings;    use DoblDobl_Complex_Laur_Strings;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Polynomials_io;  use QuadDobl_Complex_Polynomials_io;
 with QuadDobl_Complex_Poly_Strings;    use QuadDobl_Complex_Poly_Strings;
@@ -203,6 +206,31 @@ procedure ts_parse is
       put("-> After parsing : "); put(sp); new_line;
     end;
   end Parse_Standard_Laurent_Polynomial;
+
+  procedure Parse_DoblDobl_Laurent_Polynomial is
+
+    use DoblDobl_Complex_Laurentials;
+
+    n : natural32 := 0;
+    s : constant string := Read_String;
+    p : Poly;
+
+  begin
+    put("-> Your string : "); put_line(s);
+    put("Give the number of variables : "); get(n);
+    Symbol_Table.Init(n);
+    p := Parse(n,s);
+    put_line("The parsed polynomial : "); put(p); new_line;
+    new_line;
+    declare
+      ps : constant string := Write(p);
+      sp : Poly;
+    begin
+      put("The polynomial : "); put(ps); new_line;
+      sp := Parse(n,ps);
+      put("-> After parsing : "); put(sp); new_line;
+    end;
+  end Parse_DoblDobl_Laurent_Polynomial;
 
   procedure Parse_Multprec_Laurent_Polynomial is
 
@@ -410,15 +438,16 @@ procedure ts_parse is
     put_line("  5. test parsing of one quad double common polynomial;");
     put_line("  6. test parsing of one multiprecision common polynomial;");
     put_line("  7. test parsing of one Laurent polynomial;");
-    put_line("  8. test parsing of one multiprecision Laurent polynomial;");
-    put_line("  9. parse a polynomial system, given from file;");
-    put_line("  A. parse a string from file into a polynomial system;");
-    put_line("  B. read strings from file, parse standard complex system;");
-    put_line("  C. read strings from file, parse standard Laurent system;");
-    put_line("  D. read strings from file, parse multprec complex system;");
-    put_line("  E. read strings from file, parse multprec Laurent system.");
-    put("Type 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, or E : ");
-    Ask_Alternative(ans,"123456789ABCDE");
+    put_line("  8. test parsing of one double double Laurent polynomial;");
+    put_line("  9. test parsing of one multiprecision Laurent polynomial;");
+    put_line("  A. parse a polynomial system, given from file;");
+    put_line("  B. parse a string from file into a polynomial system;");
+    put_line("  C. read strings from file, parse standard complex system;");
+    put_line("  D. read strings from file, parse standard Laurent system;");
+    put_line("  E. read strings from file, parse multprec complex system;");
+    put_line("  F. read strings from file, parse multprec Laurent system.");
+    put("Type 1, 2, 3, 4, 5, 6, 7, 8, 9, A, B, C, D, E, or F : ");
+    Ask_Alternative(ans,"123456789ABCDEF");
     new_line;
     case ans is
       when '1' => Parse_Standard_Number;
@@ -428,13 +457,14 @@ procedure ts_parse is
       when '5' => Parse_QuadDobl_Polynomial;
       when '6' => Parse_Multprec_Polynomial;
       when '7' => Parse_Standard_Laurent_Polynomial;
-      when '8' => Parse_Multprec_Laurent_Polynomial;
-      when '9' => Parse_String_from_System;
-      when 'A' => Parse_String_from_File;
-      when 'B' => Parse_Standard_Complex_Strings_from_File;
-      when 'C' => Parse_Standard_Laurent_Strings_from_File;
-      when 'D' => Parse_Multprec_Complex_Strings_from_File;
-      when 'E' => Parse_Multprec_Laurent_Strings_from_File;
+      when '8' => Parse_DoblDobl_Laurent_Polynomial;
+      when '9' => Parse_Multprec_Laurent_Polynomial;
+      when 'A' => Parse_String_from_System;
+      when 'B' => Parse_String_from_File;
+      when 'C' => Parse_Standard_Complex_Strings_from_File;
+      when 'D' => Parse_Standard_Laurent_Strings_from_File;
+      when 'E' => Parse_Multprec_Complex_Strings_from_File;
+      when 'F' => Parse_Multprec_Laurent_Strings_from_File;
       when others => null;
     end case;
   end Main;
