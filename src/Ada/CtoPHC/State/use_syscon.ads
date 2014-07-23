@@ -56,6 +56,12 @@ function use_syscon ( job : integer32;
 --          = 116 : add to the i-th polynomial the term with coefficient
 --                      in c and exponent vector in b;
 --          = 117 : the systems container is cleared;
+--          = 118 : puts a Laurent polynomial given as a string in the
+--                  container for systems with double double precision,
+--                  with the input parameters as follows:
+--                    a[0] : number of characters in the string,
+--                    a[1] : index of the polynomial in the system,
+--                    b : string converted to an integer array.
 --
 -- the operations in the Laurent systems container with quad doubles :
 --
@@ -70,6 +76,12 @@ function use_syscon ( job : integer32;
 --          = 126 : add to the i-th polynomial the term with coefficient
 --                      in c and exponent vector in b;
 --          = 127 : the systems container is cleared;
+--          = 128 : puts a Laurent polynomial given as a string in the
+--                  container for systems with quad double precision,
+--                  with the input parameters as follows:
+--                    a[0] : number of characters in the string,
+--                    a[1] : index of the polynomial in the system,
+--                    b : string converted to an integer array.
 
 -- the operations in the double double polynomial systems container :
 -- 
@@ -170,6 +182,20 @@ function use_syscon ( job : integer32;
 --                    c = 0 : default complex coefficient on unit circle,
 --                    c = 1 : all coefficients are equal to one,
 --                    c = 2 : real coefficients in [-1,+1].
+--          =  72 : loads a Laurent polynomial from the double double
+--                  systems container into a string:
+--                    a[0] : index of the polynomial k on entry,
+--                           and number of characters in the string on return,
+--                    b : characters in the string representation of
+--                        the k-th polynomial in the container,
+--                  this is the reverse of operation 118,    
+--          =  73 : loads a Laurent polynomial from the quad double
+--                  systems container into a string:
+--                    a[0] : index of the polynomial k on entry,
+--                           and number of characters in the string on return,
+--                    b : characters in the string representation of
+--                        the k-th polynomial in the container,
+--                  this is the reverse of operation 128,
 --          =  74 : puts a Laurent polynomial given as a string in the system 
 --                  container, with the input parameters as follows:
 --                    a[0] : number of characters in the string,

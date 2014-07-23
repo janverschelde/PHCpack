@@ -20,6 +20,7 @@ with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Strings;
+with DoblDobl_Complex_Laur_Strings;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Laurentials;
@@ -27,6 +28,7 @@ with DoblDobl_Complex_Laur_Systems;
 with DoblDobl_Complex_Laur_Systems_io;  use DoblDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Strings;
+with QuadDobl_Complex_Laur_Strings;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;  use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Laurentials;
@@ -765,7 +767,6 @@ function use_syscon ( job : integer32;
 
   function Job68 return integer32 is -- poly as string from dobldobl container
 
-    use DoblDobl_Complex_Poly_Systems;
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant DoblDobl_Complex_Polynomials.Poly
@@ -785,9 +786,50 @@ function use_syscon ( job : integer32;
     when others => return 68;
   end Job68;
 
+  function Job72 return integer32 is -- Laurpoly as string from dd container
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    p : constant DoblDobl_Complex_Laurentials.Poly
+      := DoblDobl_LaurSys_Container.Retrieve_Poly(equ);
+    s : constant string := DoblDobl_Complex_Laur_Strings.Write(p);
+    sv : constant Standard_Integer_Vectors.Vector
+       := String_to_Integer_Vector(s);
+    slast : constant integer32 := integer32(s'last);
+
+  begin
+   -- put("Polynomial "); put(equ,1); put(" : "); put_line(s);
+   -- put("#characters : "); put(s'last,1); new_line;
+    Assign(slast,a);
+    Assign(sv,b);
+    return 0;
+  exception
+    when others => return 72;
+  end Job72;
+
+  function Job73 return integer32 is -- Laurpoly as string from qd container
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    p : constant QuadDobl_Complex_Laurentials.Poly
+      := QuadDobl_LaurSys_Container.Retrieve_Poly(equ);
+    s : constant string := QuadDobl_Complex_Laur_Strings.Write(p);
+    sv : constant Standard_Integer_Vectors.Vector
+       := String_to_Integer_Vector(s);
+    slast : constant integer32 := integer32(s'last);
+
+  begin
+   -- put("Polynomial "); put(equ,1); put(" : "); put_line(s);
+   -- put("#characters : "); put(s'last,1); new_line;
+    Assign(slast,a);
+    Assign(sv,b);
+    return 0;
+  exception
+    when others => return 72;
+  end Job73;
+
   function Job69 return integer32 is -- poly as string from quaddobl container
 
-    use QuadDobl_Complex_Poly_Systems;
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     equ : constant integer32 := integer32(v_a(v_a'first));
     p : constant QuadDobl_Complex_Polynomials.Poly
@@ -925,6 +967,74 @@ function use_syscon ( job : integer32;
   exception
     when others => return 76;
   end Job76;
+
+  function Job118 return integer32 is -- dd laur poly as str to container
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+    nc : constant integer := integer(v_a(v_a'first));
+    n : constant natural32 := natural32(v_a(v_a'first+1));
+    k : constant integer32 := integer32(v_a(v_a'first+2));
+    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
+    v_b : constant C_Integer_Array(0..nc1)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
+    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
+    p : DoblDobl_Complex_Laurentials.Poly;
+
+  begin
+   -- put("Polynomial "); put(k,1);
+   -- put(" given as string of "); put(nc,1);
+   -- put_line(" characters.");
+   -- put("The string : "); put_line(s);
+    if Symbol_Table.Empty then
+      Symbol_Table.Init(n);
+    elsif Symbol_Table.Maximal_Size < n then
+      Symbol_Table.Clear;
+      Symbol_Table.Init(n);
+    end if;
+    p := DoblDobl_Complex_Laur_Strings.Parse(n,s);
+    DoblDobl_LaurSys_Container.Add_Poly(k,p);
+    DoblDobl_Complex_Laurentials.Clear(p);
+    return 0;
+  exception
+    when others => return 118;
+  end Job118;
+
+  function Job128 return integer32 is -- qd laur poly as str to container
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+    nc : constant integer := integer(v_a(v_a'first));
+    n : constant natural32 := natural32(v_a(v_a'first+1));
+    k : constant integer32 := integer32(v_a(v_a'first+2));
+    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
+    v_b : constant C_Integer_Array(0..nc1)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
+    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
+    p : QuadDobl_Complex_Laurentials.Poly;
+
+  begin
+   -- put("Polynomial "); put(k,1);
+   -- put(" given as string of "); put(nc,1);
+   -- put_line(" characters.");
+   -- put("The string : "); put_line(s);
+    if Symbol_Table.Empty then
+      Symbol_Table.Init(n);
+    elsif Symbol_Table.Maximal_Size < n then
+      Symbol_Table.Clear;
+      Symbol_Table.Init(n);
+    end if;
+    p := QuadDobl_Complex_Laur_Strings.Parse(n,s);
+    QuadDobl_LaurSys_Container.Add_Poly(k,p);
+    QuadDobl_Complex_Laurentials.Clear(p);
+    return 0;
+  exception
+    when others => return 118;
+  end Job128;
 
   function Job208 return integer32 is -- dd poly as string to container
 
@@ -1372,6 +1482,7 @@ function use_syscon ( job : integer32;
       when 115 => return Job115; -- return a term of a polynomial
       when 116 => return Job116; -- add a term to a polynomial
       when 117 => return Job117; -- clear the container
+      when 118 => return Job118; -- store dobldobl Laurential string
      -- jobs for quad double complex Laurent polynomials :
       when 120 => return Job120; -- read system into container
       when 121 => return Job121; -- write system in container
@@ -1381,6 +1492,7 @@ function use_syscon ( job : integer32;
       when 125 => return Job125; -- return a term of a polynomial
       when 126 => return Job126; -- add a term to a polynomial
       when 127 => return Job127; -- clear the container
+      when 128 => return Job128; -- store quaddobl Laurential string
      -- jobs for double double complex polynomials
       when 200 => return Job200; -- read system into container
       when 201 => return Job201; -- write system in container
@@ -1418,6 +1530,8 @@ function use_syscon ( job : integer32;
       when 69 => return Job69; -- load quaddobl polynomial from container
       when 70 => return Job70; -- load multprec polynomial from container
       when 71 => return Job71; -- store random system in container
+      when 72 => return Job72; -- load dobldobl Laurential from container
+      when 73 => return Job73; -- load quaddobl Laurential from container
       when 74 => return Job74; -- store standard Laurential in container
       when 76 => return Job76; -- store standard polynomial in container
      -- reading systems into the containers :
