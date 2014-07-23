@@ -46,7 +46,7 @@ package body QuadDobl_Complex_Laurentials_io is
     else 
       sb := Symbol_Table.get(natural32(i)); Symbol_Table_io.put(file,sb);
     end if;
-    if d > 1 then
+    if d > 1 or d < 0 then
       if pow = '^'
        then put(file,'^');
        else put(file,"**");
@@ -90,7 +90,7 @@ package body QuadDobl_Complex_Laurentials_io is
       Write_Number(file,t.cf);
       if Sum(t.dg) /= 0 then
         for i in t.dg'range loop
-          if t.dg(i) > 0 then
+          if t.dg(i) > 0 or t.dg(i) < 0 then
             put(file,'*');
             Write_Factor(file,t.dg(i),i,standard,'^');
           end if;

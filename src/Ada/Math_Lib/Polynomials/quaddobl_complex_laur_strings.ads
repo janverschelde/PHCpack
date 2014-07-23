@@ -1,15 +1,15 @@
 with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with DoblDobl_Complex_Laurentials;       use DoblDobl_Complex_Laurentials;
-with DoblDobl_Complex_Laur_Systems;      use DoblDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Laurentials;       use QuadDobl_Complex_Laurentials;
+with QuadDobl_Complex_Laur_Systems;      use QuadDobl_Complex_Laur_Systems;
 
-package DoblDobl_Complex_Laur_Strings is
+package QuadDobl_Complex_Laur_Strings is
 
 -- DESCRIPTION :
 --   This package writes Laurent polynomials in several variables and 
---   with double double complex floating-point coefficients to strings,
+--   with quad double complex floating-point coefficients to strings,
 --   and parses strings for Laurent polynomials in several variables
---   with double double complex coefficients.
+--   with quad double complex coefficients.
 
   procedure Parse ( s : in string; k : in out integer;
                     n : in natural32; p : in out Poly );
@@ -44,4 +44,4 @@ package DoblDobl_Complex_Laur_Strings is
   -- DESCRIPTION :
   --   This function writes the polynomial system to a string.
 
-end DoblDobl_Complex_Laur_Strings;
+end QuadDobl_Complex_Laur_Strings;
