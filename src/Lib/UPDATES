@@ -1,3 +1,6 @@
+Thu 24 Jul 2014 : updated syscon to store and load Laurent polynomials in 
+  standard double, double double, and quad double precision.
+
 Tue 22 Jul 2014 : updated celcon and phcpy2c with permute operations for
   double double and quad double polynomial and Laurent systems.
 

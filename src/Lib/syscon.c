@@ -413,6 +413,85 @@ int syscon_store_Laurential ( int nc, int n, int k, char *p )
    return fail;
 }
 
+int syscon_store_dobldobl_Laurential ( int nc, int n, int k, char *p )
+{
+   int a[3],b[nc],i,fail;
+   double *c;
+
+   a[0] = nc;
+   a[1] = n;
+   a[2] = k;
+   for(i=0; i<nc; i++) b[i] = (int) p[i];
+
+   fail = _ada_use_c2phc(558,a,b,c);
+
+   return fail;
+}
+
+int syscon_store_quaddobl_Laurential ( int nc, int n, int k, char *p )
+{
+   int a[3],b[nc],i,fail;
+   double *c;
+
+   a[0] = nc;
+   a[1] = n;
+   a[2] = k;
+   for(i=0; i<nc; i++) b[i] = (int) p[i];
+
+   fail = _ada_use_c2phc(568,a,b,c);
+
+   return fail;
+}
+
+int syscon_load_standard_Laurential ( int k, int *nc, char *p )
+{
+   int fail,i;
+   int b[25600];
+   int size = k;
+   double *c;
+
+   fail = _ada_use_c2phc(128,&size,b,c);
+   /* printf("number of characters : %d\n",size); */
+   for(i=0; i<size; i++) p[i] = (char) b[i];
+   p[size] = '\0';
+   /* printf("the string : %s\n",p); */
+
+   return fail;
+}
+
+int syscon_load_dobldobl_Laurential ( int k, int *nc, char *p )
+{
+   int fail,i;
+   int b[51200];
+   int size = k;
+   double *c;
+
+   fail = _ada_use_c2phc(559,&size,b,c);
+   /* printf("number of characters : %d\n",size); */
+   for(i=0; i<size; i++) p[i] = (char) b[i];
+   p[size] = '\0';
+   /* printf("the string : %s\n",p); */
+
+   return fail;
+}
+
+int syscon_load_quaddobl_Laurential ( int k, int *nc, char *p )
+{
+   int fail,i;
+   int b[102400];
+   int size = k;
+   double *c;
+
+   fail = _ada_use_c2phc(569,&size,b,c);
+   /* printf("number of characters : %d\n",size); */
+   for(i=0; i<size; i++) p[i] = (char) b[i];
+   p[size] = '\0';
+   /* printf("the string : %s\n",p); */
+
+   return fail;
+}
+
+
 int syscon_create_evaluator ( void )
 {
    int fail,*a,*b;
