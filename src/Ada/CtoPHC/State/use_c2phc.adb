@@ -1708,6 +1708,7 @@ function use_c2phc ( job : integer32;
       when 119 => return use_syscon(20,a,b,c); -- degree of standard polynomial
      -- operations on Laurent systems :
       when 120..127 => return use_syscon(job-20,a,b,c);
+      when 128 => return use_syscon(77,a,b,c); -- load standard Laur as string
       when 130..145 => return use_solcon(job-120,a,b,c);
       when 146 => return use_solcon(9,a,b,c); -- drop coordinate by name
       when 147 => return use_syscon(10,a,b,c);

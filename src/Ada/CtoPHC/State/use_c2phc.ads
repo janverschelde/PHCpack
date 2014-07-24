@@ -684,6 +684,13 @@ function use_c2phc ( job : integer32;
 --         = 126 : add to the i-th polynomial the term with coefficient
 --                     in c and exponent vector in b;
 --         = 127 : the systems container is cleared;
+--         = 128 : loads a Laurent polynomial from the standard double
+--                 systems container into a string:
+--                   a[0] : index of the polynomial k on entry,
+--                           and number of characters in the string on return,
+--                   b : characters in the string representation of
+--                        the k-th polynomial in the container,
+--                 this is the reverse of operation 74.   
 --
 -- the operations in the Laurent systems container with double doubles :
 --
