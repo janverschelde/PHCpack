@@ -206,7 +206,14 @@ function use_syscon ( job : integer32;
 --                    a[0] : number of characters in the string,
 --                    a[1] : index of the polynomial in the system,
 --                    b : string converted to an integer array,
---                  this is the reverse of operation 67.
+--                  this is the reverse of operation 67;
+--          =  77 : loads a Laurent polynomial from the standard double
+--                  systems container into a string:
+--                    a[0] : index of the polynomial k on entry,
+--                           and number of characters in the string on return,
+--                    b : characters in the string representation of
+--                        the k-th polynomial in the container,
+--                  this is the reverse of operation 74.   
 --
 -- the operations to drop variables from a polynomial :
 --  

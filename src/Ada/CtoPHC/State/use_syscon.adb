@@ -786,6 +786,27 @@ function use_syscon ( job : integer32;
     when others => return 68;
   end Job68;
 
+  function Job77 return integer32 is -- Laurpoly as string from st container
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    p : constant Standard_Complex_Laurentials.Poly
+      := Laurent_Systems_Container.Retrieve_Poly(equ);
+    s : constant string := Standard_Complex_Laur_Strings.Write(p);
+    sv : constant Standard_Integer_Vectors.Vector
+       := String_to_Integer_Vector(s);
+    slast : constant integer32 := integer32(s'last);
+
+  begin
+   -- put("Polynomial "); put(equ,1); put(" : "); put_line(s);
+   -- put("#characters : "); put(s'last,1); new_line;
+    Assign(slast,a);
+    Assign(sv,b);
+    return 0;
+  exception
+    when others => return 77;
+  end Job77;
+
   function Job72 return integer32 is -- Laurpoly as string from dd container
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
@@ -1534,6 +1555,7 @@ function use_syscon ( job : integer32;
       when 73 => return Job73; -- load quaddobl Laurential from container
       when 74 => return Job74; -- store standard Laurential in container
       when 76 => return Job76; -- store standard polynomial in container
+      when 77 => return Job77; -- load standard Laurential from container
      -- reading systems into the containers :
       when 540 => return Job540; -- read standard system from file
       when 541 => return Job541; -- read double double system from file
