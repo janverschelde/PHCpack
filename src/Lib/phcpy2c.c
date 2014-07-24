@@ -1670,6 +1670,71 @@ static PyObject *py2c_syscon_store_Laurential
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_syscon_store_dobldobl_Laurential
+ ( PyObject *self, PyObject *args )
+{      
+   int fail,n,nc,k;
+   char *p;   
+                 
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiis",&nc,&n,&k,&p)) return NULL;
+   fail = syscon_store_dobldobl_Laurential(nc,n,k,p);
+                 
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syscon_store_quaddobl_Laurential
+ ( PyObject *self, PyObject *args )
+{      
+   int fail,n,nc,k;
+   char *p;   
+                 
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiis",&nc,&n,&k,&p)) return NULL;
+   fail = syscon_store_quaddobl_Laurential(nc,n,k,p);
+                 
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syscon_load_standard_Laurential
+ ( PyObject *self, PyObject *args )
+{      
+   int fail,nc,k;
+   char p[25600];  /* must be computed or retrieved !!!! */
+                 
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
+   fail = syscon_load_standard_Laurential(k,&nc,p);
+                 
+   return Py_BuildValue("s",p);
+}
+
+static PyObject *py2c_syscon_load_dobldobl_Laurential
+ ( PyObject *self, PyObject *args )
+{      
+   int fail,nc,k;
+   char p[51200];  /* must be computed or retrieved !!!! */
+                 
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
+   fail = syscon_load_dobldobl_Laurential(k,&nc,p);
+                 
+   return Py_BuildValue("s",p);
+}
+
+static PyObject *py2c_syscon_load_quaddobl_Laurential
+ ( PyObject *self, PyObject *args )
+{      
+   int fail,nc,k;
+   char p[102400];  /* must be computed or retrieved !!!! */
+                 
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
+   fail = syscon_load_quaddobl_Laurential(k,&nc,p);
+                 
+   return Py_BuildValue("s",p);
+}
+
 static PyObject *py2c_syscon_total_degree ( PyObject *self, PyObject *args )
 {
    int fail,totdeg;
@@ -3917,9 +3982,24 @@ static PyMethodDef phcpy2c_methods[] =
      py2c_syscon_load_multprec_polynomial,
     METH_VARARGS,
     "gets the k-th polynomial from the multiprecision systems container"},
-   {"py2c_syscon_store_Laurential", py2c_syscon_store_Laurential,
-    METH_VARARGS,
-    "defines the k-th polynomial in the Laurent systems container"},
+   {"py2c_syscon_store_Laurential",
+     py2c_syscon_store_Laurential, METH_VARARGS,
+    "defines the k-th polynomial in the standard Laurent systems container"},
+   {"py2c_syscon_store_dobldobl_Laurential",
+     py2c_syscon_store_dobldobl_Laurential, METH_VARARGS,
+    "defines the k-th polynomial in the dobldobl Laurent systems container"},
+   {"py2c_syscon_store_quaddobl_Laurential",
+     py2c_syscon_store_quaddobl_Laurential, METH_VARARGS,
+    "defines the k-th polynomial in the quaddobl Laurent systems container"},
+   {"py2c_syscon_load_standard_Laurential",
+     py2c_syscon_load_standard_Laurential, METH_VARARGS,
+    "gets the k-th polynomial from the standard Laurent systems container"},
+   {"py2c_syscon_load_dobldobl_Laurential",
+     py2c_syscon_load_dobldobl_Laurential, METH_VARARGS,
+    "gets the k-th polynomial from the quaddobl Laurent systems container"},
+   {"py2c_syscon_load_quaddobl_Laurential",
+     py2c_syscon_load_quaddobl_Laurential, METH_VARARGS,
+    "gets the k-th polynomial from the quaddobl Laurent systems container"},
    {"py2c_syscon_total_degree", py2c_syscon_total_degree,
     METH_VARARGS,"returns the total degree of the system in the container"},
    {"py2c_syscon_standard_drop_variable_by_index",
