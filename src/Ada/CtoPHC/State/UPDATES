@@ -1,3 +1,6 @@
+Thu 24 Jul 2014 : added four extra jobs to use_c2phc to parse strings and
+  write to strings Laurent polynomials in dd and qd precision.
+
 Wed 23 Jul 2014 : extended use_syscon with operations to parse strings and
   write to strings Laurent polynomials in dd and qd precision.
 

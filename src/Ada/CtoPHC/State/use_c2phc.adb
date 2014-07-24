@@ -1827,9 +1827,11 @@ function use_c2phc ( job : integer32;
      -- operations to read systems and solutions into the containers
       when 544..547 => return use_solcon(job,a,b,c);
      -- operations on Laurent container for double doubles :
-      when 550..557 => return use_syscon(job-440,a,b,c);
+      when 550..558 => return use_syscon(job-440,a,b,c);
+      when 559 => return use_syscon(72,a,b,c);
      -- operations on Laurent container for quad doubles :
-      when 560..567 => return use_syscon(job-440,a,b,c);
+      when 560..568 => return use_syscon(job-440,a,b,c);
+      when 569 => return use_syscon(73,a,b,c);
      -- setting seed and producing version string
       when 998 => return Set_Seed;
       when 999 => return Version_String;
