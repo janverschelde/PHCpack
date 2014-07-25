@@ -2,32 +2,7 @@ with unchecked_deallocation;
 with Standard_Integer_Vectors;
 with Standard_Integer_Matrices;          use Standard_Integer_Matrices;
 
---with text_io,integer_io; use text_io,integer_io;
-
 package body Generic_Laur_Poly_Functions is
-
--- NOTE : Evaluation is not guaranteed to work for negative exponents...
-
--- DATA STRUCTURES : 
-
-  MAX_INT : constant integer32 := 100000;
-
---  type kind is (coefficient,polynomial);
---  type Poly_Rec ( k : kind := coefficient ) is record
---    case k is
---      when coefficient => c : number;
---      when polynomial  => p : Eval_Poly;
---    end case;
---  end record;
---  type Coeff_Poly_Rec ( k : kind := coefficient ) is record
---    case k is
---      when coefficient => c : integer;
---      when polynomial  => p : Eval_Coeff_Poly;
---    end case;
---  end record;
-
---  type Eval_Poly_Rep is array(integer range <>) of Poly_Rec;
---  type Eval_Coeff_Poly_Rep is array(integer range <>) of Coeff_Poly_Rec;
 
   procedure free is new unchecked_deallocation(Eval_Poly_Rep,Eval_Poly);
   procedure free is
@@ -57,9 +32,16 @@ package body Generic_Laur_Poly_Functions is
   --   Returns the corresponding value for c, when it lies in 1..n,
   --   otherwise 0 is returned.
 
+    diff : number;
+    eqzero : boolean;
+
   begin
     for i in 1..n loop
-      if c = Create(integer(i))
+     -- if c = Create(integer(i)) -- not good for multiprecision
+      diff := c - Create(integer(i));
+      eqzero := Equal(diff,zero);
+      clear(diff);
+      if eqzero
        then return i;
       end if;
     end loop;
@@ -239,13 +221,13 @@ package body Generic_Laur_Poly_Functions is
       nt : Term;
 
     begin
-      nt.cf := t.cf;
+      copy(t.cf,nt.cf);
       nt.dg := new Standard_Integer_Vectors.Vector(t.dg'first..t.dg'last-1);
       for i in nt.dg'range loop
         nt.dg(i) := t.dg(i+1);
       end loop;
-      Clear(nt);
       Add(terms(t.dg(t.dg'first)),nt);
+      Clear(nt);
       cont := true;
     end Add_Term;
     procedure Add_Terms is new Visiting_Iterator(Add_Term);
@@ -302,7 +284,7 @@ package body Generic_Laur_Poly_Functions is
       nt : Term;
 
     begin
-      nt.cf := t.cf;
+      copy(t.cf,nt.cf);
       nt.dg := new Standard_Integer_Vectors.Vector(t.dg'first..t.dg'last-1);
       for i in nt.dg'range loop
         nt.dg(i) := t.dg(i+1);
@@ -413,7 +395,7 @@ package body Generic_Laur_Poly_Functions is
       max := Maximum(0,Maximal_Degree(p,ind));
       min := Minimum(0,Minimal_Degree(p,ind));
       res := Create(lp,n,nb,max,min);
-      Clear(lp);
+      Clear(lp);  
     end if;
     return res;
   end Create;
@@ -676,7 +658,12 @@ package body Generic_Laur_Poly_Functions is
 
   begin
     if vprec.k = coefficient then
+     -- if vprec.c < c'first or vprec.c > c'last  -- fixes SIGBUS
+     --  then copy(zero,res);
+     --       put("vprec.c = "); put(vprec.c,1); put(" out of range!");
+     --  else
       copy(c(vprec.c),res);
+     -- end if;
     elsif vprec.p = null then
       copy(zero,res);
     else
