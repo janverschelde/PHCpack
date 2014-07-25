@@ -38,8 +38,10 @@ quaddobl_complex_poly_sysfun      : quad double polynomial system functions
 quaddobl_complex_laur_functions   : complex quad double Laurent functions
 quaddobl_complex_laur_sysfun      : quad double Laurent system functions
 multprec_complex_poly_functions   : evaluating multprec complex polynomials
+multprec_complex_laur_functions   : evaluating multprec complex Laurentials
 multprec_floating_poly_functions  : evaluating multprec floating polynomials
 multprec_complex_poly_sysfun      : evaluating multprec complex poly systems
+multprec_complex_laur_sysfun      : evaluating multprec complex laur systems
 multprec_floating_poly_sysfun     : evaluating multprec floating poly systems
 standard_evaluator_packages       : create package to evaluate systems
 -------------------------------------------------------------------------------
