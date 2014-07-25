@@ -41,9 +41,15 @@ package body Generic_Polynomial_Functions is
   --   Returns the corresponding value for c, when it lies in 1..n,
   --   otherwise 0 is returned.
 
+    diff : number;
+    eqzero : boolean;
+
   begin
     for i in 1..n loop
-      if c = Create(integer(i))
+     -- if c = Create(integer(i)) -- not okay for multiprecision
+      diff := c - Create(integer(i));
+      eqzero := Equal(diff,zero);
+      if eqzero
        then return integer32(i);
       end if;
     end loop;
@@ -85,10 +91,10 @@ package body Generic_Polynomial_Functions is
     tmpdeg : natural32;
 
   begin
-    tmpcff := cff(i);  -- Copy(cff(i),tmpcff);
-    cff(i) := cff(j);  -- Copy(cff(j),cff(i));
-    cff(j) := tmpcff;  -- Copy(tmpcff,cff(j));
-                       -- Clear(tmpcff);
+    Copy(cff(i),tmpcff); -- tmpcff := cff(i);
+    Copy(cff(j),cff(i)); -- cff(i) := cff(j);
+    Copy(tmpcff,cff(j)); -- cff(j) := tmpcff;
+    Clear(tmpcff);
     for kk in k..deg'last(2) loop
       tmpdeg := deg(i,kk);
       deg(i,kk) := deg(j,kk);

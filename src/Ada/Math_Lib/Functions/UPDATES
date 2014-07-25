@@ -1,5 +1,7 @@
 Fri 25 Jul 2014 : Fixed several bugs in generic_laur_poly_functions.adb,
-  tested by ts_laurpoly.adb in ../Polynomials.
+  tested by ts_laurpoly.adb in ../Polynomials.  Did similar updates for
+  the coefficient polynomial evaluation in generic_poynomial_functions,
+  tested by ts_poly.adb in ../Polynomials.
 
 Fri 4 Jul 2014 : extended exponent_vectors for double double coefficients
   and for quad double coefficients.
