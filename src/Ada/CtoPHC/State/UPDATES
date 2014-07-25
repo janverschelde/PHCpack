@@ -1,3 +1,6 @@
+Fri 25 Jul 2014 : new multprec_laursys_container, tested by ts_syscon for
+  Laurent systems with multprecision complex coefficients.
+
 Thu 24 Jul 2014 : added four extra jobs to use_c2phc to parse strings and
   write to strings Laurent polynomials in dd and qd precision.
   To use_syscon, added an extra operation to load a Laurential 

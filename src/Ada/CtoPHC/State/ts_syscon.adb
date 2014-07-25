@@ -32,6 +32,10 @@ with Multprec_Complex_Polynomials;
 with Multprec_Complex_Polynomials_io;   use Multprec_Complex_Polynomials_io;
 with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems_io;  use Multprec_Complex_Poly_Systems_io;
+with Multprec_Complex_Laurentials;
+with Multprec_Complex_Laurentials_io;   use Multprec_Complex_Laurentials_io;
+with Multprec_Complex_Laur_Systems;
+with Multprec_Complex_Laur_Systems_io;  use Multprec_Complex_Laur_Systems_io;
 with Standard_PolySys_Container;
 with DoblDobl_PolySys_Container;
 with QuadDobl_PolySys_Container;
@@ -39,6 +43,7 @@ with Multprec_PolySys_Container;
 with Laurent_Systems_Container;
 with DoblDobl_LaurSys_Container;
 with QuadDobl_LaurSys_Container;
+with Multprec_LaurSys_Container;
 
 procedure ts_syscon is
 
@@ -289,11 +294,48 @@ procedure ts_syscon is
     end loop;
   end QuadDobl_Test_Laurent_Retrievals;
 
+  procedure Multprec_Test_Laurent_Retrievals is
+
+  -- DESCRIPTION :
+  --   Test on retrieving data from the Laurent system container,
+  --   for multiprecision complex coefficients.
+
+    use Multprec_Complex_Laurentials;
+
+    n : constant natural32 := Multprec_LaurSys_Container.Dimension;
+    m : natural32;
+   -- lp : Multprec_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    put("Dimension of the system : "); put(n,1); new_line;
+   -- lp := Multprec_LaurSys_Container.Retrieve;
+   -- put_line("The Laurent polynomial system : "); put(lp.all);
+    for i in 1..integer32(n) loop
+      m := Multprec_LaurSys_Container.Number_of_Terms(i);
+      put("Number of terms in polynomial "); put(i,1);
+      put(" : "); put(m,1); new_line;
+      declare
+        p : Poly := Null_Poly;
+      begin
+        for j in 1..m loop
+          declare
+            t : Term := Multprec_LaurSys_Container.Retrieve_Term(i,j);
+          begin
+            Add(p,t);
+            Clear(t);
+          end;
+        end loop;
+        put(p); new_line;
+        put(Multprec_LaurSys_Container.Retrieve(i)); new_line;
+      end;
+    end loop;
+  end Multprec_Test_Laurent_Retrievals;
+
   procedure Standard_Test_Additions
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
-  --   Tests the constructors of the package.
+  --   Tests the constructors of the standard double polynomial container.
 
     use Standard_Complex_Polynomials;
 
@@ -320,7 +362,7 @@ procedure ts_syscon is
               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
-  --   Tests the constructors of the package.
+  --   Tests the constructors of the double double polynomial container.
 
     use DoblDobl_Complex_Polynomials;
 
@@ -347,7 +389,7 @@ procedure ts_syscon is
               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
-  --   Tests the constructors of the package.
+  --   Tests the constructors of the quad double polynomial container.
 
     use QuadDobl_Complex_Polynomials;
 
@@ -374,7 +416,7 @@ procedure ts_syscon is
               ( p : in Multprec_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
-  --   Tests the constructors of the package.
+  --   Tests the constructors of the multiprecision polynomial container.
 
     use Multprec_Complex_Polynomials;
 
@@ -401,7 +443,7 @@ procedure ts_syscon is
               ( p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
 
   -- DESCRIPTION :
-  --   Tests the constructors of the package.
+  --   Tests the constructors of the standard double Laurent container.
 
     use Standard_Complex_Laurentials;
 
@@ -428,7 +470,7 @@ procedure ts_syscon is
               ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
 
   -- DESCRIPTION :
-  --   Tests the constructors of the package.
+  --   Tests the constructors of the double double Laurent container.
 
     use DoblDobl_Complex_Laurentials;
 
@@ -455,7 +497,7 @@ procedure ts_syscon is
               ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
 
   -- DESCRIPTION :
-  --   Tests the constructors of the package.
+  --   Tests the constructors of the quad double Laurent container.
 
     use QuadDobl_Complex_Laurentials;
 
@@ -478,6 +520,33 @@ procedure ts_syscon is
     put(QuadDobl_LaurSys_Container.Retrieve.all);
   end QuadDobl_Test_Laurent_Additions;
 
+  procedure Multprec_Test_Laurent_Additions
+              ( p : in Multprec_Complex_Laur_Systems.Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Tests the constructors of the multiprecision Laurent container.
+
+    use Multprec_Complex_Laurentials;
+
+    ind : integer32;
+
+    procedure Add_Term ( t : in Term; continue : out boolean ) is
+    begin
+      Multprec_LaurSys_Container.Add_Term(ind,t);
+      continue := true;
+    end Add_Term;
+    procedure Add_Terms is new Visiting_Iterator(Add_Term);
+
+  begin
+    Multprec_LaurSys_Container.Initialize(p'last);
+    for i in p'range loop
+      ind := i;
+      Add_Terms(p(i));
+    end loop;
+    put_line("The Laurent polynomial system : ");
+    put(Multprec_LaurSys_Container.Retrieve.all);
+  end Multprec_Test_Laurent_Additions;
+
   procedure Main is
 
     st_lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -487,6 +556,7 @@ procedure ts_syscon is
     st_lq : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
     dd_lq : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
     qd_lq : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    mp_lq : Multprec_Complex_Laur_Systems.Link_to_Laur_Sys;
     ans : character;
 
   begin
@@ -499,8 +569,9 @@ procedure ts_syscon is
     put_line("  5. test Laurent systems in standard double precision;");
     put_line("  6. test Laurent systems in double double precision;");
     put_line("  7. test Laurent systems in quad double precision;");
-    put("Type 1, 2, 3, 4, 5, 6, or 7 to select the precision : ");
-    Ask_Alternative(ans,"1234567");
+    put_line("  8. test Laurent systems in arbitrary multiprecision;");
+    put("Type 1, 2, 3, 4, 5, 6, 7, or 8 to select the precision : ");
+    Ask_Alternative(ans,"12345678");
     new_line;
     case ans is
       when '1' =>
@@ -545,6 +616,12 @@ procedure ts_syscon is
         QuadDobl_Test_Laurent_Retrievals;
         QuadDobl_LaurSys_Container.Clear;
         QuadDobl_Test_Laurent_Additions(qd_lq.all);
+      when '8' =>
+        get(mp_lq);
+        Multprec_LaurSys_Container.Initialize(mp_lq.all);
+        Multprec_Test_Laurent_Retrievals;
+        Multprec_LaurSys_Container.Clear;
+        Multprec_Test_Laurent_Additions(mp_lq.all);
       when others => null;
     end case;
   end Main;
