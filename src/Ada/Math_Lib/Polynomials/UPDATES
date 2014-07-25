@@ -1,3 +1,6 @@
+Fri 25 Jul 2014 : extended ts_laurpoly.adb to test the evaluation
+  for multiprecision coefficients.
+
 Wed 23 Jul 2014 : bug fix in dobldobl_laurentials_io.adb and new package
   dobldobl_complex_laur_strings, tested by ts_parse.adb.
 
