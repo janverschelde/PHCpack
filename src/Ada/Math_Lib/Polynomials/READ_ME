@@ -118,6 +118,7 @@ multprec_complex_poly_systems_io  : simple output of multiprec complex systems
 multprec_floating_poly_systems    : systems of multiprec floating polynomials
 multprec_floating_poly_systems_io : simple output for multiprec real systems
 multprec_complex_jaco_matrices    : Jacobi matrices for multiprecision complex
+multprec_complex_laur_jacomats    : multprec complex Laurent Jacobi matrices
 multprec_floating_jaco_matrices   : Jacobi matrices for multiprecision real
 multprec_complex_laur_systems     : multiprecision Laurent systems
 multprec_complex_laur_systems_io  : i/o for multiprecision Laurent systems

@@ -1,5 +1,7 @@
 Fri 25 Jul 2014 : extended ts_laurpoly.adb and ts_poly.adb to test the 
-  evaluation for multiprecision coefficients.
+  evaluation for multiprecision coefficients.  Instantiation of the
+  generic_laur_jaco_matrices with multiprecision complex numbers leads
+  to the package multprec_complex_laur_JacoMats.
 
 Wed 23 Jul 2014 : bug fix in dobldobl_laurentials_io.adb and new package
   dobldobl_complex_laur_strings, tested by ts_parse.adb.
