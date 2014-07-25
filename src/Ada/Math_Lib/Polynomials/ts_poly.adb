@@ -345,6 +345,7 @@ procedure ts_poly is
     p : Standard_Complex_Polynomials.Poly;
     mp : Multprec_Complex_Polynomials.Poly;
     ep : Multprec_Complex_Poly_Functions.Eval_Poly;
+    ecp : Multprec_Complex_Poly_Functions.Eval_Coeff_Poly;
 
   begin
     new_line;
@@ -356,18 +357,23 @@ procedure ts_poly is
     put_line("Your polynomial p : "); put(p); new_line;
     mp := Convert(p);
     ep := Create(mp);
+    ecp := Create(mp);
     declare
       x : Multprec_Complex_Vectors.Vector(1..integer32(n));
+      cp : constant Multprec_Complex_Vectors.Vector
+         := Multprec_Complex_Poly_Functions.Coeff(mp); 
       sz : natural32 := 0;
-      y1,y2 : Multprec_Complex_Numbers.Complex_Number;
+      y1,y2,y3 : Multprec_Complex_Numbers.Complex_Number;
     begin
+      put_line("The coefficient vector : "); put_line(cp);
       put("Give "); put(n,1); put_line(" complex numbers : "); get(x);
       loop
         put("Give the size of the numbers : "); get(sz);
         Set_Size(x,sz);
-        y1 := Eval(mp,x); put("p(x) : "); put(y1); new_line;
-        y2 := Eval(ep,x); put("e(x) : "); put(y2); new_line;
-        if Equal(y1,y2)
+        y1 := Eval(mp,x);     put("p(x)   : "); put(y1); new_line;
+        y2 := Eval(ep,x);     put("e(x)   : "); put(y2); new_line;
+        y3 := Eval(ecp,cp,x); put("f(c,x) : "); put(y3); new_line;
+        if Equal(y1,y2) and Equal(y1,y3)
          then put_line("Test on evaluation is successful.");
          else put_line("Different results!  Bug detected.");
         end if;
