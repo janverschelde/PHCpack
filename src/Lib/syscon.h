@@ -54,6 +54,16 @@ int syscon_read_multprec_system ( int deci );
  *   the coefficients is given by the value of deci.
  *   Returns 0 if okay, otherwise returns the fail value. */
 
+int syscon_read_multprec_Laurent_system ( int deci );
+/* 
+ * DESCRIPTION :
+ *   Prompts the user for a file, reads system from file, and 
+ *   puts the system in the container for Laurent systems with 
+ *   multiprecision coefficients; where the number of decimal places 
+ *   in the working precision to evaluate the coefficients is given
+ *   by the value of deci.
+ *   Returns 0 if okay, otherwise returns the fail value. */
+
 int syscon_random_system ( int n, int m, int d, int c );
 /*
  * DESCRIPTION :
@@ -105,6 +115,12 @@ int syscon_write_multprec_system ( void );
  *   Writes the system in the container of systems 
  *   with multiprecision coefficients to screen. */
 
+int syscon_write_multprec_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Writes the system in the container of Laurent systems 
+ *   with multiprecision coefficients to screen. */
+
 int syscon_number_of_polynomials ( int *length );
 /*
  * DESCRIPTION :
@@ -144,6 +160,12 @@ int syscon_number_of_multprec_polynomials ( int *length );
  * DESCRIPTION :
  *   Returns in length the number of polynomials in the container
  *   for systems with multiprecision coefficients. */
+
+int syscon_number_of_multprec_Laurentials ( int *length );
+/*
+ * DESCRIPTION :
+ *   Returns in length the number of polynomials in the container
+ *   for Laurent systems with multiprecision coefficients. */
 
 int syscon_initialize_number ( int length );
 /*
@@ -631,6 +653,12 @@ int syscon_clear_multprec_system ( void );
 /*
  * DESCRIPTION :
  *   Clears the content of the systems container
+ *   for systems with multiprecision coefficients. */
+
+int syscon_clear_multprec_Laurent_system ( void );
+/*
+ * DESCRIPTION :
+ *   Clears the content of the Laurent systems container
  *   for systems with multiprecision coefficients. */
 
 int syscon_number_of_symbols ( int *n );

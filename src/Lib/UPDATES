@@ -1,3 +1,6 @@
+Sat 26 Jul 2014 : added operations to syscon for operating the container
+  for Laurent systems with multiprecision coefficients.
+
 Thu 24 Jul 2014 : updated syscon to store and load Laurent polynomials in 
   standard double, double double, and quad double precision.
   Called the new functions in phcpy2c for use in Python.

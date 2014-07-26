@@ -61,6 +61,14 @@ int syscon_read_multprec_system ( int deci )
    return fail;
 }
 
+int syscon_read_multprec_Laurent_system ( int deci )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(570,&deci,b,c);
+   return fail;
+}
+
 int syscon_random_system ( int n, int m, int d, int c )
 {
    int b[3],fail;
@@ -128,6 +136,14 @@ int syscon_write_multprec_system ( void )
    return fail;
 }
 
+int syscon_write_multprec_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(571,a,b,c);
+   return fail;
+}
+
 int syscon_number_of_polynomials ( int *length )
 {
    int *b,fail;
@@ -184,6 +200,14 @@ int syscon_number_of_multprec_polynomials ( int *length )
    return fail;
 }
 
+int syscon_number_of_multprec_Laurentials ( int *length )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(572,length,b,c);
+   return fail;
+}
+
 int syscon_initialize_number ( int length )
 {
    int *b,fail;
@@ -237,6 +261,14 @@ int syscon_initialize_number_of_multprec_polynomials ( int length )
    int *b,fail;
    double *c;
    fail = _ada_use_c2phc(443,&length,b,c);
+   return fail;
+}
+
+int syscon_initialize_number_of_multprec_Laurentials ( int length )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(573,&length,b,c);
    return fail;
 }
 
@@ -738,6 +770,14 @@ int syscon_clear_multprec_system ( void )
    int *a,*b,fail;
    double *c;
    fail = _ada_use_c2phc(447,a,b,c);
+   return fail;
+}
+
+int syscon_clear_multprec_Laurent_system ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(577,a,b,c);
    return fail;
 }
 
