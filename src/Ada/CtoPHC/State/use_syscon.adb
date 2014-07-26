@@ -40,6 +40,9 @@ with Multprec_Complex_Polynomials_io;
 with Multprec_Complex_Poly_Strings;
 with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems_io;  use Multprec_Complex_Poly_Systems_io;
+with Multprec_Complex_Laurentials;
+with Multprec_Complex_Laur_Systems;
+with Multprec_Complex_Laur_Systems_io;  use Multprec_Complex_Laur_Systems_io;
 with Polynomial_Drops;
 with Total_Degree_Start_Systems;
 with PHCpack_Operations;
@@ -50,6 +53,7 @@ with Multprec_PolySys_Container;
 with Laurent_Systems_Container;
 with DoblDobl_LaurSys_Container;
 with QuadDobl_LaurSys_Container;
+with Multprec_LaurSys_Container;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 
 function use_syscon ( job : integer32;
@@ -104,6 +108,18 @@ function use_syscon ( job : integer32;
     QuadDobl_LaurSys_Container.Initialize(lp.all);
     return 0;
   end Job120;
+
+  function Job130 return integer32 is -- read Laurent sys into mp container
+
+    lp : Multprec_Complex_Laur_Systems.Link_to_Laur_Sys;
+
+  begin
+    new_line;
+    put_line("Reading a Laurent polynomial system...");
+    get(lp);
+    Multprec_LaurSys_Container.Initialize(lp.all);
+    return 0;
+  end Job130;
 
   function Job200 return integer32 is -- read dobldobl system into container
 
@@ -206,6 +222,21 @@ function use_syscon ( job : integer32;
     return 0;
   end Job121;
 
+  function Job131 return integer32 is -- write system in container
+ 
+    use Multprec_Complex_Laur_Systems;
+    lp : constant Link_to_Laur_Sys := Multprec_LaurSys_Container.Retrieve;
+
+  begin
+    if lp /= null then
+      if PHCpack_Operations.file_okay
+       then put(PHCpack_Operations.output_file,lp.all);
+       else put(standard_output,lp.all);
+      end if;
+    end if;
+    return 0;
+  end Job131;
+
   function Job201 return integer32 is -- write system in container
  
     use DoblDobl_Complex_Poly_Systems;
@@ -281,6 +312,12 @@ function use_syscon ( job : integer32;
     return 0;
   end Job122;
 
+  function Job132 return integer32 is -- return dimension of Laurent system
+  begin
+    Assign(integer32(Multprec_LaurSys_Container.Dimension),a);
+    return 0;
+  end Job132;
+
   function Job202 return integer32 is -- return dimension of system
   begin
     Assign(integer32(DoblDobl_PolySys_Container.Dimension),a);
@@ -342,6 +379,17 @@ function use_syscon ( job : integer32;
     Symbol_Table.Init(natural32(n));
     return 0;
   end Job123;
+
+  function Job133 return integer32 is -- initialize container with dimension
+
+    v : constant C_Integer_Array := C_intarrs.Value(a);
+    n : constant integer32 := integer32(v(v'first));
+
+  begin
+    Multprec_LaurSys_Container.Initialize(n);
+    Symbol_Table.Init(natural32(n));
+    return 0;
+  end Job133;
 
   function Job203 return integer32 is -- initialize container with dimension
 
@@ -424,6 +472,18 @@ function use_syscon ( job : integer32;
     return 0;
   end Job124;
 
+  function Job134 return integer32 is -- returns #terms of a Laurential
+
+    v : constant C_Integer_Array
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    use Interfaces.C;
+    i : constant integer32 := integer32(v(v'first+1));
+
+  begin
+    Assign(integer32(Multprec_LaurSys_Container.Number_of_Terms(i)),a);
+    return 0;
+  end Job134;
+
   function Job204 return integer32 is -- returns #terms of a polynomial
 
     v : constant C_Integer_Array
@@ -475,7 +535,7 @@ function use_syscon ( job : integer32;
     return 0;
   end Job5;
 
-  function Job105 return integer32 is -- returns a term of a polynomial
+  function Job105 return integer32 is -- returns a term of a Laurential
 
     v : constant C_Integer_Array(0..2)
       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
@@ -490,7 +550,7 @@ function use_syscon ( job : integer32;
     return 0;
   end Job105;
 
-  function Job115 return integer32 is -- returns a term of a polynomial
+  function Job115 return integer32 is -- returns a term of a Laurential
 
     v : constant C_Integer_Array(0..2)
       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
@@ -505,7 +565,7 @@ function use_syscon ( job : integer32;
     return 0;
   end Job115;
 
-  function Job125 return integer32 is -- returns a term of a polynomial
+  function Job125 return integer32 is -- returns a term of a Laurential
 
     v : constant C_Integer_Array(0..2)
       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
@@ -519,6 +579,21 @@ function use_syscon ( job : integer32;
     Assign(t.dg.all,b);
     return 0;
   end Job125;
+
+  function Job135 return integer32 is -- returns a term of a Laurential
+
+    v : constant C_Integer_Array(0..2)
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+    i : constant integer32 := integer32(v(1));
+    j : constant natural32 := natural32(v(2));
+    t : constant Multprec_Complex_Laurentials.Term 
+      := Multprec_LaurSys_Container.Retrieve_Term(i,j);
+
+  begin
+   -- Assign(t.cf,c);
+    Assign(t.dg.all,b);
+    return 0;
+  end Job135;
 
   function Job205 return integer32 is -- returns a term of a polynomial
 
@@ -567,7 +642,7 @@ function use_syscon ( job : integer32;
     return 0;
   end Job6;
 
-  function Job106 return integer32 is -- add a term to a polynomial
+  function Job106 return integer32 is -- add a term to a Laurential
 
     v : constant C_Integer_Array(0..1)
       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
@@ -584,7 +659,7 @@ function use_syscon ( job : integer32;
     return 0;
   end Job106;
 
-  function Job116 return integer32 is -- add a term to a polynomial
+  function Job116 return integer32 is -- add a term to a Laurential
 
     v : constant C_Integer_Array(0..1)
       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
@@ -601,7 +676,7 @@ function use_syscon ( job : integer32;
     return 0;
   end Job116;
 
-  function Job126 return integer32 is -- add a term to a polynomial
+  function Job126 return integer32 is -- add a term to a Laurential
 
     v : constant C_Integer_Array(0..1)
       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
@@ -617,6 +692,23 @@ function use_syscon ( job : integer32;
     QuadDobl_LaurSys_Container.Add_Term(i,t);
     return 0;
   end Job126;
+
+  function Job136 return integer32 is -- add a term to a Laurential
+
+    v : constant C_Integer_Array(0..1)
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    n : constant integer32 := integer32(v(0));
+    i : constant integer32 := integer32(v(1));
+    e : Standard_Integer_Vectors.Vector(1..n);
+    t : Multprec_Complex_Laurentials.Term;
+
+  begin
+   -- Assign(c,t.cf);
+    Assign(natural32(n),b,e);
+    t.dg := new Standard_Integer_Vectors.Vector'(e);
+    Multprec_LaurSys_Container.Add_Term(i,t);
+    return 0;
+  end Job136;
 
   function Job206 return integer32 is -- add a term to a polynomial
 
@@ -675,6 +767,12 @@ function use_syscon ( job : integer32;
     QuadDobl_LaurSys_Container.Clear;
     return 0;
   end Job127;
+
+  function Job137 return integer32 is -- clears the container
+  begin
+    Multprec_LaurSys_Container.Clear;
+    return 0;
+  end Job137;
 
   function Job207 return integer32 is -- clears the container
   begin
@@ -1514,6 +1612,15 @@ function use_syscon ( job : integer32;
       when 126 => return Job126; -- add a term to a polynomial
       when 127 => return Job127; -- clear the container
       when 128 => return Job128; -- store quaddobl Laurential string
+     -- jobs for multiprecision complex Laurent polynomials :
+      when 130 => return Job130; -- read system into container
+      when 131 => return Job131; -- write system in container
+      when 132 => return Job132; -- return dimension of system
+      when 133 => return Job133; -- initialize container with dimension
+      when 134 => return Job134; -- return #terms of a polynomial
+      when 135 => return Job135; -- return a term of a polynomial
+      when 136 => return Job136; -- add a term to a polynomial
+      when 137 => return Job137; -- clear the container
      -- jobs for double double complex polynomials
       when 200 => return Job200; -- read system into container
       when 201 => return Job201; -- write system in container

@@ -82,7 +82,16 @@ function use_syscon ( job : integer32;
 --                    a[0] : number of characters in the string,
 --                    a[1] : index of the polynomial in the system,
 --                    b : string converted to an integer array.
-
+--
+-- the operations in the Laurent systems container in multiprecision :
+--
+--   job    = 130 : read polynomial system and put in container;
+--          = 131 : write the polynomial system in the container;
+--          = 132 : return in a[0] the dimension of the polynomial system;
+--          = 133 : initializes the container with the dimension in a[0];
+--          = 124 : return in a[0] the number of terms in the i-th polynomial;
+--          = 137 : the systems container is cleared;
+--
 -- the operations in the double double polynomial systems container :
 -- 
 --   job    = 200 : read polynomial system and put in container;
