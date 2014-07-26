@@ -1,5 +1,6 @@
 Sat 26 Jul 2014 : added operations to the use_syscon gateway to deal with
-  systems of multiprecision Laurent systems.
+  systems of multiprecision Laurent systems.  Provided the operations also
+  to the central gateway use_c2phc.
 
 Fri 25 Jul 2014 : new multprec_laursys_container, tested by ts_syscon for
   Laurent systems with multprecision complex coefficients.

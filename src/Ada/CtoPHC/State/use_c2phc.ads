@@ -746,6 +746,15 @@ function use_c2phc ( job : integer32;
 --                       the k-th polynomial in the container,
 --                 this is the reverse of operation 568.
 --
+-- the operations in the Laurent systems container in multiprecision :
+--
+--   job   = 570 : read polynomial system and put in container;
+--         = 571 : write the polynomial system in the container;
+--         = 572 : return in a[0] the dimension of the polynomial system;
+--         = 573 : initializes the container with the dimension in a[0];
+--         = 574 : return in a[0] the number of terms in the i-th polynomial;
+--         = 577 : the contents of the systems container is cleared.
+--
 -- operations to incrementally read/write solution from/to file :
 --
 --   job   = 130 : prompts the user for a file name for solutions,
