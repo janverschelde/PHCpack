@@ -41,6 +41,7 @@ with Multprec_Complex_Poly_Strings;
 with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems_io;  use Multprec_Complex_Poly_Systems_io;
 with Multprec_Complex_Laurentials;
+with Multprec_Complex_Laur_Strings;
 with Multprec_Complex_Laur_Systems;
 with Multprec_Complex_Laur_Systems_io;  use Multprec_Complex_Laur_Systems_io;
 with Polynomial_Drops;
@@ -944,7 +945,7 @@ function use_syscon ( job : integer32;
     Assign(sv,b);
     return 0;
   exception
-    when others => return 72;
+    when others => return 73;
   end Job73;
 
   function Job69 return integer32 is -- poly as string from quaddobl container
@@ -1152,8 +1153,64 @@ function use_syscon ( job : integer32;
     QuadDobl_Complex_Laurentials.Clear(p);
     return 0;
   exception
-    when others => return 118;
+    when others => return 128;
   end Job128;
+
+  function Job138 return integer32 is -- mp laur poly as str to container
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(4));
+    nc : constant integer := integer(v_a(v_a'first));
+    n : constant natural32 := natural32(v_a(v_a'first+1));
+    k : constant integer32 := integer32(v_a(v_a'first+2));
+    size : constant natural32 := natural32(v_a(v_a'first+3));
+    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
+    v_b : constant C_Integer_Array(0..nc1)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
+    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
+    p : Multprec_Complex_Laurentials.Poly;
+
+  begin
+   -- put("Polynomial "); put(k,1);
+   -- put(" given as string of "); put(nc,1);
+   -- put_line(" characters.");
+   -- put("The string : "); put_line(s);
+    if Symbol_Table.Empty then
+      Symbol_Table.Init(n);
+    elsif Symbol_Table.Maximal_Size < n then
+      Symbol_Table.Clear;
+      Symbol_Table.Init(n);
+    end if;
+    p := Multprec_Complex_Laur_Strings.Parse(n,size,s);
+    Multprec_LaurSys_Container.Add_Poly(k,p);
+    Multprec_Complex_Laurentials.Clear(p);
+    return 0;
+  exception
+    when others => return 138;
+  end Job138;
+
+  function Job139 return integer32 is -- Laurpoly as string from mp container
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    p : constant Multprec_Complex_Laurentials.Poly
+      := Multprec_LaurSys_Container.Retrieve_Poly(equ);
+    s : constant string := Multprec_Complex_Laur_Strings.Write(p);
+    sv : constant Standard_Integer_Vectors.Vector
+       := String_to_Integer_Vector(s);
+    slast : constant integer32 := integer32(s'last);
+
+  begin
+   -- put("Polynomial "); put(equ,1); put(" : "); put_line(s);
+   -- put("#characters : "); put(s'last,1); new_line;
+    Assign(slast,a);
+    Assign(sv,b);
+    return 0;
+  exception
+    when others => return 139;
+  end Job139;
 
   function Job208 return integer32 is -- dd poly as string to container
 
@@ -1621,6 +1678,8 @@ function use_syscon ( job : integer32;
       when 135 => return Job135; -- return a term of a polynomial
       when 136 => return Job136; -- add a term to a polynomial
       when 137 => return Job137; -- clear the container
+      when 138 => return Job138; -- store multprec Laurential string
+      when 139 => return Job139; -- load multprec Laurential into string
      -- jobs for double double complex polynomials
       when 200 => return Job200; -- read system into container
       when 201 => return Job201; -- write system in container

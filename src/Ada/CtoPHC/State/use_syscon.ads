@@ -60,7 +60,8 @@ function use_syscon ( job : integer32;
 --                  container for systems with double double precision,
 --                  with the input parameters as follows:
 --                    a[0] : number of characters in the string,
---                    a[1] : index of the polynomial in the system,
+--                    a[1] : number of variables in the Laurent polynomial,
+--                    a[2] : index of the polynomial in the system,
 --                    b : string converted to an integer array.
 --
 -- the operations in the Laurent systems container with quad doubles :
@@ -80,7 +81,8 @@ function use_syscon ( job : integer32;
 --                  container for systems with quad double precision,
 --                  with the input parameters as follows:
 --                    a[0] : number of characters in the string,
---                    a[1] : index of the polynomial in the system,
+--                    a[1] : number of variables in the Laurent polynomial, 
+--                    a[2] : index of the polynomial in the system,
 --                    b : string converted to an integer array.
 --
 -- the operations in the Laurent systems container in multiprecision :
@@ -91,6 +93,21 @@ function use_syscon ( job : integer32;
 --          = 133 : initializes the container with the dimension in a[0];
 --          = 124 : return in a[0] the number of terms in the i-th polynomial;
 --          = 137 : the systems container is cleared;
+--          = 138 : puts a Laurent polynomial given as a string in the
+--                  container for systems with quad double precision,
+--                  with the input parameters as follows:
+--                    a[0] : number of characters in the string,
+--                    a[1] : number of variables in the Laurent polynomial,
+--                    a[2] : index of the polynomial in the system,
+--                    a[3] : precision to evaluate the coefficients,
+--                    b : string converted to an integer array.
+--          = 139 : loads a Laurent polynomial from the multprec
+--                  systems container into a string:
+--                    a[0] : index of the polynomial k on entry,
+--                           and number of characters in the string on return,
+--                    b : characters in the string representation of
+--                        the k-th polynomial in the container,
+--                  this is the reverse of operation 138.
 --
 -- the operations in the double double polynomial systems container :
 -- 
@@ -208,12 +225,14 @@ function use_syscon ( job : integer32;
 --          =  74 : puts a Laurent polynomial given as a string in the system 
 --                  container, with the input parameters as follows:
 --                    a[0] : number of characters in the string,
---                    a[1] : index of the polynomial in the system,
+--                    a[1] : number of variables in the Laurent polynomial,
+--                    a[2] : index of the polynomial in the system,
 --                    b : string converted to an integer array.
 --          =  76 : puts a polynomial given as a string in the system 
 --                  container, with the input parameters as follows:
 --                    a[0] : number of characters in the string,
---                    a[1] : index of the polynomial in the system,
+--                    a[1] : number of variables in the polynomial,
+--                    a[2] : index of the polynomial in the system,
 --                    b : string converted to an integer array,
 --                  this is the reverse of operation 67;
 --          =  77 : loads a Laurent polynomial from the standard double
@@ -266,6 +285,7 @@ function use_syscon ( job : integer32;
 --   b        memory allocated for array of integers, used for exponents;
 --   c        memory allocated for array of double floating-point numbers,
 --            used for real and imaginary part of complex coefficient.
+--
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
 --   e.g.: indices to monomial out of range, or job not in the proper range.
