@@ -1,5 +1,5 @@
 Sun 27 Jul 2014 : added store/load operations to use_syscon for Laurent
-  systems with multiprecision coefficients.
+  systems with multiprecision coefficients, also added to use_c2phc.
 
 Sat 26 Jul 2014 : added operations to the use_syscon gateway to deal with
   systems of multiprecision Laurent systems.  Provided the operations also

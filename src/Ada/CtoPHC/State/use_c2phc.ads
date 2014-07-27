@@ -477,12 +477,14 @@ function use_c2phc ( job : integer32;
 --   job   =  74 : puts a Laurential given as a string in the system 
 --                 container, with the input parameters as follows:
 --                   a[0] : number of characters in the string,
---                   a[1] : index of the polynomial in the system,
+--                   a[1] : number of variables in the Laurent polynomial,
+--                   a[2] : index of the polynomial in the system,
 --                   b : string converted to an integer array,
 --         =  76 : puts a polynomial given as a string in the system 
 --                 container, with the input parameters as follows:
 --                   a[0] : number of characters in the string,
---                   a[1] : index of the polynomial in the system,
+--                   a[1] : number of variables in the polynomial,
+--                   a[2] : index of the polynomial in the system,
 --                   b : string converted to an integer array,
 --                 this operation is the reverse of job 67;
 --         =  77 : solves the polynomial system in the system container
@@ -709,7 +711,8 @@ function use_c2phc ( job : integer32;
 --                 container for systems with double double precision,
 --                 with the input parameters as follows:
 --                   a[0] : number of characters in the string,
---                   a[1] : index of the polynomial in the system,
+--                   a[1] : number of variables in the Laurent polynomial,
+--                   a[2] : index of the polynomial in the system,
 --                   b : string converted to an integer array;
 --         = 559 : loads a Laurent polynomial from the double double
 --                 systems container into a string:
@@ -736,7 +739,8 @@ function use_c2phc ( job : integer32;
 --                 container for systems with quad double precision,
 --                 with the input parameters as follows:
 --                   a[0] : number of characters in the string,
---                   a[1] : index of the polynomial in the system,
+--                   a[1] : number of variables in the Laurent polynomial,
+--                   a[2] : index of the polynomial in the system,
 --                   b : string converted to an integer array;
 --         = 569 : loads a Laurent polynomial from the quad double
 --                 systems container into a string:
@@ -754,6 +758,21 @@ function use_c2phc ( job : integer32;
 --         = 573 : initializes the container with the dimension in a[0];
 --         = 574 : return in a[0] the number of terms in the i-th polynomial;
 --         = 577 : the contents of the systems container is cleared.
+--         = 578 : puts a Laurent polynomial given as a string in the
+--                 container for systems with quad double precision,
+--                 with the input parameters as follows:
+--                   a[0] : number of characters in the string,
+--                   a[1] : number of variables in the Laurent polynomial,
+--                   a[2] : index of the polynomial in the system,
+--                   a[3] : precision to evaluate the coefficients,
+--                   b : string converted to an integer array.
+--         = 579 : loads a Laurent polynomial from the multprec
+--                 systems container into a string:
+--                   a[0] : index of the polynomial k on entry,
+--                          and number of characters in the string on return,
+--                   b : characters in the string representation of
+--                       the k-th polynomial in the container,
+--                 this is the reverse of operation 578.
 --
 -- operations to incrementally read/write solution from/to file :
 --

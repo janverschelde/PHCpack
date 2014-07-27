@@ -1835,7 +1835,7 @@ function use_c2phc ( job : integer32;
       when 569 => return use_syscon(73,a,b,c);
      -- operations on Laurent container for multiprecision :
       when 570..574 => return use_syscon(job-440,a,b,c);
-      when 577 => return use_syscon(137,a,b,c);
+      when 577..579 => return use_syscon(job-440,a,b,c);
      -- setting seed and producing version string
       when 998 => return Set_Seed;
       when 999 => return Version_String;
