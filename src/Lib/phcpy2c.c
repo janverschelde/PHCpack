@@ -1042,6 +1042,18 @@ static PyObject *py2c_syscon_read_multprec_system
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_syscon_read_multprec_Laurent_system 
+ ( PyObject *self, PyObject *args )
+{
+   int fail,deci;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&deci)) return NULL;   
+   fail = syscon_read_multprec_Laurent_system(deci);
+              
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_syscon_random_system ( PyObject *self, PyObject *args )
 {
    int fail,n,m,d,c;
@@ -1136,6 +1148,18 @@ static PyObject *py2c_syscon_write_multprec_system
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_syscon_write_multprec_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = syscon_write_multprec_Laurent_system();
+              
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_syscon_clear_system ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -1215,6 +1239,18 @@ static PyObject *py2c_syscon_clear_multprec_system
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;   
    fail = syscon_clear_multprec_system();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syscon_clear_multprec_Laurent_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = syscon_clear_multprec_Laurent_system();
               
    return Py_BuildValue("i",fail);
 }
@@ -1373,6 +1409,18 @@ static PyObject *py2c_syscon_number_of_quaddobl_Laurentials
    return Py_BuildValue("i",number);
 }
 
+static PyObject *py2c_syscon_number_of_multprec_Laurentials
+ ( PyObject *self, PyObject *args )
+{
+   int fail,number;
+
+   initialize();
+   if (!PyArg_ParseTuple(args,"")) return NULL;
+   fail = syscon_number_of_multprec_Laurentials(&number);
+
+   return Py_BuildValue("i",number);
+}
+
 static PyObject *py2c_syscon_initialize_number
  ( PyObject *self, PyObject *args )
 {      
@@ -1453,6 +1501,18 @@ static PyObject *py2c_syscon_initialize_number_of_quaddobl_Laurentials
    if(!PyArg_ParseTuple(args,"i",&dim)) return NULL;
    initialize();
    fail = syscon_initialize_number_of_quaddobl_Laurentials(dim);
+                 
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syscon_initialize_number_of_multprec_Laurentials
+ ( PyObject *self, PyObject *args )
+{      
+   int fail,dim;
+
+   if(!PyArg_ParseTuple(args,"i",&dim)) return NULL;
+   initialize();
+   fail = syscon_initialize_number_of_multprec_Laurentials(dim);
                  
    return Py_BuildValue("i",fail);
 }
@@ -3805,6 +3865,9 @@ static PyMethodDef phcpy2c_methods[] =
     "reads Laurent system with quad doubles in container"},
    {"py2c_syscon_read_multprec_system", py2c_syscon_read_multprec_system,
     METH_VARARGS, "reads system with multiprecision numbers in container"},
+   {"py2c_syscon_read_multprec_Laurent_system",
+     py2c_syscon_read_multprec_Laurent_system, METH_VARARGS,
+    "reads Laurent system with multiprecision numbers in container"},
    {"py2c_syscon_random_system", py2c_syscon_random_system,
     METH_VARARGS, "stores a random system in the container"},
    {"py2c_syscon_write_system", py2c_syscon_write_system,
@@ -3823,6 +3886,9 @@ static PyMethodDef phcpy2c_methods[] =
     "writes Laurent system in quad double container on screen"},
    {"py2c_syscon_write_multprec_system", py2c_syscon_write_multprec_system,
     METH_VARARGS, "writes system in multiprecision container on screen"},
+   {"py2c_syscon_write_multprec_Laurent_system",
+     py2c_syscon_write_multprec_Laurent_system, METH_VARARGS,
+    "writes Laurent system in multiprecision container on screen"},
    {"py2c_syscon_clear_system", py2c_syscon_clear_system,
     METH_VARARGS, "clears the content of the systems container"},
    {"py2c_syscon_clear_Laurent_system", py2c_syscon_clear_Laurent_system,
@@ -3839,6 +3905,9 @@ static PyMethodDef phcpy2c_methods[] =
     "clears the quad double Laurent polynomial systems container"},
    {"py2c_syscon_clear_multprec_system", py2c_syscon_clear_multprec_system,
     METH_VARARGS, "clears the multiprecision polynomial systems container"},
+   {"py2c_syscon_clear_multprec_Laurent_system",
+     py2c_syscon_clear_multprec_Laurent_system, METH_VARARGS,
+    "clears the multiprecision Laurent polynomial systems container"},
    {"py2c_syscon_number_of_symbols", py2c_syscon_number_of_symbols,
     METH_VARARGS, "returns the number of symbols in the symbol table"},
    {"py2c_syscon_write_symbols", py2c_syscon_write_symbols,
@@ -3913,6 +3982,9 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_syscon_number_of_quaddobl_Laurentials",
      py2c_syscon_number_of_quaddobl_Laurentials, METH_VARARGS, 
     "returns the number of quad double Laurent polynomials"},
+   {"py2c_syscon_number_of_multprec_Laurentials",
+     py2c_syscon_number_of_multprec_Laurentials, METH_VARARGS, 
+    "returns the number of multiprecision Laurent polynomials"},
    {"py2c_syscon_initialize_number", py2c_syscon_initialize_number,
     METH_VARARGS, "initializes the container with the number of polynomials"},
    {"py2c_syscon_initialize_number_of_dobldobl_polynomials",
@@ -3933,6 +4005,9 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_syscon_initialize_number_of_quaddobl_Laurentials",
      py2c_syscon_initialize_number_of_quaddobl_Laurentials, METH_VARARGS,
     "initializes the number of quad double Laurentials"},
+   {"py2c_syscon_initialize_number_of_multprec_Laurentials",
+     py2c_syscon_initialize_number_of_multprec_Laurentials, METH_VARARGS,
+    "initializes the number of multiprecisionLaurentials"},
    {"py2c_syscon_degree_of_polynomial", py2c_syscon_degree_of_polynomial,
     METH_VARARGS,
     "returns the degree of the k-th polynomial in the standard container"},
