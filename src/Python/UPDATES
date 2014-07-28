@@ -1,3 +1,6 @@
+Mon 28 Jul 2014 : added store/load operations for systems of Laurent
+  polynomials with multiprecision coefficients.
+
 Thu 24 Jul 2014 : new store/load operations for Laurent systems to solver.
 
 Tue 22 Jul 2014 : added permute operations to solver.py for systems with

@@ -238,6 +238,27 @@ def store_quaddobl_Laurent_system(polsys):
         nchar = len(pol)
         py2c_syscon_store_quaddobl_Laurential(nchar, dim, cnt+1, pol)
 
+def store_multprec_Laurent_system(polsys, decimals):
+    """
+    Stores the Laurent polynomials represented by the list 
+    of strings in polsys into the container for systems 
+    with coefficients in multiprecision.
+    The parameter decimals equals the number of decimal places
+    in the working precision for the parsing of the strings in polsys.
+    """
+    from phcpy2c import py2c_syscon_clear_multprec_Laurent_system
+    from phcpy2c\
+    import py2c_syscon_initialize_number_of_multprec_Laurentials
+    from phcpy2c import py2c_syscon_store_multprec_Laurential
+    py2c_syscon_clear_multprec_Laurent_system()
+    dim = len(polsys)
+    py2c_syscon_initialize_number_of_multprec_Laurentials(dim)
+    for cnt in range(0, dim):
+        pol = polsys[cnt]
+        nchar = len(pol)
+        py2c_syscon_store_multprec_Laurential(nchar, dim, cnt+1, \
+            decimals, pol)
+
 def load_standard_Laurent_system():
     """
     Returns the Laurent polynomials stored in the system container
@@ -275,6 +296,19 @@ def load_quaddobl_Laurent_system():
     result = []
     for ind in range(1, dim+1):
         result.append(py2c_syscon_load_quaddobl_Laurential(ind))
+    return result
+
+def load_multprec_Laurent_system():
+    """
+    Returns the Laurent polynomials stored in the system container
+    with multiprecision complex coefficients.
+    """
+    from phcpy2c import py2c_syscon_number_of_multprec_Laurentials
+    from phcpy2c import py2c_syscon_load_multprec_Laurential
+    dim = py2c_syscon_number_of_multprec_Laurentials()
+    result = []
+    for ind in range(1, dim+1):
+        result.append(py2c_syscon_load_multprec_Laurential(ind))
     return result
 
 def store_standard_solutions(nvar, sols):
