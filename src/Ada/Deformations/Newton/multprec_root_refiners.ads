@@ -6,6 +6,9 @@ with Multprec_Complex_Vectors;           use Multprec_Complex_Vectors;
 with Multprec_Complex_Poly_Systems;      use Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_SysFun;       use Multprec_Complex_Poly_SysFun;
 with Multprec_Complex_Jaco_Matrices;     use Multprec_Complex_Jaco_Matrices;
+with Multprec_Complex_Laur_Systems;
+with Multprec_Complex_Laur_SysFun;
+with Multprec_Complex_Laur_JacoMats;
 with Multprec_Complex_Solutions;         use Multprec_Complex_Solutions;
 
 package Multprec_Root_Refiners is
@@ -28,6 +31,11 @@ package Multprec_Root_Refiners is
   procedure Multprec_Newton_Step
               ( f : in Multprec_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in Multprec_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out Multprec_Complex_Vectors.Vector;
+                err,rco,res : out Floating_Number );
+  procedure Multprec_Newton_Step
+              ( f : in Multprec_Complex_Laur_SysFun.Eval_Laur_Sys;
+                jf : in Multprec_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out Multprec_Complex_Vectors.Vector;
                 err,rco,res : out Floating_Number );
 

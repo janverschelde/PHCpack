@@ -1,3 +1,6 @@
+Mon 28 Jul 2014 : extended multprec_root_refiners with a procedure to compute
+  one Newton step on a Laurent polynomial system.
+
 Fri 20 Jun 2014 : upgraded standard_root_refiners.adb with an improved
   cluster detection and multiplicity calculation.
 

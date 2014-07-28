@@ -190,6 +190,30 @@ package body Multprec_Root_Refiners is
     Clear(y); Clear(A);
   end Multprec_Newton_Step;
 
+  procedure Multprec_Newton_Step
+              ( f : in Multprec_Complex_Laur_SysFun.Eval_Laur_Sys;
+                jf : in Multprec_Complex_Laur_JacoMats.Eval_Jaco_Mat;
+                x : in out Multprec_Complex_Vectors.Vector;
+                err,rco,res : out Floating_Number ) is
+
+    y : Vector(f'range) := Multprec_Complex_Laur_SysFun.Eval(f,x);
+    A : Matrix(f'range,x'range)
+      := Multprec_Complex_Laur_JacoMats.Eval(jf,x);
+    ipvt : Standard_Integer_Vectors.Vector(A'range(1));
+
+  begin
+    Min(y);
+    Clear(rco);
+    lufco(A,A'last(1),ipvt,rco);
+    lusolve(A,A'last(1),ipvt,y);
+    Add(x,y);
+    Clear(err); err := Max_Norm(y);
+    Clear(y);
+    y := Multprec_Complex_Laur_SysFun.Eval(f,x);
+    Clear(res); res := Max_Norm(y);
+    Clear(y); Clear(A);
+  end Multprec_Newton_Step;
+
 -- TARGET ROUTINES, NEWTON's METHOD :
 
   procedure Silent_Newton
