@@ -396,6 +396,27 @@ int syscon_store_quaddobl_Laurential ( int nc, int n, int k, char *p );
  *   must be initialized with the number of polynomials and 
  *   this number must be larger than or equal to k. */
 
+int syscon_store_multprec_Laurential
+ ( int nc, int n, int k, int deci, char *p );
+/*
+ * DESCRIPTION :
+ *   Defines the k-th Laurent polynomial in the systems container 
+ *   in multiprecision precision with the data in string p,
+ *   the number of characters in p is in nc.
+ *
+ * ON ENTRY :
+ *   nc       number of characters in the string p;
+ *   n        number of variables in the multivariate Laurent polynomial;
+ *   k        index of the Laurent polynomial in the system;
+ *   deci     number of decimal places to evaluate the coefficients;
+ *   p        string which will be parsed by PHCpack into a Laurent
+ *            polynomial in n variables with complex coefficients.
+ *
+ * REQUIRED :
+ *   The Laurent systems container in quad double precision 
+ *   must be initialized with the number of polynomials and 
+ *   this number must be larger than or equal to k. */
+
 int syscon_load_standard_Laurential ( int k, int *nc, char *p );
 /*
  * DESCRIPTION :
@@ -415,6 +436,13 @@ int syscon_load_quaddobl_Laurential ( int k, int *nc, char *p );
  * DESCRIPTION :
  *   Returns the k-th polynomial in the Laurent systems container 
  *   with quad double complex coefficients in the string p,
+ *   where nc equals the number of characters in the string p. */
+
+int syscon_load_multprec_Laurential ( int k, int *nc, char *p );
+/*
+ * DESCRIPTION :
+ *   Returns the k-th polynomial in the Laurent systems container 
+ *   with multiprecision complex coefficients in the string p,
  *   where nc equals the number of characters in the string p. */
 
 int syscon_create_evaluator ( void );

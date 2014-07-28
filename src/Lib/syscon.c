@@ -475,6 +475,23 @@ int syscon_store_quaddobl_Laurential ( int nc, int n, int k, char *p )
    return fail;
 }
 
+int syscon_store_multprec_Laurential
+ ( int nc, int n, int k, int deci, char *p )
+{
+   int a[4],b[nc],i,fail;
+   double *c;
+
+   a[0] = nc;
+   a[1] = n;
+   a[2] = k;
+   a[3] = deci;
+   for(i=0; i<nc; i++) b[i] = (int) p[i];
+
+   fail = _ada_use_c2phc(578,a,b,c);
+
+   return fail;
+}
+
 int syscon_load_standard_Laurential ( int k, int *nc, char *p )
 {
    int fail,i;
@@ -523,6 +540,21 @@ int syscon_load_quaddobl_Laurential ( int k, int *nc, char *p )
    return fail;
 }
 
+int syscon_load_multprec_Laurential ( int k, int *nc, char *p )
+{
+   int fail,i;
+   int b[102400];
+   int size = k;
+   double *c;
+
+   fail = _ada_use_c2phc(579,&size,b,c);
+   /* printf("number of characters : %d\n",size); */
+   for(i=0; i<size; i++) p[i] = (char) b[i];
+   p[size] = '\0';
+   /* printf("the string : %s\n",p); */
+
+   return fail;
+}
 
 int syscon_create_evaluator ( void )
 {
