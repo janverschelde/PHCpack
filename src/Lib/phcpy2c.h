@@ -270,11 +270,15 @@ static PyObject *py2c_syscon_store_dobldobl_Laurential
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_store_quaddobl_Laurential
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_store_multprec_Laurential
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_load_standard_Laurential
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_load_dobldobl_Laurential
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_load_quaddobl_Laurential
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_load_multprec_Laurential
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_total_degree ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_standard_drop_variable_by_index

@@ -1,6 +1,7 @@
 Sun 27 Jul 2014 : called the new operations for multiprecision Laurent
   systems from syscon in phcpy2c.  Serialization of multiprecision Laurent
   polynomials added to syscon, fixed forgotton declaration in header file.
+  Added the new serialization functions in phcpy2c.
 
 Sat 26 Jul 2014 : added operations to syscon for operating the container
   for Laurent systems with multiprecision coefficients.
