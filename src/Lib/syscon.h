@@ -213,6 +213,12 @@ int syscon_initialize_number_of_multprec_polynomials ( int length );
  *   Initializes the container with length, the number of polynomials. 
  *   Also initializes the symbol table. */
 
+int syscon_initialize_number_of_multprec_Laurentials ( int length );
+/*
+ * DESCRIPTION :
+ *   Initializes the container with length, the number of polynomials. 
+ *   Also initializes the symbol table. */
+
 int syscon_degree_of_polynomial ( int k, int *d );
 /*
  * DESCRIPTION :
