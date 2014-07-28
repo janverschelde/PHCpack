@@ -965,6 +965,17 @@ function use_c2phc ( job : integer32;
 --         = 199 : does one Newton step with standard double arithmetic
 --                 using system and solutions in the containers.
 --
+-- one Newton step on Laurent systems :
+--
+--   job   = 326 : does one Newton step with standard double arithmetic
+--                 using Laurent system and solutions in the containers;
+--         = 327 : does one Newton step with double double arithmetic
+--                 using Laurent system and solutions in the containers;
+--         = 328 : does one Newton step with quad double arithmetic
+--                 using Laurent system and solutions in the containers;
+--         = 329 : does one Newton step with multiprecision arithmetic
+--                 using Laurent system and solutions in the containers.
+--
 -- operations to write solutions to strings :
 -- 
 --   job   = 200 : with the solutions container initialized,

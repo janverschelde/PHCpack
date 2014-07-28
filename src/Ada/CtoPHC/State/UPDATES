@@ -1,3 +1,7 @@
+Mon 28 Jul 2014 : extended use_c2phc with operations to do one Newton step
+  on Laurent polynomial systems for standard double, double double,
+  quad double, and multiprecision arithmetic.
+
 Sun 27 Jul 2014 : added store/load operations to use_syscon for Laurent
   systems with multiprecision coefficients, also added to use_c2phc.
 

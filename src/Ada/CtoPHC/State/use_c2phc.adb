@@ -17,13 +17,22 @@ with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_SysFun;
 with DoblDobl_Complex_Jaco_Matrices;
+with DoblDobl_Complex_Laur_Systems;
+with DoblDobl_Complex_Laur_SysFun;
+with DoblDobl_Complex_Laur_JacoMats;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Jaco_Matrices;
+with QuadDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Laur_SysFun;
+with QuadDobl_Complex_Laur_JacoMats;
 with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_SysFun;
 with Multprec_Complex_Jaco_Matrices;
-with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
+with Multprec_Complex_Laur_Systems;
+with Multprec_Complex_Laur_SysFun;
+with Multprec_Complex_Laur_JacoMats;
+with Standard_Complex_Laur_Systems;
 with Standard_Laur_Poly_Convertors;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
@@ -48,8 +57,11 @@ with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 -- with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with Standard_PolySys_Container;
 with DoblDobl_PolySys_Container;
+with DoblDobl_LaurSys_Container;
 with QuadDobl_PolySys_Container;
+with QuadDobl_LaurSys_Container;
 with Multprec_PolySys_Container;
+with Multprec_LaurSys_Container;
 with Laurent_Systems_Container;
 with Standard_Solutions_Container;
 with DoblDobl_Solutions_Container;
@@ -1124,7 +1136,7 @@ function use_c2phc ( job : integer32;
 
   begin
     if lp = null or Is_Null(sols) then
-      return 197;             
+      return 195;             
     else
       Copy(sols,work);
       Set_Size(work,size);
@@ -1147,6 +1159,47 @@ function use_c2phc ( job : integer32;
       return 0;
     end if;
   end Job195;
+
+  function Job329 return integer32 is -- one multprec Newton step on Laurent 
+
+    use Multprec_Complex_Laur_Systems;
+    use Multprec_Complex_Laur_SysFun;
+    use Multprec_Complex_Laur_JacoMats;
+    use Multprec_Complex_Solutions;
+    use Multprec_Root_Refiners;
+    lp : constant Link_to_Laur_Sys := Multprec_LaurSys_Container.Retrieve;
+    sols : constant Solution_List := Multprec_Solutions_Container.Retrieve;
+    work : Solution_List;
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    deci : constant natural32 := natural32(v_a(v_a'first));
+    size : constant natural32
+         := Multprec_Floating_Numbers.Decimal_to_Size(deci);
+
+  begin
+    if lp = null or Is_Null(sols) then
+      return 329;             
+    else
+      Copy(sols,work);
+      Set_Size(work,size);
+      declare
+        f : Eval_Laur_Sys(lp'range) := Create(lp.all);
+        jm : Jaco_Mat(lp'range,lp'range) := Create(lp.all);
+        jf : Eval_Jaco_Mat(lp'range,lp'range) := Create(jm);
+        tmp : Solution_List := work;
+        ls : Link_to_Solution;
+      begin
+        while not Is_Null(tmp) loop
+          ls := Head_Of(tmp);
+          Multprec_Newton_Step(f,jf,ls.v,ls.err,ls.rco,ls.res);
+          tmp := Tail_Of(tmp);
+        end loop;
+        Clear(f); Clear(jm); Clear(jf);
+        Multprec_Solutions_Container.Clear;
+        Multprec_Solutions_Container.Initialize(work);
+      end;
+      return 0;
+    end if;
+  end Job329;
 
   function Job197 return integer32 is -- 1 Newton step on quaddobl containers
 
@@ -1184,6 +1237,42 @@ function use_c2phc ( job : integer32;
     end if;
   end Job197;
 
+  function Job328 return integer32 is -- one quaddobl Newton step on Laurent
+
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Complex_Laur_SysFun;
+    use QuadDobl_Complex_Laur_JacoMats;
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Root_Refiners;
+    lp : constant Link_to_Laur_Sys := QuadDobl_LaurSys_Container.Retrieve;
+    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
+    work : Solution_List;
+
+  begin
+    if lp = null or Is_Null(sols) then
+      return 328;             
+    else
+      Copy(sols,work);
+      declare
+        f : Eval_Laur_Sys(lp'range) := Create(lp.all);
+        jm : Jaco_Mat(lp'range,lp'range) := Create(lp.all);
+        jf : Eval_Jaco_Mat(lp'range,lp'range) := Create(jm);
+        tmp : Solution_List := work;
+        ls : Link_to_Solution;
+      begin
+        while not Is_Null(tmp) loop
+          ls := Head_Of(tmp);
+          QuadDobl_Newton_Step(f,jf,ls.v,ls.err,ls.rco,ls.res);
+          tmp := Tail_Of(tmp);
+        end loop;
+        Clear(f); Clear(jm); Clear(jf);
+        QuadDobl_Solutions_Container.Clear;
+        QuadDobl_Solutions_Container.Initialize(work);
+      end;
+      return 0;
+    end if;
+  end Job328;
+
   function Job198 return integer32 is -- 1 Newton step on dobldobl containers
 
     use DoblDobl_Complex_Poly_Systems;
@@ -1220,6 +1309,42 @@ function use_c2phc ( job : integer32;
     end if;
   end Job198;
 
+  function Job327 return integer32 is -- one dobldobl Newton step on Laurent
+
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Complex_Laur_SysFun;
+    use DoblDobl_Complex_Laur_JacoMats;
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Root_Refiners;
+    lp : constant Link_to_Laur_Sys := DoblDobl_LaurSys_Container.Retrieve;
+    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
+    work : Solution_List;
+
+  begin
+    if lp = null or Is_Null(sols) then
+      return 327;             
+    else
+      Copy(sols,work);
+      declare
+        f : Eval_Laur_Sys(lp'range) := Create(lp.all);
+        jm : Jaco_Mat(lp'range,lp'range) := Create(lp.all);
+        jf : Eval_Jaco_Mat(lp'range,lp'range) := Create(jm);
+        tmp : Solution_List := work;
+        ls : Link_to_Solution;
+      begin
+        while not Is_Null(tmp) loop
+          ls := Head_Of(tmp);
+          DoblDobl_Newton_Step(f,jf,ls.v,ls.err,ls.rco,ls.res);
+          tmp := Tail_Of(tmp);
+        end loop;
+        Clear(f); Clear(jm); Clear(jf);
+        DoblDobl_Solutions_Container.Clear;
+        DoblDobl_Solutions_Container.Initialize(work);
+      end;
+      return 0;
+    end if;
+  end Job327;
+
   function Job199 return integer32 is -- 1 Newton step on standard containers
 
     use Standard_Complex_Poly_Systems,Standard_Complex_Solutions;
@@ -1247,6 +1372,32 @@ function use_c2phc ( job : integer32;
       return 0;
     end if;
   end Job199;
+
+  function Job326 return integer32 is -- one standard Newton step on Laurent
+
+    use Standard_Complex_Laur_Systems,Standard_Complex_Solutions;
+    use Standard_Root_Refiners;
+    lp : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+    sols : Solution_List := Standard_Solutions_Container.Retrieve;
+    refsols : Solution_List;
+
+  begin
+    if lp = null or Is_Null(sols) then
+      return 326;             
+    else
+      declare
+        epsxa : constant double_float := 1.0E-12;
+        epsfa : constant double_float := 1.0E-12;
+        tolsi : constant double_float := 1.0E-8;
+        nit : natural32 := 0;
+      begin
+        Silent_Root_Refiner(lp.all,sols,refsols,epsxa,epsfa,tolsi,nit,1);
+        Standard_Solutions_Container.Clear;
+        Standard_Solutions_Container.Initialize(refsols);
+      end;
+      return 0;
+    end if;
+  end Job326;
 
   function Job196 return integer32 is -- apply deflation as in main driver
 
@@ -1358,6 +1509,7 @@ function use_c2phc ( job : integer32;
   function Job75 return integer32 is -- solve Laurent system in container
 
     use Standard_Complex_Poly_Systems,Standard_Complex_Solutions;
+    use Standard_Complex_Laur_Systems;
     v_b : constant C_Integer_Array := C_intarrs.Value(b);
     silval : constant natural32 := natural32(v_b(v_b'first));
     silent : constant boolean := (silval = 1);
@@ -1400,6 +1552,7 @@ function use_c2phc ( job : integer32;
   function Job78 return integer32 is -- computes mixed volume
 
     use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Laur_Systems;
     use Black_Mixed_Volume_Computations;
 
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
@@ -1777,6 +1930,11 @@ function use_c2phc ( job : integer32;
       when 300..305 => return use_syspool(job-300,a,b,c);
       when 306..311 => return use_syscon(job-294,a,b,c);
       when 320..325 => return use_solpool(job-320,a,b,c);
+     -- one Newton step on Laurent system :
+      when 326 => return Job326; -- standard Newton step on Laurent
+      when 327 => return Job327; -- dobldobl Newton step on Laurent
+      when 328 => return Job328; -- quaddobl Newton step on Laurent
+      when 329 => return Job329; -- multprec Newton step on Laurent
      -- operations on double double system container
       when 330..339 => return use_syscon(job-130,a,b,c);
      -- operations on double double solution container
