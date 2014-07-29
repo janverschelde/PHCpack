@@ -1,3 +1,6 @@
+Tue 29 Jul 2014 : renaming of Newton_step into standard_Newton_step caused
+  changes in the module solver.py of phcpy.
+
 Mon 28 Jul 2014 : added store/load operations for systems of Laurent
   polynomials with multiprecision coefficients.
 

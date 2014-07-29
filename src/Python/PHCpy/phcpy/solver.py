@@ -60,7 +60,7 @@ def random_system(dim, nbrmon, deg, cff):
     if 2, then coefficients are floats in [-1,+1].
     """
     from phcpy2c import py2c_syscon_random_system
-    fail = py2c_syscon_random_system(dim, nbrmon, deg, cff)
+    py2c_syscon_random_system(dim, nbrmon, deg, cff)
     return load_standard_system()
 
 def store_standard_system(polsys):
@@ -185,7 +185,7 @@ def load_multprec_system():
         result.append(py2c_syscon_load_multprec_polynomial(ind))
     return result
 
-def store_standard_Laurent_system(polsys):
+def store_standard_laurent_system(polsys):
     """
     Stores the Laurent polynomials represented by the list of
     strings in polsys into the container for systems
@@ -202,9 +202,9 @@ def store_standard_Laurent_system(polsys):
         nchar = len(pol)
         py2c_syscon_store_Laurential(nchar, dim, cnt+1, pol)
 
-def store_dobldobl_Laurent_system(polsys):
+def store_dobldobl_laurent_system(polsys):
     """
-    Stores the Laurent polynomials represented by the list of 
+    Stores the Laurent polynomials represented by the list of
     strings in polsys into the container for systems
     with coefficients in double double precision.
     """
@@ -220,10 +220,10 @@ def store_dobldobl_Laurent_system(polsys):
         nchar = len(pol)
         py2c_syscon_store_dobldobl_Laurential(nchar, dim, cnt+1, pol)
 
-def store_quaddobl_Laurent_system(polsys):
+def store_quaddobl_laurent_system(polsys):
     """
-    Stores the Laurent polynomials represented by the list 
-    of strings in polsys into the container for systems 
+    Stores the Laurent polynomials represented by the list
+    of strings in polsys into the container for systems
     with coefficients in quad double precision.
     """
     from phcpy2c import py2c_syscon_clear_quaddobl_Laurent_system
@@ -238,10 +238,10 @@ def store_quaddobl_Laurent_system(polsys):
         nchar = len(pol)
         py2c_syscon_store_quaddobl_Laurential(nchar, dim, cnt+1, pol)
 
-def store_multprec_Laurent_system(polsys, decimals):
+def store_multprec_laurent_system(polsys, decimals):
     """
-    Stores the Laurent polynomials represented by the list 
-    of strings in polsys into the container for systems 
+    Stores the Laurent polynomials represented by the list
+    of strings in polsys into the container for systems
     with coefficients in multiprecision.
     The parameter decimals equals the number of decimal places
     in the working precision for the parsing of the strings in polsys.
@@ -259,7 +259,7 @@ def store_multprec_Laurent_system(polsys, decimals):
         py2c_syscon_store_multprec_Laurential(nchar, dim, cnt+1, \
             decimals, pol)
 
-def load_standard_Laurent_system():
+def load_standard_laurent_system():
     """
     Returns the Laurent polynomials stored in the system container
     for standard double precision arithmetic.
@@ -272,7 +272,7 @@ def load_standard_Laurent_system():
         result.append(py2c_syscon_load_standard_Laurential(ind))
     return result
 
-def load_dobldobl_Laurent_system():
+def load_dobldobl_laurent_system():
     """
     Returns the Laurent polynomials stored in the system container
     with double double complex coefficients.
@@ -285,7 +285,7 @@ def load_dobldobl_Laurent_system():
         result.append(py2c_syscon_load_dobldobl_Laurential(ind))
     return result
 
-def load_quaddobl_Laurent_system():
+def load_quaddobl_laurent_system():
     """
     Returns the Laurent polynomials stored in the system container
     with quad double complex coefficients.
@@ -298,7 +298,7 @@ def load_quaddobl_Laurent_system():
         result.append(py2c_syscon_load_quaddobl_Laurential(ind))
     return result
 
-def load_multprec_Laurent_system():
+def load_multprec_laurent_system():
     """
     Returns the Laurent polynomials stored in the system container
     with multiprecision complex coefficients.
@@ -468,8 +468,8 @@ def newton_step(system, solutions, precision='d', decimals=100):
     if(precision == 'd'):
         store_standard_system(system)
         store_standard_solutions(len(system), solutions)
-        from phcpy2c import py2c_Newton_step
-        py2c_Newton_step()
+        from phcpy2c import py2c_standard_Newton_step
+        py2c_standard_Newton_step()
         result = load_standard_solutions()
     elif(precision == 'dd'):
         store_dobldobl_system(system)
