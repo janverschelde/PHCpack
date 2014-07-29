@@ -141,7 +141,7 @@ static PyObject *py2c_solve_system ( PyObject *self, PyObject *args );
 static PyObject *py2c_solve_Laurent_system ( PyObject *self, PyObject *args );
 static PyObject *py2c_mixed_volume ( PyObject *self, PyObject *args );
 static PyObject *py2c_deflate ( PyObject *self, PyObject *args );
-static PyObject *py2c_Newton_step ( PyObject *self, PyObject *args );
+static PyObject *py2c_standard_Newton_step ( PyObject *self, PyObject *args );
 static PyObject *py2c_dobldobl_Newton_step ( PyObject *self, PyObject *args );
 static PyObject *py2c_quaddobl_Newton_step ( PyObject *self, PyObject *args );
 static PyObject *py2c_multprec_Newton_step ( PyObject *self, PyObject *args );

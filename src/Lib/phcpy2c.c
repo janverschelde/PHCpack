@@ -916,12 +916,12 @@ static PyObject *py2c_deflate ( PyObject *self, PyObject *args )
    }
 }
 
-static PyObject *py2c_Newton_step ( PyObject *self, PyObject *args )
+static PyObject *py2c_standard_Newton_step ( PyObject *self, PyObject *args )
 {
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
    {
-      int fail = Newton_step();
+      int fail = standard_Newton_step();
       return Py_BuildValue("i",fail);
    }
 }
@@ -3867,7 +3867,7 @@ static PyMethodDef phcpy2c_methods[] =
     METH_VARARGS, "returns the mixed volume of system in the container"},
    {"py2c_deflate", py2c_deflate,
     METH_VARARGS, "applies deflation with default settings"},
-   {"py2c_Newton_step", py2c_Newton_step,
+   {"py2c_standard_Newton_step", py2c_standard_Newton_step,
     METH_VARARGS, "does one Newton step on container data"},
    {"py2c_dobldobl_Newton_step", py2c_dobldobl_Newton_step,
     METH_VARARGS, "does one Newton step on double double container data"},

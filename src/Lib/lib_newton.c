@@ -89,7 +89,7 @@ void test_standard_Newton_step ( void )
    printf("The solution container has size %d.\n",len);
    fail = solcon_dimension_of_solutions(&dim);
    printf("The solutions in the container have dimension %d.\n",dim);
-   fail = Newton_step();
+   fail = standard_Newton_step();
    printf("The solutions after the Newton step :\n");
    fail = solcon_write_solutions();
 }

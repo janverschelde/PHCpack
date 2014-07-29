@@ -1,3 +1,6 @@
+Tue 29 Jul 2014 : renaming of Newton_step into standard_Newton_step in
+  phcpack implied changes in lib_newton and phcpy2c.
+
 Sun 27 Jul 2014 : called the new operations for multiprecision Laurent
   systems from syscon in phcpy2c.  Serialization of multiprecision Laurent
   polynomials added to syscon, fixed forgotton declaration in header file.

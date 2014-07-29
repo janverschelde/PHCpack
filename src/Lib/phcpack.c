@@ -76,7 +76,7 @@ int deflate ( void )
    return fail;
 }
 
-int Newton_step ( void )
+int standard_Newton_step ( void )
 {
    int *a,*b,fail;
    double *c;

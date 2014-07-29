@@ -56,7 +56,7 @@ int deflate ( void );
  *   Applies deflation on the system and solutions in the containers with
  *   standard double precision and default settings of the parameters. */
 
-int Newton_step ( void );
+int standard_Newton_step ( void );
 /*
  * DESCRPTION :
  *   Replaces the solutions in the solution container with the results
