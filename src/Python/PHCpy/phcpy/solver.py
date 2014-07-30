@@ -497,6 +497,49 @@ def newton_step(system, solutions, precision='d', decimals=100):
         print strsol[-1]
     return result
 
+def newton_laurent_step(system, solutions, precision='d', decimals=100):
+    """
+    Applies one Newton step to the solutions of the Laurent system.
+    For each solution, prints its last line of diagnostics.
+    Four levels of precision are supported:
+    d  : standard double precision (1.1e-15 or 2^(-53)),
+    dd : double double precision (4.9e-32 or 2^(-104)),
+    qd : quad double precision (1.2e-63 or 2^(-209)).
+    mp : arbitrary precision, where the number of decimal places
+    in the working precision is determined by decimals.
+    """
+    if(precision == 'd'):
+        store_standard_laurent_system(system)
+        store_standard_solutions(len(system), solutions)
+        from phcpy2c import py2c_standard_Newton_Laurent_step
+        py2c_standard_Newton_Laurent_step()
+        result = load_standard_solutions()
+    elif(precision == 'dd'):
+        store_dobldobl_laurent_system(system)
+        store_dobldobl_solutions(len(system), solutions)
+        from phcpy2c import py2c_dobldobl_Newton_Laurent_step
+        py2c_dobldobl_Newton_Laurent_step()
+        result = load_dobldobl_solutions()
+    elif(precision == 'qd'):
+        store_quaddobl_laurent_system(system)
+        store_quaddobl_solutions(len(system), solutions)
+        from phcpy2c import py2c_quaddobl_Newton_Laurent_step
+        py2c_quaddobl_Newton_Laurent_step()
+        result = load_quaddobl_solutions()
+    elif(precision == 'mp'):
+        store_multprec_laurent_system(system, decimals)
+        store_multprec_solutions(len(system), solutions)
+        from phcpy2c import py2c_multprec_Newton_Laurent_step
+        py2c_multprec_Newton_Laurent_step(decimals)
+        result = load_multprec_solutions()
+    else:
+        print 'wrong argument for precision'
+        return None
+    for sol in result:
+        strsol = sol.split('\n')
+        print strsol[-1]
+    return result
+
 def deflate(system, solutions):
     """
     The deflation method augments the given system with
@@ -889,6 +932,52 @@ def test_polyhedral_homotopy(precision='d'):
         test_quaddobl_polyhedral_homotopy()
     else:
         print 'precision not recognized'
+
+def test_newton():
+    """
+    Tests Newton's method on simple polynomial system,
+    refining the square root of 2 with increasing precision.
+    """
+    pols = ['x*y - 1;', 'x^2 - 2;']
+    from phcpy.solutions import make_solution   
+    sol = make_solution(['x', 'y'], [1.414, 0.707])
+    sols = [sol]
+    print 'start solution :\n', sols[0]
+    for k in range(1, 4):
+        sols = newton_step(pols, sols)
+        print 'at step', k, ':\n', sols[0]
+    for k in range(4, 6):
+        sols = newton_step(pols, sols, precision='dd')
+        print 'at step', k, ':\n', sols[0]
+    for k in range(6, 8):
+        sols = newton_step(pols, sols, precision='qd')
+        print 'at step', k, ':\n', sols[0]
+    for k in range(8, 10):
+        sols = newton_step(pols, sols, precision='mp')
+        print 'at step', k, ':\n', sols[0]
+
+def test_newton_laurent():
+    """
+    Tests Newton's method on simple Laurent system,
+    refining the square root of 2 with increasing precision.
+    """
+    laurpols = ['x - y^-1;', 'x^2 - 2;']
+    from phcpy.solutions import make_solution   
+    sol = make_solution(['x', 'y'], [1.414, 0.707])
+    sols = [sol]
+    print 'start solution :\n', sols[0]
+    for k in range(1, 4):
+        sols = newton_laurent_step(laurpols, sols)
+        print 'at step', k, ':\n', sols[0]
+    for k in range(4, 6):
+        sols = newton_laurent_step(laurpols, sols, precision='dd')
+        print 'at step', k, ':\n', sols[0]
+    for k in range(6, 8):
+        sols = newton_laurent_step(laurpols, sols, precision='qd')
+        print 'at step', k, ':\n', sols[0]
+    for k in range(8, 10):
+        sols = newton_laurent_step(laurpols, sols, precision='mp')
+        print 'at step', k, ':\n', sols[0]
 
 def test_solver():
     """

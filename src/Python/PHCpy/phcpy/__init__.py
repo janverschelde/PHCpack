@@ -86,4 +86,4 @@ except:
     print 'Is the phcpy2c.so not suited for this platform?'
 
 # Definition of the version number
-__version__ = '0.1.9'
+__version__ = '0.2.0'
