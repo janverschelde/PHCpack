@@ -1,6 +1,7 @@
 Wed 30 Jul 2014 : added newton_laurent_step in solver.py with test routines
   for Newton's method on ordinary polynomial and Laurent polynomial systems.
   Upgraded READ_ME, __init__.py and setup.py to version 0.2.0.
+  Upgraded conf.py in doc/source to version 0.2.0.
 
 Tue 29 Jul 2014 : renaming of Newton_step into standard_Newton_step caused
   changes in the module solver.py of phcpy.
