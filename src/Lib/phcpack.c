@@ -108,6 +108,38 @@ int multprec_Newton_step ( int deci )
    return fail;
 }
 
+int standard_Newton_Laurent_step ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(326,a,b,c);
+   return fail;
+}
+
+int dobldobl_Newton_Laurent_step ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(327,a,b,c);
+   return fail;
+}
+
+int quaddobl_Newton_Laurent_step ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(328,a,b,c);
+   return fail;
+}
+
+int multprec_Newton_Laurent_step ( int deci )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(329,&deci,b,c);
+   return fail;
+}
+
 /* wrapping the operations from C_to_PHCpack */
 
 int read_standard_target_system ( void )

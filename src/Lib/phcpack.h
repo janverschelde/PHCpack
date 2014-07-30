@@ -61,7 +61,7 @@ int standard_Newton_step ( void );
  * DESCRPTION :
  *   Replaces the solutions in the solution container with the results
  *   of one Newton step on the system in the container with the solutions 
- *   in the container on input. */
+ *   in the container on input, using standard double arithmetic. */
 
 int dobldobl_Newton_step ( void );
 /*
@@ -83,6 +83,36 @@ int multprec_Newton_step ( int deci );
  *   Replaces the solutions in the solution container with the results
  *   of one Newton step on the system in the container with the solutions 
  *   in the container on input, using multiprecision arithmetic.
+ *   The input parameter gives the number of decimal places in the
+ *   working precision. */
+
+int standard_Newton_Laurent_step ( void );
+/*
+ * DESCRPTION :
+ *   Replaces the solutions in the solution container with the results
+ *   of one Newton step on the Laurent system in the container with the
+ *   solutions in the container on input, using standard double arithmetic. */
+
+int dobldobl_Newton_Laurent_step ( void );
+/*
+ * DESCRPTION :
+ *   Replaces the solutions in the solution container with the results
+ *   of one Newton step on the Laurent system in the container with the
+ *   solutions in the container on input, using double double arithmetic. */
+
+int quaddobl_Newton_Laurent_step ( void );
+/*
+ * DESCRPTION :
+ *   Replaces the solutions in the solution container with the results
+ *   of one Newton step on the Laurent system in the container with the
+ *   solutions in the container on input, using quad double arithmetic. */
+
+int multprec_Newton_Laurent_step ( int deci );
+/*
+ * DESCRPTION :
+ *   Replaces the solutions in the solution container with the results
+ *   of one Newton step on the Laurent system in the container with the
+ *   solutions in the container on input, using multiprecision arithmetic.
  *   The input parameter gives the number of decimal places in the
  *   working precision. */
 
