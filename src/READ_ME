@@ -20,8 +20,14 @@ The public distribution for PHCpack version 2.3.90 contains
 This code is distributed under the GNU GENERAL PUBLIC LICENSE,
 see the file COPYING.txt for version 3 of this license.
 
+Directories released separately or for future releases
+
+  Demo       original collection of benchmark problems
+  doc        documentation notes on development
+  Web        a web interface written by Xiangcheng Yu
+
 The date of the latest major release 2.3 is Independence Day 2005 (4 July)
-release 2.3.90 on 2014-07-30 : polynomial homotopies with dd/qd numbers
+release 2.3.90 on 2014-07-30 : polyhedral homotopies with dd/qd numbers
 release 2.3.89 on 2014-06-30 : faster and more accurate path trackers
 release 2.3.88 on 2014-06-06 : improved Littlewood-Richardson homotopies
 release 2.3.87 on 2014-03-28 : dd/qd sampling and improved phcpy 0.1.7
