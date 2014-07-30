@@ -957,6 +957,51 @@ static PyObject *py2c_multprec_Newton_step ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_standard_Newton_Laurent_step
+ ( PyObject *self, PyObject *args )
+{
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   {
+      int fail = standard_Newton_Laurent_step();
+      return Py_BuildValue("i",fail);
+   }
+}
+
+static PyObject *py2c_dobldobl_Newton_Laurent_step
+ ( PyObject *self, PyObject *args )
+{
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   {
+      int fail = dobldobl_Newton_Laurent_step();
+      return Py_BuildValue("i",fail);
+   }
+}
+
+static PyObject *py2c_quaddobl_Newton_Laurent_step
+ ( PyObject *self, PyObject *args )
+{
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   {
+      int fail = quaddobl_Newton_Laurent_step();
+      return Py_BuildValue("i",fail);
+   }
+}
+
+static PyObject *py2c_multprec_Newton_Laurent_step
+ ( PyObject *self, PyObject *args )
+{
+   int fail,decimals;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&decimals)) return NULL;
+   fail = multprec_Newton_Laurent_step(decimals);
+
+   return Py_BuildValue("i",fail);
+}
+
 /* wrapping functions in syscon.h starts from here */
 
 static PyObject *py2c_syscon_read_system ( PyObject *self, PyObject *args )
@@ -3875,6 +3920,18 @@ static PyMethodDef phcpy2c_methods[] =
     METH_VARARGS, "does one Newton step on quad double container data"},
    {"py2c_multprec_Newton_step", py2c_multprec_Newton_step,
     METH_VARARGS, "does one Newton step on multiprecision container data"},
+   {"py2c_standard_Newton_Laurent_step", py2c_standard_Newton_Laurent_step,
+    METH_VARARGS, 
+    "does one Newton step on standard double Laurent systems"},
+   {"py2c_dobldobl_Newton_Laurent_step", py2c_dobldobl_Newton_Laurent_step,
+    METH_VARARGS,
+    "does one Newton step on double double Laurent systems"},
+   {"py2c_quaddobl_Newton_Laurent_step", py2c_quaddobl_Newton_Laurent_step,
+    METH_VARARGS, 
+    "does one Newton step on quad double Laurent systems"},
+   {"py2c_multprec_Newton_Laurent_step", py2c_multprec_Newton_Laurent_step,
+    METH_VARARGS,
+    "does one Newton step on multiprecision Laurent systems"},
    {"py2c_syscon_read_system", py2c_syscon_read_system,
     METH_VARARGS, "reads and puts the system in container"},
    {"py2c_syscon_read_Laurent_system", py2c_syscon_read_Laurent_system,
