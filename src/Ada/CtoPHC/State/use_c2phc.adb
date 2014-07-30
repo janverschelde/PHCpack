@@ -1393,7 +1393,7 @@ function use_c2phc ( job : integer32;
       begin
         Silent_Root_Refiner(lp.all,sols,refsols,epsxa,epsfa,tolsi,nit,1);
         Standard_Solutions_Container.Clear;
-        Standard_Solutions_Container.Initialize(refsols);
+        Standard_Solutions_Container.Initialize(sols);
       end;
       return 0;
     end if;

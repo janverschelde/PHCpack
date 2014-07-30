@@ -1,3 +1,6 @@
+Wed 30 Jul 2014 : bug fix in use_c2phc.adb for Newton step on Laurent system
+  in standard double precision.
+
 Mon 28 Jul 2014 : extended use_c2phc with operations to do one Newton step
   on Laurent polynomial systems for standard double, double double,
   quad double, and multiprecision arithmetic.
