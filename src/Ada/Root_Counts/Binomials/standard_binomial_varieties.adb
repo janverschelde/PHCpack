@@ -996,7 +996,8 @@ package body Standard_Binomial_Varieties is
   begin
     Standard_Binomial_Systems.Parse(p,nq,A,b,fail);
     if fail then
-      put_line(file,"The system is not a binomial system!");
+      null; -- we do not want the message for phc -b
+      -- put_line(file,"The system is not a binomial system!");
     else
       Cone_of_Tropisms(A,r,V);
       Check_Cone(file,A,V.all,r,fail);
