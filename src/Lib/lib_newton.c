@@ -22,6 +22,22 @@ void test_quaddobl_Newton_step ( void );
 void test_multprec_Newton_step ( void );
 /* runs the Newton step with multiprecision arithmetic */
 
+void test_standard_Newton_Laurent_step ( void );
+/* runs the Newton step with standard arithmetic
+ * on Laurent polynomial systems */
+
+void test_dobldobl_Newton_Laurent_step ( void );
+/* runs the Newton step with double double arithmetic
+ * on Laurent polynomial systems */
+
+void test_quaddobl_Newton_Laurent_step ( void );
+/* runs the Newton step with quad double arithmetic
+ * on Laurent polynomial systems */
+
+void test_multprec_Newton_Laurent_step ( void );
+/* runs the Newton step with multiprecision arithmetic
+ * on Laurent polynomial systems */
+
 void test_deflate( void );
 /* calls the standard double precision deflate */
 
@@ -38,8 +54,12 @@ int main ( int argc, char *argv[] )
    printf("  2. run Newton step with double double arithmetic;\n");
    printf("  3. run Newton step with quad double arithmetic;\n");
    printf("  4. run Newton step with multiprecision arithmetic;\n");
-   printf("  5. standard double precision deflation with defaults.\n");
-   printf("Type 0, 1, 2, 3, 4, or 5 to select : ");
+   printf("  5. standard double precision deflation with defaults;\n");
+   printf("  6. standard double Newton step on Laurent system;\n");
+   printf("  7.   double double Newton step on Laurent system;\n");
+   printf("  8.     quad double Newton step on Laurent system;\n");
+   printf("  9.  multiprecision Newton step on Laurent system.\n");
+   printf("Type 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9 to select : ");
    scanf("%d",&choice);
    scanf("%c",&ch); /* skip newline symbol */
 
@@ -55,6 +75,14 @@ int main ( int argc, char *argv[] )
       test_multprec_Newton_step();
    else if(choice == 5)
       test_deflate();
+   else if(choice == 6)
+      test_standard_Newton_Laurent_step();
+   else if(choice == 7)
+      test_dobldobl_Newton_Laurent_step();
+   else if(choice == 8)
+      test_quaddobl_Newton_Laurent_step();
+   else if(choice == 9)
+      test_multprec_Newton_Laurent_step();
    else
       printf("invalid selection, please try again\n");
 
@@ -94,6 +122,24 @@ void test_standard_Newton_step ( void )
    fail = solcon_write_solutions();
 }
 
+void test_standard_Newton_Laurent_step ( void )
+{
+   int fail,dim,len;
+
+   printf("\nRunning Newton step with standard arithmetic ...\n");
+   fail = syscon_read_Laurent_system();
+   fail = syscon_number_of_Laurentials(&dim);
+   printf("The system container has %d Laurent polynomials.\n",dim);
+   fail = solcon_read_solutions();
+   fail = solcon_number_of_solutions(&len);
+   printf("The solution container has size %d.\n",len);
+   fail = solcon_dimension_of_solutions(&dim);
+   printf("The solutions in the container have dimension %d.\n",dim);
+   fail = standard_Newton_Laurent_step();
+   printf("The solutions after the Newton step :\n");
+   fail = solcon_write_solutions();
+}
+
 void test_dobldobl_Newton_step ( void )
 {
    int fail,dim,len;
@@ -108,6 +154,24 @@ void test_dobldobl_Newton_step ( void )
    fail = solcon_dimension_of_dobldobl_solutions(&dim);
    printf("The solutions in the container have dimension %d.\n",dim);
    fail = dobldobl_Newton_step();
+   printf("The solutions after the Newton step :\n");
+   fail = solcon_write_dobldobl_solutions();
+}
+
+void test_dobldobl_Newton_Laurent_step ( void )
+{
+   int fail,dim,len;
+
+   printf("\nRunning Newton step with double double arithmetic ...\n");
+   fail = syscon_read_dobldobl_Laurent_system();
+   fail = syscon_number_of_dobldobl_Laurentials(&dim);
+   printf("The system container has %d Laurent polynomials.\n",dim);
+   fail = solcon_read_dobldobl_solutions();
+   fail = solcon_number_of_dobldobl_solutions(&len);
+   printf("The solution container has size %d.\n",len);
+   fail = solcon_dimension_of_dobldobl_solutions(&dim);
+   printf("The solutions in the container have dimension %d.\n",dim);
+   fail = dobldobl_Newton_Laurent_step();
    printf("The solutions after the Newton step :\n");
    fail = solcon_write_dobldobl_solutions();
 }
@@ -130,6 +194,24 @@ void test_quaddobl_Newton_step ( void )
    fail = solcon_write_quaddobl_solutions();
 }
 
+void test_quaddobl_Newton_Laurent_step ( void )
+{
+   int fail,dim,len;
+
+   printf("\nRunning Newton step with quad double arithmetic ...\n");
+   fail = syscon_read_quaddobl_Laurent_system();
+   fail = syscon_number_of_quaddobl_Laurentials(&dim);
+   printf("The system container has %d Laurent polynomials.\n",dim);
+   fail = solcon_read_quaddobl_solutions();
+   fail = solcon_number_of_quaddobl_solutions(&len);
+   printf("The solution container has size %d.\n",len);
+   fail = solcon_dimension_of_quaddobl_solutions(&dim);
+   printf("The solutions in the container have dimension %d.\n",dim);
+   fail = quaddobl_Newton_Laurent_step();
+   printf("The solutions after the Newton step :\n");
+   fail = solcon_write_quaddobl_solutions();
+}
+
 void test_multprec_Newton_step ( void )
 {
    int fail,dim,len,deci;
@@ -146,6 +228,26 @@ void test_multprec_Newton_step ( void )
    fail = solcon_dimension_of_multprec_solutions(&dim);
    printf("The solutions in the container have dimension %d.\n",dim);
    fail = multprec_Newton_step(deci);
+   printf("The solutions after the Newton step :\n");
+   fail = solcon_write_multprec_solutions();
+}
+
+void test_multprec_Newton_Laurent_step ( void )
+{
+   int fail,dim,len,deci;
+
+   printf("\nRunning Newton step with multiprecision arithmetic ...\n");
+   printf("\ngive the number of decimal places in the working precision : ");
+   scanf("%d",&deci);
+   fail = syscon_read_multprec_Laurent_system(deci);
+   fail = syscon_number_of_multprec_Laurentials(&dim);
+   printf("The system container has %d Laurent polynomials.\n",dim);
+   fail = solcon_read_multprec_solutions();
+   fail = solcon_number_of_multprec_solutions(&len);
+   printf("The solution container has size %d.\n",len);
+   fail = solcon_dimension_of_multprec_solutions(&dim);
+   printf("The solutions in the container have dimension %d.\n",dim);
+   fail = multprec_Newton_Laurent_step(deci);
    printf("The solutions after the Newton step :\n");
    fail = solcon_write_multprec_solutions();
 }

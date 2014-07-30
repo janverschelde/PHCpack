@@ -1,3 +1,5 @@
+Wed 30 Jul 2014 : added tests to lib_newton.c for Laurent systems.
+
 Tue 29 Jul 2014 : renaming of Newton_step into standard_Newton_step in
   phcpack implied changes in lib_newton and phcpy2c.  Added operations
   to phcpack for one Newton step on Laurent polynomial systems and
