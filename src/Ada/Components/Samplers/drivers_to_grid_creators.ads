@@ -1,18 +1,28 @@
 with text_io;                              use text_io;
 with Standard_Natural_Numbers;             use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;            use Standard_Floating_Numbers;
-with Standard_Complex_VecVecs;             use Standard_Complex_VecVecs;
+with Double_Double_Numbers;                use Double_Double_Numbers;
+with Quad_Double_Numbers;                  use Quad_Double_Numbers;
+with Standard_Complex_VecVecs;
+with DoblDobl_Complex_VecVecs;
+with QuadDobl_Complex_VecVecs;
 with Sample_Point_Lists;                   use Sample_Point_Lists;
+with DoblDobl_Sample_Lists;                use DoblDobl_Sample_Lists;
+with QuadDobl_Sample_Lists;                use QuadDobl_Sample_Lists;
 with Standard_Stacked_Sample_Grids;
+with DoblDobl_Stacked_Sample_Grids;
+with QuadDobl_Stacked_Sample_Grids;
 with Multprec_Stacked_Sample_Grids;
 
 package Drivers_to_Grid_Creators is
 
 -- DESCRIPTION :
 --   This package provides drivers to the creators for rectangular
---   and stacked grids of sample points.  Besides creating the grids,
---   these routines also provides additional tests on the quality of
---   the grids.
+--   and stacked grids of sample points.
+--   In addition to creating the grids, these routines provide tests 
+--   on the quality of the grids.
+--   Four different types of precision are supported:
+--   standard double, double double, quad double, and multiprecision.
 
 -- REQUIRED :
 --   The sampling machine must be properly initialized and tuned
@@ -20,6 +30,10 @@ package Drivers_to_Grid_Creators is
 
   procedure Write_Errors ( file : in file_type;
                            sps : in Standard_Sample_List );
+  procedure Write_Errors ( file : in file_type;
+                           sps : in DoblDobl_Sample_List );
+  procedure Write_Errors ( file : in file_type;
+                           sps : in QuadDobl_Sample_List );
   procedure Write_Errors ( file : in file_type;
                            sps : in Multprec_Sample_List );
 
@@ -34,6 +48,22 @@ package Drivers_to_Grid_Creators is
                ( file : in file_type; sps : in Standard_Sample_List;
                  m : in natural32; grid : out Array_of_Standard_Sample_Lists;
                  eps,dst : out double_float );
+  procedure DoblDobl_Rectangular_Grid_Creator
+               ( file : in file_type; sps : in DoblDobl_Sample_List;
+                 m : in natural32; grid : out Array_of_DoblDobl_Sample_Lists;
+                 eps,dst : out double_double );
+  procedure DoblDobl_Triangular_Grid_Creator
+               ( file : in file_type; sps : in DoblDobl_Sample_List;
+                 m : in natural32; grid : out Array_of_DoblDobl_Sample_Lists;
+                 eps,dst : out double_double );
+  procedure QuadDobl_Rectangular_Grid_Creator
+               ( file : in file_type; sps : in QuadDobl_Sample_List;
+                 m : in natural32; grid : out Array_of_QuadDobl_Sample_Lists;
+                 eps,dst : out quad_double );
+  procedure QuadDobl_Triangular_Grid_Creator
+               ( file : in file_type; sps : in QuadDobl_Sample_List;
+                 m : in natural32; grid : out Array_of_QuadDobl_Sample_Lists;
+                 eps,dst : out quad_double );
   procedure Multprec_Rectangular_Grid_Creator
                ( file : in file_type; sps : in out Standard_Sample_List;
                  m,size : in natural32;
@@ -65,6 +95,14 @@ package Drivers_to_Grid_Creators is
                ( file : in file_type; sps : in Standard_Sample_List;
                  full : in boolean;
                  grid : out Standard_Stacked_Sample_Grids.Stacked_Sample_Grid );
+  procedure DoblDobl_Stacked_Grid_Creator
+               ( file : in file_type; sps : in DoblDobl_Sample_List;
+                 full : in boolean;
+                 grid : out DoblDobl_Stacked_Sample_Grids.Stacked_Sample_Grid );
+  procedure QuadDobl_Stacked_Grid_Creator
+               ( file : in file_type; sps : in QuadDobl_Sample_List;
+                 full : in boolean;
+                 grid : out QuadDobl_Stacked_Sample_Grids.Stacked_Sample_Grid );
   procedure Multprec_Stacked_Grid_Creator
                ( file : in file_type; sps : in Standard_Sample_List;
                  full : in boolean; size : in natural32;
@@ -89,6 +127,14 @@ package Drivers_to_Grid_Creators is
                ( file : in file_type; sps : in Standard_Sample_List;
                  sli : in Standard_Complex_VecVecs.VecVec;
                  testsps : out Standard_Sample_List );
+  procedure DoblDobl_Test_Samples
+               ( file : in file_type; sps : in DoblDobl_Sample_List;
+                 sli : in DoblDobl_Complex_VecVecs.VecVec;
+                 testsps : out DoblDobl_Sample_List );
+  procedure QuadDobl_Test_Samples
+               ( file : in file_type; sps : in QuadDobl_Sample_List;
+                 sli : in QuadDobl_Complex_VecVecs.VecVec;
+                 testsps : out QuadDobl_Sample_List );
   procedure Multprec_Test_Samples
                ( file : in file_type; sps : in Standard_Sample_List;
                  sli : in Standard_Complex_VecVecs.VecVec;

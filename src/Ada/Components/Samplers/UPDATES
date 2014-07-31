@@ -1,3 +1,6 @@
+Thu 31 Jul 2014 : new packages {dobl,quad}dobl_{stacked,rectangular}_
+  sample_grids, called in drivers_to_grid_creators.
+
 Fri 13 Jun 2014 : modified sample_point_lists.adb for compiler warning.
   Changed standard_intrinsic_newton.adb for changed QRLS.
 
