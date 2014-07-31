@@ -1,5 +1,7 @@
 Thu 31 Jul 2014 : new packages {dobldobl,quaddobl}_power_traces
   and {dobldobl,quaddobl}_univariate_interpolators, tested by ts_powtrc.adb.
+  New packages {dobl,quad}dobl_{nvariate,trace}_interpolators,
+  tested by ts_traces.
 
 Fri 13 Jun 2014 : changed standard_polynomial_interpolators.adb for change
   in the specification of QRLS.

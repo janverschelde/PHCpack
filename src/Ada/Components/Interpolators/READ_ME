@@ -49,10 +49,14 @@ quaddobl_power_traces              : Newton identities with quad doubles
 multprec_power_traces              : Newton identities with multi-precision
 ts_powtrc                          : interactive test on Newton identities
 standard_nvariate_interpolators    : Newton interpolation for n-dim functions
-multprec_nvariate_interpolators    : multi-precision n-D Newton interpolation
+dobldobl_nvariate_interpolators    : double double n-D Newton interpolation
+quaddobl_nvariate_interpolators    : quad double n-D Newton interpolation
+multprec_nvariate_interpolators    : multiprecision n-D Newton interpolation
 ts_newint                          : test on the direct Newton interpolators
 standard_trace_interpolators       : standard trace form of interpolator
-multprec_trace_interpolators       : multi-precision interpolator with traces
+dobldobl_trace_interpolators       : double double interpolator with traces
+quaddobl_trace_interpolators       : quad double interpolator with traces
+multprec_trace_interpolators       : multiprecision interpolator with traces
 ts_traces                          : interactive test on trace interpolation
 ts_trapol                          : test on trace interpolators for one poly
 ------------------------------------------------------------------------------
