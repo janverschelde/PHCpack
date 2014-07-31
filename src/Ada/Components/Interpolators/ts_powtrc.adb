@@ -54,7 +54,9 @@ with Standard_Power_Traces;              use Standard_Power_Traces;
 with DoblDobl_Power_Traces;              use DoblDobl_Power_Traces;
 with QuadDobl_Power_Traces;              use QuadDobl_Power_Traces;
 with Multprec_Power_Traces;              use Multprec_Power_Traces;
-with Standard_Univariate_Interpolators;  use Standard_Univariate_Interpolators;
+with Standard_Univariate_Interpolators;
+with DoblDobl_Univariate_Interpolators;
+with QuadDobl_Univariate_Interpolators;
 with Standard_Trace_Interpolators;
 with Multprec_Trace_Interpolators;
 
@@ -604,7 +606,7 @@ procedure ts_powtrc is
         declare
           trc : constant Standard_Complex_Vectors.Vector(0..j) := Trace(t,j);
         begin
-          tcf(d-j) := Evalc(trc,pts(i));
+          tcf(d-j) := Standard_Univariate_Interpolators.Evalc(trc,pts(i));
         end;
       end loop;
       y := Standard_Roots(file,tcf);

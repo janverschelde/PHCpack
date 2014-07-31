@@ -40,6 +40,8 @@ multprec_divided_differences       : multi-precision Newton interpolation
 ts_divdif                          : interactive test on Newton interpolation
 ts_dvdexp                          : experiment on conditioning/stability
 standard_univariate_interpolators  : basic Newton interpolation for functions
+dobldobl_univariate_interpolators  : Newton interpolation with double doubles
+quaddobl_univariate_interpolators  : Newton interpolation with quad doubles
 multprec_univariate_interpolators  : multi-precision 1-D Newton interpolation
 standard_power_traces              : Newton identities with standard precision
 dobldobl_power_traces              : Newton identities with double doubles
