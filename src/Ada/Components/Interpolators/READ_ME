@@ -1,4 +1,4 @@
-Interpolation module for solution components with PHCv2.3.89
+Interpolation module for solution components with PHCv2.3.91
 
 The interpolation routines constitute a separate module.
 Three approaches have been studied and implemented :
@@ -42,6 +42,8 @@ ts_dvdexp                          : experiment on conditioning/stability
 standard_univariate_interpolators  : basic Newton interpolation for functions
 multprec_univariate_interpolators  : multi-precision 1-D Newton interpolation
 standard_power_traces              : Newton identities with standard precision
+dobldobl_power_traces              : Newton identities with double doubles
+quaddobl_power_traces              : Newton identities with quad doubles
 multprec_power_traces              : Newton identities with multi-precision
 ts_powtrc                          : interactive test on Newton identities
 standard_nvariate_interpolators    : Newton interpolation for n-dim functions

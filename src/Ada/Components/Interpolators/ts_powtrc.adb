@@ -8,17 +8,33 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with DoblDobl_Complex_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with QuadDobl_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
-with Standard_Random_Vectors;            use Standard_Random_Vectors;
-with Standard_Durand_Kerner;             use Standard_Durand_Kerner;
+with Standard_Random_Vectors;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Random_Vectors;
+with DoblDobl_Complex_Vector_Norms;      use DoblDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Random_Vectors;
+with QuadDobl_Complex_Vector_Norms;      use QuadDobl_Complex_Vector_Norms;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
 with Standard_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
+with Standard_Durand_Kerner;             use Standard_Durand_Kerner;
+with DoblDobl_Durand_Kerner;             use DoblDobl_Durand_Kerner;
+with QuadDobl_Durand_Kerner;             use QuadDobl_Durand_Kerner;
 with Witness_Sets,Witness_Sets_io;       use Witness_Sets,Witness_Sets_io;
 with Rectangular_Sample_Grids;           use Rectangular_Sample_Grids;
 with Drivers_to_Grid_Creators;           use Drivers_to_Grid_Creators;
@@ -29,12 +45,14 @@ with Multprec_Complex_Numbers_io;        use Multprec_Complex_Numbers_io;
 with Multprec_Complex_Vectors;
 with Multprec_Complex_Vectors_io;        use Multprec_Complex_Vectors_io;
 with Multprec_Complex_Norms_Equals;      use Multprec_Complex_Norms_Equals;
-with Multprec_Random_Vectors;            use Multprec_Random_Vectors;
+with Multprec_Random_Vectors;
 with Multprec_Durand_Kerner;             use Multprec_Durand_Kerner;
 with Sampling_Machine;
 with Sample_Points;                      use Sample_Points;
 with Sample_Point_Lists;                 use Sample_Point_Lists;
 with Standard_Power_Traces;              use Standard_Power_Traces;
+with DoblDobl_Power_Traces;              use DoblDobl_Power_Traces;
+with QuadDobl_Power_Traces;              use QuadDobl_Power_Traces;
 with Multprec_Power_Traces;              use Multprec_Power_Traces;
 with Standard_Univariate_Interpolators;  use Standard_Univariate_Interpolators;
 with Standard_Trace_Interpolators;
@@ -71,6 +89,52 @@ procedure ts_powtrc is
     return t;
   end Standard_Coefficients_to_Traces;
 
+  function DoblDobl_Coefficients_to_Traces 
+             ( c : DoblDobl_Complex_Vectors.Vector )
+             return DoblDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Converts the coefficients c into traces t, t(i) = c(d-i),
+  --   where i runs from 1 till d, d = c'last.
+
+  -- REQUIRED :
+  --   c'range = 0..d, c(i) is coefficient with x^i, c(d) is not used.
+
+    use DoblDobl_Complex_Numbers,DoblDobl_Complex_Vectors;
+
+    d : constant integer32 := c'last;
+    t : Vector(1..d);
+
+  begin
+    for i in 1..d loop
+      t(i) := c(d-i);
+    end loop;
+    return t;
+  end DoblDobl_Coefficients_to_Traces;
+
+  function QuadDobl_Coefficients_to_Traces 
+             ( c : QuadDobl_Complex_Vectors.Vector )
+             return QuadDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Converts the coefficients c into traces t, t(i) = c(d-i),
+  --   where i runs from 1 till d, d = c'last.
+
+  -- REQUIRED :
+  --   c'range = 0..d, c(i) is coefficient with x^i, c(d) is not used.
+
+    use QuadDobl_Complex_Numbers,QuadDobl_Complex_Vectors;
+
+    d : constant integer32 := c'last;
+    t : Vector(1..d);
+
+  begin
+    for i in 1..d loop
+      t(i) := c(d-i);
+    end loop;
+    return t;
+  end QuadDobl_Coefficients_to_Traces;
+
   function Multprec_Coefficients_to_Traces 
              ( c : Multprec_Complex_Vectors.Vector )
              return Multprec_Complex_Vectors.Vector is
@@ -105,7 +169,8 @@ procedure ts_powtrc is
     use Standard_Complex_Numbers;
 
     d : constant integer32 := c'last;
-    z : Standard_Complex_Vectors.Vector(1..d) := Random_Vector(1,d);
+    z : Standard_Complex_Vectors.Vector(1..d)
+      := Standard_Random_Vectors.Random_Vector(1,d);
     maxit : constant natural32 := 10 + natural32(d);
     eps : constant double_float := 1.0E-14;
     res : Standard_Complex_Vectors.Vector(1..d);
@@ -128,6 +193,76 @@ procedure ts_powtrc is
     return z;
   end Standard_Roots;
 
+  function DoblDobl_Roots ( file : file_type;
+                            c : DoblDobl_Complex_Vectors.Vector )
+                          return DoblDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Applies Durand-Kerner to compute the roots of the polynomial
+  --   defined by the coefficients in c.
+
+    use DoblDobl_Complex_Numbers;
+
+    d : constant integer32 := c'last;
+    z : DoblDobl_Complex_Vectors.Vector(1..d)
+      := DoblDobl_Random_Vectors.Random_Vector(1,d);
+    maxit : constant natural32 := 20 + natural32(d);
+    eps : constant double_float := 1.0E-26;
+    res : DoblDobl_Complex_Vectors.Vector(1..d);
+    maxres : double_double;
+    nb : natural32;
+    fail : boolean;
+
+  begin
+    Silent_Durand_Kerner(c,z,res,maxit,eps,nb,fail);
+   -- put_line(file,"The roots of the polynomial : "); put_line(file,z);
+   -- put_line(file,"The residuals at the roots : "); put_line(file,res);
+    maxres := AbsVal(res(1));
+    for i in 2..d loop
+      if AbsVal(res(i)) > maxres
+       then maxres := AbsVal(res(i));
+      end if;
+    end loop;
+    put(file,"Maximal residual at the roots : ");
+    put(file,maxres,3); new_line(file);
+    return z;
+  end DoblDobl_Roots;
+
+  function QuadDobl_Roots ( file : file_type;
+                            c : QuadDobl_Complex_Vectors.Vector )
+                          return QuadDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Applies Durand-Kerner to compute the roots of the polynomial
+  --   defined by the coefficients in c.
+
+    use QuadDobl_Complex_Numbers;
+
+    d : constant integer32 := c'last;
+    z : QuadDobl_Complex_Vectors.Vector(1..d)
+      := QuadDobl_Random_Vectors.Random_Vector(1,d);
+    maxit : constant natural32 := 30 + natural32(d);
+    eps : constant double_float := 1.0E-58;
+    res : QuadDobl_Complex_Vectors.Vector(1..d);
+    maxres : quad_double;
+    nb : natural32;
+    fail : boolean;
+
+  begin
+    Silent_Durand_Kerner(c,z,res,maxit,eps,nb,fail);
+   -- put_line(file,"The roots of the polynomial : "); put_line(file,z);
+   -- put_line(file,"The residuals at the roots : "); put_line(file,res);
+    maxres := AbsVal(res(1));
+    for i in 2..d loop
+      if AbsVal(res(i)) > maxres
+       then maxres := AbsVal(res(i));
+      end if;
+    end loop;
+    put(file,"Maximal residual at the roots : ");
+    put(file,maxres,3); new_line(file);
+    return z;
+  end QuadDobl_Roots;
+
   function Multprec_Roots ( file : file_type;
                             c : Multprec_Complex_Vectors.Vector;
                             size : natural32 )
@@ -142,7 +277,7 @@ procedure ts_powtrc is
     d : constant integer32 := c'last;
     deci : constant natural32 := Size_to_Decimal(size);
     z : Multprec_Complex_Vectors.Vector(1..d)
-      := Random_Vector(1,d,size) ;
+      := Multprec_Random_Vectors.Random_Vector(1,d,size) ;
     maxit : constant natural32 := 10 + natural32(d);
     eps : constant double_float := 10.0**integer(-deci);
     mpeps : Floating_Number := Create(eps);
@@ -193,6 +328,52 @@ procedure ts_powtrc is
     return sums;
   end Standard_Power_Sums;
 
+  function DoblDobl_Power_Sums ( x : DoblDobl_Complex_Vectors.Vector )
+                               return DoblDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Given all d roots in x of a degree d polynomial,
+  --   then all power sums up to degree d of the roots are returned.
+
+    use DoblDobl_Complex_Numbers,DoblDobl_Complex_Vectors;
+
+    sums : Vector(x'range);
+    powers : Vector(x'range) := x;   -- contains powers of roots
+
+  begin
+    sums(1) := Sum(powers);
+    for i in 2..x'last loop
+      for j in x'range loop
+        powers(j) := powers(j)*x(j);
+      end loop;
+      sums(i) := Sum(powers);
+    end loop;
+    return sums;
+  end DoblDobl_Power_Sums;
+
+  function QuadDobl_Power_Sums ( x : QuadDobl_Complex_Vectors.Vector )
+                               return QuadDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Given all d roots in x of a degree d polynomial,
+  --   then all power sums up to degree d of the roots are returned.
+
+    use QuadDobl_Complex_Numbers,QuadDobl_Complex_Vectors;
+
+    sums : Vector(x'range);
+    powers : Vector(x'range) := x;   -- contains powers of roots
+
+  begin
+    sums(1) := Sum(powers);
+    for i in 2..x'last loop
+      for j in x'range loop
+        powers(j) := powers(j)*x(j);
+      end loop;
+      sums(i) := Sum(powers);
+    end loop;
+    return sums;
+  end QuadDobl_Power_Sums;
+
   function Multprec_Power_Sums ( x : Multprec_Complex_Vectors.Vector )
                                return Multprec_Complex_Vectors.Vector is
 
@@ -233,7 +414,7 @@ procedure ts_powtrc is
     ans : character;
   
   begin
-    c(0..d-1) := Random_Vector(0,d-1);
+    c(0..d-1) := Standard_Random_Vectors.Random_Vector(0,d-1);
     c(d) := Create(1.0);
     put_line("The random coefficients of a monic polynomial ");
     put_line(c);
@@ -261,6 +442,96 @@ procedure ts_powtrc is
     put("Max norm of difference : "); put(normdiff,3); new_line;
   end Standard_Test_Power_Traces;
 
+  procedure DoblDobl_Test_Power_Traces ( d : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   The test consists of the following steps :
+  --    1) generate random coefficient of a monic polynomial of degree d;
+  --    2) compute power sums from the traces;
+  --    3) convert power sums into traces => original coefficients?
+
+    use DoblDobl_Complex_Numbers,DoblDobl_Complex_Vectors;
+
+    c : Vector(0..d);
+    s,t,st,x,ps,diff : Vector(1..d);
+    one : constant double_double := create(1.0);
+    normdiff : double_double;
+    ans : character;
+  
+  begin
+    c(0..d-1) := DoblDobl_Random_Vectors.Random_Vector(0,d-1);
+    c(d) := Create(one);
+    put_line("The random coefficients of a monic polynomial ");
+    put_line(c);
+    t := DoblDobl_Coefficients_to_Traces(c);
+    s := Traces_to_Power_Sums(t);
+    st := Power_Sums_to_Traces(s);
+    put_line("The traces computed from the coefficients : ");
+    put_line(t);
+    put_line("The traces computed from the power sums : ");
+    put_line(st);
+    diff := t - st;
+    normdiff := Max_Norm(diff);
+    put("Max norm of difference : "); put(normdiff,3); new_line;
+    put("Do you wish to continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    x := DoblDobl_Roots(Standard_Output,c);
+    ps := DoblDobl_Power_Sums(x);
+    put_line("Power sums computed from the traces : ");
+    put_line(s);
+    put_line("Power sums computed from the roots : ");
+    put_line(ps);
+    diff := s - ps;
+    normdiff := Max_Norm(diff);
+    put("Max norm of difference : "); put(normdiff,3); new_line;
+  end DoblDobl_Test_Power_Traces;
+
+  procedure QuadDobl_Test_Power_Traces ( d : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   The test consists of the following steps :
+  --    1) generate random coefficient of a monic polynomial of degree d;
+  --    2) compute power sums from the traces;
+  --    3) convert power sums into traces => original coefficients?
+
+    use QuadDobl_Complex_Numbers,QuadDobl_Complex_Vectors;
+
+    c : Vector(0..d);
+    s,t,st,x,ps,diff : Vector(1..d);
+    one : constant quad_double := create(1.0);
+    normdiff : quad_double;
+    ans : character;
+  
+  begin
+    c(0..d-1) := QuadDobl_Random_Vectors.Random_Vector(0,d-1);
+    c(d) := Create(one);
+    put_line("The random coefficients of a monic polynomial ");
+    put_line(c);
+    t := QuadDobl_Coefficients_to_Traces(c);
+    s := Traces_to_Power_Sums(t);
+    st := Power_Sums_to_Traces(s);
+    put_line("The traces computed from the coefficients : ");
+    put_line(t);
+    put_line("The traces computed from the power sums : ");
+    put_line(st);
+    diff := t - st;
+    normdiff := Max_Norm(diff);
+    put("Max norm of difference : "); put(normdiff,3); new_line;
+    put("Do you wish to continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans /= 'y' then return; end if;
+    x := QuadDobl_Roots(Standard_Output,c);
+    ps := QuadDobl_Power_Sums(x);
+    put_line("Power sums computed from the traces : ");
+    put_line(s);
+    put_line("Power sums computed from the roots : ");
+    put_line(ps);
+    diff := s - ps;
+    normdiff := Max_Norm(diff);
+    put("Max norm of difference : "); put(normdiff,3); new_line;
+  end QuadDobl_Test_Power_Traces;
+
   procedure Multprec_Test_Power_Traces
               ( d : in integer32; size : in natural32 ) is
 
@@ -278,7 +549,7 @@ procedure ts_powtrc is
     ans : character;
   
   begin
-    c(0..d-1) := Random_Vector(0,d-1,size);
+    c(0..d-1) := Multprec_Random_Vectors.Random_Vector(0,d-1,size);
     c(d) := Create(integer(1));
     put_line("The random coefficients of a monic polynomial ");
     put_line(c);
@@ -527,14 +798,25 @@ procedure ts_powtrc is
       if ans = '1' then
         new_line;
         put("Give the degree : "); get(d);
-        put("Give the number of decimal places (<= 16 is standard) : ");
-        get(deci);
-        if deci > 16 then
-          size := Decimal_to_Size(deci);
-          Multprec_Test_Power_Traces(integer32(d),size);
-        else
-          Standard_Test_Power_Traces(integer32(d));
-        end if;
+        new_line;
+        put_line("MENU for the precision of the computations : ");
+        put_line("  0. standard double precision;");
+        put_line("  1. double double precision;");
+        put_line("  2. quad double precision;");
+        put_line("  3. arbitrary multiprecision;");
+        put("Type 0, 1, 2, or 3 to select precision : ");
+        Ask_Alternative(ans,"0123");
+        case ans is
+           when '0' => Standard_Test_Power_Traces(integer32(d));
+           when '1' => DoblDobl_Test_Power_Traces(integer32(d));
+           when '2' => QuadDobl_Test_Power_Traces(integer32(d));
+           when '3' =>
+             put("Give the number of decimal places : ");
+             get(deci);
+             size := Decimal_to_Size(deci);
+             Multprec_Test_Power_Traces(integer32(d),size);
+           when others => null;
+        end case;
         put("Do you want more tests ? (y/n) ");
         Ask_Yes_or_No(ans);
       else
