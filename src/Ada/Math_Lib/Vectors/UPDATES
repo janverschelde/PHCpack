@@ -1,0 +1,79 @@
+Thu 31 Jul 2014 : new packages {dobl,quad}dobl_complex_nesvecs with _io.
+
+Fri 21 Jun 2013 : updated multprec_random_vecvecs as needed by multiprecision
+  interpolation methods.
+
+Fri 7 Jun 2013 : updated multprec_random_vectors,
+  multprec_complex_vector_tools, and all random vecvecs:
+  {standard,dobldobl,quaddobl}_random_vecvecs.
+
+Thu 6 Jun 2013 : following the introduction of natural32 and integer32,
+  updated generic_vectors_io, generic_vecvecs_io, tested by ts_natvec.
+  Updated ts_cmpvec, {dobldobl,quaddobl}_random_vectors, tested by ts_ddvec
+  and ts_qdvec.  Also changed generic_nesvecs, generic_nesvecs_io.adb,
+  tested by ts_nesvec.
+
+Tue 4 Jun 2013 : because of GNAT GPL 2013 changes in the numbers,
+  updated standard_random_vectors.adb, ts_natvec.adb, and ts_fltvec.adb.
+  Also changed generic_vectors.ads and generic_vecvecs.ads.
+
+Wed 21 Nov 2012 : moved add *norms* to the new directory Reduction.
+
+Mon 8 Oct 2012 : new package standard_complex_vector_norms, updates
+  in dobldobl_complex_vector_norms.adb to use the double double sqrt.
+  Also quaddobl_complex_vector_norms.adb uses the quad double sqrt.
+
+Sat 6 Oct 2012 : new package standard_floating_vector_norms.
+
+Wed 26 Sep 2012 : updated standard_random_vectors with routines to generate
+  vectors with entries of a certain magnitude, tested by ts_fltvec.adb 
+  and ts_cmpvec.adb.  Updated standard_random_vecvecs to generate vectors
+  of vectors with the magnitude in a certain range.  Did the same update
+  for {dobldobl,quaddobl}_random_{vectors,vecvecs}, tested by ts_ddvec.adb
+  and ts_qdvec.adb.
+
+Tue 25 Sep 2012 : new packages {dobldobl,quaddobl}_random_vecvecs.
+
+Fri 20 May 2011 : added "constant" declarations to ts_ddvec and ts_qdvec
+  because of warnings, also changed {double,quad}_double_vector_norms.adb
+  because of redundant use clause in body.
+
+Thu 8 Oct 2010 : new package dobldobl_complex_equality_tests needed for
+  dobldobl_path_trackers.  Update in dobldobl_complex_equality_tests and
+  new package quaddobl_complex_equality_tests for quaddobl_path_trackers.
+
+Fri 25 Jun 2010 : {double,quad}_double_vector_norms now use the SQRT
+  of {dobldobl,quaddobl}_mathematical_functions.
+
+Fri 4 Jun 2010 : added double_double_vector_norms.
+
+Fri 28 May 2010 : to convert complex vectors and double, quad doubles
+  new packages are {DoblDobl,QuadDobl}_complex_vectors_cv, tested by
+  ts_ddvec and ts_qdvec.  Vector norms are provided in the packages
+  {dobldobl,quaddobl}_complex_vector_norms.
+
+Tue 25 May 2010 : defined {quad,double}_double_{vectors,vecvecs}_io and
+  {quad,dobl}dobl_complex_{vectors,vecvecs}_io, resulting in 8 new types
+  and 16 instantiated packages.  For testing, created random vectors in
+  {dobldobl,quaddobl}_random_vectors, called by ts_ddvec and ts_qdvec.
+  
+Fri 6 Nov 2009 : modified generic_vectors.a* for GNAT GPL 2009 warnings.
+
+Mon 21 Sep 2009 : instantiated standard_natural64_{vectors,vecvecs} and _io.
+
+Tue 8 Sep 2009 : instantiated multprec_floating64_vectors and its _io.
+
+Fri 4 Sep 2009 : extended standard_random_vectors with a generator
+  for standard integer 64-bit vectors.
+
+Sun 30 Aug 2009 : instantiated multprec_integer64_vectors and its i/o.
+
+Thu 20 Aug 2009 : introducing vectors of long long integers: new are
+  standard_integer64_vectors, standard_integer64_vectors_io,
+  standard_integer64_vecvecs, standard_integer64_vecvecs_io, tested by
+  ts_intvec.adb.  Documentation change in standard_integer_vectors.ads
+
+Thu 3 Jan 2008 : because of warnings with GNAT GPL 2006, changed
+  generic_nesvecs.adb and ts_nesvec.adb.
+
+Sun 23 Sep 2007 : splitted this directory off from Matrices.
