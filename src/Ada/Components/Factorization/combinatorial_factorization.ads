@@ -3,6 +3,8 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Vectors;          use Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;          use Standard_Natural_VecVecs;
 with Sample_Point_Lists;                use Sample_Point_Lists;
+with DoblDobl_Sample_Lists;             use DoblDobl_Sample_Lists;
+with QuadDobl_Sample_Lists;             use QuadDobl_Sample_Lists;
 
 package Combinatorial_Factorization is
 
@@ -77,7 +79,44 @@ package Combinatorial_Factorization is
 
   -- DESCRIPTION :
   --   Uses the combinatorial enumeration of factors and linear traces
-  --   to determine the factorization of a solution component.
+  --   to determine the factorization of a solution component,
+  --   given a grid of sample points in standard double precision.
+
+  -- ON ENTRY :
+  --   file       for intermediate output and diagnostics;
+  --   n          #witness points, sum of degrees over all factors;
+  --   grid       sample grid of n witness points, of range 0..2.
+
+  -- ON RETURN :
+  --   groups of labels of witness points for each irreducible factor.
+
+  function Factor ( n : natural32;
+                    grid : Array_of_DoblDobl_Sample_Lists ) return VecVec;
+  function Factor ( file : file_type; n : natural32;
+                    grid : Array_of_DoblDobl_Sample_Lists ) return VecVec;
+
+  -- DESCRIPTION :
+  --   Uses the combinatorial enumeration of factors and linear traces
+  --   to determine the factorization of a solution component,
+  --   given a grid of sample points in double double precision.
+
+  -- ON ENTRY :
+  --   file       for intermediate output and diagnostics;
+  --   n          #witness points, sum of degrees over all factors;
+  --   grid       sample grid of n witness points, of range 0..2.
+
+  -- ON RETURN :
+  --   groups of labels of witness points for each irreducible factor.
+
+  function Factor ( n : natural32;
+                    grid : Array_of_QuadDobl_Sample_Lists ) return VecVec;
+  function Factor ( file : file_type; n : natural32;
+                    grid : Array_of_QuadDobl_Sample_Lists ) return VecVec;
+
+  -- DESCRIPTION :
+  --   Uses the combinatorial enumeration of factors and linear traces
+  --   to determine the factorization of a solution component,
+  --   given a grid of sample points in double double precision.
 
   -- ON ENTRY :
   --   file       for intermediate output and diagnostics;

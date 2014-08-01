@@ -2,11 +2,21 @@ with Timing_Package;                    use Timing_Package;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
+with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
 with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Standard_Trace_Interpolators;      use Standard_Trace_Interpolators;
+with DoblDobl_Trace_Interpolators;      use DoblDobl_Trace_Interpolators;
+with QuadDobl_Trace_Interpolators;      use QuadDobl_Trace_Interpolators;
 
 package body Combinatorial_Factorization is
 
@@ -441,7 +451,7 @@ package body Combinatorial_Factorization is
     return Seek(file,n,factors,f,0);
   end Search_Factorization_with_Output;
 
--- TARGET FACTORIZATION :
+-- TARGET FACTORIZATION FUNCTIONS :
 
   function Factor ( n : natural32;
                     grid : Array_of_Standard_Sample_Lists ) return VecVec is
@@ -451,6 +461,8 @@ package body Combinatorial_Factorization is
     function Certify_Factor
                ( f : Standard_Natural_Vectors.Vector ) return boolean is
 
+      use Standard_Complex_Numbers;
+
       sub_grid : constant Array_of_Standard_Sample_Lists(grid'range)
                := Select_Sub_Grid(grid,f);
       q : constant Standard_Complex_Vectors.Vector := Create(sub_grid,1);
@@ -458,7 +470,7 @@ package body Combinatorial_Factorization is
 
     begin
       Eval_Trace(q,1,sub_grid(2),val,eva);
-      return (AbsVal(val-eva) < tol);
+      return (Standard_Complex_Numbers.AbsVal(val-eva) < tol);
     end Certify_Factor;
 
     function CombFac is new Search_Factorization(Certify_Factor);
@@ -480,9 +492,90 @@ package body Combinatorial_Factorization is
     function Certify_Factor
                ( f : Standard_Natural_Vectors.Vector ) return boolean is
 
+      use Standard_Complex_Numbers;
+
       sub_grid : constant Array_of_Standard_Sample_Lists(grid'range)
                := Select_Sub_Grid(grid,f);
       q : constant Standard_Complex_Vectors.Vector := Create(sub_grid,1);
+      val,eva : Complex_Number;
+
+    begin
+      Eval_Trace(q,1,sub_grid(2),val,eva);
+      put(file,"calculated sum at samples : ");
+      put(file,val); new_line(file);
+      put(file,"value at the linear trace : ");
+      put(file,eva); new_line(file);
+      put(file,"The witness points"); put(file,f);
+      if Standard_Complex_Numbers.AbsVal(val-eva) < tol
+       then put_line(file," define a factor.");        return true;
+       else put_line(file," do not define a factor."); return false;
+      end if;
+    end Certify_Factor;
+
+    function CombFac is new Search_Factorization_with_Output(Certify_Factor);
+
+  begin
+    tstart(timer);
+    declare
+      factors : constant Standard_Natural_VecVecs.VecVec
+              := CombFac(file,n);
+    begin
+      tstop(timer);
+      put(file,"Factorization found : ");
+      Write(file,factors); new_line(file);
+      new_line(file);
+      put_line(file,"The decomposition : ");
+      Write_Labels(file,factors);
+      new_line(file);
+      print_times(file,timer,"combinatorial factorization");
+      return factors;
+    end;
+  end Factor;
+
+  function Factor ( n : natural32;
+                    grid : Array_of_DoblDobl_Sample_Lists ) return VecVec is
+
+    tol : constant double_float := 1.0E-8;
+
+    function Certify_Factor
+               ( f : Standard_Natural_Vectors.Vector ) return boolean is
+
+      use DoblDobl_Complex_Numbers;
+
+      sub_grid : constant Array_of_DoblDobl_Sample_Lists(grid'range)
+               := Select_Sub_Grid(grid,f);
+      q : constant DoblDobl_Complex_Vectors.Vector := Create(sub_grid,1);
+      val,eva : Complex_Number;
+
+    begin
+      Eval_Trace(q,1,sub_grid(2),val,eva);
+      return (AbsVal(val-eva) < tol);
+    end Certify_Factor;
+
+    function CombFac is new Search_Factorization(Certify_Factor);
+
+  begin
+    declare
+      factors : constant Standard_Natural_VecVecs.VecVec := CombFac(n);
+    begin
+      return factors;
+    end;
+  end Factor;
+
+  function Factor ( file : file_type; n : natural32;
+                    grid : Array_of_DoblDobl_Sample_Lists ) return VecVec is
+
+    timer : Timing_Widget;
+    tol : constant double_float := 1.0E-8;
+
+    function Certify_Factor
+               ( f : Standard_Natural_Vectors.Vector ) return boolean is
+
+      use DoblDobl_Complex_Numbers;
+
+      sub_grid : constant Array_of_DoblDobl_Sample_Lists(grid'range)
+               := Select_Sub_Grid(grid,f);
+      q : constant DoblDobl_Complex_Vectors.Vector := Create(sub_grid,1);
       val,eva : Complex_Number;
 
     begin
@@ -503,8 +596,85 @@ package body Combinatorial_Factorization is
   begin
     tstart(timer);
     declare
-      factors : constant Standard_Natural_VecVecs.VecVec
-              := CombFac(file,n);
+      factors : constant Standard_Natural_VecVecs.VecVec := CombFac(file,n);
+    begin
+      tstop(timer);
+      put(file,"Factorization found : ");
+      Write(file,factors); new_line(file);
+      new_line(file);
+      put_line(file,"The decomposition : ");
+      Write_Labels(file,factors);
+      new_line(file);
+      print_times(file,timer,"combinatorial factorization");
+      return factors;
+    end;
+  end Factor;
+
+  function Factor ( n : natural32;
+                    grid : Array_of_QuadDobl_Sample_Lists ) return VecVec is
+
+    tol : constant double_float := 1.0E-8;
+
+    function Certify_Factor
+               ( f : Standard_Natural_Vectors.Vector ) return boolean is
+
+      use QuadDobl_Complex_Numbers;
+
+      sub_grid : constant Array_of_QuadDobl_Sample_Lists(grid'range)
+               := Select_Sub_Grid(grid,f);
+      q : constant QuadDobl_Complex_Vectors.Vector := Create(sub_grid,1);
+      val,eva : Complex_Number;
+
+    begin
+      Eval_Trace(q,1,sub_grid(2),val,eva);
+      return (AbsVal(val-eva) < tol);
+    end Certify_Factor;
+
+    function CombFac is new Search_Factorization(Certify_Factor);
+
+  begin
+    declare
+      factors : constant Standard_Natural_VecVecs.VecVec := CombFac(n);
+    begin
+      return factors;
+    end;
+  end Factor;
+
+  function Factor ( file : file_type; n : natural32;
+                    grid : Array_of_QuadDobl_Sample_Lists ) return VecVec is
+
+    timer : Timing_Widget;
+    tol : constant double_float := 1.0E-8;
+
+    function Certify_Factor
+               ( f : Standard_Natural_Vectors.Vector ) return boolean is
+
+      use QuadDobl_Complex_Numbers;
+
+      sub_grid : constant Array_of_QuadDobl_Sample_Lists(grid'range)
+               := Select_Sub_Grid(grid,f);
+      q : constant QuadDobl_Complex_Vectors.Vector := Create(sub_grid,1);
+      val,eva : Complex_Number;
+
+    begin
+      Eval_Trace(q,1,sub_grid(2),val,eva);
+      put(file,"calculated sum at samples : ");
+      put(file,val); new_line(file);
+      put(file,"value at the linear trace : ");
+      put(file,eva); new_line(file);
+      put(file,"The witness points"); put(file,f);
+      if AbsVal(val-eva) < tol
+       then put_line(file," define a factor.");        return true;
+       else put_line(file," do not define a factor."); return false;
+      end if;
+    end Certify_Factor;
+
+    function CombFac is new Search_Factorization_with_Output(Certify_Factor);
+
+  begin
+    tstart(timer);
+    declare
+      factors : constant Standard_Natural_VecVecs.VecVec := CombFac(file,n);
     begin
       tstop(timer);
       put(file,"Factorization found : ");
