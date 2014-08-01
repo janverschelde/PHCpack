@@ -3,6 +3,8 @@ with Standard_Natural_Numbers;            use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Standard_Natural_VecVecs;            use Standard_Natural_VecVecs;
 
 package Monodromy_Partitions is
@@ -18,6 +20,10 @@ package Monodromy_Partitions is
   --   of degree d as d singletons.
 
   function Map ( t1,t2 : Standard_Complex_Vectors.Vector; tol : double_float )
+               return Standard_Natural_Vectors.Vector;
+  function Map ( t1,t2 : DoblDobl_Complex_Vectors.Vector; tol : double_float )
+               return Standard_Natural_Vectors.Vector;
+  function Map ( t1,t2 : QuadDobl_Complex_Vectors.Vector; tol : double_float )
                return Standard_Natural_Vectors.Vector;
 
   -- DESCRIPTION :

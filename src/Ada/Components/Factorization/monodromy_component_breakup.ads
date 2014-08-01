@@ -1,28 +1,63 @@
 with text_io;                           use text_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
-with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
-with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
+with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 with Sample_Point_Lists;                use Sample_Point_Lists;
+with DoblDobl_Sample_Lists;             use DoblDobl_Sample_Lists;
+with QuadDobl_Sample_Lists;             use QuadDobl_Sample_Lists;
 
 package Monodromy_Component_Breakup is
 
 -- DESCRIPTION :
 --   This package uses monodromy and linear traces to factor positive
 --   dimensional solution sets into irreducible components.
+--   Three different levels of precision are supported:
+--   standard double, double double, or quad double precision.
 
 -- AUXILIARIES FOR LINEAR TRACE CERTIFICATES :
 
-  function Create ( p : Poly_Sys; sols : Solution_List; dim : natural32 )
+  function Create ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+                    sols : Standard_Complex_Solutions.Solution_List;
+                    dim : natural32 )
                   return Array_of_Standard_Sample_Lists;
-  function Create ( file : file_type; p : Poly_Sys;
-                    sols : Solution_List; dim : natural32 )
+  function Create ( file : file_type;
+                    p : Standard_Complex_Poly_Systems.Poly_Sys;
+                    sols : Standard_Complex_Solutions.Solution_List;
+                    dim : natural32 )
                   return Array_of_Standard_Sample_Lists;
 
+  function Create ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    sols : DoblDobl_Complex_Solutions.Solution_List;
+                    dim : natural32 )
+                  return Array_of_DoblDobl_Sample_Lists;
+  function Create ( file : file_type;
+                    p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    sols : DoblDobl_Complex_Solutions.Solution_List;
+                    dim : natural32 )
+                  return Array_of_DoblDobl_Sample_Lists;
+
+  function Create ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    sols : QuadDobl_Complex_Solutions.Solution_List;
+                    dim : natural32 )
+                  return Array_of_QuadDobl_Sample_Lists;
+  function Create ( file : file_type;
+                    p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    sols : QuadDobl_Complex_Solutions.Solution_List;
+                    dim : natural32 )
+                  return Array_of_QuadDobl_Sample_Lists;
+
   -- DESCRIPTION :
-  --   Returns a grid of sample points needed for linear traces.
+  --   Returns a grid of sample points needed for linear traces
+  --   in standard double, double double, or quad double precision.
 
   -- REQUIRED : the sampling machine is initialized and tuned.
 
@@ -36,9 +71,26 @@ package Monodromy_Component_Breakup is
                   f : Standard_Natural_Vectors.Vector;
                   grid : Array_of_Standard_Sample_Lists ) return double_float;
 
+  function Trace_Sum_Difference
+                ( f : Standard_Natural_Vectors.Vector;
+                  grid : Array_of_DoblDobl_Sample_Lists ) return double_double;
+  function Trace_Sum_Difference
+                ( file : file_type;
+                  f : Standard_Natural_Vectors.Vector;
+                  grid : Array_of_DoblDobl_Sample_Lists ) return double_double;
+
+  function Trace_Sum_Difference
+                ( f : Standard_Natural_Vectors.Vector;
+                  grid : Array_of_QuadDobl_Sample_Lists ) return quad_double;
+  function Trace_Sum_Difference
+                ( file : file_type;
+                  f : Standard_Natural_Vectors.Vector;
+                  grid : Array_of_QuadDobl_Sample_Lists ) return quad_double;
+
   -- DESCRIPTION :
   --   Returns the difference between the sum computed at the samples
-  --   and the sum evaluated at the linear trace.
+  --   and the sum evaluated at the linear trace,
+  --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   file       for intermediate output and diagnostics;
@@ -56,6 +108,24 @@ package Monodromy_Component_Breakup is
                 ( file : file_type; tol : double_float;
                   f : Standard_Natural_Vectors.Vector;
                   grid : Array_of_Standard_Sample_Lists ) return boolean;
+
+  function Certify_Factor
+                ( tol : double_float;
+                  f : Standard_Natural_Vectors.Vector;
+                  grid : Array_of_DoblDobl_Sample_Lists ) return boolean;
+  function Certify_Factor
+                ( file : file_type; tol : double_float;
+                  f : Standard_Natural_Vectors.Vector;
+                  grid : Array_of_DoblDobl_Sample_Lists ) return boolean;
+
+  function Certify_Factor
+                ( tol : double_float;
+                  f : Standard_Natural_Vectors.Vector;
+                  grid : Array_of_QuadDobl_Sample_Lists ) return boolean;
+  function Certify_Factor
+                ( file : file_type; tol : double_float;
+                  f : Standard_Natural_Vectors.Vector;
+                  grid : Array_of_QuadDobl_Sample_Lists ) return boolean;
 
   -- DESCRIPTION :
   --   Computes the linear trace on the grid to see if the witness points
@@ -79,9 +149,28 @@ package Monodromy_Component_Breakup is
                   f : Standard_Natural_VecVecs.VecVec;
                   grid : Array_of_Standard_Sample_Lists ) return boolean;
 
+  function Is_Factorization
+                ( tol : double_float;
+                  f : Standard_Natural_VecVecs.VecVec;
+                  grid : Array_of_DoblDobl_Sample_Lists ) return boolean;
+  function Is_Factorization
+                ( file : file_type; tol : double_float;
+                  f : Standard_Natural_VecVecs.VecVec;
+                  grid : Array_of_DoblDobl_Sample_Lists ) return boolean;
+
+  function Is_Factorization
+                ( tol : double_float;
+                  f : Standard_Natural_VecVecs.VecVec;
+                  grid : Array_of_QuadDobl_Sample_Lists ) return boolean;
+  function Is_Factorization
+                ( file : file_type; tol : double_float;
+                  f : Standard_Natural_VecVecs.VecVec;
+                  grid : Array_of_QuadDobl_Sample_Lists ) return boolean;
+
   -- DESCRIPTION :
   --   Applies linear traces on the grid to certify whether the partition
-  --   of the set of witness points forms an irreducible decomposition.
+  --   of the set of witness points forms an irreducible decomposition,
+  --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   file       for intermediate output and diagnostics;
@@ -104,8 +193,29 @@ package Monodromy_Component_Breakup is
                   dim,threshold : in natural32; tol : in double_float;
                   f : in Standard_Natural_VecVecs.Link_to_VecVec );
 
+  procedure Monodromy_Breakup
+                ( grid : in Array_of_DoblDobl_Sample_Lists;
+                  dim,threshold : in natural32; tol : in double_float;
+                  f : in Standard_Natural_VecVecs.Link_to_VecVec );
+  procedure Monodromy_Breakup
+                ( file : in file_type;
+                  grid : in Array_of_DoblDobl_Sample_Lists;
+                  dim,threshold : in natural32; tol : in double_float;
+                  f : in Standard_Natural_VecVecs.Link_to_VecVec );
+
+  procedure Monodromy_Breakup
+                ( grid : in Array_of_QuadDobl_Sample_Lists;
+                  dim,threshold : in natural32; tol : in double_float;
+                  f : in Standard_Natural_VecVecs.Link_to_VecVec );
+  procedure Monodromy_Breakup
+                ( file : in file_type;
+                  grid : in Array_of_QuadDobl_Sample_Lists;
+                  dim,threshold : in natural32; tol : in double_float;
+                  f : in Standard_Natural_VecVecs.Link_to_VecVec );
+
   -- DESCRIPTION :
-  --   Applies monodromy loops starting at sps to create factorization f.
+  --   Applies monodromy loops starting at sps to compute the factorization f,
+  --   in standard double, double double, or quad double precision.
  
   -- REQUIRED : the sampling machine is initialized and tuned.
 
@@ -123,16 +233,40 @@ package Monodromy_Component_Breakup is
 
 -- DRIVER ROUTINES :
 
-  procedure Factor ( p : in Poly_Sys; dim : in natural32;
+  procedure Factor ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                     dim : in natural32;
                      grid : in Array_of_Standard_Sample_Lists;
                      f : out Standard_Natural_VecVecs.Link_to_VecVec );
-  procedure Factor ( file : in file_type; p : in Poly_Sys; dim : in natural32;
+  procedure Factor ( file : in file_type;
+                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                     dim : in natural32;
                      grid : in Array_of_Standard_Sample_Lists;
+                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+
+  procedure Factor ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                     dim : in natural32;
+                     grid : in Array_of_DoblDobl_Sample_Lists;
+                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+  procedure Factor ( file : in file_type;
+                     p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                     dim : in natural32;
+                     grid : in Array_of_DoblDobl_Sample_Lists;
+                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+
+  procedure Factor ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                     dim : in natural32;
+                     grid : in Array_of_QuadDobl_Sample_Lists;
+                     f : out Standard_Natural_VecVecs.Link_to_VecVec );
+  procedure Factor ( file : in file_type;
+                     p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                     dim : in natural32;
+                     grid : in Array_of_QuadDobl_Sample_Lists;
                      f : out Standard_Natural_VecVecs.Link_to_VecVec );
 
   -- DESCRIPTION :
   --   Applies monodromy loops to factor a pure dimensional solution set
-  --   into irreducible components.
+  --   into irreducible components, in standard double, double double,
+  --   or quad double precision.
 
   -- REQUIRED : the sampling machine is initialized and tuned.
 

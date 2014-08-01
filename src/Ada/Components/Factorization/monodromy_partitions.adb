@@ -1,7 +1,11 @@
 with Standard_Natural_Numbers_io;         use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
-with Standard_Complex_Numbers;            use Standard_Complex_Numbers;
+with Standard_Complex_Numbers;
+with Double_Double_Numbers;
+with DoblDobl_Complex_Numbers;
+with Quad_Double_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors_io;         use Standard_Natural_Vectors_io;
 
 package body Monodromy_Partitions is 
@@ -21,6 +25,43 @@ package body Monodromy_Partitions is
                return Standard_Natural_Vectors.Vector is
 
     res : Standard_Natural_Vectors.Vector(t1'range) := (t1'range => 0);
+    use Standard_Complex_Numbers;
+
+  begin
+    for i in t1'range loop
+      for j in t2'range loop
+        if (abs(REAL_PART(t1(i)) - REAL_PART(t2(j))) < tol)
+            and then (abs(IMAG_PART(t1(i)) - IMAG_PART(t2(j))) < tol)
+         then res(i) := natural32(j); exit;
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Map;
+
+  function Map ( t1,t2 : DoblDobl_Complex_Vectors.Vector; tol : double_float )
+               return Standard_Natural_Vectors.Vector is
+
+    res : Standard_Natural_Vectors.Vector(t1'range) := (t1'range => 0);
+    use Double_Double_Numbers,DoblDobl_Complex_Numbers;
+
+  begin
+    for i in t1'range loop
+      for j in t2'range loop
+        if (abs(REAL_PART(t1(i)) - REAL_PART(t2(j))) < tol)
+            and then (abs(IMAG_PART(t1(i)) - IMAG_PART(t2(j))) < tol)
+         then res(i) := natural32(j); exit;
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Map;
+
+  function Map ( t1,t2 : QuadDobl_Complex_Vectors.Vector; tol : double_float )
+               return Standard_Natural_Vectors.Vector is
+
+    res : Standard_Natural_Vectors.Vector(t1'range) := (t1'range => 0);
+    use Quad_Double_Numbers,QuadDobl_Complex_Numbers;
 
   begin
     for i in t1'range loop

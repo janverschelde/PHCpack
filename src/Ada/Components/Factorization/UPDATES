@@ -1,5 +1,7 @@
 Fri 1 Aug 2014 : extended combinatorial_factorization to operate on samples
   in double double and quad double precision, tested by ts_combfac.adb.
+  Extended monodromy_partitions and monodromy_component_breakup to run
+  in double double and quad double precision, tested by ts_newfac.adb.
 
 Mon 24 Mar 2014 : mainfac.adb adjusted so membership homotopy test
   enabled for double double and quad double precision.
