@@ -1,4 +1,4 @@
-Numerical Linear Algebra in PHCv2.3.89
+Numerical Linear Algebra in PHCv2.3.91
 
 This "Reduction" directory implements "row reduction" on linear systems
 of floating-point number of various precisions: double, double double,
@@ -65,6 +65,7 @@ ts_mgs                             : test on modified Gram-Schmidt
 ts_mgsrnk                          : Gram-Schmidt for rank determination
 -------------------------------------------------------------------------------
 standard_complex_singular_values   : SVD in standard arithmetic
+dobldobl_complex_singular_values   : SVD in double double arithmetic
 multprec_complex_singular_values   : SVD in multiprecision arithmetic
 ts_svd                             : test singular value decomposition
 -------------------------------------------------------------------------------
