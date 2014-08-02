@@ -10,6 +10,9 @@ with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Double_Double_Numbers;             use Double_Double_Numbers;
 with Double_Double_Numbers_io;          use Double_Double_Numbers_io;
 with DoblDobl_Complex_Numbers;          use DoblDobl_Complex_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;            use Quad_Double_Numbers_io;
+with QuadDobl_Complex_Numbers;          use QuadDobl_Complex_Numbers;
 with Multprec_Floating_Numbers;         use Multprec_Floating_Numbers;
 with Multprec_Complex_Numbers;          use Multprec_Complex_Numbers;
 with Multprec_Complex_Number_Tools;     use Multprec_Complex_Number_Tools;
@@ -17,16 +20,23 @@ with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
 with Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
 with DoblDobl_Complex_Matrices;
 with DoblDobl_Complex_Matrices_io;      use DoblDobl_Complex_Matrices_io;
+with QuadDobl_Complex_Matrices;
+with QuadDobl_Complex_Matrices_io;      use QuadDobl_Complex_Matrices_io;
 with Standard_Random_Vectors;           use Standard_Random_Vectors;
 with DoblDobl_Random_Vectors;           use DoblDobl_Random_Vectors;
+with QuadDobl_Random_Vectors;           use QuadDobl_Random_Vectors;
 with Standard_Random_Matrices;          use Standard_Random_Matrices;
 with DoblDobl_Random_Matrices;          use DoblDobl_Random_Matrices;
+with QuadDobl_Random_Matrices;          use QuadDobl_Random_Matrices;
 with Standard_Complex_Singular_Values;  use Standard_Complex_Singular_Values;
 with DoblDobl_Complex_Singular_Values;  use DoblDobl_Complex_Singular_Values;
+with QuadDobl_Complex_Singular_Values;  use QuadDobl_Complex_Singular_Values;
 with Multprec_Complex_Vectors;
 with Multprec_Complex_Vectors_io;       use Multprec_Complex_Vectors_io;
 with Multprec_Complex_Vector_Tools;     use Multprec_Complex_Vector_Tools;
@@ -646,7 +656,7 @@ procedure ts_svd is
     s : Vector(1..mm);
     e : Vector(1..p);
     u : Matrix(1..n,1..n);
-    v: Matrix(1..p,1..p);
+    v : Matrix(1..p,1..p);
     job : constant integer32 := 11;
     info : integer32;
 
@@ -655,6 +665,314 @@ procedure ts_svd is
     Test_SVD_Output(y,u,v,s,e,info);
     Test_SVD_Solver(y,u,v,s,b);
   end DoblDobl_Test_SVD_on_Random_System;
+
+-- ROUTINES USING QUAD DOUBLE ARITHMETIC :
+
+  function Read_Vector
+             ( n : in integer32 ) return QuadDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Prompts the user to enter n complex numbers,
+  --   returns the vector which contains the user given numbers.
+
+    res : QuadDobl_Complex_Vectors.Vector(1..n);
+
+  begin
+    put("Give "); put(n,1);
+    put(" complex numbers for a vector of dimension ");
+    put(n,1); put_line(" :");
+    get(res);
+    return res;
+  end Read_Vector;
+
+  function Read_Matrix
+             ( n,m : in integer32 ) return QuadDobl_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Prompts the user to enter n*m complex numbers to define
+  --   an n-by-m matrix.  Returns the matrix of given numbers.
+
+    res : QuadDobl_Complex_Matrices.Matrix(1..n,1..m);
+
+  begin
+    put("Give "); put(n*m,1); put(" complex numbers for ");
+    put(n,1); put("x"); put(m,1); put_line(" matrix :");
+    get(res);
+    return res;
+  end Read_Matrix;
+
+  function Is_Identity ( a : QuadDobl_Complex_Matrices.Matrix;
+                         tol : double_float ) return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if a is the identity matrix modulo the tolerance.
+
+    one : constant quad_double := create(1.0);
+
+  begin
+    for i in a'range(1) loop
+      for j in a'range(2) loop
+        if i = j then
+          if Absval(a(i,j) - one) > tol
+           then return false;
+          end if;
+        else
+          if AbsVal(a(i,j)) > tol
+           then return false;
+          end if;
+        end if;
+      end loop;
+    end loop;
+    return true;
+  end Is_Identity;
+
+  function Is_Orthogonal ( a : QuadDobl_Complex_Matrices.Matrix;
+                           tol : double_float ) return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if a*a^H and a^H*a equal the identity matrix
+  --   modulo the given tolerance tol.
+
+    use QuadDobl_Complex_Matrices;
+
+    atr : constant Matrix(a'range(2),a'range(1)) := Conjugate_Transpose(a);
+    ata : constant Matrix(a'range(2),a'range(2)) := atr*a;
+    aat : constant Matrix(a'range(1),a'range(1)) := a*atr;
+
+  begin
+    if not Is_Identity(ata,tol) then
+      return false;
+    elsif not Is_Identity(aat,tol) then
+      return false;
+    else
+      return true;
+    end if;
+  end Is_Orthogonal;
+
+  function Is_SVD ( x,u,v : QuadDobl_Complex_Matrices.Matrix;
+                    s : QuadDobl_Complex_Vectors.Vector;
+                    tol : in double_float ) return boolean is
+
+  -- DESCRIPTION :
+  --   Forms the product u'*x*v and checks whether this product is a
+  --   diagonal matrix with the singular values on the diagonal.
+
+    use QuadDobl_Complex_Matrices;
+
+    ut : constant Matrix(u'range(2),u'range(1)) := Conjugate_Transpose(u);
+    utx : constant Matrix(u'range(2),x'range(2)) := ut*x;
+    utxv : constant Matrix(u'range(2),v'range(2)) := utx*v;
+
+    procedure Error is
+    begin
+      put_line("The matrix u'*x*v : "); put(utxv,3);
+      put_line("is NOT a singular value decomposition!  BUG!");
+    end Error;
+
+  begin
+    for i in utxv'range(1) loop
+      for j in utxv'range(2) loop
+        if i = j then
+          if AbsVal(utxv(i,j) - s(i)) > tol
+           then Error; return false;
+          end if;
+        else
+          if AbsVal(utxv(i,j)) > tol
+           then Error; return false;
+          end if;
+        end if;
+      end loop;
+    end loop;
+    return true;
+  end Is_SVD;
+
+  procedure Test_SVD_Output
+              ( x,u,v : in QuadDobl_Complex_Matrices.Matrix;
+                s,e : in QuadDobl_Complex_Vectors.Vector;
+                info : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests whether the matrices u and v are orthogonal and
+  --   whether u'*x*v yields a diagonal matrix with the singular
+  --   values on the diagonal.  Diagnostics are written to screen.
+
+    ortho,decomp : boolean;
+    tol : constant double_float := 1.0E-8;
+
+  begin
+    put("info = "); put(info,1); new_line;
+    put_line("The e values : "); put_line(e);
+    put_line("The singular values : "); put_line(s);
+    put_line("The matrix u : "); put(u);
+    ortho := Is_Orthogonal(u,tol);
+    if ortho
+     then put_line("The matrix u is orthogonal.");
+     else put_line("The matrix u is NOT orthogonal!  BUG!!!");
+    end if;
+    put_line("The matrix v : "); put(v);
+    ortho := Is_Orthogonal(v,tol);
+    if ortho
+     then put_line("The matrix v is orthogonal.");
+     else put_line("The matrix v is NOT orthogonal!  BUG!!!");
+    end if;
+    decomp := Is_SVD(x,u,v,s,tol);
+    if decomp then
+      put_line("The singular values stand u'*x*v test.");
+    else
+      put_line("The singular values do NOT stand u'*x*v test!");
+      put_line("The matrix x :"); put(x,3);
+      put_line("The computed matrix u :"); put(u,3);
+      put_line("The computed matrix v :"); put(v,3);
+    end if;
+  end Test_SVD_Output;
+
+  procedure Test_SVD_Solver
+               ( a,u,v : in QuadDobl_Complex_Matrices.Matrix;
+                 s,b : in QuadDobl_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Calls the solver using the SVD of a to solve a*x = b,
+  --   and prints the residual vector b - a*x.
+
+    use QuadDobl_Complex_Vectors;
+    use QuadDobl_Complex_Matrices;
+
+    res : Vector(b'range) := b;
+    x : Vector(a'range(2));
+    inv : constant Matrix(a'range(2),a'range(1)) := Inverse(u,v,s);
+    ai : constant Matrix(a'range(1),a'range(1)) := a*inv;
+    ia : constant Matrix(a'range(2),a'range(2)) := inv*a;
+    tol : constant double_float := 1.0E-8;
+
+  begin
+    put("The rank of the matrix : ");
+    put(Rank(s),1); new_line;
+    put("Inverse of condition number : ");
+    put(Inverse_Condition_Number(s),3); new_line;
+    if Is_Identity(ai,tol) then
+      put_line("The product a*inv(a) is the indentity matrix.");
+    else
+      put_line("The product a*inv(a) is NOT the indentity matrix!");
+      if a'length(1) > a'length(2) then
+        put_line("... okay, inv(a) can only be a left inverse.");
+      else
+        put_line("This may be a genuine bug, look at the product:");
+        put(ai,3);
+      end if;
+    end if;
+    if Is_Identity(ia,tol) then
+      put_line("The product inv(a)*a is the indentity matrix.");
+    else
+      put_line("The product inv(a)*a is NOT the indentity matrix!");
+      if a'length(1) < a'length(2) then
+        put_line("... okay, inv(a) can only be a right inverse.");
+      else
+        put_line("This may be a genuine bug, look at the product:");
+        put(ia,3);
+      end if;
+    end if;
+    x := Solve(u,v,s,b);
+    res := b - a*x;
+    put_line("The residual vector : ");
+    put_line(res);
+  end Test_SVD_Solver;
+
+  procedure QuadDobl_Test_SVD_on_Given_Matrix ( n,p : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Computes the SVD of a user given n-by-p matrix.
+
+    use QuadDobl_Complex_Vectors;
+    use QuadDobl_Complex_Matrices;
+
+    x : Matrix(1..n,1..p) := Read_Matrix(n,p);
+    y : constant Matrix(1..n,1..p) := x;
+    mm : constant integer32 := QuadDobl_Complex_Singular_Values.Min0(n+1,p);
+    s : Vector(1..mm);
+    e : Vector(1..p);
+    u : Matrix(1..n,1..n);
+    v : Matrix(1..p,1..p);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    SVD(x,n,p,s,e,u,v,job,info);
+    Test_SVD_Output(y,u,v,s,e,info);
+  end QuadDobl_Test_SVD_on_Given_Matrix;
+
+  procedure QuadDobl_Test_SVD_on_Given_System ( n,p : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Uses SVD to solve a given linear system of n equations in p unknowns.
+
+    use QuadDobl_Complex_Vectors;
+    use QuadDobl_Complex_Matrices;
+
+    a : Matrix(1..n,1..p) := Read_Matrix(n,p);
+    b : constant Vector(1..n) := Read_Vector(n);
+    y : constant Matrix(1..n,1..p) := a;
+    mm : constant integer32 := QuadDobl_Complex_Singular_Values.Min0(n+1,p);
+    s : Vector(1..mm);
+    e : Vector(1..p);
+    u : Matrix(1..n,1..n);
+    v : Matrix(1..p,1..p);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    SVD(a,n,p,s,e,u,v,job,info);
+    Test_SVD_Output(y,u,v,s,e,info);
+    Test_SVD_Solver(y,u,v,s,b);
+  end QuadDobl_Test_SVD_on_Given_System;
+
+  procedure QuadDobl_Test_SVD_on_Random_Matrix ( n,p : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Computes a SVD on a random n-by-p matrix.
+
+    use QuadDobl_Complex_Vectors;
+    use QuadDobl_Complex_Matrices;
+  
+    x : Matrix(1..n,1..p) := Random_Matrix(natural32(n),natural32(p));
+    y : constant Matrix(1..n,1..p) := x;
+    mm : constant integer32 := QuadDobl_Complex_Singular_Values.Min0(n+1,p);
+    s : Vector(1..mm);
+    e : Vector(1..p);
+    u : Matrix(1..n,1..n);
+    v : Matrix(1..p,1..p);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    SVD(x,n,p,s,e,u,v,job,info);
+    Test_SVD_Output(y,u,v,s,e,info);
+  end QuadDobl_Test_SVD_on_Random_Matrix;
+
+  procedure QuadDobl_Test_SVD_on_Random_System ( n,p : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Uses SVD to solve a randomly generated linear system
+  --   of n equations in p unknowns with double double arithmetic.
+
+    use QuadDobl_Complex_Vectors;
+    use QuadDobl_Complex_Matrices;
+
+    a : Matrix(1..n,1..p) := Random_Matrix(natural32(n),natural32(p));
+    b : constant Vector(1..n) := Random_Vector(1,n);
+    y : constant Matrix(1..n,1..p) := a;
+    mm : constant integer32 := QuadDobl_Complex_Singular_Values.Min0(n+1,p);
+    s : Vector(1..mm);
+    e : Vector(1..p);
+    u : Matrix(1..n,1..n);
+    v : Matrix(1..p,1..p);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    SVD(a,n,p,s,e,u,v,job,info);
+    Test_SVD_Output(y,u,v,s,e,info);
+    Test_SVD_Solver(y,u,v,s,b);
+  end QuadDobl_Test_SVD_on_Random_System;
 
 -- ROUTINES USING MULTIPRECISION ARITHMETIC :
 
@@ -1022,11 +1340,12 @@ procedure ts_svd is
     put_line("MENU to select the precision : ");
     put_line("  0. standard double precision; or");
     put_line("  1. double double precision; or");
-    put_line("  2. arbitrary multiprecision.");
-    put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(prec,"012");
-    if prec = '2' then
-      put("Give size of the numbers (0 for standard precision): ");
+    put_line("  2. quad double precision; or");
+    put_line("  3. arbitrary multiprecision.");
+    put("Type 0, 1, 2, or 3 to select the precision : ");
+    Ask_Alternative(prec,"0123");
+    if prec = '3' then
+      put("Give size of the numbers : ");
       get(sz);
     end if;
     new_line;
@@ -1055,6 +1374,14 @@ procedure ts_svd is
           when others => null;
       end case;
       when '2' =>
+        case ans is
+          when '1' => QuadDobl_Test_SVD_on_Given_Matrix(n,m);
+          when '2' => QuadDobl_Test_SVD_on_Given_System(n,m);
+          when '3' => QuadDobl_Test_SVD_on_Random_Matrix(n,m);
+          when '4' => QuadDobl_Test_SVD_on_Random_System(n,m);
+          when others => null;
+      end case;
+      when '3' =>
         case ans is
           when '1' => Test_SVD_on_Given_Matrix(n,m,sz);
           when '2' => Test_SVD_on_Given_System(n,m,sz);

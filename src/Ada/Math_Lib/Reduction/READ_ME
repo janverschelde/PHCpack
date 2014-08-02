@@ -66,6 +66,7 @@ ts_mgsrnk                          : Gram-Schmidt for rank determination
 -------------------------------------------------------------------------------
 standard_complex_singular_values   : SVD in standard arithmetic
 dobldobl_complex_singular_values   : SVD in double double arithmetic
+quaddobl_complex_singular_values   : SVD in quad double arithmetic
 multprec_complex_singular_values   : SVD in multiprecision arithmetic
 ts_svd                             : test singular value decomposition
 -------------------------------------------------------------------------------
