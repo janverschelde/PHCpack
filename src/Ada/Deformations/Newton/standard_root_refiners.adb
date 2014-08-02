@@ -307,6 +307,60 @@ package body Standard_Root_Refiners is
     put_bar(file);
   end Write_Global_Info;
 
+-- ONE NEWTON STEP :
+
+  procedure Standard_Newton_Step
+              ( f : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in  Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float ) is
+
+    use Standard_Complex_Poly_SysFun;
+    use Standard_Complex_Jaco_Matrices;
+
+    y : Standard_Complex_Vectors.Vector(f'range) := eval(f,x);
+    A : Matrix(f'range,f'range) := eval(jf,x);
+    ipvt : Standard_Integer_Vectors.Vector(A'range(2));
+    info : integer32;
+    Anorm : constant double_float := Norm1(A);
+
+  begin
+    Standard_Complex_Vectors.Min(y);
+    lufac(A,A'last(1),ipvt,info);
+    estco(A,A'last(1),ipvt,Anorm,rco);
+    lusolve(A,A'last(1),ipvt,y);
+    Standard_Complex_Vectors.Add(x,y);
+    err := Max_Norm(y);
+    y := eval(f,x);
+    res := Max_Norm(y);
+  end Standard_Newton_Step;
+
+  procedure Standard_Newton_Step
+              ( f : in Standard_Complex_Laur_SysFun.Eval_Laur_Sys;
+                jf : in  Standard_Complex_Laur_JacoMats.Eval_Jaco_Mat;
+                x : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float ) is
+
+    use Standard_Complex_Laur_SysFun;
+    use Standard_Complex_Laur_JacoMats;
+
+    y : Standard_Complex_Vectors.Vector(f'range) := eval(f,x);
+    A : Matrix(f'range,f'range) := eval(jf,x);
+    ipvt : Standard_Integer_Vectors.Vector(A'range(2));
+    info : integer32;
+    Anorm : constant double_float := Norm1(A);
+
+  begin
+    Standard_Complex_Vectors.Min(y);
+    lufac(A,A'last(1),ipvt,info);
+    estco(A,A'last(1),ipvt,Anorm,rco);
+    lusolve(A,A'last(1),ipvt,y);
+    Standard_Complex_Vectors.Add(x,y);
+    err := Max_Norm(y);
+    y := eval(f,x);
+    res := Max_Norm(y);
+  end Standard_Newton_Step;
+
 -- TARGET ROUTINES, NEWTON's METHOD :
 
   procedure Silent_Newton

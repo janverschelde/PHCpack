@@ -198,6 +198,33 @@ package Standard_Root_Refiners is
   --   nbsing    number of singular solutions;
   --   nbclus    number of clustered solutions.
 
+-- ONE NEWTON STEP :
+
+  procedure Standard_Newton_Step
+              ( f : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in  Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float );
+  procedure Standard_Newton_Step
+              ( f : in Standard_Complex_Laur_SysFun.Eval_Laur_Sys;
+                jf : in  Standard_Complex_Laur_JacoMats.Eval_Jaco_Mat;
+                x : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float );
+
+  -- DESCRIPTION :
+  --   Does one Newton step in standard complex arithmetic.
+
+  -- ON ENTRY :
+  --   f        evaluable form of a (Laurent) polynomial system;
+  --   jf       Jacobian matrix of f;
+  --   x        current approximate solution.
+
+  -- ON RETURN :
+  --   x        updated approximate solution;
+  --   err      norm of the update vector;
+  --   rco      estimate for the inverse condition number;
+  --   res      residual, norm of the function value.
+
 -- NEWTON's METHOD :
 
   procedure Silent_Newton 
