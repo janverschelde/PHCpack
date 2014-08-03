@@ -7,7 +7,7 @@ package DoblDobl_Complex_QR_Least_Squares is
 
 -- DESCRIPTION :
 --   This package provides an implementation of QR-decomposition for
---   matrices of standard complex numbers.  With this decomposition,
+--   matrices of double double complex numbers.  With this decomposition,
 --   we can orthogonalize a matrix and solve linear systems in the
 --   least squares sense.
 
