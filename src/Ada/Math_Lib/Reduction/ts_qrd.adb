@@ -7,7 +7,10 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;        use Standard_Integer_Vectors_io;
 with Standard_Floating_Vectors;
@@ -24,6 +27,14 @@ with Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
 with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
 with Standard_Complex_QR_Least_Squares;  use Standard_Complex_QR_Least_Squares;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_Matrices;
+with DoblDobl_Complex_Matrices_io;       use DoblDobl_Complex_Matrices_io;
+with DoblDobl_Complex_Vector_Norms;      use DoblDobl_Complex_Vector_Norms;
+with DoblDobl_Random_Vectors;            use DoblDobl_Random_Vectors;
+with DoblDobl_Random_Matrices;           use DoblDobl_Random_Matrices;
+with DoblDobl_Complex_QR_Least_Squares;  use DoblDobl_Complex_QR_Least_Squares;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Multprec_Floating_Numbers_io;       use Multprec_Floating_Numbers_io;
 with Multprec_Complex_Numbers;
@@ -88,6 +99,29 @@ procedure ts_qrd is
   end Extract_Upper_Triangular;
 
   function Extract_Upper_Triangular
+                ( a : DoblDobl_Complex_Matrices.Matrix )
+                return DoblDobl_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the upper triangular part of the matrix a.
+
+    use DoblDobl_Complex_Numbers;
+    res : DoblDobl_Complex_Matrices.Matrix(a'range(1),a'range(2));
+    zero : constant double_double := create(0.0);
+
+  begin
+    for i in a'range(1) loop
+      for j in a'first(2)..(i-1) loop
+        res(i,j) := Create(zero);
+      end loop;
+      for j in i..a'last(2) loop
+        res(i,j) := a(i,j);
+      end loop;
+    end loop;
+    return res;
+  end Extract_Upper_Triangular;
+
+  function Extract_Upper_Triangular
                 ( a : Multprec_Complex_Matrices.Matrix )
                 return Multprec_Complex_Matrices.Matrix is
 
@@ -134,6 +168,24 @@ procedure ts_qrd is
 
     use Standard_Complex_Numbers;
     sum : double_float := 0.0;
+
+  begin
+    for i in a'range(1) loop
+      for j in a'range(2) loop
+        sum := sum + AbsVal(a(i,j)-b(i,j));
+      end loop;
+    end loop;
+    return sum;
+  end Differences;
+
+  function Differences ( a,b : in DoblDobl_Complex_Matrices.Matrix )
+                       return double_double is
+
+  -- DESCRIPTION :
+  --   Returns the sum of the differences of all elements |a(i,j)-b(i,j)|.
+
+    use DoblDobl_Complex_Numbers;
+    sum : double_double := create(0.0);
 
   begin
     for i in a'range(1) loop
@@ -218,6 +270,33 @@ procedure ts_qrd is
     return sum;
   end Orthogonality_Check_Sum;
 
+  function Orthogonality_Check_Sum 
+             ( q : DoblDobl_Complex_Matrices.Matrix )
+             return double_double is
+
+  -- DESCRIPTION :
+  --   Tests whether the columns are orthogonal w.r.t. each other,
+  --   returns the sum of all inner products of any column in q with
+  --   its following columns.
+
+    use DoblDobl_Complex_Numbers;
+    zero : constant double_double := create(0.0);
+    sum : double_double := zero;
+    ip : Complex_Number;
+
+  begin
+    for j in q'range(2) loop
+      for k in j+1..q'last(2) loop
+        ip := Create(zero);
+        for i in q'range(1) loop
+          ip := ip + Conjugate(q(i,j))*q(i,k);
+        end loop;
+        sum := sum + AbsVal(ip);
+      end loop;
+    end loop;
+    return sum;
+  end Orthogonality_Check_Sum;
+
   function Orthogonality_Check_Sum
              ( q : Multprec_Complex_Matrices.Matrix )
              return Floating_Number is
@@ -289,6 +368,26 @@ procedure ts_qrd is
     put(Differences(a,wrk),3,3,3); new_line;
     put("Orthogonality check sum : ");
     put(Orthogonality_Check_Sum(q),3,3,3); new_line;
+  end Test_QRD;
+
+  procedure Test_QRD ( a,q,r : in DoblDobl_Complex_Matrices.Matrix;
+                       output : in boolean ) is
+
+    wrk : DoblDobl_Complex_Matrices.Matrix(a'range(1),a'range(2));
+    use DoblDobl_Complex_Matrices;
+
+  begin
+    if output
+     then put_line("The upper triangular part R :"); put(r,3);
+    end if;
+    wrk := q*r;
+    if output
+     then put_line("q*r :"); put(wrk,3); 
+    end if;
+    put("Difference in 1-norm between the matrix and q*r : ");
+    put(Differences(a,wrk),3); new_line;
+    put("Orthogonality check sum : ");
+    put(Orthogonality_Check_Sum(q),3); new_line;
   end Test_QRD;
 
   procedure Test_QRD ( a,q,r : in Multprec_Complex_Matrices.Matrix;
@@ -540,19 +639,19 @@ procedure ts_qrd is
      then put_line("The matrix : "); put(a,3);
     end if;
     QRD(wrk,qraux,jpvt,piv);
-    if output
-     then put_line("The matrix after QR : "); put(wrk,3);
-         put_line("The vector qraux : "); put(qraux,3); new_line;
+    if output then
+      put_line("The matrix after QR : "); put(wrk,3);
+      put_line("The vector qraux : "); put(qraux,3); new_line;
     end if;
    -- put("The vector jpvt : "); put(jpvt); new_line;
-    QRLS(wrk,n,n,m,qraux,b,dum,dum2,sol,rsd,dum3,110,info);
+    QRLS(wrk,n,m,qraux,b,dum,dum2,sol,rsd,dum3,110,info);
     if output
      then put_line("The solution : "); put(sol,3); new_line;
     end if;
     dum := b - a*sol;
-    if output  
-     then put_line("right-hand size - matrix*solution : ");
-          put(dum,3); new_line;
+    if output then 
+      put_line("right-hand size - matrix*solution : ");
+      put(dum,3); new_line;
     end if;
     put("Sum norm of residual : "); put(Sum_Norm(dum),3,3,3); new_line;
   end Standard_Complex_LS_Test;
@@ -648,6 +747,178 @@ procedure ts_qrd is
     new_line;
     print_times(Standard_Output,timer,"Random Standard Complex Least Squares");
   end Standard_Random_Complex_LS_Test;
+
+-- DOBLDOBL COMPLEX TEST DRIVERS :
+
+  procedure DoblDobl_Complex_QR_Test
+              ( n,m : in integer32; piv : in boolean;
+                a : DoblDobl_Complex_Matrices.Matrix;
+                output : in boolean ) is
+
+    use DoblDobl_Complex_Numbers;
+    wrk : DoblDobl_Complex_Matrices.Matrix(1..n,1..m) := a;
+    bas : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
+    zero : constant double_double := create(0.0);
+    qraux : DoblDobl_Complex_Vectors.Vector(1..m) := (1..m => Create(zero));
+    jpvt : Standard_Integer_Vectors.Vector(1..m) := (1..m => 0);
+
+  begin
+    if output
+     then put_line("The matrix : "); put(a,3);
+    end if;
+    QRD(wrk,qraux,jpvt,piv);
+    if output
+     then put_line("The matrix after QR : "); put(wrk,3);
+          put_line("The vector qraux : "); put(qraux,3); new_line;
+    end if;
+   -- put("The vector jpvt : "); put(jpvt); new_line;
+    if not piv then
+      for i in wrk'range(1) loop
+        for j in wrk'range(2) loop
+          bas(i,j) := wrk(i,j);
+        end loop;
+        for j in n+1..m loop
+          bas(i,j) := Create(zero);
+        end loop;
+      end loop;
+      Basis(bas,a);
+      if output
+       then put_line("The orthogonal part Q of QR  :"); put(bas,3);
+      end if;
+      Test_QRD(a,bas,Extract_Upper_Triangular(wrk),output);
+    end if;
+  end DoblDobl_Complex_QR_Test;
+
+  procedure DoblDobl_Complex_LS_Test
+              ( n,m : in integer32; piv : in boolean;
+                a : DoblDobl_Complex_Matrices.Matrix;
+                b : DoblDobl_Complex_Vectors.Vector;
+                output : in boolean ) is
+
+    use DoblDobl_Complex_Numbers;
+    wrk : DoblDobl_Complex_Matrices.Matrix(1..n,1..m) := a;
+    zero : constant double_double := create(0.0);
+    qraux : DoblDobl_Complex_Vectors.Vector(1..m) := (1..m => Create(zero));
+    jpvt : Standard_Integer_Vectors.Vector(1..m) := (1..m => 0);
+    sol : DoblDobl_Complex_Vectors.Vector(1..m);
+    rsd,dum,dum2,dum3 : DoblDobl_Complex_Vectors.Vector(1..n);
+    info : integer32;
+    use DoblDobl_Complex_Matrices;
+    use DoblDobl_Complex_Vectors; 
+
+  begin
+    if output
+     then put_line("The matrix : "); put(a,3);
+    end if;
+    QRD(wrk,qraux,jpvt,piv);
+    if output then
+      put_line("The matrix after QR : "); put(wrk,3);
+      put_line("The vector qraux : "); put(qraux,3); new_line;
+    end if;
+   -- put("The vector jpvt : "); put(jpvt); new_line;
+    QRLS(wrk,n,m,qraux,b,dum,dum2,sol,rsd,dum3,110,info);
+    if output
+     then put_line("The solution : "); put(sol,3); new_line;
+    end if;
+    dum := b - a*sol;
+    if output then 
+      put_line("right-hand size - matrix*solution : ");
+      put(dum,3); new_line;
+    end if;
+    put("Sum norm of residual : "); put(Sum_Norm(dum),3); new_line;
+  end DoblDobl_Complex_LS_Test;
+
+  procedure DoblDobl_Interactive_Complex_QR_Test
+              ( n,m : in integer32; piv : in boolean ) is
+
+    a : DoblDobl_Complex_Matrices.Matrix(1..n,1..m);
+    ans : character;
+
+  begin
+    loop
+      put("Give a "); put(n,1); put("x"); put(m,1);
+      put_line(" matrix : "); get(a);
+      DoblDobl_Complex_QR_Test(n,m,piv,a,true);
+      put("Do you want more tests ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
+  end DoblDobl_Interactive_Complex_QR_Test;
+
+  procedure DoblDobl_Interactive_Complex_LS_Test
+              ( n,m : in integer32; piv : in boolean ) is
+
+    a : DoblDobl_Complex_Matrices.Matrix(1..n,1..m);
+    b : DoblDobl_Complex_Vectors.Vector(1..n);
+    ans : character;
+
+  begin
+    loop
+      put("Give a "); put(n,1); put("x"); put(m,1);
+      put_line(" matrix : "); get(a);
+      put("Give right-hand size "); put(n,1);
+      put_line("-vector : "); get(b); 
+      DoblDobl_Complex_LS_Test(n,m,piv,a,b,true);
+      put("Do you want more tests ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
+  end DoblDobl_Interactive_Complex_LS_Test;
+
+  procedure DoblDobl_Random_Complex_QR_Test
+              ( n,m : in integer32; piv : in boolean ) is
+
+    a : DoblDobl_Complex_Matrices.Matrix(1..n,1..m);
+    nb : integer32 := 0;
+    ans : character;
+    output : boolean;
+    timer : Timing_Widget;
+
+  begin
+    put("Give the number of tests : "); get(nb);
+    put("Do you want to see all matrices and vectors ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    output := (ans = 'y');
+    tstart(timer);
+    for i in 1..nb loop
+      a := Random_Matrix(natural32(n),natural32(m));
+      DoblDobl_Complex_QR_Test(n,m,piv,a,output);
+    end loop;
+    tstop(timer);
+    put("Tested "); put(nb,1);
+    put_line(" QR factorizations on random double double complex matrices.");
+    new_line;
+    print_times(Standard_Output,timer,
+                "Random DoblDobl Complex QR Factorizations");
+  end DoblDobl_Random_Complex_QR_Test;
+
+  procedure DoblDobl_Random_Complex_LS_Test
+              ( n,m : in integer32; piv : in boolean ) is
+
+    a : DoblDobl_Complex_Matrices.Matrix(1..n,1..m);
+    b : DoblDobl_Complex_Vectors.Vector(1..n);
+    nb : integer32 := 0;
+    ans : character;
+    output : boolean;
+    timer : Timing_Widget;
+
+  begin
+    put("Give the number of tests : "); get(nb);
+    put("Do you want to see all matrices and vectors ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    output := (ans = 'y');
+    tstart(timer);
+    for i in 1..nb loop
+      a := Random_Matrix(natural32(n),natural32(m));
+      b := Random_Vector(1,n);
+      DoblDobl_Complex_LS_Test(n,m,piv,a,b,output);
+    end loop;
+    tstop(timer);
+    put("Tested "); put(nb,1);
+    put_line(" least squares on random double double complex matrices.");
+    new_line;
+    print_times(Standard_Output,timer,"Random DoblDobl Complex Least Squares");
+  end DoblDobl_Random_Complex_LS_Test;
 
 -- MULTPREC COMPLEX TEST DRIVERS :
 
@@ -872,17 +1143,21 @@ procedure ts_qrd is
       put_line("  6.                        standard complex matrix.");
       put_line("  7.               on random standard floating matrix.");
       put_line("  8.                         standard complex matrix.");
-      put_line("  9. QR-decomposition on given multprec complex matrix.");
-      put_line("  A.                  on random multprec complex matrix.");
-      put_line("  B. Least Squares on given multprec complex matrix.");
-      put_line("  C.               on random multprec complex matrix.");
-	  put("Make your choice (0,1,2,3,4,5,6,7,8,9,A,B, or C) : ");
-      Ask_Alternative(choice,"0123456789ABC");
+      put_line("  9. QR-decomposition on given dobldobl complex matrix.");
+      put_line("  A.                  on random dobldobl complex matrix.");
+      put_line("  B. Least Squares on given dobldobl complex matrix.");
+      put_line("  C.               on random dobldobl complex matrix.");
+      put_line("  D. QR-decomposition on given multprec complex matrix.");
+      put_line("  E.                  on random multprec complex matrix.");
+      put_line("  F. Least Squares on given multprec complex matrix.");
+      put_line("  G.               on random multprec complex matrix.");
+	  put("Make your choice (0, 1, .. , A, B, .., G) : ");
+      Ask_Alternative(choice,"0123456789ABCDEFG");
       exit when (choice = '0');
       new_line;
       put("Give the number of rows of the matrix : "); get(n);
       put("Give the number of columns of the matrix : "); get(m);
-      if choice = '9' or choice = 'A' or choice = 'B' or choice = 'C'
+      if choice = 'D' or choice = 'E' or choice = 'F' or choice = 'G'
        then put("Give the size of the numbers : "); get(sz);
       end if;
       case choice is
@@ -894,10 +1169,14 @@ procedure ts_qrd is
         when '6' => Standard_Interactive_Complex_LS_Test(n,m,piv);
         when '7' => Standard_Random_Real_LS_Test(n,m,piv);
         when '8' => Standard_Random_Complex_LS_Test(n,m,piv);
-        when '9' => Multprec_Interactive_Complex_QR_Test(n,m,piv);
-        when 'A' => Multprec_Random_Complex_QR_Test(n,m,sz,piv);
-        when 'B' => Multprec_Interactive_Complex_LS_Test(n,m,piv);
-        when 'C' => Multprec_Random_Complex_LS_Test(n,m,sz,piv);
+        when '9' => DoblDobl_Interactive_Complex_QR_Test(n,m,piv);
+        when 'A' => DoblDobl_Random_Complex_QR_Test(n,m,piv);
+        when 'B' => DoblDobl_Interactive_Complex_LS_Test(n,m,piv);
+        when 'C' => DoblDobl_Random_Complex_LS_Test(n,m,piv);
+        when 'D' => Multprec_Interactive_Complex_QR_Test(n,m,piv);
+        when 'E' => Multprec_Random_Complex_QR_Test(n,m,sz,piv);
+        when 'F' => Multprec_Interactive_Complex_LS_Test(n,m,piv);
+        when 'G' => Multprec_Random_Complex_LS_Test(n,m,sz,piv);
         when others => null;
       end case;
     end loop;

@@ -1,3 +1,6 @@
+Sun 3 Aug 2014 : new packages dobldobl_complex_qr_least_squares,
+  tested by ts_qrd.adb.
+
 Sat 2 Aug 2014 : new packages {dobldobl,quaddobl}_complex_singular_values,
   tested by ts_svd.adb.
 

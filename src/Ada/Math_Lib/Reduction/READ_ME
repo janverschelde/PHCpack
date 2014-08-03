@@ -53,8 +53,9 @@ quaddobl_complex_row_reduction     : row reduction with quad doubles
 ts_rowred                          : test incremental row reduction
 -------------------------------------------------------------------------------
 standard_floating_qr_least_squares : QR + least squares for standard floats
-standard_complex_qr_least_squares  : QR + least squares for standard complex #s
-multprec_complex_qr_least_squares  : QR + least squares for multprec complex #s
+standard_complex_qr_least_squares  : QR + least squares for standard complex
+dobldobl_complex_qr_least_squares  : QR + least squares for dobldobl complex
+multprec_complex_qr_least_squares  : QR + least squares for multprec complex
 ts_qrd                             : test QR-decomposition and least squares
 -------------------------------------------------------------------------------
 standard_floating_gramschmidt      : modified Gram-Schmidt QR on doubles
