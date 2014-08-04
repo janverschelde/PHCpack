@@ -34,6 +34,8 @@ standard_complex_veclists          : lists of standard complex vectors
 standard_complex_veclists_io       : i/o of lists of standard complex vectors
 dobldobl_complex_veclists          : lists of double double complex vectors
 dobldobl_complex_veclists_io       : i/o of lists of dobldobl complex vectors
+quaddobl_complex_veclists          : lists of quad double complex vectors
+quaddobl_complex_veclists_io       : i/o of lists of quaddobl complex vectors
 multprec_complex_veclists          : lists of multprec complex vectors
 multprec_complex_veclists_io       : i/o of lists of multprec complex vectors
 generic_arrays_of_vector_lists     : generic arrays of vector lists 

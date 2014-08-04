@@ -1,4 +1,4 @@
-Mon 4 Aug 2014 : new instantiations dobldobl_complex_veclists and io.
+Mon 4 Aug 2014 : new instantiations {dobl,quad}dobl_complex_veclists and io.
 
 Thu 13 Jun 2013 : updated integer_support_functions for integer32.
 
