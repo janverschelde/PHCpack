@@ -1,4 +1,4 @@
-Support sets, polytopes, and linear-inequality systems in PHCv2.3.80
+Support sets, polytopes, and linear-inequality systems in PHCv2.3.91
 
 New in release 2 is the usage of Ada 95 concepts to build the lists.
 Reverse search is added in release 2.1 to enumerate vertices and facets.
@@ -32,6 +32,8 @@ lists_of_floating_vectors          : lists of standard floating vectors
 lists_of_floating_vectors_io       : input/output of lists of floating vectors
 standard_complex_veclists          : lists of standard complex vectors
 standard_complex_veclists_io       : i/o of lists of standard complex vectors
+dobldobl_complex_veclists          : lists of double double complex vectors
+dobldobl_complex_veclists_io       : i/o of lists of dobldobl complex vectors
 multprec_complex_veclists          : lists of multprec complex vectors
 multprec_complex_veclists_io       : i/o of lists of multprec complex vectors
 generic_arrays_of_vector_lists     : generic arrays of vector lists 

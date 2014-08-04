@@ -1,0 +1,26 @@
+Mon 4 Aug 2014 : new instantiations dobldobl_complex_veclists and io.
+
+Thu 13 Jun 2013 : updated integer_support_functions for integer32.
+
+Sun 9 Jun 2013 : about half the files in this directory changed because of
+  the natural32 and integer32 types...
+
+Fri 7 Jun 2013 : edits in generic_lists_of_vectors.
+
+Wed 1 Jun 2011 : changed face_enumerators_utilities.adb for a warning.
+
+Sun 29 May 2011 : changed integer_support_functions.adb for warnings of
+  the GNAT GPL 2010 compiler.
+
+Mon 24 Aug 2009 : added lists_of_integer64_vectors.ads
+  and lists_of_integer64_vectors_io.ads.
+
+Tue 12 Dec 2006 : renamed "lists_of_complex_vectors" and its _io into
+  standard_complex_veclists (+ io), new multprec_complex_veclists (+io)
+  for the convenient use of Aitken extrapolation.
+
+Tue 10 Oct 2006 : added Creators to generic_arrays_of_vector_lists because
+  conversion was needed in new polyhedral coefficient trackers.
+
+Thu 2 Aug 2001 : added lists_of_complex_vectors + io, because needed in the
+  monodromy factorization of complex multivariate polynomials.
