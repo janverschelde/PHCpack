@@ -8,8 +8,11 @@ with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;             use Double_Double_Numbers;
 with Double_Double_Numbers_io;          use Double_Double_Numbers_io;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;            use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;          use DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;          use QuadDobl_Complex_Numbers;
 with Multprec_Floating_Numbers;         use Multprec_Floating_Numbers;
 with Multprec_Floating_Numbers_io;      use Multprec_Floating_Numbers_io;
 with Standard_Complex_Vectors;
@@ -18,6 +21,9 @@ with Standard_Complex_Norms_Equals;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vector_Norms;
 with Multprec_Complex_Vectors;
 with Multprec_Complex_Vectors_io;       use Multprec_Complex_Vectors_io;
 with Multprec_Complex_Norms_Equals;
@@ -26,9 +32,11 @@ with Standard_Integer_Matrices;
 with Standard_Integer_Matrices_io;      use Standard_Integer_Matrices_io;
 with Standard_Complex_Matrices;
 with DoblDobl_Complex_Matrices;
+with QuadDobl_Complex_Matrices;
 with Multprec_Complex_Matrices;
 with Standard_Complex_VecLists;
 with DoblDobl_Complex_VecLists;
+with QuadDobl_Complex_VecLists;
 with Multprec_Complex_VecLists;
 with Symbol_Table;
 with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
@@ -45,6 +53,11 @@ with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Poly_SysFun;
 with DoblDobl_Complex_Jaco_Matrices;
+with QuadDobl_Complex_Polynomials;      use QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems_io;  use QuadDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_SysFun;
+with QuadDobl_Complex_Jaco_Matrices;
 with Multprec_Complex_Polynomials;      use Multprec_Complex_Polynomials;
 with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems_io;  use Multprec_Complex_Poly_Systems_io;
@@ -54,10 +67,13 @@ with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions;
 with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with Multprec_Complex_Solutions;
 with Multprec_Complex_Solutions_io;     use Multprec_Complex_Solutions_io;
 with Standard_Complex_Newton_Steps;
 with DoblDobl_Complex_Newton_Steps;
+with QuadDobl_Complex_Newton_Steps;
 with Multprec_Complex_Newton_Steps;
 with Standard_Aitken_Extrapolation;
 with Multprec_Aitken_Extrapolation;
@@ -217,6 +233,20 @@ procedure ts_newton is
     put_vector(s);
   end Write_DoblDobl_Solution;
 
+  procedure Write_QuadDobl_Solution
+              ( z : in QuadDobl_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Uses the symbol table to write the solution vector.
+
+    use QuadDobl_Complex_Solutions;
+    s : Solution(z'length);
+
+  begin
+    s.v := z;
+    put_vector(s);
+  end Write_QuadDobl_Solution;
+
   procedure Write_Multprec_Solution
               ( z : in Multprec_Complex_Vectors.Vector ) is
 
@@ -264,6 +294,23 @@ procedure ts_newton is
     put("  resid :"); put(res,3); new_line;
     put("The numerical rank : "); put(rank,1); new_line;
   end Write_DoblDobl_Solution;
+
+  procedure Write_QuadDobl_Solution
+              ( z : in QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : in quad_double; cnt,rank : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Uses the symbol table to write the solution vector z,
+  --   but then uses the values of err, rco, res for the diagnostics.
+
+  begin
+    put("The new approximation at step "); put(cnt,1); put_line(" : "); 
+    Write_QuadDobl_Solution(z);
+    put("error :"); put(err,3);
+    put("  rcond :"); put(rco,3);
+    put("  resid :"); put(res,3); new_line;
+    put("The numerical rank : "); put(rank,1); new_line;
+  end Write_QuadDobl_Solution;
 
   procedure Write_Multprec_Solution
               ( z : in Multprec_Complex_Vectors.Vector;
@@ -402,6 +449,61 @@ procedure ts_newton is
       exit when (ans /= 'y');
     end loop;
   end Call_DoblDobl_Newton;
+
+  procedure Call_QuadDobl_Newton
+              ( file : in file_type; tol : in double_float;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                z : in out QuadDobl_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Calls Newton's method to find a better approximation of a root
+  --   of p, starting at the vector z, in quad double precision.
+
+    use QuadDobl_Complex_Vectors;
+    use QuadDobl_Complex_Matrices;
+    use QuadDobl_Complex_Poly_SysFun;
+    use QuadDobl_Complex_Jaco_Matrices;
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Complex_VecLists;
+
+    ep : Eval_Poly_Sys(p'range) := Create(p);
+    jm : Jaco_Mat(p'range,z'range) := Create(p);
+    ejm : Eval_Jaco_Mat(jm'range(1),jm'range(2)) := Create(jm);
+    ans : character;
+    err,rco,res : quad_double;
+    rank : natural32;
+    cnt : natural32 := 0;
+    sz,sz_last : List;
+    order : natural32 := 1;
+
+    function f ( x : Vector ) return Vector is
+    begin
+      return Eval(ep,x);
+    end f;
+
+    function jmf ( x : Vector ) return Matrix is
+
+      res : Matrix(jm'range(1),jm'range(2)) := Eval(ejm,x);
+
+    begin
+      return res;
+    end jmf;
+
+    procedure Newton is
+      new QuadDobl_Complex_Newton_Steps.Reporting_Newton_Step(f,jmf);
+
+  begin
+    Append(sz,sz_last,z);
+    loop
+      cnt := cnt + 1;
+      Newton(file,natural32(p'last),z,tol,err,rco,res,rank);
+      Write_QuadDobl_Solution(z,err,rco,res,cnt,rank);
+      Append(sz,sz_last,z);
+      put("Do you want another iteration ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
+  end Call_QuadDobl_Newton;
 
   procedure Append_Copy
               ( first,last : in out Multprec_Complex_VecLists.List;
@@ -551,6 +653,38 @@ procedure ts_newton is
     end loop;
   end DoblDobl_Newton;
 
+  procedure QuadDobl_Newton
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                n : in natural32; tol : in double_float;
+                sols : in QuadDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method in double double precision.
+
+    z : QuadDobl_Complex_Vectors.Vector(1..integer32(n));
+    tmp : QuadDobl_Complex_Solutions.Solution_List;
+    ans : character;
+
+  begin
+    if not QuadDobl_Complex_Solutions.Is_Null(sols) then
+      z := QuadDobl_Complex_Solutions.Head_Of(sols).v;
+      tmp := QuadDobl_Complex_Solutions.Tail_Of(sols);
+    else
+      put("Give "); put(n,1);
+      put_line(" complex numbers to start at : "); 
+      QuadDobl_Complex_Vectors_io.get(z);
+    end if;
+    loop
+      Call_QuadDobl_Newton(Standard_Output,tol,p,z);
+      exit when QuadDobl_Complex_Solutions.Is_Null(tmp);
+      put("Move on to the next root ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      z := QuadDobl_Complex_Solutions.Head_Of(tmp).v;
+      tmp := QuadDobl_Complex_Solutions.Tail_Of(tmp);
+    end loop;
+  end QuadDobl_Newton;
+
   procedure Multprec_Newton
               ( p : in Multprec_Complex_Poly_Systems.Poly_Sys;
                 n : in natural32; tol : in double_float;
@@ -673,6 +807,51 @@ procedure ts_newton is
     DoblDobl_Newton(lp.all,n,tol,sols);
   end Newton_with_DoblDobl_Complex_Arithmetic;
 
+  procedure Newton_with_QuadDobl_Complex_Arithmetic is
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    lp : Link_to_Poly_Sys;
+    infile : file_type;
+    ans : character;
+    found : boolean;
+    sols : Solution_List;
+    tol : double_float := 1.0E-8;
+    n : natural32 := 0;
+
+  begin
+    new_line;
+    put("Is the polynomial system on file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      new_line;
+      put_line("Reading the name of the file for the system.");
+      Read_Name_and_Open_File(infile);
+      get(infile,lp);
+      n := Number_of_Unknowns(lp(lp'first));
+      Scan_and_Skip(infile,"SOLUTIONS",found);
+      if found then
+        get(infile,sols);
+        new_line;
+        put("Read "); put(Length_Of(sols),1);
+        put_line(" solutions from file.");
+      end if;
+    else
+      new_line;
+      put("Give the dimension of the system : "); get(n);
+      Symbol_Table.Init(n);
+      lp := new Poly_Sys(1..integer32(n));
+      put("Give "); put(n,1); put_line(" polynomials :");
+      get(standard_input,lp.all); skip_line;
+      found := false;
+    end if;
+    new_line;
+    put("Tolerance to decide the numerical rank is ");
+    put(tol,3); new_line;
+    QuadDobl_Newton(lp.all,n,tol,sols);
+  end Newton_with_QuadDobl_Complex_Arithmetic;
+
   procedure Newton_with_Multprec_Complex_Arithmetic is
 
     use Multprec_Complex_Poly_Systems;
@@ -759,13 +938,15 @@ procedure ts_newton is
     put_line("MENU of testing operations : ");
     put_line("  1. Newton with standard double complex arithmetic; or");
     put_line("  2. Newton with double double complex arithmetic; or");
-    put_line("  3. Newton with multiprecision complex arithmetic.");
-    put("Type 1, 2, or 3 to make a choice : ");
-    Ask_Alternative(ans,"123");
+    put_line("  3. Newton with quad double complex arithmetic; or");
+    put_line("  4. Newton with multiprecision complex arithmetic.");
+    put("Type 1, 2, 3, or 4 to make a choice : ");
+    Ask_Alternative(ans,"1234");
     case ans is
       when '1' => Newton_with_Standard_Complex_Arithmetic;
       when '2' => Newton_with_DoblDobl_Complex_Arithmetic;
-      when '3' => Newton_with_Multprec_Complex_Arithmetic;
+      when '3' => Newton_with_QuadDobl_Complex_Arithmetic;
+      when '4' => Newton_with_Multprec_Complex_Arithmetic;
       when others => null;
     end case;
   end Main;
