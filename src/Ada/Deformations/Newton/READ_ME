@@ -25,8 +25,10 @@ ts_mreseva                       : multiprecision residual computation
 root_refining_parameters         : sets the parameters of root refiners
 ------------------------------------------------------------------------------
 standard_numerical_rank          : numerical rank by SVD for standard numbers
+dobldobl_numerical_rank          : numerical rank by SVD for dobldobl numbers
 multprec_numerical_rank          : numerical rank by SVD for multprec numbers
 standard_complex_newton_steps    : Newton/SVD in standard complex arithmetic
+dobldobl_complex_newton_steps    : Newton/SVD in dobldobl complex arithmetic
 multprec_complex_newton_steps    : Newton/SVD in multprec complex arithmetic
 standard_floating_newton_steps   : Newton/SVD in standard real arithmetic
 standard_aitken_extrapolation    : Aitken extrapolation in several variables

@@ -6,20 +6,29 @@ with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Double_Double_Numbers_io;          use Double_Double_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;          use DoblDobl_Complex_Numbers;
 with Multprec_Floating_Numbers;         use Multprec_Floating_Numbers;
 with Multprec_Floating_Numbers_io;      use Multprec_Floating_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
-with Standard_Complex_Norms_Equals;  
-with Multprec_Complex_Norms_Equals;
+with Standard_Complex_Norms_Equals;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_Vector_Norms;
 with Multprec_Complex_Vectors;
+with Multprec_Complex_Vectors_io;       use Multprec_Complex_Vectors_io;
+with Multprec_Complex_Norms_Equals;
 with Multprec_Complex_Vector_Tools;     use Multprec_Complex_Vector_Tools;
 with Standard_Integer_Matrices;
 with Standard_Integer_Matrices_io;      use Standard_Integer_Matrices_io;
 with Standard_Complex_Matrices;
+with DoblDobl_Complex_Matrices;
 with Multprec_Complex_Matrices;
 with Standard_Complex_VecLists;
+with DoblDobl_Complex_VecLists;
 with Multprec_Complex_VecLists;
 with Symbol_Table;
 with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
@@ -31,14 +40,24 @@ with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;
 with Standard_to_Multprec_Convertors;   use Standard_to_Multprec_Convertors;
+with DoblDobl_Complex_Polynomials;      use DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_SysFun;
+with DoblDobl_Complex_Jaco_Matrices;
+with Multprec_Complex_Polynomials;      use Multprec_Complex_Polynomials;
 with Multprec_Complex_Poly_Systems;
+with Multprec_Complex_Poly_Systems_io;  use Multprec_Complex_Poly_Systems_io;
 with Multprec_Complex_Poly_SysFun;
 with Multprec_Complex_Jaco_Matrices;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions;
+with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
 with Multprec_Complex_Solutions;
 with Multprec_Complex_Solutions_io;     use Multprec_Complex_Solutions_io;
 with Standard_Complex_Newton_Steps;
+with DoblDobl_Complex_Newton_Steps;
 with Multprec_Complex_Newton_Steps;
 with Standard_Aitken_Extrapolation;
 with Multprec_Aitken_Extrapolation;
@@ -65,6 +84,31 @@ procedure ts_newton is
       declare
         y : Standard_Complex_Vectors.Vector(lv'range) := Eval(p,lv.all);
         r : double_float := Standard_Complex_Norms_equals.Norm2(y);
+      begin
+        put(cnt,2); put(" : "); put(r); new_line;
+      end;
+      tmp := Tail_Of(tmp);
+      cnt := cnt + 1;
+    end loop;
+  end Write_Residuals;
+
+  procedure Write_Residuals
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                z : in DoblDobl_Complex_VecLists.List ) is
+
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_VecLists;
+
+    tmp : List := z;
+    cnt : natural32 := 0;
+    lv : DoblDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    while not Is_Null(tmp) loop
+      lv := Head_Of(tmp);
+      declare
+        y : DoblDobl_Complex_Vectors.Vector(lv'range) := Eval(p,lv.all);
+        r : double_double := DoblDobl_Complex_Vector_Norms.Norm2(y);
       begin
         put(cnt,2); put(" : "); put(r); new_line;
       end;
@@ -159,6 +203,20 @@ procedure ts_newton is
     put_vector(s);
   end Write_Standard_Solution;
 
+  procedure Write_DoblDobl_Solution
+              ( z : in DoblDobl_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Uses the symbol table to write the solution vector.
+
+    use DoblDobl_Complex_Solutions;
+    s : Solution(z'length);
+
+  begin
+    s.v := z;
+    put_vector(s);
+  end Write_DoblDobl_Solution;
+
   procedure Write_Multprec_Solution
               ( z : in Multprec_Complex_Vectors.Vector ) is
 
@@ -189,6 +247,23 @@ procedure ts_newton is
     put("  resid :"); put(res,3); new_line;
     put("The numerical rank : "); put(rank,1); new_line;
   end Write_Standard_Solution;
+
+  procedure Write_DoblDobl_Solution
+              ( z : in DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : in double_double; cnt,rank : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Uses the symbol table to write the solution vector z,
+  --   but then uses the values of err, rco, res for the diagnostics.
+
+  begin
+    put("The new approximation at step "); put(cnt,1); put_line(" : "); 
+    Write_DoblDobl_Solution(z);
+    put("error :"); put(err,3);
+    put("  rcond :"); put(rco,3);
+    put("  resid :"); put(res,3); new_line;
+    put("The numerical rank : "); put(rank,1); new_line;
+  end Write_DoblDobl_Solution;
 
   procedure Write_Multprec_Solution
               ( z : in Multprec_Complex_Vectors.Vector;
@@ -272,6 +347,61 @@ procedure ts_newton is
       exit when (ans /= 'y');
     end loop;
   end Call_Standard_Newton;
+
+  procedure Call_DoblDobl_Newton
+              ( file : in file_type; tol : in double_float;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                z : in out DoblDobl_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Calls Newton's method to find a better approximation of a root
+  --   of p, starting at the vector z, in double double precision.
+
+    use DoblDobl_Complex_Vectors;
+    use DoblDobl_Complex_Matrices;
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_Jaco_Matrices;
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Complex_VecLists;
+
+    ep : Eval_Poly_Sys(p'range) := Create(p);
+    jm : Jaco_Mat(p'range,z'range) := Create(p);
+    ejm : Eval_Jaco_Mat(jm'range(1),jm'range(2)) := Create(jm);
+    ans : character;
+    err,rco,res : double_double;
+    rank : natural32;
+    cnt : natural32 := 0;
+    sz,sz_last : List;
+    order : natural32 := 1;
+
+    function f ( x : Vector ) return Vector is
+    begin
+      return Eval(ep,x);
+    end f;
+
+    function jmf ( x : Vector ) return Matrix is
+
+      res : Matrix(jm'range(1),jm'range(2)) := Eval(ejm,x);
+
+    begin
+      return res;
+    end jmf;
+
+    procedure Newton is
+      new DoblDobl_Complex_Newton_Steps.Reporting_Newton_Step(f,jmf);
+
+  begin
+    Append(sz,sz_last,z);
+    loop
+      cnt := cnt + 1;
+      Newton(file,natural32(p'last),z,tol,err,rco,res,rank);
+      Write_DoblDobl_Solution(z,err,rco,res,cnt,rank);
+      Append(sz,sz_last,z);
+      put("Do you want another iteration ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
+  end Call_DoblDobl_Newton;
 
   procedure Append_Copy
               ( first,last : in out Multprec_Complex_VecLists.List;
@@ -358,10 +488,13 @@ procedure ts_newton is
     end loop;
   end Call_Multprec_Newton;
 
-  procedure Call_Newton
+  procedure Standard_Newton
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                n,dgts : in natural32; tol : in double_float;
+                n : in natural32; tol : in double_float;
                 sols : in Standard_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method in standard double precision.
 
     z : Standard_Complex_Vectors.Vector(1..integer32(n));
     tmp : Standard_Complex_Solutions.Solution_List;
@@ -375,40 +508,82 @@ procedure ts_newton is
       put("Give "); put(n,1);
       put_line(" complex numbers to start at:"); get(z);
     end if;
-    if dgts < 16 then
-      loop
-        Call_Standard_Newton(Standard_Output,tol,p,z);
-        exit when Standard_Complex_Solutions.Is_Null(tmp);
-        put("Move on to the next root ? (y/n) ");
-        Ask_Yes_or_No(ans);
-        exit when (ans /= 'y');
-        z := Standard_Complex_Solutions.Head_Of(tmp).v;
-        tmp := Standard_Complex_Solutions.Tail_Of(tmp);
-      end loop;
-    else
-      declare
-        mpz : Multprec_Complex_Vectors.Vector(1..integer32(n)) := Create(z);
-        mps : Multprec_Complex_Poly_Systems.Poly_Sys(p'range) := Convert(p);
-        size : constant natural32 := Decimal_to_Size(dgts);
-      begin
-        Set_Size(mps,size);
-        Set_Size(mpz,size);
-        loop
-          Call_Multprec_Newton(Standard_Output,tol,mps,mpz);
-          exit when Standard_Complex_Solutions.Is_Null(tmp);
-          put("Move on the next root ? (y/n) ");
-          Ask_Yes_or_No(ans);
-          exit when (ans /= 'y');
-          z := Standard_Complex_Solutions.Head_Of(tmp).v;
-          Multprec_Complex_Vectors.Clear(mpz);
-          mpz := Create(z);
-          tmp := Standard_Complex_Solutions.Tail_Of(tmp);
-        end loop;
-      end;
-    end if;
-  end Call_Newton;
+    loop
+      Call_Standard_Newton(Standard_Output,tol,p,z);
+      exit when Standard_Complex_Solutions.Is_Null(tmp);
+      put("Move on to the next root ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      z := Standard_Complex_Solutions.Head_Of(tmp).v;
+      tmp := Standard_Complex_Solutions.Tail_Of(tmp);
+    end loop;
+  end Standard_Newton;
 
-  procedure Newton_in_Complex_Arithmetic is
+  procedure DoblDobl_Newton
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                n : in natural32; tol : in double_float;
+                sols : in DoblDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method in double double precision.
+
+    z : DoblDobl_Complex_Vectors.Vector(1..integer32(n));
+    tmp : DoblDobl_Complex_Solutions.Solution_List;
+    ans : character;
+
+  begin
+    if not DoblDobl_Complex_Solutions.Is_Null(sols) then
+      z := DoblDobl_Complex_Solutions.Head_Of(sols).v;
+      tmp := DoblDobl_Complex_Solutions.Tail_Of(sols);
+    else
+      put("Give "); put(n,1);
+      put_line(" complex numbers to start at : "); 
+      DoblDobl_Complex_Vectors_io.get(z);
+    end if;
+    loop
+      Call_DoblDobl_Newton(Standard_Output,tol,p,z);
+      exit when DoblDobl_Complex_Solutions.Is_Null(tmp);
+      put("Move on to the next root ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      z := DoblDobl_Complex_Solutions.Head_Of(tmp).v;
+      tmp := DoblDobl_Complex_Solutions.Tail_Of(tmp);
+    end loop;
+  end DoblDobl_Newton;
+
+  procedure Multprec_Newton
+              ( p : in Multprec_Complex_Poly_Systems.Poly_Sys;
+                n : in natural32; tol : in double_float;
+                sols : in Multprec_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method in multiprecision.
+
+    z : Multprec_Complex_Vectors.Vector(1..integer32(n));
+    tmp : Multprec_Complex_Solutions.Solution_List;
+    ans : character;
+
+  begin
+    if not Multprec_Complex_Solutions.Is_Null(sols) then
+      z := Multprec_Complex_Solutions.Head_Of(sols).v;
+      tmp := Multprec_Complex_Solutions.Tail_Of(sols);
+    else
+      put("Give "); put(n,1);
+      put_line(" complex numbers to start at : ");
+      Multprec_Complex_Vectors_io.get(z);
+    end if;
+    loop
+      Call_Multprec_Newton(Standard_Output,tol,p,z);
+      exit when Multprec_Complex_Solutions.Is_Null(tmp);
+      put("Move on to the next root ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      z := Multprec_Complex_Solutions.Head_Of(tmp).v;
+      tmp := Multprec_Complex_Solutions.Tail_Of(tmp);
+    end loop;
+  end Multprec_Newton;
+
+  procedure Newton_with_Standard_Complex_Arithmetic is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -419,7 +594,7 @@ procedure ts_newton is
     found : boolean;
     sols : Solution_List;
     tol : double_float := 1.0E-8;
-    n,dgts : natural32 := 0;
+    n : natural32 := 0;
 
   begin
     new_line;
@@ -448,13 +623,106 @@ procedure ts_newton is
       found := false;
     end if;
     new_line;
-    put("Give the number of digits (<16 is hardware double float) : ");
-    get(dgts);
+    put("Tolerance to decide the numerical rank is ");
+    put(tol,3); new_line;
+    Standard_Newton(lp.all,n,tol,sols);
+  end Newton_with_Standard_Complex_Arithmetic;
+
+  procedure Newton_with_DoblDobl_Complex_Arithmetic is
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    lp : Link_to_Poly_Sys;
+    infile : file_type;
+    ans : character;
+    found : boolean;
+    sols : Solution_List;
+    tol : double_float := 1.0E-8;
+    n : natural32 := 0;
+
+  begin
+    new_line;
+    put("Is the polynomial system on file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      new_line;
+      put_line("Reading the name of the file for the system.");
+      Read_Name_and_Open_File(infile);
+      get(infile,lp);
+      n := Number_of_Unknowns(lp(lp'first));
+      Scan_and_Skip(infile,"SOLUTIONS",found);
+      if found then
+        get(infile,sols);
+        new_line;
+        put("Read "); put(Length_Of(sols),1);
+        put_line(" solutions from file.");
+      end if;
+    else
+      new_line;
+      put("Give the dimension of the system : "); get(n);
+      Symbol_Table.Init(n);
+      lp := new Poly_Sys(1..integer32(n));
+      put("Give "); put(n,1); put_line(" polynomials :");
+      get(standard_input,lp.all); skip_line;
+      found := false;
+    end if;
     new_line;
     put("Tolerance to decide the numerical rank is ");
     put(tol,3); new_line;
-    Call_Newton(lp.all,n,dgts,tol,sols);
-  end Newton_in_Complex_Arithmetic;
+    DoblDobl_Newton(lp.all,n,tol,sols);
+  end Newton_with_DoblDobl_Complex_Arithmetic;
+
+  procedure Newton_with_Multprec_Complex_Arithmetic is
+
+    use Multprec_Complex_Poly_Systems;
+    use Multprec_Complex_Solutions;
+
+    lp : Link_to_Poly_Sys;
+    infile : file_type;
+    ans : character;
+    found : boolean;
+    sols : Solution_List;
+    tol : double_float := 1.0E-8;
+    n,dgts,size : natural32 := 0;
+
+  begin
+    new_line;
+    put("Is the polynomial system on file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      new_line;
+      put_line("Reading the name of the file for the system.");
+      Read_Name_and_Open_File(infile);
+      get(infile,lp);
+      n := Number_of_Unknowns(lp(lp'first));
+      Scan_and_Skip(infile,"SOLUTIONS",found);
+      if found then
+        get(infile,sols);
+        new_line;
+        put("Read "); put(Length_Of(sols),1);
+        put_line(" solutions from file.");
+      end if;
+    else
+      new_line;
+      put("Give the dimension of the system : "); get(n);
+      Symbol_Table.Init(n);
+      lp := new Poly_Sys(1..integer32(n));
+      put("Give "); put(n,1); put_line(" polynomials :");
+      get(lp.all); skip_line;
+      found := false;
+    end if;
+    new_line;
+    put("Give the number of digits : ");
+    get(dgts);
+    size := Decimal_to_Size(dgts);
+    Set_Size(lp.all,size);
+    Set_Size(sols,size);
+    new_line;
+    put("Tolerance to decide the numerical rank is ");
+    put(tol,3); new_line;
+    Multprec_Newton(lp.all,n,tol,sols);
+  end Newton_with_Multprec_Complex_Arithmetic;
 
   procedure Call_Newton
               ( p : in Standard_Floating_Poly_Systems.Poly_Sys;
@@ -489,14 +757,17 @@ procedure ts_newton is
     put_line("Testing Newton's method ...");
     new_line;
     put_line("MENU of testing operations : ");
-    put_line("  1. test Newton on complex polynomial system;");
-    put_line("  2. test Newton on system with real coefficients.");
-    put("Type 1 or 2 to make a choice : ");
-    Ask_Alternative(ans,"12");
-    if ans = '1'
-     then Newton_in_Complex_Arithmetic;
-     else Newton_in_Real_Arithmetic;
-    end if;
+    put_line("  1. Newton with standard double complex arithmetic; or");
+    put_line("  2. Newton with double double complex arithmetic; or");
+    put_line("  3. Newton with multiprecision complex arithmetic.");
+    put("Type 1, 2, or 3 to make a choice : ");
+    Ask_Alternative(ans,"123");
+    case ans is
+      when '1' => Newton_with_Standard_Complex_Arithmetic;
+      when '2' => Newton_with_DoblDobl_Complex_Arithmetic;
+      when '3' => Newton_with_Multprec_Complex_Arithmetic;
+      when others => null;
+    end case;
   end Main;
 
 begin
