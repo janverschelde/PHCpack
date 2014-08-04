@@ -8,7 +8,7 @@ package DoblDobl_Numerical_Rank is
 
 -- DESCRIPTION :
 --   The singular value decomposition gives the numerical rank of a matrix,
---   using standard complex floating-point arithmetic.
+--   using double double complex arithmetic.
 
   function Numerical_Rank ( S : Vector; tol : double_float ) return natural32;
 
