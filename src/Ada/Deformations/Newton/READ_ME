@@ -51,10 +51,16 @@ quaddobl_jacobian_trees          : remember table for quaddobl Jaco matrices
 multprec_jacobian_trees          : remember table for multprec Jaco matrices
 ts_jactrees                      : test on trees of Jacobian matrices
 standard_deflate_singularities   : adds new equations with standard coeff
+dobldobl_deflate_singularities   : adds new equations with dobldobl coeff
+quaddobl_deflate_singularities   : adds new equations with quaddobl coeff
 multprec_deflate_singularities   : adds new equations with multprec coeff
 standard_deflation_trees         : stores trees of standard deflated systems
+dobldobl_deflation_trees         : stores trees of dobldobl deflated systems
+quaddobl_deflation_trees         : stores trees of quaddobl deflated systems
 multprec_deflation_trees         : stores trees of multprec deflated systems
 standard_deflation_trees_io      : i/o of trees of standard deflated systems
+dobldobl_deflation_trees_io      : i/o of trees of dobldobl deflated systems
+quaddobl_deflation_trees_io      : i/o of trees of quaddobl deflated systems
 multprec_deflation_trees_io      : i/o of trees of multprec deflated systems
 ts_deftrees                      : interactive test on derivative trees
 standard_multiple_solutions      : group same solutions after deflation
