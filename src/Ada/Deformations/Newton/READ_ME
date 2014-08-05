@@ -54,6 +54,8 @@ standard_deflate_singularities   : adds new equations with standard coeff
 dobldobl_deflate_singularities   : adds new equations with dobldobl coeff
 quaddobl_deflate_singularities   : adds new equations with quaddobl coeff
 multprec_deflate_singularities   : adds new equations with multprec coeff
+ts_deflop                        : to make systems to look for singularities
+------------------------------------------------------------------------------
 standard_deflation_trees         : stores trees of standard deflated systems
 dobldobl_deflation_trees         : stores trees of dobldobl deflated systems
 quaddobl_deflation_trees         : stores trees of quaddobl deflated systems
@@ -80,6 +82,7 @@ multprec_evaluate_deflation_io   : output of directed acyclic graphs
 standard_query_matrices          : to look into big standard matrices
 multprec_query_matrices          : to look into big multprec matrices
 ts_defmat                        : working with deflation matrices
+------------------------------------------------------------------------------
 standard_nullity_polynomials     : operations to create nullity matrices
 multprec_nullity_polynomials     : multiprecision operations for nullity
 standard_nullity_matrices        : creation and evaluation of nullity matrices
@@ -91,5 +94,4 @@ multprec_multiple_deflation      : multiprecision higher-order deflation
 standard_probe_kernel            : utilities to determine order of deflation
 multprec_probe_kernel            : multiprecision version of probe_kernel
 ts_muldef                        : test on higher-order deflation
-ts_deflop                        : to make systems to look for singularities
 ------------------------------------------------------------------------------
