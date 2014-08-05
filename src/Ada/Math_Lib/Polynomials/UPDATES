@@ -1,3 +1,6 @@
+Tue 5 Aug 2014 : instantiations of {dobl,quad}dobl_complex_poly_ring,
+  {dobl,quad}_complex_poly_{matrices,vectors,vectors_io}.
+
 Fri 25 Jul 2014 : extended ts_laurpoly.adb and ts_poly.adb to test the 
   evaluation for multiprecision coefficients.  Instantiation of the
   generic_laur_jaco_matrices with multiprecision complex numbers leads
