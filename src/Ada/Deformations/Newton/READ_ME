@@ -42,14 +42,17 @@ ts_numdif                        : test on numerical differentiation
 ------------------------------------------------------------------------------
 standard_derivative_trees        : trees of partial derivatives
 multprec_derivative_trees        : multiprecision version of derivative_trees
-ts_deftrees                      : interactive test on derivative trees
+monomial_hashing                 : hashing of Jacobian matrices via monomials
+standard_jacobian_trees          : remember table for standard Jaco matrices
+multprec_jacobian_trees          : remember table for multprec Jaco matrices
+ts_jactrees                      : test on trees of Jacobian matrices
 standard_deflate_singularities   : adds new equations with standard coeff
 multprec_deflate_singularities   : adds new equations with multprec coeff
 standard_deflation_trees         : stores trees of standard deflated systems
 multprec_deflation_trees         : stores trees of multprec deflated systems
 standard_deflation_trees_io      : i/o of trees of standard deflated systems
 multprec_deflation_trees_io      : i/o of trees of multprec deflated systems
-ts_jactrees                      : test on trees of Jacobian matrices
+ts_deftrees                      : interactive test on derivative trees
 standard_multiple_solutions      : group same solutions after deflation
 standard_deflation_methods       : deflation algorithm with standard numbers
 multprec_deflation_methods       : deflation algorithm with multprec numbers
@@ -58,9 +61,6 @@ ts_deflate                       : interactive test
 ts_straight                      : test on straight-line programs
 ts_stair                         : test examples from the staircase
 ------------------------------------------------------------------------------
-monomial_hashing                 : hashing of Jacobian matrices via monomials
-standard_jacobian_trees          : remember table for standard Jaco matrices
-multprec_jacobian_trees          : remember table for multprec Jaco matrices
 standard_deflation_matrices      : standard block assignment operations
 multprec_deflation_matrices      : multprec block assignment operations
 standard_evaluate_deflation      : evaluation of standard deflation matrices
