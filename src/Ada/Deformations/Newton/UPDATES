@@ -1,4 +1,4 @@
-Tue 5 Aug 2014 : new packages dobldobl_{derivative,jacobian}_trees,
+Tue 5 Aug 2014 : new packages {dobl,quad}dobl_{derivative,jacobian}_trees,
   tested by ts_jactrees.adb.
 
 Mon 4 Aug 2014 : new packages {dobl,quad}dobl_numerical_rank and 

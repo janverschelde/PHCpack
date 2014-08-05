@@ -41,9 +41,13 @@ standard_evaluation_machine      : defines functions to differentiate
 ts_numdif                        : test on numerical differentiation
 ------------------------------------------------------------------------------
 standard_derivative_trees        : trees of partial derivatives
+dobldobl_derivative_trees        : dobldobl version of derivative_trees
+quaddobl_derivative_trees        : quaddobl version of derivative_trees
 multprec_derivative_trees        : multiprecision version of derivative_trees
 monomial_hashing                 : hashing of Jacobian matrices via monomials
 standard_jacobian_trees          : remember table for standard Jaco matrices
+dobldobl_jacobian_trees          : remember table for dobldobl Jaco matrices
+quaddobl_jacobian_trees          : remember table for quaddobl Jaco matrices
 multprec_jacobian_trees          : remember table for multprec Jaco matrices
 ts_jactrees                      : test on trees of Jacobian matrices
 standard_deflate_singularities   : adds new equations with standard coeff
