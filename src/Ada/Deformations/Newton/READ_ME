@@ -65,6 +65,23 @@ dobldobl_deflation_trees_io      : i/o of trees of dobldobl deflated systems
 quaddobl_deflation_trees_io      : i/o of trees of quaddobl deflated systems
 multprec_deflation_trees_io      : i/o of trees of multprec deflated systems
 ts_deftrees                      : interactive test on derivative trees
+------------------------------------------------------------------------------
+standard_deflation_matrices      : standard block assignment operations
+dobldobl_deflation_matrices      : dobldobl block assignment operations
+quaddobl_deflation_matrices      : quaddobl block assignment operations
+multprec_deflation_matrices      : multprec block assignment operations
+standard_evaluate_deflation      : evaluation of standard deflation matrices
+dobldobl_evaluate_deflation      : evaluation of dobldobl deflation matrices
+quaddobl_evaluate_deflation      : evaluation of quaddobl deflation matrices
+multprec_evaluate_deflation      : evaluation of multprec deflation matrices
+standard_evaluate_deflation_io   : output standard directed acyclic graphs
+dobldobl_evaluate_deflation_io   : output dobldobl directed acyclic graphs
+quaddobl_evaluate_deflation_io   : output quaddobl directed acyclic graphs
+multprec_evaluate_deflation_io   : output multprec directed acyclic graphs
+standard_query_matrices          : to look into big standard matrices
+multprec_query_matrices          : to look into big multprec matrices
+ts_defmat                        : working with deflation matrices
+------------------------------------------------------------------------------
 standard_multiple_solutions      : group same solutions after deflation
 standard_deflation_methods       : deflation algorithm with standard numbers
 multprec_deflation_methods       : deflation algorithm with multprec numbers
@@ -72,16 +89,6 @@ drivers_to_deflate_singularities : drivers to the deflation method
 ts_deflate                       : interactive test
 ts_straight                      : test on straight-line programs
 ts_stair                         : test examples from the staircase
-------------------------------------------------------------------------------
-standard_deflation_matrices      : standard block assignment operations
-multprec_deflation_matrices      : multprec block assignment operations
-standard_evaluate_deflation      : evaluation of standard deflation matrices
-multprec_evaluate_deflation      : evaluation of multprec deflation matrices
-standard_evaluate_deflation_io   : output of directed acyclic graphs
-multprec_evaluate_deflation_io   : output of directed acyclic graphs
-standard_query_matrices          : to look into big standard matrices
-multprec_query_matrices          : to look into big multprec matrices
-ts_defmat                        : working with deflation matrices
 ------------------------------------------------------------------------------
 standard_nullity_polynomials     : operations to create nullity matrices
 multprec_nullity_polynomials     : multiprecision operations for nullity
