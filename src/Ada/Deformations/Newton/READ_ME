@@ -82,8 +82,12 @@ standard_query_matrices          : to look into big standard matrices
 multprec_query_matrices          : to look into big multprec matrices
 ts_defmat                        : working with deflation matrices
 ------------------------------------------------------------------------------
-standard_multiple_solutions      : group same solutions after deflation
+standard_multiple_solutions      : group standard solutions after deflation
+dobldobl_multiple_solutions      : group dobldobl solutions after deflation
+quaddobl_multiple_solutions      : group quaddobl solutions after deflation
 standard_deflation_methods       : deflation algorithm with standard numbers
+dobldobl_deflation_methods       : deflation algorithm with dobldobl numbers
+quaddobl_deflation_methods       : deflation algorithm with quaddobl numbers
 multprec_deflation_methods       : deflation algorithm with multprec numbers
 drivers_to_deflate_singularities : drivers to the deflation method
 ts_deflate                       : interactive test

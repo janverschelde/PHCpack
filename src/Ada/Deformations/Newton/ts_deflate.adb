@@ -21,6 +21,8 @@ with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Standard_Deflate_Singularities;    use Standard_Deflate_Singularities;
 --with Multprec_Deflate_Singularities;    use Multprec_Deflate_Singularities;
 with Standard_Deflation_Methods;        use Standard_Deflation_Methods;
+with DoblDobl_Deflation_Methods;
+with QuadDobl_Deflation_Methods;
 with Multprec_Deflation_Methods;        use Multprec_Deflation_Methods;
 with Drivers_to_Deflate_Singularities;  use Drivers_to_Deflate_Singularities;
 

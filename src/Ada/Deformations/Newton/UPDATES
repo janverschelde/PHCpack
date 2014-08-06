@@ -1,5 +1,7 @@
 Wed 6 Aug 2014 : new packages {dobl,quad}dobl_deflation_matrices and
   {dobl,quad}dobl_evaluate_deflation{_io}, tested by ts_defmat.
+  New packages {dobl,quad}dobl_multiple_solutions and
+  {dobl,quad}dobl_deflation_methods, tested by ts_deflate.
 
 Tue 5 Aug 2014 : new packages {dobl,quad}dobl_{derivative,jacobian}_trees,
   tested by ts_jactrees.adb.  Definition of the deflation operator for
