@@ -4,8 +4,12 @@ with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Vectors;
 with Multprec_Complex_Vectors;
 with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Drivers_to_Deflate_Singularities is
 
@@ -34,6 +38,12 @@ package Drivers_to_Deflate_Singularities is
   procedure Deflate_Singularities
                ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                  sols : in out Standard_Complex_Solutions.Solution_List );
+  procedure Deflate_Singularities
+               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Deflate_Singularities
+               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Applies deflation to the system p with solution in sols,

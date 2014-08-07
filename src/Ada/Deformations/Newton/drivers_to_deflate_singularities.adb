@@ -24,6 +24,8 @@ with Multprec_Deflate_Singularities;
 with Standard_Deflation_Trees_io;       use Standard_Deflation_Trees_io;
 with Multprec_Deflation_Trees_io;       use Multprec_Deflation_Trees_io;
 with Standard_Deflation_Methods;
+with DoblDobl_Deflation_Methods;
+with QuadDobl_Deflation_Methods;
 with Multprec_Deflation_Methods;
 
 package body Drivers_to_Deflate_Singularities is
@@ -299,6 +301,36 @@ package body Drivers_to_Deflate_Singularities is
     Set_Default_Parameters
       (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
     Standard_Deflation_Methods.Algorithmic_Deflation_and_Clustering
+      (p,sols,maxitr,maxdef,tolerr,tolres,tolrnk);
+  end Deflate_Singularities;
+
+  procedure Deflate_Singularities
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    symbolic,output : boolean;
+    maxitr,maxdef,nbdgts : natural32;
+    tolerr,tolres,tolrnk : double_float;
+
+  begin
+    Set_Default_Parameters
+      (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
+    DoblDobl_Deflation_Methods.Algorithmic_Deflation_and_Clustering
+      (p,sols,maxitr,maxdef,tolerr,tolres,tolrnk);
+  end Deflate_Singularities;
+
+  procedure Deflate_Singularities
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    symbolic,output : boolean;
+    maxitr,maxdef,nbdgts : natural32;
+    tolerr,tolres,tolrnk : double_float;
+
+  begin
+    Set_Default_Parameters
+      (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
+    QuadDobl_Deflation_Methods.Algorithmic_Deflation_and_Clustering
       (p,sols,maxitr,maxdef,tolerr,tolres,tolrnk);
   end Deflate_Singularities;
 
