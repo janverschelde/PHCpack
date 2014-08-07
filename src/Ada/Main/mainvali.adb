@@ -15,12 +15,20 @@ with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_to_Multprec_Convertors;    use Standard_to_Multprec_Convertors;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Multprec_Complex_Poly_Systems;      use Multprec_Complex_Poly_Systems;
 --with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
 with Multprec_Complex_Poly_SysFun;       use Multprec_Complex_Poly_SysFun;
 with Multprec_Complex_Poly_Strings;      use Multprec_Complex_Poly_Strings;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Multprec_Complex_Solutions;
 with Multprec_Complex_Solutions_io;      use Multprec_Complex_Solutions_io;
 with Multprec_System_and_Solutions_io;   use Multprec_System_and_Solutions_io;
@@ -73,6 +81,70 @@ procedure mainvali ( infilename,outfilename : in string ) is
   procedure Scan_System
                ( file : in out file_type; filename : in string;
                  lp : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sysonfile : out boolean ) is
+
+  -- DESCRIPTION :
+  --   Checks whether the given file name corresponds to a file with
+  --   a polynomial system in a correct format.
+  --   If this is the case, then sysonfile is true on return and lp
+  --   contains the system.
+
+  begin
+    if filename /= "" then
+      Open(file,in_file,filename);
+      get(file,lp);
+      sysonfile := true;
+    else
+      sysonfile := false;
+    end if;
+   -- if lp /= null then
+   --   put("in Scan_System : ");
+   --   put(" #equations = "); put(lp'last,1); new_line;
+   -- end if;
+  exception
+    when others =>
+      new_line;
+      put("Could not open file with name "); put_line(filename);
+      lp := null;
+      sysonfile := false;
+      return;
+  end Scan_System;
+
+  procedure Scan_System
+               ( file : in out file_type; filename : in string;
+                 lp : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 sysonfile : out boolean ) is
+
+  -- DESCRIPTION :
+  --   Checks whether the given file name corresponds to a file with
+  --   a polynomial system in a correct format.
+  --   If this is the case, then sysonfile is true on return and lp
+  --   contains the system.
+
+  begin
+    if filename /= "" then
+      Open(file,in_file,filename);
+      get(file,lp);
+      sysonfile := true;
+    else
+      sysonfile := false;
+    end if;
+   -- if lp /= null then
+   --   put("in Scan_System : ");
+   --   put(" #equations = "); put(lp'last,1); new_line;
+   -- end if;
+  exception
+    when others =>
+      new_line;
+      put("Could not open file with name "); put_line(filename);
+      lp := null;
+      sysonfile := false;
+      return;
+  end Scan_System;
+
+  procedure Scan_System
+               ( file : in out file_type; filename : in string;
+                 lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                  sysonfile : out boolean ) is
 
   -- DESCRIPTION :
@@ -183,6 +255,108 @@ procedure mainvali ( infilename,outfilename : in string ) is
    -- new_line;
   end Read_System;
 
+  procedure Read_System
+              ( file : in out file_type; filename : in string;
+                lp : in out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sysonfile : out boolean ) is
+
+  -- DESCRIPTION :
+  --   Searches first the system on file, using the given filename.
+  --   If necessary other files will be openend.
+
+    use DoblDobl_Complex_Poly_Systems;
+
+    ans : character;
+    n : integer32;
+
+  begin
+    Scan_System(file,filename,lp,sysonfile);
+    if lp = null then
+      loop
+        new_line;
+        put("Is the system on a file ? (y/n/i=info) ");
+        Ask_Alternative(ans,"yni");
+        if ans = 'i' then
+          new_line;
+          Standard_Complex_Poly_Systems_io.Display_Format;
+          new_line;
+        end if;
+        exit when ans /= 'i';
+      end loop;
+      new_line;
+      if ans = 'y' then
+        put_line("Reading the name of the input file.");
+        Read_Name_and_Open_File(file);
+        get(file,lp);
+        sysonfile := true;
+        n := lp'length;
+      else
+        put("Give the dimension : "); get(n);
+        lp := new DoblDobl_Complex_Poly_Systems.Poly_Sys(1..n);
+        put("Give "); put(n,1); put(" "); put(n,1);
+        put_line("-variate polynomials :");
+        get(standard_input,lp.all);
+        skip_line;  -- skip end_of_line symbol
+        sysonfile := false;
+      end if;
+    end if;
+   -- put_line("at end of Read_System : ");
+   -- put("#equations : "); put(lp'last,1);
+   -- put(", #variables : "); put(Number_of_Unknowns(lp(lp'first)),1);
+   -- new_line;
+  end Read_System;
+
+  procedure Read_System
+              ( file : in out file_type; filename : in string;
+                lp : in out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sysonfile : out boolean ) is
+
+  -- DESCRIPTION :
+  --   Searches first the system on file, using the given filename.
+  --   If necessary other files will be openend.
+
+    use QuadDobl_Complex_Poly_Systems;
+
+    ans : character;
+    n : integer32;
+
+  begin
+    Scan_System(file,filename,lp,sysonfile);
+    if lp = null then
+      loop
+        new_line;
+        put("Is the system on a file ? (y/n/i=info) ");
+        Ask_Alternative(ans,"yni");
+        if ans = 'i' then
+          new_line;
+          Standard_Complex_Poly_Systems_io.Display_Format;
+          new_line;
+        end if;
+        exit when ans /= 'i';
+      end loop;
+      new_line;
+      if ans = 'y' then
+        put_line("Reading the name of the input file.");
+        Read_Name_and_Open_File(file);
+        get(file,lp);
+        sysonfile := true;
+        n := lp'length;
+      else
+        put("Give the dimension : "); get(n);
+        lp := new QuadDobl_Complex_Poly_Systems.Poly_Sys(1..n);
+        put("Give "); put(n,1); put(" "); put(n,1);
+        put_line("-variate polynomials :");
+        get(standard_input,lp.all);
+        skip_line;  -- skip end_of_line symbol
+        sysonfile := false;
+      end if;
+    end if;
+   -- put_line("at end of Read_System : ");
+   -- put("#equations : "); put(lp'last,1);
+   -- put(", #variables : "); put(Number_of_Unknowns(lp(lp'first)),1);
+   -- new_line;
+  end Read_System;
+
 --  procedure Read_System
 --               ( file : in out file_type; filename : in string;
 --                 lp : in out Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -253,9 +427,85 @@ procedure mainvali ( infilename,outfilename : in string ) is
          found := false;
   end Scan_Solutions;
 
+  procedure Scan_Solutions
+              ( file : in out file_type; sysonfile : in boolean;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                found : out boolean ) is
+  begin
+    if sysonfile then
+      Scan_and_Skip(file,"THE SOLUTIONS",found);
+      if found
+       then get(file,sols);
+       end if;
+       Close(file);
+    else
+      found := false;
+    end if;
+  exception
+    when others
+      => put_line("Something is wrong with the solutions, will ignore...");
+         Close(file);
+         found := false;
+  end Scan_Solutions;
+
+  procedure Scan_Solutions
+              ( file : in out file_type; sysonfile : in boolean;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                found : out boolean ) is
+  begin
+    if sysonfile then
+      Scan_and_Skip(file,"THE SOLUTIONS",found);
+      if found
+       then get(file,sols);
+       end if;
+       Close(file);
+    else
+      found := false;
+    end if;
+  exception
+    when others
+      => put_line("Something is wrong with the solutions, will ignore...");
+         Close(file);
+         found := false;
+  end Scan_Solutions;
+
   procedure Read_Solutions
               ( file : in out file_type; sysonfile : in boolean;
                 sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    found : boolean;
+
+  begin
+    Scan_Solutions(file,sysonfile,sols,found);
+    if not found then
+      new_line;
+      put_line("Reading the name of the file for the solutions.");
+      Read_Name_and_Open_File(file);
+      get(file,sols);
+      Close(file);
+    end if;
+  end Read_Solutions;
+
+  procedure Read_Solutions
+              ( file : in out file_type; sysonfile : in boolean;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    found : boolean;
+
+  begin
+    Scan_Solutions(file,sysonfile,sols,found);
+    if not found then
+      new_line;
+      put_line("Reading the name of the file for the solutions.");
+      Read_Name_and_Open_File(file);
+      get(file,sols);
+      Close(file);
+    end if;
+  end Read_Solutions;
+
+  procedure Read_Solutions
+              ( file : in out file_type; sysonfile : in boolean;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
 
     found : boolean;
 
@@ -635,7 +885,7 @@ procedure mainvali ( infilename,outfilename : in string ) is
     Close(resultfile);
   end Polyhedral_End_Game_Validation;
 
-  procedure Newton_with_Deflation is
+  procedure Standard_Newton_with_Deflation is
 
     use Standard_Complex_Solutions;
 
@@ -668,6 +918,96 @@ procedure mainvali ( infilename,outfilename : in string ) is
       put(outfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
       Deflate_Singularities(outfile,outfilename,lp.all,sols);
     end if;
+  end Standard_Newton_with_Deflation;
+
+  procedure DoblDobl_Newton_with_Deflation is
+
+    use DoblDobl_Complex_Solutions;
+
+    infile,outfile : file_type;
+    sysonfile : boolean;
+    lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    sols : DoblDobl_Complex_Solutions.Solution_List;
+
+  begin
+    Read_System(infile,infilename,lp,sysonfile);
+    if outfilename = "" then
+      put_line("Reading the name of the output file...");
+      declare
+        new_outfilename : constant string := Read_String;
+      begin
+        Create_Output_File(outfile,new_outfilename);
+        put(outfile,lp.all);
+        Read_Solutions(infile,sysonfile,sols);
+        new_line(outfile);
+        put_line(outfile,"the solutions on input :");
+        put(outfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+        Deflate_Singularities(outfile,new_outfilename,lp.all,sols);
+      end;
+    else
+      Create_Output_File(outfile,outfilename);
+      put(outfile,lp.all);
+      Read_Solutions(infile,sysonfile,sols);
+      new_line(outfile);
+      put_line(outfile,"the solutions on input :");
+      put(outfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      Deflate_Singularities(outfile,outfilename,lp.all,sols);
+    end if;
+  end DoblDobl_Newton_with_Deflation;
+
+  procedure QuadDobl_Newton_with_Deflation is
+
+    use QuadDobl_Complex_Solutions;
+
+    infile,outfile : file_type;
+    sysonfile : boolean;
+    lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    sols : QuadDobl_Complex_Solutions.Solution_List;
+
+  begin
+    Read_System(infile,infilename,lp,sysonfile);
+    if outfilename = "" then
+      put_line("Reading the name of the output file...");
+      declare
+        new_outfilename : constant string := Read_String;
+      begin
+        Create_Output_File(outfile,new_outfilename);
+        put(outfile,lp.all);
+        Read_Solutions(infile,sysonfile,sols);
+        new_line(outfile);
+        put_line(outfile,"the solutions on input :");
+        put(outfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+        Deflate_Singularities(outfile,new_outfilename,lp.all,sols);
+      end;
+    else
+      Create_Output_File(outfile,outfilename);
+      put(outfile,lp.all);
+      Read_Solutions(infile,sysonfile,sols);
+      new_line(outfile);
+      put_line(outfile,"the solutions on input :");
+      put(outfile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      Deflate_Singularities(outfile,outfilename,lp.all,sols);
+    end if;
+  end QuadDobl_Newton_with_Deflation;
+
+  procedure Newton_with_Deflation is
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU for the precision level :");
+    put_line("  0. standard double precision;");
+    put_line("  1. double double precision;");
+    put_line("  2. quad double precision.");
+    put("Type 0, 1, or 2 to select the level of precision : ");
+    Ask_Alternative(ans,"012");
+    case ans is
+      when '0' => Standard_Newton_with_Deflation;
+      when '1' => DoblDobl_Newton_with_Deflation;
+      when '2' => QuadDobl_Newton_with_Deflation;
+      when others => null;
+    end case;
   end Newton_with_Deflation;
 
   procedure Multiplicity_Structure is
