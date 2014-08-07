@@ -54,6 +54,14 @@ package Drivers_to_Deflate_Singularities is
                ( file : in file_type; outfilename : in string;
                  p : in Standard_Complex_Poly_Systems.Poly_Sys;
                  sols : in out Standard_Complex_Solutions.Solution_List );
+  procedure Deflate_Singularities
+               ( file : in file_type; outfilename : in string;
+                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Deflate_Singularities
+               ( file : in file_type; outfilename : in string;
+                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Applies Newton's method with deflation to a list of solutions

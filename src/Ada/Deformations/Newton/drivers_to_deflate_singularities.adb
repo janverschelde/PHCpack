@@ -18,6 +18,8 @@ with Multprec_Complex_Polynomials;
 with Multprec_Complex_Polynomials_io;
 with Multprec_Complex_Poly_Systems_io;  use Multprec_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with Multprec_Complex_Solutions;
 with Standard_Deflate_Singularities;
 with Multprec_Deflate_Singularities;
@@ -245,18 +247,24 @@ package body Drivers_to_Deflate_Singularities is
   end Display_Parameters;
 
   procedure Determine_Parameters
-              ( symbolic,output : out boolean;
+              ( inprecision : in natural32; 
+                symbolic,output : out boolean;
                 maxitr,maxdef,nbdgts : out natural32;
-	        tolerr,tolres,tolrnk : out double_float ) is
+                tolerr,tolres,tolrnk : out double_float ) is
 
   -- DESCRIPTION :
   --   Allows the user to change the default values for the parameters.
+  --   For double double and quad double precision, the value for
+  --   inprecision should respectively be 31 and 63.
 
     ans : character;
 
   begin
     Set_Default_Parameters
       (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
+    if inprecision > 15
+     then nbdgts := inprecision;
+    end if;
     loop
       Display_Parameters(standard_output,symbolic,output,
                          maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
@@ -346,8 +354,8 @@ package body Drivers_to_Deflate_Singularities is
 
   begin
     new_line;
-    Determine_Parameters(symbolic,output,maxitr,maxdef,nbdgts,
-                         tolerr,tolres,tolrnk);
+    Determine_Parameters
+      (15,symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
     new_line;
     put_line("See the output file for results...");
     new_line;
@@ -385,6 +393,78 @@ package body Drivers_to_Deflate_Singularities is
             (file,mp,size,sols,tolrnk);
         end if;
       end;
+    end if;
+    tstop(timer);
+    new_line(file);
+    print_times(file,timer,"Deflating Isolated Singularities");
+  end Deflate_Singularities;
+
+  procedure Deflate_Singularities
+              ( file : in file_type; outfilename : in string;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    timer : Timing_Widget;
+    symbolic,output : boolean;
+    maxitr,maxdef,nbdgts : natural32;
+    tolerr,tolres,tolrnk : double_float;
+
+  begin
+    new_line;
+    Determine_Parameters
+      (31,symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
+    new_line;
+    put_line("See the output file for results...");
+    new_line;
+    tstart(timer);
+    if symbolic then
+      DoblDobl_Deflation_Methods.Symbolic_Deflation_and_Clustering
+        (file,outfilename,p,sols,
+         output,maxitr,maxdef,tolerr,tolres,tolrnk);
+    else
+      DoblDobl_Deflation_Methods.Algorithmic_Deflation_and_Clustering
+        (file,outfilename,p,sols,
+         output,maxitr,maxdef,tolerr,tolres,tolrnk);
+      new_line(file);
+      put_line(file,"THE SOLUTIONS after deflation :");
+      put(file,DoblDobl_Complex_Solutions.Length_Of(sols),
+               natural32(DoblDobl_Complex_Solutions.Head_Of(sols).n),sols);
+    end if;
+    tstop(timer);
+    new_line(file);
+    print_times(file,timer,"Deflating Isolated Singularities");
+  end Deflate_Singularities;
+
+  procedure Deflate_Singularities
+              ( file : in file_type; outfilename : in string;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    timer : Timing_Widget;
+    symbolic,output : boolean;
+    maxitr,maxdef,nbdgts : natural32;
+    tolerr,tolres,tolrnk : double_float;
+
+  begin
+    new_line;
+    Determine_Parameters
+      (63,symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
+    new_line;
+    put_line("See the output file for results...");
+    new_line;
+    tstart(timer);
+    if symbolic then
+      QuadDobl_Deflation_Methods.Symbolic_Deflation_and_Clustering
+        (file,outfilename,p,sols,
+         output,maxitr,maxdef,tolerr,tolres,tolrnk);
+    else
+      QuadDobl_Deflation_Methods.Algorithmic_Deflation_and_Clustering
+        (file,outfilename,p,sols,
+         output,maxitr,maxdef,tolerr,tolres,tolrnk);
+      new_line(file);
+      put_line(file,"THE SOLUTIONS after deflation :");
+      put(file,QuadDobl_Complex_Solutions.Length_Of(sols),
+               natural32(QuadDobl_Complex_Solutions.Head_Of(sols).n),sols);
     end if;
     tstop(timer);
     new_line(file);
