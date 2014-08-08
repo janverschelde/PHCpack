@@ -50,11 +50,23 @@ int stable_mixed_volume ( int *mv, int *smv );
  *   return equals the mixed volume.
  *   The regular mixed-cell configuration is in the cells container. */
 
-int deflate ( void );
+int standard_deflate ( void );
 /*
  * DESCRIPTION :
- *   Applies deflation on the system and solutions in the containers with
- *   standard double precision and default settings of the parameters. */
+ *   Applies deflation on the system and solutions in the containers,
+ *   in standard double precision and default settings of the parameters. */
+
+int dobldobl_deflate ( void );
+/*
+ * DESCRIPTION :
+ *   Applies deflation on the system and solutions in the containers,
+ *   in double double precision and default settings of the parameters. */
+
+int quaddobl_deflate ( void );
+/*
+ * DESCRIPTION :
+ *   Applies deflation on the system and solutions in the containers,
+ *   in quad double precision and default settings of the parameters. */
 
 int standard_Newton_step ( void );
 /*

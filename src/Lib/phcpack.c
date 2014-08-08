@@ -68,11 +68,27 @@ int stable_mixed_volume ( int *mv, int *smv )
    return fail;
 }
 
-int deflate ( void )
+int standard_deflate ( void )
 {
    int *a,*b,fail;
    double *c;
    fail = _ada_use_c2phc(196,a,b,c);
+   return fail;
+}
+
+int dobldobl_deflate ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(249,a,b,c);
+   return fail;
+}
+
+int quaddobl_deflate ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(250,a,b,c);
    return fail;
 }
 

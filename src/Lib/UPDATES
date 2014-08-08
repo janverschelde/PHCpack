@@ -1,3 +1,7 @@
+Fri 8 Aug 2014 : deflate operations in double double and quad double
+  precision added to phcpack, the existing "deflate" became standard_deflate.
+  Upgraded phcpy2c with the double double and quad double deflate operations.
+
 Wed 30 Jul 2014 : added tests to lib_newton.c for Laurent systems.
 
 Tue 29 Jul 2014 : renaming of Newton_step into standard_Newton_step in

@@ -264,7 +264,7 @@ void test_deflate ( void )
    printf("The system container has %d polynomials.\n",dim);
    fail = solcon_number_of_solutions(&len);
    printf("The solution container has size %d.\n",len);
-   fail = deflate();
+   fail = standard_deflate();
    printf("The solutions after deflation :\n");
    fail = solcon_write_solutions();
 }
