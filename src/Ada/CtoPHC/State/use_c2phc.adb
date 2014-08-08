@@ -1402,10 +1402,11 @@ function use_c2phc ( job : integer32;
   function Job196 return integer32 is -- apply deflation as in main driver
 
     use Standard_Complex_Poly_Systems,Standard_Complex_Solutions;
+    use Drivers_to_Deflate_Singularities;
+
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
     work : Solution_List;
-    use Drivers_to_Deflate_Singularities;
 
   begin
     Copy(sols,work);
@@ -1414,6 +1415,40 @@ function use_c2phc ( job : integer32;
     Standard_Solutions_Container.Initialize(work);
     return 0;
   end Job196;
+
+  function Job249 return integer32 is -- deflation in double double precision
+
+    use DoblDobl_Complex_Poly_Systems,DoblDobl_Complex_Solutions;
+    use Drivers_to_Deflate_Singularities;
+
+    lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
+    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
+    work : Solution_List;
+
+  begin
+    Copy(sols,work);
+    Deflate_Singularities(lp.all,work);
+    DoblDobl_Solutions_Container.Clear;
+    DoblDobl_Solutions_Container.Initialize(work);
+    return 0;
+  end Job249;
+
+  function Job250 return integer32 is -- deflation in quad double precision
+
+    use QuadDobl_Complex_Poly_Systems,QuadDobl_Complex_Solutions;
+    use Drivers_to_Deflate_Singularities;
+
+    lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
+    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
+    work : Solution_List;
+
+  begin
+    Copy(sols,work);
+    Deflate_Singularities(lp.all,work);
+    QuadDobl_Solutions_Container.Clear;
+    QuadDobl_Solutions_Container.Initialize(work);
+    return 0;
+  end Job250;
 
   function Job66 return integer32 is
 

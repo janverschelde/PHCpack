@@ -964,6 +964,12 @@ function use_c2phc ( job : integer32;
 --                 using system and solutions in the containers;
 --         = 199 : does one Newton step with standard double arithmetic
 --                 using system and solutions in the containers.
+--   job   = 249 : applies deflation on the system and solutions
+--                 in the containers with double double precision and 
+--                 and default settings;
+--         = 250 : applies deflation on the system and solutions
+--                 in the containers with double double precision and 
+--                 and default settings.
 --
 -- one Newton step on Laurent systems :
 --
