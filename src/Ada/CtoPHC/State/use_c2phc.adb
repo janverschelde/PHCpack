@@ -1925,6 +1925,9 @@ function use_c2phc ( job : integer32;
       when 241..245 => return C_to_PHCpack(job-220,0);
       when 246 => return Job246; -- solve by quad double path tracking
       when 247..248 => return C_to_PHCpack(job-220,0);
+     -- deflation in double double and quad double precision
+      when 249 => return Job249; -- double double deflate
+      when 250 => return Job250; -- quad double deflate
      -- double double versions for jobs 1 to 8
       when 251 => return Job251; -- copy target system to container
       when 252 => return Job252; -- copy target system from container
