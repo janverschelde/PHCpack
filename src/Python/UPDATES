@@ -1,5 +1,5 @@
 Fri 8 Aug 2014 : upgraded the solver.py with deflate operations in
-  double double and quad double precision.
+  double double and quad double precision and extended test_deflate.
 
 Wed 30 Jul 2014 : added newton_laurent_step in solver.py with test routines
   for Newton's method on ordinary polynomial and Laurent polynomial systems.

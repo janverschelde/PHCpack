@@ -1069,7 +1069,15 @@ def test_deflate():
     for sol in sols:
         print sol
     result = standard_deflate(pols, sols)
-    print 'the solutions after deflation :'
+    print 'the solutions after deflation in standard double precision:'
+    for sol in result:
+        print sol
+    result = dobldobl_deflate(pols, sols)
+    print 'the solutions after deflation in double double precision:'
+    for sol in result:
+        print sol
+    result = quaddobl_deflate(pols, sols)
+    print 'the solutions after deflation in quad double precision:'
     for sol in result:
         print sol
 
