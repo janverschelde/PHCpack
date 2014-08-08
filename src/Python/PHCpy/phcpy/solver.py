@@ -540,19 +540,52 @@ def newton_laurent_step(system, solutions, precision='d', decimals=100):
         print strsol[-1]
     return result
 
-def deflate(system, solutions):
+def standard_deflate(system, solutions):
     """
     The deflation method augments the given system with
     derivatives to restore the quadratic convergence of
-    Newton's method at isolated singular solutions.
+    Newton's method at isolated singular solutions,
+    in standard double precision.
     After application of deflation with default settings,
     the new approximate solutions are returned.
     """
-    from phcpy2c import py2c_deflate
+    from phcpy2c import py2c_standard_deflate
     store_standard_system(system)
     store_standard_solutions(len(system), solutions)
-    py2c_deflate()
+    py2c_standard_deflate()
     result = load_standard_solutions()
+    return result
+
+def dobldobl_deflate(system, solutions):
+    """
+    The deflation method augments the given system with
+    derivatives to restore the quadratic convergence of
+    Newton's method at isolated singular solutions,
+    in double double precision.
+    After application of deflation with default settings,
+    the new approximate solutions are returned.
+    """
+    from phcpy2c import py2c_dobldobl_deflate
+    store_dobldobl_system(system)
+    store_dobldobl_solutions(len(system), solutions)
+    py2c_dobldobl_deflate()
+    result = load_dobldobl_solutions()
+    return result
+
+def quaddobl_deflate(system, solutions):
+    """
+    The deflation method augments the given system with
+    derivatives to restore the quadratic convergence of
+    Newton's method at isolated singular solutions,
+    in quad double precision.
+    After application of deflation with default settings,
+    the new approximate solutions are returned.
+    """
+    from phcpy2c import py2c_quaddobl_deflate
+    store_quaddobl_system(system)
+    store_quaddobl_solutions(len(system), solutions)
+    py2c_quaddobl_deflate()
+    result = load_quaddobl_solutions()
     return result
 
 def total_degree(pols):
@@ -1035,7 +1068,7 @@ def test_deflate():
     print 'the solutions before deflation :'
     for sol in sols:
         print sol
-    result = deflate(pols, sols)
+    result = standard_deflate(pols, sols)
     print 'the solutions after deflation :'
     for sol in result:
         print sol
