@@ -2,7 +2,11 @@ with text_io;                               use text_io;
 with Standard_Natural_Numbers;              use Standard_Natural_Numbers;
 with Standard_Natural_VecVecs;
 with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Drivers_to_Factor_Components is
 
@@ -40,7 +44,46 @@ package Drivers_to_Factor_Components is
                 f : out Standard_Natural_VecVecs.Link_to_VecVec );
 
   -- DESCRIPTION :
-  --   The solutions given to this routine are witness points.
+  --   The solutions given to this routine are witness points,
+  --   computed in standard double precision.
+  --   With monodromy we partition the set of witness points according
+  --   to the irreducible components of the system p at dimension dim.
+  --   The factorization is represented by f on return.
+
+  procedure Call_Monodromy_Breakup
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 );
+  procedure Call_Monodromy_Breakup
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                dim : in natural32;
+                f : out Standard_Natural_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   The solutions given to this routine are witness points,
+  --   computed in double double precision.
+  --   With monodromy we partition the set of witness points according
+  --   to the irreducible components of the system p at dimension dim.
+  --   The factorization is represented by f on return.
+
+  procedure Call_Monodromy_Breakup
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 );
+  procedure Call_Monodromy_Breakup
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                dim : in natural32;
+                f : out Standard_Natural_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   The solutions given to this routine are witness points,
+  --   computed in quad double precision.
   --   With monodromy we partition the set of witness points according
   --   to the irreducible components of the system p at dimension dim.
   --   The factorization is represented by f on return.

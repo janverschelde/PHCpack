@@ -12,6 +12,10 @@ with Multprec_Complex_Poly_Systems;
 with Witness_Sets,Witness_Sets_io;       use Witness_Sets,Witness_Sets_io;
 with Sampling_Machine;
 with Sample_Point_Lists;                 use Sample_Point_Lists;
+with DoblDobl_Sampling_Machine;
+with DoblDobl_Sample_Lists;              use DoblDobl_Sample_Lists;
+with QuadDobl_Sampling_Machine;
+with QuadDobl_Sample_Lists;              use QuadDobl_Sample_Lists;
 with Irreducible_Components;             use Irreducible_Components;
 with Irreducible_Component_Lists;        use Irreducible_Component_Lists;
 with Irreducible_Component_Lists_io;     use Irreducible_Component_Lists_io;
@@ -132,6 +136,30 @@ package body Drivers_to_Factor_Components is
 
   procedure Call_Monodromy_Breakup
               ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    f : Standard_Natural_VecVecs.Link_to_VecVec;
+
+  begin
+    Call_Monodromy_Breakup(file,p,sols,dim,f);
+  end Call_Monodromy_Breakup;
+
+  procedure Call_Monodromy_Breakup
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                dim : in natural32 ) is
+
+    f : Standard_Natural_VecVecs.Link_to_VecVec;
+
+  begin
+    Call_Monodromy_Breakup(file,p,sols,dim,f);
+  end Call_Monodromy_Breakup;
+
+  procedure Call_Monodromy_Breakup
+              ( file : in file_type;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 dim : in natural32;
@@ -151,6 +179,52 @@ package body Drivers_to_Factor_Components is
     grid := Create(file,p,sols,dim);
     Factor(file,p,dim,grid,f);
     Sampling_Machine.Clear;
+  end Call_Monodromy_Breakup;
+
+  procedure Call_Monodromy_Breakup
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                dim : in natural32;
+                f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+    grid : Array_of_DoblDobl_Sample_Lists(0..2);
+
+  begin
+    DoblDobl_Sampling_Machine.Initialize(p);
+   -- DoblDobl_Sampling_Machine.Default_Tune_Sampler(0);
+    new_line;
+    DoblDobl_Sampling_Machine.Interactive_Tune_Sampler(file);
+    DoblDobl_Sampling_Machine.Default_Tune_Refiner;
+    new_line;
+    put_line("See the output file for results...");
+    new_line;
+    grid := Create(file,p,sols,dim);
+    Factor(file,p,dim,grid,f);
+    DoblDobl_Sampling_Machine.Clear;
+  end Call_Monodromy_Breakup;
+
+  procedure Call_Monodromy_Breakup
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                dim : in natural32;
+                f : out Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+    grid : Array_of_QuadDobl_Sample_Lists(0..2);
+
+  begin
+    QuadDobl_Sampling_Machine.Initialize(p);
+   -- DoblDobl_Sampling_Machine.Default_Tune_Sampler(0);
+    new_line;
+    QuadDobl_Sampling_Machine.Interactive_Tune_Sampler(file);
+    QuadDobl_Sampling_Machine.Default_Tune_Refiner;
+    new_line;
+    put_line("See the output file for results...");
+    new_line;
+    grid := Create(file,p,sols,dim);
+    Factor(file,p,dim,grid,f);
+    QuadDobl_Sampling_Machine.Clear;
   end Call_Monodromy_Breakup;
 
   function Last_Element ( sps : Standard_Sample_List )
