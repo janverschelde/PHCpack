@@ -1,5 +1,7 @@
 Sat 9 Aug 2014 : upgraded drivers_to_factor_components with procedures to
   call the monodromy factorization in double double and quad double precision.
+  The main driver mainfac exports factorization as options 8 and 9,
+  respectively in double double and quad double precision.
 
 Fri 1 Aug 2014 : extended combinatorial_factorization to operate on samples
   in double double and quad double precision, tested by ts_combfac.adb.
