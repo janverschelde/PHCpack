@@ -1,3 +1,6 @@
+Sun 10 Aug 2014 : updated __init__.py, setup.py, and conf.py for 0.2.1
+  version of phcpy.
+
 Fri 8 Aug 2014 : upgraded the solver.py with deflate operations in
   double double and quad double precision and extended test_deflate.
 
