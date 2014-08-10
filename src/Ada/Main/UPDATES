@@ -1,3 +1,5 @@
+Sun 10 Aug 2014 : updated greeting_banners for version 2.3.91.
+
 Thu 7 Aug 2014 : upgraded mainvali.adb to deflate polynomial systems in
   double double and quad double precision.
 
