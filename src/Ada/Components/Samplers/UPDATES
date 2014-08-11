@@ -1,3 +1,7 @@
+Mon 11 Aug 2014 : new packages {dobl,quad}dobl_point_coordinates,
+  {dobl,quad}dobl_plane_{operations, representations}, 
+  {dobl,quad}dobl_moving_planes, tested by ts_planes.
+
 Thu 31 Jul 2014 : new packages {dobl,quad}dobl_{stacked,rectangular}_
   sample_grids, called in drivers_to_grid_creators.
 

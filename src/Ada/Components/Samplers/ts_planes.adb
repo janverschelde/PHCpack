@@ -14,10 +14,18 @@ with Standard_Complex_VecVecs_io;       use Standard_Complex_VecVecs_io;
 with Standard_Complex_Matrices;         use Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
 with Standard_Random_Vectors;           use Standard_Random_Vectors;
-with Standard_Plane_Representations;    use Standard_Plane_Representations;
-with Standard_Point_Coordinates;        use Standard_Point_Coordinates;
-with Standard_Plane_Operations;         use Standard_Plane_Operations;
+with Standard_Plane_Representations;
+with DoblDobl_Plane_Representations;
+with QuadDobl_Plane_Representations;
+with Standard_Point_Coordinates;
+with DoblDobl_Point_Coordinates;
+with QuadDobl_Point_Coordinates;
+with Standard_Plane_Operations;
+with DoblDobl_Plane_Operations;
+with QuadDobl_Plane_Operations;
 with Standard_Moving_Planes;
+with DoblDobl_Moving_Planes;
+with QuadDobl_Moving_Planes;
 
 procedure ts_planes is
 
@@ -27,13 +35,14 @@ procedure ts_planes is
 --   representations of affine planes.
 
   procedure Evaluate_at_Hyperplanes
-              ( hyp : in VecVec; x : in Standard_Complex_Vectors.Vector ) is
+              ( hyp : in Standard_Complex_VecVecs.VecVec;
+                x : in Standard_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --   Evaluates the point x at the hyperplanes with coefficients in hyp.
 
     eva : constant Standard_Complex_Vectors.Vector(hyp'range)
-        := Evaluate(hyp,x);
+        := Standard_Plane_Operations.Evaluate(hyp,x);
 
   begin
     put_line("evaluation at the hyperplanes : ");
@@ -41,9 +50,11 @@ procedure ts_planes is
   end Evaluate_at_Hyperplanes;
 
   procedure Test_Orthogonality ( b : in Standard_Complex_Vectors.Vector;
-                                 v : in VecVec ) is
+                                 v : in Standard_Complex_VecVecs.VecVec ) is
 
     use Standard_Complex_Vectors;
+    use Standard_Point_Coordinates;
+    use Standard_Plane_Representations;
 
     w : constant VecVec(v'range) := Orthogonalize(v);
     ip : Complex_Number;
@@ -68,13 +79,16 @@ procedure ts_planes is
     put_line("The coefficient vector computed with project : ");
     put_line(c2);
     put("The random point - basis point is");
-    if In_Span(w,x-b,tol)
+    if Standard_Plane_Operations.In_Span(w,x-b,tol)
      then put_line(" in span.");
      else put_line(" NOT in span!");
     end if;
   end Test_Orthogonality;
 
   procedure Test_Orthogonality ( g : Matrix ) is
+
+    use Standard_Point_Coordinates;
+    use Standard_Plane_Representations;
 
     og : constant Matrix(g'range(1),g'range(2)) := Orthogonalize(g);
     ip : Complex_Number;
@@ -138,12 +152,15 @@ procedure ts_planes is
     return ans;
   end Continue;
 
-  procedure Test ( n,k : in integer32; hyp : in VecVec ) is
+  procedure Test ( n,k : in integer32;
+                   hyp : in Standard_Complex_VecVecs.VecVec ) is
 
   -- DESCRIPTION :
   --   Test on computing the parametric representation of the plane.
 
     use Standard_Complex_Vectors;
+    use Standard_Plane_Representations;
+    use Standard_Plane_Operations;
 
     b,x : Standard_Complex_Vectors.Vector(1..n);
     d : VecVec(1..n-k);
@@ -246,7 +263,7 @@ procedure ts_planes is
         x(i) := x(i) + c(j)*gen(i,j);
       end loop;
     end loop;
-    Evaluate(eqs,x,res);
+    Standard_Plane_Operations.Evaluate(eqs,x,res);
     put("residual of a random point at the equations :");
     put(res,3); new_line;
   end Test_Equations;
@@ -268,7 +285,7 @@ procedure ts_planes is
       for i in genA'range(1) loop
         v(i) := genA(i,0) + c*genA(i,j);
       end loop;
-      Evaluate(eqsB,v,r);
+      Standard_Plane_Operations.Evaluate(eqsB,v,r);
       put("residual of generator "); put(j,1); put(" :"); put(r,3); new_line;
       if r < tol 
        then res := res + 1;
@@ -282,6 +299,8 @@ procedure ts_planes is
   -- DESCRIPTION :
   --   Generates two random k-planes in n-space with a common offset
   --   and then computes their intersection.
+
+    use Standard_Plane_Representations;
 
     A : Matrix(1..n,0..k) := Standard_Moving_Planes.Random_Plane(n,k);
     B : Matrix(1..n,0..k) := Standard_Moving_Planes.Random_Plane(n,k);
@@ -304,7 +323,7 @@ procedure ts_planes is
     Test_Equations(B,eqsB);
     new_line;
     put_line("calling intersect ...");
-    Intersect(standard_output,eqsA,eqsB,A,B);
+    Standard_Plane_Operations.Intersect(standard_output,eqsA,eqsB,A,B);
     new_line;
     put_line("testing the new generators of the first plane ...");
     Test_Equations(A,eqsA);

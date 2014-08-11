@@ -1,4 +1,4 @@
-Sampling module for positive dimensional solution components with PHCv2.3.91
+Sampling module for positive dimensional solution components with PHCv2.3.92
 
 This directory is entirely new in release 2.1, with no changes in
 release 2.2.  Intrinsic samplers were added in release 2.3.
@@ -19,8 +19,14 @@ version 2.3.87 of PHCpack.
 file name                         : short description
 ------------------------------------------------------------------------------
 standard_plane_representations    : convert representations of planes
+dobldobl_plane_representations    : dobldobl convert representations of planes
+quaddobl_plane_representations    : quaddobl convert representations of planes
 standard_point_coordinates        : coordinates of points in planes
+dobldobl_point_coordinates        : dobldobl coordinates of points in planes
+quaddobl_point_coordinates        : quaddobl coordinates of points in planes
 standard_plane_operations         : utilities to work with planes
+dobldobl_plane_operations         : work with planes in dobldobl precision
+quaddobl_plane_operations         : work with planes in quaddobl precision
 ts_planes                         : test on manipulating planes
 standard_flag_representations     : intrinsic format of a flag
 ts_flag                           : test on formats of flags
