@@ -1,8 +1,19 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with DoblDobl_Mathematical_Functions;    use DoblDobl_Mathematical_Functions;
-with DoblDobl_Complex_Numbers;           use DoblDobl_Complex_Numbers;
 
 package body DoblDobl_Complex_Vector_Norms is
+
+  function Conjugated_Inner_Product ( v,w : Vector ) return Complex_Number is
+
+    zero : constant double_double := create(0.0);
+    res : Complex_Number := Create(zero);
+
+  begin
+    for i in v'range loop
+      res := res + Conjugate(v(i))*w(i);
+    end loop;
+    return res;
+  end Conjugated_Inner_Product;
 
   function Norm2 ( v : Vector ) return double_double is
 

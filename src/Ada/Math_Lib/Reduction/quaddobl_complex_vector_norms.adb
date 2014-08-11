@@ -1,12 +1,23 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with QuadDobl_Mathematical_Functions;    use QuadDobl_Mathematical_Functions;
-with QuadDobl_Complex_Numbers;           use QuadDobl_Complex_Numbers;
 
 package body QuadDobl_Complex_Vector_Norms is
 
+  function Conjugated_Inner_Product ( v,w : Vector ) return Complex_Number is
+
+    zero : constant quad_double := create(0.0);
+    res : Complex_Number := Create(zero);
+
+  begin
+    for i in v'range loop
+      res := res + Conjugate(v(i))*w(i);
+    end loop;
+    return res;
+  end Conjugated_Inner_Product;
+
   function Norm2 ( v : Vector ) return quad_double is
 
-    res : quad_double := Create(integer(0));
+    res : quad_double := Create(0.0);
 
   begin
     for i in v'range loop
