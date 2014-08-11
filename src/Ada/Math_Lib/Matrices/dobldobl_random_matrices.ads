@@ -20,4 +20,10 @@ package DoblDobl_Random_Matrices is
   --   Returns a matrix of range 1..n,1..m
   --   with random complex double double numbers.
 
+  function Orthogonalize ( mat : DoblDobl_Complex_Matrices.Matrix )
+                         return DoblDobl_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns the orthogonal matrix with the same column span as mat.
+
 end DoblDobl_Random_Matrices;

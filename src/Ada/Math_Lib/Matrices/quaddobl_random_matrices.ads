@@ -20,4 +20,10 @@ package QuadDobl_Random_Matrices is
   --   Returns a matrix of range 1..n,1..m
   --   with random complex quad double numbers.
 
+  function Orthogonalize ( mat : QuadDobl_Complex_Matrices.Matrix )
+                         return QuadDobl_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns the orthogonal matrix with the same column span as mat.
+
 end QuadDobl_Random_Matrices;

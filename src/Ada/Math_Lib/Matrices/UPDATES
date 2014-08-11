@@ -1,0 +1,315 @@
+Mon 11 Aug 2014 : added orthogonalize to {dobl,quad}dobl_random_matrices.
+
+Thu 24 Oct 2013 : removed old ts_fltdls.adb
+
+Fri 7 Jun 2013 : updated standard_random_matrices.adb.
+
+Thu 6 Jun 2013 : moved ts_fltdls.adb to ../Reduction.
+  Updated generic_matrices, its io, generic_vecmats, its io,
+  the standard_random_matrices.adb, {dobldobl,quaddobl}_random_matrices,
+  and the test programs ts_natmat, ts_intmat, ts_fltmat, ts_ddmat, ts_qdmat, 
+  and ts_cmpmat.
+
+Tue 4 Jun 2013 : updated multprec_random_matrices because of changes
+  in natural32 and integer32.
+
+Thu 27 Dec 2012 : significantly reduced ts_{flt,cmp,dd,qd}mat.adb 
+  moving LU factorization to ../Reduction/ts_{flt,cmp,dd,qd}lu.adb.
+
+Wed 21 Nov 2012 : moved code to Divisors and Reduction, see the UPDATES of
+  the directories in Divisors and Reduction to see which files got moved.
+  What remains is below:
+
+dobldobl_complex_matrices.ads        quaddobl_random_matrices.adb
+dobldobl_complex_matrices_io.ads     quaddobl_random_matrices.ads
+dobldobl_complex_vecmats.ads         quad_double_matrices.ads
+dobldobl_random_matrices.adb         quad_double_matrices_io.ads
+dobldobl_random_matrices.ads
+double_double_matrices.ads           standard_complex_matrices.ads
+double_double_matrices_io.ads        standard_complex_matrices_io.ads
+generic_matrices.adb                 standard_complex_vecmats.ads
+generic_matrices.ads                 standard_complex_vecmats_io.ads
+generic_matrices_io.adb              standard_floating_matrices.ads
+generic_matrices_io.ads              standard_floating_matrices_io.ads
+generic_vecmats.adb                  standard_floating_vecmats.ads
+generic_vecmats.ads                  standard_floating_vecmats_io.ads
+generic_vecmats_io.adb               standard_integer64_matrices.ads
+generic_vecmats_io.ads               standard_integer64_matrices_io.ads
+multprec_complex_matrices.ads        standard_integer64_vecmats.ads
+multprec_complex_matrices_io.ads     standard_integer64_vecmats_io.ads
+multprec_complex_vecmats.ads         standard_integer_matrices.ads
+multprec_complex_vecmats_io.ads      standard_integer_matrices_io.ads
+multprec_floating64_matrices.ads     standard_integer_vecmats.ads
+multprec_floating64_matrices_io.ads  standard_integer_vecmats_io.ads
+multprec_floating_matrices.ads       standard_natural_matrices.ads
+multprec_floating_matrices_io.ads    standard_natural_matrices_io.ads
+multprec_integer64_matrices.ads      standard_random_matrices.adb
+multprec_integer64_matrices_io.ads   standard_random_matrices.ads
+multprec_integer_matrices.ads        ts_cmpmat.adb
+multprec_integer_matrices_io.ads     ts_ddmat.adb
+multprec_natural_matrices.ads        ts_fltdls.adb
+multprec_natural_matrices_io.ads     ts_fltmat.adb
+multprec_random_matrices.adb         ts_intmat.adb
+multprec_random_matrices.ads         ts_natmat.adb
+quaddobl_complex_matrices.ads        ts_qdmat.adb
+quaddobl_complex_matrices_io.ads 
+quaddobl_complex_vecmats.ads
+
+Thu 15 Nov 2012 : new package standard_integer_matrices, tested by ts_circuit.
+
+Wed 17 Oct 2012 : updated all *gramschmidt* files so no extra memory is used
+  for the projections, updated ts_mgs.adb and ts_mgsrank.adb.
+
+Mon 8 Oct 2012 : fixed the permutation error in standard_floating_gramschmidt,
+  and updated the test in ts_mgsrnk.adb.  Added QR with pivoting to the
+  packages {standard,dobldobl,quaddobl}_complex_gramschmidt.
+
+Sat 6 Oct 2012 : added pivoting in standard_floating_gramschmidt,
+  tested by a new ts_mgsrnk.adb.
+
+Thu 4 Oct 2012 : added projection of right hand side vector to
+  standard_floating_gramschmidt, tested by ts_mgs.adb.
+
+Mon 1 Oct 2012 : updated ts_ddmat.adb and ts_qdmat.adb to do performance testing
+  only on the LU factorization (giving the user to skip the lusolve).
+
+Wed 26 Sep 2012 : updated all gramschmidt packages with the computation
+  of the largest error of the orthonormalization and the decomposition,
+  and ts_mgs.adb was updated with an accuracy test.
+
+Tue 25 Sep 2012 : 4 new packages: standard_{floating,complex}_gramschmidt,
+  {dobldobl,quaddobl}_complex_gramschmidt, tested by ts_mgs.adb.
+
+Sun 10 Jun 2012 : extended standard_smith_normal_form with 64-bit versions,
+  tested by ts_smith.adb.  Also extended standard_integer_matrix_inverse
+  with 64-bit versions, tested by ts_intinv.adb.
+
+Fri 8 Jun 2012 : new packages (standard,multprec}_integer_matrix_inverse
+  tested by ts_intinv.adb.
+
+Wed 6 Jun 2012 : new package multprec_integer_norms.
+
+Mon 4 Jun 2012 : extended multprec_random_matrices with routine to make
+  integer random matrices with entries in a given range.
+  Extended ts_smith.adb so multiprecision Smith normal form works.
+
+Sun 3 Jun 2012 : changed ts_smith.adb, renamed package smith_normal_form 
+  into standard_smith_normal_form, created multprec_smith_normal_form.
+
+Fri 3 Jun 2011 : source code formatting in generic_floating_linear_solvers.adb.
+  Touched greatest_common_divisors.adb to test alternative gcd computation.
+  Extended ts_intmat.adb to test the Hermite normal form better.
+
+Wed 1 Jun 2011 : changed standard_complex_qr_least_squares.adb for
+  warning and did some code formatting.
+
+Mon 23 May 2011 : instantiated {dobldobl,quaddobl}_complex_vecmats, made
+  {dobldobl,quaddobl}_complex_row_reduction from the standard version.
+  Modified standard_complex_row_reduction.adb for warnings.
+
+Tue 28 Dec 2010 : changes in multprec_integer_linear_solvers.adb to check
+  for a bug, although everything was fine there.
+
+Sun 26 Dec 2010 : copied generic_integer_linear_solvers into
+  multprec_integer_linear_solvers to fix a bug.
+  Also copied multprec_common_divisors off from greatest_common_divisors.
+  Added some printing information to greatest_common_divisors.adb and
+  generic_integer_linear_solvers.adb.
+
+Fri 4 Jun 2010 : extended ts_ddmat and ts_qdmat with performance testers.
+
+Wed 26 May 2010 : defined {double,quad}_double_matrices + io
+  and {dobldobl,quaddobl}_complex_matrices + io, ts_ddmat and ts_qdmat
+  test {dobldobl,quaddobl}_random_matrices.  Instantiated linear solvers:
+  {double,quad}_double_linear_solvers, tested by ts_ddmat and ts_qdmat.
+  Also {dobldobl,quaddobl}_complex_linear_solvers work.
+
+Mon 30 Nov 2009 : warnings for multprec_complex_singular_values.adb
+  led to better management in the top solvers.
+
+Tue 10 Nov 2009 : added conjugated ip to standard_complex_norms_equals.
+
+Fri 6 Nov 2009 : changed multprec_complex_norms_equals.adb and
+  {standard,multprec}_complex_linear_solvers.adb for warnings of GNAT GPL 2009.
+
+Sat 31 Oct 2009 : modified ts_cmpmat.adb, ts_eigval.adb, ts_fltdls.adb,
+  ts_qrd.adb, ts_rowred.adb, smith_normal_form.adb, and ts_svd.adb
+  for warnings of GNAT GPL 2009.
+
+Thu 29 Oct 2009 : modified generic_matrices_io.adb because of bug
+  in another procedure, no changes in generic_matrices_io.adb.
+
+Wed 28 Oct 2009 : fixed if-then-else formatting in 
+  multprec_complex_singular_values.adb.
+
+Wed 30 Sep 2009 : commented out in standard_complex_singular_values.adb.
+
+Tue 29 Sep 2009 : diagnostic printing in standard_complex_singular_values.adb.
+
+Tue 8 Sep 2009 : instantiated multprec_floating64_matrices, its _io,
+  and multprec_floating64_linear_solvers.
+
+Mon 31 Aug 2009 : instantiated multprec_integer64_linear_solvers.ads.
+
+Sun 30 Aug 2009 : instantiated multprec64_common_divisors and
+  multprec_integer64_matrices and multprec_integer64_matrices_io.
+  Extended multprec_random_matrices for multiprecision integer64 matrices.
+
+Thu 20 Aug 2009 : change in greatest_common_divisors.adb for a warning,
+  created standard64_common_divisors.ads, tested by ts_gcd.adb.
+  Updated standard_integer_norms.  New are standard_integer64_matrices + i/o, 
+  standard_integer64_vecmats + i/o, tested by ts_intmat.adb.
+  New standard_integer64_linear_solvers and updated standard_random_matrices.
+
+Wed 12 Aug 2009 : if-then-else formats in generic_integer_linear_solvers.adb.
+
+Thu 14 Aug 2008 : changed standard_complex_singular_values.adb to avoid
+  an infinite loop in deflation ... patched it for NaN inputs
+
+Thu 10 Jan 2008 : changed standard_complex_singular_values.adb,
+  removing much of the nasty code formatting.
+
+Thu 3 Jan 2008 : updated standard_complex_norms_equals.adb,
+  generic_norms_equals.adb, standard_random_matrices.adb,
+  greatest_common_divisors.adb, ts_fltmat.adb, ts_intmat.adb,
+  generic_linear_solvers.a*, and multprec_linear_solvers.ads
+  because of warnings caused by GNAT GPL 2006.
+
+Mon 24 Sep 2007 : added wrappers to standard_floating_eigenvalues,
+  tested in ts_eigval.adb.  Did the split off into Vectors.
+
+Sun 23 Sep 2007 : fixed a bug in standard_floating_eigenvalues.adb,
+  capitalization of h to H in standard_floating_eigenvalues.ads,
+  extended testing in ts_eigval.adb, looks ok for real eigenvalues.
+
+Wed 12 Sep 2007 : inserted cdiv in standard_floating_eigenvalues and tested
+  eigen-equation in ts_eigval.adb.
+
+Tue 11 Sep 2007 : fixed a bug in standard_floating_eigenvalues.adb.
+
+Mon 3 Sep 2007 : added standard_floating_eigenvalues, tested by ts_eigval.
+
+Tue 27 Mar 2007 : standard_floating_vector_tools provides size conversions.
+
+Sat 3 Feb 2007 : removed nasty end of line characters from
+  standard_complex_singular_values.adb and created
+  the package standard_floating_singular_values.
+
+Thu 28 Dec 2006 : fixed bugs in standard_complex_row_reduction.adb.
+
+Wed 27 Dec 2006 : ts_rowred.adb implements incremental row reduction,
+  provided in the package standard_complex_row_reduction.
+
+Wed 14 Jun 2006 : because of warnings on AIX, changed generic_vectors.adb,
+  generic_vectors_io, generic_matrices_io, generic_integer_linear_solvers.adb,
+  generic_floating_linear_solvers.adb, greatest_common_divisors.adb, 
+  standard_complex_singular_values, and generic_norms_equals.adb.
+
+Fri 17 Feb 2006 : fixed bug in one of the "Per" routines in
+  generic_integer_linear_solvers.adb which gave wrong Bezout number
+  when user gave in its own partition!
+
+Mon 26 Dec 2005 : bug in Sum for generic_vectors caused segmentation
+  fault for multiprecision numbers!
+
+Thu 22 Dec 2005 : bug in calling csign in *complex_singular_values 
+  and *complex_qr_least squares: used cdabs/cabs, but tested wrong.
+
+Thu 8 Sep 2005 : added Link_to_Array_of_VecVecs and Create_Copy to 
+  generic_vecvecs, as needed in the package Sampling_Operations.
+
+Mon 27 Jun 2005 : added multprec_complex_vecmats.ads and its _io.ads,
+  needed for multiprecision version of evaluating deflation matrices.
+
+Thu 29 Jul 2004 : added Norm2 to Standard_Complex_Norms_Equals and
+  to Multprec_Complex_Norms_Equals.
+
+Sun 20 Jun 2004 : the Equal(..,0.0) test is fragile in 
+  standard_complex_singular_values.adb, made some patches...
+
+Sun 7 Mar 2004 : added random matrix routine to standard_complex_matrices
+  to generate matrices of any dimension.
+
+Thu 15 Jan 2004 : integrated the multiprecision test routine on svd
+  into the ts_svd, which runs fine.
+
+Tue 13 Jan 2004 : fixed bug in multprec_complex_singular_values.adb,
+  problem is 1.0/complex number; extra output in the standard version
+  to shadow the multiprecision routine led to the bug
+
+Thu 18 Dec 2003 : fixed bug in standard_complex_singular_values.adb,
+  Solve caused constrained error, mirrored in multprec version.
+
+Mon 15 Dec 2003 : minor reformatting in standard_random_matrices.adb
+
+Thu 4 Dec 2003 : translated standard_complex_singular_values into
+  multprec_complex_singular_values, ready to try a first run...
+
+------------------------------------------- since release v2.2
+
+Updates in the future will depend on what happens in Numbers,
+in particular, whether staggered precision will be available.
+
+Other linear algebra such as SVD might become available.
+
+Orthogonal matrices are becoming more and more important.
+
+generic_vecmats : no need to have vectors as input package,
+only needed to instantiate the generic matrices package!
+
+On July 4, 1999 : standard_random_vecvecs.adb, adaption necessary,
+  due to change of standard_random_vectors.adb.
+  Copied over to the public distribution directory.
+
+On Saturday 27 November 1999 : added Array_of_VecVecs as data structure
+  to the generic_vecvecs, was needed in Sampler of generic points...
+
+On Saturday 5 February 2000 : needed to adapt the package 
+  Multprec_Random_VecVecs, due to a change of Multprec_Random_Vectors.
+
+On Thursday 9 March 2000 : added Clear to Array_of_VecVecs in the
+  package generic_vecvecs.  Extended Multprec_Complex_Vector_Tools
+  with similar facilities for vecvecs and arrays of vecvecs.
+
+Friday 5 May 2000 : fixed inconsistency with random vector call in
+  ts_fltmat and added timers.  In generic_floating_linear_solvers.adb,
+  introduced a Swap operation.  Also added timing in ts_cmpmat.adb.
+
+Thursday 18 May 2000 : in search of memory leaks, changed ts_fltmat
+  and generic_matrices.  Also changed generic_floating_linear_solvers.adb
+  and multprec_complex_linear_solvers.adb.
+  lufac is okay, no memory leaks for both floating and complex, but
+  lufco creates memory leaks - fixed on Fri 19 May, 2000.
+
+Wed 31 May 2000 : initiated multi-precision version of QR decomposition,
+  created multprec_complex_qr_decomposition
+  and multprec_complex_least_squares, changed ts_qrd.adb.
+  It works, but careless with memory, and inaccurate SQRT.
+
+Fri 2 June 2000 : merged least squares with qr for standard float,
+  standard complex and multi-precision complex.
+
+Thu 22 June 2000 : added tol in the specification of Triangulate of
+  Standard_Complex_Linear_Solvers.  This affected
+  Homotopy/reduction_of_polynomial_systems.adb
+
+Fri 25 May 2001 : created new packaged "generic_nested_vectors" to
+  represent n-dimensional matrices, as needed for interpolation.
+  Instantiated standard_complex_nested_vectors.  Also did the i/o;
+  see the test program ts_nesvec for a basic usage.
+
+Sun 27 May 2001 : defined complex multi-precision nested vectors + i/o.
+
+Tue 19 June 2001 : mistake in "Sum" of generic_vectors caused bug in
+  multi-precision routines.
+
+Fri 3 Aug 2001 : added "Round" in Multprec_Complex_Vector_Tools.
+
+Thu 28 Nov 2002 : added Transpose in the package generic_matrices.ads
+
+Mon 30 Dec 2002 : added package "standard_complex_singular_values" and
+  test routine ts_svd, translation of zsvd.f from linpack.
+
+Wed 8 Jan 2002 : had to change generic_integer_linear_solvers.adb after
+  installation of gnat3.15p.  The comparison a'last(1) >= a'last(2) had
+  to be replaced by a'length(1) >= a'length(2).
