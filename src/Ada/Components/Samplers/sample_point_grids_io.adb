@@ -14,7 +14,7 @@ package body Sample_Point_Grids_io is
   procedure get ( file : in file_type;
                   grid,grid_last : in out Standard_Sample_Grid ) is
 
-    nb : natural32;
+    nb : natural32 := 0;
 
   begin
     get(file,nb);
@@ -36,7 +36,7 @@ package body Sample_Point_Grids_io is
   procedure get ( file : in file_type;
                   grid,grid_last : in out Multprec_Sample_Grid ) is
 
-    nb : natural32;
+    nb : natural32 := 0;
 
   begin
     get(file,nb);
