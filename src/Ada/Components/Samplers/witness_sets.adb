@@ -14,8 +14,6 @@ with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
 with Standard_Random_Matrices;           use Standard_Random_Matrices;
 with Standard_Complex_Substitutors;      use Standard_Complex_Substitutors;
 with Standard_Embed_Polynomials;         use Standard_Embed_Polynomials;
-with DoblDobl_Complex_Polynomials;
-with QuadDobl_Complex_Polynomials;
 with Planes_and_Polynomials;             use Planes_and_Polynomials;
 
 package body Witness_Sets is
@@ -572,11 +570,109 @@ package body Witness_Sets is
     return false;                -- term is constant term
   end Is_Added_Term;
 
+  function Is_Added_Term
+             ( t : DoblDobl_Complex_Polynomials.Term; dim : natural32 )
+             return boolean is
+
+  -- DESCRIPTION :
+  --   This routine tells whether the term was added in the embedding,
+  --   i.e.: whether it has only nonzero degrees in the last dim positions.
+
+  begin
+    for i in t.dg'first..t.dg'last-integer32(dim) loop
+      if t.dg(i) /= 0
+       then return false;        -- term has nonzero original variable
+      end if;
+    end loop;                    -- term has no nonzero original variable
+    for i in t.dg'last-integer32(dim)+1..t.dg'last loop
+      if t.dg(i) /= 0
+       then return true;         -- moreover, term has added variable
+      end if;
+    end loop;
+    return false;                -- term is constant term
+  end Is_Added_Term;
+
+  function Is_Added_Term
+             ( t : QuadDobl_Complex_Polynomials.Term; dim : natural32 )
+             return boolean is
+
+  -- DESCRIPTION :
+  --   This routine tells whether the term was added in the embedding,
+  --   i.e.: whether it has only nonzero degrees in the last dim positions.
+
+  begin
+    for i in t.dg'first..t.dg'last-integer32(dim) loop
+      if t.dg(i) /= 0
+       then return false;        -- term has nonzero original variable
+      end if;
+    end loop;                    -- term has no nonzero original variable
+    for i in t.dg'last-integer32(dim)+1..t.dg'last loop
+      if t.dg(i) /= 0
+       then return true;         -- moreover, term has added variable
+      end if;
+    end loop;
+    return false;                -- term is constant term
+  end Is_Added_Term;
+
   function Remove_Embedding ( p : Standard_Complex_Polynomials.Poly;
                               dim : natural32 )
                             return Standard_Complex_Polynomials.Poly is
 
     use Standard_Complex_Polynomials;
+    res : Poly := Null_Poly;
+
+    procedure Remove_in_Term ( t : in Term; cont : out boolean ) is
+
+      rt : Term;
+
+    begin
+      if not Is_Added_Term(t,dim) then
+        rt.cf := t.cf;
+        rt.dg := new Standard_Natural_Vectors.Vector'
+                       (t.dg(t.dg'first..t.dg'last-integer32(dim)));
+        Add(res,rt);
+      end if;
+      cont := true;
+    end Remove_in_Term;
+    procedure Remove_in_Terms is new Visiting_Iterator(Remove_in_Term);
+
+  begin
+    Remove_in_Terms(p);
+    return res;
+  end Remove_Embedding;
+
+  function Remove_Embedding ( p : DoblDobl_Complex_Polynomials.Poly;
+                              dim : natural32 )
+                            return DoblDobl_Complex_Polynomials.Poly is
+
+    use DoblDobl_Complex_Polynomials;
+    res : Poly := Null_Poly;
+
+    procedure Remove_in_Term ( t : in Term; cont : out boolean ) is
+
+      rt : Term;
+
+    begin
+      if not Is_Added_Term(t,dim) then
+        rt.cf := t.cf;
+        rt.dg := new Standard_Natural_Vectors.Vector'
+                       (t.dg(t.dg'first..t.dg'last-integer32(dim)));
+        Add(res,rt);
+      end if;
+      cont := true;
+    end Remove_in_Term;
+    procedure Remove_in_Terms is new Visiting_Iterator(Remove_in_Term);
+
+  begin
+    Remove_in_Terms(p);
+    return res;
+  end Remove_Embedding;
+
+  function Remove_Embedding ( p : QuadDobl_Complex_Polynomials.Poly;
+                              dim : natural32 )
+                            return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Polynomials;
     res : Poly := Null_Poly;
 
     procedure Remove_in_Term ( t : in Term; cont : out boolean ) is
@@ -617,6 +713,34 @@ package body Witness_Sets is
                              return Standard_Complex_Poly_Systems.Poly_Sys is
 
     res : Standard_Complex_Poly_Systems.Poly_Sys
+            (p'first..p'last-integer32(dim));
+
+  begin
+    for i in res'range loop
+      res(i) := Remove_Embedding(p(i),dim);
+    end loop;
+    return res;
+  end Remove_Embedding1;
+
+  function Remove_Embedding1 ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                               dim : natural32 )
+                             return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : DoblDobl_Complex_Poly_Systems.Poly_Sys
+            (p'first..p'last-integer32(dim));
+
+  begin
+    for i in res'range loop
+      res(i) := Remove_Embedding(p(i),dim);
+    end loop;
+    return res;
+  end Remove_Embedding1;
+
+  function Remove_Embedding1 ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                               dim : natural32 )
+                             return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : QuadDobl_Complex_Poly_Systems.Poly_Sys
             (p'first..p'last-integer32(dim));
 
   begin

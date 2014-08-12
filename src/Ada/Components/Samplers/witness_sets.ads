@@ -7,7 +7,9 @@ with QuadDobl_Complex_VecVecs;
 with Multprec_Complex_VecVecs;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 
@@ -196,6 +198,12 @@ package Witness_Sets is
   function Remove_Embedding ( p : Standard_Complex_Polynomials.Poly;
                               dim : natural32 )
                             return Standard_Complex_Polynomials.Poly;
+  function Remove_Embedding ( p : DoblDobl_Complex_Polynomials.Poly;
+                              dim : natural32 )
+                            return DoblDobl_Complex_Polynomials.Poly;
+  function Remove_Embedding ( p : QuadDobl_Complex_Polynomials.Poly;
+                              dim : natural32 )
+                            return QuadDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Removes all dim added slack  added in the embedding.
@@ -203,6 +211,12 @@ package Witness_Sets is
   function Remove_Embedding1 ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                                dim : natural32 )
                              return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Remove_Embedding1 ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                               dim : natural32 )
+                             return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Remove_Embedding1 ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                               dim : natural32 )
+                             return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Removes all dim added variables and the terms added to p in
