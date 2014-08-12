@@ -1,5 +1,6 @@
 Tue 12 Aug 2014 : extended witness_sets with routines to remove the embedding
   from systems with double double and quad double coefficients.
+  New packages {dobl,quad}dobl_intrinsic_solutions, tested by ts_coords.
 
 Mon 11 Aug 2014 : new packages {dobl,quad}dobl_point_coordinates,
   {dobl,quad}dobl_plane_{operations, representations}, 

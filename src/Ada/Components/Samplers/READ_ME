@@ -31,13 +31,15 @@ ts_planes                         : test on manipulating planes
 standard_flag_representations     : intrinsic format of a flag
 ts_flag                           : test on formats of flags
 standard_intrinsic_solutions      : format conversions of witness points
+dobldobl_intrinsic_solutions      : conversions of dobldobl witness points
+quaddobl_intrinsic_solutions      : conversions of quaddobl witness points
+ts_coords                         : test representations of witness points
 standard_affine_solutions         : convert solutions in affine planes
 planes_and_polynomials            : operations on planes and polynomials
 witness_sets                      : main tools to create an embedding
 witness_sets_io                   : utilities to read embedded systems
 witness_sets_formats              : from intrinsic to extrinsic formats
 intrinsic_witness_sets_io         : writes intrinsic sets to extrinsic format
-ts_coords                         : test representations of witness points
 ts_square                         : test on making polynomial systems square
 ts_embed                          : test on embedding a polynomial system
 ts_squemb                         : test on squaring and embedding
@@ -47,6 +49,8 @@ standard_intrinsic_newton         : Newton's method for intrinsic coordinates
 standard_intrinsic_trackers       : tracking paths in intrinsic coordinates
 standard_intrinsic_continuation   : calls trackers on a list of solutions
 standard_moving_planes            : define path of linear spaces
+dobldobl_moving_planes            : path of planes with double doubles
+quaddobl_moving_planes            : path of planes with quad doubles
 ts_iwset                          : convert to intrinsic witness sets
 ts_inewt                          : test on intrinsic Newton's method
 ts_itrack                         : test on intrinsic path trackers
