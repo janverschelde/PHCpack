@@ -399,7 +399,7 @@ test_deformations: test_solutions test_homotopy test_newton test_curves \
 
 test_solutions: ts_sols ts_ddsols ts_qdsols ts_solfilt ts_solar \
                 ts_mapsols_io ts_dicsols_io ts_grepsols ts_selsol \
-                ts_solstr ts_contab ts_quad ts_soldrop
+                ts_solstr ts_contab ts_quad ts_soldrop ts_ptlists
 
 ts_sols:
 	make -f $(MAKEFILE) ts_sols
@@ -440,10 +440,13 @@ ts_quad:
 ts_soldrop:
 	make -f $(MAKEFILE) ts_soldrop
 
+ts_ptlists:
+	make -f $(MAKEFILE) ts_ptlists
+
 # Test programs for the Deformations/Homotopy library :
 
 test_homotopy: ts_quad ts_drivscal ts_scal ts_drivred ts_homotopy \
-               ts_homline ts_linsol ts_qdhom ts_poldrop
+               ts_homline ts_linsol ts_qdhom ts_poldrop ts_evalhomt
 
 ts_drivscal:
 	make -f $(MAKEFILE) ts_drivscal
@@ -468,6 +471,9 @@ ts_qdhom:
 
 ts_poldrop:
 	make -f $(MAKEFILE) ts_poldrop
+
+ts_evalhomt:
+	make -f $(MAKEFILE) ts_evalhomt
 
 # Test programs for the Deformations/Newton library :
 
@@ -906,7 +912,7 @@ test_components: test_samplers test_interpolators test_factorization \
 
 test_samplers: ts_roots ts_hypsam ts_hyprts ts_hyppts ts_unisam \
                ts_planes ts_flag ts_coords \
-               ts_itrack ts_ispan ts_inewt ts_iwset ts_ilocal \
+               ts_itrack ts_ispan ts_inewt ts_iddnewt ts_iwset ts_ilocal \
                ts_sample ts_endgm ts_locdim ts_ddqdsam
 
 ts_roots:
@@ -941,6 +947,9 @@ ts_ispan:
 
 ts_inewt:
 	make -f $(MAKEFILE) ts_inewt
+
+ts_iddnewt:
+	make -f $(MAKEFILE) ts_iddnewt
 
 ts_iwset:
 	make -f $(MAKEFILE) ts_iwset
@@ -1263,22 +1272,16 @@ ts_feedback:
 
 # Test programs for the C interface to GPU acceleration :
 
-test_phctoc: ts_gpu2norm
+test_phctoc: ts_cpu2norm_d ts_cpu2norm_dd ts_cpu2norm_qd
 
-ts_gpu2norm_d:
-	make -f $(MAKEFILE) ts_gpu2norm_d
+ts_cpu2norm_d:
+	make -f $(MAKEFILE) ts_cpu2norm_d
 
-ts_gpu2norm_dd:
-	make -f $(MAKEFILE) ts_gpu2norm_dd
+ts_cpu2norm_dd:
+	make -f $(MAKEFILE) ts_cpu2norm_dd
 
-ts_gpu2norm_qd:
-	make -f $(MAKEFILE) ts_gpu2norm_qd
-
-ts_gpu2norm_Cmain:
-	make -f $(MAKEFILE) ts_gpu2norm_Cmain
-
-ts_gpu2norm_call:
-	make -f $(MAKEFILE) ts_gpu2norm_call
+ts_cpu2norm_qd:
+	make -f $(MAKEFILE) ts_cpu2norm_qd
 
 # Test programs for the Tasking:
 

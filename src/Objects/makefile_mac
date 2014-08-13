@@ -473,6 +473,10 @@ ts_soldrop:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_soldrop.adb \
               -o $(BIN)/ts_soldrop
 
+ts_ptlists:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_ptlists.adb \
+              -o $(BIN)/ts_ptlists
+
 # Test programs for the Deformations/Homotopy library :
 
 ts_drivscal:
@@ -502,6 +506,10 @@ ts_qdhom:
 ts_poldrop:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_poldrop.adb \
               -o $(BIN)/ts_poldrop
+
+ts_evalhomt:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_evalhomt.adb \
+              -o $(BIN)/ts_evalhomt
 
 # Test programs for the Deformations/Newton library :
 
@@ -968,6 +976,10 @@ ts_ispan:
 ts_inewt:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_inewt.adb -o $(BIN)/ts_inewt
 
+ts_iddnewt:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_iddnewt.adb \
+              -o $(BIN)/ts_iddnewt
+
 ts_iwset:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_iwset.adb -o $(BIN)/ts_iwset
 
@@ -1378,33 +1390,32 @@ feedback.o:
 
 # Test program to test the C interface to GPU acceleration :
 
-ts_gpu2norm_d:
-	gcc -c $(PHCAda)/PHCtoC/ts_gpu2norm_d_in_c.c -o ts_gpu2norm_d_in_c.o
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_gpu2norm_d.adb \
-              -o $(BIN)/ts_gpu2norm_d -largs ts_gpu2norm_d_in_c.o -lm
+ts_cpu2norm_d:
+	gcc -c $(PHCAda)/PHCtoC/cpu2norm_d_in_c.c -o cpu2norm_d_in_c.o
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cpu2norm_d.adb \
+              -o $(BIN)/ts_cpu2norm_d -largs cpu2norm_d_in_c.o -lm
 
-ts_gpu2norm_dd:
+ts_cpu2norm_dd:
 	gcc -I $(PHCAda)/Math_Lib/QD \
             -c $(PHCAda)/Math_Lib/QD/double_double.c -o double_double.o
 	gcc -I $(PHCAda)/Math_Lib/QD \
-            -c $(PHCAda)/PHCtoC/ts_gpu2norm_dd_in_c.c \
-            -o ts_gpu2norm_dd_in_c.o
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_gpu2norm_dd.adb \
-              -o $(BIN)/ts_gpu2norm_dd \
-              -largs double_double.o ts_gpu2norm_dd_in_c.o -lm
+            -c $(PHCAda)/PHCtoC/cpu2norm_dd_in_c.c \
+            -o cpu2norm_dd_in_c.o
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cpu2norm_dd.adb \
+              -o $(BIN)/ts_cpu2norm_dd \
+              -largs double_double.o cpu2norm_dd_in_c.o -lm
 
-ts_gpu2norm_qd:
+ts_cpu2norm_qd:
 	gcc -I $(PHCAda)/Math_Lib/QD \
             -c $(PHCAda)/Math_Lib/QD/double_double.c -o double_double.o
 	gcc -I $(PHCAda)/Math_Lib/QD \
             -c $(PHCAda)/Math_Lib/QD/quad_double.c -o quad_double.o
 	gcc -I $(PHCAda)/Math_Lib/QD \
-            -c $(PHCAda)/PHCtoC/ts_gpu2norm_qd_in_c.c \
-            -o ts_gpu2norm_qd_in_c.o
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_gpu2norm_qd.adb \
-              -o $(BIN)/ts_gpu2norm_qd \
-              -largs double_double.o quad_double.o ts_gpu2norm_qd_in_c.o -lm
-
+            -c $(PHCAda)/PHCtoC/cpu2norm_qd_in_c.c \
+            -o cpu2norm_qd_in_c.o
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cpu2norm_qd.adb \
+              -o $(BIN)/ts_cpu2norm_qd \
+              -largs double_double.o quad_double.o cpu2norm_qd_in_c.o -lm
 
 ts_gpu2norm_Cmain:
 	g++ -c $(PHCAda)/PHCtoC/callGPUnorm.cpp -o callGPUnorm.o

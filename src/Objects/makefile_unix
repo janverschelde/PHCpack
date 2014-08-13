@@ -465,6 +465,9 @@ ts_contab:
 ts_soldrop:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_soldrop.adb -o $(BIN)/ts_soldrop
 
+ts_ptlists:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_ptlists.adb -o $(BIN)/ts_ptlists
+
 # Test programs for the Deformations/Homotopy library :
 
 ts_drivscal:
@@ -493,6 +496,10 @@ ts_qdhom:
 
 ts_poldrop:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_poldrop.adb -o $(BIN)/ts_poldrop
+
+ts_evalhomt:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_evalhomt.adb \
+              -o $(BIN)/ts_evalhomt
 
 # Test programs for the Deformations/Newton library :
 
@@ -961,6 +968,10 @@ ts_ispan:
 ts_inewt:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_inewt.adb -o $(BIN)/ts_inewt
 
+ts_iddnewt:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_iddnewt.adb \
+              -o $(BIN)/ts_iddnewt
+
 ts_iwset:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_iwset.adb -o $(BIN)/ts_iwset
 
@@ -1351,34 +1362,34 @@ feedback.o:
 
 # Test program to test the C interface to GPU acceleration :
 
-ts_gpu2norm_d:
-	gcc -c $(PHCAda)/PHCtoC/ts_gpu2norm_d_in_c.c -o ts_gpu2norm_d_in_c.o
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_gpu2norm_d.adb \
-              -o $(BIN)/ts_gpu2norm_d -largs ts_gpu2norm_d_in_c.o -lm
+ts_cpu2norm_d:
+	gcc -c $(PHCAda)/PHCtoC/cpu2norm_d_in_c.c -o cpu2norm_d_in_c.o
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cpu2norm_d.adb \
+              -o $(BIN)/ts_cpu2norm_d -largs cpu2norm_d_in_c.o -lm
 
-ts_gpu2norm_dd:
+ts_cpu2norm_dd:
 	gcc -I $(PHCAda)/Math_Lib/QD \
             -c $(PHCAda)/Math_Lib/QD/double_double.c -o double_double.o
 	gcc -I $(PHCAda)/Math_Lib/QD \
-            -c $(PHCAda)/PHCtoC/ts_gpu2norm_dd_in_c.c \
-            -o ts_gpu2norm_dd_in_c.o
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_gpu2norm_dd.adb \
-              -o $(BIN)/ts_gpu2norm_dd \
-              -largs double_double.o ts_gpu2norm_dd_in_c.o -lm
+            -c $(PHCAda)/PHCtoC/cpu2norm_dd_in_c.c \
+            -o cpu2norm_dd_in_c.o
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cpu2norm_dd.adb \
+              -o $(BIN)/ts_cpu2norm_dd \
+              -largs double_double.o cpu2norm_dd_in_c.o -lm
 
-ts_gpu2norm_qd:
+ts_cpu2norm_qd:
 	gcc -I $(PHCAda)/Math_Lib/QD \
             -c $(PHCAda)/Math_Lib/QD/double_double.c -o double_double.o
 	gcc -I $(PHCAda)/Math_Lib/QD \
             -c $(PHCAda)/Math_Lib/QD/quad_double.c -o quad_double.o
 	gcc -I $(PHCAda)/Math_Lib/QD \
-            -c $(PHCAda)/PHCtoC/ts_gpu2norm_qd_in_c.c \
-            -o ts_gpu2norm_qd_in_c.o
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_gpu2norm_qd.adb \
-              -o $(BIN)/ts_gpu2norm_qd \
-              -largs double_double.o quad_double.o ts_gpu2norm_qd_in_c.o -lm
+            -c $(PHCAda)/PHCtoC/cpu2norm_qd_in_c.c \
+            -o cpu2norm_qd_in_c.o
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cpu2norm_qd.adb \
+              -o $(BIN)/ts_cpu2norm_qd \
+              -largs double_double.o quad_double.o cpu2norm_qd_in_c.o -lm
 
-ts_gpu2norm_Cmain:
+ts_gpu2norm_d_in_c:
 	@-echo ">>> compiling kernels ..."
 	nvcc --define-macro precision=d -I$(PHCgpu)/DefineTypesD \
              -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
@@ -1394,16 +1405,16 @@ ts_gpu2norm_Cmain:
 	g++ -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesD \
             -I$(QD_ROOT)/include -I$(GQD_HOME)/inc \
             -I/usr/local/cuda/include \
-            -c $(PHCAda)/PHCtoC/callGPUnorm.cpp -o callGPUnorm.o
+            -c $(PHCAda)/PHCtoC/gpu2norm_d.cpp -o gpu2norm_d.o
 	@-echo ">>> compiling the main C program ..."
-	gcc -c $(PHCAda)/PHCtoC/ts_gpu2norm_Cmain.c -o ts_gpu2norm_Cmain.o
+	gcc -c $(PHCAda)/PHCtoC/ts_gpu2norm_d_in_c.c -o ts_gpu2norm_d_in_c.o
 	@-echo ">>> linking ..."
-	g++ norm_host.o norm_kernels.o callGPUnorm.o ts_gpu2norm_Cmain.o \
-            -o $(BIN)/ts_gpu2norm_Cmain -lm \
-            -lcuda -lcutil_x86_64 -lcudart \
+	g++ norm_host.o norm_kernels.o gpu2norm_d.o ts_gpu2norm_d_in_c.o \
+            -o $(BIN)/ts_gpu2norm_d_in_c -lm \
+            -lcutil_x86_64 -lcudart \
             -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib
 
-ts_gpu2norm_call:
+ts_gpu2norm_d:
 	@-echo ">>> compiling kernels ..."
 	nvcc --define-macro precision=d -I$(PHCgpu)/DefineTypesD \
              -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
@@ -1419,15 +1430,73 @@ ts_gpu2norm_call:
 	g++ -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesD \
             -I$(QD_ROOT)/include -I$(GQD_HOME)/inc \
             -I/usr/local/cuda/include \
-            -c $(PHCAda)/PHCtoC/callGPUnorm.cpp -o callGPUnorm.o
+            -c $(PHCAda)/PHCtoC/gpu2norm_d.cpp -o gpu2norm_d.o
 	@-echo ">>> compiling and binding the main Ada program ..."
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_gpu2norm_call.adb \
-                 -o ts_gpu2norm_call.o
-	gnatbind ts_gpu2norm_call
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_gpu2norm_d.adb \
+                 -o ts_gpu2norm_d.o
+	gnatbind ts_gpu2norm_d
 	@-echo ">>> linking ..."
-	gnatlink -o $(BIN)/ts_gpu2norm_call ts_gpu2norm_call \
-                 norm_host.o norm_kernels.o callGPUnorm.o -lm \
-                 -lcuda -lcutil_x86_64 -lcudart \
+	gnatlink -o $(BIN)/ts_gpu2norm_d ts_gpu2norm_d \
+                 norm_host.o norm_kernels.o gpu2norm_d.o -lm \
+                 -lcutil_x86_64 -lcudart \
+                 -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
+                 --LINK=g++
+
+ts_gpu2norm_dd:
+	@-echo ">>> compiling kernels ..."
+	nvcc --define-macro precision=dd -I$(PHCgpu)/DefineTypesDD \
+             -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
+             -I/usr/local/cuda/include \
+             -c $(PHCgpu)/MGS2/norm_kernels.cu -arch=sm_13 --ptxas-options=-v \
+             -o norm_kernels.o
+	@-echo ">>> compiling code for execution on the host ..."
+	g++ -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesDD \
+            -I$(QD_ROOT)/include -I$(GQD_HOME)/inc \
+            -I/usr/local/cuda/include \
+            -c $(PHCgpu)/MGS2/norm_host.cpp -o norm_host.o
+	@-echo ">>> compiling the caller function ..."
+	g++ -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesDD \
+            -I$(PHCAda)/Math_Lib/QD \
+            -I$(QD_ROOT)/include -I$(GQD_HOME)/inc \
+            -I/usr/local/cuda/include \
+            -c $(PHCAda)/PHCtoC/gpu2norm_dd.cpp -o gpu2norm_dd.o
+	@-echo ">>> compiling and binding the main Ada program ..."
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_gpu2norm_dd.adb \
+                 -o ts_gpu2norm_dd.o
+	gnatbind ts_gpu2norm_dd
+	@-echo ">>> linking ..."
+	gnatlink -o $(BIN)/ts_gpu2norm_dd ts_gpu2norm_dd \
+                 norm_host.o norm_kernels.o gpu2norm_dd.o -lm \
+                 -lcutil_x86_64 -lcudart $(QD_ROOT)/src/libqd.a \
+                 -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
+                 --LINK=g++
+
+ts_gpu2norm_qd:
+	@-echo ">>> compiling kernels ..."
+	nvcc --define-macro precision=qd -I$(PHCgpu)/DefineTypesQD \
+             -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
+             -I/usr/local/cuda/include \
+             -c $(PHCgpu)/MGS2/norm_kernels.cu -arch=sm_13 --ptxas-options=-v \
+             -o norm_kernels.o
+	@-echo ">>> compiling code for execution on the host ..."
+	g++ -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesQD \
+            -I$(QD_ROOT)/include -I$(GQD_HOME)/inc \
+            -I/usr/local/cuda/include \
+            -c $(PHCgpu)/MGS2/norm_host.cpp -o norm_host.o
+	@-echo ">>> compiling the caller function ..."
+	g++ -I$(PHCgpu)/MGS2 -I$(PHCgpu)/MGS2/DefineTypesQD \
+            -I$(PHCAda)/Math_Lib/QD \
+            -I$(QD_ROOT)/include -I$(GQD_HOME)/inc \
+            -I/usr/local/cuda/include \
+            -c $(PHCAda)/PHCtoC/gpu2norm_qd.cpp -o gpu2norm_qd.o
+	@-echo ">>> compiling and binding the main Ada program ..."
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_gpu2norm_qd.adb \
+                 -o ts_gpu2norm_qd.o
+	gnatbind ts_gpu2norm_qd
+	@-echo ">>> linking ..."
+	gnatlink -o $(BIN)/ts_gpu2norm_qd ts_gpu2norm_qd \
+                 norm_host.o norm_kernels.o gpu2norm_qd.o -lm \
+                 -lcutil_x86_64 -lcudart $(QD_ROOT)/src/libqd.a \
                  -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
                  --LINK=g++
 
