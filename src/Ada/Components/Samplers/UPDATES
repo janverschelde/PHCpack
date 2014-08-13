@@ -1,5 +1,7 @@
 Wed 13 Aug 2014 : added make_square functions to witness_sets for systems
   of double double and quad double complex coefficients.
+  New package dobldobl_intrinsic_newton tested by ts_iddnewt for Newton's
+  method with intrinsic coordinates in double double precision.
 
 Tue 12 Aug 2014 : extended witness_sets with routines to remove the embedding
   from systems with double double and quad double coefficients.

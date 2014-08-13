@@ -45,12 +45,13 @@ ts_embed                          : test on embedding a polynomial system
 ts_squemb                         : test on squaring and embedding
 ts_locdim                         : attempt at a local dimension test
 ------------------------------------------------------------------------------
-standard_intrinsic_newton         : Newton's method for intrinsic coordinates
-standard_intrinsic_trackers       : tracking paths in intrinsic coordinates
-standard_intrinsic_continuation   : calls trackers on a list of solutions
 standard_moving_planes            : define path of linear spaces
 dobldobl_moving_planes            : path of planes with double doubles
 quaddobl_moving_planes            : path of planes with quad doubles
+standard_intrinsic_newton         : Newton's method for intrinsic coordinates
+dobldobl_intrinsic_newton         : double double intrinsic Newton
+standard_intrinsic_trackers       : tracking paths in intrinsic coordinates
+standard_intrinsic_continuation   : calls trackers on a list of solutions
 ts_iwset                          : convert to intrinsic witness sets
 ts_inewt                          : test on intrinsic Newton's method
 ts_itrack                         : test on intrinsic path trackers
