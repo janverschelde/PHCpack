@@ -1,7 +1,9 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Random_Numbers;            use Standard_Random_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with Standard_Random_Numbers;
+with DoblDobl_Random_Numbers;
+with QuadDobl_Random_Numbers;
 with Standard_Natural_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
@@ -98,7 +100,7 @@ package body Witness_Sets is
   begin
     t.dg := new Standard_Natural_Vectors.Vector'(1..integer32(n+k) => 0);
     for i in 1..integer32(k) loop
-      t.cf := Random1;
+      t.cf := Standard_Random_Numbers.Random1;
       t.dg(integer32(n)+i) := 1;
       Add(res,t);
       t.dg(integer32(n)+i) := 0;
@@ -119,7 +121,7 @@ package body Witness_Sets is
   begin
     t.dg := new Standard_Natural_Vectors.Vector'(1..n+integer32(k) => 0);
     for i in 1..integer32(k) loop
-      t.cf := Random1;
+      t.cf := Standard_Random_Numbers.Random1;
       t.dg(n+i) := 1;
       Add(res,t);
       t.dg(n+i) := 0;
@@ -162,7 +164,71 @@ package body Witness_Sets is
       end loop;
       for i in integer32(k)+1..f'last loop
         for j in res'range loop
-          r := Random1;
+          r := Standard_Random_Numbers.Random1;
+          declare
+            rp : Poly := r*f(i);
+          begin
+            Add(res(j),rp);
+            Clear(rp);
+          end;
+        end loop;
+      end loop;
+    end if;
+    return res;
+  end Make_Square;
+
+  function Make_Square ( f : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                         k : natural32 )
+                       return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+    use DoblDobl_Complex_Polynomials;
+    res : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(k));
+    r : DoblDobl_Complex_Numbers.Complex_Number;
+
+  begin
+    if f'last <= integer32(k) then
+      for i in f'range loop
+        Copy(f(i),res(i));
+      end loop;
+    else
+      for i in 1..integer32(k) loop
+        Copy(f(i),res(i));
+      end loop;
+      for i in integer32(k)+1..f'last loop
+        for j in res'range loop
+          r := DoblDobl_Random_Numbers.Random1;
+          declare
+            rp : Poly := r*f(i);
+          begin
+            Add(res(j),rp);
+            Clear(rp);
+          end;
+        end loop;
+      end loop;
+    end if;
+    return res;
+  end Make_Square;
+
+  function Make_Square ( f : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                         k : natural32 )
+                       return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+    use QuadDobl_Complex_Polynomials;
+    res : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(k));
+    r : QuadDobl_Complex_Numbers.Complex_Number;
+
+  begin
+    if f'last <= integer32(k) then
+      for i in f'range loop
+        Copy(f(i),res(i));
+      end loop;
+    else
+      for i in 1..integer32(k) loop
+        Copy(f(i),res(i));
+      end loop;
+      for i in integer32(k)+1..f'last loop
+        for j in res'range loop
+          r := QuadDobl_Random_Numbers.Random1;
           declare
             rp : Poly := r*f(i);
           begin
@@ -345,7 +411,7 @@ package body Witness_Sets is
     for i in p'range loop
       res(i) := Add_Variables(p(i),k);
       for j in n+1..n+integer32(k) loop
-        t.cf := Random1;
+        t.cf := Standard_Random_Numbers.Random1;
         t.dg(j) := 1;
         Add(res(i),t);
         t.dg(j) := 0;
@@ -535,7 +601,7 @@ package body Witness_Sets is
           res(i) := Add_Variables(p(i),k);
           for j in 1..integer32(k) loop
             t.dg(m+j) := 1; 
-            t.cf := Random;
+            t.cf := Standard_Random_Numbers.Random1;
             Add(res(i),t);
             t.dg(m+j) := 0;
           end loop;
@@ -770,7 +836,7 @@ package body Witness_Sets is
         end loop;
         for i in integer32(n-k)+1..p'last loop
           for j in res'range loop
-            rnd := Random1;
+            rnd := Standard_Random_Numbers.Random1;
             extra := rnd*p(i);
             Add(res(j),extra);
             Clear(extra);

@@ -1,3 +1,6 @@
+Wed 13 Aug 2014 : added make_square functions to witness_sets for systems
+  of double double and quad double complex coefficients.
+
 Tue 12 Aug 2014 : extended witness_sets with routines to remove the embedding
   from systems with double double and quad double coefficients.
   New packages {dobl,quad}dobl_intrinsic_solutions, tested by ts_coords.

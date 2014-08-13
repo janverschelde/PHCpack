@@ -77,6 +77,12 @@ package Witness_Sets is
   function Make_Square ( f : Standard_Complex_Poly_Systems.Poly_Sys;
                          k : natural32 )
                        return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Make_Square ( f : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                         k : natural32 )
+                       return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Make_Square ( f : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                         k : natural32 )
+                       return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   If the number of equations in f is more than the co-dimension k,
