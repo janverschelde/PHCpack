@@ -1,3 +1,7 @@
+Thu 14 Aug 2014 : new package quaddobl_intrinsic_newton for Newton's method
+  with intrinsic coordinates in quad double precision, with extended testing
+  in ts_iddnewt.
+
 Wed 13 Aug 2014 : added make_square functions to witness_sets for systems
   of double double and quad double complex coefficients.
   New package dobldobl_intrinsic_newton tested by ts_iddnewt for Newton's
