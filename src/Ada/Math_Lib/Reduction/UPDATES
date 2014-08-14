@@ -1,3 +1,6 @@
+Thu 14 Aug 2014 : to {dobl,quad}dobl_complex_vector_norms, added normalize 
+  procedure.
+
 Mon 11 Aug 2014 : extended {dobl,quad}dobl_vector_norms with a conjugated
   inner product, as needed for rescaling coordinates.
 

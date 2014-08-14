@@ -19,6 +19,11 @@ package QuadDobl_Complex_Vector_Norms is
   -- DESCRIPTION :
   --   Returns the 2-norm of the complex vector v.
 
+  procedure Normalize ( v : in out Vector );
+
+  -- DESCRIPTION :
+  --   Divides the vector v by its 2-norm, if its 2-norm is nonzero.
+
   function Sum_Norm ( v : Vector ) return quad_double;
 
   -- DESCRIPTION :

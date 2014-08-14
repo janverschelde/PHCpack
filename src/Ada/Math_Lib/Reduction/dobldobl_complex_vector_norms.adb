@@ -28,6 +28,21 @@ package body DoblDobl_Complex_Vector_Norms is
     return res;
   end Norm2;
 
+  procedure Normalize ( v : in out Vector ) is
+
+    nrm : constant double_double := Norm2(v);
+    one : constant double_double := create(1.0);
+    d : Complex_Number; 
+
+  begin
+    if nrm + one /= one then
+      d := Create(nrm);
+      for i in v'range loop
+        v(i) := v(i)/d;
+      end loop;
+    end if;
+  end Normalize;
+
   function Sum_Norm ( v : Vector ) return double_double is
 
     res : double_double := Create(0.0);
