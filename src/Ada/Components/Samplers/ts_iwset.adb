@@ -30,6 +30,8 @@ with Standard_Intrinsic_Solutions;      use Standard_Intrinsic_Solutions;
 with Standard_Point_Coordinates;
 with Standard_Intrinsic_Newton;         use Standard_Intrinsic_Newton;
 with Standard_Intrinsic_Trackers;       use Standard_Intrinsic_Trackers;
+with DoblDobl_Intrinsic_Trackers;
+with QuadDobl_Intrinsic_Trackers;
 with Standard_Linear_Span;              use Standard_Linear_Span;
 
 procedure ts_iwset is

@@ -1,3 +1,6 @@
+Fri 15 Aug 2014 : new packages quaddobl_rescaling_coordinates and
+  quaddobl_intrinsic_trackers, tested for compilation by ts_iwset.
+
 Thu 14 Aug 2014 : new package quaddobl_intrinsic_newton for Newton's method
   with intrinsic coordinates in quad double precision, with extended testing
   in ts_iddnewt.  New packages dobldobl_rescaling_coordinates and

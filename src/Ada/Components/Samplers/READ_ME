@@ -52,8 +52,12 @@ standard_intrinsic_newton         : Newton's method for intrinsic coordinates
 dobldobl_intrinsic_newton         : double double intrinsic Newton
 quaddobl_intrinsic_newton         : quad double intrinsic Newton
 ts_iddnewt                        : test {dobl,quad}dobl intrinsic Newton
+standard_rescaling_coordinates    : local intrinsic coords, standard precision
+dobldobl_rescaling_coordinates    : local intrinsic coords, dobldobl precision
+quaddobl_rescaling_coordinates    : local intrinsic coords, quaddobl precision
 standard_intrinsic_trackers       : tracking paths in intrinsic coordinates
 dobldobl_intrinsic_trackers       : dobldobl tracking in intrinsic coordinates
+quaddobl_intrinsic_trackers       : quaddobl tracking in intrinsic coordinates
 standard_intrinsic_continuation   : calls trackers on a list of solutions
 ts_iwset                          : convert to intrinsic witness sets
 ts_inewt                          : test on intrinsic Newton's method
