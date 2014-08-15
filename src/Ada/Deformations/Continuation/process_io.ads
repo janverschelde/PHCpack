@@ -3,6 +3,7 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
@@ -97,6 +98,10 @@ package Process_io is
   procedure pWrite ( file : in file_type; step_number : in natural32;
                      step : in double_double;
                      t : in DoblDobl_Complex_Numbers.Complex_Number );
+  procedure pWrite ( file : in file_type; step_number : in natural32;
+                     step : in quad_double;
+                     t : in QuadDobl_Complex_Numbers.Complex_Number );
+
 
   -- DESCRIPTION :
   --   The predictor information is written on file or on standard output.

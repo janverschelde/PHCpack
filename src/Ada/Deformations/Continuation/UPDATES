@@ -1,3 +1,5 @@
+Fri 15 Aug 2014 : added pWrite operations for quad double in process_io.
+
 Fri 11 Jul 2014 : added option to the drivers_for_continuation_parameters
   to add the precision level, in the file drivers_for_poly_continuation.
 

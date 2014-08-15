@@ -1,6 +1,7 @@
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Multprec_Floating_Numbers_io;       use Multprec_Floating_Numbers_io;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
@@ -211,6 +212,15 @@ package body Process_io is
   begin
     put(file,"step# "); put(file,step_number,1); 
     put(file,"  t = "); put(file,DoblDobl_Complex_Numbers.REAL_PART(t),3);
+    put(file,"  step = "); put(file,step,3); new_line(file);
+  end pWrite;
+
+  procedure pWrite ( file : in file_type; step_number : in natural32;
+                     step : in quad_double;
+                     t : in QuadDobl_Complex_Numbers.Complex_Number ) is
+  begin
+    put(file,"step# "); put(file,step_number,1); 
+    put(file,"  t = "); put(file,QuadDobl_Complex_Numbers.REAL_PART(t),3);
     put(file,"  step = "); put(file,step,3); new_line(file);
   end pWrite;
 
