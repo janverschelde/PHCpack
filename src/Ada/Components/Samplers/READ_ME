@@ -63,6 +63,8 @@ ts_iwset                          : convert to intrinsic witness sets
 ts_inewt                          : test on intrinsic Newton's method
 ts_itrack                         : test on intrinsic path trackers
 standard_linear_span              : determine linear span of component
+dobldobl_linear_span              : linear span in double double precision
+quaddobl_linear_span              : linear span in quad double precision
 ts_ispan                          : test on determining linear span
 standard_recentering_coordinates  : work with local intrinsic coordinates
 ts_ilocal                         : test local intrinsic coordinates
