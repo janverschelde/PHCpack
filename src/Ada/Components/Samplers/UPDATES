@@ -1,4 +1,5 @@
-Sat 16 Aug 2014 : new packages {dobl,quad}dobl_linear_span.
+Sat 16 Aug 2014 : new packages {dobl,quad}dobl_linear_span, added tests
+  to ts_iwset for double double precision.
 
 Fri 15 Aug 2014 : new packages quaddobl_rescaling_coordinates and
   quaddobl_intrinsic_trackers, tested for compilation by ts_iwset.
