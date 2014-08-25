@@ -1441,7 +1441,7 @@ procedure ts_iwset is
     gen : constant Matrix(1..n,0..k) := Generators(eqs);
     pla : constant Matrix(1..n,0..k) := Orthogonalize(gen);
     isols : Solution_List := Project(esols,pla);
-    tol : constant double_float := 1.0E-8;
+    tol : constant double_float := 1.0E-16;
     isols_ptr : Solution_List := isols;
     esols_ptr : Solution_List := esols;
     i_ls,e_ls : Link_to_Solution;
@@ -1505,7 +1505,7 @@ procedure ts_iwset is
     gen : constant Matrix(1..n,0..k) := Generators(eqs);
     pla : constant Matrix(1..n,0..k) := Orthogonalize(gen);
     isols : Solution_List := Project(esols,pla);
-    tol : constant double_float := 1.0E-8;
+    tol : constant double_float := 1.0E-32;
     isols_ptr : Solution_List := isols;
     esols_ptr : Solution_List := esols;
     i_ls,e_ls : Link_to_Solution;
