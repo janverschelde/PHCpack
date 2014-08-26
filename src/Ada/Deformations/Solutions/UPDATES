@@ -1,3 +1,6 @@
+Tue 26 Aug 2014 : extended {dobl,quad}dobl_complex_solutions_io with output
+  routines for the diagnostics of a solution.
+
 Fri 20 Jun 2014 : proper adjustment of multiplicity field in the procedure
   Multiplicity of standard_condition_report.
 

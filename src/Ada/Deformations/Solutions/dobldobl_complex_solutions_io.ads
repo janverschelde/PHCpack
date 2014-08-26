@@ -21,6 +21,12 @@ package DoblDobl_Complex_Solutions_io is
   -- DESCRIPTION :
   --   On the output the solution vector will be written.
 
+  procedure put_diagnostics ( s : in Solution );
+  procedure put_diagnostics ( file : in file_type; s : in Solution );
+
+  -- DESCRIPTION :
+  --   Writes the diagnostics of the solution to screen or to file.
+
 -- FOR SOLUTIONS :
 
   procedure get ( s : out Solution );

@@ -250,6 +250,19 @@ package body DoblDobl_Complex_Solutions_io is
     end if;
   end put_vector;
 
+  procedure put_diagnostics ( s : in Solution ) is
+  begin
+    put_diagnostics(Standard_Output,s);
+  end put_diagnostics;
+
+  procedure put_diagnostics ( file : in file_type; s : in Solution ) is
+  begin
+    put(file,"==");
+    put(file," err : "); put(file,s.err,3); put(file," =");
+    put(file," rco : "); put(file,s.rco,3); put(file," =");
+    put(file," res : "); put(file,s.res,3); put(file," =");
+  end put_diagnostics;
+
 -- OUTPUT OF A SOLUTION :
 
   procedure put ( s : in Solution ) is
