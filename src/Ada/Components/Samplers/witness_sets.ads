@@ -63,6 +63,12 @@ package Witness_Sets is
   function Add_Embedding ( p : Standard_Complex_Polynomials.Poly;
                            k : natural32 )
                          return Standard_Complex_Polynomials.Poly;
+  function Add_Embedding ( p : DoblDobl_Complex_Polynomials.Poly;
+                           k : natural32 )
+                         return DoblDobl_Complex_Polynomials.Poly;
+  function Add_Embedding ( p : QuadDobl_Complex_Polynomials.Poly;
+                           k : natural32 )
+                         return QuadDobl_Complex_Polynomials.Poly;
   function Add_Embedding ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                            k : natural32 )
                          return Standard_Complex_Poly_Systems.Poly_Sys;

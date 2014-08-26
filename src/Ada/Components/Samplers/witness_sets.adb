@@ -16,6 +16,8 @@ with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
 with Standard_Random_Matrices;           use Standard_Random_Matrices;
 with Standard_Complex_Substitutors;      use Standard_Complex_Substitutors;
 with Standard_Embed_Polynomials;         use Standard_Embed_Polynomials;
+with DoblDobl_Embed_Polynomials;         use DoblDobl_Embed_Polynomials;
+with QuadDobl_Embed_Polynomials;         use QuadDobl_Embed_Polynomials;
 with Planes_and_Polynomials;             use Planes_and_Polynomials;
 
 package body Witness_Sets is
@@ -122,6 +124,48 @@ package body Witness_Sets is
     t.dg := new Standard_Natural_Vectors.Vector'(1..n+integer32(k) => 0);
     for i in 1..integer32(k) loop
       t.cf := Standard_Random_Numbers.Random1;
+      t.dg(n+i) := 1;
+      Add(res,t);
+      t.dg(n+i) := 0;
+    end loop;
+    Clear(t);
+    return res;
+  end Add_Embedding;
+
+  function Add_Embedding ( p : DoblDobl_Complex_Polynomials.Poly;
+                           k : natural32 )
+                         return DoblDobl_Complex_Polynomials.Poly is
+
+    use DoblDobl_Complex_Polynomials;
+    res : Poly := Add_Variables(p,k);
+    n : constant integer32 := integer32(Number_of_Unknowns(p));
+    t : Term;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..n+integer32(k) => 0);
+    for i in 1..integer32(k) loop
+      t.cf := DoblDobl_Random_Numbers.Random1;
+      t.dg(n+i) := 1;
+      Add(res,t);
+      t.dg(n+i) := 0;
+    end loop;
+    Clear(t);
+    return res;
+  end Add_Embedding;
+
+  function Add_Embedding ( p : QuadDobl_Complex_Polynomials.Poly;
+                           k : natural32 )
+                         return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Polynomials;
+    res : Poly := Add_Variables(p,k);
+    n : constant integer32 := integer32(Number_of_Unknowns(p));
+    t : Term;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..n+integer32(k) => 0);
+    for i in 1..integer32(k) loop
+      t.cf := QuadDobl_Random_Numbers.Random1;
       t.dg(n+i) := 1;
       Add(res,t);
       t.dg(n+i) := 0;
