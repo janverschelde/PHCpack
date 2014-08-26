@@ -4,6 +4,7 @@ Tue 26 Aug 2014 : new packages {dobl,quad}dobl_intrinsic_continuation
   embedded symbols to polynomials with double double and quad double
   coefficients.  Extended intrinsic_witness_sets_io with procedure to write
   witness sets in double double and quad double precision.
+  The test program ts_ilocal works with double doubles and quad doubles.
 
 Mon 25 Aug 2014 : added tests to ts_iwset for quad double precision,
   with changed tolerances for higher precision.

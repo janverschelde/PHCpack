@@ -818,6 +818,32 @@ package body Witness_Sets is
     return res;
   end Number_of_Zero_Equations;
 
+  function Number_of_Zero_Equations
+             ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys ) return natural32 is
+
+    res : natural32 := 0;
+    use DoblDobl_Complex_Polynomials;
+
+  begin
+    while p(p'last-integer32(res)) = Null_Poly loop
+      res := res + 1;
+    end loop;
+    return res;
+  end Number_of_Zero_Equations;
+
+  function Number_of_Zero_Equations
+             ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys ) return natural32 is
+
+    res : natural32 := 0;
+    use QuadDobl_Complex_Polynomials;
+
+  begin
+    while p(p'last-integer32(res)) = Null_Poly loop
+      res := res + 1;
+    end loop;
+    return res;
+  end Number_of_Zero_Equations;
+
   function Remove_Embedding1 ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                                dim : natural32 )
                              return Standard_Complex_Poly_Systems.Poly_Sys is

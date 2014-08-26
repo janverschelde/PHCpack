@@ -237,6 +237,10 @@ package Witness_Sets is
 
   function Number_of_Zero_Equations 
              ( p : Standard_Complex_Poly_Systems.Poly_Sys ) return natural32;
+  function Number_of_Zero_Equations 
+             ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys ) return natural32;
+  function Number_of_Zero_Equations 
+             ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys ) return natural32;
 
   -- DESCRIPTION :
   --   Returns the number of zero equations that may occur at the 
