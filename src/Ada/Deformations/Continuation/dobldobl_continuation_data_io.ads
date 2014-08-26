@@ -102,4 +102,11 @@ package DoblDobl_Continuation_Data_io is
   --             = 1 if the path converged to a regular solution;
   --             = 2 if the path converged to a singular solution.
 
+  procedure Path_Tracking_Statistics
+               ( file : in file_type; s : in Solu_Info_Array );
+
+  -- DESCRIPTION :
+  --   Computes minimum, maximum, and average of path tracking statistics:
+  --   number of steps, failures and iterations.
+
 end DoblDobl_Continuation_Data_io;

@@ -1,3 +1,6 @@
+Tue 26 Aug 2014 : extended {dobl,quad}dobl_continuation_data_io with
+  procedures to write path tracking statistics.
+
 Fri 15 Aug 2014 : added pWrite operations for quad double in process_io.
 
 Fri 11 Jul 2014 : added option to the drivers_for_continuation_parameters

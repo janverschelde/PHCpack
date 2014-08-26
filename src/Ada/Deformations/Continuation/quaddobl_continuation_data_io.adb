@@ -1,4 +1,5 @@
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
@@ -119,5 +120,49 @@ package body QuadDobl_Continuation_Data_io is
     Write_Diagnostics(file,s,tol_zero,tol_sing,nbfail,nbregu,nbsing,kind);
     Write_Solution(file,s);
   end Write_Next_Solution;
+
+  procedure Path_Tracking_Statistics
+               ( file : in file_type; s : in Solu_Info_Array ) is
+
+    min_nstep,max_nstep,min_nfail,max_nfail,min_niter,max_niter : natural32;
+    avg_nstep,avg_nfail,avg_niter : double_float;
+    len : constant double_float := double_float(s'last);
+
+  begin
+    min_nstep := s(s'first).nstep; max_nstep := s(s'first).nstep;
+    min_nfail := s(s'first).nfail; max_nfail := s(s'first).nfail;
+    min_niter := s(s'first).niter; max_niter := s(s'first).niter;
+    avg_nstep := double_float(min_nstep)/len;
+    avg_nfail := double_float(min_nfail)/len;
+    avg_niter := double_float(min_niter)/len;
+    for i in s'first+1..s'last loop
+      if s(i).nstep < min_nstep then
+        min_nstep := s(i).nstep;
+      elsif s(i).nstep > max_nstep then
+        max_nstep := s(i).nstep;
+      end if;
+      if s(i).nfail < min_nfail then
+        min_nstep := s(i).nfail;
+      elsif s(i).nfail > max_nfail then
+        max_nfail := s(i).nfail;
+      end if;
+      if s(i).niter < min_niter then
+        min_niter := s(i).niter;
+      elsif s(i).niter > max_niter then
+        max_niter := s(i).niter;
+      end if;
+      avg_nstep := avg_nstep + double_float(s(i).nstep)/len;
+      avg_nfail := avg_nfail + double_float(s(i).nfail)/len;
+      avg_niter := avg_niter + double_float(s(i).niter)/len;
+    end loop;
+    put_line(file,"path tracking statistics :");
+    put(file,"           min       max       avg"); new_line(file);
+    put(file,"#step : "); put(file,min_nstep,6); put(file,max_nstep,10);
+    put(file,avg_nstep,8,3,0); new_line(file);
+    put(file,"#fail : "); put(file,min_nfail,6); put(file,max_nfail,10);
+    put(file,avg_nfail,8,3,0); new_line(file);
+    put(file,"#iter : "); put(file,min_niter,6); put(file,max_niter,10);
+    put(file,avg_niter,8,3,0); new_line(file);
+  end Path_Tracking_Statistics;
 
 end QuadDobl_Continuation_Data_io;
