@@ -3,20 +3,34 @@ with File_Scanning;                      use File_Scanning;
 with Characters_and_Numbers;             use Characters_and_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Random_Numbers;
-with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
+with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Standard_Complex_VecVecs;           use Standard_Complex_VecVecs;
 --with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
-with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
+with Standard_Complex_Polynomials;
+with DoblDobl_Complex_Polynomials;
+with QuadDobl_Complex_Polynomials;
 with Symbol_Table;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Witness_Sets,Witness_Sets_io;       use Witness_Sets,Witness_Sets_io;
 with Planes_and_Polynomials;             use Planes_and_Polynomials;
 with Standard_Plane_Representations;     use Standard_Plane_Representations;
-with Standard_Intrinsic_Solutions;       use Standard_Intrinsic_Solutions;
+with DoblDobl_Plane_Representations;     use DoblDobl_Plane_Representations;
+with QuadDobl_Plane_Representations;     use QuadDobl_Plane_Representations;
+with Standard_Intrinsic_Solutions;
 
 -- for testing Recentered version:
 --with Standard_Complex_Vectors_io;  use Standard_Complex_Vectors_io;
@@ -48,14 +62,22 @@ package body Intrinsic_Witness_Sets_io is
     return s & "_s" & strd;
   end Append_sd;
 
-  function Embed_System ( f : in Poly_Sys; n,d : in natural32;
-                          slices : in Matrix ) return Poly_Sys is
+  function Embed_System
+             ( f : in Standard_Complex_Poly_Systems.Poly_Sys;
+               n,d : in natural32;
+               slices : in Standard_Complex_Matrices.Matrix )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
 
   -- DESCRIPTION :
   --   Returns an embedding of a polynomial system, with n original
   --   variables, to encode a solution set of dimension d.
   --   The matrix slices is the coefficient matrix of the linear equations,
   --   to be added to the system f.
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Polynomials;
+    use Standard_Complex_Poly_Systems;
 
     nd : constant integer32 := integer32(n+d);
     res : Poly_Sys(1..nd);
@@ -93,7 +115,119 @@ package body Intrinsic_Witness_Sets_io is
     return res;
   end Embed_System;
 
-  function Count_Dummies ( p : Poly_Sys; n,d : natural32 ) return natural32 is
+  function Embed_System
+             ( f : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+               n,d : in natural32;
+               slices : in DoblDobl_Complex_Matrices.Matrix )
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+  -- DESCRIPTION :
+  --   Returns an embedding of a polynomial system, with n original
+  --   variables, to encode a solution set of dimension d.
+  --   The matrix slices is the coefficient matrix of the linear equations,
+  --   to be added to the system f.
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Vectors;
+    use DoblDobl_Complex_Polynomials;
+    use DoblDobl_Complex_Poly_Systems;
+
+    nd : constant integer32 := integer32(n+d);
+    res : Poly_Sys(1..nd);
+    cff : Vector(0..nd);
+    one : constant double_double := create(1.0);
+    zero : constant double_double := create(0.0);
+
+  begin
+    for i in f'range loop                   -- embed polynomial system
+      res(i) := Add_Embedding(f(i),d);
+    end loop;
+    if f'last < integer32(n) then           -- add dummy equations
+      declare
+        t : Term;
+        ind : integer32 := integer32(n);
+      begin
+        t.cf := Create(one);
+        t.dg := new Standard_Natural_Vectors.Vector'(1..nd => 0);
+        for i in f'last+1..integer32(n) loop
+          ind := ind + 1;
+          t.dg(ind) := 1;
+          res(i) := Create(t);
+          t.dg(ind) := 0;
+        end loop;
+      end;
+    end if;
+    for i in 1..integer32(d) loop           -- add the slices
+      for j in 0..integer32(n) loop
+        cff(j) := slices(i,j);
+      end loop;
+      for j in 1..integer32(d) loop
+        cff(integer32(n)+j) := Create(zero); 
+      end loop;
+      cff(integer32(n)+i) := Create(one);
+      res(integer32(n)+i) := Hyperplane(cff);
+    end loop;
+    return res;
+  end Embed_System;
+
+  function Embed_System
+             ( f : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+               n,d : in natural32;
+               slices : in QuadDobl_Complex_Matrices.Matrix )
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+  -- DESCRIPTION :
+  --   Returns an embedding of a polynomial system, with n original
+  --   variables, to encode a solution set of dimension d.
+  --   The matrix slices is the coefficient matrix of the linear equations,
+  --   to be added to the system f.
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Vectors;
+    use QuadDobl_Complex_Polynomials;
+    use QuadDobl_Complex_Poly_Systems;
+
+    nd : constant integer32 := integer32(n+d);
+    res : Poly_Sys(1..nd);
+    cff : Vector(0..nd);
+    one : constant quad_double := create(1.0);
+    zero : constant quad_double := create(0.0);
+
+  begin
+    for i in f'range loop                   -- embed polynomial system
+      res(i) := Add_Embedding(f(i),d);
+    end loop;
+    if f'last < integer32(n) then           -- add dummy equations
+      declare
+        t : Term;
+        ind : integer32 := integer32(n);
+      begin
+        t.cf := Create(one);
+        t.dg := new Standard_Natural_Vectors.Vector'(1..nd => 0);
+        for i in f'last+1..integer32(n) loop
+          ind := ind + 1;
+          t.dg(ind) := 1;
+          res(i) := Create(t);
+          t.dg(ind) := 0;
+        end loop;
+      end;
+    end if;
+    for i in 1..integer32(d) loop           -- add the slices
+      for j in 0..integer32(n) loop
+        cff(j) := slices(i,j);
+      end loop;
+      for j in 1..integer32(d) loop
+        cff(integer32(n)+j) := Create(zero); 
+      end loop;
+      cff(integer32(n)+i) := Create(one);
+      res(integer32(n)+i) := Hyperplane(cff);
+    end loop;
+    return res;
+  end Embed_System;
+
+  function Count_Dummies
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+               n,d : natural32 ) return natural32 is
 
   -- DESCRIPTION :
   --   Returns the number of dummy equations in the system p.
@@ -106,6 +240,8 @@ package body Intrinsic_Witness_Sets_io is
   --   d        number of embedding variables.
 
   -- REQUIRED : the embedding variables are the last d ones.
+
+    use Standard_Complex_Polynomials;
 
     res : natural32 := 0;
 
@@ -122,11 +258,17 @@ package body Intrinsic_Witness_Sets_io is
     return res;
   end Count_Dummies;
 
-  function Intrinsic_Slices ( p : Poly_Sys; n,d : natural32 ) return Matrix is
+  function Intrinsic_Slices
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+               n,d : natural32 )
+             return Standard_Complex_Matrices.Matrix is
 
   -- DESCRIPTION :
   --   Returns the intrinsic representation of the last d linear equations
   --   of the polynomial system in n unknowns.  The basis is orthogonal.
+
+    use Standard_Complex_VecVecs;
+    use Standard_Complex_Matrices;
 
     sli : VecVec(1..integer32(d)) := Slices(p,d);
     equ : constant Matrix(1..integer32(d),0..integer32(n))
@@ -143,11 +285,16 @@ package body Intrinsic_Witness_Sets_io is
     return res;
   end Intrinsic_Slices;
 
-  procedure Write_Hyperplanes ( file : in file_type; c : in Matrix ) is
+  procedure Write_Hyperplanes
+              ( file : in file_type;
+                c : in Standard_Complex_Matrices.Matrix ) is
 
   -- DESCRIPTION :
   --   Converts the hyperplanes whose coefficients are given in c
   --   to a polynomial system and writes this system to file.
+
+    use Standard_Complex_VecVecs;
+    use Standard_Complex_Poly_Systems;
 
     hyp : VecVec(c'range(1)) := Equations_to_VecVec(c);
     sys : Poly_Sys(hyp'range);
@@ -165,7 +312,13 @@ package body Intrinsic_Witness_Sets_io is
 
   procedure Read_Witness_Stone
               ( d,k : out natural32;
-                s : out Solution_List; p : out Link_to_Matrix ) is
+                s : out Standard_Complex_Solutions.Solution_List;
+                p : out Standard_Complex_Matrices.Link_to_Matrix ) is
+
+    use Standard_Complex_Matrices;
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
+    use Standard_Intrinsic_Solutions;
 
     infile : file_type;
     lp : Link_to_Poly_Sys;
@@ -205,8 +358,14 @@ package body Intrinsic_Witness_Sets_io is
   end Read_Witness_Stone;
 
   procedure Read_Witness_Stone
-              ( f : out Link_to_Poly_Sys; d,k : out natural32;
-                s : out Solution_List; p : out Link_to_Matrix ) is
+              ( f : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                d,k : out natural32;
+                s : out Standard_Complex_Solutions.Solution_List;
+                p : out Standard_Complex_Matrices.Link_to_Matrix ) is
+
+    use Standard_Complex_Matrices;
+    use Standard_Complex_Solutions;
+    use Standard_Intrinsic_Solutions;
 
     esols : Solution_List;
    -- es2 : Solution_List;
@@ -230,7 +389,12 @@ package body Intrinsic_Witness_Sets_io is
 
   procedure Write_Witness_Stone
               ( file : in file_type; filename : in string; nv,d : in natural32;
-                s : in Solution_List; p : in Matrix ) is
+                s : in Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Matrices.Matrix ) is
+
+    use Standard_Complex_Matrices;
+    use Standard_Complex_Solutions;
+    use Standard_Intrinsic_Solutions;
 
     witname : constant string := Append_sd(filename,d);
     witfile : file_type;
@@ -259,7 +423,14 @@ package body Intrinsic_Witness_Sets_io is
 
   procedure Write_Witness_Stone
               ( file : in file_type; filename : in string; nv,d : in natural32;
-                f : in Poly_Sys; s : in Solution_List; p : in Matrix ) is
+                f : in Standard_Complex_Poly_Systems.Poly_Sys;
+                s : in Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Matrices.Matrix ) is
+
+    use Standard_Complex_Matrices;
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
+    use Standard_Intrinsic_Solutions;
 
     witname : constant string := Append_sd(filename,d);
     witfile : file_type;
@@ -292,7 +463,11 @@ package body Intrinsic_Witness_Sets_io is
 
   procedure Write_Witness_Set
               ( file : in file_type; filename : in string; nv,d : in natural32;
-                s : in Solution_List; p : in Matrix ) is
+                s : in Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Matrices.Matrix ) is
+
+    use Standard_Complex_Solutions;
+    use Standard_Intrinsic_Solutions;
 
     witfile : file_type;
     witname : constant string := Append_wd(filename,d);
@@ -309,7 +484,14 @@ package body Intrinsic_Witness_Sets_io is
 
   procedure Write_Witness_Set
               ( file : in file_type; nv,d : in natural32;
-                f : in Poly_Sys; s : in Solution_List; p : in Matrix ) is
+                f : in Standard_Complex_Poly_Systems.Poly_Sys;
+                s : in Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Matrices.Matrix ) is
+
+    use Standard_Complex_Matrices;
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
+    use Standard_Intrinsic_Solutions;
 
     wsols : Solution_List := Expand(s,p);
     esols : Solution_List := Add_Embedding(wsols,d);
@@ -333,7 +515,13 @@ package body Intrinsic_Witness_Sets_io is
 
   procedure Write_Recentered_Witness_Set
               ( file : in file_type; nv,d : in natural32;
-                f : in Poly_Sys; s : in Solution_List; p : in Matrix ) is
+                f : in Standard_Complex_Poly_Systems.Poly_Sys; 
+                s : in Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Matrices.Matrix ) is
+
+    use Standard_Complex_Matrices;
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     slices : constant Matrix(1..integer32(d),0..integer32(nv)) := Equations(p);
     sys : constant Poly_Sys(1..integer32(nv+d)) := Embed_System(f,nv,d,slices);
@@ -368,9 +556,146 @@ package body Intrinsic_Witness_Sets_io is
    -- end;
   end Write_Recentered_Witness_Set;
 
+  procedure Write_Recentered_Witness_Set
+              ( file : in file_type; nv,d : in natural32;
+                f : in DoblDobl_Complex_Poly_Systems.Poly_Sys; 
+                s : in DoblDobl_Complex_Solutions.Solution_List;
+                p : in DoblDobl_Complex_Matrices.Matrix ) is
+
+    use DoblDobl_Complex_Matrices;
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    slices : constant Matrix(1..integer32(d),0..integer32(nv)) := Equations(p);
+    sys : constant Poly_Sys(1..integer32(nv+d)) := Embed_System(f,nv,d,slices);
+
+  begin
+   -- put_line("Writing recentered witness sets ...");
+   -- put("f'last = "); put(f'last,1); 
+   -- put("  d = "); put(d,1); put("  nv = "); put(nv,1); new_line;
+    if Symbol_Table.Number < nv+d
+     then Add_Embed_Symbols(d);
+    end if;
+    put(file,sys);
+    new_line(file);
+    put(file,"TITLE : witness set of dimension "); 
+    put(file,d,1); new_line(file);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    new_line(file);
+    put(file,Length_Of(s),natural32(Head_Of(s).n),s);
+   -- declare
+   --   tmp : Solution_List := s;
+   -- begin
+   --   for i in 1..Length_Of(s) loop
+   --     put("evaluation of solution "); put(i,1); put_line(" : ");
+   --     declare
+   --       y : constant Vector := Eval(sys,Head_Of(tmp).v);
+   --     begin
+   --       put_line(y);
+   --     end;
+   --     tmp := Tail_Of(tmp);
+   --   end loop;
+   -- end;
+  end Write_Recentered_Witness_Set;
+
+  procedure Write_Recentered_Witness_Set
+              ( file : in file_type; nv,d : in natural32;
+                f : in QuadDobl_Complex_Poly_Systems.Poly_Sys; 
+                s : in QuadDobl_Complex_Solutions.Solution_List;
+                p : in QuadDobl_Complex_Matrices.Matrix ) is
+
+    use QuadDobl_Complex_Matrices;
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    slices : constant Matrix(1..integer32(d),0..integer32(nv)) := Equations(p);
+    sys : constant Poly_Sys(1..integer32(nv+d)) := Embed_System(f,nv,d,slices);
+
+  begin
+   -- put_line("Writing recentered witness sets ...");
+   -- put("f'last = "); put(f'last,1); 
+   -- put("  d = "); put(d,1); put("  nv = "); put(nv,1); new_line;
+    if Symbol_Table.Number < nv+d
+     then Add_Embed_Symbols(d);
+    end if;
+    put(file,sys);
+    new_line(file);
+    put(file,"TITLE : witness set of dimension "); 
+    put(file,d,1); new_line(file);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    new_line(file);
+    put(file,Length_Of(s),natural32(Head_Of(s).n),s);
+   -- declare
+   --   tmp : Solution_List := s;
+   -- begin
+   --   for i in 1..Length_Of(s) loop
+   --     put("evaluation of solution "); put(i,1); put_line(" : ");
+   --     declare
+   --       y : constant Vector := Eval(sys,Head_Of(tmp).v);
+   --     begin
+   --       put_line(y);
+   --     end;
+   --     tmp := Tail_Of(tmp);
+   --   end loop;
+   -- end;
+  end Write_Recentered_Witness_Set;
+
   procedure Write_Witness_Set_to_File
-              ( filename : in string; n,k : in natural32; f : in Poly_Sys;
-                p : in Matrix; sols : in Solu_Info_Array ) is
+              ( filename : in string; n,k : in natural32;
+                f : in Standard_Complex_Poly_Systems.Poly_Sys;
+                p : in Standard_Complex_Matrices.Matrix;
+                sols : in Standard_Continuation_Data.Solu_Info_Array ) is
+
+    use Standard_Complex_Solutions;
+    use Standard_Continuation_Data;
+
+    file : file_type;
+    d : constant natural32 := n-k;
+    strd : constant string := Characters_and_Numbers.convert(integer32(d));
+    name : constant string := filename & "_w" & strd;
+    s : constant Solution_List := Shallow_Create(sols);
+
+  begin
+    new_line;
+    put("Writing the witness set to file "); put(name); put_line(" ...");
+    put("See the file "); put(filename); put_line(" for diagnostics.");
+    Create_Output_File(file,name);
+    Write_Recentered_Witness_Set(file,n,d,f,s,p);
+  end Write_Witness_Set_to_File;
+
+  procedure Write_Witness_Set_to_File
+              ( filename : in string; n,k : in natural32;
+                f : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                p : in DoblDobl_Complex_Matrices.Matrix;
+                sols : in DoblDobl_Continuation_Data.Solu_Info_Array ) is
+
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Continuation_Data;
+
+    file : file_type;
+    d : constant natural32 := n-k;
+    strd : constant string := Characters_and_Numbers.convert(integer32(d));
+    name : constant string := filename & "_w" & strd;
+    s : constant Solution_List := Shallow_Create(sols);
+
+  begin
+    new_line;
+    put("Writing the witness set to file "); put(name); put_line(" ...");
+    put("See the file "); put(filename); put_line(" for diagnostics.");
+    Create_Output_File(file,name);
+    Write_Recentered_Witness_Set(file,n,d,f,s,p);
+  end Write_Witness_Set_to_File;
+
+  procedure Write_Witness_Set_to_File
+              ( filename : in string; n,k : in natural32;
+                f : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                p : in QuadDobl_Complex_Matrices.Matrix;
+                sols : in QuadDobl_Continuation_Data.Solu_Info_Array ) is
+
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Continuation_Data;
 
     file : file_type;
     d : constant natural32 := n-k;
@@ -388,7 +713,14 @@ package body Intrinsic_Witness_Sets_io is
 
   procedure Write_Witness_Set
               ( file : in file_type; filename : in string; nv,d : in natural32;
-                f : in Poly_Sys; s : in Solution_List; p : in Matrix ) is
+                f : in Standard_Complex_Poly_Systems.Poly_Sys;
+                s : in Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Matrices.Matrix ) is
+
+    use Standard_Complex_Matrices;
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
+    use Standard_Intrinsic_Solutions;
 
     witname : constant string := Append_wd(filename,d);
     witfile : file_type;
@@ -437,7 +769,10 @@ package body Intrinsic_Witness_Sets_io is
 
   procedure Write_Witness_Sets
               ( file : in file_type; filename : in string; nv : in natural32;
-                witset : in Array_of_Solution_Lists; planes : in VecMat ) is
+                witset : in Standard_Complex_Solutions.Array_of_Solution_Lists;
+                planes : in Standard_Complex_VecMats.VecMat ) is
+
+    use Standard_Complex_Solutions;
 
     d : natural32;
     empty_sets : boolean := true;
@@ -460,8 +795,11 @@ package body Intrinsic_Witness_Sets_io is
 
   procedure Write_Witness_Sets
               ( file : in file_type; filename : in string; nv : in natural32;
-                f : in Poly_Sys;
-                witset : in Array_of_Solution_Lists; planes : in VecMat ) is
+                f : in Standard_Complex_Poly_Systems.Poly_Sys;
+                witset : in Standard_Complex_Solutions.Array_of_Solution_Lists;
+                planes : in Standard_Complex_VecMats.VecMat ) is
+
+    use Standard_Complex_Solutions;
 
     d : natural32;
     empty_sets : boolean := true;

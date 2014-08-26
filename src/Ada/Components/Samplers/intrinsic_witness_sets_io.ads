@@ -1,10 +1,18 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
-with Standard_Complex_VecMats;           use Standard_Complex_VecMats;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
-with Standard_Continuation_Data;         use Standard_Continuation_Data;
+with Standard_Complex_Matrices;
+with DoblDobl_Complex_Matrices;
+with QuadDobl_Complex_Matrices;
+with Standard_Complex_VecMats;
+with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
+with Standard_Continuation_Data;
+with DoblDobl_Continuation_Data;
+with QuadDobl_Continuation_Data;
 
 package Intrinsic_Witness_Sets_io is
 
@@ -17,10 +25,13 @@ package Intrinsic_Witness_Sets_io is
 
   procedure Read_Witness_Stone
               ( d,k : out natural32;
-                s : out Solution_List; p : out Link_to_Matrix );
+                s : out Standard_Complex_Solutions.Solution_List;
+                p : out Standard_Complex_Matrices.Link_to_Matrix );
   procedure Read_Witness_Stone
-              ( f : out Link_to_Poly_Sys; d,k : out natural32;
-                s : out Solution_List; p : out Link_to_Matrix );
+              ( f : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                d,k : out natural32;
+                s : out Standard_Complex_Solutions.Solution_List;
+                p : out Standard_Complex_Matrices.Link_to_Matrix );
 
   -- DESCRIPTION :
   --   Prompts the user for a file name, and then reads a witness set.
@@ -35,10 +46,13 @@ package Intrinsic_Witness_Sets_io is
   
   procedure Write_Witness_Stone
               ( file : in file_type; filename : in string; nv,d : in natural32;
-                s : in Solution_List; p : in Matrix );
+                s : in Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Matrices.Matrix );
   procedure Write_Witness_Stone
               ( file : in file_type; filename : in string; nv,d : in natural32;
-                f : in Poly_Sys; s : in Solution_List; p : in Matrix );
+                f : in Standard_Complex_Poly_Systems.Poly_Sys;
+                s : in Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
   --   Writes a witness stone, just like "Write_Witness_Set" above.
@@ -50,14 +64,28 @@ package Intrinsic_Witness_Sets_io is
 
   procedure Write_Witness_Set
               ( file : in file_type; nv,d : in natural32;
-                f : in Poly_Sys; s : in Solution_List; p : in Matrix );
+                f : in Standard_Complex_Poly_Systems.Poly_Sys;
+                s : in Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
   --   Writes the witness set defined by f, s, and p to file.
 
   procedure Write_Recentered_Witness_Set
               ( file : in file_type; nv,d : in natural32;
-                f : in Poly_Sys; s : in Solution_List; p : in Matrix );
+                f : in Standard_Complex_Poly_Systems.Poly_Sys;
+                s : in Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Matrices.Matrix );
+  procedure Write_Recentered_Witness_Set
+              ( file : in file_type; nv,d : in natural32;
+                f : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in DoblDobl_Complex_Solutions.Solution_List;
+                p : in DoblDobl_Complex_Matrices.Matrix );
+  procedure Write_Recentered_Witness_Set
+              ( file : in file_type; nv,d : in natural32;
+                f : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in QuadDobl_Complex_Solutions.Solution_List;
+                p : in QuadDobl_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
   --   Writes the witness set defined by f, s, and p to file.
@@ -65,8 +93,20 @@ package Intrinsic_Witness_Sets_io is
   --   as computed in a recentered version of intrinsic tracking.
 
   procedure Write_Witness_Set_to_File
-              ( filename : in string; n,k : in natural32; f : in Poly_Sys;
-                p : in Matrix; sols : in Solu_Info_Array );
+              ( filename : in string; n,k : in natural32;
+                f : in Standard_Complex_Poly_Systems.Poly_Sys;
+                p : in Standard_Complex_Matrices.Matrix;
+                sols : in Standard_Continuation_Data.Solu_Info_Array );
+  procedure Write_Witness_Set_to_File
+              ( filename : in string; n,k : in natural32;
+                f : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                p : in DoblDobl_Complex_Matrices.Matrix;
+                sols : in DoblDobl_Continuation_Data.Solu_Info_Array );
+  procedure Write_Witness_Set_to_File
+              ( filename : in string; n,k : in natural32;
+                f : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                p : in QuadDobl_Complex_Matrices.Matrix;
+                sols : in QuadDobl_Continuation_Data.Solu_Info_Array );
 
   -- DESCRIPTION :
   --   Prompts the user for a file name and then writes the
@@ -74,10 +114,13 @@ package Intrinsic_Witness_Sets_io is
 
   procedure Write_Witness_Set
               ( file : in file_type; filename : in string; nv,d : in natural32;
-                s : in Solution_List; p : in Matrix );
+                s : in Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Matrices.Matrix );
   procedure Write_Witness_Set
               ( file : in file_type; filename : in string; nv,d : in natural32;
-                f : in Poly_Sys; s : in Solution_List; p : in Matrix );
+                f : in Standard_Complex_Poly_Systems.Poly_Sys;
+                s : in Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
   --   Writes a witness set to file with name given in filename
@@ -87,11 +130,13 @@ package Intrinsic_Witness_Sets_io is
 
   procedure Write_Witness_Sets
               ( file : in file_type; filename : in string; nv : in natural32;
-                witset : in Array_of_Solution_Lists; planes : in VecMat );
+                witset : in Standard_Complex_Solutions.Array_of_Solution_Lists;
+                planes : in Standard_Complex_VecMats.VecMat );
   procedure Write_Witness_Sets
               ( file : in file_type; filename : in string; nv : in natural32;
-                f : in Poly_Sys;
-                witset : in Array_of_Solution_Lists; planes : in VecMat );
+                f : in Standard_Complex_Poly_Systems.Poly_Sys;
+                witset : in Standard_Complex_Solutions.Array_of_Solution_Lists;
+                planes : in Standard_Complex_VecMats.VecMat );
 
   -- DESCRIPTION :
   --   For every nonzero witness set, a new file with extension _wd
