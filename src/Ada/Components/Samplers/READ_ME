@@ -58,14 +58,16 @@ quaddobl_rescaling_coordinates    : local intrinsic coords, quaddobl precision
 standard_intrinsic_trackers       : tracking paths in intrinsic coordinates
 dobldobl_intrinsic_trackers       : dobldobl tracking in intrinsic coordinates
 quaddobl_intrinsic_trackers       : quaddobl tracking in intrinsic coordinates
-standard_intrinsic_continuation   : calls trackers on a list of solutions
-ts_iwset                          : convert to intrinsic witness sets
-ts_inewt                          : test on intrinsic Newton's method
-ts_itrack                         : test on intrinsic path trackers
 standard_linear_span              : determine linear span of component
 dobldobl_linear_span              : linear span in double double precision
 quaddobl_linear_span              : linear span in quad double precision
 ts_ispan                          : test on determining linear span
+ts_iwset                          : convert to intrinsic witness sets
+standard_intrinsic_continuation   : calls trackers on a list of solutions
+dobldobl_intrinsic_continuation   : intrinsic tracking with double doubles
+quaddobl_intrinsic_continuation   : intrinsic tracking with quad doubles
+ts_inewt                          : test on intrinsic Newton's method
+ts_itrack                         : test on intrinsic path trackers
 standard_recentering_coordinates  : work with local intrinsic coordinates
 ts_ilocal                         : test local intrinsic coordinates
 affine_sampling_machine           : sampling using affine planes

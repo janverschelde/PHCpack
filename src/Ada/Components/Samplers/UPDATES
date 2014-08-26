@@ -1,3 +1,7 @@
+Tue 26 Aug 2014 : new packages {dobl,quad}dobl_intrinsic_continuation
+  to run intrinsic path trackers in double double and quad double precision,
+  for testing in ts_ilocal.
+
 Mon 25 Aug 2014 : added tests to ts_iwset for quad double precision,
   with changed tolerances for higher precision.
 
