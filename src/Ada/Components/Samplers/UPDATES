@@ -1,3 +1,6 @@
+Wed 27 Aug 2014 : extended mainsam.adb with routines to sample in
+  double double and quad double precision, available in phc -y.
+
 Tue 26 Aug 2014 : new packages {dobl,quad}dobl_intrinsic_continuation
   to run intrinsic path trackers in double double and quad double precision,
   for testing in ts_ilocal.  Extended witness_sets with operations to add
