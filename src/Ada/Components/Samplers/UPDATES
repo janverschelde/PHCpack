@@ -1,3 +1,5 @@
+Thu 28 Aug 2014 : reformatting in witness_sets_formats.
+
 Wed 27 Aug 2014 : extended mainsam.adb with routines to sample in
   double double and quad double precision, available in phc -y.
 

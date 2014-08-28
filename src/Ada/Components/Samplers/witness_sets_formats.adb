@@ -17,7 +17,14 @@ with Standard_Plane_Representations;    use Standard_Plane_Representations;
 package body Witness_Sets_Formats is
 
   function Embedded_System
-              ( n : integer32; b,v : Vector; p : Poly_Sys ) return Poly_Sys is
+              ( n : integer32;
+                b,v : Standard_Complex_Vectors.Vector;
+                p : Standard_Complex_Poly_Systems.Poly_Sys )
+              return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    use Standard_Complex_Vectors;
+    use Standard_Complex_VecVecs;
+    use Standard_Complex_Poly_Systems;
 
     res : Poly_Sys(p'first..p'last+n-1);
     hyp : VecVec(1..n-1) := Equations1(b,v);
@@ -53,8 +60,15 @@ package body Witness_Sets_Formats is
   end Embedded_System;
 
   function Embedded_System
-              ( n,k : integer32; b : Vector; v : VecVec; p : Poly_Sys )
-              return Poly_Sys is
+              ( n,k : integer32;
+                b : Standard_Complex_Vectors.Vector;
+                v : Standard_Complex_VecVecs.VecVec;
+                p : Standard_Complex_Poly_Systems.Poly_Sys )
+              return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    use Standard_Complex_Vectors;
+    use Standard_Complex_VecVecs;
+    use Standard_Complex_Poly_Systems;
 
     res : Poly_Sys(p'first..p'last+n-k);
     hyp : VecVec(1..n-k) := Equations(b,v);
@@ -90,7 +104,12 @@ package body Witness_Sets_Formats is
   end Embedded_System;
 
   function Embedded_Extrinsic_Solutions
-              ( n : integer32; b,v,sol : Vector ) return Solution_List is
+              ( n : integer32;
+                b,v,sol : Standard_Complex_Vectors.Vector )
+              return Standard_Complex_Solutions.Solution_List is
+
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Solutions;
 
     res,res_last : Solution_List;
 
@@ -117,8 +136,14 @@ package body Witness_Sets_Formats is
   end Embedded_Extrinsic_Solutions;
 
   function Embedded_Extrinsic_Solutions
-              ( n,k : integer32; b : Vector; v : VecVec;
-                sols : Solution_List ) return Solution_List is
+              ( n,k : integer32;
+                b : Standard_Complex_Vectors.Vector;
+                v : Standard_Complex_VecVecs.VecVec;
+                sols : Standard_Complex_Solutions.Solution_List )
+              return Standard_Complex_Solutions.Solution_List is
+
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Solutions;
 
     res,res_last : Solution_List;
     tmp : Solution_List := sols;
@@ -151,9 +176,14 @@ package body Witness_Sets_Formats is
   end Embedded_Extrinsic_Solutions;
 
   procedure Write_Embedding
-              ( file : in file_type; p : in Poly_Sys;
-                n : in integer32; b,v : in Vector;
-                sols : in Solution_List ) is
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                n : in integer32;
+                b,v : in Standard_Complex_Vectors.Vector;
+                sols : in Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     ep : constant Poly_Sys(p'first..p'last+n-1) := Embedded_System(n,b,v,p);
     esols : constant Solution_List
@@ -175,9 +205,15 @@ package body Witness_Sets_Formats is
   end Write_Embedding;
 
   procedure Write_Embedding
-              ( file : in file_type; p : in Poly_Sys;
-                n,k : in integer32; b : in Vector; v : in VecVec;
-                sols : in Solution_List ) is
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                n,k : in integer32;
+                b : in Standard_Complex_Vectors.Vector;
+                v : in Standard_Complex_VecVecs.VecVec;
+                sols : in Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     ep : constant Poly_Sys(p'first..p'last+n-k) := Embedded_System(n,k,b,v,p);
     esols : constant Solution_List
