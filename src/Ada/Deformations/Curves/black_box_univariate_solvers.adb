@@ -6,13 +6,16 @@ with Standard_Floating_Vectors;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;      use Standard_Complex_Numbers_io;
 with Multprec_Floating_Numbers;
+with Multprec_Floating_Numbers_io;     use Multprec_Floating_Numbers_io;
 with Multprec_Complex_Numbers;
+with Multprec_Complex_Numbers_io;      use Multprec_Complex_Numbers_io;
 with Multprec_Floating_Vectors;
 with Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;
 with Quad_Double_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Complex_Vectors_io;      use Standard_Complex_Vectors_io;
+with Multprec_Complex_Vectors_io;      use Multprec_Complex_Vectors_io;
 with Standard_Random_Vectors;          use Standard_Random_Vectors;
 with DoblDobl_Random_Vectors;          use DoblDobl_Random_Vectors;
 with QuadDobl_Random_Vectors;          use QuadDobl_Random_Vectors;
@@ -20,7 +23,9 @@ with Multprec_Random_Vectors;          use Multprec_Random_Vectors;
 with Multprec_Complex_Vector_Tools;
 with Standard_Complex_Polynomials_io;  use Standard_Complex_Polynomials_io;
 with Standard_Complex_Laurentials_io;  use Standard_Complex_Laurentials_io;
+with Multprec_Complex_Laurentials_io;  use Multprec_Complex_Laurentials_io;
 with Standard_Complex_Solutions_io;    use Standard_Complex_Solutions_io;
+with Multprec_Complex_Solutions_io;    use Multprec_Complex_Solutions_io;
 with Standard_Durand_Kerner;
 with DoblDobl_Durand_Kerner;
 with QuadDobl_Durand_Kerner;
@@ -242,6 +247,34 @@ package body Black_Box_Univariate_Solvers is
     "------------------------------------------------------------------------");
   end Write_Results;
 
+  procedure Write_Results
+               ( file : in file_type; step : in natural32;
+                 z,res : in Multprec_Complex_Vectors.Vector ) is
+
+    use Multprec_Floating_Numbers;
+    absres : Floating_Number;
+
+  begin
+    new_line(file);
+    put(file,"Results after "); put(file,step,1);
+    put_line(file," iterations :");
+    put_line(file,
+    "------------------------------------------------------------------------");
+    put_line(file,
+    "| APPROXIMATED ROOTS (real and imaginary part) |     RESIDUALS         |");
+    put_line(file,
+    "------------------------------------------------------------------------");
+    for i in z'range loop
+      absres := Multprec_Complex_Numbers.AbsVal(res(i));
+      put(file,"| "); put(file,z(i)); put(file," | "); 
+      put(file,absres); put(file," |");
+      new_line(file);
+      Clear(absres);
+    end loop;
+    put_line(file,
+    "------------------------------------------------------------------------");
+  end Write_Results;
+
   procedure Standard_Find_Roots
               ( d : in integer32;
                 cp : in Standard_Complex_Vectors.Vector;
@@ -386,6 +419,40 @@ package body Black_Box_Univariate_Solvers is
     sols := Create_Solution_List(z,err,rco,res);
   end Standard_Find_Roots;
 
+  procedure Multprec_Find_Roots
+              ( file : in file_type; d : in integer32; size : in natural32;
+                cp : in Multprec_Complex_Vectors.Vector;
+                sols : out Multprec_Complex_Solutions.Solution_List ) is
+
+    use Multprec_Durand_Kerner;
+
+    max : constant natural32 := 10*size*natural32(d);
+    deci : constant natural32
+         := Multprec_Floating_Numbers.Size_to_Decimal(size);
+    d_eps : constant double_float := 10.0**natural(-deci + 8);
+    eps : Multprec_Floating_Numbers.Floating_Number
+        := Multprec_Floating_Numbers.create(d_eps);
+    z,r : Multprec_Complex_Vectors.Vector(1..d);
+    dcp : Multprec_Complex_Vectors.Vector(0..d-1) := Derivative(cp);
+    err,rco,res : Multprec_Floating_Vectors.Vector(z'range);
+    nb : natural32;
+    fail : boolean;
+
+  begin
+    z := Random_Vector1(1,d);
+    Multprec_Complex_Vector_Tools.Set_Size(z,size);
+    Multprec_Complex_Vector_Tools.Set_Size(dcp,size);
+    Silent_Durand_Kerner(cp,z,r,max,eps,nb,fail);
+    if fail
+     then put_line(file,"precision insufficient to reach results");
+    end if;
+    Write_Results(file,nb,z,r);
+    Newton(cp,dcp,z,err,rco,res);
+    sols := Create_Solution_List(z,err,rco,res);
+    Multprec_Complex_Vectors.Clear(z);
+    Multprec_Complex_Vectors.Clear(r);
+  end Multprec_Find_Roots;
+
   function Coefficient_Vector
               ( d : natural32; p : Standard_Complex_Polynomials.Poly )
               return Standard_Complex_Vectors.Vector is
@@ -500,7 +567,7 @@ package body Black_Box_Univariate_Solvers is
 
     procedure Scan_Coefficient ( t : in Term; cont : out boolean ) is
     begin
-      res(integer32(t.dg(1))) := t.cf;
+      Copy(t.cf,res(integer32(t.dg(1))));
       cont := true;
     end Scan_Coefficient;
     procedure Scan_Coefficients is new Visiting_Iterator(Scan_Coefficient);
@@ -509,7 +576,7 @@ package body Black_Box_Univariate_Solvers is
     Scan_Coefficients(p);
    -- for i in 0..d-1 loop  -- why leave the leading coefficient !??
     for i in 0..integer32(d) loop
-      res(i) := res(i)/res(integer32(d));
+      Div(res(i),res(integer32(d)));
     end loop;
     return res;
   end Coefficient_Vector;
@@ -547,6 +614,39 @@ package body Black_Box_Univariate_Solvers is
     return res;
   end Coefficient_Vector;
 
+  function Coefficient_Vector
+              ( mind,maxd : integer32;
+                p : Multprec_Complex_Laurentials.Poly )
+              return Multprec_Complex_Vectors.Vector is
+
+  -- DECRIPTION :
+  --   Returns the coefficient vector of p, eventually divided 
+  --   by its leading coefficient if p is not monic.
+
+  -- REQUIRED : mind is the minimal and maxd the maximal degree of p.
+
+    use Multprec_Complex_Numbers;
+    use Multprec_Complex_Laurentials;
+
+    res : Multprec_Complex_Vectors.Vector(mind..maxd)
+        := (mind..maxd => Create(integer(0)));
+
+    procedure Scan_Coefficient ( t : in Term; cont : out boolean ) is
+    begin
+      Copy(t.cf,res(t.dg(1)));
+      cont := true;
+    end Scan_Coefficient;
+    procedure Scan_Coefficients is new Visiting_Iterator(Scan_Coefficient);
+
+  begin
+    Scan_Coefficients(p);
+   -- for i in mind..maxd-1 loop  -- same mistake as above !?
+    for i in mind..maxd-1 loop
+      Div(res(i),res(maxd));
+    end loop;
+    return res;
+  end Coefficient_Vector;
+
   function Shift ( v : Standard_Complex_Vectors.Vector )
                  return Standard_Complex_Vectors.Vector is
 
@@ -560,6 +660,24 @@ package body Black_Box_Univariate_Solvers is
   begin
     for i in v'range loop
       res(ind) := v(i);
+      ind := ind + 1;
+    end loop;
+    return res;
+  end Shift;
+
+  function Shift ( v : Multprec_Complex_Vectors.Vector )
+                 return Multprec_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   If v'first < 0, then all entries will be shifted so the
+  --   vector on return starts at 0.
+
+    res : Multprec_Complex_Vectors.Vector(0..v'last-v'first);
+    ind : integer32 := 0;
+
+  begin
+    for i in v'range loop
+      Multprec_Complex_Numbers.Copy(v(i),res(ind));
       ind := ind + 1;
     end loop;
     return res;
@@ -613,6 +731,35 @@ package body Black_Box_Univariate_Solvers is
     if mind = 0
      then Standard_Find_Roots(file,maxd,cff,sols);
      else Standard_Find_Roots(file,maxd-mind,Shift(cff),sols);
+    end if;
+    tstop(timer);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    new_line(file);
+    print_times(file,timer,"application of the method of Weierstrass");
+  end Call_Durand_Kerner;
+
+  procedure Call_Durand_Kerner
+              ( file : in file_type; mind,maxd : in integer32;
+                p : in Multprec_Complex_Laurentials.Poly;
+                size : in natural32;
+                sols : out Multprec_Complex_Solutions.Solution_List ) is
+
+    use Multprec_Complex_Solutions;
+
+    timer : Timing_Widget;
+    cff : Multprec_Complex_Vectors.Vector(mind..maxd);
+
+  begin
+    tstart(timer);
+    cff := Coefficient_Vector(mind,maxd,p);
+    new_line(file);
+    put_line(file,"The coefficient vector :");
+    put_line(file,cff);
+    if mind = 0
+     then Multprec_Find_Roots(file,maxd,size,cff,sols);
+     else Multprec_Find_Roots(file,maxd-mind,size,Shift(cff),sols);
     end if;
     tstop(timer);
     new_line(file);
@@ -715,6 +862,24 @@ package body Black_Box_Univariate_Solvers is
   end Black_Box_Durand_Kerner;
 
   procedure Black_Box_Durand_Kerner
+              ( p : in Multprec_Complex_Laurentials.Poly;
+                size : in natural32;
+                sols : out Multprec_Complex_Solutions.Solution_List ) is
+
+    use Multprec_Complex_Laurentials;
+    mindeg : constant integer32 := Minimal_Degree(p,1);
+    maxdeg : constant integer32 := Maximal_Degree(p,1);
+    c : constant Multprec_Complex_Vectors.Vector(mindeg..maxdeg)
+      := Coefficient_Vector(mindeg,maxdeg,p);
+
+  begin
+    if mindeg = 0
+     then Multprec_Find_Roots(maxdeg,size,c,sols);
+     else Multprec_Find_Roots(maxdeg-mindeg,size,Shift(c),sols);
+    end if;
+  end Black_Box_Durand_Kerner;
+
+  procedure Black_Box_Durand_Kerner
               ( file : in file_type;
                 p : in Standard_Complex_Polynomials.Poly;
                 sols : out Standard_Complex_Solutions.Solution_List ) is
@@ -751,6 +916,28 @@ package body Black_Box_Univariate_Solvers is
       new_line(file);
     else
       Call_Durand_Kerner(file,mind,maxd,p,sols);
+    end if;
+  end Black_Box_Durand_Kerner;
+
+  procedure Black_Box_Durand_Kerner
+              ( file : in file_type;
+                p : in Multprec_Complex_Laurentials.Poly;
+                size : in natural32;
+                sols : out Multprec_Complex_Solutions.Solution_List ) is
+
+    use Multprec_Complex_Laurentials;
+    mind : constant integer32 := Minimal_Degree(p,1);
+    maxd : constant integer32 := Maximal_Degree(p,1);
+
+  begin
+    put_line(file,"1 1");
+    put(file,p); new_line(file);
+    if mind = maxd then
+      new_line(file);
+      put_line(file,"There are no roots to compute.");
+      new_line(file);
+    else
+      Call_Durand_Kerner(file,mind,maxd,p,size,sols);
     end if;
   end Black_Box_Durand_Kerner;
 

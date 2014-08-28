@@ -10,6 +10,7 @@ with QuadDobl_Complex_Polynomials;
 with Multprec_Complex_Vectors;
 with Multprec_Complex_Polynomials;
 with Standard_Complex_Laurentials;
+with Multprec_Complex_Laurentials;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
@@ -44,6 +45,10 @@ package Black_Box_Univariate_Solvers is
               ( mind,maxd : integer32;
                 p : Standard_Complex_Laurentials.Poly )
               return Standard_Complex_Vectors.Vector;
+  function Coefficient_Vector
+              ( mind,maxd : integer32;
+                p : Multprec_Complex_Laurentials.Poly )
+              return Multprec_Complex_Vectors.Vector;
 
   -- DECRIPTION :
   --   Returns the coefficient vector of p, eventually divided 
@@ -70,6 +75,10 @@ package Black_Box_Univariate_Solvers is
               ( p : in Standard_Complex_Laurentials.Poly;
                 sols : out Standard_Complex_Solutions.Solution_List );
   procedure Black_Box_Durand_Kerner
+              ( p : in Multprec_Complex_Laurentials.Poly;
+                size : in natural32;
+                sols : out Multprec_Complex_Solutions.Solution_List );
+  procedure Black_Box_Durand_Kerner
               ( file : in file_type;
                 p : in Standard_Complex_Polynomials.Poly;
                 sols : out Standard_Complex_Solutions.Solution_List );
@@ -77,6 +86,11 @@ package Black_Box_Univariate_Solvers is
               ( file : in file_type;
                 p : in Standard_Complex_Laurentials.Poly;
                 sols : out Standard_Complex_Solutions.Solution_List );
+  procedure Black_Box_Durand_Kerner
+              ( file : in file_type;
+                p : in Multprec_Complex_Laurentials.Poly;
+                size : in natural32;
+                sols : out Multprec_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Applies the method of Durand-Kerner to the polynomial p,

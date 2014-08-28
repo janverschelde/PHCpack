@@ -1,0 +1,21 @@
+Thu 28 Aug 2013 : extended black_box_univariate_solvers with routines to
+  solving univariate Laurent polynomials with multiprecision arithmetic.
+
+Sat 30 Nov 2013 : updated black_box_univariate_solvers.a*,
+  sample_plane_curves.a*, ts_extrapol.adb and ts_extrapts for multiprecision.
+
+Fri 29 Nov 2013 : changed sample_plane_curves.adb and ts_extrapol.adb
+  in search for a bug that turned out to be in the copy of lists in
+  multprec_complex_solutions.adb.
+
+Thu 28 Nov 2013 : higher-order predictors in multiprecision arithmetic
+  in a new package multprec_extrapolators, and for testing purposes,
+  updated sample_plane_curves, multprec_durand_kerner, ts_extrapol, and
+  black_box_univariate_solvers.
+
+Mon 10 Jun 2013 : all files in this directory changed because of the
+  new types natural32 and integer32.
+
+Tue 14 May 2013 : new directory with code from Root_Counts/Implift 
+  and ../Trackers.  New package sample_plane_curves, with updates in
+  ts_extrapol and a new ts_extrapts.
