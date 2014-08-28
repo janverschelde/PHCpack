@@ -2,18 +2,12 @@ with Timing_Package;                   use Timing_Package;
 with Standard_Natural_Numbers_io;      use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers;        use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;     use Standard_Floating_Numbers_io;
-with Standard_Floating_Vectors;
-with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;      use Standard_Complex_Numbers_io;
 with Multprec_Floating_Numbers;
 with Multprec_Floating_Numbers_io;     use Multprec_Floating_Numbers_io;
-with Multprec_Complex_Numbers;
 with Multprec_Complex_Numbers_io;      use Multprec_Complex_Numbers_io;
-with Multprec_Floating_Vectors;
 with Double_Double_Numbers;
-with DoblDobl_Complex_Numbers;
 with Quad_Double_Numbers;
-with QuadDobl_Complex_Numbers;
 with Standard_Complex_Vectors_io;      use Standard_Complex_Vectors_io;
 with Multprec_Complex_Vectors_io;      use Multprec_Complex_Vectors_io;
 with Standard_Random_Vectors;          use Standard_Random_Vectors;
@@ -37,10 +31,8 @@ package body Black_Box_Univariate_Solvers is
              ( z : Standard_Complex_Numbers.Complex_Number )
              return Standard_Complex_Solutions.Solution_List is
 
-  -- DESCRIPTION :
-  --   Returns the root of a degree one equation in the format of a list.
-
     use Standard_Complex_Solutions;
+
     sols,last : Solution_List;
     sol : Solution(1);
 
@@ -59,10 +51,8 @@ package body Black_Box_Univariate_Solvers is
              ( z : DoblDobl_Complex_Numbers.Complex_Number )
              return DoblDobl_Complex_Solutions.Solution_List is
 
-  -- DESCRIPTION :
-  --   Returns the root of a degree one equation in the format of a list.
-
     use DoblDobl_Complex_Solutions;
+
     sols,last : Solution_List;
     sol : Solution(1);
 
@@ -81,10 +71,8 @@ package body Black_Box_Univariate_Solvers is
              ( z : QuadDobl_Complex_Numbers.Complex_Number )
              return QuadDobl_Complex_Solutions.Solution_List is
 
-  -- DESCRIPTION :
-  --   Returns the root of a degree one equation in the format of a list.
-
     use QuadDobl_Complex_Solutions;
+
     sols,last : Solution_List;
     sol : Solution(1);
 
@@ -103,10 +91,8 @@ package body Black_Box_Univariate_Solvers is
              ( z : Multprec_Complex_Numbers.Complex_Number )
              return Multprec_Complex_Solutions.Solution_List is
 
-  -- DESCRIPTION :
-  --   Returns the root of a degree one equation in the format of a list.
-
     use Multprec_Complex_Solutions;
+
     sols,last : Solution_List;
     sol : Solution(1);
 
@@ -126,10 +112,8 @@ package body Black_Box_Univariate_Solvers is
                  err,rco,res : Standard_Floating_Vectors.Vector )
                return Standard_Complex_Solutions.Solution_List is
 
-  -- DESCRIPTION :
-  --   Returns the roots and residuals in the format of a solution list.
-
     use Standard_Complex_Solutions;
+
     sols,last : Solution_List;
     sol : Solution(1);
 
@@ -151,10 +135,8 @@ package body Black_Box_Univariate_Solvers is
                  err,rco,res : Standard_Floating_Vectors.Vector )
                return DoblDobl_Complex_Solutions.Solution_List is
 
-  -- DESCRIPTION :
-  --   Returns the roots and residuals in the format of a solution list.
-
     use DoblDobl_Complex_Solutions;
+
     sols,last : Solution_List;
     sol : Solution(1);
 
@@ -176,10 +158,8 @@ package body Black_Box_Univariate_Solvers is
                  err,rco,res : Standard_Floating_Vectors.Vector )
                return QuadDobl_Complex_Solutions.Solution_List is
 
-  -- DESCRIPTION :
-  --   Returns the roots and residuals in the format of a solution list.
-
     use QuadDobl_Complex_Solutions;
+
     sols,last : Solution_List;
     sol : Solution(1);
 
@@ -201,10 +181,8 @@ package body Black_Box_Univariate_Solvers is
                  err,rco,res : Multprec_Floating_Vectors.Vector )
                return Multprec_Complex_Solutions.Solution_List is
 
-  -- DESCRIPTION :
-  --   Returns the roots and residuals in the format of a solution list.
-
     use Multprec_Complex_Solutions;
+
     sols,last : Solution_List;
     sol : Solution(1);
 

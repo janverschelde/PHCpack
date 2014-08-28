@@ -1,12 +1,18 @@
 with text_io;                          use text_io;
 with Standard_Natural_Numbers;         use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;         use Standard_Integer_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
+with Multprec_Complex_Numbers;
+with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Polynomials;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Polynomials;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Polynomials;
+with Multprec_Floating_Vectors;
 with Multprec_Complex_Vectors;
 with Multprec_Complex_Polynomials;
 with Standard_Complex_Laurentials;
@@ -21,6 +27,42 @@ package Black_Box_Univariate_Solvers is
 -- DESCRIPTION :
 --   Forms an interface to the black box univariate solver in PHCpack,
 --   to the Durand-Kerner method, also known as the method of Weierstrass.
+
+  function Create_Solution_List
+             ( z : Standard_Complex_Numbers.Complex_Number )
+             return Standard_Complex_Solutions.Solution_List;
+  function Create_Solution_List
+             ( z : DoblDobl_Complex_Numbers.Complex_Number )
+             return DoblDobl_Complex_Solutions.Solution_List;
+  function Create_Solution_List
+             ( z : QuadDobl_Complex_Numbers.Complex_Number )
+             return QuadDobl_Complex_Solutions.Solution_List;
+  function Create_Solution_List
+             ( z : Multprec_Complex_Numbers.Complex_Number )
+             return Multprec_Complex_Solutions.Solution_List;
+
+  -- DESCRIPTION :
+  --   Returns the root of a degree one equation in the format of a list.
+
+  function Create_Solution_List
+               ( z : Standard_Complex_Vectors.Vector;
+                 err,rco,res : Standard_Floating_Vectors.Vector )
+               return Standard_Complex_Solutions.Solution_List;
+  function Create_Solution_List
+               ( z : DoblDobl_Complex_Vectors.Vector;
+                 err,rco,res : Standard_Floating_Vectors.Vector )
+               return DoblDobl_Complex_Solutions.Solution_List;
+  function Create_Solution_List
+               ( z : QuadDobl_Complex_Vectors.Vector;
+                 err,rco,res : Standard_Floating_Vectors.Vector )
+               return QuadDobl_Complex_Solutions.Solution_List;
+  function Create_Solution_List
+               ( z : Multprec_Complex_Vectors.Vector;
+                 err,rco,res : Multprec_Floating_Vectors.Vector )
+               return Multprec_Complex_Solutions.Solution_List;
+
+  -- DESCRIPTION :
+  --   Returns the roots and residuals in the format of a solution list.
 
   function Coefficient_Vector
               ( d : natural32; p : Standard_Complex_Polynomials.Poly )

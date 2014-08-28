@@ -1,5 +1,6 @@
 Thu 28 Aug 2013 : extended black_box_univariate_solvers with routines to
   solving univariate Laurent polynomials with multiprecision arithmetic.
+  Exported more routines for the C to PHCpack interface.
 
 Sat 30 Nov 2013 : updated black_box_univariate_solvers.a*,
   sample_plane_curves.a*, ts_extrapol.adb and ts_extrapts for multiprecision.
