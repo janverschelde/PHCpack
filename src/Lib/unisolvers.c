@@ -29,3 +29,10 @@ int solve_with_quad_doubles ( int max, double eps, int *nit )
 
    return fail;
 }
+
+int solve_with_multiprecision ( int dcp, int max, double eps, int *nit )
+{
+   int fail = _ada_use_c2phc(275,&max,nit,&eps);
+
+   return fail;
+}

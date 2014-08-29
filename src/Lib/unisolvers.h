@@ -57,3 +57,23 @@ int solve_with_quad_doubles ( int max, double eps, int *nit );
  *
  * ON RETURN :
  *   nit      number of iterations performed by Durand-Kerner. */
+
+int solve_with_multiprecision ( int dcp, int max, double eps, int *nit );
+/*
+ * DESCRIPTION :
+ *   Calls the method of Durand-Kerner as implemented in PHCpack
+ *   in quad double precision.
+ *
+ * REQUIRED :
+ *   The multprec polynomial systems container must have as system
+ *   one polynomial in one variable, before calling this function.
+ *   On return, approximations for the roots are in the multprec
+ *   solutions container.
+ *
+ * ON ENTRY :
+ *   dcp      number of decimal places in the working precision;
+ *   max      maximum number of iterations;
+ *   eps      accuracy requirement.
+ *
+ * ON RETURN :
+ *   nit      number of iterations performed by Durand-Kerner. */

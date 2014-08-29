@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include "syscon.h"
 #include "solcon.h"
 #include "unisolvers.h"
@@ -21,6 +22,12 @@ void quaddobl_test ( void );
  * Prompts the user for a polynomial and then computes the roots
  * in quad double precision. */
 
+void multprec_test ( void );
+/*
+ * Prompts the user for the number of decimal places in the working
+ * precision, asks for a polynomial and then computes the roots
+ * in arbitrary multiprecision. */
+
 int main(void)
 {
    int choice;
@@ -29,7 +36,8 @@ int main(void)
    printf("  0. in standard double precision;\n");
    printf("  1. in double double precision;\n");
    printf("  2. in quad double precision.\n");
-   printf("Type 0, 1, or 2 to select the precision : ");
+   printf("  3. in arbitrary multiprecision.\n");
+   printf("Type 0, 1, 2, or 3 to select the precision : ");
    scanf("%d",&choice);
 
    adainit();
@@ -40,6 +48,8 @@ int main(void)
       dobldobl_test();
    else if(choice == 2)
       quaddobl_test();
+   else if(choice == 3)
+      multprec_test();
    else
       printf("invalid choice, please try again...\n");
 
@@ -97,4 +107,27 @@ void quaddobl_test ( void )
 
    printf("\nNumber of iterations : %d\n",nit);
    fail = solcon_write_quaddobl_solutions();
+}
+
+void multprec_test ( void )
+{
+   int fail,max,nit,dcp;
+   double eps;
+
+   printf("\nGive the number of decimal places in the precision : ");
+   scanf("%d",&dcp);
+
+   fail = syscon_read_multprec_system(dcp);
+   fail = syscon_write_multprec_system();
+
+   eps = pow(10.0,-(double) dcp*0.75);  /* 75% of working precision */
+   printf("accuracy requirement : %.3e\n",eps);
+   
+   printf("\nGive the maximum number of iterations : ");
+   scanf("%d",&max);
+   
+   fail = solve_with_multiprecision(dcp,max,eps,&nit);
+
+   printf("\nNumber of iterations : %d\n",nit);
+   fail = solcon_write_multprec_solutions();
 }
