@@ -1,3 +1,7 @@
+Thu 28 Aug 2014 : new unisolve gateway for the univariate root finders
+  in PHCpack, for export to C.  Added job codes in use_c2phc.
+  New test program ts_unisolve.
+
 Fri 8 Aug 2014 : added functions to use_c2phc to deflate singularities
   in double double and quad double precision.
 

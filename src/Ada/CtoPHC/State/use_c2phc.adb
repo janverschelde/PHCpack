@@ -80,6 +80,7 @@ with use_celcon;
 with use_track;
 with use_mapcon;
 with use_nxtsol;
+with unisolve;
 
 function use_c2phc ( job : integer32;
                      a : C_intarrs.Pointer;
@@ -1949,6 +1950,10 @@ function use_c2phc ( job : integer32;
      -- interface to diagonal homotopies ...
       when 270 => return use_track(40,a,b,c); -- witness set of hypersurface
       when 271 => return use_track(41,a,b,c); -- start diagonal cascade sols
+     -- univariate polynomial solvers
+      when 272 => return unisolve(1,a,b,c); -- standard double precision
+      when 273 => return unisolve(2,a,b,c); -- double double precision
+      when 274 => return unisolve(3,a,b,c); -- quad double precision
      -- multiprecision versions for jobs 1 to 8
       when 281 => return Job281; -- copy target system to container
       when 282 => return Job282; -- copy target system from container

@@ -1035,6 +1035,27 @@ function use_c2phc ( job : integer32;
 --         = 271 : makes the solutions to start the cascade to intersect
 --                 two witness sets of dimensions in a[0] and b[0].
 --
+-- univariate root finders :
+--
+--   job   = 272 : standard precision univariate solver of polynomial
+--                 which must be in the systems container, on input are
+--                 in a: the maximum number of iterations;
+--                 in c: the accuracy requirement, and on return are
+--                 in b: the number of iterations spent and the solution
+--                 container contains the solutions.
+--   job   = 273 : double double precision univariate solver of polynomial
+--                 which must be in the systems container, on input are
+--                 in a: the maximum number of iterations;
+--                 in c: the accuracy requirement, and on return are
+--                 in b: the number of iterations spent and the solution
+--                 container contains the solutions.
+--   job   = 274 : quad double precision univariate solver of polynomial
+--                 which must be in the systems container, on input are
+--                 in a: the maximum number of iterations;
+--                 in c: the accuracy requirement, and on return are
+--                 in b: the number of iterations spent and the solution
+--                 container contains the solutions.
+--
 -- operations on the pool of systems :
 --
 --   job   = 300 : initializes the system pool with n = a[0];
