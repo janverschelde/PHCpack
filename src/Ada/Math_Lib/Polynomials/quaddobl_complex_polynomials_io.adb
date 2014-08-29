@@ -1,11 +1,30 @@
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Quad_Double_Numbers;                use Quad_Double_Numbers;
-with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
-with QuadDobl_Complex_Numbers;           use QuadDobl_Complex_Numbers;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;            use Quad_Double_Numbers_io;
+with QuadDobl_Complex_Numbers;          use QuadDobl_Complex_Numbers;
 with Symbol_Table,Symbol_Table_io;
+with QuadDobl_Polynomial_Convertors;    use QuadDobl_Polynomial_Convertors;
+with Multprec_Complex_Polynomials;
+with Multprec_Complex_Polynomials_io;
 
 package body QuadDobl_Complex_Polynomials_io is
+
+  procedure get ( p : out Poly ) is
+  begin
+    get(standard_input,p);
+  end get;
+
+  procedure get ( file : in file_type; p : out Poly ) is
+
+    mp : Multprec_Complex_Polynomials.Poly;
+
+  begin
+    Multprec_Complex_Polynomials_io.Set_Working_Precision(10);
+    Multprec_Complex_Polynomials_io.get(file,mp);
+    p := Multprec_Polynomial_to_QuadDobl_Complex(mp);
+    Multprec_Complex_Polynomials.Clear(mp);
+  end get;
 
 -- AUXILIARIES FOR OUTPUT ROUTINES :
 

@@ -7,6 +7,12 @@ package DoblDobl_Complex_Polynomials_io is
 --   This package provides very basic output routines for polynomials
 --   with double double complex coefficients.
 
+  procedure get ( p : out Poly );
+  procedure get ( file : in file_type; p : out Poly );
+
+  -- DESCRIPTION :
+  --   Reads a multivariate polynomial from standard input or from file.
+
   procedure put ( p : in Poly );
   procedure put ( file : in file_type; p : in Poly );
 
