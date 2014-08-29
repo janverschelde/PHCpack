@@ -1,3 +1,6 @@
+Fri 29 Aug 2014 : new library unisolvers to call the solvers of univariate
+  polynomials in PHCpack, tested by lib_usolve.
+
 Fri 8 Aug 2014 : deflate operations in double double and quad double
   precision added to phcpack, the existing "deflate" became standard_deflate.
   Upgraded phcpy2c with the double double and quad double deflate operations.
