@@ -1954,6 +1954,7 @@ function use_c2phc ( job : integer32;
       when 272 => return unisolve(1,a,b,c); -- standard double precision
       when 273 => return unisolve(2,a,b,c); -- double double precision
       when 274 => return unisolve(3,a,b,c); -- quad double precision
+      when 275 => return unisolve(4,a,b,c); -- arbitrary multiprecision
      -- multiprecision versions for jobs 1 to 8
       when 281 => return Job281; -- copy target system to container
       when 282 => return Job282; -- copy target system from container

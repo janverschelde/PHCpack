@@ -29,6 +29,13 @@ function unisolve ( job : integer32;
 --                 in c: the accuracy requirement, and on return are
 --                 in b: the number of iterations spent and the solution
 --                 container contains the solutions.
+--   job   =   4 : multiprecision univariate solver of polynomial
+--                 which must be in the systems container, on input are
+--                 in a[0]: number of decimal places in the working precision,
+--                    a[1]: the maximum number of iterations,
+--                 in c: the accuracy requirement, and on return are
+--                 in b: the number of iterations spent and the solution
+--                 container contains the solutions.
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
