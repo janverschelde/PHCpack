@@ -115,21 +115,22 @@ procedure ts_unisolve is
     r : integer32;
     max : natural32 := 0;
     sols : Solution_List;
-   -- ans : character;
+    ans : character;
 
   begin
     new_line;
-   -- put("Random or given polynomial ? (r/g) ");
-   -- Ask_Alternative(ans,"rg");
-   -- if ans = 'g' then
-   --   Symbol_Table.Init(1);
-   --   put("Give a polynomial : "); get(1,p);
-   -- else
+    put("Random or given polynomial ? (r/g) ");
+    Ask_Alternative(ans,"rg");
+    if ans = 'g' then
+      Symbol_Table.Init(1);
+      new_line;
+      put("Give a polynomial : "); get(p);
+    else
       new_line;
       put("Give the degree : "); get(d);
       p := DoblDobl_Random_Polynomials.Random_Dense_Poly(1,d,0);
-   -- end if;
-    put_line("the polynomial :"); put(p); new_line;
+    end if;
+    put_line("the polynomial :"); put(p);
     new_line;
     put("Give the maximum number of iterations : "); get(max);
     ar(0) := Interfaces.C.int(max);
@@ -169,21 +170,22 @@ procedure ts_unisolve is
     r : integer32;
     max : natural32 := 0;
     sols : Solution_List;
-   -- ans : character;
+    ans : character;
 
   begin
     new_line;
-   -- put("Random or given polynomial ? (r/g) ");
-   -- Ask_Alternative(ans,"rg");
-   -- if ans = 'g' then
-   --   Symbol_Table.Init(1);
-   --   put("Give a polynomial : "); get(1,p);
-   -- else
+    put("Random or given polynomial ? (r/g) ");
+    Ask_Alternative(ans,"rg");
+    if ans = 'g' then
+      Symbol_Table.Init(1);
+      new_line;
+      put("Give a polynomial : "); get(p);
+    else
       new_line;
       put("Give the degree : "); get(d);
       p := QuadDobl_Random_Polynomials.Random_Dense_Poly(1,d,0);
-   -- end if;
-    put_line("the polynomial :"); put(p); new_line;
+    end if;
+    put_line("the polynomial :"); put(p);
     new_line;
     put("Give the maximum number of iterations : "); get(max);
     ar(0) := Interfaces.C.int(max);
