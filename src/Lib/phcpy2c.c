@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "phcpack.h"
+#include "unisolvers.h"
 #include "schubert.h"
 #include "syscon.h"
 #include "solcon.h"
@@ -1020,6 +1021,56 @@ static PyObject *py2c_multprec_Newton_Laurent_step
    fail = multprec_Newton_Laurent_step(decimals);
 
    return Py_BuildValue("i",fail);
+}
+
+/* wrapping functions in unisolvers.h starts from here */
+
+static PyObject *py2c_usolve_standard ( PyObject *self, PyObject *args )
+{
+   int fail,max,nit;
+   double eps;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"id",&max,&eps)) return NULL;
+   fail = solve_with_standard_doubles(max,eps,&nit);
+
+   return Py_BuildValue("i",nit);
+}
+
+static PyObject *py2c_usolve_dobldobl ( PyObject *self, PyObject *args )
+{
+   int fail,max,nit;
+   double eps;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"id",&max,&eps)) return NULL;
+   fail = solve_with_double_doubles(max,eps,&nit);
+
+   return Py_BuildValue("i",nit);
+}
+
+static PyObject *py2c_usolve_quaddobl ( PyObject *self, PyObject *args )
+{
+   int fail,max,nit;
+   double eps;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"id",&max,&eps)) return NULL;
+   fail = solve_with_quad_doubles(max,eps,&nit);
+
+   return Py_BuildValue("i",nit);
+}
+
+static PyObject *py2c_usolve_multprec ( PyObject *self, PyObject *args )
+{
+   int fail,dcp,max,nit;
+   double eps;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iid",&dcp,&max,&eps)) return NULL;
+   fail = solve_with_multiprecision(dcp,max,eps,&nit);
+
+   return Py_BuildValue("i",nit);
 }
 
 /* wrapping functions in syscon.h starts from here */
@@ -3959,6 +4010,14 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_multprec_Newton_Laurent_step", py2c_multprec_Newton_Laurent_step,
     METH_VARARGS,
     "does one Newton step on multiprecision Laurent systems"},
+   {"py2c_usolve_standard", py2c_usolve_standard, METH_VARARGS,
+    "solve polynomial in one variable in standard double precision"},
+   {"py2c_usolve_dobldobl", py2c_usolve_dobldobl, METH_VARARGS,
+    "solve polynomial in one variable in double double precision"},
+   {"py2c_usolve_quaddobl", py2c_usolve_quaddobl, METH_VARARGS,
+    "solve polynomial in one variable in quad double precision"},
+   {"py2c_usolve_multprec", py2c_usolve_multprec, METH_VARARGS,
+    "solve polynomial in one variable in arbitrary multiprecision"},
    {"py2c_syscon_read_system", py2c_syscon_read_system,
     METH_VARARGS, "reads and puts the system in container"},
    {"py2c_syscon_read_Laurent_system", py2c_syscon_read_Laurent_system,
