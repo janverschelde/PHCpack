@@ -21,7 +21,7 @@ solver
    to recondition isolated singular solutions.
 solutions
    solutions of phcpy.solve are lists of PHCpack solution strings
-   and the phcsols module exports operations to convert the solution
+   and this module exports operations to convert the solution
    strings into Python dictionaries, e.g. for evaluation.
 trackers
    offers functions to track solution paths defined by a homotopy between
@@ -76,7 +76,7 @@ monomials with random coefficients.
 
 The solve command returned a list of 30 strings in s,
 each string represents a solution that makes the polynomials in f vanish.
-The module phcsols offers function to evaluate the solutions
+The module solutions offers function to evaluate the solutions
 in the polynomials given as strings.
 """
 try:
