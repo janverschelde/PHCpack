@@ -898,6 +898,104 @@ def permute_quaddobl_system(pols):
     py2c_celcon_permute_quaddobl_system()
     return load_quaddobl_system()
 
+def standard_usolve(pol, max, eps):
+    """
+    Applies the method of Durand-Kerner (aka Weierstrass)
+    to the polynomial in the string pol, in standard double precision
+    The maximum number of iterations is in max,
+    the requirement on the accuracy in eps.
+    """
+    from phcpy2c import py2c_usolve_standard
+    store_standard_system([pol])
+    nit = py2c_usolve_standard(max, eps)
+    rts = load_standard_solutions()
+    return (nit, rts)
+
+def dobldobl_usolve(pol, max, eps):
+    """
+    Applies the method of Durand-Kerner (aka Weierstrass)
+    to the polynomial in the string pol, in double double precision
+    The maximum number of iterations is in max,
+    the requirement on the accuracy in eps.
+    """
+    from phcpy2c import py2c_usolve_dobldobl
+    store_dobldobl_system([pol])
+    nit = py2c_usolve_dobldobl(max, eps)
+    rts = load_dobldobl_solutions()
+    return (nit, rts)
+
+def quaddobl_usolve(pol, max, eps):
+    """
+    Applies the method of Durand-Kerner (aka Weierstrass)
+    to the polynomial in the string pol, in quad double precision
+    The maximum number of iterations is in max,
+    the requirement on the accuracy in eps.
+    """
+    from phcpy2c import py2c_usolve_quaddobl
+    store_quaddobl_system([pol])
+    nit = py2c_usolve_quaddobl(max, eps)
+    rts = load_quaddobl_solutions()
+    return (nit, rts)
+
+def multprec_usolve(pol, max, eps, decimals):
+    """
+    Applies the method of Durand-Kerner (aka Weierstrass)
+    to the polynomial in the string pol, in arbitrary multiprecision,
+    the number of decimal places in the precision is in decimals.
+    The maximum number of iterations is in max,
+    the requirement on the accuracy in eps.
+    """
+    from phcpy2c import py2c_usolve_multprec
+    store_multprec_system([pol], decimals)
+    nit = py2c_usolve_multprec(decimals, max, eps)
+    rts = load_multprec_solutions()
+    return (nit, rts)
+
+def usolve(pol, max, eps, precision='d', decimals=100):
+    """
+    Applies the method of Durand-Kerner (aka Weierstrass)
+    to the polynomial in the string pol.
+    The maximum number of iterations is in max,
+    the requirement on the accuracy in eps.
+    Four levels of precision are supported:
+    d  : standard double precision (1.1e-15 or 2^(-53)),
+    dd : double double precision (4.9e-32 or 2^(-104)),
+    qd : quad double precision (1.2e-63 or 2^(-209)).
+    mp : arbitrary precision, where the number of decimal places
+    in the working precision is determined by decimals.
+    """
+    if(precision == 'd'):
+        return standard_usolve(pol, max, eps)
+    elif(precision == 'dd'):
+        return dobldobl_usolve(pol, max, eps)
+    elif(precision == 'qd'):
+        return quaddobl_usolve(pol, max, eps)
+    else:
+        return multprec_usolve(pol, max, eps, decimals)
+
+def test_usolve():
+    """
+    Does a simple sanity check on solving a univariate polynomial
+    at various levels of precision.
+    """
+    sqrt2pol = 'x^2 - 2;'
+    (nit, roots) = usolve(sqrt2pol, 10, 1.0e-12)
+    print 'number of iterations :', nit
+    for root in roots:
+        print root
+    (nit, roots) = usolve(sqrt2pol, 20, 1.0e-28, 'dd')
+    print 'number of iterations :', nit
+    for root in roots:
+        print root
+    (nit, roots) = usolve(sqrt2pol, 30, 1.0e-48, 'qd')
+    print 'number of iterations :', nit
+    for root in roots:
+        print root
+    (nit, roots) = usolve(sqrt2pol, 40, 1.0e-88, 'md', 100)
+    print 'number of iterations :', nit
+    for root in roots:
+        print root
+
 def test_dobldobl_polyhedral_homotopy():
     """
     Test polyhedral homotopy in double double precision
