@@ -1,4 +1,4 @@
-phcpy 0.2.1 offers a simple Python interface to PHCv2.3.91
+phcpy 0.2.2 offers a simple Python interface to PHCv2.3.92
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -36,6 +36,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.2.2 : 2014-08-31 : univariate root finders at various level of precision
 0.2.1 : 2014-08-10 : deflation in double double and quad double precision
 0.2.0 : 2014-07-30 : polyhedral homotopies with double double and quad doubles
 0.1.9 : 2014-06-30 : examples directory and random system function
