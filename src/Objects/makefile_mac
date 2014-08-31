@@ -1367,6 +1367,10 @@ ts_use_celcon:
 	gnatbind -n use_celcon
 	gnatlink -C use_celcon ts_use_celcon.o -o $(BIN)/ts_use_celcon
 
+ts_unisolve:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_unisolve.adb \
+              -o $(BIN)/ts_unisolve
+
 # files in feedback :
 
 lib.a:$(PHCAda)/../Feedback/*.c $(PHCAda)/../Feedback/*.h
@@ -1656,6 +1660,16 @@ lib_lrhom:
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc schubert.o lib_lrhom.o -o $(BIN)/lib_lrhom
 
+lib_usolve: standard_solutions_container.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/solcon.c
+	gcc -c $(PHCLib)/unisolvers.c
+	gcc -c $(PHCLib)/lib_usolve.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc syscon.o solcon.o unisolvers.o lib_usolve.o \
+                 -o ../bin/lib_usolve -lm
+
 phc_solve: standard_solutions_container.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/syscon.c
@@ -1673,6 +1687,7 @@ phcpy2c.so: standard_solutions_container.o
 	gcc -c -O2 $(PHCLib)/celcon.c
 	gcc -c -O2 $(PHCLib)/witset.c
 	gcc -c -O2 $(PHCLib)/schubert.c
+	gcc -c -O2 $(PHCLib)/unisolvers.c
 	gcc -c -O2 $(PHCLib)/phcpack.c
 	gcc -c -O2 $(PHCLib)/mapcon.c
 	gcc -c -O2 $(PHCLib)/next_track.c
@@ -1681,8 +1696,8 @@ phcpy2c.so: standard_solutions_container.o
 	gnatmake -c -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n use_c2phc
 	gnatlink -dynamiclib -C use_c2phc phcpy2c.o phcpack.o syscon.o \
-                                witset.o mapcon.o next_track.o \
-                                solcon.o product.o celcon.o schubert.o \
+                       witset.o mapcon.o next_track.o unisolvers.o \
+                       solcon.o product.o celcon.o schubert.o \
                  -o ../Python/PHCpy/phcpy/phcpy2c.so -framework Python
 
 # how to make the executables with MPI:
