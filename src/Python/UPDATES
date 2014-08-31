@@ -1,3 +1,6 @@
+Sun 31 Aug 2014 : updated READ_ME, __init__.py, setup.py, and conf.py
+  for version 0.2.2 of phcpy.
+
 Sat 30 Aug 2014 : extended solver.py with usolve functions to compute all
   roots of a univariate polynomial at various precision levels.
 
