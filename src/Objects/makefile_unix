@@ -5,9 +5,11 @@
 # The makefile works on RHEL 6.3, with python2.6, openmpi, and GNATGPL 2013.
 
 PYTHON=/usr/include/python2.6
-MPI_HOME=/usr/lib64/openmpi
+# MPI_HOME=/usr/lib64/openmpi
+MPI_HOME=/usr/local/mpi/gcc/openmpi-1.4.3
 
-QD_ROOT=/usr/local/qd-2.3.9
+QD_ROOT=/usr/local/qd-2.3.13
+QD_LIB=/usr/local/lib
 GQD_HOME=/usr/local/gqd_1_2
 SDK_HOME=/usr/local/cuda/sdk
 
@@ -45,7 +47,7 @@ GNAT95FLAGS=-gnat95 -gnatv -O3 -gnatp -gnatf
 # GNATFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
 # GNATFLAGS=-gnatv -gnatwa -gnatVa
-GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
+# GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
 # GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
 COFLAGS = -O2
@@ -306,9 +308,9 @@ ts_mgsrnk:
 ts_backsubs:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_backsubs.adb \
               -o $(BIN)/ts_backsubs
+
 ts_perflu:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_perflu.adb \
-              -o $(BIN)/ts_perflu
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_perflu.adb -o $(BIN)/ts_perflu
 
 # Test programs for Math_Lib/Polynomials :
 
@@ -389,7 +391,7 @@ ts_speel:
 
 ts_speelsys:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_speelsys.adb \
-                -o $(BIN)/ts_speelsys
+	      -o $(BIN)/ts_speelsys
 
 ts_cycfun:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cycfun.adb -o $(BIN)/ts_cycfun
@@ -997,8 +999,7 @@ ts_locdim:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_locdim.adb -o $(BIN)/ts_locdim
 
 ts_ddqdsam:
-	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_ddqdsam.adb \
-              -o $(BIN)/ts_ddqdsam
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_ddqdsam.adb -o $(BIN)/ts_ddqdsam
 
 # Test programs for the Components/Interpolators libary :
 
@@ -1339,6 +1340,10 @@ ts_use_celcon:
 	gnatbind -n use_celcon
 	gnatlink -C use_celcon ts_use_celcon.o -o $(BIN)/ts_use_celcon
 
+ts_unisolve:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_unisolve.adb \
+              -o $(BIN)/ts_unisolve
+
 # files in feedback :
 
 lib.a:$(PHCAda)/../Feedback/*.c $(PHCAda)/../Feedback/*.h
@@ -1460,16 +1465,16 @@ ts_gpu2norm_dd:
             -I$(QD_ROOT)/include -I$(GQD_HOME)/inc \
             -I/usr/local/cuda/include \
             -c $(PHCAda)/PHCtoC/gpu2norm_dd.cpp -o gpu2norm_dd.o
-	@-echo ">>> compiling and binding the main Ada program ..."
+	@-echo ">>> compiling main Ada program ..."
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_gpu2norm_dd.adb \
                  -o ts_gpu2norm_dd.o
 	gnatbind ts_gpu2norm_dd
 	@-echo ">>> linking ..."
 	gnatlink -o $(BIN)/ts_gpu2norm_dd ts_gpu2norm_dd \
                  norm_host.o norm_kernels.o gpu2norm_dd.o -lm \
-                 -lcutil_x86_64 -lcudart $(QD_ROOT)/src/libqd.a \
+                 -lcutil_x86_64 -lcudart $(QD_LIB)/libqd.a \
                  -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
-                 --LINK=g++
+                 -L$(PHCAda)/Math_Lib/QD --LINK=g++
 
 ts_gpu2norm_qd:
 	@-echo ">>> compiling kernels ..."
@@ -1489,16 +1494,16 @@ ts_gpu2norm_qd:
             -I$(QD_ROOT)/include -I$(GQD_HOME)/inc \
             -I/usr/local/cuda/include \
             -c $(PHCAda)/PHCtoC/gpu2norm_qd.cpp -o gpu2norm_qd.o
-	@-echo ">>> compiling and binding the main Ada program ..."
+	@-echo ">>> compiling main Ada program ..."
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_gpu2norm_qd.adb \
                  -o ts_gpu2norm_qd.o
 	gnatbind ts_gpu2norm_qd
 	@-echo ">>> linking ..."
 	gnatlink -o $(BIN)/ts_gpu2norm_qd ts_gpu2norm_qd \
                  norm_host.o norm_kernels.o gpu2norm_qd.o -lm \
-                 -lcutil_x86_64 -lcudart $(QD_ROOT)/src/libqd.a \
+                 -lcutil_x86_64 -lcudart $(QD_LIB)/libqd.a \
                  -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
-                 --LINK=g++
+                 -L$(PHCAda)/Math_Lib/QD --LINK=g++
 
 # Test programs for the Tasking :
 
@@ -1652,7 +1657,7 @@ lib_track: standard_solutions_container.o
                  jump_track.o lib_track.o -o ../bin/lib_track -lm
 
 lib_nxtsol: standard_solutions_container.o
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/solcon.c
@@ -1663,7 +1668,7 @@ lib_nxtsol: standard_solutions_container.o
 	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o jump_track.o \
                     next_track.o lib_nxtsol.o -o ../bin/lib_nxtsol
 
-lib_poco: standard_solutions_container.o
+lib_poco:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/lib_poco.c
@@ -1681,7 +1686,7 @@ lib_lrhom:
 	gcc -c -O2 $(PHCLib)/schubert.c
 	gcc -c -O2 $(PHCLib)/lib_lrhom.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc lib_lrhom.o schubert.o -o $(BIN)/lib_lrhom
+	gnatlink -C use_c2phc schubert.o lib_lrhom.o -o $(BIN)/lib_lrhom -lm
 
 lib_factor: standard_solutions_container.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
@@ -1692,6 +1697,16 @@ lib_factor: standard_solutions_container.o
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o solcon.o witset.o lib_factor.o \
                  -o ../bin/lib_factor -lm
+
+lib_usolve: standard_solutions_container.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/solcon.c
+	gcc -c $(PHCLib)/unisolvers.c
+	gcc -c $(PHCLib)/lib_usolve.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc syscon.o solcon.o unisolvers.o lib_usolve.o \
+                 -o ../bin/lib_usolve -lm
 
 phc_solve: standard_solutions_container.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
@@ -1711,6 +1726,7 @@ phcpy2c.so:
 	gcc -static -c -fPIC -O2 $(PHCLib)/product.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/celcon.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/witset.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/unisolvers.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/phcpack.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/schubert.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/mapcon.c
@@ -1721,7 +1737,7 @@ phcpy2c.so:
 	gnatbind -n -shared use_c2phc
 	gnatlink -shared -C use_c2phc syscon.o solcon.o product.o celcon.o \
                             phcpack.o witset.o schubert.o mapcon.o \
-                            next_track.o phcpy2c.o \
+                            next_track.o phcpy2c.o unisolvers.o \
                  -o ../Python/PHCpy/phcpy/phcpy2c.so -lm
 
 # note using static flags with gnatbind and gnatlink does not work
