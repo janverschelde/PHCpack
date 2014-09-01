@@ -1,3 +1,10 @@
+Mon 1 Sep 2014 : new package point_lists_and_strings, tested by ts_ptlstr
+  meant for interfacing with Python.
+
+Tue 19 Nov 2013 : updated ts_inform.adb and about half of all files in
+  this directory to get ts_convhull.adb compiling again after the
+  natural32 and integer32 types introduced in summer.
+
 Sun 30 Jun 2013 : updated ts_inform.adb, standard_pretropical_facets,
   and ts_pretrop.adb, also ts_tropisms.adb and ts_tropawit.adb.
 

@@ -1,4 +1,4 @@
-Tropicalization of witness sets with PHCv2.3.85
+Tropicalization of witness sets with PHCv2.3.93
 
 This directory is new since release 2.3.48.  The asymptotics of witness sets
 have tropical interpretations.  Via the computation of tropisms we develop
@@ -39,6 +39,8 @@ convex_hull_methods              : drivers and tests on gift wrapping
 ts_convhull                      : testing convex hull operations
 standard_pretropical_facets      : giftwrapping for 3d tropisms
 ts_pretrop                       : test on standard lattice facets
+point_lists_and_strings          : list of tuples formats of point sets
+ts_ptlstr                        : test on conversions
 ------------------------------------------------------------------------------
 
 The other ts_ routines in this directory are NOT ready for release...
