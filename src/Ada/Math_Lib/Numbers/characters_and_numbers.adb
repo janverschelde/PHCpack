@@ -195,6 +195,14 @@ package body Characters_and_Numbers is
     end if;
   end Convert;
 
+  function Convert ( i : integer64 ) return string is
+  begin
+    if i < 0
+     then return "-" & nConvert(natural64(-i)); 
+     else return nConvert(natural64(i));
+    end if;
+  end Convert;
+
   procedure Skip_Spaces ( file : in file_type; c : in out character ) is
   begin
     get(file,c);

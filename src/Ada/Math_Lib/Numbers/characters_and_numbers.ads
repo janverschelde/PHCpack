@@ -58,6 +58,7 @@ package Characters_and_Numbers is
   --   Returns the string representation of the natural number.
 
   function Convert ( i : integer32 ) return string;
+  function Convert ( i : integer64 ) return string;
 
   -- DESCRIPTION :
   --   Returns the string representation of the integer number. 

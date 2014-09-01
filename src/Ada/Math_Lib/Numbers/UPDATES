@@ -1,3 +1,6 @@
+Mon 1 Sep 2014 : extended characters_and_numbers with convert method
+  for 64-bit integers.
+
 Fri 13 Jun 2014 : bug fix in Conjugate of standard_complex_numbers.adb.
 
 Wed 11 Jun 2014 : specific standard_complex_numbers.adb works better for
