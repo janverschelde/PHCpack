@@ -1,3 +1,5 @@
+Tue 2 Sep 2014 : updated point_lists_and_strings and the test ts_ptlstr.
+
 Mon 1 Sep 2014 : new package point_lists_and_strings, tested by ts_ptlstr
   meant for interfacing with Python.
 

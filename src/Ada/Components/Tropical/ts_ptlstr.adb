@@ -26,9 +26,19 @@ procedure ts_ptlstr is
     put_line("The point configuration : "); put(A);
     put_line("The string representation : ");
     declare
-      s : constant string := Point_Lists_and_Strings.convert(A);
+      s : constant string := Point_Lists_and_Strings.write(A);
+      r,c : integer32;
     begin
       put_line(s);
+      Point_Lists_and_Strings.Extract_Dimensions(s,r,c);
+      put("extracted number of rows : "); put(r,1); new_line;
+      put("extracted number of columns : "); put(c,1); new_line;
+      declare
+        B : Standard_Integer64_Matrices.Matrix(1..r,1..c)
+          := Point_Lists_and_Strings.parse(s,r,c);
+      begin
+        put_line("The matrix : "); put(B);
+      end;
     end;
   end Standard_Test;
 
@@ -44,9 +54,19 @@ procedure ts_ptlstr is
     put_line("The point configuration : "); put(A);
     put_line("The string representation : ");
     declare
-      s : constant string := Point_Lists_and_Strings.convert(A);
+      s : constant string := Point_Lists_and_Strings.write(A);
+      r,c : integer32;
     begin
       put_line(s);
+      Point_Lists_and_Strings.Extract_Dimensions(s,r,c);
+      put("extracted number of rows : "); put(r,1); new_line;
+      put("extracted number of columns : "); put(c,1); new_line;
+      declare
+        B : Multprec_Integer_Matrices.Matrix(1..r,1..c)
+          := Point_Lists_and_Strings.parse(s,r,c);
+      begin
+        put_line("The matrix : "); put(B);
+      end;
     end;
   end Multprec_Test;
 
