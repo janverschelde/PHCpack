@@ -89,21 +89,28 @@ package body Multprec_Integer_Numbers_io is
 
     minus : boolean;
     n : Natural_Number;
+    pos : integer := s'first;
 
   begin
-    if s(s'first) = '-' then
-      minus := true;
-      get(s(s'first+1..s'last),n);
-    else
-      minus := false;
-      if s(s'first) = '+'
-       then get(s(s'first+1..s'last),n);
-       else get(s,n);
+    while s(pos) = ' ' loop
+      pos := pos + 1;
+      exit when pos > s'last;
+    end loop;
+    if pos <= s'last then
+      if s(pos) = '-' then
+        minus := true;
+        get(s(pos+1..s'last),n);
+      else
+        minus := false;
+        if s(pos) = '+'
+         then get(s(pos+1..s'last),n);
+         else get(s(pos..s'last),n);
+        end if;
       end if;
-    end if;
-    i := Create(n);
-    if minus
-     then Min(i);
+      i := Create(n);
+      if minus
+       then Min(i);
+      end if;
     end if;
   end get;
 
