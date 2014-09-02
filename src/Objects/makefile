@@ -1132,7 +1132,7 @@ testnine:
 # Test programs in the Components/Tropical library
 
 test_tropical: ts_inform ts_comfac ts_tropisms ts_pretrop \
-               ts_intorto ts_tropawit ts_convhull
+               ts_intorto ts_tropawit ts_convhull ts_ptlstr
 
 ts_tropawit:
 	make -f $(MAKEFILE) ts_tropawit
@@ -1151,6 +1151,9 @@ ts_intorto:
 
 ts_convhull:
 	make -f $(MAKEFILE) ts_convhull
+
+ts_ptlstr:
+	make -f $(MAKEFILE) ts_ptlstr
 
 ts_pretrop:
 	make -f $(MAKEFILE) ts_pretrop
@@ -1211,8 +1214,8 @@ ts_csols:
 
 test_state: ts_solcon ts_use_solcon ts_solpool ts_use_solpool \
             ts_syscon ts_use_syscon ts_syspool ts_use_syspool \
-            ts_celcon ts_use_celcon ts_pirhom ts_use_c2pieri \
-            ts_c2phc ts_c2str ts_use_c2phc ts_use_c2fac
+            ts_celcon ts_use_celcon ts_pirhom ts_use_c2pieri ts_c2phc \
+            ts_c2str ts_use_c2phc ts_use_c2fac ts_unisolve ts_use_giftwrap
 
 standard_solutions_container.o:
 	make -f $(MAKEFILE) standard_solutions_container.o
@@ -1264,6 +1267,12 @@ ts_celcon:
 
 ts_use_celcon:
 	make -f $(MAKEFILE) ts_use_celcon
+
+ts_unisolve:
+	make -f $(MAKEFILE) ts_unisolve
+
+ts_use_giftwrap:
+	make -f $(MAKEFILE) ts_use_giftwrap
 
 # files in feedback :
 
@@ -1361,7 +1370,8 @@ ts_greet:
 # Test programs in the library Lib :
 
 test_lib: lib_read lib_syscon lib_solcon lib_newton lib_celcon lib_roco \
-          lib_conpar lib_poco lib_track lib_nxtsol lib_factor phc_solve
+          lib_conpar lib_poco lib_track lib_nxtsol lib_factor lib_pieri \
+          lib_lrhom phc_solve lib_usolve
 
 lib_read:
 	make -f $(MAKEFILE) lib_read
@@ -1401,6 +1411,9 @@ lib_lrhom:
 
 lib_factor:
 	make -f $(MAKEFILE) lib_factor
+
+lib_usolve:
+	make -f $(MAKEFILE) lib_usolve
 
 phc_solve:
 	make -f $(MAKEFILE) phc_solve

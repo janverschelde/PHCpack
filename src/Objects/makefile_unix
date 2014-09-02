@@ -1169,6 +1169,10 @@ ts_convhull:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_convhull.adb \
                  -o $(BIN)/ts_convhull
 
+ts_ptlstr:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_ptlstr.adb \
+                 -o $(BIN)/ts_ptlstr
+
 ts_pretrop:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_pretrop.adb \
                  -o $(BIN)/ts_pretrop
@@ -1343,6 +1347,10 @@ ts_use_celcon:
 ts_unisolve:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_unisolve.adb \
               -o $(BIN)/ts_unisolve
+
+ts_use_giftwrap:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_use_giftwrap.adb \
+              -o $(BIN)/ts_use_giftwrap
 
 # files in feedback :
 
