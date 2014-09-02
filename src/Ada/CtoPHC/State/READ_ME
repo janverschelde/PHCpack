@@ -1,4 +1,4 @@
-Calling PHCpack from C as a state machine in PHCv2.3.92
+Calling PHCpack from C as a state machine in PHCv2.3.93
 
 This directory was created in release 2.3 as subdirectory to CtoPHC.
 The idea for using PHCpack as a state machine originated from the need
@@ -69,6 +69,9 @@ use_mapcon                       : Ada gateway to monomial maps container
 ------------------------------------------------------------------------------
 unisolve                         : roots of univariate polynomials
 ts_unisolve                      : test on unisolve
+------------------------------------------------------------------------------
+use_giftwrap                     : giftwrapping for convex hulls
+ts_use_giftwrap                  : test on use_giftwrap
 ------------------------------------------------------------------------------
 ts_c2phc.c                       : C routine calls the Ada gateway to PHCpack
 use_c2phc                        : bundles containers and c_to_phcpack

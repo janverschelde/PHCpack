@@ -1,3 +1,5 @@
+Tue 2 Sep 2014 : new use_giftwrap gateway, tested by ts_use_giftwrap.
+
 Thu 28 Aug 2014 : new unisolve gateway for the univariate root finders
   in PHCpack, for export to C.  Added job codes in use_c2phc.
   New test program ts_unisolve.  Fixed forgotten assignment in unisolve.adb.
