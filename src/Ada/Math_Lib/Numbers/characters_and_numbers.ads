@@ -26,8 +26,15 @@ package Characters_and_Numbers is
   function Convert ( s : string ) return natural64;
 
   -- DESCRIPTION :
-  --   Converts the string into a number, the string is supposed to
-  --   contain a number in decimal format.
+  --   Converts the string into a 32-bit or 64-bit natural number,
+  --   the string is supposed to contain a number in decimal format.
+
+  function Convert ( s : string ) return integer32;
+  function Convert ( s : string ) return integer64;
+
+  -- DESCRIPTION :
+  --   Converts the string into a 32-bit or 64-bit integer number,
+  --   the string is supposed to contain a number in decimal format.
 
   function Convert ( s : string ) return double_float;
 

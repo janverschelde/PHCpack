@@ -126,6 +126,52 @@ package body Characters_and_Numbers is
     return acc;
   end Convert;
 
+  function Convert ( s : string ) return integer32 is
+
+    res : integer32 := 0;
+    resnat : natural32 := 0;
+    pos : integer := s'first;
+
+  begin
+    while s(pos) = ' ' loop
+      pos := pos + 1;
+      exit when (pos > s'last);
+    end loop;
+    if pos <= s'last then
+      if s(pos) = '-' then
+        resnat := convert(s(pos+1..s'last));
+        res := -integer32(resnat);
+      else
+        resnat := convert(s(pos..s'last));
+        res := integer32(resnat);
+      end if;
+    end if;
+    return res;
+  end Convert;
+
+  function Convert ( s : string ) return integer64 is
+
+    res : integer64 := 0;
+    resnat : natural64 := 0;
+    pos : integer := s'first;
+
+  begin
+    while s(pos) = ' ' loop
+      pos := pos + 1;
+      exit when (pos > s'last);
+    end loop;
+    if pos <= s'last then
+      if s(pos) = '-' then
+        resnat := convert(s(pos+1..s'last));
+        res := -integer64(resnat);
+      else
+        resnat := convert(s(pos..s'last));
+        res := integer64(resnat);
+      end if;
+    end if;
+    return res;
+  end Convert;
+
   function Convert ( s : string ) return double_float is
 
     acc : double_float := 0.0;

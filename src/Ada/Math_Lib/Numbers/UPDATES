@@ -1,3 +1,6 @@
+Tue 2 Sep 2014 : extended characters_and_numbers again with parsing of
+  string into 32-bit and 64-bit integer numbers.
+
 Mon 1 Sep 2014 : extended characters_and_numbers with convert method
   for 64-bit integers.
 
