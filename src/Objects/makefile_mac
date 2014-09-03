@@ -1678,6 +1678,14 @@ lib_usolve: standard_solutions_container.o
 	gnatlink -C use_c2phc syscon.o solcon.o unisolvers.o lib_usolve.o \
                  -o ../bin/lib_usolve -lm
 
+lib_giftwrap:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gcc -c $(PHCLib)/giftwrappers.c
+	gcc -c $(PHCLib)/lib_giftwrap.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc giftwrappers.o lib_giftwrap.o \
+                 -o ../bin/lib_giftwrap -lm
+
 phc_solve: standard_solutions_container.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/syscon.c

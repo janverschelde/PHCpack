@@ -1371,7 +1371,7 @@ ts_greet:
 
 test_lib: lib_read lib_syscon lib_solcon lib_newton lib_celcon lib_roco \
           lib_conpar lib_poco lib_track lib_nxtsol lib_factor lib_pieri \
-          lib_lrhom phc_solve lib_usolve
+          lib_lrhom phc_solve lib_usolve lib_giftwrap
 
 lib_read:
 	make -f $(MAKEFILE) lib_read
@@ -1414,6 +1414,9 @@ lib_factor:
 
 lib_usolve:
 	make -f $(MAKEFILE) lib_usolve
+
+lib_giftwrap:
+	make -f $(MAKEFILE) lib_giftwrap
 
 phc_solve:
 	make -f $(MAKEFILE) phc_solve
