@@ -4,7 +4,7 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors;
 with Multprec_Integer_Matrices;
-with Multprec_Integer_Matrices_io;       use Multprec_Integer_Matrices_io;
+-- with Multprec_Integer_Matrices_io;       use Multprec_Integer_Matrices_io;
 with Multprec_Lattice_Polygons;
 with Point_Lists_and_Strings;
 with Assignments_in_Ada_and_C;           use Assignments_in_Ada_and_C;
@@ -27,15 +27,15 @@ function use_giftwrap ( job : integer32;
     r,c : integer32;
 
   begin
-    put("The number of characters : "); put(nbc,1); new_line;
+   -- put("The number of characters : "); put(nbc,1); new_line;
     sv := C_Integer_Array_to_String(natural32(nbc),v_b);
-    put_line("The string representation : "); put_line(sv);
+   -- put_line("The string representation : "); put_line(sv);
     Point_Lists_and_Strings.Extract_Dimensions(sv,r,c);
     declare
       M : Multprec_Integer_Matrices.Matrix(1..r,1..c)
         := Point_Lists_and_Strings.parse(sv,r,c);
     begin
-      put_line("The matrix : "); put(M);
+     -- put_line("The matrix : "); put(M);
       Multprec_Lattice_Polygons.Lexicographic_Decreasing_Sort(M);
       declare
         V : constant Multprec_Integer_Matrices.Matrix
@@ -48,9 +48,9 @@ function use_giftwrap ( job : integer32;
         resvec : constant Standard_Integer_Vectors.Vector
                := String_to_Integer_Vector(result);
       begin
-        put_line("The vertices : "); put(V);
-        put_line("The inner normals : "); put(N);
-        put_line("The result : "); put_line(result);
+       -- put_line("The vertices : "); put(V);
+       -- put_line("The inner normals : "); put(N);
+       -- put_line("The result : "); put_line(result);
         Assign(integer32(result'last),a);
         Assign(resvec,b);
       end;

@@ -1,3 +1,6 @@
+Wed 3 Sep 2014 : called use_giftwrap in use_c2phc, removed diagnostic
+  printing from use_giftwrap.adb.
+
 Tue 2 Sep 2014 : new use_giftwrap gateway, tested by ts_use_giftwrap.
 
 Thu 28 Aug 2014 : new unisolve gateway for the univariate root finders

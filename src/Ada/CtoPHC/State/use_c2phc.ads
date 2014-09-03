@@ -1202,6 +1202,20 @@ function use_c2phc ( job : integer32;
 --                 the value of a[1] stores the number of decimal places
 --                 as the precision for parsing the numbers;
 --
+-- convex hull computations via the gift wrapping method :
+--
+--   job   = 580 : convex hull in the plane, on input are
+--                 in a: the number of characters in the string representation
+--                       of the point configuration,
+--                 in b: as many integers as there are characters in the
+--                       string representation of the point configuration,
+--                 on return are 
+--                 in a: the number of characters of the representation of
+--                       the string representation of the convex hull
+--                 in b: is a string representation of a tuple:
+--                 the vertices and the inner normals, both represented
+--                 as string representations of point configurations.
+--
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
 --   or job not in the right range.
