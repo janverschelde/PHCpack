@@ -17,7 +17,7 @@ setup(
     packages = ['phcpy'] ,
     py_modules = ['phcpy/solver', 'phcpy/solutions', 'phcpy/trackers',  \
                   'phcpy/sets', 'phcpy/maps', 'phcpy/schubert' , \
-                  'phcpy/examples', 'phcpy/families' ] ,
+                  'phcpy/polytopes', 'phcpy/examples', 'phcpy/families' ] ,
     license = 'GNU GENERAL PUBLIC LICENSE version 2 or higher' ,
     data_files = [(get_python_lib()+'/phcpy', ['phcpy/phcpy2c.so'])] ,
     platforms = ['linux2'] ,
