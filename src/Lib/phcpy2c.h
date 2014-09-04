@@ -163,6 +163,10 @@ static PyObject *py2c_usolve_dobldobl ( PyObject *self, PyObject *args );
 static PyObject *py2c_usolve_quaddobl ( PyObject *self, PyObject *args );
 static PyObject *py2c_usolve_multprec ( PyObject *self, PyObject *args );
 
+/* wrapping functions in giftwrappers.h starts from here */
+
+static PyObject *py2c_giftwrap_planar ( PyObject *self, PyObject *args );
+
 /* wrapping functions in syscon.h starts from here */
 
 static PyObject *py2c_syscon_read_system ( PyObject *self, PyObject *args );

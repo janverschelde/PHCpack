@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "phcpack.h"
 #include "unisolvers.h"
+#include "giftwrappers.h"
 #include "schubert.h"
 #include "syscon.h"
 #include "solcon.h"
@@ -1071,6 +1072,27 @@ static PyObject *py2c_usolve_multprec ( PyObject *self, PyObject *args )
    fail = solve_with_multiprecision(dcp,max,eps,&nit);
 
    return Py_BuildValue("i",nit);
+}
+
+/* wrapping functions in giftwrappers.h starts from here */
+
+static PyObject *py2c_giftwrap_planar ( PyObject *self, PyObject *args )
+{
+   int fail,nbc_pts;
+   char *pts;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&nbc_pts,&pts)) return NULL;
+
+   {
+      int nbc_hull;
+      char hull[10*nbc_pts];
+
+      fail = convex_hull_2d(nbc_pts,pts,&nbc_hull,hull);
+      hull[nbc_hull] = '\0';
+
+      return Py_BuildValue("s",hull);
+   }
 }
 
 /* wrapping functions in syscon.h starts from here */
@@ -4018,6 +4040,8 @@ static PyMethodDef phcpy2c_methods[] =
     "solve polynomial in one variable in quad double precision"},
    {"py2c_usolve_multprec", py2c_usolve_multprec, METH_VARARGS,
     "solve polynomial in one variable in arbitrary multiprecision"},
+   {"py2c_giftwrap_planar", py2c_giftwrap_planar, METH_VARARGS,
+    "giftwrapping to compute the convex hull for points in the plane"},
    {"py2c_syscon_read_system", py2c_syscon_read_system,
     METH_VARARGS, "reads and puts the system in container"},
    {"py2c_syscon_read_Laurent_system", py2c_syscon_read_Laurent_system,

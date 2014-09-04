@@ -1,3 +1,5 @@
+Thu 4 Sep 2014 : updated phcpy2c to call giftwrappers for planar hull.
+
 Wed 3 Sep 2014 : new library giftwrappers, tested by lib_giftwrap.
 
 Sat 30 Aug 2014 : added wrappers to univariate solvers in phcpy2c.
