@@ -1704,6 +1704,7 @@ phcpy2c.so: standard_solutions_container.o
 	gcc -c -O2 $(PHCLib)/witset.c
 	gcc -c -O2 $(PHCLib)/schubert.c
 	gcc -c -O2 $(PHCLib)/unisolvers.c
+	gcc -c -O2 $(PHCLib)/giftwrappers.c
 	gcc -c -O2 $(PHCLib)/phcpack.c
 	gcc -c -O2 $(PHCLib)/mapcon.c
 	gcc -c -O2 $(PHCLib)/next_track.c
@@ -1712,8 +1713,8 @@ phcpy2c.so: standard_solutions_container.o
 	gnatmake -c -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n use_c2phc
 	gnatlink -dynamiclib -C use_c2phc phcpy2c.o phcpack.o syscon.o \
-                       witset.o mapcon.o next_track.o unisolvers.o \
-                       solcon.o product.o celcon.o schubert.o \
+            witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
+            solcon.o product.o celcon.o schubert.o \
                  -o ../Python/PHCpy/phcpy/phcpy2c.so -framework Python
 
 # how to make the executables with MPI:
