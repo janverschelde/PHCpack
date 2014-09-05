@@ -29,33 +29,6 @@ package body Point_Lists_and_Strings is
     end if;
   end Add_Coordinates;
 
-  function One_if_Negative ( i : Integer_Number ) return natural32 is
-
-  -- DESCRIPTION :
-  --   Returns one if i < 0, returns 0 otherwise.
-
-  begin
-    if i < 0
-     then return 1;
-     else return 0;
-    end if;
-  end One_if_Negative;
-
-  function Convert_to_String ( i : Integer_Number ) return string is
-
-    dp : constant natural32 := Multprec_Integer_Numbers.Decimal_Places(i);
-    dp1 : constant natural32 := dp + One_if_Negative(i);
-    res : string(1..integer(dp1));
-
-  begin
-    if dp = 0 then
-      return "0";
-    else
-      Multprec_Integer_Numbers_io.put(res,i);
-      return res;
-    end if;
-  end Convert_to_String;
-
   function Add_Coordinates
              ( A : Multprec_Integer_Matrices.Matrix; k,i : integer32;
                accu : string ) return string is
@@ -66,7 +39,8 @@ package body Point_Lists_and_Strings is
 
   -- REQUIRED : k <= A'last(2) and i <= A'last(1).
 
-    strAik : constant string := Convert_to_String(A(i,k));
+    strAik : constant string
+           := Multprec_Integer_Numbers_io.Convert_to_String(A(i,k));
 
   begin
     if i = A'last(1) then
