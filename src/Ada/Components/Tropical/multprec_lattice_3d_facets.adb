@@ -468,20 +468,20 @@ package body Multprec_Lattice_3d_Facets is
     u := Edge_Normal(A,i,j);
     s := Multprec_Lattice_Supports.Minimum(A,u);
     k := Third_Point(A,i,j,s,u);
-    put("  i = "); put(i,1);
-    put("  j = "); put(j,1);
-    put("  k = "); put(k,1); new_line;
+   -- put("  i = "); put(i,1);
+   -- put("  j = "); put(j,1);
+   -- put("  k = "); put(k,1); new_line;
     if k /= 0 then
       Multprec_Lattice_Supports.Inner(A,i,j,k,u);
       v := u;
     else
-      put("  u = "); put(u);
+     -- put("  u = "); put(u);
       w := Normal(A,i,j,u);
-      put("  w = "); put(w);
+     -- put("  w = "); put(w);
       k := Largest_Angle(A,i,j,u,w);
-      put("  k = "); put(k,1);
+     -- put("  k = "); put(k,1);
       v := Inner_Normal(A,i,j,k);
-      put("  v = "); put(v); new_line;
+     -- put("  v = "); put(v); new_line;
     end if;
  -- exception
  --   when others => put_line("exception in Initial_Facet_Normal"); raise;

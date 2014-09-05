@@ -1,3 +1,7 @@
+Fri 5 Sep 2014 : in multprec_lattice_3d_facets.adb, commented out some
+  diagnostic output during the construction of the initial facet normal
+  and commented out output in multprec_lattice_polytopes.adb.
+
 Tue 2 Sep 2014 : updated point_lists_and_strings and the test ts_ptlstr.
 
 Mon 1 Sep 2014 : new package point_lists_and_strings, tested by ts_ptlstr

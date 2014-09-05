@@ -67,9 +67,9 @@ package body Multprec_Lattice_Polytopes is
     V : Matrix(A'range(1),A'first(2)..A'last(2)-1) := Shift(A,k);
 
   begin
-    put_line("in rank with V = "); put(V);
+   -- put_line("in rank with V = "); put(V);
     Upper_Triangulate(V);
-    put_line("V after Upper Triangulate :"); put(V);
+   -- put_line("V after Upper Triangulate :"); put(V);
     res := Rank_of_Upper(V);
     return res;
  -- exception
