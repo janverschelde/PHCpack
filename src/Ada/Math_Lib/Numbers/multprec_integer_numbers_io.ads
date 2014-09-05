@@ -56,6 +56,13 @@ package Multprec_Integer_Numbers_io is
   --   s'last = Decimal_Places(Unsigned(i)) + 1 if Negative(i),
   --          = Decimal_Places(Unsigned(i)) otherwise.
 
+  function Convert_to_String ( i : Integer_Number ) return string;
+
+  -- DESCRIPTION :
+  --   Wrapper around the previous put(s,i) where s is a string.
+  --   Deals with the special case when i equals zero, in which
+  --   case the number of decimal places equals zero as well...
+
   procedure put ( i : in Integer_Number; dp : in natural32 );
   procedure put ( file : in file_type;
                   i : in Integer_Number; dp : in natural32 );

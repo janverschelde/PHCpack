@@ -145,6 +145,33 @@ package body Multprec_Integer_Numbers_io is
     end if;
   end put;
 
+  function One_if_Negative ( i : Integer_Number ) return natural32 is
+
+  -- DESCRIPTION :
+  --   Returns one if i < 0, returns 0 otherwise.
+
+  begin
+    if i < 0
+     then return 1;
+     else return 0;
+    end if;
+  end One_if_Negative;
+
+  function Convert_to_String ( i : Integer_Number ) return string is
+
+    dp : constant natural32 := Multprec_Integer_Numbers.Decimal_Places(i);
+    dp1 : constant natural32 := dp + One_if_Negative(i);
+    res : string(1..integer(dp1));
+
+  begin
+    if dp = 0 then
+      return "0";
+    else
+      put(res,i);
+      return res;
+    end if;
+  end Convert_to_String;
+
   procedure put ( i : in Integer_Number; dp : in natural32 ) is
   begin
     put(Standard_Output,i,dp);
