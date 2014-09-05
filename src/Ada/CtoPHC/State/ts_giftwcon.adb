@@ -12,12 +12,14 @@ with Multprec_Lattice_4d_Facets;
 with Multprec_Lattice_4d_Facets_io;     use Multprec_Lattice_4d_Facets_io;
 with Convex_Hull_Methods;
 with Multprec_Giftwrap_Container;
+with Facets_and_Strings;
 
 procedure ts_giftwcon is
 
 -- DESCRIPTION :
 --   Interactive test on the container to store the results of
 --   the giftwrapping method in 3 and 4 dimensions.
+--   Also the string representation of the facets is shown.
 
   procedure Test_3d ( n : integer32 ) is
 
@@ -42,9 +44,12 @@ procedure ts_giftwcon is
       put("Give a facet number (-1 to exit) : "); get(fcn);
       exit when (fcn < 0);
       lft := Multprec_Giftwrap_Container.Facet_3d_Data(natural32(fcn));
-      if lft = null
-       then put("null pointer for facet number "); put(fcn,1); new_line;
-       else Write_Facet(A,lft.all);
+      if lft = null then
+        put("null pointer for facet number "); put(fcn,1); new_line;
+      else
+        Write_Facet(A,lft.all);
+        put_line("The string representation :");
+        put_line(Facets_and_Strings.write(A,lft.all));
       end if;
     end loop; 
   end Test_3d; 
@@ -72,9 +77,12 @@ procedure ts_giftwcon is
       put("Give a facet number (-1 to exit) : "); get(fcn);
       exit when (fcn < 0);
       lft := Multprec_Giftwrap_Container.Facet_4d_Data(natural32(fcn));
-      if lft = null
-       then put("null pointer for facet number "); put(fcn,1); new_line;
-       else Write_4D_Facet(A,lft);
+      if lft = null then
+        put("null pointer for facet number "); put(fcn,1); new_line;
+      else
+        Write_4D_Facet(A,lft);
+        put_line("The string representation :");
+        put_line(Facets_and_Strings.write(A,lft.all));
       end if;
     end loop; 
   end Test_4d; 
