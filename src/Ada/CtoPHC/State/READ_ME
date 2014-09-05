@@ -72,6 +72,8 @@ ts_unisolve                      : test on unisolve
 ------------------------------------------------------------------------------
 use_giftwrap                     : giftwrapping for convex hulls
 ts_use_giftwrap                  : test on use_giftwrap
+multprec_giftwrap_container      : hold results of giftwrapping method
+ts_giftwcon                      : test on giftwrapping container
 ------------------------------------------------------------------------------
 ts_c2phc.c                       : C routine calls the Ada gateway to PHCpack
 use_c2phc                        : bundles containers and c_to_phcpack

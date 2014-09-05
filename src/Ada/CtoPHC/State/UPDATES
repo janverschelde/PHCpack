@@ -1,3 +1,6 @@
+Thu 4 Sep 2014 : new package multprec_giftwrap_container, tested by
+  ts_giftwcon for the results of the 3d and 4d giftwrapping method.
+
 Wed 3 Sep 2014 : called use_giftwrap in use_c2phc, removed diagnostic
   printing from use_giftwrap.adb.
 
