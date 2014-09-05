@@ -809,6 +809,18 @@ package body Multprec_Lattice_3d_Facets is
 
 -- SELECTORS :
 
+  function Support_Value_of_Facet
+             ( A : Matrix; f : Facet_in_3d ) return Integer_Number is
+
+    use Multprec_Lattice_Supports;
+
+    ind : constant integer32 := f.points(f.points'first);
+    res : Integer_Number := Inner_Product(A,ind,f.normal);
+
+  begin
+    return res;
+  end Support_Value_of_Facet;
+
   function Facet_Normals
              ( f : Facet_3d_List ) return Lists_of_Integer64_Vectors.List is
 

@@ -40,7 +40,6 @@ ts_convhull                      : testing convex hull operations
 standard_pretropical_facets      : giftwrapping for 3d tropisms
 ts_pretrop                       : test on standard lattice facets
 point_lists_and_strings          : list of tuples formats of point sets
+facets_and_strings               : string representations of facets
 ts_ptlstr                        : test on conversions
 ------------------------------------------------------------------------------
-
-The other ts_ routines in this directory are NOT ready for release...

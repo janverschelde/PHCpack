@@ -2,7 +2,9 @@ Fri 5 Sep 2014 : in multprec_lattice_3d_facets.adb, commented out some
   diagnostic output during the construction of the initial facet normal
   and commented out output in multprec_lattice_polytopes.adb.
   Moved the convert_to_string from point_lists_and_strings.adb to
-  the multprec_integer_numbers_io package.
+  the multprec_integer_numbers_io package.  Added a function to compute
+  the support value of a facet in multprec_lattice_{3d, 4d}_facets.
+  New package facets_and_strings for the string representation of facets.
 
 Tue 2 Sep 2014 : updated point_lists_and_strings and the test ts_ptlstr.
 

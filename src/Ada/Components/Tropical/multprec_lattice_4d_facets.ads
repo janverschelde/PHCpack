@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Multprec_Integer_Numbers;           use Multprec_Integer_Numbers;
 with Standard_Integer_Vectors;
 with Multprec_Integer_Vectors;
 with Multprec_Integer_Matrices;          use Multprec_Integer_Matrices;
@@ -100,6 +101,13 @@ package Multprec_Lattice_4d_Facets is
   --   The vector v is the first facet normal.
 
 -- SELECTORS :
+
+  function Support_Value_of_Facet
+             ( A : Matrix; f : Facet_in_4d ) return Integer_Number;
+
+  -- DESCRIPTION :
+  --   Returns the value of the supporting function defined by the
+  --   facet normal and the points spanned by the facet.
 
   function Is_Connected ( f : Link_to_4d_Facet ) return boolean;
 

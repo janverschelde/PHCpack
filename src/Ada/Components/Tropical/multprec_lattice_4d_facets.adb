@@ -4,7 +4,6 @@
 --with Multprec_Integer_Vectors_io; use Multprec_Integer_Vectors_io;
 
 with unchecked_deallocation;
-with Multprec_Integer_Numbers;            use Multprec_Integer_Numbers;
 with Standard_Lattice_Supports;
 with Multprec_Lattice_Supports;
 with Multprec_Integer_Orthogonals;
@@ -429,6 +428,18 @@ package body Multprec_Lattice_4d_Facets is
   end Convex_Hull_4D;
 
 -- SELECTORS :
+
+  function Support_Value_of_Facet
+             ( A : Matrix; f : Facet_in_4d ) return Integer_Number is
+
+    use Multprec_Lattice_Supports;
+
+    ind : constant integer32 := f.points(f.points'first);
+    res : Integer_Number := Inner_Product(A,ind,f.normal);
+
+  begin
+    return res;
+  end Support_Value_of_Facet;
 
   function Is_Connected ( f : Link_to_4d_Facet ) return boolean is
   begin

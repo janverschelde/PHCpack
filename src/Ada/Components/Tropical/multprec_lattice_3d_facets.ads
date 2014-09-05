@@ -307,6 +307,13 @@ package Multprec_Lattice_3d_Facets is
 
 -- SELECTORS :
 
+  function Support_Value_of_Facet
+             ( A : Matrix; f : Facet_in_3d ) return Integer_Number;
+
+  -- DESCRIPTION :
+  --   Returns the value of the supporting function defined by the
+  --   facet normal and the points spanned by the facet.
+
   function Facet_Normals
              ( f : Facet_3d_List ) return Lists_of_Integer64_Vectors.List;
 
