@@ -1,3 +1,8 @@
+Sat 6 Sep 2014 : added job codes in use_c2phc to call use_giftwrap.
+
+Fri 5 Sep 2014 : extra operations in use_giftwrap, tested by ts_use_giftwrap,
+  and extended tests in ts_giftwcon.
+
 Thu 4 Sep 2014 : new package multprec_giftwrap_container, tested by
   ts_giftwcon for the results of the 3d and 4d giftwrapping method.
 

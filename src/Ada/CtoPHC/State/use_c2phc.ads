@@ -1215,6 +1215,16 @@ function use_c2phc ( job : integer32;
 --                 in b: is a string representation of a tuple:
 --                 the vertices and the inner normals, both represented
 --                 as string representations of point configurations.
+--   job   = 581 : convex hull in 3-space or 4-space, on input are
+--                 in a: the number of characters in the string representation
+--                       of the point configuration,
+--                 in b: as many integers as there are characters in the
+--                       string representation of the point configuration,
+--                 this operation initializes the giftwrap container with
+--                 the list of facets of the convex hull.
+--   job   = 582 : if given in a either 3 or 4, then the number of facets
+--                 of a convex hull in 3-space or 4-space respectively is
+--                 returned in b.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

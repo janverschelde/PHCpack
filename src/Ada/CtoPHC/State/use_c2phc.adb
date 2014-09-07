@@ -2039,7 +2039,7 @@ function use_c2phc ( job : integer32;
       when 570..574 => return use_syscon(job-440,a,b,c);
       when 577..579 => return use_syscon(job-440,a,b,c);
      -- convex hull via giftwrapping :
-      when 580 => return use_giftwrap(1,a,b,c);
+      when 580..582 => return use_giftwrap(job-579,a,b,c);
      -- setting seed and producing version string
       when 998 => return Set_Seed;
       when 999 => return Version_String;
