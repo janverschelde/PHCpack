@@ -1225,6 +1225,9 @@ function use_c2phc ( job : integer32;
 --   job   = 582 : if given in a either 3 or 4, then the number of facets
 --                 of a convex hull in 3-space or 4-space respectively is
 --                 returned in b.
+--   job   = 583 : if given in a either 3 or 4 and in b the label of a facet,
+--                 then the string representation of the facet is returned
+--                 in b, with in a the number of characters in the string.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

@@ -6,9 +6,12 @@ with Standard_Integer_Vectors;
 with Multprec_Integer_Matrices;
 -- with Multprec_Integer_Matrices_io;       use Multprec_Integer_Matrices_io;
 with Multprec_Lattice_Polygons;
+with Multprec_Lattice_3d_Facets;
+with Multprec_Lattice_4d_Facets;
+with Assignments_in_Ada_and_C;           use Assignments_in_Ada_and_C;
 with Multprec_Giftwrap_Container;
 with Point_Lists_and_Strings;
-with Assignments_in_Ada_and_C;           use Assignments_in_Ada_and_C;
+with Facets_and_Strings;
 
 function use_giftwrap ( job : integer32;
                         a : C_intarrs.Pointer;
@@ -65,15 +68,21 @@ function use_giftwrap ( job : integer32;
        -- put_line("The vertices : "); put(V);
        -- put_line("The inner normals : "); put(N);
        -- put_line("The result : "); put_line(result);
-        Assign(integer32(result'last),a);
+        Assign(integer32(resvec'last),a);
         Assign(resvec,b);
       end;
       Multprec_Integer_Matrices.Clear(M);
     end;
     return 0;
+  exception
+    when others => return 1;
   end Job1;
 
   function Job2 return integer32 is -- create convex hull in 3d or 4d
+
+  -- DESCRIPTION :
+  --   Parses the string representation for a matrix and initializes the 
+  --   gift wrapping container with the list of facets.
 
     sv : constant string := String_of_Point_Configuration;
     r,c : integer32;
@@ -89,9 +98,15 @@ function use_giftwrap ( job : integer32;
       Multprec_Giftwrap_Container.Create(M);
     end;
     return 0;
+  exception
+    when others => return 2;
   end Job2;
 
   function Job3 return integer32 is -- returns number of facets
+
+  -- DESCRIPTION :
+  --   Returns in b the number of facets of a convex hull in 3-space 
+  --   or 4-space, depending on the value of a.
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     dim : constant integer32 := integer32(v_a(v_a'first));
@@ -104,7 +119,53 @@ function use_giftwrap ( job : integer32;
     end if;
     Assign(integer32(res),b);
     return 0;
+  exception
+    when others => return 3;
   end Job3;
+
+  function Job4 return integer32 is -- string representation of a facet
+
+  -- DESCRIPTION :
+  --   Extracts from a and b the dimension of the space and the
+  --   number of a facet.
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant integer32 := integer32(v_a(v_a'first));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    fcn : constant natural32 := natural32(v_b(v_b'first));
+
+  begin
+    if dim = 3 then
+      declare
+        lft : constant Multprec_Lattice_3d_Facets.Link_to_3d_Facet
+            := Multprec_Giftwrap_Container.Facet_3d_Data(fcn);
+        pts : constant Multprec_Integer_Matrices.Link_to_Matrix
+            := Multprec_Giftwrap_Container.Point_Configuration_in_3d;
+        sfc : constant string := Facets_and_Strings.write(pts.all,lft.all);
+        resvec : constant Standard_Integer_Vectors.Vector
+               := String_to_Integer_Vector(sfc);
+      begin
+        Assign(integer32(resvec'last),a);
+        Assign(resvec,b);
+      end;
+    elsif dim = 4 then
+      declare
+        lft : constant Multprec_Lattice_4d_Facets.Link_to_4d_Facet
+            := Multprec_Giftwrap_Container.Facet_4d_Data(fcn);
+        pts : constant Multprec_Integer_Matrices.Link_to_Matrix
+            := Multprec_Giftwrap_Container.Point_Configuration_in_4d;
+        sfc : constant string := Facets_and_Strings.write(pts.all,lft.all);
+        resvec : constant Standard_Integer_Vectors.Vector
+               := String_to_Integer_Vector(sfc);
+      begin
+        Assign(integer32(resvec'last),a);
+        Assign(resvec,b);
+      end;
+    end if;
+    return 0;
+  exception
+    when others => return 4;
+  end Job4;
 
   function Handle_Jobs return integer32 is
   begin
@@ -112,10 +173,11 @@ function use_giftwrap ( job : integer32;
       when 1 => return Job1; -- planar convex hull
       when 2 => return Job2; -- convex hull in 3d or 4d
       when 3 => return Job3; -- returns the number of facets
+      when 4 => return Job4; -- returns string representation of a facet
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   exception
-    when others => put("Exception raised in unisolve handling job ");
+    when others => put("Exception raised in use_giftwrap handling job ");
                    put(job,1); put_line(".  Will not ignore."); raise;
   end Handle_Jobs;
 

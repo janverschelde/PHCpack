@@ -8,13 +8,16 @@ package body Multprec_Giftwrap_Container is
 
   f3d : Multprec_Lattice_3d_Facets.Facet_3d_List;
   f4d : Multprec_Lattice_4d_Facets.Facet_4d_List;
+  pts3 : Multprec_Integer_Matrices.Link_to_Matrix;
+  pts4 : Multprec_Integer_Matrices.Link_to_Matrix;
 
 -- CONSTRUCTOR :
 
   procedure Create ( A : in Matrix ) is
   begin
-    if A'last(1) = 3 
-     then f3d := Multprec_Lattice_3d_Facets.Convex_Hull_3D(A);
+    if A'last(1) = 3 then
+      f3d := Multprec_Lattice_3d_Facets.Convex_Hull_3D(A);
+      pts3 := new Multprec_Integer_Matrices.Matrix'(A);
     end if;
     if A'last(1) = 4 then
       declare
@@ -24,10 +27,21 @@ package body Multprec_Giftwrap_Container is
         Multprec_Lattice_Polytopes.Initial_Facet_Normal(A,r,v);
         f4d := Multprec_Lattice_4d_Facets.Convex_Hull_4D(A,v);
       end;
+      pts4 := new Multprec_Integer_Matrices.Matrix'(A);
     end if;
   end Create;
 
 -- SELECTORS :
+
+  function Point_Configuration_in_3d return Link_to_Matrix is
+  begin
+    return pts3;
+  end Point_Configuration_in_3d;
+
+  function Point_Configuration_in_4d return Link_to_Matrix is
+  begin
+    return pts4;
+  end Point_Configuration_in_4d;
 
   function Number_of_3d_Facets return natural32 is
   begin

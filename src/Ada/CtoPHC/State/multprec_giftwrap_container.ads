@@ -27,6 +27,18 @@ package Multprec_Giftwrap_Container is
 
 -- SELECTORS :
 
+  function Point_Configuration_in_3d return Link_to_Matrix;
+
+  -- DESCRIPTION :
+  --   Returns a pointer to the matrix that contains in its columns
+  --   the coordinates of the points in 3-space.
+
+  function Point_Configuration_in_4d return Link_to_Matrix;
+
+  -- DESCRIPTION :
+  --   Returns a pointer to the matrix that contains in its columns
+  --   the coordinates of the points in 4-space.
+
   function Number_of_3d_Facets return natural32;
 
   -- DESCRIPTION :
