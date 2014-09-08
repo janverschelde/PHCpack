@@ -47,3 +47,21 @@ int number_of_facets ( int dim, int *nbr )
 
    return fail;
 }
+
+int retrieve_facet ( int dim, int fcn, int *nc_rep, char *fctrep )
+{
+   int fail,k;
+   int a = dim;
+   int b[100*dim];
+   double *c;
+
+   b[0] = fcn;
+
+   fail = _ada_use_c2phc(583,&a,b,c);
+
+   *nc_rep = a;
+   for(k=0; k<a; k++) fctrep[k] = (char) b[k];
+   fctrep[a] = '\0';
+
+   return fail;
+}
