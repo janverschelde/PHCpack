@@ -167,6 +167,32 @@ function use_giftwrap ( job : integer32;
     when others => return 4;
   end Job4;
 
+  function Job5 return integer32 is -- clears list of facets in 3-space
+
+  -- DESCRIPTION :
+  --   Deallocation of the storage for the list of facets of a convex hull
+  --   in 3-space.
+
+  begin
+    Multprec_Giftwrap_Container.Clear_3d;
+    return 0;
+  exception
+    when others => return 5;
+  end Job5;
+
+  function Job6 return integer32 is -- clears list of facets in 4-space
+
+  -- DESCRIPTION :
+  --   Deallocation of the storage for the list of facets of a convex hull
+  --   in 4-space.
+
+  begin
+    Multprec_Giftwrap_Container.Clear_4d;
+    return 0;
+  exception
+    when others => return 6;
+  end Job6;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -174,6 +200,8 @@ function use_giftwrap ( job : integer32;
       when 2 => return Job2; -- convex hull in 3d or 4d
       when 3 => return Job3; -- returns the number of facets
       when 4 => return Job4; -- returns string representation of a facet
+      when 5 => return Job5; -- clear list of facets in 3-space
+      when 6 => return Job6; -- clear list of facets in 4-space
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   exception

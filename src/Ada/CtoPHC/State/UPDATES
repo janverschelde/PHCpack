@@ -1,3 +1,7 @@
+Mon 8 Sep 2014 : set pointers to matrices in multprec_giftwrap_containers
+  to null when clearing.  Added clear operations to use_giftwrap and made
+  them available in use_c2phc.
+
 Sun 7 Sep 2014 : extended multprec_giftwrap_container with functions that
   return the stored point configuration in 3-space or 4-space.
   The use_giftwrap exports the string representation of a facet

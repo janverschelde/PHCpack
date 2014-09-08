@@ -100,11 +100,13 @@ package body Multprec_Giftwrap_Container is
   procedure Clear_3d is
   begin
     Multprec_Lattice_3d_Facets.Clear(f3d);
+    pts3 := null; -- memory for A managed outside container
   end Clear_3d;
 
   procedure Clear_4d is
   begin
     Multprec_Lattice_4d_Facets.Clear(f4d);
+    pts4 := null; -- memory for A managed outside container
   end Clear_4d;
 
   procedure Clear is
