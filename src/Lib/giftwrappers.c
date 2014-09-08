@@ -24,3 +24,26 @@ int convex_hull_2d ( int nc_pts, char *pts, int *nc_hull, char *hull )
   
    return fail;
 }
+
+int convex_hull ( int nc_pts, char *pts )
+{
+   int fail,i;
+   int points[nc_pts];
+   double *c;
+
+   for(i=0; i<nc_pts; i++) points[i] = (int) pts[i];
+
+   fail = _ada_use_c2phc(581,&nc_pts,points,c);
+
+   return fail;
+}
+
+int number_of_facets ( int dim, int *nbr )
+{
+   int fail;
+   double *c;
+
+   fail = _ada_use_c2phc(582,&dim,nbr,c);
+
+   return fail;
+}
