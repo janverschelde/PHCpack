@@ -171,6 +171,10 @@ static PyObject *py2c_giftwrap_number_of_facets
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_giftwrap_retrieve_facet
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_giftwrap_clear_3d_facets
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_giftwrap_clear_4d_facets
+ ( PyObject *self, PyObject *args );
 
 /* wrapping functions in syscon.h starts from here */
 

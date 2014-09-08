@@ -78,3 +78,13 @@ int retrieve_facet ( int dim, int fcn, int *nc_rep, char *fctrep );
  *               note that the index count starts at one instead of zero;
  *            3. number of adjacent facets, with the facet count starting
  *               at zero. */
+
+int clear_3d_facets ( void );
+/*
+ * DESCRIPTION :
+ *   Clears the list of facets in 3-space. */
+
+int clear_4d_facets ( void );
+/*
+ * DESCRIPTION :
+ *   Clears the list of facets in 4-space. */

@@ -1,5 +1,6 @@
 Mon 7 Sep 2014 : string representation of a facet is added to the
   giftwrappers and tested by lib_giftwrap.  Extended phcpy2c.
+  Added clear operations to giftwrappers and phcpy2c.
 
 Sun 6 Sep 2014 : added functions to giftwrappers.
 

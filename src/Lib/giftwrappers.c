@@ -65,3 +65,23 @@ int retrieve_facet ( int dim, int fcn, int *nc_rep, char *fctrep )
 
    return fail;
 }
+
+int clear_3d_facets ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc(584,a,b,c);
+
+   return fail;
+}
+
+int clear_4d_facets ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc(585,a,b,c);
+
+   return fail;
+}

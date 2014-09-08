@@ -1136,6 +1136,32 @@ static PyObject *py2c_giftwrap_retrieve_facet
    return Py_BuildValue("s",rep);
 }
 
+static PyObject *py2c_giftwrap_clear_3d_facets
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+
+   fail = clear_3d_facets();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_giftwrap_clear_4d_facets
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+
+   fail = clear_4d_facets();
+
+   return Py_BuildValue("i",fail);
+}
+
 /* wrapping functions in syscon.h starts from here */
 
 static PyObject *py2c_syscon_read_system ( PyObject *self, PyObject *args )
@@ -4091,6 +4117,12 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_giftwrap_retrieve_facet", py2c_giftwrap_retrieve_facet,
     METH_VARARGS,
     "returns the string representation of a facet in  3- or 4-space"},
+   {"py2c_giftwrap_clear_3d_facets", py2c_giftwrap_clear_3d_facets,
+    METH_VARARGS,
+    "deallocates list of facets of convex hull stored in 3-space"},
+   {"py2c_giftwrap_clear_4d_facets", py2c_giftwrap_clear_4d_facets,
+    METH_VARARGS,
+    "deallocates list of facets of convex hull stored in 4-space"},
    {"py2c_syscon_read_system", py2c_syscon_read_system,
     METH_VARARGS, "reads and puts the system in container"},
    {"py2c_syscon_read_Laurent_system", py2c_syscon_read_Laurent_system,
