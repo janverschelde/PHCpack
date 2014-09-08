@@ -166,6 +166,11 @@ static PyObject *py2c_usolve_multprec ( PyObject *self, PyObject *args );
 /* wrapping functions in giftwrappers.h starts from here */
 
 static PyObject *py2c_giftwrap_planar ( PyObject *self, PyObject *args );
+static PyObject *py2c_giftwrap_convex_hull ( PyObject *self, PyObject *args );
+static PyObject *py2c_giftwrap_number_of_facets
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_giftwrap_retrieve_facet
+ ( PyObject *self, PyObject *args );
 
 /* wrapping functions in syscon.h starts from here */
 

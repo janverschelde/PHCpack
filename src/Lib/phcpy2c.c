@@ -1095,6 +1095,47 @@ static PyObject *py2c_giftwrap_planar ( PyObject *self, PyObject *args )
    }
 }
 
+static PyObject *py2c_giftwrap_convex_hull ( PyObject *self, PyObject *args )
+{
+   int fail,nbc_pts;
+   char *pts;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&nbc_pts,&pts)) return NULL;
+
+   fail = convex_hull(nbc_pts,pts);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_giftwrap_number_of_facets
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim,number;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&dim)) return NULL;
+
+   fail = number_of_facets(dim,&number);
+
+   return Py_BuildValue("i",number);
+}
+
+static PyObject *py2c_giftwrap_retrieve_facet
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim,ind,ncp;
+   char rep[256];
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&dim,&ind)) return NULL;
+
+   fail = retrieve_facet(dim,ind,&ncp,rep);
+   rep[ncp] = '\0';
+
+   return Py_BuildValue("s",rep);
+}
+
 /* wrapping functions in syscon.h starts from here */
 
 static PyObject *py2c_syscon_read_system ( PyObject *self, PyObject *args )
@@ -4042,6 +4083,14 @@ static PyMethodDef phcpy2c_methods[] =
     "solve polynomial in one variable in arbitrary multiprecision"},
    {"py2c_giftwrap_planar", py2c_giftwrap_planar, METH_VARARGS,
     "giftwrapping to compute the convex hull for points in the plane"},
+   {"py2c_giftwrap_convex_hull", py2c_giftwrap_convex_hull, METH_VARARGS,
+    "giftwrapping to compute the convex hull for points 3- or 4-space"},
+   {"py2c_giftwrap_number_of_facets", py2c_giftwrap_number_of_facets,
+    METH_VARARGS,
+    "returns the number of facets of the convex hull in  3- or 4-space"},
+   {"py2c_giftwrap_retrieve_facet", py2c_giftwrap_retrieve_facet,
+    METH_VARARGS,
+    "returns the string representation of a facet in  3- or 4-space"},
    {"py2c_syscon_read_system", py2c_syscon_read_system,
     METH_VARARGS, "reads and puts the system in container"},
    {"py2c_syscon_read_Laurent_system", py2c_syscon_read_Laurent_system,
