@@ -1,3 +1,6 @@
+Mon 8 Sep 2014 : extended polytopes with function to compute the
+  convex hull in 3-space and in 4-space, with a test function.
+
 Thu 4 Sep 2014 : new Python package polytopes, updated setup.py.
 
 Sun 31 Aug 2014 : updated READ_ME, __init__.py, setup.py, and conf.py
