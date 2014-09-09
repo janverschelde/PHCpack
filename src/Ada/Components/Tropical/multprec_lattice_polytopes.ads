@@ -13,6 +13,14 @@ package Multprec_Lattice_Polytopes is
 --   implement the giftwrapping algorithm for the convex hull, using
 --   multiprecision integer arithmetic.
 
+-- PATCH TO DEAL WITH -0 PROBLEM :
+
+  procedure Normalize ( v : in out Multprec_Integer_Vectors.Vector );
+  procedure Normalize ( A : in out Matrix );
+
+  -- DESCRIPTION :
+  --   Replaces every instance of "-0" by "0".
+
 -- INITIAL FACET :
 
   function Rank ( A : Matrix ) return natural32;

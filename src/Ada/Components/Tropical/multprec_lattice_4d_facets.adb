@@ -1,4 +1,5 @@
 --with text_io,integer_io; use text_io,integer_io;
+--with Multprec_Integer_Matrices_io; use Multprec_Integer_Matrices_io;
 --with Multprec_Integer_Numbers_io; use Multprec_Integer_Numbers_io;
 --with Standard_Integer_Vectors_io; use Standard_Integer_Vectors_io;
 --with Multprec_Integer_Vectors_io; use Multprec_Integer_Vectors_io;
@@ -8,6 +9,7 @@ with Standard_Lattice_Supports;
 with Multprec_Lattice_Supports;
 with Multprec_Integer_Orthogonals;
 with Multprec_Power_Transformations;
+with Multprec_Lattice_Polytopes;
 
 package body Multprec_Lattice_4d_Facets is
 
@@ -93,6 +95,9 @@ package body Multprec_Lattice_4d_Facets is
     M := Multprec_Power_Transformations.Eliminate(v,p);
     MB := M*B;
     B2 := Multprec_Lattice_3d_Facets.Drop(MB,p);
+   -- put_line("The matrix B2 before normalization : "); put(B2);
+    Multprec_Lattice_Polytopes.Normalize(B2);
+   -- put_line("The matrix B2 after normalization : "); put(B2);
     F := Multprec_Lattice_3d_Facets.Convex_Hull_3D(B2);
   end Convex_Hull_of_Ridge;
 

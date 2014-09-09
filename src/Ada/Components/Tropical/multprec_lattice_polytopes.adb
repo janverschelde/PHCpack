@@ -4,6 +4,7 @@ with text_io;                            use text_io;
 --with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors;
 with Standard_Lattice_Supports;
+with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
 with Multprec_Integer_Numbers;           use Multprec_Integer_Numbers;
 --with Multprec_Integer_Numbers_io;        use Multprec_Integer_Numbers_io;
 --with Multprec_Integer_Vectors_io;        use Multprec_Integer_Vectors_io;
@@ -14,6 +15,42 @@ with Multprec_Lattice_3d_Facets;
 with Multprec_Integer_Orthogonals;
 
 package body Multprec_Lattice_Polytopes is
+
+  procedure Normalize ( v : in out Multprec_Integer_Vectors.Vector ) is
+
+    zero : constant integer32 := 0;
+
+  begin
+    for i in v'range loop
+      if Empty(v(i)) then
+        v(i) := Multprec_Integer_Numbers.Create(zero);
+      elsif Negative(v(i)) then
+        if Equal(v(i),0) then
+          Clear(v(i));
+          v(i) := Multprec_Integer_Numbers.Create(zero);
+        end if;
+      end if;
+    end loop;
+  end Normalize;
+
+  procedure Normalize ( A : in out Matrix ) is
+
+    zero : constant integer32 := 0;
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        if Empty(A(i,j)) then
+          A(i,j) := Multprec_Integer_Numbers.Create(zero);
+        elsif Negative(A(i,j)) then
+          if Equal(A(i,j),0) then
+            Clear(A(i,j));
+            A(i,j) := Multprec_Integer_Numbers.Create(zero);
+          end if;
+        end if;
+      end loop;
+    end loop;
+  end Normalize;
 
 -- INITIAL FACET :
 
@@ -26,6 +63,7 @@ package body Multprec_Lattice_Polytopes is
     res : Matrix(A'range(1),A'first(2)..A'last(2)-1);
 
   begin
+   -- put_line("The matrix before the shift : "); put(A);
     for j in A'range(2) loop
       if j < k then
         for i in A'range(1) loop
@@ -37,6 +75,8 @@ package body Multprec_Lattice_Polytopes is
         end loop;
       end if;
     end loop;
+    Normalize(res);
+   -- put_line("The matrix after the shift : "); put(res);
     return res;
   end Shift;
 

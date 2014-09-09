@@ -2,9 +2,11 @@ with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
 
---with Multprec_Integer_Numbers_io; use Multprec_Integer_Numbers_io;
-with Multprec_Integer_Vectors_io; use Multprec_Integer_Vectors_io;
+-- with Multprec_Integer_Numbers_io; use Multprec_Integer_Numbers_io;
+-- with Multprec_Integer_Vectors_io; use Multprec_Integer_Vectors_io;
+-- with Multprec_Integer_Matrices_io; use Multprec_Integer_Matrices_io;
 
 with unchecked_deallocation;
 with Multprec_Common_Divisors;          use Multprec_Common_Divisors;
@@ -12,6 +14,7 @@ with Multprec_Power_Transformations;
 with Multprec_Lattice_Polygons;
 with Standard_Lattice_Supports;
 with Multprec_Lattice_Supports;
+with Multprec_Lattice_Polytopes;
 
 package body Multprec_Lattice_3d_Facets is
 
@@ -48,6 +51,7 @@ package body Multprec_Lattice_3d_Facets is
     min : Integer_Number;
 
   begin
+   -- put("In Second_Lowest with k = "); put(k,1); 
     if k /= A'first(2) 
      then res := A'first(2);
      else res := A'first(2) + 1;
@@ -65,6 +69,7 @@ package body Multprec_Lattice_3d_Facets is
       end if;
     end loop;
     Clear(min);
+   -- put(" returns "); put(res,1); new_line;
     return res;
   end Second_Lowest;
 
@@ -89,6 +94,7 @@ package body Multprec_Lattice_3d_Facets is
         if p > q
          then res := j; Copy(w1,v1); Copy(w2,v2);
         end if;
+        Clear(p); Clear(q);
       end if;
       Clear(w1); Clear(w2);
     end loop;
@@ -102,6 +108,10 @@ package body Multprec_Lattice_3d_Facets is
     res : integer32 := Second_Lowest(A,k);
 
   begin
+   -- put("A("); put(A'first(1),1); put(","); put(res,1); put(") = ");
+   -- put(A(A'first(1),res)); put(" ? = ");
+   -- put("A("); put(A'first(1),1); put(","); put(k,1); put(") = ");
+   -- put(A(A'first(1),k)); new_line;
     if not Equal(A(A'first(1),res),A(A'first(1),k))
      then res := Largest_Angle(A,k);
     end if;
@@ -284,9 +294,32 @@ package body Multprec_Lattice_3d_Facets is
     res : Multprec_Integer_Vectors.Vector(A'range(1));
 
   begin
+   -- put_line("The matrix before the shift : "); put(A);
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        if Empty(A(i,j)) then
+          put("Element ("); put(i,1); put(","); put(j,1);
+          put_line(") is empty!");
+        elsif Negative(A(i,j)) then
+          if Equal(A(i,j),0) then
+            put("Element ("); put(i,1); put(","); put(j,1);
+            put_line(") equals -0!");
+          end if;
+        end if;
+      end loop;
+    end loop;
     for k in A'range(1) loop
       res(k) := A(k,j) - A(k,i);
+      declare
+        unsresk : constant Natural_Number := Unsigned(res(k));
+      begin
+        if Equal(unsresk,0) and then Negative(res(k))
+         then Min(res(k));
+        end if;
+      end;
     end loop;
+    Multprec_Lattice_Polytopes.Normalize(res);
+   -- put_line("The vector after the shift : "); put(res); new_line;
     return res;
   end Shift;
 
@@ -304,15 +337,19 @@ package body Multprec_Lattice_3d_Facets is
    -- put("inside Largest_Angle with i = "); put(i,1);
    -- put(", j = "); put(j,1); put(", v = "); put(v);
    -- put(" and w = "); put(w);
+    y1 := Create(integer32(0));
     for k in A'range(2) loop
       if k /= i and k /= j then
         d := Shift(A,i,k);
-        x1 := Multprec_Lattice_Supports.Inner_Product(d,v);
-        y1 := Multprec_Lattice_Supports.Inner_Product(d,w);
+        Clear(x1); x1 := Multprec_Lattice_Supports.Inner_Product(d,v);
+        Clear(y1); y1 := Multprec_Lattice_Supports.Inner_Product(d,w);
+        if y1 < 0
+         then Min(y1);
+        end if;
         ind := k; res := k;
         Multprec_Integer_Vectors.Clear(d);
       end if;
-      exit when (ind >= A'first(2));
+      exit when ((not Equal(y1,0)) and (ind >= A'first(2)));
     end loop;
    -- put("ind = "); put(ind,1);
    -- put("  x1 = "); put(x1); put("  y1 = "); put(y1); new_line;
@@ -473,7 +510,7 @@ package body Multprec_Lattice_3d_Facets is
    -- put("  k = "); put(k,1); new_line;
     if k /= 0 then
       Multprec_Lattice_Supports.Inner(A,i,j,k,u);
-      v := u;
+      Multprec_Integer_Vectors.Copy(u,v); -- v := u;
     else
      -- put("  u = "); put(u);
       w := Normal(A,i,j,u);
@@ -483,8 +520,9 @@ package body Multprec_Lattice_3d_Facets is
       v := Inner_Normal(A,i,j,k);
      -- put("  v = "); put(v); new_line;
     end if;
- -- exception
- --   when others => put_line("exception in Initial_Facet_Normal"); raise;
+   -- put("Initial_Facet_Normal returns v = "); put(v); new_line;
+  exception
+    when others => put_line("exception in Initial_Facet_Normal"); raise;
   end Initial_Facet_Normal;
 
   function Drop ( A : Matrix; p : integer32 ) return Matrix is

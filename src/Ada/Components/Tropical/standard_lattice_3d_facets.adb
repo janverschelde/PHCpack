@@ -1,4 +1,4 @@
---with Standard_Integer64_Vectors_io; use Standard_Integer64_Vectors_io;
+-- with Standard_Integer64_Vectors_io;      use Standard_Integer64_Vectors_io;
 
 with unchecked_deallocation;
 with text_io;                            use text_io;
@@ -43,6 +43,7 @@ package body Standard_Lattice_3d_Facets is
     min : integer64;
 
   begin
+   -- put("inside second_lowest for k = "); put(k,1);
     if k /= A'first(2) 
      then res := A'first(2);
      else res := A'first(2) + 1;
@@ -59,6 +60,7 @@ package body Standard_Lattice_3d_Facets is
         end if;
       end if;
     end loop;
+   -- put(" returns "); put(res,1); new_line;
     return res;
   end Second_Lowest;
 
@@ -93,6 +95,10 @@ package body Standard_Lattice_3d_Facets is
     res : integer32 := Second_Lowest(A,k);
 
   begin
+   -- put("A("); put(A'first(1),1); put(","); put(res,1); put(") = ");
+   -- put(A(A'first(1),res),1); put(" ? = ");
+   -- put("A("); put(A'first(1),1); put(","); put(k,1); put(") = ");
+   -- put(A(A'first(1),k),1); new_line;
     if A(A'first(1),res) /= A(A'first(1),k)
      then res := Largest_Angle(A,k);
     end if;
@@ -276,8 +282,8 @@ package body Standard_Lattice_3d_Facets is
       exit when ((y1 > 0 ) and (ind >= A'first(2)));
      -- exit when (ind >= A'first(2));
     end loop;
-    put("ind = "); put(ind,1);
-    put("  x1 = "); put(x1); put("  y1 = "); put(y1); new_line;
+   -- put("ind = "); put(ind,1);
+   -- put("  x1 = "); put(x1); put("  y1 = "); put(y1); new_line;
     for k in ind+1..A'last(2) loop
       if k /= i and k /= j then
        -- if Independent(A,i,j,k) then
@@ -285,8 +291,8 @@ package body Standard_Lattice_3d_Facets is
           x2 := Standard_Lattice_Supports.Inner_Product(d,v);
           y2 := Standard_Lattice_Supports.Inner_Product(d,w);
           if y2 < 0 then y2 := -y2; end if;
-          put("at k = "); put(k,1); 
-          put("  x2 = "); put(x2); put("  y2 = "); put(y2); new_line;
+         -- put("at k = "); put(k,1); 
+         -- put("  x2 = "); put(x2); put("  y2 = "); put(y2); new_line;
           if y2 /= 0 then
             if x2 >= 0 then
               if x1*y2 > x2*y1

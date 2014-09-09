@@ -1,3 +1,7 @@
+Tue 9 Sep 2014 : standard_lattice_3d_facets.adb contains more commented out
+  diagnostic prints for a bug fix in multprec_lattice_{3d,4d}_facets.adb.
+  Added Normalize operation to multprec_lattice_polytopes for the -0 problem.
+
 Fri 5 Sep 2014 : in multprec_lattice_3d_facets.adb, commented out some
   diagnostic output during the construction of the initial facet normal
   and commented out output in multprec_lattice_polytopes.adb.
