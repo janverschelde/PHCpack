@@ -184,9 +184,11 @@ package body Multprec_Power_Transformations is
           end if;
         end loop;
       elsif zeroes then
-        if w(i) < 0 then
-          Clear(t(i,i)); t(i,i) := Create(integer32(1)); Min(t(i,i));
-          Multprec_Integer_Matrices.Mul2(t,res);
+        if not Equal(w(i),0) then
+          if w(i) < 0 then
+            Clear(t(i,i)); t(i,i) := Create(integer32(1)); Min(t(i,i));
+            Multprec_Integer_Matrices.Mul2(t,res);
+          end if;
         end if;
       end if;
       Multprec_Integer_Vectors.Clear(w);

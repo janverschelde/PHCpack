@@ -1,3 +1,6 @@
+Tue 9 Sep 2014 : modification in multprec_power_transformations.adb and
+  added test in ts_powtrans for multiprecision integer arithmetic.
+
 Wed 30 Jul 2014 : suppressed message in standard_binomial_varieties.adb
   when the system submitted to the blackbox solver is not binomial.
 
