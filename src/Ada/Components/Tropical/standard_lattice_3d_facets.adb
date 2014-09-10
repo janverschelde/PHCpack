@@ -1,4 +1,5 @@
--- with Standard_Integer64_Vectors_io;      use Standard_Integer64_Vectors_io;
+-- with Standard_Integer64_Vectors_io;     use Standard_Integer64_Vectors_io;
+-- with Standard_Integer64_Matrices_io;    use Standard_Integer64_Matrices_io;
 
 with unchecked_deallocation;
 with text_io;                            use text_io;
@@ -199,9 +200,13 @@ package body Standard_Lattice_3d_Facets is
     h : integer64;
 
   begin
+   -- put_line("The matrix A :"); put(A);
+   -- put("in normal with i = "); put(i,1);
+   -- put(" j = "); put(j,1); put(" and v = "); put(v); new_line;
     for k in d'range loop
       d(k) := A(k,j) - A(k,i);
     end loop;
+   -- put("the d = "); put(d); new_line;
     if d(d'first+2) = 0 then
       res(res'first+2) := 1; 
     elsif v(v'first) = 0 then
@@ -234,6 +239,7 @@ package body Standard_Lattice_3d_Facets is
     if res(res'first) < 0
      then Standard_Integer64_Vectors.Min(res);
     end if;
+   -- put("Normal returns res = "); put(res); new_line;
     return res;
   end Normal;
 
@@ -433,8 +439,9 @@ package body Standard_Lattice_3d_Facets is
     v : constant Standard_Integer64_Vectors.Vector(A'range(1)) := Shift(A,i,k);
 
   begin
-   -- new_line;
-   -- put("computing normal to u = "); put(u);
+   -- put("inside Normal, i = "); 
+   -- put(i,1); put(" j = "); put(j,1); put(" k = "); put(k,1);
+   -- put(" with u = "); put(u); 
    -- put(" and v = "); put(v); new_line;
     return Normal(u,v);
  -- exception
@@ -570,6 +577,7 @@ package body Standard_Lattice_3d_Facets is
     v : Standard_Integer64_Vectors.Vector(A'range(1));
 
   begin
+   -- put_line("Calling Initial_Facet with A = "); put(A);
     Initial_Facet_Normal(A,i,j,k,v);
     return Edges_of_Facet(A,v);
   end Initial_Facet;

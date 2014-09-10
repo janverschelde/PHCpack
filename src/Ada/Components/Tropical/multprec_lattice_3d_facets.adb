@@ -243,10 +243,15 @@ package body Multprec_Lattice_3d_Facets is
     h,h2 : Integer_Number;
 
   begin
+   -- put_line("The matrix A : "); put(A);
+   -- put("in normal with i = "); put(i,1);
+   -- put(" j = "); put(j,1); put(" and v = "); put(v); new_line;
     for k in d'range loop
       res(k) := Multprec_Integer_Numbers.Create(integer32(0));
       d(k) := A(k,j) - A(k,i);
     end loop;
+    Multprec_Lattice_Polytopes.Normalize(d);
+   -- put("the d = "); put(d); new_line;
     if Equal(d(d'first+2),0) then
       res(res'first+2) := Multprec_Integer_Numbers.Create(integer32(1)); 
     elsif Equal(v(v'first),0) then
@@ -285,6 +290,7 @@ package body Multprec_Lattice_3d_Facets is
     if res(res'first) < 0
      then Multprec_Integer_Vectors.Min(res);
     end if;
+   -- put("Normal returns res = "); put(res); new_line;
     return res;
   end Normal;
 
@@ -358,6 +364,9 @@ package body Multprec_Lattice_3d_Facets is
         d := Shift(A,i,k);
         x2 := Multprec_Lattice_Supports.Inner_Product(d,v);
         y2 := Multprec_Lattice_Supports.Inner_Product(d,w);
+        if y2 < 0
+         then Min(y2);
+        end if;
        -- put("at k = "); put(k,1); 
        -- put("  x2 = "); put(x2); put("  y2 = "); put(y2); new_line;
         p := x1*y2; q := x2*y1;
@@ -405,7 +414,7 @@ package body Multprec_Lattice_3d_Facets is
           Multprec_Integer_Vectors.Clear(d);
         end if;
       end if;
-      exit when (ind >= A'first(2));
+      exit when ((not Equal(y1,0)) and (ind >= A'first(2)));
     end loop;
     for k in ind+1..A'last(2) loop
       if Standard_Lattice_Supports.Member(f,k) < f'first then
@@ -474,7 +483,9 @@ package body Multprec_Lattice_3d_Facets is
     v : Multprec_Integer_Vectors.Vector(A'range(1)) := Shift(A,i,k);
 
   begin
-   -- put("inside Normal with u = "); put(u); 
+   -- put("inside Normal, i = "); 
+   -- put(i,1); put(" j = "); put(j,1); put(" k = "); put(k,1);
+   -- put(" with u = "); put(u); 
    -- put(" and v = "); put(v); new_line;
     res := Normal(u,v);
     Multprec_Integer_Vectors.Clear(u);
@@ -503,6 +514,7 @@ package body Multprec_Lattice_3d_Facets is
     i := Lowest(A);
     j := Initial_Edge(A,i);
     u := Edge_Normal(A,i,j);
+   -- put("edge normal : "); put(u); new_line;
     s := Multprec_Lattice_Supports.Minimum(A,u);
     k := Third_Point(A,i,j,s,u);
    -- put("  i = "); put(i,1);
@@ -520,6 +532,7 @@ package body Multprec_Lattice_3d_Facets is
       v := Inner_Normal(A,i,j,k);
      -- put("  v = "); put(v); new_line;
     end if;
+    Multprec_Lattice_Polytopes.Normalize(v);
    -- put("Initial_Facet_Normal returns v = "); put(v); new_line;
   exception
     when others => put_line("exception in Initial_Facet_Normal"); raise;
@@ -581,15 +594,26 @@ package body Multprec_Lattice_3d_Facets is
 
     s : constant Standard_Integer_Vectors.Vector
       := Multprec_Lattice_Supports.Support(A,v);
-    B : constant Matrix(A'range(1),s'range)
-      := Multprec_Lattice_Supports.Support_Points(A,s);
-    p : constant integer32 := Multprec_Power_Transformations.Pivot(v);
-    M : constant Matrix(A'range(1),A'range(1))
-      := Multprec_Power_Transformations.Eliminate(v,p);
-    MB : constant Matrix(A'range(1),B'range(2)) := M*B;
-    B2 : Matrix(1..2,B'range(2)) := Drop(MB,p);
+    B : Matrix(A'range(1),s'range);
+    p : integer32;
+    M : Matrix(A'range(1),A'range(1));
+    MB : Matrix(A'range(1),B'range(2));
+    B2 : Matrix(1..2,B'range(2));
+    w : Multprec_Integer_Vectors.Vector(v'range);
 
   begin
+    B := Multprec_Lattice_Supports.Support_Points(A,s);
+   -- put_line("the matrix B before normalization : "); put(B);
+    Multprec_Lattice_Polytopes.Normalize(B);
+   -- put_line("the matrix B after normalization : "); put(B);
+    Multprec_Integer_Vectors.Copy(v,w);
+   -- put_line("The vector v before normalization : "); put(v);
+    Multprec_Lattice_Polytopes.Normalize(w);
+   -- put_line("The after v before normalization : "); put(w);
+    p := Multprec_Power_Transformations.Pivot(w);
+    M := Multprec_Power_Transformations.Eliminate(w,p);
+    MB := M*B;
+    B2 := Drop(MB,p);
     Multprec_Lattice_Polygons.Lexicographic_Decreasing_Sort(B2);
     declare
       C2 : constant Matrix := Multprec_Lattice_Polygons.Convex_Hull_2D(B2);
@@ -598,9 +622,10 @@ package body Multprec_Lattice_3d_Facets is
       res : Facet_in_3d(3,m2'last);
     begin
       res.label := 0;
-      Multprec_Integer_Vectors.Copy(v,res.normal);
+      Multprec_Integer_Vectors.Copy(w,res.normal);
       res.points := Multprec_Lattice_Supports.Indices(A,pts);
       res.neighbors := (m2'range => null);
+      Multprec_Integer_Vectors.Clear(w);
       return res;
     end;
  -- exception
@@ -613,6 +638,7 @@ package body Multprec_Lattice_3d_Facets is
     v : Multprec_Integer_Vectors.Vector(A'range(1));
 
   begin
+   -- put_line("Calling Initial_Facet with A = "); put(A);
     Initial_Facet_Normal(A,i,j,k,v);
     return Edges_of_Facet(A,v);
  -- exception
@@ -763,10 +789,13 @@ package body Multprec_Lattice_3d_Facets is
          else j := f.points(f.points'first);
         end if;
         u := Shift(A,i,j);
+       -- put("u = "); put(u); new_line;
         w := Normal(u,f.normal);
+       -- put("w = "); put(w); new_line;
         Multprec_Lattice_Supports.Inner(A,i,j,f.points,w);
         k := Extreme_Angle(A,i,j,f.points,w,f.normal); 
         v := Inner_Normal(A,i,j,k);
+       -- put("Inner_Normal returned v = "); put(v); new_line;
         f.neighbors(p) := new Facet_in_3d'(Edges_of_Facet(A,v));
         idcnt := idcnt + 1;
         f.neighbors(p).label := idcnt;

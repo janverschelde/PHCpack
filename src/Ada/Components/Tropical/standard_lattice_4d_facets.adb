@@ -71,15 +71,19 @@ package body Standard_Lattice_4d_Facets is
     B2 : Matrix(1..3,s'range);
 
   begin
-   -- put("in Convex_Hull_of_Ridge with v = "); put(v);
+   -- put_line("In Convex_Hull_of_Ridge ...");
+   -- put_line("The matrix A :"); put(A);
+   -- put("with v = " ); put(v); new_line;
     B := Standard_Lattice_Supports.Support_Points(A,s);
-   -- put_line(" spanned by points :"); put(B);
+   -- put_line(" ridge is spanned by the points :"); put(B);
     p := Standard_Power_Transformations.Pivot(v);
-   -- put("in Convex_Hull_of_Ridge with p = "); put(p,1); new_line;
+   -- put("the pivot p = "); put(p,1); new_line;
     M := Standard_Power_Transformations.Eliminate(v,p);
+   -- put("The matrix M : "); put(M);
     MB := M*B;
+   -- put("The matrix MB : "); put(MB);
     B2 := Standard_Lattice_3d_Facets.Drop(MB,p);
-   -- put_line("after dropping one coordinate :"); put(B2);
+   -- put_line("B2 after dropping one coordinate :"); put(B2);
     F := Standard_Lattice_3d_Facets.Convex_Hull_3D(B2);
  -- exception
  --   when others => put_line("exception in Convex_Hull_of_Ridge B2 =");

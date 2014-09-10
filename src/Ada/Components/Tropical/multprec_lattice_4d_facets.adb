@@ -1,8 +1,9 @@
---with text_io,integer_io; use text_io,integer_io;
---with Multprec_Integer_Matrices_io; use Multprec_Integer_Matrices_io;
---with Multprec_Integer_Numbers_io; use Multprec_Integer_Numbers_io;
---with Standard_Integer_Vectors_io; use Standard_Integer_Vectors_io;
---with Multprec_Integer_Vectors_io; use Multprec_Integer_Vectors_io;
+-- with text_io; use text_io;
+-- with Standard_Integer_Numbers_io; use Standard_Integer_Numbers_io;
+-- with Multprec_Integer_Matrices_io; use Multprec_Integer_Matrices_io;
+-- with Multprec_Integer_Numbers_io; use Multprec_Integer_Numbers_io;
+-- with Standard_Integer_Vectors_io; use Standard_Integer_Vectors_io;
+-- with Multprec_Integer_Vectors_io; use Multprec_Integer_Vectors_io;
 
 with unchecked_deallocation;
 with Standard_Lattice_Supports;
@@ -88,16 +89,30 @@ package body Multprec_Lattice_4d_Facets is
     B : Matrix(A'range(1),s'range);
     MB : Matrix(A'range(1),s'range);
     B2 : Matrix(1..3,s'range);
+    w : Multprec_Integer_Vectors.Vector(v'range);
 
   begin
+   -- put_line("In Convex_Hull_of_Ridge ...");
+   -- put_line("The matrix A :"); put(A);
+   -- put("with v = " ); put(v); new_line;
     B := Multprec_Lattice_Supports.Support_Points(A,s);
-    p := Multprec_Power_Transformations.Pivot(v);
-    M := Multprec_Power_Transformations.Eliminate(v,p);
+   -- put_line("ridge is spanned by the poins : "); put(B);
+    Multprec_Lattice_Polytopes.Normalize(B);
+   -- put_line("The matrix B after normalization : "); put(B);
+   -- put_line("The vector v before normalize : "); put(v);
+    Multprec_Integer_Vectors.Copy(v,w);
+    Multprec_Lattice_Polytopes.Normalize(w);
+   -- put_line("The vector v after normalize : "); put(w);
+    p := Multprec_Power_Transformations.Pivot(w);
+   -- put("the pivot p = "); put(p,1); new_line;
+    M := Multprec_Power_Transformations.Eliminate(w,p);
+   -- put_line("The matrix M : "); put(M);
     MB := M*B;
+   -- put_line("The matrix MB : "); put(MB);
     B2 := Multprec_Lattice_3d_Facets.Drop(MB,p);
    -- put_line("The matrix B2 before normalization : "); put(B2);
     Multprec_Lattice_Polytopes.Normalize(B2);
-   -- put_line("The matrix B2 after normalization : "); put(B2);
+   -- put_line("B2 after dropping one coordinate : "); put(B2);
     F := Multprec_Lattice_3d_Facets.Convex_Hull_3D(B2);
   end Convex_Hull_of_Ridge;
 
