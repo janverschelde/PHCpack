@@ -1,3 +1,6 @@
+-- with text_io;                           use text_io;
+-- with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+
 with Standard_Common_Divisors;
 with Standard64_Common_Divisors;
 
@@ -292,6 +295,8 @@ package body Standard_Power_Transformations is
           end loop;
           a := w(j1); b := w(j2);
           Standard64_Common_Divisors.gcd(a,b,ka,lb,d);
+         -- put("gcd("); put(a,1); put(","); put(b,1); put(") = "); put(d,1); 
+         -- put("  k = "); put(ka,1); put("  l = "); put(lb,1); new_line;
           a := a/d;  b := b/d;
           t(j1,j1) := lb; t(j1,j2) := -ka;
           t(j2,j1) := a;  t(j2,j2) := b;
@@ -321,6 +326,8 @@ package body Standard_Power_Transformations is
           end loop;
           a := w(j1); b := w(j2);
           Standard64_Common_Divisors.gcd(a,b,ka,lb,d);
+         -- put("gcd("); put(a,1); put(","); put(b,1); put(") = "); put(d,1); 
+         -- put("  k = "); put(ka,1); put("  l = "); put(lb,1); new_line;
           a := a/d;  b := b/d;
           t(j1,j1) := a;   t(j1,j2) := b;
           t(j2,j1) := -lb; t(j2,j2) := ka;

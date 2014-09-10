@@ -1,3 +1,7 @@
+Wed 10 Sep 2014 : commented out tracing of the gcd calculations in the
+  calculation of an eliminating power transformation in {standard,multprec}_
+  power_transformations.adb.
+
 Tue 9 Sep 2014 : modification in multprec_power_transformations.adb and
   added test in ts_powtrans for multiprecision integer arithmetic.
 

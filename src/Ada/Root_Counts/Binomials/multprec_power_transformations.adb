@@ -1,5 +1,6 @@
---with Multprec_Integer64_Numbers;         use Multprec_Integer64_Numbers;
---with Multprec64_Common_Divisors;         use Multprec64_Common_Divisors;
+-- with text_io;                            use text_io;
+-- with Multprec_Integer_Numbers_io;        use Multprec_Integer_Numbers_io;
+
 with Multprec_Integer_Numbers;           use Multprec_Integer_Numbers;
 with Multprec_Common_Divisors;           use Multprec_Common_Divisors;
 
@@ -136,6 +137,8 @@ package body Multprec_Power_Transformations is
           end loop;
           Copy(w(j1),a); Copy(w(j2),b);
           Multprec_Common_Divisors.gcd(a,b,ka,lb,d);
+         -- put("gcd("); put(a,1); put(","); put(b,1); put(") = "); put(d,1); 
+         -- put("  k = "); put(ka,1); put("  l = "); put(lb,1); new_line;
           Div(a,d); Div(b,d);
           Copy(lb,t(j1,j1)); Min(ka); Copy(ka,t(j1,j2));
           Copy(a,t(j2,j1)); Copy(b,t(j2,j2));
@@ -168,6 +171,8 @@ package body Multprec_Power_Transformations is
           end loop;
           Copy(w(j1),a); Copy(w(j2),b);
           Multprec_Common_Divisors.gcd(a,b,ka,lb,d);
+         -- put("gcd("); put(a,1); put(","); put(b,1); put(") = "); put(d,1); 
+         -- put("  k = "); put(ka,1); put("  l = "); put(lb,1); new_line;
           Div(a,d); Div(b,d);
           Copy(a,t(j1,j1)); Copy(b,t(j1,j2));
           Min(lb); Copy(lb,t(j2,j1)); Copy(ka,t(j2,j2));
