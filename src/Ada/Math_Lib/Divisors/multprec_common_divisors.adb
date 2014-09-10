@@ -148,9 +148,9 @@ package body Multprec_Common_Divisors is
         Min(ll); l := ll;
       elsif b < 0 then
         minb := -b;
-        if minb > a 
-         then pos_gcd(minb,a,ll,k,d);
-         else pos_gcd(a,minb,k,ll,d);
+        if a > minb
+         then pos_gcd(a,minb,k,ll,d);
+         else pos_gcd(minb,a,ll,k,d);
         end if;
         Clear(minb);
         Min(ll); l := ll;

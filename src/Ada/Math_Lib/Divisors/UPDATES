@@ -1,0 +1,44 @@
+Wed 10 Sep 2014 : made multprec_common_divisors.adb consistent with
+  greatest_common_divisors.adb.
+
+Fri 14 Jun 2013 : updates in standard_integer_linear_equalities for integer32.
+
+Thu 13 Jun 2013 : updated standard_integer_norms.a* for integer32 and
+  also modified multprec_integer_norms.adb.
+
+Fri 7 Jun 2013 : new intlina.adb, forked off from the intmat.adb.
+  Updated generic_linear_linear_solvers, multprec_integer_linear_solvers,
+  {standard,multprec}_integer_matrix_inverse, tested by ts_intinv.
+  Changed {standard,multprec}_smith_normal_form, tested by ts_smith;
+  updated multprec_integer_norms, multprec_common_divisors.adb,
+  standard_integer_circuits, tested by ts_gcd and ts_circuit.
+
+Tue 3 Jun 2013 : edited greatest_common_divisors.adb.
+
+Fri 23 Nov 2012 : generating all circuits works in standard_integer_circuits,
+  and is tested by the program ts_circuit.adb.
+
+Thu 22 Nov 2012 : updates in standard_integer_circuits, and in the test
+  program ts_circuit.adb.
+
+Wed 21 Nov 2012 : new directory with code copied from Matrices, the files are
+
+generic_integer_linear_solvers.adb       standard64_common_divisors.ads
+generic_integer_linear_solvers.ads       standard_common_divisors.ads
+greatest_common_divisors.adb             standard_integer64_linear_solvers.ads
+greatest_common_divisors.ads             standard_integer_circuits.adb
+multprec64_common_divisors.ads           standard_integer_circuits.ads
+multprec_common_divisors.adb             standard_integer_linear_equalities.adb
+multprec_common_divisors.ads             standard_integer_linear_equalities.ads
+multprec_common_divisors.ads.bak         standard_integer_linear_solvers.ads
+multprec_floating64_linear_solvers.ads   standard_integer_matrix_inverse.adb
+multprec_integer64_linear_solvers.ads    standard_integer_matrix_inverse.ads
+multprec_integer_linear_solvers.adb      standard_integer_norms.adb
+multprec_integer_linear_solvers.ads      standard_integer_norms.ads
+multprec_integer_linear_solvers.ads.bak  standard_smith_normal_form.adb
+multprec_integer_matrix_inverse.adb      standard_smith_normal_form.ads
+multprec_integer_matrix_inverse.ads      ts_circuit.adb
+multprec_integer_norms.adb               ts_gcd.adb
+multprec_integer_norms.ads               ts_intinv.adb
+multprec_smith_normal_form.adb           ts_smith.adb
+multprec_smith_normal_form.ads
