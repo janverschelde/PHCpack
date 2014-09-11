@@ -1215,7 +1215,8 @@ ts_csols:
 test_state: ts_solcon ts_use_solcon ts_solpool ts_use_solpool \
             ts_syscon ts_use_syscon ts_syspool ts_use_syspool \
             ts_celcon ts_use_celcon ts_pirhom ts_use_c2pieri ts_c2phc \
-            ts_c2str ts_use_c2phc ts_use_c2fac ts_unisolve ts_use_giftwrap
+            ts_c2str ts_use_c2phc ts_use_c2fac ts_unisolve ts_use_giftwrap \
+            ts_giftwcon
 
 standard_solutions_container.o:
 	make -f $(MAKEFILE) standard_solutions_container.o
@@ -1273,6 +1274,9 @@ ts_unisolve:
 
 ts_use_giftwrap:
 	make -f $(MAKEFILE) ts_use_giftwrap
+
+ts_giftwcon:
+	make -f $(MAKEFILE) ts_giftwcon
 
 # files in feedback :
 
@@ -1371,7 +1375,10 @@ ts_greet:
 
 test_lib: lib_read lib_syscon lib_solcon lib_newton lib_celcon lib_roco \
           lib_conpar lib_poco lib_track lib_nxtsol lib_factor lib_pieri \
-          lib_lrhom phc_solve lib_usolve lib_giftwrap
+          lib_lrhom phc_solve lib_usolve lib_giftwrap ts_list2str
+
+ts_list2str:
+	make -f $(MAKEFILE) ts_list2str
 
 lib_read:
 	make -f $(MAKEFILE) lib_read

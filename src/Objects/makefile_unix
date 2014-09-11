@@ -1352,6 +1352,10 @@ ts_use_giftwrap:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_use_giftwrap.adb \
               -o $(BIN)/ts_use_giftwrap
 
+ts_giftwcon:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_giftwcon.adb \
+              -o $(BIN)/ts_giftwcon
+
 # files in feedback :
 
 lib.a:$(PHCAda)/../Feedback/*.c $(PHCAda)/../Feedback/*.h
@@ -1590,6 +1594,11 @@ phcpack.o:
 use_c2phc.o:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 
+ts_list2str:
+	gcc -c $(PHCLib)/lists_and_strings.c
+	gcc -c $(PHCLib)/ts_list2str.c
+	gcc lists_and_strings.o ts_list2str.o -o $(BIN)/ts_list2str
+
 lib_read:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
@@ -1597,21 +1606,21 @@ lib_read:
 	gcc -c $(PHCLib)/lib_read.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o solcon.o lib_read.o \
-                 -o ../bin/lib_read -lm
+                 -o $(BIN)/lib_read -lm
 
 lib_syscon:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/lib_syscon.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc syscon.o lib_syscon.o -o ../bin/lib_syscon
+	gnatlink -C use_c2phc syscon.o lib_syscon.o -o $(BIN)/lib_syscon
 
 lib_solcon: standard_solutions_container.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(PHCLib)/lib_solcon.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc solcon.o lib_solcon.o -o ../bin/lib_solcon
+	gnatlink -C use_c2phc solcon.o lib_solcon.o -o $(BIN)/lib_solcon
 
 lib_newton:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
@@ -1621,7 +1630,7 @@ lib_newton:
 	gcc -c $(PHCLib)/lib_newton.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o lib_newton.o \
-                 -o ../bin/lib_newton -lm
+                 -o $(BIN)/lib_newton -lm
 
 lib_roco: standard_solutions_container.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
@@ -1632,7 +1641,7 @@ lib_roco: standard_solutions_container.o
 	gcc -c $(PHCLib)/lib_roco.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o product.o \
-                    lib_roco.o -o ../bin/lib_roco -lm
+                    lib_roco.o -o $(BIN)/lib_roco -lm
 
 lib_celcon: standard_solutions_container.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
@@ -1643,14 +1652,14 @@ lib_celcon: standard_solutions_container.o
 	gcc -c $(PHCLib)/lib_celcon.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o celcon.o \
-                    lib_celcon.o -o ../bin/lib_celcon -lm
+                    lib_celcon.o -o $(BIN)/lib_celcon -lm
 
 lib_conpar:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/lib_conpar.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc phcpack.o lib_conpar.o -o ../bin/lib_conpar -lm
+	gnatlink -C use_c2phc phcpack.o lib_conpar.o -o $(BIN)/lib_conpar -lm
 
 lib_track: standard_solutions_container.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
@@ -1662,7 +1671,7 @@ lib_track: standard_solutions_container.o
 	gcc -c $(PHCLib)/lib_track.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o witset.o \
-                 jump_track.o lib_track.o -o ../bin/lib_track -lm
+                 jump_track.o lib_track.o -o $(BIN)/lib_track -lm
 
 lib_nxtsol: standard_solutions_container.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
@@ -1674,20 +1683,20 @@ lib_nxtsol: standard_solutions_container.o
 	gcc -c $(PHCLib)/lib_nxtsol.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o jump_track.o \
-                    next_track.o lib_nxtsol.o -o ../bin/lib_nxtsol
+                    next_track.o lib_nxtsol.o -o $(BIN)/lib_nxtsol
 
 lib_poco:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/lib_poco.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc phcpack.o lib_poco.o -o ../bin/lib_poco -lm
+	gnatlink -C use_c2phc phcpack.o lib_poco.o -o $(BIN)/lib_poco -lm
 
 lib_pieri:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2pieri.adb
 	gcc -c -O2 $(PHCLib)/lib_pieri.c
 	gnatbind -n use_c2pieri
-	gnatlink -C use_c2pieri lib_pieri.o -o ../bin/lib_pieri
+	gnatlink -C use_c2pieri lib_pieri.o -o $(BIN)/lib_pieri
 
 lib_lrhom:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
@@ -1704,7 +1713,7 @@ lib_factor: standard_solutions_container.o
 	gcc -c $(PHCLib)/lib_factor.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o solcon.o witset.o lib_factor.o \
-                 -o ../bin/lib_factor -lm
+                 -o $(BIN)/lib_factor -lm
 
 lib_usolve: standard_solutions_container.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
@@ -1714,7 +1723,7 @@ lib_usolve: standard_solutions_container.o
 	gcc -c $(PHCLib)/lib_usolve.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc syscon.o solcon.o unisolvers.o lib_usolve.o \
-                 -o ../bin/lib_usolve -lm
+                 -o $(BIN)/lib_usolve -lm
 
 lib_giftwrap:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
@@ -1722,7 +1731,7 @@ lib_giftwrap:
 	gcc -c $(PHCLib)/lib_giftwrap.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc giftwrappers.o lib_giftwrap.o \
-                 -o ../bin/lib_giftwrap -lm
+                 -o $(BIN)/lib_giftwrap -lm
 
 phc_solve: standard_solutions_container.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
@@ -1732,7 +1741,7 @@ phc_solve: standard_solutions_container.o
 	gcc -c $(PHCLib)/phc_solve.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc syscon.o solcon.o phcpack.o phc_solve.o \
-                 -o ../bin/phc_solve -lm
+                 -o $(BIN)/phc_solve -lm
 
 phcpy2c.so:
 	gnatmake -static -c -fPIC $(INCLULIBS) $(GNAT95FLAGS) \
@@ -1740,6 +1749,7 @@ phcpy2c.so:
 	gcc -static -c -fPIC -O2 $(PHCLib)/syscon.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/solcon.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/product.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/lists_and_strings.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/celcon.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/witset.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/unisolvers.c
@@ -1753,8 +1763,8 @@ phcpy2c.so:
 	gnatmake -static -c -fPIC $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gnatbind -n -shared use_c2phc
 	gnatlink -shared -C use_c2phc syscon.o solcon.o product.o celcon.o \
-                        phcpack.o witset.o schubert.o mapcon.o \
-                        next_track.o phcpy2c.o unisolvers.o giftwrappers.o \
+                  lists_and_strings.o phcpack.o witset.o schubert.o mapcon.o \
+                  next_track.o phcpy2c.o unisolvers.o giftwrappers.o \
                  -o ../Python/PHCpy/phcpy/phcpy2c.so -lm
 
 # note using static flags with gnatbind and gnatlink does not work

@@ -424,6 +424,10 @@ ts_giftwrap:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_giftwrap.adb \
                  -o $(BIN)/ts_giftwrap
 
+ts_giftwcon:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_giftwcon.adb \
+                 -o $(BIN)/ts_giftwcon
+
 # Test programs for the Deformations/Solutions library :
 
 ts_solfilt:
@@ -1539,6 +1543,11 @@ phcpack.o:
 use_c2phc.o:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 
+ts_list2str:
+	gcc -c $(PHCLib)/lists_and_strings.c
+	gcc -c $(PHCLib)/ts_list2str.c
+	gcc -o /tmp/ts_list2str lists_and_strings.o ts_list2str.o
+
 lib_read:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
@@ -1700,6 +1709,7 @@ phcpy2c.so: standard_solutions_container.o
 	gcc -c -O2 $(PHCLib)/syscon.c
 	gcc -c -O2 $(PHCLib)/solcon.c
 	gcc -c -O2 $(PHCLib)/product.c
+	gcc -c -O2 $(PHCLib)/lists_and_strings.c
 	gcc -c -O2 $(PHCLib)/celcon.c
 	gcc -c -O2 $(PHCLib)/witset.c
 	gcc -c -O2 $(PHCLib)/schubert.c
@@ -1714,7 +1724,7 @@ phcpy2c.so: standard_solutions_container.o
 	gnatbind -n use_c2phc
 	gnatlink -dynamiclib -C use_c2phc phcpy2c.o phcpack.o syscon.o \
             witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
-            solcon.o product.o celcon.o schubert.o \
+            solcon.o product.o lists_and_strings.o celcon.o schubert.o \
                  -o ../Python/PHCpy/phcpy/phcpy2c.so -framework Python
 
 # how to make the executables with MPI:
