@@ -428,6 +428,8 @@ static PyObject *py2c_celcon_set_type_of_mixture
 static PyObject *py2c_celcon_type_of_mixture ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_append_lifted_point
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_retrieve_lifted_point
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_number_of_cells ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_create_random_coefficient_system 
  ( PyObject *self, PyObject *args );

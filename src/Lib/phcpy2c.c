@@ -2783,6 +2783,24 @@ static PyObject *py2c_celcon_append_lifted_point
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_celcon_retrieve_lifted_point
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim,sup,ind,nbc;
+   char strpoint[256];
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&dim,&sup,&ind)) return NULL;
+   {
+      double liftedpoint[dim];
+
+      fail = celcon_get_lifted_point(dim,sup,ind,liftedpoint);
+      nbc = dbllist2str(dim,liftedpoint,strpoint);
+   }
+
+   return Py_BuildValue("s",strpoint);
+}
+
 static PyObject *py2c_celcon_number_of_cells ( PyObject *self, PyObject *args )
 {
    int fail,length;
@@ -4550,6 +4568,9 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_celcon_append_lifted_point",
      py2c_celcon_append_lifted_point,METH_VARARGS,
     "appends a lifted point to the cells container"},
+   {"py2c_celcon_retrieve_lifted_point",
+     py2c_celcon_retrieve_lifted_point,METH_VARARGS,
+    "retrieves a lifted point from the cells container"},
    {"py2c_celcon_number_of_cells", py2c_celcon_number_of_cells,
     METH_VARARGS, "returns the number of cells in the cell container"},
    {"py2c_celcon_create_random_coefficient_system",
