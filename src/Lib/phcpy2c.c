@@ -8,6 +8,7 @@
 #include "syscon.h"
 #include "solcon.h"
 #include "product.h"
+#include "lists_and_strings.h"
 #include "celcon.h"
 #include "witset.h"
 #include "mapcon.h"
@@ -2729,6 +2730,59 @@ static PyObject *py2c_product_m_homogeneous_start_system
 
 /* wrapping functions in celcon.h starts here */
 
+static PyObject *py2c_celcon_set_type_of_mixture
+ ( PyObject *self, PyObject *args )
+{
+   int fail,r,cnt;
+   char *strmix;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&r,&strmix)) return NULL;
+
+   cnt = itemcount(strmix);
+   {
+      int mix[cnt];
+
+      str2intlist(cnt,strmix,mix);
+      fail = celcon_set_type_of_mixture(r,mix);
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_celcon_type_of_mixture ( PyObject *self, PyObject *args )
+{
+   int fail,r,nbc;
+   int mix[64];
+   char strmix[256];
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+
+   fail = celcon_type_of_mixture(&r,mix);
+   nbc = intlist2str(r,mix,strmix);
+
+   return Py_BuildValue("s",strmix);
+}
+
+static PyObject *py2c_celcon_append_lifted_point
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim,ind,cnt;
+   char *strpoint;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iis",&dim,&ind,&strpoint)) return NULL;
+
+   cnt = itemcount(strpoint);
+   {
+      double point[cnt];
+
+      str2dbllist(cnt,strpoint,point);
+      fail = celcon_append_lifted_point(dim,ind,point);
+   }
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_celcon_number_of_cells ( PyObject *self, PyObject *args )
 {
    int fail,length;
@@ -4487,6 +4541,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_product_m_homogeneous_start_system",
      py2c_product_m_homogeneous_start_system,
     METH_VARARGS, "makes an m-homogeneous start system for given partition"},
+   {"py2c_celcon_set_type_of_mixture",
+     py2c_celcon_set_type_of_mixture,METH_VARARGS,
+    "initializes the cells container with a type of mixture"},
+   {"py2c_celcon_type_of_mixture",
+     py2c_celcon_type_of_mixture,METH_VARARGS,
+    "returns the type of mixture stored in the cells container"},
+   {"py2c_celcon_append_lifted_point",
+     py2c_celcon_append_lifted_point,METH_VARARGS,
+    "appends a lifted point to the cells container"},
    {"py2c_celcon_number_of_cells", py2c_celcon_number_of_cells,
     METH_VARARGS, "returns the number of cells in the cell container"},
    {"py2c_celcon_create_random_coefficient_system",

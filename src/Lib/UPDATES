@@ -1,4 +1,11 @@
-Mon 7 Sep 2014 : string representation of a facet is added to the
+Thu 11 Sep 2014 : lists_of_strings also works for sequences of doubles,
+  needed in the Python interface to add a lifted point.
+
+Wed 10 Sep 2014 : extended phcpy2c with initialization of cells container
+  and addition of lifted points.  New lists_of_strings collection of
+  functions tested by ts_list2str.
+
+Mon 8 Sep 2014 : string representation of a facet is added to the
   giftwrappers and tested by lib_giftwrap.  Extended phcpy2c.
   Added clear operations to giftwrappers and phcpy2c.
 

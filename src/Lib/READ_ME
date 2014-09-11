@@ -70,6 +70,9 @@ giftwrappers.h                   : prototypes for the giftwrapping method
 giftwrappers.c                   : calls _ada_use_c2phc
 lib_giftwrap.c                   : test on convex hull computation
 ------------------------------------------------------------------------------
+lists_and_strings                : arrays of numbers <-> strings of lists
+ts_list2str                      : interactive test on conversion
+------------------------------------------------------------------------------
 phc_solve.c                      : test on the blackbox solver in PHCpack
 phcpy2c.c                        : C extension module for Python
 ------------------------------------------------------------------------------
