@@ -56,6 +56,31 @@ def convex_hull(dim, points):
         fail = py2c_giftwrap_clear_4d_facets()
     return result
 
+def mixed_volume(mixture, points):
+    """
+    Returns the mixed volume of the tuple in points.
+    Both mixture and points have the same length.
+    The list mixture counts the number of times each support
+    in points should be counted.
+    For example, to compute the volume of a three dimensional polytope,
+    the mixture is [3].  In general, the mixture determines the powers
+    of the unknowns in the Minkowski polynomial of which the computed
+    mixed volume is its coefficient.
+    """
+    from phcpy.phcpy2c import py2c_celcon_initialize_supports as init
+    from phcpy.phcpy2c import py2c_celcon_set_type_of_mixture as setmix
+    from phcpy.phcpy2c import py2c_celcon_append_lifted_point as applft
+    from phcpy.phcpy2c import py2c_celcon_mixed_volume_of_supports as mixvol
+    nbr = len(mixture)
+    init(nbr)
+    setmix(nbr, str(mixture))
+    for k in range(nbr):
+        for point in points[k]:
+            lpt = list(point)
+            lpt.append(0)
+            applft(len(lpt), k+1, str(lpt))
+    return mixvol()
+
 def test_planar_hull():
     """
     Generates a random point configuration in the plane
@@ -78,6 +103,30 @@ def test_convex_hull():
     print 'the facets :'
     for facet in facets:
         print facet
+
+def test_mixed_volume():
+    """
+    Runs some simple tests on mixed volume computation.
+    """
+    simple = [(0, 0, 0), (1, 0, 0), (0, 2, 0), (0, 0, 3)]
+    mixvol = mixed_volume([3], tuple([simple]))
+    print simple, 'has volume', mixvol
+    points = random_points(3, 10, -9, 9)
+    mixvol = mixed_volume([3], tuple([points]))
+    print points, 'has volume', mixvol
+    mixvol = mixed_volume([2, 1], (points, simple))
+    print 'the mixed volume of the two is', mixvol
+    cyclic5 = ([(1, 0, 0, 0, 0), (0, 1, 0, 0, 0), (0, 0, 1, 0, 0), \
+                (0, 0, 0, 1, 0), (0, 0, 0, 0, 1)],
+               [(1, 1, 0, 0, 0), (0, 1, 1, 0, 0), (0, 0, 1, 1, 0), \
+                (0, 0, 0, 1, 1), (1, 0, 0, 0, 1)],
+               [(1, 1, 1, 0, 0), (0, 1, 1, 1, 0), (0, 0, 1, 1, 1), \
+                (1, 0, 0, 1, 1), (1, 1, 0, 0, 1)],
+               [(1, 1, 1, 1, 0), (0, 1, 1, 1, 1), (1, 0, 1, 1, 1), \
+                (1, 1, 0, 1, 1), (1, 1, 1, 0, 1)],
+               [(1, 1, 1, 1, 1), (0, 0, 0, 0, 0)])
+    mixvol = mixed_volume([1, 1, 1, 1, 1], cyclic5)
+    print 'the mixed volume of the cyclic 5-roots problem is', mixvol
 
 if __name__ == "__main__":
     test_planar_hull()

@@ -1,3 +1,5 @@
+Fri 12 Sep 2014 : added mixed volume function to polytopes with test.
+
 Mon 8 Sep 2014 : extended polytopes with function to compute the
   convex hull in 3-space and in 4-space, with a test function.
 
