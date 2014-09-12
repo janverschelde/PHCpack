@@ -423,14 +423,20 @@ static PyObject *py2c_product_m_homogeneous_start_system
 
 /* wrapping functions in celcon.h starts here */
 
+static PyObject *py2c_celcon_initialize_supports
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_set_type_of_mixture
  ( PyObject *self, PyObject *args );
-static PyObject *py2c_celcon_type_of_mixture ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_type_of_mixture
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_append_lifted_point
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_retrieve_lifted_point
  ( PyObject *self, PyObject *args );
-static PyObject *py2c_celcon_number_of_cells ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_mixed_volume_of_supports
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_celcon_number_of_cells
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_create_random_coefficient_system 
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_celcon_dobldobl_random_coefficient_system 

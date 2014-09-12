@@ -2730,6 +2730,18 @@ static PyObject *py2c_product_m_homogeneous_start_system
 
 /* wrapping functions in celcon.h starts here */
 
+static PyObject *py2c_celcon_initialize_supports
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbr;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&nbr)) return NULL;
+   fail = celcon_initialize_supports(nbr);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_celcon_set_type_of_mixture
  ( PyObject *self, PyObject *args )
 {
@@ -2799,6 +2811,18 @@ static PyObject *py2c_celcon_retrieve_lifted_point
    }
 
    return Py_BuildValue("s",strpoint);
+}
+
+static PyObject *py2c_celcon_mixed_volume_of_supports
+ ( PyObject *self, PyObject *args )
+{
+   int fail,mv;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = celcon_mixed_volume_of_supports(&mv);
+
+   return Py_BuildValue("i",mv);
 }
 
 static PyObject *py2c_celcon_number_of_cells ( PyObject *self, PyObject *args )
@@ -4559,6 +4583,9 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_product_m_homogeneous_start_system",
      py2c_product_m_homogeneous_start_system,
     METH_VARARGS, "makes an m-homogeneous start system for given partition"},
+   {"py2c_celcon_initialize_supports",
+     py2c_celcon_initialize_supports,METH_VARARGS,
+    "initializes the cells container with the number of distinct supports"},
    {"py2c_celcon_set_type_of_mixture",
      py2c_celcon_set_type_of_mixture,METH_VARARGS,
     "initializes the cells container with a type of mixture"},
@@ -4571,6 +4598,9 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_celcon_retrieve_lifted_point",
      py2c_celcon_retrieve_lifted_point,METH_VARARGS,
     "retrieves a lifted point from the cells container"},
+   {"py2c_celcon_mixed_volume_of_supports",
+     py2c_celcon_mixed_volume_of_supports,METH_VARARGS,
+    "computes the mixed volume of the points stored in the cell container"},
    {"py2c_celcon_number_of_cells", py2c_celcon_number_of_cells,
     METH_VARARGS, "returns the number of cells in the cell container"},
    {"py2c_celcon_create_random_coefficient_system",

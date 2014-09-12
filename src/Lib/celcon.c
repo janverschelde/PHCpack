@@ -100,6 +100,14 @@ int celcon_mixed_volume_of_supports ( int *mv )
    return fail;
 }
 
+int celcon_initialize_supports ( int nbr )
+{
+   int fail,*b;
+   double *c;
+   fail = _ada_use_c2phc(240,&nbr,b,c);
+   return fail;
+}
+
 int celcon_set_type_of_mixture ( int r, int *mix )
 {
    int fail;

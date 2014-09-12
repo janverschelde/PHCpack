@@ -104,6 +104,11 @@ int celcon_mixed_volume_of_supports ( int *mv );
  *   Returns in mv the mixed volume of the supports 
  *   stored in the cells container. */
 
+int celcon_initialize_supports ( int nbr );
+/*
+ * DESCRIPTION :
+ *   Initializes the number of distinct supports in the cells container. */
+
 int celcon_set_type_of_mixture ( int r, int *mix );
 /*
  * DESCRIPTION :

@@ -1,4 +1,5 @@
-Fri 12 Sep 2014 : extra mixed_volume function in celcon.
+Fri 12 Sep 2014 : extra mixed_volume function and initialization of supports
+  in celcon, called in phcpy2c.
 
 Thu 11 Sep 2014 : lists_of_strings also works for sequences of doubles,
   needed in the Python interface to add a lifted point.
