@@ -558,6 +558,8 @@ function use_c2phc ( job : integer32;
 --         = 105 : permutes the systems in the containers for standard
 --                 complex polynomial and Laurent systems based on
 --                 the induced permutation of the supports.
+--   job   = 239 : returns in a the mixed volume of the points stored
+--                 in the cells container.
 --
 -- operations for polyhedral homotopy in double double precision :
 --

@@ -52,7 +52,7 @@ function use_celcon ( job : integer32;
 --
 -- operations for polyhedral homotopy in standard double precision :
 --
---            = 16 : creates a random coefficient system, using the
+--   job      = 16 : creates a random coefficient system, using the
 --                   type of mixture and supports in the cells container;
 --            = 17 : prompts the user for a polynomial system and stores it
 --                   as random coefficient system in the cells container;
@@ -80,7 +80,7 @@ function use_celcon ( job : integer32;
 --
 -- operations for polyhedral homotopy in double double precision :
 --
---            = 26 : creates a random coefficient system, using the
+--   job      = 26 : creates a random coefficient system, using the
 --                   type of mixture and supports in the cells container,
 --                   with double double coefficients;
 --            = 27 : prompts the user for a polynomial system with 
@@ -113,7 +113,7 @@ function use_celcon ( job : integer32;
 --
 -- operations for polyhedral homotopy in quad double precision :
 --
---            = 36 : creates a random coefficient system, using the
+--   job      = 36 : creates a random coefficient system, using the
 --                   type of mixture and supports in the cells container,
 --                   with double double coefficients;
 --            = 37 : prompts the user for a polynomial system with 
@@ -143,6 +143,11 @@ function use_celcon ( job : integer32;
 --            = 45 : permutes the systems in the containers for quad
 --                   double complex polynomial and Laurent systems based on
 --                   the induced permutation of the supports.
+--
+-- MIXED VOLUME CALCULATOR :
+--
+--   job      = 46 : returns in a the mixed volume of the points stored
+--                   in the cells container.
 
 -- ON RETURN :
 --   0 if operation was successful, otherwise something went wrong...

@@ -1923,6 +1923,7 @@ function use_c2phc ( job : integer32;
       when 231..235 => return C_to_PHCpack(job-220,0);
       when 236 => return Job236; -- solve by double double path tracking
       when 237..238 => return C_to_PHCpack(job-220,0);
+      when 239 => return use_celcon(46,a,b,c);
       when 241..245 => return C_to_PHCpack(job-220,0);
       when 246 => return Job246; -- solve by quad double path tracking
       when 247..248 => return C_to_PHCpack(job-220,0);

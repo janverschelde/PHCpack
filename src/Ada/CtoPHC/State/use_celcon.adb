@@ -796,6 +796,15 @@ function use_celcon ( job : integer32;
     end if;
     return 0;
   end Job45;
+
+  function Job46 return integer32 is -- mixed volume computation
+
+    mv : constant natural32 := Cells_Container.Mixed_Volume;
+
+  begin
+    Assign(integer32(mv),a);
+    return 0;
+  end Job46;
  
   function Handle_Jobs return integer32 is
   begin
@@ -849,6 +858,7 @@ function use_celcon ( job : integer32;
       when 43 => return Job43; -- track path in quad double precision
       when 44 => return Job44; -- copy target solution to qd container
       when 45 => return Job45; -- permute quaddobl target system
+      when 46 => return Job46; -- mixed volume computation
       when others => put_line("invalid operation"); return 1;
     end case;
   exception

@@ -312,6 +312,12 @@ package Cells_Container is
   -- ON RETURN :
   --   A target solution corresponding the k-th cell is added.
 
+  function Mixed_Volume return natural32;
+
+  -- DESCRIPTION :
+  --   If the mixture and lifted supports are defined,
+  --   then the mixed volume of the supports is returned.
+
 -- DESTRUCTORS :
 
   procedure Clear_Cell_Data;

@@ -1,3 +1,6 @@
+Thu 11 Sep 2014 : added mixed_volume function to the cells_container,
+  updated gateways use_celcon and use_c2phc.
+
 Mon 8 Sep 2014 : set pointers to matrices in multprec_giftwrap_containers
   to null when clearing.  Added clear operations to use_giftwrap and made
   them available in use_c2phc.
