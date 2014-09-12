@@ -1,3 +1,5 @@
+Fri 12 Sep 2014 : extra mixed_volume function in celcon.
+
 Thu 11 Sep 2014 : lists_of_strings also works for sequences of doubles,
   needed in the Python interface to add a lifted point.
   Extended phcpy2c with function to retrieve a lifted point.

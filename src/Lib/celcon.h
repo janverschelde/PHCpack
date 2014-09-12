@@ -98,6 +98,12 @@ int celcon_mixed_volume ( int i, int *mv );
  * DESCRIPTION :
  *   Returns in mv the mixed volume of the i-th cell. */
 
+int celcon_mixed_volume_of_supports ( int *mv );
+/*
+ * DESCRIPTION :
+ *   Returns in mv the mixed volume of the supports 
+ *   stored in the cells container. */
+
 int celcon_set_type_of_mixture ( int r, int *mix );
 /*
  * DESCRIPTION :
