@@ -36,7 +36,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
-0.2.3 : 2014-09-   : new module polytopes with convex hulls and mixed volume
+0.2.3 : 2014-09-12 : new module polytopes with convex hulls and mixed volume
 0.2.2 : 2014-08-31 : univariate root finders at various level of precision
 0.2.1 : 2014-08-10 : deflation in double double and quad double precision
 0.2.0 : 2014-07-30 : polyhedral homotopies with double double and quad doubles
