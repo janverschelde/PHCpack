@@ -11,6 +11,7 @@ Release history:
 Version 1.0.1 April 24, 2008
 Version 1.0.2 March 30, 2013, num2str bug fix in form_poly.m
 Version 1.0.3 May 21, 2014, cmplx2str of Bor Plestenjak in form_poly.m
+Version 1.0.4 September 12, 2014, patch in cmplx2str for negative real cffs
 
 The main functions of PHClab are divided into two categories: 
 
