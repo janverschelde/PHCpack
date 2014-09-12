@@ -1034,6 +1034,19 @@ the x-axis, and the yz-plane as the three solution sets.
 .. automodule:: maps
    :members:
 
+Newton polytopes
+----------------
+
+The Newton polytopes of the polynomial system provide important
+information about the structure of the solution sets.
+The module ``polytopes`` provides an interface to the convex hull
+methods of PHCpack.  It also provides a directer interface to the
+mixed volume calculator, directer in the sense that the user can enter
+the supports directly, without having to formulate a polynomial system.
+
+.. automodule:: polytopes
+   :members:
+
 the module phcwulf
 ------------------
 
