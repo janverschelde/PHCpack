@@ -129,6 +129,14 @@ package body Cells_Container is
 
 -- CREATORS :
 
+  procedure Initialize_Supports ( nbr : in natural32 ) is
+  begin
+    if lifsup /= null then
+      Deep_Clear(lifsup);
+      lifsup_last := null;
+    end if;
+  end Initialize_Supports;
+
   procedure Initialize 
               ( mixture : in Standard_Integer_Vectors.Link_to_Vector;
                 lifting : in Link_to_Array_of_Lists;
@@ -949,6 +957,7 @@ package body Cells_Container is
   procedure Clear_Cell_Data is
   begin
     Deep_Clear(lifsup);
+    lifsup_last := null;
     Deep_Clear(cells);
     Standard_Integer_Vectors.Clear(mix);
   end Clear_Cell_Data;

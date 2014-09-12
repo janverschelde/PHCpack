@@ -805,6 +805,16 @@ function use_celcon ( job : integer32;
     Assign(integer32(mv),a);
     return 0;
   end Job46;
+
+  function Job47 return integer32 is -- initialize #distinct supports
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    nbr : constant natural32 := natural32(v_a(v_a'first));
+
+  begin
+    Cells_Container.Initialize_Supports(nbr);
+    return 0;
+  end Job47;
  
   function Handle_Jobs return integer32 is
   begin
@@ -859,6 +869,7 @@ function use_celcon ( job : integer32;
       when 44 => return Job44; -- copy target solution to qd container
       when 45 => return Job45; -- permute quaddobl target system
       when 46 => return Job46; -- mixed volume computation
+      when 47 => return Job47; -- initialize number of distinct supports
       when others => put_line("invalid operation"); return 1;
     end case;
   exception

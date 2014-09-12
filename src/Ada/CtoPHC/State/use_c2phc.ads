@@ -560,6 +560,8 @@ function use_c2phc ( job : integer32;
 --                 the induced permutation of the supports.
 --   job   = 239 : returns in a the mixed volume of the points stored
 --                 in the cells container.
+--         = 240 : initializes the number of different supports with
+--                 the value of a.
 --
 -- operations for polyhedral homotopy in double double precision :
 --

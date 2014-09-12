@@ -148,6 +148,8 @@ function use_celcon ( job : integer32;
 --
 --   job      = 46 : returns in a the mixed volume of the points stored
 --                   in the cells container.
+--            = 47 : initializes the number of different supports with
+--                   the value of a.
 
 -- ON RETURN :
 --   0 if operation was successful, otherwise something went wrong...

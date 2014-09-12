@@ -18,6 +18,12 @@ package Cells_Container is
 
 -- CREATORS :
 
+  procedure Initialize_Supports ( nbr : in natural32 );
+
+  -- DESCRIPTION :
+  --   Initializes the container to hold as many different supports
+  --   as the value of nbr.
+
   procedure Initialize 
               ( mixture : in Standard_Integer_Vectors.Link_to_Vector;
                 lifting : in Link_to_Array_of_Lists;
