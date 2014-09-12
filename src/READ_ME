@@ -1,4 +1,4 @@
-The public distribution for PHCpack version 2.3.92 contains
+The public distribution for PHCpack version 2.3.93 contains
 
   Ada        Ada sources
   bin        binary versions of phc
@@ -21,6 +21,7 @@ This code is distributed under the GNU GENERAL PUBLIC LICENSE,
 see the file COPYING.txt for version 3 of this license.
 
 The date of the latest major release 2.3 is Independence Day 2005 (4 July)
+release 2.3.93 on 2014-90-12 : phcpy contains module polytopes, bug fixes
 release 2.3.92 on 2014-08-31 : sampling in phc -y with dobldobls and quaddobls
 release 2.3.91 on 2014-08-10 : factorization and deflation with dd/qd numbers
 release 2.3.90 on 2014-07-30 : polyhedral homotopies with dd/qd numbers
