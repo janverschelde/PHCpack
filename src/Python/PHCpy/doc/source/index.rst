@@ -1183,6 +1183,61 @@ random, the polytope is simplicial: every facet is spanned by exactly
 two facets we count every edge twice if we multiply the number of facets
 by three, so we have 36/2 = 18 edges.
 
+The mixed volume of a tuple of Newton polytopes
+if defined as the coefficient in the expansion of the volume
+of a linear combination of Newton polytopes.
+For example, for a 3-tuple of Newton polytopes:
+
+.. math::
+
+    vol(\lambda_1 P_1 + \lambda_2 P_2 + \lambda_3 P_3)  
+    = V(P_1, P_1, P_1) \lambda_1^3
+    + V(P_1, P_1, P_2) \lambda_1^2 \lambda_2
+    + V(P_1, P_2, P_2) \lambda_1 \lambda_2^2
+    + V(P_1, P_2, P_3) \lambda_1 \lambda_2 \lambda_3
+    + V(P_2, P_2, P_2) \lambda_2^3
+    + V(P_2, P_2, P_3) \lambda_2^2 \lambda_3
+    + V(P_2, P_3, P_3) \lambda_2 \lambda_3^2
+    + V(P_3, P_3, P_3) \lambda_3^3
+
+where \ :math:`vol(\cdot)` is the volume function
+and \ :math:`V(\cdot)` is the mixed volume.
+For the tuple \ :math:`(P_1, P_2, P_3)`, its mixed volume
+is \ :math:`V(P_1,P_2,P_3)` in the expansion above.
+
+The function ``mixed_volume`` expects two arguments.
+The first argument is the list of exponents of
+the \ :math:`\lambda` variables in the volume expansion formula.
+The second argument of ``mixed_volume`` is a tuple of Newton polytopes.
+The session below illustrates the computation of the volume of one
+single polytope.
+
+::
+
+   >>> from phcpy.polytopes import random_points as rp
+   >>> from phcpy.polytopes import mixed_volume as mv
+   >>> p1 = rp(3, 5, -9, 9)
+   >>> p1
+   [(3, 7, -3), (-1, 0, 8), (-6, -6, 8), (-6, 9, 4), (-3, 4, -7)]
+   >>> tp1 = tuple([p1])
+   >>> mv([3], tp1)
+   2107
+
+The volume is normalized, so the standard unit simplex has volume one.
+To compute mixed volumes of two polytopes, we continue the session,
+generating another polytope:
+
+::
+
+   >>> p2 = rp(3, 5, -9, 9)
+   >>> mv([2, 1],(p1, p2))
+   3910
+   >>> mv([1, 2],(p1, p2))
+   3961
+   >>> 
+
+
+
 .. automodule:: polytopes
    :members:
 
