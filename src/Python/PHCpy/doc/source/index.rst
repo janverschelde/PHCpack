@@ -1190,15 +1190,17 @@ For example, for a 3-tuple of Newton polytopes:
 
 .. math::
 
-    vol(\lambda_1 P_1 + \lambda_2 P_2 + \lambda_3 P_3)  
-    = V(P_1, P_1, P_1) \lambda_1^3
-    + V(P_1, P_1, P_2) \lambda_1^2 \lambda_2
-    + V(P_1, P_2, P_2) \lambda_1 \lambda_2^2
-    + V(P_1, P_2, P_3) \lambda_1 \lambda_2 \lambda_3
-    + V(P_2, P_2, P_2) \lambda_2^3
-    + V(P_2, P_2, P_3) \lambda_2^2 \lambda_3
-    + V(P_2, P_3, P_3) \lambda_2 \lambda_3^2
-    + V(P_3, P_3, P_3) \lambda_3^3
+    \begin{array}{rcl}
+      vol(\lambda_1 P_1 + \lambda_2 P_2 + \lambda_3 P_3)  
+      & = & V(P_1, P_1, P_1) \lambda_1^3 \\
+      & + & V(P_1, P_1, P_2) \lambda_1^2 \lambda_2 \\
+      & + & V(P_1, P_2, P_2) \lambda_1 \lambda_2^2 \\
+      & + & V(P_1, P_2, P_3) \lambda_1 \lambda_2 \lambda_3 \\
+      & + & V(P_2, P_2, P_2) \lambda_2^3 \\
+      & + & V(P_2, P_2, P_3) \lambda_2^2 \lambda_3 \\
+      & + & V(P_2, P_3, P_3) \lambda_2 \lambda_3^2 \\
+      & + & V(P_3, P_3, P_3) \lambda_3^3
+    \end{array}
 
 where \ :math:`vol(\cdot)` is the volume function
 and \ :math:`V(\cdot)` is the mixed volume.
