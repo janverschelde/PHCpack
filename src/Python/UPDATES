@@ -1,5 +1,6 @@
 Tue 16 Sep 2014 : forgot to clear the solutions container in the running
   of the Littlewood-Richardson homotopy function in the file schubert.py.
+  Updated the Sphinx documentation with example sessions.
 
 Fri 12 Sep 2014 : added mixed volume function to polytopes with test.
   Adjusted setup.py, __init__.py, and conf.py for version 0.2.3 of phcpy.
