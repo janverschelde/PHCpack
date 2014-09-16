@@ -33,7 +33,7 @@ def resolve_schubert_conditions(ndim, kdim, brackets, verbose=True):
     subject to intersection conditions represented by brackets.
     The brackets is a list of brackets.  A bracket is a list
     of as many natural numbers (in the range 1..ndim) as kdim.
-    On return is the formal root count, sharp for general flags,
+    On return is the formal root count, which is sharp for general flags.
     and the coordinates of the flags, stored row wise in a list
     of real and imaginary parts.
     """
@@ -54,12 +54,20 @@ def littlewood_richardson_homotopies(ndim, kdim, brackets, \
     subject to intersection conditions represented by brackets.
     The brackets is a list of brackets.  A bracket is a list
     of as many natural numbers (in the range 1..ndim) as kdim.
-    On return is the formal root count, sharp for general flags.
     The Littlewood-Richardson homotopies compute k-planes that
     meet the flags at spaces of dimensions prescribed by the brackets.
+    On return is a 4-tuple.  The first item of the tuple is the
+    formal root count, sharp for general flags, then as second
+    item the coordinates of the flags.  The coordinates of the
+    flags are stored row wise in a list of real and imaginary parts.
+    The third and fourth item of the tuple on return are respectively
+    the polynomial system that has been solved and its solutions.
+    The length of the list of solution should match the root count.
     """
+    from phcpy2c import py2c_solcon_clear_solutions
     from phcpy2c import py2c_schubert_littlewood_richardson_homotopies as lrhom
     from solver import load_standard_solutions, load_standard_system
+    py2c_solcon_clear_solutions()
     nbc = len(brackets)
     cds = ''
     for bracket in brackets:
