@@ -28,11 +28,12 @@ with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
 with Matrix_Indeterminates;             use Matrix_Indeterminates;
-with Standard_Complex_Poly_Matrices;    use Standard_Complex_Poly_Matrices;
+with Standard_Complex_Poly_Matrices;
 with Standard_Complex_Poly_Matrices_io; use Standard_Complex_Poly_Matrices_io;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Standard_Embed_Polynomials;        use Standard_Embed_Polynomials;
+with Standard_Numerical_Rank;
 with Brackets,Brackets_io;              use Brackets,Brackets_io;
 with Bracket_Monomials;                 use Bracket_Monomials;
 with Bracket_Monomials_io;              use Bracket_Monomials_io;
@@ -40,6 +41,7 @@ with Bracket_Polynomials;               use Bracket_Polynomials;
 with Bracket_Polynomials_io;            use Bracket_Polynomials_io;
 with Bracket_Systems;                   use Bracket_Systems;
 with Bracket_Systems_io;                use Bracket_Systems_io;
+with Plane_Representations;
 with Symbolic_Schubert_Conditions;      use Symbolic_Schubert_Conditions;
 with Checker_Boards,Checker_Moves;      use Checker_Boards,Checker_Moves;
 with Checker_Boards_io;                 use Checker_Boards_io;
@@ -592,6 +594,8 @@ procedure ts_flagcond is
 
   -- REQUIRED : the symbol table is initialized properly.
 
+    use Standard_Complex_Poly_Matrices;
+
     m : constant integer32 := integer32(Number_of_Moves(natural32(n)));
     all_moves : constant Standard_Natural_VecVecs.VecVec(1..m)
               := Checker_Posets.Generalizing_Moves(n);
@@ -775,6 +779,8 @@ procedure ts_flagcond is
     --   cx       n-by-k matrix is localization pattern for k-plane
     --            of the current move.
 
+      use Standard_Complex_Poly_Matrices;
+
      -- valpvt : constant Matrix(pvt'range(1),pvt'range(2))
      --        := Evaluate_Transformation(pvt,Create(1.0));
       valict : constant Matrix(invct'range(1),invct'range(2))
@@ -820,6 +826,8 @@ procedure ts_flagcond is
     -- ON RETURN :
     --   pvt      transformation of current move;
     --   pvx      symbolic form of solution plane in current move.
+
+      use Standard_Complex_Poly_Matrices;
 
       f : constant integer32 := Checker_Moves.Falling_Checker(p);
       a : constant integer32 := Checker_Moves.Ascending_Checker(p,f);
@@ -925,6 +933,8 @@ procedure ts_flagcond is
   end Symbolic_Localization_Patterns;
 
   procedure Define_Moving_Flag_Homotopy ( n,k : in integer32 ) is
+
+    use Standard_Complex_Poly_Matrices;
 
     p : Standard_Natural_Vectors.Vector(1..n);
     b : Board(1..n,1..n);
@@ -1133,6 +1143,114 @@ procedure ts_flagcond is
     Clear(b);
   end Define_Schubert_Systems;
 
+  procedure Verify_Solution
+              ( n,k : in integer32; cond : in Bracket;
+                flag : in Standard_Complex_Matrices.Matrix;
+                locmap : in Standard_Natural_Matrices.Matrix;
+                sol : in Solution ) is
+
+  -- DESCRIPTION :
+  --   Verifies the solution with respect to the flag and the condition.
+
+    tol : constant double_float := 1.0e-8;
+    solplane : constant Standard_Complex_Matrices.Matrix(1..n,1..k)
+             := Checker_Localization_Patterns.Map(locmap,sol.v);
+
+  begin
+    put_line("The solution as a matrix : ");
+    put(solplane);
+    for L in cond'range loop
+      declare
+        nbcols : constant integer32 := k + integer32(cond(L));
+        A : Standard_Complex_Matrices.Matrix(1..n,1..nbcols);
+        rnk,expected : natural32;
+      begin
+        for i in 1..n loop
+          for j in 1..k loop
+            A(i,j) := solplane(i,j);
+          end loop;
+          for j in 1..integer32(cond(L)) loop
+            A(i,k+j) := flag(i,j);
+          end loop;
+        end loop;
+        rnk := Standard_Numerical_Rank.Numerical_Rank(A,tol);
+        put("Rank at condition "); put(L,1); put(" : ");
+        put(rnk,1); 
+        expected := natural32(k + integer32(cond(L)) - L);
+        if rnk = expected then
+          put(" = "); put(expected,1);
+          put_line(", the expected rank.");
+        else
+          put(" /= "); put(expected,1);
+          put_line(", the expected rank, bug!?");
+        end if;
+      end;
+    end loop;
+  end Verify_Solution;
+
+  procedure Verify_Solutions
+              ( n,k : in integer32; cond : in Bracket;
+                flag : in Standard_Complex_Matrices.Matrix;
+                sols : in Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Verifies the solutions with respect to the flag and the condition.
+
+    p : constant Standard_Natural_Vectors.Vector(1..n)
+      := Identity_Permutation(natural32(n));
+    rows,cols : Standard_Natural_Vectors.Vector(1..k);
+    locmap : Standard_Natural_Matrices.Matrix(1..n,1..k);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    for i in cond'range loop
+      rows(i) := cond(i);
+      cols(i) := cond(i);
+    end loop;
+    locmap := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+    put("The general localization map for a "); put(k,1);
+    put("-plane in "); put(n,1); put_line("-space :");
+    put(locmap);
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Verify_Solution(n,k,cond,flag,locmap,ls.all);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Verify_Solutions;
+
+  procedure Verify_Solutions_of_Schubert_Problem ( n,k : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the file name for the coordinates of a flag,
+  --   represented as an complex n-by-n matrix, then asks for a list of
+  --   solutions, and then finally for a bracket condition.
+
+    sols : Solution_List; 
+    flagfile : file_type;
+    flag : Standard_Complex_Matrices.Matrix(1..n,1..n);
+    cond : Bracket(1..k);
+
+  begin
+    new_line;
+    put_line("Reading the file name for the coordinates of the flag ...");
+    Read_Name_and_Open_File(flagfile);
+    new_line;
+    put("Reading a "); put(n,1); put("-by-"); put(n,1);
+    put_line(" matrix ...");
+    get(flagfile,flag);
+    close(flagfile);
+    put_line("The matrix : "); put(flag);
+    new_line;
+    Read(sols);
+    put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
+    new_line;
+    put("Give "); put(k,1); put(" increasing integers : ");
+    get(cond);
+    put("The bracket condition : "); put(cond); new_line;
+    Verify_Solutions(n,k,cond,flag,sols);
+  end Verify_Solutions_of_Schubert_Problem;
+
   procedure Main is
 
     n,k : integer32 := 0;
@@ -1155,9 +1273,10 @@ procedure ts_flagcond is
     put_line("  7. define homotopy with a moving flag;");
     put_line("  8. test one flag homotopy for one move;");
     put_line("  9. test moving flag continuation;");
-    put_line("  A. define all systems for a general Schubert problem.");
-    put("Type 1, 2, 3, 4, 5, 6, 7, 8, 9, or A to make your choice : ");
-    Ask_Alternative(ans,"123456789A");
+    put_line("  A. define all systems for a general Schubert problem;");
+    put_line("  B. numerically verifying solutions of a Schubert condition.");
+    put("Type 1, 2, 3, 4, 5, 6, 7, 8, 9, A, or B to make your choice : ");
+    Ask_Alternative(ans,"123456789AB");
     case ans is
       when '1' => Test_Minor_Expansions(n,k);
       when '2' => Symbolic_Plane(n,k);
@@ -1170,6 +1289,7 @@ procedure ts_flagcond is
       when '8' => Test_One_Flag_Homotopy(n,k);
       when '9' => Run_Moving_Flag_Continuation(n,k);
       when 'A' => Define_Schubert_Systems(n,k);
+      when 'B' => Verify_Solutions_of_Schubert_Problem(n,k);
       when others => null;
     end case;
   end Main;

@@ -1,3 +1,6 @@
+Wed 17 Sep 2014 : added test on rank on the solutions with respect to the
+  flag and the intersection condition to ts_flagcond.adb.
+
 Sun 15 Jun 2014 : refactored ts_induce.adb into the new package 
   flag_transformations to transform pair of flags.
 
