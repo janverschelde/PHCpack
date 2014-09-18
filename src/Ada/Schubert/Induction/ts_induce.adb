@@ -28,7 +28,7 @@ with Checker_Homotopies;
 with Intersection_Posets;                use Intersection_Posets;
 with Intersection_Posets_io;             use Intersection_Posets_io;
 with Moving_Flag_Homotopies;             use Moving_Flag_Homotopies;
-with Flag_Transformations;               use Flag_Transformations;
+with Flag_Transformations;
 
 procedure ts_induce is
 
@@ -464,6 +464,8 @@ procedure ts_induce is
   -- DESCRIPTION :
   --   Tests whether A*f1 = g1*T1 and A*f2 = g2*T2.
 
+    rsd : double_float;
+
     use Standard_Complex_Matrices;
 
   begin
@@ -471,6 +473,8 @@ procedure ts_induce is
     put_line("g1*T1 : "); put(g1*T1);
     put_line("A*f2 : "); put(A*f2);
     put_line("g2*T2 : "); put(g2*T2);
+    rsd := Flag_Transformations.Residual(f1,f2,g1,g2,A,T1,T2);
+    put("The residual : "); put(rsd); new_line;
   end Test_Flag_Transformation;
 
   procedure Test_Random_Flags2Flags ( n : in integer32 ) is
@@ -490,9 +494,9 @@ procedure ts_induce is
        := Standard_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
     dim : constant integer32 := 2*n*n;
     mat : constant Standard_Complex_Matrices.Matrix(1..dim,1..dim)
-        := Flag_Transformation_Coefficient_Matrix(n,f1,f2,g1,g2);
+        := Flag_Transformations.Coefficient_Matrix(n,f1,f2,g1,g2);
     rhs : constant Standard_Complex_Vectors.Vector(1..dim)
-        := Flag_Transformation_Right_Hand_Side(n,g1);
+        := Flag_Transformations.Right_Hand_Side(n,g1);
     wrk : Standard_Complex_Matrices.Matrix(1..dim,1..dim) := mat;
     sol : Standard_Complex_Vectors.Vector(1..dim) := rhs;
     res : Standard_Complex_Vectors.Vector(1..dim);
@@ -514,7 +518,7 @@ procedure ts_induce is
     res := rhs - mat*sol;
     nrm := Max_Norm(res);
     put("The norm of the residual : "); put(nrm); new_line;
-    Extract_Matrices(n,sol,A,T1,T2);
+    Flag_Transformations.Extract_Matrices(n,sol,A,T1,T2);
     Test_Flag_Transformation(f1,f2,g1,g2,A,T1,T2);
   end Test_Random_Flags2Flags;
 
@@ -537,9 +541,9 @@ procedure ts_induce is
        := Standard_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
     dim : constant integer32 := 2*n*n;
     mat : constant Standard_Complex_Matrices.Matrix(1..dim,1..dim)
-        := Flag_Transformation_Coefficient_Matrix(n,f1,f2,g1,g2);
+        := Flag_Transformations.Coefficient_Matrix(n,f1,f2,g1,g2);
     rhs : constant Standard_Complex_Vectors.Vector(1..dim)
-        := Flag_Transformation_Right_Hand_Side(n,g1);
+        := Flag_Transformations.Right_Hand_Side(n,g1);
     wrk : Standard_Complex_Matrices.Matrix(1..dim,1..dim) := mat;
     sol : Standard_Complex_Vectors.Vector(1..dim) := rhs;
     res : Standard_Complex_Vectors.Vector(1..dim);
@@ -561,7 +565,7 @@ procedure ts_induce is
     res := rhs - mat*sol;
     nrm := Max_Norm(res);
     put("The norm of the residual : "); put(nrm); new_line;
-    Extract_Matrices(n,sol,A,T1,T2);
+    Flag_Transformations.Extract_Matrices(n,sol,A,T1,T2);
     Test_Flag_Transformation(f1,f2,g1,g2,A,T1,T2);
   end Test_Specific_Flags2Flags;
 
