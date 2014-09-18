@@ -1,6 +1,7 @@
 Thu 18 Sep 2014 : moved code for the function "moved_flag" from ts_induce
   to the package moving_flag_homotopies.  Extended the numerical testing
   in ts_flagcond.adb.  Upgrades in flag_transformations, tested by ts_induce.
+  Applied the transformations in the numerical test in ts_flagcond.adb.
 
 Wed 17 Sep 2014 : added test on rank on the solutions with respect to the
   flag and the intersection condition to ts_flagcond.adb.

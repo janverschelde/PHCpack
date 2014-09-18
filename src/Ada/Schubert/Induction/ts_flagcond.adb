@@ -56,6 +56,7 @@ with Numeric_Schubert_Conditions;       use Numeric_Schubert_Conditions;
 with Remember_Symbolic_Minors;          use Remember_Symbolic_Minors;
 with Moving_Flag_Homotopies;            use Moving_Flag_Homotopies;
 with Schubert_Posets;
+with Flag_Transformations;
 with Drivers_for_Schubert_Induction;    use Drivers_for_Schubert_Induction;
 
 procedure ts_flagcond is
@@ -1189,6 +1190,56 @@ procedure ts_flagcond is
     end loop;
   end Verify_Solution;
 
+  procedure Verify_Transformed_Solution
+              ( n,k : in integer32; cond : in Bracket;
+                flag,trnf : in Standard_Complex_Matrices.Matrix;
+                locmap : in Standard_Natural_Matrices.Matrix;
+                sol : in Solution ) is
+
+  -- DESCRIPTION :
+  --   Verifies the solution with respect to the flag and the condition,
+  --   after transforming the solution using the matrix trnf.
+
+    use Standard_Complex_Matrices;
+
+    tol : constant double_float := 1.0e-8;
+    solplane : constant Standard_Complex_Matrices.Matrix(1..n,1..k)
+             := Checker_Localization_Patterns.Map(locmap,sol.v);
+    trnfsolplane : constant Standard_Complex_Matrices.Matrix(1..n,1..k)
+                 := trnf*solplane;
+
+  begin
+    put_line("The solution as a matrix : ");
+    put(solplane);
+    for L in cond'range loop
+      declare
+        nbcols : constant integer32 := k + integer32(cond(L));
+        A : Standard_Complex_Matrices.Matrix(1..n,1..nbcols);
+        rnk,expected : natural32;
+      begin
+        for i in 1..n loop
+          for j in 1..k loop
+            A(i,j) := trnfsolplane(i,j);
+          end loop;
+          for j in 1..integer32(cond(L)) loop
+            A(i,k+j) := flag(i,j);
+          end loop;
+        end loop;
+        rnk := Standard_Numerical_Rank.Numerical_Rank(A,tol);
+        put("Rank at condition "); put(L,1); put(" : ");
+        put(rnk,1); 
+        expected := natural32(k + integer32(cond(L)) - L);
+        if rnk = expected then
+          put(" = "); put(expected,1);
+          put_line(", the expected rank.");
+        else
+          put(" /= "); put(expected,1);
+          put_line(", the expected rank, bug!?");
+        end if;
+      end;
+    end loop;
+  end Verify_Transformed_Solution;
+
   procedure Verify_Solutions
               ( n,k : in integer32; cond : in Bracket;
                 flag : in Standard_Complex_Matrices.Matrix;
@@ -1220,6 +1271,42 @@ procedure ts_flagcond is
     end loop;
   end Verify_Solutions;
 
+  procedure Verify_Transformed_Solutions
+              ( n,k : in integer32; cond : in Bracket;
+                flag,trnf : in Standard_Complex_Matrices.Matrix;
+                sols : in Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Verifies the solutions with respect to the flag and the condition,
+  --   where trnf is applied to the solution plane.
+
+    use Standard_Complex_Matrices;
+
+    p : constant Standard_Natural_Vectors.Vector(1..n)
+      := Identity_Permutation(natural32(n));
+    rows,cols : Standard_Natural_Vectors.Vector(1..k);
+    locmap : Standard_Natural_Matrices.Matrix(1..n,1..k);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+    --t2flag : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+    --       := t2*flag;
+
+  begin
+    for i in cond'range loop
+      rows(i) := cond(i);
+      cols(i) := cond(i);
+    end loop;
+    locmap := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+    put("The general localization map for a "); put(k,1);
+    put("-plane in "); put(n,1); put_line("-space :");
+    put(locmap);
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Verify_Transformed_Solution(n,k,cond,flag,trnf,locmap,ls.all);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Verify_Transformed_Solutions;
+
   procedure Verify_Solutions_of_Schubert_Problem ( n,k : in integer32 ) is
 
   -- DESCRIPTION :
@@ -1235,6 +1322,14 @@ procedure ts_flagcond is
           := Moving_Flag_Homotopies.Moved_Flag(n);
     inverse_moved : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
                   := Standard_Matrix_Inversion.Inverse(moved);
+    idemat : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+           :=  Moving_Flag_Homotopies.Identity(n);
+    ranflag : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+            := Moving_Flag_Homotopies.Random_Flag(n);
+    A,T1,T2,trnflag : Standard_Complex_Matrices.Matrix(1..n,1..n);
+    rsd : double_float;
+
+    use Standard_Complex_Matrices;
 
   begin
     new_line;
@@ -1260,6 +1355,17 @@ procedure ts_flagcond is
     put_line("The coordinates for the moved flag :"); put(moved);
     put_line("Verifying the bracket condition for the moved flag ...");
     Verify_Solutions(n,k,cond,inverse_moved,sols);
+    Flag_Transformations.Transform(n,moved,idemat,idemat,ranflag,A,T1,T2);
+    rsd := Flag_Transformations.Residual(moved,idemat,idemat,ranflag,A,T1,T2);
+    put("The residual : "); put(rsd); new_line;
+    new_line;
+    put_line("Verifying the condition for the transformed fixed flag ...");
+    trnflag := T2*flag;
+    Verify_Transformed_Solutions(n,k,cond,trnflag,T2,sols);
+    new_line;
+    put_line("Verifying the condition for the transformed random flag ...");
+    trnflag := ranflag*T2;
+    Verify_Transformed_Solutions(n,k,cond,ranflag,T1,sols);
   end Verify_Solutions_of_Schubert_Problem;
 
   procedure Main is
