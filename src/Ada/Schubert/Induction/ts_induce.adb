@@ -32,6 +32,10 @@ with Flag_Transformations;               use Flag_Transformations;
 
 procedure ts_induce is
 
+-- DESCRIPTION :
+--   Allows to interactively test the setup and the running of the
+--   Littlewood-Richardson homotopies.
+
   procedure Generalizing_Moving_Flags ( n : in integer32 ) is
 
   -- DESCRIPTION :
@@ -514,26 +518,6 @@ procedure ts_induce is
     Test_Flag_Transformation(f1,f2,g1,g2,A,T1,T2);
   end Test_Random_Flags2Flags;
 
-  function Moved_Flag
-             ( n : integer32 ) return Standard_Complex_Matrices.Matrix is
-
-  -- DESCRIPTION :
-  --   Returns the coordinates for the moved flag in n-space.
-
-    res : Standard_Complex_Matrices.Matrix(1..n,1..n);
-
-  begin
-    for i in 1..n loop
-      for j in 1..n-i+1 loop
-        res(i,j) := Create(1.0);
-      end loop;
-      for j in (n-i+2)..n loop
-        res(i,j) := Create(0.0);
-      end loop;
-    end loop;
-    return res;
-  end Moved_Flag;
-
   procedure Test_Specific_Flags2Flags ( n : in integer32 ) is
 
   -- DESCRIPTION :
@@ -544,7 +528,7 @@ procedure ts_induce is
   --   so that A*F1 = G1*T1 and A*F2 = G2*T2.
 
     f1 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-       := Moved_Flag(n);
+       := Moving_Flag_Homotopies.Moved_Flag(n);
     f2 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
        := Moving_Flag_Homotopies.Identity(n);
     g1 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)

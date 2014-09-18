@@ -38,6 +38,12 @@ package Moving_Flag_Homotopies is
   -- DESCRIPTION :
   --   Returns the n-by-n identity matrix.
 
+  function Moved_Flag
+             ( n : integer32 ) return Standard_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns the coordinates for the moved flag in n-space.
+
   function Numeric_Transformation
              ( t : Standard_Natural_Matrices.Matrix; g : Complex_Number )
              return Standard_Complex_Matrices.Matrix;

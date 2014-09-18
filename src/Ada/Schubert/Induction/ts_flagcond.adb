@@ -42,6 +42,7 @@ with Bracket_Polynomials_io;            use Bracket_Polynomials_io;
 with Bracket_Systems;                   use Bracket_Systems;
 with Bracket_Systems_io;                use Bracket_Systems_io;
 with Plane_Representations;
+with Standard_Matrix_Inversion;
 with Symbolic_Schubert_Conditions;      use Symbolic_Schubert_Conditions;
 with Checker_Boards,Checker_Moves;      use Checker_Boards,Checker_Moves;
 with Checker_Boards_io;                 use Checker_Boards_io;
@@ -1230,6 +1231,10 @@ procedure ts_flagcond is
     flagfile : file_type;
     flag : Standard_Complex_Matrices.Matrix(1..n,1..n);
     cond : Bracket(1..k);
+    moved : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+          := Moving_Flag_Homotopies.Moved_Flag(n);
+    inverse_moved : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+                  := Standard_Matrix_Inversion.Inverse(moved);
 
   begin
     new_line;
@@ -1248,7 +1253,13 @@ procedure ts_flagcond is
     put("Give "); put(k,1); put(" increasing integers : ");
     get(cond);
     put("The bracket condition : "); put(cond); new_line;
+    new_line;
+    put_line("Verifying the bracket condition for the fixed flag ...");
     Verify_Solutions(n,k,cond,flag,sols);
+    new_line;
+    put_line("The coordinates for the moved flag :"); put(moved);
+    put_line("Verifying the bracket condition for the moved flag ...");
+    Verify_Solutions(n,k,cond,inverse_moved,sols);
   end Verify_Solutions_of_Schubert_Problem;
 
   procedure Main is

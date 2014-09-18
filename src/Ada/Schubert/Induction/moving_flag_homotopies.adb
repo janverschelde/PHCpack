@@ -73,6 +73,23 @@ package body Moving_Flag_Homotopies is
     return res;
   end Identity;
 
+  function Moved_Flag
+             ( n : integer32 ) return Standard_Complex_Matrices.Matrix is
+
+    res : Standard_Complex_Matrices.Matrix(1..n,1..n);
+
+  begin
+    for i in 1..n loop
+      for j in 1..n-i+1 loop
+        res(i,j) := Create(1.0);
+      end loop;
+      for j in (n-i+2)..n loop
+        res(i,j) := Create(0.0);
+      end loop;
+    end loop;
+    return res;
+  end Moved_Flag;
+
   function Numeric_Transformation
               ( t : Standard_Natural_Matrices.Matrix; g : Complex_Number )
               return Standard_Complex_Matrices.Matrix is
