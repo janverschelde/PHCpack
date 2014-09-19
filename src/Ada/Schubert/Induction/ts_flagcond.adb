@@ -1220,6 +1220,58 @@ procedure ts_flagcond is
     end loop;
   end Verify_Solutions;
 
+  function Expanded_Polynomial_Equations 
+             ( n,k : integer32; cond : Bracket;
+               flag : Standard_Complex_Matrices.Matrix )
+             return Poly_Sys is
+
+  -- DESCRIPTION :
+  --   Returns the expanded polynomial equation for the condition on
+  --   a k-plane in n-space with the localization map in locmap,
+  --   imposed by the conditions in cond and with respect to the given flag.
+
+    p : constant Standard_Natural_Vectors.Vector(1..n)
+      := Identity_Permutation(natural32(n));
+    b : constant Standard_Natural_Vectors.Vector
+      := Standard_Natural_Vectors.Vector(cond);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,b,b);
+    nq : constant integer32
+       := integer32(Number_of_Equations(natural32(n),cond));
+    dim : constant natural32 := Dimension(locmap);
+    xpm : constant Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
+        := Symbolic_Form_of_Plane(n,k,locmap);
+    nv : constant natural32 := Dimension(locmap);
+    res : constant Poly_Sys(1..nq) := Expand(n,k,nq,cond,xpm,flag);
+
+  begin
+    return res;
+  end Expanded_Polynomial_Equations;
+
+  procedure Evaluate_Solutions
+              ( n,k : in integer32; cond : in Bracket;
+                flag : in Standard_Complex_Matrices.Matrix;
+                sols : in Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Evaluates the solutions at the expanded polynomial equations.
+
+    sys : constant Poly_Sys := Expanded_Polynomial_Equations(n,k,cond,flag);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      declare
+        y : constant Standard_Complex_Vectors.Vector := Eval(sys,ls.v);
+      begin
+        put_line("The value of the solution : "); put_line(y);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Evaluate_Solutions;
+
   procedure Verify_Solutions_of_Schubert_Problem ( n,k : in integer32 ) is
 
   -- DESCRIPTION :
@@ -1278,6 +1330,7 @@ procedure ts_flagcond is
     new_line;
     put_line("Verifying the condition for the transformed random flag ...");
     Verify_Solutions(n,k,cond,ranflag,sols,tol);
+    Evaluate_Solutions(n,k,cond,ranflag,sols);
   end Verify_Solutions_of_Schubert_Problem;
 
   procedure Main is
@@ -1303,7 +1356,7 @@ procedure ts_flagcond is
     put_line("  8. test one flag homotopy for one move;");
     put_line("  9. test moving flag continuation;");
     put_line("  A. define all systems for a general Schubert problem;");
-    put_line("  B. numerically verifying solutions of a Schubert condition.");
+    put_line("  B. numerically verifying solutions of flag transformation.");
     put("Type 1, 2, 3, 4, 5, 6, 7, 8, 9, A, or B to make your choice : ");
     Ask_Alternative(ans,"123456789AB");
     case ans is
