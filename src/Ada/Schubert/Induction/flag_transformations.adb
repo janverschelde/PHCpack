@@ -1,8 +1,12 @@
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
+with Standard_Matrix_Inversion;
+with Moving_Flag_Homotopies;
 
 package body Flag_Transformations is
+
+-- DEFINING A LINEAR SYSTEM :
 
   function Coefficient_Matrix
              ( n : integer32;
@@ -76,6 +80,8 @@ package body Flag_Transformations is
     return res;
   end Right_Hand_Side;
 
+-- PROCESSING THE SOLUTION :
+
   procedure Extract_Matrices
               ( n : in integer32; sol : in Standard_Complex_Vectors.Vector;
                 A,T1,T2 : out Standard_Complex_Matrices.Matrix ) is
@@ -109,6 +115,8 @@ package body Flag_Transformations is
       end loop;
     end loop;
   end Extract_Matrices;
+
+-- THE MAIN TRANSFORMATION :
 
   procedure Transform
               ( n : in integer32; 
@@ -160,5 +168,48 @@ package body Flag_Transformations is
     end loop;
     return res;
   end Residual;
+
+-- GENERAL WRAPPERS :
+
+  function Move_to_Generic_Flag
+              ( n : integer32 ) return Standard_Complex_Matrices.Matrix is
+
+    res : Standard_Complex_Matrices.Matrix(1..n,1..n)
+        := Moving_Flag_Homotopies.Random_Flag(n);
+    moved : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+          := Moving_Flag_Homotopies.Moved_Flag(n);
+    idemat : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+           :=  Moving_Flag_Homotopies.Identity(n);
+    A,T1,T2,invT1 : Standard_Complex_Matrices.Matrix(1..n,1..n);
+
+    use Standard_Complex_Matrices;
+
+  begin
+    Transform(n,moved,idemat,idemat,res,A,T1,T2);
+    invT1 := Standard_Matrix_Inversion.Inverse(T1);
+    res := invT1*res;
+    return res;
+  end Move_to_Generic_Flag;
+
+  procedure Move_to_Generic_Flag
+              ( n : in integer32; F : out Standard_Complex_Matrices.Matrix;
+                rsd : out double_float ) is
+
+    moved : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+          := Moving_Flag_Homotopies.Moved_Flag(n);
+    idemat : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+           :=  Moving_Flag_Homotopies.Identity(n);
+    ranflag : Standard_Complex_Matrices.Matrix(1..n,1..n)
+            := Moving_Flag_Homotopies.Random_Flag(n);
+    A,T1,T2,invT1 : Standard_Complex_Matrices.Matrix(1..n,1..n);
+
+    use Standard_Complex_Matrices;
+
+  begin
+    Transform(n,moved,idemat,idemat,ranflag,A,T1,T2);
+    invT1 := Standard_Matrix_Inversion.Inverse(T1);
+    F := invT1*ranflag;
+    rsd := Residual(moved,idemat,idemat,ranflag,A,T1,T2);
+  end Move_to_Generic_Flag;
 
 end Flag_Transformations;

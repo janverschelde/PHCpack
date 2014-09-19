@@ -91,6 +91,42 @@ package Flag_Transformations is
               return double_float;
 
   -- DESCRIPTION :
-  --   Returns the 1-norm of the differences A*f1 - g1*T1 and A*f2 - g2*T2.
+  --   Returns the 1-norm of the differences A*f1 - g1*T1 and A*f2 - g2*T2,
+  --   where the input arguments are the output arguments of Transform.
+
+-- GENERAL WRAPPERS :
+
+  function Move_to_Generic_Flag
+              ( n : integer32 ) return Standard_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   To resolve a triple Schubert condition in n-space with the
+  --   Littlewood-Richardson homotopies, three flags are involved:
+  --   the identity, the fixed flag, and the moving flag. 
+  --   This function turns the moving flag into a generic flag.
+
+  -- ON ENTRY :
+  --   n       the ambient dimension.
+
+  -- ON RETURN :
+  --   A generic flag computed so the solution to the triple intersection
+  --   problem involving the moving flag will satisfy the generic flag.
+
+  procedure Move_to_Generic_Flag
+              ( n : in integer32; F : out Standard_Complex_Matrices.Matrix;
+                rsd : out double_float );
+
+  -- DESCRIPTION :
+  --   In addition to returning the generic flag, returns the residual of
+  --   the linear system solved when computing the transformation.
+  --   This residual allows to check the accuracy of the result.
+
+  -- ON ENTRY :
+  --   n        the ambient dimension.
+
+  -- ON RETURN :
+  --   F        plays the same role as Move_to_Generic_Flag(n),
+  --            although different random numbers are generated;
+  --   rsd      is the outcome of Residual() function from above.
 
 end Flag_Transformations;

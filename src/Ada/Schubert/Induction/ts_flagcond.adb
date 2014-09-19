@@ -1145,16 +1145,15 @@ procedure ts_flagcond is
     Clear(b);
   end Define_Schubert_Systems;
 
-  procedure Verify_Solution
+  procedure Verify_a_Solution
               ( n,k : in integer32; cond : in Bracket;
                 flag : in Standard_Complex_Matrices.Matrix;
                 locmap : in Standard_Natural_Matrices.Matrix;
-                sol : in Solution ) is
+                sol : in Solution; tol : in double_float ) is
 
   -- DESCRIPTION :
   --   Verifies the solution with respect to the flag and the condition.
 
-    tol : constant double_float := 1.0e-8;
     solplane : constant Standard_Complex_Matrices.Matrix(1..n,1..k)
              := Checker_Localization_Patterns.Map(locmap,sol.v);
 
@@ -1188,62 +1187,12 @@ procedure ts_flagcond is
         end if;
       end;
     end loop;
-  end Verify_Solution;
-
-  procedure Verify_Transformed_Solution
-              ( n,k : in integer32; cond : in Bracket;
-                flag,trnf : in Standard_Complex_Matrices.Matrix;
-                locmap : in Standard_Natural_Matrices.Matrix;
-                sol : in Solution ) is
-
-  -- DESCRIPTION :
-  --   Verifies the solution with respect to the flag and the condition,
-  --   after transforming the solution using the matrix trnf.
-
-    use Standard_Complex_Matrices;
-
-    tol : constant double_float := 1.0e-8;
-    solplane : constant Standard_Complex_Matrices.Matrix(1..n,1..k)
-             := Checker_Localization_Patterns.Map(locmap,sol.v);
-    trnfsolplane : constant Standard_Complex_Matrices.Matrix(1..n,1..k)
-                 := trnf*solplane;
-
-  begin
-    put_line("The solution as a matrix : ");
-    put(solplane);
-    for L in cond'range loop
-      declare
-        nbcols : constant integer32 := k + integer32(cond(L));
-        A : Standard_Complex_Matrices.Matrix(1..n,1..nbcols);
-        rnk,expected : natural32;
-      begin
-        for i in 1..n loop
-          for j in 1..k loop
-            A(i,j) := trnfsolplane(i,j);
-          end loop;
-          for j in 1..integer32(cond(L)) loop
-            A(i,k+j) := flag(i,j);
-          end loop;
-        end loop;
-        rnk := Standard_Numerical_Rank.Numerical_Rank(A,tol);
-        put("Rank at condition "); put(L,1); put(" : ");
-        put(rnk,1); 
-        expected := natural32(k + integer32(cond(L)) - L);
-        if rnk = expected then
-          put(" = "); put(expected,1);
-          put_line(", the expected rank.");
-        else
-          put(" /= "); put(expected,1);
-          put_line(", the expected rank, bug!?");
-        end if;
-      end;
-    end loop;
-  end Verify_Transformed_Solution;
+  end Verify_a_Solution;
 
   procedure Verify_Solutions
               ( n,k : in integer32; cond : in Bracket;
                 flag : in Standard_Complex_Matrices.Matrix;
-                sols : in Solution_List ) is
+                sols : in Solution_List; tol : in double_float ) is
 
   -- DESCRIPTION :
   --   Verifies the solutions with respect to the flag and the condition.
@@ -1266,46 +1215,10 @@ procedure ts_flagcond is
     put(locmap);
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
-      Verify_Solution(n,k,cond,flag,locmap,ls.all);
+      Verify_a_Solution(n,k,cond,flag,locmap,ls.all,tol);
       tmp := Tail_Of(tmp);
     end loop;
   end Verify_Solutions;
-
-  procedure Verify_Transformed_Solutions
-              ( n,k : in integer32; cond : in Bracket;
-                flag,trnf : in Standard_Complex_Matrices.Matrix;
-                sols : in Solution_List ) is
-
-  -- DESCRIPTION :
-  --   Verifies the solutions with respect to the flag and the condition,
-  --   where trnf is applied to the solution plane.
-
-    use Standard_Complex_Matrices;
-
-    p : constant Standard_Natural_Vectors.Vector(1..n)
-      := Identity_Permutation(natural32(n));
-    rows,cols : Standard_Natural_Vectors.Vector(1..k);
-    locmap : Standard_Natural_Matrices.Matrix(1..n,1..k);
-    tmp : Solution_List := sols;
-    ls : Link_to_Solution;
-    --t2flag : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-    --       := t2*flag;
-
-  begin
-    for i in cond'range loop
-      rows(i) := cond(i);
-      cols(i) := cond(i);
-    end loop;
-    locmap := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
-    put("The general localization map for a "); put(k,1);
-    put("-plane in "); put(n,1); put_line("-space :");
-    put(locmap);
-    while not Is_Null(tmp) loop
-      ls := Head_Of(tmp);
-      Verify_Transformed_Solution(n,k,cond,flag,trnf,locmap,ls.all);
-      tmp := Tail_Of(tmp);
-    end loop;
-  end Verify_Transformed_Solutions;
 
   procedure Verify_Solutions_of_Schubert_Problem ( n,k : in integer32 ) is
 
@@ -1324,10 +1237,9 @@ procedure ts_flagcond is
                   := Standard_Matrix_Inversion.Inverse(moved);
     idemat : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
            :=  Moving_Flag_Homotopies.Identity(n);
-    ranflag : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-            := Moving_Flag_Homotopies.Random_Flag(n);
-    A,T1,T2,trnflag : Standard_Complex_Matrices.Matrix(1..n,1..n);
+    ranflag : Standard_Complex_Matrices.Matrix(1..n,1..n);
     rsd : double_float;
+    tol : constant double_float := 1.0E-6;
 
     use Standard_Complex_Matrices;
 
@@ -1350,22 +1262,22 @@ procedure ts_flagcond is
     put("The bracket condition : "); put(cond); new_line;
     new_line;
     put_line("Verifying the bracket condition for the fixed flag ...");
-    Verify_Solutions(n,k,cond,flag,sols);
+    Verify_Solutions(n,k,cond,flag,sols,tol);
     new_line;
     put_line("The coordinates for the moved flag :"); put(moved);
     put_line("Verifying the bracket condition for the moved flag ...");
-    Verify_Solutions(n,k,cond,inverse_moved,sols);
-    Flag_Transformations.Transform(n,moved,idemat,idemat,ranflag,A,T1,T2);
-    rsd := Flag_Transformations.Residual(moved,idemat,idemat,ranflag,A,T1,T2);
+    Verify_Solutions(n,k,cond,inverse_moved,sols,tol);
+    Flag_Transformations.Move_to_Generic_Flag(n,ranflag,rsd);
     put("The residual : "); put(rsd); new_line;
     new_line;
-    put_line("Verifying the condition for the transformed fixed flag ...");
-    trnflag := T2*flag;
-    Verify_Transformed_Solutions(n,k,cond,trnflag,T2,sols);
+    put_line("Verifying the condition for the identity flag ...");
+    Verify_Solutions(n,k,cond,idemat,sols,tol);
+    new_line;
+    put_line("Verifying the condition for the fixed flag ...");
+    Verify_Solutions(n,k,cond,flag,sols,tol);
     new_line;
     put_line("Verifying the condition for the transformed random flag ...");
-    trnflag := ranflag*T2;
-    Verify_Transformed_Solutions(n,k,cond,ranflag,T1,sols);
+    Verify_Solutions(n,k,cond,ranflag,sols,tol);
   end Verify_Solutions_of_Schubert_Problem;
 
   procedure Main is
