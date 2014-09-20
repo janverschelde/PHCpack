@@ -1220,34 +1220,6 @@ procedure ts_flagcond is
     end loop;
   end Verify_Solutions;
 
-  function Expanded_Polynomial_Equations 
-             ( n,k : integer32; cond : Bracket;
-               flag : Standard_Complex_Matrices.Matrix )
-             return Poly_Sys is
-
-  -- DESCRIPTION :
-  --   Returns the expanded polynomial equation for the condition on
-  --   a k-plane in n-space with the localization map in locmap,
-  --   imposed by the conditions in cond and with respect to the given flag.
-
-    p : constant Standard_Natural_Vectors.Vector(1..n)
-      := Identity_Permutation(natural32(n));
-    b : constant Standard_Natural_Vectors.Vector
-      := Standard_Natural_Vectors.Vector(cond);
-    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
-           := Checker_Localization_Patterns.Column_Pattern(n,k,p,b,b);
-    nq : constant integer32
-       := integer32(Number_of_Equations(natural32(n),cond));
-    dim : constant natural32 := Dimension(locmap);
-    xpm : constant Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
-        := Symbolic_Form_of_Plane(n,k,locmap);
-    nv : constant natural32 := Dimension(locmap);
-    res : constant Poly_Sys(1..nq) := Expand(n,k,nq,cond,xpm,flag);
-
-  begin
-    return res;
-  end Expanded_Polynomial_Equations;
-
   procedure Evaluate_Solutions
               ( n,k : in integer32; cond : in Bracket;
                 flag : in Standard_Complex_Matrices.Matrix;

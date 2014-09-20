@@ -1,5 +1,6 @@
 Fri 19 Sep 2014 : refactored code from ts_flagcond.adb into the package
   flag_transformations, with better verification of the solutions.
+  Refactored code from ts_flagcond into numeric_schubert_conditions.
 
 Thu 18 Sep 2014 : moved code for the function "moved_flag" from ts_induce
   to the package moving_flag_homotopies.  Extended the numerical testing

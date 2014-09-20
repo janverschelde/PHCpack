@@ -142,4 +142,25 @@ package Numeric_Schubert_Conditions is
   -- REQUIRED :
   --   The number of unknowns in all polynomial matrices is the same for all.
 
+-- WRAPPER FUNCTION :
+
+  function Expanded_Polynomial_Equations 
+             ( n,k : integer32; cond : Bracket;
+               flag : Standard_Complex_Matrices.Matrix ) return Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Returns the expanded polynomial equation for the condition on
+  --   a k-plane in n-space with the localization map in locmap,
+  --   imposed by the conditions in cond and with respect to the given flag.
+
+  -- ON ENTRY :
+  --   n        ambient dimension;
+  --   k        dimension of the solution plane;
+  --   cond     conditions imposed by Schubert conditions;
+  --   flag     used for formulating the polynomial equations.
+
+  -- ON RETURN :
+  --   Expanded polynomial equations that define the Schubert conditions
+  --   via all expanded minors.
+
 end Numeric_Schubert_Conditions;

@@ -1,8 +1,12 @@
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Natural_Vectors;
+with Standard_Natural_Matrices;
 with Bracket_Monomials;                 use Bracket_Monomials;
 with Bracket_Systems;                   use Bracket_Systems;
 with Straightening_Syzygies;
 with Symbolic_Schubert_Conditions;      use Symbolic_Schubert_Conditions;
+with Checker_Moves;
+with Checker_Localization_Patterns;
 
 package body Numeric_Schubert_Conditions is
 
@@ -564,5 +568,26 @@ package body Numeric_Schubert_Conditions is
    -- Clear(fm);
     return res;
   end Expand;
+
+  function Expanded_Polynomial_Equations 
+             ( n,k : integer32; cond : Bracket;
+               flag : Standard_Complex_Matrices.Matrix ) return Poly_Sys is
+
+    p : constant Standard_Natural_Vectors.Vector(1..n)
+      := Checker_Moves.Identity_Permutation(natural32(n));
+    b : constant Standard_Natural_Vectors.Vector
+      := Standard_Natural_Vectors.Vector(cond);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,b,b);
+    nq : constant integer32
+       := integer32(Number_of_Equations(natural32(n),cond));
+    xpm : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
+        := Symbolic_Form_of_Plane(n,k,locmap);
+    res : constant Poly_Sys(1..nq) := Expand(n,k,nq,cond,xpm,flag);
+
+  begin
+    Standard_Complex_Poly_Matrices.Clear(xpm);
+    return res;
+  end Expanded_Polynomial_Equations;
 
 end Numeric_Schubert_Conditions;
