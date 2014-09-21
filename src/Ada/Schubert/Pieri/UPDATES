@@ -1,4 +1,5 @@
 Sat 20 Sep 2014 : new package dobldobl_matrix_inversion, tested by ts_matinv.
+  For quad doubles, there is the new package quaddobl_matrix_inversion.
 
 Sun 15 Jun 2014 : changed ts_detsys.adb for a compiler warning.
 

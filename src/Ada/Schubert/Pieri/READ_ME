@@ -36,6 +36,7 @@ curves_into_grassmannian_io      : output facilities for the q-curves
 deformation_posets               : posets of solution planes
 standard_matrix_inversion        : inverse of square matrix, standard doubles
 dobldobl_matrix_inversion        : inverse of square matrix in double doubles
+quaddobl_matrix_inversion        : inverse of square matrix in quad doubles
 drivers_for_input_planes         : generators of input for Pieri algorithm
 drivers_for_pieri_homotopies     : drivers for the Pieri homotopies
 drivers_for_quantum_pieri        : drivers for counting q-maps
@@ -70,13 +71,13 @@ A. The Pieri tree delivers chains of increasing sequences of brackets.
    count is a partition of the list of codimensions.  As output we obtain
    a list of pairs of leaves that satisfy Pieri's condition.
 
-  Ada soft : Pieri_Trees, Pieri_Trees_io, Pieri_Root_Counts
+   packages: Pieri_Trees, Pieri_Trees_io, Pieri_Root_Counts
 
 B. The poset-oriented Pieri homotopy algorithm only needs one concept,
    that of a localization pattern.  This pattern is determined by a
    couple of pivots indicating the topmost and bottommost nonzero entries.
 
-  Ada soft : Localization_Posets
+   package: Localization_Posets
 
 2) symbolic-numeric computation
 
@@ -94,7 +95,7 @@ B. The poset-oriented Pieri homotopy algorithm only needs one concept,
 
    Only minor modifications were needed in the poset-oriented version.
 
-  Ada soft : Symbolic_Minor_Equations, Numeric_Minor_Equations
+   packages: Symbolic_Minor_Equations, Numeric_Minor_Equations
              Determinantal_Systems, Solve_Pieri_Leaves
 
 3) deforming geometries
@@ -109,9 +110,9 @@ A. The pairs of chains that end in pairs of leaves that satisfy Pieri's
    at each node the current solution plane satisfies one more nontrivial
    intersection requirement with an additional input plane.
 
-  Ada soft : Pieri_Homotopies, Pieri_Continuation, Pieri_Deformations
+   packages: Pieri_Homotopies, Pieri_Continuation, Pieri_Deformations
 
 B. The continuous analogue to the localization posets are deformation posets.
    These posets contain in their nodes the solution p-planes at that level.
 
-  Ada soft : Deformation_Posets
+   package: Deformation_Posets
