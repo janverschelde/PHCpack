@@ -29,9 +29,11 @@ procedure ts_checkers is
 -- DESCRIPTION :
 --   Simple test on the operations in Checker_Posets.
 
--- TARGET TEST ROUTINES :
-
   procedure Interactive_Test ( n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user to enter a permutation of n elements
+  --   and calculates the descending and rising checker.
 
     p : Vector(1..n);
     ans : character;
@@ -53,6 +55,10 @@ procedure ts_checkers is
   end Interactive_Test;
 
   procedure Specialization_Order ( n : in integer32) is
+
+  -- DESCRIPTION :
+  --   Shows all the moves in the specialization order,
+  --   starting from the identity permutation on n elements.
 
     p : Vector(1..n) := Identity_Permutation(natural32(n));
     mf : Matrix(1..n,1..n);
@@ -85,6 +91,9 @@ procedure ts_checkers is
   end Specialization_Order;
 
   procedure Show_Specializing_Moves ( n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Shows all moves of n black checkers in the specializing order.
 
     m : constant natural32 := Number_of_Moves(natural32(n));
     all_moves : constant VecVec(1..integer32(m)) := Specializing_Moves(n);
@@ -120,6 +129,9 @@ procedure ts_checkers is
   end Show_Specializing_Moves;
 
   procedure Show_Generalizing_Moves ( n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Shows all moves of n black checkers in the generalizing order.
 
     m : constant natural32 := Number_of_Moves(natural32(n));
     all_moves : constant VecVec(1..integer32(m)) := Generalizing_Moves(n);
@@ -161,6 +173,10 @@ procedure ts_checkers is
   end Show_Generalizing_Moves;
 
   procedure Show_All_Moves ( n : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   On a board with n black checkers we can either play the
+  --   specialization or the generalization of the moves.
 
     m : constant natural32 := Number_of_Moves(n);
     ans : character;
@@ -214,6 +230,9 @@ procedure ts_checkers is
   end Initialize_Checkerboard;
 
   procedure Test_White_Moves ( k,n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the calculation of the moves of the white checkers.
 
     p : Vector(1..n);
     b : Board(1..n,1..n);
@@ -299,6 +318,9 @@ procedure ts_checkers is
   end Test_White_Moves;
 
   procedure Group_Black_Checkers ( k,n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Groups the black checkes into four zones.
 
     p : Vector(1..n);
     b : Board(1..n,1..n);
@@ -578,6 +600,11 @@ procedure ts_checkers is
   procedure Create_Intersection_Poset
               ( n : in integer32; bm : in Bracket_Monomial ) is
 
+  -- DESCRIPTION :
+  --   Makes the intersection poset to resolve a general intersection 
+  --   condition in n-space, as defined by the conditions in the monomial
+  --   of brackets.
+
     nb : constant integer32 := integer32(Number_of_Brackets(bm));
     cd : constant Array_of_Brackets(1..nb) := Create(bm);
     fs : Natural_Number;
@@ -595,6 +622,10 @@ procedure ts_checkers is
   end Create_Intersection_Poset;
 
   procedure Resolve_Intersection_Condition ( n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a bracket monomial on a k-plane in n-space
+  --   and resolves the entered Schubert intersection condition.
 
     bm : Bracket_Monomial;
     nn : integer32 := n;
@@ -623,6 +654,9 @@ procedure ts_checkers is
   end Resolve_Intersection_Condition;
 
   procedure Write_Paths_in_Poset ( ps : in Poset ) is
+
+  -- DESCRIPTION :
+  --   Enuerations all paths defined by the poset.
 
     cnt : natural32 := 0;
 
