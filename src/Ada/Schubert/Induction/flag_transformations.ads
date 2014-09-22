@@ -97,6 +97,16 @@ package Flag_Transformations is
 -- GENERAL WRAPPERS :
 
   function Move_to_Generic_Flag
+              ( n : integer32; G : Standard_Complex_Matrices.Matrix )
+              return Standard_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Does the transformation from the moving flag into a generic flag
+  --   based on the given random n-by-n matrix G.
+  --   Without providing G as below, the caller has no control over the
+  --   choice for random numbers used to make the generic flag.
+
+  function Move_to_Generic_Flag
               ( n : integer32 ) return Standard_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :

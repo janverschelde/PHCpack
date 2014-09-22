@@ -172,10 +172,10 @@ package body Flag_Transformations is
 -- GENERAL WRAPPERS :
 
   function Move_to_Generic_Flag
-              ( n : integer32 ) return Standard_Complex_Matrices.Matrix is
+              ( n : integer32; G : Standard_Complex_Matrices.Matrix )
+              return Standard_Complex_Matrices.Matrix is
 
-    res : Standard_Complex_Matrices.Matrix(1..n,1..n)
-        := Moving_Flag_Homotopies.Random_Flag(n);
+    res : Standard_Complex_Matrices.Matrix(1..n,1..n) := G;
     moved : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
           := Moving_Flag_Homotopies.Moved_Flag(n);
     idemat : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
@@ -191,16 +191,29 @@ package body Flag_Transformations is
     return res;
   end Move_to_Generic_Flag;
 
+  function Move_to_Generic_Flag
+              ( n : integer32 ) return Standard_Complex_Matrices.Matrix is
+
+    ranflag : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+            := Moving_Flag_Homotopies.Random_Flag(n);
+    res : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+        := Move_to_Generic_Flag(n,ranflag);
+
+  begin
+    return res;
+  end Move_to_Generic_Flag;
+
   procedure Move_to_Generic_Flag
-              ( n : in integer32; F : out Standard_Complex_Matrices.Matrix;
+              ( n : in integer32;
+                G : in Standard_Complex_Matrices.Matrix;
+                F : out Standard_Complex_Matrices.Matrix;
                 rsd : out double_float ) is
 
     moved : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
           := Moving_Flag_Homotopies.Moved_Flag(n);
     idemat : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
            :=  Moving_Flag_Homotopies.Identity(n);
-    ranflag : Standard_Complex_Matrices.Matrix(1..n,1..n)
-            := Moving_Flag_Homotopies.Random_Flag(n);
+    ranflag : Standard_Complex_Matrices.Matrix(1..n,1..n) := G;
     A,T1,T2,invT1 : Standard_Complex_Matrices.Matrix(1..n,1..n);
 
     use Standard_Complex_Matrices;
@@ -210,6 +223,18 @@ package body Flag_Transformations is
     invT1 := Standard_Matrix_Inversion.Inverse(T1);
     F := invT1*ranflag;
     rsd := Residual(moved,idemat,idemat,ranflag,A,T1,T2);
+  end Move_to_Generic_Flag;
+
+  procedure Move_to_Generic_Flag
+              ( n : in integer32;
+                F : out Standard_Complex_Matrices.Matrix;
+                rsd : out double_float ) is
+
+    ranflag : Standard_Complex_Matrices.Matrix(1..n,1..n)
+            := Moving_Flag_Homotopies.Random_Flag(n);
+
+  begin
+    Move_to_Generic_Flag(n,ranflag,F,rsd);
   end Move_to_Generic_Flag;
 
 end Flag_Transformations;
