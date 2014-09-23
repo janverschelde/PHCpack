@@ -52,8 +52,17 @@ procedure mainzip ( infilename,outfilename : in string ) is
     end if;
   exception
     when others =>
-      put("Something wrong with solutions on "); put(filename);
-      put_line("."); return;
+      put("Something wrong with solutions on the file '"); put(filename);
+      put_line("'.");
+      if maple_format then
+        put_line("The solution were expected to be in Maple format!?");
+      else  
+        put_line("The solution were expected to be in PHCpack format!?");
+      end if;
+      put("Solution in PHCpack format must start with ");
+      put_line("'THE SOLUTIONS :'");
+      put_line("on the first line of the inpt file.");
+      return;
   end Scan_Solutions;
 
   procedure Write ( file : in file_type; maple_format : in boolean;
