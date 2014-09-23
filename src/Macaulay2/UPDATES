@@ -1,0 +1,2 @@
+Tue 23 Sep 2014 : figured out how to replace the "e+00" with regular 
+  expressions when parsing systems from file.
