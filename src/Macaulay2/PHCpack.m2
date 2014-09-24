@@ -272,14 +272,15 @@ systemFromFile (String) := (name) -> (
   --   first term starts with +1*x which cannot be digested by M2.
   --   In contrast to the startSystemFromFile, the first term could
   --   also be "-1*x" so we must be a bit more careful...
-  --   Another problem are constants as "3.0e+00", at least on a Mac.
+  --   Another problem are constants as "3.0e+00", which is fixed now.
+  --   The ring of variables must be defined!
   s := get name;
   s = replace("i","ii",s);
   s = replace("E","e",s);
   s = replace("e\\+00","",s);  -- on Mac: M2 crashes at 3.0e+00 as constant
   L := lines(s);
   dimL0 := separate(" ", L_0); -- deal with case of nonsquare systems
-  n := value dimL0_1;          -- first is always number of equations
+  n := value dimL0_0;          -- first is always number of equations
   result := {};
   i := 0; j := 1;
   local stop;
