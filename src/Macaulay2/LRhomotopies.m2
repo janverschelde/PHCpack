@@ -1,20 +1,23 @@
 -- This package provides an interface to the Littlewood-Richardson
 -- homotopies in PHCpack.
+-- Note that this package needs version 1.6.1 of PHCpack.m2.
 
 newPackage(
    "LRhomotopies",
-   Version => "0.6" ,
-   Date => "28 July 2011",
+   Version => "0.7" ,
+   Date => "24 September 2014",
    Authors => {{Name => "Jan Verschelde",
                 Email => "jan@math.uic.edu",
                 HomePage => "http://www.math.uic.edu/~jan/"}},
    Headline => "interface to Littlewood-Richardson homotopies in PHCpack",
+   PackageImports => {"PHCpack"},
    DebuggingMode => true
 )
 
-export{"LRrule","LRtriple","wrapTriplet","LRcheater"}
+export{"LRrule", "LRtriple", "parseTriplet", "wrapTriplet", "LRcheater"}
 
 needsPackage "SimpleDoc"
+debug needsPackage "PHCpack"
 
 LRruleIn = method();
 LRruleIn(ZZ,ZZ,Matrix) := (a,n,m) -> (
@@ -51,6 +54,7 @@ LRruleIn(ZZ,ZZ,Matrix) := (a,n,m) -> (
    s = concatenate(s,";");
    s
 );
+
 dataToFile = method()
 dataToFile(String,String) := (data,name) -> (
 --
@@ -62,6 +66,7 @@ dataToFile(String,String) := (data,name) -> (
    file << data << endl;
    close file;
 );
+
 lastLine = method()
 lastLine(String) := (name) -> (
 --
@@ -75,6 +80,7 @@ lastLine(String) := (name) -> (
    result := L_n;
    result
 );
+
 LRrule = method();
 LRrule(ZZ,Matrix) := (n,m) -> (
 -- 
@@ -92,7 +98,7 @@ LRrule(ZZ,Matrix) := (n,m) -> (
 --             intersection condition and at the right the result.
 --
    d := LRruleIn(4,n,m);
-   stdio << "the input data for phc -e : " << endl <<  d;
+   -- stdio << "the input data for phc -e : " << endl <<  d;
    PHCinputFile := temporaryFileName() | "PHCinput";
    PHCoutputFile := temporaryFileName() | "PHCoutput";
    stdio << endl << "writing data to file " << PHCinputFile << endl;
@@ -105,8 +111,52 @@ LRrule(ZZ,Matrix) := (n,m) -> (
    s = concatenate(s,outcome);
    s
 );
-systemFromFile = method();
-systemFromFile(String) := (name) -> (
+
+ringFromString = method();
+ringFromString(String) := (p) -> (
+--
+-- DESCRIPTION :
+--   Given in p a polynomial system in PHCpack format,
+--   returns the polynomial ring.
+--
+   -- stdio << "the input data for phc -o : " << endl <<  p;
+   PHCinpFile := temporaryFileName() | "PHCinp";
+   PHCoutFile := temporaryFileName() | "PHCout";
+   PHCsesFile := temporaryFileName() | "PHCses";
+   stdio << endl << "writing data to file " << PHCinpFile << endl;
+   dataToFile(p,PHCinpFile);
+   stdio << "running phc -o, writing output to " << PHCoutFile << endl;
+   run("phc -o " | PHCinpFile | " " | PHCoutFile | " > " | PHCsesFile);
+   s := get PHCoutFile;
+   -- stdio << "the string of symbols :" << s;
+   if s_0 == " " then (
+      s = substring(1, s)
+   );
+   L := separate(" ", s);
+   -- stdio << "the list of symbols as strings" << L;
+   v := apply(L, x -> value(x));
+   -- stdio << "the list of symbols as strings" << v;
+   CC_53[v]
+);
+
+systemFromString = method();
+systemFromString (String, Ring) := (p, R) -> (
+--
+-- DESCRIPTION :
+--   Given in the string p a polynomial system in PHCpack format
+--   and a polynomial ring with as symbols the names of the variables
+--   used in the string p, the polynomial system in p is returned as
+--   a proper polynomial system in Macaulay2.   
+--
+   PHCinpFile := temporaryFileName() | "PHCipt";
+   stdio << endl << "writing data to file " << PHCinpFile << endl;
+   dataToFile(p,PHCinpFile);
+   use R;
+   return systemFromFile(PHCinpFile);
+);
+
+SchubertSystemFromFile = method();
+SchubertSystemFromFile(String) := (name) -> (
 --
 -- DESCRIPTION :
 --   Given the name of the output file of a run of phc -e with option #5,
@@ -120,7 +170,7 @@ systemFromFile(String) := (name) -> (
 -- ON RETURN :
 --   (f,p,s)   a sequence with flag and polynomial system, and solutions,
 --   f         random complex coordinates of the fixed flag,
---   p         the solved polynomial equations as a string,
+--   p         the solved polynomial equations,
 --   s         solutions to the polynomials in string format.
 --
    data := get name;
@@ -135,9 +185,10 @@ systemFromFile(String) := (name) -> (
    for i from np+2 to ns-1 do p = concatenate(p,L_i,"\n");
    s := concatenate(L_(ns+1),"\n");
    for i from ns+2 to #L-1 do s = concatenate(s,L_i,"\n");
-   result := (f,p,s);
+   result := (f, p, s);
    result
 );
+
 LRtriple = method();
 LRtriple(ZZ,Matrix) := (n,m) -> (
 --
@@ -151,21 +202,23 @@ LRtriple(ZZ,Matrix) := (n,m) -> (
 --             the intersection bracket must be taken.
 -- 
 -- ON RETURN :
---   (f,p,s)   a sequence with the result of the Schubert problem:
+--   (f,r,p,s) a sequence with the result of the Schubert problem:
+--   r         the polynomial ring for the symbols of the variables
+--             representing the solutions in the matrix representations,
 --   f         a string representation of a fixed flag,
---   p         a string representation of a polynomial system,
+--   p         the polynomial system solved,
 --   s         a string with solutions to the polynomial system.
 --
    d := LRruleIn(5,n,m);  -- option 5 of phc -e
-   PHCinputFile := temporaryFileName() | "PHCinput";
-   PHCoutputFile := temporaryFileName() | "PHCoutput";
-   PHCsessionFile := temporaryFileName() | "PHCsession";
+   PHCinputFile := temporaryFileName() | "PHCip";
+   PHCoutputFile := temporaryFileName() | "PHCout";
+   PHCsessionFile := temporaryFileName() | "PHCses";
    PHCsolutions := temporaryFileName() | "PHCsolutions";
    d = concatenate(d,"\n0\n");  -- solve a generic instance for random flags
    d = concatenate(d,PHCoutputFile,"\n");
    d = concatenate(d,"0\n");  -- do not change default continuation parameters
    d = concatenate(d,"0\n");  -- no intermediate output during continuation
-   stdio << "the input data for phc -e : " << endl <<  d;
+   -- stdio << "the input data for phc -e : " << endl <<  d;
    stdio << endl << "writing data to file " << PHCinputFile << endl;
    dataToFile(d,PHCinputFile);
    stdio << "running phc -e, session output to " << PHCsessionFile << endl;
@@ -173,12 +226,79 @@ LRtriple(ZZ,Matrix) := (n,m) -> (
    run("phc -e < " | PHCinputFile | " > " | PHCsessionFile);
    run("phc -z " | PHCoutputFile | " " | PHCsolutions);
    stdio << "opening output file " << PHCsolutions << endl;
-   stdio << endl << "extracting fixed flags, polynomial system, solutions";
-   stdio << endl;
-   fps := systemFromFile(PHCoutputFile);
+  -- stdio << endl << "extracting fixed flags, polynomial system, solutions";
+  -- stdio << endl;
+   fps := SchubertSystemFromFile(PHCoutputFile);
    result := (fps_0,fps_1,fps_2);
    result
 );
+
+parseFlag = method();
+parseFlag(String) := (f) -> (
+--
+-- DESCRIPTION :
+--   Returns the matrix stored as a string in f
+--   as a proper matrix object.
+--
+   s := replace("E","e",f);
+   s = replace("e\\+","e",s); 
+   L := lines(s);
+   i := 0;
+   while i < #L do (
+      local line;     -- one line in the flag
+      local newline;  -- line with all double spaces removes
+      local listline; -- the line as a list
+      local stop;     -- stop condition
+      local vals;     -- real and imaginary values 
+      local cvals;    -- values of the flag as complex numbers
+      line = L_i;
+      if #line > 0 then (
+         stop = false;     -- first replace double by single spaces
+         newline = line;
+         while not stop do (
+            newline = replace("  "," ",line);
+            stop = (newline == line);
+            line = newline;
+         );
+         if newline_0 == " " then (
+            newline = substring(1, newline); -- bite off leading space
+         );
+         listline = separate(" ",newline);
+         vals = apply(listline, x-> value(x));
+         cvals = for i in 0..(#vals-1) list (
+            if odd i then continue; vals_i + vals_(i+1)*ii
+         );
+         if i == 0 then values := {cvals};
+         if i > 0 then values = values | {cvals};
+      );
+      i = i + 1;
+   );
+   matrix(values)
+);
+
+parseTriplet = method();
+parseTriplet(String,String,String) := (f,p,s) -> (
+--
+-- DESCRIPTION :
+--   Returns the polynomial ring of the variables, the polynomial system,
+--   the solutions and the fixed flag as Macaulay objects, when given
+--   the string representations of the flag f, the polynomial system p,
+--   and the list of solutions in s.
+--
+   R := ringFromString(p);
+   spR := systemFromString(p, R);
+   s = concatenate("THE SOLUTIONS :\n", s);
+   PHCiptsolsFile := temporaryFileName() | "PHCsols";
+   PHCoptsolsFile := temporaryFileName() | "PHCsols";
+   stdio << "writing solutions to " << PHCiptsolsFile;
+   dataToFile(s,PHCiptsolsFile);
+   stdio << "running phc -z ..." << endl;
+   run(PHCexe|" -z " | PHCiptsolsFile | " "| PHCoptsolsFile);
+   sols := parseSolutions(PHCoptsolsFile, R);
+   result := (R, spR, sols, parseFlag(f));
+   result
+);
+
 wrapTriplet = method();
 wrapTriplet(String,String,String) := (f,p,s) -> (
 --
@@ -191,6 +311,7 @@ wrapTriplet(String,String,String) := (f,p,s) -> (
    result = concatenate(result,"THE SOLUTIONS :\n",s);
    result
 );
+
 cheaterInputFile = method();
 cheaterInputFile(String) := (data) -> (
 --
@@ -211,6 +332,7 @@ cheaterInputFile(String) := (data) -> (
    close file;
    name
 );
+
 LRcheater = method();
 LRcheater(ZZ,Matrix,String) := (n,m,w) -> (
 --
@@ -232,25 +354,25 @@ LRcheater(ZZ,Matrix,String) := (n,m,w) -> (
    PHCoutputCheater := temporaryFileName() | "PHCoutputCheater";
    PHCinputSession := temporaryFileName() | "PHCinputSession";
    PHCsessionCheater := temporaryFileName() | "PHCsessionCheater";
-   PHCsolutionsCheater := temporaryFileName() | "PHCsolutionsCheater";
+   -- PHCsolutionsCheater := temporaryFileName() | "PHCsolutionsCheater";
    d := LRruleIn(5,n,m);        -- option 5 of phc -e
    d = concatenate(d,"\n1\n");  -- run Cheater's homotopy
    d = concatenate(d,PHCinputCheater,"\n");
    d = concatenate(d,"y\n");    -- generate real flags
    d = concatenate(d,PHCoutputCheater,"\n");
-   stdio << "the input data for phc -e : " << endl <<  d;
+   -- stdio << "the input data for phc -e : " << endl <<  d;
    stdio << endl << "writing data to file " << PHCinputSession << endl;
    dataToFile(d,PHCinputSession);
    stdio << "running phc -e, session output to " << PHCsessionCheater << endl;
    stdio << "                writing output to " << PHCoutputCheater << endl;
    run("phc -e < " | PHCinputSession | " > " | PHCsessionCheater);
-   run("phc -z " | PHCoutputCheater | " " | PHCsolutionsCheater);
-   stdio << "opening output file " << PHCsolutionsCheater << endl;
-   stdio << endl << "extracting fixed flags, polynomial system, solutions";
-   stdio << endl;
-   fp := systemFromFile(PHCoutputCheater);
-   s := get PHCsolutionsCheater;
-   result := (fp_0,fp_1,s);
+   -- run("phc -z " | PHCoutputCheater | " " | PHCsolutionsCheater);
+   -- stdio << "opening output file " << PHCsolutionsCheater << endl;
+   -- stdio << endl << "extracting fixed flags, polynomial system, solutions";
+   -- stdio << endl;
+   fp := SchubertSystemFromFile(PHCoutputCheater);
+   -- s := get PHCsolutionsCheater;
+   result := (fp_0,fp_1,fp_2);
    result
 );
 
@@ -357,13 +479,47 @@ doc ///
 
       The example below computes all 3-planes that satisfy [2 4 6]^3.
     Example
-      R := ZZ;
-      n := 6;
-      m := matrix{{3, 2, 4, 6}};
+      R := ZZ; n := 6; m := matrix{{3, 2, 4, 6}};
       result := LRtriple(n,m);
       stdio << "the fixed flags :\n" << result_0;
       stdio << "polynomial system solved :\n" << result_1;
       stdio << "solutions :\n" << result_2;
+///;
+
+doc ///
+  Key
+    parseTriplet
+    (parseTriplet,String,String,String)
+  Headline
+    Parses a flag, system, and solutions into Macaulay2 objects.
+  Usage
+    (R, pols, sols, flag) = parseTriplet(f, p, s)
+  Inputs
+    f:String
+      represents the fixed flag
+    p:String
+      represents a polynomial system
+    s:String
+      solutions to the polynomial system
+  Outputs
+    R:Ring
+      a polynomial ring with complex floating-point coefficients
+      and in the variables used in the systems p
+    pols:List
+      list of polynomial equations in the ring R
+    sols:List
+      list of solutions of the system pols
+    flag:Matrix
+      the flag as a matrix of complex numbers
+  Description
+    Text
+      The parseTriplet allows to process the output of LRtriple.
+    Example
+      r = LRtriple(6,matrix{{3, 2, 4, 6}});
+      (R, pols, sols, flag) = parseTriplet(r);
+      vars(R)
+      peek sols
+      peek flag
 ///;
 
 doc ///
@@ -373,7 +529,7 @@ doc ///
   Headline
     Wraps a flag, system, and solutions into one string for phc -e.
   Usage
-    w = wrapTriple(f,p,s)
+    w = wrapTriplet(f,p,s)
   Inputs
     f:String
       represents the fixed flag
@@ -426,14 +582,15 @@ doc ///
       t := LRtriple(n,m);
       w := wrapTriplet(t);
       result := LRcheater(n,m,w);
-      stdio << "real fixed flags :\n" << result_0;
-      stdio << "polynomial system solved :\n" << result_1;
-      stdio << "solutions :\n" << result_2;
+      (rps, pols, sols, flag) = parseTriplet(result);
+      stdio << "real fixed flag :\n" << flag;
+      stdio << "polynomial system solved :\n" << pols;
+      stdio << "solutions :\n" << sols;
 ///;
 
 end  -- terminate reading
 
-  Usage
+Usage
    s = LRrule(N,M)
    S = LRtriple(N,M)
    w = wrapTriplet(S)

@@ -1,4 +1,5 @@
-Wed 24 Sep 2014 : fixed bug in systemFromFile in PHCpack.m2.
+Wed 24 Sep 2014 : fixed bug in systemFromFile in PHCpack.m2 and added
+  parsing routines to LRhomotopies.m2.
 
 Tue 23 Sep 2014 : figured out how to replace the "e+00" with regular 
   expressions when parsing systems from file.
