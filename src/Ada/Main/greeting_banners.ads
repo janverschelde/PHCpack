@@ -18,6 +18,9 @@ package Greeting_Banners is
   goodban : constant string :=
     "Checking whether a given input system has the right syntax.";
 
+  symbban : constant string :=
+    "Writing the contents of the symbol table after reading an input system.";
+
   hypban : constant string :=
     "Witness Set for Hypersurface cutting with Random Line.";
 

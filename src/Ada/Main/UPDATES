@@ -1,5 +1,6 @@
 Tue 23 Sep 2014 : better error message in mainzip.adb for when the banner
-  for solutions in PHCpack format is omitted.
+  for solutions in PHCpack format is omitted.  Extended dispatch.adb with
+  the option -o and adjusted greeting_banners.ads.
 
 Sun 12 Sep 2014 : updated greeting_banners for version 2.3.93.
 

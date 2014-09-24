@@ -21,6 +21,7 @@ with mainfac,maindeco;        -- factorization and decomposition
 with mainsolve;               -- equation-by-equation solver
 with mainwit;                 -- witness set intersection
 with maingood;                -- to test if a system is good
+with mainsymb;                -- to get the symbol table contents
 with mainhyp;                 -- witness set for hypersurface
 -- NOTE (added for pieri_solver.ali) :
 with Interfaces.C;
@@ -38,6 +39,7 @@ procedure Dispatch is
   enumban : constant string := Greeting_Banners.enumban;
   facban  : constant string := Greeting_Banners.facban;
   goodban : constant string := Greeting_Banners.goodban;
+  symbban : constant string := Greeting_Banners.symbban;
   hypban  : constant string := Greeting_Banners.hypban;
   mvcban  : constant string := Greeting_Banners.mvcban;
   pocoban : constant string := Greeting_Banners.pocoban;
@@ -52,7 +54,7 @@ procedure Dispatch is
 
 -- AVAILABLE OPTIONS :
 
-  options : constant string := "0asdpqmrvbekcxyzftwlg";
+  options : constant string := "0asdpqmrvbekcxyzftwlgo";
   -- 0 : zero seed for repeatable runs
   -- a : solve => equation-by-equation solver
   -- b : batch or black box processing
@@ -64,6 +66,7 @@ procedure Dispatch is
   -- k : feba => dynamic output feedback to control linear systems
   -- l : hyp  => witness set for hypersurface cutting with random line
   -- m : mvc  => mixed-volume computation
+  -- o : symbOls -> get symbols using as variables in a system
   -- p : poco => polynomial continuation
   -- q : track => tracking solution paths
   -- r : roco => root counting methods
@@ -527,6 +530,8 @@ procedure Dispatch is
       when 'l'    => Witness_Set_for_Hypersurface_Dispatcher(f1,f2);
       when 's'    => Scaling_Dispatcher(f1,f2);
       when 'f'    => Factorization_Dispatcher(f1,f2);
+      when 'o'    => put_line(welcome); put_line(symbban);
+                     mainsymb(f1,f2);
       when 'p'    => Continuation_Dispatcher(o2,f1,f2,f3);
       when 'q'    => put_line(welcome); put_line(trackban);
                      maintrack(f1,f2,f3);
