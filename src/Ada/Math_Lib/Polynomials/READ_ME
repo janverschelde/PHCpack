@@ -1,4 +1,4 @@
-Multivariate polynomials and polynomial systems over rings in PHCv2.3.92.
+Multivariate polynomials and polynomial systems over rings in PHCv2.3.94.
 
 New in release 2 is the availability of multiprecision numbers.
 The data structures are entirely redefined using Ada 95 concepts.
@@ -155,6 +155,7 @@ ts_qdpol                          : test on quad double polynomials
 -------------------------------------------------------------------------------
 parse_strings_to_polynomials      : to parse strings into a system
 maingood                          : code for the phc -g
+mainsymb                          : writes the symbol table of a system
 -------------------------------------------------------------------------------
 The i/o-routines provide readable formats in symbolic form.
 

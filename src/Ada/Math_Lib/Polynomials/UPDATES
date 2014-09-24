@@ -1,3 +1,5 @@
+Tue 23 Sep 2014 : new routine mainsymb to show symbols in a system.
+
 Fri 29 Aug 2014 : added read operations for polynomials with complex
   double double and quad double coefficients, extending the packages
   {dobl,quad}dobl_complex_polynomials_io.
