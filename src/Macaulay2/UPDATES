@@ -1,3 +1,6 @@
+Thu 25 Sep 2014 : changed DBG in PHCpack.m2 int PHCDBG.  Note that the
+  LRhomotopies.m2 is now part of NumericalSchubertCalculus.
+
 Wed 24 Sep 2014 : fixed bug in systemFromFile in PHCpack.m2 and added
   parsing routines to LRhomotopies.m2.
 
