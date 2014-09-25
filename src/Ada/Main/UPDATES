@@ -1,3 +1,6 @@
+Thu 25 Sep 2014 : release 2.3.94 needed for the new option -o,
+  adjusted the greeting_banners.
+
 Tue 23 Sep 2014 : better error message in mainzip.adb for when the banner
   for solutions in PHCpack format is omitted.  Extended dispatch.adb with
   the option -o and adjusted greeting_banners.ads.
