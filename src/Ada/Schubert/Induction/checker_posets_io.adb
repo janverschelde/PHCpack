@@ -57,6 +57,21 @@ package body Checker_Posets_io is
     Enum_Parents(nd);
   end Write_Parents;
 
+  procedure Write_Nodes_in_Poset ( ps : in Poset; i : in integer32 ) is
+
+    ptr : Link_to_Node;
+
+  begin
+    put(i,2); put(" : ");
+    put(ps.black(i)); put(" : ");
+    ptr := ps.white(i);             -- write coordinates
+    while ptr /= null loop
+      Write_Node(ptr.all);
+      ptr := ptr.next_sibling;
+    end loop;
+    new_line;
+  end Write_Nodes_in_Poset;
+
   procedure Write ( ps : in Poset ) is
 
     ptr : Link_to_Node;
@@ -64,14 +79,7 @@ package body Checker_Posets_io is
 
   begin
     for i in ps.black'range loop
-      put(i,2); put(" : ");
-      put(ps.black(i)); put(" : ");
-      ptr := ps.white(i);             -- write coordinates
-      while ptr /= null loop
-        Write_Node(ptr.all);
-        ptr := ptr.next_sibling;
-      end loop;
-      new_line;
+      Write_Nodes_in_Poset(ps,i);
       if i < ps.black'last then       -- write children
         ptr := ps.white(i);
         ind := 0;                     -- ind is index to current node

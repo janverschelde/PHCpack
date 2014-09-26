@@ -25,6 +25,13 @@ package Checker_Posets_io is
   --   Writes all parents to the node nd, preceded by the position p
   --   of the black checkers.
 
+  procedure Write_Nodes_in_Poset ( ps : in Poset; i : in integer32 );
+
+  -- DECRIPTION :
+  --   Writes the nodes at level i in the poset ps,
+  --   showing the level, the black checkers and then the elaboration
+  --   with the red checkers and corresponding root counts.
+
   procedure Write ( ps : in Poset );
 
   -- DESCRIPTION :
