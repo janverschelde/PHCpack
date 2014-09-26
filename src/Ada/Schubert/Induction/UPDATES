@@ -1,3 +1,5 @@
+Fri 26 Sep 2014 : improved documentation of intersection_posets_io.ads.
+
 Sun 21 Sep 2014 : every procedure in ts_checkers is now documented.
   Improved interfaces in the package flag_transformations.
 

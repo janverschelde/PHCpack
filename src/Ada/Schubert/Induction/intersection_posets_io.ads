@@ -3,6 +3,10 @@ with Intersection_Posets;               use Intersection_Posets;
 
 package Intersection_Posets_io is
 
+-- DESCRIPTION :
+--   This package provides output routines for intersection posets
+--   to resolve a general Schubert problem with checker games.
+
   procedure Write_Parents ( pl : in Poset_List; nd : in Poset_Node );
 
   -- DESCRIPTION :
