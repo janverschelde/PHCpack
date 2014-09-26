@@ -1,5 +1,6 @@
 Fri 26 Sep 2014 : improved documentation of intersection_posets_io.ads.
-  Changed interface in checker_posets_io.
+  Changed interface in checker_posets_io.  New ts_lrhom.adb to interactively
+  develop the resolution of general Schubert problems.
 
 Sun 21 Sep 2014 : every procedure in ts_checkers is now documented.
   Improved interfaces in the package flag_transformations.
