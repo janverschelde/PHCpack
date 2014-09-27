@@ -1,10 +1,15 @@
 with text_io;                            use text_io;
+with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
 with Standard_Natural_Vectors;           use Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
+with Brackets;                           use Brackets;
+with Bracket_Monomials;                  use Bracket_Monomials;
+with Bracket_Monomials_io;               use Bracket_Monomials_io;
 with Checker_Boards_io;                  use Checker_Boards_io;
 with Checker_Moves;                      use Checker_Moves;
 with Checker_Posets,Checker_Posets_io;   use Checker_Posets,Checker_Posets_io;
@@ -17,8 +22,27 @@ procedure ts_lrhom is
 --   Interactive development of the application of Littlewood-Richardson
 --   homotopies to solve general Schubert problems.
 
-  function Read_Conditions
-             ( n,k,m : in integer32 ) return Intersection_Poset is
+  procedure Read_Brackets ( bm : out Bracket_Monomial ) is
+
+  -- DECRIPTION :
+  --   Prompts the user for a bracket monomial.
+
+  begin
+    new_line;
+    put_line("A product of brackets is for example ");
+    put_line("  [2 4 6]*[2 4 6]*[2 4 6]; or [2 4 6]^3;");
+    put_line("Give a product of brackets, terminate by a semicolon ;");
+    get(bm);
+    put("Your product : "); put(bm); new_line;
+  end Read_Brackets;
+
+  function Process_Conditions
+             ( n,k,m : integer32; conds : Array_of_Brackets )
+             return Intersection_Poset is
+
+  -- DESCRIPTION :
+  --   Process the m conditions stored in conds on k-planes in n-space.
+  --   Returns the intersection poset.
 
     res : Intersection_Poset(m-1);
     p : constant Vector(1..n) := Identity_Permutation(natural32(n));
@@ -27,30 +51,49 @@ procedure ts_lrhom is
 
   begin
     put_line("Reading the first two intersection conditions...");
-    Read_Permutation(rows); Read_Permutation(cols);
+    rows := Standard_Natural_Vectors.Vector(conds(1).all);
+    cols := Standard_Natural_Vectors.Vector(conds(2).all);
+   -- Read_Permutation(rows); Read_Permutation(cols);
     if not Happy_Checkers(p,rows,cols) then
       put_line("Your conditions form an unhappy configuration.");
     else
       ps := Create(n,rows,cols);
       res := Create(m-1,ps);
       for k in 3..m loop
-        put("Reading intersection condition "); put(k,1); put_line("...");
-        Read_Permutation(cols);
+       -- put("Reading intersection condition "); put(k,1); put_line("...");
+       -- Read_Permutation(cols);
+        cols := Standard_Natural_Vectors.Vector(conds(k).all);
         Intersect(res,cols,false);
       end loop;
     end if;
     return res;
-  end Read_Conditions;
+  end Process_Conditions;
 
-  procedure Walk_Intersection_Poset ( n,k,m : in integer32 ) is
+  procedure Walk_from_Root_to_Leaves
+              ( n,k : in integer32; bm : in Bracket_Monomial ) is
 
   -- DESCRIPTION :
   --   Prompts the user for m intersection conditions on k-planes in n-space,
-  --   and writes the expansion to resolve the conditions from the top down.
+  --   and writes the expansion to resolve the conditions from the top down,
+  --   walking the intersection poset from the root to the leaves.
 
-    ips : Intersection_Poset(m-1) := Read_Conditions(n,k,m);
+  -- ON ENTRY :
+  --   n        ambient space
+  --   k        dimension of the solution planes;
+  --   bm       product of k-brackets, with conditions on the k-planes.
+
+    cnd : constant Array_of_Brackets := Create(bm);
+    nbc : constant integer32 := cnd'last;
+    ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
     tmp : Poset_List;
     lpn : Link_to_Poset_Node;
+
+    procedure Write_Parent ( node : in Link_to_Poset_Node ) is
+    begin
+      Checker_Posets_io.Write_Nodes_in_Poset(node.ps,node.ps.black'first);
+    end Write_Parent;
+    procedure Write_Parents is
+      new Intersection_Posets.Enumerate_Parents(Write_Parent);
 
   begin
     put_line("Resolving the intersection conditions :");
@@ -64,10 +107,82 @@ procedure ts_lrhom is
        -- Checker_Posets_io.Write(lpn.ps);
         Checker_Posets_io.Write_Nodes_in_Poset(lpn.ps,lpn.ps.black'first);
         Checker_Posets_io.Write_Nodes_in_Poset(lpn.ps,lpn.ps.black'last);
+        if i > 1 then
+          put_line("-> its parents are listed by their root :");
+          Write_Parents(ips.nodes(i-1),lpn.all);
+        end if;
         tmp := Tail_Of(tmp);
       end loop;
     end loop;
-  end Walk_Intersection_Poset;
+  end Walk_from_Root_to_Leaves;
+
+  procedure Initialize_Leaves ( pl : in out Poset_List ) is
+
+  -- DESCRIPTION :
+  --   Initializes the root count at the leaves in the posets at one.
+
+    tmp : Poset_List := pl;
+    lpn : Link_to_Poset_Node;
+    cps : Checker_Posets.Poset;
+
+  begin
+    while not Is_Null(tmp) loop
+      lpn := Head_Of(tmp);
+      cps := lpn.ps;
+      Clear(cps.white(cps.white'first).coeff);
+      cps.white(cps.white'first).coeff := Create(natural32(1));
+      Clear(cps.white(cps.white'last).coeff);
+      cps.white(cps.white'last).coeff := Create(natural32(1));
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Initialize_Leaves;
+
+  procedure Walk_from_Leaves_to_Root
+              ( n,k : in integer32; bm : in Bracket_Monomial ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for m intersection conditions on k-planes in n-space,
+  --   and writes the evolution of the root count from the leaves to the root.
+
+  -- ON ENTRY :
+  --   n        ambient space
+  --   k        dimension of the solution planes;
+  --   bm       product of k-brackets, with conditions on the k-planes.
+
+    cnd : constant Array_of_Brackets := Create(bm);
+    nbc : constant integer32 := cnd'last;
+    ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
+    tmp : Poset_List;
+    lpn : Link_to_Poset_Node;
+
+    procedure Write_Parent ( node : in Link_to_Poset_Node ) is
+    begin
+      Checker_Posets_io.Write_Nodes_in_Poset(node.ps,node.ps.black'first);
+    end Write_Parent;
+    procedure Write_Parents is
+      new Intersection_Posets.Enumerate_Parents(Write_Parent);
+
+  begin
+   -- put_line("Resolving the intersection conditions :");
+   -- Write_Expansion(ips);
+    Initialize_Leaves(ips.nodes(ips.m));
+    for i in reverse 1..ips.m loop
+      put("The nodes at level "); put(i,1); put_line(" :");
+      tmp := ips.nodes(i);
+      for j in 1..Length_Of(ips.nodes(i)) loop
+        lpn := Head_Of(tmp);
+        put("-> poset node "); put(j,1); put_line(", root and leaves :");
+       -- Checker_Posets_io.Write(lpn.ps);
+        Checker_Posets_io.Write_Nodes_in_Poset(lpn.ps,lpn.ps.black'first);
+        Checker_Posets_io.Write_Nodes_in_Poset(lpn.ps,lpn.ps.black'last);
+        if i > 1 then
+          put_line("-> its parents are listed by their root :");
+          Write_Parents(ips.nodes(i-1),lpn.all);
+        end if;
+        tmp := Tail_Of(tmp);
+      end loop;
+    end loop;
+  end Walk_from_Leaves_to_Root;
 
   procedure Main is
 
@@ -75,16 +190,25 @@ procedure ts_lrhom is
   --   Provides the user with a list of test procedures
   --   and prompts to make a choice.
 
-    n,k,m : integer32 := 0;
+    ans : character;
+    n,k : integer32 := 0;
+    bm : Bracket_Monomial;
 
   begin
     put_line("MENU to solve Schubert problems with LR homotopies : ");
-    put_line("  0. walk through intersection poset from leaves to root.");
+    put_line("  0. walk through intersection poset from root to leaves.");
+    put_line("  1. walk through intersection poset from leaves to root.");
+    put("Type 0 or 1 to select ");
+    Ask_Alternative(ans,"01");
     new_line;
     put("Give the ambient dimension : "); get(n);
     put("Give the dimension of the planes : "); get(k);
-    put("Give the number of conditions : "); get(m);
-    Walk_Intersection_Poset(n,k,m);
+    Read_Brackets(bm);
+    case ans is
+      when '0' => Walk_from_Root_to_Leaves(n,k,bm);
+      when '1' => Walk_from_Leaves_to_Root(n,k,bm);
+      when others => null;
+    end case;
   end Main;
 
 begin
