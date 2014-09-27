@@ -89,8 +89,14 @@ procedure ts_lrhom is
     lpn : Link_to_Poset_Node;
 
     procedure Write_Parent ( node : in Link_to_Poset_Node ) is
+
+    -- DESCRIPITION :
+    --   Writes the root node of the parent given on input in node
+    --   and also writes the leaf nodes of the parent.
+
     begin
       Checker_Posets_io.Write_Nodes_in_Poset(node.ps,node.ps.black'first);
+      Checker_Posets_io.Write_Nodes_in_Poset(node.ps,node.ps.black'last);
     end Write_Parent;
     procedure Write_Parents is
       new Intersection_Posets.Enumerate_Parents(Write_Parent);
@@ -108,7 +114,7 @@ procedure ts_lrhom is
         Checker_Posets_io.Write_Nodes_in_Poset(lpn.ps,lpn.ps.black'first);
         Checker_Posets_io.Write_Nodes_in_Poset(lpn.ps,lpn.ps.black'last);
         if i > 1 then
-          put_line("-> its parents are listed by their root :");
+          put_line("-> its parents are listed by their root and leaves :");
           Write_Parents(ips.nodes(i-1),lpn.all);
         end if;
         tmp := Tail_Of(tmp);
@@ -137,6 +143,61 @@ procedure ts_lrhom is
     end loop;
   end Initialize_Leaves;
 
+  procedure Connect_Checker_Posets
+              ( pl : in Intersection_Posets.Poset_List;
+                nd : in Intersection_Posets.Poset_Node ) is
+
+  -- DESCRIPTION :
+  --   Connects the root counts at the root of the child poset with
+  --   those leaves of the parent poset for which the conditions match.
+
+  -- ON ENTRY :
+  --   pl       list of checker posets at some level of the parent nodes
+  --            to the node nd in the intersection poset;
+  --   nd       poset of the child.
+
+    procedure Connect_Parent ( node : in Link_to_Poset_Node ) is
+
+    -- DESCRIPTION :
+    --   Connects the leaf of the parent given on input in node.
+
+      child : constant Checker_Posets.Poset := nd.ps;
+      childnode : constant Link_to_Node := child.white(child.white'first);
+      childconds : constant Standard_Natural_Vectors.Vector
+                 := childnode.rows;     -- root
+      gamenode : Link_to_Node := node.ps.white(node.ps.white'last);
+      parentconds : constant Standard_Natural_Vectors.Vector
+                  := node.ps.white(node.ps.white'last).cols; -- leaf
+
+    begin
+     -- Checker_Posets_io.Write_Nodes_in_Poset(node.ps,node.ps.black'first);
+      put_line("Before assigning coefficients at parent :");
+      Checker_Posets_io.Write_Nodes_in_Poset(node.ps,node.ps.black'last);
+      put("conditions at child  : "); put(childconds); new_line;
+      put("conditions at parent : ");
+      loop
+        put(gamenode.cols); 
+        if Standard_Natural_Vectors.Equal(gamenode.cols,childconds) then
+          Copy(childnode.coeff,gamenode.coeff);
+        else
+          Clear(gamenode.coeff);
+          gamenode.coeff := Create(natural32(0));
+        end if;
+        exit when (gamenode.next_sibling = null);
+        put(" |");
+        gamenode := gamenode.next_sibling;
+      end loop;
+      new_line;
+      put_line("After assigning coefficients at parent :");
+      Checker_Posets_io.Write_Nodes_in_Poset(node.ps,node.ps.black'last);
+    end Connect_Parent;
+    procedure Connect_Parents is
+      new Intersection_Posets.Enumerate_Parents(Connect_Parent);
+
+  begin
+    Connect_Parents(pl,nd);
+  end Connect_Checker_Posets;
+
   procedure Walk_from_Leaves_to_Root
               ( n,k : in integer32; bm : in Bracket_Monomial ) is
 
@@ -155,13 +216,6 @@ procedure ts_lrhom is
     tmp : Poset_List;
     lpn : Link_to_Poset_Node;
 
-    procedure Write_Parent ( node : in Link_to_Poset_Node ) is
-    begin
-      Checker_Posets_io.Write_Nodes_in_Poset(node.ps,node.ps.black'first);
-    end Write_Parent;
-    procedure Write_Parents is
-      new Intersection_Posets.Enumerate_Parents(Write_Parent);
-
   begin
    -- put_line("Resolving the intersection conditions :");
    -- Write_Expansion(ips);
@@ -176,8 +230,9 @@ procedure ts_lrhom is
         Checker_Posets_io.Write_Nodes_in_Poset(lpn.ps,lpn.ps.black'first);
         Checker_Posets_io.Write_Nodes_in_Poset(lpn.ps,lpn.ps.black'last);
         if i > 1 then
-          put_line("-> its parents are listed by their root :");
-          Write_Parents(ips.nodes(i-1),lpn.all);
+         -- put_line("-> its parents are listed by their root :");
+          put_line("-> its parents are listed by their leaf :");
+          Connect_Checker_Posets(ips.nodes(i-1),lpn.all);
         end if;
         tmp := Tail_Of(tmp);
       end loop;
