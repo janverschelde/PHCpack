@@ -122,26 +122,60 @@ procedure ts_lrhom is
     end loop;
   end Walk_from_Root_to_Leaves;
 
-  procedure Initialize_Leaves ( pl : in out Poset_List ) is
+  procedure Initialize_Leaves_to_One ( pl : in out Poset_List ) is
 
   -- DESCRIPTION :
-  --   Initializes the root count at the leaves in the posets at one.
+  --   Initializes the root count at the leaves in the posets to one.
 
     tmp : Poset_List := pl;
     lpn : Link_to_Poset_Node;
     cps : Checker_Posets.Poset;
+    lnd : Link_to_Node;
 
   begin
     while not Is_Null(tmp) loop
       lpn := Head_Of(tmp);
       cps := lpn.ps;
-      Clear(cps.white(cps.white'first).coeff);
-      cps.white(cps.white'first).coeff := Create(natural32(1));
+      for i in cps.white'first..(cps.white'last-1) loop
+        lnd := cps.white(i);
+        while lnd /= null loop
+          Clear(lnd.coeff);
+          lnd.coeff := Create(natural32(0));
+          lnd := lnd.next_sibling;
+        end loop;
+      end loop;
       Clear(cps.white(cps.white'last).coeff);
       cps.white(cps.white'last).coeff := Create(natural32(1));
       tmp := Tail_Of(tmp);
     end loop;
-  end Initialize_Leaves;
+  end Initialize_Leaves_to_One;
+
+  procedure Initialize_Nodes_to_Zero ( pl : in out Poset_List ) is
+
+  -- DESCRIPTION :
+  --   Initializes the root count at the internal nodes in the posets
+  --   to zero.
+
+    tmp : Poset_List := pl;
+    lpn : Link_to_Poset_Node;
+    cps : Checker_Posets.Poset;
+    lnd : Link_to_Node;
+
+  begin
+    while not Is_Null(tmp) loop
+      lpn := Head_Of(tmp);
+      cps := lpn.ps;
+      for i in cps.white'range loop
+        lnd := cps.white(i);
+        while lnd /= null loop
+          Clear(lnd.coeff);
+          lnd.coeff := Create(natural32(0));
+          lnd := lnd.next_sibling;     
+        end loop;
+      end loop;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Initialize_Nodes_to_Zero;
 
   procedure Connect_Checker_Posets
               ( pl : in Intersection_Posets.Poset_List;
@@ -171,24 +205,21 @@ procedure ts_lrhom is
 
     begin
      -- Checker_Posets_io.Write_Nodes_in_Poset(node.ps,node.ps.black'first);
-      put_line("Before assigning coefficients at parent :");
+      put_line("** Before assigning coefficients at parent :");
       Checker_Posets_io.Write_Nodes_in_Poset(node.ps,node.ps.black'last);
-      put("conditions at child  : "); put(childconds); new_line;
-      put("conditions at parent : ");
+      put("  conditions at child  : "); put(childconds); new_line;
+      put("  conditions at parent : ");
       loop
         put(gamenode.cols); 
-        if Standard_Natural_Vectors.Equal(gamenode.cols,childconds) then
-          Copy(childnode.coeff,gamenode.coeff);
-        else
-          Clear(gamenode.coeff);
-          gamenode.coeff := Create(natural32(0));
+        if Standard_Natural_Vectors.Equal(gamenode.cols,childconds)
+         then Add(gamenode.coeff,childnode.coeff);
         end if;
         exit when (gamenode.next_sibling = null);
         put(" |");
         gamenode := gamenode.next_sibling;
       end loop;
       new_line;
-      put_line("After assigning coefficients at parent :");
+      put_line("** After assigning coefficients at parent :");
       Checker_Posets_io.Write_Nodes_in_Poset(node.ps,node.ps.black'last);
     end Connect_Parent;
     procedure Connect_Parents is
@@ -219,14 +250,22 @@ procedure ts_lrhom is
   begin
    -- put_line("Resolving the intersection conditions :");
    -- Write_Expansion(ips);
-    Initialize_Leaves(ips.nodes(ips.m));
+    Initialize_Leaves_to_One(ips.nodes(ips.m));
+    for i in 1..ips.m-1 loop
+      Initialize_Nodes_to_Zero(ips.nodes(i));
+    end loop;
     for i in reverse 1..ips.m loop
+      new_line;
       put("The nodes at level "); put(i,1); put_line(" :");
       tmp := ips.nodes(i);
       for j in 1..Length_Of(ips.nodes(i)) loop
         lpn := Head_Of(tmp);
-        put("-> poset node "); put(j,1); put_line(", root and leaves :");
+       -- put_line("poset before adding from leaves to root : ");
        -- Checker_Posets_io.Write(lpn.ps);
+        Checker_Posets.Add_from_Leaves_to_Root(lpn.ps);
+        put_line("poset after adding from leaves to root : ");
+        Checker_Posets_io.Write(lpn.ps);
+        put("-> poset node "); put(j,1); put_line(", root and leaves :");
         Checker_Posets_io.Write_Nodes_in_Poset(lpn.ps,lpn.ps.black'first);
         Checker_Posets_io.Write_Nodes_in_Poset(lpn.ps,lpn.ps.black'last);
         if i > 1 then
@@ -250,6 +289,7 @@ procedure ts_lrhom is
     bm : Bracket_Monomial;
 
   begin
+    new_line;
     put_line("MENU to solve Schubert problems with LR homotopies : ");
     put_line("  0. walk through intersection poset from root to leaves.");
     put_line("  1. walk through intersection poset from leaves to root.");

@@ -2,6 +2,8 @@ Sat 27 Sep 2014 : extended ts_lrhom.adb with a walk from leaves to root in
   the intersection poset to resolve intersection conditions.
   Made the connections between checker posets between root of child and
   the leaves of the parents in the intersection poset.
+  Extended checker_posets with procedure to add the coefficients from
+  the leaves to the root in the poset, called in ts_lrhom.
 
 Fri 26 Sep 2014 : improved documentation of intersection_posets_io.ads.
   Changed interface in checker_posets_io.  New ts_lrhom.adb to interactively

@@ -274,6 +274,40 @@ package body Checker_Posets is
     end loop;
   end Add_Multiplicity;
 
+  procedure Set_Coefficients_to_Zero ( ps : in out Poset ) is
+
+    lnd : Link_to_Node;
+
+  begin
+    for i in ps.white'range loop
+      lnd := ps.white(i);
+      while lnd /= null loop 
+        Clear(lnd.coeff);
+        lnd.coeff := Create(natural32(0));
+        lnd := lnd.next_sibling;
+      end loop;
+    end loop;
+  end Set_Coefficients_to_Zero;
+
+  procedure Add_from_Leaves_to_Root ( ps : in out Poset ) is
+
+    lnd : Link_to_Node;
+
+  begin
+    for i in reverse ps.white'first..ps.white'last-1 loop
+      lnd := ps.white(i);
+      while lnd /= null loop
+        if lnd.stay_child /= null
+         then Add(lnd.coeff,lnd.stay_child.coeff);
+        end if;
+        if lnd.swap_child /= null
+         then Add(lnd.coeff,lnd.swap_child.coeff);
+        end if;
+        lnd := lnd.next_sibling;
+      end loop;
+    end loop;
+  end Add_from_Leaves_to_Root;
+
 -- SELECTORS :
 
   function Root_Rows ( ps : in Poset ) return Vector is

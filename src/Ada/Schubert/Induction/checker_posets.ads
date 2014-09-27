@@ -90,6 +90,18 @@ package Checker_Posets is
   -- DESCRIPTION :
   --   Adds m to every coefficient in the poset.
 
+  procedure Set_Coefficients_to_Zero ( ps : in out Poset );
+
+  -- DESCRIPTION :
+  --   Sets all coefficients in the poset to zero.
+
+  procedure Add_from_Leaves_to_Root ( ps : in out Poset );
+
+  -- DESCRIPTION :
+  --   Takes the coefficients of the leaves at the poset
+  --   and adds those to the coefficients of the parents
+  --   all the way up to the root of the poset.
+
 -- SELECTORS :
 
   function Root_Rows ( ps : in Poset ) return Vector;
