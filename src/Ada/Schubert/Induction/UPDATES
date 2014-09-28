@@ -1,3 +1,5 @@
+Sun 28 Sep 2014 : stubbing Littlewood-Richardson homotopies in ts_lrhom.adb.
+
 Sat 27 Sep 2014 : extended ts_lrhom.adb with a walk from leaves to root in
   the intersection poset to resolve intersection conditions.
   Made the connections between checker posets between root of child and
