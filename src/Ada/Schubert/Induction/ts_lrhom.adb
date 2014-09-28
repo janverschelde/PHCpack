@@ -5,6 +5,7 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
+with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
 with Standard_Natural_Vectors;           use Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Brackets;                           use Brackets;
@@ -246,10 +247,13 @@ procedure ts_lrhom is
     ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
     tmp : Poset_List;
     lpn : Link_to_Poset_Node;
+    roco : Natural_Number;
 
   begin
    -- put_line("Resolving the intersection conditions :");
    -- Write_Expansion(ips);
+    roco := Final_Sum(ips);
+    put("The formal root count : "); put(roco); new_line;
     Initialize_Leaves_to_One(ips.nodes(ips.m));
     for i in 1..ips.m-1 loop
       Initialize_Nodes_to_Zero(ips.nodes(i));
@@ -276,6 +280,10 @@ procedure ts_lrhom is
         tmp := Tail_Of(tmp);
       end loop;
     end loop;
+    put(" Top down root count : "); put(roco); new_line;
+    lpn := Head_Of(ips.nodes(1));
+    put("Bottom up root count : ");
+    put(lpn.ps.white(lpn.ps.white'first).coeff); new_line;
   end Walk_from_Leaves_to_Root;
 
   procedure Main is
