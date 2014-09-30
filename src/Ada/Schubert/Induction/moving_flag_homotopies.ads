@@ -398,8 +398,22 @@ package Moving_Flag_Homotopies is
                f : out Link_to_Poly_Sys );
 
   -- DESCRIPTION :
-  --   Returns in fthe flag conditions for a k-plane in n-space with
+  --   Returns in f the flag conditions for a k-plane in n-space with
   --   localization pattern determined by (p,rows,cols) that has
   --   to meet the Cheater homotopy flag under the conditions cond.
+
+  procedure Many_Flag_Conditions
+             ( n,k : in integer32;
+               p,rows,cols : in Standard_Natural_Vectors.Vector;
+               conds : in Array_of_Brackets;
+               start,target : in Standard_Complex_VecMats.VecMat;
+               f : out Link_to_Poly_Sys );
+
+  -- DESCRIPTION :
+  --   Returns in f all polynonial equations that must be satisfied
+  --   to meet all conditions by the brackets in cond,
+  --   for the matrices in start and target.  
+
+  -- REQUIRED : conds'range = start'range = target'range.
 
 end Moving_Flag_Homotopies;

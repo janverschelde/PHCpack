@@ -854,4 +854,33 @@ package body Moving_Flag_Homotopies is
     f := new Poly_Sys'(Filter_Zero_Equations(sc));
   end Flag_Conditions;
 
+  procedure Many_Flag_Conditions
+             ( n,k : in integer32;
+               p,rows,cols : in Standard_Natural_Vectors.Vector;
+               conds : in Array_of_Brackets;
+               start,target : in Standard_Complex_VecMats.VecMat;
+               f : out Link_to_Poly_Sys ) is
+
+    eqs : Array_of_Poly_Sys(conds'range);
+    cnt : integer32 := 0;
+    ind : integer32;
+    current : Link_to_Poly_Sys;
+
+  begin
+    for i in conds'range loop
+      Flag_Conditions
+        (n,k,p,rows,cols,conds(i).all,start(i).all,target(i).all,eqs(i));
+      cnt := cnt + eqs(i)'last;
+    end loop;
+    f := new Poly_Sys(1..cnt);
+    ind := 0;
+    for i in eqs'range loop       -- copy the pointers to the systems
+      current := eqs(i);
+      for k in current'range loop -- flattening the double indexed array
+        ind := ind + 1;
+        f(ind) := current(k);
+      end loop;
+    end loop;
+  end Many_Flag_Conditions;
+
 end Moving_Flag_Homotopies;
