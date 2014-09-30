@@ -36,6 +36,24 @@ procedure ts_induce is
 --   Allows to interactively test the setup and the running of the
 --   Littlewood-Richardson homotopies.
 
+  procedure Write_Short ( x : in Standard_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Writes the matrix in short format, without the imaginary part,
+  --   and as an integer.
+
+    xre : double_float;
+
+  begin
+    for i in x'range(1) loop
+      for j in x'range(2) loop
+        xre := REAL_PART(x(i,j));
+        put(integer32(xre),3);
+      end loop;
+      new_line;
+    end loop;
+  end Write_Short;
+
   procedure Generalizing_Moving_Flags ( n : in integer32 ) is
 
   -- DESCRIPTION :
@@ -53,7 +71,7 @@ procedure ts_induce is
     nt : Standard_Complex_Matrices.Matrix(1..n,1..n);
     acc : Standard_Complex_Matrices.Matrix(1..n,1..n) := Identity(n);
     f,a : integer32;
-    gamma : Complex_Number;
+    gamma : Complex_Number := Create(-1.0);
 
     use Standard_Complex_Matrices;
 
@@ -72,11 +90,14 @@ procedure ts_induce is
         put("After Move #"); put(i,1); 
         put(" (a,f) = ("); put(a,1); put(","); put(f,1);
         put(") : ");
-        gamma := fg(n+1-a,f);
-        nt := Numeric_Transformation(t,gamma);
-        put_line("The numeric form of the transformation : "); put(nt,3);
+       -- gamma := fg(n+1-a,f);
+       -- nt := Numeric_Transformation(t,gamma);
+        nt := Numeric_Transformation(t);
+        put_line("The numeric form of the transformation : ");
+        Write_Short(nt); -- put(nt,1);
         acc := acc*nt;
-        put_line("The transformed moving flag : "); put(acc,3);
+        put_line("The transformed moving flag : ");
+        Write_Short(acc); --  put(acc,1);
       end loop;
       put_line("The final configuration : ");
       p := all_moves(all_moves'last).all; mf := Moving_Flag(p);

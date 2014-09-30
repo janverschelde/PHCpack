@@ -1,3 +1,6 @@
+Mon 29 Sep 2014 : updated moving_flag_homotopies with the correct numeric
+  transformation, tested by the first option of ts_induce.
+
 Sun 28 Sep 2014 : stubbing Littlewood-Richardson homotopies in ts_lrhom.adb.
 
 Sat 27 Sep 2014 : extended ts_lrhom.adb with a walk from leaves to root in

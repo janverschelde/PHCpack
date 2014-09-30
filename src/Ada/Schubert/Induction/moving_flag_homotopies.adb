@@ -111,6 +111,32 @@ package body Moving_Flag_Homotopies is
     return res;
   end Numeric_Transformation;
 
+  function Numeric_Transformation
+              ( t : Standard_Natural_Matrices.Matrix )
+              return Standard_Complex_Matrices.Matrix is
+
+    res : Standard_Complex_Matrices.Matrix(t'range(1),t'range(2));
+
+  begin
+    for i in t'range(1) loop
+      for j in t'range(2) loop
+        if t(i,j) = 0 then
+          res(i,j) := Create(0.0);
+        elsif t(i,j) = 1 then
+          res(i,j) := Create(1.0);
+          if i > t'first(1) then
+            if t(i-1,j) = 2
+             then res(i,j) := Create(-1.0);
+            end if;
+          end if;
+        else
+          res(i,j) := Create(1.0);
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Numeric_Transformation;
+
   procedure Add_t_Symbol is
 
     sb : Symbol_Table.Symbol;

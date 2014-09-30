@@ -51,6 +51,16 @@ package Moving_Flag_Homotopies is
   -- DESCRIPTION :
   --   Returns the transformation t in its numeric form, replacing
   --   the free coefficient by the gamma constant g.  
+
+  function Numeric_Transformation
+             ( t : Standard_Natural_Matrices.Matrix )
+             return Standard_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns the transformation t in its numeric form.
+  --   The free coefficients is replaced by one and the coefficient
+  --   just below it gets the value minus one.
+
   procedure Add_t_Symbol;
 
   -- DESCRIPTION :
