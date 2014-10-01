@@ -63,6 +63,73 @@ package Checker_Homotopies is
 
 -- PART II : coordinate transformations on input flags and solution plane
 
+  procedure Inverse_Transformation
+              ( r : in integer32;
+                x : in out Standard_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Applies the inverse coordinate transformation to a solution plane
+  --   in case no homotopies are needed.
+
+  -- REQUIRED : r < x'last(1).
+
+  -- ON ENTRY :
+  --   r        the index of the critical row;
+  --   x        matrix representation of a solution k-plane,
+  --            as an n-by-k matrix.
+
+  -- ON RETURN :
+  --   x        the inverse coordinate transformation is applied to x.
+
+  procedure Normalize_to_Fit
+              ( r : in integer32;
+                pattern : in Standard_Natural_Matrices.Matrix;
+                x : in out Standard_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Normalizes and column reduces the solution in x to fit 
+  --   the localization pattern, after application of the inverse
+  --   coordinate transformation with critical row r.
+
+  -- REQUIRED : r < x'last(1) and on the rows where ones are expected
+  --   according to the localization pattern in columns r and r+1,
+  --   the matrix x must have values that different from zero.
+
+  -- ON ENTRY :
+  --   r        the index of the critical row;
+  --   pattern  a matrix of 0, 1, and 2 entries represents a localization
+  --            pattern for a k-plane: 2 for arbitrary numbers,
+  --            and 0 and 1 at position where zero and ones are expected;
+  --   x        matrix representation of a solution k-plane,
+  --            as an n-by-k matrix, after Inverse_Transformation(r,x).
+
+  -- ON RETURN :
+  --   x        normalized so ones appear at the expected places.
+
+  procedure Normalize_and_Reduce_to_Fit
+              ( r : in integer32;
+                pattern : in Standard_Natural_Matrices.Matrix;
+                x : in out Standard_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Normalizes and column reduces the solution in x to fit 
+  --   the localization pattern, after application of the inverse
+  --   coordinate transformation with critical row r.
+
+  -- REQUIRED : r < x'last(1).
+
+  -- ON ENTRY :
+  --   r        the index of the critical row;
+  --   pattern  a matrix of 0, 1, and 2 entries represents a localization
+  --            pattern for a k-plane: 2 for arbitrary numbers,
+  --            and 0 and 1 at position where zero and ones are expected;
+  --   x        matrix representation of a solution k-plane,
+  --            as an n-by-k matrix, after Inverse_Transformation(r,x).
+
+  -- ON RETURN :
+  --   x        normalized so ones appear at the expected places,
+  --            and column reduced so zeros are where expected.
+
   procedure Inverse_Coordinate_Transformation
               ( r : in integer32;
                 m : in out Standard_Complex_Matrices.Matrix );

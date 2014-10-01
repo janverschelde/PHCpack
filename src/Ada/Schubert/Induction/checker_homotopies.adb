@@ -159,6 +159,55 @@ package body Checker_Homotopies is
 
 -- PART II : coordinate transformations on input flags and solution plane
 
+  procedure Inverse_Transformation
+              ( r : in integer32;
+                x : in out Standard_Complex_Matrices.Matrix ) is
+
+    tmp : Complex_Number;
+
+  begin
+    tmp := x(r+1,r);
+    x(r+1,r) := x(r,r) + x(r+1,r);
+    x(r,r+1) := -tmp;
+    tmp := x(r+1,r+1);
+    x(r+1,r+1) := x(r,r+1) + x(r+1,r+1);
+    x(r+1,r+1) := -tmp;
+  end Inverse_Transformation;
+
+  procedure Normalize_to_Fit
+              ( r : in integer32;
+                pattern : in Standard_Natural_Matrices.Matrix;
+                x : in out Standard_Complex_Matrices.Matrix ) is
+
+    pivot : integer32 := 0;
+
+  begin
+    for k in r..r+1 loop
+      for i in pattern'range(1) loop
+        if pattern(i,k) = 1
+         then pivot := i;
+        end if;
+        exit when (pivot > 0);
+      end loop;
+      for i in x'first(1)..pivot-1 loop
+        Div(x(i,k),x(pivot,k));
+      end loop;
+      for i in pivot+1..x'last(1) loop
+        Div(x(i,k),x(pivot,k));
+      end loop;
+      x(pivot,k) := Create(1.0);
+    end loop;
+  end Normalize_to_Fit;
+
+  procedure Normalize_and_Reduce_to_Fit
+              ( r : in integer32;
+                pattern : in Standard_Natural_Matrices.Matrix;
+                x : in out Standard_Complex_Matrices.Matrix ) is
+
+  begin
+    Normalize_to_Fit(r,pattern,x);
+  end Normalize_and_Reduce_to_Fit;
+
   procedure Inverse_Coordinate_Transformation
               ( r : in integer32;
                 m : in out Standard_Complex_Matrices.Matrix ) is

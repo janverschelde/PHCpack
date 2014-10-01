@@ -1,3 +1,6 @@
+Wed 1 Oct 2014 : updated checker homotopies with coordinate transformations
+  on the solutions in the cases where there is no homotopy.
+
 Tue 30 Sep 2014 : wrapper for the many conditions imposed by many flags
   for use in a cheater homotopy.
 
