@@ -159,30 +159,29 @@ package body Checker_Homotopies is
 
 -- PART II : coordinate transformations on input flags and solution plane
 
-  procedure Inverse_Transformation
+  procedure Inverse_Row_Transformation
               ( r : in integer32;
                 x : in out Standard_Complex_Matrices.Matrix ) is
 
     tmp : Complex_Number;
 
   begin
-    tmp := x(r+1,r);
-    x(r+1,r) := x(r,r) + x(r+1,r);
-    x(r,r+1) := -tmp;
-    tmp := x(r+1,r+1);
-    x(r+1,r+1) := x(r,r+1) + x(r+1,r+1);
-    x(r+1,r+1) := -tmp;
-  end Inverse_Transformation;
+    for k in x'range(2) loop
+      tmp := x(r,k);
+      x(r,k) := -x(r+1,k);
+      x(r+1,k) := tmp + x(r+1,k);
+    end loop;
+  end Inverse_Row_Transformation;
 
   procedure Normalize_to_Fit
-              ( r : in integer32;
-                pattern : in Standard_Natural_Matrices.Matrix;
+              ( pattern : in Standard_Natural_Matrices.Matrix;
                 x : in out Standard_Complex_Matrices.Matrix ) is
 
-    pivot : integer32 := 0;
+    pivot : integer32;
 
   begin
-    for k in r..r+1 loop
+    for k in pattern'range(2) loop
+      pivot := 0;
       for i in pattern'range(1) loop
         if pattern(i,k) = 1
          then pivot := i;
@@ -199,13 +198,49 @@ package body Checker_Homotopies is
     end loop;
   end Normalize_to_Fit;
 
+  procedure Reduce_to_Fit
+              ( pattern : in Standard_Natural_Matrices.Matrix;
+                x : in out Standard_Complex_Matrices.Matrix ) is
+
+    tol : constant double_float := 1.0e-8;
+    avx : double_float;
+    pivot : integer32;
+
+  begin
+    for k in pattern'range(2) loop
+      for i in pattern'range(1) loop
+        if pattern(i,k) = 0 then
+          avx := AbsVal(x(i,k));
+          if avx > tol then
+            pivot := 0;
+            for j in 1..k-1 loop
+              if pattern(i,j) = 1
+               then pivot := j;
+              end if;
+              exit when (pivot > 0);
+            end loop;
+            if pivot > 0 then
+              for ii in x'first(1)..i-1 loop
+                x(ii,k) := x(ii,k) - x(i,k)*x(ii,pivot);
+              end loop;
+              for ii in i+1..x'last(1) loop
+                x(ii,k) := x(ii,k) - x(i,k)*x(ii,pivot);
+              end loop;
+              x(i,k) := Create(0.0);
+            end if;
+          end if;
+        end if;
+      end loop;
+    end loop;
+  end Reduce_to_Fit;
+
   procedure Normalize_and_Reduce_to_Fit
-              ( r : in integer32;
-                pattern : in Standard_Natural_Matrices.Matrix;
+              ( pattern : in Standard_Natural_Matrices.Matrix;
                 x : in out Standard_Complex_Matrices.Matrix ) is
 
   begin
-    Normalize_to_Fit(r,pattern,x);
+    Normalize_to_Fit(pattern,x);
+    Reduce_to_Fit(pattern,x);
   end Normalize_and_Reduce_to_Fit;
 
   procedure Inverse_Coordinate_Transformation
@@ -265,8 +300,9 @@ package body Checker_Homotopies is
     put(file,r+1,1); new_line(file);
     y := Map(plocmap,x); -- z := y;
     put_line(file,"the given solution plane :"); put(file,y,3);
-    Inverse_Transformation(r,y);
-    Normalize_and_Reduce_to_Fit(r,qlocmap,y);
+    Inverse_Row_Transformation(r,y);
+    put_line(file,"after the inverse transformation :"); put(file,y,3);
+    Normalize_and_Reduce_to_Fit(qlocmap,y);
    -- if inrowrp1 = 0 then
    --   for j in qlocmap'range(2) loop
    --    -- if qlocmap(r,j) = 2 and qlocmap(r+1,j) = 2 then

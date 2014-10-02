@@ -63,7 +63,7 @@ package Checker_Homotopies is
 
 -- PART II : coordinate transformations on input flags and solution plane
 
-  procedure Inverse_Transformation
+  procedure Inverse_Row_Transformation
               ( r : in integer32;
                 x : in out Standard_Complex_Matrices.Matrix );
 
@@ -82,49 +82,69 @@ package Checker_Homotopies is
   --   x        the inverse coordinate transformation is applied to x.
 
   procedure Normalize_to_Fit
-              ( r : in integer32;
-                pattern : in Standard_Natural_Matrices.Matrix;
+              ( pattern : in Standard_Natural_Matrices.Matrix;
                 x : in out Standard_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
   --   Normalizes and column reduces the solution in x to fit 
   --   the localization pattern, after application of the inverse
-  --   coordinate transformation with critical row r.
+  --   row transformation on the solution plane x.
 
-  -- REQUIRED : r < x'last(1) and on the rows where ones are expected
-  --   according to the localization pattern in columns r and r+1,
-  --   the matrix x must have values that different from zero.
+  -- REQUIRED : The rows where ones are expected according to the 
+  --   localization pattern in  the matrix x must be different from zero.
 
   -- ON ENTRY :
-  --   r        the index of the critical row;
   --   pattern  a matrix of 0, 1, and 2 entries represents a localization
   --            pattern for a k-plane: 2 for arbitrary numbers,
   --            and 0 and 1 at position where zero and ones are expected;
   --   x        matrix representation of a solution k-plane,
-  --            as an n-by-k matrix, after Inverse_Transformation(r,x).
+  --            as an n-by-k matrix, after Inverse_Row_Transformation(r,x),
+  --            where r is the critical row.
 
   -- ON RETURN :
   --   x        normalized so ones appear at the expected places.
 
+  procedure Reduce_to_Fit
+              ( pattern : in Standard_Natural_Matrices.Matrix;
+                x : in out Standard_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Reduces the columns of the matrix x according to the zeres in
+  --   the localization pattern.
+
+  -- REQUIRED :
+  --   The matrix x has been normalized so the ones appear on the
+  --   places prescribed by the localization pattern.
+
+  -- ON ENTRY :
+  --   pattern  a matrix of 0, 1, and 2 entries represents a localization
+  --            pattern for a k-plane: 2 for arbitrary numbers,
+  --            and 0 and 1 at position where zero and ones are expected;
+  --   x        matrix representation of a solution k-plane,
+  --            as an n-by-k matrix, after Inverse_Row_Transformation(r,x),
+  --            where r is the critical row, and after Normalize_to_Fit
+  --            has been applied to have ones in the proper places.
+
+  -- ON RETURN :
+  --   x        normalized so ones appear at the expected places,
+  --            and column reduced so zeros are where expected.
+
   procedure Normalize_and_Reduce_to_Fit
-              ( r : in integer32;
-                pattern : in Standard_Natural_Matrices.Matrix;
+              ( pattern : in Standard_Natural_Matrices.Matrix;
                 x : in out Standard_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
   --   Normalizes and column reduces the solution in x to fit 
   --   the localization pattern, after application of the inverse
-  --   coordinate transformation with critical row r.
-
-  -- REQUIRED : r < x'last(1).
+  --   coordinate row transformation on the solution plane x.
 
   -- ON ENTRY :
-  --   r        the index of the critical row;
   --   pattern  a matrix of 0, 1, and 2 entries represents a localization
   --            pattern for a k-plane: 2 for arbitrary numbers,
   --            and 0 and 1 at position where zero and ones are expected;
   --   x        matrix representation of a solution k-plane,
-  --            as an n-by-k matrix, after Inverse_Transformation(r,x).
+  --            as an n-by-k matrix, after Inverse_Row_Transformation(r,x),
+  --            where r is the critical row.
 
   -- ON RETURN :
   --   x        normalized so ones appear at the expected places,

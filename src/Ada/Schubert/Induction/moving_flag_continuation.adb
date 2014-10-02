@@ -457,9 +457,9 @@ package body Moving_Flag_Continuation is
       end if;
     end if;
     if not fail then
-      put(file,"Transforming input planes with critical row = ");
+      put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
-      Checker_Homotopies.Inverse_Coordinate_Transformation(ctr,vf);
+     -- Checker_Homotopies.Inverse_Coordinate_Transformation(ctr,vf);
       Checker_Homotopies.Trivial_Stay_Coordinates
         (file,n,k,ctr,q,p,qr,qc,pr,pc,ls.v);
       put_line(file,"Verifying after coordinate changes ...");

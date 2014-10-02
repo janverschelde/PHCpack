@@ -1,3 +1,6 @@
+Thu 2 Oct 2014 : bug fixes and completed code in checker_homotopies
+  and changes in moving_flag_continuation.adb.
+
 Wed 1 Oct 2014 : updated checker_homotopies with coordinate transformations
   on the solutions in the cases where there is no homotopy.
   Applied the coordinate transformation in the Trivial_Stay case.
