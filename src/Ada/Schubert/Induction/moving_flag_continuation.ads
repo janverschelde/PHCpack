@@ -127,6 +127,7 @@ package Moving_Flag_Continuation is
               ( file : in file_type; n,k : in integer32;
                 q,rows,cols : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 x : in Standard_Complex_Vectors.Vector );
 
@@ -142,6 +143,7 @@ package Moving_Flag_Continuation is
   --   rows     position of the rows of the white checkers;
   --   cols     position of the columns of the white checkers;
   --   cond     specifications for the intersection conditions;
+  --   mf       coordinates for the moving flag;
   --   vf       coordinates for the input flags;
   --   x        current solution plane.
 
@@ -167,6 +169,7 @@ package Moving_Flag_Continuation is
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Complex_Matrices.Matrix;
                 vf : in out Standard_Complex_VecMats.VecMat;
                 ls : in out Link_to_Solution; fail : out boolean );
 
@@ -187,6 +190,7 @@ package Moving_Flag_Continuation is
   --   pr       position of the rows of the white checkers with p;
   --   pc       position of the columns of the white checkers with p;
   --   cond     intersection conditions for the general fixed flags;
+  --   mf       coordinates of the moving flag;
   --   vf       coordinates of general flags to keep fixed.
 
   -- ON RETURN :
@@ -230,6 +234,7 @@ package Moving_Flag_Continuation is
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Complex_Matrices.Matrix;
                 vf : in out Standard_Complex_VecMats.VecMat;
                 ls : in out Link_to_Solution; fail : out boolean );
 
@@ -250,6 +255,7 @@ package Moving_Flag_Continuation is
   --   pr       position of the rows of the white checkers with p;
   --   pc       position of the columns of the white checkers with p;
   --   cond     intersection conditions for the general fixed flags;
+   --  mf       coordinates of the moving flag;
   --   vf       coordinates of general flags to keep fixed.
 
   -- ON RETURN :
@@ -262,7 +268,7 @@ package Moving_Flag_Continuation is
                 path : in Array_of_Nodes; count : in integer32;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
-                mf : in Standard_Complex_Matrices.Matrix;
+                mf : in out Standard_Complex_Matrices.Matrix;
                 tvf : out Standard_Complex_VecMats.VecMat;
                 ls : in out Link_to_Solution; unhappy : out boolean );
 
@@ -278,9 +284,11 @@ package Moving_Flag_Continuation is
   --   count    number of the path;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
-  --   mf       coordinates of the moving flag.
+  --   mf       coordinates of the moving flag,
+  --            should be equal to the identity matrix at the start.
 
   -- ON RETURN :
+  --   mf       moving flag at the end of the path;
   --   tvf      transformed matrix representations of input planes;
   --   ls       solution at the end of the path;
   --   unhappy  true if the configuration of checkers is unhappy
@@ -290,7 +298,6 @@ package Moving_Flag_Continuation is
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
-                mf : in Standard_Complex_Matrices.Matrix;
                 tvf : out Standard_Complex_VecMats.VecMat;
                 sols : out Solution_List );
 
@@ -303,8 +310,7 @@ package Moving_Flag_Continuation is
   --   k        dimension of the plane, number of white checkers;
   --   ps       checker poset for one game;
   --   cond     intersection conditions for the general fixed flags;
-  --   vf       coordinates of general flags to keep fixed;
-  --   mf       coordinates of the moving flag.
+  --   vf       coordinates of general flags to keep fixed.
 
   -- ON RETURN :
   --   tvf      transformed matrix representations of input planes;
