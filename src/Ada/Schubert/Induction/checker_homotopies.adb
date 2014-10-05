@@ -277,8 +277,6 @@ package body Checker_Homotopies is
             := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
     inrowrp1 : integer32 := 0;
     y : Standard_Complex_Matrices.Matrix(1..n,1..k);
-   -- y,z : Standard_Complex_Matrices.Matrix(1..n,1..k);
-   -- dnr,fac : Complex_Number;
 
   begin
     put(file,"Trivial Stay with critical row = "); put(file,r,1);
@@ -298,59 +296,11 @@ package body Checker_Homotopies is
       put(file,inrowrp1,1); put(file," in row ");
     end if;
     put(file,r+1,1); new_line(file);
-    y := Map(plocmap,x); -- z := y;
+    y := Map(plocmap,x);
     put_line(file,"the given solution plane :"); put(file,y,3);
     Inverse_Row_Transformation(r,y);
     put_line(file,"after the inverse transformation :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(qlocmap,y);
-   -- if inrowrp1 = 0 then
-   --   for j in qlocmap'range(2) loop
-   --    -- if qlocmap(r,j) = 2 and qlocmap(r+1,j) = 2 then
-   --       put(file,"adjusting column "); put(file,j,1); new_line(file);
-   --       z(r,j) := y(r+1,j);
-   --       z(r+1,j) := y(r,j) - y(r+1,j);
-   --    -- end if;
-   --   end loop;
-   -- else
-   --   for j in qlocmap'range(2) loop
-   --     if j /= inrowrp1 then
-   --      -- if qlocmap(r,j) = 2 and qlocmap(r+1,j) = 2 then
-   --         put(file,"adjusting column "); put(file,j,1); new_line(file);
-   --         z(r,j) := y(r+1,j);
-   --         z(r+1,j) := y(r,j) - y(r+1,j);
-   --      -- end if;
-   --     end if;
-   --   end loop;
-   --   if AbsVal(y(r,inrowrp1)) > 1.0E-12 then
-   --     dnr := y(r,inrowrp1) - Create(1.0);
-   --     if AbsVal(dnr) > 1.0E-12 then
-   --       for i in z'range(1) loop
-   --         if i = r then
-   --           z(r,inrowrp1) := Create(1.0)/dnr;
-   --         elsif i /= r + 1 then
-   --           if qlocmap(i,inrowrp1) = 2
-   --            then z(i,inrowrp1) := y(i,inrowrp1)/dnr;
-   --           end if;
-   --        end if;
-   --       end loop;
-   --     end if;
-   --   end if;
-   --   if inrowrp1 < qlocmap'last(2) then
-   --     if plocmap(r+1,inrowrp1+1) = 2 then
-   --       put(file,"computing the factor fac = ");
-   --       fac := y(r,inrowrp1+1) - y(r+1,inrowrp1+1);
-   --       put(file,fac); new_line(file);
-   --       for i in qlocmap'range(1) loop
-   --         if i /= r and i /= r+1 and qlocmap(i,inrowrp1+1) = 2 then
-   --           put(file,"adjusting row "); put(file,i,1); new_line(file);
-   --           z(i,inrowrp1+1) := y(i,inrowrp1+1) - fac*y(i,inrowrp1);
-   --         end if;
-   --       end loop;
-   --     end if;
-   --   end if;
-   -- end if;
-   -- put_line(file,"The transformed plane :"); put(file,z,3);
-   -- x := Map(qlocmap,z);
     put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(qlocmap,y);
   end Trivial_Stay_Coordinates;
@@ -394,11 +344,16 @@ package body Checker_Homotopies is
     put(file,"Homotopy Stay with critical row = "); put(file,r,1);
     put_line(file,".");
     put_line(file,"The localization map : "); put(file,locmap);
-    for j in locmap'range(2) loop
-      if locmap(r,j) = 2 then
-        y(r,j) := y(r,j) + y(r+1,j);
-      end if;
-    end loop;
+   -- for j in locmap'range(2) loop
+   --   if locmap(r,j) = 2 then
+   --     y(r,j) := y(r,j) + y(r+1,j);
+   --   end if;
+   -- end loop;
+    put_line(file,"the given solution plane :"); put(file,y,3);
+    Inverse_Row_Transformation(r,y);
+    put_line(file,"after the inverse transformation :"); put(file,y,3);
+    Normalize_and_Reduce_to_Fit(locmap,y);
+    put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(locmap,y);
   end Homotopy_Stay_Coordinates;
 
@@ -758,7 +713,7 @@ package body Checker_Homotopies is
     Initialize_Moving_Plane(res,locmap);
     t.dg := new Standard_Natural_Vectors.Vector'(1..dim+1 => 0);
     t.dg(dim+1) := 1;
-    t.cf := Create(1.0);
+    t.cf := Create(-1.0);
     for j in locmap'range(2) loop  -- find spot to place t in row r+1
       if locmap(r,j) = 1
        then res(r+1,j) := Create(t); exit;

@@ -162,7 +162,7 @@ package body Moving_Flag_Homotopies is
              ( n,v : integer32; t : Standard_Natural_Matrices.Matrix ) 
              return Standard_Complex_Poly_Matrices.Matrix is
 
-    gamma : constant Complex_Number := Create(1.0);
+    gamma : constant Complex_Number := Create(-1.0); --Create(1.0);
 
   begin
     return Symbolic_Transformation(n,v,gamma,t);
@@ -581,7 +581,7 @@ package body Moving_Flag_Homotopies is
 
   begin
     x := Symbolic_Schubert_Conditions.Symbolic_Form_of_Plane(n,k,locmap);
-    st := nf*nt;
+    st := mf; -- nf*nt;
     put_line(file,"Moving flag in intersection conditions : ");
     put(file,st,2);
     xp := Moving_Flag(st,x);
