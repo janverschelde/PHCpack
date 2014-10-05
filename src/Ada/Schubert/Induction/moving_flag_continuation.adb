@@ -211,13 +211,8 @@ package body Moving_Flag_Continuation is
     deflate : boolean := false;
 
   begin
-    put_line("inside track next move ...");
-    put("n : "); put(n,1); new_line;
-    
     xt(sol.v'range) := sol.v; xt(xt'last) := Create(0.0);
-    put_line("evaluating the homotopy ...");
     y := Eval(h,xt);
-    put_line(y);
     new_line(file);
     put_line(file,"Value of the start solution at the original homotopy :");
     put_line(file,y);
@@ -487,7 +482,12 @@ package body Moving_Flag_Continuation is
                 ls : in out Link_to_Solution; fail : out boolean ) is
 
     gh : Link_to_Poly_Sys;
-   -- dim : integer32;
+    xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Stay_Moving_Plane(n,k,ctr,p,pr,pc);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
 
   begin
     fail := true;
@@ -495,38 +495,29 @@ package body Moving_Flag_Continuation is
    --   Generalizing_Homotopy(file,n,k,q,p,pr,pc,cond,vf,mf,nf,gh,dim);
    --   Track_First_Move(file,dim,gh.all,ls,fail);
    -- else
-      declare
-        xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
-           := Checker_Homotopies.Stay_Moving_Plane(n,k,ctr,p,pr,pc);
-        locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
-               := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
-        dim : constant integer32
-            := integer32(Checker_Localization_Patterns.Degree_of_Freedom
-                           (locmap));
-      begin
-        put("dim : "); put(dim,1); new_line;
-        Initialize_Homotopy_Symbols(natural32(dim),locmap);
-        put_line(file,"The moving coordinates : "); put(file,xp);
-        put_line("making the flag conditions ...");
-        Flag_Conditions(n,k,xp,cond,vf,gh);
-        put_line("calling track next move ...");
-        if ind = 0
-         then Track_First_Move(file,dim,gh.all,ls,fail);
-         else Track_Next_Move(file,dim,gh.all,ls,fail);
-        end if;
-        Standard_Complex_Poly_Matrices.Clear(xp);
-      end;
+   -- put("dim : "); put(dim,1); new_line;
+    Initialize_Homotopy_Symbols(natural32(dim),locmap);
+    put_line(file,"The moving coordinates : "); put(file,xp);
+   -- put_line("making the flag conditions ...");
+    Flag_Conditions(n,k,xp,cond,vf,gh);
+   -- put_line("calling track next move ...");
+    if ind = 0
+     then Track_First_Move(file,dim,gh.all,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,ls,fail);
+    end if;
    -- end if;
     if not fail then
       put(file,"Transforming input planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
      -- Checker_Homotopies.Inverse_Coordinate_Transformation(ctr,vf);
-     -- Checker_Homotopies.Homotopy_Stay_Coordinates(file,n,k,ctr,q,qr,qc,ls.v);
+      Checker_Homotopies.Homotopy_Stay_Coordinates
+        (file,n,k,ctr,q,qr,qc,xp,ls.v);
      -- Checker_Homotopies.Trivial_Stay_Coordinates
      --   (file,n,k,ctr,q,p,qr,qc,pr,pc,ls.v);
       put_line(file,"Verifying after coordinate changes ...");
       Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,ls.v);
     end if;
+    Standard_Complex_Poly_Matrices.Clear(xp);
     Clear(gh);
   exception
     when others => put_line("exception in Stay_Homotopy"); raise;

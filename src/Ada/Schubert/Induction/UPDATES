@@ -1,3 +1,6 @@
+Sun 5 Oct 2014 : improved coordinate transformation in checker_homotopies
+  and changes in moving_flag_continuation.adb for the stay homotopies.
+
 Sat 4 Oct 2014 : cleaning up in checker_homotopies.adb, modifications in
   moving_flag_{homotopies,continuation}.adb for the stay homotopies.
 

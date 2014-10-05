@@ -6,8 +6,11 @@ with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 with Standard_Natural_Matrices_io;      use Standard_Natural_Matrices_io;
+with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
 with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
+with Standard_Complex_Poly_Functions;   use Standard_Complex_Poly_Functions;
+with Standard_Complex_Poly_Matrices_io; use Standard_Complex_Poly_Matrices_io;
 with Checker_Moves;                     use Checker_Moves;
 with Checker_Localization_Patterns;     use Checker_Localization_Patterns;
 
@@ -334,21 +337,37 @@ package body Checker_Homotopies is
   procedure Homotopy_Stay_Coordinates
               ( file : in file_type; n,k,r : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
                 x : in out Standard_Complex_Vectors.Vector ) is
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
     y : Standard_Complex_Matrices.Matrix(1..n,1..k) := Map(locmap,x);
+    xt : Standard_Complex_Vectors.Vector(x'first..x'last+1);
+    eva : Standard_Complex_Matrices.Matrix(1..n,1..k);
 
   begin
     put(file,"Homotopy Stay with critical row = "); put(file,r,1);
     put_line(file,".");
     put_line(file,"The localization map : "); put(file,locmap);
-   -- for j in locmap'range(2) loop
-   --   if locmap(r,j) = 2 then
-   --     y(r,j) := y(r,j) + y(r+1,j);
-   --   end if;
-   -- end loop;
+    put_line(file,"The matrix xtm : "); put(file,xtm);
+    xt(x'range) := x;
+    xt(xt'last) := Create(1.0);
+    put_line(file,"The vector xt : "); put_line(file,xt);
+    for i in eva'range(1) loop
+      for j in eva'range(2) loop
+        eva(i,j) := Eval(xtm(i,j),xt);
+      end loop;
+    end loop;
+    put_line(file,"The matrix xtm evaluated at the solution : ");
+    put(file,eva,2);
+    for j in locmap'range(2) loop
+      if locmap(r,j) = 1 then
+        if xtm(r+1,j) /= Null_Poly
+         then y(r+1,j) := eva(r+1,j);
+        end if;
+      end if;
+    end loop;
     put_line(file,"the given solution plane :"); put(file,y,3);
     Inverse_Row_Transformation(r,y);
     put_line(file,"after the inverse transformation :"); put(file,y,3);
