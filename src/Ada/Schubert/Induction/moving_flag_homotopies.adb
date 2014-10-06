@@ -1,4 +1,5 @@
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Natural_Matrices;         use Standard_Natural_Matrices;
 --with Standard_Natural_Matrices_io;      use Standard_Natural_Matrices_io;
 --with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
@@ -90,6 +91,24 @@ package body Moving_Flag_Homotopies is
     return res;
   end Moved_Flag;
 
+  procedure Write_Moving_Flag
+              ( file : in file_type;
+                flag : in Standard_Complex_Matrices.Matrix ) is
+
+    realcff : double_float;
+    intcff : integer32;
+
+  begin
+    for i in flag'range(1) loop
+      for j in flag'range(2) loop
+        realcff := REAL_PART(flag(i,j));
+        intcff := integer32(realcff);
+        put(file,intcff,3);
+      end loop;
+      new_line(file);
+    end loop;
+  end Write_Moving_Flag;
+
   function Numeric_Transformation
               ( t : Standard_Natural_Matrices.Matrix; g : Complex_Number )
               return Standard_Complex_Matrices.Matrix is
@@ -131,6 +150,9 @@ package body Moving_Flag_Homotopies is
           end if;
         else
           res(i,j) := Create(1.0);
+          if i = t'first(1)  -- special case, see i > t'first(1) above
+           then res(i+1,j) := Create(-1.0);
+          end if;
         end if;
       end loop;
     end loop;

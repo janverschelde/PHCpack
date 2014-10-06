@@ -6,6 +6,7 @@ with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 with Standard_Natural_Matrices;
+with Standard_Natural_Matrices_io;      use Standard_Natural_Matrices_io;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
 with Standard_Complex_Norms_Equals;     use Standard_Complex_Norms_Equals;
@@ -337,7 +338,8 @@ package body Moving_Flag_Continuation is
    -- end loop;
    -- put_line(file,"THE POLYNOMIAL SYSTEM : "); put_line(file,f.all);
     put_line(file,"Verification of intersection conditions :");
-    put_line(file,"The moving flag : "); put(file,mf,2);
+    put_line(file,"The moving flag : ");
+    Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
     declare
       z : Standard_Complex_Vectors.Vector(x'range);
       fail : boolean;
@@ -618,10 +620,21 @@ package body Moving_Flag_Continuation is
         q := ps.black(ptr).all; qr := path(i).rows; qc := path(i).cols;
         Checker_Posets_io.Write_Node_in_Path(file,n,k,ps,path,i);
         stay_child := Checker_Posets.Is_Stay_Child(path(i).all,path(i-1).all);
-        fc := Checker_Moves.Falling_Checker(q);
+        fc := Checker_Moves.Falling_Checker(p);
+        put(file,"Calling Transformation with index = ");
+        put(file,integer32(q(fc)),1);
+        put(file," where fc = "); put(file,fc,1);
+        put(file," and q = "); put(file,q); new_line(file);
         t := Checker_Localization_Patterns.Transformation(n,integer32(q(fc)));
+        put_line(file,"The pattern t for the numerical transformation ");
+        put(file,t);
+        put_line(file,"The numerical transformation :");
+        Write_Moving_Flag(file,Numeric_Transformation(t));
+        put_line(file,"The moving flag before the update :");
+        Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
         mf := mf*Numeric_Transformation(t);
-        put_line(file,"The moving flag :"); put(file,mf,2);
+        put_line(file,"The moving flag after the update :");
+        Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
         Checker_Homotopies.Define_Generalizing_Homotopy
            (file,n,q,qr,qc,stay_child,homtp,ctr);
        -- Checker_Homotopies.Define_Generalizing_Homotopy
@@ -660,10 +673,10 @@ package body Moving_Flag_Continuation is
 
     cnt : integer32 := 0;
     sols_last : Solution_List := sols;
-    mf : Standard_Complex_Matrices.Matrix(1..n,1..n) := Identity(n);
 
     procedure Track_Path ( nds : in Array_of_Nodes; ct : out boolean ) is
 
+      mf : Standard_Complex_Matrices.Matrix(1..n,1..n) := Identity(n);
       ls : Link_to_Solution;
       fail : boolean;
 

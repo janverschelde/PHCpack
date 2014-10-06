@@ -61,6 +61,13 @@ package Moving_Flag_Homotopies is
   --   The free coefficients is replaced by one and the coefficient
   --   just below it gets the value minus one.
 
+  procedure Write_Moving_Flag
+              ( file : in file_type;
+                flag : in Standard_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Writes the coordinates of the moving flag as an integer matrix.
+
   procedure Add_t_Symbol;
 
   -- DESCRIPTION :
