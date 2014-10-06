@@ -361,14 +361,15 @@ package body Checker_Homotopies is
     end loop;
     put_line(file,"The matrix xtm evaluated at the solution : ");
     put(file,eva,2);
-    for j in locmap'range(2) loop
-      if locmap(r,j) = 1 then
-        if xtm(r+1,j) /= Null_Poly
-         then y(r+1,j) := eva(r+1,j);
-        end if;
-      end if;
-    end loop;
-    put_line(file,"the given solution plane :"); put(file,y,3);
+   -- for j in locmap'range(2) loop
+   --   if locmap(r,j) = 1 then
+   --     if xtm(r+1,j) /= Null_Poly
+   --      then y(r+1,j) := eva(r+1,j);
+   --     end if;
+   --   end if;
+   -- end loop;
+   -- put_line(file,"the given solution plane :"); put(file,y,3);
+    y := eva;
     Inverse_Row_Transformation(r,y);
     put_line(file,"after the inverse transformation :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(locmap,y);

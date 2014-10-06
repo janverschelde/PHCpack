@@ -480,12 +480,13 @@ package body Moving_Flag_Continuation is
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in out Standard_Complex_VecMats.VecMat;
-                mf,nf : in Standard_Complex_Matrices.Matrix;
+                mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 ls : in out Link_to_Solution; fail : out boolean ) is
 
     gh : Link_to_Poly_Sys;
     xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
        := Checker_Homotopies.Stay_Moving_Plane(n,k,ctr,p,pr,pc);
+    xpm : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
     dim : constant integer32
@@ -500,8 +501,14 @@ package body Moving_Flag_Continuation is
    -- put("dim : "); put(dim,1); new_line;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
     put_line(file,"The moving coordinates : "); put(file,xp);
-   -- put_line("making the flag conditions ...");
-    Flag_Conditions(n,k,xp,cond,vf,gh);
+    put_line(file,"the new moving flag when making the stay homotopy :");
+    Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+    put_line(file,"the old moving flag when making the stay homotopy :");
+    Moving_Flag_Homotopies.Write_Moving_Flag(file,start_mf);
+    xpm := Moving_Flag(start_mf,xp);
+    put_line(file,"The moving coordinates after multiplication by M :");
+    put(file,xpm);
+    Flag_Conditions(n,k,xpm,cond,vf,gh);
    -- put_line("calling track next move ...");
     if ind = 0
      then Track_First_Move(file,dim,gh.all,ls,fail);
@@ -513,13 +520,14 @@ package body Moving_Flag_Continuation is
       put(file,ctr,1); put_line(file,".");
      -- Checker_Homotopies.Inverse_Coordinate_Transformation(ctr,vf);
       Checker_Homotopies.Homotopy_Stay_Coordinates
-        (file,n,k,ctr,q,qr,qc,xp,ls.v);
+        (file,n,k,ctr,q,qr,qc,xpm,ls.v);
      -- Checker_Homotopies.Trivial_Stay_Coordinates
      --   (file,n,k,ctr,q,p,qr,qc,pr,pc,ls.v);
       put_line(file,"Verifying after coordinate changes ...");
       Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,ls.v);
     end if;
     Standard_Complex_Poly_Matrices.Clear(xp);
+    Standard_Complex_Poly_Matrices.Clear(xpm);
     Clear(gh);
   exception
     when others => put_line("exception in Stay_Homotopy"); raise;
@@ -591,7 +599,7 @@ package body Moving_Flag_Continuation is
     cnd : constant Standard_Natural_Vectors.Vector(1..k)
         := cond(cond'first).all;
     t : Standard_Natural_Matrices.Matrix(1..n,1..n);
-    nf : constant Standard_Complex_Matrices.Matrix(1..n,1..n) := Identity(n);
+    start_mf : Standard_Complex_Matrices.Matrix(1..n,1..n) := Identity(n);
     dim,ptr,homtp,ctr,ind,fc : integer32;
     stay_child : boolean;
     fail : boolean := false;
@@ -632,6 +640,7 @@ package body Moving_Flag_Continuation is
         Write_Moving_Flag(file,Numeric_Transformation(t));
         put_line(file,"The moving flag before the update :");
         Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+        start_mf := mf;
         mf := mf*Numeric_Transformation(t);
         put_line(file,"The moving flag after the update :");
         Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
@@ -648,7 +657,7 @@ package body Moving_Flag_Continuation is
             (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,work_vf,ls,fail);
         elsif homtp = 1 then
           Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
-                        work_vf,mf,nf,ls,fail);
+                        work_vf,mf,start_mf,ls,fail);
         else -- homtp = 2
           Moving_Flag_Homotopies.Add_t_Symbol;
           Swap_Homotopy

@@ -1,5 +1,7 @@
 Mon 6 Oct 2014 : printing of the moving flag in moving_flag_homotopies and
-  bug fixes in moving_flag_continuation.adb.
+  bug fixes in moving_flag_continuation.adb.  Better documentation about
+  the flag transitions in moving_flag_continuation.  In check_homotopies.adb
+  we must evaluate the computer coordinates to transform the planes.
 
 Sun 5 Oct 2014 : improved coordinate transformation in checker_homotopies
   and changes in moving_flag_continuation.adb for the stay homotopies.
