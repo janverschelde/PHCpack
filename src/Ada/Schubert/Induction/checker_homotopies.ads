@@ -81,6 +81,22 @@ package Checker_Homotopies is
   -- ON RETURN :
   --   x        the inverse coordinate transformation is applied to x.
 
+  procedure Inverse_Row_Transformation
+              ( mf : in Standard_Complex_Matrices.Matrix;
+                x : in out Standard_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Applies the inverse coordinate transformation to a solution plane
+  --   in the case homotopies are needed.
+
+  -- ON ENTRY :
+  --   mf       the new current moving flag;
+  --   x        matrix representation of a solution k-plane,
+  --            as an n-by-k matrix.
+
+  -- ON RETURN :
+  --   x        the inverse coordinate transformation is applied to x.
+
   procedure Normalize_to_Fit
               ( pattern : in Standard_Natural_Matrices.Matrix;
                 x : in out Standard_Complex_Matrices.Matrix );
@@ -192,6 +208,7 @@ package Checker_Homotopies is
   procedure Homotopy_Stay_Coordinates
               ( file : in file_type; n,k,r : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
                 xtm : in Standard_Complex_Poly_Matrices.Matrix;
                 x : in out Standard_Complex_Vectors.Vector );
 
@@ -207,6 +224,7 @@ package Checker_Homotopies is
   --   p        permutation indicates location of black checkers;
   --   rows     row indices for the location of the white checkers;
   --   cols     column indices for the location of the white checkers;
+  --   mf       the coordinates of the new moving flag;
   --   xtm      localization pattern extended with t;
   --   x        current solution.
 

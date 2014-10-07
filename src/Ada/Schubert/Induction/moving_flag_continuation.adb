@@ -520,7 +520,7 @@ package body Moving_Flag_Continuation is
       put(file,ctr,1); put_line(file,".");
      -- Checker_Homotopies.Inverse_Coordinate_Transformation(ctr,vf);
       Checker_Homotopies.Homotopy_Stay_Coordinates
-        (file,n,k,ctr,q,qr,qc,xpm,ls.v);
+        (file,n,k,ctr,q,qr,qc,mf,xpm,ls.v);
      -- Checker_Homotopies.Trivial_Stay_Coordinates
      --   (file,n,k,ctr,q,p,qr,qc,pr,pc,ls.v);
       put_line(file,"Verifying after coordinate changes ...");

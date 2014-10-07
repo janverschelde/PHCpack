@@ -11,6 +11,7 @@ with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
 with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Functions;   use Standard_Complex_Poly_Functions;
 with Standard_Complex_Poly_Matrices_io; use Standard_Complex_Poly_Matrices_io;
+with Standard_Matrix_Inversion;
 with Checker_Moves;                     use Checker_Moves;
 with Checker_Localization_Patterns;     use Checker_Localization_Patterns;
 
@@ -176,6 +177,19 @@ package body Checker_Homotopies is
     end loop;
   end Inverse_Row_Transformation;
 
+  procedure Inverse_Row_Transformation
+              ( mf : in Standard_Complex_Matrices.Matrix;
+                x : in out Standard_Complex_Matrices.Matrix ) is
+
+    invm : constant Standard_Complex_Matrices.Matrix(mf'range(1),mf'range(2))
+         := Standard_Matrix_Inversion.Inverse(mf);
+
+    use Standard_Complex_Matrices;
+
+  begin
+    x := invm*x;
+  end Inverse_Row_Transformation;
+
   procedure Normalize_to_Fit
               ( pattern : in Standard_Natural_Matrices.Matrix;
                 x : in out Standard_Complex_Matrices.Matrix ) is
@@ -337,6 +351,7 @@ package body Checker_Homotopies is
   procedure Homotopy_Stay_Coordinates
               ( file : in file_type; n,k,r : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
                 xtm : in Standard_Complex_Poly_Matrices.Matrix;
                 x : in out Standard_Complex_Vectors.Vector ) is
 
@@ -370,7 +385,7 @@ package body Checker_Homotopies is
    -- end loop;
    -- put_line(file,"the given solution plane :"); put(file,y,3);
     y := eva;
-    Inverse_Row_Transformation(r,y);
+    Inverse_Row_Transformation(mf,y);
     put_line(file,"after the inverse transformation :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(locmap,y);
     put_line(file,"The transformed plane :"); put(file,y,3);
