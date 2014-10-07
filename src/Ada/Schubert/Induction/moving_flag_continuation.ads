@@ -236,7 +236,7 @@ package Moving_Flag_Continuation is
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
-                mf : in Standard_Complex_Matrices.Matrix;
+                mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in out Standard_Complex_VecMats.VecMat;
                 ls : in out Link_to_Solution; fail : out boolean );
 
@@ -258,6 +258,7 @@ package Moving_Flag_Continuation is
   --   pc       position of the columns of the white checkers with p;
   --   cond     intersection conditions for the general fixed flags;
    --  mf       coordinates of the moving flag;
+  --   start_mf is the moving flag at the start of the homotopy;
   --   vf       coordinates of general flags to keep fixed.
 
   -- ON RETURN :

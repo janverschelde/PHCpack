@@ -537,7 +537,7 @@ package body Moving_Flag_Continuation is
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
-                mf : in Standard_Complex_Matrices.Matrix;
+                mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in out Standard_Complex_VecMats.VecMat;
                 ls : in out Link_to_Solution; fail : out boolean ) is
 
@@ -549,6 +549,7 @@ package body Moving_Flag_Continuation is
     s : constant integer32 := Checker_Homotopies.Swap_Column(ctr,locmap);
     xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
        := Checker_Homotopies.Swap_Moving_Plane(file,n,k,ctr,big_r,s,q,p,pr,pc);
+    xpm : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
     dim : constant integer32
         := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
     gh : Link_to_Poly_Sys;
@@ -556,8 +557,11 @@ package body Moving_Flag_Continuation is
   begin
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
     put_line(file,"The moving coordinates : "); put(file,xp); 
+    xpm := Moving_Flag(start_mf,xp);
+    put_line(file,"The moving coordinates after multiplication by M :");
+    put(file,xpm);
     fail := true;
-    Flag_Conditions(n,k,xp,cond,vf,gh);
+    Flag_Conditions(n,k,xpm,cond,vf,gh);
     if ind = 0
      then Track_First_Move(file,dim,gh.all,ls,fail);
      else Track_Next_Move(file,dim,gh.all,ls,fail);
@@ -578,6 +582,7 @@ package body Moving_Flag_Continuation is
     end if;
     Standard_Complex_Poly_Systems.Clear(gh);
     Standard_Complex_Poly_Matrices.Clear(xp);
+    Standard_Complex_Poly_Matrices.Clear(xpm);
   exception
     when others => put_line("exception in Swap_Homotopy"); raise;
   end Swap_Homotopy;
@@ -660,8 +665,8 @@ package body Moving_Flag_Continuation is
                         work_vf,mf,start_mf,ls,fail);
         else -- homtp = 2
           Moving_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,work_vf,ls,fail);
+          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
+                        mf,start_mf,work_vf,ls,fail);
         end if;
         if fail then
           put_line(file,"no longer a valid solution, abort tracking");

@@ -3,6 +3,8 @@ Mon 6 Oct 2014 : printing of the moving flag in moving_flag_homotopies and
   the flag transitions in moving_flag_continuation.  In checker_homotopies.adb
   we must evaluate the computer coordinates to transform the planes,
   furthermore, matrix inversion is needed in checker_homotopies.
+  Also for swap homotopies, localization maps are multiplied with the
+  current moving flag.
 
 Sun 5 Oct 2014 : improved coordinate transformation in checker_homotopies
   and changes in moving_flag_continuation.adb for the stay homotopies.
