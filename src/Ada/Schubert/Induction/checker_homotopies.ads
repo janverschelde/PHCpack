@@ -234,6 +234,8 @@ package Checker_Homotopies is
   procedure First_Swap_Coordinates
               ( file : in file_type; n,k,r,big_r,dc,s : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
                 x : in out Standard_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
@@ -254,6 +256,8 @@ package Checker_Homotopies is
   --   qc       position of the columns of the white checkers with q;
   --   pr       position of the rows of the white checkers with p;
   --   pc       position of the columns of the white checkers with p;
+  --   mf       the coordinates of the new moving flag;
+  --   xtm      localization pattern extended with t;
   --   x        current solution.
 
   -- ON RETURN :

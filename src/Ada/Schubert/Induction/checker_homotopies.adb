@@ -375,7 +375,7 @@ package body Checker_Homotopies is
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
-    y : Standard_Complex_Matrices.Matrix(1..n,1..k) := Map(locmap,x);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k); -- := Map(locmap,x);
     xt : Standard_Complex_Vectors.Vector(x'first..x'last+1);
     eva : Standard_Complex_Matrices.Matrix(1..n,1..k);
 
@@ -409,13 +409,17 @@ package body Checker_Homotopies is
   procedure First_Swap_Coordinates
               ( file : in file_type; n,k,r,big_r,dc,s : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
                 x : in out Standard_Complex_Vectors.Vector ) is
 
     plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
             := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
     qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
             := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
-    y : Standard_Complex_Matrices.Matrix(1..n,1..k) := Map(plocmap,x);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k); -- := Map(plocmap,x);
+    xt : Standard_Complex_Vectors.Vector(x'first..x'last+1);
+    eva : Standard_Complex_Matrices.Matrix(1..n,1..k);
     pivot : integer32;
 
   begin
@@ -424,45 +428,58 @@ package body Checker_Homotopies is
     put(file," and s = "); put(file,s,1); put_line(file,".");
     put_line(file,"The start localization map : "); put(file,plocmap);
     put_line(file,"The target localization map : "); put(file,qlocmap);
-    put_line(file,"The given solution plane :"); put(file,y,3);
-    for i in p'range loop
-      if integer32(p(i)) < r then
-        if p'last+1-i > p'last-dc+1 then   -- in zone A
-          if qlocmap(integer32(p(i)),s) = 2
-           then y(integer32(p(i)),s) := y(integer32(p(i)),s+1)/y(r+1,s+1);
-          end if;
-        end if;
-      end if;
-    end loop;
-    for i in p'range loop
-      if integer32(p(i)) < r then 
-        if p'last+1-i < p'last-r+1 then    -- in zone B
-          if qlocmap(integer32(p(i)),s+1) = 2 
-           then y(integer32(p(i)),s+1) := y(integer32(p(i)),s+1)
-                   + y(r+1,s+1)*y(integer32(p(i)),s);
-          end if;
-        end if;
-      elsif integer32(p(i)) = r+1 and qlocmap(integer32(p(i)),s+1) = 2 then
-        y(integer32(p(i)),s+1) := -y(r+1,s+1);
-      end if;
-    end loop;
-    for j in qlocmap'range(2) loop
-      if j /= s and j /= s+1 then
-        pivot := 0;
-        for i in qlocmap'range(1) loop
-          if plocmap(i,j) = 2 and qlocmap(i,j) = 0
-           then pivot := i; exit;
-          end if;
-        end loop;
-        if pivot > 0 then
-          for i in qlocmap'range(1) loop
-            if qlocmap(i,j) = 2 
-             then y(i,j) := y(i,j) - y(pivot,j)*y(i,s+1);
-            end if;
-          end loop;
-        end if;
-      end if;
-    end loop;
+    put_line(file,"The matrix xtm : "); put(file,xtm);
+    xt(x'range) := x;
+    xt(xt'last) := Create(1.0);
+    put_line(file,"The vector xt : "); put_line(file,xt);
+    eva := Eval(xtm,xt);
+    put_line(file,"The matrix xtm evaluated at the solution : ");
+    put(file,eva,2);
+   -- put_line(file,"The given solution plane :"); put(file,y,3);
+   -- for i in p'range loop
+   --   if integer32(p(i)) < r then
+   --     if p'last+1-i > p'last-dc+1 then   -- in zone A
+   --       if qlocmap(integer32(p(i)),s) = 2
+   --        then y(integer32(p(i)),s) := y(integer32(p(i)),s+1)/y(r+1,s+1);
+   --       end if;
+   --     end if;
+   --   end if;
+   -- end loop;
+   -- for i in p'range loop
+   --   if integer32(p(i)) < r then 
+   --     if p'last+1-i < p'last-r+1 then    -- in zone B
+   --       if qlocmap(integer32(p(i)),s+1) = 2 
+   --        then y(integer32(p(i)),s+1) := y(integer32(p(i)),s+1)
+   --                + y(r+1,s+1)*y(integer32(p(i)),s);
+   --       end if;
+   --     end if;
+   --   elsif integer32(p(i)) = r+1 and qlocmap(integer32(p(i)),s+1) = 2 then
+   --     y(integer32(p(i)),s+1) := -y(r+1,s+1);
+   --   end if;
+   -- end loop;
+   -- for j in qlocmap'range(2) loop
+   --   if j /= s and j /= s+1 then
+   --     pivot := 0;
+   --     for i in qlocmap'range(1) loop
+   --       if plocmap(i,j) = 2 and qlocmap(i,j) = 0
+   --        then pivot := i; exit;
+   --       end if;
+   --     end loop;
+   --     if pivot > 0 then
+   --       for i in qlocmap'range(1) loop
+   --         if qlocmap(i,j) = 2 
+   --          then y(i,j) := y(i,j) - y(pivot,j)*y(i,s+1);
+   --         end if;
+   --       end loop;
+   --     end if;
+   --   end if;
+   -- end loop;
+   -- put_line(file,"The transformed plane :"); put(file,y,3);
+   -- x := Map(qlocmap,y);
+    y := eva;
+    Inverse_Row_Transformation(mf,y);
+    put_line(file,"after the inverse transformation :"); put(file,y,3);
+    Normalize_and_Reduce_to_Fit(qlocmap,y);
     put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(qlocmap,y);
   end First_Swap_Coordinates;
@@ -593,22 +610,29 @@ package body Checker_Homotopies is
         end if;
       end if;
     end loop;
-    if not empty_zone_A 
-     then t.dg(piv) := 1;   -- multiply by y(r+1,s+1)
+    if not empty_zone_A then
+      put_line(file,"empty_zone_A is false");
+      t.dg(piv) := 1;   -- multiply by y(r+1,s+1)
+      put(file,"multiply by x(");
+      put(file,r+1,1); put(file,",");
+      put(file,s+1,1); put(file,")");
+      put(file," piv = "); put(file,piv,1); new_line(file);
+    else
+      put_line(file,"empty_zone_A is true");
     end if;
     x(r,s) := Create(t);    -- m(r) of 1st swapped column s
-    t.dg(np1) := 1;
+    t.dg(np1) := 1; t.cf := Create(-1.0);
     x(r+1,s) := Create(t);  -- t*m(r+1) of 1st swapped column s
-    t.dg(np1) := 0; t.dg(piv) := 0;
+    t.dg(np1) := 0; t.dg(piv) := 0; t.cf := Create(1.0);
     for i in p'range loop
       if integer32(p(i)) < r then      -- in zones A and B
         if p'last+1-i > p'last-dc+1 then    -- in zone A
           if locmap(integer32(p(i)),s+1) = 2 then
             ind := Checker_Localization_Patterns.Rank
                      (locmap,integer32(p(i)),s+1);
-            t.dg(ind) := 1; t.dg(np1) := 1;
+            t.dg(ind) := 1; t.dg(np1) := 1; t.cf := Create(-1.0);
             x(integer32(p(i)),s) := Create(t);
-            t.dg(ind) := 0; t.dg(np1) := 0;
+            t.dg(ind) := 0; t.dg(np1) := 0; t.cf := Create(1.0);
           end if;
         elsif p'last+1-i < p'last-r+1 then -- in zone B
           if locmap(integer32(p(i)),s) = 2 then

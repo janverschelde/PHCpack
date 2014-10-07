@@ -572,8 +572,7 @@ package body Moving_Flag_Continuation is
      -- Checker_Homotopies.Inverse_Coordinate_Transformation(ctr,vf);
       if big_r > ctr + 1
        then Checker_Homotopies.First_Swap_Coordinates
-             -- (file,n,k,ctr,big_r,s,q,qr,qc,ls.v);
-              (file,n,k,ctr,big_r,dc,s,q,p,qr,qc,pr,pc,ls.v);
+              (file,n,k,ctr,big_r,dc,s,q,p,qr,qc,pr,pc,mf,xpm,ls.v);
        else Checker_Homotopies.Second_Swap_Coordinates
               (file,n,k,ctr,s,q,qr,qc,mf,xpm,ls.v);
       end if;
