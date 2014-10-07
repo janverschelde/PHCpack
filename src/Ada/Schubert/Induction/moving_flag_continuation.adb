@@ -569,13 +569,13 @@ package body Moving_Flag_Continuation is
     if not fail then
       put(file,"Transforming input planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
-      Checker_Homotopies.Inverse_Coordinate_Transformation(ctr,vf);
+     -- Checker_Homotopies.Inverse_Coordinate_Transformation(ctr,vf);
       if big_r > ctr + 1
        then Checker_Homotopies.First_Swap_Coordinates
              -- (file,n,k,ctr,big_r,s,q,qr,qc,ls.v);
               (file,n,k,ctr,big_r,dc,s,q,p,qr,qc,pr,pc,ls.v);
        else Checker_Homotopies.Second_Swap_Coordinates
-              (file,n,k,ctr,s,q,qr,qc,ls.v);
+              (file,n,k,ctr,s,q,qr,qc,mf,xpm,ls.v);
       end if;
       put_line(file,"Verifying after coordinate changes ...");
       Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,ls.v);

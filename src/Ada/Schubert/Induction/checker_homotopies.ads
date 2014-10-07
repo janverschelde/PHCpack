@@ -262,6 +262,8 @@ package Checker_Homotopies is
   procedure Second_Swap_Coordinates
               ( file : in file_type; n,k,r,s : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
                 x : in out Standard_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
@@ -277,6 +279,8 @@ package Checker_Homotopies is
   --   p        permutation indicates location of black checkers;
   --   rows     row indices for the location of the white checkers;
   --   cols     column indices for the location of the white checkers;
+  --   mf       the coordinates of the new moving flag;
+  --   xtm      localization pattern extended with t;
   --   x        current solution.
 
   -- ON RETURN :

@@ -348,6 +348,24 @@ package body Checker_Homotopies is
 --    x := Map(qlocmap,y);
 --  end Homotopy_Stay_Coordinates;
 
+  function Eval ( m : Standard_Complex_Poly_Matrices.Matrix;
+                  x : Standard_Complex_Vectors.Vector )
+                return Standard_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the value of m evaluated at  x.
+
+    res : Standard_Complex_Matrices.Matrix(m'range(1),m'range(2));
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        res(i,j) := Eval(m(i,j),x);
+      end loop;
+    end loop;
+    return res;
+  end Eval;
+
   procedure Homotopy_Stay_Coordinates
               ( file : in file_type; n,k,r : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
@@ -369,11 +387,7 @@ package body Checker_Homotopies is
     xt(x'range) := x;
     xt(xt'last) := Create(1.0);
     put_line(file,"The vector xt : "); put_line(file,xt);
-    for i in eva'range(1) loop
-      for j in eva'range(2) loop
-        eva(i,j) := Eval(xtm(i,j),xt);
-      end loop;
-    end loop;
+    eva := Eval(xtm,xt);
     put_line(file,"The matrix xtm evaluated at the solution : ");
     put(file,eva,2);
    -- for j in locmap'range(2) loop
@@ -456,21 +470,37 @@ package body Checker_Homotopies is
   procedure Second_Swap_Coordinates
               ( file : in file_type; n,k,r,s : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
                 x : in out Standard_Complex_Vectors.Vector ) is
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
     y : Standard_Complex_Matrices.Matrix(1..n,1..k) := Map(locmap,x);
+    xt : Standard_Complex_Vectors.Vector(x'first..x'last+1);
+    eva : Standard_Complex_Matrices.Matrix(1..n,1..k);
 
   begin
     put(file,"Swap type II with critical row = "); put(file,r,1);
     put(file," and s = "); put(file,s,1); put_line(file,".");
     put_line(file,"The localization map : "); put(file,locmap);
-    for i in locmap'range(1) loop
-      if locmap(i,s+1) = 2
-       then y(i,s+1) := y(i,s) - y(i,s+1);
-      end if;
-    end loop;
+    put_line(file,"The matrix xtm : "); put(file,xtm);
+    xt(x'range) := x;
+    xt(xt'last) := Create(1.0);
+    put_line(file,"The vector xt : "); put_line(file,xt);
+    eva := Eval(xtm,xt);
+    put_line(file,"The matrix xtm evaluated at the solution : ");
+    put(file,eva,2);
+   -- for i in locmap'range(1) loop
+   --   if locmap(i,s+1) = 2
+   --    then y(i,s+1) := y(i,s) - y(i,s+1);
+   --   end if;
+   -- end loop;
+    y := eva;
+    Inverse_Row_Transformation(mf,y);
+    put_line(file,"after the inverse transformation :"); put(file,y,3);
+    Normalize_and_Reduce_to_Fit(locmap,y);
+    put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(locmap,y);
   end Second_Swap_Coordinates;
 
@@ -645,9 +675,9 @@ package body Checker_Homotopies is
     t.dg := new Standard_Natural_Vectors.Vector'(1..np1 => 0);
     t.cf := Create(1.0);
     x(r,s) := Create(t);    -- m(r) of 1st swapped column s
-    t.dg(np1) := 1;
+    t.dg(np1) := 1; t.cf := Create(-1.0);
     x(r+1,s) := Create(t);  -- t*m(r+1) of 1st swapped column s
-    t.dg(np1) := 0;
+    t.dg(np1) := 0; t.cf := Create(1.0);
     for i in p'range loop
       if integer32(p(i)) < r then      -- in zones A and B
         if p'last+1-i > p'last-dc+1 then    -- in zone A
@@ -657,9 +687,9 @@ package body Checker_Homotopies is
                      (locmap,integer32(p(i)),s+1);
             put(file," -> assigning to x("); put(file,p(i),1); put(file,",");
             put(file,s,1); put_line(file,")...");
-            t.dg(ind) := 1; t.dg(np1) := 1;
+            t.dg(ind) := 1; t.dg(np1) := 1; t.cf := Create(-1.0);
             x(integer32(p(i)),s) := Create(t);
-            t.dg(ind) := 0; t.dg(np1) := 0;
+            t.dg(ind) := 0; t.dg(np1) := 0; t.cf := Create(1.0);
           end if;
         elsif p'last+1-i < p'last-r+1 then -- in zone B
           if locmap(integer32(p(i)),s) = 2 then
