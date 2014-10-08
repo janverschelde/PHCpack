@@ -277,6 +277,8 @@ package body Drivers_for_Schubert_Induction is
                  sols : in Solution_List; fsys : out Link_to_Poly_Sys ) is
 
     f : Link_to_Poly_Sys;
+    mf : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+       := Moving_Flag_Homotopies.Moved_Flag(n);
 
   begin
     new_line(file);
@@ -296,7 +298,9 @@ package body Drivers_for_Schubert_Induction is
       put(file,vfs(i).all);
       new_line(file);
     end loop;
-    Moving_Flag_Homotopies.Flag_Conditions(n,k,q,rows,cols,cnds.all,vfs,f);
+    put_line(file,"The moved flag :");
+    Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+    Moving_Flag_Homotopies.Flag_Conditions(n,k,q,rows,cols,cnds.all,mf,vfs,f);
     put_line(file,"THE POLYNOMIAL SYSTEM :"); put_line(file,f.all);
     if not Is_Null(sols) then
       new_line(file);

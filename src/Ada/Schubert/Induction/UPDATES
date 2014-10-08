@@ -2,6 +2,8 @@ Tue 7 Oct 2014 : swap type II homotopies work after changes in
   checker_homotopies and moving_flag_continuation.
   After more updates in checker homotopies and moving_flag_continuation.adb,
   the case [2 4 6]^3 appears to be solved again correctly.
+  Fixed call to flag_conditions in drivers_for_schubert_induction.adb,
+  after updating moving_flag_homotopies.adb.
 
 Mon 6 Oct 2014 : printing of the moving flag in moving_flag_homotopies and
   bug fixes in moving_flag_continuation.adb.  Better documentation about

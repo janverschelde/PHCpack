@@ -82,7 +82,10 @@ package body Moving_Flag_Homotopies is
   begin
     for i in 1..n loop
       for j in 1..n-i+1 loop
-        res(i,j) := Create(1.0);
+        if i mod 2 = 0
+         then res(i,j) := Create(-1.0);
+         else res(i,j) := Create(1.0);
+        end if;
       end loop;
       for j in (n-i+2)..n loop
         res(i,j) := Create(0.0);
