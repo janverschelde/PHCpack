@@ -406,6 +406,19 @@ package body Checker_Homotopies is
     x := Map(locmap,y);
   end Homotopy_Stay_Coordinates;
 
+  procedure Update_Swap_Column
+              ( x : in out Standard_Complex_Matrices.Matrix;
+                s : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Replaces column s+1 by the sum of columns s and s+1.
+
+  begin
+    for i in x'range(1) loop
+      x(i,s+1) := x(i,s+1) + x(i,s);
+    end loop;
+  end Update_Swap_Column;
+
   procedure First_Swap_Coordinates
               ( file : in file_type; n,k,r,big_r,dc,s : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -479,6 +492,8 @@ package body Checker_Homotopies is
     y := eva;
     Inverse_Row_Transformation(mf,y);
     put_line(file,"after the inverse transformation :"); put(file,y,3);
+    Update_Swap_Column(y,s);
+    put_line(file,"After updating the swap column :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(qlocmap,y);
     put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(qlocmap,y);
@@ -516,6 +531,8 @@ package body Checker_Homotopies is
     y := eva;
     Inverse_Row_Transformation(mf,y);
     put_line(file,"after the inverse transformation :"); put(file,y,3);
+    Update_Swap_Column(y,s);
+    put_line(file,"After updating the swap column :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(locmap,y);
     put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(locmap,y);

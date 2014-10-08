@@ -1,3 +1,6 @@
+Wed 8 Oct 2014 : improved transformation of solutions after a swap homotopy
+  in checker_homotopies with new Update_Swap_Column procedure.
+
 Tue 7 Oct 2014 : swap type II homotopies work after changes in 
   checker_homotopies and moving_flag_continuation.
   After more updates in checker homotopies and moving_flag_continuation.adb,
