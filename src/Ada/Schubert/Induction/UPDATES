@@ -1,4 +1,5 @@
 Thu 9 Oct 2014 : bug fix in checker_homotopies.adb, first_swap_plane.
+  The same bug existed in the second_swap_plane of checker_homotopies.adb.
 
 Wed 8 Oct 2014 : improved transformation of solutions after a swap homotopy
   in checker_homotopies with new Update_Swap_Column procedure.

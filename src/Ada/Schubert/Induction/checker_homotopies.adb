@@ -753,6 +753,14 @@ package body Checker_Homotopies is
             x(integer32(p(i)),s) := Create(t);
             t.dg(ind) := 0;
           end if;
+        elsif locmap(integer32(p(i)),s) = 2 then -- do not forget variables!
+          ind := Checker_Localization_Patterns.Rank
+                   (locmap,integer32(p(i)),s);
+          if ind in t.dg'range then
+            t.dg(ind) := 1;
+            x(integer32(p(i)),s) := Create(t);
+            t.dg(ind) := 0;
+          end if;
         end if;
       end if;
     end loop;
