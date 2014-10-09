@@ -433,7 +433,7 @@ package body Checker_Homotopies is
     y : Standard_Complex_Matrices.Matrix(1..n,1..k); -- := Map(plocmap,x);
     xt : Standard_Complex_Vectors.Vector(x'first..x'last+1);
     eva : Standard_Complex_Matrices.Matrix(1..n,1..k);
-    pivot : integer32;
+   -- pivot : integer32;
 
   begin
     put(file,"Swap type I with critical row = "); put(file,r,1);
@@ -652,15 +652,28 @@ package body Checker_Homotopies is
             t.dg(ind) := 0; t.dg(np1) := 0; t.cf := Create(1.0);
           end if;
         elsif p'last+1-i < p'last-r+1 then -- in zone B
+          put(file,"checker p("); put(file,i,1); put(file,") = ");
+          put(file,p(i),1); put_line(file," is in zone B");
           if locmap(integer32(p(i)),s) = 2 then
+            put(file,"checking locmap("); put(file,p(i),1);
+            put(file,","); put(file,s,1); put(file,") = 2");
             ind := Checker_Localization_Patterns.Rank
                      (locmap,integer32(p(i)),s);
             t.dg(ind) := 1;
+            put(file,"  ind = "); put(file,ind,1); new_line(file);
             if not empty_zone_A
              then t.dg(piv) := 1;
             end if;
             x(integer32(p(i)),s) := Create(t);
             t.dg(ind) := 0; t.dg(piv) := 0;
+          end if;
+        elsif locmap(integer32(p(i)),s) = 2 then -- do not forget variables!
+          ind := Checker_Localization_Patterns.Rank
+                   (locmap,integer32(p(i)),s);
+          if ind in t.dg'range then
+            t.dg(ind) := 1;
+            x(integer32(p(i)),s) := Create(t);
+            t.dg(ind) := 0;
           end if;
         end if;
       end if;
@@ -857,6 +870,8 @@ package body Checker_Homotopies is
     put(file,"  rows = "); put(file,rows);
     put(file,"  cols = "); put(file,cols); new_line(file);
     Initialize_Moving_Plane(res,locmap,s);
+    put_line(file,"After initialization of the moving plane :");
+    put(file,res);
     put(file,"Black checkers in upper right (zone A) : ");
     for i in p'range loop
       if integer32(p(i)) < r and p'last+1-i > p'last-dc+1
