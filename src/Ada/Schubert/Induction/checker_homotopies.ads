@@ -166,20 +166,6 @@ package Checker_Homotopies is
   --   x        normalized so ones appear at the expected places,
   --            and column reduced so zeros are where expected.
 
-  procedure Inverse_Coordinate_Transformation
-              ( r : in integer32;
-                m : in out Standard_Complex_Matrices.Matrix );
-  procedure Inverse_Coordinate_Transformation
-              ( r : in integer32;
-                m : in out Standard_Complex_VecMats.VecMat );
-
-  -- DESCRIPTION :
-  --   Applies the inverse coordinate transformation to the matrix m,
-  --   replacing its r-th row with the (r+1)-th row and the (r+1)-th
-  --   row becomes the difference of the r-th with the (r+1)-th row.
-
-  -- REQUIRED : r < A'last(1), for A = m or A = m(i), i in m'range.
-
   procedure Trivial_Stay_Coordinates
               ( file : in file_type; n,k,r : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;

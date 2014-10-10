@@ -466,7 +466,6 @@ package body Moving_Flag_Continuation is
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
-     -- Checker_Homotopies.Inverse_Coordinate_Transformation(ctr,vf);
       Checker_Homotopies.Trivial_Stay_Coordinates
         (file,n,k,ctr,q,p,qr,qc,pr,pc,ls.v);
       put_line(file,"Verifying after coordinate changes ...");
@@ -518,7 +517,6 @@ package body Moving_Flag_Continuation is
     if not fail then
       put(file,"Transforming input planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
-     -- Checker_Homotopies.Inverse_Coordinate_Transformation(ctr,vf);
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (file,n,k,ctr,q,qr,qc,mf,xpm,ls.v);
      -- Checker_Homotopies.Trivial_Stay_Coordinates
@@ -569,7 +567,6 @@ package body Moving_Flag_Continuation is
     if not fail then
       put(file,"Transforming input planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
-     -- Checker_Homotopies.Inverse_Coordinate_Transformation(ctr,vf);
       if big_r > ctr + 1
        then Checker_Homotopies.First_Swap_Coordinates
               (file,n,k,ctr,big_r,dc,s,q,p,qr,qc,pr,pc,mf,xpm,ls.v);

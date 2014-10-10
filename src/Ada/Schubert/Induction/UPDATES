@@ -1,3 +1,6 @@
+Fri 10 Oct 2014 : clean up unused code in checker_homotopies, removed
+  commented out lines in moving_flag_homotopies.adb.
+
 Thu 9 Oct 2014 : bug fix in checker_homotopies.adb, first_swap_plane.
   The same bug existed in the second_swap_plane of checker_homotopies.adb.
 

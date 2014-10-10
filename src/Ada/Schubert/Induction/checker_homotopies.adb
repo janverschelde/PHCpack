@@ -260,29 +260,6 @@ package body Checker_Homotopies is
     Reduce_to_Fit(pattern,x);
   end Normalize_and_Reduce_to_Fit;
 
-  procedure Inverse_Coordinate_Transformation
-              ( r : in integer32;
-                m : in out Standard_Complex_Matrices.Matrix ) is
-
-    mrj : Complex_Number;
-
-  begin
-    for j in m'range(2) loop
-      mrj := m(r,j);
-      m(r,j) := m(r+1,j);
-      m(r+1,j) := mrj - m(r+1,j);
-    end loop;
-  end Inverse_Coordinate_Transformation;
-
-  procedure Inverse_Coordinate_Transformation
-              ( r : in integer32;
-                m : in out Standard_Complex_VecMats.VecMat ) is
-  begin
-    for i in m'range loop
-      Inverse_Coordinate_Transformation(r,m(i).all);
-    end loop;
-  end Inverse_Coordinate_Transformation;
-
   procedure Trivial_Stay_Coordinates
               ( file : in file_type; n,k,r : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
