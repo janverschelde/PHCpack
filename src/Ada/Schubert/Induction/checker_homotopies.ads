@@ -167,6 +167,10 @@ package Checker_Homotopies is
   --            and column reduced so zeros are where expected.
 
   procedure Trivial_Stay_Coordinates
+              ( n,k,r : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                x : in out Standard_Complex_Vectors.Vector );
+  procedure Trivial_Stay_Coordinates
               ( file : in file_type; n,k,r : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 x : in out Standard_Complex_Vectors.Vector );
@@ -176,7 +180,7 @@ package Checker_Homotopies is
   --   in case of a trivial stay case when no homotopy is needed.
 
   -- ON ENTRY :
-  --   file     for intermediate output;
+  --   file     for intermediate output, if omitted, then silent version;
   --   n        ambient dimension;
   --   k        dimension of the solution plane;
   --   r        the critical row;
@@ -192,6 +196,12 @@ package Checker_Homotopies is
   --   x        solution with transformed coordinates.
 
   procedure Homotopy_Stay_Coordinates
+              ( n,k,r : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                x : in out Standard_Complex_Vectors.Vector );
+  procedure Homotopy_Stay_Coordinates
               ( file : in file_type; n,k,r : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
                 mf : in Standard_Complex_Matrices.Matrix;
@@ -203,7 +213,7 @@ package Checker_Homotopies is
   --   after a homotopy in the stay case.
 
   -- ON ENTRY :
-  --   file     for intermediate output;
+  --   file     for intermediate output, if omitted, then silent version;
   --   n        ambient dimension;
   --   k        dimension of the solution plane;
   --   r        the critical row;
@@ -218,6 +228,12 @@ package Checker_Homotopies is
   --   x        solution with transformed coordinates.
 
   procedure First_Swap_Coordinates
+              ( n,k,r,big_r,dc,s : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                x : in out Standard_Complex_Vectors.Vector );
+  procedure First_Swap_Coordinates
               ( file : in file_type; n,k,r,big_r,dc,s : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 mf : in Standard_Complex_Matrices.Matrix;
@@ -229,7 +245,7 @@ package Checker_Homotopies is
   --   after a swap homotopy of the first type.
 
   -- ON ENTRY :
-  --   file     for intermediate output;
+  --   file     for intermediate output, if omitted, then silent version;
   --   n        ambient dimension;
   --   k        dimension of the solution plane;
   --   r        the critical row;
@@ -250,6 +266,12 @@ package Checker_Homotopies is
   --   x        solution with transformed coordinates.
 
   procedure Second_Swap_Coordinates
+              ( n,k,r,s : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                x : in out Standard_Complex_Vectors.Vector );
+  procedure Second_Swap_Coordinates
               ( file : in file_type; n,k,r,s : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
                 mf : in Standard_Complex_Matrices.Matrix;
@@ -261,7 +283,7 @@ package Checker_Homotopies is
   --   after a swap homotopy of the second type.
 
   -- ON ENTRY :
-  --   file     for intermediate output;
+  --   file     for intermediate output, if omitted, then silent version;
   --   n        ambient dimension;
   --   k        dimension of the solution plane;
   --   r        the critical row;
@@ -330,6 +352,11 @@ package Checker_Homotopies is
   --   x        initialized coordinates except columns s and s+1.
 
   procedure First_Swap_Plane
+              ( x : in out Standard_Complex_Poly_Matrices.Matrix;
+                r,big_r,dc,s : in integer32;
+                p : in Standard_Natural_Vectors.Vector;
+                locmap : in Standard_Natural_Matrices.Matrix );
+  procedure First_Swap_Plane
               ( file : in file_type;
                 x : in out Standard_Complex_Poly_Matrices.Matrix;
                 r,big_r,dc,s : in integer32;
@@ -340,7 +367,7 @@ package Checker_Homotopies is
   --   In the first type of swap homotopy r+1 < R = big_r.
 
   -- ON ENTRY :
-  --   file     for intermediate output and diagnostics;
+  --   file     for intermediate output, if omitted, then silent;
   --   x        matrix of n rows and k rows;
   --   r        critical row, row of the descending black checker;
   --   big_r    row of the swapped white checker, R > r + 1;
@@ -353,6 +380,11 @@ package Checker_Homotopies is
   --   x        coordinates for swap homotopy of first type.
 
   procedure Second_Swap_Plane
+              ( x : in out Standard_Complex_Poly_Matrices.Matrix;
+                r,dc,s : in integer32;
+                p : in Standard_Natural_Vectors.Vector;
+                locmap : in Standard_Natural_Matrices.Matrix );
+  procedure Second_Swap_Plane
               ( file : in file_type;
                 x : in out Standard_Complex_Poly_Matrices.Matrix;
                 r,dc,s : in integer32;
@@ -363,7 +395,7 @@ package Checker_Homotopies is
   --   In the second type of swap homotopy r+1 = R.
 
   -- ON ENTRY :
-  --   file     for intermediate output and diagnostics;
+  --   file     for intermediate output, if omitted, then silent;
   --   x        matrix of n rows and k rows;
   --   r        critical row, row of the descending black checker;
   --   dc       index of the descending black checker in specializing poset;
@@ -391,6 +423,10 @@ package Checker_Homotopies is
   --   cols     column indices for the location of the white checkers.
 
   function Swap_Moving_Plane
+              ( n,k,r,big_r,s : in integer32;
+                q,p,rows,cols : in Standard_Natural_Vectors.Vector )
+              return Standard_Complex_Poly_Matrices.Matrix;
+  function Swap_Moving_Plane
               ( file : in file_type; n,k,r,big_r,s : in integer32;
                 q,p,rows,cols : in Standard_Natural_Vectors.Vector )
               return Standard_Complex_Poly_Matrices.Matrix;
@@ -399,7 +435,7 @@ package Checker_Homotopies is
   --   Returns a moving k-plane in n-space for use in a swap homotopy.
 
   -- ON ENTRY :
-  --   file     for intermediate diagnostics;
+  --   file     for intermediate diagnostics, if omitted, then silent;
   --   n        number of rows of the matrix on return;
   --   k        number of columns of the matrix on return;
   --   r        critical row;

@@ -1,3 +1,6 @@
+Sun 12 Oct 2014 : added silent versions of the coordinate transformations
+  in checker_homotopies.
+
 Sat 11 Oct 2014 : must multiply forgotten variables by x(r+1,s+1) as well
   in the first_swap_plane of checker_homotopies.adb.
 

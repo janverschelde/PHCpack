@@ -261,6 +261,24 @@ package body Checker_Homotopies is
   end Normalize_and_Reduce_to_Fit;
 
   procedure Trivial_Stay_Coordinates
+              ( n,k,r : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                x : in out Standard_Complex_Vectors.Vector ) is
+
+    plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k);
+
+  begin
+    y := Map(plocmap,x);
+    Inverse_Row_Transformation(r,y);
+    Normalize_and_Reduce_to_Fit(qlocmap,y);
+    x := Map(qlocmap,y);
+  end Trivial_Stay_Coordinates;
+
+  procedure Trivial_Stay_Coordinates
               ( file : in file_type; n,k,r : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 x : in out Standard_Complex_Vectors.Vector ) is
@@ -299,32 +317,6 @@ package body Checker_Homotopies is
     x := Map(qlocmap,y);
   end Trivial_Stay_Coordinates;
 
---  procedure Homotopy_Stay_Coordinates
---              ( file : in file_type; n,k,r : in natural;
---                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
---                x : in out Standard_Complex_Vectors.Vector ) is
---
---    plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
---            := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
---    qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
---            := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
---    y : Standard_Complex_Matrices.Matrix(1..n,1..k) := Map(plocmap,x);
---
---  begin
---    put(file,"Homotopy Stay with critical row = "); put(file,r,1);
---    put_line(file,".");
---    put_line(file,"The previous localization map : "); put(file,plocmap);
---    put_line(file,"The current localization map : "); put(file,qlocmap);
---    put_line(file,"The given solution plane :"); put(file,y,3);
---    for j in qlocmap'range(2) loop
---      --if qlocmap(r,j) = 2 then
---        y(r,j) := y(r,j) + y(r+1,j);
---      --end if;
---    end loop;
---    put_line(file,"The transformed solution plane :"); put(file,y,3);
---    x := Map(qlocmap,y);
---  end Homotopy_Stay_Coordinates;
-
   function Eval ( m : Standard_Complex_Poly_Matrices.Matrix;
                   x : Standard_Complex_Vectors.Vector )
                 return Standard_Complex_Matrices.Matrix is
@@ -344,6 +336,27 @@ package body Checker_Homotopies is
   end Eval;
 
   procedure Homotopy_Stay_Coordinates
+              ( n,k,r : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                x : in out Standard_Complex_Vectors.Vector ) is
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k);
+    xt : Standard_Complex_Vectors.Vector(x'first..x'last+1);
+
+  begin
+    xt(x'range) := x;
+    xt(xt'last) := Create(1.0);
+    y := Eval(xtm,xt);
+    Inverse_Row_Transformation(mf,y);
+    Normalize_and_Reduce_to_Fit(locmap,y);
+    x := Map(locmap,y);
+  end Homotopy_Stay_Coordinates;
+
+  procedure Homotopy_Stay_Coordinates
               ( file : in file_type; n,k,r : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
                 mf : in Standard_Complex_Matrices.Matrix;
@@ -352,9 +365,8 @@ package body Checker_Homotopies is
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
-    y : Standard_Complex_Matrices.Matrix(1..n,1..k); -- := Map(locmap,x);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k);
     xt : Standard_Complex_Vectors.Vector(x'first..x'last+1);
-    eva : Standard_Complex_Matrices.Matrix(1..n,1..k);
 
   begin
     put(file,"Homotopy Stay with critical row = "); put(file,r,1);
@@ -364,18 +376,9 @@ package body Checker_Homotopies is
     xt(x'range) := x;
     xt(xt'last) := Create(1.0);
     put_line(file,"The vector xt : "); put_line(file,xt);
-    eva := Eval(xtm,xt);
+    y := Eval(xtm,xt);
     put_line(file,"The matrix xtm evaluated at the solution : ");
-    put(file,eva,2);
-   -- for j in locmap'range(2) loop
-   --   if locmap(r,j) = 1 then
-   --     if xtm(r+1,j) /= Null_Poly
-   --      then y(r+1,j) := eva(r+1,j);
-   --     end if;
-   --   end if;
-   -- end loop;
-   -- put_line(file,"the given solution plane :"); put(file,y,3);
-    y := eva;
+    put(file,y,2);
     Inverse_Row_Transformation(mf,y);
     put_line(file,"after the inverse transformation :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(locmap,y);
@@ -397,6 +400,28 @@ package body Checker_Homotopies is
   end Update_Swap_Column;
 
   procedure First_Swap_Coordinates
+              ( n,k,r,big_r,dc,s : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                x : in out Standard_Complex_Vectors.Vector ) is
+
+    qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k);
+    xt : Standard_Complex_Vectors.Vector(x'first..x'last+1);
+
+  begin
+    xt(x'range) := x;
+    xt(xt'last) := Create(1.0);
+    y := Eval(xtm,xt);
+    Inverse_Row_Transformation(mf,y);
+    Update_Swap_Column(y,s);
+    Normalize_and_Reduce_to_Fit(qlocmap,y);
+    x := Map(qlocmap,y);
+  end First_Swap_Coordinates;
+
+  procedure First_Swap_Coordinates
               ( file : in file_type; n,k,r,big_r,dc,s : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 mf : in Standard_Complex_Matrices.Matrix;
@@ -407,10 +432,8 @@ package body Checker_Homotopies is
             := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
     qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
             := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
-    y : Standard_Complex_Matrices.Matrix(1..n,1..k); -- := Map(plocmap,x);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k);
     xt : Standard_Complex_Vectors.Vector(x'first..x'last+1);
-    eva : Standard_Complex_Matrices.Matrix(1..n,1..k);
-   -- pivot : integer32;
 
   begin
     put(file,"Swap type I with critical row = "); put(file,r,1);
@@ -422,51 +445,9 @@ package body Checker_Homotopies is
     xt(x'range) := x;
     xt(xt'last) := Create(1.0);
     put_line(file,"The vector xt : "); put_line(file,xt);
-    eva := Eval(xtm,xt);
+    y := Eval(xtm,xt);
     put_line(file,"The matrix xtm evaluated at the solution : ");
-    put(file,eva,2);
-   -- put_line(file,"The given solution plane :"); put(file,y,3);
-   -- for i in p'range loop
-   --   if integer32(p(i)) < r then
-   --     if p'last+1-i > p'last-dc+1 then   -- in zone A
-   --       if qlocmap(integer32(p(i)),s) = 2
-   --        then y(integer32(p(i)),s) := y(integer32(p(i)),s+1)/y(r+1,s+1);
-   --       end if;
-   --     end if;
-   --   end if;
-   -- end loop;
-   -- for i in p'range loop
-   --   if integer32(p(i)) < r then 
-   --     if p'last+1-i < p'last-r+1 then    -- in zone B
-   --       if qlocmap(integer32(p(i)),s+1) = 2 
-   --        then y(integer32(p(i)),s+1) := y(integer32(p(i)),s+1)
-   --                + y(r+1,s+1)*y(integer32(p(i)),s);
-   --       end if;
-   --     end if;
-   --   elsif integer32(p(i)) = r+1 and qlocmap(integer32(p(i)),s+1) = 2 then
-   --     y(integer32(p(i)),s+1) := -y(r+1,s+1);
-   --   end if;
-   -- end loop;
-   -- for j in qlocmap'range(2) loop
-   --   if j /= s and j /= s+1 then
-   --     pivot := 0;
-   --     for i in qlocmap'range(1) loop
-   --       if plocmap(i,j) = 2 and qlocmap(i,j) = 0
-   --        then pivot := i; exit;
-   --       end if;
-   --     end loop;
-   --     if pivot > 0 then
-   --       for i in qlocmap'range(1) loop
-   --         if qlocmap(i,j) = 2 
-   --          then y(i,j) := y(i,j) - y(pivot,j)*y(i,s+1);
-   --         end if;
-   --       end loop;
-   --     end if;
-   --   end if;
-   -- end loop;
-   -- put_line(file,"The transformed plane :"); put(file,y,3);
-   -- x := Map(qlocmap,y);
-    y := eva;
+    put(file,y,2);
     Inverse_Row_Transformation(mf,y);
     put_line(file,"after the inverse transformation :"); put(file,y,3);
     Update_Swap_Column(y,s);
@@ -475,6 +456,28 @@ package body Checker_Homotopies is
     put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(qlocmap,y);
   end First_Swap_Coordinates;
+
+  procedure Second_Swap_Coordinates
+              ( n,k,r,s : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                x : in out Standard_Complex_Vectors.Vector ) is
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k) := Map(locmap,x);
+    xt : Standard_Complex_Vectors.Vector(x'first..x'last+1);
+
+  begin
+    xt(x'range) := x;
+    xt(xt'last) := Create(1.0);
+    y := Eval(xtm,xt);
+    Inverse_Row_Transformation(mf,y);
+    Update_Swap_Column(y,s);
+    Normalize_and_Reduce_to_Fit(locmap,y);
+    x := Map(locmap,y);
+  end Second_Swap_Coordinates;
 
   procedure Second_Swap_Coordinates
               ( file : in file_type; n,k,r,s : in integer32;
@@ -487,7 +490,6 @@ package body Checker_Homotopies is
            := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
     y : Standard_Complex_Matrices.Matrix(1..n,1..k) := Map(locmap,x);
     xt : Standard_Complex_Vectors.Vector(x'first..x'last+1);
-    eva : Standard_Complex_Matrices.Matrix(1..n,1..k);
 
   begin
     put(file,"Swap type II with critical row = "); put(file,r,1);
@@ -497,15 +499,9 @@ package body Checker_Homotopies is
     xt(x'range) := x;
     xt(xt'last) := Create(1.0);
     put_line(file,"The vector xt : "); put_line(file,xt);
-    eva := Eval(xtm,xt);
+    y := Eval(xtm,xt);
     put_line(file,"The matrix xtm evaluated at the solution : ");
-    put(file,eva,2);
-   -- for i in locmap'range(1) loop
-   --   if locmap(i,s+1) = 2
-   --    then y(i,s+1) := y(i,s) - y(i,s+1);
-   --   end if;
-   -- end loop;
-    y := eva;
+    put(file,y,2);
     Inverse_Row_Transformation(mf,y);
     put_line(file,"after the inverse transformation :"); put(file,y,3);
     Update_Swap_Column(y,s);
@@ -574,6 +570,94 @@ package body Checker_Homotopies is
       end loop;
     end loop;
   end Initialize_Moving_Plane;
+
+  procedure First_Swap_Plane
+              ( x : in out Standard_Complex_Poly_Matrices.Matrix;
+                r,big_r,dc,s : in integer32;
+                p : in Standard_Natural_Vectors.Vector;
+                locmap : in Standard_Natural_Matrices.Matrix ) is
+
+    dim : constant natural32 := Degree_of_Freedom(locmap);
+    np1 : constant integer32 := integer32(dim)+1;
+    ind : integer32;
+    piv : constant integer32
+        := Checker_Localization_Patterns.Rank(locmap,r+1,s+1);
+    t : Term;
+    empty_zone_A : boolean;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..np1 => 0);
+    t.cf := Create(1.0);
+    empty_zone_A := true;
+    for i in p'range loop
+      if integer32(p(i)) < r then
+        if p'last+1-i > p'last-dc+1
+         then empty_zone_A := false; exit;
+        end if;
+      end if;
+    end loop;
+    if not empty_zone_A
+     then t.dg(piv) := 1;   -- multiply by y(r+1,s+1)
+    end if;
+    x(r,s) := Create(t);    -- m(r) of 1st swapped column s
+    t.dg(np1) := 1; t.cf := Create(-1.0);
+    x(r+1,s) := Create(t);  -- t*m(r+1) of 1st swapped column s
+    t.dg(np1) := 0; t.dg(piv) := 0; t.cf := Create(1.0);
+    for i in p'range loop
+      if integer32(p(i)) < r then      -- in zones A and B
+        if p'last+1-i > p'last-dc+1 then    -- in zone A
+          if locmap(integer32(p(i)),s+1) = 2 then
+            ind := Checker_Localization_Patterns.Rank
+                     (locmap,integer32(p(i)),s+1);
+            t.dg(ind) := 1; t.dg(np1) := 1; t.cf := Create(-1.0);
+            x(integer32(p(i)),s) := Create(t);
+            t.dg(ind) := 0; t.dg(np1) := 0; t.cf := Create(1.0);
+          end if;
+        elsif p'last+1-i < p'last-r+1 then -- in zone B
+          if locmap(integer32(p(i)),s) = 2 then
+            ind := Checker_Localization_Patterns.Rank
+                     (locmap,integer32(p(i)),s);
+            t.dg(ind) := 1;
+            if not empty_zone_A
+             then t.dg(piv) := 1;
+            end if;
+            x(integer32(p(i)),s) := Create(t);
+            t.dg(ind) := 0; t.dg(piv) := 0;
+          end if;
+        elsif locmap(integer32(p(i)),s) = 2 then -- do not forget variables!
+          ind := Checker_Localization_Patterns.Rank
+                   (locmap,integer32(p(i)),s);
+          if ind in t.dg'range then
+            t.dg(ind) := 1;
+            if not empty_zone_A
+             then t.dg(piv) := 1;
+            end if;
+            x(integer32(p(i)),s) := Create(t);
+            t.dg(ind) := 0; t.dg(piv) := 0;
+          end if;
+        end if;
+      end if;
+    end loop;
+    t.dg(piv) := 1;
+    x(r+1,s+1) := Create(t);    -- x(r+1,s+1)*m(r+1) for column s+1
+    t.dg(piv) := 0;
+    x(big_r,s+1) := Create(t);  -- m(R) in column s+1 
+    for i in p'range loop
+      if integer32(p(i)) /= r and integer32(p(i)) /= r+1
+                              and integer32(p(i)) /= big_r then
+       -- if locmap(p(i),s+1) = 2 then
+          ind := Checker_Localization_Patterns.Rank
+                   (locmap,integer32(p(i)),s+1);
+        if ind in t.dg'range then
+          t.dg(ind) := 1;
+          x(integer32(p(i)),s+1) := Create(t);
+          t.dg(ind) := 0;
+        end if;
+       -- end if;
+      end if;
+    end loop;
+    Clear(t);
+  end First_Swap_Plane;
 
   procedure First_Swap_Plane
               ( file : in file_type;
@@ -692,6 +776,68 @@ package body Checker_Homotopies is
     end loop;
     Clear(t);
   end First_Swap_Plane;
+
+  procedure Second_Swap_Plane
+              ( x : in out Standard_Complex_Poly_Matrices.Matrix;
+                r,dc,s : in integer32;
+                p : in Standard_Natural_Vectors.Vector;
+                locmap : in Standard_Natural_Matrices.Matrix ) is
+
+    dim : constant natural32 := Degree_of_Freedom(locmap);
+    np1 : constant integer32 := integer32(dim)+1;
+    ind : integer32;
+    t : Term;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..np1 => 0);
+    t.cf := Create(1.0);
+    x(r,s) := Create(t);    -- m(r) of 1st swapped column s
+    t.dg(np1) := 1; t.cf := Create(-1.0);
+    x(r+1,s) := Create(t);  -- t*m(r+1) of 1st swapped column s
+    t.dg(np1) := 0; t.cf := Create(1.0);
+    for i in p'range loop
+      if integer32(p(i)) < r then      -- in zones A and B
+        if p'last+1-i > p'last-dc+1 then    -- in zone A
+          if locmap(integer32(p(i)),s+1) = 2 then
+            ind := Checker_Localization_Patterns.Rank
+                     (locmap,integer32(p(i)),s+1);
+            t.dg(ind) := 1; t.dg(np1) := 1; t.cf := Create(-1.0);
+            x(integer32(p(i)),s) := Create(t);
+            t.dg(ind) := 0; t.dg(np1) := 0; t.cf := Create(1.0);
+          end if;
+        elsif p'last+1-i < p'last-r+1 then -- in zone B
+          if locmap(integer32(p(i)),s) = 2 then
+            ind := Checker_Localization_Patterns.Rank
+                     (locmap,integer32(p(i)),s);
+            t.dg(ind) := 1;
+            x(integer32(p(i)),s) := Create(t);
+            t.dg(ind) := 0;
+          end if;
+        elsif locmap(integer32(p(i)),s) = 2 then -- do not forget variables!
+          ind := Checker_Localization_Patterns.Rank
+                   (locmap,integer32(p(i)),s);
+          if ind in t.dg'range then
+            t.dg(ind) := 1;
+            x(integer32(p(i)),s) := Create(t);
+            t.dg(ind) := 0;
+          end if;
+        end if;
+      end if;
+    end loop;
+    x(r+1,s+1) := Create(t);  -- m(r+1) in 2nd swapped column s+1
+    for i in p'range loop
+      if integer32(p(i)) < r then      -- in zones A and B
+        if locmap(integer32(p(i)),s+1) = 2 then
+          ind := Checker_Localization_Patterns.Rank
+                   (locmap,integer32(p(i)),s+1);
+          t.dg(ind) := 1;
+          x(integer32(p(i)),s+1) := Create(t);
+          t.dg(ind) := 0;
+        end if;
+      end if;
+    end loop;
+    Clear(t);
+  end Second_Swap_Plane;
 
   procedure Second_Swap_Plane
               ( file : in file_type;
@@ -834,6 +980,25 @@ package body Checker_Homotopies is
   end Stay_Moving_Plane;
 
   function Swap_Moving_Plane
+              ( n,k,r,big_r,s : in integer32;
+                q,p,rows,cols : in Standard_Natural_Vectors.Vector ) 
+              return Standard_Complex_Poly_Matrices.Matrix is
+
+    res : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    dc : constant integer32 := Descending_Checker(q);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+
+  begin
+    Initialize_Moving_Plane(res,locmap,s);
+    if big_r = r + 1
+     then Second_Swap_Plane(res,r,dc,s,p,locmap);
+     else First_Swap_Plane(res,r,big_r,dc,s,p,locmap);
+    end if;
+    return res;
+  end Swap_Moving_Plane;
+
+  function Swap_Moving_Plane
               ( file : in file_type; n,k,r,big_r,s : in integer32;
                 q,p,rows,cols : in Standard_Natural_Vectors.Vector ) 
               return Standard_Complex_Poly_Matrices.Matrix is
@@ -843,9 +1008,7 @@ package body Checker_Homotopies is
     rc : constant integer32 := Rising_Checker(q,dc);
     cd : constant integer32
        := Top_White_Checker(integer32(q(rc)),n-rc+1,n,rows,cols);
-   -- big_r : constant natural := rows(cd);
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
-          -- := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
            := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
 
   begin
