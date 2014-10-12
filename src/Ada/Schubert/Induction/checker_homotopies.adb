@@ -649,8 +649,14 @@ package body Checker_Homotopies is
                    (locmap,integer32(p(i)),s);
           if ind in t.dg'range then
             t.dg(ind) := 1;
+            if not empty_zone_A
+             then t.dg(piv) := 1;
+            end if;
+            put(file,"assigning forgotten variable x(");
+            put(file,integer32(p(i)),1); put(file,",");
+            put(file,s,1); put_line(file,")");
             x(integer32(p(i)),s) := Create(t);
-            t.dg(ind) := 0;
+            t.dg(ind) := 0; t.dg(piv) := 0;
           end if;
         end if;
       end if;
