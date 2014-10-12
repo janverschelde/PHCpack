@@ -332,11 +332,6 @@ package body Moving_Flag_Continuation is
     put(file,"At q = "); put(file,q);
     put(file,"  rows = "); put(file,rows);
     put(file,"  cols = "); put(file,cols); new_line(file);
-   -- put_line(file,"THE FIXED FLAGS :");
-   -- for i in vf'range loop
-   --   put(file,vf(i).all,3);
-   -- end loop;
-   -- put_line(file,"THE POLYNOMIAL SYSTEM : "); put_line(file,f.all);
     put_line(file,"Verification of intersection conditions :");
     put_line(file,"The moving flag : ");
     Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
@@ -356,6 +351,7 @@ package body Moving_Flag_Continuation is
         put(file,"with residual :"); put(file,res,3); new_line(file);
       end if;
     end;
+    Clear(f);
   exception
     when others => put_line("exception in verify_intersection conditions");
                    raise;
@@ -647,10 +643,6 @@ package body Moving_Flag_Continuation is
         Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
         Checker_Homotopies.Define_Generalizing_Homotopy
            (file,n,q,qr,qc,stay_child,homtp,ctr);
-       -- Checker_Homotopies.Define_Generalizing_Homotopy
-       --    (file,n,p,pr,pc,stay_child,homtp,ctr);
-       -- Checker_Homotopies.Define_Specializing_Homotopy
-       --    (file,n,q,qr,qc,homtp,ctr);
         Initialize_Symbol_Table(n,k,q,qr,qc,dim);
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
