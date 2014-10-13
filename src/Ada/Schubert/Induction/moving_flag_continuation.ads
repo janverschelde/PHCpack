@@ -47,18 +47,6 @@ package Moving_Flag_Continuation is
   --            last component of xt to be equal to one;
   --   sol      standard representation of the solution.
 
-  procedure Track_Paths 
-              ( file : in file_type; n : in integer32; h : in Poly_Sys );
-
-  -- DESCRIPTION :
-  --   Given a homotopy with last variable (with index n+1) the 
-  --   continuation parameter, the path trackers are called.
-
-  -- ON ENTRY :
-  --   file     output file for intermediate results and diagnostics;
-  --   n        number of variables in the ambient space;
-  --   h        homotopy in n+1 variables.
-
   procedure Track_First_Move
               ( file : in file_type; n : in integer32; h : in Poly_Sys;
                 sol : out Link_to_Solution; fail : out boolean );
@@ -152,30 +140,12 @@ package Moving_Flag_Continuation is
   --   vf       coordinates for the input flags;
   --   x        current solution plane.
 
-  procedure Track_Game 
-              ( file : in file_type; n,k : in integer32; ps : in Poset;
-                cond : in Standard_Natural_VecVecs.VecVec;
-                vf : in Standard_Complex_VecMats.VecMat;
-                mf : in Standard_Complex_Matrices.Matrix );
-
-  -- DESCRIPTION :
-  --   Tracks paths for one entire checker game in n-space.
-
-  -- ON ENTRY :
-  --   file     for intermediate output and diagnostics;
-  --   n        dimension of the ambient space, number of black checkers;
-  --   k        dimension of the plane, number of white checkers;
-  --   ps       checker poset for one game;
-  --   cond     intersection conditions for the general fixed flags;
-  --   vf       coordinates of general flags to keep fixed;
-  --   mf       coordinates of the moving flag.
-
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
-                vf : in out Standard_Complex_VecMats.VecMat;
+                vf : in Standard_Complex_VecMats.VecMat;
                 ls : in out Link_to_Solution; fail : out boolean );
 
   -- DESCRIPTION :
@@ -199,7 +169,6 @@ package Moving_Flag_Continuation is
   --   vf       coordinates of general flags to keep fixed.
 
   -- ON RETURN :
-  --   vf       transformed matrix representations of input planes;
   --   ls       solution in the proper coordinates;
   --   fail     true if no longer a solution, false otherwise.
 
@@ -207,7 +176,7 @@ package Moving_Flag_Continuation is
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
-                vf : in out Standard_Complex_VecMats.VecMat;
+                vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 ls : in out Link_to_Solution; fail : out boolean );
 
@@ -233,7 +202,6 @@ package Moving_Flag_Continuation is
   --   start_mf is the moving flag at the start of the homotopy.
 
   -- ON RETURN :
-  --   vf       transformed matrix representations of input planes;
   --   ls       solution in the proper coordinates;
   --   fail     true if no longer a solution, false otherwise.
 
@@ -242,7 +210,7 @@ package Moving_Flag_Continuation is
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
-                vf : in out Standard_Complex_VecMats.VecMat;
+                vf : in Standard_Complex_VecMats.VecMat;
                 ls : in out Link_to_Solution; fail : out boolean );
 
   -- DESCRIPTION :
@@ -267,7 +235,6 @@ package Moving_Flag_Continuation is
   --   vf       coordinates of general flags to keep fixed.
 
   -- ON RETURN :
-  --   vf       transformed matrix representations of input planes;
   --   ls       solution in the proper coordinates;
   --   fail     true if no longer a solution, false otherwise.
 
@@ -277,7 +244,6 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
-                tvf : out Standard_Complex_VecMats.VecMat;
                 ls : in out Link_to_Solution; unhappy : out boolean );
 
   -- DESCRIPTION :
@@ -297,7 +263,6 @@ package Moving_Flag_Continuation is
 
   -- ON RETURN :
   --   mf       moving flag at the end of the path;
-  --   tvf      transformed matrix representations of input planes;
   --   ls       solution at the end of the path;
   --   unhappy  true if the configuration of checkers is unhappy
   --            and gives no solution.
@@ -306,7 +271,6 @@ package Moving_Flag_Continuation is
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
-                tvf : out Standard_Complex_VecMats.VecMat;
                 sols : out Solution_List );
 
   -- DESCRIPTION :
@@ -321,7 +285,6 @@ package Moving_Flag_Continuation is
   --   vf       coordinates of general flags to keep fixed.
 
   -- ON RETURN :
-  --   tvf      transformed matrix representations of input planes;
   --   sols     all solutions at the end of the paths.
 
 end Moving_Flag_Continuation;

@@ -351,10 +351,6 @@ package body Drivers_for_Schubert_Induction is
 
     ip : constant Standard_Natural_Vectors.Vector(1..n)
        := Identity_Permutation(natural32(n));
-   -- mf : constant Standard_Complex_Matrices.Matrix(1..n,1..n) 
-       -- := Random_Flag(n); -- random flag implements gamma trick
-   --    := Moving_Flag_Homotopies.One_Flag(n);
-       -- one_flag is closer to symbolic representation
     ps : Poset;
     report : boolean;
     timer : Timing_Widget;
@@ -364,18 +360,14 @@ package body Drivers_for_Schubert_Induction is
      then Moving_Flag_Continuation.Set_Parameters(file,report);
     end if;
     ps := Create(n,rows,cols);
-    declare
-      vfs : Standard_Complex_VecMats.VecMat(cnds'range);
-    begin
-      vfs := Random_Flags(n,cnds'last);
-      tstart(timer);
-      Moving_Flag_Continuation.Track_All_Paths_in_Poset
-        (file,n,k,ps,cnds.all,vfs,flags,sols);
-      tstop(timer);
-      new_line(file);
-      print_times(file,timer,"tracking all paths");
-      Write_Results(file,n,k,ip,rows,cols,cnds,flags,sols,fsys);
-    end;
+    flags := Random_Flags(n,cnds'last);
+    tstart(timer);
+    Moving_Flag_Continuation.Track_All_Paths_in_Poset
+        (file,n,k,ps,cnds.all,flags,sols);
+    tstop(timer);
+    new_line(file);
+    print_times(file,timer,"tracking all paths");
+    Write_Results(file,n,k,ip,rows,cols,cnds,flags,sols,fsys);
   end Reporting_Moving_Flag_Continuation;
 
   procedure Reporting_Moving_Flag_Continuation
