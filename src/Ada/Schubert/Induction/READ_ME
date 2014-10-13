@@ -24,6 +24,7 @@ remember_symbolic_minors       : remember table for symbolic minors
 moving_flag_continuation       : trackers for moving flag homotopies
 ts_flagcond                    : test conditions imposed by bracket + flag
 drivers_for_schubert_induction : interface to Littlewood-Richardson homotopies
+resolve_schubert_problems      : code to resolve general Schubert problems
 ts_lrhom                       : development to solve general problems
 ------------------------------------------------------------------------------
 mainenum                       : called by general dispatcher in phc
