@@ -22,6 +22,10 @@ package Moving_Flag_Continuation is
   --   Interactive determination of the continuation and output parameters.
 
   procedure Call_Path_Trackers
+              ( n : in integer32; h : in Poly_Sys;
+                xt : in out Standard_Complex_Vectors.Vector;
+                sol : out Link_to_Solution ); 
+  procedure Call_Path_Trackers
               ( file : in file_type; n : in integer32; h : in Poly_Sys;
                 xt : in out Standard_Complex_Vectors.Vector;
                 sol : out Link_to_Solution ); 
@@ -31,7 +35,8 @@ package Moving_Flag_Continuation is
   --   as defined by the homotopy h.
 
   -- ON ENTRY :
-  --   file     output file for intermediate results and diagnostics;
+  --   file     output file for intermediate results and diagnostics,
+  --            if omitted, then there is no intermediate output;
   --   n        number of variables in the ambient space;
   --   h        homotopy in n+1 variables;
   --   xt       start solution with its last component equal to zero,

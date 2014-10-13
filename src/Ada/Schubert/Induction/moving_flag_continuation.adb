@@ -81,6 +81,30 @@ package body Moving_Flag_Continuation is
   end Set_Parameters;
 
   procedure Call_Path_Trackers
+              ( n : in integer32; h : in Poly_Sys;
+                xt : in out Standard_Complex_Vectors.Vector;
+                sol : out Link_to_Solution ) is
+
+    use Standard_IncFix_Continuation;
+
+    sols : Solution_List := Create(xt);
+
+    procedure Track is
+      new Silent_Continue(Max_Norm,Standard_Homotopy.Eval,
+                          Standard_Homotopy.Diff,Standard_Homotopy.Diff);
+
+  begin
+    Standard_Homotopy.Create(h,n+1);
+    Track(sols,false,Create(1.0));
+    xt(xt'first..xt'last-1) := Head_Of(sols).v;
+    xt(xt'last) := Head_Of(sols).t;
+    sol := Head_Of(sols);
+    Standard_Homotopy.Clear;
+  exception -- adding this exception handler caused no longer exception ...
+    when others => put_line("exception in Call Path Trackers"); raise;
+  end Call_Path_Trackers;
+
+  procedure Call_Path_Trackers
               ( file : in file_type; n : in integer32; h : in Poly_Sys;
                 xt : in out Standard_Complex_Vectors.Vector;
                 sol : out Link_to_Solution ) is
@@ -99,6 +123,7 @@ package body Moving_Flag_Continuation is
     xt(xt'first..xt'last-1) := Head_Of(sols).v;
     xt(xt'last) := Head_Of(sols).t;
     sol := Head_Of(sols);
+    Standard_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
     when others => put_line("exception in Call Path Trackers"); raise;
   end Call_Path_Trackers;
@@ -351,7 +376,7 @@ package body Moving_Flag_Continuation is
         put(file,"with residual :"); put(file,res,3); new_line(file);
       end if;
     end;
-    Clear(f);
+   -- Clear(f); -- executing this Clear(f) results in a crash ...
   exception
     when others => put_line("exception in verify_intersection conditions");
                    raise;
