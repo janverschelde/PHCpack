@@ -1,5 +1,6 @@
 Mon 13 Oct 2014 : removed dead code in moving_flag_continuation with changed
   specs caused change in drivers_for_schubert_induction.adb.
+  Extended checker_posets_io with an extra write procedure.
 
 Sun 12 Oct 2014 : added silent versions of the coordinate transformations
   in checker_homotopies.  Memory management in moving_flag_continuation.adb.

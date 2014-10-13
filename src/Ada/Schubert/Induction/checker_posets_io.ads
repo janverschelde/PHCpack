@@ -26,6 +26,8 @@ package Checker_Posets_io is
   --   of the black checkers.
 
   procedure Write_Nodes_in_Poset ( ps : in Poset; i : in integer32 );
+  procedure Write_Nodes_in_Poset 
+              ( file : in file_type; ps : in Poset; i : in integer32 );
 
   -- DECRIPTION :
   --   Writes the nodes at level i in the poset ps,

@@ -72,6 +72,22 @@ package body Checker_Posets_io is
     new_line;
   end Write_Nodes_in_Poset;
 
+  procedure Write_Nodes_in_Poset
+              ( file : in file_type; ps : in Poset; i : in integer32 ) is
+
+    ptr : Link_to_Node;
+
+  begin
+    put(file,i,2); put(file," : ");
+    put(file,ps.black(i)); put(file," : ");
+    ptr := ps.white(i);             -- write coordinates
+    while ptr /= null loop
+      Write_Node(file,ptr.all);
+      ptr := ptr.next_sibling;
+    end loop;
+    new_line(file);
+  end Write_Nodes_in_Poset;
+
   procedure Write ( ps : in Poset ) is
 
     ptr : Link_to_Node;
