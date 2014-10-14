@@ -20,6 +20,7 @@ with Checker_Posets,Checker_Posets_io;   use Checker_Posets,Checker_Posets_io;
 with Intersection_Posets;
 with Intersection_Posets_io;             use Intersection_Posets_io;
 with Moving_Flag_Homotopies;
+with Intersection_Solution_Posets;       use Intersection_Solution_Posets;
 with Resolve_Schubert_Problems;          use Resolve_Schubert_Problems;
 
 procedure ts_lrhom is
@@ -318,6 +319,44 @@ procedure ts_lrhom is
     Resolve(standard_output,ips,flags,sols);
   end Resolve_Schubert_Problem;
 
+  procedure Make_Solution_Poset
+              ( n,k : in integer32; bm : in Bracket_Monomial ) is
+
+  -- DESCRIPTION :
+  --   Creates the solution poset corresponding to the intersection
+  --   poset for the given Schubert conditions.
+
+  -- ON ENTRY :
+  --   n        ambient space
+  --   k        dimension of the solution planes;
+  --   bm       product of k-brackets, with conditions on the k-planes.
+
+
+    use Intersection_Posets;
+
+    cnd : constant Array_of_Brackets := Create(bm);
+    nbc : constant integer32 := cnd'last;
+    ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
+    sps : Solution_Poset(ips.m) := Create(ips);
+    tmp : Solnode_List;
+    snd : Link_to_Solution_Node;
+
+  begin
+    for i in sps.nodes'range loop
+      put("Length of solution lists at level "); put(i,1); put(" :");
+      tmp := sps.nodes(i);
+      while not Is_Null(tmp) loop
+        snd := Head_Of(tmp);
+        put(" "); put(Length_Of(snd.sols),1);
+        tmp := Tail_Of(tmp);
+      end loop;
+      new_line;
+    end loop;
+    put("Clearing the solution poset ...");
+    Clear(sps);
+    put_line(" done.");
+  end Make_Solution_Poset;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -334,9 +373,11 @@ procedure ts_lrhom is
     put_line("  0. walk through intersection poset from root to leaves;");
     put_line("  1. walk through intersection poset from leaves to root;");
     put_line("  2. stubbing the run of Littlewood-Richardson homotopies;");
-    put_line("  3. resolve Schubert problem via L.-R. homotopies.");
-    put("Type 0, 1, 2, or 3 to select ");
-    Ask_Alternative(ans,"0123");
+    put_line
+      ("  3. resolve Schubert problem via Littlewood-Richardson homotopies;");
+    put_line("  4. make an empty intersection solution poset.");
+    put("Type 0, 1, 2, 3, or 4 to select : ");
+    Ask_Alternative(ans,"01234");
     new_line;
     put("Give the ambient dimension : "); get(n);
     put("Give the dimension of the planes : "); get(k);
@@ -346,6 +387,7 @@ procedure ts_lrhom is
       when '1' => Walk_from_Leaves_to_Root(n,k,bm);
       when '2' => Stubbing_Littlewood_Richardson(n,k,bm);
       when '3' => Resolve_Schubert_Problem(n,k,bm);
+      when '4' => Make_Solution_Poset(n,k,bm);
       when others => null;
     end case;
   end Main;
