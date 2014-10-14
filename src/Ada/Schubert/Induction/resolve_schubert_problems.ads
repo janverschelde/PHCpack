@@ -1,8 +1,10 @@
 with text_io;                            use text_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
 with Standard_Complex_VecMats;
-with Intersection_Posets;                use Intersection_Posets;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with Intersection_Posets;                use Intersection_Posets;
+with Intersection_Solution_Posets;       use Intersection_Solution_Posets;
 
 package Resolve_Schubert_Problems is
 
@@ -37,6 +39,30 @@ package Resolve_Schubert_Problems is
   --            to the node nd in the intersection poset;
   --   nd       poset of the child.
 
+  procedure Connect_Checker_Posets_to_Track
+              ( file : in file_type; level : in integer32;
+                pl : in Poset_List; snd : in Link_to_Solution_Node;
+                sps : in out Solution_Poset;
+                flags : in out Standard_Complex_VecMats.VecMat );
+
+  -- DESCRIPTION :
+  --   Extension of the Connect_Checker_Posets_to_Count to track the
+  --   solution paths.
+
+  -- ON ENTRY :
+  --   file     for intermediate output;
+  --   level    level of the parent nodes in the list pl;
+  --   pl       list of checker posets at some level of the parent nodes
+  --            to the node nd in the intersection poset;
+  --   snd      solution node that contains the poset of the child;
+  --   sps      solution poset constructed up to the proper level;
+  --   flags    current fixed flags.
+
+  -- ON RETURN :
+  --   sps      updated solution poset;
+  --   flags    to glue the intersection conditions, the linear spaces
+  --            have been multiplied with invertible matrices;
+
   procedure Count_Roots
               ( file : in file_type; ips : in out Intersection_Poset;
                 roco : out Natural_Number );
@@ -61,7 +87,9 @@ package Resolve_Schubert_Problems is
   --   roco     the formal root count.
 
   procedure Resolve
-              ( file : in file_type; ips : in out Intersection_Poset;
+              ( file : in file_type;
+                ips : in out Intersection_Poset;
+                sps : in out Solution_Poset;
                 flags : in out Standard_Complex_VecMats.VecMat;
                 sols : out Solution_List );
 
@@ -78,12 +106,14 @@ package Resolve_Schubert_Problems is
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
   --   ips      an intersection poset built to resolve Schubert conditions;
+  --   sps      an initialized solution poset corresponding to ips;
   --   flags    generic complex matrices that represented nested linear
   --            space for use in the homotopies.
 
   -- ON RETURN :
   --   ips      intersection poset with Littlewood-Richardson coefficients,
   --            computed from the bottom leaves to the top root;
+  --   sps      solution poset with at each level the corresponding solutions;
   --   flags    to glue the intersection conditions, the linear spaces
   --            have been multiplied with invertible matrices;
   --   sols     solutions to the Schubert problem, the length of

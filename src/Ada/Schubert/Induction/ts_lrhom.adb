@@ -281,44 +281,6 @@ procedure ts_lrhom is
     put("Bottom up root count : "); put(bottom_roco); new_line;
   end Stubbing_Littlewood_Richardson;
 
-  procedure Resolve_Schubert_Problem
-              ( n,k : in integer32; bm : in Bracket_Monomial ) is
-
-  -- DESCRIPTION :
-  --   Prompts the user for m intersection conditions on k-planes in n-space,
-  --   and writes the evolution of the root count from the leaves to the root.
-
-  -- ON ENTRY :
-  --   n        ambient space
-  --   k        dimension of the solution planes;
-  --   bm       product of k-brackets, with conditions on the k-planes.
-
-    use Intersection_Posets;
-
-    cnd : constant Array_of_Brackets := Create(bm);
-    nbc : constant integer32 := cnd'last;
-    ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
-    top_roco,bottom_roco : Natural_Number;
-    flags : Standard_Complex_VecMats.VecMat(1..nbc-2);
-    sols : Solution_List;
-
-  begin
-    top_roco := Final_Sum(ips);
-    put("The formal root count : "); put(top_roco); new_line;
-    Count_Roots(standard_output,ips,bottom_roco);
-    put(" Top down root count : "); put(top_roco); new_line;
-    put("Bottom up root count : "); put(bottom_roco); new_line;
-    for i in flags'range loop
-      declare
-        randflag : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-                 := Moving_Flag_Homotopies.Random_Flag(n);
-      begin
-        flags(i) := new Standard_Complex_Matrices.Matrix'(randflag);
-      end;
-    end loop;
-    Resolve(standard_output,ips,flags,sols);
-  end Resolve_Schubert_Problem;
-
   procedure Make_Solution_Poset
               ( n,k : in integer32; bm : in Bracket_Monomial ) is
 
@@ -330,7 +292,6 @@ procedure ts_lrhom is
   --   n        ambient space
   --   k        dimension of the solution planes;
   --   bm       product of k-brackets, with conditions on the k-planes.
-
 
     use Intersection_Posets;
 
@@ -357,6 +318,55 @@ procedure ts_lrhom is
     put_line(" done.");
   end Make_Solution_Poset;
 
+  procedure Resolve_Schubert_Problem
+              ( n,k : in integer32; bm : in Bracket_Monomial ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for m intersection conditions on k-planes in n-space,
+  --   and writes the evolution of the root count from the leaves to the root.
+
+  -- ON ENTRY :
+  --   n        ambient space
+  --   k        dimension of the solution planes;
+  --   bm       product of k-brackets, with conditions on the k-planes.
+
+    use Intersection_Posets;
+
+    file : file_type;
+    cnd : constant Array_of_Brackets := Create(bm);
+    nbc : constant integer32 := cnd'last;
+    ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
+    sps : Solution_Poset(ips.m) := Create(ips);
+    top_roco,bottom_roco : Natural_Number;
+    flags : Standard_Complex_VecMats.VecMat(1..nbc-2);
+    sols : Solution_List;
+
+  begin
+    new_line;
+    put_line("Reading a name for the output file ...");
+    Read_Name_and_Create_File(file);
+    new_line;
+    top_roco := Final_Sum(ips);
+    put("The formal root count : "); put(top_roco); new_line;
+    put_line("... running the root counting from the bottom up ...");
+    Count_Roots(file,ips,bottom_roco);
+    put(" Top down root count : "); put(top_roco); new_line;
+    put("Bottom up root count : "); put(bottom_roco); new_line;
+    for i in flags'range loop
+      declare
+        randflag : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+                 := Moving_Flag_Homotopies.Random_Flag(n);
+      begin
+        flags(i) := new Standard_Complex_Matrices.Matrix'(randflag);
+      end;
+    end loop;
+    put_line("... resolving the Schubert problem ...");
+    new_line;
+    put_line("See the output file for results ...");
+    new_line;
+    Resolve(file,ips,sps,flags,sols);
+  end Resolve_Schubert_Problem;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -373,9 +383,9 @@ procedure ts_lrhom is
     put_line("  0. walk through intersection poset from root to leaves;");
     put_line("  1. walk through intersection poset from leaves to root;");
     put_line("  2. stubbing the run of Littlewood-Richardson homotopies;");
+    put_line("  3. make an empty intersection solution poset.");
     put_line
-      ("  3. resolve Schubert problem via Littlewood-Richardson homotopies;");
-    put_line("  4. make an empty intersection solution poset.");
+      ("  4. resolve Schubert problem via Littlewood-Richardson homotopies;");
     put("Type 0, 1, 2, 3, or 4 to select : ");
     Ask_Alternative(ans,"01234");
     new_line;
@@ -386,8 +396,8 @@ procedure ts_lrhom is
       when '0' => Walk_from_Root_to_Leaves(n,k,bm);
       when '1' => Walk_from_Leaves_to_Root(n,k,bm);
       when '2' => Stubbing_Littlewood_Richardson(n,k,bm);
-      when '3' => Resolve_Schubert_Problem(n,k,bm);
-      when '4' => Make_Solution_Poset(n,k,bm);
+      when '3' => Make_Solution_Poset(n,k,bm);
+      when '4' => Resolve_Schubert_Problem(n,k,bm);
       when others => null;
     end case;
   end Main;

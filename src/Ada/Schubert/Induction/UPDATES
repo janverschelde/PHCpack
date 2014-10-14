@@ -1,5 +1,6 @@
 Tue 14 Oct 2014 : new package intersection_solution_posets, tested by
-  ts_lrhom.
+  ts_lrhom.  Used the intersection_solution_posets in the resolve
+  of resolve_schubert_problems, also tested by ts_lrhom.
 
 Mon 13 Oct 2014 : removed dead code in moving_flag_continuation with changed
   specs caused change in drivers_for_schubert_induction.adb.
