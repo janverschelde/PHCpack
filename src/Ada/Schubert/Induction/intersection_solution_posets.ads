@@ -1,5 +1,6 @@
 with generic_lists;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Natural_Vectors;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Intersection_Posets;                use Intersection_Posets;
 
@@ -48,6 +49,18 @@ package Intersection_Solution_Posets is
   --   of completion of the solution poset on return equals zero.
   --   Furthermore, the solution poset is created up to ips.level,
   --   the level of completion of the given intersection poset.
+
+-- SELECTOR :
+
+  function Retrieve ( snl : Solnode_List;
+                      rows,cols : Standard_Natural_Vectors.Vector )
+                    return Link_to_Solution_Node;
+
+  -- DESCRIPTION :
+  --   Returns the pointer to the solution node in the list
+  --   with corresponding poset that has as root rows and columns
+  --   the given vectors rows and cols.  If there is no such node
+  --   in the list, then the null pointer is returned.
 
 -- DESTRUCTORS :
 

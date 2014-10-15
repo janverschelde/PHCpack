@@ -1,4 +1,5 @@
 with unchecked_deallocation;
+with Checker_Posets;
 
 package body Intersection_Solution_Posets is
 
@@ -47,7 +48,37 @@ package body Intersection_Solution_Posets is
     return res;
   end Create;
 
--- DESSTRUCTORS :
+-- SELECTOR :
+
+  function Retrieve ( snl : Solnode_List;
+                      rows,cols : Standard_Natural_Vectors.Vector )
+                    return Link_to_Solution_Node is
+
+    res : Link_to_Solution_Node := null;
+    tmp : Solnode_List := snl;
+    pnd : Link_to_Solution_Node;
+
+  begin
+    while not Is_Null(tmp) loop
+      pnd := Head_Of(tmp);
+      declare
+        p : constant Checker_Posets.Poset := pnd.lpnd.ps;
+        r : constant Standard_Natural_Vectors.Vector
+          := Checker_Posets.Root_Rows(p);
+        c : constant Standard_Natural_Vectors.Vector
+          := Checker_Posets.Root_Columns(p);
+      begin
+        if (Standard_Natural_Vectors.Equal(r,rows) 
+            and then Standard_Natural_Vectors.Equal(c,cols))
+         then return pnd;
+        end if;
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Retrieve;
+
+-- DESTRUCTORS :
 
   procedure free is
     new unchecked_deallocation(Solution_Node,Link_to_Solution_Node);

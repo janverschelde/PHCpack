@@ -95,6 +95,11 @@ package body Resolve_Schubert_Problems is
     --   Connects the leaf of the parent given on input in node.
 
       child : constant Checker_Posets.Poset := nd.ps;
+      parent : constant Checker_Posets.Poset := node.ps;
+      parent_snd : constant Link_to_Solution_Node
+                 := Retrieve(sps.nodes(level),
+                             Checker_Posets.Root_Rows(parent),
+                             Checker_Posets.Root_Columns(parent));
       childnode : constant Checker_Posets.Link_to_Node
                 := child.white(child.white'first);
       childconds : constant Standard_Natural_Vectors.Vector
@@ -107,6 +112,10 @@ package body Resolve_Schubert_Problems is
       use Checker_Posets;
 
     begin
+      if parent_snd /= null
+       then put_line(file,"Found node with start solutions at parent.");
+       else put_line(file,"No node with start solutions at parent found!");
+      end if;
       loop
         if Standard_Natural_Vectors.Equal(gamenode.cols,childconds) then
           Add(gamenode.coeff,childnode.coeff);
