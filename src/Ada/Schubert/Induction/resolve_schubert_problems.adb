@@ -2,8 +2,15 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
+with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
+with Standard_Natural_Matrices;
+with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Checker_Posets,Checker_Posets_io;   use Checker_Posets_io;
+with Checker_Localization_Patterns;
+with Moving_Flag_Homotopies;             use Moving_Flag_Homotopies;
 
 package body Resolve_Schubert_Problems is
 
@@ -38,6 +45,46 @@ package body Resolve_Schubert_Problems is
       tmp := Tail_Of(tmp);
     end loop;
   end Initialize_Nodes;
+
+  procedure Start_Solution 
+              ( file : in file_type; n,k : in integer32;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                vf : in Standard_Complex_VecMats.VecMat;
+                snd : in out Link_to_Solution_Node;
+                fail : out boolean;
+                x : out Standard_Complex_Vectors.Vector;
+                res : out double_float ) is
+
+    slnp : constant Checker_Posets.Poset := snd.lpnd.ps;
+    rows : constant Standard_Natural_Vectors.Vector
+         := Checker_Posets.Root_Rows(slnp);
+    cols : constant Standard_Natural_Vectors.Vector
+         := Checker_Posets.Root_Columns(slnp);
+    q : constant Standard_Natural_Vectors.Vector
+      := slnp.black(slnp.black'first).all;
+    eqs : Link_to_Poly_Sys;
+
+  begin
+    put(file,"q = "); put(file,q);
+    put(file,"  rows = "); put(file,rows);
+    put(file,"  cols = "); put(file,cols); new_line(file);
+    Flag_Conditions(n,k,q,rows,cols,conds,vf,eqs);
+    First_Solution(eqs.all,fail,x,res);
+    put(file,"Residual of the solution : "); put(file,res,3);
+    if fail
+     then put_line(" failure.");
+     else put_line(" success.");
+    end if;
+    declare
+      sol : Solution(x'last);
+      ls : Link_to_Solution;
+    begin
+      sol.t := Create(0.0); sol.m := 1; sol.v := x;
+      sol.err := 0.0; sol.res := res; sol.rco := 1.0;
+      ls := new Solution'(sol);
+      Construct(ls,snd.sols);
+    end;
+  end Start_Solution;
 
   procedure Connect_Checker_Posets_to_Count
               ( file : in file_type;

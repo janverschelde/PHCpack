@@ -1,8 +1,12 @@
 with text_io;                            use text_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
+with Standard_Natural_VecVecs;
+with Standard_Complex_Vectors;
 with Standard_Complex_VecMats;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with Brackets;                           use Brackets;
 with Intersection_Posets;                use Intersection_Posets;
 with Intersection_Solution_Posets;       use Intersection_Solution_Posets;
 
@@ -22,6 +26,42 @@ package Resolve_Schubert_Problems is
 
   -- DESCRIPTION :
   --   Initializes the coefficient at every node in pl to zero.
+
+  procedure Start_Solution 
+              ( file : in file_type; n,k : in integer32;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                vf : in Standard_Complex_VecMats.VecMat;
+                snd : in out Link_to_Solution_Node;
+                fail : out boolean;
+                x : out Standard_Complex_Vectors.Vector;
+                res : out double_float );
+
+  -- DESCRIPTION :
+  --   Computes the start solution at a solution node,
+  --   positioned at the leaves of the intersection poset,
+  --   as the analogue to the Initialize_Leaves from above.
+
+  -- REQUIRED :
+  --   The solution node comes with a valid checker poset.
+  --   Assumed is that there conditions turn into a linear system
+  --   and there is at most only one solution.
+
+  -- ON ENTRY :
+  --   file     for intermediate output and diagnostics;
+  --   n        the ambient dimension;
+  --   k        dimension of the solution plane;
+  --   conds    conditions on the solution planes meeting the flags in vf;
+  --   vf       fixed flags for setting up the intersection conditions;
+  --   snd      a solution node.
+
+  -- ON RETURN :
+  --   snd      if not fail, the solution node contains a start solution;
+  --   fail     true if the residual is higher than the 1.0e-8 threshold;
+  --   x        the computed solution vector;
+  --   res      the residual as the two norm of the solution evaluated
+  --            at the polynomial equations that express the intersection
+  --            conditions imposed by the brackets in the poset,
+  --            the brackets in cond and the fixed flags.
 
   procedure Connect_Checker_Posets_to_Count
               ( file : in file_type;
