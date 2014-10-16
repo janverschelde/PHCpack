@@ -49,10 +49,9 @@ package body Resolve_Schubert_Problems is
   procedure Start_Solution 
               ( file : in file_type; n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                vf : in Standard_Complex_VecMats.VecMat;
+                flags : in Standard_Complex_VecMats.VecMat;
                 snd : in out Link_to_Solution_Node;
                 fail : out boolean;
-                x : out Standard_Complex_Vectors.Vector;
                 res : out double_float ) is
 
     slnp : constant Checker_Posets.Poset := snd.lpnd.ps;
@@ -62,13 +61,18 @@ package body Resolve_Schubert_Problems is
          := Checker_Posets.Root_Columns(slnp);
     q : constant Standard_Natural_Vectors.Vector
       := slnp.black(slnp.black'first).all;
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
+    dim : constant natural32
+        := Checker_Localization_Patterns.Degree_of_Freedom(locmap);
+    x : Standard_Complex_Vectors.Vector(1..integer32(dim));
     eqs : Link_to_Poly_Sys;
 
   begin
     put(file,"q = "); put(file,q);
     put(file,"  rows = "); put(file,rows);
     put(file,"  cols = "); put(file,cols); new_line(file);
-    Flag_Conditions(n,k,q,rows,cols,conds,vf,eqs);
+    Flag_Conditions(n,k,q,rows,cols,conds,flags,eqs);
     First_Solution(eqs.all,fail,x,res);
     put(file,"Residual of the solution : "); put(file,res,3);
     if fail
@@ -85,6 +89,35 @@ package body Resolve_Schubert_Problems is
       Construct(ls,snd.sols);
     end;
   end Start_Solution;
+
+  procedure Initialize_Solution_Nodes
+              ( file : in file_type; n,k : in integer32;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in Standard_Complex_VecMats.VecMat;
+                nodes : in out Solnode_List;
+                res : out double_float ) is
+
+    tmp : Solnode_List := nodes;
+    snd : Link_to_Solution_Node;
+    res_node : double_float;
+    fail : boolean;
+    cnt : natural32 := 0;
+
+  begin
+    res := 0.0;
+    while not Is_Null(tmp) loop
+      snd := Head_Of(tmp);
+      Start_Solution(file,n,k,conds,flags,snd,fail,res_node);
+      cnt := cnt + 1;
+      if fail then
+        put_line(file,"Failed to compute start solution at node ");
+        put(file,cnt,1); new_line(file);
+      end if;
+      res := res + res_node;
+      tmp := Tail_Of(tmp);
+    end loop;
+    put(file,"The sum of all residuals : "); put(file,res,3); new_line(file);
+  end Initialize_Solution_Nodes;
 
   procedure Connect_Checker_Posets_to_Count
               ( file : in file_type;
@@ -223,6 +256,7 @@ package body Resolve_Schubert_Problems is
               ( file : in file_type;
                 ips : in out Intersection_Poset;
                 sps : in out Solution_Poset;
+                conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in out Standard_Complex_VecMats.VecMat;
                 sols : out Solution_List ) is
 

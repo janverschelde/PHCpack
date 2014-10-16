@@ -1,6 +1,7 @@
 Wed 15 Oct 2014 : extended intersection_solution_posets with retrieval
   function used in resolve_schubert_problems.adb.
-  Added a procedure to compute start solutions at the leaves.
+  Added a procedure to compute start solutions at the leaves and augmented
+  parameter list of the resolve, tested by ts_lrhom.adb.
 
 Tue 14 Oct 2014 : new package intersection_solution_posets, tested by
   ts_lrhom.  Used the intersection_solution_posets in the resolve

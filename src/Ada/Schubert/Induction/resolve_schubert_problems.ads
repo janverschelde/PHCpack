@@ -30,10 +30,9 @@ package Resolve_Schubert_Problems is
   procedure Start_Solution 
               ( file : in file_type; n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                vf : in Standard_Complex_VecMats.VecMat;
+                flags : in Standard_Complex_VecMats.VecMat;
                 snd : in out Link_to_Solution_Node;
                 fail : out boolean;
-                x : out Standard_Complex_Vectors.Vector;
                 res : out double_float );
 
   -- DESCRIPTION :
@@ -51,7 +50,7 @@ package Resolve_Schubert_Problems is
   --   n        the ambient dimension;
   --   k        dimension of the solution plane;
   --   conds    conditions on the solution planes meeting the flags in vf;
-  --   vf       fixed flags for setting up the intersection conditions;
+  --   flags    fixed flags for setting up the intersection conditions;
   --   snd      a solution node.
 
   -- ON RETURN :
@@ -130,6 +129,7 @@ package Resolve_Schubert_Problems is
               ( file : in file_type;
                 ips : in out Intersection_Poset;
                 sps : in out Solution_Poset;
+                conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in out Standard_Complex_VecMats.VecMat;
                 sols : out Solution_List );
 
@@ -141,12 +141,13 @@ package Resolve_Schubert_Problems is
 
   -- REQUIRED :
   --   The intersection conditions are processed into an intersection poset,
-  --   given in ips on entry.
+  --   given in ips on entry.  Moreover, conds'range = flags'range.
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
   --   ips      an intersection poset built to resolve Schubert conditions;
   --   sps      an initialized solution poset corresponding to ips;
+  --   conds    intersection conditions on the fixed flags;
   --   flags    generic complex matrices that represented nested linear
   --            space for use in the homotopies.
 

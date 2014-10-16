@@ -8,6 +8,7 @@ with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
 with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
 with Standard_Natural_Vectors;           use Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
+with Standard_Natural_VecVecs;
 with Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
@@ -318,6 +319,32 @@ procedure ts_lrhom is
     put_line(" done.");
   end Make_Solution_Poset;
 
+  function Remaining_Intersection_Conditions
+             ( b : Array_of_Brackets )
+             return Standard_Natural_VecVecs.VecVec is
+
+  -- DESCRIPTION :
+  --   Returns the remaining b'last-2 conditions stored in b.
+
+  -- REQUIRED : b'last > 2.
+
+    res : Standard_Natural_VecVecs.VecVec(b'first..b'last-2);
+
+  begin
+    for i in b'first+2..b'last loop
+      declare
+        bck : constant Link_to_Bracket := b(i);
+        bvc : Standard_Natural_Vectors.Vector(bck'range);
+      begin
+        for j in bvc'range loop
+          bvc(j) := bck(j);
+        end loop;
+        res(i-2) := new Standard_Natural_Vectors.Vector'(bvc);
+      end;
+    end loop;
+    return res;
+  end Remaining_Intersection_Conditions;            
+
   procedure Resolve_Schubert_Problem
               ( n,k : in integer32; bm : in Bracket_Monomial ) is
 
@@ -338,6 +365,8 @@ procedure ts_lrhom is
     ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
     sps : Solution_Poset(ips.m) := Create(ips);
     top_roco,bottom_roco : Natural_Number;
+    conds : Standard_Natural_VecVecs.VecVec(1..nbc-2)
+          := Remaining_Intersection_Conditions(cnd);
     flags : Standard_Complex_VecMats.VecMat(1..nbc-2);
     sols : Solution_List;
 
@@ -364,7 +393,7 @@ procedure ts_lrhom is
     new_line;
     put_line("See the output file for results ...");
     new_line;
-    Resolve(file,ips,sps,flags,sols);
+    Resolve(file,ips,sps,conds,flags,sols);
   end Resolve_Schubert_Problem;
 
   procedure Main is
