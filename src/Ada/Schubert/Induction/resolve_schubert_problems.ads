@@ -126,7 +126,7 @@ package Resolve_Schubert_Problems is
   --   roco     the formal root count.
 
   procedure Resolve
-              ( file : in file_type;
+              ( file : in file_type; n,k : in integer32;
                 ips : in out Intersection_Poset;
                 sps : in out Solution_Poset;
                 conds : in Standard_Natural_VecVecs.VecVec;
@@ -145,6 +145,8 @@ package Resolve_Schubert_Problems is
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
+  --   n        the ambient dimension;
+  --   k        dimension of the solution plane;
   --   ips      an intersection poset built to resolve Schubert conditions;
   --   sps      an initialized solution poset corresponding to ips;
   --   conds    intersection conditions on the fixed flags;

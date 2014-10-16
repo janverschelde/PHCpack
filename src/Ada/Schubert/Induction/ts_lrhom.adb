@@ -393,7 +393,7 @@ procedure ts_lrhom is
     new_line;
     put_line("See the output file for results ...");
     new_line;
-    Resolve(file,ips,sps,conds,flags,sols);
+    Resolve(file,n,k,ips,sps,conds,flags,sols);
   end Resolve_Schubert_Problem;
 
   procedure Main is

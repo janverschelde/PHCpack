@@ -7,6 +7,7 @@ with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Standard_Natural_Matrices;
+with Standard_Natural_Matrices_io;       use Standard_Natural_Matrices_io;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Checker_Posets,Checker_Posets_io;   use Checker_Posets_io;
 with Checker_Localization_Patterns;
@@ -46,6 +47,21 @@ package body Resolve_Schubert_Problems is
     end loop;
   end Initialize_Nodes;
 
+  function Flip ( b : Standard_Natural_Vectors.Vector )
+                return Standard_Natural_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns the vector b with its entries in reverse order.
+
+    res : Standard_Natural_Vectors.Vector(b'range);
+
+  begin
+    for i in b'range loop
+      res(i) := b(b'last-i+1);
+    end loop;
+    return res;
+  end Flip;
+
   procedure Start_Solution 
               ( file : in file_type; n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
@@ -55,12 +71,11 @@ package body Resolve_Schubert_Problems is
                 res : out double_float ) is
 
     slnp : constant Checker_Posets.Poset := snd.lpnd.ps;
-    rows : constant Standard_Natural_Vectors.Vector
+    rows : Standard_Natural_Vectors.Vector
          := Checker_Posets.Root_Rows(slnp);
-    cols : constant Standard_Natural_Vectors.Vector
-         := Checker_Posets.Root_Columns(slnp);
+    cols : Standard_Natural_Vectors.Vector(rows'range) := Flip(rows);
     q : constant Standard_Natural_Vectors.Vector
-      := slnp.black(slnp.black'first).all;
+      := slnp.black(slnp.black'last).all;
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
     dim : constant natural32
@@ -69,6 +84,9 @@ package body Resolve_Schubert_Problems is
     eqs : Link_to_Poly_Sys;
 
   begin
+    put_line(file,"The localization map : "); put(file,locmap);
+    put(file,"The number of variables : ");
+    put(file,dim,1); put_line(file,".");
     put(file,"q = "); put(file,q);
     put(file,"  rows = "); put(file,rows);
     put(file,"  cols = "); put(file,cols); new_line(file);
@@ -76,8 +94,8 @@ package body Resolve_Schubert_Problems is
     First_Solution(eqs.all,fail,x,res);
     put(file,"Residual of the solution : "); put(file,res,3);
     if fail
-     then put_line(" failure.");
-     else put_line(" success.");
+     then put_line(file," : failure.");
+     else put_line(file," : success.");
     end if;
     declare
       sol : Solution(x'last);
@@ -104,13 +122,15 @@ package body Resolve_Schubert_Problems is
     cnt : natural32 := 0;
 
   begin
+    new_line(file);
+    put_line(file,"Computing the solutions at the leaves ...");
     res := 0.0;
     while not Is_Null(tmp) loop
       snd := Head_Of(tmp);
       Start_Solution(file,n,k,conds,flags,snd,fail,res_node);
       cnt := cnt + 1;
       if fail then
-        put_line(file,"Failed to compute start solution at node ");
+        put(file,"Failed to compute start solution at node ");
         put(file,cnt,1); new_line(file);
       end if;
       res := res + res_node;
@@ -253,7 +273,7 @@ package body Resolve_Schubert_Problems is
   end Count_Roots;
 
   procedure Resolve
-              ( file : in file_type;
+              ( file : in file_type; n,k : in integer32;
                 ips : in out Intersection_Poset;
                 sps : in out Solution_Poset;
                 conds : in Standard_Natural_VecVecs.VecVec;
@@ -263,12 +283,16 @@ package body Resolve_Schubert_Problems is
     tmp : Solnode_List;
     snd : Link_to_Solution_Node;
     lpn : Link_to_Poset_Node;
+    residual : double_float;
 
   begin
     Initialize_Leaves(ips.nodes(ips.m));
     for i in 1..ips.m-1 loop
       Initialize_Nodes(ips.nodes(i));
     end loop;
+    Initialize_Solution_Nodes(file,n,k,
+      conds(conds'last..conds'last),
+      flags(flags'last..flags'last),sps.nodes(sps.m),residual);
     for i in reverse 1..sps.m loop
       new_line(file);
       put(file,"Solving at level "); put(file,i,1); put_line(file," :");
