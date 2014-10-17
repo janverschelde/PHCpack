@@ -79,9 +79,10 @@ package Resolve_Schubert_Problems is
   --   nd       poset of the child.
 
   procedure Connect_Checker_Posets_to_Track
-              ( file : in file_type; level : in integer32;
+              ( file : in file_type; n,k,level : in integer32;
                 pl : in Poset_List; snd : in Link_to_Solution_Node;
                 sps : in out Solution_Poset;
+                conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in out Standard_Complex_VecMats.VecMat );
 
   -- DESCRIPTION :
@@ -90,11 +91,14 @@ package Resolve_Schubert_Problems is
 
   -- ON ENTRY :
   --   file     for intermediate output;
+  --   n        the ambient dimension;
+  --   k        dimension of the solution planes;
   --   level    level of the parent nodes in the list pl;
   --   pl       list of checker posets at some level of the parent nodes
   --            to the node nd in the intersection poset;
   --   snd      solution node that contains the poset of the child;
   --   sps      solution poset constructed up to the proper level;
+  --   conds    conditions on the current fixed flags;
   --   flags    current fixed flags.
 
   -- ON RETURN :

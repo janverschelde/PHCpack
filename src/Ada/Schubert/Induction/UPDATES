@@ -1,3 +1,6 @@
+Fri 17 Oct 2014 : called Littlewood-Richardson homotopies on one checker
+  game in the resolve_schubert_problems.
+
 Thu 16 Oct 2014 : Debugged procedure to compute solutions at leaves in
   resolve_schubert_problems, tested by ts_lrhom.adb.
 

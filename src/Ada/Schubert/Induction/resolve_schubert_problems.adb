@@ -12,6 +12,7 @@ with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Checker_Posets,Checker_Posets_io;   use Checker_Posets_io;
 with Checker_Localization_Patterns;
 with Moving_Flag_Homotopies;             use Moving_Flag_Homotopies;
+with Moving_Flag_Continuation;
 
 package body Resolve_Schubert_Problems is
 
@@ -128,6 +129,7 @@ package body Resolve_Schubert_Problems is
     while not Is_Null(tmp) loop
       snd := Head_Of(tmp);
       Start_Solution(file,n,k,conds,flags,snd,fail,res_node);
+      Set_Head(tmp,snd);
       cnt := cnt + 1;
       if fail then
         put(file,"Failed to compute start solution at node ");
@@ -182,9 +184,10 @@ package body Resolve_Schubert_Problems is
   end Connect_Checker_Posets_to_Count;
 
   procedure Connect_Checker_Posets_to_Track
-              ( file : in file_type; level : in integer32;
+              ( file : in file_type; n,k,level : in integer32;
                 pl : in Poset_List; snd : in Link_to_Solution_Node;
                 sps : in out Solution_Poset;
+                conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in out Standard_Complex_VecMats.VecMat ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
@@ -200,6 +203,7 @@ package body Resolve_Schubert_Problems is
                  := Retrieve(sps.nodes(level),
                              Checker_Posets.Root_Rows(parent),
                              Checker_Posets.Root_Columns(parent));
+      parent_snd_last : Solution_List;
       childnode : constant Checker_Posets.Link_to_Node
                 := child.white(child.white'first);
       childconds : constant Standard_Natural_Vectors.Vector
@@ -209,18 +213,28 @@ package body Resolve_Schubert_Problems is
       parentconds : constant Standard_Natural_Vectors.Vector
                   := node.ps.white(node.ps.white'last).cols; -- leaf
 
-      use Checker_Posets;
+      use Checker_Posets,Moving_Flag_Continuation;
 
     begin
-      if parent_snd /= null
-       then put_line(file,"Found node with start solutions at parent.");
-       else put_line(file,"No node with start solutions at parent found!");
+      put(file,"Number of start solutions at child : ");
+      put(file,Length_Of(snd.sols),1); new_line(file);
+      if parent_snd = null then
+        put_line(file,"No solution node at parent found!"); return;
+      else
+        put(file,Length_Of(parent_snd.sols),1); put_line(file,".");
+        parent_snd_last := parent_snd.sols;
       end if;
       loop
         if Standard_Natural_Vectors.Equal(gamenode.cols,childconds) then
           Add(gamenode.coeff,childnode.coeff);
           put(file,"*** number of paths from child to the parent : ");
           put(file,childnode.coeff); put_line(file," ***");
+          declare
+            sols : Solution_List;
+          begin
+            Track_All_Paths_in_Poset(file,n,k,node.ps,conds,flags,sols);
+            Concat(parent_snd.sols,parent_snd_last,sols);
+          end;
         end if;
         exit when (gamenode.next_sibling = null);
         gamenode := gamenode.next_sibling;
@@ -311,7 +325,7 @@ package body Resolve_Schubert_Problems is
         if i > 1 then
           put_line(file,"-> solving at the leaves of its parents :");
           Connect_Checker_Posets_to_Track
-            (file,i-1,ips.nodes(i-1),snd,sps,flags);
+            (file,n,k,i-1,ips.nodes(i-1),snd,sps,conds,flags);
         end if;
         tmp := Tail_Of(tmp);
       end loop;
