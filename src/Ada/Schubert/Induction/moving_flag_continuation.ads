@@ -8,6 +8,7 @@ with Standard_Complex_VecMats;
 with Standard_Complex_Poly_Systems;       use Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;          use Standard_Complex_Solutions;
 with Checker_Posets;                      use Checker_Posets;
+with Intersection_Solution_Posets;        use Intersection_Solution_Posets;
 
 package Moving_Flag_Continuation is
 
@@ -248,6 +249,7 @@ package Moving_Flag_Continuation is
 
   -- DESCRIPTION :
   --   Tracks one path in the poset, given as an array of nodes.
+  --   Start solutions are computed.
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
@@ -267,6 +269,39 @@ package Moving_Flag_Continuation is
   --   unhappy  true if the configuration of checkers is unhappy
   --            and gives no solution.
 
+  procedure Track_Path_in_Poset
+              ( file : in file_type; n,k : in integer32; ps : in Poset;
+                path : in Array_of_Nodes; count : in integer32;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in Standard_Complex_VecMats.VecMat;
+                mf : in out Standard_Complex_Matrices.Matrix;
+                snd : in Link_to_Solution_Node; ls : in out Link_to_Solution;
+                unhappy : out boolean );
+
+  -- DESCRIPTION :
+  --   Tracks one path in the poset, given as an array of nodes.
+  --   Start solutions are provided in the nodes.
+
+  -- ON ENTRY :
+  --   file     for intermediate output and diagnostics;
+  --   n        dimension of the ambient space, number of black checkers;
+  --   k        dimension of the plane, number of white checkers;
+  --   ps       checker poset for one game;
+  --   path     path of nodes in the poset;
+  --   count    number of the path;
+  --   cond     intersection conditions for the general fixed flags;
+  --   vf       coordinates of general flags to keep fixed;
+  --   mf       coordinates of the moving flag,
+  --            should be equal to the identity matrix at the start;
+  --   snd      start solutions from the nodes at the previous level
+  --            in the intersection poset.
+
+  -- ON RETURN :
+  --   mf       moving flag at the end of the path;
+  --   ls       solution at the end of the path;
+  --   unhappy  true if the configuration of checkers is unhappy
+  --            and gives no solution.
+
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -274,7 +309,8 @@ package Moving_Flag_Continuation is
                 sols : out Solution_List );
 
   -- DESCRIPTION :
-  --   Tracks paths for one entire checker game in n-space.
+  --   Tracks paths for one entire checker game in n-space,
+  --   computing all start solutions.
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
@@ -283,6 +319,29 @@ package Moving_Flag_Continuation is
   --   ps       checker poset for one game;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed.
+
+  -- ON RETURN :
+  --   sols     all solutions at the end of the paths.
+
+  procedure Track_All_Paths_in_Poset
+              ( file : in file_type; n,k : in integer32; ps : in Poset;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in Standard_Complex_VecMats.VecMat;
+                snd : in Link_to_Solution_Node; sols : out Solution_List );
+
+  -- DESCRIPTION :
+  --   Tracks paths for one entire checker game in n-space,
+  --   with start solutions provided in the nodes.
+
+  -- ON ENTRY :
+  --   file     for intermediate output and diagnostics;
+  --   n        dimension of the ambient space, number of black checkers;
+  --   k        dimension of the plane, number of white checkers;
+  --   ps       checker poset for one game;
+  --   cond     intersection conditions for the general fixed flags;
+  --   vf       coordinates of general flags to keep fixed;
+  --   snd      solution nodes at the previous level with the start
+  --            solutions for the current level.
 
   -- ON RETURN :
   --   sols     all solutions at the end of the paths.

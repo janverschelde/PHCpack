@@ -232,7 +232,7 @@ package body Resolve_Schubert_Problems is
           declare
             sols : Solution_List;
           begin
-            Track_All_Paths_in_Poset(file,n,k,node.ps,conds,flags,sols);
+            Track_All_Paths_in_Poset(file,n,k,node.ps,conds,flags,snd,sols);
             Concat(parent_snd.sols,parent_snd_last,sols);
           end;
         end if;

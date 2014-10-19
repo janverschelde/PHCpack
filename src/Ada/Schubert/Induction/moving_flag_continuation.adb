@@ -576,6 +576,90 @@ package body Moving_Flag_Continuation is
     end if;
   end Track_Path_in_Poset;
 
+  procedure Track_Path_in_Poset
+              ( file : in file_type; n,k : in integer32; ps : in Poset;
+                path : in Array_of_Nodes; count : in integer32;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in Standard_Complex_VecMats.VecMat;
+                mf : in out Standard_Complex_Matrices.Matrix;
+                snd : in Link_to_Solution_Node; ls : in out Link_to_Solution;
+                unhappy : out boolean ) is
+
+    leaf : constant Link_to_Node := path(path'first);
+    ip : constant Standard_Natural_Vectors.Vector(1..n) 
+       := Checker_Moves.Identity_Permutation(natural32(n));
+    p,q : Standard_Natural_Vectors.Vector(1..n);
+    pr,pc,qr,qc : Standard_Natural_Vectors.Vector(1..k);
+    cnd : constant Standard_Natural_Vectors.Vector(1..k)
+        := cond(cond'first).all;
+    t : Standard_Natural_Matrices.Matrix(1..n,1..n);
+    start_mf : Standard_Complex_Matrices.Matrix(1..n,1..n) := Identity(n);
+    dim,ptr,homtp,ctr,ind,fc : integer32;
+    stay_child : boolean;
+    fail : boolean := false;
+
+    use Standard_Complex_Matrices;
+
+  begin
+    new_line(file);
+    if not Checker_Moves.Happy_Checkers(ip,leaf.cols,cnd) then
+      put(file,"No tracking for path "); put(file,count,1);
+      put(file," because "); Checker_Posets_io.Write(file,leaf.cols,cnd);
+      put_line(file," is not happy.");
+      unhappy := true;
+    else
+      unhappy := false;
+      put(file,"Tracking path "); put(file,count,1);
+      put(file," in poset starting at a happy ");
+      Checker_Posets_io.Write(file,leaf.cols,cnd); put_line(file," ...");
+      p := ps.black(ps.black'last).all;
+      pr := leaf.rows; pc := leaf.cols;
+      for i in path'first+1..path'last loop
+        ptr := ps.black'last - i + 1;
+        p := ps.black(ptr+1).all; pr := path(i-1).rows; pc := path(i-1).cols;
+        q := ps.black(ptr).all; qr := path(i).rows; qc := path(i).cols;
+        Checker_Posets_io.Write_Node_in_Path(file,n,k,ps,path,i);
+        stay_child := Checker_Posets.Is_Stay_Child(path(i).all,path(i-1).all);
+        fc := Checker_Moves.Falling_Checker(p);
+        put(file,"Calling Transformation with index = ");
+        put(file,integer32(q(fc)),1);
+        put(file," where fc = "); put(file,fc,1);
+        put(file," and q = "); put(file,q); new_line(file);
+        t := Checker_Localization_Patterns.Transformation(n,integer32(q(fc)));
+        put_line(file,"The pattern t for the numerical transformation ");
+        put(file,t);
+        put_line(file,"The numerical transformation :");
+        Write_Moving_Flag(file,Numeric_Transformation(t));
+        put_line(file,"The moving flag before the update :");
+        Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+        start_mf := mf;
+        mf := mf*Numeric_Transformation(t);
+        put_line(file,"The moving flag after the update :");
+        Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+        Checker_Homotopies.Define_Generalizing_Homotopy
+           (file,n,q,qr,qc,stay_child,homtp,ctr);
+        Initialize_Symbol_Table(n,k,q,qr,qc,dim);
+        ind := i-path'first-1; -- ind = 0 signals start solution
+        if homtp = 0 then
+          Trivial_Stay
+            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,ls,fail);
+        elsif homtp = 1 then
+          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
+                        vf,mf,start_mf,ls,fail);
+        else -- homtp = 2
+          Moving_Flag_Homotopies.Add_t_Symbol;
+          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
+                        mf,start_mf,vf,ls,fail);
+        end if;
+        if fail then
+          put_line(file,"no longer a valid solution, abort tracking");
+          new_line(file);
+          exit;
+        end if;
+      end loop;
+    end if;
+  end Track_Path_in_Poset;
+
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -594,6 +678,35 @@ package body Moving_Flag_Continuation is
     begin
       cnt := cnt + 1;
       Track_Path_in_Poset(file,n,k,ps,nds,cnt,cond,vf,mf,ls,fail);
+      if not fail
+       then Append(sols,sols_last,ls.all);
+      end if;
+      ct := true;
+    end Track_Path;
+    procedure Enumerate_Paths is new Enumerate_Paths_in_Poset(Track_Path);
+
+  begin
+    Enumerate_Paths(ps);
+  end Track_All_Paths_in_Poset;
+
+  procedure Track_All_Paths_in_Poset
+              ( file : in file_type; n,k : in integer32; ps : in Poset;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in Standard_Complex_VecMats.VecMat;
+                snd : in Link_to_Solution_Node; sols : out Solution_List ) is
+
+    cnt : integer32 := 0;
+    sols_last : Solution_List := sols;
+
+    procedure Track_Path ( nds : in Array_of_Nodes; ct : out boolean ) is
+
+      mf : Standard_Complex_Matrices.Matrix(1..n,1..n) := Identity(n);
+      ls : Link_to_Solution;
+      fail : boolean;
+
+    begin
+      cnt := cnt + 1;
+      Track_Path_in_Poset(file,n,k,ps,nds,cnt,cond,vf,mf,snd,ls,fail);
       if not fail
        then Append(sols,sols_last,ls.all);
       end if;

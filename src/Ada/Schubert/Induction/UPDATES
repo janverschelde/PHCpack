@@ -1,3 +1,7 @@
+Sat 18 Oct 2014 : added routines in moving_flag_continuation to take the
+  solution nodes at the previous level into account, as called in 
+  resolve_schubert_problems.adb.
+
 Fri 17 Oct 2014 : called Littlewood-Richardson homotopies on one checker
   game in the resolve_schubert_problems.
 
