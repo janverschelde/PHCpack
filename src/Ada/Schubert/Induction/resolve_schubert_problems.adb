@@ -90,7 +90,8 @@ package body Resolve_Schubert_Problems is
     put(file,dim,1); put_line(file,".");
     put(file,"q = "); put(file,q);
     put(file,"  rows = "); put(file,rows);
-    put(file,"  cols = "); put(file,cols); new_line(file);
+    put(file,"  cols = "); put(file,cols);
+    put(file,"  conds = "); put(file,conds(conds'first)); new_line(file);
     Flag_Conditions(n,k,q,rows,cols,conds,flags,eqs);
     First_Solution(eqs.all,fail,x,res);
     put(file,"Residual of the solution : "); put(file,res,3);
@@ -221,6 +222,7 @@ package body Resolve_Schubert_Problems is
       if parent_snd = null then
         put_line(file,"No solution node at parent found!"); return;
       else
+        put(file,"Number of solutions at parent node : ");
         put(file,Length_Of(parent_snd.sols),1); put_line(file,".");
         parent_snd_last := parent_snd.sols;
       end if;

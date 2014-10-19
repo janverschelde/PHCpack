@@ -1,5 +1,6 @@
 with Communications_with_User;          use Communications_with_User;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
@@ -16,6 +17,7 @@ with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
 with Standard_Complex_Poly_Matrices;
 with Standard_Complex_Poly_Matrices_io; use Standard_Complex_Poly_Matrices_io;
 with Standard_Homotopy;
+with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Standard_Root_Refiners;            use Standard_Root_Refiners;
 with Standard_IncFix_Continuation;
 with Drivers_for_Poly_Continuation;     use Drivers_for_Poly_Continuation;
@@ -130,7 +132,7 @@ package body Moving_Flag_Continuation is
 
   procedure Track_First_Move
               ( file : in file_type; n : in integer32; h : in Poly_Sys;
-                sol : out Link_to_Solution; fail : out boolean ) is
+                sol : in out Link_to_Solution; fail : out boolean ) is
 
     x : Standard_Complex_Vectors.Vector(1..n);
     xt : Standard_Complex_Vectors.Vector(1..n+1);
@@ -159,6 +161,14 @@ package body Moving_Flag_Continuation is
       put_line(file,"Value of the start solution at the squared homotopy :");
       put_line(file,yh);
       sols := Create(xt);
+      if sol = null then
+        put_line(file,"In Track_First_Move, sol is null.");
+      else
+        put_line(file,"In Track_First_Move, the solution on input :");
+        put(file,sol.all); new_line(file);
+      end if;
+      put_line(file,"The start solution in Track_First_Move : ");
+      put(file,Head_Of(sols).all); new_line(file);
       sh0 := Eval(sh,Create(0.0),n+1);
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,deflate,false);
@@ -608,6 +618,15 @@ package body Moving_Flag_Continuation is
       put_line(file," is not happy.");
       unhappy := true;
     else
+      if Is_Null(snd.sols) then
+        put_line(file,"No start solutions ?");
+      else
+        put(file,"In track path in poset, number of start solutions : ");
+        put(file,Length_Of(snd.sols),1); put_line(file,".");
+        ls := Head_Of(snd.sols);
+        put_line(file,"The start solution :");
+        put(file,ls.all); new_line(file);
+      end if;
       unhappy := false;
       put(file,"Tracking path "); put(file,count,1);
       put(file," in poset starting at a happy ");

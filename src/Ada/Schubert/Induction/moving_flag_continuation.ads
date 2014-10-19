@@ -50,7 +50,7 @@ package Moving_Flag_Continuation is
 
   procedure Track_First_Move
               ( file : in file_type; n : in integer32; h : in Poly_Sys;
-                sol : out Link_to_Solution; fail : out boolean );
+                sol : in out Link_to_Solution; fail : out boolean );
 
   -- DESCRIPTION :
   --   Given a homotopy with last variable (with index n+1) the 
@@ -62,7 +62,9 @@ package Moving_Flag_Continuation is
   --   n        number of variables in the ambient space;
   --   homtp    type of homotopy, if 0, then only start solution
   --            is computed and verified;
-  --   h        homotopy in n+1 variables.
+  --   h        homotopy in n+1 variables;
+  --   sol      if not null, then the start solution for the homotopy,
+  --            otherwise, the start solution will be computed.
 
   -- ON RETURN :
   --   sol      solution at the end of the path if not fail;
