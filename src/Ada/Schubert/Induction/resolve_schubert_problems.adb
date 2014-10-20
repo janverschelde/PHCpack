@@ -240,7 +240,7 @@ package body Resolve_Schubert_Problems is
             put(file,totalflags,1); put(file," fixed flags; level = ");
             put(file,level,1); 
             put(file,"  sps.m = "); put(file,sps.m,1); put_line(file,".");
-            put(file,"nunber of flags = ");
+            put(file,"number of flags = ");
             put(file,nbflags,1); put_line(file,".");
             Track_All_Paths_in_Poset
               (file,n,k,node.ps,

@@ -48,6 +48,27 @@ package Moving_Flag_Continuation is
   --            last component of xt to be equal to one;
   --   sol      standard representation of the solution.
 
+  procedure Call_Path_Trackers
+              ( file : in file_type; n : in integer32; h : in Poly_Sys;
+                xtsols,sols : in out Solution_List );
+
+  -- DESCRIPTION :
+  --   Tracks one path starting at the solution in xt,
+  --   as defined by the homotopy h.
+
+  -- ON ENTRY :
+  --   file     output file for intermediate results and diagnostics,
+  --            if omitted, then there is no intermediate output;
+  --   n        number of variables in the ambient space;
+  --   h        homotopy in n+1 variables;
+  --   xtsols   start solutions with their last component equal to zero,
+  --            satisfies the homotopy h (upto tolerance).
+
+  -- ON RETURN :
+  --   xtsols   solutions at the end of the path, tracked to the
+  --            last component of vectors in xtsols to be equal to one;
+  --   sols     standard representation of the solutions.
+
   procedure Track_First_Move
               ( file : in file_type; n : in integer32; h : in Poly_Sys;
                 sol : in out Link_to_Solution; fail : out boolean );
@@ -87,6 +108,26 @@ package Moving_Flag_Continuation is
 
   -- ON RETURN :
   --   sol      solution at the end of the path if not fail;
+  --   fail     true if there was no solution,
+  --            or if the path tracker failed to reach a solution.
+
+  procedure Track_Next_Move
+              ( file : in file_type; n : in integer32; h : in Poly_Sys;
+                sols : in out Solution_List; fail : out boolean );
+
+  -- DESCRIPTION :
+  --   Tracks a path for the next move in the checker poset,
+  --   given a homotopy with last variable (with index n+1) the 
+  --   continuation parameter and a start solution.
+
+  -- ON ENTRY :
+  --   file     output file for intermediate results and diagnostics;
+  --   n        number of variables in the ambient space;
+  --   h        homotopy in n+1 variables;
+  --   sols     start solutions for the homotopy.
+
+  -- ON RETURN :
+  --   sols     solutions at the end of the path if not fail;
   --   fail     true if there was no solution,
   --            or if the path tracker failed to reach a solution.
 
@@ -142,6 +183,34 @@ package Moving_Flag_Continuation is
   --   mf       coordinates for the moving flag;
   --   vf       coordinates for the input flags;
   --   x        current solution plane.
+
+  procedure Verify_Intersection_Conditions
+              ( file : in file_type; n,k : in integer32;
+                q,rows,cols : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Complex_Matrices.Matrix;
+                vf : in Standard_Complex_VecMats.VecMat;
+                sols : in Solution_List; fail : out boolean );
+
+  -- DESCRIPTION :
+  --   Verifies the intersection conditions imposed by the input flags vf
+  --   on k-planes in n-space with attidutes of the intersection in cond.
+
+  -- ON ENTRY :
+  --   file     for intermedidate output and diagnostics;
+  --   n        ambient dimension;
+  --   k        dimension of the solution plane;
+  --   q        parent permutation in the poset, used for the localization;
+  --   rows     position of the rows of the white checkers;
+  --   cols     position of the columns of the white checkers;
+  --   cond     specifications for the intersection conditions;
+  --   mf       coordinates for the moving flag;
+  --   vf       coordinates for the input flags;
+  --   sols     current solution planes.
+
+  -- ON RETURN :
+  --   fail     true if all solutions evaluate to a residual that is
+  --            higher than the fixed threshold of 1.0e-8.
 
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
@@ -208,6 +277,40 @@ package Moving_Flag_Continuation is
   --   ls       solution in the proper coordinates;
   --   fail     true if no longer a solution, false otherwise.
 
+  procedure Stay_Homotopy
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in Standard_Complex_VecMats.VecMat;
+                mf,start_mf : in Standard_Complex_Matrices.Matrix;
+                sols : in out Solution_List; fail : out boolean );
+
+  -- DESCRIPTION :
+  --   In a stay homotopy, the white checkers stay in position.
+  --   After tracking a path, the intersection conditions are verified.
+
+  -- ON ENTRY :
+  --   file     for intermediate output and diagnostics;
+  --   n        dimension of the ambient space, number of black checkers;
+  --   k        dimension of the plane, number of white checkers;
+  --   ctr      index of the critical row;
+  --   ind      index of the move, if 0 then ls will be a first solution;
+  --   q        parent permutation in the poset used for target;
+  --   p        current permutation in the poset used for start;
+  --   qr       position of the rows of the white checkers with q;
+  --   qc       position of the columns of the white checkers with q;
+  --   pr       position of the rows of the white checkers with p;
+  --   pc       position of the columns of the white checkers with p;
+  --   cond     intersection conditions for the general fixed flags;
+  --   vf       coordinates of general flags to keep fixed;
+  --   mf       the new moving flag at the target;
+  --   start_mf is the moving flag at the start of the homotopy;
+  --   sols     the start solutions for the homotopy.
+
+  -- ON RETURN :
+  --   sols     solution in the proper coordinates;
+  --   fail     true if sols contains no longer a solution, false otherwise.
+
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -240,6 +343,40 @@ package Moving_Flag_Continuation is
   -- ON RETURN :
   --   ls       solution in the proper coordinates;
   --   fail     true if no longer a solution, false otherwise.
+
+  procedure Swap_Homotopy
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf,start_mf : in Standard_Complex_Matrices.Matrix;
+                vf : in Standard_Complex_VecMats.VecMat;
+                sols : in out Solution_List; fail : out boolean );
+
+  -- DESCRIPTION :
+  --   In a swap homotopy, two white checkers get swapped.
+  --   After tracking a path, the intersection conditions are verified.
+
+  -- ON ENTRY :
+  --   file     for intermediate output and diagnostics;
+  --   n        dimension of the ambient space, number of black checkers;
+  --   k        dimension of the plane, number of white checkers;
+  --   ctr      index of the critical row;
+  --   ind      index of the move, if 0 then ls will be a first solution;
+  --   q        parent permutation in the poset used for target;
+  --   p        current permutation in the poset used for start;
+  --   qr       position of the rows of the white checkers with q;
+  --   qc       position of the columns of the white checkers with q;
+  --   pr       position of the rows of the white checkers with p;
+  --   pc       position of the columns of the white checkers with p;
+  --   cond     intersection conditions for the general fixed flags;
+   --  mf       coordinates of the moving flag;
+  --   start_mf is the moving flag at the start of the homotopy;
+  --   vf       coordinates of general flags to keep fixed;
+  --   sols     start solutions for the homotopy.
+
+  -- ON RETURN :
+  --   sols     solutions in the proper coordinates;
+  --   fail     true if sols contains no longer a solution, false otherwise.
 
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
@@ -277,7 +414,7 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
-                snd : in Link_to_Solution_Node; ls : in out Link_to_Solution;
+                snd : in Link_to_Solution_Node; sols : out Solution_List;
                 unhappy : out boolean );
 
   -- DESCRIPTION :
@@ -300,7 +437,7 @@ package Moving_Flag_Continuation is
 
   -- ON RETURN :
   --   mf       moving flag at the end of the path;
-  --   ls       solution at the end of the path;
+  --   sols     solutions at the end of the path in the poset;
   --   unhappy  true if the configuration of checkers is unhappy
   --            and gives no solution.
 

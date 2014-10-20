@@ -130,6 +130,38 @@ package body Moving_Flag_Continuation is
     when others => put_line("exception in Call Path Trackers"); raise;
   end Call_Path_Trackers;
 
+  procedure Call_Path_Trackers
+              ( file : in file_type; n : in integer32; h : in Poly_Sys;
+                xtsols,sols : in out Solution_List ) is
+
+    use Standard_IncFix_Continuation;
+
+    xtp,tmp : Solution_List;
+    xtls,ls : Link_to_Solution;
+
+    procedure Track is
+      new Reporting_Continue(Max_Norm,Standard_Homotopy.Eval,
+                             Standard_Homotopy.Diff,Standard_Homotopy.Diff);
+
+  begin
+    Standard_Homotopy.Create(h,n+1);
+    Track(file,xtsols,false,Create(1.0));
+    tmp := sols;
+    xtp := xtsols;
+    while not Is_Null(xtp) loop
+      xtls := Head_Of(xtp);
+      ls := Head_Of(tmp);
+      ls.v := xtls.v(ls.v'range);
+      ls.t := xtls.t;
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+      xtp := Tail_Of(tmp);
+    end loop;
+    Standard_Homotopy.Clear;
+  exception -- adding this exception handler caused no longer exception ...
+    when others => put_line("exception in Call Path Trackers"); raise;
+  end Call_Path_Trackers;
+
   procedure Track_First_Move
               ( file : in file_type; n : in integer32; h : in Poly_Sys;
                 sol : in out Link_to_Solution; fail : out boolean ) is
@@ -228,6 +260,67 @@ package body Moving_Flag_Continuation is
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
       fail := (res > tolsing);
+    end if;
+    Clear(sh); Clear(sh0); --Clear(sols);
+  exception
+    when others => put_line("exception in Track_Next_Move ..."); raise;
+  end Track_Next_Move;
+
+  procedure Track_Next_Move
+              ( file : in file_type; n : in integer32; h : in Poly_Sys;
+                sols : in out Solution_List; fail : out boolean ) is
+
+    xt : Standard_Complex_Vectors.Vector(1..n+1);
+    y : Standard_Complex_Vectors.Vector(h'range);
+    res : double_float;
+    sh : Poly_Sys(1..n) := Square(n,h);
+    yh : Standard_Complex_Vectors.Vector(sh'range);
+    sh0 : Poly_Sys(sh'range);
+    epsxa : constant double_float := 1.0E-12;
+    tolsing : constant double_float := 1.0E-8;
+    epsfa : constant double_float := 1.0E-12;
+    numit : natural32 := 0;
+    deflate : boolean := false;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+    xtsols,xt_sols_last : Solution_List;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      xt(ls.v'range) := ls.v; xt(xt'last) := Create(0.0);
+      y := Eval(h,xt);
+      new_line(file);
+      put_line(file,"Value of the start solution at the original homotopy :");
+      put_line(file,y);
+      res := Max_Norm(y);
+      put(file,"The residual : "); put(file,res,3); new_line(file);
+      fail := (res > tolsing);
+      yh := Eval(sh,xt);
+      put_line(file,"Value of the start solution at the squared homotopy :");
+      put_line(file,yh);
+      res := Max_Norm(y);
+      put(file,"The residual : "); put(file,res,3); new_line(file);
+      fail := fail and (res > tolsing);
+      Append(xtsols,xt_sols_last,Create(xt));
+      tmp := Tail_Of(tmp);
+    end loop;
+    if fail then
+      put_line(file,"-> residual too high, abort path tracking");
+    else
+      sh0 := Eval(sh,Create(0.0),n+1);
+      Reporting_Root_Refiner
+        (file,sh0,xtsols,epsxa,epsfa,tolsing,numit,3,deflate,false);
+      Call_Path_Trackers(file,n,sh,xtsols,sols);
+      put(file,"The residuals of the end solution at original homotopy : ");
+      tmp := xtsols;
+      while not Is_Null(tmp) loop
+        ls := Head_Of(tmp);
+        y := Eval(h,ls.v); res := Max_Norm(y);
+        put(file,res,3); new_line(file); new_line(file);
+        fail := (res > tolsing);
+        tmp := Tail_Of(tmp);
+      end loop;
     end if;
     Clear(sh); Clear(sh0); --Clear(sols);
   exception
@@ -347,6 +440,60 @@ package body Moving_Flag_Continuation is
                    raise;
   end Verify_Intersection_Conditions;
 
+  procedure Verify_Intersection_Conditions
+              ( file : in file_type; n,k : in integer32;
+                q,rows,cols : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Complex_Matrices.Matrix;
+                vf : in Standard_Complex_VecMats.VecMat;
+                sols : in Solution_List; fail : out boolean ) is
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
+    dim : natural32;
+    f : Link_to_Poly_Sys;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    dim := Checker_Localization_Patterns.Degree_of_Freedom(locmap);
+    if not Symbol_Table.Empty
+     then Symbol_Table.Clear;
+    end if;
+    Matrix_Indeterminates.Initialize_Symbols(dim,locmap);
+   -- note: p and parameters mf and nf needed for this call ...
+   -- Flag_Conditions(file,n,k,q,p,rows,cols,cond,vf,mf,nf,f);
+    Flag_Conditions(n,k,q,rows,cols,cond,mf,vf,f);
+    put(file,"At q = "); put(file,q);
+    put(file,"  rows = "); put(file,rows);
+    put(file,"  cols = "); put(file,cols); new_line(file);
+    put_line(file,"Verification of intersection conditions :");
+    put_line(file,"The moving flag : ");
+    Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+    fail := true; -- assume all solutions are failures
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      declare
+        res : double_float;
+        y : constant Standard_Complex_Vectors.Vector(f'range)
+          := Eval(f.all,ls.v);
+      begin
+        put_line(file,"The given solution :"); put_line(file,ls.v);
+        put_line(file,"The value of the given solution :"); put_line(file,y);
+        res := Max_Norm(y);
+        put(file,"The residual : "); put(file,res,3); new_line(file);
+        if fail
+         then fail := (res > 1.0E-8); -- no fail as soon as one succeeds
+        end if;
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+   -- Clear(f); -- executing this Clear(f) results in a crash ...
+  exception
+    when others => put_line("exception in verify_intersection conditions");
+                   raise;
+  end Verify_Intersection_Conditions;
+
   procedure Copy_Flags ( src : in Standard_Complex_VecMats.VecMat;
                          dst : in out Standard_Complex_VecMats.VecMat ) is
   begin
@@ -404,6 +551,22 @@ package body Moving_Flag_Continuation is
     Clear(gh);
   end Trivial_Stay;
 
+  procedure Trivial_Stay
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Complex_Matrices.Matrix;
+                vf : in Standard_Complex_VecMats.VecMat;
+                sols : in out Solution_List; fail : out boolean ) is
+  begin
+    put(file,"Transforming solution planes with critical row = ");
+    put(file,ctr,1); put_line(file,".");
+    Checker_Homotopies.Trivial_Stay_Coordinates
+      (file,n,k,ctr,q,p,qr,qc,pr,pc,sols);
+    put_line(file,"Verifying after coordinate changes ...");
+    Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,sols,fail);
+  end Trivial_Stay;
+
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -444,6 +607,51 @@ package body Moving_Flag_Continuation is
         (file,n,k,ctr,q,qr,qc,mf,xpm,ls.v);
       put_line(file,"Verifying after coordinate changes ...");
       Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,ls.v);
+    end if;
+    Standard_Complex_Poly_Matrices.Clear(xp);
+    Standard_Complex_Poly_Matrices.Clear(xpm);
+    Clear(gh);
+  exception
+    when others => put_line("exception in Stay_Homotopy"); raise;
+  end Stay_Homotopy;
+
+  procedure Stay_Homotopy
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in Standard_Complex_VecMats.VecMat;
+                mf,start_mf : in Standard_Complex_Matrices.Matrix;
+                sols : in out Solution_List; fail : out boolean ) is
+
+    gh : Link_to_Poly_Sys;
+    xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Stay_Moving_Plane(n,k,ctr,p,pr,pc);
+    xpm : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+
+  begin
+    fail := true;
+    Initialize_Homotopy_Symbols(natural32(dim),locmap);
+    put_line(file,"The moving coordinates : "); put(file,xp);
+    put_line(file,"the new moving flag when making the stay homotopy :");
+    Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+    put_line(file,"the old moving flag when making the stay homotopy :");
+    Moving_Flag_Homotopies.Write_Moving_Flag(file,start_mf);
+    xpm := Moving_Flag(start_mf,xp);
+    put_line(file,"The moving coordinates after multiplication by M :");
+    put(file,xpm);
+    Flag_Conditions(n,k,xpm,cond,vf,gh);
+    Track_Next_Move(file,dim,gh.all,sols,fail);
+    if not fail then
+      put(file,"Transforming solution planes with critical row = ");
+      put(file,ctr,1); put_line(file,".");
+      Checker_Homotopies.Homotopy_Stay_Coordinates
+        (file,n,k,ctr,q,qr,qc,mf,xpm,sols);
+      put_line(file,"Verifying after coordinate changes ...");
+      Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,sols,fail);
     end if;
     Standard_Complex_Poly_Matrices.Clear(xp);
     Standard_Complex_Poly_Matrices.Clear(xpm);
@@ -495,6 +703,54 @@ package body Moving_Flag_Continuation is
       end if;
       put_line(file,"Verifying after coordinate changes ...");
       Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,ls.v);
+    end if;
+    Standard_Complex_Poly_Systems.Clear(gh);
+    Standard_Complex_Poly_Matrices.Clear(xp);
+    Standard_Complex_Poly_Matrices.Clear(xpm);
+  exception
+    when others => put_line("exception in Swap_Homotopy"); raise;
+  end Swap_Homotopy;
+
+  procedure Swap_Homotopy
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf,start_mf : in Standard_Complex_Matrices.Matrix;
+                vf : in Standard_Complex_VecMats.VecMat;
+                sols : in out Solution_List; fail : out boolean ) is
+
+    big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
+    dc : constant integer32 := Checker_Moves.Descending_Checker(q);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    s : constant integer32 := Checker_Homotopies.Swap_Column(ctr,locmap);
+    xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Swap_Moving_Plane(file,n,k,ctr,big_r,s,q,p,pr,pc);
+    xpm : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+    gh : Link_to_Poly_Sys;
+
+  begin
+    Initialize_Homotopy_Symbols(natural32(dim),locmap);
+    put_line(file,"The moving coordinates : "); put(file,xp); 
+    xpm := Moving_Flag(start_mf,xp);
+    put_line(file,"The moving coordinates after multiplication by M :");
+    put(file,xpm);
+    fail := true;
+    Flag_Conditions(n,k,xpm,cond,vf,gh);
+    Track_Next_Move(file,dim,gh.all,sols,fail);
+    if not fail then
+      put(file,"Transforming solution planes with critical row = ");
+      put(file,ctr,1); put_line(file,".");
+      if big_r > ctr + 1
+       then Checker_Homotopies.First_Swap_Coordinates
+              (file,n,k,ctr,big_r,dc,s,q,p,qr,qc,pr,pc,mf,xpm,sols);
+       else Checker_Homotopies.Second_Swap_Coordinates
+              (file,n,k,ctr,s,q,qr,qc,mf,xpm,sols);
+      end if;
+      put_line(file,"Verifying after coordinate changes ...");
+      Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,sols,fail);
     end if;
     Standard_Complex_Poly_Systems.Clear(gh);
     Standard_Complex_Poly_Matrices.Clear(xp);
@@ -592,7 +848,7 @@ package body Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
-                snd : in Link_to_Solution_Node; ls : in out Link_to_Solution;
+                snd : in Link_to_Solution_Node; sols : out Solution_List;
                 unhappy : out boolean ) is
 
     leaf : constant Link_to_Node := path(path'first);
@@ -607,6 +863,7 @@ package body Moving_Flag_Continuation is
     dim,ptr,homtp,ctr,ind,fc : integer32;
     stay_child : boolean;
     fail : boolean := false;
+    ls : Link_to_Solution;
 
     use Standard_Complex_Matrices;
 
@@ -656,19 +913,20 @@ package body Moving_Flag_Continuation is
         put_line(file,"The moving flag after the update :");
         Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
         Checker_Homotopies.Define_Generalizing_Homotopy
-           (file,n,q,qr,qc,stay_child,homtp,ctr);
+          (file,n,q,qr,qc,stay_child,homtp,ctr);
         Initialize_Symbol_Table(n,k,q,qr,qc,dim);
         ind := i-path'first-1; -- ind = 0 signals start solution
+        Copy(snd.sols,sols);
         if homtp = 0 then
           Trivial_Stay
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,ls,fail);
+            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail);
         elsif homtp = 1 then
           Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
-                        vf,mf,start_mf,ls,fail);
+                        vf,mf,start_mf,sols,fail);
         else -- homtp = 2
           Moving_Flag_Homotopies.Add_t_Symbol;
           Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
-                        mf,start_mf,vf,ls,fail);
+                        mf,start_mf,vf,sols,fail);
         end if;
         if fail then
           put_line(file,"no longer a valid solution, abort tracking");
@@ -720,14 +978,14 @@ package body Moving_Flag_Continuation is
     procedure Track_Path ( nds : in Array_of_Nodes; ct : out boolean ) is
 
       mf : Standard_Complex_Matrices.Matrix(1..n,1..n) := Identity(n);
-      ls : Link_to_Solution;
+      pp_sols : Solution_List; -- solutions on path in poset
       fail : boolean;
 
     begin
       cnt := cnt + 1;
-      Track_Path_in_Poset(file,n,k,ps,nds,cnt,cond,vf,mf,snd,ls,fail);
+      Track_Path_in_Poset(file,n,k,ps,nds,cnt,cond,vf,mf,snd,pp_sols,fail);
       if not fail
-       then Append(sols,sols_last,ls.all);
+       then Concat(sols,sols_last,pp_sols);
       end if;
       ct := true;
     end Track_Path;
