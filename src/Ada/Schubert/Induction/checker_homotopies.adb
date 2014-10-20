@@ -279,6 +279,31 @@ package body Checker_Homotopies is
   end Trivial_Stay_Coordinates;
 
   procedure Trivial_Stay_Coordinates
+              ( n,k,r : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                sols : in out Solution_List) is
+
+    plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      y := Map(plocmap,ls.v);
+      Inverse_Row_Transformation(r,y);
+      Normalize_and_Reduce_to_Fit(qlocmap,y);
+      ls.v := Map(qlocmap,y);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Trivial_Stay_Coordinates;
+
+  procedure Trivial_Stay_Coordinates
               ( file : in file_type; n,k,r : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 x : in out Standard_Complex_Vectors.Vector ) is
@@ -315,6 +340,52 @@ package body Checker_Homotopies is
     Normalize_and_Reduce_to_Fit(qlocmap,y);
     put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(qlocmap,y);
+  end Trivial_Stay_Coordinates;
+
+  procedure Trivial_Stay_Coordinates
+              ( file : in file_type; n,k,r : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                sols : in out Solution_List ) is
+
+    plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    inrowrp1 : integer32 := 0;
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    put(file,"Trivial Stay with critical row = "); put(file,r,1);
+    put_line(file,".");
+    put_line(file,"The previous localization map : "); put(file,plocmap);
+    put_line(file,"The current localization map : "); put(file,qlocmap);
+    put(file,"rows of white checkers : "); put(file,qr); new_line(file);
+    for j in qlocmap'range(2) loop
+      if qlocmap(r+1,j) = 1 then
+        inrowrp1 := j;
+      end if;
+    end loop;
+    if inrowrp1 = 0 then
+      put(file,"no white checker in row ");
+    else
+      put(file,"white checker "); 
+      put(file,inrowrp1,1); put(file," in row ");
+    end if;
+    put(file,r+1,1); new_line(file);
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      y := Map(plocmap,ls.v);
+      put_line(file,"the given solution plane :"); put(file,y,3);
+      Inverse_Row_Transformation(r,y);
+      put_line(file,"after the inverse transformation :"); put(file,y,3);
+      Normalize_and_Reduce_to_Fit(qlocmap,y);
+      put_line(file,"The transformed plane :"); put(file,y,3);
+      ls.v := Map(qlocmap,y);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+    end loop;
   end Trivial_Stay_Coordinates;
 
   function Eval ( m : Standard_Complex_Poly_Matrices.Matrix;
@@ -357,6 +428,37 @@ package body Checker_Homotopies is
   end Homotopy_Stay_Coordinates;
 
   procedure Homotopy_Stay_Coordinates
+              ( n,k,r : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                sols : in out Solution_List) is
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      declare
+        xt : Standard_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
+      begin
+        xt(ls.v'range) := ls.v;
+        xt(xt'last) := Create(1.0);
+        y := Eval(xtm,xt);
+      end;
+      Inverse_Row_Transformation(mf,y);
+      Normalize_and_Reduce_to_Fit(locmap,y);
+      ls.v := Map(locmap,y);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Homotopy_Stay_Coordinates;
+
+  procedure Homotopy_Stay_Coordinates
               ( file : in file_type; n,k,r : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
                 mf : in Standard_Complex_Matrices.Matrix;
@@ -384,6 +486,46 @@ package body Checker_Homotopies is
     Normalize_and_Reduce_to_Fit(locmap,y);
     put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(locmap,y);
+  end Homotopy_Stay_Coordinates;
+
+  procedure Homotopy_Stay_Coordinates
+              ( file : in file_type; n,k,r : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                sols : in out Solution_List ) is
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    put(file,"Homotopy Stay with critical row = "); put(file,r,1);
+    put_line(file,".");
+    put_line(file,"The localization map : "); put(file,locmap);
+    put_line(file,"The matrix xtm : "); put(file,xtm);
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      declare
+        xt : Standard_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
+      begin
+        xt(ls.v'range) := ls.v;
+        xt(xt'last) := Create(1.0);
+        put_line(file,"The vector xt : "); put_line(file,xt);
+        y := Eval(xtm,xt);
+      end;
+      put_line(file,"The matrix xtm evaluated at the solution : ");
+      put(file,y,2);
+      Inverse_Row_Transformation(mf,y);
+      put_line(file,"after the inverse transformation :"); put(file,y,3);
+      Normalize_and_Reduce_to_Fit(locmap,y);
+      put_line(file,"The transformed plane :"); put(file,y,3);
+      ls.v := Map(locmap,y);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+    end loop;
   end Homotopy_Stay_Coordinates;
 
   procedure Update_Swap_Column
@@ -422,6 +564,38 @@ package body Checker_Homotopies is
   end First_Swap_Coordinates;
 
   procedure First_Swap_Coordinates
+              ( n,k,r,big_r,dc,s : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                sols : in out Solution_List ) is
+
+    qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      declare
+        xt : Standard_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
+      begin
+        xt(ls.v'range) := ls.v;
+        xt(xt'last) := Create(1.0);
+        y := Eval(xtm,xt);
+      end;
+      Inverse_Row_Transformation(mf,y);
+      Update_Swap_Column(y,s);
+      Normalize_and_Reduce_to_Fit(qlocmap,y);
+      ls.v := Map(qlocmap,y);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end First_Swap_Coordinates;
+
+  procedure First_Swap_Coordinates
               ( file : in file_type; n,k,r,big_r,dc,s : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 mf : in Standard_Complex_Matrices.Matrix;
@@ -457,6 +631,52 @@ package body Checker_Homotopies is
     x := Map(qlocmap,y);
   end First_Swap_Coordinates;
 
+  procedure First_Swap_Coordinates
+              ( file : in file_type; n,k,r,big_r,dc,s : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                sols : in out Solution_List ) is
+
+    plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    put(file,"Swap type I with critical row = "); put(file,r,1);
+    put(file,", R = "); put(file,big_r,1);
+    put(file," and s = "); put(file,s,1); put_line(file,".");
+    put_line(file,"The start localization map : "); put(file,plocmap);
+    put_line(file,"The target localization map : "); put(file,qlocmap);
+    put_line(file,"The matrix xtm : "); put(file,xtm);
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      declare
+        xt : Standard_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
+      begin
+        xt(ls.v'range) := ls.v;
+        xt(xt'last) := Create(1.0);
+        put_line(file,"The vector xt : "); put_line(file,xt);
+        y := Eval(xtm,xt);
+      end;
+      put_line(file,"The matrix xtm evaluated at the solution : ");
+      put(file,y,2);
+      Inverse_Row_Transformation(mf,y);
+      put_line(file,"after the inverse transformation :"); put(file,y,3);
+      Update_Swap_Column(y,s);
+      put_line(file,"After updating the swap column :"); put(file,y,3);
+      Normalize_and_Reduce_to_Fit(qlocmap,y);
+      put_line(file,"The transformed plane :"); put(file,y,3);
+      ls.v := Map(qlocmap,y);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end First_Swap_Coordinates;
+
   procedure Second_Swap_Coordinates
               ( n,k,r,s : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
@@ -466,7 +686,7 @@ package body Checker_Homotopies is
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
-    y : Standard_Complex_Matrices.Matrix(1..n,1..k) := Map(locmap,x);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k); -- := Map(locmap,x);
     xt : Standard_Complex_Vectors.Vector(x'first..x'last+1);
 
   begin
@@ -480,6 +700,38 @@ package body Checker_Homotopies is
   end Second_Swap_Coordinates;
 
   procedure Second_Swap_Coordinates
+              ( n,k,r,s : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                sols : in out Solution_List ) is
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k); -- := Map(locmap,x);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      declare
+        xt : Standard_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
+      begin
+        xt(ls.v'range) := ls.v;
+        xt(xt'last) := Create(1.0);
+        y := Eval(xtm,xt);
+      end;
+      Inverse_Row_Transformation(mf,y);
+      Update_Swap_Column(y,s);
+      Normalize_and_Reduce_to_Fit(locmap,y);
+      ls.v := Map(locmap,y);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Second_Swap_Coordinates;
+
+  procedure Second_Swap_Coordinates
               ( file : in file_type; n,k,r,s : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
                 mf : in Standard_Complex_Matrices.Matrix;
@@ -488,7 +740,7 @@ package body Checker_Homotopies is
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
-    y : Standard_Complex_Matrices.Matrix(1..n,1..k) := Map(locmap,x);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k); -- := Map(locmap,x);
     xt : Standard_Complex_Vectors.Vector(x'first..x'last+1);
 
   begin
@@ -509,6 +761,48 @@ package body Checker_Homotopies is
     Normalize_and_Reduce_to_Fit(locmap,y);
     put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(locmap,y);
+  end Second_Swap_Coordinates;
+
+  procedure Second_Swap_Coordinates
+              ( file : in file_type; n,k,r,s : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                sols : in out Solution_List ) is
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+    y : Standard_Complex_Matrices.Matrix(1..n,1..k); -- := Map(locmap,x);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    put(file,"Swap type II with critical row = "); put(file,r,1);
+    put(file," and s = "); put(file,s,1); put_line(file,".");
+    put_line(file,"The localization map : "); put(file,locmap);
+    put_line(file,"The matrix xtm : "); put(file,xtm);
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      declare
+        xt : Standard_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
+      begin
+        xt(ls.v'range) := ls.v;
+        xt(xt'last) := Create(1.0);
+        put_line(file,"The vector xt : "); put_line(file,xt);
+        y := Eval(xtm,xt);
+      end;
+      put_line(file,"The matrix xtm evaluated at the solution : ");
+      put(file,y,2);
+      Inverse_Row_Transformation(mf,y);
+      put_line(file,"after the inverse transformation :"); put(file,y,3);
+      Update_Swap_Column(y,s);
+      put_line(file,"After updating the swap column :"); put(file,y,3);
+      Normalize_and_Reduce_to_Fit(locmap,y);
+      put_line(file,"The transformed plane :"); put(file,y,3);
+      ls.v := Map(locmap,y);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+    end loop;
   end Second_Swap_Coordinates;
 
 -- PART III : coordinate definitions for the stay and swap homotopies

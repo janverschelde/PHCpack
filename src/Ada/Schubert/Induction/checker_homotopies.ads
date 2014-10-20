@@ -6,6 +6,7 @@ with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
 with Standard_Complex_Poly_Matrices;
+with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 
 package Checker_Homotopies is
 
@@ -195,6 +196,35 @@ package Checker_Homotopies is
   -- ON RETURN :
   --   x        solution with transformed coordinates.
 
+  procedure Trivial_Stay_Coordinates
+              ( n,k,r : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                sols : in out Solution_List );
+  procedure Trivial_Stay_Coordinates
+              ( file : in file_type; n,k,r : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                sols : in out Solution_List );
+
+  -- DESCRIPTION :
+  --   Performs the change of variables on the solutions in sols
+  --   in case of a trivial stay case when no homotopy is needed.
+
+  -- ON ENTRY :
+  --   file     for intermediate output, if omitted, then silent version;
+  --   n        ambient dimension;
+  --   k        dimension of the solution plane;
+  --   r        the critical row;
+  --   q        parent permutation in the poset used for target;
+  --   p        current permutation in the poset used for start;
+  --   qr       position of the rows of the white checkers with q;
+  --   qc       position of the columns of the white checkers with q;
+  --   pr       position of the rows of the white checkers with p;
+  --   pc       position of the columns of the white checkers with p;
+  --   sols     list of current solutions.
+
+  -- ON RETURN :
+  --   sols     solutions with transformed coordinates.
+
   procedure Homotopy_Stay_Coordinates
               ( n,k,r : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
@@ -226,6 +256,38 @@ package Checker_Homotopies is
 
   -- ON RETURN :
   --   x        solution with transformed coordinates.
+
+  procedure Homotopy_Stay_Coordinates
+              ( n,k,r : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                sols : in out Solution_List );
+  procedure Homotopy_Stay_Coordinates
+              ( file : in file_type; n,k,r : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                sols : in out Solution_List );
+
+  -- DESCRIPTION :
+  --   Performs the change of variables on the solutions in the list sols
+  --   after a homotopy in the stay case.
+
+  -- ON ENTRY :
+  --   file     for intermediate output, if omitted, then silent version;
+  --   n        ambient dimension;
+  --   k        dimension of the solution plane;
+  --   r        the critical row;
+  --   p        permutation indicates location of black checkers;
+  --   rows     row indices for the location of the white checkers;
+  --   cols     column indices for the location of the white checkers;
+  --   mf       the coordinates of the new moving flag;
+  --   xtm      localization pattern extended with t;
+  --   sols     current solutions.
+
+  -- ON RETURN :
+  --   sols     list of solutions with transformed coordinates.
 
   procedure First_Swap_Coordinates
               ( n,k,r,big_r,dc,s : in integer32;
@@ -265,6 +327,44 @@ package Checker_Homotopies is
   -- ON RETURN :
   --   x        solution with transformed coordinates.
 
+  procedure First_Swap_Coordinates
+              ( n,k,r,big_r,dc,s : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                sols : in out Solution_List );
+  procedure First_Swap_Coordinates
+              ( file : in file_type; n,k,r,big_r,dc,s : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                sols : in out Solution_List );
+
+  -- DESCRIPTION :
+  --   Performs the change of variables on the solutions in the list sols
+  --   after a swap homotopy of the first type.
+
+  -- ON ENTRY :
+  --   file     for intermediate output, if omitted, then silent version;
+  --   n        ambient dimension;
+  --   k        dimension of the solution plane;
+  --   r        the critical row;
+  --   big_r    row of the swapped white checker, R > r + 1;
+  --   dc       index of the descending black checker in specializing poset;
+  --   s        columns s and s+1 in x are swapped;
+  --   q        parent permutation in the poset used for target;
+  --   p        current permutation in the poset used for start;
+  --   qr       position of the rows of the white checkers with q;
+  --   qc       position of the columns of the white checkers with q;
+  --   pr       position of the rows of the white checkers with p;
+  --   pc       position of the columns of the white checkers with p;
+  --   mf       the coordinates of the new moving flag;
+  --   xtm      localization pattern extended with t;
+  --   sols     current solutions.
+
+  -- ON RETURN :
+  --   sols     list of solutions with transformed coordinates.
+
   procedure Second_Swap_Coordinates
               ( n,k,r,s : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
@@ -297,6 +397,39 @@ package Checker_Homotopies is
 
   -- ON RETURN :
   --   x        solution with transformed coordinates.
+
+  procedure Second_Swap_Coordinates
+              ( n,k,r,s : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                sols : in out Solution_List );
+  procedure Second_Swap_Coordinates
+              ( file : in file_type; n,k,r,s : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in Standard_Complex_Matrices.Matrix;
+                xtm : in Standard_Complex_Poly_Matrices.Matrix;
+                sols : in out Solution_List );
+
+  -- DESCRIPTION :
+  --   Performs the change of variables on the solutions in the list sols
+  --   after a swap homotopy of the second type.
+
+  -- ON ENTRY :
+  --   file     for intermediate output, if omitted, then silent version;
+  --   n        ambient dimension;
+  --   k        dimension of the solution plane;
+  --   r        the critical row;
+  --   s        columns s and s+1 in x are swapped;
+  --   p        permutation indicates location of black checkers;
+  --   rows     row indices for the location of the white checkers;
+  --   cols     column indices for the location of the white checkers;
+  --   mf       the coordinates of the new moving flag;
+  --   xtm      localization pattern extended with t;
+  --   sols     current solutions.
+
+  -- ON RETURN :
+  --   sols     list of solutions with transformed coordinates.
 
 -- PART III : coordinate definitions for the stay and swap homotopies
 

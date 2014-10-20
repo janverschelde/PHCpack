@@ -1,3 +1,6 @@
+Mon 20 Oct 2014 : extended checker_homotopies with inverse transformations
+  on solution lists after the 3 types of Littlewood-Richardson homotopies.
+
 Sun 19 Oct 2014 : added more checks in moving_flag_continuation and changes
   in resolve_schubert_problems.adb.  Number of flags given on input to a
   checker game depends on the level in the intersection poset.
