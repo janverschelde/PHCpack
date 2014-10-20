@@ -233,8 +233,19 @@ package body Resolve_Schubert_Problems is
           put(file,childnode.coeff); put_line(file," ***");
           declare
             sols : Solution_List;
+            totalflags : constant natural32 := natural32(flags'length);
+            nbflags : constant integer32 := sps.m - level;
           begin
-            Track_All_Paths_in_Poset(file,n,k,node.ps,conds,flags,snd,sols);
+            put(file,"Calling Track_All_Paths_in_Posets with ");
+            put(file,totalflags,1); put(file," fixed flags; level = ");
+            put(file,level,1); 
+            put(file,"  sps.m = "); put(file,sps.m,1); put_line(file,".");
+            put(file,"nunber of flags = ");
+            put(file,nbflags,1); put_line(file,".");
+            Track_All_Paths_in_Poset
+              (file,n,k,node.ps,
+               conds(conds'last-nbflags+1..conds'last),
+               flags(flags'last-nbflags+1..flags'last),snd,sols);
             Concat(parent_snd.sols,parent_snd_last,sols);
           end;
         end if;

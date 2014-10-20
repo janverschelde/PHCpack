@@ -1,5 +1,6 @@
 Sun 19 Oct 2014 : added more checks in moving_flag_continuation and changes
-  in resolve_schubert_problems.adb.
+  in resolve_schubert_problems.adb.  Number of flags given on input to a
+  checker game depends on the level in the intersection poset.
 
 Sat 18 Oct 2014 : added routines in moving_flag_continuation to take the
   solution nodes at the previous level into account, as called in 
