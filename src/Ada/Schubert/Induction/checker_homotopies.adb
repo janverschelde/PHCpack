@@ -11,6 +11,7 @@ with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
 with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Functions;   use Standard_Complex_Poly_Functions;
 with Standard_Complex_Poly_Matrices_io; use Standard_Complex_Poly_Matrices_io;
+with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Standard_Matrix_Inversion;
 with Checker_Moves;                     use Checker_Moves;
 with Checker_Localization_Patterns;     use Checker_Localization_Patterns;
@@ -523,9 +524,11 @@ package body Checker_Homotopies is
       Normalize_and_Reduce_to_Fit(locmap,y);
       put_line(file,"The transformed plane :"); put(file,y,3);
       ls.v := Map(locmap,y);
-      Set_Head(tmp,ls);
+     -- Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
     end loop;
+    put_line(file,"The transformed solution list :");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
   end Homotopy_Stay_Coordinates;
 
   procedure Update_Swap_Column

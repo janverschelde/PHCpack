@@ -584,6 +584,8 @@ package body Moving_Flag_Continuation is
   begin
     put(file,"Transforming solution planes with critical row = ");
     put(file,ctr,1); put_line(file,".");
+    put_line(file,"The solution given to the Trivial_Stay_Coordinates : ");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     Checker_Homotopies.Trivial_Stay_Coordinates
       (file,n,k,ctr,q,p,qr,qc,pr,pc,sols);
     put_line(file,"Verifying after coordinate changes ...");
@@ -913,6 +915,7 @@ package body Moving_Flag_Continuation is
       Checker_Posets_io.Write(file,leaf.cols,cnd); put_line(file," ...");
       p := ps.black(ps.black'last).all;
       pr := leaf.rows; pc := leaf.cols;
+      Copy(snd.sols,sols);
       for i in path'first+1..path'last loop
         ptr := ps.black'last - i + 1;
         p := ps.black(ptr+1).all; pr := path(i-1).rows; pc := path(i-1).cols;
@@ -939,7 +942,6 @@ package body Moving_Flag_Continuation is
           (file,n,q,qr,qc,stay_child,homtp,ctr);
         Initialize_Symbol_Table(n,k,q,qr,qc,dim);
         ind := i-path'first-1; -- ind = 0 signals start solution
-        Copy(snd.sols,sols);
         if homtp = 0 then
           Trivial_Stay
             (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail);

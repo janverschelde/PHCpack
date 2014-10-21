@@ -1,3 +1,6 @@
+Tue 21 Oct 2014 : bug fix in moving_flag_continuation.adb with extra output
+  diagnostics in checker_homotopies.adb.
+
 Mon 20 Oct 2014 : extended checker_homotopies with inverse transformations
   on solution lists after the 3 types of Littlewood-Richardson homotopies.
   Extended moving_flag_continuation to work with lists of solutions,
