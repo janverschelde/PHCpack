@@ -148,6 +148,11 @@ package body Moving_Flag_Continuation is
     Track(file,xtsols,false,Create(1.0));
     tmp := sols;
     xtp := xtsols;
+    put_line(file,"In Call_Path_Trackers ...");
+    put(file,"Number of solutions in sols   : ");
+    put(file,Length_Of(sols),1); new_line(file);
+    put(file,"Number of solutions in xtsols : ");
+    put(file,Length_Of(xtsols),1); new_line(file);
     while not Is_Null(xtp) loop
       xtls := Head_Of(xtp);
       ls := Head_Of(tmp);
@@ -155,7 +160,7 @@ package body Moving_Flag_Continuation is
       ls.t := xtls.t;
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
-      xtp := Tail_Of(tmp);
+      xtp := Tail_Of(xtp);
     end loop;
     Standard_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
@@ -311,13 +316,31 @@ package body Moving_Flag_Continuation is
       sh0 := Eval(sh,Create(0.0),n+1);
       Reporting_Root_Refiner
         (file,sh0,xtsols,epsxa,epsfa,tolsing,numit,3,deflate,false);
+      put(file,"Number of solutions in xtsols : ");
+      put(file,Length_Of(xtsols),1); new_line(file);
+      put(file,"Number of solutions in sols   : ");
+      put(file,Length_Of(sols),1); new_line(file);
       Call_Path_Trackers(file,n,sh,xtsols,sols);
-      put(file,"The residuals of the end solution at original homotopy : ");
       tmp := xtsols;
+      Clear(sh0);
+      sh0 := Eval(sh,Create(1.0),n+1);
       while not Is_Null(tmp) loop
         ls := Head_Of(tmp);
-        y := Eval(h,ls.v); res := Max_Norm(y);
-        put(file,res,3); new_line(file); new_line(file);
+        put(file,"The residual of the end solution at squared homotopy  :");
+        yh := Eval(sh0,ls.v); res := Max_Norm(yh);
+        put(file,res,3); new_line(file);
+        put_line(file,"Evaluating the end solution at the original homotopy :");
+        declare
+          xt : Standard_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
+        begin
+          xt(ls.v'range) := ls.v;
+          xt(xt'last) := ls.t;
+          y := Eval(h,xt);
+        end;
+        put_line(file,y);
+        put(file,"The residual of the end solution at original homotopy :");
+        res := Max_Norm(y);
+        put(file,res,3); new_line(file);
         fail := (res > tolsing);
         tmp := Tail_Of(tmp);
       end loop;

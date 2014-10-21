@@ -2,6 +2,7 @@ Mon 20 Oct 2014 : extended checker_homotopies with inverse transformations
   on solution lists after the 3 types of Littlewood-Richardson homotopies.
   Extended moving_flag_continuation to work with lists of solutions,
   small change in resolve_schubert_problems.adb.
+  Bug fix in moving_flag_continuation.adb.
 
 Sun 19 Oct 2014 : added more checks in moving_flag_continuation and changes
   in resolve_schubert_problems.adb.  Number of flags given on input to a
