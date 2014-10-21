@@ -1,5 +1,6 @@
 Tue 21 Oct 2014 : bug fix in moving_flag_continuation.adb with extra output
-  diagnostics in checker_homotopies.adb.
+  diagnostics in checker_homotopies.adb.  Abort track path in poset in
+  moving_flag_continuation.adb if there are no start solutions, so no crash.
 
 Mon 20 Oct 2014 : extended checker_homotopies with inverse transformations
   on solution lists after the 3 types of Littlewood-Richardson homotopies.

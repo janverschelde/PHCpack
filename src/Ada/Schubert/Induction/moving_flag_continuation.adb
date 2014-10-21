@@ -901,7 +901,8 @@ package body Moving_Flag_Continuation is
       unhappy := true;
     else
       if Is_Null(snd.sols) then
-        put_line(file,"No start solutions ?");
+        put_line(file,"No start solutions ?  Abort track path in poset.");
+        return;
       else
         put(file,"In track path in poset, number of start solutions : ");
         put(file,Length_Of(snd.sols),1); put_line(file,".");
