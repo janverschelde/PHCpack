@@ -2,6 +2,7 @@ with Standard_Integer_Numbers;           use Standard_Integer_NUmbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
+with Standard_Complex_VecMats;
 
 package Flag_Transformations is
 
@@ -138,5 +139,31 @@ package Flag_Transformations is
   --   F        plays the same role as Move_to_Generic_Flag(n),
   --            although different random numbers are generated;
   --   rsd      is the outcome of Residual() function from above.
+
+-- FOR APPLICATION TO RESOLVE SCHUBERT PROBLEMS :
+
+  procedure Transform_Sequence
+              ( n : in integer32;
+                flags : in out Standard_Complex_VecMats.VecMat;
+                A,invA,sT : out Standard_Complex_VecMats.VecMat );
+
+  -- DESCRIPTION :
+  --   Applies a sequence of transformations to the given flags,
+  --   returns the matrices A, their inverses, and the transformations
+  --   on the solutions.
+
+  -- REQUIRED : A'range = invA'range = sT'range = flags'first..flags'last-1.
+
+  -- ON ENTRY :
+  --   n        the ambient dimensions;
+  --   flags    a sequence of flags in n-space.
+
+  -- ON RETURN :
+  --   flags    successively transformed flags;
+  --   A        a sequence of invertible transformation on the flags,
+  --            the matrix A(i) transformed flags(i);
+  --   invA     invA(i) is the inverse of A(i);
+  --   sT       a sequence of upper triangular matrices to transform
+  --            the corresponding solution planes that meet the flags.
 
 end Flag_Transformations;

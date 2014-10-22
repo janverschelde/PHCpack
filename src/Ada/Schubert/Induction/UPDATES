@@ -1,3 +1,6 @@
+Wed 22 Oct 2014 : added procedure to transform a sequence of flags in
+  flag_transformations.
+
 Tue 21 Oct 2014 : bug fix in moving_flag_continuation.adb with extra output
   diagnostics in checker_homotopies.adb.  Abort track path in poset in
   moving_flag_continuation.adb if there are no start solutions, so no crash.
