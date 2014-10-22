@@ -4,13 +4,16 @@ with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
-with Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Standard_Natural_Matrices;
 with Standard_Natural_Matrices_io;       use Standard_Natural_Matrices_io;
+with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
+with Checker_Moves;
 with Checker_Posets,Checker_Posets_io;   use Checker_Posets_io;
 with Checker_Localization_Patterns;
+with Checker_Homotopies;
+with Flag_Transformations;
 with Moving_Flag_Homotopies;             use Moving_Flag_Homotopies;
 with Moving_Flag_Continuation;
 
@@ -142,6 +145,49 @@ package body Resolve_Schubert_Problems is
     put(file,"The sum of all residuals : "); put(file,res,3); new_line(file);
   end Initialize_Solution_Nodes;
 
+  procedure Transform_Start_Solutions
+              ( file : in file_type; n,k : in integer32;
+                r_src,c_src,r_tgt,c_tgt : in Standard_Natural_Vectors.Vector;
+                tm : in Standard_Complex_Matrices.Matrix;
+                sols : in out Solution_List ) is
+
+     p : constant Standard_Natural_Vectors.Vector
+       := Checker_Moves.Identity_Permutation(natural32(n));
+     q : constant Standard_Natural_Vectors.Vector
+       := Checker_Moves.Reverse_Permutation(natural32(n));
+     src_pat : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+       := Checker_Localization_Patterns.Column_Pattern(n,k,p,r_src,c_src);
+     tgt_pat : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+       := Checker_Localization_Patterns.Column_Pattern(n,k,q,r_tgt,c_tgt);
+     tmp : Solution_List := sols;
+     ls : Link_to_Solution;
+     x,y : Standard_Complex_Matrices.Matrix(1..n,1..k);
+
+     use Standard_Complex_Matrices;
+
+  begin
+    put(file,"At source : ");
+    put(file," p = "); put(file,p);
+    put(file," r = "); put(file,r_src);
+    put(file," c = "); put(file,c_src); new_line(file);
+    put(file,"At target : ");
+    put(file," p = "); put(file,q);
+    put(file," r = "); put(file,r_tgt);
+    put(file," c = "); put(file,c_tgt); new_line(file);
+    put_line(file,"The pattern at the source : "); put(file,src_pat);
+    put_line(file,"The pattern at the target : "); put(file,tgt_pat);
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      x := Checker_Localization_Patterns.Map(src_pat,ls.v);
+      put_line(file,"The solution plane at the source : "); put(file,x,3);
+      y := tm*x;
+      put_line(file,"After the transformation : "); put(file,y,3);
+      Checker_Homotopies.Normalize_and_Reduce_to_Fit(tgt_pat,y);
+      put_line(file,"The transformed plane at target :"); put(file,y,3);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Transform_Start_Solutions;
+
   procedure Connect_Checker_Posets_to_Count
               ( file : in file_type;
                 pl : in Poset_List; nd : in Poset_Node ) is
@@ -187,6 +233,7 @@ package body Resolve_Schubert_Problems is
   procedure Connect_Checker_Posets_to_Track
               ( file : in file_type; n,k,level : in integer32;
                 pl : in Poset_List; snd : in Link_to_Solution_Node;
+                tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Solution_Poset;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in out Standard_Complex_VecMats.VecMat ) is
@@ -209,16 +256,31 @@ package body Resolve_Schubert_Problems is
                 := child.white(child.white'first);
       childconds : constant Standard_Natural_Vectors.Vector
                  := childnode.rows;     -- root
+      childcols : constant Standard_Natural_Vectors.Vector
+                := childnode.cols;
       gamenode : Checker_Posets.Link_to_Node
                := node.ps.white(node.ps.white'last);
       parentconds : constant Standard_Natural_Vectors.Vector
                   := node.ps.white(node.ps.white'last).cols; -- leaf
+      parentrows : constant Standard_Natural_Vectors.Vector
+                 := node.ps.white(node.ps.white'last).rows;
 
+      use Standard_Complex_Matrices;
       use Checker_Posets,Moving_Flag_Continuation;
 
     begin
       put(file,"Number of start solutions at child : ");
       put(file,Length_Of(snd.sols),1); new_line(file);
+      if tmfo /= null then
+        put_line(file,"Transforming the start solutions ...");
+        put(file,"cols at leaf of parent : ");
+        put(file,parentconds); new_line(file);
+        put(file,"rows at leaf of parent : ");
+        put(file,parentrows); new_line(file);
+        Transform_Start_Solutions
+          (file,n,k,childconds,childcols,parentrows,parentconds,
+           tmfo.all,snd.sols);
+      end if;
       if parent_snd = null then
         put_line(file,"No solution node at parent found!"); return;
       else
@@ -311,8 +373,18 @@ package body Resolve_Schubert_Problems is
     snd : Link_to_Solution_Node;
     lpn : Link_to_Poset_Node;
     residual : double_float;
+    A,invA,sT : Standard_Complex_VecMats.VecMat(flags'first..flags'last-1);
+    sTind : integer32; -- index of current transformation matrix in sT
+    trans : Standard_Complex_Matrices.Link_to_Matrix := null;
 
   begin
+    if flags'last <= 1 then
+      sTind := 0;
+    else
+      sTind := flags'last; -- always decrement before use
+      put_line(file,"transforming the sequence of flags ...");
+      Flag_Transformations.Transform_Sequence(n,flags,A,invA,sT);
+    end if;
     Initialize_Leaves(ips.nodes(ips.m));
     for i in 1..ips.m-1 loop
       Initialize_Nodes(ips.nodes(i));
@@ -338,10 +410,13 @@ package body Resolve_Schubert_Problems is
         if i > 1 then
           put_line(file,"-> solving at the leaves of its parents :");
           Connect_Checker_Posets_to_Track
-            (file,n,k,i-1,ips.nodes(i-1),snd,sps,conds,flags);
+            (file,n,k,i-1,ips.nodes(i-1),snd,trans,sps,conds,flags);
         end if;
         tmp := Tail_Of(tmp);
       end loop;
+      if sTind > 1  -- set transform for next level
+       then sTind := sTind - 1; trans := sT(sTind);
+      end if;
       sps.level := i; -- note that level of completion goes in reverse!
     end loop;
     put(file,"The formal root count : ");

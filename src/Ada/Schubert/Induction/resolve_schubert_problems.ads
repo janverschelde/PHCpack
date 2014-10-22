@@ -2,8 +2,10 @@ with text_io;                            use text_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
+with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
 with Standard_Complex_Vectors;
+with Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Brackets;                           use Brackets;
@@ -62,6 +64,31 @@ package Resolve_Schubert_Problems is
   --            conditions imposed by the brackets in the poset,
   --            the brackets in cond and the fixed flags.
 
+  procedure Transform_Start_Solutions
+              ( file : in file_type; n,k : in integer32;
+                r_src,c_src,r_tgt,c_tgt : in Standard_Natural_Vectors.Vector;
+                tm : in Standard_Complex_Matrices.Matrix;
+                sols : in out Solution_List );
+
+  -- DESCRIPTION :
+  --   Applies the tm transformation to all solutions and column reduces
+  --   the result to fit in the pattern defined by rows and cols.
+
+  -- ON ENTRY :
+  --   file     for intermediate output and diagnostics;
+  --   n        ambient dimension;
+  --   k        dimension of the solution plane
+  --   r_src    rows of the conditions at the source: incoming solutions;
+  --   c_src    columns of the conditions at the source;
+  --   r_src    rows of the conditions at the target: transformed solutions;
+  --   c_src    columns of the conditions at the target;
+  --   tm       transformation matrix, equals T1*M;
+  --   sols     solutions that fit the pattern as defined by r_src, c_src.
+
+  -- ON RETURN :
+  --   sols     transformed solutions that fit the pattern prescribed by
+  --            r_tgt and c_tgt.
+
   procedure Connect_Checker_Posets_to_Count
               ( file : in file_type;
                 pl : in Poset_List; nd : in Poset_Node );
@@ -81,6 +108,7 @@ package Resolve_Schubert_Problems is
   procedure Connect_Checker_Posets_to_Track
               ( file : in file_type; n,k,level : in integer32;
                 pl : in Poset_List; snd : in Link_to_Solution_Node;
+                tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Solution_Poset;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in out Standard_Complex_VecMats.VecMat );
@@ -97,6 +125,7 @@ package Resolve_Schubert_Problems is
   --   pl       list of checker posets at some level of the parent nodes
   --            to the node nd in the intersection poset;
   --   snd      solution node that contains the poset of the child;
+  --   tmfo     transformation for use at start solution if not null;
   --   sps      solution poset constructed up to the proper level;
   --   conds    conditions on the current fixed flags;
   --   flags    current fixed flags.
