@@ -156,12 +156,14 @@ package body Resolve_Schubert_Problems is
      q : constant Standard_Natural_Vectors.Vector
        := Checker_Moves.Reverse_Permutation(natural32(n));
      src_pat : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
-       := Checker_Localization_Patterns.Column_Pattern(n,k,p,r_src,c_src);
+       := Checker_Localization_Patterns.Column_Pattern(n,k,q,r_src,c_src);
      tgt_pat : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
        := Checker_Localization_Patterns.Column_Pattern(n,k,q,r_tgt,c_tgt);
      tmp : Solution_List := sols;
      ls : Link_to_Solution;
      x,y : Standard_Complex_Matrices.Matrix(1..n,1..k);
+     dim : constant natural32
+         := Checker_Localization_Patterns.Degree_of_Freedom(tgt_pat);
 
      use Standard_Complex_Matrices;
 
@@ -184,6 +186,21 @@ package body Resolve_Schubert_Problems is
       put_line(file,"After the transformation : "); put(file,y,3);
       Checker_Homotopies.Normalize_and_Reduce_to_Fit(tgt_pat,y);
       put_line(file,"The transformed plane at target :"); put(file,y,3);
+      declare
+        z : constant Standard_Complex_Vectors.Vector(1..integer32(dim))
+          := Checker_Localization_Patterns.Map(tgt_pat,y);
+        s : Solution(integer32(dim));
+      begin
+        s.t := ls.t;
+        s.m := ls.m;
+        s.v := z;
+        s.err := ls.err;
+        s.rco := ls.rco;
+        s.res := ls.res;
+        Clear(ls);
+        ls := new Solution'(s);
+        Set_Head(tmp,ls);
+      end;
       tmp := Tail_Of(tmp);
     end loop;
   end Transform_Start_Solutions;
@@ -256,8 +273,8 @@ package body Resolve_Schubert_Problems is
                 := child.white(child.white'first);
       childconds : constant Standard_Natural_Vectors.Vector
                  := childnode.rows;     -- root
-      childcols : constant Standard_Natural_Vectors.Vector
-                := childnode.cols;
+      childrows : constant Standard_Natural_Vectors.Vector
+                := Flip(childconds);
       gamenode : Checker_Posets.Link_to_Node
                := node.ps.white(node.ps.white'last);
       parentconds : constant Standard_Natural_Vectors.Vector
@@ -271,28 +288,28 @@ package body Resolve_Schubert_Problems is
     begin
       put(file,"Number of start solutions at child : ");
       put(file,Length_Of(snd.sols),1); new_line(file);
-      if tmfo /= null then
-        put_line(file,"Transforming the start solutions ...");
-        put(file,"cols at leaf of parent : ");
-        put(file,parentconds); new_line(file);
-        put(file,"rows at leaf of parent : ");
-        put(file,parentrows); new_line(file);
-        Transform_Start_Solutions
-          (file,n,k,childconds,childcols,parentrows,parentconds,
-           tmfo.all,snd.sols);
-      end if;
-      if parent_snd = null then
-        put_line(file,"No solution node at parent found!"); return;
-      else
-        put(file,"Number of solutions at parent node : ");
-        put(file,Length_Of(parent_snd.sols),1); put_line(file,".");
-        parent_snd_last := parent_snd.sols;
-      end if;
+     -- if parent_snd = null then
+     --   put_line(file,"No solution node at parent found!"); return;
+     -- else
+     --   put(file,"Number of solutions at parent node : ");
+     --   put(file,Length_Of(parent_snd.sols),1); put_line(file,".");
+      parent_snd_last := parent_snd.sols;
+     -- end if;
       loop
         if Standard_Natural_Vectors.Equal(gamenode.cols,childconds) then
           Add(gamenode.coeff,childnode.coeff);
           put(file,"*** number of paths from child to the parent : ");
           put(file,childnode.coeff); put_line(file," ***");
+          if tmfo /= null then
+            put_line(file,"Transforming the start solutions ...");
+            put(file,"cols at leaf of parent : ");
+            put(file,parentconds); new_line(file);
+            put(file,"rows at leaf of parent : ");
+            put(file,parentrows); new_line(file);
+            Transform_Start_Solutions
+              (file,n,k,childrows,childconds,Flip(gamenode.cols),gamenode.cols,
+               tmfo.all,snd.sols);
+          end if;
           declare
             sols : Solution_List;
             totalflags : constant natural32 := natural32(flags'length);

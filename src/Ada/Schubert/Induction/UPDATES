@@ -1,6 +1,7 @@
 Wed 22 Oct 2014 : added procedure to transform a sequence of flags in
   flag_transformations.  Applied the transformations to the start solutions
-  in resolve_schubert_problems.
+  in resolve_schubert_problems.  Linked up nodes at the leaves of the parent
+  correctly to the nodes at the roots of the children.
 
 Tue 21 Oct 2014 : bug fix in moving_flag_continuation.adb with extra output
   diagnostics in checker_homotopies.adb.  Abort track path in poset in
