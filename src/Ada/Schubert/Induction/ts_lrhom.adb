@@ -11,7 +11,9 @@ with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Standard_Natural_VecVecs;
 with Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
+with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Brackets;                           use Brackets;
 with Bracket_Monomials;                  use Bracket_Monomials;
 with Bracket_Monomials_io;               use Bracket_Monomials_io;
@@ -23,6 +25,7 @@ with Intersection_Posets_io;             use Intersection_Posets_io;
 with Moving_Flag_Homotopies;
 with Intersection_Solution_Posets;       use Intersection_Solution_Posets;
 with Resolve_Schubert_Problems;          use Resolve_Schubert_Problems;
+with Drivers_for_Schubert_Induction;     use Drivers_for_Schubert_Induction;
 
 procedure ts_lrhom is
 
@@ -319,6 +322,21 @@ procedure ts_lrhom is
     put_line(" done.");
   end Make_Solution_Poset;
 
+  function Bracket_to_Vector
+             ( b : Bracket ) return Standard_Natural_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Converts the bracket to a vector of standard natural numbers.
+
+    res : Standard_Natural_Vectors.Vector(b'range);
+
+  begin
+    for i in b'range loop
+      res(i) := b(i);
+    end loop;
+    return res;
+  end Bracket_to_Vector;
+
   function Remaining_Intersection_Conditions
              ( b : Array_of_Brackets )
              return Standard_Natural_VecVecs.VecVec is
@@ -365,9 +383,18 @@ procedure ts_lrhom is
     ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
     sps : Solution_Poset(ips.m) := Create(ips);
     top_roco,bottom_roco : Natural_Number;
+    q : constant Standard_Natural_Vectors.Vector
+      := Identity_Permutation(natural32(n));
+    rows : constant Standard_Natural_Vectors.Vector
+         := Bracket_to_Vector(cnd(cnd'first).all);
+    cols : constant Standard_Natural_Vectors.Vector
+         := Bracket_to_Vector(cnd(cnd'first+1).all);
     conds : Standard_Natural_VecVecs.VecVec(1..nbc-2)
           := Remaining_Intersection_Conditions(cnd);
+    link2conds : constant Standard_Natural_VecVecs.Link_to_VecVec
+               := new Standard_Natural_VecVecs.VecVec'(conds);
     flags : Standard_Complex_VecMats.VecMat(1..nbc-2);
+    fsys : Link_to_Poly_Sys;
     sols : Solution_List;
 
   begin
@@ -394,6 +421,12 @@ procedure ts_lrhom is
     put_line("See the output file for results ...");
     new_line;
     Resolve(file,n,k,ips,sps,conds,flags,sols);
+    Write_Results(file,n,k,q,rows,cols,link2conds,flags,sols,fsys);
+   -- if Length_Of(sols) > 0 then
+   --   new_line(file);
+   --   put_line(file,"THE SOLUTIONS :");
+   --   put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+   -- end if;
   end Resolve_Schubert_Problem;
 
   procedure Main is

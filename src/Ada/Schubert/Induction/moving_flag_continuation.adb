@@ -957,6 +957,7 @@ package body Moving_Flag_Continuation is
         if fail then
           put_line(file,"no longer a valid solution, abort tracking");
           new_line(file);
+          unhappy := true; -- prevent from being concatenated
           exit;
         end if;
       end loop;

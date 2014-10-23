@@ -314,7 +314,8 @@ package body Resolve_Schubert_Problems is
             put(file,"cols at game node at root : ");
             Transform_Start_Solutions
               (file,n,k,childnode.rows,childnode.cols, -- childconds,
-               Flip(gamenode.cols),gamenode.cols,
+              gamenode.rows,gamenode.cols,
+              -- Flip(gamenode.cols),gamenode.cols,
                tmfo.all,snd.sols);
           end if;
           declare
@@ -390,7 +391,7 @@ package body Resolve_Schubert_Problems is
                 ips : in out Intersection_Poset;
                 sps : in out Solution_Poset;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in out Standard_Complex_VecMats.VecMat;
+                flags : in Standard_Complex_VecMats.VecMat;
                 sols : out Solution_List ) is
 
     tmp : Solnode_List;
@@ -400,14 +401,26 @@ package body Resolve_Schubert_Problems is
     A,invA,sT : Standard_Complex_VecMats.VecMat(flags'first..flags'last-1);
     sTind : integer32; -- index of current transformation matrix in sT
     trans : Standard_Complex_Matrices.Link_to_Matrix := null;
+    workflags : Standard_Complex_VecMats.VecMat(flags'range);
 
   begin
     if flags'last <= 1 then
       sTind := 0;
     else
+      Moving_Flag_Continuation.Copy_Flags(flags,workflags);
       sTind := flags'last; -- always decrement before use
       put_line(file,"transforming the sequence of flags ...");
-      Flag_Transformations.Transform_Sequence(n,flags,A,invA,sT);
+      put_line(file,"The flags before the transformation : ");
+      for i in workflags'range loop
+        put(file,"flag "); put(file,i,1); put_line(file," :");
+        put(file,workflags(i).all,2);
+      end loop;
+      Flag_Transformations.Transform_Sequence(n,workflags,A,invA,sT);
+      put_line(file,"The flags after the transformation : ");
+      for i in workflags'range loop
+        put(file,"flag "); put(file,i,1); put_line(file," :");
+        put(file,workflags(i).all,2);
+      end loop;
       for i in A'range loop
         declare
           use Standard_Complex_Matrices;
@@ -424,7 +437,7 @@ package body Resolve_Schubert_Problems is
     end loop;
     Initialize_Solution_Nodes(file,n,k,
       conds(conds'last..conds'last),
-      flags(flags'last..flags'last),sps.nodes(sps.m),residual);
+      workflags(flags'last..workflags'last),sps.nodes(sps.m),residual);
     for i in reverse 1..sps.m loop
       new_line(file);
       put(file,"Solving at level "); put(file,i,1); put_line(file," :");
@@ -443,12 +456,13 @@ package body Resolve_Schubert_Problems is
         if i > 1 then
           put_line(file,"-> solving at the leaves of its parents :");
           Connect_Checker_Posets_to_Track
-            (file,n,k,i-1,ips.nodes(i-1),snd,trans,sps,conds,flags);
+            (file,n,k,i-1,ips.nodes(i-1),snd,trans,sps,conds,workflags);
         end if;
         tmp := Tail_Of(tmp);
       end loop;
-      if sTind > 1  -- set transform for next level
-       then sTind := sTind - 1; trans := sT(sTind);
+      if sTind > 1 then -- set transform for next level
+        sTind := sTind - 1; trans := sT(sTind);
+        workflags(workflags'last).all := flags(flags'last).all; -- restore
       end if;
       sps.level := i; -- note that level of completion goes in reverse!
     end loop;

@@ -163,7 +163,7 @@ package Resolve_Schubert_Problems is
                 ips : in out Intersection_Poset;
                 sps : in out Solution_Poset;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in out Standard_Complex_VecMats.VecMat;
+                flags : in Standard_Complex_VecMats.VecMat;
                 sols : out Solution_List );
 
   -- DESCRIPTION :
@@ -190,8 +190,6 @@ package Resolve_Schubert_Problems is
   --   ips      intersection poset with Littlewood-Richardson coefficients,
   --            computed from the bottom leaves to the top root;
   --   sps      solution poset with at each level the corresponding solutions;
-  --   flags    to glue the intersection conditions, the linear spaces
-  --            have been multiplied with invertible matrices;
   --   sols     solutions to the Schubert problem, the length of
   --            this list must equal the formal root count.
  
