@@ -212,6 +212,14 @@ package Moving_Flag_Continuation is
   --   fail     true if all solutions evaluate to a residual that is
   --            higher than the fixed threshold of 1.0e-8.
 
+  procedure Copy_Flags ( src : in Standard_Complex_VecMats.VecMat;
+                         dst : in out Standard_Complex_VecMats.VecMat );
+
+  -- DESCRIPTION :
+  --   Copies the flags from source src to destination dst.
+
+  -- REQUIRED : dst'range = src'range.
+
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
