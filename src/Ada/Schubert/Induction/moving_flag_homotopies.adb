@@ -29,13 +29,16 @@ package body Moving_Flag_Homotopies is
 
   begin
     for j in 1..n loop
-      for i in 1..(n-j) loop
+      for i in 1..n loop
         res(i,j) := Random1;
-      end loop; 
-      res(n-j+1,j) := Create(1.0);
-      for i in (n-j+2)..n loop
-        res(i,j) := Create(0.0);
       end loop;
+     -- for i in 1..(n-j) loop
+     --   res(i,j) := Random1;
+     -- end loop; 
+     -- res(n-j+1,j) := Create(1.0);
+     -- for i in (n-j+2)..n loop
+     --   res(i,j) := Create(0.0);
+     -- end loop;
     end loop;
     return res;
   end Random_Flag;
