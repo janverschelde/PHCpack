@@ -8,6 +8,7 @@ with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Standard_Natural_Matrices;
 with Standard_Natural_Matrices_io;       use Standard_Natural_Matrices_io;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
+with Standard_Matrix_Inversion;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Checker_Moves;
 with Checker_Posets,Checker_Posets_io;   use Checker_Posets_io;
@@ -156,7 +157,7 @@ package body Resolve_Schubert_Problems is
      q : constant Standard_Natural_Vectors.Vector
        := Checker_Moves.Reverse_Permutation(natural32(n));
      src_pat : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
-       := Checker_Localization_Patterns.Column_Pattern(n,k,q,r_src,c_src);
+       := Checker_Localization_Patterns.Column_Pattern(n,k,p,r_src,c_src);
      tgt_pat : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
        := Checker_Localization_Patterns.Column_Pattern(n,k,q,r_tgt,c_tgt);
      tmp : Solution_List := sols;
@@ -164,10 +165,14 @@ package body Resolve_Schubert_Problems is
      x,y : Standard_Complex_Matrices.Matrix(1..n,1..k);
      dim : constant natural32
          := Checker_Localization_Patterns.Degree_of_Freedom(tgt_pat);
+    -- invtm : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+    --       := Standard_Matrix_Inversion.Inverse(tm);
 
      use Standard_Complex_Matrices;
 
   begin
+    put_line(file,"The transformation matrix :");
+    put(file,tm,3);
     put(file,"At source : ");
     put(file," p = "); put(file,p);
     put(file," r = "); put(file,r_src);
@@ -182,7 +187,7 @@ package body Resolve_Schubert_Problems is
       ls := Head_Of(tmp);
       x := Checker_Localization_Patterns.Map(src_pat,ls.v);
       put_line(file,"The solution plane at the source : "); put(file,x,3);
-      y := tm*x;
+      y := tm*x; --  y := invtm*x;
       put_line(file,"After the transformation : "); put(file,y,3);
       Checker_Homotopies.Normalize_and_Reduce_to_Fit(tgt_pat,y);
       put_line(file,"The transformed plane at target :"); put(file,y,3);
@@ -306,8 +311,10 @@ package body Resolve_Schubert_Problems is
             put(file,parentconds); new_line(file);
             put(file,"rows at leaf of parent : ");
             put(file,parentrows); new_line(file);
+            put(file,"cols at game node at root : ");
             Transform_Start_Solutions
-              (file,n,k,childrows,childconds,Flip(gamenode.cols),gamenode.cols,
+              (file,n,k,childnode.rows,childnode.cols, -- childconds,
+               Flip(gamenode.cols),gamenode.cols,
                tmfo.all,snd.sols);
           end if;
           declare
@@ -401,6 +408,15 @@ package body Resolve_Schubert_Problems is
       sTind := flags'last; -- always decrement before use
       put_line(file,"transforming the sequence of flags ...");
       Flag_Transformations.Transform_Sequence(n,flags,A,invA,sT);
+      for i in A'range loop
+        declare
+          use Standard_Complex_Matrices;
+          B : constant Matrix := A(i).all*Moving_Flag_Homotopies.Moved_Flag(n);
+        begin
+          put_line(file,"A*M :"); put(file,B,3);
+          put_line(file,"sT :"); put(file,sT(i).all,3);
+        end;
+      end loop;
     end if;
     Initialize_Leaves(ips.nodes(ips.m));
     for i in 1..ips.m-1 loop

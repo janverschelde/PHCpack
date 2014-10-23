@@ -1,5 +1,7 @@
 Thu 23 Oct 2014 : changed Random_Flag in moving_flag_homotopies.adb,
-  so the matrix is now a random dense matrix.
+  so the matrix is now a random dense matrix.  Fixed matching of localization
+  patterns when lining up the solutions from one level to the next in
+  resolve_schubert_problems.adb.
 
 Wed 22 Oct 2014 : added procedure to transform a sequence of flags in
   flag_transformations.  Applied the transformations to the start solutions
