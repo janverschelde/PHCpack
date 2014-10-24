@@ -239,6 +239,28 @@ package body Flag_Transformations is
 
 -- FOR APPLICATION TO RESOLVE SCHUBERT PROBLEMS :
 
+  procedure Transform_Sequence_with_Flag
+              ( n,i : in integer32;
+                flags : in out Standard_Complex_VecMats.VecMat;
+                A,invA,sT : out Standard_Complex_Matrices.Matrix ) is
+
+    moved : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+          := Moving_Flag_Homotopies.Moved_Flag(n);
+    idemat : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+           :=  Moving_Flag_Homotopies.Identity(n);
+    flag,T2 : Standard_Complex_Matrices.Matrix(1..n,1..n);
+
+    use Standard_Complex_Matrices;
+
+  begin
+    flag := flags(i).all;
+    Transform(n,moved,idemat,idemat,flag,A,sT,T2);
+    invA := Standard_Matrix_Inversion.Inverse(A);
+    for j in i+1..flags'last loop
+      flags(j).all := invA*flags(j).all;
+    end loop;
+  end Transform_Sequence_with_Flag;
+
   procedure Transform_Sequence
               ( n : in integer32;
                 flags : in out Standard_Complex_VecMats.VecMat;

@@ -142,6 +142,30 @@ package Flag_Transformations is
 
 -- FOR APPLICATION TO RESOLVE SCHUBERT PROBLEMS :
 
+  procedure Transform_Sequence_with_Flag
+              ( n,i : in integer32;
+                flags : in out Standard_Complex_VecMats.VecMat;
+                A,invA,sT : out Standard_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Takes the i-th flag in flags, that is flags(i), to transform
+  --   the pair (M, I) to (I, flags(i)).  Multiplies all flags that
+  --   appear with higher index than i with the inverse of A, in invA.
+
+  -- REQUIRED : i in f'flags'range.
+
+  -- ON ENTRY :
+  --   n        the ambient dimensions;
+  --   flags    a sequence of flags in n-space.
+
+  -- ON RETURN :
+  --   flags    flags(j) for j in i+1..flags'last are multiplied
+  --            with the inverse of A, in invA;
+  --   A        invertible transformation on flags;
+  --   invA     the inverse of A;
+  --   sT       equals A times the moved flag, for use to transform
+  --            the solutions to the transformed problem.
+
   procedure Transform_Sequence
               ( n : in integer32;
                 flags : in out Standard_Complex_VecMats.VecMat;
