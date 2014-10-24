@@ -873,7 +873,7 @@ package body Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
-                snd : in Link_to_Solution_Node; sols : out Solution_List;
+                start : in Solution_List; sols : out Solution_List;
                 unhappy : out boolean ) is
 
     leaf : constant Link_to_Node := path(path'first);
@@ -888,7 +888,6 @@ package body Moving_Flag_Continuation is
     dim,ptr,homtp,ctr,ind,fc : integer32;
     stay_child : boolean;
     fail : boolean := false;
-    ls : Link_to_Solution;
 
     use Standard_Complex_Matrices;
 
@@ -900,15 +899,14 @@ package body Moving_Flag_Continuation is
       put_line(file," is not happy.");
       unhappy := true;
     else
-      if Is_Null(snd.sols) then
+      if Is_Null(start) then
         put_line(file,"No start solutions ?  Abort track path in poset.");
         return;
       else
         put(file,"In track path in poset, number of start solutions : ");
-        put(file,Length_Of(snd.sols),1); put_line(file,".");
-        ls := Head_Of(snd.sols);
-        put_line(file,"The start solution :");
-        put(file,ls.all); new_line(file);
+        put(file,Length_Of(start),1); put_line(file,".");
+        put_line(file,"THE START SOLUTIONS :");
+        put(file,Length_Of(start),natural32(Head_Of(start).n),start);
       end if;
       unhappy := false;
       put(file,"Tracking path "); put(file,count,1);
@@ -916,7 +914,7 @@ package body Moving_Flag_Continuation is
       Checker_Posets_io.Write(file,leaf.cols,cnd); put_line(file," ...");
       p := ps.black(ps.black'last).all;
       pr := leaf.rows; pc := leaf.cols;
-      Copy(snd.sols,sols);
+      Copy(start,sols);
       for i in path'first+1..path'last loop
         ptr := ps.black'last - i + 1;
         p := ps.black(ptr+1).all; pr := path(i-1).rows; pc := path(i-1).cols;
@@ -995,9 +993,10 @@ package body Moving_Flag_Continuation is
 
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
+                child : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
-                snd : in Link_to_Solution_Node; sols : out Solution_List ) is
+                start : in Solution_List; sols : out Solution_List ) is
 
     cnt : integer32 := 0;
     sols_last : Solution_List := sols;
@@ -1007,12 +1006,23 @@ package body Moving_Flag_Continuation is
       mf : Standard_Complex_Matrices.Matrix(1..n,1..n) := Identity(n);
       pp_sols : Solution_List; -- solutions on path in poset
       fail : boolean;
+      leaf : constant Standard_Natural_Vectors.Vector := nds(nds'first).cols;
 
     begin
       cnt := cnt + 1;
-      Track_Path_in_Poset(file,n,k,ps,nds,cnt,cond,vf,mf,snd,pp_sols,fail);
-      if not fail
-       then Concat(sols,sols_last,pp_sols);
+      new_line(file);
+      put(file,"Examining match for path "); put(file,cnt,1);
+      put_line(file," ...");
+      put(file,"-> leaf : "); put(file,leaf);
+      put(file,"  child : "); put(file,child);
+      if not Standard_Natural_Vectors.Equal(leaf,child) then
+        put(file," no match, skip path "); put(file,cnt,1); new_line(file);
+      else
+        put(file," match at path "); put(file,cnt,1); new_line(file);
+        Track_Path_in_Poset(file,n,k,ps,nds,cnt,cond,vf,mf,start,pp_sols,fail);
+        if not fail
+         then Concat(sols,sols_last,pp_sols);
+        end if;
       end if;
       ct := true;
     end Track_Path;

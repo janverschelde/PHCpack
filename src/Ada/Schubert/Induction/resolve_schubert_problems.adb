@@ -286,6 +286,7 @@ package body Resolve_Schubert_Problems is
                   := node.ps.white(node.ps.white'last).cols; -- leaf
       parentrows : constant Standard_Natural_Vectors.Vector
                  := node.ps.white(node.ps.white'last).rows;
+      startsols : Solution_List;
 
       use Standard_Complex_Matrices;
       use Checker_Posets,Moving_Flag_Continuation;
@@ -305,6 +306,7 @@ package body Resolve_Schubert_Problems is
           Add(gamenode.coeff,childnode.coeff);
           put(file,"*** number of paths from child to the parent : ");
           put(file,childnode.coeff); put_line(file," ***");
+          Copy(snd.sols,startsols);
           if tmfo /= null then
             put_line(file,"Transforming the start solutions ...");
             put(file,"cols at leaf of parent : ");
@@ -316,7 +318,7 @@ package body Resolve_Schubert_Problems is
               (file,n,k,childnode.rows,childnode.cols, -- childconds,
               gamenode.rows,gamenode.cols,
               -- Flip(gamenode.cols),gamenode.cols,
-               tmfo.all,snd.sols);
+               tmfo.all,startsols);
           end if;
           declare
             sols : Solution_List;
@@ -330,11 +332,12 @@ package body Resolve_Schubert_Problems is
             put(file,"number of flags = ");
             put(file,nbflags,1); put_line(file,".");
             Track_All_Paths_in_Poset
-              (file,n,k,node.ps,
+              (file,n,k,node.ps,childconds,
                conds(conds'last-nbflags+1..conds'last),
-               flags(flags'last-nbflags+1..flags'last),snd,sols);
+               flags(flags'last-nbflags+1..flags'last),startsols,sols);
             Concat(parent_snd.sols,parent_snd_last,sols);
           end;
+          Deep_Clear(startsols);
         end if;
         exit when (gamenode.next_sibling = null);
         gamenode := gamenode.next_sibling;
@@ -446,7 +449,8 @@ package body Resolve_Schubert_Problems is
         snd := Head_Of(tmp);
         lpn := snd.lpnd;
         Checker_Posets.Add_from_Leaves_to_Root(lpn.ps);
-        put(file,"-> poset node "); put(file,j,1);
+        put(file,"-> Level "); put(file,i,1); 
+        put(file," : poset node "); put(file,j,1);
         put_line(file,", root and leaves :");
         Write_Nodes_in_Poset(file,lpn.ps,lpn.ps.black'first);
         Write_Nodes_in_Poset(file,lpn.ps,lpn.ps.black'last);

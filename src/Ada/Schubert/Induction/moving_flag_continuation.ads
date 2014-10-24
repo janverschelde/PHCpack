@@ -422,7 +422,7 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
-                snd : in Link_to_Solution_Node; sols : out Solution_List;
+                start : in Solution_List; sols : out Solution_List;
                 unhappy : out boolean );
 
   -- DESCRIPTION :
@@ -440,7 +440,7 @@ package Moving_Flag_Continuation is
   --   vf       coordinates of general flags to keep fixed;
   --   mf       coordinates of the moving flag,
   --            should be equal to the identity matrix at the start;
-  --   snd      start solutions from the nodes at the previous level
+  --   start    the start solutions from the nodes at the previous level
   --            in the intersection poset.
 
   -- ON RETURN :
@@ -472,23 +472,27 @@ package Moving_Flag_Continuation is
 
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
+                child : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
-                snd : in Link_to_Solution_Node; sols : out Solution_List );
+                start : in Solution_List; sols : out Solution_List );
 
   -- DESCRIPTION :
   --   Tracks paths for one entire checker game in n-space,
-  --   with start solutions provided in the nodes.
+  --   with start solutions provided in the nodes,
+  --   but only those paths that start at the matching child condition.
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
   --   n        dimension of the ambient space, number of black checkers;
   --   k        dimension of the plane, number of white checkers;
   --   ps       checker poset for one game;
+  --   child    conditions on the child for which the start solutions
+  --            are provided and which should match leaves of ps;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
-  --   snd      solution nodes at the previous level with the start
-  --            solutions for the current level.
+  --   start    contains solutions of the previous level, transformed
+  --            to serve as the start solutions for the current level.
 
   -- ON RETURN :
   --   sols     all solutions at the end of the paths.
