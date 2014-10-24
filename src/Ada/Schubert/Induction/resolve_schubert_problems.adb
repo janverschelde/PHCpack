@@ -273,7 +273,6 @@ package body Resolve_Schubert_Problems is
                  := Retrieve(sps.nodes(level),
                              Checker_Posets.Root_Rows(parent),
                              Checker_Posets.Root_Columns(parent));
-      parent_snd_last : Solution_List;
       childnode : constant Checker_Posets.Link_to_Node
                 := child.white(child.white'first);
       childconds : constant Standard_Natural_Vectors.Vector
@@ -299,7 +298,6 @@ package body Resolve_Schubert_Problems is
      -- else
      --   put(file,"Number of solutions at parent node : ");
      --   put(file,Length_Of(parent_snd.sols),1); put_line(file,".");
-      parent_snd_last := parent_snd.sols;
      -- end if;
       loop
         if Standard_Natural_Vectors.Equal(gamenode.cols,childconds) then
@@ -335,7 +333,11 @@ package body Resolve_Schubert_Problems is
               (file,n,k,node.ps,childconds,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),startsols,sols);
-            Concat(parent_snd.sols,parent_snd_last,sols);
+            Push(sols,parent_snd.sols);
+            put(file,"Before push : #sols returned = ");
+            put(file,Length_Of(sols),1); new_line(file);
+            put(file,"After push to parent_snd : #sols = ");
+            put(file,Length_of(parent_snd.sols),1); new_line(file);
           end;
           Deep_Clear(startsols);
         end if;
