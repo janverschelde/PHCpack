@@ -167,6 +167,38 @@ package body Moving_Flag_Continuation is
     when others => put_line("exception in Call Path Trackers"); raise;
   end Call_Path_Trackers;
 
+  procedure Call_Path_Trackers
+              ( n : in integer32; h : in Poly_Sys;
+                xtsols,sols : in out Solution_List ) is
+
+    use Standard_IncFix_Continuation;
+
+    xtp,tmp : Solution_List;
+    xtls,ls : Link_to_Solution;
+
+    procedure Track is
+      new Silent_Continue(Max_Norm,Standard_Homotopy.Eval,
+                          Standard_Homotopy.Diff,Standard_Homotopy.Diff);
+
+  begin
+    Standard_Homotopy.Create(h,n+1);
+    Track(xtsols,false,Create(1.0));
+    tmp := sols;
+    xtp := xtsols;
+    while not Is_Null(xtp) loop
+      xtls := Head_Of(xtp);
+      ls := Head_Of(tmp);
+      ls.v := xtls.v(ls.v'range);
+      ls.t := xtls.t;
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+      xtp := Tail_Of(xtp);
+    end loop;
+    Standard_Homotopy.Clear;
+  exception -- adding this exception handler caused no longer exception ...
+    when others => put_line("exception in Call Path Trackers"); raise;
+  end Call_Path_Trackers;
+
   procedure Track_First_Move
               ( file : in file_type; n : in integer32; h : in Poly_Sys;
                 sol : in out Link_to_Solution; fail : out boolean ) is
@@ -346,6 +378,47 @@ package body Moving_Flag_Continuation is
       end loop;
     end if;
     Clear(sh); Clear(sh0); --Clear(sols);
+  exception
+    when others => put_line("exception in Track_Next_Move ..."); raise;
+  end Track_Next_Move;
+
+  procedure Track_Next_Move
+              ( n : in integer32; h : in Poly_Sys;
+                sols : in out Solution_List; fail : out boolean ) is
+
+    xt : Standard_Complex_Vectors.Vector(1..n+1);
+    sh : Poly_Sys(1..n) := Square(n,h);
+    tol : constant double_float := 1.0E-8;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+    xtsols,xt_sols_last : Solution_List;
+
+  begin
+    fail := false;
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      xt(ls.v'range) := ls.v;
+      xt(xt'last) := Create(0.0);
+      fail := fail and (ls.res > tol);
+      Append(xtsols,xt_sols_last,Create(xt));
+      tmp := Tail_Of(tmp);
+    end loop;
+    if not fail then
+      Call_Path_Trackers(n,sh,xtsols,sols);
+      tmp := xtsols;
+      while not Is_Null(tmp) loop
+        ls := Head_Of(tmp);
+        declare
+          xt : Standard_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
+        begin
+          xt(ls.v'range) := ls.v;
+          xt(xt'last) := ls.t;
+        end;
+        fail := fail and (ls.res > tol);
+        tmp := Tail_Of(tmp);
+      end loop;
+    end if;
+    Clear(sh);
   exception
     when others => put_line("exception in Track_Next_Move ..."); raise;
   end Track_Next_Move;
@@ -685,6 +758,39 @@ package body Moving_Flag_Continuation is
     when others => put_line("exception in Stay_Homotopy"); raise;
   end Stay_Homotopy;
 
+  procedure Stay_Homotopy
+              ( n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in Standard_Complex_VecMats.VecMat;
+                mf,start_mf : in Standard_Complex_Matrices.Matrix;
+                sols : in out Solution_List; fail : out boolean ) is
+
+    gh : Link_to_Poly_Sys;
+    xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Stay_Moving_Plane(n,k,ctr,p,pr,pc);
+    xpm : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+
+  begin
+    fail := true;
+    xpm := Moving_Flag(start_mf,xp);
+    Flag_Conditions(n,k,xpm,cond,vf,gh);
+    Track_Next_Move(dim,gh.all,sols,fail);
+    if not fail then
+      Checker_Homotopies.Homotopy_Stay_Coordinates
+        (n,k,ctr,q,qr,qc,mf,xpm,sols);
+    end if;
+    Standard_Complex_Poly_Matrices.Clear(xp);
+    Standard_Complex_Poly_Matrices.Clear(xpm);
+    Clear(gh);
+  exception
+    when others => put_line("exception in Stay_Homotopy"); raise;
+  end Stay_Homotopy;
+
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -776,6 +882,46 @@ package body Moving_Flag_Continuation is
       end if;
       put_line(file,"Verifying after coordinate changes ...");
       Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,sols,fail);
+    end if;
+    Standard_Complex_Poly_Systems.Clear(gh);
+    Standard_Complex_Poly_Matrices.Clear(xp);
+    Standard_Complex_Poly_Matrices.Clear(xpm);
+  exception
+    when others => put_line("exception in Swap_Homotopy"); raise;
+  end Swap_Homotopy;
+
+  procedure Swap_Homotopy
+              ( n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf,start_mf : in Standard_Complex_Matrices.Matrix;
+                vf : in Standard_Complex_VecMats.VecMat;
+                sols : in out Solution_List; fail : out boolean ) is
+
+    big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
+    dc : constant integer32 := Checker_Moves.Descending_Checker(q);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    s : constant integer32 := Checker_Homotopies.Swap_Column(ctr,locmap);
+    xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Swap_Moving_Plane(n,k,ctr,big_r,s,q,p,pr,pc);
+    xpm : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+    gh : Link_to_Poly_Sys;
+
+  begin
+    xpm := Moving_Flag(start_mf,xp);
+    fail := true;
+    Flag_Conditions(n,k,xpm,cond,vf,gh);
+    Track_Next_Move(dim,gh.all,sols,fail);
+    if not fail then
+      if big_r > ctr + 1
+       then Checker_Homotopies.First_Swap_Coordinates
+              (n,k,ctr,big_r,dc,s,q,p,qr,qc,pr,pc,mf,xpm,sols);
+       else Checker_Homotopies.Second_Swap_Coordinates
+              (n,k,ctr,s,q,qr,qc,mf,xpm,sols);
+      end if;
     end if;
     Standard_Complex_Poly_Systems.Clear(gh);
     Standard_Complex_Poly_Matrices.Clear(xp);

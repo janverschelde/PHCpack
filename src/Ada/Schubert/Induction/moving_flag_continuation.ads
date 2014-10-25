@@ -49,6 +49,9 @@ package Moving_Flag_Continuation is
   --   sol      standard representation of the solution.
 
   procedure Call_Path_Trackers
+              ( n : in integer32; h : in Poly_Sys;
+                xtsols,sols : in out Solution_List );
+  procedure Call_Path_Trackers
               ( file : in file_type; n : in integer32; h : in Poly_Sys;
                 xtsols,sols : in out Solution_List );
 
@@ -112,6 +115,9 @@ package Moving_Flag_Continuation is
   --            or if the path tracker failed to reach a solution.
 
   procedure Track_Next_Move
+              ( n : in integer32; h : in Poly_Sys;
+                sols : in out Solution_List; fail : out boolean );
+  procedure Track_Next_Move
               ( file : in file_type; n : in integer32; h : in Poly_Sys;
                 sols : in out Solution_List; fail : out boolean );
 
@@ -121,7 +127,8 @@ package Moving_Flag_Continuation is
   --   continuation parameter and a start solution.
 
   -- ON ENTRY :
-  --   file     output file for intermediate results and diagnostics;
+  --   file     output file for intermediate results and diagnostics,
+  --            if omitted, then no output is written to file;
   --   n        number of variables in the ambient space;
   --   h        homotopy in n+1 variables;
   --   sols     start solutions for the homotopy.
@@ -286,6 +293,13 @@ package Moving_Flag_Continuation is
   --   fail     true if no longer a solution, false otherwise.
 
   procedure Stay_Homotopy
+              ( n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in Standard_Complex_VecMats.VecMat;
+                mf,start_mf : in Standard_Complex_Matrices.Matrix;
+                sols : in out Solution_List; fail : out boolean );
+  procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -353,6 +367,13 @@ package Moving_Flag_Continuation is
   --   fail     true if no longer a solution, false otherwise.
 
   procedure Swap_Homotopy
+              ( n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf,start_mf : in Standard_Complex_Matrices.Matrix;
+                vf : in Standard_Complex_VecMats.VecMat;
+                sols : in out Solution_List; fail : out boolean );
+  procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -365,7 +386,8 @@ package Moving_Flag_Continuation is
   --   After tracking a path, the intersection conditions are verified.
 
   -- ON ENTRY :
-  --   file     for intermediate output and diagnostics;
+  --   file     for intermediate output and diagnostics,
+  --            if omitted, then there is no intermediate output;
   --   n        dimension of the ambient space, number of black checkers;
   --   k        dimension of the plane, number of white checkers;
   --   ctr      index of the critical row;
