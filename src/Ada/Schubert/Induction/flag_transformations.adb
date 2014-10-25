@@ -261,31 +261,4 @@ package body Flag_Transformations is
     end loop;
   end Transform_Sequence_with_Flag;
 
-  procedure Transform_Sequence
-              ( n : in integer32;
-                flags : in out Standard_Complex_VecMats.VecMat;
-                A,invA,sT : out Standard_Complex_VecMats.VecMat ) is
-
-    moved : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-          := Moving_Flag_Homotopies.Moved_Flag(n);
-    idemat : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-           :=  Moving_Flag_Homotopies.Identity(n);
-    flag,T1,T2,AA,invAA : Standard_Complex_Matrices.Matrix(1..n,1..n);
-
-    use Standard_Complex_Matrices;
-
-  begin
-    for i in flags'first..flags'last-1 loop
-      flag := flags(i).all;
-      Transform(n,moved,idemat,idemat,flag,AA,T1,T2);
-      invAA := Standard_Matrix_Inversion.Inverse(AA);
-      A(i) := new Standard_Complex_Matrices.Matrix'(AA);
-      invA(i) := new Standard_Complex_Matrices.Matrix'(invAA);
-      sT(i) := new Standard_Complex_Matrices.Matrix'(T1);
-      for j in i+1..flags'last loop
-        flags(j).all := invAA*flags(j).all;
-      end loop;
-    end loop;
-  end Transform_Sequence;
-
 end Flag_Transformations;

@@ -403,24 +403,21 @@ package body Resolve_Schubert_Problems is
     snd : Link_to_Solution_Node;
     lpn : Link_to_Poset_Node;
     residual : double_float;
-    A,invA,sT : Standard_Complex_VecMats.VecMat(flags'first..flags'last-1);
-    sTind : integer32; -- index of current transformation matrix in sT
+    A,invA,sT : Standard_Complex_Matrices.Matrix(1..n,1..n);
     trans : Standard_Complex_Matrices.Link_to_Matrix := null;
     workflags : Standard_Complex_VecMats.VecMat(flags'range);
 
   begin
-    if flags'last <= 1 then
-      sTind := 0;
-    else
+    if flags'last > 1 then
       Moving_Flag_Continuation.Copy_Flags(flags,workflags);
-      sTind := flags'last; -- always decrement before use
       put_line(file,"transforming the sequence of flags ...");
       put_line(file,"The flags before the transformation : ");
       for i in workflags'range loop
         put(file,"flag "); put(file,i,1); put_line(file," :");
         put(file,workflags(i).all,2);
       end loop;
-      Flag_Transformations.Transform_Sequence(n,workflags,A,invA,sT);
+      Flag_Transformations.Transform_Sequence_with_Flag
+        (n,workflags'last-1,workflags,A,invA,sT);
       put_line(file,"The flags after the transformation : ");
       for i in workflags'range loop
         put(file,"flag "); put(file,i,1); put_line(file," :");
@@ -429,10 +426,10 @@ package body Resolve_Schubert_Problems is
       for i in A'range loop
         declare
           use Standard_Complex_Matrices;
-          B : constant Matrix := A(i).all*Moving_Flag_Homotopies.Moved_Flag(n);
+          B : constant Matrix := A*Moving_Flag_Homotopies.Moved_Flag(n);
         begin
           put_line(file,"A*M :"); put(file,B,3);
-          put_line(file,"sT :"); put(file,sT(i).all,3);
+          put_line(file,"sT :"); put(file,sT,3);
         end;
       end loop;
     end if;
@@ -466,10 +463,8 @@ package body Resolve_Schubert_Problems is
         end if;
         tmp := Tail_Of(tmp);
       end loop;
-      if sTind > 1 then -- set transform for next level
-        sTind := sTind - 1; trans := sT(sTind);
-        workflags(workflags'last).all := flags(flags'last).all; -- restore
-      end if;
+      trans := new Standard_Complex_Matrices.Matrix'(sT);
+      workflags(workflags'last).all := flags(flags'last).all; -- restore
       sps.level := i; -- note that level of completion goes in reverse!
     end loop;
     put(file,"The formal root count : ");
