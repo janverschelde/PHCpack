@@ -210,6 +210,53 @@ package body Resolve_Schubert_Problems is
     end loop;
   end Transform_Start_Solutions;
 
+  procedure Transform_Start_Solutions
+              ( n,k : in integer32;
+                r_src,c_src,r_tgt,c_tgt : in Standard_Natural_Vectors.Vector;
+                tm : in Standard_Complex_Matrices.Matrix;
+                sols : in out Solution_List ) is
+
+     p : constant Standard_Natural_Vectors.Vector
+       := Checker_Moves.Identity_Permutation(natural32(n));
+     q : constant Standard_Natural_Vectors.Vector
+       := Checker_Moves.Reverse_Permutation(natural32(n));
+     src_pat : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+       := Checker_Localization_Patterns.Column_Pattern(n,k,p,r_src,c_src);
+     tgt_pat : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+       := Checker_Localization_Patterns.Column_Pattern(n,k,q,r_tgt,c_tgt);
+     tmp : Solution_List := sols;
+     ls : Link_to_Solution;
+     x,y : Standard_Complex_Matrices.Matrix(1..n,1..k);
+     dim : constant natural32
+         := Checker_Localization_Patterns.Degree_of_Freedom(tgt_pat);
+
+     use Standard_Complex_Matrices;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      x := Checker_Localization_Patterns.Map(src_pat,ls.v);
+      y := tm*x;
+      Checker_Homotopies.Normalize_and_Reduce_to_Fit(tgt_pat,y);
+      declare
+        z : constant Standard_Complex_Vectors.Vector(1..integer32(dim))
+          := Checker_Localization_Patterns.Map(tgt_pat,y);
+        s : Solution(integer32(dim));
+      begin
+        s.t := ls.t;
+        s.m := ls.m;
+        s.v := z;
+        s.err := ls.err;
+        s.rco := ls.rco;
+        s.res := ls.res;
+        Clear(ls);
+        ls := new Solution'(s);
+        Set_Head(tmp,ls);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Transform_Start_Solutions;
+
   procedure Connect_Checker_Posets_to_Count
               ( file : in file_type;
                 pl : in Poset_List; nd : in Poset_Node ) is
@@ -347,6 +394,78 @@ package body Resolve_Schubert_Problems is
       new_line(file);
       put_line(file,"** After assigning coefficients at parent :");
       Write_Nodes_in_Poset(file,node.ps,node.ps.black'last);
+    end Connect_Parent;
+    procedure Connect_Parents is
+      new Intersection_Posets.Enumerate_Parents(Connect_Parent);
+
+  begin
+    Connect_Parents(pl,nd.all);
+  end Connect_Checker_Posets_to_Track;
+
+  procedure Connect_Checker_Posets_to_Track
+              ( n,k,level : in integer32;
+                pl : in Poset_List; snd : in Link_to_Solution_Node;
+                tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
+                sps : in out Solution_Poset;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in out Standard_Complex_VecMats.VecMat ) is
+
+    nd : constant Link_to_Poset_Node := snd.lpnd;
+
+    procedure Connect_Parent ( node : in Link_to_Poset_Node ) is
+
+    -- DESCRIPTION :
+    --   Connects the leaf of the parent given on input in node.
+
+      child : constant Checker_Posets.Poset := nd.ps;
+      parent : constant Checker_Posets.Poset := node.ps;
+      parent_snd : constant Link_to_Solution_Node
+                 := Retrieve(sps.nodes(level),
+                             Checker_Posets.Root_Rows(parent),
+                             Checker_Posets.Root_Columns(parent));
+      childnode : constant Checker_Posets.Link_to_Node
+                := child.white(child.white'first);
+      childconds : constant Standard_Natural_Vectors.Vector
+                 := childnode.rows;     -- root
+      childrows : constant Standard_Natural_Vectors.Vector
+                := Flip(childconds);
+      gamenode : Checker_Posets.Link_to_Node
+               := node.ps.white(node.ps.white'last);
+      parentconds : constant Standard_Natural_Vectors.Vector
+                  := node.ps.white(node.ps.white'last).cols; -- leaf
+      parentrows : constant Standard_Natural_Vectors.Vector
+                 := node.ps.white(node.ps.white'last).rows;
+      startsols : Solution_List;
+
+      use Standard_Complex_Matrices;
+      use Checker_Posets,Moving_Flag_Continuation;
+
+    begin
+      loop
+        if Standard_Natural_Vectors.Equal(gamenode.cols,childconds) then
+          Add(gamenode.coeff,childnode.coeff);
+          Copy(snd.sols,startsols);
+          if tmfo /= null then
+            Transform_Start_Solutions
+              (n,k,childnode.rows,childnode.cols,
+               gamenode.rows,gamenode.cols,tmfo.all,startsols);
+          end if;
+          declare
+            sols : Solution_List;
+            totalflags : constant natural32 := natural32(flags'length);
+            nbflags : constant integer32 := sps.m - level;
+          begin
+            Track_All_Paths_in_Poset
+              (n,k,node.ps,childconds,
+               conds(conds'last-nbflags+1..conds'last),
+               flags(flags'last-nbflags+1..flags'last),startsols,sols);
+            Push(sols,parent_snd.sols);
+          end;
+          Deep_Clear(startsols);
+        end if;
+        exit when (gamenode.next_sibling = null);
+        gamenode := gamenode.next_sibling;
+      end loop;
     end Connect_Parent;
     procedure Connect_Parents is
       new Intersection_Posets.Enumerate_Parents(Connect_Parent);

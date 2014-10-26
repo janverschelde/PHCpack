@@ -65,6 +65,11 @@ package Resolve_Schubert_Problems is
   --            the brackets in cond and the fixed flags.
 
   procedure Transform_Start_Solutions
+              ( n,k : in integer32;
+                r_src,c_src,r_tgt,c_tgt : in Standard_Natural_Vectors.Vector;
+                tm : in Standard_Complex_Matrices.Matrix;
+                sols : in out Solution_List );
+  procedure Transform_Start_Solutions
               ( file : in file_type; n,k : in integer32;
                 r_src,c_src,r_tgt,c_tgt : in Standard_Natural_Vectors.Vector;
                 tm : in Standard_Complex_Matrices.Matrix;
@@ -75,7 +80,8 @@ package Resolve_Schubert_Problems is
   --   the result to fit in the pattern defined by rows and cols.
 
   -- ON ENTRY :
-  --   file     for intermediate output and diagnostics;
+  --   file     for intermediate output and diagnostics,
+  --            if omitted, then there is no intermediate output;
   --   n        ambient dimension;
   --   k        dimension of the solution plane
   --   r_src    rows of the conditions at the source: incoming solutions;
@@ -106,6 +112,13 @@ package Resolve_Schubert_Problems is
   --   nd       poset of the child.
 
   procedure Connect_Checker_Posets_to_Track
+              ( n,k,level : in integer32;
+                pl : in Poset_List; snd : in Link_to_Solution_Node;
+                tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
+                sps : in out Solution_Poset;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in out Standard_Complex_VecMats.VecMat );
+  procedure Connect_Checker_Posets_to_Track
               ( file : in file_type; n,k,level : in integer32;
                 pl : in Poset_List; snd : in Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
@@ -118,7 +131,7 @@ package Resolve_Schubert_Problems is
   --   solution paths.
 
   -- ON ENTRY :
-  --   file     for intermediate output;
+  --   file     for intermediate output, if provided, otherwise silent;
   --   n        the ambient dimension;
   --   k        dimension of the solution planes;
   --   level    level of the parent nodes in the list pl;
