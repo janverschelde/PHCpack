@@ -486,6 +486,40 @@ package body Moving_Flag_Continuation is
     put(file,dim,1); put_line(file,"+1 unknowns ..."); -- put(file,h.all);
   end Generalizing_Homotopy;
 
+  procedure Generalizing_Homotopy
+              ( n,k : in integer32;
+                q,p,rows,cols : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in Standard_Complex_VecMats.VecMat;
+                mf,nf : in Standard_Complex_Matrices.Matrix;
+                h : out Link_to_Poly_Sys; dim : out integer32 ) is
+
+   -- f : constant natural := Checker_Moves.Falling_Checker(p);
+   -- a : constant natural := Checker_Moves.Ascending_Checker(p,f);
+   -- t : Standard_Natural_Matrices.Matrix(1..n,1..n)
+   --   := Checker_Localization_Patterns.Transformation(n,q(f));
+   -- m : Standard_Natural_Matrices.Matrix(1..n,1..n)
+   --   := Checker_Localization_Patterns.Moving_Flag(p);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+        -- rows and cols must be rows and cols with p, not with q!
+        --   := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
+        -- must use q (current) not p (previous)
+
+  begin
+    dim := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+    if cond'last = 1 then
+      declare
+        c : constant Brackets.Bracket(1..k)
+          := Brackets.Bracket(cond(cond'first).all);
+      begin
+        One_Flag_Homotopy(n,k,q,p,rows,cols,c,vf(vf'first).all,mf,nf,h);
+      end;
+    else
+      Moving_Flag_Homotopy(n,k,q,p,rows,cols,cond,vf,mf,nf,h);
+    end if;
+  end Generalizing_Homotopy;
+
   procedure Verify_Intersection_Conditions
               ( file : in file_type; n,k : in integer32;
                 q,rows,cols : in Standard_Natural_Vectors.Vector;
@@ -663,6 +697,19 @@ package body Moving_Flag_Continuation is
       (file,n,k,ctr,q,p,qr,qc,pr,pc,sols);
     put_line(file,"Verifying after coordinate changes ...");
     Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,sols,fail);
+  end Trivial_Stay;
+
+  procedure Trivial_Stay
+              ( n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Complex_Matrices.Matrix;
+                vf : in Standard_Complex_VecMats.VecMat;
+                sols : in out Solution_List; fail : out boolean ) is
+  begin
+    fail := false; -- no checks anymore ...
+    Checker_Homotopies.Trivial_Stay_Coordinates
+      (n,k,ctr,q,p,qr,qc,pr,pc,sols);
   end Trivial_Stay;
 
   procedure Stay_Homotopy
@@ -1108,6 +1155,71 @@ package body Moving_Flag_Continuation is
     end if;
   end Track_Path_in_Poset;
 
+  procedure Track_Path_in_Poset
+              ( n,k : in integer32; ps : in Poset;
+                path : in Array_of_Nodes; count : in integer32;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in Standard_Complex_VecMats.VecMat;
+                mf : in out Standard_Complex_Matrices.Matrix;
+                start : in Solution_List; sols : out Solution_List;
+                unhappy : out boolean ) is
+
+    leaf : constant Link_to_Node := path(path'first);
+    ip : constant Standard_Natural_Vectors.Vector(1..n) 
+       := Checker_Moves.Identity_Permutation(natural32(n));
+    p,q : Standard_Natural_Vectors.Vector(1..n);
+    pr,pc,qr,qc : Standard_Natural_Vectors.Vector(1..k);
+    cnd : constant Standard_Natural_Vectors.Vector(1..k)
+        := cond(cond'first).all;
+    t : Standard_Natural_Matrices.Matrix(1..n,1..n);
+    start_mf : Standard_Complex_Matrices.Matrix(1..n,1..n) := Identity(n);
+    ptr,homtp,ctr,ind,fc : integer32;
+    stay_child : boolean;
+    fail : boolean := false;
+
+    use Standard_Complex_Matrices;
+
+  begin
+    if not Checker_Moves.Happy_Checkers(ip,leaf.cols,cnd) then
+      unhappy := true;
+    else
+      if Is_Null(start) then
+        return;
+      end if;
+      unhappy := false;
+      p := ps.black(ps.black'last).all;
+      pr := leaf.rows; pc := leaf.cols;
+      Copy(start,sols);
+      for i in path'first+1..path'last loop
+        ptr := ps.black'last - i + 1;
+        p := ps.black(ptr+1).all; pr := path(i-1).rows; pc := path(i-1).cols;
+        q := ps.black(ptr).all; qr := path(i).rows; qc := path(i).cols;
+        stay_child := Checker_Posets.Is_Stay_Child(path(i).all,path(i-1).all);
+        fc := Checker_Moves.Falling_Checker(p);
+        t := Checker_Localization_Patterns.Transformation(n,integer32(q(fc)));
+        start_mf := mf;
+        mf := mf*Numeric_Transformation(t);
+        Checker_Homotopies.Define_Generalizing_Homotopy
+          (n,q,qr,qc,stay_child,homtp,ctr);
+        ind := i-path'first-1; -- ind = 0 signals start solution
+        if homtp = 0 then
+          Trivial_Stay
+            (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail);
+        elsif homtp = 1 then
+          Stay_Homotopy(n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
+                        vf,mf,start_mf,sols,fail);
+        else -- homtp = 2
+          Swap_Homotopy(n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
+                        mf,start_mf,vf,sols,fail);
+        end if;
+        if fail then
+          unhappy := true; -- prevent from being concatenated
+          exit;
+        end if;
+      end loop;
+    end if;
+  end Track_Path_in_Poset;
+
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -1166,6 +1278,39 @@ package body Moving_Flag_Continuation is
       else
         put(file," match at path "); put(file,cnt,1); new_line(file);
         Track_Path_in_Poset(file,n,k,ps,nds,cnt,cond,vf,mf,start,pp_sols,fail);
+        if not fail
+         then Concat(sols,sols_last,pp_sols);
+        end if;
+      end if;
+      ct := true;
+    end Track_Path;
+    procedure Enumerate_Paths is new Enumerate_Paths_in_Poset(Track_Path);
+
+  begin
+    Enumerate_Paths(ps);
+  end Track_All_Paths_in_Poset;
+
+  procedure Track_All_Paths_in_Poset
+              ( n,k : in integer32; ps : in Poset;
+                child : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in Standard_Complex_VecMats.VecMat;
+                start : in Solution_List; sols : out Solution_List ) is
+
+    cnt : integer32 := 0;
+    sols_last : Solution_List := sols;
+
+    procedure Track_Path ( nds : in Array_of_Nodes; ct : out boolean ) is
+
+      mf : Standard_Complex_Matrices.Matrix(1..n,1..n) := Identity(n);
+      pp_sols : Solution_List; -- solutions on path in poset
+      fail : boolean;
+      leaf : constant Standard_Natural_Vectors.Vector := nds(nds'first).cols;
+
+    begin
+      cnt := cnt + 1;
+      if Standard_Natural_Vectors.Equal(leaf,child) then
+        Track_Path_in_Poset(n,k,ps,nds,cnt,cond,vf,mf,start,pp_sols,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;

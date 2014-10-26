@@ -1,6 +1,7 @@
 Sat 25 Oct 2014 : cleaned up flag_transformations and upgraded 
   resolve_schubert_problems.adb with use of the new transformation procedure.
-  Silent stay and swap homotopy in moving_flag_continuation.
+  Silent stay and swap homotopy in moving_flag_continuation,
+  track_all_paths_in_poset in moving_flag_continuation has silent version.
 
 Fri 24 Oct 2014 : added procedure to flag_transformations, to transform
   using only the current flag in a sequence of flags.

@@ -139,6 +139,13 @@ package Moving_Flag_Continuation is
   --            or if the path tracker failed to reach a solution.
 
   procedure Generalizing_Homotopy
+              ( n,k : in integer32;
+                q,p,rows,cols : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in Standard_Complex_VecMats.VecMat;
+                mf,nf : in Standard_Complex_Matrices.Matrix;
+                h : out Link_to_Poly_Sys; dim : out integer32 );
+  procedure Generalizing_Homotopy
               ( file : in file_type; n,k : in integer32;
                 q,p,rows,cols : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -150,7 +157,8 @@ package Moving_Flag_Continuation is
   --   A generalizing homotopy to move the black checkers from p to q.
 
   -- ON ENTRY :
-  --   file     for intermediate output and diagnostics;
+  --   file     for intermediate output and diagnostics,
+  --            if omitted, then there is no output.
   --   n        dimension of the ambient space, number of black checkers;
   --   k        dimension of the plane, number of white checkers;
   --   q        parent permutation in the specializing poset;
@@ -253,10 +261,52 @@ package Moving_Flag_Continuation is
   --   pc       position of the columns of the white checkers with p;
   --   cond     intersection conditions for the general fixed flags;
   --   mf       coordinates of the moving flag;
-  --   vf       coordinates of general flags to keep fixed.
+  --   vf       coordinates of general flags to keep fixed;
+  --   ls       current solution if ind > 0.
 
   -- ON RETURN :
   --   ls       solution in the proper coordinates;
+  --   fail     true if no longer a solution, false otherwise.
+
+  procedure Trivial_Stay
+              ( n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Complex_Matrices.Matrix;
+                vf : in Standard_Complex_VecMats.VecMat;
+                sols : in out Solution_List; fail : out boolean );
+  procedure Trivial_Stay
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Complex_Matrices.Matrix;
+                vf : in Standard_Complex_VecMats.VecMat;
+                sols : in out Solution_List; fail : out boolean );
+
+  -- DESCRIPTION :
+  --   In the trivial stay case instead of a homotopy,
+  --   only a coordinate transformation is needed.
+
+  -- ON ENTRY :
+  --   file     for intermediate output and diagnostics,
+  --            if omitted, then there is no output;
+  --   n        dimension of the ambient space, number of black checkers;
+  --   k        dimension of the plane, number of white checkers;
+  --   ctr      index of the critical row;
+  --   ind      index of the move;
+  --   q        parent permutation in the poset used for target;
+  --   p        current permutation in the poset used for start;
+  --   qr       position of the rows of the white checkers with q;
+  --   qc       position of the columns of the white checkers with q;
+  --   pr       position of the rows of the white checkers with p;
+  --   pc       position of the columns of the white checkers with p;
+  --   cond     intersection conditions for the general fixed flags;
+  --   mf       coordinates of the moving flag;
+  --   vf       coordinates of general flags to keep fixed;
+  --   sols     current list of solutions.
+
+  -- ON RETURN :
+  --   sols     solutions in the proper coordinates;
   --   fail     true if no longer a solution, false otherwise.
 
   procedure Stay_Homotopy
@@ -493,6 +543,12 @@ package Moving_Flag_Continuation is
   --   sols     all solutions at the end of the paths.
 
   procedure Track_All_Paths_in_Poset
+              ( n,k : in integer32; ps : in Poset;
+                child : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in Standard_Complex_VecMats.VecMat;
+                start : in Solution_List; sols : out Solution_List );
+  procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
@@ -505,7 +561,8 @@ package Moving_Flag_Continuation is
   --   but only those paths that start at the matching child condition.
 
   -- ON ENTRY :
-  --   file     for intermediate output and diagnostics;
+  --   file     for intermediate output and diagnostics,
+  --            if omitted, then there is no intermediate output;
   --   n        dimension of the ambient space, number of black checkers;
   --   k        dimension of the plane, number of white checkers;
   --   ps       checker poset for one game;
