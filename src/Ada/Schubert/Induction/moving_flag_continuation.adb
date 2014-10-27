@@ -212,7 +212,7 @@ package body Moving_Flag_Continuation is
     sh0 : Poly_Sys(sh'range);
     sols : Solution_List;
     epsxa : constant double_float := 1.0E-12;
-    tolsing : constant double_float := 1.0E-8;
+    tolsing : constant double_float := 1.0E-6;
     epsfa : constant double_float := 1.0E-12;
     numit : natural32 := 0;
     deflate : boolean := false;
@@ -265,7 +265,7 @@ package body Moving_Flag_Continuation is
     sh0 : Poly_Sys(sh'range);
     sols : Solution_List;
     epsxa : constant double_float := 1.0E-12;
-    tolsing : constant double_float := 1.0E-8;
+    tolsing : constant double_float := 1.0E-6;
     epsfa : constant double_float := 1.0E-12;
     numit : natural32 := 0;
     deflate : boolean := false;
@@ -314,7 +314,7 @@ package body Moving_Flag_Continuation is
     yh : Standard_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     epsxa : constant double_float := 1.0E-12;
-    tolsing : constant double_float := 1.0E-8;
+    tolsing : constant double_float := 1.0E-6;
     epsfa : constant double_float := 1.0E-12;
     numit : natural32 := 0;
     deflate : boolean := false;
@@ -388,7 +388,7 @@ package body Moving_Flag_Continuation is
 
     xt : Standard_Complex_Vectors.Vector(1..n+1);
     sh : Poly_Sys(1..n) := Square(n,h);
-    tol : constant double_float := 1.0E-8;
+    tol : constant double_float := 1.0E-6;
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
     xtsols,xt_sols_last : Solution_List;

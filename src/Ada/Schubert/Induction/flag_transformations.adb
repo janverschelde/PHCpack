@@ -274,9 +274,15 @@ package body Flag_Transformations is
       declare
         work : Standard_Complex_VecMats.VecMat(flags'range);
         flag : Standard_Complex_Matrices.Matrix(1..n,1..n);
+        ptr2flags : Standard_Complex_VecMats.Link_to_VecMat;
       begin
         for j in work'range loop
-          Standard_Complex_Matrices.Copy(flags(j).all,flag);
+          if i = flags'first then  -- use original flags at the start
+            Standard_Complex_Matrices.Copy(flags(j).all,flag);
+          else -- work with transformed flags in later stages
+            ptr2flags := stack(i-1);
+            Standard_Complex_Matrices.Copy(ptr2flags(j).all,flag);
+          end if;
           work(j) := new Standard_Complex_Matrices.Matrix'(flag);
         end loop;
         Transform_Sequence_with_Flag(n,i,work,AA,invAA,T1);

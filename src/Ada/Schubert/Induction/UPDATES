@@ -1,4 +1,6 @@
 Mon 27 Oct 2014 : resolve_schubert_problems uses stack_of_flags.
+  Bug fix in flag_transformations.adb and increased tolerance 'tolsing'
+  in moving_flag_continuation from 1.0E-8 to 1.0E-6.
 
 Sun 26 Oct 2014 : silent versions of connect to track procedures in
   resolve_schubert_problems.  Added stack_of_flags in flag_transformations
