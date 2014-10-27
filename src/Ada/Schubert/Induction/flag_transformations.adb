@@ -261,4 +261,38 @@ package body Flag_Transformations is
     end loop;
   end Transform_Sequence_with_Flag;
 
+  procedure Create ( n : in integer32;
+                     flags : in Standard_Complex_VecMats.VecMat;
+                     stack : out Stack_of_Flags;
+                     A,invA,sT : out Standard_Complex_VecMats.VecMat ) is
+
+    AA,invAA,T1 : Standard_Complex_Matrices.Matrix(1..n,1..n);
+    work : Standard_Complex_VecMats.VecMat(flags'range);
+
+  begin
+    for i in flags'first..flags'last-1 loop
+      declare
+        work : Standard_Complex_VecMats.VecMat(flags'range);
+        flag : Standard_Complex_Matrices.Matrix(1..n,1..n);
+      begin
+        for j in work'range loop
+          Standard_Complex_Matrices.Copy(flags(j).all,flag);
+          work(j) := new Standard_Complex_Matrices.Matrix'(flag);
+        end loop;
+        Transform_Sequence_with_Flag(n,i,work,AA,invAA,T1);
+        stack(i) := new Standard_Complex_VecMats.VecMat'(work);
+        A(i) := new Standard_Complex_Matrices.Matrix'(AA);
+        invA(i) := new Standard_Complex_Matrices.Matrix'(invAA);
+        st(i) := new Standard_Complex_Matrices.Matrix'(T1);
+      end;
+    end loop;
+  end Create;
+
+  procedure Clear ( s : in out Stack_of_Flags ) is
+  begin
+    for i in s'range loop
+      Standard_Complex_VecMats.Deep_Clear(s(i));
+    end loop;
+  end Clear;
+
 end Flag_Transformations;

@@ -22,6 +22,11 @@ package Flag_Transformations is
 --   compute the matrix A, upper triangular matrices T1 and T2
 --   so that A*F1 = G1*T1 and A*F2 = G2*T2.
 
+-- DATA STRUCTURE :
+
+  type stack_of_flags is 
+    array ( integer32 range <> ) of Standard_Complex_VecMats.Link_to_VecMat;
+
 -- DEFINING A LINEAR SYSTEM :
 
   function Coefficient_Matrix
@@ -165,5 +170,30 @@ package Flag_Transformations is
   --   invA     the inverse of A;
   --   sT       equals A times the moved flag, for use to transform
   --            the solutions to the transformed problem.
+
+  procedure Create ( n : in integer32;
+                     flags : in Standard_Complex_VecMats.VecMat;
+                     stack : out Stack_of_Flags;
+                     A,invA,sT : out Standard_Complex_VecMats.VecMat );
+
+  -- DESCRIPTION :
+  --   Makes a stack of flags, successively transformed.
+
+  -- REQUIRED : stack'range = flags'first..flags'last-1.
+
+  -- ON ENTRY :
+  --   n        the ambient dimension;
+  --   flags    a sequence of flags.
+
+  -- ON RETURN :
+  --   stack    a stack of flags, in stack(i), flags(i) was used;
+  --   A        sequence of invertible transformations on flags;
+  --   invA     sequence of inverses of the matrices in A;
+  --   sT       sequence of A times the moved flag.
+
+  procedure Clear ( s : in out Stack_of_Flags );
+
+  -- DESCRIPTION :
+  --   Deallocation of the stack of flags in s.
 
 end Flag_Transformations;
