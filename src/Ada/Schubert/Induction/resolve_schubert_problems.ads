@@ -117,14 +117,14 @@ package Resolve_Schubert_Problems is
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Solution_Poset;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in out Standard_Complex_VecMats.VecMat );
+                flags : in Standard_Complex_VecMats.VecMat );
   procedure Connect_Checker_Posets_to_Track
               ( file : in file_type; n,k,level : in integer32;
                 pl : in Poset_List; snd : in Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Solution_Poset;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in out Standard_Complex_VecMats.VecMat );
+                flags : in Standard_Complex_VecMats.VecMat );
 
   -- DESCRIPTION :
   --   Extension of the Connect_Checker_Posets_to_Count to track the
@@ -144,9 +144,7 @@ package Resolve_Schubert_Problems is
   --   flags    current fixed flags.
 
   -- ON RETURN :
-  --   sps      updated solution poset;
-  --   flags    to glue the intersection conditions, the linear spaces
-  --            have been multiplied with invertible matrices;
+  --   sps      updated solution poset.
 
   procedure Count_Roots
               ( file : in file_type; ips : in out Intersection_Poset;

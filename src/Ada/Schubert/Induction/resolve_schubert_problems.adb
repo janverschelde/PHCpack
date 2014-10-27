@@ -305,7 +305,7 @@ package body Resolve_Schubert_Problems is
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Solution_Poset;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in out Standard_Complex_VecMats.VecMat ) is
+                flags : in Standard_Complex_VecMats.VecMat ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
 
@@ -408,7 +408,7 @@ package body Resolve_Schubert_Problems is
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Solution_Poset;
                 conds : in Standard_Natural_VecVecs.VecVec;
-                flags : in out Standard_Complex_VecMats.VecMat ) is
+                flags : in Standard_Complex_VecMats.VecMat ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
 
@@ -522,46 +522,30 @@ package body Resolve_Schubert_Problems is
     snd : Link_to_Solution_Node;
     lpn : Link_to_Poset_Node;
     residual : double_float;
-    A,invA,sT : Standard_Complex_Matrices.Matrix(1..n,1..n);
     trans : Standard_Complex_Matrices.Link_to_Matrix := null;
-    workflags : Standard_Complex_VecMats.VecMat(flags'range);
     stack : Flag_Transformations.stack_of_flags(flags'first..flags'last-1);
+    index : integer32 := stack'last;
+    workf : Standard_Complex_VecMats.Link_to_VecMat;
     sqA,sqinvA,sqT : Standard_Complex_VecMats.VecMat(stack'range);
 
   begin
-    if flags'last > 1 then
-      Flag_Transformations.Create(n,flags,stack,sqA,sqinvA,sqT);
-      Moving_Flag_Continuation.Copy_Flags(flags,workflags);
-      put_line(file,"transforming the sequence of flags ...");
-      put_line(file,"The flags before the transformation : ");
-      for i in workflags'range loop
-        put(file,"flag "); put(file,i,1); put_line(file," :");
-        put(file,workflags(i).all,2);
-      end loop;
-      Flag_Transformations.Transform_Sequence_with_Flag
-        (n,workflags'last-1,workflags,A,invA,sT);
-      put_line(file,"The flags after the transformation : ");
-      for i in workflags'range loop
-        put(file,"flag "); put(file,i,1); put_line(file," :");
-        put(file,workflags(i).all,2);
-      end loop;
-      for i in A'range loop
-        declare
-          use Standard_Complex_Matrices;
-          B : constant Matrix := A*Moving_Flag_Homotopies.Moved_Flag(n);
-        begin
-          put_line(file,"A*M :"); put(file,B,3);
-          put_line(file,"sT :"); put(file,sT,3);
-        end;
-      end loop;
-    end if;
     Initialize_Leaves(ips.nodes(ips.m));
     for i in 1..ips.m-1 loop
       Initialize_Nodes(ips.nodes(i));
     end loop;
-    Initialize_Solution_Nodes(file,n,k,
-      conds(conds'last..conds'last),
-      workflags(flags'last..workflags'last),sps.nodes(sps.m),residual);
+    if flags'last = 1 then
+      Initialize_Solution_Nodes(file,n,k,
+        conds(conds'last..conds'last),
+        flags(flags'last..flags'last),sps.nodes(sps.m),residual);
+    elsif flags'last > 1 then
+      Flag_Transformations.Create(n,flags,stack,sqA,sqinvA,sqT);
+      workf := stack(index);
+      Initialize_Solution_Nodes(file,n,k,
+        conds(conds'last..conds'last),
+        workf(workf'last..workf'last),sps.nodes(sps.m),residual);
+    else -- flags'last < 1 ???
+      return;
+    end if;
     for i in reverse 1..sps.m loop
       new_line(file);
       put(file,"Solving at level "); put(file,i,1); put_line(file," :");
@@ -580,13 +564,23 @@ package body Resolve_Schubert_Problems is
         put_line(file," ***");
         if i > 1 then
           put_line(file,"-> solving at the leaves of its parents :");
-          Connect_Checker_Posets_to_Track
-            (file,n,k,i-1,ips.nodes(i-1),snd,trans,sps,conds,workflags);
+          if i = 2 then -- use the original flags
+            Connect_Checker_Posets_to_Track
+              (file,n,k,i-1,ips.nodes(i-1),snd,trans,sps,conds,flags);
+          else
+            Connect_Checker_Posets_to_Track
+              (file,n,k,i-1,ips.nodes(i-1),snd,trans,sps,conds,workf.all);
+          end if;
         end if;
         tmp := Tail_Of(tmp);
       end loop;
-      trans := new Standard_Complex_Matrices.Matrix'(sT);
-      workflags(workflags'last).all := flags(flags'last).all; -- restore
+      if flags'last > 1 then
+        trans := sqT(index);
+        if index > 1 then
+          index := index - 1;
+          workf := stack(index);
+        end if;
+      end if;
       sps.level := i; -- note that level of completion goes in reverse!
     end loop;
     put(file,"The formal root count : ");

@@ -1,3 +1,5 @@
+Mon 27 Oct 2014 : resolve_schubert_problems uses stack_of_flags.
+
 Sun 26 Oct 2014 : silent versions of connect to track procedures in
   resolve_schubert_problems.  Added stack_of_flags in flag_transformations
   and made the call in resolve_schubert_problems.adb.
