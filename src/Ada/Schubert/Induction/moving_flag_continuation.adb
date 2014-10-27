@@ -613,7 +613,7 @@ package body Moving_Flag_Continuation is
         res := Max_Norm(y);
         put(file,"The residual : "); put(file,res,3); new_line(file);
         if fail
-         then fail := (res > 1.0E-8); -- no fail as soon as one succeeds
+         then fail := (res > 1.0E-6); -- no fail as soon as one succeeds
         end if;
       end;
       tmp := Tail_Of(tmp);
