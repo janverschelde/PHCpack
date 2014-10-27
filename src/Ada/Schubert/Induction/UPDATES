@@ -1,5 +1,6 @@
 Sun 26 Oct 2014 : silent versions of connect to track procedures in
-  resolve_schubert_problems.  Added stack_of_flags in flag_transformations.
+  resolve_schubert_problems.  Added stack_of_flags in flag_transformations
+  and made the call in resolve_schubert_problems.adb.
 
 Sat 25 Oct 2014 : cleaned up flag_transformations and upgraded 
   resolve_schubert_problems.adb with use of the new transformation procedure.

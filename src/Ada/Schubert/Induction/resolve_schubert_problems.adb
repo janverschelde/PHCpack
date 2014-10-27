@@ -525,9 +525,12 @@ package body Resolve_Schubert_Problems is
     A,invA,sT : Standard_Complex_Matrices.Matrix(1..n,1..n);
     trans : Standard_Complex_Matrices.Link_to_Matrix := null;
     workflags : Standard_Complex_VecMats.VecMat(flags'range);
+    stack : Flag_Transformations.stack_of_flags(flags'first..flags'last-1);
+    sqA,sqinvA,sqT : Standard_Complex_VecMats.VecMat(stack'range);
 
   begin
     if flags'last > 1 then
+      Flag_Transformations.Create(n,flags,stack,sqA,sqinvA,sqT);
       Moving_Flag_Continuation.Copy_Flags(flags,workflags);
       put_line(file,"transforming the sequence of flags ...");
       put_line(file,"The flags before the transformation : ");
