@@ -485,7 +485,8 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
-                ls : in out Link_to_Solution; unhappy : out boolean );
+                ls : in out Link_to_Solution;
+                tol : in double_float; unhappy : out boolean );
 
   -- DESCRIPTION :
   --   Tracks one path in the poset, given as an array of nodes.
@@ -501,13 +502,14 @@ package Moving_Flag_Continuation is
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
   --   mf       coordinates of the moving flag,
-  --            should be equal to the identity matrix at the start.
+  --            should be equal to the identity matrix at the start;
+  --   tol      tolerance on the residual to decide failure;
 
   -- ON RETURN :
   --   mf       moving flag at the end of the path;
   --   ls       solution at the end of the path;
-  --   unhappy  true if the configuration of checkers is unhappy
-  --            and gives no solution.
+  --   unhappy  true if the configuration of checkers is unhappy and
+  --            gives no solution, also true if tolerance is not met.
 
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
@@ -516,7 +518,7 @@ package Moving_Flag_Continuation is
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
                 start : in Solution_List; sols : out Solution_List;
-                unhappy : out boolean );
+                tol : in double_float; unhappy : out boolean );
 
   -- DESCRIPTION :
   --   Tracks one path in the poset, given as an array of nodes.
@@ -534,19 +536,20 @@ package Moving_Flag_Continuation is
   --   mf       coordinates of the moving flag,
   --            should be equal to the identity matrix at the start;
   --   start    the start solutions from the nodes at the previous level
-  --            in the intersection poset.
+  --            in the intersection poset;
+  --   tol      tolerance on residuals to decide failure.
 
   -- ON RETURN :
   --   mf       moving flag at the end of the path;
   --   sols     solutions at the end of the path in the poset;
   --   unhappy  true if the configuration of checkers is unhappy
-  --            and gives no solution.
+  --            and gives no solution, true also if tolerance is not met.
 
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
-                sols : out Solution_List );
+                tol : in double_float; sols : out Solution_List );
 
   -- DESCRIPTION :
   --   Tracks paths for one entire checker game in n-space,
@@ -558,7 +561,8 @@ package Moving_Flag_Continuation is
   --   k        dimension of the plane, number of white checkers;
   --   ps       checker poset for one game;
   --   cond     intersection conditions for the general fixed flags;
-  --   vf       coordinates of general flags to keep fixed.
+  --   vf       coordinates of general flags to keep fixed;
+  --   tol      tolerance on residuals to decide failure.
 
   -- ON RETURN :
   --   sols     all solutions at the end of the paths.
@@ -568,12 +572,14 @@ package Moving_Flag_Continuation is
                 child : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
+                tol : in double_float;
                 start : in Solution_List; sols : out Solution_List );
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
+                tol : in double_float;
                 start : in Solution_List; sols : out Solution_List );
 
   -- DESCRIPTION :
@@ -592,7 +598,8 @@ package Moving_Flag_Continuation is
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
   --   start    contains solutions of the previous level, transformed
-  --            to serve as the start solutions for the current level.
+  --            to serve as the start solutions for the current level;
+  --   tol      tolerance on residuals to decide failure.
 
   -- ON RETURN :
   --   sols     all solutions at the end of the paths.

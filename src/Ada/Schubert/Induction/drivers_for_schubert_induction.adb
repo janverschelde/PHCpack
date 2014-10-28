@@ -2,6 +2,7 @@ with Communications_with_User;           use Communications_with_User;
 with File_Scanning,Timing_Package;       use File_Scanning,Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
@@ -354,6 +355,7 @@ package body Drivers_for_Schubert_Induction is
     ps : Poset;
     report : boolean;
     timer : Timing_Widget;
+    tol : constant double_float := 1.0E-6;
 
   begin
     if tune
@@ -363,7 +365,7 @@ package body Drivers_for_Schubert_Induction is
     flags := Random_Flags(n,cnds'last);
     tstart(timer);
     Moving_Flag_Continuation.Track_All_Paths_in_Poset
-        (file,n,k,ps,cnds.all,flags,sols);
+      (file,n,k,ps,cnds.all,flags,tol,sols);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"tracking all paths");

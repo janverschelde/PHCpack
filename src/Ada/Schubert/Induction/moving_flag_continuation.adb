@@ -994,7 +994,8 @@ package body Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
-                ls : in out Link_to_Solution; unhappy : out boolean ) is
+                ls : in out Link_to_Solution; 
+                tol : in double_float; unhappy : out boolean ) is
 
     leaf : constant Link_to_Node := path(path'first);
     ip : constant Standard_Natural_Vectors.Vector(1..n) 
@@ -1008,7 +1009,6 @@ package body Moving_Flag_Continuation is
     dim,ptr,homtp,ctr,ind,fc : integer32;
     stay_child : boolean;
     fail : boolean := false;
-    tol : constant double_float := 1.0E-6;
 
     use Standard_Complex_Matrices;
 
@@ -1079,7 +1079,7 @@ package body Moving_Flag_Continuation is
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
                 start : in Solution_List; sols : out Solution_List;
-                unhappy : out boolean ) is
+                tol : in double_float; unhappy : out boolean ) is
 
     leaf : constant Link_to_Node := path(path'first);
     ip : constant Standard_Natural_Vectors.Vector(1..n) 
@@ -1093,7 +1093,6 @@ package body Moving_Flag_Continuation is
     dim,ptr,homtp,ctr,ind,fc : integer32;
     stay_child : boolean;
     fail : boolean := false;
-    tol : constant double_float := 1.0E-6;
 
     use Standard_Complex_Matrices;
 
@@ -1175,7 +1174,7 @@ package body Moving_Flag_Continuation is
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
                 start : in Solution_List; sols : out Solution_List;
-                unhappy : out boolean ) is
+                tol : in double_float; unhappy : out boolean ) is
 
     leaf : constant Link_to_Node := path(path'first);
     ip : constant Standard_Natural_Vectors.Vector(1..n) 
@@ -1189,7 +1188,6 @@ package body Moving_Flag_Continuation is
     ptr,homtp,ctr,ind,fc : integer32;
     stay_child : boolean;
     fail : boolean := false;
-    tol : constant double_float := 1.0E-6;
 
     use Standard_Complex_Matrices;
 
@@ -1238,7 +1236,7 @@ package body Moving_Flag_Continuation is
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
-                sols : out Solution_List ) is
+                tol : in double_float; sols : out Solution_List ) is
 
     cnt : integer32 := 0;
     sols_last : Solution_List := sols;
@@ -1251,7 +1249,7 @@ package body Moving_Flag_Continuation is
 
     begin
       cnt := cnt + 1;
-      Track_Path_in_Poset(file,n,k,ps,nds,cnt,cond,vf,mf,ls,fail);
+      Track_Path_in_Poset(file,n,k,ps,nds,cnt,cond,vf,mf,ls,tol,fail);
       if not fail
        then Append(sols,sols_last,ls.all);
       end if;
@@ -1268,6 +1266,7 @@ package body Moving_Flag_Continuation is
                 child : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
+                tol : in double_float;
                 start : in Solution_List; sols : out Solution_List ) is
 
     cnt : integer32 := 0;
@@ -1291,7 +1290,8 @@ package body Moving_Flag_Continuation is
         put(file," no match, skip path "); put(file,cnt,1); new_line(file);
       else
         put(file," match at path "); put(file,cnt,1); new_line(file);
-        Track_Path_in_Poset(file,n,k,ps,nds,cnt,cond,vf,mf,start,pp_sols,fail);
+        Track_Path_in_Poset
+          (file,n,k,ps,nds,cnt,cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
@@ -1309,6 +1309,7 @@ package body Moving_Flag_Continuation is
                 child : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
+                tol : in double_float;
                 start : in Solution_List; sols : out Solution_List ) is
 
     cnt : integer32 := 0;
@@ -1324,7 +1325,7 @@ package body Moving_Flag_Continuation is
     begin
       cnt := cnt + 1;
       if Standard_Natural_Vectors.Equal(leaf,child) then
-        Track_Path_in_Poset(n,k,ps,nds,cnt,cond,vf,mf,start,pp_sols,fail);
+        Track_Path_in_Poset(n,k,ps,nds,cnt,cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;

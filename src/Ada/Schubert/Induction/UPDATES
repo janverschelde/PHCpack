@@ -1,3 +1,8 @@
+Tue 28 Oct 2014 : constant tol moved from the body of the procedures in
+  moving_flag_continuation into the specification parameters.
+  This caused changes in drivers_for_schubert_induction.adb
+  and resolve_schubert_problems.adb.
+
 Mon 27 Oct 2014 : resolve_schubert_problems uses stack_of_flags.
   Bug fix in flag_transformations.adb and increased tolerance 'tolsing'
   in moving_flag_continuation from 1.0E-8 to 1.0E-6.

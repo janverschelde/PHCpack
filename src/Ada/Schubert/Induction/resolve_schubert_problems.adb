@@ -308,6 +308,7 @@ package body Resolve_Schubert_Problems is
                 flags : in Standard_Complex_VecMats.VecMat ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
+    tol : constant double_float := 1.0E-6;
 
     procedure Connect_Parent ( node : in Link_to_Poset_Node ) is
 
@@ -379,7 +380,7 @@ package body Resolve_Schubert_Problems is
             Track_All_Paths_in_Poset
               (file,n,k,node.ps,childconds,
                conds(conds'last-nbflags+1..conds'last),
-               flags(flags'last-nbflags+1..flags'last),startsols,sols);
+               flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
             put(file,"Before push : #sols returned = ");
             put(file,Length_Of(sols),1); new_line(file);
@@ -411,6 +412,7 @@ package body Resolve_Schubert_Problems is
                 flags : in Standard_Complex_VecMats.VecMat ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
+    tol : constant double_float := 1.0E-8;
 
     procedure Connect_Parent ( node : in Link_to_Poset_Node ) is
 
@@ -458,7 +460,7 @@ package body Resolve_Schubert_Problems is
             Track_All_Paths_in_Poset
               (n,k,node.ps,childconds,
                conds(conds'last-nbflags+1..conds'last),
-               flags(flags'last-nbflags+1..flags'last),startsols,sols);
+               flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
           end;
           Deep_Clear(startsols);
