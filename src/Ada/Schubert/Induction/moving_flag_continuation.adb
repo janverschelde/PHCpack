@@ -2,7 +2,6 @@ with Communications_with_User;          use Communications_with_User;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
@@ -200,7 +199,8 @@ package body Moving_Flag_Continuation is
   end Call_Path_Trackers;
 
   procedure Track_First_Move
-              ( file : in file_type; n : in integer32; h : in Poly_Sys;
+              ( file : in file_type;
+                n : in integer32; h : in Poly_Sys; tol : in double_float;
                 sol : in out Link_to_Solution; fail : out boolean ) is
 
     x : Standard_Complex_Vectors.Vector(1..n);
@@ -212,7 +212,7 @@ package body Moving_Flag_Continuation is
     sh0 : Poly_Sys(sh'range);
     sols : Solution_List;
     epsxa : constant double_float := 1.0E-12;
-    tolsing : constant double_float := 1.0E-6;
+    tolsing : constant double_float := tol;
     epsfa : constant double_float := 1.0E-12;
     numit : natural32 := 0;
     deflate : boolean := false;
@@ -254,7 +254,8 @@ package body Moving_Flag_Continuation is
   end Track_First_Move;
 
   procedure Track_Next_Move
-              ( file : in file_type; n : in integer32; h : in Poly_Sys;
+              ( file : in file_type;
+                n : in integer32; h : in Poly_Sys; tol : in double_float;
                 sol : in out Link_to_Solution; fail : out boolean ) is
 
     xt : Standard_Complex_Vectors.Vector(1..n+1);
@@ -265,7 +266,7 @@ package body Moving_Flag_Continuation is
     sh0 : Poly_Sys(sh'range);
     sols : Solution_List;
     epsxa : constant double_float := 1.0E-12;
-    tolsing : constant double_float := 1.0E-6;
+    tolsing : constant double_float := tol;
     epsfa : constant double_float := 1.0E-12;
     numit : natural32 := 0;
     deflate : boolean := false;
@@ -304,7 +305,8 @@ package body Moving_Flag_Continuation is
   end Track_Next_Move;
 
   procedure Track_Next_Move
-              ( file : in file_type; n : in integer32; h : in Poly_Sys;
+              ( file : in file_type;
+                n : in integer32; h : in Poly_Sys; tol : in double_float;
                 sols : in out Solution_List; fail : out boolean ) is
 
     xt : Standard_Complex_Vectors.Vector(1..n+1);
@@ -314,7 +316,7 @@ package body Moving_Flag_Continuation is
     yh : Standard_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     epsxa : constant double_float := 1.0E-12;
-    tolsing : constant double_float := 1.0E-6;
+    tolsing : constant double_float := tol;
     epsfa : constant double_float := 1.0E-12;
     numit : natural32 := 0;
     deflate : boolean := false;
@@ -383,12 +385,11 @@ package body Moving_Flag_Continuation is
   end Track_Next_Move;
 
   procedure Track_Next_Move
-              ( n : in integer32; h : in Poly_Sys;
+              ( n : in integer32; h : in Poly_Sys; tol : in double_float;
                 sols : in out Solution_List; fail : out boolean ) is
 
     xt : Standard_Complex_Vectors.Vector(1..n+1);
     sh : Poly_Sys(1..n) := Square(n,h);
-    tol : constant double_float := 1.0E-6;
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
     xtsols,xt_sols_last : Solution_List;
@@ -576,7 +577,8 @@ package body Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
-                sols : in Solution_List; fail : out boolean ) is
+                sols : in Solution_List;
+                tol : in double_float; fail : out boolean ) is
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
@@ -613,7 +615,7 @@ package body Moving_Flag_Continuation is
         res := Max_Norm(y);
         put(file,"The residual : "); put(file,res,3); new_line(file);
         if fail
-         then fail := (res > 1.0E-6); -- no fail as soon as one succeeds
+         then fail := (res > tol); -- no fail as soon as one succeeds
         end if;
       end;
       tmp := Tail_Of(tmp);
@@ -687,7 +689,8 @@ package body Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
-                sols : in out Solution_List; fail : out boolean ) is
+                sols : in out Solution_List;
+                tol : in double_float; fail : out boolean ) is
   begin
     put(file,"Transforming solution planes with critical row = ");
     put(file,ctr,1); put_line(file,".");
@@ -696,7 +699,7 @@ package body Moving_Flag_Continuation is
     Checker_Homotopies.Trivial_Stay_Coordinates
       (file,n,k,ctr,q,p,qr,qc,pr,pc,sols);
     put_line(file,"Verifying after coordinate changes ...");
-    Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,sols,fail);
+    Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,sols,tol,fail);
   end Trivial_Stay;
 
   procedure Trivial_Stay
@@ -718,7 +721,8 @@ package body Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
-                ls : in out Link_to_Solution; fail : out boolean ) is
+                ls : in out Link_to_Solution; 
+                tol : in double_float; fail : out boolean ) is
 
     gh : Link_to_Poly_Sys;
     xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
@@ -742,8 +746,8 @@ package body Moving_Flag_Continuation is
     put(file,xpm);
     Flag_Conditions(n,k,xpm,cond,vf,gh);
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,ls,fail);
+     then Track_First_Move(file,dim,gh.all,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,tol,ls,fail);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -766,7 +770,8 @@ package body Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
-                sols : in out Solution_List; fail : out boolean ) is
+                sols : in out Solution_List;
+                tol : in double_float; fail : out boolean ) is
 
     gh : Link_to_Poly_Sys;
     xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
@@ -789,14 +794,15 @@ package body Moving_Flag_Continuation is
     put_line(file,"The moving coordinates after multiplication by M :");
     put(file,xpm);
     Flag_Conditions(n,k,xpm,cond,vf,gh);
-    Track_Next_Move(file,dim,gh.all,sols,fail);
+    Track_Next_Move(file,dim,gh.all,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (file,n,k,ctr,q,qr,qc,mf,xpm,sols);
       put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,sols,fail);
+      Verify_Intersection_Conditions
+        (file,n,k,q,qr,qc,cond,mf,vf,sols,tol,fail);
     end if;
     Standard_Complex_Poly_Matrices.Clear(xp);
     Standard_Complex_Poly_Matrices.Clear(xpm);
@@ -811,7 +817,8 @@ package body Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
-                sols : in out Solution_List; fail : out boolean ) is
+                sols : in out Solution_List;
+                tol : in double_float; fail : out boolean ) is
 
     gh : Link_to_Poly_Sys;
     xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k)
@@ -826,7 +833,7 @@ package body Moving_Flag_Continuation is
     fail := true;
     xpm := Moving_Flag(start_mf,xp);
     Flag_Conditions(n,k,xpm,cond,vf,gh);
-    Track_Next_Move(dim,gh.all,sols,fail);
+    Track_Next_Move(dim,gh.all,tol,sols,fail);
     if not fail then
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (n,k,ctr,q,qr,qc,mf,xpm,sols);
@@ -844,7 +851,8 @@ package body Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
-                ls : in out Link_to_Solution; fail : out boolean ) is
+                ls : in out Link_to_Solution;
+                tol : in double_float; fail : out boolean ) is
 
     big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
     dc : constant integer32 := Checker_Moves.Descending_Checker(q);
@@ -867,8 +875,8 @@ package body Moving_Flag_Continuation is
     fail := true;
     Flag_Conditions(n,k,xpm,cond,vf,gh);
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,ls,fail);
+     then Track_First_Move(file,dim,gh.all,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,tol,ls,fail);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -895,7 +903,8 @@ package body Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
-                sols : in out Solution_List; fail : out boolean ) is
+                sols : in out Solution_List;
+                tol : in double_float; fail : out boolean ) is
 
     big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
     dc : constant integer32 := Checker_Moves.Descending_Checker(q);
@@ -917,7 +926,7 @@ package body Moving_Flag_Continuation is
     put(file,xpm);
     fail := true;
     Flag_Conditions(n,k,xpm,cond,vf,gh);
-    Track_Next_Move(file,dim,gh.all,sols,fail);
+    Track_Next_Move(file,dim,gh.all,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -928,7 +937,8 @@ package body Moving_Flag_Continuation is
               (file,n,k,ctr,s,q,qr,qc,mf,xpm,sols);
       end if;
       put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,sols,fail);
+      Verify_Intersection_Conditions
+        (file,n,k,q,qr,qc,cond,mf,vf,sols,tol,fail);
     end if;
     Standard_Complex_Poly_Systems.Clear(gh);
     Standard_Complex_Poly_Matrices.Clear(xp);
@@ -943,7 +953,8 @@ package body Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
-                sols : in out Solution_List; fail : out boolean ) is
+                sols : in out Solution_List;
+                tol : in double_float; fail : out boolean ) is
 
     big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
     dc : constant integer32 := Checker_Moves.Descending_Checker(q);
@@ -961,7 +972,7 @@ package body Moving_Flag_Continuation is
     xpm := Moving_Flag(start_mf,xp);
     fail := true;
     Flag_Conditions(n,k,xpm,cond,vf,gh);
-    Track_Next_Move(dim,gh.all,sols,fail);
+    Track_Next_Move(dim,gh.all,tol,sols,fail);
     if not fail then
       if big_r > ctr + 1
        then Checker_Homotopies.First_Swap_Coordinates
@@ -997,6 +1008,7 @@ package body Moving_Flag_Continuation is
     dim,ptr,homtp,ctr,ind,fc : integer32;
     stay_child : boolean;
     fail : boolean := false;
+    tol : constant double_float := 1.0E-6;
 
     use Standard_Complex_Matrices;
 
@@ -1045,11 +1057,11 @@ package body Moving_Flag_Continuation is
             (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,ls,fail);
         elsif homtp = 1 then
           Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
-                        vf,mf,start_mf,ls,fail);
+                        vf,mf,start_mf,ls,tol,fail);
         else -- homtp = 2
           Moving_Flag_Homotopies.Add_t_Symbol;
           Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
-                        mf,start_mf,vf,ls,fail);
+                        mf,start_mf,vf,ls,tol,fail);
         end if;
         if fail then
           put_line(file,"no longer a valid solution, abort tracking");
@@ -1081,6 +1093,7 @@ package body Moving_Flag_Continuation is
     dim,ptr,homtp,ctr,ind,fc : integer32;
     stay_child : boolean;
     fail : boolean := false;
+    tol : constant double_float := 1.0E-6;
 
     use Standard_Complex_Matrices;
 
@@ -1136,14 +1149,14 @@ package body Moving_Flag_Continuation is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail);
+            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,tol,fail);
         elsif homtp = 1 then
           Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
-                        vf,mf,start_mf,sols,fail);
+                        vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
           Moving_Flag_Homotopies.Add_t_Symbol;
           Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
-                        mf,start_mf,vf,sols,fail);
+                        mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
           put_line(file,"no longer a valid solution, abort tracking");
@@ -1176,6 +1189,7 @@ package body Moving_Flag_Continuation is
     ptr,homtp,ctr,ind,fc : integer32;
     stay_child : boolean;
     fail : boolean := false;
+    tol : constant double_float := 1.0E-6;
 
     use Standard_Complex_Matrices;
 
@@ -1207,10 +1221,10 @@ package body Moving_Flag_Continuation is
             (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail);
         elsif homtp = 1 then
           Stay_Homotopy(n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
-                        vf,mf,start_mf,sols,fail);
+                        vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
           Swap_Homotopy(n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
-                        mf,start_mf,vf,sols,fail);
+                        mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
           unhappy := true; -- prevent from being concatenated
