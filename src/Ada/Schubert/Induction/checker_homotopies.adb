@@ -86,15 +86,6 @@ package body Checker_Homotopies is
   end Define_Specializing_Homotopy;
 
   procedure Define_Generalizing_Homotopy 
-              ( n : in integer32;
-                p,row,col : in Standard_Natural_Vectors.Vector;
-                stay_child : in boolean; homtp,ctr : out integer32 ) is
-  begin
-    Define_Generalizing_Homotopy
-      (standard_output,n,p,row,col,stay_child,homtp,ctr);
-  end Define_Generalizing_Homotopy;
-
-  procedure Define_Generalizing_Homotopy 
               ( file : in file_type; n : in integer32;
                 p,row,col : in Standard_Natural_Vectors.Vector;
                 stay_child : in boolean; homtp,ctr : out integer32 ) is
@@ -157,6 +148,47 @@ package body Checker_Homotopies is
             put(file,"R(="); put(file,big_R,1); put(file,") > ");
             put(file,"r(="); put(file,little_r,1); put_line(file,") + 1");
           end if;
+        end if;
+      end if;
+    end if;
+  end Define_Generalizing_Homotopy;
+
+  procedure Define_Generalizing_Homotopy 
+              ( n : in integer32;
+                p,row,col : in Standard_Natural_Vectors.Vector;
+                stay_child : in boolean; homtp,ctr : out integer32 ) is
+
+    d : constant integer32 := Descending_Checker(p);
+    r,cr,cd,little_r,big_R : integer32;
+    np : Standard_Natural_Vectors.Vector(p'range) := p;
+    swap : boolean;
+
+  begin
+    if d /= 0 then
+      r := Rising_Checker(p,d);
+      Move(np,d,r);
+      cr := Critical_Row(integer32(p(d)),n-d+1,row,col);
+      little_r := integer32(p(d)); ctr := little_r;
+      if cr = 0 then
+        homtp := 0;
+        swap := false;
+      else
+        cd := Top_White_Checker(integer32(p(r)),n-r+1,n,row,col);
+        if cd = 0 then
+          swap := false;
+        else
+          case Central_Choice(p,d,r,row,col,cr,cd,true) is
+            when 0 => swap := false; 
+            when 1 => swap := true;
+            when others => swap := true;
+          end case;
+          if swap
+           then big_R := integer32(row(cd));
+          end if;
+        end if;
+        if stay_child
+         then homtp := 1;
+         else homtp := 2;
         end if;
       end if;
     end if;

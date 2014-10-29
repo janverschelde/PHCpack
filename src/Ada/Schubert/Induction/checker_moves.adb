@@ -156,14 +156,6 @@ package body Checker_Moves is
   end Blocker;
 
   function Central_Choice
-              ( p : Vector; d,r : integer32;
-                rows,cols : Vector; cr,cd : integer32; debug : boolean ) 
-              return integer32 is
-  begin
-    return Central_Choice(standard_output,p,d,r,rows,cols,cr,cd,debug);
-  end Central_Choice;
-
-  function Central_Choice
               ( file : in file_type; p : Vector; d,r : integer32;
                 rows,cols : Vector; cr,cd : integer32; debug : boolean ) 
               return integer32 is
@@ -217,6 +209,26 @@ package body Checker_Moves is
        then put_line(file,"There is not a blocker, so there is choice.");
       end if;
       return 2;
+    end if;
+  end Central_Choice;
+
+  function Central_Choice
+              ( p : Vector; d,r : integer32;
+                rows,cols : Vector; cr,cd : integer32; debug : boolean ) 
+              return integer32 is
+  begin
+   -- is white checker in critical row in descending checker's square?
+    if p(d) = rows(cr) and p'last-d+1 = integer32(cols(cols'last-cr+1))
+     then return 1;   -- we must swap
+    end if;
+   -- is top white checker in critical row in rising checker's square?
+    if p(r) = rows(cd) and p'last-r+1 = integer32(cols(cols'last-cd+1))
+     then return 1;   -- we must swap
+    end if;
+   -- is there a blocker?
+    if Blocker(rows,cols,cr,cd)
+     then return 0;   -- we must stay
+     else return 2;
     end if;
   end Central_Choice;
 

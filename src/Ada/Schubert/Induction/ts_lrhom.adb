@@ -4,6 +4,7 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
 with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
 with Standard_Natural_Vectors;           use Standard_Natural_Vectors;
@@ -396,12 +397,20 @@ procedure ts_lrhom is
     flags : Standard_Complex_VecMats.VecMat(1..nbc-2);
     fsys : Link_to_Poly_Sys;
     sols : Solution_List;
+    tol : constant double_float := 1.0E-6;
+    ans : character;
+    monitor_games : boolean;
 
   begin
     new_line;
     put_line("Reading a name for the output file ...");
     Read_Name_and_Create_File(file);
     new_line;
+    put("Monitor Littlewood-Richardson homotopies"
+      & " in each checker game ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    new_line;
+    monitor_games := (ans = 'y');
     top_roco := Final_Sum(ips);
     put("The formal root count : "); put(top_roco); new_line;
     put_line("... running the root counting from the bottom up ...");
@@ -420,7 +429,7 @@ procedure ts_lrhom is
     new_line;
     put_line("See the output file for results ...");
     new_line;
-    Resolve(file,n,k,ips,sps,conds,flags,sols);
+    Resolve(file,monitor_games,n,k,tol,ips,sps,conds,flags,sols);
     Write_Results(file,n,k,q,rows,cols,link2conds,flags,sols,fsys);
    -- if Length_Of(sols) > 0 then
    --   new_line(file);
