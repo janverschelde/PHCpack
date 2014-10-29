@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
@@ -120,7 +121,7 @@ package Drivers_for_Schubert_Induction is
   --   the other Run_Moving_Flag_Continuation below.
 
   procedure Reporting_Moving_Flag_Continuation
-              ( n,k : in integer32;
+              ( n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec );
 
@@ -132,12 +133,14 @@ package Drivers_for_Schubert_Induction is
   -- ON ENTRY :
   --   n        ambient dimension;
   --   k        dimension of the solution planes;
-  --   rows     row positions for white checkers
+  --   tol      tolerance on the residual of the original problem;
+  --   rows     row positions for white checkers;
   --   cols     columns of white checkers of resolved condition;
   --   cnds     conditions kept fixed during flag continuation.
 
   procedure Reporting_Moving_Flag_Continuation
-              ( file : in file_type; n,k : in integer32;
+              ( file : in file_type;
+                n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec );
 
@@ -150,12 +153,14 @@ package Drivers_for_Schubert_Induction is
   --   file     must be opened for output;
   --   n        ambient dimension;
   --   k        dimension of the solution planes;
-  --   rows     row positions for white checkers
+  --   tol      tolerance on the residual of the original problem;
+  --   rows     row positions for white checkers;
   --   cols     columns of white checkers of resolved condition;
   --   cnds     conditions kept fixed during flag continuation.
 
   procedure Reporting_Moving_Flag_Continuation
-              ( file : in file_type; tune : in boolean; n,k : in integer32;
+              ( file : in file_type; tune : in boolean;
+                n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 sols : out Solution_list; fsys : out Link_to_Poly_Sys;

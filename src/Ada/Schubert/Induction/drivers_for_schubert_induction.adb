@@ -2,7 +2,6 @@ with Communications_with_User;           use Communications_with_User;
 with File_Scanning,Timing_Package;       use File_Scanning,Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
@@ -329,7 +328,7 @@ package body Drivers_for_Schubert_Induction is
   end Random_Flags;
 
   procedure Reporting_Moving_Flag_Continuation
-              ( n,k : in integer32;
+              ( n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec ) is
 
@@ -340,11 +339,12 @@ package body Drivers_for_Schubert_Induction is
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
     new_line;
-    Reporting_Moving_Flag_Continuation(file,n,k,rows,cols,cnds);
+    Reporting_Moving_Flag_Continuation(file,n,k,tol,rows,cols,cnds);
   end Reporting_Moving_Flag_Continuation;
 
   procedure Reporting_Moving_Flag_Continuation
-              ( file : in file_type; tune : in boolean; n,k : in integer32;
+              ( file : in file_type; tune : in boolean;
+                n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 sols : out Solution_List; fsys : out Link_to_Poly_Sys;
@@ -355,7 +355,6 @@ package body Drivers_for_Schubert_Induction is
     ps : Poset;
     report : boolean;
     timer : Timing_Widget;
-    tol : constant double_float := 1.0E-6;
 
   begin
     if tune
@@ -373,7 +372,8 @@ package body Drivers_for_Schubert_Induction is
   end Reporting_Moving_Flag_Continuation;
 
   procedure Reporting_Moving_Flag_Continuation
-              ( file : in file_type; n,k : in integer32;
+              ( file : in file_type;
+                n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec ) is
 
@@ -383,7 +383,7 @@ package body Drivers_for_Schubert_Induction is
 
   begin
     Reporting_Moving_Flag_Continuation
-      (file,true,n,k,rows,cols,cnds,sols,fsys,flgs);
+      (file,true,n,k,tol,rows,cols,cnds,sols,fsys,flgs);
   end Reporting_Moving_Flag_Continuation;
 
   procedure Run_Moving_Flag_Continuation ( n,k : in integer32 ) is
@@ -393,6 +393,7 @@ package body Drivers_for_Schubert_Induction is
     rows,cols,cond : Standard_Natural_Vectors.Vector(1..k);
     cnds : Standard_Natural_VecVecs.Link_to_VecVec;
     happy : boolean;
+    tol : constant double_float := 1.0E-5;
 
   begin
     new_line;
@@ -409,7 +410,7 @@ package body Drivers_for_Schubert_Induction is
     cnds := new Standard_Natural_VecVecs.VecVec(1..1);
     cnds(1) := new Standard_Natural_Vectors.Vector'(cond);
     skip_line; -- skip enter symbol
-    Reporting_Moving_Flag_Continuation(n,k,rows,cols,cnds);
+    Reporting_Moving_Flag_Continuation(n,k,tol,rows,cols,cnds);
   end Run_Moving_Flag_Continuation;
 
   procedure Set_Symbol_Table
@@ -656,6 +657,7 @@ package body Drivers_for_Schubert_Induction is
     nbsols : Natural_Number;
     ans : character;
     inpt : boolean;
+    tol : double_float := 1.0E-5;
 
   begin
     Intersection_Conditions(bm,rows,cols,cnds);
@@ -683,7 +685,7 @@ package body Drivers_for_Schubert_Induction is
       put("Type 0, 1, or 2 to select from menu : ");
       Ask_Alternative(ans,"012");
       if ans = '0' then
-        Reporting_Moving_Flag_Continuation(n,k,rows.all,cols.all,cnds);
+        Reporting_Moving_Flag_Continuation(n,k,tol,rows.all,cols.all,cnds);
       else
         inpt := (ans = '2');
         Run_Cheater_Flag_Homotopy(n,k,rows.all,cols.all,cnds,inpt);

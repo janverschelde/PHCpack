@@ -1,3 +1,6 @@
+Wed 29 Oct 2014 : constant tol moved to specifications of the procedures
+  in drivers_for_schubert_induction.
+
 Tue 28 Oct 2014 : constant tol moved from the body of the procedures in
   moving_flag_continuation into the specification parameters.
   This caused changes in drivers_for_schubert_induction.adb
