@@ -10,6 +10,7 @@ with Standard_Natural_Matrices;          use Standard_Natural_Matrices;
 with Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
 with Standard_Random_Matrices;
+with Symbol_Table;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 --with Standard_Complex_Poly_SysFun;
 with Matrix_Indeterminates;
@@ -280,8 +281,17 @@ package body Drivers_for_Schubert_Induction is
     f : Link_to_Poly_Sys;
     mf : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
        := Moving_Flag_Homotopies.Moved_Flag(n);
+    locmap : Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
+    dim : constant natural32
+        := Checker_Localization_Patterns.Degree_of_Freedom(locmap);
+    tmp : Solution_List;
+    ls : Link_to_Solution;
 
   begin
+    if Symbol_Table.Number < dim 
+     then Matrix_Indeterminates.Initialize_Symbols(dim,locmap);
+    end if;
     new_line(file);
     put(file,"Resolved "); put(file,Bracket(rows)); put(file,"*");
     put(file,Bracket(cols));
@@ -299,8 +309,27 @@ package body Drivers_for_Schubert_Induction is
       put(file,vfs(i).all);
       new_line(file);
     end loop;
-    put_line(file,"The moved flag :");
+    put_line(file,"THE MOVED FLAG :");
     Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+    if Is_Null(sols) then
+      put_line(file,"No solutions found ...");
+    else
+      new_line(file);
+      put(file,"THE "); put(file,k,1);
+      put_line(file,"-SOLUTION PLANES :");
+      tmp := sols;
+      while not Is_Null(tmp) loop
+        ls := Head_Of(tmp);
+        declare
+          x : constant Standard_Complex_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Map(locmap,ls.v);
+        begin
+          put(file,x);
+          new_line(file);
+        end;     
+        tmp := Tail_Of(tmp);
+      end loop;
+    end if;
     Moving_Flag_Homotopies.Flag_Conditions(n,k,q,rows,cols,cnds.all,mf,vfs,f);
     put_line(file,"THE POLYNOMIAL SYSTEM :"); put_line(file,f.all);
     if not Is_Null(sols) then
@@ -665,6 +694,7 @@ package body Drivers_for_Schubert_Induction is
     ps : Poset;
     ans : character;
     silent : boolean;
+    top_roco : Natural_Number;
 
   begin
     new_line;
@@ -687,6 +717,9 @@ package body Drivers_for_Schubert_Induction is
         Intersect(res,cols,silent);
       end loop;
     end if;
+    top_roco := Final_Sum(res);
+    put("The formal root count : "); put(top_roco); new_line;
+    Clear(top_roco);
     return res;
   end Process_Conditions;
 
