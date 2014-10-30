@@ -2,6 +2,8 @@ Wed 29 Oct 2014 : constant tol moved to specifications of the procedures
   in drivers_for_schubert_induction.  Added a verbose option to the resolve
   in resolve_schubert_problems and adjusted ts_lrhom.adb.
   Changed checker_moves.adb and checker_homotopies.adb for silent versions.
+  Moved driver routines from ts_lrhom to drivers_for_schubert_induction
+  so phc -e can now handle any number of Schubert intersection conditions.
 
 Tue 28 Oct 2014 : constant tol moved from the body of the procedures in
   moving_flag_continuation into the specification parameters.

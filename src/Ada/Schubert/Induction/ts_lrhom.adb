@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Timing_Package;                     use Timing_Package;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
@@ -47,46 +48,6 @@ procedure ts_lrhom is
     get(bm);
     put("Your product : "); put(bm); new_line;
   end Read_Brackets;
-
-  function Process_Conditions
-             ( n,k,m : integer32; conds : Array_of_Brackets )
-             return Intersection_Posets.Intersection_Poset is
-
-  -- DESCRIPTION :
-  --   Process the m conditions stored in conds on k-planes in n-space.
-  --   Returns the intersection poset.
-
-    use Intersection_Posets;
-    res : Intersection_Poset(m-1);
-    p : constant Vector(1..n) := Identity_Permutation(natural32(n));
-    rows,cols : Vector(1..k);
-    ps : Poset;
-    ans : character;
-    silent : boolean;
-
-  begin
-    new_line;
-    put("Intermediate output during formal root count ? (y/n) "); 
-    Ask_Yes_or_No(ans);
-    silent := (ans = 'n');
-   -- put_line("Reading the first two intersection conditions...");
-    rows := Standard_Natural_Vectors.Vector(conds(1).all);
-    cols := Standard_Natural_Vectors.Vector(conds(2).all);
-   -- Read_Permutation(rows); Read_Permutation(cols);
-    if not Happy_Checkers(p,rows,cols) then
-      put_line("Your conditions form an unhappy configuration.");
-    else
-      ps := Create(n,rows,cols);
-      res := Create(m-1,ps);
-      for k in 3..m loop
-       -- put("Reading intersection condition "); put(k,1); put_line("...");
-       -- Read_Permutation(cols);
-        cols := Standard_Natural_Vectors.Vector(conds(k).all);
-        Intersect(res,cols,silent);
-      end loop;
-    end if;
-    return res;
-  end Process_Conditions;
 
   procedure Walk_from_Root_to_Leaves
               ( n,k : in integer32; bm : in Bracket_Monomial ) is
@@ -323,47 +284,6 @@ procedure ts_lrhom is
     put_line(" done.");
   end Make_Solution_Poset;
 
-  function Bracket_to_Vector
-             ( b : Bracket ) return Standard_Natural_Vectors.Vector is
-
-  -- DESCRIPTION :
-  --   Converts the bracket to a vector of standard natural numbers.
-
-    res : Standard_Natural_Vectors.Vector(b'range);
-
-  begin
-    for i in b'range loop
-      res(i) := b(i);
-    end loop;
-    return res;
-  end Bracket_to_Vector;
-
-  function Remaining_Intersection_Conditions
-             ( b : Array_of_Brackets )
-             return Standard_Natural_VecVecs.VecVec is
-
-  -- DESCRIPTION :
-  --   Returns the remaining b'last-2 conditions stored in b.
-
-  -- REQUIRED : b'last > 2.
-
-    res : Standard_Natural_VecVecs.VecVec(b'first..b'last-2);
-
-  begin
-    for i in b'first+2..b'last loop
-      declare
-        bck : constant Link_to_Bracket := b(i);
-        bvc : Standard_Natural_Vectors.Vector(bck'range);
-      begin
-        for j in bvc'range loop
-          bvc(j) := bck(j);
-        end loop;
-        res(i-2) := new Standard_Natural_Vectors.Vector'(bvc);
-      end;
-    end loop;
-    return res;
-  end Remaining_Intersection_Conditions;            
-
   procedure Resolve_Schubert_Problem
               ( n,k : in integer32; bm : in Bracket_Monomial ) is
 
@@ -400,6 +320,7 @@ procedure ts_lrhom is
     tol : constant double_float := 1.0E-6;
     ans : character;
     monitor_games : boolean;
+    timer : Timing_Widget;
 
   begin
     new_line;
@@ -429,13 +350,12 @@ procedure ts_lrhom is
     new_line;
     put_line("See the output file for results ...");
     new_line;
+    tstart(timer);
     Resolve(file,monitor_games,n,k,tol,ips,sps,conds,flags,sols);
+    tstop(timer);
     Write_Results(file,n,k,q,rows,cols,link2conds,flags,sols,fsys);
-   -- if Length_Of(sols) > 0 then
-   --   new_line(file);
-   --   put_line(file,"THE SOLUTIONS :");
-   --   put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
-   -- end if;
+    new_line(file);
+    print_times(file,timer,"resolving a Schubert problem");
   end Resolve_Schubert_Problem;
 
   procedure Main is

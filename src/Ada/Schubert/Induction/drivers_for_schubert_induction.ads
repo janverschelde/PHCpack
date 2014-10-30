@@ -11,6 +11,7 @@ with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Brackets;                           use Brackets;
 with Bracket_Monomials;                  use Bracket_Monomials;
 with Intersection_Posets;                use Intersection_Posets;
+with Intersection_Solution_Posets;       use Intersection_Solution_Posets;
 
 package Drivers_for_Schubert_Induction is
 
@@ -22,6 +23,30 @@ package Drivers_for_Schubert_Induction is
   -- DESCRIPTION :
   --   Prompts the user for a product of brackets,
   --   i.e.: for a Schubert intersection problem.
+
+  function Process_Conditions
+             ( n,k,m : integer32; conds : Array_of_Brackets )
+             return Intersection_Posets.Intersection_Poset;
+
+  -- DESCRIPTION :
+  --   Process the m conditions stored in conds on k-planes in n-space.
+  --   Returns the intersection poset.
+
+  function Bracket_to_Vector
+             ( b : Bracket ) return Standard_Natural_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Converts the bracket to a vector of standard natural numbers.
+
+  function Remaining_Intersection_Conditions
+             ( b : Array_of_Brackets )
+             return Standard_Natural_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns the remaining b'last-2 conditions stored in b.
+
+  -- REQUIRED : b'last > 2.
+
 
   function Is_Isolated 
               ( b : Standard_Natural_Vectors.Vector ) return boolean;
