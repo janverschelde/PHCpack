@@ -1,3 +1,6 @@
+Fri 31 Oct 2014 : the use_c2lrhom.adb must use the general resolve for the
+  C and Python interfaces to handle general Schubert problems.
+
 Thu 30 Oct 2014 : updated use_c2lrhom.adb to fit the tol parameter when
   calling Littlewood-Richardson homotopies.
 

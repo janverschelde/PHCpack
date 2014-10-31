@@ -1,20 +1,27 @@
 with text_io;                           use text_io;
 with Interfaces.C;                      use Interfaces.C;
 with Communications_with_User;
+with Timing_Package;                    use Timing_Package;
 with Characters_and_Numbers;            use Characters_and_Numbers;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
--- with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Multprec_Natural_Numbers;          use Multprec_Natural_Numbers;
--- with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Multprec_Natural_Numbers_io;       use Multprec_Natural_Numbers_io;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
+with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 with Standard_Natural_VecVecs;
 with Standard_Complex_VecMats;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 with Brackets;                          use Brackets;
--- with Brackets_io;                       use Brackets_io;
+with Brackets_io;                       use Brackets_io;
+with Checker_Moves;
+with Intersection_Posets;               use Intersection_Posets;
+with Intersection_Solution_Posets;      use Intersection_Solution_Posets;
+with Resolve_Schubert_Problems;         use Resolve_Schubert_Problems;
 with Drivers_for_Schubert_Induction;    use Drivers_for_Schubert_Induction;
 with Standard_PolySys_Container;
 with Standard_Solutions_Container;
@@ -220,33 +227,48 @@ function use_c2lrhom ( job : integer32;
    -- put("Number of characters : "); put(nbchar,1); new_line;
     declare
       cond : constant Array_of_Brackets(1..nbc) := Get_Conditions(b,k,nbc);
+      q : constant Standard_Natural_Vectors.Vector
+        := Checker_Moves.Identity_Permutation(natural32(n));
       rows,cols : Standard_Natural_Vectors.Vector(1..k);
       cnds : Standard_Natural_VecVecs.Link_to_VecVec;
-      flgs : Standard_Complex_VecMats.VecMat(1..nbc-2);
+      ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cond);
+      sps : Solution_Poset(ips.m) := Create(ips);
+      flgs : Standard_Complex_VecMats.VecMat(1..nbc-2)
+           := Random_Flags(n,nbc-2);
       name : constant string := Get_File_Name(c,nbchar);
+      monitor : constant boolean := true;
+      timer : Timing_Widget;
       file : file_type;
       sols : Solution_List;
       fsys : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     begin
-     -- put("The file name : "); put(name); new_line;
-     -- put_line("The brackets : ");
-     -- for i in cond'range loop
-     --   put(cond(i).all);
-     -- end loop;
-     -- new_line;
-      Create_Intersection_Poset(n,nbc,cond,not otp,rc);
-      cnds := new Standard_Natural_VecVecs.VecVec(1..1);
-      cnds(1) := new Standard_Natural_Vectors.Vector(1..k);
+      put_line("The brackets : ");
+      for i in cond'range loop
+        put(cond(i).all);
+      end loop;
+      new_line;
       for i in 1..k loop
         rows(i) := cond(1)(i);
         cols(i) := cond(2)(i);
-        cnds(1)(i) := cond(3)(i);
+      end loop;
+      cnds := new Standard_Natural_VecVecs.VecVec(1..nbc-2);
+      for j in 1..nbc-2 loop 
+        cnds(j) := new Standard_Natural_Vectors.Vector(1..k);
+        for i in 1..k loop
+          cnds(j)(i) := cond(j+2)(i);
+        end loop;
       end loop;
       Communications_with_User.Create_Output_File(file,name);
-      Reporting_Moving_Flag_Continuation
-        (file,false,n,k,tol,rows,cols,cnds,sols,fsys,flgs);
+      Count_Roots(file,ips,rc);
+      put("the root count : "); put(rc,1); new_line;
+      tstart(timer);
+      Resolve(file,monitor,n,k,tol,ips,sps,cnds.all,flgs,sols);
+      tstop(timer);
+      Write_Results(file,n,k,q,rows,cols,cnds,flgs,sols,fsys);
       Standard_PolySys_Container.Initialize(fsys.all);
       Standard_Solutions_Container.Initialize(sols);
+      new_line(file);
+      print_times(file,timer,"resolving a Schubert problem");
       Close(file);
       nrc := Multprec_Natural_Numbers.Create(rc);
      -- put("The formal root count : "); put(nrc,1); new_line;
