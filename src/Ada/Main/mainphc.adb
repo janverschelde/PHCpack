@@ -40,7 +40,7 @@ procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
   -- DESCRIPTION :
   --   Displays an overview of all options on screen.
 
-    o : array(0..20) of string(1..65);
+    o : array(0..21) of string(1..65);
 
   begin
     put("Running full mode,");
@@ -60,16 +60,17 @@ procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
     o(8) := "  phc -k : realization of dynamic output feedback placing poles  ";
     o(9) := "  phc -l : Witness Set for Hypersurface cutting with Random Line ";
     o(10):= "  phc -m : Mixed-Volume Computation via lift+prune and MixedVol  ";
-    o(11):= "  phc -p : Polynomial Continuation by a homotopy in one parameter";
-    o(12):= "  phc -q : Tracking Solution Paths with incremental read/write   ";
-    o(13):= "  phc -r : Root counting and Construction of start systems       ";
-    o(14):= "  phc -s : Equation and variable Scaling on system and solutions ";
-    o(15):= "  phc -t : Tasking for tracking paths using multiple threads     ";
-    o(16):= "  phc -v : Verification, refinement and purification of solutions";
-    o(17):= "  phc -w : Witness Set Intersection using Diagonal Homotopies    ";
-    o(18):= "  phc -x : convert solutions from PHCpack into Python dictionary ";
-    o(19):= "  phc -y : sample points from an algebraic set, given witness set";
-    o(20):= "  phc -z : strip phc output solution lists into Maple format     ";
+    o(11):= "  phc -o : write order of symbols after parsing polynomial system";
+    o(12):= "  phc -p : Polynomial Continuation by a homotopy in one parameter";
+    o(13):= "  phc -q : Tracking Solution Paths with incremental read/write   ";
+    o(14):= "  phc -r : Root counting and Construction of start systems       ";
+    o(15):= "  phc -s : Equation and variable Scaling on system and solutions ";
+    o(16):= "  phc -t : Tasking for tracking paths using multiple threads     ";
+    o(17):= "  phc -v : Verification, refinement and purification of solutions";
+    o(18):= "  phc -w : Witness Set Intersection using Diagonal Homotopies    ";
+    o(19):= "  phc -x : convert solutions from PHCpack into Python dictionary ";
+    o(20):= "  phc -y : sample points from an algebraic set, given witness set";
+    o(21):= "  phc -z : strip phc output solution lists into Maple format     ";
     for i in o'range loop
       put_line(o(i));
     end loop;
