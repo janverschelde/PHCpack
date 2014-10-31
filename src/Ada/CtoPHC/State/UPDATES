@@ -1,3 +1,6 @@
+Thu 30 Oct 2014 : updated use_c2lrhom.adb to fit the tol parameter when
+  calling Littlewood-Richardson homotopies.
+
 Fri 12 Sep 2014 : initialization of the supports added to cell_container,
   exported via use_celcon and use_c2phc.
 

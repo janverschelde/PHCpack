@@ -204,6 +204,7 @@ function use_c2lrhom ( job : integer32;
     otp : boolean;
     rc : Natural_Number;
     nrc : natural32;
+    tol : constant double_float := 1.0E-5;
 
   begin
     Get_Dimensions2(a,n,k,nbc,nbchar,otp);
@@ -243,7 +244,7 @@ function use_c2lrhom ( job : integer32;
       end loop;
       Communications_with_User.Create_Output_File(file,name);
       Reporting_Moving_Flag_Continuation
-        (file,false,n,k,rows,cols,cnds,sols,fsys,flgs);
+        (file,false,n,k,tol,rows,cols,cnds,sols,fsys,flgs);
       Standard_PolySys_Container.Initialize(fsys.all);
       Standard_Solutions_Container.Initialize(sols);
       Close(file);
