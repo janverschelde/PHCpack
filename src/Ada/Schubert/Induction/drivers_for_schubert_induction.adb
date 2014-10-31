@@ -794,7 +794,8 @@ package body Drivers_for_Schubert_Induction is
           := Remaining_Intersection_Conditions(cnd);
     link2conds : constant Standard_Natural_VecVecs.Link_to_VecVec
                := new Standard_Natural_VecVecs.VecVec'(conds);
-    flags : Standard_Complex_VecMats.VecMat(1..nbc-2);
+    flags : Standard_Complex_VecMats.VecMat(1..nbc-2)
+          := Random_Flags(n,nbc-2);
     fsys : Link_to_Poly_Sys;
     sols : Solution_List;
     tol : constant double_float := 1.0E-6;
@@ -818,14 +819,6 @@ package body Drivers_for_Schubert_Induction is
     Count_Roots(file,ips,bottom_roco);
     put(" Top down root count : "); put(top_roco); new_line;
     put("Bottom up root count : "); put(bottom_roco); new_line;
-    for i in flags'range loop
-      declare
-        randflag : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-                 := Moving_Flag_Homotopies.Random_Flag(n);
-      begin
-        flags(i) := new Standard_Complex_Matrices.Matrix'(randflag);
-      end;
-    end loop;
     put_line("... resolving the Schubert problem ...");
     new_line;
     put_line("See the output file for results ...");

@@ -1,3 +1,6 @@
+Fri 31 Oct 2014 : used Random_Flags in the Resolve_Schubert_Problem
+  in drivers_for_schubert_induction.adb.
+
 Thu 30 Oct 2014 : improved output in drivers_for_schubert_induction.adb.
 
 Wed 29 Oct 2014 : constant tol moved to specifications of the procedures
