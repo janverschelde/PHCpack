@@ -349,6 +349,25 @@ introduce more sparsity may also benefit polyhedral methods.
 phc -e : SAGBI/Pieri homotopies to intersect linear subspaces  
 -------------------------------------------------------------
 
+Numerical Schubert calculus is the development of numerical
+homotopy algorithms to solve Schubert problems.  
+A classical problem in Schubert calculus is the problem of four lines:
+Given four lines in three dimensional space, find all lines that meet
+the four given lines in a point.  If the lines are in general position,
+then there are exactly two lines that satisfy the problem specification.
+Numerical homotopy continuation methods deform a given generic problem
+into special position, solve the problem in special position, and then
+deform the solutions from the special into the generic problem.
+
+As Schubert calculus is a classical topic in algebraic geometry,
+what seems less well known is that Schubert calculus offers a solution
+to the output pole placement problem in linear systems control.
+The option phc -k offers one particular interface dedicated to the
+Pieri homotopies to solve the output pole placement problem.
+A related problem that can be solved with Schubert calculus is the 
+completion of a matrix so that the completed matrix has a prescribed 
+set of eigenvalues.
+
 There are three types of homotopies in numerical Schubert calculus:
 
 1. SAGBI homotopies solve hypersurface intersection conditions
@@ -359,6 +378,11 @@ There are three types of homotopies in numerical Schubert calculus:
 
 3. Littlewood-Richardson homotopies resolve general Schubert
    intersection conditions.
+
+The earliest instances of SAGBI and Pieri homotopies were already
+available in version 2.0 of PHCpack.  
+Since version 2.3.95, a more complete implementation of the 
+Littlewood-Richardson homotopies is available.
 
 phc -f : Factor pure dimensional solution set into irreducibles
 ---------------------------------------------------------------
@@ -461,6 +485,52 @@ The menu of phc -m offers 5 different algorithms:
    Stable mixed volumes count all affine solutions
    (not only those with nonzero coordinates) 
    and lead to polyhedral homotopies that compute all affine solutions.
+
+phc -o : writes the contents of the symbol table of an input system
+-------------------------------------------------------------------
+
+Running phc -o with as input argument a polynomial system
+writes the symbols for the variables in the order in which they
+are stored internally after parsing the system.
+For example, if the file /tmp/ex1 contains the lines
+
+::
+
+   2
+     y + x + 1;
+     x*y - 1;
+
+then running phc -o at the command prompt as
+
+::
+
+   phc -o /tmp/ex1 /tmp/ex1.out
+
+makes the file /tmp/ex1.out which contains the line
+
+::
+
+   y x
+
+because in the formulation of the polynomial system,
+the variable with name y occurred before the variable with name x.
+Consequently, the order of the coordinates of the solutions will
+then also be stored in the same order as of the occurrence of the
+variable names.  
+If a particular order of variables would be inconvenient,
+then a trick to force an order on the variables is to insert
+a simple polynomial that simplifies to zero.  For example,
+a modification of the file /tmp/ex1 could be
+
+::
+
+   2
+    x + y - x - y +
+    y + x + 1;
+    x*y - 1;
+
+and the first four monomials x + y - x - y will initialize the
+symbol table with the names x and y, in that order.
 
 phc -p : Polynomial Continuation by a homotopy in one parameter
 ---------------------------------------------------------------
@@ -698,7 +768,7 @@ Acknowledgments
 
 This material is based upon work supported by the 
 National Science Foundation under Grants No. 9804846, 0105739, 0134611,
-0410036, 0713018, and 1115777.
+0410036, 0713018, 1115777, and 1440534.
 Any opinions, findings, and conclusions or recommendations expressed 
 in this material are those of the author(s) and do not necessarily 
 reflect the views of the National Science Foundation. 
