@@ -214,11 +214,13 @@ LRtriple(ZZ,Matrix) := (n,m) -> (
    PHCoutputFile := temporaryFileName() | "PHCout";
    PHCsessionFile := temporaryFileName() | "PHCses";
    PHCsolutions := temporaryFileName() | "PHCsolutions";
-   d = concatenate(d,"\n0\n");  -- solve a generic instance for random flags
+   d = concatenate(d,"\n0\n"); -- solve a generic instance for random flags
+   d = concatenate(d,"n\n");   -- no intermediate output during root count
    d = concatenate(d,PHCoutputFile,"\n");
-   d = concatenate(d,"0\n");  -- do not change default continuation parameters
-   d = concatenate(d,"0\n");  -- no intermediate output during continuation
-   -- stdio << "the input data for phc -e : " << endl <<  d;
+   d = concatenate(d,"n\n");   -- no monitoring of LR homotopies in all games
+  -- d = concatenate(d,"0\n"); -- do not change default continuation parameters
+  -- d = concatenate(d,"0\n"); -- no intermediate output during continuation
+  -- stdio << "the input data for phc -e : " << endl <<  d;
    stdio << endl << "writing data to file " << PHCinputFile << endl;
    dataToFile(d,PHCinputFile);
    stdio << "running phc -e, session output to " << PHCsessionFile << endl;

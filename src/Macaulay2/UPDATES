@@ -1,6 +1,6 @@
-Thu 25 Sep 2014 : changed DBG in PHCpack.m2 int PHCDBG.  Note that the
-  LRhomotopies.m2 is now part of NumericalSchubertCalculus.
-
+Thu 30 Oct 2014 : updated LRhomotopies.m2 to solve general problems, tested
+  R := ZZ; n := 6; m := matrix{{4, 3, 6}}; which is the [3 6]^4 problem.
+  
 Wed 24 Sep 2014 : fixed bug in systemFromFile in PHCpack.m2 and added
   parsing routines to LRhomotopies.m2.
 
