@@ -449,6 +449,34 @@ with as many equations as unknowns, the mixed volume of the Newton
 polytopes gives a generically sharp upper bound on the number of
 isolated solutions with coordinates different from zero.
 
+The mixed volume of a tuple of Newton polytopes
+if defined as the coefficient in the expansion of the volume
+of a linear combination of Newton polytopes.
+For example, for a 3-tuple of Newton polytopes:
+
+.. math::
+
+    \begin{array}{rcl}
+      vol(\lambda_1 P_1 + \lambda_2 P_2 + \lambda_3 P_3)  
+      & = & V(P_1, P_1, P_1) \lambda_1^3 \\
+      & + & V(P_1, P_1, P_2) \lambda_1^2 \lambda_2 \\
+      & + & V(P_1, P_2, P_2) \lambda_1 \lambda_2^2 \\
+      & + & V(P_1, P_2, P_3) \lambda_1 \lambda_2 \lambda_3 \\
+      & + & V(P_2, P_2, P_2) \lambda_2^3 \\
+      & + & V(P_2, P_2, P_3) \lambda_2^2 \lambda_3 \\
+      & + & V(P_2, P_3, P_3) \lambda_2 \lambda_3^2 \\
+      & + & V(P_3, P_3, P_3) \lambda_3^3
+    \end{array}
+
+where \ :math:`vol(\cdot)` is the volume function
+and \ :math:`V(\cdot)` is the mixed volume.
+For the tuple \ :math:`(P_1, P_2, P_3)`, its mixed volume
+is \ :math:`V(P_1,P_2,P_3)` in the expansion above.
+
+The polynomial above can be called the *Minkowski polynomial*
+and with the Cayley trick we can compute all its coefficients.
+This is implemented with the dynamic lifting algorithm.
+
 The menu of phc -m offers 5 different algorithms:
 
 0. Static lifting: a lifting function is applied to the points in the
