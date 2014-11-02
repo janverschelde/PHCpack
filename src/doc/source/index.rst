@@ -290,6 +290,43 @@ number generator with the seed 89348224.
 Just calling phc as phc -0 will still result in using the same
 fixed seed as before in each run.
 
+A homotopy is a family of polynomial systems.
+In an artificial parameter homotopy there is one parameter \ :math:`t` 
+usually going from 0 to 1.  
+If we want to solve the system \ :math:`f({\bf x}) = {\bf 0}`
+and we have a system \ :math:`g({\bf x}) = {\bf 0}`
+then a typical homotopy is \ :math:`h({\bf x},t) = {\bf 0}` as below.
+
+.. math::
+
+   h({\bf x},t) = \gamma (1-t) g({\bf x}) + t f({\bf x}) = {\bf 0}.
+
+The \ :math:`\gamma` is a complex constant on the unit circle
+in the complex plane, generated uniformly at random.
+If all solutions of \ :math:`g({\bf x}) = {\bf 0}` are isolated
+and of multiplicity one, then only for a finite number of complex values 
+for \ :math:`t` the homotopy \ :math:`h({\bf x},t) = {\bf 0}` has
+singular solutions.  
+But since we consider \ :math:`t \in [0,1]` and since the values
+for \ :math:`t` for which \ :math:`h({\bf x},t) = {\bf 0}` are complex,
+the interval \ :math:`[0,1(` will with probability one not contain
+any of the bad complex values for \ :math:`t` and therefore no
+singular solutions for \ :math:`t \in [0,1(` will occur.
+
+Note that, for this gamma trick to work, the order of the operations matters.
+We first give the program the system \ :math:`f({\bf x}) = {\bf 0}`
+and then either also give the system \ :math:`g({\bf x}) = {\bf 0}`
+or let the program generate a suitable \ :math:`g({\bf x}) = {\bf 0}`.
+Only then, in the construction of the homotopy will a random number
+generator determine a constant \ :math:`\gamma`.
+If the \ :math:`\gamma` is predetermined, then it is possible to
+construct an input system \ :math:`f({\bf x}) = {\bf 0}` and
+a start system \ :math:`g({\bf x}) = {\bf 0}` for which there
+are bad values for \ :math:`t \in [0,1(`.
+But reverting the usual order of operations is a bit similar to guessing
+the outcome of a coin toss after the coin toss and not before the coin toss.
+Therefore phc -0 should be used only for debugging purposes.
+
 phc -a : Solving polynomial systems equation-by-equation       
 --------------------------------------------------------
 
