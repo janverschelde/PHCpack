@@ -1,3 +1,6 @@
+Sun 2 Nov 2014 : ts_vmplu.adb tests variable precision linear solving with
+  estimation of the condition number via LU decomposition.
+
 Thu 14 Aug 2014 : to {dobl,quad}dobl_complex_vector_norms, added normalize 
   procedure.
 
