@@ -240,7 +240,7 @@ ts_circuit:
 # Test programs for Math_Lib/Reduction :
 
 test_reduction: ts_fltlu ts_cmplu ts_ddlu ts_qdlu ts_qrd ts_svd ts_eigval \
-                ts_mgs ts_mgsrnk ts_backsubs ts_perflu
+                ts_mgs ts_mgsrnk ts_backsubs ts_perflu ts_vmplu
 
 ts_fltlu:
 	make -f $(MAKEFILE) ts_fltlu
@@ -277,6 +277,9 @@ ts_backsubs:
 
 ts_perflu:
 	make -f $(MAKEFILE) ts_perflu
+
+ts_vmplu:
+	make -f $(MAKEFILE) ts_vmplu
 
 # Test programs for Math_Lib/Polynomials :
 
@@ -884,7 +887,7 @@ ts_piroco:
 
 # Test programs for Induction library in numerical Schubert calculus :
 
-test_induction: ts_checkers ts_induce ts_flagcond
+test_induction: ts_checkers ts_induce ts_flagcond ts_lrhom
 
 ts_checkers:
 	make -f $(MAKEFILE) ts_checkers
@@ -894,6 +897,9 @@ ts_induce:
 
 ts_flagcond:
 	make -f $(MAKEFILE) ts_flagcond
+
+ts_lrhom:
+	make -f $(MAKEFILE) ts_lrhom
 
 # Test programs for the evaluators :
 
