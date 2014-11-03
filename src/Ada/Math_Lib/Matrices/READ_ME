@@ -1,4 +1,4 @@
-Matrix types in PHCv2.3.92
+Matrix types in PHCv2.3.96
 
 Below are some milestones in the development of this library.
 New in the second release is the availability of multiprecision numbers,
@@ -69,6 +69,8 @@ multprec_floating64_matrices       : matrices of multiprecision floating
 multprec_floating64_matrices_io    : generic_matrices_io(multprec floating)
 multprec_complex_vecmats           : generic_vecmats(multprec complex)
 multprec_complex_vecmats_io        : generic_vecmats_io(multprec complex)
+------------------------------------------------------------------------------
+varbprec_matrix_conversions        : convert matrices of various precisions
 ------------------------------------------------------------------------------
 standard_random_matrices           : matrices of random standard numbers
 dobldobl_random_matrices           : matrices of random double doubles
