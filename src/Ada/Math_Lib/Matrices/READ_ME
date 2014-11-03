@@ -70,12 +70,13 @@ multprec_floating64_matrices_io    : generic_matrices_io(multprec floating)
 multprec_complex_vecmats           : generic_vecmats(multprec complex)
 multprec_complex_vecmats_io        : generic_vecmats_io(multprec complex)
 ------------------------------------------------------------------------------
-varbprec_matrix_conversions        : convert matrices of various precisions
-------------------------------------------------------------------------------
 standard_random_matrices           : matrices of random standard numbers
 dobldobl_random_matrices           : matrices of random double doubles
 quaddobl_random_matrices           : matrices of random quad doubles
 multprec_random_matrices           : matrices of random multiprecision numbers
+------------------------------------------------------------------------------
+varbprec_matrix_conversions        : convert matrices of various precisions
+random_conditioned_matrices        : random matrices with given condition
 ------------------------------------------------------------------------------
 ts_natmat                          : test matrices of natural numbers
 ts_intmat                          : test solvers of integer numbers

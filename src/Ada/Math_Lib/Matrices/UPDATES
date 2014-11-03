@@ -1,6 +1,8 @@
 Mon 3 Nov 2014 : new package varbprec_matrix_conversions to convert between
   matrices of various precisions for variable precision linear solvers.
   Added random_orthogonal_matrix to {dobl,quad}dobl_random_matrices.
+  New package random_conditioned_matrices to generate random matrices
+  with prescribed condition number.
 
 Mon 11 Aug 2014 : added orthogonalize to {dobl,quad}dobl_random_matrices.
 
