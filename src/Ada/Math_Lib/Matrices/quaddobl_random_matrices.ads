@@ -26,4 +26,10 @@ package QuadDobl_Random_Matrices is
   -- DESCRIPTION :
   --   Returns the orthogonal matrix with the same column span as mat.
 
+  function Random_Orthogonal_Matrix
+             ( n,m : natural32 ) return QuadDobl_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns a random matrix where the columns form an orthonormal basis.
+
 end QuadDobl_Random_Matrices;

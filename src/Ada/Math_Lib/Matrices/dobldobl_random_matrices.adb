@@ -68,4 +68,15 @@ package body DoblDobl_Random_Matrices is
     return res;
   end Orthogonalize;
 
+  function Random_Orthogonal_Matrix
+             ( n,m : natural32 ) return DoblDobl_Complex_Matrices.Matrix is
+
+    res : constant DoblDobl_Complex_Matrices.Matrix
+                     (1..integer32(n),1..integer32(m))
+        := Orthogonalize(Random_Matrix(n,m));
+
+  begin
+    return res;
+  end Random_Orthogonal_Matrix;
+
 end DoblDobl_Random_Matrices;
