@@ -114,7 +114,8 @@ package body Quad_Double_Numbers is
 
   function is_zero ( q : quad_double ) return boolean is
   begin
-    return (q.hihi = 0.0);
+    return ((q.hihi = 0.0) and (q.lohi = 0.0)
+        and (q.hilo = 0.0) and (q.lolo = 0.0));
   end is_zero;
 
   function is_one ( q : quad_double ) return boolean is

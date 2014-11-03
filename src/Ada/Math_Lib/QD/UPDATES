@@ -1,3 +1,6 @@
+Mon 3 Nov 2014 : test "is_zero" in {double,quad}_double_numbers.adb
+  must test on all parts of the dd/qd number, not just highest part!
+
 Thu 26 Jun 2014 : new package dobldobl_complex_exponentiation as needed
   by the binomial solvers for multiprecision exponent matrices and
   quaddobl_complex_exponentiation is the version for quad doubles.

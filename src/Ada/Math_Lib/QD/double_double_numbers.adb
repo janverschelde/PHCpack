@@ -72,7 +72,7 @@ package body Double_Double_Numbers is
 
   function is_zero ( d : double_double ) return boolean is
   begin
-    return (d.hi = 0.0);
+    return ((d.hi = 0.0) and (d.lo = 0.0));
   end is_zero;
 
   function is_one ( d : double_double ) return boolean is
