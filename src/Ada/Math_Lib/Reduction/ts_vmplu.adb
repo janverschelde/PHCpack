@@ -27,143 +27,22 @@ with Double_Double_Matrices;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_Matrices;
-with Standard_Random_Matrices;          use Standard_Random_Matrices;
+with VarbPrec_Matrix_Conversions;       use VarbPrec_Matrix_Conversions;
+with Standard_Random_Matrices;
+with DoblDobl_Random_Matrices;
+with QuadDobl_Random_Matrices;
+with Random_Conditioned_Matrices;       use Random_Conditioned_Matrices;
 with Standard_Floating_Linear_Solvers;
 with Standard_Complex_Linear_Solvers;
 with Double_Double_Linear_Solvers;
 with DoblDobl_Complex_Linear_Solvers;
+with VarbPrec_Complex_Linear_Solvers;   use VarbPrec_Complex_Linear_Solvers;
 
 procedure ts_vmplu is
 
 -- DESCRIPTION :
 --   Test on variable precision linear system solving with LU decomposition,
 --   with real and complex standard double and double double numbers.
-
-  function d2dd ( mat : Standard_Floating_Matrices.Matrix )
-                return Double_Double_Matrices.Matrix is
-
-    res : Double_Double_Matrices.Matrix(mat'range(1),mat'range(2));
-
-  begin
-    for i in mat'range(1) loop
-      for j in mat'range(2) loop
-        res(i,j) := create(mat(i,j));
-      end loop;
-    end loop;
-    return res;
-  end d2dd;
-
-  function d2dd ( mat : Standard_Complex_Matrices.Matrix )
-                return DoblDobl_Complex_Matrices.Matrix is
-
-    res : DoblDobl_Complex_Matrices.Matrix(mat'range(1),mat'range(2));
-
-  begin
-    for i in mat'range(1) loop
-      for j in mat'range(2) loop
-        declare
-          strp : constant double_float
-               := Standard_Complex_Numbers.REAL_PART(mat(i,j));
-          ddrp : constant double_double := create(strp);
-          stip : constant double_float
-               := Standard_Complex_Numbers.IMAG_PART(mat(i,j));
-          ddip : constant double_double := create(stip);
-        begin
-          res(i,j) := DoblDobl_Complex_Numbers.create(ddrp,ddip);
-        end;
-      end loop;
-    end loop;
-    return res;
-  end d2dd;
-
-  function Singular_Value_Matrix
-             ( n : integer32; c : double_float )
-             return Standard_Floating_Matrices.Matrix is
-
-  -- DESCRIPTION :
-  --   Returns an n-dimensional diagonal matrix that has on its diagonal 
-  --   the values 1.0 + (c - 1.0)/(n-1)*(i - 1), for i in 1..n. 
-
-   res : Standard_Floating_Matrices.Matrix(1..n,1..n);
-   dm1 : constant double_float := double_float(n) - 1.0;
-
-  begin
-    for i in 1..n loop
-      for j in 1..n loop
-        res(i,j) := 0.0;
-      end loop;
-      res(i,i) := 1.0 + (c - 1.0)/dm1*(double_float(i) - 1.0);
-    end loop;
-   -- put_line("The diagonal matrix :"); put(res);
-    return res;
-  end Singular_Value_Matrix;
-
-  function Singular_Value_Matrix
-             ( n : integer32; c : double_float )
-             return Standard_Complex_Matrices.Matrix is
-
-  -- DESCRIPTION :
-  --   Returns an n-dimensional diagonal matrix that has on its diagonal 
-  --   the values 1.0 + (c - 1.0)/(n-1)*(i - 1), for i in 1..n. 
-
-   res : Standard_Complex_Matrices.Matrix(1..n,1..n);
-   dm1 : constant double_float := double_float(n) - 1.0;
-   rdi : double_float;
-
-  begin
-    for i in 1..n loop
-      for j in 1..n loop
-        res(i,j) := Standard_Complex_Numbers.Create(0.0);
-      end loop;
-      rdi := 1.0 + (c - 1.0)/dm1*(double_float(i) - 1.0);
-      res(i,i) := Standard_Complex_Numbers.Create(rdi);
-    end loop;
-    return res;
-  end Singular_Value_Matrix;
-
-  function Random_Conditioned_Matrix
-             ( n : integer32; c : double_float )
-             return Standard_Floating_Matrices.Matrix is
-
-  -- DESCRIPTION :
-  --   Returns a random n-dimensional matrix with condition number c.
-
-    res : Standard_Floating_Matrices.Matrix(1..n,1..n);
-    svm : constant Standard_Floating_Matrices.Matrix(1..n,1..n)
-        := Singular_Value_Matrix(n,c);
-    rq1 : constant Standard_Floating_Matrices.Matrix(1..n,1..n)
-        := Random_Orthogonal_Matrix(natural32(n),natural32(n)); 
-    rq2 : constant Standard_Floating_Matrices.Matrix(1..n,1..n)
-        := Random_Orthogonal_Matrix(natural32(n),natural32(n)); 
-
-    use Standard_Floating_Matrices;
-
-  begin
-    res := rq1*svm*rq2;
-    return res;
-  end Random_Conditioned_Matrix;
-
-  function Random_Conditioned_Matrix
-             ( n : integer32; c : double_float )
-             return Standard_Complex_Matrices.Matrix is
-
-  -- DESCRIPTION :
-  --   Returns a random n-dimensional matrix with condition number c.
-
-    res : Standard_Complex_Matrices.Matrix(1..n,1..n);
-    svm : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-        := Singular_Value_Matrix(n,c);
-    rq1 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-        := Random_Orthogonal_Matrix(natural32(n),natural32(n)); 
-    rq2 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-        := Random_Orthogonal_Matrix(natural32(n),natural32(n)); 
-
-    use Standard_Complex_Matrices;
-
-  begin
-    res := rq1*svm*rq2;
-    return res;
-  end Random_Conditioned_Matrix;
 
   function Estimated_Loss_in_Fixed_Precision
              ( mat : in Standard_Floating_Matrices.Matrix )
@@ -306,7 +185,7 @@ procedure ts_vmplu is
   --   Returns the estimated loss of decimal places that may occur
   --   when solving a linear system with coefficient matrix mat.
 
-    res : integer32 := Estimated_Loss_in_Fixed_Precision(mat);
+    res : integer32 := Estimated_Loss_of_Decimal_Places(mat);
 
   begin
      if res < -15 then
@@ -542,6 +421,33 @@ procedure ts_vmplu is
     end if;
   end Real_Test;
 
+  function Random_Conditioned_Complex_Matrix
+             ( n : in integer32; c : in double_float ) 
+             return Standard_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns a random n-by-n complex matrix with condition number
+  --   equal to c.
+
+    res : Standard_Complex_Matrices.Matrix(1..n,1..n);
+
+  begin
+    if c < 1.0E-15 then
+      res := Random_Conditioned_Matrix(n,c);
+    else
+      declare
+        dd_res : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+               := Random_Conditioned_Matrix(n,c);
+        lss : integer32;
+      begin
+        put_line("estimating dd_res with double double arithmetic ...");
+        lss := Estimated_Loss_in_Fixed_Precision(dd_res);
+        res := dd2d(dd_res);
+      end;
+    end if;
+    return res;
+  end Random_Conditioned_Complex_Matrix;
+
   procedure Complex_Test ( n : in integer32; c : in double_float ) is
 
   -- DESCRIPTION :
@@ -549,7 +455,7 @@ procedure ts_vmplu is
   --   and calls the LU factorization with condition number estimator.
 
     mat : Standard_Complex_Matrices.Matrix(1..n,1..n)
-        := Random_Conditioned_Matrix(n,c);
+        := Random_Conditioned_Complex_Matrix(n,c);
     loss_dcp,want_dcp : integer32 := 0;
     precision : integer32 := 15;
 

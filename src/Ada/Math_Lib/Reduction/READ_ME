@@ -75,6 +75,9 @@ ts_svd                             : test singular value decomposition
 standard_floating_eigenvalues      : eigenvalues of floating-point matrices
 ts_eigval                          : test on eigenvalue computation
 -------------------------------------------------------------------------------
+varbprec_complex_linear_solvers    : variable precision linear system solvers
+ts_vmplu                           : test on variable precision solvers
+-------------------------------------------------------------------------------
 
 The LU-factorizations for real and complex numbers have been translated from
 the LINPACK f66 library.  Adaptions have been made for multiprecision.
