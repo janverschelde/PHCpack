@@ -30,13 +30,26 @@ package VarbPrec_Matrix_Conversions is
                 return Standard_Floating_Matrices.Matrix;
   function dd2d ( mtx : DoblDobl_Complex_Matrices.Matrix )
                 return Standard_Complex_Matrices.Matrix;
+  function dd2qd ( mtx : Double_Double_Matrices.Matrix )
+                 return Quad_Double_Matrices.Matrix;
+  function dd2qd ( mtx : DoblDobl_Complex_Matrices.Matrix )
+                 return QuadDobl_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Converts a matrix in double double precision to a matrix
+  --   in standard double (d) or quad double (qd) precision.
+
   function qd2d ( mtx : Quad_Double_Matrices.Matrix )
                 return Standard_Floating_Matrices.Matrix;
   function qd2d ( mtx : QuadDobl_Complex_Matrices.Matrix )
                 return Standard_Complex_Matrices.Matrix;
+  function qd2dd ( mtx : Quad_Double_Matrices.Matrix )
+                 return Double_Double_Matrices.Matrix;
+  function qd2dd ( mtx : QuadDobl_Complex_Matrices.Matrix )
+                 return DoblDobl_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
-  --   Converts a matrix in double double (dd) or quad double (qd) precision
-  --   into a matrix of standard double precision. 
+  --   Converts a matrix in quad double precision to a matrix
+  --   in standard double (d) or double double (dd) precision.
 
 end VarbPrec_Matrix_Conversions;
