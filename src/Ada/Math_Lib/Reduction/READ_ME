@@ -54,6 +54,7 @@ ts_rowred                          : test incremental row reduction
 -------------------------------------------------------------------------------
 standard_floating_qr_least_squares : QR + least squares for standard floats
 double_double_qr_least_squares     : QR + least squares for double doubles
+quad_double_qr_least_squares       : QR + least squares for quad doubles
 standard_complex_qr_least_squares  : QR + least squares for standard complex
 dobldobl_complex_qr_least_squares  : QR + least squares for dobldobl complex
 quaddobl_complex_qr_least_squares  : QR + least squares for quaddobl complex
