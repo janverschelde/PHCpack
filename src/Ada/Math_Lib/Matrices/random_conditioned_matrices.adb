@@ -3,6 +3,7 @@ with Standard_Complex_Numbers;
 with Standard_Mathematical_Functions;   use Standard_Mathematical_Functions;
 with Standard_Random_Matrices;
 with DoblDobl_Random_Matrices;
+with QuadDobl_Random_Matrices;
 with VarbPrec_Matrix_Conversions;       use VarbPrec_Matrix_Conversions;
 
 package body Random_Conditioned_Matrices is
@@ -99,6 +100,29 @@ package body Random_Conditioned_Matrices is
 
   function Random_Conditioned_Matrix
              ( n : integer32; c : double_float )
+             return Double_Double_Matrices.Matrix is
+
+    use DoblDobl_Random_Matrices;
+
+    res : Double_Double_Matrices.Matrix(1..n,1..n);
+    st_svm : constant Standard_Floating_Matrices.Matrix(1..n,1..n)
+           := Singular_Value_Matrix(n,c);
+    dd_svm : constant Double_Double_Matrices.Matrix(1..n,1..n)
+           := d2dd(st_svm);
+    rq1 : constant Double_Double_Matrices.Matrix(1..n,1..n)
+        := Random_Orthogonal_Matrix(natural32(n),natural32(n)); 
+    rq2 : constant Double_Double_Matrices.Matrix(1..n,1..n)
+        := Random_Orthogonal_Matrix(natural32(n),natural32(n)); 
+
+    use Double_Double_Matrices;
+
+  begin
+    res := rq1*dd_svm*rq2;
+    return res;
+  end Random_Conditioned_Matrix;
+
+  function Random_Conditioned_Matrix
+             ( n : integer32; c : double_float )
              return DoblDobl_Complex_Matrices.Matrix is
 
     use DoblDobl_Random_Matrices;
@@ -114,6 +138,52 @@ package body Random_Conditioned_Matrices is
         := Random_Orthogonal_Matrix(natural32(n),natural32(n)); 
 
     use DoblDobl_Complex_Matrices;
+
+  begin
+    res := rq1*dd_svm*rq2;
+    return res;
+  end Random_Conditioned_Matrix;
+
+  function Random_Conditioned_Matrix
+             ( n : integer32; c : double_float )
+             return Quad_Double_Matrices.Matrix is
+
+    use QuadDobl_Random_Matrices;
+
+    res : Quad_Double_Matrices.Matrix(1..n,1..n);
+    st_svm : constant Standard_Floating_Matrices.Matrix(1..n,1..n)
+           := Singular_Value_Matrix(n,c);
+    dd_svm : constant Quad_Double_Matrices.Matrix(1..n,1..n)
+           := d2qd(st_svm);
+    rq1 : constant Quad_Double_Matrices.Matrix(1..n,1..n)
+        := Random_Orthogonal_Matrix(natural32(n),natural32(n)); 
+    rq2 : constant Quad_Double_Matrices.Matrix(1..n,1..n)
+        := Random_Orthogonal_Matrix(natural32(n),natural32(n)); 
+
+    use Quad_Double_Matrices;
+
+  begin
+    res := rq1*dd_svm*rq2;
+    return res;
+  end Random_Conditioned_Matrix;
+
+  function Random_Conditioned_Matrix
+             ( n : integer32; c : double_float )
+             return QuadDobl_Complex_Matrices.Matrix is
+
+    use QuadDobl_Random_Matrices;
+
+    res : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
+    st_svm : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+           := Singular_Value_Matrix(n,c);
+    dd_svm : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+           := d2qd(st_svm);
+    rq1 : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+        := Random_Orthogonal_Matrix(natural32(n),natural32(n)); 
+    rq2 : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+        := Random_Orthogonal_Matrix(natural32(n),natural32(n)); 
+
+    use QuadDobl_Complex_Matrices;
 
   begin
     res := rq1*dd_svm*rq2;

@@ -1,8 +1,11 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Matrices;
+with Double_Double_Matrices;
+with Quad_Double_Matrices;
 with Standard_Complex_Matrices;
 with DoblDobl_Complex_Matrices;
+with QuadDobl_Complex_Matrices;
 
 package Random_Conditioned_Matrices is
 
@@ -35,15 +38,30 @@ package Random_Conditioned_Matrices is
   --   Returns a random n-dimensional matrix with condition number c,
   --   computed with standard floating-point double precision numbers.
   --   The matrix of return will have the condition number c,
-  --   provided this condition number is less than 10**15.
+  --   provided this condition number is less than 1.0E+16.
 
+  function Random_Conditioned_Matrix
+             ( n : integer32; c : double_float )
+             return Double_Double_Matrices.Matrix;
   function Random_Conditioned_Matrix
              ( n : integer32; c : double_float )
              return DoblDobl_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
-  --   Returns a random n-dimensional matrix with condition number c,
+  --   Returns a random n-dimensional matrix with condition number c.
   --   computed with double double arithmetic.
-  --   This will work for conditioned numbers no larger than 10**30.
+  --   This will work for conditioned numbers no larger than 1.0E+32.
+  --
+  function Random_Conditioned_Matrix
+             ( n : integer32; c : double_float )
+             return Quad_Double_Matrices.Matrix;
+  function Random_Conditioned_Matrix
+             ( n : integer32; c : double_float )
+             return QuadDobl_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns a random n-dimensional matrix with condition number c.
+  --   computed with double double arithmetic.
+  --   This will work for conditioned numbers no larger than 1.0E+64.
 
 end Random_Conditioned_Matrices;

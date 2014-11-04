@@ -1,3 +1,7 @@
+Tue 4 Nov 2014 : added orthogonalizer and random_orthogonal_matrix to
+  {dobl,quad}dobl_random_matrices.  Added extra functions to
+  random_conditioned_matrices for real double doubles and quad doubles.
+
 Mon 3 Nov 2014 : new package varbprec_matrix_conversions to convert between
   matrices of various precisions for variable precision linear solvers.
   Added random_orthogonal_matrix to {dobl,quad}dobl_random_matrices.

@@ -13,6 +13,19 @@ package DoblDobl_Random_Matrices is
   -- DESCRIPTION :
   --   Returns a matrix of range 1..n,1..m with random double doubles.
 
+  function Orthogonalize ( mat : Double_Double_Matrices.Matrix )
+                         return Double_Double_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns the orthogonal matrix with the same column span as mat.
+
+  function Random_Orthogonal_Matrix
+                ( n,m : natural32 ) return Double_Double_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns a matrix of range 1..n,1..m with random floating numbers,
+  --   where the columns are orthogonal w.r.t. each other.
+
   function Random_Matrix ( n,m : natural32 )
                          return DoblDobl_Complex_Matrices.Matrix;
 
