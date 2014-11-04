@@ -1,3 +1,5 @@
+Tue 4 Nov 2014 : package double_double_qr_least_squares is tested by ts_qrd.
+
 Mon 3 Nov 2014 : moved code from ts_vmplu.adb to random_conditioned_matrices
   and various other changes.  New package varbproc_linear_solvers with
   estimators for loss of number of correct decimal places.
