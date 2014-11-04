@@ -1,8 +1,10 @@
 Tue 4 Nov 2014 : package double_double_qr_least_squares is tested by ts_qrd
   and ts_qrd tests also the new package double_double_qr_least_squares.
+  Extended varbprec_complex_linear_solvers and made a new package
+  varbprec_floating_linear_solvers, tested by ts_vmplu.
 
 Mon 3 Nov 2014 : moved code from ts_vmplu.adb to random_conditioned_matrices
-  and various other changes.  New package varbproc_linear_solvers with
+  and various other changes.  New package varbprec_complex_linear_solvers with
   estimators for loss of number of correct decimal places.
 
 Sun 2 Nov 2014 : ts_vmplu.adb tests variable precision linear solving with

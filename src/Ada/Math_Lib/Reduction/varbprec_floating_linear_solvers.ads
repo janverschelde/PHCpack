@@ -3,11 +3,11 @@ with Standard_Floating_Numbers;        use Standard_Floating_Numbers;
 with Double_Double_Numbers;            use Double_Double_Numbers;
 with Quad_Double_Numbers;              use Quad_Double_Numbers;
 with Standard_Integer_Vectors;
-with Standard_Complex_Matrices;
-with DoblDobl_Complex_Matrices;
-with QuadDobl_Complex_Matrices;
+with Standard_Floating_Matrices;
+with Double_Double_Matrices;
+with Quad_Double_Matrices;
 
-package Varbprec_Complex_Linear_Solvers is
+package Varbprec_Floating_Linear_Solvers is
 
 -- DESCRIPTION :
 --   The 'varbprec' is a contraction of variable precision.
@@ -19,15 +19,15 @@ package Varbprec_Complex_Linear_Solvers is
 --   The condition number estimators are based on the LINPACK library.
 
   procedure Estimated_Loss_of_Decimal_Places
-              ( mtx : in out Standard_Complex_Matrices.Matrix;
+              ( mtx : in out Standard_Floating_Matrices.Matrix;
                 piv : out Standard_Integer_Vectors.Vector;
                 rco : out double_float; loss : out integer32 );
   procedure Estimated_Loss_of_Decimal_Places
-              ( mtx : in out DoblDobl_Complex_Matrices.Matrix;
+              ( mtx : in out Double_Double_Matrices.Matrix;
                 piv : out Standard_Integer_Vectors.Vector;
                 rco : out double_double; loss : out integer32 );
   procedure Estimated_Loss_of_Decimal_Places
-              ( mtx : in out QuadDobl_Complex_Matrices.Matrix;
+              ( mtx : in out Quad_Double_Matrices.Matrix;
                 piv : out Standard_Integer_Vectors.Vector;
                 rco : out quad_double; loss : out integer32 );
 
@@ -54,13 +54,13 @@ package Varbprec_Complex_Linear_Solvers is
   --            places when solving a linear system with matrix mtx.
 
   function Estimated_Loss_of_Decimal_Places
-              ( mtx : Standard_Complex_Matrices.Matrix )
+              ( mtx : Standard_Floating_Matrices.Matrix )
               return integer32;
   function Estimated_Loss_of_Decimal_Places
-              ( mtx : DoblDobl_Complex_Matrices.Matrix )
+              ( mtx : Double_Double_Matrices.Matrix )
               return integer32;
   function Estimated_Loss_of_Decimal_Places
-              ( mtx : QuadDobl_Complex_Matrices.Matrix )
+              ( mtx : Quad_Double_Matrices.Matrix )
               return integer32;
 
   -- DESCRIPTION :
@@ -70,4 +70,4 @@ package Varbprec_Complex_Linear_Solvers is
 
   -- REQUIRED : mtx'range(1) = mtx'range(2).
 
-end Varbprec_Complex_Linear_Solvers;
+end Varbprec_Floating_Linear_Solvers;
