@@ -1,3 +1,6 @@
+Wed 5 Nov 2014 : extended varbprec_complex_linear_solvers with solvers
+  with tests in ts_vmplu.adb.
+
 Tue 4 Nov 2014 : package double_double_qr_least_squares is tested by ts_qrd
   and ts_qrd tests also the new package double_double_qr_least_squares.
   Extended varbprec_complex_linear_solvers and made a new package

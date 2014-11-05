@@ -95,4 +95,55 @@ package body Varbprec_Complex_Linear_Solvers is
     return res;
   end Estimated_Loss_of_Decimal_Places;
 
+  procedure Solve_to_Wanted_Decimal_Places
+              ( mtx : in out Standard_Complex_Matrices.Matrix;
+                rhs : in out Standard_Complex_Vectors.Vector;
+                want : in integer32; fail : out boolean;
+                piv : out Standard_Integer_Vectors.Vector;
+                rco : out double_float; loss : out integer32 ) is
+
+    precision : constant integer32 := 16;
+
+  begin
+    Estimated_Loss_of_Decimal_Places(mtx,piv,rco,loss);
+    fail := (precision + loss < want);
+    if not fail
+     then lusolve(mtx,mtx'last(1),piv,rhs);
+    end if;
+  end Solve_to_Wanted_Decimal_Places;
+
+  procedure Solve_to_Wanted_Decimal_Places
+              ( mtx : in out DoblDobl_Complex_Matrices.Matrix;
+                rhs : in out DoblDobl_Complex_Vectors.Vector;
+                want : in integer32; fail : out boolean;
+                piv : out Standard_Integer_Vectors.Vector;
+                rco : out double_double; loss : out integer32 ) is
+
+    precision : constant integer32 := 32;
+
+  begin
+    Estimated_Loss_of_Decimal_Places(mtx,piv,rco,loss);
+    fail := (precision + loss < want);
+    if not fail
+     then lusolve(mtx,mtx'last(1),piv,rhs);
+    end if;
+  end Solve_to_Wanted_Decimal_Places;
+
+  procedure Solve_to_Wanted_Decimal_Places
+              ( mtx : in out QuadDobl_Complex_Matrices.Matrix;
+                rhs : in out QuadDobl_Complex_Vectors.Vector;
+                want : in integer32; fail : out boolean;
+                piv : out Standard_Integer_Vectors.Vector;
+                rco : out quad_double; loss : out integer32 ) is
+
+    precision : constant integer32 := 64;
+
+  begin
+    Estimated_Loss_of_Decimal_Places(mtx,piv,rco,loss);
+    fail := (precision + loss < want);
+    if not fail
+     then lusolve(mtx,mtx'last(1),piv,rhs);
+    end if;
+  end Solve_to_Wanted_Decimal_Places;
+
 end Varbprec_Complex_Linear_Solvers;
