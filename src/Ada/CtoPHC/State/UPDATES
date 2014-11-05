@@ -1,3 +1,6 @@
+Wed 5 Nov 2014 : upgraded use_c2phc.adb to apply the drivers to square and
+  embed a polynomial system from drivers_to_cascade_filtering.
+
 Fri 31 Oct 2014 : the use_c2lrhom.adb must use the general resolve for the
   C and Python interfaces to handle general Schubert problems.
 

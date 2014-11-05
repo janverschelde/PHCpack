@@ -52,6 +52,7 @@ with Floating_Mixed_Subdivisions;
 with Black_Mixed_Volume_Computations;
 with Black_Box_Solvers;
 with Witness_Sets,Witness_Sets_io;
+with Drivers_to_Cascade_Filtering;
 with Greeting_Banners;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 -- with Assignments_of_Solutions;          use Assignments_of_Solutions;
@@ -1459,21 +1460,19 @@ function use_c2phc ( job : integer32;
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     lplast : integer32 := lp'last;
     use Standard_Complex_Polynomials;
+    ep : Link_to_Poly_Sys;
 
   begin
    -- put("Embedding the system in the container with dimension = ");
    -- put(dim,1); new_line;
-    while lp(lplast) = Null_Poly loop
-      lplast := lplast-1;
-    end loop;
-    declare
-      e : constant Poly_Sys := Witness_Sets.Slice_and_Embed(lp.all,dim);
-       -- := Witness_Sets.Slice_and_Embed(lp(lp'first..lplast),dim);
-    begin
-      Standard_PolySys_Container.Clear;
-      Standard_PolySys_Container.Initialize(e);
-      Witness_Sets_io.Add_Embed_Symbols(dim);
-    end;
+   -- while lp(lplast) = Null_Poly loop
+   --   lplast := lplast-1;
+   -- end loop;
+   -- e := Witness_Sets.Slice_and_Embed(lp(lp'first..lplast),dim);
+    Drivers_to_Cascade_Filtering.Square_and_Embed(lp.all,dim,ep);
+    Standard_PolySys_Container.Clear;
+    Standard_PolySys_Container.Initialize(ep.all);
+    Witness_Sets_io.Add_Embed_Symbols(dim);
     return 0;
   exception
     when others => return 66;
