@@ -73,18 +73,20 @@ procedure ts_vmplu is
   --   decimal places correct as the value of want_dcp.
 
     x : constant Standard_Floating_Vectors.Vector(1..dim) := (1..dim => 1.0);
-    b : Standard_Floating_Vectors.Vector(1..dim);
+    b,rhs : Standard_Floating_Vectors.Vector(1..dim);
     wrk : Standard_Floating_Matrices.Matrix(1..dim,1..dim) := mat;
+    mtx : Standard_Floating_Matrices.Matrix(1..dim,1..dim) := mat;
     piv : Standard_Integer_Vectors.Vector(1..dim);
-    inf : integer32;
+    inf,loss : integer32;
     tol : constant double_float := 10.0**(integer(-want_dcp - 1));
     okay : boolean := true;
-    adf : double_float;
+    fail : boolean;
+    adf,rco : double_float;
   
     use Standard_Floating_Matrices;
 
   begin
-    b := mat*x;
+    b := mat*x; rhs := b;
     Standard_Floating_Linear_Solvers.lufac(wrk,dim,piv,inf);
     Standard_Floating_Linear_Solvers.lusolve(wrk,dim,piv,b);
     put_line("The computed solution :"); put_line(b);
@@ -102,6 +104,14 @@ procedure ts_vmplu is
     else
       put("Accuracy of "); put(want_dcp,1); 
       put_line(" decimal places is not obtained.");
+    end if;
+    put_line("-> verifying with call to packaged routine ...");
+    Solve_to_Wanted_Decimal_Places(mtx,rhs,want_dcp,fail,piv,rco,loss);
+    if fail then
+      put_line("Failed to compute up to want number of decimal places!");
+    else
+      put_line("Succeeded to compute up to wanted number of decimal places.");
+      put_line("The solution :"); put_line(rhs);
     end if;
   end Standard_Real_Solve;
 
@@ -173,18 +183,20 @@ procedure ts_vmplu is
 
     one : constant double_double := create(1.0);
     x : constant Double_Double_Vectors.Vector(1..dim) := (1..dim => one);
-    b : Double_Double_Vectors.Vector(1..dim);
+    b,rhs : Double_Double_Vectors.Vector(1..dim);
     wrk : Double_Double_Matrices.Matrix(1..dim,1..dim) := mat;
+    mtx : Double_Double_Matrices.Matrix(1..dim,1..dim) := mat;
     piv : Standard_Integer_Vectors.Vector(1..dim);
-    inf : integer32;
+    inf,loss : integer32;
     tol : constant double_float := 10.0**(integer(-want_dcp - 1));
     okay : boolean := true;
-    adf : double_double;
+    fail : boolean;
+    adf,rco : double_double;
   
     use Double_Double_Matrices;
 
   begin
-    b := mat*x;
+    b := mat*x; rhs := b;
     Double_Double_Linear_Solvers.lufac(wrk,dim,piv,inf);
     Double_Double_Linear_Solvers.lusolve(wrk,dim,piv,b);
     put_line("The computed solution :"); put_line(b);
@@ -202,6 +214,14 @@ procedure ts_vmplu is
     else
       put("Accuracy of "); put(want_dcp,1); 
       put_line(" decimal places is not obtained.");
+    end if;
+    put_line("-> verifying with call to packaged routine ...");
+    Solve_to_Wanted_Decimal_Places(mtx,rhs,want_dcp,fail,piv,rco,loss);
+    if fail then
+      put_line("Failed to compute up to want number of decimal places!");
+    else
+      put_line("Succeeded to compute up to wanted number of decimal places.");
+      put_line("The solution :"); put_line(rhs);
     end if;
   end DoblDobl_Real_Solve;
 
@@ -274,18 +294,20 @@ procedure ts_vmplu is
 
     one : constant quad_double := create(1.0);
     x : constant Quad_Double_Vectors.Vector(1..dim) := (1..dim => one);
-    b : Quad_Double_Vectors.Vector(1..dim);
+    b,rhs : Quad_Double_Vectors.Vector(1..dim);
     wrk : Quad_Double_Matrices.Matrix(1..dim,1..dim) := mat;
+    mtx : Quad_Double_Matrices.Matrix(1..dim,1..dim) := mat;
     piv : Standard_Integer_Vectors.Vector(1..dim);
-    inf : integer32;
+    inf,loss : integer32;
     tol : constant double_float := 10.0**(integer(-want_dcp - 1));
     okay : boolean := true;
-    adf : quad_double;
+    fail : boolean;
+    adf,rco : quad_double;
   
     use Quad_Double_Matrices;
 
   begin
-    b := mat*x;
+    b := mat*x; rhs := b;
     Quad_Double_Linear_Solvers.lufac(wrk,dim,piv,inf);
     Quad_Double_Linear_Solvers.lusolve(wrk,dim,piv,b);
     put_line("The computed solution :"); put_line(b);
@@ -303,6 +325,14 @@ procedure ts_vmplu is
     else
       put("Accuracy of "); put(want_dcp,1); 
       put_line(" decimal places is not obtained.");
+    end if;
+    put_line("-> verifying with call to packaged routine ...");
+    Solve_to_Wanted_Decimal_Places(mtx,rhs,want_dcp,fail,piv,rco,loss);
+    if fail then
+      put_line("Failed to compute up to want number of decimal places!");
+    else
+      put_line("Succeeded to compute up to wanted number of decimal places.");
+      put_line("The solution :"); put_line(rhs);
     end if;
   end QuadDobl_Real_Solve;
 
