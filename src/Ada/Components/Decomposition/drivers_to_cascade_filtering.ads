@@ -101,6 +101,98 @@ package Drivers_to_Cascade_Filtering is
   --   the solution set of the system p.  k is the top dimension.
   --   All results are written to the file.
 
+  procedure Interactive_Embed_Square_System 
+              ( file : in file_type; p : in Poly_Sys;
+                embsys : out Link_to_Poly_Sys; topdim : out natural32 );
+
+  -- DESCRIPTION :
+  --   Prompts the user to enter the expected top dimension, 
+  --   which is returned in topdim,
+  --   creates the embedded system and writes it on file.
+  --   This procedure is called by Interactive_Square_and_Embed,
+  --   in case the given polynomial system is square.
+
+  procedure Embed_Square_System 
+              ( p : in Poly_Sys; topdim : in natural32;
+                embsys : out Link_to_Poly_Sys );
+
+  -- DESCRIPTION :
+  --   Noninteractive version of the previous procedure.
+
+  -- ON ENTRY :
+  --   p        system with as many equations as variables;
+  --   topdim   the topdimension.
+ 
+  -- ON RETURN :
+  --   embsys   system with as many extra linear equations as topdim
+  --            and with the symbol table enlarged with as many
+  --            symbols for the slack variables as the value of topdim.
+
+  function Full_Embed_Nonsquare_System
+               ( p : Poly_Sys; nq,nv,k : natural32 ) return Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Constructs an embedding of a nonsquare system,
+  --   using slices not restricted to any particular subspace.
+
+  -- ON ENTRY :
+  --   p         nonsquare polynomial system;
+  --   nq        number of equations;
+  --   nv        number of variables;
+  --   k         number of slices to be added to the system.
+
+  -- ON RETURN :
+  --   Square polynomial system with k additional linear equations.
+
+  procedure Interactive_Embed_Nonsquare_System
+              ( file : in file_type; p : in Poly_Sys;
+                nbequ,nbunk : in natural32;
+                embsys : out Link_to_Poly_Sys; topdim : out natural32 );
+
+  -- DESCRIPTION :
+  --   Constructs an embedding of a nonsquare system with number of
+  --   equations in nbequ and number of unknowns in nbunk.
+  --   The user is prompted for the expected top dimension.
+  --   Slack variables are added for overdetermined systems.
+  --   Dummy variables are added for underdetermined systems.
+  --   The embedded system is written to file.
+
+  procedure Embed_Nonsquare_System
+              ( p : in Poly_Sys;
+                nbequ,nbunk,topdim : in natural32;
+                embsys : out Link_to_Poly_Sys );
+
+  -- DESCRIPTION :
+  --   Noninteractive version of the above procedure.
+
+  procedure Interactive_Square_and_Embed
+              ( file : in file_type; p : in Poly_Sys;
+                ep : out Link_to_Poly_Sys; k : out natural32 );
+
+  -- DESCRIPTION :
+  --   The embedding of nonsquare systems involves the addition of
+  --   extra slack variables (in case the system is overdetermined)
+  --   or the use of dummy variables (for underdetermined systems).
+  --   Therefore the embedding for square systems is treated separately
+  --   from the embedding of the nonsquare systems.
+
+  -- ON ENTRY :
+  --   file     for output;
+  --   p        system in any number of equations and variables.
+ 
+  -- ON RETURN :
+  --   ep       embedded system with extra slack variables;
+  --   k        the dimension as entered by the user.
+
+  procedure Square_and_Embed
+              ( p : in Poly_Sys; topdim : in natural32;
+                ep : out Link_to_Poly_Sys );
+
+  -- DESCRIPTION :
+  --   Noninteractive version of the procedure above,
+  --   works for systems in any number of equations and variables
+  --   and takes care of the symbol table adjustment.
+
   procedure Embed_and_Cascade;
 
   -- DESCRIPTION :

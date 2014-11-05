@@ -91,12 +91,13 @@ package body Drivers_to_Cascade_Filtering is
     end if;
   end Maximum;
 
-  procedure Embed_Square_System 
+  procedure Interactive_Embed_Square_System 
               ( file : in file_type; p : in Poly_Sys;
                 embsys : out Link_to_Poly_Sys; topdim : out natural32 ) is
 
   -- DESCRIPTION :
-  --   Prompts the user to enter the expected top dimension,
+  --   Prompts the user to enter the expected top dimension, 
+  --   which is returned in topdim,
   --   creates the embedded system and writes it on file.
 
     k,m : natural32 := 0;
@@ -126,6 +127,19 @@ package body Drivers_to_Cascade_Filtering is
         end loop;
       end if;
       put_line(file,ep);
+      embsys := new Poly_Sys'(ep);
+    end;
+  end Interactive_Embed_Square_System;
+
+  procedure Embed_Square_System 
+              ( p : in Poly_Sys; topdim : in natural32;
+                embsys : out Link_to_Poly_Sys ) is
+  begin
+    Add_Embed_Symbols(topdim);
+    declare
+      ep : Poly_Sys(p'first..p'last+integer32(topdim));
+    begin
+      ep := Slice_and_Embed(p,topdim);
       embsys := new Poly_Sys'(ep);
     end;
   end Embed_Square_System;
@@ -171,7 +185,7 @@ package body Drivers_to_Cascade_Filtering is
     return embedded;
   end Full_Embed_Nonsquare_System;
 
-  procedure Embed_Nonsquare_System
+  procedure Interactive_Embed_Nonsquare_System
               ( file : in file_type; p : in Poly_Sys;
                 nbequ,nbunk : in natural32;
                 embsys : out Link_to_Poly_Sys; topdim : out natural32 ) is
@@ -235,18 +249,39 @@ package body Drivers_to_Cascade_Filtering is
       put_line(file,ep);
       embsys := new Poly_Sys'(ep);
     end;
+  end Interactive_Embed_Nonsquare_System;
+
+  procedure Embed_Nonsquare_System
+              ( p : in Poly_Sys;
+                nbequ,nbunk,topdim : in natural32;
+                embsys : out Link_to_Poly_Sys ) is
+
+    max : constant natural32 := Maximum(nbequ,nbunk);
+    sp : constant Poly_Sys(1..integer32(max)) := Square(p);
+    ns : natural32;
+
+  begin
+    if nbequ > nbunk then
+      Add_Slack_Symbols(nbequ-nbunk);
+     -- put("added "); put(nbequ - nbunk,1); put_line(" slack variables");
+    end if;
+   -- put_line("The squared polynomial system :"); put_line(sp);
+    ns := Symbol_Table.Number;
+    if ns < nbunk
+     then Add_Extra_Symbols(nbunk-ns);
+    end if;
+    Add_Embed_Symbols(topdim);
+    declare
+      ep : Poly_Sys(sp'first..sp'last+integer32(topdim))
+         := Full_Embed_Nonsquare_System(sp,nbequ,nbunk,topdim);
+    begin
+      embsys := new Poly_Sys'(ep);
+    end;
   end Embed_Nonsquare_System;
 
-  procedure Square_and_Embed
+  procedure Interactive_Square_and_Embed
               ( file : in file_type; p : in Poly_Sys;
                 ep : out Link_to_Poly_Sys; k : out natural32 ) is
-
-  -- NOTE :
-  --   The embedding of nonsquare systems involves the addition of
-  --   extra slack variables (in case the system is overdetermined)
-  --   or the use of dummy variables (for underdetermined systems).
-  --   Therefore the embedding for square systems is treated separately
-  --   from the embedding of the nonsquare systems.
 
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
@@ -255,8 +290,24 @@ package body Drivers_to_Cascade_Filtering is
     put("The number of equations : "); put(nq,1); new_line;
     put("The number of variables : "); put(nv,1); new_line;
     if nq /= nv
-     then Embed_Nonsquare_System(file,p,nq,nv,ep,k);
-     else Embed_Square_System(file,p,ep,k);
+     then Interactive_Embed_Nonsquare_System(file,p,nq,nv,ep,k);
+     else Interactive_Embed_Square_System(file,p,ep,k);
+    end if;
+  end Interactive_Square_and_Embed;
+
+  procedure Square_and_Embed
+              ( p : in Poly_Sys; topdim : in natural32;
+                ep : out Link_to_Poly_Sys ) is
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+
+  begin
+   -- put("The number of equations : "); put(nq,1); new_line;
+   -- put("The number of variables : "); put(nv,1); new_line;
+    if nq /= nv
+     then Embed_Nonsquare_System(p,nq,nv,topdim,ep);
+     else Embed_Square_System(p,topdim,ep);
     end if;
   end Square_and_Embed;
 
@@ -273,7 +324,7 @@ package body Drivers_to_Cascade_Filtering is
     put_line("Reading the name of the output file.");
     Read_Name_and_Create_File(file);
     new_line;
-    Square_and_Embed(file,lp.all,ep,k);
+    Interactive_Square_and_Embed(file,lp.all,ep,k);
     new_line;
     put_line("See the output file for results...");
     new_line;
@@ -1055,7 +1106,7 @@ package body Drivers_to_Cascade_Filtering is
     put_line("Reading the name of the output file.");
     Read_Name_and_Create_File(file,outfilename);
     new_line;
-    Square_and_Embed(file,lp.all,ep,k);
+    Interactive_Square_and_Embed(file,lp.all,ep,k);
     new_line;
     put_line("Calling the blackbox solver on the top embedding.");
     put_line("See the output file for results...");

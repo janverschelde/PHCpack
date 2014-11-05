@@ -1,3 +1,7 @@
+Wed 5 Nov 2014 : renamed and exported procedures to square and embed
+  polynomial systems in drivers_to_cascade_filtering, for use in the
+  phcpy.sets.embed method.
+
 Wed 30 Apr 2014 : changed maindeco.adb so the user is now prompted also
   in silent mode whether the solution set is pure dimensional.
 
