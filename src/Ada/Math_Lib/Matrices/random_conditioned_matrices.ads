@@ -6,6 +6,7 @@ with Quad_Double_Matrices;
 with Standard_Complex_Matrices;
 with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices;
+with Multprec_Complex_Matrices;
 
 package Random_Conditioned_Matrices is
 
@@ -63,5 +64,15 @@ package Random_Conditioned_Matrices is
   --   Returns a random n-dimensional matrix with condition number c.
   --   computed with double double arithmetic.
   --   This will work for conditioned numbers no larger than 1.0E+64.
+  --
+  function Random_Conditioned_Matrix
+             ( n : integer32; c : double_float )
+             return Multprec_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns a random n-dimensional matrix with condition number c.
+  --   computed with arbitrary multiprecision arithmetic.
+  --   The size of the multiprecision numbers is set as twice
+  --   the magnitude of the condition number c.
 
 end Random_Conditioned_Matrices;

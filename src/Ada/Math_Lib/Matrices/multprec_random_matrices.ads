@@ -40,4 +40,16 @@ package Multprec_Random_Matrices is
   -- DESCRIPTION :
   --   Returns a matrix of range 1..n,1..m with entries of size sz.
 
+  function Orthogonalize ( mat : Multprec_Complex_Matrices.Matrix )
+                         return Multprec_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns the orthogonal matrix with the same column span as mat.
+
+  function Random_Orthogonal_Matrix
+             ( n,m,sz : natural32 ) return Multprec_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns a random matrix where the columns form an orthonormal basis.
+
 end Multprec_Random_Matrices;

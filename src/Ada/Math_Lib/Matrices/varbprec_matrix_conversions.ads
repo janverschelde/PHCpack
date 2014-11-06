@@ -1,9 +1,12 @@
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Floating_Matrices;
 with Standard_Complex_Matrices;
 with Double_Double_Matrices;
 with Quad_Double_Matrices;
+with Multprec_Floating_Matrices;
 with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices;
+with Multprec_Complex_Matrices;
 
 package VarbPrec_Matrix_Conversions is
 
@@ -21,10 +24,15 @@ package VarbPrec_Matrix_Conversions is
                 return Quad_Double_Matrices.Matrix;
   function d2qd ( mtx : Standard_Complex_Matrices.Matrix )
                 return QuadDobl_Complex_Matrices.Matrix;
+  function d2mp ( mtx : Standard_Floating_Matrices.Matrix )
+                return Multprec_Floating_Matrices.Matrix;
+  function d2mp ( mtx : Standard_Complex_Matrices.Matrix )
+                return Multprec_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Converts a floating-point matrix in standard double precision
-  --   to a matrix in double double (dd) or quad double (qd) precision.
+  --   to a matrix in double double (dd), quad double (qd) precision,
+  --   or arbitrary multiprecision (mp).
 
   function dd2d ( mtx : Double_Double_Matrices.Matrix )
                 return Standard_Floating_Matrices.Matrix;
@@ -51,5 +59,13 @@ package VarbPrec_Matrix_Conversions is
   -- DESCRIPTION :
   --   Converts a matrix in quad double precision to a matrix
   --   in standard double (d) or double double (dd) precision.
+
+  procedure Set_Size ( mtx : in out Multprec_Floating_Matrices.Matrix;
+                       size : in natural32 );
+  procedure Set_Size ( mtx : in out Multprec_Complex_Matrices.Matrix;
+                       size : in natural32 );
+
+  -- DESCRIPTION :
+  --   Sets the size of the matrix mtx to the given value of size.
 
 end VarbPrec_Matrix_Conversions;

@@ -1,9 +1,12 @@
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Double_Double_Numbers;             use Double_Double_Numbers;
-with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with Multprec_Complex_Numbers;
+with Multprec_Complex_Number_Tools;      use Multprec_Complex_Number_Tools;
 
 package body VarbPrec_Matrix_Conversions is
 
@@ -82,6 +85,45 @@ package body VarbPrec_Matrix_Conversions is
     end loop;
     return res;
   end d2qd;
+
+  function d2mp ( mtx : Standard_Floating_Matrices.Matrix )
+                return Multprec_Floating_Matrices.Matrix is
+
+    res : Multprec_Floating_Matrices.Matrix(mtx'range(1),mtx'range(2));
+
+  begin
+    for i in mtx'range(1) loop
+      for j in mtx'range(2) loop
+        res(i,j) := create(mtx(i,j));
+      end loop;
+    end loop;
+    return res;
+  end d2mp;
+
+  function d2mp ( mtx : Standard_Complex_Matrices.Matrix )
+                return Multprec_Complex_Matrices.Matrix is
+
+    res : Multprec_Complex_Matrices.Matrix(mtx'range(1),mtx'range(2));
+
+  begin
+    for i in mtx'range(1) loop
+      for j in mtx'range(2) loop
+        declare
+          strp : constant double_float
+               := Standard_Complex_Numbers.REAL_PART(mtx(i,j));
+          mprp : Floating_Number := Create(strp);
+          stip : constant double_float
+               := Standard_Complex_Numbers.IMAG_PART(mtx(i,j));
+          mpip : Floating_Number := create(stip);
+        begin
+          res(i,j) := Multprec_Complex_Numbers.create(mprp,mpip);
+          Multprec_Floating_Numbers.Clear(mprp);
+          Multprec_Floating_Numbers.Clear(mpip);
+        end;
+      end loop;
+    end loop;
+    return res;
+  end d2mp;
 
   function dd2d ( mtx : Double_Double_Matrices.Matrix )
                 return Standard_Floating_Matrices.Matrix is
@@ -230,5 +272,25 @@ package body VarbPrec_Matrix_Conversions is
     end loop;
     return res;
   end qd2dd;
+
+  procedure Set_Size ( mtx : in out Multprec_Floating_Matrices.Matrix;
+                       size : in natural32 ) is
+  begin
+    for i in mtx'range(1) loop
+      for j in mtx'range(2) loop
+        Multprec_Floating_Numbers.Set_Size(mtx(i,j),size);
+      end loop;
+    end loop;
+  end Set_Size;
+
+  procedure Set_Size ( mtx : in out Multprec_Complex_Matrices.Matrix;
+                       size : in natural32 ) is
+  begin
+    for i in mtx'range(1) loop
+      for j in mtx'range(2) loop
+        Set_Size(mtx(i,j),size);
+      end loop;
+    end loop;
+  end Set_Size;
 
 end VarbPrec_Matrix_Conversions;

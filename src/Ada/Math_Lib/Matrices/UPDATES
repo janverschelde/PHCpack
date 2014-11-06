@@ -1,3 +1,7 @@
+Thu 6 Nov 2014 : extended multprec_random_matrices with function to generate
+  a random orthogonal complex matrix of arbitrary precision, for use in
+  random_condition_matrices; modified random_conditioned_matrices.
+
 Tue 4 Nov 2014 : added orthogonalizer and random_orthogonal_matrix to
   {dobl,quad}dobl_random_matrices.  Added extra functions to
   random_conditioned_matrices for real double doubles and quad doubles.
