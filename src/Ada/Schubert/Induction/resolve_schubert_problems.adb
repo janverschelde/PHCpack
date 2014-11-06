@@ -301,6 +301,7 @@ package body Resolve_Schubert_Problems is
 
   procedure Connect_Checker_Posets_to_Track
               ( file : in file_type; n,k,level : in integer32;
+                tol : in double_float;
                 pl : in Poset_List; snd : in Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Solution_Poset;
@@ -308,7 +309,6 @@ package body Resolve_Schubert_Problems is
                 flags : in Standard_Complex_VecMats.VecMat ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
-    tol : constant double_float := 1.0E-6;
 
     procedure Connect_Parent ( node : in Link_to_Poset_Node ) is
 
@@ -404,7 +404,7 @@ package body Resolve_Schubert_Problems is
   end Connect_Checker_Posets_to_Track;
 
   procedure Connect_Checker_Posets_to_Track
-              ( n,k,level : in integer32;
+              ( n,k,level : in integer32; tol : in double_float;
                 pl : in Poset_List; snd : in Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Solution_Poset;
@@ -412,7 +412,6 @@ package body Resolve_Schubert_Problems is
                 flags : in Standard_Complex_VecMats.VecMat ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
-    tol : constant double_float := 1.0E-8;
 
     procedure Connect_Parent ( node : in Link_to_Poset_Node ) is
 
@@ -513,7 +512,8 @@ package body Resolve_Schubert_Problems is
   end Count_Roots;
 
   procedure Resolve
-              ( file : in file_type; n,k : in integer32;
+              ( file : in file_type; extopt : in boolean;
+                n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out Solution_Poset;
                 conds : in Standard_Natural_VecVecs.VecVec;
@@ -566,12 +566,23 @@ package body Resolve_Schubert_Problems is
         put_line(file," ***");
         if i > 1 then
           put_line(file,"-> solving at the leaves of its parents :");
-          if i = 2 then -- use the original flags
-            Connect_Checker_Posets_to_Track
-              (file,n,k,i-1,ips.nodes(i-1),snd,trans,sps,conds,flags);
+          if extopt then
+            if i = 2 then -- use the original flags
+              Connect_Checker_Posets_to_Track
+                (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,conds,flags);
+            else
+              Connect_Checker_Posets_to_Track
+                (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,conds,
+                 workf.all);
+            end if;
           else
-            Connect_Checker_Posets_to_Track
-              (file,n,k,i-1,ips.nodes(i-1),snd,trans,sps,conds,workf.all);
+            if i = 2 then -- use the original flags
+              Connect_Checker_Posets_to_Track
+                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,conds,flags);
+            else
+              Connect_Checker_Posets_to_Track
+                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,conds,workf.all);
+            end if;
           end if;
         end if;
         tmp := Tail_Of(tmp);

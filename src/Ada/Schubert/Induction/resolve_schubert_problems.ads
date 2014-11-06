@@ -112,14 +112,15 @@ package Resolve_Schubert_Problems is
   --   nd       poset of the child.
 
   procedure Connect_Checker_Posets_to_Track
-              ( n,k,level : in integer32;
+              ( n,k,level : in integer32; tol : in double_float;
                 pl : in Poset_List; snd : in Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Solution_Poset;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat );
   procedure Connect_Checker_Posets_to_Track
-              ( file : in file_type; n,k,level : in integer32;
+              ( file : in file_type;
+                n,k,level : in integer32; tol : in double_float;
                 pl : in Poset_List; snd : in Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Solution_Poset;
@@ -170,7 +171,8 @@ package Resolve_Schubert_Problems is
   --   roco     the formal root count.
 
   procedure Resolve
-              ( file : in file_type; n,k : in integer32;
+              ( file : in file_type; extopt : in boolean;
+                n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out Solution_Poset;
                 conds : in Standard_Natural_VecVecs.VecVec;
@@ -189,8 +191,11 @@ package Resolve_Schubert_Problems is
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
+  --   extopt   extra output about monitoring the Littlewood-Richardson
+  --            homotopies in each and every checker game;
   --   n        the ambient dimension;
   --   k        dimension of the solution plane;
+  --   tol      tolerance on residual to decide failure in checker games;
   --   ips      an intersection poset built to resolve Schubert conditions;
   --   sps      an initialized solution poset corresponding to ips;
   --   conds    intersection conditions on the fixed flags;
