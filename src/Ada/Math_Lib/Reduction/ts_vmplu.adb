@@ -15,6 +15,8 @@ with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
+with Multprec_Floating_Numbers;         use Multprec_Floating_Numbers;
+with Multprec_Complex_Numbers;
 with Standard_Mathematical_Functions;   use Standard_Mathematical_Functions;
 with DoblDobl_Mathematical_Functions;   use DoblDobl_Mathematical_Functions;
 with QuadDobl_Mathematical_Functions;   use QuadDobl_Mathematical_Functions;
@@ -38,6 +40,7 @@ with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Matrices;
+with Multprec_Complex_Matrices;
 with VarbPrec_Matrix_Conversions;       use VarbPrec_Matrix_Conversions;
 with Standard_Random_Matrices;
 with DoblDobl_Random_Matrices;
@@ -642,6 +645,38 @@ procedure ts_vmplu is
     end if;
   end QuadDobl_Complex_Test;
 
+  procedure Multprec_Complex_Test ( n : in integer32; c : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Generates a random n-dimensional matrix with condition number c
+  --   and calls the LU factorization with condition number estimator.
+
+    mat : Multprec_Complex_Matrices.Matrix(1..n,1..n)
+        := Random_Conditioned_Matrix(n,c);
+    num1 : Multprec_Complex_Numbers.Complex_Number := mat(1,1);
+    rpt1 : Floating_Number := Multprec_Complex_Numbers.REAL_PART(num1);
+    precision : integer32 := integer32(Decimal_Places_Fraction(rpt1));
+    loss_dcp,want_dcp : integer32 := 0;
+
+  begin
+    new_line;
+    put("The given condition number :"); put(c,3); new_line;
+    put("Number of decimal places in the precision : ");
+    put(precision,1); new_line;
+    loss_dcp := Estimated_Loss_of_Decimal_Places(mat);
+    put("-> Estimated loss of decimal places : "); put(loss_dcp,1); new_line;
+    new_line;
+    put("Give the wanted number of decimal places : "); get(want_dcp);
+    precision := precision + loss_dcp;
+    put("-> Number of decimal places left in precision : ");
+    put(precision,1); new_line;
+    if precision >= want_dcp then
+      put_line("The current precision will suffice.");
+    else
+      put_line("Need to increase the current precision.");
+    end if;
+  end Multprec_Complex_Test;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -675,8 +710,10 @@ procedure ts_vmplu is
         Standard_Complex_Test(dim,cnd);
       elsif exl < 32 then
         DoblDobl_Complex_Test(dim,cnd);
-      else
+      elsif exl < 64 then
         QuadDobl_Complex_Test(dim,cnd);
+      else
+        Multprec_Complex_Test(dim,cnd);
       end if;
     end if;
   end Main;

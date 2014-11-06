@@ -1,7 +1,11 @@
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Mathematical_Functions;   use Standard_Mathematical_Functions;
+with Multprec_Natural_Numbers;          use Multprec_Natural_Numbers;
+with Multprec_Integer_Numbers;          use Multprec_Integer_Numbers;
 with Standard_Complex_Linear_Solvers;   use Standard_Complex_Linear_Solvers;
 with DoblDobl_Complex_Linear_Solvers;   use DoblDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_Linear_Solvers;   use QuadDobl_Complex_Linear_Solvers;
+with Multprec_Complex_Linear_Solvers;   use Multprec_Complex_Linear_Solvers;
 
 package body Varbprec_Complex_Linear_Solvers is
 
@@ -50,6 +54,27 @@ package body Varbprec_Complex_Linear_Solvers is
     end if;
   end Estimated_Loss_of_Decimal_Places;
 
+  procedure Estimated_Loss_of_Decimal_Places
+              ( mtx : in out Multprec_Complex_Matrices.Matrix;
+                piv : out Standard_Integer_Vectors.Vector;
+                rco : out Floating_Number; loss : out integer32 ) is
+
+    dim : constant integer32 := mtx'last(1);
+
+  begin
+    lufco(mtx,dim,piv,rco);
+    if Equal(rco,0.0) then
+      loss := -2**30;
+    else
+      declare
+        dp : constant natural32 := Decimal_Places(Unsigned(Fraction(rco)));
+        exprco : Integer_Number := Exponent(rco);
+      begin
+        loss := Create(exprco) + integer32(dp-1);
+      end;
+    end if;
+  end Estimated_Loss_of_Decimal_Places;
+
   function Estimated_Loss_of_Decimal_Places
               ( mtx : Standard_Complex_Matrices.Matrix )
               return integer32 is
@@ -92,6 +117,23 @@ package body Varbprec_Complex_Linear_Solvers is
 
   begin
     Estimated_Loss_of_Decimal_Places(wrk,piv,rco,res);
+    return res;
+  end Estimated_Loss_of_Decimal_Places;
+
+  function Estimated_Loss_of_Decimal_Places
+              ( mtx : Multprec_Complex_Matrices.Matrix )
+              return integer32 is
+
+    res : integer32;
+    dim : constant integer32 := mtx'last(1);
+    wrk : Multprec_Complex_Matrices.Matrix(mtx'range(1),mtx'range(2));
+    piv : Standard_Integer_Vectors.Vector(1..dim);
+    rco : Floating_Number;
+
+  begin
+    Multprec_Complex_Matrices.Copy(mtx,wrk);
+    Estimated_Loss_of_Decimal_Places(wrk,piv,rco,res);
+    Clear(rco);
     return res;
   end Estimated_Loss_of_Decimal_Places;
 

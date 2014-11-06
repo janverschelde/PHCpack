@@ -1,7 +1,8 @@
-with Standard_Integer_Numbers;         use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;        use Standard_Floating_Numbers;
-with Double_Double_Numbers;            use Double_Double_Numbers;
-with Quad_Double_Numbers;              use Quad_Double_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
@@ -9,6 +10,7 @@ with QuadDobl_Complex_Vectors;
 with Standard_Complex_Matrices;
 with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices;
+with Multprec_Complex_Matrices;
 
 package Varbprec_Complex_Linear_Solvers is
 
@@ -33,6 +35,10 @@ package Varbprec_Complex_Linear_Solvers is
               ( mtx : in out QuadDobl_Complex_Matrices.Matrix;
                 piv : out Standard_Integer_Vectors.Vector;
                 rco : out quad_double; loss : out integer32 );
+  procedure Estimated_Loss_of_Decimal_Places
+              ( mtx : in out Multprec_Complex_Matrices.Matrix;
+                piv : out Standard_Integer_Vectors.Vector;
+                rco : out Floating_Number; loss : out integer32 );
 
   -- DESCRIPTION :
   --   Returns the estimated loss of decimal places that may occur
@@ -64,6 +70,9 @@ package Varbprec_Complex_Linear_Solvers is
               return integer32;
   function Estimated_Loss_of_Decimal_Places
               ( mtx : QuadDobl_Complex_Matrices.Matrix )
+              return integer32;
+  function Estimated_Loss_of_Decimal_Places
+              ( mtx : Multprec_Complex_Matrices.Matrix )
               return integer32;
 
   -- DESCRIPTION :
