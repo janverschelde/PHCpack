@@ -1,3 +1,7 @@
+Fri 7 Nov 2014 : functions to generate random orthogonal real matrices of
+  arbitrary precision in multprec_random_matrices, for use in the package
+  random_conditioned_matrices; completed varbprec_matrix_conversions.
+
 Thu 6 Nov 2014 : extended multprec_random_matrices with function to generate
   a random orthogonal complex matrix of arbitrary precision, for use in
   random_condition_matrices; modified random_conditioned_matrices.

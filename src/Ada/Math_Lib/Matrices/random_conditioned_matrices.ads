@@ -3,6 +3,7 @@ with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Matrices;
 with Double_Double_Matrices;
 with Quad_Double_Matrices;
+with Multprec_Floating_Matrices;
 with Standard_Complex_Matrices;
 with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices;
@@ -65,6 +66,9 @@ package Random_Conditioned_Matrices is
   --   computed with double double arithmetic.
   --   This will work for conditioned numbers no larger than 1.0E+64.
   --
+  function Random_Conditioned_Matrix
+             ( n : integer32; c : double_float )
+             return Multprec_Floating_Matrices.Matrix;
   function Random_Conditioned_Matrix
              ( n : integer32; c : double_float )
              return Multprec_Complex_Matrices.Matrix;

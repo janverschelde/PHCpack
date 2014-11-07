@@ -194,6 +194,38 @@ package body Random_Conditioned_Matrices is
 
   function Random_Conditioned_Matrix
              ( n : integer32; c : double_float )
+             return Multprec_Floating_Matrices.Matrix is
+
+    res : Multprec_Floating_Matrices.Matrix(1..n,1..n);
+    magc : constant natural32 := natural32(log10(abs(c)));
+    deci : natural32 := 2*magc;
+    size : natural32;
+    st_svm : constant Standard_Floating_Matrices.Matrix(1..n,1..n)
+           := Singular_Value_Matrix(n,c);
+    mp_svm : Multprec_Floating_Matrices.Matrix(1..n,1..n)
+           := d2mp(st_svm);
+    rq1,rq2 : Multprec_Floating_Matrices.Matrix(1..n,1..n);
+
+    use Multprec_Floating_Matrices,Multprec_Random_Matrices;
+
+  begin
+    if deci < 16
+     then deci := 16; -- at least double precision !
+    end if;
+    size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
+    Set_Size(mp_svm,size);
+    Set_Size(rq1,size);
+    rq1 := Random_Orthogonal_Matrix(natural32(n),natural32(n),size);
+    rq2 := Random_Orthogonal_Matrix(natural32(n),natural32(n),size);
+    res := rq1*mp_svm*rq2;
+    Multprec_Floating_Matrices.Clear(mp_svm);
+    Multprec_Floating_Matrices.Clear(rq1);
+    Multprec_Floating_Matrices.Clear(rq2);
+    return res;
+  end Random_Conditioned_Matrix;
+
+  function Random_Conditioned_Matrix
+             ( n : integer32; c : double_float )
              return Multprec_Complex_Matrices.Matrix is
 
     res : Multprec_Complex_Matrices.Matrix(1..n,1..n);

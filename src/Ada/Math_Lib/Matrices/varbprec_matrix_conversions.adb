@@ -4,9 +4,13 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Numbers_cv;        use DoblDobl_Complex_Numbers_cv;
 with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers_cv;        use QuadDobl_Complex_Numbers_cv;
 with Multprec_Complex_Numbers;
 with Multprec_Complex_Number_Tools;      use Multprec_Complex_Number_Tools;
+with Multprec_DoblDobl_Convertors;       use Multprec_DoblDobl_Convertors;
+with Multprec_QuadDobl_Convertors;       use Multprec_QuadDobl_Convertors;
 
 package body VarbPrec_Matrix_Conversions is
 
@@ -199,6 +203,34 @@ package body VarbPrec_Matrix_Conversions is
     return res;
   end dd2qd;
 
+  function dd2mp ( mtx : Double_Double_Matrices.Matrix )
+                 return Multprec_Floating_Matrices.Matrix is
+
+    res : Multprec_Floating_Matrices.Matrix(mtx'range(1),mtx'range(2));
+
+  begin
+    for i in mtx'range(1) loop
+      for j in mtx'range(2) loop
+        res(i,j) := to_floating_number(mtx(i,j));
+      end loop;
+    end loop;
+    return res;
+  end dd2mp;
+
+  function dd2mp ( mtx : DoblDobl_Complex_Matrices.Matrix )
+                 return Multprec_Complex_Matrices.Matrix is
+
+    res : Multprec_Complex_Matrices.Matrix(mtx'range(1),mtx'range(2));
+
+  begin
+    for i in mtx'range(1) loop
+      for j in mtx'range(2) loop
+        res(i,j) := DoblDobl_Complex_to_MultPrec(mtx(i,j));
+      end loop;
+    end loop;
+    return res;
+  end dd2mp;
+
   function qd2d ( mtx : Quad_Double_Matrices.Matrix )
                 return Standard_Floating_Matrices.Matrix is
 
@@ -272,6 +304,34 @@ package body VarbPrec_Matrix_Conversions is
     end loop;
     return res;
   end qd2dd;
+
+  function qd2mp ( mtx : Quad_Double_Matrices.Matrix )
+                 return Multprec_Floating_Matrices.Matrix is
+
+    res : Multprec_Floating_Matrices.Matrix(mtx'range(1),mtx'range(2));
+
+  begin
+    for i in mtx'range(1) loop
+      for j in mtx'range(2) loop
+        res(i,j) := to_floating_number(mtx(i,j));
+      end loop;
+    end loop;
+    return res;
+  end qd2mp;
+
+  function qd2mp ( mtx : QuadDobl_Complex_Matrices.Matrix )
+                 return Multprec_Complex_Matrices.Matrix is
+
+    res : Multprec_Complex_Matrices.Matrix(mtx'range(1),mtx'range(2));
+
+  begin
+    for i in mtx'range(1) loop
+      for j in mtx'range(2) loop
+        res(i,j) := QuadDobl_Complex_to_MultPrec(mtx(i,j));
+      end loop;
+    end loop;
+    return res;
+  end qd2mp;
 
   procedure Set_Size ( mtx : in out Multprec_Floating_Matrices.Matrix;
                        size : in natural32 ) is
