@@ -60,6 +60,12 @@ with QuadDobl_Random_Matrices;           use QuadDobl_Random_Matrices;
 with QuadDobl_Complex_QR_Least_Squares;  use QuadDobl_Complex_QR_Least_Squares;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Multprec_Floating_Numbers_io;       use Multprec_Floating_Numbers_io;
+with Multprec_Floating_Vectors;
+with Multprec_Floating_Vectors_io;       use Multprec_Floating_Vectors_io;
+with Multprec_Floating_Matrices;
+with Multprec_Floating_Matrices_io;      use Multprec_Floating_Matrices_io;
+with Multprec_Floating_Norms_Equals;     use Multprec_Floating_Norms_Equals;
+with Multprec_Floating_QR_Least_Squares; use Multprec_Floating_QR_Least_Squares;
 with Multprec_Complex_Numbers;
 with Multprec_Complex_Vectors;
 with Multprec_Complex_Vectors_io;        use Multprec_Complex_Vectors_io;
@@ -212,6 +218,28 @@ procedure ts_qrd is
   end Extract_Upper_Triangular;
 
   function Extract_Upper_Triangular
+                ( a : Multprec_Floating_Matrices.Matrix )
+                return Multprec_Floating_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the upper triangular part of the matrix a.
+
+    use Multprec_Floating_Numbers;
+    res : Multprec_Floating_Matrices.Matrix(a'range(1),a'range(2));
+
+  begin
+    for i in a'range(1) loop
+      for j in a'first(2)..(i-1) loop
+        res(i,j) := Create(0.0);
+      end loop;
+      for j in i..a'last(2) loop
+        Copy(a(i,j),res(i,j));
+      end loop;
+    end loop;
+    return res;
+  end Extract_Upper_Triangular;
+
+  function Extract_Upper_Triangular
                 ( a : Multprec_Complex_Matrices.Matrix )
                 return Multprec_Complex_Matrices.Matrix is
 
@@ -333,6 +361,28 @@ procedure ts_qrd is
     for i in a'range(1) loop
       for j in a'range(2) loop
         sum := sum + AbsVal(a(i,j)-b(i,j));
+      end loop;
+    end loop;
+    return sum;
+  end Differences;
+
+  function Differences ( a,b : in Multprec_Floating_Matrices.Matrix )
+                       return Floating_Number is
+
+  -- DESCRIPTION :
+  --   Returns the sum of the differences of all elements |a(i,j)-b(i,j)|.
+
+    sum : Floating_Number := Create(0.0);
+    dif : Floating_Number;
+    absdif : Floating_Number;
+
+  begin
+    for i in a'range(1) loop
+      for j in a'range(2) loop
+        dif := a(i,j) - b(i,j);
+        absdif := AbsVal(dif);
+        Add(sum,absdif);
+        Clear(dif); Clear(absdif);
       end loop;
     end loop;
     return sum;
@@ -549,6 +599,36 @@ procedure ts_qrd is
     return sum;
   end Orthogonality_Check_Sum;
 
+  function Orthogonality_Check_Sum
+             ( q : Multprec_Floating_Matrices.Matrix )
+             return Floating_Number is
+
+  -- DESCRIPTION :
+  --   Tests whether the columns are orthogonal w.r.t. each other,
+  --   returns the sum of all inner products of a column with all
+  --   its following columns.
+
+    sum : Floating_Number := Create(0.0);
+    absip,ip,acc : Floating_Number;
+
+  begin
+    for j in q'range(2) loop
+      for k in j+1..q'last(2) loop
+        ip := Create(0.0);
+        for i in q'range(1) loop
+          acc := q(i,j)*q(i,k);
+          Add(ip,acc);
+          Clear(acc);
+        end loop;
+        absip := AbsVal(ip);
+        Add(sum,absip);
+        Clear(ip);
+        Clear(absip);
+      end loop;
+    end loop;
+    return sum;
+  end Orthogonality_Check_Sum;
+
   procedure Test_QRD ( a,q,r : in Standard_Floating_Matrices.Matrix;
                        output : in boolean ) is
 
@@ -667,6 +747,32 @@ procedure ts_qrd is
     put(Differences(a,wrk),3); new_line;
     put("Orthogonality check sum : ");
     put(Orthogonality_Check_Sum(q),3); new_line;
+  end Test_QRD;
+
+  procedure Test_QRD ( a,q,r : in Multprec_Floating_Matrices.Matrix;
+                       output : in boolean ) is
+
+    wrk : Multprec_Floating_Matrices.Matrix(a'range(1),a'range(2));
+    use Multprec_Floating_Matrices;
+    dif : Floating_Number;
+
+  begin
+    if output
+     then put_line("The upper triangular part R :"); put(r,3);
+    end if;
+    wrk := q*r;
+    if output
+     then put_line("q*r :"); put(wrk,3); 
+    end if;
+    put("Difference in 1-norm between the matrix and q*r : ");
+    dif := Differences(a,wrk);
+    put(dif,3,3,3); new_line;
+    Clear(dif);
+    Multprec_Floating_Matrices.Clear(wrk);
+    dif := Orthogonality_Check_Sum(q);
+    put("Orthogonality check sum : ");
+    put(dif,3,3,3); new_line;
+    Clear(dif);
   end Test_QRD;
 
   procedure Test_QRD ( a,q,r : in Multprec_Complex_Matrices.Matrix;
@@ -1184,6 +1290,181 @@ procedure ts_qrd is
     new_line;
     print_times(Standard_Output,timer,"Testing QuadDobl Real Least Squares");
   end QuadDobl_Random_Real_LS_Test;
+
+-- MULTPREC REAL TEST DRIVERS :
+
+  procedure Multprec_Real_LS_Test
+              ( n,m : in integer32; piv : in boolean;
+                a : in Multprec_Floating_Matrices.Matrix;
+                b : in Multprec_Floating_Vectors.Vector;
+                output : in boolean ) is
+
+    zero : Floating_Number := create(0.0);
+    wrk : Multprec_Floating_Matrices.Matrix(1..n,1..m);
+    qraux : Multprec_Floating_Vectors.Vector(1..m);
+    jpvt : Standard_Integer_Vectors.Vector(1..m) := (1..m => 0);
+    sol : Multprec_Floating_Vectors.Vector(1..m);
+    rsd,dum,dum2,dum3 : Multprec_Floating_Vectors.Vector(1..n);
+    info : integer32;
+    use Multprec_Floating_Matrices;
+    use Multprec_Floating_Vectors;
+
+  begin
+    Multprec_Floating_Matrices.Copy(a,wrk);
+    for i in 1..m loop
+      Copy(zero,qraux(i));
+    end loop;
+    if output
+     then put_line("The matrix : "); put(a,3);
+    end if;
+    QRD(wrk,qraux,jpvt,piv);
+    if output then
+      put_line("The matrix after QR : "); put(wrk,3);
+      put_line("The vector qraux : "); put(qraux,3); new_line;
+    end if;
+    if piv then
+      put("The vector jpvt : "); put(jpvt); new_line;
+      Permute_Columns(wrk,jpvt);
+    end if;
+    QRLS(wrk,n,n,m,qraux,b,dum2,dum3,sol,rsd,dum,110,info);
+    if piv
+     then Permute(sol,jpvt);
+    end if;
+    if output
+     then put_line("The solution : "); put(sol,3); new_line;
+    end if;
+    dum := b - a*sol;
+    if output then
+      put_line("right-hand size - matrix*solution : "); 
+      put(dum,3); new_line;
+    end if;
+    put("The norm of residual : "); put(Sum_Norm(dum),3); new_line;
+  end Multprec_Real_LS_Test;          
+
+  procedure Multprec_Real_QR_Test
+              ( n,m : in integer32; piv : in boolean;
+                a : in Multprec_Floating_Matrices.Matrix;
+                output : in boolean ) is
+
+    zero : Floating_Number := create(0.0);
+    wrk : Multprec_Floating_Matrices.Matrix(1..n,1..m);
+    bas : Multprec_Floating_Matrices.Matrix(1..n,1..n);
+    qraux : Multprec_Floating_Vectors.Vector(1..m);
+    jpvt : Standard_Integer_Vectors.Vector(1..m) := (1..m => 0);
+
+  begin
+    for i in 1..m loop
+      Copy(zero,qraux(i));
+    end loop;
+    Multprec_Floating_Matrices.Copy(a,wrk);
+    if output
+     then put_line("The matrix : "); put(a,3);
+    end if;
+    QRD(wrk,qraux,jpvt,piv);
+    if output then
+      put_line("The matrix after QR : "); put(wrk,3);
+      put_line("The vector qraux : "); put(qraux,3); new_line;
+    end if;
+    if piv then
+      put("The vector jpvt : "); put(jpvt); new_line;
+      Permute_Columns(wrk,jpvt);
+    end if;
+    for i in wrk'range(1) loop
+      for j in wrk'range(2) loop
+        Copy(wrk(i,j),bas(i,j));
+      end loop;
+      for j in n+1..m loop
+        Copy(zero,bas(i,j));
+      end loop;
+    end loop;
+    Basis(bas,a);
+    if output
+     then put_line("The orthogonal part Q of QR  :"); put(bas,3);
+    end if;
+    Test_QRD(a,bas,Extract_Upper_Triangular(wrk),output);
+  end Multprec_Real_QR_Test;
+
+  procedure Multprec_Interactive_Real_QR_Test
+              ( n,m : in integer32; piv : in boolean ) is
+
+    a : Multprec_Floating_Matrices.Matrix(1..n,1..m);
+
+  begin
+    put("Give a "); put(n,1); put("x"); put(m,1);   
+    put_line(" matrix : "); get(a);
+    Multprec_Real_QR_Test(n,m,piv,a,true);
+  end Multprec_Interactive_Real_QR_Test;
+
+  procedure Multprec_Interactive_Real_LS_Test
+              ( n,m : in integer32; piv : in boolean ) is
+
+    a : Multprec_Floating_Matrices.Matrix(1..n,1..m);
+    b : Multprec_Floating_Vectors.Vector(1..n);
+
+  begin
+    put("Give a "); put(n,1); put("x"); put(m,1);   
+    put_line(" matrix : "); get(a);
+    put("Give right-hand size "); put(n,1);
+    put_line("-vector : "); get(b);
+    Multprec_Real_LS_Test(n,m,piv,a,b,true);
+  end Multprec_Interactive_Real_LS_Test;
+
+  procedure Multprec_Random_Real_QR_Test
+              ( n,m : in integer32; sz : in natural32; piv : in boolean ) is
+
+    a : Multprec_Floating_Matrices.Matrix(1..n,1..m);
+    nb : integer32 := 0;
+    output : boolean;
+    ans : character;
+    timer : Timing_Widget;
+
+  begin
+    put("Give the number of tests : "); get(nb);
+    put("Do you want to see all matrices and vectors ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    output := (ans = 'y');
+    tstart(timer);
+    for i in 1..nb loop
+      a := Random_Matrix(natural32(n),natural32(m),sz);
+      Multprec_Real_QR_Test(n,m,piv,a,output);
+      Multprec_Floating_Matrices.Clear(a);
+    end loop;
+    tstop(timer);
+    put("Tested "); put(nb,1);
+    put_line(" QR factoriziations on multprec random real matrices.");
+    new_line;
+    print_times(Standard_Output,timer,"Random Multprec Real QR Factorizations");
+  end Multprec_Random_Real_QR_Test;
+
+  procedure Multprec_Random_Real_LS_Test
+              ( n,m : in integer32; sz : in natural32; piv : in boolean ) is
+
+    a : Multprec_Floating_Matrices.Matrix(1..n,1..m);
+    b : Multprec_Floating_Vectors.Vector(1..n);
+    nb : integer32 := 0;
+    ans : character;
+    output : boolean;
+    timer : Timing_Widget;
+
+  begin
+    put("Give the number of tests : "); get(nb);
+    put("Do you want to see all matrices and vectors ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    output := (ans = 'y'); 
+    tstart(timer);
+    for i in 1..nb loop
+      a := Random_Matrix(natural32(n),natural32(m),sz);
+      b := Random_Vector(1,n,sz);
+      Multprec_Real_LS_Test(n,m,piv,a,b,output);
+      Multprec_Floating_Matrices.Clear(a);
+      Multprec_Floating_Vectors.Clear(b);
+    end loop;
+    tstop(timer);
+    put("Tested "); put(nb,1);
+    put_line(" real least squares on quaddobl random real matrices.");
+    new_line;
+    print_times(Standard_Output,timer,"Testing Multprec Real Least Squares");
+  end Multprec_Random_Real_LS_Test;
 
 -- STANDARD COMPLEX TEST DRIVERS :
 
@@ -1719,9 +2000,9 @@ procedure ts_qrd is
     end if;
     Multprec_Complex_Matrices.Copy(a,wrk);
     QRD(wrk,qraux,jpvt,piv);
-    if output
-     then put_line("The matrix after QR : "); put(wrk,3);
-          put_line("The vector qraux : "); put(qraux,3); new_line;
+    if output then
+      put_line("The matrix after QR : "); put(wrk,3);
+      put_line("The vector qraux : "); put(qraux,3); new_line;
     end if;
    -- put("The vector jpvt : "); put(jpvt); new_line;
     if not piv then
@@ -1770,9 +2051,9 @@ procedure ts_qrd is
     end if;
     Multprec_Complex_Matrices.Copy(a,wrk);
     QRD(wrk,qraux,jpvt,piv);
-    if output
-     then put_line("The matrix after QR : "); put(wrk,3);
-          put_line("The vector qraux : "); put(qraux,3); new_line;
+    if output then
+      put_line("The matrix after QR : "); put(wrk,3);
+      put_line("The vector qraux : "); put(qraux,3); new_line;
     end if;
     if piv
      then put("The vector jpvt : "); put(jpvt); new_line;
@@ -1786,9 +2067,9 @@ procedure ts_qrd is
     end if;
     eva := a*sol;
     res := b - eva;
-    if output
-     then put_line("right-hand size - matrix*solution : ");
-          put(res,3); new_line;
+    if output then
+      put_line("right-hand size - matrix*solution : ");
+      put(res,3); new_line;
     end if;
     resi := Sum_Norm(res);
     put("Sum norm of residual : "); put(resi,3); new_line;
@@ -1942,17 +2223,22 @@ procedure ts_qrd is
       put_line("  N.               on random quaddobl real matrix.");
       put_line("  O.                                  complex matrix.");
       put_line("*** QR and Least Squares in arbitrary multiprecision ***");
-      put_line("  P. QR-decomposition on given multprec complex matrix.");
-      put_line("  Q.                  on random multprec complex matrix.");
-      put_line("  R. Least Squares on given multprec complex matrix.");
-      put_line("  S.               on random multprec complex matrix.");
-      put("Make your choice (0, 1, .. , A, B, .., S) : ");
-      Ask_Alternative(choice,"0123456789ABCDEFGHIJKLMNOPQRS");
+      put_line("  P. QR-decomposition on given multprec floating matrix.");
+      put_line("  Q.                  on random multprec floating matrix.");
+      put_line("  R. Least Squares on given multprec floating matrix.");
+      put_line("  S.               on random multprec floating matrix.");
+      put_line("  T. QR-decomposition on given multprec complex matrix.");
+      put_line("  U.                  on random multprec complex matrix.");
+      put_line("  V. Least Squares on given multprec complex matrix.");
+      put_line("  W.               on random multprec complex matrix.");
+      put("Make your choice (0, 1, .. , A, B, .., W) : ");
+      Ask_Alternative(choice,"0123456789ABCDEFGHIJKLMNOPQRSTUVW");
       exit when (choice = '0');
       new_line;
       put("Give the number of rows of the matrix : "); get(n);
       put("Give the number of columns of the matrix : "); get(m);
       if choice = 'P' or choice = 'Q' or choice = 'R' or choice = 'S'
+        or choice = 'T' or choice = 'U' or choice = 'V' or choice = 'W'
        then put("Give the size of the numbers : "); get(sz);
       end if;
       case choice is
@@ -1984,10 +2270,14 @@ procedure ts_qrd is
         when 'N' => QuadDobl_Random_Real_LS_Test(n,m,piv);
         when 'O' => QuadDobl_Random_Complex_LS_Test(n,m,piv);
        -- QR and Least Squares in arbitrary precision arithmetic
-        when 'P' => Multprec_Interactive_Complex_QR_Test(n,m,piv);
-        when 'Q' => Multprec_Random_Complex_QR_Test(n,m,sz,piv);
-        when 'R' => Multprec_Interactive_Complex_LS_Test(n,m,piv);
-        when 'S' => Multprec_Random_Complex_LS_Test(n,m,sz,piv);
+        when 'P' => Multprec_Interactive_Real_QR_Test(n,m,piv);
+        when 'Q' => Multprec_Random_Real_QR_Test(n,m,sz,piv);
+        when 'R' => Multprec_Interactive_Real_LS_Test(n,m,piv);
+        when 'S' => Multprec_Random_Real_LS_Test(n,m,sz,piv);
+        when 'T' => Multprec_Interactive_Complex_QR_Test(n,m,piv);
+        when 'U' => Multprec_Random_Complex_QR_Test(n,m,sz,piv);
+        when 'V' => Multprec_Interactive_Complex_LS_Test(n,m,piv);
+        when 'W' => Multprec_Random_Complex_LS_Test(n,m,sz,piv);
         when others => null;
       end case;
     end loop;

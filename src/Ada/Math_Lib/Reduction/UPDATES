@@ -1,3 +1,6 @@
+Fri 7 Nov 2014 : new package multprec_floating_qr_least_squares, tested
+  by ts_qrd.adb.
+
 Thu 6 Nov 2014 : extended multprec_complex_linear_solvers with versions
   for arbitrary multiprecision, tested in ts_vmplu.adb.
   Added solvers to multprec_complex_linear_solvers, tested by ts_vmplu.adb.
