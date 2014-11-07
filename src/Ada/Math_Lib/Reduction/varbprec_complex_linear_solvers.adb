@@ -2,10 +2,13 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Mathematical_Functions;   use Standard_Mathematical_Functions;
 with Multprec_Natural_Numbers;          use Multprec_Natural_Numbers;
 with Multprec_Integer_Numbers;          use Multprec_Integer_Numbers;
+with Multprec_Floating_Numbers;         use Multprec_Floating_Numbers;
+with Multprec_Complex_Numbers;
 with Standard_Complex_Linear_Solvers;   use Standard_Complex_Linear_Solvers;
 with DoblDobl_Complex_Linear_Solvers;   use DoblDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_Linear_Solvers;   use QuadDobl_Complex_Linear_Solvers;
 with Multprec_Complex_Linear_Solvers;   use Multprec_Complex_Linear_Solvers;
+with VarbPrec_Matrix_Conversions;
 
 package body Varbprec_Complex_Linear_Solvers is
 
@@ -186,6 +189,31 @@ package body Varbprec_Complex_Linear_Solvers is
     if not fail
      then lusolve(mtx,mtx'last(1),piv,rhs);
     end if;
+  end Solve_to_Wanted_Decimal_Places;
+
+  procedure Solve_to_Wanted_Decimal_Places
+              ( mtx : in out Multprec_Complex_Matrices.Matrix;
+                rhs : in out Multprec_Complex_Vectors.Vector;
+                want : in integer32;
+                piv : out Standard_Integer_Vectors.Vector;
+                rco : out Floating_Number; loss : out integer32 ) is
+
+    num1 : Multprec_Complex_Numbers.Complex_Number := mtx(1,1);
+    rpt1 : Floating_Number := Multprec_Complex_Numbers.REAL_PART(num1);
+    mat_precision : integer32 := integer32(Decimal_Places_Fraction(rpt1));
+    precision : integer32 := mat_precision;
+    size : natural32;
+
+  begin
+    Estimated_Loss_of_Decimal_Places(mtx,piv,rco,loss);
+    precision := precision + loss;
+    if precision < want then
+      precision := mat_precision + (want - precision);
+      size := Multprec_Floating_Numbers.Decimal_to_Size(natural32(precision));
+      VarbPrec_Matrix_Conversions.Set_Size(mtx,size);
+    end if;
+    lusolve(mtx,mtx'last(1),piv,rhs);
+    Multprec_Floating_Numbers.Clear(rpt1);
   end Solve_to_Wanted_Decimal_Places;
 
 end Varbprec_Complex_Linear_Solvers;

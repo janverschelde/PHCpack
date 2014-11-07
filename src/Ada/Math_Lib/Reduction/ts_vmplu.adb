@@ -17,6 +17,7 @@ with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
 with Multprec_Floating_Numbers;         use Multprec_Floating_Numbers;
 with Multprec_Complex_Numbers;
+with Multprec_Complex_Numbers_io;       use Multprec_Complex_Numbers_io;
 with Standard_Mathematical_Functions;   use Standard_Mathematical_Functions;
 with DoblDobl_Mathematical_Functions;   use DoblDobl_Mathematical_Functions;
 with QuadDobl_Mathematical_Functions;   use QuadDobl_Mathematical_Functions;
@@ -40,18 +41,22 @@ with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Matrices;
+with Multprec_Complex_Vectors;
+with Multprec_Complex_Vectors_io;       use Multprec_Complex_Vectors_io;
 with Multprec_Complex_Matrices;
 with VarbPrec_Matrix_Conversions;       use VarbPrec_Matrix_Conversions;
 with Standard_Random_Matrices;
 with DoblDobl_Random_Matrices;
 with QuadDobl_Random_Matrices;
 with Random_Conditioned_Matrices;       use Random_Conditioned_Matrices;
+with VarbPrec_Matrix_Conversions;
 with Standard_Floating_Linear_Solvers;
 with Standard_Complex_Linear_Solvers;
 with Double_Double_Linear_Solvers;
 with Quad_Double_Linear_Solvers;
 with DoblDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_Linear_Solvers;
+with Multprec_Complex_Linear_Solvers;
 with VarbPrec_Floating_Linear_Solvers;  use VarbPrec_Floating_Linear_Solvers;
 with VarbPrec_Complex_Linear_Solvers;   use VarbPrec_Complex_Linear_Solvers;
 
@@ -345,7 +350,7 @@ procedure ts_vmplu is
 
   -- DESCRIPTION :
   --   Makes a righthandside vector b so x = (1,1,..,1) is the exact solution.
-  --   Solves the linear system in double double floating-point arithmetic.
+  --   Solves the linear system in quad double floating-point arithmetic.
   --   Verifies whether the computed solution has indeed at least as many 
   --   decimal places correct as the value of want_dcp.
 
@@ -395,6 +400,66 @@ procedure ts_vmplu is
       put_line("The solution :"); put_line(rhs);
     end if;
   end QuadDobl_Complex_Solve;
+
+  procedure Multprec_Complex_Solve
+              ( dim,want_dcp : in integer32;
+                mat : in Multprec_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Makes a righthandside vector b so x = (1,1,..,1) is the exact solution.
+  --   Solves the linear system in arbitrary multiprecision arithmetic.
+  --   Verifies whether the computed solution has indeed at least as many 
+  --   decimal places correct as the value of want_dcp.
+
+    use Multprec_Complex_Numbers;
+
+    fp_one : Floating_Number := create(1.0);
+    one : Complex_Number := create(fp_one);
+    x : Multprec_Complex_Vectors.Vector(1..dim);
+    b,rhs : Multprec_Complex_Vectors.Vector(1..dim);
+    wrk,mtx : Multprec_Complex_Matrices.Matrix(1..dim,1..dim);
+    piv : Standard_Integer_Vectors.Vector(1..dim);
+    inf,loss : integer32;
+    tol : constant double_float := 10.0**(integer(-want_dcp - 1));
+    okay : boolean := true;
+    bmx : Complex_Number;
+    rco,adf : Floating_Number;
+  
+    use Multprec_Complex_Matrices;
+
+  begin
+    for i in x'range loop
+      Multprec_Complex_Numbers.Copy(one,x(i));
+    end loop;
+    Multprec_Complex_Matrices.Copy(mat,wrk);
+    Multprec_Complex_Matrices.Copy(mat,mtx);
+    b := mat*x;
+    Multprec_Complex_Vectors.Copy(b,rhs);
+    Multprec_Complex_Linear_Solvers.lufac(wrk,dim,piv,inf);
+    Multprec_Complex_Linear_Solvers.lusolve(wrk,dim,piv,b);
+    put_line("The computed solution :"); put_line(b);
+    for i in b'range loop
+      bmx := b(i) - x(i);
+      adf := AbsVal(bmx);
+      if adf > tol then
+        put("x("); put(i,1); put(") = "); put(b(i));
+        put_line(" is off!"); okay := false;
+      end if;
+      Multprec_Complex_Numbers.Clear(bmx);
+      Multprec_Floating_Numbers.Clear(adf);
+      exit when not okay;
+    end loop;
+    if okay then
+      put("Solution accurate with at least ");
+      put(want_dcp,1); put_line(" decimal places.");
+    else
+      put("Accuracy of "); put(want_dcp,1); 
+      put_line(" decimal places is not obtained.");
+    end if;
+    put_line("-> verifying with call to packaged routine ...");
+    Solve_to_Wanted_Decimal_Places(mtx,rhs,want_dcp,piv,rco,loss);
+    put_line("The solution :"); put_line(rhs);
+  end Multprec_Complex_Solve;
 
   procedure Standard_Real_Test ( n : in integer32; c : in double_float ) is
 
@@ -655,8 +720,10 @@ procedure ts_vmplu is
         := Random_Conditioned_Matrix(n,c);
     num1 : Multprec_Complex_Numbers.Complex_Number := mat(1,1);
     rpt1 : Floating_Number := Multprec_Complex_Numbers.REAL_PART(num1);
-    precision : integer32 := integer32(Decimal_Places_Fraction(rpt1));
+    mat_precision : integer32 := integer32(Decimal_Places_Fraction(rpt1));
+    precision : integer32 := mat_precision;
     loss_dcp,want_dcp : integer32 := 0;
+    size : natural32;
 
   begin
     new_line;
@@ -674,7 +741,15 @@ procedure ts_vmplu is
       put_line("The current precision will suffice.");
     else
       put_line("Need to increase the current precision.");
+     -- precision < want_dcp => want_dcp - precision > 0
+      precision := mat_precision + (want_dcp - precision);
+      size := Multprec_Floating_Numbers.Decimal_to_Size(natural32(precision));
+      precision := integer32(Multprec_Floating_Numbers.Size_to_Decimal(size));
+      put("Increasing precision to "); put(precision,1);
+      put_line(" decimal places.");
+      VarbPrec_Matrix_Conversions.Set_Size(mat,size);
     end if;
+    Multprec_Complex_Solve(n,want_dcp,mat);
   end Multprec_Complex_Test;
 
   procedure Main is

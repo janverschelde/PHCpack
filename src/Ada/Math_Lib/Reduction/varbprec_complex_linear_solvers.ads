@@ -7,6 +7,7 @@ with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
+with Multprec_Complex_Vectors;
 with Standard_Complex_Matrices;
 with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices;
@@ -122,6 +123,41 @@ package Varbprec_Complex_Linear_Solvers is
   --   fail     if true, then the precision did not suffice
   --            to meet the wanted number of decimal places,
   --            otherwise, the solution in rhs is accurate enough;
+  --   piv      pivoting information computed by lufco;
+  --   rco      estimate for the inverse of the condition number,
+  --            as computed by lufco on the matrix;
+  --   loss     logarithm of rco, indicates the loss of decimal
+  --            places when solving a linear system with matrix mtx.
+
+  procedure Solve_to_Wanted_Decimal_Places
+              ( mtx : in out Multprec_Complex_Matrices.Matrix;
+                rhs : in out Multprec_Complex_Vectors.Vector;
+                want : in integer32;
+                piv : out Standard_Integer_Vectors.Vector;
+                rco : out Floating_Number; loss : out integer32 );
+
+  -- DESCRIPTION :
+  --   Estimates the loss of decimal places based on the estimated
+  --   condition number and raises the working precision to meet the
+  --   wanted number of decimal places, taking into account the expected
+  --   loss of decimal places, due to the conditioning of the matrix.
+  --   Unlike the other solvers, we can always raise the precision to
+  --   meet the desired accuracy, so failure is no option.
+
+  -- REQUIRED : mat'range(1) = mat'range(2).
+
+  -- ON ENTRY :
+  --   mtx      matrix of floating-point complex numbers;
+  --   rhs      righthandside vector of a linear system;
+  --   want     wanted number of correct decimal places.
+
+  -- ON RETURN :
+  --   mtx      output of lufco, suitable for backsubstitution
+  --            if nonsingular;
+  --   rhs      if not fail, then rhs contains the solution to
+  --            the linear system with coefficient matrix mtx
+  --            and as righthandside vector the given rhs,
+  --            correct with as many decimal places as want;
   --   piv      pivoting information computed by lufco;
   --   rco      estimate for the inverse of the condition number,
   --            as computed by lufco on the matrix;
