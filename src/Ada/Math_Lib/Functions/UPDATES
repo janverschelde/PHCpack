@@ -1,3 +1,6 @@
+Sat 8 Nov 2014 : new package varbprec_polynomial_evaluations tested by
+  ts_vmpeval.adb.
+
 Fri 25 Jul 2014 : Fixed several bugs in generic_laur_poly_functions.adb,
   tested by ts_laurpoly.adb in ../Polynomials.  Did similar updates for
   the coefficient polynomial evaluation in generic_poynomial_functions,
