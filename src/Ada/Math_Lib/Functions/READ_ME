@@ -65,6 +65,7 @@ standard_jacobian_evaluations     : evaluating and differentiation of systems
 dobldobl_jacobian_evaluations     : double double eval & diff of systems
 quaddobl_jacobian_evaluations     : quad double eval & diff of systems
 -------------------------------------------------------------------------------
+random_conditioned_evaluations    : generate problems with given condition
 varbprec_polynomial_evaluations   : evaluate polynomials at various precisions
 ts_vmpeval                        : tests the variable precision evaluation
 -------------------------------------------------------------------------------

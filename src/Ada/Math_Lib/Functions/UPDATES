@@ -1,3 +1,8 @@
+Sun 9 Nov 2014 : extended varbprec_polynomial_evaluations with double double
+  and quad double versions; new package random_conditioned_evaluations
+  to generate evaluation problems with prescribed condition number,
+  for testing ts_vmpeval.adb.
+
 Sat 8 Nov 2014 : new package varbprec_polynomial_evaluations tested by
   ts_vmpeval.adb.
 
