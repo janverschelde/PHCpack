@@ -329,7 +329,8 @@ ts_str2pol:
 # Test programs for Math_Lib/Functions :
 
 test_functions: ts_evaline ts_evalpoly ts_evalform ts_lineva ts_cffsup \
-                ts_expvec ts_polyflat ts_perfeval ts_speel ts_speelsys
+                ts_expvec ts_polyflat ts_perfeval ts_speel ts_speelsys \
+                ts_vmpeval
 
 ts_evaline:
 	make -f $(MAKEFILE) ts_evaline
@@ -363,6 +364,9 @@ ts_speelsys:
 
 ts_cycfun:
 	make -f $(MAKEFILE) ts_cycfun
+
+ts_vmpeval:
+	make -f $(MAKEFILE) ts_vmpeval
 
 # Test programs for Math_Lib/Supports :
 

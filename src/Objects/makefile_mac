@@ -399,6 +399,10 @@ ts_speelsys:
 ts_cycfun:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cycfun.adb -o $(BIN)/ts_cycfun
 
+ts_vmpeval:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_vmpeval.adb \
+              -o $(BIN)/ts_vmpeval
+
 # Test programs for Math_Lib/Supports :
 
 ts_basex:
