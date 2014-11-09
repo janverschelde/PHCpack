@@ -17,6 +17,12 @@ with QuadDobl_Complex_Vectors;
 with QuadDobl_Random_Vectors;
 with QuadDobl_Complex_Poly_Functions;   use QuadDobl_Complex_Poly_Functions;
 with QuadDobl_Random_Polynomials;
+with Multprec_Floating_Numbers;         use Multprec_Floating_Numbers;
+with Multprec_Complex_Numbers;
+with Multprec_Complex_Number_Tools;     use Multprec_Complex_Number_Tools;
+with Multprec_Random_Vectors;
+with Multprec_Complex_Poly_Functions;   use Multprec_Complex_Poly_Functions;
+with Multprec_Random_Polynomials;
 
 package body Random_Conditioned_Evaluations is
 
@@ -121,6 +127,51 @@ package body Random_Conditioned_Evaluations is
     t.cf := QuadDobl_Complex_Numbers.Create(qd_close);
     QuadDobl_Complex_Polynomials.Add(p,t);
     QuadDobl_Complex_Polynomials.Clear(t);
+    f := p;
+    z := x;
+  end Random_Conditioned_Evaluation_Problem;
+
+  procedure Random_Conditioned_Evaluation_Problem
+              ( n,d,m,c,sz : in natural32;
+                cffsz,pntsz,close : in double_float;
+                f : out Multprec_Complex_Polynomials.Poly;
+                z : out Multprec_Complex_Vectors.Vector ) is
+
+    use Multprec_Complex_Numbers;
+
+    mp_cffsz : Floating_Number := create(cffsz);
+    mp_pntsz : Floating_Number := create(pntsz);
+    cp_pntsz : Complex_Number := create(mp_pntsz);
+    mp_close : Floating_Number := create(close);
+    p : Multprec_Complex_Polynomials.Poly;
+    x : Multprec_Complex_Vectors.Vector(1..integer32(n))
+      := Multprec_Random_Vectors.Random_Vector(1,integer32(n),sz);
+    t : Multprec_Complex_Polynomials.Term;
+
+  begin
+    if m = 0
+     then p := Multprec_Random_Polynomials.Random_Dense_Poly(n,d,c);
+     else p := Multprec_Random_Polynomials.Random_Sparse_Poly(n,d,m,c);
+    end if;
+    t.dg := new Standard_Natural_Vectors.Vector'(1..integer32(n) => 0);
+    t.cf := Multprec_Complex_Numbers.Create(mp_cffsz);
+    Multprec_Complex_Number_Tools.Set_Size(t.cf,sz);
+    Multprec_Complex_Polynomials.Mul(p,t);
+    for i in x'range loop
+      Multprec_Complex_Numbers.Mul(x(i),cp_pntsz);
+      Multprec_Complex_Number_Tools.Set_Size(x(i),sz);
+    end loop;
+    Multprec_Complex_Numbers.Clear(t.cf);
+    t.cf := Eval(p,x);
+    Multprec_Complex_Polynomials.Sub(p,t);
+    Multprec_Complex_Numbers.Clear(t.cf);
+    t.cf := Multprec_Complex_Numbers.Create(mp_close);
+    Multprec_Complex_Polynomials.Add(p,t);
+    Multprec_Complex_Polynomials.Clear(t);
+    Multprec_Complex_Numbers.Clear(cp_pntsz);
+    Multprec_Floating_Numbers.Clear(mp_pntsz);
+    Multprec_Floating_Numbers.Clear(mp_cffsz);
+    Multprec_Floating_Numbers.Clear(mp_close);
     f := p;
     z := x;
   end Random_Conditioned_Evaluation_Problem;
