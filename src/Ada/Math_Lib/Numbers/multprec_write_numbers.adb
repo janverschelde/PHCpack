@@ -74,9 +74,11 @@ package body Multprec_Write_Numbers is
       im := IMAG_PART(c);
       put(file,"(");
       put(file,re);
-      put(file,"+");
+      if im > 0.0
+       then put(file,"+");
+      end if;
       put(file,im);
-      put(file,")");
+      put(file,"*i)");
       Clear(re); Clear(im);
     end if;
   end Write_Number;

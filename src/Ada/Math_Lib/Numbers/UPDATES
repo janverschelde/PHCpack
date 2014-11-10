@@ -1,3 +1,6 @@
+Sun 9 Nov 2014 : fixed bug in writing of multiprecision complex number
+  in multprec_write_numbers.adb.
+
 Fri 5 Sep 2014 : extended multprec_integer_numbers_io with the
   convert_to_string wrapper from point_lists_and_strings.adb.
 
