@@ -1,6 +1,7 @@
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with Multprec_Complex_Numbers;
 
 package body VarbPrec_Polynomial_Evaluations is
 
@@ -100,6 +101,47 @@ package body VarbPrec_Polynomial_Evaluations is
   begin
     Evaluate_Terms(f);
     return AbsVal(value)/absum;
+  end Inverse_Condition_Number;
+
+  function Inverse_Condition_Number
+             ( f : Multprec_Complex_Polynomials.Poly;
+               z : Multprec_Complex_Vectors.Vector ) return Floating_Number is
+
+    use Multprec_Complex_Numbers;
+
+    res : Floating_Number;
+    zero : Floating_Number := create(0.0);
+    value : Complex_Number := create(zero);
+    absum : Floating_Number := create(0.0);
+
+    use Multprec_Complex_Polynomials;
+
+    procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
+
+      val : Complex_Number;
+      avl : Floating_Number;
+
+    begin
+      Copy(t.cf,val);
+      for i in t.dg'range loop
+        for j in 1..t.dg(i) loop
+          Mul(val,z(i));
+        end loop;
+      end loop;
+      Add(value,val);
+      avl := AbsVal(val);
+      Add(absum,avl);
+      Clear(val); Clear(avl);
+      continue := true;
+    end Evaluate_Term;
+    procedure Evaluate_Terms is new Visiting_Iterator(Evaluate_Term);
+
+  begin
+    Evaluate_Terms(f);
+    res := AbsVal(value);
+    Div(res,absum);
+    Clear(value); Clear(absum); Clear(zero);
+    return res;
   end Inverse_Condition_Number;
 
 end VarbPrec_Polynomial_Evaluations;

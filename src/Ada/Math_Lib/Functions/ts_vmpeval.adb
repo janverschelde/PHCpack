@@ -176,8 +176,8 @@ procedure ts_vmpeval is
     Random_Conditioned_Evaluation_Problem(n,d,m,c,sz,cffsz,pntsz,close,p,x);
     put_line("The generated random polynomial :");
     put_line(p); new_line;
-   -- rco := Inverse_Condition_Number(p,x);
-   -- put("The inverse condition number : "); put(rco,3); new_line;
+    rco := Inverse_Condition_Number(p,x);
+    put("The inverse condition number : "); put(rco,3); new_line;
   end Multprec_Test;
 
   procedure Main is
