@@ -2,6 +2,10 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
+with Multprec_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Polynomials;
 with DoblDobl_Complex_Vectors;
@@ -42,5 +46,40 @@ package VarbPrec_Polynomial_Evaluations is
   -- ON ENTRY :
   --   f       a polynomial in several variables;
   --   z       values for the variables that appear in f.
+
+  procedure Evaluate_with_Inverse_Condition
+             ( f : in Standard_Complex_Polynomials.Poly;
+               z : in Standard_Complex_Vectors.Vector;
+               rco : out double_float;
+               fz : out Standard_Complex_Numbers.Complex_Number );
+  procedure Evaluate_with_Inverse_Condition
+             ( f : in DoblDobl_Complex_Polynomials.Poly;
+               z : in DoblDobl_Complex_Vectors.Vector;
+               rco : out double_double;
+               fz : out DoblDobl_Complex_Numbers.Complex_Number );
+  procedure Evaluate_with_Inverse_Condition
+             ( f : in QuadDobl_Complex_Polynomials.Poly;
+               z : in QuadDobl_Complex_Vectors.Vector;
+               rco : out quad_double;
+               fz : out QuadDobl_Complex_Numbers.Complex_Number );
+  procedure Evaluate_with_Inverse_Condition
+             ( f : in Multprec_Complex_Polynomials.Poly;
+               z : in Multprec_Complex_Vectors.Vector;
+               rco : out Floating_Number;
+               fz : out Multprec_Complex_Numbers.Complex_Number );
+
+  -- DESCRIPTION :
+  --   Evaluates the polynomial f at z with the computation
+  --   of the inverse condition number.
+
+  -- REQUIRED : z'range = 1..Number_of_Unknowns(f).
+
+  -- ON ENTRY :
+  --   f       a polynomial in several variables;
+  --   z       values for the variables that appear in f.
+
+  -- ON RETURN :
+  --   rco     equals Inverse_Condition_Number(f,z);
+  --   fz      the polynomial f evaluated at z.
 
 end VarbPrec_Polynomial_Evaluations;

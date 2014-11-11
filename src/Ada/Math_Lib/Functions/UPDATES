@@ -1,6 +1,7 @@
 Mon 10 Nov 2014 : extended random_conditioned_evaluations with functions
   and procedures to fix the gradient of a random polynomial at a point,
-  tested by ts_vmpeval.adb.
+  tested by ts_vmpeval.adb.  To varbprec_polynomial_evaluations added
+  procedure to evaluate polynomials with condition number computation.
 
 Sun 9 Nov 2014 : extended varbprec_polynomial_evaluations with double double
   and quad double versions; new package random_conditioned_evaluations
