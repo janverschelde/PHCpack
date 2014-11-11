@@ -6,12 +6,10 @@ package body VarbPrec_Polynomial_Evaluations is
              ( f : Standard_Complex_Polynomials.Poly;
                z : Standard_Complex_Vectors.Vector ) return double_float is
 
-    use Standard_Complex_Numbers;
+    use Standard_Complex_Numbers,Standard_Complex_Polynomials;
 
     value : Complex_Number := create(0.0);
     absum : double_float := 0.0;
-
-    use Standard_Complex_Polynomials;
 
     procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
 
@@ -38,13 +36,11 @@ package body VarbPrec_Polynomial_Evaluations is
              ( f : DoblDobl_Complex_Polynomials.Poly;
                z : DoblDobl_Complex_Vectors.Vector ) return double_double is
 
-    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Numbers,DoblDobl_Complex_Polynomials;
 
     zero : constant double_double := create(0.0);
     value : Complex_Number := create(zero);
     absum : double_double := create(0.0);
-
-    use DoblDobl_Complex_Polynomials;
 
     procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
 
@@ -71,13 +67,11 @@ package body VarbPrec_Polynomial_Evaluations is
              ( f : QuadDobl_Complex_Polynomials.Poly;
                z : QuadDobl_Complex_Vectors.Vector ) return quad_double is
 
-    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Numbers,QuadDobl_Complex_Polynomials;
 
     zero : constant quad_double := create(0.0);
     value : Complex_Number := create(zero);
     absum : quad_double := create(0.0);
-
-    use QuadDobl_Complex_Polynomials;
 
     procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
 
@@ -104,14 +98,12 @@ package body VarbPrec_Polynomial_Evaluations is
              ( f : Multprec_Complex_Polynomials.Poly;
                z : Multprec_Complex_Vectors.Vector ) return Floating_Number is
 
-    use Multprec_Complex_Numbers;
+    use Multprec_Complex_Numbers,Multprec_Complex_Polynomials;
 
     res : Floating_Number;
     zero : Floating_Number := create(0.0);
     value : Complex_Number := create(zero);
     absum : Floating_Number := create(0.0);
-
-    use Multprec_Complex_Polynomials;
 
     procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
 
@@ -138,6 +130,161 @@ package body VarbPrec_Polynomial_Evaluations is
     res := AbsVal(value);
     Div(res,absum);
     Clear(value); Clear(absum); Clear(zero);
+    return res;
+  end Inverse_Condition_Number;
+
+  function Inverse_Condition_Number
+             ( f : Standard_Complex_Laurentials.Poly;
+               z : Standard_Complex_Vectors.Vector ) return double_float is
+
+    use Standard_Complex_Numbers,Standard_Complex_Laurentials;
+
+    value : Complex_Number := create(0.0);
+    absum : double_float := 0.0;
+
+    procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
+
+      val : Complex_Number := t.cf;
+
+    begin
+      for i in t.dg'range loop
+        if t.dg(i) > 0 then
+          for j in 1..t.dg(i) loop
+            val := val*z(i);
+          end loop;
+        elsif t.dg(i) < 0 then
+          for j in 1..(-t.dg(i)) loop
+            val := val/z(i);
+          end loop;
+        end if;
+      end loop;
+      value := value + val;
+      absum := absum + AbsVal(val);
+      continue := true;
+    end Evaluate_Term;
+    procedure Evaluate_Terms is new Visiting_Iterator(Evaluate_Term);
+
+  begin
+    Evaluate_Terms(f);
+    return AbsVal(value)/absum;
+  end Inverse_Condition_Number;
+
+  function Inverse_Condition_Number
+             ( f : DoblDobl_Complex_Laurentials.Poly;
+               z : DoblDobl_Complex_Vectors.Vector ) return double_double is
+
+    use DoblDobl_Complex_Numbers,DoblDobl_Complex_Laurentials;
+
+    zero : constant double_double := create(0.0);
+    value : Complex_Number := create(zero);
+    absum : double_double := create(0.0);
+
+    procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
+
+      val : Complex_Number := t.cf;
+
+    begin
+      for i in t.dg'range loop
+        if t.dg(i) > 0 then
+          for j in 1..t.dg(i) loop
+            val := val*z(i);
+          end loop;
+        elsif t.dg(i) < 0 then
+          for j in 1..(-t.dg(i)) loop
+            val := val/z(i);
+          end loop;
+        end if;
+      end loop;
+      value := value + val;
+      absum := absum + AbsVal(val);
+      continue := true;
+    end Evaluate_Term;
+    procedure Evaluate_Terms is new Visiting_Iterator(Evaluate_Term);
+
+  begin
+    Evaluate_Terms(f);
+    return AbsVal(value)/absum;
+  end Inverse_Condition_Number;
+
+  function Inverse_Condition_Number
+             ( f : QuadDobl_Complex_Laurentials.Poly;
+               z : QuadDobl_Complex_Vectors.Vector ) return quad_double is
+
+    use QuadDobl_Complex_Numbers,QuadDobl_Complex_Laurentials;
+
+    zero : constant quad_double := create(0.0);
+    value : Complex_Number := create(zero);
+    absum : quad_double := create(0.0);
+
+    procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
+
+      val : Complex_Number := t.cf;
+
+    begin
+      for i in t.dg'range loop
+        if t.dg(i) > 0 then
+          for j in 1..t.dg(i) loop
+            val := val*z(i);
+          end loop;
+        elsif t.dg(i) < 0 then
+          for j in 1..(-t.dg(i)) loop
+            val := val/z(i);
+          end loop;
+        end if;
+      end loop;
+      value := value + val;
+      absum := absum + AbsVal(val);
+      continue := true;
+    end Evaluate_Term;
+    procedure Evaluate_Terms is new Visiting_Iterator(Evaluate_Term);
+
+  begin
+    Evaluate_Terms(f);
+    return AbsVal(value)/absum;
+  end Inverse_Condition_Number;
+
+  function Inverse_Condition_Number
+             ( f : Multprec_Complex_Laurentials.Poly;
+               z : Multprec_Complex_Vectors.Vector ) return Floating_Number is
+
+    use Multprec_Complex_Numbers,Multprec_Complex_Laurentials;
+
+    res : Floating_Number;
+    zero : Floating_Number := create(0.0);
+    value : Complex_Number := create(zero);
+    absum : Floating_Number := create(0.0);
+
+    procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
+
+      val : Complex_Number;
+      tmp : Floating_Number;
+
+    begin
+      Copy(t.cf,val);
+      for i in t.dg'range loop
+        if t.dg(i) > 0 then
+          for j in 1..t.dg(i) loop
+            Mul(val,z(i));
+          end loop;
+        elsif t.dg(i) < 0 then
+          for j in 1..(-t.dg(i)) loop
+            Div(val,z(i));
+          end loop;
+        end if;
+      end loop;
+      Add(value,val);
+      tmp := AbsVal(val);
+      Add(absum,tmp);
+      Clear(val); Clear(tmp);
+      continue := true;
+    end Evaluate_Term;
+    procedure Evaluate_Terms is new Visiting_Iterator(Evaluate_Term);
+
+  begin
+    Evaluate_Terms(f);
+    res := AbsVal(value);
+    Div(res,absum);
+    Clear(absum); Clear(value); Clear(zero);
     return res;
   end Inverse_Condition_Number;
 
@@ -221,12 +368,10 @@ package body VarbPrec_Polynomial_Evaluations is
                rco : out double_float;
                fz : out Standard_Complex_Numbers.Complex_Number ) is
 
-    use Standard_Complex_Numbers;
+    use Standard_Complex_Numbers,Standard_Complex_Polynomials;
 
     value : Complex_Number := create(0.0);
     absum : double_float := 0.0;
-
-    use Standard_Complex_Polynomials;
 
     procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
 
@@ -256,13 +401,11 @@ package body VarbPrec_Polynomial_Evaluations is
                rco : out double_double;
                fz : out DoblDobl_Complex_Numbers.Complex_Number ) is
 
-    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Numbers,DoblDobl_Complex_Polynomials;
 
     zero : constant double_double := create(0.0);
     value : Complex_Number := create(zero);
     absum : double_double := zero;
-
-    use DoblDobl_Complex_Polynomials;
 
     procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
 
@@ -292,13 +435,11 @@ package body VarbPrec_Polynomial_Evaluations is
                rco : out quad_double;
                fz : out QuadDobl_Complex_Numbers.Complex_Number ) is
 
-    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Numbers,QuadDobl_Complex_Polynomials;
 
     zero : constant quad_double := create(0.0);
     value : Complex_Number := create(zero);
     absum : quad_double := zero;
-
-    use QuadDobl_Complex_Polynomials;
 
     procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
 
@@ -328,14 +469,12 @@ package body VarbPrec_Polynomial_Evaluations is
                rco : out Floating_Number;
                fz : out Multprec_Complex_Numbers.Complex_Number ) is
 
-    use Multprec_Complex_Numbers;
+    use Multprec_Complex_Numbers,Multprec_Complex_Polynomials;
 
     res : Floating_Number;
     zero : Floating_Number := create(0.0);
     value : Complex_Number := create(zero);
     absum : Floating_Number := create(0.0);
-
-    use Multprec_Complex_Polynomials;
 
     procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
 
@@ -364,6 +503,319 @@ package body VarbPrec_Polynomial_Evaluations is
     Clear(absum); Clear(zero);
     rco := res;
     fz := value;
+  end Evaluate_with_Inverse_Condition;
+
+  procedure Evaluate_with_Inverse_Condition
+             ( f : in Standard_Complex_Laurentials.Poly;
+               z : in Standard_Complex_Vectors.Vector;
+               rco : out double_float;
+               fz : out Standard_Complex_Numbers.Complex_Number ) is
+
+    use Standard_Complex_Numbers,Standard_Complex_Laurentials;
+
+    value : Complex_Number := create(0.0);
+    absum : double_float := 0.0;
+
+    procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
+
+      val : Complex_Number := t.cf;
+
+    begin
+      for i in t.dg'range loop
+        if t.dg(i) > 0 then
+          for j in 1..t.dg(i) loop
+            val := val*z(i);
+          end loop;
+        elsif t.dg(i) < 0 then
+          for j in 1..(-t.dg(i)) loop
+            val := val/z(i);
+          end loop;
+        end if;
+      end loop;
+      value := value + val;
+      absum := absum + AbsVal(val);
+      continue := true;
+    end Evaluate_Term;
+    procedure Evaluate_Terms is new Visiting_Iterator(Evaluate_Term);
+
+  begin
+    Evaluate_Terms(f);
+    rco := AbsVal(value)/absum;
+    fz := value;
+  end Evaluate_with_Inverse_Condition;
+
+  procedure Evaluate_with_Inverse_Condition
+             ( f : in DoblDobl_Complex_Laurentials.Poly;
+               z : in DoblDobl_Complex_Vectors.Vector;
+               rco : out double_double;
+               fz : out DoblDobl_Complex_Numbers.Complex_Number ) is
+
+    use DoblDobl_Complex_Numbers,DoblDobl_Complex_Laurentials;
+
+    zero : constant double_double := create(0.0);
+    value : Complex_Number := create(zero);
+    absum : double_double := create(0.0);
+
+    procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
+
+      val : Complex_Number := t.cf;
+
+    begin
+      for i in t.dg'range loop
+        if t.dg(i) > 0 then
+          for j in 1..t.dg(i) loop
+            val := val*z(i);
+          end loop;
+        elsif t.dg(i) < 0 then
+          for j in 1..(-t.dg(i)) loop
+            val := val/z(i);
+          end loop;
+        end if;
+      end loop;
+      value := value + val;
+      absum := absum + AbsVal(val);
+      continue := true;
+    end Evaluate_Term;
+    procedure Evaluate_Terms is new Visiting_Iterator(Evaluate_Term);
+
+  begin
+    Evaluate_Terms(f);
+    rco := AbsVal(value)/absum;
+    fz := value;
+  end Evaluate_with_Inverse_Condition;
+
+  procedure Evaluate_with_Inverse_Condition
+             ( f : in QuadDobl_Complex_Laurentials.Poly;
+               z : in QuadDobl_Complex_Vectors.Vector;
+               rco : out quad_double;
+               fz : out QuadDobl_Complex_Numbers.Complex_Number ) is
+
+    use QuadDobl_Complex_Numbers,QuadDobl_Complex_Laurentials;
+
+    zero : constant quad_double := create(0.0);
+    value : Complex_Number := create(zero);
+    absum : quad_double := create(0.0);
+
+    procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
+
+      val : Complex_Number := t.cf;
+
+    begin
+      for i in t.dg'range loop
+        if t.dg(i) > 0 then
+          for j in 1..t.dg(i) loop
+            val := val*z(i);
+          end loop;
+        elsif t.dg(i) < 0 then
+          for j in 1..(-t.dg(i)) loop
+            val := val/z(i);
+          end loop;
+        end if;
+      end loop;
+      value := value + val;
+      absum := absum + AbsVal(val);
+      continue := true;
+    end Evaluate_Term;
+    procedure Evaluate_Terms is new Visiting_Iterator(Evaluate_Term);
+
+  begin
+    Evaluate_Terms(f);
+    rco := AbsVal(value)/absum;
+    fz := value;
+  end Evaluate_with_Inverse_Condition;
+
+  procedure Evaluate_with_Inverse_Condition
+             ( f : in Multprec_Complex_Laurentials.Poly;
+               z : in Multprec_Complex_Vectors.Vector;
+               rco : out Floating_Number;
+               fz : out Multprec_Complex_Numbers.Complex_Number ) is
+
+    use Multprec_Complex_Numbers,Multprec_Complex_Laurentials;
+
+    res : Floating_Number;
+    zero : Floating_Number := create(0.0);
+    value : Complex_Number := create(zero);
+    absum : Floating_Number := create(0.0);
+
+    procedure Evaluate_Term ( t : in Term; continue : out boolean ) is
+
+      val : Complex_Number;
+      tmp : Floating_Number;
+
+    begin
+      Copy(t.cf,val);
+      for i in t.dg'range loop
+        if t.dg(i) > 0 then
+          for j in 1..t.dg(i) loop
+            Mul(val,z(i));
+          end loop;
+        elsif t.dg(i) < 0 then
+          for j in 1..(-t.dg(i)) loop
+            Div(val,z(i));
+          end loop;
+        end if;
+      end loop;
+      Add(value,val);
+      tmp := AbsVal(val);
+      Add(absum,tmp);
+      Clear(val); Clear(tmp);
+      continue := true;
+    end Evaluate_Term;
+    procedure Evaluate_Terms is new Visiting_Iterator(Evaluate_Term);
+
+  begin
+    Evaluate_Terms(f);
+    res := AbsVal(value);
+    Div(res,absum);
+    Clear(absum); Clear(zero);
+    rco := res;
+    fz := value;
+  end Evaluate_with_Inverse_Condition;
+
+  procedure Evaluate_with_Inverse_Condition
+             ( f : in Standard_Complex_Poly_Systems.Poly_Sys;
+               z : in Standard_Complex_Vectors.Vector;
+               rco : out double_float;
+               fz : out Standard_Complex_Vectors.Vector ) is
+
+    val : double_float;
+
+  begin
+    Evaluate_with_Inverse_Condition(f(f'first),z,rco,fz(fz'first));
+    for i in f'first+1..f'last loop
+      Evaluate_with_Inverse_Condition(f(i),z,val,fz(i));
+      if val < rco
+       then rco := val;
+      end if;
+    end loop;
+  end Evaluate_with_Inverse_Condition;
+
+  procedure Evaluate_with_Inverse_Condition
+             ( f : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+               z : in DoblDobl_Complex_Vectors.Vector;
+               rco : out double_double;
+               fz : out DoblDobl_Complex_Vectors.Vector ) is
+
+    val : double_double;
+
+  begin
+    Evaluate_with_Inverse_Condition(f(f'first),z,rco,fz(fz'first));
+    for i in f'first+1..f'last loop
+      Evaluate_with_Inverse_Condition(f(i),z,val,fz(i));
+      if val < rco
+       then rco := val;
+      end if;
+    end loop;
+  end Evaluate_with_Inverse_Condition;
+
+  procedure Evaluate_with_Inverse_Condition
+             ( f : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+               z : in QuadDobl_Complex_Vectors.Vector;
+               rco : out quad_double;
+               fz : out QuadDobl_Complex_Vectors.Vector ) is
+
+    val : quad_double;
+
+  begin
+    Evaluate_with_Inverse_Condition(f(f'first),z,rco,fz(fz'first));
+    for i in f'first+1..f'last loop
+      Evaluate_with_Inverse_Condition(f(i),z,val,fz(i));
+      if val < rco
+       then rco := val;
+      end if;
+    end loop;
+  end Evaluate_with_Inverse_Condition;
+
+  procedure Evaluate_with_Inverse_Condition
+             ( f : in Multprec_Complex_Poly_Systems.Poly_Sys;
+               z : in Multprec_Complex_Vectors.Vector;
+               rco : out Floating_Number;
+               fz : out Multprec_Complex_Vectors.Vector ) is
+
+    val : Floating_Number;
+
+  begin
+    Evaluate_with_Inverse_Condition(f(f'first),z,rco,fz(fz'first));
+    for i in f'first+1..f'last loop
+      Evaluate_with_Inverse_Condition(f(i),z,val,fz(i));
+      if val < rco
+       then Copy(val,rco);
+      end if;
+    end loop;
+    Clear(val);
+  end Evaluate_with_Inverse_Condition;
+
+  procedure Evaluate_with_Inverse_Condition
+             ( f : in Standard_Complex_Laur_Systems.Laur_Sys;
+               z : in Standard_Complex_Vectors.Vector;
+               rco : out double_float;
+               fz : out Standard_Complex_Vectors.Vector ) is
+
+    val : double_float;
+
+  begin
+    Evaluate_with_Inverse_Condition(f(f'first),z,rco,fz(fz'first));
+    for i in f'first+1..f'last loop
+      Evaluate_with_Inverse_Condition(f(i),z,val,fz(i));
+      if val < rco
+       then rco := val;
+      end if;
+    end loop;
+  end Evaluate_with_Inverse_Condition;
+
+  procedure Evaluate_with_Inverse_Condition
+             ( f : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+               z : in DoblDobl_Complex_Vectors.Vector;
+               rco : out double_double;
+               fz : out DoblDobl_Complex_Vectors.Vector ) is
+
+    val : double_double;
+
+  begin
+    Evaluate_with_Inverse_Condition(f(f'first),z,rco,fz(fz'first));
+    for i in f'first+1..f'last loop
+      Evaluate_with_Inverse_Condition(f(i),z,val,fz(i));
+      if val < rco
+       then rco := val;
+      end if;
+    end loop;
+  end Evaluate_with_Inverse_Condition;
+
+  procedure Evaluate_with_Inverse_Condition
+             ( f : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+               z : in QuadDobl_Complex_Vectors.Vector;
+               rco : out quad_double;
+               fz : out QuadDobl_Complex_Vectors.Vector ) is
+
+    val : quad_double;
+
+  begin
+    Evaluate_with_Inverse_Condition(f(f'first),z,rco,fz(fz'first));
+    for i in f'first+1..f'last loop
+      Evaluate_with_Inverse_Condition(f(i),z,val,fz(i));
+      if val < rco
+       then rco := val;
+      end if;
+    end loop;
+  end Evaluate_with_Inverse_Condition;
+
+  procedure Evaluate_with_Inverse_Condition
+             ( f : in Multprec_Complex_Laur_Systems.Laur_Sys;
+               z : in Multprec_Complex_Vectors.Vector;
+               rco : out Floating_Number;
+               fz : out Multprec_Complex_Vectors.Vector ) is
+
+    val : Floating_Number;
+
+  begin
+    Evaluate_with_Inverse_Condition(f(f'first),z,rco,fz(fz'first));
+    for i in f'first+1..f'last loop
+      Evaluate_with_Inverse_Condition(f(i),z,val,fz(i));
+      if val < rco
+       then Copy(val,rco);
+      end if;
+    end loop;
+    Clear(val);
   end Evaluate_with_Inverse_Condition;
 
 end VarbPrec_Polynomial_Evaluations;
