@@ -7,13 +7,17 @@ with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Multprec_Complex_Numbers;
 with Standard_Complex_Vectors;
-with Standard_Complex_Polynomials;
 with DoblDobl_Complex_Vectors;
-with DoblDobl_Complex_Polynomials;
 with QuadDobl_Complex_Vectors;
-with QuadDobl_Complex_Polynomials;
 with Multprec_Complex_Vectors;
+with Standard_Complex_Polynomials;
+with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Poly_Systems;
 with Multprec_Complex_Polynomials;
+with Multprec_Complex_Poly_Systems;
 
 package VarbPrec_Polynomial_Evaluations is
 
@@ -46,6 +50,23 @@ package VarbPrec_Polynomial_Evaluations is
   -- ON ENTRY :
   --   f       a polynomial in several variables;
   --   z       values for the variables that appear in f.
+
+  function Inverse_Condition_Number
+             ( f : Standard_Complex_Poly_Systems.Poly_Sys;
+               z : Standard_Complex_Vectors.Vector ) return double_float; 
+  function Inverse_Condition_Number
+             ( f : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+               z : DoblDobl_Complex_Vectors.Vector ) return double_double;
+  function Inverse_Condition_Number
+             ( f : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+               z : QuadDobl_Complex_Vectors.Vector ) return quad_double;
+  function Inverse_Condition_Number
+             ( f : Multprec_Complex_Poly_Systems.Poly_Sys;
+               z : Multprec_Complex_Vectors.Vector ) return Floating_Number;
+
+  -- DESCRIPTION :
+  --   Returns the smallest inverse condition number of evaluating
+  --   every polynomial f(i) at z.
 
   procedure Evaluate_with_Inverse_Condition
              ( f : in Standard_Complex_Polynomials.Poly;

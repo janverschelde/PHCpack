@@ -1,3 +1,5 @@
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+
 package body VarbPrec_Polynomial_Evaluations is
 
   function Inverse_Condition_Number
@@ -136,6 +138,80 @@ package body VarbPrec_Polynomial_Evaluations is
     res := AbsVal(value);
     Div(res,absum);
     Clear(value); Clear(absum); Clear(zero);
+    return res;
+  end Inverse_Condition_Number;
+
+  function Inverse_Condition_Number
+             ( f : Standard_Complex_Poly_Systems.Poly_Sys;
+               z : Standard_Complex_Vectors.Vector ) return double_float is
+
+    res : double_float := Inverse_Condition_Number(f(f'first),z);
+    rco : double_float;
+
+  begin
+    for i in f'first+1..f'last loop
+      exit when res + 1.0 = 1.0;
+      rco := Inverse_Condition_Number(f(i),z);
+      if rco < res
+       then res := rco;
+      end if;
+    end loop;
+    return res;
+  end Inverse_Condition_Number;
+
+  function Inverse_Condition_Number
+             ( f : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+               z : DoblDobl_Complex_Vectors.Vector ) return double_double is
+
+    res : double_double := Inverse_Condition_Number(f(f'first),z);
+    one : constant double_double := create(1.0);
+    rco : double_double;
+
+  begin
+    for i in f'first+1..f'last loop
+      exit when res + one = one;
+      rco := Inverse_Condition_Number(f(i),z);
+      if rco < res
+       then res := rco;
+      end if;
+    end loop;
+    return res;
+  end Inverse_Condition_Number;
+
+  function Inverse_Condition_Number
+             ( f : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+               z : QuadDobl_Complex_Vectors.Vector ) return quad_double is
+
+    res : quad_double := Inverse_Condition_Number(f(f'first),z);
+    one : constant quad_double := create(1.0);
+    rco : quad_double;
+
+  begin
+    for i in f'first+1..f'last loop
+      exit when res + one = one;
+      rco := Inverse_Condition_Number(f(i),z);
+      if rco < res
+       then res := rco;
+      end if;
+    end loop;
+    return res;
+  end Inverse_Condition_Number;
+
+  function Inverse_Condition_Number
+             ( f : Multprec_Complex_Poly_Systems.Poly_Sys;
+               z : Multprec_Complex_Vectors.Vector ) return Floating_Number is
+
+    res : Floating_Number := Inverse_Condition_Number(f(f'first),z);
+    rco : Floating_Number;
+
+  begin
+    for i in f'first+1..f'last loop
+      rco := Inverse_Condition_Number(f(i),z);
+      if rco < res
+       then Copy(rco,res);
+      end if;
+      Clear(rco);
+    end loop;
     return res;
   end Inverse_Condition_Number;
 

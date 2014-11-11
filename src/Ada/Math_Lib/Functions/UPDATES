@@ -1,3 +1,6 @@
+Tue 11 Nov 2014 : added to varbprec_polynomial_evaluations estimators of
+  the condition number for polynomial systems.
+
 Mon 10 Nov 2014 : extended random_conditioned_evaluations with functions
   and procedures to fix the gradient of a random polynomial at a point,
   tested by ts_vmpeval.adb.  To varbprec_polynomial_evaluations added
