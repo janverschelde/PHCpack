@@ -106,3 +106,6 @@ standard_probe_kernel            : utilities to determine order of deflation
 multprec_probe_kernel            : multiprecision version of probe_kernel
 ts_muldef                        : test on higher-order deflation
 ------------------------------------------------------------------------------
+varbprec_complex_newton_steps    : variable precision Newton steps
+ts_vmpnewt                       : test on variable precision Newton
+------------------------------------------------------------------------------

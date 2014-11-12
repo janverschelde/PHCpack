@@ -1,3 +1,6 @@
+Wed 12 Nov 2014 : new package varbprec_complex_newton_steps, with basic
+  testing in ts_vmpnewt.adb.
+
 Thu 7 Aug 2014 : to drivers_to_deflate_singularities added drivers to
   deflate in double double and quad double precision.
 
