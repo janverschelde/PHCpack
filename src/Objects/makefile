@@ -486,7 +486,7 @@ ts_evalhomt:
 
 test_newton: ts_mreseva ts_rootrefi ts_newton ts_realnewt ts_numdif \
              ts_deftrees ts_jactrees ts_defmat ts_deflate ts_multip ts_stair \
-             ts_deflop ts_numdif ts_straight ts_ddnewt ts_qdnewt 
+             ts_deflop ts_numdif ts_straight ts_ddnewt ts_qdnewt ts_vmpnewt
 
 ts_mreseva:
 	make -f $(MAKEFILE) ts_mreseva
@@ -535,6 +535,9 @@ ts_ddnewt:
 
 ts_qdnewt:
 	make -f $(MAKEFILE) ts_qdnewt
+
+ts_vmpnewt:
+	make -f $(MAKEFILE) ts_vmpnewt
 
 # Test programs for the Deformations/Curves library :
 
