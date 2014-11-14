@@ -1,3 +1,6 @@
+Fri 14 Nov 2014 : to random_conditioned_evaluations, added versions to
+  generate polynomial systems with prescribed condition numbers.
+
 Tue 11 Nov 2014 : added to varbprec_polynomial_evaluations estimators of
   the condition number for polynomial systems and for Laurent polynomials.
   Added the Laurent polynomial of Stefano Taschini to ts_vmpeval.adb.

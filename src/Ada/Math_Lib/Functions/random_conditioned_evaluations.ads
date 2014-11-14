@@ -1,13 +1,17 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Vectors;
-with Standard_Complex_Polynomials;
 with DoblDobl_Complex_Vectors;
-with DoblDobl_Complex_Polynomials;
 with QuadDobl_Complex_Vectors;
-with QuadDobl_Complex_Polynomials;
 with Multprec_Complex_Vectors;
+with Standard_Complex_Polynomials;
+with DoblDobl_Complex_Polynomials;
+with QuadDobl_Complex_Polynomials;
 with Multprec_Complex_Polynomials;
+with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
+with Multprec_Complex_Poly_Systems;
 
 package Random_Conditioned_Evaluations is
 
@@ -64,7 +68,9 @@ package Random_Conditioned_Evaluations is
 
   -- ON RETURN :
   --   f        polynomial in n variables of degrees at most d,
-  --            with coefficients of the given cffsz;
+  --            with coefficients of the given cffsz, except
+  --            perhaps for the constant coefficient, which
+  --            was calculated to be close enough to a root;
   --   z        coordinates of a point of the given pntsz.
 
   procedure Random_Conditioned_Evaluation_Problem
@@ -94,7 +100,55 @@ package Random_Conditioned_Evaluations is
 
   -- ON RETURN :
   --   f        polynomial in n variables of degrees at most d,
-  --            with coefficients of the given cffsz;
+  --            with coefficients of the given cffsz, except
+  --            perhaps for the constant coefficient, which
+  --            was calculated to be close enough to a root;
+  --   z        coordinates of a point of the given pntsz.
+
+  procedure Random_Conditioned_Evaluation_Problem
+              ( n,d,m,c : in natural32;
+                cffsz,pntsz,close : in double_float;
+                f : out Standard_Complex_Poly_Systems.Poly_Sys;
+                z : out Standard_Complex_Vectors.Vector );
+  procedure Random_Conditioned_Evaluation_Problem
+              ( n,d,m,c : in natural32;
+                cffsz,pntsz,close : in double_float;
+                f : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                z : out DoblDobl_Complex_Vectors.Vector );
+  procedure Random_Conditioned_Evaluation_Problem
+              ( n,d,m,c : in natural32;
+                cffsz,pntsz,close : in double_float;
+                f : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                z : out QuadDobl_Complex_Vectors.Vector );
+  procedure Random_Conditioned_Evaluation_Problem
+              ( n,d,m,c,sz : in natural32;
+                cffsz,pntsz,close : in double_float;
+                f : out Multprec_Complex_Poly_Systems.Poly_Sys;
+                z : out Multprec_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Generates a polynomial system with prescribed condition,
+  --   using the same parameters for every equation.
+
+  -- REQUIRED : f'range = z'range = 1..n.
+
+  -- ON ENTRY :
+  --   n        number of variables;
+  --   d        largest degree of the monomials;
+  --   m        number of monomials (0 for a dense polynomial);
+  --   c        type of coefficient, 0 is random complex, 1 is one,
+  --            and 2 is random real;
+  --   sz       size of the numbers determines the working precision;
+  --   cffsz    size of the coefficients;
+  --   pntsz    size of the coordinates of the point where to evaluate;
+  --   close    distance of the point to a root.
+
+  -- ON RETURN :
+  --   f        system of n equations in n variables,
+  --            where each polynomial has degree at most d,
+  --            with coefficients of the given cffsz, except
+  --            perhaps for the constant coefficients, which
+  --            were calculated to be close enough to a root;
   --   z        coordinates of a point of the given pntsz.
 
   procedure Fix_Gradient
