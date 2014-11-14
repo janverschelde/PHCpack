@@ -19,46 +19,69 @@ with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
 with Multprec_Floating_Numbers;         use Multprec_Floating_Numbers;
 with Multprec_Floating_Numbers_io;      use Multprec_Floating_Numbers_io;
+with Multprec_Mathematical_Functions;   use Multprec_Mathematical_Functions;
 with Multprec_Complex_Numbers;
 with Multprec_Complex_Numbers_io;       use Multprec_Complex_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
+with Standard_Complex_Norms_Equals;     use Standard_Complex_Norms_Equals;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_Vector_Norms;     use DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vector_Norms;     use QuadDobl_Complex_Vector_Norms;
 with Multprec_Complex_Vectors;
 with Multprec_Complex_Vectors_io;       use Multprec_Complex_Vectors_io;
+with Multprec_Complex_Norms_Equals;     use Multprec_Complex_Norms_Equals;
 with Standard_Random_Vectors;
 with DoblDobl_Random_Vectors;
 with QuadDobl_Random_Vectors;
 with Multprec_Random_Vectors;
+with Standard_Complex_Matrices;
+with DoblDobl_Complex_Matrices;
+with QuadDobl_Complex_Matrices;
+with Multprec_Complex_Matrices;
 with Symbol_Table;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;   use Standard_Complex_Polynomials_io;
 with Standard_Complex_Poly_Functions;   use Standard_Complex_Poly_Functions;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_SysFun;
+with Standard_Complex_Jaco_Matrices;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Laurentials_io;   use Standard_Complex_Laurentials_io;
 with Standard_Complex_Laur_Strings;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Polynomials_io;   use DoblDobl_Complex_Polynomials_io;
 with DoblDobl_Complex_Poly_Functions;   use DoblDobl_Complex_Poly_Functions;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_SysFun;
+with DoblDobl_Complex_Jaco_Matrices;
 with DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Laurentials_io;   use DoblDobl_Complex_Laurentials_io;
 with DoblDobl_Complex_Laur_Strings;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Polynomials_io;   use QuadDobl_Complex_Polynomials_io;
 with QuadDobl_Complex_Poly_Functions;   use QuadDobl_Complex_Poly_Functions;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_SysFun;
+with QuadDobl_Complex_Jaco_Matrices;
 with QuadDobl_Complex_Laurentials;
 with QuadDobl_Complex_Laurentials_io;   use QuadDobl_Complex_Laurentials_io;
 with QuadDobl_Complex_Laur_Strings;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Polynomials_io;   use Multprec_Complex_Polynomials_io;
 with Multprec_Complex_Poly_Functions;   use Multprec_Complex_Poly_Functions;
+with Multprec_Complex_Poly_Systems;
+with Multprec_Complex_Poly_SysFun;
+with Multprec_Complex_Jaco_Matrices;
 with Multprec_Complex_Laurentials;
 with Multprec_Complex_Laurentials_io;   use Multprec_Complex_Laurentials_io;
 with Multprec_Complex_Laur_Strings;
+with Random_Conditioned_Matrices;       use Random_Conditioned_Matrices;
 with Random_Conditioned_Evaluations;    use Random_Conditioned_Evaluations;
+with Varbprec_Complex_Linear_Solvers;   use Varbprec_Complex_Linear_Solvers; 
 with VarbPrec_Polynomial_Evaluations;   use VarbPrec_Polynomial_Evaluations;
 
 procedure ts_vmpeval is
@@ -526,6 +549,427 @@ procedure ts_vmpeval is
     end case;
   end Test_Taschini_Laurential;
 
+  procedure Standard_Check_Values
+              ( f : in Standard_Complex_Poly_Systems.Poly_Sys;
+                x : in Standard_Complex_Vectors.Vector;
+                jm : in Standard_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Computes the residual |f(x)| and checks whether the Jacobian
+  --   matrix of f evaluated at x equals the matrix jm.
+
+    y : Standard_Complex_Vectors.Vector
+      := Standard_Complex_Poly_SysFun.Eval(f,x);
+    res : double_float := Max_Norm(y);
+    jmf : Standard_Complex_Jaco_Matrices.Jaco_Mat(f'range,x'range)
+        := Standard_Complex_Jaco_Matrices.Create(f);
+    mtx : Standard_Complex_Matrices.Matrix(f'range,x'range)
+        := Standard_Complex_Jaco_Matrices.Eval(jmf,x);
+ 
+  begin
+    new_line;
+    put_line("Checking the values ...");
+    put("-> the residual :"); put(res,3); new_line;
+    for i in mtx'range(1) loop
+      for j in mtx'range(2) loop
+        put("i = "); put(i,1); put("  j = "); put(j,1);
+        put_line(" :");
+        put(mtx(i,j)); new_line;
+        put(jm(i,j)); new_line;
+      end loop;
+    end loop;
+  end Standard_Check_Values;
+
+  procedure DoblDobl_Check_Values
+              ( f : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                x : in DoblDobl_Complex_Vectors.Vector;
+                jm : in DoblDobl_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Computes the residual |f(x)| and checks whether the Jacobian
+  --   matrix of f evaluated at x equals the matrix jm.
+
+    y : DoblDobl_Complex_Vectors.Vector
+      := DoblDobl_Complex_Poly_SysFun.Eval(f,x);
+    res : double_double := Max_Norm(y);
+    jmf : DoblDobl_Complex_Jaco_Matrices.Jaco_Mat(f'range,x'range)
+        := DoblDobl_Complex_Jaco_Matrices.Create(f);
+    mtx : DoblDobl_Complex_Matrices.Matrix(f'range,x'range)
+        := DoblDobl_Complex_Jaco_Matrices.Eval(jmf,x);
+ 
+  begin
+    new_line;
+    put_line("Checking the values ...");
+    put("-> the residual :"); put(res,3); new_line;
+    for i in mtx'range(1) loop
+      for j in mtx'range(2) loop
+        put("i = "); put(i,1); put("  j = "); put(j,1);
+        put_line(" :");
+        put(mtx(i,j)); new_line;
+        put(jm(i,j)); new_line;
+      end loop;
+    end loop;
+  end DoblDobl_Check_Values;
+
+  procedure QuadDobl_Check_Values
+              ( f : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                x : in QuadDobl_Complex_Vectors.Vector;
+                jm : in QuadDobl_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Computes the residual |f(x)| and checks whether the Jacobian
+  --   matrix of f evaluated at x equals the matrix jm.
+
+    y : QuadDobl_Complex_Vectors.Vector
+      := QuadDobl_Complex_Poly_SysFun.Eval(f,x);
+    res : quad_double := Max_Norm(y);
+    jmf : QuadDobl_Complex_Jaco_Matrices.Jaco_Mat(f'range,x'range)
+        := QuadDobl_Complex_Jaco_Matrices.Create(f);
+    mtx : QuadDobl_Complex_Matrices.Matrix(f'range,x'range)
+        := QuadDobl_Complex_Jaco_Matrices.Eval(jmf,x);
+ 
+  begin
+    new_line;
+    put_line("Checking the values ...");
+    put("-> the residual :"); put(res,3); new_line;
+    for i in mtx'range(1) loop
+      for j in mtx'range(2) loop
+        put("i = "); put(i,1); put("  j = "); put(j,1);
+        put_line(" :");
+        put(mtx(i,j)); new_line;
+        put(jm(i,j)); new_line;
+      end loop;
+    end loop;
+  end QuadDobl_Check_Values;
+
+  procedure Multprec_Check_Values
+              ( f : in Multprec_Complex_Poly_Systems.Poly_Sys;
+                x : in Multprec_Complex_Vectors.Vector;
+                jm : in Multprec_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Computes the residual |f(x)| and checks whether the Jacobian
+  --   matrix of f evaluated at x equals the matrix jm.
+
+    y : Multprec_Complex_Vectors.Vector
+      := Multprec_Complex_Poly_SysFun.Eval(f,x);
+    res : Floating_Number := Max_Norm(y);
+    jmf : Multprec_Complex_Jaco_Matrices.Jaco_Mat(f'range,x'range)
+        := Multprec_Complex_Jaco_Matrices.Create(f);
+    mtx : Multprec_Complex_Matrices.Matrix(f'range,x'range)
+        := Multprec_Complex_Jaco_Matrices.Eval(jmf,x);
+ 
+  begin
+    new_line;
+    put_line("Checking the values ...");
+    put("-> the residual :"); put(res,3); new_line;
+    for i in mtx'range(1) loop
+      for j in mtx'range(2) loop
+        put("i = "); put(i,1); put("  j = "); put(j,1);
+        put_line(" :");
+        put(mtx(i,j)); new_line;
+        put(jm(i,j)); new_line;
+      end loop;
+    end loop;
+  end Multprec_Check_Values;
+
+  procedure Standard_Jacobian_Test
+              ( n,d,m,c : in natural32;
+                cffsz,pntsz,close,condjm : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Given in n the number of variables, in d the largest degree,
+  --   in m the maximum number of monomials (or 0 for dense), and in c
+  --   the type of coefficients, then this procedure will generate a
+  --   random polynomial system with standard complex coefficients.
+  --   The condition number of the numerical evaluation problem is
+  --   determined by the degree, the coefficient size, the size of the
+  --   coordinates of the point, and the distance of the point to the
+  --   closest root.  The condition number of the Jacobian number
+  --   will be as prescribed provided condjm < 1.0E+16.
+
+  -- ON ENTRY :
+  --   n        number of variables;
+  --   d        largest degree of the monomials;
+  --   m        number of monomials (0 for a dense polynomial);
+  --   c        type of coefficient, 0 is random complex, 1 is one,
+  --            and 2 is random real;
+  --   cffsz    size of the coefficients;
+  --   pntsz    size of the coordinates of the point where to evaluate;
+  --   close    distance of the point to a root;
+  --   condjm   condition number of the Jacobian matrix.
+
+    p : Standard_Complex_Poly_Systems.Poly_Sys(1..integer32(n));
+    x : Standard_Complex_Vectors.Vector(p'range);
+    jm : Standard_Complex_Matrices.Matrix(p'range,x'range)
+       := Random_Conditioned_Matrix(integer32(n),condjm);
+    rco : double_float;
+    loss_jac,loss_eva : integer32;
+    ans : character;
+
+  begin
+    new_line;
+    put("The given condition number of the Jacobian :");
+    put(condjm,3); new_line;
+    loss_jac := Estimated_Loss_of_Decimal_Places(jm);
+    put("-> Estimated loss of decimal places : "); put(loss_jac,1); new_line;
+    Random_Conditioned_Jacobian_Evaluation(n,d,m,c,cffsz,pntsz,close,jm,p,x);
+    rco := Inverse_Condition_Number(p,x);
+    if rco = 0.0
+     then loss_eva := -2**30;
+     else loss_eva := integer32(log10(rco));
+    end if;
+    new_line;
+    put("Inverse condition of polynomial evaluation :");
+    put(rco,3); new_line;
+    put("-> Estimated loss of decimal places : "); put(loss_eva,1); new_line;
+    new_line;
+    put("Check values of the Jacobian matrix ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Standard_Check_Values(p,x,jm);
+    end if;
+  end Standard_Jacobian_Test;
+
+  procedure DoblDobl_Jacobian_Test
+              ( n,d,m,c : in natural32;
+                cffsz,pntsz,close,condjm : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Given in n the number of variables, in d the largest degree,
+  --   in m the maximum number of monomials (or 0 for dense), and in c
+  --   the type of coefficients, then this procedure will generate a
+  --   random polynomial system with standard complex coefficients.
+  --   The condition number of the numerical evaluation problem is
+  --   determined by the degree, the coefficient size, the size of the
+  --   coordinates of the point, and the distance of the point to the
+  --   closest root.  The condition number of the Jacobian number
+  --   will be as prescribed provided condjm < 1.0E+32.
+
+  -- ON ENTRY :
+  --   n        number of variables;
+  --   d        largest degree of the monomials;
+  --   m        number of monomials (0 for a dense polynomial);
+  --   c        type of coefficient, 0 is random complex, 1 is one,
+  --            and 2 is random real;
+  --   cffsz    size of the coefficients;
+  --   pntsz    size of the coordinates of the point where to evaluate;
+  --   close    distance of the point to a root;
+  --   condjm   condition number of the Jacobian matrix.
+
+    p : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(n));
+    x : DoblDobl_Complex_Vectors.Vector(p'range);
+    jm : DoblDobl_Complex_Matrices.Matrix(p'range,x'range)
+       := Random_Conditioned_Matrix(integer32(n),condjm);
+    rco : double_double;
+    loss_jac,loss_eva : integer32;
+    ans : character;
+
+  begin
+    new_line;
+    put("The given condition number of the Jacobian :");
+    put(condjm,3); new_line;
+    loss_jac := Estimated_Loss_of_Decimal_Places(jm);
+    put("-> Estimated loss of decimal places : "); put(loss_jac,1); new_line;
+    Random_Conditioned_Jacobian_Evaluation(n,d,m,c,cffsz,pntsz,close,jm,p,x);
+    rco := Inverse_Condition_Number(p,x);
+    if Is_Zero(rco)
+     then loss_eva := -2**30;
+     else loss_eva := integer32(to_double(log10(rco)));
+    end if;
+    new_line;
+    put("Inverse condition of polynomial evaluation :");
+    put(rco,3); new_line;
+    put("-> Estimated loss of decimal places : "); put(loss_eva,1); new_line;
+    new_line;
+    put("Check the values of the Jacobian matrix ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then DoblDobl_Check_Values(p,x,jm);
+    end if;
+  end DoblDobl_Jacobian_Test;
+
+  procedure QuadDobl_Jacobian_Test
+              ( n,d,m,c : in natural32;
+                cffsz,pntsz,close,condjm : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Given in n the number of variables, in d the largest degree,
+  --   in m the maximum number of monomials (or 0 for dense), and in c
+  --   the type of coefficients, then this procedure will generate a
+  --   random polynomial system with standard complex coefficients.
+  --   The condition number of the numerical evaluation problem is
+  --   determined by the degree, the coefficient size, the size of the
+  --   coordinates of the point, and the distance of the point to the
+  --   closest root.  The condition number of the Jacobian number
+  --   will be as prescribed provided condjm < 1.0E+64.
+
+  -- ON ENTRY :
+  --   n        number of variables;
+  --   d        largest degree of the monomials;
+  --   m        number of monomials (0 for a dense polynomial);
+  --   c        type of coefficient, 0 is random complex, 1 is one,
+  --            and 2 is random real;
+  --   cffsz    size of the coefficients;
+  --   pntsz    size of the coordinates of the point where to evaluate;
+  --   close    distance of the point to a root;
+  --   condjm   condition number of the Jacobian matrix.
+
+    p : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(n));
+    x : QuadDobl_Complex_Vectors.Vector(p'range);
+    jm : QuadDobl_Complex_Matrices.Matrix(p'range,x'range)
+       := Random_Conditioned_Matrix(integer32(n),condjm);
+    rco : quad_double;
+    loss_jac,loss_eva : integer32;
+    ans : character;
+
+  begin
+    new_line;
+    put("The given condition number of the Jacobian :");
+    put(condjm,3); new_line;
+    loss_jac := Estimated_Loss_of_Decimal_Places(jm);
+    put("-> Estimated loss of decimal places : "); put(loss_jac,1); new_line;
+    Random_Conditioned_Jacobian_Evaluation(n,d,m,c,cffsz,pntsz,close,jm,p,x);
+    rco := Inverse_Condition_Number(p,x);
+    if Is_Zero(rco)
+     then loss_eva := -2**30;
+     else loss_eva := integer32(to_double(log10(rco)));
+    end if;
+    new_line;
+    put("Inverse condition of polynomial evaluation :");
+    put(rco,3); new_line;
+    put("-> Estimated loss of decimal places : "); put(loss_eva,1); new_line;
+    new_line;
+    put("Check the values of the Jacobian matrix ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then QuadDobl_Check_Values(p,x,jm);
+    end if;
+  end QuadDobl_Jacobian_Test;
+
+  procedure Multprec_Jacobian_Test
+              ( n,d,m,c,sz : in natural32;
+                cffsz,pntsz,close,condjm : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Given in n the number of variables, in d the largest degree,
+  --   in m the maximum number of monomials (or 0 for dense), and in c
+  --   the type of coefficients, then this procedure will generate a
+  --   random polynomial system with standard complex coefficients.
+  --   The condition number of the numerical evaluation problem is
+  --   determined by the degree, the coefficient size, the size of the
+  --   coordinates of the point, and the distance of the point to the
+  --   closest root.  The condition number of the Jacobian number
+  --   will be as prescribed, provided the value sz for the precision
+  --   is sufficiently high.
+
+  -- ON ENTRY :
+  --   n        number of variables;
+  --   d        largest degree of the monomials;
+  --   m        number of monomials (0 for a dense polynomial);
+  --   c        type of coefficient, 0 is random complex, 1 is one,
+  --            and 2 is random real;
+  --   sz       size of the numbers in the working precision;
+  --   cffsz    size of the coefficients;
+  --   pntsz    size of the coordinates of the point where to evaluate;
+  --   close    distance of the point to a root;
+  --   condjm   condition number of the Jacobian matrix.
+
+    p : Multprec_Complex_Poly_Systems.Poly_Sys(1..integer32(n));
+    x : Multprec_Complex_Vectors.Vector(p'range);
+    jm : Multprec_Complex_Matrices.Matrix(p'range,x'range)
+       := Random_Conditioned_Matrix(integer32(n),condjm);
+    rco : Floating_Number;
+    loss_jac,loss_eva : integer32;
+    ans : character;
+
+  begin
+    new_line;
+    put("The given condition number of the Jacobian :");
+    put(condjm,3); new_line;
+    loss_jac := Estimated_Loss_of_Decimal_Places(jm);
+    put("-> Estimated loss of decimal places : "); put(loss_jac,1); new_line;
+    Random_Conditioned_Jacobian_Evaluation(n,d,m,c,sz,cffsz,pntsz,close,jm,p,x);
+    rco := Inverse_Condition_Number(p,x);
+    if Equal(rco,0.0) then
+      loss_eva := -2**30;
+    else
+      declare
+        mp_log10rco : Floating_Number := log10(rco);
+        st_log10rco : double_float := Round(mp_log10rco);
+      begin
+        loss_eva := integer32(st_log10rco);
+      end;
+    end if;
+    new_line;
+    put("Inverse condition of polynomial evaluation :");
+    put(rco,3); new_line;
+    put("-> Estimated loss of decimal places : "); put(loss_eva,1); new_line;
+    new_line;
+    put("Check the values of the Jacobian matrix ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Multprec_Check_Values(p,x,jm);
+    end if;
+  end Multprec_Jacobian_Test;
+
+  procedure Test_Random_Conditioned_Jacobian_Evaluation is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the dimensions of the numerical problem
+  --   to set the condition of the Jacobian matrix and
+  --   the condition of the polynomial evaluation problem.
+
+    n,d,m,deci,size : natural32 := 0;
+    condjm,coeffsize,pointsize,closeroot,cond : double_float := 0.0;
+    ans : character;
+
+  begin
+    new_line;
+    put_line("First part, condition number of Jacobian matrix :");
+    put("Give the condition of the Jacobian matrix : "); get(condjm);
+    new_line;
+    put_line("Second part, parameters of the random polynomials :");
+    put("Give number of variables : "); get(n);
+    Symbol_Table.Init(n);
+    put("Give maximal degree : "); get(d);
+    put("Give number of monomials (0 for dense): "); get(m);
+    new_line;
+    put_line("Third part, factors in numerical condition of evaluation :");
+    put("Give magnitude of the coefficients : "); get(coeffsize);
+    put("Give magnitude of the coordinates of the point : "); get(pointsize);
+    put("Give closeness to a root : "); get(closeroot);
+    cond := coeffsize*(pointsize**integer(d))/closeroot;
+    put("Predicted condition number : "); put(cond,3); new_line;
+    new_line;
+    put_line("Choose the level of precision : ");
+    put_line("  0. standard double precision;");
+    put_line("  1. double double precision;");
+    put_line("  2. quad double precision;");
+    put_line("  3. arbitrary multiprecision.");
+    put("Type 0, 1, 2, or 3 to select the precision : ");
+    Ask_Alternative(ans,"0123");
+    case ans is
+      when '0' => 
+        Standard_Jacobian_Test(n,d,m,0,coeffsize,pointsize,closeroot,condjm);
+      when '1' =>
+        DoblDobl_Jacobian_Test(n,d,m,0,coeffsize,pointsize,closeroot,condjm);
+      when '2' =>
+        QuadDobl_Jacobian_Test(n,d,m,0,coeffsize,pointsize,closeroot,condjm);
+      when '3' =>
+        declare
+          deci,size : natural32 := 0;
+        begin
+          new_line;
+          put("Give the number of decimal places : "); get(deci);
+          size := Decimal_to_Size(deci);
+          Multprec_Jacobian_Test
+            (n,d,m,0,size,coeffsize,pointsize,closeroot,condjm);
+        end;
+      when others => null;
+    end case;
+  end Test_Random_Conditioned_Jacobian_Evaluation;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -540,12 +984,14 @@ procedure ts_vmpeval is
     new_line;
     put_line("MENU to test condition number computation :");
     put_line("  1. generate a random polynomial and select precision;");
-    put_line("  2. test specific Laurent polynomial of Stefano Taschini.");
-    put("Type 1 or 2 to select the type of test : ");
-    Ask_Alternative(ans,"12");
+    put_line("  2. test specific Laurent polynomial of Stefano Taschini;");
+    put_line("  3. conditioned Jacobian matrix and evaluation problem.");
+    put("Type 1, 2, or 3 to select the type of test : ");
+    Ask_Alternative(ans,"123");
     case ans is
       when '1' => Test_Random_Polynomial;
       when '2' => Test_Taschini_Laurential;
+      when '3' => Test_Random_Conditioned_Jacobian_Evaluation;
       when others => null;
     end case;
   end Main;

@@ -1,5 +1,7 @@
 Fri 14 Nov 2014 : to random_conditioned_evaluations, added versions to
-  generate polynomial systems with prescribed condition numbers.
+  generate polynomial systems with prescribed condition numbers and
+  versions to generate system with prescribed Jacobian matrices,
+  tested in ts_vmpeval.adb.
 
 Tue 11 Nov 2014 : added to varbprec_polynomial_evaluations estimators of
   the condition number for polynomial systems and for Laurent polynomials.
