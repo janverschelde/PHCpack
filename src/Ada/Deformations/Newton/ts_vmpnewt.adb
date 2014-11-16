@@ -474,6 +474,18 @@ procedure ts_vmpnewt is
     end;
   end Multprec_Test_on_Given_System;
 
+  function Minimum ( a,b : integer32 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the minimum of a and b.
+
+  begin
+    if a < b
+     then return a;
+     else return b;
+    end if;
+  end Minimum;
+
   procedure Standard_Conditioned_Test
               ( n,d,m,c : in natural32;
                 cffsz,pntsz,close,condjm : in double_float ) is
@@ -505,10 +517,10 @@ procedure ts_vmpnewt is
     jm : Standard_Complex_Matrices.Matrix(p'range,x'range)
        := Random_Conditioned_Matrix(integer32(n),condjm);
     rco : double_float;
-    loss_jac,loss_eva : integer32;
+    precision : constant integer32 := 16;
+    loss_jac,loss_eva,loss,want : integer32 := 0;
 
   begin
-    new_line;
     put("The given condition number of the Jacobian :");
     put(condjm,3); new_line;
     loss_jac := Estimated_Loss_of_Decimal_Places(jm);
@@ -524,7 +536,17 @@ procedure ts_vmpnewt is
     put(rco,3); new_line;
     put("-> Estimated loss of decimal places : "); put(loss_eva,1); new_line;
     new_line;
-    Standard_Test(p,x);
+    loss := Minimum(loss_jac,loss_eva);
+    put("-> Estimated total loss : "); put(loss,1); new_line;
+    put("Give the wanted number of decimal places : "); get(want);
+    if precision + loss >= want then
+      put("Double precision suffices to meet "); put(want,1);
+      put_line(" accurate decimal places.");
+      Standard_Test(p,x);
+    else
+      put("Double precision does not suffice for "); put(want,1);
+      put_line(" accurate decimal places.");
+    end if;
   end Standard_Conditioned_Test;
 
   procedure DoblDobl_Conditioned_Test
@@ -558,10 +580,10 @@ procedure ts_vmpnewt is
     jm : DoblDobl_Complex_Matrices.Matrix(p'range,x'range)
        := Random_Conditioned_Matrix(integer32(n),condjm);
     rco : double_double;
-    loss_jac,loss_eva : integer32;
+    precision : constant integer32 := 32;
+    loss_jac,loss_eva,loss,want : integer32 := 0;
 
   begin
-    new_line;
     put("The given condition number of the Jacobian :");
     put(condjm,3); new_line;
     loss_jac := Estimated_Loss_of_Decimal_Places(jm);
@@ -573,11 +595,21 @@ procedure ts_vmpnewt is
      else loss_eva := integer32(to_double(log10(rco)));
     end if;
     new_line;
-    put("Inverse condition of polynomial evaluation :");
+    put("Inverse condition of polynomial evaluation : ");
     put(rco,3); new_line;
     put("-> Estimated loss of decimal places : "); put(loss_eva,1); new_line;
     new_line;
-    DoblDobl_Test(p,x);
+    loss := Minimum(loss_jac,loss_eva);
+    put("-> Estimated total loss : "); put(loss,1); new_line;
+    put("Give the wanted number of decimal places : "); get(want);
+    if precision + loss >= want then
+      put("Double double precision suffices to meet "); put(want,1);
+      put_line(" accurate decimal places.");
+      DoblDobl_Test(p,x);
+    else
+      put("Double double precision does not suffice for "); put(want,1);
+      put_line(" accurate decimal places.");
+    end if;
   end DoblDobl_Conditioned_Test;
 
   procedure QuadDobl_Conditioned_Test
@@ -611,10 +643,10 @@ procedure ts_vmpnewt is
     jm : QuadDobl_Complex_Matrices.Matrix(p'range,x'range)
        := Random_Conditioned_Matrix(integer32(n),condjm);
     rco : quad_double;
-    loss_jac,loss_eva : integer32;
+    precision : constant integer32 := 64;
+    loss_jac,loss_eva,loss,want : integer32 := 0;
 
   begin
-    new_line;
     put("The given condition number of the Jacobian :");
     put(condjm,3); new_line;
     loss_jac := Estimated_Loss_of_Decimal_Places(jm);
@@ -626,11 +658,21 @@ procedure ts_vmpnewt is
      else loss_eva := integer32(to_double(log10(rco)));
     end if;
     new_line;
-    put("Inverse condition of polynomial evaluation :");
+    put("Inverse condition of polynomial evaluation : ");
     put(rco,3); new_line;
     put("-> Estimated loss of decimal places : "); put(loss_eva,1); new_line;
     new_line;
-    QuadDobl_Test(p,x);
+    loss := Minimum(loss_jac,loss_eva);
+    put("-> Estimated total loss : "); put(loss,1); new_line;
+    put("Give the wanted number of decimal places : "); get(want);
+    if precision + loss >= want then
+      put("Quad double precision suffices to meet "); put(want,1);
+      put_line(" accurate decimal places.");
+      QuadDobl_Test(p,x);
+    else
+      put("Quad double precision does not suffice for "); put(want,1);
+      put_line(" accurate decimal places.");
+    end if;
   end QuadDobl_Conditioned_Test;
 
   procedure Multprec_Conditioned_Test
@@ -666,10 +708,10 @@ procedure ts_vmpnewt is
     jm : Multprec_Complex_Matrices.Matrix(p'range,x'range)
        := Random_Conditioned_Matrix(integer32(n),condjm);
     rco : Floating_Number;
-    loss_jac,loss_eva : integer32;
+    precision : constant integer32 := integer32(Size_to_Decimal(sz));
+    loss_jac,loss_eva,loss,want : integer32 := 0;
 
   begin
-    new_line;
     put("The given condition number of the Jacobian :");
     put(condjm,3); new_line;
     loss_jac := Estimated_Loss_of_Decimal_Places(jm);
@@ -691,7 +733,17 @@ procedure ts_vmpnewt is
     put(rco,3); new_line;
     put("-> Estimated loss of decimal places : "); put(loss_eva,1); new_line;
     new_line;
-    Multprec_Test(p,sz,x);
+    loss := Minimum(loss_jac,loss_eva);
+    put("-> Estimated total loss : "); put(loss,1); new_line;
+    put("Give the wanted number of decimal places : "); get(want);
+    if precision + loss >= want then
+      put("Current multiprecision suffices to meet "); put(want,1);
+      put_line(" accurate decimal places.");
+      Multprec_Test(p,sz,x);
+    else
+      put("Current multiprecision does not suffice for "); put(want,1);
+      put_line(" accurate decimal places.");
+    end if;
   end Multprec_Conditioned_Test;
 
   procedure Random_Conditioned_Root_Problem ( preclvl : in character ) is
@@ -734,7 +786,6 @@ procedure ts_vmpnewt is
         declare
           deci,size : natural32 := 0;
         begin
-          new_line;
           put("Give the number of decimal places : "); get(deci);
           size := Decimal_to_Size(deci);
           Multprec_Conditioned_Test(n,d,m,0,size,cffsize,pntsize,close,condjm);

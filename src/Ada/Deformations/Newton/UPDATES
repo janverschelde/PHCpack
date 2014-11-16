@@ -1,3 +1,6 @@
+Sun 16 Nov 2014 : prompts user for wanted number of accurate decimal places
+  in test procedure ts_vmpnewt.adb.
+
 Sat 15 Nov 2014 : added tests on random conditioned root problems at
   various precision levels in ts_vmpnewt.adb.
 
