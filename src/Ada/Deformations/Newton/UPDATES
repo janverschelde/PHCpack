@@ -1,3 +1,6 @@
+Sat 15 Nov 2014 : added tests on random conditioned root problems at
+  various precision levels in ts_vmpnewt.adb.
+
 Thu 13 Nov 2014 : multprecision versions in varbprec_complex_newton_steps,
   tested by ts_vmpnewt.adb.
 
