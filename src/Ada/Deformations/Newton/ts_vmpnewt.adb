@@ -474,18 +474,6 @@ procedure ts_vmpnewt is
     end;
   end Multprec_Test_on_Given_System;
 
-  function Minimum ( a,b : integer32 ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Returns the minimum of a and b.
-
-  begin
-    if a < b
-     then return a;
-     else return b;
-    end if;
-  end Minimum;
-
   procedure Standard_Conditioned_Test
               ( n,d,m,c : in natural32;
                 cffsz,pntsz,close,condjm : in double_float ) is
