@@ -1,3 +1,6 @@
+Mon 17 Nov 2014 : new package standard_complex_vector_strings to parse/write
+  complex vectors from/to strings, tested by ts_strvec.adb.
+
 Thu 31 Jul 2014 : new packages {dobl,quad}dobl_complex_nesvecs with _io.
 
 Fri 21 Jun 2013 : updated multprec_random_vecvecs as needed by multiprecision
