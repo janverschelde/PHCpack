@@ -1,5 +1,6 @@
 Sun 16 Nov 2014 : prompts user for wanted number of accurate decimal places
-  in test procedure ts_vmpnewt.adb.
+  in test procedure ts_vmpnewt.adb.  To varbprec_complex_newton_steps,
+  procedures were added to do a Newton step to a wanted accuracy.
 
 Sat 15 Nov 2014 : added tests on random conditioned root problems at
   various precision levels in ts_vmpnewt.adb.

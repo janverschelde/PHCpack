@@ -127,4 +127,66 @@ package Varbprec_Complex_Newton_Steps is
   --   z        updated approximation for a solution;
   --   err      magnitude of the correction term added to z.
 
+  function Minimum ( a,b : integer32 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the minimum of a and b, used to compute the total loss,
+  --   as the minimum of the loss in the accuracy of the linear solving
+  --   and the loss in the accuracy of the polynomial evaluation.
+
+  procedure Newton_Step_to_Wanted_Accuracy
+              ( f : in Standard_Complex_Poly_Systems.Poly_Sys;
+                jf : in Standard_Complex_Jaco_Matrices.Jaco_Mat;
+                z : in out Standard_Complex_Vectors.Vector;
+                want : in integer32; loss : out integer32;
+                jfzrco,fzrco,err : out double_float;
+                fz : out Standard_Complex_Vectors.Vector;
+                fail : out boolean );
+  procedure Newton_Step_to_Wanted_Accuracy
+              ( f : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                jf : in DoblDobl_Complex_Jaco_Matrices.Jaco_Mat;
+                z : in out DoblDobl_Complex_Vectors.Vector;
+                want : in integer32; loss : out integer32;
+                jfzrco,fzrco,err : out double_double;
+                fz : out DoblDobl_Complex_Vectors.Vector;
+                fail : out boolean );
+  procedure Newton_Step_to_Wanted_Accuracy
+              ( f : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                jf : in QuadDobl_Complex_Jaco_Matrices.Jaco_Mat;
+                z : in out QuadDobl_Complex_Vectors.Vector;
+                want : in integer32; loss : out integer32;
+                jfzrco,fzrco,err : out quad_double;
+                fz : out QuadDobl_Complex_Vectors.Vector;
+                fail : out boolean );
+  procedure Newton_Step_to_Wanted_Accuracy
+              ( f : in Multprec_Complex_Poly_Systems.Poly_Sys;
+                jf : in Multprec_Complex_Jaco_Matrices.Jaco_Mat;
+                z : in out Multprec_Complex_Vectors.Vector;
+                prec,want : in integer32; loss : out integer32;
+                jfzrco,fzrco,err : out Floating_Number;
+                fz : out Multprec_Complex_Vectors.Vector;
+                fail : out boolean );
+
+  -- DESCRIPTION :
+  --   Estimates the loss of accuracy and if the loss is small enough
+  --   to achieve the desired wanted number of decimal places with
+  --   the double, double double, quad double, or arbitrary precision, 
+  --   then one Newton step is done.
+
+  -- ON ENTRY :
+  --   f        polynomial system in as many equations in as many variables;
+  --   jf       Jacobian matrix of the system f;
+  --   z        current approximation for a solution of f;
+  --   prec     number of decimal places in the arbitrary multiprecision;
+  --   want     wanted number of decimal places to be accurate.
+
+  -- ON RETURN :
+  --   z        if not fail, then updated approximation for a solution;
+  --   loss     estimated loss of decimal places;
+  --   jfzrco   inverse condition number of the Jacobian matrix at z;
+  --   fzrco    inverse condition number of the evaluation problem of f at z;
+  --   err      if not fail, then magnitude of the correction added to z;
+  --   fz       system f evaluated at z;
+  --   fail     if the precision is insufficient to meet the accuracy.
+
 end Varbprec_Complex_Newton_Steps;

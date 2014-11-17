@@ -213,5 +213,112 @@ package body Varbprec_Complex_Newton_Steps is
     end loop;
     Multprec_Complex_Vectors.Clear(dz);
   end do_Newton_Step;
+
+  function Minimum ( a,b : integer32 ) return integer32 is
+  begin
+    if a < b
+     then return a;
+     else return b;
+    end if;
+  end Minimum;
+
+  procedure Newton_Step_to_Wanted_Accuracy
+              ( f : in Standard_Complex_Poly_Systems.Poly_Sys;
+                jf : in Standard_Complex_Jaco_Matrices.Jaco_Mat;
+                z : in out Standard_Complex_Vectors.Vector;
+                want : in integer32; loss : out integer32;
+                jfzrco,fzrco,err : out double_float;
+                fz : out Standard_Complex_Vectors.Vector;
+                fail : out boolean ) is
+
+    precision : constant integer32 := 16;
+    jfz : Standard_Complex_Matrices.Matrix(f'range,z'range);
+    piv : Standard_Integer_Vectors.Vector(z'range);
+    jflss,fzlss : integer32;
+
+  begin
+    Estimate_Loss_in_Newton_Step(f,jf,z,jfz,piv,fz,jfzrco,fzrco,jflss,fzlss);
+    loss := Minimum(jflss,fzlss);
+    if precision + loss < want then
+      fail := true;
+    else
+      fail := false;
+      do_Newton_Step(z,jfz,piv,fz,err);
+    end if;
+  end Newton_Step_to_Wanted_Accuracy;
+
+  procedure Newton_Step_to_Wanted_Accuracy
+              ( f : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                jf : in DoblDobl_Complex_Jaco_Matrices.Jaco_Mat;
+                z : in out DoblDobl_Complex_Vectors.Vector;
+                want : in integer32; loss : out integer32;
+                jfzrco,fzrco,err : out double_double;
+                fz : out DoblDobl_Complex_Vectors.Vector;
+                fail : out boolean ) is
+
+    precision : constant integer32 := 32;
+    jfz : DoblDobl_Complex_Matrices.Matrix(f'range,z'range);
+    piv : Standard_Integer_Vectors.Vector(z'range);
+    jflss,fzlss : integer32;
+
+  begin
+    Estimate_Loss_in_Newton_Step(f,jf,z,jfz,piv,fz,jfzrco,fzrco,jflss,fzlss);
+    loss := Minimum(jflss,fzlss);
+    if precision + loss < want then
+      fail := true;
+    else
+      fail := false;
+      do_Newton_Step(z,jfz,piv,fz,err);
+    end if;
+  end Newton_Step_to_Wanted_Accuracy;
+
+  procedure Newton_Step_to_Wanted_Accuracy
+              ( f : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                jf : in QuadDobl_Complex_Jaco_Matrices.Jaco_Mat;
+                z : in out QuadDobl_Complex_Vectors.Vector;
+                want : in integer32; loss : out integer32;
+                jfzrco,fzrco,err : out quad_double;
+                fz : out QuadDobl_Complex_Vectors.Vector;
+                fail : out boolean ) is
+
+    precision : constant integer32 := 64;
+    jfz : QuadDobl_Complex_Matrices.Matrix(f'range,z'range);
+    piv : Standard_Integer_Vectors.Vector(z'range);
+    jflss,fzlss : integer32;
+
+  begin
+    Estimate_Loss_in_Newton_Step(f,jf,z,jfz,piv,fz,jfzrco,fzrco,jflss,fzlss);
+    loss := Minimum(jflss,fzlss);
+    if precision + loss < want then
+      fail := true;
+    else
+      fail := false;
+      do_Newton_Step(z,jfz,piv,fz,err);
+    end if;
+  end Newton_Step_to_Wanted_Accuracy;
+
+  procedure Newton_Step_to_Wanted_Accuracy
+              ( f : in Multprec_Complex_Poly_Systems.Poly_Sys;
+                jf : in Multprec_Complex_Jaco_Matrices.Jaco_Mat;
+                z : in out Multprec_Complex_Vectors.Vector;
+                prec,want : in integer32; loss : out integer32;
+                jfzrco,fzrco,err : out Floating_Number;
+                fz : out Multprec_Complex_Vectors.Vector;
+                fail : out boolean ) is
+
+    jfz : Multprec_Complex_Matrices.Matrix(f'range,z'range);
+    piv : Standard_Integer_Vectors.Vector(z'range);
+    jflss,fzlss : integer32;
+
+  begin
+    Estimate_Loss_in_Newton_Step(f,jf,z,jfz,piv,fz,jfzrco,fzrco,jflss,fzlss);
+    loss := Minimum(jflss,fzlss);
+    if prec + loss < want then
+      fail := true;
+    else
+      fail := false;
+      do_Newton_Step(z,jfz,piv,fz,err);
+    end if;
+  end Newton_Step_to_Wanted_Accuracy;
                 
 end Varbprec_Complex_Newton_Steps;
