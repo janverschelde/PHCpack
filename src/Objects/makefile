@@ -172,7 +172,7 @@ ts_cmpexp:
 # Test programs for Math_Lib/Vectors :
 
 test_vectors: ts_natvec ts_intvec ts_fltvec ts_cmpvec ts_ddvec ts_qdvec \
-              ts_nesvec
+              ts_nesvec ts_strvec
 
 ts_natvec:
 	make -f $(MAKEFILE) ts_natvec
@@ -194,6 +194,9 @@ ts_ddvec:
 
 ts_qdvec:
 	make -f $(MAKEFILE) ts_qdvec
+
+ts_strvec:
+	make -f $(MAKEFILE) ts_strvec
 
 # Test programs for Math_Lib/Matrices :
 
