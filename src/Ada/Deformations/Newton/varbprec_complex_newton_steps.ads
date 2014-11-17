@@ -1,3 +1,4 @@
+with String_Splitters;                   use String_Splitters;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
@@ -26,6 +27,8 @@ package Varbprec_Complex_Newton_Steps is
 -- DESCRIPTION :
 --   Applies one step of Newton's method to a polynomial system,
 --   with condition number estimation.
+
+-- PART I : estimators and Newton steps at various level of precision
 
   procedure Estimate_Loss_in_Newton_Step
               ( f : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -188,5 +191,60 @@ package Varbprec_Complex_Newton_Steps is
   --   err      if not fail, then magnitude of the correction added to z;
   --   fz       system f evaluated at z;
   --   fail     if the precision is insufficient to meet the accuracy.
+
+-- PART II : estimating loss of accuracy
+
+  procedure Standard_Estimate_Loss_of_Accuracy
+              ( f : in Array_of_Strings; z : in string;
+                jfrco,fzrco : out double_float; loss : out integer32 );
+  procedure DoblDobl_Estimate_Loss_of_Accuracy
+              ( f : in Array_of_Strings; z : in string;
+                jfrco,fzrco : out double_double; loss : out integer32 );
+  procedure QuadDobl_Estimate_Loss_of_Accuracy
+              ( f : in Array_of_Strings; z : in string;
+                jfrco,fzrco : out quad_double; loss : out integer32 );
+
+  -- DESCRIPTION :
+  --   Evaluates the system in f and vector in z in standard
+  --   double, double double, or quad double  precision to determine the 
+  --   condition numbers of the Jacobian matrix and evaluation problem.
+
+  -- REQUIRED : f'range = number of equations and variables,
+  --   so z will parse into a complex vector of that many variables.
+
+  -- ON ENTRY :
+  --   f        array of strings the contain a polynomial system;
+  --   z        string of numbers, separated by newline symbols.
+
+  -- ON RETURN :
+  --   jfrco    inverse condition number of Jacobian matrix of f at z;
+  --   fzrco    inverse condition number of evaluating f at z;
+  --   loss     loss of number of decimal places, as negative number.
+
+  procedure Estimate_Loss_of_Accuracy
+              ( f : in Array_of_Strings; z : in string;
+                jfrco,fzrco : out Floating_Number; loss : out integer32 );
+
+  -- DESCRIPTION :
+  --   Evaluates the system in f and vector in z at various precision
+  --   until sufficiently high to determine the condition numbers
+  --   of the Jacobian matrix and evaluation problem.
+
+  -- ON ENTRY :
+  --   f        array of strings the contain a polynomial system;
+  --   z        string of numbers, separated by newline symbols.
+
+  -- ON RETURN :
+  --   jfrco    inverse condition number of Jacobian matrix of f at z;
+  --   fzrco    inverse condition number of evaluating f at z;
+  --   loss     loss of number of decimal places, as negative number.
+
+  function Estimate_Loss_of_Accuracy
+              ( f : Array_of_Strings; z : string ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns estimated loss of decimal places as a negative number
+  --   based on condition number estimates for one Newton step on f at z.
+  --   This function encapsulates the same named procedure.
 
 end Varbprec_Complex_Newton_Steps;

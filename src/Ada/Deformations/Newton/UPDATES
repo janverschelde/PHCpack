@@ -1,3 +1,6 @@
+Mon 17 Nov 2014 : extended varbprec_complex_newton_steps with procedures
+  to estimate the loss of accurate decimal places at various precisions.
+
 Sun 16 Nov 2014 : prompts user for wanted number of accurate decimal places
   in test procedure ts_vmpnewt.adb.  To varbprec_complex_newton_steps,
   procedures were added to do a Newton step to a wanted accuracy.

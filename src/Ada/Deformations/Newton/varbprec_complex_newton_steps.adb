@@ -1,18 +1,28 @@
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Multprec_Complex_Numbers;
+with Multprec_DoblDobl_Convertors;
+with Multprec_QuadDobl_Convertors;
 with Standard_Mathematical_Functions;    use Standard_Mathematical_Functions;
 with DoblDobl_Mathematical_Functions;    use DoblDobl_Mathematical_Functions;
 with QuadDobl_Mathematical_Functions;    use QuadDobl_Mathematical_Functions;
 with Multprec_Mathematical_Functions;    use Multprec_Mathematical_Functions;
+with Standard_Complex_Vector_Strings;
+with DoblDobl_Complex_Vector_Strings;
+with QuadDobl_Complex_Vector_Strings;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
 with Multprec_Complex_Linear_Solvers;    use Multprec_Complex_Linear_Solvers;
-with QuadDobl_Complex_Poly_Functions;    use QuadDobl_Complex_Poly_Functions;
+with Symbol_Table;
 with Standard_Complex_Poly_Functions;    use Standard_Complex_Poly_Functions;
+with Standard_Complex_Poly_Strings;
 with DoblDobl_Complex_Poly_Functions;    use DoblDobl_Complex_Poly_Functions;
+with DoblDobl_Complex_Poly_Strings;
+with QuadDobl_Complex_Poly_Functions;    use QuadDobl_Complex_Poly_Functions;
+with QuadDobl_Complex_Poly_Strings;
 with Multprec_Complex_Poly_Functions;    use Multprec_Complex_Poly_Functions;
 with Varbprec_Complex_Linear_Solvers;    use Varbprec_Complex_Linear_Solvers;
 with Varbprec_Polynomial_Evaluations;    use Varbprec_Polynomial_Evaluations;
@@ -320,5 +330,115 @@ package body Varbprec_Complex_Newton_Steps is
       do_Newton_Step(z,jfz,piv,fz,err);
     end if;
   end Newton_Step_to_Wanted_Accuracy;
+
+  procedure Standard_Estimate_Loss_of_Accuracy
+              ( f : in Array_of_Strings; z : in string;
+                jfrco,fzrco : out double_float; loss : out integer32 ) is
+  
+    pf : Standard_Complex_Poly_Systems.Poly_Sys(1..integer32(f'last))
+       := Standard_Complex_Poly_Strings.Parse(natural32(f'last),f);
+    cz : constant Standard_Complex_Vectors.Vector(pf'range)
+       := Standard_Complex_Vector_Strings.Parse(z);
+    jf : Standard_Complex_Jaco_Matrices.Jaco_Mat(pf'range,cz'range)
+       := Standard_Complex_Jaco_Matrices.Create(pf);
+    fz : Standard_Complex_Vectors.Vector(pf'range);
+    jfz : Standard_Complex_Matrices.Matrix(pf'range,cz'range);
+    piv : Standard_Integer_Vectors.Vector(cz'range);
+    jflss,fzlss : integer32;
+
+  begin
+    Estimate_Loss_in_Newton_Step(pf,jf,cz,jfz,piv,fz,jfrco,fzrco,jflss,fzlss);
+    loss := Minimum(jflss,fzlss);
+    Standard_Complex_Poly_Systems.Clear(pf);
+    Standard_Complex_Jaco_Matrices.Clear(jf);
+  end Standard_Estimate_Loss_of_Accuracy;
+
+  procedure DoblDobl_Estimate_Loss_of_Accuracy
+              ( f : in Array_of_Strings; z : in string;
+                jfrco,fzrco : out double_double; loss : out integer32 ) is
+
+    pf : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(f'last))
+       := DoblDobl_Complex_Poly_Strings.Parse(natural32(f'last),f);
+    cz : constant DoblDobl_Complex_Vectors.Vector(pf'range)
+       := DoblDobl_Complex_Vector_Strings.Parse(z);
+    jf : DoblDobl_Complex_Jaco_Matrices.Jaco_Mat(pf'range,cz'range)
+       := DoblDobl_Complex_Jaco_Matrices.Create(pf);
+    fz : DoblDobl_Complex_Vectors.Vector(pf'range);
+    jfz : DoblDobl_Complex_Matrices.Matrix(pf'range,cz'range);
+    piv : Standard_Integer_Vectors.Vector(cz'range);
+    jflss,fzlss : integer32;
+
+  begin
+    Estimate_Loss_in_Newton_Step(pf,jf,cz,jfz,piv,fz,jfrco,fzrco,jflss,fzlss);
+    loss := Minimum(jflss,fzlss);
+    DoblDobl_Complex_Poly_Systems.Clear(pf);
+    DoblDobl_Complex_Jaco_Matrices.Clear(jf);
+  end DoblDobl_Estimate_Loss_of_Accuracy;
+
+  procedure QuadDobl_Estimate_Loss_of_Accuracy
+              ( f : in Array_of_Strings; z : in string;
+                jfrco,fzrco : out quad_double; loss : out integer32 ) is
+
+    pf : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(f'last))
+       := QuadDobl_Complex_Poly_Strings.Parse(natural32(f'last),f);
+    cz : constant QuadDobl_Complex_Vectors.Vector(pf'range)
+       := QuadDobl_Complex_Vector_Strings.Parse(z);
+    jf : QuadDobl_Complex_Jaco_Matrices.Jaco_Mat(pf'range,cz'range)
+       := QuadDobl_Complex_Jaco_Matrices.Create(pf);
+    fz : QuadDobl_Complex_Vectors.Vector(pf'range);
+    jfz : QuadDobl_Complex_Matrices.Matrix(pf'range,cz'range);
+    piv : Standard_Integer_Vectors.Vector(cz'range);
+    jflss,fzlss : integer32;
+
+  begin
+    Estimate_Loss_in_Newton_Step(pf,jf,cz,jfz,piv,fz,jfrco,fzrco,jflss,fzlss);
+    loss := Minimum(jflss,fzlss);
+    QuadDobl_Complex_Poly_Systems.Clear(pf);
+    QuadDobl_Complex_Jaco_Matrices.Clear(jf);
+  end QuadDobl_Estimate_Loss_of_Accuracy;
+
+  procedure Estimate_Loss_of_Accuracy
+              ( f : in Array_of_Strings; z : in string;
+                jfrco,fzrco : out Floating_Number; loss : out integer32 ) is
+
+    dim : constant natural32 := natural32(f'last);
+    d_jfrco,d_fzrco : double_float;
+    dd_jfrco,dd_fzrco : double_double;
+    qd_jfrco,qd_fzrco : quad_double;
+
+  begin
+    if Symbol_Table.Number < dim
+     then Symbol_Table.Init(dim);
+    end if;
+    Standard_Estimate_Loss_of_Accuracy(f,z,d_jfrco,d_fzrco,loss);
+    if loss > -15 then
+      jfrco := create(d_jfrco);
+      fzrco := create(d_fzrco);
+    else
+      DoblDobl_Estimate_Loss_of_Accuracy(f,z,dd_jfrco,dd_fzrco,loss);
+      if loss > -30 then
+        jfrco := Multprec_DoblDobl_Convertors.to_floating_number(dd_jfrco);
+        fzrco := Multprec_DoblDobl_Convertors.to_floating_number(dd_fzrco);
+      else
+        QuadDobl_Estimate_Loss_of_Accuracy(f,z,qd_jfrco,qd_fzrco,loss);
+        if loss > -60 then
+          jfrco := Multprec_QuadDobl_Convertors.to_floating_number(qd_jfrco);
+          fzrco := Multprec_QuadDobl_Convertors.to_floating_number(qd_fzrco);
+        end if;
+      end if;
+    end if;
+  end Estimate_Loss_of_Accuracy;
+
+  function Estimate_Loss_of_Accuracy
+              ( f : Array_of_Strings; z : string ) return integer32 is
+
+    res : integer32;
+    jfrco,fzrco : Floating_Number;
+
+  begin
+    Estimate_Loss_of_Accuracy(f,z,jfrco,fzrco,res);
+    Clear(jfrco); Clear(fzrco);
+    return res;
+  end Estimate_Loss_of_Accuracy;
                 
 end Varbprec_Complex_Newton_Steps;
