@@ -1,3 +1,6 @@
+Mon 17 Nov 2014 : to {dobl,quad}dobl_complex_numbers_io added get/put
+  procedures to parse/write complex numbers from/to strings.
+
 Mon 3 Nov 2014 : test "is_zero" in {double,quad}_double_numbers.adb
   must test on all parts of the dd/qd number, not just highest part!
 

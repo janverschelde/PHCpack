@@ -10,6 +10,8 @@ package QuadDobl_Complex_Numbers_io is
 
   procedure get ( c : in out Complex_Number );
   procedure get ( file : in file_type; c : in out Complex_Number );
+  procedure get ( s : in string; c : in out Complex_Number;
+                  last : out integer );
 
   -- DESCRIPTION :
   --   Reads a quad double complex number from standard input
@@ -17,6 +19,7 @@ package QuadDobl_Complex_Numbers_io is
 
   procedure put ( c : in Complex_Number );
   procedure put ( file : in file_type; c : in Complex_Number );
+  procedure put ( s : out string; c : in Complex_Number );
 
   -- DESCRIPTION :
   --   Writes the quad double complex number c to standard output
@@ -24,6 +27,8 @@ package QuadDobl_Complex_Numbers_io is
 
   procedure put ( c : in Complex_Number; dp : in natural32 );
   procedure put ( file : in file_type;
+                  c : in Complex_Number; dp : in natural32 );
+  procedure put ( s : out string;
                   c : in Complex_Number; dp : in natural32 );
 
   -- DESCRIPTION :
