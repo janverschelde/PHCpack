@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
 
 package Standard_Complex_Vector_Strings is
@@ -16,6 +17,18 @@ package Standard_Complex_Vector_Strings is
   --   scientific format, separated by newline symbols.
   --   Real and imaginary parts of the complex numbers are
   --   separated by spaces.
+
+  function Count_Linefeeds ( s : string ) return integer32;
+
+  -- DESCRIPTION :
+  --   Counts the number of line feeds in the string.
+
+  function Next_Linefeed ( s : string ) return integer;
+
+  -- DESCRIPTION :
+  --   Returns the position in the string where the next linefeed occurs.
+  --   If there is no linefeed in s, then the number on return is
+  --   larger than s'last.
 
   function Parse ( s : string ) return Vector;
 

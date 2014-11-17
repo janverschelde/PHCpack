@@ -60,6 +60,7 @@ double_double_vecvecs              : vectors of double double vectors
 double_double_vecvecs_io           : generic_vecvecs_io(double double)
 dobldobl_complex_vectors           : vectors of double double complex numbers
 dobldobl_complex_vectors_io        : generic_vectors_io(double double complex)
+dobldobl_complex_vector_strings    : parse/write ddcplx vectors from/to strings
 dobldobl_complex_vectors_cv        : convert complex <-> double double
 dobldobl_complex_vector_norms      : vector norms for double double complex
 dobldobl_complex_equality_tests    : tests whether double doubles are equal
@@ -75,6 +76,7 @@ quad_double_vecvecs                : vectors of double quad vectors
 quad_double_vecvecs_io             : generic_vecvecs_io(quad double)
 quaddobl_complex_vectors           : vectors of quad double complex numbers
 quaddobl_complex_vectors_io        : generic_vectors_io(quad double complex)
+quaddobl_copmlex_vector_strings    : parse/write qdcplx vectors from/to strings
 quaddobl_complex_vectors_cv        : convert complex <-> quad double
 quaddobl_complex_vector_norms      : vector norms for quad double complex
 quaddobl_complex_vecvecs           : vectors of quad double complex vectors

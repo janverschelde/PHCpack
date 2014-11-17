@@ -1,7 +1,6 @@
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with String_Splitters;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;
-with String_Splitters;
 
 package body Standard_Complex_Vector_Strings is
 
@@ -26,9 +25,6 @@ package body Standard_Complex_Vector_Strings is
 
   function Count_Linefeeds ( s : string ) return integer32 is
 
-  -- DESCRIPTION :
-  --   Counts the number of line feeds in the string.
-
     res : integer32 := 0;
 
   begin
@@ -41,11 +37,6 @@ package body Standard_Complex_Vector_Strings is
   end Count_Linefeeds;
 
   function Next_Linefeed ( s : string ) return integer is 
-
-  -- DESCRIPTION :
-  --   Returns the position in the string where the next linefeed occurs.
-  --   If there is no linefeed in s, then the number on return is
-  --   larger than s'last.
 
     res : integer := s'first;
 
