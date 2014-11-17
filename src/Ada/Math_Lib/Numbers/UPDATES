@@ -1,3 +1,7 @@
+Mon 17 Nov 2014 : extended standard_complex_numbers_io with get and put
+  procedures to parse complex numbers from strings and to write to strings,
+  tested by ts_strnum.adb.
+
 Sun 9 Nov 2014 : fixed bug in writing of multiprecision complex number
   in multprec_write_numbers.adb.
 
