@@ -1,3 +1,7 @@
+Tue 18 Nov 2014 : some edits in quaddobl_complex_vector_strings.ads to
+  correct some documentation and new multprec_complex_vector_strings to
+  parse/write multiprecision complex vectors from/to strings.
+
 Mon 17 Nov 2014 : new package standard_complex_vector_strings to parse/write
   complex vectors from/to strings, tested by ts_strvec.adb.  Similar for
   double double and quad doubles, added {dobl,quad}_complex_vector_strings,

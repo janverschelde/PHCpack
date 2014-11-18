@@ -1,13 +1,13 @@
-with QuadDobl_Complex_Vectors;           use QuadDobl_Complex_Vectors;
+with Multprec_Complex_Vectors;           use Multprec_Complex_Vectors;
 
-package QuadDobl_Complex_Vector_Strings is
+package Multprec_Complex_Vector_Strings is
 
 -- DESCRIPTION :
---   Exports functions to write a quad double complex vector 
---   to a string and to parse a string into a quad double complex vector.
+--   Exports functions to write a multiprecision complex vector 
+--   to a string and to parse a string into a multprecision complex vector.
 --   The simple format of a complex number is followed:
---   a complex number is a sequence of two quad doubles,
---   separated by two spaces.
+--   a complex number is a sequence of two multiprecision floating-point
+--   numbers (real and imaginary part), separated by two spaces.
 
   function Write ( v : Vector ) return string;
 
@@ -23,4 +23,4 @@ package QuadDobl_Complex_Vector_Strings is
   --   Parses the numbers separated by newline symbols in the string
   --   to the vector on return.
 
-end QuadDobl_Complex_Vector_Strings; 
+end Multprec_Complex_Vector_Strings; 

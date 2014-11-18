@@ -102,6 +102,7 @@ multprec_floating_vecvecs_io       : generic_vecvecs_io(multprec floating)
 multprec_floating_vector_tools     : format and size conversions
 multprec_complex_vectors           : vectors of multiprecision complex numbers
 multprec_complex_vectors_io        : generic_vectors_io(multprec complex)
+multprec_complex_vector_strings    : parse/write mpcplx vectors from/to strings
 multprec_complex_vecvecs           : generic_vecvecs(multprec complex)
 multprec_complex_vecvecs_io        : generic_vecvecs_io(multprec complex)
 multprec_complex_vector_tools      : format and size conversions
@@ -123,6 +124,7 @@ ts_natvec                          : test vectors/vecvecs of natural numbers
 ts_intvec                          : test vectors/vecvecs of integer numbers
 ts_fltvec                          : test vectors/vecvecs of floating numbers
 ts_cmpvec                          : test vectors/vecvecs of complex numbers
+ts_strvec                          : test parse/write vectors from/to strings
 ts_nesvec                          : test on nested vectors
 ts_ddvec                           : test on vectors of double doubles
 ts_qdvec                           : test on vectors of quad doubles
