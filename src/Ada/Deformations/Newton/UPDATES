@@ -1,3 +1,6 @@
+Tue 18 Nov 2014 : extended varbprec_complex_newton_steps with multiprecision
+  procedure to estimate the loss of accuracy in a Newton step.
+
 Mon 17 Nov 2014 : extended varbprec_complex_newton_steps with procedures
   to estimate the loss of accurate decimal places at various precisions.
 

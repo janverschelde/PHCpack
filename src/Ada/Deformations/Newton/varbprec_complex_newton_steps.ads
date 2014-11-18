@@ -1,4 +1,5 @@
 with String_Splitters;                   use String_Splitters;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
@@ -203,6 +204,10 @@ package Varbprec_Complex_Newton_Steps is
   procedure QuadDobl_Estimate_Loss_of_Accuracy
               ( f : in Array_of_Strings; z : in string;
                 jfrco,fzrco : out quad_double; loss : out integer32 );
+  procedure Multprec_Estimate_Loss_of_Accuracy
+              ( f : in Array_of_Strings; z : in string;
+                prec : in natural32;
+                jfrco,fzrco : out Floating_Number; loss : out integer32 );
 
   -- DESCRIPTION :
   --   Evaluates the system in f and vector in z in standard
@@ -214,7 +219,8 @@ package Varbprec_Complex_Newton_Steps is
 
   -- ON ENTRY :
   --   f        array of strings the contain a polynomial system;
-  --   z        string of numbers, separated by newline symbols.
+  --   z        string of numbers, separated by newline symbols;
+  --   prec     number of decimal places in arbitrary multiprecision.
 
   -- ON RETURN :
   --   jfrco    inverse condition number of Jacobian matrix of f at z;
