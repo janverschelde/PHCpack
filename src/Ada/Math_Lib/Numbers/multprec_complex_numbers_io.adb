@@ -14,10 +14,26 @@ package body Multprec_Complex_Numbers_io is
 
   begin
     get(file,xre);
-	get(file,xim);
+    get(file,xim);
     x := Create(xre,xim);
     Clear(xre);
     Clear(xim);
+  end get;
+
+  procedure get ( s : in string; c : in out Complex_Number;
+                  last : out integer ) is
+
+    x,y : Floating_Number;
+
+  begin
+    get(s,x,last);
+    while s(last) /= ' ' loop  -- make sure to start at dividing spaces
+      last := last + 1;
+      exit when last >= s'last;
+    end loop;
+    get(s(last..s'last),y,last);
+    c := Create(x,y);
+    Clear(x); Clear(y);
   end get;
 
   procedure put ( x : in Complex_Number ) is
@@ -69,5 +85,32 @@ package body Multprec_Complex_Numbers_io is
   begin
     put(file,c,dp,dp,dp);
   end put;                                       
+
+  function Character_Size ( c : Complex_Number ) return natural32 is
+
+    res : natural32;
+    x : Floating_Number := REAL_PART(c);
+    y : Floating_Number := IMAG_PART(c);
+
+  begin
+    res := Character_Size(x) + 2 + Character_Size(y);
+    Clear(x);
+    Clear(y);
+    return res;
+  end Character_Size;
+
+  procedure put ( s : out string; c : in Complex_Number ) is
+
+    x : Floating_Number := REAL_PART(c);
+    y : Floating_Number := IMAG_PART(c);
+    sx : string(1..integer(Character_Size(x)));
+    sy : string(1..integer(Character_Size(y)));
+  
+  begin
+    s := (s'range => ' ');
+    put(sx,x); Clear(x);
+    put(sy,y); Clear(y);
+    s := sx & "  " & sy;
+  end put;
 
 end Multprec_Complex_Numbers_io;

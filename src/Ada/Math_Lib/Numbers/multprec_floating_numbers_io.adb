@@ -7,6 +7,7 @@ with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
 with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
 with Multprec_Integer_Numbers;           use Multprec_Integer_Numbers;
 with Multprec_Integer_Numbers_io;        use Multprec_Integer_Numbers_io;
+with Multprec_Parse_Numbers;
 
 package body Multprec_Floating_Numbers_io is
 
@@ -269,6 +270,16 @@ package body Multprec_Floating_Numbers_io is
 
   begin
     get(file,f,c);
+  end get;
+
+  procedure get ( s : in string; f : in out Floating_Number;
+                  last : out integer ) is
+
+    pos : integer := s'first;
+
+  begin
+    Multprec_Parse_Numbers.parse(s,pos,f);
+    last := pos;
   end get;
 
 -- OUTPUT ROUTINES :

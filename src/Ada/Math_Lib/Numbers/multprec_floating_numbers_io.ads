@@ -19,6 +19,13 @@ package Multprec_Floating_Numbers_io is
   --   otherwise, the default is a space.  On output, c is the last
   --   character read, which is the first nondigit immediately after f.
 
+  procedure get ( s : in string; f : in out Floating_Number;
+                  last : out integer );
+
+  -- DESCRIPTION :
+  --   Reads a floating-point number from string, where last points
+  --   to the first nondigit character in s following f.
+
   procedure put ( f : in Floating_Number );
   procedure put ( file : in file_type; f : in Floating_Number );
 

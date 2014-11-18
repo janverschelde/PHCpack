@@ -1,3 +1,6 @@
+Tue 18 Nov 2014 : extended multprec_{floating,complex}_numbers_io with
+  procedure to parse/write numbers from/to strings, tested by ts_strnum.adb.
+
 Mon 17 Nov 2014 : extended standard_complex_numbers_io with get and put
   procedures to parse complex numbers from strings and to write to strings,
   tested by ts_strnum.adb.
