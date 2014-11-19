@@ -8,6 +8,11 @@ with Standard_Mathematical_Functions;    use Standard_Mathematical_Functions;
 with DoblDobl_Mathematical_Functions;    use DoblDobl_Mathematical_Functions;
 with QuadDobl_Mathematical_Functions;    use QuadDobl_Mathematical_Functions;
 with Multprec_Mathematical_Functions;    use Multprec_Mathematical_Functions;
+with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
+with DoblDobl_Complex_Vector_Norms;      use DoblDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Vector_Norms;      use QuadDobl_Complex_Vector_Norms;
+with Multprec_Complex_Norms_Equals;      use Multprec_Complex_Norms_Equals;
+with Multprec_Complex_Vector_Tools;
 with Standard_Complex_Vector_Strings;
 with DoblDobl_Complex_Vector_Strings;
 with QuadDobl_Complex_Vector_Strings;
@@ -19,12 +24,16 @@ with Multprec_Complex_Linear_Solvers;    use Multprec_Complex_Linear_Solvers;
 with Symbol_Table;
 with Standard_Complex_Poly_Functions;    use Standard_Complex_Poly_Functions;
 with Standard_Complex_Poly_Strings;
+with Standard_Complex_Poly_SysFun;
 with DoblDobl_Complex_Poly_Functions;    use DoblDobl_Complex_Poly_Functions;
 with DoblDobl_Complex_Poly_Strings;
+with DoblDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Poly_Functions;    use QuadDobl_Complex_Poly_Functions;
 with QuadDobl_Complex_Poly_Strings;
+with QuadDobl_Complex_Poly_SysFun;
 with Multprec_Complex_Poly_Functions;    use Multprec_Complex_Poly_Functions;
 with Multprec_Complex_Poly_Strings;
+with Multprec_Complex_Poly_SysFun;
 with Varbprec_Complex_Linear_Solvers;    use Varbprec_Complex_Linear_Solvers;
 with Varbprec_Polynomial_Evaluations;    use Varbprec_Polynomial_Evaluations;
 
@@ -480,5 +489,168 @@ package body Varbprec_Complex_Newton_Steps is
     Clear(jfrco); Clear(fzrco);
     return res;
   end Estimate_Loss_of_Accuracy;
+
+  procedure Standard_Newton_Step
+              ( f : in Array_of_Strings; z : in out Link_to_String;
+                err,rco,res : out double_float ) is
+
+    n : constant integer32 := integer32(f'last);
+    p : Standard_Complex_Poly_Systems.Poly_Sys(1..n)
+      := Standard_Complex_Poly_Strings.Parse(natural32(n),f);
+    x : Standard_Complex_Vectors.Vector(p'range)
+      := Standard_Complex_Vector_Strings.Parse(z.all);
+    jf : Standard_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := Standard_Complex_Jaco_Matrices.Create(p);
+    fz : Standard_Complex_Vectors.Vector(p'range)
+       := Standard_Complex_Poly_SysFun.Eval(p,x);
+    jfz : Standard_Complex_Matrices.Matrix(p'range,x'range)
+        := Standard_Complex_Jaco_Matrices.Eval(jf,x);
+    piv : Standard_Integer_Vectors.Vector(x'range);
+
+  begin
+    lufco(jfz,n,piv,rco);
+    do_Newton_Step(x,jfz,piv,fz,err);
+    res := Max_Norm(fz);
+    declare
+      nz : constant string
+         := Standard_Complex_Vector_Strings.Write(x);
+    begin
+      Clear(z);
+      z := new string'(nz);
+    end;
+    Standard_Complex_Poly_Systems.Clear(p);
+    Standard_Complex_Jaco_Matrices.Clear(jf);
+  end Standard_Newton_Step;
+
+  procedure DoblDobl_Newton_Step
+              ( f : in Array_of_Strings; z : in out Link_to_String;
+                err,rco,res : out double_float ) is
+
+    n : constant integer32 := integer32(f'last);
+    p : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..n)
+      := DoblDobl_Complex_Poly_Strings.Parse(natural32(n),f);
+    x : DoblDobl_Complex_Vectors.Vector(p'range)
+      := DoblDobl_Complex_Vector_Strings.Parse(z.all);
+    jf : DoblDobl_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := DoblDobl_Complex_Jaco_Matrices.Create(p);
+    fz : DoblDobl_Complex_Vectors.Vector(p'range)
+       := DoblDobl_Complex_Poly_SysFun.Eval(p,x);
+    jfz : DoblDobl_Complex_Matrices.Matrix(p'range,x'range)
+        := DoblDobl_Complex_Jaco_Matrices.Eval(jf,x);
+    piv : Standard_Integer_Vectors.Vector(x'range);
+    dd_rco,dd_err : double_double;
+
+  begin
+    lufco(jfz,n,piv,dd_rco);
+    rco := to_double(dd_rco);
+    do_Newton_Step(x,jfz,piv,fz,dd_err);
+    err := to_double(dd_err);
+    res := to_double(Max_Norm(fz));
+    declare
+      nz : constant string
+         := DoblDobl_Complex_Vector_Strings.Write(x);
+    begin
+      Clear(z);
+      z := new string'(nz);
+    end;
+    DoblDobl_Complex_Poly_Systems.Clear(p);
+    DoblDobl_Complex_Jaco_Matrices.Clear(jf);
+  end DoblDobl_Newton_Step;
+
+  procedure QuadDobl_Newton_Step
+              ( f : in Array_of_Strings; z : in out Link_to_String;
+                err,rco,res : out double_float ) is
+
+    n : constant integer32 := integer32(f'last);
+    p : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..n)
+      := QuadDobl_Complex_Poly_Strings.Parse(natural32(n),f);
+    x : QuadDobl_Complex_Vectors.Vector(p'range)
+      := QuadDobl_Complex_Vector_Strings.Parse(z.all);
+    jf : QuadDobl_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := QuadDobl_Complex_Jaco_Matrices.Create(p);
+    fz : QuadDobl_Complex_Vectors.Vector(p'range)
+       := QuadDobl_Complex_Poly_SysFun.Eval(p,x);
+    jfz : QuadDobl_Complex_Matrices.Matrix(p'range,x'range)
+        := QuadDobl_Complex_Jaco_Matrices.Eval(jf,x);
+    piv : Standard_Integer_Vectors.Vector(x'range);
+    qd_rco,qd_err : quad_double;
+
+  begin
+    lufco(jfz,n,piv,qd_rco);
+    rco := to_double(qd_rco);
+    do_Newton_Step(x,jfz,piv,fz,qd_err);
+    err := to_double(qd_err);
+    res := to_double(Max_Norm(fz));
+    declare
+      nz : constant string
+         := QuadDobl_Complex_Vector_Strings.Write(x);
+    begin
+      Clear(z);
+      z := new string'(nz);
+    end;
+    QuadDobl_Complex_Poly_Systems.Clear(p);
+    QuadDobl_Complex_Jaco_Matrices.Clear(jf);
+  end QuadDobl_Newton_Step;
+
+  procedure Multprec_Newton_Step
+              ( f : in Array_of_Strings; z : in out Link_to_String;
+                prcn : in natural32; err,rco,res : out double_float ) is
+
+    size : constant natural32 := Decimal_to_Size(prcn);
+    n : constant integer32 := integer32(f'last);
+    p : Multprec_Complex_Poly_Systems.Poly_Sys(1..n)
+       := Multprec_Complex_Poly_Strings.Parse(natural32(n),size,f);
+    x : Multprec_Complex_Vectors.Vector(p'range)
+      := Multprec_Complex_Vector_Strings.Parse(z.all);
+    jf : Multprec_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+       := Multprec_Complex_Jaco_Matrices.Create(p);
+    fz : Multprec_Complex_Vectors.Vector(p'range);
+    jfz : Multprec_Complex_Matrices.Matrix(p'range,x'range);
+    piv : Standard_Integer_Vectors.Vector(x'range);
+    mp_rco,mp_err,mp_res : Floating_Number;
+
+  begin
+    Multprec_Complex_Vector_Tools.Set_Size(x,size);
+    fz := Multprec_Complex_Poly_SysFun.Eval(p,x);
+    jfz := Multprec_Complex_Jaco_Matrices.Eval(jf,x);
+    lufco(jfz,n,piv,mp_rco);
+    rco := Round(mp_rco);
+    do_Newton_Step(x,jfz,piv,fz,mp_err);
+    err := Round(mp_err);
+    mp_res := Max_Norm(fz);
+    res := Round(mp_res);
+    declare
+      nz : constant string
+         := Multprec_Complex_Vector_Strings.Write(x);
+    begin
+      Clear(z);
+      z := new string'(nz);
+    end;
+    Multprec_Complex_Poly_Systems.Clear(p);
+    Multprec_Complex_Jaco_Matrices.Clear(jf);
+    Multprec_Complex_Matrices.Clear(jfz);
+    Multprec_Complex_Vectors.Clear(fz);
+    Multprec_Complex_Vectors.Clear(x);
+    Clear(mp_rco); Clear(mp_err); Clear(mp_res);
+  end Multprec_Newton_Step;
+
+  procedure do_Newton_Step
+              ( f : in Array_of_Strings; z : in out Link_to_String;
+                loss,want : in integer32; err,rco,res : out double_float ) is
+
+    precision : constant natural32
+              := natural32(-loss) + natural32(want);
+
+  begin
+    if precision <= 16 then
+      Standard_Newton_Step(f,z,err,rco,res);
+    elsif precision <= 32 then
+      DoblDobl_Newton_Step(f,z,err,rco,res);
+    elsif precision <= 64 then
+      QuadDobl_Newton_Step(f,z,err,rco,res);
+    else
+      Multprec_Newton_Step(f,z,precision,err,rco,res);
+    end if;
+  end do_Newton_Step;
                 
 end Varbprec_Complex_Newton_Steps;

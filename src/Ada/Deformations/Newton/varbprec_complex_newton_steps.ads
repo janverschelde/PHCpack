@@ -255,4 +255,54 @@ package Varbprec_Complex_Newton_Steps is
   --   based on condition number estimates for one Newton step on f at z.
   --   This function encapsulates the same named procedure.
 
+  procedure Standard_Newton_Step
+              ( f : in Array_of_Strings; z : in out Link_to_String;
+                err,rco,res : out double_float );
+  procedure DoblDobl_Newton_Step
+              ( f : in Array_of_Strings; z : in out Link_to_String;
+                err,rco,res : out double_float );
+  procedure QuadDobl_Newton_Step
+              ( f : in Array_of_Strings; z : in out Link_to_String;
+                err,rco,res : out double_float );
+  procedure Multprec_Newton_Step
+              ( f : in Array_of_Strings; z : in out Link_to_String;
+                prcn : in natural32; err,rco,res : out double_float );
+
+  -- DESCRIPTION :
+  --   Evaluates the system f and initial approximation z in standard
+  --   double, double double, quad double, or arbitrary multiprecision.
+  --   One Newton step is done on the evaluated system.
+
+  -- ON ENTRY :
+  --   f        string representation of a polynomial system;
+  --   z        string representation of an initial approximation;
+  --   prcn     number of decimal places in arbitrary multiprecision.
+
+  -- ON RETURN :
+  --   z        updated approximation for a solution of f;
+  --   err      magnitude of the correction added to z;
+  --   rco      estimate of the inverse condition number of Jacobian at z;
+  --   res      magnitude of f evaluated at z.
+
+  procedure do_Newton_Step
+              ( f : in Array_of_Strings; z : in out Link_to_String;
+                loss,want : in integer32; err,rco,res : out double_float );
+
+  -- DESCRIPTION :
+  --   Selects the precision to meet the wanted number of accurate
+  --   decimal places taking the loss of decimal places into account
+  --   when performing one Newton step on f at z.
+
+  -- ON ENTRY :
+  --   f        string representation of a polynomial system;
+  --   z        string representation of an initial approximation;
+  --   loss     estimated loss of decimal places as a negative number;
+  --   want     wanted number of accurate decimal places.
+
+  -- ON RETURN :
+  --   z        updated approximation for a solution of f;
+  --   err      magnitude of the correction added to z;
+  --   rco      estimate of the inverse condition number of Jacobian at z;
+  --   res      magnitude of f evaluated at z.
+
 end Varbprec_Complex_Newton_Steps;

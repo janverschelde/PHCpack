@@ -967,8 +967,10 @@ procedure ts_vmpnewt is
 
     f : Link_to_Array_of_Strings;   
     z : Link_to_String;
-    loss,want : integer32 := 0;
+    loss,want,accu : integer32 := 0;
     precision : natural32;
+    err,rco,res : double_float;
+    ans : character;
 
   begin
     Random_Conditioned_Root_Problem(f,z);
@@ -978,14 +980,25 @@ procedure ts_vmpnewt is
    -- end loop;
    -- put_line("The initial approximation for a root :");
    -- put_line(z.all);
-    loss := Estimate_Loss_of_Accuracy(f.all,z.all,1000);
-    put("Estimated loss of decimal places : "); put(loss,1); new_line;
-    new_line;
-    put("Give the wanted number of accurate decimal places : ");
-    get(want);
-    precision := natural32(-loss) + natural32(want);
-    put("-> the working precision will have ");
-    put(precision,1); put_line(" decimal places.");
+    loop
+      loss := Estimate_Loss_of_Accuracy(f.all,z.all,1000);
+      put("Estimated loss of decimal places : "); put(loss,1); new_line;
+      new_line;
+      put("Give the wanted number of accurate decimal places : ");
+      get(want);
+      precision := natural32(-loss) + natural32(want);
+      put("-> the working precision should be ");
+      put(precision,1); put_line(" decimal places.");
+      do_Newton_Step(f.all,z,loss,want,err,rco,res);
+      accu := integer32(log10(err));
+      put("err :"); put(err,3);
+      put("  rco :"); put(rco,3);
+      put("  res :"); put(res,3); new_line;
+      put("-> number of accurate decimal places : ");
+      put(abs(accu),1); new_line;
+      put("Do another Newton step ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
   end Test_Variable_Precision;
 
   procedure Main is

@@ -1,5 +1,7 @@
 Wed 19 Nov 2014 : ts_vmpnewt.adb tests estimator of condition number based
   on random conditioned problem generated at arbitrary multiprecision.
+  Added variable precision Newton steps to varbprec_complex_newton_steps
+  and tested by ts_vmpnewt.adb.
 
 Tue 18 Nov 2014 : extended varbprec_complex_newton_steps with multiprecision
   procedure to estimate the loss of accuracy in a Newton step.
