@@ -427,6 +427,7 @@ package body Varbprec_Complex_Newton_Steps is
 
   procedure Estimate_Loss_of_Accuracy
               ( f : in Array_of_Strings; z : in string;
+                maxprec : in natural32;
                 jfrco,fzrco : out Floating_Number; loss : out integer32 ) is
 
     dim : constant natural32 := natural32(f'last);
@@ -455,11 +456,12 @@ package body Varbprec_Complex_Newton_Steps is
           fzrco := Multprec_QuadDobl_Convertors.to_floating_number(qd_fzrco);
         else
           prcn := 80;
-          for i in 1..16 loop  -- no infinite loop ...
+          loop
             Multprec_Estimate_Loss_of_Accuracy(f,z,prcn,jfrco,fzrco,loss);
             exit when (natural32(loss) < prcn);
             Clear(jfrco); Clear(fzrco);
-            prcn := prcn + 16; -- increment working precision
+            prcn := prcn + prcn/16;  -- increment precision with 25%
+            exit when (prcn > maxprec);
           end loop;
         end if;
       end if;
@@ -467,13 +469,14 @@ package body Varbprec_Complex_Newton_Steps is
   end Estimate_Loss_of_Accuracy;
 
   function Estimate_Loss_of_Accuracy
-              ( f : Array_of_Strings; z : string ) return integer32 is
+              ( f : Array_of_Strings; z : string; maxprec : natural32)
+              return integer32 is
 
     res : integer32;
     jfrco,fzrco : Floating_Number;
 
   begin
-    Estimate_Loss_of_Accuracy(f,z,jfrco,fzrco,res);
+    Estimate_Loss_of_Accuracy(f,z,maxprec,jfrco,fzrco,res);
     Clear(jfrco); Clear(fzrco);
     return res;
   end Estimate_Loss_of_Accuracy;

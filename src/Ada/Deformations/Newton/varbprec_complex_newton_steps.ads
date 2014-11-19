@@ -219,8 +219,7 @@ package Varbprec_Complex_Newton_Steps is
 
   -- ON ENTRY :
   --   f        array of strings the contain a polynomial system;
-  --   z        string of numbers, separated by newline symbols;
-  --   prec     number of decimal places in arbitrary multiprecision.
+  --   z        string of numbers, separated by newline symbols.
 
   -- ON RETURN :
   --   jfrco    inverse condition number of Jacobian matrix of f at z;
@@ -229,6 +228,7 @@ package Varbprec_Complex_Newton_Steps is
 
   procedure Estimate_Loss_of_Accuracy
               ( f : in Array_of_Strings; z : in string;
+                maxprec : in natural32;
                 jfrco,fzrco : out Floating_Number; loss : out integer32 );
 
   -- DESCRIPTION :
@@ -238,7 +238,8 @@ package Varbprec_Complex_Newton_Steps is
 
   -- ON ENTRY :
   --   f        array of strings the contain a polynomial system;
-  --   z        string of numbers, separated by newline symbols.
+  --   z        string of numbers, separated by newline symbols;
+  --   maxprec  maximum number of decimal places that could be used.
 
   -- ON RETURN :
   --   jfrco    inverse condition number of Jacobian matrix of f at z;
@@ -246,7 +247,8 @@ package Varbprec_Complex_Newton_Steps is
   --   loss     loss of number of decimal places, as negative number.
 
   function Estimate_Loss_of_Accuracy
-              ( f : Array_of_Strings; z : string ) return integer32;
+              ( f : Array_of_Strings; z : string; maxprec : natural32 )
+              return integer32;
 
   -- DESCRIPTION :
   --   Returns estimated loss of decimal places as a negative number
