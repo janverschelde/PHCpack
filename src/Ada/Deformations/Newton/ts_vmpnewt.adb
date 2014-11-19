@@ -31,6 +31,7 @@ with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Random_Vectors;
 with Multprec_Complex_Vectors;
 with Multprec_Complex_Vectors_io;        use Multprec_Complex_Vectors_io;
+with Multprec_Complex_Vector_Strings;
 with Multprec_Complex_Vector_Tools;
 with Multprec_Random_Vectors;
 with Standard_Complex_Matrices;
@@ -514,6 +515,7 @@ procedure ts_vmpnewt is
     loss_jac := Estimated_Loss_of_Decimal_Places(jm);
     put("-> Estimated loss of decimal places : "); put(loss_jac,1); new_line;
     Random_Conditioned_Jacobian_Evaluation(n,d,m,c,cffsz,pntsz,close,jm,p,x);
+   -- put_line("The polynomial system : "); put_line(p);
     rco := Inverse_Condition_Number(p,x);
     if rco = 0.0
      then loss_eva := -2**30;
@@ -577,6 +579,7 @@ procedure ts_vmpnewt is
     loss_jac := Estimated_Loss_of_Decimal_Places(jm);
     put("-> Estimated loss of decimal places : "); put(loss_jac,1); new_line;
     Random_Conditioned_Jacobian_Evaluation(n,d,m,c,cffsz,pntsz,close,jm,p,x);
+   -- put_line("The polynomial system : "); put_line(p);
     rco := Inverse_Condition_Number(p,x);
     if Is_Zero(rco)
      then loss_eva := -2**30;
@@ -640,6 +643,7 @@ procedure ts_vmpnewt is
     loss_jac := Estimated_Loss_of_Decimal_Places(jm);
     put("-> Estimated loss of decimal places : "); put(loss_jac,1); new_line;
     Random_Conditioned_Jacobian_Evaluation(n,d,m,c,cffsz,pntsz,close,jm,p,x);
+   -- put_line("The polynomial system :"); put_line(p);
     rco := Inverse_Condition_Number(p,x);
     if Is_Zero(rco)
      then loss_eva := -2**30;
@@ -705,6 +709,7 @@ procedure ts_vmpnewt is
     loss_jac := Estimated_Loss_of_Decimal_Places(jm);
     put("-> Estimated loss of decimal places : "); put(loss_jac,1); new_line;
     Random_Conditioned_Jacobian_Evaluation(n,d,m,c,sz,cffsz,pntsz,close,jm,p,x);
+   -- put_line("The polynomial system :"); put_line(p);
     rco := Inverse_Condition_Number(p,x);
     if Equal(rco,0.0) then
       loss_eva := -2**30;
@@ -734,22 +739,95 @@ procedure ts_vmpnewt is
     end if;
   end Multprec_Conditioned_Test;
 
-  procedure Random_Conditioned_Root_Problem ( preclvl : in character ) is
+  procedure Multprec_Conditioned_Root_Problem
+              ( n,d,m,c,prcn : in natural32;
+                cffsz,pntsz,close,condjm : in double_float;
+                f : out Link_to_Array_of_Strings; z : out Link_to_String ) is
 
   -- DESCRIPTION :
-  --   Prompts the user for the dimensions of the numerical problem
-  --   to set the condition of the Jacobian matrix and
-  --   the condition of the polynomial evaluation problem.
-  --   The level of precision is indicated by the character preclvl.
+  --   Given in n the number of variables, in d the largest degree,
+  --   in m the maximum number of monomials (or 0 for dense), and in c
+  --   the type of coefficients, then this procedure will generate a
+  --   random polynomial system with multiprecision complex coefficients.
+  --   The condition number of the numerical evaluation problem is
+  --   determined by the degree, the coefficient size, the size of the
+  --   coordinates of the point, and the distance of the point to the
+  --   closest root.
 
-    n,d,m,deci,size : natural32 := 0;
-    condjm,cffsize,pntsize,close,cond : double_float := 0.0;
+  -- REQUIRED :
+  --   The working precision prcn is sufficiently high to compute the
+  --   prescribed conditioning of the root problem.
+
+  -- ON ENTRY :
+  --   n        number of variables;
+  --   d        largest degree of the monomials;
+  --   m        number of monomials (0 for a dense polynomial);
+  --   c        type of coefficient, 0 is random complex, 1 is one,
+  --            and 2 is random real;
+  --   prcn     number of decimal places in the working precision;
+  --   cffsz    size of the coefficients;
+  --   pntsz    size of the coordinates of the point where to evaluate;
+  --   close    distance of the point to a root;
+  --   condjm   condition number of the Jacobian matrix.
+
+  -- ON RETURN :
+  --   f        string representation of a polynomial system;
+  --   z        string representation of an initial approximation.
+
+    p : Multprec_Complex_Poly_Systems.Poly_Sys(1..integer32(n));
+    x : Multprec_Complex_Vectors.Vector(p'range);
+    jm : Multprec_Complex_Matrices.Matrix(p'range,x'range)
+       := Random_Conditioned_Matrix(integer32(n),condjm);
+    sz : constant natural32 := Decimal_to_Size(prcn);
 
   begin
+    Random_Conditioned_Jacobian_Evaluation
+      (n,d,m,c,sz,cffsz,pntsz,close,jm,p,x);
+   -- put_line("The polynomials :"); put_line(p);
+   -- put_line("The initial approximation : "); put_line(x);
+    Symbol_Table.Init(Symbol_Table.Standard_Symbols(integer32(n)));
+    declare
+      strx : constant string := Multprec_Complex_Vector_Strings.Write(x);
+      strp : Array_of_Strings(1..integer(p'last));
+    begin
+      z := new string'(strx);
+      for i in p'range loop
+        declare
+          strpi : constant string
+                := Multprec_Complex_Poly_Strings.Write(p(i));
+        begin
+          strp(integer(i)) := new string'(strpi);
+        end;
+      end loop;
+      f := new Array_of_Strings'(strp);
+    end;
+  end Multprec_Conditioned_Root_Problem;
+
+  procedure Random_Conditioned_Parameters
+              ( n,d,m : out natural32;
+                condjm,cffsize,pntsize,close,condfz : out double_float ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the parameters that determined the numerical
+  --   conditioning of a root problem.
+
+  -- ON RETURN :
+  --   n        number of variables and equations in the polynomial system;
+  --   d        largest degree of a monomial;
+  --   m        number of monomials per equation (0 for dense);
+  --   condjm   condition number of the Jacobian matrix;
+  --   cffsize  size of the coefficients of the polynomials;
+  --   pntsize  size of the point where to start Newton's method;
+  --   close    closeness to a solution of the system;
+  --   condfz   condition of the evaluation problem.
+
+  begin
+    condjm := 0.0; cffsize := 0.0; pntsize := 0.0; close := 0.0;
     new_line;
     put_line("First part, condition number of Jacobian matrix :");
     put("Give the condition of the Jacobian matrix : "); get(condjm);
     new_line;
+    n := 0; d:= 0; m := 0;
     put_line("Second part, parameters of the random polynomials :");
     put("Give number of variables : "); get(n);
     Symbol_Table.Init(n);
@@ -760,8 +838,23 @@ procedure ts_vmpnewt is
     put("Give magnitude of the coefficients : "); get(cffsize);
     put("Give magnitude of the coordinates of the point : "); get(pntsize);
     put("Give closeness to a root : "); get(close);
-    cond := cffsize*(pntsize**integer(d))/close;
-    put("Predicted condition number : "); put(cond,3); new_line;
+    condfz := cffsize*(pntsize**integer(d))/close;
+    put("Predicted condition number : "); put(condfz,3); new_line;
+  end Random_Conditioned_Parameters;
+
+  procedure Random_Conditioned_Root_Problem ( preclvl : in character ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the dimensions of the numerical problem
+  --   to set the condition of the Jacobian matrix and
+  --   the condition of the polynomial evaluation problem.
+  --   The level of precision is indicated by the character preclvl.
+
+    n,d,m,deci,size : natural32 := 0;
+    condjm,cffsize,pntsize,close,condfz : double_float := 0.0;
+
+  begin
+    Random_Conditioned_Parameters(n,d,m,condjm,cffsize,pntsize,close,condfz);
     new_line;
     case preclvl is
       when '0' => 
@@ -782,7 +875,54 @@ procedure ts_vmpnewt is
     end case;
   end Random_Conditioned_Root_Problem;
 
-  procedure Main is
+  function Maximum ( a,b : integer32 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the maximum of a and b.
+ 
+  begin
+    if a > b
+     then return a;
+     else return b;
+    end if;
+  end Maximum;
+
+  procedure Random_Conditioned_Root_Problem
+              ( f : out Link_to_Array_of_Strings;
+                z : out Link_to_String ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the parameters of a conditioned root problem
+  --   and after generating the problem with sufficiently high precision,
+  --   returns the problem in the strings f and z.
+
+  -- ON RETURN :
+  --   f        string representation of a polynomial system;
+  --   z        string representation of initial approximation for a root.
+
+    n,d,m,deci,size : natural32 := 0;
+    condjm,cffsize,pntsize,close,condfz : double_float := 0.0;
+    jmloss,fzloss,maxloss : integer32;
+    precision : natural32;
+
+  begin
+    Random_Conditioned_Parameters(n,d,m,condjm,cffsize,pntsize,close,condfz);
+    jmloss := integer32(log10(condjm));
+    put("-> expected loss of linear system solving : ");
+    put(jmloss,1); new_line;
+    fzloss := integer32(log10(condfz));
+    put("-> expected loss of polynomial evaluation : ");
+    put(fzloss,1); new_line;
+    maxloss := Maximum(jmloss,fzloss);
+    put("-> maximum loss of accuracy : "); put(maxloss,1); new_line;
+    precision := 2*natural32(maxloss);
+    put("Precision of generating conditioned root problem : "); 
+    put(precision,1); new_line;
+    Multprec_Conditioned_Root_Problem
+      (n,d,m,0,precision,cffsize,pntsize,close,condjm,f,z);
+  end Random_Conditioned_Root_Problem;
+
+  procedure Test_in_Fixed_Precision is
 
   -- DESCRIPTION :
   --   Prompts the user for the level of precision
@@ -797,7 +937,7 @@ procedure ts_vmpnewt is
     put_line("Testing variable precision Newton steps ...");
     put_line("  0. standard double precision;");
     put_line("  1. double double precision;");
-    put_line("  2. quad double precision'");
+    put_line("  2. quad double precision;");
     put_line("  3. arbitrary multiprecision.");
     put("Type 0, 1, 2, or 3 to select the precision : ");
     Ask_Alternative(precision,"0123");
@@ -817,6 +957,57 @@ procedure ts_vmpnewt is
         when others => null;
       end case;
     end if;
+  end Test_in_Fixed_Precision;
+
+  procedure Test_Variable_Precision is
+
+  -- DESCRIPTION :
+  --   Generates a conditioned root problem and then estimates
+  --   the loss of decimal places.
+
+    f : Link_to_Array_of_Strings;   
+    z : Link_to_String;
+    loss,want : integer32 := 0;
+    precision : natural32;
+
+  begin
+    Random_Conditioned_Root_Problem(f,z);
+   -- put_line("The polynomial in the system :");
+   -- for i in f'range loop
+   --   put_line(f(i).all);
+   -- end loop;
+   -- put_line("The initial approximation for a root :");
+   -- put_line(z.all);
+    loss := Estimate_Loss_of_Accuracy(f.all,z.all,1000);
+    put("Estimated loss of decimal places : "); put(loss,1); new_line;
+    new_line;
+    put("Give the wanted number of accurate decimal places : ");
+    get(want);
+    precision := natural32(-loss) + natural32(want);
+    put("-> the working precision will have ");
+    put(precision,1); put_line(" decimal places.");
+  end Test_Variable_Precision;
+
+  procedure Main is
+
+  -- DESCRIPTION :
+  --   Offers the user to select precision first, before generating
+  --   the problem, or later, after generating the problem.
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU to test variable precision Newton's method :");
+    put_line("  1. test in a fixed level of precision;");
+    put_line("  2. fix precision after estimating condition numbers.");
+    put("Type 1 or 2 to select test : ");
+    Ask_Alternative(ans,"12");
+    case ans is
+      when '1' => Test_in_Fixed_Precision;
+      when '2' => Test_Variable_Precision;
+      when others => null;
+    end case;
   end Main;
 
 begin
