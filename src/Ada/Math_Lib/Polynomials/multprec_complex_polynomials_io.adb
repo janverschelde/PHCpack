@@ -550,6 +550,7 @@ package body Multprec_Complex_Polynomials_io is
 
     procedure Write_Term ( t : in Term; continue : out boolean ) is
     begin
+      put(file,"+ ");
       put(file,t,standard,pow);
       new_line(file);
       continue := true;
