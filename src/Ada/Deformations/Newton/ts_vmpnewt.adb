@@ -959,7 +959,7 @@ procedure ts_vmpnewt is
     end if;
   end Test_in_Fixed_Precision;
 
-  procedure Test_Variable_Precision is
+  procedure Interactive_Test_Variable_Precision is
 
   -- DESCRIPTION :
   --   Generates a conditioned root problem and then estimates
@@ -999,7 +999,33 @@ procedure ts_vmpnewt is
       put("Do another Newton step ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
-  end Test_Variable_Precision;
+  end Interactive_Test_Variable_Precision;
+
+  procedure Test_Variable_Precision_Newton_Steps is
+
+  -- DESCRIPTION :
+  --   Generates a conditioned root problem and then estimates
+  --   the loss of decimal places.
+
+    f : Link_to_Array_of_Strings;   
+    z : Link_to_String;
+    want,loss : integer32 := 0;
+    nbr : natural32 := 0;
+    err,rco,res : double_float;
+    ans : character;
+
+  begin
+    Random_Conditioned_Root_Problem(f,z);
+    new_line;
+    loop
+      put("Give the wanted number of accurate decimal places : "); get(want);
+      put("Give maximum number of steps : "); get(nbr);
+      Newton_Steps_to_Wanted_Accuracy
+        (standard_output,f.all,z,want,1000,nbr,loss,err,rco,res);
+      put("More steps ? (y/n) "); Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
+  end Test_Variable_Precision_Newton_Steps;
 
   procedure Main is
 
@@ -1013,12 +1039,14 @@ procedure ts_vmpnewt is
     new_line;
     put_line("MENU to test variable precision Newton's method :");
     put_line("  1. test in a fixed level of precision;");
-    put_line("  2. fix precision after estimating condition numbers.");
-    put("Type 1 or 2 to select test : ");
-    Ask_Alternative(ans,"12");
+    put_line("  2. fix precision after estimating condition numbers;");
+    put_line("  3. run sequence of Newton steps in variable precision.");
+    put("Type 1, 2, or 3 to select test : ");
+    Ask_Alternative(ans,"123");
     case ans is
       when '1' => Test_in_Fixed_Precision;
-      when '2' => Test_Variable_Precision;
+      when '2' => Interactive_Test_Variable_Precision;
+      when '3' => Test_Variable_Precision_Newton_Steps;
       when others => null;
     end case;
   end Main;

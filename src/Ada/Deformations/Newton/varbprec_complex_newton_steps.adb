@@ -669,8 +669,8 @@ package body Varbprec_Complex_Newton_Steps is
       loss := Estimate_Loss_of_Accuracy(f,z.all,maxprc);
       precision := natural32(-loss) + natural32(want);
       do_Newton_Step(f,z,loss,want,err,rco,res);
-      err_accu := integer32(log10(err));
-      res_accu := integer32(log10(res));
+      err_accu := abs(integer32(log10(err)));
+      res_accu := abs(integer32(log10(res)));
       exit when ((err_accu >= want) and (res_accu >= want));
     end loop;
   end Newton_Steps_to_Wanted_Accuracy;
@@ -695,8 +695,8 @@ package body Varbprec_Complex_Newton_Steps is
       put(file,"  err :"); put(file,err,3);
       put(file,"  rco :"); put(file,rco,3);
       put(file,"  res :"); put(file,res,3); new_line(file);
-      err_accu := integer32(log10(err));
-      res_accu := integer32(log10(res));
+      err_accu := abs(integer32(log10(err)));
+      res_accu := abs(integer32(log10(res)));
       exit when ((err_accu >= want) and (res_accu >= want));
     end loop;
   end Newton_Steps_to_Wanted_Accuracy;
