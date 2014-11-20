@@ -20,6 +20,7 @@ with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
 with Multprec_Complex_Numbers_io;        use Multprec_Complex_Numbers_io;
 with Standard_Integer_Vectors;
+with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Random_Vectors;
@@ -39,7 +40,7 @@ with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices;
 with Multprec_Complex_Matrices;
 with Random_Conditioned_Matrices;        use Random_Conditioned_Matrices;
-with Symbol_Table;
+with Symbol_Table,Symbol_Table_io;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Jaco_Matrices;
@@ -53,10 +54,13 @@ with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
 with Multprec_Complex_Poly_Strings;      use Multprec_Complex_Poly_Strings;
 with Multprec_Complex_Jaco_Matrices;
+with Multprec_Complex_Solutions;
+with Multprec_System_and_Solutions_io;
 with Random_Conditioned_Evaluations;     use Random_Conditioned_Evaluations;
 with Varbprec_Complex_Linear_Solvers;    use Varbprec_Complex_Linear_Solvers;
 with Varbprec_Polynomial_Evaluations;    use Varbprec_Polynomial_Evaluations;
 with Varbprec_Complex_Newton_Steps;      use Varbprec_Complex_Newton_Steps;
+with Verification_of_Solutions;          use Verification_of_Solutions;
 
 procedure ts_vmpnewt is
 
@@ -1027,6 +1031,52 @@ procedure ts_vmpnewt is
     end loop;
   end Test_Variable_Precision_Newton_Steps;
 
+  procedure Test_Verification_of_Solutions is
+
+  -- DESCRIPTION :
+  --   Calls the operations of the package Verification_of_Solutions.
+
+    wanted,maxitr,maxprc : natural32;
+    verbose : boolean;
+    p : Link_to_Array_of_Strings;
+    sols : Multprec_Complex_Solutions.Solution_List;
+    nq,nv,ns,len : natural32;
+    file : file_type;
+
+  begin
+    new_line;
+    put_line("Reading a system with solutions from file.");
+    Multprec_System_and_Solutions_io.get(nq,nv,p,sols);
+    new_line;
+    len := Multprec_Complex_Solutions.Length_Of(sols);
+    put("Read list of "); put(len,1); put_line(" solutions from file.");
+    if len > 0 then
+      ns := Symbol_Table.Number;
+      put("Number of symbols read : "); put(ns,1); new_line;
+      if ns > 0 then
+        put("Symbols in the table :");
+        Symbol_Table_io.Write; new_line;
+      end if;
+      Menu_to_set_Parameters(wanted,maxitr,maxprc,verbose);
+      if verbose then
+        new_line;
+        put_line("Reading the name of the output file.");
+        Read_Name_and_Create_File(file);
+      end if;
+      declare
+        strsols : Array_of_Strings(1..integer(len)) := to_strings(sols);
+        err,rco,res : Standard_Floating_Vectors.Vector(1..integer32(len));
+      begin
+        put_line("Calling verify procedure ...");
+        if verbose
+         then Verify(file,p.all,strsols,wanted,maxitr,maxprc,err,rco,res);
+         else Verify(standard_output,p.all,strsols,wanted,maxitr,maxprc,
+                     err,rco,res);
+        end if;
+      end;
+    end if;
+  end Test_Verification_of_Solutions;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -1040,13 +1090,15 @@ procedure ts_vmpnewt is
     put_line("MENU to test variable precision Newton's method :");
     put_line("  1. test in a fixed level of precision;");
     put_line("  2. fix precision after estimating condition numbers;");
-    put_line("  3. run sequence of Newton steps in variable precision.");
-    put("Type 1, 2, or 3 to select test : ");
-    Ask_Alternative(ans,"123");
+    put_line("  3. run sequence of Newton steps in variable precision;");
+    put_line("  4. verify solutions of a system on file.");
+    put("Type 1, 2, 3, or 4 to select test : ");
+    Ask_Alternative(ans,"1234");
     case ans is
       when '1' => Test_in_Fixed_Precision;
       when '2' => Interactive_Test_Variable_Precision;
       when '3' => Test_Variable_Precision_Newton_Steps;
+      when '4' => Test_Verification_of_Solutions;
       when others => null;
     end case;
   end Main;
