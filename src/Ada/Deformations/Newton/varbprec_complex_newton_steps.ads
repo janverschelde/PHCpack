@@ -1,3 +1,4 @@
+with text_io;                            use text_io;
 with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
@@ -255,6 +256,8 @@ package Varbprec_Complex_Newton_Steps is
   --   based on condition number estimates for one Newton step on f at z.
   --   This function encapsulates the same named procedure.
 
+-- PART III : computing after parsing to the precision
+
   procedure Standard_Newton_Step
               ( f : in Array_of_Strings; z : in out Link_to_String;
                 err,rco,res : out double_float );
@@ -301,6 +304,41 @@ package Varbprec_Complex_Newton_Steps is
 
   -- ON RETURN :
   --   z        updated approximation for a solution of f;
+  --   err      magnitude of the correction added to z;
+  --   rco      estimate of the inverse condition number of Jacobian at z;
+  --   res      magnitude of f evaluated at z.
+
+-- PART IV : sequence of Newton steps to the wanted accuracy
+
+  procedure Newton_Steps_to_Wanted_Accuracy
+              ( f : in Array_of_Strings; z : in out Link_to_String;
+                want : in integer32; maxprc,maxitr : in natural32;
+                loss : out integer32; err,rco,res : out double_float );
+  procedure Newton_Steps_to_Wanted_Accuracy
+              ( file : in file_type;
+                f : in Array_of_Strings; z : in out Link_to_String;
+                want : in integer32; maxprc,maxitr : in natural32;
+                loss : out integer32; err,rco,res : out double_float );
+
+  -- DESCRIPTION :
+  --   Performs a sequence of Newton steps to approximate a root
+  --   of a polynomial system up to a wanted number of accuracte
+  --   decimal places taking the loss of decimal places into account
+  --   when performing one Newton step on f at z.
+
+  -- ON ENTRY :
+  --   file     for intermediate output, if omitted,
+  --            then the procedure will be silent;
+  --   f        string representation of a polynomial system;
+  --   z        string representation of an initial approximation;
+  --   want     wanted number of accurate decimal places;
+  --   maxprc   maximum number of decimal places that can be used
+  --            to estimate the loss of accuracy;
+  --   maxitr   maximum number of Newton steps.
+
+  -- ON RETURN :
+  --   z        updated approximation for a solution of f;
+  --   loss     estimated loss of decimal places as a negative number;
   --   err      magnitude of the correction added to z;
   --   rco      estimate of the inverse condition number of Jacobian at z;
   --   res      magnitude of f evaluated at z.

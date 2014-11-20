@@ -1,3 +1,6 @@
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
@@ -652,5 +655,50 @@ package body Varbprec_Complex_Newton_Steps is
       Multprec_Newton_Step(f,z,precision,err,rco,res);
     end if;
   end do_Newton_Step;
+
+  procedure Newton_Steps_to_Wanted_Accuracy
+              ( f : in Array_of_Strings; z : in out Link_to_String;
+                want : in integer32; maxprc,maxitr : in natural32;
+                loss : out integer32; err,rco,res : out double_float ) is
+
+    precision : natural32;
+    err_accu,res_accu : integer32;
+
+  begin
+    for i in 1..maxitr loop
+      loss := Estimate_Loss_of_Accuracy(f,z.all,maxprc);
+      precision := natural32(-loss) + natural32(want);
+      do_Newton_Step(f,z,loss,want,err,rco,res);
+      err_accu := integer32(log10(err));
+      res_accu := integer32(log10(res));
+      exit when ((err_accu >= want) and (res_accu >= want));
+    end loop;
+  end Newton_Steps_to_Wanted_Accuracy;
+
+  procedure Newton_Steps_to_Wanted_Accuracy
+              ( file : in file_type;
+                f : in Array_of_Strings; z : in out Link_to_String;
+                want : in integer32; maxprc,maxitr : in natural32;
+                loss : out integer32; err,rco,res : out double_float ) is
+
+    precision : natural32;
+    err_accu,res_accu : integer32;
+
+  begin
+    for i in 1..maxitr loop
+      put(file,"estimated loss in step "); put(file,i,1); put(file," : ");
+      loss := Estimate_Loss_of_Accuracy(f,z.all,maxprc);
+      put(file,loss,1);
+      precision := natural32(-loss) + natural32(want);
+      put(file,", precision : "); put(file,precision,1); new_line(file);
+      do_Newton_Step(f,z,loss,want,err,rco,res);
+      put(file,"  err :"); put(file,err,3);
+      put(file,"  rco :"); put(file,rco,3);
+      put(file,"  res :"); put(file,res,3); new_line(file);
+      err_accu := integer32(log10(err));
+      res_accu := integer32(log10(res));
+      exit when ((err_accu >= want) and (res_accu >= want));
+    end loop;
+  end Newton_Steps_to_Wanted_Accuracy;
                 
 end Varbprec_Complex_Newton_Steps;
