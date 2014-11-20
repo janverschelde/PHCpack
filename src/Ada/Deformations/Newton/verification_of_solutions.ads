@@ -62,6 +62,8 @@ package Verification_of_Solutions is
 
   -- DESCRIPTION :
   --   Returns the solution vectors in sols to strings.
+  --   After the Verify, we can do the reverse operation,
+  --   see the to_solutions function below.
 
   procedure Verify ( p : in Array_of_Strings; z : in out Array_of_Strings;
                      wanted,maxitr,maxprec : in natural32;
@@ -92,5 +94,17 @@ package Verification_of_Solutions is
   --   rco      estimate for the inverse of the condition number of
   --            the Jacobian matrix of the k-th solution is in rco(k);
   --   res      backward error of the k-th solution is in res(k).
+
+  function to_Solutions
+              ( z : Array_of_Strings;
+                err,rco,res : Standard_Floating_Vectors.Vector )
+              return Multprec_Complex_Solutions.Solution_List;
+
+  -- DESCRIPTION :
+  --   Returns the list of solutions using as solution vectors
+  --   the strings in z, and the corresponding (err,rco,res) tuple
+  --   as the diagnostics for every solution.
+
+  -- REQUIRED : z'range = err'range = rco'range = res'range.
 
 end Verification_of_Solutions;

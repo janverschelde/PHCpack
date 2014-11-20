@@ -1,6 +1,9 @@
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Multprec_Floating_Numbers;
+with Multprec_Complex_Numbers;
+with Multprec_Complex_Vectors;
 with Multprec_Complex_Vector_Strings;
 with Varbprec_Complex_Newton_Steps;      use Varbprec_Complex_Newton_Steps;
 
@@ -30,8 +33,8 @@ package body Verification_of_Solutions is
     put(file,maxprc); new_line(file);
     put(file,"  4. intermediate output and diagnostics during steps : ");
     if verbose
-     then put_line("yes");
-     else put_line("no");
+     then put_line(file,"yes");
+     else put_line(file,"no");
     end if;
   end Write_Parameters;
 
@@ -121,5 +124,34 @@ package body Verification_of_Solutions is
       put_line(file,z(i).all);
     end loop;
   end Verify;
+
+  function to_Solutions
+              ( z : Array_of_Strings;
+                err,rco,res : Standard_Floating_Vectors.Vector )
+              return Multprec_Complex_Solutions.Solution_List is
+
+    result,last : Multprec_Complex_Solutions.Solution_List;
+
+  begin
+    for i in z'range loop
+      declare
+        sz : constant Multprec_Complex_Vectors.Vector
+           := Multprec_Complex_Vector_Strings.Parse(z(i).all);
+        dim : constant integer32 := sz'last;
+        sol : Multprec_Complex_Solutions.Solution(dim); 
+      begin
+        sol.t := Multprec_Complex_Numbers.Create(integer32(1));
+        sol.m := 1;
+        for k in 1..dim loop
+          sol.v(k) := sz(k);
+        end loop;
+        sol.err := Multprec_Floating_Numbers.create(err(integer32(i)));
+        sol.rco := Multprec_Floating_Numbers.create(rco(integer32(i)));
+        sol.res := Multprec_Floating_Numbers.create(res(integer32(i)));
+        Multprec_Complex_Solutions.Append(result,last,sol);
+      end;
+    end loop;
+    return result;
+  end to_Solutions;
 
 end Verification_of_Solutions;

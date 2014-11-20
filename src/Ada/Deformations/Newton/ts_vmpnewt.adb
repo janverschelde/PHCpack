@@ -55,6 +55,7 @@ with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
 with Multprec_Complex_Poly_Strings;      use Multprec_Complex_Poly_Strings;
 with Multprec_Complex_Jaco_Matrices;
 with Multprec_Complex_Solutions;
+with Multprec_Complex_Solutions_io;      use Multprec_Complex_Solutions_io;
 with Multprec_System_and_Solutions_io;
 with Random_Conditioned_Evaluations;     use Random_Conditioned_Evaluations;
 with Varbprec_Complex_Linear_Solvers;    use Varbprec_Complex_Linear_Solvers;
@@ -1066,12 +1067,25 @@ procedure ts_vmpnewt is
       declare
         strsols : Array_of_Strings(1..integer(len)) := to_strings(sols);
         err,rco,res : Standard_Floating_Vectors.Vector(1..integer32(len));
+        newsols : Multprec_Complex_Solutions.Solution_List;
       begin
-        put_line("Calling verify procedure ...");
-        if verbose
-         then Verify(file,p.all,strsols,wanted,maxitr,maxprc,err,rco,res);
-         else Verify(standard_output,p.all,strsols,wanted,maxitr,maxprc,
-                     err,rco,res);
+        if verbose then
+          Write_Parameters(file,wanted,maxitr,maxprc,verbose);
+          Verify(file,p.all,strsols,wanted,maxitr,maxprc,err,rco,res);
+        else
+          Write_Parameters(standard_output,wanted,maxitr,maxprc,verbose);
+          Verify(standard_output,p.all,strsols,wanted,maxitr,maxprc,
+                 err,rco,res);
+        end if;
+        newsols := to_Solutions(strsols,err,rco,res);
+        if verbose then
+          new_line(file);
+          put_line(file,"THE SOLUTIONS :");
+          put(file,len,nv,newsols);
+        else
+          new_line;
+          put_line("THE SOLUTIONS :");
+          put(standard_output,len,nv,newsols);
         end if;
       end;
     end if;

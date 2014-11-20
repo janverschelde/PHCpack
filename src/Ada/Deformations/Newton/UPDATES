@@ -1,5 +1,6 @@
 Thu 20 Nov 2014 : new package verification_of_solutions, tested by
   ts_vmpnewt.adb to run sequences of variable precision Newton steps.
+  Added fourth tester to ts_vmpnewt.adb to develop a driver routine.
 
 Wed 19 Nov 2014 : ts_vmpnewt.adb tests estimator of condition number based
   on random conditioned problem generated at arbitrary multiprecision.
