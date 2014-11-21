@@ -986,7 +986,7 @@ procedure ts_vmpnewt is
    -- put_line("The initial approximation for a root :");
    -- put_line(z.all);
     loop
-      loss := Estimate_Loss_of_Accuracy(f.all,z.all,1000);
+      loss := Estimate_Loss_for_Polynomial_System(f.all,z.all,1000);
       put("Estimated loss of decimal places : "); put(loss,1); new_line;
       new_line;
       put("Give the wanted number of accurate decimal places : ");
@@ -994,7 +994,7 @@ procedure ts_vmpnewt is
       precision := natural32(-loss) + natural32(want);
       put("-> the working precision should be ");
       put(precision,1); put_line(" decimal places.");
-      do_Newton_Step(f.all,z,loss,want,err,rco,res);
+      do_Newton_Step_on_Polynomial_System(f.all,z,loss,want,err,rco,res);
       accu := integer32(log10(err));
       put("err :"); put(err,3);
       put("  rco :"); put(rco,3);
@@ -1018,15 +1018,25 @@ procedure ts_vmpnewt is
     nbr : natural32 := 0;
     err,rco,res : double_float;
     ans : character;
+    laurent : boolean;
 
   begin
     Random_Conditioned_Root_Problem(f,z);
     new_line;
+    put("Consider as Laurent polynomial system ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    laurent := (ans = 'y');
+    new_line;
     loop
       put("Give the wanted number of accurate decimal places : "); get(want);
       put("Give maximum number of steps : "); get(nbr);
-      Newton_Steps_to_Wanted_Accuracy
-        (standard_output,f.all,z,want,1000,nbr,loss,err,rco,res);
+      if laurent then
+        Newton_Steps_on_Laurent_Polynomials
+          (standard_output,f.all,z,want,1000,nbr,loss,err,rco,res);
+      else
+        Newton_Steps_on_Polynomial_System
+          (standard_output,f.all,z,want,1000,nbr,loss,err,rco,res);
+      end if;
       put("More steps ? (y/n) "); Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
@@ -1043,6 +1053,8 @@ procedure ts_vmpnewt is
     sols : Multprec_Complex_Solutions.Solution_List;
     nq,nv,ns,len : natural32;
     file : file_type;
+    ans : character;
+    laurent : boolean;
 
   begin
     new_line;
@@ -1059,35 +1071,39 @@ procedure ts_vmpnewt is
         Symbol_Table_io.Write; new_line;
       end if;
       Menu_to_set_Parameters(wanted,maxitr,maxprc,verbose);
+      new_line;
+      put("Consider system as Laurent polynomial system ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      laurent := (ans = 'y');
       if verbose then
         new_line;
         put_line("Reading the name of the output file.");
         Read_Name_and_Create_File(file);
+        Write_Parameters(file,wanted,maxitr,maxprc,verbose);
+        if laurent then
+          Verify_Solutions_of_Laurent_Polynomials
+            (file,p.all,sols,wanted,maxitr,maxprc);
+        else
+          Verify_Solutions_of_Polynomial_System
+            (file,p.all,sols,wanted,maxitr,maxprc);
+        end if;
+        new_line(file);
+        put_line(file,"THE SOLUTIONS :");
+        put(file,len,nv,sols);
+      else 
+        new_line;
+        Write_Parameters(standard_output,wanted,maxitr,maxprc,verbose);
+        if laurent then
+          Verify_Solutions_of_Laurent_Polynomials
+            (p.all,sols,wanted,maxitr,maxprc);
+        else
+          Verify_Solutions_of_Polynomial_System
+            (p.all,sols,wanted,maxitr,maxprc);
+        end if;
+        new_line;
+        put_line("THE SOLUTIONS :");
+        put(standard_output,len,nv,sols);
       end if;
-      declare
-        strsols : Array_of_Strings(1..integer(len)) := to_strings(sols);
-        err,rco,res : Standard_Floating_Vectors.Vector(1..integer32(len));
-        newsols : Multprec_Complex_Solutions.Solution_List;
-      begin
-        if verbose then
-          Write_Parameters(file,wanted,maxitr,maxprc,verbose);
-          Verify(file,p.all,strsols,wanted,maxitr,maxprc,err,rco,res);
-        else
-          Write_Parameters(standard_output,wanted,maxitr,maxprc,verbose);
-          Verify(standard_output,p.all,strsols,wanted,maxitr,maxprc,
-                 err,rco,res);
-        end if;
-        newsols := to_Solutions(strsols,err,rco,res);
-        if verbose then
-          new_line(file);
-          put_line(file,"THE SOLUTIONS :");
-          put(file,len,nv,newsols);
-        else
-          new_line;
-          put_line("THE SOLUTIONS :");
-          put(standard_output,len,nv,newsols);
-        end if;
-      end;
     end if;
   end Test_Verification_of_Solutions;
 

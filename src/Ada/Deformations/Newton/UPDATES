@@ -1,5 +1,9 @@
 Fri 21 Nov 2014 : updated varbprec_complex_newton_steps with improved
   condition numbers for the evaluation problem for small residuals.
+  Added to varbprec_complex_newton_steps versions for Laurent polynomial
+  systems, which cuased changes in verification_of_solutions.adb and
+  the test program ts_vmpnewt.adb.  To verification_of_solutions, added
+  procedure to work on Laurent polynomial systems, tested by ts_vmpnewt.
 
 Thu 20 Nov 2014 : new package verification_of_solutions, tested by
   ts_vmpnewt.adb to run sequences of variable precision Newton steps.

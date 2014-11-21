@@ -94,36 +94,71 @@ package body Verification_of_Solutions is
     return res;
   end to_strings;
 
-  procedure Verify ( p : in Array_of_Strings; z : in out Array_of_Strings;
-                     wanted,maxitr,maxprec : in natural32;
-                     err,rco,res : out Standard_Floating_Vectors.Vector ) is
+  procedure Verify_Solutions_of_Polynomial_System
+              ( p : in Array_of_Strings; z : in out Array_of_Strings;
+                wanted,maxitr,maxprec : in natural32;
+                err,rco,res : out Standard_Floating_Vectors.Vector ) is
 
     loss : integer32;
 
   begin
     for i in z'range loop
-      Newton_Steps_to_Wanted_Accuracy
+      Newton_Steps_on_Polynomial_System
         (p,z(i),integer32(wanted),maxprec,maxitr,loss,
          err(integer32(i)),rco(integer32(i)),res(integer32(i)));
     end loop;
-  end Verify;
+  end Verify_Solutions_of_Polynomial_System;
 
-  procedure Verify ( file : in file_type;
-                     p : in Array_of_Strings; z : in out Array_of_Strings;
-                     wanted,maxitr,maxprec : in natural32;
-                     err,rco,res : out Standard_Floating_Vectors.Vector ) is
+  procedure Verify_Solutions_of_Laurent_Polynomials
+              ( p : in Array_of_Strings; z : in out Array_of_Strings;
+                wanted,maxitr,maxprec : in natural32;
+                err,rco,res : out Standard_Floating_Vectors.Vector ) is
+
+    loss : integer32;
+
+  begin
+    for i in z'range loop
+      Newton_Steps_on_Laurent_Polynomials
+        (p,z(i),integer32(wanted),maxprec,maxitr,loss,
+         err(integer32(i)),rco(integer32(i)),res(integer32(i)));
+    end loop;
+  end Verify_Solutions_of_Laurent_Polynomials;
+
+  procedure Verify_Solutions_of_Polynomial_System
+              ( file : in file_type;
+                p : in Array_of_Strings; z : in out Array_of_Strings;
+                wanted,maxitr,maxprec : in natural32;
+                err,rco,res : out Standard_Floating_Vectors.Vector ) is
 
     loss : integer32;
 
   begin
     for i in z'range loop
       put(file,"solution "); put(file,natural32(i),1); put_line(file," :");
-      Newton_Steps_to_Wanted_Accuracy
+      Newton_Steps_on_Polynomial_System
         (file,p,z(i),integer32(wanted),maxprec,maxitr,loss,
          err(integer32(i)),rco(integer32(i)),res(integer32(i)));
       put_line(file,z(i).all);
     end loop;
-  end Verify;
+  end Verify_Solutions_of_Polynomial_System;
+
+  procedure Verify_Solutions_of_Laurent_Polynomials
+              ( file : in file_type;
+                p : in Array_of_Strings; z : in out Array_of_Strings;
+                wanted,maxitr,maxprec : in natural32;
+                err,rco,res : out Standard_Floating_Vectors.Vector ) is
+
+    loss : integer32;
+
+  begin
+    for i in z'range loop
+      put(file,"solution "); put(file,natural32(i),1); put_line(file," :");
+      Newton_Steps_on_Laurent_Polynomials
+        (file,p,z(i),integer32(wanted),maxprec,maxitr,loss,
+         err(integer32(i)),rco(integer32(i)),res(integer32(i)));
+      put_line(file,z(i).all);
+    end loop;
+  end Verify_Solutions_of_Laurent_Polynomials;
 
   function to_Solutions
               ( z : Array_of_Strings;
@@ -153,5 +188,69 @@ package body Verification_of_Solutions is
     end loop;
     return result;
   end to_Solutions;
+
+  procedure Verify_Solutions_of_Polynomial_System
+              ( p : in Array_of_Strings;
+                sols : in out Multprec_Complex_Solutions.Solution_List;
+                wanted,maxitr,maxprc : in natural32 ) is
+
+    len : constant natural32 := Multprec_Complex_Solutions.Length_Of(sols);
+    strsols : Array_of_Strings(1..integer(len)) := to_strings(sols);
+    err,rco,res : Standard_Floating_Vectors.Vector(1..integer32(len));
+
+  begin
+    Verify_Solutions_of_Polynomial_System
+      (p,strsols,wanted,maxitr,maxprc,err,rco,res);
+    Multprec_Complex_Solutions.Clear(sols);
+    sols := to_Solutions(strsols,err,rco,res);
+  end Verify_Solutions_of_Polynomial_System;
+
+  procedure Verify_Solutions_of_Laurent_Polynomials
+              ( p : in Array_of_Strings;
+                sols : in out Multprec_Complex_Solutions.Solution_List;
+                wanted,maxitr,maxprc : in natural32 ) is
+
+    len : constant natural32 := Multprec_Complex_Solutions.Length_Of(sols);
+    strsols : Array_of_Strings(1..integer(len)) := to_strings(sols);
+    err,rco,res : Standard_Floating_Vectors.Vector(1..integer32(len));
+
+  begin
+    Verify_Solutions_of_Laurent_Polynomials
+      (p,strsols,wanted,maxitr,maxprc,err,rco,res);
+    Multprec_Complex_Solutions.Clear(sols);
+    sols := to_Solutions(strsols,err,rco,res);
+  end Verify_Solutions_of_Laurent_Polynomials;
+
+  procedure Verify_Solutions_of_Polynomial_System
+              ( file : in file_type; p : in Array_of_Strings;
+                sols : in out Multprec_Complex_Solutions.Solution_List;
+                wanted,maxitr,maxprc : in natural32 ) is
+
+    len : constant natural32 := Multprec_Complex_Solutions.Length_Of(sols);
+    strsols : Array_of_Strings(1..integer(len)) := to_strings(sols);
+    err,rco,res : Standard_Floating_Vectors.Vector(1..integer32(len));
+
+  begin
+    Verify_Solutions_of_Polynomial_System
+      (file,p,strsols,wanted,maxitr,maxprc,err,rco,res);
+    Multprec_Complex_Solutions.Clear(sols);
+    sols := to_Solutions(strsols,err,rco,res);
+  end Verify_Solutions_of_Polynomial_System;
+
+  procedure Verify_Solutions_of_Laurent_Polynomials
+              ( file : in file_type; p : in Array_of_Strings;
+                sols : in out Multprec_Complex_Solutions.Solution_List;
+                wanted,maxitr,maxprc : in natural32 ) is
+
+    len : constant natural32 := Multprec_Complex_Solutions.Length_Of(sols);
+    strsols : Array_of_Strings(1..integer(len)) := to_strings(sols);
+    err,rco,res : Standard_Floating_Vectors.Vector(1..integer32(len));
+
+  begin
+    Verify_Solutions_of_Laurent_Polynomials
+      (file,p,strsols,wanted,maxitr,maxprc,err,rco,res);
+    Multprec_Complex_Solutions.Clear(sols);
+    sols := to_Solutions(strsols,err,rco,res);
+  end Verify_Solutions_of_Laurent_Polynomials;
 
 end Verification_of_Solutions;
