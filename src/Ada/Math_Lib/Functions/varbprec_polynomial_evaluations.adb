@@ -2,9 +2,10 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 
 package body VarbPrec_Polynomial_Evaluations is
 
-  function Inverse_Condition_Number
-             ( f : Standard_Complex_Polynomials.Poly;
-               z : Standard_Complex_Vectors.Vector ) return double_float is
+  procedure Inverse_Condition_Number
+             ( f : in Standard_Complex_Polynomials.Poly;
+               z : in Standard_Complex_Vectors.Vector;
+               absfz,denrco,rco : out double_float ) is
 
     use Standard_Complex_Numbers,Standard_Complex_Polynomials;
 
@@ -29,12 +30,26 @@ package body VarbPrec_Polynomial_Evaluations is
 
   begin
     Evaluate_Terms(f);
-    return AbsVal(value)/absum;
+    absfz := AbsVal(value);
+    denrco := absum;
+    rco := absfz/denrco;
   end Inverse_Condition_Number;
 
   function Inverse_Condition_Number
-             ( f : DoblDobl_Complex_Polynomials.Poly;
-               z : DoblDobl_Complex_Vectors.Vector ) return double_double is
+             ( f : Standard_Complex_Polynomials.Poly;
+               z : Standard_Complex_Vectors.Vector ) return double_float is
+
+    res,absfz,denrco : double_float;
+
+  begin
+    Inverse_Condition_Number(f,z,absfz,denrco,res);
+    return res;
+  end Inverse_Condition_Number;
+
+  procedure Inverse_Condition_Number
+             ( f : in DoblDobl_Complex_Polynomials.Poly;
+               z : in DoblDobl_Complex_Vectors.Vector;
+               absfz,denrco,rco : out double_double ) is
 
     use DoblDobl_Complex_Numbers,DoblDobl_Complex_Polynomials;
 
@@ -60,12 +75,26 @@ package body VarbPrec_Polynomial_Evaluations is
 
   begin
     Evaluate_Terms(f);
-    return AbsVal(value)/absum;
+    absfz := AbsVal(value);
+    denrco := absum;
+    rco := absfz/denrco;
   end Inverse_Condition_Number;
 
   function Inverse_Condition_Number
-             ( f : QuadDobl_Complex_Polynomials.Poly;
-               z : QuadDobl_Complex_Vectors.Vector ) return quad_double is
+             ( f : DoblDobl_Complex_Polynomials.Poly;
+               z : DoblDobl_Complex_Vectors.Vector ) return double_double is
+
+    res,numrco,absfz : double_double;
+
+  begin
+    Inverse_Condition_Number(f,z,numrco,absfz,res);
+    return res;
+  end Inverse_Condition_Number;
+
+  procedure Inverse_Condition_Number
+             ( f : in QuadDobl_Complex_Polynomials.Poly;
+               z : in QuadDobl_Complex_Vectors.Vector;
+               absfz,denrco,rco : out quad_double ) is
 
     use QuadDobl_Complex_Numbers,QuadDobl_Complex_Polynomials;
 
@@ -91,12 +120,26 @@ package body VarbPrec_Polynomial_Evaluations is
 
   begin
     Evaluate_Terms(f);
-    return AbsVal(value)/absum;
+    absfz := AbsVal(value);
+    denrco := absum;
+    rco := absfz/denrco;
   end Inverse_Condition_Number;
 
   function Inverse_Condition_Number
-             ( f : Multprec_Complex_Polynomials.Poly;
-               z : Multprec_Complex_Vectors.Vector ) return Floating_Number is
+             ( f : QuadDobl_Complex_Polynomials.Poly;
+               z : QuadDobl_Complex_Vectors.Vector ) return quad_double is
+
+    res,absfz,denrco : quad_double;
+
+  begin
+    Inverse_Condition_Number(f,z,absfz,denrco,res);
+    return res;
+  end Inverse_Condition_Number;
+
+  procedure Inverse_Condition_Number
+             ( f : in Multprec_Complex_Polynomials.Poly;
+               z : in Multprec_Complex_Vectors.Vector;
+               absfz,denrco,rco : out Floating_Number ) is
 
     use Multprec_Complex_Numbers,Multprec_Complex_Polynomials;
 
@@ -127,15 +170,27 @@ package body VarbPrec_Polynomial_Evaluations is
 
   begin
     Evaluate_Terms(f);
-    res := AbsVal(value);
-    Div(res,absum);
-    Clear(value); Clear(absum); Clear(zero);
-    return res;
+    absfz := AbsVal(value); Clear(value);
+    denrco := absum;
+    rco := absfz/absum; Clear(zero);
   end Inverse_Condition_Number;
 
   function Inverse_Condition_Number
-             ( f : Standard_Complex_Laurentials.Poly;
-               z : Standard_Complex_Vectors.Vector ) return double_float is
+             ( f : Multprec_Complex_Polynomials.Poly;
+               z : Multprec_Complex_Vectors.Vector ) return Floating_Number is
+
+    res,absfz,denrco : Floating_Number;
+
+  begin
+    Inverse_Condition_Number(f,z,absfz,denrco,res);
+    Clear(denrco); Clear(absfz);
+    return res;
+  end Inverse_Condition_Number;
+
+  procedure Inverse_Condition_Number
+             ( f : in Standard_Complex_Laurentials.Poly;
+               z : in Standard_Complex_Vectors.Vector;
+               absfz,denrco,rco : out double_float ) is
 
     use Standard_Complex_Numbers,Standard_Complex_Laurentials;
 
@@ -166,12 +221,26 @@ package body VarbPrec_Polynomial_Evaluations is
 
   begin
     Evaluate_Terms(f);
-    return AbsVal(value)/absum;
+    absfz := AbsVal(value);
+    denrco := absum;
+    rco := absfz/denrco;
   end Inverse_Condition_Number;
 
   function Inverse_Condition_Number
-             ( f : DoblDobl_Complex_Laurentials.Poly;
-               z : DoblDobl_Complex_Vectors.Vector ) return double_double is
+             ( f : Standard_Complex_Laurentials.Poly;
+               z : Standard_Complex_Vectors.Vector ) return double_float is
+
+    res,absfz,denrco : double_float;
+
+  begin
+    Inverse_Condition_Number(f,z,absfz,denrco,res);
+    return res;
+  end Inverse_Condition_Number;
+
+  procedure Inverse_Condition_Number
+             ( f : in DoblDobl_Complex_Laurentials.Poly;
+               z : in DoblDobl_Complex_Vectors.Vector;
+               absfz,denrco,rco : out double_double ) is
 
     use DoblDobl_Complex_Numbers,DoblDobl_Complex_Laurentials;
 
@@ -203,12 +272,26 @@ package body VarbPrec_Polynomial_Evaluations is
 
   begin
     Evaluate_Terms(f);
-    return AbsVal(value)/absum;
+    absfz := AbsVal(value);
+    denrco := absum;
+    rco := absfz/denrco;
   end Inverse_Condition_Number;
 
   function Inverse_Condition_Number
-             ( f : QuadDobl_Complex_Laurentials.Poly;
-               z : QuadDobl_Complex_Vectors.Vector ) return quad_double is
+             ( f : DoblDobl_Complex_Laurentials.Poly;
+               z : DoblDobl_Complex_Vectors.Vector ) return double_double is
+
+    res,absfz,denrco : double_double;
+
+  begin
+    Inverse_Condition_Number(f,z,absfz,denrco,res);
+    return res;
+  end Inverse_Condition_Number;
+
+  procedure Inverse_Condition_Number
+             ( f : in QuadDobl_Complex_Laurentials.Poly;
+               z : in QuadDobl_Complex_Vectors.Vector;
+               absfz,denrco,rco : out quad_double ) is
 
     use QuadDobl_Complex_Numbers,QuadDobl_Complex_Laurentials;
 
@@ -240,12 +323,26 @@ package body VarbPrec_Polynomial_Evaluations is
 
   begin
     Evaluate_Terms(f);
-    return AbsVal(value)/absum;
+    absfz := AbsVal(value);
+    denrco := absum;
+    rco := absfz/denrco;
   end Inverse_Condition_Number;
 
   function Inverse_Condition_Number
-             ( f : Multprec_Complex_Laurentials.Poly;
-               z : Multprec_Complex_Vectors.Vector ) return Floating_Number is
+             ( f : QuadDobl_Complex_Laurentials.Poly;
+               z : QuadDobl_Complex_Vectors.Vector ) return quad_double is
+
+    res,absfz,denrco : quad_double;
+
+  begin
+    Inverse_Condition_Number(f,z,absfz,denrco,res);
+    return res;
+  end Inverse_Condition_Number;
+
+  procedure Inverse_Condition_Number
+             ( f : in Multprec_Complex_Laurentials.Poly;
+               z : in Multprec_Complex_Vectors.Vector;
+               absfz,denrco,rco : out Floating_Number ) is
 
     use Multprec_Complex_Numbers,Multprec_Complex_Laurentials;
 
@@ -282,9 +379,20 @@ package body VarbPrec_Polynomial_Evaluations is
 
   begin
     Evaluate_Terms(f);
-    res := AbsVal(value);
-    Div(res,absum);
-    Clear(absum); Clear(value); Clear(zero);
+    absfz := AbsVal(value); Clear(value);
+    denrco := absum;
+    rco := absfz/denrco; Clear(zero);
+  end Inverse_Condition_Number;
+
+  function Inverse_Condition_Number
+             ( f : Multprec_Complex_Laurentials.Poly;
+               z : Multprec_Complex_Vectors.Vector ) return Floating_Number is
+
+    res,absfz,denrco : Floating_Number;
+
+  begin
+    Inverse_Condition_Number(f,z,absfz,denrco,res);
+    Clear(denrco); Clear(absfz);
     return res;
   end Inverse_Condition_Number;
 

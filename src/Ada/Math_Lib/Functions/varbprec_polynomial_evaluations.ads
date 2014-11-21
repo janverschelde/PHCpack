@@ -34,6 +34,39 @@ package VarbPrec_Polynomial_Evaluations is
 --   we can adjust the working precision to obtained the result
 --   accurate to a wanted number of decimal places.
 
+  procedure Inverse_Condition_Number
+             ( f : in Standard_Complex_Polynomials.Poly;
+               z : in Standard_Complex_Vectors.Vector;
+               absfz,denrco,rco : out double_float );
+  procedure Inverse_Condition_Number
+             ( f : in DoblDobl_Complex_Polynomials.Poly;
+               z : in DoblDobl_Complex_Vectors.Vector;
+               absfz,denrco,rco : out double_double );
+  procedure Inverse_Condition_Number
+             ( f : in QuadDobl_Complex_Polynomials.Poly;
+               z : in QuadDobl_Complex_Vectors.Vector;
+               absfz,denrco,rco : out quad_double );
+  procedure Inverse_Condition_Number
+             ( f : in Multprec_Complex_Polynomials.Poly;
+               z : in Multprec_Complex_Vectors.Vector;
+               absfz,denrco,rco : out Floating_Number );
+
+  -- DESCRIPTION :
+  --   Computes the inverse of the condition number of evaluating f at z.
+
+  -- REQUIRED : z'range = 1..Number_of_Unknowns(f).
+
+  -- ON ENTRY :
+  --   f       a polynomial in several variables;
+  --   z       values for the variables that appear in f.
+
+  -- ON RETURN :
+  --   absfz   the magnitude of the function value;
+  --   denrco  denominator of the inverse condition number, equals the
+  --           sum of the magnitudes of the coefficients times the
+  --           magnitudes of the evaluated monomials;
+  --   rco     equals absfz/denrco.
+
   function Inverse_Condition_Number
              ( f : Standard_Complex_Polynomials.Poly;
                z : Standard_Complex_Vectors.Vector ) return double_float; 
@@ -58,6 +91,39 @@ package VarbPrec_Polynomial_Evaluations is
   -- ON ENTRY :
   --   f       a polynomial in several variables;
   --   z       values for the variables that appear in f.
+
+  procedure Inverse_Condition_Number
+             ( f : in Standard_Complex_Laurentials.Poly;
+               z : in Standard_Complex_Vectors.Vector;
+               absfz,denrco,rco : out double_float );
+  procedure Inverse_Condition_Number
+             ( f : in DoblDobl_Complex_Laurentials.Poly;
+               z : in DoblDobl_Complex_Vectors.Vector;
+               absfz,denrco,rco : out double_double );
+  procedure Inverse_Condition_Number
+             ( f : in QuadDobl_Complex_Laurentials.Poly;
+               z : in QuadDobl_Complex_Vectors.Vector;
+               absfz,denrco,rco : out quad_double );
+  procedure Inverse_Condition_Number
+             ( f : in Multprec_Complex_Laurentials.Poly;
+               z : in Multprec_Complex_Vectors.Vector;
+               absfz,denrco,rco : out Floating_Number );
+
+  -- DESCRIPTION :
+  --   Computes the inverse of the condition number of evaluating f at z.
+
+  -- REQUIRED : z'range = 1..Number_of_Unknowns(f).
+
+  -- ON ENTRY :
+  --   f       a polynomial in several variables;
+  --   z       values for the variables that appear in f.
+
+  -- ON RETURN :
+  --   absfz   the magnitude of the function value;
+  --   denrco  denominator of the inverse condition number, equals the
+  --           sum of the magnitudes of the coefficients times the
+  --           magnitudes of the evaluated monomials;
+  --   rco     equals numrco/absfz.
 
   function Inverse_Condition_Number
              ( f : Standard_Complex_Laurentials.Poly;
