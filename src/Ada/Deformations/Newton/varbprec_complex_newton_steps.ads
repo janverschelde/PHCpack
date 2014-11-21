@@ -91,7 +91,9 @@ package Varbprec_Complex_Newton_Steps is
   --   jfzloss  10-logarithm of jfzrco, as indication for the loss of
   --            decimal places when computing the update in a Newton step;
   --   fzloss   10-logarithm of fzrco, as indication for the loss of
-  --            decimal places when evaluating f at z.
+  --            decimal places when evaluating f at z, if absfz > 0.1,
+  --            otherwise the 10-logarithm of the denominator of fzrco
+  --            is used to predict the loss of decimal places.
 
   procedure do_Newton_Step
               ( z : in out Standard_Complex_Vectors.Vector;

@@ -51,13 +51,20 @@ package body Varbprec_Complex_Newton_Steps is
                 fz : out Standard_Complex_Vectors.Vector;
                 jfzrco,fzrco : out double_float;
                 jfzloss,fzloss : out integer32 ) is
+
+    absfz,denrco : double_float;
+
   begin
     jfz := Standard_Complex_Jaco_Matrices.Eval(jf,z);
     Estimated_Loss_of_Decimal_Places(jfz,piv,jfzrco,jfzloss);
-    Evaluate_with_Inverse_Condition(f,z,fzrco,fz);
-    if fzrco = 0.0
-     then fzloss := -2**30;
-     else fzloss := integer32(log10(fzrco));
+    Evaluate_with_Inverse_Condition(f,z,absfz,denrco,fzrco,fz);
+    if absfz > 0.1 then
+      if fzrco = 0.0
+       then fzloss := -2**30;
+       else fzloss := integer32(log10(fzrco));
+      end if;
+    else
+      fzloss := -integer32(log10(denrco));
     end if;
   end Estimate_Loss_in_Newton_Step;
 
@@ -71,13 +78,19 @@ package body Varbprec_Complex_Newton_Steps is
                 jfzrco,fzrco : out double_double;
                 jfzloss,fzloss : out integer32 ) is
 
+    absfz,denrco : double_double;
+
   begin
     jfz := DoblDobl_Complex_Jaco_Matrices.Eval(jf,z);
     Estimated_Loss_of_Decimal_Places(jfz,piv,jfzrco,jfzloss);
-    Evaluate_with_Inverse_Condition(f,z,fzrco,fz);
-    if Is_Zero(fzrco)
-     then fzloss := -2**30;
-     else fzloss := integer32(to_double(log10(fzrco)));
+    Evaluate_with_Inverse_Condition(f,z,absfz,denrco,fzrco,fz);
+    if absfz > 0.1 then
+      if Is_Zero(fzrco)
+       then fzloss := -2**30;
+       else fzloss := integer32(to_double(log10(fzrco)));
+      end if;
+    else
+      fzloss := -integer32(to_double(log10(denrco)));
     end if;
   end Estimate_Loss_in_Newton_Step;
 
@@ -91,13 +104,19 @@ package body Varbprec_Complex_Newton_Steps is
                 jfzrco,fzrco : out quad_double;
                 jfzloss,fzloss : out integer32 ) is
 
+    absfz,denrco : quad_double;
+
   begin
     jfz := QuadDobl_Complex_Jaco_Matrices.Eval(jf,z);
     Estimated_Loss_of_Decimal_Places(jfz,piv,jfzrco,jfzloss);
-    Evaluate_with_Inverse_Condition(f,z,fzrco,fz);
-    if Is_Zero(fzrco)
-     then fzloss := -2**30;
-     else fzloss := integer32(to_double(log10(fzrco)));
+    Evaluate_with_Inverse_Condition(f,z,absfz,denrco,fzrco,fz);
+    if absfz > 0.1 then
+      if Is_Zero(fzrco)
+       then fzloss := -2**30;
+       else fzloss := integer32(to_double(log10(fzrco)));
+      end if;
+    else
+      fzloss := -integer32(to_double(log10(fzrco)));
     end if;
   end Estimate_Loss_in_Newton_Step;
 
@@ -110,20 +129,33 @@ package body Varbprec_Complex_Newton_Steps is
                 fz : out Multprec_Complex_Vectors.Vector;
                 jfzrco,fzrco : out Floating_Number;
                 jfzloss,fzloss : out integer32 ) is
+
+    absfz,denrco : Floating_Number;
+
   begin
     jfz := Multprec_Complex_Jaco_Matrices.Eval(jf,z);
     Estimated_Loss_of_Decimal_Places(jfz,piv,jfzrco,jfzloss);
-    Evaluate_with_Inverse_Condition(f,z,fzrco,fz);
-    if Equal(fzrco,0.0) then
-     fzloss := -2**30;
-    else 
-     declare
-       log10fzrco : Floating_Number := log10(fzrco);
-     begin
-       fzloss := integer32(Round(log10(fzrco)));
-       Clear(log10fzrco);
-     end;
+    Evaluate_with_Inverse_Condition(f,z,absfz,denrco,fzrco,fz);
+    if absfz > 0.1 then
+      if Equal(fzrco,0.0) then
+       fzloss := -2**30;
+      else 
+        declare
+          log10fzrco : Floating_Number := log10(fzrco);
+        begin
+          fzloss := integer32(Round(log10(fzrco)));
+          Clear(log10fzrco);
+        end;
+      end if;
+    else
+      declare
+        log10denrco : Floating_Number := log10(denrco);
+      begin
+        fzloss := -integer32(Round(log10(denrco)));
+        Clear(log10denrco);
+      end;
     end if;
+    Clear(absfz); Clear(denrco);
   end Estimate_Loss_in_Newton_Step;
 
   procedure do_Newton_Step

@@ -1,3 +1,6 @@
+Fri 21 Nov 2014 : updated varbprec_complex_newton_steps with improved
+  condition numbers for the evaluation problem for small residuals.
+
 Thu 20 Nov 2014 : new package verification_of_solutions, tested by
   ts_vmpnewt.adb to run sequences of variable precision Newton steps.
   Added fourth tester to ts_vmpnewt.adb to develop a driver routine.
