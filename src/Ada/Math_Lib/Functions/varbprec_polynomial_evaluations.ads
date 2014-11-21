@@ -151,6 +151,28 @@ package VarbPrec_Polynomial_Evaluations is
   --   f       a polynomial in several variables;
   --   z       values for the variables that appear in f.
 
+  procedure Inverse_Condition_Number
+             ( f : in Standard_Complex_Poly_Systems.Poly_Sys;
+               z : in Standard_Complex_Vectors.Vector;
+               absfz,denrco,rco : out double_float );
+  procedure Inverse_Condition_Number
+             ( f : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+               z : in DoblDobl_Complex_Vectors.Vector;
+               absfz,denrco,rco : out double_double );
+  procedure Inverse_Condition_Number
+             ( f : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+               z : in QuadDobl_Complex_Vectors.Vector;
+               absfz,denrco,rco : out quad_double );
+  procedure Inverse_Condition_Number
+             ( f : in Multprec_Complex_Poly_Systems.Poly_Sys;
+               z : in Multprec_Complex_Vectors.Vector;
+               absfz,denrco,rco : out Floating_Number );
+
+  -- DESCRIPTION :
+  --   Returns the smallest inverse condition number of evaluating
+  --   every polynomial f(i) at z, with corresponding |f(z)| in absfz
+  --   and denominator denrco.
+
   function Inverse_Condition_Number
              ( f : Standard_Complex_Poly_Systems.Poly_Sys;
                z : Standard_Complex_Vectors.Vector ) return double_float; 
