@@ -369,7 +369,7 @@ procedure ts_vmpeval is
        & "+ 5.5*y**8 + (1/2)*x*y^-1;";
     p : Poly := Standard_Complex_Laur_Strings.Parse(n,s);
     x : Standard_Complex_Vectors.Vector(1..integer32(n));
-    rco : double_float;
+    rco,absfz,denrco : double_float;
     val : Standard_Complex_Numbers.Complex_Number;
 
   begin
@@ -384,7 +384,8 @@ procedure ts_vmpeval is
     end loop;
     rco := Inverse_Condition_Number(p,x);
     put("The inverse of the condition number : "); put(rco,3); new_line;
-    Evaluate_with_Inverse_Condition(p,x,rco,val);
+    Evaluate_with_Inverse_Condition(p,x,absfz,denrco,rco,val);
+    put("Condition number without residual : "); put(denrco,3); new_line;
     put("The value : "); put(val); new_line;
   end Standard_Test_Taschini_Laurential;
 
@@ -407,7 +408,7 @@ procedure ts_vmpeval is
        & "+ 5.5*y**8 + (1/2)*x*y^-1;";
     p : Poly := DoblDobl_Complex_Laur_Strings.Parse(n,s);
     x : DoblDobl_Complex_Vectors.Vector(1..integer32(n));
-    rco : double_double;
+    rco,absfz,denrco : double_double;
     dd_x1 : constant double_double := create(77617.0);
     dd_x2 : constant double_double := create(33096.0);
     val : DoblDobl_Complex_Numbers.Complex_Number;
@@ -425,7 +426,8 @@ procedure ts_vmpeval is
     put_line("The point where to evaluate :"); put_line(x);
     rco := Inverse_Condition_Number(p,x);
     put("The inverse of the condition number : "); put(rco,3); new_line;
-    Evaluate_with_Inverse_Condition(p,x,rco,val);
+    Evaluate_with_Inverse_Condition(p,x,absfz,denrco,rco,val);
+    put("Condition number without residual : "); put(denrco,3); new_line;
     put("The value : "); put(val); new_line;
   end DoblDobl_Test_Taschini_Laurential;
 
@@ -448,7 +450,7 @@ procedure ts_vmpeval is
        & "+ 5.5*y**8 + (1/2)*x*y^-1;";
     p : Poly := QuadDobl_Complex_Laur_Strings.Parse(n,s);
     x : QuadDobl_Complex_Vectors.Vector(1..integer32(n));
-    rco : quad_double;
+    rco,absfz,denrco : quad_double;
     qd_x1 : constant quad_double := create(77617.0);
     qd_x2 : constant quad_double := create(33096.0);
     val : QuadDobl_Complex_Numbers.Complex_Number;
@@ -466,7 +468,8 @@ procedure ts_vmpeval is
     put_line("The point where to evaluate :"); put_line(x);
     rco := Inverse_Condition_Number(p,x);
     put("The inverse of the condition number : "); put(rco,3); new_line;
-    Evaluate_with_Inverse_Condition(p,x,rco,val);
+    Evaluate_with_Inverse_Condition(p,x,absfz,denrco,rco,val);
+    put("Condition number without residual : "); put(denrco,3); new_line;
     put("The value : "); put(val); new_line;
   end QuadDobl_Test_Taschini_Laurential;
 
@@ -490,7 +493,7 @@ procedure ts_vmpeval is
        & "+ 5.5*y**8 + (1/2)*x*y^-1;";
     p : Poly := Multprec_Complex_Laur_Strings.Parse(n,size,s);
     x : Multprec_Complex_Vectors.Vector(1..integer32(n));
-    rco : Floating_Number;
+    rco,absfz,denrco : Floating_Number;
     qd_x1 : Floating_Number := create(77617.0);
     qd_x2 : Floating_Number := create(33096.0);
     val : Multprec_Complex_Numbers.Complex_Number;
@@ -508,7 +511,8 @@ procedure ts_vmpeval is
     put_line("The point where to evaluate :"); put_line(x);
     rco := Inverse_Condition_Number(p,x);
     put("The inverse of the condition number : "); put(rco,3); new_line;
-    Evaluate_with_Inverse_Condition(p,x,rco,val);
+    Evaluate_with_Inverse_Condition(p,x,absfz,denrco,rco,val);
+    put("Condition number without residual : "); put(denrco,3); new_line;
     put("The value : "); put(val); new_line;
   end Multprec_Test_Taschini_Laurential;
 
@@ -521,7 +525,7 @@ procedure ts_vmpeval is
     ans : character;
 
   begin
-    new_line;
+   -- new_line;
    -- put("Give the number of variables : "); get(n);
     n := 2;
     Symbol_Table.Init(n);

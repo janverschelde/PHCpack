@@ -1,3 +1,8 @@
+Fri 21 Nov 2014 : completed varbprec_polynomial_evaluations adding condition
+  number calculators for Laurent polynomial systems and extending the output
+  parameters with numerators and denominators of inverse condition numbers,
+  adjusting the tests in ts_vmpeval.adb.
+
 Thu 20 Nov 2014 : new procedures to split off the denominator in the
   of the inverse condition number in varbprec_polynomial_evaluations.
 
