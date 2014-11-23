@@ -48,7 +48,7 @@ package body QuadDobl_Complex_Numbers_io is
 
   procedure put ( s : out string; c : in Complex_Number ) is
 
-    re,im : string(1..74);
+    re,im : string(1..75);
     re_ends,im_ends : integer;
     x : constant quad_double := REAL_PARt(c);
     y : constant quad_double := IMAG_PARt(c);
@@ -57,7 +57,12 @@ package body QuadDobl_Complex_Numbers_io is
     s := (s'range => ' ');
     to_string(x,64,0,false,false,true,' ',re,re_ends);
     to_string(y,64,0,false,false,true,' ',im,im_ends);
-    s := re(1..re_ends) & "  " & im(1..im_ends);
+    declare
+      t : constant string
+        := re(1..re_ends) & "  " & im(1..im_ends);
+    begin
+      s(t'range) := t;
+    end;
   end put;
 
   procedure put ( c : in Complex_Number; dp : in natural32 ) is

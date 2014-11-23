@@ -1,3 +1,6 @@
+Sat 22 Nov 2014 : added one extra character in the strings for tiny numbers
+  in {dobl,quad}dobl_complex_numbers_io.adb.
+
 Mon 17 Nov 2014 : to {dobl,quad}dobl_complex_numbers_io added get/put
   procedures to parse/write complex numbers from/to strings.
 
