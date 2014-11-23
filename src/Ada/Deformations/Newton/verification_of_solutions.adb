@@ -152,11 +152,17 @@ package body Verification_of_Solutions is
 
   begin
     for i in z'range loop
+     -- declare
+     -- begin
       put(file,"solution "); put(file,natural32(i),1); put_line(file," :");
       Newton_Steps_on_Laurent_Polynomials
         (file,p,z(i),integer32(wanted),maxprec,maxitr,loss,
          err(integer32(i)),rco(integer32(i)),res(integer32(i)));
       put_line(file,z(i).all);
+     -- exception
+     --   when others => 
+     --     put("Exception at solution "); put(integer32(i),1); new_line; raise;
+     -- end;
     end loop;
   end Verify_Solutions_of_Laurent_Polynomials;
 
@@ -251,6 +257,10 @@ package body Verification_of_Solutions is
       (file,p,strsols,wanted,maxitr,maxprc,err,rco,res);
     Multprec_Complex_Solutions.Clear(sols);
     sols := to_Solutions(strsols,err,rco,res);
+  --exception
+  --  when others => 
+  --    put_line("Exception in Verify_Solutions_of_Laurent_Polynomials");
+  --    raise;
   end Verify_Solutions_of_Laurent_Polynomials;
 
 end Verification_of_Solutions;

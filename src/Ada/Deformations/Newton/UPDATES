@@ -1,3 +1,7 @@
+Sat 22 Nov 2014 : changes in varbprec_complex_newton_steps.adb for compiler
+  warnings and added exception handlers (now commented out), with similar
+  changes in verification_of_solutions.adb.
+
 Fri 21 Nov 2014 : updated varbprec_complex_newton_steps with improved
   condition numbers for the evaluation problem for small residuals.
   Added to varbprec_complex_newton_steps versions for Laurent polynomial

@@ -8,8 +8,6 @@ with Multprec_Complex_Numbers;
 with Multprec_DoblDobl_Convertors;
 with Multprec_QuadDobl_Convertors;
 with Standard_Mathematical_Functions;    use Standard_Mathematical_Functions;
-with DoblDobl_Mathematical_Functions;    use DoblDobl_Mathematical_Functions;
-with QuadDobl_Mathematical_Functions;    use QuadDobl_Mathematical_Functions;
 with Multprec_Mathematical_Functions;    use Multprec_Mathematical_Functions;
 with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
 with DoblDobl_Complex_Vector_Norms;      use DoblDobl_Complex_Vector_Norms;
@@ -909,7 +907,7 @@ package body Varbprec_Complex_Newton_Steps is
       := Standard_Complex_Vector_Strings.Parse(z.all);
     jf : Standard_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := Standard_Complex_Jaco_Matrices.Create(p);
-    fz : Standard_Complex_Vectors.Vector(p'range)
+    fz : constant Standard_Complex_Vectors.Vector(p'range)
        := Standard_Complex_Poly_SysFun.Eval(p,x);
     jfz : Standard_Complex_Matrices.Matrix(p'range,x'range)
         := Standard_Complex_Jaco_Matrices.Eval(jf,x);
@@ -941,7 +939,7 @@ package body Varbprec_Complex_Newton_Steps is
       := DoblDobl_Complex_Vector_Strings.Parse(z.all);
     jf : DoblDobl_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := DoblDobl_Complex_Jaco_Matrices.Create(p);
-    fz : DoblDobl_Complex_Vectors.Vector(p'range)
+    fz : constant DoblDobl_Complex_Vectors.Vector(p'range)
        := DoblDobl_Complex_Poly_SysFun.Eval(p,x);
     jfz : DoblDobl_Complex_Matrices.Matrix(p'range,x'range)
         := DoblDobl_Complex_Jaco_Matrices.Eval(jf,x);
@@ -976,7 +974,7 @@ package body Varbprec_Complex_Newton_Steps is
       := QuadDobl_Complex_Vector_Strings.Parse(z.all);
     jf : QuadDobl_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
        := QuadDobl_Complex_Jaco_Matrices.Create(p);
-    fz : QuadDobl_Complex_Vectors.Vector(p'range)
+    fz : constant QuadDobl_Complex_Vectors.Vector(p'range)
        := QuadDobl_Complex_Poly_SysFun.Eval(p,x);
     jfz : QuadDobl_Complex_Matrices.Matrix(p'range,x'range)
         := QuadDobl_Complex_Jaco_Matrices.Eval(jf,x);
@@ -1053,7 +1051,7 @@ package body Varbprec_Complex_Newton_Steps is
       := Standard_Complex_Vector_Strings.Parse(z.all);
     jf : Standard_Complex_Laur_JacoMats.Jaco_Mat(p'range,x'range)
        := Standard_Complex_Laur_JacoMats.Create(p);
-    fz : Standard_Complex_Vectors.Vector(p'range)
+    fz : constant Standard_Complex_Vectors.Vector(p'range)
        := Standard_Complex_Laur_SysFun.Eval(p,x);
     jfz : Standard_Complex_Matrices.Matrix(p'range,x'range)
         := Standard_Complex_Laur_JacoMats.Eval(jf,x);
@@ -1072,6 +1070,11 @@ package body Varbprec_Complex_Newton_Steps is
     end;
     Standard_Complex_Laur_Systems.Clear(p);
     Standard_Complex_Laur_JacoMats.Clear(jf);
+ -- exception
+ --   when others =>
+ --     put_line("Exception in Standard_Newton_Step_on_Laurent_Polynomials.");
+ --     put_line("The vector x :"); put_line(x);
+ --     raise;
   end Standard_Newton_Step_on_Laurent_Polynomials;
 
   procedure DoblDobl_Newton_Step_on_Laurent_Polynomials
@@ -1085,7 +1088,7 @@ package body Varbprec_Complex_Newton_Steps is
       := DoblDobl_Complex_Vector_Strings.Parse(z.all);
     jf : DoblDobl_Complex_Laur_JacoMats.Jaco_Mat(p'range,x'range)
        := DoblDobl_Complex_Laur_JacoMats.Create(p);
-    fz : DoblDobl_Complex_Vectors.Vector(p'range)
+    fz : constant DoblDobl_Complex_Vectors.Vector(p'range)
        := DoblDobl_Complex_Laur_SysFun.Eval(p,x);
     jfz : DoblDobl_Complex_Matrices.Matrix(p'range,x'range)
         := DoblDobl_Complex_Laur_JacoMats.Eval(jf,x);
@@ -1120,7 +1123,7 @@ package body Varbprec_Complex_Newton_Steps is
       := QuadDobl_Complex_Vector_Strings.Parse(z.all);
     jf : QuadDobl_Complex_Laur_JacoMats.Jaco_Mat(p'range,x'range)
        := QuadDobl_Complex_Laur_JacoMats.Create(p);
-    fz : QuadDobl_Complex_Vectors.Vector(p'range)
+    fz : constant QuadDobl_Complex_Vectors.Vector(p'range)
        := QuadDobl_Complex_Laur_SysFun.Eval(p,x);
     jfz : QuadDobl_Complex_Matrices.Matrix(p'range,x'range)
         := QuadDobl_Complex_Laur_JacoMats.Eval(jf,x);
@@ -1222,6 +1225,10 @@ package body Varbprec_Complex_Newton_Steps is
     else
       Multprec_Newton_Step_on_Laurent_Polynomials(f,z,precision,err,rco,res);
     end if;
+ -- exception
+ --   when others =>
+ --     put_line("Exception in do_Newton_Step_on_Laurent_Polynomials ...");
+ --     raise;
   end do_Newton_Step_on_Laurent_Polynomials;
 
   procedure Newton_Steps_on_Polynomial_System
@@ -1229,13 +1236,11 @@ package body Varbprec_Complex_Newton_Steps is
                 want : in integer32; maxprc,maxitr : in natural32;
                 loss : out integer32; err,rco,res : out double_float ) is
 
-    precision : natural32;
     err_accu,res_accu : integer32;
 
   begin
     for i in 1..maxitr loop
       loss := Estimate_Loss_for_Polynomial_System(f,z.all,maxprc);
-      precision := natural32(-loss) + natural32(want);
       do_Newton_Step_on_Polynomial_System(f,z,loss,want,err,rco,res);
       err_accu := abs(integer32(log10(err)));
       res_accu := abs(integer32(log10(res)));
@@ -1248,13 +1253,11 @@ package body Varbprec_Complex_Newton_Steps is
                 want : in integer32; maxprc,maxitr : in natural32;
                 loss : out integer32; err,rco,res : out double_float ) is
 
-    precision : natural32;
     err_accu,res_accu : integer32;
 
   begin
     for i in 1..maxitr loop
       loss := Estimate_Loss_for_Laurent_Polynomials(f,z.all,maxprc);
-      precision := natural32(-loss) + natural32(want);
       do_Newton_Step_on_Laurent_Polynomials(f,z,loss,want,err,rco,res);
       err_accu := abs(integer32(log10(err)));
       res_accu := abs(integer32(log10(res)));
@@ -1312,6 +1315,10 @@ package body Varbprec_Complex_Newton_Steps is
       res_accu := abs(integer32(log10(res)));
       exit when ((err_accu >= want) and (res_accu >= want));
     end loop;
+ -- exception
+ --   when others =>
+ --     put_line("Exception in Newton_Steps_on_Laurent_Polynomials");
+ --     raise;
   end Newton_Steps_on_Laurent_Polynomials;
                 
 end Varbprec_Complex_Newton_Steps;
