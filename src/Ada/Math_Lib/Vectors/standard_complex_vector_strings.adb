@@ -11,7 +11,7 @@ package body Standard_Complex_Vector_Strings is
   begin
     for i in v'range loop
       declare
-        nb : string(1..44);
+        nb : string(1..46);
       begin
         Standard_Complex_Numbers_io.put(nb,v(i));
         if i = v'last

@@ -1,3 +1,6 @@
+Sat 22 Nov 2014 : extended length of strings when writing complex vectors
+  in standard precision to strings, in standard_complex_vector_strings.adb.
+
 Tue 18 Nov 2014 : some edits in quaddobl_complex_vector_strings.ads to
   correct some documentation and new multprec_complex_vector_strings to
   parse/write multiprecision complex vectors from/to strings.
