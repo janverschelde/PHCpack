@@ -46,7 +46,7 @@ package body Standard_Complex_Numbers_io is
 
   procedure put ( s : out string; c : in Complex_Number ) is
 
-    sre,sim : string(1..21) := (1..21 => ' ');
+    sre,sim : string(1..22) := (1..22 => ' '); -- careful with E-100
 
   begin
     put(sre,REAL_PART(c));
@@ -112,7 +112,7 @@ package body Standard_Complex_Numbers_io is
   procedure put ( s : out string;
                   c : in Complex_Number; aft,exp : in natural32 ) is
 
-    sre,sim : string(1..21) := (1..21 => ' ');
+    sre,sim : string(1..22) := (1..22 => ' ');
 
   begin
     s := (s'range => ' ');
@@ -135,13 +135,18 @@ package body Standard_Complex_Numbers_io is
   procedure put ( s : out string;
                   c : in Complex_Number; dp : in natural32 ) is
 
-    sre,sim : string(1..21) := (1..21 => ' ');
+    sre,sim : string(1..22) := (1..22 => ' ');
 
   begin
     s := (s'range => ' ');
     put(sre,REAL_PART(c),dp);
     put(sim,IMAG_PART(c),dp);
-    s := Trim_Spaces(sre) & "  " & Trim_Spaces(sim);
+    declare
+      t : constant string
+        := Trim_Spaces(sre) & "  " & Trim_Spaces(sim);
+    begin
+      s(t'range) := t;
+    end;
   end put;
 
 end Standard_Complex_Numbers_io;

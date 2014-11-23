@@ -29,7 +29,7 @@ procedure ts_strnum is
 
     f : double_float := 0.0;
     c : Complex_Number;
-    s : string(1..21) := (1..21 => '#');
+    s : string(1..22) := (1..22 => ' ');
 
   begin
     put("Give a double float : "); get(f);
@@ -47,9 +47,9 @@ procedure ts_strnum is
     put("Give a complex number : "); get(c);
     declare
       s : constant string := Signed_Coefficient(c);
-      s2 : string(1..44);
+      s2 : string(1..46);
       dp : natural32 := 0;
-      s3 : string(1..44);
+      s3 : string(1..46);
       c2,c3 : Complex_Number;
       last : integer;
     begin

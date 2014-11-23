@@ -1,3 +1,8 @@
+Sat 22 Nov 2014 : fixed bug in writing complex numbers to string
+  in case the exponent takes 3 decimal places, debugged with the complex
+  number 6.70143755976065E-04  -9.28677255416848E-100, debugged with
+  changed ts_strnum.adb.
+
 Tue 18 Nov 2014 : extended multprec_{floating,complex}_numbers_io with
   procedure to parse/write numbers from/to strings, tested by ts_strnum.adb.
 
