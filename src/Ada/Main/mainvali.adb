@@ -20,7 +20,6 @@ with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Multprec_Complex_Poly_Systems;      use Multprec_Complex_Poly_Systems;
---with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
 with Multprec_Complex_Poly_SysFun;       use Multprec_Complex_Poly_SysFun;
 with Multprec_Complex_Poly_Strings;      use Multprec_Complex_Poly_Strings;
 with Standard_Complex_Solutions;
@@ -47,6 +46,7 @@ with Drivers_to_DD_QD_Root_Refiners;     use Drivers_to_DD_QD_Root_Refiners;
 with Root_Refining_Parameters;           use Root_Refining_Parameters;
 with valipoco;
 with Bye_Bye_Message;
+with Verification_of_Solutions;          use Verification_of_Solutions;
 
 procedure mainvali ( infilename,outfilename : in string ) is
 
@@ -666,10 +666,10 @@ procedure mainvali ( infilename,outfilename : in string ) is
     Close(outfile);
   end Winding_Verification;
 
-  procedure Standard_Weeding_Validation is
+  procedure Standard_Weeding_Verification is
 
   -- DESCRIPTION :
-  --   Validation by refining the roots and weeding out the solution set.
+  --   Verifciation by refining the roots and weeding out the solution set.
 
     use Standard_Complex_Solutions;
 
@@ -731,7 +731,7 @@ procedure mainvali ( infilename,outfilename : in string ) is
     new_line(outfile);
     print_times(outfile,timer,"Root Refinement");
     Close(outfile);
-  end Standard_Weeding_Validation;
+  end Standard_Weeding_Verification;
 
   procedure Multprec_Residual_Evaluator is
 
@@ -824,10 +824,46 @@ procedure mainvali ( infilename,outfilename : in string ) is
     print_times(file,timer,"Multi-Precision Root Refinement");
   end Call_Multprec_Root_Refiner;
 
-  procedure Multprec_Weeding_Validation is
+  procedure Call_Varbprec_Root_Refiner
+               ( file : in file_type; n,m : in natural32;
+                 ls : in Link_to_Array_of_Strings;
+                 sols : in out Multprec_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
-  --   Newton's method using multi-precision arithmetic.
+  --   Offers the user a menu to set the parameters and then calls
+  --   the variable precision Newton's method on the list of solutions.
+
+    timer : Timing_Widget;
+    wanted,maxitr,maxprc : natural32;
+    verbose : boolean;
+
+    use Multprec_Complex_Solutions;
+
+  begin
+    Menu_to_Set_Parameters(wanted,maxitr,maxprc,verbose);
+    new_line(file);
+    Write_Parameters(file,wanted,maxitr,maxprc,verbose);
+    tstart(timer);
+    if verbose then
+      Verify_Solutions_of_Laurent_Polynomials
+        (file,ls.all,sols,wanted,maxitr,maxprc);
+    else
+      Verify_Solutions_of_Laurent_Polynomials
+        (ls.all,sols,wanted,maxitr,maxprc);
+    end if;
+    tstop(timer);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    new_line(file);
+    print_times(file,timer,"Variable precision Newton steps");
+  end Call_Varbprec_Root_Refiner;
+
+  procedure Multprec_Weeding_Verification ( varbprec : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Newton's method using multi-precision arithmetic,
+  --   or with variable precision if varbprec is true.
 
     n,m : natural32;
     ls : Link_to_Array_of_Strings;
@@ -857,16 +893,18 @@ procedure mainvali ( infilename,outfilename : in string ) is
       put_line(outfile,"the given solutions : ");
       put(outfile,Multprec_Complex_Solutions.Length_Of(sols),
           natural32(Multprec_Complex_Solutions.Head_Of(sols).n),sols);
-      put_line("calling the multiprecision root refiner ...");
-      Call_Multprec_Root_Refiner(outfile,n,m,ls,sols);
+      if varbprec
+       then Call_Varbprec_Root_Refiner(outfile,n,m,ls,sols);
+       else Call_Multprec_Root_Refiner(outfile,n,m,ls,sols);
+      end if;
     end if;
     Close(outfile);
-  end Multprec_Weeding_Validation;
+  end Multprec_Weeding_Verification;
 
-  procedure Polyhedral_End_Game_Validation is
+  procedure Polyhedral_End_Game_Verification is
 
   -- DESCRIPTION :
-  --   Validation of the polyhedral end game.
+  --   Verification of the polyhedral end game.
 
     pocofile,resultfile : file_type;
 
@@ -883,7 +921,7 @@ procedure mainvali ( infilename,outfilename : in string ) is
     new_line(resultfile);
     put(resultfile,Bye_Bye_Message);
     Close(resultfile);
-  end Polyhedral_End_Game_Validation;
+  end Polyhedral_End_Game_Verification;
 
   procedure Standard_Newton_with_Deflation is
 
@@ -1058,21 +1096,24 @@ procedure mainvali ( infilename,outfilename : in string ) is
       put_line
          ("  7. Multiplicity structure of isolated singular solutions;");
       put_line
-         ("  8. Newton's method in double double or quad double arithmetic.");
-      put("Type 0, 1, 2, 3, 4, 5, 6, 7, or 8 to select, or i for info : ");
-      Ask_Alternative(ans,"012345678i");
+         ("  8. Newton's method in double double or quad double arithmetic;");
+      put_line
+         ("  9. variable precision Newton steps to the desired accuracy.");
+      put("Type 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9 to select, or i for info : ");
+      Ask_Alternative(ans,"0123456789i");
       case ans is
         when 'i' => new_line;
                     Display_Verification_Info;
         when '0' => Main_Driver_to_Scan_Solution_Lists(infilename,outfilename);
-        when '1' => Standard_Weeding_Validation;
+        when '1' => Standard_Weeding_Verification;
         when '2' => Multprec_Residual_Evaluator;
-        when '3' => Multprec_Weeding_Validation;
+        when '3' => Multprec_Weeding_Verification(false);
         when '4' => Winding_Verification;
-        when '5' => Polyhedral_End_Game_Validation;
+        when '5' => Polyhedral_End_Game_Verification;
         when '6' => Newton_with_Deflation;
         when '7' => Multiplicity_Structure;
         when '8' => DD_QD_Root_Refinement;
+        when '9' => Multprec_Weeding_Verification(true);
         when others => null;
       end case;
       exit when ans /= 'i';

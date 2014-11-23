@@ -1,3 +1,5 @@
+Sat 22 Nov 2014 : added 9-th option of phc -v for variable precision Newton.
+
 Fri 31 Oct 2014 : greeting_banners changed for release 2.3.95 and
   added description of phc -o to mainphc.adb.
 
