@@ -1,5 +1,6 @@
 with Interfaces.C;
 with text_io;                           use text_io;
+with String_Splitters;                  use String_Splitters;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 -- with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
@@ -48,10 +49,11 @@ with DoblDobl_Root_Refiners;
 with QuadDobl_Root_Refiners;
 with Multprec_Root_Refiners;
 with Drivers_to_Deflate_Singularities;
+with Verification_of_Solutions;
 with Floating_Mixed_Subdivisions;
 with Black_Mixed_Volume_Computations;
 with Black_Box_Solvers;
-with Witness_Sets,Witness_Sets_io;
+with Witness_Sets_io;
 with Drivers_to_Cascade_Filtering;
 with Greeting_Banners;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
@@ -1121,6 +1123,55 @@ function use_c2phc ( job : integer32;
       return 9;
   end Job9;
 
+  function Job179 return integer32 is -- variable precision Newton step
+
+    use Interfaces.C;
+    use Verification_of_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(5));
+    dim : constant natural32 := natural32(v_a(v_a'first));
+    ns : constant natural32 := natural32(v_a(v_a'first+1));
+    wanted : constant natural32 := natural32(v_a(v_a'first+2));
+    maxitr : constant natural32 := natural32(v_a(v_a'first+3));
+    maxprc : constant natural32 := natural32(v_a(v_a'first+4));
+    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(ns-1);
+    v_b : constant C_Integer_Array(0..n1)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(ns));
+    s : constant String(1..integer(ns)) := C_Integer_Array_to_String(ns,v_b);
+    ls : Array_of_Strings(1..integer(dim)) := Split(natural(dim),s,';');
+    sols : constant Multprec_Complex_Solutions.Solution_List
+         := Multprec_Solutions_Container.Retrieve;
+    work : Multprec_Complex_Solutions.Solution_List;
+
+  begin
+   -- put("The dimension : "); put(integer32(dim),1); new_line;
+   -- put("The number of characters in the system : ");
+   -- put(integer32(ns),1); new_line;
+   -- put("The number of wanted number of decimal places : ");
+   -- put(integer32(wanted),1); new_line;
+   -- put("The maximum number of Newton steps : ");
+   -- put(integer32(maxitr),1); new_line;
+   -- put("The maximum number of decimal places to estimate the loss : ");
+   -- put(integer32(maxprc),1); new_line;
+   -- put_line("The polynomials : "); put_line(s);
+   -- for i in ls'range loop
+   --   put("Polynomial "); put(integer32(i),1); put_line(" :");
+   --   put_line(ls(i).all);
+   -- end loop;
+    Multprec_Complex_Solutions.Copy(sols,work);
+    Verify_Solutions_of_Laurent_Polynomials
+      (ls,work,wanted,maxitr,maxprc);
+    Multprec_Solutions_Container.Clear;
+    Multprec_Solutions_Container.Initialize(work);
+    Clear(ls);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception occurred in variable precision Newton step.");
+      return 179;
+  end Job179;
+
   function Job195 return integer32 is -- 1 Newton step on multprec containers
 
     use Multprec_Complex_Poly_Systems;
@@ -1458,7 +1509,7 @@ function use_c2phc ( job : integer32;
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     dim : constant natural32 := natural32(v_a(v_a'first));
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-    lplast : integer32 := lp'last;
+   -- lplast : integer32 := lp'last;
     use Standard_Complex_Polynomials;
     ep : Link_to_Poly_Sys;
 
@@ -1904,6 +1955,8 @@ function use_c2phc ( job : integer32;
       when 149..171 => return use_track(job-150,a,b,c);
      -- track operations for double double precision :
       when 172..178 => return use_track(job-150,a,b,c);
+     -- variable precision Newton step :
+      when 179 => return Job179;
      -- track operations for quad double precision :
       when 182..188 => return use_track(job-150,a,b,c);
      -- tuning continuation parameters, deflation, and Newton step

@@ -1,3 +1,6 @@
+Sun 23 Nov 2014 : added job 179 to use_c2phc for the variable precision
+  Newton's method.
+
 Wed 5 Nov 2014 : upgraded use_c2phc.adb to apply the drivers to square and
   embed a polynomial system from drivers_to_cascade_filtering.
 

@@ -958,6 +958,19 @@ function use_c2phc ( job : integer32;
 --
 -- deflation and one Newton step :
 --
+--   job   = 179 : applies the variable precision Newton's method,
+--                 in a[0] is the dimension of the problem,
+--                 in a[1] is the number of characters in the string b,
+--                 in a[2] is the number of wanted decimal places,
+--                 in a[3] is the maximum number of Newton steps,
+--                 in a[4] is the maximum number of decimal places
+--                 to estimate the loss of accuracy,
+--                 in b is the string representation of a (Laurent)
+--                 polynomial system.  The container with multiprecision
+--                 solutions must be initialized and then the Newton step
+--                 replaces the multiprecision solutions in the container
+--                 with the updated solutions computed by the Newton step.
+--
 --   job   = 196 : applies deflation on the system and solutions in the
 --                 containers with standard precision and default settings;
 --         = 195 : does one Newton step with multiprecision arithmetic
