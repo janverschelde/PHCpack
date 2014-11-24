@@ -1,3 +1,6 @@
+Sun 23 Nov 2014 : extended length of strings when writing double double complex
+  vectors to strings, in dobldobl_complex_vector_strings.adb.
+
 Sat 22 Nov 2014 : extended length of strings when writing complex vectors
   in standard precision to strings, in standard_complex_vector_strings.adb.
 

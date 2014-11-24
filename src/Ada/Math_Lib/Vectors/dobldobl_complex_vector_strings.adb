@@ -13,7 +13,7 @@ package body DoblDobl_Complex_Vector_Strings is
   begin
     for i in v'range loop
       declare
-        nb : string(1..80);
+        nb : string(1..81);
       begin
         DoblDobl_Complex_Numbers_io.put(nb,v(i));
         if i = v'last
