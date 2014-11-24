@@ -1025,6 +1025,22 @@ static PyObject *py2c_multprec_Newton_Laurent_step
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_varbprec_Newton_Laurent_steps
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim,wanted,maxitr,maxprc,nbstr;
+   char *pols;
+
+   initialize();
+
+   if(!PyArg_ParseTuple(args,"iiiiis",
+      &dim,&wanted,&maxitr,&maxprc,&nbstr,&pols)) return NULL;
+
+   fail = varbprec_Newton_Laurent_step(dim,wanted,maxitr,maxprc,nbstr,pols);
+
+   return Py_BuildValue("i",fail);
+}
+
 /* wrapping functions in unisolvers.h starts from here */
 
 static PyObject *py2c_usolve_standard ( PyObject *self, PyObject *args )
@@ -4195,6 +4211,9 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_multprec_Newton_Laurent_step", py2c_multprec_Newton_Laurent_step,
     METH_VARARGS,
     "does one Newton step on multiprecision Laurent systems"},
+   {"py2c_varbprec_Newton_Laurent_steps", py2c_varbprec_Newton_Laurent_steps,
+    METH_VARARGS,
+    "sequence of variable precision Newton steps on Laurent polynomials"},
    {"py2c_usolve_standard", py2c_usolve_standard, METH_VARARGS,
     "solve polynomial in one variable in standard double precision"},
    {"py2c_usolve_dobldobl", py2c_usolve_dobldobl, METH_VARARGS,

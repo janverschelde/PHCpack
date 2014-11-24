@@ -1,3 +1,6 @@
+Mon 24 Nov 2014 : phcpy2c has interface routine to variable precision Newton
+  steps, for use in the Python interface.
+
 Sun 23 Nov 2014 : added function to phcpack to run variable precision Newton
   steps, tested by lib_newton.c.
 

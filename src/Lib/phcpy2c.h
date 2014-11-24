@@ -155,6 +155,8 @@ static PyObject *py2c_quaddobl_Newton_Laurent_step
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_multprec_Newton_Laurent_step
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_varbprec_Newton_Laurent_steps
+ ( PyObject *self, PyObject *args );
 
 /* wrapping functions in unisolvers.h starts from here */
 
