@@ -1,0 +1,58 @@
+Sun 23 Nov 2014 : added a split function to string_splitters.
+
+Sun 29 May 2011 : communications_with_user.adb did not refer to 
+  unchecked_deallocation, removed this from the header for warning.
+
+Fri 20 May 2011 : ts_striscan.adb did not use communications_with_user,
+  as warned by compiler.  Also modified ts_strsplit.adb for warnings.
+
+Fri 24 Sep 2010 : splitted reading a string off from communications_with_user
+  into new package string_splitters, tested by ts_strsplit.adb
+  Also ts_striscan.adb and ts_filescan.adb needed updating.
+
+Sun 31 May 2009 : added package long_integer_io.adb.
+
+Sun 4 May 2008 : one function scan in the package string_parsing for
+  parsing strings for solutions, tested by ts_striscan.adb.
+
+Sat 22 Mar 2008 : minor modification in ts_threads.adb.
+
+Thu 10 Jan 2008 : added package multithreading to encapsulate
+  the GNAT.threads package.
+
+Wed 9 Jan 2008 : ts_threads.adb tests the GNAT interface to threads.
+
+Thu 3 Jan 2008 : because of warnings of GNAT GPL 2006, modified
+  bye_bye_message.adb and ts_time.adb.
+
+Wed 2 Jan 2008 : because of warnings with GNAT GPL 2006, modified
+  communications_with_user.adb, machines.adb and time_stamps.adb.
+
+Thu 20 Mar 2006 : extended the package File_Scanning with the operation
+  Scan_Line_for_Number, moved from standard_complex_poly_systems_io.
+
+Mon 20 Dec 2004 : added also name to Read_Name_and_Open_file and
+  Open_Input_File in communications_with_user.
+
+Sun 19 Dec 2004 : added "name" as extra to Create_Output_File in the
+  communications_with_user package.
+
+Sun 15 Aug 2004 : created new directories Basic_Timer and Unix_Timer to
+  avoid the copying of files to install windows or unix verison of phc.
+  Older files were moved into Archive, which should be obsolete...
+
+Mon 19 Jul 2004 : added new version of Read_Name_and_Create_File which
+  returns the name of the file which was created.
+
+Fri 22 Mar 2002 : new Read_Name_and_Append_File in Communications_with_User,
+  appended to ts_commuser.adb to test the new facility
+
+Fri 15 Sep 2000 : introduced "Write_Elapsed_Time" in Time_Stamps to fix
+  negative seconds when the calculations ran overnight.
+
+Fri 1 Dec 2000 : created ts_ctimer.adb to get a timer that only depends
+  on ANSI C, no longer on UNIX
+
+Tue 19 Dec 2000 : created win_timing_package and ts_wintimer.adb to
+  test the timer with the C interface.
+

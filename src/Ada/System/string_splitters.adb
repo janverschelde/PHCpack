@@ -94,6 +94,27 @@ package body String_Splitters is
     end;
   end get;
 
+  function Split ( n : natural; s : string; d : character )
+                 return Array_of_Strings is
+
+    res : Array_of_Strings(1..n);
+    ind : integer := 0;
+    buf : string(s'range);
+    cnt : integer := buf'first-1;
+
+  begin
+    for i in s'range loop
+      cnt := cnt + 1;
+      buf(cnt) := s(i);
+      if s(i) = d then
+        ind := ind + 1;
+        res(ind) := new string'(buf(buf'first..cnt));
+        cnt := buf'first-1;
+      end if;
+    end loop;
+    return res;
+  end Split;
+
 -- DESTRUCTORS :
 
   procedure Clear ( s : in out Link_to_String ) is

@@ -53,6 +53,18 @@ package String_Splitters is
   --   m         number of variables in each polynomial;
   --   p         array of strings, each delimited by semicolon.
 
+  function Split ( n : natural; s : string; d : character )
+                 return Array_of_Strings;
+
+  -- DESCRIPTION :
+  --   Returns an array of n strings by splitting s
+  --   along the delimiter d.
+
+  -- ON ENTRY :
+  --   n         number of occurrences of d in s;
+  --   s         string representation of n polynomials, separated by d;
+  --   d         delimiter symbol is typically a semicolon.
+
 -- DESTRUCTORS :
 
   procedure Clear ( s : in out Link_to_String );
