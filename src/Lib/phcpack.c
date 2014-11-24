@@ -2,6 +2,7 @@
 
 #include<stdlib.h>
 #include<stdio.h>
+#include<string.h>
 #include<math.h>
 
 #define v 0 /* verbose flag */
@@ -153,6 +154,85 @@ int multprec_Newton_Laurent_step ( int deci )
    int *b,fail;
    double *c;
    fail = _ada_use_c2phc(329,&deci,b,c);
+   return fail;
+}
+
+char *read_equations_from_file
+ ( FILE *fp, int nq, int k, int *len, char *accu )
+{
+   int i,lenline;
+   char line[256];
+   char *result;
+
+   fscanf(fp,"%s\n",line);
+   lenline = strlen(line);
+   for(i=0; i<lenline; i++) if(line[i] == ';') k = k+1;
+
+   result = (char*)calloc(*len+lenline,sizeof(char));
+   for(i=0; i<*len; i++) result[i] = accu[i];
+   *len = *len + lenline;
+   strcat(result,line);
+   if(k < nq)
+   {
+      return read_equations_from_file(fp,nq,k,len,result);
+   }
+   else
+   {
+      free(accu);
+      return result;
+   }
+}
+
+char *read_polynomials_from_file
+ ( int nc, char *name, int *len, int *nq, int *nv, int *fail )
+{
+   char *result;
+   char line[256];
+   FILE *fp;
+   
+   fp = fopen(name,"r");
+   if(fp == NULL)
+   {
+      printf("File with name %s could not be opened for reading!\n",name);
+      *fail = 1;
+   }
+   else
+   {
+      char c;
+      char *acc;
+      fscanf(fp,"%d",nq);
+      printf("Number of equations : %d\n",*nq);
+      c = getc(fp);
+      if(c == '\n')
+         *nv = *nq;
+      else
+         fscanf(fp,"%d",nv);
+      printf("Number of variables : %d\n",*nv);
+      acc = (char*)calloc(1,sizeof(char));
+      acc[0] = '\0';
+      result = read_equations_from_file(fp,*nq,0,len,acc);
+   }
+
+   return result;
+}
+
+int varbprec_Newton_Laurent_step
+ ( int dim, int wanted, int maxitr, int maxprc, int ns, char *s )
+{
+   int i,fail;
+   int a[5];
+   int b[ns];
+   double *c;
+
+   a[0] = dim;
+   a[1] = ns;
+   a[2] = wanted;
+   a[3] = maxitr;
+   a[4] = maxprc;
+   for(i=0; i<ns; i++) b[i] = (int) s[i];
+
+   fail = _ada_use_c2phc(179,a,b,c);
+
    return fail;
 }
 

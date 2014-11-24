@@ -70,28 +70,28 @@ int quaddobl_deflate ( void );
 
 int standard_Newton_step ( void );
 /*
- * DESCRPTION :
+ * DESCRIPTION :
  *   Replaces the solutions in the solution container with the results
  *   of one Newton step on the system in the container with the solutions 
  *   in the container on input, using standard double arithmetic. */
 
 int dobldobl_Newton_step ( void );
 /*
- * DESCRPTION :
+ * DESCRIPTION :
  *   Replaces the solutions in the solution container with the results
  *   of one Newton step on the system in the container with the solutions 
  *   in the container on input, using double double arithmetic. */
 
 int quaddobl_Newton_step ( void );
 /*
- * DESCRPTION :
+ * DESCRIPTION :
  *   Replaces the solutions in the solution container with the results
  *   of one Newton step on the system in the container with the solutions 
  *   in the container on input, using quad double arithmetic. */
 
 int multprec_Newton_step ( int deci );
 /*
- * DESCRPTION :
+ * DESCRIPTION :
  *   Replaces the solutions in the solution container with the results
  *   of one Newton step on the system in the container with the solutions 
  *   in the container on input, using multiprecision arithmetic.
@@ -100,33 +100,86 @@ int multprec_Newton_step ( int deci );
 
 int standard_Newton_Laurent_step ( void );
 /*
- * DESCRPTION :
+ * DESCRIPTION :
  *   Replaces the solutions in the solution container with the results
  *   of one Newton step on the Laurent system in the container with the
  *   solutions in the container on input, using standard double arithmetic. */
 
 int dobldobl_Newton_Laurent_step ( void );
 /*
- * DESCRPTION :
+ * DESCRIPTION :
  *   Replaces the solutions in the solution container with the results
  *   of one Newton step on the Laurent system in the container with the
  *   solutions in the container on input, using double double arithmetic. */
 
 int quaddobl_Newton_Laurent_step ( void );
 /*
- * DESCRPTION :
+ * DESCRIPTION :
  *   Replaces the solutions in the solution container with the results
  *   of one Newton step on the Laurent system in the container with the
  *   solutions in the container on input, using quad double arithmetic. */
 
 int multprec_Newton_Laurent_step ( int deci );
 /*
- * DESCRPTION :
+ * DESCRIPTION :
  *   Replaces the solutions in the solution container with the results
  *   of one Newton step on the Laurent system in the container with the
  *   solutions in the container on input, using multiprecision arithmetic.
  *   The input parameter gives the number of decimal places in the
  *   working precision. */
+
+char *read_equations_from_file
+ ( FILE *fp, int nq, int k, int *len, char *accu );
+/*
+ * DESCRIPTION :
+ *   Reads equations from file line per line, call as
+ *   eqs = read_equations(fp,nq,0,0,""); initially.
+ *
+ * ON ENTRY :
+ *  fp        file opened for input;
+ *  nq        number of equations the file should contain;
+ *  k         current number of equation read;
+ *  len       length of the string acc;
+ *  accu      accumulates all equations read.
+ *
+ * ON RETURN :
+ *  len       length of the string on return. */
+
+char *read_polynomials_from_file
+ ( int nc, char *name, int *len, int *nq, int *nv, int *fail );
+/*
+ * DESCRIPTION :
+ *   Reads a polynomial system from file and returns its string.
+ *
+ * ON ENTRY :
+ *   nc       number of characters in the name string;
+ *   name     name of a file that contains a polynomial system.
+ *
+ * ON RETURN :
+ *   len      number of characters in the string on return;
+ *   nq       number of equations as counted by first number on file
+ *            and the number of semicolons;
+ *   nv       number of variables in the system, if different from nq,
+ *            then this must be the second number on the first line on file;
+ *   fail     if 0, then no failure, if 1 then something went wrong.
+
+int varbprec_Newton_Laurent_step
+ ( int dim, int wanted, int maxitr, int maxprc, int ns, char *s );
+/*
+ * DESCRIPTION :
+ *   Replaces the solutions in the multprecision solutions container with
+ *   the results of one Variable precision Newton step on the system stored
+ *   in the string s with ns characters.  The value of dim on entry must
+ *   equal the number of variables and equations of the system.
+ *
+ * ON ENTRY :
+ *   dim      number of equations and variables in the system;
+ *   wanted   number of wanted decimal places of accuracy;
+ *   maxitr   maximum number of Newton steps;
+ *   maxprc   maximum number of decimal places in the precision
+ *            to estimate the loss of accuracy;
+ *   ns       the number of characters in the string s;
+ *   s        string representation of the (Laurent) polynomial system. */
 
 int read_standard_target_system ( void );
 /*
@@ -134,7 +187,7 @@ int read_standard_target_system ( void );
  *   Prompts the user for a file name and reads the target system from file.
  *   If available on file, also its solutions will be read and stored. */
 
-int read_standard_target_system_from_file ( int n, char* filename );
+int read_standard_target_system_from_file ( int n, char *filename );
 /*
  * DESCRIPTION :
  *   Opens the file with name given in the n characters stored in filename,

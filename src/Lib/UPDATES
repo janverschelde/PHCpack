@@ -1,3 +1,6 @@
+Sun 23 Nov 2014 : added function to phcpack to run variable precision Newton
+  steps, tested by lib_newton.c.
+
 Fri 12 Sep 2014 : extra mixed_volume function and initialization of supports
   in celcon, called in phcpy2c.
 
