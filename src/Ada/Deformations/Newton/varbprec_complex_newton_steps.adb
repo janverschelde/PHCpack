@@ -41,6 +41,8 @@ with Multprec_Complex_Poly_SysFun;
 with Multprec_Complex_Laur_SysFun;
 with Varbprec_Complex_Linear_Solvers;    use Varbprec_Complex_Linear_Solvers;
 with Varbprec_Polynomial_Evaluations;    use Varbprec_Polynomial_Evaluations;
+-- for debugging :
+--with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 
 package body Varbprec_Complex_Newton_Steps is
 
@@ -1073,6 +1075,7 @@ package body Varbprec_Complex_Newton_Steps is
  -- exception
  --   when others =>
  --     put_line("Exception in Standard_Newton_Step_on_Laurent_Polynomials.");
+ --     put_line("The string z :"); put_line(z.all);
  --     put_line("The vector x :"); put_line(x);
  --     raise;
   end Standard_Newton_Step_on_Laurent_Polynomials;
@@ -1236,14 +1239,22 @@ package body Varbprec_Complex_Newton_Steps is
                 want : in integer32; maxprc,maxitr : in natural32;
                 loss : out integer32; err,rco,res : out double_float ) is
 
+    precision : natural32;
     err_accu,res_accu : integer32;
 
   begin
     for i in 1..maxitr loop
       loss := Estimate_Loss_for_Polynomial_System(f,z.all,maxprc);
       do_Newton_Step_on_Polynomial_System(f,z,loss,want,err,rco,res);
-      err_accu := abs(integer32(log10(err)));
-      res_accu := abs(integer32(log10(res)));
+      precision := natural32(-loss) + natural32(want);
+      if err = 0.0
+       then err_accu := integer32(precision);
+       else err_accu := abs(integer32(log10(err)));
+      end if;
+      if res = 0.0
+       then res_accu := integer32(precision);
+       else res_accu := abs(integer32(log10(res)));
+      end if;
       exit when ((err_accu >= want) and (res_accu >= want));
     end loop;
   end Newton_Steps_on_Polynomial_System;
@@ -1253,14 +1264,22 @@ package body Varbprec_Complex_Newton_Steps is
                 want : in integer32; maxprc,maxitr : in natural32;
                 loss : out integer32; err,rco,res : out double_float ) is
 
+    precision : natural32;
     err_accu,res_accu : integer32;
 
   begin
     for i in 1..maxitr loop
       loss := Estimate_Loss_for_Laurent_Polynomials(f,z.all,maxprc);
       do_Newton_Step_on_Laurent_Polynomials(f,z,loss,want,err,rco,res);
-      err_accu := abs(integer32(log10(err)));
-      res_accu := abs(integer32(log10(res)));
+      precision := natural32(-loss) + natural32(want);
+      if err = 0.0 
+       then err_accu := integer32(precision);
+       else err_accu := abs(integer32(log10(err)));
+      end if;
+      if res = 0.0
+       then res_accu := integer32(precision);
+       else res_accu := abs(integer32(log10(res)));
+      end if;
       exit when ((err_accu >= want) and (res_accu >= want));
     end loop;
   end Newton_Steps_on_Laurent_Polynomials;
@@ -1285,8 +1304,14 @@ package body Varbprec_Complex_Newton_Steps is
       put(file,"  err :"); put(file,err,3);
       put(file,"  rco :"); put(file,rco,3);
       put(file,"  res :"); put(file,res,3); new_line(file);
-      err_accu := abs(integer32(log10(err)));
-      res_accu := abs(integer32(log10(res)));
+      if err = 0.0
+       then err_accu := integer32(precision);
+       else err_accu := abs(integer32(log10(err)));
+      end if;
+      if res = 0.0
+       then res_accu := integer32(precision);
+       else res_accu := abs(integer32(log10(res)));
+      end if;
       exit when ((err_accu >= want) and (res_accu >= want));
     end loop;
   end Newton_Steps_on_Polynomial_System;
@@ -1311,8 +1336,14 @@ package body Varbprec_Complex_Newton_Steps is
       put(file,"  err :"); put(file,err,3);
       put(file,"  rco :"); put(file,rco,3);
       put(file,"  res :"); put(file,res,3); new_line(file);
-      err_accu := abs(integer32(log10(err)));
-      res_accu := abs(integer32(log10(res)));
+      if err = 0.0
+       then err_accu := integer32(precision);
+       else err_accu := abs(integer32(log10(err)));
+      end if;
+      if res = 0.0
+       then res_accu := integer32(precision);
+       else res_accu := abs(integer32(log10(res)));
+      end if;
       exit when ((err_accu >= want) and (res_accu >= want));
     end loop;
  -- exception
