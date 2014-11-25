@@ -1,3 +1,5 @@
+Mon 24 Nov 2014 : added Newton_steps function to solver.py.
+
 Fri 31 Oct 2014 : updated __init__.py, setup.py for version 0.2.4.
 
 Tue 16 Sep 2014 : forgot to clear the solutions container in the running

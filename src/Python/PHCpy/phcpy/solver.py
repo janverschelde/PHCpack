@@ -540,6 +540,26 @@ def newton_laurent_step(system, solutions, precision='d', decimals=100):
         print strsol[-1]
     return result
 
+def Newton_steps(system, solutions, accuracy=8, maxsteps=4, maxprec=256):
+    """
+    Runs a sequence of variable precision Newton steps to approximate
+    solutions accurate up to a specified number of decimal places.
+    In addition to the system and solutions, there are three parameters:
+    accuracy : number of decimal places wanted to be accurate,
+    maxsteps : maximum number of Newton steps,
+    maxprec : maximum number of decimal places in the precision used
+    to estimate the condition numbers.
+    """
+    from phcpy2c import py2c_varbprec_Newton_Laurent_steps as vmpnewt
+    dim = len(system)
+    store_multprec_solutions(dim, solutions)
+    pols = ""
+    for polynomial in system:
+        pols = pols + polynomial
+    vmpnewt(dim,accuracy,maxsteps,maxprec,len(pols),pols)
+    result = load_multprec_solutions()
+    return result
+
 def standard_deflate(system, solutions):
     """
     The deflation method augments the given system with
