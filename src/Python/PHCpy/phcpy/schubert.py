@@ -79,7 +79,7 @@ def littlewood_richardson_homotopies(ndim, kdim, brackets, \
     rflags = eval(sflags)
     flgs = []
     for k in range(len(rflags)/2):
-        flgs.append(complex(rflags[2*k],rflags[2*k+1]))
+        flgs.append(complex(rflags[2*k], rflags[2*k+1]))
     fsys = load_standard_system()
     sols = load_standard_solutions()
     return (roco, flgs, fsys, sols)
@@ -109,7 +109,7 @@ def random_complex_matrices(nbr, nbrows, nbcols):
     """
     result = []
     for i in range(nbr):
-        result.append(random_complex_matrix(nbrows,nbcols))
+        result.append(random_complex_matrix(nbrows, nbcols))
     return result
 
 def planes_to_string(planes):

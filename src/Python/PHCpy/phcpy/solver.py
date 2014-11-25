@@ -540,7 +540,7 @@ def newton_laurent_step(system, solutions, precision='d', decimals=100):
         print strsol[-1]
     return result
 
-def Newton_steps(system, solutions, accuracy=8, maxsteps=4, maxprec=256):
+def newton_steps(system, solutions, accuracy=8, maxsteps=4, maxprec=256):
     """
     Runs a sequence of variable precision Newton steps to approximate
     solutions accurate up to a specified number of decimal places.
@@ -556,7 +556,7 @@ def Newton_steps(system, solutions, accuracy=8, maxsteps=4, maxprec=256):
     pols = ""
     for polynomial in system:
         pols = pols + polynomial
-    vmpnewt(dim,accuracy,maxsteps,maxprec,len(pols),pols)
+    vmpnewt(dim, accuracy, maxsteps, maxprec, len(pols), pols)
     result = load_multprec_solutions()
     return result
 
@@ -918,64 +918,64 @@ def permute_quaddobl_system(pols):
     py2c_celcon_permute_quaddobl_system()
     return load_quaddobl_system()
 
-def standard_usolve(pol, max, eps):
+def standard_usolve(pol, mxi, eps):
     """
     Applies the method of Durand-Kerner (aka Weierstrass)
     to the polynomial in the string pol, in standard double precision
-    The maximum number of iterations is in max,
+    The maximum number of iterations is in mxi,
     the requirement on the accuracy in eps.
     """
     from phcpy2c import py2c_usolve_standard
     store_standard_system([pol])
-    nit = py2c_usolve_standard(max, eps)
+    nit = py2c_usolve_standard(mxi, eps)
     rts = load_standard_solutions()
     return (nit, rts)
 
-def dobldobl_usolve(pol, max, eps):
+def dobldobl_usolve(pol, mxi, eps):
     """
     Applies the method of Durand-Kerner (aka Weierstrass)
     to the polynomial in the string pol, in double double precision
-    The maximum number of iterations is in max,
+    The maximum number of iterations is in mxi,
     the requirement on the accuracy in eps.
     """
     from phcpy2c import py2c_usolve_dobldobl
     store_dobldobl_system([pol])
-    nit = py2c_usolve_dobldobl(max, eps)
+    nit = py2c_usolve_dobldobl(mxi, eps)
     rts = load_dobldobl_solutions()
     return (nit, rts)
 
-def quaddobl_usolve(pol, max, eps):
+def quaddobl_usolve(pol, mxi, eps):
     """
     Applies the method of Durand-Kerner (aka Weierstrass)
     to the polynomial in the string pol, in quad double precision
-    The maximum number of iterations is in max,
+    The maximum number of iterations is in mxi,
     the requirement on the accuracy in eps.
     """
     from phcpy2c import py2c_usolve_quaddobl
     store_quaddobl_system([pol])
-    nit = py2c_usolve_quaddobl(max, eps)
+    nit = py2c_usolve_quaddobl(mxi, eps)
     rts = load_quaddobl_solutions()
     return (nit, rts)
 
-def multprec_usolve(pol, max, eps, decimals):
+def multprec_usolve(pol, mxi, eps, decimals):
     """
     Applies the method of Durand-Kerner (aka Weierstrass)
     to the polynomial in the string pol, in arbitrary multiprecision,
     the number of decimal places in the precision is in decimals.
-    The maximum number of iterations is in max,
+    The maximum number of iterations is in mxi,
     the requirement on the accuracy in eps.
     """
     from phcpy2c import py2c_usolve_multprec
     store_multprec_system([pol], decimals)
-    nit = py2c_usolve_multprec(decimals, max, eps)
+    nit = py2c_usolve_multprec(decimals, mxi, eps)
     rts = load_multprec_solutions()
     return (nit, rts)
 
-def usolve(pol, max, eps, precision='d', decimals=100):
+def usolve(pol, mxi, eps, precision='d', decimals=100):
     """
     Applies the method of Durand-Kerner (aka Weierstrass)
     to the polynomial in the string pol.
-    The maximum number of iterations is in max,
+    The maximum number of iterations is in mxi,
     the requirement on the accuracy in eps.
     Four levels of precision are supported:
     d  : standard double precision (1.1e-15 or 2^(-53)),
@@ -985,13 +985,13 @@ def usolve(pol, max, eps, precision='d', decimals=100):
     in the working precision is determined by decimals.
     """
     if(precision == 'd'):
-        return standard_usolve(pol, max, eps)
+        return standard_usolve(pol, mxi, eps)
     elif(precision == 'dd'):
-        return dobldobl_usolve(pol, max, eps)
+        return dobldobl_usolve(pol, mxi, eps)
     elif(precision == 'qd'):
-        return quaddobl_usolve(pol, max, eps)
+        return quaddobl_usolve(pol, mxi, eps)
     else:
-        return multprec_usolve(pol, max, eps, decimals)
+        return multprec_usolve(pol, mxi, eps, decimals)
 
 def test_usolve():
     """
@@ -1090,7 +1090,7 @@ def test_newton():
     refining the square root of 2 with increasing precision.
     """
     pols = ['x*y - 1;', 'x^2 - 2;']
-    from phcpy.solutions import make_solution   
+    from phcpy.solutions import make_solution
     sol = make_solution(['x', 'y'], [1.414, 0.707])
     sols = [sol]
     print 'start solution :\n', sols[0]
@@ -1113,7 +1113,7 @@ def test_newton_laurent():
     refining the square root of 2 with increasing precision.
     """
     laurpols = ['x - y^-1;', 'x^2 - 2;']
-    from phcpy.solutions import make_solution   
+    from phcpy.solutions import make_solution
     sol = make_solution(['x', 'y'], [1.414, 0.707])
     sols = [sol]
     print 'start solution :\n', sols[0]

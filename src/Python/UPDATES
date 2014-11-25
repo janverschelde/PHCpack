@@ -1,3 +1,6 @@
+Tue 25 Nov 2014 : minor changes in solver.py and schubert.py 
+  for pylint warnings.
+
 Mon 24 Nov 2014 : added Newton_steps function to solver.py.
 
 Fri 31 Oct 2014 : updated __init__.py, setup.py for version 0.2.4.
