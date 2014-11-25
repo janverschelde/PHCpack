@@ -6,11 +6,14 @@ positive dimensional solution sets of polynomial systems.
 #from phcpy2c import *
 #import solver
 
-def embed(nvar, dim, pols):
+def embed(nvar, topdim, pols):
     """
     Given in pols a list of strings that represent
     polynomials in nvar variables, this function
-    returns an embedding of pols of dimension dim.
+    returns an embedding of pols of dimension topdim.
+    The topdim abbreviates the top dimension which
+    equals the expected highest dimension of a component
+    of the solution set of the system of polynomials.
     """
     from phcpy2c import py2c_syscon_clear_system
     from phcpy2c import py2c_syscon_initialize_number
@@ -28,10 +31,10 @@ def embed(nvar, dim, pols):
     for i in range(0, nequ):
         nchar = len(pols[i])
         py2c_syscon_store_polynomial(nchar, nvar, i+1, pols[i])
-    py2c_embed_system(dim)
+    py2c_embed_system(topdim)
     # py2c_syscon_write_system()
     result = []
-    for i in range(1, nbres+dim+1):
+    for i in range(1, nbres+topdim+1):
         result.append(py2c_syscon_load_polynomial(i))
     return result
 
@@ -94,7 +97,7 @@ def standard_double_cascade_step(embsys, esols):
     from phcpy2c import py2c_copy_container_to_start_system
     from phcpy2c import py2c_copy_container_to_start_solutions
     from phcpy2c import py2c_standard_cascade_homotopy
-    from phcpy2c import py2c_solve_by_homotopy_continuation
+    from phcpy2c import py2c_solve_by_standard_homotopy_continuation
     from phcpy2c import py2c_solcon_clear_solutions
     from phcpy2c import py2c_copy_target_solutions_to_container
     solver.store_standard_system(embsys)
@@ -102,7 +105,7 @@ def standard_double_cascade_step(embsys, esols):
     solver.store_standard_solutions(len(embsys), esols)
     py2c_copy_container_to_start_solutions()
     py2c_standard_cascade_homotopy()
-    py2c_solve_by_homotopy_continuation()
+    py2c_solve_by_standard_homotopy_continuation()
     py2c_solcon_clear_solutions()
     py2c_copy_target_solutions_to_container()
     return solver.load_standard_solutions()
@@ -201,7 +204,7 @@ def test_cascade():
         print sol
     print 'number of solutions :', len(sols)
     raw_input('hit enter to continue...')
-    from phcpy.phcsols import filter_zero_coordinates, filter_regular
+    from phcpy.solutions import filter_zero_coordinates, filter_regular
     sols0 = filter_zero_coordinates(sols, 'zz1', 1.0e-8, 'select')
     sols1 = filter_zero_coordinates(sols, 'zz1', 1.0e-8, 'remove')
     print 'solutions with zero slack variables :'
@@ -260,7 +263,7 @@ def monodromy_breakup(embsys, esols, dim):
     from phcpy2c import py2c_factor_set_trace_slice
     from phcpy2c import py2c_factor_store_gammas
     from phcpy2c import py2c_factor_track_paths
-    from phcpy2c import py2c_factor_store_standard_solutions
+    from phcpy2c import py2c_factor_store_solutions
     from phcpy2c import py2c_factor_restore_solutions
     from phcpy2c import py2c_factor_new_slices
     from phcpy2c import py2c_factor_swap_slices
@@ -279,13 +282,13 @@ def monodromy_breakup(embsys, esols, dim):
     py2c_factor_initialize_sampler(dim)
     nbloops = input('give the maximum number of loops : ')
     py2c_factor_initialize_monodromy(nbloops, deg, dim)
-    py2c_factor_store_standard_solutions()
+    py2c_factor_store_solutions()
     print '... initializing the grid ...'
     for i in range(1, 3):
         py2c_factor_set_trace_slice(i)
         py2c_factor_store_gammas(nvar)
         py2c_factor_track_paths()
-        py2c_factor_store_standard_solutions()
+        py2c_factor_store_solutions()
         py2c_factor_restore_solutions()
         py2c_factor_swap_slices()
     for i in range(1, nbloops+1):
@@ -296,7 +299,7 @@ def monodromy_breakup(embsys, esols, dim):
         py2c_solcon_clear_solutions()
         py2c_factor_store_gammas(nvar)
         py2c_factor_track_paths()
-        py2c_factor_store_standard_solutions()
+        py2c_factor_store_solutions()
         sprm = py2c_factor_permutation_after_loop(deg)
         perm = eval(sprm)
         print 'the permutation :', perm
