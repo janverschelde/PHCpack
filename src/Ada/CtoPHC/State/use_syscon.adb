@@ -1085,7 +1085,10 @@ function use_syscon ( job : integer32;
     Standard_Complex_Polynomials.Clear(p);
     return 0;
   exception
-    when others => return 76;
+    when others =>
+      put_line("Exception raised in parsing polynomial.  Ignored.");
+      Symbol_Table.Clear;
+      return 76;
   end Job76;
 
   function Job118 return integer32 is -- dd laur poly as str to container

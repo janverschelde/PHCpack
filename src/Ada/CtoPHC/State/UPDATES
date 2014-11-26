@@ -1,3 +1,8 @@
+Tue 25 Nov 2014 : better exception handling message in use_syscon.adb.
+
+Mon 24 Nov 2014 : added exception handlers (commented out) in use_solcon.adb
+  to chase a bug.
+
 Sun 23 Nov 2014 : added job 179 to use_c2phc for the variable precision
   Newton's method.
 
