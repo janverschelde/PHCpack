@@ -1,3 +1,6 @@
+Tue 25 Nov 2014 : added message when failure occurs in the parsing a string
+  for a polynomial in syscon.c and phcpy2c.c.
+
 Mon 24 Nov 2014 : phcpy2c has interface routine to variable precision Newton
   steps, for use in the Python interface.
 

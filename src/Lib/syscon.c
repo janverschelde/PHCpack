@@ -5,6 +5,8 @@ extern void adainit( void );
 extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
 extern void adafinal( void );
 
+#include<stdio.h>
+
 int syscon_read_system ( void )
 {
    int *a,*b,fail;
@@ -315,6 +317,8 @@ int syscon_store_polynomial ( int nc, int n, int k, char *p )
    for(i=0; i<nc; i++) b[i] = (int) p[i];
 
    fail = _ada_use_c2phc(76,a,b,c);
+
+   if(fail != 0) printf("Failed to store a polynomial.\n");
 
    return fail;
 }

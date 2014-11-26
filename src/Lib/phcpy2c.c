@@ -1844,7 +1844,9 @@ static PyObject *py2c_syscon_store_polynomial
    initialize();
    if(!PyArg_ParseTuple(args,"iiis",&nc,&n,&k,&p)) return NULL;
    fail = syscon_store_polynomial(nc,n,k,p);
-                 
+
+   if(fail != 0) printf("Failed to store %s.\n",p);
+
    return Py_BuildValue("i",fail);
 }
 
@@ -2421,6 +2423,9 @@ static PyObject *py2c_solcon_append_solution_string
 
    initialize();
    if(!PyArg_ParseTuple(args,"iis",&n,&k,&p)) return NULL;
+
+   printf("Calling solcon_append_solution_string ...\n");
+
    fail = solcon_append_solution_string(n,k,p);
                  
    return Py_BuildValue("i",fail);
