@@ -1,3 +1,6 @@
+Tue 25 Nov 2014 : improved exception handling messages when parsing a string
+  in standard_complex_poly_strings.adb.
+
 Wed 19 Nov 2014 : bug fix in put_line of multprec_complex_polynomials_io.adb.
 
 Tue 23 Sep 2014 : new routine mainsymb to show symbols in a system.

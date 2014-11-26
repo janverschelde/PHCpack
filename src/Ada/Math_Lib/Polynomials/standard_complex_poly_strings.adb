@@ -167,9 +167,9 @@ package body Standard_Complex_Poly_Strings is
     Pow(p,d);
     Skip_Spaces_and_CR(s,k);   -- skip last digit of exponent 
   exception
-    when others => put("exception raised at character ");
-                   put(integer32(k),1);
-                   put_line(" of " & s); raise;
+    when others =>
+      put("Exception raised at character "); put(integer32(k),1);
+      put_line(" of " & s & " in Parse_Power_Factor."); raise;
   end Parse_Power_Factor;
 
   procedure Parse_Polynomial
@@ -258,9 +258,9 @@ package body Standard_Complex_Poly_Strings is
     p := acc + res;
     Clear(acc); Clear(res);
   exception
-    when others => put("exception raised at character ");
-                   put(integer32(k),1);
-                   put_line(" of " & s); raise;
+    when others =>
+      put("Exception raised at character "); put(integer32(k),1);
+      put_line(" of " & s & " in Parse_Polynomial."); raise;
   end Parse_Polynomial;
 
   procedure Parse_Factor
@@ -322,9 +322,9 @@ package body Standard_Complex_Poly_Strings is
      else Parse_Factor(s,bc,p,n,d,pb); -- the case " x * y " 
     end if;
   exception
-    when others => put("exception raised at character ");
-                   put(integer32(p),1);
-                   put_line(" of " & s); raise;
+    when others =>
+      put("Exception raised at character "); put(integer32(p),1);
+      put_line(" of " & s & " in Parse_Factor."); raise;
   end Parse_Factor;
  
   procedure Parse_Term ( s : in string; bc : in out integer32;
@@ -420,9 +420,9 @@ package body Standard_Complex_Poly_Strings is
      then Mul(termp,res); Clear(res);
     end if;
   exception
-    when others => put("exception raised at character ");
-                   put(integer32(p),1);
-                   put_line(" of " & s); raise;
+    when others =>
+      put("Exception raised at character "); put(integer32(p),1);
+      put_line(" of " & s & " in Parse_Term."); raise;
   end Parse_Term;
 
 -- AUXILIARIES FOR OUTPUT :
@@ -558,7 +558,14 @@ package body Standard_Complex_Poly_Strings is
  
   begin
     for i in s'range loop
-      res(integer32(i)) := Parse(m,s(i).all);
+      declare
+      begin
+        res(integer32(i)) := Parse(m,s(i).all);
+      exception
+        when others =>
+          put("Exception raised at string "); put(integer32(i),1);
+          put_line(" in Parse to polynomial system."); raise;
+      end;
     end loop;
     return res;
   end Parse;
