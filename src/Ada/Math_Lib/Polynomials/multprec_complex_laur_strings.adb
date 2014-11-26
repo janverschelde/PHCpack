@@ -1,3 +1,6 @@
+with text_io;                            use text_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Characters_and_Numbers;             use Characters_and_Numbers;
@@ -85,11 +88,18 @@ package body Multprec_Complex_Laur_Strings is
 
   begin
     k := k + 1;                -- skip the '^'
+    if k > s'last
+     then return;
+    end if;
    -- Standard_Complex_Laur_Strings.Read_Exponent(s,k,d);
     Standard_Parse_Numbers.Parse_also_Brackets(s,k,d,nd,sign);
     Pow(p,natural32(d));
    -- skip last digit of exponent 
     Standard_Parse_Numbers.Skip_Spaces_and_CR(s,k); 
+  exception
+    when others =>
+      put("Exception raised at character "); put(integer32(k),1);
+      put_line(" of " & s & " in Parse_Power_Factor."); raise;
   end Parse_Power_Factor;
 
   procedure Parse_Polynomial
@@ -108,6 +118,9 @@ package body Multprec_Complex_Laur_Strings is
   begin
     oper := '+';
     Standard_Parse_Numbers.Skip_Spaces_and_CR(s,k);
+    if k > s'last
+     then return;
+    end if;
     if s(k) = '-'
      then oper := '-';
     end if;                         -- the first term can have no sign
@@ -179,6 +192,10 @@ package body Multprec_Complex_Laur_Strings is
     end loop;
     p := acc + res;
     Clear(acc); Clear(res);
+  exception
+    when others =>
+      put("Exception raised at character "); put(integer32(k),1);
+      put_line(" of " & s & " in Parse_Polynomial."); raise;
   end Parse_Polynomial;
 
   procedure Parse_Factor
@@ -192,10 +209,16 @@ package body Multprec_Complex_Laur_Strings is
     sign : character;
  
   begin
+    if p > s'last
+     then return;
+    end if;
     Standard_Parse_Numbers.Skip_Spaces_and_CR(s,p);
     if s(p) = '(' then 
       bc := bc + 1;
       p := p + 1;        -- get a new symbol, skip '('
+      if p > s'last
+       then return;
+      end if;
       Parse_Polynomial(s(p..s'last),size,bc,p,n,pb);
       Standard_Parse_Numbers.Skip_Spaces_and_CR(s,p);
       if s(p) = '^'
@@ -208,6 +231,9 @@ package body Multprec_Complex_Laur_Strings is
     Standard_Parse_Numbers.Skip_Spaces_and_CR(s,p);
     if s(p) = '^' then
       p := p + 1;                               -- skip the '^'
+      if p > s'last
+       then return;
+      end if;
      -- Standard_Complex_Laur_Strings.Read_Exponent(s,p,expo);
       Standard_Parse_Numbers.Parse_also_Brackets(s,p,expo,nd,sign);
       d(k) := d(k) + expo;
@@ -220,6 +246,9 @@ package body Multprec_Complex_Laur_Strings is
       p := p + 1;
       if s(p) = '*' then
         p := p + 1;                             -- the case " x ** expo "
+        if p > s'last
+         then return;
+        end if;
        -- Standard_Complex_Laur_Strings.Read_Exponent(s,p,expo);
         Standard_Parse_Numbers.Parse_also_Brackets(s,p,expo,nd,sign);
         d(k) := d(k) + expo;
@@ -243,6 +272,10 @@ package body Multprec_Complex_Laur_Strings is
      then Parse_Term(s,size,bc,p,n,pb); -- the case " x * c " or " x ** c * c "
      else Parse_Factor(s,size,bc,p,n,d,pb); -- the case " x * y "
     end if;
+  exception
+    when others =>
+      put("Exception raised at character "); put(integer32(p),1);
+      put_line(" of " & s & " in Parse_Factor."); raise;
   end Parse_Factor;
  
   procedure Parse_Term
@@ -342,6 +375,10 @@ package body Multprec_Complex_Laur_Strings is
     if Number_Of_Unknowns(res) > 0
      then Mul(termp,res); Clear(res);
     end if;
+  exception
+    when others =>
+      put("Exception raised at character "); put(integer32(p),1);
+      put_line(" of " & s & " in Parse_Term."); raise;
   end Parse_Term;
 
 -- AUXILIARIES FOR OUTPUT :

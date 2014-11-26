@@ -153,12 +153,18 @@ package body Standard_Complex_Poly_Strings is
 
   begin
     k := k + 1;                -- skip the '^'
+    if k > s'last
+     then return;
+    end if;
     if s(k) = '('
      then k := k + 1; bracket := true;
     end if;
     Read_Exponent(s,k,d);
     if bracket then
       Skip_Spaces_and_CR(s,k);
+      if k > s'last
+       then return;
+      end if;
       if s(k) = ')'
        then k := k + 1;        -- skip closing bracket
        else raise BAD_BRACKET; -- no closing bracket found
@@ -186,6 +192,9 @@ package body Standard_Complex_Poly_Strings is
   begin
     oper := '+';
     Skip_Spaces_and_CR(s,k);
+    if k > s'last
+     then return;
+    end if;
     if s(k) = '-'
      then oper := '-';
     end if;                         -- the first term can have no sign
@@ -272,10 +281,16 @@ package body Standard_Complex_Poly_Strings is
     k : integer32;
  
   begin
+    if p > s'last
+     then return;
+    end if;
     Skip_Spaces_and_CR(s,p);
     if s(p) = '(' then 
       bc := bc + 1;
       p := p + 1;        -- get a new symbol, skip '('
+      if p > s'last
+       then return;
+      end if;
       Parse_Polynomial(s(p..s'last),bc,p,n,pb);
       Skip_Spaces_and_CR(s,p);
       if s(p) = '^'
@@ -288,6 +303,9 @@ package body Standard_Complex_Poly_Strings is
     Skip_Spaces_and_CR(s,p);
     if s(p) = '^' then
       p := p + 1;                               -- skip the '^'
+      if p > s'last
+       then return;
+      end if;
       Read_Exponent(s,p,expo);
       d(k) := d(k) + expo;
       Skip_Spaces_and_CR(s,p);
@@ -297,6 +315,9 @@ package body Standard_Complex_Poly_Strings is
       end if; 
     elsif s(p) = '*' then
       p := p + 1;
+      if p > s'last
+       then return;
+      end if;
       if s(p) = '*' then
         p := p + 1;                             -- the case " x ** expo "
         Read_Exponent(s,p,expo);

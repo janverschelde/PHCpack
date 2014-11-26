@@ -82,12 +82,18 @@ package body Multprec_Complex_Poly_Strings is
 
   begin
     k := k + 1;                -- skip the '^'
+    if k > s'last
+     then return;
+    end if;
     if s(k) = '('
      then k := k + 1; bracket := true;
     end if;
     Standard_Complex_Poly_Strings.Read_Exponent(s,k,d);
     if bracket then
       Standard_Parse_Numbers.Skip_Spaces_and_CR(s,k);
+      if k > s'last
+       then return;
+      end if;
       if s(k) = ')'
        then k := k + 1;         -- skip closing bracket
        else raise BAD_BRACKET;  -- no closing bracket found
@@ -96,6 +102,10 @@ package body Multprec_Complex_Poly_Strings is
     Pow(p,d);
    -- skip last digit of exponent 
     Standard_Parse_Numbers.Skip_Spaces_and_CR(s,k);
+  exception
+    when others =>
+      put("Exception raised at character "); put(integer32(k),1);
+      put_line(" of " & s & " in Parse_Power_Factor."); raise;
   end Parse_Power_Factor;
 
   procedure Parse_Polynomial
@@ -112,6 +122,9 @@ package body Multprec_Complex_Poly_Strings is
   begin
     oper := '+';
     Standard_Parse_Numbers.Skip_Spaces_and_CR(s,k);
+    if k > s'last
+     then return;
+    end if;
     if s(k) = '-'
      then oper := '-';
     end if;                         -- the first term can have no sign
@@ -183,6 +196,10 @@ package body Multprec_Complex_Poly_Strings is
     end loop;
     p := acc + res;
     Clear(acc); Clear(res);
+  exception
+    when others =>
+      put("Exception raised at character "); put(integer32(k),1);
+      put_line(" of " & s & " in Parse_Polynomial."); raise;
   end Parse_Polynomial;
 
   procedure Parse_Factor
@@ -195,10 +212,16 @@ package body Multprec_Complex_Poly_Strings is
     k : integer32;
  
   begin
+    if p > s'last
+     then return;
+    end if;
     Standard_Parse_Numbers.Skip_Spaces_and_CR(s,p);
     if s(p) = '(' then 
       bc := bc + 1;
       p := p + 1;        -- get a new symbol, skip '('
+      if p > s'last
+       then return;
+      end if;
       Parse_Polynomial(s(p..s'last),size,bc,p,n,pb);
       Standard_Parse_Numbers.Skip_Spaces_and_CR(s,p);
       if s(p) = '^'
@@ -244,10 +267,10 @@ package body Multprec_Complex_Poly_Strings is
      then Parse_Term(s,size,bc,p,n,pb); -- the case " x * c " or " x ** c * c "
      else Parse_Factor(s,size,bc,p,n,d,pb);  -- the case " x * y " 
     end if;
---  exception 
---    when others => put_line("exception raised in Parse_Factor");
---                   put("k = "); put(k,1); new_line;
---                   put("s'last = "); put(s'last,1); new_line; raise;
+  exception
+    when others =>
+      put("Exception raised at character "); put(integer32(p),1);
+      put_line(" of " & s & " in Parse_Factor."); raise;
   end Parse_Factor;
  
   procedure Parse_Term ( s : in string; size : in natural32;
@@ -346,6 +369,10 @@ package body Multprec_Complex_Poly_Strings is
     if Number_Of_Unknowns(res) > 0
      then Mul(termp,res); Clear(res);
     end if;
+  exception
+    when others =>
+      put("Exception raised at character "); put(integer32(p),1);
+      put_line(" of " & s & " in Parse_Term."); raise;
   end Parse_Term;
 
 -- AUXILIARIES FOR OUTPUT :

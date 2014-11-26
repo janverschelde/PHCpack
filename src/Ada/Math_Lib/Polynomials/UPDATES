@@ -1,3 +1,8 @@
+Wed 26 Nov 2014 : added tests to check for the end of a string in
+  standard_complex_poly_strings.adb.  Added similar tests to the packages
+  multprec_complex_poly_strings.adb, and
+  {standard,multprec}_complex_laur_strings.adb.
+
 Tue 25 Nov 2014 : improved exception handling messages when parsing a string
   in standard_complex_poly_strings.adb.
 
