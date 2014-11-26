@@ -23,9 +23,12 @@ solutions
    solutions of phcpy.solve are lists of PHCpack solution strings
    and this module exports operations to convert the solution
    strings into Python dictionaries, e.g. for evaluation.
+interface
+   data transfer from string representations of polynomials and solutions
+   as the interface between Python and the C interface of PHCpack.
 trackers
    offers functions to track solution paths defined by a homotopy between
-   a given start system with known solutions and a target system  
+   a given start system with known solutions and a target system.
 maps
    module to work with monomial maps, defined as solution of systems
    that have exactly two monomials in every equation (binomial systems).
@@ -85,5 +88,5 @@ try:
 except:
     print 'Is the phcpy2c.so not suited for this platform?'
 
-# Definition of the version number
-__version__ = '0.2.4'
+# The version number is defined as a data attribute.
+__version__ = '0.2.5'

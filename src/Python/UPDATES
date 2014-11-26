@@ -1,5 +1,8 @@
 Wed 26 Nov 2014 : in solver.py took the failure codes into account
   when storing polynomials or solutions and computing the mixed_volume.
+  New module interface.py with routines factored out from solver,
+  which caused changes in sets.py, trackers.py, schubert.py, __init__.py,
+  and updated setup.py for version 0.2.5.
 
 Tue 25 Nov 2014 : minor changes in solver.py and schubert.py 
   for pylint warnings.  Fixed bugs in sets.py, found by pylint.

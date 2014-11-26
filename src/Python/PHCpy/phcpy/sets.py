@@ -3,9 +3,6 @@ This module exports routines of PHCpack to manipulate
 positive dimensional solution sets of polynomial systems.
 """
 
-#from phcpy2c import *
-#import solver
-
 def embed(nvar, topdim, pols):
     """
     Given in pols a list of strings that represent
@@ -47,11 +44,11 @@ def witness_set_of_hypersurface(nvar, hpol):
     The number of solutions on return should equal
     the degree of the polynomial in hpol.
     """
-    import solver
     from phcpy2c import py2c_witness_set_of_hypersurface
     py2c_witness_set_of_hypersurface(nvar, len(hpol), hpol)
-    pols = solver.load_standard_system()
-    sols = solver.load_standard_solutions()
+    from interface import load_standard_system, load_standard_solutions
+    pols = load_standard_system()
+    sols = load_standard_solutions()
     return (pols, sols)
 
 def drop_variable_from_polynomials(pols, svar):
@@ -60,13 +57,13 @@ def drop_variable_from_polynomials(pols, svar):
     from the list pols of strings that represented
     polynomials in several variables.
     """
-    import solver
     from phcpy2c import py2c_syscon_standard_drop_variable_by_name
     from phcpy2c import py2c_syscon_remove_symbol_name
-    solver.store_standard_system(pols)
+    from interface import store_standard_system, load_standard_system
+    store_standard_system(pols)
     py2c_syscon_standard_drop_variable_by_name(len(svar), svar)
     py2c_syscon_remove_symbol_name(len(svar), svar)
-    return solver.load_standard_system()
+    return load_standard_system()
 
 def drop_coordinate_from_solutions(sols, nbvar, svar):
     """
@@ -74,15 +71,15 @@ def drop_coordinate_from_solutions(sols, nbvar, svar):
     from the list sols of strings that represent solutions
     in nbvar variables.
     """
-    import solver
     from phcpy2c import py2c_syscon_clear_symbol_table
     from phcpy2c import py2c_solcon_standard_drop_coordinate_by_name
     from phcpy2c import py2c_syscon_remove_symbol_name
+    from interface import store_standard_solutions, load_standard_solutions
     py2c_syscon_clear_symbol_table()
-    solver.store_standard_solutions(nbvar, sols)
+    store_standard_solutions(nbvar, sols)
     py2c_solcon_standard_drop_coordinate_by_name(len(svar), svar)
     py2c_syscon_remove_symbol_name(len(svar), svar)
-    return solver.load_standard_solutions()
+    return load_standard_solutions()
 
 def standard_double_cascade_step(embsys, esols):
     """
@@ -93,22 +90,23 @@ def standard_double_cascade_step(embsys, esols):
     The list on return contains witness points on
     lower dimensional solution components.
     """
-    import solver
     from phcpy2c import py2c_copy_container_to_start_system
     from phcpy2c import py2c_copy_container_to_start_solutions
     from phcpy2c import py2c_standard_cascade_homotopy
     from phcpy2c import py2c_solve_by_standard_homotopy_continuation
     from phcpy2c import py2c_solcon_clear_solutions
     from phcpy2c import py2c_copy_target_solutions_to_container
-    solver.store_standard_system(embsys)
+    from interface import store_standard_system
+    from interface import store_standard_solutions, load_standard_solutions
+    store_standard_system(embsys)
     py2c_copy_container_to_start_system()
-    solver.store_standard_solutions(len(embsys), esols)
+    store_standard_solutions(len(embsys), esols)
     py2c_copy_container_to_start_solutions()
     py2c_standard_cascade_homotopy()
     py2c_solve_by_standard_homotopy_continuation()
     py2c_solcon_clear_solutions()
     py2c_copy_target_solutions_to_container()
-    return solver.load_standard_solutions()
+    return load_standard_solutions()
 
 def double_double_cascade_step(embsys, esols):
     """
@@ -119,22 +117,23 @@ def double_double_cascade_step(embsys, esols):
     The list on return contains witness points on
     lower dimensional solution components.
     """
-    import solver
     from phcpy2c import py2c_copy_dobldobl_container_to_start_system
     from phcpy2c import py2c_copy_dobldobl_container_to_start_solutions
     from phcpy2c import py2c_dobldobl_cascade_homotopy
     from phcpy2c import py2c_solve_by_dobldobl_homotopy_continuation
     from phcpy2c import py2c_solcon_clear_dobldobl_solutions
     from phcpy2c import py2c_copy_dobldobl_target_solutions_to_container
-    solver.store_dobldobl_system(embsys)
+    from interface import store_dobldobl_system
+    from interface import store_dobldobl_solutions, load_dobldobl_solutions
+    store_dobldobl_system(embsys)
     py2c_copy_dobldobl_container_to_start_system()
-    solver.store_dobldobl_solutions(len(embsys), esols)
+    store_dobldobl_solutions(len(embsys), esols)
     py2c_copy_dobldobl_container_to_start_solutions()
     py2c_dobldobl_cascade_homotopy()
     py2c_solve_by_dobldobl_homotopy_continuation()
     py2c_solcon_clear_dobldobl_solutions()
     py2c_copy_dobldobl_target_solutions_to_container()
-    return solver.load_dobldobl_solutions()
+    return load_dobldobl_solutions()
 
 def quad_double_cascade_step(embsys, esols):
     """
@@ -145,22 +144,23 @@ def quad_double_cascade_step(embsys, esols):
     The list on return contains witness points on
     lower dimensional solution components.
     """
-    import solver
     from phcpy2c import py2c_copy_quaddobl_container_to_start_system
     from phcpy2c import py2c_copy_quaddobl_container_to_start_solutions
     from phcpy2c import py2c_quaddobl_cascade_homotopy
     from phcpy2c import py2c_solve_by_quaddobl_homotopy_continuation
     from phcpy2c import py2c_solcon_clear_quaddobl_solutions
     from phcpy2c import py2c_copy_quaddobl_target_solutions_to_container
-    solver.store_quaddobl_system(embsys)
+    from interface import store_quaddobl_system
+    from interface import store_quaddobl_solutions, load_quaddobl_solutions
+    store_quaddobl_system(embsys)
     py2c_copy_quaddobl_container_to_start_system()
-    solver.store_quaddobl_solutions(len(embsys), esols)
+    store_quaddobl_solutions(len(embsys), esols)
     py2c_copy_quaddobl_container_to_start_solutions()
     py2c_quaddobl_cascade_homotopy()
     py2c_solve_by_quaddobl_homotopy_continuation()
     py2c_solcon_clear_quaddobl_solutions()
     py2c_copy_quaddobl_target_solutions_to_container()
-    return solver.load_quaddobl_solutions()
+    return load_quaddobl_solutions()
 
 def cascade_step(embsys, esols, precision='d'):
     """
@@ -190,7 +190,7 @@ def test_cascade():
     solution set x = 1.  In the cascade step we compute
     the three witness points on the twisted cubic.
     """
-    import solver
+    from solver import solve
     pols = ['(x - 1)*(y-x^2);', \
             '(x - 1)*(z-x^3);', \
             '(x^2 - 1)*(y-x^2);' ]
@@ -199,12 +199,12 @@ def test_cascade():
     print 'the embedded system :'
     print embpols
     raw_input('hit enter to continue...')
-    sols = solver.solve(embpols, silent=True)
+    sols = solve(embpols, silent=True)
     for sol in sols:
         print sol
     print 'number of solutions :', len(sols)
     raw_input('hit enter to continue...')
-    from phcpy.solutions import filter_zero_coordinates, filter_regular
+    from solutions import filter_zero_coordinates, filter_regular
     sols0 = filter_zero_coordinates(sols, 'zz1', 1.0e-8, 'select')
     sols1 = filter_zero_coordinates(sols, 'zz1', 1.0e-8, 'remove')
     print 'solutions with zero slack variables :'
@@ -255,7 +255,6 @@ def monodromy_breakup(embsys, esols, dim):
     the d-dimensional algebraic set represented by the
     embedded system e and its solutions esols.
     """
-    import solver
     from phcpy2c import py2c_factor_set_to_mute
     from phcpy2c import py2c_factor_assign_labels
     from phcpy2c import py2c_factor_initialize_monodromy
@@ -271,12 +270,13 @@ def monodromy_breakup(embsys, esols, dim):
     from phcpy2c import py2c_factor_number_of_components
     from phcpy2c import py2c_factor_update_decomposition
     from phcpy2c import py2c_solcon_clear_solutions
+    from interface import store_standard_solutions
     print '... applying monodromy factorization ...'
     py2c_factor_set_to_mute()
     deg = len(esols)
     nvar = len(embsys)
     print 'dim =', dim
-    solver.store_standard_solutions(nvar, esols)
+    store_standard_solutions(nvar, esols)
     py2c_factor_assign_labels(nvar, deg)
     # py2c_solcon_write_solutions()
     py2c_factor_initialize_sampler(dim)
@@ -317,13 +317,13 @@ def test_monodromy():
     Runs a test on applying monodromy loops
     to factor a curve into irreducible components.
     """
-    import solver
+    from solver import solve
     pols = ['(x^2 - y)*(x-y);', 'x^3 - z;']
     embsys = embed(3, 1, pols)
     # patch : make sure zz1 is last symbol!
     embsys[0] = 'x - x + y - y + z - z + ' + embsys[0]
     print embsys
-    sols = solver.solve(embsys, silent=True)
+    sols = solve(embsys, silent=True)
     # for sol in sols: print sol
     print 'the degree is', len(sols)
     monodromy_breakup(embsys, sols, 1)

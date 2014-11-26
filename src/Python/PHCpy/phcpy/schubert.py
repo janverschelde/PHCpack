@@ -66,7 +66,7 @@ def littlewood_richardson_homotopies(ndim, kdim, brackets, \
     """
     from phcpy2c import py2c_solcon_clear_solutions
     from phcpy2c import py2c_schubert_littlewood_richardson_homotopies as lrhom
-    from solver import load_standard_solutions, load_standard_system
+    from interface import load_standard_solutions, load_standard_system
     py2c_solcon_clear_solutions()
     nbc = len(brackets)
     cds = ''
@@ -331,10 +331,15 @@ def test_pieri():
     from solver import newton_step
     print 'verification with one Newton step :'
     newton_step(system, sols)
-    # cheater(m,p,qdeg,system,sols)
+    # cheater(m, p, qdeg, system, sols)
     if(qdeg == 0):
         osculating_input(mdim, pdim, qdeg, system, sols)
 
 if __name__ == "__main__":
-    test_lrhom()
+    """
+    Tests the Pieri homotopies and the Littlewood-Richardson homotopies.
+    """
+    print "\nTesting the Pieri homotopies ...\n"
     test_pieri()
+    print "\nTesting the Littlewood-Richardson homotopies ..."
+    test_lrhom()

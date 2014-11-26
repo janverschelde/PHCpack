@@ -59,8 +59,8 @@ def standard_double_track(target, start, sols, gamma=0, tasks=0):
     from phcpy2c import py2c_solve_by_standard_homotopy_continuation
     from phcpy2c import py2c_solcon_clear_solutions
     from phcpy2c import py2c_copy_target_solutions_to_container
-    from solver import store_standard_system
-    from solver import store_standard_solutions, load_standard_solutions
+    from interface import store_standard_system
+    from interface import store_standard_solutions, load_standard_solutions
     store_standard_system(target)
     py2c_copy_container_to_target_system()
     store_standard_system(start)
@@ -101,8 +101,8 @@ def double_double_track(target, start, sols, gamma=0, tasks=0):
     from phcpy2c import py2c_solve_by_dobldobl_homotopy_continuation
     from phcpy2c import py2c_solcon_clear_dobldobl_solutions
     from phcpy2c import py2c_copy_dobldobl_target_solutions_to_container
-    from solver import store_dobldobl_system
-    from solver import store_dobldobl_solutions, load_dobldobl_solutions
+    from interface import store_dobldobl_system
+    from interface import store_dobldobl_solutions, load_dobldobl_solutions
     store_dobldobl_system(target)
     py2c_copy_dobldobl_container_to_target_system()
     store_dobldobl_system(start)
@@ -143,8 +143,8 @@ def quad_double_track(target, start, sols, gamma=0, tasks=0):
     from phcpy2c import py2c_solve_by_quaddobl_homotopy_continuation
     from phcpy2c import py2c_solcon_clear_quaddobl_solutions
     from phcpy2c import py2c_copy_quaddobl_target_solutions_to_container
-    from solver import store_quaddobl_system
-    from solver import store_quaddobl_solutions, load_quaddobl_solutions
+    from interface import store_quaddobl_system
+    from interface import store_quaddobl_solutions, load_quaddobl_solutions
     store_quaddobl_system(target)
     py2c_copy_quaddobl_container_to_target_system()
     store_quaddobl_system(start)
@@ -187,8 +187,8 @@ def multiprecision_track(target, start, sols, gamma=0, decimals=80):
     from phcpy2c import py2c_solve_by_multprec_homotopy_continuation
     from phcpy2c import py2c_solcon_clear_multprec_solutions
     from phcpy2c import py2c_copy_multprec_target_solutions_to_container
-    from solver import store_multprec_system
-    from solver import store_multprec_solutions, load_multprec_solutions
+    from interface import store_multprec_system
+    from interface import store_multprec_solutions, load_multprec_solutions
     store_multprec_system(target, decimals)
     py2c_copy_multprec_container_to_target_system()
     store_multprec_system(start, decimals)
@@ -250,7 +250,7 @@ def initialize_standard_tracker(target, start, fixedGamma=True):
     from phcpy2c import py2c_copy_container_to_target_system
     from phcpy2c import py2c_copy_container_to_start_system
     from phcpy2c import py2c_initialize_standard_homotopy
-    from solver import store_standard_system
+    from interface import store_standard_system
     store_standard_system(target)
     py2c_copy_container_to_target_system()
     store_standard_system(start)
@@ -270,7 +270,7 @@ def initialize_dobldobl_tracker(target, start, fixedGamma=True):
     from phcpy2c import py2c_copy_dobldobl_container_to_target_system
     from phcpy2c import py2c_copy_dobldobl_container_to_start_system
     from phcpy2c import py2c_initialize_dobldobl_homotopy
-    from solver import store_dobldobl_system
+    from interface import store_dobldobl_system
     store_dobldobl_system(target)
     py2c_copy_dobldobl_container_to_target_system()
     store_dobldobl_system(start)
@@ -290,7 +290,7 @@ def initialize_quaddobl_tracker(target, start, fixedGamma=True):
     from phcpy2c import py2c_copy_quaddobl_container_to_target_system
     from phcpy2c import py2c_copy_quaddobl_container_to_start_system
     from phcpy2c import py2c_initialize_quaddobl_homotopy
-    from solver import store_quaddobl_system
+    from interface import store_quaddobl_system
     store_quaddobl_system(target)
     py2c_copy_quaddobl_container_to_target_system()
     store_quaddobl_system(start)
@@ -312,7 +312,7 @@ def initialize_multprec_tracker(target, start, fixedGamma=True, decimals=100):
     from phcpy2c import py2c_copy_multprec_container_to_target_system
     from phcpy2c import py2c_copy_multprec_container_to_start_system
     from phcpy2c import py2c_initialize_multprec_homotopy
-    from solver import store_multprec_system
+    from interface import store_multprec_system
     store_multprec_system(target, decimals)
     py2c_copy_multprec_container_to_target_system()
     store_multprec_system(start, decimals)
@@ -330,7 +330,7 @@ def initialize_standard_solution(nvar, sol):
     solution sol and sol is a PHCpack solution string.
     """
     from phcpy2c import py2c_initialize_standard_solution
-    from solver import store_standard_solutions
+    from interface import store_standard_solutions
     store_standard_solutions(nvar, [sol])
     py2c_initialize_standard_solution(1)
 
@@ -342,7 +342,7 @@ def initialize_dobldobl_solution(nvar, sol):
     solution sol and sol is a PHCpack solution string.
     """
     from phcpy2c import py2c_initialize_dobldobl_solution
-    from solver import store_dobldobl_solutions
+    from interface import store_dobldobl_solutions
     store_dobldobl_solutions(nvar, [sol])
     py2c_initialize_dobldobl_solution(1)
 
@@ -354,7 +354,7 @@ def initialize_quaddobl_solution(nvar, sol):
     solution sol and sol is a PHCpack solution string.
     """
     from phcpy2c import py2c_initialize_quaddobl_solution
-    from solver import store_quaddobl_solutions
+    from interface import store_quaddobl_solutions
     store_quaddobl_solutions(nvar, [sol])
     py2c_initialize_quaddobl_solution(1)
 
@@ -366,7 +366,7 @@ def initialize_multprec_solution(nvar, sol):
     solution sol and sol is a PHCpack solution string.
     """
     from phcpy2c import py2c_initialize_multprec_solution
-    from solver import store_multprec_solutions
+    from interface import store_multprec_solutions
     store_multprec_solutions(nvar, [sol])
     py2c_initialize_multprec_solution(1)
 
