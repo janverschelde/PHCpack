@@ -1859,7 +1859,9 @@ static PyObject *py2c_syscon_store_dobldobl_polynomial
    initialize();
    if(!PyArg_ParseTuple(args,"iiis",&nc,&n,&k,&p)) return NULL;
    fail = syscon_store_dobldobl_polynomial(nc,n,k,p);
-                 
+           
+   if(fail != 0) printf("Failed to store %s.\n",p);
+
    return Py_BuildValue("i",fail);
 }
 
@@ -1872,6 +1874,8 @@ static PyObject *py2c_syscon_store_quaddobl_polynomial
    initialize();
    if(!PyArg_ParseTuple(args,"iiis",&nc,&n,&k,&p)) return NULL;
    fail = syscon_store_quaddobl_polynomial(nc,n,k,p);
+
+   if(fail != 0) printf("Failed to store %s.\n",p);
                  
    return Py_BuildValue("i",fail);
 }
@@ -1885,6 +1889,8 @@ static PyObject *py2c_syscon_store_multprec_polynomial
    initialize();
    if(!PyArg_ParseTuple(args,"iiiis",&nc,&n,&k,&dp,&p)) return NULL;
    fail = syscon_store_multprec_polynomial(nc,n,k,dp,p);
+
+   if(fail != 0) printf("Failed to store %s.\n",p);
                  
    return Py_BuildValue("i",fail);
 }
@@ -2424,10 +2430,12 @@ static PyObject *py2c_solcon_append_solution_string
    initialize();
    if(!PyArg_ParseTuple(args,"iis",&n,&k,&p)) return NULL;
 
-   printf("Calling solcon_append_solution_string ...\n");
+   /* printf("Calling solcon_append_solution_string ...\n"); */
 
    fail = solcon_append_solution_string(n,k,p);
-                 
+
+   if(fail != 0) printf("Failed to append solution %s.\n",p);
+
    return Py_BuildValue("i",fail);
 }
 
@@ -2441,6 +2449,8 @@ static PyObject *py2c_solcon_append_dobldobl_solution_string
    initialize();
    if(!PyArg_ParseTuple(args,"iis",&n,&k,&p)) return NULL;
    fail = solcon_append_dobldobl_solution_string(n,k,p);
+
+   if(fail != 0) printf("Failed to append solution %s.\n",p);
                  
    return Py_BuildValue("i",fail);
 }
@@ -2455,6 +2465,8 @@ static PyObject *py2c_solcon_append_quaddobl_solution_string
    initialize();
    if(!PyArg_ParseTuple(args,"iis",&n,&k,&p)) return NULL;
    fail = solcon_append_quaddobl_solution_string(n,k,p);
+
+   if(fail != 0) printf("Failed to append solution %s.\n",p);
                  
    return Py_BuildValue("i",fail);
 }
@@ -2469,6 +2481,8 @@ static PyObject *py2c_solcon_append_multprec_solution_string
    initialize();
    if(!PyArg_ParseTuple(args,"iis",&n,&k,&p)) return NULL;
    fail = solcon_append_multprec_solution_string(n,k,p);
+
+   if(fail != 0) printf("Failed to append solution %s.\n",p);
                  
    return Py_BuildValue("i",fail);
 }
