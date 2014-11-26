@@ -776,6 +776,7 @@ def mixed_volume(pols, stable=False):
     nonzero, the stable mixed volume counts all affine roots.
     Note that the stable mixed volume does not apply to systems
     with negative exponents.
+    Incorrectly parsed strings will result in a negative value on return.
     """
     from phcpy2c import py2c_celcon_clear_container
     from phcpy2c import py2c_syscon_clear_Laurent_system
@@ -784,7 +785,7 @@ def mixed_volume(pols, stable=False):
     from phcpy2c import py2c_mixed_volume
     py2c_celcon_clear_container()
     if stable:
-        store_standard_system(pols)
+        fail = store_standard_system(pols)
     else:
         py2c_syscon_clear_Laurent_system()
         dim = len(pols)
@@ -792,8 +793,13 @@ def mixed_volume(pols, stable=False):
         for ind in range(0, dim):
             lpol = pols[ind]
             nchar = len(lpol)
-            py2c_syscon_store_Laurential(nchar, dim, ind+1, lpol)
-    return py2c_mixed_volume(stable)
+            fail = py2c_syscon_store_Laurential(nchar, dim, ind+1, lpol)
+            if(fail != 0):
+                break
+    if(fail != 0):
+        return -fail  # a negative number is clearly wrong
+    else:
+        return py2c_mixed_volume(stable)
 
 def standard_random_coefficient_system(silent=False):
     """
