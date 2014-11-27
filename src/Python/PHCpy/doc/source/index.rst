@@ -366,6 +366,18 @@ at the command prompt.
 .. automodule:: solutions
    :members:
 
+interface to PHCpack
+--------------------
+
+The module interface collects the functions that parse the string
+representations for polynomials and solutions to pass their data 
+through the C interface of PHCpack.  The reverse operations return
+the string representations for polynomials and solutions as stored
+internally in PHCpack.
+
+.. automodule:: interface
+   :members:
+
 the path trackers
 -----------------
 
