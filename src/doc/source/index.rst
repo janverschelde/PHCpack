@@ -673,6 +673,10 @@ and/or at infinity.  With phc -v one can do the following tasks:
 3. For isolated singular solutions, the deflation method may recondition
    the solutions and restore quadratic convergence.
 
+4. Based on condition number estimates the working precision is set
+   to meet the wanted number of accurate decimal places in the solutions
+   when applying Newton's method.
+
 phc -w : Witness Set Intersection using Diagonal Homotopies    
 -----------------------------------------------------------
 
