@@ -1,6 +1,9 @@
-with text_io,integer_io;                use text_io,integer_io;
+with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
 with Timing_Package;                    use Timing_Package;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Random_Numbers;           use Standard_Random_Numbers;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
@@ -20,7 +23,7 @@ procedure ts_mtcont is
 
     p,q : Link_to_Poly_Sys;
     s : Solution_List;
-    n : natural;
+    n : integer32 := 0;
     file : file_type;
     timer : Timing_Widget;
     gamma : constant Complex_Number := Random1;
