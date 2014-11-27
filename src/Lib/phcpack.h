@@ -161,7 +161,7 @@ char *read_polynomials_from_file
  *            and the number of semicolons;
  *   nv       number of variables in the system, if different from nq,
  *            then this must be the second number on the first line on file;
- *   fail     if 0, then no failure, if 1 then something went wrong.
+ *   fail     if 0, then no failure, if 1 then something went wrong. */
 
 int varbprec_Newton_Laurent_step
  ( int dim, int wanted, int maxitr, int maxprc, int ns, char *s );
