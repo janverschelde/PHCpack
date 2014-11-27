@@ -1,3 +1,7 @@
+Thu 27 Nov 2014 : fixed bug in documentation regarding refactoring of the
+  solver module to the interface module, moving an example of a session
+  to the documentation section on the interface module.
+
 Wed 26 Nov 2014 : in solver.py took the failure codes into account
   when storing polynomials or solutions and computing the mixed_volume.
   New module interface.py with routines factored out from solver,
