@@ -1,3 +1,6 @@
+Fri 28 Nov 2014 : fixed bug in writing standard complex numbers to string
+  with zero imaginary part, replacing im > 0 with im >= 0.
+
 Sat 22 Nov 2014 : fixed bug in writing complex numbers to string
   in case the exponent takes 3 decimal places, debugged with the complex
   number 6.70143755976065E-04  -9.28677255416848E-100, debugged with

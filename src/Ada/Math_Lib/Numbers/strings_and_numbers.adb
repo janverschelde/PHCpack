@@ -239,7 +239,7 @@ package body Strings_and_Numbers is
     im : constant double_float := IMAG_PART(c);
 
   begin
-    if im > 0.0
+    if im >= 0.0
      then return "(" & Convert(re) & " + " & Convert(im) & "*i)";
      else return "(" & Convert(re) & Convert(im) & "*i)";
     end if;
@@ -254,7 +254,7 @@ package body Strings_and_Numbers is
     im : Floating_Number := IMAG_PART(c);
 
   begin
-    if im > 0.0 then
+    if im > 0.0 or Equal(im,0.0) then
       declare
         res : constant string 
             := "(" & Convert(re) & " + " & Convert(im) & "*i)";
