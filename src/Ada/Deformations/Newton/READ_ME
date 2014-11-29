@@ -107,6 +107,7 @@ multprec_probe_kernel            : multiprecision version of probe_kernel
 ts_muldef                        : test on higher-order deflation
 ------------------------------------------------------------------------------
 varbprec_complex_newton_steps    : variable precision Newton steps
+random_conditioned_root_problems : generate and test random root problems
 verification_of_solutions        : run sequences of varbprec Newton steps
 ts_vmpnewt                       : test on variable precision Newton
 ------------------------------------------------------------------------------

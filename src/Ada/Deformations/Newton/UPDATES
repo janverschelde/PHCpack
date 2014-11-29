@@ -1,3 +1,6 @@
+Sat 29 Nov 2014 : new package random_conditioned_root_problems, refactored
+  from ts_vmpnewt.adb.
+
 Mon 24 Nov 2014 : guarded log10(0.0) in varbprec_complex_newton_steps.adb.
 
 Sat 22 Nov 2014 : changes in varbprec_complex_newton_steps.adb for compiler
