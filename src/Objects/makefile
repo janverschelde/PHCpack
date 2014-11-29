@@ -456,7 +456,7 @@ ts_ptlists:
 # Test programs for the Deformations/Homotopy library :
 
 test_homotopy: ts_quad ts_drivscal ts_scal ts_drivred ts_homotopy \
-               ts_homline ts_linsol ts_qdhom ts_poldrop ts_evalhomt
+               ts_homline ts_linsol ts_qdhom ts_poldrop ts_evalhomt ts_vmphom
 
 ts_drivscal:
 	make -f $(MAKEFILE) ts_drivscal
@@ -484,6 +484,9 @@ ts_poldrop:
 
 ts_evalhomt:
 	make -f $(MAKEFILE) ts_evalhomt
+
+ts_vmphom:
+	make -f $(MAKEFILE) ts_vmphom
 
 # Test programs for the Deformations/Newton library :
 

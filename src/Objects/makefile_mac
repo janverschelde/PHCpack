@@ -39,7 +39,7 @@ GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 GNATOPT95FLAGS=-gnat95 -gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
 # GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
-# GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
+GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
 # GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
 COFLAGS = -O2
@@ -524,6 +524,9 @@ ts_poldrop:
 ts_evalhomt:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_evalhomt.adb \
               -o $(BIN)/ts_evalhomt
+
+ts_vmphom:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_vmphom.adb -o $(BIN)/ts_vmphom
 
 # Test programs for the Deformations/Newton library :
 

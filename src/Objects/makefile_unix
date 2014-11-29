@@ -513,6 +513,9 @@ ts_evalhomt:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_evalhomt.adb \
               -o $(BIN)/ts_evalhomt
 
+ts_vmphom:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_vmphom.adb -o $(BIN)/ts_vmphom
+
 # Test programs for the Deformations/Newton library :
 
 ts_mreseva:
