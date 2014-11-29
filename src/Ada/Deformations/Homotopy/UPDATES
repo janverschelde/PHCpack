@@ -1,3 +1,6 @@
+Fri 28 Nov 2014 : new ts_vmphom.adb to develop homotopies with variable
+  precision Newton's method.
+
 Wed 13 Aug 2014 : upgraded projective_transformations with operations for
   double double and quad double precision.
 

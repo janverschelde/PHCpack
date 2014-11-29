@@ -50,3 +50,5 @@ ts_linsol                          : test on the linear poly solvers
 polynomial_drops                   : drop a variable from polynomials
 ts_poldrop                         : interactive test on dropping
 ------------------------------------------------------------------------------
+ts_vmphom                          : test variable precision homotopies
+------------------------------------------------------------------------------
