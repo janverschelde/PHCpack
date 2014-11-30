@@ -85,4 +85,19 @@ package body DoblDobl_Complex_Laur_Strings is
     end if;
   end Write;
 
+  function Write ( p : Laur_Sys ) return Array_of_Strings is
+
+    res : Array_of_Strings(integer(p'first)..integer(p'last));
+
+  begin
+    for i in res'range loop
+      declare
+        s : constant string := Write(p(integer32(i)));
+      begin
+        res(i) := new string'(s);
+      end;
+    end loop;
+    return res;
+  end Write;
+
 end DoblDobl_Complex_Laur_Strings;

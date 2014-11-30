@@ -44,4 +44,9 @@ package DoblDobl_Complex_Laur_Strings is
   -- DESCRIPTION :
   --   This function writes the polynomial system to a string.
 
+  function Write ( p : Laur_Sys ) return Array_of_Strings;
+
+  -- DESCRIPTION :
+  --   Writes every polynomial in p to a separate string.
+
 end DoblDobl_Complex_Laur_Strings;

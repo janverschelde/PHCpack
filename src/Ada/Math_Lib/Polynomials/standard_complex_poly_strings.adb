@@ -629,4 +629,19 @@ package body Standard_Complex_Poly_Strings is
     return Write_Terms(1,"") & ";";
   end Write;
 
+  function Write ( p : Poly_Sys ) return Array_of_Strings is
+
+    res : Array_of_Strings(integer(p'first)..integer(p'last));
+
+  begin
+    for i in res'range loop
+      declare
+        s : constant string := Write(p(integer32(i)));
+      begin
+        res(i) := new string'(s);
+      end;
+    end loop;
+    return res;
+  end Write;
+
 end Standard_Complex_Poly_Strings;

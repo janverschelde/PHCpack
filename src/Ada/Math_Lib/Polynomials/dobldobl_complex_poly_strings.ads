@@ -43,4 +43,9 @@ package DoblDobl_Complex_Poly_Strings is
   -- DESCRIPTION :
   --   This function writes the polynomial system to a string.
 
+  function Write ( p : Poly_Sys ) return Array_of_Strings;
+
+  -- DESCRIPTION :
+  --   Writes every polynomial in p to a separate string.
+
 end DoblDobl_Complex_Poly_Strings;

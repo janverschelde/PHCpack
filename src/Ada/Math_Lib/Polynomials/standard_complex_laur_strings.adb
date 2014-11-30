@@ -1,5 +1,4 @@
 with text_io;                            use text_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
@@ -562,6 +561,21 @@ package body Standard_Complex_Laur_Strings is
   begin
     Store_Terms(p);
     return Write_Terms(1,"") & ";";
+  end Write;
+
+  function Write ( p : Laur_Sys ) return Array_of_Strings is
+
+    res : Array_of_Strings(integer(p'first)..integer(p'last));
+
+  begin
+    for i in res'range loop
+      declare
+        s : constant string := Write(p(integer32(i)));
+      begin
+        res(i) := new string'(s);
+      end;
+    end loop;
+    return res;
   end Write;
 
 end Standard_Complex_Laur_Strings;

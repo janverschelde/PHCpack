@@ -1,3 +1,6 @@
+Sun 30 Nov 2014 : in all *_complex_{laur,poly}_strings packages added function
+  to write each polynomial in a system to a separate string.
+
 Wed 26 Nov 2014 : added tests to check for the end of a string in
   standard_complex_poly_strings.adb.  Added similar tests to the packages
   multprec_complex_poly_strings.adb, and
