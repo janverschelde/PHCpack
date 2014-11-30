@@ -4,46 +4,26 @@ with String_Splitters;                   use String_Splitters;
 with Strings_and_Numbers;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Random_Numbers;            use Standard_Random_Numbers;
 with Symbol_Table;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Poly_Strings;
 with Multprec_Complex_Solutions;
 with Multprec_Complex_Solutions_io;      use Multprec_Complex_Solutions_io;
 with Multprec_System_and_Solutions_io;
 with Verification_of_Solutions;          use Verification_of_Solutions;
+with Random_Conditioned_Root_Problems;   use Random_Conditioned_Root_Problems;
+with Random_Conditioned_Homotopies;      use Random_Conditioned_Homotopies;
 
 procedure ts_vmphom is
 
 -- DESCRIPTION :
 --   Development of variable precision homotopy evaluation.
-
-  function Strip_Semicolon ( f : string ) return string is
-
-  -- DESCRIPTION :
-  --   Removes the semicolon from the last position in the string f.
-
-  begin
-    if f(f'last) = ';'
-     then return f(f'first..f'last-1);
-     else return f;
-    end if;
-  end Strip_Semicolon;
-
-  function Strip_First_Plus ( f : string ) return string is
-
-  -- DESCRIPTION :
-  --   Removes the plus sign at the first position of the string f.
-
-  begin
-    if f(f'first) = '+'
-     then return (" " & f(f'first+1..f'last));
-     else return f;
-    end if;
-  end Strip_First_Plus;
 
   function Write_Homotopy ( fcs,gcs,f,g : string ) return string is
 
@@ -142,12 +122,13 @@ procedure ts_vmphom is
     end;
   end Make_Homotopy;
 
-  procedure Main is
+  procedure Test_Homotopy_to_String is
 
   -- DESCRIPTION :
-  --   Prompts the user for a target and start system.
+  --   Prompts the user for a target and start system
+  --   and writes the string representation of the standard homotopy.
 
-    sf_file,sg_file : file_type;
+    sf_file : file_type;
     sf,sg : Link_to_Array_of_strings;
     nq,nv,len : natural32;
     sols : Multprec_Complex_Solutions.Solution_List;
@@ -165,6 +146,79 @@ procedure ts_vmphom is
     len := Multprec_Complex_Solutions.Length_Of(sols);
     put("Read list of "); put(len,1); put_line(" solutions from file.");
     Make_Homotopy(nv,sf.all,sg.all,sols);
+  end Test_Homotopy_to_String;
+
+  procedure Test_Random_Conditioned_Homotopy ( f : in Array_of_Strings ) is
+
+  -- DESCRIPTION :
+  --   Puts the system f at the middle of a homotopy.
+
+    hom : Array_of_Strings(f'range) := Conditioned_Homotopy(f);
+    dim : constant integer32 := integer32(f'last);
+    nvr : constant natural32 := natural32(dim);
+    htp,fzero,fmid,fone : Standard_Complex_Poly_Systems.Poly_Sys(1..dim);
+    t : Complex_Number;
+
+  begin
+    put_line("The polynomials in the conditioned homotopy :");
+    for i in hom'range loop
+      put_line(hom(i).all);
+    end loop;
+    Symbol_Table.Init(nvr+1);
+    htp := Standard_Complex_Poly_Strings.Parse(nvr+1,hom);
+    put_line("The homotopy parsed into a polynomial system :");
+    put_line(htp);
+    Symbol_Table.Clear; -- wipe out symbol table for confusion about t
+    t := Create(0.0);
+    fzero := Standard_Complex_Poly_SysFun.Eval(htp,t,1); -- t is first !
+    put_line("The start system :"); put_line(fzero);
+    t := Create(1.0);
+    fone := Standard_Complex_Poly_SysFun.Eval(htp,t,1);  -- t is first !
+    put_line("The target system :"); put_line(fone);
+    t := Create(0.5);
+    fmid := Standard_Complex_Poly_SysFun.Eval(htp,t,1);  -- t is first !
+    put_line("The system in the middle :"); put_line(fmid);
+    String_Splitters.Clear(hom);
+    Standard_Complex_Poly_Systems.Clear(htp);
+    Standard_Complex_Poly_Systems.Clear(fzero);
+    Standard_Complex_Poly_Systems.Clear(fone);
+    Standard_Complex_Poly_Systems.Clear(fmid);
+  end Test_Random_Conditioned_Homotopy;
+
+  procedure Test_Random_Conditioned_Homotopy is
+
+  -- DESCRIPTION :
+  --   Sets up a random conditioned root problem and puts this problem
+  --   at the middle of a homotopy.
+
+    fhalf : Link_to_Array_of_Strings;
+    froot : Link_to_String;
+
+  begin
+    Random_Conditioned_Root_Problem(fhalf,froot);
+    Test_Random_Conditioned_Homotopy(fhalf.all);
+    String_Splitters.Clear(fhalf);
+    String_Splitters.Clear(froot);
+  end Test_Random_Conditioned_Homotopy;
+
+  procedure Main is
+
+  -- DESCRIPTION :
+  --   Presents the menu to test random conditioned homotopies.
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU to test random conditioned homotopies :");
+    put_line("  1. write a standard linear homotopy to a string;");
+    put_line("  2. place a random conditioned system in the middle.");
+    put("Type 1 or 2 to make your choice : ");
+    Ask_Alternative(ans,"12");
+    if ans = '1'
+     then Test_Homotopy_to_String;
+     else Test_Random_Conditioned_Homotopy;
+    end if;
   end Main;
 
 begin

@@ -1,3 +1,6 @@
+Sun 30 Nov 2014 : new package random_conditioned_homotopies for testing
+  variable precision path trackers, tested by ts_vmphom.
+
 Fri 28 Nov 2014 : new ts_vmphom.adb to develop homotopies with variable
   precision Newton's method.
 
