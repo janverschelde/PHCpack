@@ -49,7 +49,6 @@ package Random_Conditioned_Root_Problems is
 
   procedure Multprec_Test
               ( p : in Multprec_Complex_Poly_Systems.Poly_Sys;
-                size : in natural32;
                 z : in out Multprec_Complex_Vectors.Vector );
 
   -- DESCRIPTION :

@@ -148,7 +148,6 @@ package body Random_Conditioned_Root_Problems is
 
   procedure Multprec_Test
               ( p : in Multprec_Complex_Poly_Systems.Poly_Sys;
-                size : in natural32;
                 z : in out Multprec_Complex_Vectors.Vector ) is
 
     use Multprec_Complex_Jaco_Matrices;
@@ -355,7 +354,7 @@ package body Random_Conditioned_Root_Problems is
     if precision + loss >= want then
       put("Current multiprecision suffices to meet "); put(want,1);
       put_line(" accurate decimal places.");
-      Multprec_Test(p,sz,x);
+      Multprec_Test(p,x);
     else
       put("Current multiprecision does not suffice for "); put(want,1);
       put_line(" accurate decimal places.");
@@ -424,7 +423,7 @@ package body Random_Conditioned_Root_Problems is
 
   procedure Random_Conditioned_Root_Problem ( preclvl : in character ) is
 
-    n,d,m,deci,size : natural32 := 0;
+    n,d,m : natural32 := 0;
     condjm,cffsize,pntsize,close,condfz : double_float := 0.0;
 
   begin
@@ -461,7 +460,7 @@ package body Random_Conditioned_Root_Problems is
               ( f : out Link_to_Array_of_Strings;
                 z : out Link_to_String ) is
 
-    n,d,m,deci,size : natural32 := 0;
+    n,d,m : natural32 := 0;
     condjm,cffsize,pntsize,close,condfz : double_float := 0.0;
     jmloss,fzloss,maxloss : integer32;
     precision : natural32;

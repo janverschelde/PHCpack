@@ -1,3 +1,6 @@
+Sun 30 Nov 2014 : changes to random_conditioned_root_problems and ts_vmpnewt
+  because of compiler warnings.
+
 Sat 29 Nov 2014 : new package random_conditioned_root_problems, refactored
   from ts_vmpnewt.adb.
 

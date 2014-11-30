@@ -205,7 +205,7 @@ procedure ts_vmpnewt is
       := Multprec_Initial_Approximation(p'last,size);
 
   begin
-    Multprec_Test(p,size,z);
+    Multprec_Test(p,z);
   end Multprec_Test;
 
   procedure Standard_Test_on_Given_System is
@@ -444,7 +444,7 @@ procedure ts_vmpnewt is
         new_line;
         put_line("Reading the name of the output file.");
         Read_Name_and_Create_File(file);
-        Write_Parameters(file,wanted,maxitr,maxprc,verbose);
+        Write_Parameters(file,wanted,maxitr,maxprc,true);
         if laurent then
           Verify_Solutions_of_Laurent_Polynomials
             (file,p.all,sols,wanted,maxitr,maxprc);
