@@ -21,6 +21,7 @@ generic_lists                     : lists of items
 graded_lexicographic_order        : defines the order of monomials
 generic_polynomials               : generic polynomials in several variables
 generic_laurent_polynomials       : generic polynomials with integer exponents
+generic_lists_of_terms            : generic list of terms in several variables
 generic_polynomial_systems        : systems of polynomials
 generic_laur_poly_systems         : systems of Laurent polynomials
 generic_jacobian_matrices         : Jacobian matrices of polynomial systems

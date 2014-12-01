@@ -1,3 +1,6 @@
+Mon 1 Dec 2014 : new package generic_lists_of_terms, tested by ts_termlist
+  via the instantiation standard_complex_term_lists.
+
 Sun 30 Nov 2014 : in all *_complex_{laur,poly}_strings packages added function
   to write each polynomial in a system to a separate string.
 
