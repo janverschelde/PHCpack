@@ -360,7 +360,11 @@ ts_tabform:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_tabform.adb -o $(BIN)/ts_tabform
 
 ts_str2pol:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_str2pol -o $(BIN)/ts_str2pol
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_str2pol -o $(BIN)/ts_str2pol
+
+ts_termlist:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_termlist \
+              -o $(BIN)/ts_termlist
 
 # Test programs for Math_Lib/Functions :
 

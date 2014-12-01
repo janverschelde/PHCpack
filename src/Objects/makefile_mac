@@ -34,11 +34,11 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/CtoPHC/Funky -I$(PHCAda)/CtoPHC/State -I$(MPILib) \
  -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
-GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
+# GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flag with gnat95 restriction for CtoPHC 
 GNATOPT95FLAGS=-gnat95 -gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
-# GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
+GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
 GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
 # GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
@@ -351,16 +351,23 @@ ts_parse:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_parse.adb -o $(BIN)/ts_parse
 
 ts_subs:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_subs -o $(BIN)/ts_subs
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_subs.adb -o $(BIN)/ts_subs
 
 ts_tabform:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_tabform -o $(BIN)/ts_tabform
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_tabform.adb \
+              -o $(BIN)/ts_tabform
 
 ts_randpoly:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_randpoly -o $(BIN)/ts_randpoly
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_randpoly.adb \
+              -o $(BIN)/ts_randpoly
 
 ts_str2pol:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_str2pol -o $(BIN)/ts_str2pol
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_str2pol.adb \
+              -o $(BIN)/ts_str2pol
+
+ts_termlist:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_termlist.adb \
+              -o $(BIN)/ts_termlist
 
 # Test programs for Math_Lib/Functions :
 
