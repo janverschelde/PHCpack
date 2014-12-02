@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Abstract_Ring;
 with Generic_Lists;
 with Generic_Polynomials;
@@ -19,6 +20,7 @@ package Generic_Lists_of_Terms is
 
   package List_of_Terms is new Generic_Lists(Term);
   type Term_List is new List_of_Terms.List;
+  type Array_of_Term_Lists is array ( integer32 range <> ) of Term_List;
 
 -- CONSTRUCTORS :
 
@@ -32,6 +34,12 @@ package Generic_Lists_of_Terms is
   -- DESCRIPTION :
   --   Appends a copy of the term t to the list first, where last is 
   --   a pointer to the last element of the list.
+
+  procedure Concat ( first,last : in out Term_List; t : in Term_List );
+
+  -- DESCRIPTION :
+  --   Concatenates the terms in t to the list first, where last points
+  --   to the last term in the list first.
 
 -- COPYING :
 
@@ -55,7 +63,9 @@ package Generic_Lists_of_Terms is
 -- DESTRUCTORS :
 
   procedure Clear ( p : in out Term_List );
+  procedure Clear ( p : in out Array_of_Term_Lists );
   procedure Shallow_Clear ( p : in out Term_List );
+  procedure Shallow_Clear ( p : in out Array_of_Term_Lists );
 
   -- DESCRIPTION :
   --   Deallocation of memory, a shallow clear only releases the pointer
