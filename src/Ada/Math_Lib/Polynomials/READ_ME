@@ -82,6 +82,8 @@ double_double_poly_systems        : systems of double double polynomials
 double_double_jaco_matrices       : Jacobian matrices of double doubles
 dobldobl_complex_polynomials      : polynomials over complex double doubles
 dobldobl_complex_polynomials_io   : basic output for dobldobl complex poly
+dobldobl_complex_term_lists       : list of terms with dobldobl complex coeffs
+dobldobl_complex_term_lists_io    : list of terms written in tableau format
 dobldobl_random_polynomials       : random sparse or dense dd complex poly
 dobldobl_complex_poly_randomizers : random polynomials with same support
 dobldobl_complex_poly_strings     : string representations of dd complex poly
@@ -105,6 +107,8 @@ quaddobl_complex_poly_matrices    : generic_matrices(quaddobl complex poly)
 quaddobl_complex_poly_matrices_io : generic_matrices_io(quaddobl complex poly)
 quaddobl_complex_polynomials      : polynomials over complex quad doubles
 quaddobl_complex_polynomials_io   : basic output for qd complex polynomials
+quaddobl_complex_term_lists       : list of terms with quaddobl complex coeffs
+quaddobl_complex_term_lists_io    : list of terms written in tableau format
 quaddobl_random_polynomials       : random sparse or dense qd complex poly
 quaddobl_complex_poly_strings     : string representations of qd complex poly
 quaddobl_complex_poly_systems     : systems of quad double complex polys
@@ -130,6 +134,8 @@ multprec_complex_poly_matrices    : generic_matrices(multprec complex poly)
 multprec_complex_poly_matrices_io : generic_matrices_io(multprec complex poly)
 multprec_complex_poly_systems     : systems of multiprec complex polynomials
 multprec_complex_poly_systems_io  : simple output of multiprec complex systems
+multprec_complex_term_lists       : list of terms with multprec complex coeffs
+multprec_complex_term_lists_io    : list of terms written in tableau format
 multprec_floating_poly_systems    : systems of multiprec floating polynomials
 multprec_floating_poly_systems_io : simple output for multiprec real systems
 multprec_complex_jaco_matrices    : Jacobi matrices for multiprecision complex
