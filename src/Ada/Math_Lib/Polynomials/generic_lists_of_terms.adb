@@ -19,8 +19,24 @@ package body Generic_Lists_of_Terms is
   end Create;
 
   procedure Append ( first,last : in out Term_List; t : in Term ) is
+
+    tt : Term;
+
   begin
-    List_of_Terms.Append(List_of_Terms.List(first),List_of_Terms.List(last),t);
+    tt.cf := t.cf;
+    Copy(t.dg,tt.dg);
+    if Is_Null(first) then
+      Construct(tt,first);
+      last := first;
+    else
+      declare
+        tmp : Term_List;
+      begin
+        Construct(tt,tmp);
+        Swap_Tail(last,tmp);
+        last := Tail_Of(last);
+      end;
+    end if;
   end Append;
 
   procedure Concat ( first,last : in out Term_List; t : in Term_List ) is
@@ -45,7 +61,10 @@ package body Generic_Lists_of_Terms is
     t : Term;
 
   begin
-    Clear(q); q_last := q;
+    if not Is_Null(q)
+     then Clear(q);
+    end if;
+    q_last := q;
     while not Is_Null(tmp) loop
       t := Head_Of(tmp);
       Append(q,q_last,t);
@@ -111,7 +130,9 @@ package body Generic_Lists_of_Terms is
 
   procedure Shallow_Clear ( p : in out Term_List ) is
   begin
-    List_of_Terms.Clear(List_of_Terms.List(p));
+    if not Is_Null(p)
+     then List_of_Terms.Clear(List_of_Terms.List(p));
+    end if;
   end Shallow_Clear;
 
   procedure Shallow_Clear ( p : in out Array_of_Term_Lists ) is
