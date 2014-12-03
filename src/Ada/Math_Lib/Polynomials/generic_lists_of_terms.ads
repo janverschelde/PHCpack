@@ -29,17 +29,38 @@ package Generic_Lists_of_Terms is
   -- DESCRIPTION :
   --   Returns the terms that appear in p with nonzero coefficient.
 
+  function Create ( t : Term_List ) return Poly;
+
+  -- DESCRIPTION :
+  --   Returns the polynomial as the sum of the terms in t.
+
   procedure Append ( first,last : in out Term_List; t : in Term );
 
   -- DESCRIPTION :
   --   Appends a copy of the term t to the list first, where last is 
   --   a pointer to the last element of the list.
 
+  procedure Merge_Append ( first,last : in out Term_List; t : in Term );
+
+  -- DESCRIPTION :
+  --   Appends a copy of the term t to the list first, where last is
+  --   a pointer to the last element of the list in case first does
+  --   not contain a term with matching exponents as in t.dg.
+  --   Otherwise, the coefficient of t is added to the coefficient of
+  --   the term with matching exponents in first.
+
   procedure Concat ( first,last : in out Term_List; t : in Term_List );
 
   -- DESCRIPTION :
   --   Concatenates the terms in t to the list first, where last points
   --   to the last term in the list first.
+
+  procedure Merge_Concat ( first,last : in out Term_List; t : in Term_List );
+
+  -- DESCRIPTION :
+  --   Concatenates the terms in t to the list first, where last points
+  --   to the last term in the list first, each time calling Merge_Append
+  --   to take into account matching exponents.
 
 -- COPYING :
 

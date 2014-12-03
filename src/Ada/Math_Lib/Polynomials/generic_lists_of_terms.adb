@@ -1,3 +1,5 @@
+with Standard_Natural_Vectors;
+
 package body Generic_Lists_of_Terms is 
 
 -- CONSTRUCTORS :
@@ -15,6 +17,19 @@ package body Generic_Lists_of_Terms is
 
   begin
     Append_Terms(p);
+    return res;
+  end Create;
+
+  function Create ( t : Term_List ) return Poly is
+
+    res : Poly := Null_Poly;
+    tmp : Term_List := t;
+
+  begin
+    while not Is_Null(tmp) loop
+      Add(res,Head_Of(tmp));
+      tmp := Tail_Of(tmp);
+    end loop;
     return res;
   end Create;
 
@@ -39,6 +54,42 @@ package body Generic_Lists_of_Terms is
     end if;
   end Append;
 
+  procedure Merge_Append ( first,last : in out Term_List; t : in Term ) is
+
+    tt : Term;
+
+  begin
+    if Is_Null(first) then
+      tt.cf := t.cf;
+      Copy(t.dg,tt.dg);
+      Construct(tt,first);
+      last := first;
+    else
+      declare
+        tmp : Term_List := first;
+        ttt : Term;
+        newtmp : Term_List;
+      begin
+        while not Is_Null(tmp) loop  -- search for matching exponents
+          ttt := Head_Of(tmp);
+          if Standard_Natural_Vectors.Equal(ttt.dg.all,t.dg.all) then
+            ttt.cf := ttt.cf + t.cf;
+            Set_Head(tmp,ttt); return;
+          else
+            tmp := Tail_Of(tmp);
+          end if;
+        end loop;
+        if Is_Null(tmp) then
+          tt.cf := t.cf;
+          Copy(t.dg,tt.dg);
+          Construct(tt,newtmp);
+          Swap_Tail(last,newtmp);
+          last := Tail_Of(last);
+        end if;
+      end;
+    end if;
+  end Merge_Append;
+
   procedure Concat ( first,last : in out Term_List; t : in Term_List ) is
 
     tmp : Term_List := t;
@@ -51,6 +102,20 @@ package body Generic_Lists_of_Terms is
       tmp := Tail_Of(tmp);
     end loop;
   end Concat;
+
+  procedure Merge_Concat ( first,last : in out Term_List;
+                           t : in Term_List ) is
+
+    tmp : Term_List := t;
+    tt : Term;
+
+  begin
+    while not Is_Null(tmp) loop
+      tt := Head_Of(tmp);
+      Merge_Append(first,last,tt);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Merge_Concat;
 
 -- COPYING :
 

@@ -3,6 +3,7 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Vectors;
 with Symbol_Table;                       use Symbol_Table;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
+with Standard_Complex_Term_Lists;        use Standard_Complex_Term_Lists;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 
 package Standard_Complex_Poly_Strings is
@@ -10,7 +11,11 @@ package Standard_Complex_Poly_Strings is
 -- DESCRIPTION :
 --   This package converts polynomials in several variables and with
 --   standard complex floating-point coefficients into strings, and
---   vice versa.
+--   vice versa.  The parse operations of strings into lists of terms
+--   are limited: no support for powers of polynomials and long bracketed
+--   expressions, because the goal of parsing into term lists is to avoid
+--   the sorting and polynomial operations that are needed with the
+--   parsing of general polynomial expressions.
 
 -- STRING MANIPULATORS :
 
@@ -51,12 +56,16 @@ package Standard_Complex_Poly_Strings is
 
   procedure Parse ( s : in string; k : in out integer;
                     n : in natural32; p : in out Poly );
+  procedure Parse ( s : in string; k : in out integer;
+                    n : in natural32; p,p_last : in out Term_List );
 
   -- DESCRIPTION :
   --   Parses the string s for a polynomial p in n variables,
-  --   starting at s(k).
+  --   starting at s(k).  In case of a list, p_last points to
+  --   the last term in the term list p.
 
   function Parse ( n : natural32; s : string ) return Poly;
+  function Parse ( n : natural32; s : string ) return Term_List;
 
   -- DESCRIPTION :
   --   This function returns a polynomial in n variables,

@@ -32,6 +32,8 @@ parse_polynomial_exceptions       : defines exceptions for parsing polynomials
 line_breaks                       : counts number of characters to break lines
 -------------------------------------------------------------------------------
 standard_complex_polynomials      : polynomials over standard complex numbers
+standard_complex_poly_terms       : list of terms with standard complex coeffs
+standard_complex_poly_terms_io    : list of terms written in tableau format
 standard_floating_polynomials     : polynomials with real coefficients
 standard_complex_to_real_poly     : type conversions between complex/real
 standard_complex_polynomials_io   : input/output of complex polynomials
@@ -153,6 +155,7 @@ ts_parse                          : test on poly-string conversions
 ts_subs                           : test on substitution of variables
 ts_ddpol                          : test on double double polynomials
 ts_qdpol                          : test on quad double polynomials
+ts_termlist                       : tests on lists of terms
 -------------------------------------------------------------------------------
 parse_strings_to_polynomials      : to parse strings into a system
 maingood                          : code for the phc -g

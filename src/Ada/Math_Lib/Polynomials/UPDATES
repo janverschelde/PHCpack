@@ -1,4 +1,12 @@
+Wed 3 Dec 2014 : new package standard_complex_term_lists_io to write lists
+  of terms in tableau format.  Updated generic_lists_of_terms with another
+  create operation and merge append/concat procedures.  Extended 
+  standard_complex_poly_strings with parse a string into a term list,
+  with updated testing in ts_termlist.
+
 Tue 2 Dec 2014 : added array of term lists to generic_lists_of_terms.
+  Extended standard_complex_poly_strings with operations that parse a string
+  into a list of terms.
 
 Mon 1 Dec 2014 : new package generic_lists_of_terms, tested by ts_termlist
   via the instantiation standard_complex_term_lists.

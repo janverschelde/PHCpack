@@ -8,6 +8,7 @@ with Strings_and_Numbers;                use Strings_and_Numbers;
 with Standard_Parse_Numbers;             use Standard_Parse_Numbers;
 with Symbol_Table_io;
 with Parse_Polynomial_Exceptions;        use Parse_Polynomial_Exceptions;
+with Standard_Complex_Term_Lists_io;     use Standard_Complex_Term_Lists_io;
 
 package body Standard_Complex_Poly_Strings is
 
@@ -96,6 +97,9 @@ package body Standard_Complex_Poly_Strings is
   procedure Parse_Term
               ( s : in string; bc : in out integer32; p : in out integer;
                 n : in natural32; termp : in out Poly );
+  procedure Parse_Term
+              ( s : in string; bc : in out integer32; p : in out integer;
+                n : in natural32; termp,termp_last : in out Term_List );
 
   -- DESCRIPTION :
   --   Parses the string for a term, starting at s(p).
@@ -115,6 +119,10 @@ package body Standard_Complex_Poly_Strings is
   procedure Parse_Factor
               ( s : in string; bc : in out integer32; p : in out integer;
                 n : in natural32; d : in out Degrees; pb : in out Poly );
+  procedure Parse_Factor
+              ( s : in string; bc : in out integer32; p : in out integer;
+                n : in natural32; d : in out Degrees;
+                pb,pb_last : in out Term_List );
 
   -- DESCRIPTION :
   --   Parses the string s for a factor, starting at s(p).
@@ -171,6 +179,129 @@ package body Standard_Complex_Poly_Strings is
       end if;
     end if;
     Pow(p,d);
+    Skip_Spaces_and_CR(s,k);   -- skip last digit of exponent 
+  exception
+    when others =>
+      put("Exception raised at character "); put(integer32(k),1);
+      put_line(" of " & s & " in Parse_Power_Factor."); raise;
+  end Parse_Power_Factor;
+
+  procedure Mul ( p,p_last : in out Term_List; q : in Term_List ) is
+
+  -- DESCRIPTION :
+  --   Multiplies every term in p by every term in q.
+
+    ptmp : Term_List := p;
+    qtmp : Term_List;
+    pt,qt : Term;
+
+  begin
+    while not Is_Null(ptmp) loop
+      pt := Head_Of(ptmp);
+      qtmp := q;
+      while not Is_Null(qtmp) loop
+        qt := Head_Of(qtmp);
+        pt.cf := pt.cf*qt.cf;
+        for i in pt.dg'range loop
+          pt.dg(i) := pt.dg(i) + qt.dg(i);
+        end loop;
+        qtmp := Tail_Of(qtmp);
+      end loop;
+      ptmp := Tail_Of(ptmp);
+    end loop;
+  end Mul;
+
+  procedure Pow ( p,p_last : in out Term_List; d : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Raises the terms in the list p to the power d.
+  --   For lists of terms, this procedure is just a stub because
+  --   the input format does not support powers of polynomials.
+
+  begin
+    null;
+  end Pow;
+
+  procedure Min ( p : in out Term_List ) is
+
+  -- DESCRIPTION :
+  --   Flips the sign of all terms in the list p.
+
+    tmp : Term_List;
+    t : Term;
+
+  begin
+    while not Is_Null(tmp) loop
+      t := Head_Of(tmp);
+      t.cf := -t.cf;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Min;
+
+  procedure Sub ( p,p_last : in out Term_List; q : in Term_List ) is
+
+  -- DESCRIPTION :
+  --   Flips the sign of the coefficients of the terms in q
+  --   before appending them to the list p.
+
+    tmp : Term_List := q;
+    t : Term;
+
+  begin 
+    while not Is_Null(tmp) loop
+      t := Head_Of(tmp);
+      declare
+        mint : Term;
+      begin
+        mint.cf := -t.cf;
+        mint.dg := t.dg;
+        Merge_Append(p,p_last,mint);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Sub;
+
+  procedure Parse_Power_Factor
+              ( s : in string; k : in out integer;
+                p,p_last : in out Term_List ) is
+
+  -- DESCRIPTION :
+  --   Reads the exponent of a factor stored in s and returns
+  --   in p the polynomial p raised to the read exponent.
+
+  -- ON ENTRY :
+  --   s        string to contain a polynomial
+  --   k        s(k) equals the exponentiation symbol '^';
+  --   p        current factor.
+
+  -- ON RETURN :
+  --   k        updated position in the string;
+  --   p        p raised to the read exponent.
+ 
+    d : natural32 := 0;
+    bracket : boolean := false;
+
+  begin
+    put_line("In Parse_Power_Factor ...");
+    k := k + 1;                -- skip the '^'
+    if k > s'last
+     then return;
+    end if;
+    if s(k) = '('
+     then k := k + 1; bracket := true;
+    end if;
+    Read_Exponent(s,k,d);
+    if bracket then
+      Skip_Spaces_and_CR(s,k);
+      if k > s'last
+       then return;
+      end if;
+      if s(k) = ')'
+       then k := k + 1;        -- skip closing bracket
+       else raise BAD_BRACKET; -- no closing bracket found
+      end if;
+    end if;
+    Pow(p,p_last,d);
     Skip_Spaces_and_CR(s,k);   -- skip last digit of exponent 
   exception
     when others =>
@@ -272,6 +403,105 @@ package body Standard_Complex_Poly_Strings is
       put_line(" of " & s & " in Parse_Polynomial."); raise;
   end Parse_Polynomial;
 
+  procedure Parse_Polynomial
+              ( s : in string; bc : in out integer32; k : in out integer;
+                n : in natural32; p,p_last : in out Term_List ) is
+
+  -- DESCRIPTION :
+  --   Main parsing routine for a polynomial from a string,
+  --   keeps track of the bracket count in bc.
+
+    oper : character;
+    term,term_last,res,res_last,acc,acc_last : Term_List;
+
+  begin
+    oper := '+';
+    Skip_Spaces_and_CR(s,k);
+    if k > s'last
+     then return;
+    end if;
+    if s(k) = '-'
+     then oper := '-';
+    end if;                            -- the first term can have no sign
+    Parse_Term(s,bc,k,n,res,res_last); -- therefore read it first
+    loop
+      case s(k) is
+        when ' ' | ASCII.CR | ASCII.LF => k := k + 1;   -- skip blanks
+        when '+' | '-' =>
+          oper := s(k);
+          Parse_Term(s,bc,k,n,term,term_last);
+          if not Is_Null(term)
+           then Merge_Concat(res,res_last,term); Clear(term);
+          end if;
+        when delimiter => 
+          if bc /= 0
+           then raise BAD_BRACKET;
+          end if;
+          exit;
+        when '(' =>
+          bc := bc + 1;
+          k := k + 1;
+          Parse_Polynomial(s(k..s'last),bc,k,n,term,term_last);
+          Skip_Spaces_and_CR(s,k);
+          if s(k) = '(' -- or s(k) = ')'
+           then raise BAD_BRACKET;
+          end if;
+          if s(k) = '^'
+           then Parse_Power_Factor(s,k,term,term_last);
+          end if;
+          case oper is
+            when '+' => Merge_Concat(acc,acc_last,res); 
+                        Clear(res); Copy(term,res);
+            when '-' => Merge_Concat(acc,acc_last,res);
+                        Clear(res); Copy(term,res); Min(res);
+            when '*' => Mul(res,res_last,term);
+            when others => raise ILLEGAL_OPERATION;
+          end case;
+          Clear(term);
+        when ')' =>
+          bc := bc - 1;
+          k := k + 1;
+          if bc < 0
+           then raise BAD_BRACKET;
+          end if;
+          exit;
+        when '*' =>
+          if Is_Null(res) then
+            raise ILLEGAL_CHARACTER;
+          else -- the case " ) * " :
+            oper := s(k); k := k + 1;  -- skip '*'
+            Parse_Term(s,bc,k,n,term,term_last);
+            Skip_Spaces_and_CR(s,k);
+            if s(k) = '^'
+             then Parse_Power_Factor(s,k,term,term_last);
+            end if;
+            if s(k) /= '(' then
+              case oper is
+                when '+' => Merge_Concat(res,res_last,term);
+                when '-' => Sub(res,res_last,term);
+                when '*' => Mul(res,res_last,term);
+                when others => raise ILLEGAL_OPERATION;
+              end case;
+            end if;
+            Clear(term);
+          end if;
+        when '^' =>
+          if Is_Null(res)
+           then raise ILLEGAL_CHARACTER;
+           else Parse_Power_Factor(s,k,res,res_last);
+          end if;
+        when others => raise ILLEGAL_CHARACTER;
+      end case;
+    end loop;
+    Merge_Concat(p,p_last,acc);
+    Merge_Concat(p,p_last,res);
+    Clear(acc); Clear(res);
+  exception
+    when others =>
+      put("Exception raised at character "); put(integer32(k),1);
+      put_line(" of " & s & " in Parse_Polynomial."); raise;
+  end Parse_Polynomial;
+
   procedure Parse_Factor
               ( s : in string; bc : in out integer32; p : in out integer;
                 n : in natural32; d : in out Degrees; pb : in out Poly ) is
@@ -341,6 +571,84 @@ package body Standard_Complex_Poly_Strings is
     if Convert(s(p)) < 10
      then Parse_Term(s,bc,p,n,pb); -- the case " x * c " or " x ** c * c "
      else Parse_Factor(s,bc,p,n,d,pb); -- the case " x * y " 
+    end if;
+  exception
+    when others =>
+      put("Exception raised at character "); put(integer32(p),1);
+      put_line(" of " & s & " in Parse_Factor."); raise;
+  end Parse_Factor;
+
+  procedure Parse_Factor
+              ( s : in string; bc : in out integer32; p : in out integer;
+                n : in natural32; d : in out Degrees;
+                pb,pb_last : in out Term_List ) is
+
+    sb : symbol;
+    expo : natural32;
+    k : integer32;
+ 
+  begin
+    if p > s'last
+     then return;
+    end if;
+    Skip_Spaces_and_CR(s,p);
+    if s(p) = '(' then 
+      bc := bc + 1;
+      p := p + 1;        -- get a new symbol, skip '('
+      if p > s'last
+       then return;
+      end if;
+      Parse_Polynomial(s(p..s'last),bc,p,n,pb,pb_last);
+      Skip_Spaces_and_CR(s,p);
+      if s(p) = '^'
+       then Parse_Power_Factor(s,p,pb,pb_last);
+      end if;
+      return;
+    end if;
+    Symbol_Table_io.Parse_Symbol(s,p,sb);
+    k := integer32(Symbol_Table.Check_Symbol(n,sb));
+    Skip_Spaces_and_CR(s,p);
+    if s(p) = '^' then
+      p := p + 1;                               -- skip the '^'
+      if p > s'last
+       then return;
+      end if;
+      Read_Exponent(s,p,expo);
+      d(k) := d(k) + expo;
+      Skip_Spaces_and_CR(s,p);
+      if s(p) /= '*'                            -- the case x^2*...
+       then return;                             -- end of factor
+       else p := p + 1;                         -- skip the '*'
+      end if; 
+    elsif s(p) = '*' then
+      p := p + 1;
+      if p > s'last
+       then return;
+      end if;
+      if s(p) = '*' then
+        p := p + 1;                             -- the case " x ** expo "
+        Read_Exponent(s,p,expo);
+        d(k) := d(k) + expo;
+        Skip_Spaces_and_CR(s,p);
+        if s(p) /= '*'
+         then return;                   -- end of factor
+         else p := p + 1;               -- skip the '*'
+        end if;
+      else
+        d(k) := d(k) + 1;               -- the case " x * ? "
+      end if;
+    else -- the case " x ?", with ? /= '*' or ' ' or '^' :
+      d(k) := d(k) + 1;
+      return;
+    end if;
+    Skip_Spaces_and_CR(s,p);
+    if (s(p) = '-') or (s(p) = '+') 
+     then return;
+    end if;
+    if Convert(s(p)) < 10
+     then Parse_Term(s,bc,p,n,pb,pb_last);
+           -- the case " x * c " or " x ** c * c "
+     else Parse_Factor(s,bc,p,n,d,pb,pb_last); -- the case " x * y " 
     end if;
   exception
     when others =>
@@ -439,6 +747,107 @@ package body Standard_Complex_Poly_Strings is
     Clear(tmp);
     if Number_Of_Unknowns(res) > 0
      then Mul(termp,res); Clear(res);
+    end if;
+  exception
+    when others =>
+      put("Exception raised at character "); put(integer32(p),1);
+      put_line(" of " & s & " in Parse_Term."); raise;
+  end Parse_Term;
+ 
+  procedure Parse_Term ( s : in string; bc : in out integer32;
+                         p : in out integer; n : in natural32;
+                         termp,termp_last : in out Term_List ) is
+
+    zero : constant Complex_Number := Create(0.0);
+    c : Complex_Number := zero;
+    d : Degrees := new Standard_Natural_Vectors.Vector'(1..integer32(n) => 0);
+    pb,pb_last,res,res_last : Term_List;
+    tmp : Term;
+
+    procedure Collect_Factor_Polynomial is
+    begin
+      if not Is_Null(pb) then
+        if Is_Null(res)
+         then Copy(pb,res); Clear(pb);
+         else Mul(res,res_last,pb); Clear(pb);
+        end if;
+      end if;
+    end Collect_Factor_Polynomial;
+
+  begin
+    Parse(s,p,c); -- look for 'i' :
+    Skip_Spaces_and_CR(s,p);
+    if ( c = Create(0.0) ) and then ((s(p) = 'i') or (s(p) = 'I')) then
+      -- the case "+ i" :
+      c := Create(0.0,1.0); 
+      p := p + 1;        -- skip 'i'
+    elsif ( c = Create(-1.0) ) and then ((s(p) = 'i') or (s(p) = 'I')) then
+      -- the case "- i" :
+      c := Create(0.0,-1.0);
+      p := p + 1;      -- skip 'i'
+    elsif s(p) = '*' then -- the case ".. c *.." :
+      Skip_Spaces_and_CR(s,p);
+      p := p + 1;  -- skip '*'
+      Skip_Spaces_and_CR(s,p);
+      if (s(p) = 'i') or (s(p) = 'I') then -- the case ".. c * i.." :
+        c := Create(0.0,REAL_PART(c));
+        p := p + 1;    -- skip 'i'
+      else                                 -- the case ".. c * x.." :
+        Parse_Factor(s,bc,p,n,d,pb,pb_last);
+        if not Is_Null(pb)
+         then Clear(res); Copy(pb,res); Clear(pb);
+        end if;
+      end if;
+    end if; -- the case ".. c ?"  will be treated in the loop
+    loop
+      case s(p) is
+        when ' ' | ASCII.CR | ASCII.LF => p := p + 1;
+        when '*' =>
+          p := p + 1;
+          Parse_Factor(s,bc,p,n,d,pb,pb_last);
+          Collect_Factor_Polynomial;
+        when '+' | '-' => 
+          if c = Create(0.0)
+           then raise ILLEGAL_CHARACTER;
+           else exit;
+          end if;
+        when delimiter =>
+          if bc /= 0
+           then raise BAD_BRACKET;
+          end if;
+          exit;
+        when '(' => 
+          if c = Create(0.0) or else c = Create(-1.0)
+           then c := Create(0.0); exit; -- the case "+ (" or "- (" :
+           else raise BAD_BRACKET;      -- the case "c  (" :
+          end if;
+        when ')' =>
+          if bc < 0
+           then raise BAD_BRACKET;
+          end if;
+          exit;
+        when others  =>
+          if c = Create(0.0) then
+            c := Create(1.0);
+            Parse_Factor(s,bc,p,n,d,pb,pb_last);
+          elsif c = Create(-1.0) then
+            Parse_Factor(s,bc,p,n,d,pb,pb_last);
+          elsif s(p) = '^' then
+            Parse_Power_Factor(s,p,res,res_last);
+          else
+            raise ILLEGAL_CHARACTER;
+          end if;
+          Collect_Factor_Polynomial;
+      end case;
+    end loop;
+    if not Equal(c,zero) then
+      tmp.cf := c;
+      tmp.dg := d;
+      Merge_Append(termp,termp_last,tmp);
+      Clear(tmp);
+    end if;
+    if Length_Of(res) > 0
+     then Mul(termp,termp_last,res); Clear(res);
     end if;
   exception
     when others =>
@@ -549,6 +958,16 @@ package body Standard_Complex_Poly_Strings is
     Parse_Polynomial(s,bc,k,n,p);
   end Parse;
 
+  procedure Parse ( s : in string; k : in out integer;
+                    n : in natural32; p,p_last : in out Term_List ) is
+
+    bc : integer32 := 0;
+
+  begin
+   -- put_line("In procedure Parse_Polynomial ...");
+    Parse_Polynomial(s,bc,k,n,p,p_last);
+  end Parse;
+
   function Parse ( n : natural32; s : string ) return Poly is
 
     res : Poly;
@@ -557,6 +976,20 @@ package body Standard_Complex_Poly_Strings is
   begin
     Parse(s,p,n,res);
     return res;
+  end Parse;
+
+  function Parse ( n : natural32; s : string ) return Term_List is
+
+    res,res_last : Term_List;
+    p : integer := s'first;
+
+  begin
+   -- put_line("Calling procedure Parse ...");
+    Parse(s,p,n,res,res_last);
+    return res;
+  exception
+    when others =>
+      put_line("Exception in Parse of string for term list"); raise;
   end Parse;
 
   function Parse ( n,m : natural32; s : string ) return Poly_Sys is
