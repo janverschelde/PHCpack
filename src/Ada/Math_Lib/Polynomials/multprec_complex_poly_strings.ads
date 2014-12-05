@@ -1,6 +1,7 @@
 with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Multprec_Complex_Polynomials;       use Multprec_Complex_Polynomials;
+with Multprec_Complex_Term_Lists;        use Multprec_Complex_Term_Lists;
 with Multprec_Complex_Poly_Systems;      use Multprec_Complex_Poly_Systems;
 
 package Multprec_Complex_Poly_Strings is
@@ -8,17 +9,25 @@ package Multprec_Complex_Poly_Strings is
 -- DESCRIPTION :
 --   This package converts polynomials in several variables and with
 --   multiprecision complex floating-point coefficients into strings,
---   and vice versa.
+--   and vice versa.  The parse operations of strings into lists of terms
+--   are limited: no support for powers of polynomials and long bracketed
+--   expressions, because the goal of parsing into term lists is to avoid
+--   the sorting and polynomial operations that are needed with the
+--   parsing of general polynomial expressions.
 
   procedure Parse ( s : in string; k : in out integer;
                     n,size : in natural32; p : in out Poly );
+  procedure Parse ( s : in string; k : in out integer;
+                    n,size : in natural32; p,p_last : in out Term_List );
 
   -- DESCRIPTION :
   --   Parses the string s for a polynomial p in n variables,
   --   starting at s(k) using working precision set at size
-  --   to evaluate fractions.
+  --   to evaluate fractions.  In case of a list, p_last points to
+  --   the last term in the term list p.
 
   function Parse ( n,size : natural32; s : string ) return Poly;
+  function Parse ( n,size : natural32; s : string ) return Term_List;
 
   -- DESCRIPTION :
   --   This function returns a polynomial in n variables,

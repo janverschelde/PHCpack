@@ -126,9 +126,8 @@ package body Generic_Lists_of_Terms is
 
   begin
     if not Is_Null(q)
-     then Clear(q);
+     then Clear(q); q_last := q;
     end if;
-    q_last := q;
     while not Is_Null(tmp) loop
       t := Head_Of(tmp);
       Append(q,q_last,t);

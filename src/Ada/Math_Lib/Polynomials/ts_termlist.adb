@@ -54,6 +54,25 @@ procedure ts_termlist is
     put("The reconstructed polynomial :"); put_line(p);
   end Standard_Test_Parse;
 
+  procedure Multprec_Test_Parse ( n : in natural32; s : in string ) is
+
+  -- DESCRIPTION :
+  --   Tests the parsing of string into a list of terms,
+  --   in n variable.
+
+    use Multprec_Complex_Term_Lists;
+    size : constant natural32 := 5;
+    t : Term_List := Multprec_Complex_Poly_Strings.Parse(n,size,s);
+    p : Multprec_Complex_Polynomials.Poly;
+
+  begin
+   -- put_line("The string :"); put_line(s);
+    put_line("The list of parsed terms :"); put(t);
+    p := Create(t);
+   -- Clear(t);
+    put("The reconstructed polynomial :"); put_line(p);
+  end Multprec_Test_Parse;
+
   procedure Standard_Test is
 
   -- DESCRIPTION :
@@ -171,7 +190,13 @@ procedure ts_termlist is
     put_line(s.all);
     Multprec_Complex_Term_Lists.Clear(t);
     put_line("The list of terms after clear :"); put(t);
-   -- Multprec_Test_Parse(n,s.all);
+    declare
+      q : Multprec_Complex_Polynomials.Poly
+        := Multprec_Complex_Poly_Strings.Parse(n,5,s.all);
+    begin
+      put("The random polynomial parsed from string :"); put_line(q);
+    end;
+    Multprec_Test_Parse(n,s.all);
   end Multprec_Test;
 
   procedure Main is
