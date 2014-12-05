@@ -72,6 +72,24 @@ procedure ts_termlist is
     put("The reconstructed polynomial :"); put_line(p);
   end DoblDobl_Test_Parse;
 
+  procedure QuadDobl_Test_Parse ( n : in natural32; s : in string ) is
+
+  -- DESCRIPTION :
+  --   Tests the parsing of string into a list of terms,
+  --   in n variable.
+
+    use QuadDobl_Complex_Term_Lists;
+    t : Term_List := QuadDobl_Complex_Poly_Strings.Parse(n,s);
+    p : QuadDobl_Complex_Polynomials.Poly;
+
+  begin
+   -- put_line("The string :"); put_line(s);
+    put_line("The list of parsed terms :"); put(t);
+    p := Create(t);
+    Clear(t);
+    put("The reconstructed polynomial :"); put_line(p);
+  end QuadDobl_Test_Parse;
+
   procedure Multprec_Test_Parse ( n : in natural32; s : in string ) is
 
   -- DESCRIPTION :
@@ -178,7 +196,7 @@ procedure ts_termlist is
     put_line(s.all);
     QuadDobl_Complex_Term_Lists.Clear(t);
     put_line("The list of terms after clear :"); put(t);
-   -- QuadDobl_Test_Parse(n,s.all);
+    QuadDobl_Test_Parse(n,s.all);
   end QuadDobl_Test;
 
   procedure Multprec_Test is

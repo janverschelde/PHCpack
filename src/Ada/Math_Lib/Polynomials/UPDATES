@@ -1,6 +1,6 @@
 Fri 5 Dec 2014 : extended multprec_complex_poly_strings with operations
   to parse a string into a list of terms.  Likewise, added parse operations
-  to dobldobl_complex_poly_strings, tested by ts_termlist.
+  to {dobldobl,quaddobl}_complex_poly_strings, tested by ts_termlist.
 
 Thu 4 Dec 2014 : fixed in generic_lists_of_terms.adb the treatment of 
   coefficients as needed for multiprecision coefficients.
