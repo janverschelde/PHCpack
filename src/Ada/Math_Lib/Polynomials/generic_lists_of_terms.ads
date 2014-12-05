@@ -64,7 +64,11 @@ package Generic_Lists_of_Terms is
 
 -- COPYING :
 
-  procedure Copy ( p : in Term_List; q : in out Term_List );
+  procedure Copy ( p : in Term_List; q,q_last : in out Term_List );
+
+  -- DESCRIPTION :
+  --   Copies the list p to q, where q_last on return points to the
+  --   last element of the list q.
 
 -- SELECTORS :
 

@@ -119,10 +119,9 @@ package body Generic_Lists_of_Terms is
 
 -- COPYING :
 
-  procedure Copy ( p : in Term_List; q : in out Term_List ) is
+  procedure Copy ( p : in Term_List; q,q_last : in out Term_List ) is
 
     tmp : Term_List := p;
-    q_last : Term_List;
     t : Term;
 
   begin
