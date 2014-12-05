@@ -3,7 +3,10 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Complex_Poly_Strings;
+with DoblDobl_Complex_Numbers_cv;        use DoblDobl_Complex_Numbers_cv;
+with Multprec_DoblDobl_Convertors;       use Multprec_DoblDobl_Convertors;
 with Multprec_Complex_Polynomials;
+with Multprec_Complex_Term_Lists;
 with Multprec_Complex_Poly_Strings;
 with DoblDobl_Polynomial_Convertors;     use DoblDobl_Polynomial_Convertors;
 
@@ -12,6 +15,30 @@ package body DoblDobl_Complex_Poly_Strings is
 -- NOTE : The implementation is a wrapper to Multprec_Complex_Poly_Strings.
 
   size : constant natural32 := 5;
+
+  function Multprec_Terms_to_DoblDobl_Complex
+             ( p : Multprec_Complex_Term_Lists.Term_List )
+             return DoblDobl_Complex_Term_Lists.Term_List is
+
+    res,res_last : DoblDobl_Complex_Term_Lists.Term_List;
+    tmp : Multprec_Complex_Term_Lists.Term_List := p;
+    mpt : Multprec_Complex_Polynomials.Term;
+
+  begin
+    while not Multprec_Complex_Term_Lists.Is_Null(tmp) loop
+      mpt := Multprec_Complex_Term_Lists.Head_Of(tmp);
+      declare
+        ddt : DoblDobl_Complex_Polynomials.Term;
+      begin
+        ddt.cf := Multprec_to_DoblDobl_Complex(mpt.cf);
+        ddt.dg := DoblDobl_Complex_Polynomials.Degrees(mpt.dg);
+        -- the Append makes a copy anyway
+        DoblDobl_Complex_Term_Lists.Append(res,res_last,ddt);
+      end;
+      tmp := Multprec_Complex_Term_Lists.Tail_Of(tmp);
+    end loop;
+    return res;
+  end Multprec_Terms_to_DoblDobl_Complex;
 
   procedure Parse ( s : in string; k : in out integer;
                     n : in natural32; p : in out Poly ) is
@@ -24,6 +51,17 @@ package body DoblDobl_Complex_Poly_Strings is
     Multprec_Complex_Polynomials.Clear(q);
   end Parse;
 
+  procedure Parse ( s : in string; k : in out integer;
+                    n : in natural32; p,p_last : in out Term_List ) is
+
+    q,q_last : Multprec_Complex_Term_Lists.Term_List;
+
+  begin
+    Multprec_Complex_Poly_Strings.Parse(s,k,n,size,q,q_last);
+    p := Multprec_Terms_to_DoblDobl_Complex(q);
+    Multprec_Complex_Term_Lists.Clear(q);
+  end Parse;
+
   function Parse ( n : natural32; s : string ) return Poly is
 
     res : Poly;
@@ -31,6 +69,16 @@ package body DoblDobl_Complex_Poly_Strings is
 
   begin
     Parse(s,p,n,res);
+    return res;
+  end Parse;
+
+  function Parse ( n : natural32; s : string ) return Term_List is
+
+    res,res_last : Term_List;
+    p : integer := s'first;
+
+  begin
+    Parse(s,p,n,res,res_last);
     return res;
   end Parse;
 
