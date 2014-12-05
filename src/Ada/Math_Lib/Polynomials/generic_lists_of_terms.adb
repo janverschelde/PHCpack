@@ -38,7 +38,7 @@ package body Generic_Lists_of_Terms is
     tt : Term;
 
   begin
-    tt.cf := t.cf;
+    Copy(t.cf,tt.cf);
     Copy(t.dg,tt.dg);
     if Is_Null(first) then
       Construct(tt,first);
@@ -60,7 +60,7 @@ package body Generic_Lists_of_Terms is
 
   begin
     if Is_Null(first) then
-      tt.cf := t.cf;
+      Copy(t.cf,tt.cf);
       Copy(t.dg,tt.dg);
       Construct(tt,first);
       last := first;
@@ -73,14 +73,14 @@ package body Generic_Lists_of_Terms is
         while not Is_Null(tmp) loop  -- search for matching exponents
           ttt := Head_Of(tmp);
           if Standard_Natural_Vectors.Equal(ttt.dg.all,t.dg.all) then
-            ttt.cf := ttt.cf + t.cf;
+            Add(ttt.cf,t.cf);
             Set_Head(tmp,ttt); return;
           else
             tmp := Tail_Of(tmp);
           end if;
         end loop;
         if Is_Null(tmp) then
-          tt.cf := t.cf;
+          Copy(t.cf,tt.cf);
           Copy(t.dg,tt.dg);
           Construct(tt,newtmp);
           Swap_Tail(last,newtmp);
