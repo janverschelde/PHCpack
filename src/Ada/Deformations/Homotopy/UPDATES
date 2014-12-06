@@ -1,3 +1,6 @@
+Sat 6 Dec 2014 : writing of start, target, and system in the middle to
+  file as option in ts_vmphom.adb.
+
 Sun 30 Nov 2014 : new package random_conditioned_homotopies for testing
   variable precision path trackers, tested by ts_vmphom.
 

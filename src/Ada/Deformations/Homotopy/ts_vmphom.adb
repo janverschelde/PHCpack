@@ -15,10 +15,12 @@ with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Multprec_Floating_Numbers_io;       use Multprec_Floating_Numbers_io;
 with Multprec_Complex_Numbers;
 with Symbol_Table;
+with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Poly_Strings;
+with Multprec_Complex_Polynomials;
 with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
 with Multprec_Complex_Poly_SysFun;
@@ -197,6 +199,63 @@ procedure ts_vmphom is
     close(file);
   end Write_Homotopy_to_File;
 
+  procedure Write_System_to_File
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Asks the user if the system p should be written to file
+  --   and if yes, then the user is prompted for a file name.
+  --   The symbol table is reset if the number of variables in p
+  --   different from the number of symbols in the table.
+
+    dim : constant natural32
+        := Standard_Complex_Polynomials.Number_of_Unknowns(p(p'first));
+    ans : character;
+    file : file_type;
+
+  begin
+    new_line;
+    put("Write the system to file ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Read_Name_and_Create_File(file);
+      if Symbol_Table.Number /= dim then
+        Symbol_Table.Clear;
+        Symbol_Table.Init(Symbol_Table.Standard_Symbols(integer32(dim)));
+      end if;
+      put_line(file,p);
+      close(file);
+    end if;
+  end Write_System_to_File;
+
+  procedure Write_System_to_File
+              ( p : in Multprec_Complex_Poly_Systems.Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Asks the user if the system p should be written to file
+  --   and if yes, then the user is prompted for a file name.
+  --   The symbol table is reset if the number of variables in p
+  --   different from the number of symbols in the table.
+
+    dim : constant natural32
+        := Multprec_Complex_Polynomials.Number_of_Unknowns(p(p'first));
+    ans : character;
+    file : file_type;
+
+  begin
+    new_line;
+    put("Write the system to file ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Read_Name_and_Create_File(file);
+      if Symbol_Table.Number /= dim then
+        Symbol_Table.Clear;
+        Symbol_Table.Init(Symbol_Table.Standard_Symbols(integer32(dim)));
+      end if;
+      put(file,dim,1); new_line(file);
+      put_line(file,p);
+      close(file);
+    end if;
+  end Write_System_to_File;
+
   procedure Standard_Random_Conditioned_Homotopy
               ( hom : in Array_of_Strings; root : in string ) is
 
@@ -230,12 +289,15 @@ procedure ts_vmphom is
     t := Create(0.0);
     fzero := Standard_Complex_Poly_SysFun.Eval(htp,t,1); -- t is first !
     put_line("The start system :"); put_line(fzero);
+    Write_System_to_File(fzero);
     t := Create(1.0);
     fone := Standard_Complex_Poly_SysFun.Eval(htp,t,1);  -- t is first !
     put_line("The target system :"); put_line(fone);
+    Write_System_to_File(fone);
     t := Create(0.5);
     fmid := Standard_Complex_Poly_SysFun.Eval(htp,t,1);  -- t is first !
     put_line("The system in the middle :"); put_line(fmid);
+    Write_System_to_File(fmid);
     Symbol_Table.Init(Symbol_Table.Standard_Symbols(dim));
     strfmid := Standard_Complex_Poly_Strings.Write(fmid);
     Standard_Estimate_Loss_for_Polynomial_System(strfmid,root,jfrco,fzrco,loss);
@@ -285,12 +347,15 @@ procedure ts_vmphom is
     fnb := Create(0.0); t := Create(fnb); Clear(fnb);
     fzero := Multprec_Complex_Poly_SysFun.Eval(htp,t,1); -- t is first !
     put_line("The start system :"); put_line(fzero);
+    Write_System_to_File(fzero);
     fnb := Create(1.0); t := Create(fnb); Clear(fnb);
     fone := Multprec_Complex_Poly_SysFun.Eval(htp,t,1);  -- t is first !
     put_line("The target system :"); put_line(fone);
+    Write_System_to_File(fone);
     fnb := Create(0.5); t := Create(fnb); Clear(fnb);
     fmid := Multprec_Complex_Poly_SysFun.Eval(htp,t,1);  -- t is first !
     put_line("The system in the middle :"); put_line(fmid);
+    Write_System_to_File(fmid);
     Symbol_Table.Init(Symbol_Table.Standard_Symbols(dim));
     strfmid := Multprec_Complex_Poly_Strings.Write(fmid);
     Multprec_Estimate_Loss_for_Polynomial_System
