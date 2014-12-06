@@ -194,7 +194,8 @@ procedure ts_vmphom is
   begin
     new_line;
     Read_Name_and_Create_File(file);
-    put(file,h'last,1); new_line(file);
+    put(file,h'last,1); put(file,"  "); put(file,h'last+1,1);
+    new_line(file);
     put_line(file,h);
     close(file);
   end Write_Homotopy_to_File;
