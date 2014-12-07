@@ -1,3 +1,6 @@
+Sun 7 Dec 2014 : new package varbprec_complex_solutions to convert solutions
+  over various levels of precision.
+
 Tue 26 Aug 2014 : extended {dobl,quad}dobl_complex_solutions_io with output
   routines for the diagnostics of a solution.
 

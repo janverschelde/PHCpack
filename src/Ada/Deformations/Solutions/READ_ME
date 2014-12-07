@@ -68,6 +68,7 @@ ts_quad                            : test on quadtree development
 ts_selsol                          : select solutions from file
 solution_drops                     : drop a coordinate of a solution
 ts_drops                           : interactive tests on solution drops
+varbprec_complex_solutions         : variable precision solutions
 ------------------------------------------------------------------------------
 
 The standard and multiprecision solutions lists are two separate packages,
