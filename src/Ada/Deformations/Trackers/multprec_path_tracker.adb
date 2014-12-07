@@ -169,6 +169,23 @@ package body Multprec_Path_Tracker is
     Init(s);
   end Init;
 
+  procedure Init ( h : in Link_to_Poly_Sys; txk : in integer32;
+                   cp,deci : in natural32 ) is
+  begin
+    Multprec_Homotopy.Clear;
+    Multprec_Homotopy.Create(h.all,txk);
+    Continuation_Parameters.Tune(cp,deci);
+  end Init;
+
+  procedure Init ( h : in Link_to_Poly_Sys; txk : in integer32;
+                   cp,deci : in natural32; s : in Link_to_Solution ) is
+  begin
+    Multprec_Homotopy.Clear;
+    Multprec_Homotopy.Create(h.all,txk);
+    Continuation_Parameters.Tune(cp,deci);
+    Init(s);
+  end Init;
+
 -- PREDICTOR-CORRECTOR STAGE :
 
   procedure Predictor_Corrector_Stage

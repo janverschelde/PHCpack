@@ -139,6 +139,20 @@ package body DoblDobl_Path_Tracker is
     Init(s);
   end Init;
 
+  procedure Init ( h : in Link_to_Poly_Sys; txk : in integer32 ) is
+  begin
+    DoblDobl_Homotopy.Clear;
+    DoblDobl_Homotopy.Create(h.all,txk);
+  end Init;
+
+  procedure Init ( h : in Link_to_Poly_Sys; txk : in integer32;
+                   s : in Link_to_Solution ) is
+  begin
+    DoblDobl_Homotopy.Clear;
+    DoblDobl_Homotopy.Create(h.all,txk);
+    Init(s);
+  end Init;
+
 -- PREDICTOR-CORRECTOR STEPS :
 
   procedure Predictor_Corrector_Stage

@@ -130,12 +130,14 @@ package body Standard_Path_Tracker is
 
   procedure Init ( h : in Link_to_Poly_Sys; txk : in integer32 ) is
   begin
+    Standard_Homotopy.Clear;
     Standard_Homotopy.Create(h.all,txk);
   end Init;
 
   procedure Init ( h : in Link_to_Poly_Sys; txk : in integer32;
                    s : in Link_to_Solution ) is
   begin
+    Standard_Homotopy.Clear;
     Standard_Homotopy.Create(h.all,txk);
     Init(s);
   end Init;

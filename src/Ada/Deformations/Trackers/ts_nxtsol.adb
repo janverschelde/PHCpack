@@ -38,6 +38,18 @@ with Standard_Homotopy;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;
  use Standard_Complex_Vectors_io;
+with DoblDobl_Homotopy;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Vectors_io;
+ use DoblDobl_Complex_Vectors_io;
+with QuadDobl_Homotopy;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors_io;
+ use QuadDobl_Complex_Vectors_io;
+with Multprec_Homotopy;
+with Multprec_Complex_Vectors;
+with Multprec_Complex_Vectors_io;
+ use Multprec_Complex_Vectors_io;
 
 procedure ts_nxtsol is
 
@@ -88,6 +100,137 @@ procedure ts_nxtsol is
     end;
   end Standard_Natural_Parameter_Initialize;
 
+  procedure DoblDobl_Natural_Parameter_Initialize is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a homotopy and start solutions to
+  --   initialize the standard path tracker.
+
+    use DoblDobl_Complex_Poly_Systems,DoblDobl_Complex_Solutions;
+
+    hom : Link_to_Poly_Sys;
+    idx : integer32 := 0;
+    sols : Solution_List;
+
+  begin
+    new_line;
+    put_line("Reading the homotopy ...");
+    get(hom);
+    new_line;
+    put("The symbols in the homotopy : "); Symbol_Table_io.Write; new_line;
+    put("-> give the index of the deformation parameter t : ");
+    get(idx); skip_line;
+    if idx /= hom'last+1
+     then put_line("Works only when deformation parameter is last symbol!");
+    end if;
+    Symbol_Table.Remove(natural32(idx)); -- remove t for reading of solutions
+    new_line;
+    DoblDobl_Complex_Solutions_io.Read(sols);
+    DoblDobl_Path_Tracker.Init(hom,idx,Head_Of(sols));
+   -- only good when standard_path_tracker has reporting corrector
+   -- declare
+   --   use Process_io;
+   --   oc : constant Process_io.Output_Code := c;
+   -- begin
+   --   Process_io.Set_Output_Code(oc);
+   -- end;
+    declare
+      y : constant DoblDobl_Complex_Vectors.Vector
+        := DoblDobl_Homotopy.Eval(Head_Of(sols).v,Head_Of(sols).t);
+    begin
+      put_line("The start solution evaluated : ");
+      put_line(y);
+    end;
+  end DoblDobl_Natural_Parameter_Initialize;
+
+  procedure QuadDobl_Natural_Parameter_Initialize is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a homotopy and start solutions to
+  --   initialize the standard path tracker.
+
+    use QuadDobl_Complex_Poly_Systems,QuadDobl_Complex_Solutions;
+
+    hom : Link_to_Poly_Sys;
+    idx : integer32 := 0;
+    sols : Solution_List;
+
+  begin
+    new_line;
+    put_line("Reading the homotopy ...");
+    get(hom);
+    new_line;
+    put("The symbols in the homotopy : "); Symbol_Table_io.Write; new_line;
+    put("-> give the index of the deformation parameter t : ");
+    get(idx); skip_line;
+    if idx /= hom'last+1
+     then put_line("Works only when deformation parameter is last symbol!");
+    end if;
+    Symbol_Table.Remove(natural32(idx)); -- remove t for reading of solutions
+    new_line;
+    QuadDobl_Complex_Solutions_io.Read(sols);
+    QuadDobl_Path_Tracker.Init(hom,idx,Head_Of(sols));
+   -- only good when standard_path_tracker has reporting corrector
+   -- declare
+   --   use Process_io;
+   --   oc : constant Process_io.Output_Code := c;
+   -- begin
+   --   Process_io.Set_Output_Code(oc);
+   -- end;
+    declare
+      y : constant QuadDobl_Complex_Vectors.Vector
+        := QuadDobl_Homotopy.Eval(Head_Of(sols).v,Head_Of(sols).t);
+    begin
+      put_line("The start solution evaluated : ");
+      put_line(y);
+    end;
+  end QuadDobl_Natural_Parameter_Initialize;
+
+  procedure Multprec_Natural_Parameter_Initialize
+              ( deci : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a homotopy and start solutions to
+  --   initialize the standard path tracker.
+  --   The number of decimal places in the working precision equals deci.
+
+    use Multprec_Complex_Poly_Systems,Multprec_Complex_Solutions;
+
+    hom : Link_to_Poly_Sys;
+    idx : integer32 := 0;
+    sols : Solution_List;
+
+  begin
+    new_line;
+    put_line("Reading the homotopy ...");
+    get(hom);
+    new_line;
+    put("The symbols in the homotopy : "); Symbol_Table_io.Write; new_line;
+    put("-> give the index of the deformation parameter t : ");
+    get(idx); skip_line;
+    if idx /= hom'last+1
+     then put_line("Works only when deformation parameter is last symbol!");
+    end if;
+    Symbol_Table.Remove(natural32(idx)); -- remove t for reading of solutions
+    new_line;
+    Multprec_Complex_Solutions_io.Read(sols);
+    Multprec_Path_Tracker.Init(hom,idx,0,deci,Head_Of(sols));
+   -- only good when standard_path_tracker has reporting corrector
+   -- declare
+   --   use Process_io;
+   --   oc : constant Process_io.Output_Code := c;
+   -- begin
+   --   Process_io.Set_Output_Code(oc);
+   -- end;
+    declare
+      y : constant Multprec_Complex_Vectors.Vector
+        := Multprec_Homotopy.Eval(Head_Of(sols).v,Head_Of(sols).t);
+    begin
+      put_line("The start solution evaluated : ");
+      put_line(y);
+    end;
+  end Multprec_Natural_Parameter_Initialize;
+
   procedure Standard_Artificial_Parameter_Initialize is
 
   -- DESCRIPTION :
@@ -116,28 +259,7 @@ procedure ts_nxtsol is
     end if;
   end Standard_Artificial_Parameter_Initialize;
 
-  procedure Standard_Initialize_Path_Tracker is
-
-  -- DESCRIPTION :
-  --   Prompts the user for the choice between natural parameter,
-  --   or artificial parameter homotopy, with start and target system.
-
-    ans : character;
-
-  begin
-    new_line;
-    put_line("MENU to choose between artificial or natural parameter :");
-    put_line("  1. artificial parameter t with start and target system;");
-    put_line("  2. natural parameter t is a variable in the homotopy system.");
-    put("Type 1 or 2 to select type of homotopy : ");
-    Ask_Alternative(ans,"12");
-    if ans = '1'
-     then Standard_Artificial_Parameter_Initialize;
-     else Standard_Natural_Parameter_Initialize;
-    end if;
-  end Standard_Initialize_Path_Tracker;
-
-  procedure DoblDobl_Initialize_Path_Tracker is
+  procedure DoblDobl_Artificial_Parameter_Initialize is
 
   -- DESCRIPTION :
   --   Prompts the user for a target system, a start system,
@@ -163,13 +285,13 @@ procedure ts_nxtsol is
      then DoblDobl_Path_Tracker.Init(tgt_sys,sta_sys,true,Head_Of(sols));
      else DoblDobl_Path_Tracker.Init(tgt_sys,sta_sys,false,Head_Of(sols));
     end if;
-  end DoblDobl_Initialize_Path_Tracker;
+  end DoblDobl_Artificial_Parameter_Initialize;
 
-  procedure QuadDobl_Initialize_Path_Tracker is
+  procedure QuadDobl_Artificial_Parameter_Initialize is
 
   -- DESCRIPTION :
   --   Prompts the user for a target system, a start system,
-  --   and start solutions and initializes the quad double path tracker.
+  --   and start solutions and initializes the double double path tracker.
 
     use QuadDobl_Complex_Poly_Systems,QuadDobl_Complex_Solutions;
 
@@ -191,9 +313,10 @@ procedure ts_nxtsol is
      then QuadDobl_Path_Tracker.Init(tgt_sys,sta_sys,true,Head_Of(sols));
      else QuadDobl_Path_Tracker.Init(tgt_sys,sta_sys,false,Head_Of(sols));
     end if;
-  end QuadDobl_Initialize_Path_Tracker;
+  end QuadDobl_Artificial_Parameter_Initialize;
 
-  procedure Multprec_Initialize_Path_Tracker ( deci : in natural32 ) is
+  procedure Multprec_Artificial_Parameter_Initialize
+              ( deci : in natural32 ) is
 
   -- DESCRIPTION :
   --   Prompts the user for a target system, a start system,
@@ -223,6 +346,90 @@ procedure ts_nxtsol is
     if ans = 'y' 
      then Multprec_Path_Tracker.Init(tgt_sys,sta_sys,true,Head_Of(sols),deci);
      else Multprec_Path_Tracker.Init(tgt_sys,sta_sys,false,Head_Of(sols),deci);
+    end if;
+  end Multprec_Artificial_Parameter_Initialize;
+
+  procedure Standard_Initialize_Path_Tracker is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the choice between natural parameter,
+  --   or artificial parameter homotopy, with start and target system.
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU to choose between artificial or natural parameter :");
+    put_line("  1. artificial parameter t with start and target system;");
+    put_line("  2. natural parameter t is a variable in the homotopy system.");
+    put("Type 1 or 2 to select type of homotopy : ");
+    Ask_Alternative(ans,"12");
+    if ans = '1'
+     then Standard_Artificial_Parameter_Initialize;
+     else Standard_Natural_Parameter_Initialize;
+    end if;
+  end Standard_Initialize_Path_Tracker;
+
+  procedure DoblDobl_Initialize_Path_Tracker is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the choice between natural parameter,
+  --   or artificial parameter homotopy, with start and target system.
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU to choose between artificial or natural parameter :");
+    put_line("  1. artificial parameter t with start and target system;");
+    put_line("  2. natural parameter t is a variable in the homotopy system.");
+    put("Type 1 or 2 to select type of homotopy : ");
+    Ask_Alternative(ans,"12");
+    if ans = '1'
+     then DoblDobl_Artificial_Parameter_Initialize;
+     else DoblDobl_Natural_Parameter_Initialize;
+    end if;
+  end DoblDobl_Initialize_Path_Tracker;
+
+  procedure QuadDobl_Initialize_Path_Tracker is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the choice between natural parameter,
+  --   or artificial parameter homotopy, with start and target system.
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU to choose between artificial or natural parameter :");
+    put_line("  1. artificial parameter t with start and target system;");
+    put_line("  2. natural parameter t is a variable in the homotopy system.");
+    put("Type 1 or 2 to select type of homotopy : ");
+    Ask_Alternative(ans,"12");
+    if ans = '1'
+     then QuadDobl_Artificial_Parameter_Initialize;
+     else QuadDobl_Natural_Parameter_Initialize;
+    end if;
+  end QuadDobl_Initialize_Path_Tracker;
+
+  procedure Multprec_Initialize_Path_Tracker ( deci : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the choice between natural parameter,
+  --   or artificial parameter homotopy, with start and target system.
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU to choose between artificial or natural parameter :");
+    put_line("  1. artificial parameter t with start and target system;");
+    put_line("  2. natural parameter t is a variable in the homotopy system.");
+    put("Type 1 or 2 to select type of homotopy : ");
+    Ask_Alternative(ans,"12");
+    if ans = '1'
+     then Multprec_Artificial_Parameter_Initialize(deci);
+     else Multprec_Natural_Parameter_Initialize(deci);
     end if;
   end Multprec_Initialize_Path_Tracker;
 

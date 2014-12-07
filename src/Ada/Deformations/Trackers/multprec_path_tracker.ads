@@ -1,4 +1,5 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Multprec_Complex_Numbers;           use Multprec_Complex_Numbers;
 with Multprec_Complex_Poly_Systems;      use Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Solutions;         use Multprec_Complex_Solutions;
@@ -57,6 +58,22 @@ package Multprec_Path_Tracker is
   --   The number of decimal places in the working precision (deci)
   --   will be used to set the tolerances in the continuation parameters.
   --   The condition of the continuation parameters is set to cp.
+
+  procedure Init ( h : in Link_to_Poly_Sys; txk : in integer32;
+                   cp,deci : in natural32 );
+  procedure Init ( h : in Link_to_Poly_Sys; txk : in integer32;
+                   cp,deci : in natural32; s : in Link_to_Solution );
+
+  -- DESCRIPTION :
+  --   Initializes the homotopy with the natural parameter homotopy h.
+  --   The index txk points to x(k) = t, the variable that will be used
+  --   as the continuation parameter.
+  --   The number of decimal places in the working precision is deci and
+  --   the condition of the continuation parameters is set to cp.
+
+  -- REQUIRED :
+  --   For some n, h'range = 1..n and Number_of_Unknowns(h(i)) = n+1,
+  --   for i in h'range.
 
 -- SELECTORS :
 

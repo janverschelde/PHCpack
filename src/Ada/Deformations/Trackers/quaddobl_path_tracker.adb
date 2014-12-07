@@ -147,6 +147,20 @@ package body QuadDobl_Path_Tracker is
     Init(s);
   end Init;
 
+  procedure Init ( h : in Link_to_Poly_Sys; txk : in integer32 ) is
+  begin
+    QuadDobl_Homotopy.Clear;
+    QuadDobl_Homotopy.Create(h.all,txk);
+  end Init;
+
+  procedure Init ( h : in Link_to_Poly_Sys; txk : in integer32;
+                   s : in Link_to_Solution ) is
+  begin
+    QuadDobl_Homotopy.Clear;
+    QuadDobl_Homotopy.Create(h.all,txk);
+    Init(s);
+  end Init;
+
 -- PREDICTOR-CORRECTOR STAGE :
 
   procedure Predictor_Corrector_Stage
