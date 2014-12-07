@@ -1,4 +1,5 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
@@ -50,6 +51,19 @@ package Standard_Path_Tracker is
   --   and stores the start solution s (if given).
   --   The given gamma and k will be used as constants in the homotopy.
   --   The condition of the continuation parameters is set to cp.
+
+  procedure Init ( h : in Link_to_Poly_Sys; txk : in integer32 );
+  procedure Init ( h : in Link_to_Poly_Sys; txk : in integer32;
+                   s : in Link_to_Solution );
+
+  -- DESCRIPTION :
+  --   Initializes the homotopy with the natural parameter homotopy h.
+  --   The index txk points to x(k) = t, the variable that will be used
+  --   as the continuation parameter.
+
+  -- REQUIRED :
+  --   For some n, h'range = 1..n and Number_of_Unknowns(h(i)) = n+1,
+  --   for i in h'range.
 
 -- SELECTORS :
 

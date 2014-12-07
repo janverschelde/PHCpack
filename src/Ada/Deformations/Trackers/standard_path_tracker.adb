@@ -1,3 +1,10 @@
+-- for testing purposes :
+--with text_io;
+--with Standard_Complex_Numbers_io;
+-- use Standard_Complex_Numbers_io;
+--with Standard_Complex_Vectors_io;
+-- use Standard_Complex_Vectors_io;
+
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Random_Numbers;
 with Standard_Complex_Vectors;
@@ -121,6 +128,18 @@ package body Standard_Path_Tracker is
     Init(s);
   end Init;
 
+  procedure Init ( h : in Link_to_Poly_Sys; txk : in integer32 ) is
+  begin
+    Standard_Homotopy.Create(h.all,txk);
+  end Init;
+
+  procedure Init ( h : in Link_to_Poly_Sys; txk : in integer32;
+                   s : in Link_to_Solution ) is
+  begin
+    Standard_Homotopy.Create(h.all,txk);
+    Init(s);
+  end Init;
+
 -- PREDICTOR-CORRECTOR STAGE :
 
   procedure Predictor_Corrector_Stage
@@ -135,6 +154,9 @@ package body Standard_Path_Tracker is
     procedure Predictor is 
       new Single_Predictor
             (Max_Norm,Standard_Homotopy.diff,Standard_Homotopy.diff);
+   -- procedure Affine_Corrector is
+   --   new Affine_Single_Severe_Normal_Reporting_Corrector
+   --         (Max_Norm,Standard_Homotopy.Eval,Standard_Homotopy.diff);
     procedure Affine_Corrector is
       new Affine_Single_Severe_Normal_Silent_Corrector
             (Max_Norm,Standard_Homotopy.Eval,Standard_Homotopy.diff);
@@ -157,6 +179,11 @@ package body Standard_Path_Tracker is
         (point,p,true,prev_sol.all,prev_sol2.all,prev_sol1.all,prev_sol0.all,
          prev_t,prev_t2,prev_t1,prev_t0,target,step,tol);
     end if;
+   -- text_io.put("The predicted t value : "); put(point.sol.t); 
+   -- text_io.new_line;
+   -- text_io.put_line("The predicted solution vector :");
+   -- put_line(point.sol.v);
+   -- Affine_Corrector(text_io.standard_output,point,c);
     Affine_Corrector(point,c);
     if p.predictor_type < 7 then
       Linear_Single_Management

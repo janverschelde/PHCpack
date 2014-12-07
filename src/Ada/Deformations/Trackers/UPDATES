@@ -1,3 +1,6 @@
+Sat 6 Dec 2014 : extended standard_path_tracker with initializer for a
+  natural parameter homotopy, tested by ts_nxtsol.
+
 Thu 29 May 2014 : changed drivers_to_track_{standard, quaddobl}_paths.adb
   for compiler warnings.
 

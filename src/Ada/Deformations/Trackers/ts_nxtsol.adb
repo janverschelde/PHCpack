@@ -2,6 +2,9 @@ with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Symbol_Table,Symbol_Table_io;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Poly_Systems;
@@ -29,13 +32,63 @@ with DoblDobl_Path_Tracker;
 with QuadDobl_Path_Tracker;
 with Multprec_Path_Tracker;
 
+-- for testing purposes
+-- with Process_io;
+with Standard_Homotopy;
+with Standard_Complex_Vectors;
+with Standard_Complex_Vectors_io;
+ use Standard_Complex_Vectors_io;
+
 procedure ts_nxtsol is
 
 -- DESCRIPTION :
 --   Allows tracking of one path via a generator "next"
 --   which gives the next solution point on the path.
 
-  procedure Standard_Initialize_Path_Tracker is
+  procedure Standard_Natural_Parameter_Initialize is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a homotopy and start solutions to
+  --   initialize the standard path tracker.
+
+    use Standard_Complex_Poly_Systems,Standard_Complex_Solutions;
+
+    hom : Link_to_Poly_Sys;
+    idx : integer32 := 0;
+    sols : Solution_List;
+
+  begin
+    new_line;
+    put_line("Reading the homotopy ...");
+    get(hom);
+    new_line;
+    put("The symbols in the homotopy : "); Symbol_Table_io.Write; new_line;
+    put("-> give the index of the deformation parameter t : ");
+    get(idx); skip_line;
+    if idx /= hom'last+1
+     then put_line("Works only when deformation parameter is last symbol!");
+    end if;
+    Symbol_Table.Remove(natural32(idx)); -- remove t for reading of solutions
+    new_line;
+    Standard_Complex_Solutions_io.Read(sols);
+    Standard_Path_Tracker.Init(hom,idx,Head_Of(sols));
+   -- only good when standard_path_tracker has reporting corrector
+   -- declare
+   --   use Process_io;
+   --   oc : constant Process_io.Output_Code := c;
+   -- begin
+   --   Process_io.Set_Output_Code(oc);
+   -- end;
+    declare
+      y : constant Standard_Complex_Vectors.Vector
+        := Standard_Homotopy.Eval(Head_Of(sols).v,Head_Of(sols).t);
+    begin
+      put_line("The start solution evaluated : ");
+      put_line(y);
+    end;
+  end Standard_Natural_Parameter_Initialize;
+
+  procedure Standard_Artificial_Parameter_Initialize is
 
   -- DESCRIPTION :
   --   Prompts the user for a target system, a start system,
@@ -60,6 +113,27 @@ procedure ts_nxtsol is
     if ans = 'y' 
      then Standard_Path_Tracker.Init(tgt_sys,sta_sys,true,Head_Of(sols));
      else Standard_Path_Tracker.Init(tgt_sys,sta_sys,false,Head_Of(sols));
+    end if;
+  end Standard_Artificial_Parameter_Initialize;
+
+  procedure Standard_Initialize_Path_Tracker is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the choice between natural parameter,
+  --   or artificial parameter homotopy, with start and target system.
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU to choose between artificial or natural parameter :");
+    put_line("  1. artificial parameter t with start and target system;");
+    put_line("  2. natural parameter t is a variable in the homotopy system.");
+    put("Type 1 or 2 to select type of homotopy : ");
+    Ask_Alternative(ans,"12");
+    if ans = '1'
+     then Standard_Artificial_Parameter_Initialize;
+     else Standard_Natural_Parameter_Initialize;
     end if;
   end Standard_Initialize_Path_Tracker;
 
