@@ -14,6 +14,12 @@ with Standard_Random_Numbers;            use Standard_Random_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Multprec_Floating_Numbers_io;       use Multprec_Floating_Numbers_io;
 with Multprec_Complex_Numbers;
+with Standard_Integer_Vectors;
+with Standard_Complex_Vectors;
+with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
+with Standard_Complex_Matrices;
+with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
+with Varbprec_Complex_Linear_Solvers;    use Varbprec_Complex_Linear_Solvers;
 with Symbol_Table;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
@@ -25,6 +31,7 @@ with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
 with Multprec_Complex_Poly_SysFun;
 with Multprec_Complex_Poly_Strings;
+with Standard_Complex_Solutions;
 with Multprec_Complex_Solutions;
 with Multprec_Complex_Solutions_io;      use Multprec_Complex_Solutions_io;
 with Multprec_System_and_Solutions_io;
@@ -32,6 +39,8 @@ with Verification_of_Solutions;          use Verification_of_Solutions;
 with Random_Conditioned_Root_Problems;   use Random_Conditioned_Root_Problems;
 with Random_Conditioned_Homotopies;      use Random_Conditioned_Homotopies;
 with Varbprec_Complex_Newton_Steps;      use Varbprec_Complex_Newton_Steps;
+with Varbprec_Complex_Solutions;
+with Varbprec_Homotopy;
 
 procedure ts_vmphom is
 
@@ -140,16 +149,23 @@ procedure ts_vmphom is
     end;
   end Make_Homotopy;
 
-  procedure Test_Homotopy_to_String is
+  procedure Read_Homotopy_Strings
+              ( sf,sg : out Link_to_Array_of_Strings;
+                nq,nv,len : out natural32;
+                sols : out Multprec_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
-  --   Prompts the user for a target and start system
-  --   and writes the string representation of the standard homotopy.
+  --   Prompts the user for a target, start system, and start solutions.
+
+  -- ON RETURN :
+  --   sf       string representation of the targett system;
+  --   sg       string representation of the start system;
+  --   nq       number of equations;
+  --   nv       number of variables;
+  --   len      number of start solutions;
+  --   sols     start solutions.
 
     sf_file : file_type;
-    sf,sg : Link_to_Array_of_strings;
-    nq,nv,len : natural32;
-    sols : Multprec_Complex_Solutions.Solution_List;
 
   begin
     new_line;
@@ -163,6 +179,20 @@ procedure ts_vmphom is
     new_line;
     len := Multprec_Complex_Solutions.Length_Of(sols);
     put("Read list of "); put(len,1); put_line(" solutions from file.");
+  end Read_Homotopy_Strings;
+
+  procedure Test_Homotopy_to_String is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a target and start system
+  --   and writes the string representation of the standard homotopy.
+
+    sf,sg : Link_to_Array_of_strings;
+    nq,nv,len : natural32;
+    sols : Multprec_Complex_Solutions.Solution_List;
+
+  begin
+    Read_Homotopy_Strings(sf,sg,nq,nv,len,sols);
     Make_Homotopy(nv,sf.all,sg.all,sols);
   end Test_Homotopy_to_String;
 
@@ -414,6 +444,66 @@ procedure ts_vmphom is
     String_Splitters.Clear(froot);
   end Test_Random_Conditioned_Homotopy;
 
+  procedure Standard_Test_Varbprec_Homotopy
+              ( sols : in Standard_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Tests the operations of the variable precision homotopy
+  --   in standard double precision.
+
+    use Standard_Complex_Solutions;
+
+    hom : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+        := Varbprec_Homotopy.Standard_Homotopy_System;
+
+  begin
+    put_line("The homotopy in standard precision :");
+    put_line(hom.all);
+    if not Is_Null(sols) then
+      declare
+        ls : constant Link_to_Solution := Head_Of(sols);
+        y : Standard_Complex_Vectors.Vector(ls.v'range);
+        A : Standard_Complex_Matrices.Matrix(y'range,y'range);
+        t : Standard_Complex_Numbers.Complex_Number
+          := Standard_Complex_Numbers.Create(0.0);
+        piv : Standard_Integer_Vectors.Vector(y'range);
+        rco : double_float;
+        loss : integer32;
+      begin
+        y := Varbprec_Homotopy.Eval(ls.v,t);
+        put_line("The first start solution evaluated : "); put_line(y);
+        A := Varbprec_Homotopy.Diff(ls.v,t);
+        put_line("The Jacobian matrix at the first start solution :");
+        put(A,3);
+        Estimated_Loss_of_Decimal_Places(A,piv,rco,loss);
+        put("Estimated inverse condition number : "); put(rco,3); new_line;
+        put("Estimated loss of decimal places : "); put(loss,1); new_line;
+      end;
+    end if;
+  end Standard_Test_Varbprec_Homotopy;
+
+  procedure Test_Varbprec_Homotopy is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a start and target system
+  --   and initilizes the variable precision homotopy.
+
+    use Varbprec_Complex_Solutions;
+
+    sf,sg : Link_to_Array_of_strings;
+    nq,nv,len : natural32;
+    gamma : constant Standard_Complex_Numbers.Complex_Number
+          := Standard_Random_Numbers.Random1;
+    mpsols : Multprec_Complex_Solutions.Solution_List;
+    stsols : Standard_Complex_Solutions.Solution_List;
+
+  begin
+    Read_Homotopy_Strings(sf,sg,nq,nv,len,mpsols);
+    Varbprec_Homotopy.Create(sf,sg,2,gamma);
+    stsols := Multprec_to_Standard_Solutions(mpsols);
+    Standard_Test_Varbprec_Homotopy(stsols);
+  end Test_Varbprec_Homotopy;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -425,13 +515,16 @@ procedure ts_vmphom is
     new_line;
     put_line("MENU to test random conditioned homotopies :");
     put_line("  1. write a standard linear homotopy to a string;");
-    put_line("  2. place a random conditioned system in the middle.");
-    put("Type 1 or 2 to make your choice : ");
-    Ask_Alternative(ans,"12");
-    if ans = '1'
-     then Test_Homotopy_to_String;
-     else Test_Random_Conditioned_Homotopy;
-    end if;
+    put_line("  2. place a random conditioned system in the middle;");
+    put_line("  3. test variable precision homotopy package.");
+    put("Type 1, 2, or 3 to make your choice : ");
+    Ask_Alternative(ans,"123");
+    case ans is
+      when '1' => Test_Homotopy_to_String;
+      when '2' => Test_Random_Conditioned_Homotopy;
+      when '3' => Test_Varbprec_Homotopy;
+      when others => null;
+    end case;
   end Main;
 
 begin

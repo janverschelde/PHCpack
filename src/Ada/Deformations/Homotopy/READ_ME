@@ -51,5 +51,6 @@ polynomial_drops                   : drop a variable from polynomials
 ts_poldrop                         : interactive test on dropping
 ------------------------------------------------------------------------------
 random_conditioned_homotopies      : homotopy with middle conditioned system
+varbprec_homotopy                  : variable precision homotopy
 ts_vmphom                          : test variable precision homotopies
 ------------------------------------------------------------------------------
