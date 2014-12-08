@@ -8,8 +8,14 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Random_Numbers;            use Standard_Random_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Multprec_Floating_Numbers_io;       use Multprec_Floating_Numbers_io;
@@ -17,8 +23,16 @@ with Multprec_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
+with DoblDobl_Complex_Matrices;
+with DoblDobl_Complex_Matrices_io;       use DoblDobl_Complex_Matrices_io;
+with QuadDobl_Complex_Matrices;
+with QuadDobl_Complex_Matrices_io;       use QuadDobl_Complex_Matrices_io;
 with Varbprec_Complex_Linear_Solvers;    use Varbprec_Complex_Linear_Solvers;
 with Symbol_Table;
 with Standard_Complex_Polynomials;
@@ -26,12 +40,18 @@ with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Poly_Strings;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
 with Multprec_Complex_Poly_SysFun;
 with Multprec_Complex_Poly_Strings;
 with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 with Multprec_Complex_Solutions;
 with Multprec_Complex_Solutions_io;      use Multprec_Complex_Solutions_io;
 with Multprec_System_and_Solutions_io;
@@ -470,6 +490,7 @@ procedure ts_vmphom is
         rco : double_float;
         loss : integer32;
       begin
+        put_line("The first solution vector : "); put_line(ls.v);
         y := Varbprec_Homotopy.Eval(ls.v,t);
         put_line("The first start solution evaluated : "); put_line(y);
         A := Varbprec_Homotopy.Diff(ls.v,t);
@@ -481,6 +502,86 @@ procedure ts_vmphom is
       end;
     end if;
   end Standard_Test_Varbprec_Homotopy;
+
+  procedure DoblDobl_Test_Varbprec_Homotopy
+              ( sols : in DoblDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Tests the operations of the variable precision homotopy
+  --   in double double precision.
+
+    use DoblDobl_Complex_Solutions;
+
+    hom : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+        := Varbprec_Homotopy.DoblDobl_Homotopy_System;
+
+  begin
+    put_line("The homotopy in double double precision :");
+    put_line(hom.all);
+    if not Is_Null(sols) then
+      declare
+        ls : constant Link_to_Solution := Head_Of(sols);
+        y : DoblDobl_Complex_Vectors.Vector(ls.v'range);
+        A : DoblDobl_Complex_Matrices.Matrix(y'range,y'range);
+        zero : constant double_double := create(0.0);
+        t : DoblDobl_Complex_Numbers.Complex_Number
+          := Dobldobl_Complex_Numbers.Create(zero);
+        piv : Standard_Integer_Vectors.Vector(y'range);
+        rco : double_double;
+        loss : integer32;
+      begin
+        put_line("The first solution vector : "); put_line(ls.v);
+        y := Varbprec_Homotopy.Eval(ls.v,t);
+        put_line("The first start solution evaluated : "); put_line(y);
+        A := Varbprec_Homotopy.Diff(ls.v,t);
+        put_line("The Jacobian matrix at the first start solution :");
+        put(A,3);
+        Estimated_Loss_of_Decimal_Places(A,piv,rco,loss);
+        put("Estimated inverse condition number : "); put(rco,3); new_line;
+        put("Estimated loss of decimal places : "); put(loss,1); new_line;
+      end;
+    end if;
+  end DoblDobl_Test_Varbprec_Homotopy;
+
+  procedure QuadDobl_Test_Varbprec_Homotopy
+              ( sols : in QuadDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Tests the operations of the variable precision homotopy
+  --   in quad double precision.
+
+    use QuadDobl_Complex_Solutions;
+
+    hom : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+        := Varbprec_Homotopy.QuadDobl_Homotopy_System;
+
+  begin
+    put_line("The homotopy in quad double precision :");
+    put_line(hom.all);
+    if not Is_Null(sols) then
+      declare
+        ls : constant Link_to_Solution := Head_Of(sols);
+        y : QuadDobl_Complex_Vectors.Vector(ls.v'range);
+        A : QuadDobl_Complex_Matrices.Matrix(y'range,y'range);
+        zero : constant quad_double := create(0.0);
+        t : QuadDobl_Complex_Numbers.Complex_Number
+          := QuadDobl_Complex_Numbers.Create(zero);
+        piv : Standard_Integer_Vectors.Vector(y'range);
+        rco : quad_double;
+        loss : integer32;
+      begin
+        put_line("The first solution vector : "); put_line(ls.v);
+        y := Varbprec_Homotopy.Eval(ls.v,t);
+        put_line("The first start solution evaluated : "); put_line(y);
+        A := Varbprec_Homotopy.Diff(ls.v,t);
+        put_line("The Jacobian matrix at the first start solution :");
+        put(A,3);
+        Estimated_Loss_of_Decimal_Places(A,piv,rco,loss);
+        put("Estimated inverse condition number : "); put(rco,3); new_line;
+        put("Estimated loss of decimal places : "); put(loss,1); new_line;
+      end;
+    end if;
+  end QuadDobl_Test_Varbprec_Homotopy;
 
   procedure Test_Varbprec_Homotopy is
 
@@ -496,12 +597,32 @@ procedure ts_vmphom is
           := Standard_Random_Numbers.Random1;
     mpsols : Multprec_Complex_Solutions.Solution_List;
     stsols : Standard_Complex_Solutions.Solution_List;
+    ddsols : DoblDobl_Complex_Solutions.Solution_List;
+    qdsols : QuadDobl_Complex_Solutions.Solution_List;
+    ans : character;
 
   begin
     Read_Homotopy_Strings(sf,sg,nq,nv,len,mpsols);
     Varbprec_Homotopy.Create(sf,sg,2,gamma);
-    stsols := Multprec_to_Standard_Solutions(mpsols);
-    Standard_Test_Varbprec_Homotopy(stsols);
+    new_line;
+    put_line("MENU to test variable precision homotopy :");
+    put_line("  0. evaluate and differentiate in standard double precision;");
+    put_line("  1. evaluate and differentiate in double double precision;");
+    put_line("  2. evaluate and differentiate in quad double precision;");
+    put("Type 0 or 1 to choose precision : ");
+    Ask_Alternative(ans,"012");
+    case ans is
+      when '0' =>
+        stsols := Multprec_to_Standard_Solutions(mpsols);
+        Standard_Test_Varbprec_Homotopy(stsols);
+      when '1' =>
+        ddsols := Multprec_to_DoblDobl_Solutions(mpsols);
+        DoblDobl_Test_Varbprec_Homotopy(ddsols);
+      when '2' =>
+        qdsols := Multprec_to_QuadDobl_Solutions(mpsols);
+        QuadDobl_Test_Varbprec_Homotopy(qdsols);
+      when others => null;
+    end case;
   end Test_Varbprec_Homotopy;
 
   procedure Main is

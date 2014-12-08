@@ -1,10 +1,15 @@
 with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Complex_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Symbol_Table;
-with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Strings;
+with DoblDobl_Complex_Poly_Strings;
+with QuadDobl_Complex_Poly_Strings;
 with Standard_Homotopy;
+with DoblDobl_Homotopy;
+with QuadDobl_Homotopy;
 
 package body Varbprec_Homotopy is
 
@@ -12,9 +17,13 @@ package body Varbprec_Homotopy is
 
   start,target : Link_to_Array_of_Strings;
   st_start,st_target : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+  dd_start,dd_target : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+  qd_start,qd_target : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
   gamma : Standard_Complex_Numbers.Complex_Number;
   exp4t : natural32;
-  standard_homotopy_initialized : boolean;
+  standard_homotopy_initialized : boolean; -- is standard homotopy defined ?
+  dobldobl_homotopy_initialized : boolean; -- is dobldobl homotopy defined ?
+  quaddobl_homotopy_initialized : boolean; -- is quaddobl homotopy defined ?
 
 -- AUXILIARY CONSTRUCTOR :
 
@@ -44,6 +53,82 @@ package body Varbprec_Homotopy is
       standard_homotopy_initialized := true;
     end if;
   end Initialize_Standard_Homotopy;
+
+  procedure Initialize_DoblDobl_Homotopy is
+
+  -- DESCRIPTION :
+  --   Initializes the homotopy for double double precision,
+  --   using the string representations
+  --   for the start and target polynomial systems.
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Poly_Strings;
+
+    nvr : natural32;
+    regamma : constant double_float
+            := Standard_Complex_Numbers.REAL_PART(gamma);
+    imgamma : constant double_float
+            := Standard_Complex_Numbers.IMAG_PART(gamma);
+    ddregamma : constant double_double
+              := Double_Double_Numbers.create(regamma);
+    ddimgamma : constant double_double
+              := Double_Double_Numbers.create(imgamma);
+    ddgamma : constant DoblDobl_Complex_Numbers.Complex_Number
+            := DoblDobl_Complex_Numbers.Create(ddregamma,ddimgamma);
+
+  begin
+    DoblDobl_Homotopy.Clear;
+    if start /= null then
+      nvr := natural32(start'last);
+      if Symbol_Table.Number < nvr + 1
+       then Symbol_Table.Init(nvr+1);
+      end if;
+      dd_start := new Poly_Sys'(Parse(nvr,start.all));
+      if target /= null
+       then dd_target := new Poly_Sys'(Parse(nvr,target.all));
+      end if;
+      DoblDobl_Homotopy.Create(dd_target.all,dd_start.all,exp4t,ddgamma);
+      dobldobl_homotopy_initialized := true;
+    end if;
+  end Initialize_DoblDobl_Homotopy;
+
+  procedure Initialize_QuadDobl_Homotopy is
+
+  -- DESCRIPTION :
+  --   Initializes the homotopy for quad double precision,
+  --   using the string representations
+  --   for the start and target polynomial systems.
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Poly_Strings;
+
+    nvr : natural32;
+    regamma : constant double_float
+            := Standard_Complex_Numbers.REAL_PART(gamma);
+    imgamma : constant double_float
+            := Standard_Complex_Numbers.IMAG_PART(gamma);
+    qdregamma : constant quad_double
+              := Quad_Double_Numbers.create(regamma);
+    qdimgamma : constant quad_double
+              := Quad_Double_Numbers.create(imgamma);
+    qdgamma : constant QuadDobl_Complex_Numbers.Complex_Number
+            := QuadDobl_Complex_Numbers.Create(qdregamma,qdimgamma);
+
+  begin
+    QuadDobl_Homotopy.Clear;
+    if start /= null then
+      nvr := natural32(start'last);
+      if Symbol_Table.Number < nvr + 1
+       then Symbol_Table.Init(nvr+1);
+      end if;
+      qd_start := new Poly_Sys'(Parse(nvr,start.all));
+      if target /= null
+       then qd_target := new Poly_Sys'(Parse(nvr,target.all));
+      end if;
+      QuadDobl_Homotopy.Create(qd_target.all,qd_start.all,exp4t,qdgamma);
+      quaddobl_homotopy_initialized := true;
+    end if;
+  end Initialize_QuadDobl_Homotopy;
 
 -- CONSTRUCTORS :
 
@@ -86,6 +171,38 @@ package body Varbprec_Homotopy is
     return res;
   end Standard_Homotopy_System;
 
+  function DoblDobl_Homotopy_System
+             return DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys is
+
+    use DoblDobl_Complex_Poly_Systems;
+    res : Link_to_Poly_Sys;
+
+  begin
+    if not dobldobl_homotopy_initialized
+     then Initialize_DoblDobl_Homotopy;
+    end if;
+    if dobldobl_homotopy_initialized
+     then res := new Poly_Sys'(DoblDobl_Homotopy.Homotopy_System);
+    end if;
+    return res;
+  end DoblDobl_Homotopy_System;
+
+  function QuadDobl_Homotopy_System
+             return QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys is
+
+    use QuadDobl_Complex_Poly_Systems;
+    res : Link_to_Poly_Sys;
+
+  begin
+    if not quaddobl_homotopy_initialized
+     then Initialize_QuadDobl_Homotopy;
+    end if;
+    if quaddobl_homotopy_initialized
+     then res := new Poly_Sys'(QuadDobl_Homotopy.Homotopy_System);
+    end if;
+    return res;
+  end QuadDobl_Homotopy_System;
+
   function Eval ( x : Standard_Complex_Vectors.Vector;
                   t : Standard_Complex_Numbers.Complex_Number )
                 return Standard_Complex_Vectors.Vector is
@@ -98,6 +215,38 @@ package body Varbprec_Homotopy is
     end if;
     if standard_homotopy_initialized
      then res := Standard_Homotopy.Eval(x,t);
+    end if;
+    return res;
+  end Eval;
+
+  function Eval ( x : DoblDobl_Complex_Vectors.Vector;
+                  t : DoblDobl_Complex_Numbers.Complex_Number )
+                return DoblDobl_Complex_Vectors.Vector is
+
+    res : DoblDobl_Complex_Vectors.Vector(x'range);
+
+  begin
+    if not dobldobl_homotopy_initialized
+     then Initialize_DoblDobl_Homotopy;
+    end if;
+    if dobldobl_homotopy_initialized
+     then res := DoblDobl_Homotopy.Eval(x,t);
+    end if;
+    return res;
+  end Eval;
+
+  function Eval ( x : QuadDobl_Complex_Vectors.Vector;
+                  t : QuadDobl_Complex_Numbers.Complex_Number )
+                return QuadDobl_Complex_Vectors.Vector is
+
+    res : QuadDobl_Complex_Vectors.Vector(x'range);
+
+  begin
+    if not quaddobl_homotopy_initialized
+     then Initialize_QuadDobl_Homotopy;
+    end if;
+    if quaddobl_homotopy_initialized
+     then res := QuadDobl_Homotopy.Eval(x,t);
     end if;
     return res;
   end Eval;
@@ -118,6 +267,38 @@ package body Varbprec_Homotopy is
     return res;
   end Diff;
 
+  function Diff ( x : DoblDobl_Complex_Vectors.Vector;
+                  t : DoblDobl_Complex_Numbers.Complex_Number )
+                return DoblDobl_Complex_Vectors.Vector is
+
+    res : DoblDobl_Complex_Vectors.Vector(x'range);
+
+  begin
+    if not dobldobl_homotopy_initialized
+     then Initialize_DoblDobl_Homotopy;
+    end if;
+    if dobldobl_homotopy_initialized
+     then res := DoblDobl_Homotopy.Diff(x,t);
+    end if;
+    return res;
+  end Diff;
+
+  function Diff ( x : QuadDobl_Complex_Vectors.Vector;
+                  t : QuadDobl_Complex_Numbers.Complex_Number )
+                return QuadDobl_Complex_Vectors.Vector is
+
+    res : QuadDobl_Complex_Vectors.Vector(x'range);
+
+  begin
+    if not quaddobl_homotopy_initialized
+     then Initialize_QuadDobl_Homotopy;
+    end if;
+    if quaddobl_homotopy_initialized
+     then res := QuadDobl_Homotopy.Diff(x,t);
+    end if;
+    return res;
+  end Diff;
+
   function Diff ( x : Standard_Complex_Vectors.Vector;
                   t : Standard_Complex_Numbers.Complex_Number )
                 return Standard_Complex_Matrices.Matrix is
@@ -130,6 +311,38 @@ package body Varbprec_Homotopy is
     end if;
     if standard_homotopy_initialized
      then res := Standard_Homotopy.Diff(x,t);
+    end if;
+    return res;
+  end Diff;
+
+  function Diff ( x : DoblDobl_Complex_Vectors.Vector;
+                  t : DoblDobl_Complex_Numbers.Complex_Number )
+                return DoblDobl_Complex_Matrices.Matrix is
+
+    res : DoblDobl_Complex_Matrices.Matrix(x'range,x'range);
+
+  begin
+    if not dobldobl_homotopy_initialized
+     then Initialize_DoblDobl_Homotopy;
+    end if;
+    if dobldobl_homotopy_initialized
+     then res := DoblDobl_Homotopy.Diff(x,t);
+    end if;
+    return res;
+  end Diff;
+
+  function Diff ( x : QuadDobl_Complex_Vectors.Vector;
+                  t : QuadDobl_Complex_Numbers.Complex_Number )
+                return QuadDobl_Complex_Matrices.Matrix is
+
+    res : QuadDobl_Complex_Matrices.Matrix(x'range,x'range);
+
+  begin
+    if not quaddobl_homotopy_initialized
+     then Initialize_QuadDobl_Homotopy;
+    end if;
+    if quaddobl_homotopy_initialized
+     then res := QuadDobl_Homotopy.Diff(x,t);
     end if;
     return res;
   end Diff;
@@ -149,10 +362,22 @@ package body Varbprec_Homotopy is
       Standard_Complex_Poly_Systems.Clear(st_start);
       Standard_Complex_Poly_Systems.Clear(st_target);
     end if;
+    if dobldobl_homotopy_initialized then
+      DoblDobl_Homotopy.Clear;
+      DoblDobl_Complex_Poly_Systems.Clear(dd_start);
+      DoblDobl_Complex_Poly_Systems.Clear(dd_target);
+    end if;
+    if quaddobl_homotopy_initialized then
+      QuadDobl_Homotopy.Clear;
+      QuadDobl_Complex_Poly_Systems.Clear(qd_start);
+      QuadDobl_Complex_Poly_Systems.Clear(qd_target);
+    end if;
   end Clear;
 
 begin
   start := null;
   target := null;
   standard_homotopy_initialized := false;
+  dobldobl_homotopy_initialized := false;
+  quaddobl_homotopy_initialized := false;
 end Varbprec_Homotopy;
