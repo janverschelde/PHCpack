@@ -27,12 +27,16 @@ with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
+with Multprec_Complex_Vectors;
+with Multprec_Complex_Vectors_io;        use Multprec_Complex_Vectors_io;
 with Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
 with DoblDobl_Complex_Matrices;
 with DoblDobl_Complex_Matrices_io;       use DoblDobl_Complex_Matrices_io;
 with QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices_io;       use QuadDobl_Complex_Matrices_io;
+with Multprec_Complex_Matrices;
+with Multprec_Complex_Matrices_io;       use Multprec_Complex_Matrices_io;
 with Varbprec_Complex_Linear_Solvers;    use Varbprec_Complex_Linear_Solvers;
 with Symbol_Table;
 with Standard_Complex_Polynomials;
@@ -583,6 +587,48 @@ procedure ts_vmphom is
     end if;
   end QuadDobl_Test_Varbprec_Homotopy;
 
+  procedure Multprec_Test_Varbprec_Homotopy
+              ( deci : in natural32;
+                sols : in Multprec_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Tests the operations of the variable precision homotopy
+  --   in arbitrary multiprecision with as many decimal places
+  --   as the value of deci.
+
+    use Multprec_Complex_Solutions;
+
+    hom : constant Multprec_Complex_Poly_Systems.Link_to_Poly_Sys
+        := Varbprec_Homotopy.Multprec_Homotopy_System(deci);
+
+  begin
+    put_line("The homotopy in arbitrary multiprecision :");
+    put_line(hom.all);
+    if not Is_Null(sols) then
+      declare
+        ls : constant Link_to_Solution := Head_Of(sols);
+        y : Multprec_Complex_Vectors.Vector(ls.v'range);
+        A : Multprec_Complex_Matrices.Matrix(y'range,y'range);
+        zero : Multprec_Floating_Numbers.Floating_Number := create(0.0);
+        t : Multprec_Complex_Numbers.Complex_Number
+          := Multprec_Complex_Numbers.Create(zero);
+        piv : Standard_Integer_Vectors.Vector(y'range);
+        rco : Multprec_Floating_Numbers.Floating_Number;
+        loss : integer32;
+      begin
+        put_line("The first solution vector : "); put_line(ls.v);
+        y := Varbprec_Homotopy.Eval(ls.v,t,deci);
+        put_line("The first start solution evaluated : "); put_line(y);
+        A := Varbprec_Homotopy.Diff(ls.v,t,deci);
+        put_line("The Jacobian matrix at the first start solution :");
+        put(A,3);
+        Estimated_Loss_of_Decimal_Places(A,piv,rco,loss);
+        put("Estimated inverse condition number : "); put(rco,3); new_line;
+        put("Estimated loss of decimal places : "); put(loss,1); new_line;
+      end;
+    end if;
+  end Multprec_Test_Varbprec_Homotopy;
+
   procedure Test_Varbprec_Homotopy is
 
   -- DESCRIPTION :
@@ -592,7 +638,7 @@ procedure ts_vmphom is
     use Varbprec_Complex_Solutions;
 
     sf,sg : Link_to_Array_of_strings;
-    nq,nv,len : natural32;
+    nq,nv,len,deci : natural32 := 0;
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := Standard_Random_Numbers.Random1;
     mpsols : Multprec_Complex_Solutions.Solution_List;
@@ -609,8 +655,9 @@ procedure ts_vmphom is
     put_line("  0. evaluate and differentiate in standard double precision;");
     put_line("  1. evaluate and differentiate in double double precision;");
     put_line("  2. evaluate and differentiate in quad double precision;");
+    put_line("  3. evaluate and differentiate in arbitrary multiprecision.");
     put("Type 0 or 1 to choose precision : ");
-    Ask_Alternative(ans,"012");
+    Ask_Alternative(ans,"0123");
     case ans is
       when '0' =>
         stsols := Multprec_to_Standard_Solutions(mpsols);
@@ -621,6 +668,10 @@ procedure ts_vmphom is
       when '2' =>
         qdsols := Multprec_to_QuadDobl_Solutions(mpsols);
         QuadDobl_Test_Varbprec_Homotopy(qdsols);
+      when '3' =>
+        new_line;
+        put("Give the number of decimal places : "); get(deci);
+        Multprec_Test_Varbprec_Homotopy(deci,mpsols);
       when others => null;
     end case;
   end Test_Varbprec_Homotopy;

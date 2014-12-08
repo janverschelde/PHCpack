@@ -3,15 +3,19 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with Multprec_Complex_Numbers;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
+with Multprec_Complex_Vectors;
 with Standard_Complex_Matrices;
 with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices;
+with Multprec_Complex_Matrices;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
+with Multprec_Complex_Poly_Systems;
 
 package Varbprec_Homotopy is
 
@@ -54,6 +58,14 @@ package Varbprec_Homotopy is
   --   Evaluates the homotopy stored as string representation by Create
   --   and returns the evaluated system in quad double precision.
 
+  function Multprec_Homotopy_System ( deci : natural32 )
+             return Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Evaluates the homotopy stored as string representation by Create
+  --   and returns the evaluated system in arbitrary multiprecision,
+  --   with as many decimal places as the value of deci.
+
   function Eval ( x : Standard_Complex_Vectors.Vector;
                   t : Standard_Complex_Numbers.Complex_Number )
                 return Standard_Complex_Vectors.Vector;
@@ -74,6 +86,15 @@ package Varbprec_Homotopy is
 
   -- DESCRIPTION :
   --   Evaluates the homotopy at x and t in quad double precision.
+
+  function Eval ( x : Multprec_Complex_Vectors.Vector;
+                  t : Multprec_Complex_Numbers.Complex_Number;
+                  d : natural32 )
+                return Multprec_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Evaluates the homotopy at x and t in arbitrary multiprecision,
+  --   with as many decimal places as d.
 
   function Diff ( x : Standard_Complex_Vectors.Vector;
                   t : Standard_Complex_Numbers.Complex_Number )
@@ -98,6 +119,16 @@ package Varbprec_Homotopy is
   -- DESCRIPTION :
   --   Returns the homotopy differentiated with respect to t
   --   and evaluated at x and t, evaluated in quad double precision.
+
+  function Diff ( x : Multprec_Complex_Vectors.Vector;
+                  t : Multprec_Complex_Numbers.Complex_Number;
+                  d : natural32 )
+                return Multprec_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the homotopy differentiated with respect to t
+  --   and evaluated at x and t, evaluated in arbitrary multiprecision,
+  --   using as many decimal places as the value of d.
 
   function Diff ( x : Standard_Complex_Vectors.Vector;
                   t : Standard_Complex_Numbers.Complex_Number )
@@ -125,6 +156,16 @@ package Varbprec_Homotopy is
   --   Returns the evaluated Jacobian matrix of the homotopy,
   --   differentiated with respect to x, and evaluated at x and t
   --   in quad double precision.
+
+  function Diff ( x : Multprec_Complex_Vectors.Vector;
+                  t : Multprec_Complex_Numbers.Complex_Number;
+                  d : natural32 )
+                return Multprec_Complex_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns the evaluated Jacobian matrix of the homotopy,
+  --   differentiated with respect to x, and evaluated at x and t
+  --   in arbitrary multiprecision using d decimal places.
 
 -- DESTRUCTOR :
 

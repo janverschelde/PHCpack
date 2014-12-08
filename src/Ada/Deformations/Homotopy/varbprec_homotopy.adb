@@ -3,13 +3,16 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Multprec_Floating_Numbers;
 with Symbol_Table;
 with Standard_Complex_Poly_Strings;
 with DoblDobl_Complex_Poly_Strings;
 with QuadDobl_Complex_Poly_Strings;
+with Multprec_Complex_Poly_Strings;
 with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
+with Multprec_Homotopy;
 
 package body Varbprec_Homotopy is
 
@@ -19,11 +22,14 @@ package body Varbprec_Homotopy is
   st_start,st_target : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
   dd_start,dd_target : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
   qd_start,qd_target : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+  mp_start,mp_target : Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;
   gamma : Standard_Complex_Numbers.Complex_Number;
   exp4t : natural32;
   standard_homotopy_initialized : boolean; -- is standard homotopy defined ?
   dobldobl_homotopy_initialized : boolean; -- is dobldobl homotopy defined ?
   quaddobl_homotopy_initialized : boolean; -- is quaddobl homotopy defined ?
+  multprec_homotopy_numbsize : natural32;
+  -- size of the numbers in the multiprecision homotopy
 
 -- AUXILIARY CONSTRUCTOR :
 
@@ -130,6 +136,45 @@ package body Varbprec_Homotopy is
     end if;
   end Initialize_QuadDobl_Homotopy;
 
+  procedure Initialize_Multprec_Homotopy ( size : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Parses start and target system with respect to the precision
+  --   as defined by the size of the numbers given in size.
+
+    use Multprec_Complex_Poly_Systems;
+    use Multprec_Complex_Poly_Strings;
+
+    nvr : natural32;
+    regamma : constant double_float
+            := Standard_Complex_Numbers.REAL_PART(gamma);
+    imgamma : constant double_float
+            := Standard_Complex_Numbers.IMAG_PART(gamma);
+    mpregamma : Multprec_Floating_Numbers.Floating_Number
+              := Multprec_Floating_Numbers.create(regamma);
+    mpimgamma : Multprec_Floating_Numbers.Floating_Number
+              := Multprec_Floating_Numbers.create(imgamma);
+    mpgamma : Multprec_Complex_Numbers.Complex_Number
+            := Multprec_Complex_Numbers.Create(mpregamma,mpimgamma);
+
+  begin
+    Multprec_Homotopy.Clear;
+    Multprec_Complex_Poly_Systems.Clear(mp_start);
+    Multprec_Complex_Poly_Systems.Clear(mp_target);
+    if start /= null then
+      nvr := natural32(start'last);
+      if Symbol_Table.Number < nvr + 1
+       then Symbol_Table.Init(nvr+1);
+      end if;
+      mp_start := new Poly_Sys'(Parse(nvr,size,start.all));
+      if target /= null
+       then mp_target := new Poly_Sys'(Parse(nvr,size,target.all));
+      end if;
+      Multprec_Homotopy.Create(mp_target.all,mp_start.all,exp4t,mpgamma);
+      multprec_homotopy_numbsize := size;
+    end if;
+  end Initialize_Multprec_Homotopy;
+
 -- CONSTRUCTORS :
 
   procedure Create ( p,q : in Link_to_Array_of_Strings; k : in natural32;
@@ -203,6 +248,24 @@ package body Varbprec_Homotopy is
     return res;
   end QuadDobl_Homotopy_System;
 
+  function Multprec_Homotopy_System ( deci : natural32 )
+             return Multprec_Complex_Poly_Systems.Link_to_Poly_Sys is
+
+    use Multprec_Complex_Poly_Systems;
+    res : Link_to_Poly_Sys;
+    size : constant natural32
+         := Multprec_Floating_Numbers.Decimal_to_Size(deci);
+
+  begin
+    if multprec_homotopy_numbsize /= size
+     then Initialize_Multprec_Homotopy(size);
+    end if;
+    if multprec_homotopy_numbsize = size
+     then res := new Poly_Sys'(Multprec_Homotopy.Homotopy_System);
+    end if;
+    return res;
+  end Multprec_Homotopy_System;
+
   function Eval ( x : Standard_Complex_Vectors.Vector;
                   t : Standard_Complex_Numbers.Complex_Number )
                 return Standard_Complex_Vectors.Vector is
@@ -251,6 +314,24 @@ package body Varbprec_Homotopy is
     return res;
   end Eval;
 
+  function Eval ( x : Multprec_Complex_Vectors.Vector;
+                  t : Multprec_Complex_Numbers.Complex_Number;
+                  d : natural32 )
+                return Multprec_Complex_Vectors.Vector is
+
+    res : Multprec_Complex_Vectors.Vector(x'range);
+    size : constant natural32 := Multprec_Floating_Numbers.Decimal_to_Size(d);
+
+  begin
+    if multprec_homotopy_numbsize /= size
+     then Initialize_Multprec_Homotopy(size);
+    end if;
+    if multprec_homotopy_numbsize = size
+     then res := Multprec_Homotopy.Eval(x,t);
+    end if;
+    return res;
+  end Eval;
+
   function Diff ( x : Standard_Complex_Vectors.Vector;
                   t : Standard_Complex_Numbers.Complex_Number )
                 return Standard_Complex_Vectors.Vector is
@@ -295,6 +376,24 @@ package body Varbprec_Homotopy is
     end if;
     if quaddobl_homotopy_initialized
      then res := QuadDobl_Homotopy.Diff(x,t);
+    end if;
+    return res;
+  end Diff;
+
+  function Diff ( x : Multprec_Complex_Vectors.Vector;
+                  t : Multprec_Complex_Numbers.Complex_Number;
+                  d : natural32 )
+                return Multprec_Complex_Vectors.Vector is
+
+    res : Multprec_Complex_Vectors.Vector(x'range);
+    size : constant natural32 := Multprec_Floating_Numbers.Decimal_to_Size(d);
+
+  begin
+    if multprec_homotopy_numbsize /= size
+     then Initialize_Multprec_Homotopy(size);
+    end if;
+    if multprec_homotopy_numbsize = size
+     then res := Multprec_Homotopy.Diff(x,t);
     end if;
     return res;
   end Diff;
@@ -347,6 +446,25 @@ package body Varbprec_Homotopy is
     return res;
   end Diff;
 
+
+  function Diff ( x : Multprec_Complex_Vectors.Vector;
+                  t : Multprec_Complex_Numbers.Complex_Number;
+                  d : natural32 )
+                return Multprec_Complex_Matrices.Matrix is
+
+    res : Multprec_Complex_Matrices.Matrix(x'range,x'range);
+    size : constant natural32 := Multprec_Floating_Numbers.Decimal_to_Size(d);
+
+  begin
+    if multprec_homotopy_numbsize /= size
+     then Initialize_Multprec_Homotopy(size);
+    end if;
+    if multprec_homotopy_numbsize = size
+     then res := Multprec_Homotopy.Diff(x,t);
+    end if;
+    return res;
+  end Diff;
+
 -- DESTRUCTOR :
 
   procedure Clear is
@@ -372,6 +490,11 @@ package body Varbprec_Homotopy is
       QuadDobl_Complex_Poly_Systems.Clear(qd_start);
       QuadDobl_Complex_Poly_Systems.Clear(qd_target);
     end if;
+    if multprec_homotopy_numbsize /= 0 then
+      Multprec_Homotopy.Clear;
+      Multprec_Complex_Poly_Systems.Clear(mp_start);
+      Multprec_Complex_Poly_Systems.Clear(mp_target);
+    end if;
   end Clear;
 
 begin
@@ -380,4 +503,5 @@ begin
   standard_homotopy_initialized := false;
   dobldobl_homotopy_initialized := false;
   quaddobl_homotopy_initialized := false;
+  multprec_homotopy_numbsize := 0;
 end Varbprec_Homotopy;
