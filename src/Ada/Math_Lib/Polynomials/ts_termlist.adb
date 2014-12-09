@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Timing_Package;                     use Timing_Package;
 with String_Splitters;                   use String_Splitters;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
@@ -235,6 +236,46 @@ procedure ts_termlist is
     Multprec_Test_Parse(n,s.all);
   end Multprec_Test;
 
+  procedure Test_User_Data is
+
+  -- DESCRIPTION :
+  --   Prompts the user to provide a file name and then reads
+  --   an array of strings from that file for parsing.
+
+    file : file_type;
+    ls : Link_to_Array_of_Strings;
+    timer : Timing_Widget;
+    nq,nv : natural32;
+
+  begin
+    new_line;
+    put_line("Reading an array of strings from file ...");
+    Read_Name_and_Open_File(file);
+    tstart(timer);
+    get(file,natural(nq),natural(nv),ls);
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"reading strings from file");
+    new_line;
+    put_line("The polynomials read from file :");
+    for i in ls'range loop
+      put_line(ls(i).all);
+    end loop;
+    Symbol_Table.Init(nv);
+    declare
+      use Standard_Complex_Term_Lists;
+      t : Array_of_Term_Lists(1..integer32(nq));
+    begin
+      tstart(timer);
+      t := Standard_Complex_Poly_Strings.Parse(nv,ls.all);
+      tstop(timer);
+      new_line;
+      print_times(standard_output,timer,"parsing the strings into term lists");
+      new_line;
+      put_line("The lists of terms : "); put(t);
+    end;
+  end Test_User_Data;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -245,17 +286,19 @@ procedure ts_termlist is
   begin
     new_line;
     put_line("MENU to test operations on lists of terms ...");
-    put_line("  0. in standard double precision;");
-    put_line("  1. in double double precision;");
-    put_line("  2. in quad double precision;");
-    put_line("  3. in arbitrary multiprecision;");
-    put("Type 0, 1, 2, or 3 to select the precision : ");
-    Ask_Alternative(ans,"0123");
+    put_line("  0. randomly generated data in standard double precision;");
+    put_line("  1. randomly generated data in double double precision;");
+    put_line("  2. randomly generated data in quad double precision;");
+    put_line("  3. randomly generated data in arbitrary multiprecision;");
+    put_line("  4. test on system given on file.");
+    put("Type 0, 1, 2, 3, or 4 to select the test : ");
+    Ask_Alternative(ans,"01234");
     case ans is
       when '0' => Standard_Test;
       when '1' => DoblDobl_Test;
       when '2' => QuadDobl_Test;
       when '3' => Multprec_Test;
+      when '4' => Test_USer_Data;
       when others => null;
     end case;
   end Main;
