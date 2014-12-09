@@ -96,9 +96,42 @@ package body DoblDobl_Complex_Poly_Strings is
     return res;
   end Parse;
 
+  function Parse ( n,m : natural32; s : string ) return Array_of_Term_Lists is
+
+    res : Array_of_Term_Lists(1..integer32(n));
+    ind : constant Standard_Natural_Vectors.Vector(1..integer32(n))
+        := Standard_Complex_Poly_Strings.Delimiters(n,s);
+
+  begin
+    res(1) := Parse(m,s(s'first..integer(ind(1))));
+    for i in 2..integer32(n) loop
+      res(i) := Parse(m,s(integer(ind(i-1)+1)..integer(ind(i))));
+    end loop;
+    return res;
+  end Parse;
+
   function Parse ( m : natural32; s : Array_of_Strings ) return Poly_Sys is
 
     res : Poly_Sys(integer32(s'first)..integer32(s'last));
+ 
+  begin
+    for i in s'range loop
+      declare
+      begin
+        res(integer32(i)) := Parse(m,s(i).all);
+      exception
+        when others => put("something is wrong with string ");
+                       put(natural32(i),1);
+                       new_line; put_line(s(i).all); raise;
+      end;
+    end loop;
+    return res;
+  end Parse;
+
+  function Parse ( m : natural32; s : Array_of_Strings ) 
+                 return Array_of_Term_Lists is
+
+    res : Array_of_Term_Lists(integer32(s'first)..integer32(s'last));
  
   begin
     for i in s'range loop

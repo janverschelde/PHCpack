@@ -35,12 +35,16 @@ package Multprec_Complex_Poly_Strings is
   --   at size to evaluate fractions.
 
   function Parse ( n,m,size : natural32; s : string ) return Poly_Sys;
+  function Parse ( n,m,size : natural32; s : string )
+                 return Array_of_Term_Lists;
 
   -- DESCRIPTION :
   --   Returns a system of n polynomials in m variables,
   --   using working precision set at size to evaluate fractions.
 
   function Parse ( m,size : natural32; s : Array_of_Strings ) return Poly_Sys;
+  function Parse ( m,size : natural32; s : Array_of_Strings )
+                 return Array_of_Term_Lists;
 
   -- DESCRIPTION :
   --   Parses the strings in s into polynomials in m variables,

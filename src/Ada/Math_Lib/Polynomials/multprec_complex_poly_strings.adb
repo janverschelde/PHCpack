@@ -14,10 +14,10 @@ with Symbol_Table,Symbol_Table_io;       use Symbol_Table;
 with Parse_Polynomial_Exceptions;        use Parse_Polynomial_Exceptions;
 with Standard_Complex_Poly_Strings;
 
-with Multprec_Complex_Numbers_io;
- use Multprec_Complex_Numbers_io;
-with Multprec_Complex_Term_Lists_io;
- use Multprec_Complex_Term_Lists_io;
+--with Multprec_Complex_Numbers_io;
+-- use Multprec_Complex_Numbers_io;
+--with Multprec_Complex_Term_Lists_io;
+-- use Multprec_Complex_Term_Lists_io;
 
 package body Multprec_Complex_Poly_Strings is
 
@@ -968,10 +968,44 @@ package body Multprec_Complex_Poly_Strings is
     return res;
   end Parse;
 
+  function Parse ( n,m,size : natural32; s : string ) 
+                 return Array_of_Term_Lists is
+
+    res : Array_of_Term_Lists(1..integer32(n));
+    ind : constant Standard_Natural_Vectors.Vector(1..integer32(n))
+        := Standard_Complex_Poly_Strings.Delimiters(n,s);
+
+  begin
+    res(1) := Parse(m,size,s(s'first..integer(ind(1))));
+    for i in 2..integer32(n) loop
+      res(i) := Parse(m,size,s(integer(ind(i-1)+1)..integer(ind(i))));
+    end loop;
+    return res;
+  end Parse;
+
   function Parse ( m,size : natural32;
                    s : Array_of_Strings ) return Poly_Sys is
 
     res : Poly_Sys(integer32(s'first)..integer32(s'last));
+ 
+  begin
+    for i in s'range loop
+      declare
+      begin
+        res(integer32(i)) := Parse(m,size,s(i).all);
+      exception
+        when others => put("something is wrong with string ");
+                       put(integer32(i),1);
+                       new_line; put_line(s(i).all); raise;
+      end;
+    end loop;
+    return res;
+  end Parse;
+
+  function Parse ( m,size : natural32;
+                   s : Array_of_Strings ) return Array_of_Term_Lists is
+
+    res : Array_of_Term_Lists(integer32(s'first)..integer32(s'last));
  
   begin
     for i in s'range loop

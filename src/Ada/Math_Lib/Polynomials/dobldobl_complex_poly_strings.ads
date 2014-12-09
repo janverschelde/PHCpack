@@ -33,11 +33,14 @@ package DoblDobl_Complex_Poly_Strings is
   --   as a result of parsing the string s.
 
   function Parse ( n,m : natural32; s : string ) return Poly_Sys;
+  function Parse ( n,m : natural32; s : string ) return Array_of_Term_Lists;
 
   -- DESCRIPTION :
   --   Returns a system of n polynomials in m variables.
 
   function Parse ( m : natural32; s : Array_of_Strings ) return Poly_Sys;
+  function Parse ( m : natural32; s : Array_of_Strings )
+                 return Array_of_Term_Lists;
 
   -- DESCRIPTION :
   --   Parses the strings in s into polynomials in m variables.

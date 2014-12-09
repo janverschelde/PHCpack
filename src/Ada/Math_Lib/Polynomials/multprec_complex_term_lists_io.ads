@@ -13,4 +13,12 @@ package Multprec_Complex_Term_Lists_io is
   --   come first, written plainly as two multiprecision floating point
   --   numbers, followed by the integer exponents.
 
+  procedure put ( p : in Array_of_Term_Lists );
+  procedure put ( file : in file_type; p : in Array_of_Term_Lists );
+
+  -- DESCRIPTION :
+  --   Writes the array of term lists stored in p to standard output
+  --   or to file, using tableau format, with one blank line to
+  --   separate the polynomials in p.
+
 end Multprec_Complex_Term_Lists_io;

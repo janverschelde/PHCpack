@@ -5,6 +5,7 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Multprec_Floating_Numbers;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Symbol_Table;
 with Standard_Complex_Polynomials;
@@ -236,6 +237,127 @@ procedure ts_termlist is
     Multprec_Test_Parse(n,s.all);
   end Multprec_Test;
 
+  procedure Standard_Test_User_Data
+              ( nq,nv : in natural32; p : in Array_of_Strings ) is
+
+  -- DESCRIPTION :
+  --   Times the parsing of the array of strings in nv variables
+  --   into lists of terms with standard double precision.
+  --   The strings in p represent nq polynomials in nv variables.
+
+    use Standard_Complex_Term_Lists;
+    t : Array_of_Term_Lists(1..integer32(nq));
+    timer : Timing_Widget;
+    ans : character;
+ 
+  begin
+    Symbol_Table.Init(nv);
+    tstart(timer);
+    t := Standard_Complex_Poly_Strings.Parse(nv,p);
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"parsing the strings into term lists");
+    new_line;
+    put("Do you want to see the lists of terms ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      new_line;
+      put_line("The lists of terms : "); put(t);
+    end if;
+  end Standard_Test_User_Data;
+
+  procedure DoblDobl_Test_User_Data
+              ( nq,nv : in natural32; p : in Array_of_Strings ) is
+
+  -- DESCRIPTION :
+  --   Times the parsing of the array of strings in nv variables
+  --   into lists of terms with double double precision.
+  --   The strings in p represent nq polynomials in nv variables.
+
+    use DoblDobl_Complex_Term_Lists;
+    t : Array_of_Term_Lists(1..integer32(nq));
+    timer : Timing_Widget;
+    ans : character;
+ 
+  begin
+    Symbol_Table.Init(nv);
+    tstart(timer);
+    t := DoblDobl_Complex_Poly_Strings.Parse(nv,p);
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"parsing the strings into term lists");
+    new_line;
+    put("Do you want to see the lists of terms ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      new_line;
+      put_line("The lists of terms : "); put(t);
+    end if;
+  end DoblDobl_Test_User_Data;
+
+  procedure QuadDobl_Test_User_Data
+              ( nq,nv : in natural32; p : in Array_of_Strings ) is
+
+  -- DESCRIPTION :
+  --   Times the parsing of the array of strings in nv variables
+  --   into lists of terms with quad double precision.
+  --   The strings in p represent nq polynomials in nv variables.
+
+    use QuadDobl_Complex_Term_Lists;
+    t : Array_of_Term_Lists(1..integer32(nq));
+    timer : Timing_Widget;
+    ans : character;
+ 
+  begin
+    Symbol_Table.Init(nv);
+    tstart(timer);
+    t := QuadDobl_Complex_Poly_Strings.Parse(nv,p);
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"parsing the strings into term lists");
+    new_line;
+    put("Do you want to see the lists of terms ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      new_line;
+      put_line("The lists of terms : "); put(t);
+    end if;
+  end QuadDobl_Test_User_Data;
+
+  procedure Multprec_Test_User_Data
+              ( nq,nv : in natural32; p : in Array_of_Strings ) is
+
+  -- DESCRIPTION :
+  --   Times the parsing of the array of strings in nv variables
+  --   into lists of terms with quad double precision.
+  --   The strings in p represent nq polynomials in nv variables.
+
+    use Multprec_Complex_Term_Lists;
+    t : Array_of_Term_Lists(1..integer32(nq));
+    timer : Timing_Widget;
+    ans : character;
+    deci,size : natural32 := 0;
+ 
+  begin
+    new_line;
+    put("Give the number of decimal places in the precision : ");
+    get(deci);
+    size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
+    Symbol_Table.Init(nv);
+    tstart(timer);
+    t := Multprec_Complex_Poly_Strings.Parse(nv,size,p);
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"parsing the strings into term lists");
+    new_line;
+    put("Do you want to see the lists of terms ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      new_line;
+      put_line("The lists of terms : "); put(t);
+    end if;
+  end Multprec_Test_User_Data;
+
   procedure Test_User_Data is
 
   -- DESCRIPTION :
@@ -246,6 +368,7 @@ procedure ts_termlist is
     ls : Link_to_Array_of_Strings;
     timer : Timing_Widget;
     nq,nv : natural32;
+    ans : character;
 
   begin
     new_line;
@@ -257,23 +380,30 @@ procedure ts_termlist is
     new_line;
     print_times(standard_output,timer,"reading strings from file");
     new_line;
-    put_line("The polynomials read from file :");
-    for i in ls'range loop
-      put_line(ls(i).all);
-    end loop;
-    Symbol_Table.Init(nv);
-    declare
-      use Standard_Complex_Term_Lists;
-      t : Array_of_Term_Lists(1..integer32(nq));
-    begin
-      tstart(timer);
-      t := Standard_Complex_Poly_Strings.Parse(nv,ls.all);
-      tstop(timer);
+    put("Do you want to see the strings ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
       new_line;
-      print_times(standard_output,timer,"parsing the strings into term lists");
-      new_line;
-      put_line("The lists of terms : "); put(t);
-    end;
+      put_line("The polynomials read from file :");
+      for i in ls'range loop
+        put_line(ls(i).all);
+      end loop;
+    end if;
+    new_line;
+    put_line("MENU for the precision level of parsing the coefficients :");
+    put_line("  0. parse coefficients in standard double precision;");
+    put_line("  1. parse coefficients in double double precision;");
+    put_line("  2. parse coefficients in quad double precision;");
+    put_line("  3. parse coefficients in arbitrary multiprecision.");
+    put("Type 0, 1, 2, or 3 to select the precision : ");
+    Ask_Alternative(ans,"0123");
+    case ans is
+      when '0' => Standard_Test_User_Data(nq,nv,ls.all);
+      when '1' => DoblDobl_Test_User_Data(nq,nv,ls.all);
+      when '2' => QuadDobl_Test_User_Data(nq,nv,ls.all);
+      when '3' => Multprec_Test_User_Data(nq,nv,ls.all);
+      when others => null;
+    end case;
   end Test_User_Data;
 
   procedure Main is

@@ -1,3 +1,8 @@
+Tue 9 Dec 2014 : parsing of user given strings for arrays of term lists
+  in {dobldobl,quaddobl,multprec}_complex_poly_strings with corresponding
+  changes in {dobldobl,quaddobl,multprec}_complex_term_lists_io,
+  tested by ts_termlist.
+
 Mon 8 Dec 2014 : extended standard_complex_poly_strings and
   standard_complex_term_lists_io with operations on arrays_of_term_lists,
   as needed in ts_termlist.
