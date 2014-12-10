@@ -1,3 +1,6 @@
+Wed 10 Dec 2014 : updated ts_termlist with parsing routines to polynomials
+  for efficiency comparisons.
+
 Tue 9 Dec 2014 : parsing of user given strings for arrays of term lists
   in {dobldobl,quaddobl,multprec}_complex_poly_strings with corresponding
   changes in {dobldobl,quaddobl,multprec}_complex_term_lists_io,

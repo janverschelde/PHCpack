@@ -10,18 +10,26 @@ with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Symbol_Table;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;    use Standard_Complex_Polynomials_io;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_Strings;
 with Standard_Random_Polynomials;
 with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Polynomials_io;    use DoblDobl_Complex_Polynomials_io;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Poly_Strings;
 with DoblDobl_Random_Polynomials;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Polynomials_io;    use QuadDobl_Complex_Polynomials_io;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_Strings;
 with QuadDobl_Random_Polynomials;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Polynomials_io;    use Multprec_Complex_Polynomials_io;
+with Multprec_Complex_Poly_Systems;
+with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
 with Multprec_Complex_Poly_Strings;
 with Multprec_Random_Polynomials;
 with Standard_Complex_Term_Lists;
@@ -244,25 +252,47 @@ procedure ts_termlist is
   --   Times the parsing of the array of strings in nv variables
   --   into lists of terms with standard double precision.
   --   The strings in p represent nq polynomials in nv variables.
+  --   To make the comparison in efficiency, the user can also ask
+  --   to parse the strings to polynomial data structures.
 
     use Standard_Complex_Term_Lists;
+    use Standard_Complex_Poly_Systems;
     t : Array_of_Term_Lists(1..integer32(nq));
+    f : Poly_Sys(t'range);
     timer : Timing_Widget;
     ans : character;
  
   begin
     Symbol_Table.Init(nv);
-    tstart(timer);
-    t := Standard_Complex_Poly_Strings.Parse(nv,p);
-    tstop(timer);
     new_line;
-    print_times(standard_output,timer,"parsing the strings into term lists");
-    new_line;
-    put("Do you want to see the lists of terms ? (y/n) ");
+    put("Parse to a polynomial (if no, to list of terms) ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
+      tstart(timer);
+      f := Standard_Complex_Poly_Strings.Parse(nv,p);
+      tstop(timer);
       new_line;
-      put_line("The lists of terms : "); put(t);
+      print_times(standard_output,timer,"parsing the strings into term lists");
+      new_line;
+      put("Do you want to see the polynomials ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        new_line;
+        put_line("The polynomial system : "); put(f);
+      end if;
+    else
+      tstart(timer);
+      t := Standard_Complex_Poly_Strings.Parse(nv,p);
+      tstop(timer);
+      new_line;
+      print_times(standard_output,timer,"parsing the strings into term lists");
+      new_line;
+      put("Do you want to see the lists of terms ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        new_line;
+        put_line("The lists of terms : "); put(t);
+      end if;
     end if;
   end Standard_Test_User_Data;
 
@@ -275,23 +305,43 @@ procedure ts_termlist is
   --   The strings in p represent nq polynomials in nv variables.
 
     use DoblDobl_Complex_Term_Lists;
+    use DoblDobl_Complex_Poly_Systems;
     t : Array_of_Term_Lists(1..integer32(nq));
+    f : Poly_Sys(t'range);
     timer : Timing_Widget;
     ans : character;
  
   begin
     Symbol_Table.Init(nv);
-    tstart(timer);
-    t := DoblDobl_Complex_Poly_Strings.Parse(nv,p);
-    tstop(timer);
     new_line;
-    print_times(standard_output,timer,"parsing the strings into term lists");
-    new_line;
-    put("Do you want to see the lists of terms ? (y/n) ");
+    put("Parse to a polynomial (if no, to list of terms) ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
+      tstart(timer);
+      f := DoblDobl_Complex_Poly_Strings.Parse(nv,p);
+      tstop(timer);
       new_line;
-      put_line("The lists of terms : "); put(t);
+      print_times(standard_output,timer,"parsing the strings into term lists");
+      new_line;
+      put("Do you want to see the polynomials ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        new_line;
+        put_line("The polynomial system : "); put(f);
+      end if;
+    else
+      tstart(timer);
+      t := DoblDobl_Complex_Poly_Strings.Parse(nv,p);
+      tstop(timer);
+      new_line;
+      print_times(standard_output,timer,"parsing the strings into term lists");
+      new_line;
+      put("Do you want to see the lists of terms ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        new_line;
+        put_line("The lists of terms : "); put(t);
+      end if;
     end if;
   end DoblDobl_Test_User_Data;
 
@@ -304,23 +354,43 @@ procedure ts_termlist is
   --   The strings in p represent nq polynomials in nv variables.
 
     use QuadDobl_Complex_Term_Lists;
+    use QuadDobl_Complex_Poly_Systems;
     t : Array_of_Term_Lists(1..integer32(nq));
+    f : Poly_Sys(t'range);
     timer : Timing_Widget;
     ans : character;
  
   begin
     Symbol_Table.Init(nv);
-    tstart(timer);
-    t := QuadDobl_Complex_Poly_Strings.Parse(nv,p);
-    tstop(timer);
     new_line;
-    print_times(standard_output,timer,"parsing the strings into term lists");
-    new_line;
-    put("Do you want to see the lists of terms ? (y/n) ");
+    put("Parse to a polynomial (if no, to list of terms) ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
+      tstart(timer);
+      f := QuadDobl_Complex_Poly_Strings.Parse(nv,p);
+      tstop(timer);
       new_line;
-      put_line("The lists of terms : "); put(t);
+      print_times(standard_output,timer,"parsing the strings into term lists");
+      new_line;
+      put("Do you want to see the polynomials ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        new_line;
+        put_line("The polynomial system : "); put(f);
+      end if;
+    else
+      tstart(timer);
+      t := QuadDobl_Complex_Poly_Strings.Parse(nv,p);
+      tstop(timer);
+      new_line;
+      print_times(standard_output,timer,"parsing the strings into term lists");
+      new_line;
+      put("Do you want to see the lists of terms ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        new_line;
+        put_line("The lists of terms : "); put(t);
+      end if;
     end if;
   end QuadDobl_Test_User_Data;
 
@@ -333,7 +403,9 @@ procedure ts_termlist is
   --   The strings in p represent nq polynomials in nv variables.
 
     use Multprec_Complex_Term_Lists;
+    use Multprec_Complex_Poly_Systems;
     t : Array_of_Term_Lists(1..integer32(nq));
+    f : Poly_Sys(t'range);
     timer : Timing_Widget;
     ans : character;
     deci,size : natural32 := 0;
@@ -344,17 +416,35 @@ procedure ts_termlist is
     get(deci);
     size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
     Symbol_Table.Init(nv);
-    tstart(timer);
-    t := Multprec_Complex_Poly_Strings.Parse(nv,size,p);
-    tstop(timer);
     new_line;
-    print_times(standard_output,timer,"parsing the strings into term lists");
-    new_line;
-    put("Do you want to see the lists of terms ? (y/n) ");
+    put("Parse to a polynomial (if no, to list of terms) ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
+      tstart(timer);
+      f := Multprec_Complex_Poly_Strings.Parse(nv,size,p);
+      tstop(timer);
       new_line;
-      put_line("The lists of terms : "); put(t);
+      print_times(standard_output,timer,"parsing the strings into term lists");
+      new_line;
+      put("Do you want to see the polynomials ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        new_line;
+        put_line("The polynomial system : "); put(f);
+      end if;
+    else
+      tstart(timer);
+      t := Multprec_Complex_Poly_Strings.Parse(nv,size,p);
+      tstop(timer);
+      new_line;
+      print_times(standard_output,timer,"parsing the strings into term lists");
+      new_line;
+      put("Do you want to see the lists of terms ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        new_line;
+        put_line("The lists of terms : "); put(t);
+      end if;
     end if;
   end Multprec_Test_User_Data;
 
