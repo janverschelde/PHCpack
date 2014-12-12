@@ -5,6 +5,26 @@ This script provides an exact representation of the solution set,
 following the tropical formulation with m-1 free parameters.
 """
 
+def randcmplx():
+    """
+    Returns a random complex number on the unit circle.
+    """
+    from random import uniform
+    from math import cos, sin, pi
+    angle = uniform(0, 2*pi)
+    return complex(cos(angle), sin(angle))
+
+def strcmplx(nbr, imagunit, mulsym=''):
+    """
+    Returns the string representation of a complex number,
+    where imagunit contains the string to use for the
+    imaginary unit, and mulsym is the symbol for multiplication
+    with the imaginary unit.
+    """
+    nre = '%.16e' % nbr.real
+    nim = '%+.16e' % nbr.imag
+    return '(' + nre + nim + mulsym + imagunit + ')'
+
 def constants(m, L):
     """
     Returns the tuple of constants u and gamma
@@ -25,19 +45,21 @@ def component(m, L, u, gamma):
     The m-1 parameters are t0, t1, .., tm-2.
     """
     result = []
+    ustr = '(%.16e %+.16ej)' % (u.real, u.imag)
+    gstr = '(%.16e %+.16ej)' % (gamma.real, gamma.imag)
     for ell in range(L):
         for k in range(m):
             if(ell % 2 == 1):
-                s = '-' + str(u) + '**' + str(k)
+                s = '-' + ustr + '**' + str(k)
             else:
-                s = '+' + str(u) + '**' + str(k)
+                s = '+' + ustr + '**' + str(k)
             for i in range(m-1):
                 s = s + '*t' + str(i)
                 result.append(s)
             if(ell % 2 == 1):
-                s = '-' + str(gamma) + '*' + str(u) + '**' + str(k)
+                s = '-' + gstr + '*' + ustr + '**' + str(k)
             else:
-                s = '+' + str(gamma) + '*' + str(u) + '**' + str(k)
+                s = '+' + gstr + '*' + ustr + '**' + str(k)
             for i in range(m-1):
                 e = -m + 1 + i
                 s = s + '*t' + str(i) + '**(' + str(e) + ')'
@@ -49,14 +71,10 @@ def sample(m, roots):
     Generates m-1 random complex numbers as parameters
     and evaluates the representation for the roots.
     """
-    from random import uniform
-    from cmath import exp, pi
-    i = complex(0, 1)
     d = globals()
     for k in range(m-1):
         var = 't' + str(k)
-        u = uniform(0, 2*pi)
-        d[var] = exp(i*u)
+        d[var] = randcmplx()
     result = []
     for r in roots:
         result.append(eval(r))
@@ -82,6 +100,118 @@ def evaluate(point):
         result.append(eval(r[0:-1]))
     return result
 
+def embedpol(nbslk, pol):
+    """
+    Given in pol the string representation of a polynomial
+    in several variables, the string pol is returned,
+    augmented with a random linear sum of as many slack
+    variables as the value of nbslk.
+    """
+    hyp = ""
+    for k in range(1, nbslk+1):
+        nbr = randcmplx()
+        cff = strcmplx(nbr, 'i', '*')
+        hyp = hyp + ' + ' + cff + '*zz' + str(k)
+    result = pol[0:-1] + hyp + ';'
+    return result
+
+def embedsys(nbslk, sys):
+    """
+    Given on input in sys a list of string representations
+    for polynomials, on return is the list of strings
+    representing the embedding with as many slack variables
+    as the value of nbslk.
+    """
+    result = []
+    for pol in sys:
+        result.append(embedpol(nbslk, pol))
+    return result
+
+def hyperplane(dim, point):
+    """
+    Returns a random linear equation in len(point) + dim
+    variables through the point.
+    The first len(point) variables have name 'x' followed by
+    an index which starts its count at zero.
+    The dim slack variables have name 'zz' and their index
+    count starts at one.
+    The constant term of the hyperplane is computed so that
+    the point evaluates to zero at the hyperplane.
+    """
+    nvr = len(point)
+    hyp = ""    # to return in PHCpack format
+    evahyp = "" # in Python format for evaluation
+    for k in range(nvr):
+        nbr = randcmplx()
+        cff = strcmplx(nbr, 'i', '*')
+        evacff = strcmplx(nbr, 'j')
+        hyp = hyp + ' + ' + cff + '*x' + str(k)
+        evahyp = evahyp + ' + ' + evacff + '*x' + str(k)
+    for k in range(1, dim+1):
+        nbr = randcmplx()
+        cff = strcmplx(nbr, 'i', '*')
+        evacff = strcmplx(nbr, 'j')
+        hyp = hyp + ' + ' + cff + '*zz' + str(k)
+        evahyp = evahyp + ' + ' + evacff + '*zz' + str(k)
+    d = globals()
+    for k in range(nvr):
+        var = 'x' + str(k)
+        d[var] = point[k]
+    for k in range(1, dim+1):
+        var = 'zz' + str(k)
+        d[var] = 0.0
+    cst = eval(evahyp)
+    result = hyp + ' + (%.16e %+.16e*i)' % (-cst.real, -cst.imag) + ';'
+    return result
+
+def embedpoint(dim, point):
+    """
+    Embeds the point in a witness set representation
+    for a cyclic n-roots solution set of dimension dim.
+    """
+    from phcpy.families import cyclic
+    nvr = len(point)
+    sys = cyclic(nvr)
+    emb = embedsys(dim, sys)
+    for p in point:
+        print p
+    for k in range(dim):
+        hyp = hyperplane(dim, point)
+        emb.append(hyp)
+    return emb
+
+def embedtofile(embsys, point):
+    """
+    Prompts the user for a file name and writes
+    the embedded system in embsys and the point
+    to file.
+    """
+    name = raw_input('Give a file name : ')
+    file = open(name, 'w')
+    file.write(str(len(embsys)) + '\n')
+    for pol in embsys:
+        file.write(pol + '\n')
+    from phcpy.solutions import make_solution
+    vars = []  # symbols for the variables
+    vals = []  # values for the variables
+    for k in range(len(point)):
+        vars.append('x' + str(k))
+        vals.append(point[k])
+    dim = len(embsys) - len(point)
+    for k in range(1, dim+1):
+        vars.append('zz' + str(k))
+        vals.append(complex(0))
+    print 'vars = \n', vars
+    print 'vals = \n', vals
+    sol = make_solution(vars, vals)
+    n = len(point)
+    file.write('\nTITLE : sample of tropical Backelin cyclic %d-roots\n' % n)
+    file.write('\nTHE SOLUTIONS :\n')
+    file.write('1 ' + str(len(vars)) + '\n')
+    file.write('====================================================\n')
+    file.write('solution 1 :\n')
+    file.write(sol + '\n')
+
 def main():
     """
     Prompts the user for the parameters m and L.
@@ -100,11 +230,18 @@ def main():
     point = sample(m, coords)
     print 'a random point:'
     for p in point:
-        print p
+        print '%.16e %+.16ej)' % (p.real, p.imag)
     residual = evaluate(point)
     print 'the residual :'
     for r in residual:
         print r
     print 'the sum :', sum([abs(r) for r in residual])
+    ans = raw_input('embed sample point in witness set ? (y/n) ')
+    if(ans == 'y'):
+        emb = embedpoint(m-1, point)
+        print 'the embedded system :\n', emb
+        ans = raw_input('write the witness set to file ? (y/n) ')
+        if(ans == 'y'):
+            embedtofile(emb, point)
 
 main()

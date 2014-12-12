@@ -10,6 +10,8 @@ and to collect use cases with applications.
 -------------------------------------------------------------------------------
 file name    : short description
 -------------------------------------------------------------------------------
+backelin     : sample positive dimensional cyclic n-roots following the
+             : tropical version of Backelin's Lemma and make witness set
 randlrhom    : generate and enumerate random Schubert problems
              : for the Littlewood-Richardson homotopies (lrhom)
 -------------------------------------------------------------------------------
