@@ -1,3 +1,5 @@
+Sun 14 Dec 2014 : extended varbprec_homotopy with natural parameter homotopies.
+
 Sun 7 Dec 2014 : new package varbprec_homotopy, tested by ts_vmphom.
 
 Sat 6 Dec 2014 : writing of start, target, and system in the middle to

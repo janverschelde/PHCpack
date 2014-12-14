@@ -18,26 +18,28 @@ package body Varbprec_Homotopy is
 
 -- INTERNAL DATA :
 
-  start,target : Link_to_Array_of_Strings;
-  st_start,st_target : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-  dd_start,dd_target : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-  qd_start,qd_target : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
-  mp_start,mp_target : Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;
-  gamma : Standard_Complex_Numbers.Complex_Number;
-  exp4t : natural32;
+  start,target,homotopy : Link_to_Array_of_Strings;
+  st_start,st_target,st_htpy : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+  dd_start,dd_target,dd_htpy : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+  qd_start,qd_target,qd_htpy : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+  mp_start,mp_target,mp_htpy : Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;
+  gamma : Standard_Complex_Numbers.Complex_Number; -- gamma constant
+  exp4t : natural32; -- exponent of t in artificial parameter homotopy
   standard_homotopy_initialized : boolean; -- is standard homotopy defined ?
   dobldobl_homotopy_initialized : boolean; -- is dobldobl homotopy defined ?
   quaddobl_homotopy_initialized : boolean; -- is quaddobl homotopy defined ?
   multprec_homotopy_numbsize : natural32;
   -- size of the numbers in the multiprecision homotopy
+  idx4t : integer32; -- index of t in natural parameter homotopy
 
--- AUXILIARY CONSTRUCTOR :
+-- AUXILIARY CONSTRUCTORS :
 
-  procedure Initialize_Standard_Homotopy is
+  procedure Initialize_Standard_Artificial_Homotopy is
 
   -- DESCRIPTION :
   --   Initializes the standard homotopy, using the string representations
-  --   for the start and target polynomial systems.
+  --   for the start and target polynomial systems, for an artificial
+  --   parameter homotopy in standard double precision.
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Poly_Strings;
@@ -48,8 +50,8 @@ package body Varbprec_Homotopy is
     Standard_Homotopy.Clear;
     if start /= null then
       nvr := natural32(start'last);
-      if Symbol_Table.Number < nvr + 1
-       then Symbol_Table.Init(nvr+1);
+      if Symbol_Table.Number < nvr
+       then Symbol_Table.Init(nvr);
       end if;
       st_start := new Poly_Sys'(Parse(nvr,start.all));
       if target /= null
@@ -58,13 +60,13 @@ package body Varbprec_Homotopy is
       Standard_Homotopy.Create(st_target.all,st_start.all,exp4t,gamma);
       standard_homotopy_initialized := true;
     end if;
-  end Initialize_Standard_Homotopy;
+  end Initialize_Standard_Artificial_Homotopy;
 
-  procedure Initialize_DoblDobl_Homotopy is
+  procedure Initialize_DoblDobl_Artificial_Homotopy is
 
   -- DESCRIPTION :
-  --   Initializes the homotopy for double double precision,
-  --   using the string representations
+  --   Initializes the artificial parameter homotopy for double double
+  --   precision, using the string representations
   --   for the start and target polynomial systems.
 
     use DoblDobl_Complex_Poly_Systems;
@@ -86,8 +88,8 @@ package body Varbprec_Homotopy is
     DoblDobl_Homotopy.Clear;
     if start /= null then
       nvr := natural32(start'last);
-      if Symbol_Table.Number < nvr + 1
-       then Symbol_Table.Init(nvr+1);
+      if Symbol_Table.Number < nvr
+       then Symbol_Table.Init(nvr);
       end if;
       dd_start := new Poly_Sys'(Parse(nvr,start.all));
       if target /= null
@@ -96,13 +98,13 @@ package body Varbprec_Homotopy is
       DoblDobl_Homotopy.Create(dd_target.all,dd_start.all,exp4t,ddgamma);
       dobldobl_homotopy_initialized := true;
     end if;
-  end Initialize_DoblDobl_Homotopy;
+  end Initialize_DoblDobl_Artificial_Homotopy;
 
-  procedure Initialize_QuadDobl_Homotopy is
+  procedure Initialize_QuadDobl_Artificial_Homotopy is
 
   -- DESCRIPTION :
-  --   Initializes the homotopy for quad double precision,
-  --   using the string representations
+  --   Initializes the artificial parameter homotopy 
+  --   for quad double precision, using the string representations
   --   for the start and target polynomial systems.
 
     use QuadDobl_Complex_Poly_Systems;
@@ -124,8 +126,8 @@ package body Varbprec_Homotopy is
     QuadDobl_Homotopy.Clear;
     if start /= null then
       nvr := natural32(start'last);
-      if Symbol_Table.Number < nvr + 1
-       then Symbol_Table.Init(nvr+1);
+      if Symbol_Table.Number < nvr
+       then Symbol_Table.Init(nvr);
       end if;
       qd_start := new Poly_Sys'(Parse(nvr,start.all));
       if target /= null
@@ -134,13 +136,15 @@ package body Varbprec_Homotopy is
       QuadDobl_Homotopy.Create(qd_target.all,qd_start.all,exp4t,qdgamma);
       quaddobl_homotopy_initialized := true;
     end if;
-  end Initialize_QuadDobl_Homotopy;
+  end Initialize_QuadDobl_Artificial_Homotopy;
 
-  procedure Initialize_Multprec_Homotopy ( size : in natural32 ) is
+  procedure Initialize_Multprec_Artificial_Homotopy ( size : in natural32 ) is
 
   -- DESCRIPTION :
   --   Parses start and target system with respect to the precision
   --   as defined by the size of the numbers given in size.
+  --   Initializes the artificial parameter homotopy with the parsed
+  --   start and target system in the precision defined by size.
 
     use Multprec_Complex_Poly_Systems;
     use Multprec_Complex_Poly_Strings;
@@ -163,8 +167,8 @@ package body Varbprec_Homotopy is
     Multprec_Complex_Poly_Systems.Clear(mp_target);
     if start /= null then
       nvr := natural32(start'last);
-      if Symbol_Table.Number < nvr + 1
-       then Symbol_Table.Init(nvr+1);
+      if Symbol_Table.Number < nvr
+       then Symbol_Table.Init(nvr);
       end if;
       mp_start := new Poly_Sys'(Parse(nvr,size,start.all));
       if target /= null
@@ -172,6 +176,155 @@ package body Varbprec_Homotopy is
       end if;
       Multprec_Homotopy.Create(mp_target.all,mp_start.all,exp4t,mpgamma);
       multprec_homotopy_numbsize := size;
+    end if;
+  end Initialize_Multprec_Artificial_Homotopy;
+
+  procedure Initialize_Standard_Natural_Homotopy is
+
+  -- DESCRIPTION :
+  --   Initializes the natural parameter homotopy 
+  --   with standard double precision.
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Poly_Strings;
+
+    nvr : natural32;
+
+  begin
+    Standard_Homotopy.Clear;
+    Standard_Complex_Poly_Systems.Clear(st_htpy);
+    if homotopy /= null then
+      nvr := natural32(homotopy'last);
+      if Symbol_Table.Number < nvr + 1
+       then Symbol_Table.Init(nvr);
+      end if;
+      st_htpy := new Poly_Sys'(Parse(nvr+1,homotopy.all));
+      Standard_Homotopy.Create(st_htpy.all,idx4t);
+      standard_homotopy_initialized := true;
+    end if;
+  end Initialize_Standard_Natural_Homotopy;
+
+  procedure Initialize_DoblDobl_Natural_Homotopy is
+
+  -- DESCRIPTION :
+  --   Initializes the natural parameter homotopy 
+  --   with double double precision.
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Poly_Strings;
+
+    nvr : natural32;
+
+  begin
+    DoblDobl_Homotopy.Clear;
+    DoblDobl_Complex_Poly_Systems.Clear(dd_htpy);
+    if homotopy /= null then
+      nvr := natural32(homotopy'last);
+      if Symbol_Table.Number < nvr + 1
+       then Symbol_Table.Init(nvr);
+      end if;
+      dd_htpy := new Poly_Sys'(Parse(nvr+1,homotopy.all));
+      DoblDobl_Homotopy.Create(dd_htpy.all,idx4t);
+      dobldobl_homotopy_initialized := true;
+    end if;
+  end Initialize_DoblDobl_Natural_Homotopy;
+
+  procedure Initialize_QuadDobl_Natural_Homotopy is
+
+  -- DESCRIPTION :
+  --   Initializes the natural parameter homotopy 
+  --   with quad double precision.
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Poly_Strings;
+
+    nvr : natural32;
+
+  begin
+    QuadDobl_Homotopy.Clear;
+    QuadDobl_Complex_Poly_Systems.Clear(qd_htpy);
+    if homotopy /= null then
+      nvr := natural32(homotopy'last);
+      if Symbol_Table.Number < nvr + 1
+       then Symbol_Table.Init(nvr);
+      end if;
+      qd_htpy := new Poly_Sys'(Parse(nvr+1,homotopy.all));
+      QuadDobl_Homotopy.Create(qd_htpy.all,idx4t);
+      quaddobl_homotopy_initialized := true;
+    end if;
+  end Initialize_QuadDobl_Natural_Homotopy;
+
+  procedure Initialize_Multprec_Natural_Homotopy ( size : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Initializes the natural parameter homotopy 
+  --   in arbitrary multiprecision, with numbers of the given size.
+
+    use Multprec_Complex_Poly_Systems;
+    use Multprec_Complex_Poly_Strings;
+
+    nvr : natural32;
+
+  begin
+    Multprec_Homotopy.Clear;
+    Multprec_Complex_Poly_Systems.Clear(mp_htpy);
+    if homotopy /= null then
+      nvr := natural32(homotopy'last);
+      if Symbol_Table.Number < nvr + 1
+       then Symbol_Table.Init(nvr);
+      end if;
+      mp_htpy := new Poly_Sys'(Parse(nvr+1,size,homotopy.all));
+      Multprec_Homotopy.Create(mp_htpy.all,idx4t);
+      multprec_homotopy_numbsize := size;
+    end if;
+  end Initialize_Multprec_Natural_Homotopy;
+
+  procedure Initialize_Standard_Homotopy is
+
+  -- DESCRIPTION :
+  --   Initializes the homotopy in standard double precision.
+ 
+  begin
+    if homotopy = null
+     then Initialize_Standard_Artificial_Homotopy;
+     else Initialize_Standard_Natural_Homotopy;
+    end if;
+  end Initialize_Standard_Homotopy;
+
+  procedure Initialize_DoblDobl_Homotopy is
+
+  -- DESCRIPTION :
+  --   Initializes the homotopy in double double precision.
+ 
+  begin
+    if homotopy = null
+     then Initialize_DoblDobl_Artificial_Homotopy;
+     else Initialize_DoblDobl_Natural_Homotopy;
+    end if;
+  end Initialize_DoblDobl_Homotopy;
+
+  procedure Initialize_QuadDobl_Homotopy is
+
+  -- DESCRIPTION :
+  --   Initializes the homotopy in quad double precision.
+ 
+  begin
+    if homotopy = null
+     then Initialize_QuadDobl_Artificial_Homotopy;
+     else Initialize_QuadDobl_Natural_Homotopy;
+    end if;
+  end Initialize_QuadDobl_Homotopy;
+
+  procedure Initialize_Multprec_Homotopy ( size : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Initializes the homotopy in arbitrary multiprecision,
+  --   parsing the strings with numbers of the given size.
+ 
+  begin
+    if homotopy = null
+     then Initialize_Multprec_Artificial_Homotopy(size);
+     else Initialize_Multprec_Natural_Homotopy(size);
     end if;
   end Initialize_Multprec_Homotopy;
 
@@ -196,6 +349,18 @@ package body Varbprec_Homotopy is
     for i in p'range loop
       target(i) := new string'(p(i).all);
     end loop;
+  end Create;
+
+  procedure Create ( h : in Link_to_Array_of_Strings; txk : in integer32 ) is
+  begin
+    if homotopy /= null
+     then clear(homotopy);
+    end if;
+    homotopy := new Array_of_Strings(h'range);
+    for i in h'range loop
+      homotopy(i) := new string'(h(i).all);
+    end loop;
+    idx4t := txk;
   end Create;
 
 -- SELECTORS :
@@ -446,7 +611,6 @@ package body Varbprec_Homotopy is
     return res;
   end Diff;
 
-
   function Diff ( x : Multprec_Complex_Vectors.Vector;
                   t : Multprec_Complex_Numbers.Complex_Number;
                   d : natural32 )
@@ -475,31 +639,39 @@ package body Varbprec_Homotopy is
     if target /= null
      then Clear(target);
     end if;
+    if homotopy /= null
+     then Clear(homotopy);
+    end if;
     if standard_homotopy_initialized then
       Standard_Homotopy.Clear;
       Standard_Complex_Poly_Systems.Clear(st_start);
       Standard_Complex_Poly_Systems.Clear(st_target);
+      Standard_Complex_Poly_Systems.Clear(st_htpy);
     end if;
     if dobldobl_homotopy_initialized then
       DoblDobl_Homotopy.Clear;
       DoblDobl_Complex_Poly_Systems.Clear(dd_start);
       DoblDobl_Complex_Poly_Systems.Clear(dd_target);
+      DoblDobl_Complex_Poly_Systems.Clear(dd_htpy);
     end if;
     if quaddobl_homotopy_initialized then
       QuadDobl_Homotopy.Clear;
       QuadDobl_Complex_Poly_Systems.Clear(qd_start);
       QuadDobl_Complex_Poly_Systems.Clear(qd_target);
+      QuadDobl_Complex_Poly_Systems.Clear(qd_htpy);
     end if;
     if multprec_homotopy_numbsize /= 0 then
       Multprec_Homotopy.Clear;
       Multprec_Complex_Poly_Systems.Clear(mp_start);
       Multprec_Complex_Poly_Systems.Clear(mp_target);
+      Multprec_Complex_Poly_Systems.Clear(mp_htpy);
     end if;
   end Clear;
 
 begin
   start := null;
   target := null;
+  homotopy := null;
   standard_homotopy_initialized := false;
   dobldobl_homotopy_initialized := false;
   quaddobl_homotopy_initialized := false;

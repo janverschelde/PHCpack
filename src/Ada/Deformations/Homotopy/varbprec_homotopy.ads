@@ -1,5 +1,6 @@
 with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
@@ -34,6 +35,13 @@ package Varbprec_Homotopy is
   --   and p is the target system. 
   --   In storing the string representations of the polynomial systems,
   --   deep copies are made.
+
+  procedure Create ( h : in Link_to_Array_of_Strings; txk : in integer32 );
+
+  -- DESCRIPTION :
+  --   Stores the data for a natural parameter homotopy,
+  --   where the index of the continuation parameter is the variable
+  --   with index txk in the polynomials of h.
 
 -- SELECTORS :
 
