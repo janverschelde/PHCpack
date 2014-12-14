@@ -4,7 +4,6 @@ with Standard_Random_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Multprec_Complex_Vectors;
 with Multprec_Complex_Norms_Equals;      use Multprec_Complex_Norms_Equals;
---with Multprec_Complex_Equality_Tests;    use Multprec_Complex_Equality_Tests;
 with Multprec_Homotopy;
 with Multprec_Dispatch_Predictors;       use Multprec_Dispatch_Predictors;
 with Multprec_Correctors;                use Multprec_Correctors;
@@ -84,12 +83,12 @@ package body Multprec_Path_Tracker is
     end loop;
   end Init;
 
-  procedure Init ( p,q : in Link_to_Poly_sys; fixed_gamma : in boolean;
+  procedure Init ( p,q : in Link_to_Poly_Sys; fixed_gamma : in boolean;
                    deci : in natural32 ) is
 
     mp_re : Floating_Number;
     mp_im : Floating_Number;
-    gamma : Complex_Number := Create(mp_re,mp_im);
+    gamma : Complex_Number;
 
   begin
     if fixed_gamma then
@@ -113,12 +112,12 @@ package body Multprec_Path_Tracker is
     Clear(mp_re); Clear(mp_im);
   end Init;
 
-  procedure Init ( p,q : in Link_to_Poly_sys; fixed_gamma : in boolean;
+  procedure Init ( p,q : in Link_to_Poly_Sys; fixed_gamma : in boolean;
                    s : in Link_to_Solution; deci : in natural32 ) is
 
     mp_re : Floating_Number;
     mp_im : Floating_Number;
-    gamma : Complex_Number := Create(mp_re,mp_im);
+    gamma : Complex_Number;
 
   begin
     if fixed_gamma then
@@ -142,19 +141,19 @@ package body Multprec_Path_Tracker is
     Clear(mp_re); Clear(mp_im);
   end Init;
 
-  procedure Init ( p,q : in Link_to_Poly_sys;
+  procedure Init ( p,q : in Link_to_Poly_Sys;
                    gamma : in Complex_Number; k,deci : in natural32 ) is
   begin
     Init(p,q,gamma,k,deci,0);
   end Init;
 
-  procedure Init ( p,q : in Link_to_Poly_sys; s : in Link_to_Solution;
+  procedure Init ( p,q : in Link_to_Poly_Sys; s : in Link_to_Solution;
                    gamma : in Complex_Number; k,deci : in natural32 ) is
   begin
     Init(p,q,s,gamma,k,deci,0);
   end Init;
 
-  procedure Init ( p,q : in Link_to_Poly_sys;
+  procedure Init ( p,q : in Link_to_Poly_Sys;
                    gamma : in Complex_Number; k,deci,cp : in natural32 ) is
   begin
     Multprec_Homotopy.Clear;
@@ -162,7 +161,7 @@ package body Multprec_Path_Tracker is
     Continuation_Parameters.Tune(cp,deci);
   end Init;
 
-  procedure Init ( p,q : in Link_to_Poly_sys; s : in Link_to_Solution;
+  procedure Init ( p,q : in Link_to_Poly_Sys; s : in Link_to_Solution;
                    gamma : in Complex_Number; k,deci,cp : in natural32 ) is
   begin
     Init(p,q,gamma,k,deci,cp);

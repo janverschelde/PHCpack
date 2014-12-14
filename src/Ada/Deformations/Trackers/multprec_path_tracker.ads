@@ -19,9 +19,9 @@ package Multprec_Path_Tracker is
   --   Stores s as the current solution, leaves the homotopy as it is.
   --   This is useful for tracking the next path in the same homotopy.
 
-  procedure Init ( p,q : in Link_to_Poly_sys; fixed_gamma : in boolean;
+  procedure Init ( p,q : in Link_to_Poly_Sys; fixed_gamma : in boolean;
                    deci : in natural32 );
-  procedure Init ( p,q : in Link_to_Poly_sys; fixed_gamma : in boolean;
+  procedure Init ( p,q : in Link_to_Poly_Sys; fixed_gamma : in boolean;
                    s : in Link_to_Solution; deci : in natural32 );
 
   -- DESCRIPTION :
@@ -33,9 +33,9 @@ package Multprec_Path_Tracker is
   --   will be used to set the tolerances in the continuation parameters.
   --   The condition of the continuation parameters is set to zero.
 
-  procedure Init ( p,q : in Link_to_Poly_sys;
+  procedure Init ( p,q : in Link_to_Poly_Sys;
                    gamma : in Complex_Number; k,deci : in natural32 );
-  procedure Init ( p,q : in Link_to_Poly_sys; s : in Link_to_Solution;
+  procedure Init ( p,q : in Link_to_Poly_Sys; s : in Link_to_Solution;
                    gamma : in Complex_Number; k,deci : in natural32 );
 
   -- DESCRIPTION :
@@ -46,9 +46,9 @@ package Multprec_Path_Tracker is
   --   The number of decimal places in the working precision (deci)
   --   will be used to set the tolerances in the continuation parameters.
 
-  procedure Init ( p,q : in Link_to_Poly_sys;
+  procedure Init ( p,q : in Link_to_Poly_Sys;
                    gamma : in Complex_Number; k,deci,cp : in natural32 );
-  procedure Init ( p,q : in Link_to_Poly_sys; s : in Link_to_Solution;
+  procedure Init ( p,q : in Link_to_Poly_Sys; s : in Link_to_Solution;
                    gamma : in Complex_Number; k,deci,cp : in natural32 );
 
   -- DESCRIPTION :
