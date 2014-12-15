@@ -115,26 +115,31 @@ def embedpol(nbslk, pol):
     result = pol[0:-1] + hyp + ';'
     return result
 
-def embedsys(nbslk, sys):
+def embedsys(nbslk, sys, addslack=True):
     """
     Given on input in sys a list of string representations
     for polynomials, on return is the list of strings
     representing the embedding with as many slack variables
-    as the value of nbslk.
+    as the value of nbslk, provided addslack equals True.
+    Otherwise, the system on return is just a copy of sys.
     """
     result = []
-    for pol in sys:
-        result.append(embedpol(nbslk, pol))
+    if addslack:
+        for pol in sys:
+            result.append(embedpol(nbslk, pol))
+    else:
+        for pol in sys:
+            result.append(pol)
     return result
 
-def hyperplane(dim, point):
+def hyperplane(dim, point, addslack=True):
     """
     Returns a random linear equation in len(point) + dim
     variables through the point.
     The first len(point) variables have name 'x' followed by
     an index which starts its count at zero.
     The dim slack variables have name 'zz' and their index
-    count starts at one.
+    count starts at one, provided addslack is True.
     The constant term of the hyperplane is computed so that
     the point evaluates to zero at the hyperplane.
     """
@@ -147,48 +152,56 @@ def hyperplane(dim, point):
         evacff = strcmplx(nbr, 'j')
         hyp = hyp + ' + ' + cff + '*x' + str(k)
         evahyp = evahyp + ' + ' + evacff + '*x' + str(k)
-    for k in range(1, dim+1):
-        nbr = randcmplx()
-        cff = strcmplx(nbr, 'i', '*')
-        evacff = strcmplx(nbr, 'j')
-        hyp = hyp + ' + ' + cff + '*zz' + str(k)
-        evahyp = evahyp + ' + ' + evacff + '*zz' + str(k)
+    if addslack:
+        for k in range(1, dim+1):
+            nbr = randcmplx()
+            cff = strcmplx(nbr, 'i', '*')
+            evacff = strcmplx(nbr, 'j')
+            hyp = hyp + ' + ' + cff + '*zz' + str(k)
+            evahyp = evahyp + ' + ' + evacff + '*zz' + str(k)
     d = globals()
     for k in range(nvr):
         var = 'x' + str(k)
         d[var] = point[k]
-    for k in range(1, dim+1):
-        var = 'zz' + str(k)
-        d[var] = 0.0
+    if addslack:
+        for k in range(1, dim+1):
+            var = 'zz' + str(k)
+            d[var] = 0.0
     cst = eval(evahyp)
     result = hyp + ' + (%.16e %+.16e*i)' % (-cst.real, -cst.imag) + ';'
     return result
 
-def embedpoint(dim, point):
+def embedpoint(dim, point, addslack=True):
     """
     Embeds the point in a witness set representation
     for a cyclic n-roots solution set of dimension dim.
+    If addslack, then slack variables will be added
+    to square the embedded system.
     """
     from phcpy.families import cyclic
     nvr = len(point)
     sys = cyclic(nvr)
-    emb = embedsys(dim, sys)
+    emb = embedsys(dim, sys, addslack)
     for p in point:
         print p
     for k in range(dim):
-        hyp = hyperplane(dim, point)
+        hyp = hyperplane(dim, point, addslack)
         emb.append(hyp)
     return emb
 
-def embedtofile(embsys, point):
+def embedtofile(embsys, point, addslack=True):
     """
-    Prompts the user for a file name and writes
-    the embedded system in embsys and the point
-    to file.
+    Prompts the user for a file name and writes the
+    embedded system in embsys and the point to file.
+    If addslack, then slack variables will be used
+    to square the system.
     """
     name = raw_input('Give a file name : ')
     file = open(name, 'w')
-    file.write(str(len(embsys)) + '\n')
+    if addslack:
+        file.write(str(len(embsys)) + '\n')
+    else:
+        file.write(str(len(embsys)) + ' ' + str(len(point))+ '\n')
     for pol in embsys:
         file.write(pol + '\n')
     from phcpy.solutions import make_solution
@@ -198,9 +211,10 @@ def embedtofile(embsys, point):
         vars.append('x' + str(k))
         vals.append(point[k])
     dim = len(embsys) - len(point)
-    for k in range(1, dim+1):
-        vars.append('zz' + str(k))
-        vals.append(complex(0))
+    if addslack:
+        for k in range(1, dim+1):
+            vars.append('zz' + str(k))
+            vals.append(complex(0))
     print 'vars = \n', vars
     print 'vals = \n', vals
     sol = make_solution(vars, vals)
@@ -238,10 +252,12 @@ def main():
     print 'the sum :', sum([abs(r) for r in residual])
     ans = raw_input('embed sample point in witness set ? (y/n) ')
     if(ans == 'y'):
-        emb = embedpoint(m-1, point)
+        ans = raw_input('use slack variables to square the system ? (y/n) ')
+        addslack = (ans == 'y')
+        emb = embedpoint(m-1, point, addslack)
         print 'the embedded system :\n', emb
         ans = raw_input('write the witness set to file ? (y/n) ')
         if(ans == 'y'):
-            embedtofile(emb, point)
+            embedtofile(emb, point, addslack)
 
 main()
