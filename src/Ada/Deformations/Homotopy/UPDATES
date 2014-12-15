@@ -1,4 +1,5 @@
-Sun 14 Dec 2014 : extended varbprec_homotopy with natural parameter homotopies.
+Sun 14 Dec 2014 : extended varbprec_homotopy with natural parameter homotopies
+  with added tests in ts_vmphom.
 
 Sun 7 Dec 2014 : new package varbprec_homotopy, tested by ts_vmphom.
 

@@ -182,7 +182,7 @@ procedure ts_vmphom is
   --   Prompts the user for a target, start system, and start solutions.
 
   -- ON RETURN :
-  --   sf       string representation of the targett system;
+  --   sf       string representation of the target system;
   --   sg       string representation of the start system;
   --   nq       number of equations;
   --   nv       number of variables;
@@ -204,6 +204,37 @@ procedure ts_vmphom is
     len := Multprec_Complex_Solutions.Length_Of(sols);
     put("Read list of "); put(len,1); put_line(" solutions from file.");
   end Read_Homotopy_Strings;
+
+  procedure Read_Homotopy_String
+              ( sh : out Link_to_Array_of_Strings;
+                nq,nv,len : out natural32;
+                sols : out Multprec_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a natural parameter homotopy and start solutions.
+
+  -- ON RETURN :
+  --   sh       string representation of the natural parameter homotopy;
+  --   nq       number of equations;
+  --   nv       number of variables;
+  --   len      number of start solutions;
+  --   sols     start solutions.
+
+    sh_file : file_type;
+
+  begin
+    new_line;
+    put_line("Reading the natural parameter homotopy ...");
+    Read_Name_and_Open_File(sh_file);
+    get(sh_file,integer(nq),integer(nv),sh);
+    close(sh_file);
+    new_line;
+    put_line("Reading the start solutions ...");
+    Multprec_Complex_Solutions_io.Read(sols);
+    new_line;
+    len := Multprec_Complex_Solutions.Length_Of(sols);
+    put("Read list of "); put(len,1); put_line(" solutions from file.");
+  end Read_Homotopy_String;
 
   procedure Test_Homotopy_to_String is
 
@@ -637,7 +668,7 @@ procedure ts_vmphom is
 
     use Varbprec_Complex_Solutions;
 
-    sf,sg : Link_to_Array_of_strings;
+    sf,sg,sh : Link_to_Array_of_strings;
     nq,nv,len,deci : natural32 := 0;
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := Standard_Random_Numbers.Random1;
@@ -648,8 +679,16 @@ procedure ts_vmphom is
     ans : character;
 
   begin
-    Read_Homotopy_Strings(sf,sg,nq,nv,len,mpsols);
-    Varbprec_Homotopy.Create(sf,sg,2,gamma);
+    new_line;
+    put("Is the homotopy a natural parameter homotopy ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Read_Homotopy_String(sh,nq,nv,len,mpsols);
+      Varbprec_Homotopy.Create(sh,integer32(nv));
+    else
+      Read_Homotopy_Strings(sf,sg,nq,nv,len,mpsols);
+      Varbprec_Homotopy.Create(sf,sg,2,gamma);
+    end if;
     new_line;
     put_line("MENU to test variable precision homotopy :");
     put_line("  0. evaluate and differentiate in standard double precision;");
