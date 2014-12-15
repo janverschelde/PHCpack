@@ -3,6 +3,13 @@ Backelin's Lemma states that the cyclic n-roots problem has an m-dimensional
 solution set for n = L*m^2, where L is no multiple of k^2, m >= 2.
 This script provides an exact representation of the solution set,
 following the tropical formulation with m-1 free parameters.
+The tropical version of Backelin's Lemma appeared in the proceedings of
+Computer Algebra in Scientific Computing, 15th International Workshop, 
+CASC 2013, Berlin, Germany, edited by Vladimir P.  Gerdt, Wolfram Koepf, 
+Ernst W. Mayr, and Evgenii V. Vorozhtsov;
+Lecture Notes in Computer Science, Volume 8136, pages 10-29, 2013;
+in the paper Polyhedral Methods for Space Curves Exploiting Symmetry 
+Applied to the Cyclic n-roots Problem, by Danko Adrovic and Jan Verschelde.
 """
 
 def randcmplx():
@@ -47,23 +54,16 @@ def component(m, L, u, gamma):
     result = []
     ustr = '(%.16e %+.16ej)' % (u.real, u.imag)
     gstr = '(%.16e %+.16ej)' % (gamma.real, gamma.imag)
-    for ell in range(L):
-        for k in range(m):
-            if(ell % 2 == 1):
-                s = '-' + ustr + '**' + str(k)
-            else:
-                s = '+' + ustr + '**' + str(k)
-            for i in range(m-1):
-                s = s + '*t' + str(i)
-                result.append(s)
-            if(ell % 2 == 1):
-                s = '-' + gstr + '*' + ustr + '**' + str(k)
-            else:
-                s = '+' + gstr + '*' + ustr + '**' + str(k)
-            for i in range(m-1):
-                e = -m + 1 + i
-                s = s + '*t' + str(i) + '**(' + str(e) + ')'
+    for k in range(L*m):
+        s = '+' + ustr + '**' + str(k)
+        for i in range(m-1):
+            s = s + '*t' + str(i)
             result.append(s)
+        s = '+' + gstr + '*' + ustr + '**' + str(k)
+        for i in range(m-1):
+            e = -m + 1 + i
+            s = s + '*t' + str(i) + '**(' + str(e) + ')'
+        result.append(s)
     return result
 
 def sample(m, roots):
