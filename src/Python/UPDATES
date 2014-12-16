@@ -1,3 +1,5 @@
+Tue 16 Dec 2014 : new script pierisystems.py in examples directory of PHCpy.
+
 Mon 15 Dec 2014 : updated script backelin.py to generate generic points
   on the components of cyclic n-roots as defined by the tropical version
   of Backelin's Lemma, with one sampled point in a witness set.
