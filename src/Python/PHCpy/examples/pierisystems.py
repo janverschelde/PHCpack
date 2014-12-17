@@ -6,7 +6,7 @@ entries in a matrix.  To compute determinants, numpy.linalg.det is used.
 """
 
 import sympy as sp
-from numpy import ndarray
+from numpy import ndarray, zeros
 from numpy.linalg import det, qr
 from random import uniform
 from math import sin, cos, pi
@@ -86,17 +86,21 @@ def make_term(mat, rows, cols, idx, cffs):
     """
     Returns the string representation of the term defined by
     the selection of rows in the list idx.
+    If the coefficient is zero, then the empty string is returned.
     """
     coeff = complement(cffs, rows, cols, idx)
-    cffre = '%.16e' % coeff.real
-    cffim = '%+.16e' % coeff.imag
-    result = '(' + cffre + cffim + '*i)'
-    for k in range(cols):
-        if(mat[idx[k], k] != 1):
-            if(result == ''):
-                result = str(mat[idx[k],k])
-            else:
-                result = result + '*' + str(mat[idx[k],k])
+    if(coeff == 0.0):
+        result = ''
+    else:
+        cffre = '%.16e' % coeff.real
+        cffim = '%+.16e' % coeff.imag
+        result = '(' + cffre + cffim + '*i)'
+        for k in range(cols):
+            if(mat[idx[k], k] != 1):
+                if(result == ''):
+                    result = str(mat[idx[k],k])
+                else:
+                    result = result + '*' + str(mat[idx[k],k])
     return result
 
 def enumerate_all_terms(mat, rows, cols, crnt, accu, cffs, equ):
@@ -153,9 +157,11 @@ def sum_terms(equ):
     """
     result = ''
     if(len(equ) > 0):
-        result = equ[0]
+        if(equ[0] != ''):
+            result = equ[0]
         for i in range(1, len(equ)):
-            result = result + ' + ' + equ[i]
+            if(equ[i] != ''):
+                result = result + ' + ' + equ[i]
     return result
 
 def number_of_variables(pivots):
@@ -211,6 +217,51 @@ def show_variable_matrix():
     print 'all terms in the Pieri condition :'
     print sum_terms(equ)
 
+def rightmost_nonfull_pivot(dim, pivots):
+    """
+    Let dim be the dimension of the ambient space.
+    The list of pivots is full if equal to 
+    [dim - L, dim - L + 1, .., dim - 1], L = len(pivots).
+    If the list of pivots is full, then -1 is returned,
+    otherwise return the index of the rightmost entry
+    in pivots that can still be increased.
+    """
+    L = len(pivots) 
+    for k in range(L-1,-1,-1):
+        if(pivots[k] < dim - L + k):
+            return k
+    return -1
+
+def update_pivots(dim, pivots):
+    """
+    Returns the updated pivots after incrementing
+    the rightmost nonfull pivot in pivots.
+    If the pivots are full, then pivots are returned.
+    """
+    piv = rightmost_nonfull_pivot(dim, pivots)
+    if(piv < 0):
+        result = pivots
+    else:
+        result = [x for x in pivots]
+        result[piv] = result[piv] + 1
+    return result
+
+def special_plane(dim, pivots):
+    """
+    Returns a matrix with as many rows as the value of dim
+    and as many columns as the value of dim - len(pivots).
+    The plane is a special plane so the Pieri condition is
+    satisfied when the variable with the rightmost nonfull
+    pivot is set to zero.
+    """
+    cols = dim - len(pivots)
+    result = zeros(shape=(dim, cols), dtype=complex)
+    ind = 0
+    for k in range(dim):
+        if(not (k in pivots)):
+            (result[k, ind], ind) = (1.0, ind+1)
+    return result
+
 def pieri_system(rows, cols, pivots):
     """
     Generates a Pieri system for the numbers of rows in rows,
@@ -225,8 +276,46 @@ def pieri_system(rows, cols, pivots):
         equ = all_terms(mat, rows, cols, cff)
         print 'number of terms in equation %d : %d' % (k+1, len(equ))
         pol = sum_terms(equ)
-        result.append(pol)
+        result.append(pol + ';')
     return result
+
+def start_pieri_system(rows, cols, pivots):
+    """
+    Generates a Pieri system where the last equation
+    is for a special plane.
+    """
+    newpiv = update_pivots(rows, pivots)
+    mat = variables(rows, cols, newpiv)
+    nvr = number_of_variables(pivots)
+    dim = rows - cols
+    result = []
+    for k in range(nvr):
+        cff = random_matrix(rows, dim)
+        equ = all_terms(mat, rows, cols, cff)
+        print 'number of terms in equation %d : %d' % (k+1, len(equ))
+        pol = sum_terms(equ)
+        result.append(pol + ';')
+    lastcff = special_plane(rows, newpiv)
+    print 'the special plane :'
+    print lastcff
+    lastequ = all_terms(mat, rows, cols, lastcff)
+    lastpol = sum_terms(lastequ)
+    result.append(lastpol + ';')
+    return result
+
+def solve_pieri_system(eqs):
+    """
+    Applies the black box solver of phcpy to solve the equations
+    defined by the strings in the list eqs.  Note that, because
+    of its particular structure, this will only work well if the 
+    system is linear.
+    """
+    from phcpy.solver import solve
+    sols = solve(eqs)
+    print 'the solutions :'
+    for sol in sols:
+        print sol
+    return sols
 
 def show_pieri_system():
     """
@@ -236,12 +325,19 @@ def show_pieri_system():
     as there are variables in the matrix.
     """
     rows, cols, pvts = ask_inputs()
-    eqs = pieri_system(rows, cols, pvts)
+    answer = raw_input('start Pieri system ? (y/n) ')
+    if(answer == 'y'):
+        eqs = start_pieri_system(rows, cols, pvts)
+    else:
+        eqs = pieri_system(rows, cols, pvts)
     answer = raw_input('see the polynomials ? (y/n) ')
     if(answer == 'y'):
         print 'the polynomials in the Pieri system :'
         for pol in eqs:
             print pol
+    answer = raw_input('apply solve of phcpy ? (y/n) ')
+    if(answer == 'y'):
+        sols = solve_pieri_system(eqs)
 
 def main():
     """
