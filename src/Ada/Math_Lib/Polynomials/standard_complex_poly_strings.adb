@@ -664,6 +664,7 @@ package body Standard_Complex_Poly_Strings is
     d : Degrees := new Standard_Natural_Vectors.Vector'(1..integer32(n) => 0);
     pb,res : Poly := Null_Poly;
     tmp : Term;
+    stop_kkloop : boolean;
 
     procedure Collect_Factor_Polynomial is
     begin
@@ -676,30 +677,42 @@ package body Standard_Complex_Poly_Strings is
     end Collect_Factor_Polynomial;
 
   begin
-    Parse(s,p,c); -- look for 'i' :
-    Skip_Spaces_and_CR(s,p);
-    if ( c = Create(0.0) ) and then ((s(p) = 'i') or (s(p) = 'I')) then
-      -- the case "+ i" :
-      c := Create(0.0,1.0); 
-      p := p + 1;        -- skip 'i'
-    elsif ( c = Create(-1.0) ) and then ((s(p) = 'i') or (s(p) = 'I')) then
+    stop_kkloop := true;  -- introduced to handle cases like (0 + 2*i)
+    for kk in 1..2 loop
+      Parse(s,p,c); -- look for 'i' :
+      Skip_Spaces_and_CR(s,p);
+      if ( c = Create(0.0) ) then
+        if ((s(p) = 'i') or (s(p) = 'I')) then -- the case "+ i" :
+          c := Create(0.0,1.0); 
+          p := p + 1;        -- skip 'i'
+        elsif s(p) = '+' or s(p) = '-' then
+          stop_kkloop := false;
+        elsif s(p) = '*' then  -- the case 0*i
+          p := p + 1;          -- skip the '*'
+          Skip_Spaces_and_CR(s,p);
+          if (s(p) = 'i') or (s(p) = 'I') then -- the case ".. c * i.." :
+            p := p + 1;    -- skip 'i' or 'I"
+          end if;
+        end if;
+      elsif ( c = Create(-1.0) ) and then ((s(p) = 'i') or (s(p) = 'I')) then
       -- the case "- i" :
-      c := Create(0.0,-1.0);
-      p := p + 1;      -- skip 'i'
-    elsif s(p) = '*' then -- the case ".. c *.." :
-      Skip_Spaces_and_CR(s,p);
-      p := p + 1;  -- skip '*'
-      Skip_Spaces_and_CR(s,p);
-      if (s(p) = 'i') or (s(p) = 'I') then -- the case ".. c * i.." :
-        c := Create(0.0,REAL_PART(c));
-        p := p + 1;    -- skip 'i'
-      else                                 -- the case ".. c * x.." :
-        Parse_Factor(s,bc,p,n,d,pb);
-        if pb /= Null_Poly
-         then Clear(res); Copy(pb,res); Clear(pb);
+        c := Create(0.0,-1.0);
+        p := p + 1;      -- skip 'i'
+      elsif s(p) = '*' then -- the case ".. c *.." :
+        p := p + 1;  -- skip '*'
+        Skip_Spaces_and_CR(s,p);
+        if (s(p) = 'i') or (s(p) = 'I') then -- the case ".. c * i.." :
+          c := Create(0.0,REAL_PART(c));
+          p := p + 1;    -- skip 'i'
+        else                                 -- the case ".. c * x.." :
+          Parse_Factor(s,bc,p,n,d,pb);
+          if pb /= Null_Poly
+           then Clear(res); Copy(pb,res); Clear(pb);
+          end if;
         end if;
       end if;
-    end if; -- the case ".. c ?"  will be treated in the loop
+      exit when stop_kkloop;
+    end loop; -- the case ".. c ?"  will be treated in the loop
     loop
       case s(p) is
         when ' ' | ASCII.CR | ASCII.LF => p := p + 1;
@@ -741,17 +754,34 @@ package body Standard_Complex_Poly_Strings is
           Collect_Factor_Polynomial;
       end case;
     end loop;
-    tmp.cf := c;
-    tmp.dg := d;
-    termp := create(tmp);
-    Clear(tmp);
-    if Number_Of_Unknowns(res) > 0
-     then Mul(termp,res); Clear(res);
-    end if;
+    if c /= create(0.0) then
+      tmp.cf := c;
+      tmp.dg := d;
+      termp := create(tmp);
+      Clear(tmp);
+      if Number_Of_Unknowns(res) > 0
+       then Mul(termp,res); Clear(res);
+     end if;
+   end if;
   exception
+    when BAD_BRACKET =>
+      put("Exception BAD_BRACKET raised at character "); put(integer32(p),1);
+      put_line(" of " & s & " in Parse_Term."); 
+      put_line("The character is " & s(p)); raise;
+    when ILLEGAL_CHARACTER =>
+      put("Exception ILLEGAL_CHARACTER raised at character ");
+      put(integer32(p),1);
+      put_line(" of " & s & " in Parse_Term.");
+      put_line("The character is " & s(p));
+      put_line("Surrouding characters are " & s(s'first..p+1));
+      put_line("Surrouding characters are " & s(p-3..p+1));
+      put_line("Surrouding characters are " & s(p-5..p+1));
+      put_line("Surrouding characters are " & s(p-7..p+1));
+      raise;
     when others =>
       put("Exception raised at character "); put(integer32(p),1);
-      put_line(" of " & s & " in Parse_Term."); raise;
+      put_line(" of " & s & " in Parse_Term.");
+      put_line("The character is " & s(p)); raise;
   end Parse_Term;
  
   procedure Parse_Term ( s : in string; bc : in out integer32;
