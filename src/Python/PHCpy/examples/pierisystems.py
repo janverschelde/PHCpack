@@ -185,15 +185,16 @@ def ask_inputs():
     rows = int(rawnbr)
     cols = int(rawnbc)
     pvts = [k for k in range(cols)]
-    pvts[cols-1] = rows-1
-    print 'the start pivots :', pvts
-    print 'number of variables :', number_of_variables(pvts)
+    # pvts[cols-1] = rows-1 # rows - 1 is largest linear system
+    pvts[cols-1] = rows-2   # rows - 2 allows for special plane
+    print '-> the start pivots :', pvts
+    print '-> number of variables :', number_of_variables(pvts)
     answer = raw_input('Do you want to give other pivots ? (y/n) ')
     if(answer == 'y'):
         rawpvts = raw_input('Give a list of increasing numbers : ')
         pvts = eval(rawpvts)
-        print 'your pivots :', pvts
-        print 'number of variables :', number_of_variables(pvts)
+        print '-> your pivots :', pvts
+        print '-> number of variables :', number_of_variables(pvts)
     return rows, cols, pvts
 
 def show_variable_matrix():
@@ -205,7 +206,7 @@ def show_variable_matrix():
     """
     rows, cols, pvts = ask_inputs()
     varmat = variables(rows, cols, pvts)
-    print 'the matrix of variables :'
+    print '-> the matrix of variables :'
     print varmat
     answer = raw_input('Enumerate all minors ? (y/n) ')
     if(answer == 'y'):
@@ -214,7 +215,7 @@ def show_variable_matrix():
     dim = rows - cols
     cff = random_matrix(rows, dim)
     equ = all_terms(varmat, rows, cols, cff)
-    print 'all terms in the Pieri condition :'
+    print '-> all terms in the Pieri condition :'
     print sum_terms(equ)
 
 def rightmost_nonfull_pivot(dim, pivots):
@@ -246,6 +247,30 @@ def update_pivots(dim, pivots):
         result[piv] = result[piv] + 1
     return result
 
+def extend_solutions(sols, dim, pivots):
+    """
+    Adds one extra zero coordinate to all solutions in sols,
+    corresponding to the rightmost nonfull pivot.
+    """
+    from phcpy.solutions import strsol2dict, variables, make_solution
+    piv = rightmost_nonfull_pivot(dim, pivots)
+    print '-> in extend_solutions, piv =', piv
+    if(piv < 0):
+        result = sols
+    else:
+        rown = pivots[piv] + 1  # row number of new variable 
+        name = 'x_' + str(rown+1) + '_' + str(piv+1)
+        print '-> the name of the new variable :', name
+        result = []
+        for sol in sols:
+            dicsol = strsol2dict(sol)
+            solvar = variables(dicsol)
+            solval = [dicsol[var] for var in solvar] 
+            solvar.append(name)
+            solval.append(complex(0.0))
+            result.append(make_solution(solvar, solval))
+    return result
+
 def special_plane(dim, pivots):
     """
     Returns a matrix with as many rows as the value of dim
@@ -262,27 +287,57 @@ def special_plane(dim, pivots):
             (result[k, ind], ind) = (1.0, ind+1)
     return result
 
-def pieri_system(rows, cols, pivots):
+def pieri_system(rows, cols, pivots, planes):
     """
     Generates a Pieri system for the numbers of rows in rows,
     the number of columns in cols, and the given pivots.
+    The list planes must contain at least as many matrices
+    as the number of variables in the pivots.
+    The number of rows of the matrices in planes is the value
+    of rows and the number of columns of the matrices in planes
+    must equal to rows - cols.
     """
     mat = variables(rows, cols, pivots)
     nvr = number_of_variables(pivots)
     dim = rows - cols
     result = []
     for k in range(nvr):
-        cff = random_matrix(rows, dim)
+        cff = planes[k]
         equ = all_terms(mat, rows, cols, cff)
-        print 'number of terms in equation %d : %d' % (k+1, len(equ))
+        print '-> number of terms in equation %d : %d' % (k+1, len(equ))
         pol = sum_terms(equ)
         result.append(pol + ';')
     return result
 
-def start_pieri_system(rows, cols, pivots):
+def random_planes(rows, cols, pivots):
+    """
+    Generates as many random planes as the number of variables
+    described by the list of pivots.
+    The dimension of the planes is the value of cols
+    in a space of dimension equal to the value of rows.
+    """
+    nvr = number_of_variables(pivots)
+    dim = rows - cols
+    planes = []
+    for k in range(nvr):
+        cff = random_matrix(rows, dim)
+        planes.append(cff)
+    return planes
+
+def random_pieri_system(rows, cols, pivots):
+    """
+    Generates a Pieri system for the numbers of rows in rows,
+    the number of columns in cols, and the given pivots.
+    The conditions are formulated for random planes.
+    """
+    planes = random_planes(rows, cols, pivots)
+    return pieri_system(rows, cols, pivots, planes)
+
+def start_pieri_system(rows, cols, pivots, planes):
     """
     Generates a Pieri system where the last equation
-    is for a special plane.
+    is for a special plane.  For all other equations,
+    the planes in the list planes will be used.
     """
     newpiv = update_pivots(rows, pivots)
     mat = variables(rows, cols, newpiv)
@@ -290,18 +345,27 @@ def start_pieri_system(rows, cols, pivots):
     dim = rows - cols
     result = []
     for k in range(nvr):
-        cff = random_matrix(rows, dim)
+        cff = planes[k]
         equ = all_terms(mat, rows, cols, cff)
-        print 'number of terms in equation %d : %d' % (k+1, len(equ))
+        print '-> number of terms in equation %d : %d' % (k+1, len(equ))
         pol = sum_terms(equ)
         result.append(pol + ';')
     lastcff = special_plane(rows, newpiv)
-    print 'the special plane :'
+    print '-> the special plane :'
     print lastcff
     lastequ = all_terms(mat, rows, cols, lastcff)
     lastpol = sum_terms(lastequ)
     result.append(lastpol + ';')
     return result
+
+def random_start_pieri_system(rows, cols, pivots):
+    """
+    Generates a Pieri system where the last equation
+    is for a special plane.  For all other equations,
+    random matrices will be generated.
+    """
+    planes = random_planes(rows, cols, pivots)
+    return start_pieri_system(rows, cols, pivots, planes) 
 
 def solve_pieri_system(eqs):
     """
@@ -312,10 +376,38 @@ def solve_pieri_system(eqs):
     """
     from phcpy.solver import solve
     sols = solve(eqs)
-    print 'the solutions :'
+    print '-> the solutions :'
     for sol in sols:
         print sol
     return sols
+
+def write_to_file(eqs, sols, dimspace, dimplane):
+    """
+    Prompts the user for a file name and then writes the system
+    defined by the string representations of polynomials to file.
+    If the list sols is not empty, then the solutions will be
+    writen as well to file.  The parameters dimspace and dimplane
+    respectively represent the dimensions of the space and 
+    the solution planes.
+    """
+    name = raw_input('Give a name of a file to write to : ')
+    file = open(name, 'w')
+    file.write(str(len(eqs)) + '\n')
+    for pol in eqs:
+        file.write(pol + '\n')
+    file.write('\n')
+    file.write('TITLE : Pieri conditions on %d-planes in %d-space\n' \
+               % (dimplane, dimspace))
+    file.write('\n')
+    if(len(sols) > 0):
+        cnt = 0
+        file.write('THE SOLUTIONS :\n')
+        file.write(str(len(sols)) + ' ' + str(len(eqs)) + '\n')
+        file.write('=====================================================\n')
+        for sol in sols:
+            cnt = cnt + 1
+            file.write('solution ' + str(cnt) + ' : \n')
+            file.write(sol + '\n')
 
 def show_pieri_system():
     """
@@ -325,26 +417,91 @@ def show_pieri_system():
     as there are variables in the matrix.
     """
     rows, cols, pvts = ask_inputs()
-    answer = raw_input('start Pieri system ? (y/n) ')
+    answer = raw_input('Make start Pieri system ? (y/n) ')
     if(answer == 'y'):
-        eqs = start_pieri_system(rows, cols, pvts)
+        eqs = random_start_pieri_system(rows, cols, pvts)
     else:
-        eqs = pieri_system(rows, cols, pvts)
-    answer = raw_input('see the polynomials ? (y/n) ')
+        eqs = random_pieri_system(rows, cols, pvts)
+    answer = raw_input('Do you want to see the polynomials ? (y/n) ')
     if(answer == 'y'):
-        print 'the polynomials in the Pieri system :'
+        print '-> the polynomials in the Pieri system :'
         for pol in eqs:
             print pol
-    answer = raw_input('apply solve of phcpy ? (y/n) ')
+    answer = raw_input('Apply solve of phcpy ? (y/n) ')
     if(answer == 'y'):
         sols = solve_pieri_system(eqs)
+    else:
+        sols = []
+    answer = raw_input('Write the system to file ? (y/n) ')
+    if(answer == 'y'):
+        write_to_file(eqs, sols, rows, cols)
+
+def sequence_of_pieri_systems():
+    """
+    Makes a sequence of Pieri systems
+    and runs the path trackers on one path.
+    """
+    from phcpy.trackers import track
+    nbrows, nbcols, pvts = ask_inputs()
+    dim = nbrows - nbcols
+    planes = random_planes(nbrows, nbcols, pvts)
+    start = start_pieri_system(nbrows, nbcols, pvts, planes)
+    startsols = solve_pieri_system(start)
+    newpvts = update_pivots(nbrows, pvts)
+    planes.append(random_matrix(nbrows, dim))
+    target = pieri_system(nbrows, nbcols, newpvts, planes)
+    sols = track(target, start, startsols)
+    print '-> the solutions after track :'
+    for sol in sols:
+        print sol
+    while True:
+        answer = raw_input('Continue to next level ? (y/n) ')
+        if(answer != 'y'):
+            break
+        else:
+            pvts = [piv for piv in newpvts]
+            newpvts = update_pivots(nbrows, pvts)
+            if(pvts == newpvts):
+                print '-> no extension of pivots possible: no next level'
+                break
+            start = start_pieri_system(nbrows, nbcols, pvts, planes)
+            print '-> the new start system :'
+            for pol in start:
+                print pol
+            startsols = extend_solutions(sols, nbrows, pvts)
+            print '-> the extended solutions :'
+            for sol in startsols:
+                print sol
+            planes.append(random_matrix(nbrows, dim))
+            target = pieri_system(nbrows, nbcols, newpvts, planes)
+            print '-> the new target system :'
+            for pol in target:
+                print pol
+            sols = track(target, start, startsols)
+            print '-> the solutions after track :'
+            for sol in sols:
+                print sol
+    answer = raw_input('Write system and solutions to file ? (y/n) ')
+    if(answer == 'y'):
+        write_to_file(target, sols, nbrows, nbcols)
 
 def main():
     """
     Collects the test programs.
     """
-    # show_variable_matrix()
-    show_pieri_system()
+    print 'MENU to test setup of Pieri systems :'
+    print '  1. show a matrix of variables'
+    print '  2. make a Pieri system for pivots'
+    print '  3. run path trackers between Pieri systems'
+    answer = raw_input('Type 1, 2, or 3 to select a test : ')
+    if(answer == '1'):
+        show_variable_matrix()
+    elif(answer == '2'):
+        show_pieri_system()
+    elif(answer == '3'):
+        sequence_of_pieri_systems()
+    else:
+        print 'Wrong answer, please try again ...'
 
 if __name__ == '__main__':
     main()
