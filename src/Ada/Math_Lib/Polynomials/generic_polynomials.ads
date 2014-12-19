@@ -47,6 +47,11 @@ package Generic_Polynomials is
   function Number_of_Unknowns ( p : Poly ) return natural32;
   function Number_of_Terms    ( p : Poly ) return natural32;
 
+  function Size_of_Support ( t : Term ) return natural32;
+  -- returns number of variables with nonzero exponent
+  function Size_of_Support ( p : Poly ) return natural32;
+  -- returns number of variables with nonzero exponent
+
   function Degree ( p : Poly ) return integer32;              -- return deg(p);
   function Degree ( p : Poly; i : integer32 ) return integer32;
     -- return deg(p,xi); if p is empty, then the number on return is negative

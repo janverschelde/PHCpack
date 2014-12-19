@@ -61,6 +61,7 @@ procedure ts_poly is
     m := Number_of_Unknowns(p);
     put("the number of unknowns : "); put(m,1); new_line;
     put("the number of terms : "); put(Number_of_Terms(p),1); new_line;
+    put("the size of the support : "); put(Size_of_Support(p),1); new_line;
     put("the degree of p : "); put(Degree(p),1);
     put("  max degrees : ");
     for i in 1..integer32(m) loop
@@ -94,6 +95,7 @@ procedure ts_poly is
     m := Number_of_Unknowns(p);
     put("the number of unknowns : "); put(m,1); new_line;
     put("the number of terms : "); put(Number_of_Terms(p),1); new_line;
+    put("the size of the support : "); put(Size_of_Support(p),1); new_line;
     put("the degree of p : "); put(Degree(p),1);
     put("  max degrees : ");
     for i in 1..integer32(m) loop

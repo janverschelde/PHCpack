@@ -187,7 +187,54 @@ package body Generic_Laurent_Polynomials is
      else return Length_Of(p.all);
     end if;
   end Number_Of_Terms;
- 
+
+  function Size_of_Support ( t : Term ) return natural32 is
+
+    res : natural32 := 0;
+
+  begin
+    if t.dg /= null then
+      for i in t.dg'range loop
+        if t.dg(i) /= 0
+         then res := res + 1;
+        end if;
+      end loop;
+    end if;
+    return res;
+  end Size_of_Support;
+
+  function Size_of_Support ( p : Poly ) return natural32 is
+
+    res : natural32 := 0;
+    nvr : integer32;
+    rep : Poly_Rep;
+    t : term;
+
+  begin 
+    if p /= Null_Poly then
+      nvr := integer32(Number_of_Unknowns(p));
+      if nvr /= 0 then
+        declare
+          occ : Standard_Integer_Vectors.Vector(1..nvr) := (1..nvr => 0);
+        begin
+          rep := p.all;
+          while not Is_Null(rep) loop
+            t := Head_Of(rep);
+            for i in t.dg'range loop
+              if occ(i) = 0 and t.dg(i) /= 0 then
+                occ(i) := 1;
+                res := res + 1;
+              end if;
+            end loop;
+            exit when (res >= natural32(nvr));
+            rep := Tail_Of(rep);
+          end loop;
+        end;
+      end if;
+    end if;
+    return res;
+  end Size_of_Support;
+
   function Degree ( p : Poly ) return integer32 is
 
     temp : Term;

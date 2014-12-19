@@ -1,5 +1,9 @@
-Wed 17 Dec 2014 : bug fix in standard_complex_{poly,laur}_strings.adb for 
-  parsing strings with zero complex coefficients.
+Fri 19 Dec 2014 : added function to generic_polynomials to compute the size
+  of the support of a polynomial.  Added same to generic_laurent_polynomials,
+  tested in ts_poly.
+
+Wed 17 Dec 2014 : bug fix in standard_complex_poly_strings.adb for parsing
+  strings with zero complex coefficients.
 
 Wed 10 Dec 2014 : updated ts_termlist with parsing routines to polynomials
   for efficiency comparisons.
