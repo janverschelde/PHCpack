@@ -1,3 +1,4 @@
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Abstract_Ring;
 with Generic_Laurent_Polynomials;
@@ -23,6 +24,11 @@ package Generic_Laur_Poly_Systems is
 -- COPYING :
 
   procedure Copy ( p : in Laur_Sys; q : in out Laur_Sys );
+
+-- SELECTOR :
+
+  function Size_of_Support ( p : Laur_Sys ) return natural32;
+  -- returns the number of variables in p with nonzero exponent
 
 -- ARITHMETIC OPERATIONS :
 

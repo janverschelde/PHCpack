@@ -11,6 +11,22 @@ package body Generic_Polynomial_Systems is
     end loop;
   end Copy;
 
+-- SELECTOR :
+
+  function Size_of_Support ( p : Poly_Sys ) return natural32 is
+
+    res,size : natural32 := 0;
+
+  begin
+    for i in p'range loop
+      size := Size_of_Support(p(i));
+      if size > res
+       then res := size;
+      end if;
+    end loop;
+    return size;
+  end Size_of_Support;
+
 -- ARITHMETIC OPERATIONS :
 
   function "+" ( p,q : Poly_Sys ) return Poly_Sys is

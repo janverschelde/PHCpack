@@ -1,3 +1,4 @@
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Abstract_Ring;
 with Generic_Polynomials;
@@ -24,6 +25,11 @@ package Generic_Polynomial_Systems is
 -- COPYING :
 
   procedure Copy ( p : in Poly_Sys; q : in out Poly_Sys );
+
+-- SELECTOR :
+
+  function Size_of_Support ( p : Poly_Sys ) return natural32;
+  -- returns the number of variables with nonzero exponent
 
 -- ARITHMETIC OPERATIONS :
 
