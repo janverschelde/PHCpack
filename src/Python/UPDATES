@@ -1,3 +1,6 @@
+Fri 19 Dec 2014 : linear instead of double indexing in pierisystems.py
+  and generation of pairs of systems of hypersurface Pieri conditions.
+
 Thu 18 Dec 2014 : updated pierisystems.py with path tracking between
   systems in a sequence of Pieri conditions.
 
