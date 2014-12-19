@@ -541,6 +541,8 @@ def write_sequence_of_pieri_systems():
     nbrows, nbcols, pvts = ask_inputs()
     answer = raw_input('Double indexing of variables ? (y/n) ')
     linear = (answer != 'y')
+    answer = raw_input('Continue through all levels ? (y/n) ')
+    contin = (answer == 'y')
     dim = nbrows - nbcols
     planes = random_planes(nbrows, nbcols, pvts)
     start = start_pieri_system(nbrows, nbcols, pvts, planes, linear)
@@ -553,9 +555,10 @@ def write_sequence_of_pieri_systems():
     write_to_name_file(name, target, [], nbrows, nbcols)
     cnt = 0
     while True:
-        answer = raw_input('Continue to next level ? (y/n) ')
-        if(answer != 'y'):
-            break
+        if(not contin):
+            answer = raw_input('Continue to next level ? (y/n) ')
+            if(answer != 'y'):
+                break
         else:
             cnt = cnt + 1
             pvts = [piv for piv in newpvts]
