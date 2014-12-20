@@ -24,7 +24,7 @@ package body Generic_Laur_Poly_Systems is
        then res := size;
       end if;
     end loop;
-    return size;
+    return res;
   end Size_of_Support;
 
 -- ARITHMETIC OPERATIONS :
