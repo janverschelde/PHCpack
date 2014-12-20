@@ -14,6 +14,7 @@ with Standard_Floating_Vectors;
 with Arrays_of_Floating_Vector_Lists;
 with Symbol_Table,Symbol_Table_io;
 with Standard_Complex_Polynomials;
+with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_SysFun;
@@ -1600,10 +1601,21 @@ function use_c2phc ( job : integer32;
     silval : constant natural32 := natural32(v_b(v_b'first));
     silent : constant boolean := (silval = 1);
     lp : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
+    nv : constant natural32 := Size_of_Support(lp.all);
+    nq : constant natural32 := natural32(lp'last);
     rc : natural32;
     sols : Solution_List;
 
   begin
+   -- put("nv = "); put(integer32(nv),1);
+   -- put("  nq = "); put(integer32(nq),1); new_line;
+    if nv < nq then
+      put_line("The system is overdetermined, add slack variables.");
+      return 75;
+    elsif nv > nq then
+      put_line("The system is underdetermined, add linear equations.");
+      return 75;
+    end if;
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
       Black_Box_Solvers.Solve(lp.all,silent,rc,sols);
     else
@@ -1624,11 +1636,20 @@ function use_c2phc ( job : integer32;
     use Standard_Complex_Poly_Systems,Standard_Complex_Solutions;
    -- n : constant natural := Standard_PolySys_Container.Dimension;
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    nv : constant natural32 := Size_of_Support(lp.all);
+    nq : constant natural32 := natural32(lp'last);
     rc : natural32;
     sols : Solution_List;
 
   begin
    -- put("Dimension of the system in the container : "); put(n,1); new_line;
+    if nv < nq then
+      put_line("The system is overdetermined, add slack variables.");
+      return 77;
+    elsif nv > nq then
+      put_line("The system is underdetermined, add linear equations.");
+      return 77;
+    end if;
     Black_Box_Solvers.Solve(lp.all,false,rc,sols); -- not silent by default
     Assign(integer32(rc),a);
     Standard_Solutions_Container.Initialize(sols);

@@ -1,3 +1,6 @@
+Fri 19 Dec 2014 : checked for size of support when calling the blackbox
+  solver in use_c2phc.adb.
+
 Tue 25 Nov 2014 : better exception handling message in use_syscon.adb.
 
 Mon 24 Nov 2014 : added exception handlers (commented out) in use_solcon.adb
