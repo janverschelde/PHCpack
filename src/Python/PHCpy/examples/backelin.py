@@ -66,6 +66,27 @@ def component(m, L, u, gamma):
         result.append(s)
     return result
 
+def component_monomials(m, L):
+    """
+    Returns a list of strings, where the k-th string
+    stores the representation of the k-th coordinate.
+    The m-1 parameters are t0, t1, .., tm-2.
+    Only the monomials are returned, not the coefficients,
+    which are not needed for the degree computation.
+    """
+    result = []
+    for k in range(L*m):
+        s = '+ 1'
+        for i in range(m-1):
+            s = s + '*t' + str(i)
+            result.append(s)
+        s = '+ 1'
+        for i in range(m-1):
+            e = -m + 1 + i
+            s = s + '*t' + str(i) + '**(' + str(e) + ')'
+        result.append(s)
+    return result
+
 def sample(m, roots):
     """
     Generates m-1 random complex numbers as parameters
@@ -226,13 +247,24 @@ def embedtofile(embsys, point, addslack=True):
     file.write('solution 1 :\n')
     file.write(sol + '\n')
 
-def main():
+def ask_inputs():
     """
-    Prompts the user for the parameters m and L.
+    The components of cyclic n-roots according to Backelin's Lemma
+    occur in dimension n = m**2*L.  This script prompts the user
+    to enter m, L, and then return m, L, and n.
     """
     m = input("Give the m in n = m**2*L : ")
     L = input("Give the L in n = m**2*L : ")
     n = m**2*L
+    return (m, L, n)
+
+def sample_component():
+    """
+    Prompts the user for the parameters m and L.
+    Computes one random point on the cyclic n-roots component,
+    for n = m**2*L and embeds the sample point in a witness set.
+    """
+    (m, L, n) = ask_inputs()
     print 'The dimension n = %d**2*%d = %d.' % (m, L, n)
     u, gamma = constants(m, L)
     print 'u =', u
@@ -259,5 +291,47 @@ def main():
         ans = raw_input('write the witness set to file ? (y/n) ')
         if(ans == 'y'):
             embedtofile(emb, point, addslack)
+
+def compute_degree():
+    """
+    Prompts the user for the parameters m and L.
+    Computes the degree of the cyclic n-roots set,
+    for n = m**2*L.
+    """
+    (m, L, n) = ask_inputs()
+    print 'The dimension n = %d**2*%d = %d.' % (m, L, n)
+    coords = component_monomials(m, L)
+    print 'monomial coordinates of a cyclic %d-roots component :' % n
+    for c in coords:
+        print c
+    dim = m-1
+    print 'dimension =', dim
+    pol = ''
+    for c in coords:
+        pol = pol + c
+    print pol
+    sys = []
+    for k in range(dim):
+        sys.append(pol + ';')
+    print sys
+    from phcpy.solver import mixed_volume
+    deg = mixed_volume(sys)
+    print 'the degree of cyclic %d-roots set : %d' % (n, deg)
+
+def main():
+    """
+    Presents the user with a menu of choices and 
+    then calls the selected script.
+    """
+    print 'MENU for cyclic n-roots, n = m**2*L :'
+    print '  1. sample a point and embed as witness set'
+    print '  2. compute the degree of the cyclic n-roots set'
+    answer = raw_input('Type 1 or 2 to select : ')
+    if(answer == '1'):
+        sample_component()   
+    elif(answer == '2'):
+        compute_degree()
+    else:
+        print 'invalid choice, please try again...'
 
 main()

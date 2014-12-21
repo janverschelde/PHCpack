@@ -1,3 +1,5 @@
+Sat 20 Dec 2014 : extended backelin.py with degree computation.
+
 Fri 19 Dec 2014 : linear instead of double indexing in pierisystems.py
   and generation of pairs of systems of hypersurface Pieri conditions.
 
