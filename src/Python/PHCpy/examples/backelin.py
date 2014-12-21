@@ -318,6 +318,36 @@ def compute_degree():
     deg = mixed_volume(sys)
     print 'the degree of cyclic %d-roots set : %d' % (n, deg)
 
+def degree(m, L):
+    """
+    Returns the degree of the cyclic n-roots solution set,
+    for n = m**2*L.
+    """
+    coords = component_monomials(m, L)
+    dim = m-1
+    pol = ''
+    for c in coords:
+        pol = pol + c
+    sys = []
+    for k in range(m-1):
+        sys.append(pol + ';')
+    from phcpy.solver import mixed_volume
+    deg = mixed_volume(sys)
+    return deg
+
+def compute_degrees():
+    """
+    Computes the degrees of cyclic n-roots solution sets,
+    for n = m**2*L, for a given range of m.
+    """
+    bench = [(4, 1), (4, 2), (4, 3), (8, 1), (4, 5), (4, 6), \
+             (8, 2), (12, 1), (4, 10), (4, 11), (8, 3), (4, 13), \
+             (4, 14), (4, 15), (16, 1)]
+    for (m, L) in bench:
+        d = degree(m, L)
+        n = m**2*L
+        print 'degree of cyclic %d-roots set : %d' % (n, d)
+
 def main():
     """
     Presents the user with a menu of choices and 
@@ -325,12 +355,15 @@ def main():
     """
     print 'MENU for cyclic n-roots, n = m**2*L :'
     print '  1. sample a point and embed as witness set'
-    print '  2. compute the degree of the cyclic n-roots set'
-    answer = raw_input('Type 1 or 2 to select : ')
+    print '  2. compute the degree of one cyclic n-roots set'
+    print '  3. compute the degree of cyclic n-roots bench sets'
+    answer = raw_input('Type 1, 2, or 3 to select : ')
     if(answer == '1'):
         sample_component()   
     elif(answer == '2'):
         compute_degree()
+    elif(answer == '3'):
+        compute_degrees()
     else:
         print 'invalid choice, please try again...'
 

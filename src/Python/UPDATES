@@ -1,3 +1,6 @@
+Sun 21 Dec 2014 : extended backelin.py with the degree computation of a list
+  of benchmark systems.
+
 Sat 20 Dec 2014 : extended backelin.py with degree computation.
 
 Fri 19 Dec 2014 : linear instead of double indexing in pierisystems.py
