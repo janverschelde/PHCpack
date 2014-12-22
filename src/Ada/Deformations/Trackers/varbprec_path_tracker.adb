@@ -83,6 +83,13 @@ package body Varbprec_Path_Tracker is
     Init(s);
   end Init;
 
+-- SELECTORS :
+
+  function get_current return Link_to_String is
+  begin
+    return current;
+  end get_current;
+
 -- DESTRUCTOR :
 
   procedure Clear is

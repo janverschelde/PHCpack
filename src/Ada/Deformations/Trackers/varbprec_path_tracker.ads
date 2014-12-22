@@ -67,6 +67,13 @@ package Varbprec_Path_Tracker is
   --   For some n, h'range = 1..n and Number_of_Unknowns(h(i)) = n+1,
   --   for i in h'range.
 
+-- SELECTORS :
+
+  function get_current return Link_to_String;
+
+  -- DESCRIPTION :
+  --   Returns the current solution.
+
 -- DESCTRUCTOR :
 
   procedure Clear;

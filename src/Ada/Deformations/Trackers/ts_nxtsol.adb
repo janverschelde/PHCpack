@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with String_Splitters;                   use String_Splitters;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
@@ -25,12 +26,14 @@ with QuadDobl_System_and_Solutions_io;   use QuadDobl_System_and_Solutions_io;
 with Multprec_Floating_Numbers;
 with Multprec_Complex_Solutions;
 with Multprec_Complex_Solutions_io;
+with Multprec_Solution_Strings;
 with Multprec_System_and_Solutions_io;   use Multprec_System_and_Solutions_io;
 with Standard_to_Multprec_Convertors;
 with Standard_Path_Tracker;
 with DoblDobl_Path_Tracker;
 with QuadDobl_Path_Tracker;
 with Multprec_Path_Tracker;
+with Varbprec_Path_Tracker;
 
 -- for testing purposes
 -- with Process_io;
@@ -104,7 +107,7 @@ procedure ts_nxtsol is
 
   -- DESCRIPTION :
   --   Prompts the user for a homotopy and start solutions to
-  --   initialize the standard path tracker.
+  --   initialize the double double path tracker.
 
     use DoblDobl_Complex_Poly_Systems,DoblDobl_Complex_Solutions;
 
@@ -147,7 +150,7 @@ procedure ts_nxtsol is
 
   -- DESCRIPTION :
   --   Prompts the user for a homotopy and start solutions to
-  --   initialize the standard path tracker.
+  --   initialize the quad double path tracker.
 
     use QuadDobl_Complex_Poly_Systems,QuadDobl_Complex_Solutions;
 
@@ -191,7 +194,7 @@ procedure ts_nxtsol is
 
   -- DESCRIPTION :
   --   Prompts the user for a homotopy and start solutions to
-  --   initialize the standard path tracker.
+  --   initialize the multiprecision path tracker.
   --   The number of decimal places in the working precision equals deci.
 
     use Multprec_Complex_Poly_Systems,Multprec_Complex_Solutions;
@@ -230,6 +233,43 @@ procedure ts_nxtsol is
       put_line(y);
     end;
   end Multprec_Natural_Parameter_Initialize;
+
+  procedure Varbprec_Natural_Parameter_Initialize is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a homotopy and start solutions to
+  --   initialize the variable precision path tracker.
+
+    hom : Link_to_Array_of_Strings;
+    sol : Link_to_String;
+    sols : Multprec_Complex_Solutions.Solution_List;
+    ls : Multprec_Complex_Solutions.Link_to_Solution;
+    nq,nv,len : natural32;
+    idx : integer32 := 0;
+
+  begin
+    new_line;
+    put_line("Reading the homotopy and start solutions from file ...");
+    Multprec_System_and_Solutions_io.get(nq,nv,hom,sols);
+    new_line;
+    put("-> read "); put(nq,1); put(" polynomials in "); put(nv,1);
+    put_line(" variables.");
+    len := Multprec_Complex_Solutions.Length_Of(sols);
+    put("-> read "); put(len,1); put_line(" solutions from file.");
+    if len > 0 then
+      ls := Multprec_Complex_Solutions.Head_Of(sols);
+      sol := new string'(Multprec_Solution_Strings.Write(ls.all));
+      put_line("-> the first solution :"); put_line(sol.all);
+
+      put("The symbols in the homotopy : "); Symbol_Table_io.Write; new_line;
+      put("-> give the index of the deformation parameter t : ");
+      get(idx); skip_line;
+      if idx /= integer32(hom'last)+1
+       then put_line("Works only when deformation parameter is last symbol!");
+      end if;
+      Varbprec_Path_Tracker.Init(hom,idx,sol);
+    end if;
+  end Varbprec_Natural_Parameter_Initialize;
 
   procedure Standard_Artificial_Parameter_Initialize is
 
@@ -349,6 +389,50 @@ procedure ts_nxtsol is
     end if;
   end Multprec_Artificial_Parameter_Initialize;
 
+  procedure Varbprec_Artificial_Parameter_Initialize is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a target system, a start system, start solutions,
+  --   and initializes the variable precision path tracker.
+
+    pfile : file_type;
+    p,q : Link_to_Array_of_Strings;
+    sol : Link_to_String;
+    sols : Multprec_Complex_Solutions.Solution_List;
+    ls : Multprec_Complex_Solutions.Link_to_Solution;
+    nq,nv,len : natural32;
+    ans : character;
+
+  begin
+    new_line;
+    put_line("Reading the target system ...");
+    Read_Name_and_Open_File(pfile);
+    get(pfile,natural(nq),natural(nv),p);
+    new_line;
+    put("-> read "); put(nq,1); put(" polynomials in "); put(nv,1);
+    put_line(" variables.");
+    new_line;
+    put_line("Reading the start system and start solutions from file ...");
+    Multprec_System_and_Solutions_io.get(nq,nv,q,sols);
+    new_line;
+    put("-> read "); put(nq,1); put(" polynomials in "); put(nv,1);
+    put_line(" variables.");
+    len := Multprec_Complex_Solutions.Length_Of(sols);
+    put("-> read "); put(len,1); put_line(" solutions from file.");
+    if len > 0 then
+      ls := Multprec_Complex_Solutions.Head_Of(sols);
+      sol := new string'(Multprec_Solution_Strings.Write(ls.all));
+      put_line("-> the first solution :"); put_line(sol.all);
+      new_line;
+      put("Fixed gamma constant ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y'
+       then Varbprec_Path_Tracker.Init(p,q,true,sol);
+       else Varbprec_Path_Tracker.Init(p,q,false,sol);
+      end if;
+    end if;
+  end Varbprec_Artificial_Parameter_Initialize;
+
   procedure Standard_Initialize_Path_Tracker is
 
   -- DESCRIPTION :
@@ -432,6 +516,27 @@ procedure ts_nxtsol is
      else Multprec_Natural_Parameter_Initialize(deci);
     end if;
   end Multprec_Initialize_Path_Tracker;
+
+  procedure Varbprec_Initialize_Path_Tracker is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the choice between natural parameter,
+  --   or artificial parameter homotopy, with start and target system.
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU to choose between artificial or natural parameter :");
+    put_line("  1. artificial parameter t with start and target system;");
+    put_line("  2. natural parameter t is a variable in the homotopy system.");
+    put("Type 1 or 2 to select type of homotopy : ");
+    Ask_Alternative(ans,"12");
+    if ans = '1'
+     then Varbprec_Artificial_Parameter_Initialize;
+     else Varbprec_Natural_Parameter_Initialize;
+    end if;
+  end Varbprec_Initialize_Path_Tracker;
 
   procedure Standard_Run_Path_Tracker is
 
@@ -533,6 +638,20 @@ procedure ts_nxtsol is
     end loop;
   end Multprec_Run_Path_Tracker;
 
+  procedure Varbprec_Run_Path_Tracker is
+
+  -- DESCRIPTION :
+  --   Shows the current solution and prompts the user each time to make
+  --   one extra predictor-corrector step to compute the next solution
+  --   on the path with variable precision arithmetic.
+
+    s : Link_to_String := VarbPrec_Path_Tracker.get_current;
+
+  begin
+    new_line;
+    put_line("The current solution : "); put_line(s.all);
+  end Varbprec_Run_Path_Tracker;
+
   procedure Main is
 
     ans : character;
@@ -544,9 +663,10 @@ procedure ts_nxtsol is
     put_line("  1. in complex standard floating-point arithmetic;");
     put_line("  2. in complex double double arithmetic;");
     put_line("  3. in complex quad double arithmetic;");
-    put_line("  4. in complex multiprecision arithmetic.");
-    put("Type 1, 2, 3, or 4 to select precision : ");
-    Ask_Alternative(ans,"1234");
+    put_line("  4. in complex multiprecision arithmetic;");
+    put_line("  5. in variable multiprecision arithmetic.");
+    put("Type 1, 2, 3, 4, or 5 to select precision : ");
+    Ask_Alternative(ans,"12345");
     case ans is
       when '1' =>
         Standard_Initialize_Path_Tracker;
@@ -567,6 +687,10 @@ procedure ts_nxtsol is
         Multprec_Initialize_Path_Tracker(deci);
         Multprec_Run_Path_Tracker;
         Multprec_Path_Tracker.Clear;
+      when '5' =>
+        Varbprec_Initialize_Path_Tracker;
+        Varbprec_Run_Path_Tracker;
+        Varbprec_Path_Tracker.Clear;
       when others => null;
     end case;
   end Main;

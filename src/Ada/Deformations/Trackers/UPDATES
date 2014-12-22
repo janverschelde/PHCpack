@@ -1,3 +1,7 @@
+Mon 22 Dec 2014 : extended varbprec_path_tracker with initialization of
+  natural parameter homotopy and the return of the current solution,
+  tested initialization in ts_nxtsol.
+
 Sat 13 Dec 2014 : fix in initialization of multiprecision homotopy in
   multprec_path_tracker.  Started writing of new package varbprec_path_tracker 
   to implement variable precision path tracker with next() method.
