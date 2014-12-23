@@ -46,14 +46,14 @@ package body Multprec_Path_Tracker is
     if vv /= null then Clear(vv); end if;
   end Clear_Solution_Data;
 
-  procedure Init ( s : in Link_to_Solution ) is
+  procedure Init_Solution_Data is
+
+  -- DESCRIPTION :
+  --   Initializes the solution data: the backup solution,
+  --   pointers to four previous solution vectors,
+  --   and their corresponding t values.
+
   begin
-    current := s;
-    point := Shallow_Create(current);
-    nsuccess := 0;
-    trial := 0;
-    success := true;
-    Clear_Solution_Data;
     old_sol := new Multprec_Complex_Vectors.Vector(current.v'range);
     prev_sol := new Multprec_Complex_Vectors.Vector(current.v'range);
     prev_sol0 := new Multprec_Complex_Vectors.Vector(current.v'range);
@@ -81,6 +81,17 @@ package body Multprec_Path_Tracker is
         Clear(mp_zero);
       end;
     end loop;
+  end Init_Solution_Data;
+
+  procedure Init ( s : in Link_to_Solution ) is
+  begin
+    current := s;
+    point := Shallow_Create(current);
+    nsuccess := 0;
+    trial := 0;
+    success := true;
+    Clear_Solution_Data;
+    Init_Solution_Data;
   end Init;
 
   procedure Init ( p,q : in Link_to_Poly_Sys; fixed_gamma : in boolean;

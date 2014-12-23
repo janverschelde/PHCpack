@@ -50,15 +50,14 @@ package body Standard_Path_Tracker is
     if vv /= null then Clear(vv); end if;
   end Clear_Solution_Data;
 
-  procedure Init ( s : in Link_to_Solution ) is
+  procedure Init_Solution_Data is
+
+  -- DESCRIPTION :
+  --   Initializes the solution data: the backup solution,
+  --   pointers to four previous solution vectors,
+  --   and their corresponding t values.
+
   begin
-    current := s;
-    point := Shallow_Create(current);
-    step := Continuation_Parameters.max_path_step_size;
-    nsuccess := 0;
-    trial := 0;
-    success := true;
-    Clear_Solution_Data;
     old_sol := new Standard_Complex_Vectors.Vector(current.v'range);
     prev_sol := new Standard_Complex_Vectors.Vector(current.v'range);
     prev_sol0 := new Standard_Complex_Vectors.Vector(current.v'range);
@@ -74,6 +73,18 @@ package body Standard_Path_Tracker is
     prev_t1 := prev_t; prev_sol1.all := prev_sol.all;
     prev_t2 := prev_t; prev_sol2.all := prev_sol.all;
     prev_v.all := (prev_v'range => Create(0.0));
+  end Init_Solution_Data;
+
+  procedure Init ( s : in Link_to_Solution ) is
+  begin
+    current := s;
+    point := Shallow_Create(current);
+    step := Continuation_Parameters.max_path_step_size;
+    nsuccess := 0;
+    trial := 0;
+    success := true;
+    Clear_Solution_Data;
+    Init_Solution_Data;
   end Init;
 
   procedure Init ( p,q : in Link_to_Poly_sys; fixed_gamma : in boolean ) is

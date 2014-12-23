@@ -1,3 +1,6 @@
+Tue 23 Dec 2014 : separate procedure to initialize solution data in
+  {standard,dobldobl,quaddobl,multprec}_path_tracker.adb.
+
 Mon 22 Dec 2014 : extended varbprec_path_tracker with initialization of
   natural parameter homotopy and the return of the current solution,
   tested initialization in ts_nxtsol.
