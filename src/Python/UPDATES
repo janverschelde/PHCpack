@@ -1,3 +1,6 @@
+Tue 23 Dec 2014 : added more benchmark test cases to the degree computation
+  list of backelin.py.
+
 Sun 21 Dec 2014 : extended backelin.py with the degree computation of a list
   of benchmark systems.
 

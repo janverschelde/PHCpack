@@ -342,11 +342,13 @@ def compute_degrees():
     """
     bench = [(4, 1), (4, 2), (4, 3), (8, 1), (4, 5), (4, 6), \
              (8, 2), (12, 1), (4, 10), (4, 11), (8, 3), (4, 13), \
-             (4, 14), (4, 15), (16, 1)]
+             (4, 14), (4, 15), (16, 1), (4, 17), (12, 2), (4, 19), \
+             (8, 5), (4, 21), (4, 22)]
     for (m, L) in bench:
         d = degree(m, L)
         n = m**2*L
-        print 'degree of cyclic %d-roots set : %d' % (n, d)
+        print 'degree of cyclic %d-roots set : %d, m = %d, L = %d' \
+            % (n, d, m, L)
 
 def main():
     """
