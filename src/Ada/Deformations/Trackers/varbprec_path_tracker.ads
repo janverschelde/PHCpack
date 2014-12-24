@@ -11,11 +11,13 @@ package Varbprec_Path_Tracker is
 
 -- CONSTRUCTORS :
 
-  procedure Init ( s : in Link_to_String );
+  procedure Init ( s : in Link_to_String; nv : in natural32 );
 
   -- DESRIPTION :
   --   Stores s as the current solution, leaves the homotopy as it is.
   --   This is useful for tracking the next path in the same homotopy.
+  --   The number of variables in the solution must equal nv,
+  --   as needed to initialize the standard path tracker.
 
   procedure Init ( p,q : in Link_to_Array_of_Strings;
                    fixed_gamma : in boolean );
@@ -73,6 +75,19 @@ package Varbprec_Path_Tracker is
 
   -- DESCRIPTION :
   --   Returns the current solution.
+
+  function get_next return Link_to_String;
+
+  -- DESCRIPTION :
+  --   Does one step of a predictor-corrector method.
+  --   The default for the target of the continuation parameter t is one.
+
+  function get_next ( target_t : Standard_Complex_Numbers.Complex_Number )
+                    return Link_to_String;
+
+  -- DESCRIPTION :
+  --   Does one step of a predictor-corrector method.
+  --   for the given target of the continuation parameter.
 
 -- DESCTRUCTOR :
 

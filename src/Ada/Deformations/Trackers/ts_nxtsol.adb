@@ -646,10 +646,18 @@ procedure ts_nxtsol is
   --   on the path with variable precision arithmetic.
 
     s : Link_to_String := VarbPrec_Path_Tracker.get_current;
+    ans : character;
 
   begin
     new_line;
     put_line("The current solution : "); put_line(s.all);
+    loop
+      put("Do predictor-corrector step ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+      s := Varbprec_Path_Tracker.get_next;
+      put_line("The current solution : "); put_line(s.all);
+    end loop;
   end Varbprec_Run_Path_Tracker;
 
   procedure Main is
