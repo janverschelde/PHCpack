@@ -1,3 +1,5 @@
+Thu 25 Dec 2014 : new package solution_string_splitters tested by ts_solstr.
+
 Sun 7 Dec 2014 : new package varbprec_complex_solutions to convert solutions
   over various levels of precision.
 

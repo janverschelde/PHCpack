@@ -36,8 +36,13 @@ with Standard_Solution_Strings;
 with DoblDobl_Solution_Strings;
 with QuadDobl_Solution_Strings;
 with Multprec_Solution_Strings;
+with Solution_String_Splitters;          use Solution_String_Splitters;
 
 procedure ts_solstr is
+
+-- DESCRIPTION :
+--   Tests writing of solutions into strings and their parsing
+--   into solutions of various precision levels.
 
   procedure Standard_Test_Write
               ( ls : in Standard_Complex_Solutions.Link_to_Solution ) is
@@ -51,6 +56,8 @@ procedure ts_solstr is
   begin
     put_line("The solution written as a string : ");
     put_line(s);
+    put_line("The solution vector part : ");
+    put_line(Coordinates(s).all);
     put("Length of string : "); put(natural32(s'last),1); put(" = ");
     put(Standard_Solution_Strings.Length(ls.all),1);
     new_line;

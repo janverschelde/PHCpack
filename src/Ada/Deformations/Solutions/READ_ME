@@ -1,4 +1,4 @@
-Solutions of systems and homotopies in PHCv2.3.92
+Solutions of systems and homotopies in PHCv2.3.97
 
 The second release introduced the solution vectors with multiprecision.
 Version 2.3 has an improved Maple interface.
@@ -31,6 +31,7 @@ standard_solution_strings          : write solutions to strings and parse
 dobldobl_solution_strings          : double double solutions and strings
 quaddobl_solution_strings          : quad double solutions and strings
 multprec_solution_strings          : multprecision solutions and strings
+solution_string_splitters          : split coordinates of a solution string
 ts_solstr                          : test string representations
 ------------------------------------------------------------------------------
 standard_solution_filters          : filters solutions subject to criteria
