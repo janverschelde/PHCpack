@@ -1,5 +1,6 @@
 Wed 24 Dec 2014 : added initialization of standard path tracker and get_next
-  to varbprec_path_tracker, tested by ts_nxtsol.adb.
+  to varbprec_path_tracker, tested by ts_nxtsol.adb.  New package
+  varbprec_corrector_steps, for use in varbprc_path_tracker.
 
 Tue 23 Dec 2014 : separate procedure to initialize solution data in
   {standard,dobldobl,quaddobl,multprec}_path_tracker.adb.

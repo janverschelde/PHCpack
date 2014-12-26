@@ -5,9 +5,11 @@ with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Strings;
 with Standard_Complex_Solutions;
 with Standard_Solution_Strings;
+with Solution_String_Splitters;
 with Continuation_Parameters;
 with Varbprec_Homotopy;
 with Standard_Path_Tracker;
+with Varbprec_Corrector_Steps;
 
 package body Varbprec_Path_Tracker is
 
@@ -173,28 +175,50 @@ package body Varbprec_Path_Tracker is
 
   function get_next return Link_to_String is
 
-    res : Link_to_String;
+    res,coords : Link_to_String;
     ls : Standard_Complex_Solutions.Link_to_Solution;
+    previous_t,t : Standard_Complex_Numbers.Complex_Number;
+    m : integer32;
+    fail : boolean;
+
+    use Solution_String_Splitters;
 
   begin
+    previous_t := Standard_Path_Tracker.get_current.t;
     ls := Standard_Path_Tracker.get_next;
-    res := new string'(Standard_Solution_Strings.Write(ls.all));
-    String_Splitters.Clear(current);
-    current := res;
+    if Standard_Complex_Numbers.Equal(previous_t,ls.t) then
+      res := current;
+    else
+      res := new string'(Standard_Solution_Strings.Write(ls.all));
+      String_Splitters.Clear(current);
+      current := res;
+      Split_Coordinates(current.all,m,t,coords,fail);
+    end if;
     return res;
   end get_next;
 
   function get_next ( target_t : Standard_Complex_Numbers.Complex_Number )
                     return Link_to_String is
 
-    res : Link_to_String;
+    res,coords : Link_to_String;
     ls : Standard_Complex_Solutions.Link_to_Solution;
+    previous_t,t : Standard_Complex_Numbers.Complex_Number;
+    m : integer32;
+    fail : boolean;
+
+    use Solution_String_Splitters;
 
   begin
+    previous_t := Standard_Path_Tracker.get_current.t;
     ls := Standard_Path_Tracker.get_next(target_t);
-    res := new string'(Standard_Solution_Strings.Write(ls.all));
-    String_Splitters.Clear(current);
-    current := res;
+    if Standard_Complex_Numbers.Equal(previous_t,ls.t) then
+      res := current;
+    else
+      res := new string'(Standard_Solution_Strings.Write(ls.all));
+      String_Splitters.Clear(current);
+      current := res;
+      Split_Coordinates(current.all,m,t,coords,fail);
+    end if;
     return res;
   end get_next;
 

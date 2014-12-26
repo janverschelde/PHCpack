@@ -50,9 +50,11 @@ quaddobl_path_trackers           : path trackers with quad doubles
 multprec_path_trackers           : path trackers with multiprecision numbers
 ts_path                          : test facility for path trackers
 -----------------------------------------------------------------------------
+varbprec_corrector_steps         : variable precision corrector steps
 standard_path_tracker            : path tracker with "get_next" procedure
 dobldobl_path_tracker            : get_next in double double arithmetic
 quaddobl_path_tracker            : get_next in quad double arithmetic
+varbprec_path_tracker            : variable precision get_next
 ts_nxtsol                        : test on path tracker with generator
 -----------------------------------------------------------------------------
 drivers_to_track_standard_paths  : drivers for tracking with jumpstarting
