@@ -1,3 +1,5 @@
+with text_io;                            use text_io;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Random_Numbers;
 with Symbol_Table;
@@ -178,10 +180,10 @@ package body Varbprec_Path_Tracker is
     res,coords : Link_to_String;
     ls : Standard_Complex_Solutions.Link_to_Solution;
     previous_t,t : Standard_Complex_Numbers.Complex_Number;
-    m : integer32;
+    m,loss : integer32;
     fail : boolean;
 
-    use Solution_String_Splitters;
+    use Solution_String_Splitters,Varbprec_Corrector_Steps;
 
   begin
     previous_t := Standard_Path_Tracker.get_current.t;
@@ -193,6 +195,9 @@ package body Varbprec_Path_Tracker is
       String_Splitters.Clear(current);
       current := res;
       Split_Coordinates(current.all,m,t,coords,fail);
+      put_line("The coordinates : " & coords.all);
+      loss := Estimate_Loss_for_Polynomial_Homotopy(coords.all,t,256);
+      put("-> estimated loss : "); put(loss,1); new_line;
     end if;
     return res;
   end get_next;
@@ -203,10 +208,10 @@ package body Varbprec_Path_Tracker is
     res,coords : Link_to_String;
     ls : Standard_Complex_Solutions.Link_to_Solution;
     previous_t,t : Standard_Complex_Numbers.Complex_Number;
-    m : integer32;
+    m,loss : integer32;
     fail : boolean;
 
-    use Solution_String_Splitters;
+    use Solution_String_Splitters,Varbprec_Corrector_Steps;
 
   begin
     previous_t := Standard_Path_Tracker.get_current.t;
@@ -218,6 +223,9 @@ package body Varbprec_Path_Tracker is
       String_Splitters.Clear(current);
       current := res;
       Split_Coordinates(current.all,m,t,coords,fail);
+      put_line("The coordinates : " & coords.all);
+      loss := Estimate_Loss_for_Polynomial_Homotopy(coords.all,t,256);
+      put("-> estimated loss : "); put(loss,1); new_line;
     end if;
     return res;
   end get_next;

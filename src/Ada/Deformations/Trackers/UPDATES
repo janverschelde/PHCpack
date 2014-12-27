@@ -1,3 +1,6 @@
+Fri 26 Dec 2014 : to varbprec_path_tracker.adb added estimate of loss
+  of precision.
+
 Wed 24 Dec 2014 : added initialization of standard path tracker and get_next
   to varbprec_path_tracker, tested by ts_nxtsol.adb.  New package
   varbprec_corrector_steps, for use in varbprc_path_tracker.
