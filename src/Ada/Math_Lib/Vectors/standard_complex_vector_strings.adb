@@ -66,6 +66,7 @@ package body Standard_Complex_Vector_Strings is
       res(i) := cff;
       exit when pos > s'last;
       start := pos + 1; -- skip the linefeed
+      exit when start > s'last; -- careful with empty lines ...
     end loop;
     return res;
   end Parse;

@@ -1,3 +1,7 @@
+Fri 26 Dec 2014 : in standard_complex_vector_strings.adb fixed bug when
+  index went over the end of a string.  Applied the same fix for the 
+  dobldobl, quaddobl, and multprec versions.
+
 Sun 23 Nov 2014 : extended length of strings when writing double double complex
   vectors to strings, in dobldobl_complex_vector_strings.adb.
 
