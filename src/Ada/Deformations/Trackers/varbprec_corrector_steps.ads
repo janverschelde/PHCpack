@@ -1,3 +1,4 @@
+with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -201,5 +202,62 @@ package Varbprec_Corrector_Steps is
   --   Returns estimated loss of decimal places as a negative number
   --   based on condition number estimates for one Newton step on f at z.
   --   This function encapsulates the same named procedure.
+
+-- PART III : computing after parsing to the precision
+
+  procedure Standard_Newton_Step_on_Homotopy
+              ( z : in out Link_to_String;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                err,rco,res : out double_float );
+  procedure DoblDobl_Newton_Step_on_Homotopy
+              ( z : in out Link_to_String;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                err,rco,res : out double_float );
+  procedure QuadDobl_Newton_Step_on_Homotopy
+              ( z : in out Link_to_String;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                err,rco,res : out double_float );
+  procedure Multprec_Newton_Step_on_Homotopy
+              ( z : in out Link_to_String;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                prcn : in natural32; err,rco,res : out double_float );
+
+  -- DESCRIPTION :
+  --   Evaluates the homotopy and the initial approximation z in standard
+  --   double, double double, quad double, or arbitrary multiprecision.
+  --   One Newton step is done on the evaluated system.
+
+  -- ON ENTRY :
+  --   z        string representation of an initial approximation;
+  --   t        corresponding value of the homotopy continuation parameter;
+  --   prcn     number of decimal places in arbitrary multiprecision.
+
+  -- ON RETURN :
+  --   z        updated approximation for a solution of the homotopy;
+  --   err      magnitude of the correction added to z;
+  --   rco      estimate of the inverse condition number of Jacobian at z;
+  --   res      magnitude of homotopy evaluated at z and t.
+
+  procedure do_Newton_Step_on_Homotopy
+              ( z : in out Link_to_String;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                loss,want : in integer32; err,rco,res : out double_float );
+
+  -- DESCRIPTION :
+  --   Selects the precision to meet the wanted number of accurate
+  --   decimal places taking the loss of decimal places into account
+  --   when performing one Newton step on f at z.
+
+  -- ON ENTRY :
+  --   z        string representation of an initial approximation;
+  --   t        correspondinf value of the homtopy continuation parameter;
+  --   loss     estimated loss of decimal places as a negative number;
+  --   want     wanted number of accurate decimal places.
+
+  -- ON RETURN :
+  --   z        updated approximation for a solution of a homotopy at t;
+  --   err      magnitude of the correction added to z;
+  --   rco      estimate of the inverse condition number of Jacobian at z;
+  --   res      magnitude of the homotopy evaluated at z.
 
 end Varbprec_Corrector_Steps;

@@ -1,9 +1,16 @@
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
+with Multprec_Complex_Numbers;
 with Standard_Mathematical_Functions;    use Standard_Mathematical_Functions;
 with DoblDobl_Mathematical_Functions;    use DoblDobl_Mathematical_Functions;
 with QuadDobl_Mathematical_Functions;    use QuadDobl_Mathematical_Functions;
 with Multprec_Mathematical_Functions;    use Multprec_Mathematical_Functions;
 with Multprec_DoblDobl_Convertors;
 with Multprec_QuadDobl_Convertors;
+with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vector_Strings;
 with DoblDobl_Complex_Vectors;
@@ -12,6 +19,19 @@ with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Vector_Strings;
 with Multprec_Complex_Vectors;
 with Multprec_Complex_Vector_Strings;
+with Multprec_Complex_Vector_Tools;
+with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
+with DoblDobl_Complex_Vector_Norms;      use DoblDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Vector_Norms;      use QuadDobl_Complex_Vector_Norms;
+with Multprec_Complex_Norms_Equals;      use Multprec_Complex_Norms_Equals;
+with Standard_Complex_Matrices;
+with DoblDobl_Complex_Matrices;
+with QuadDobl_Complex_Matrices;
+with Multprec_Complex_Matrices;
+with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
+with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
+with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
+with Multprec_Complex_Linear_Solvers;    use Multprec_Complex_Linear_Solvers;
 with Symbol_Table;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
@@ -409,5 +429,179 @@ package body Varbprec_Corrector_Steps is
     Clear(jfrco); Clear(fzrco);
     return res;
   end Estimate_Loss_for_Polynomial_Homotopy;
+
+-- PART III : computing after parsing to the precision
+
+  procedure Standard_Newton_Step_on_Homotopy
+              ( z : in out Link_to_String;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                err,rco,res : out double_float ) is
+
+    h : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+      := Varbprec_Homotopy.Standard_Homotopy_System;
+    n : constant integer32 := h'last;
+    x : Standard_Complex_Vectors.Vector(1..n)
+      := Standard_Complex_Vector_Strings.Parse(z.all);
+    fz : constant Standard_Complex_Vectors.Vector(h'range)
+       := Varbprec_Homotopy.Eval(x,t);
+    jfz : Standard_Complex_Matrices.Matrix(h'range,x'range)
+        := Varbprec_Homotopy.Diff(x,t);
+    piv : Standard_Integer_Vectors.Vector(x'range);
+
+  begin
+    lufco(jfz,n,piv,rco);
+    Varbprec_Complex_Newton_Steps.do_Newton_Step(x,jfz,piv,fz,err);
+    res := Max_Norm(fz);
+    declare
+      nz : constant string
+         := Standard_Complex_Vector_Strings.Write(x);
+    begin
+      Clear(z);
+      z := new string'(nz);
+    end;
+  end Standard_Newton_Step_on_Homotopy;
+
+  procedure DoblDobl_Newton_Step_on_Homotopy
+              ( z : in out Link_to_String;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                err,rco,res : out double_float ) is
+
+    h : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+      := Varbprec_Homotopy.DoblDobl_Homotopy_System;
+    n : constant integer32 := h'last;
+    x : DoblDobl_Complex_Vectors.Vector(1..n)
+      := DoblDobl_Complex_Vector_Strings.Parse(z.all);
+    dd_re : constant double_double
+          := Create(Standard_Complex_Numbers.REAL_PART(t));
+    dd_im : constant double_double
+          := Create(Standard_Complex_Numbers.IMAG_PART(t));
+    dd_t : constant DoblDobl_Complex_Numbers.Complex_Number
+         := DoblDobl_Complex_Numbers.Create(dd_re,dd_im);
+    fz : constant DoblDobl_Complex_Vectors.Vector(h'range)
+       := Varbprec_Homotopy.Eval(x,dd_t);
+    jfz : DoblDobl_Complex_Matrices.Matrix(h'range,x'range)
+        := Varbprec_Homotopy.Diff(x,dd_t);
+    piv : Standard_Integer_Vectors.Vector(x'range);
+    dd_err,dd_rco,dd_res : double_double;
+
+  begin
+    lufco(jfz,n,piv,dd_rco);
+    Varbprec_Complex_Newton_Steps.do_Newton_Step(x,jfz,piv,fz,dd_err);
+    dd_res := Max_Norm(fz);
+    declare
+      nz : constant string
+         := DoblDobl_Complex_Vector_Strings.Write(x);
+    begin
+      Clear(z);
+      z := new string'(nz);
+    end;
+    err := to_double(dd_err);
+    rco := to_double(dd_rco);
+    res := to_double(dd_res);
+  end DoblDobl_Newton_Step_on_Homotopy;
+
+  procedure QuadDobl_Newton_Step_on_Homotopy
+              ( z : in out Link_to_String;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                err,rco,res : out double_float ) is
+
+    h : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+      := Varbprec_Homotopy.DoblDobl_Homotopy_System;
+    n : constant integer32 := h'last;
+    x : QuadDobl_Complex_Vectors.Vector(1..n)
+      := QuadDobl_Complex_Vector_Strings.Parse(z.all);
+    qd_re : constant quad_double
+          := Create(Standard_Complex_Numbers.REAL_PART(t));
+    qd_im : constant quad_double
+          := Create(Standard_Complex_Numbers.IMAG_PART(t));
+    qd_t : constant QuadDobl_Complex_Numbers.Complex_Number
+         := QuadDobl_Complex_Numbers.Create(qd_re,qd_im);
+    fz : constant QuadDobl_Complex_Vectors.Vector(h'range)
+       := Varbprec_Homotopy.Eval(x,qd_t);
+    jfz : QuadDobl_Complex_Matrices.Matrix(h'range,x'range)
+        := Varbprec_Homotopy.Diff(x,qd_t);
+    piv : Standard_Integer_Vectors.Vector(x'range);
+    qd_err,qd_rco,qd_res : quad_double;
+
+  begin
+    lufco(jfz,n,piv,qd_rco);
+    Varbprec_Complex_Newton_Steps.do_Newton_Step(x,jfz,piv,fz,qd_err);
+    qd_res := Max_Norm(fz);
+    declare
+      nz : constant string
+         := QuadDobl_Complex_Vector_Strings.Write(x);
+    begin
+      Clear(z);
+      z := new string'(nz);
+    end;
+    err := to_double(qd_err);
+    rco := to_double(qd_rco);
+    res := to_double(qd_res);
+  end QuadDobl_Newton_Step_on_Homotopy;
+
+  procedure Multprec_Newton_Step_on_Homotopy
+              ( z : in out Link_to_String;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                prcn : in natural32; err,rco,res : out double_float ) is
+
+    size : constant natural32 := Decimal_to_Size(prcn);
+    h : constant Multprec_Complex_Poly_Systems.Link_to_Poly_Sys
+      := Varbprec_Homotopy.Multprec_Homotopy_System(prcn);
+    n : constant integer32 := h'last;
+    x : Multprec_Complex_Vectors.Vector(1..n)
+      := Multprec_Complex_Vector_Strings.Parse(z.all);
+    fz : Multprec_Complex_Vectors.Vector(h'range);
+    jfz : Multprec_Complex_Matrices.Matrix(h'range,x'range);
+    piv : Standard_Integer_Vectors.Vector(x'range);
+    mp_re : Floating_Number := Create(Standard_Complex_Numbers.REAL_PART(t));
+    mp_im : Floating_Number := Create(Standard_Complex_Numbers.IMAG_PART(t));
+    mp_t : Multprec_Complex_Numbers.Complex_Number
+         :=  Multprec_Complex_Numbers.Create(mp_re,mp_im);
+    mp_rco,mp_err,mp_res : Floating_Number;
+
+  begin
+    Multprec_Complex_Vector_Tools.Set_Size(x,size);
+    fz := Varbprec_Homotopy.Eval(x,mp_t,prcn);
+    jfz := Varbprec_Homotopy.Diff(x,mp_t,prcn);
+    lufco(jfz,n,piv,mp_rco);
+    rco := Round(mp_rco);
+    Varbprec_Complex_Newton_Steps.do_Newton_Step(x,jfz,piv,fz,mp_err);
+    err := Round(mp_err);
+    mp_res := Max_Norm(fz);
+    res := Round(mp_res);
+    declare
+      nz : constant string
+         := Multprec_Complex_Vector_Strings.Write(x);
+    begin
+      Clear(z);
+      z := new string'(nz);
+    end;
+    Multprec_Complex_Matrices.Clear(jfz);
+    Multprec_Complex_Vectors.Clear(fz);
+    Multprec_Complex_Vectors.Clear(x);
+    Clear(mp_re); Clear(mp_im);
+    Multprec_Complex_Numbers.Clear(mp_t);
+    Clear(mp_rco); Clear(mp_err); Clear(mp_res);
+  end Multprec_Newton_Step_on_Homotopy;
+
+  procedure do_Newton_Step_on_Homotopy
+              ( z : in out Link_to_String;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                loss,want : in integer32; err,rco,res : out double_float ) is
+
+    precision : constant natural32
+              := natural32(-loss) + natural32(want);
+
+  begin
+    if precision <= 16 then
+      Standard_Newton_Step_on_Homotopy(z,t,err,rco,res);
+    elsif precision <= 32 then
+      DoblDobl_Newton_Step_on_Homotopy(z,t,err,rco,res);
+    elsif precision <= 64 then
+      QuadDobl_Newton_Step_on_Homotopy(z,t,err,rco,res);
+    else
+      Multprec_Newton_Step_on_Homotopy(z,t,precision,err,rco,res);
+    end if;
+  end do_Newton_Step_on_Homotopy;
 
 end Varbprec_Corrector_Steps;
