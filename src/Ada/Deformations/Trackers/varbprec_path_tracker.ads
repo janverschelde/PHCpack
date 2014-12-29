@@ -76,18 +76,41 @@ package Varbprec_Path_Tracker is
   -- DESCRIPTION :
   --   Returns the current solution.
 
-  function get_next return Link_to_String;
+  function get_next ( want,maxprc,maxitr : natural32; output : boolean )
+                    return Link_to_String;
 
   -- DESCRIPTION :
   --   Does one step of a predictor-corrector method.
   --   The default for the target of the continuation parameter t is one.
 
-  function get_next ( target_t : Standard_Complex_Numbers.Complex_Number )
+  -- ON ENTRY :
+  --   want     wanted number of decimal places of accuracy;
+  --   maxprc   maximum precision used in variable precision corrector;
+  --   maxitr   maximum number of corrector steps.
+
+  -- ON RETURN :
+  --   string representation of a solution in PHCpack format,
+  --   the triplet (err, rco, res) indicates the success of the correction.
+
+  function get_next ( target_t : Standard_Complex_Numbers.Complex_Number;
+                      want,maxprc,maxitr : natural32; output : boolean )
                     return Link_to_String;
 
   -- DESCRIPTION :
   --   Does one step of a predictor-corrector method.
   --   for the given target of the continuation parameter.
+
+  -- ON ENTRY :
+  --   target_t value of the homotopy continuation parameter
+  --            at its destination, the get_next will not overshoot
+  --            this target value for t; 
+  --   want     wanted number of decimal places of accuracy;
+  --   maxprc   maximum precision used in variable precision corrector;
+  --   maxitr   maximum number of corrector steps.
+
+  -- ON RETURN :
+  --   string representation of a solution in PHCpack format,
+  --   the triplet (err, rco, res) indicates the success of the correction.
 
 -- DESCTRUCTOR :
 

@@ -175,13 +175,15 @@ package body Varbprec_Path_Tracker is
     return current;
   end get_current;
 
-  function get_next return Link_to_String is
+  function get_next ( want,maxprc,maxitr : natural32; output : boolean )
+                    return Link_to_String is
 
-    res,coords : Link_to_String;
+    result,coords : Link_to_String;
     ls : Standard_Complex_Solutions.Link_to_Solution;
     previous_t,t : Standard_Complex_Numbers.Complex_Number;
     m,loss : integer32;
     fail : boolean;
+    err,rco,res : double_float;
 
     use Solution_String_Splitters,Varbprec_Corrector_Steps;
 
@@ -189,27 +191,36 @@ package body Varbprec_Path_Tracker is
     previous_t := Standard_Path_Tracker.get_current.t;
     ls := Standard_Path_Tracker.get_next;
     if Standard_Complex_Numbers.Equal(previous_t,ls.t) then
-      res := current;
+      result := current;
     else
-      res := new string'(Standard_Solution_Strings.Write(ls.all));
-      String_Splitters.Clear(current);
-      current := res;
-      Split_Coordinates(current.all,m,t,coords,fail);
+      result := new string'(Standard_Solution_Strings.Write(ls.all));
+      Split_Coordinates(result.all,m,t,coords,fail);
       put_line("The coordinates : " & coords.all);
-      loss := Estimate_Loss_for_Polynomial_Homotopy(coords.all,t,256);
+      loss := Estimate_Loss_for_Polynomial_Homotopy(coords.all,t,maxprc);
       put("-> estimated loss : "); put(loss,1); new_line;
+      if output then
+        Newton_Steps_on_Polynomial_Homotopy
+          (standard_output,coords,t,want,maxprc,maxitr,loss,err,rco,res);
+      else
+        Newton_Steps_on_Polynomial_Homotopy
+          (coords,t,want,maxprc,maxitr,loss,err,rco,res);
+      end if;
+      String_Splitters.Clear(current);
+      current := result;
     end if;
-    return res;
+    return result;
   end get_next;
 
-  function get_next ( target_t : Standard_Complex_Numbers.Complex_Number )
+  function get_next ( target_t : Standard_Complex_Numbers.Complex_Number;
+                      want,maxprc,maxitr : natural32; output : boolean )
                     return Link_to_String is
 
-    res,coords : Link_to_String;
+    result,coords : Link_to_String;
     ls : Standard_Complex_Solutions.Link_to_Solution;
     previous_t,t : Standard_Complex_Numbers.Complex_Number;
     m,loss : integer32;
     fail : boolean;
+    err,rco,res : double_float;
 
     use Solution_String_Splitters,Varbprec_Corrector_Steps;
 
@@ -217,17 +228,24 @@ package body Varbprec_Path_Tracker is
     previous_t := Standard_Path_Tracker.get_current.t;
     ls := Standard_Path_Tracker.get_next(target_t);
     if Standard_Complex_Numbers.Equal(previous_t,ls.t) then
-      res := current;
+      result := current;
     else
-      res := new string'(Standard_Solution_Strings.Write(ls.all));
-      String_Splitters.Clear(current);
-      current := res;
-      Split_Coordinates(current.all,m,t,coords,fail);
+      result := new string'(Standard_Solution_Strings.Write(ls.all));
+      Split_Coordinates(result.all,m,t,coords,fail);
       put_line("The coordinates : " & coords.all);
       loss := Estimate_Loss_for_Polynomial_Homotopy(coords.all,t,256);
       put("-> estimated loss : "); put(loss,1); new_line;
+      if output then
+        Newton_Steps_on_Polynomial_Homotopy
+          (standard_output,coords,t,want,maxprc,maxitr,loss,err,rco,res);
+      else
+        Newton_Steps_on_Polynomial_Homotopy
+          (coords,t,want,maxprc,maxitr,loss,err,rco,res);
+      end if;
+      String_Splitters.Clear(current);
+      current := result;
     end if;
-    return res;
+    return result;
   end get_next;
 
 -- DESTRUCTOR :

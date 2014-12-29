@@ -590,10 +590,10 @@ package body Varbprec_Corrector_Steps is
   procedure do_Newton_Step_on_Polynomial_Homotopy
               ( z : in out Link_to_String;
                 t : in Standard_Complex_Numbers.Complex_Number;
-                loss,want : in integer32; err,rco,res : out double_float ) is
+                loss : in integer32; want : in natural32;
+                err,rco,res : out double_float ) is
 
-    precision : constant natural32
-              := natural32(-loss) + natural32(want);
+    precision : constant natural32 := natural32(-loss) + want;
 
   begin
     if precision <= 16 then
@@ -612,7 +612,7 @@ package body Varbprec_Corrector_Steps is
   procedure Newton_Steps_on_Polynomial_Homotopy
               ( z : in out Link_to_String;
                 t : in Standard_Complex_Numbers.Complex_Number;
-                want : in integer32; maxprc,maxitr : in natural32;
+                want,maxprc,maxitr : in natural32;
                 loss : out integer32; err,rco,res : out double_float ) is
 
     precision : natural32;
@@ -621,7 +621,7 @@ package body Varbprec_Corrector_Steps is
   begin
     for i in 1..maxitr loop
       loss := Estimate_Loss_for_Polynomial_Homotopy(z.all,t,maxprc);
-      precision := natural32(-loss) + natural32(want);
+      precision := natural32(-loss) + want;
       do_Newton_Step_on_Polynomial_Homotopy(z,t,loss,want,err,rco,res);
       if err = 0.0
        then err_accu := integer32(precision);
@@ -631,14 +631,15 @@ package body Varbprec_Corrector_Steps is
        then res_accu := integer32(precision);
        else res_accu := abs(integer32(log10(res)));
       end if;
-      exit when ((err_accu >= want) and (res_accu >= want));
+      exit when ((err_accu >= integer32(want))
+             and (res_accu >= integer32(want)));
     end loop;
   end Newton_Steps_on_Polynomial_Homotopy;
 
   procedure Newton_Steps_on_Polynomial_Homotopy
               ( file : in file_type; z : in out Link_to_String;
                 t : in Standard_Complex_Numbers.Complex_Number;
-                want : in integer32; maxprc,maxitr : in natural32;
+                want,maxprc,maxitr : in natural32;
                 loss : out integer32; err,rco,res : out double_float ) is
 
     precision : natural32;
@@ -649,7 +650,7 @@ package body Varbprec_Corrector_Steps is
       put(file,"estimated loss in step "); put(file,i,1); put(file," : ");
       loss := Estimate_Loss_for_Polynomial_Homotopy(z.all,t,maxprc);
       put(file,loss,1);
-      precision := natural32(-loss) + natural32(want);
+      precision := natural32(-loss) + want;
       put(file,", precision : "); put(file,precision,1); new_line(file);
       do_Newton_Step_on_Polynomial_Homotopy(z,t,loss,want,err,rco,res);
       put(file,"  err :"); put(file,err,3);
@@ -663,7 +664,8 @@ package body Varbprec_Corrector_Steps is
        then res_accu := integer32(precision);
        else res_accu := abs(integer32(log10(res)));
       end if;
-      exit when ((err_accu >= want) and (res_accu >= want));
+      exit when ((err_accu >= integer32(want))
+             and (res_accu >= integer32(want)));
     end loop;
   end Newton_Steps_on_Polynomial_Homotopy;
 

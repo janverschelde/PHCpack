@@ -33,6 +33,7 @@ with Standard_Path_Tracker;
 with DoblDobl_Path_Tracker;
 with QuadDobl_Path_Tracker;
 with Multprec_Path_Tracker;
+with Verification_of_Solutions;
 with Varbprec_Path_Tracker;
 
 -- for testing purposes
@@ -645,17 +646,22 @@ procedure ts_nxtsol is
   --   one extra predictor-corrector step to compute the next solution
   --   on the path with variable precision arithmetic.
 
+    use Verification_of_Solutions;
+
     s : Link_to_String := VarbPrec_Path_Tracker.get_current;
     ans : character;
+    wanted,maxitr,maxprc : natural32;
+    verbose : boolean;
 
   begin
+    Menu_to_Set_Parameters(wanted,maxitr,maxprc,verbose);
     new_line;
     put_line("The current solution : "); put_line(s.all);
     loop
       put("Do predictor-corrector step ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
-      s := Varbprec_Path_Tracker.get_next;
+      s := Varbprec_Path_Tracker.get_next(wanted,maxitr,maxprc,verbose);
       put_line("The current solution : "); put_line(s.all);
     end loop;
   end Varbprec_Run_Path_Tracker;

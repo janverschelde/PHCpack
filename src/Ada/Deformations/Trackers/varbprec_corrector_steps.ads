@@ -242,7 +242,8 @@ package Varbprec_Corrector_Steps is
   procedure do_Newton_Step_on_Polynomial_Homotopy
               ( z : in out Link_to_String;
                 t : in Standard_Complex_Numbers.Complex_Number;
-                loss,want : in integer32; err,rco,res : out double_float );
+                loss : in integer32; want : in natural32;
+                err,rco,res : out double_float );
 
   -- DESCRIPTION :
   --   Selects the precision to meet the wanted number of accurate
@@ -266,12 +267,12 @@ package Varbprec_Corrector_Steps is
   procedure Newton_Steps_on_Polynomial_Homotopy
               ( z : in out Link_to_String;
                 t : in Standard_Complex_Numbers.Complex_Number;
-                want : in integer32; maxprc,maxitr : in natural32;
+                want,maxprc,maxitr : in natural32;
                 loss : out integer32; err,rco,res : out double_float );
   procedure Newton_Steps_on_Polynomial_Homotopy
               ( file : in file_type; z : in out Link_to_String;
                 t : in Standard_Complex_Numbers.Complex_Number;
-                want : in integer32; maxprc,maxitr : in natural32;
+                want,maxprc,maxitr : in natural32;
                 loss : out integer32; err,rco,res : out double_float );
 
   -- DESCRIPTION :
