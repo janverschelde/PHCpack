@@ -2,6 +2,7 @@ with integer_io;
 with String_Parsing;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Characters_and_Numbers;
+with Standard_Complex_Vector_Strings;
 
 package body Standard_Solution_Strings is
 
@@ -57,15 +58,20 @@ package body Standard_Solution_Strings is
     return st + sm + bt;
   end Length_Intro;
 
-  function Write_Intro ( s : Solution ) return string is
+  function Write_Intro ( t : Complex_Number; m : integer32 ) return string is
 
-    st : constant string := "t : " & Write_Number(s.t) & ASCII.LF;
-    sm : constant string := "m : " & Characters_and_Numbers.Convert(s.m)
+    st : constant string := "t : " & Write_Number(t) & ASCII.LF;
+    sm : constant string := "m : " & Characters_and_Numbers.Convert(m)
                                    & ASCII.LF;
     bt : constant string := "the solution for t :" & ASCII.LF;
 
   begin
     return st & sm & bt; 
+  end Write_Intro;
+
+  function Write_Intro ( s : Solution ) return string is
+  begin
+    return Write_Intro(s.t,s.m);
   end Write_Intro;
 
   function Length_Symbol ( i : natural32 ) return natural32 is
@@ -152,6 +158,34 @@ package body Standard_Solution_Strings is
     end if;
   end Write_Components;
 
+  function Write_Components
+             ( k,n : integer32; xv,accu : string ) return string is
+
+  -- DESCRIPTION :
+  --   If k equals n, or is larger than n, then the accu is returned,
+  --   otherwise, the k-th symbol is added to the string, along with
+  --   the number on the current line of xv. 
+
+  begin
+    if k >= n then
+      return accu;
+    else
+      declare
+        sb : constant string := " " & Write_Symbol(natural32(k)) & " : ";
+        pos : constant integer
+            := Standard_Complex_Vector_Strings.Next_Linefeed(xv);
+        nb : constant string := xv(xv'first..pos); -- & ASCII.LF;
+        new_accu : constant string := sb & nb;
+      begin
+        if k = n then
+          return accu & new_accu;
+        else -- skip the linefeed in xv
+          return Write_Components(k+1,n,xv(pos+1..xv'last),accu & new_accu);
+        end if;
+      end;
+    end if;
+  end Write_Components;
+
   function Length_Vector ( v : Vector ) return natural32 is
   begin
     return Length_Components(natural32(v'last),v,0);
@@ -212,6 +246,18 @@ package body Standard_Solution_Strings is
 
   begin
     return tm & sv & dg;
+  end Write;
+
+  function Write ( t : Complex_Number; n,m : integer32; xv : string; 
+                   err,rco,res : double_float ) return string is
+
+    result : constant string
+           := Write_Intro(t,m)
+            & Write_Components(1,n,xv,"")
+            & Write_Diagnostics(err,rco,res);
+
+  begin
+    return result;
   end Write;
 
 -- PART II: parse strings into solutions

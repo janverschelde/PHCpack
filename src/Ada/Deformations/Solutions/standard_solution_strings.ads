@@ -48,6 +48,13 @@ package Standard_Solution_Strings is
   --   Returns the number of characters in the introduction
   --   of the string representation of the solution s.
 
+  function Write_Intro ( t : Complex_Number; m : integer32 ) return string;
+
+  -- DESCRIPTION :
+  --   The introduction to a solution consists of the value of the
+  --   homotopy continuation parameter t, the multiplicity flag m,
+  --   and one line containing 'the solution for t :'.
+
   function Write_Intro ( s : Solution ) return string;
 
   -- DESCRIPTION :
@@ -99,6 +106,27 @@ package Standard_Solution_Strings is
   -- DESCRIPTION :
   --   Writes a solution to a string in the same format
   --   as it is written to standard output or to file.
+
+  function Write ( t : Complex_Number; n,m : integer32; xv : string; 
+                   err,rco,res : double_float ) return string;
+
+  -- DESCRIPTION :
+  --   Writes a solution to string where the values for the coordinates
+  --   are given in a string, with components separated by newline symblos.
+  --   This write is needed in variable precision calculations.
+
+  -- ON ENTRY :
+  --   t        value for the homotopy continuation parameter;
+  --   n        number of coordinates in the solution vector;
+  --   m        value for the multiplicity flag;
+  --   xv       coordinates for the solution component,
+  --            each number appears on a separate line;
+  --   err      forward error on the solution;
+  --   rco      estimate for the inverse of the condition number;
+  --   res      backward error on the solution, or the residual.
+
+  -- ON RETURN :
+  --   solution representation in PHCpack format.
 
 -- PART II: parse strings into solutions
 --   Note that all exceptions are suppressed, i.e: handled silently with
