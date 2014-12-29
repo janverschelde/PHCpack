@@ -1,3 +1,6 @@
+Sun 28 Dec 2014 : fourth part to varbprec_corrector_steps to perform
+  sequence of Newton steps to obtain wanted accuracy with variable precision.
+
 Sat 27 Dec 2014 : added third part to varbprec_corrector_steps
   to do one Newton step after parsing to the proper precision.
 

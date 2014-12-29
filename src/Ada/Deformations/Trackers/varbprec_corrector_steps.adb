@@ -1,3 +1,6 @@
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
@@ -432,7 +435,7 @@ package body Varbprec_Corrector_Steps is
 
 -- PART III : computing after parsing to the precision
 
-  procedure Standard_Newton_Step_on_Homotopy
+  procedure Standard_Newton_Step_on_Polynomial_Homotopy
               ( z : in out Link_to_String;
                 t : in Standard_Complex_Numbers.Complex_Number;
                 err,rco,res : out double_float ) is
@@ -459,9 +462,9 @@ package body Varbprec_Corrector_Steps is
       Clear(z);
       z := new string'(nz);
     end;
-  end Standard_Newton_Step_on_Homotopy;
+  end Standard_Newton_Step_on_Polynomial_Homotopy;
 
-  procedure DoblDobl_Newton_Step_on_Homotopy
+  procedure DoblDobl_Newton_Step_on_Polynomial_Homotopy
               ( z : in out Link_to_String;
                 t : in Standard_Complex_Numbers.Complex_Number;
                 err,rco,res : out double_float ) is
@@ -498,9 +501,9 @@ package body Varbprec_Corrector_Steps is
     err := to_double(dd_err);
     rco := to_double(dd_rco);
     res := to_double(dd_res);
-  end DoblDobl_Newton_Step_on_Homotopy;
+  end DoblDobl_Newton_Step_on_Polynomial_Homotopy;
 
-  procedure QuadDobl_Newton_Step_on_Homotopy
+  procedure QuadDobl_Newton_Step_on_Polynomial_Homotopy
               ( z : in out Link_to_String;
                 t : in Standard_Complex_Numbers.Complex_Number;
                 err,rco,res : out double_float ) is
@@ -537,9 +540,9 @@ package body Varbprec_Corrector_Steps is
     err := to_double(qd_err);
     rco := to_double(qd_rco);
     res := to_double(qd_res);
-  end QuadDobl_Newton_Step_on_Homotopy;
+  end QuadDobl_Newton_Step_on_Polynomial_Homotopy;
 
-  procedure Multprec_Newton_Step_on_Homotopy
+  procedure Multprec_Newton_Step_on_Polynomial_Homotopy
               ( z : in out Link_to_String;
                 t : in Standard_Complex_Numbers.Complex_Number;
                 prcn : in natural32; err,rco,res : out double_float ) is
@@ -582,9 +585,9 @@ package body Varbprec_Corrector_Steps is
     Clear(mp_re); Clear(mp_im);
     Multprec_Complex_Numbers.Clear(mp_t);
     Clear(mp_rco); Clear(mp_err); Clear(mp_res);
-  end Multprec_Newton_Step_on_Homotopy;
+  end Multprec_Newton_Step_on_Polynomial_Homotopy;
 
-  procedure do_Newton_Step_on_Homotopy
+  procedure do_Newton_Step_on_Polynomial_Homotopy
               ( z : in out Link_to_String;
                 t : in Standard_Complex_Numbers.Complex_Number;
                 loss,want : in integer32; err,rco,res : out double_float ) is
@@ -594,14 +597,74 @@ package body Varbprec_Corrector_Steps is
 
   begin
     if precision <= 16 then
-      Standard_Newton_Step_on_Homotopy(z,t,err,rco,res);
+      Standard_Newton_Step_on_Polynomial_Homotopy(z,t,err,rco,res);
     elsif precision <= 32 then
-      DoblDobl_Newton_Step_on_Homotopy(z,t,err,rco,res);
+      DoblDobl_Newton_Step_on_Polynomial_Homotopy(z,t,err,rco,res);
     elsif precision <= 64 then
-      QuadDobl_Newton_Step_on_Homotopy(z,t,err,rco,res);
+      QuadDobl_Newton_Step_on_Polynomial_Homotopy(z,t,err,rco,res);
     else
-      Multprec_Newton_Step_on_Homotopy(z,t,precision,err,rco,res);
+      Multprec_Newton_Step_on_Polynomial_Homotopy(z,t,precision,err,rco,res);
     end if;
-  end do_Newton_Step_on_Homotopy;
+  end do_Newton_Step_on_Polynomial_Homotopy;
+
+-- PART IV : sequence of Newton steps to the wanted accuracy
+
+  procedure Newton_Steps_on_Polynomial_Homotopy
+              ( z : in out Link_to_String;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                want : in integer32; maxprc,maxitr : in natural32;
+                loss : out integer32; err,rco,res : out double_float ) is
+
+    precision : natural32;
+    err_accu,res_accu : integer32;
+
+  begin
+    for i in 1..maxitr loop
+      loss := Estimate_Loss_for_Polynomial_Homotopy(z.all,t,maxprc);
+      precision := natural32(-loss) + natural32(want);
+      do_Newton_Step_on_Polynomial_Homotopy(z,t,loss,want,err,rco,res);
+      if err = 0.0
+       then err_accu := integer32(precision);
+       else err_accu := abs(integer32(log10(err)));
+      end if;
+      if res = 0.0
+       then res_accu := integer32(precision);
+       else res_accu := abs(integer32(log10(res)));
+      end if;
+      exit when ((err_accu >= want) and (res_accu >= want));
+    end loop;
+  end Newton_Steps_on_Polynomial_Homotopy;
+
+  procedure Newton_Steps_on_Polynomial_Homotopy
+              ( file : in file_type; z : in out Link_to_String;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                want : in integer32; maxprc,maxitr : in natural32;
+                loss : out integer32; err,rco,res : out double_float ) is
+
+    precision : natural32;
+    err_accu,res_accu : integer32;
+
+  begin
+    for i in 1..maxitr loop
+      put(file,"estimated loss in step "); put(file,i,1); put(file," : ");
+      loss := Estimate_Loss_for_Polynomial_Homotopy(z.all,t,maxprc);
+      put(file,loss,1);
+      precision := natural32(-loss) + natural32(want);
+      put(file,", precision : "); put(file,precision,1); new_line(file);
+      do_Newton_Step_on_Polynomial_Homotopy(z,t,loss,want,err,rco,res);
+      put(file,"  err :"); put(file,err,3);
+      put(file,"  rco :"); put(file,rco,3);
+      put(file,"  res :"); put(file,res,3); new_line(file);
+      if err = 0.0
+       then err_accu := integer32(precision);
+       else err_accu := abs(integer32(log10(err)));
+      end if;
+      if res = 0.0
+       then res_accu := integer32(precision);
+       else res_accu := abs(integer32(log10(res)));
+      end if;
+      exit when ((err_accu >= want) and (res_accu >= want));
+    end loop;
+  end Newton_Steps_on_Polynomial_Homotopy;
 
 end Varbprec_Corrector_Steps;

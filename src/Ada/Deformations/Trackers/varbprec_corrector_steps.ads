@@ -1,3 +1,4 @@
+with text_io;                            use text_io;
 with String_Splitters;                   use String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
@@ -205,19 +206,19 @@ package Varbprec_Corrector_Steps is
 
 -- PART III : computing after parsing to the precision
 
-  procedure Standard_Newton_Step_on_Homotopy
+  procedure Standard_Newton_Step_on_Polynomial_Homotopy
               ( z : in out Link_to_String;
                 t : in Standard_Complex_Numbers.Complex_Number;
                 err,rco,res : out double_float );
-  procedure DoblDobl_Newton_Step_on_Homotopy
+  procedure DoblDobl_Newton_Step_on_Polynomial_Homotopy
               ( z : in out Link_to_String;
                 t : in Standard_Complex_Numbers.Complex_Number;
                 err,rco,res : out double_float );
-  procedure QuadDobl_Newton_Step_on_Homotopy
+  procedure QuadDobl_Newton_Step_on_Polynomial_Homotopy
               ( z : in out Link_to_String;
                 t : in Standard_Complex_Numbers.Complex_Number;
                 err,rco,res : out double_float );
-  procedure Multprec_Newton_Step_on_Homotopy
+  procedure Multprec_Newton_Step_on_Polynomial_Homotopy
               ( z : in out Link_to_String;
                 t : in Standard_Complex_Numbers.Complex_Number;
                 prcn : in natural32; err,rco,res : out double_float );
@@ -238,7 +239,7 @@ package Varbprec_Corrector_Steps is
   --   rco      estimate of the inverse condition number of Jacobian at z;
   --   res      magnitude of homotopy evaluated at z and t.
 
-  procedure do_Newton_Step_on_Homotopy
+  procedure do_Newton_Step_on_Polynomial_Homotopy
               ( z : in out Link_to_String;
                 t : in Standard_Complex_Numbers.Complex_Number;
                 loss,want : in integer32; err,rco,res : out double_float );
@@ -259,5 +260,44 @@ package Varbprec_Corrector_Steps is
   --   err      magnitude of the correction added to z;
   --   rco      estimate of the inverse condition number of Jacobian at z;
   --   res      magnitude of the homotopy evaluated at z.
+
+-- PART IV : sequence of Newton steps to the wanted accuracy
+
+  procedure Newton_Steps_on_Polynomial_Homotopy
+              ( z : in out Link_to_String;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                want : in integer32; maxprc,maxitr : in natural32;
+                loss : out integer32; err,rco,res : out double_float );
+  procedure Newton_Steps_on_Polynomial_Homotopy
+              ( file : in file_type; z : in out Link_to_String;
+                t : in Standard_Complex_Numbers.Complex_Number;
+                want : in integer32; maxprc,maxitr : in natural32;
+                loss : out integer32; err,rco,res : out double_float );
+
+  -- DESCRIPTION :
+  --   Performs a sequence of Newton steps to approximate a root
+  --   of a polynomial homotopy up to a wanted number of accuracte
+  --   decimal places taking the loss of decimal places into account
+  --   when performing one Newton step on the homotopy at z.
+
+  -- REQUIRED :
+  --   The Varbprec_Homotopy is initialized properly.
+
+  -- ON ENTRY :
+  --   file     for intermediate output, if omitted,
+  --            then the procedure will be silent;
+  --   z        string representation of an initial approximation;
+  --   t        corresponding value of the homotopy continuation parameter;
+  --   want     wanted number of accurate decimal places;
+  --   maxprc   maximum number of decimal places that can be used
+  --            to estimate the loss of accuracy;
+  --   maxitr   maximum number of Newton steps.
+
+  -- ON RETURN :
+  --   z        updated approximation for a solution of the homotopy at t;
+  --   loss     estimated loss of decimal places as a negative number;
+  --   err      magnitude of the correction added to z;
+  --   rco      estimate of the inverse condition number of Jacobian at z;
+  --   res      magnitude of the homotopy evaluated at z and at t.
 
 end Varbprec_Corrector_Steps;
