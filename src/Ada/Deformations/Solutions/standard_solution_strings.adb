@@ -158,6 +158,19 @@ package body Standard_Solution_Strings is
     end if;
   end Write_Components;
 
+  function Add_Linefeed ( s : string ) return string is
+
+  -- DESCRIPTION :
+  --   If s(s'last) /= ASCII.LF, then it will be added to the string s,
+  --   otherwise the string s is returned.
+
+  begin
+    if s(s'last) = ASCII.LF
+     then return s;
+     else return s & ASCII.LF;
+    end if;
+  end Add_Linefeed;
+
   function Write_Components
              ( k,n : integer32; xv,accu : string ) return string is
 
@@ -167,14 +180,14 @@ package body Standard_Solution_Strings is
   --   the number on the current line of xv. 
 
   begin
-    if k >= n then
+    if k > n then  -- be careful if n equals 1 !!!
       return accu;
     else
       declare
         sb : constant string := " " & Write_Symbol(natural32(k)) & " : ";
         pos : constant integer
             := Standard_Complex_Vector_Strings.Next_Linefeed(xv);
-        nb : constant string := xv(xv'first..pos); -- & ASCII.LF;
+        nb : constant string := Add_Linefeed(xv(xv'first..pos));
         new_accu : constant string := sb & nb;
       begin
         if k = n then

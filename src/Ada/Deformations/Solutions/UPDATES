@@ -1,5 +1,5 @@
 Mon 29 Dec 2014 : extended standard_solution_strings with write functions
-  to string for variable precision use.
+  to string for variable precision use.  Be careful with one variable case!
 
 Thu 25 Dec 2014 : new package solution_string_splitters tested by ts_solstr.
 
