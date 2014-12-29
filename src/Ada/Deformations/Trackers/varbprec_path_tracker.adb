@@ -205,6 +205,15 @@ package body Varbprec_Path_Tracker is
         Newton_Steps_on_Polynomial_Homotopy
           (coords,t,want,maxprc,maxitr,loss,err,rco,res);
       end if;
+      String_Splitters.Clear(result);
+      declare
+        n : constant integer32 := ls.v'last;
+        r : constant string
+          := Standard_Solution_Strings.Write(t,n,m,coords.all,err,rco,res);
+      begin
+        result := new string'(r);
+      end;
+      String_Splitters.Clear(coords);
       String_Splitters.Clear(current);
       current := result;
     end if;
@@ -233,7 +242,7 @@ package body Varbprec_Path_Tracker is
       result := new string'(Standard_Solution_Strings.Write(ls.all));
       Split_Coordinates(result.all,m,t,coords,fail);
       put_line("The coordinates : " & coords.all);
-      loss := Estimate_Loss_for_Polynomial_Homotopy(coords.all,t,256);
+      loss := Estimate_Loss_for_Polynomial_Homotopy(coords.all,t,maxprc);
       put("-> estimated loss : "); put(loss,1); new_line;
       if output then
         Newton_Steps_on_Polynomial_Homotopy
@@ -242,6 +251,15 @@ package body Varbprec_Path_Tracker is
         Newton_Steps_on_Polynomial_Homotopy
           (coords,t,want,maxprc,maxitr,loss,err,rco,res);
       end if;
+      String_Splitters.Clear(result);
+      declare
+        n : constant integer32 := ls.v'last;
+        r : constant string
+          := Standard_Solution_Strings.Write(t,n,m,coords.all,err,rco,res);
+      begin
+        result := new string'(r);
+      end;
+      String_Splitters.Clear(coords);
       String_Splitters.Clear(current);
       current := result;
     end if;

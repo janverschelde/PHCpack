@@ -1,5 +1,7 @@
 Mon 29 Dec 2014 : extended interface of varbprec_corrector_steps with the
   tuning parameters, called in varbprec_path_tracker, tested in ts_nxtsol.
+  With the mixed-precision write of solutions to string, the get_next() in
+  varbprec_path_tracker.adb works!
 
 Sun 28 Dec 2014 : fourth part to varbprec_corrector_steps to perform
   sequence of Newton steps to obtain wanted accuracy with variable precision.
