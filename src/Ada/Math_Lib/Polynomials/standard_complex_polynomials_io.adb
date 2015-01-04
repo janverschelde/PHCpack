@@ -294,10 +294,11 @@ package body Standard_Complex_Polynomials_io is
           get(file,char); Read_Factor(file,bc,char,n,d,pb);
           Collect_Factor_Polynomial;
         when '+' | '-' => 
-          if c = Create(0.0)
-           then raise ILLEGAL_CHARACTER;
-           else exit;
-          end if;
+          -- if c = Create(0.0)
+          --  then raise ILLEGAL_CHARACTER;
+          --  else exit;
+          -- end if;
+          exit; -- zero coefficient no longer wrong input
         when delimiter => 
           if bc /= 0
            then raise BAD_BRACKET;
@@ -327,12 +328,14 @@ package body Standard_Complex_Polynomials_io is
           Collect_Factor_Polynomial;
       end case;
     end loop;
-    tmp.cf := c;
-    tmp.dg := d;
-    termp := create(tmp);
-    Clear(tmp);
-    if Number_Of_Unknowns(res) > 0
-     then Mul(termp,res); Clear(res);
+    if c /= Create(0.0) then
+      tmp.cf := c;
+      tmp.dg := d;
+      termp := create(tmp);
+      Clear(tmp);
+      if Number_Of_Unknowns(res) > 0
+       then Mul(termp,res); Clear(res);
+      end if;
     end if;
   end Read_Term;
 

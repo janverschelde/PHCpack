@@ -1,3 +1,6 @@
+Sat 3 Jan 2015 : updates in standard_complex_{polynomials,laurentials}_io.adb
+  to allow for terms with zero coefficient.
+
 Fri 19 Dec 2014 : added function to generic_polynomials to compute the size
   of the support of a polynomial.  Added same to generic_laurent_polynomials,
   tested in ts_poly.  Also generic_{polynomial, laur_poly}_systems now have
