@@ -150,9 +150,9 @@ package body Standard_Complex_Polynomials_io is
           end if;
           exit;
         when '*' =>
-          if res = Null_Poly then
-            raise ILLEGAL_CHARACTER;
-          else -- the case " ) * " :
+         -- if res = Null_Poly then    -- input case (0.0)*(2+x)
+         --   raise ILLEGAL_CHARACTER; -- should not be an error
+         -- else -- the case " ) * " :
             oper := char; get(file,char);  -- skip '*'
             Read_Term(file,bc,char,n,term);
             Skip_Spaces_and_CR(file,char);
@@ -168,7 +168,7 @@ package body Standard_Complex_Polynomials_io is
               end case;
             end if;
             Clear(term);
-          end if;
+         -- end if;
         when '^' => 
           if res = Null_Poly
            then raise ILLEGAL_CHARACTER;
