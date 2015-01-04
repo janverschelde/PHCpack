@@ -162,9 +162,9 @@ package body Multprec_Complex_Polynomials_io is
           end if;
           exit;
         when '*' =>
-          if res = Null_Poly then
-            raise ILLEGAL_CHARACTER;
-          else -- the case " ) * " :
+         -- if res = Null_Poly then     -- input case like (0.0)*(2 + x)
+         --   raise ILLEGAL_CHARACTER;  -- should not be an error
+         -- else -- the case " ) * " :
             oper := char; get(file,char);  -- skip '*'
             Read_Term(file,bc,char,n,term);
             if char /= '(' then
@@ -176,7 +176,7 @@ package body Multprec_Complex_Polynomials_io is
               end case;
             end if;
             Clear(term);
-          end if;
+         -- end if;
         when '^' =>
           if res = Null_Poly
            then raise ILLEGAL_CHARACTER;
@@ -309,10 +309,11 @@ package body Multprec_Complex_Polynomials_io is
           get(file,char); Read_Factor(file,bc,char,n,d,pb);
           Collect_Factor_Polynomial;
         when '+' | '-' =>
-          if Equal(c,compzero)
-           then raise ILLEGAL_CHARACTER;
-           else exit;
-          end if;
+          -- if Equal(c,compzero)
+          --  then raise ILLEGAL_CHARACTER;
+          --  else exit;
+          -- end if;
+          exit; -- zero coefficient should no be wrong input
         when delimiter =>
           if bc /= 0
            then raise BAD_BRACKET;
@@ -342,11 +343,13 @@ package body Multprec_Complex_Polynomials_io is
           Collect_Factor_Polynomial;
       end case;
     end loop;
-    tmp.cf := c;
-    tmp.dg := d;
-    termp := create(tmp);
-    if Number_Of_Unknowns(res) > 0
-     then Mul(termp,res); Clear(res);
+    if not Equal(c,compzero) then
+      tmp.cf := c;
+      tmp.dg := d;
+      termp := create(tmp);
+      if Number_Of_Unknowns(res) > 0
+       then Mul(termp,res); Clear(res);
+      end if;
     end if;
   end Read_Term;
 
