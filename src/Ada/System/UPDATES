@@ -1,3 +1,6 @@
+Mon 5 Jan 2015 : added function to count occurrences of delimiter in string
+  to the package string_splitters.
+
 Sun 23 Nov 2014 : added a split function to string_splitters.
 
 Sun 29 May 2011 : communications_with_user.adb did not refer to 

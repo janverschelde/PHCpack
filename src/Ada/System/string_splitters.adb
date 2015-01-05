@@ -94,6 +94,19 @@ package body String_Splitters is
     end;
   end get;
 
+  function Count_Delimiters ( s : string; d : character ) return natural is
+
+    res : natural := 0;
+
+  begin
+    for i in s'range loop
+      if s(i) = d
+       then res := res + 1;
+      end if;
+    end loop;
+    return res;
+  end Count_Delimiters;
+
   function Split ( n : natural; s : string; d : character )
                  return Array_of_Strings is
 

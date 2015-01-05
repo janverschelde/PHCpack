@@ -53,6 +53,11 @@ package String_Splitters is
   --   m         number of variables in each polynomial;
   --   p         array of strings, each delimited by semicolon.
 
+  function Count_Delimiters ( s : string; d : character ) return natural;
+
+  -- DESCRIPTION :
+  --   Returns the number of occurrences of the character d in the string s.
+
   function Split ( n : natural; s : string; d : character )
                  return Array_of_Strings;
 
