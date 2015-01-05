@@ -162,9 +162,9 @@ package body Multprec_Complex_Laur_Strings is
           end if;
           exit;
         when '*' =>
-          if res = Null_Poly then
-            raise ILLEGAL_CHARACTER;
-          else -- the case " ) * " :
+          -- if res = Null_Poly then     -- zero coefficients should
+          --   raise ILLEGAL_CHARACTER;  -- not raise an exception
+          -- else -- the case " ) * " :
             oper := s(k); k := k + 1;  -- skip '*'
             Parse_Term(s,size,bc,k,n,term);
             Standard_Parse_Numbers.Skip_Spaces_and_CR(s,k);
@@ -180,7 +180,7 @@ package body Multprec_Complex_Laur_Strings is
               end case;
             end if;
             Clear(term);
-          end if;
+          -- end if;
         when '^' =>
           if res = Null_Poly
            then raise ILLEGAL_CHARACTER;
@@ -334,10 +334,11 @@ package body Multprec_Complex_Laur_Strings is
           Parse_Factor(s,size,bc,p,n,d,pb);
           Collect_Factor_Polynomial;
         when '+' | '-' => 
-          if Equal(c,compzero)
-           then raise ILLEGAL_CHARACTER;
-           else exit;
-          end if;
+         -- if Equal(c,compzero)
+         --  then raise ILLEGAL_CHARACTER;
+         --  else exit;
+         -- end if;
+          exit; -- terms with zero coefficient are allowed
         when delimiter => 
           if bc /= 0
            then raise BAD_BRACKET;
@@ -367,12 +368,14 @@ package body Multprec_Complex_Laur_Strings is
           Collect_Factor_Polynomial;
       end case;
     end loop;
-    tmp.cf := c;
-    tmp.dg := d;
-    termp := create(tmp);
-    Clear(tmp);
-    if Number_Of_Unknowns(res) > 0
-     then Mul(termp,res); Clear(res);
+    if not Equal(c,compzero) then
+      tmp.cf := c;
+      tmp.dg := d;
+      termp := create(tmp);
+      Clear(tmp);
+      if Number_Of_Unknowns(res) > 0
+       then Mul(termp,res); Clear(res);
+      end if;
     end if;
   exception
     when others =>

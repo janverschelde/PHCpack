@@ -1,7 +1,8 @@
 Sun 4 Jan 2015 : updates in standard_complex_{polynomials,laurentials}_io.adb
   to suppress the raising of an exception in case of a null polynomial factor.
   Made same changes to multprec_complex_{polynomials,laurentials}_io.adb.
-  Similar changes in standard_complex_{poly,laur}_strings.adb.
+  Similar changes in standard_complex_{poly,laur}_strings.adb and
+  for multprec_complex_{poly,laur}_strings.adb.
 
 Sat 3 Jan 2015 : updates in standard_complex_{polynomials,laurentials}_io.adb
   to allow for terms with zero coefficient.
