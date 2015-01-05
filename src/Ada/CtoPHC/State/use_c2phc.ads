@@ -1175,6 +1175,29 @@ function use_c2phc ( job : integer32;
 --                 precision and replaces the solution in the multiprecision
 --                 solutions container at position equal to the value of a[0];
 --         = 515 : clears the multiprecision path tracker.
+--         = 516 : initialize homotopy for variable precision tracking,
+--                 with the target and start systems stored as strings,
+--                 the function expects three values in a:
+--                 a[0] = whether a fixed gamma is used or not (1 or 0),
+--                 a[1] = the total number of characters in the string b,
+--                 a[2] = the start of the second (start) system in b;
+--                 b holds the string representations of two systems,
+--                 respectively the target and start system in the homotopy;
+--         = 517 : takes solution given as string representation in b,
+--                 in a[0] = the number of characters in the string b,
+--                 in a[1] = the number of variables in the solution
+--                 represented by b, to initialize the variable precision
+--                 path tracker with;
+--         = 518 : applies one predictor-corrector step in variable
+--                 precision and expects four values in a on entry:
+--                 a[0] = the wanted number of accurate decimal places;
+--                 a[1] = the maximum precision to be used;
+--                 a[2] = the maximum number of corrector steps;
+--                 a[3] = whether intermediate output is wanted or not,
+--                 where 1 is true and 0 is false; and
+--                 returns in a[0] the number of characters in the string
+--                 of the solution and returns in b the solution string;
+--         = 519 : clears the variable precision path tracker.
 --
 -- operations on multiprecision homotopies :
 --
