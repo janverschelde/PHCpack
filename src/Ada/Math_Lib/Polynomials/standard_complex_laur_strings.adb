@@ -147,9 +147,9 @@ package body Standard_Complex_Laur_Strings is
           end if;
           exit;
         when '*' =>
-          if res = Null_Poly then
-            raise ILLEGAL_CHARACTER;
-          else -- the case " ) * " :
+         -- if res = Null_Poly then     -- zero factor polynomials
+         --   raise ILLEGAL_CHARACTER;  -- should not raise exception
+         -- else -- the case " ) * " :
             oper := s(k); k := k + 1;  -- skip '*'
             Parse_Term(s,bc,k,n,term);
             Skip_Spaces_and_CR(s,k);
@@ -165,7 +165,7 @@ package body Standard_Complex_Laur_Strings is
               end case;
             end if;
             Clear(term);
-          end if;
+         -- end if;
         when '^' =>
           if res = Null_Poly
            then raise ILLEGAL_CHARACTER;
@@ -295,6 +295,9 @@ package body Standard_Complex_Laur_Strings is
           Skip_Spaces_and_CR(s,p);
           if (s(p) = 'i') or (s(p) = 'I') then -- the case ".. c * i.." :
             p := p + 1;    -- skip 'i' or 'I"
+          else -- the case 0*factor
+            Parse_Factor(s,bc,p,n,d,pb);
+            Clear(pb); return; -- ignore the factor
           end if;
         end if;
       elsif ( c = Create(-1.0) ) and then ((s(p) = 'i') or (s(p) = 'I')) then
@@ -324,10 +327,11 @@ package body Standard_Complex_Laur_Strings is
           Parse_Factor(s,bc,p,n,d,pb);
           Collect_Factor_Polynomial;
         when '+' | '-' => 
-          if c = Create(0.0)
-           then raise ILLEGAL_CHARACTER;
-           else exit;
-          end if;
+          -- if c = Create(0.0)
+          --  then raise ILLEGAL_CHARACTER;
+          --  else exit;
+          -- end if;
+          exit; -- zero coefficients should not cause exception
         when delimiter => 
           if bc /= 0
            then raise BAD_BRACKET;
@@ -345,7 +349,7 @@ package body Standard_Complex_Laur_Strings is
           exit;
         when others  =>
           if c = Create(0.0) then
-            c := Create(1.0);
+           -- c := Create(1.0); -- do not add zero coefficient term!
             Parse_Factor(s,bc,p,n,d,pb);
           elsif c = Create(-1.0) then
             Parse_Factor(s,bc,p,n,d,pb);

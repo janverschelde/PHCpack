@@ -368,9 +368,9 @@ package body Standard_Complex_Poly_Strings is
           end if;
           exit;
         when '*' =>
-          if res = Null_Poly then
-            raise ILLEGAL_CHARACTER;
-          else -- the case " ) * " :
+         -- if res = Null_Poly then    -- the case (0.0)*(2 + x)
+         --   raise ILLEGAL_CHARACTER; -- should not raise exception
+         -- else -- the case " ) * " :
             oper := s(k); k := k + 1;  -- skip '*'
             Parse_Term(s,bc,k,n,term);
             Skip_Spaces_and_CR(s,k);
@@ -386,7 +386,7 @@ package body Standard_Complex_Poly_Strings is
               end case;
             end if;
             Clear(term);
-          end if;
+         -- end if;
         when '^' =>
           if res = Null_Poly
            then raise ILLEGAL_CHARACTER;
@@ -466,9 +466,9 @@ package body Standard_Complex_Poly_Strings is
           end if;
           exit;
         when '*' =>
-          if Is_Null(res) then
-            raise ILLEGAL_CHARACTER;
-          else -- the case " ) * " :
+          -- if Is_Null(res) then        -- case like (0.0)*(2 + x)
+          --   raise ILLEGAL_CHARACTER;  -- should not trigger exception
+          -- else -- the case " ) * " :
             oper := s(k); k := k + 1;  -- skip '*'
             Parse_Term(s,bc,k,n,term,term_last);
             Skip_Spaces_and_CR(s,k);
@@ -484,7 +484,7 @@ package body Standard_Complex_Poly_Strings is
               end case;
             end if;
             Clear(term);
-          end if;
+          -- end if;
         when '^' =>
           if Is_Null(res)
            then raise ILLEGAL_CHARACTER;
@@ -692,6 +692,9 @@ package body Standard_Complex_Poly_Strings is
           Skip_Spaces_and_CR(s,p);
           if (s(p) = 'i') or (s(p) = 'I') then -- the case ".. c * i.." :
             p := p + 1;    -- skip 'i' or 'I"
+          else -- the case 0*factor
+            Parse_Factor(s,bc,p,n,d,pb);
+            Clear(pb); return; -- ignore the factor
           end if;
         end if;
       elsif ( c = Create(-1.0) ) and then ((s(p) = 'i') or (s(p) = 'I')) then
@@ -721,10 +724,11 @@ package body Standard_Complex_Poly_Strings is
           Parse_Factor(s,bc,p,n,d,pb);
           Collect_Factor_Polynomial;
         when '+' | '-' => 
-          if c = Create(0.0)
-           then raise ILLEGAL_CHARACTER;
-           else exit;
-          end if;
+          -- if c = Create(0.0)
+          --  then raise ILLEGAL_CHARACTER;
+          --  else exit;
+          -- end if;
+          exit; -- term with zero coefficient is not invalid input
         when delimiter =>
           if bc /= 0
            then raise BAD_BRACKET;
@@ -732,7 +736,8 @@ package body Standard_Complex_Poly_Strings is
           exit;
         when '(' => 
           if c = Create(0.0) or else c = Create(-1.0)
-           then c := Create(0.0); exit; -- the case "+ (" or "- (" :
+           then c := Create(0.0);
+                exit; -- the case "+ (" or "- (" :
            else raise BAD_BRACKET;      -- the case "c  (" :
           end if;
         when ')' =>
@@ -761,8 +766,8 @@ package body Standard_Complex_Poly_Strings is
       Clear(tmp);
       if Number_Of_Unknowns(res) > 0
        then Mul(termp,res); Clear(res);
-     end if;
-   end if;
+      end if;
+    end if;
   exception
     when BAD_BRACKET =>
       put("Exception BAD_BRACKET raised at character "); put(integer32(p),1);
@@ -837,10 +842,11 @@ package body Standard_Complex_Poly_Strings is
           Parse_Factor(s,bc,p,n,d,pb,pb_last);
           Collect_Factor_Polynomial;
         when '+' | '-' => 
-          if c = Create(0.0)
-           then raise ILLEGAL_CHARACTER;
-           else exit;
-          end if;
+          -- if c = Create(0.0)
+          --  then raise ILLEGAL_CHARACTER;
+          --  else exit;
+          -- end if;
+          exit; -- term with zero coefficient is not invalid input
         when delimiter =>
           if bc /= 0
            then raise BAD_BRACKET;
@@ -875,9 +881,9 @@ package body Standard_Complex_Poly_Strings is
       tmp.dg := d;
       Merge_Append(termp,termp_last,tmp);
       Clear(tmp);
-    end if;
-    if Length_Of(res) > 0
-     then Mul(termp,termp_last,res); Clear(res);
+      if Length_Of(res) > 0
+       then Mul(termp,termp_last,res); Clear(res);
+      end if;
     end if;
   exception
     when others =>
