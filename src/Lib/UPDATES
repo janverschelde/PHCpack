@@ -1,3 +1,6 @@
+Tue 6 Jan 2015 : extended next_track with operations to interface with the
+  variable precision path tracker.
+
 Wed 26 Nov 2014 : uncommented message in phcpy2c.c and added error messages
   in case of failure when storing the string representation of a polynomial,
   or appending a solution string.

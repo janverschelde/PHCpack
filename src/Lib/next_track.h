@@ -38,6 +38,21 @@ int initialize_multprec_homotopy ( int fixed_gamma, int decimals );
  *   If fixed_gamma equals 1 (true), then gamma will be a fixed default,
  *   otherwise, a new random complex constant for gamma is generated. */
 
+int initialize_varbprec_homotopy 
+ ( int fixed_gamma, int nc_target, char *target, int nc_start, char *start );
+/*
+ * DESCRIPTION :
+ *   Initializes the variable precision homotopy with the target and
+ *   start system stored in the strings.
+ *
+ * ON ENTRY :
+ *   fixed_gamma   if 1, then a fixed value for the gamma constant is used,
+ *                 if 0, a random value for gamma will be generated;
+ *   nc_target     number of characters in the string target;
+ *   target        string representation of the target system;
+ *   nc_start      number of characters in the string start;
+ *   target        string representation of the start system. */
+
 int initialize_standard_solution ( int k );
 /*
  * DESCRIPTION :
@@ -61,6 +76,17 @@ int initialize_multprec_solution ( int k );
  * DESCRIPTION :
  *   Takes the k-th solution in the multiprecision solution container
  *   and initializes the multiprecision path tracker with generator. */
+
+int initialize_varbprec_solution ( int nv, int nc, char *sol );
+/*
+ * DESCRIPTION :
+ *   Uses the string representation of a solution to initialize the
+ *   variable precision path tracker with.
+ *
+ * ON ENTRY :
+ *   nv      the number of variables in the solution;
+ *   nc      the number of characters in the string sol;
+ *   sol     string representation of a solution. */
 
 int next_standard_solution ( int k );
 /*
@@ -106,6 +132,27 @@ int next_multprec_solution ( int k );
  *   The multiprecision homotopy has been initialized and the multiprecision
  *   path tracker was initialized with the k-th start solution.  */
 
+int next_varbprec_solution
+ ( int want, int maxprc, int maxitr, int verbose, int *nc, char *sol ); 
+/*
+ * DESCRIPTION :
+ *   Returns the next point along the path computed with variable precision.
+ *
+ * REQUIRED :
+ *   The variable precision path tracker is initialized with a homotopy
+ *   and a solution.
+ *
+ * ON ENTRY :
+ *   want     number of decimal places wanted as accurate in the solution;
+ *   maxprc   maximum number of decimal places in the working precision;
+ *   maxitr   maximum number of corrector steps;
+ *   verbose  if 1, then extra output is written to screen,
+ *            if 0, then the next step is done in silence.
+ *
+ * ON RETURN :
+ *   nc       number of characters allocated in the string sol;
+ *   sol      string representation of the next solution along a path. */
+
 int clear_standard_tracker ( void );
 /*
  * DESCRIPTION :
@@ -129,3 +176,9 @@ int clear_multprec_tracker ( void );
  * DESCRIPTION :
  *   Deallocates and resets data for tracking paths with a generator
  *   in multiprecision complex arithmetic. */
+
+int clear_varbprec_tracker ( void );
+/*
+ * DESCRIPTION :
+ *   Deallocates and resets data for tracking paths with a generator
+ *   in variable precision complex arithmetic. */
