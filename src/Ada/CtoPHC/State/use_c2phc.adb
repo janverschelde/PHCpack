@@ -2095,7 +2095,7 @@ function use_c2phc ( job : integer32;
         PHCpack_Operations_io.Write_Multprec_Target_Solutions; return 0;
       when 498 => PHCpack_Operations.Multprec_Clear; return 0;
      -- path trackers with generators :
-      when 500..519 => return use_nxtsol(job-500,a,b,c);
+      when 500..520 => return use_nxtsol(job-500,a,b,c);
      -- multiprecision homotopies :
       when 522..524 => return use_track(job-470,a,b,c);
      -- multihomogeneous Bezout numbers and start systems

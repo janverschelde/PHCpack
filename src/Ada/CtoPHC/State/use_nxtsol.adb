@@ -321,6 +321,10 @@ function use_nxtsol ( job : integer32;
   --   a[2] : the maximum number of corrector steps;
   --   a[3] : whether intermediate output is wanted or not,
   --   where 1 is true and 0 is false.
+  --   Because the size of the solution string can fluctuate as the
+  --   demands on the precision vary, job 20 must be called immediately
+  --   after this job to retrieve the solution.
+  --   The size of the solution string is returned in b.
 
     v_a : constant C_Integer_Array
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(4));
@@ -333,6 +337,23 @@ function use_nxtsol ( job : integer32;
 
   begin
     sol := Varbprec_Path_Tracker.get_next(want,maxprc,maxitr,otp);
+    Assign(integer32(sol'last),b);
+    return 0;
+  exception
+    when others => return 518;
+  end Job18;
+
+  function Job20 return integer32 is -- current variable precision solution
+
+  -- DESCRIPTION :
+  --   Returns the current variable precision solution as a string,
+  --   as computed previously by Job 18.
+  --   Assign in a[0] the number of characters in the string b.
+
+    sol : Link_to_String;
+
+  begin
+    sol := Varbprec_Path_Tracker.get_current;
     declare
       sv : constant Standard_Integer_Vectors.Vector
          := String_to_integer_Vector(sol.all);
@@ -342,8 +363,8 @@ function use_nxtsol ( job : integer32;
     end;
     return 0;
   exception
-    when others => return 518;
-  end Job18;
+    when others => return 520;
+  end Job20;
 
   function Handle_Jobs return integer32 is
   begin
@@ -367,6 +388,7 @@ function use_nxtsol ( job : integer32;
       when 17 => return Job17; -- initialize variable precision solution
       when 18 => return Job18; -- next variable precision solution
       when 19 => Varbprec_Path_Tracker.Clear; return 0;
+      when 20 => return Job20; -- current variable precision solution
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   end Handle_Jobs;

@@ -1,4 +1,7 @@
-Mon 5 Jan 2014 : added variable precision get_next path tracker interface
+Tue 6 Jan 2015 : new job to use_nxtsol and use_c2phc to get the current
+  variable precision solution.
+
+Mon 5 Jan 2015 : added variable precision get_next path tracker interface
   to use_nxtsol and use_c2phc.
 
 Fri 19 Dec 2014 : checked for size of support when calling the blackbox

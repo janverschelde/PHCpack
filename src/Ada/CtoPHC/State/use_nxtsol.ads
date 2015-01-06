@@ -65,9 +65,13 @@ function use_nxtsol ( job : integer32;
 --                  a[2] = the maximum number of corrector steps;
 --                  a[3] = whether intermediate output is wanted or not,
 --                  where 1 is true and 0 is false; and
---                  returns in a[0] the number of characters in the string
---                  of the solution and returns in b the solution string;
+--                  returns in b the number of characters in the string
+--                  of the solution than can be retrieved with job 20.
 --         =   19 : clears the variable precision path tracker.
+--         =   20 : return current variable precision solution in b
+--                  as computed by job 18, the number of characters in b
+--                  equals the value as a[0] which should be the same value
+--                  as the one returned in a[0] of job 18, called just before.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

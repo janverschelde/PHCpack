@@ -1195,9 +1195,13 @@ function use_c2phc ( job : integer32;
 --                 a[2] = the maximum number of corrector steps;
 --                 a[3] = whether intermediate output is wanted or not,
 --                 where 1 is true and 0 is false; and
---                 returns in a[0] the number of characters in the string
---                 of the solution and returns in b the solution string;
---         = 519 : clears the variable precision path tracker.
+--                 returns in b the number of characters in the string
+--                 of the solution that can be retrieved with job 520;
+--         = 519 : clears the variable precision path tracker;
+--         = 520 : return current variable precision solution in b
+--                 as computed by job 518, the number of characters in b
+--                 equals the value as a[0] which should be the same value
+--                 as the one returned in a[0] of job 518, called just before.
 --
 -- operations on multiprecision homotopies :
 --
