@@ -160,22 +160,21 @@ int multprec_Newton_Laurent_step ( int deci )
 char *read_equations_from_file
  ( FILE *fp, int nq, int k, int *len, char *accu )
 {
-   int i,lenline;
-   char line[256];
+   int i,lenterm;
+   char term[256];
    char *result;
 
-   fscanf(fp,"%s\n",line);
-   lenline = strlen(line);
-   for(i=0; i<lenline; i++) if(line[i] == ';') k = k+1;
+   fscanf(fp,"%s\n",term);
+   lenterm = strlen(term);
+   for(i=0; i<lenterm; i++) if(term[i] == ';') k = k+1;
 
-   result = (char*)calloc(*len+lenline,sizeof(char));
+   result = (char*)calloc(*len+lenterm+1,sizeof(char));
    for(i=0; i<*len; i++) result[i] = accu[i];
-   *len = *len + lenline;
-   strcat(result,line);
+   result[*len] = ' '; /* add space to separate terms */
+   for(i=0; i<lenterm; i++) result[*len+1+i] = term[i];
+   *len = *len + lenterm + 1;
    if(k < nq)
-   {
       return read_equations_from_file(fp,nq,k,len,result);
-   }
    else
    {
       free(accu);
@@ -201,15 +200,16 @@ char *read_polynomials_from_file
       char c;
       char *acc;
       fscanf(fp,"%d",nq);
-      printf("Number of equations : %d\n",*nq);
+      /* printf("Number of equations : %d\n",*nq); */
       c = getc(fp);
       if(c == '\n')
          *nv = *nq;
       else
          fscanf(fp,"%d",nv);
-      printf("Number of variables : %d\n",*nv);
+      /* printf("Number of variables : %d\n",*nv); */
       acc = (char*)calloc(1,sizeof(char));
       acc[0] = '\0';
+      *len = 0;
       result = read_equations_from_file(fp,*nq,0,len,acc);
    }
 

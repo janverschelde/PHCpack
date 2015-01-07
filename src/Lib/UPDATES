@@ -1,3 +1,6 @@
+Wed 7 Jan 2015 : debugged the reading of polynomials as strings from file
+  as called in lib_nxtsol.c.
+
 Tue 6 Jan 2015 : extended next_track with operations to interface with the
   variable precision path tracker.
 

@@ -2,6 +2,7 @@
    using the start system in an artificial-parameter homotopy */
 
 #include <stdio.h>
+#include <string.h>
 #include "solcon.h"
 #include "phcpack.h"
 #include "jump_track.h"
@@ -41,6 +42,12 @@ int call_initialize_multprec_homotopy ( int *index );
  *   Prepares the containers to initialize the homotopy to track a path
  *   in multiprecision.  Returns in index the number of the
  *   solution in the container selected as start solution. */
+
+int call_initialize_varbprec_homotopy ( void );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for data to initialize the variable precision
+ *   path tracker with a homotopy and an initial solution. */
 
 int write_standard_solution ( int index );
 /*
@@ -115,11 +122,15 @@ int main ( int argc, char *argv[] )
       fail = call_quaddobl_path_tracker(nbsol);
       fail = clear_quaddobl_tracker();
    }
-   else
+   else if(level == 3)
    {
       fail = call_initialize_multprec_homotopy(&nbsol);
       fail = call_multprec_path_tracker(nbsol);
       fail = clear_multprec_tracker();
+   }
+   else
+   {
+      fail = call_initialize_varbprec_homotopy();
    }
 
    adafinal();
@@ -137,8 +148,9 @@ int prompt_for_precision ( void )
    printf("  0. run in standard double precision arithmetic;\n");
    printf("  1. run in double double precision arithmetic;\n");
    printf("  2. run in quad double precision arithmetic;\n");
-   printf("  3. run in multiprecision arithmetic.\n");
-   printf("Type 0, 1, 2, or 3 to select precision : ");
+   printf("  3. run in multiprecision arithmetic;\n");
+   printf("  4. run in variable precision arithmetic.\n");
+   printf("Type 0, 1, 2, 3, or 4 to select precision : ");
    scanf("%d",&answer);
    scanf("%c",&nlc);     /* skip new line symbol */
 
@@ -214,6 +226,42 @@ int call_initialize_multprec_homotopy ( int *index )
    printf("Fixed gamma constant ? (1 = yes/0 = no) "); scanf("%d",&fixed);
    fail = initialize_multprec_homotopy(fixed,deci);
    fail = initialize_multprec_solution(*index);
+
+   return fail;
+}
+
+int call_initialize_varbprec_homotopy ( void )
+{
+   int fail,nc,lentar,lensta,nq,nv,fix;
+   char name[80];
+   char *target,*start;
+
+   printf("\nGive the name of a file to read the target system : ");
+   scanf("%s",name);
+   nc = strlen(name);
+   
+   target = read_polynomials_from_file(nc,name,&lentar,&nq,&nv,&fail);
+   if(fail != 0)
+      printf("Some failure occurred.\n");
+   else
+   {
+      printf("Read %d polynomials in %d variables : \n%s\n",nq,nv,target);
+
+      printf("\nGive the name of a file to read the start system : ");
+      scanf("%s",name);
+      nc = strlen(name);
+   
+      start = read_polynomials_from_file(nc,name,&lensta,&nq,&nv,&fail);
+      if(fail != 0)
+         printf("Some failure occurred.\n");
+      else
+      {
+         printf("Read %d polynomials in %d variables : \n%s\n",nq,nv,start);
+         printf("Fixed gamma constant ? (1 = yes/0 = no) ");
+         scanf("%d",&fix);
+         fail = initialize_varbprec_homotopy(fix,lentar,target,lensta,start);
+      }
+   }
 
    return fail;
 }
