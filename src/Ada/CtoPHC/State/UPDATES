@@ -1,3 +1,5 @@
+Wed 7 Jan 2015 : added forgotten case handler in use_nxtsol.adb.
+
 Tue 6 Jan 2015 : new job to use_nxtsol and use_c2phc to get the current
   variable precision solution.
 

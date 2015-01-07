@@ -385,6 +385,7 @@ function use_nxtsol ( job : integer32;
       when 13 => return Job13; -- initialize multiprecision solution
       when 14 => return Job14; -- next multiprecision solution
       when 15 => Multprec_Path_Tracker.Clear; return 0;
+      when 16 => return Job16; -- initialize variable precision homotopy 
       when 17 => return Job17; -- initialize variable precision solution
       when 18 => return Job18; -- next variable precision solution
       when 19 => Varbprec_Path_Tracker.Clear; return 0;
