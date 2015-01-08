@@ -257,7 +257,8 @@ function use_nxtsol ( job : integer32;
   --   The function expects three values in a:
   --   a[0] : whether a fixed gamma is to be used or not (1 or 0);
   --   a[1] : the total number of characters in the string b;
-  --   a[2] : the start of the second system stored in the string b.
+  --   a[2] : the number of characters in the first string that
+  --   contains the target system.
   --   The parameter b holds the string representations of two systems,
   --   respectively the target and start system in the homotopy.
 
@@ -271,8 +272,8 @@ function use_nxtsol ( job : integer32;
         := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(len+1));
     hom : constant string(1..len)
         := C_Integer_Array_to_String(natural32(len),v_b);
-    str_target : constant string(1..sec-1) := hom(1..sec-1);
-    str_starts : constant string(sec..len) := hom(sec..len);
+    str_target : constant string(1..sec) := hom(1..sec);
+    str_starts : constant string(sec+1..len) := hom(sec+1..len);
     tnq : constant natural := Count_Delimiters(str_target,';');
     snq : constant natural := Count_Delimiters(str_starts,';');
     target : constant Array_of_Strings := Split(tnq,str_target,';');
