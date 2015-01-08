@@ -1,3 +1,6 @@
+Thu 8 Jan 2015 : forgot to set the fail return value in case of success
+  in phcpack.c.
+
 Wed 7 Jan 2015 : debugged the reading of polynomials as strings from file
   as called in lib_nxtsol.c.
 

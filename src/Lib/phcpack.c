@@ -211,6 +211,7 @@ char *read_polynomials_from_file
       acc[0] = '\0';
       *len = 0;
       result = read_equations_from_file(fp,*nq,0,len,acc);
+      *fail = 0;
    }
 
    return result;
