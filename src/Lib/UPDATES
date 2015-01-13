@@ -1,3 +1,6 @@
+Tue 13 Jan 2015 : added buffered line reader to phcpack.c, as needed for 
+  lib_nxtsol.c to initialize variable precision path tracker with solution.
+
 Thu 8 Jan 2015 : forgot to set the fail return value in case of success
   in phcpack.c.
 

@@ -43,11 +43,20 @@ int call_initialize_multprec_homotopy ( int *index );
  *   in multiprecision.  Returns in index the number of the
  *   solution in the container selected as start solution. */
 
-int call_initialize_varbprec_homotopy ( void );
+int call_initialize_varbprec_solution ( char *name, int *index );
+/*
+ * DESCRIPTION :
+ *   Given the name of the file with start system and start solutions,
+ *   the user is prompted for an index and then the solution is read
+ *   from file and used to initialize the variable precision homotopy. */
+
+int call_initialize_varbprec_homotopy ( int *index );
 /*
  * DESCRIPTION :
  *   Prompts the user for data to initialize the variable precision
- *   path tracker with a homotopy and an initial solution. */
+ *   path tracker with a homotopy and an initial solution.
+ *   On return is the index of the start solution given on file
+ *   with the start system that was selected as start solution. */
 
 int write_standard_solution ( int index );
 /*
@@ -130,7 +139,7 @@ int main ( int argc, char *argv[] )
    }
    else
    {
-      fail = call_initialize_varbprec_homotopy();
+      fail = call_initialize_varbprec_homotopy(&nbsol);
    }
 
    adafinal();
@@ -230,9 +239,30 @@ int call_initialize_multprec_homotopy ( int *index )
    return fail;
 }
 
-int call_initialize_varbprec_homotopy ( void )
+int call_initialize_varbprec_solution ( char *name, int *index )
 {
-   int fail,nc,lentar,lensta,nq,nv,fix;
+   FILE *fp;
+   char *sol;
+
+   fp = fopen(name,"r");
+   if(fp == NULL)
+   {
+      printf("File with name %s could not be opened for reading!\n",name);
+      *index = -1;
+   }
+   else
+   {
+      printf("Give the index of the start solution : ");
+      scanf("%d",index);
+      sol = read_solution_banner_and_string(fp,*index);
+      printf("Solution %d :\n%s\n",*index,sol);
+   }
+   fclose(fp);
+}
+
+int call_initialize_varbprec_homotopy ( int *index )
+{
+   int fail,nc,lentar,lensta,nq,nv,fix,i,idx;
    char name[80];
    char *target,*start;
 
@@ -260,6 +290,7 @@ int call_initialize_varbprec_homotopy ( void )
          printf("Fixed gamma constant ? (1 = yes/0 = no) ");
          scanf("%d",&fix);
          fail = initialize_varbprec_homotopy(fix,lentar,target,lensta,start);
+         if(fail == 0) call_initialize_varbprec_solution(name,&idx);
       }
    }
 

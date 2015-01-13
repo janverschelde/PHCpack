@@ -163,6 +163,52 @@ char *read_polynomials_from_file
  *            then this must be the second number on the first line on file;
  *   fail     if 0, then no failure, if 1 then something went wrong. */
 
+int skip_lines ( FILE *fp, int k );
+/*
+ * DESCRIPTION :
+ *   Moves the file pointer fp ahead by k lines,
+ *   skipping the current line and the next k-1 lines.
+ *   Upon return, the position on file will be after the k-th newline
+ *   symbol (in which case the returned value is 0), otherwise, if
+ *   the end of the file is reached, then the value on return will be
+ *   equal to the number of newline symbols read. */
+
+char *buffered_line_reader ( FILE *fp, int k, int n, int *len, char *accu );
+/*
+ * DESCRIPTION :
+ *   Reads n lines from file, where k counts the number of lines
+ *   already read and len the length of the number of characters in accu.
+ *   All n lines that are read are returned in a string. */
+
+char *store_lines ( FILE *fp, int k );
+/*
+ * DESCRIPTION :
+ *   Returns the string that stores the next k lines on file fp. */
+
+int read_solution_banner ( FILE *fp, int *len, int *dim );
+/*
+ * DESCRIPTION :
+ *   Scans the file for the banner 'THE SOLUTIONS' and returns
+ *   the length of the solution list and the number of variables
+ *   in each solution in the variables len and dim on return.
+ *   The return value is zero if the banner was found and followed
+ *   by two natural numbers len and dim.
+ *   therwise 1 is returned, indicating failure. */
+
+char *read_solution_string ( FILE *fp, int k, int len, int dim );
+/*
+ * DESCRIPTION :
+ *   The file has been positioned to after the reading of the
+ *   solution banner and the length and the dimension have been
+ *   retrieved properly.  The k-th solution will be read and
+ *   returned as a string.  The function expects that k <= len. */
+
+char *read_solution_banner_and_string ( FILE *fp, int k );
+/*
+ * DESCRIPTION :
+ *   Scans the file for the banner 'THE SOLUTIONS' and then reads the
+ *   k-th solution in the file and returns its string representation. */
+
 int varbprec_Newton_Laurent_step
  ( int dim, int wanted, int maxitr, int maxprc, int ns, char *s );
 /*

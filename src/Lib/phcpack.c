@@ -186,7 +186,6 @@ char *read_polynomials_from_file
  ( int nc, char *name, int *len, int *nq, int *nv, int *fail )
 {
    char *result;
-   char line[256];
    FILE *fp;
    
    fp = fopen(name,"r");
@@ -213,6 +212,157 @@ char *read_polynomials_from_file
       result = read_equations_from_file(fp,*nq,0,len,acc);
       *fail = 0;
    }
+   fclose(fp);
+
+   return result;
+}
+
+int skip_lines ( FILE *fp, int k )
+{
+   char c;
+   int go_on = 1;
+   int cnt = k;   /* number of new lines to read */
+
+   do
+   {
+      go_on = fscanf(fp,"%c",&c);
+      if(go_on != 1) break;         /* at end of file */
+      if(c == '\n') cnt = cnt - 1;  /* one less line to read */
+      go_on = (cnt > 0);
+   }
+   while(go_on == 1);
+
+   return cnt;
+}
+
+char *buffered_line_reader 
+ ( FILE *fp, int k, int n, int *len, char *accu )
+{
+   const int SIZE = 80;
+   char *result;
+   char buffer[SIZE];
+   char c;
+   int i;
+   int go_on = 1;
+   int idx = 0;
+   int cnt = k;
+
+   for(i=0; i<SIZE; i++) buffer[i] = ' ';
+
+   do
+   {
+      int rc = fgetc(fp);
+      if(rc == EOF) break;
+      c = (char) rc;
+      if(c == '\n') cnt = cnt + 1;
+      buffer[idx++] = (char) rc;
+   }
+   while((idx < SIZE) && (cnt < n));
+
+   result = (char*)calloc(*len+idx+1,sizeof(char));
+   /* The initialization of result seems critical !!! */
+   for(i=0; i<*len+idx+1; i++) result[i] = ' ';
+   for(i=0; i<*len; i++) result[i] = accu[i];
+   for(i=0; i<idx; i++) result[*len+i] = buffer[i];
+   *len = *len + idx;
+   result[*len] = '\0';
+
+   if(cnt < n)
+      return buffered_line_reader(fp,cnt,n,len,result);
+   else
+   {
+      free(accu);
+      return result;
+   }
+}
+
+char *store_lines ( FILE *fp, int k )
+{
+   char *result;
+   char *acc;
+   int len = 0;
+ 
+   acc = (char*)calloc(1,sizeof(char));
+   acc[0] = '\0';
+   
+   result = buffered_line_reader(fp,0,k,&len,acc);
+
+   return result;
+}
+
+int read_solution_banner ( FILE *fp, int *len, int *dim )
+{
+   const int size = 13;
+   const char banner[] = "THE SOLUTIONS";
+   char buffer[size];
+   char c;
+   int go_on = 1;
+   int cnt = 0;
+   int found = 0;
+
+   do
+   {
+      go_on = fscanf(fp,"%c",&c);
+      if(go_on != 1) break;         /* at end of file */
+      if(cnt < size)
+         buffer[cnt++] = c;         /* just add character to buffer */
+      else
+      {                             /* shift the characters in buffer */
+         int i;
+         for(i=0; i<size-1; i++) buffer[i] = buffer[i+1];
+         buffer[size-1] = c;
+         found = 1;                 /* assume we have a match */
+         for(i=0; i<size; i++)
+            if(buffer[i] != banner[i])
+            { 
+               found = 0; break;
+            }
+         go_on = (found == 0);
+      }
+   }
+   while(go_on == 1);
+
+   if(found == 0)
+      printf("Did not find the solution banner!\n");
+   else
+   {
+      go_on = skip_lines(fp,1);     /* skip rest of the banner line */
+      if(go_on == 0)
+      {
+         fscanf(fp,"%d",len);
+         fscanf(fp,"%d",dim);
+         printf("Length : %d and dimension : %d\n",*len,*dim);
+         go_on = skip_lines(fp,2);  /* skip rest of line and next line */
+      }
+   }
+
+   return go_on;
+}
+
+char *read_solution_string ( FILE *fp, int k, int len, int dim )
+{
+   char *result;
+   const int lines = dim + 5;     /* number of lines a solution occupies */
+   int fail;
+
+   if(k > 1) fail = skip_lines(fp,(k-1)*lines);
+
+   if(fail == 0)
+   {
+      fail = skip_lines(fp,1);        /* skip line with solution counter */
+      result = store_lines(fp,lines-1);
+   }
+
+   return result;
+}
+
+char *read_solution_banner_and_string ( FILE *fp, int k )
+{
+   int fail,len,dim;
+   char *result;
+
+   fail = read_solution_banner(fp,&len,&dim);
+   if(fail == 0) result = read_solution_string(fp,k,len,dim);
 
    return result;
 }
