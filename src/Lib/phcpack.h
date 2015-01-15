@@ -203,11 +203,13 @@ char *read_solution_string ( FILE *fp, int k, int len, int dim );
  *   retrieved properly.  The k-th solution will be read and
  *   returned as a string.  The function expects that k <= len. */
 
-char *read_solution_banner_and_string ( FILE *fp, int k );
+char *read_solution_banner_and_string ( FILE *fp, int k, int *len, int *dim );
 /*
  * DESCRIPTION :
  *   Scans the file for the banner 'THE SOLUTIONS' and then reads the
- *   k-th solution in the file and returns its string representation. */
+ *   k-th solution in the file and returns its string representation.
+ *   On return in len are the length of the solution list in len
+ *   and the number of variables in dim. */
 
 int varbprec_Newton_Laurent_step
  ( int dim, int wanted, int maxitr, int maxprc, int ns, char *s );

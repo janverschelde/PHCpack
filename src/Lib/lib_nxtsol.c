@@ -106,6 +106,12 @@ int call_multprec_path_tracker ( int index );
  *   Calls the path tracker in multiprecision,
  *   starting a solution with the numbers in the index. */
 
+int call_varbprec_path_tracker ( void );
+/*
+ * DESCRIPTION :
+ *   Calls the path tracker in variable precision,
+ *   with the solution the path tracker was initialized with. */ 
+
 int main ( int argc, char *argv[] )
 {
    int fail,nbsol;
@@ -140,6 +146,8 @@ int main ( int argc, char *argv[] )
    else
    {
       fail = call_initialize_varbprec_homotopy(&nbsol);
+      fail = call_varbprec_path_tracker();
+      fail = clear_varbprec_tracker();
    }
 
    adafinal();
@@ -243,21 +251,26 @@ int call_initialize_varbprec_solution ( char *name, int *index )
 {
    FILE *fp;
    char *sol;
+   int fail,len,nc,nv;
 
    fp = fopen(name,"r");
    if(fp == NULL)
    {
       printf("File with name %s could not be opened for reading!\n",name);
       *index = -1;
+      fail = -1;
    }
    else
    {
       printf("Give the index of the start solution : ");
       scanf("%d",index);
-      sol = read_solution_banner_and_string(fp,*index);
+      sol = read_solution_banner_and_string(fp,*index,&len,&nv);
       printf("Solution %d :\n%s\n",*index,sol);
+      nc = strlen(sol);
+      fail = initialize_varbprec_solution(nv,nc,sol);
    }
    fclose(fp);
+   return fail;
 }
 
 int call_initialize_varbprec_homotopy ( int *index )
@@ -424,6 +437,28 @@ int call_multprec_path_tracker ( int index )
    {
       fail = next_multprec_solution(index);
       fail = write_multprec_solution(index);
+      printf("Continue to next step ? (y/n) ");
+      scanf("%c",&answer); /* get trailing new line...*/
+      scanf("%c",&answer);
+   }
+   while(answer == 'y');
+
+   return fail;
+}
+
+int call_varbprec_path_tracker ( void )
+{
+   int fail,len;
+   int want = 8;
+   int maxprc = 256;
+   int maxitr = 3;
+   int vrb = 1;
+   char *sol,answer;
+
+   do
+   {
+      fail = next_varbprec_solution(want,maxprc,maxitr,vrb,&len,sol);
+      if(fail == 0) printf("The next solution :\n%s\n",sol);
       printf("Continue to next step ? (y/n) ");
       scanf("%c",&answer); /* get trailing new line...*/
       scanf("%c",&answer);

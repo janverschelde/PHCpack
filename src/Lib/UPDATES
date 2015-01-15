@@ -1,3 +1,6 @@
+Wed 14 Jan 2015 : extended read_solution_banner_and_solution with two
+  extra parameters in phcpack, for use in lib_nxtsol.c.
+
 Tue 13 Jan 2015 : added buffered line reader to phcpack.c, as needed for 
   lib_nxtsol.c to initialize variable precision path tracker with solution.
 

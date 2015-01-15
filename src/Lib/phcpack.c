@@ -356,13 +356,13 @@ char *read_solution_string ( FILE *fp, int k, int len, int dim )
    return result;
 }
 
-char *read_solution_banner_and_string ( FILE *fp, int k )
+char *read_solution_banner_and_string ( FILE *fp, int k, int *len, int *dim )
 {
-   int fail,len,dim;
+   int fail;
    char *result;
 
-   fail = read_solution_banner(fp,&len,&dim);
-   if(fail == 0) result = read_solution_string(fp,k,len,dim);
+   fail = read_solution_banner(fp,len,dim);
+   if(fail == 0) result = read_solution_string(fp,k,*len,*dim);
 
    return result;
 }
