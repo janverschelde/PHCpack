@@ -307,6 +307,8 @@ function use_nxtsol ( job : integer32;
     lsl : constant Link_to_String := new string'(sol);
 
   begin
+   -- put_line("initializing the variable precision path tracker ...");
+   -- put_line("with the solution : "); put_line(lsl.all);
     Varbprec_Path_Tracker.Init(lsl,dim);
     return 0;
   exception
@@ -337,11 +339,16 @@ function use_nxtsol ( job : integer32;
     sol : Link_to_String;
 
   begin
+   -- put_line("inside use_nxtsol, calling get_current ...");
+    sol := Varbprec_Path_Tracker.get_current;
+   -- put_line("inside use_nxtsol, calling get_next ...");
     sol := Varbprec_Path_Tracker.get_next(want,maxprc,maxitr,otp);
+   -- put_line("The solution returned : ");
+   -- put_line(sol.all);
     Assign(integer32(sol'last),b);
     return 0;
   exception
-    when others => return 518;
+    when others => put_line("some exception occurred"); raise; return 518;
   end Job18;
 
   function Job20 return integer32 is -- current variable precision solution

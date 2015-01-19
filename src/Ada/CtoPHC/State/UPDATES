@@ -1,3 +1,5 @@
+Mon 19 Jan 2015 : updates in use_nxtsol.adb, uncommenting messages...
+
 Thu 8 Jan 2015 : altered the spefication of the initialization of the
   variable precision homotopy in use_nxtsol, also updating use_c2phc.ads.
   Because of different string beginnings it is better to pass the length
