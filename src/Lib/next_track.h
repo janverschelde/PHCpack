@@ -132,8 +132,8 @@ int next_multprec_solution ( int k );
  *   The multiprecision homotopy has been initialized and the multiprecision
  *   path tracker was initialized with the k-th start solution.  */
 
-int next_varbprec_solution
- ( int want, int maxprc, int maxitr, int verbose, int *nc, char *sol ); 
+char *next_varbprec_solution
+ ( int want, int maxprc, int maxitr, int verbose, int *nc, int *fail ); 
 /*
  * DESCRIPTION :
  *   Returns the next point along the path computed with variable precision.
@@ -150,8 +150,9 @@ int next_varbprec_solution
  *            if 0, then the next step is done in silence.
  *
  * ON RETURN :
- *   nc       number of characters allocated in the string sol;
- *   sol      string representation of the next solution along a path. */
+ *   nc       number of characters allocated in the returned string,
+ *            which represents the next solution along a path;
+ *   fail     if 0, then no failure occurred. */
 
 int clear_standard_tracker ( void );
 /*

@@ -2,6 +2,7 @@
    using the start system in an artificial-parameter homotopy */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "solcon.h"
 #include "phcpack.h"
@@ -457,8 +458,12 @@ int call_varbprec_path_tracker ( void )
 
    do
    {
-      fail = next_varbprec_solution(want,maxprc,maxitr,vrb,&len,sol);
-      if(fail == 0) printf("The next solution :\n%s\n",sol);
+      sol = next_varbprec_solution(want,maxprc,maxitr,vrb,&len,&fail);
+      if(fail == 0)
+      {
+         printf("The next solution :\n%s\n",sol);
+         free(sol); /* only free when no failure! */
+      }
       printf("Continue to next step ? (y/n) ");
       scanf("%c",&answer); /* get trailing new line...*/
       scanf("%c",&answer);

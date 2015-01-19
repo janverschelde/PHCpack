@@ -1,3 +1,6 @@
+Mon 19 Jan 2015 : changed specification of function to return the next
+  variable precision solution in next_track, updated lib_nxtsol.c.
+
 Wed 14 Jan 2015 : extended read_solution_banner_and_solution with two
   extra parameters in phcpack, for use in lib_nxtsol.c.
 

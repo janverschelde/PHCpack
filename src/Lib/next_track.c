@@ -1,6 +1,7 @@
 /* The file next_track.c defines the functions of next_track.h. */
 
 #include <stdlib.h>
+#include <stdio.h>
 
 extern void adainit ( void );
 extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
@@ -57,11 +58,11 @@ int initialize_varbprec_homotopy
 
    a[0] = fixed_gamma;
    a[1] = len;
-   a[2] = nc_target;
+   a[2] = nc_target; 
 
    for(i=0; i<nc_target; i++) b[i] = (int) target[i];
    for(i=0; i<nc_start; i++) b[nc_target+i] = (int) start[i];
-
+ 
    fail = _ada_use_c2phc(516,a,b,c);
 
    return fail;
@@ -163,32 +164,33 @@ int next_multprec_solution ( int k )
    return fail;
 }
 
-int next_varbprec_solution
- ( int want, int maxprc, int maxitr, int verbose, int *nc, char *sol )
+char *next_varbprec_solution
+ ( int want, int maxprc, int maxitr, int verbose, int *nc, int *fail )
 {
-   int fail,a[4],len;
+   int a[4],len;
    double *c;
+   char *sol;
 
    a[0] = want;
    a[1] = maxprc;
    a[2] = maxitr;
    a[3] = verbose;
 
-   fail = _ada_use_c2phc(518,a,&len,c);
+   *fail = _ada_use_c2phc(518,a,&len,c);
    {
       int i,b[len];
-      fail = _ada_use_c2phc(520,a,b,c);
+      *fail = _ada_use_c2phc(520,a,b,c);
       if(len != a[0])
-         return 518;
+         *fail = 518;
       else
       {
-         len = a[0] + 1; 
          sol = (char*) calloc(len,sizeof(char));
+         for(i=0; i<a[0]; i++) sol[i] = ' ';
          for(i=0; i<a[0]; i++) sol[i] = (char) b[i];
-         sol[a[0]] = '\0';
+         for(i=0; i<a[0]; i++) printf("%c",sol[i]);
       }
    }
-   return fail;
+   return sol;
 }
 
 int clear_standard_tracker ( void )
