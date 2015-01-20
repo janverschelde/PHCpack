@@ -47,7 +47,7 @@ GNAT95FLAGS=-gnat95 -gnatv -O3 -gnatp -gnatf
 # GNATFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
 # GNATFLAGS=-gnatv -gnatwa -gnatVa
-# GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
+GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
 # GNATFLAGS=-gnatv --GNATBIND="gnatbind -static"
 
 COFLAGS = -O2
@@ -1698,7 +1698,7 @@ lib_track: standard_solutions_container.o
                  jump_track.o lib_track.o -o $(BIN)/lib_track -lm
 
 lib_nxtsol: standard_solutions_container.o
-	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/solcon.c
