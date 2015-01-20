@@ -35,6 +35,7 @@ with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions;
 with Standard_Binomial_Systems;          use Standard_Binomial_Systems;
 with Standard_Binomial_Solvers;          use Standard_Binomial_Solvers;
@@ -60,6 +61,23 @@ procedure ts_binsys is
     for i in A'range(1) loop
       for j in A'range(2) loop
         res(i,j) := Create(A(i,j));
+      end loop;
+    end loop;
+    return res;
+  end Convert;
+
+  function Convert ( A : Standard_Integer64_Matrices.Matrix )
+                   return Multprec_Integer_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the matrix A converted to multiprecision type.
+
+    res : Multprec_Integer_Matrices.Matrix(A'range(1),A'range(2));
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        res(i,j) := Create(integer32(A(i,j)));
       end loop;
     end loop;
     return res;
@@ -158,7 +176,7 @@ procedure ts_binsys is
     end if;
   end QuadDobl_Solver;
 
-  procedure Solver_with_Multiprecision_Hermite
+  procedure Standard_Solver_with_Multiprecision_Hermite
               ( A : in Standard_Integer_Matrices.Matrix;
                 c : in Standard_Complex_Vectors.Vector ) is
 
@@ -185,7 +203,36 @@ procedure ts_binsys is
         put(Sum_Residuals(A,c,sols),3); new_line;
       end if;
     end if;
-  end Solver_with_Multiprecision_Hermite;
+  end Standard_Solver_with_Multiprecision_Hermite;
+
+  procedure DoblDobl_Solver_with_Multiprecision_Hermite
+              ( A : in Standard_Integer64_Matrices.Matrix;
+                c : in DoblDobl_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Computes the Hermite normal form with multiprecision arithmetic.
+
+    use DoblDobl_Complex_Solutions;
+
+    mpA,M,U : Multprec_Integer_Matrices.Matrix(A'range(1),A'range(2));
+    d : natural32;
+    r : integer32;
+    sols : Solution_List;
+
+  begin
+    mpA := Convert(A);
+    Solve(mpA,c,r,M,U,sols);
+    put("The rank of the exponent matrix is "); put(r,1); new_line;
+    if r /= 0 then
+      d := Length_Of(sols);
+      put("Found "); put(d,1); put_line(" solutions.");
+      put(standard_Output,d,natural32(c'last),sols);
+      if d > 0 then
+        put("Sum of residuals : ");
+        put(Sum_Residuals(A,c,sols),3); new_line;
+      end if;
+    end if;
+  end DoblDobl_Solver_with_Multiprecision_Hermite;
 
   procedure Standard_Parse_and_Solve
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -209,7 +256,7 @@ procedure ts_binsys is
     else
       put_line("The system is a binomial system.");
       if mp 
-       then Solver_with_Multiprecision_Hermite(A,c);
+       then Standard_Solver_with_Multiprecision_Hermite(A,c);
        else Standard_Solver(A,c);
       end if;
     end if;

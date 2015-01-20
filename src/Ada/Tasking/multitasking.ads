@@ -21,6 +21,7 @@ package Multitasking is
   --   Returns true if all entries from 1 to n in b are false;
 
   function to_string ( n : natural32 ) return string;
+  function to_string ( n : integer32 ) return string;
 
   -- DESCRIPTION :
   --   Returns the string representation of a natural number.

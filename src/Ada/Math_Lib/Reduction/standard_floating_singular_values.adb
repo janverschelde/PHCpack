@@ -2,14 +2,14 @@ with Standard_Complex_Singular_Values;
 
 package body Standard_Floating_Singular_Values is
 
-  function Min0 ( a,b : integer ) return integer is
+  function Min0 ( a,b : integer32 ) return integer32 is
   begin
     return Standard_Complex_Singular_Values.Min0(a,b);
   end Min0;
 
-  procedure SVD ( x : in out Matrix; n,p : in integer;
+  procedure SVD ( x : in out Matrix; n,p : in integer32;
                   s,e : out Vector; u : out Matrix; v : out Matrix;
-                  job : in integer; info : out integer ) is
+                  job : in integer32; info : out integer32 ) is
   begin
     null;
   end SVD;

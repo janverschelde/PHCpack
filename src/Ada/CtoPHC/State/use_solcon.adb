@@ -895,16 +895,29 @@ function use_solcon ( job : integer32;
     fail : boolean;
 
   begin
+   -- put_line("Inside the Job 38 ...");
     sv := C_Integer_Array_to_String(natural32(nc),vb);
+   -- put_line("The string received in Job 38 : "); put_line(sv);
     Standard_Solution_Strings.Parse(sv,ind,nv,sol,fail);
+   -- put_line("The parsed solution : ");
+   -- Standard_Complex_Solutions_io.put(sol);
     if fail then
+     -- put_line("Failure occurred !");
       return 208;
     else
+     -- put_line("Appending the solution to the container...");
       Standard_Solutions_Container.Append(sol);
     end if;
     return 0;
   exception
-    when others => return 208;
+    when others => 
+ --     put_line("exception occurred in Job 38 of use_solcon, with nv :");
+ --     put(nv,1); new_line;
+ --     put_line("exception occurred in Job 38 of use_solcon, with nc :");
+ --     put(natural32(nc),1); new_line;
+ --     put_line("exception occurred in Job 38 of use_solcon, with string :");
+ --     put_line(sv);
+      return 208;
   end Job38;
 
   function Job78 return integer32 is -- append solution string to container
@@ -1158,8 +1171,8 @@ function use_solcon ( job : integer32;
     sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
 
   begin
-    new_line;
-    put_line("Opening the file with name " & sv & " ...");
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
     declare
       file : file_type;
       p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -1191,8 +1204,8 @@ function use_solcon ( job : integer32;
     sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
 
   begin
-    new_line;
-    put_line("Opening the file with name " & sv & " ...");
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
     declare
       file : file_type;
       p : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -1224,8 +1237,8 @@ function use_solcon ( job : integer32;
     sv : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),vb);
 
   begin
-    new_line;
-    put_line("Opening the file with name " & sv & " ...");
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
     declare
       file : file_type;
       p : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -1262,8 +1275,8 @@ function use_solcon ( job : integer32;
 
   begin
     Multprec_Complex_Polynomials_io.Set_Working_Precision(size);
-    new_line;
-    put_line("Opening the file with name " & sv & " ...");
+   -- new_line;
+   -- put_line("Opening the file with name " & sv & " ...");
     declare
       file : file_type;
       p : Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;

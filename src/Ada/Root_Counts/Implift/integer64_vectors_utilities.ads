@@ -5,7 +5,7 @@ with Standard_Integer64_Transformations; use Standard_Integer64_Transformations;
 package Integer64_Vectors_Utilities is
 
 -- DESCRIPTION :
---   This package offers utilities for transforming 64-bit integer vectors.
+--   This package offers utilities for transforming integer vectors.
 
   function Pivot ( v : Vector ) return integer32;
   function Pivot ( v : Link_to_Vector ) return integer32;

@@ -26,6 +26,14 @@ package Standard_Jacobian_Evaluations is
                 x : in Standard_Complex_Vectors.Vector;
                 z : out Standard_Complex_Vectors.Vector;
                 A : out Standard_Complex_Matrices.Matrix );
+  procedure Standard_Jacobian_Evaluation
+              ( f,b : in Standard_Natural_VecVecs.VecVec;
+                c : in Standard_Complex_VecVecs.VecVec;
+                k : in Standard_Natural_VecVecs.VecVec;
+                x : in Standard_Complex_Vectors.Vector;
+                z : out Standard_Complex_Vectors.Vector;
+                y : out Standard_Complex_VecVecs.VecVec;
+                A : out Standard_Complex_VecVecs.VecVec );
 
   -- DESCRIPTION :
   --   The common factors of the exponent vectors are in f
@@ -38,6 +46,14 @@ package Standard_Jacobian_Evaluations is
                 x : in Standard_Complex_Vectors.Vector;
                 z : out Standard_Complex_Vectors.Vector;
                 A : out Standard_Complex_Matrices.Matrix );
+  procedure Standard_Jacobian_Evaluation
+              ( v : in Standard_Natural_VecVecs.VecVec;
+                c : in Standard_Complex_VecVecs.VecVec;
+                k : in Standard_Natural_VecVecs.VecVec;
+                x : in Standard_Complex_Vectors.Vector;
+                z : out Standard_Complex_Vectors.Vector;
+                y : out Standard_Complex_VecVecs.VecVec;
+                A : out Standard_Complex_VecVecs.VecVec );
 
   -- DESCRIPTION :
   --   Given the flattened representation (v,c,k) of a system and x,
@@ -51,6 +67,14 @@ package Standard_Jacobian_Evaluations is
                 x : in Standard_Complex_Vectors.Vector;
                 z : out Standard_Complex_Vectors.Vector;
                 A : out Standard_Complex_Matrices.Matrix );
+  procedure Standard_Jacobian_Evaluation
+              ( v : in Standard_Integer_VecVecs.VecVec;
+                c : in Standard_Complex_VecVecs.VecVec;
+                k : in Standard_Natural_VecVecs.VecVec;
+                x : in Standard_Complex_Vectors.Vector;
+                z : out Standard_Complex_Vectors.Vector;
+                y : out Standard_Complex_VecVecs.VecVec;
+                A : out Standard_Complex_VecVecs.VecVec );
 
   -- DESCRIPTION :
   --   Given the flattened representation (v,c,k) of a system and x,

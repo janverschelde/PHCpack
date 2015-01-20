@@ -39,6 +39,11 @@ package body Multitasking is
     end case;
   end to_string;
 
+  function to_string ( n : integer32 ) return string is
+  begin
+    return to_string(natural32(n));
+  end to_string;
+
   procedure show ( n : in integer32; b : in boolean_array; s : in string ) is
   begin
     for i in 1..n loop

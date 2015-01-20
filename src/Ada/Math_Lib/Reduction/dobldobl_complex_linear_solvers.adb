@@ -86,6 +86,8 @@ package body DoblDobl_Complex_Linear_Solvers is
     kp1,l,nm1 : integer32;
     smax : double_double;
     temp : Complex_Number;
+    dd_min_one : constant double_double := create(-1.0);
+    cp_min_one : constant Complex_Number := create(dd_min_one);
 
   begin
     info := 0;
@@ -110,8 +112,7 @@ package body DoblDobl_Complex_Linear_Solvers is
             a(k,k) := temp;
           end if;
          -- temp := -Create(1.0)/a(k,k);                -- compute multipliers
-          temp := -Create(integer(1));
-          temp := temp/a(k,k);
+          temp := cp_min_one/a(k,k);
           for i in kp1..n loop
             a(i,k) := temp*a(i,k);
           end loop;
@@ -142,6 +143,7 @@ package body DoblDobl_Complex_Linear_Solvers is
     kb,kp1,l : integer32;
     s,sm,sum,ynorm : double_double;
     ek,t,wk,wkm : Complex_Number;
+    one : constant double_double := create(1.0);
 
   begin
     ek := Create(integer(1));                       -- solve ctrans(u)*w = e
@@ -189,7 +191,7 @@ package body DoblDobl_Complex_Linear_Solvers is
     for i in 1..n loop
       sum := sum + cabs(z(i));
     end loop;
-    s := 1.0 / sum;
+    s := one / sum;
     z := Create(s) * z;
     for k in 1..n loop                           -- solve ctrans(l)*y = w
       kb := n+1-k;
@@ -201,7 +203,7 @@ package body DoblDobl_Complex_Linear_Solvers is
         z(kb) := z(kb) + t;
       end if;
       if cabs(z(kb)) > 1.0 then
-        s := 1.0 / cabs(z(kb));
+        s := one / cabs(z(kb));
         z := Create(s) * z;
       end if;
       l := ipvt(kb);
@@ -213,7 +215,7 @@ package body DoblDobl_Complex_Linear_Solvers is
     for i in 1..n loop
       sum := sum + cabs(z(i));
     end loop;
-    s := 1.0 / sum;
+    s := one / sum;
     z := Create(s) * z;
     ynorm := create(1.0);
     for k in 1..n loop                                    -- solve l*v = y
@@ -227,7 +229,7 @@ package body DoblDobl_Complex_Linear_Solvers is
         end loop;
       end if;
       if cabs(z(k)) > 1.0 then
-        s := 1.0 / cabs(z(k));
+        s := one / cabs(z(k));
         z := Create(s) * z;
         ynorm := s * ynorm;
       end if;
@@ -236,7 +238,7 @@ package body DoblDobl_Complex_Linear_Solvers is
     for i in 1..n loop
       sum := sum + cabs(z(i));
     end loop;
-    s := 1.0 / sum;
+    s := one / sum;
     z := Create(s) * z;
     ynorm := s * ynorm;
     for k in 1..n loop                                    -- solve u*z = v
@@ -259,7 +261,7 @@ package body DoblDobl_Complex_Linear_Solvers is
     for i in 1..n loop
       sum := sum + cabs(z(i));
     end loop;
-    s := 1.0 / sum;
+    s := one / sum;
    -- z := Create(s) * z; -- deemed useless by GNAT GPL 2009 compiler
     ynorm := s * ynorm;
     if is_zero(anorm)

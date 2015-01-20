@@ -1,4 +1,5 @@
-with Standard_Natural_Vectors;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
 with DoblDobl_Complex_Vectors;
@@ -15,41 +16,42 @@ package multitasking_linear_solvers is
 -- LU FACTORIZATION :
 
   procedure silent_lufac
-              ( t : in positive;
+              ( t : in integer32;
                 a : in out Standard_Complex_Matrices.Matrix;
-                n : in positive;
-                ipvt : out Standard_Natural_Vectors.Vector;
-                info : out natural );
+                n : in integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32 );
   procedure reporting_lufac
-              ( t : in positive;
+              ( t : in integer32; 
+                lu : in Standard_Complex_Matrices.Matrix;
                 a : in out Standard_Complex_Matrices.Matrix;
-                n : in positive;
-                ipvt : out Standard_Natural_Vectors.Vector;
-                info : out natural );
+                n : in integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32 );
   procedure silent_lufac
-              ( t : in positive;
+              ( t : in integer32;
                 a : in out DoblDobl_Complex_Matrices.Matrix;
-                n : in positive;
-                ipvt : out Standard_Natural_Vectors.Vector;
-                info : out natural );
+                n : in integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32 );
   procedure reporting_lufac
-              ( t : in positive;
+              ( t : in integer32;
                 a : in out DoblDobl_Complex_Matrices.Matrix;
-                n : in positive;
-                ipvt : out Standard_Natural_Vectors.Vector;
-                info : out natural );
+                n : in integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32 );
   procedure silent_lufac
-              ( t : in positive;
+              ( t : in integer32;
                 a : in out QuadDobl_Complex_Matrices.Matrix;
-                n : in positive;
-                ipvt : out Standard_Natural_Vectors.Vector;
-                info : out natural );
+                n : in integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32 );
   procedure reporting_lufac
-              ( t : in positive;
+              ( t : in integer32;
                 a : in out QuadDobl_Complex_Matrices.Matrix;
-                n : in positive;
-                ipvt : out Standard_Natural_Vectors.Vector;
-                info : out natural );
+                n : in integer32;
+                ipvt : out Standard_Integer_Vectors.Vector;
+                info : out integer32 );
 
   -- DESCRIPTION :
   --   Computes an LU factorization with t tasks.  The reporting version
@@ -59,6 +61,8 @@ package multitasking_linear_solvers is
 
   -- ON ENTRY :
   --   t        number of tasks;
+  --   lu       for debugging purposes in the reporting versions,
+  --            lu is the result of the LU decomposition;
   --   a        a complex n-by-n matrix for factorization;
   --   n        dimension of the matrix a.
 
@@ -72,40 +76,40 @@ package multitasking_linear_solvers is
 -- FORWARD and BACK SUBSTITUTION :
 
   procedure silent_lusolve
-              ( t : in positive;
+              ( t : in integer32;
                 a : in Standard_Complex_Matrices.Matrix;
-                n : in positive;
-                ipvt : in Standard_Natural_Vectors.Vector;
+                n : in integer32;
+                ipvt : in Standard_Integer_Vectors.Vector;
                 b : in out Standard_Complex_Vectors.Vector );
   procedure reporting_lusolve
-              ( t : in positive;
+              ( t : in integer32;
                 a : in Standard_Complex_Matrices.Matrix;
-                n : in positive;
-                ipvt : in Standard_Natural_Vectors.Vector;
+                n : in integer32;
+                ipvt : in Standard_Integer_Vectors.Vector;
                 b : in out Standard_Complex_Vectors.Vector );
   procedure silent_lusolve
-              ( t : in positive;
+              ( t : in integer32;
                 a : in DoblDobl_Complex_Matrices.Matrix;
-                n : in positive;
-                ipvt : in Standard_Natural_Vectors.Vector;
+                n : in integer32;
+                ipvt : in Standard_Integer_Vectors.Vector;
                 b : in out DoblDobl_Complex_Vectors.Vector );
   procedure reporting_lusolve
-              ( t : in positive;
+              ( t : in integer32;
                 a : in DoblDobl_Complex_Matrices.Matrix;
-                n : in positive;
-                ipvt : in Standard_Natural_Vectors.Vector;
+                n : in integer32;
+                ipvt : in Standard_Integer_Vectors.Vector;
                 b : in out DoblDobl_Complex_Vectors.Vector );
   procedure silent_lusolve
-              ( t : in positive;
+              ( t : in integer32;
                 a : in QuadDobl_Complex_Matrices.Matrix;
-                n : in positive;
-                ipvt : in Standard_Natural_Vectors.Vector;
+                n : in integer32;
+                ipvt : in Standard_Integer_Vectors.Vector;
                 b : in out QuadDobl_Complex_Vectors.Vector );
   procedure reporting_lusolve
-              ( t : in positive;
+              ( t : in integer32;
                 a : in QuadDobl_Complex_Matrices.Matrix;
-                n : in positive;
-                ipvt : in Standard_Natural_Vectors.Vector;
+                n : in integer32;
+                ipvt : in Standard_Integer_Vectors.Vector;
                 b : in out QuadDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :

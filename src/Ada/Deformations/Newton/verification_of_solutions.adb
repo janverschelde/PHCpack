@@ -161,7 +161,7 @@ package body Verification_of_Solutions is
       put_line(file,z(i).all);
      -- exception
      --   when others => 
-     --     put("Exception at solution "); put(integer32(i),1); new_line; raise;
+     --     put("Exception at solution "); put(natural32(i),1); new_line; raise;
      -- end;
     end loop;
   end Verify_Solutions_of_Laurent_Polynomials;
@@ -257,10 +257,10 @@ package body Verification_of_Solutions is
       (file,p,strsols,wanted,maxitr,maxprc,err,rco,res);
     Multprec_Complex_Solutions.Clear(sols);
     sols := to_Solutions(strsols,err,rco,res);
-  --exception
-  --  when others => 
-  --    put_line("Exception in Verify_Solutions_of_Laurent_Polynomials");
-  --    raise;
+ -- exception
+ --   when others => 
+ --     put_line("Exception in Verify_Solutions_of_Laurent_Polynomials");
+ --     raise;
   end Verify_Solutions_of_Laurent_Polynomials;
 
 end Verification_of_Solutions;

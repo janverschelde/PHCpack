@@ -53,12 +53,42 @@ package Standard_Polynomial_Flatteners is
   --            and contain the exponent vectors of p;
   --   s_last   points to the last element in the list s.
 
+  procedure Concatenate_Supports
+              ( s,s_last : in out List;
+                p : in Standard_Complex_Polynomials.Poly );
+  procedure Concatenate_Supports
+              ( s,s_last : in out List;
+                p : in Standard_Complex_Laurentials.Poly );
+
+  -- DESCRIPTION :
+  --   Concatenates the supports in s with the exponent vectors in p.
+
+  -- ON ENTRY :
+  --   s        current list of supports, all vectors are distinct;
+  --   s_last   points to the last element in the list s;
+  --   p        a polynomial in several variables.
+
+  -- ON RETURN :
+  --   s        updated list of supports, contains the exponent vectors of p,
+  --            may contain duplicates;
+  --   s_last   points to the last element in the list s.
+
   function Distinct_Supports ( p : Poly_Sys ) return List;
   function Distinct_Supports ( p : Laur_Sys ) return List;
 
   -- DESCRIPTION :
-  --   Returns a list of integer vectors with the support of p,
+  --   Returns a list of integer vectors with the supports of p,
   --   in which every exponent vector is listed only once.
+
+  function Concatenate_Supports ( p : Poly_Sys ) return List;
+  function Concatenate_Supports ( p : Laur_Sys ) return List;
+
+  -- DESCRIPTION :
+  --   Returns a list of integer vectors with the supports of p,
+  --   where the supports are just concatenated, so duplicates may occur.
+
+  -- REQUIRED :
+  --   Every exponent vector occurs only once in each support. 
 
 -- CONSTRUCTORS for the DENSE case :
 

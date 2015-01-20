@@ -15,3 +15,5 @@ ts_timer                  : timing of summation of natural numbers
 ------------------------------------------------------------------------------
 
 The get_clock.c tends to return a 32-bit number which causes overflow.
+Attempts to resolve this overflow (see the new* files) did not work,
+despite the availability of 64-bit integers, see ts_maxnum.adb.

@@ -54,6 +54,41 @@ package body Standard_Jacobian_Evaluations is
   end Standard_Jacobian_Evaluation;
 
   procedure Standard_Jacobian_Evaluation
+              ( f,b : in Standard_Natural_VecVecs.VecVec;
+                c : in Standard_Complex_VecVecs.VecVec;
+                k : in Standard_Natural_VecVecs.VecVec;
+                x : in Standard_Complex_Vectors.Vector;
+                z : out Standard_Complex_Vectors.Vector;
+                y : out Standard_Complex_VecVecs.VecVec;
+                A : out Standard_Complex_VecVecs.VecVec ) is
+
+    ind : integer32;
+    use Standard_Complex_Numbers;
+    cff : Complex_Number;
+    yind,Arow : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    Standard_Gradient_Evaluations.Gradient_Monomials(f,b,x,y);
+    for i in z'range loop
+      z(i) := Create(0.0);
+      Arow := A(i);
+      for j in Arow'range loop
+        Arow(j) := Create(0.0);
+      end loop;
+      for j in c(i)'range loop
+        ind := integer32(k(i)(j));
+        cff := c(i)(j);
+        yind := y(ind);
+        Arow := A(i);
+        z(i) := z(i) + cff*yind(0);
+        for k in Arow'range loop
+          Arow(k) := Arow(k) + cff*yind(k);
+        end loop;
+      end loop;
+    end loop;
+  end Standard_Jacobian_Evaluation;
+
+  procedure Standard_Jacobian_Evaluation
               ( v : in Standard_Natural_VecVecs.VecVec;
                 c : in Standard_Complex_VecVecs.VecVec;
                 k : in Standard_Natural_VecVecs.VecVec;
@@ -69,6 +104,22 @@ package body Standard_Jacobian_Evaluations is
   end Standard_Jacobian_Evaluation;
 
   procedure Standard_Jacobian_Evaluation
+              ( v : in Standard_Natural_VecVecs.VecVec;
+                c : in Standard_Complex_VecVecs.VecVec;
+                k : in Standard_Natural_VecVecs.VecVec;
+                x : in Standard_Complex_Vectors.Vector;
+                z : out Standard_Complex_Vectors.Vector;
+                y : out Standard_Complex_VecVecs.VecVec;
+                A : out Standard_Complex_VecVecs.VecVec ) is
+
+    f,b : Standard_Natural_VecVecs.VecVec(v'range);
+
+  begin
+    Standard_Gradient_Evaluations.Split_Common_Factors(v,f,b);
+    Standard_Jacobian_Evaluation(f,b,c,k,x,z,y,A);
+  end Standard_Jacobian_Evaluation;
+
+  procedure Standard_Jacobian_Evaluation
               ( v : in Standard_Integer_VecVecs.VecVec;
                 c : in Standard_Complex_VecVecs.VecVec;
                 k : in Standard_Natural_VecVecs.VecVec;
@@ -80,6 +131,22 @@ package body Standard_Jacobian_Evaluations is
 
   begin
     Standard_Jacobian_Evaluation(e,c,k,x,z,A);
+    Standard_Natural_VecVecs.Clear(e);
+  end Standard_Jacobian_Evaluation;
+
+  procedure Standard_Jacobian_Evaluation
+              ( v : in Standard_Integer_VecVecs.VecVec;
+                c : in Standard_Complex_VecVecs.VecVec;
+                k : in Standard_Natural_VecVecs.VecVec;
+                x : in Standard_Complex_Vectors.Vector;
+                z : out Standard_Complex_Vectors.Vector;
+                y : out Standard_Complex_VecVecs.VecVec;
+                A : out Standard_Complex_VecVecs.VecVec ) is
+
+    e : Standard_Natural_VecVecs.VecVec(v'range) := Integer_to_Natural(v);
+
+  begin
+    Standard_Jacobian_Evaluation(e,c,k,x,z,y,A);
     Standard_Natural_VecVecs.Clear(e);
   end Standard_Jacobian_Evaluation;
 

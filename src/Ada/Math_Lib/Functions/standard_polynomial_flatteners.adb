@@ -77,6 +77,49 @@ package body Standard_Polynomial_Flatteners is
     Scan_Support(p);
   end Update_Supports;
 
+  procedure Concatenate_Supports
+              ( s,s_last : in out List;
+                p : in Standard_Complex_Polynomials.Poly ) is
+
+    use Standard_Complex_Polynomials;
+
+    procedure Scan ( t : in Term; continue : out boolean ) is
+
+      v : Standard_Integer_Vectors.Vector(t.dg'range);
+
+    begin
+      for i in v'range loop
+        v(i) := integer32(t.dg(i));
+      end loop;
+      Append(s,s_last,v);
+      continue := true;
+    end Scan;
+    procedure Scan_Support is new Visiting_Iterator(Scan);
+
+  begin
+    Scan_Support(p);
+  end Concatenate_Supports;
+
+  procedure Concatenate_Supports
+              ( s,s_last : in out List;
+                p : in Standard_Complex_Laurentials.Poly ) is
+
+    use Standard_Complex_Laurentials;
+
+    procedure Scan ( t : in Term; continue : out boolean ) is
+
+      v : constant Standard_Integer_Vectors.Vector := t.dg.all;
+
+    begin
+      Append(s,s_last,v);
+      continue := true;
+    end Scan;
+    procedure Scan_Support is new Visiting_Iterator(Scan);
+
+  begin
+    Scan_Support(p);
+  end Concatenate_Supports;
+
   function Distinct_Supports ( p : Poly_Sys ) return List is
 
     res,res_last : List;
@@ -98,6 +141,28 @@ package body Standard_Polynomial_Flatteners is
     end loop;
     return res;
   end Distinct_Supports;
+
+  function Concatenate_Supports ( p : Poly_Sys ) return List is
+
+    res,res_last : List;
+
+  begin
+    for i in p'range loop
+      Concatenate_Supports(res,res_last,p(i));
+    end loop;
+    return res;
+  end Concatenate_Supports;
+
+  function Concatenate_Supports ( p : Laur_Sys ) return List is
+
+    res,res_last : List;
+
+  begin
+    for i in p'range loop
+      Concatenate_Supports(res,res_last,p(i));
+    end loop;
+    return res;
+  end Concatenate_Supports;
 
 -- CONSTRUCTORS for the DENSE case :
 

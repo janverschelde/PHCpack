@@ -54,6 +54,25 @@ package body Standard_Gradient_Evaluations is
     return res;
   end Reverse_Speel;
 
+  procedure Reverse_Speel
+             ( b : in Standard_Natural_VecVecs.VecVec;
+               x : in Standard_Complex_Vectors.Vector;
+               s : in out Standard_Complex_VecVecs.VecVec ) is
+
+    res : Standard_Complex_VecVecs.VecVec(b'range);
+    z : Standard_Complex_Vectors.Vector(0..x'last);
+    sind : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for i in b'range loop
+      z := Standard_Speelpenning_Products.Reverse_Speel(b(i).all,x);
+      sind := s(i);
+      for j in z'range loop
+        sind(j) := z(j);
+      end loop;
+    end loop;
+  end Reverse_Speel;
+
   function Gradient_Monomials
              ( f,b : Standard_Natural_VecVecs.VecVec;
                x : Standard_Complex_Vectors.Vector )
@@ -84,6 +103,38 @@ package body Standard_Gradient_Evaluations is
     return s;
   end Gradient_Monomials;
 
+  procedure Gradient_Monomials
+             ( f,b : in Standard_Natural_VecVecs.VecVec;
+               x : in Standard_Complex_Vectors.Vector;
+               s : in out Standard_Complex_VecVecs.VecVec ) is
+
+    y : Standard_Complex_Vectors.Vector(f'range);
+    z : Complex_Number;
+    zero : constant Complex_Number := Create(0.0);
+    m : natural32;
+    find : Standard_Natural_Vectors.Link_to_Vector;
+    sind : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    y := Standard_Monomial_Evaluations.Eval_with_Power_Table(f,x);
+    Reverse_Speel(b,x,s);
+    for i in s'range loop
+      sind := s(i);
+      sind(0) := y(i)*sind(0);
+      find := f(i);
+      for j in 1..x'last loop
+        z := sind(j);
+        if z /= zero then
+          m := find(j) + 1;
+          if m > 1 
+           then sind(j) := double_float(m)*y(i)*z;
+           else sind(j) := y(i)*z;
+          end if;
+        end if;
+      end loop;
+    end loop;
+  end Gradient_Monomials;
+
   function Gradient_Sum_of_Monomials
              ( f,b : Standard_Natural_VecVecs.VecVec;
                x : Standard_Complex_Vectors.Vector )
@@ -92,15 +143,37 @@ package body Standard_Gradient_Evaluations is
     n : constant integer32 := x'last;
     res : Standard_Complex_Vectors.Vector(0..n) := (0..n => Create(0.0));
     y : Standard_Complex_VecVecs.VecVec(b'range);
+    yind : Standard_Complex_Vectors.Link_to_Vector;
 
   begin
     y := Gradient_Monomials(f,b,x);
     for i in y'range loop
+      yind := y(i);
       for j in res'range loop
-        res(j) := res(j) + y(i)(j);
+        res(j) := res(j) + yind(j);
       end loop;
     end loop;
     return res;
+  end Gradient_Sum_of_Monomials;
+
+  procedure Gradient_Sum_of_Monomials
+             ( f,b : in Standard_Natural_VecVecs.VecVec;
+               x : in Standard_Complex_Vectors.Vector;
+               y : in out Standard_Complex_VecVecs.VecVec;
+               r : out Standard_Complex_Vectors.Vector ) is
+
+    n : constant integer32 := x'last;
+    yind : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    Gradient_Monomials(f,b,x,y);
+    r := (0..n => Create(0.0));
+    for i in y'range loop
+      yind := y(i);
+      for j in r'range loop
+        r(j) := r(j) + yind(j);
+      end loop;
+    end loop;
   end Gradient_Sum_of_Monomials;
 
   function Gradient_of_Polynomial
@@ -111,15 +184,37 @@ package body Standard_Gradient_Evaluations is
     n : constant integer32 := x'last;
     res : Standard_Complex_Vectors.Vector(0..n) := (0..n => Create(0.0));
     y : Standard_Complex_VecVecs.VecVec(b'range);
+    yind : Standard_Complex_Vectors.Link_to_Vector;
 
   begin
     y := Gradient_Monomials(f,b,x);
     for i in y'range loop
+      yind := y(i);
       for j in res'range loop
-        res(j) := res(j) + c(i)*y(i)(j);
+        res(j) := res(j) + c(i)*yind(j);
       end loop;
     end loop;
     return res;
+  end Gradient_of_Polynomial;
+
+  procedure Gradient_of_Polynomial
+             ( f,b : in Standard_Natural_VecVecs.VecVec;
+               c,x : in Standard_Complex_Vectors.Vector;
+               y : in out Standard_Complex_VecVecs.VecVec;
+               r : out Standard_Complex_Vectors.Vector ) is
+
+    n : constant integer32 := x'last;
+    yind : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    Gradient_Monomials(f,b,x,y);
+    r := (0..n => Create(0.0));
+    for i in y'range loop
+      yind := y(i);
+      for j in r'range loop
+        r(j) := r(j) + c(i)*yind(j);
+      end loop;
+    end loop;
   end Gradient_of_Polynomial;
 
 end Standard_Gradient_Evaluations;

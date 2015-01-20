@@ -1,7 +1,13 @@
+
+with text_io; use text_io;
+with Standard_Natural_Numbers_io;           use Standard_Natural_Numbers_io;
+
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 
 package body Standard_Complex_Linear_Solvers is
+
+ -- lufac_count : natural32 := 0;
 
 -- AUXLILIARIES :
 
@@ -86,8 +92,8 @@ package body Standard_Complex_Linear_Solvers is
                     ipvt : out Standard_Integer_Vectors.Vector;
                     info : out integer32 ) is
 
-    kp1,l,nm1 : integer32;
-    smax : double_float;
+    kp1,L,nm1 : integer32;
+    smax,ikabs : double_float;
     temp : Complex_Number;
 
   begin
@@ -95,21 +101,22 @@ package body Standard_Complex_Linear_Solvers is
     nm1 := n - 1;
     if nm1 >= 1 then
       for k in 1..nm1 loop
-        kp1 := k + 1;                              -- find the pivot index l
-        l := k; smax := cabs(a(k,k));
+        kp1 := k + 1;                              -- find the pivot index L
+        L := k; smax := cabs(a(k,k));
         for i in kp1..n loop
-          if cabs(a(i,k)) > smax then
-            l := i;
-            smax := cabs(a(i,k));
+          ikabs := cabs(a(i,k));
+          if ikabs > smax then
+            L := i;
+            smax := ikabs;
           end if;
         end loop;
-        ipvt(k) := l;
+        ipvt(k) := L;
         if smax = 0.0 then          -- this column is already triangularized
           info := k;
         else
-          if l /= k then                         -- interchange if necessary
-            temp := a(l,k);
-            a(l,k) := a(k,k);
+          if L /= k then                         -- interchange if necessary
+            temp := a(L,k);
+            a(L,k) := a(k,k);
             a(k,k) := temp;
           end if;
           temp := -Create(1.0)/a(k,k);                -- compute multipliers
@@ -117,9 +124,9 @@ package body Standard_Complex_Linear_Solvers is
             a(i,k) := temp*a(i,k);
           end loop;
           for j in kp1..n loop       -- row elimination with column indexing
-            temp := a(l,j);
-            if l /= k then
-              a(l,j) := a(k,j);
+            temp := a(L,j);
+            if L /= k then
+              a(L,j) := a(k,j);
               a(k,j) := temp;
             end if;
             for i in kp1..n loop
@@ -133,6 +140,8 @@ package body Standard_Complex_Linear_Solvers is
     if AbsVal(a(n,n)) = 0.0
      then info := n;
     end if;
+   -- lufac_count := lufac_count + 1;
+   -- put("lufac count : "); put(lufac_count,1); new_line;
   end lufac;
 
   procedure estco ( a : in Matrix; n : in integer32;
@@ -512,4 +521,6 @@ package body Standard_Complex_Linear_Solvers is
     end loop;
   end Permute_Lower;
 
+--begin
+--  lufac_count := 0;
 end Standard_Complex_Linear_Solvers;

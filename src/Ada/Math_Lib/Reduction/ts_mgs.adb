@@ -292,23 +292,23 @@ procedure ts_mgs is
     new_line;
     print_times(standard_output,timer,"QR decomposition on vectors");
     Show_Performance(m,n,f,timer);
-    for j in 1..m loop
-      for i in 1..n loop
-        A(i,j) := v(j)(i);
-      end loop; 
-    end loop;
-    tstart(timer);
-    for k in 1..f loop
-      for i in 1..n loop
-        for j in 1..m loop
-          B(i,j) := A(i,j);
-        end loop;
-      end loop;
-      QR(n,m,B,qq,rr);
-    end loop;
-    tstop(timer);
-    new_line;
-    print_times(standard_output,timer,"QR decomposition on matrices");
+  --  for j in 1..m loop
+  --    for i in 1..n loop
+  --      A(i,j) := v(j)(i);
+  --    end loop; 
+  --  end loop;
+  --  tstart(timer);
+  --  for k in 1..f loop
+  --    for i in 1..n loop
+  --      for j in 1..m loop
+  --        B(i,j) := A(i,j);
+  --      end loop;
+  --    end loop;
+  --    QR(n,m,B,qq,rr);
+  --  end loop;
+  --  tstop(timer);
+  --  new_line;
+  --  print_times(standard_output,timer,"QR decomposition on matrices");
   end Standard_Floating_Performance_Test;
 
   procedure Standard_Complex_Performance_Test ( n,m : in integer32 ) is

@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;         use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;        use Standard_Floating_Numbers;
 with Standard_Floating_Vectors;        use Standard_Floating_Vectors;
 with Standard_Floating_Matrices;       use Standard_Floating_Matrices;
@@ -19,13 +20,13 @@ package Standard_Floating_Singular_Values is
 -- NOTE :
 --   The current implementation is just an interface to the complex SVD.  
 
-  function Min0 ( a,b : integer ) return integer;
+  function Min0 ( a,b : integer32 ) return integer32;
 
   -- DESCRIPTION : returns the minimum of a and b.
 
-  procedure SVD ( x : in out Matrix; n,p : in integer;
+  procedure SVD ( x : in out Matrix; n,p : in integer32;
                   s,e : out Vector; u : out Matrix; v : out Matrix;
-                  job : in integer; info : out integer );
+                  job : in integer32; info : out integer32 );
 
   -- DESCRIPTION :
   --   Reduces a complex n-by-p matrix x by unitary transformations u
@@ -71,8 +72,8 @@ package Standard_Floating_Singular_Values is
   --            conjugate-transpose of u), thus the singular values of x 
   --            and b are the same.
 
-  function Rank ( s : Vector ) return natural;
-  function Rank ( s : Vector; tol : double_float ) return natural;
+  function Rank ( s : Vector ) return integer32;
+  function Rank ( s : Vector; tol : double_float ) return integer32;
 
   -- DESCRIPTION :
   --   Given the singular values of a matrix, returns the number
