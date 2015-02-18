@@ -1,3 +1,5 @@
+Wed 18 Feb 2015 : regressed version of standard_complex_laur_strings.adb.
+
 Sun 4 Jan 2015 : updates in standard_complex_{polynomials,laurentials}_io.adb
   to suppress the raising of an exception in case of a null polynomial factor.
   Made same changes to multprec_complex_{polynomials,laurentials}_io.adb.

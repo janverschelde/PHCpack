@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
@@ -147,9 +148,9 @@ package body Standard_Complex_Laur_Strings is
           end if;
           exit;
         when '*' =>
-         -- if res = Null_Poly then     -- zero factor polynomials
-         --   raise ILLEGAL_CHARACTER;  -- should not raise exception
-         -- else -- the case " ) * " :
+          if res = Null_Poly then
+            raise ILLEGAL_CHARACTER;
+          else -- the case " ) * " :
             oper := s(k); k := k + 1;  -- skip '*'
             Parse_Term(s,bc,k,n,term);
             Skip_Spaces_and_CR(s,k);
@@ -165,7 +166,7 @@ package body Standard_Complex_Laur_Strings is
               end case;
             end if;
             Clear(term);
-         -- end if;
+          end if;
         when '^' =>
           if res = Null_Poly
            then raise ILLEGAL_CHARACTER;
@@ -267,7 +268,6 @@ package body Standard_Complex_Laur_Strings is
     d : Degrees := new Standard_Integer_Vectors.Vector'(1..integer32(n) => 0);
     pb,res : Poly := Null_Poly;
     tmp : Term;
-    stop_kkloop : boolean;
 
     procedure Collect_Factor_Polynomial is
     begin
@@ -280,45 +280,30 @@ package body Standard_Complex_Laur_Strings is
     end Collect_Factor_Polynomial;
 
   begin
-    stop_kkloop := true;  -- introduced to handle cases like (0 + 2*i)
-    for kk in 1..2 loop
-      Parse(s,p,c); -- look for 'i' :
-      Skip_Spaces_and_CR(s,p);
-      if ( c = Create(0.0) ) then
-        if ((s(p) = 'i') or (s(p) = 'I')) then -- the case "+ i" :
-          c := Create(0.0,1.0); 
-          p := p + 1;        -- skip 'i'
-        elsif s(p) = '+' or s(p) = '-' then
-          stop_kkloop := false;
-        elsif s(p) = '*' then  -- the case 0*i
-          p := p + 1;          -- skip the '*'
-          Skip_Spaces_and_CR(s,p);
-          if (s(p) = 'i') or (s(p) = 'I') then -- the case ".. c * i.." :
-            p := p + 1;    -- skip 'i' or 'I"
-          else -- the case 0*factor
-            Parse_Factor(s,bc,p,n,d,pb);
-            Clear(pb); return; -- ignore the factor
-          end if;
-        end if;
-      elsif ( c = Create(-1.0) ) and then ((s(p) = 'i') or (s(p) = 'I')) then
+    Parse(s,p,c); -- look for 'i' :
+    Skip_Spaces_and_CR(s,p);
+    if ( c = Create(0.0) ) and then ((s(p) = 'i') or (s(p) = 'I')) then
+      -- the case "+ i" :
+      c := Create(0.0,1.0); 
+      p := p + 1;        -- skip 'i'
+    elsif ( c = Create(-1.0) ) and then ((s(p) = 'i') or (s(p) = 'I')) then
       -- the case "- i" :
-        c := Create(0.0,-1.0);
-        p := p + 1;      -- skip 'i'
-      elsif s(p) = '*' then -- the case ".. c *.." :
-        p := p + 1;  -- skip '*'
-        Skip_Spaces_and_CR(s,p);
-        if (s(p) = 'i') or (s(p) = 'I') then -- the case ".. c * i.." :
-          c := Create(0.0,REAL_PART(c));
-          p := p + 1;    -- skip 'i'
-        else                                 -- the case ".. c * x.." :
-          Parse_Factor(s,bc,p,n,d,pb);
-          if pb /= Null_Poly
-           then Clear(res); Copy(pb,res); Clear(pb);
-          end if;
+      c := Create(0.0,-1.0);
+      p := p + 1;      -- skip 'i'
+    elsif s(p) = '*' then -- the case ".. c *.." :
+      Skip_Spaces_and_CR(s,p);
+      p := p + 1;  -- skip '*'
+      Skip_Spaces_and_CR(s,p);
+      if (s(p) = 'i') or (s(p) = 'I') then -- the case ".. c * i.." :
+        c := Create(0.0,REAL_PART(c));
+        p := p + 1;    -- skip 'i'
+      else                                 -- the case ".. c * x.." :
+        Parse_Factor(s,bc,p,n,d,pb);
+        if pb /= Null_Poly
+         then Clear(res); Copy(pb,res); Clear(pb);
         end if;
       end if;
-      exit when stop_kkloop;
-    end loop; -- the case ".. c ?"  will be treated in the loop
+    end if; -- the case ".. c ?"  will be treated in the loop
     loop
       case s(p) is
         when ' ' | ASCII.CR | ASCII.LF => p := p + 1;
@@ -327,11 +312,10 @@ package body Standard_Complex_Laur_Strings is
           Parse_Factor(s,bc,p,n,d,pb);
           Collect_Factor_Polynomial;
         when '+' | '-' => 
-          -- if c = Create(0.0)
-          --  then raise ILLEGAL_CHARACTER;
-          --  else exit;
-          -- end if;
-          exit; -- zero coefficients should not cause exception
+          if c = Create(0.0)
+           then raise ILLEGAL_CHARACTER;
+           else exit;
+          end if;
         when delimiter => 
           if bc /= 0
            then raise BAD_BRACKET;
@@ -349,7 +333,7 @@ package body Standard_Complex_Laur_Strings is
           exit;
         when others  =>
           if c = Create(0.0) then
-           -- c := Create(1.0); -- do not add zero coefficient term!
+            c := Create(1.0);
             Parse_Factor(s,bc,p,n,d,pb);
           elsif c = Create(-1.0) then
             Parse_Factor(s,bc,p,n,d,pb);
@@ -361,14 +345,12 @@ package body Standard_Complex_Laur_Strings is
           Collect_Factor_Polynomial;
       end case;
     end loop;
-    if c /= create(0.0) then
-      tmp.cf := c;
-      tmp.dg := d;
-      termp := create(tmp);
-      Clear(tmp);
-      if Number_Of_Unknowns(res) > 0
-       then Mul(termp,res); Clear(res);
-      end if;
+    tmp.cf := c;
+    tmp.dg := d;
+    termp := create(tmp);
+    Clear(tmp);
+    if Number_Of_Unknowns(res) > 0
+     then Mul(termp,res); Clear(res);
     end if;
   exception
     when others =>
