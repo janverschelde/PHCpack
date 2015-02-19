@@ -232,7 +232,7 @@ package body Process_io is
        put(file,"correction (a&r):");
        put(file,normax,3,3,3); put(file,normrx,3,3,3); put(file," ");
        put(file,"residual (a&r):");
-       put(file,normaf,3,3,3); put(file,normaf,3,3,3); new_line(file);
+       put(file,normaf,3,3,3); put(file,normrf,3,3,3); new_line(file);
     end if;
   end cWrite;
 
@@ -244,7 +244,7 @@ package body Process_io is
       put(file,"correction (a&r):");
       put(file,normax,3,3,3); put(file,normrx,3,3,3); put(file," ");
       put(file,"residual (a&r):");
-      put(file,normaf,3,3,3); put(file,normaf,3,3,3); new_line(file);
+      put(file,normaf,3,3,3); put(file,normrf,3,3,3); new_line(file);
     end if;
   end cWrite;
 

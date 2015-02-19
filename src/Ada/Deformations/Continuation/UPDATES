@@ -1,3 +1,5 @@
+Thu 19 Feb 2015 : fixed bug in printing relative residuals in process_io.adb.
+
 Tue 26 Aug 2014 : extended {dobl,quad}dobl_continuation_data_io with
   procedures to write path tracking statistics.
 
