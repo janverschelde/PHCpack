@@ -1,3 +1,5 @@
+Fri 20 Feb 2015 : fixed the bug in standard_complex_laur_strings.adb.
+
 Wed 18 Feb 2015 : regressed version of standard_complex_laur_strings.adb.
 
 Sun 4 Jan 2015 : updates in standard_complex_{polynomials,laurentials}_io.adb
