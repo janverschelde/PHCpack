@@ -3858,6 +3858,20 @@ static PyObject *py2c_initialize_multprec_homotopy
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_initialize_varbprec_homotopy
+ ( PyObject *self, PyObject *args )
+{
+   int fail,fixed,nctgt,ncstr;
+   char *tgt;
+   char *str;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iisis",&fixed,&nctgt,&tgt,&ncstr,&str))
+      return NULL;
+   fail = initialize_varbprec_homotopy(fixed,nctgt,tgt,ncstr,str);
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_initialize_standard_solution
  ( PyObject *self, PyObject *args )
 {
@@ -3902,6 +3916,19 @@ static PyObject *py2c_initialize_multprec_solution
    initialize();
    if(!PyArg_ParseTuple(args,"i",&indsol)) return NULL;
    fail = initialize_multprec_solution(indsol);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_initialize_varbprec_solution
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nv,nc;
+   char *sol;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iis",&nv,&nc,&sol)) return NULL;
+   fail = initialize_varbprec_solution(nv,nc,sol);
 
    return Py_BuildValue("i",fail);
 }
@@ -4800,6 +4827,8 @@ static PyMethodDef phcpy2c_methods[] =
     METH_VARARGS, "initializes homotopy for tracking with quad doubles"},
    {"py2c_initialize_multprec_homotopy", py2c_initialize_multprec_homotopy,
     METH_VARARGS, "initializes homotopy for tracking in multiprecision"},
+   {"py2c_initialize_varbprec_homotopy", py2c_initialize_varbprec_homotopy,
+    METH_VARARGS, "initializes homotopy for tracking in variable precision"},
    {"py2c_initialize_standard_solution", py2c_initialize_standard_solution, 
     METH_VARARGS, "initializes standard double start solution for tracking"},
    {"py2c_initialize_dobldobl_solution", py2c_initialize_dobldobl_solution,
@@ -4808,6 +4837,8 @@ static PyMethodDef phcpy2c_methods[] =
     METH_VARARGS, "initializes quad double start solution for tracking"},
    {"py2c_initialize_multprec_solution", py2c_initialize_multprec_solution,
     METH_VARARGS, "initializes multiprecision start solution for tracking"},
+   {"py2c_initialize_varbprec_solution", py2c_initialize_varbprec_solution,
+    METH_VARARGS, "initializes variable precision start solution for tracking"},
    {"py2c_next_standard_solution", py2c_next_standard_solution, 
     METH_VARARGS, "one predictor-corrector step with standard doubles"},
    {"py2c_next_dobldobl_solution", py2c_next_dobldobl_solution,

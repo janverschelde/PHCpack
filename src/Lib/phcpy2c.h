@@ -571,6 +571,8 @@ static PyObject *py2c_initialize_quaddobl_homotopy
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_initialize_multprec_homotopy
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_initialize_varprec_homotopy
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_initialize_standard_solution
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_initialize_dobldobl_solution
@@ -578,6 +580,8 @@ static PyObject *py2c_initialize_dobldobl_solution
 static PyObject *py2c_initialize_quaddobl_solution
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_initialize_multprec_solution
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_initialize_varbprec_solution
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_next_standard_solution
  ( PyObject *self, PyObject *args );

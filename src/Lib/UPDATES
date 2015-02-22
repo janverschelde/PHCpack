@@ -1,3 +1,6 @@
+Sat 21 Feb 2015 : added initialization functions for the variable precision
+  homotopy and solution to prepare for the Python interface.
+
 Mon 19 Jan 2015 : changed specification of function to return the next
   variable precision solution in next_track, updated lib_nxtsol.c.
 
