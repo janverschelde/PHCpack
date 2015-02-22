@@ -591,11 +591,15 @@ static PyObject *py2c_next_quaddobl_solution
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_next_multprec_solution
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_next_varbprec_solution
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_clear_standard_tracker
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_clear_dobldobl_tracker
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_clear_quaddobl_tracker
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_clear_multprec_tracker
  ( PyObject *self, PyObject *args );
-static PyObject *py2c_clear_quaddobl_tracker
+static PyObject *py2c_clear_varbprec_tracker
  ( PyObject *self, PyObject *args );

@@ -1,3 +1,6 @@
+Sun 22 Feb 2015 : added next_varbprec_solution() and clear operation for
+  the variable precision path tracker with a generator.
+
 Sat 21 Feb 2015 : added initialization functions for the variable precision
   homotopy and solution to prepare for the Python interface.
 

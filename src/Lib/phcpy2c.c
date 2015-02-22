@@ -3981,6 +3981,19 @@ static PyObject *py2c_next_multprec_solution
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_next_varbprec_solution
+ ( PyObject *self, PyObject *args )
+{
+   int fail,want,mxpr,mxit,verb,nc;
+   char *sol;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiii",&want,&mxpr,&mxit,&verb)) return NULL;
+   sol = next_varbprec_solution(want,mxpr,mxit,verb,&nc,&fail);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_clear_standard_tracker
  ( PyObject *self, PyObject *args )
 {
@@ -4022,6 +4035,17 @@ static PyObject *py2c_clear_multprec_tracker
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
    fail = clear_multprec_tracker();
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_clear_varbprec_tracker
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = clear_varbprec_tracker();
    return Py_BuildValue("i",fail);
 }
 
@@ -4847,6 +4871,8 @@ static PyMethodDef phcpy2c_methods[] =
     METH_VARARGS, "one predictor-corrector step with quad doubles"},
    {"py2c_next_multprec_solution", py2c_next_multprec_solution,
     METH_VARARGS, "one predictor-corrector step in multiprecision"},
+   {"py2c_next_varbprec_solution", py2c_next_varbprec_solution,
+    METH_VARARGS, "one predictor-corrector step in variable precision"},
    {"py2c_clear_standard_tracker", py2c_clear_standard_tracker,
     METH_VARARGS, "deallocates and resets tracker in standard doubles"},
    {"py2c_clear_dobldobl_tracker", py2c_clear_dobldobl_tracker,
@@ -4855,6 +4881,8 @@ static PyMethodDef phcpy2c_methods[] =
     METH_VARARGS, "deallocates and resets tracker in quad doubles"},
    {"py2c_clear_multprec_tracker", py2c_clear_multprec_tracker,
     METH_VARARGS, "deallocates and resets tracker in multiprecision"},
+   {"py2c_clear_varbprec_tracker", py2c_clear_varbprec_tracker,
+    METH_VARARGS, "deallocates and resets tracker in variable precision"},
    {NULL, NULL, 0, NULL} 
 };
 
