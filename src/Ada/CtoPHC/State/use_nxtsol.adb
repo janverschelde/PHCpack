@@ -282,6 +282,16 @@ function use_nxtsol ( job : integer32;
     lq : constant Link_to_Array_of_Strings := new Array_of_Strings'(starts);
 
   begin
+   -- put_line("The target system : "); put_line(str_target);
+   -- put_line("The start system : "); put_line(str_starts);
+   -- put_line("The list of target polynomials : ");
+   -- for i in lp'range loop
+   --   put_line(lp(i).all);
+   -- end loop;
+   -- put_line("The list of start polynomials : ");
+   -- for i in lq'range loop
+   --   put_line(lq(i).all);
+   -- end loop;
     Varbprec_Path_Tracker.Init(lp,lq,fixed);
     return 0;
   exception

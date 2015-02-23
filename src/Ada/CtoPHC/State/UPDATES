@@ -1,3 +1,7 @@
+Mon 23 Feb 2015 : in use_nxtsol.adb provided commented out test code
+  for the passing of the string representation for target and start systems
+  when initializing the variable precision path tracker.
+
 Mon 19 Jan 2015 : updates in use_nxtsol.adb, uncommenting messages...
 
 Thu 8 Jan 2015 : altered the spefication of the initialization of the
