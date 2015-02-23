@@ -322,6 +322,28 @@ def initialize_multprec_tracker(target, start, fixedGamma=True, decimals=100):
     else:
         py2c_initialize_multprec_homotopy(0, decimals)
 
+def initialize_varbprec_tracker(target, start, fixedGamma=True):
+    """
+    Initializes a path tracker in variable precision with a target
+    and start system, given as lists of string representations of
+    multivariate polynomials.
+    If fixedGamma, then gamma will be a fixed default value,
+    otherwise, a random complex constant for gamma is generated.
+    """
+    from phcpy2c import py2c_initialize_varbprec_homotopy
+    tgtsys = ''
+    for pol in target:
+        tgtsys = tgtsys + pol
+    nct = len(tgtsys)
+    strsys = ''
+    for pol in start:
+        strsys = strsys + pol
+    ncs = len(strsys)
+    if fixedGamma:
+        py2c_initialize_varbprec_homotopy(1, nct, tgtsys, ncs, strsys)
+    else:
+        py2c_initialize_varbprec_homotopy(0, nct, tgtsys, ncs, strsys)
+
 def initialize_standard_solution(nvar, sol):
     """
     Initializes a path tracker with a generator

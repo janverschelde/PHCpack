@@ -1,3 +1,6 @@
+Mon 23 Feb 2015 : initializer for variable precision tracker with generator
+  added to trackers.py.
+
 Tue 23 Dec 2014 : added more benchmark test cases to the degree computation
   list of backelin.py.
 
