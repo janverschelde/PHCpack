@@ -1,3 +1,6 @@
+Tue 24 Feb 2015 : add initialization with solution for the variable precision
+  path tracker with a generator.
+
 Mon 23 Feb 2015 : initializer for variable precision tracker with generator
   added to trackers.py.
 

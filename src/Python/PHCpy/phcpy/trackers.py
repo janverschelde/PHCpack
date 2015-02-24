@@ -256,9 +256,9 @@ def initialize_standard_tracker(target, start, fixedGamma=True):
     store_standard_system(start)
     py2c_copy_container_to_start_system()
     if fixedGamma:
-        py2c_initialize_standard_homotopy(1)
+        return py2c_initialize_standard_homotopy(1)
     else:
-        py2c_initialize_standard_homotopy(0)
+        return py2c_initialize_standard_homotopy(0)
 
 def initialize_dobldobl_tracker(target, start, fixedGamma=True):
     """
@@ -276,9 +276,9 @@ def initialize_dobldobl_tracker(target, start, fixedGamma=True):
     store_dobldobl_system(start)
     py2c_copy_dobldobl_container_to_start_system()
     if fixedGamma:
-        py2c_initialize_dobldobl_homotopy(1)
+        return py2c_initialize_dobldobl_homotopy(1)
     else:
-        py2c_initialize_dobldobl_homotopy(0)
+        return py2c_initialize_dobldobl_homotopy(0)
 
 def initialize_quaddobl_tracker(target, start, fixedGamma=True):
     """
@@ -296,9 +296,9 @@ def initialize_quaddobl_tracker(target, start, fixedGamma=True):
     store_quaddobl_system(start)
     py2c_copy_quaddobl_container_to_start_system()
     if fixedGamma:
-        py2c_initialize_quaddobl_homotopy(1)
+        return py2c_initialize_quaddobl_homotopy(1)
     else:
-        py2c_initialize_quaddobl_homotopy(0)
+        return py2c_initialize_quaddobl_homotopy(0)
 
 def initialize_multprec_tracker(target, start, fixedGamma=True, decimals=100):
     """
@@ -318,9 +318,9 @@ def initialize_multprec_tracker(target, start, fixedGamma=True, decimals=100):
     store_multprec_system(start, decimals)
     py2c_copy_multprec_container_to_start_system()
     if fixedGamma:
-        py2c_initialize_multprec_homotopy(1, decimals)
+        return py2c_initialize_multprec_homotopy(1, decimals)
     else:
-        py2c_initialize_multprec_homotopy(0, decimals)
+        return py2c_initialize_multprec_homotopy(0, decimals)
 
 def initialize_varbprec_tracker(target, start, fixedGamma=True):
     """
@@ -340,57 +340,62 @@ def initialize_varbprec_tracker(target, start, fixedGamma=True):
         strsys = strsys + pol
     ncs = len(strsys)
     if fixedGamma:
-        py2c_initialize_varbprec_homotopy(1, nct, tgtsys, ncs, strsys)
+        return py2c_initialize_varbprec_homotopy(1, nct, tgtsys, ncs, strsys)
     else:
-        py2c_initialize_varbprec_homotopy(0, nct, tgtsys, ncs, strsys)
+        return py2c_initialize_varbprec_homotopy(0, nct, tgtsys, ncs, strsys)
 
 def initialize_standard_solution(nvar, sol):
     """
-    Initializes a path tracker with a generator
-    for a start solution sol given in standard double precision.
-    The value of nvar must equal the number of variables in the
-    solution sol and sol is a PHCpack solution string.
+    A standard double precision path tracker with a generator is
+    initialized with a start solution sol in a number of
+    variables equal to the value of nvar.
     """
     from phcpy2c import py2c_initialize_standard_solution
     from interface import store_standard_solutions
     store_standard_solutions(nvar, [sol])
-    py2c_initialize_standard_solution(1)
+    return py2c_initialize_standard_solution(1)
 
 def initialize_dobldobl_solution(nvar, sol):
     """
-    Initializes a path tracker with a generator
-    for a start solution sol given in double double precision.
-    The value of nvar must equal the number of variables in the
-    solution sol and sol is a PHCpack solution string.
+    A double double precision path tracker with a generator is
+    initialized with a start solution sol in a number of
+    variables equal to the value of nvar.
     """
     from phcpy2c import py2c_initialize_dobldobl_solution
     from interface import store_dobldobl_solutions
     store_dobldobl_solutions(nvar, [sol])
-    py2c_initialize_dobldobl_solution(1)
+    return py2c_initialize_dobldobl_solution(1)
 
 def initialize_quaddobl_solution(nvar, sol):
     """
-    Initializes a path tracker with a generator
-    for a start solution sol given in quad double precision.
-    The value of nvar must equal the number of variables in the
-    solution sol and sol is a PHCpack solution string.
+    A quad double precision path tracker with a generator is
+    initialized with a start solution sol in a number of
+    variables equal to the value of nvar.
     """
     from phcpy2c import py2c_initialize_quaddobl_solution
     from interface import store_quaddobl_solutions
     store_quaddobl_solutions(nvar, [sol])
-    py2c_initialize_quaddobl_solution(1)
+    return py2c_initialize_quaddobl_solution(1)
 
 def initialize_multprec_solution(nvar, sol):
     """
-    Initializes a path tracker with a generator
-    for a start solution sol given in arbitrary multiprecision.
-    The value of nvar must equal the number of variables in the
-    solution sol and sol is a PHCpack solution string.
+    A multiprecision path tracker with a generator is
+    initialized with a start solution sol in a number of
+    variables equal to the value of nvar.
     """
     from phcpy2c import py2c_initialize_multprec_solution
     from interface import store_multprec_solutions
     store_multprec_solutions(nvar, [sol])
-    py2c_initialize_multprec_solution(1)
+    return py2c_initialize_multprec_solution(1)
+
+def initialize_varbprec_solution(nvar, sol):
+    """
+    A variable precision path tracker with a generator is
+    initialized with a start solution sol in a number of
+    variables equal to the value of nvar.
+    """
+    from phcpy2c import py2c_initialize_varbprec_solution
+    return py2c_initialize_varbprec_solution(nvar, len(sol), sol)
 
 def next_standard_solution():
     """
