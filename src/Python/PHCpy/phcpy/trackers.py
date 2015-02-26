@@ -457,6 +457,21 @@ def next_multprec_solution():
     sol = py2c_solcon_write_multprec_solution_string(1, lns)
     return sol
 
+def next_varbprec_solution(wanted, maxprec, maxit, verbose):
+    """
+    Returns the next solution on a path tracked with variable
+    precision arithmetic, provided the functions
+    initialize_varbprec_tracker() and initialize_varbprec_solution()
+    have been executed properly.  The four input parameters are
+    wanted : the number of correct decimal places in the solution,
+    maxprec : upper bound on the number of decimal places in the precision,
+    maxit : maximum number of iterations, and
+    verbose : flag to indicate if intermediate output is wanted.
+    """
+    from phcpy2c import py2c_next_varbprec_solution
+    sol = py2c_next_varbprec_solution(wanted, maxprec, maxit, verbose)
+    return sol
+
 def test_track(silent=True, precision='d', decimals=80):
     """
     Tests the path tracking on a small random system.
