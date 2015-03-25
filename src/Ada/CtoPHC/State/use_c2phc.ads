@@ -1180,7 +1180,8 @@ function use_c2phc ( job : integer32;
 --                 the function expects three values in a:
 --                 a[0] = whether a fixed gamma is used or not (1 or 0),
 --                 a[1] = the total number of characters in the string b,
---                 a[2] = the start of the second (start) system in b;
+--                 a[2] = the number of characters occupied by the first
+--                 system (the target system) stored in b,
 --                 b holds the string representations of two systems,
 --                 respectively the target and start system in the homotopy;
 --         = 517 : takes solution given as string representation in b,
@@ -1274,6 +1275,13 @@ function use_c2phc ( job : integer32;
 --                 in b, with in a the number of characters in the string.
 --   job   = 584 : clear the list of facets for the convex hull in 3-space.
 --   job   = 585 : clear the list of facets for the convex hull in 4-space.
+--   job   = 586 : returns in a the number of characters in the string
+--                 representation of a support set of the first
+--                 polynomial in the Laurent systems container;
+--   job   = 587 : given in a the number computed in job 586,
+--                 and with sufficient space allocated in b,
+--                 returns the string representation of the support in b;
+--   job   = 588 : deallocates the string computed in job 586.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

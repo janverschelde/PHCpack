@@ -1,3 +1,7 @@
+Wed 25 Mar 2015 : extended multprec_giftwrap_container with extra methods
+  to store a string.  New functions in use_giftwrap and use_c2phc to compute
+  the support of a Laurent polynomial.
+
 Mon 23 Feb 2015 : in use_nxtsol.adb provided commented out test code
   for the passing of the string representation for target and start systems
   when initializing the variable precision path tracker.

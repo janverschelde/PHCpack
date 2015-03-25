@@ -25,6 +25,11 @@ package Multprec_Giftwrap_Container is
   -- REQUIRED :
   --   A'range(1) = 1..3 or A'range(1) = 1..4.
 
+  procedure Store_String ( s : in string );
+
+  -- DESCRIPTION :
+  --   Stores the string s in the container.
+
 -- SELECTORS :
 
   function Point_Configuration_in_3d return Link_to_Matrix;
@@ -73,6 +78,11 @@ package Multprec_Giftwrap_Container is
   --   If k is out of the range 0..Number_of_4d_Facets-1,
   --   then the null pointer will be returned.
 
+  function Retrieve_String return string;
+
+  -- DESCRIPTION :
+  --   Returns the string stored in the container;
+
 -- DESTRUCTORS : 
 
   procedure Clear_3d;
@@ -84,6 +94,11 @@ package Multprec_Giftwrap_Container is
 
   -- DESCRIPTION :
   --   Clears the data structures stored for the 3-dimensional convex hull.
+
+  procedure Clear_String;
+
+  -- DESCRIPTION :
+  --   Clears the string stored in the container.
 
   procedure Clear;
 

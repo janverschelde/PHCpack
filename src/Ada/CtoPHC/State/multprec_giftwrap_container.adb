@@ -1,3 +1,4 @@
+with String_Splitters;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Multprec_Integer_Vectors;
 with Multprec_Lattice_Polytopes;
@@ -10,6 +11,7 @@ package body Multprec_Giftwrap_Container is
   f4d : Multprec_Lattice_4d_Facets.Facet_4d_List;
   pts3 : Multprec_Integer_Matrices.Link_to_Matrix;
   pts4 : Multprec_Integer_Matrices.Link_to_Matrix;
+  supp : String_Splitters.Link_to_String := null;
 
 -- CONSTRUCTOR :
 
@@ -30,6 +32,11 @@ package body Multprec_Giftwrap_Container is
       pts4 := new Multprec_Integer_Matrices.Matrix'(A);
     end if;
   end Create;
+
+  procedure Store_String ( s : in string ) is
+  begin
+    supp := new string'(s);
+  end Store_String;
 
 -- SELECTORS :
 
@@ -95,6 +102,17 @@ package body Multprec_Giftwrap_Container is
     return res;
   end Facet_4d_Data;
 
+  function Retrieve_String return string is
+
+    use String_Splitters;
+
+  begin
+    if supp = null
+     then return "";
+     else return supp.all;
+    end if;
+  end Retrieve_String;
+
 -- DESTRUCTOR : 
 
   procedure Clear_3d is
@@ -109,10 +127,17 @@ package body Multprec_Giftwrap_Container is
     pts4 := null; -- memory for A managed outside container
   end Clear_4d;
 
+  procedure Clear_String is
+  begin
+    String_Splitters.Clear(supp);
+    supp := null;
+  end Clear_String;
+
   procedure Clear is
   begin
     Clear_3d;
     Clear_4d;
+    Clear_String;
   end Clear;
 
 end Multprec_Giftwrap_Container;

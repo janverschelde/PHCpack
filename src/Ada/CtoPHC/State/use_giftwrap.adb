@@ -1,6 +1,8 @@
 with Interfaces.C;
 with text_io;                            use text_io;
+with String_Splitters;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors;
 with Multprec_Integer_Matrices;
@@ -8,6 +10,10 @@ with Multprec_Integer_Matrices;
 with Multprec_Lattice_Polygons;
 with Multprec_Lattice_3d_Facets;
 with Multprec_Lattice_4d_Facets;
+with Standard_Complex_Laur_Systems;
+with Laurent_Systems_Container;
+with Lists_of_Integer_Vectors;
+with Supports_of_Polynomial_Systems;
 with Assignments_in_Ada_and_C;           use Assignments_in_Ada_and_C;
 with Multprec_Giftwrap_Container;
 with Point_Lists_and_Strings;
@@ -193,6 +199,50 @@ function use_giftwrap ( job : integer32;
     when others => return 6;
   end Job6;
 
+  function Job7 return integer32 is -- returns length of string of support
+
+    lp : constant Standard_Complex_Laur_Systems.Link_to_Laur_Sys
+       := Laurent_Systems_Container.retrieve;
+    sup : Lists_of_Integer_Vectors.List;
+
+  begin
+    sup := Supports_of_Polynomial_Systems.Create(lp(lp'first));
+   -- put("The number of elements in the support : ");
+   -- put(Lists_of_Integer_Vectors.Length_Of(sup),1); new_line;
+    declare
+      support : constant string := Point_Lists_and_Strings.Write(sup);
+    begin
+     -- put_line("The support as string : "); put_line(support);
+      Multprec_Giftwrap_Container.Store_String(support);
+      Assign(integer32(support'last),a);
+    end;
+    return 0;
+  exception
+    when others => return 7;
+  end Job7;
+
+  function Job8 return integer32 is -- returns string of support
+
+    support : constant string := Multprec_Giftwrap_Container.Retrieve_String;
+    sv : constant Standard_Integer_Vectors.Vector
+       := String_to_Integer_Vector(support);
+
+  begin
+   -- put_line("In job 8, the support string :"); put_line(support);
+    Assign(sv,b);
+    return 0;
+  exception
+    when others => return 8;
+  end Job8;
+
+  function Job9 return integer32 is -- deallocates support string
+  begin
+    Multprec_Giftwrap_Container.Clear_String;
+    return 0;
+  exception
+    when others => return 9;
+  end Job9;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -202,6 +252,9 @@ function use_giftwrap ( job : integer32;
       when 4 => return Job4; -- returns string representation of a facet
       when 5 => return Job5; -- clear list of facets in 3-space
       when 6 => return Job6; -- clear list of facets in 4-space
+      when 7 => return Job7; -- returns length of string of support
+      when 8 => return Job8; -- returns string of support
+      when 9 => return Job9; -- deallocates support string
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   exception

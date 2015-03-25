@@ -37,6 +37,13 @@ function use_giftwrap ( job : integer32;
 --                 in b, with in a the number of characters in the string.
 --   job   =   5 : clear the list of facets for the convex hull in 3-space.
 --   job   =   6 : clear the list of facets for the convex hull in 4-space.
+--   job   =   7 : returns in a the number of characters in the string
+--                 representation of a support set of the first
+--                 polynomial in the Laurent systems container;
+--   job   =   8 : given in a the number computed in job 7,
+--                 and with sufficient space allocated in b,
+--                 returns the string representation of the support in b;
+--   job   =   9 : deallocates the string computed in job 7.
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
