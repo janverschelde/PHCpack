@@ -85,3 +85,37 @@ int clear_4d_facets ( void )
 
    return fail;
 }
+
+int support_size ( void ) 
+{
+   int fail,nbr;
+   int *b;
+   double *c;
+
+   fail = _ada_use_c2phc(586,&nbr,b,c);
+
+   return nbr;
+}
+
+int support_string ( int size, char *supp )
+{
+   int fail,i;
+   int support[size];
+   double *c;
+
+   fail = _ada_use_c2phc(587,&size,support,c);
+   for(i=0; i<size; i++) supp[i] = (char) support[i];
+   supp[size] = '\0';
+
+   return fail;
+}
+
+int clear_support_string ( void )
+{
+   int fail,*a,*b;
+   double *c;
+
+   fail = _ada_use_c2phc(588,a,b,c);
+
+   return fail;
+}

@@ -1179,6 +1179,46 @@ static PyObject *py2c_giftwrap_clear_4d_facets
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_giftwrap_support_size
+ ( PyObject *self, PyObject *args )
+{
+   int nbr;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   nbr = support_size();  
+
+   return Py_BuildValue("i",nbr);
+}
+
+static PyObject *py2c_giftwrap_support_string
+ ( PyObject *self, PyObject *args )
+{
+   int nbr,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&nbr)) return NULL;   
+   {
+      char support[nbr+1];
+
+      fail = support_string(nbr,support);
+
+      return Py_BuildValue("s",support);
+   }
+}
+
+static PyObject *py2c_giftwrap_clear_support_string
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = clear_support_string();
+   
+   return Py_BuildValue("i",fail);
+}
+
 /* wrapping functions in syscon.h starts from here */
 
 static PyObject *py2c_syscon_read_system ( PyObject *self, PyObject *args )
@@ -4308,6 +4348,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_giftwrap_clear_4d_facets", py2c_giftwrap_clear_4d_facets,
     METH_VARARGS,
     "deallocates list of facets of convex hull stored in 4-space"},
+   {"py2c_giftwrap_support_size", py2c_giftwrap_support_size,
+    METH_VARARGS,
+    "returns size of string representation of support of Laurent polynomial"},
+   {"py2c_giftwrap_support_string", py2c_giftwrap_support_string,
+    METH_VARARGS,
+    "returns the string representation of support of Laurent polynomial"},
+   {"py2c_giftwrap_clear_support_string", py2c_giftwrap_clear_support_string,
+    METH_VARARGS,
+    "deallocates the string representation of support of Laurent polynomial"},
    {"py2c_syscon_read_system", py2c_syscon_read_system,
     METH_VARARGS, "reads and puts the system in container"},
    {"py2c_syscon_read_Laurent_system", py2c_syscon_read_Laurent_system,

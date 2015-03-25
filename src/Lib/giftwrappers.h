@@ -1,6 +1,38 @@
 /* file giftwrappers.h contains prototypes to the gift wrapping methods,
  * wrapped through the Ada code use_giftwrap of PHCpack */
 
+int support_size ( void );
+/*
+ * DESCRIPTION :
+ *   Returns the number of characters in the string representation of
+ *   the support of the first Laurent polynomial in the container.
+ *
+ * REQUIRED :
+ *   The Laurent systems container must be initialized. */
+
+int support_string ( int size, char *supp );
+/*
+ * DESCRIPTION :
+ *   Returns the string representation of a Laurent polynomial.
+ *
+ * REQUIRED :
+ *   The Laurent systems container must be initialized
+ *   and supp must be allocated for as many characters as size.
+ *
+ * ON ENTRY :
+ *   size     the number of characters in the string representation
+ *            of the support of a Laurent polynomial.
+ *
+ * ON RETURN :
+ *   support  the string representation of the support of a Laurent
+ *            polynomial. */
+
+int clear_support_string ( void );
+/*
+ * DESCRIPTION :
+ *   Deallocates the string representation of the support set
+ *   as stored internally. */
+
 int convex_hull_2d ( int nc_pts, char *pts, int *nc_hull, char *hull );
 /*
  * DESCRIPTION :
