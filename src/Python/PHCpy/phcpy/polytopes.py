@@ -16,6 +16,38 @@ def random_points(dim, nbr, low, upp):
         result.append(point)
     return result
 
+def support(nvr, pol):
+    """
+    The support of a multivariate polynomial is a set of exponents
+    of the monomials that appear with nonzero coefficient.
+    Given in nvr the number of variables and in pol a string 
+    representation of a polynomial in nvr variables,
+    returns the support of the polynomial as a list of tuples.
+    """
+    from phcpy2c import py2c_syscon_clear_Laurent_system
+    from phcpy2c import py2c_syscon_initialize_number_of_Laurentials
+    from phcpy2c import py2c_syscon_store_Laurential
+    py2c_syscon_clear_Laurent_system()
+    py2c_syscon_initialize_number_of_Laurentials(nvr)
+    nchar = len(pol)
+    fail = py2c_syscon_store_Laurential(nchar, nvr, 1, pol)
+    if(fail != 0):
+        return fail
+    else:
+        from phcpy2c import py2c_syscon_number_of_Laurent_terms
+        from phcpy2c import py2c_giftwrap_support_size
+        from phcpy2c import py2c_giftwrap_support_string
+        from phcpy2c import py2c_giftwrap_clear_support_string
+        ntm = py2c_syscon_number_of_Laurent_terms(1)
+        # print 'number of terms : %d' % ntm
+        size = py2c_giftwrap_support_size()
+        # print 'size of support :', size
+        supp = py2c_giftwrap_support_string(size)
+        # print 'support string :', supp
+        py2c_giftwrap_clear_support_string()
+        result = eval(supp)
+        return result
+
 def planar_convex_hull(points):
     """
     The convex hull of a point configuration in the plane
