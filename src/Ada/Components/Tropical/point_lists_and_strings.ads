@@ -1,6 +1,7 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer64_Matrices;
 with Multprec_Integer_Matrices;
+with Lists_of_Integer_Vectors;
 
 package Point_Lists_and_Strings is
 
@@ -28,6 +29,12 @@ package Point_Lists_and_Strings is
   --   The number of items in the string representation of the Python list
   --   equals the number of columns of the matrix A.
   --   Every column defines one tuple in the list on return.
+
+  function write ( A : Lists_of_Integer_Vectors.List ) return string;
+
+  -- DESCRIPTION :
+  --   Given in A the list of points, writes the string representation
+  --   as define when A is the matrix with the points in its columns.
 
   procedure Extract_Dimensions ( s : in string; rows,cols : out integer32 );
 

@@ -4,6 +4,7 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Characters_and_Numbers;
 with Multprec_Integer_Numbers;          use Multprec_Integer_Numbers;
 with Multprec_Integer_Numbers_io;
+with Standard_Integer_Vectors;
 
 package body Point_Lists_and_Strings is
 
@@ -192,6 +193,37 @@ package body Point_Lists_and_Strings is
 
   begin
     return res & "]";
+  end write;
+
+  function write ( A : Lists_of_Integer_Vectors.List ) return string is
+
+    use Lists_of_Integer_Vectors;
+    len : constant integer32 := integer32(Length_Of(A));
+    dim : integer32;
+
+  begin
+    
+    if len = 0 then
+      return "";
+    else
+      dim := Head_Of(A)'last;
+      declare
+        mat : Standard_Integer64_Matrices.Matrix(1..dim,1..len);
+        tmp : List := A;
+        lpt : Standard_Integer_Vectors.Link_to_Vector;
+        col : integer32 := 0;
+      begin
+        while not Is_Null(tmp) loop
+          lpt := Head_Of(tmp);
+          col := col + 1;
+          for row in lpt'range loop
+            mat(row,col) := integer64(lpt(row));
+          end loop;
+          tmp := Tail_Of(tmp);
+        end loop;
+        return write(mat);
+      end;
+    end if;
   end write;
 
   procedure Extract_Dimensions ( s : in string; rows,cols : out integer32 ) is

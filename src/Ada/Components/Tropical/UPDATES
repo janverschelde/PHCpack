@@ -1,3 +1,6 @@
+Wed 25 Mar 2015 : added writing of string representation of support
+  when given as a list of points.
+
 Wed 10 Sep 2014 : fixed another bug in multprec_lattice_3d_facets.adb
   and commented out printing statements in multprec_lattice_4d_facets.adb,
   standard_lattice_{3d,4d}_facets.adb.
