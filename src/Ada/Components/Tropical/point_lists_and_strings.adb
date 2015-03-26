@@ -261,4 +261,31 @@ package body Point_Lists_and_Strings is
     return res;
   end parse;
 
+  function parse ( n : integer32; s : string )
+                 return Standard_Integer_Vectors.Vector is
+
+    use Characters_and_Numbers;
+
+    res : Standard_Integer_Vectors.Vector(1..n);
+    ind : integer32 := 0;
+    buffer : string(s'range);
+    buffer_last : integer;
+
+  begin
+    for i in s'range loop
+      if s(i) = '(' then
+        ind := ind + 1;
+        Scan(s,i+1,buffer,buffer_last);
+        res(ind) := convert(buffer(buffer'first..buffer_last));
+      elsif s(i) = ',' then
+        ind := ind + 1;
+        if ind <= res'last then
+          Scan(s,i+1,buffer,buffer_last);
+          res(ind) := convert(buffer(buffer'first..buffer_last));
+        end if;
+      end if;
+    end loop;
+    return res;
+  end parse;
+
 end Point_Lists_and_Strings;

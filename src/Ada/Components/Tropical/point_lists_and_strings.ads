@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Integer_Vectors;
 with Standard_Integer64_Matrices;
 with Multprec_Integer_Matrices;
 with Lists_of_Integer_Vectors;
@@ -56,5 +57,12 @@ package Point_Lists_and_Strings is
 
   -- REQUIRED :
   --   rows and cols are computed via Extract_Dimensions(s,rows,cols).
+
+  function parse ( n : integer32; s : string )
+                 return Standard_Integer_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Extracts the numbers of the string representation s of the point
+  --   with n integer coordinates as stored as a Python tuple.
 
 end Point_Lists_and_Strings;
