@@ -177,6 +177,13 @@ static PyObject *py2c_giftwrap_clear_3d_facets
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_giftwrap_clear_4d_facets
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_giftwrap_support_size
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_giftwrap_support_string
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_giftwrap_clear_support_string
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_giftwrap_initial_form ( PyObject *self, PyObject *args );
 
 /* wrapping functions in syscon.h starts from here */
 

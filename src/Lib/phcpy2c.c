@@ -1219,6 +1219,21 @@ static PyObject *py2c_giftwrap_clear_support_string
    return Py_BuildValue("i",fail);
 }
 
+
+static PyObject *py2c_giftwrap_initial_form
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim,nbc;
+   char *normal;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iis",&dim,&nbc,&normal)) return NULL;
+   /* printf("the inner normal in wrapper is %s\n", normal); */
+   fail = initial_form(dim,nbc,normal);
+   
+   return Py_BuildValue("i",fail);
+}
+
 /* wrapping functions in syscon.h starts from here */
 
 static PyObject *py2c_syscon_read_system ( PyObject *self, PyObject *args )
@@ -4357,6 +4372,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_giftwrap_clear_support_string", py2c_giftwrap_clear_support_string,
     METH_VARARGS,
     "deallocates the string representation of support of Laurent polynomial"},
+   {"py2c_giftwrap_initial_form", py2c_giftwrap_initial_form,
+    METH_VARARGS, "returns the initial form of Laurent polynomials"},
    {"py2c_syscon_read_system", py2c_syscon_read_system,
     METH_VARARGS, "reads and puts the system in container"},
    {"py2c_syscon_read_Laurent_system", py2c_syscon_read_Laurent_system,

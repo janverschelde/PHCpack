@@ -119,3 +119,19 @@ int clear_support_string ( void )
 
    return fail;
 }
+
+int initial_form ( int dim, int nbc, char *normal )
+{
+   int fail,i;
+   int pars[2];
+   int nrm[nbc];
+   double *c;
+
+   pars[0] = dim;
+   pars[1] = nbc;
+   /* printf("the normal in C is %s\n", normal); */
+   for(i=0; i<nbc; i++) nrm[i] = (int) normal[i];
+   fail = _ada_use_c2phc(589,pars,nrm,c);
+
+   return fail;
+}
