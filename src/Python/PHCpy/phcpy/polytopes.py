@@ -48,6 +48,29 @@ def support(nvr, pol):
         result = eval(supp)
         return result
 
+def initial_form(pols, normal):
+    """
+    Returns the initial form of the polynomials in pols
+    with respect to the inner normal with coordinates in normal.
+    """
+    from phcpy2c import py2c_syscon_clear_Laurent_system
+    from phcpy2c import py2c_syscon_initialize_number_of_Laurentials
+    from phcpy2c import py2c_syscon_store_Laurential
+    from phcpy2c import py2c_syscon_load_standard_Laurential
+    from phcpy2c import py2c_giftwrap_initial_form
+    py2c_syscon_clear_Laurent_system()
+    dim = max(len(pols), len(normal))
+    py2c_syscon_initialize_number_of_Laurentials(dim)
+    for i in range(len(pols)):
+        nchar = len(pols[i])
+        fail = py2c_syscon_store_Laurential(nchar, dim, i+1, pols[i])
+    strnrm = str(tuple(normal))
+    fail = py2c_giftwrap_initial_form(len(normal), len(strnrm), strnrm)
+    result = []
+    for i in range(len(pols)):
+        result.append(py2c_syscon_load_standard_Laurential(i+1))
+    return result
+
 def planar_convex_hull(points):
     """
     The convex hull of a point configuration in the plane

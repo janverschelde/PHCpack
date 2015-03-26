@@ -1,3 +1,6 @@
+Thu 26 Mar 2015 : new function initial_form in polytopes.py to compute the
+  initial form of a Laurent polynomial system.
+
 Wed 25 Mar 2015 : added support function to polytopes.py to compute the
   support of a Laurent polynomial.
 
