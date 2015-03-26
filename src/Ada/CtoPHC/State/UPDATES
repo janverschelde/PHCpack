@@ -1,3 +1,6 @@
+Thu 26 Mar 2015 : added jobs to use_giftwrap and use_c2phc to compute an
+  initial form of a Laurent system.
+
 Wed 25 Mar 2015 : extended multprec_giftwrap_container with extra methods
   to store a string.  New functions in use_giftwrap and use_c2phc to compute
   the support of a Laurent polynomial.

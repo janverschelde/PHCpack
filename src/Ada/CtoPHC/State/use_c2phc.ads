@@ -1282,6 +1282,10 @@ function use_c2phc ( job : integer32;
 --                 and with sufficient space allocated in b,
 --                 returns the string representation of the support in b;
 --   job   = 588 : deallocates the string computed in job 586.
+--   job   = 589 : replaces the system in the Laurent systems container
+--                 with its initial form as defined by the inner normal
+--                 with coordinates in b and number of variables in a.
+--                 The normal is given as a string of a Python tuple.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
