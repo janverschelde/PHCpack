@@ -429,6 +429,18 @@ int add_one_to_double_loop_counters ( int *i, int *j, int n, int m );
  *   1 if i has reached n and the loop must stop,
  *   0 otherwise: the double loop continues. */
 
+int solcon_reset_input_file ( int k, int *d, int *n );
+/*
+ * DESCRIPTION :
+ *   Resets the input file to read witness points for set k.
+ *
+ * ON ENTRY :
+ *   k         index of the witness set, must be 1 or 2.
+ *
+ * ON RETURN :
+ *   d         degree of the witness set, equals #solutions;
+ *   n         ambient dimension, length of the solution vectors. */
+
 int get_next_start_product
       ( int *i, int *j, int monitor,
         int n1, int n2, int dim1, int dim2, int deg1, int deg2, int cd, 
@@ -465,18 +477,6 @@ int get_next_start_product
  *   get_next_start_product returns 1 or 0:
  *   1 if some failure occurred or the iteration must stop,
  *   0 if not yet at the end and no failure occurred. */
-
-int solcon_reset_input_file ( int k, int *d, int *n );
-/*
- * DESCRIPTION :
- *   Resets the input file to read witness points for set k.
- *
- * ON ENTRY :
- *   k         index of the witness set, must be 1 or 2.
- *
- * ON RETURN :
- *   d         degree of the witness set, equals #solutions;
- *   n         ambient dimension, length of the solution vectors. */
 
 int solcon_write_next_solution ( int *k, int n, int m, double *sol );
 /*

@@ -1,3 +1,6 @@
+Fri 8 May 2015 : swapped solcon_reset_input_file with the previous function
+  in solcon.h and solcon.c because of a g++ complaint.
+
 Thu 26 Mar 2015 : new function in giftwrappers and phcpy2c to compute the
   initial form of a Laurent polynomial system.
 

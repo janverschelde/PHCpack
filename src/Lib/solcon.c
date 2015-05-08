@@ -371,6 +371,18 @@ int add_one_to_double_loop_counters ( int *i, int *j, int n, int m )
    return ( (*i) >= n ? 1 : 0);
 }
 
+int solcon_reset_input_file ( int k, int *d, int *n )
+{
+   int fail,b[2];
+   double *c;
+
+   fail = _ada_use_c2phc(167,&k,b,c);
+   *d = b[0];
+   *n = b[1];
+
+   return fail;
+}
+
 int get_next_start_product
       ( int *i, int *j, int monitor,
         int n1, int n2, int dim1, int dim2, int deg1, int deg2, int cd, 
@@ -409,18 +421,6 @@ int get_next_start_product
       }
    }
    return (fail && done);
-}
-
-int solcon_reset_input_file ( int k, int *d, int *n )
-{
-   int fail,b[2];
-   double *c;
-
-   fail = _ada_use_c2phc(167,&k,b,c);
-   *d = b[0];
-   *n = b[1];
-
-   return fail;
 }
 
 int solcon_write_next_solution ( int *k, int n, int m, double *sol )
