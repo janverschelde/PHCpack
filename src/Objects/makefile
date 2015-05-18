@@ -1395,15 +1395,14 @@ ts_greet:
 
 # Test programs in the library Lib :
 
-test_lib: lib_read lib_syscon lib_solcon lib_newton lib_celcon lib_roco \
+test_lib: lib_syscon lib_syscon_cpp lib_solcon lib_solcon_cpp \
+          lib_read lib_read_cpp lib_newton lib_newton_cpp \
+          lib_roco lib_roco_cpp lib_celcon lib_celcon_cpp \
           lib_conpar lib_poco lib_track lib_nxtsol lib_factor lib_pieri \
           lib_lrhom phc_solve lib_usolve lib_giftwrap ts_list2str
 
 ts_list2str:
 	make -f $(MAKEFILE) ts_list2str
-
-lib_read:
-	make -f $(MAKEFILE) lib_read
 
 lib_syscon:
 	make -f $(MAKEFILE) lib_syscon
@@ -1414,14 +1413,32 @@ lib_syscon_cpp:
 lib_solcon:
 	make -f $(MAKEFILE) lib_solcon
 
+lib_solcon_cpp:
+	make -f $(MAKEFILE) lib_solcon_cpp
+
+lib_read:
+	make -f $(MAKEFILE) lib_read
+
+lib_read_cpp:
+	make -f $(MAKEFILE) lib_read_cpp
+
 lib_newton:
 	make -f $(MAKEFILE) lib_newton
+
+lib_newton_cpp:
+	make -f $(MAKEFILE) lib_newton_cpp
 
 lib_roco:
 	make -f $(MAKEFILE) lib_roco
 
+lib_roco_cpp:
+	make -f $(MAKEFILE) lib_roco_cpp
+
 lib_celcon:
 	make -f $(MAKEFILE) lib_celcon
+
+lib_celcon_cpp:
+	make -f $(MAKEFILE) lib_celcon_cpp
 
 lib_conpar:
 	make -f $(MAKEFILE) lib_conpar

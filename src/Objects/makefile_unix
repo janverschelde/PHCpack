@@ -1623,15 +1623,6 @@ ts_list2str:
 	gcc -c $(PHCLib)/ts_list2str.c
 	gcc lists_and_strings.o ts_list2str.o -o $(BIN)/ts_list2str
 
-lib_read:
-	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
-	gcc -c $(PHCLib)/phcpack.c
-	gcc -c $(PHCLib)/solcon.c
-	gcc -c $(PHCLib)/lib_read.c
-	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc phcpack.o solcon.o lib_read.o \
-                 -o $(BIN)/lib_read -lm
-
 lib_syscon:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/syscon.c
@@ -1654,6 +1645,32 @@ lib_solcon: standard_solutions_container.o
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc solcon.o lib_solcon.o -o $(BIN)/lib_solcon
 
+lib_solcon_cpp: standard_solutions_container.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	g++ -Dcompilewgpp=1  -c $(PHCLib)/solcon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_solcon.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc solcon.o lib_solcon.o -o $(BIN)/lib_solcon \
+                 --LINK=g++
+
+lib_read:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/solcon.c
+	gcc -c $(PHCLib)/lib_read.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o solcon.o lib_read.o \
+                 -o $(BIN)/lib_read -lm
+
+lib_read_cpp:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_read.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o solcon.o lib_read.o \
+                 -o $(BIN)/lib_read -lm --LINK=g++
+
 lib_newton:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
@@ -1663,6 +1680,16 @@ lib_newton:
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o lib_newton.o \
                  -o $(BIN)/lib_newton -lm
+
+lib_newton_cpp:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_newton.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o lib_newton.o \
+                 -o $(BIN)/lib_newton -lm --LINK=g++
 
 lib_roco: standard_solutions_container.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
@@ -1675,6 +1702,17 @@ lib_roco: standard_solutions_container.o
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o product.o \
                     lib_roco.o -o $(BIN)/lib_roco -lm
 
+lib_roco_cpp: standard_solutions_container.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/product.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_roco.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o product.o \
+                    lib_roco.o -o $(BIN)/lib_roco -lm --LINK=g++
+
 lib_celcon: standard_solutions_container.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
@@ -1685,6 +1723,17 @@ lib_celcon: standard_solutions_container.o
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o celcon.o \
                     lib_celcon.o -o $(BIN)/lib_celcon -lm
+
+lib_celcon_cpp: standard_solutions_container.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/celcon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_celcon.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o celcon.o \
+                    lib_celcon.o -o $(BIN)/lib_celcon -lm --LINK=g++
 
 lib_conpar:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
