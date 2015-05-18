@@ -1,4 +1,20 @@
-/* file witset.h contains prototypes of functions on witness sets */
+/* The file witset.h contains prototypes of functions on witness sets.
+ * By default, compilation with gcc is assumed.
+ * To compile with a C++ compiler such as g++, the flag compilewgpp must
+ * be defined as "g++ -Dcompilewgpp=1." */
+
+#ifndef __WITSET_H__
+#define __WITSET_H__
+
+#ifdef compilewgpp
+extern "C" void adainit( void );
+extern "C" int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+extern "C" void adafinal( void );
+#else
+extern void adainit( void );
+extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+extern void adafinal( void );
+#endif
 
 /* some basic OPERATIONS on witness sets */
 
@@ -371,3 +387,5 @@ int monodromy_permutation ( int d, int *done );
  *   d is the number of solutions or the degree of the set,
  *   if *done == 1 on return, then the linear trace test has certified
  *   the current monodromy breakup, otherwise we are not done yet. */
+
+#endif

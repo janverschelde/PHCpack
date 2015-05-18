@@ -1,15 +1,12 @@
 /* The file jump_track.c contains the definitions of the functions
  * in jump_track.h */
 
-#include<stdlib.h>
-#include<stdio.h>
-#include<math.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
+#include "jump_track.h"
 
 #define v 0 /* verbose flag */
-
-extern void adainit( void );
-extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
-extern void adafinal( void );
 
 int read_target_system_without_solutions ( void )
 {

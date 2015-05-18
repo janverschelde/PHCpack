@@ -1,4 +1,4 @@
-/* prompts the user for a system and solves it calling the blackbox
+/* Prompts the user for a system and solves it calling the blackbox
  * solver in PHCpack. */
 
 #include <stdio.h>
@@ -6,9 +6,6 @@
 #include "syscon.h"
 #include "solcon.h"
 #include "phcpack.h"
-
-extern void adainit( void );
-extern void adafinal( void );
 
 void read_poly ( int *nc, char p[] );
 /* 

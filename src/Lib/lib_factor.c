@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "phcpack.h"
 #include "solcon.h"
 #include "witset.h"

@@ -1,5 +1,21 @@
 /* The file next_track.h contains prototypes for the operations to
- * track a solution path with a generator, i.e.: a get_next() method. */
+ * track a solution path with a generator, i.e.: a get_next() method.
+ * By default, compilation with gcc is assumed.
+ * To compile with a C++ compiler such as g++, the flag compilewgpp must
+ * be defined as "g++ -Dcompilewgpp=1." */
+
+#ifndef __NEXT_TRACK_H__
+#define __NEXT_TRACK_H__
+
+#ifdef compilewgpp
+extern "C" void adainit( void );
+extern "C" int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+extern "C" void adafinal( void );
+#else
+extern void adainit( void );
+extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+extern void adafinal( void );
+#endif
 
 int initialize_standard_homotopy ( int fixed_gamma );
 /*
@@ -183,3 +199,5 @@ int clear_varbprec_tracker ( void );
  * DESCRIPTION :
  *   Deallocates and resets data for tracking paths with a generator
  *   in variable precision complex arithmetic. */
+
+#endif

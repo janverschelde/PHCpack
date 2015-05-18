@@ -2,10 +2,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-
-extern void adainit ( void );
-extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
-extern void adafinal ( void );
+#include "next_track.h"
 
 int initialize_standard_homotopy ( int fixed_gamma )
 {

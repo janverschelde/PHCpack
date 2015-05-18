@@ -4,10 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-
-extern void adainit ( void );
-extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
-extern void adafinal ( void );
+#include "unisolvers.h"
 
 int solve_with_standard_doubles ( int max, double eps, int *nit )
 {

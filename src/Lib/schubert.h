@@ -1,5 +1,21 @@
-/* file schubert.h contains prototypes to the numerical Schubert calculus
-   available in PHCpack */
+/* The file schubert.h contains prototypes to the numerical Schubert calculus
+ * available in PHCpack.
+ * By default, compilation with gcc is assumed.
+ * To compile with a C++ compiler such as g++, the flag compilewgpp must
+ * be defined as "g++ -Dcompilewgpp=1." */
+
+#ifndef __SCHUBERT_H__
+#define __SCHUBERT_H__
+
+#ifdef compilewgpp
+extern "C" void adainit( void );
+extern "C" int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+extern "C" void adafinal( void );
+#else
+extern void adainit( void );
+extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+extern void adafinal( void );
+#endif
 
 int Pieri_root_count ( int m, int p, int q, int *r );
 /*
@@ -102,3 +118,5 @@ int real_osculating_planes
  * Returns in planes (a string of nc characters), the string representation
  * of n real m-planes in d-space osculating a rational normal curve
  * at the n points in s, where n = m*p + q*(m+p) and d = m+p. */
+
+#endif

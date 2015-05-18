@@ -1,12 +1,9 @@
-/* the file giftwrappers.c contains the definitions of the functions 
- * with prototypes documented in giftwrappers.h */
+/* The file giftwrappers.c contains the definitions of the functions 
+ * with prototypes documented in giftwrappers.h. */
 
 #include <stdlib.h>
 #include <stdio.h>
-
-extern void adainit ( void );
-extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
-extern void adafinal ( void );
+#include "giftwrappers.h"
 
 int convex_hull_2d ( int nc_pts, char *pts, int *nc_hull, char *hull )
 {

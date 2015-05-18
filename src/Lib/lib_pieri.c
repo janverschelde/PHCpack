@@ -1,12 +1,21 @@
 /* Solves a hypersurface Pieri problem providing encapsulations
-   for the use_c2pieri functionality. */ 
+   for the use_c2pieri functionality.
+ * By default, compilation with gcc is assumed.
+ * To compile with a C++ compiler such as g++, the flag compilewgpp must
+ * be defined as "g++ -Dcompilewgpp=1." */
 
 #include <stdio.h>
 #include <stdlib.h>
 
-extern void adainit();
-extern int _ada_use_c2pieri ( int job, int *a, int *b, double *c );
-extern void adafinal();
+#ifdef compilewgpp
+extern "C" void adainit( void );
+extern "C" int _ada_use_c2pieri ( int task, int *a, int *b, double *c );
+extern "C" void adafinal( void );
+#else
+extern void adainit( void );
+extern int _ada_use_c2pieri ( int task, int *a, int *b, double *c );
+extern void adafinal( void );
+#endif
 
 int initialize_dimensions ( int m, int p, int q );
 /*

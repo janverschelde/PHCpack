@@ -36,7 +36,7 @@ int main ( int argc, char *argv[] )
    return 0;
 }
 
-char *predictor_banner ( int pred_type )
+const char *predictor_banner ( int pred_type )
 /* returns banner for corresponding predictor type */
 {
    switch (pred_type)

@@ -3,12 +3,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include "witset.h"
 
 #define v 0 /* verbose flag */
-
-extern void adainit( void );
-extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
-extern void adafinal( void );
 
 /* some basic OPERATIONS on witness sets */
 

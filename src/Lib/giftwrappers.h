@@ -1,5 +1,21 @@
-/* file giftwrappers.h contains prototypes to the gift wrapping methods,
- * wrapped through the Ada code use_giftwrap of PHCpack */
+/* The file giftwrappers.h contains prototypes to the gift wrapping methods,
+ * wrapped through the Ada code use_giftwrap of PHCpack.
+ * By default, compilation with gcc is assumed.
+ * To compile with a C++ compiler such as g++, the flag compilewgpp must
+ * be defined as "g++ -Dcompilewgpp=1." */
+
+#ifndef __GIFTWRAPPERS_H__
+#define __GIFTWRAPPERS_H__
+
+#ifdef compilewgpp
+extern "C" void adainit( void );
+extern "C" int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+extern "C" void adafinal( void );
+#else
+extern void adainit( void );
+extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+extern void adafinal( void );
+#endif
 
 int convex_hull_2d ( int nc_pts, char *pts, int *nc_hull, char *hull );
 /*
@@ -128,3 +144,5 @@ int initial_form ( int dim, int nbc, char *normal );
  *   defined by the inner normal with coordinates in the parameter normal,
  *   where the number of coordinates equals dim.
  *   The normal is given as a Python tuple, stored as a string. */
+
+#endif

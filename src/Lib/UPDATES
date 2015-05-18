@@ -1,6 +1,9 @@
 Mon 10 May 2015 : updates in syscon and lib_syscon so that compilation with
   g++ works via a special flag.  Made similar updates to solcon, phcpack,
   product, celcon, which caused changes to lib_read and lib_roco.
+  Updates in lib_conpar, witset, jump_track, lib_track, next_track,
+  lib_factor, mapcon, lib_pieri, schubert, phc_solve, unisolvers, and
+  giftwrappers so these files all compile with g++ -Dcompilewgpp=1.
 
 Fri 8 May 2015 : swapped solcon_reset_input_file with the previous function
   in solcon.h and solcon.c because of a g++ complaint.

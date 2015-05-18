@@ -1,5 +1,5 @@
-/* reads a target and start system and then solves the target system,
-   using the start system in an artificial-parameter homotopy */
+/* Reads a target and start system and then solves the target system,
+   using the start system in an artificial-parameter homotopy. */
 
 #include <stdio.h>
 #include <stdlib.h>

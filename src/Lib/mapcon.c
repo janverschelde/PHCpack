@@ -1,9 +1,7 @@
 /* This file "mapcon.c" contains the definitions of the operations
  * declared in the file "mapcon.h". */
 
-extern void adainit( void );
-extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
-extern void adafinal( void );
+#include "mapcon.h"
 
 int mapcon_solve_system ( int puretopdim )
 {
