@@ -1590,6 +1590,14 @@ lib_syscon:
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc syscon.o lib_syscon.o -o ../bin/lib_syscon
 
+lib_syscon_cpp:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_syscon.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc syscon.o lib_syscon.o -o $(BIN)/lib_syscon \
+                 --LINK=g++
+
 lib_solcon: standard_solutions_container.o
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/solcon.c

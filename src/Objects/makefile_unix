@@ -2,7 +2,7 @@
 # of the library of PHCpack, then comes the MPI set up, followed
 # by a listing of all the targets, grouped by library.
 
-# The makefile works on RHEL 6.3, with python2.6, openmpi, and GNATGPL 2013.
+# The makefile works on RHEL 6.6, with python2.6, openmpi, and GNATGPL 2014.
 
 PYTHON=/usr/include/python2.6
 # MPI_HOME=/usr/lib64/openmpi
@@ -1638,6 +1638,14 @@ lib_syscon:
 	gcc -c $(PHCLib)/lib_syscon.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc syscon.o lib_syscon.o -o $(BIN)/lib_syscon
+
+lib_syscon_cpp:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_syscon.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc syscon.o lib_syscon.o -o $(BIN)/lib_syscon \
+                 --LINK=g++
 
 lib_solcon: standard_solutions_container.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb

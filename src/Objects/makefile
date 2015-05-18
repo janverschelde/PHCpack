@@ -1408,6 +1408,9 @@ lib_read:
 lib_syscon:
 	make -f $(MAKEFILE) lib_syscon
 
+lib_syscon_cpp:
+	make -f $(MAKEFILE) lib_syscon_cpp
+
 lib_solcon:
 	make -f $(MAKEFILE) lib_solcon
 
