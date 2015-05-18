@@ -1,5 +1,21 @@
 /* This file "syscon.h" contains the prototypes of the operations
- * on the systems container in PHCpack. */
+ * on the systems container in PHCpack.
+ * By default, compilation with gcc is assumed.
+ * To compile with a C++ compiler such as g++, the flag compilewgpp must
+ * be defined as "g++ -Dcompilewgpp=1." */
+
+#ifndef __SYSCON_H__
+#define __SYSCON_H__
+
+#ifdef compilewgpp
+extern "C" void adainit( void );
+extern "C" int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+extern "C" void adafinal( void );
+#else
+extern void adainit( void );
+extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+extern void adafinal( void );
+#endif
 
 int syscon_read_system ( void );
 /* 
@@ -774,3 +790,5 @@ int syscon_quaddobl_drop_variable_by_name ( int nc, char *s );
  *   Replaces the system in the quad double precision container 
  *   with the same system that has that variable dropped
  *   corresponding to the name in the string s of nc characters long. */
+
+#endif

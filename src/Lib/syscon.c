@@ -1,11 +1,8 @@
 /* This file "syscon.c" contains the definitions of the operations
  * declared in the file "syscon.h". */
 
-extern void adainit( void );
-extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
-extern void adafinal( void );
-
-#include<stdio.h>
+/* #include<stdio.h> only used for extra print statements */
+#include "syscon.h"
 
 int syscon_read_system ( void )
 {
@@ -318,7 +315,7 @@ int syscon_store_polynomial ( int nc, int n, int k, char *p )
 
    fail = _ada_use_c2phc(76,a,b,c);
 
-   if(fail != 0) printf("Failed to store a polynomial.\n");
+   /* if(fail != 0) printf("Failed to store a polynomial.\n"); */
 
    return fail;
 }

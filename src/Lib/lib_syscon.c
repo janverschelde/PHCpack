@@ -19,11 +19,11 @@ LIST *push ( LIST *l, int n, double *c, int *e );
 void write_monomial_list ( LIST *l, int n );
 /* writes the list of monomials */
 
-void test_retrievals ( int n, LIST *p[n] );
+void test_retrievals ( int n, LIST *p[] );
 /* prints the system in the container,
  * and returns the lists of terms in p */
 
-void test_additions ( int n, LIST *p[n] );
+void test_additions ( int n, LIST *p[] );
 /* fills up the container with the terms in p */
 
 void test_symbol_table ( void );
@@ -76,7 +76,7 @@ int main(void)
    return 0;
 }
 
-void test_retrievals ( int n, LIST *p[n] )
+void test_retrievals ( int n, LIST *p[] )
 {
    int i,j,k,nt,fail;
    double c[2];
@@ -99,7 +99,7 @@ void test_retrievals ( int n, LIST *p[n] )
    }
 }
 
-void test_additions ( int n, LIST *p[n] )
+void test_additions ( int n, LIST *p[] )
 {
    int i,fail;
    double *c;
