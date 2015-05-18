@@ -1398,8 +1398,11 @@ ts_greet:
 test_lib: lib_syscon lib_syscon_cpp lib_solcon lib_solcon_cpp \
           lib_read lib_read_cpp lib_newton lib_newton_cpp \
           lib_roco lib_roco_cpp lib_celcon lib_celcon_cpp \
-          lib_conpar lib_poco lib_track lib_nxtsol lib_factor lib_pieri \
-          lib_lrhom phc_solve lib_usolve lib_giftwrap ts_list2str
+          lib_conpar lib_conpar_cpp lib_poco lib_poco_cpp \
+          lib_track lib_track_cpp lib_nxtsol lib_nxtsol_cpp \
+          lib_factor lib_factor_cpp lib_pieri lib_pieri_cpp \
+          lib_lrhom lib_lrhom_cpp phc_solve phc_solve_cpp \
+          lib_usolve lib_usolve_cpp lib_giftwrap lib_giftwrap_cpp ts_list2str
 
 ts_list2str:
 	make -f $(MAKEFILE) ts_list2str
@@ -1443,32 +1446,62 @@ lib_celcon_cpp:
 lib_conpar:
 	make -f $(MAKEFILE) lib_conpar
 
-lib_track:
-	make -f $(MAKEFILE) lib_track
-
-lib_nxtsol:
-	make -f $(MAKEFILE) lib_nxtsol
+lib_conpar_cpp:
+	make -f $(MAKEFILE) lib_conpar_cpp
 
 lib_poco:
 	make -f $(MAKEFILE) lib_poco
 
-lib_pieri:
-	make -f $(MAKEFILE) lib_pieri
+lib_poco_cpp:
+	make -f $(MAKEFILE) lib_poco_cpp
 
-lib_lrhom:
-	make -f $(MAKEFILE) lib_lrhom
+lib_track:
+	make -f $(MAKEFILE) lib_track
+
+lib_track_cpp:
+	make -f $(MAKEFILE) lib_track_cpp
+
+lib_nxtsol:
+	make -f $(MAKEFILE) lib_nxtsol
+
+lib_nxtsol_cpp:
+	make -f $(MAKEFILE) lib_nxtsol_cpp
 
 lib_factor:
 	make -f $(MAKEFILE) lib_factor
 
+lib_factor_cpp:
+	make -f $(MAKEFILE) lib_factor_cpp
+
+lib_pieri:
+	make -f $(MAKEFILE) lib_pieri
+
+lib_pieri_cpp:
+	make -f $(MAKEFILE) lib_pieri_cpp
+
+lib_lrhom:
+	make -f $(MAKEFILE) lib_lrhom
+
+lib_lrhom_cpp:
+	make -f $(MAKEFILE) lib_lrhom_cpp
+
 lib_usolve:
 	make -f $(MAKEFILE) lib_usolve
+
+lib_usolve_cpp:
+	make -f $(MAKEFILE) lib_usolve_cpp
 
 lib_giftwrap:
 	make -f $(MAKEFILE) lib_giftwrap
 
+lib_giftwrap_cpp:
+	make -f $(MAKEFILE) lib_giftwrap_cpp
+
 phc_solve:
 	make -f $(MAKEFILE) phc_solve
+
+phc_solve_cpp:
+	make -f $(MAKEFILE) phc_solve_cpp
 
 # Executables with MPI:
 
