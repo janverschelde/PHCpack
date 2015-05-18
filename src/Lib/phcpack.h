@@ -1,5 +1,20 @@
-/* file phcpack.h contains prototypes to the operations offered by PHCpack */
-/* most BASIC operations in PHCpack : */
+/* file phcpack.h contains prototypes to the operations offered by PHCpack
+ * By default, compilation with gcc is assumed.
+ * To compile with a C++ compiler such as g++, the flag compilewgpp must
+ * be defined as "g++ -Dcompilewgpp=1." */
+
+#ifndef __PHCPACK_H__
+#define __PHCPACK_H__
+
+#ifdef compilewgpp
+extern "C" void adainit( void );
+extern "C" int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+extern "C" void adafinal( void );
+#else
+extern void adainit( void );
+extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+extern void adafinal( void );
+#endif
 
 int version_string ( int *n, char *s );
 /*
@@ -852,3 +867,5 @@ int print_system ( void );
 /*
  * DESCRIPTION :
  *   Prints the system in the systems container. */
+
+#endif

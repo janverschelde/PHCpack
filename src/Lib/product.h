@@ -1,5 +1,21 @@
 /* file product.h contains prototypes for the linear-product
- * root counts and random linear-product systems */
+ * root counts and random linear-product systems.
+ * By default, compilation with gcc is assumed.
+ * To compile with a C++ compiler such as g++, the flag compilewgpp must
+ * be defined as "g++ -Dcompilewgpp=1." */
+
+#ifndef __PRODUCT_H__
+#define __PRODUCT_H__
+
+#ifdef compilewgpp
+extern "C" void adainit( void );
+extern "C" int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+extern "C" void adafinal( void );
+#else
+extern void adainit( void );
+extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
+extern void adafinal( void );
+#endif
 
 int supporting_set_structure ( void );
 /*
@@ -87,3 +103,5 @@ int m_homogeneous_start_system ( int ncp, char *partition );
  *   Replaces the system in the system container with a random linear-product
  *   start system based on the given partition and the container system.
  *   The number of characters in the string partition equals ncp. */
+
+#endif

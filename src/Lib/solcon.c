@@ -2,10 +2,7 @@
  * declared in "solcon.h". */
 
 #include <stdio.h>
-
-extern void adainit( void );
-extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
-extern void adafinal( void );
+#include "solcon.h"
 
 int solcon_read_solutions ( void )
 {

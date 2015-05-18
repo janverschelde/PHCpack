@@ -1,9 +1,7 @@
 /* This file "celcon.c" contains the prototypes of the operations
  * declared in "celcon.h". */
 
-extern void adainit( void );
-extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
-extern void adafinal( void );
+#include "celcon.h"
 
 int celcon_read_mixed_cell_configuration ( void )
 {
@@ -125,7 +123,7 @@ int celcon_append_lifted_point ( int n, int i, double *point )
 }
 
 int celcon_append_mixed_cell
-             ( int n, int r, int k, int labels[k], double *normal )
+             ( int n, int r, int k, int labels[], double *normal )
 {
    int d[3],fail;
    d[0] = r;

@@ -38,6 +38,7 @@ int input_argument_free ( void )
 {
    int fail,n;
    char outfile[80],ch;
+   char somesys[22] = "\nTITLE : some system\n";
 
    printf("\nReading and writing a polynomial system ...\n");
 
@@ -56,7 +57,8 @@ int input_argument_free ( void )
    if(v==1) printf("-> define_output_file_with_string returns %d\n",fail);
    fail = print_system();
    if(v==1) printf("-> print_system returns %d\n",fail);
-   fail = write_string_to_defined_output_file(21,"\nTITLE : some system\n");
+ //  fail = write_string_to_defined_output_file(21,"\nTITLE : some system\n");
+   fail = write_string_to_defined_output_file(21,somesys);
    if(v==1) printf("-> write_string_to_defined_output_file returns %d\n",fail);
    fail = close_output_file();
    if(v==1) printf("-> close_output_file returns %d\n",fail);

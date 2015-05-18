@@ -1,15 +1,12 @@
 /* file phcpack.c contains the definitions of the functions in phcpack.h */
 
-#include<stdlib.h>
-#include<stdio.h>
-#include<string.h>
-#include<math.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include "phcpack.h"
 
 #define v 0 /* verbose flag */
-
-extern void adainit( void );
-extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
-extern void adafinal( void );
 
 /* most BASIC operations in PHCpack : */
 

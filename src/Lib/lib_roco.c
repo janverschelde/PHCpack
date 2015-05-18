@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "syscon.h"
+#include "solcon.h"
 #include "phcpack.h"
 #include "product.h"
 
