@@ -42,6 +42,7 @@ lib_roco.c                       : test on operations in product
 celcon.h                         : prototypes for cells container
 celcon.c                         : definitions of functions in celcon.h
 lib_celcon.c                     : test on operations in cells container
+lib_celphc.c                     : powers of t in polyhedral homotopy
 jump_track.h                     : prototypes for jump starting homotopies
 jump_track.c                     : definitions of the functions in jump_track.h
 lib_track.c                      : tracking paths with incremental read/write

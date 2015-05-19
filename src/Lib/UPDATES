@@ -1,3 +1,6 @@
+Tue 11 May 2015 : new lib_celphc.c to compute the powers of the continuation
+  parameters in a polyhedral homotopy.
+
 Mon 10 May 2015 : updates in syscon and lib_syscon so that compilation with
   g++ works via a special flag.  Made similar updates to solcon, phcpack,
   product, celcon, which caused changes to lib_read and lib_roco.
