@@ -1735,6 +1735,26 @@ lib_celcon_cpp: standard_solutions_container.o
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o celcon.o \
                     lib_celcon.o -o $(BIN)/lib_celcon -lm --LINK=g++
 
+lib_celphc:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/celcon.c
+	gcc -c $(PHCLib)/lib_celphc.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o syscon.o celcon.o \
+                    lib_celphc.o -o $(BIN)/lib_celphc -lm
+
+lib_celphc_cpp:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/celcon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_celphc.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o syscon.o celcon.o \
+                    lib_celphc.o -o $(BIN)/lib_celphc -lm --LINK=g++
+
 lib_conpar:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c

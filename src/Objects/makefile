@@ -1398,6 +1398,7 @@ ts_greet:
 test_lib: lib_syscon lib_syscon_cpp lib_solcon lib_solcon_cpp \
           lib_read lib_read_cpp lib_newton lib_newton_cpp \
           lib_roco lib_roco_cpp lib_celcon lib_celcon_cpp \
+          lib_celphc lib_celphc_cpp \
           lib_conpar lib_conpar_cpp lib_poco lib_poco_cpp \
           lib_track lib_track_cpp lib_nxtsol lib_nxtsol_cpp \
           lib_factor lib_factor_cpp lib_pieri lib_pieri_cpp \
@@ -1442,6 +1443,12 @@ lib_celcon:
 
 lib_celcon_cpp:
 	make -f $(MAKEFILE) lib_celcon_cpp
+
+lib_celphc:
+	make -f $(MAKEFILE) lib_celphc
+
+lib_celphc_cpp:
+	make -f $(MAKEFILE) lib_celphc_cpp
 
 lib_conpar:
 	make -f $(MAKEFILE) lib_conpar
