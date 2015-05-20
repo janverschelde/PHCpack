@@ -45,21 +45,27 @@ package VarbPrec_Polynomial_Evaluations is
 --   and use the denominator of the inverse condition number as
 --   the condition number for the evaluation problem.
 
+-- PART I : ordinary polynomials
+
   procedure Inverse_Condition_Number
              ( f : in Standard_Complex_Polynomials.Poly;
                z : in Standard_Complex_Vectors.Vector;
+               fz : out Standard_Complex_Numbers.Complex_Number;
                absfz,denrco,rco : out double_float );
   procedure Inverse_Condition_Number
              ( f : in DoblDobl_Complex_Polynomials.Poly;
                z : in DoblDobl_Complex_Vectors.Vector;
+               fz : out DoblDobl_Complex_Numbers.Complex_Number;
                absfz,denrco,rco : out double_double );
   procedure Inverse_Condition_Number
              ( f : in QuadDobl_Complex_Polynomials.Poly;
                z : in QuadDobl_Complex_Vectors.Vector;
+               fz : out QuadDobl_Complex_Numbers.Complex_Number;
                absfz,denrco,rco : out quad_double );
   procedure Inverse_Condition_Number
              ( f : in Multprec_Complex_Polynomials.Poly;
                z : in Multprec_Complex_Vectors.Vector;
+               fz : out Multprec_Complex_Numbers.Complex_Number;
                absfz,denrco,rco : out Floating_Number );
 
   -- DESCRIPTION :
@@ -72,6 +78,7 @@ package VarbPrec_Polynomial_Evaluations is
   --   z       values for the variables that appear in f.
 
   -- ON RETURN :
+  --   fz      the value of the polynomial f at z;
   --   absfz   the magnitude of the function value;
   --   denrco  denominator of the inverse condition number, equals the
   --           sum of the magnitudes of the coefficients times the
@@ -103,21 +110,27 @@ package VarbPrec_Polynomial_Evaluations is
   --   f       a polynomial in several variables;
   --   z       values for the variables that appear in f.
 
+-- PART II : Laurent polynomials
+
   procedure Inverse_Condition_Number
              ( f : in Standard_Complex_Laurentials.Poly;
                z : in Standard_Complex_Vectors.Vector;
+               fz : out Standard_Complex_Numbers.Complex_Number;
                absfz,denrco,rco : out double_float );
   procedure Inverse_Condition_Number
              ( f : in DoblDobl_Complex_Laurentials.Poly;
                z : in DoblDobl_Complex_Vectors.Vector;
+               fz : out DoblDobl_Complex_Numbers.Complex_Number;
                absfz,denrco,rco : out double_double );
   procedure Inverse_Condition_Number
              ( f : in QuadDobl_Complex_Laurentials.Poly;
                z : in QuadDobl_Complex_Vectors.Vector;
+               fz : out QuadDobl_Complex_Numbers.Complex_Number;
                absfz,denrco,rco : out quad_double );
   procedure Inverse_Condition_Number
              ( f : in Multprec_Complex_Laurentials.Poly;
                z : in Multprec_Complex_Vectors.Vector;
+               fz : out Multprec_Complex_Numbers.Complex_Number;
                absfz,denrco,rco : out Floating_Number );
 
   -- DESCRIPTION :
@@ -130,7 +143,8 @@ package VarbPrec_Polynomial_Evaluations is
   --   z       values for the variables that appear in f.
 
   -- ON RETURN :
-  --   absfz   the magnitude of the function value;
+  --   fz      the value of the polynomial f at z;
+  --   absfz   the magnitude of the function value fz;
   --   denrco  denominator of the inverse condition number, equals the
   --           sum of the magnitudes of the coefficients times the
   --           magnitudes of the evaluated monomials;
@@ -162,27 +176,46 @@ package VarbPrec_Polynomial_Evaluations is
   --   f       a polynomial in several variables;
   --   z       values for the variables that appear in f.
 
+-- PART III : ordinary polynomial systems
+
   procedure Inverse_Condition_Number
              ( f : in Standard_Complex_Poly_Systems.Poly_Sys;
                z : in Standard_Complex_Vectors.Vector;
+               fz : out Standard_Complex_Vectors.Vector;
                absfz,denrco,rco : out double_float );
   procedure Inverse_Condition_Number
              ( f : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                z : in DoblDobl_Complex_Vectors.Vector;
+               fz : out DoblDobl_Complex_Vectors.Vector;
                absfz,denrco,rco : out double_double );
   procedure Inverse_Condition_Number
              ( f : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                z : in QuadDobl_Complex_Vectors.Vector;
+               fz : out QuadDobl_Complex_Vectors.Vector;
                absfz,denrco,rco : out quad_double );
   procedure Inverse_Condition_Number
              ( f : in Multprec_Complex_Poly_Systems.Poly_Sys;
                z : in Multprec_Complex_Vectors.Vector;
+               fz : out Multprec_Complex_Vectors.Vector;
                absfz,denrco,rco : out Floating_Number );
 
   -- DESCRIPTION :
-  --   Returns the smallest inverse condition number of evaluating
-  --   every polynomial f(i) at z, with corresponding |f(z)| in absfz
-  --   and denominator denrco.
+  --   Evaluates the polynomial system f at z with the computation
+  --   of the inverse condition number.
+
+  -- REQUIRED : z'range = 1..Number_of_Unknowns(f).
+
+  -- ON ENTRY :
+  --   f       a polynomial system in several variables;
+  --   z       values for the variables that appear in f.
+
+  -- ON RETURN :
+  --   fz      the polynomial system f evaluated at z;
+  --   absfz   the magnitude of the function value;
+  --   denrco  denominator of the inverse condition number, equals the
+  --           sum of the magnitudes of the coefficients times the
+  --           magnitudes of the evaluated monomials;
+  --   rco     equals absfz/denrco = Inverse_Condition_Number(f,z).
 
   function Inverse_Condition_Number
              ( f : Standard_Complex_Poly_Systems.Poly_Sys;
@@ -201,27 +234,48 @@ package VarbPrec_Polynomial_Evaluations is
   --   Returns the smallest inverse condition number of evaluating
   --   every polynomial f(i) at z.
 
+-- PART IV : Laurent polynomial systems
+
   procedure Inverse_Condition_Number
              ( f : in Standard_Complex_Laur_Systems.Laur_Sys;
                z : in Standard_Complex_Vectors.Vector;
+               fz : out Standard_Complex_Vectors.Vector;
                absfz,denrco,rco : out double_float );
   procedure Inverse_Condition_Number
              ( f : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                z : in DoblDobl_Complex_Vectors.Vector;
+               fz : out DoblDobl_Complex_Vectors.Vector;
                absfz,denrco,rco : out double_double );
   procedure Inverse_Condition_Number
              ( f : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                z : in QuadDobl_Complex_Vectors.Vector;
+               fz : out QuadDobl_Complex_Vectors.Vector;
                absfz,denrco,rco : out quad_double );
   procedure Inverse_Condition_Number
              ( f : in Multprec_Complex_Laur_Systems.Laur_Sys;
                z : in Multprec_Complex_Vectors.Vector;
+               fz : out Multprec_Complex_Vectors.Vector;
                absfz,denrco,rco : out Floating_Number );
 
   -- DESCRIPTION :
-  --   Returns the smallest inverse condition number of evaluating
-  --   every polynomial f(i) at z, with corresponding |f(z)| in absfz
-  --   and denominator denrco.
+  --   Evaluates the Laurent polynomial system f at z,
+  --   with the computation of the inverse condition number.
+
+  -- REQUIRED : z'range = 1..Number_of_Unknowns(f) and z(i) /= 0
+  --   for those indices i for which the i-th variable occurs with
+  --   a negative exponent.
+
+  -- ON ENTRY :
+  --   f       a Laurent polynomial system in several variables;
+  --   z       values for the variables that appear in f.
+
+  -- ON RETURN :
+  --   absfz   the magnitude of the function value;
+  --   denrco  denominator of the inverse condition number, equals the
+  --           sum of the magnitudes of the coefficients times the
+  --           magnitudes of the evaluated monomials;
+  --   rco     equals absfz/denrco = Inverse_Condition_Number(f,z);
+  --   fz      the Laurent polynomial system f evaluated at z.
 
   function Inverse_Condition_Number
              ( f : Standard_Complex_Laur_Systems.Laur_Sys;

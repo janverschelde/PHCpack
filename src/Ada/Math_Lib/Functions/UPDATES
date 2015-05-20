@@ -1,3 +1,5 @@
+Wed 20 May 2015 : streamlined interface of varbprec_polynomial_evaluations.
+
 Fri 21 Nov 2014 : completed varbprec_polynomial_evaluations adding condition
   number calculators for Laurent polynomial systems and extending the output
   parameters with numerators and denominators of inverse condition numbers,
