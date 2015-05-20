@@ -294,6 +294,8 @@ package VarbPrec_Polynomial_Evaluations is
   --   Returns the smallest inverse condition number of evaluating
   --   every polynomial f(i) at z.
 
+-- PART V : the wrappers
+
   procedure Evaluate_with_Inverse_Condition
              ( f : in Standard_Complex_Polynomials.Poly;
                z : in Standard_Complex_Vectors.Vector;
