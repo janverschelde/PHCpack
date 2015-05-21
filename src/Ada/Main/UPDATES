@@ -1,3 +1,6 @@
+Thu 21 May 2015 : changed drivers_for_root_counts.adb for extra boolean flag
+  in the drivers for MixedVol Algorithm.
+
 Wed 26 Nov 2014 : adjusted greeting_banners for version 2.3.96.
 
 Sat 22 Nov 2014 : added 9-th option of phc -v for variable precision Newton.

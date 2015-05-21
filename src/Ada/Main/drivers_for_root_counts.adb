@@ -258,7 +258,7 @@ package body Drivers_for_Root_Counts is
       when '8' => Driver_for_Symmetric_Mixed_Volume_Computation
                     (file,p,false,q,qsols,rc);
       when '9' => Driver_for_MixedVol_Algorithm
-                    (file,0,p,false,q,qsols,qsols0,rc,smv,tmv);
+                    (file,0,p,false,false,q,qsols,qsols0,rc,smv,tmv);
       when 'A' => Driver_for_Own_Start_System(file,p,q,qsols);
                   rc := Length_of(qsols);
       when others => null;
@@ -280,7 +280,7 @@ package body Drivers_for_Root_Counts is
   begin
     case method is
       when '1' => Driver_for_MixedVol_Algorithm
-                    (file,0,p,false,q,qsols,qsols0,rc,smv,tmv);
+                    (file,0,p,false,false,q,qsols,qsols0,rc,smv,tmv);
       when '2' => Driver_for_Mixture_Bezout_BKK(file,p,false,q,qsols,rc);
       when '3' => Driver_for_Mixed_Volume_Computation
                     (file,0,p,false,q,qsols,qsols0,rc,smv,tmv);
