@@ -449,7 +449,7 @@ package Drivers_for_MixedVol_Algorithm is
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                byebye : in boolean;
+                byebye,nostart : in boolean;
                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
@@ -457,7 +457,7 @@ package Drivers_for_MixedVol_Algorithm is
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                byebye : in boolean;
+                byebye,nostart : in boolean;
                 q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
@@ -465,7 +465,7 @@ package Drivers_for_MixedVol_Algorithm is
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                byebye : in boolean;
+                byebye,nostart : in boolean;
                 q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
@@ -473,7 +473,7 @@ package Drivers_for_MixedVol_Algorithm is
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                byebye : in boolean;
+                byebye,nostart : in boolean;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
@@ -481,7 +481,7 @@ package Drivers_for_MixedVol_Algorithm is
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                byebye : in boolean;
+                byebye,nostart : in boolean;
                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
@@ -489,7 +489,7 @@ package Drivers_for_MixedVol_Algorithm is
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                byebye : in boolean;
+                byebye,nostart : in boolean;
                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
@@ -504,7 +504,8 @@ package Drivers_for_MixedVol_Algorithm is
   --   nt       number of tasks to use in polyhedral homotopies,
   --            if nt = 0, then the plain sequential code is used;
   --   p        a polynomial system;
-  --   byebye   true if a bye-bye message needs to be given.
+  --   byebye   true if a bye-bye message needs to be given;
+  --   nostart  true if the user does not want a start system.
 
   -- ON RETURN :
   --   q        start system (if requested by user);

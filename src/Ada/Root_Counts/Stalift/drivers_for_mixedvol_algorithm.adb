@@ -1876,23 +1876,24 @@ package body Drivers_for_mixedvol_algorithm is
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                byebye : in boolean;
+                byebye,nostart : in boolean;
                 q : out Standard_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
                 multprec_hermite : in boolean := false ) is
 
-    ans : character;
+   -- ans : character;
     cellfile,startfile : file_type;
     stable,misufile,ranstart,contrep : boolean;
     oc : natural32;
 
   begin
     Ask_for_Stable_and_Cells_File(stable,misufile,cellfile);
-    new_line;
-    put("Do you want a random coefficient start system ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    ranstart := (ans = 'y');
+   -- new_line;
+   -- put("Do you want a random coefficient start system ? (y/n) ");
+   -- Ask_Yes_or_No(ans);
+   -- ranstart := (ans = 'y');
+    ranstart := not nostart;
     if ranstart then
       new_line;
       put_line("Reading the name of the file to write the start system ...");
@@ -1920,23 +1921,24 @@ package body Drivers_for_mixedvol_algorithm is
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                byebye : in boolean;
+                byebye,nostart : in boolean;
                 q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
                 multprec_hermite : in boolean := false ) is
 
-    ans : character;
+   -- ans : character;
     cellfile,startfile : file_type;
     stable,misufile,ranstart,contrep : boolean;
     oc : natural32;
 
   begin
     Ask_for_Stable_and_Cells_File(stable,misufile,cellfile);
-    new_line;
-    put("Do you want a random coefficient start system ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    ranstart := (ans = 'y');
+   -- new_line;
+   -- put("Do you want a random coefficient start system ? (y/n) ");
+   -- Ask_Yes_or_No(ans);
+   -- ranstart := (ans = 'y');
+    ranstart := not nostart;
     if ranstart then
       new_line;
       put_line("Reading the name of the file to write the start system ...");
@@ -1964,23 +1966,24 @@ package body Drivers_for_mixedvol_algorithm is
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                byebye : in boolean;
+                byebye,nostart : in boolean;
                 q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
                 multprec_hermite : in boolean := false ) is
 
-    ans : character;
+   -- ans : character;
     cellfile,startfile : file_type;
     stable,misufile,ranstart,contrep : boolean;
     oc : natural32;
 
   begin
     Ask_for_Stable_and_Cells_File(stable,misufile,cellfile);
-    new_line;
-    put("Do you want a random coefficient start system ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    ranstart := (ans = 'y');
+   -- new_line;
+   -- put("Do you want a random coefficient start system ? (y/n) ");
+   -- Ask_Yes_or_No(ans);
+   -- ranstart := (ans = 'y');
+    ranstart := not nostart;
     if ranstart then
       new_line;
       put_line("Reading the name of the file to write the start system ...");
@@ -2008,13 +2011,13 @@ package body Drivers_for_mixedvol_algorithm is
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                byebye : in boolean;
+                byebye,nostart : in boolean;
                 q : out Standard_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
                 multprec_hermite : in boolean := false ) is
 
-    ans : character;
+   -- ans : character;
     cellfile,startfile : file_type;
     stable,misufile,ranstart,contrep : boolean;
     oc : natural32;
@@ -2022,10 +2025,11 @@ package body Drivers_for_mixedvol_algorithm is
   begin
     stable := not Is_Genuine_Laurent(p);
     Ask_only_if_Stable_and_Cells_File(stable,misufile,cellfile);
-    new_line;
-    put("Do you want a random coefficient start system ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    ranstart := (ans = 'y');
+   -- new_line;
+   -- put("Do you want a random coefficient start system ? (y/n) ");
+   -- Ask_Yes_or_No(ans);
+   -- ranstart := (ans = 'y');
+    ranstart := not nostart;
     if ranstart then
       new_line;
       put_line("Reading the name of the file to write the start system ...");
@@ -2054,13 +2058,13 @@ package body Drivers_for_mixedvol_algorithm is
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
-                byebye : in boolean;
+                byebye,nostart : in boolean;
                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out DoblDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
                 multprec_hermite : in boolean := false ) is
 
-    ans : character;
+   -- ans : character;
     cellfile,startfile : file_type;
     stable,misufile,ranstart,contrep : boolean;
     oc : natural32;
@@ -2068,10 +2072,11 @@ package body Drivers_for_mixedvol_algorithm is
   begin
     stable := not Is_Genuine_Laurent(p);
     Ask_only_if_Stable_and_Cells_File(stable,misufile,cellfile);
-    new_line;
-    put("Do you want a random coefficient start system ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    ranstart := (ans = 'y');
+   -- new_line;
+   -- put("Do you want a random coefficient start system ? (y/n) ");
+   -- Ask_Yes_or_No(ans);
+   -- ranstart := (ans = 'y');
+    ranstart := not nostart;
     if ranstart then
       new_line;
       put_line("Reading the name of the file to write the start system ...");
@@ -2099,13 +2104,13 @@ package body Drivers_for_mixedvol_algorithm is
   procedure Driver_for_MixedVol_Algorithm
               ( file : in file_type; nt : in integer32;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
-                byebye : in boolean;
+                byebye,nostart : in boolean;
                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 qsols,qsols0 : out QuadDobl_Complex_Solutions.Solution_List;
                 mv,smv,tmv : out natural32;
                 multprec_hermite : in boolean := false ) is
 
-    ans : character;
+   -- ans : character;
     cellfile,startfile : file_type;
     stable,misufile,ranstart,contrep : boolean;
     oc : natural32;
@@ -2113,10 +2118,11 @@ package body Drivers_for_mixedvol_algorithm is
   begin
     stable := not Is_Genuine_Laurent(p);
     Ask_only_if_Stable_and_Cells_File(stable,misufile,cellfile);
-    new_line;
-    put("Do you want a random coefficient start system ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    ranstart := (ans = 'y');
+   -- new_line;
+   -- put("Do you want a random coefficient start system ? (y/n) ");
+   -- Ask_Yes_or_No(ans);
+   -- ranstart := (ans = 'y');
+    ranstart := not nostart;
     if ranstart then
       new_line;
       put_line("Reading the name of the file to write the start system ...");

@@ -51,7 +51,7 @@ procedure ts_drivstal is
       put("Use multiprecision arithmetic for Hermite normal form ? (y/n) ");
       Ask_Yes_or_No(ans);
       Driver_for_MixedVol_Algorithm
-        (file,integer32(nt),lp.all,true,lq.all,qsols,qsols0,
+        (file,integer32(nt),lp.all,true,false,lq.all,qsols,qsols0,
          mv,smv,tmv,(ans = 'y'));
     else
       Driver_for_Mixed_Volume_Computation
@@ -90,7 +90,7 @@ procedure ts_drivstal is
     put("Give the number of tasks (0 for no multitasking) : ");
     get(nt);
     Driver_for_MixedVol_Algorithm
-      (file,integer32(nt),lp.all,true,lq.all,qsols,qsols0,
+      (file,integer32(nt),lp.all,true,false,lq.all,qsols,qsols0,
        mv,smv,tmv,(ans = 'y'));
    -- else
    --   Driver_for_Mixed_Volume_Computation
@@ -129,7 +129,7 @@ procedure ts_drivstal is
     put("Give the number of tasks (0 for no multitasking) : ");
     get(nt);
     Driver_for_MixedVol_Algorithm
-      (file,integer32(nt),lp.all,true,lq.all,qsols,qsols0,
+      (file,integer32(nt),lp.all,true,false,lq.all,qsols,qsols0,
        mv,smv,tmv,(ans = 'y'));
    -- else
    --   Driver_for_Mixed_Volume_Computation
