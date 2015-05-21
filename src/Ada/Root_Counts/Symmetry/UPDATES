@@ -1,3 +1,6 @@
+Thu 21 May 2015 : adjusted mainsmvc.adb for changed specifications in the
+  calls to the drivers for MixedVol algorithm.
+
 Wed 16 Jul 2014 : mainsmvc is modified to provide double double and
   quad double precision via phc -m for polyhedral continuation.
 

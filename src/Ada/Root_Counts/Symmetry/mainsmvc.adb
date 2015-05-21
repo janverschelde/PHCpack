@@ -131,6 +131,7 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
     qd_qsols,qd_qsols0 : QuadDobl_Complex_Solutions.Solution_List;
     mv,smv,tmv : natural32;
     ans : character;
+    nostart : boolean;
   
   begin
     new_line;
@@ -141,18 +142,22 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
     put_line("  3. run polyhedral homotopies in quad double precision.");
     put("Type 0, 1, 2, or 3 to select the precision : ");
     Ask_Alternative(ans,"0123");
+    nostart := (ans = '0');
     case ans is
       when '0' | '1' =>
         Driver_for_MixedVol_Algorithm
-          (file,integer32(nt),lq.all,true,d_qq,d_qsols,d_qsols0,mv,smv,tmv);
+          (file,integer32(nt),lq.all,true,nostart,
+           d_qq,d_qsols,d_qsols0,mv,smv,tmv);
       when '2' =>
         dd_p := Standard_Laur_Sys_to_DoblDobl_Complex(lq.all);
         Driver_for_MixedVol_Algorithm
-          (file,integer32(nt),dd_p,true,dd_qq,dd_qsols,dd_qsols0,mv,smv,tmv);
+          (file,integer32(nt),dd_p,true,nostart,
+           dd_qq,dd_qsols,dd_qsols0,mv,smv,tmv);
       when '3' =>
         qd_p := Standard_Laur_Sys_to_QuadDobl_Complex(lq.all);
         Driver_for_MixedVol_Algorithm
-          (file,integer32(nt),qd_p,true,qd_qq,qd_qsols,qd_qsols0,mv,smv,tmv);
+          (file,integer32(nt),qd_p,true,nostart,
+           qd_qq,qd_qsols,qd_qsols0,mv,smv,tmv);
       when others => null;
     end case;
   end Call_MixedVol;
