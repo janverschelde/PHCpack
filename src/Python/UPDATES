@@ -1,3 +1,6 @@
+Thu 21 May 2015 : improved Sphinx documentation with proper use of toctree
+  and splitted index.rst into more meaningful subtitles.
+
 Thu 26 Mar 2015 : new function initial_form in polytopes.py to compute the
   initial form of a Laurent polynomial system.
 

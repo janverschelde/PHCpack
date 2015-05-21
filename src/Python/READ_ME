@@ -1,4 +1,4 @@
-phcpy 0.2.5 offers a simple Python interface to PHCv2.3.97
+phcpy 0.2.6 offers a simple Python interface to PHCv2.3.97
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -18,18 +18,19 @@ monodromy factorization was provided in phcsets.py in release 2.3.74.
 The package phcpy is defined in the directory PHCpy.
 
 ------------------------------------------------------------------------------
-file name                        : short description
+file name               : short description
 ------------------------------------------------------------------------------
-examples.py                      : some interesting benchmark examples
-families.py                      : a couple of families of systems
-interface.py                     : load/store data to C interface with PHCpack
-solver.py                        : use of C extension module phcpy2c
-solutions.py                     : PHCpack solution string into dictionary
-trackers.py                      : path trackers
-maps.py                          : monomial maps as solutions of binomials
-phcwulf.py                       : client/server for beowulf clusters
-sets.py                          : manipulate algebraic sets
-schubert.py                      : numerical Schubert calculus
+examples.py             : some interesting benchmark examples
+families.py             : a couple of families of systems
+interface.py            : load/store data to C interface with PHCpack
+polytopes               : convex hulls and mixed volumes of Newton polytopes
+solver.py               : use of C extension module phcpy2c
+solutions.py            : PHCpack solution string into dictionary
+trackers.py             : path trackers
+maps.py                 : monomial maps as solutions of binomials
+phcwulf.py              : client/server for beowulf clusters
+sets.py                 : manipulate algebraic sets
+schubert.py             : numerical Schubert calculus
 ------------------------------------------------------------------------------
 
 The modules examples, solver, phcsols provide tests which are executed
@@ -37,6 +38,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.2.6 : 2015-05-22 : improved documentation
 0.2.5 : 2014-11-26 : variable precision Newton steps
 0.2.4 : 2014-10-31 : more complete Littlewood-Richardson homotopies
 0.2.3 : 2014-09-12 : new module polytopes with convex hulls and mixed volume
