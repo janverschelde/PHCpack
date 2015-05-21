@@ -1,3 +1,7 @@
+Thu 21 May 2015 : fixed bug in mixedVolume function of PHCpack.m2 which
+  was introduced with the polyhedral homotopies in double double and
+  quad double arithmetic.  Needs version 2.3.97 of PHCpack.
+
 Thu 30 Oct 2014 : updated LRhomotopies.m2 to solve general problems, tested
   R := ZZ; n := 6; m := matrix{{4, 3, 6}}; which is the [3 6]^4 problem.
   

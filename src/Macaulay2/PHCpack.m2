@@ -1,8 +1,8 @@
 
 newPackage(
   "PHCpack",
-  Version => "1.6.1", 
-  Date => "23 September 2014",
+  Version => "1.6.2", 
+  Date => "21 May 2015",
   Authors => {
     {Name => "Elizabeth Gross",
      Email => "egross7@uic.edu",
@@ -738,7 +738,9 @@ mixedVolume  List := Sequence => opt -> system -> (
   -- Calls an Ada translation of ACM TOMS Algorithm 846:
   --  "MixedVol: a software package for mixed-volume computation" 
   -- by Tangan Gao, T. Y. Li, Mengnien Wu, ACM TOMS 31(4):555-560, 2005.
- 
+  -- With the introduction of double double and quad double arithmetic,
+  -- the menu options after version 2.3.90 changed.
+  -- Fixed in the distribution of 2.3.97 of PHCpack.
   R := ring ideal system;
   n := #system;
   
@@ -761,16 +763,18 @@ mixedVolume  List := Sequence => opt -> system -> (
   -- writing data to the corresponding files
   file := openOut cmdfile; 
   file << "4" << endl; -- call MixedVol in PHCpack
+  if opt.StartSystem
+   then (file << "1" << endl)  -- random coefficient start system wanted
+   else (file << "0" << endl); -- no random coefficient start system
   if opt.StableMixedVolume
    then (file << "y" << endl)  -- stable mixed volume wanted
    else (file << "n" << endl); -- no stable mixed volume 
   file << "n" << endl; -- no mixed-cell configuration on file
-  if opt.StartSystem then (
-    file << "y" << endl; -- random coefficient start system wanted
+  if opt.StartSystem then (    -- file and options for start system
     file << startfile << endl;
     file << "0" << endl << "1" << endl;
-   )
-   else (file << "n" << endl); -- no random coefficient start system
+  );
+
   close file;
   systemToFile(system,infile);
   
