@@ -1,6 +1,7 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Abstract_Ring;
+with Standard_Natural_Vectors;
 with Generic_Polynomials;
 
 generic
@@ -26,7 +27,11 @@ package Generic_Polynomial_Systems is
 
   procedure Copy ( p : in Poly_Sys; q : in out Poly_Sys );
 
--- SELECTOR :
+-- SELECTORS :
+
+  function Variables_in_Support
+             ( p : Poly_Sys ) return Standard_Natural_Vectors.Vector;
+  -- returns 0/1 vector with 1 at place of a variable with nonzero exponent
 
   function Size_of_Support ( p : Poly_Sys ) return natural32;
   -- returns the number of variables with nonzero exponent

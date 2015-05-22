@@ -1,6 +1,7 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Abstract_Ring;
+with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 
 generic
@@ -52,6 +53,13 @@ package Generic_Laurent_Polynomials is
   -- returns number of variables with nonzero exponent
   function Size_of_Support ( p : Poly ) return natural32;
   -- returns number of variables with nonzero exponent
+
+  function Variables_in_Support
+             ( t : Term ) return Standard_Natural_Vectors.Vector;
+  -- returns 0/1 vector with 1 at place of a variable with nonzero exponent
+  function Variables_in_Support
+             ( p : Poly ) return Standard_Natural_Vectors.Vector;
+  -- returns 0/1 vector with 1 at place of a variable with nonzero exponent
 
   function Degree ( p : Poly ) return integer32;            -- return deg(p);
 

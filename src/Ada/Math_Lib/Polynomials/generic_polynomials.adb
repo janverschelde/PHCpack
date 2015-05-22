@@ -197,6 +197,21 @@ package body Generic_Polynomials is
     return res;
   end Size_of_Support;
 
+  function Variables_in_Support
+             ( t : Term ) return Standard_Natural_Vectors.Vector is
+
+    res : Standard_Natural_Vectors.Vector(t.dg'range);
+
+  begin
+    for i in t.dg'range loop
+      if t.dg(i) = 0
+       then res(i) := 0;
+       else res(i) := 1;
+      end if;
+    end loop;
+    return res;
+  end Variables_in_Support;
+
   function Size_of_Support ( p : Poly ) return natural32 is
 
     res : natural32 := 0;
@@ -228,6 +243,29 @@ package body Generic_Polynomials is
     end if;
     return res;
   end Size_of_Support;
+
+  function Variables_in_Support
+             ( p : Poly ) return Standard_Natural_Vectors.Vector is
+
+    nvr : constant integer32 := integer32(Number_of_Unknowns(p));
+    res : Standard_Natural_Vectors.Vector(1..nvr) := (1..nvr => 0);
+    rep : Poly_Rep := p.all;
+    cnt : integer32 := 0;
+    t : term;
+
+  begin 
+    while not Is_Null(rep) loop
+      t := Head_Of(rep);
+      for i in t.dg'range loop
+        if res(i) = 0 and t.dg(i) /= 0
+         then res(i) := 1; cnt := cnt + 1;
+        end if;
+      end loop;
+      exit when (cnt >= nvr);
+      rep := Tail_Of(rep);
+    end loop;
+    return res;
+  end Variables_in_Support;
 
   function Number_Of_Terms ( p : Poly ) return natural32 is
   begin

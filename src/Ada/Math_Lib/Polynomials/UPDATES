@@ -1,3 +1,7 @@
+Fri 22 May 2015 : extra variables_in_support functions in the packages
+  generic_polynomials and generic_laurent_polynomials as needed to define
+  the size_of_support correctly in generic_{polynomials, laur_poly}_systems.
+
 Fri 20 Feb 2015 : fixed the bug in standard_complex_laur_strings.adb.
 
 Wed 18 Feb 2015 : regressed version of standard_complex_laur_strings.adb.

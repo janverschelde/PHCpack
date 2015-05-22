@@ -11,19 +11,36 @@ package body Generic_Polynomial_Systems is
     end loop;
   end Copy;
 
--- SELECTOR :
+-- SELECTORS :
 
-  function Size_of_Support ( p : Poly_Sys ) return natural32 is
+  function Variables_in_Support
+             ( p : Poly_Sys ) return Standard_Natural_Vectors.Vector is
 
-    res,size : natural32 := 0;
+    nvr : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
+    res : Standard_Natural_Vectors.Vector(1..nvr) := (1..nvr => 0);
+    wrk : Standard_Natural_Vectors.Vector(1..nvr);
+    cnt : integer32 := 0;
 
   begin
     for i in p'range loop
-      size := Size_of_Support(p(i));
-      if size > res
-       then res := size;
-      end if;
+      wrk := Variables_in_Support(p(i));
+      for k in wrk'range loop
+        if wrk(k) = 1 and res(k) = 0
+         then res(k) := 1; cnt := cnt + 1;
+        end if;
+      end loop;
+      exit when (cnt >= nvr);
     end loop;
+    return res;
+  end Variables_in_Support;
+
+  function Size_of_Support ( p : Poly_Sys ) return natural32 is
+
+    res : natural32;
+    vsp : constant Standard_Natural_Vectors.Vector := Variables_in_Support(p);
+
+  begin
+    res := Standard_Natural_Vectors.Sum(vsp);
     return res;
   end Size_of_Support;
 

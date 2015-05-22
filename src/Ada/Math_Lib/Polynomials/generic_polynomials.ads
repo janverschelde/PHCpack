@@ -52,6 +52,13 @@ package Generic_Polynomials is
   function Size_of_Support ( p : Poly ) return natural32;
   -- returns number of variables with nonzero exponent
 
+  function Variables_in_Support
+             ( t : Term ) return Standard_Natural_Vectors.Vector;
+  -- returns 0/1 vector with 1 at place of a variable with nonzero exponent
+  function Variables_in_Support
+             ( p : Poly ) return Standard_Natural_Vectors.Vector;
+  -- returns 0/1 vector with 1 at place of a variable with nonzero exponent
+
   function Degree ( p : Poly ) return integer32;              -- return deg(p);
   function Degree ( p : Poly; i : integer32 ) return integer32;
     -- return deg(p,xi); if p is empty, then the number on return is negative
