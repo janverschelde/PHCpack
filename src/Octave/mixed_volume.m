@@ -40,7 +40,8 @@ if(set_default_options)
 end
 if(flag_2==1) 
     mixedvol_str = 'stable mixed volume :';
-else mixedvol_str = 'common mixed volume :';
+else
+    mixedvol_str = 'common mixed volume :';
 end
 
 rand('seed',sum(100*clock));
@@ -57,7 +58,21 @@ phcout = [phctemp 'mixedvolphcout' sr];
 write_system(sysfile, s);
 
 % prepare input redirection file
-tempstr = ['y\n' sysfile '\n' outfile '\n' '4\n' 'y\n' 'n\n' 'y\n' startfile '\n'  '0\n0\n'];   
+if(flag_1==0)     % no start system
+    if(flag_2==0)  % no stable mixed volume
+        tempstr = ['y\n' sysfile '\n' outfile '\n' '4\n' '0\n' 'n\n' 'n\n'];   
+    else           % stable mixed volume
+        tempstr = ['y\n' sysfile '\n' outfile '\n' '4\n' '0\n' 'y\n' 'n\n'];   
+    end
+else
+    if(flag_2==0)
+        tempstr = ['y\n' sysfile '\n' outfile '\n' '4\n' '1\n' 'n\n' 'y\n' startfile '\n'  '0\n0\n'];   
+    else
+        tempstr = ['y\n' sysfile '\n' outfile '\n' '4\n' '1\n' 'y\n' 'y\n' startfile '\n'  '0\n0\n'];   
+    end
+end
+% fprintf("inside mixed_volume ... \n")
+% tempstr
 temp_id = fopen(temp,'wt');
 fprintf(temp_id, tempstr);
 fclose(temp_id);
@@ -65,20 +80,25 @@ fclose(temp_id);
 % call phc executable
 str = [phcloc ' -m <' temp ' >' phcout];
 system(str);
-
 % extract the mixed volume, start system and solutions
 outfile_id = fopen(outfile,'rt');
 temps = fread(outfile_id);
 fclose(outfile_id);
 temps = char(temps)'; % 1*m string array
 volstart = findstr(temps, mixedvol_str);
-if(flag_2==0)
-    volend = findstr(temps, 'stable mixed volume :');
+volend = volstart + length(mixedvol_str);
+if(flag_2 == 0)
+   vollast = findstr(temps, 'TIMING INFORMATION for Volume');
 else
-    volend = findstr(temps, 'total mixed volume :');
+   vollast = findstr(temps, 'total mixed volume');
 end
-vol = str2num(temps(volstart+length(mixedvol_str):volend-1));
-
+% fprintf("volend : ")
+% volend
+% fprintf("vollast : ")
+% vollast
+% fprintf("The string with the volume :\n")
+% temps(volend:vollast-1)
+vol = str2num(temps(volend:vollast-1));
 startsys = cell(0,0);
 sols = struct('time',{},'multiplicity',{},'err',{},'rco',{},'res',{});
 if(flag_1==1)
@@ -96,12 +116,15 @@ if(flag_1==1)
 end
 
 % remove intermediate files
+return
 delete(sysfile);
 delete(outfile);
-if(vol~=0 & flag_1)
-  delete(solsfile);
+if(vol~=0)
+   if(flag_1==1)
+      delete(solsfile);
+      delete(startfile);
+   end
 end
-delete(startfile);
 delete(temp);
 delete(phcout);
 
