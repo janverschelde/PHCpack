@@ -1,1 +1,4 @@
+Sun 24 May 2015 : mixed_volume of PHClab now also works for start systems,
+  when the first option is turned on.
+
 Sat 23 May 2015 : fixed bug in mixed_volume of PHClab.

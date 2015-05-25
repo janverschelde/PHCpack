@@ -66,9 +66,9 @@ if(flag_1==0)     % no start system
     end
 else
     if(flag_2==0)
-        tempstr = ['y\n' sysfile '\n' outfile '\n' '4\n' '1\n' 'n\n' 'y\n' startfile '\n'  '0\n0\n'];   
+        tempstr = ['y\n' sysfile '\n' outfile '\n' '4\n' '1\n' 'n\n' 'n\n' startfile '\n'  '0\n0\n'];   
     else
-        tempstr = ['y\n' sysfile '\n' outfile '\n' '4\n' '1\n' 'y\n' 'y\n' startfile '\n'  '0\n0\n'];   
+        tempstr = ['y\n' sysfile '\n' outfile '\n' '4\n' '1\n' 'y\n' 'n\n' startfile '\n'  '0\n0\n'];   
     end
 end
 % fprintf("inside mixed_volume ... \n")
