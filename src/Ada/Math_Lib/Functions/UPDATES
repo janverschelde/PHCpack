@@ -1,3 +1,6 @@
+Mon 25 May 2015 : extended ts_cycfun.adb with tests for double double and
+  quad double arithmetic.
+
 Wed 20 May 2015 : streamlined interface of varbprec_polynomial_evaluations.
   Shortened the code with wrappers in the evaluate with condition number.
 
