@@ -59,7 +59,6 @@ package body Standard_Gradient_Evaluations is
                x : in Standard_Complex_Vectors.Vector;
                s : in out Standard_Complex_VecVecs.VecVec ) is
 
-    res : Standard_Complex_VecVecs.VecVec(b'range);
     z : Standard_Complex_Vectors.Vector(0..x'last);
     sind : Standard_Complex_Vectors.Link_to_Vector;
 

@@ -539,6 +539,7 @@ procedure ts_cycfun is
   procedure Indexed_Evaluate_and_Differentiate
               ( s : in Standard_Integer_VecVecs.Array_of_VecVecs;
                 x : in Standard_Complex_Vectors.Vector;
+                z : in out Standard_Complex_Vectors.Vector;
                 y : out Standard_Complex_Vectors.Vector;
                 A : out Standard_Complex_Matrices.Matrix ) is
 
@@ -547,7 +548,10 @@ procedure ts_cycfun is
   --   using the indexed supports in s, in standard double precision.
   --   The function evaluations are in y and the Jacobian matrix in A.
 
-    z : Standard_Complex_Vectors.Vector(0..x'last);
+  -- REQUIRED :
+  --   The vector z is used as work space and is of range 0..x'last.
+
+  -- z : Standard_Complex_Vectors.Vector(0..x'last);
 
   begin
     for i in s'range loop
@@ -827,6 +831,7 @@ procedure ts_cycfun is
     x : Standard_Complex_Vectors.Vector(1..n)
       := Standard_Random_Vectors.Random_Vector(1,n);
     y : Standard_Complex_Vectors.Vector(1..n);
+    z : Standard_Complex_Vectors.Vector(0..n);
     A : Standard_Complex_Matrices.Matrix(1..n,1..n);
     timer : Timing_Widget;
     m : integer32 := 0;
@@ -845,7 +850,7 @@ procedure ts_cycfun is
     tstart(timer);
     for i in 1..m loop
       x := Standard_Random_Vectors.Random_Vector(1,n);
-      Indexed_Evaluate_and_Differentiate(idx,x,y,A);
+      Indexed_Evaluate_and_Differentiate(idx,x,z,y,A);
     end loop;
     tstop(timer);
     print_times(standard_output,timer,"with precomputed indexes");
