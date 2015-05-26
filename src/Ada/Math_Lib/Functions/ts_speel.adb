@@ -1,5 +1,6 @@
 with text_io;                             use text_io;
 with Communications_with_User;            use Communications_with_User;
+with Timing_Package;                      use Timing_Package;
 with Standard_Natural_Numbers;            use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;         use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
@@ -910,6 +911,41 @@ procedure ts_speel is
     end case;
   end Evaluate_Gradient;
 
+  procedure Performance_Test is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the dimension and the number of times
+  --   to evaluate and differentiate a product of variables.
+
+    timer : Timing_Widget;
+    n,nbtimes : integer32 := 0;
+
+  begin
+    new_line;
+    put("Give the number of variables : "); get(n);
+    put("Give the frequency : "); get(nbtimes);
+    declare
+      x : constant Standard_Complex_Vectors.Vector(1..n)
+        := Standard_Random_Vectors.Random_Vector(1,n);
+      y : Standard_Complex_Vectors.Vector(0..n);
+    begin
+      tstart(timer);
+      for i in 1..nbtimes loop
+        y := Standard_Speelpenning_Products.Straight_Speel(x);
+      end loop;
+      tstop(timer);
+      new_line;
+      print_times(standard_output,timer,"straight eval and diff");
+      tstart(timer);
+      for i in 1..nbtimes loop
+        y := Standard_Speelpenning_Products.Reverse_Speel(x);
+      end loop;
+      tstop(timer);
+      new_line;
+      print_times(standard_output,timer,"reverse eval and diff");
+    end;
+  end Performance_Test;
+
   procedure Main is
 
     ans : character;
@@ -921,15 +957,17 @@ procedure ts_speel is
     put_line("  2. enter your own monomial;");
     put_line("  3. generate a random exponent vector;");
     put_line("  4. evaluate sequences of random monomials;");
-    put_line("  5. evaluate gradient of a sum of random monomials.");
+    put_line("  5. evaluate gradient of a sum of random monomials;");
+    put_line("  6. run performance test on Speelpenning's example.");
     put("Type 1, 2, 3, 4, or 5 to choose : ");
-    Ask_Alternative(ans,"12345");
+    Ask_Alternative(ans,"123456");
     case ans is
       when '1' => Run_Speelpenning;
       when '2' => Monomial_Evaluation;
       when '3' => Random_Monomial_Evaluation;
       when '4' => Evaluate_Monomials;
       when '5' => Evaluate_Gradient;
+      when '6' => Performance_Test;
       when others => null;
     end case;
   end Main;

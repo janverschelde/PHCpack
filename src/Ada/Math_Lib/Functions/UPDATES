@@ -1,5 +1,5 @@
 Tue 26 May 2015 : small updates in standard_gradient_evaluations.adb and
-  in ts_cycfun.adb.
+  in ts_cycfun.adb.  Added performance test to ts_speel.adb.
 
 Mon 25 May 2015 : extended ts_cycfun.adb with tests for double double and
   quad double arithmetic.
