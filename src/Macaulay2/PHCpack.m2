@@ -1,7 +1,7 @@
 
 newPackage(
   "PHCpack",
-  Version => "1.6.2", 
+  Version => "1.6.3", 
   Date => "21 May 2015",
   Authors => {
     {Name => "Elizabeth Gross",
@@ -915,6 +915,8 @@ solveSystem  List := List =>  o->system -> (
   -- IN:  system = list of polynomials with complex coeffiecients, 
   -- i.e. the system to solved 
   -- OUT: solutions to the system, a list of Points
+  -- fixed removing of nonzero slack variables
+  -- for overdetermined systems (JV 2015/05/27)
   
   if instance(ring ideal system, FractionField) then
      error "ring is a fraction field, use solveRationalSystem";
@@ -924,7 +926,8 @@ solveSystem  List := List =>  o->system -> (
     
   filename := getFilename();
   if o.Verbose then
-    stdio  << "using temporary files " << filename|"PHCinput" << " and " << filename|"PHCoutput" << endl;
+    stdio << "using temporary files " << filename|"PHCinput"
+          << " and " << filename|"PHCoutput" << endl;
   infile := filename|"PHCinput";
   outfile := filename|"PHCoutput";
   solnsfile := filename|"PHCsolns";
@@ -936,6 +939,9 @@ solveSystem  List := List =>  o->system -> (
   -- add slack variables if needed (i.e. if system is overdetermined)
   if n > numgens R then (
     nSlacks := n - numgens R;
+    if o.Verbose then
+      stdio << "adding " << nSlacks
+            << " slack variables to overdetermined system" << endl;
     slackVars := apply(nSlacks, i->getSymbol("OOOO"|toString i));
     newR := CC(monoid[gens R, slackVars]);
     rM := random(CC^n,CC^nSlacks);
@@ -951,13 +957,30 @@ solveSystem  List := List =>  o->system -> (
   ret := run(execstr);
   if ret =!= 0 then 
     error "error occurred while executing PHCpack command: phc -b";
+  if o.Verbose then
+    stdio << "solutions are in the file " << solnsfile << endl;
   execstr = PHCexe|" -z "|infile|" " |solnsfile;
   ret = run(execstr);
   if ret =!= 0 then 
     error "error occurred while executing PHCpack command: phc -z";
   
   -- parse and output the solutions:
-  result := parseSolutions(solnsfile, R);
+  local result;
+  if n == numgens R then (
+    result = parseSolutions(solnsfile, R)
+  )
+  else (
+    slackRing := (coefficientRing R)(gens R | slackVars);
+    result = parseSolutions(solnsfile, slackRing);
+    if o.Verbose then
+      stdio << "computed " << #result
+            << " solutions of system with slack variables" << endl;
+    result = zeroFilter(result, n-1, 1.0e-8);
+    if o.Verbose then
+      stdio << "after filtering nonsolutions : "
+            << #result << " solutions left" << endl;
+    scan(result, (sol -> sol#Coordinates = take(sol#Coordinates, numgens R)));
+  );
   result
 )
 
