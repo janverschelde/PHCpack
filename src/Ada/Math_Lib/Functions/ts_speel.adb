@@ -911,6 +911,123 @@ procedure ts_speel is
     end case;
   end Evaluate_Gradient;
 
+  procedure Standard_Performance_Test ( n,nbtimes : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Does nbtimes the evaluation and differentiation of a product
+  --   of n variables in standard double precision.
+
+    timer : Timing_Widget;
+    us,ur : duration;
+    x : constant Standard_Complex_Vectors.Vector(1..n)
+      := Standard_Random_Vectors.Random_Vector(1,n);
+    y : Standard_Complex_Vectors.Vector(0..n);
+
+  begin
+    tstart(timer);
+    for i in 1..nbtimes loop
+      y := Standard_Speelpenning_Products.Straight_Speel(x);
+    end loop;
+    tstop(timer);
+    us := Elapsed_User_Time(timer);
+    new_line;
+    print_times(standard_output,timer,"straight eval and diff");
+    tstart(timer);
+    for i in 1..nbtimes loop
+      y := Standard_Speelpenning_Products.Reverse_Speel(x);
+    end loop;
+    tstop(timer);
+    ur := Elapsed_User_Time(timer);
+    new_line;
+    print_times(standard_output,timer,"reverse eval and diff");
+    new_line;
+    put("Time for straightforward : ");
+    print_time(standard_output,us); new_line;
+    put("Time for reverse mode    : ");
+    print_time(standard_output,ur); new_line;
+    put("Speedup for n = "); put(n,1); put(" : ");
+    print_time(standard_output,us/ur); new_line;
+    put("n/3 : "); put(double_float(n)/3.0,3,3,0); new_line;
+  end Standard_Performance_Test;
+
+  procedure DoblDobl_Performance_Test ( n,nbtimes : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Does nbtimes the evaluation and differentiation of a product
+  --   of n variables in double double precision.
+
+    timer : Timing_Widget;
+    us,ur : duration;
+    x : constant DoblDobl_Complex_Vectors.Vector(1..n)
+      := DoblDobl_Random_Vectors.Random_Vector(1,n);
+    y : DoblDobl_Complex_Vectors.Vector(0..n);
+
+  begin
+    tstart(timer);
+    for i in 1..nbtimes loop
+      y := DoblDobl_Speelpenning_Products.Straight_Speel(x);
+    end loop;
+    tstop(timer);
+    us := Elapsed_User_Time(timer);
+    new_line;
+    print_times(standard_output,timer,"straight eval and diff");
+    tstart(timer);
+    for i in 1..nbtimes loop
+      y := DoblDobl_Speelpenning_Products.Reverse_Speel(x);
+    end loop;
+    tstop(timer);
+    ur := Elapsed_User_Time(timer);
+    new_line;
+    print_times(standard_output,timer,"reverse eval and diff");
+    new_line;
+    put("Time for straightforward : ");
+    print_time(standard_output,us); new_line;
+    put("Time for reverse mode    : ");
+    print_time(standard_output,ur); new_line;
+    put("Speedup for n = "); put(n,1); put(" : ");
+    print_time(standard_output,us/ur); new_line;
+    put("n/3 : "); put(double_float(n)/3.0,3,3,0); new_line;
+  end DoblDobl_Performance_Test;
+
+  procedure QuadDobl_Performance_Test ( n,nbtimes : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Does nbtimes the evaluation and differentiation of a product
+  --   of n variables in quad double precision.
+
+    timer : Timing_Widget;
+    us,ur : duration;
+    x : constant QuadDobl_Complex_Vectors.Vector(1..n)
+      := QuadDobl_Random_Vectors.Random_Vector(1,n);
+    y : QuadDobl_Complex_Vectors.Vector(0..n);
+
+  begin
+    tstart(timer);
+    for i in 1..nbtimes loop
+      y := QuadDobl_Speelpenning_Products.Straight_Speel(x);
+    end loop;
+    tstop(timer);
+    us := Elapsed_User_Time(timer);
+    new_line;
+    print_times(standard_output,timer,"straight eval and diff");
+    tstart(timer);
+    for i in 1..nbtimes loop
+      y := QuadDobl_Speelpenning_Products.Reverse_Speel(x);
+    end loop;
+    tstop(timer);
+    ur := Elapsed_User_Time(timer);
+    new_line;
+    print_times(standard_output,timer,"reverse eval and diff");
+    new_line;
+    put("Time for straightforward : ");
+    print_time(standard_output,us); new_line;
+    put("Time for reverse mode    : ");
+    print_time(standard_output,ur); new_line;
+    put("Speedup for n = "); put(n,1); put(" : ");
+    print_time(standard_output,us/ur); new_line;
+    put("n/3 : "); put(double_float(n)/3.0,3,3,0); new_line;
+  end QuadDobl_Performance_Test;
+
   procedure Performance_Test is
 
   -- DESCRIPTION :
@@ -919,31 +1036,25 @@ procedure ts_speel is
 
     timer : Timing_Widget;
     n,nbtimes : integer32 := 0;
+    ans : character;
 
   begin
     new_line;
     put("Give the number of variables : "); get(n);
     put("Give the frequency : "); get(nbtimes);
-    declare
-      x : constant Standard_Complex_Vectors.Vector(1..n)
-        := Standard_Random_Vectors.Random_Vector(1,n);
-      y : Standard_Complex_Vectors.Vector(0..n);
-    begin
-      tstart(timer);
-      for i in 1..nbtimes loop
-        y := Standard_Speelpenning_Products.Straight_Speel(x);
-      end loop;
-      tstop(timer);
-      new_line;
-      print_times(standard_output,timer,"straight eval and diff");
-      tstart(timer);
-      for i in 1..nbtimes loop
-        y := Standard_Speelpenning_Products.Reverse_Speel(x);
-      end loop;
-      tstop(timer);
-      new_line;
-      print_times(standard_output,timer,"reverse eval and diff");
-    end;
+    new_line;
+    put_line("MENU for the precision : ");
+    put_line("  0. standard double precision;");
+    put_line("  1. double double precision;");
+    put_line("  2. quad double precision;");
+    put("Type 0, 1, or 2 to select the precision : ");
+    Ask_Alternative(ans,"012");
+    case ans is
+      when '0' => Standard_Performance_Test(n,nbtimes);
+      when '1' => DoblDobl_Performance_Test(n,nbtimes);
+      when '2' => QuadDobl_Performance_Test(n,nbtimes);
+      when others => null;
+    end case;
   end Performance_Test;
 
   procedure Main is
