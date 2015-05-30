@@ -911,6 +911,26 @@ procedure ts_speel is
     end case;
   end Evaluate_Gradient;
 
+  procedure Write_Times ( n : in integer32; uf,ur : in duration ) is
+
+  -- DESCRIPTION :
+  --   Writes the elapsed user times for straightforward (uf)
+  --   and reverse algorithm (ur), with the computed speedup,
+  --   compared to the theoretical speedup of n/3.
+
+    fus : constant double_float := double_float(uf);
+    fur : constant double_float := double_float(ur);
+    spd : constant double_float := fus/fur;
+    tsp : constant double_float := double_float(n)/3.0;
+
+  begin
+    new_line;
+    put("Time for straightforward : "); put(fus,3); put_line(" seconds.");
+    put("Time for reverse mode    : "); put(fur,3); put_line(" seconds.");
+    put("Speedup for n = "); put(n,1); put(" : "); put(spd,3,2,0); put(".");
+    put("  n/3 : "); put(tsp,3,2,0); new_line;
+  end Write_Times;
+
   procedure Standard_Performance_Test ( n,nbtimes : in integer32 ) is
 
   -- DESCRIPTION :
@@ -940,14 +960,7 @@ procedure ts_speel is
     ur := Elapsed_User_Time(timer);
     new_line;
     print_times(standard_output,timer,"reverse eval and diff");
-    new_line;
-    put("Time for straightforward : ");
-    print_time(standard_output,us); new_line;
-    put("Time for reverse mode    : ");
-    print_time(standard_output,ur); new_line;
-    put("Speedup for n = "); put(n,1); put(" : ");
-    print_time(standard_output,us/ur); new_line;
-    put("n/3 : "); put(double_float(n)/3.0,3,3,0); new_line;
+    Write_Times(n,us,ur);
   end Standard_Performance_Test;
 
   procedure DoblDobl_Performance_Test ( n,nbtimes : in integer32 ) is
@@ -979,14 +992,7 @@ procedure ts_speel is
     ur := Elapsed_User_Time(timer);
     new_line;
     print_times(standard_output,timer,"reverse eval and diff");
-    new_line;
-    put("Time for straightforward : ");
-    print_time(standard_output,us); new_line;
-    put("Time for reverse mode    : ");
-    print_time(standard_output,ur); new_line;
-    put("Speedup for n = "); put(n,1); put(" : ");
-    print_time(standard_output,us/ur); new_line;
-    put("n/3 : "); put(double_float(n)/3.0,3,3,0); new_line;
+    Write_Times(n,us,ur);
   end DoblDobl_Performance_Test;
 
   procedure QuadDobl_Performance_Test ( n,nbtimes : in integer32 ) is
@@ -1018,14 +1024,7 @@ procedure ts_speel is
     ur := Elapsed_User_Time(timer);
     new_line;
     print_times(standard_output,timer,"reverse eval and diff");
-    new_line;
-    put("Time for straightforward : ");
-    print_time(standard_output,us); new_line;
-    put("Time for reverse mode    : ");
-    print_time(standard_output,ur); new_line;
-    put("Speedup for n = "); put(n,1); put(" : ");
-    print_time(standard_output,us/ur); new_line;
-    put("n/3 : "); put(double_float(n)/3.0,3,3,0); new_line;
+    Write_Times(n,us,ur);
   end QuadDobl_Performance_Test;
 
   procedure Performance_Test is

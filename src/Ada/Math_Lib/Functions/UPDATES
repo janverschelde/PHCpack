@@ -1,3 +1,5 @@
+Fri 29 May 2015 : better formatting of the times in ts_speel.adb.
+
 Tue 26 May 2015 : small updates in standard_gradient_evaluations.adb and
   in ts_cycfun.adb.  Added performance test to ts_speel.adb, for all three
   levels of precision: standard double, double double, and quad double.
