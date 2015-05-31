@@ -947,7 +947,7 @@ solveSystem  List := List =>  o->system -> (
     rM := random(CC^n,CC^nSlacks);
     system = apply(#system, i->sub(system#i,newR)
       +(rM^{i}*transpose submatrix'(vars newR,toList(0..numgens R - 1)))_(0,0))
-  ) else newR=R; 
+  ) else newR := R; 
 
   -- writing data to the corresponding files:    
   systemToFile(system,infile);
@@ -980,6 +980,7 @@ solveSystem  List := List =>  o->system -> (
       stdio << "after filtering nonsolutions : "
             << #result << " solutions left" << endl;
     scan(result, (sol -> sol#Coordinates = take(sol#Coordinates, numgens R)));
+    newR := (coefficientRing R)(gens R);
   );
   result
 )
