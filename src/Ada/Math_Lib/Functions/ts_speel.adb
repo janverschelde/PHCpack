@@ -26,8 +26,11 @@ with Double_Double_Numbers;               use Double_Double_Numbers;
 with Double_Double_Numbers_io;            use Double_Double_Numbers_io;
 with DoblDobl_Complex_Numbers;            use DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_io;         use DoblDobl_Complex_Numbers_io;
+with Double_Double_Vectors;
+with Double_Double_Vectors_io;            use Double_Double_Vectors_io;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Vectors_io;         use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_Vector_Norms;       use DoblDobl_Complex_Vector_Norms;
 with DoblDobl_Random_Vectors;
 with DoblDobl_Speelpenning_Products;
@@ -642,11 +645,12 @@ procedure ts_speel is
 
   procedure Check_DoblDobl_Evaluated_Gradient
                ( e : in Standard_Natural_VecVecs.VecVec;
-                 c,x,z : in DoblDobl_Complex_Vectors.Vector ) is
+                 c,x,z,z2 : in DoblDobl_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --   The vector z contains the evaluated monomials defined by e at x,
   --   where the coefficients are defined in c.
+  --   The vector z2 is obtained by the procedure.
 
     p : DoblDobl_Complex_Polynomials.Poly
       := Create_DoblDobl_Polynomial(c,e);
@@ -656,9 +660,12 @@ procedure ts_speel is
     diffnorm : double_double;
 
   begin
-    put("y : "); put(y); new_line;
-    put("z : "); put(z(0));
+    put(" y : "); put(y); new_line;
+    put(" z : "); put(z(0));
     diff := y - z(0); diffnorm := AbsVal(diff);
+    put("  d : "); put(diffnorm,3); new_line;
+    put("z2 : "); put(z2(0));
+    diff := y - z2(0); diffnorm := AbsVal(diff);
     put("  d : "); put(diffnorm,3); new_line;
     for i in x'range loop
       declare
@@ -666,9 +673,12 @@ procedure ts_speel is
           := DoblDobl_Complex_Polynomials.Diff(p,i);
       begin
         y := DoblDobl_Complex_Poly_Functions.Eval(q,x);
-        put("y'("); put(i,1); put(") : "); put(y); new_line;
-        put("z'("); put(i,1); put(") : "); put(z(i));
+        put(" y'("); put(i,1); put(") : "); put(y); new_line;
+        put(" z'("); put(i,1); put(") : "); put(z(i));
         diff := y - z(i); diffnorm := AbsVal(diff);
+        put("  d : "); put(diffnorm,3); new_line;
+        put("z2'("); put(i,1); put(") : "); put(z2(i));
+        diff := y - z2(i); diffnorm := AbsVal(diff);
         put("  d : "); put(diffnorm,3); new_line;
         DoblDobl_Complex_Polynomials.Clear(q);
       end;
@@ -867,23 +877,36 @@ procedure ts_speel is
     c : constant DoblDobl_Complex_Vectors.Vector(1..m)
       := DoblDobl_Random_Vectors.Random_Vector(1,m);
     f,b : Standard_Natural_VecVecs.VecVec(1..m);
+    wrk : DoblDobl_Complex_VecVecs.VecVec(1..m);
     x : constant DoblDobl_Complex_Vectors.Vector(1..n)
       := DoblDobl_Random_Vectors.Random_Vector(1,n);
-    z : DoblDobl_Complex_Vectors.Vector(0..n);
+    z,z2 : DoblDobl_Complex_Vectors.Vector(0..n);
+    numcnd : Double_Double_Vectors.Vector(0..n);
+
+    use DoblDobl_Gradient_Evaluations;
 
   begin
-    DoblDobl_Gradient_Evaluations.Split_Common_Factors(e,f,b);
+    Split_Common_Factors(e,f,b);
     put_line("The exponents, with splitted factors : ");
     for i in 1..m loop
       put(e(i).all);
       put(" = "); put(f(i).all);
       put(" + "); put(b(i).all); new_line;
     end loop;
-    z := DoblDobl_Gradient_Evaluations.Gradient_Sum_of_Monomials(f,b,x);
+    z := Gradient_Sum_of_Monomials(f,b,x);
     Check_DoblDobl_Evaluated_Gradient(e,x,z);
-    z := DoblDobl_Gradient_Evaluations.Gradient_of_Polynomial(f,b,c,x);
-    Check_DoblDobl_Evaluated_Gradient(e,c,x,z);
+    z := Gradient_of_Polynomial(f,b,c,x);
+    for i in b'range loop
+      wrk(i) := new DoblDobl_Complex_Vectors.Vector(0..n);
+    end loop;
+    Conditioned_Gradient_of_Polynomial(f,b,c,x,wrk,z2,numcnd);
+    Check_DoblDobl_Evaluated_Gradient(e,c,x,z,z2);
+    put_line("The numerators of the condition numbers : ");
+    put_line(numcnd);
+    Standard_Natural_VecVecs.Clear(b);
+    Standard_Natural_VecVecs.Clear(f);
     Standard_Natural_VecVecs.Clear(e);
+    DoblDobl_Complex_VecVecs.Clear(wrk);
   end DoblDobl_Evaluate_Gradient;
 
   procedure QuadDobl_Evaluate_Gradient ( n,d,m : in integer32 ) is
