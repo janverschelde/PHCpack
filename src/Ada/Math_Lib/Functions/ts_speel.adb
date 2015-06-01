@@ -13,8 +13,11 @@ with Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;         use Standard_Natural_Vectors_io;
 with Standard_Natural_VecVecs;
 with Standard_Integer_Vectors;
+with Standard_Floating_Vectors;
+with Standard_Floating_Vectors_io;        use Standard_Floating_Vectors_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;         use Standard_Complex_Vectors_io;
+with Standard_Complex_VecVecs;
 with Standard_Complex_Norms_Equals;       use Standard_Complex_Norms_Equals;
 with Standard_Random_Numbers;
 with Standard_Random_Vectors;             use Standard_Random_Vectors;
@@ -596,10 +599,12 @@ procedure ts_speel is
 
   procedure Check_Standard_Evaluated_Gradient
                ( e : in Standard_Natural_VecVecs.VecVec;
-                 c,x,z : in Standard_Complex_Vectors.Vector ) is
+                 c,x,z,z2 : in Standard_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
-  --   The vector z contains the evaluated monomials defined by e at x.
+  --   The vector z contains the evaluated monomials defined by e at x,
+  --   where the coefficients are defined in c.
+  --   The vector z2 is obtained by the procedure.
 
     p : Standard_Complex_Polynomials.Poly
       := Create_Standard_Polynomial(c,e);
@@ -609,9 +614,12 @@ procedure ts_speel is
     diffnorm : double_float;
 
   begin
-    put("y : "); put(y); new_line;
-    put("z : "); put(z(0));
+    put(" y : "); put(y); new_line;
+    put(" z : "); put(z(0));
     diff := y - z(0); diffnorm := AbsVal(diff);
+    put("  d : "); put(diffnorm,3); new_line;
+    put("z2 : "); put(z2(0));
+    diff := y - z2(0); diffnorm := AbsVal(diff);
     put("  d : "); put(diffnorm,3); new_line;
     for i in x'range loop
       declare
@@ -619,9 +627,12 @@ procedure ts_speel is
           := Standard_Complex_Polynomials.Diff(p,i);
       begin
         y := Standard_Complex_Poly_Functions.Eval(q,x);
-        put("y'("); put(i,1); put(") : "); put(y); new_line;
-        put("z'("); put(i,1); put(") : "); put(z(i));
+        put(" y'("); put(i,1); put(") : "); put(y); new_line;
+        put(" z'("); put(i,1); put(") : "); put(z(i));
         diff := y - z(i); diffnorm := AbsVal(diff);
+        put("  d : "); put(diffnorm,3); new_line;
+        put("z2'("); put(i,1); put(") : "); put(z2(i));
+        diff := y - z2(i); diffnorm := AbsVal(diff);
         put("  d : "); put(diffnorm,3); new_line;
         Standard_Complex_Polynomials.Clear(q);
       end;
@@ -634,7 +645,8 @@ procedure ts_speel is
                  c,x,z : in DoblDobl_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
-  --   The vector z contains the evaluated monomials defined by e at x.
+  --   The vector z contains the evaluated monomials defined by e at x,
+  --   where the coefficients are defined in c.
 
     p : DoblDobl_Complex_Polynomials.Poly
       := Create_DoblDobl_Polynomial(c,e);
@@ -669,7 +681,8 @@ procedure ts_speel is
                  c,x,z : in QuadDobl_Complex_Vectors.Vector ) is
 
   -- DESCRIPTION :
-  --   The vector z contains the evaluated monomials defined by e at x.
+  --   The vector z contains the evaluated monomials defined by e at x,
+  --   where the coefficients are defined in z.
 
     p : QuadDobl_Complex_Polynomials.Poly
       := Create_QuadDobl_Polynomial(c,e);
@@ -705,6 +718,7 @@ procedure ts_speel is
 
   -- DESCRIPTION :
   --   The vector z contains the evaluated monomials defined by e at x.
+  --   The coefficients of the monomials are all ones.
 
     p : Standard_Complex_Polynomials.Poly := Create_Standard_Polynomial(e);
     y : Standard_Complex_Numbers.Complex_Number
@@ -739,6 +753,7 @@ procedure ts_speel is
 
   -- DESCRIPTION :
   --   The vector z contains the evaluated monomials defined by e at x.
+  --   The coefficients of the monomials are all ones.
 
     p : DoblDobl_Complex_Polynomials.Poly := Create_DoblDobl_Polynomial(e);
     y : DoblDobl_Complex_Numbers.Complex_Number
@@ -773,6 +788,7 @@ procedure ts_speel is
 
   -- DESCRIPTION :
   --   The vector z contains the evaluated monomials defined by e at x.
+  --   The coefficients of the monomials are all ones.
 
     p : QuadDobl_Complex_Polynomials.Poly := Create_QuadDobl_Polynomial(e);
     y : QuadDobl_Complex_Numbers.Complex_Number
@@ -807,25 +823,38 @@ procedure ts_speel is
   --   Randomly generates a sequence of m monomials in n variables
   --   of degrees at most d, using standard arithmetic.
 
+    use Standard_Gradient_Evaluations;
+
     e : Standard_Natural_VecVecs.VecVec(1..m) := Random_Exponents(n,d,m);
     c : constant Standard_Complex_Vectors.Vector(1..m) := Random_Vector(1,m);
     f,b : Standard_Natural_VecVecs.VecVec(1..m);
+    wrk : Standard_Complex_VecVecs.VecVec(1..m);
     x : constant Standard_Complex_Vectors.Vector(1..n) := Random_Vector(1,n);
-    z : Standard_Complex_Vectors.Vector(0..n);
+    z,z2 : Standard_Complex_Vectors.Vector(0..n);
+    numcnd : Standard_Floating_Vectors.Vector(0..n);
 
   begin
-    Standard_Gradient_Evaluations.Split_Common_Factors(e,f,b);
+    Split_Common_Factors(e,f,b);
     put_line("The exponents, with splitted factors : ");
     for i in 1..m loop
       put(e(i).all);
       put(" = "); put(f(i).all);
       put(" + "); put(b(i).all); new_line;
     end loop;
-    z := Standard_Gradient_Evaluations.Gradient_Sum_of_Monomials(f,b,x);
+    z := Gradient_Sum_of_Monomials(f,b,x);
     Check_Standard_Evaluated_Gradient(e,x,z);
-    z := Standard_Gradient_Evaluations.Gradient_of_Polynomial(f,b,c,x);
-    Check_Standard_Evaluated_Gradient(e,c,x,z);
+    z := Gradient_of_Polynomial(f,b,c,x);
+    for i in b'range loop
+      wrk(i) := new Standard_Complex_Vectors.Vector(0..n);
+    end loop;
+    Conditioned_Gradient_of_Polynomial(f,b,c,x,wrk,z2,numcnd);
+    Check_Standard_Evaluated_Gradient(e,c,x,z,z2);
+    put_line("The numerators of the condition numbers : ");
+    put_line(numcnd);
     Standard_Natural_VecVecs.Clear(e);
+    Standard_Natural_VecVecs.Clear(f);
+    Standard_Natural_VecVecs.Clear(b);
+    Standard_Complex_VecVecs.Clear(wrk);
   end Standard_Evaluate_Gradient;
 
   procedure DoblDobl_Evaluate_Gradient ( n,d,m : in integer32 ) is

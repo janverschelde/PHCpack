@@ -1,3 +1,6 @@
+Mon 1 Jun 2015 : updated standard_gradient_evaluations with numerators of
+  condition numbers, tested by ts_speel.adb.
+
 Fri 29 May 2015 : better formatting of the times in ts_speel.adb.
 
 Tue 26 May 2015 : small updates in standard_gradient_evaluations.adb and

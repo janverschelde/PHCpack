@@ -199,21 +199,46 @@ package body Standard_Gradient_Evaluations is
   procedure Gradient_of_Polynomial
              ( f,b : in Standard_Natural_VecVecs.VecVec;
                c,x : in Standard_Complex_Vectors.Vector;
-               y : in out Standard_Complex_VecVecs.VecVec;
-               r : out Standard_Complex_Vectors.Vector ) is
+               wrk : in out Standard_Complex_VecVecs.VecVec;
+               ydx : out Standard_Complex_Vectors.Vector ) is
 
     n : constant integer32 := x'last;
     yind : Standard_Complex_Vectors.Link_to_Vector;
 
   begin
-    Gradient_Monomials(f,b,x,y);
-    r := (0..n => Create(0.0));
-    for i in y'range loop
-      yind := y(i);
-      for j in r'range loop
-        r(j) := r(j) + c(i)*yind(j);
+    Gradient_Monomials(f,b,x,wrk);
+    ydx := (0..n => Create(0.0));
+    for i in wrk'range loop
+      yind := wrk(i);
+      for j in ydx'range loop
+        ydx(j) := ydx(j) + c(i)*yind(j);
       end loop;
     end loop;
   end Gradient_of_Polynomial;
+
+  procedure Conditioned_Gradient_of_Polynomial
+             ( f,b : in Standard_Natural_VecVecs.VecVec;
+               c,x : in Standard_Complex_Vectors.Vector;
+               wrk : in out Standard_Complex_VecVecs.VecVec;
+               ydx : out Standard_Complex_Vectors.Vector;
+               numcnd : out Standard_Floating_Vectors.Vector ) is
+
+    n : constant integer32 := x'last;
+    yind : Standard_Complex_Vectors.Link_to_Vector;
+    ciyj : Complex_Number;
+
+  begin
+    Gradient_Monomials(f,b,x,wrk);
+    ydx := (0..n => Create(0.0));
+    numcnd := (0..n => 0.0);
+    for i in wrk'range loop
+      yind := wrk(i);
+      for j in ydx'range loop
+        ciyj := c(i)*yind(j);
+        ydx(j) := ydx(j) + ciyj;
+        numcnd(j) := numcnd(j) + Absval(ciyj); 
+      end loop;
+    end loop;
+  end Conditioned_Gradient_of_Polynomial;
 
 end Standard_Gradient_Evaluations;
