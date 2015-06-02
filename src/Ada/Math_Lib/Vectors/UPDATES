@@ -1,3 +1,6 @@
+Tue 2 Jun 2015 : fixed bug in initialization of Sum in generic_vectors.adb,
+  which affected the multiprecision versions.
+
 Fri 26 Dec 2014 : in standard_complex_vector_strings.adb fixed bug when
   index went over the end of a string.  Applied the same fix for the 
   dobldobl, quaddobl, and multprec versions.

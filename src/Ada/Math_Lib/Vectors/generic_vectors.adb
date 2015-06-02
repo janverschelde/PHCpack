@@ -141,7 +141,7 @@ package body Generic_Vectors is
 
   function Sum ( v : Vector ) return number is
 
-    res : number := zero;
+    res : number;
 
   begin
     Copy(v(v'first),res);
