@@ -54,9 +54,11 @@ quaddobl_polynomial_flatteners    : flattened representation of quaddobl system
 standard_speelpenning_products    : evaluate and differentiate variable product
 dobldobl_speelpenning_products    : Speelpenning product with double doubles
 quaddobl_speelpenning_products    : Speelpenning product with quad doubles
+multprec_speelpenning_products    : Speelpenning product with multprecision
 standard_monomial_evaluations     : evaluations of monomials
 dobldobl_monomial_evaluations     : monomial evaluations with double doubles
 quaddobl_monomial_evaluations     : monomial evaluations with quad doubles
+multprec_monomial_evaluations     : monomial evaluations with multiprecision
 standard_gradient_evaluations     : evaluation and gradient computation
 dobldobl_gradient_evaluations     : double double gradient computation
 quaddobl_gradient_evaluations     : quad double gradient computation

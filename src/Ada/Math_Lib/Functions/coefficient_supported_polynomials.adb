@@ -2,6 +2,7 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with Multprec_Complex_Numbers;
 with Standard_Natural_Vectors;
 
 package body Coefficient_Supported_Polynomials is
@@ -18,6 +19,7 @@ package body Coefficient_Supported_Polynomials is
       t.cf := Standard_Complex_Numbers.Create(1.0);
       t.dg := new Standard_Natural_Vectors.Vector'(e(i).all);
       Standard_Complex_Polynomials.Add(res,t);
+      Standard_Complex_Polynomials.Clear(t);
     end loop;
     return res;
   end Create_Standard_Polynomial;
@@ -35,6 +37,7 @@ package body Coefficient_Supported_Polynomials is
       t.cf := c(i);
       t.dg := new Standard_Natural_Vectors.Vector'(e(i).all);
       Standard_Complex_Polynomials.Add(res,t);
+      Standard_Complex_Polynomials.Clear(t);
     end loop;
     return res;
   end Create_Standard_Polynomial;
@@ -94,6 +97,7 @@ package body Coefficient_Supported_Polynomials is
       t.cf := DoblDobl_Complex_Numbers.Create(integer(1));
       t.dg := new Standard_Natural_Vectors.Vector'(e(i).all);
       DoblDobl_Complex_Polynomials.Add(res,t);
+      DoblDobl_Complex_Polynomials.Clear(t);
     end loop;
     return res;
   end Create_DoblDobl_Polynomial;
@@ -111,6 +115,7 @@ package body Coefficient_Supported_Polynomials is
       t.cf := c(i);
       t.dg := new Standard_Natural_Vectors.Vector'(e(i).all);
       DoblDobl_Complex_Polynomials.Add(res,t);
+      DoblDobl_Complex_Polynomials.Clear(t);
     end loop;
     return res;
   end Create_DoblDobl_Polynomial;
@@ -127,6 +132,7 @@ package body Coefficient_Supported_Polynomials is
       t.cf := QuadDobl_Complex_Numbers.Create(integer(1));
       t.dg := new Standard_Natural_Vectors.Vector'(e(i).all);
       QuadDobl_Complex_Polynomials.Add(res,t);
+      QuadDobl_Complex_Polynomials.Clear(t);
     end loop;
     return res;
   end Create_QuadDobl_Polynomial;
@@ -144,8 +150,44 @@ package body Coefficient_Supported_Polynomials is
       t.cf := c(i);
       t.dg := new Standard_Natural_Vectors.Vector'(e(i).all);
       QuadDobl_Complex_Polynomials.Add(res,t);
+      QuadDobl_Complex_Polynomials.Clear(t);
     end loop;
     return res;
   end Create_QuadDobl_Polynomial;
+
+  function Create_Multprec_Polynomial
+             ( e : Standard_Natural_VecVecs.VecVec )
+             return Multprec_Complex_Polynomials.Poly is
+
+    res : Multprec_Complex_Polynomials.Poly;
+    t : Multprec_Complex_Polynomials.Term;
+
+  begin
+    for i in e'range loop
+      t.cf := Multprec_Complex_Numbers.Create(integer(1));
+      t.dg := new Standard_Natural_Vectors.Vector'(e(i).all);
+      Multprec_Complex_Polynomials.Add(res,t);
+      Multprec_Complex_Polynomials.Clear(t);
+    end loop;
+    return res;
+  end Create_Multprec_Polynomial;
+
+  function Create_Multprec_Polynomial
+             ( c : Multprec_Complex_Vectors.Vector;
+               e : Standard_Natural_VecVecs.VecVec )
+             return Multprec_Complex_Polynomials.Poly is
+
+    res : Multprec_Complex_Polynomials.Poly;
+    t : Multprec_Complex_Polynomials.Term;
+
+  begin
+    for i in e'range loop
+      Multprec_Complex_Numbers.Copy(c(i),t.cf);
+      t.dg := new Standard_Natural_Vectors.Vector'(e(i).all);
+      Multprec_Complex_Polynomials.Add(res,t);
+      Multprec_Complex_Polynomials.Clear(t);
+    end loop;
+    return res;
+  end Create_Multprec_Polynomial;
 
 end Coefficient_Supported_Polynomials;

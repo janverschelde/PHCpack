@@ -7,7 +7,7 @@ with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;        use Standard_Floating_Numbers_io;
-with Standard_Complex_Numbers;            use Standard_Complex_Numbers;
+with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;         use Standard_Complex_Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;         use Standard_Natural_Vectors_io;
@@ -24,7 +24,7 @@ with Standard_Random_Vectors;             use Standard_Random_Vectors;
 with Standard_Speelpenning_Products;
 with Double_Double_Numbers;               use Double_Double_Numbers;
 with Double_Double_Numbers_io;            use Double_Double_Numbers_io;
-with DoblDobl_Complex_Numbers;            use DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_io;         use DoblDobl_Complex_Numbers_io;
 with Double_Double_Vectors;
 with Double_Double_Vectors_io;            use Double_Double_Vectors_io;
@@ -36,7 +36,7 @@ with DoblDobl_Random_Vectors;
 with DoblDobl_Speelpenning_Products;
 with Quad_Double_Numbers;                 use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;              use Quad_Double_Numbers_io;
-with QuadDobl_Complex_Numbers;            use QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers_io;         use QuadDobl_Complex_Numbers_io;
 with Quad_Double_Vectors;
 with Quad_Double_Vectors_io;              use Quad_Double_Vectors_io;
@@ -46,9 +46,19 @@ with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vector_Norms;       use QuadDobl_Complex_Vector_Norms;
 with QuadDobl_Random_Vectors;
 with QuadDobl_Speelpenning_Products;
+with Multprec_Floating_Numbers;           use Multprec_Floating_Numbers;
+with Multprec_Floating_Numbers_io;        use Multprec_Floating_Numbers_io;
+with Multprec_Complex_Numbers;
+with Multprec_Complex_Numbers_io;         use Multprec_Complex_Numbers_io;
+with Multprec_Complex_Vectors;
+with Multprec_Complex_Vectors_io;         use Multprec_Complex_Vectors_io;
+with Multprec_Complex_Norms_Equals;       use Multprec_Complex_Norms_Equals;
+with Multprec_Random_Vectors;
+with Multprec_Speelpenning_Products;
 with Standard_Monomial_Evaluations;
 with DoblDobl_Monomial_Evaluations;
 with QuadDobl_Monomial_Evaluations;
+with Multprec_Monomial_Evaluations;
 with Symbol_Table;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Functions;
@@ -57,6 +67,8 @@ with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Functions;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Functions;
+with Multprec_Complex_Polynomials;
+with Multprec_Complex_Poly_Functions;
 with Coefficient_Supported_Polynomials;   use Coefficient_Supported_Polynomials;
 with Standard_Gradient_Evaluations;
 with DoblDobl_Gradient_Evaluations;
@@ -80,6 +92,7 @@ procedure ts_speel is
     y,z : Standard_Complex_Vectors.Vector(0..n);
     sum,d : double_float;
 
+    use Standard_Complex_Numbers;
     use Standard_Speelpenning_Products;
 
   begin
@@ -107,6 +120,7 @@ procedure ts_speel is
     y,z : DoblDobl_Complex_Vectors.Vector(0..n);
     sum,d : double_double;
 
+    use DoblDobl_Complex_Numbers;
     use DoblDobl_Speelpenning_Products;
 
   begin
@@ -127,13 +141,14 @@ procedure ts_speel is
   -- DESCRIPTION :
   --   Compares the evaluation and differentiation of a product of n
   --   variables with and without algorithm differentiation techniques,
-  --   using double double complex arithmetic.
+  --   using quad double complex arithmetic.
 
     x : constant QuadDobl_Complex_Vectors.Vector(1..n)
       := QuadDobl_Random_Vectors.Random_Vector(1,n);
     y,z : QuadDobl_Complex_Vectors.Vector(0..n);
     sum,d : quad_double;
 
+    use QuadDobl_Complex_Numbers;
     use QuadDobl_Speelpenning_Products;
 
   begin
@@ -149,6 +164,45 @@ procedure ts_speel is
     put("Sum of differences : "); put(sum); new_line;
   end Run_QuadDobl_Speelpenning_Example;
 
+  procedure Run_Multprec_Speelpenning_Example ( n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Compares the evaluation and differentiation of a product of n
+  --   variables with and without algorithm differentiation techniques,
+  --   using arbitrary multiprecision complex arithmetic.
+
+    deci,size : natural32 := 0;
+    x : Multprec_Complex_Vectors.Vector(1..n);
+    y,z : Multprec_Complex_Vectors.Vector(0..n);
+    dyz : Multprec_Complex_Numbers.Complex_Number;
+    sum,d : Floating_Number;
+
+    use Multprec_Complex_Numbers;
+    use Multprec_Speelpenning_Products;
+
+  begin
+    new_line;
+    put("Give the number of decimal places : "); get(deci);
+    size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
+    x := Multprec_Random_Vectors.Random_Vector(1,n,size);
+   -- put_line("A random vector : "); put_line(x);
+    put_line("Speelpenning's example at a random vector :");
+    y := Straight_Speel(x); put_line(y);
+    put_line("Running Speelpenning's example in reverse mode :");
+    z := Reverse_Speel(x); put_line(z);
+    sum := Create(integer(0));
+    for i in 0..n loop
+      dyz := y(i) - z(i);
+      d := AbsVal(dyz); Clear(dyz);
+      Add(sum,d); Clear(d);
+    end loop;
+    put("Sum of differences : "); put(sum); new_line;
+    Clear(sum);
+    Multprec_Complex_Vectors.Clear(x);
+    Multprec_Complex_Vectors.Clear(y);
+    Multprec_Complex_Vectors.Clear(z);
+  end Run_Multprec_Speelpenning_Example;
+
   procedure Run_Speelpenning is
 
   -- DESCRIPTION :
@@ -161,12 +215,13 @@ procedure ts_speel is
     new_line;
     put_line("Computing the example of Speelpenning ...");
     put("give the n, the number of variables : "); get(n);
-    put("standard, double double, or quad double arithmetic ? (s/d/q) ");
-    Ask_Alternative(ans,"sdq");
+    put("double, double double, quad double, or multiprecision ? (s/d/q/m) ");
+    Ask_Alternative(ans,"sdqm");
     case ans is
       when 's' => Run_Standard_Speelpenning_Example(n);
       when 'd' => Run_DoblDobl_Speelpenning_Example(n);
       when 'q' => Run_QuadDobl_Speelpenning_Example(n);
+      when 'm' => Run_Multprec_Speelpenning_Example(n);
       when others => null;
     end case;
   end Run_Speelpenning;
@@ -215,6 +270,8 @@ procedure ts_speel is
 
     sum,d : double_float := 0.0;
 
+    use Standard_Complex_Numbers;
+
   begin
     for i in x'range loop
       d := AbsVal(x(i) - y(i));
@@ -230,6 +287,8 @@ procedure ts_speel is
   --   and the sum of this differences.
 
     sum,d : double_double := create(integer(0));
+
+    use DoblDobl_Complex_Numbers;
 
   begin
     for i in x'range loop
@@ -247,10 +306,32 @@ procedure ts_speel is
 
     sum,d : quad_double := create(integer(0));
 
+    use QuadDobl_Complex_Numbers;
+
   begin
     for i in x'range loop
       d := AbsVal(x(i) - y(i));
       sum := sum + d;
+    end loop;
+    put("Sum of differences : "); put(sum); new_line;
+  end Compare;
+
+  procedure Compare ( x,y : in Multprec_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Prints the componentwise differences between the vectors x and y
+  --   and the sum of this differences.
+
+    sum,d : Floating_Number := create(integer(0));
+    dxy : Multprec_Complex_Numbers.Complex_Number;
+
+    use Multprec_Complex_Numbers;
+
+  begin
+    for i in x'range loop
+      dxy := x(i) - y(i);
+      d := AbsVal(dxy); Clear(dxy);
+      Add(sum,d); Clear(d);
     end loop;
     put("Sum of differences : "); put(sum); new_line;
   end Compare;
@@ -321,6 +402,29 @@ procedure ts_speel is
     Compare(y,z2);
   end Run_QuadDobl_Speelpenning_Monomial;
 
+  procedure Run_Multprec_Speelpenning_Monomial
+              ( n : in integer32; size : natural32;
+                e : in Standard_Natural_Vectors.Vector ) is
+
+    x : Multprec_Complex_Vectors.Vector(1..n)
+      := Multprec_Random_Vectors.Random_Vector(1,n,size);
+    y,z,z2 : Multprec_Complex_Vectors.Vector(0..n);
+    idx : constant Standard_Integer_Vectors.Vector
+        := Standard_Speelpenning_Products.Nonzero_Indices(e);
+
+    use Multprec_Speelpenning_Products;
+
+  begin
+    put_line("Speelpenning's example at a random vector :");
+    y := Straight_Speel(e,x); put_line(y);
+    put_line("Running Speelspenning's example in reverse mode :");
+    z := Reverse_Speel(e,x); put_line(z);
+    Compare(y,z);
+    put_line("Running indexed version of Speelpenning's example :");
+    z2 := Indexed_Reverse_Speel(idx,x); put_line(z2);
+    Compare(y,z2);
+  end Run_Multprec_Speelpenning_Monomial;
+
   procedure Monomial_Evaluation is
 
   -- DESCRIPTION :
@@ -385,12 +489,20 @@ procedure ts_speel is
         := Random_Exponent(n,1);
     begin
       put("The exponent vector is"); put(e); put_line(".");
-      put("standard, double double, or quad double arithmetic ? (s/d/q) ");
-      Ask_Alternative(ans,"sdq");
+      put("double, double double, quad double, or multiprecision? (s/d/q/m) ");
+      Ask_Alternative(ans,"sdqm");
       case ans is
         when 's' => Run_Standard_Speelpenning_Monomial(n,e);
         when 'd' => Run_DoblDobl_Speelpenning_Monomial(n,e);
-        when 'q' => Run_QuadDobl_Speelpenning_Monomial(n,e);
+        when 'q'
+          => declare
+               deci,size : natural32 := 0;
+             begin
+               new_line;
+               put("Give the number of decimal places : "); get(deci);
+               size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
+               Run_Multprec_Speelpenning_Monomial(n,size,e);
+             end;
         when others => null;
       end case;
     end;
@@ -492,6 +604,32 @@ procedure ts_speel is
     put("Polynomial sum : "); put(sum); new_line;
   end Write_Difference;
 
+  procedure Write_Difference
+              ( a,b : in Multprec_Complex_Vectors.Vector;
+                sum : in Multprec_Complex_Numbers.Complex_Number ) is
+
+  -- DESCRIPTION :
+  --   Writes the difference between the two vectors a and b.
+  --   The variable sum contains the sum of the evaluated monomials
+  --   defined by the exponents.
+
+    use Multprec_Complex_Vectors;
+    c : Vector(a'range) := a - b;
+    d : Floating_Number := Max_Norm(c);
+    a_sum : Multprec_Complex_Numbers.Complex_Number
+          := Multprec_Complex_Vectors.Sum(a);
+    b_sum : Multprec_Complex_Numbers.Complex_Number
+          := Multprec_Complex_Vectors.Sum(b);
+
+  begin
+    put_line("the first vector : "); put_line(a);
+    put_line("the second vector : "); put_line(b);
+    put("Difference between vectors : "); put(d,3); new_line;
+    put("   The 1st sum : "); put(a_sum); new_line;
+    put("   The 2nd sum : "); put(b_sum); new_line;
+    put("Polynomial sum : "); put(sum); new_line;
+  end Write_Difference;
+
   procedure Standard_Evaluate_Monomials
               ( n,m : in integer32;
                 e : in Standard_Natural_VecVecs.VecVec ) is
@@ -567,6 +705,32 @@ procedure ts_speel is
     QuadDobl_Complex_Polynomials.Clear(p);
   end QuadDobl_Evaluate_Monomials;
 
+  procedure Multprec_Evaluate_Monomials
+              ( n,m : in integer32; size : in natural32;
+                e : in Standard_Natural_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Evaluates m random monomials in n variables and of degrees in e
+  --   using multiprecision arithmetic, with numbers of the given size,
+  --   once with tables of powers, and once without, 
+  --   comparing the results, also with the sum
+  --   of the monomials defined by the exponents in e.
+
+    use Multprec_Monomial_Evaluations;
+    x : Multprec_Complex_Vectors.Vector(1..n)
+      := Multprec_Random_Vectors.Random_Vector(1,n,size);
+    y,z : Multprec_Complex_Vectors.Vector(1..m);
+    p : Multprec_Complex_Polynomials.Poly := Create_Multprec_Polynomial(e);
+    w : Multprec_Complex_Numbers.Complex_Number;
+
+  begin
+    y := Eval(e,x);
+    z := Eval_with_Power_Table(e,x);
+    w := Multprec_Complex_Poly_Functions.Eval(p,x);
+    Write_Difference(y,z,w);
+    Multprec_Complex_Polynomials.Clear(p);
+  end Multprec_Evaluate_Monomials;
+
   procedure Evaluate_Monomials is
 
   -- DESCRIPTION :
@@ -591,12 +755,21 @@ procedure ts_speel is
       end loop;
       put("The largest degrees : ");
       put(Standard_Monomial_Evaluations.Largest_Degrees(n,e)); new_line;
-      put("standard, double double, or quad double arithmetic ? (s/d/q) ");
-      Ask_Alternative(ans,"sdq");
+      put("double, double double, quad double, or multiprecision? (s/d/q/m) ");
+      Ask_Alternative(ans,"sdqm");
       case ans is
         when 's' => Standard_Evaluate_Monomials(n,m,e);
         when 'd' => DoblDobl_Evaluate_Monomials(n,m,e);
         when 'q' => QuadDobl_Evaluate_Monomials(n,m,e);
+        when 'm' =>
+          declare
+            deci,size : natural32 := 0;
+          begin
+            new_line;
+            put("Give the number of decimal places : "); get(deci);
+            size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
+            Multprec_Evaluate_Monomials(n,m,size,e);
+          end;
         when others => null;
       end case;
       Standard_Natural_VecVecs.Clear(e);
@@ -618,6 +791,8 @@ procedure ts_speel is
       := Standard_Complex_Poly_Functions.Eval(p,x);
     diff : Standard_Complex_Numbers.Complex_Number;
     diffnorm : double_float;
+
+    use Standard_Complex_Numbers;
 
   begin
     put(" y : "); put(y); new_line;
@@ -662,6 +837,8 @@ procedure ts_speel is
     diff : DoblDobl_Complex_Numbers.Complex_Number;
     diffnorm : double_double;
 
+    use DoblDobl_Complex_Numbers;
+
   begin
     put(" y : "); put(y); new_line;
     put(" z : "); put(z(0));
@@ -705,6 +882,8 @@ procedure ts_speel is
     diff : QuadDobl_Complex_Numbers.Complex_Number;
     diffnorm : quad_double;
 
+    use QuadDobl_Complex_Numbers;
+
   begin
     put(" y : "); put(y); new_line;
     put(" z : "); put(z(0));
@@ -746,6 +925,8 @@ procedure ts_speel is
     diff : Standard_Complex_Numbers.Complex_Number;
     diffnorm : double_float;
 
+    use Standard_Complex_Numbers;
+
   begin
     put("y : "); put(y); new_line;
     put("z : "); put(z(0));
@@ -781,6 +962,8 @@ procedure ts_speel is
     diff : DoblDobl_Complex_Numbers.Complex_Number;
     diffnorm : double_double;
 
+    use DoblDobl_Complex_Numbers;
+
   begin
     put("y : "); put(y); new_line;
     put("z : "); put(z(0));
@@ -815,6 +998,8 @@ procedure ts_speel is
       := QuadDobl_Complex_Poly_Functions.Eval(p,x);
     diff : QuadDobl_Complex_Numbers.Complex_Number;
     diffnorm : quad_double;
+
+    use QuadDobl_Complex_Numbers;
 
   begin
     put("y : "); put(y); new_line;

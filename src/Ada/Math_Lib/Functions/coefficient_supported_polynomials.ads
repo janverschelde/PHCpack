@@ -3,10 +3,12 @@ with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
+with Multprec_Complex_Vectors;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Polynomials;
 with QuadDobl_Complex_Polynomials;
+with Multprec_Complex_Polynomials;
 
 package Coefficient_Supported_Polynomials is
 
@@ -71,6 +73,20 @@ package Coefficient_Supported_Polynomials is
               ( c : QuadDobl_Complex_Vectors.Vector;
                 e : Standard_Natural_VecVecs.VecVec )
               return QuadDobl_Complex_Polynomials.Poly;
+
+  -- DESCRIPTION :
+  --   Returns the polynomial which is the sum of monomials with
+  --   exponents in e and with constant coefficients all equal to one
+  --   if c is unspecified, otherwise the polynomial on return is the
+  --   sum of the terms c(i)*x^e(i), for i in c'range = e'range.
+
+  function Create_Multprec_Polynomial
+              ( e : Standard_Natural_VecVecs.VecVec )
+              return Multprec_Complex_Polynomials.Poly;
+  function Create_Multprec_Polynomial
+              ( c : Multprec_Complex_Vectors.Vector;
+                e : Standard_Natural_VecVecs.VecVec )
+              return Multprec_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns the polynomial which is the sum of monomials with

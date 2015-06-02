@@ -1,3 +1,7 @@
+Tue 2 Jun 2015 : updates in coefficient_supported_polynomials for the
+  multiprecision polynomials.  New packages multprec_speelpenning_products
+  and multprec_monomial_evaluations, tested by ts_speel.
+
 Mon 1 Jun 2015 : updated standard_gradient_evaluations with numerators of
   condition numbers, tested by ts_speel.adb.  Also done for double doubles
   and quad doubles, changed {dobldobl,quaddobl}_gradient_evaluations.
