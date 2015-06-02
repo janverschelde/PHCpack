@@ -1,5 +1,6 @@
 Mon 1 Jun 2015 : updated standard_gradient_evaluations with numerators of
-  condition numbers, tested by ts_speel.adb.  Also done for double doubles.
+  condition numbers, tested by ts_speel.adb.  Also done for double doubles
+  and quad doubles, changed {dobldobl,quaddobl}_gradient_evaluations.
 
 Fri 29 May 2015 : better formatting of the times in ts_speel.adb.
 
