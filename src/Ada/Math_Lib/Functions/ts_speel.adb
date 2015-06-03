@@ -50,10 +50,13 @@ with Multprec_Floating_Numbers;           use Multprec_Floating_Numbers;
 with Multprec_Floating_Numbers_io;        use Multprec_Floating_Numbers_io;
 with Multprec_Complex_Numbers;
 with Multprec_Complex_Numbers_io;         use Multprec_Complex_Numbers_io;
+with Multprec_Floating_Vectors;
+with Multprec_Floating_Vectors_io;        use Multprec_Floating_Vectors_io;
 with Multprec_Complex_Vectors;
 with Multprec_Complex_Vectors_io;         use Multprec_Complex_Vectors_io;
 with Multprec_Complex_Norms_Equals;       use Multprec_Complex_Norms_Equals;
 with Multprec_Random_Vectors;
+with Multprec_Complex_VecVecs;
 with Multprec_Speelpenning_Products;
 with Standard_Monomial_Evaluations;
 with DoblDobl_Monomial_Evaluations;
@@ -73,6 +76,7 @@ with Coefficient_Supported_Polynomials;   use Coefficient_Supported_Polynomials;
 with Standard_Gradient_Evaluations;
 with DoblDobl_Gradient_Evaluations;
 with QuadDobl_Gradient_Evaluations;
+with Multprec_Gradient_Evaluations;
 
 procedure ts_speel is
 
@@ -911,6 +915,51 @@ procedure ts_speel is
     QuadDobl_Complex_Polynomials.Clear(p);
   end Check_QuadDobl_Evaluated_Gradient;
 
+  procedure Check_Multprec_Evaluated_Gradient
+               ( e : in Standard_Natural_VecVecs.VecVec;
+                 c,x,z,z2 : in Multprec_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   The vector z contains the evaluated monomials defined by e at x,
+  --   where the coefficients are defined in z.
+  --   The vector z2 is obtained with the procedure version.
+
+    p : Multprec_Complex_Polynomials.Poly
+      := Create_Multprec_Polynomial(c,e);
+    y : Multprec_Complex_Numbers.Complex_Number
+      := Multprec_Complex_Poly_Functions.Eval(p,x);
+    diff : Multprec_Complex_Numbers.Complex_Number;
+    diffnorm : Floating_Number;
+
+    use Multprec_Complex_Numbers;
+
+  begin
+    put(" y : "); put(y); new_line;
+    put(" z : "); put(z(0));
+    diff := y - z(0); diffnorm := AbsVal(diff);
+    put("  d : "); put(diffnorm,3); new_line;
+    put("z2 : "); put(z2(0));
+    diff := y - z2(0); diffnorm := AbsVal(diff);
+    put("  d : "); put(diffnorm,3); new_line;
+    for i in x'range loop
+      declare
+        q : Multprec_Complex_Polynomials.Poly
+          := Multprec_Complex_Polynomials.Diff(p,i);
+      begin
+        y := Multprec_Complex_Poly_Functions.Eval(q,x);
+        put(" y'("); put(i,1); put(") : "); put(y); new_line;
+        put(" z'("); put(i,1); put(") : "); put(z(i));
+        diff := y - z(i); diffnorm := AbsVal(diff);
+        put("  d : "); put(diffnorm,3); new_line;
+        put("z2'("); put(i,1); put(") : "); put(z2(i));
+        diff := y - z2(i); diffnorm := AbsVal(diff);
+        put("  d : "); put(diffnorm,3); new_line;
+        Multprec_Complex_Polynomials.Clear(q);
+      end;
+    end loop;
+    Multprec_Complex_Polynomials.Clear(p);
+  end Check_Multprec_Evaluated_Gradient;
+
   procedure Check_Standard_Evaluated_Gradient
                ( e : in Standard_Natural_VecVecs.VecVec;
                  x,z : in Standard_Complex_Vectors.Vector ) is
@@ -1021,6 +1070,43 @@ procedure ts_speel is
     end loop;
     QuadDobl_Complex_Polynomials.Clear(p);
   end Check_QuadDobl_Evaluated_Gradient;
+
+  procedure Check_Multprec_Evaluated_Gradient
+               ( e : in Standard_Natural_VecVecs.VecVec;
+                 x,z : in Multprec_Complex_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   The vector z contains the evaluated monomials defined by e at x.
+  --   The coefficients of the monomials are all ones.
+
+    p : Multprec_Complex_Polynomials.Poly := Create_Multprec_Polynomial(e);
+    y : Multprec_Complex_Numbers.Complex_Number
+      := Multprec_Complex_Poly_Functions.Eval(p,x);
+    diff : Multprec_Complex_Numbers.Complex_Number;
+    diffnorm : Floating_Number;
+
+    use Multprec_Complex_Numbers;
+
+  begin
+    put("y : "); put(y); new_line;
+    put("z : "); put(z(0));
+    diff := y - z(0); diffnorm := AbsVal(diff);
+    put("  d : "); put(diffnorm,3); new_line;
+    for i in x'range loop
+      declare
+        q : Multprec_Complex_Polynomials.Poly
+          := Multprec_Complex_Polynomials.Diff(p,i);
+      begin
+        y := Multprec_Complex_Poly_Functions.Eval(q,x);
+        put("y'("); put(i,1); put(") : "); put(y); new_line;
+        put("z'("); put(i,1); put(") : "); put(z(i));
+        diff := y - z(i); diffnorm := AbsVal(diff);
+        put("  d : "); put(diffnorm,3); new_line;
+        Multprec_Complex_Polynomials.Clear(q);
+      end;
+    end loop;
+    Multprec_Complex_Polynomials.Clear(p);
+  end Check_Multprec_Evaluated_Gradient;
 
   procedure Standard_Evaluate_Gradient ( n,d,m : in integer32 ) is
 
@@ -1146,6 +1232,49 @@ procedure ts_speel is
     QuadDobl_Complex_VecVecs.Clear(wrk);
   end QuadDobl_Evaluate_Gradient;
 
+  procedure Multprec_Evaluate_Gradient
+              ( n,d,m : in integer32; size : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Randomly generates a sequence of m monomials in n variables
+  --   of degrees at most d, with size long multiprecision numbers.
+
+    e : Standard_Natural_VecVecs.VecVec(1..m) := Random_Exponents(n,d,m);
+    c : Multprec_Complex_Vectors.Vector(1..m)
+      := Multprec_Random_Vectors.Random_Vector(1,m,size);
+    f,b : Standard_Natural_VecVecs.VecVec(1..m);
+    wrk : Multprec_Complex_VecVecs.VecVec(1..m);
+    x : Multprec_Complex_Vectors.Vector(1..n)
+      := Multprec_Random_Vectors.Random_Vector(1,n,size);
+    z,z2 : Multprec_Complex_Vectors.Vector(0..n);
+    numcnd : Multprec_Floating_Vectors.Vector(0..n);
+
+    use Multprec_Gradient_Evaluations;
+
+  begin
+    Split_Common_Factors(e,f,b);
+    put_line("The exponents, with splitted factors : ");
+    for i in 1..m loop
+      put(e(i).all);
+      put(" = "); put(f(i).all);
+      put(" + "); put(b(i).all); new_line;
+    end loop;
+    z := Gradient_Sum_of_Monomials(f,b,x);
+    Check_Multprec_Evaluated_Gradient(e,x,z);
+    z := Gradient_of_Polynomial(f,b,c,x);
+    for i in b'range loop
+      wrk(i) := new Multprec_Complex_Vectors.Vector(0..n);
+    end loop;
+    Conditioned_Gradient_of_Polynomial(f,b,c,x,wrk,z2,numcnd);
+    Check_Multprec_Evaluated_Gradient(e,c,x,z,z2);
+    put_line("The numerators of the condition numbers :");
+    put_line(numcnd);
+    Standard_Natural_VecVecs.Clear(e);
+    Standard_Natural_VecVecs.Clear(f);
+    Standard_Natural_VecVecs.Clear(b);
+    Multprec_Complex_VecVecs.Clear(wrk);
+  end Multprec_Evaluate_Gradient;
+
   procedure Evaluate_Gradient is
 
   -- DESCRIPTION :
@@ -1161,12 +1290,21 @@ procedure ts_speel is
     put("  give the number of variables, n = "); get(n);
     put("  give the largest degree, d = "); get(d);
     put("  give number of monomials, m = "); get(m);
-    put("standard, double double, or quad double arithmetic ? (s/d/q) ");
-    Ask_Alternative(ans,"sdq");
+    put("double, double double, quad double, or multiprecision? (s/d/q/m) ");
+    Ask_Alternative(ans,"sdqm");
     case ans is
       when 's' => Standard_Evaluate_Gradient(n,d,m);
       when 'd' => DoblDobl_Evaluate_Gradient(n,d,m);
       when 'q' => QuadDobl_Evaluate_Gradient(n,d,m);
+      when 'm' =>
+        declare
+          deci,size : natural32 := 0;
+        begin
+          new_line;
+          put("Give the number of decimal places : "); get(deci);
+          size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
+          Multprec_Evaluate_Gradient(n,d,m,size);
+        end;
       when others => null;
     end case;
   end Evaluate_Gradient;

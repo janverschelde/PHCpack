@@ -1,3 +1,5 @@
+Wed 3 Jun 2015 : added tests on multprecision gradient in ts_speel.adb.
+
 Tue 2 Jun 2015 : updates in coefficient_supported_polynomials for the
   multiprecision polynomials.  New packages multprec_speelpenning_products
   and multprec_monomial_evaluations, tested by ts_speel.  For the gradients
