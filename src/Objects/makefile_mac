@@ -413,6 +413,10 @@ ts_vmpeval:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_vmpeval.adb \
               -o $(BIN)/ts_vmpeval
 
+ts_vmpdiff:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_vmpdiff.adb \
+              -o $(BIN)/ts_vmpdiff
+
 # Test programs for Math_Lib/Supports :
 
 ts_basex:

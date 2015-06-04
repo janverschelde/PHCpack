@@ -336,7 +336,7 @@ ts_termlist:
 
 test_functions: ts_evaline ts_evalpoly ts_evalform ts_lineva ts_cffsup \
                 ts_expvec ts_polyflat ts_perfeval ts_speel ts_speelsys \
-                ts_vmpeval
+                ts_vmpeval ts_vmpdiff
 
 ts_evaline:
 	make -f $(MAKEFILE) ts_evaline
@@ -373,6 +373,9 @@ ts_cycfun:
 
 ts_vmpeval:
 	make -f $(MAKEFILE) ts_vmpeval
+
+ts_vmpdiff:
+	make -f $(MAKEFILE) ts_vmpdiff
 
 # Test programs for Math_Lib/Supports :
 
