@@ -69,7 +69,9 @@ quaddobl_jacobian_evaluations     : quad double eval & diff of systems
 -------------------------------------------------------------------------------
 random_conditioned_evaluations    : generate problems with given condition
 varbprec_polynomial_evaluations   : evaluate polynomials at various precisions
-ts_vmpeval                        : tests the variable precision evaluation
+varbprec_gradient_evaluations     : evaluate gradient a various precision
+ts_vmpeval                        : tests variable precision evaluation
+ts_vmpdiff                        : tests variable precision differentiation
 -------------------------------------------------------------------------------
 ts_evaline                        : calls the evaluator package
 ts_evalpoly                       : development of nested Horner scheme

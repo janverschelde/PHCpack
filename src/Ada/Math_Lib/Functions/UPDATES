@@ -1,3 +1,6 @@
+Thu 4 Jun 2015 : new package varbprec_gradient_evaluations, tested by
+  the new ts_vmpdiff.
+
 Wed 3 Jun 2015 : added tests on multprecision gradient in ts_speel.adb.
 
 Tue 2 Jun 2015 : updates in coefficient_supported_polynomials for the
