@@ -1,5 +1,6 @@
 with text_io;                             use text_io;
 with Communications_with_User;            use Communications_with_User;
+with Timing_Package;                      use Timing_Package;
 with Standard_Natural_Numbers;            use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;         use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
@@ -66,10 +67,13 @@ with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Functions;
 with Standard_Complex_Polynomials_io;     use Standard_Complex_Polynomials_io;
 with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Polynomials_io;     use DoblDobl_Complex_Polynomials_io;
 with DoblDobl_Complex_Poly_Functions;
 with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Polynomials_io;     use QuadDobl_Complex_Polynomials_io;
 with QuadDobl_Complex_Poly_Functions;
 with Multprec_Complex_Polynomials;
+with Multprec_Complex_Polynomials_io;     use Multprec_Complex_Polynomials_io;
 with Multprec_Complex_Poly_Functions;
 with Coefficient_Supported_Polynomials;   use Coefficient_Supported_Polynomials;
 with Standard_Gradient_Evaluations;
@@ -78,6 +82,15 @@ with QuadDobl_Gradient_Evaluations;
 with Multprec_Gradient_Evaluations;
 with Varbprec_Polynomial_Evaluations;     use Varbprec_Polynomial_Evaluations;
 with Varbprec_Gradient_Evaluations;       use Varbprec_Gradient_Evaluations;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_SysFun;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_SysFun;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_SysFun;
+with Multprec_Complex_Poly_Systems;
+with Multprec_Complex_Poly_SysFun;
+with Cyclic_Roots_System;                 use Cyclic_Roots_System;
 
 procedure ts_vmpdiff is
 
@@ -365,21 +378,323 @@ procedure ts_vmpdiff is
     end case;
   end Evaluate_Gradient;
 
+  procedure Standard_Performance_Test ( n,m : integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates the next to last equation of the cyclic n-roots problem
+  --   with standard complex coefficients and performs m evaluations
+  --   of the gradient, once in the reverse mode and once straightforward.
+
+    s : Standard_Natural_VecVecs.VecVec(1..n) := Support_of_Cyclic(n,n-1);
+    f,b : Standard_Natural_VecVecs.VecVec(1..n);
+    p : Standard_Complex_Polynomials.Poly := Standard_Cyclic_Polynomial(s);
+    c : Standard_Complex_Vectors.Vector(1..n)
+      := (1..n => Standard_Complex_Numbers.Create(1.0));
+    x : Standard_Complex_Vectors.Vector(1..n) := Random_Vector(1,n);
+    z : Standard_Complex_Vectors.Vector(0..n);
+    g : Standard_Complex_Poly_Systems.Poly_Sys(0..n);
+    eg : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(0..n);
+    wrk : Standard_Complex_VecVecs.VecVec(1..n);
+    timer : Timing_Widget;
+
+    use Standard_Gradient_Evaluations;
+
+  begin
+    put_line("The polynomial : "); put(p);
+    Split_Common_Factors(s,f,b);
+    tstart(timer);
+    for i in 1..m loop
+      z := Gradient_of_Polynomial(f,b,c,x);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"gradient function in reverse mode");
+    for i in b'range loop
+      wrk(i) := new Standard_Complex_Vectors.Vector(0..n);
+    end loop;
+    tstart(timer);
+    for i in 1..m loop
+      Gradient_of_Polynomial(f,b,c,x,wrk,z);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"gradient procedure in reverse mode");
+    for k in 1..n loop
+      g(k) := Standard_Complex_Polynomials.Diff(p,k);
+    end loop;
+    tstart(timer);
+    for i in 1..m loop
+      z := Standard_Complex_Poly_SysFun.Eval(g,x);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"gradient plain mode");
+    eg := Standard_Complex_Poly_SysFun.Create(g);
+    tstart(timer);
+    for i in 1..m loop
+      z := Standard_Complex_Poly_SysFun.Eval(eg,x);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"gradient with Horner");
+    Standard_Natural_VecVecs.Clear(s);
+    Standard_Complex_Polynomials.Clear(p);
+    Standard_Complex_Poly_Systems.Clear(g);
+    Standard_Complex_Poly_SysFun.Clear(eg);
+  end Standard_Performance_Test;
+
+  procedure DoblDobl_Performance_Test ( n,m : integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates the next to last equation of the cyclic n-roots problem
+  --   with standard complex coefficients and performs m evaluations
+  --   of the gradient, once in the reverse mode and once straightforward.
+
+    s : Standard_Natural_VecVecs.VecVec(1..n) := Support_of_Cyclic(n,n-1);
+    f,b : Standard_Natural_VecVecs.VecVec(1..n);
+    p : DoblDobl_Complex_Polynomials.Poly := DoblDobl_Cyclic_Polynomial(s);
+    c : DoblDobl_Complex_Vectors.Vector(1..n)
+      := (1..n => DoblDobl_Complex_Numbers.Create(integer(1)));
+    x : DoblDobl_Complex_Vectors.Vector(1..n)
+      := DoblDobl_Random_Vectors.Random_Vector(1,n);
+    z : DoblDobl_Complex_Vectors.Vector(0..n);
+    g : DoblDobl_Complex_Poly_Systems.Poly_Sys(0..n);
+    eg : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(0..n);
+    wrk : DoblDobl_Complex_VecVecs.VecVec(1..n);
+    timer : Timing_Widget;
+
+    use DoblDobl_Gradient_Evaluations;
+
+  begin
+    put_line("The polynomial : "); put(p);
+    Split_Common_Factors(s,f,b);
+    tstart(timer);
+    for i in 1..m loop
+      z := Gradient_of_Polynomial(f,b,c,x);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"gradient function in reverse mode");
+    for i in b'range loop
+      wrk(i) := new DoblDobl_Complex_Vectors.Vector(0..n);
+    end loop;
+    tstart(timer);
+    for i in 1..m loop
+      Gradient_of_Polynomial(f,b,c,x,wrk,z);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"gradient procedure in reverse mode");
+    for k in 1..n loop
+      g(k) := DoblDobl_Complex_Polynomials.Diff(p,k);
+    end loop;
+    tstart(timer);
+    for i in 1..m loop
+      z := DoblDobl_Complex_Poly_SysFun.Eval(g,x);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"gradient plain mode");
+    eg := DoblDobl_Complex_Poly_SysFun.Create(g);
+    tstart(timer);
+    for i in 1..m loop
+      z := DoblDobl_Complex_Poly_SysFun.Eval(eg,x);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"gradient with Horner");
+    Standard_Natural_VecVecs.Clear(s);
+    DoblDobl_Complex_Polynomials.Clear(p);
+    DoblDobl_Complex_Poly_Systems.Clear(g);
+    DoblDobl_Complex_Poly_SysFun.Clear(eg);
+  end DoblDobl_Performance_Test;
+
+  procedure QuadDobl_Performance_Test ( n,m : integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates the next to last equation of the cyclic n-roots problem
+  --   with standard complex coefficients and performs m evaluations
+  --   of the gradient, once in the reverse mode and once straightforward.
+
+    s : Standard_Natural_VecVecs.VecVec(1..n) := Support_of_Cyclic(n,n-1);
+    f,b : Standard_Natural_VecVecs.VecVec(1..n);
+    p : QuadDobl_Complex_Polynomials.Poly := QuadDobl_Cyclic_Polynomial(s);
+    c : QuadDobl_Complex_Vectors.Vector(1..n)
+      := (1..n => QuadDobl_Complex_Numbers.Create(integer(1)));
+    x : QuadDobl_Complex_Vectors.Vector(1..n)
+      := QuadDobl_Random_Vectors.Random_Vector(1,n);
+    z : QuadDobl_Complex_Vectors.Vector(0..n);
+    g : QuadDobl_Complex_Poly_Systems.Poly_Sys(0..n);
+    eg : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(0..n);
+    wrk : QuadDobl_Complex_VecVecs.VecVec(1..n);
+    timer : Timing_Widget;
+
+    use QuadDobl_Gradient_Evaluations;
+
+  begin
+    put_line("The polynomial : "); put(p);
+    Split_Common_Factors(s,f,b);
+    tstart(timer);
+    for i in 1..m loop
+      z := Gradient_of_Polynomial(f,b,c,x);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"gradient function in reverse mode");
+    for i in b'range loop
+      wrk(i) := new QuadDobl_Complex_Vectors.Vector(0..n);
+    end loop;
+    tstart(timer);
+    for i in 1..m loop
+      Gradient_of_Polynomial(f,b,c,x,wrk,z);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"gradient procedure in reverse mode");
+    for k in 1..n loop
+      g(k) := QuadDobl_Complex_Polynomials.Diff(p,k);
+    end loop;
+    tstart(timer);
+    for i in 1..m loop
+      z := QuadDobl_Complex_Poly_SysFun.Eval(g,x);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"gradient plain mode");
+    eg := QuadDobl_Complex_Poly_SysFun.Create(g);
+    tstart(timer);
+    for i in 1..m loop
+      z := QuadDobl_Complex_Poly_SysFun.Eval(eg,x);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"gradient with Horner");
+    Standard_Natural_VecVecs.Clear(s);
+    QuadDobl_Complex_Polynomials.Clear(p);
+    QuadDobl_Complex_Poly_Systems.Clear(g);
+    QuadDobl_Complex_Poly_SysFun.Clear(eg);
+  end QuadDobl_Performance_Test;
+
+  procedure Multprec_Performance_Test
+             ( n,m : integer32; size : natural32 ) is
+
+  -- DESCRIPTION :
+  --   Generates the next to last equation of the cyclic n-roots problem
+  --   with standard complex coefficients and performs m evaluations
+  --   of the gradient, once in the reverse mode and once straightforward.
+
+    s : Standard_Natural_VecVecs.VecVec(1..n) := Support_of_Cyclic(n,n-1);
+    f,b : Standard_Natural_VecVecs.VecVec(1..n);
+    p : Multprec_Complex_Polynomials.Poly := Multprec_Cyclic_Polynomial(s);
+    c : Multprec_Complex_Vectors.Vector(1..n)
+      := (1..n => Multprec_Complex_Numbers.Create(integer(1)));
+    x : Multprec_Complex_Vectors.Vector(1..n)
+      := Multprec_Random_Vectors.Random_Vector(1,n,size);
+    z : Multprec_Complex_Vectors.Vector(0..n);
+    g : Multprec_Complex_Poly_Systems.Poly_Sys(0..n);
+    eg : Multprec_Complex_Poly_SysFun.Eval_Poly_Sys(0..n);
+    wrk : Multprec_Complex_VecVecs.VecVec(1..n);
+    timer : Timing_Widget;
+
+    use Multprec_Gradient_Evaluations;
+
+  begin
+    put_line("The polynomial : "); put(p);
+    Split_Common_Factors(s,f,b);
+    tstart(timer);
+    for i in 1..m loop
+      z := Gradient_of_Polynomial(f,b,c,x);
+      Multprec_Complex_Vectors.Clear(z);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"gradient function in reverse mode");
+    for i in b'range loop
+      wrk(i) := new Multprec_Complex_Vectors.Vector(0..n);
+    end loop;
+    tstart(timer);
+    for i in 1..m loop
+      Gradient_of_Polynomial(f,b,c,x,wrk,z);
+      Multprec_Complex_Vectors.Clear(z);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"gradient procedure in reverse mode");
+    for k in 1..n loop
+      g(k) := Multprec_Complex_Polynomials.Diff(p,k);
+    end loop;
+    tstart(timer);
+    for i in 1..m loop
+      z := Multprec_Complex_Poly_SysFun.Eval(g,x);
+      Multprec_Complex_Vectors.Clear(z);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"gradient plain mode");
+    eg := Multprec_Complex_Poly_SysFun.Create(g);
+    tstart(timer);
+    for i in 1..m loop
+      z := Multprec_Complex_Poly_SysFun.Eval(eg,x);
+      Multprec_Complex_Vectors.Clear(z);
+    end loop;
+    tstop(timer);
+    new_line;
+    print_times(standard_output,timer,"gradient with Horner");
+    Standard_Natural_VecVecs.Clear(s);
+    Multprec_Complex_Polynomials.Clear(p);
+    Multprec_Complex_Poly_Systems.Clear(g);
+    Multprec_Complex_Poly_SysFun.Clear(eg);
+  end Multprec_Performance_Test;
+
+  procedure Performance_Test is
+
+  -- DESCRIPTION :
+  --   We take the next to last equation of the cyclic n-roots problem
+  --   and compute its gradient once evaluating seperate derivatives
+  --   and once via the reverse mode, for various level of precision.
+
+    n,m : integer32 := 0;
+    ans : character;
+
+  begin
+    new_line;
+    put("Give the dimension : "); get(n);
+    put("Give the frequency : "); get(m);
+    put("double, double double, quad double, or multiprecision? (s/d/q/m) ");
+    Ask_Alternative(ans,"sdqm");
+    case ans is
+      when 's' => Standard_Performance_Test(n,m);
+      when 'd' => DoblDobl_Performance_Test(n,m);
+      when 'q' => QuadDobl_Performance_Test(n,m);
+      when 'm' =>
+        declare
+          deci,size : natural32 := 0;
+        begin
+          new_line;
+          put("Give the number of decimal places : "); get(deci);
+          size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
+          Multprec_Performance_Test(n,m,size);
+        end;
+      when others => null;
+    end case;
+  end Performance_Test;
+
   procedure Main is
 
-   -- ans : character;
+    ans : character;
 
   begin
     new_line;
     put_line("Evaluation of a gradient and its condition number ...");
-   -- put_line("  1. generate a random polynomial and select the precision.");
-   -- put("Type 1 to choose : ");
-   -- Ask_Alternative(ans,"1");
-   -- case ans is
-   --   when '1' => 
-    Evaluate_Gradient;
-   --   when others => null;
-   -- end case;
+    put_line("  1. generate a random polynomial and select the precision;");
+    put_line("  2. do a performance test on a cyclic n-roots polynomial.");
+    put("Type 1 or 2 to choose : ");
+    Ask_Alternative(ans,"12");
+    case ans is
+      when '1' => Evaluate_Gradient;
+      when '2' => Performance_Test;
+      when others => null;
+    end case;
   end Main;
 
 begin

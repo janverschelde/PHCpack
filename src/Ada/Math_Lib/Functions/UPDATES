@@ -1,5 +1,5 @@
 Fri 5 Jun 2015 : new package cyclic_roots_system with code factored out
-  from ts_cycfun.
+  from ts_cycfun.  Added performance test to ts_vmpdiff.
 
 Thu 4 Jun 2015 : new package varbprec_gradient_evaluations, tested by
   the new ts_vmpdiff.
