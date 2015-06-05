@@ -70,6 +70,7 @@ quaddobl_jacobian_evaluations     : quad double eval & diff of systems
 random_conditioned_evaluations    : generate problems with given condition
 varbprec_polynomial_evaluations   : evaluate polynomials at various precisions
 varbprec_gradient_evaluations     : evaluate gradient a various precision
+cyclic_roots_system               : defines the cyclic n-roots benchmark
 ts_vmpeval                        : tests variable precision evaluation
 ts_vmpdiff                        : tests variable precision differentiation
 -------------------------------------------------------------------------------
