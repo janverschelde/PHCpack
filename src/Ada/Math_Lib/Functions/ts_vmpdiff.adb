@@ -91,6 +91,7 @@ with QuadDobl_Complex_Poly_SysFun;
 with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_SysFun;
 with Cyclic_Roots_System;                 use Cyclic_Roots_System;
+with Random_Conditioned_Evaluations;      use Random_Conditioned_Evaluations;
 
 procedure ts_vmpdiff is
 
@@ -660,6 +661,7 @@ procedure ts_vmpdiff is
     new_line;
     put("Give the dimension : "); get(n);
     put("Give the frequency : "); get(m);
+
     put("double, double double, quad double, or multiprecision? (s/d/q/m) ");
     Ask_Alternative(ans,"sdqm");
     case ans is
@@ -679,6 +681,255 @@ procedure ts_vmpdiff is
     end case;
   end Performance_Test;
 
+  procedure Standard_Conditioning_Test
+              ( n,d,m,c : natural32;
+                cffsz,pntsz,close : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Generates a polynomial, a point, and its gradient of
+  --   prescribed conditioning number, using double arithmetic.
+
+  -- ON ENTRY :
+  --   n        number of variables;
+  --   d        largest degree of the monomials;
+  --   m        number of monomials (0 for a dense polynomial);
+  --   c        type of coefficient, 0 is random complex, 1 is one,
+  --            and 2 is random real;
+  --   cffsz    size of the coefficients;
+  --   pntsz    size of the coordinates of the point where to evaluate;
+  --   close    distance of the point to a root.
+
+    p : Standard_Complex_Polynomials.Poly;
+    x : Standard_Complex_Vectors.Vector(1..integer32(n));
+    g : Standard_Complex_Vectors.Vector(1..integer32(n))
+      := Standard_Random_Vectors.Random_Vector(1,integer32(n));
+    fgz : Standard_Complex_Vectors.Vector(0..x'last);
+    nt : integer32;
+    numfz,denfz,fzrco,maxng,mindg,gzrco : double_float;
+
+    use Standard_Gradient_Evaluations;
+
+  begin
+    Random_Conditioned_Gradient_Evaluation(n,d,m,c,cffsz,pntsz,close,g,p,x);
+    nt := integer32(Standard_Complex_Polynomials.Number_of_Terms(p));
+    declare
+      c : Standard_Complex_Vectors.Vector(1..nt);
+      wrk : Standard_Complex_VecVecs.VecVec(1..nt);
+      e,f,b : Standard_Natural_VecVecs.VecVec(1..nt);
+    begin
+      Coefficients_and_Supports(p,c,e);
+      Split_Common_Factors(e,f,b);
+      for i in b'range loop
+        wrk(i) := new Standard_Complex_Vectors.Vector(0..integer32(n));
+      end loop;
+      Gradient_with_Inverse_Condition
+        (f,b,c,x,wrk,fgz,numfz,denfz,fzrco,maxng,mindg,gzrco);
+      put_line("Condition number of evaluation :");
+      put("  inverse condition number : "); put(fzrco,3); new_line;
+      put_line("Condition of gradient :");
+      put("  max of numerator : "); put(maxng,3); new_line;
+      put("  min of denominator : "); put(mindg,3); new_line;
+      put("  inverse condition number : "); put(gzrco,3); new_line;
+    end;
+  end Standard_Conditioning_Test;
+
+  procedure DoblDobl_Conditioning_Test
+              ( n,d,m,c : natural32;
+                cffsz,pntsz,close : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Generates a polynomial, a point, and its gradient of
+  --   prescribed conditioning number, using double double arithmetic.
+
+  -- ON ENTRY :
+  --   n        number of variables;
+  --   d        largest degree of the monomials;
+  --   m        number of monomials (0 for a dense polynomial);
+  --   c        type of coefficient, 0 is random complex, 1 is one,
+  --            and 2 is random real;
+  --   cffsz    size of the coefficients;
+  --   pntsz    size of the coordinates of the point where to evaluate;
+  --   close    distance of the point to a root.
+
+    p : DoblDobl_Complex_Polynomials.Poly;
+    x : DoblDobl_Complex_Vectors.Vector(1..integer32(n));
+    g : DoblDobl_Complex_Vectors.Vector(1..integer32(n))
+      := DoblDobl_Random_Vectors.Random_Vector(1,integer32(n));
+    fgz : DoblDobl_Complex_Vectors.Vector(0..x'last);
+    nt : integer32;
+    numfz,denfz,fzrco,maxng,mindg,gzrco : double_double;
+
+    use DoblDobl_Gradient_Evaluations;
+
+  begin
+    Random_Conditioned_Gradient_Evaluation(n,d,m,c,cffsz,pntsz,close,g,p,x);
+    nt := integer32(DoblDobl_Complex_Polynomials.Number_of_Terms(p));
+    declare
+      c : DoblDobl_Complex_Vectors.Vector(1..nt);
+      wrk : DoblDobl_Complex_VecVecs.VecVec(1..nt);
+      e,f,b : Standard_Natural_VecVecs.VecVec(1..nt);
+    begin
+      Coefficients_and_Supports(p,c,e);
+      Split_Common_Factors(e,f,b);
+      for i in b'range loop
+        wrk(i) := new DoblDobl_Complex_Vectors.Vector(0..integer32(n));
+      end loop;
+      Gradient_with_Inverse_Condition
+        (f,b,c,x,wrk,fgz,numfz,denfz,fzrco,maxng,mindg,gzrco);
+      put_line("Condition number of evaluation :");
+      put("  inverse condition number : "); put(fzrco,3); new_line;
+      put_line("Condition of gradient :");
+      put("  max of numerator : "); put(maxng,3); new_line;
+      put("  min of denominator : "); put(mindg,3); new_line;
+      put("  inverse condition number : "); put(gzrco,3); new_line;
+    end;
+  end DoblDobl_Conditioning_Test;
+
+  procedure QuadDobl_Conditioning_Test
+              ( n,d,m,c : natural32;
+                cffsz,pntsz,close : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Generates a polynomial, a point, and its gradient of
+  --   prescribed conditioning number, using quad double arithmetic.
+
+  -- ON ENTRY :
+  --   n        number of variables;
+  --   d        largest degree of the monomials;
+  --   m        number of monomials (0 for a dense polynomial);
+  --   c        type of coefficient, 0 is random complex, 1 is one,
+  --            and 2 is random real;
+  --   cffsz    size of the coefficients;
+  --   pntsz    size of the coordinates of the point where to evaluate;
+  --   close    distance of the point to a root.
+
+    p : QuadDobl_Complex_Polynomials.Poly;
+    x : QuadDobl_Complex_Vectors.Vector(1..integer32(n));
+    g : QuadDobl_Complex_Vectors.Vector(1..integer32(n))
+      := QuadDobl_Random_Vectors.Random_Vector(1,integer32(n));
+    fgz : QuadDobl_Complex_Vectors.Vector(0..x'last);
+    nt : integer32;
+    numfz,denfz,fzrco,maxng,mindg,gzrco : quad_double;
+
+    use QuadDobl_Gradient_Evaluations;
+
+  begin
+    Random_Conditioned_Gradient_Evaluation(n,d,m,c,cffsz,pntsz,close,g,p,x);
+    nt := integer32(QuadDobl_Complex_Polynomials.Number_of_Terms(p));
+    declare
+      c : QuadDobl_Complex_Vectors.Vector(1..nt);
+      wrk : QuadDobl_Complex_VecVecs.VecVec(1..nt);
+      e,f,b : Standard_Natural_VecVecs.VecVec(1..nt);
+    begin
+      Coefficients_and_Supports(p,c,e);
+      Split_Common_Factors(e,f,b);
+      for i in b'range loop
+        wrk(i) := new QuadDobl_Complex_Vectors.Vector(0..integer32(n));
+      end loop;
+      Gradient_with_Inverse_Condition
+        (f,b,c,x,wrk,fgz,numfz,denfz,fzrco,maxng,mindg,gzrco);
+      put_line("Condition number of evaluation :");
+      put("  inverse condition number : "); put(fzrco,3); new_line;
+      put_line("Condition of gradient :");
+      put("  max of numerator : "); put(maxng,3); new_line;
+      put("  min of denominator : "); put(mindg,3); new_line;
+      put("  inverse condition number : "); put(gzrco,3); new_line;
+    end;
+  end QuadDobl_Conditioning_Test;
+
+  procedure Multprec_Conditioning_Test
+              ( n,d,m,c,sz : natural32;
+                cffsz,pntsz,close : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Generates a polynomial, a point, and its gradient of
+  --   prescribed conditioning number.
+
+  -- ON ENTRY :
+  --   n        number of variables;
+  --   d        largest degree of the monomials;
+  --   m        number of monomials (0 for a dense polynomial);
+  --   c        type of coefficient, 0 is random complex, 1 is one,
+  --            and 2 is random real;
+  --   size     the size of the numbers;
+  --   cffsz    size of the coefficients;
+  --   pntsz    size of the coordinates of the point where to evaluate;
+  --   close    distance of the point to a root.
+
+    p : Multprec_Complex_Polynomials.Poly;
+    x : Multprec_Complex_Vectors.Vector(1..integer32(n));
+    g : Multprec_Complex_Vectors.Vector(1..integer32(n))
+      := Multprec_Random_Vectors.Random_Vector(1,integer32(n),sz);
+    fgz : Multprec_Complex_Vectors.Vector(0..x'last);
+    nt : integer32;
+    numfz,denfz,fzrco,maxng,mindg,gzrco : Floating_Number;
+
+    use Multprec_Gradient_Evaluations;
+
+  begin
+    Random_Conditioned_Gradient_Evaluation(n,d,m,c,sz,cffsz,pntsz,close,g,p,x);
+    nt := integer32(Multprec_Complex_Polynomials.Number_of_Terms(p));
+    declare
+      c : Multprec_Complex_Vectors.Vector(1..nt);
+      wrk : Multprec_Complex_VecVecs.VecVec(1..nt);
+      e,f,b : Standard_Natural_VecVecs.VecVec(1..nt);
+    begin
+      Coefficients_and_Supports(p,c,e);
+      Split_Common_Factors(e,f,b);
+      for i in b'range loop
+        wrk(i) := new Multprec_Complex_Vectors.Vector(0..integer32(n));
+      end loop;
+      Gradient_with_Inverse_Condition
+        (f,b,c,x,wrk,fgz,numfz,denfz,fzrco,maxng,mindg,gzrco);
+      put_line("Condition number of evaluation :");
+      put("  inverse condition number : "); put(fzrco,3); new_line;
+      put_line("Condition of gradient :");
+      put("  max of numerator : "); put(maxng,3); new_line;
+      put("  min of denominator : "); put(mindg,3); new_line;
+      put("  inverse condition number : "); put(gzrco,3); new_line;
+    end;
+  end Multprec_Conditioning_Test;
+
+  procedure Conditioning_Test is
+
+  -- DESCRIPTION :
+  --   For various levels of precision, a polynomial f is generated
+  --   and a point z with prescribed condition number.
+
+    n,d,m,c,deci,size : natural32 := 0;
+    cff,pnt,cls,cond : double_float := 0.0;
+    ans : character;
+
+  begin
+    new_line;
+    put("Give the dimension : "); get(n);
+    put("Give the largest degree : "); get(d);
+    put("Give the number of monomials (0 for dense) : "); get(m);
+    put("Give the type of coefficient (0 cmplx, 1 one, 2, real) : ");
+    get(c);
+    put("Give magnitude of the coefficients : "); get(cff);
+    put("Give magnitude of the coordinates of the point : "); get(pnt);
+    put("Give closeness to a root : "); get(cls);
+    cond := cff*(pnt**integer(d))/cls;
+    new_line;
+    put("Predicted condition number : "); put(cond,3); new_line;
+    new_line;
+    put("double, double double, quad double, or multiprecision? (s/d/q/m) ");
+    Ask_Alternative(ans,"sdqm");
+    new_line;
+    case ans is
+      when 's' => Standard_Conditioning_Test(n,d,m,c,cff,pnt,cls);
+      when 'd' => DoblDobl_Conditioning_Test(n,d,m,c,cff,pnt,cls);
+      when 'q' => QuadDobl_Conditioning_Test(n,d,m,c,cff,pnt,cls);
+      when 'm' =>
+        new_line;
+        put("Give the number of decimal places : "); get(deci);
+        size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
+        Multprec_Conditioning_Test(n,d,m,c,size,cff,pnt,cls);
+      when others => null;
+    end case;
+  end Conditioning_Test;
+
   procedure Main is
 
     ans : character;
@@ -687,12 +938,14 @@ procedure ts_vmpdiff is
     new_line;
     put_line("Evaluation of a gradient and its condition number ...");
     put_line("  1. generate a random polynomial and select the precision;");
-    put_line("  2. do a performance test on a cyclic n-roots polynomial.");
-    put("Type 1 or 2 to choose : ");
-    Ask_Alternative(ans,"12");
+    put_line("  2. do a performance test on a cyclic n-roots polynomial;");
+    put_line("  3. generate a problem with prescribed conditioning.");
+    put("Type 1, 2, or 3 to choose : ");
+    Ask_Alternative(ans,"123");
     case ans is
       when '1' => Evaluate_Gradient;
       when '2' => Performance_Test;
+      when '3' => Conditioning_Test;
       when others => null;
     end case;
   end Main;
