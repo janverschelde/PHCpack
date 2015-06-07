@@ -67,6 +67,78 @@ package body Coefficient_Supported_Polynomials is
   end Coefficients_and_Supports;
 
   procedure Coefficients_and_Supports
+              ( p : in DoblDobl_Complex_Polynomials.Poly;
+                c : out DoblDobl_Complex_Vectors.Vector;
+                e : out Standard_Natural_VecVecs.VecVec ) is
+
+    ind : integer32 := 0;
+    use DoblDobl_Complex_Polynomials;
+
+    procedure Visit_Term ( t : in Term; continue : out boolean ) is
+    begin
+      ind := ind + 1;
+      c(ind) := t.cf;
+      e(ind) := new Standard_Natural_Vectors.Vector(t.dg'range);
+      for i in t.dg'range loop
+        e(ind)(i) := t.dg(i);
+      end loop;
+      continue := true;
+    end Visit_Term;
+    procedure Visit_Terms is new Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+  end Coefficients_and_Supports;
+
+  procedure Coefficients_and_Supports
+              ( p : in QuadDobl_Complex_Polynomials.Poly;
+                c : out QuadDobl_Complex_Vectors.Vector;
+                e : out Standard_Natural_VecVecs.VecVec ) is
+
+    ind : integer32 := 0;
+    use QuadDobl_Complex_Polynomials;
+
+    procedure Visit_Term ( t : in Term; continue : out boolean ) is
+    begin
+      ind := ind + 1;
+      c(ind) := t.cf;
+      e(ind) := new Standard_Natural_Vectors.Vector(t.dg'range);
+      for i in t.dg'range loop
+        e(ind)(i) := t.dg(i);
+      end loop;
+      continue := true;
+    end Visit_Term;
+    procedure Visit_Terms is new Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+  end Coefficients_and_Supports;
+
+  procedure Coefficients_and_Supports
+              ( p : in Multprec_Complex_Polynomials.Poly;
+                c : out Multprec_Complex_Vectors.Vector;
+                e : out Standard_Natural_VecVecs.VecVec ) is
+
+    ind : integer32 := 0;
+    use Multprec_Complex_Polynomials;
+
+    procedure Visit_Term ( t : in Term; continue : out boolean ) is
+    begin
+      ind := ind + 1;
+      Multprec_Complex_Numbers.Copy(t.cf,c(ind));
+      e(ind) := new Standard_Natural_Vectors.Vector(t.dg'range);
+      for i in t.dg'range loop
+        e(ind)(i) := t.dg(i);
+      end loop;
+      continue := true;
+    end Visit_Term;
+    procedure Visit_Terms is new Visiting_Iterator(Visit_Term);
+
+  begin
+    Visit_Terms(p);
+  end Coefficients_and_Supports;
+
+  procedure Coefficients_and_Supports
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 c : out Standard_Complex_VecVecs.VecVec;
                 e : out Standard_Natural_VecVecs.Array_of_VecVecs ) is

@@ -34,6 +34,18 @@ package Coefficient_Supported_Polynomials is
               ( p : in Standard_Complex_Polynomials.Poly;
                 c : out Standard_Complex_Vectors.Vector;
                 e : out Standard_Natural_VecVecs.VecVec );
+  procedure Coefficients_and_Supports
+              ( p : in DoblDobl_Complex_Polynomials.Poly;
+                c : out DoblDobl_Complex_Vectors.Vector;
+                e : out Standard_Natural_VecVecs.VecVec );
+  procedure Coefficients_and_Supports
+              ( p : in QuadDobl_Complex_Polynomials.Poly;
+                c : out QuadDobl_Complex_Vectors.Vector;
+                e : out Standard_Natural_VecVecs.VecVec );
+  procedure Coefficients_and_Supports
+              ( p : in Multprec_Complex_Polynomials.Poly;
+                c : out Multprec_Complex_Vectors.Vector;
+                e : out Standard_Natural_VecVecs.VecVec );
 
   -- DESCRIPTION :
   --   Extracts the coefficients and corresponding exponent vectors
