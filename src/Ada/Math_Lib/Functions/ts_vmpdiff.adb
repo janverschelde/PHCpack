@@ -1,62 +1,70 @@
-with text_io;                             use text_io;
-with Communications_with_User;            use Communications_with_User;
-with Timing_Package;                      use Timing_Package;
-with Standard_Natural_Numbers;            use Standard_Natural_Numbers;
-with Standard_Natural_Numbers_io;         use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
-with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
-with Standard_Floating_Numbers_io;        use Standard_Floating_Numbers_io;
+with text_io;                           use text_io;
+with Communications_with_User;          use Communications_with_User;
+with Timing_Package;                    use Timing_Package;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
-with Standard_Complex_Numbers_io;         use Standard_Complex_Numbers_io;
+with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
+with Standard_Mathematical_Functions;   use Standard_Mathematical_Functions;
 with Standard_Natural_Vectors;
-with Standard_Natural_Vectors_io;         use Standard_Natural_Vectors_io;
+with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 with Standard_Natural_VecVecs;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
-with Standard_Floating_Vectors_io;        use Standard_Floating_Vectors_io;
+with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
 with Standard_Complex_Vectors;
-with Standard_Complex_Vectors_io;         use Standard_Complex_Vectors_io;
+with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;
-with Standard_Complex_Norms_Equals;       use Standard_Complex_Norms_Equals;
+with Standard_Complex_Norms_Equals;     use Standard_Complex_Norms_Equals;
 with Standard_Random_Numbers;
-with Standard_Random_Vectors;             use Standard_Random_Vectors;
+with Standard_Random_Vectors;           use Standard_Random_Vectors;
+with Standard_Complex_Matrices;
 with Standard_Speelpenning_Products;
-with Double_Double_Numbers;               use Double_Double_Numbers;
-with Double_Double_Numbers_io;            use Double_Double_Numbers_io;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Double_Double_Numbers_io;          use Double_Double_Numbers_io;
 with DoblDobl_Complex_Numbers;
-with DoblDobl_Complex_Numbers_io;         use DoblDobl_Complex_Numbers_io;
+with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
+with DoblDobl_Mathematical_Functions;   use DoblDobl_Mathematical_Functions;
 with Double_Double_Vectors;
-with Double_Double_Vectors_io;            use Double_Double_Vectors_io;
+with Double_Double_Vectors_io;          use Double_Double_Vectors_io;
 with DoblDobl_Complex_Vectors;
-with DoblDobl_Complex_Vectors_io;         use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_VecVecs;
-with DoblDobl_Complex_Vector_Norms;       use DoblDobl_Complex_Vector_Norms;
+with DoblDobl_Complex_Vector_Norms;     use DoblDobl_Complex_Vector_Norms;
 with DoblDobl_Random_Vectors;
+with DoblDobl_Complex_Matrices;
 with DoblDobl_Speelpenning_Products;
-with Quad_Double_Numbers;                 use Quad_Double_Numbers;
-with Quad_Double_Numbers_io;              use Quad_Double_Numbers_io;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;            use Quad_Double_Numbers_io;
 with QuadDobl_Complex_Numbers;
-with QuadDobl_Complex_Numbers_io;         use QuadDobl_Complex_Numbers_io;
+with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
+with QuadDobl_Mathematical_Functions;   use QuadDobl_Mathematical_Functions;
 with Quad_Double_Vectors;
-with Quad_Double_Vectors_io;              use Quad_Double_Vectors_io;
+with Quad_Double_Vectors_io;            use Quad_Double_Vectors_io;
 with QuadDobl_Complex_Vectors;
-with QuadDobl_Complex_Vectors_io;         use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_VecVecs;
-with QuadDobl_Complex_Vector_Norms;       use QuadDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Vector_Norms;     use QuadDobl_Complex_Vector_Norms;
 with QuadDobl_Random_Vectors;
+with QuadDobl_Complex_Matrices;
 with QuadDobl_Speelpenning_Products;
-with Multprec_Floating_Numbers;           use Multprec_Floating_Numbers;
-with Multprec_Floating_Numbers_io;        use Multprec_Floating_Numbers_io;
+with Multprec_Floating_Numbers;         use Multprec_Floating_Numbers;
+with Multprec_Floating_Numbers_io;      use Multprec_Floating_Numbers_io;
 with Multprec_Complex_Numbers;
-with Multprec_Complex_Numbers_io;         use Multprec_Complex_Numbers_io;
+with Multprec_Complex_Numbers_io;       use Multprec_Complex_Numbers_io;
+with Multprec_Mathematical_Functions;   use Multprec_Mathematical_Functions;
 with Multprec_Floating_Vectors;
-with Multprec_Floating_Vectors_io;        use Multprec_Floating_Vectors_io;
+with Multprec_Floating_Vectors_io;      use Multprec_Floating_Vectors_io;
 with Multprec_Complex_Vectors;
-with Multprec_Complex_Vectors_io;         use Multprec_Complex_Vectors_io;
-with Multprec_Complex_Norms_Equals;       use Multprec_Complex_Norms_Equals;
+with Multprec_Complex_Vectors_io;       use Multprec_Complex_Vectors_io;
+with Multprec_Complex_Norms_Equals;     use Multprec_Complex_Norms_Equals;
 with Multprec_Random_Vectors;
 with Multprec_Complex_VecVecs;
+with Multprec_Complex_Matrices;
 with Multprec_Speelpenning_Products;
 with Standard_Monomial_Evaluations;
 with DoblDobl_Monomial_Evaluations;
@@ -65,23 +73,21 @@ with Multprec_Monomial_Evaluations;
 with Symbol_Table;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Functions;
-with Standard_Complex_Polynomials_io;     use Standard_Complex_Polynomials_io;
+with Standard_Complex_Polynomials_io;   use Standard_Complex_Polynomials_io;
 with DoblDobl_Complex_Polynomials;
-with DoblDobl_Complex_Polynomials_io;     use DoblDobl_Complex_Polynomials_io;
+with DoblDobl_Complex_Polynomials_io;   use DoblDobl_Complex_Polynomials_io;
 with DoblDobl_Complex_Poly_Functions;
 with QuadDobl_Complex_Polynomials;
-with QuadDobl_Complex_Polynomials_io;     use QuadDobl_Complex_Polynomials_io;
+with QuadDobl_Complex_Polynomials_io;   use QuadDobl_Complex_Polynomials_io;
 with QuadDobl_Complex_Poly_Functions;
 with Multprec_Complex_Polynomials;
-with Multprec_Complex_Polynomials_io;     use Multprec_Complex_Polynomials_io;
+with Multprec_Complex_Polynomials_io;   use Multprec_Complex_Polynomials_io;
 with Multprec_Complex_Poly_Functions;
-with Coefficient_Supported_Polynomials;   use Coefficient_Supported_Polynomials;
+with Coefficient_Supported_Polynomials; use Coefficient_Supported_Polynomials;
 with Standard_Gradient_Evaluations;
 with DoblDobl_Gradient_Evaluations;
 with QuadDobl_Gradient_Evaluations;
 with Multprec_Gradient_Evaluations;
-with Varbprec_Polynomial_Evaluations;     use Varbprec_Polynomial_Evaluations;
-with Varbprec_Gradient_Evaluations;       use Varbprec_Gradient_Evaluations;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_SysFun;
 with DoblDobl_Complex_Poly_Systems;
@@ -90,8 +96,12 @@ with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_SysFun;
 with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_SysFun;
-with Cyclic_Roots_System;                 use Cyclic_Roots_System;
-with Random_Conditioned_Evaluations;      use Random_Conditioned_Evaluations;
+with Cyclic_Roots_System;               use Cyclic_Roots_System;
+with Random_Conditioned_Matrices;       use Random_Conditioned_Matrices;
+with Random_Conditioned_Evaluations;    use Random_Conditioned_Evaluations;
+with Varbprec_Complex_Linear_Solvers;   use Varbprec_Complex_Linear_Solvers;
+with Varbprec_Polynomial_Evaluations;   use Varbprec_Polynomial_Evaluations;
+with Varbprec_Gradient_Evaluations;     use Varbprec_Gradient_Evaluations;
 
 procedure ts_vmpdiff is
 
@@ -890,7 +900,48 @@ procedure ts_vmpdiff is
     end;
   end Multprec_Conditioning_Test;
 
-  procedure Conditioning_Test is
+  procedure Ask_for_Parameters
+              ( n,d,m,c : out natural32;
+                cff,pnt,cls : out double_float;
+                prc : out character ) is
+
+  -- DESCRIPTIN :
+  --   Prompts the user for the parameters of the problem.
+
+  -- ON RETURN :
+  --   n        the dimension is the number of variables;
+  --   d        the largest degree of the monomials;
+  --   m        the number of monomials (0 for dense);
+  --   c        coefficient type, complex, one, or real (1, 2, 3);
+  --   cff      magnitude of the coefficients;
+  --   pnt      magnitude of the points;
+  --   cls      closeness to a root;
+  --   prc      working precision, either s, d, q, or m for double,
+  --            double double, quad double, or arbitrary multiprecision.
+
+    cond : double_float;
+
+  begin
+    n := 0; d := 0; m := 0; c := 0;
+    new_line;
+    put("Give the dimension : "); get(n);
+    put("Give the largest degree : "); get(d);
+    put("Give the number of monomials (0 for dense) : "); get(m);
+    put("Give the type of coefficient (0 cmplx, 1 one, 2, real) : ");
+    get(c);
+    cff := 0.0; pnt := 0.0; cls := 0.0;
+    put("Give magnitude of the coefficients : "); get(cff);
+    put("Give magnitude of the coordinates of the point : "); get(pnt);
+    put("Give closeness to a root : "); get(cls);
+    cond := cff*(pnt**integer(d))/cls;
+    new_line;
+    put("Predicted condition number : "); put(cond,3); new_line;
+    new_line;
+    put("double, double double, quad double, or multiprecision? (s/d/q/m) ");
+    Ask_Alternative(prc,"sdqm");
+  end Ask_for_Parameters;
+
+  procedure Gradient_Conditioning_Test is
 
   -- DESCRIPTION :
   --   For various levels of precision, a polynomial f is generated
@@ -928,7 +979,376 @@ procedure ts_vmpdiff is
         Multprec_Conditioning_Test(n,d,m,c,size,cff,pnt,cls);
       when others => null;
     end case;
-  end Conditioning_Test;
+  end Gradient_Conditioning_Test;
+
+  procedure Standard_Jacobian_Test
+              ( n,d,m,c : in natural32;
+                cffsz,pntsz,close,condjm : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Given in n the number of variables, in d the largest degree,
+  --   in m the maximum number of monomials (or 0 for dense), and in c
+  --   the type of coefficients, then this procedure will generate a
+  --   random polynomial system with standard complex coefficients.
+  --   The condition number of the numerical evaluation problem is
+  --   determined by the degree, the coefficient size, the size of the
+  --   coordinates of the point, and the distance of the point to the
+  --   closest root.  The condition number of the Jacobian number
+  --   will be as prescribed provided condjm < 1.0E+16.
+
+  -- ON ENTRY :
+  --   n        number of variables;
+  --   d        largest degree of the monomials;
+  --   m        number of monomials (0 for a dense polynomial);
+  --   c        type of coefficient, 0 is random complex, 1 is one,
+  --            and 2 is random real;
+  --   cffsz    size of the coefficients;
+  --   pntsz    size of the coordinates of the point where to evaluate;
+  --   close    distance of the point to a root;
+  --   condjm   condition number of the Jacobian matrix.
+
+    p : Standard_Complex_Poly_Systems.Poly_Sys(1..integer32(n));
+    x : Standard_Complex_Vectors.Vector(p'range);
+    jm : Standard_Complex_Matrices.Matrix(p'range,x'range)
+       := Random_Conditioned_Matrix(integer32(n),condjm);
+    rco,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd : double_float;
+    loss_jac,loss_eva : integer32;
+
+    use Standard_Gradient_Evaluations;
+
+  begin
+    put("The given condition number of the Jacobian :");
+    put(condjm,3); new_line;
+    loss_jac := Estimated_Loss_of_Decimal_Places(jm);
+    put("-> Estimated loss of decimal places : "); put(loss_jac,1); new_line;
+    Random_Conditioned_Jacobian_Evaluation(n,d,m,c,cffsz,pntsz,close,jm,p,x);
+    rco := Inverse_Condition_Number(p,x);
+    if rco = 0.0
+     then loss_eva := -2**30;
+     else loss_eva := integer32(log10(rco));
+    end if;
+    new_line;
+    put("Inverse condition of polynomial evaluation :");
+    put(rco,3); new_line;
+    put("-> Estimated loss of decimal places : "); put(loss_eva,1); new_line;
+    declare
+      cff : Standard_Complex_VecVecs.VecVec(p'range);
+      ydx : Standard_Complex_VecVecs.VecVec(p'range);
+      e,f,b : Standard_Natural_VecVecs.Array_of_VecVecs(p'range);
+      wrk : Standard_Complex_VecVecs.Array_of_VecVecs(p'range);
+      nt : integer32;
+    begin
+      for i in p'range loop
+        nt := integer32(Standard_Complex_Polynomials.Number_of_Terms(p(i)));
+        cff(i) := new Standard_Complex_Vectors.Vector(1..nt);
+        e(i) := new Standard_Natural_VecVecs.VecVec(1..nt);
+        Coefficients_and_Supports(p(i),cff(i).all,e(i).all);
+        f(i) := new Standard_Natural_VecVecs.VecVec(1..nt);
+        b(i) := new Standard_Natural_VecVecs.VecVec(1..nt);
+        Split_Common_Factors(e(i).all,f(i).all,b(i).all);
+        wrk(i) := new Standard_Complex_VecVecs.VecVec(1..nt);
+        for j in b(i)'range loop
+          wrk(i)(j) := new Standard_Complex_Vectors.Vector(0..x'last);
+        end loop;
+        ydx(i) := new Standard_Complex_Vectors.Vector(0..x'last);
+      end loop;
+      Jacobian_with_Inverse_Condition
+        (f,b,cff,x,wrk,ydx,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd);
+      put_line("Condition of the polynomial evaluation :");
+      put("  numerator : "); put(fxnrc,3); new_line;
+      put("denominator : "); put(fxdrc,3); new_line;
+      put("inverse condition number : "); put(fxrco,3); new_line;
+      put_line("Condition of the Jacobian evaluation :");
+      put("  numerator : "); put(maxng,3); new_line;
+      put("denominator : "); put(mindg,3); new_line;
+      put("inverse condition number : "); put(rcogd,3); new_line;
+    end;
+  end Standard_Jacobian_Test;
+
+  procedure DoblDobl_Jacobian_Test
+              ( n,d,m,c : in natural32;
+                cffsz,pntsz,close,condjm : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Given in n the number of variables, in d the largest degree,
+  --   in m the maximum number of monomials (or 0 for dense), and in c
+  --   the type of coefficients, then this procedure will generate a
+  --   random polynomial system with double double complex coefficients.
+  --   The condition number of the numerical evaluation problem is
+  --   determined by the degree, the coefficient size, the size of the
+  --   coordinates of the point, and the distance of the point to the
+  --   closest root.  The condition number of the Jacobian number
+  --   will be as prescribed provided condjm < 1.0E+32.
+
+  -- ON ENTRY :
+  --   n        number of variables;
+  --   d        largest degree of the monomials;
+  --   m        number of monomials (0 for a dense polynomial);
+  --   c        type of coefficient, 0 is random complex, 1 is one,
+  --            and 2 is random real;
+  --   cffsz    size of the coefficients;
+  --   pntsz    size of the coordinates of the point where to evaluate;
+  --   close    distance of the point to a root;
+  --   condjm   condition number of the Jacobian matrix.
+
+    p : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(n));
+    x : DoblDobl_Complex_Vectors.Vector(p'range);
+    jm : DoblDobl_Complex_Matrices.Matrix(p'range,x'range)
+       := Random_Conditioned_Matrix(integer32(n),condjm);
+    rco,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd : double_double;
+    loss_jac,loss_eva : integer32;
+
+    use DoblDobl_Gradient_Evaluations;
+
+  begin
+    put("The given condition number of the Jacobian :");
+    put(condjm,3); new_line;
+    loss_jac := Estimated_Loss_of_Decimal_Places(jm);
+    put("-> Estimated loss of decimal places : "); put(loss_jac,1); new_line;
+    Random_Conditioned_Jacobian_Evaluation(n,d,m,c,cffsz,pntsz,close,jm,p,x);
+    rco := Inverse_Condition_Number(p,x);
+    if Is_Zero(rco)
+     then loss_eva := -2**30;
+     else loss_eva := integer32(to_double(log10(rco)));
+    end if;
+    new_line;
+    put("Inverse condition of polynomial evaluation :");
+    put(rco,3); new_line;
+    put("-> Estimated loss of decimal places : "); put(loss_eva,1); new_line;
+    declare
+      cff : DoblDobl_Complex_VecVecs.VecVec(p'range);
+      ydx : DoblDobl_Complex_VecVecs.VecVec(p'range);
+      e,f,b : Standard_Natural_VecVecs.Array_of_VecVecs(p'range);
+      wrk : DoblDobl_Complex_VecVecs.Array_of_VecVecs(p'range);
+      nt : integer32;
+    begin
+      for i in p'range loop
+        nt := integer32(DoblDobl_Complex_Polynomials.Number_of_Terms(p(i)));
+        cff(i) := new DoblDobl_Complex_Vectors.Vector(1..nt);
+        e(i) := new Standard_Natural_VecVecs.VecVec(1..nt);
+        Coefficients_and_Supports(p(i),cff(i).all,e(i).all);
+        f(i) := new Standard_Natural_VecVecs.VecVec(1..nt);
+        b(i) := new Standard_Natural_VecVecs.VecVec(1..nt);
+        Split_Common_Factors(e(i).all,f(i).all,b(i).all);
+        wrk(i) := new DoblDobl_Complex_VecVecs.VecVec(1..nt);
+        for j in b(i)'range loop
+          wrk(i)(j) := new DoblDobl_Complex_Vectors.Vector(0..x'last);
+        end loop;
+        ydx(i) := new DoblDobl_Complex_Vectors.Vector(0..x'last);
+      end loop;
+      Jacobian_with_Inverse_Condition
+        (f,b,cff,x,wrk,ydx,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd);
+      put_line("Condition of the polynomial evaluation :");
+      put("  numerator : "); put(fxnrc,3); new_line;
+      put("denominator : "); put(fxdrc,3); new_line;
+      put("inverse condition number : "); put(fxrco,3); new_line;
+      put_line("Condition of the Jacobian evaluation :");
+      put("  numerator : "); put(maxng,3); new_line;
+      put("denominator : "); put(mindg,3); new_line;
+      put("inverse condition number : "); put(rcogd,3); new_line;
+    end;
+  end DoblDobl_Jacobian_Test;
+
+  procedure QuadDobl_Jacobian_Test
+              ( n,d,m,c : in natural32;
+                cffsz,pntsz,close,condjm : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Given in n the number of variables, in d the largest degree,
+  --   in m the maximum number of monomials (or 0 for dense), and in c
+  --   the type of coefficients, then this procedure will generate a
+  --   random polynomial system with quad double complex coefficients.
+  --   The condition number of the numerical evaluation problem is
+  --   determined by the degree, the coefficient size, the size of the
+  --   coordinates of the point, and the distance of the point to the
+  --   closest root.  The condition number of the Jacobian number
+  --   will be as prescribed provided condjm < 1.0E+64.
+
+  -- ON ENTRY :
+  --   n        number of variables;
+  --   d        largest degree of the monomials;
+  --   m        number of monomials (0 for a dense polynomial);
+  --   c        type of coefficient, 0 is random complex, 1 is one,
+  --            and 2 is random real;
+  --   cffsz    size of the coefficients;
+  --   pntsz    size of the coordinates of the point where to evaluate;
+  --   close    distance of the point to a root;
+  --   condjm   condition number of the Jacobian matrix.
+
+    p : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(n));
+    x : QuadDobl_Complex_Vectors.Vector(p'range);
+    jm : QuadDobl_Complex_Matrices.Matrix(p'range,x'range)
+       := Random_Conditioned_Matrix(integer32(n),condjm);
+    rco,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd : quad_double;
+    loss_jac,loss_eva : integer32;
+
+    use QuadDobl_Gradient_Evaluations;
+
+  begin
+    put("The given condition number of the Jacobian :");
+    put(condjm,3); new_line;
+    loss_jac := Estimated_Loss_of_Decimal_Places(jm);
+    put("-> Estimated loss of decimal places : "); put(loss_jac,1); new_line;
+    Random_Conditioned_Jacobian_Evaluation(n,d,m,c,cffsz,pntsz,close,jm,p,x);
+    rco := Inverse_Condition_Number(p,x);
+    if Is_Zero(rco)
+     then loss_eva := -2**30;
+     else loss_eva := integer32(to_double(log10(rco)));
+    end if;
+    new_line;
+    put("Inverse condition of polynomial evaluation :");
+    put(rco,3); new_line;
+    put("-> Estimated loss of decimal places : "); put(loss_eva,1); new_line;
+    declare
+      cff : QuadDobl_Complex_VecVecs.VecVec(p'range);
+      ydx : QuadDobl_Complex_VecVecs.VecVec(p'range);
+      e,f,b : Standard_Natural_VecVecs.Array_of_VecVecs(p'range);
+      wrk : QuadDobl_Complex_VecVecs.Array_of_VecVecs(p'range);
+      nt : integer32;
+    begin
+      for i in p'range loop
+        nt := integer32(QuadDobl_Complex_Polynomials.Number_of_Terms(p(i)));
+        cff(i) := new QuadDobl_Complex_Vectors.Vector(1..nt);
+        e(i) := new Standard_Natural_VecVecs.VecVec(1..nt);
+        Coefficients_and_Supports(p(i),cff(i).all,e(i).all);
+        f(i) := new Standard_Natural_VecVecs.VecVec(1..nt);
+        b(i) := new Standard_Natural_VecVecs.VecVec(1..nt);
+        Split_Common_Factors(e(i).all,f(i).all,b(i).all);
+        wrk(i) := new QuadDobl_Complex_VecVecs.VecVec(1..nt);
+        for j in b(i)'range loop
+          wrk(i)(j) := new QuadDobl_Complex_Vectors.Vector(0..x'last);
+        end loop;
+        ydx(i) := new QuadDobl_Complex_Vectors.Vector(0..x'last);
+      end loop;
+      Jacobian_with_Inverse_Condition
+        (f,b,cff,x,wrk,ydx,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd);
+      put_line("Condition of the polynomial evaluation :");
+      put("  numerator : "); put(fxnrc,3); new_line;
+      put("denominator : "); put(fxdrc,3); new_line;
+      put("inverse condition number : "); put(fxrco,3); new_line;
+      put_line("Condition of the Jacobian evaluation :");
+      put("  numerator : "); put(maxng,3); new_line;
+      put("denominator : "); put(mindg,3); new_line;
+      put("inverse condition number : "); put(rcogd,3); new_line;
+    end;
+  end QuadDobl_Jacobian_Test;
+
+  procedure Multprec_Jacobian_Test
+              ( n,d,m,c,size : in natural32;
+                cffsz,pntsz,close,condjm : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Given in n the number of variables, in d the largest degree,
+  --   in m the maximum number of monomials (or 0 for dense), and in c
+  --   the type of coefficients, then this procedure will generate a
+  --   random polynomial system with quad double complex coefficients.
+  --   The condition number of the numerical evaluation problem is
+  --   determined by the degree, the coefficient size, the size of the
+  --   coordinates of the point, and the distance of the point to the
+  --   closest root.  The condition number of the Jacobian number
+  --   will be as prescribed provided the value for the size of
+  --   the working precision is sufficiently high.
+
+  -- ON ENTRY :
+  --   n        number of variables;
+  --   d        largest degree of the monomials;
+  --   m        number of monomials (0 for a dense polynomial);
+  --   c        type of coefficient, 0 is random complex, 1 is one,
+  --            and 2 is random real;
+  --   size     size of the working precision;
+  --   cffsz    size of the coefficients;
+  --   pntsz    size of the coordinates of the point where to evaluate;
+  --   close    distance of the point to a root;
+  --   condjm   condition number of the Jacobian matrix.
+
+    p : Multprec_Complex_Poly_Systems.Poly_Sys(1..integer32(n));
+    x : Multprec_Complex_Vectors.Vector(p'range);
+    jm : Multprec_Complex_Matrices.Matrix(p'range,x'range)
+       := Random_Conditioned_Matrix(integer32(n),condjm);
+    rco,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd : Floating_Number;
+    loss_jac,loss_eva : integer32;
+
+    use Multprec_Gradient_Evaluations;
+
+  begin
+    put("The given condition number of the Jacobian :");
+    put(condjm,3); new_line;
+    loss_jac := Estimated_Loss_of_Decimal_Places(jm);
+    put("-> Estimated loss of decimal places : "); put(loss_jac,1); new_line;
+    Random_Conditioned_Jacobian_Evaluation
+      (n,d,m,c,size,cffsz,pntsz,close,jm,p,x);
+    rco := Inverse_Condition_Number(p,x);
+    if Equal(rco,0.0) then
+      loss_eva := -2**30;
+    else
+      declare
+        mp_log10rco : Floating_Number := log10(rco);
+        st_log10rco : double_float := Round(mp_log10rco);
+      begin
+        loss_eva := integer32(st_log10rco);
+      end;
+    end if;
+    new_line;
+    put("Inverse condition of polynomial evaluation :");
+    put(rco,3); new_line;
+    put("-> Estimated loss of decimal places : "); put(loss_eva,1); new_line;
+    declare
+      cff : Multprec_Complex_VecVecs.VecVec(p'range);
+      ydx : Multprec_Complex_VecVecs.VecVec(p'range);
+      e,f,b : Standard_Natural_VecVecs.Array_of_VecVecs(p'range);
+      wrk : Multprec_Complex_VecVecs.Array_of_VecVecs(p'range);
+      nt : integer32;
+    begin
+      for i in p'range loop
+        nt := integer32(Multprec_Complex_Polynomials.Number_of_Terms(p(i)));
+        cff(i) := new Multprec_Complex_Vectors.Vector(1..nt);
+        e(i) := new Standard_Natural_VecVecs.VecVec(1..nt);
+        Coefficients_and_Supports(p(i),cff(i).all,e(i).all);
+        f(i) := new Standard_Natural_VecVecs.VecVec(1..nt);
+        b(i) := new Standard_Natural_VecVecs.VecVec(1..nt);
+        Split_Common_Factors(e(i).all,f(i).all,b(i).all);
+        wrk(i) := new Multprec_Complex_VecVecs.VecVec(1..nt);
+        for j in b(i)'range loop
+          wrk(i)(j) := new Multprec_Complex_Vectors.Vector(0..x'last);
+        end loop;
+        ydx(i) := new Multprec_Complex_Vectors.Vector(0..x'last);
+      end loop;
+      Jacobian_with_Inverse_Condition
+        (f,b,cff,x,wrk,ydx,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd);
+      put_line("Condition of the polynomial evaluation :");
+      put("  numerator : "); put(fxnrc,3); new_line;
+      put("denominator : "); put(fxdrc,3); new_line;
+      put("inverse condition number : "); put(fxrco,3); new_line;
+      put_line("Condition of the Jacobian evaluation :");
+      put("  numerator : "); put(maxng,3); new_line;
+      put("denominator : "); put(mindg,3); new_line;
+      put("inverse condition number : "); put(rcogd,3); new_line;
+    end;
+  end Multprec_Jacobian_Test;
+
+  procedure Jacobian_Conditioning_Test is
+
+    n,d,m,c,deci,size : natural32 := 0;
+    cff,pnt,cls,cndjm : double_float := 0.0;
+    ans : character;
+
+  begin
+    Ask_for_Parameters(n,d,m,c,cff,pnt,cls,ans);
+    new_line;
+    put("Condition number of the Jacobian matrix : "); get(cndjm);
+    new_line;
+    case ans is
+      when 's' => Standard_Jacobian_Test(n,d,m,c,cff,pnt,cls,cndjm);
+      when 'd' => DoblDobl_Jacobian_Test(n,d,m,c,cff,pnt,cls,cndjm);
+      when 'q' => QuadDobl_Jacobian_Test(n,d,m,c,cff,pnt,cls,cndjm);
+      when 'm' =>
+        new_line;
+        put("Give the number of decimal places : "); get(deci);
+        size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
+        Multprec_Jacobian_Test(n,d,m,c,size,cff,pnt,cls,cndjm);
+      when others => null;
+    end case;
+  end Jacobian_Conditioning_Test;
 
   procedure Main is
 
@@ -939,13 +1359,15 @@ procedure ts_vmpdiff is
     put_line("Evaluation of a gradient and its condition number ...");
     put_line("  1. generate a random polynomial and select the precision;");
     put_line("  2. do a performance test on a cyclic n-roots polynomial;");
-    put_line("  3. generate a problem with prescribed conditioning.");
-    put("Type 1, 2, or 3 to choose : ");
-    Ask_Alternative(ans,"123");
+    put_line("  3. generate a polynomial with prescribed conditioning;");
+    put_line("  4. generate a system with prescribed conditioning.");
+    put("Type 1, 2, 3, or 4 to choose : ");
+    Ask_Alternative(ans,"1234");
     case ans is
       when '1' => Evaluate_Gradient;
       when '2' => Performance_Test;
-      when '3' => Conditioning_Test;
+      when '3' => Gradient_Conditioning_Test;
+      when '4' => Jacobian_Conditioning_Test;
       when others => null;
     end case;
   end Main;

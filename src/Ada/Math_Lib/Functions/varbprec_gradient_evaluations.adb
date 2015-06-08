@@ -301,10 +301,10 @@ package body VarbPrec_Gradient_Evaluations is
        then Copy(kmndg,mindg);
       end if;
       Clear(kxnrc); Clear(kxdrc); Clear(kxrco);
-      Clear(maxng); Clear(mindg); Clear(rcogd);
+      Clear(kmxng); Clear(kmndg); Clear(krcgd);
     end loop;
-    fxrco := fxnrc/fxdrc;
-    rcogd := maxng/mindg;
+    Clear(fxrco); fxrco := fxnrc/fxdrc;
+    Clear(rcogd); rcogd := maxng/mindg;
   end Jacobian_with_Inverse_Condition;
 
 end VarbPrec_Gradient_Evaluations;
