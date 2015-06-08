@@ -1,3 +1,6 @@
+Sun 7 Jun 2015 : extended varbprec_gradient_evaluations with procedures
+  to evaluate the Jacobian matrix with computation of the condition number.
+
 Sat 6 Jun 2015 : extended coefficient_supported_polynomials with
   procedures for double double, quad double, and arbitrary multiprecision.
   Added random conditioned test to ts_vmpdiff.

@@ -25,6 +25,8 @@ package VarbPrec_Gradient_Evaluations is
 --   Condition numbers that turn out as larger than the inverse of the 
 --   working precision must be recomputed at a higher precision.
 
+-- PART I : ordinary polynomials
+
   procedure Gradient_with_Inverse_Condition
              ( f,b : in Standard_Natural_VecVecs.VecVec;
                c,x : in Standard_Complex_Vectors.Vector;
@@ -65,7 +67,7 @@ package VarbPrec_Gradient_Evaluations is
   --   0-th component the function value and the i-th
   --   component the i-th derivative of the sum at x.
   --   Moreover: numrco'range = ydx'range.
-  --   The y serves as work space and has been allocated,
+  --   The argument wrk serves as work space and has been allocated,
   --   in particular wrk'range = b'range.
 
   -- ON ENTRY :
@@ -91,7 +93,84 @@ package VarbPrec_Gradient_Evaluations is
   --   maxng   largest numerator of the condition of the gradient at x,
   --           taken over every component of the gradient as the absolute
   --           value of the evaluated partial derivative at x;
-  --   mindg   smallest denonnarator of the condition of the gradient at x,
+  --   mindg   smallest denominator of the condition of the gradient at x,
+  --           taken over every component k as the absolute value of ydx(k);
+  --   rcodg   the inverse condition number of the gradient is maxng/mindg. 
+
+-- PART II : ordinary polynomial systems
+
+  procedure Jacobian_with_Inverse_Condition
+             ( f,b : in Standard_Natural_VecVecs.Array_of_VecVecs;
+               c : in Standard_Complex_VecVecs.VecVec;
+               x : in Standard_Complex_Vectors.Vector;
+               wrk : in out Standard_Complex_VecVecs.Array_of_VecVecs;
+               ydx : in Standard_Complex_VecVecs.VecVec;
+               fxnrc,fxdrc,fxrco : out double_float;
+               maxng,mindg,rcogd : out double_float );
+  procedure Jacobian_with_Inverse_Condition
+             ( f,b : in Standard_Natural_VecVecs.Array_of_VecVecs;
+               c : in DoblDobl_Complex_VecVecs.VecVec;
+               x : in DoblDobl_Complex_Vectors.Vector;
+               wrk : in out DoblDobl_Complex_VecVecs.Array_of_VecVecs;
+               ydx : in DoblDobl_Complex_VecVecs.VecVec;
+               fxnrc,fxdrc,fxrco : out double_double;
+               maxng,mindg,rcogd : out double_double );
+  procedure Jacobian_with_Inverse_Condition
+             ( f,b : in Standard_Natural_VecVecs.Array_of_VecVecs;
+               c : in QuadDobl_Complex_VecVecs.VecVec;
+               x : in QuadDobl_Complex_Vectors.Vector;
+               wrk : in out QuadDobl_Complex_VecVecs.Array_of_VecVecs;
+               ydx : in QuadDobl_Complex_VecVecs.VecVec;
+               fxnrc,fxdrc,fxrco : out quad_double;
+               maxng,mindg,rcogd : out quad_double );
+  procedure Jacobian_with_Inverse_Condition
+             ( f,b : in Standard_Natural_VecVecs.Array_of_VecVecs;
+               c : in Multprec_Complex_VecVecs.VecVec;
+               x : in Multprec_Complex_Vectors.Vector;
+               wrk : in out Multprec_Complex_VecVecs.Array_of_VecVecs;
+               ydx : in Multprec_Complex_VecVecs.VecVec;
+               fxnrc,fxdrc,fxrco : out Floating_Number;
+               maxng,mindg,rcogd : out Floating_Number );
+
+  -- DESCRIPTION :
+  --   Given in f, b, and c the common factors, the bit vectors, and the
+  --   coefficients of a polynomial system, the polynomial system is
+  --   evaluated and differentiated at x, along with the computation
+  --   of the condition number of the evaluation and differentiation problem.
+  --   The result of the evaluation and differentiation is in ydx.
+  --   The condition of the evaluation is computed in (fxnrc, fxdrc, fxrco)
+  --   and (maxng, mindg, rcogd) defines the condition of the Jacobian at x.
+
+  -- REQUIRED :
+  --   f'range = b'range = c'range = wrk'range = ydx'range, where f'length
+  --   equals the number of polynomials in the system.
+
+  -- ON ENTRY :
+  --   f       common factors for each polynomial in the system;
+  --   b       bit vectors that define the products of variables;
+  --   c       coefficients of the terms in each polynomial in the system;
+  --   x       point where to evaluate and differentiate at;
+  --   wrk     work space for each polynomial.
+
+  -- ON RETURN :
+  --   wrk     values used in the evaluation and differentiation;
+  --   ydx     ydx(k) is a vector range 0..x'last, its first position
+  --           at ydx(k)(0) contains the value of the k-th polynomial
+  --           evaluated at x and the other components of ydx(k) contain
+  --           the components of the evaluated gradient of the k-th polynomial
+  --           so: ydx(k)(1..x'last) contains the gradient
+  --           which is the k-th column of the Jacobian matrix;
+  --   fxnrc   numerator of the inverse condition number of the evalution,
+  --           this is the maximum of the absolute values of the evaluated
+  --           polynomials in the vector ydx(0);
+  --   fxdrc   denominator of the inverse condition number of the evalution,
+  --           as the maximum of the sums of the absolute values of the 
+  --           evaluated terms;
+  --   fxrco   inverse condition number of the evaluation problem at x;
+  --   maxng   largest numerator of the condition over all gradients at x,
+  --           taken over every component of the gradient as the absolute
+  --           value of the evaluated partial derivative at x;
+  --   mindg   smallest denominator of the condition over all gradients at x,
   --           taken over every component k as the absolute value of ydx(k);
   --   rcodg   the inverse condition number of the gradient is maxng/mindg. 
 
