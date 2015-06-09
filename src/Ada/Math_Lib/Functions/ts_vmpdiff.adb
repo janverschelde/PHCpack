@@ -691,6 +691,160 @@ procedure ts_vmpdiff is
     end case;
   end Performance_Test;
 
+  procedure Compare ( fz : in Standard_Complex_Numbers.Complex_Number;
+                      gz : in Standard_Complex_Vectors.Vector;
+                      fgz : in Standard_Complex_Vectors.Vector;
+                      tol : in double_float; output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Compares the evaluated polynomial in fz with fgz(0)
+  --   and the values in gz with fgz(1..fgz'last).
+  --   If the differences between the corresponding values is larger
+  --   than the tolerance tol, then an error message is written.
+  --   If the flag output is true, then all differences are written.
+
+    use Standard_Complex_Numbers;
+
+    dff : Complex_Number;
+    val : double_float;
+ 
+  begin
+    dff := fz - fgz(0);
+    val := AbsVal(dff);
+    if val > tol or output then
+      put_line("difference in evaluated polynomial :");
+      put(fz); new_line;
+      put(fgz(0)); new_line;
+      put("error :"); put(val,3); new_line;
+    end if;
+    for i in gz'range loop
+      dff := gz(i) - fgz(i);
+      val := AbsVal(dff);
+      if val > tol or output then
+        put("difference in gradient at "); put(i,1); put_line(" :");
+        put(gz(i)); new_line;
+        put(fgz(i)); new_line;
+        put("error :"); put(val,3); new_line;
+      end if;
+    end loop;
+  end Compare;
+
+  procedure Compare ( fz : in DoblDobl_Complex_Numbers.Complex_Number;
+                      gz : in DoblDobl_Complex_Vectors.Vector;
+                      fgz : in DoblDobl_Complex_Vectors.Vector;
+                      tol : in double_float; output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Compares the evaluated polynomial in fz with fgz(0)
+  --   and the values in gz with fgz(1..fgz'last).
+  --   If the differences between the corresponding values is larger
+  --   than the tolerance tol, then an error message is written.
+  --   If the flag output is true, then all differences are written.
+
+    use DoblDobl_Complex_Numbers;
+
+    dff : Complex_Number;
+    val : double_double;
+ 
+  begin
+    dff := fz - fgz(0);
+    val := AbsVal(dff);
+    if val > tol or output then
+      put_line("difference in evaluated polynomial :");
+      put(fz); new_line;
+      put(fgz(0)); new_line;
+      put("error : "); put(val,3); new_line;
+    end if;
+    for i in gz'range loop
+      dff := gz(i) - fgz(i);
+      val := AbsVal(dff);
+      if val > tol or output then
+        put("difference in gradient at "); put(i,1); put_line(" :");
+        put(gz(i)); new_line;
+        put(fgz(i)); new_line;
+        put("error : "); put(val,3); new_line;
+      end if;
+    end loop;
+  end Compare;
+
+  procedure Compare ( fz : in QuadDobl_Complex_Numbers.Complex_Number;
+                      gz : in QuadDobl_Complex_Vectors.Vector;
+                      fgz : in QuadDobl_Complex_Vectors.Vector;
+                      tol : in double_float; output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Compares the evaluated polynomial in fz with fgz(0)
+  --   and the values in gz with fgz(1..fgz'last).
+  --   If the differences between the corresponding values is larger
+  --   than the tolerance tol, then an error message is written.
+  --   If the flag output is true, then all differences are written.
+
+    use QuadDobl_Complex_Numbers;
+
+    dff : Complex_Number;
+    val : quad_double;
+ 
+  begin
+    dff := fz - fgz(0);
+    val := AbsVal(dff);
+    if val > tol or output then
+      put_line("difference in evaluated polynomial :");
+      put(fz); new_line;
+      put(fgz(0)); new_line;
+      put("error : "); put(val,3); new_line;
+    end if;
+    for i in gz'range loop
+      dff := gz(i) - fgz(i);
+      val := AbsVal(dff);
+      if val > tol or output then
+        put("difference in gradient at "); put(i,1); put_line(" :");
+        put(gz(i)); new_line;
+        put(fgz(i)); new_line;
+        put("error : "); put(val,3); new_line;
+      end if;
+    end loop;
+  end Compare;
+
+  procedure Compare ( fz : in Multprec_Complex_Numbers.Complex_Number;
+                      gz : in Multprec_Complex_Vectors.Vector;
+                      fgz : in Multprec_Complex_Vectors.Vector;
+                      tol : in double_float; output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Compares the evaluated polynomial in fz with fgz(0)
+  --   and the values in gz with fgz(1..fgz'last).
+  --   If the differences between the corresponding values is larger
+  --   than the tolerance tol, then an error message is written.
+  --   If the flag output is true, then all differences are written.
+
+    use Multprec_Complex_Numbers;
+
+    dff : Complex_Number;
+    val : Floating_Number;
+ 
+  begin
+    dff := fz - fgz(0);
+    val := AbsVal(dff);
+    if val > tol or output then
+      put_line("difference in evaluated polynomial :");
+      put(fz); new_line;
+      put(fgz(0)); new_line;
+      put("error : "); put(val,3); new_line;
+    end if;
+    Clear(dff); Clear(val);
+    for i in gz'range loop
+      dff := gz(i) - fgz(i);
+      val := AbsVal(dff);
+      if val > tol or output then
+        put("difference in gradient at "); put(i,1); put_line(" :");
+        put(gz(i)); new_line;
+        put(fgz(i)); new_line;
+        put("error : "); put(val,3); new_line;
+      end if;
+      Clear(dff); Clear(val);
+    end loop;
+  end Compare;
+
   procedure Standard_Conditioning_Test
               ( n,d,m,c : natural32;
                 cffsz,pntsz,close : in double_float ) is
@@ -714,13 +868,15 @@ procedure ts_vmpdiff is
     g : Standard_Complex_Vectors.Vector(1..integer32(n))
       := Standard_Random_Vectors.Random_Vector(1,integer32(n));
     fgz : Standard_Complex_Vectors.Vector(0..x'last);
+    fz : Standard_Complex_Numbers.Complex_Number;
     nt : integer32;
-    numfz,denfz,fzrco,maxng,mindg,gzrco : double_float;
+    numfz,denfz,fzrco,gznrc,gzdrc,gzrco : double_float;
 
     use Standard_Gradient_Evaluations;
 
   begin
     Random_Conditioned_Gradient_Evaluation(n,d,m,c,cffsz,pntsz,close,g,p,x);
+    fz := Standard_Complex_Poly_Functions.Eval(p,x);
     nt := integer32(Standard_Complex_Polynomials.Number_of_Terms(p));
     declare
       c : Standard_Complex_Vectors.Vector(1..nt);
@@ -733,12 +889,16 @@ procedure ts_vmpdiff is
         wrk(i) := new Standard_Complex_Vectors.Vector(0..integer32(n));
       end loop;
       Gradient_with_Inverse_Condition
-        (f,b,c,x,wrk,fgz,numfz,denfz,fzrco,maxng,mindg,gzrco);
+        (f,b,c,x,wrk,fgz,numfz,denfz,fzrco,gznrc,gzdrc,gzrco);
+      put_line("Comparing evaluated values ...");
+      Compare(fz,g,fgz,1.0E-8,true);
       put_line("Condition number of evaluation :");
+      put("    numerator : "); put(numfz,3); new_line;
+      put("  denominator : "); put(denfz,3); new_line;
       put("  inverse condition number : "); put(fzrco,3); new_line;
       put_line("Condition of gradient :");
-      put("  max of numerator : "); put(maxng,3); new_line;
-      put("  min of denominator : "); put(mindg,3); new_line;
+      put("    numerator : "); put(gznrc,3); new_line;
+      put("  denominator : "); put(gzdrc,3); new_line;
       put("  inverse condition number : "); put(gzrco,3); new_line;
     end;
   end Standard_Conditioning_Test;
@@ -765,14 +925,16 @@ procedure ts_vmpdiff is
     x : DoblDobl_Complex_Vectors.Vector(1..integer32(n));
     g : DoblDobl_Complex_Vectors.Vector(1..integer32(n))
       := DoblDobl_Random_Vectors.Random_Vector(1,integer32(n));
+    fz : DoblDobl_Complex_Numbers.Complex_Number;
     fgz : DoblDobl_Complex_Vectors.Vector(0..x'last);
     nt : integer32;
-    numfz,denfz,fzrco,maxng,mindg,gzrco : double_double;
+    numfz,denfz,fzrco,gznrc,gzdrc,gzrco : double_double;
 
     use DoblDobl_Gradient_Evaluations;
 
   begin
     Random_Conditioned_Gradient_Evaluation(n,d,m,c,cffsz,pntsz,close,g,p,x);
+    fz := DoblDobl_Complex_Poly_Functions.Eval(p,x);
     nt := integer32(DoblDobl_Complex_Polynomials.Number_of_Terms(p));
     declare
       c : DoblDobl_Complex_Vectors.Vector(1..nt);
@@ -785,12 +947,16 @@ procedure ts_vmpdiff is
         wrk(i) := new DoblDobl_Complex_Vectors.Vector(0..integer32(n));
       end loop;
       Gradient_with_Inverse_Condition
-        (f,b,c,x,wrk,fgz,numfz,denfz,fzrco,maxng,mindg,gzrco);
+        (f,b,c,x,wrk,fgz,numfz,denfz,fzrco,gznrc,gzdrc,gzrco);
+      put_line("Comparing evaluated values ...");
+      Compare(fz,g,fgz,1.0E-8,true);
       put_line("Condition number of evaluation :");
+      put("    numerator : "); put(numfz,3); new_line;
+      put("  denominator : "); put(denfz,3); new_line;
       put("  inverse condition number : "); put(fzrco,3); new_line;
       put_line("Condition of gradient :");
-      put("  max of numerator : "); put(maxng,3); new_line;
-      put("  min of denominator : "); put(mindg,3); new_line;
+      put("    numerator : "); put(gznrc,3); new_line;
+      put("  denominator : "); put(gzdrc,3); new_line;
       put("  inverse condition number : "); put(gzrco,3); new_line;
     end;
   end DoblDobl_Conditioning_Test;
@@ -817,14 +983,16 @@ procedure ts_vmpdiff is
     x : QuadDobl_Complex_Vectors.Vector(1..integer32(n));
     g : QuadDobl_Complex_Vectors.Vector(1..integer32(n))
       := QuadDobl_Random_Vectors.Random_Vector(1,integer32(n));
+    fz : QuadDobl_Complex_Numbers.Complex_Number;
     fgz : QuadDobl_Complex_Vectors.Vector(0..x'last);
     nt : integer32;
-    numfz,denfz,fzrco,maxng,mindg,gzrco : quad_double;
+    numfz,denfz,fzrco,gznrc,gzdrc,gzrco : quad_double;
 
     use QuadDobl_Gradient_Evaluations;
 
   begin
     Random_Conditioned_Gradient_Evaluation(n,d,m,c,cffsz,pntsz,close,g,p,x);
+    fz := QuadDobl_Complex_Poly_Functions.Eval(p,x);
     nt := integer32(QuadDobl_Complex_Polynomials.Number_of_Terms(p));
     declare
       c : QuadDobl_Complex_Vectors.Vector(1..nt);
@@ -837,12 +1005,16 @@ procedure ts_vmpdiff is
         wrk(i) := new QuadDobl_Complex_Vectors.Vector(0..integer32(n));
       end loop;
       Gradient_with_Inverse_Condition
-        (f,b,c,x,wrk,fgz,numfz,denfz,fzrco,maxng,mindg,gzrco);
+        (f,b,c,x,wrk,fgz,numfz,denfz,fzrco,gznrc,gzdrc,gzrco);
+      put_line("Comparing evaluated values ...");
+      Compare(fz,g,fgz,1.0E-8,true);
       put_line("Condition number of evaluation :");
       put("  inverse condition number : "); put(fzrco,3); new_line;
+      put("    numerator : "); put(numfz,3); new_line;
+      put("  denominator : "); put(denfz,3); new_line;
       put_line("Condition of gradient :");
-      put("  max of numerator : "); put(maxng,3); new_line;
-      put("  min of denominator : "); put(mindg,3); new_line;
+      put("    numerator : "); put(gznrc,3); new_line;
+      put("  denominator : "); put(gzdrc,3); new_line;
       put("  inverse condition number : "); put(gzrco,3); new_line;
     end;
   end QuadDobl_Conditioning_Test;
@@ -870,9 +1042,10 @@ procedure ts_vmpdiff is
     x : Multprec_Complex_Vectors.Vector(1..integer32(n));
     g : Multprec_Complex_Vectors.Vector(1..integer32(n))
       := Multprec_Random_Vectors.Random_Vector(1,integer32(n),sz);
+    fz : Multprec_Complex_Numbers.Complex_Number;
     fgz : Multprec_Complex_Vectors.Vector(0..x'last);
     nt : integer32;
-    numfz,denfz,fzrco,maxng,mindg,gzrco : Floating_Number;
+    numfz,denfz,fzrco,gznrc,gzdrc,gzrco : Floating_Number;
 
     use Multprec_Gradient_Evaluations;
 
@@ -890,12 +1063,16 @@ procedure ts_vmpdiff is
         wrk(i) := new Multprec_Complex_Vectors.Vector(0..integer32(n));
       end loop;
       Gradient_with_Inverse_Condition
-        (f,b,c,x,wrk,fgz,numfz,denfz,fzrco,maxng,mindg,gzrco);
+        (f,b,c,x,wrk,fgz,numfz,denfz,fzrco,gznrc,gzdrc,gzrco);
+      put_line("Comparing evaluated values ...");
+      Compare(fz,g,fgz,1.0E-8,true);
       put_line("Condition number of evaluation :");
       put("  inverse condition number : "); put(fzrco,3); new_line;
+      put("    numerator : "); put(numfz,3); new_line;
+      put("  denominator : "); put(denfz,3); new_line;
       put_line("Condition of gradient :");
-      put("  max of numerator : "); put(maxng,3); new_line;
-      put("  min of denominator : "); put(mindg,3); new_line;
+      put("    numerator : "); put(gznrc,3); new_line;
+      put("  denominator : "); put(gzdrc,3); new_line;
       put("  inverse condition number : "); put(gzrco,3); new_line;
     end;
   end Multprec_Conditioning_Test;
@@ -927,7 +1104,7 @@ procedure ts_vmpdiff is
     put("Give the dimension : "); get(n);
     put("Give the largest degree : "); get(d);
     put("Give the number of monomials (0 for dense) : "); get(m);
-    put("Give the type of coefficient (0 cmplx, 1 one, 2, real) : ");
+    put("Give the type of coefficient (0 cmplx, 1 one, 2 real) : ");
     get(c);
     cff := 0.0; pnt := 0.0; cls := 0.0;
     put("Give magnitude of the coefficients : "); get(cff);
@@ -973,7 +1150,6 @@ procedure ts_vmpdiff is
       when 'd' => DoblDobl_Conditioning_Test(n,d,m,c,cff,pnt,cls);
       when 'q' => QuadDobl_Conditioning_Test(n,d,m,c,cff,pnt,cls);
       when 'm' =>
-        new_line;
         put("Give the number of decimal places : "); get(deci);
         size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
         Multprec_Conditioning_Test(n,d,m,c,size,cff,pnt,cls);
@@ -981,6 +1157,35 @@ procedure ts_vmpdiff is
     end case;
   end Gradient_Conditioning_Test;
 
+  procedure Compare ( A : in Standard_Complex_Matrices.Matrix;
+                      B : in Standard_Complex_VecVecs.VecVec;
+                      tol : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Compares the values in the Jacobian matrix A
+  --   with the evaluated gradients in B.
+  --   If the corresponding values in A and B differ by more than
+  --   the tolerance tol, then an error message is written.
+
+    use Standard_Complex_Numbers;
+
+    dff : Complex_Number;
+
+  begin
+    for col in A'range(2) loop
+      for row in A'range(1) loop
+        dff := A(row,col) - B(col)(row);
+        if AbsVal(dff) > tol then
+          put("difference in Jacobian and gradient at");
+          put(" row = "); put(row,1);
+          put(", column = "); put(col,1); put_line(" :");
+          put(A(row,col)); new_line;
+          put(B(col)(row)); new_line;
+        end if;
+      end loop;
+    end loop;
+  end Compare;
+ 
   procedure Standard_Jacobian_Test
               ( n,d,m,c : in natural32;
                 cffsz,pntsz,close,condjm : in double_float ) is
@@ -1054,6 +1259,8 @@ procedure ts_vmpdiff is
       end loop;
       Jacobian_with_Inverse_Condition
         (f,b,cff,x,wrk,ydx,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd);
+      put_line("Comparing values in Jacobian matrix with gradients ...");
+      Compare(jm,ydx,1.0E-8);
       put_line("Condition of the polynomial evaluation :");
       put("  numerator : "); put(fxnrc,3); new_line;
       put("denominator : "); put(fxdrc,3); new_line;

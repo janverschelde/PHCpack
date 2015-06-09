@@ -21,33 +21,31 @@ package body VarbPrec_Gradient_Evaluations is
                wrk : in out Standard_Complex_VecVecs.VecVec;
                ydx : out Standard_Complex_Vectors.Vector;
                fxnrc,fxdrc,fxrco : out double_float;
-               maxng,mindg,rcogd : out double_float ) is
+               gxnrc,gxdrc,gxrco : out double_float ) is
 
     use Standard_Complex_Numbers;
     use Standard_Gradient_Evaluations;
 
     numcnd : Standard_Floating_Vectors.Vector(0..x'last);
-    val : double_float;
+    val,rco : double_float;
 
   begin
     Conditioned_Gradient_of_Polynomial(f,b,c,x,wrk,ydx,numcnd);
     fxnrc := AbsVal(ydx(0));
     fxdrc := numcnd(0);
     fxrco := fxnrc/fxdrc;
-    maxng := AbsVal(ydx(1));
+    gxnrc := AbsVal(ydx(1));
+    gxdrc := numcnd(1);
+    gxrco := gxnrc/gxdrc;
     for k in 2..ydx'last loop
       val := AbsVal(ydx(k));
-      if val > maxng
-       then maxng := val;
+      rco := val/numcnd(k);
+      if rco < gxrco then
+        gxnrc := val;
+        gxdrc := numcnd(k);
+        gxrco := rco;
       end if;
     end loop;
-    mindg := numcnd(1);
-    for k in 2..numcnd'last loop
-      if numcnd(k) < mindg
-       then mindg := numcnd(k);
-      end if;
-    end loop;
-    rcogd := maxng/mindg;
   end Gradient_with_Inverse_Condition;
 
   procedure Gradient_with_Inverse_Condition
@@ -56,33 +54,31 @@ package body VarbPrec_Gradient_Evaluations is
                wrk : in out DoblDobl_Complex_VecVecs.VecVec;
                ydx : out DoblDobl_Complex_Vectors.Vector;
                fxnrc,fxdrc,fxrco : out double_double;
-               maxng,mindg,rcogd : out double_double ) is
+               gxnrc,gxdrc,gxrco : out double_double ) is
 
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Gradient_Evaluations;
 
     numcnd : Double_Double_Vectors.Vector(0..x'last);
-    val : double_double;
+    val,rco : double_double;
 
   begin
     Conditioned_Gradient_of_Polynomial(f,b,c,x,wrk,ydx,numcnd);
     fxnrc := AbsVal(ydx(0));
     fxdrc := numcnd(0);
     fxrco := fxnrc/fxdrc;
-    maxng := AbsVal(ydx(1));
+    gxnrc := AbsVal(ydx(1));
+    gxdrc := numcnd(1);
+    gxrco := gxnrc/gxdrc;
     for k in 2..ydx'last loop
       val := AbsVal(ydx(k));
-      if val > maxng
-       then maxng := val;
+      rco := val/numcnd(k);
+      if rco < gxrco then
+        gxnrc := val;
+        gxdrc := numcnd(k);
+        gxrco := rco;
       end if;
     end loop;
-    mindg := numcnd(1);
-    for k in 2..numcnd'last loop
-      if numcnd(k) < mindg
-       then mindg := numcnd(k);
-      end if;
-    end loop;
-    rcogd := maxng/mindg;
   end Gradient_with_Inverse_Condition;
 
   procedure Gradient_with_Inverse_Condition
@@ -91,33 +87,31 @@ package body VarbPrec_Gradient_Evaluations is
                wrk : in out QuadDobl_Complex_VecVecs.VecVec;
                ydx : out QuadDobl_Complex_Vectors.Vector;
                fxnrc,fxdrc,fxrco : out quad_double;
-               maxng,mindg,rcogd : out quad_double ) is
+               gxnrc,gxdrc,gxrco : out quad_double ) is
 
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Gradient_Evaluations;
 
     numcnd : Quad_Double_Vectors.Vector(0..x'last);
-    val : quad_double;
+    val,rco : quad_double;
 
   begin
     Conditioned_Gradient_of_Polynomial(f,b,c,x,wrk,ydx,numcnd);
     fxnrc := AbsVal(ydx(0));
     fxdrc := numcnd(0);
     fxrco := fxnrc/fxdrc;
-    maxng := AbsVal(ydx(1));
+    gxnrc := AbsVal(ydx(1));
+    gxdrc := numcnd(1);
+    gxrco := gxnrc/gxdrc;
     for k in 2..ydx'last loop
       val := AbsVal(ydx(k));
-      if val > maxng
-       then maxng := val;
+      rco := val/numcnd(k);
+      if rco < gxrco then
+        gxnrc := val;
+        gxdrc := numcnd(k);
+        gxrco := rco;
       end if;
     end loop;
-    mindg := numcnd(1);
-    for k in 2..numcnd'last loop
-      if numcnd(k) < mindg
-       then mindg := numcnd(k);
-      end if;
-    end loop;
-    rcogd := maxng/mindg;
   end Gradient_with_Inverse_Condition;
 
   procedure Gradient_with_Inverse_Condition
@@ -126,34 +120,32 @@ package body VarbPrec_Gradient_Evaluations is
                wrk : in out Multprec_Complex_VecVecs.VecVec;
                ydx : out Multprec_Complex_Vectors.Vector;
                fxnrc,fxdrc,fxrco : out Floating_Number;
-               maxng,mindg,rcogd : out Floating_Number ) is
+               gxnrc,gxdrc,gxrco : out Floating_Number ) is
 
     use Multprec_Complex_Numbers;
     use Multprec_Gradient_Evaluations;
 
     numcnd : Multprec_Floating_Vectors.Vector(0..x'last);
-    val : Floating_Number;
+    val,rco : Floating_Number;
 
   begin
     Conditioned_Gradient_of_Polynomial(f,b,c,x,wrk,ydx,numcnd);
     fxnrc := AbsVal(ydx(0));
     Copy(numcnd(0),fxdrc);
     fxrco := fxnrc/fxdrc;
-    maxng := AbsVal(ydx(1));
+    gxnrc := AbsVal(ydx(1));
+    Copy(numcnd(1),gxdrc);
+    gxrco := gxnrc/gxdrc;
     for k in 2..ydx'last loop
       val := AbsVal(ydx(k));
-      if val > maxng
-       then Copy(val,maxng);
+      rco := val/numcnd(k);
+      if rco < gxrco then
+        Copy(val,gxnrc);
+        Copy(numcnd(k),gxdrc);
+        Copy(rco,gxrco);
       end if;
-      Clear(val);
+      Clear(val); Clear(rco);
     end loop;
-    mindg := numcnd(1);
-    for k in 2..numcnd'last loop
-      if numcnd(k) < mindg
-       then Copy(numcnd(k),mindg);
-      end if;
-    end loop;
-    rcogd := maxng/mindg;
     Multprec_Floating_Vectors.Clear(numcnd);
   end Gradient_with_Inverse_Condition;
 

@@ -1,3 +1,6 @@
+Tue 9 Jun 2015 : improved definition for the condition number of the
+  gradient in varbprec_gradient_evaluations, and more tests in ts_vmpdiff.
+
 Mon 8 Jun 2015 : fixed a bug in varbprec_gradient_evaluations.adb that
   affects the multiprecision version, tested by ts_vmpdiff.
 

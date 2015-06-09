@@ -33,34 +33,36 @@ package VarbPrec_Gradient_Evaluations is
                wrk : in out Standard_Complex_VecVecs.VecVec;
                ydx : out Standard_Complex_Vectors.Vector;
                fxnrc,fxdrc,fxrco : out double_float;
-               maxng,mindg,rcogd : out double_float );
+               gxnrc,gxdrc,gxrco : out double_float );
   procedure Gradient_with_Inverse_Condition
              ( f,b : in Standard_Natural_VecVecs.VecVec;
                c,x : in DoblDobl_Complex_Vectors.Vector;
                wrk : in out DoblDobl_Complex_VecVecs.VecVec;
                ydx : out DoblDobl_Complex_Vectors.Vector;
                fxnrc,fxdrc,fxrco : out double_double;
-               maxng,mindg,rcogd : out double_double );
+               gxnrc,gxdrc,gxrco : out double_double );
   procedure Gradient_with_Inverse_Condition
              ( f,b : in Standard_Natural_VecVecs.VecVec;
                c,x : in QuadDobl_Complex_Vectors.Vector;
                wrk : in out QuadDobl_Complex_VecVecs.VecVec;
                ydx : out QuadDobl_Complex_Vectors.Vector;
                fxnrc,fxdrc,fxrco : out quad_double;
-               maxng,mindg,rcogd : out quad_double );
+               gxnrc,gxdrc,gxrco : out quad_double );
   procedure Gradient_with_Inverse_Condition
              ( f,b : in Standard_Natural_VecVecs.VecVec;
                c,x : in Multprec_Complex_Vectors.Vector;
                wrk : in out Multprec_Complex_VecVecs.VecVec;
                ydx : out Multprec_Complex_Vectors.Vector;
                fxnrc,fxdrc,fxrco : out Floating_Number;
-               maxng,mindg,rcogd : out Floating_Number );
+               gxnrc,gxdrc,gxrco : out Floating_Number );
 
   -- DESCRIPTION :
   --   Computes the value of the polynomial and its gradient at x,
   --   with exponents in f, b, and coefficients in c.
   --   The condition of the evaluation is computed in (fxnrc, fxdrc, fxrco)
-  --   and (maxng, mindg, rcogd) defines the condition of the gradient at x.
+  --   and (gxnrc, gxdrc, gxrco) defines the condition of the gradient at x.
+  --   The condition of the gradient is taken as the smallest inverse
+  --   condition number over all its components.
  
   -- REQUIRED :
   --   The range of the vector ydx must be 0..x'last with its 
@@ -90,12 +92,10 @@ package VarbPrec_Gradient_Evaluations is
   --   fxdrc   denominator of the inverse condition number of the evalution,
   --           as the sum of the absolute values of the evaluated terms;
   --   fxrco   inverse condition number of the evaluation problem at x;
-  --   maxng   largest numerator of the condition of the gradient at x,
-  --           taken over every component of the gradient as the absolute
-  --           value of the evaluated partial derivative at x;
-  --   mindg   smallest denominator of the condition of the gradient at x,
-  --           taken over every component k as the absolute value of ydx(k);
-  --   rcodg   the inverse condition number of the gradient is maxng/mindg. 
+  --   gxnrc   numerator of the inverse condition number of the gradient;
+  --   gxdrc   denominator of the inverse condition number of the gradient;
+  --   gxrco   the inverse condition of the gradient is the smallest over
+  --           all the components of the gradient, equals gxnrc/gxdrc.
 
 -- PART II : ordinary polynomial systems
 
