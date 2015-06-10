@@ -1,3 +1,6 @@
+Wed 10 Jun 2015 : more tests in ts_vmpdiff, comparing Jacobian calculation
+  with the straightforward methods.
+
 Tue 9 Jun 2015 : improved definition for the condition number of the
   gradient in varbprec_gradient_evaluations, and more tests in ts_vmpdiff.
   Did the same for the Jacobian in varbprec_gradient_evaluations,

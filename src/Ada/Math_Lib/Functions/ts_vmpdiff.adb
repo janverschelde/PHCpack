@@ -90,12 +90,16 @@ with QuadDobl_Gradient_Evaluations;
 with Multprec_Gradient_Evaluations;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_SysFun;
+with Standard_Complex_Jaco_Matrices;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_SysFun;
+with DoblDobl_Complex_Jaco_Matrices;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_SysFun;
+with QuadDobl_Complex_Jaco_Matrices;
 with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_SysFun;
+with Multprec_Complex_Jaco_Matrices;
 with Cyclic_Roots_System;               use Cyclic_Roots_System;
 with Random_Conditioned_Matrices;       use Random_Conditioned_Matrices;
 with Random_Conditioned_Evaluations;    use Random_Conditioned_Evaluations;
@@ -1289,6 +1293,82 @@ procedure ts_vmpdiff is
       end loop;
     end loop;
   end Compare;
+
+  function Jacobian ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+                      x : Standard_Complex_Vectors.Vector )
+                    return Standard_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the straightforward computation and evaluation
+  --   of the Jacobian matrix of the system p at the point x,
+  --   computed in standard double precision, for testing purposes.
+
+    res : Standard_Complex_Matrices.Matrix(p'range,x'range);
+    jac : Standard_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+        := Standard_Complex_Jaco_Matrices.Create(p);
+
+  begin
+    res := Standard_Complex_Jaco_Matrices.Eval(jac,x);
+    Standard_Complex_Jaco_Matrices.Clear(jac);
+    return res;
+  end Jacobian;
+
+  function Jacobian ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                      x : DoblDobl_Complex_Vectors.Vector )
+                    return DoblDobl_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the straightforward computation and evaluation
+  --   of the Jacobian matrix of the system p at the point x,
+  --   computed in DoblDobl double precision, for testing purposes.
+
+    res : DoblDobl_Complex_Matrices.Matrix(p'range,x'range);
+    jac : DoblDobl_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+        := DoblDobl_Complex_Jaco_Matrices.Create(p);
+
+  begin
+    res := DoblDobl_Complex_Jaco_Matrices.Eval(jac,x);
+    DoblDobl_Complex_Jaco_Matrices.Clear(jac);
+    return res;
+  end Jacobian;
+
+  function Jacobian ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                      x : QuadDobl_Complex_Vectors.Vector )
+                    return QuadDobl_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the straightforward computation and evaluation
+  --   of the Jacobian matrix of the system p at the point x,
+  --   computed in QuadDobl double precision, for testing purposes.
+
+    res : QuadDobl_Complex_Matrices.Matrix(p'range,x'range);
+    jac : QuadDobl_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+        := QuadDobl_Complex_Jaco_Matrices.Create(p);
+
+  begin
+    res := QuadDobl_Complex_Jaco_Matrices.Eval(jac,x);
+    QuadDobl_Complex_Jaco_Matrices.Clear(jac);
+    return res;
+  end Jacobian;
+
+  function Jacobian ( p : Multprec_Complex_Poly_Systems.Poly_Sys;
+                      x : Multprec_Complex_Vectors.Vector )
+                    return Multprec_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the straightforward computation and evaluation
+  --   of the Jacobian matrix of the system p at the point x,
+  --   computed in Multprec double precision, for testing purposes.
+
+    res : Multprec_Complex_Matrices.Matrix(p'range,x'range);
+    jac : Multprec_Complex_Jaco_Matrices.Jaco_Mat(p'range,x'range)
+        := Multprec_Complex_Jaco_Matrices.Create(p);
+
+  begin
+    res := Multprec_Complex_Jaco_Matrices.Eval(jac,x);
+    Multprec_Complex_Jaco_Matrices.Clear(jac);
+    return res;
+  end Jacobian;
  
   procedure Standard_Jacobian_Test
               ( n,d,m,c : in natural32;
@@ -1320,6 +1400,7 @@ procedure ts_vmpdiff is
     x : Standard_Complex_Vectors.Vector(p'range);
     jm : Standard_Complex_Matrices.Matrix(p'range,x'range)
        := Random_Conditioned_Matrix(integer32(n),condjm);
+    jmpx : Standard_Complex_Matrices.Matrix(p'range,x'range);
     rco,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd : double_float;
     loss_jac,loss_eva : integer32;
 
@@ -1363,8 +1444,13 @@ procedure ts_vmpdiff is
       end loop;
       Jacobian_with_Inverse_Condition
         (f,b,cff,x,wrk,ydx,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd);
+      new_line;
       put_line("Comparing values in Jacobian matrix with gradients ...");
       Compare(jm,ydx,1.0E-8,true);
+      new_line;
+      put_line("Comparing values with straightforward computation ...");
+      jmpx := Jacobian(p,x);
+      Compare(jmpx,ydx,1.0E-8,true);
       put_line("Condition of the polynomial evaluation :");
       put("  numerator : "); put(fxnrc,3); new_line;
       put("denominator : "); put(fxdrc,3); new_line;
@@ -1406,6 +1492,7 @@ procedure ts_vmpdiff is
     x : DoblDobl_Complex_Vectors.Vector(p'range);
     jm : DoblDobl_Complex_Matrices.Matrix(p'range,x'range)
        := Random_Conditioned_Matrix(integer32(n),condjm);
+    jmpx : DoblDobl_Complex_Matrices.Matrix(p'range,x'range);
     rco,fxnrc,fxdrc,fxrco,gxnrc,gxdrc,gxrco : double_double;
     loss_jac,loss_eva : integer32;
 
@@ -1449,8 +1536,13 @@ procedure ts_vmpdiff is
       end loop;
       Jacobian_with_Inverse_Condition
         (f,b,cff,x,wrk,ydx,fxnrc,fxdrc,fxrco,gxnrc,gxdrc,gxrco);
+      new_line;
       put_line("Comparing values in Jacobian matrix with gradients ...");
       Compare(jm,ydx,1.0E-8,true);
+      new_line;
+      put_line("Comparing values with straightforward computation ...");
+      jmpx := Jacobian(p,x);
+      Compare(jmpx,ydx,1.0E-8,true);
       put_line("Condition of the polynomial evaluation :");
       put("  numerator : "); put(fxnrc,3); new_line;
       put("denominator : "); put(fxdrc,3); new_line;
@@ -1492,6 +1584,7 @@ procedure ts_vmpdiff is
     x : QuadDobl_Complex_Vectors.Vector(p'range);
     jm : QuadDobl_Complex_Matrices.Matrix(p'range,x'range)
        := Random_Conditioned_Matrix(integer32(n),condjm);
+    jmpx : QuadDobl_Complex_Matrices.Matrix(p'range,x'range);
     rco,fxnrc,fxdrc,fxrco,gxnrc,gxdrc,gxrco : quad_double;
     loss_jac,loss_eva : integer32;
 
@@ -1535,8 +1628,13 @@ procedure ts_vmpdiff is
       end loop;
       Jacobian_with_Inverse_Condition
         (f,b,cff,x,wrk,ydx,fxnrc,fxdrc,fxrco,gxnrc,gxdrc,gxrco);
+      new_line;
       put_line("Comparing values in Jacobian matrix with gradients ...");
       Compare(jm,ydx,1.0E-8,true);
+      new_line;
+      put_line("Comparing values with straightforward computation ...");
+      jmpx := Jacobian(p,x);
+      Compare(jmpx,ydx,1.0E-8,true);
       put_line("Condition of the polynomial evaluation :");
       put("  numerator : "); put(fxnrc,3); new_line;
       put("denominator : "); put(fxdrc,3); new_line;
@@ -1580,6 +1678,7 @@ procedure ts_vmpdiff is
     x : Multprec_Complex_Vectors.Vector(p'range);
     jm : Multprec_Complex_Matrices.Matrix(p'range,x'range)
        := Random_Conditioned_Matrix(integer32(n),condjm);
+    jmpx : Multprec_Complex_Matrices.Matrix(p'range,x'range);
     rco,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd : Floating_Number;
     loss_jac,loss_eva : integer32;
 
@@ -1630,8 +1729,13 @@ procedure ts_vmpdiff is
       end loop;
       Jacobian_with_Inverse_Condition
         (f,b,cff,x,wrk,ydx,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd);
+      new_line;
+      put_line("Comparing values with those in the gradients ...");
       Compare(jm,ydx,1.0E-8,true);
-      put_line("Condition of the polynomial evaluation :");
+      new_line;
+      put_line("Comparing values with straightforward computation ...");
+      jmpx := Jacobian(p,x);
+      Compare(jmpx,ydx,1.0E-8,true);
       put_line("Condition of the polynomial evaluation :");
       put("  numerator : "); put(fxnrc,3); new_line;
       put("denominator : "); put(fxdrc,3); new_line;
