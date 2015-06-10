@@ -106,7 +106,7 @@ package VarbPrec_Gradient_Evaluations is
                wrk : in out Standard_Complex_VecVecs.Array_of_VecVecs;
                ydx : in Standard_Complex_VecVecs.VecVec;
                fxnrc,fxdrc,fxrco : out double_float;
-               maxng,mindg,rcogd : out double_float );
+               gxnrc,gxdrc,gxrco : out double_float );
   procedure Jacobian_with_Inverse_Condition
              ( f,b : in Standard_Natural_VecVecs.Array_of_VecVecs;
                c : in DoblDobl_Complex_VecVecs.VecVec;
@@ -114,7 +114,7 @@ package VarbPrec_Gradient_Evaluations is
                wrk : in out DoblDobl_Complex_VecVecs.Array_of_VecVecs;
                ydx : in DoblDobl_Complex_VecVecs.VecVec;
                fxnrc,fxdrc,fxrco : out double_double;
-               maxng,mindg,rcogd : out double_double );
+               gxnrc,gxdrc,gxrco : out double_double );
   procedure Jacobian_with_Inverse_Condition
              ( f,b : in Standard_Natural_VecVecs.Array_of_VecVecs;
                c : in QuadDobl_Complex_VecVecs.VecVec;
@@ -122,7 +122,7 @@ package VarbPrec_Gradient_Evaluations is
                wrk : in out QuadDobl_Complex_VecVecs.Array_of_VecVecs;
                ydx : in QuadDobl_Complex_VecVecs.VecVec;
                fxnrc,fxdrc,fxrco : out quad_double;
-               maxng,mindg,rcogd : out quad_double );
+               gxnrc,gxdrc,gxrco : out quad_double );
   procedure Jacobian_with_Inverse_Condition
              ( f,b : in Standard_Natural_VecVecs.Array_of_VecVecs;
                c : in Multprec_Complex_VecVecs.VecVec;
@@ -130,7 +130,7 @@ package VarbPrec_Gradient_Evaluations is
                wrk : in out Multprec_Complex_VecVecs.Array_of_VecVecs;
                ydx : in Multprec_Complex_VecVecs.VecVec;
                fxnrc,fxdrc,fxrco : out Floating_Number;
-               maxng,mindg,rcogd : out Floating_Number );
+               gxnrc,gxdrc,gxrco : out Floating_Number );
 
   -- DESCRIPTION :
   --   Given in f, b, and c the common factors, the bit vectors, and the
@@ -167,11 +167,10 @@ package VarbPrec_Gradient_Evaluations is
   --           as the maximum of the sums of the absolute values of the 
   --           evaluated terms;
   --   fxrco   inverse condition number of the evaluation problem at x;
-  --   maxng   largest numerator of the condition over all gradients at x,
-  --           taken over every component of the gradient as the absolute
-  --           value of the evaluated partial derivative at x;
-  --   mindg   smallest denominator of the condition over all gradients at x,
-  --           taken over every component k as the absolute value of ydx(k);
-  --   rcodg   the inverse condition number of the gradient is maxng/mindg. 
+  --   gxnrc   numerator of the smallest inverse condition number,
+  --           computed over all gradients;
+  --   gxdrc   denominator of the smallest inverse condition number,
+  --           computed over all gradients;
+  --   rcodg   the inverse condition number is gxnrc/gxdrc.
 
 end VarbPrec_Gradient_Evaluations;

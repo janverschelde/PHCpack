@@ -158,33 +158,29 @@ package body VarbPrec_Gradient_Evaluations is
                wrk : in out Standard_Complex_VecVecs.Array_of_VecVecs;
                ydx : in Standard_Complex_VecVecs.VecVec;
                fxnrc,fxdrc,fxrco : out double_float;
-               maxng,mindg,rcogd : out double_float ) is
+               gxnrc,gxdrc,gxrco : out double_float ) is
 
-    kxnrc,kxdrc,kxrco,kmxng,kmndg,krcgd : double_float;
+    kfxnrc,kfxdrc,kfxrco,kgxnrc,kgxdrc,kgxrco : double_float;
 
   begin
     Gradient_with_Inverse_Condition
       (f(1).all,b(1).all,c(1).all,x,wrk(1).all,ydx(1).all,
-       fxnrc,fxdrc,fxrco,maxng,mindg,rcogd);
+       fxnrc,fxdrc,fxrco,gxnrc,gxdrc,gxrco);
     for k in 2..b'last loop
       Gradient_with_Inverse_Condition
         (f(k).all,b(k).all,c(k).all,x,wrk(k).all,ydx(k).all,
-         kxnrc,kxdrc,kxrco,kmxng,kmndg,krcgd);
-      if kxnrc > fxnrc
-       then fxnrc := kxnrc;
+         kfxnrc,kfxdrc,kfxrco,kgxnrc,kgxdrc,kgxrco);
+      if kfxrco < fxrco then
+        fxrco := kfxrco;
+        fxnrc := kfxnrc;
+        fxdrc := kfxdrc;
       end if;
-      if kxdrc < fxdrc
-       then fxdrc := kxdrc;
-      end if;
-      if kmxng > maxng
-       then maxng := kmxng;
-      end if;
-      if kmndg < mindg
-       then mindg := kmndg;
+      if kgxrco < gxrco then
+        gxrco := kgxrco;
+        gxnrc := kgxnrc;
+        gxdrc := kgxdrc;
       end if;
     end loop;
-    fxrco := fxnrc/fxdrc;
-    rcogd := maxng/mindg;
   end Jacobian_with_Inverse_Condition;
 
   procedure Jacobian_with_Inverse_Condition
@@ -194,33 +190,29 @@ package body VarbPrec_Gradient_Evaluations is
                wrk : in out DoblDobl_Complex_VecVecs.Array_of_VecVecs;
                ydx : in DoblDobl_Complex_VecVecs.VecVec;
                fxnrc,fxdrc,fxrco : out double_double;
-               maxng,mindg,rcogd : out double_double ) is
+               gxnrc,gxdrc,gxrco : out double_double ) is
 
-    kxnrc,kxdrc,kxrco,kmxng,kmndg,krcgd : double_double;
+    kfxnrc,kfxdrc,kfxrco,kgxnrc,kgxdrc,kgxrco : double_double;
 
   begin
     Gradient_with_Inverse_Condition
       (f(1).all,b(1).all,c(1).all,x,wrk(1).all,ydx(1).all,
-       fxnrc,fxdrc,fxrco,maxng,mindg,rcogd);
+       fxnrc,fxdrc,fxrco,gxnrc,gxdrc,gxrco);
     for k in 2..b'last loop
       Gradient_with_Inverse_Condition
         (f(k).all,b(k).all,c(k).all,x,wrk(k).all,ydx(k).all,
-         kxnrc,kxdrc,kxrco,kmxng,kmndg,krcgd);
-      if kxnrc > fxnrc
-       then fxnrc := kxnrc;
+         kfxnrc,kfxdrc,kfxrco,kgxnrc,kgxdrc,kgxrco);
+      if kfxrco < fxrco then
+        fxrco := kfxrco;
+        fxnrc := kfxnrc;
+        fxdrc := kfxdrc;
       end if;
-      if kxdrc < fxdrc
-       then fxdrc := kxdrc;
-      end if;
-      if kmxng > maxng
-       then maxng := kmxng;
-      end if;
-      if kmndg < mindg
-       then mindg := kmndg;
+      if kgxrco < gxrco then
+        gxrco := kgxrco;
+        gxnrc := kgxnrc;
+        gxdrc := kgxdrc;
       end if;
     end loop;
-    fxrco := fxnrc/fxdrc;
-    rcogd := maxng/mindg;
   end Jacobian_with_Inverse_Condition;
 
   procedure Jacobian_with_Inverse_Condition
@@ -230,33 +222,29 @@ package body VarbPrec_Gradient_Evaluations is
                wrk : in out QuadDobl_Complex_VecVecs.Array_of_VecVecs;
                ydx : in QuadDobl_Complex_VecVecs.VecVec;
                fxnrc,fxdrc,fxrco : out quad_double;
-               maxng,mindg,rcogd : out quad_double ) is
+               gxnrc,gxdrc,gxrco : out quad_double ) is
 
-    kxnrc,kxdrc,kxrco,kmxng,kmndg,krcgd : quad_double;
+    kfxnrc,kfxdrc,kfxrco,kgxnrc,kgxdrc,kgxrco : quad_double;
 
   begin
     Gradient_with_Inverse_Condition
       (f(1).all,b(1).all,c(1).all,x,wrk(1).all,ydx(1).all,
-       fxnrc,fxdrc,fxrco,maxng,mindg,rcogd);
+       fxnrc,fxdrc,fxrco,gxnrc,gxdrc,gxrco);
     for k in 2..b'last loop
       Gradient_with_Inverse_Condition
         (f(k).all,b(k).all,c(k).all,x,wrk(k).all,ydx(k).all,
-         kxnrc,kxdrc,kxrco,kmxng,kmndg,krcgd);
-      if kxnrc > fxnrc
-       then fxnrc := kxnrc;
+         kfxnrc,kfxdrc,kfxrco,kgxnrc,kgxdrc,kgxrco);
+      if kfxrco < fxrco then
+        fxrco := kfxrco;
+        fxnrc := kfxnrc;
+        fxdrc := kfxdrc;
       end if;
-      if kxdrc < fxdrc
-       then fxdrc := kxdrc;
-      end if;
-      if kmxng > maxng
-       then maxng := kmxng;
-      end if;
-      if kmndg < mindg
-       then mindg := kmndg;
+      if kgxrco < gxrco then
+        gxrco := kgxrco;
+        gxnrc := kgxnrc;
+        gxdrc := kgxdrc;
       end if;
     end loop;
-    fxrco := fxnrc/fxdrc;
-    rcogd := maxng/mindg;
   end Jacobian_with_Inverse_Condition;
 
   procedure Jacobian_with_Inverse_Condition
@@ -266,37 +254,33 @@ package body VarbPrec_Gradient_Evaluations is
                wrk : in out Multprec_Complex_VecVecs.Array_of_VecVecs;
                ydx : in Multprec_Complex_VecVecs.VecVec;
                fxnrc,fxdrc,fxrco : out Floating_Number;
-               maxng,mindg,rcogd : out Floating_Number ) is
+               gxnrc,gxdrc,gxrco : out Floating_Number ) is
 
-    kxnrc,kxdrc,kxrco,kmxng,kmndg,krcgd : Floating_Number;
+    kfxnrc,kfxdrc,kfxrco,kgxnrc,kgxdrc,kgxrco : Floating_Number;
 
   begin
     Clear(fxnrc); Clear(fxdrc); Clear(fxrco);
-    Clear(maxng); Clear(mindg); Clear(rcogd);
+    Clear(gxnrc); Clear(gxdrc); Clear(gxrco);
     Gradient_with_Inverse_Condition
       (f(1).all,b(1).all,c(1).all,x,wrk(1).all,ydx(1).all,
-       fxnrc,fxdrc,fxrco,maxng,mindg,rcogd);
+       fxnrc,fxdrc,fxrco,gxnrc,gxdrc,gxrco);
     for k in 2..b'last loop
       Gradient_with_Inverse_Condition
         (f(k).all,b(k).all,c(k).all,x,wrk(k).all,ydx(k).all,
-         kxnrc,kxdrc,kxrco,kmxng,kmndg,krcgd);
-      if kxnrc > fxnrc
-       then Copy(kxnrc,fxnrc);
+         kfxnrc,kfxdrc,kfxrco,kgxnrc,kgxdrc,kgxrco);
+      if kfxrco < fxrco then
+        Copy(kfxrco,fxrco);
+        Copy(kfxnrc,fxnrc);
+        Copy(kfxdrc,fxdrc);
       end if;
-      if kxdrc < fxdrc
-       then Copy(kxdrc,fxdrc);
+      if kgxrco < gxrco then
+        Copy(kgxrco,gxrco);
+        Copy(kgxnrc,gxnrc);
+        Copy(kgxdrc,gxdrc);
       end if;
-      if kmxng > maxng
-       then Copy(kmxng,maxng);
-      end if;
-      if kmndg < mindg
-       then Copy(kmndg,mindg);
-      end if;
-      Clear(kxnrc); Clear(kxdrc); Clear(kxrco);
-      Clear(kmxng); Clear(kmndg); Clear(krcgd);
+      Clear(kfxnrc); Clear(kfxdrc); Clear(kfxrco);
+      Clear(kgxnrc); Clear(kgxdrc); Clear(kgxrco);
     end loop;
-    Clear(fxrco); fxrco := fxnrc/fxdrc;
-    Clear(rcogd); rcogd := maxng/mindg;
   end Jacobian_with_Inverse_Condition;
 
 end VarbPrec_Gradient_Evaluations;

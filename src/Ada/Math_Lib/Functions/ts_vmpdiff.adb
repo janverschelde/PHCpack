@@ -1159,29 +1159,133 @@ procedure ts_vmpdiff is
 
   procedure Compare ( A : in Standard_Complex_Matrices.Matrix;
                       B : in Standard_Complex_VecVecs.VecVec;
-                      tol : in double_float ) is
+                      tol : in double_float; output : in boolean ) is
 
   -- DESCRIPTION :
   --   Compares the values in the Jacobian matrix A
   --   with the evaluated gradients in B.
   --   If the corresponding values in A and B differ by more than
   --   the tolerance tol, then an error message is written.
+  --   If the flag output is true, then all numbers are written.
 
     use Standard_Complex_Numbers;
 
     dff : Complex_Number;
+    val : double_float;
 
   begin
     for col in A'range(2) loop
       for row in A'range(1) loop
-        dff := A(row,col) - B(col)(row);
-        if AbsVal(dff) > tol then
+        dff := A(row,col) - B(row)(col);
+        val := AbsVal(dff);
+        if val > tol or output then
           put("difference in Jacobian and gradient at");
           put(" row = "); put(row,1);
           put(", column = "); put(col,1); put_line(" :");
           put(A(row,col)); new_line;
-          put(B(col)(row)); new_line;
+          put(B(row)(col)); new_line;
+          put("error :"); put(val,3); new_line;
         end if;
+      end loop;
+    end loop;
+  end Compare;
+
+  procedure Compare ( A : in DoblDobl_Complex_Matrices.Matrix;
+                      B : in DoblDobl_Complex_VecVecs.VecVec;
+                      tol : in double_float; output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Compares the values in the Jacobian matrix A
+  --   with the evaluated gradients in B.
+  --   If the corresponding values in A and B differ by more than
+  --   the tolerance tol, then an error message is written.
+  --   If the flag output is true, then all numbers are written.
+
+    use DoblDobl_Complex_Numbers;
+
+    dff : Complex_Number;
+    val : double_double;
+
+  begin
+    for col in A'range(2) loop
+      for row in A'range(1) loop
+        dff := A(row,col) - B(row)(col);
+        val := AbsVal(dff);
+        if val > tol or output then
+          put("difference in Jacobian and gradient at");
+          put(" row = "); put(row,1);
+          put(", column = "); put(col,1); put_line(" :");
+          put(A(row,col)); new_line;
+          put(B(row)(col)); new_line;
+          put("error : "); put(val,3); new_line;
+        end if;
+      end loop;
+    end loop;
+  end Compare;
+
+  procedure Compare ( A : in QuadDobl_Complex_Matrices.Matrix;
+                      B : in QuadDobl_Complex_VecVecs.VecVec;
+                      tol : in double_float; output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Compares the values in the Jacobian matrix A
+  --   with the evaluated gradients in B.
+  --   If the corresponding values in A and B differ by more than
+  --   the tolerance tol, then an error message is written.
+  --   If the flag output is true, then all numbers are written.
+
+    use QuadDobl_Complex_Numbers;
+
+    dff : Complex_Number;
+    val : quad_double;
+
+  begin
+    for col in A'range(2) loop
+      for row in A'range(1) loop
+        dff := A(row,col) - B(row)(col);
+        val := AbsVal(dff);
+        if val > tol or output then
+          put("difference in Jacobian and gradient at");
+          put(" row = "); put(row,1);
+          put(", column = "); put(col,1); put_line(" :");
+          put(A(row,col)); new_line;
+          put(B(row)(col)); new_line;
+          put("error : "); put(val,3); new_line;
+        end if;
+      end loop;
+    end loop;
+  end Compare;
+
+  procedure Compare ( A : in Multprec_Complex_Matrices.Matrix;
+                      B : in Multprec_Complex_VecVecs.VecVec;
+                      tol : in double_float; output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Compares the values in the Jacobian matrix A
+  --   with the evaluated gradients in B.
+  --   If the corresponding values in A and B differ by more than
+  --   the tolerance tol, then an error message is written.
+  --   If the flag output is true, then all numbers are written.
+
+    use Multprec_Complex_Numbers;
+
+    dff : Complex_Number;
+    val : Floating_Number;
+
+  begin
+    for col in A'range(2) loop
+      for row in A'range(1) loop
+        dff := A(row,col) - B(row)(col);
+        val := AbsVal(dff);
+        if val > tol or output then
+          put("difference in Jacobian and gradient at");
+          put(" row = "); put(row,1);
+          put(", column = "); put(col,1); put_line(" :");
+          put(A(row,col)); new_line;
+          put(B(row)(col)); new_line;
+          put("error : "); put(val,3); new_line;
+        end if;
+        Clear(dff); Clear(val);
       end loop;
     end loop;
   end Compare;
@@ -1260,7 +1364,7 @@ procedure ts_vmpdiff is
       Jacobian_with_Inverse_Condition
         (f,b,cff,x,wrk,ydx,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd);
       put_line("Comparing values in Jacobian matrix with gradients ...");
-      Compare(jm,ydx,1.0E-8);
+      Compare(jm,ydx,1.0E-8,true);
       put_line("Condition of the polynomial evaluation :");
       put("  numerator : "); put(fxnrc,3); new_line;
       put("denominator : "); put(fxdrc,3); new_line;
@@ -1302,7 +1406,7 @@ procedure ts_vmpdiff is
     x : DoblDobl_Complex_Vectors.Vector(p'range);
     jm : DoblDobl_Complex_Matrices.Matrix(p'range,x'range)
        := Random_Conditioned_Matrix(integer32(n),condjm);
-    rco,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd : double_double;
+    rco,fxnrc,fxdrc,fxrco,gxnrc,gxdrc,gxrco : double_double;
     loss_jac,loss_eva : integer32;
 
     use DoblDobl_Gradient_Evaluations;
@@ -1344,15 +1448,17 @@ procedure ts_vmpdiff is
         ydx(i) := new DoblDobl_Complex_Vectors.Vector(0..x'last);
       end loop;
       Jacobian_with_Inverse_Condition
-        (f,b,cff,x,wrk,ydx,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd);
+        (f,b,cff,x,wrk,ydx,fxnrc,fxdrc,fxrco,gxnrc,gxdrc,gxrco);
+      put_line("Comparing values in Jacobian matrix with gradients ...");
+      Compare(jm,ydx,1.0E-8,true);
       put_line("Condition of the polynomial evaluation :");
       put("  numerator : "); put(fxnrc,3); new_line;
       put("denominator : "); put(fxdrc,3); new_line;
       put("inverse condition number : "); put(fxrco,3); new_line;
       put_line("Condition of the Jacobian evaluation :");
-      put("  numerator : "); put(maxng,3); new_line;
-      put("denominator : "); put(mindg,3); new_line;
-      put("inverse condition number : "); put(rcogd,3); new_line;
+      put("  numerator : "); put(gxnrc,3); new_line;
+      put("denominator : "); put(gxdrc,3); new_line;
+      put("inverse condition number : "); put(gxrco,3); new_line;
     end;
   end DoblDobl_Jacobian_Test;
 
@@ -1386,7 +1492,7 @@ procedure ts_vmpdiff is
     x : QuadDobl_Complex_Vectors.Vector(p'range);
     jm : QuadDobl_Complex_Matrices.Matrix(p'range,x'range)
        := Random_Conditioned_Matrix(integer32(n),condjm);
-    rco,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd : quad_double;
+    rco,fxnrc,fxdrc,fxrco,gxnrc,gxdrc,gxrco : quad_double;
     loss_jac,loss_eva : integer32;
 
     use QuadDobl_Gradient_Evaluations;
@@ -1428,15 +1534,17 @@ procedure ts_vmpdiff is
         ydx(i) := new QuadDobl_Complex_Vectors.Vector(0..x'last);
       end loop;
       Jacobian_with_Inverse_Condition
-        (f,b,cff,x,wrk,ydx,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd);
+        (f,b,cff,x,wrk,ydx,fxnrc,fxdrc,fxrco,gxnrc,gxdrc,gxrco);
+      put_line("Comparing values in Jacobian matrix with gradients ...");
+      Compare(jm,ydx,1.0E-8,true);
       put_line("Condition of the polynomial evaluation :");
       put("  numerator : "); put(fxnrc,3); new_line;
       put("denominator : "); put(fxdrc,3); new_line;
       put("inverse condition number : "); put(fxrco,3); new_line;
       put_line("Condition of the Jacobian evaluation :");
-      put("  numerator : "); put(maxng,3); new_line;
-      put("denominator : "); put(mindg,3); new_line;
-      put("inverse condition number : "); put(rcogd,3); new_line;
+      put("  numerator : "); put(gxnrc,3); new_line;
+      put("denominator : "); put(gxdrc,3); new_line;
+      put("inverse condition number : "); put(gxrco,3); new_line;
     end;
   end QuadDobl_Jacobian_Test;
 
@@ -1522,6 +1630,8 @@ procedure ts_vmpdiff is
       end loop;
       Jacobian_with_Inverse_Condition
         (f,b,cff,x,wrk,ydx,fxnrc,fxdrc,fxrco,maxng,mindg,rcogd);
+      Compare(jm,ydx,1.0E-8,true);
+      put_line("Condition of the polynomial evaluation :");
       put_line("Condition of the polynomial evaluation :");
       put("  numerator : "); put(fxnrc,3); new_line;
       put("denominator : "); put(fxdrc,3); new_line;
@@ -1549,7 +1659,6 @@ procedure ts_vmpdiff is
       when 'd' => DoblDobl_Jacobian_Test(n,d,m,c,cff,pnt,cls,cndjm);
       when 'q' => QuadDobl_Jacobian_Test(n,d,m,c,cff,pnt,cls,cndjm);
       when 'm' =>
-        new_line;
         put("Give the number of decimal places : "); get(deci);
         size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
         Multprec_Jacobian_Test(n,d,m,c,size,cff,pnt,cls,cndjm);
