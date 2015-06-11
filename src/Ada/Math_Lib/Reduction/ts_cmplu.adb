@@ -156,7 +156,7 @@ procedure ts_cmplu is
     use Standard_Complex_Vectors_io;
     use Standard_Complex_Matrices;
 
-    n,nb : integer32;
+    n,nb : integer32 := 0;
     timer : Timing_Widget;
 
   begin
@@ -275,8 +275,8 @@ procedure ts_cmplu is
     use Multprec_Complex_Vectors_io;
     use Multprec_Complex_Matrices;
 
-    n : integer32;
-    sz,nb : natural32;
+    n : integer32 := 0;
+    sz,nb : natural32 := 0;
     timer : Timing_Widget;
 
   begin

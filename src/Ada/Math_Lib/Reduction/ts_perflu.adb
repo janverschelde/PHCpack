@@ -40,18 +40,6 @@ procedure ts_perflu is
     x := z;
   end Swap;
 
-  procedure Swap ( x,y : in out Complex_Number ) is
-
-  -- DESCRIPTION :
-  --   Swaps x with y.
-
-    z : constant Complex_Number := y;
-
-  begin
-    y := x;
-    x := z;
-  end Swap;
-
   function cabs ( c : Complex_Number ) return double_float is
   begin
     return (ABS(REAL_PART(c)) + ABS(IMAG_PART(c)));
@@ -109,68 +97,6 @@ procedure ts_perflu is
     end if;
     ipvt(n) := n;
     if a(n)(n) = 0.0
-     then info := n;
-    end if;
-  end vvlufac;
-
-  procedure vvlufac ( a : in out Standard_Complex_VecVecs.VecVec;
-                      n : in integer32;
-                      ipvt : out Standard_Integer_Vectors.Vector;
-                      info : out integer32 ) is
-
-  -- DESCRIPTION :
-  --   LU factorization on vector of vectors data type.
-
-    kp1,ell,nm1 : integer32;
-    smax,amax : double_float;
-    acc : Complex_Number;
-    ak,aj : Standard_Complex_Vectors.Link_to_Vector;
-    zero : constant Complex_Number := Create(0.0);
-
-  begin
-    info := 0;
-    nm1 := integer32(n - 1);
-    if nm1 >= 1 then
-      for k in 1..nm1 loop
-        ak := a(k);
-        kp1 := k + 1;
-        ell := k;                               -- find the pivot index ell
-        smax := cabs(ak(k));
-        for i in kp1..n loop
-          amax := cabs(ak(i));
-          if amax > smax 
-           then ell := i; smax := amax;
-          end if;
-        end loop;
-        ipvt(k) := ell;
-        if smax = 0.0 then
-          info := k;               -- this column is already triangulated
-        else
-          if ell /= k then                     -- interchange if necessary
-            acc := ak(ell);
-            ak(ell) := ak(k);
-            ak(k) := acc;
-          end if;                                  -- compute multipliers
-          acc := (-1.0)/ak(k); 
-          for i in kp1..n loop
-            ak(i) := ak(i)*acc;
-          end loop;
-          for j in kp1..n loop                         -- row elimination
-            aj := a(j);
-            acc := aj(ell);
-            if ell /= k then
-              aj(ell) := aj(k);
-              aj(k) := acc;
-            end if;
-            for i in kp1..n loop
-              aj(i) := aj(i) + acc*ak(i);
-            end loop;
-          end loop;
-        end if;
-      end loop;
-    end if;
-    ipvt(n) := n;
-    if a(n)(n) = zero
      then info := n;
     end if;
   end vvlufac;
@@ -241,7 +167,7 @@ procedure ts_perflu is
            matj(k) := Standard_Random_Numbers.Random1;
          end loop;
       end loop;
-      vvlufac(mat,n,ipvt,info);
+      lufac(mat,n,ipvt,info);
     end loop;
   end Run_Complex_vvLU_Factorizations;
 

@@ -3,6 +3,7 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;         
 with Standard_Natural_Matrices;
 with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
 
 package Standard_Complex_Linear_Solvers is
@@ -54,6 +55,18 @@ package Standard_Complex_Linear_Solvers is
   --                divide by zero if called.  Use rcond in
   --                lufco for a reliable indication of singularity.
 
+  procedure lufac ( a : in out Standard_Complex_VecVecs.VecVec;
+                    n : in integer32;
+                    ipvt : out Standard_Integer_Vectors.Vector;
+                    info : out integer32 );
+
+  -- DESCRIPTION :
+  --   LU factorization on vector of vectors data type.
+  --   Except for a, the parameters n, ipvt, and info play the same role
+  --   as the lufac on a matrix.
+  --   The columns of the matrix a are stored as vectors
+  --   and the ranges of the vectors are supposed to contain 1..n.
+
   procedure estco ( a : in Matrix; n : in integer32;
                     ipvt : in Standard_Integer_Vectors.Vector;
                     anorm : in double_float; rcond : out double_float );
@@ -82,6 +95,17 @@ package Standard_Complex_Linear_Solvers is
   --           is true, than a may be singular to working precision.
   --           In particular, rcond is zero if exact singularity is
   --           detected or the estimate underflows.
+
+  procedure estco ( a : in Standard_Complex_VecVecs.VecVec;
+                    n : in integer32;
+                    ipvt : in Standard_Integer_Vectors.Vector;
+                    anorm : in double_float; rcond : out double_float );
+
+  -- DESCRIPTION :
+  --   Estimation of the condition number with in a the output of lufac.
+  --   All parameters play the same role as the estco on a matrix.
+  --   The columns of the matrix a are stored as vectors
+  --   and the ranges of the vectors are supposed to contain 1..n.
 
   procedure lufco ( a : in out Matrix; n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;

@@ -1,3 +1,9 @@
+Thu 11 Jun 2015 : to standard_complex_linear_solvers added procedures to
+  estimate the condition number, some small changes in ts_cmplu.
+
+Wed 10 Jun 2015 : factored vvlufac out of ts_perflu into the
+  standard_complex_linear_solvers.
+
 Fri 7 Nov 2014 : new package multprec_floating_qr_least_squares, tested
   by ts_qrd.adb.  Extended varbprec_floating_linear_solvers, with extended
   testing done in ts_vmplu.adb.
