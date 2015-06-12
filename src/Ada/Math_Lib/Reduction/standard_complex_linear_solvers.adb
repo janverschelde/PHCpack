@@ -97,8 +97,7 @@ package body Standard_Complex_Linear_Solvers is
     return res;
   end Norm1;
 
-  function Norm1 ( a : Standard_Complex_VecVecs.VecVec )
-                 return double_float is
+  function Norm1 ( a : VecVec ) return double_float is
 
   -- DESCRIPTION :
   --   returns the 1-norm of a.
@@ -179,8 +178,7 @@ package body Standard_Complex_Linear_Solvers is
    -- put("lufac count : "); put(lufac_count,1); new_line;
   end lufac;
 
-  procedure lufac ( a : in out Standard_Complex_VecVecs.VecVec;
-                    n : in integer32;
+  procedure lufac ( a : in out VecVec; n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     info : out integer32 ) is
 
@@ -372,8 +370,7 @@ package body Standard_Complex_Linear_Solvers is
     end if;
   end estco;
 
-  procedure estco ( a : in Standard_Complex_VecVecs.VecVec;
-                    n : in integer32;
+  procedure estco ( a : in VecVec; n : in integer32;
                     ipvt : in Standard_Integer_Vectors.Vector;
                     anorm : in double_float; rcond : out double_float ) is
 
@@ -529,8 +526,7 @@ package body Standard_Complex_Linear_Solvers is
     end if;
   end lufco;
 
-  procedure lufco ( a : in out Standard_Complex_VecVecs.VecVec;
-                    n : in integer32;
+  procedure lufco ( a : in out VecVec; n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     rcond : out double_float ) is
 

@@ -175,6 +175,74 @@ package body Multprec_Complex_Linear_Solvers is
     Clear(fltacc);
   end lufac;
 
+  procedure lufac ( a : in out VecVec; n : in integer32;
+                    ipvt : out Standard_Integer_Vectors.Vector;
+                    info : out integer32 ) is
+
+    kp1,ell,nm1 : integer32;
+    ak,aj : Multprec_Complex_Vectors.Link_to_Vector;
+    smax,fltacc : Floating_Number;
+    temp,cmpacc : Complex_Number;
+
+  begin
+    info := 0;
+    nm1 := n - 1;
+    if nm1 >= 1 then
+      for k in 1..nm1 loop
+        kp1 := k + 1;
+        ell := k;
+        ak := a(k);
+        smax := AbsVal(ak(k));                  -- find the pivot index ell
+        for i in kp1..n loop
+          fltacc := AbsVal(ak(i));
+          if fltacc > smax then
+            ell := i;
+            Copy(fltacc,smax);
+          end if;
+          Clear(fltacc);
+        end loop;
+        ipvt(k) := ell;
+        if Equal(smax,0.0) then     -- this column is already triangularized
+          info := k;
+        else
+          if ell /= k then                       -- interchange if necessary
+            Copy(ak(ell),temp);
+            Copy(ak(k),ak(ell));
+            Copy(temp,ak(k)); Clear(temp);
+          end if;
+          cmpacc := Create(integer(1));               -- compute multipliers
+          Div(cmpacc,ak(k));
+          Min(cmpacc);
+          for i in kp1..n loop
+            Mul(ak(i),cmpacc);
+          end loop;
+          Clear(cmpacc);
+          for j in kp1..n loop                           -- row elimination
+            aj := a(j);
+            Copy(aj(ell),temp);
+            if ell /= k then
+              Copy(aj(k),aj(ell));
+              Copy(temp,aj(k));
+            end if;
+            for i in kp1..n loop
+              cmpacc := temp*ak(i);
+              Add(aj(i),cmpacc);
+              Clear(cmpacc);
+            end loop;
+          end loop;
+          Clear(temp);
+        end if;
+        Clear(smax);
+      end loop;
+    end if;
+    ipvt(n) := n;
+    fltacc := AbsVal(a(n)(n));
+    if Equal(fltacc,0.0)
+     then info := n;
+    end if;
+    Clear(fltacc);
+  end lufac;
+
   procedure lufco ( a : in out Matrix; n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     rcond : out Floating_Number ) is

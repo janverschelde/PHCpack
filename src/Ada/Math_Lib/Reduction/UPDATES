@@ -1,5 +1,9 @@
+Fri 12 Jun 2015 : updates in {standard,dobldobl,quaddobl,multprec}_
+  complex_linear_solvers for matrices stores as vectors of columns.
+
 Thu 11 Jun 2015 : to standard_complex_linear_solvers added procedures to
   estimate the condition number, some small changes in ts_cmplu.
+  Did the same for the double double and quad double versions.
 
 Wed 10 Jun 2015 : factored vvlufac out of ts_perflu into the
   standard_complex_linear_solvers.

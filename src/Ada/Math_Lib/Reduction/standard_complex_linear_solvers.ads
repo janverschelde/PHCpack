@@ -3,7 +3,7 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;         
 with Standard_Natural_Matrices;
 with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
-with Standard_Complex_VecVecs;
+with Standard_Complex_VecVecs;           use Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
 
 package Standard_Complex_Linear_Solvers is
@@ -55,8 +55,7 @@ package Standard_Complex_Linear_Solvers is
   --                divide by zero if called.  Use rcond in
   --                lufco for a reliable indication of singularity.
 
-  procedure lufac ( a : in out Standard_Complex_VecVecs.VecVec;
-                    n : in integer32;
+  procedure lufac ( a : in out VecVec; n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     info : out integer32 );
 
@@ -96,8 +95,7 @@ package Standard_Complex_Linear_Solvers is
   --           In particular, rcond is zero if exact singularity is
   --           detected or the estimate underflows.
 
-  procedure estco ( a : in Standard_Complex_VecVecs.VecVec;
-                    n : in integer32;
+  procedure estco ( a : in VecVec; n : in integer32;
                     ipvt : in Standard_Integer_Vectors.Vector;
                     anorm : in double_float; rcond : out double_float );
 
@@ -138,6 +136,16 @@ package Standard_Complex_Linear_Solvers is
   --           is true, than a may be singular to working precision.
   --           In particular, rcond is zero if exact singularity is
   --           detected or the estimate underflows.
+
+  procedure lufco ( a : in out VecVec; n : in integer32;
+                    ipvt : out Standard_Integer_Vectors.Vector;
+                    rcond : out double_float );
+
+  -- DESCRIPTION :
+  --   lufco factors a complex matrix by gaussian elimination
+  --   and estimates the condition of the matrix.
+  --   The matrix is given as a vector of n columns.
+  --   Each column contains the range 1..n.
 
   procedure lusolve ( a : in Matrix; n : in integer32;
                       ipvt : in Standard_Integer_Vectors.Vector;

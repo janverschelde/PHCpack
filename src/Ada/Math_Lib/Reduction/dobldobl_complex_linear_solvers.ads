@@ -4,6 +4,7 @@ with Standard_Natural_Matrices;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with DoblDobl_Complex_Vectors;           use DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_VecVecs;           use DoblDobl_Complex_VecVecs;
 with DoblDobl_Complex_Matrices;          use DoblDobl_Complex_Matrices;
 
 package DoblDobl_Complex_Linear_Solvers is
@@ -55,6 +56,17 @@ package DoblDobl_Complex_Linear_Solvers is
   --                divide by zero if called.  Use rcond in
   --                lufco for a reliable indication of singularity.
 
+  procedure lufac ( a : in out VecVec; n : in integer32;
+                    ipvt : out Standard_Integer_Vectors.Vector;
+                    info : out integer32 );
+
+  -- DESCRIPTION :
+  --   LU factorization on vector of vectors data type.
+  --   Except for a, the parameters n, ipvt, and info play the same role
+  --   as the lufac on a matrix.
+  --   The columns of the matrix a are stored as vectors
+  --   and the ranges of the vectors are supposed to contain 1..n.
+
   procedure estco ( a : in Matrix; n : in integer32;
                     ipvt : in Standard_Integer_Vectors.Vector;
                     anorm : in double_double; rcond : out double_double );
@@ -83,6 +95,16 @@ package DoblDobl_Complex_Linear_Solvers is
   --           is true, than a may be singular to working precision.
   --           In particular, rcond is zero if exact singularity is
   --           detected or the estimate underflows.
+
+  procedure estco ( a : in VecVec; n : in integer32;
+                    ipvt : in Standard_Integer_Vectors.Vector;
+                    anorm : in double_double; rcond : out double_double );
+
+  -- DESCRIPTION :
+  --   Estimation of the condition number with in a the output of lufac.
+  --   All parameters play the same role as the estco on a matrix.
+  --   The columns of the matrix a are stored as vectors
+  --   and the ranges of the vectors are supposed to contain 1..n.
 
   procedure lufco ( a : in out Matrix; n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
@@ -115,6 +137,16 @@ package DoblDobl_Complex_Linear_Solvers is
   --           is true, than a may be singular to working precision.
   --           In particular, rcond is zero if exact singularity is
   --           detected or the estimate underflows.
+
+  procedure lufco ( a : in out VecVec; n : in integer32;
+                    ipvt : out Standard_Integer_Vectors.Vector;
+                    rcond : out double_double );
+
+  -- DESCRIPTION :
+  --   lufco factors a complex matrix by gaussian elimination
+  --   and estimates the condition of the matrix.
+  --   The matrix is given as a vector of n columns.
+  --   Each column contains the range 1..n.
 
   procedure lusolve ( a : in Matrix; n : in integer32;
                       ipvt : in Standard_Integer_Vectors.Vector;

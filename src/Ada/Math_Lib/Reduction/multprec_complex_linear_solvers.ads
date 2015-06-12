@@ -5,6 +5,7 @@ with Standard_Integer_Vectors;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Multprec_Complex_Vectors;           use Multprec_Complex_Vectors;
+with Multprec_Complex_VecVecs;           use Multprec_Complex_VecVecs;
 with Multprec_Complex_Matrices;          use Multprec_Complex_Matrices;
 
 package Multprec_Complex_Linear_Solvers is
@@ -50,6 +51,17 @@ package Multprec_Complex_Linear_Solvers is
   --                but it does indicate that lusolve will
   --                divide by zero if called.  Use rcond in
   --                lufco for a reliable indication of singularity.
+
+  procedure lufac ( a : in out VecVec; n : in integer32;
+                    ipvt : out Standard_Integer_Vectors.Vector;
+                    info : out integer32 );
+
+  -- DESCRIPTION :
+  --   LU factorization on vector of vectors data type.
+  --   Except for a, the parameters n, ipvt, and info play the same role
+  --   as the lufac on a matrix.
+  --   The columns of the matrix a are stored as vectors
+  --   and the ranges of the vectors are supposed to contain 1..n.
 
   procedure lufco ( a : in out Matrix; n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;

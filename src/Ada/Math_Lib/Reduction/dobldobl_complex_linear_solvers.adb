@@ -77,6 +77,26 @@ package body DoblDobl_Complex_Linear_Solvers is
     return res;
   end Norm1;
 
+  function Norm1 ( a : VecVec ) return double_double is
+
+    res : double_double := Create(0.0);
+    sum : double_double;
+    aj : DoblDobl_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for j in a'range loop
+      sum := create(0.0);
+      aj := a(j);
+      for i in a'range(1) loop
+        sum := sum + cabs(aj(i));
+      end loop;
+      if sum > res
+       then res := sum;
+      end if; 
+    end loop;
+    return res;
+  end Norm1;
+
 -- TARGET ROUTINES :
 
   procedure lufac ( a : in out Matrix; n : in integer32;
@@ -131,6 +151,64 @@ package body DoblDobl_Complex_Linear_Solvers is
     end if;
     ipvt(n) := n;
     if is_zero(AbsVal(a(n,n)))
+     then info := n;
+    end if;
+  end lufac;
+
+  procedure lufac ( a : in out VecVec; n : in integer32;
+                    ipvt : out Standard_Integer_Vectors.Vector;
+                    info : out integer32 ) is
+
+    kp1,ell,nm1 : integer32;
+    smax : double_double;
+    temp : Complex_Number;
+    ak,aj : DoblDobl_Complex_Vectors.Link_to_Vector;
+    dd_min_one : constant double_double := create(-1.0);
+    cp_min_one : constant Complex_Number := create(dd_min_one);
+
+  begin
+    info := 0;
+    nm1 := n - 1;
+    if nm1 >= 1 then
+      for k in 1..nm1 loop
+        ak := a(k);
+        kp1 := k + 1;                             -- find the pivot index ell
+        ell := k; smax := cabs(ak(k));
+        for i in kp1..n loop
+          if cabs(ak(k)) > smax then
+            ell := i;
+            smax := cabs(ak(i));
+          end if;
+        end loop;
+        ipvt(k) := ell;
+        if is_zero(smax) then       -- this column is already triangularized
+          info := k;
+        else
+          if ell /= k then                       -- interchange if necessary
+            temp := ak(ell);
+            ak(ell) := ak(k);
+            ak(k) := temp;
+          end if;
+          temp := cp_min_one/ak(k);                   -- compute multipliers
+          for i in kp1..n loop
+            ak(i) := temp*ak(i);
+          end loop;
+          for j in kp1..n loop       -- row elimination with column indexing
+            aj := a(j);
+            temp := aj(ell);
+            if ell /= k then
+              aj(ell) := aj(k);
+              aj(k) := temp;
+            end if;
+            for i in kp1..n loop
+              aj(i) := aj(i) + temp*ak(i);
+            end loop;
+          end loop;
+        end if;
+      end loop;
+    end if;
+    ipvt(n) := n;
+    if is_zero(AbsVal(a(n)(n)))
      then info := n;
     end if;
   end lufac;
@@ -270,7 +348,164 @@ package body DoblDobl_Complex_Linear_Solvers is
     end if;
   end estco;
 
+  procedure estco ( a : in VecVec; n : in integer32;
+                    ipvt : in Standard_Integer_Vectors.Vector;
+                    anorm : in double_double; rcond : out double_double ) is
+
+    z : DoblDobl_Complex_Vectors.Vector(1..n);
+    ak,aj : DoblDobl_Complex_Vectors.Link_to_Vector;
+    kb,kp1,ell : integer32;
+    s,sm,sum,ynorm : double_double;
+    ek,t,wk,wkm : Complex_Number;
+    one : constant double_double := create(1.0);
+
+  begin
+    ek := Create(integer(1));                       -- solve ctrans(u)*w = e
+    for j in 1..n loop
+      z(j) := Create(integer(0));
+    end loop;
+    for k in 1..n loop
+      ak := a(k);
+      if not is_zero(cabs(z(k)))
+       then ek := csign(ek,-z(k));
+      end if;
+      if cabs(ek-z(k)) > cabs(ak(k)) then
+        s := cabs(ak(k))/cabs(ek-z(k));
+        z := Create(s) * z;
+        ek := Create(s) * ek;
+      end if;
+      wk := ek - z(k);
+      wkm := -ek - z(k);
+      s := cabs(wk);
+      sm := cabs(wkm);
+      if is_zero(cabs(ak(k))) then
+        wk := Create(integer(1));
+        wkm := Create(integer(1));
+      else
+        wk := wk / dconjg(ak(k));
+        wkm := wkm / dconjg(ak(k));
+      end if;
+      kp1 := k + 1;
+      if kp1 <= n then
+        for j in kp1..n loop
+          aj := a(j);
+          sm := sm + cabs(z(j)+wkm*dconjg(aj(k)));
+          z(j) := z(j) + wk*dconjg(aj(k));
+          s := s + cabs(z(j));
+        end loop;
+        if s < sm then
+          t := wkm - wk;
+          wk := wkm;
+          for j in kp1..n loop
+            aj := a(j);
+            z(j) := z(j) + t*dconjg(aj(k));
+          end loop;
+        end if;
+      end if;
+      z(k) := wk;
+    end loop;
+    sum := Create(0.0);
+    for i in 1..n loop
+      sum := sum + cabs(z(i));
+    end loop;
+    s := one / sum;
+    z := Create(s) * z;
+    for k in 1..n loop                           -- solve ctrans(l)*y = w
+      kb := n+1-k;
+      if kb < n then
+        ak := a(kb);
+        t := Create(integer(0));
+        for i in (kb+1)..n loop
+          t := t + dconjg(ak(i))*z(i);
+        end loop;
+        z(kb) := z(kb) + t;
+      end if;
+      if cabs(z(kb)) > 1.0 then
+        s := one / cabs(z(kb));
+        z := Create(s) * z;
+      end if;
+      ell := ipvt(kb);
+      t := z(ell);
+      z(ell) := z(kb);
+      z(kb)  := t;
+    end loop;
+    sum := Create(0.0);
+    for i in 1..n loop
+      sum := sum + cabs(z(i));
+    end loop;
+    s := one / sum;
+    z := Create(s) * z;
+    ynorm := create(1.0);
+    for k in 1..n loop                                    -- solve l*v = y
+      ell := ipvt(k);
+      t := z(ell);
+      z(ell) := z(k);
+      z(k) := t;
+      if k < n then
+        ak := a(k);
+        for i in (k+1)..n loop
+          z(i) := z(i) + t * ak(i);
+        end loop;
+      end if;
+      if cabs(z(k)) > 1.0 then
+        s := one / cabs(z(k));
+        z := Create(s) * z;
+        ynorm := s * ynorm;
+      end if;
+    end loop;
+    sum := Create(0.0);
+    for i in 1..n loop
+      sum := sum + cabs(z(i));
+    end loop;
+    s := one / sum;
+    z := Create(s) * z;
+    ynorm := s * ynorm;
+    for k in 1..n loop                                    -- solve u*z = v
+      kb := n+1-k;
+      ak := a(kb);
+      if cabs(z(kb)) > cabs(ak(kb)) then
+        s := cabs(ak(kb)) / cabs(z(kb));
+        z := Create(s) * z;
+        ynorm := s * ynorm;
+      end if;
+      if is_zero(cabs(ak(kb)))
+       then z(kb) := Create(integer(1));
+       else z(kb) := z(kb) / ak(kb);
+      end if;
+      t := -z(kb);
+      for i in 1..(kb-1) loop
+        z(i) := z(i) + t * ak(i);
+      end loop;
+    end loop;
+    sum := Create(0.0);                                  -- make znorm = 1.0
+    for i in 1..n loop
+      sum := sum + cabs(z(i));
+    end loop;
+    s := one / sum;
+   -- z := Create(s) * z; -- deemed useless by GNAT GPL 2009 compiler
+    ynorm := s * ynorm;
+    if is_zero(anorm)
+     then rcond := create(0.0);
+     else rcond := ynorm/anorm;
+    end if;
+  end estco;
+
   procedure lufco ( a : in out Matrix; n : in integer32;
+                    ipvt : out Standard_Integer_Vectors.Vector;
+                    rcond : out double_double ) is
+
+    anorm : constant double_double := Norm1(a);
+    info : integer32;
+
+  begin
+    lufac(a,n,ipvt,info);
+    if info = 0
+     then estco(a,n,ipvt,anorm,rcond);
+     else rcond := create(0.0);
+    end if;
+  end lufco;
+
+  procedure lufco ( a : in out VecVec; n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     rcond : out double_double ) is
 
