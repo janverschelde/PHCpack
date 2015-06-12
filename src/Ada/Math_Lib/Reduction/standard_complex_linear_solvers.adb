@@ -212,7 +212,7 @@ package body Standard_Complex_Linear_Solvers is
             ak(ell) := ak(k);
             ak(k) := acc;
           end if;                                  -- compute multipliers
-          acc := (-1.0)/ak(k); 
+          acc := -Create(1.0)/ak(k); 
           for i in kp1..n loop
             ak(i) := ak(i)*acc;
           end loop;
@@ -231,7 +231,7 @@ package body Standard_Complex_Linear_Solvers is
       end loop;
     end if;
     ipvt(n) := n;
-    if a(n)(n) = zero
+    if AbsVal(a(n)(n)) = 0.0
      then info := n;
     end if;
   end lufac;
