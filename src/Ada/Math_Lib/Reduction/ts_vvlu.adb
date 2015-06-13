@@ -261,6 +261,7 @@ procedure ts_vvlu is
     B : VecVec(1..dim) := mat2vv(A);
     Apiv,Bpiv : Standard_Integer_Vectors.Vector(1..dim);
     Ainfo,Binfo : integer32;
+    Anorm,Bnorm,Arcond,Brcond : double_float;
     otp : boolean;
     ans : character;
 
@@ -274,8 +275,16 @@ procedure ts_vvlu is
     Compare(A,B,1.0E-8,otp);
     lufac(A,dim,Apiv,Ainfo);
     put("pivots on A : "); put(Apiv); new_line;
+    Anorm := norm1(A);
+    estco(A,dim,Apiv,Anorm,Arcond);
+    put("The norm of the matrix : "); put(Anorm); new_line;
+    put("Estimated inverse condition number : "); put(Arcond); new_line;
     lufac(B,dim,Bpiv,Binfo);
     put("pivots on B : "); put(Bpiv); new_line;
+    Bnorm := norm1(B);
+    estco(B,dim,Bpiv,Bnorm,Brcond);
+    put("The norm of the matrix : "); put(Anorm); new_line;
+    put("Estimated inverse condition number : "); put(Arcond); new_line;
     put_line("Checking the matrices on output ...");
     Compare(A,B,1.0E-8,otp);
   end Standard_Test;
@@ -294,6 +303,7 @@ procedure ts_vvlu is
     B : VecVec(1..dim) := mat2vv(A);
     Apiv,Bpiv : Standard_Integer_Vectors.Vector(1..dim);
     Ainfo,Binfo : integer32;
+    Anorm,Bnorm,Arcond,Brcond : double_double;
     otp : boolean;
     ans : character;
 
@@ -307,8 +317,16 @@ procedure ts_vvlu is
     Compare(A,B,1.0E-8,otp);
     lufac(A,dim,Apiv,Ainfo);
     put("pivots on A : "); put(Apiv); new_line;
+    Anorm := norm1(A);
+    estco(A,dim,Apiv,Anorm,Arcond);
+    put("The norm of the matrix : "); put(Anorm); new_line;
+    put("Estimated inverse condition number : "); put(Arcond); new_line;
     lufac(B,dim,Bpiv,Binfo);
     put("pivots on B : "); put(Bpiv); new_line;
+    Bnorm := norm1(B);
+    estco(B,dim,Bpiv,Bnorm,Brcond);
+    put("The norm of the matrix : "); put(Anorm); new_line;
+    put("Estimated inverse condition number : "); put(Arcond); new_line;
     put_line("Checking the matrices on output ...");
     Compare(A,B,1.0E-8,otp);
   end DoblDobl_Test;
@@ -327,6 +345,7 @@ procedure ts_vvlu is
     B : VecVec(1..dim) := mat2vv(A);
     Apiv,Bpiv : Standard_Integer_Vectors.Vector(1..dim);
     Ainfo,Binfo : integer32;
+    Anorm,Bnorm,Arcond,Brcond : quad_double;
     otp : boolean;
     ans : character;
 
@@ -340,8 +359,16 @@ procedure ts_vvlu is
     Compare(A,B,1.0E-8,otp);
     lufac(A,dim,Apiv,Ainfo);
     put("pivots on A : "); put(Apiv); new_line;
+    Anorm := norm1(A);
+    estco(A,dim,Apiv,Anorm,Arcond);
+    put("The norm of the matrix : "); put(Anorm); new_line;
+    put("Estimated inverse condition number : "); put(Arcond); new_line;
     lufac(B,dim,Bpiv,Binfo);
     put("pivots on B : "); put(Bpiv); new_line;
+    Bnorm := norm1(B);
+    estco(B,dim,Bpiv,Bnorm,Brcond);
+    put("The norm of the matrix : "); put(Anorm); new_line;
+    put("Estimated inverse condition number : "); put(Arcond); new_line;
     put_line("Checking the matrices on output ...");
     Compare(A,B,1.0E-8,otp);
   end QuadDobl_Test;

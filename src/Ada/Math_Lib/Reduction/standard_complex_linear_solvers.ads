@@ -22,6 +22,7 @@ package Standard_Complex_Linear_Solvers is
   -- REQUIRED : a'range(1) = b'range(1).
 
   function Norm1 ( a : Matrix ) return double_float;
+  function Norm1 ( a : VecVec ) return double_float;
 
   -- DESCRIPTION :
   --   Returns the 1-norm of the matrix a.

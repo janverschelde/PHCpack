@@ -1,3 +1,7 @@
+Sat 13 Jun 2015 : tested estco for standard, double double, and quad double
+  precision in ts_vvlu, with changed specifications in the complex linear
+  solvers packages.
+
 Fri 12 Jun 2015 : updates in {standard,dobldobl,quaddobl,multprec}_
   complex_linear_solvers for matrices stores as vectors of columns.
   New test program ts_vvlu, bug fix in standard_complex_linear_solvers.adb.

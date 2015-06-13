@@ -23,6 +23,7 @@ package DoblDobl_Complex_Linear_Solvers is
   -- REQUIRED : a'range(1) = b'range(1).
 
   function Norm1 ( a : Matrix ) return double_double;
+  function Norm1 ( a : VecVec ) return double_double;
 
   -- DESCRIPTION :
   --   Returns the 1-norm of the matrix a.
