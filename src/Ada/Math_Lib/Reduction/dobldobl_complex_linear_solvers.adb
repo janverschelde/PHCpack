@@ -175,7 +175,7 @@ package body DoblDobl_Complex_Linear_Solvers is
         kp1 := k + 1;                             -- find the pivot index ell
         ell := k; smax := cabs(ak(k));
         for i in kp1..n loop
-          if cabs(ak(k)) > smax then
+          if cabs(ak(i)) > smax then
             ell := i;
             smax := cabs(ak(i));
           end if;

@@ -1,6 +1,8 @@
 Fri 12 Jun 2015 : updates in {standard,dobldobl,quaddobl,multprec}_
   complex_linear_solvers for matrices stores as vectors of columns.
   New test program ts_vvlu, bug fix in standard_complex_linear_solvers.adb.
+  Updated ts_vvlu for other precision and fixed a bug in
+  dobldobl_complex_linear_solvers.adb.
 
 Thu 11 Jun 2015 : to standard_complex_linear_solvers added procedures to
   estimate the condition number, some small changes in ts_cmplu.
