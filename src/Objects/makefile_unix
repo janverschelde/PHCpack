@@ -315,6 +315,9 @@ ts_backsubs:
 ts_perflu:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_perflu.adb -o $(BIN)/ts_perflu
 
+ts_vvlu:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_vvlu.adb -o $(BIN)/ts_vvlu
+
 ts_vmplu:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_vmplu.adb -o $(BIN)/ts_vmplu
 
