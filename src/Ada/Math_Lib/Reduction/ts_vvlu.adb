@@ -40,6 +40,7 @@ with DoblDobl_Random_Vectors;            use DoblDobl_Random_Vectors;
 with DoblDobl_Random_Matrices;           use DoblDobl_Random_Matrices;
 with QuadDobl_Random_Vectors;            use QuadDobl_Random_Vectors;
 with QuadDobl_Random_Matrices;           use QuadDobl_Random_Matrices;
+with Multprec_Random_Vectors;            use Multprec_Random_Vectors;
 with Multprec_Random_Matrices;           use Multprec_Random_Matrices;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
@@ -326,6 +327,32 @@ procedure ts_vvlu is
     end loop;
   end Compare;
 
+  procedure Compare ( A : in Multprec_Complex_Vectors.Vector;
+                      B : in Multprec_Complex_Vectors.Vector;
+                      tol : in double_float; output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Compares the entries in A with the corresponding entries in B.
+  --   Writes the results to screen if output is true or if the 
+  --   difference between the two entries exceeds the tolerance tol.
+
+    use Multprec_Complex_Numbers;
+    dff : Complex_Number;
+    val : Floating_Number;
+
+  begin
+    for i in A'range loop
+      dff := A(i) - B(i);
+      val := AbsVal(dff);
+      if output or val > tol then
+        put("A("); put(i,1); put(") : "); put(A(i)); new_line;
+        put("B("); put(i,1); put(") : "); put(B(i)); new_line;
+        put("error : "); put(val,3); new_line;
+      end if;
+      Clear(dff); Clear(val);
+    end loop;
+  end Compare;
+
   procedure Standard_Factor_Test ( dim : in integer32 ) is
 
   -- DESCRIPTION :
@@ -603,10 +630,10 @@ procedure ts_vvlu is
     QuadDobl_Solve_Test(dim);
   end QuadDobl_Test;
 
-  procedure Multprec_Test ( dim : in integer32; size : in natural32 ) is
+  procedure Multprec_Factor_Test ( dim : in integer32; size : in natural32 ) is
 
   -- DESCRIPTION :
-  --   Performs a test in double double precision,
+  --   Tests the LU factorization in arbitrary multiprecision,
   --   on a problem of the given dimension dim.
   --   The size of the numbers is defined by size.
 
@@ -635,6 +662,65 @@ procedure ts_vvlu is
     put("pivots on B : "); put(Bpiv); new_line;
     put_line("Checking the matrices on output ...");
     Compare(A,B,1.0E-8,otp);
+  end Multprec_Factor_Test;
+
+  procedure Multprec_Solve_Test ( dim : in integer32; size : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Tests solving a linear system in arbitrary multiprecision,
+  --   with numbers of the given size, and
+  --   on a problem of the given dimension dim.
+
+    use Multprec_Complex_VecVecs;
+    use Multprec_Complex_Matrices;
+
+    n : constant natural32 := natural32(dim);
+    A : Matrix(1..dim,1..dim) := Random_Matrix(n,n,size);
+    B : VecVec(1..dim) := mat2vv(A);
+    Apiv,Bpiv : Standard_Integer_Vectors.Vector(1..dim);
+    Arhs : Multprec_Complex_Vectors.Vector(1..dim)
+         := Random_Vector(1,dim,size);
+    Brhs : Multprec_Complex_Vectors.Vector(1..dim);
+    Arcond,Brcond : Floating_Number;
+    otp : boolean;
+    ans : character;
+
+  begin
+    Multprec_Complex_Vectors.Copy(Arhs,Brhs);
+    new_line;
+    put("Intermediate output wanted ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    otp := (ans = 'y');
+    new_line;
+    put_line("Checking the matrices on input ...");
+    Compare(A,B,1.0E-8,otp);
+    lufco(A,dim,Apiv,Arcond);
+    put("pivots on A : "); put(Apiv); new_line;
+    put("Estimated inverse condition number : "); put(Arcond); new_line;
+    lufco(B,dim,Bpiv,Brcond);
+    put("pivots on B : "); put(Bpiv); new_line;
+    put("Estimated inverse condition number : "); put(Arcond); new_line;
+    put_line("Checking the matrices on output ...");
+    Compare(A,B,1.0E-8,otp);
+    lusolve(A,dim,Apiv,Arhs);
+    lusolve(B,dim,Bpiv,Brhs);
+    put_line("Comparing the solution vectors ...");
+    Compare(Arhs,Brhs,1.0E-8,otp);
+  end Multprec_Solve_Test;
+
+  procedure Multprec_Test ( dim : in integer32; size : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Tests LU factorization and solving linear systems on a problem of
+  --   the given dimension dim and with numbers of the given size.
+
+  begin
+    new_line;
+    put_line("Testing LU factorization ...");
+    Multprec_Factor_Test(dim,size);
+    new_line;
+    put_line("Test solving a linear system ...");
+    Multprec_Solve_Test(dim,size);
   end Multprec_Test;
 
   procedure Main is

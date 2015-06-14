@@ -3,6 +3,8 @@ Sun 14 Jun 2015 : version of lusolve in standard_complex_linear_solvers
   Add lusolve for vecvecs to {dobldobl,quaddobl}_complex_linear_solvers,
   with extra test procedures in ts_vvlu.  Refactored lufco in the package
   multprec_complex_linear_solvers in estco, tested by ts_cmplu.
+  Added versions for lusolve for vectors of vectors to 
+  multprec_complex_linear_solvers, tested by ts_vvlu.
 
 Sat 13 Jun 2015 : tested estco for standard, double double, and quad double
   precision in ts_vvlu, with changed specifications in the complex linear

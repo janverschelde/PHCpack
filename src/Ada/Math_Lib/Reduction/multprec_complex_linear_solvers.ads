@@ -103,6 +103,14 @@ package Multprec_Complex_Linear_Solvers is
   --           In particular, rcond is zero if exact singularity is
   --           detected or the estimate underflows.
 
+  procedure estco ( a : in Multprec_Complex_VecVecs.VecVec;
+                    n : in integer32;
+                    ipvt : in Standard_Integer_Vectors.Vector;
+                    anorm : in Floating_Number; rcond : out Floating_Number );
+
+  -- DESCRIPTION :
+  --   Version of estco for matrices as vectors of columns.
+
   procedure lufco ( a : in out Multprec_Complex_Matrices.Matrix;
                     n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
@@ -136,6 +144,14 @@ package Multprec_Complex_Linear_Solvers is
   --           In particular, rcond is zero if exact singularity is
   --           detected or the estimate underflows.
 
+  procedure lufco ( a : in out Multprec_Complex_VecVecs.VecVec;
+                    n : in integer32;
+                    ipvt : out Standard_Integer_Vectors.Vector;
+                    rcond : out Floating_Number );
+
+  -- DESCRIPTION :
+  --   Version of lufco for matrices as vectors of columns.
+
   procedure lusolve ( a : in Multprec_Complex_Matrices.Matrix;
                       n : in integer32;
                       ipvt : in Standard_Integer_Vectors.Vector;
@@ -153,6 +169,14 @@ package Multprec_Complex_Linear_Solvers is
 
   -- ON RETURN :
   --   b       the solution vector x.
+
+  procedure lusolve ( a : in Multprec_Complex_VecVecs.VecVec;
+                      n : in integer32;
+                      ipvt : in Standard_Integer_Vectors.Vector;
+                      b : in out Multprec_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Version of lusolve for matrices as vectors of columns.
 
   procedure Triangulate ( a : in out Multprec_Complex_Matrices.Matrix;
                           tol : in double_float;
