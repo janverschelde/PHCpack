@@ -36,7 +36,9 @@ with QuadDobl_Complex_Matrices;
 with Multprec_Complex_Matrices;
 with Standard_Random_Vectors;            use Standard_Random_Vectors;
 with Standard_Random_Matrices;           use Standard_Random_Matrices;
+with DoblDobl_Random_Vectors;            use DoblDobl_Random_Vectors;
 with DoblDobl_Random_Matrices;           use DoblDobl_Random_Matrices;
+with QuadDobl_Random_Vectors;            use QuadDobl_Random_Vectors;
 with QuadDobl_Random_Matrices;           use QuadDobl_Random_Matrices;
 with Multprec_Random_Matrices;           use Multprec_Random_Matrices;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
@@ -215,6 +217,31 @@ procedure ts_vvlu is
     end loop;
   end Compare;
 
+  procedure Compare ( A : in DoblDobl_Complex_Vectors.Vector;
+                      B : in DoblDobl_Complex_Vectors.Vector;
+                      tol : in double_float; output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Compares the entries in A with the corresponding entries in B.
+  --   Writes the results to screen if output is true or if the 
+  --   difference between the two entries exceeds the tolerance tol.
+
+    use DoblDobl_Complex_Numbers;
+    dff : Complex_Number;
+    val : double_double;
+
+  begin
+    for i in A'range loop
+      dff := A(i) - B(i);
+      val := AbsVal(dff);
+      if output or val > tol then
+        put("A("); put(i,1); put(") : "); put(A(i)); new_line;
+        put("B("); put(i,1); put(") : "); put(B(i)); new_line;
+        put("error : "); put(val,3); new_line;
+      end if;
+    end loop;
+  end Compare;
+
   procedure Compare ( A : in QuadDobl_Complex_Matrices.Matrix;
                       B : in QuadDobl_Complex_VecVecs.VecVec;
                       tol : in double_float; output : in boolean ) is
@@ -241,6 +268,31 @@ procedure ts_vvlu is
           put("error : "); put(val,3); new_line;
         end if;
       end loop;
+    end loop;
+  end Compare;
+
+  procedure Compare ( A : in QuadDobl_Complex_Vectors.Vector;
+                      B : in QuadDobl_Complex_Vectors.Vector;
+                      tol : in double_float; output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Compares the entries in A with the corresponding entries in B.
+  --   Writes the results to screen if output is true or if the 
+  --   difference between the two entries exceeds the tolerance tol.
+
+    use QuadDobl_Complex_Numbers;
+    dff : Complex_Number;
+    val : quad_double;
+
+  begin
+    for i in A'range loop
+      dff := A(i) - B(i);
+      val := AbsVal(dff);
+      if output or val > tol then
+        put("A("); put(i,1); put(") : "); put(A(i)); new_line;
+        put("B("); put(i,1); put(") : "); put(B(i)); new_line;
+        put("error : "); put(val,3); new_line;
+      end if;
     end loop;
   end Compare;
 
@@ -365,10 +417,10 @@ procedure ts_vvlu is
     Standard_Solve_Test(dim);
   end Standard_Test;
 
-  procedure DoblDobl_Test ( dim : in integer32 ) is
+  procedure DoblDobl_Factor_Test ( dim : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Performs a test in double double precision,
+  --   Tests the LU factorization in double double precision,
   --   on a problem of the given dimension dim.
 
     use DoblDobl_Complex_VecVecs;
@@ -405,12 +457,63 @@ procedure ts_vvlu is
     put("Estimated inverse condition number : "); put(Arcond); new_line;
     put_line("Checking the matrices on output ...");
     Compare(A,B,1.0E-8,otp);
-  end DoblDobl_Test;
+  end DoblDobl_Factor_Test;
 
-  procedure QuadDobl_Test ( dim : in integer32 ) is
+  procedure DoblDobl_Solve_Test ( dim : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Performs a test in double double precision,
+  --   Tests solving a linear system in double double precision,
+  --   on a problem of the given dimension dim.
+
+    use DoblDobl_Complex_VecVecs;
+    use DoblDobl_Complex_Matrices;
+
+    n : constant natural32 := natural32(dim);
+    A : Matrix(1..dim,1..dim) := Random_Matrix(n,n);
+    B : VecVec(1..dim) := mat2vv(A);
+    Apiv,Bpiv : Standard_Integer_Vectors.Vector(1..dim);
+    Arhs : DoblDobl_Complex_Vectors.Vector(1..dim) := Random_Vector(1,dim);
+    Brhs : DoblDobl_Complex_Vectors.Vector(1..dim) := Arhs;
+    Arcond,Brcond : double_double;
+    otp : boolean;
+    ans : character;
+
+  begin
+    new_line;
+    put("Intermediate output wanted ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    otp := (ans = 'y');
+    new_line;
+    put_line("Checking the matrices on input ...");
+    Compare(A,B,1.0E-8,otp);
+    lufco(A,dim,Apiv,Arcond);
+    put("pivots on A : "); put(Apiv); new_line;
+    put("Estimated inverse condition number : "); put(Arcond); new_line;
+    lufco(B,dim,Bpiv,Brcond);
+    put("pivots on B : "); put(Bpiv); new_line;
+    put("Estimated inverse condition number : "); put(Arcond); new_line;
+    put_line("Checking the matrices on output ...");
+    Compare(A,B,1.0E-8,otp);
+    lusolve(A,dim,Apiv,Arhs);
+    lusolve(B,dim,Bpiv,Brhs);
+    put_line("Comparing the solution vectors ...");
+    Compare(Arhs,Brhs,1.0E-8,otp);
+  end DoblDobl_Solve_Test;
+
+  procedure DoblDobl_Test ( dim : in integer32 ) is
+  begin
+    new_line;
+    put_line("Testing LU factorization ...");
+    DoblDobl_Factor_Test(dim);
+    new_line;
+    put_line("Test solving a linear system ...");
+    DoblDobl_Solve_Test(dim);
+  end DoblDobl_Test;
+
+  procedure QuadDobl_Factor_Test ( dim : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the LU factorization in quad double precision,
   --   on a problem of the given dimension dim.
 
     use QuadDobl_Complex_VecVecs;
@@ -447,6 +550,57 @@ procedure ts_vvlu is
     put("Estimated inverse condition number : "); put(Arcond); new_line;
     put_line("Checking the matrices on output ...");
     Compare(A,B,1.0E-8,otp);
+  end QuadDobl_Factor_Test;
+
+  procedure QuadDobl_Solve_Test ( dim : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests solving a linear system in quad double precision,
+  --   on a problem of the given dimension dim.
+
+    use QuadDobl_Complex_VecVecs;
+    use QuadDobl_Complex_Matrices;
+
+    n : constant natural32 := natural32(dim);
+    A : Matrix(1..dim,1..dim) := Random_Matrix(n,n);
+    B : VecVec(1..dim) := mat2vv(A);
+    Apiv,Bpiv : Standard_Integer_Vectors.Vector(1..dim);
+    Arhs : QuadDobl_Complex_Vectors.Vector(1..dim) := Random_Vector(1,dim);
+    Brhs : QuadDobl_Complex_Vectors.Vector(1..dim) := Arhs;
+    Arcond,Brcond : quad_double;
+    otp : boolean;
+    ans : character;
+
+  begin
+    new_line;
+    put("Intermediate output wanted ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    otp := (ans = 'y');
+    new_line;
+    put_line("Checking the matrices on input ...");
+    Compare(A,B,1.0E-8,otp);
+    lufco(A,dim,Apiv,Arcond);
+    put("pivots on A : "); put(Apiv); new_line;
+    put("Estimated inverse condition number : "); put(Arcond); new_line;
+    lufco(B,dim,Bpiv,Brcond);
+    put("pivots on B : "); put(Bpiv); new_line;
+    put("Estimated inverse condition number : "); put(Arcond); new_line;
+    put_line("Checking the matrices on output ...");
+    Compare(A,B,1.0E-8,otp);
+    lusolve(A,dim,Apiv,Arhs);
+    lusolve(B,dim,Bpiv,Brhs);
+    put_line("Comparing the solution vectors ...");
+    Compare(Arhs,Brhs,1.0E-8,otp);
+  end QuadDobl_Solve_Test;
+
+  procedure QuadDobl_Test ( dim : in integer32 ) is
+  begin
+    new_line;
+    put_line("Testing LU factorization ...");
+    QuadDobl_Factor_Test(dim);
+    new_line;
+    put_line("Test solving a linear system ...");
+    QuadDobl_Solve_Test(dim);
   end QuadDobl_Test;
 
   procedure Multprec_Test ( dim : in integer32; size : in natural32 ) is

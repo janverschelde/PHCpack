@@ -22,12 +22,13 @@ package body DoblDobl_Complex_Linear_Solvers is
 
 -- TARGET ROUTINES :
 
-  procedure Scale ( a : in out Matrix; b : in out Vector ) is
+  procedure Scale ( a : in out DoblDobl_Complex_Matrices.Matrix;
+                    b : in out DoblDobl_Complex_Vectors.Vector ) is
 
     fac : Complex_Number;
 
-    function Maximum ( a : in Matrix; i : in integer32 )
-                     return Complex_Number is
+    function Maximum ( a : in DoblDobl_Complex_Matrices.Matrix;
+                       i : in integer32 ) return Complex_Number is
 
       res : integer32 := a'first(2);
       max : double_double := cabs(a(i,res));
@@ -43,7 +44,8 @@ package body DoblDobl_Complex_Linear_Solvers is
       return a(i,res);
     end Maximum;
 
-    procedure Divide ( a : in out Matrix; b : in out Vector;
+    procedure Divide ( a : in out DoblDobl_Complex_Matrices.Matrix;
+                       b : in out DoblDobl_Complex_Vectors.Vector;
                        i : in integer32; fac : in Complex_Number ) is
     begin
       for j in a'range(2) loop
@@ -59,7 +61,8 @@ package body DoblDobl_Complex_Linear_Solvers is
     end loop;
   end Scale;
 
-  function Norm1 ( a : Matrix ) return double_double is
+  function Norm1 ( a : DoblDobl_Complex_Matrices.Matrix )
+                 return double_double is
 
     res : double_double := Create(0.0);
     sum : double_double;
@@ -77,7 +80,8 @@ package body DoblDobl_Complex_Linear_Solvers is
     return res;
   end Norm1;
 
-  function Norm1 ( a : VecVec ) return double_double is
+  function Norm1 ( a : DoblDobl_Complex_VecVecs.VecVec )
+                 return double_double is
 
     res : double_double := Create(0.0);
     sum : double_double;
@@ -99,7 +103,8 @@ package body DoblDobl_Complex_Linear_Solvers is
 
 -- TARGET ROUTINES :
 
-  procedure lufac ( a : in out Matrix; n : in integer32;
+  procedure lufac ( a : in out DoblDobl_Complex_Matrices.Matrix;
+                    n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     info : out integer32 ) is
 
@@ -155,7 +160,8 @@ package body DoblDobl_Complex_Linear_Solvers is
     end if;
   end lufac;
 
-  procedure lufac ( a : in out VecVec; n : in integer32;
+  procedure lufac ( a : in out DoblDobl_Complex_VecVecs.VecVec;
+                    n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     info : out integer32 ) is
 
@@ -213,7 +219,8 @@ package body DoblDobl_Complex_Linear_Solvers is
     end if;
   end lufac;
 
-  procedure estco ( a : in Matrix; n : in integer32;
+  procedure estco ( a : in DoblDobl_Complex_Matrices.Matrix;
+                    n : in integer32;
                     ipvt : in Standard_Integer_Vectors.Vector;
                     anorm : in double_double; rcond : out double_double ) is
 
@@ -222,6 +229,8 @@ package body DoblDobl_Complex_Linear_Solvers is
     s,sm,sum,ynorm : double_double;
     ek,t,wk,wkm : Complex_Number;
     one : constant double_double := create(1.0);
+
+    use DoblDobl_Complex_Vectors;
 
   begin
     ek := Create(integer(1));                       -- solve ctrans(u)*w = e
@@ -348,7 +357,8 @@ package body DoblDobl_Complex_Linear_Solvers is
     end if;
   end estco;
 
-  procedure estco ( a : in VecVec; n : in integer32;
+  procedure estco ( a : in DoblDobl_Complex_VecVecs.VecVec;
+                    n : in integer32;
                     ipvt : in Standard_Integer_Vectors.Vector;
                     anorm : in double_double; rcond : out double_double ) is
 
@@ -358,6 +368,8 @@ package body DoblDobl_Complex_Linear_Solvers is
     s,sm,sum,ynorm : double_double;
     ek,t,wk,wkm : Complex_Number;
     one : constant double_double := create(1.0);
+
+    use DoblDobl_Complex_Vectors;
 
   begin
     ek := Create(integer(1));                       -- solve ctrans(u)*w = e
@@ -490,7 +502,8 @@ package body DoblDobl_Complex_Linear_Solvers is
     end if;
   end estco;
 
-  procedure lufco ( a : in out Matrix; n : in integer32;
+  procedure lufco ( a : in out DoblDobl_Complex_Matrices.Matrix;
+                    n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     rcond : out double_double ) is
 
@@ -505,7 +518,8 @@ package body DoblDobl_Complex_Linear_Solvers is
     end if;
   end lufco;
 
-  procedure lufco ( a : in out VecVec; n : in integer32;
+  procedure lufco ( a : in out DoblDobl_Complex_VecVecs.VecVec;
+                    n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     rcond : out double_double ) is
 
@@ -520,21 +534,22 @@ package body DoblDobl_Complex_Linear_Solvers is
     end if;
   end lufco;
 
-  procedure lusolve ( a : in Matrix; n : in integer32;
+  procedure lusolve ( a : in DoblDobl_Complex_Matrices.Matrix;
+                      n : in integer32;
                       ipvt : in Standard_Integer_Vectors.Vector;
-                      b : in out Vector ) is
+                      b : in out DoblDobl_Complex_Vectors.Vector ) is
 
-    l,nm1,kb : integer32;
+    ell,nm1,kb : integer32;
     temp : Complex_Number;
  
   begin
     nm1 := n-1;
-    if nm1 >= 1 then                                       -- solve l*y = b
+    if nm1 >= 1 then                                       -- solve L*y = b
       for k in 1..nm1 loop
-        l := ipvt(k);
-        temp := b(l);
-        if l /= k then
-          b(l) := b(k);
+        ell := ipvt(k);
+        temp := b(ell);
+        if ell /= k then
+          b(ell) := b(k);
           b(k) := temp;
         end if;
         for i in (k+1)..n loop
@@ -542,9 +557,9 @@ package body DoblDobl_Complex_Linear_Solvers is
         end loop;
       end loop;
     end if;
-    for k in 1..n loop                                     -- solve u*x = y
+    for k in 1..n loop                                     -- solve U*x = y
       kb := n+1-k;
-      b(kb) := b(kb) / a(kb,kb);
+      b(kb) := b(kb)/a(kb,kb);
       temp := -b(kb);
       for j in 1..(kb-1) loop
         b(j) := b(j) + temp*a(j,kb);
@@ -552,7 +567,44 @@ package body DoblDobl_Complex_Linear_Solvers is
     end loop;
   end lusolve;
 
-  procedure Triangulate ( a : in out Matrix; tol : in double_float;
+  procedure lusolve ( a : in DoblDobl_Complex_VecVecs.VecVec;
+                      n : in integer32;
+                      ipvt : in Standard_Integer_Vectors.Vector;
+                      b : in out DoblDobl_Complex_Vectors.Vector ) is
+
+    ell,nm1,kb : integer32;
+    ak : DoblDobl_Complex_Vectors.Link_to_Vector;
+    temp : Complex_Number;
+ 
+  begin
+    nm1 := n-1;
+    if nm1 >= 1 then                                       -- solve L*y = b
+      for k in 1..nm1 loop
+        ell := ipvt(k);
+        temp := b(ell);
+        if ell /= k then
+          b(ell) := b(k);
+          b(k) := temp;
+        end if;
+        ak := a(k);
+        for i in (k+1)..n loop
+          b(i) := b(i) + temp*ak(i);
+        end loop;
+      end loop;
+    end if;
+    for k in 1..n loop                                     -- solve U*x = y
+      kb := n+1-k;
+      ak := a(kb);
+      b(kb) := b(kb)/ak(kb);
+      temp := -b(kb);
+      for j in 1..(kb-1) loop
+        b(j) := b(j) + temp*ak(j);
+      end loop;
+    end loop;
+  end lusolve;
+
+  procedure Triangulate ( a : in out DoblDobl_Complex_Matrices.Matrix;
+                          tol : in double_float;
                           n,m : in integer32 ) is
 
     max,cbs : double_double;
@@ -598,7 +650,8 @@ package body DoblDobl_Complex_Linear_Solvers is
     end loop;
   end Triangulate;
 
-  procedure Diagonalize ( a : in out Matrix; n,m : in integer32 ) is
+  procedure Diagonalize ( a : in out DoblDobl_Complex_Matrices.Matrix;
+                          n,m : in integer32 ) is
 
     max : double_double;
     temp : Complex_Number;
@@ -682,9 +735,12 @@ package body DoblDobl_Complex_Linear_Solvers is
   end Permutation_Matrix;
 
   function Permute ( P : Standard_Natural_Matrices.Matrix;
-                     A : Matrix ) return Matrix is
+                     A : DoblDobl_Complex_Matrices.Matrix )
+                   return DoblDobl_Complex_Matrices.Matrix is
 
-    fP : Matrix(P'range(1),P'range(2));
+    fP : DoblDobl_Complex_Matrices.Matrix(P'range(1),P'range(2));
+
+    use DoblDobl_Complex_Matrices;
 
   begin
     for i in P'range(1) loop
@@ -695,9 +751,10 @@ package body DoblDobl_Complex_Linear_Solvers is
     return fP*A;
   end Permute;
 
-  function Lower_Diagonal ( A : Matrix ) return Matrix is
+  function Lower_Diagonal ( A : DoblDobl_Complex_Matrices.Matrix )
+                          return DoblDobl_Complex_Matrices.Matrix is
 
-    res : Matrix(A'range(1),A'range(2));
+    res : DoblDobl_Complex_Matrices.Matrix(A'range(1),A'range(2));
 
   begin
     for i in res'range(1) loop
@@ -714,9 +771,10 @@ package body DoblDobl_Complex_Linear_Solvers is
     return res;
   end Lower_Diagonal;
 
-  function Upper_Diagonal ( A : Matrix ) return Matrix is
+  function Upper_Diagonal ( A : DoblDobl_Complex_Matrices.Matrix )
+                          return DoblDobl_Complex_Matrices.Matrix is
 
-    res : Matrix(A'range(1),A'range(2));
+    res : DoblDobl_Complex_Matrices.Matrix(A'range(1),A'range(2));
 
   begin
     for i in res'range(1) loop
@@ -731,7 +789,7 @@ package body DoblDobl_Complex_Linear_Solvers is
   end Upper_Diagonal;
 
   procedure Permute_Lower
-              ( L : in out Matrix;
+              ( L : in out DoblDobl_Complex_Matrices.Matrix;
                 ipvt : in Standard_Integer_Vectors.Vector ) is
 
     tmp : Complex_Number;
