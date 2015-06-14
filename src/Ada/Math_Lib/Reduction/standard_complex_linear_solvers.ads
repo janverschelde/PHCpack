@@ -1,19 +1,24 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;         
+with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
 with Standard_Natural_Matrices;
-with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
-with Standard_Complex_VecVecs;           use Standard_Complex_VecVecs;
-with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
+with Standard_Complex_Matrices;
 
 package Standard_Complex_Linear_Solvers is
 
 -- DESCRIPTION :
---   This package offers a few routines to solve linear systems of equations.
---   The code for lufac, lufco and lusolve is a literal translation from the
---   f77-linpack code.
+--   This package offers a few routines to solve linear systems of equations,
+--   with complex arithmetic in standard double precision.
+--   Two different definitions of matrices are supported:
+--   (1) with the builtin two dimensional array type,
+--   (2) as vectors of columns, for more efficient memory movements.
+--   The code for lufac, lufco and lusolve is a literal translation
+--   from the f77-linpack code.
 
-  procedure Scale ( a : in out Matrix; b : in out Vector );
+  procedure Scale ( a : in out Standard_Complex_Matrices.Matrix;
+                    b : in out Standard_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Divides the ith equation in the system a*x = b by the largest
@@ -21,13 +26,14 @@ package Standard_Complex_Linear_Solvers is
 
   -- REQUIRED : a'range(1) = b'range(1).
 
-  function Norm1 ( a : Matrix ) return double_float;
-  function Norm1 ( a : VecVec ) return double_float;
+  function Norm1 ( a : Standard_Complex_Matrices.Matrix ) return double_float;
+  function Norm1 ( a : Standard_Complex_VecVecs.VecVec ) return double_float;
 
   -- DESCRIPTION :
   --   Returns the 1-norm of the matrix a.
 
-  procedure lufac ( a : in out Matrix; n : in integer32;
+  procedure lufac ( a : in out Standard_Complex_Matrices.Matrix;
+                    n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     info : out integer32 );
 
@@ -56,7 +62,8 @@ package Standard_Complex_Linear_Solvers is
   --                divide by zero if called.  Use rcond in
   --                lufco for a reliable indication of singularity.
 
-  procedure lufac ( a : in out VecVec; n : in integer32;
+  procedure lufac ( a : in out Standard_Complex_VecVecs.VecVec;
+                    n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     info : out integer32 );
 
@@ -67,7 +74,8 @@ package Standard_Complex_Linear_Solvers is
   --   The columns of the matrix a are stored as vectors
   --   and the ranges of the vectors are supposed to contain 1..n.
 
-  procedure estco ( a : in Matrix; n : in integer32;
+  procedure estco ( a : in Standard_Complex_Matrices.Matrix;
+                    n : in integer32;
                     ipvt : in Standard_Integer_Vectors.Vector;
                     anorm : in double_float; rcond : out double_float );
 
@@ -96,7 +104,8 @@ package Standard_Complex_Linear_Solvers is
   --           In particular, rcond is zero if exact singularity is
   --           detected or the estimate underflows.
 
-  procedure estco ( a : in VecVec; n : in integer32;
+  procedure estco ( a : in Standard_Complex_VecVecs.VecVec;
+                    n : in integer32;
                     ipvt : in Standard_Integer_Vectors.Vector;
                     anorm : in double_float; rcond : out double_float );
 
@@ -106,7 +115,8 @@ package Standard_Complex_Linear_Solvers is
   --   The columns of the matrix a are stored as vectors
   --   and the ranges of the vectors are supposed to contain 1..n.
 
-  procedure lufco ( a : in out Matrix; n : in integer32;
+  procedure lufco ( a : in out Standard_Complex_Matrices.Matrix;
+                    n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     rcond : out double_float );
 
@@ -138,7 +148,8 @@ package Standard_Complex_Linear_Solvers is
   --           In particular, rcond is zero if exact singularity is
   --           detected or the estimate underflows.
 
-  procedure lufco ( a : in out VecVec; n : in integer32;
+  procedure lufco ( a : in out Standard_Complex_VecVecs.VecVec;
+                    n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     rcond : out double_float );
 
@@ -148,25 +159,34 @@ package Standard_Complex_Linear_Solvers is
   --   The matrix is given as a vector of n columns.
   --   Each column contains the range 1..n.
 
-  procedure lusolve ( a : in Matrix; n : in integer32;
+  procedure lusolve ( a : in Standard_Complex_Matrices.Matrix;
+                      n : in integer32;
                       ipvt : in Standard_Integer_Vectors.Vector;
-                      b : in out Vector );
+                      b : in out Standard_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   lusolve solves the complex system a*x = b using the factors
   --   computed by lufac or lufco
 
   -- ON ENTRY :
-  --   a       a complex matrix(1..n,1..n), the output from
-  --           lufac or lufco
-  --   n       the dimension of the matrix a
-  --   ipvt    the pivot vector from lufac or lufco
-  --   b       the right hand side vector
+  --   a       a complex matrix(1..n,1..n), the output from lufac or lufco;
+  --   n       the dimension of the matrix a;
+  --   ipvt    the pivot vector from lufac or lufco;
+  --   b       the right hand side vector.
 
   -- ON RETURN :
-  --   b       the solution vector x
+  --   b       the solution vector x.
 
-  procedure Triangulate ( a : in out Matrix; tol : in double_float;
+  procedure lusolve ( a : in Standard_Complex_VecVecs.VecVec;
+                      n : in integer32;
+                      ipvt : in Standard_Integer_Vectors.Vector;
+                      b : in out Standard_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Version of lusolve for matrices given as vectors of columns.
+
+  procedure Triangulate ( a : in out Standard_Complex_Matrices.Matrix;
+                          tol : in double_float;
                           n,m : in integer32 );
 
   -- DESCRIPTION :
@@ -182,11 +202,12 @@ package Standard_Complex_Linear_Solvers is
   -- ON RETURN :
   --   a       the triangulated matrix.
 
-  procedure Diagonalize ( a : in out Matrix; n,m : in integer32 );
+  procedure Diagonalize ( a : in out Standard_Complex_Matrices.Matrix;
+                          n,m : in integer32 );
 
   -- DESCRIPTION :
-  --   diagonalize makes the n*m complex matrix a diagonal using
-  --   Gauss-Jordan.
+  --   Diagonalize makes the n-by-m complex matrix a diagonal using
+  --   the Gauss-Jordan method.
 
   -- ON ENTRY :
   --   a       a complex matrix(1..n,1..m)
@@ -206,23 +227,26 @@ package Standard_Complex_Linear_Solvers is
   --   Returns the permutation matrix defined by the pivot selection in ipvt.
 
   function Permute ( P : Standard_Natural_Matrices.Matrix;
-                     A : Matrix ) return Matrix;
+                     A : Standard_Complex_Matrices.Matrix )
+                   return Standard_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns the matrix P*A.
 
-  function Lower_Diagonal ( A : Matrix ) return Matrix;
+  function Lower_Diagonal ( A : Standard_Complex_Matrices.Matrix )
+                          return Standard_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns the lower diagonal part of A, with ones on the diagonal.
 
-  function Upper_Diagonal ( A : Matrix ) return Matrix;
+  function Upper_Diagonal ( A : Standard_Complex_Matrices.Matrix )
+                          return Standard_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns the upper diagonal part of A.
 
   procedure Permute_Lower
-              ( L : in out Matrix;
+              ( L : in out Standard_Complex_Matrices.Matrix;
                 ipvt : in Standard_Integer_Vectors.Vector );
 
   -- DESCRIPTION :
