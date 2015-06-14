@@ -254,6 +254,20 @@ procedure ts_cmplu is
     put_line("Solving the linear system with lufco.");
     lufco(wrk,n,piv,rcond);
     put("inverse condition : "); put(rcond); new_line;
+    declare
+      anorm : Floating_Number := Norm1(mat);
+      wrk1 : Matrix(mat'range(1),mat'range(2)) := +mat;
+      ipvt : Standard_Integer_Vectors.Vector(mat'range(2));
+      info : integer32;
+    begin
+      lufac(wrk1,n,ipvt,info);
+      if info = 0
+       then estco(wrk1,n,ipvt,anorm,rcond);
+       else rcond := Create(0.0);
+      end if;
+      put_line("computed condition number again with estco");
+      put("inverse condition : "); put(rcond); new_line;
+    end;
     sol := +rhs;
     lusolve(wrk,n,piv,sol);
     put_line("The solution vector :"); put(sol); new_line;

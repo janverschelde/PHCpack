@@ -4,9 +4,9 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;         
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
-with Multprec_Complex_Vectors;           use Multprec_Complex_Vectors;
-with Multprec_Complex_VecVecs;           use Multprec_Complex_VecVecs;
-with Multprec_Complex_Matrices;          use Multprec_Complex_Matrices;
+with Multprec_Complex_Vectors;
+with Multprec_Complex_VecVecs;
+with Multprec_Complex_Matrices;
 
 package Multprec_Complex_Linear_Solvers is
 
@@ -15,7 +15,8 @@ package Multprec_Complex_Linear_Solvers is
 --   The code for lufac, lufco and lusolve is a literal translation from the
 --   f77-linpack code.
 
-  procedure Scale ( a : in out Matrix; b : in out Vector );
+  procedure Scale ( a : in out Multprec_Complex_Matrices.Matrix;
+                    b : in out Multprec_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Divides the ith equation in the system a*x = b by the largest
@@ -23,7 +24,16 @@ package Multprec_Complex_Linear_Solvers is
 
   -- REQUIRED : a'range(1) = b'range(1).
 
-  procedure lufac ( a : in out Matrix; n : in integer32;
+  function Norm1 ( a : Multprec_Complex_Matrices.Matrix )
+                 return Floating_Number;
+  function Norm1 ( a : Multprec_Complex_VecVecs.VecVec )
+                 return Floating_Number;
+
+  -- DESCRIPTION :
+  --   Returns the 1-norm of the matrix a.
+
+  procedure lufac ( a : in out Multprec_Complex_Matrices.Matrix;
+                    n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     info : out integer32 );
 
@@ -45,14 +55,14 @@ package Multprec_Complex_Linear_Solvers is
   --           l is a product of permutation and unit lower
   --           triangular matrices and u is upper triangular.
   --   ipvt    an integer vector of pivot indices
-  --   info    = 0  normal value
-  --           = k  if u(k,k) = 0.0.
-  --                This is not an error for this routine,
-  --                but it does indicate that lusolve will
-  --                divide by zero if called.  Use rcond in
-  --                lufco for a reliable indication of singularity.
+  --   info    = 0 normal value,
+  --           = k if u(k,k) = 0.0.
+  --           This is not an error for this routine, but it indicates
+  --           that lusolve will divide by zero if called.  Use rcond in
+  --           lufco for a reliable indication of singularity.
 
-  procedure lufac ( a : in out VecVec; n : in integer32;
+  procedure lufac ( a : in out Multprec_Complex_VecVecs.VecVec;
+                    n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     info : out integer32 );
 
@@ -63,7 +73,38 @@ package Multprec_Complex_Linear_Solvers is
   --   The columns of the matrix a are stored as vectors
   --   and the ranges of the vectors are supposed to contain 1..n.
 
-  procedure lufco ( a : in out Matrix; n : in integer32;
+  procedure estco ( a : in Multprec_Complex_Matrices.Matrix;
+                    n : in integer32;
+                    ipvt : in Standard_Integer_Vectors.Vector;
+                    anorm : in Floating_Number; rcond : out Floating_Number );
+
+  -- DESCRIPTION :
+  --   estco estimates the condition number of the matrix,
+  --   based on the given lu factorization of the matrix.
+
+  -- ON ENTRY :
+  --   a       an upper triangular matrix and the multipliers 
+  --           which are used to obtain it.
+  --           The factorization can be written a = l*u, where
+  --           l is a product of permutation and unit lower triangular
+  --           matrices and u is upper triangular.
+  --   n       the dimension of the matrix a.
+  --   ipvt    an integer vector of pivot indices.
+  --   anorm   1-norm of the matrix a, computed before factorization of a.
+
+  -- ON RETURN :
+  --   rcond   an estimate of the reciprocal condition of a.
+  --           For the system a*x = b, relative perturbations
+  --           in a and b of size epsilon may cause relative
+  --           perturbations in x of size epsilon/rcond.
+  --           If rcond is so small that the logical expression
+  --                  1.0 + rcond = 1.0 
+  --           is true, than a may be singular to working precision.
+  --           In particular, rcond is zero if exact singularity is
+  --           detected or the estimate underflows.
+
+  procedure lufco ( a : in out Multprec_Complex_Matrices.Matrix;
+                    n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     rcond : out Floating_Number );
 
@@ -95,28 +136,30 @@ package Multprec_Complex_Linear_Solvers is
   --           In particular, rcond is zero if exact singularity is
   --           detected or the estimate underflows.
 
-  procedure lusolve ( a : in Matrix; n : in integer32;
+  procedure lusolve ( a : in Multprec_Complex_Matrices.Matrix;
+                      n : in integer32;
                       ipvt : in Standard_Integer_Vectors.Vector;
-                      b : in out Vector );
+                      b : in out Multprec_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   lusolve solves the complex system a*x = b using the factors
-  --   computed by lufac or lufco
+  --   computed by lufac or lufco.
 
   -- ON ENTRY :
-  --   a       a complex matrix(1..n,1..n), the output from
-  --           lufac or lufco
-  --   n       the dimension of the matrix a
-  --   ipvt    the pivot vector from lufac or lufco
-  --   b       the right hand side vector
+  --   a       a complex matrix(1..n,1..n), the output from lufac or lufco;
+  --   n       the dimension of the matrix a;
+  --   ipvt    the pivot vector from lufac or lufco;
+  --   b       the right hand side vector.
 
   -- ON RETURN :
-  --   b       the solution vector x
+  --   b       the solution vector x.
 
-  procedure Triangulate ( a : in out Matrix; tol : in double_float;
+  procedure Triangulate ( a : in out Multprec_Complex_Matrices.Matrix;
+                          tol : in double_float;
                           size : in natural32; n,m : in integer32 );
   procedure Triangulate ( file : in file_type;
-                          a : in out Matrix; tol : in double_float;
+                          a : in out Multprec_Complex_Matrices.Matrix;
+                          tol : in double_float;
                           size : in natural32; n,m : in integer32 );
 
   -- DESCRIPTION :
@@ -136,11 +179,12 @@ package Multprec_Complex_Linear_Solvers is
   -- ON RETURN :
   --   a       the triangulated matrix.
 
-  procedure Diagonalize ( a : in out Matrix; n,m : in integer32 );
+  procedure Diagonalize ( a : in out Multprec_Complex_Matrices.Matrix;
+                          n,m : in integer32 );
 
   -- DESCRIPTION :
   --   diagonalize makes the n*m complex matrix a diagonal using
-  --   Gauss-Jordan.
+  --   the Gauss-Jordan method.
 
   -- ON ENTRY :
   --   a       a complex matrix(1..n,1..m);

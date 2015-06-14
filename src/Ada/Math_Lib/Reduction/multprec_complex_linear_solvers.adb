@@ -49,7 +49,8 @@ package body Multprec_Complex_Linear_Solvers is
     return res;
   end csign;
 
-  function Inverse_Abs_Sum ( z : Vector ) return Floating_Number is
+  function Inverse_Abs_Sum ( z : Multprec_Complex_Vectors.Vector )
+                           return Floating_Number is
 
   -- DESCRIPTION :
   --   Returns the reciprocal of the sum of the absolute values in z.
@@ -71,11 +72,13 @@ package body Multprec_Complex_Linear_Solvers is
 
 -- TARGET ROUTINES :
 
-  procedure Scale ( a : in out Matrix; b : in out Vector ) is
+  procedure Scale ( a : in out Multprec_Complex_Matrices.Matrix;
+                    b : in out Multprec_Complex_Vectors.Vector ) is
 
     fac : Complex_Number;
 
-    function Maximum ( a : in Matrix; i : in integer32 )
+    function Maximum ( a : in Multprec_Complex_Matrices.Matrix;
+                       i : in integer32 )
                      return Complex_Number is
 
       res : integer32 := a'first(2);
@@ -92,7 +95,8 @@ package body Multprec_Complex_Linear_Solvers is
       return a(i,res);
     end Maximum;
 
-    procedure Divide ( a : in out Matrix; b : in out Vector;
+    procedure Divide ( a : in out Multprec_Complex_Matrices.Matrix;
+                       b : in out Multprec_Complex_Vectors.Vector;
                        i : in integer32; fac : in Complex_Number ) is
     begin
       for j in a'range(2) loop
@@ -108,9 +112,52 @@ package body Multprec_Complex_Linear_Solvers is
     end loop;
   end Scale;
 
--- TARGET ROUTINES :
+  function Norm1 ( a : Multprec_Complex_Matrices.Matrix )
+                 return Floating_Number is
 
-  procedure lufac ( a : in out Matrix; n : in integer32;
+    res : Floating_Number := Create(0.0);
+    sum,acc : Floating_Number;
+
+  begin
+    for j in a'range(2) loop
+      sum := Create(0.0);
+      for i in a'range(1) loop
+        acc := AbsVal(a(i,j));
+        Add(sum,acc); Clear(acc);
+      end loop;
+      if sum > res
+       then Copy(sum,res);
+      end if; 
+      Clear(sum);
+    end loop;
+    return res;
+  end Norm1;
+
+  function Norm1 ( a : Multprec_Complex_VecVecs.VecVec )
+                 return Floating_Number is
+
+    res : Floating_Number := Create(0.0);
+    sum,acc : Floating_Number;
+    aj : Multprec_Complex_Vectors.Link_to_Vector;
+
+  begin
+    for j in a'range loop
+      sum := Create(0.0);
+      aj := a(j);
+      for i in aj'range loop
+        acc := AbsVal(aj(i));
+        Add(sum,acc); Clear(acc);
+      end loop;
+      if sum > res
+       then Copy(sum,res);
+      end if; 
+      Clear(sum);
+    end loop;
+    return res;
+  end Norm1;
+
+  procedure lufac ( a : in out Multprec_Complex_Matrices.Matrix;
+                    n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     info : out integer32 ) is
 
@@ -175,7 +222,8 @@ package body Multprec_Complex_Linear_Solvers is
     Clear(fltacc);
   end lufac;
 
-  procedure lufac ( a : in out VecVec; n : in integer32;
+  procedure lufac ( a : in out Multprec_Complex_VecVecs.VecVec;
+                    n : in integer32;
                     ipvt : out Standard_Integer_Vectors.Vector;
                     info : out integer32 ) is
 
@@ -243,8 +291,10 @@ package body Multprec_Complex_Linear_Solvers is
     Clear(fltacc);
   end lufac;
 
-  procedure lufco ( a : in out Matrix; n : in integer32;
-                    ipvt : out Standard_Integer_Vectors.Vector;
+  procedure estco ( a : in Multprec_Complex_Matrices.Matrix;
+                    n : in integer32;
+                    ipvt : in Standard_Integer_Vectors.Vector;
+                    anorm : in Floating_Number;
                     rcond : out Floating_Number ) is
 
   -- NOTE :
@@ -252,31 +302,17 @@ package body Multprec_Complex_Linear_Solvers is
   --   estimate = norm(z)/norm(y) where a*z = y and ctrans(a)*y = e.
   --   ctrans(a) is the conjugate transpose of a.
   --   The components of e are chosen to cause maximum local
-  --   growth in teh elements of w where ctrans(u)*w = e.
+  --   growth in the elements of w where ctrans(u)*w = e.
   --   The vectors are frequently rescaled to avoid overflow.
 
     z : Multprec_Complex_Vectors.Vector(1..n);
-    info,kb,kp1,l : integer32;
-    s,sm,sum,anorm,ynorm,fltacc1,fltacc2 : Floating_Number;
+    kb,kp1,ell : integer32;
+    s,sm,sum,ynorm,fltacc1,fltacc2 : Floating_Number;
     ek,t,wk,wkm,cmpacc1,cmpacc2 : Complex_Number;
-    ipvtt : Standard_Integer_Vectors.Vector(1..n);
+
+    use Multprec_Complex_Vectors;
 
   begin
-    anorm := Create(integer(0));                     -- compute 1-norm of a
-    for j in 1..n loop
-      sum := Create(integer(0));
-      for i in 1..n loop
-        fltacc1 := AbsVal(a(i,j));
-        Add(sum,fltacc1);
-        Clear(fltacc1);
-      end loop;
-      if sum > anorm
-       then Copy(sum,anorm);
-      end if; 
-      Clear(sum);
-    end loop;
-    lufac(a,n,ipvtt,info);                                        -- factor
-    ipvt := ipvtt;
     ek := Create(integer(1));                        -- solve ctrans(u)*w = e
     for j in 1..n loop
       z(j) := Create(integer(0));
@@ -386,10 +422,10 @@ package body Multprec_Complex_Linear_Solvers is
         Clear(s);
       end if;
       Clear(fltacc1);
-      l := ipvtt(kb);
-      if l /= kb then
-        Copy(z(l),t);
-        Copy(z(kb),z(l));
+      ell := ipvt(kb);
+      if ell /= kb then
+        Copy(z(ell),t);
+        Copy(z(kb),z(ell));
         Copy(t,z(kb));
         Clear(t);
       end if;
@@ -401,13 +437,13 @@ package body Multprec_Complex_Linear_Solvers is
     Clear(cmpacc1);
     ynorm := Create(integer(1));
     for k in 1..n loop                                    -- solve l*v = y
-      l := ipvtt(k);
-      if l /= k then
-        Copy(z(l),t);
-        Copy(z(k),z(l));
+      ell := ipvt(k);
+      if ell /= k then
+        Copy(z(ell),t);
+        Copy(z(k),z(ell));
         Copy(t,z(k));
       else
-        Copy(z(l),t);
+        Copy(z(ell),t);
       end if;
       if k < n then
         for i in (k+1)..n loop
@@ -473,20 +509,37 @@ package body Multprec_Complex_Linear_Solvers is
      then rcond := Create(integer(0));
      else rcond := ynorm/anorm;
     end if;
-    Clear(ynorm); Clear(anorm);
-    Clear(z);
+    Clear(ynorm); Clear(z);
+  end estco;
+
+  procedure lufco ( a : in out Multprec_Complex_Matrices.Matrix;
+                    n : in integer32;
+                    ipvt : out Standard_Integer_Vectors.Vector;
+                    rcond : out Floating_Number ) is
+
+    anorm : Floating_Number := Norm1(a);
+    info : integer32;
+
+  begin
+    lufac(a,n,ipvt,info);
+    if info = 0
+     then estco(a,n,ipvt,anorm,rcond);
+     else rcond := Create(0.0);
+    end if;
+    Clear(anorm);
   end lufco;
 
-  procedure lusolve ( a : in Matrix; n : in integer32;
+  procedure lusolve ( a : in Multprec_Complex_Matrices.Matrix;
+                      n : in integer32;
                       ipvt : in Standard_Integer_Vectors.Vector;
-                      b : in out Vector ) is
+                      b : in out Multprec_Complex_Vectors.Vector ) is
 
     l,nm1,kb : integer32;
     temp,acc : Complex_Number;
  
   begin
     nm1 := n-1;
-    if nm1 >= 1 then                                        -- solve l*y = b
+    if nm1 >= 1 then                                        -- solve L*y = b
       for k in 1..nm1 loop
         l := ipvt(k);
         Copy(b(l),temp);
@@ -502,7 +555,7 @@ package body Multprec_Complex_Linear_Solvers is
         Clear(temp);
       end loop;
     end if;
-    for k in 1..n loop                                     -- solve u*x = y
+    for k in 1..n loop                                     -- solve U*x = y
       kb := n+1-k;
       Div(b(kb),a(kb,kb));
       temp := -b(kb);
@@ -533,7 +586,8 @@ package body Multprec_Complex_Linear_Solvers is
     end if;
   end Examine;
 
-  procedure Triangulate ( a : in out Matrix; tol : in double_float;
+  procedure Triangulate ( a : in out Multprec_Complex_Matrices.Matrix;
+                          tol : in double_float;
                           size : in natural32; n,m : in integer32 ) is
 
     max,cbs : Floating_Number;
@@ -588,7 +642,8 @@ package body Multprec_Complex_Linear_Solvers is
   end Triangulate;
 
   procedure Triangulate ( file : in file_type;
-                          a : in out Matrix; tol : in double_float;
+                          a : in out Multprec_Complex_Matrices.Matrix;
+                          tol : in double_float;
                           size : in natural32; n,m : in integer32 ) is
 
     max,cbs : Floating_Number;
@@ -694,7 +749,8 @@ package body Multprec_Complex_Linear_Solvers is
     put_line(file,"leaving triangulate");
   end Triangulate;
 
-  procedure Diagonalize ( a : in out Matrix; n,m : in integer32 ) is
+  procedure Diagonalize ( a : in out Multprec_Complex_Matrices.Matrix;
+                          n,m : in integer32 ) is
 
     max : Floating_Number;
     temp : Complex_Number;
