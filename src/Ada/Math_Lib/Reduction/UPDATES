@@ -1,3 +1,6 @@
+Mon 15 Jun 2015 : extended varbprec_complex_linear_solvers with versions
+  for matrices stored as vectors of columns.
+
 Sun 14 Jun 2015 : version of lusolve in standard_complex_linear_solvers
   for matrices defined as vectors of columns, tested by ts_vvlu.
   Add lusolve for vecvecs to {dobldobl,quaddobl}_complex_linear_solvers,

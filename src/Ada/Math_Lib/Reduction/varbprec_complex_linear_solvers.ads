@@ -5,9 +5,13 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
 with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_VecVecs;
 with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_VecVecs;
 with Multprec_Complex_Vectors;
+with Multprec_Complex_VecVecs;
 with Standard_Complex_Matrices;
 with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices;
@@ -63,6 +67,46 @@ package Varbprec_Complex_Linear_Solvers is
   --   loss     logarithm of rco, indicates the loss of decimal
   --            places when solving a linear system with matrix mtx.
 
+  procedure Estimated_Loss_of_Decimal_Places
+              ( mtx : in out Standard_Complex_VecVecs.VecVec;
+                piv : out Standard_Integer_Vectors.Vector;
+                rco : out double_float; loss : out integer32 );
+  procedure Estimated_Loss_of_Decimal_Places
+              ( mtx : in out DoblDobl_Complex_VecVecs.VecVec;
+                piv : out Standard_Integer_Vectors.Vector;
+                rco : out double_double; loss : out integer32 );
+  procedure Estimated_Loss_of_Decimal_Places
+              ( mtx : in out QuadDobl_Complex_VecVecs.VecVec;
+                piv : out Standard_Integer_Vectors.Vector;
+                rco : out quad_double; loss : out integer32 );
+  procedure Estimated_Loss_of_Decimal_Places
+              ( mtx : in out Multprec_Complex_VecVecs.VecVec;
+                piv : out Standard_Integer_Vectors.Vector;
+                rco : out Floating_Number; loss : out integer32 );
+
+  -- DESCRIPTION :
+  --   Returns the estimated loss of decimal places that may occur
+  --   when solving a linear system with coefficient matrix mat.
+  --   The matrix is stored as a vector of columns.
+  --   If the estimates are computed respectively in fixed double 
+  --   double double, and quad double precision,
+  --   the results are not reliable for matrices with condition numbers
+  --   that are respectively larger than 1.0E+16, 1.0E+32, and 1.0E+64.
+
+  -- REQUIRED : mtx'range = mtx(k)'range, for k in mtx'range.
+
+  -- ON ENTRY :
+  --   mtx      matrix of floating-point complex numbers.
+
+  -- ON RETURN :
+  --   mtx      output of lufco, suitable for backsubstitution
+  --            if nonsingular;
+  --   piv      pivoting information computed by lufco;
+  --   rco      estimate for the inverse of the condition number,
+  --            as computed by lufco on the matrix;
+  --   loss     logarithm of rco, indicates the loss of decimal
+  --            places when solving a linear system with matrix mtx.
+
   function Estimated_Loss_of_Decimal_Places
               ( mtx : Standard_Complex_Matrices.Matrix )
               return integer32;
@@ -81,7 +125,26 @@ package Varbprec_Complex_Linear_Solvers is
   --   when solving a linear system with coefficient matrix mtx.
   --   This function encapsulates the above procedure with the same name.
 
-  -- REQUIRED : mtx'range(1) = mtx'range(2).
+  function Estimated_Loss_of_Decimal_Places
+              ( mtx : Standard_Complex_VecVecs.VecVec )
+              return integer32;
+  function Estimated_Loss_of_Decimal_Places
+              ( mtx : DoblDobl_Complex_VecVecs.VecVec )
+              return integer32;
+  function Estimated_Loss_of_Decimal_Places
+              ( mtx : QuadDobl_Complex_VecVecs.VecVec )
+              return integer32;
+  function Estimated_Loss_of_Decimal_Places
+              ( mtx : Multprec_Complex_VecVecs.VecVec )
+              return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the estimated loss of decimal places that may occur
+  --   when solving a linear system with coefficient matrix mtx.
+  --   The matrix is stored as a vector of columns.
+  --   This function encapsulates the above procedure with the same name.
+
+  -- REQUIRED : mtx'range = mtx(k)'range, for k in mtx'range.
 
   procedure Solve_to_Wanted_Decimal_Places
               ( mtx : in out Standard_Complex_Matrices.Matrix;
@@ -130,6 +193,53 @@ package Varbprec_Complex_Linear_Solvers is
   --            places when solving a linear system with matrix mtx.
 
   procedure Solve_to_Wanted_Decimal_Places
+              ( mtx : in out Standard_Complex_VecVecs.VecVec;
+                rhs : in out Standard_Complex_Vectors.Vector;
+                want : in integer32; fail : out boolean;
+                piv : out Standard_Integer_Vectors.Vector;
+                rco : out double_float; loss : out integer32 );
+  procedure Solve_to_Wanted_Decimal_Places
+              ( mtx : in out DoblDobl_Complex_VecVecs.VecVec;
+                rhs : in out DoblDobl_Complex_Vectors.Vector;
+                want : in integer32; fail : out boolean;
+                piv : out Standard_Integer_Vectors.Vector;
+                rco : out double_double; loss : out integer32 );
+  procedure Solve_to_Wanted_Decimal_Places
+              ( mtx : in out QuadDobl_Complex_VecVecs.VecVec;
+                rhs : in out QuadDobl_Complex_Vectors.Vector;
+                want : in integer32; fail : out boolean;
+                piv : out Standard_Integer_Vectors.Vector;
+                rco : out quad_double; loss : out integer32 );
+
+  -- DESCRIPTION :
+  --   Estimates the loss of decimal places based on the estimated
+  --   condition number, via the above procedures Estimated_Loss_.
+  --   The matrix is stored as a vector of columns.
+
+  -- REQUIRED : mtx'range = mtx(k)'range, for k in mtx'range.
+
+  -- ON ENTRY :
+  --   mtx      matrix of floating-point complex numbers;
+  --   rhs      righthandside vector of a linear system;
+  --   want     wanted number of correct decimal places.
+
+  -- ON RETURN :
+  --   mtx      output of lufco, suitable for backsubstitution
+  --            if nonsingular;
+  --   rhs      if not fail, then rhs contains the solution to
+  --            the linear system with coefficient matrix mtx
+  --            and as righthandside vector the given rhs,
+  --            correct with as many decimal places as want;
+  --   fail     if true, then the precision did not suffice
+  --            to meet the wanted number of decimal places,
+  --            otherwise, the solution in rhs is accurate enough;
+  --   piv      pivoting information computed by lufco;
+  --   rco      estimate for the inverse of the condition number,
+  --            as computed by lufco on the matrix;
+  --   loss     logarithm of rco, indicates the loss of decimal
+  --            places when solving a linear system with matrix mtx.
+
+  procedure Solve_to_Wanted_Decimal_Places
               ( mtx : in out Multprec_Complex_Matrices.Matrix;
                 rhs : in out Multprec_Complex_Vectors.Vector;
                 want : in integer32;
@@ -144,7 +254,43 @@ package Varbprec_Complex_Linear_Solvers is
   --   Unlike the other solvers, we can always raise the precision to
   --   meet the desired accuracy, so failure is no option.
 
-  -- REQUIRED : mat'range(1) = mat'range(2).
+  -- REQUIRED : mtx'range(1) = mtx'range(2).
+
+  -- ON ENTRY :
+  --   mtx      matrix of floating-point complex numbers;
+  --   rhs      righthandside vector of a linear system;
+  --   want     wanted number of correct decimal places.
+
+  -- ON RETURN :
+  --   mtx      output of lufco, suitable for backsubstitution
+  --            if nonsingular;
+  --   rhs      if not fail, then rhs contains the solution to
+  --            the linear system with coefficient matrix mtx
+  --            and as righthandside vector the given rhs,
+  --            correct with as many decimal places as want;
+  --   piv      pivoting information computed by lufco;
+  --   rco      estimate for the inverse of the condition number,
+  --            as computed by lufco on the matrix;
+  --   loss     logarithm of rco, indicates the loss of decimal
+  --            places when solving a linear system with matrix mtx.
+
+  procedure Solve_to_Wanted_Decimal_Places
+              ( mtx : in out Multprec_Complex_VecVecs.VecVec;
+                rhs : in out Multprec_Complex_Vectors.Vector;
+                want : in integer32;
+                piv : out Standard_Integer_Vectors.Vector;
+                rco : out Floating_Number; loss : out integer32 );
+
+  -- DESCRIPTION :
+  --   Estimates the loss of decimal places based on the estimated
+  --   condition number and raises the working precision to meet the
+  --   wanted number of decimal places, taking into account the expected
+  --   loss of decimal places, due to the conditioning of the matrix.
+  --   The matrix is stored as a vector of columns.
+  --   Unlike the other solvers, we can always raise the precision to
+  --   meet the desired accuracy, so failure is no option.
+
+  -- REQUIRED : mtx'range = mtx'range(k), for k in mtx'range.
 
   -- ON ENTRY :
   --   mtx      matrix of floating-point complex numbers;
