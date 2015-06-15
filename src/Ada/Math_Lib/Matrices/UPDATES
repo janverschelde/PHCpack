@@ -1,3 +1,6 @@
+Mon 15 Jun 2015 : new package matrix_to_vecvec_conversions with factored out
+  code from ts_vvlu of the ../Reduction folder.
+
 Fri 7 Nov 2014 : functions to generate random orthogonal real matrices of
   arbitrary precision in multprec_random_matrices, for use in the package
   random_conditioned_matrices; completed varbprec_matrix_conversions.
