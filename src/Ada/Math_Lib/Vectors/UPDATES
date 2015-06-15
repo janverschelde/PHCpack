@@ -1,3 +1,6 @@
+Mon 15 Jun 2015 : new package varbprec_vecvec_conversions to convert various
+  types of vectors of vectors, for various levels of precision.
+
 Tue 2 Jun 2015 : fixed bug in initialization of Sum in generic_vectors.adb,
   which affected the multiprecision versions.
 

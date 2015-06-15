@@ -120,6 +120,8 @@ quaddobl_random_vecvecs            : vecvecs of random quad doubles
 multprec_random_vectors            : vectors of random multiprecision numbers
 multprec_random_vecvecs            : vecvecs of random multiprecision numbers
 ------------------------------------------------------------------------------
+varbprec_vecvec_conversions        : conversions between vecvecs of varb prcs
+------------------------------------------------------------------------------
 ts_natvec                          : test vectors/vecvecs of natural numbers
 ts_intvec                          : test vectors/vecvecs of integer numbers
 ts_fltvec                          : test vectors/vecvecs of floating numbers
