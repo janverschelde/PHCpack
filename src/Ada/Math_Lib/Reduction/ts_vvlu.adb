@@ -42,6 +42,7 @@ with QuadDobl_Random_Vectors;            use QuadDobl_Random_Vectors;
 with QuadDobl_Random_Matrices;           use QuadDobl_Random_Matrices;
 with Multprec_Random_Vectors;            use Multprec_Random_Vectors;
 with Multprec_Random_Matrices;           use Multprec_Random_Matrices;
+with Matrix_to_VecVec_Conversions;       use Matrix_to_VecVec_Conversions;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
@@ -51,89 +52,6 @@ procedure ts_vvlu is
 
 -- DESCRIPTION :
 --   Test on LU factorization on matrices given as vectors of columns.
-
-  function mat2vv ( A : Standard_Complex_Matrices.Matrix )
-                  return Standard_Complex_VecVecs.VecVec is
-
-  -- DESCRIPTION :
-  --   Returns a vector of vectors, with as content in the vectors
-  --   the columns of the matrix A.
-
-    res : Standard_Complex_VecVecs.VecVec(A'range(2));
-    col : Standard_Complex_Vectors.Vector(A'range(1));
-
-  begin
-    for k in A'range(2) loop
-      for i in col'range loop
-        col(i) := A(i,k); 
-      end loop;
-      res(k) := new Standard_Complex_Vectors.Vector'(col);
-    end loop;
-    return res;
-  end mat2vv;
-
-  function mat2vv ( A : DoblDobl_Complex_Matrices.Matrix )
-                  return DoblDobl_Complex_VecVecs.VecVec is
-
-  -- DESCRIPTION :
-  --   Returns a vector of vectors, with as content in the vectors
-  --   the columns of the matrix A.
-
-    res : DoblDobl_Complex_VecVecs.VecVec(A'range(2));
-    col : DoblDobl_Complex_Vectors.Vector(A'range(1));
-
-  begin
-    for k in A'range(2) loop
-      for i in col'range loop
-        col(i) := A(i,k); 
-      end loop;
-      res(k) := new DoblDobl_Complex_Vectors.Vector'(col);
-    end loop;
-    return res;
-  end mat2vv;
-
-  function mat2vv ( A : QuadDobl_Complex_Matrices.Matrix )
-                  return QuadDobl_Complex_VecVecs.VecVec is
-
-  -- DESCRIPTION :
-  --   Returns a vector of vectors, with as content in the vectors
-  --   the columns of the matrix A.
-
-    res : QuadDobl_Complex_VecVecs.VecVec(A'range(2));
-    col : QuadDobl_Complex_Vectors.Vector(A'range(1));
-
-  begin
-    for k in A'range(2) loop
-      for i in col'range loop
-        col(i) := A(i,k); 
-      end loop;
-      res(k) := new QuadDobl_Complex_Vectors.Vector'(col);
-    end loop;
-    return res;
-  end mat2vv;
-
-  function mat2vv ( A : Multprec_Complex_Matrices.Matrix )
-                  return Multprec_Complex_VecVecs.VecVec is
-
-  -- DESCRIPTION :
-  --   Returns a vector of vectors, with as content in the vectors
-  --   the columns of the matrix A.
-
-    res : Multprec_Complex_VecVecs.VecVec(A'range(2));
-
-  begin
-    for k in A'range(2) loop
-      declare
-        col : Multprec_Complex_Vectors.Vector(A'range(1));
-      begin
-        for i in col'range loop
-          Multprec_Complex_Numbers.Copy(A(i,k),col(i)); 
-        end loop;
-        res(k) := new Multprec_Complex_Vectors.Vector'(col);
-      end;
-    end loop;
-    return res;
-  end mat2vv;
 
   procedure Compare ( A : in Standard_Complex_Matrices.Matrix;
                       B : in Standard_Complex_VecVecs.VecVec;
