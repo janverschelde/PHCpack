@@ -1,3 +1,6 @@
+Tue 16 Jun 2015 : added writing of number seed to mainphc.adb, bablphc.adb,
+  and black_box_solvers.adb.
+
 Fri 22 May 2015 : adjusted greeting_banners for version 2.3.97.
 
 Thu 21 May 2015 : changed drivers_for_root_counts.adb for extra boolean flag

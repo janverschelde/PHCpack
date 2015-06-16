@@ -8,6 +8,8 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Standard_Random_Numbers;
+with Write_Seed_Number;
 with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
@@ -192,6 +194,7 @@ procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
     put(outpt," till ");        Write_Time_Stamp(outpt,ended_moment);
     put_line(outpt,".");
     Write_Elapsed_Time(outpt,start_moment,ended_moment);
+    Write_Seed_Number(outpt);
     Close(outpt);
   end Main_Dispatch;
 

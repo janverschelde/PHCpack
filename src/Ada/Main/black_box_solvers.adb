@@ -6,6 +6,7 @@ with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Random_Numbers;
+with Write_Seed_Number;
 with Standard_Natural_Vectors;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
@@ -254,6 +255,7 @@ package body Black_Box_Solvers is
       put(outfile," till "); Write_Time_Stamp(outfile,ended_moment);
       put_line(outfile,".");
       Write_Elapsed_Time(outfile,start_moment,ended_moment);
+      Write_Seed_Number(outfile);
       Close(outfile);
       if maps /= null
        then Append(infilename,maps.all);
@@ -271,6 +273,7 @@ package body Black_Box_Solvers is
       put(" till "); Write_Time_Stamp(standard_output,ended_moment);
       put_line(".");
       Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+      Write_Seed_Number(standard_output);
     end if;
   end Square_Main;
 
@@ -363,6 +366,7 @@ package body Black_Box_Solvers is
         put(outfile," till "); Write_Time_Stamp(outfile,ended_moment);
         put_line(outfile,".");
         Write_Elapsed_Time(outfile,start_moment,ended_moment);
+        Write_Seed_Number(outfile);
         Close(outfile);
         Append_Solutions_to_Input_File(infilename,sols,append_sols);
       exception
@@ -378,6 +382,7 @@ package body Black_Box_Solvers is
       put(" till "); Write_Time_Stamp(standard_output,ended_moment);
       put_line(".");
       Write_Elapsed_Time(standard_output,start_moment,ended_moment);
+      Write_Seed_Number(standard_output);
     end if;
   exception
     when others =>
