@@ -5,6 +5,7 @@ void initialize ( void );
 static PyObject *py2c_PHCpack_version_string
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_set_seed ( PyObject *self, PyObject *args );
+static PyObject *py2c_get_seed ( PyObject *self, PyObject *args );
 static PyObject *py2c_read_standard_target_system
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_read_standard_target_system_from_file

@@ -33,6 +33,14 @@ int set_seed ( int seed );
  *   Takes the value in seed to initial the seed for the random
  *   number generator. */
 
+int get_seed ( int *seed );
+/*
+ * DESCRIPTION :
+ *   Returns in seed the value of the seed used in the random
+ *   number generators, if the return value of get_seed is zero.
+ *   This function enables reproducible runs which may be useful
+ *   for debugging and testing benchmark problems. */
+
 int solve_system ( int *root_count );
 /*
  * DESCRIPTION :

@@ -56,6 +56,18 @@ static PyObject *py2c_set_seed( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_get_seed( PyObject *self, PyObject *args )
+{
+   int fail,seed;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+
+   fail = get_seed(&seed);
+              
+   return Py_BuildValue("i",seed);
+}
+
 static PyObject *py2c_read_standard_target_system
  ( PyObject *self, PyObject *args )
 {
@@ -4110,7 +4122,8 @@ static PyMethodDef phcpy2c_methods[] =
      METH_VARARGS, "returns the version string of PHCpack"},
    {"py2c_set_seed", py2c_set_seed,
      METH_VARARGS, "sets the given seed for the random number generator"},
-
+   {"py2c_get_seed", py2c_get_seed,
+     METH_VARARGS, "gets the seed used in the random number generator"},
    {"py2c_read_standard_target_system", py2c_read_standard_target_system,
      METH_VARARGS, "reads the target system in standard doubles"},
    {"py2c_read_standard_target_system_from_file",

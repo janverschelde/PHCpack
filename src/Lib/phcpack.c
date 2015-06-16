@@ -34,6 +34,16 @@ int set_seed ( int seed )
    return fail;
 }
 
+int get_seed ( int *seed )
+{
+   int *b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(997,seed,b,c);
+
+   return fail;
+}
+
 int solve_system ( int *root_count )
 {
    int *b,fail;
