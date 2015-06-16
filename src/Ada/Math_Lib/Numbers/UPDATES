@@ -1,3 +1,6 @@
+Tue 16 Jun 2015 : new procedure write_seed_number to define the writing of
+  the seed used in the random number generators at the end of a run of phc.
+
 Fri 28 Nov 2014 : fixed bug in writing standard complex numbers to string
   with zero imaginary part, replacing im > 0 with im >= 0.
 
