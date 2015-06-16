@@ -1,3 +1,6 @@
+Mon 15 Jun 2015 : added job in use_c2phc to get the seed of the random
+  number generators.
+
 Thu 26 Mar 2015 : added jobs to use_giftwrap and use_c2phc to compute an
   initial form of a Laurent system.
 

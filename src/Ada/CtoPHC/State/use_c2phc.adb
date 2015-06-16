@@ -110,6 +110,22 @@ function use_c2phc ( job : integer32;
     when others => return 999;
   end Version_String;
 
+  function Get_Seed return integer32 is -- job 997 to get the seed
+
+  -- DESCRIPTION :
+  --   Gets the seed used in the random number generators
+  --   and returns its value in the parameter a on return.
+  --   Having the seed could be useful for reproducible runs.
+
+    seed : constant integer32 := Standard_Random_Numbers.Get_Seed;
+
+  begin
+    Assign(seed,a);
+    return 0;
+  exception
+    when others => return 997;
+  end Get_Seed;
+
   function Set_Seed return integer32 is
 
   -- DESCRIPTION :
@@ -2115,7 +2131,8 @@ function use_c2phc ( job : integer32;
       when 577..579 => return use_syscon(job-440,a,b,c);
      -- convex hull via giftwrapping :
       when 580..589 => return use_giftwrap(job-579,a,b,c);
-     -- setting seed and producing version string
+     -- getting, setting seed and producing version string
+      when 997 => return Get_Seed;
       when 998 => return Set_Seed;
       when 999 => return Version_String;
       when others => put_line("  Sorry.  Invalid operation."); return 1;
