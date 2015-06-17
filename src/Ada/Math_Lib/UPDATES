@@ -1,0 +1,4 @@
+Wed 17 Jun 2015 : created new directory Circuits, taking the code for the
+  reverse mode of algorithmic differentiation out of the Functions folder.
+
+Thu 25 Apr 2013 : merged directory Tasking with the Ada/Tasking directory.

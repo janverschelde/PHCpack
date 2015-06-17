@@ -9,8 +9,7 @@ The nested Horner scheme is implemented for fixed and parametric
 coefficients for use in coefficient parameter homotopies.
 The flattened representation was developed in collaboration with Genady Yoffe
 and used in our first multithreaded polynomial evaluation algorithms,
-presented at PASCO 2010.  The latest algorithms based on Speelpenning's
-example have not yet been extended for Laurent polynomials.
+presented at PASCO 2010.  See also the directory ../Circuits.
 
 Since the different ways to evaluate polynomials use different orders of
 computation, the results may differ when mixed-precision arithmetic is used.
@@ -51,36 +50,9 @@ standard_polynomial_flatteners    : flattened representation of standard system
 dobldobl_polynomial_flatteners    : flattened representation of dobldobl system
 quaddobl_polynomial_flatteners    : flattened representation of quaddobl system
 -------------------------------------------------------------------------------
-standard_speelpenning_products    : evaluate and differentiate variable product
-dobldobl_speelpenning_products    : Speelpenning product with double doubles
-quaddobl_speelpenning_products    : Speelpenning product with quad doubles
-multprec_speelpenning_products    : Speelpenning product with multprecision
-standard_monomial_evaluations     : evaluations of monomials
-dobldobl_monomial_evaluations     : monomial evaluations with double doubles
-quaddobl_monomial_evaluations     : monomial evaluations with quad doubles
-multprec_monomial_evaluations     : monomial evaluations with multiprecision
-standard_gradient_evaluations     : evaluation and gradient computation
-dobldobl_gradient_evaluations     : double double gradient computation
-quaddobl_gradient_evaluations     : quad double gradient computation
-coefficient_supported_polynomials : support vector polynomial representations
-standard_jacobian_evaluations     : evaluating and differentiation of systems
-dobldobl_jacobian_evaluations     : double double eval & diff of systems
-quaddobl_jacobian_evaluations     : quad double eval & diff of systems
--------------------------------------------------------------------------------
-random_conditioned_evaluations    : generate problems with given condition
-varbprec_polynomial_evaluations   : evaluate polynomials at various precisions
-varbprec_gradient_evaluations     : evaluate gradient a various precision
-cyclic_roots_system               : defines the cyclic n-roots benchmark
-ts_vmpeval                        : tests variable precision evaluation
-ts_vmpdiff                        : tests variable precision differentiation
--------------------------------------------------------------------------------
 ts_evaline                        : calls the evaluator package
 ts_evalpoly                       : development of nested Horner scheme
 ts_expvec                         : test on exponent vector extraction
 ts_polyflat                       : tests the flattening
 ts_perfeval                       : performance testing on poly evaluation
-ts_cffsup                         : test on coefficient supported polynomials
-ts_speel                          : development of Speelpenning product
-ts_speelsys                       : test on eval and diff of systems
-ts_cycfun                         : on the cyclic n-roots problems
 -------------------------------------------------------------------------------

@@ -26,6 +26,7 @@ multprec_monomial_evaluations     : monomial evaluations with multiprecision
 standard_gradient_evaluations     : evaluation and gradient computation
 dobldobl_gradient_evaluations     : double double gradient computation
 quaddobl_gradient_evaluations     : quad double gradient computation
+multprec_gradient_evaluations     : multiprecision gradient computation
 coefficient_supported_polynomials : support vector polynomial representations
 standard_jacobian_evaluations     : evaluating and differentiation of systems
 dobldobl_jacobian_evaluations     : double double eval & diff of systems

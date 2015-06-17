@@ -1,3 +1,5 @@
+Wed 17 Jun 2015 : moved algorithmic differentation code to ../Circuits.
+
 Wed 10 Jun 2015 : more tests in ts_vmpdiff, comparing Jacobian calculation
   with the straightforward methods.
 

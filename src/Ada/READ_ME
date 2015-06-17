@@ -1,4 +1,4 @@
-Ada source code of Polynomial Homotopy Continuation version 2.3.97
+Ada source code of Polynomial Homotopy Continuation version 2.3.98
 
 The same hierarchical structure as in the original version is preserved,
 with the addition of numerical Schubert calculus in release 2,
@@ -37,6 +37,7 @@ The Ada sources are organized in a tree of directories:
   |      |-- Polynomials   : 1.7. multivariate polynomial systems
   |      |-- Functions     : 1.8. evaluation and differentiation
   |      |-- Supports      : 1.9. support sets and linear programming
+  |      |-- Circuits      : 1.A. circuits for algorithmic differentation
   |-- Deformations         : 2. homotopies, Newton's method & path trackers
   |      |-- Solutions     : 2.1. solutions of systems and homotopies
   |      |-- Homotopy      : 2.2. homotopies, scaling and reduction
