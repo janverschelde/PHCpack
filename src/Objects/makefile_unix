@@ -23,7 +23,7 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/Math_Lib/Vectors -I$(PHCAda)/Math_Lib/Matrices \
  -I$(PHCAda)/Math_Lib/Divisors -I$(PHCAda)/Math_Lib/Reduction \
  -I$(PHCAda)/Math_Lib/Polynomials -I$(PHCAda)/Math_Lib/Functions \
- -I$(PHCAda)/Math_Lib/Supports \
+ -I$(PHCAda)/Math_Lib/Supports -I$(PHCAda)/Math_Lib/Circuits \
  -I$(PHCAda)/Deformations/Solutions -I$(PHCAda)/Deformations/Homotopy \
  -I$(PHCAda)/Deformations/Newton -I$(PHCAda)/Deformations/Curves \
  -I$(PHCAda)/Deformations/End_Games -I$(PHCAda)/Deformations/Sweep \
@@ -395,6 +395,8 @@ ts_perfeval:
 
 ts_expvec:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_expvec.adb -o $(BIN)/ts_expvec
+
+# Test programs for Math_Lib/Circuits :
 
 ts_cffsup:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_cffsup.adb -o $(BIN)/ts_cffsup

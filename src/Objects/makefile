@@ -84,7 +84,8 @@ ts_threads:
 # Test programs for the library Math_Lib :
 
 test_math_lib: test_numbers test_qd test_vectors test_matrices test_divisors \
-               test_reduction test_polynomials test_functions test_supports
+               test_reduction test_polynomials test_functions test_supports \
+               test_circuits
 
 # Test programs for the library Math_Lib/Numbers :
 
@@ -337,9 +338,8 @@ ts_termlist:
 
 # Test programs for Math_Lib/Functions :
 
-test_functions: ts_evaline ts_evalpoly ts_evalform ts_lineva ts_cffsup \
-                ts_expvec ts_polyflat ts_perfeval ts_speel ts_speelsys \
-                ts_vmpeval ts_vmpdiff
+test_functions: ts_evaline ts_evalpoly ts_evalform ts_lineva \
+                ts_expvec ts_polyflat ts_perfeval
 
 ts_evaline:
 	make -f $(MAKEFILE) ts_evaline
@@ -361,6 +361,10 @@ ts_perfeval:
 
 ts_expvec:
 	make -f $(MAKEFILE) ts_expvec
+
+# Test programs for Math_Lib/Circuits :
+
+test_circuits: ts_cffsup ts_speel ts_speelsys ts_vmpeval ts_vmpdiff
 
 ts_cffsup:
 	make -f $(MAKEFILE) ts_cffsup
