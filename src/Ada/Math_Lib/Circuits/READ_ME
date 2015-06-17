@@ -1,0 +1,45 @@
+Algorithmic differentiation and arithmetic circuits in PHCv2.3.98.
+
+This directory was created new in v2.3.98, with code that had been building
+up in the directory Functions.  In Functions, polynomials are evaluated by
+means of a nested Horner scheme.  For scaling to larger problems and for
+massively parallel implementations (GPU), new evaluation and differentation
+algorithms were develed jointly with Genady Yoffe.
+With the reverse mode of algorithmic differentiation the value of a product
+of variables -- the so-called Speelpenning example -- can be computed along
+with its gradient at a cost that is linear in the number of variables.
+
+Since the different ways to evaluate polynomials use different orders of
+computation, the results may differ when mixed-precision arithmetic is used.
+
+-------------------------------------------------------------------------------
+file name                         : short description
+-------------------------------------------------------------------------------
+standard_speelpenning_products    : evaluate and differentiate variable product
+dobldobl_speelpenning_products    : Speelpenning product with double doubles
+quaddobl_speelpenning_products    : Speelpenning product with quad doubles
+multprec_speelpenning_products    : Speelpenning product with multprecision
+standard_monomial_evaluations     : evaluations of monomials
+dobldobl_monomial_evaluations     : monomial evaluations with double doubles
+quaddobl_monomial_evaluations     : monomial evaluations with quad doubles
+multprec_monomial_evaluations     : monomial evaluations with multiprecision
+standard_gradient_evaluations     : evaluation and gradient computation
+dobldobl_gradient_evaluations     : double double gradient computation
+quaddobl_gradient_evaluations     : quad double gradient computation
+coefficient_supported_polynomials : support vector polynomial representations
+standard_jacobian_evaluations     : evaluating and differentiation of systems
+dobldobl_jacobian_evaluations     : double double eval & diff of systems
+quaddobl_jacobian_evaluations     : quad double eval & diff of systems
+-------------------------------------------------------------------------------
+random_conditioned_evaluations    : generate problems with given condition
+varbprec_polynomial_evaluations   : evaluate polynomials at various precisions
+varbprec_gradient_evaluations     : evaluate gradient a various precision
+cyclic_roots_system               : defines the cyclic n-roots benchmark
+ts_vmpeval                        : tests variable precision evaluation
+ts_vmpdiff                        : tests variable precision differentiation
+-------------------------------------------------------------------------------
+ts_cffsup                         : test on coefficient supported polynomials
+ts_speel                          : development of Speelpenning product
+ts_speelsys                       : test on eval and diff of systems
+ts_cycfun                         : on the cyclic n-roots problems
+-------------------------------------------------------------------------------
