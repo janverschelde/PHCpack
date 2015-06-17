@@ -1,3 +1,5 @@
+Tue 16 Jun 2015 : extra tests in ts_vmplu.adb.
+
 Mon 15 Jun 2015 : extended varbprec_complex_linear_solvers with versions
   for matrices stored as vectors of columns.  Factored out code of ts_vvlu
   into a new package matrix_to_vecvec_conversions, in the ../Matrices folder.
