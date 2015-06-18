@@ -38,6 +38,19 @@ package Coefficient_Supported_Polynomials is
 
   -- REQUIRED : f'range = b'range = e'range.
 
+  procedure Split_Common_Factors
+              ( e : in Standard_Natural_VecVecs.VecVec;
+                f,b : out Standard_Natural_VecVecs.VecVec;
+                nof : out boolean );
+
+  -- DESCRIPTION :
+  --   Extended version of the split that checks whether there is
+  --   a common factor different from zero.
+  --   If on return nof is true, then all vectors in f are zero vectors,
+  --   and thus: if nof, then f can be ignored.
+  --   Otherwise, if nof is false, then not all vectors in f are zero
+  --   and there are nontrivial common factors.
+
   function Create_Standard_Polynomial
               ( e : Standard_Natural_VecVecs.VecVec )
               return Standard_Complex_Polynomials.Poly;

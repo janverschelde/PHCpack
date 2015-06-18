@@ -1,5 +1,6 @@
 Thu 18 Jun 2015 : factored split_common_factors out of the different
   gradient_evaluations packages into coefficient_supported_polynomials,
   which also changed the *jacobian_evaluations.adb files.
+  Provided an extended version of split_common_factors.
 
 Wed 17 Jun 2015 : new directory populated with code from ../Functions.

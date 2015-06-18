@@ -38,6 +38,43 @@ package body Coefficient_Supported_Polynomials is
     end loop;
   end Split_Common_Factors;
 
+  function Nonzero ( v : Standard_Natural_Vectors.Vector ) return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if there is a nonzero entry in v.
+
+  begin
+    for k in v'range loop
+      if v(k) /= 0 
+       then return true;
+      end if;
+    end loop;
+    return false;
+  end Nonzero;
+
+  procedure Split_Common_Factors
+              ( e : in Standard_Natural_VecVecs.VecVec;
+                f,b : out Standard_Natural_VecVecs.VecVec;
+                nof : out boolean ) is
+  begin
+    nof := true;               -- assume no common factors
+    for i in e'range loop
+      declare
+        ee : constant Standard_Natural_Vectors.Vector := e(i).all;
+        ff,bb : Standard_Natural_Vectors.Vector(ee'range);
+      begin
+        Split_Common_Factor(ee,ff,bb);
+        f(i) := new Standard_Natural_Vectors.Vector'(ff);
+        b(i) := new Standard_Natural_Vectors.Vector'(bb);
+        if nof then            -- only check if all factors were zero so far
+          if NonZero(ff)
+           then nof := false;  -- first nonzero common factor found
+          end if;
+        end if;
+      end;
+    end loop;
+  end Split_Common_Factors;
+
   function Create_Standard_Polynomial
              ( e : Standard_Natural_VecVecs.VecVec )
              return Standard_Complex_Polynomials.Poly is
