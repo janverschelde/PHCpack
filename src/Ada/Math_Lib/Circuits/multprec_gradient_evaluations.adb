@@ -4,23 +4,8 @@ with Multprec_Floating_Numbers;
 with Multprec_Complex_Numbers;            use Multprec_Complex_Numbers;
 with Multprec_Speelpenning_Products;
 with Multprec_Monomial_Evaluations;
-with Standard_Gradient_Evaluations;
 
 package body Multprec_Gradient_Evaluations is
-
-  procedure Split_Common_Factor
-              ( e : in Standard_Natural_Vectors.Vector;
-                f,b : out Standard_Natural_Vectors.Vector ) is
-  begin
-    Standard_Gradient_Evaluations.Split_Common_Factor(e,f,b);
-  end Split_Common_Factor;
-
-  procedure Split_Common_Factors
-              ( e : in Standard_Natural_VecVecs.VecVec;
-                f,b : out Standard_Natural_VecVecs.VecVec ) is
-  begin
-    Standard_Gradient_Evaluations.Split_Common_Factors(e,f,b);
-  end Split_Common_Factors;
 
   function Reverse_Speel
              ( b : Standard_Natural_VecVecs.VecVec;

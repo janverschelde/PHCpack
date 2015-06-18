@@ -1,8 +1,9 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with QuadDobl_Complex_Numbers;
+with Coefficient_Supported_Polynomials;  use Coefficient_Supported_Polynomials;
 with Standard_Gradient_Evaluations;
-with QuadDobl_Gradient_Evaluations;
 with Standard_Jacobian_Evaluations;
+with QuadDobl_Gradient_Evaluations;
 
 package body QuadDobl_Jacobian_Evaluations is
 
@@ -21,7 +22,7 @@ package body QuadDobl_Jacobian_Evaluations is
     cff : Complex_Number;
 
   begin
-    Standard_Gradient_Evaluations.Split_Common_Factors(v,f,b);
+    Split_Common_Factors(v,f,b);
     y := QuadDobl_Gradient_Evaluations.Gradient_Monomials(f,b,x);
     for i in z'range loop
       z(i) := Create(integer(0));

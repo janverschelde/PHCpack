@@ -3,6 +3,7 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Gradient_Evaluations;
+with Coefficient_Supported_Polynomials;  use Coefficient_Supported_Polynomials;
 
 package body Standard_Jacobian_Evaluations is
 
@@ -99,7 +100,7 @@ package body Standard_Jacobian_Evaluations is
     f,b : Standard_Natural_VecVecs.VecVec(v'range);
 
   begin
-    Standard_Gradient_Evaluations.Split_Common_Factors(v,f,b);
+    Split_Common_Factors(v,f,b);
     Standard_Jacobian_Evaluation(f,b,c,k,x,z,A);
   end Standard_Jacobian_Evaluation;
 
@@ -115,7 +116,7 @@ package body Standard_Jacobian_Evaluations is
     f,b : Standard_Natural_VecVecs.VecVec(v'range);
 
   begin
-    Standard_Gradient_Evaluations.Split_Common_Factors(v,f,b);
+    Split_Common_Factors(v,f,b);
     Standard_Jacobian_Evaluation(f,b,c,k,x,z,y,A);
   end Standard_Jacobian_Evaluation;
 

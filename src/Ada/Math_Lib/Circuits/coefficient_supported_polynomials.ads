@@ -1,3 +1,4 @@
+with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
@@ -15,6 +16,27 @@ package Coefficient_Supported_Polynomials is
 -- DESCRIPTION :
 --   This package allows to define polynomials by vectors of supports
 --   and corresponding coefficients.
+
+  procedure Split_Common_Factor
+              ( e : in Standard_Natural_Vectors.Vector;
+                f,b : out Standard_Natural_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Splits the exponent vector e into a common factor f
+  --   and a bit vector b of zeroes and ones.
+  --   For all i in e'range: e(i) = f(i) + b(i), b(i) is 0 or 1.
+
+  -- REQUIRED : f'range = b'range = e'range.
+
+  procedure Split_Common_Factors
+              ( e : in Standard_Natural_VecVecs.VecVec;
+                f,b : out Standard_Natural_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Splits the exponents vectors in e into common factors f
+  --   and bit vectors b.
+
+  -- REQUIRED : f'range = b'range = e'range.
 
   function Create_Standard_Polynomial
               ( e : Standard_Natural_VecVecs.VecVec )

@@ -1,11 +1,42 @@
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Multprec_Complex_Numbers;
-with Standard_Natural_Vectors;
 
 package body Coefficient_Supported_Polynomials is
+
+  procedure Split_Common_Factor
+              ( e : in Standard_Natural_Vectors.Vector;
+                f,b : out Standard_Natural_Vectors.Vector ) is
+  begin
+    for i in e'range loop
+      if e(i) = 0 then
+        b(i) := 0; f(i) := 0;
+      elsif e(i) = 1 then
+        b(i) := 1; f(i) := 0;
+      else -- e(i) > 1
+        b(i) := 1; f(i) := e(i) - 1;
+      end if;
+    end loop;
+  end Split_Common_Factor;
+
+  procedure Split_Common_Factors
+              ( e : in Standard_Natural_VecVecs.VecVec;
+                f,b : out Standard_Natural_VecVecs.VecVec ) is
+  begin
+    for i in e'range loop
+      declare
+        ee : constant Standard_Natural_Vectors.Vector := e(i).all;
+        ff,bb : Standard_Natural_Vectors.Vector(ee'range);
+      begin
+        Split_Common_Factor(ee,ff,bb);
+        f(i) := new Standard_Natural_Vectors.Vector'(ff);
+        b(i) := new Standard_Natural_Vectors.Vector'(bb);
+      end;
+    end loop;
+  end Split_Common_Factors;
 
   function Create_Standard_Polynomial
              ( e : Standard_Natural_VecVecs.VecVec )

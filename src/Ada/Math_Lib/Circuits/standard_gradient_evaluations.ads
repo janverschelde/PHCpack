@@ -11,27 +11,6 @@ package Standard_Gradient_Evaluations is
 --   variables with standard complex coefficients and to compute its
 --   gradient, the vector of all partial derivatives.
 
-  procedure Split_Common_Factor
-              ( e : in Standard_Natural_Vectors.Vector;
-                f,b : out Standard_Natural_Vectors.Vector );
-
-  -- DESCRIPTION :
-  --   Splits the exponent vector e into a common factor f
-  --   and a bit vector b of zeroes and ones.
-  --   For all i in e'range: e(i) = f(i) + b(i), b(i) is 0 or 1.
-
-  -- REQUIRED : f'range = b'range = e'range.
-
-  procedure Split_Common_Factors
-              ( e : in Standard_Natural_VecVecs.VecVec;
-                f,b : out Standard_Natural_VecVecs.VecVec );
-
-  -- DESCRIPTION :
-  --   Splits the exponents vectors in e into common factors f
-  --   and bit vectors b.
-
-  -- REQUIRED : f'range = b'range = e'range.
-
   function Reverse_Speel
               ( b : Standard_Natural_VecVecs.VecVec;
                 x : Standard_Complex_Vectors.Vector )
