@@ -1,7 +1,9 @@
 Fri 19 Jun 2015 : in standard_gradient_evaluations, added functions and
-  procedures in case there are no nontrivial common factors.
+  procedures in case there are no common factors.
   New package standard_gradient_circuits encapsulates evaluation
   and differentiation, tested by ts_gradcirc.
+  Extended {dobldobl,quaddobl,multprec}_gradient_evaluations also with
+  routines for when there are no common factors.
 
 Thu 18 Jun 2015 : factored split_common_factors out of the different
   gradient_evaluations packages into coefficient_supported_polynomials,

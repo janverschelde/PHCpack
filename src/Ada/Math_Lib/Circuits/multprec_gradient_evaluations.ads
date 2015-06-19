@@ -41,6 +41,10 @@ package Multprec_Gradient_Evaluations is
   --   has been allocated for s.
 
   function Gradient_Monomials
+             ( b : Standard_Natural_VecVecs.VecVec;
+               x : Multprec_Complex_Vectors.Vector )
+             return Multprec_Complex_VecVecs.VecVec;
+  function Gradient_Monomials
              ( f,b : Standard_Natural_VecVecs.VecVec;
                x : Multprec_Complex_Vectors.Vector )
              return Multprec_Complex_VecVecs.VecVec;
@@ -49,7 +53,12 @@ package Multprec_Gradient_Evaluations is
   --   Applies the reverse mode to compute the gradient of the Speelpenning
   --   products defined by the vectors in b and multiplies the results with
   --   the factors in f, all evaluated at x.
+  --   If f is omitted, then there are no common factors.
 
+  procedure Gradient_Monomials
+             ( b : in Standard_Natural_VecVecs.VecVec;
+               x : in Multprec_Complex_Vectors.Vector;
+               s : in out Multprec_Complex_VecVecs.VecVec );
   procedure Gradient_Monomials
              ( f,b : in Standard_Natural_VecVecs.VecVec;
                x : in Multprec_Complex_Vectors.Vector;
@@ -59,9 +68,14 @@ package Multprec_Gradient_Evaluations is
   --   Applies the reverse mode to compute the gradient of the Speelpenning
   --   products defined by the vectors in b and multiplies the results with
   --   the factors in f, all evaluated at x.
+  --   If f is omitted, then there are no common factors.
 
   -- REQUIRED : s'range = b'range and s(i)'range = 0..x'last.
 
+  function Gradient_Sum_of_Monomials
+             ( b : Standard_Natural_VecVecs.VecVec;
+               x : Multprec_Complex_Vectors.Vector )
+             return Multprec_Complex_Vectors.Vector;
   function Gradient_Sum_of_Monomials
              ( f,b : Standard_Natural_VecVecs.VecVec;
                x : Multprec_Complex_Vectors.Vector )
@@ -73,9 +87,15 @@ package Multprec_Gradient_Evaluations is
   --   along with the gradient vectors.  The range of the vector on return
   --   is 0..x'last with its 0-th component the function value and the i-th
   --   component the i-th derivative of the sum at x.
-  --   Note: this evaluation corresponds to a polynomial where all
+  --   If f is omitted, then there are no common factors.
+  -- NOTE : this evaluation corresponds to a polynomial where all
   --   coefficients are equal to one.
 
+  procedure Gradient_Sum_of_Monomials
+             ( b : in Standard_Natural_VecVecs.VecVec;
+               x : in Multprec_Complex_Vectors.Vector;
+               y : in out Multprec_Complex_VecVecs.VecVec;
+               r : out Multprec_Complex_Vectors.Vector );
   procedure Gradient_Sum_of_Monomials
              ( f,b : in Standard_Natural_VecVecs.VecVec;
                x : in Multprec_Complex_Vectors.Vector;
@@ -88,12 +108,17 @@ package Multprec_Gradient_Evaluations is
   --   along with the gradient vectors.  The range of the vector r must 
   --   be 0..x'last with its 0-th component the function value and the i-th
   --   component the i-th derivative of the sum at x.
-  --   Note: this evaluation corresponds to a polynomial where all
+  --   If f is omitted, then there are no common factors.
+  -- NOTE : this evaluation corresponds to a polynomial where all
   --   coefficients are equal to one.
 
   -- REQUIRED : The y serves as work space and has been allocated,
   --   in particular y'range = b'range.
 
+  function Gradient_of_Polynomial
+             ( b : Standard_Natural_VecVecs.VecVec;
+               c,x : Multprec_Complex_Vectors.Vector )
+             return Multprec_Complex_Vectors.Vector;
   function Gradient_of_Polynomial
              ( f,b : Standard_Natural_VecVecs.VecVec;
                c,x : Multprec_Complex_Vectors.Vector )
@@ -101,11 +126,17 @@ package Multprec_Gradient_Evaluations is
 
   -- DESCRIPTION :
   --   Returns the value of the polynomial and its gradient at x,
-  --   with exponents in f, b, and coefficients in c.
+  --   with common factors in f, positions in b, and coefficients in c.
+  --   If f is omitted, then there are no common factors.
   --   Compared to the procedures below, this function requires
   --   the allocation and deallocation of workspace memory, which
   --   is not efficient for repeated evaluations and differentiations.
 
+  procedure Gradient_of_Polynomial
+             ( b : in Standard_Natural_VecVecs.VecVec;
+               c,x : in Multprec_Complex_Vectors.Vector;
+               wrk : in out Multprec_Complex_VecVecs.VecVec;
+               ydx : out Multprec_Complex_Vectors.Vector );
   procedure Gradient_of_Polynomial
              ( f,b : in Standard_Natural_VecVecs.VecVec;
                c,x : in Multprec_Complex_Vectors.Vector;
@@ -114,7 +145,8 @@ package Multprec_Gradient_Evaluations is
 
   -- DESCRIPTION :
   --   Computes the value of the polynomial and its gradient at x,
-  --   with exponents in f, b, and coefficients in c.
+  --   with common factors in f, positions in b, and coefficients in c.
+  --   If f is omitted, then there are no common factors.
   --   This evaluation and differentiation is for general polynomials.
  
   -- REQUIRED :
@@ -127,7 +159,8 @@ package Multprec_Gradient_Evaluations is
   -- ON ENTRY :
   --   f       defines the common factors in each monomial,
   --           these are the monomials with higher powers that
-  --           appear both in the function values and the derivatives;
+  --           appear both in the function values and the derivatives,
+  --           if omitted, then there are no common factors;
   --   b       bit vectors that define products of variables,
   --           b(k)(i) = 1 if the i-th variable occurs in monomial k,
   --           b(k)(i) = 0 otherwise;
@@ -141,6 +174,12 @@ package Multprec_Gradient_Evaluations is
   --           ydx(k) is the k-th derivative of the polynomial at x.
 
   procedure Conditioned_Gradient_of_Polynomial
+             ( b : in Standard_Natural_VecVecs.VecVec;
+               c,x : in Multprec_Complex_Vectors.Vector;
+               wrk : in out Multprec_Complex_VecVecs.VecVec;
+               ydx : out Multprec_Complex_Vectors.Vector;
+               numcnd : out Multprec_Floating_Vectors.Vector );
+  procedure Conditioned_Gradient_of_Polynomial
              ( f,b : in Standard_Natural_VecVecs.VecVec;
                c,x : in Multprec_Complex_Vectors.Vector;
                wrk : in out Multprec_Complex_VecVecs.VecVec;
@@ -149,7 +188,8 @@ package Multprec_Gradient_Evaluations is
 
   -- DESCRIPTION :
   --   Computes the value of the polynomial and its gradient at x,
-  --   with exponents in f, b, and coefficients in c.
+  --   with common factors in f, positions in b, and coefficients in c.
+  --   If f is omitted, then there are no common factors.
   --   This evaluation and differentiation is for general polynomials.
   --   In addition, the numerators of the condition numbers of the
   --   evaluation and differentiation problem are computed as well.
@@ -168,7 +208,8 @@ package Multprec_Gradient_Evaluations is
   -- ON ENTRY :
   --   f       defines the common factors in each monomial,
   --           these are the monomials with higher powers that
-  --           appear both in the function values and the derivatives;
+  --           appear both in the function values and the derivatives,
+  --           if f is omitted, then there are no common factors;
   --   b       bit vectors that define products of variables,
   --           b(k)(i) = 1 if the i-th variable occurs in monomial k,
   --           b(k)(i) = 0 otherwise;
