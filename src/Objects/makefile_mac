@@ -404,6 +404,9 @@ ts_expvec:
 ts_cffsup:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_cffsup -o $(BIN)/ts_cffsup
 
+ts_gradcirc:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_gradcirc -o $(BIN)/ts_gradcirc
+
 ts_speel:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_speel -o $(BIN)/ts_speel
 

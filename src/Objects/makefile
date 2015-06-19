@@ -364,10 +364,14 @@ ts_expvec:
 
 # Test programs for Math_Lib/Circuits :
 
-test_circuits: ts_cffsup ts_speel ts_speelsys ts_vmpeval ts_vmpdiff
+test_circuits: ts_cffsup ts_speel ts_cycfun ts_speelsys ts_gradcirc \
+               ts_vmpeval ts_vmpdiff
 
 ts_cffsup:
 	make -f $(MAKEFILE) ts_cffsup
+
+ts_gradcirc:
+	make -f $(MAKEFILE) ts_gradcirc
 
 ts_speel:
 	make -f $(MAKEFILE) ts_speel
