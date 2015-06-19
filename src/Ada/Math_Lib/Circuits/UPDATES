@@ -4,6 +4,7 @@ Fri 19 Jun 2015 : in standard_gradient_evaluations, added functions and
   and differentiation, tested by ts_gradcirc.
   Extended {dobldobl,quaddobl,multprec}_gradient_evaluations also with
   routines for when there are no common factors.
+  New package dobldobl_gradient_circuits, tested by ts_gradcirc.
 
 Thu 18 Jun 2015 : factored split_common_factors out of the different
   gradient_evaluations packages into coefficient_supported_polynomials,

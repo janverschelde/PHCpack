@@ -45,5 +45,6 @@ ts_speelsys                       : test on eval and diff of systems
 ts_cycfun                         : on the cyclic n-roots problems
 -------------------------------------------------------------------------------
 standard_gradient_circuits        : eval & diff circuits for polynomials
+dobldobl_gradient_circuits        : gradient circuits for double doubles
 ts_gradcirc                       : test on eval & diff circuits
 -------------------------------------------------------------------------------
