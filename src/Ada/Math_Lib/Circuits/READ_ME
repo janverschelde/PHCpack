@@ -44,3 +44,6 @@ ts_speel                          : development of Speelpenning product
 ts_speelsys                       : test on eval and diff of systems
 ts_cycfun                         : on the cyclic n-roots problems
 -------------------------------------------------------------------------------
+standard_gradient_circuits        : eval & diff circuits for polynomials
+ts_gradcirc                       : test on eval & diff circuits
+-------------------------------------------------------------------------------
