@@ -1,19 +1,19 @@
 with Standard_Natural_Numbers;            use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
-with Standard_Complex_Numbers;            use Standard_Complex_Numbers;
+with Multprec_Complex_Numbers;            use Multprec_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
-with Standard_Complex_Vectors;
-with Standard_Complex_VecVecs;
-with Standard_Complex_Polynomials;        use Standard_Complex_Polynomials;
+with Multprec_Complex_Vectors;
+with Multprec_Complex_VecVecs;
+with Multprec_Complex_Polynomials;        use Multprec_Complex_Polynomials;
 
-package Standard_Gradient_Circuits is
+package Multprec_Gradient_Circuits is
 
 -- DESCRIPTION :
 --   An arithmetic circuit to evaluate and differentate a polynomial
 --   in several variables is defined as a tuple of coefficients,
 --   common factors, and positions of the variables in the products.
---   The coefficients are complex, of standard double precision.
+--   The coefficients are complex, of arbitrary multiprecision.
 --   A circuit to evaluate and differentiate a polynomial system is
 --   a tuple of circuits to evaluate and differentiatie polynomials.
 --   The purpose of this package is to bundle the different data
@@ -24,7 +24,7 @@ package Standard_Gradient_Circuits is
 -- CONSTRUCTORS :  
 
   function Create ( n : natural32;
-                    c : Standard_Complex_Vectors.Vector;
+                    c : Multprec_Complex_Vectors.Vector;
                     b : Standard_Natural_VecVecs.VecVec )
                   return Circuit;
 
@@ -32,13 +32,13 @@ package Standard_Gradient_Circuits is
   --   Returns a circuit defined by the given coefficients in c
   --   and in b the corresponding variables in the products,
   --   to represent a polynomial in n variables.
-  --   A deep copy is made of the data in b.
+  --   A deep copy is made of the data in b and c.
 
   -- REQUIRED : c'range = b'range = 1..m, for m = c'last = b'last.
   --   Moreover: every vector in b must be of range 1..n.
 
   function Create ( n : natural32;
-                    c : Standard_Complex_Vectors.Vector;
+                    c : Multprec_Complex_Vectors.Vector;
                     b,f : Standard_Natural_VecVecs.VecVec )
                   return Circuit;
 
@@ -47,7 +47,7 @@ package Standard_Gradient_Circuits is
   --   in b the corresponding variables in the products, and
   --   in f the common factors of the monomials,
   --   to represent a polynomial in n variables.
-  --   A deep copy is made of the data in b and f.
+  --   A deep copy is made of the data in b, c, and f.
 
   -- REQUIRED : c'range = b'range = f'range = 1..m, 
   --   for m = c'last = b'last = f'last.
@@ -73,7 +73,7 @@ package Standard_Gradient_Circuits is
   --   Returns the number of variables in the circuit.
 
   function Coefficients
-             ( c : Circuit ) return Standard_Complex_Vectors.Vector;
+             ( c : Circuit ) return Multprec_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Returns the vector of ceofficients of the polynomial.
@@ -118,16 +118,16 @@ package Standard_Gradient_Circuits is
 -- EVALUATION AND DIFFERENTIATION :
 
   function WorkSpace ( c : Circuit )
-                     return Standard_Complex_VecVecs.VecVec;
+                     return Multprec_Complex_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Returns work space to evaluate and differentiate the circuit.
   --   The data structure on return should be used in the wrk below.
 
   procedure EvalDiff ( c : in Circuit;
-                       x : in Standard_Complex_Vectors.Vector;
-                       wrk : in out Standard_Complex_VecVecs.VecVec;
-                       ydx : out Standard_Complex_Vectors.Vector );
+                       x : in Multprec_Complex_Vectors.Vector;
+                       wrk : in out Multprec_Complex_VecVecs.VecVec;
+                       ydx : out Multprec_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Computes the value of the polynomial defined by a circuit,
@@ -151,8 +151,8 @@ package Standard_Gradient_Circuits is
   --   ydx     ydx(0) is the value of the polynomial at x,
   --           ydx(k) is the k-th derivative of the polynomial at x.
 
-  function EvalDiff ( c : Circuit; x : Standard_Complex_Vectors.Vector )
-                    return Standard_Complex_Vectors.Vector;
+  function EvalDiff ( c : Circuit; x : Multprec_Complex_Vectors.Vector )
+                    return Multprec_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Returns a vector of range 0..x'last that contains at position 0
@@ -175,4 +175,4 @@ private
   type Circuit_Rep;
   type Circuit is access Circuit_Rep;
 
-end Standard_Gradient_Circuits;
+end Multprec_Gradient_Circuits;

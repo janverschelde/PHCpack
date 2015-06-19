@@ -34,7 +34,7 @@ package body Standard_Gradient_Circuits is
   begin
     rep.n := n;
     rep.c := c;
-    rep.b := b;
+    rep.b := Standard_Natural_VecVecs.Create_Copy(b);
     rep.f := null;
     res := new Circuit_Rep'(rep);
     return res;
@@ -51,8 +51,13 @@ package body Standard_Gradient_Circuits is
   begin
     rep.n := n;
     rep.c := c;
-    rep.b := b;
-    rep.f := new Standard_Natural_VecVecs.VecVec'(f);
+    rep.b := Standard_Natural_VecVecs.Create_Copy(b);
+    declare
+      cf : constant Standard_Natural_VecVecs.VecVec(f'range)
+         := Standard_Natural_VecVecs.Create_Copy(f);
+    begin
+      rep.f := new Standard_Natural_VecVecs.VecVec'(cf);
+    end;
     res := new Circuit_Rep'(rep);
     return res;
   end Create;
@@ -62,6 +67,7 @@ package body Standard_Gradient_Circuits is
     res : Circuit;
     m : constant integer32 
       := integer32(Standard_Complex_Polynomials.Number_of_Terms(p));
+    rep : Circuit_Rep(m);
     n : constant natural32
       := Standard_Complex_Polynomials.Number_of_Unknowns(p);
     c : Standard_Complex_Vectors.Vector(1..m);
@@ -71,79 +77,83 @@ package body Standard_Gradient_Circuits is
   begin
     Coefficients_and_Supports(p,c,e);
     Split_Common_Factors(e,f,b,nof);
+    rep.n := n;
+    rep.c := c;
+    rep.b := b;
     if nof then
       Standard_Natural_VecVecs.Clear(f);
-      res := Create(n,c,b);
+      rep.f := null;
     else
-      res := Create(n,c,b,f);
+      rep.f := new Standard_Natural_VecVecs.VecVec'(f);
     end if;
+    res := new Circuit_Rep'(rep);
     return res;
   end Create;
 
 -- SELECTORS :
 
-  function Number_of_Terms ( crc : Circuit ) return natural32 is
+  function Number_of_Terms ( c : Circuit ) return natural32 is
   begin
-    if crc = null
+    if c = null
      then return 0;
-     else return natural32(crc.m);
+     else return natural32(c.m);
     end if;
   end Number_of_Terms;
 
-  function Number_of_Variables ( crc : Circuit ) return natural32 is
+  function Number_of_Variables ( c : Circuit ) return natural32 is
   begin
-    if crc = null
+    if c = null
      then return 0;
-     else return natural32(crc.n);
+     else return natural32(c.n);
     end if;
   end Number_of_Variables;
 
   function Coefficients
-             ( crc : Circuit ) return Standard_Complex_Vectors.Vector is
+             ( c : Circuit ) return Standard_Complex_Vectors.Vector is
   begin
-    return crc.c;
+    return c.c;
   end Coefficients;
 
   function Coefficient
-             ( crc : Circuit; k : integer32 ) return Complex_Number is
+             ( c : Circuit; k : integer32 ) return Complex_Number is
   begin
-    return crc.c(k);
+    return c.c(k);
   end Coefficient;
 
   function Positions
-             ( crc : Circuit ) return Standard_Natural_VecVecs.VecVec is
+             ( c : Circuit ) return Standard_Natural_VecVecs.VecVec is
   begin
-    return crc.b;
+    return c.b;
   end Positions;
 
   function Positions
-             ( crc : Circuit; k : integer32 )
+             ( c : Circuit; k : integer32 )
              return Standard_Natural_Vectors.Link_to_Vector is
   begin
-    return crc.b(k);
+    return c.b(k);
   end Positions;
 
   function Factors
-             ( crc : Circuit )
+             ( c : Circuit )
              return Standard_Natural_VecVecs.Link_to_VecVec is
   begin
-    return crc.f;
+    return c.f;
   end Factors;
 
   function Factors
-             ( crc : Circuit; k : integer32 )
+             ( c : Circuit; k : integer32 )
              return Standard_Natural_Vectors.Link_to_Vector is
   begin
-    return crc.f(k);
+    return c.f(k);
   end Factors;
 
 -- EVALUATION AND DIFFERENTIATION :
 
-  function WorkSpace ( crc : Circuit )
+  function WorkSpace ( c : Circuit )
                      return Standard_Complex_VecVecs.VecVec is
 
-    res : Standard_Complex_VecVecs.VecVec(1..crc.m);
-    dim : integer32 := integer32(crc.n);
+    res : Standard_Complex_VecVecs.VecVec(1..c.m);
+    dim : integer32 := integer32(c.n);
 
   begin
     for k in res'range loop
@@ -152,7 +162,7 @@ package body Standard_Gradient_Circuits is
     return res;
   end WorkSpace;
 
-  procedure EvalDiff ( crc : in Circuit;
+  procedure EvalDiff ( c : in Circuit;
                        x : in Standard_Complex_Vectors.Vector;
                        wrk : in out Standard_Complex_VecVecs.VecVec;
                        ydx : out Standard_Complex_Vectors.Vector ) is
@@ -160,9 +170,9 @@ package body Standard_Gradient_Circuits is
     use Standard_Natural_VecVecs;
 
   begin
-    if crc.f = null
-     then Gradient_of_Polynomial(crc.b,crc.c,x,wrk,ydx);
-     else Gradient_of_Polynomial(crc.f.all,crc.b,crc.c,x,wrk,ydx);
+    if c.f = null
+     then Gradient_of_Polynomial(c.b,c.c,x,wrk,ydx);
+     else Gradient_of_Polynomial(c.f.all,c.b,c.c,x,wrk,ydx);
     end if;
   end EvalDiff;
 
@@ -180,20 +190,20 @@ package body Standard_Gradient_Circuits is
 
 -- DESTRUCTORS :
 
-  procedure Clear ( crc : in out Circuit_Rep ) is
+  procedure Clear ( c : in out Circuit_Rep ) is
   begin
-    Standard_Natural_VecVecs.Clear(crc.b);
-    Standard_Natural_VecVecs.Deep_Clear(crc.f);
+    Standard_Natural_VecVecs.Clear(c.b);
+    Standard_Natural_VecVecs.Deep_Clear(c.f);
   end Clear;
 
-  procedure Clear ( crc : in out Circuit ) is
+  procedure Clear ( c : in out Circuit ) is
 
     procedure free is new unchecked_deallocation(Circuit_Rep,Circuit);
 
   begin
-    if crc /= null then
-      Clear(crc.all);
-      free(crc);
+    if c /= null then
+      Clear(c.all);
+      free(c);
     end if;
   end Clear;
 

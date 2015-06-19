@@ -32,6 +32,7 @@ package DoblDobl_Gradient_Circuits is
   --   Returns a circuit defined by the given coefficients in c
   --   and in b the corresponding variables in the products,
   --   to represent a polynomial in n variables.
+  --   A deep copy is made of the data in b.
 
   -- REQUIRED : c'range = b'range = 1..m, for m = c'last = b'last.
   --   Moreover: every vector in b must be of range 1..n.
@@ -46,6 +47,7 @@ package DoblDobl_Gradient_Circuits is
   --   in b the corresponding variables in the products, and
   --   in f the common factors of the monomials,
   --   to represent a polynomial in n variables.
+  --   A deep copy is made of the data in b and f.
 
   -- REQUIRED : c'range = b'range = f'range = 1..m, 
   --   for m = c'last = b'last = f'last.
@@ -59,25 +61,25 @@ package DoblDobl_Gradient_Circuits is
 
 -- SELECTORS :
 
-  function Number_of_Terms ( crc : Circuit ) return natural32;
+  function Number_of_Terms ( c : Circuit ) return natural32;
 
   -- DESCRIPTION :
   --   Returns the number of coefficients in the circuit,
   --   or equivalently, the number of terms in the polynomial.
 
-  function Number_of_Variables ( crc : Circuit ) return natural32;
+  function Number_of_Variables ( c : Circuit ) return natural32;
 
   -- DESCRIPTION :
   --   Returns the number of variables in the circuit.
 
   function Coefficients
-             ( crc : Circuit ) return DoblDobl_Complex_Vectors.Vector;
+             ( c : Circuit ) return DoblDobl_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Returns the vector of ceofficients of the polynomial.
 
   function Coefficient
-             ( crc : Circuit; k : integer32 ) return Complex_Number;
+             ( c : Circuit; k : integer32 ) return Complex_Number;
 
   -- DESCRIPTION :
   --   Returns the k-th coefficient of the polynomial.
@@ -85,14 +87,14 @@ package DoblDobl_Gradient_Circuits is
   -- REQUIRED : k is in range 1..c.m.
 
   function Positions
-             ( crc : Circuit ) return Standard_Natural_VecVecs.VecVec;
+             ( c : Circuit ) return Standard_Natural_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Returns the indices of the variables that occur in the
   --   products of variables in all terms of the polynomial.
 
   function Positions
-             ( crc : Circuit; k : integer32 )
+             ( c : Circuit; k : integer32 )
              return Standard_Natural_Vectors.Link_to_Vector;
 
   -- DESCRIPTION :
@@ -100,14 +102,14 @@ package DoblDobl_Gradient_Circuits is
   --   product of the k-th term in the polynomial.
 
   function Factors
-             ( crc : Circuit ) return Standard_Natural_VecVecs.Link_to_VecVec;
+             ( c : Circuit ) return Standard_Natural_VecVecs.Link_to_VecVec;
 
   -- DESCRIPTION :
   --   Returns all common factors in all terms of the polynomial.
   --   Note that if there are no common factors, then null is returned.
 
   function Factors
-             ( crc : Circuit; k : integer32 )
+             ( c : Circuit; k : integer32 )
              return Standard_Natural_Vectors.Link_to_Vector;
 
   -- DESCRIPTION :
@@ -115,14 +117,14 @@ package DoblDobl_Gradient_Circuits is
 
 -- EVALUATION AND DIFFERENTIATION :
 
-  function WorkSpace ( crc : Circuit )
+  function WorkSpace ( c : Circuit )
                      return DoblDobl_Complex_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Returns work space to evaluate and differentiate the circuit.
   --   The data structure on return should be used in the wrk below.
 
-  procedure EvalDiff ( crc : in Circuit;
+  procedure EvalDiff ( c : in Circuit;
                        x : in DoblDobl_Complex_Vectors.Vector;
                        wrk : in out DoblDobl_Complex_VecVecs.VecVec;
                        ydx : out DoblDobl_Complex_Vectors.Vector );
@@ -136,10 +138,10 @@ package DoblDobl_Gradient_Circuits is
   --   0-th component the function value and the i-th
   --   component the i-th derivative of the sum at x.
   --   The wrk serves as work space and has been allocated,
-  --   in particular wrk'range = 1..Numbers_of_Terms(crc).
+  --   in particular wrk'range = 1..Numbers_of_Terms(c).
 
   -- ON ENTRY :
-  --   crc     a circuit for a polynomial in several variables;
+  --   c       a circuit for a polynomial in several variables;
   --   x       values for the variables: where to evaluate at;
   --   wrk     serves as workspace for all evaluated monomials,
   --           to be allocated with the WorkSpace function of above.
@@ -163,7 +165,7 @@ package DoblDobl_Gradient_Circuits is
 
 -- DESTRUCTORS :
 
-  procedure Clear ( crc : in out Circuit );
+  procedure Clear ( c : in out Circuit );
 
   -- DESCRIPTION :
   --   Deallocates the memory occupied by the circuit.

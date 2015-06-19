@@ -1,14 +1,14 @@
 with unchecked_deallocation;
 with Coefficient_Supported_Polynomials; use Coefficient_Supported_Polynomials;
-with DoblDobl_Gradient_Evaluations;     use DoblDobl_Gradient_Evaluations;
+with QuadDobl_Gradient_Evaluations;     use QuadDobl_Gradient_Evaluations;
 
-package body DoblDobl_Gradient_Circuits is
+package body QuadDobl_Gradient_Circuits is
 
 -- DATA STRUCTURE :
 
   type Circuit_Rep ( m : integer32 ) is record   -- m is number of terms
     n : natural32;                               -- number of variables
-    c : DoblDobl_Complex_Vectors.Vector(1..m);   -- coefficients
+    c : QuadDobl_Complex_Vectors.Vector(1..m);   -- coefficients
     b : Standard_Natural_VecVecs.VecVec(1..m);   -- positions are bits
     f : Standard_Natural_VecVecs.Link_to_VecVec; -- common factors
   end record;
@@ -24,7 +24,7 @@ package body DoblDobl_Gradient_Circuits is
 -- CONSTRUCTORS :  
 
   function Create ( n : natural32;
-                    c : DoblDobl_Complex_Vectors.Vector;
+                    c : QuadDobl_Complex_Vectors.Vector;
                     b : Standard_Natural_VecVecs.VecVec )
                   return Circuit is
 
@@ -41,7 +41,7 @@ package body DoblDobl_Gradient_Circuits is
   end Create;
 
   function Create ( n : natural32;
-                    c : DoblDobl_Complex_Vectors.Vector;
+                    c : QuadDobl_Complex_Vectors.Vector;
                     b,f : Standard_Natural_VecVecs.VecVec )
                   return Circuit is
 
@@ -66,11 +66,11 @@ package body DoblDobl_Gradient_Circuits is
 
     res : Circuit;
     m : constant integer32 
-      := integer32(DoblDobl_Complex_Polynomials.Number_of_Terms(p));
+      := integer32(QuadDobl_Complex_Polynomials.Number_of_Terms(p));
     rep : Circuit_Rep(m);
     n : constant natural32
-      := DoblDobl_Complex_Polynomials.Number_of_Unknowns(p);
-    c : DoblDobl_Complex_Vectors.Vector(1..m);
+      := QuadDobl_Complex_Polynomials.Number_of_Unknowns(p);
+    c : QuadDobl_Complex_Vectors.Vector(1..m);
     e,f,b : Standard_Natural_VecVecs.VecVec(1..m);
     nof : boolean;
 
@@ -109,7 +109,7 @@ package body DoblDobl_Gradient_Circuits is
   end Number_of_Variables;
 
   function Coefficients
-             ( c : Circuit ) return DoblDobl_Complex_Vectors.Vector is
+             ( c : Circuit ) return QuadDobl_Complex_Vectors.Vector is
   begin
     return c.c;
   end Coefficients;
@@ -150,22 +150,22 @@ package body DoblDobl_Gradient_Circuits is
 -- EVALUATION AND DIFFERENTIATION :
 
   function WorkSpace ( c : Circuit )
-                     return DoblDobl_Complex_VecVecs.VecVec is
+                     return QuadDobl_Complex_VecVecs.VecVec is
 
-    res : DoblDobl_Complex_VecVecs.VecVec(1..c.m);
+    res : QuadDobl_Complex_VecVecs.VecVec(1..c.m);
     dim : integer32 := integer32(c.n);
 
   begin
     for k in res'range loop
-      res(k) := new DoblDobl_Complex_Vectors.Vector(0..dim);
+      res(k) := new QuadDobl_Complex_Vectors.Vector(0..dim);
     end loop;
     return res;
   end WorkSpace;
 
   procedure EvalDiff ( c : in Circuit;
-                       x : in DoblDobl_Complex_Vectors.Vector;
-                       wrk : in out DoblDobl_Complex_VecVecs.VecVec;
-                       ydx : out DoblDobl_Complex_Vectors.Vector ) is
+                       x : in QuadDobl_Complex_Vectors.Vector;
+                       wrk : in out QuadDobl_Complex_VecVecs.VecVec;
+                       ydx : out QuadDobl_Complex_Vectors.Vector ) is
     
     use Standard_Natural_VecVecs;
 
@@ -176,15 +176,15 @@ package body DoblDobl_Gradient_Circuits is
     end if;
   end EvalDiff;
 
-  function EvalDiff ( c : Circuit; x : DoblDobl_Complex_Vectors.Vector )
-                    return DoblDobl_Complex_Vectors.Vector is
+  function EvalDiff ( c : Circuit; x : QuadDobl_Complex_Vectors.Vector )
+                    return QuadDobl_Complex_Vectors.Vector is
 
-    res : DoblDobl_Complex_Vectors.Vector(0..x'last);
-    wrk : DoblDobl_Complex_VecVecs.VecVec(1..c.m) := WorkSpace(c);
+    res : QuadDobl_Complex_Vectors.Vector(0..x'last);
+    wrk : QuadDobl_Complex_VecVecs.VecVec(1..c.m) := WorkSpace(c);
 
   begin
     EvalDiff(c,x,wrk,res);
-    DoblDobl_Complex_VecVecs.Clear(wrk);
+    QuadDobl_Complex_VecVecs.Clear(wrk);
     return res;
   end EvalDiff;
 
@@ -207,4 +207,4 @@ package body DoblDobl_Gradient_Circuits is
     end if;
   end Clear;
 
-end DoblDobl_Gradient_Circuits;
+end QuadDobl_Gradient_Circuits;
