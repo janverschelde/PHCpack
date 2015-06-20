@@ -1,3 +1,7 @@
+Sat 20 Jun 2015 : new package standard_jacobian_circuits to contain the
+  data structures to evaluate and differentiate systems of polynomials,
+  tested by ts_gradcirc.
+
 Fri 19 Jun 2015 : in standard_gradient_evaluations, added functions and
   procedures in case there are no common factors.
   New package standard_gradient_circuits encapsulates evaluation

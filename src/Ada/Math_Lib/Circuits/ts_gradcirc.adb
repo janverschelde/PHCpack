@@ -28,12 +28,15 @@ with QuadDobl_Complex_Vectors;
 with QuadDobl_Random_Vectors;
 with Multprec_Complex_Vectors;
 with Multprec_Random_Vectors;
+with Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Standard_Natural_VecVecs;
 with Symbol_Table;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;    use Standard_Complex_Polynomials_io;
 with Standard_Complex_Poly_Functions;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Polynomials;       use DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Polynomials_io;    use DoblDobl_Complex_Polynomials_io;
 with DoblDobl_Complex_Poly_Functions;
@@ -44,6 +47,7 @@ with Multprec_Complex_Polynomials;       use Multprec_Complex_Polynomials;
 with Multprec_Complex_Polynomials_io;    use Multprec_Complex_Polynomials_io;
 with Multprec_Complex_Poly_Functions;
 with Standard_Gradient_Circuits;
+with Standard_Jacobian_Circuits;
 with DoblDobl_Gradient_Circuits;
 with QuadDobl_Gradient_Circuits;
 with Multprec_Gradient_Circuits;
@@ -475,12 +479,55 @@ procedure ts_gradcirc is
     Multprec_Test(p,size);
   end Multprec_Test;
 
+  procedure Standard_System_Test is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system and then
+  --   tests the operations on the circuit representing the system.
+
+    use Standard_Jacobian_Circuits;
+    use Standard_Natural_Vectors;
+
+    p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    comfac : Standard_Natural_Vectors.Link_to_Vector;
+    c : Circuit;
+    nq : integer32;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ..."); get(p);
+    c := Create(p.all);
+    put("-> number of equations : ");
+    put(Number_of_Polynomials(c),1); new_line;
+    put("-> number of variables : ");
+    put(Number_of_Variables(c),1); new_line;
+    put("-> number of monomials : ");
+    put(Number_of_Monomials(c),1); new_line;
+    nq := integer32(Number_of_Polynomials(c));
+    for k in 1..nq loop
+      put("-> polynomial "); put(k,1); put(" has ");
+      put(Number_of_Terms(c,k),1); put_line(" terms");
+    end loop;
+    for k in 1..nq loop
+      put("-> polynomial "); put(k,1); put_line(" : ");
+      for i in 1..integer32(Number_of_Terms(c,k)) loop
+        put(Coefficient(c,k,i));
+        put(Product(c,k,i).all);
+        comfac := Factor(c,k,i);
+        if comfac /= null then
+          put(" +"); put(comfac.all);
+        end if;
+        new_line;
+      end loop;
+    end loop;
+  end Standard_System_Test;
+
   procedure Main is
 
   -- DESCRPITION :
   --  Prompts the user for the precision and the dimension.
 
-    ans : character;
+    ans,sys : character;
     n : natural32 := 0;
 
   begin
@@ -493,23 +540,30 @@ procedure ts_gradcirc is
     put("Type 0, 1, 2, or 3 to select the precision : ");
     Ask_Alternative(ans,"0123");
     new_line;
-    put("Give the number of variables : "); get(n);
-    Symbol_Table.Init(n);
-    case ans is 
-      when '0' => Standard_Test(n);
-      when '1' => DoblDobl_Test(n);
-      when '2' => QuadDobl_Test(n);
-      when '3' =>
-        declare
-          deci,size : natural32 := 0;
-        begin
-          new_line;
-          put("Give the number of decimal places : "); get(deci);
-          size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
-          Multprec_Test(n,size);
-        end;
-      when others => null;
-    end case;
+    put("Test system or one polynomial ? (s/p) ");
+    Ask_Alternative(sys,"sp");
+    if sys = 'p' then
+      new_line;
+      put("Give the number of variables : "); get(n);
+      Symbol_Table.Init(n);
+      case ans is 
+        when '0' => Standard_Test(n);
+        when '1' => DoblDobl_Test(n);
+        when '2' => QuadDobl_Test(n);
+        when '3' =>
+          declare
+            deci,size : natural32 := 0;
+          begin
+            new_line;
+            put("Give the number of decimal places : "); get(deci);
+            size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
+            Multprec_Test(n,size);
+          end;
+        when others => null;
+      end case;
+    else
+      Standard_System_Test;
+    end if;
   end Main;
 
 begin
