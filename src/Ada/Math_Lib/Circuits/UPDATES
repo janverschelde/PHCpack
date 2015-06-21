@@ -1,3 +1,5 @@
+Sun 21 Jun 2015 : updates in standard_jacobian_evaluations and ts_speelsys.
+
 Sat 20 Jun 2015 : new package standard_jacobian_circuits to contain the
   data structures to evaluate and differentiate systems of polynomials,
   tested by ts_gradcirc.

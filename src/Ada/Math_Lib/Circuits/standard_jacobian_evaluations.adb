@@ -23,21 +23,21 @@ package body Standard_Jacobian_Evaluations is
     return res;
   end Integer_to_Natural;
 
-  procedure Standard_Jacobian_Evaluation
-              ( f,b : in Standard_Natural_VecVecs.VecVec;
+  procedure EvalDiff
+              ( b : in Standard_Natural_VecVecs.VecVec;
                 c : in Standard_Complex_VecVecs.VecVec;
                 k : in Standard_Natural_VecVecs.VecVec;
                 x : in Standard_Complex_Vectors.Vector;
                 z : out Standard_Complex_Vectors.Vector;
+                y : out Standard_Complex_VecVecs.VecVec;
                 A : out Standard_Complex_Matrices.Matrix ) is
 
-    y : Standard_Complex_VecVecs.VecVec(f'range);
     ind : integer32;
     use Standard_Complex_Numbers;
     cff : Complex_Number;
 
   begin
-    y := Standard_Gradient_Evaluations.Gradient_Monomials(f,b,x);
+    Standard_Gradient_Evaluations.Gradient_Monomials(b,x,y);
     for i in z'range loop
       z(i) := Create(0.0);
       for j in A'range(2) loop
@@ -52,16 +52,82 @@ package body Standard_Jacobian_Evaluations is
         end loop;
       end loop;
     end loop;
-  end Standard_Jacobian_Evaluation;
+  end EvalDiff;
 
-  procedure Standard_Jacobian_Evaluation
+  procedure EvalDiff
               ( f,b : in Standard_Natural_VecVecs.VecVec;
                 c : in Standard_Complex_VecVecs.VecVec;
                 k : in Standard_Natural_VecVecs.VecVec;
                 x : in Standard_Complex_Vectors.Vector;
                 z : out Standard_Complex_Vectors.Vector;
                 y : out Standard_Complex_VecVecs.VecVec;
-                A : out Standard_Complex_VecVecs.VecVec ) is
+                A : out Standard_Complex_Matrices.Matrix ) is
+
+    ind : integer32;
+    use Standard_Complex_Numbers;
+    cff : Complex_Number;
+
+  begin
+    Standard_Gradient_Evaluations.Gradient_Monomials(f,b,x,y);
+    for i in z'range loop
+      z(i) := Create(0.0);
+      for j in A'range(2) loop
+        A(i,j) := Create(0.0);
+      end loop;
+      for j in c(i)'range loop
+        ind := integer32(k(i)(j));
+        cff := c(i)(j);
+        z(i) := z(i) + cff*y(ind)(0);
+        for k in A'range(2) loop
+          A(i,k) := A(i,k) + cff*y(ind)(k);
+        end loop;
+      end loop;
+    end loop;
+  end EvalDiff;
+
+  procedure EvalDiff
+              ( b : in Standard_Natural_VecVecs.VecVec;
+                c : in Standard_Complex_VecVecs.VecVec;
+                k : in Standard_Natural_VecVecs.VecVec;
+                x : in Standard_Complex_Vectors.Vector;
+                z : out Standard_Complex_Vectors.Vector;
+                y : out Standard_Complex_VecVecs.VecVec;
+                A : in Standard_Complex_VecVecs.VecVec ) is
+
+    ind : integer32;
+    use Standard_Complex_Numbers;
+    cff : Complex_Number;
+    yind,Arow : Standard_Complex_Vectors.Link_to_Vector;
+
+  begin
+    Standard_Gradient_Evaluations.Gradient_Monomials(b,x,y);
+    for i in z'range loop
+      z(i) := Create(0.0);
+      Arow := A(i);
+      for j in Arow'range loop
+        Arow(j) := Create(0.0);
+      end loop;
+      for j in c(i)'range loop
+        ind := integer32(k(i)(j));
+        cff := c(i)(j);
+        yind := y(ind);
+        Arow := A(i);
+        z(i) := z(i) + cff*yind(0);
+        for k in Arow'range loop
+          Arow(k) := Arow(k) + cff*yind(k);
+        end loop;
+      end loop;
+    end loop;
+  end EvalDiff;
+
+  procedure EvalDiff
+              ( f,b : in Standard_Natural_VecVecs.VecVec;
+                c : in Standard_Complex_VecVecs.VecVec;
+                k : in Standard_Natural_VecVecs.VecVec;
+                x : in Standard_Complex_Vectors.Vector;
+                z : out Standard_Complex_Vectors.Vector;
+                y : out Standard_Complex_VecVecs.VecVec;
+                A : in Standard_Complex_VecVecs.VecVec ) is
 
     ind : integer32;
     use Standard_Complex_Numbers;
@@ -87,7 +153,9 @@ package body Standard_Jacobian_Evaluations is
         end loop;
       end loop;
     end loop;
-  end Standard_Jacobian_Evaluation;
+  end EvalDiff;
+
+-- WRAPPERS :
 
   procedure Standard_Jacobian_Evaluation
               ( v : in Standard_Natural_VecVecs.VecVec;
@@ -95,13 +163,14 @@ package body Standard_Jacobian_Evaluations is
                 k : in Standard_Natural_VecVecs.VecVec;
                 x : in Standard_Complex_Vectors.Vector;
                 z : out Standard_Complex_Vectors.Vector;
+                y : out Standard_Complex_VecVecs.VecVec;
                 A : out Standard_Complex_Matrices.Matrix ) is
 
     f,b : Standard_Natural_VecVecs.VecVec(v'range);
 
   begin
     Split_Common_Factors(v,f,b);
-    Standard_Jacobian_Evaluation(f,b,c,k,x,z,A);
+    EvalDiff(f,b,c,k,x,z,y,A);
   end Standard_Jacobian_Evaluation;
 
   procedure Standard_Jacobian_Evaluation
@@ -111,13 +180,13 @@ package body Standard_Jacobian_Evaluations is
                 x : in Standard_Complex_Vectors.Vector;
                 z : out Standard_Complex_Vectors.Vector;
                 y : out Standard_Complex_VecVecs.VecVec;
-                A : out Standard_Complex_VecVecs.VecVec ) is
+                A : in Standard_Complex_VecVecs.VecVec ) is
 
     f,b : Standard_Natural_VecVecs.VecVec(v'range);
 
   begin
     Split_Common_Factors(v,f,b);
-    Standard_Jacobian_Evaluation(f,b,c,k,x,z,y,A);
+    EvalDiff(f,b,c,k,x,z,y,A);
   end Standard_Jacobian_Evaluation;
 
   procedure Standard_Jacobian_Evaluation
@@ -126,12 +195,13 @@ package body Standard_Jacobian_Evaluations is
                 k : in Standard_Natural_VecVecs.VecVec;
                 x : in Standard_Complex_Vectors.Vector;
                 z : out Standard_Complex_Vectors.Vector;
+                y : out Standard_Complex_VecVecs.VecVec;
                 A : out Standard_Complex_Matrices.Matrix ) is
 
     e : Standard_Natural_VecVecs.VecVec(v'range) := Integer_to_Natural(v);
 
   begin
-    Standard_Jacobian_Evaluation(e,c,k,x,z,A);
+    Standard_Jacobian_Evaluation(e,c,k,x,z,y,A);
     Standard_Natural_VecVecs.Clear(e);
   end Standard_Jacobian_Evaluation;
 
@@ -142,7 +212,7 @@ package body Standard_Jacobian_Evaluations is
                 x : in Standard_Complex_Vectors.Vector;
                 z : out Standard_Complex_Vectors.Vector;
                 y : out Standard_Complex_VecVecs.VecVec;
-                A : out Standard_Complex_VecVecs.VecVec ) is
+                A : in Standard_Complex_VecVecs.VecVec ) is
 
     e : Standard_Natural_VecVecs.VecVec(v'range) := Integer_to_Natural(v);
 

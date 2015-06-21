@@ -148,13 +148,17 @@ procedure ts_speelsys is
     jm : Standard_Complex_Jaco_Matrices.Jaco_Mat(A'range(1),A'range(2))
        := Standard_Complex_Jaco_Matrices.Create(p);
     d : Standard_Complex_Vectors.Vector(A'range(1));
+    w : Standard_Complex_VecVecs.VecVec(v'range);
 
     use Standard_Jacobian_Evaluations;
 
   begin
     A := Standard_Complex_Jaco_Matrices.Eval(jm,x);
     Standard_Polynomial_Flatteners.Coefficients_of_Supports(p,v,c,k);
-    Standard_Jacobian_Evaluation(v,c,k,x,z,B);
+    for i in w'range loop
+      w(i) := new Standard_Complex_Vectors.Vector(0..n);
+    end loop;
+    Standard_Jacobian_Evaluation(v,c,k,x,z,w,B);
     put_line("the first evaluation : "); put_line(y);
     put_line("the second evaluation : "); put_line(z);
     d := Difference_between_Rows(A,B);
