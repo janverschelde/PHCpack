@@ -1,7 +1,6 @@
 with unchecked_deallocation;
 with Standard_Natural_VecVecs;
 with Standard_Integer_VecVecs;
-with Standard_Complex_VecVecs;
 with Lists_of_Integer_Vectors;
 with Lexicographical_Supports;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
@@ -165,6 +164,51 @@ package body Standard_Jacobian_Circuits is
       return c.f(ind);
     end if;
   end Factor;
+
+-- EVALUATION AND DIFFERENTIATION :
+
+  function WorkSpace ( c : Circuit )
+                     return Standard_Complex_VecVecs.VecVec is
+
+    res : Standard_Complex_VecVecs.VecVec(1..c.m);
+    dim : integer32 := integer32(c.nv);
+
+  begin
+    for k in res'range loop
+      res(k) := new Standard_Complex_Vectors.Vector(0..dim);
+    end loop;
+    return res;
+  end WorkSpace;
+
+  procedure EvalDiff ( c : in Circuit;
+                       x : in Standard_Complex_Vectors.Vector;
+                       wrk : in out Standard_Complex_VecVecs.VecVec;
+                       y : out Standard_Complex_Vectors.Vector;
+                       A : out Standard_Complex_Matrices.Matrix ) is
+
+    use Standard_Natural_VecVecs;
+
+  begin
+    if c.f = null
+     then EvalDiff(c.b,c.c,c.k,x,y,wrk,A);
+     else EvalDiff(c.f.all,c.b,c.c,c.k,x,y,wrk,A);
+    end if;
+  end EvalDiff;
+
+  procedure EvalDiff ( c : in Circuit;
+                       x : in Standard_Complex_Vectors.Vector;
+                       wrk : in out Standard_Complex_VecVecs.VecVec;
+                       y : out Standard_Complex_Vectors.Vector;
+                       A : in Standard_Complex_VecVecs.VecVec ) is
+
+    use Standard_Natural_VecVecs;
+
+  begin
+    if c.f = null
+     then EvalDiff(c.b,c.c,c.k,x,y,wrk,A);
+     else EvalDiff(c.f.all,c.b,c.c,c.k,x,y,wrk,A);
+    end if;
+  end EvalDiff;
 
 -- DESTRUCTOR :
 

@@ -3,6 +3,8 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
+with Standard_Complex_Matrices;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 
 package Standard_Jacobian_Circuits is
@@ -70,6 +72,74 @@ package Standard_Jacobian_Circuits is
   -- DESCRIPTION :
   --   Returns the common factor for the j-th term in the i-th polynomials.
   --   If there are no common factors, then the null pointer is returned.
+
+-- EVALUATION AND DIFFERENTIATION :
+
+  function WorkSpace ( c : Circuit )
+                     return Standard_Complex_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns work space to evaluate and differentiate the circuit.
+  --   The data structure on return should be used in the wrk below.
+
+  procedure EvalDiff ( c : in Circuit;
+                       x : in Standard_Complex_Vectors.Vector;
+                       wrk : in out Standard_Complex_VecVecs.VecVec;
+                       y : out Standard_Complex_Vectors.Vector;
+                       A : out Standard_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Computes the value of the polynomial system defined by a circuit,
+  --   and evaluates its Jacobian at x.
+  --   This version returns the Jacobian as a regular two dimensional matrix.
+ 
+  -- REQUIRED :
+  --   The range of the vector ydx must be 0..x'last with its 
+  --   0-th component the function value and the i-th
+  --   component the i-th derivative of the sum at x.
+  --   The wrk serves as work space and has been allocated,
+  --   in particular wrk'range = 1..Numbers_of_Terms(c).
+
+  -- ON ENTRY :
+  --   c       a circuit for a polynomial in several variables;
+  --   x       values for the variables: where to evaluate at;
+  --   wrk     serves as workspace for all evaluated monomials,
+  --           to be allocated with the WorkSpace function of above.
+
+  -- ON RETURN :
+  --   wrk     used workspace, filled with values;
+  --   y       y(k) is the value of the k-th polynomial at x;
+  --   A       Jacobian matrix of the system evaluated at x.
+
+  procedure EvalDiff ( c : in Circuit;
+                       x : in Standard_Complex_Vectors.Vector;
+                       wrk : in out Standard_Complex_VecVecs.VecVec;
+                       y : out Standard_Complex_Vectors.Vector;
+                       A : in Standard_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Computes the value of the polynomial system defined by a circuit,
+  --   and evaluates its Jacobian at x.
+  --   This version returns the Jacobian as a vector of columns.
+ 
+  -- REQUIRED :
+  --   The range of the vector ydx must be 0..x'last with its 
+  --   0-th component the function value and the i-th
+  --   component the i-th derivative of the sum at x.
+  --   The wrk serves as work space and has been allocated,
+  --   in particular wrk'range = 1..Numbers_of_Terms(c).
+
+  -- ON ENTRY :
+  --   c       a circuit for a polynomial in several variables;
+  --   x       values for the variables: where to evaluate at;
+  --   wrk     serves as workspace for all evaluated monomials,
+  --           to be allocated with the WorkSpace function of above;
+  --   A       allocated space for a vector of columns.
+
+  -- ON RETURN :
+  --   wrk     used workspace, filled with values;
+  --   y       y(k) is the value of the k-th polynomial at x;
+  --   A       Jacobian matrix of the system evaluated at x.
 
 -- DESTRUCTOR :
 

@@ -31,12 +31,16 @@ with Multprec_Random_Vectors;
 with Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Standard_Natural_VecVecs;
+with Standard_Complex_VecVecs;
+with Standard_Complex_Matrices;
 with Symbol_Table;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;    use Standard_Complex_Polynomials_io;
 with Standard_Complex_Poly_Functions;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with Standard_Complex_Poly_SysFun;
+with Standard_Complex_Jaco_Matrices;
 with DoblDobl_Complex_Polynomials;       use DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Polynomials_io;    use DoblDobl_Complex_Polynomials_io;
 with DoblDobl_Complex_Poly_Functions;
@@ -82,6 +86,68 @@ procedure ts_gradcirc is
         put(y(i)); new_line;
         put("error :"); put(val,3); new_line;
       end if;
+    end loop;
+  end Compare;
+
+  procedure Compare ( x : in Standard_Complex_Matrices.Matrix;
+                      y : in Standard_Complex_Matrices.Matrix;
+                      tol : in double_float; output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Compares the values in x with the values in y.
+  --   If the differences between the corresponding values is larger
+  --   than the tolerance tol, then an error message is written.
+  --   If the flag output is true, then all differences are written.
+
+    use Standard_Complex_Numbers;
+
+    dff : Complex_Number;
+    val : double_float;
+ 
+  begin
+    for i in x'range(1) loop
+      for j in x'range(2) loop
+        dff := x(i,j) - y(i,j);
+        val := AbsVal(dff);
+        if val > tol or output then
+          put("difference at ("); put(i,1); put(",");
+          put(j,1); put_line(") :");
+          put(x(i,j)); new_line;
+          put(y(i,j)); new_line;
+          put("error :"); put(val,3); new_line;
+        end if;
+      end loop;
+    end loop;
+  end Compare;
+
+  procedure Compare ( x : in Standard_Complex_Matrices.Matrix;
+                      y : in Standard_Complex_VecVecs.VecVec;
+                      tol : in double_float; output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Compares the values in x with the values in y.
+  --   If the differences between the corresponding values is larger
+  --   than the tolerance tol, then an error message is written.
+  --   If the flag output is true, then all differences are written.
+
+    use Standard_Complex_Numbers;
+
+    dff : Complex_Number;
+    val : double_float;
+ 
+  begin
+    for i in x'range(1) loop
+      for j in x'range(2) loop
+        dff := x(i,j) - y(i)(j);
+        val := AbsVal(dff);
+        if val > tol or output then
+          put("difference at ("); put(i,1); put(",");
+          put(j,1); put_line(") :");
+          put(x(i,j)); new_line;
+          put(y(i)(j)); new_line;
+          put("error :"); put(val,3); new_line;
+        end if;
+      end loop;
     end loop;
   end Compare;
 
@@ -479,6 +545,48 @@ procedure ts_gradcirc is
     Multprec_Test(p,size);
   end Multprec_Test;
 
+  procedure Standard_Jacobian_Test 
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                c : in Standard_Jacobian_Circuits.Circuit ) is
+
+  -- DESCRIPTION :
+  --   Tests the evaluation at a random point using the circuit c
+  --   defined by a polynomial system p,
+  --   with comparisons to the straightforward evaluations.
+
+    use Standard_Jacobian_Circuits;
+
+    nm : constant integer32 := integer32(Number_of_Monomials(c));
+    nq : constant integer32 := integer32(Number_of_Polynomials(c));
+    nv : constant integer32 := integer32(Number_of_Variables(c));
+    x : constant Standard_Complex_Vectors.Vector(1..nv)
+      := Standard_Random_Vectors.Random_Vector(1,nv);
+    px : constant Standard_Complex_Vectors.Vector(1..nq)
+       := Standard_Complex_Poly_SysFun.Eval(p,x);
+    jm : Standard_Complex_Jaco_Matrices.Jaco_Mat(1..nq,1..nv)
+       := Standard_Complex_Jaco_Matrices.Create(p);
+    Ap : Standard_Complex_Matrices.Matrix(jm'range(1),jm'range(2))
+       := Standard_Complex_Jaco_Matrices.Eval(jm,x);
+    wrk : Standard_Complex_VecVecs.VecVec(1..nm) := WorkSpace(c);
+    y : Standard_Complex_Vectors.Vector(1..nq);
+    A : Standard_Complex_Matrices.Matrix(1..nq,1..nv);
+    B : Standard_Complex_VecVecs.VecVec(1..nv);
+
+  begin
+    EvalDiff(c,x,wrk,y,A);
+    for i in 1..nv loop
+      B(i) := new Standard_Complex_Vectors.Vector(1..nq);
+    end loop;
+    EvalDiff(c,x,wrk,y,B);
+    put_line("Comparing the evaluation :");
+    Compare(px,y,1.0E-8,true);
+    put_line("Comparing the differentiation :");
+    Compare(Ap,A,1.0E-8,true);
+    put_line("Comparing the vectors of vectors :");
+    Compare(Ap,B,1.0E-8,true);
+    Standard_Complex_Jaco_Matrices.Clear(jm);
+  end Standard_Jacobian_Test;
+
   procedure Standard_System_Test is
 
   -- DESCRIPTION :
@@ -520,6 +628,7 @@ procedure ts_gradcirc is
         new_line;
       end loop;
     end loop;
+    Standard_Jacobian_Test(p.all,c);
   end Standard_System_Test;
 
   procedure Main is
