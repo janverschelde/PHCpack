@@ -49,5 +49,7 @@ dobldobl_gradient_circuits        : gradient circuits for double doubles
 quaddobl_gradient_circuits        : gradient circuits for quad doubles
 multprec_gradient_circuits        : gradient circuits for multiprecision
 standard_jacobian_circuits        : eval & diff circuits for systems
+dobldobl_jacobian_circuits        : Jacobian circuits for double doubles
+quaddobl_jacobian_circuits        : Jacobian circuits for quad doubles
 ts_gradcirc                       : test on eval & diff circuits
 -------------------------------------------------------------------------------
