@@ -1,3 +1,5 @@
+Mon 22 Jun 2015 : new package multprec_polynomial_flatteners.
+
 Wed 17 Jun 2015 : moved algorithmic differentation code to ../Circuits.
 
 Wed 10 Jun 2015 : more tests in ts_vmpdiff, comparing Jacobian calculation

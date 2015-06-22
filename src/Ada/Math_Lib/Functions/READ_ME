@@ -49,6 +49,7 @@ lexicographical_supports          : supports in lexicographic increasing order
 standard_polynomial_flatteners    : flattened representation of standard system
 dobldobl_polynomial_flatteners    : flattened representation of dobldobl system
 quaddobl_polynomial_flatteners    : flattened representation of quaddobl system
+multprec_polynomial_flatteners    : flattened representation of multprec system
 -------------------------------------------------------------------------------
 ts_evaline                        : calls the evaluator package
 ts_evalpoly                       : development of nested Horner scheme
