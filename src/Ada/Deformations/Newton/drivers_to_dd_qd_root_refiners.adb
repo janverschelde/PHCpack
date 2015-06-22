@@ -6,7 +6,11 @@ with Standard_Complex_Laur_Systems;
 with Multprec_Complex_Laurentials_io;
 with Multprec_Complex_Laur_Systems;
 with DoblDobl_Polynomial_Convertors;     use DoblDobl_Polynomial_Convertors;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Laur_Poly_Convertors;
 with QuadDobl_Polynomial_Convertors;     use QuadDobl_Polynomial_Convertors;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Laur_Poly_Convertors;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;
@@ -118,9 +122,21 @@ package body Drivers_to_dd_qd_Root_Refiners is
       new_line; put("refining "); 
       put(DoblDobl_Complex_Solutions.Length_Of(dd_s),1);
       put(" solutions ...");
-      tstart(timer);
-      DoblDobl_Root_Refiner(dd_p.all,dd_s);
-      tstop(timer);
+      if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(dd_p.all) then
+        tstart(timer);
+        DoblDobl_Root_Refiner(dd_p.all,dd_s);
+        tstop(timer);
+      else
+        declare
+          use DoblDobl_Laur_Poly_Convertors;         
+          q : DoblDobl_Complex_Poly_Systems.Poly_Sys(dd_p'range)
+            := Laurent_to_Polynomial_System(dd_p.all);
+        begin
+          tstart(timer);
+          DoblDobl_Root_Refiner(q,dd_s);
+          tstop(timer);
+        end;
+      end if;
       put_line(" see the output file for results"); new_line;
       DoblDobl_Complex_Solutions_io.write(file,dd_s);
       new_line(file);
@@ -135,9 +151,21 @@ package body Drivers_to_dd_qd_Root_Refiners is
       new_line; put("refining "); 
       put(QuadDobl_Complex_Solutions.Length_Of(qd_s),1);
       put(" solutions ...");
-      tstart(timer);
-      QuadDobl_Root_Refiner(qd_p.all,qd_s);
-      tstop(timer);
+      if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(qd_p.all) then
+        tstart(timer);
+        QuadDobl_Root_Refiner(qd_p.all,qd_s);
+        tstop(timer);
+      else
+        declare
+          use QuadDobl_Laur_Poly_Convertors;         
+          q : QuadDobl_Complex_Poly_Systems.Poly_Sys(qd_p'range)
+            := Laurent_to_Polynomial_System(qd_p.all);
+        begin
+          tstart(timer);
+          QuadDobl_Root_Refiner(q,qd_s);
+          tstop(timer);
+        end;
+      end if;
       put_line(" see the output file for results"); new_line;
       QuadDobl_Complex_Solutions_io.write(file,qd_s);
       new_line(file);

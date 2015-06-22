@@ -153,6 +153,20 @@ package body DoblDobl_Root_Refiners is
   end DoblDobl_Root_Refiner;
 
   procedure DoblDobl_Root_Refiner
+              ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in DoblDobl_Jacobian_Circuits.Circuit;
+                s : in DoblDobl_Complex_Solutions.Link_to_Solution;
+                wrk : in out DoblDobl_Complex_VecVecs.VecVec ) is
+  begin
+    for i in 1..3 loop
+      DoblDobl_Newton_Step(f,jf,s.v,wrk,s.err,s.rco,s.res);
+     -- put("err : "); put(s.err,3);
+     -- put(" = rco : "); put(s.rco,3);
+     -- put(" = res : "); put(s.res,3); new_line;
+    end loop;
+  end DoblDobl_Root_Refiner;
+
+  procedure DoblDobl_Root_Refiner
               ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                 s : in out DoblDobl_Complex_Solutions.Solution_List ) is
 
@@ -175,6 +189,32 @@ package body DoblDobl_Root_Refiners is
     DoblDobl_Complex_Laur_SysFun.Clear(f);
     DoblDobl_Complex_Laur_JacoMats.Clear(jm);
     DoblDobl_Complex_Laur_JacoMats.Clear(jf);
+  end DoblDobl_Root_Refiner;
+
+  procedure DoblDobl_Root_Refiner
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Jacobian_Circuits;
+    use DoblDobl_Complex_Solutions;
+
+    f : Eval_Poly_Sys(p'range) := Create(p);
+    jf : Circuit := Create(p);
+    nm : constant integer32 := integer32(Number_of_Monomials(jf));
+    wrk : DoblDobl_Complex_VecVecs.VecVec(1..nm) := WorkSpace(jf);
+    tmp : Solution_List := s;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      DoblDobl_Root_Refiner(f,jf,ls,wrk);
+      tmp := Tail_Of(tmp);
+    end loop;
+    DoblDobl_Complex_Poly_SysFun.Clear(f);
+    DoblDobl_Jacobian_Circuits.Clear(jf);
+    DoblDobl_Complex_VecVecs.Clear(wrk);
   end DoblDobl_Root_Refiner;
 
   procedure Silent_Root_Refiner

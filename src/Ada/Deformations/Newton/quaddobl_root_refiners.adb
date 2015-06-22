@@ -153,6 +153,20 @@ package body QuadDobl_Root_Refiners is
   end QuadDobl_Root_Refiner;
 
   procedure QuadDobl_Root_Refiner
+              ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in QuadDobl_Jacobian_Circuits.Circuit;
+                s : in QuadDobl_Complex_Solutions.Link_to_Solution;
+                wrk : in out QuadDobl_Complex_VecVecs.VecVec ) is
+  begin
+    for i in 1..5 loop
+      QuadDobl_Newton_Step(f,jf,s.v,wrk,s.err,s.rco,s.res);
+     -- put("err : "); put(s.err,3);
+     -- put(" = rco : "); put(s.rco,3);
+     -- put(" = res : "); put(s.res,3); new_line;
+    end loop;
+  end QuadDobl_Root_Refiner;
+
+  procedure QuadDobl_Root_Refiner
               ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 s : in out QuadDobl_Complex_Solutions.Solution_List ) is
 
@@ -173,6 +187,32 @@ package body QuadDobl_Root_Refiners is
       tmp := Tail_Of(tmp);
     end loop;
     Clear(f); Clear(jm); Clear(jf);
+  end QuadDobl_Root_Refiner;
+
+  procedure QuadDobl_Root_Refiner
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Poly_SysFun;
+    use QuadDobl_Jacobian_Circuits;
+    use QuadDobl_Complex_Solutions;
+
+    f : Eval_Poly_Sys(p'range) := Create(p);
+    jf : Circuit := Create(p);
+    nm : constant integer32 := integer32(Number_of_Monomials(jf));
+    wrk : QuadDobl_Complex_VecVecs.VecVec(1..nm) := WorkSpace(jf);
+    tmp : Solution_List := s;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      QuadDobl_Root_Refiner(f,jf,ls,wrk);
+      tmp := Tail_Of(tmp);
+    end loop;
+    QuadDobl_Complex_Poly_SysFun.Clear(f);
+    QuadDobl_Jacobian_Circuits.Clear(jf);
+    QuadDobl_Complex_VecVecs.Clear(wrk);
   end QuadDobl_Root_Refiner;
 
   procedure Silent_Root_Refiner

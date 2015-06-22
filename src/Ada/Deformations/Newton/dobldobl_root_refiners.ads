@@ -135,7 +135,28 @@ package DoblDobl_Root_Refiners is
                 s : in DoblDobl_Complex_Solutions.Link_to_Solution );
 
   -- DESCRIPTION :
-  --   Refines the solution s of the system f with Jacobi matrix jf.
+  --   Refines the solution s of the system f with Jacobian matrix jf,
+  --   applying three Newton steps.
+
+  procedure DoblDobl_Root_Refiner
+              ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in DoblDobl_Jacobian_Circuits.Circuit;
+                s : in DoblDobl_Complex_Solutions.Link_to_Solution;
+                wrk : in out DoblDobl_Complex_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Refines the solution s of the system f with Jacobian matrix jf,
+  --   defined as a circuit, applying three Newton steps.
+
+  -- ON ENTRY :
+  --   f        polynomial system in evaluable form;
+  --   jf       Jacobian matrix defined as a circuit;
+  --   s        pointer to a solution;
+  --   wrk      work space for the evaluated monomials.
+
+  -- ON RETURN :
+  --   s        content where the pointer refers to is updated;
+  --   wrk      modified work space for the evaluated monomials.
 
   procedure DoblDobl_Root_Refiner
               ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
@@ -143,6 +164,14 @@ package DoblDobl_Root_Refiners is
 
   -- DESCRIPTION :
   --   Applies Newton's method to the solutions s of the system p.
+
+  procedure DoblDobl_Root_Refiner
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in out DoblDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Applies Newton's method to the solutions s of the system p,
+  --   using the circuit representation for the Jacobian matrix.
 
   procedure Silent_Root_Refiner
                ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;

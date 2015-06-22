@@ -2,7 +2,9 @@ with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
+with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Laur_Systems;
+with DoblDobl_Laur_Poly_Convertors;
 with DoblDobl_Complex_Solutions;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with DoblDobl_Root_Refiners;             use DoblDobl_Root_Refiners;
@@ -33,7 +35,16 @@ procedure ts_ddnewt is
     put("read "); 
     put(DoblDobl_Complex_Solutions.Length_Of(s),1);
     put_line(" solutions");
-    DoblDobl_Root_Refiner(p.all,s);
+    if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(p.all) then
+      DoblDobl_Root_Refiner(p.all,s);
+    else
+      declare
+        q : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range)
+          := DoblDobl_Laur_Poly_Convertors.Laurent_to_Polynomial_System(p.all);
+      begin
+        DoblDobl_Root_Refiner(q,s);
+      end;
+    end if;
     put_line("The refined solutions :");
     put(standard_output,DoblDobl_Complex_Solutions.Length_Of(s),
         natural32(DoblDobl_Complex_Solutions.Head_Of(s).n),s);
