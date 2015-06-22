@@ -31,6 +31,7 @@ coefficient_supported_polynomials : support vector polynomial representations
 standard_jacobian_evaluations     : evaluating and differentiation of systems
 dobldobl_jacobian_evaluations     : double double eval & diff of systems
 quaddobl_jacobian_evaluations     : quad double eval & diff of systems
+multprec_jacobian_evaluations     : multiprecision eval & diff of systems
 -------------------------------------------------------------------------------
 random_conditioned_evaluations    : generate problems with given condition
 varbprec_polynomial_evaluations   : evaluate polynomials at various precisions
@@ -51,5 +52,6 @@ multprec_gradient_circuits        : gradient circuits for multiprecision
 standard_jacobian_circuits        : eval & diff circuits for systems
 dobldobl_jacobian_circuits        : Jacobian circuits for double doubles
 quaddobl_jacobian_circuits        : Jacobian circuits for quad doubles
+multprec_jacobian_circuits        : Jacobian circuits for multprec numbers
 ts_gradcirc                       : test on eval & diff circuits
 -------------------------------------------------------------------------------

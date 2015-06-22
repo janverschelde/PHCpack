@@ -1,3 +1,6 @@
+Mon 22 Jun 2015 : new packages multprec_jacobian_evaluations and
+  multprec_jacobian_circuits, tested by ts_gradcirc.
+
 Sun 21 Jun 2015 : updates in standard_jacobian_evaluations and ts_speelsys.
   Upgraded standard_jacobian_circuits with EvalDiff procedure,
   tested by ts_gradcirc.  Versions for double doubles and quad doubles 

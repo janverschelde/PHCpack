@@ -37,6 +37,8 @@ with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Matrices;
 with Multprec_Complex_Vectors;
 with Multprec_Random_Vectors;
+with Multprec_Complex_VecVecs;
+with Multprec_Complex_Matrices;
 with Symbol_Table;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;    use Standard_Complex_Polynomials_io;
@@ -62,6 +64,10 @@ with QuadDobl_Complex_Jaco_Matrices;
 with Multprec_Complex_Polynomials;       use Multprec_Complex_Polynomials;
 with Multprec_Complex_Polynomials_io;    use Multprec_Complex_Polynomials_io;
 with Multprec_Complex_Poly_Functions;
+with Multprec_Complex_Poly_Systems;
+with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
+with Multprec_Complex_Poly_SysFun;
+with Multprec_Complex_Jaco_Matrices;
 with Standard_Gradient_Circuits;
 with Standard_Jacobian_Circuits;
 with DoblDobl_Gradient_Circuits;
@@ -69,6 +75,7 @@ with DoblDobl_Jacobian_Circuits;
 with QuadDobl_Gradient_Circuits;
 with QuadDobl_Jacobian_Circuits;
 with Multprec_Gradient_Circuits;
+with Multprec_Jacobian_Circuits;
 
 procedure ts_gradcirc is
 
@@ -370,6 +377,70 @@ procedure ts_gradcirc is
         put(y(i)); new_line;
         put("error : "); put(val,3); new_line;
       end if;
+    end loop;
+  end Compare;
+
+  procedure Compare ( x : in Multprec_Complex_Matrices.Matrix;
+                      y : in Multprec_Complex_Matrices.Matrix;
+                      tol : in double_float; output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Compares the values in x with the values in y.
+  --   If the differences between the corresponding values is larger
+  --   than the tolerance tol, then an error message is written.
+  --   If the flag output is true, then all differences are written.
+
+    use Multprec_Complex_Numbers;
+
+    dff : Complex_Number;
+    val : Floating_Number;
+ 
+  begin
+    for i in x'range(1) loop
+      for j in x'range(2) loop
+        dff := x(i,j) - y(i,j);
+        val := AbsVal(dff);
+        if val > tol or output then
+          put("difference at ("); put(i,1); put(",");
+          put(j,1); put_line(") :");
+          put(x(i,j)); new_line;
+          put(y(i,j)); new_line;
+          put("error : "); put(val,3); new_line;
+        end if;
+        Clear(dff); Clear(val);
+      end loop;
+    end loop;
+  end Compare;
+
+  procedure Compare ( x : in Multprec_Complex_Matrices.Matrix;
+                      y : in Multprec_Complex_VecVecs.VecVec;
+                      tol : in double_float; output : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Compares the values in x with the values in y.
+  --   If the differences between the corresponding values is larger
+  --   than the tolerance tol, then an error message is written.
+  --   If the flag output is true, then all differences are written.
+
+    use Multprec_Complex_Numbers;
+
+    dff : Complex_Number;
+    val : Floating_Number;
+ 
+  begin
+    for i in x'range(1) loop
+      for j in x'range(2) loop
+        dff := x(i,j) - y(i)(j);
+        val := AbsVal(dff);
+        if val > tol or output then
+          put("difference at ("); put(i,1); put(",");
+          put(j,1); put_line(") :");
+          put(x(i,j)); new_line;
+          put(y(i)(j)); new_line;
+          put("error : "); put(val,3); new_line;
+        end if;
+        Clear(dff); Clear(val);
+      end loop;
     end loop;
   end Compare;
 
@@ -809,6 +880,50 @@ procedure ts_gradcirc is
     QuadDobl_Complex_Jaco_Matrices.Clear(jm);
   end QuadDobl_Jacobian_Test;
 
+  procedure Multprec_Jacobian_Test 
+              ( p : in Multprec_Complex_Poly_Systems.Poly_Sys;
+                c : in Multprec_Jacobian_Circuits.Circuit;
+                size : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the evaluation at a random point using the circuit c
+  --   defined by a polynomial system p,
+  --   with comparisons to the straightforward evaluations,
+  --   in arbitrary multiprecision with numbers of the given size.
+
+    use Multprec_Jacobian_Circuits;
+
+    nm : constant integer32 := integer32(Number_of_Monomials(c));
+    nq : constant integer32 := integer32(Number_of_Polynomials(c));
+    nv : constant integer32 := integer32(Number_of_Variables(c));
+    x : Multprec_Complex_Vectors.Vector(1..nv)
+      := Multprec_Random_Vectors.Random_Vector(1,nv,size);
+    px : Multprec_Complex_Vectors.Vector(1..nq)
+       := Multprec_Complex_Poly_SysFun.Eval(p,x);
+    jm : Multprec_Complex_Jaco_Matrices.Jaco_Mat(1..nq,1..nv)
+       := Multprec_Complex_Jaco_Matrices.Create(p);
+    Ap : Multprec_Complex_Matrices.Matrix(jm'range(1),jm'range(2))
+       := Multprec_Complex_Jaco_Matrices.Eval(jm,x);
+    wrk : Multprec_Complex_VecVecs.VecVec(1..nm) := WorkSpace(c);
+    y : Multprec_Complex_Vectors.Vector(1..nq);
+    A : Multprec_Complex_Matrices.Matrix(1..nq,1..nv);
+    B : Multprec_Complex_VecVecs.VecVec(1..nv);
+
+  begin
+    EvalDiff(c,x,wrk,y,A);
+    for i in 1..nv loop
+      B(i) := new Multprec_Complex_Vectors.Vector(1..nq);
+    end loop;
+    EvalDiff(c,x,wrk,y,B);
+    put_line("Comparing the evaluation :");
+    Compare(px,y,1.0E-8,true);
+    put_line("Comparing the differentiation :");
+    Compare(Ap,A,1.0E-8,true);
+    put_line("Comparing the vectors of vectors :");
+    Compare(Ap,B,1.0E-8,true);
+    Multprec_Complex_Jaco_Matrices.Clear(jm);
+  end Multprec_Jacobian_Test;
+
   procedure Standard_System_Test is
 
   -- DESCRIPTION :
@@ -944,13 +1059,73 @@ procedure ts_gradcirc is
     QuadDobl_Jacobian_Test(p.all,c);
   end QuadDobl_System_Test;
 
+  procedure Multprec_System_Test ( size : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system and then
+  --   tests the operations on the circuit representing the system,
+  --   in arbitrary multiprecision, with numbers of the given size.
+
+    use Multprec_Jacobian_Circuits;
+    use Standard_Natural_Vectors;
+
+    p : Multprec_Complex_Poly_Systems.Link_to_Poly_Sys;
+    comfac : Standard_Natural_Vectors.Link_to_Vector;
+    c : Circuit;
+    nq : integer32;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ..."); get(p);
+    c := Create(p.all);
+    put("-> number of equations : ");
+    put(Number_of_Polynomials(c),1); new_line;
+    put("-> number of variables : ");
+    put(Number_of_Variables(c),1); new_line;
+    put("-> number of monomials : ");
+    put(Number_of_Monomials(c),1); new_line;
+    nq := integer32(Number_of_Polynomials(c));
+    for k in 1..nq loop
+      put("-> polynomial "); put(k,1); put(" has ");
+      put(Number_of_Terms(c,k),1); put_line(" terms");
+    end loop;
+    for k in 1..nq loop
+      put("-> polynomial "); put(k,1); put_line(" : ");
+      for i in 1..integer32(Number_of_Terms(c,k)) loop
+        put(Coefficient(c,k,i));
+        put(Product(c,k,i).all);
+        comfac := Factor(c,k,i);
+        if comfac /= null then
+          put(" +"); put(comfac.all);
+        end if;
+        new_line;
+      end loop;
+    end loop;
+    Multprec_Jacobian_Test(p.all,c,size);
+  end Multprec_System_Test;
+
+  function Ask_for_Size return natural32 is
+
+  -- DESCRIPTION :
+  --   Asks the user for the number of decimal places
+  --   and returns the corresponding size of the numbers.
+
+    deci,size : natural32 := 0;
+
+  begin
+    new_line;
+    put("Give the number of decimal places : "); get(deci);
+    size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
+    return size;
+  end Ask_for_Size;
+
   procedure Main is
 
   -- DESCRPITION :
   --  Prompts the user for the precision and the dimension.
 
     ans,sys : character;
-    n : natural32 := 0;
+    n,sz : natural32 := 0;
 
   begin
     new_line;
@@ -972,15 +1147,8 @@ procedure ts_gradcirc is
         when '0' => Standard_Test(n);
         when '1' => DoblDobl_Test(n);
         when '2' => QuadDobl_Test(n);
-        when '3' =>
-          declare
-            deci,size : natural32 := 0;
-          begin
-            new_line;
-            put("Give the number of decimal places : "); get(deci);
-            size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
-            Multprec_Test(n,size);
-          end;
+        when '3' => sz := Ask_for_Size;
+                    Multprec_Test(n,sz);
         when others => null;
       end case;
     else
@@ -988,6 +1156,8 @@ procedure ts_gradcirc is
         when '0' => Standard_System_Test;
         when '1' => DoblDobl_System_Test;
         when '2' => QuadDobl_System_Test;
+        when '3' => sz := Ask_for_Size;
+                    Multprec_System_Test(sz);
         when others => null;
       end case;
     end if;
