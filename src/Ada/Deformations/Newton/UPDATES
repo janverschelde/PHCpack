@@ -1,3 +1,6 @@
+Mon 22 Jun 2015 : added procedures in {dobldobl,quaddobl}_root_refiners to
+  use circuits for the Jacobian matrices.
+
 Sun 30 Nov 2014 : changes to random_conditioned_root_problems and ts_vmpnewt
   because of compiler warnings.
 

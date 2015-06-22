@@ -1,12 +1,14 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_VecVecs;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Jaco_Matrices;
 with QuadDobl_Complex_Laur_Systems;
 with QuadDobl_Complex_Laur_SysFun;
 with QuadDobl_Complex_Laur_JacoMats;
+with QuadDobl_Jacobian_Circuits;
 with QuadDobl_Complex_Solutions;
 
 package QuadDobl_Root_Refiners is
@@ -39,6 +41,28 @@ package QuadDobl_Root_Refiners is
   --   rco      estimate for the inverse condition number;
   --   res      residual, norm of the function value.
 
+  procedure QuadDobl_Newton_Step
+              ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in QuadDobl_Jacobian_Circuits.Circuit;
+                x : in out QuadDobl_Complex_Vectors.Vector;
+                wrk : in out QuadDobl_Complex_VecVecs.VecVec;
+                err,rco,res : out quad_double );
+
+  -- DESCRIPTION :
+  --   Does one Newton step in quad double complex arithmetic.
+
+  -- ON ENTRY :
+  --   f        evaluable form of a (Laurent) polynomial system;
+  --   jf       Jacobian matrix of f, defined as a circuit;
+  --   x        current approximate solution;
+  --   wrk      work space for the evaluated monomials.
+
+  -- ON RETURN :
+  --   x        updated approximate solution;
+  --   err      norm of the update vector;
+  --   rco      estimate for the inverse condition number;
+  --   res      residual, norm of the function value.
+
   procedure Silent_Newton
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in  QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
@@ -63,6 +87,37 @@ package QuadDobl_Root_Refiners is
   --   f        evaluable form of a (Laurent) polynomial system;
   --   jf       Jacobian matrix of f;
   --   x        current approximate solution,
+  --   epsxa    accuracy requirement on update factor;
+  --   epsfa    accuracy requirement on residual;
+  --   numit    number of iterations, must be zero on entry,
+  --   max      maximum number of iterations allowed.
+
+  -- ON RETURN :
+  --   x        updated approximate solution;
+  --   numit    number of iterations spent on refining x;
+  --   fail     true if spent max number of iterations
+  --            and none of the accuracy requirements is met.
+
+  procedure Silent_Newton
+              ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in  QuadDobl_Jacobian_Circuits.Circuit;
+                x : in out QuadDobl_Complex_Solutions.Solution;
+                wrk : in out QuadDobl_Complex_VecVecs.VecVec;
+                epsxa,epsfa : in quad_double; numit : in out natural32;
+                max : in natural32; fail : out boolean );
+
+  -- DESCRIPTION :
+  --   Applies Newton's method to refine an approximate root x of f.
+  --   Stops when one conditions is satisfied:
+  --   (1) numit >= max (reached maximum number of iterations),
+  --   (2) x.err < epsxa (update factor to x is less than epsxa),
+  --   (3) x.res < epsfa (residual smaller than epsfa).
+
+  -- ON ENTRY :
+  --   f        evaluable form of a polynomial system;
+  --   jf       Jacobian matrix of f, defined as a circuit;
+  --   x        current approximate solution,
+  --   wrk      work space for the evaluated monomials;
   --   epsxa    accuracy requirement on update factor;
   --   epsfa    accuracy requirement on residual;
   --   numit    number of iterations, must be zero on entry,

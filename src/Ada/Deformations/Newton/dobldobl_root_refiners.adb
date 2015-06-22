@@ -33,6 +33,35 @@ package body DoblDobl_Root_Refiners is
   end DoblDobl_Newton_Step;
 
   procedure DoblDobl_Newton_Step
+              ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in DoblDobl_Jacobian_Circuits.Circuit;
+                x : in out DoblDobl_Complex_Vectors.Vector;
+                wrk : in out DoblDobl_Complex_VecVecs.VecVec;
+                err,rco,res : out double_double ) is
+
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Jacobian_Circuits;
+
+    y : DoblDobl_Complex_Vectors.Vector(f'range);
+    A : Matrix(f'range,f'range);
+    ipvt : Standard_Integer_Vectors.Vector(A'range(2));
+    info : integer32;
+    Anorm : double_double;
+
+  begin
+    EvalDiff(jf,x,wrk,y,A);
+    DoblDobl_Complex_Vectors.Min(y);
+    lufac(A,A'last(1),ipvt,info);
+    Anorm := Norm1(A);
+    estco(A,A'last(1),ipvt,Anorm,rco);
+    lusolve(A,A'last(1),ipvt,y);
+    DoblDobl_Complex_Vectors.Add(x,y);
+    err := Max_Norm(y);
+    y := eval(f,x);
+    res := Max_Norm(y);
+  end DoblDobl_Newton_Step;
+
+  procedure DoblDobl_Newton_Step
               ( f : in DoblDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in DoblDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out DoblDobl_Complex_Vectors.Vector;
@@ -86,6 +115,24 @@ package body DoblDobl_Root_Refiners is
     while numit < max loop
       numit := numit + 1;
       DoblDobl_Newton_Step(f,jf,x.v,x.err,x.rco,x.res);
+      if (x.err < epsxa) or (x.res < epsfa)
+       then fail := false; exit;
+      end if;
+    end loop;
+  end Silent_Newton;
+
+  procedure Silent_Newton
+              ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in  DoblDobl_Jacobian_Circuits.Circuit;
+                x : in out DoblDobl_Complex_Solutions.Solution;
+                wrk : in out DoblDobl_Complex_VecVecs.VecVec;
+                epsxa,epsfa : in double_double; numit : in out natural32;
+                max : in natural32; fail : out boolean ) is
+  begin
+    fail := true;
+    while numit < max loop
+      numit := numit + 1;
+      DoblDobl_Newton_Step(f,jf,x.v,wrk,x.err,x.rco,x.res);
       if (x.err < epsxa) or (x.res < epsfa)
        then fail := false; exit;
       end if;
