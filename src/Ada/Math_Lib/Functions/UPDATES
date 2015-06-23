@@ -1,3 +1,6 @@
+Tue 23 Jun 2015 : changed ts_perfeval.adb for a change in the specification
+  of standard_jacobian_evaluations.
+
 Mon 22 Jun 2015 : new package multprec_polynomial_flatteners.
 
 Wed 17 Jun 2015 : moved algorithmic differentation code to ../Circuits.

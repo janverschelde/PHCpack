@@ -40,6 +40,7 @@ with QuadDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Jaco_Matrices;
 with Lists_of_Integer_Vectors;           use Lists_of_Integer_Vectors;
 with Lexicographical_Supports;
+with Coefficient_Supported_Polynomials;  use Coefficient_Supported_Polynomials;
 with Standard_Polynomial_Flatteners;
 with DoblDobl_Polynomial_Flatteners;
 with QuadDobl_Polynomial_Flatteners;
@@ -558,17 +559,21 @@ procedure ts_perfeval is
     x : Standard_Complex_Vectors.Vector(1..n);
     z : Standard_Complex_Vectors.Vector(p'range);
     A : Standard_Complex_Matrices.Matrix(p'range,1..n);
+    wrk : Standard_Complex_VecVecs.VecVec(1..v'last);
     timer : Timing_Widget;
 
     use Standard_Jacobian_Evaluations;
 
   begin
     Standard_Polynomial_Flatteners.Coefficients_of_Supports(p,v,c,k);
-    Standard_Gradient_Evaluations.Split_Common_Factors(v_n,f,b);
+    Split_Common_Factors(v_n,f,b);
+    for k in wrk'range loop
+      wrk(k) := new Standard_Complex_Vectors.Vector(0..n);
+    end loop;
     tstart(timer);
     for i in 1..m loop
       x := Standard_Random_Vectors.Random_Vector(1,n);
-      Standard_Jacobian_Evaluation(f,b,c,k,x,z,A);
+      EvalDiff(f,b,c,k,x,z,wrk,A);
     end loop;
     tstop(timer);
     new_line;
