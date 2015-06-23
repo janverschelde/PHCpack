@@ -31,6 +31,7 @@ with Standard_Complex_Prod_Systems;      use Standard_Complex_Prod_Systems;
 with Standard_Complex_Prod_Systems_io;   use Standard_Complex_Prod_Systems_io;
 with Standard_Complex_Prod_Planes;
 with PHCpack_Operations;
+with File_Management;
 with Standard_Solutions_Container;
 with Witness_Sets_io;
 with Extrinsic_Diagonal_Homotopies;
@@ -179,8 +180,8 @@ package body PHCpack_Operations_io is
   begin
     new_line;
     put_line("Reading the name of the file for the start system.");
-    Standard_Solutions_Container.Silent_Open_Input_File;
-    get(Standard_Solutions_Container.Solution_Input_File,p);
+    File_Management.Silent_Open_Input_File;
+    get(File_Management.Solution_Input_File,p);
     PHCpack_Operations.Store_Start_System(p.all);
   end Read_Start_System_without_Solutions;
 
@@ -189,8 +190,8 @@ package body PHCpack_Operations_io is
     p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
 
   begin
-    Standard_Solutions_Container.Silent_Open_Input_File(filename);
-    get(Standard_Solutions_Container.Solution_Input_File,p);
+    File_Management.Silent_Open_Input_File(filename);
+    get(File_Management.Solution_Input_File,p);
     PHCpack_Operations.Store_Start_System(p.all);
   end Read_Start_System_without_Solutions;
 
@@ -287,17 +288,17 @@ package body PHCpack_Operations_io is
     n := 0;
     fail := true;
     if k = 1 or k = 2 then
-      Standard_Solutions_Container.Open_Input_File(k);
-      get(Standard_Solutions_Container.Solution_Input_File(k),n);
+      File_Management.Open_Input_File(k);
+      get(File_Management.Solution_Input_File(k),n);
       put("The ambient dimension : "); put(n,1); new_line;
       lp := new Standard_Complex_Poly_Systems.Poly_Sys(1..integer32(n));
       Symbol_Table.Init(n);
-      get(Standard_Solutions_Container.Solution_Input_File(k),lp.all);
+      get(File_Management.Solution_Input_File(k),lp.all);
       dim := Witness_Sets_io.Count_Embed_Symbols(n,"zz");
       put("  dimension of the witness set : "); put(dim,1); new_line;
       Witness_Sets_io.Swap_Symbols_to_End(n,dim,"zz",lp.all);
       Jumpstart_Diagonal_Homotopies.Read_Degree_of_Witness_Set
-        (Standard_Solutions_Container.Solution_Input_File(k),deg,n);
+        (File_Management.Solution_Input_File(k),deg,n);
       put("  degree of the solution set : "); put(deg,1); new_line;
       lsym := Extrinsic_Diagonal_Homotopies_io.Get_Link_to_Symbols;
       Standard_Solutions_Container.Store_Symbol_Table(k,lsym.all);
@@ -333,14 +334,14 @@ package body PHCpack_Operations_io is
     found : boolean;
 
   begin
-    Standard_Solutions_Container.Reset_Input_File(k);
-    Scan_and_Skip(Standard_Solutions_Container.Solution_Input_File(k),
-                  "SOLUTIONS",found);
-    if not found
-     then fail := true;
-     else Standard_Complex_Solutions_io.Read_First
-            (Standard_Solutions_Container.Solution_Input_File(k),deg,dim);
-          fail := false;
+    File_Management.Reset_Input_File(k);
+    Scan_and_Skip(File_Management.Solution_Input_File(k),"SOLUTIONS",found);
+    if not found then
+      fail := true;
+    else
+      Standard_Complex_Solutions_io.Read_First
+        (File_Management.Solution_Input_File(k),deg,dim);
+      fail := false;
     end if;
   end Reset_Witness_Input_File;
 

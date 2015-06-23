@@ -39,6 +39,7 @@ with Standard_PolySys_Container;
 with DoblDobl_PolySys_Container;
 with QuadDobl_PolySys_Container;
 with Multprec_PolySys_Container;
+with File_Management;
 with Standard_Solutions_Container;
 with DoblDobl_Solutions_Container;
 with QuadDobl_Solutions_Container;
@@ -256,13 +257,13 @@ function use_solcon ( job : integer32;
 
   function Job10 return integer32 is -- prompts for input file and opens it
   begin
-    Standard_Solutions_Container.Open_Input_File;
+    File_Management.Open_Input_File;
     return 0;
   end Job10;
 
   function Job11 return integer32 is -- prompts for output file and creates it
   begin
-    Standard_Solutions_Container.Create_Output_File;
+    File_Management.Create_Output_File;
     return 0;
   end Job11;
 
@@ -271,8 +272,7 @@ function use_solcon ( job : integer32;
     found : boolean;
 
   begin
-    Scan_and_Skip(Standard_Solutions_Container.Solution_Input_File,
-                  "SOLUTIONS",found);
+    Scan_and_Skip(File_Management.Solution_Input_File,"SOLUTIONS",found);
     if found
      then return 0;
      else return 132;
@@ -287,7 +287,7 @@ function use_solcon ( job : integer32;
     len,dim : natural32;
 
   begin
-    Read_First(Standard_Solutions_Container.Solution_Input_File,len,dim);
+    Read_First(File_Management.Solution_Input_File,len,dim);
     Assign(integer32(len),a);
     Assign(integer32(dim),b);
     return 0;
@@ -303,7 +303,7 @@ function use_solcon ( job : integer32;
   begin
     Assign(a,integer32(len));
     Assign(b,integer32(dim));
-    Write_First(Standard_Solutions_Container.Solution_Output_File,len,dim);
+    Write_First(File_Management.Solution_Output_File,len,dim);
     return 0;
   exception
     when others => return 134;
@@ -318,7 +318,7 @@ function use_solcon ( job : integer32;
   begin
     Assign(a,integer32(dim));
    -- put("Dimension : "); put(dim,1); put_line(", calling Read_Next ...");
-    Read_Next(Standard_Solutions_Container.Solution_Input_File,dim,ls);
+    Read_Next(File_Management.Solution_Input_File,dim,ls);
    -- put_line("The solution read : "); put(ls.all); new_line;
     Assign_Solution(ls,b,c);
     Clear(ls);
@@ -335,7 +335,7 @@ function use_solcon ( job : integer32;
 
   begin
     Assign(a,integer32(cnt));
-    Write_Next(Standard_Solutions_Container.Solution_Output_File,cnt,ls);
+    Write_Next(File_Management.Solution_Output_File,cnt,ls);
    -- put_line("Written solution : "); put(ls.all); new_line;
     Assign(integer32(cnt),a);
     Clear(ls);
@@ -352,8 +352,8 @@ function use_solcon ( job : integer32;
 
   begin
     if k = 0
-     then Standard_Solutions_Container.Close_Input_File;
-     else Standard_Solutions_Container.Close_Input_File(k);
+     then File_Management.Close_Input_File;
+     else File_Management.Close_Input_File(k);
     end if;
     return 0;
   exception 
@@ -516,7 +516,7 @@ function use_solcon ( job : integer32;
   begin
    -- put("reading next witness point from set "); put(k,1); new_line;
    -- put("  solution vector has length "); put(n,1); new_line;
-    Read_Next(Standard_Solutions_Container.Solution_Input_File(k),n,ls,
+    Read_Next(File_Management.Solution_Input_File(k),n,ls,
               Standard_Solutions_Container.Retrieve_Symbol_Table(0).all);
    -- was the following:
    --           Standard_Solutions_Container.Retrieve_Symbol_Table(k).all);
@@ -1388,7 +1388,7 @@ function use_solcon ( job : integer32;
       when 15 => return Job15; -- reads next solution from file
       when 16 => return Job16; -- writes next solution to file
       when 17 => return Job17; -- close a solution input file
-      when 18 => Standard_Solutions_Container.Close_Output_File; return 0;
+      when 18 => File_Management.Close_Output_File; return 0;
       when 19 => return Job19; -- writes solutions banner to defined file
       when 20 => return Job20; -- writes solution dimensions defined file
       when 21 => return Job21; -- writes next solution to defined output file

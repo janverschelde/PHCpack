@@ -1,6 +1,8 @@
 Tue 23 Jun 2015 : in {standard,dobldobl,quaddobl,multprec}_solution_containers
   added retrieve_next_solution operations for faster retrieval of long lists.
   Added three additional jobs in use_solcon and use_c2phc.
+  New package file_management with code out of standard_solutions_containers,
+  which changed use_solcon.adb and phcpack_operations_io.adb.
 
 Mon 15 Jun 2015 : added job in use_c2phc to get the seed of the random
   number generators.
