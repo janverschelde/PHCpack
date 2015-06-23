@@ -370,6 +370,38 @@ function use_c2phc ( job : integer32;
 --                 representation of a solution stored in b, the solution
 --                 will be appended to the solutions container.
 --
+-- RETRIEVE NEXT SOLUTION :
+--
+--   job     = 276 : if a[0] = 0 on entry, then the pointer to the current
+--                   solution in the standard solutions container will be
+--                   reset to the first solution, otherwise
+--                   returns in b the multiplicity m of the current solution
+--                   and in c the current solution as an array of 2*n+5
+--                   doubles, in the following order:
+--                   two doubles for the complex continuation parameter t,
+--                   2*n doubles for the coefficients of the solution vector,
+--                   one double for the norm of last Newton update,
+--                   one double for the inverse of condition# estimate,
+--                   one double for the norm of the residual;
+--   job     = 277 : if a[0] = 0 on entry, then the pointer to the current
+--                   solution in the dobldobl solutions container will be
+--                   reset to the first solution, otherwise
+--                   returns in b the multiplicity m of the current solution,
+--                   and in c the current solution as an array of 4*n+10
+--                   doubles, in the following order:
+--                   two double doubles for the complex parameter t,
+--                   4*n doubles for the coefficients of the solution vector,
+--                   one double double for the norm of last Newton update,
+--                   one double double for the inverse of condition# estimate,
+--                   one double double for the norm of the residual;
+--   job     = 278 : if a[0] = 0 on entry, then the pointer to the current
+--                   solution in the quaddobl solutions container will be
+--                   reset to the first solution, otherwise
+--                   returns in b the multiplicity m of the current solution,
+--                   and in c the current solution as an array of 8*n+20
+--                   doubles, in the following order:
+--                   two quad doubles for the complex parameter t,
+--
 -- the operations of the monodromy factorization :
 --
 --   job   =  39 : set state of monodromy permutations to silent;

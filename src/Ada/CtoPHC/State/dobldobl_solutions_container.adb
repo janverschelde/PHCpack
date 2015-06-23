@@ -2,7 +2,8 @@ package body DoblDobl_Solutions_Container is
 
 -- INTERNAL DATA :
 
-  first,last : Solution_List;
+  first,last,current : Solution_List;
+  cursor : natural32 := 0; -- index to the current solution
 
 -- OPERATIONS :
 
@@ -15,6 +16,8 @@ package body DoblDobl_Solutions_Container is
       Append(first,last,Head_Of(tmp).all);
       tmp := Tail_Of(tmp);
     end loop;
+    current := first;
+    cursor := 1;
   end Initialize;
 
   function Length return natural32 is
@@ -67,6 +70,27 @@ package body DoblDobl_Solutions_Container is
     fail := true;
   end Retrieve;
 
+  procedure Retrieve_Next_Initialize is
+  begin
+    current := first;
+    if Is_Null(current)
+     then cursor := 0; -- empty solution list
+     else cursor := 1; -- index to the first solution
+    end if;
+  end Retrieve_Next_Initialize;
+
+  procedure Retrieve_Next ( s : out Link_to_Solution; k : out natural32 ) is
+  begin
+    if Is_Null(current) then
+      k := 0;
+    else
+      s := Head_Of(current);
+      k := cursor;
+      current := Tail_Of(current);
+      cursor := cursor + 1;
+    end if;
+  end Retrieve_Next;
+
   procedure Replace ( k : in natural32; s : in Solution;
                       fail : out boolean ) is
 	  
@@ -117,18 +141,32 @@ package body DoblDobl_Solutions_Container is
 
   procedure Append ( s : in Solution ) is
   begin
-    Append(first,last,s);
+    if Is_Null(first) then
+      Append(first,last,s);
+      current := first;
+      cursor := 1;
+    else
+      Append(first,last,s);
+    end if;
   end Append;
 
   procedure Append ( s : in Link_to_Solution ) is
   begin
-    Append(first,last,s);
+    if Is_Null(first) then
+      Append(first,last,s);
+      current := first;
+      cursor := 1;
+    else
+      Append(first,last,s);
+    end if;
   end Append;
 
   procedure Clear is
   begin
     Clear(first);
     last := first;
+    current := first;
+    cursor := 0;
   end Clear;
 
 end DoblDobl_Solutions_Container;

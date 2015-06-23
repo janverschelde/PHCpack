@@ -1162,6 +1162,72 @@ function use_solcon ( job : integer32;
     return 0;
   end Job89;
 
+  function Job276 return integer32 is -- retrieve next standard solution
+
+    use Standard_Complex_Solutions;
+    ls : Link_to_Solution;
+    v : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant natural32 := natural32(v(v'first));
+    idx : natural32;
+
+  begin
+    if k = 0 then
+      Standard_Solutions_Container.Retrieve_Next_Initialize;
+    else
+      Standard_Solutions_Container.Retrieve_Next(ls,idx);
+      Assign(integer32(idx),a);
+      if idx = 0
+       then return 276;
+       else Assign_Solution(ls,b,c);
+      end if;
+    end if;
+    return 0;
+  end Job276;
+
+  function Job277 return integer32 is -- retrieve next dobldobl solution
+
+    use DoblDobl_Complex_Solutions;
+    ls : Link_to_Solution;
+    v : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant natural32 := natural32(v(v'first));
+    idx : natural32;
+
+  begin
+    if k = 0 then
+      DoblDobl_Solutions_Container.Retrieve_Next_Initialize;
+    else
+      DoblDobl_Solutions_Container.Retrieve_Next(ls,idx);
+      Assign(integer32(idx),a);
+      if idx = 0
+       then return 276;
+       else Assign_Solution(ls,b,c);
+      end if;
+    end if;
+    return 0;
+  end Job277;
+
+  function Job278 return integer32 is -- retrieve next quaddobl solution
+
+    use QuadDobl_Complex_Solutions;
+    ls : Link_to_Solution;
+    v : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant natural32 := natural32(v(v'first));
+    idx : natural32;
+
+  begin
+    if k = 0 then
+      QuadDobl_Solutions_Container.Retrieve_Next_Initialize;
+    else
+      QuadDobl_Solutions_Container.Retrieve_Next(ls,idx);
+      Assign(integer32(idx),a);
+      if idx = 0
+       then return 276;
+       else Assign_Solution(ls,b,c);
+      end if;
+    end if;
+    return 0;
+  end Job278;
+
   function Job544 return integer32 is -- read standard sys+sols from file
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
@@ -1381,6 +1447,10 @@ function use_solcon ( job : integer32;
       when 150 => return Job150; -- returns size of solution string
       when 151 => return Job151; -- returns solution string
       when 158 => return Job158; -- append solution string to container
+     -- retrieve next solution
+      when 276 => return Job276; -- retrieve next standard solution
+      when 277 => return Job277; -- retrieve next double double solution
+      when 278 => return Job278; -- retrieve next quad double solution
      -- reading system and solutions from given file name
       when 544 => return Job544; -- read standard system and solutions
       when 545 => return Job545; -- read double double system and solutions

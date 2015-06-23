@@ -37,6 +37,20 @@ package DoblDobl_Solutions_Container is
   --   Reports failure (fail = true) if there are fewer than k
   --   solutions in the container.
 
+  procedure Retrieve_Next_Initialize;
+
+  -- DESCRIPTION :
+  --   Resets the current pointer to the first solution in the container.
+
+  procedure Retrieve_Next ( s : out Link_to_Solution; k : out natural32 );
+
+  -- DESCRIPTION :
+  --   Retrieves the next solution, where the current pointer is,
+  --   and returns in k the index of the solution in the list.
+  --   If k > 0, then s contains the pointer to the current solutioni
+  --   and the current pointer is moved to the next solution.
+  --   Otherwise, if the current pointer is null, then k on return is 0.
+
   procedure Replace ( k : in natural32; s : in Solution;
                       fail : out boolean );
   procedure Replace ( k : in natural32; s : in Link_to_Solution;
