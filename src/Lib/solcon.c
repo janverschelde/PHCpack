@@ -190,6 +190,7 @@ int solcon_retrieve_next_standard_solution
  ( int n, int *k, int *m, double *sol )
 {
    int fail;
+   *k = n;
    fail = _ada_use_c2phc(276,k,m,sol);
    return fail;
 }
@@ -198,6 +199,7 @@ int solcon_retrieve_next_dobldobl_solution
  ( int n, int *k, int *m, double *sol )
 {
    int fail;
+   *k = n;
    fail = _ada_use_c2phc(277,k,m,sol);
    return fail;
 }
@@ -206,6 +208,7 @@ int solcon_retrieve_next_quaddobl_solution
  ( int n, int *k, int *m, double *sol )
 {
    int fail;
+   *k = n;
    fail = _ada_use_c2phc(278,k,m,sol);
    return fail;
 }
