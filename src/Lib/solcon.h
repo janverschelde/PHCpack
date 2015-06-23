@@ -179,11 +179,13 @@ int solcon_retrieve_next_standard_initialize ( void );
 /*
  * DESCRIPTION :
  *   Resets the pointer to the current standard solution in the container
+ *   to the first solution in the list. */
 
 int solcon_retrieve_next_dobldobl_initialize ( void );
 /*
  * DESCRIPTION :
  *   Resets the pointer to the current dobldobl solution in the container
+ *   to the first solution in the list. */
 
 int solcon_retrieve_next_quaddobl_initialize ( void );
 /*
