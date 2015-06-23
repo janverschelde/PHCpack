@@ -68,6 +68,12 @@ void test_quaddobl_container ( void );
 void test_multprec_container ( void );
 /* test operations in the container for multiprecision solutions */
 
+void standard_next_retrievals ( void );
+/* prints the standard solution vectors with the retrieve_next */
+
+void test_standard_next_retrievals ( void );
+/* prompts the user for solutions and then calls standard_next_retrievals */
+
 int main(void)
 {
    int choice;
@@ -77,8 +83,9 @@ int main(void)
    printf("  1. test with standard doubles;\n");
    printf("  2. test with double doubles;\n");
    printf("  3. test with quad doubles;\n");
-   printf("  4. test with multiprecision numbers.\n");
-   printf("Type 1, 2, 3, or 4 to choose precision : ");
+   printf("  4. test with multiprecision numbers;\n");
+   printf("  5. test retrieval of standard solutions with next.\n");
+   printf("Type 1, 2, 3, 4, or 5 to choose a test : ");
    scanf("%d",&choice);
    scanf("%c",&ch); /* skip new line character */
    printf("\n");
@@ -93,6 +100,8 @@ int main(void)
       test_quaddobl_container();
    else if(choice == 4)
       test_multprec_container();
+   else if(choice == 5)
+      test_standard_next_retrievals();
    else
       printf("invalid choice, please try again\n");
 
@@ -467,4 +476,33 @@ void test_multprec_container ( void )
    fail = solcon_append_multprec_solution_string(dim,nc+1,solution);
    printf("solutions after the append :\n");
    fail = solcon_write_multprec_solutions();
+}
+
+void standard_next_retrievals ( void )
+{
+   int n,fail;
+   fail = solcon_dimension_of_solutions(&n);
+   {
+      int i,k,m;
+      double sol[2*n+5];
+      do
+      {
+         fail = solcon_retrieve_next_standard_solution(n,&k,&m,sol);
+         if(fail != 0)
+            printf("return value of k is %d\n",k);
+         else
+         { 
+            printf("The solution vector %d :\n",k);
+            for(i=0; i<n; i++)
+               printf(" %.15e  %.15e\n", sol[2+2*i], sol[2+2*i+1]);
+         }
+      }
+      while(k > 0);
+   }
+}
+
+void test_standard_next_retrievals ( void )
+{
+   int fail = solcon_read_solutions();
+   standard_next_retrievals();
 }

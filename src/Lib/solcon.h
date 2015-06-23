@@ -175,6 +175,93 @@ int solcon_retrieve_quaddobl_solution ( int n, int k, int *m, double *sol );
  *               the inverse of the estimate for the condition number;
  *               the norm of the residual vector. */
 
+int solcon_retrieve_next_standard_initialize ( void );
+/*
+ * DESCRIPTION :
+ *   Resets the pointer to the current standard solution in the container
+
+int solcon_retrieve_next_dobldobl_initialize ( void );
+/*
+ * DESCRIPTION :
+ *   Resets the pointer to the current dobldobl solution in the container
+
+int solcon_retrieve_next_quaddobl_initialize ( void );
+/*
+ * DESCRIPTION :
+ *   Resets the pointer to the current quaddobl solution in the container
+ *   to the first solution in the list. */
+
+int solcon_retrieve_next_standard_solution
+ ( int n, int *k, int *m, double *sol );
+/* 
+ * DESCRIPTION :
+ *   Returns the next solution n-vector in the container in m and sol.
+ *   The function returns 0 if okay, otherwise it returns the fail value.
+ *
+ * ON ENTRY :
+ *   n        the dimension of the solution vector.
+ *
+ * ON RETURN :
+ *   k        the position of the solution in the list,
+ *            equals zero if the current pointer is null;
+ *   m        the multiplicity label of the k-th solution;
+ *   sol      2*n+5 doubles, with the following meaning:
+ *            1) the complex continuation parameter t is sol[0]+sol[1]*I;
+ *            2) the real and imaginary parts of the coefficients
+ *               of the solution vector are in the next 2*n doubles;
+ *            3) the last three doubles are respectively
+ *               the norm of the last Newton update on the solution;
+ *               the inverse of the estimate for the condition number;
+ *               the norm of the residual vector. */
+
+int solcon_retrieve_next_dobldobl_solution
+ ( int n, int *k, int *m, double *sol );
+/* 
+ * DESCRIPTION :
+ *   Returns the next solution n-vector in the container in m and sol,
+ *   with double double precision.
+ *   The function returns 0 if okay, otherwise it returns the fail value.
+ *
+ * ON ENTRY :
+ *   n        the dimension of the solution vector;
+ *
+ * ON RETURN :
+ *   k        the position of the solution in the list,
+ *            equals zero if the current pointer is null;
+ *   m        the multiplicity label of the k-th solution;
+ *   sol      4*n+10 doubles, with the following meaning:
+ *            1) the complex continuation parameter t is the first 4 doubles;
+ *            2) the real and imaginary parts of the coefficients
+ *               of the solution vector are in the next 4*n doubles;
+ *            3) the last three double doubles are respectively
+ *               the norm of the last Newton update on the solution;
+ *               the inverse of the estimate for the condition number;
+ *               the norm of the residual vector. */
+
+int solcon_retrieve_next_quaddobl_solution
+ ( int n, int *k, int *m, double *sol );
+/* 
+ * DESCRIPTION :
+ *   Returns the next solution n-vector in the container in m and sol,
+ *   with quad double precision.
+ *   The function returns 0 if okay, otherwise it returns the fail value.
+ *
+ * ON ENTRY :
+ *   n        the dimension of the solution vector.
+ *
+ * ON RETURN :
+ *   k        the position of the solution in the list,
+ *            equals zero if the current pointer was null;
+ *   m        the multiplicity label of the k-th solution;
+ *   sol      8*n+20 doubles, with the following meaning:
+ *            1) the complex continuation parameter t is the first 8 doubles;
+ *            2) the real and imaginary parts of the coefficients
+ *               of the solution vector are in the next 8*n doubles;
+ *            3) the last three quad doubles are respectively
+ *               the norm of the last Newton update on the solution;
+ *               the inverse of the estimate for the condition number;
+ *               the norm of the residual vector. */
+
 int solcon_replace_solution ( int n, int k, int m, double *sol );
 /*
  * DESCRIPTION :

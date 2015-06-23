@@ -1,3 +1,6 @@
+Tue 23 Jun 2015 : extended solcon with operations to retrieve solutions faster
+  and added a test in lib_solcon.c.
+
 Mon 15 Jun 2015 : added function get_seed to phcpack and to phcpy2c.
 
 Tue 11 May 2015 : new lib_celphc.c to compute the powers of the continuation
