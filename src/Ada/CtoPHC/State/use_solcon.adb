@@ -1228,6 +1228,218 @@ function use_solcon ( job : integer32;
     return 0;
   end Job278;
 
+  function Job300 return integer32 is -- set pointer to next standard solution
+
+    ind : natural32;
+
+  begin
+    Standard_Solutions_Container.Move_Current(ind);
+    Assign(integer32(ind),a);
+    return 0;
+  exception
+    when others => return 300;
+  end Job300;
+
+  function Job301 return integer32 is -- set pointer to next dobldobl solution
+
+    ind : natural32;
+
+  begin
+    DoblDobl_Solutions_Container.Move_Current(ind);
+    Assign(integer32(ind),a);
+    return 0;
+  exception
+    when others => return 301;
+  end Job301;
+
+  function Job302 return integer32 is -- set pointer to next quaddobl solution
+
+    ind : natural32;
+
+  begin
+    QuadDobl_Solutions_Container.Move_Current(ind);
+    Assign(integer32(ind),a);
+    return 0;
+  exception
+    when others => return 302;
+  end Job302;
+
+  function Job303 return integer32 is -- set pointer to next multprec solution
+
+    ind : natural32;
+
+  begin
+    Multprec_Solutions_Container.Move_Current(ind);
+    Assign(integer32(ind),a);
+    return 0;
+  exception
+    when others => return 303;
+  end Job303;
+
+  function Job304 return integer32 is -- length of current standard solution
+
+    use Standard_Complex_Solutions;
+    ind,len : natural32;
+    ls : Link_to_Solution;
+
+  begin
+    Standard_Solutions_Container.Retrieve_Current(ls,ind);
+    Assign(integer32(ind),a);
+    if ind /= 0 then
+      len := Standard_Solution_Strings.Length(ls.all);
+      Assign(integer32(len),b);
+    end if;
+    return 0;
+  exception
+    when others => return 304;
+  end Job304;
+
+  function Job305 return integer32 is -- length of current dobldobl solution
+
+    use DoblDobl_Complex_Solutions;
+    ind,len : natural32;
+    ls : Link_to_Solution;
+
+  begin
+    DoblDobl_Solutions_Container.Retrieve_Current(ls,ind);
+    Assign(integer32(ind),a);
+    if ind /= 0 then
+      len := DoblDobl_Solution_Strings.Length(ls.all);
+      Assign(integer32(len),b);
+    end if;
+    return 0;
+  exception
+    when others => return 305;
+  end Job305;
+
+  function Job306 return integer32 is -- length of current quaddobl solution
+
+    use QuadDobl_Complex_Solutions;
+    ind,len : natural32;
+    ls : Link_to_Solution;
+
+  begin
+    QuadDobl_Solutions_Container.Retrieve_Current(ls,ind);
+    Assign(integer32(ind),a);
+    if ind /= 0 then
+      len := QuadDobl_Solution_Strings.Length(ls.all);
+      Assign(integer32(len),b);
+    end if;
+    return 0;
+  exception
+    when others => return 306;
+  end Job306;
+
+  function Job307 return integer32 is -- length of current multprec solution
+
+    use Multprec_Complex_Solutions;
+    ind,len : natural32;
+    ls : Link_to_Solution;
+
+  begin
+    Multprec_Solutions_Container.Retrieve_Current(ls,ind);
+    Assign(integer32(ind),a);
+    if ind /= 0 then
+      len := Multprec_Solution_Strings.Length(ls.all);
+      Assign(integer32(len),b);
+    end if;
+    return 0;
+  exception
+    when others => return 307;
+  end Job307;
+
+  function Job308 return integer32 is -- current standard solution string
+
+    use Standard_Complex_Solutions;
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    len : constant natural32 := natural32(v_a(v_a'first));
+    ind : natural32;
+    ls : Link_to_Solution;
+    s : string(1..integer(len));
+    sv : Standard_Integer_Vectors.Vector(1..integer32(len));
+
+  begin
+    Standard_Solutions_Container.Retrieve_Current(ls,ind);
+    Assign(integer32(ind),a);
+    if ind /= 0 then
+      s := Standard_Solution_Strings.Write_Vector(ls.all);
+      sv := String_to_Integer_Vector(Pad_with_Spaces(len,s));
+      Assign(sv,b);
+    end if;
+    return 0;
+  exception
+    when others => return 308;
+  end Job308;
+
+  function Job309 return integer32 is -- current dobldobl solution string
+
+    use DoblDobl_Complex_Solutions;
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    len : constant natural32 := natural32(v_a(v_a'first));
+    ind : natural32;
+    ls : Link_to_Solution;
+    s : string(1..integer(len));
+    sv : Standard_Integer_Vectors.Vector(1..integer32(len));
+
+  begin
+    DoblDobl_Solutions_Container.Retrieve_Current(ls,ind);
+    Assign(integer32(ind),a);
+    if ind /= 0 then
+      s := DoblDobl_Solution_Strings.Write_Vector(ls.all);
+      sv := String_to_Integer_Vector(Pad_with_Spaces(len,s));
+      Assign(sv,b);
+    end if;
+    return 0;
+  exception
+    when others => return 309;
+  end Job309;
+
+  function Job310 return integer32 is -- current quaddobl solution string
+
+    use QuadDobl_Complex_Solutions;
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    len : constant natural32 := natural32(v_a(v_a'first));
+    ind : natural32;
+    ls : Link_to_Solution;
+    s : string(1..integer(len));
+    sv : Standard_Integer_Vectors.Vector(1..integer32(len));
+
+  begin
+    QuadDobl_Solutions_Container.Retrieve_Current(ls,ind);
+    Assign(integer32(ind),a);
+    if ind /= 0 then
+      s := QuadDobl_Solution_Strings.Write_Vector(ls.all);
+      sv := String_to_Integer_Vector(Pad_with_Spaces(len,s));
+      Assign(sv,b);
+    end if;
+    return 0;
+  exception
+    when others => return 310;
+  end Job310;
+
+  function Job311 return integer32 is -- current multprec solution string
+
+    use Multprec_Complex_Solutions;
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    len : constant natural32 := natural32(v_a(v_a'first));
+    ind : natural32;
+    ls : Link_to_Solution;
+    s : string(1..integer(len));
+    sv : Standard_Integer_Vectors.Vector(1..integer32(len));
+
+  begin
+    Multprec_Solutions_Container.Retrieve_Current(ls,ind);
+    Assign(integer32(ind),a);
+    if ind /= 0 then
+      s := Multprec_Solution_Strings.Write_Vector(ls.all);
+      sv := String_to_Integer_Vector(Pad_with_Spaces(len,s));
+      Assign(sv,b);
+    end if;
+    return 0;
+  exception
+    when others => return 311;
+  end Job311;
+
   function Job544 return integer32 is -- read standard sys+sols from file
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
@@ -1451,6 +1663,21 @@ function use_solcon ( job : integer32;
       when 276 => return Job276; -- retrieve next standard solution
       when 277 => return Job277; -- retrieve next double double solution
       when 278 => return Job278; -- retrieve next quad double solution
+     -- move pointer from current to next solution
+      when 300 => return Job300; -- move to next standard solution
+      when 301 => return Job301; -- move to next dobldobl solution
+      when 302 => return Job302; -- move to next quaddobl solution
+      when 303 => return Job303; -- move to next multprec solution
+     -- return length of current solution string
+      when 304 => return Job304; -- length of current standard solution string
+      when 305 => return Job305; -- length of current dobldobl solution string
+      when 306 => return Job306; -- length of current quaddobl solution string
+      when 307 => return Job307; -- length of current multprec solution string
+     -- return current solution string
+      when 308 => return Job308; -- current standard solution string
+      when 309 => return Job309; -- current dobldobl solution string
+      when 310 => return Job310; -- current quaddobl solution string
+      when 311 => return Job311; -- current multprec solution string
      -- reading system and solutions from given file name
       when 544 => return Job544; -- read standard system and solutions
       when 545 => return Job545; -- read double double system and solutions

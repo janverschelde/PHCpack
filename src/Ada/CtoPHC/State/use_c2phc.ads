@@ -372,35 +372,84 @@ function use_c2phc ( job : integer32;
 --
 -- RETRIEVE NEXT SOLUTION :
 --
---   job     = 276 : if a[0] = 0 on entry, then the pointer to the current
---                   solution in the standard solutions container will be
---                   reset to the first solution, otherwise
---                   returns in b the multiplicity m of the current solution
---                   and in c the current solution as an array of 2*n+5
---                   doubles, in the following order:
---                   two doubles for the complex continuation parameter t,
---                   2*n doubles for the coefficients of the solution vector,
---                   one double for the norm of last Newton update,
---                   one double for the inverse of condition# estimate,
---                   one double for the norm of the residual;
---   job     = 277 : if a[0] = 0 on entry, then the pointer to the current
---                   solution in the dobldobl solutions container will be
---                   reset to the first solution, otherwise
---                   returns in b the multiplicity m of the current solution,
---                   and in c the current solution as an array of 4*n+10
---                   doubles, in the following order:
---                   two double doubles for the complex parameter t,
---                   4*n doubles for the coefficients of the solution vector,
---                   one double double for the norm of last Newton update,
---                   one double double for the inverse of condition# estimate,
---                   one double double for the norm of the residual;
---   job     = 278 : if a[0] = 0 on entry, then the pointer to the current
---                   solution in the quaddobl solutions container will be
---                   reset to the first solution, otherwise
---                   returns in b the multiplicity m of the current solution,
---                   and in c the current solution as an array of 8*n+20
---                   doubles, in the following order:
---                   two quad doubles for the complex parameter t,
+--   job   = 276 : if a[0] = 0 on entry, then the pointer to the current
+--                 solution in the standard solutions container will be
+--                 reset to the first solution, otherwise
+--                 returns in b the multiplicity m of the current solution
+--                 and in c the current solution as an array of 2*n+5
+--                 doubles, in the following order:
+--                 two doubles for the complex continuation parameter t,
+--                 2*n doubles for the coefficients of the solution vector,
+--                 one double for the norm of last Newton update,
+--                 one double for the inverse of condition# estimate,
+--                 one double for the norm of the residual;
+--   job   = 277 : if a[0] = 0 on entry, then the pointer to the current
+--                 solution in the dobldobl solutions container will be
+--                 reset to the first solution, otherwise
+--                 returns in b the multiplicity m of the current solution,
+--                 and in c the current solution as an array of 4*n+10
+--                 doubles, in the following order:
+--                 two double doubles for the complex parameter t,
+--                 4*n doubles for the coefficients of the solution vector,
+--                 one double double for the norm of last Newton update,
+--                 one double double for the inverse of condition# estimate,
+--                 one double double for the norm of the residual;
+--   job   = 278 : if a[0] = 0 on entry, then the pointer to the current
+--                 solution in the quaddobl solutions container will be
+--                 reset to the first solution, otherwise
+--                 returns in b the multiplicity m of the current solution,
+--                 and in c the current solution as an array of 8*n+20
+--                 doubles, in the following order:
+--                 two quad doubles for the complex parameter t,
+--
+-- MOVE POINTER to next solution in container :
+--
+--   job   = 454 : moves the pointer to the next standard solution
+--                 in then container and returns in a[0] the cursor
+--                 of the current solution, 0 if there is no solution;
+--         = 455 : moves the pointer to the next dobldobl solution
+--                 in then container and returns in a[0] the cursor
+--                 of the current solution, 0 if there is no solution;
+--         = 457 : moves the pointer to the next quaddobl solution
+--                 in then container and returns in a[0] the cursor
+--                 of the current solution, 0 if there is no solution;
+--         = 458 : moves the pointer to the next multprec solution
+--                 in then container and returns in a[0] the cursor
+--                 of the current solution, 0 if there is no solution.
+--
+-- RETURN LENGTH of the current solution string :
+--
+--         = 525 : returns in a[0] the value of the cursor of the current
+--                 standard solution and if a[0] is nonzero, then in b[0]
+--                 is the length of the current standard solution string;
+--         = 526 : returns in a[0] the value of the cursor of the current
+--                 dobldobl solution and if a[0] is nonzero, then in b[0]
+--                 is the length of the current dobldobl solution string;
+--         = 527 : returns in a[0] the value of the cursor of the current
+--                 quaddobl solution and if a[0] is nonzero, then in b[0]
+--                 is the length of the current quaddobl solution string;
+--         = 528 : returns in a[0] the value of the cursor of the current
+--                 multprec solution and if a[0] is nonzero, then in b[0]
+--                 is the length of the current multprec solution string.
+--
+-- RETURN CURRENT solution string :
+--
+--         = 533 : given in a[0] the length of the current standard solution
+--                 string, returns in a[0] the value of the cursor to the
+--                 current standard solution an if a[0] is nonzero, then
+--                 in b on return is the current standard solution string;
+--         = 534 : given in a[0] the length of the current dobldobl solution
+--                 string, returns in a[0] the value of the cursor to the
+--                 current dobldobl solution an if a[0] is nonzero, then
+--                 in b on return is the current dobldobl solution string;
+--         = 535 : given in a[0] the length of the current quaddobl solution
+--                 string, returns in a[0] the value of the cursor to the
+--                 current quaddobl solution an if a[0] is nonzero, then
+--                 in b on return is the current quaddobl solution string;
+--         = 536 : given in a[0] the length of the current multprec solution
+--                 string, returns in a[0] the value of the cursor to the
+--                 current multprec solution an if a[0] is nonzero, then
+--                 in b on return is the current multprec solution string.
 --
 -- the operations of the monodromy factorization :
 --

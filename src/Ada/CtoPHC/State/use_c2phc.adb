@@ -2096,6 +2096,11 @@ function use_c2phc ( job : integer32;
      -- operations on multiprecision solutions :
       when 450..453 => return use_solcon(job-330,a,b,c);
       when 457 => return use_solcon(job-330,a,b,c);
+     -- moving pointer to the current solution
+      when 454 => return use_solcon(300,a,b,c);
+      when 455 => return use_solcon(301,a,b,c);
+      when 456 => return use_solcon(302,a,b,c);
+      when 458 => return use_solcon(303,a,b,c);
      -- polyhedral homotopies in double double precision :
       when 460..469 => return use_celcon(job-435,a,b,c);
      -- polyhedral homotopies in quad double precision :
@@ -2118,8 +2123,18 @@ function use_c2phc ( job : integer32;
       when 500..520 => return use_nxtsol(job-500,a,b,c);
      -- multiprecision homotopies :
       when 522..524 => return use_track(job-470,a,b,c);
+     -- get length of current solution string :
+      when 525 => return use_solcon(304,a,b,c);
+      when 526 => return use_solcon(305,a,b,c);
+      when 527 => return use_solcon(306,a,b,c);
+      when 528 => return use_solcon(307,a,b,c);
      -- multihomogeneous Bezout numbers and start systems
       when 530..532 => return use_roco(job-520,a,b,c);
+     -- returns current solution string :
+      when 533 => return use_solcon(308,a,b,c);
+      when 534 => return use_solcon(309,a,b,c);
+      when 535 => return use_solcon(310,a,b,c);
+      when 536 => return use_solcon(311,a,b,c);
      -- operations to read systems into the containers
       when 540..543 => return use_syscon(job,a,b,c);
      -- operations to read systems and solutions into the containers

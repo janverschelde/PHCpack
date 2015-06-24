@@ -135,6 +135,23 @@ function use_solcon ( job : integer32;
 --                   representation of a solution stored in b, the solution
 --                   will be appended to the solutions container.
 --
+-- CORRESPONDING JOBS for containers of MULTIPRECISION solutions :
+-- 
+--   job     = 120 : read solutions from file and put in container;
+--           = 121 : write solutions in the container;
+--           = 122 : return in b the length of the container;
+--           = 123 : return in b the dimension of the solution vectors;
+--           = 127 : clears all solutions in the container;
+--           = 150 : in a is given a solution number, returns in b the number
+--                   of characters to write the entire solution as string;
+--           = 151 : on input in a[0] is a solution number and in a[1] is
+--                   the number of characters for the entire string,
+--                   returns in b the string representation of the solution;
+--           = 158 : on input in a[0] is the number of variables 
+--                   and in a[1] is the length of characters in the string
+--                   representation of a solution stored in b, the solution
+--                   will be appended to the solutions container.
+--
 -- CORRESPONDING JOBS for containers of QUAD DOUBLE solutions :
 -- 
 --   job     =  80 : read solutions from file and put in container;
@@ -203,43 +220,75 @@ function use_solcon ( job : integer32;
 --                   one quad double for the inverse of condition# estimate,
 --                   one quad double for the norm of the residual.
 --
--- CORRESPONDING JOBS for containers of MULTIPRECISION solutions :
--- 
---   job     = 120 : read solutions from file and put in container;
---           = 121 : write solutions in the container;
---           = 122 : return in b the length of the container;
---           = 123 : return in b the dimension of the solution vectors;
---           = 127 : clears all solutions in the container;
---           = 150 : in a is given a solution number, returns in b the number
---                   of characters to write the entire solution as string;
---           = 151 : on input in a[0] is a solution number and in a[1] is
---                   the number of characters for the entire string,
---                   returns in b the string representation of the solution;
---           = 158 : on input in a[0] is the number of variables 
---                   and in a[1] is the length of characters in the string
---                   representation of a solution stored in b, the solution
---                   will be appended to the solutions container.
+-- MOVE POINTER to next solution in container :
+--
+--   job     = 300 : moves the pointer to the next standard solution
+--                   in then container and returns in a[0] the cursor
+--                   of the current solution, 0 if there is no solution;
+--           = 301 : moves the pointer to the next dobldobl solution
+--                   in then container and returns in a[0] the cursor
+--                   of the current solution, 0 if there is no solution;
+--           = 302 : moves the pointer to the next quaddobl solution
+--                   in then container and returns in a[0] the cursor
+--                   of the current solution, 0 if there is no solution;
+--           = 303 : moves the pointer to the next multprec solution
+--                   in then container and returns in a[0] the cursor
+--                   of the current solution, 0 if there is no solution.
+--
+-- RETURN LENGTH of the current solution string :
+--
+--           = 304 : returns in a[0] the value of the cursor of the current
+--                   standard solution and if a[0] is nonzero, then in b[0]
+--                   is the length of the current standard solution string;
+--           = 305 : returns in a[0] the value of the cursor of the current
+--                   dobldobl solution and if a[0] is nonzero, then in b[0]
+--                   is the length of the current dobldobl solution string;
+--           = 306 : returns in a[0] the value of the cursor of the current
+--                   quaddobl solution and if a[0] is nonzero, then in b[0]
+--                   is the length of the current quaddobl solution string;
+--           = 307 : returns in a[0] the value of the cursor of the current
+--                   multprec solution and if a[0] is nonzero, then in b[0]
+--                   is the length of the current multprec solution string.
+--
+-- RETURN CURRENT solution string :
+--
+--           = 308 : given in a[0] the length of the current standard solution
+--                   string, returns in a[0] the value of the cursor to the
+--                   current standard solution an if a[0] is nonzero, then
+--                   in b on return is the current standard solution string;
+--           = 309 : given in a[0] the length of the current dobldobl solution
+--                   string, returns in a[0] the value of the cursor to the
+--                   current dobldobl solution an if a[0] is nonzero, then
+--                   in b on return is the current dobldobl solution string;
+--           = 310 : given in a[0] the length of the current quaddobl solution
+--                   string, returns in a[0] the value of the cursor to the
+--                   current quaddobl solution an if a[0] is nonzero, then
+--                   in b on return is the current quaddobl solution string;
+--           = 311 : given in a[0] the length of the current multprec solution
+--                   string, returns in a[0] the value of the cursor to the
+--                   current multprec solution an if a[0] is nonzero, then
+--                   in b on return is the current multprec solution string.
 --
 -- operations to read a system and its solutions into the containers :
 --
---   job    = 544 : reads a standard system into the systems container 
---                  and its solutions into the solutions container where the
---                  file name is given as a string of n = a[0] characters,
---                  with the n characters are stored in given b on input;
---   job    = 545 : reads a double double system into the systems container
---                  and its solutions into the solutions container where the
---                  file name is given as a string of n = a[0] characters,
---                  with the n characters are stored in given b on input;
---   job    = 546 : reads a quad double system into the systems container
---                  and its solutions into the solutions container where the
---                  file name is given as a string of n = a[0] characters,
---                  with the n characters are stored in given b on input;
---   job    = 547 : reads a multiprecision system into the systems container
---                  and its solutions into the solutions container where the
---                  file name is given as a string of n = a[0] characters,
---                  with the n characters are stored in given b on input,
---                  the value of a[1] stores the number of decimal places
---                  as the precision for parsing the numbers;
+--   job     = 544 : reads a standard system into the systems container 
+--                   and its solutions into the solutions container where the
+--                   file name is given as a string of n = a[0] characters,
+--                   with the n characters are stored in given b on input;
+--   job     = 545 : reads a double double system into the systems container
+--                   and its solutions into the solutions container where the
+--                   file name is given as a string of n = a[0] characters,
+--                   with the n characters are stored in given b on input;
+--   job     = 546 : reads a quad double system into the systems container
+--                   and its solutions into the solutions container where the
+--                   file name is given as a string of n = a[0] characters,
+--                   with the n characters are stored in given b on input;
+--   job     = 547 : reads a multiprecision system into the systems container
+--                   and its solutions into the solutions container where the
+--                   file name is given as a string of n = a[0] characters,
+--                   with the n characters are stored in given b on input,
+--                   the value of a[1] stores the number of decimal places
+--                   as the precision for parsing the numbers;
 --
 --   a       indicates the number of solution to work on;
 --   b       array with allocated memory for integers,
