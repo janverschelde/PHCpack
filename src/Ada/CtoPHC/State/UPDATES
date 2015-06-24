@@ -1,4 +1,7 @@
-Tue 23 Jun 2015 : in {standard,dobldobl,quaddobl,multprec}_solution_containers
+Wed 24 Jun 2014 : added retrieve_current and move_current to the
+  {standard,dobldobl,quaddobl,multprec}_solutions_container packages.
+
+Tue 23 Jun 2015 : in {standard,dobldobl,quaddobl,multprec}_solutions_container
   added retrieve_next_solution operations for faster retrieval of long lists.
   Added three additional jobs in use_solcon and use_c2phc.
   New package file_management with code out of standard_solutions_containers,

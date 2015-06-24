@@ -51,6 +51,21 @@ package DoblDobl_Solutions_Container is
   --   and the current pointer is moved to the next solution.
   --   Otherwise, if the current pointer is null, then k on return is 0.
 
+  procedure Retrieve_Current ( s : out Link_to_Solution; k : out natural32 );
+
+  -- DESCRIPTION :
+  --   Retrieves the current solution without advancing the pointer to
+  --   the current solution.  If the pointer refers to a valid solution,
+  --   then k is the solution number on return, otherwise, k = 0.
+
+  procedure Move_Current ( k : out natural32 );
+
+  -- DESCRIPTION :
+  --   Moves the pointer to the current solution to the next solution.
+  --   If the pointer is currently null or if there is no next solution,
+  --   then k will be zero on return.  Otherwise, k will equal the
+  --   value of the cursor, the number of the current solution.
+
   procedure Replace ( k : in natural32; s : in Solution;
                       fail : out boolean );
   procedure Replace ( k : in natural32; s : in Link_to_Solution;

@@ -91,6 +91,30 @@ package body DoblDobl_Solutions_Container is
     end if;
   end Retrieve_Next;
 
+  procedure Retrieve_Current ( s : out Link_to_Solution; k : out natural32 ) is
+  begin
+    if Is_Null(current) then
+      k := 0;
+    else
+      s := Head_Of(current);
+      k := cursor;
+    end if;
+  end Retrieve_Current;
+
+  procedure Move_Current ( k : out natural32 ) is
+  begin
+    if Is_Null(current) then
+      k := 0;
+    else
+      current := Tail_Of(current);
+      if Is_Null(current)
+       then cursor := 0;
+       else cursor := cursor + 1;
+      end if;
+      k := cursor;
+    end if;
+  end Move_Current;
+
   procedure Replace ( k : in natural32; s : in Solution;
                       fail : out boolean ) is
 	  
