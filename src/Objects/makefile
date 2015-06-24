@@ -1248,14 +1248,14 @@ ts_csols:
 
 # test programs in the CtoPHC/State directory :
 
-test_state: ts_solcon ts_use_solcon ts_solpool ts_use_solpool \
+test_state: ts_filman ts_solcon ts_use_solcon ts_solpool ts_use_solpool \
             ts_syscon ts_use_syscon ts_syspool ts_use_syspool \
             ts_celcon ts_use_celcon ts_pirhom ts_use_c2pieri ts_c2phc \
             ts_c2str ts_use_c2phc ts_use_c2fac ts_unisolve ts_use_giftwrap \
             ts_giftwcon
 
-file_management.o:
-	make -f $(MAKEFILE) file_management.o
+ts_filman: file_management.o
+	make -f $(MAKEFILE) ts_filman
 
 ts_solcon:
 	make -f $(MAKEFILE) ts_solcon

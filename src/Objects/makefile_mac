@@ -35,8 +35,6 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
 GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
-# flag with gnat95 restriction for CtoPHC 
-GNATOPT95FLAGS=-gnat95 -gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
 # GNATOPTFLAGS=-gnatv -gnatwa -gnatVa
 GNATNOPFLAGS=-gnatv -gnatwa -gnatVa
@@ -1331,23 +1329,23 @@ ts_csols:
 
 # test programs for the CtoPHC/State directory :
 
-file_management.o:
-	gnatmake -c $(INCLULIBS) $(GNATOPT95FLAGS) file_management.adb
+ts_filman:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_filman.adb -o $(BIN)/ts_filman
 
-ts_solcon: file_management.o
+ts_solcon:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_solcon.adb -o $(BIN)/ts_solcon
 
-ts_solpool: file_management.o
+ts_solpool:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_solpool.adb \
                  -o $(BIN)/ts_solpool
 
-ts_use_solcon: file_management.o
+ts_use_solcon:
 	gcc -c $(PHCAda)/CtoPHC/State/ts_use_solcon.c
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_solcon.adb
 	gnatbind -n use_solcon
 	gnatlink -C use_solcon ts_use_solcon.o -o $(BIN)/ts_use_solcon
 
-ts_use_solpool: file_management.o
+ts_use_solpool:
 	gcc -c $(PHCAda)/CtoPHC/State/ts_use_solpool.c
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_solpool.adb
 	gnatbind -n use_solpool
@@ -1603,14 +1601,14 @@ lib_syscon_cpp:
 	gnatlink -C use_c2phc syscon.o lib_syscon.o -o $(BIN)/lib_syscon \
                  --LINK=g++
 
-lib_solcon: file_management.o
+lib_solcon:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(PHCLib)/lib_solcon.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc solcon.o lib_solcon.o -o $(BIN)/lib_solcon
 
-lib_solcon_cpp: file_management.o
+lib_solcon_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1  -c $(PHCLib)/solcon.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_solcon.c
@@ -1656,7 +1654,7 @@ lib_newton_cpp:
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o lib_newton.o \
                  -o $(BIN)/lib_newton -lm --LINK=g++
 
-lib_roco: file_management.o
+lib_roco:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -1667,7 +1665,7 @@ lib_roco: file_management.o
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o product.o \
                     lib_roco.o -o $(BIN)/lib_roco -lm
 
-lib_roco_cpp: file_management.o
+lib_roco_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -1678,7 +1676,7 @@ lib_roco_cpp: file_management.o
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o product.o \
                     lib_roco.o -o $(BIN)/lib_roco -lm --LINK=g++
 
-lib_celcon: file_management.o
+lib_celcon:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -1689,7 +1687,7 @@ lib_celcon: file_management.o
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o celcon.o \
                     lib_celcon.o -o $(BIN)/lib_celcon -lm
 
-lib_celcon_cpp: file_management.o
+lib_celcon_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -1750,7 +1748,7 @@ lib_poco_cpp:
 	gnatlink -C use_c2phc phcpack.o lib_poco.o -o $(BIN)/lib_poco -lm \
                  --LINK=g++
 
-lib_track: file_management.o
+lib_track:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -1762,7 +1760,7 @@ lib_track: file_management.o
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o witset.o \
                  jump_track.o lib_track.o -o $(BIN)/lib_track -lm
 
-lib_track_cpp: file_management.o
+lib_track_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -1775,7 +1773,7 @@ lib_track_cpp: file_management.o
                  jump_track.o lib_track.o -o $(BIN)/lib_track -lm \
                  --LINK=g++
 
-lib_nxtsol: file_management.o
+lib_nxtsol:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/syscon.c
@@ -1787,7 +1785,7 @@ lib_nxtsol: file_management.o
 	gnatlink -C use_c2phc phcpack.o solcon.o syscon.o jump_track.o \
                     next_track.o lib_nxtsol.o -o $(BIN)/lib_nxtsol
 
-lib_nxtsol_cpp: file_management.o
+lib_nxtsol_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -1828,7 +1826,7 @@ lib_lrhom_cpp:
 	gnatlink -C use_c2phc schubert.o lib_lrhom.o -o $(BIN)/lib_lrhom -lm \
                  --LINK=g++
 
-lib_factor: file_management.o
+lib_factor:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
 	gcc -c $(PHCLib)/solcon.c
@@ -1838,7 +1836,7 @@ lib_factor: file_management.o
 	gnatlink -C use_c2phc phcpack.o solcon.o witset.o lib_factor.o \
                  -o $(BIN)/lib_factor -lm
 
-lib_factor_cpp: file_management.o
+lib_factor_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp -c $(PHCLib)/phcpack.c
 	g++ -Dcompilewgpp -c $(PHCLib)/solcon.c
@@ -1848,7 +1846,7 @@ lib_factor_cpp: file_management.o
 	gnatlink -C use_c2phc phcpack.o solcon.o witset.o lib_factor.o \
                  -o $(BIN)/lib_factor -lm --LINK=g++
 
-lib_usolve: file_management.o
+lib_usolve:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/solcon.c
@@ -1858,7 +1856,7 @@ lib_usolve: file_management.o
 	gnatlink -C use_c2phc syscon.o solcon.o unisolvers.o lib_usolve.o \
                  -o $(BIN)/lib_usolve -lm
 
-lib_usolve_cpp: file_management.o
+lib_usolve_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
@@ -1884,7 +1882,7 @@ lib_giftwrap_cpp:
 	gnatlink -C use_c2phc giftwrappers.o lib_giftwrap.o \
                  -o $(BIN)/lib_giftwrap -lm --LINK=g++
 
-phc_solve: file_management.o
+phc_solve:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/solcon.c
@@ -1894,7 +1892,7 @@ phc_solve: file_management.o
 	gnatlink -C use_c2phc syscon.o solcon.o phcpack.o phc_solve.o \
                  -o $(BIN)/phc_solve -lm
 
-phc_solve_cpp: file_management.o
+phc_solve_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	g++ -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
@@ -1904,7 +1902,7 @@ phc_solve_cpp: file_management.o
 	gnatlink -C use_c2phc syscon.o solcon.o phcpack.o phc_solve.o \
                  -o $(BIN)/phc_solve -lm --LINK=g++
 
-phcpy2c.so: file_management.o
+phcpy2c.so:
 	gcc -c -O2 $(PHCLib)/syscon.c
 	gcc -c -O2 $(PHCLib)/solcon.c
 	gcc -c -O2 $(PHCLib)/product.c
