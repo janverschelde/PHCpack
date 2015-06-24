@@ -272,7 +272,7 @@ function use_solcon ( job : integer32;
     found : boolean;
 
   begin
-    Scan_and_Skip(File_Management.Solution_Input_File,"SOLUTIONS",found);
+    Scan_and_Skip(File_Management.Link_to_Input.all,"SOLUTIONS",found);
     if found
      then return 0;
      else return 132;
@@ -287,7 +287,7 @@ function use_solcon ( job : integer32;
     len,dim : natural32;
 
   begin
-    Read_First(File_Management.Solution_Input_File,len,dim);
+    Read_First(File_Management.Link_to_Input.all,len,dim);
     Assign(integer32(len),a);
     Assign(integer32(dim),b);
     return 0;
@@ -303,7 +303,7 @@ function use_solcon ( job : integer32;
   begin
     Assign(a,integer32(len));
     Assign(b,integer32(dim));
-    Write_First(File_Management.Solution_Output_File,len,dim);
+    Write_First(File_Management.Link_to_Output.all,len,dim);
     return 0;
   exception
     when others => return 134;
@@ -318,7 +318,7 @@ function use_solcon ( job : integer32;
   begin
     Assign(a,integer32(dim));
    -- put("Dimension : "); put(dim,1); put_line(", calling Read_Next ...");
-    Read_Next(File_Management.Solution_Input_File,dim,ls);
+    Read_Next(File_Management.Link_to_Input.all,dim,ls);
    -- put_line("The solution read : "); put(ls.all); new_line;
     Assign_Solution(ls,b,c);
     Clear(ls);
@@ -335,7 +335,7 @@ function use_solcon ( job : integer32;
 
   begin
     Assign(a,integer32(cnt));
-    Write_Next(File_Management.Solution_Output_File,cnt,ls);
+    Write_Next(File_Management.Link_to_Output.all,cnt,ls);
    -- put_line("Written solution : "); put(ls.all); new_line;
     Assign(integer32(cnt),a);
     Clear(ls);
@@ -516,7 +516,7 @@ function use_solcon ( job : integer32;
   begin
    -- put("reading next witness point from set "); put(k,1); new_line;
    -- put("  solution vector has length "); put(n,1); new_line;
-    Read_Next(File_Management.Solution_Input_File(k),n,ls,
+    Read_Next(File_Management.Link_to_Input(k).all,n,ls,
               Standard_Solutions_Container.Retrieve_Symbol_Table(0).all);
    -- was the following:
    --           Standard_Solutions_Container.Retrieve_Symbol_Table(k).all);

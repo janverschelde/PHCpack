@@ -181,7 +181,7 @@ package body PHCpack_Operations_io is
     new_line;
     put_line("Reading the name of the file for the start system.");
     File_Management.Silent_Open_Input_File;
-    get(File_Management.Solution_Input_File,p);
+    get(File_Management.Link_to_Input.all,p);
     PHCpack_Operations.Store_Start_System(p.all);
   end Read_Start_System_without_Solutions;
 
@@ -191,7 +191,7 @@ package body PHCpack_Operations_io is
 
   begin
     File_Management.Silent_Open_Input_File(filename);
-    get(File_Management.Solution_Input_File,p);
+    get(File_Management.Link_to_Input.all,p);
     PHCpack_Operations.Store_Start_System(p.all);
   end Read_Start_System_without_Solutions;
 
@@ -289,16 +289,16 @@ package body PHCpack_Operations_io is
     fail := true;
     if k = 1 or k = 2 then
       File_Management.Open_Input_File(k);
-      get(File_Management.Solution_Input_File(k),n);
+      get(File_Management.Link_to_Input(k).all,n);
       put("The ambient dimension : "); put(n,1); new_line;
       lp := new Standard_Complex_Poly_Systems.Poly_Sys(1..integer32(n));
       Symbol_Table.Init(n);
-      get(File_Management.Solution_Input_File(k),lp.all);
+      get(File_Management.Link_to_Input(k).all,lp.all);
       dim := Witness_Sets_io.Count_Embed_Symbols(n,"zz");
       put("  dimension of the witness set : "); put(dim,1); new_line;
       Witness_Sets_io.Swap_Symbols_to_End(n,dim,"zz",lp.all);
       Jumpstart_Diagonal_Homotopies.Read_Degree_of_Witness_Set
-        (File_Management.Solution_Input_File(k),deg,n);
+        (File_Management.Link_to_Input(k).all,deg,n);
       put("  degree of the solution set : "); put(deg,1); new_line;
       lsym := Extrinsic_Diagonal_Homotopies_io.Get_Link_to_Symbols;
       Standard_Solutions_Container.Store_Symbol_Table(k,lsym.all);
@@ -335,12 +335,12 @@ package body PHCpack_Operations_io is
 
   begin
     File_Management.Reset_Input_File(k);
-    Scan_and_Skip(File_Management.Solution_Input_File(k),"SOLUTIONS",found);
+    Scan_and_Skip(File_Management.Link_to_Input(k).all,"SOLUTIONS",found);
     if not found then
       fail := true;
     else
       Standard_Complex_Solutions_io.Read_First
-        (File_Management.Solution_Input_File(k),deg,dim);
+        (File_Management.Link_to_Input(k).all,deg,dim);
       fail := false;
     end if;
   end Reset_Witness_Input_File;

@@ -5,43 +5,51 @@ package body File_Management is
 
 -- INTERNAL DATA :
 
-  input_file,output_file,wfile1,wfile2 : file_type;
+  link_to_infile,link_to_outfile : link_to_file_type;
+  link_to_wfile1,link_to_wfile2 : link_to_file_type;
 
 -- OPERATIONS :
 
   procedure Silent_Open_Input_File ( filename : in string ) is
   begin
-    Open(input_file,in_file,filename);
+    link_to_infile := new file_type;
+    Open(link_to_infile.all,in_file,filename);
   end Silent_Open_Input_File;
 
   procedure Silent_Open_Input_File
               ( k : in natural32; filename : in string ) is
   begin
     if k = 1 then
-      Open(wfile1,in_file,filename);
+      link_to_wfile1 := new file_type;
+      Open(link_to_wfile1.all,in_file,filename);
     elsif k = 2 then
-      Open(wfile2,in_file,filename);
+      link_to_wfile2 := new file_type;
+      Open(link_to_wfile2.all,in_file,filename);
     end if;
   end Silent_Open_Input_File;
 
   procedure Silent_Open_Input_File is
   begin
-    Read_Name_and_Open_File(input_file);
+    link_to_infile := new file_type;
+    Read_Name_and_Open_File(link_to_infile.all);
   end Silent_Open_Input_File;
 
   procedure Silent_Open_Input_File ( k : in natural32 ) is
   begin
     if k = 1 then
-      Read_Name_and_Open_File(wfile1);
+      link_to_wfile1 := new file_type;
+      Read_Name_and_Open_File(link_to_wfile1.all);
     elsif k = 2 then
-      Read_Name_and_Open_File(wfile2);
+      link_to_wfile2 := new file_type;
+      Read_Name_and_Open_File(link_to_wfile2.all);
     end if;
   end Silent_Open_Input_File;
 
   procedure Open_Input_File is
   begin
-    put_line("Reading the name of the input file for solutions.");
-    Read_Name_and_Open_File(input_file);
+    link_to_infile := new file_type;
+    put_line("Reading the name of the input file...");
+    Read_Name_and_Open_File(link_to_infile.all);
   end Open_Input_File;
 
   procedure Open_Input_File ( k : in natural32 ) is
@@ -49,67 +57,70 @@ package body File_Management is
     put("Reading the name of the input file for witness set ");
     put(k,1); put_line(".");
     if k = 1 then
-      Read_Name_and_Open_File(wfile1);
+      link_to_wfile1 := new file_type;
+      Read_Name_and_Open_File(link_to_wfile1.all);
     elsif k = 2 then
-      Read_Name_and_Open_File(wfile2);
+      link_to_wfile2 := new file_type;
+      Read_Name_and_Open_File(link_to_wfile2.all);
     end if;
   end Open_Input_File;
 
   procedure Create_Output_File is
   begin
-    put_line("Reading the name of the output file for solutions.");
-    Read_Name_and_Create_File(output_file);
+    link_to_outfile := new file_type;
+    put_line("Reading the name of the output file...");
+    Read_Name_and_Create_File(link_to_outfile.all);
   end Create_Output_File;
 
-  function Solution_Input_File return file_type is
+  function Link_to_Input return link_to_file_type is
   begin
-    return input_file;
-  end Solution_Input_File;
+    return link_to_infile;
+  end Link_to_Input;
 
-  function Solution_Input_File ( k : natural32 ) return file_type is
+  function Link_to_Input ( k : natural32 ) return link_to_file_type is
   begin
     if k = 1 then
-      return wfile1;
+      return link_to_wfile1;
     elsif k = 2 then
-      return wfile2;
+      return link_to_wfile2;
     else
-      return input_file;
+      return link_to_infile;
     end if;
-  end Solution_Input_File;
+  end Link_to_Input;
 
-  function Solution_Output_File return file_type is
+  function Link_to_Output return link_to_file_type is
   begin
-    return output_file;
-  end Solution_Output_File;
+    return link_to_outfile;
+  end Link_to_Output;
 
   procedure Reset_Input_File ( k : in natural32 ) is
   begin
     if k = 1 then
-      Reset(wfile1);
+      Reset(link_to_wfile1.all);
     elsif k = 2 then
-      Reset(wfile2);
+      Reset(link_to_wfile2.all);
     end if;
   end Reset_Input_File;
 
   procedure Close_Input_File is
   begin
-    close(input_file);
+    close(link_to_infile.all);
   end Close_Input_File;
 
   procedure Close_Input_File ( k : in natural32 ) is
   begin
     if k = 0 then
-      close(input_file);
+      close(link_to_infile.all);
     elsif k = 1 then
-      close(wfile1);
+      close(link_to_wfile1.all);
     elsif k = 2 then 
-      close(wfile2);
+      close(link_to_wfile2.all);
     end if;
   end Close_Input_File;
 
   procedure Close_Output_File is
   begin
-    close(output_file);
+    close(link_to_outfile.all);
   end Close_Output_File;
 
 end File_Management;
