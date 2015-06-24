@@ -264,6 +264,102 @@ int solcon_retrieve_next_quaddobl_solution
  *               the inverse of the estimate for the condition number;
  *               the norm of the residual vector. */
 
+int solcon_move_current_standard_to_next ( int *cursor );
+/*
+ * DESCRIPTION :
+ *   Moves the pointer to the current solution in standard double precision
+ *   to the next solution and returns the value of the cursor.
+ *   If cursor on return is zero, then either the pointer was null
+ *   or there is no next solution. */
+
+int solcon_move_current_dobldobl_to_next ( int *cursor );
+/*
+ * DESCRIPTION :
+ *   Moves the pointer to the current solution in double double precision
+ *   to the next solution and returns the value of the cursor.
+ *   If cursor on return is zero, then either the pointer was null
+ *   or there is no next solution. */
+
+int solcon_move_current_quaddobl_to_next ( int *cursor );
+/*
+ * DESCRIPTION :
+ *   Moves the pointer to the current solution in quad double precision
+ *   to the next solution and returns the value of the cursor.
+ *   If cursor on return is zero, then either the pointer was null
+ *   or there is no next solution. */
+
+int solcon_move_current_multprec_to_next ( int *cursor );
+/*
+ * DESCRIPTION :
+ *   Moves the pointer to the current solution in multiprecision
+ *   to the next solution and returns the value of the cursor.
+ *   If cursor on return is zero, then either the pointer was null
+ *   or there is no next solution. */
+
+int solcon_length_current_standard_solution_string ( int *cursor, int *n );
+/*
+ * DESCRIPTION :
+ *   Returns in n the number of characters in the string representation
+ *   of the current standard double solution in the container,
+ *   at the place indicated by the value of the cursor on return.
+ *   If this value equals zero, then there is no current solution. */
+
+int solcon_length_current_dobldobl_solution_string ( int *cursor, int *n );
+/*
+ * DESCRIPTION :
+ *   Returns in n the number of characters in the string representation
+ *   of the current double double solution in the container,
+ *   at the place indicated by the value of the cursor on return.
+ *   If this value equals zero, then there is no current solution. */
+
+int solcon_length_current_quaddobl_solution_string ( int *cursor, int *n );
+/*
+ * DESCRIPTION :
+ *   Returns in n the number of characters in the string representation
+ *   of the current quad double solution in the container,
+ *   at the place indicated by the value of the cursor on return.
+ *   If this value equals zero, then there is no current solution. */
+
+int solcon_length_current_multprec_solution_string ( int *cursor, int *n );
+/*
+ * DESCRIPTION :
+ *   Returns in n the number of characters in the string representation
+ *   of the current multiprecision solution in the container,
+ *   at the place indicated by the value of the cursor on return.
+ *   If this value equals zero, then there is no current solution. */
+
+int solcon_write_current_standard_solution_string ( int *k, int n, char *s );
+/*
+ * DESCRIPTION :
+ *   Writes the current standard double solution in the solution container
+ *   to the string s of n+1 characters.  The last character is \0.
+ *   The value of k is the place of the solution in the container,
+ *   if k equals zero, then there is no current solution. */
+
+int solcon_write_current_dobldobl_solution_string ( int *k, int n, char *s );
+/*
+ * DESCRIPTION :
+ *   Writes the current solution in the double double solution container to
+ *   the string s of n+1 characters.  The last character is \0.
+ *   The value of k is the place of the solution in the container,
+ *   if k equals zero, then there is no current solution. */
+
+int solcon_write_current_quaddobl_solution_string ( int *k, int n, char *s );
+/*
+ * DESCRIPTION :
+ *   Writes the current solution in the quad double solution container to
+ *   the string s of n+1 characters.  The last character is \0.
+ *   The value of k is the place of the solution in the container,
+ *   if k equals zero, then there is no current solution. */
+
+int solcon_write_current_multprec_solution_string ( int *k, int n, char *s );
+/*
+ * DESCRIPTION :
+ *   Writes the current solution in the multiprecision solution container to
+ *   the string s of n+1 characters.  The last character is \0.
+ *   The value of k is the place of the solution in the container,
+ *   if k equals zero, then there is no current solution. */
+
 int solcon_replace_solution ( int n, int k, int m, double *sol );
 /*
  * DESCRIPTION :
@@ -672,7 +768,7 @@ int solcon_write_quaddobl_solution_string ( int k, int n, char *s );
 int solcon_write_multprec_solution_string ( int k, int n, char *s );
 /*
  * DESCRIPTION :
- *   Writes the k-th solution in the quad double solution container to the
+ *   Writes the k-th solution in the multiprecision solution container to the
  *   string s of n+1 characters.  The last character is \0. */
 
 int solcon_length_solution_intro ( int k, int *n );

@@ -74,6 +74,13 @@ void standard_next_retrievals ( void );
 void test_standard_next_retrievals ( void );
 /* prompts the user for solutions and then calls standard_next_retrievals */
 
+void retrieve_all_standard_solution_strings ( void );
+/* prints the strings of all standard solutions */
+
+void test_retrieve_all_standard_solution_strings ( void );
+/* prompts the user for solutions and then calls 
+ * retrieve_all_standard_solution_strings */
+
 int main(void)
 {
    int choice;
@@ -85,7 +92,8 @@ int main(void)
    printf("  3. test with quad doubles;\n");
    printf("  4. test with multiprecision numbers;\n");
    printf("  5. test retrieval of standard solutions with next.\n");
-   printf("Type 1, 2, 3, 4, or 5 to choose a test : ");
+   printf("  6. test retrieval of all standard solution strings.\n");
+   printf("Type 1, 2, 3, 4, 5, or 6 to choose a test : ");
    scanf("%d",&choice);
    scanf("%c",&ch); /* skip new line character */
    printf("\n");
@@ -102,6 +110,8 @@ int main(void)
       test_multprec_container();
    else if(choice == 5)
       test_standard_next_retrievals();
+   else if(choice == 6)
+      test_retrieve_all_standard_solution_strings();
    else
       printf("invalid choice, please try again\n");
 
@@ -480,20 +490,22 @@ void test_multprec_container ( void )
 
 void standard_next_retrievals ( void )
 {
-   int n,fail;
-   fail = solcon_dimension_of_solutions(&n);
+   int dim,len,fail;
+   fail = solcon_dimension_of_solutions(&dim);
+   fail = solcon_number_of_solutions(&len);
+   printf("The container has %d solutions of dimension %d.\n",len,dim);
    {
       int i,k,m;
-      double sol[2*n+5];
+      double sol[2*dim+5];
       do
       {
-         fail = solcon_retrieve_next_standard_solution(n,&k,&m,sol);
+         fail = solcon_retrieve_next_standard_solution(dim,&k,&m,sol);
          if(fail != 0)
             printf("return value of k is %d\n",k);
          else
          { 
             printf("The solution vector %d :\n",k);
-            for(i=0; i<n; i++)
+            for(i=0; i<dim; i++)
                printf(" %.15e  %.15e\n", sol[2+2*i], sol[2+2*i+1]);
          }
       }
@@ -505,4 +517,35 @@ void test_standard_next_retrievals ( void )
 {
    int fail = solcon_read_solutions();
    standard_next_retrievals();
+}
+
+void retrieve_all_standard_solution_strings ( void )
+{
+   int dim,len,fail;
+   fail = solcon_dimension_of_solutions(&dim);
+   fail = solcon_number_of_solutions(&len);
+   printf("The container has %d solutions of dimension %d.\n",len,dim);
+   {
+      int k,len;
+      do
+      {
+         fail = solcon_length_current_standard_solution_string(&k,&len);
+         if(fail != 0)
+            printf("return value of k is %d\n",k);
+         else
+         { 
+            char sol[len+1];
+            fail = solcon_write_current_standard_solution_string(&k,len,sol);
+            printf("The solution vector %d :\n%s\n",k, sol);
+            fail = solcon_move_current_standard_to_next(&k);
+         }
+      }
+      while(k > 0);
+   }
+}
+
+void test_retrieve_all_standard_solution_strings ( void )
+{
+   int fail = solcon_read_solutions();
+   retrieve_all_standard_solution_strings();
 }

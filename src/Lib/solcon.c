@@ -213,6 +213,146 @@ int solcon_retrieve_next_quaddobl_solution
    return fail;
 }
 
+int solcon_move_current_standard_to_next ( int *cursor )
+{
+   int *b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(454,cursor,b,c);
+
+   return fail;
+}
+
+int solcon_move_current_dobldobl_to_next ( int *cursor )
+{
+   int *b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(455,cursor,b,c);
+
+   return fail;
+}
+
+int solcon_move_current_quaddobl_to_next ( int *cursor )
+{
+   int *b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(456,cursor,b,c);
+
+   return fail;
+}
+
+int solcon_move_current_multprec_to_next ( int *cursor )
+{
+   int *b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(458,cursor,b,c);
+
+   return fail;
+}
+
+int solcon_length_current_standard_solution_string ( int *cursor, int *n )
+{
+   int fail;
+   double *c;
+
+   fail = _ada_use_c2phc(525,cursor,n,c);
+
+   return fail;
+}
+
+int solcon_length_current_dobldobl_solution_string ( int *cursor, int *n )
+{
+   int fail;
+   double *c;
+
+   fail = _ada_use_c2phc(526,cursor,n,c);
+
+   return fail;
+}
+
+int solcon_length_current_quaddobl_solution_string ( int *cursor, int *n )
+{
+   int fail;
+   double *c;
+
+   fail = _ada_use_c2phc(527,cursor,n,c);
+
+   return fail;
+}
+
+int solcon_length_current_multprec_solution_string ( int *cursor, int *n )
+{
+   int fail;
+   double *c;
+
+   fail = _ada_use_c2phc(528,cursor,n,c);
+
+   return fail;
+}
+
+int solcon_write_current_standard_solution_string ( int *k, int n, char *s )
+{
+   int b[n],fail,i;
+   double *c;
+
+   *k = n;
+   fail = _ada_use_c2phc(533,k,b,c);
+   if(*k != 0)
+   {
+      for(i=0; i<n; i++) s[i] = b[i];
+      s[n] = '\0';
+   }
+   return fail;
+}
+
+int solcon_write_current_dobldobl_solution_string ( int *k, int n, char *s )
+{
+   int b[n],fail,i;
+   double *c;
+
+   *k = n;
+   fail = _ada_use_c2phc(534,k,b,c);
+   if(*k != 0)
+   {
+      for(i=0; i<n; i++) s[i] = b[i];
+      s[n] = '\0';
+   }
+   return fail;
+}
+
+int solcon_write_current_quaddobl_solution_string ( int *k, int n, char *s )
+{
+   int b[n],fail,i;
+   double *c;
+
+   *k = n;
+   fail = _ada_use_c2phc(535,k,b,c);
+   if(*k != 0)
+   {
+      for(i=0; i<n; i++) s[i] = b[i];
+      s[n] = '\0';
+   }
+   return fail;
+}
+
+int solcon_write_current_multprec_solution_string ( int *k, int n, char *s )
+{
+   int b[n],fail,i;
+   double *c;
+
+   *k = n;
+   fail = _ada_use_c2phc(535,k,b,c);
+   if(*k != 0)
+   {
+      for(i=0; i<n; i++) s[i] = b[i];
+      s[n] = '\0';
+   }
+   return fail;
+}
+
 int solcon_replace_solution ( int n, int k, int m, double *sol )
 {
    int b[2],fail;
