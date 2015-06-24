@@ -410,7 +410,7 @@ function use_c2phc ( job : integer32;
 --         = 455 : moves the pointer to the next dobldobl solution
 --                 in then container and returns in a[0] the cursor
 --                 of the current solution, 0 if there is no solution;
---         = 457 : moves the pointer to the next quaddobl solution
+--         = 456 : moves the pointer to the next quaddobl solution
 --                 in then container and returns in a[0] the cursor
 --                 of the current solution, 0 if there is no solution;
 --         = 458 : moves the pointer to the next multprec solution
