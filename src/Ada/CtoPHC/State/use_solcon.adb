@@ -1355,15 +1355,17 @@ function use_solcon ( job : integer32;
     len : constant natural32 := natural32(v_a(v_a'first));
     ind : natural32;
     ls : Link_to_Solution;
-    s : string(1..integer(len));
     sv : Standard_Integer_Vectors.Vector(1..integer32(len));
 
   begin
     Standard_Solutions_Container.Retrieve_Current(ls,ind);
     Assign(integer32(ind),a);
     if ind /= 0 then
-      s := Standard_Solution_Strings.Write_Vector(ls.all);
-      sv := String_to_Integer_Vector(Pad_with_Spaces(len,s));
+      declare
+        s : constant string := Standard_Solution_Strings.Write(ls.all);
+      begin
+        sv := String_to_Integer_Vector(Pad_with_Spaces(len,s));
+      end;
       Assign(sv,b);
     end if;
     return 0;
@@ -1378,15 +1380,17 @@ function use_solcon ( job : integer32;
     len : constant natural32 := natural32(v_a(v_a'first));
     ind : natural32;
     ls : Link_to_Solution;
-    s : string(1..integer(len));
     sv : Standard_Integer_Vectors.Vector(1..integer32(len));
 
   begin
     DoblDobl_Solutions_Container.Retrieve_Current(ls,ind);
     Assign(integer32(ind),a);
     if ind /= 0 then
-      s := DoblDobl_Solution_Strings.Write_Vector(ls.all);
-      sv := String_to_Integer_Vector(Pad_with_Spaces(len,s));
+      declare
+        s : constant string := DoblDobl_Solution_Strings.Write(ls.all);
+      begin
+        sv := String_to_Integer_Vector(Pad_with_Spaces(len,s));
+      end;
       Assign(sv,b);
     end if;
     return 0;
@@ -1401,15 +1405,17 @@ function use_solcon ( job : integer32;
     len : constant natural32 := natural32(v_a(v_a'first));
     ind : natural32;
     ls : Link_to_Solution;
-    s : string(1..integer(len));
     sv : Standard_Integer_Vectors.Vector(1..integer32(len));
 
   begin
     QuadDobl_Solutions_Container.Retrieve_Current(ls,ind);
     Assign(integer32(ind),a);
     if ind /= 0 then
-      s := QuadDobl_Solution_Strings.Write_Vector(ls.all);
-      sv := String_to_Integer_Vector(Pad_with_Spaces(len,s));
+      declare
+        s : constant string := QuadDobl_Solution_Strings.Write(ls.all);
+      begin
+        sv := String_to_Integer_Vector(Pad_with_Spaces(len,s));
+      end;
       Assign(sv,b);
     end if;
     return 0;
@@ -1424,15 +1430,17 @@ function use_solcon ( job : integer32;
     len : constant natural32 := natural32(v_a(v_a'first));
     ind : natural32;
     ls : Link_to_Solution;
-    s : string(1..integer(len));
     sv : Standard_Integer_Vectors.Vector(1..integer32(len));
 
   begin
     Multprec_Solutions_Container.Retrieve_Current(ls,ind);
     Assign(integer32(ind),a);
     if ind /= 0 then
-      s := Multprec_Solution_Strings.Write_Vector(ls.all);
-      sv := String_to_Integer_Vector(Pad_with_Spaces(len,s));
+      declare
+        s : constant string := Multprec_Solution_Strings.Write(ls.all);
+      begin
+        sv := String_to_Integer_Vector(Pad_with_Spaces(len,s));
+      end;
       Assign(sv,b);
     end if;
     return 0;
