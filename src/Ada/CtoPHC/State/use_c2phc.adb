@@ -2050,6 +2050,7 @@ function use_c2phc ( job : integer32;
       when 276 => return use_solcon(276,a,b,c); -- next standard solution
       when 277 => return use_solcon(277,a,b,c); -- next double double solution
       when 278 => return use_solcon(278,a,b,c); -- next quad double solution
+      when 279 => return use_solcon(279,a,b,c); -- next multprec initialize
      -- multiprecision versions for jobs 1 to 8
       when 281 => return Job281; -- copy target system to container
       when 282 => return Job282; -- copy target system from container

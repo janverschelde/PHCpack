@@ -401,6 +401,8 @@ function use_c2phc ( job : integer32;
 --                 and in c the current solution as an array of 8*n+20
 --                 doubles, in the following order:
 --                 two quad doubles for the complex parameter t,
+--         = 279 : initializes the pointer to the current solution in the
+--                 multiprecision container to the first solution.
 --
 -- MOVE POINTER to next solution in container :
 --

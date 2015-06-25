@@ -219,6 +219,8 @@ function use_solcon ( job : integer32;
 --                   one quad double for the norm of last Newton update,
 --                   one quad double for the inverse of condition# estimate,
 --                   one quad double for the norm of the residual.
+--           = 279 : initializes the pointer to the current solution in the
+--                   multiprecision container to the first solution.
 --
 -- MOVE POINTER to next solution in container :
 --

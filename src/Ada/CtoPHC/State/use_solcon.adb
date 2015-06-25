@@ -1228,6 +1228,12 @@ function use_solcon ( job : integer32;
     return 0;
   end Job278;
 
+  function Job279 return integer32 is -- retrieve next multprec initialize
+  begin
+    Multprec_Solutions_Container.Retrieve_Next_Initialize;
+    return 0;
+  end Job279;
+
   function Job300 return integer32 is -- set pointer to next standard solution
 
     ind : natural32;
@@ -1671,6 +1677,7 @@ function use_solcon ( job : integer32;
       when 276 => return Job276; -- retrieve next standard solution
       when 277 => return Job277; -- retrieve next double double solution
       when 278 => return Job278; -- retrieve next quad double solution
+      when 279 => return Job279; -- retrieve next multprec initialize
      -- move pointer from current to next solution
       when 300 => return Job300; -- move to next standard solution
       when 301 => return Job301; -- move to next dobldobl solution
