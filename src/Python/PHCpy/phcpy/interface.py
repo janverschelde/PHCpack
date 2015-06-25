@@ -350,15 +350,19 @@ def load_standard_solutions():
     Returns the list of solutions stored in the container
     for solutions with standard double precision.
     """
-    from phcpy2c import py2c_solcon_number_of_solutions
-    from phcpy2c import py2c_solcon_length_solution_string
-    from phcpy2c import py2c_solcon_write_solution_string
-    nbsols = py2c_solcon_number_of_solutions()
+    from phcpy2c import py2c_solcon_retrieve_next_standard_initialize
+    from phcpy2c import py2c_solcon_move_current_standard_to_next
+    from phcpy2c import py2c_solcon_length_current_standard_solution_string
+    from phcpy2c import py2c_solcon_write_current_standard_solution_string
     result = []
-    for ind in range(1, nbsols+1):
-        lns = py2c_solcon_length_solution_string(ind)
-        sol = py2c_solcon_write_solution_string(ind, lns)
+    py2c_solcon_retrieve_next_standard_initialize()
+    while True:
+        lns = py2c_solcon_length_current_standard_solution_string()
+        if(lns == 0): break
+        sol = py2c_solcon_write_current_standard_solution_string(lns)
         result.append(sol)
+        ind = py2c_solcon_move_current_standard_to_next()
+        if(ind == 0): break
     return result
 
 def load_dobldobl_solutions():
@@ -366,15 +370,19 @@ def load_dobldobl_solutions():
     Returns the list of solutions stored in the container
     for complex double double solutions.
     """
-    from phcpy2c import py2c_solcon_number_of_dobldobl_solutions
-    from phcpy2c import py2c_solcon_length_dobldobl_solution_string
-    from phcpy2c import py2c_solcon_write_dobldobl_solution_string
-    nbsols = py2c_solcon_number_of_dobldobl_solutions()
+    from phcpy2c import py2c_solcon_retrieve_next_dobldobl_initialize
+    from phcpy2c import py2c_solcon_move_current_dobldobl_to_next
+    from phcpy2c import py2c_solcon_length_current_dobldobl_solution_string
+    from phcpy2c import py2c_solcon_write_current_dobldobl_solution_string
     result = []
-    for ind in range(1, nbsols+1):
-        lns = py2c_solcon_length_dobldobl_solution_string(ind)
-        sol = py2c_solcon_write_dobldobl_solution_string(ind, lns)
+    py2c_solcon_retrieve_next_dobldobl_initialize()
+    while True:
+        lns = py2c_solcon_length_current_dobldobl_solution_string()
+        if(lns == 0): break
+        sol = py2c_solcon_write_current_dobldobl_solution_string(lns)
         result.append(sol)
+        ind = py2c_solcon_move_current_dobldobl_to_next()
+        if(ind == 0): break
     return result
 
 def load_quaddobl_solutions():
@@ -382,15 +390,19 @@ def load_quaddobl_solutions():
     Returns the list of solutions stored in the container
     for complex quad double solutions.
     """
-    from phcpy2c import py2c_solcon_number_of_quaddobl_solutions
-    from phcpy2c import py2c_solcon_length_quaddobl_solution_string
-    from phcpy2c import py2c_solcon_write_quaddobl_solution_string
-    nbsols = py2c_solcon_number_of_quaddobl_solutions()
+    from phcpy2c import py2c_solcon_retrieve_next_quaddobl_initialize
+    from phcpy2c import py2c_solcon_move_current_quaddobl_to_next
+    from phcpy2c import py2c_solcon_length_current_quaddobl_solution_string
+    from phcpy2c import py2c_solcon_write_current_quaddobl_solution_string
     result = []
-    for ind in range(1, nbsols+1):
-        lns = py2c_solcon_length_quaddobl_solution_string(ind)
-        sol = py2c_solcon_write_quaddobl_solution_string(ind, lns)
+    py2c_solcon_retrieve_next_quaddobl_initialize()
+    while True:
+        lns = py2c_solcon_length_current_quaddobl_solution_string()
+        if(lns == 0): break
+        sol = py2c_solcon_write_current_quaddobl_solution_string(lns)
         result.append(sol)
+        ind = py2c_solcon_move_current_quaddobl_to_next()
+        if(ind == 0): break
     return result
 
 def load_multprec_solutions():
@@ -398,13 +410,17 @@ def load_multprec_solutions():
     Returns the list of solutions stored in the container
     for complex multiprecision solutions.
     """
-    from phcpy2c import py2c_solcon_number_of_multprec_solutions
-    from phcpy2c import py2c_solcon_length_multprec_solution_string
-    from phcpy2c import py2c_solcon_write_multprec_solution_string
-    nbsols = py2c_solcon_number_of_multprec_solutions()
+    from phcpy2c import py2c_solcon_retrieve_next_multprec_initialize
+    from phcpy2c import py2c_solcon_move_current_multprec_to_next
+    from phcpy2c import py2c_solcon_length_current_multprec_solution_string
+    from phcpy2c import py2c_solcon_write_current_multprec_solution_string
     result = []
-    for ind in range(1, nbsols+1):
-        lns = py2c_solcon_length_multprec_solution_string(ind)
-        sol = py2c_solcon_write_multprec_solution_string(ind, lns)
+    py2c_solcon_retrieve_next_multprec_initialize()
+    while True:
+        lns = py2c_solcon_length_current_multprec_solution_string()
+        if(lns == 0): break
+        sol = py2c_solcon_write_current_multprec_solution_string(lns)
         result.append(sol)
+        ind = py2c_solcon_move_current_multprec_to_next()
+        if(ind == 0): break
     return result

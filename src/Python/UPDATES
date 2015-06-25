@@ -1,3 +1,5 @@
+Wed 24 Jun 2015 : interface.py has faster load_*_solutions functions.
+
 Fri 22 May 2015 : updated PHCpy for version 0.2.6.
 
 Thu 21 May 2015 : improved Sphinx documentation with proper use of toctree
