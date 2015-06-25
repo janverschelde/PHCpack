@@ -1,4 +1,4 @@
-phcpy 0.2.6 offers a simple Python interface to PHCv2.3.97
+phcpy 0.2.7 offers a simple Python interface to PHCv2.3.98
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -38,6 +38,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.2.7 : 2015-06-26 : faster retrieval of solutions, reproducible runs
 0.2.6 : 2015-05-22 : improved documentation
 0.2.5 : 2014-11-26 : variable precision Newton steps
 0.2.4 : 2014-10-31 : more complete Littlewood-Richardson homotopies
