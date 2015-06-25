@@ -193,6 +193,12 @@ int solcon_retrieve_next_quaddobl_initialize ( void );
  *   Resets the pointer to the current quaddobl solution in the container
  *   to the first solution in the list. */
 
+int solcon_retrieve_next_multprec_initialize ( void );
+/*
+ * DESCRIPTION :
+ *   Resets the pointer to the current multprec solution in the container
+ *   to the first solution in the list. */
+
 int solcon_retrieve_next_standard_solution
  ( int n, int *k, int *m, double *sol );
 /* 

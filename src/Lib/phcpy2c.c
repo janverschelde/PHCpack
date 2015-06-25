@@ -2410,7 +2410,7 @@ static PyObject *py2c_solcon_length_multprec_solution_string
 static PyObject *py2c_solcon_write_solution_string
  ( PyObject *self, PyObject *args )
 {      
-   char fail;
+   int fail;
    int n,k;
    char *p;
    static PyObject* a;   
@@ -2430,7 +2430,7 @@ static PyObject *py2c_solcon_write_solution_string
 static PyObject *py2c_solcon_write_dobldobl_solution_string
  ( PyObject *self, PyObject *args )
 {      
-   char fail;
+   int fail;
    int n,k;
    char *p;
    static PyObject* a;   
@@ -2450,7 +2450,7 @@ static PyObject *py2c_solcon_write_dobldobl_solution_string
 static PyObject *py2c_solcon_write_quaddobl_solution_string
  ( PyObject *self, PyObject *args )
 {      
-   char fail;
+   int fail;
    int n,k;
    char *p;
    static PyObject* a;   
@@ -2470,7 +2470,7 @@ static PyObject *py2c_solcon_write_quaddobl_solution_string
 static PyObject *py2c_solcon_write_multprec_solution_string
  ( PyObject *self, PyObject *args )
 {      
-   char fail;
+   int fail;
    int n,k;
    char *p;
    static PyObject* a;   
@@ -2479,6 +2479,234 @@ static PyObject *py2c_solcon_write_multprec_solution_string
    if(!PyArg_ParseTuple(args,"ii",&n,&k)) return NULL;
    p = (char*)malloc((k+1)*sizeof(char));
    fail = solcon_write_multprec_solution_string(n,k,p);
+                 
+   a = Py_BuildValue("s",p);
+
+   free(p);
+   
+   return a;
+}
+
+static PyObject *py2c_solcon_retrieve_next_standard_initialize
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = solcon_retrieve_next_standard_initialize();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_solcon_retrieve_next_dobldobl_initialize
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = solcon_retrieve_next_dobldobl_initialize();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_solcon_retrieve_next_quaddobl_initialize
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = solcon_retrieve_next_quaddobl_initialize();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_solcon_retrieve_next_multprec_initialize
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = solcon_retrieve_next_multprec_initialize();
+              
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_solcon_move_current_standard_to_next
+ ( PyObject *self, PyObject *args )
+{
+   int fail,cursor;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = solcon_move_current_standard_to_next(&cursor);
+              
+   return Py_BuildValue("i",cursor);
+}
+
+static PyObject *py2c_solcon_move_current_dobldobl_to_next
+ ( PyObject *self, PyObject *args )
+{
+   int fail,cursor;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = solcon_move_current_dobldobl_to_next(&cursor);
+              
+   return Py_BuildValue("i",cursor);
+}
+
+static PyObject *py2c_solcon_move_current_quaddobl_to_next
+ ( PyObject *self, PyObject *args )
+{
+   int fail,cursor;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = solcon_move_current_quaddobl_to_next(&cursor);
+              
+   return Py_BuildValue("i",cursor);
+}
+
+static PyObject *py2c_solcon_move_current_multprec_to_next
+ ( PyObject *self, PyObject *args )
+{
+   int fail,cursor;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = solcon_move_current_multprec_to_next(&cursor);
+              
+   return Py_BuildValue("i",cursor);
+}
+
+static PyObject *py2c_solcon_length_current_standard_solution_string
+ ( PyObject *self, PyObject *args )
+{
+   int fail,cursor,len;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = solcon_length_current_standard_solution_string(&cursor,&len);
+   if(cursor == 0) len = 0;
+
+   return Py_BuildValue("i",len);
+}
+
+static PyObject *py2c_solcon_length_current_dobldobl_solution_string
+ ( PyObject *self, PyObject *args )
+{
+   int fail,cursor,len;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = solcon_length_current_dobldobl_solution_string(&cursor,&len);
+   if(cursor == 0) len = 0;
+
+   return Py_BuildValue("i",len);
+}
+
+static PyObject *py2c_solcon_length_current_quaddobl_solution_string
+ ( PyObject *self, PyObject *args )
+{
+   int fail,cursor,len;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = solcon_length_current_quaddobl_solution_string(&cursor,&len);
+   if(cursor == 0) len = 0;
+
+   return Py_BuildValue("i",len);
+}
+
+static PyObject *py2c_solcon_length_current_multprec_solution_string
+ ( PyObject *self, PyObject *args )
+{
+   int fail,cursor,len;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = solcon_length_current_multprec_solution_string(&cursor,&len);
+   if(cursor == 0) len = 0;
+
+   return Py_BuildValue("i",len);
+}
+
+static PyObject *py2c_solcon_write_current_standard_solution_string
+ ( PyObject *self, PyObject *args )
+{      
+   int fail;
+   int n,k;
+   char *p;
+   static PyObject* a;   
+                 
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&n)) return NULL;
+   p = (char*)malloc((n+1)*sizeof(char));
+   fail = solcon_write_current_standard_solution_string(&k,n,p);
+                 
+   a = Py_BuildValue("s",p);
+
+   free(p);
+   
+   return a;
+}
+
+static PyObject *py2c_solcon_write_current_dobldobl_solution_string
+ ( PyObject *self, PyObject *args )
+{      
+   int fail;
+   int n,k;
+   char *p;
+   static PyObject* a;   
+                 
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&n)) return NULL;
+   p = (char*)malloc((n+1)*sizeof(char));
+   fail = solcon_write_current_dobldobl_solution_string(&k,n,p);
+                 
+   a = Py_BuildValue("s",p);
+
+   free(p);
+   
+   return a;
+}
+
+static PyObject *py2c_solcon_write_current_quaddobl_solution_string
+ ( PyObject *self, PyObject *args )
+{      
+   int fail;
+   int n,k;
+   char *p;
+   static PyObject* a;   
+                 
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&n)) return NULL;
+   p = (char*)malloc((n+1)*sizeof(char));
+   fail = solcon_write_current_quaddobl_solution_string(&k,n,p);
+                 
+   a = Py_BuildValue("s",p);
+
+   free(p);
+   
+   return a;
+}
+
+static PyObject *py2c_solcon_write_current_multprec_solution_string
+ ( PyObject *self, PyObject *args )
+{      
+   int fail;
+   int n,k;
+   char *p;
+   static PyObject* a;   
+                 
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&n)) return NULL;
+   p = (char*)malloc((n+1)*sizeof(char));
+   fail = solcon_write_current_multprec_solution_string(&k,n,p);
                  
    a = Py_BuildValue("s",p);
 
@@ -4670,6 +4898,54 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_solcon_write_multprec_solution_string",
      py2c_solcon_write_multprec_solution_string,
     METH_VARARGS, "writes the k-th multiprecision solution to a string"},
+   {"py2c_solcon_retrieve_next_standard_initialize",
+     py2c_solcon_retrieve_next_standard_initialize, METH_VARARGS,
+    "sets the pointer to the current standard double solution to the start"},
+   {"py2c_solcon_retrieve_next_dobldobl_initialize",
+     py2c_solcon_retrieve_next_dobldobl_initialize, METH_VARARGS,
+    "sets the pointer to the current double double solution to the start"},
+   {"py2c_solcon_retrieve_next_quaddobl_initialize",
+     py2c_solcon_retrieve_next_quaddobl_initialize, METH_VARARGS,
+    "sets the pointer to the current quad double solution to the start"},
+   {"py2c_solcon_retrieve_next_multprec_initialize",
+     py2c_solcon_retrieve_next_multprec_initialize, METH_VARARGS,
+    "sets the pointer to the current multiprecision solution to the start"},
+   {"py2c_solcon_move_current_standard_to_next",
+     py2c_solcon_move_current_standard_to_next, METH_VARARGS,
+    "moves pointer from the current standard double solution to the next"},
+   {"py2c_solcon_move_current_dobldobl_to_next",
+     py2c_solcon_move_current_dobldobl_to_next, METH_VARARGS,
+    "moves pointer from the current double double solution to the next"},
+   {"py2c_solcon_move_current_quaddobl_to_next",
+     py2c_solcon_move_current_quaddobl_to_next, METH_VARARGS,
+    "moves pointer from the current quad double solution to the next"},
+   {"py2c_solcon_move_current_multprec_to_next",
+     py2c_solcon_move_current_multprec_to_next, METH_VARARGS,
+    "moves pointer from the current multiprecision solution to the next"},
+   {"py2c_solcon_length_current_standard_solution_string",
+     py2c_solcon_length_current_standard_solution_string, METH_VARARGS,
+    "returns the length of the current standard double solution string"},
+   {"py2c_solcon_length_current_dobldobl_solution_string",
+     py2c_solcon_length_current_dobldobl_solution_string, METH_VARARGS,
+    "returns the length of the current double double solution string"},
+   {"py2c_solcon_length_current_quaddobl_solution_string",
+     py2c_solcon_length_current_quaddobl_solution_string, METH_VARARGS,
+    "returns the length of the current quad double solution string"},
+   {"py2c_solcon_length_current_multprec_solution_string",
+     py2c_solcon_length_current_multprec_solution_string, METH_VARARGS,
+    "returns the length of the current multiprecision solution string"},
+   {"py2c_solcon_write_current_standard_solution_string",
+     py2c_solcon_write_current_standard_solution_string, METH_VARARGS,
+    "writes the current standard double solution to a string"},
+   {"py2c_solcon_write_current_dobldobl_solution_string",
+     py2c_solcon_write_current_dobldobl_solution_string, METH_VARARGS,
+    "writes the current double double solution to a string"},
+   {"py2c_solcon_write_current_quaddobl_solution_string",
+     py2c_solcon_write_current_quaddobl_solution_string, METH_VARARGS,
+    "writes the current quad double solution to a string"},
+   {"py2c_solcon_write_current_multprec_solution_string",
+     py2c_solcon_write_current_multprec_solution_string, METH_VARARGS,
+    "writes the current multiprecision solution to a string"},
    {"py2c_solcon_append_solution_string", py2c_solcon_append_solution_string,
     METH_VARARGS, "appends a solution string to the container"},
    {"py2c_solcon_append_dobldobl_solution_string",

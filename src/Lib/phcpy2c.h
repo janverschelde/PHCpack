@@ -375,6 +375,38 @@ static PyObject *py2c_solcon_write_quaddobl_solution_string
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_solcon_write_multprec_solution_string
  ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_retrieve_next_standard_initialize
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_retrieve_next_dobldobl_initialize
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_retrieve_next_quaddobl_initialize
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_retrieve_next_multprec_initialize
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_move_current_standard_to_next
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_move_current_dobldobl_to_next
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_move_current_quaddobl_to_next
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_move_current_multprec_to_next
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_length_current_standard_solution_string
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_length_current_dobldobl_solution_string
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_length_current_quaddobl_solution_string
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_length_current_multprec_solution_string
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_write_current_standard_solution_string
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_write_current_dobldobl_solution_string
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_write_current_quaddobl_solution_string
+ ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_write_current_multprec_solution_string
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_solcon_append_solution_string
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_solcon_append_dobldobl_solution_string

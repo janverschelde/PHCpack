@@ -1,5 +1,6 @@
 Wed 24 Jun 2015 : solcon is extended with function to retrieve string
   representations of solutions faster, with one test in lib_solcon.c.
+  Extended phcpy2c with the corresponding wrappers.
 
 Tue 23 Jun 2015 : extended solcon with operations to retrieve solutions faster
   and added a test in lib_solcon.c.

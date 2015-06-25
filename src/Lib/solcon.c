@@ -155,33 +155,44 @@ int solcon_retrieve_quaddobl_solution ( int n, int k, int *m, double *sol )
 
 int solcon_retrieve_next_standard_initialize ( void )
 {
-   int *a,*b,fail;
+   int a,*b,fail;
    double *c;
 
-   *a = 0;
-   fail = _ada_use_c2phc(276,a,b,c);
+   a = 0;
+   fail = _ada_use_c2phc(276,&a,b,c);
 
    return fail;
 }
 
 int solcon_retrieve_next_dobldobl_initialize ( void )
 {
-   int *a,*b,fail;
+   int a,*b,fail;
    double *c;
 
-   *a = 0;
-   fail = _ada_use_c2phc(277,a,b,c);
+   a = 0;
+   fail = _ada_use_c2phc(277,&a,b,c);
 
    return fail;
 }
 
 int solcon_retrieve_next_quaddobl_initialize ( void )
 {
-   int *a,*b,fail;
+   int a,*b,fail;
    double *c;
 
-   *a = 0;
-   fail = _ada_use_c2phc(278,a,b,c);
+   a = 0;
+   fail = _ada_use_c2phc(278,&a,b,c);
+
+   return fail;
+}
+
+int solcon_retrieve_next_multprec_initialize ( void )
+{
+   int a,*b,fail;
+   double *c;
+
+   a = 0;
+   fail = _ada_use_c2phc(279,&a,b,c);
 
    return fail;
 }
