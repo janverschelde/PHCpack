@@ -807,7 +807,7 @@ package body Standard_Root_Refiners is
   exception
    -- when constraint_error -- same underflow as in Reporting_Newton may occur
     when others -- 
-       => put_line("exception raised in reporting deflate");
+       => -- put_line("exception raised in reporting deflate");
           Handle_Underflow_Gracefully.Underflow_to_Zero(ls.v);
           ls.rco := Handle_Underflow_Gracefully.Underflow_to_Zero(ls.rco);
           fail := not done;

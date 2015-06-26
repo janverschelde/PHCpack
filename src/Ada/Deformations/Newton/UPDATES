@@ -1,3 +1,6 @@
+Fri 26 Jun 2015 : suppress 'exception raised in reporting deflate'
+  in standard_root_refiners.adb.
+
 Mon 22 Jun 2015 : added procedures in {dobldobl,quaddobl}_root_refiners to
   use circuits for the Jacobian matrices, changed ts_ddnewt and ts_qdnewt;
   upgraded drivers_to_dd_qd_root_refiners.adb.
