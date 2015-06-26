@@ -31,6 +31,18 @@ number generator with the seed 89348224.
 Just calling phc as phc -0 will still result in using the same
 fixed seed as before in each run.
 
+To reproduce a run with any seed (when the option -0 was not used),
+we can look at the output file, for the line
+
+::
+
+   Seed used in random number generators : 407.
+
+which appears at the end of the output of phc -b.
+Running phc -b -0407 on the same input file as before
+will generate the same sequences of random numbers
+and thus the same output.
+
 A homotopy is a family of polynomial systems.
 In an artificial parameter homotopy there is one parameter \ :math:`t` 
 usually going from 0 to 1.  

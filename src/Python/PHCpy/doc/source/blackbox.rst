@@ -85,6 +85,19 @@ as follows:
    0
    >>>
 
+The above session continues as
+
+::
+
+   >>> from phcpy.phcpy2c import py2c_get_seed
+   >>> py2c_get_seed()
+   2013
+   >>> 
+
+To reproduce a computation, we can thus request the seed that was used
+(with ``py2c_get_seed``) and then restart the session setting the seed
+to what was used before (with ``py2c_set_seed``).
+
 root counting methods
 ---------------------
 
