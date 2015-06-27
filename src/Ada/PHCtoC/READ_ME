@@ -1,4 +1,4 @@
-GPU acceleration of Newton's method and path tracking in PHCv2.3.90
+GPU acceleration of Newton's method and path tracking in PHCv2.3.99
 
 This directory is newly created in release 2.3.90 of PHCpack.
 At this point it consists of a collection of test programs to 
@@ -27,4 +27,7 @@ ts_gpu2norm_d_in_c.c   : calling gpu2norm_d from main C program
 ts_gpu2norm_d.adb      : Ada calls 2-norm of complex double vector
 ts_gpu2norm_dd.adb     : Ada calls 2-norm of complex double double vector
 ts_gpu2norm_qd.adb     : Ada calls 2-norm of complex quad double vector
+-------------------------------------------------------------------------------
+ts_gpunewton           : development of acceleration of Newton's method
+gpunewton_d.cpp        : C++ program called by ts_gpunewton
 -------------------------------------------------------------------------------

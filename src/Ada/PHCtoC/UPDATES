@@ -1,3 +1,7 @@
+Sat 27 Jun 2015 : updates to gpunewton_d.cpp, as called by ts_gpunewton.adb.
+
+Fri 26 Jun 2015 : new file ts_gpunewton.adb to accelerate Newton's method.
+
 Tue 1 Jul 2014 : renaming of files, separating ts_cpu from ts_gpu and
   using the ts_ only for the Ada main test programs, not for the C code.
   Made double double and quad double interfaces for random vector
