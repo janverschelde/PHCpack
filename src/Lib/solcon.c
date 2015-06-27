@@ -593,7 +593,7 @@ int solcon_reset_input_file ( int k, int *d, int *n )
 
 int get_next_start_product
       ( int *i, int *j, int monitor,
-        int n1, int n2, int dim1, int dim2, int deg1, int deg2, int cd, 
+        int n1, int n2, int dim1, int dim2, int deg1, int deg2, int extcd, 
         double *sol1, double *sol2, double *ps )
 {
    int fail,m,done,dim,deg;
@@ -603,7 +603,7 @@ int get_next_start_product
       if(((*i) == 0) && ((*j) == 0))
          fail = solcon_read_next_witness_point(1,n1,&m,sol1);
       fail = solcon_read_next_witness_point(2,n2,&m,sol2);
-      fail = solcon_extrinsic_product(dim1,dim2,n1,n2,sol1,sol2,cd,ps);
+      fail = solcon_extrinsic_product(dim1,dim2,n1,n2,sol1,sol2,extcd,ps);
       done = add_one_to_double_loop_counters(i,j,deg1,deg2);
       if((*j == 0) && (done == 0))
       {
@@ -618,7 +618,7 @@ int get_next_start_product
       if(((*i) == 0) && ((*j) == 0))
          fail = solcon_read_next_witness_point(2,n2,&m,sol2);
       fail = solcon_read_next_witness_point(1,n1,&m,sol1);
-      fail = solcon_extrinsic_product(dim2,dim1,n2,n1,sol2,sol1,cd,ps);
+      fail = solcon_extrinsic_product(dim2,dim1,n2,n1,sol2,sol1,extcd,ps);
       done = add_one_to_double_loop_counters(j,i,deg2,deg1);
       if((*i == 0) && (done == 0))
       {

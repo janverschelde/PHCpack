@@ -649,8 +649,9 @@ int solcon_reset_input_file ( int k, int *d, int *n );
  *   n         ambient dimension, length of the solution vectors. */
 
 int get_next_start_product
-      ( int *i, int *j, int monitor,
-        int n1, int n2, int dim1, int dim2, int deg1, int deg2, int cd, 
+      ( int *i, int *j, int mymonitor,
+        int n1, int n2, int dim1, int dim2,
+        int deg1, int deg2, int extcd, 
         double *sol1, double *sol2, double *ps );
 /*
  * DESCRIPTION :
@@ -670,7 +671,7 @@ int get_next_start_product
  *   dim2     dimension of the second witness set;
  *   deg1     degree of the first witness set;
  *   deg2     degree of the second witness set;
- *   cd       dimension of the extrinsic diagonal homotopy;
+ *   extcd    dimension of the extrinsic diagonal homotopy;
  *   sol1     workspace for the first solution, of dimension 2*n1+5;
  *   sol2     workspace for the second solution, of dimension 2*n2+5;;
  *   ps       workspace for the product of the first two solutions,
