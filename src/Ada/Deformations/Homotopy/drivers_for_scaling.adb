@@ -4,10 +4,28 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
+with Multprec_Floating_Numbers_io;       use Multprec_Floating_Numbers_io;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
-with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
+with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
+with Multprec_Complex_Vectors_io;        use Multprec_Complex_Vectors_io;
+with Standard_Complex_Polynomials;
+with DoblDobl_Complex_Polynomials;
+with QuadDobl_Complex_Polynomials;
+with Multprec_Complex_Polynomials;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
-with Standard_Scaling;                   use Standard_Scaling;
+with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
+with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
+with Standard_Scaling;
+with DoblDobl_Scaling;
+with QuadDobl_Scaling;
+with Multprec_Scaling;
 
 package body Drivers_for_Scaling is
 
@@ -34,21 +52,68 @@ package body Drivers_for_Scaling is
   end Display_Info;
 
   procedure Equation_Scaling
-              ( file : in file_type; p : in out Poly_Sys ) is
+              ( file : in file_type;
+                p : in out Standard_Complex_Poly_Systems.Poly_Sys ) is
 
     timer : Timing_Widget;
 
   begin
     put_line(file,"EQUATION SCALING :");
     tstart(timer);
-    Scale(p);
+    Standard_Scaling.Scale(p);
+    tstop(timer);
+    new_line(file); print_times(file,timer,"Equation Scaling"); new_line(file);
+  end Equation_Scaling;
+
+  procedure Equation_Scaling
+              ( file : in file_type;
+                p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+    timer : Timing_Widget;
+
+  begin
+    put_line(file,"EQUATION SCALING :");
+    tstart(timer);
+    DoblDobl_Scaling.Scale(p);
+    tstop(timer);
+    new_line(file); print_times(file,timer,"Equation Scaling"); new_line(file);
+  end Equation_Scaling;
+
+  procedure Equation_Scaling
+              ( file : in file_type;
+                p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+    timer : Timing_Widget;
+
+  begin
+    put_line(file,"EQUATION SCALING :");
+    tstart(timer);
+    QuadDobl_Scaling.Scale(p);
+    tstop(timer);
+    new_line(file); print_times(file,timer,"Equation Scaling"); new_line(file);
+  end Equation_Scaling;
+
+  procedure Equation_Scaling
+              ( file : in file_type;
+                p : in out Multprec_Complex_Poly_Systems.Poly_Sys ) is
+
+    timer : Timing_Widget;
+
+  begin
+    put_line(file,"EQUATION SCALING :");
+    tstart(timer);
+    Multprec_Scaling.Scale(p);
     tstop(timer);
     new_line(file); print_times(file,timer,"Equation Scaling"); new_line(file);
   end Equation_Scaling;
 
   procedure Variable_Scaling
-              ( file : in file_type; p : in out Poly_Sys;
-                basis : out natural32; scvc : out Link_to_Vector ) is
+              ( file : in file_type;
+                p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                basis : out natural32;
+                scvc : out Standard_Complex_Vectors.Link_to_Vector ) is
+
+    use Standard_Complex_Polynomials;
 
     yn : character;
     timer : Timing_Widget;
@@ -56,7 +121,7 @@ package body Drivers_for_Scaling is
     bas : constant natural32 := 10;
     dim : constant integer32
         := p'length + integer32(Number_of_Unknowns(p(p'first)));
-    scalecoeff : Vector(1..dim);
+    scalecoeff : Standard_Complex_Vectors.Vector(1..dim);
 
   begin
     put_line(file,"EQUATION AND VARIABLE SCALING :");
@@ -65,10 +130,10 @@ package body Drivers_for_Scaling is
     tstart(timer);
     if yn = 'y' then
       put_line(file,"  Reducing the variability of coefficients.");
-      scale(p,bas,true,rcond,scalecoeff);
+      Standard_Scaling.scale(p,bas,true,rcond,scalecoeff);
     else
       put_line(file,"  No reduction of variability of coefficients.");
-      scale(p,bas,false,rcond,scalecoeff);
+      Standard_Scaling.scale(p,bas,false,rcond,scalecoeff);
     end if;
     tstop(timer);
     put("  The inverse condition is");
@@ -76,12 +141,132 @@ package body Drivers_for_Scaling is
     put(file,"  The inverse condition is");
     put(file,rcond,3); put_line(file,".");
     basis := bas;
-    scvc := new Vector'(scalecoeff);
+    scvc := new Standard_Complex_Vectors.Vector'(scalecoeff);
     new_line(file); print_times(file,timer,"Variable Scaling"); new_line(file);
   end Variable_Scaling;
 
-  procedure Write_Results ( file : in file_type; p : in Poly_Sys;
-                            basis : in natural32; scvc : in Link_to_Vector ) is
+  procedure Variable_Scaling
+              ( file : in file_type;
+                p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                basis : out natural32;
+                scvc : out DoblDobl_Complex_Vectors.Link_to_Vector ) is
+
+    use DoblDobl_Complex_Polynomials;
+
+    yn : character;
+    timer : Timing_Widget;
+    rcond : double_double;
+    bas : constant natural32 := 10;
+    dim : constant integer32
+        := p'length + integer32(Number_of_Unknowns(p(p'first)));
+    scalecoeff : DoblDobl_Complex_Vectors.Vector(1..dim);
+
+  begin
+    put_line(file,"EQUATION AND VARIABLE SCALING :");
+    put("  Reducing the variability of coefficients ? (y/n) ");
+    Ask_Yes_or_No(yn);
+    tstart(timer);
+    if yn = 'y' then
+      put_line(file,"  Reducing the variability of coefficients.");
+      DoblDobl_Scaling.scale(p,bas,true,rcond,scalecoeff);
+    else
+      put_line(file,"  No reduction of variability of coefficients.");
+      DoblDobl_Scaling.scale(p,bas,false,rcond,scalecoeff);
+    end if;
+    tstop(timer);
+    put("  The inverse condition is ");
+    put(rcond,3); put_line(".");
+    put(file,"  The inverse condition is ");
+    put(file,rcond,3); put_line(file,".");
+    basis := bas;
+    scvc := new DoblDobl_Complex_Vectors.Vector'(scalecoeff);
+    new_line(file); print_times(file,timer,"Variable Scaling"); new_line(file);
+  end Variable_Scaling;
+
+  procedure Variable_Scaling
+              ( file : in file_type;
+                p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                basis : out natural32;
+                scvc : out QuadDobl_Complex_Vectors.Link_to_Vector ) is
+
+    use QuadDobl_Complex_Polynomials;
+
+    yn : character;
+    timer : Timing_Widget;
+    rcond : quad_double;
+    bas : constant natural32 := 10;
+    dim : constant integer32
+        := p'length + integer32(Number_of_Unknowns(p(p'first)));
+    scalecoeff : QuadDobl_Complex_Vectors.Vector(1..dim);
+
+  begin
+    put_line(file,"EQUATION AND VARIABLE SCALING :");
+    put("  Reducing the variability of coefficients ? (y/n) ");
+    Ask_Yes_or_No(yn);
+    tstart(timer);
+    if yn = 'y' then
+      put_line(file,"  Reducing the variability of coefficients.");
+      QuadDobl_Scaling.scale(p,bas,true,rcond,scalecoeff);
+    else
+      put_line(file,"  No reduction of variability of coefficients.");
+      QuadDobl_Scaling.scale(p,bas,false,rcond,scalecoeff);
+    end if;
+    tstop(timer);
+    put("  The inverse condition is ");
+    put(rcond,3); put_line(".");
+    put(file,"  The inverse condition is ");
+    put(file,rcond,3); put_line(file,".");
+    basis := bas;
+    scvc := new QuadDobl_Complex_Vectors.Vector'(scalecoeff);
+    new_line(file); print_times(file,timer,"Variable Scaling"); new_line(file);
+  end Variable_Scaling;
+
+  procedure Variable_Scaling
+              ( file : in file_type;
+                p : in out Multprec_Complex_Poly_Systems.Poly_Sys;
+                basis : out natural32;
+                scvc : out Multprec_Complex_Vectors.Link_to_Vector ) is
+
+    use Multprec_Complex_Polynomials;
+
+    yn : character;
+    timer : Timing_Widget;
+    rcond : Floating_Number;
+    bas : constant natural32 := 10;
+    dim : constant integer32
+        := p'length + integer32(Number_of_Unknowns(p(p'first)));
+    scalecoeff : Multprec_Complex_Vectors.Vector(1..dim);
+
+  begin
+    put_line(file,"EQUATION AND VARIABLE SCALING :");
+    put("  Reducing the variability of coefficients ? (y/n) ");
+    Ask_Yes_or_No(yn);
+    tstart(timer);
+    if yn = 'y' then
+      put_line(file,"  Reducing the variability of coefficients.");
+      Multprec_Scaling.scale(p,bas,true,rcond,scalecoeff);
+    else
+      put_line(file,"  No reduction of variability of coefficients.");
+      Multprec_Scaling.scale(p,bas,false,rcond,scalecoeff);
+    end if;
+    tstop(timer);
+    put("  The inverse condition is ");
+    put(rcond,3); put_line(".");
+    put(file,"  The inverse condition is ");
+    put(file,rcond,3); put_line(file,".");
+    basis := bas;
+    scvc := new Multprec_Complex_Vectors.Vector'(scalecoeff);
+    new_line(file); print_times(file,timer,"Variable Scaling"); new_line(file);
+  end Variable_Scaling;
+
+  procedure Write_Results
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                basis : in natural32;
+                scvc : in Standard_Complex_Vectors.Link_to_Vector ) is
+
+    use Standard_Complex_Polynomials;
+
   begin
     new_line(file);
     put_line(file,"THE SCALED SYSTEM :");
@@ -97,12 +282,182 @@ package body Drivers_for_Scaling is
     end if;
   end Write_Results;
 
+  procedure Write_Results
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                basis : in natural32;
+                scvc : in DoblDobl_Complex_Vectors.Link_to_Vector ) is
+  begin
+    new_line(file);
+    put_line(file,"THE SCALED SYSTEM :");
+    new_line(file);
+    put(file,p);
+    new_line(file);
+    if basis /= 0 then
+      new_line(file);
+      put_line(file,"SCALING COEFFICIENTS :");
+      new_line(file);
+      put(file,basis,1); new_line(file);
+      put_line(file,scvc);
+    end if;
+  end Write_Results;
+
+  procedure Write_Results
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                basis : in natural32;
+                scvc : in QuadDobl_Complex_Vectors.Link_to_Vector ) is
+  begin
+    new_line(file);
+    put_line(file,"THE SCALED SYSTEM :");
+    new_line(file);
+    put(file,p);
+    new_line(file);
+    if basis /= 0 then
+      new_line(file);
+      put_line(file,"SCALING COEFFICIENTS :");
+      new_line(file);
+      put(file,basis,1); new_line(file);
+      put_line(file,scvc);
+    end if;
+  end Write_Results;
+
+  procedure Write_Results
+              ( file : in file_type;
+                p : in Multprec_Complex_Poly_Systems.Poly_Sys;
+                basis : in natural32;
+                scvc : in Multprec_Complex_Vectors.Link_to_Vector ) is
+  begin
+    new_line(file);
+    put_line(file,"THE SCALED SYSTEM :");
+    new_line(file);
+    put(file,p);
+    new_line(file);
+    if basis /= 0 then
+      new_line(file);
+      put_line(file,"SCALING COEFFICIENTS :");
+      new_line(file);
+      put(file,basis,1); new_line(file);
+      put_line(file,scvc);
+    end if;
+  end Write_Results;
+
   procedure Driver_for_Scaling
-              ( file : in file_type; p : in out Poly_Sys;
-                basis : out natural32; scvc : out Link_to_Vector ) is
+              ( file : in file_type;
+                p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                basis : out natural32;
+                scvc : out Standard_Complex_Vectors.Link_to_Vector ) is
 
     ans : character;
-    res_scvc : Link_to_Vector;
+    res_scvc : Standard_Complex_Vectors.Link_to_Vector;
+    bas : natural32 := 0;
+
+  begin
+    loop
+      new_line;
+      put_line("MENU for Scaling Polynomial Systems :");
+      put_line("  0 : No Scaling       : leave the menu                    ");
+      put_line("  1 : Equation Scaling : divide by average coefficient     ");
+      put_line("  2 : Variable Scaling : change of variables, z = (10^c)*x ");
+      put("Type 0, 1, or 2 to select scaling, or i for info : ");
+      Ask_Alternative(ans,"012i");
+      if ans = 'i'
+       then new_line; Display_Info;
+      end if;
+      exit when ans /= 'i';
+    end loop;
+    case ans is
+      when '1' => Equation_Scaling(file,p);
+      when '2' => Variable_Scaling(file,p,bas,res_scvc);
+      when others => null;
+    end case;
+    case ans is
+      when '1' | '2' => Write_Results(file,p,bas,res_scvc);
+      when others    => null;
+    end case;
+    basis := bas; scvc := res_scvc;
+  end Driver_for_Scaling;
+
+  procedure Driver_for_Scaling
+              ( file : in file_type;
+                p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                basis : out natural32;
+                scvc : out DoblDobl_Complex_Vectors.Link_to_Vector ) is
+
+    ans : character;
+    res_scvc : DoblDobl_Complex_Vectors.Link_to_Vector;
+    bas : natural32 := 0;
+
+  begin
+    loop
+      new_line;
+      put_line("MENU for Scaling Polynomial Systems :");
+      put_line("  0 : No Scaling       : leave the menu                    ");
+      put_line("  1 : Equation Scaling : divide by average coefficient     ");
+      put_line("  2 : Variable Scaling : change of variables, z = (10^c)*x ");
+      put("Type 0, 1, or 2 to select scaling, or i for info : ");
+      Ask_Alternative(ans,"012i");
+      if ans = 'i'
+       then new_line; Display_Info;
+      end if;
+      exit when ans /= 'i';
+    end loop;
+    case ans is
+      when '1' => Equation_Scaling(file,p);
+      when '2' => Variable_Scaling(file,p,bas,res_scvc);
+      when others => null;
+    end case;
+    case ans is
+      when '1' | '2' => Write_Results(file,p,bas,res_scvc);
+      when others    => null;
+    end case;
+    basis := bas; scvc := res_scvc;
+  end Driver_for_Scaling;
+
+  procedure Driver_for_Scaling
+              ( file : in file_type;
+                p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                basis : out natural32;
+                scvc : out QuadDobl_Complex_Vectors.Link_to_Vector ) is
+
+    ans : character;
+    res_scvc : QuadDobl_Complex_Vectors.Link_to_Vector;
+    bas : natural32 := 0;
+
+  begin
+    loop
+      new_line;
+      put_line("MENU for Scaling Polynomial Systems :");
+      put_line("  0 : No Scaling       : leave the menu                    ");
+      put_line("  1 : Equation Scaling : divide by average coefficient     ");
+      put_line("  2 : Variable Scaling : change of variables, z = (10^c)*x ");
+      put("Type 0, 1, or 2 to select scaling, or i for info : ");
+      Ask_Alternative(ans,"012i");
+      if ans = 'i'
+       then new_line; Display_Info;
+      end if;
+      exit when ans /= 'i';
+    end loop;
+    case ans is
+      when '1' => Equation_Scaling(file,p);
+      when '2' => Variable_Scaling(file,p,bas,res_scvc);
+      when others => null;
+    end case;
+    case ans is
+      when '1' | '2' => Write_Results(file,p,bas,res_scvc);
+      when others    => null;
+    end case;
+    basis := bas; scvc := res_scvc;
+  end Driver_for_Scaling;
+
+  procedure Driver_for_Scaling
+              ( file : in file_type;
+                p : in out Multprec_Complex_Poly_Systems.Poly_Sys;
+                basis : out natural32;
+                scvc : out Multprec_Complex_Vectors.Link_to_Vector ) is
+
+    ans : character;
+    res_scvc : Multprec_Complex_Vectors.Link_to_Vector;
     bas : natural32 := 0;
 
   begin

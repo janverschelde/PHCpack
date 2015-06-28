@@ -1,3 +1,6 @@
+Sun 28 Jun 2015 : new packages {dobldobl,quaddobl}_scaling, tested by
+  ts_drivscal.adb, via modified drivers_for_scaling.
+
 Sun 14 Dec 2014 : extended varbprec_homotopy with natural parameter homotopies
   with added tests in ts_vmphom.
 
