@@ -1,0 +1,6 @@
+This directory contains the main test programs for the the library
+to accelerate path tracking.
+
+To define the location of the input files to run the tests,
+the constant string DATA needs to be changed in init_test.cpp
+and path_test.cpp.

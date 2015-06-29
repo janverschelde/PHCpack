@@ -1,0 +1,11 @@
+Definitions of complex types and arithmetic, with templates,
+ready for double, double double, and quad double precision.
+
+Header files end with the extension .h, c++ end with .cpp,
+and code for the device ends with .cu (short for CUDA).
+The big 'H' stands for Host.
+
+The GQD library is the version of the QD library for GPUs
+and types on the host are different from types on the device.
+The utilities gqd_qd_util provide functions to convert from
+tuples on the device into types on the host.

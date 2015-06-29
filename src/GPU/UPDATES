@@ -1,0 +1,11 @@
+Fri 26 Jun 2015 : cleaning up and new directory Path.
+
+Thu 26 Dec 2013 : new directory MGS2 to upgrade MGS for larger dimensions.
+
+Tue 19 Feb 2013 : New directory PED with restructured code
+  for the polynomial evaluation and differentiation.
+
+Mon 7 Jan 2013 : new directory MGS, with code copied from the directory
+  GPU-CPU-LinSolver-better-documented.
+
+Thu 3 Jan 2013 : structured the directory, see the READ_ME file.

@@ -1,0 +1,6 @@
+This directory contains the makefile, just type 'make'
+and the main executables path_d, path_dd, and path_qd will
+be placed in the dirctory ../bin.  
+
+Typing 'make clean' cleans this directory and also removes
+all executables from the ../bin directory.

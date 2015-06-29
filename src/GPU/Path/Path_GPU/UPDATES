@@ -1,0 +1,3 @@
+Mon 29 Jun 2015 : in eval.cu, removed the comment on line 4,
+  before the statement #include "eval_mon_dd.cu", so eval.cu compiles
+  to make path_dd.

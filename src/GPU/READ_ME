@@ -1,6 +1,7 @@
+GPU acceleration of polynomial homotopy continuation in PHCv2.3.99
+
 This directory contains code for the GPU, developed in collaboration
-with Genady Yoffe and Xiangcheng Yu, 
-written mainly for the NVIDIA Tesla C2050 and K20C.
+with Genady Yoffe and Xiangcheng Yu, for the NVIDIA Tesla C2050 and K20C.
 
 The directories are organized in chronological order:
 
@@ -10,7 +11,15 @@ PED : Polynomial Evaluation and Differentiation,
 MGS : version of modified Gram-Schmidt method,
       the paper was presented at PDSEC 2013 in Boston.
 
-MGS2 : second version of MGS2 works for larger dimensions.
+MGS2 : version 2 of MGS for larger dimensions, combined with Newton's method,
+       presented at HPCC 2014 in Paris.
+
+The code in PED, MGS, and MGS2 are standalone, apart from PHCpack,
+with their own specific makefiles and running modes.
+
+Path : accelerated path tracking, as standalone package, and with
+       integration into PHCpack, for presentation at ISSAC 2015,
+       PASCO 2015, and HPCC 2015 (in this chronological order).
 
 This code is distributed under the GNU GENERAL PUBLIC LICENSE,
 see the file COPYING.txt for version 3 of this license.

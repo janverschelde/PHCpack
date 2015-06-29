@@ -1,0 +1,3 @@
+Mon 29 Jun 2015 : added to init_test.cpp a constant string with the
+  definition for the gamma file.  The same constant string is also
+  defined in main_test.cpp.
