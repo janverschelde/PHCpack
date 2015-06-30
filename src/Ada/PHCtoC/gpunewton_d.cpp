@@ -3,6 +3,8 @@
 #include <iostream>
 #include "syscon.h"
 #include "solcon.h"
+#include "ada_test.h"
+#include "poly.h"
 
 using namespace std;
 
@@ -13,6 +15,8 @@ extern "C" int gpunewton_d ( void )
  *   encapsulated as a C function for to be called from Ada. */
 {
    int fail,dim,len;
+   PolySys ps;
+   PolySolSet sols;
 
    cout << endl;
    cout << "Acceleration of Newton's method ..." << endl;
@@ -21,6 +25,9 @@ extern "C" int gpunewton_d ( void )
    cout << "number of polynomials : " << dim << endl;
    fail = solcon_number_of_solutions(&len);
    cout << "number of solutions : " << len << endl;
+
+   ada_read_sys(ps);
+   ada_read_sols(ps,sols);
 
    return 0;
 }
