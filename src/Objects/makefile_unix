@@ -1548,6 +1548,35 @@ ts_gpu2norm_qd:
                  -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
                  -L$(PHCAda)/Math_Lib/QD --LINK=g++
 
+ts_gpunewton:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	@-echo ">>> compiling code for the containers ..."
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	@-echo ">>> compiling utilities_d, poly_d, and ada_test ..."
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+                -c  $(PHCgpu)/Path/Poly/utilities.cpp -o utilities_d.o
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+                -c  $(PHCgpu)/Path/Poly/poly.cpp -o poly_d.o
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+                -I$(PHCLib) -I$(PHCgpu)/Path/Poly \
+                -c  $(PHCgpu)/Path/Main/ada_test.cpp -o ada_test.o
+	@-echo ">>> compiling the main C++ code ..."
+	g++ -c $(PHCAda)/PHCtoC/gpunewton_d.cpp -I$(PHCLib) \
+            -I $(PHCgpu)/Path/DefineTypesD \
+            -I $(PHCgpu)/Path/Main -I $(PHCgpu)/Path/Poly \
+            -o gpunewton_d.o
+	@-echo ">>> compiling the main Ada procedure ..."
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_gpunewton.adb \
+                 -o ts_gpunewton.o
+	gnatbind ts_gpunewton use_c2phc
+	@-echo ">>> linking ..."
+	gnatlink ts_gpunewton \
+                    gpunewton_d.o syscon.o solcon.o phcpack.o \
+                    utilities_d.o poly_d.o ada_test.o \
+                 -o $(BIN)/ts_gpunewton --LINK=g++
+
 # Test programs for the Tasking :
 
 ts_mtmatvec:
