@@ -72,7 +72,9 @@ int main_test(int test, int dim, int device_option, int n_path) {
 	if(ada_test==true){
 		char start_file[] = "../../Problems/MultiPath/cyclic10.start";
 		char target_file[] = "../../Problems/MultiPath/cyclic10.target";
+                adainit()
 		ada_read_homotopy(start_file, target_file, Start_Sys, Target_Sys, start_sol_set);
+                adafinal()
 		bool init_success = init_test_ada(Target_Sys, Start_Sys, \
 				       cpu_inst_hom, workspace_cpu, path_parameter.n_predictor);
 		if(init_success == false){
