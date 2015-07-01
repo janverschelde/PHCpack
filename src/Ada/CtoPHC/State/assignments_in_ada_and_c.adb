@@ -227,6 +227,44 @@ package body Assignments_in_Ada_and_C is
                          Interfaces.C.ptrdiff_t(nd));
   end Assign;
 
+  procedure Assign ( ada_d : in Double_Double_Vectors.Vector;
+                     c_d : in C_dblarrs.Pointer ) is
+
+    nd : constant natural32 := natural32(ada_d'last);
+    val : C_Double_Array(0..Interfaces.C.size_t(2*nd-1));
+    ind : Interfaces.C.size_t := 0;
+    nbr : double_double;
+
+  begin
+    for i in ada_d'range loop
+      nbr := ada_d(i);
+      val(ind) := Interfaces.C.double(hi_part(nbr)); ind := ind + 1;
+      val(ind) := Interfaces.C.double(lo_part(nbr)); ind := ind + 1;
+    end loop;
+    C_dblarrs.Copy_Array(val(0)'unchecked_access,c_d,
+                         Interfaces.C.ptrdiff_t(2*nd));
+  end Assign;
+
+  procedure Assign ( ada_d : in Quad_Double_Vectors.Vector;
+                     c_d : in C_dblarrs.Pointer ) is
+
+    nd : constant natural32 := natural32(ada_d'last);
+    val : C_Double_Array(0..Interfaces.C.size_t(4*nd-1));
+    ind : Interfaces.C.size_t := 0;
+    nbr : quad_double;
+
+  begin
+    for i in ada_d'range loop
+      nbr := ada_d(i);
+      val(ind) := Interfaces.C.double(hihi_part(nbr)); ind := ind + 1;
+      val(ind) := Interfaces.C.double(lohi_part(nbr)); ind := ind + 1;
+      val(ind) := Interfaces.C.double(hilo_part(nbr)); ind := ind + 1;
+      val(ind) := Interfaces.C.double(lolo_part(nbr)); ind := ind + 1;
+    end loop;
+    C_dblarrs.Copy_Array(val(0)'unchecked_access,c_d,
+                         Interfaces.C.ptrdiff_t(4*nd));
+  end Assign;
+
   procedure Assign ( ada_d : in Standard_Complex_Vectors.Vector;
                      c_d : in C_dblarrs.Pointer ) is
 
@@ -246,6 +284,58 @@ package body Assignments_in_Ada_and_C is
     end loop;    
     C_dblarrs.Copy_Array(val(0)'unchecked_access,c_d,
                          Interfaces.C.ptrdiff_t(2*v_n));
+  end Assign;
+
+  procedure Assign ( ada_d : in DoblDobl_Complex_Vectors.Vector;
+                     c_d : in C_dblarrs.Pointer ) is
+
+    use DoblDobl_Complex_Numbers;
+
+    v_n : constant natural32 := natural32(ada_d'last);
+    val : C_Double_Array(0..Interfaces.C.size_t(4*v_n-1))
+        := C_dblarrs.Value(c_d);
+    ind : Interfaces.C.size_t := 0;
+    nbr : double_double;
+
+  begin
+    for i in 1..integer32(v_n) loop
+      nbr := REAL_PART(ada_d(i));
+      val(ind) := Interfaces.C.double(hi_part(nbr)); ind := ind + 1;
+      val(ind) := Interfaces.C.double(lo_part(nbr)); ind := ind + 1;
+      nbr := IMAG_PART(ada_d(i));
+      val(ind) := Interfaces.C.double(hi_part(nbr)); ind := ind + 1;
+      val(ind) := Interfaces.C.double(lo_part(nbr)); ind := ind + 1;
+    end loop;    
+    C_dblarrs.Copy_Array(val(0)'unchecked_access,c_d,
+                         Interfaces.C.ptrdiff_t(4*v_n));
+  end Assign;
+
+  procedure Assign ( ada_d : in QuadDobl_Complex_Vectors.Vector;
+                     c_d : in C_dblarrs.Pointer ) is
+
+    use QuadDobl_Complex_Numbers;
+
+    v_n : constant natural32 := natural32(ada_d'last);
+    val : C_Double_Array(0..Interfaces.C.size_t(8*v_n-1))
+        := C_dblarrs.Value(c_d);
+    ind : Interfaces.C.size_t := 0;
+    nbr : quad_double;
+
+  begin
+    for i in 1..integer32(v_n) loop
+      nbr := REAL_PART(ada_d(i));
+      val(ind) := Interfaces.C.double(hihi_part(nbr)); ind := ind + 1;
+      val(ind) := Interfaces.C.double(lohi_part(nbr)); ind := ind + 1;
+      val(ind) := Interfaces.C.double(hilo_part(nbr)); ind := ind + 1;
+      val(ind) := Interfaces.C.double(lolo_part(nbr)); ind := ind + 1;
+      nbr := IMAG_PART(ada_d(i));
+      val(ind) := Interfaces.C.double(hihi_part(nbr)); ind := ind + 1;
+      val(ind) := Interfaces.C.double(lohi_part(nbr)); ind := ind + 1;
+      val(ind) := Interfaces.C.double(hilo_part(nbr)); ind := ind + 1;
+      val(ind) := Interfaces.C.double(lolo_part(nbr)); ind := ind + 1;
+    end loop;    
+    C_dblarrs.Copy_Array(val(0)'unchecked_access,c_d,
+                         Interfaces.C.ptrdiff_t(4*v_n));
   end Assign;
 
   procedure Assign ( v_n : in natural32; c_d : in C_intarrs.Pointer;
@@ -291,6 +381,42 @@ package body Assignments_in_Ada_and_C is
   end Assign;
 
   procedure Assign ( v_n : in natural32; c_d : in C_dblarrs.Pointer;
+                     ada_d : out Double_Double_Vectors.Vector ) is
+
+    val : C_Double_Array(0..Interfaces.C.size_t(v_n-1))
+        := C_dblarrs.Value(c_d,Interfaces.C.ptrdiff_t(v_n));
+    ind : Interfaces.C.size_t := 0;
+    lo,hi : double_float;
+    dim : integer32 := integer32(v_n)/2;
+
+  begin
+    for i in 1..dim loop
+      hi := double_float(val(ind)); ind := ind + 1;
+      lo := double_float(val(ind)); ind := ind + 1;
+      ada_d(i) := Double_Double_Numbers.Create(hi,lo);
+    end loop;
+  end Assign;
+
+  procedure Assign ( v_n : in natural32; c_d : in C_dblarrs.Pointer;
+                     ada_d : out Quad_Double_Vectors.Vector ) is
+
+    val : C_Double_Array(0..Interfaces.C.size_t(v_n-1))
+        := C_dblarrs.Value(c_d,Interfaces.C.ptrdiff_t(v_n));
+    ind : Interfaces.C.size_t := 0;
+    hihi,lohi,hilo,lolo : double_float;
+    dim : integer32 := integer32(v_n)/4;
+
+  begin
+    for i in 1..dim loop
+      hihi := double_float(val(ind)); ind := ind + 1;
+      lohi := double_float(val(ind)); ind := ind + 1;
+      hilo := double_float(val(ind)); ind := ind + 1;
+      lolo := double_float(val(ind)); ind := ind + 1;
+      ada_d(i) := Quad_Double_Numbers.Create(hihi,lohi,hilo,lolo);
+    end loop;
+  end Assign;
+
+  procedure Assign ( v_n : in natural32; c_d : in C_dblarrs.Pointer;
                      ada_d : out Standard_Complex_Vectors.Vector ) is
 
     use Standard_Complex_Numbers;
@@ -303,6 +429,58 @@ package body Assignments_in_Ada_and_C is
     for i in 1..integer32(v_n)/2 loop
       ada_d(i) := Create(double_float(val(ind)),double_float(val(ind+1)));
       ind := ind + 2;
+    end loop;
+  end Assign;
+
+  procedure Assign ( v_n : in natural32; c_d : in C_dblarrs.Pointer;
+                     ada_d : out DoblDobl_Complex_Vectors.Vector ) is
+
+    use DoblDobl_Complex_Numbers;
+
+    val : C_Double_Array(0..Interfaces.C.size_t(v_n-1))
+        := C_dblarrs.Value(c_d,Interfaces.C.ptrdiff_t(v_n));
+    ind : Interfaces.C.size_t := 0;
+    lo,hi : double_float;
+    re,im : double_double;
+    dim : integer32 := integer32(v_n)/4;
+
+  begin
+    for i in 1..dim loop
+      hi := double_float(val(ind)); ind := ind + 1;
+      lo := double_float(val(ind)); ind := ind + 1;
+      re := Double_Double_Numbers.Create(hi,lo);
+      hi := double_float(val(ind)); ind := ind + 1;
+      lo := double_float(val(ind)); ind := ind + 1;
+      im := Double_Double_Numbers.Create(hi,lo);
+      ada_d(i) := Create(re,im);
+    end loop;
+  end Assign;
+
+  procedure Assign ( v_n : in natural32; c_d : in C_dblarrs.Pointer;
+                     ada_d : out QuadDobl_Complex_Vectors.Vector ) is
+
+    use QuadDobl_Complex_Numbers;
+
+    val : C_Double_Array(0..Interfaces.C.size_t(v_n-1))
+        := C_dblarrs.Value(c_d,Interfaces.C.ptrdiff_t(v_n));
+    ind : Interfaces.C.size_t := 0;
+    lolo,hilo,lohi,hihi : double_float;
+    re,im : quad_double;
+    dim : integer32 := integer32(v_n)/8;
+
+  begin
+    for i in 1..dim loop
+      hihi := double_float(val(ind)); ind := ind + 1;
+      lohi := double_float(val(ind)); ind := ind + 1;
+      hilo := double_float(val(ind)); ind := ind + 1;
+      lolo := double_float(val(ind)); ind := ind + 1;
+      re := Quad_Double_Numbers.Create(hihi,lohi,hilo,lolo);
+      hihi := double_float(val(ind)); ind := ind + 1;
+      lohi := double_float(val(ind)); ind := ind + 1;
+      hilo := double_float(val(ind)); ind := ind + 1;
+      lolo := double_float(val(ind)); ind := ind + 1;
+      im := Quad_Double_Numbers.Create(hihi,lohi,hilo,lolo);
+      ada_d(i) := Create(re,im);
     end loop;
   end Assign;
 

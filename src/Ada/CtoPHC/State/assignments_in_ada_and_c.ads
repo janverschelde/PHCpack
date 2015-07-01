@@ -9,7 +9,11 @@ with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
+with Double_Double_Vectors;
+with Quad_Double_Vectors;
 with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with C_Integer_Arrays;                   use C_Integer_Arrays;
 with C_Double_Arrays;                    use C_Double_Arrays;
 
@@ -69,13 +73,23 @@ package Assignments_in_Ada_and_C is
                      c_d : in C_intarrs.Pointer );
   procedure Assign ( ada_d : in Standard_Floating_Vectors.Vector;
                      c_d : in C_dblarrs.Pointer );
+  procedure Assign ( ada_d : in Double_Double_Vectors.Vector;
+                     c_d : in C_dblarrs.Pointer );
+  procedure Assign ( ada_d : in Quad_Double_Vectors.Vector;
+                     c_d : in C_dblarrs.Pointer );
   procedure Assign ( ada_d : in Standard_Complex_Vectors.Vector;
+                     c_d : in C_dblarrs.Pointer );
+  procedure Assign ( ada_d : in DoblDobl_Complex_Vectors.Vector;
+                     c_d : in C_dblarrs.Pointer );
+  procedure Assign ( ada_d : in QuadDobl_Complex_Vectors.Vector;
                      c_d : in C_dblarrs.Pointer );
 
   -- DESCRIPTION :
   --   Assigns the content of the Ada vector to the C vector.
   --   The complex numbers in ada_d are written to c_d as a sequence
   --   of real and imaginary double floats.
+  --   Double double and quad double numbers are written as sequences
+  --   of respectively two and four doubles, in order of significance.
 
   -- REQUIRED : ada_d'range = 1..n, for some n.
 
@@ -87,14 +101,26 @@ package Assignments_in_Ada_and_C is
                      ada_d : out Standard_Floating_Vectors.Vector );
   procedure Assign ( v_n : in natural32; c_d : in C_dblarrs.Pointer;
                      ada_d : out Standard_Complex_Vectors.Vector );
+  procedure Assign ( v_n : in natural32; c_d : in C_dblarrs.Pointer;
+                     ada_d : out DoblDobl_Complex_Vectors.Vector );
+  procedure Assign ( v_n : in natural32; c_d : in C_dblarrs.Pointer;
+                     ada_d : out QuadDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Assigns the content of the C vector to the Ada vector.
   --   For complex vectors, it copies the consecutive real and
   --   and imaginary parts in c_d to ada_d.
+  --   When writing to a vector of double double or quad double
+  --   complex numbers, the doubles are interpreted as parts of
+  --   a double double or quad doubles, with their most significant
+  --   parts first.
 
-  -- REQUIRED : ada_d'range = 1..n, for some n;
-  --    for complex vectors: ada_d'range = 1..v_n/2, for some v_n.
+  -- REQUIRED : ada_d'range = 1..N, for some N;
+  --    for complex vectors: ada_d'range = 1..v_n/2, for some v_n;
+  --    for double double vectors: ada_d'range = 1..v_n/2; and
+  --    for quad double vectors: ada_d'range = 1..v_n/4; and
+  --    for double double complex vectors: ada_d'range = 1..v_n/4; and
+  --    for quad double complex vectors: ada_d'range = 1..v_n/8.
 
   function C_Integer_Array_to_String
              ( n : natural32; v : C_Integer_Array ) return String;
