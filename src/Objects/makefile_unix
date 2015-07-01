@@ -1548,34 +1548,87 @@ ts_gpu2norm_qd:
                  -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
                  -L$(PHCAda)/Math_Lib/QD --LINK=g++
 
-ts_gpunewton:
+utilites_d.o:
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+                -c $(PHCgpu)/Path/Poly/utilities.cpp -o utilities_d.o
+
+poly_d.o:
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+                -c $(PHCgpu)/Path/Poly/poly.cpp -o poly_d.o
+
+workspace_host_d.o:
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+                -c $(PHCgpu)/Path/Path_CPU/workspace_host.cpp \
+                -o workspace_host_d.o
+
+eval_host_d.o:
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+                -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
+                -c $(PHCgpu)/Path/Path_CPU/eval_host.cpp \
+                -o eval_host_d.o
+
+mgs_host_d.o:
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+                -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
+                -c $(PHCgpu)/Path/Path_CPU/mgs_host.cpp \
+                -o mgs_host_d.o
+
+newton_host_d.o:
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+                -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
+                -c $(PHCgpu)/Path/Path_CPU/newton_host.cpp \
+                -o newton_host_d.o
+
+ada_test.o:
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+                -I$(PHCLib) -I$(PHCgpu)/Path/Poly \
+                -c $(PHCgpu)/Path/Main/ada_test.cpp -o ada_test.o
+
+gqd_qd_util.o:
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+                -I$(PHCLib) -I$(PHCgpu)/Path/Complex -I$(GQD_HOME)/inc \
+                -I/usr/local/cuda/include \
+                -c $(PHCgpu)/Path/Complex/gqd_qd_util.cpp -o gqd_qd_util.o
+
+gpunewton_d.o: 
+	g++ -c $(PHCAda)/PHCtoC/gpunewton_d.cpp -I$(PHCLib) \
+            -I $(PHCgpu)/Path/DefineTypesD -I $(PHCgpu)/Path/Main \
+            -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
+            -I$(PHCgpu)/Path/Path_GPU \
+            -o gpunewton_d.o
+
+path_gpu_d.o:
+	@-echo ">>> compiling kernels ..."
+	nvcc -O2 --define-macro path_precision=cd \
+             -I$(PHCgpu)/Path/DefineTypesD -I$(PHCgpu)/Path/Complex \
+             -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
+             -I$(PHCgpu)/Path/Path_CPU -I$(PHCgpu)/Path/Path_GPU \
+             -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
+             -I/usr/local/cuda/include \
+	     -o path_gpu_d.o \
+             -c $(PHCgpu)/Path/Path_GPU/path_gpu.cu --ptxas-options=-v
+
+ts_gpunewton: utilities_d.o poly_d.o workspace_host_d.o eval_host_d.o \
+              mgs_host_d.o newton_host_d.o ada_test.o gqd_qd_util.o \
+              path_gpu_d.o gpunewton_d.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	@-echo ">>> compiling code for the containers ..."
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
-	@-echo ">>> compiling utilities_d, poly_d, and ada_test ..."
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
-                -c  $(PHCgpu)/Path/Poly/utilities.cpp -o utilities_d.o
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
-                -c  $(PHCgpu)/Path/Poly/poly.cpp -o poly_d.o
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
-                -I$(PHCLib) -I$(PHCgpu)/Path/Poly \
-                -c  $(PHCgpu)/Path/Main/ada_test.cpp -o ada_test.o
-	@-echo ">>> compiling the main C++ code ..."
-	g++ -c $(PHCAda)/PHCtoC/gpunewton_d.cpp -I$(PHCLib) \
-            -I $(PHCgpu)/Path/DefineTypesD \
-            -I $(PHCgpu)/Path/Main -I $(PHCgpu)/Path/Poly \
-            -o gpunewton_d.o
 	@-echo ">>> compiling the main Ada procedure ..."
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_gpunewton.adb \
                  -o ts_gpunewton.o
 	gnatbind ts_gpunewton use_c2phc
 	@-echo ">>> linking ..."
 	gnatlink ts_gpunewton \
-                    gpunewton_d.o syscon.o solcon.o phcpack.o \
-                    utilities_d.o poly_d.o ada_test.o \
-                 -o $(BIN)/ts_gpunewton --LINK=g++
+                    gpunewton_d.o syscon.o solcon.o phcpack.o ada_test.o \
+                    utilities_d.o poly_d.o workspace_host_d.o eval_host_d.o \
+                    mgs_host_d.o newton_host_d.o gqd_qd_util.o path_gpu_d.o \
+                 -o $(BIN)/ts_gpunewton -lm \
+                 -lcutil_x86_64 -lcudart \
+                 -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
+                 --LINK=g++
 
 # Test programs for the Tasking :
 
