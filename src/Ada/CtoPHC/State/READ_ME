@@ -49,6 +49,7 @@ phcpack_operations_io            : input/output of main data of PHCpack
 c_to_phcpack                     : Ada routine as gateway to the machine
 ts_c2str.c                       : test on having phc write C strings
 use_track                        : access to jumpstarting path trackers
+use_scaling                      : access to scaling systems and solutions
 ------------------------------------------------------------------------------
 pieri_homotopy                   : Pieri homotopies as a state machine
 ts_pirhom                        : interactive test on pieri_homotopy
