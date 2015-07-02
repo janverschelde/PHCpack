@@ -1,3 +1,6 @@
+Wed 1 Jul 2015 : fixed allocation error in test_symbol_table()
+  in lib_syscon.c.
+
 Fri 26 Jun 2015 : changed 'cd' parameter in get_next_start_product 
   in solcon.h and solcon.c for conflict in some g++ compilation...
 

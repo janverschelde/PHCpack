@@ -150,16 +150,20 @@ void write_monomial_list ( LIST *l, int n )
 void test_symbol_table ( void )
 {
    int n,fail;
-   int size = 80;
-   char s[size];
+   int sbsize = 80;
+   int size;
+   char *s;
 
    fail = syscon_number_of_symbols(&n);
    printf("number of symbols in the table : %d\n",n);
    printf("the symbols :");
    fail = syscon_write_symbols();
    printf("\n");
+   size = n*sbsize;
+   s = (char*)calloc(size,sizeof(char));
    fail = syscon_string_of_symbols(&size,s);
    printf("the string of symbols : %s\n",s);
+   printf("number of characters in the string : %d\n",size);
 }
 
 void test_standard_container ( void )
