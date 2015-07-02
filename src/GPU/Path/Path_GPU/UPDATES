@@ -1,3 +1,6 @@
+Thu 2 Jul 2015 : in newton.cu, changed on line 1239, the call to newton()
+  into the call to newton_single().
+
 Mon 29 Jun 2015 : in eval.cu, removed the comment on line 4,
   before the statement #include "eval_mon_dd.cu", so eval.cu compiles
   to make path_dd.

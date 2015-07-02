@@ -1236,7 +1236,7 @@ bool GPU_Newton(CPUInstHom& hom, Parameter path_parameter, CT* cpu_sol0, CT cpu_
 
 	clock_t begin = clock();
 
-	bool success = newton(workspace, inst, path_parameter);
+	bool success = newton_single(workspace, inst, path_parameter);
 
 	clock_t end = clock();
 	double timeSec_Newton = (end - begin) / static_cast<double>( CLOCKS_PER_SEC );
