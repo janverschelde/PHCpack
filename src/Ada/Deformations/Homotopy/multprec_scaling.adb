@@ -305,4 +305,43 @@ package body Multprec_Scaling is
     sccff := right;
   end Scale;
 
+  procedure Scale ( basis : in natural32; sccff : in Vector;
+                    s : in out Solution ) is
+
+    mp_basis : Floating_Number := create(basis);
+    rep,pwr : Floating_Number;
+ 
+  begin
+    for i in s.v'range loop
+      rep := REAL_PART(sccff(i));
+      pwr := mp_basis**rep;
+      Mul(s.v(i),pwr);
+      Multprec_Floating_Numbers.Clear(rep);
+      Multprec_Floating_Numbers.Clear(pwr);
+    end loop;
+  end Scale;
+
+  procedure Scale ( basis : in natural32; sccff : in Vector;
+                    sols : in out Solution_List ) is
+  begin
+    if not Is_Null(sols) then
+      declare
+        temp : Solution_List := sols;
+        n : integer32 := Head_Of(sols).n;
+        s : Solution(n);
+        l : Link_To_Solution;
+      begin
+        while not Is_Null(temp) loop
+          l := Head_Of(temp);
+          s := l.all;
+          Scale(basis,sccff,s);
+          Clear(l);
+          l := new Solution'(s);
+          Set_Head(temp,l);
+          temp := Tail_Of(temp);
+        end loop;
+      end;
+    end if;
+  end Scale;
+
 end Multprec_Scaling;

@@ -3,6 +3,7 @@ with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Multprec_Complex_Vectors;           use Multprec_Complex_Vectors;
 with Multprec_Complex_Polynomials;       use Multprec_Complex_Polynomials;
 with Multprec_Complex_Poly_Systems;      use Multprec_Complex_Poly_Systems;
+with Multprec_Complex_Solutions;         use Multprec_Complex_Solutions;
 
 package Multprec_Scaling is
 
@@ -41,5 +42,14 @@ package Multprec_Scaling is
   --   sccff    is a vector containing the the exponents (w.r.t. basis 10) of
   --            the factors to scale the solutions back to the original
   --            coordinates.
+
+  procedure Scale ( basis : in natural32; sccff : in Vector;
+                    s : in out Solution );
+  procedure Scale ( basis : in natural32; sccff : in Vector;
+                    sols : in out Solution_List );
+
+  -- DESCRIPTION :
+  --   The solution(s) is (are) scaled backwards to the original coordinates,
+  --   the vector sccff has been constructed by the procedure above.
 
 end Multprec_Scaling;
