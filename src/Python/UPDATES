@@ -1,4 +1,8 @@
+Tue 7 Jul 2015 : added extra input parameter to the solve in solver.py.
+
 Thu 25 Jun 2015 : updated __init__.py, setup.py for version 0.2.7.
+  Then added one paragraph to the documentation for the py2c_get_seed
+  and updated the version number of the documentation.
 
 Wed 24 Jun 2015 : interface.py has faster load_*_solutions functions.
 

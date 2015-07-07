@@ -64,13 +64,14 @@ def random_system(dim, nbrmon, deg, cff):
     py2c_syscon_random_system(dim, nbrmon, deg, cff)
     return load_standard_system()
 
-def solve(pols, silent=False):
+def solve(pols, silent=False, tasks=0):
     """
     Calls the blackbox solver of PHCpack.
     On input in pols is a list of strings.
     By default, the solver will print to screen the
     computed root counts.  To make the solver silent,
     set the flag silent to True.
+    The number of tasks for multithreading is given by tasks.
     """
     from phcpy2c import py2c_syscon_clear_Laurent_system
     from phcpy2c import py2c_syscon_initialize_number_of_Laurentials
@@ -86,7 +87,7 @@ def solve(pols, silent=False):
         pol = pols[ind]
         nchar = len(pol)
         py2c_syscon_store_Laurential(nchar, dim, ind+1, pol)
-    py2c_solve_Laurent_system(silent)
+    py2c_solve_Laurent_system(silent, tasks)
     return load_standard_solutions()
 
 def newton_step(system, solutions, precision='d', decimals=100):
