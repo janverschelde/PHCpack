@@ -1,3 +1,6 @@
+Tue 7 JUl 2015 : extended gateway use_c2phc to pass number of tasks to
+  the blackbox solvers.
+
 Thu 2 Jul 2015 : new gateway use_scaling to scale systems and solutions.
 
 Wed 1 Jul 2015 : extended assignments_in_ada_and_c to pass vectors of

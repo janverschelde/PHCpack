@@ -563,6 +563,10 @@ function use_c2phc ( job : integer32;
 --                   a[1] : number of variables in the Laurent polynomial,
 --                   a[2] : index of the polynomial in the system,
 --                   b : string converted to an integer array,
+--         =  75 : applies the blackbox solver to the system in the
+--                 standard Laurent container, where b[0] contains the
+--                 value of the boolean silent and b[1] equals the number
+--                 of tasks, on return in a is the root count;
 --         =  76 : puts a polynomial given as a string in the system 
 --                 container, with the input parameters as follows:
 --                   a[0] : number of characters in the string,
@@ -571,7 +575,9 @@ function use_c2phc ( job : integer32;
 --                   b : string converted to an integer array,
 --                 this operation is the reverse of job 67;
 --         =  77 : solves the polynomial system in the system container
---                 and puts the solutions into the solution container;
+--                 and puts the solutions into the solution container,
+--                 on entry in b is the number of tasks to be used,
+--                 on return in a is the root count computed;
 --         =  78 : computes the mixed volume for the system in the systems
 --                 container and fills the cells container with the regular
 --                 mixed-cell configuration constructed for the mixed volume.
