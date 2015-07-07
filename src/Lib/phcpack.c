@@ -44,19 +44,22 @@ int get_seed ( int *seed )
    return fail;
 }
 
-int solve_system ( int *root_count )
-{
-   int *b,fail;
-   double *c;
-   fail = _ada_use_c2phc(77,root_count,b,c);
-   return fail;
-}
-
-int solve_Laurent_system ( int *root_count, int silent )
+int solve_system ( int *root_count, int nbtasks )
 {
    int fail;
    double *c;
-   fail = _ada_use_c2phc(75,root_count,&silent,c);
+   fail = _ada_use_c2phc(77,root_count,&nbtasks,c);
+   return fail;
+}
+
+int solve_Laurent_system ( int *root_count, int silent, int nbtasks )
+{
+   int fail;
+   int b[2];
+   double *c;
+   b[0] = silent;
+   b[1] = nbtasks;
+   fail = _ada_use_c2phc(75,root_count,b,c);
    return fail;
 }
 

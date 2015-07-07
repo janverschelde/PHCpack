@@ -75,12 +75,13 @@ int main ( int argc, char *argv[] )
 
 int input_output_on_files ( void )
 {
-   int fail,rc;
+   int fail,rc,nbtasks;
 
    fail = syscon_read_system();
    printf("\nThe system in the container : \n");
    fail = syscon_write_system();
-   fail = solve_system(&rc);
+   printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
+   fail = solve_system(&rc,nbtasks);
    printf("\nThe root count : %d\n",rc);
    printf("\nThe solutions :\n");
    fail = solcon_write_solutions();
@@ -90,12 +91,13 @@ int input_output_on_files ( void )
 
 int Laurent_input_output_on_files ( void )
 {
-   int fail,rc;
+   int fail,rc,nbtasks;
 
    fail = syscon_read_Laurent_system();
    printf("\nThe system in the container : \n");
    fail = syscon_write_Laurent_system();
-   fail = solve_Laurent_system(&rc,0); /* not silent by default */
+   printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
+   fail = solve_Laurent_system(&rc,0,nbtasks); /* not silent by default */
    printf("\nThe root count : %d\n",rc);
    printf("\nThe solutions :\n");
    fail = solcon_write_solutions();
@@ -105,7 +107,7 @@ int Laurent_input_output_on_files ( void )
 
 int interactive_input_output ( void )
 {
-   int n,fail,k,nc,i,rc,len;
+   int n,fail,k,nc,i,rc,len,nbtasks;
    char ch,p[800];
 
    printf("\nGive the number of polynomials in the system : ");
@@ -126,7 +128,8 @@ int interactive_input_output ( void )
    }
    printf("The system in the container : \n");
    syscon_write_system();
-   fail = solve_system(&rc);
+   printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
+   fail = solve_system(&rc,nbtasks);
    printf("\nThe root count : %d\n",rc);
    /* printf("\nThe solutions :\n");
    fail = solcon_write_solutions(); */
@@ -149,7 +152,7 @@ int interactive_input_output ( void )
 
 int interactive_Laurent_input_output ( void )
 {
-   int n,fail,k,nc,i,rc,len;
+   int n,fail,k,nc,i,rc,len,nbtasks;
    char ch,p[800];
 
    printf("\nGive the number of polynomials in the system : ");
@@ -170,7 +173,8 @@ int interactive_Laurent_input_output ( void )
    }
    printf("The system in the container : \n");
    syscon_write_Laurent_system();
-   fail = solve_Laurent_system(&rc,0); /* not silent by default */
+   printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
+   fail = solve_Laurent_system(&rc,0,nbtasks); /* not silent by default */
    printf("\nThe root count : %d\n",rc);
    /* printf("\nThe solutions :\n");
    fail = solcon_write_solutions(); */

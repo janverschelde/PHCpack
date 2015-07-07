@@ -885,21 +885,23 @@ static PyObject *py2c_copy_multprec_container_to_start_solutions
 
 static PyObject *py2c_solve_system ( PyObject *self, PyObject *args )
 {
-   int fail,rc;
+   int fail,rc,nbtasks;
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
-   fail = solve_system(&rc);
+   nbtasks = 0;
+   fail = solve_system(&rc,nbtasks);
    return Py_BuildValue("i",rc);
 }
 
 static PyObject *py2c_solve_Laurent_system ( PyObject *self, PyObject *args )
 {
-   int silent,fail,rc;
+   int silent,fail,rc,nbtasks;
 
    initialize();
    if (!PyArg_ParseTuple(args,"i",&silent)) return NULL;
-   fail = solve_Laurent_system(&rc,silent);
+   nbtasks = 0;
+   fail = solve_Laurent_system(&rc,silent,nbtasks);
    return Py_BuildValue("i",rc);
 }
 

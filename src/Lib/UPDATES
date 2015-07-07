@@ -1,3 +1,6 @@
+Tue 7 Jul 2015 : extended solve_system and solve_Laurent_system in phcpack
+  with the nbtasks, updated phc_solve.c and phcpy2c.c.
+
 Wed 1 Jul 2015 : fixed allocation error in test_symbol_table()
   in lib_syscon.c.
 
