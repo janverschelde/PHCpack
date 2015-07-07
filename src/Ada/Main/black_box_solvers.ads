@@ -132,4 +132,34 @@ package Black_Box_Solvers is
   --   rc       root count used in the homotopy to solve p;
   --   sols     solutions found at the end of the paths.
 
+  procedure Solve ( nt : in natural32;
+                    p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    silent : in boolean;
+                    rc : out natural32; sols : out Solution_List );
+  procedure Solve ( file : in file_type; nt : in natural32;
+                    p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    rc : out natural32; sols : out Solution_List );
+  procedure Solve ( nt : in natural32;
+                    p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                    silent : in boolean;
+                    rc : out natural32; sols : out Solution_List );
+  procedure Solve ( file : in file_type; nt : in natural32;
+                    p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                    rc : out natural32; sols : out Solution_List );
+
+  -- DESCRIPTION :
+  --   Calls the blackbox solver to solve the system p.
+
+  -- ON INPUT :
+  --    nt      number of tasks for multithreading, 0 if no multitasking;
+  --    p       a polynomial system, or a system with Laurent polynomials;
+  --    silent  if true, then the computed root counts will not be shown,
+  --            if false, then the user will see the computed root counts
+  --            displayed on screen.
+
+  -- ON RETURN :
+  --   file     for intermediate output and diagnostics;
+  --   rc       root count used in the homotopy to solve p;
+  --   sols     solutions found at the end of the paths.
+
 end Black_Box_Solvers;

@@ -533,4 +533,152 @@ package body Black_Box_Solvers is
     end if;
   end Solve;
 
+  procedure Solve ( nt : in natural32;
+                    p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    silent : in boolean;
+                    rc : out natural32; sols : out Solution_List ) is
+ 
+    fail : boolean;
+    ls : Link_to_Solution;
+    s : Solution(p'last);
+    n : natural32;
+    pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
+    roco,hoco,poco : duration;
+    sols0 : Solution_List;
+
+  begin
+    if p'first = p'last then
+      n := Standard_Complex_Polynomials.Number_of_Unknowns(p(p'first));
+      if n > 0 then
+        rc := natural32(Standard_Complex_Polynomials.Degree(p(p'first)));
+        if n = 1
+         then Black_Box_Durand_Kerner(p(p'first),sols);
+        end if;
+      end if;
+    else
+      Standard_Linear_Poly_Solvers.Solve(p,s,fail);
+      if not fail then
+        rc := 1;
+        ls := new Solution'(s);
+        Construct(ls,sols);
+      else
+        if Are_Constants_In(p) then
+          Black_Box_Simplex_Solver(p,sols,fail);
+          fail := (fail or (Length_Of(sols) = 0));
+        else
+          fail := true;
+        end if;
+        if not fail then
+          rc := Length_Of(sols);
+        else
+          Standard_Complex_Poly_Systems.Copy(p,pp);
+          Black_Box_Root_Counting
+            (integer32(nt),silent,pp,false,rc,q,sols,sols0,roco,hoco);
+          if rc /= 0 then
+            Standard_Scaling.Scale(pp);
+            Black_Box_Polynomial_Continuation
+              (integer32(nt),pp,q,sols,sols0,poco);
+            Push(sols0,sols);
+          end if;
+        end if;
+      end if;
+    end if;
+  end Solve;
+
+  procedure Solve ( file : in file_type; nt : in natural32;
+                    p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                    rc : out natural32; sols : out Solution_List ) is
+ 
+    fail : boolean;
+    ls : Link_to_Solution;
+    s : Solution(p'last);
+    n : natural32;
+    pp,q : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
+    roco,hoco,poco : duration;
+    sols0 : Solution_List;
+
+  begin
+    if p'first = p'last then
+      n := Standard_Complex_Polynomials.Number_of_Unknowns(p(p'first));
+      if n > 0 then
+        rc := natural32(Standard_Complex_Polynomials.Degree(p(p'first)));
+        if n = 1
+         then Black_Box_Durand_Kerner(p(p'first),sols);
+        end if;
+      end if;
+    else
+      Standard_Linear_Poly_Solvers.Solve(p,s,fail);
+      if not fail then
+        rc := 1;
+        ls := new Solution'(s);
+        Construct(ls,sols);
+      else
+        if Are_Constants_In(p) then
+          Black_Box_Simplex_Solver(p,sols,fail);
+          fail := (fail or (Length_Of(sols) = 0));
+        else
+          fail := true;
+        end if;
+        if not fail then
+          rc := Length_Of(sols);
+        else
+          Standard_Complex_Poly_Systems.Copy(p,pp);
+          Black_Box_Root_Counting
+            (file,integer32(nt),pp,false,rc,q,sols,sols0,roco,hoco);
+          if rc /= 0 then
+            Standard_Scaling.Scale(pp);
+            Black_Box_Polynomial_Continuation
+              (file,integer32(nt),pp,q,sols,sols0,poco);
+            Push(sols0,sols);
+          end if;
+        end if;
+      end if;
+    end if;
+  end Solve;
+
+  procedure Solve ( nt : in natural32;
+                    p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                    silent : in boolean;
+                    rc : out natural32; sols : out Solution_List ) is
+ 
+    fail : boolean;
+    pp,q : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
+    roco,hoco,poco : duration;
+
+  begin
+    Black_Box_Simplex_Solver(p,sols,fail);
+    rc := Length_Of(sols);
+    if fail or (rc = 0) then
+      Standard_Complex_Laur_Systems.Copy(p,pp);
+      Black_Box_Root_Counting(integer32(nt),silent,pp,rc,q,sols,roco,hoco);
+      if rc /= 0 then
+        Black_Box_Polynomial_Continuation(integer32(nt),pp,q,sols,poco);
+      end if;
+    else
+      roco := 0.0; hoco := 0.0; poco := 0.0;
+    end if;
+  end Solve;
+
+  procedure Solve ( file : in file_type; nt : in natural32;
+                    p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                    rc : out natural32; sols : out Solution_List ) is
+ 
+    fail : boolean;
+    pp,q : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
+    roco,hoco,poco : duration;
+
+  begin
+    Black_Box_Simplex_Solver(p,sols,fail);
+    rc := Length_Of(sols);
+    if fail or (rc = 0) then
+      Standard_Complex_Laur_Systems.Copy(p,pp);
+      Black_Box_Root_Counting(file,integer32(nt),pp,rc,q,sols,roco,hoco);
+      if rc /= 0 then
+        Black_Box_Polynomial_Continuation(file,integer32(nt),pp,q,sols,poco);
+      end if;
+    else
+      roco := 0.0; hoco := 0.0; poco := 0.0;
+    end if;
+  end Solve;
+
 end Black_Box_Solvers;

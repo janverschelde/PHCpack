@@ -1,3 +1,6 @@
+Tue 7 Jul 2015 : extended black_box_solvers with the extra nt parameter
+  to give the number of tasks.
+
 Thu 25 Jun 2015 : updated greeting_banners for version 2.3.98.
 
 Tue 16 Jun 2015 : added writing of number seed to mainphc.adb, bablphc.adb,
