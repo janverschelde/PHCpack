@@ -10,7 +10,7 @@ witness sets
 A witness set is a data structure to represent a positive dimensional
 solution set.  A witness set consists of an embedding of the polynomial
 equations that define the solution set, augmented with as many generic
-linear equations as the dimenion of the solution set.
+linear equations as the dimension of the solution set.
 Witness points are solutions in the intersection of the original
 polynomial equations and the generic linear equations.
 The number of witness points equals the degree of the solution set.

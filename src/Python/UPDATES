@@ -1,6 +1,7 @@
 Wed 8 Jul 2015 : fixed bug in the test of sets.py, because the 
   py2c_solve_by_standard_homotopy_continuation() now requires the
-  number of tasks as input parameter.
+  number of tasks as input parameter.  Fixed spelling error in the
+  documentation, in posdimsols.rst.
 
 Tue 7 Jul 2015 : added extra input parameter to the solve in solver.py.
 
