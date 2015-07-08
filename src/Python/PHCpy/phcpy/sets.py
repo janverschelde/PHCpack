@@ -103,7 +103,7 @@ def standard_double_cascade_step(embsys, esols):
     store_standard_solutions(len(embsys), esols)
     py2c_copy_container_to_start_solutions()
     py2c_standard_cascade_homotopy()
-    py2c_solve_by_standard_homotopy_continuation()
+    py2c_solve_by_standard_homotopy_continuation(0)
     py2c_solcon_clear_solutions()
     py2c_copy_target_solutions_to_container()
     return load_standard_solutions()
