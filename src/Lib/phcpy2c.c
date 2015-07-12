@@ -3505,19 +3505,27 @@ static PyObject *py2c_factor_define_output_file_with_string
 
 static PyObject *py2c_factor_assign_labels ( PyObject *self, PyObject *args )
 {
-   int n,nbsols,i,j,m,fail;
-   double x[2*n+5];
+   int n,nbsols,fail;
 
    initialize();
    if(!PyArg_ParseTuple(args,"ii",&n,&nbsols)) return NULL;
-
-   for(i=1; i<=nbsols; i++)
    {
-      fail = solcon_retrieve_solution(n,i,&m,x);
-      m = i;
-      fail = solcon_replace_solution(n,i,m,x);
-   }
+      double x[2*n+5];
+      int i,j,m;
 
+      for(i=1; i<=nbsols; i++)
+      {
+         /* printf("... retrieving solution %d ...\n", i); */
+         fail = solcon_retrieve_solution(n,i,&m,x);
+         /* printf("fail = %d, m = %d\n", fail, m);
+            printf("printing the coordinates : \n");
+            for(j=0; j<2*n+5; j++) printf("x[%d] = %.15le \n",j,x[j]); */
+         m = i;
+         /* printf("... replacing solution %d ...\n", i); */
+         fail = solcon_replace_solution(n,i,m,x);
+         /* printf("... done replacing solution solution %d ...\n", i); */
+      }
+   }
    return Py_BuildValue("i",fail);
 }
 

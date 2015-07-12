@@ -1,3 +1,5 @@
+Sun 12 Jul 2015 : bug fix in phcpyc.c, in py2c_assign_factor_labels.
+
 Tue 7 Jul 2015 : extended solve_system and solve_Laurent_system in phcpack
   with the nbtasks, updated phc_solve.c and phcpy2c.c.
   Prepared the phcpy2c.c for an extra input parameter in the Python interface.
