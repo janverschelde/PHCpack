@@ -1,0 +1,10 @@
+This directory contains some short Python script to demonstrate
+several features of phcpy, written on the occasion of a software
+demonstration at ISSAC 2015, Bath, 6-9 July 2015.
+
+bbsolve : blackbox solver with multithreading
+mvtrack : mixed volume, polyhedral homotopies, and path tracking
+pathcrd : getting the coordinates of a solution path
+deflate : deflation on the Griewank-Osborne example
+twisted : a witness set for the twisted cubic
+monodromy : application of monodromy to factor a witness set

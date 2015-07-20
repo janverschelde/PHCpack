@@ -1,3 +1,5 @@
+Mon 20 Jul 2015 : added demo directory to the PHCpy distribution.
+
 Wed 8 Jul 2015 : fixed bug in the test of sets.py, because the 
   py2c_solve_by_standard_homotopy_continuation() now requires the
   number of tasks as input parameter.  Fixed spelling error in the
