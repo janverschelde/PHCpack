@@ -1475,6 +1475,23 @@ ts_gpu2norm_Cmain:
 	gcc $(PHCAda)/PHCtoC/ts_gpu2norm_Cmain.c callGPUnorm.o \
          -o $(BIN)/ts_gpu2norm_Cmain -lm
 
+ts_gpunewton:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	@-echo ">>> compiling code for the containers ..."
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	@-echo ">>> compiling the C++ code ..."
+	g++ -c $(PHCAda)/PHCtoC/gpunewton_d.cpp -I$(PHCLib) \
+            -o gpunewton_d.o
+	@-echo ">>> compiling the main Ada procedure ..."
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_gpunewton.adb \
+                 -o ts_gpunewton.o
+	gnatbind ts_gpunewton use_c2phc
+	@-echo ">>> linking ..."
+	gnatlink ts_gpunewton \
+                    gpunewton_d.o syscon.o solcon.o \
+                 -o $(BIN)/ts_gpunewton --LINK=g++
+
 # Test programs for the Tasking :
 
 ts_mtmatvec:
@@ -1717,6 +1734,16 @@ lib_celphc_cpp:
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o celcon.o \
                     lib_celphc.o -o $(BIN)/lib_celphc -lm --LINK=g++
+
+lib_scale:
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/scalers.c
+	gcc -c $(PHCLib)/lib_scale.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o syscon.o scalers.o lib_scale.o \
+                 -o $(BIN)/lib_scale -lm
 
 lib_conpar:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb

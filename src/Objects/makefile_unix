@@ -1844,6 +1844,16 @@ lib_celphc_cpp:
 	gnatlink -C use_c2phc phcpack.o syscon.o celcon.o \
                     lib_celphc.o -o $(BIN)/lib_celphc -lm --LINK=g++
 
+lib_scale:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/scalers.c
+	gcc -c $(PHCLib)/lib_scale.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o syscon.o scalers.o lib_scale.o \
+                 -o $(BIN)/lib_scale -lm
+
 lib_conpar:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
