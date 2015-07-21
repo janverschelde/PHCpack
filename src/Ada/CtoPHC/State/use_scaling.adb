@@ -54,15 +54,15 @@ function use_scaling ( job : integer32;
     rco : double_float;
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys
        := Standard_PolySys_Container.Retrieve;
-    scf : Standard_Complex_Vectors.Vector(1..lp'last+1);
+    scf : Standard_Complex_Vectors.Vector(1..2*lp'last+1);
 
   begin
     if stp = 0 then
       Standard_Scaling.Scale(lp.all);
     else
       if stp = 1
-       then Standard_Scaling.Scale(lp.all,10,false,rco,scf(lp'range));
-       else Standard_Scaling.Scale(lp.all,10,true,rco,scf(lp'range));
+       then Standard_Scaling.Scale(lp.all,10,false,rco,scf(1..2*lp'last));
+       else Standard_Scaling.Scale(lp.all,10,true,rco,scf(1..2*lp'last));
       end if;
       scf(scf'last) := Standard_Complex_Numbers.Create(rco);
       Assign(scf,c);
@@ -84,15 +84,15 @@ function use_scaling ( job : integer32;
     rco : double_double;
     lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
        := DoblDobl_PolySys_Container.Retrieve;
-    scf : DoblDobl_Complex_Vectors.Vector(1..lp'last+1);
+    scf : DoblDobl_Complex_Vectors.Vector(1..2*lp'last+1);
 
   begin
     if stp = 0 then
       DoblDobl_Scaling.Scale(lp.all);
     else
       if stp = 1
-       then DoblDobl_Scaling.Scale(lp.all,10,false,rco,scf(lp'range));
-       else DoblDobl_Scaling.Scale(lp.all,10,true,rco,scf(lp'range));
+       then DoblDobl_Scaling.Scale(lp.all,10,false,rco,scf(1..2*lp'last));
+       else DoblDobl_Scaling.Scale(lp.all,10,true,rco,scf(1..2*lp'last));
       end if;
       scf(scf'last) := DoblDobl_Complex_Numbers.Create(rco);
       Assign(scf,c);
@@ -114,15 +114,15 @@ function use_scaling ( job : integer32;
     rco : quad_double;
     lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
        := QuadDobl_PolySys_Container.Retrieve;
-    scf : QuadDobl_Complex_Vectors.Vector(1..lp'last+1);
+    scf : QuadDobl_Complex_Vectors.Vector(1..2*lp'last+1);
 
   begin
     if stp = 0 then
       QuadDobl_Scaling.Scale(lp.all);
     else
       if stp = 1
-       then QuadDobl_Scaling.Scale(lp.all,10,false,rco,scf(lp'range));
-       else QuadDobl_Scaling.Scale(lp.all,10,true,rco,scf(lp'range));
+       then QuadDobl_Scaling.Scale(lp.all,10,false,rco,scf(1..2*lp'last));
+       else QuadDobl_Scaling.Scale(lp.all,10,true,rco,scf(1..2*lp'last));
       end if;
       scf(scf'last) := QuadDobl_Complex_Numbers.Create(rco);
       Assign(scf,c);
@@ -146,7 +146,7 @@ function use_scaling ( job : integer32;
     rco : Floating_Number;
     lp : Multprec_Complex_Poly_Systems.Link_to_Poly_Sys
        := Multprec_PolySys_Container.Retrieve;
-    scf : Multprec_Complex_Vectors.Vector(1..lp'last+1);
+    scf : Multprec_Complex_Vectors.Vector(1..2*lp'last+1);
     qd_scf : QuadDobl_Complex_Vectors.Vector(scf'range);
 
   begin
@@ -154,8 +154,8 @@ function use_scaling ( job : integer32;
       Multprec_Scaling.Scale(lp.all);
     else
       if stp = 1
-       then Multprec_Scaling.Scale(lp.all,10,false,rco,scf(lp'range));
-       else Multprec_Scaling.Scale(lp.all,10,true,rco,scf(lp'range));
+       then Multprec_Scaling.Scale(lp.all,10,false,rco,scf(1..2*lp'last));
+       else Multprec_Scaling.Scale(lp.all,10,true,rco,scf(1..2*lp'last));
       end if;
       scf(scf'last) := Multprec_Complex_Numbers.Create(rco);
       qd_scf := Multprec_to_QuadDobl_Complex(scf);

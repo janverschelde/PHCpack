@@ -20,7 +20,9 @@ function use_scaling ( job : integer32;
 --                 2 : variable scaling with variability reduction;
 --                 if a is 1 or 2, then on return c contains the
 --                 scaling coefficients and the estimate for the
---                 condition number, stored as a standard complex vector;
+--                 condition number, stored as a standard complex vector,
+--                 the size of this vector is 4*n + 2,
+--                 where n equals the number of equations and variables;
 --             2 : scales the system in the dobldobl container,
 --                 on input in a is either 0, 1, or 2:
 --                 0 : only equation scaling,
@@ -28,7 +30,9 @@ function use_scaling ( job : integer32;
 --                 2 : variable scaling with variability reduction;
 --                 if a is 1 or 2, then on return c contains the
 --                 scaling coefficients and the estimate for the
---                 condition number, stored as a dobldobl complex vector;
+--                 condition number, stored as a dobldobl complex vector,
+--                 the size of this vector is 8*n + 4,
+--                 where n equals the number of equations and variables;
 --             3 : scales the system in the quaddobl container,
 --                 on input in a is either 0, 1, or 2:
 --                 0 : only equation scaling,
@@ -36,7 +40,9 @@ function use_scaling ( job : integer32;
 --                 2 : variable scaling with variability reduction;
 --                 if a is 1 or 2, then on return c contains the
 --                 scaling coefficients and the estimate for the
---                 condition number, stored as a quaddobl complex vector;
+--                 condition number, stored as a quaddobl complex vector,
+--                 the size of this vector is 16*n + 8,
+--                 where n equals the number of equations and variables;
 --             4 : scales the system in the multprec container,
 --                 on input in a is either 0, 1, or 2:
 --                 0 : only equation scaling,
@@ -44,7 +50,9 @@ function use_scaling ( job : integer32;
 --                 2 : variable scaling with variability reduction;
 --                 if a is 1 or 2, then on return c contains the
 --                 scaling coefficients and the estimate for the
---                 condition number, stored as a quadobl complex vector;
+--                 condition number, stored as a quadobl complex vector,
+--                 the size of this vector is 16*n + 8,
+--                 where n equals the number of equations and variables;
 --   job =     5 : scales the solutions in the standard container,
 --                 in a is the number n, in b the basis, and in c
 --                 there are n doubles for use as coefficients,

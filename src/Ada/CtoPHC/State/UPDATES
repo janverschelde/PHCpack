@@ -1,5 +1,7 @@
-Tue 7 JUl 2015 : extended gateway use_c2phc to pass number of tasks to
-  the blackbox solvers.
+Tue 21 Jul 2015 : bug fix in use_scaling, both in the implementation and the
+  specification; corresponding job codes added to use_c2phc.
+  Bug fix in assignments_in_ada_and_c.adb for qd complex vector assignment,
+  from Ada to C.
 
 Thu 2 Jul 2015 : new gateway use_scaling to scale systems and solutions.
 

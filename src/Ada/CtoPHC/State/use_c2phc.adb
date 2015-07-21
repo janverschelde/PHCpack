@@ -1,7 +1,6 @@
 with Interfaces.C;
 with text_io;                           use text_io;
 with String_Splitters;                  use String_Splitters;
--- with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 -- with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
@@ -1615,12 +1614,9 @@ function use_c2phc ( job : integer32;
 
     use Standard_Complex_Poly_Systems,Standard_Complex_Solutions;
     use Standard_Complex_Laur_Systems;
-    v_b : constant C_Integer_Array
-        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
-    use Interfaces.C;
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
     silval : constant natural32 := natural32(v_b(v_b'first));
     silent : constant boolean := (silval = 1);
-    nbtasks : constant natural32 := natural32(v_b(v_b'first+1));
     lp : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
@@ -1637,15 +1633,14 @@ function use_c2phc ( job : integer32;
       put_line("The system is underdetermined, add linear equations.");
       return 75;
     end if;
-   -- put("The number of tasks : "); put(nbtasks,1); new_line;
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
-      Black_Box_Solvers.Solve(nbtasks,lp.all,silent,rc,sols);
+      Black_Box_Solvers.Solve(lp.all,silent,rc,sols);
     else
       declare
         use Standard_Laur_Poly_Convertors;
         p : constant Poly_Sys := Positive_Laurent_Polynomial_System(lp.all);
       begin
-        Black_Box_Solvers.Solve(nbtasks,p,silent,rc,sols);
+        Black_Box_Solvers.Solve(p,silent,rc,sols);
       end;
     end if;
     Assign(integer32(rc),a);
@@ -1657,8 +1652,6 @@ function use_c2phc ( job : integer32;
 
     use Standard_Complex_Poly_Systems,Standard_Complex_Solutions;
    -- n : constant natural := Standard_PolySys_Container.Dimension;
-    vb : constant C_Integer_Array := C_intarrs.Value(b);
-    nt : constant natural32 := natural32(vb(vb'first));
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
@@ -1674,7 +1667,7 @@ function use_c2phc ( job : integer32;
       put_line("The system is underdetermined, add linear equations.");
       return 77;
     end if;
-    Black_Box_Solvers.Solve(nt,lp.all,false,rc,sols); -- not silent by default
+    Black_Box_Solvers.Solve(lp.all,false,rc,sols); -- not silent by default
     Assign(integer32(rc),a);
     Standard_Solutions_Container.Initialize(sols);
     return 0;
@@ -2159,7 +2152,9 @@ function use_c2phc ( job : integer32;
       when 577..579 => return use_syscon(job-440,a,b,c);
      -- convex hull via giftwrapping :
       when 580..589 => return use_giftwrap(job-579,a,b,c);
-     -- getting, setting seed and producing version string
+     -- scaling systems and solutions :
+      when 590..596 => return use_scaling(job-589,a,b,c);
+     -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;
       when 999 => return Version_String;

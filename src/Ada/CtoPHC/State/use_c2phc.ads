@@ -563,10 +563,6 @@ function use_c2phc ( job : integer32;
 --                   a[1] : number of variables in the Laurent polynomial,
 --                   a[2] : index of the polynomial in the system,
 --                   b : string converted to an integer array,
---         =  75 : applies the blackbox solver to the system in the
---                 standard Laurent container, where b[0] contains the
---                 value of the boolean silent and b[1] equals the number
---                 of tasks, on return in a is the root count;
 --         =  76 : puts a polynomial given as a string in the system 
 --                 container, with the input parameters as follows:
 --                   a[0] : number of characters in the string,
@@ -575,9 +571,7 @@ function use_c2phc ( job : integer32;
 --                   b : string converted to an integer array,
 --                 this operation is the reverse of job 67;
 --         =  77 : solves the polynomial system in the system container
---                 and puts the solutions into the solution container,
---                 on entry in b is the number of tasks to be used,
---                 on return in a is the root count computed;
+--                 and puts the solutions into the solution container;
 --         =  78 : computes the mixed volume for the system in the systems
 --                 container and fills the cells container with the regular
 --                 mixed-cell configuration constructed for the mixed volume.
@@ -1375,6 +1369,64 @@ function use_c2phc ( job : integer32;
 --                 with its initial form as defined by the inner normal
 --                 with coordinates in b and number of variables in a.
 --                 The normal is given as a string of a Python tuple.
+--
+-- scaling systems and solutions :
+--
+--   job   = 590 : scales the system in the standard container,
+--                 on input in a is either 0, 1, or 2:
+--                 0 : only equation scaling,
+--                 1 : variable scaling without variability reduction
+--                 2 : variable scaling with variability reduction;
+--                 if a is 1 or 2, then on return c contains the
+--                 scaling coefficients and the estimate for the
+--                 condition number, stored as a standard complex vector,
+--                 the size of this vector is 4*n + 2,
+--                 where n equals the number of equations and variables;
+--           591 : scales the system in the dobldobl container,
+--                 on input in a is either 0, 1, or 2:
+--                 0 : only equation scaling,
+--                 1 : variable scaling without variability reduction
+--                 2 : variable scaling with variability reduction;
+--                 if a is 1 or 2, then on return c contains the
+--                 scaling coefficients and the estimate for the
+--                 condition number, stored as a dobldobl complex vector,
+--                 the size of this vector is 8*n + 4,
+--                 where n equals the number of equations and variables;
+--           592 : scales the system in the quaddobl container,
+--                 on input in a is either 0, 1, or 2:
+--                 0 : only equation scaling,
+--                 1 : variable scaling without variability reduction
+--                 2 : variable scaling with variability reduction;
+--                 if a is 1 or 2, then on return c contains the
+--                 scaling coefficients and the estimate for the
+--                 condition number, stored as a quaddobl complex vector,
+--                 the size of this vector is 16*n + 8,
+--                 where n equals the number of equations and variables;
+--           593 : scales the system in the multprec container,
+--                 on input in a is either 0, 1, or 2:
+--                 0 : only equation scaling,
+--                 1 : variable scaling without variability reduction
+--                 2 : variable scaling with variability reduction;
+--                 if a is 1 or 2, then on return c contains the
+--                 scaling coefficients and the estimate for the
+--                 condition number, stored as a quadobl complex vector,
+--                 the size of this vector is 16*n + 8,
+--                 where n equals the number of equations and variables;
+--   job =   594 : scales the solutions in the standard container,
+--                 in a is the number n, in b the basis, and in c
+--                 there are n doubles for use as coefficients,
+--                 note that n/2 is the dimension of the complex vector,
+--                 and n/2 is then also the dimension of the solutions;
+--           595 : scales the solutions in the dobldobl container,
+--                 in a is the number n, in b the basis, and in c
+--                 there are n doubles for use as coefficients,
+--                 note that n/4 is the dimension of the complex vector,
+--                 and n/4 is then also the dimension of the solutions;
+--           596 : scales the solutions in the quaddobl container,
+--                 in a is the number n, in b the basis, and in c
+--                 there are n doubles for use as coefficients,
+--                 note that n/8 is the dimension of the complex vector,
+--                 and n/8 is then also the dimension of the solutions;
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

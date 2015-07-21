@@ -335,7 +335,7 @@ package body Assignments_in_Ada_and_C is
       val(ind) := Interfaces.C.double(lolo_part(nbr)); ind := ind + 1;
     end loop;    
     C_dblarrs.Copy_Array(val(0)'unchecked_access,c_d,
-                         Interfaces.C.ptrdiff_t(4*v_n));
+                         Interfaces.C.ptrdiff_t(8*v_n));
   end Assign;
 
   procedure Assign ( v_n : in natural32; c_d : in C_intarrs.Pointer;
