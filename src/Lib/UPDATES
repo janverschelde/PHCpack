@@ -1,4 +1,7 @@
-Sun 12 Jul 2015 : bug fix in phcpyc.c, in py2c_assign_factor_labels.
+Tue 21 Jul 2015 : new scalers.h and scalers.c, tested by lib_scale,
+  to scale polynomial systems and solutions.
+
+Sun 12 Jul 2015 : bug fix in phcpy2c.c, in py2c_assign_factor_labels.
 
 Tue 7 Jul 2015 : extended solve_system and solve_Laurent_system in phcpack
   with the nbtasks, updated phc_solve.c and phcpy2c.c.

@@ -74,6 +74,8 @@ lib_giftwrap.c                   : test on convex hull computation
 lists_and_strings                : arrays of numbers <-> strings of lists
 ts_list2str                      : interactive test on conversion
 ------------------------------------------------------------------------------
+scalers.c                        : scale systems and solutions
+lib_scale.c                      : test on the scaling methods
 phc_solve.c                      : test on the blackbox solver in PHCpack
 phcpy2c.c                        : C extension module for Python
 ------------------------------------------------------------------------------
