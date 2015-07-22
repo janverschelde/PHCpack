@@ -1,4 +1,5 @@
-Wed 22 Jul 2015 : refactored code in mainscal.adb.
+Wed 22 Jul 2015 : refactored code in mainscal.adb and extended the scalers
+  to compute with double double and quad double arithmetic.
 
 Thu 2 Jul 2015 : added scaling of solutions to multprec_scaling.
 
