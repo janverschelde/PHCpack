@@ -1,3 +1,5 @@
+Wed 22 Jul 2015 : refactored code in mainscal.adb.
+
 Thu 2 Jul 2015 : added scaling of solutions to multprec_scaling.
 
 Sun 28 Jun 2015 : new packages {dobldobl,quaddobl}_scaling, tested by

@@ -18,36 +18,42 @@ with Drivers_for_Scaling;                use Drivers_for_Scaling;
 
 procedure mainscal ( infilename,outfilename : in string ) is
 
-  lp : Link_to_Poly_Sys;
-  infile : file_type;
-  outfile : file_type;
-  basis : natural32;
-  n : integer32;
-  scalvec : Link_to_Vector;
-  ans : character;
-  sysonfile : boolean;
+  procedure Read_System 
+              ( file : in out file_type; filename : in string;
+                dim : out integer32;
+                lp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
 
-  procedure Read_System ( file : in out file_type; filename : in string ) is
+  -- DESCRIPTION :
+  --   Attempts to open the file defined by the name in filename
+  --   and to read a polynomial system.
+
   begin
     if filename /= "" then
       Open(file,in_file,filename);
       get(file,lp);
-      n := lp'length;
-      sysonfile := true;
+      dim := lp'length;
     else
-      sysonfile := false;
+      dim := 0;
     end if;
   exception
     when others =>
       new_line;
       put("Could not open file with name "); put_line(filename);
-      sysonfile := false; lp := null; return;
+      dim := 0; lp := null; return;
   end Read_System;
 
-  procedure Separate_File ( p : in Poly_Sys ) is
+  procedure Separate_File 
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                basis : in natural32;
+                scalvec : in Standard_Complex_Vectors.Link_to_Vector ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user if the scaled system needs to be written
+  --   on a separate file.
 
     scafile : file_type;
     nunk : constant natural32 := Number_of_Unknowns(p(p'first));
+    ans : character;
 
   begin
     new_line;
@@ -71,18 +77,38 @@ procedure mainscal ( infilename,outfilename : in string ) is
     end if;
   end Separate_File;
 
-  procedure Rescale is
+  procedure Rescale ( dim : in integer32;
+                      infile,outfile : in out file_type;
+                      sysonfile : in boolean ) is
+
+  -- DESCRIPTION :
+  --   Rescales the solutions with respect to given scaling coefficients.
+  --   The user is either prompted for solutions and scaling coefficients
+  --   or these are read from the input file infile.
+
+  -- ON ENTRY :
+  --   dim           number of polynomial equations in the system;
+  --   infile        if sysonfile, then infile is the input file;
+  --   outfile       for writing extra output information
+  --   sysonfile     is true if the input system and scaling coefficients
+  --                 are available on the infile.
+
+  -- ON RETURN :
+  --   infile        closed for input;
+  --   outfile       closed for outpute.
   
     sols : Solution_List;
     found : boolean;
+    basis : natural32 := 0;
     m : natural32;
+    scalvec : Standard_Complex_Vectors.Link_to_Vector;
 
   begin
     if sysonfile then                       -- scan for scaling coefficients
       Scan_and_Skip(infile,"SCALING COEFFICIENTS",found);
       if found then
         get(infile,basis);
-        scalvec := new vector(1..2*n);
+        scalvec := new vector(1..2*dim);
         get(infile,scalvec.all);
       end if;
     else 
@@ -90,8 +116,8 @@ procedure mainscal ( infilename,outfilename : in string ) is
     end if;
     if not found then
       put("Give the basis : "); get(basis);
-      put("Give "); put(2*n,1); put_line(" complex scaling numbers : ");
-      scalvec := new vector(1..2*n);
+      put("Give "); put(2*dim,1); put_line(" complex scaling numbers : ");
+      scalvec := new vector(1..2*dim);
       for i in scalvec'range loop
         get(scalvec(i));
       end loop;
@@ -120,7 +146,7 @@ procedure mainscal ( infilename,outfilename : in string ) is
     Standard_Scaling.Scale(basis,scalvec.all,sols);
     m := Length_Of(sols);
     if m > 0 then
-      put_line(outfile,"THE DE-SCALED SOLUTIONS : ");
+      put_line(outfile,"THE RESCALED SOLUTIONS : ");
       new_line(outfile);
       put(outfile,m,natural32(Head_Of(sols).n),sols);
     end if;
@@ -128,11 +154,17 @@ procedure mainscal ( infilename,outfilename : in string ) is
   end Rescale;
 
   procedure Display_and_Dispatch_Menu
-               ( file : in file_type; p : in out Poly_Sys ) is
+               ( infile,outfile : in out file_type; dim : in integer32;
+                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 sysonfile : in boolean ) is
 
   -- DESCRIPTION :
   --   Displays the menu and returns a choice, corresponding to one of the
   --   three available scaling procedures.
+
+    ans : character;
+    basis : natural32;
+    scalvec : Standard_Complex_Vectors.Link_to_Vector;
 
   begin
     loop
@@ -149,52 +181,69 @@ procedure mainscal ( infilename,outfilename : in string ) is
       exit when ans /= 'i';
     end loop;
     case ans is
-      when '1' => Equation_Scaling(file,p); basis := 0;
-      when '2' => Variable_Scaling(file,p,basis,scalvec);
-      when '3' => Rescale;
+      when '1' => Equation_Scaling(outfile,p); basis := 0;
+      when '2' => Variable_Scaling(outfile,p,basis,scalvec);
+      when '3' => Rescale(dim,infile,outfile,sysonfile);
       when others => null;
     end case;
     case ans is
-      when '1' | '2' => Write_Results(file,p,basis,scalvec);
+      when '1' | '2' => Write_Results(outfile,p,basis,scalvec);
       when others    => null;
     end case;
     if ans /= '3'
-     then Separate_File(p);
+     then Separate_File(p,basis,scalvec);
     end if;
   end Display_and_Dispatch_Menu;
 
-begin
-  Read_System(infile,infilename);
-  if lp = null then
-    loop
+  procedure Main is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the precision and then parses
+  --   the system into the right precision.
+
+    ans : character;
+    n : integer32;
+    infile,outfile : file_type;
+    sysonfile : boolean;
+    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+ 
+  begin
+    Read_System(infile,infilename,n,lp);
+    sysonfile := (n > 0);
+    if lp = null then
+      loop
+        new_line;
+        put("Is the system on a file ? (y/n/i=info) ");
+        Ask_Alternative(ans,"yni");
+        if ans = 'i' then
+          new_line;
+          Standard_Complex_Poly_Systems_io.Display_Format;
+          new_line;
+        end if;
+        exit when ans /= 'i';
+      end loop;
       new_line;
-      put("Is the system on a file ? (y/n/i=info) ");
-      Ask_Alternative(ans,"yni");
-      if ans = 'i' then
-        new_line;
-        Standard_Complex_Poly_Systems_io.Display_Format;
-        new_line;
+      if ans = 'y' then
+        put_line("Reading the name of the input file.");
+        Read_Name_and_Open_File(infile);
+        get(infile,lp);
+        sysonfile := true;
+        n := lp'length;
+      else
+        put("Give the dimension : "); get(n);
+        lp := new Poly_Sys(1..n);
+        put("Give "); put(n,1); put(" "); put(n,1);
+        put_line("-variate polynomials :");
+        get(natural32(n),lp.all);
+        skip_line;  -- skip end_of_line symbol
+        sysonfile := false;
       end if;
-      exit when ans /= 'i';
-    end loop;
-    new_line;
-    if ans = 'y' then
-      put_line("Reading the name of the input file.");
-      Read_Name_and_Open_File(infile);
-      get(infile,lp);
-      sysonfile := true;
-      n := lp'length;
-    else
-      put("Give the dimension : "); get(n);
-      lp := new Poly_Sys(1..n);
-      put("Give "); put(n,1); put(" "); put(n,1);
-      put_line("-variate polynomials :");
-      get(natural32(n),lp.all);
-      skip_line;  -- skip end_of_line symbol
-      sysonfile := false;
     end if;
-  end if;
-  Create_Output_File(outfile,outfilename);
-  put(outfile,natural32(lp'last),lp.all); new_line(outfile);
-  Display_and_Dispatch_Menu(outfile,lp.all);
+    Create_Output_File(outfile,outfilename);
+    put(outfile,natural32(lp'last),lp.all); new_line(outfile);
+    Display_and_Dispatch_Menu(infile,outfile,n,lp.all,sysonfile);
+  end Main;
+
+begin
+  Main;
 end mainscal;
