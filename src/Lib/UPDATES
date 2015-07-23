@@ -1,3 +1,5 @@
+Wed 22 Jul 2015 : extended scalers with functions to scale solutions.
+
 Tue 21 Jul 2015 : new scalers.h and scalers.c, tested by lib_scale,
   to scale polynomial systems and solutions.
 

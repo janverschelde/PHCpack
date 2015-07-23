@@ -29,3 +29,30 @@ int quaddobl_scale_system ( int mode, double *cff )
 
    return fail;
 }
+
+int standard_scale_solutions ( int dim, int basis, double *cff )
+{
+   int fail;
+
+   fail = _ada_use_c2phc(594,&dim,&basis,cff);
+
+   return fail;
+}
+
+int dobldobl_scale_solutions ( int dim, int basis, double *cff )
+{
+   int fail;
+
+   fail = _ada_use_c2phc(595,&dim,&basis,cff);
+
+   return fail;
+}
+
+int quaddobl_scale_solutions ( int dim, int basis, double *cff )
+{
+   int fail;
+
+   fail = _ada_use_c2phc(596,&dim,&basis,cff);
+
+   return fail;
+}

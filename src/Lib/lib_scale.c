@@ -70,7 +70,7 @@ int greetings( void )
 
 int standard_scaler ( void )
 {
-   int fail,dim;
+   int fail,dim,i;
 
    fail = syscon_read_system();
    if(fail == 0)
@@ -83,6 +83,9 @@ int standard_scaler ( void )
          double c[4*dim+2];
          fail = standard_scale_system(2,c);
          printf("The estimated inverse condition number : %.3e\n",c[4*dim]);
+         printf("The scaling coefficients : \n");
+         for(i=0; i<4*dim; i=i+2)
+            printf("%2d : %.15e  %.15e\n",i/2,c[i],c[i+1]);
          printf("\nThe system in the container : \n");
          fail = syscon_write_system();
 
@@ -93,7 +96,7 @@ int standard_scaler ( void )
 
 int dobldobl_scaler ( void )
 {
-   int fail,dim;
+   int fail,dim,i;
 
    fail = syscon_read_dobldobl_system();
    if(fail == 0)
@@ -106,6 +109,10 @@ int dobldobl_scaler ( void )
          double c[8*dim+4];
          fail = dobldobl_scale_system(2,c);
          printf("The estimated inverse condition number : %.3e\n",c[8*dim]);
+         printf("The scaling coefficients : \n");
+         for(i=0; i<8*dim; i=i+4)
+            printf("%2d : %.15e %.15e  %.15e %.15e\n",
+                   i/4,c[i],c[i+1],c[i+2],c[i+3]);
          printf("\nThe system in the container : \n");
          fail = syscon_write_dobldobl_system();
 
@@ -116,7 +123,7 @@ int dobldobl_scaler ( void )
 
 int quaddobl_scaler ( void )
 {
-   int fail,dim;
+   int fail,dim,i;
 
    fail = syscon_read_quaddobl_system();
    if(fail == 0)
@@ -129,6 +136,10 @@ int quaddobl_scaler ( void )
          double c[16*dim+8];
          fail = quaddobl_scale_system(2,c);
          printf("The estimated inverse condition number : %.3e\n",c[16*dim]);
+         printf("The scaling coefficients : \n");
+         for(i=0; i<16*dim; i=i+4)
+            printf("%2d : %.15e %.15e %.15e %.15e  %.15e %.15e %.15e %.15e\n",
+                   i/8,c[i],c[i+1],c[i+2],c[i+3],c[i+4],c[i+5],c[i+6],c[i+7]);
          printf("\nThe system in the container : \n");
          fail = syscon_write_quaddobl_system();
 
