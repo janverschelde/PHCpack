@@ -1,3 +1,5 @@
+/* This file contains the definitions of the prototypes in phcpy2c.h. */
+
 #include <Python.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,19 +18,32 @@
 #include "structmember.h"
 
 extern void adainit ( void );
+extern void adafinal ( void );
 
 int g_ada_initialized = 0;
+int g_ada_finalized = 0;
 
-void initialize(void)
+void initialize ( void )
 {
    if(!g_ada_initialized)
    {
       adainit();
       g_ada_initialized = 1;
+      g_ada_finalized = 0;
    }
 }
 
-/* wrapping functions in phcpack.h starts from here */
+void finalize ( void )
+{
+   if(!g_ada_finalized)
+   {
+      adafinal();
+      g_ada_finalized = 1;
+      g_ada_initialized = 0;
+   }
+}
+
+/* The wrapping functions in phcpack.h starts from here. */
 
 static PyObject *py2c_PHCpack_version_string ( PyObject *self, PyObject *args )
 {

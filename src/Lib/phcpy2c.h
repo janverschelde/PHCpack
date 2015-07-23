@@ -1,39 +1,158 @@
-void initialize ( void );
+/* This file contains the prototypes for the py2c interface functions. */
 
-/* wrapping functions in phcpack.h starts from here */
+void initialize ( void );
+/*
+ * DESCRIPTION :
+ *   Calls adainit(), initializing the interface to the Ada code,
+ *   setting the initialized flag to one and the finalized flag to zero,
+ *   if the initialized flag was zero.
+ *   Nothing happens if the initialized flag equals one. */
+
+void finalize ( void );
+/*
+ * DESCRIPTION :
+ *   Calls adafinal(), finalizing the interface to the Ada code,
+ *   setting the finalized flag to one and the initialized flag to zero,
+ *   if the finalized flag was zero.
+ *   Nothing happens if the finalized flag equals one. */
+
+/* The wrapping of functions with prototypes in phcpack.h starts here. */
 
 static PyObject *py2c_PHCpack_version_string
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the version string of PHCpack.
+ *   The version string is 40 characters long. */
+
 static PyObject *py2c_set_seed ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Takes the value of the integer given on input
+ *   and sets the seed for the random number generators.
+ *   This fixing of the seed enables reproducible runs. */
+
 static PyObject *py2c_get_seed ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current value of the seed.
+ *   Using this value in py2c_set_seed will ensure that the
+ *   results of previous runs can be reproduced. */
+
 static PyObject *py2c_read_standard_target_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user to enter a target system that will
+ *   be parsed in standard double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
 static PyObject *py2c_read_standard_target_system_from_file
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   The two input arguments are a number and a string:
+ *   1) The number equals the number of characters in the string.
+ *   2) The string given on input is the name of a file which contains
+ *   a target system to be parsed in standard double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
 static PyObject *py2c_read_standard_start_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user to enter a start system that will
+ *   be parsed in standard double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
 static PyObject *py2c_read_standard_start_system_from_file
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   The two input arguments are a number and a string:
+ *   1) The number equals the number of characters in the string.
+ *   2) The string given on input is the name of a file which contains
+ *   a start system to be parsed in standard double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
 static PyObject *py2c_read_dobldobl_target_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user to enter a target system that will
+ *   be parsed in double double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
 static PyObject *py2c_read_dobldobl_target_system_from_file
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   The two input arguments are a number and a string:
+ *   1) The number equals the number of characters in the string.
+ *   2) The string given on input is the name of a file which contains
+ *   a target system to be parsed in double double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
 static PyObject *py2c_read_dobldobl_start_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user to enter a start system that will
+ *   be parsed in double double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
 static PyObject *py2c_read_dobldobl_start_system_from_file
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   The two input arguments are a number and a string:
+ *   1) The number equals the number of characters in the string.
+ *   2) The string given on input is the name of a file which contains
+ *   a start system to be parsed in double double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
 static PyObject *py2c_read_quaddobl_target_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user to enter a target system that will
+ *   be parsed in quad double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
 static PyObject *py2c_read_quaddobl_target_system_from_file
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   The two input arguments are a number and a string:
+ *   1) The number equals the number of characters in the string.
+ *   2) The string given on input is the name of a file which contains
+ *   a target system to be parsed in quad double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
 static PyObject *py2c_read_quaddobl_start_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Prompts the user to enter a start system that will
+ *   be parsed in quad double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
 static PyObject *py2c_read_quaddobl_start_system_from_file
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   The two input arguments are a number and a string:
+ *   1) The number equals the number of characters in the string.
+ *   2) The string given on input is the name of a file which contains
+ *   a start system to be parsed in quad double precision.
+ *   The failure code is returned, which is zero if all went well. */
+
 static PyObject *py2c_define_output_file ( PyObject *self, PyObject *args );
 static PyObject *py2c_write_target_system ( PyObject *self, PyObject *args );
 static PyObject *py2c_write_start_system ( PyObject *self, PyObject *args );
+
 /* moving systems from and to containers */
+
 static PyObject *py2c_copy_target_system_to_container
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_copy_dobldobl_target_system_to_container
@@ -66,7 +185,9 @@ static PyObject *py2c_copy_quaddobl_container_to_start_system
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_copy_multprec_container_to_start_system 
  ( PyObject *self, PyObject *args );
+
 /* creation of homotopy and tracking all paths */
+
 static PyObject *py2c_create_homotopy ( PyObject *self, PyObject *args );
 static PyObject *py2c_create_homotopy_with_gamma
  ( PyObject *self, PyObject *args );
@@ -104,7 +225,9 @@ static PyObject *py2c_solve_by_dobldobl_homotopy_continuation
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_solve_by_quaddobl_homotopy_continuation
  ( PyObject *self, PyObject *args );
+
 /* moving solutions from and to containers */
+
 static PyObject *py2c_copy_target_solutions_to_container
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_copy_dobldobl_target_solutions_to_container
@@ -137,7 +260,9 @@ static PyObject *py2c_copy_quaddobl_container_to_start_solutions
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_copy_multprec_container_to_start_solutions
  ( PyObject *self, PyObject *args );
+
 /* black box solver, mixed volume calculator, and Newton step */
+
 static PyObject *py2c_solve_system ( PyObject *self, PyObject *args );
 static PyObject *py2c_solve_Laurent_system ( PyObject *self, PyObject *args );
 static PyObject *py2c_mixed_volume ( PyObject *self, PyObject *args );
@@ -159,14 +284,62 @@ static PyObject *py2c_multprec_Newton_Laurent_step
 static PyObject *py2c_varbprec_Newton_Laurent_steps
  ( PyObject *self, PyObject *args );
 
-/* wrapping functions in unisolvers.h starts from here */
+/* The wrapping of functions with prototypes in unisolvers.h starts here. */
 
 static PyObject *py2c_usolve_standard ( PyObject *self, PyObject *args );
-static PyObject *py2c_usolve_dobldobl ( PyObject *self, PyObject *args );
-static PyObject *py2c_usolve_quaddobl ( PyObject *self, PyObject *args );
-static PyObject *py2c_usolve_multprec ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Applies the method of Weierstrass to compute all roots of a
+ *   polynomial in one variable with standard double precision arithmetic.
+ *   On input are two numbers:
+ *   1) the maximum number of iterations in the method of Weierstrass; and
+ *   2) the epsilon requirement on the accuracy of the roots.
+ *   Before calling this function, the polynomial should be stored in
+ *   the standard systems container.  After the call of this function,
+ *   the standard solutions container contains the roots of the polynomial.
+ *   On return is the number of iterations done by the solver. */
 
-/* wrapping functions in giftwrappers.h starts from here */
+static PyObject *py2c_usolve_dobldobl ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Applies the method of Weierstrass to compute all roots of a
+ *   polynomial in one variable with double double precision arithmetic.
+ *   On input are two numbers: 
+ *   1) the maximum number of iterations in the method of Weierstrass; and
+ *   2) the epsilon requirement on the accuracy of the roots.
+ *   Before calling this function, the polynomial should be stored in
+ *   the dobldobl systems container.  After the call of this function,
+ *   the dobldobl solutions container contains the roots of the polynomial.
+ *   On return is the number of iterations done by the solver. */
+
+static PyObject *py2c_usolve_quaddobl ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Applies the method of Weierstrass to compute all roots of a
+ *   polynomial in one variable with quad double precision arithmetic.
+ *   On input are two numbers:
+ *   1) the maximum number of iterations in the method of Weierstrass; and
+ *   2) the epsilon requirement on the accuracy of the roots.
+ *   Before calling this function, the polynomial should be stored in
+ *   the quaddobl systems container.  After the call of this function,
+ *   the quaddobl solutions container contains the roots of the polynomial.
+ *   On return is the number of iterations done by the solver. */
+
+static PyObject *py2c_usolve_multprec ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Applies the method of Weierstrass to compute all roots of a
+ *   polynomial in one variable with arbitrary multiprecision arithmetic.
+ *   On input are three numbers: 
+ *   1) the number of decimal places in the working precision; 
+ *   2) the maximum number of iterations in the method of Weierstrass; and
+ *   3) the epsilon requirement on the accuracy of the roots.
+ *   Before calling this function, the polynomial should be stored in
+ *   the multprec systems container.  After the call of this function,
+ *   the multprec solutions container contains the roots of the polynomial.
+ *   On return is the number of iterations done by the solver. */
+
+/* The wrapping of functions with prototypes in giftwrappers.h starts here. */
 
 static PyObject *py2c_giftwrap_planar ( PyObject *self, PyObject *args );
 static PyObject *py2c_giftwrap_convex_hull ( PyObject *self, PyObject *args );
@@ -436,7 +609,7 @@ static PyObject *py2c_solcon_quaddobl_drop_coordinate_by_index
 static PyObject *py2c_solcon_quaddobl_drop_coordinate_by_name
  ( PyObject *self, PyObject *args );
 
-/* wrapping functions in product.h starts here */
+/* The wrapping of the functions in product.h starts here. */
 
 static PyObject *py2c_product_supporting_set_structure 
  ( PyObject *self, PyObject *args );
