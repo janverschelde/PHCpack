@@ -290,6 +290,7 @@ static PyObject *py2c_clear_quaddobl_homotopy
 static PyObject *py2c_clear_multprec_homotopy
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_write_start_solutions ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_tune_continuation_parameters
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_show_continuation_parameters
@@ -298,6 +299,7 @@ static PyObject *py2c_autotune_continuation_parameters
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_determine_output_during_continuation
  ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_solve_by_standard_homotopy_continuation
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_solve_by_dobldobl_homotopy_continuation
@@ -450,10 +452,12 @@ static PyObject *py2c_mixed_volume ( PyObject *self, PyObject *args );
 static PyObject *py2c_standard_deflate ( PyObject *self, PyObject *args );
 static PyObject *py2c_dobldobl_deflate ( PyObject *self, PyObject *args );
 static PyObject *py2c_quaddobl_deflate ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_standard_Newton_step ( PyObject *self, PyObject *args );
 static PyObject *py2c_dobldobl_Newton_step ( PyObject *self, PyObject *args );
 static PyObject *py2c_quaddobl_Newton_step ( PyObject *self, PyObject *args );
 static PyObject *py2c_multprec_Newton_step ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_standard_Newton_Laurent_step
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_dobldobl_Newton_Laurent_step
@@ -462,6 +466,7 @@ static PyObject *py2c_quaddobl_Newton_Laurent_step
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_multprec_Newton_Laurent_step
  ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_varbprec_Newton_Laurent_steps
  ( PyObject *self, PyObject *args );
 
@@ -1043,7 +1048,7 @@ static PyObject *py2c_mapcon_coefficients_of_map
 static PyObject *py2c_mapcon_exponents_of_map
  ( PyObject *self, PyObject *args );
 
-/* wrapping functions in next_track starts below */
+/* The wrapping of functions with prototypes in next_track.h starts below. */
 
 static PyObject *py2c_initialize_standard_homotopy
  ( PyObject *self, PyObject *args );
@@ -1080,28 +1085,107 @@ static PyObject *py2c_initialize_quaddobl_homotopy
 
 static PyObject *py2c_initialize_multprec_homotopy
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the homotopy to track a path with a generator,
+ *   using arbitrary multiprecision arithmetic.
+ *   There is are two integer numbers on input:
+ *   1) one to be considered as a boolean,
+ *   as an indicator whether a fixed gamma constant will be used; and
+ *   2) the number of decimal places in the working precision.
+ *   Before calling this routine the target and start system must
+ *   be copied over from the multprec systems container. */
+
 static PyObject *py2c_initialize_varprec_homotopy
  ( PyObject *self, PyObject *args );
 
 static PyObject *py2c_initialize_standard_solution
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the path tracker with a generator with a solution
+ *   from the standard solutions container.  The index to the solution
+ *   is given as an integer input parameter.  The counting of the
+ *   indices starts at one, so the first solution has index one. */
+
 static PyObject *py2c_initialize_dobldobl_solution
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the path tracker with a generator with a solution
+ *   from the dobldobl solutions container.  The index to the solution
+ *   is given as an integer input parameter.  The counting of the
+ *   indices starts at one, so the first solution has index one. */
+
 static PyObject *py2c_initialize_quaddobl_solution
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the path tracker with a generator with a solution
+ *   from the quaddobl solutions container.  The index to the solution
+ *   is given as an integer input parameter.  The counting of the
+ *   indices starts at one, so the first solution has index one. */
+
 static PyObject *py2c_initialize_multprec_solution
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the path tracker with a generator with a solution
+ *   from the multprec solutions container.  The index to the solution
+ *   is given as an integer input parameter.  The counting of the
+ *   indices starts at one, so the first solution has index one. */
+
 static PyObject *py2c_initialize_varbprec_solution
  ( PyObject *self, PyObject *args );
 
 static PyObject *py2c_next_standard_solution
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Computes the next point on the solution path with standard double
+ *   precision for the given index.  This index is given as an input
+ *   parameter.  The index to the solution path starts its count at one.
+ *   The point itself is stored in the standard solutions container.
+ *   The functions py2c_initialized_standard_tracker and
+ *   py2c_initialize_standard_solution must have been executed earlier.
+ *   The failcode is returned, which equals zero if all is well. */
+
 static PyObject *py2c_next_dobldobl_solution
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Computes the next point on the solution path with double double
+ *   precision for the given index.  This index is given as an input
+ *   parameter.  The index to the solution path starts its count at one.
+ *   The point itself is stored in the dobldobl solutions container.
+ *   The functions py2c_initialized_dobldobl_tracker and
+ *   py2c_initialize_dobldobl_solution must have been executed earlier.
+ *   The failcode is returned, which equals zero if all is well. */
+
 static PyObject *py2c_next_quaddobl_solution
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Computes the next point on the solution path with quad double
+ *   precision for the given index.  This index is given as an input
+ *   parameter.  The index to the solution path starts its count at one.
+ *   The point itself is stored in the quaddobl solutions container.
+ *   The functions py2c_initialized_quaddobl_tracker and
+ *   py2c_initialize_quaddobl_solution must have been executed earlier.
+ *   The failcode is returned, which equals zero if all is well. */
+
 static PyObject *py2c_next_multprec_solution
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Computes the next point on the solution path with arbitrary
+ *   multiprecision for the given index.  This index is given as an input
+ *   parameter.  The index to the solution path starts its count at one.
+ *   The point itself is stored in the multprec solutions container.
+ *   The functions py2c_initialized_multprec_tracker and
+ *   py2c_initialize_multprec_solution must have been executed earlier.
+ *   The failcode is returned, which equals zero if all is well. */
+
 static PyObject *py2c_next_varbprec_solution
  ( PyObject *self, PyObject *args );
 
