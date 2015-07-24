@@ -151,40 +151,119 @@ static PyObject *py2c_define_output_file ( PyObject *self, PyObject *args );
 static PyObject *py2c_write_target_system ( PyObject *self, PyObject *args );
 static PyObject *py2c_write_start_system ( PyObject *self, PyObject *args );
 
-/* moving systems from and to containers */
+/* Copying systems from and to containers. */
 
 static PyObject *py2c_copy_target_system_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the target system to the container for systems
+ *   with coefficients in standard double precision. */
+
 static PyObject *py2c_copy_dobldobl_target_system_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the target system to the container for systems
+ *   with coefficients in double double precision. */
+
 static PyObject *py2c_copy_quaddobl_target_system_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the target system to the container for systems
+ *   with coefficients in quad double precision. */
+
 static PyObject *py2c_copy_multprec_target_system_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the target system to the container for systems
+ *   with coefficients in arbitrary multiprecision. */
+
 static PyObject *py2c_copy_container_to_target_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the system in the container for systems with coefficients 
+ *   in standard double precision to the target system. */
+
 static PyObject *py2c_copy_dobldobl_container_to_target_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the system in the container for systems with coefficients
+ *   in double double precision to the target system. */
+
 static PyObject *py2c_copy_quaddobl_container_to_target_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the system in the container for systems with coefficients 
+ *   in quad double precision to the target system. */
+
 static PyObject *py2c_copy_multprec_container_to_target_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the system in the container for systems with coefficients
+ *   in arbitrary multiprecision to the target system. */
+
 static PyObject *py2c_copy_start_system_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the start system to the container for systems
+ *   with coefficients in standard double precision. */
+
 static PyObject *py2c_copy_dobldobl_start_system_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the start system to the container for systems
+ *   with coefficients in double double precision. */
+
 static PyObject *py2c_copy_quaddobl_start_system_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the start system to the container for systems
+ *   with coefficients in quad double precision. */
+
 static PyObject *py2c_copy_multprec_start_system_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the start system to the container for systems
+ *   with coefficients in arbitrary multiprecision. */
+
 static PyObject *py2c_copy_container_to_start_system 
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the system in the container for systems with coefficients
+ *   in standard double precision to the start system. */
+
 static PyObject *py2c_copy_dobldobl_container_to_start_system 
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the system in the container for systems with coefficients
+ *   in double double precision to the start system. */
+
 static PyObject *py2c_copy_quaddobl_container_to_start_system 
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the system in the container for systems with coefficients
+ *   in quad double precision to the start system. */
+
 static PyObject *py2c_copy_multprec_container_to_start_system 
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the system in the container for systems with coefficients
+ *   in arbitrary multiprecision to the start system. */
 
 /* creation of homotopy and tracking all paths */
 
@@ -230,42 +309,144 @@ static PyObject *py2c_solve_by_quaddobl_homotopy_continuation
 
 static PyObject *py2c_copy_target_solutions_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the target solutions in standard double precision to the
+ *   container for solutions in standard double precision. */
+
 static PyObject *py2c_copy_dobldobl_target_solutions_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the target solutions in double double precision to the
+ *   container for solutions in double double precision. */
+
 static PyObject *py2c_copy_quaddobl_target_solutions_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the target solutions in quad double precision to the
+ *   container for solutions in quad double precision. */
+
 static PyObject *py2c_copy_multprec_target_solutions_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the target solutions in arbitrary multiprecision to the
+ *   container for solutions in arbitrary multiprecision. */
+
 static PyObject *py2c_copy_container_to_target_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the solutions in standard double precision from the
+ *   container to the target solutions in standard double precision. */
+
 static PyObject *py2c_copy_dobldobl_container_to_target_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the solutions in double double precision from the
+ *   container to the target solutions in double double precision. */
+
 static PyObject *py2c_copy_quaddobl_container_to_target_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the solutions in quad double precision from the
+ *   container to the target solutions in quad double precision. */
+
 static PyObject *py2c_copy_multprec_container_to_target_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the solutions in arbitrary multiprecision from the
+ *   container to the target solutions in arbitrary multiprecision. */
+
 static PyObject *py2c_copy_start_solutions_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the start solutions in standard double precision to the
+ *   container for solutions in standard double precision. */
+
 static PyObject *py2c_copy_dobldobl_start_solutions_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the start solutions in double double precision to the
+ *   container for solutions in double double precision. */
+
 static PyObject *py2c_copy_quaddobl_start_solutions_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the start solutions in quad double precision to the
+ *   container for solutions in quad double precision. */
+
 static PyObject *py2c_copy_multprec_start_solutions_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the start solutions in arbitrary multiprecision to the
+ *   container for solutions in arbitrary multiprecision. */
+
 static PyObject *py2c_copy_container_to_start_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the solutions in standard double precision from the
+ *   container to the start solutions in standard double precision. */
+
 static PyObject *py2c_copy_dobldobl_container_to_start_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the solutions in double double precision from the
+ *   container to the start solutions in double double precision. */
+
 static PyObject *py2c_copy_quaddobl_container_to_start_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the solutions in quad double precision from the
+ *   container to the start solutions in quad double precision. */
+
 static PyObject *py2c_copy_multprec_container_to_start_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the solutions in arbitrary multiprecision from the
+ *   container to the start solutions in arbitrary multiprecision. */
 
 /* black box solver, mixed volume calculator, and Newton step */
 
 static PyObject *py2c_solve_system ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Calls the blackbox solver on the system stored in the container for
+ *   systems with coefficients in standard double precision.
+ *   One integer is expected on input: the number of tasks.
+ *   If that number is zero, then no multitasking is applied.
+ *   On return, the container for solutions in standard double precision
+ *   contains the solutions to the system in the standard systems container. */
+
 static PyObject *py2c_solve_Laurent_system ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Calls the blackbox solver on the system stored in the container for
+ *   Laurent systems with coefficients in standard double precision.
+ *   Two integers are expected on input:
+ *   1) a boolean flag silent: if 1, then no intermediate output about
+ *   the root counts is printed, if 0, then the solver is verbose; and 
+ *   2) the number of tasks: if 0, then no multitasking is applied,
+ *   otherwise as many tasks as the number will run.
+ *   On return, the container for solutions in standard double precision
+ *   contains the solutions to the system in the standard Laurent systems
+ *   container. */
+
 static PyObject *py2c_mixed_volume ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_standard_deflate ( PyObject *self, PyObject *args );
 static PyObject *py2c_dobldobl_deflate ( PyObject *self, PyObject *args );
 static PyObject *py2c_quaddobl_deflate ( PyObject *self, PyObject *args );
@@ -613,28 +794,106 @@ static PyObject *py2c_solcon_quaddobl_drop_coordinate_by_name
 
 static PyObject *py2c_product_supporting_set_structure 
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Builds a supporting set structure for the system stored in the
+ *   container with coefficients in standard double precision. */
+
 static PyObject *py2c_product_write_set_structure
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the supporting set structure to screen .*/
+
 static PyObject *py2c_product_set_structure_string
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the string representation of the set structure. */
+
 static PyObject *py2c_product_parse_set_structure
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Parses a given string into a set structure.
+ *   On input are two parameters, one integer and one string:
+ *   1) the number of characters in the given string; and
+ *   2) the characters in the string.
+ *   On return is the failure code, if zero, then the string
+ *   has been parsed into a valid set structure. */
+
 static PyObject *py2c_product_is_set_structure_supporting
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Checks whether the stored set structure is supporting
+ *   for the system in the standard systems container.
+ *   Returns an integer which represents true (1) or false (0). */
+
 static PyObject *py2c_product_linear_product_root_count
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the linear-product root count, computed from
+ *   the supporting set structure. */
+
 static PyObject *py2c_product_random_linear_product_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Builds a random linear-product system based on the
+ *   stored set structure.   On returns is the failure code,
+ *   which equals zero if all went well. */
+
 static PyObject *py2c_product_solve_linear_product_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Computes all solutions to the linear-product system
+ *   and stores the solutions in the container for solutions
+ *   in standard double precision.  On return is the failure
+ *   code, which equals zero if all went well. */
+
 static PyObject *py2c_product_clear_set_structure
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates the set structure. */
+
 static PyObject *py2c_product_m_homogeneous_Bezout_number
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   For the system in the standard systems container,
+ *   a heuristic partition of the set of variables may
+ *   lead to a Bezout number that is smaller than the total degree.
+ *   On return is the m-homogeneous Bezout number for the
+ *   string representation of the partition that is returned
+ *   as the second argument in the tuple. */
+
 static PyObject *py2c_product_m_partition_Bezout_number
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Give a partition of the set of variables, computes 
+ *   the m-homogeneous Bezout number for the system in
+ *   the standard systems container.
+ *   On input are two arguments:
+ *   1) the number of characters in the string (second argument); and
+ *   2) the string representation for a partition of the variables.
+ *   On return is the m-homogeneous Bezout number. */
+
 static PyObject *py2c_product_m_homogeneous_start_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Give a partition of the set of variables, constructs
+ *   an m-homogeneous Bezout number for the system in
+ *   the standard systems container.
+ *   On input are two arguments:
+ *   1) the number of characters in the string (second argument); and
+ *   2) the string representation for a partition of the variables.
+ *   On return is the m-homogeneous Bezout number. */
 
 /* wrapping functions in celcon.h starts here */
 
@@ -748,10 +1007,20 @@ static PyObject *py2c_collapse_diagonal ( PyObject *self, PyObject *args );
 
 static PyObject *py2c_schubert_pieri_count
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of p-plane producing curves of degree q
+ *   that meet m*p + q*(m+p) given general m-planes.
+ *   On input are three integer numbers:
+ *   1) m, the dimension of the input planes;
+ *   2) p, the dimension of the output planes; and
+ *   3) q, the degree of the curve that produces p-planes.
+ *   The dimension of the ambient space of this Pieri problem is m+p. */
+
 static PyObject *py2c_schubert_resolve_conditions
- ( PyObject *self, PyObject *args )
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_schubert_littlewood_richardson_homotopies
- ( PyObject *self, PyObject *args )
+ ( PyObject *self, PyObject *args );
 static PyObject *py2c_schubert_localization_poset
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_schubert_pieri_homotopies
@@ -778,14 +1047,42 @@ static PyObject *py2c_mapcon_exponents_of_map
 
 static PyObject *py2c_initialize_standard_homotopy
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the homotopy to track a path with a generator,
+ *   using standard double precision arithmetic.
+ *   There is one integer number on input to be considered as a boolean,
+ *   as an indicator whether a fixed gamma constant will be used.
+ *   Before calling this routine the target and start system must
+ *   be copied over from the standard systems container. */
+
 static PyObject *py2c_initialize_dobldobl_homotopy
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the homotopy to track a path with a generator,
+ *   using double double precision arithmetic.
+ *   There is one integer number on input to be considered as a boolean,
+ *   as an indicator whether a fixed gamma constant will be used.
+ *   Before calling this routine the target and start system must
+ *   be copied over from the dobldobl systems container. */
+
 static PyObject *py2c_initialize_quaddobl_homotopy
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the homotopy to track a path with a generator,
+ *   using quad double precision arithmetic.
+ *   There is one integer number on input to be considered as a boolean,
+ *   as an indicator whether a fixed gamma constant will be used.
+ *   Before calling this routine the target and start system must
+ *   be copied over from the quaddobl systems container. */
+
 static PyObject *py2c_initialize_multprec_homotopy
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_initialize_varprec_homotopy
  ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_initialize_standard_solution
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_initialize_dobldobl_solution
@@ -796,6 +1093,7 @@ static PyObject *py2c_initialize_multprec_solution
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_initialize_varbprec_solution
  ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_next_standard_solution
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_next_dobldobl_solution
@@ -806,13 +1104,38 @@ static PyObject *py2c_next_multprec_solution
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_next_varbprec_solution
  ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_clear_standard_tracker
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates data used in the standard double precision tracker
+ *   with a generator. */
+
 static PyObject *py2c_clear_dobldobl_tracker
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates data used in the double double precision tracker
+ *   with a generator. */
+
 static PyObject *py2c_clear_quaddobl_tracker
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates data used in the quad double precision tracker
+ *   with a generator. */
+
 static PyObject *py2c_clear_multprec_tracker
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates data used in the arbitrary multiprecision tracker
+ *   with a generator. */
+
 static PyObject *py2c_clear_varbprec_tracker
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates data used in the variable precision tracker
+ *   with a generator. */

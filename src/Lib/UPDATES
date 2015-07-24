@@ -1,3 +1,5 @@
+Fri 24 Jul 2015 : added more documentation to phcpy2c.
+
 Thu 23 Jul 2015 : added finalize function to phcpy2c and started writing
   documentation strings in phcpy2c.h.
 
