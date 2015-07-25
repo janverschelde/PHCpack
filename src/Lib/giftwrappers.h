@@ -117,7 +117,7 @@ int support_size ( void );
 int support_string ( int size, char *supp );
 /*
  * DESCRIPTION :
- *   Returns the string representation of a Laurent polynomial.
+ *   Returns the string representation of the support a Laurent polynomial.
  *
  * REQUIRED :
  *   The Laurent systems container must be initialized
@@ -140,7 +140,7 @@ int clear_support_string ( void );
 int initial_form ( int dim, int nbc, char *normal );
 /*
  * DESCRIPTION :
- *   Replaces the system in the Laurent system container by its normal form,
+ *   Replaces the system in the Laurent system container by its initial form,
  *   defined by the inner normal with coordinates in the parameter normal,
  *   where the number of coordinates equals dim.
  *   The normal is given as a Python tuple, stored as a string. */
