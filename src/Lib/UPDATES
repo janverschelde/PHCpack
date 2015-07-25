@@ -1,4 +1,5 @@
-Sat 25 Jul 2015 : fixed some documentation in giftwrappers.h.
+Sat 25 Jul 2015 : fixed some documentation in giftwrappers.h
+  and added more documentation to the prototypes in phcpy2c.h.
 
 Fri 24 Jul 2015 : added more documentation to phcpy2c.
 
