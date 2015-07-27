@@ -67,7 +67,7 @@ int initialize_varbprec_homotopy
  *   nc_target     number of characters in the string target;
  *   target        string representation of the target system;
  *   nc_start      number of characters in the string start;
- *   target        string representation of the start system. */
+ *   start         string representation of the start system. */
 
 int initialize_standard_solution ( int k );
 /*
