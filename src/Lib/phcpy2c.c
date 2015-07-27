@@ -4309,7 +4309,7 @@ static PyObject *py2c_next_varbprec_solution
    if(!PyArg_ParseTuple(args,"iiii",&want,&mxpr,&mxit,&verb)) return NULL;
    sol = next_varbprec_solution(want,mxpr,mxit,verb,&nc,&fail);
 
-   return Py_BuildValue("i",fail);
+   return Py_BuildValue("(i,s)",fail,sol);
 }
 
 static PyObject *py2c_clear_standard_tracker

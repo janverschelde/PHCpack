@@ -1017,90 +1017,404 @@ static PyObject *py2c_syscon_clear_multprec_Laurent_system
 
 static PyObject *py2c_syscon_number_of_symbols
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the numbers in the symbol table. */
+
 static PyObject *py2c_syscon_write_symbols
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the symbols in the symbol table to screen.
+ *   Returns the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_syscon_string_of_symbols
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns a string that contains the symbols in the symbol table.
+ *   The symbols are separate from each other by one space. */
+
 static PyObject *py2c_syscon_remove_symbol_name
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Removes a symbol, given by name, from the symbol table.
+ *   On input are two arguments:
+ *   1) an integer, as the number of characters in the name;
+ *   2) a string of characters with the name of the symbol.
+ *   The failure code is returned, which equals zero when all went well. */
+
 static PyObject *py2c_syscon_clear_symbol_table
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Clears the symbol table. */
+
 static PyObject *py2c_syscon_number_of_polynomials
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of polynomials with coefficients in standard
+ *   double precision as stored in the systems container. */
+
 static PyObject *py2c_syscon_number_of_dobldobl_polynomials
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of polynomials with coefficients in double
+ *   double precision as stored in the systems container. */
+
 static PyObject *py2c_syscon_number_of_quaddobl_polynomials
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of polynomials with coefficients in quad
+ *   double precision as stored in the systems container. */
+
 static PyObject *py2c_syscon_number_of_multprec_polynomials
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of polynomials with coefficients in arbitrary
+ *   multiprecision as stored in the systems container. */
+
 static PyObject *py2c_syscon_number_of_Laurentials
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of Laurent polynomials with coefficients in
+ *   standard double precision as stored in the systems container. */
+
 static PyObject *py2c_syscon_number_of_dobldobl_Laurentials
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of Laurent polynomials with coefficients in
+ *   double double precision as stored in the systems container. */
+
 static PyObject *py2c_syscon_number_of_quaddobl_Laurentials
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of Laurent polynomials with coefficients in
+ *   quad double precision as stored in the systems container. */
+
 static PyObject *py2c_syscon_number_of_multprec_Laurentials
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of Laurent polynomials with coefficients in
+ *   arbitrary multiprecision as stored in the systems container. */
+
 static PyObject *py2c_syscon_initialize_number
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initialzes the container for polynomials with coefficients in
+ *   standard double precision.  The input argument is an integer,
+ *   the number of polynomials in the container.
+ *   The failure code is returned, which equals zero if all went well. */
+
 static PyObject *py2c_syscon_initialize_number_of_dobldobl_polynomials
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initialzes the container for polynomials with coefficients in
+ *   double double precision.  The input argument is an integer,
+ *   the number of polynomials in the container.
+ *   The failure code is returned, which equals zero if all went well. */
+
 static PyObject *py2c_syscon_initialize_number_of_quaddobl_polynomials
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initialzes the container for polynomials with coefficients in
+ *   quad double precision.  The input argument is an integer,
+ *   the number of polynomials in the container.
+ *   The failure code is returned, which equals zero if all went well. */
+
 static PyObject *py2c_syscon_initialize_number_of_multprec_polynomials
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initialzes the container for polynomials with coefficients in
+ *   arbitrary multiprecision.  The input argument is an integer,
+ *   the number of polynomials in the container.
+ *   The failure code is returned, which equals zero if all went well. */
+
 static PyObject *py2c_syscon_initialize_number_of_Laurentials
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initialzes the container for Laurent polynomials with coefficients
+ *   in standard double precision.  The input argument is an integer,
+ *   the number of polynomials in the container.
+ *   The failure code is returned, which equals zero if all went well. */
+
 static PyObject *py2c_syscon_initialize_number_of_dobldobl_Laurentials
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initialzes the container for Laurent polynomials with coefficients
+ *   in double double precision.  The input argument is an integer,
+ *   the number of polynomials in the container.
+ *   The failure code is returned, which equals zero if all went well. */
+
 static PyObject *py2c_syscon_initialize_number_of_quaddobl_Laurentials
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initialzes the container for Laurent polynomials with coefficients
+ *   in quad double precision.  The input argument is an integer,
+ *   the number of polynomials in the container.
+ *   The failure code is returned, which equals zero if all went well. */
+
 static PyObject *py2c_syscon_initialize_number_of_multprec_Laurentials
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initialzes the container for Laurent polynomials with coefficients
+ *   in arbitrary multiprecision.  The input argument is an integer,
+ *   the number of polynomials in the container.
+ *   The failure code is returned, which equals zero if all went well. */
+
 static PyObject *py2c_syscon_degree_of_polynomial
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the degree of the k-th polynomial in the container for
+ *   polynomials with coefficients in standard double precision.
+ *   The index k of the polynomial is the one input argument. */
+
 static PyObject *py2c_syscon_degree_of_dobldobl_polynomial
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the degree of the k-th polynomial in the container for
+ *   polynomials with coefficients in double double precision.
+ *   The index k of the polynomial is the one input argument. */
+
 static PyObject *py2c_syscon_degree_of_quaddobl_polynomial
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the degree of the k-th polynomial in the container for
+ *   polynomials with coefficients in quad double precision.
+ *   The index k of the polynomial is the one input argument. */
+
 static PyObject *py2c_syscon_degree_of_multprec_polynomial
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the degree of the k-th polynomial in the container for
+ *   polynomials with coefficients in arbitrary multiprecision.
+ *   The index k of the polynomial is the one input argument. */
+
 static PyObject *py2c_syscon_number_of_terms ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of terms in the k-th polynomial stored in the
+ *   container for systems with coefficients in standard double precision.
+ *   The input parameter k is the index of the polynomial k. */
+
 static PyObject *py2c_syscon_number_of_Laurent_terms
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of terms in the k-th Laurent polynomial stored
+ *   in the container for Laurent polynomials systems with coefficients
+ *   in standard double precision.
+ *   The input parameter k is the index of the polynomial k. */
+
 static PyObject *py2c_syscon_retrieve_term ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_syscon_store_polynomial
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Defines the k-th polynomial in the systems container for polynomials
+ *   with coefficients in standard double precision.
+ *   As a precondition for this function, the container must be initialized
+ *   for sufficiently many polynomials, in case case >= k.
+ *   There are four input parameters, three integers and one string:
+ *   1) nc, the number of characters in the string p;
+ *   2) n, the number of variables in the multivariate polynomial;
+ *   3) k, the index of the polynomial in the system;
+ *   4) p, a valid string representation for a polynomial.
+ *   On return is the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_syscon_store_dobldobl_polynomial
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Defines the k-th polynomial in the systems container for polynomials
+ *   with coefficients in double double precision.
+ *   As a precondition for this function, the container must be initialized
+ *   for sufficiently many polynomials, in any case >= k.
+ *   There are four input parameters, three integers and one string:
+ *   1) nc, the number of characters in the string p;
+ *   2) n, the number of variables in the multivariate polynomial;
+ *   3) k, the index of the polynomial in the system;
+ *   4) p, a valid string representation for a polynomial.
+ *   On return is the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_syscon_store_quaddobl_polynomial
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Defines the k-th polynomial in the systems container for polynomials
+ *   with coefficients in quad double precision.
+ *   As a precondition for this function, the container must be initialized
+ *   for sufficiently many polynomials, in any case >= k.
+ *   There are four input parameters, three integers and one string:
+ *   1) nc, the number of characters in the string p;
+ *   2) n, the number of variables in the multivariate polynomial;
+ *   3) k, the index of the polynomial in the system;
+ *   4) p, a valid string representation for a polynomial.
+ *   On return is the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_syscon_store_multprec_polynomial
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Defines the k-th polynomial in the systems container for polynomials
+ *   with coefficients in arbitrary multiprecision.
+ *   As a precondition for this function, the container must be initialized
+ *   for sufficiently many polynomials, in any case >= k.
+ *   There are five input parameters, four integers and one string:
+ *   1) nc, the number of characters in the string p;
+ *   2) n, the number of variables in the multivariate polynomial;
+ *   3) k, the index of the polynomial in the system;
+ *   4) dp, the number of decimal places to parse the coefficients;
+ *   5) p, a valid string representation for a polynomial.
+ *   On return is the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_syscon_load_polynomial
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the k-th polynomial in the systems container 
+ *   with standard double complex coefficients as a string.
+ *   The value for k is in the one integer parameter of this function. */
+
 static PyObject *py2c_syscon_load_dobldobl_polynomial
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the k-th polynomial in the systems container 
+ *   with double double complex coefficients as a string.
+ *   The value for k is in the one integer parameter of this function. */
+
 static PyObject *py2c_syscon_load_quaddobl_polynomial
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the k-th polynomial in the systems container 
+ *   with quad double complex coefficients as a string.
+ *   The value for k is in the one integer parameter of this function. */
+
 static PyObject *py2c_syscon_load_multprec_polynomial
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the k-th polynomial in the systems container 
+ *   with arbitrary multiprecision complex coefficients as a string.
+ *   The value for k is in the one integer parameter of this function. */
+
 static PyObject *py2c_syscon_store_Laurential
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Defines the k-th polynomial in the systems container for Laurent
+ *   polynomials with coefficients in standard double precision.
+ *   As a precondition for this function, the container must be initialized
+ *   for sufficiently many polynomials, in any case >= k.
+ *   There are four input parameters, three integers and one string:
+ *   1) nc, the number of characters in the string p;
+ *   2) n, the number of variables in the multivariate polynomial;
+ *   3) k, the index of the polynomial in the system;
+ *   4) p, a valid string representation for a polynomial.
+ *   On return is the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_syscon_store_dobldobl_Laurential
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Defines the k-th polynomial in the systems container for Laurent
+ *   polynomials with coefficients in double double precision.
+ *   As a precondition for this function, the container must be initialized
+ *   for sufficiently many polynomials, in any case >= k.
+ *   There are four input parameters, three integers and one string:
+ *   1) nc, the number of characters in the string p;
+ *   2) n, the number of variables in the multivariate polynomial;
+ *   3) k, the index of the polynomial in the system;
+ *   4) p, a valid string representation for a polynomial.
+ *   On return is the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_syscon_store_quaddobl_Laurential
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Defines the k-th polynomial in the systems container for Laurent
+ *   polynomials with coefficients in quad double precision.
+ *   As a precondition for this function, the container must be initialized
+ *   for sufficiently many polynomials, in any case >= k.
+ *   There are four input parameters, three integers and one string:
+ *   1) nc, the number of characters in the string p;
+ *   2) n, the number of variables in the multivariate polynomial;
+ *   3) k, the index of the polynomial in the system;
+ *   4) p, a valid string representation for a polynomial.
+ *   On return is the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_syscon_store_multprec_Laurential
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Defines the k-th polynomial in the systems container for Laurent
+ *   polynomials with coefficients in arbitrary multiprecision.
+ *   As a precondition for this function, the container must be initialized
+ *   for sufficiently many polynomials, in any case >= k.
+ *   There are five input parameters, four integers and one string:
+ *   1) nc, the number of characters in the string p;
+ *   2) n, the number of variables in the multivariate polynomial;
+ *   3) k, the index of the polynomial in the system;
+ *   4) dp, the number of decimal places to parse the coefficients;
+ *   5) p, a valid string representation for a polynomial.
+ *   On return is the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_syscon_load_standard_Laurential
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the k-th polynomial in the Laurent systems container 
+ *   with standard double complex coefficients as a string.
+ *   The value for k is in the one integer parameter of this function. */
+
 static PyObject *py2c_syscon_load_dobldobl_Laurential
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the k-th polynomial in the Laurent systems container 
+ *   with double double complex coefficients as a string.
+ *   The value for k is in the one integer parameter of this function. */
+
 static PyObject *py2c_syscon_load_quaddobl_Laurential
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the k-th polynomial in the Laurent systems container 
+ *   with quad double complex coefficients as a string.
+ *   The value for k is in the one integer parameter of this function. */
+
 static PyObject *py2c_syscon_load_multprec_Laurential
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the k-th polynomial in the Laurent systems container 
+ *   with arbitrary multiprecision complex coefficients as a string.
+ *   The value for k is in the one integer parameter of this function. */
+
 static PyObject *py2c_syscon_total_degree ( PyObject *self, PyObject *args );
 static PyObject *py2c_syscon_standard_drop_variable_by_index
  ( PyObject *self, PyObject *args );
@@ -1115,55 +1429,204 @@ static PyObject *py2c_syscon_quaddobl_drop_variable_by_index
 static PyObject *py2c_syscon_quaddobl_drop_variable_by_name
  ( PyObject *self, PyObject *args );
 
-/* wrapping functions in solcon.h starts from here */
+/* The wrapping of functions with prototypes in solcon.h starts here. */
 
 static PyObject *py2c_solcon_read_solutions ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Interactive function to read the solutions into the container,
+ *   in standard double precision.
+ *   Returns the failure code, which is zero when all went well. */
+
 static PyObject *py2c_solcon_read_dobldobl_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Interactive function to read the solutions into the container,
+ *   in double double precision.
+ *   Returns the failure code, which is zero when all went well. */
+
 static PyObject *py2c_solcon_read_quaddobl_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Interactive function to read the solutions into the container,
+ *   in quad double precision.
+ *   Returns the failure code, which is zero when all went well. */
+
 static PyObject *py2c_solcon_read_multprec_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Interactive function to read the solutions into the container,
+ *   in arbitrary multiprecision.
+ *   Returns the failure code, which is zero when all went well. */
+
 static PyObject *py2c_solcon_write_solutions ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the solutions in standard double precision to screen.
+ *   Returns the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_solcon_write_dobldobl_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the solutions in double double precision to screen.
+ *   Returns the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_solcon_write_quaddobl_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the solutions in quad double precision to screen.
+ *   Returns the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_solcon_write_multprec_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the solutions in arbitrary multiprecision to screen.
+ *   Returns the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_solcon_clear_solutions ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates the container for solutions in standard double precision.
+ *   Returns the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_solcon_clear_dobldobl_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates the container for solutions in double double precision.
+ *   Returns the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_solcon_clear_quaddobl_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates the container for solutions in quad double precision.
+ *   Returns the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_solcon_clear_multprec_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates the container for solutions in arbitrary multiprecision.
+ *   Returns the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_solcon_open_solution_input_file
  ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_solcon_length_solution_string
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   On input is the index k to a solution in standard double precision,
+ *   stored in the container.  On return is the length of the string 
+ *   representation for that k-th solution in the container. */
+
 static PyObject *py2c_solcon_length_dobldobl_solution_string
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   On input is the index k to a solution in double double precision,
+ *   stored in the container.  On return is the length of the string 
+ *   representation for that k-th solution in the container. */
+
 static PyObject *py2c_solcon_length_quaddobl_solution_string
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   On input is the index k to a solution in quad double precision,
+ *   stored in the container.  On return is the length of the string 
+ *   representation for that k-th solution in the container. */
+
 static PyObject *py2c_solcon_length_multprec_solution_string
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   On input is the index k to a solution in arbitrary multiprecision,
+ *   stored in the container.  On return is the length of the string 
+ *   representation for that k-th solution in the container. */
+
 static PyObject *py2c_solcon_write_solution_string
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the string representation for the k-th solution stored
+ *   in standard double precision in the container.
+ *   On input are two integers:
+ *   1) the index to the solution; and
+ *   2) the number of characters in the string representation
+ *   for that solution. */
+
 static PyObject *py2c_solcon_write_dobldobl_solution_string
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the string representation for the k-th solution stored
+ *   in double double precision in the container.
+ *   On input are two integers:
+ *   1) the index to the solution; and
+ *   2) the number of characters in the string representation
+ *   for that solution. */
+
 static PyObject *py2c_solcon_write_quaddobl_solution_string
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the string representation for the k-th solution stored
+ *   in quad double precision in the container.
+ *   On input are two integers:
+ *   1) the index to the solution; and
+ *   2) the number of characters in the string representation
+ *   for that solution. */
+
 static PyObject *py2c_solcon_write_multprec_solution_string
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the string representation for the k-th solution stored
+ *   in arbitrary multiprecision in the container.
+ *   On input are two integers:
+ *   1) the index to the solution; and
+ *   2) the number of characters in the string representation
+ *   for that solution. */
+
 static PyObject *py2c_solcon_retrieve_next_standard_initialize
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Resets the pointer to the current standard solution in the container
+ *   to the first solution in the list.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_solcon_retrieve_next_dobldobl_initialize
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Resets the pointer to the current dobldobl solution in the container
+ *   to the first solution in the list.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_solcon_retrieve_next_quaddobl_initialize
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Resets the pointer to the current quaddobl solution in the container
+ *   to the first solution in the list.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_solcon_retrieve_next_multprec_initialize
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Resets the pointer to the current multprec solution in the container
+ *   to the first solution in the list.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_solcon_move_current_standard_to_next
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_solcon_move_current_dobldobl_to_next
@@ -1188,22 +1651,83 @@ static PyObject *py2c_solcon_write_current_quaddobl_solution_string
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_solcon_write_current_multprec_solution_string
  ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_solcon_append_solution_string
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Appends a solution in standard double precision to the list
+ *   of solutions already stored in the container.
+ *   There are three input parameters:
+ *   1) the number of variables;
+ *   2) the number of characters in the string;
+ *   3) the string representing the solution to append to the list.
+ *   Returns the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_solcon_append_dobldobl_solution_string
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Appends a solution in double double precision to the list
+ *   of solutions already stored in the container.
+ *   There are three input parameters:
+ *   1) the number of variables;
+ *   2) the number of characters in the string;
+ *   3) the string representing the solution to append to the list.
+ *   Returns the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_solcon_append_quaddobl_solution_string
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Appends a solution in quad double precision to the list
+ *   of solutions already stored in the container.
+ *   There are three input parameters:
+ *   1) the number of variables;
+ *   2) the number of characters in the string;
+ *   3) the string representing the solution to append to the list.
+ *   Returns the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_solcon_append_multprec_solution_string
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Appends a solution in arbitrary multiprecision to the list
+ *   of solutions already stored in the container.
+ *   There are three input parameters:
+ *   1) the number of variables;
+ *   2) the number of characters in the string;
+ *   3) the string representing the solution to append to the list.
+ *   Returns the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_solcon_number_of_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of solutions in standard double precision,
+ *   as stored in the container. */
+
 static PyObject *py2c_solcon_number_of_dobldobl_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of solutions in double double precision,
+ *   as stored in the container. */
+
 static PyObject *py2c_solcon_number_of_quaddobl_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of solutions in quad double precision,
+ *   as stored in the container. */
+
 static PyObject *py2c_solcon_number_of_multprec_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of solutions in arbitrary multiprecision,
+ *   as stored in the container. */
+
 static PyObject *py2c_solcon_standard_drop_coordinate_by_index
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_solcon_standard_drop_coordinate_by_name
@@ -1326,84 +1850,339 @@ static PyObject *py2c_product_m_homogeneous_start_system
 
 static PyObject *py2c_celcon_initialize_supports
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the cell container with the number of distinct supports,
+ *   this number is given as the one input parameter.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_celcon_set_type_of_mixture
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Defines the type of mixture of the support sets.
+ *   On input are two parameters, an integer and a string:
+ *   1) the integer equals the number of distinct supports;
+ *   2) the string is a string representation of a Python list of integers,
+ *   there are as many integers as the value of the first parameter.
+ *   Each integer is a positive number, equal to the number of occurrences
+ *   of each support set. */
+
 static PyObject *py2c_celcon_type_of_mixture
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the string representation of the type of mixture
+ *   of the support sets.  This string is the string representation
+ *   of a Python list of integers. */
+
 static PyObject *py2c_celcon_append_lifted_point
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Appends a lifted point to the cells container.
+ *   There are three input parameters:
+ *   1) the dimension of the point;
+ *   2) the index of the support to where to append to; and
+ *   3) the string representation of the lifted point.
+ *   Returns the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_celcon_retrieve_lifted_point
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns a string representation of a lifted point.
+ *   On input are three integer numbers:
+ *   1) the number of coordinates in the lifted point;
+ *   2) the index to the support set; and
+ *   3) the index to the point in that support set. */
+
 static PyObject *py2c_celcon_mixed_volume_of_supports
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the mixed volume of the supports stored
+ *   in the cell container. */
+
 static PyObject *py2c_celcon_number_of_cells
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of cells in the cell container. */
+
 static PyObject *py2c_celcon_create_random_coefficient_system 
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Based on the lifted supports stored in the container,
+ *   a random coefficient system with coefficients in standard double
+ *   precision is stored in the cell container. */
+
 static PyObject *py2c_celcon_dobldobl_random_coefficient_system 
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Based on the lifted supports stored in the container,
+ *   a random coefficient system with coefficients in double double
+ *   precision is stored in the cell container. */
+
 static PyObject *py2c_celcon_quaddobl_random_coefficient_system 
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Based on the lifted supports stored in the container,
+ *   a random coefficient system with coefficients in quad double
+ *   precision is stored in the cell container. */
+
 static PyObject *py2c_celcon_copy_into_systems_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   The random coefficient system in standard double precision is copied 
+ *   from the cell container to the to the container for systems with 
+ *   coefficients in standard double precision. */
+
 static PyObject *py2c_celcon_copy_into_dobldobl_systems_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   The random coefficient system in double double precision is copied 
+ *   from the cell container to the to the container for systems with 
+ *   coefficients in double double precision. */
+
 static PyObject *py2c_celcon_copy_into_quaddobl_systems_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   The random coefficient system in quad double precision is copied 
+ *   from the cell container to the to the container for systems with 
+ *   coefficients in quad double precision. */
+
 static PyObject *py2c_celcon_create_polyhedral_homotopy
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Based on the lifting and the random coefficient system,
+ *   the polyhedral homotopy to solve the random coefficient system 
+ *   in standard double precision is constructed.
+ *   This function also initializes the internal data structures to store
+ *   the solutions of start and target systems.
+ *   The lifted supports and the random coefficient system are defined.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_celcon_dobldobl_polyhedral_homotopy
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Based on the lifting and the random coefficient system,
+ *   the polyhedral homotopy to solve the random coefficient system 
+ *   in double double precision is constructed.
+ *   This function also initializes the internal data structures to store
+ *   the solutions of start and target systems.
+ *   The lifted supports and the random coefficient system are defined.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_celcon_quaddobl_polyhedral_homotopy
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Based on the lifting and the random coefficient system,
+ *   the polyhedral homotopy to solve the random coefficient system 
+ *   in quad double precision is constructed.
+ *   This function also initializes the internal data structures to store
+ *   the solutions of start and target systems.
+ *   The lifted supports and the random coefficient system are defined.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_celcon_solve_start_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Solves the start system corresponding to the k-th mixed cell,
+ *   using standard double precision arithmetic.
+ *   The precondition for this function is that the creation of
+ *   the polyhedral homotopy in standard double precision ended well.
+ *   On return is the number of solution found, which must equal
+ *   the mixed volume of the k-th mixed cell. */
+
 static PyObject *py2c_celcon_solve_dobldobl_start_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Solves the start system corresponding to the k-th mixed cell,
+ *   using double double precision arithmetic.
+ *   The precondition for this function is that the creation of
+ *   the polyhedral homotopy in double double precision ended well.
+ *   On return is the number of solution found, which must equal
+ *   the mixed volume of the k-th mixed cell. */
+
 static PyObject *py2c_celcon_solve_quaddobl_start_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Solves the start system corresponding to the k-th mixed cell,
+ *   using quad double precision arithmetic.
+ *   The precondition for this function is that the creation of
+ *   the polyhedral homotopy in quad double precision ended well.
+ *   On return is the number of solution found, which must equal
+ *   the mixed volume of the k-th mixed cell. */
+
 static PyObject *py2c_celcon_track_solution_path
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Tracks a solution path starting at the i-th solution of the k-th cell,
+ *   using standard double precision arithmetic.
+ *   The precondition for this function is that the start system defined
+ *   by the k-th mixed cell is solved in standard double precision.
+ *   There are three input parameters:
+ *   1) k, the index to a mixed cell in the cell container;
+ *   2) i, the index to a solution path defined by that mixed cell;
+ *   3) otp, the level for intermediate output during path tracking.
+ *   A target solution corresponding to the k-th cell is added on return. */
+
 static PyObject *py2c_celcon_track_dobldobl_solution_path
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Tracks a solution path starting at the i-th solution of the k-th cell,
+ *   using double double precision arithmetic.
+ *   The precondition for this function is that the start system defined
+ *   by the k-th mixed cell is solved in double double precision.
+ *   There are three input parameters:
+ *   1) k, the index to a mixed cell in the cell container;
+ *   2) i, the index to a solution path defined by that mixed cell;
+ *   3) otp, the level for intermediate output during path tracking.
+ *   A target solution corresponding to the k-th cell is added on return. */
+
 static PyObject *py2c_celcon_track_quaddobl_solution_path
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Tracks a solution path starting at the i-th solution of the k-th cell,
+ *   using quad double precision arithmetic.
+ *   The precondition for this function is that the start system defined
+ *   by the k-th mixed cell is solved in quad double precision.
+ *   There are three input parameters:
+ *   1) k, the index to a mixed cell in the cell container;
+ *   2) i, the index to a solution path defined by that mixed cell;
+ *   3) otp, the level for intermediate output during path tracking.
+ *   A target solution corresponding to the k-th cell is added on return. */
+
 static PyObject *py2c_celcon_copy_target_solution_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the i-th target solution corresponding to the k-th mixed cell
+ *   to the container for solutions in standard double precision.
+ *   There are two input parameters for this function:
+ *   1) k, the index to the mixed cell;
+ *   2) i, the index to the i-th solution path defined by the cell.
+ *   On return is the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_celcon_copy_target_dobldobl_solution_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the i-th target solution corresponding to the k-th mixed cell
+ *   to the container for solutions in double double precision.
+ *   There are two input parameters for this function:
+ *   1) k, the index to the mixed cell;
+ *   2) i, the index to the i-th solution path defined by the cell.
+ *   On return is the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_celcon_copy_target_quaddobl_solution_to_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the i-th target solution corresponding to the k-th mixed cell
+ *   to the container for solutions in quad double precision.
+ *   There are two input parameters for this function:
+ *   1) k, the index to the mixed cell;
+ *   2) i, the index to the i-th solution path defined by the cell.
+ *   On return is the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_celcon_permute_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Permutes the systems in the container for polynomial and Laurent systems
+ *   with standard double coefficients corresponding to the permutation
+ *   used to compute the mixed-cell configuration.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_celcon_permute_dobldobl_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Permutes the systems in the container for polynomial and Laurent systems
+ *   with double double coefficients corresponding to the permutation
+ *   used to compute the mixed-cell configuration.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_celcon_permute_quaddobl_system
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Permutes the systems in the container for polynomial and Laurent systems
+ *   with quad double coefficients corresponding to the permutation
+ *   used to compute the mixed-cell configuration.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_celcon_clear_container
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates the data in the cell container. */
 
 /* wrapping functions to manipulate algebraic sets */
 
 static PyObject *py2c_embed_system ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the system with coefficients in standard double precision
+ *   in the container with its embedding of dimension d.
+ *   The dimension d is given as an integer parameter on input.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_standard_cascade_homotopy
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Creates a homotopy in standard double precision using the stored
+ *   systems to go one level down the cascade, removing one slice.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_dobldobl_cascade_homotopy
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Creates a homotopy in double double precision using the stored
+ *   systems to go one level down the cascade, removing one slice.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_quaddobl_cascade_homotopy
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Creates a homotopy in quad double precision using the stored
+ *   systems to go one level down the cascade, removing one slice.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_factor_set_to_mute ( PyObject *self, PyObject *args );
 static PyObject *py2c_factor_define_output_file
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_factor_assign_labels ( PyObject *self, PyObject *args );
 static PyObject *py2c_factor_initialize_sampler
  ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_factor_initialize_monodromy
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_factor_store_solutions
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_factor_restore_solutions
  ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_factor_track_paths ( PyObject *self, PyObject *args );
 static PyObject *py2c_factor_swap_slices ( PyObject *self, PyObject *args );
 static PyObject *py2c_factor_new_slices ( PyObject *self, PyObject *args );
@@ -1422,13 +2201,34 @@ static PyObject *py2c_factor_trace_sum_difference
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_witness_set_of_hypersurface
  ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_create_diagonal_homotopy
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Creates a diagonal homotopy to intersect two solution sets of
+ *   dimensions a and b respectively, where a >= b.
+ *   The two input parameters are values for a and b.
+ *   The systems stored as target and start system in the container
+ *   define the witness sets for these two solution sets. */
+
 static PyObject *py2c_start_diagonal_cascade_solutions
  ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_extrinsic_top_diagonal_dimension
  ( PyObject *self, PyObject *args );
+
 static PyObject *py2c_collapse_diagonal ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Eliminates the extrinsic diagonal for the system and solutions
+ *   in the containers.  On input are two integers:
+ *   1) k, the current number of slack variables in the embedding;
+ *   2) d, the number of slack variables to add to the final embedding.
+ *   The system in the container has its diagonal eliminated and is
+ *   embedded with k+d slack variables.  The solutions corresponding
+ *   to this system are in the solutions container.
+ *   On return is the failure code, which equals zero if all went well. */
 
 /* wrapping of Pieri and Littlewood-Richardson homotopies */
 
@@ -1450,6 +2250,15 @@ static PyObject *py2c_schubert_littlewood_richardson_homotopies
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_schubert_localization_poset
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the string representation of the localization poset for the
+ *   Pieri root count for m, p, and q.  The input parameters are the
+ *   integer values for m, p, and q:
+ *   1) m, the dimension of the input planes;
+ *   2) p, the dimension of the output planes;
+ *   3) q, the degree of the curves that produce p-planes. */
+
 static PyObject *py2c_schubert_pieri_homotopies
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_schubert_osculating_planes
@@ -1460,11 +2269,42 @@ static PyObject *py2c_schubert_pieri_system
 /* wrapping functions in mapcon.h starts from here */
 
 static PyObject *py2c_mapcon_solve_system ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *  Solves the binomial system stored in the Laurent systems container.
+ *  There is one input argument, either one or zero.
+ *  If one, then only the pure top dimensional solutions are computed.
+ *  If zero, then all solution sets are computed.
+ *  Returns the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_mapcon_write_maps ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the maps stored in the container to screen.
+ *   Returns the failre code, which equals zero if all went well. */
+
 static PyObject *py2c_mapcon_clear_maps ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates the maps stored in the container.
+ *   Returns the failre code, which equals zero if all went well. */
+
 static PyObject *py2c_mapcon_top_dimension ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the top dimension of the maps in the container. */
+
 static PyObject *py2c_mapcon_number_of_maps ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of maps in the container. */
+
 static PyObject *py2c_mapcon_degree_of_map ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Given the dimension and index of a map, given as two integers as
+ *   input parameters, returns the degree of that map. */
+
 static PyObject *py2c_mapcon_coefficients_of_map
  ( PyObject *self, PyObject *args );
 static PyObject *py2c_mapcon_exponents_of_map
@@ -1610,6 +2450,17 @@ static PyObject *py2c_next_multprec_solution
 
 static PyObject *py2c_next_varbprec_solution
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Computes the next point on a solution path in variable precision.
+ *   There are four integer input parameters:
+ *   1) the number of correct decimal places in the solution;
+ *   2) an upper bound on the number of decimal places in the precision;
+ *   3) the maximum number of Newton iterations;
+ *   4) a flag zero or one to indicate the verbose level.
+ *   On return is a tuple:
+ *   0) the failure code, which equals zero if all went well; and
+ *   1) the string representation of the next solution on the path. */
 
 static PyObject *py2c_clear_standard_tracker
  ( PyObject *self, PyObject *args );
