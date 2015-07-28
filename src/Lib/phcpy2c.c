@@ -3186,7 +3186,7 @@ static PyObject *py2c_celcon_number_of_cells ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",length);
 }
 
-static PyObject *py2c_celcon_create_random_coefficient_system 
+static PyObject *py2c_celcon_standard_random_coefficient_system 
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -3222,7 +3222,7 @@ static PyObject *py2c_celcon_quaddobl_random_coefficient_system
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_celcon_copy_into_systems_container
+static PyObject *py2c_celcon_copy_into_standard_systems_container
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -3258,7 +3258,7 @@ static PyObject *py2c_celcon_copy_into_quaddobl_systems_container
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_celcon_create_polyhedral_homotopy
+static PyObject *py2c_celcon_standard_polyhedral_homotopy
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -3294,7 +3294,7 @@ static PyObject *py2c_celcon_quaddobl_polyhedral_homotopy
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_celcon_solve_start_system
+static PyObject *py2c_celcon_solve_standard_start_system
  ( PyObject *self, PyObject *args )
 {
    int fail,k,nb;
@@ -3330,7 +3330,7 @@ static PyObject *py2c_celcon_solve_quaddobl_start_system
    return Py_BuildValue("i",nb);
 }
 
-static PyObject *py2c_celcon_track_solution_path
+static PyObject *py2c_celcon_track_standard_solution_path
  ( PyObject *self, PyObject *args )
 {
    int fail,k,i,otp;
@@ -3366,7 +3366,7 @@ static PyObject *py2c_celcon_track_quaddobl_solution_path
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_celcon_copy_target_solution_to_container
+static PyObject *py2c_celcon_copy_target_standard_solution_to_container
  ( PyObject *self, PyObject *args )
 {
    int fail,k,i;
@@ -3402,7 +3402,7 @@ static PyObject *py2c_celcon_copy_target_quaddobl_solution_to_container
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_celcon_permute_system
+static PyObject *py2c_celcon_permute_standard_system
  ( PyObject *self, PyObject *args )
 {
    int fail,k,i;
@@ -5043,27 +5043,27 @@ static PyMethodDef phcpy2c_methods[] =
      py2c_product_m_homogeneous_start_system, METH_VARARGS,
     "Given a partition of the set of variables, constructs\n an m-homogeneous Bezout number for the system in\n the standard systems container.\n On input are two arguments:\n 1) the number of characters in the string (second argument); and\n 2) the string representation for a partition of the variables.\n On return is the m-homogeneous Bezout number."},
    {"py2c_celcon_initialize_supports",
-     py2c_celcon_initialize_supports,METH_VARARGS,
+     py2c_celcon_initialize_supports, METH_VARARGS,
     "Initializes the cell container with the number of distinct supports,\n this number is given as the one input parameter.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_celcon_set_type_of_mixture",
-     py2c_celcon_set_type_of_mixture,METH_VARARGS,
+     py2c_celcon_set_type_of_mixture, METH_VARARGS,
     "Defines the type of mixture of the support sets.\n On input are two parameters, an integer and a string:\n 1) the integer equals the number of distinct supports;\n 2) the string is a string representation of a Python list of integers,\n there are as many integers as the value of the first parameter.\n Each integer is a positive number, equal to the number of occurrences\n of each support set."},
    {"py2c_celcon_type_of_mixture",
-     py2c_celcon_type_of_mixture,METH_VARARGS,
+     py2c_celcon_type_of_mixture, METH_VARARGS,
     "Returns the string representation of the type of mixture of the support sets.\n This string is the string representation of a Python list of integers."},
    {"py2c_celcon_append_lifted_point",
-     py2c_celcon_append_lifted_point,METH_VARARGS,
+     py2c_celcon_append_lifted_point, METH_VARARGS,
     "Appends a lifted point to the cells container.\n There are three input parameters:\n 1) the dimension of the point;\n 2) the index of the support to where to append to; and\n 3) the string representation of the lifted point.\n Returns the failure code, which equals zero when all went well."},
    {"py2c_celcon_retrieve_lifted_point",
-     py2c_celcon_retrieve_lifted_point,METH_VARARGS,
-    "retrieves a lifted point from the cells container"},
+     py2c_celcon_retrieve_lifted_point, METH_VARARGS,
+    "Returns a string representation of a lifted point.\n On input are three integer numbers:\n 1) the number of coordinates in the lifted point;\n 2) the index to the support set; and\n 3) the index to the point in that support set."},
    {"py2c_celcon_mixed_volume_of_supports",
-     py2c_celcon_mixed_volume_of_supports,METH_VARARGS,
-    "computes the mixed volume of the points stored in the cell container"},
+     py2c_celcon_mixed_volume_of_supports, METH_VARARGS,
+    "Returns the mixed volume of the supports stored in the cell container."},
    {"py2c_celcon_number_of_cells", py2c_celcon_number_of_cells,
     METH_VARARGS, "returns the number of cells in the cell container"},
-   {"py2c_celcon_create_random_coefficient_system",
-     py2c_celcon_create_random_coefficient_system, METH_VARARGS,
+   {"py2c_celcon_standard_random_coefficient_system",
+     py2c_celcon_standard_random_coefficient_system, METH_VARARGS,
     "Based on the lifted supports stored in the container,\n a random coefficient system with coefficients in standard double\n precision is stored in the cell container."},
    {"py2c_celcon_dobldobl_random_coefficient_system",
      py2c_celcon_dobldobl_random_coefficient_system, METH_VARARGS,
@@ -5071,17 +5071,17 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_celcon_quaddobl_random_coefficient_system",
      py2c_celcon_quaddobl_random_coefficient_system, METH_VARARGS,
     "Based on the lifted supports stored in the container,\n a random coefficient system with coefficients in quad double\n precision is stored in the cell container."},
-   {"py2c_celcon_copy_into_systems_container",
-     py2c_celcon_copy_into_systems_container, METH_VARARGS,
-    "The random coefficient system in standard double precision is copied\n from the cell container to the to the container for systems with\n coefficients in standard double precision."},
+   {"py2c_celcon_copy_into_standard_systems_container",
+     py2c_celcon_copy_into_standard_systems_container, METH_VARARGS,
+    "The random coefficient system in standard double precision is copied\n from the cell container to the container for systems with\n coefficients in standard double precision."},
    {"py2c_celcon_copy_into_dobldobl_systems_container",
      py2c_celcon_copy_into_dobldobl_systems_container, METH_VARARGS,
-    "The random coefficient system in double double precision is copied\n from the cell container to the to the container for systems with\n coefficients in double double precision."},
+    "The random coefficient system in double double precision is copied\n from the cell container to the container for systems with\n coefficients in double double precision."},
    {"py2c_celcon_copy_into_quaddobl_systems_container",
      py2c_celcon_copy_into_quaddobl_systems_container, METH_VARARGS,
-    "The random coefficient system in quad double precision is copied\n from the cell container to the to the container for systems with\n coefficients in quad double precision."},
-   {"py2c_celcon_create_polyhedral_homotopy",
-     py2c_celcon_create_polyhedral_homotopy, METH_VARARGS, 
+    "The random coefficient system in quad double precision is copied\n from the cell container to the container for systems with\n coefficients in quad double precision."},
+   {"py2c_celcon_standard_polyhedral_homotopy",
+     py2c_celcon_standard_polyhedral_homotopy, METH_VARARGS, 
     "Based on the lifting and the random coefficient system,\n the polyhedral homotopy to solve the random coefficient system\n in standard double precision is constructed.\n This function also initializes the internal data structures to store\n the solutions of start and target systems.\n The lifted supports and the random coefficient system are defined.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_celcon_dobldobl_polyhedral_homotopy",
      py2c_celcon_dobldobl_polyhedral_homotopy, METH_VARARGS, 
@@ -5089,8 +5089,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_celcon_quaddobl_polyhedral_homotopy",
      py2c_celcon_quaddobl_polyhedral_homotopy, METH_VARARGS, 
     "Based on the lifting and the random coefficient system,\n the polyhedral homotopy to solve the random coefficient system\n in quad double precision is constructed.\n This function also initializes the internal data structures to store\n the solutions of start and target systems.\n The lifted supports and the random coefficient system are defined.\n On return is the failure code, which equals zero if all went well."},
-   {"py2c_celcon_solve_start_system",
-     py2c_celcon_solve_start_system, METH_VARARGS, 
+   {"py2c_celcon_solve_standard_start_system",
+     py2c_celcon_solve_standard_start_system, METH_VARARGS, 
     "Solves the start system corresponding to the k-th mixed cell,\n using standard double precision arithmetic.\n The precondition for this function is that the creation of\n the polyhedral homotopy in standard double precision ended well.\n On return is the number of solution found, which must equal\n the mixed volume of the k-th mixed cell."},
    {"py2c_celcon_solve_dobldobl_start_system",
      py2c_celcon_solve_dobldobl_start_system, METH_VARARGS, 
@@ -5098,8 +5098,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_celcon_solve_quaddobl_start_system",
      py2c_celcon_solve_quaddobl_start_system, METH_VARARGS, 
     "Solves the start system corresponding to the k-th mixed cell,\n using quad double precision arithmetic.\n The precondition for this function is that the creation of\n the polyhedral homotopy in quad double precision ended well.\n On return is the number of solution found, which must equal\n the mixed volume of the k-th mixed cell."},
-   {"py2c_celcon_track_solution_path",
-     py2c_celcon_track_solution_path, METH_VARARGS, 
+   {"py2c_celcon_track_standard_solution_path",
+     py2c_celcon_track_standard_solution_path, METH_VARARGS, 
     "Tracks a solution path starting at the i-th solution of the k-th cell,\n using standard double precision arithmetic.\n The precondition for this function is that the start system defined\n by the k-th mixed cell is solved in standard double precision.\n There are three input parameters:\n 1) k, the index to a mixed cell in the cell container;\n 2) i, the index to a solution path defined by that mixed cell;\n 3) otp, the level for intermediate output during path tracking.\n A target solution corresponding to the k-th cell is added on return."},
    {"py2c_celcon_track_dobldobl_solution_path",
      py2c_celcon_track_dobldobl_solution_path, METH_VARARGS, 
@@ -5107,8 +5107,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_celcon_track_quaddobl_solution_path",
      py2c_celcon_track_quaddobl_solution_path, METH_VARARGS, 
     "Tracks a solution path starting at the i-th solution of the k-th cell,\n using quad double precision arithmetic.\n The precondition for this function is that the start system defined\n by the k-th mixed cell is solved in quad double precision.\n There are three input parameters:\n 1) k, the index to a mixed cell in the cell container;\n 2) i, the index to a solution path defined by that mixed cell;\n 3) otp, the level for intermediate output during path tracking.\n A target solution corresponding to the k-th cell is added on return."},
-   {"py2c_celcon_copy_target_solution_to_container",
-     py2c_celcon_copy_target_solution_to_container, METH_VARARGS, 
+   {"py2c_celcon_copy_target_standard_solution_to_container",
+     py2c_celcon_copy_target_standard_solution_to_container, METH_VARARGS, 
     "Copies the i-th target solution corresponding to the k-th mixed cell\n to the container for solutions in standard double precision.\n There are two input parameters for this function:\n 1) k, the index to the mixed cell;\n 2) i, the index to the i-th solution path defined by the cell.\n On return is the failure code, which equals zero when all went well."},
    {"py2c_celcon_copy_target_dobldobl_solution_to_container",
      py2c_celcon_copy_target_dobldobl_solution_to_container, METH_VARARGS, 
@@ -5116,14 +5116,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_celcon_copy_target_quaddobl_solution_to_container",
      py2c_celcon_copy_target_quaddobl_solution_to_container, METH_VARARGS, 
     "Copies the i-th target solution corresponding to the k-th mixed cell\n to the container for solutions in quad double precision.\n There are two input parameters for this function:\n 1) k, the index to the mixed cell;\n 2) i, the index to the i-th solution path defined by the cell.\n On return is the failure code, which equals zero when all went well."},
-   {"py2c_celcon_permute_system", py2c_celcon_permute_system,
-    METH_VARARGS, "permutes system in standard double systems container"},
+   {"py2c_celcon_permute_standard_system",
+     py2c_celcon_permute_standard_system, METH_VARARGS,
+    "Permutes the systems in the container for polynomial and Laurent systems\n with standard double coefficients corresponding to the permutation\n used to compute the mixed-cell configuration.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_celcon_permute_dobldobl_system",
-     py2c_celcon_permute_dobldobl_system,
-    METH_VARARGS, "permutes system in double double systems container"},
+     py2c_celcon_permute_dobldobl_system, METH_VARARGS,
+    "Permutes the systems in the container for polynomial and Laurent systems\n with double double coefficients corresponding to the permutation\n used to compute the mixed-cell configuration.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_celcon_permute_quaddobl_system",
-     py2c_celcon_permute_quaddobl_system,
-    METH_VARARGS, "permutes system in quad double systems container"},
+     py2c_celcon_permute_quaddobl_system, METH_VARARGS,
+    "Permutes the systems in the container for polynomial and Laurent systems\n with quad double coefficients corresponding to the permutation\n used to compute the mixed-cell configuration.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_celcon_clear_container", py2c_celcon_clear_container, METH_VARARGS,
     "Deallocates the data in the cell container."},
    {"py2c_embed_system", py2c_embed_system, METH_VARARGS,
@@ -5151,31 +5152,37 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_initialize_monodromy", py2c_factor_initialize_monodromy,
      METH_VARARGS,
     "Initializes the internal data structures for n loops,\n to factor a k-dimensional solution component of degree d.\n There are three integers on input, in the following order:\n 1) n, the number of loops;\n 2) d, the degree of the solution set;\n 3) k, the dimensional of the solution set.\n On return is the failure code, which equals zero when all went well."},
-   {"py2c_factor_store_solutions", py2c_factor_store_solutions,
-    METH_VARARGS, "solutions go from container to monodromy permutations "},
+   {"py2c_factor_store_solutions", py2c_factor_store_solutions, METH_VARARGS,
+    "Stores the solutions in the container to the data for monodromy loops."},
    {"py2c_factor_restore_solutions", py2c_factor_restore_solutions,
-    METH_VARARGS, "solutions go from monodromy permutations to container"},
-   {"py2c_factor_track_paths", py2c_factor_track_paths,
-    METH_VARARGS, "tracks as many paths as defined by the witness set"},
-   {"py2c_factor_swap_slices", py2c_factor_swap_slices,
-    METH_VARARGS, "swaps the current slides with new slices"},
-   {"py2c_factor_new_slices", py2c_factor_new_slices,
-    METH_VARARGS, "generates k new slices in n-space"},
-   {"py2c_factor_set_trace_slice", py2c_factor_set_trace_slice,
-    METH_VARARGS, "sets the coefficient of the slice for the linear trace"},
-   {"py2c_factor_store_gammas", py2c_factor_store_gammas,
-    METH_VARARGS, "stores n randomly generated complex coefficients"},
+     METH_VARARGS,
+    "Restores the first initialized solutions from sampler to the container."},
+   {"py2c_factor_track_paths", py2c_factor_track_paths, METH_VARARGS,
+    "Tracks as many paths as defined by witness set.\n On return is the failure code, which is zero when all went well."},
+   {"py2c_factor_swap_slices", py2c_factor_swap_slices, METH_VARARGS,
+    "Swaps the current slices with new slices and takes new solutions\n as start to turn back.\n On return is the failure code, which is zero when all went well."},
+   {"py2c_factor_new_slices", py2c_factor_new_slices, METH_VARARGS,
+    "Generates k random slides in n-space.\n The k and the n are the two input parameters.\n On return is the failure code, which is zero when all went well."},
+   {"py2c_factor_set_trace_slice", py2c_factor_set_trace_slice, METH_VARARGS,
+    "Assigns the constant coefficient of the first slice.\n On entry is a flag to indicate if it was the first time or not.\n On return is the failure code, which is zero if all went well."},
+   {"py2c_factor_store_gammas", py2c_factor_store_gammas, METH_VARARGS,
+    "Stores the gamma constants for the sampler in the monodromy loops.\n Generates as many random complex constants as the value on input.\n On return is the failure code, which is zero if all went well."},
    {"py2c_factor_permutation_after_loop", py2c_factor_permutation_after_loop,
-    METH_VARARGS, "returns permutation computed after one loop"},
+     METH_VARARGS,
+    "For a solution set of degree d, computes the permutation using the\n solutions most recently stored, after a loop.\n The number d is the input parameter of this function.\n On return is the string representation of the permutation."},
    {"py2c_factor_update_decomposition", py2c_factor_update_decomposition,
-    METH_VARARGS, "updates the decomposition with a permutation"},
+     METH_VARARGS,
+    "Updates the decomposition with the given permutation of d elements.\n On entry are two integers and one string:\n 1) d, the number of elements in the permutation;\n 2) nc, the number of characters in the string;\n 3) p, the string representation of the permutation.\n Returns one if the current decomposition is certified,\n otherwise returns zero."},
    {"py2c_factor_number_of_components", py2c_factor_number_of_components,
-    METH_VARARGS, "returns the current number of components"},
+     METH_VARARGS,
+    "Returns the number of irreducible factors in the current\n decomposition of the witness set."},
    {"py2c_factor_witness_points_of_component",
      py2c_factor_witness_points_of_component,
-    METH_VARARGS, "returns the labels of witness points in a component"},
+     METH_VARARGS,
+    "Returns a string which represents an irreducible component.\n On entry are two integers:\n 1) the sum of the degrees of all components;\n 2) the index of the component."},
    {"py2c_factor_trace_sum_difference", py2c_factor_trace_sum_difference,
-    METH_VARARGS, "returns the difference of predicted and actual trace sum"},
+     METH_VARARGS,
+    "Returns the difference between the actual sum at the samples\n defined by the labels to the generic points in the factor,\n and the trace sum.\n On entry are three integer numbers and one string:\n 1) d, the number of points in the witness set;\n 2) k, the dimension of the solution set;\n 3) nc, the number of characters in the string;\n 4) ws, the string representing the labels of the witness set."},
    {"py2c_witness_set_of_hypersurface", py2c_witness_set_of_hypersurface,
      METH_VARARGS,
     "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container on\n return contain a witness set for the hypersurface defined by p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of a polynomial, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},

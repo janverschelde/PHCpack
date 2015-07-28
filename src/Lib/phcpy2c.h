@@ -2129,7 +2129,7 @@ static PyObject *py2c_celcon_number_of_cells
  * DESCRIPTION :
  *   Returns the number of cells in the cell container. */
 
-static PyObject *py2c_celcon_create_random_coefficient_system 
+static PyObject *py2c_celcon_standard_random_coefficient_system 
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -2153,12 +2153,12 @@ static PyObject *py2c_celcon_quaddobl_random_coefficient_system
  *   a random coefficient system with coefficients in quad double
  *   precision is stored in the cell container. */
 
-static PyObject *py2c_celcon_copy_into_systems_container
+static PyObject *py2c_celcon_copy_into_standard_systems_container
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   The random coefficient system in standard double precision is copied 
- *   from the cell container to the to the container for systems with 
+ *   from the cell container to the container for systems with 
  *   coefficients in standard double precision. */
 
 static PyObject *py2c_celcon_copy_into_dobldobl_systems_container
@@ -2166,7 +2166,7 @@ static PyObject *py2c_celcon_copy_into_dobldobl_systems_container
 /*
  * DESCRIPTION :
  *   The random coefficient system in double double precision is copied 
- *   from the cell container to the to the container for systems with 
+ *   from the cell container to the container for systems with 
  *   coefficients in double double precision. */
 
 static PyObject *py2c_celcon_copy_into_quaddobl_systems_container
@@ -2174,10 +2174,10 @@ static PyObject *py2c_celcon_copy_into_quaddobl_systems_container
 /*
  * DESCRIPTION :
  *   The random coefficient system in quad double precision is copied 
- *   from the cell container to the to the container for systems with 
+ *   from the cell container to the container for systems with 
  *   coefficients in quad double precision. */
 
-static PyObject *py2c_celcon_create_polyhedral_homotopy
+static PyObject *py2c_celcon_standard_polyhedral_homotopy
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -2213,7 +2213,7 @@ static PyObject *py2c_celcon_quaddobl_polyhedral_homotopy
  *   The lifted supports and the random coefficient system are defined.
  *   On return is the failure code, which equals zero if all went well. */
 
-static PyObject *py2c_celcon_solve_start_system
+static PyObject *py2c_celcon_solve_standard_start_system
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -2246,7 +2246,7 @@ static PyObject *py2c_celcon_solve_quaddobl_start_system
  *   On return is the number of solution found, which must equal
  *   the mixed volume of the k-th mixed cell. */
 
-static PyObject *py2c_celcon_track_solution_path
+static PyObject *py2c_celcon_track_standard_solution_path
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -2288,7 +2288,7 @@ static PyObject *py2c_celcon_track_quaddobl_solution_path
  *   3) otp, the level for intermediate output during path tracking.
  *   A target solution corresponding to the k-th cell is added on return. */
 
-static PyObject *py2c_celcon_copy_target_solution_to_container
+static PyObject *py2c_celcon_copy_target_standard_solution_to_container
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -2321,7 +2321,7 @@ static PyObject *py2c_celcon_copy_target_quaddobl_solution_to_container
  *   2) i, the index to the i-th solution path defined by the cell.
  *   On return is the failure code, which equals zero when all went well. */
 
-static PyObject *py2c_celcon_permute_system
+static PyObject *py2c_celcon_permute_standard_system
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -2462,7 +2462,7 @@ static PyObject *py2c_factor_new_slices ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Generates k random slides in n-space.
- *   The k and the n are the two input parametersr.
+ *   The k and the n are the two input parameters.
  *   On return is the failure code, which is zero when all went well. */
 
 static PyObject *py2c_factor_set_trace_slice
