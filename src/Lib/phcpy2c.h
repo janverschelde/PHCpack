@@ -829,7 +829,8 @@ static PyObject *py2c_giftwrap_initial_form ( PyObject *self, PyObject *args );
 
 /* wrapping functions in syscon.h starts from here */
 
-static PyObject *py2c_syscon_read_system ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_read_standard_system
+ ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Interactive procedure to read a polynomial system with coefficients
@@ -837,7 +838,7 @@ static PyObject *py2c_syscon_read_system ( PyObject *self, PyObject *args );
  *   The system will be placed in the standard systems container.
  *   The failure code is returned, which equals zero if all went well. */
 
-static PyObject *py2c_syscon_read_Laurent_system
+static PyObject *py2c_syscon_read_standard_Laurent_system
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -915,13 +916,14 @@ static PyObject *py2c_syscon_random_system ( PyObject *self, PyObject *args );
  *   1, if all coefficients are one, 2, if all coefficients are
  *   random floats in [-1,+1]. */
 
-static PyObject *py2c_syscon_write_system ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_write_standard_system
+ ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Writes the polynomial system with standard double precision coefficients
  *   that is stored in the container. */
 
-static PyObject *py2c_syscon_write_Laurent_system
+static PyObject *py2c_syscon_write_standard_Laurent_system
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -970,13 +972,14 @@ static PyObject *py2c_syscon_write_multprec_Laurent_system
  *   Writes the Laurent polynomial system with arbitrary multiprecision
  *   coefficients that is stored in the container. */
 
-static PyObject *py2c_syscon_clear_system ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_clear_standard_system
+ ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Deallocates the container for polynomial systems
  *   with coefficients in standard double precision. */
 
-static PyObject *py2c_syscon_clear_Laurent_system
+static PyObject *py2c_syscon_clear_standard_Laurent_system
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -1029,7 +1032,7 @@ static PyObject *py2c_syscon_number_of_symbols
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Returns the numbers in the symbol table. */
+ *   Returns the number of symbols in the symbol table. */
 
 static PyObject *py2c_syscon_write_symbols
  ( PyObject *self, PyObject *args );
@@ -1061,7 +1064,7 @@ static PyObject *py2c_syscon_clear_symbol_table
  * DESCRIPTION :
  *   Clears the symbol table. */
 
-static PyObject *py2c_syscon_number_of_polynomials
+static PyObject *py2c_syscon_number_of_standard_polynomials
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -1089,7 +1092,7 @@ static PyObject *py2c_syscon_number_of_multprec_polynomials
  *   Returns the number of polynomials with coefficients in arbitrary
  *   multiprecision as stored in the systems container. */
 
-static PyObject *py2c_syscon_number_of_Laurentials
+static PyObject *py2c_syscon_number_of_standard_Laurentials
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -1117,7 +1120,7 @@ static PyObject *py2c_syscon_number_of_multprec_Laurentials
  *   Returns the number of Laurent polynomials with coefficients in
  *   arbitrary multiprecision as stored in the systems container. */
 
-static PyObject *py2c_syscon_initialize_number
+static PyObject *py2c_syscon_initialize_number_of_standard_polynomials
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -1153,7 +1156,7 @@ static PyObject *py2c_syscon_initialize_number_of_multprec_polynomials
  *   the number of polynomials in the container.
  *   The failure code is returned, which equals zero if all went well. */
 
-static PyObject *py2c_syscon_initialize_number_of_Laurentials
+static PyObject *py2c_syscon_initialize_number_of_standard_Laurentials
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -1189,7 +1192,7 @@ static PyObject *py2c_syscon_initialize_number_of_multprec_Laurentials
  *   the number of polynomials in the container.
  *   The failure code is returned, which equals zero if all went well. */
 
-static PyObject *py2c_syscon_degree_of_polynomial
+static PyObject *py2c_syscon_degree_of_standard_polynomial
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -1221,7 +1224,8 @@ static PyObject *py2c_syscon_degree_of_multprec_polynomial
  *   polynomials with coefficients in arbitrary multiprecision.
  *   The index k of the polynomial is the one input argument. */
 
-static PyObject *py2c_syscon_number_of_terms ( PyObject *self, PyObject *args );
+static PyObject *py2c_syscon_number_of_terms
+ ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Returns the number of terms in the k-th polynomial stored in the
@@ -1244,7 +1248,7 @@ static PyObject *py2c_syscon_retrieve_term ( PyObject *self, PyObject *args );
  *   double precision, that is stored in the systems container.
  *   On return is the failure code, which equals zero if all went well. */
 
-static PyObject *py2c_syscon_store_polynomial
+static PyObject *py2c_syscon_store_standard_polynomial
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -1305,7 +1309,7 @@ static PyObject *py2c_syscon_store_multprec_polynomial
  *   5) p, a valid string representation for a polynomial.
  *   On return is the failure code, which equals zero when all went well. */
 
-static PyObject *py2c_syscon_load_polynomial
+static PyObject *py2c_syscon_load_standard_polynomial
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -1337,7 +1341,7 @@ static PyObject *py2c_syscon_load_multprec_polynomial
  *   with arbitrary multiprecision complex coefficients as a string.
  *   The value for k is in the one integer parameter of this function. */
 
-static PyObject *py2c_syscon_store_Laurential
+static PyObject *py2c_syscon_store_standard_Laurential
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :

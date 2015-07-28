@@ -1265,7 +1265,8 @@ static PyObject *py2c_giftwrap_initial_form
 
 /* wrapping functions in syscon.h starts from here */
 
-static PyObject *py2c_syscon_read_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_syscon_read_standard_system
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
@@ -1276,7 +1277,7 @@ static PyObject *py2c_syscon_read_system ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_read_Laurent_system 
+static PyObject *py2c_syscon_read_standard_Laurent_system 
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -1371,7 +1372,8 @@ static PyObject *py2c_syscon_random_system ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_write_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_syscon_write_standard_system
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
@@ -1382,7 +1384,7 @@ static PyObject *py2c_syscon_write_system ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_write_Laurent_system
+static PyObject *py2c_syscon_write_standard_Laurent_system
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -1466,7 +1468,8 @@ static PyObject *py2c_syscon_write_multprec_Laurent_system
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_clear_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_syscon_clear_standard_system
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
@@ -1477,7 +1480,7 @@ static PyObject *py2c_syscon_clear_system ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_clear_Laurent_system
+static PyObject *py2c_syscon_clear_standard_Laurent_system
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -1626,7 +1629,7 @@ static PyObject *py2c_syscon_clear_symbol_table
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_number_of_polynomials
+static PyObject *py2c_syscon_number_of_standard_polynomials
  ( PyObject *self, PyObject *args )
 {
    int fail,number;
@@ -1674,7 +1677,7 @@ static PyObject *py2c_syscon_number_of_multprec_polynomials
    return Py_BuildValue("i",number);
 }
 
-static PyObject *py2c_syscon_number_of_Laurentials
+static PyObject *py2c_syscon_number_of_standard_Laurentials
  ( PyObject *self, PyObject *args )
 {
    int fail,number;
@@ -1727,7 +1730,7 @@ static PyObject *py2c_syscon_number_of_multprec_Laurentials
    return Py_BuildValue("i",number);
 }
 
-static PyObject *py2c_syscon_initialize_number
+static PyObject *py2c_syscon_initialize_number_of_standard_polynomials
  ( PyObject *self, PyObject *args )
 {      
    int fail,dim;
@@ -1775,7 +1778,7 @@ static PyObject *py2c_syscon_initialize_number_of_multprec_polynomials
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_initialize_number_of_Laurentials
+static PyObject *py2c_syscon_initialize_number_of_standard_Laurentials
  ( PyObject *self, PyObject *args )
 {      
    int fail,dim;
@@ -1823,7 +1826,7 @@ static PyObject *py2c_syscon_initialize_number_of_multprec_Laurentials
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_degree_of_polynomial
+static PyObject *py2c_syscon_degree_of_standard_polynomial
  ( PyObject *self, PyObject *args )
 {
    int fail,equ,deg;
@@ -1919,7 +1922,7 @@ static PyObject *py2c_syscon_retrieve_term ( PyObject *self, PyObject *args )
    return a;           
 }
 
-static PyObject *py2c_syscon_store_polynomial
+static PyObject *py2c_syscon_store_standard_polynomial
  ( PyObject *self, PyObject *args )
 {      
    int fail,n,nc,k;
@@ -1979,7 +1982,7 @@ static PyObject *py2c_syscon_store_multprec_polynomial
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_load_polynomial
+static PyObject *py2c_syscon_load_standard_polynomial
  ( PyObject *self, PyObject *args )
 {      
    int fail,nc,k;
@@ -2031,7 +2034,7 @@ static PyObject *py2c_syscon_load_multprec_polynomial
    return Py_BuildValue("s",p);
 }
 
-static PyObject *py2c_syscon_store_Laurential
+static PyObject *py2c_syscon_store_standard_Laurential
  ( PyObject *self, PyObject *args )
 {      
    int fail,n,nc,k;
@@ -4644,10 +4647,11 @@ static PyMethodDef phcpy2c_methods[] =
     "Deallocates the string representation of the support set\n that was stored internally by the call py2c_giftwrap_support_size."},
    {"py2c_giftwrap_initial_form", py2c_giftwrap_initial_form, METH_VARARGS,
     "Replaces the system in the Laurent systems container by its initial form.\n There are three input parameters:\n 1) the dimension, number of coordinates in the inner normal;\n 2) the number of characters in the string representation for the normal;\n 3) the string representation of the inner normal.\n On return is the failure code, which equals zero if all went well."},
-   {"py2c_syscon_read_system", py2c_syscon_read_system, METH_VARARGS,
+   {"py2c_syscon_read_standard_system",
+     py2c_syscon_read_standard_system, METH_VARARGS,
     "Interactive procedure to read a polynomial system with coefficients\n in standard double precision.\n The system will be placed in the standard systems container.\n The failure code is returned, which equals zero if all went well."},
-   {"py2c_syscon_read_Laurent_system", py2c_syscon_read_Laurent_system,
-    METH_VARARGS,
+   {"py2c_syscon_read_standard_Laurent_system",
+     py2c_syscon_read_standard_Laurent_system, METH_VARARGS,
     "Interactive procedure to read a Laurent polynomial system with\n coefficients in standard double precision.\n The system will be placed in the standard Laurent systems container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_read_dobldobl_system", py2c_syscon_read_dobldobl_system,
     METH_VARARGS,
@@ -4669,50 +4673,62 @@ static PyMethodDef phcpy2c_methods[] =
     "Interactive procedure to read a Laurent polynomial system with\n coefficients in arbitrary multiprecision.  The one input parameter is\n an integer, the number of decimal places in the working precision.\n The system will be placed in the multprec Laurent systems container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_random_system", py2c_syscon_random_system, METH_VARARGS,
     "Places in the systems container a random polynomial system\n with coefficients in standard double precision.\n There are four integers as input parameters:\n 1) n, the number of polynomials and variables;\n 2) m, the number of monomials per equation;\n 3) d, the largest degree of each monomial;\n 4) c, the type of coefficient: 0 if on the complex unit circle,\n 1, if all coefficients are one, 2, if all coefficients are\n random floats in [-1,+1]."}, 
-   {"py2c_syscon_write_system", py2c_syscon_write_system,
-    METH_VARARGS, "writes Laurent system in container on screen"},
-   {"py2c_syscon_write_Laurent_system", py2c_syscon_write_Laurent_system,
-    METH_VARARGS, "writes Laurent system in container on screen"},
-   {"py2c_syscon_write_dobldobl_system", py2c_syscon_write_dobldobl_system,
-    METH_VARARGS, "writes system in double double container on screen"},
+   {"py2c_syscon_write_standard_system",
+     py2c_syscon_write_standard_system, METH_VARARGS,
+    "Writes the polynomial system with standard double precision coefficients\n that is stored in the container."},
+   {"py2c_syscon_write_standard_Laurent_system",
+     py2c_syscon_write_standard_Laurent_system, METH_VARARGS,
+    "Writes the Laurent polynomial system with standard double precision\n coefficients that is stored in the container."},
+   {"py2c_syscon_write_dobldobl_system",
+     py2c_syscon_write_dobldobl_system, METH_VARARGS,
+    "Writes the polynomial system with double double precision coefficients\n that is stored in the container."},
    {"py2c_syscon_write_dobldobl_Laurent_system",
      py2c_syscon_write_dobldobl_Laurent_system, METH_VARARGS,
-    "writes Laurent system in double double container on screen"},
-   {"py2c_syscon_write_quaddobl_system", py2c_syscon_write_quaddobl_system,
-    METH_VARARGS, "writes system in quad double container on screen"},
+    "Writes the Laurent polynomial system with double double precision\n coefficients that is stored in the container."},
+   {"py2c_syscon_write_quaddobl_system",
+     py2c_syscon_write_quaddobl_system, METH_VARARGS,
+    "Writes the polynomial system with quad double precision coefficients\n that is stored in the container."},
    {"py2c_syscon_write_quaddobl_Laurent_system",
      py2c_syscon_write_quaddobl_Laurent_system, METH_VARARGS,
-    "writes Laurent system in quad double container on screen"},
-   {"py2c_syscon_write_multprec_system", py2c_syscon_write_multprec_system,
-    METH_VARARGS, "writes system in multiprecision container on screen"},
+    "Writes the Laurent polynomial system with quad double precision\n coefficients that is stored in the container."},
+   {"py2c_syscon_write_multprec_system",
+     py2c_syscon_write_multprec_system, METH_VARARGS, 
+    "Writes the polynomial system with arbitrary multiprecision coefficients\n that is stored in the container."},
    {"py2c_syscon_write_multprec_Laurent_system",
      py2c_syscon_write_multprec_Laurent_system, METH_VARARGS,
-    "writes Laurent system in multiprecision container on screen"},
-   {"py2c_syscon_clear_system", py2c_syscon_clear_system,
-    METH_VARARGS, "clears the content of the systems container"},
-   {"py2c_syscon_clear_Laurent_system", py2c_syscon_clear_Laurent_system,
-    METH_VARARGS, "clears the content of the Laurent systems container"},
-   {"py2c_syscon_clear_dobldobl_system", py2c_syscon_clear_dobldobl_system,
-    METH_VARARGS, "clears the double double polynomial systems container"},
+    "Writes the Laurent polynomial system with arbitrary multiprecision\n coefficients that is stored in the container."},
+   {"py2c_syscon_clear_standard_system",
+     py2c_syscon_clear_standard_system, METH_VARARGS, 
+    "Deallocates the container for polynomial systems\n with coefficients in standard double precision."},
+   {"py2c_syscon_clear_standard_Laurent_system",
+     py2c_syscon_clear_standard_Laurent_system, METH_VARARGS,
+    "Deallocates the container for Laurent polynomial systems\n with coefficients in standard double precision."},
+   {"py2c_syscon_clear_dobldobl_system",
+     py2c_syscon_clear_dobldobl_system, METH_VARARGS, 
+    "Deallocates the container for polynomial systems\n with coefficients in double double precision."},
    {"py2c_syscon_clear_dobldobl_Laurent_system",
      py2c_syscon_clear_dobldobl_Laurent_system, METH_VARARGS,
-    "clears the double double Laurent polynomial systems container"},
-   {"py2c_syscon_clear_quaddobl_system", py2c_syscon_clear_quaddobl_system,
-    METH_VARARGS, "clears the quad double polynomial systems container"},
+    "Deallocates the container for Laurent polynomial systems\n with coefficients in double double precision."},
+   {"py2c_syscon_clear_quaddobl_system",
+     py2c_syscon_clear_quaddobl_system, METH_VARARGS, 
+    "Deallocates the container for polynomial systems\n with coefficients in quad double precision."},
    {"py2c_syscon_clear_quaddobl_Laurent_system",
      py2c_syscon_clear_quaddobl_Laurent_system, METH_VARARGS, 
-    "clears the quad double Laurent polynomial systems container"},
-   {"py2c_syscon_clear_multprec_system", py2c_syscon_clear_multprec_system,
-    METH_VARARGS, "clears the multiprecision polynomial systems container"},
+    "Deallocates the container for Laurent polynomial systems\n with coefficients in quad double precision."},
+   {"py2c_syscon_clear_multprec_system",
+     py2c_syscon_clear_multprec_system, METH_VARARGS,
+    "Deallocates the container for polynomial systems\n with coefficients in arbitrary multiprecision."},
    {"py2c_syscon_clear_multprec_Laurent_system",
      py2c_syscon_clear_multprec_Laurent_system, METH_VARARGS,
-    "clears the multiprecision Laurent polynomial systems container"},
-   {"py2c_syscon_number_of_symbols", py2c_syscon_number_of_symbols,
-    METH_VARARGS, "returns the number of symbols in the symbol table"},
-   {"py2c_syscon_write_symbols", py2c_syscon_write_symbols,
-    METH_VARARGS, "write symbols in the symbol table"},
-   {"py2c_syscon_string_of_symbols", py2c_syscon_string_of_symbols,
-    METH_VARARGS, "returns a string of symbols in the symbol table"},
+    "Deallocates the container for Laurent polynomial systems\n with coefficients in arbitrary multiprecision."},
+   {"py2c_syscon_number_of_symbols",
+     py2c_syscon_number_of_symbols, METH_VARARGS,
+    "Returns the number of symbols in the symbol table."},
+   {"py2c_syscon_write_symbols", py2c_syscon_write_symbols, METH_VARARGS, 
+    "Writes the symbols in the symbol table to screen.\n Returns the failure code, which equals zero if all went well."},
+   {"py2c_syscon_string_of_symbols",
+     py2c_syscon_string_of_symbols, METH_VARARGS,
+    "Returns a string that contains the symbols in the symbol table.\n The symbols are separate from each other by one space."},
    {"py2c_syscon_remove_symbol_name", py2c_syscon_remove_symbol_name,
      METH_VARARGS,
     "Removes a symbol, given by name, from the symbol table.\n On input are two arguments:\n 1) an integer, as the number of characters in the name;\n 2) a string of characters with the name of the symbol.\n The failure code is returned, which equals zero when all went well."},
@@ -4757,7 +4773,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_solcon_open_solution_input_file",
      py2c_solcon_open_solution_input_file, METH_VARARGS,
     "Prompts the user for the name of the input file for the solutions and\n opens the input file.  All subsequent reading happens from this input.\n Returns the failure code, which equals zero when all went well."},
-   {"py2c_syscon_number_of_polynomials", py2c_syscon_number_of_polynomials,
+   {"py2c_syscon_number_of_standard_polynomials",
+     py2c_syscon_number_of_standard_polynomials,
      METH_VARARGS, 
     "Returns the number of polynomials with coefficients in standard\n double precision as stored in the systems container."},
    {"py2c_syscon_number_of_dobldobl_polynomials",
@@ -4769,8 +4786,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_syscon_number_of_multprec_polynomials",
      py2c_syscon_number_of_multprec_polynomials, METH_VARARGS, 
     "Returns the number of polynomials with coefficients in arbitrary\n multiprecision as stored in the systems container."},
-   {"py2c_syscon_number_of_Laurentials", py2c_syscon_number_of_Laurentials,
-     METH_VARARGS, 
+   {"py2c_syscon_number_of_standard_Laurentials",
+     py2c_syscon_number_of_standard_Laurentials, METH_VARARGS, 
     "Returns the number of Laurent polynomials with coefficients in\n standard double precision as stored in the systems container."},
    {"py2c_syscon_number_of_dobldobl_Laurentials",
      py2c_syscon_number_of_dobldobl_Laurentials, METH_VARARGS, 
@@ -4781,48 +4798,53 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_syscon_number_of_multprec_Laurentials",
      py2c_syscon_number_of_multprec_Laurentials, METH_VARARGS, 
     "Returns the number of Laurent polynomials with coefficients in\n arbitrary multiprecision as stored in the systems container."},
-   {"py2c_syscon_initialize_number", py2c_syscon_initialize_number,
-    METH_VARARGS, "initializes the container with the number of polynomials"},
+   {"py2c_syscon_initialize_number_of_standard_polynomials",
+     py2c_syscon_initialize_number_of_standard_polynomials, METH_VARARGS,
+    "Initialzes the container for polynomials with coefficients in\n standard double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_initialize_number_of_dobldobl_polynomials",
-     py2c_syscon_initialize_number_of_dobldobl_polynomials,
-    METH_VARARGS, "initializes the container of double double polynomials"},
+     py2c_syscon_initialize_number_of_dobldobl_polynomials, METH_VARARGS,
+    "Initialzes the container for polynomials with coefficients in\n double double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_initialize_number_of_quaddobl_polynomials",
-     py2c_syscon_initialize_number_of_quaddobl_polynomials,
-    METH_VARARGS, "initializes the container of quad double polynomials"},
+     py2c_syscon_initialize_number_of_quaddobl_polynomials, METH_VARARGS,
+    "Initialzes the container for polynomials with coefficients in\n quad double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_initialize_number_of_multprec_polynomials",
-     py2c_syscon_initialize_number_of_multprec_polynomials,
-    METH_VARARGS, "initializes the container of multiprecision polynomials"},
-   {"py2c_syscon_initialize_number_of_Laurentials",
-     py2c_syscon_initialize_number_of_Laurentials, METH_VARARGS,
-    "initializes the container with the number of Laurentials"},
+     py2c_syscon_initialize_number_of_multprec_polynomials, METH_VARARGS,
+    "Initialzes the container for polynomials with coefficients in\n arbitrary multiprecision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
+   {"py2c_syscon_initialize_number_of_standard_Laurentials",
+     py2c_syscon_initialize_number_of_standard_Laurentials, METH_VARARGS,
+    "Initialzes the container for Laurent polynomials with coefficients\n in standard double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_initialize_number_of_dobldobl_Laurentials",
      py2c_syscon_initialize_number_of_dobldobl_Laurentials, METH_VARARGS,
-    "initializes the number of double double Laurentials"},
+    "Initialzes the container for Laurent polynomials with coefficients\n in double double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_initialize_number_of_quaddobl_Laurentials",
      py2c_syscon_initialize_number_of_quaddobl_Laurentials, METH_VARARGS,
-    "initializes the number of quad double Laurentials"},
+    "Initialzes the container for Laurent polynomials with coefficients\n in quad double precision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
    {"py2c_syscon_initialize_number_of_multprec_Laurentials",
      py2c_syscon_initialize_number_of_multprec_Laurentials, METH_VARARGS,
-    "initializes the number of multiprecisionLaurentials"},
-   {"py2c_syscon_degree_of_polynomial", py2c_syscon_degree_of_polynomial,
-    METH_VARARGS,
-    "returns the degree of the k-th polynomial in the standard container"},
+    "Initialzes the container for Laurent polynomials with coefficients\n in arbitrary multiprecision.  The input argument is an integer,\n the number of polynomials in the container.\n The failure code is returned, which equals zero if all went well."},
+   {"py2c_syscon_degree_of_standard_polynomial",
+     py2c_syscon_degree_of_standard_polynomial, METH_VARARGS,
+    "Returns the degree of the k-th polynomial in the container for\n polynomials with coefficients in standard double precision.\n The index k of the polynomial is the one input argument."},
    {"py2c_syscon_degree_of_dobldobl_polynomial",
      py2c_syscon_degree_of_dobldobl_polynomial, METH_VARARGS,
-    "returns the degree of the k-th polynomial with double double precision"},
+    "Returns the degree of the k-th polynomial in the container for\n polynomials with coefficients in double double precision.\n The index k of the polynomial is the one input argument."},
    {"py2c_syscon_degree_of_quaddobl_polynomial",
      py2c_syscon_degree_of_quaddobl_polynomial, METH_VARARGS,
-    "returns the degree of the k-th polynomial with quad double precision"},
+    "Returns the degree of the k-th polynomial in the container for\n polynomials with coefficients in quad double precision.\n The index k of the polynomial is the one input argument."},
    {"py2c_syscon_degree_of_multprec_polynomial",
      py2c_syscon_degree_of_multprec_polynomial, METH_VARARGS,
-    "returns the degree of the k-th polynomial with multiprecision"},
-   {"py2c_syscon_number_of_terms", py2c_syscon_number_of_terms,
-    METH_VARARGS, "returns in nt the number of terms in the i-th polynomial"},
-   {"py2c_syscon_number_of_Laurent_terms", py2c_syscon_number_of_Laurent_terms,
-    METH_VARARGS, "returns in nt the number of terms in the i-th Laurential"},
-   {"py2c_syscon_retrieve_term", py2c_syscon_retrieve_term,
-    METH_VARARGS, "retrieves the j-th term of the i-th polynomial"},
-   {"py2c_syscon_store_polynomial", py2c_syscon_store_polynomial, METH_VARARGS, 
+    "Returns the degree of the k-th polynomial in the container for\n polynomials with coefficients in arbitrary multiprecision.\n The index k of the polynomial is the one input argument."},
+   {"py2c_syscon_number_of_terms", 
+     py2c_syscon_number_of_terms, METH_VARARGS,
+    "Returns the number of terms in the k-th polynomial stored in the\n container for systems with coefficients in standard double precision.\n The input parameter k is the index of the polynomial k."},
+   {"py2c_syscon_number_of_Laurent_terms",
+     py2c_syscon_number_of_Laurent_terms, METH_VARARGS,
+    "Returns the number of terms in the k-th Laurent polynomial stored\n in the container for Laurent polynomials systems with coefficients\n in standard double precision.\n The input parameter k is the index of the polynomial k."},
+   {"py2c_syscon_retrieve_term",
+     py2c_syscon_retrieve_term, METH_VARARGS,
+    "Retrieves one term of a polynomial with coefficients in standard\n double precision, that is stored in the systems container.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_syscon_store_standard_polynomial",
+     py2c_syscon_store_standard_polynomial, METH_VARARGS, 
     "Defines the k-th polynomial in the systems container for polynomials\n with coefficients in standard double precision.\n As a precondition for this function, the container must be initialized\n for sufficiently many polynomials, in any case >= k.\n There are four input parameters, three integers and one string:\n 1) nc, the number of characters in the string p;\n 2) n, the number of variables in the multivariate polynomial;\n 3) k, the index of the polynomial in the system;\n 4) p, a valid string representation for a polynomial.\n On return is the failure code, which equals zero when all went well."},
    {"py2c_syscon_store_dobldobl_polynomial",
      py2c_syscon_store_dobldobl_polynomial, METH_VARARGS,
@@ -4833,8 +4855,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_syscon_store_multprec_polynomial",
      py2c_syscon_store_multprec_polynomial, METH_VARARGS,
     "Defines the k-th polynomial in the systems container for polynomials\n with coefficients in arbitrary multiprecision.\n As a precondition for this function, the container must be initialized\n for sufficiently many polynomials, in any case >= k.\n There are five input parameters, four integers and one string:\n 1) nc, the number of characters in the string p;\n 2) n, the number of variables in the multivariate polynomial;\n 3) k, the index of the polynomial in the system;\n 4) dp, the number of decimal places to parse the coefficients;\n 5) p, a valid string representation for a polynomial.\n On return is the failure code, which equals zero when all went well."},
-   {"py2c_syscon_load_polynomial", py2c_syscon_load_polynomial,
-     METH_VARARGS,
+   {"py2c_syscon_load_standard_polynomial",
+     py2c_syscon_load_standard_polynomial, METH_VARARGS,
     "Returns the k-th polynomial in the systems container\n with standard double complex coefficients as a string.\n The value for k is in the one integer parameter of this function."},
    {"py2c_syscon_load_dobldobl_polynomial",
      py2c_syscon_load_dobldobl_polynomial, METH_VARARGS,
@@ -4845,8 +4867,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_syscon_load_multprec_polynomial",
      py2c_syscon_load_multprec_polynomial, METH_VARARGS,
     "Returns the k-th polynomial in the systems container\n with arbitrary multiprecision complex coefficients as a string.\n The value for k is in the one integer parameter of this function."},
-   {"py2c_syscon_store_Laurential",
-     py2c_syscon_store_Laurential, METH_VARARGS,
+   {"py2c_syscon_store_standard_Laurential",
+     py2c_syscon_store_standard_Laurential, METH_VARARGS,
     "Defines the k-th polynomial in the systems container for Laurent\n polynomials with coefficients in standard double precision.\n As a precondition for this function, the container must be initialized\n for sufficiently many polynomials, in any case >= k.\n There are four input parameters, three integers and one string:\n 1) nc, the number of characters in the string p;\n 2) n, the number of variables in the multivariate polynomial;\n 3) k, the index of the polynomial in the system;\n 4) p, a valid string representation for a polynomial.\n On return is the failure code, which equals zero when all went well."},
    {"py2c_syscon_store_dobldobl_Laurential",
      py2c_syscon_store_dobldobl_Laurential, METH_VARARGS,
