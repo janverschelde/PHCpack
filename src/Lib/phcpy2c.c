@@ -464,7 +464,8 @@ static PyObject *py2c_copy_multprec_container_to_start_system
 
 /* creation of homotopy and tracking all solution paths */
 
-static PyObject *py2c_create_homotopy ( PyObject *self, PyObject *args )
+static PyObject *py2c_create_standard_homotopy
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
@@ -475,7 +476,7 @@ static PyObject *py2c_create_homotopy ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_create_homotopy_with_gamma
+static PyObject *py2c_create_standard_homotopy_with_gamma
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -564,7 +565,8 @@ static PyObject *py2c_create_multprec_homotopy_with_gamma
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_clear_homotopy ( PyObject *self, PyObject *args )
+static PyObject *py2c_clear_standard_homotopy
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
@@ -2221,7 +2223,8 @@ static PyObject *py2c_syscon_quaddobl_drop_variable_by_name
 
 /* wrapping functions in solcon.h starts from here */
 
-static PyObject *py2c_solcon_read_solutions ( PyObject *self, PyObject *args )
+static PyObject *py2c_solcon_read_standard_solutions
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
@@ -2268,7 +2271,8 @@ static PyObject *py2c_solcon_read_multprec_solutions
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_solcon_write_solutions ( PyObject *self, PyObject *args )
+static PyObject *py2c_solcon_write_standard_solutions
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
@@ -2315,7 +2319,8 @@ static PyObject *py2c_solcon_write_multprec_solutions
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_solcon_clear_solutions ( PyObject *self, PyObject *args )
+static PyObject *py2c_solcon_clear_standard_solutions
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
@@ -2374,7 +2379,7 @@ static PyObject *py2c_solcon_open_solution_input_file
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_solcon_length_solution_string
+static PyObject *py2c_solcon_length_standard_solution_string
  ( PyObject *self, PyObject *args )
 {
    int fail,i,number;
@@ -2422,7 +2427,7 @@ static PyObject *py2c_solcon_length_multprec_solution_string
    return Py_BuildValue("i",number);
 }
 
-static PyObject *py2c_solcon_write_solution_string
+static PyObject *py2c_solcon_write_standard_solution_string
  ( PyObject *self, PyObject *args )
 {      
    int fail;
@@ -2730,7 +2735,7 @@ static PyObject *py2c_solcon_write_current_multprec_solution_string
    return a;
 }
 
-static PyObject *py2c_solcon_append_solution_string
+static PyObject *py2c_solcon_append_standard_solution_string
  ( PyObject *self, PyObject *args )
 {      
    char fail;
@@ -2797,7 +2802,7 @@ static PyObject *py2c_solcon_append_multprec_solution_string
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_solcon_number_of_solutions
+static PyObject *py2c_solcon_number_of_standard_solutions
  ( PyObject *self, PyObject *args )
 {      
    int result,n;
@@ -4411,8 +4416,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_read_quaddobl_start_system_from_file",
      py2c_read_quaddobl_start_system_from_file, METH_VARARGS,
     "The two input arguments are a number and a string:\n 1) The number equals the number of characters in the string.\n 2) The string given on input is the name of a file which contains\n a start system to be parsed in quad double precision.\n The failure code is returned, which is zero if all went well."},
-   {"py2c_define_output_file", py2c_define_output_file,
-     METH_VARARGS, "defines the output file"},
+   {"py2c_define_output_file", py2c_define_output_file, METH_VARARGS,
+    "Prompts the user to define the output file.\n On return is the failure code, which is zero if all went well."},
    {"py2c_write_standard_target_system", py2c_write_standard_target_system,
      METH_VARARGS, "writes the target system in standard doubles to file"},
    {"py2c_write_standard_start_system", py2c_write_standard_start_system,
@@ -4467,43 +4472,44 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_copy_multprec_container_to_start_system",
      py2c_copy_multprec_container_to_start_system, METH_VARARGS,
     "Copies the system in the container for systems with coefficients\n in arbitrary multiprecision to the start system."},
-   {"py2c_create_homotopy", py2c_create_homotopy,
-    METH_VARARGS, "creates a homotopy between the target and start system"},
-   {"py2c_create_homotopy_with_gamma", py2c_create_homotopy_with_gamma,
-    METH_VARARGS, "makes a homotopy with given gamma constant"},
+   {"py2c_create_standard_homotopy", py2c_create_standard_homotopy,
+     METH_VARARGS,
+    "Initializes the data for a homotopy in standard double precision.\n The failure code is returned, which is zero when all goes well."},
+   {"py2c_create_standard_homotopy_with_gamma",
+     py2c_create_standard_homotopy_with_gamma, METH_VARARGS,
+    "Initializes the data for a homotopy in standard double precision.\n On input are two doubles: the real and imaginary part of the gamma constant.\n The failure code is returned, which is zero when all goes well."},
    {"py2c_create_dobldobl_homotopy", py2c_create_dobldobl_homotopy,
-    METH_VARARGS,
-    "creates a double double homotopy between the target and start system"},
+     METH_VARARGS,
+    "Initializes the data for a homotopy in double double precision.\n The failure code is returned, which is zero when all goes well."},
    {"py2c_create_dobldobl_homotopy_with_gamma",
-     py2c_create_dobldobl_homotopy_with_gamma,
-    METH_VARARGS, "makes a double double homotopy with given gamma constant"},
+     py2c_create_dobldobl_homotopy_with_gamma, METH_VARARGS,
+    "Initializes the data for a homotopy in double double precision.\n On input are two doubles: the real and imaginary part of the gamma constant.\n The failure code is returned, which is zero when all goes well."},
    {"py2c_create_quaddobl_homotopy", py2c_create_quaddobl_homotopy,
-    METH_VARARGS,
-    "creates a quad double homotopy between the target and start system"},
+     METH_VARARGS,
+    "Initializes the data for a homotopy in quad double precision.\n The failure code is returned, which is zero when all goes well."},
    {"py2c_create_quaddobl_homotopy_with_gamma",
-     py2c_create_quaddobl_homotopy_with_gamma,
-    METH_VARARGS, "makes a quad double homotopy with given gamma constant"},
+     py2c_create_quaddobl_homotopy_with_gamma, METH_VARARGS,
+    "Initializes the data for a homotopy in quad double precision.\n On input are two doubles: the real and imaginary part of the gamma constant.\n The failure code is returned, which is zero when all goes well."},
    {"py2c_create_multprec_homotopy", py2c_create_multprec_homotopy,
-    METH_VARARGS,
-    "creates a multiprecision homotopy between the target and start system"},
+     METH_VARARGS,
+    "Initializes the data for a homotopy in arbitrary multiprecision.\n The failure code is returned, which is zero when all goes well."},
    {"py2c_create_multprec_homotopy_with_gamma",
-     py2c_create_multprec_homotopy_with_gamma,
-    METH_VARARGS, "makes a multiprecision homotopy with given gamma constant"},
-   {"py2c_clear_homotopy", py2c_clear_homotopy,
-    METH_VARARGS, "clears the homotopy between the target and start system"},
-   {"py2c_clear_dobldobl_homotopy", py2c_clear_dobldobl_homotopy,
-    METH_VARARGS,
-    "clears the double double homotopy between the target and start system"},
-   {"py2c_clear_quaddobl_homotopy", py2c_clear_quaddobl_homotopy,
-    METH_VARARGS,
-    "clears the quad double homotopy between the target and start system"},
-   {"py2c_clear_multprec_homotopy", py2c_clear_multprec_homotopy,
-    METH_VARARGS,
-    "clears the multiprecision homotopy between the target and start system"},
+     py2c_create_multprec_homotopy_with_gamma, METH_VARARGS,
+    "Initializes the data for a homotopy in arbitrary multiprecision.\n On input are two doubles: the real and imaginary part of the gamma constant.\n The failure code is returned, which is zero when all goes well."},
+   {"py2c_clear_standard_homotopy", py2c_clear_standard_homotopy, METH_VARARGS,
+    "Deallocation of the homotopy stored in standard double precision.\n On return is the failure code, which equals zero if all is well."},
+   {"py2c_clear_dobldobl_homotopy", py2c_clear_dobldobl_homotopy, METH_VARARGS,
+    "Deallocation of the homotopy stored in double double precision.\n On return is the failure code, which equals zero if all is well."},
+   {"py2c_clear_quaddobl_homotopy", py2c_clear_quaddobl_homotopy, METH_VARARGS,
+    "Deallocation of the homotopy stored in quad double precision.\n On return is the failure code, which equals zero if all is well."},
+   {"py2c_clear_multprec_homotopy", py2c_clear_multprec_homotopy, METH_VARARGS,
+    "Deallocation of the homotopy stored in arbitrary multiprecision.\n On return is the failure code, which equals zero if all is well."},
    {"py2c_tune_continuation_parameters", py2c_tune_continuation_parameters,
-    METH_VARARGS, "interactive tuning of the continuation parameters"},
+     METH_VARARGS,
+    "Interactive procedure to tune the continuation parameters."},
    {"py2c_show_continuation_parameters", py2c_show_continuation_parameters,
-    METH_VARARGS, "shows the current values of the continuation parameters"},
+     METH_VARARGS,
+    "Shows the current values of the continuation parameters."},
    {"py2c_autotune_continuation_parameters",
      py2c_autotune_continuation_parameters, METH_VARARGS, 
     "Tunes the values of the continuation parameters.\n On input are two integers:\n 1) the difficulty level of the solution paths; and\n 2) the number of decimal places in the precision."},
@@ -4523,91 +4529,88 @@ static PyMethodDef phcpy2c_methods[] =
      py2c_solve_by_multprec_homotopy_continuation, METH_VARARGS, 
     "Tracks the paths defined by the homotopy in arbitrary multiprecision.\n On input is one integer: the number of decimal places in the precision.\n On return is the failure code, which is zero when all went well."},
    {"py2c_copy_target_solutions_to_container",
-     py2c_copy_target_solutions_to_container,
-    METH_VARARGS, "copies target solutions to container"},
+     py2c_copy_target_solutions_to_container, METH_VARARGS,
+    "Copies the target solutions in standard double precision to the\n container for solutions in standard double precision."},
    {"py2c_copy_dobldobl_target_solutions_to_container",
-     py2c_copy_dobldobl_target_solutions_to_container,
-    METH_VARARGS, "copies double double target solutions to container"},
+     py2c_copy_dobldobl_target_solutions_to_container, METH_VARARGS,
+    "Copies the target solutions in double double precision to the\n container for solutions in double double precision."},
    {"py2c_copy_quaddobl_target_solutions_to_container",
-     py2c_copy_quaddobl_target_solutions_to_container,
-    METH_VARARGS, "copies quad double target solutions to container"},
+     py2c_copy_quaddobl_target_solutions_to_container, METH_VARARGS,
+    "Copies the target solutions in quad double precision to the\n container for solutions in quad double precision."},
    {"py2c_copy_multprec_target_solutions_to_container",
-     py2c_copy_multprec_target_solutions_to_container,
-    METH_VARARGS, "copies multprecicision target solutions to container"},
+     py2c_copy_multprec_target_solutions_to_container, METH_VARARGS,
+    "Copies the target solutions in arbitrary multiprecision to the\n container for solutions in arbitrary multiprecision."},
    {"py2c_copy_container_to_target_solutions",
-     py2c_copy_container_to_target_solutions,
-    METH_VARARGS, "copies container to target solutions"},
+     py2c_copy_container_to_target_solutions, METH_VARARGS,
+    "Copies the solutions in standard double precision from the\n container to the target solutions in standard double precision."},
    {"py2c_copy_dobldobl_container_to_target_solutions",
-     py2c_copy_dobldobl_container_to_target_solutions,
-    METH_VARARGS, "copies double double container to target solutions"},
+     py2c_copy_dobldobl_container_to_target_solutions, METH_VARARGS,
+    "Copies the solutions in double double precision from the\n container to the target solutions in double double precision."},
    {"py2c_copy_quaddobl_container_to_target_solutions",
-     py2c_copy_quaddobl_container_to_target_solutions,
-    METH_VARARGS, "copies quad double container to target solutions"},
+     py2c_copy_quaddobl_container_to_target_solutions, METH_VARARGS,
+    "Copies the solutions in quad double precision from the\n container to the target solutions in quad double precision."},
    {"py2c_copy_multprec_container_to_target_solutions",
-     py2c_copy_multprec_container_to_target_solutions,
-    METH_VARARGS, "copies multiprecision container to target solutions"},
+     py2c_copy_multprec_container_to_target_solutions, METH_VARARGS,
+    "Copies the solutions in arbitrary multiprecision from the\n container to the target solutions in arbitrary multiprecision."},
    {"py2c_copy_start_solutions_to_container",
-     py2c_copy_start_solutions_to_container,
-    METH_VARARGS, "copies start solutions to container"},
+     py2c_copy_start_solutions_to_container, METH_VARARGS,
+    "Copies the start solutions in standard double precision to the\n container for solutions in standard double precision."},
    {"py2c_copy_dobldobl_start_solutions_to_container",
-     py2c_copy_dobldobl_start_solutions_to_container,
-    METH_VARARGS, "copies double double start solutions to container"},
+     py2c_copy_dobldobl_start_solutions_to_container, METH_VARARGS,
+    "Copies the start solutions in double double precision to the\n container for solutions in double double precision."},
    {"py2c_copy_quaddobl_start_solutions_to_container",
-     py2c_copy_quaddobl_start_solutions_to_container,
-    METH_VARARGS, "copies quad double start solutions to container"},
+     py2c_copy_quaddobl_start_solutions_to_container, METH_VARARGS,
+    "Copies the start solutions in quad double precision to the\n container for solutions in quad double precision."},
    {"py2c_copy_multprec_start_solutions_to_container",
-     py2c_copy_multprec_start_solutions_to_container,
-    METH_VARARGS, "copies multiprecision start solutions to container"},
+     py2c_copy_multprec_start_solutions_to_container, METH_VARARGS,
+    "Copies the start solutions in arbitrary multiprecision to the\n container for solutions in arbitrary multiprecision."},
    {"py2c_copy_container_to_start_solutions",
-     py2c_copy_container_to_start_solutions,
-    METH_VARARGS, "copies container to start solutions"},
+     py2c_copy_container_to_start_solutions, METH_VARARGS,
+    "Copies the solutions in standard double precision from the\n container to the start solutions in standard double precision."},
    {"py2c_copy_dobldobl_container_to_start_solutions",
-     py2c_copy_dobldobl_container_to_start_solutions,
-    METH_VARARGS, "copies double double container to start solutions"},
+     py2c_copy_dobldobl_container_to_start_solutions, METH_VARARGS, 
+    "Copies the solutions in double double precision from the\n container to the start solutions in double double precision."},
    {"py2c_copy_quaddobl_container_to_start_solutions",
-     py2c_copy_quaddobl_container_to_start_solutions,
-    METH_VARARGS, "copies quad double container to start solutions"},
+     py2c_copy_quaddobl_container_to_start_solutions, METH_VARARGS,
+    "Copies the solutions in quad double precision from the\n container to the start solutions in quad double precision."},
    {"py2c_copy_multprec_container_to_start_solutions",
-     py2c_copy_multprec_container_to_start_solutions,
-    METH_VARARGS, "copies multiprecision container to start solutions"},
-   {"py2c_solve_system", py2c_solve_system,
-    METH_VARARGS, "calls the blackbox solver on a polynomial"},
-   {"py2c_solve_Laurent_system", py2c_solve_Laurent_system,
-    METH_VARARGS, "calls the blackbox solver on a Laurent system"},
-   {"py2c_mixed_volume", py2c_mixed_volume,
-    METH_VARARGS, "returns the mixed volume of system in the container"},
-   {"py2c_standard_deflate", py2c_standard_deflate,
-    METH_VARARGS,
-    "applies deflation in standard double precision with default settings"},
-   {"py2c_dobldobl_deflate", py2c_dobldobl_deflate,
-    METH_VARARGS,
-    "applies deflation in double double precision with default settings"},
-   {"py2c_quaddobl_deflate", py2c_quaddobl_deflate,
-    METH_VARARGS,
-    "applies deflation in quad double precision with default settings"},
-   {"py2c_standard_Newton_step", py2c_standard_Newton_step,
-    METH_VARARGS, "does one Newton step on container data"},
-   {"py2c_dobldobl_Newton_step", py2c_dobldobl_Newton_step,
-    METH_VARARGS, "does one Newton step on double double container data"},
-   {"py2c_quaddobl_Newton_step", py2c_quaddobl_Newton_step,
-    METH_VARARGS, "does one Newton step on quad double container data"},
-   {"py2c_multprec_Newton_step", py2c_multprec_Newton_step,
-    METH_VARARGS, "does one Newton step on multiprecision container data"},
+     py2c_copy_multprec_container_to_start_solutions, METH_VARARGS,
+    "Copies the solutions in arbitrary multiprecision from the\n container to the start solutions in arbitrary multiprecision."},
+   {"py2c_solve_system", py2c_solve_system, METH_VARARGS,
+    "Calls the blackbox solver on the system stored in the container for\n systems with coefficients in standard double precision.\n One integer is expected on input: the number of tasks.\n If that number is zero, then no multitasking is applied.\n On return, the container for solutions in standard double precision\n contains the solutions to the system in the standard systems container."},
+   {"py2c_solve_Laurent_system", py2c_solve_Laurent_system, METH_VARARGS,
+    "Calls the blackbox solver on the system stored in the container for\n Laurent systems with coefficients in standard double precision.\n Two integers are expected on input:\n 1) a boolean flag silent: if 1, then no intermediate output about\n the root counts is printed, if 0, then the solver is verbose; and \n 2) the number of tasks: if 0, then no multitasking is applied,\n otherwise as many tasks as the number will run.\n On return, the container for solutions in standard double precision\n contains the solutions to the system in the standard Laurent systems\n container."},
+   {"py2c_mixed_volume", py2c_mixed_volume, METH_VARARGS,
+    "Computes the mixed volume, and the stable mixed volume as well if\n the input parameter equals 1.  On return is the mixed volume, or\n a tuple with the mixed volume and the stable mixed volume."},
+   {"py2c_standard_deflate", py2c_standard_deflate, METH_VARARGS,
+    "Applies deflation in standard double precision to the system and\n the solutions stored in the containers.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_dobldobl_deflate", py2c_dobldobl_deflate, METH_VARARGS,
+    "Applies deflation in double double precision to the system and\n the solutions stored in the containers.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_quaddobl_deflate", py2c_quaddobl_deflate, METH_VARARGS,
+    "Applies deflation in quad double precision to the system and\n the solutions stored in the containers.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_standard_Newton_step", py2c_standard_Newton_step, METH_VARARGS,
+    "Applies one Newton step in standard double precision to the system in\n the standard systems container and to the solutions in the container.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_dobldobl_Newton_step", py2c_dobldobl_Newton_step, METH_VARARGS,
+    "Applies one Newton step in double double precision to the system in\n the standard systems container and to the solutions in the container.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_quaddobl_Newton_step", py2c_quaddobl_Newton_step, METH_VARARGS,
+    "Applies one Newton step in quad double precision to the system in\n the standard systems container and to the solutions in the container.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_multprec_Newton_step", py2c_multprec_Newton_step, METH_VARARGS,
+    "Applies one Newton step in arbitrary multiprecision to the system in\n the multprec systems container and to the solutions in the container.\n On input is an integer, the number of decimal places in the precision.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_standard_Newton_Laurent_step", py2c_standard_Newton_Laurent_step,
-    METH_VARARGS, 
-    "does one Newton step on standard double Laurent systems"},
+     METH_VARARGS, 
+    "Applies one Newton step in standard double precision to the Laurent\n system in the standard Laurent systems container and to the solutions\n in the container.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_dobldobl_Newton_Laurent_step", py2c_dobldobl_Newton_Laurent_step,
-    METH_VARARGS,
-    "does one Newton step on double double Laurent systems"},
+     METH_VARARGS,
+    "Applies one Newton step in double double precision to the Laurent\n system in the standard Laurent systems container and to the solutions\n in the container.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_quaddobl_Newton_Laurent_step", py2c_quaddobl_Newton_Laurent_step,
-    METH_VARARGS, 
-    "does one Newton step on quad double Laurent systems"},
+     METH_VARARGS, 
+    "Applies one Newton step in quad double precision to the Laurent\n system in the standard Laurent systems container and to the solutions\n in the container.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_multprec_Newton_Laurent_step", py2c_multprec_Newton_Laurent_step,
-    METH_VARARGS,
-    "does one Newton step on multiprecision Laurent systems"},
+     METH_VARARGS,
+    "Applies one Newton step in arbitrary multiprecision to the Laurent\n system in the multprec Laurent systems container and to the solutions\n in the container.\n On input is an integer: the number of decimal places in the precision.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_varbprec_Newton_Laurent_steps", py2c_varbprec_Newton_Laurent_steps,
-    METH_VARARGS,
-    "sequence of variable precision Newton steps on Laurent polynomials"},
+     METH_VARARGS,
+    "Applies Newton's method in variable precision.\n There are six input parameters:\n 1) the dimension: the number of variables and equations;\n 2) the accuracy, expressed as the correct number of decimal places;\n 3) the maximum number of iterations in Newton's method;\n 4) an upper bound on the number of decimal places in the precision;\n 5) a string, with the representation of the polynomials in the system.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_usolve_standard", py2c_usolve_standard, METH_VARARGS,
     "Applies the method of Weierstrass to compute all roots of a\n polynomial in one variable with standard double precision arithmetic.\n On input are two numbers:\n 1) the maximum number of iterations in the method of Weierstrass; and\n 2) the epsilon requirement on the accuracy of the roots.\n Before calling this function, the polynomial should be stored in\n the standard systems container.  After the call of this function,\n the standard solutions container contains the roots of the polynomial.\n On return is the number of iterations done by the solver."},
    {"py2c_usolve_dobldobl", py2c_usolve_dobldobl, METH_VARARGS,
@@ -4715,7 +4718,8 @@ static PyMethodDef phcpy2c_methods[] =
     "Removes a symbol, given by name, from the symbol table.\n On input are two arguments:\n 1) an integer, as the number of characters in the name;\n 2) a string of characters with the name of the symbol.\n The failure code is returned, which equals zero when all went well."},
    {"py2c_syscon_clear_symbol_table", py2c_syscon_clear_symbol_table,
      METH_VARARGS, "Clears the symbol table."},
-   {"py2c_solcon_read_solutions", py2c_solcon_read_solutions, METH_VARARGS,
+   {"py2c_solcon_read_standard_solutions",
+     py2c_solcon_read_standard_solutions, METH_VARARGS,
     "Interactive function to read the solutions into the container,\n in standard double precision.\n Returns the failure code, which is zero when all went well."},
    {"py2c_solcon_read_dobldobl_solutions", py2c_solcon_read_dobldobl_solutions,
      METH_VARARGS,
@@ -4726,7 +4730,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_solcon_read_multprec_solutions", py2c_solcon_read_multprec_solutions,
      METH_VARARGS,
     "Interactive function to read the solutions into the container,\n in arbitrary multiprecision.\n Returns the failure code, which is zero when all went well."},
-   {"py2c_solcon_write_solutions", py2c_solcon_write_solutions, METH_VARARGS,
+   {"py2c_solcon_write_standard_solutions",
+     py2c_solcon_write_standard_solutions, METH_VARARGS,
     "Writes the solutions in standard double precision to screen.\n Returns the failure code, which equals zero when all went well."},
    {"py2c_solcon_write_dobldobl_solutions",
      py2c_solcon_write_dobldobl_solutions, METH_VARARGS,
@@ -4737,7 +4742,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_solcon_write_multprec_solutions",
      py2c_solcon_write_multprec_solutions, METH_VARARGS,
     "Writes the solutions in arbitrary multiprecision to screen.\n Returns the failure code, which equals zero when all went well."},
-   {"py2c_solcon_clear_solutions", py2c_solcon_clear_solutions, METH_VARARGS,
+   {"py2c_solcon_clear_standard_solutions",
+     py2c_solcon_clear_standard_solutions, METH_VARARGS,
     "Deallocates the container for solutions in standard double precision.\n Returns the failure code, which equals zero when all went well."},
    {"py2c_solcon_clear_dobldobl_solutions",
      py2c_solcon_clear_dobldobl_solutions, METH_VARARGS,
@@ -4883,7 +4889,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_syscon_quaddobl_drop_variable_by_name",
      py2c_syscon_quaddobl_drop_variable_by_name, METH_VARARGS,
     "Replaces the system in the quad double precision container\n with the same system that have that variable dropped\n corresponding to the name in the string s of nc characters long.\n The function has two input parameters, an integer and a string:\n 1) nc, the number of characters in the string with the name;\n 2) s, a string that holds the name of the variable.\n On return is the failure code, which equals zero if all went well."},
-   {"py2c_solcon_length_solution_string", py2c_solcon_length_solution_string,
+   {"py2c_solcon_length_standard_solution_string",
+     py2c_solcon_length_standard_solution_string,
      METH_VARARGS,
     "On input is the index k to a solution in standard double precision,\n stored in the container.  On return is the length of the string\n representation for that k-th solution in the container."},
    {"py2c_solcon_length_dobldobl_solution_string",
@@ -4895,7 +4902,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_solcon_length_multprec_solution_string",
      py2c_solcon_length_multprec_solution_string, METH_VARARGS,
     "On input is the index k to a solution in arbitrary multiprecision,\n stored in the container.  On return is the length of the string\n representation for that k-th solution in the container."},
-   {"py2c_solcon_write_solution_string", py2c_solcon_write_solution_string,
+   {"py2c_solcon_write_standard_solution_string",
+     py2c_solcon_write_standard_solution_string,
      METH_VARARGS,
     "Returns the string representation for the k-th solution stored\n in standard double precision in the container.\n On input are two integers:\n 1) the index to the solution; and\n 2) the number of characters in the string representation\n for that solution."},
    {"py2c_solcon_write_dobldobl_solution_string",
@@ -4955,7 +4963,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_solcon_write_current_multprec_solution_string",
      py2c_solcon_write_current_multprec_solution_string, METH_VARARGS,
     "Writes the current arbitrary multiprecision solution in the solution container\n to the string s of n+1 characters.\n The last character is the end of string symbol.\n The value of n is given as the one input parameter to this function.\n On return is the string that contains the string representation of\n the current solution in standard double precision in the container."},
-   {"py2c_solcon_append_solution_string", py2c_solcon_append_solution_string,
+   {"py2c_solcon_append_standard_solution_string",
+     py2c_solcon_append_standard_solution_string,
      METH_VARARGS, 
     "Appends a solution in standard double precision to the list\n of solutions already stored in the container.\n There are three input parameters:\n 1) the number of variables;\n 2) the number of characters in the string;\n 3) the string representing the solution to append to the list.\n Returns the failure code, which equals zero if all went well."},
    {"py2c_solcon_append_dobldobl_solution_string",
@@ -4967,9 +4976,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_solcon_append_multprec_solution_string",
      py2c_solcon_append_multprec_solution_string, METH_VARARGS,
     "Appends a solution in arbitrary multiprecision to the list\n of solutions already stored in the container.\n There are three input parameters:\n 1) the number of variables;\n 2) the number of characters in the string;\n 3) the string representing the solution to append to the list.\n Returns the failure code, which equals zero if all went well."},
-   {"py2c_solcon_number_of_solutions",
-     py2c_solcon_number_of_solutions,
-     METH_VARARGS,
+   {"py2c_solcon_number_of_standard_solutions",
+     py2c_solcon_number_of_standard_solutions, METH_VARARGS,
     "Returns the number of solutions in standard double precision,\n as stored in the container."},
    {"py2c_solcon_number_of_dobldobl_solutions",
      py2c_solcon_number_of_dobldobl_solutions, METH_VARARGS, 

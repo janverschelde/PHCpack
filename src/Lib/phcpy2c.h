@@ -279,15 +279,16 @@ static PyObject *py2c_copy_multprec_container_to_start_system
  *   Copies the system in the container for systems with coefficients
  *   in arbitrary multiprecision to the start system. */
 
-/* creation of homotopy and tracking all paths */
+/* Creation of homotopy and the tracking of all paths. */
 
-static PyObject *py2c_create_homotopy ( PyObject *self, PyObject *args );
+static PyObject *py2c_create_standard_homotopy
+ ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Initializes the data for a homotopy in standard double precision.
  *   The failure code is returned, which is zero when all goes well. */
 
-static PyObject *py2c_create_homotopy_with_gamma
+static PyObject *py2c_create_standard_homotopy_with_gamma
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -344,7 +345,8 @@ static PyObject *py2c_create_multprec_homotopy_with_gamma
  *   gamma constant.
  *   The failure code is returned, which is zero when all goes well. */
 
-static PyObject *py2c_clear_homotopy ( PyObject *self, PyObject *args );
+static PyObject *py2c_clear_standard_homotopy
+ ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Deallocation of the homotopy stored in standard double precision.
@@ -1499,7 +1501,8 @@ static PyObject *py2c_syscon_quaddobl_drop_variable_by_name
 
 /* The wrapping of functions with prototypes in solcon.h starts here. */
 
-static PyObject *py2c_solcon_read_solutions ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_read_standard_solutions
+ ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Interactive function to read the solutions into the container,
@@ -1530,7 +1533,8 @@ static PyObject *py2c_solcon_read_multprec_solutions
  *   in arbitrary multiprecision.
  *   Returns the failure code, which is zero when all went well. */
 
-static PyObject *py2c_solcon_write_solutions ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_write_standard_solutions
+ ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Writes the solutions in standard double precision to screen.
@@ -1557,7 +1561,8 @@ static PyObject *py2c_solcon_write_multprec_solutions
  *   Writes the solutions in arbitrary multiprecision to screen.
  *   Returns the failure code, which equals zero when all went well. */
 
-static PyObject *py2c_solcon_clear_solutions ( PyObject *self, PyObject *args );
+static PyObject *py2c_solcon_clear_standard_solutions
+ ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Deallocates the container for solutions in standard double precision.
@@ -1592,7 +1597,7 @@ static PyObject *py2c_solcon_open_solution_input_file
  *   opens the input file.  All subsequent reading happens from this input.
  *   Returns the failure code, which equals zero when all went well. */
 
-static PyObject *py2c_solcon_length_solution_string
+static PyObject *py2c_solcon_length_standard_solution_string
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -1624,7 +1629,7 @@ static PyObject *py2c_solcon_length_multprec_solution_string
  *   stored in the container.  On return is the length of the string 
  *   representation for that k-th solution in the container. */
 
-static PyObject *py2c_solcon_write_solution_string
+static PyObject *py2c_solcon_write_standard_solution_string
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -1816,7 +1821,7 @@ static PyObject *py2c_solcon_write_current_multprec_solution_string
  *   On return is the string that contains the string representation of
  *   the current solution in arbitrary multiprecision in the container. */
 
-static PyObject *py2c_solcon_append_solution_string
+static PyObject *py2c_solcon_append_standard_solution_string
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -1864,7 +1869,7 @@ static PyObject *py2c_solcon_append_multprec_solution_string
  *   3) the string representing the solution to append to the list.
  *   Returns the failure code, which equals zero if all went well. */
 
-static PyObject *py2c_solcon_number_of_solutions
+static PyObject *py2c_solcon_number_of_standard_solutions
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :

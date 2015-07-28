@@ -1,3 +1,6 @@
+Tue 28 Jul 2015 : consistent naming of functions for standard doubles
+  causes changes in phcpy2c, both the .h and .c file.
+
 Mon 27 Jul 2015 : more documentation in phcpy2c.h and phcpy2c.c,
   with correction in next_track.h.
 
