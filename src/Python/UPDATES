@@ -2,6 +2,7 @@ Tue 28 Jul 2015 : changes in trackers.py for name changes in py2c functions.
   Also made changes to interface.py, solver.py, schubert.py, and sets.py
   for changed py2c_clear_solutions into py2c_clear_standard_solutions,
   and other name changes involving standard double precision.
+  Also maps.py changed for later name changes in py2c functions.
 
 Mon 20 Jul 2015 : added demo directory to the PHCpy distribution.
 

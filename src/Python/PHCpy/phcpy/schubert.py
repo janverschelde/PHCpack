@@ -150,7 +150,7 @@ def run_pieri_homotopies(mdim, pdim, qdeg, planes, *pts):
     """
     from phcpy2c import py2c_schubert_pieri_count
     from phcpy2c import py2c_schubert_pieri_homotopies
-    from phcpy2c import py2c_syscon_load_polynomial
+    from phcpy2c import py2c_syscon_load_standard_polynomial
     from phcpy2c import py2c_solcon_number_of_standard_solutions
     from phcpy2c import py2c_solcon_length_standard_solution_string
     from phcpy2c import py2c_solcon_write_standard_solution_string
@@ -172,10 +172,10 @@ def run_pieri_homotopies(mdim, pdim, qdeg, planes, *pts):
     pols = []
     if(qdeg == 0):
         for i in range(1, mdim*pdim+1):
-            pols.append(py2c_syscon_load_polynomial(i))
+            pols.append(py2c_syscon_load_standard_polynomial(i))
     else:
         for i in range(1, mdim*pdim+qdeg*(mdim+pdim)+1):
-            pols.append(py2c_syscon_load_polynomial(i))
+            pols.append(py2c_syscon_load_standard_polynomial(i))
     print 'the system :'
     for poly in pols:
         print poly
@@ -241,7 +241,7 @@ def make_pieri_system(mdim, pdim, qdeg, planes, is_real=False):
     in the list planes.
     """
     from phcpy2c import py2c_schubert_pieri_system
-    from phcpy2c import py2c_syscon_load_polynomial
+    from phcpy2c import py2c_syscon_load_standard_polynomial
     strplanes = planes_to_string(planes)
     # print 'the string of planes :', strplanes
     if is_real:
@@ -253,7 +253,7 @@ def make_pieri_system(mdim, pdim, qdeg, planes, is_real=False):
     result = []
     if(qdeg == 0):
         for i in range(1, mdim*pdim+1):
-            result.append(py2c_syscon_load_polynomial(i))
+            result.append(py2c_syscon_load_standard_polynomial(i))
     return result
 
 def cheater(mdim, pdim, qdeg, start, startsols):

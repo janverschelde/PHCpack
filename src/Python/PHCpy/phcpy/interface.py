@@ -10,16 +10,16 @@ def store_standard_system(polsys):
     strings in polsys into the container for systems
     with coefficients in standard double precision.
     """
-    from phcpy2c import py2c_syscon_clear_system
-    from phcpy2c import py2c_syscon_initialize_number
-    from phcpy2c import py2c_syscon_store_polynomial
-    py2c_syscon_clear_system()
+    from phcpy2c import py2c_syscon_clear_standard_system
+    from phcpy2c import py2c_syscon_initialize_number_of_standard_polynomials
+    from phcpy2c import py2c_syscon_store_standard_polynomial
+    py2c_syscon_clear_standard_system()
     dim = len(polsys)
-    py2c_syscon_initialize_number(dim)
+    py2c_syscon_initialize_number_of_standard_polynomials(dim)
     for cnt in range(0, dim):
         pol = polsys[cnt]
         nchar = len(pol)
-        fail = py2c_syscon_store_polynomial(nchar, dim, cnt+1, pol)
+        fail = py2c_syscon_store_standard_polynomial(nchar, dim, cnt+1, pol)
         if(fail != 0):
             break
     return fail
@@ -30,8 +30,7 @@ def store_dobldobl_system(polsys):
     into the systems container for double double arithmetic.
     """
     from phcpy2c import py2c_syscon_clear_dobldobl_system
-    from phcpy2c\
-    import py2c_syscon_initialize_number_of_dobldobl_polynomials
+    from phcpy2c import py2c_syscon_initialize_number_of_dobldobl_polynomials
     from phcpy2c import py2c_syscon_store_dobldobl_polynomial
     py2c_syscon_clear_dobldobl_system()
     dim = len(polsys)
@@ -50,8 +49,7 @@ def store_quaddobl_system(polsys):
     into the systems container for quad double arithmetic.
     """
     from phcpy2c import py2c_syscon_clear_quaddobl_system
-    from phcpy2c\
-    import py2c_syscon_initialize_number_of_quaddobl_polynomials
+    from phcpy2c import py2c_syscon_initialize_number_of_quaddobl_polynomials
     from phcpy2c import py2c_syscon_store_quaddobl_polynomial
     py2c_syscon_clear_quaddobl_system()
     dim = len(polsys)
@@ -72,8 +70,7 @@ def store_multprec_system(polsys, decimals):
     in the working precision for the parsing of the strings in polsys.
     """
     from phcpy2c import py2c_syscon_clear_multprec_system
-    from phcpy2c\
-    import py2c_syscon_initialize_number_of_multprec_polynomials
+    from phcpy2c import py2c_syscon_initialize_number_of_multprec_polynomials
     from phcpy2c import py2c_syscon_store_multprec_polynomial
     py2c_syscon_clear_multprec_system()
     dim = len(polsys)
@@ -92,12 +89,12 @@ def load_standard_system():
     Returns the polynomials stored in the system container
     for standard double precision arithmetic.
     """
-    from phcpy2c import py2c_syscon_number_of_polynomials
-    from phcpy2c import py2c_syscon_load_polynomial
-    dim = py2c_syscon_number_of_polynomials()
+    from phcpy2c import py2c_syscon_number_of_standard_polynomials
+    from phcpy2c import py2c_syscon_load_standard_polynomial
+    dim = py2c_syscon_number_of_standard_polynomials()
     result = []
     for ind in range(1, dim+1):
-        result.append(py2c_syscon_load_polynomial(ind))
+        result.append(py2c_syscon_load_standard_polynomial(ind))
     return result
 
 def load_dobldobl_system():
@@ -145,16 +142,16 @@ def store_standard_laurent_system(polsys):
     strings in polsys into the container for systems
     with coefficients in standard double precision.
     """
-    from phcpy2c import py2c_syscon_clear_Laurent_system
-    from phcpy2c import py2c_syscon_initialize_number_of_Laurentials
-    from phcpy2c import py2c_syscon_store_Laurential
-    py2c_syscon_clear_Laurent_system()
+    from phcpy2c import py2c_syscon_clear_standard_Laurent_system
+    from phcpy2c import py2c_syscon_initialize_number_of_standard_Laurentials
+    from phcpy2c import py2c_syscon_store_standard_Laurential
+    py2c_syscon_clear_standard_Laurent_system()
     dim = len(polsys)
-    py2c_syscon_initialize_number_of_Laurentials(dim)
+    py2c_syscon_initialize_number_of_standard_Laurentials(dim)
     for cnt in range(0, dim):
         pol = polsys[cnt]
         nchar = len(pol)
-        fail = py2c_syscon_store_Laurential(nchar, dim, cnt+1, pol)
+        fail = py2c_syscon_store_standard_Laurential(nchar, dim, cnt+1, pol)
         if(fail != 0):
             break
     return fail
@@ -166,8 +163,7 @@ def store_dobldobl_laurent_system(polsys):
     with coefficients in double double precision.
     """
     from phcpy2c import py2c_syscon_clear_dobldobl_Laurent_system
-    from phcpy2c\
-    import py2c_syscon_initialize_number_of_dobldobl_Laurentials
+    from phcpy2c import py2c_syscon_initialize_number_of_dobldobl_Laurentials
     from phcpy2c import py2c_syscon_store_dobldobl_Laurential
     py2c_syscon_clear_dobldobl_Laurent_system()
     dim = len(polsys)
@@ -187,8 +183,7 @@ def store_quaddobl_laurent_system(polsys):
     with coefficients in quad double precision.
     """
     from phcpy2c import py2c_syscon_clear_quaddobl_Laurent_system
-    from phcpy2c\
-    import py2c_syscon_initialize_number_of_quaddobl_Laurentials
+    from phcpy2c import py2c_syscon_initialize_number_of_quaddobl_Laurentials
     from phcpy2c import py2c_syscon_store_quaddobl_Laurential
     py2c_syscon_clear_quaddobl_Laurent_system()
     dim = len(polsys)
@@ -210,8 +205,7 @@ def store_multprec_laurent_system(polsys, decimals):
     in the working precision for the parsing of the strings in polsys.
     """
     from phcpy2c import py2c_syscon_clear_multprec_Laurent_system
-    from phcpy2c\
-    import py2c_syscon_initialize_number_of_multprec_Laurentials
+    from phcpy2c import py2c_syscon_initialize_number_of_multprec_Laurentials
     from phcpy2c import py2c_syscon_store_multprec_Laurential
     py2c_syscon_clear_multprec_Laurent_system()
     dim = len(polsys)
@@ -230,9 +224,9 @@ def load_standard_laurent_system():
     Returns the Laurent polynomials stored in the system container
     for standard double precision arithmetic.
     """
-    from phcpy2c import py2c_syscon_number_of_Laurentials
+    from phcpy2c import py2c_syscon_number_of_standard_Laurentials
     from phcpy2c import py2c_syscon_load_standard_Laurential
-    dim = py2c_syscon_number_of_Laurentials()
+    dim = py2c_syscon_number_of_standard_Laurentials()
     result = []
     for ind in range(1, dim+1):
         result.append(py2c_syscon_load_standard_Laurential(ind))

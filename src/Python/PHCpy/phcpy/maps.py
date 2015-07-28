@@ -9,9 +9,9 @@ def is_binomial_system(silent=True):
     if not silent, then the number of terms in each Laurent
     polynomial is written to screen.
     """
-    from phcpy2c import py2c_syscon_number_of_Laurentials
+    from phcpy2c import py2c_syscon_number_of_standard_Laurentials
     from phcpy2c import py2c_syscon_number_of_Laurent_terms
-    nbequ = py2c_syscon_number_of_Laurentials()
+    nbequ = py2c_syscon_number_of_standard_Laurentials()
     if not silent:
         print 'checking if binomial system ...'
         print '  number of Laurent polynomials :', nbequ
@@ -32,17 +32,17 @@ def store_laurent_system(nbvar, pols):
     Given in pols a list of string representing Laurent polynomials
     into the systems container.  The number of variables equals nbvar.
     """
-    from phcpy2c import py2c_syscon_clear_Laurent_system
-    from phcpy2c import py2c_syscon_initialize_number_of_Laurentials
-    from phcpy2c import py2c_syscon_store_Laurential
-    py2c_syscon_clear_Laurent_system()
+    from phcpy2c import py2c_syscon_clear_standard_Laurent_system
+    from phcpy2c import py2c_syscon_initialize_number_of_standard_Laurentials
+    from phcpy2c import py2c_syscon_store_standard_Laurential
+    py2c_syscon_clear_standard_Laurent_system()
     nbequ = len(pols)
-    py2c_syscon_initialize_number_of_Laurentials(nbequ)
+    py2c_syscon_initialize_number_of_standard_Laurentials(nbequ)
     for ind in range(0, nbequ):
         pol = pols[ind]
         # print 'storing' , pol
         nbchar = len(pol)
-        py2c_syscon_store_Laurential(nbchar, nbvar, ind+1, pol)
+        py2c_syscon_store_standard_Laurential(nbchar, nbvar, ind+1, pol)
 
 def monomial_map_strings(dim, ind, nbvar):
     """
@@ -143,14 +143,14 @@ def solve_binomials(nbvar, pols, silent=True, puretopdim=False):
     The expected top dimension equals the number of variables minus
     the number of equations.
     """
-    from phcpy2c import py2c_syscon_write_Laurent_system
+    from phcpy2c import py2c_syscon_write_standard_Laurent_system
     from phcpy2c import py2c_mapcon_solve_system
     from phcpy2c import py2c_mapcon_write_maps
     from phcpy2c import py2c_mapcon_clear_maps
     store_laurent_system(nbvar, pols)
     if not silent:
         print 'the polynomials on input :'
-        py2c_syscon_write_Laurent_system()
+        py2c_syscon_write_standard_Laurent_system()
     isbin = is_binomial_system(silent)
     result = []
     if isbin:

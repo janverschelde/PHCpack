@@ -12,27 +12,27 @@ def embed(nvar, topdim, pols):
     equals the expected highest dimension of a component
     of the solution set of the system of polynomials.
     """
-    from phcpy2c import py2c_syscon_clear_system
-    from phcpy2c import py2c_syscon_initialize_number
-    from phcpy2c import py2c_syscon_store_polynomial
-    from phcpy2c import py2c_syscon_load_polynomial
+    from phcpy2c import py2c_syscon_clear_standard_system
+    from phcpy2c import py2c_syscon_initialize_number_of_standard_polynomials
+    from phcpy2c import py2c_syscon_store_standard_polynomial
+    from phcpy2c import py2c_syscon_load_standard_polynomial
     from phcpy2c import py2c_embed_system
-    py2c_syscon_clear_system()
+    py2c_syscon_clear_standard_system()
     nequ = len(pols)
     if nequ > nvar:
-        py2c_syscon_initialize_number(nequ)
+        py2c_syscon_initialize_number_of_standard_polynomials(nequ)
         nbres = nequ
     else:
-        py2c_syscon_initialize_number(nvar)
+        py2c_syscon_initialize_number_of_standard_polynomials(nvar)
         nbres = nvar
     for i in range(0, nequ):
         nchar = len(pols[i])
-        py2c_syscon_store_polynomial(nchar, nvar, i+1, pols[i])
+        py2c_syscon_store_standard_polynomial(nchar, nvar, i+1, pols[i])
     py2c_embed_system(topdim)
     # py2c_syscon_write_system()
     result = []
     for i in range(1, nbres+topdim+1):
-        result.append(py2c_syscon_load_polynomial(i))
+        result.append(py2c_syscon_load_standard_polynomial(i))
     return result
 
 def witness_set_of_hypersurface(nvar, hpol):

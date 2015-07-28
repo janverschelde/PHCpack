@@ -73,20 +73,20 @@ def solve(pols, silent=False, tasks=0):
     set the flag silent to True.
     The number of tasks for multithreading is given by tasks.
     """
-    from phcpy2c import py2c_syscon_clear_Laurent_system
-    from phcpy2c import py2c_syscon_initialize_number_of_Laurentials
-    from phcpy2c import py2c_syscon_store_Laurential
+    from phcpy2c import py2c_syscon_clear_standard_Laurent_system
+    from phcpy2c import py2c_syscon_initialize_number_of_standard_Laurentials
+    from phcpy2c import py2c_syscon_store_standard_Laurential
     from phcpy2c import py2c_solcon_clear_standard_solutions
     from phcpy2c import py2c_solve_Laurent_system
     from interface import load_standard_solutions
-    py2c_syscon_clear_Laurent_system()
+    py2c_syscon_clear_standard_Laurent_system()
     py2c_solcon_clear_standard_solutions()
     dim = len(pols)
-    py2c_syscon_initialize_number_of_Laurentials(dim)
+    py2c_syscon_initialize_number_of_standard_Laurentials(dim)
     for ind in range(0, dim):
         pol = pols[ind]
         nchar = len(pol)
-        py2c_syscon_store_Laurential(nchar, dim, ind+1, pol)
+        py2c_syscon_store_standard_Laurential(nchar, dim, ind+1, pol)
     py2c_solve_Laurent_system(silent, tasks)
     return load_standard_solutions()
 
@@ -284,15 +284,16 @@ def total_degree_start_system(pols):
     Returns the system and solutions of the total degree start system
     for the polynomials represented by the strings in the list pols.
     """
-    from phcpy2c import py2c_syscon_number_of_polynomials
+    from phcpy2c import py2c_syscon_number_of_standard_polynomials
     from phcpy2c import py2c_syscon_string_of_symbols
-    from phcpy2c import py2c_syscon_degree_of_polynomial
+    from phcpy2c import py2c_syscon_degree_of_standard_polynomial
     from interface import store_standard_system
     store_standard_system(pols)
-    dim = py2c_syscon_number_of_polynomials()
+    dim = py2c_syscon_number_of_standard_polynomials()
     svars = py2c_syscon_string_of_symbols()
     nvars = svars.split(' ')
-    degrees = [py2c_syscon_degree_of_polynomial(k+1) for k in range(dim)]
+    degrees = [py2c_syscon_degree_of_standard_polynomial(k+1) \
+               for k in range(dim)]
     result = []
     for ind in range(dim):
         result.append(nvars[ind]+'^'+str(degrees[ind])+' - 1;')
@@ -409,9 +410,6 @@ def mixed_volume(pols, stable=False):
     Incorrectly parsed strings will result in a negative value on return.
     """
     from phcpy2c import py2c_celcon_clear_container
-    from phcpy2c import py2c_syscon_clear_Laurent_system
-    from phcpy2c import py2c_syscon_initialize_number_of_Laurentials
-    from phcpy2c import py2c_syscon_store_Laurential
     from phcpy2c import py2c_mixed_volume
     from interface import store_standard_system, store_standard_laurent_system
     py2c_celcon_clear_container()
@@ -431,32 +429,32 @@ def standard_random_coefficient_system(silent=False):
     in standard double precision arithmetic.
     For this to work, the mixed_volume function must be called first.
     """
-    from phcpy2c import py2c_celcon_create_random_coefficient_system
-    from phcpy2c import py2c_celcon_copy_into_systems_container
-    from phcpy2c import py2c_celcon_create_polyhedral_homotopy
+    from phcpy2c import py2c_celcon_standard_random_coefficient_system
+    from phcpy2c import py2c_celcon_copy_into_standard_systems_container
+    from phcpy2c import py2c_celcon_standard_polyhedral_homotopy
     from phcpy2c import py2c_celcon_number_of_cells
     from phcpy2c import py2c_solcon_clear_standard_solutions
-    from phcpy2c import py2c_celcon_solve_start_system
-    from phcpy2c import py2c_celcon_track_solution_path
-    from phcpy2c import py2c_celcon_copy_target_solution_to_container
-    py2c_celcon_create_random_coefficient_system()
-    py2c_celcon_copy_into_systems_container()
+    from phcpy2c import py2c_celcon_solve_standard_start_system
+    from phcpy2c import py2c_celcon_track_standard_solution_path
+    from phcpy2c import py2c_celcon_copy_target_standard_solution_to_container
+    py2c_celcon_standard_random_coefficient_system()
+    py2c_celcon_copy_into_standard_systems_container()
     from interface import load_standard_system, load_standard_solutions
     # py2c_syscon_write_system()
     result = load_standard_system()
     # print result
-    py2c_celcon_create_polyhedral_homotopy()
+    py2c_celcon_standard_polyhedral_homotopy()
     nbcells = py2c_celcon_number_of_cells()
     py2c_solcon_clear_standard_solutions()
     for cell in range(1, nbcells+1):
-        mixvol = py2c_celcon_solve_start_system(cell)
+        mixvol = py2c_celcon_solve_standard_start_system(cell)
         if not silent:
             print 'system %d has %d solutions' % (cell, mixvol)
         for j in range(1, mixvol+1):
             if not silent:
                 print '-> tracking path %d out of %d' % (j, mixvol)
-            py2c_celcon_track_solution_path(cell, j, 0)
-            py2c_celcon_copy_target_solution_to_container(cell, j)
+            py2c_celcon_track_standard_solution_path(cell, j, 0)
+            py2c_celcon_copy_target_standard_solution_to_container(cell, j)
     sols = load_standard_solutions()
     # print sols
     # newton_step(result, sols)
@@ -561,10 +559,10 @@ def permute_standard_system(pols):
     with coefficients in standard double precision,
     along the permutation used in the mixed volume computation.
     """
-    from phcpy2c import py2c_celcon_permute_system
+    from phcpy2c import py2c_celcon_permute_standard_system
     from interface import store_standard_system, load_standard_system
     store_standard_system(pols)
-    py2c_celcon_permute_system()
+    py2c_celcon_permute_standard_system()
     return load_standard_system()
 
 def permute_dobldobl_system(pols):
@@ -730,11 +728,11 @@ def test_standard_polyhedral_homotopy():
     Test on jumpstarting a polyhedral homotopy
     in standard precision.
     """
-    from phcpy2c import py2c_syscon_clear_system
-    from phcpy2c import py2c_syscon_clear_Laurent_system
+    from phcpy2c import py2c_syscon_clear_standard_system
+    from phcpy2c import py2c_syscon_clear_standard_Laurent_system
     from trackers import track
-    py2c_syscon_clear_system()
-    py2c_syscon_clear_Laurent_system()
+    py2c_syscon_clear_standard_system()
+    py2c_syscon_clear_standard_Laurent_system()
     qrt = random_trinomials()
     mixvol = mixed_volume(qrt)
     print 'the mixed volume is', mixvol
