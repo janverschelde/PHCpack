@@ -2418,29 +2418,125 @@ static PyObject *py2c_factor_initialize_sampler
 
 static PyObject *py2c_factor_initialize_monodromy
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the internal data structures for n loops,
+ *   to factor a k-dimensional solution component of degree d.
+ *   There are three integers on input, in the following order:
+ *   1) n, the number of loops;
+ *   2) d, the degree of the solution set;
+ *   3) k, the dimensional of the solution set.
+ *   On return is the failure code, which equals zero when all went well. */
+
 static PyObject *py2c_factor_store_solutions
  ( PyObject *self, PyObject *args );
+/* 
+ * DESCRIPTION :
+ *   Stores the solutions in the container to the data for monodromy loops. */
+
 static PyObject *py2c_factor_restore_solutions
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Restores the first initialized solutions from sampler to the container. */
 
 static PyObject *py2c_factor_track_paths ( PyObject *self, PyObject *args );
+/* 
+ * DESCRIPTION :
+ *   Tracks as many paths as defined by witness set.
+ *   On return is the failure code, which is zero when all went well. */
+
 static PyObject *py2c_factor_swap_slices ( PyObject *self, PyObject *args );
+/* 
+ * DESCRIPTION :
+ *   Swaps the current slices with new slices and takes new solutions
+ *   as start to turn back.
+ *   On return is the failure code, which is zero when all went well. */
+
 static PyObject *py2c_factor_new_slices ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Generates k random slides in n-space.
+ *   The k and the n are the two input parametersr.
+ *   On return is the failure code, which is zero when all went well. */
+
 static PyObject *py2c_factor_set_trace_slice
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Assigns the constant coefficient of the first slice.
+ *   On entry is a flag to indicate if it was the first time or not.
+ *   On return is the failure code, which is zero if all went well. */
+
 static PyObject *py2c_factor_store_gammas ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Stores the gamma constants for the sampler in the monodromy loops.
+ *   Generates as many random complex constants as the value on input.
+ *   On return is the failure code, which is zero if all went well. */
+
 static PyObject *py2c_factor_permutation_after_loop
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   For a solution set of degree d, computes the permutation using the
+ *   solutions most recently stored, after a loop. 
+ *   The number d is the input parameter of this function.
+ *   On return is the string representation of the permutation. */
+
 static PyObject *py2c_factor_update_decomposition
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Updates the decomposition with the given permutation of d elements.
+ *   On entry are two integers and one string:
+ *   1) d, the number of elements in the permutation;
+ *   2) nc, the number of characters in the string;
+ *   3) p, the string representation of the permutation.
+ *   Returns one if the current decomposition is certified,
+ *   otherwise returns zero. */
+
 static PyObject *py2c_factor_number_of_components
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of irreducible factors in the current
+ *   decomposition of the witness set. */
+
 static PyObject *py2c_factor_witness_points_of_component
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns a string which represents an irreducible component.
+ *   On entry are two integers:
+ *   1) the sum of the degrees of all components;
+ *   2) the index of the component. */
+
 static PyObject *py2c_factor_trace_sum_difference
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the difference between the actual sum at the samples
+ *   defined by the labels to the generic points in the factor,
+ *   and the trace sum.
+ *   On entry are three integer numbers and one string:
+ *   1) d, the number of points in the witness set;
+ *   2) k, the dimension of the solution set;
+ *   3) nc, the number of characters in the string;
+ *   4) ws, the string representing the labels of the witness set. */
+
 static PyObject *py2c_witness_set_of_hypersurface
  ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Given in the string p of nc characters a polynomial in nv variables,
+ *   terminated by a semicolon, the systems and solutions container on
+ *   return contain a witness set for the hypersurface defined by p.
+ *   On entry are two integers and one string, in the following order:
+ *   1) nv, the number of variables of the polynomials;
+ *   2) nc, the number of characters in the string p;
+ *   3) p, string representation of a polynomial, terminates with ';'.
+ *   On return is the failure code, which equals zero if all went well. */
 
 static PyObject *py2c_create_diagonal_homotopy
  ( PyObject *self, PyObject *args );
@@ -2718,7 +2814,7 @@ static PyObject *py2c_initialize_multprec_homotopy
 static PyObject *py2c_initialize_varprec_homotopy
  ( PyObject *self, PyObject *args );
 /*
- * DECRIPTION :
+ * DESCRIPTION :
  *   Initializes the variable precision homotopy with the target and
  *   start system stored in the strings.
  *   On entry are three integers and two strings, in the following order:
