@@ -76,11 +76,11 @@ def solve(pols, silent=False, tasks=0):
     from phcpy2c import py2c_syscon_clear_Laurent_system
     from phcpy2c import py2c_syscon_initialize_number_of_Laurentials
     from phcpy2c import py2c_syscon_store_Laurential
-    from phcpy2c import py2c_solcon_clear_solutions
+    from phcpy2c import py2c_solcon_clear_standard_solutions
     from phcpy2c import py2c_solve_Laurent_system
     from interface import load_standard_solutions
     py2c_syscon_clear_Laurent_system()
-    py2c_solcon_clear_solutions()
+    py2c_solcon_clear_standard_solutions()
     dim = len(pols)
     py2c_syscon_initialize_number_of_Laurentials(dim)
     for ind in range(0, dim):
@@ -435,7 +435,7 @@ def standard_random_coefficient_system(silent=False):
     from phcpy2c import py2c_celcon_copy_into_systems_container
     from phcpy2c import py2c_celcon_create_polyhedral_homotopy
     from phcpy2c import py2c_celcon_number_of_cells
-    from phcpy2c import py2c_solcon_clear_solutions
+    from phcpy2c import py2c_solcon_clear_standard_solutions
     from phcpy2c import py2c_celcon_solve_start_system
     from phcpy2c import py2c_celcon_track_solution_path
     from phcpy2c import py2c_celcon_copy_target_solution_to_container
@@ -447,7 +447,7 @@ def standard_random_coefficient_system(silent=False):
     # print result
     py2c_celcon_create_polyhedral_homotopy()
     nbcells = py2c_celcon_number_of_cells()
-    py2c_solcon_clear_solutions()
+    py2c_solcon_clear_standard_solutions()
     for cell in range(1, nbcells+1):
         mixvol = py2c_celcon_solve_start_system(cell)
         if not silent:

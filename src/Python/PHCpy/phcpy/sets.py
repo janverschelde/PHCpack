@@ -94,7 +94,7 @@ def standard_double_cascade_step(embsys, esols):
     from phcpy2c import py2c_copy_container_to_start_solutions
     from phcpy2c import py2c_standard_cascade_homotopy
     from phcpy2c import py2c_solve_by_standard_homotopy_continuation
-    from phcpy2c import py2c_solcon_clear_solutions
+    from phcpy2c import py2c_solcon_clear_standard_solutions
     from phcpy2c import py2c_copy_target_solutions_to_container
     from interface import store_standard_system
     from interface import store_standard_solutions, load_standard_solutions
@@ -104,7 +104,7 @@ def standard_double_cascade_step(embsys, esols):
     py2c_copy_container_to_start_solutions()
     py2c_standard_cascade_homotopy()
     py2c_solve_by_standard_homotopy_continuation(0)
-    py2c_solcon_clear_solutions()
+    py2c_solcon_clear_standard_solutions()
     py2c_copy_target_solutions_to_container()
     return load_standard_solutions()
 
@@ -269,7 +269,7 @@ def monodromy_breakup(embsys, esols, dim):
     from phcpy2c import py2c_factor_permutation_after_loop
     from phcpy2c import py2c_factor_number_of_components
     from phcpy2c import py2c_factor_update_decomposition
-    from phcpy2c import py2c_solcon_clear_solutions
+    from phcpy2c import py2c_solcon_clear_standard_solutions
     from interface import store_standard_solutions
     print '... applying monodromy factorization ...'
     py2c_factor_set_to_mute()
@@ -296,7 +296,7 @@ def monodromy_breakup(embsys, esols, dim):
         py2c_factor_new_slices(dim, nvar)
         py2c_factor_store_gammas(nvar)
         py2c_factor_track_paths()
-        py2c_solcon_clear_solutions()
+        py2c_solcon_clear_standard_solutions()
         py2c_factor_store_gammas(nvar)
         py2c_factor_track_paths()
         py2c_factor_store_solutions()

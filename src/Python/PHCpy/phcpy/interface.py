@@ -284,11 +284,11 @@ def store_standard_solutions(nvar, sols):
     with standard double precision.
     The number nvar equals the number of variables.
     """
-    from phcpy2c import py2c_solcon_clear_solutions
-    from phcpy2c import py2c_solcon_append_solution_string
-    py2c_solcon_clear_solutions()
+    from phcpy2c import py2c_solcon_clear_standard_solutions
+    from phcpy2c import py2c_solcon_append_standard_solution_string
+    py2c_solcon_clear_standard_solutions()
     for ind in range(0, len(sols)):
-        fail = py2c_solcon_append_solution_string\
+        fail = py2c_solcon_append_standard_solution_string\
                    (nvar, len(sols[ind]), sols[ind])
         if(fail != 0):
             break

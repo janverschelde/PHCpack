@@ -64,10 +64,10 @@ def littlewood_richardson_homotopies(ndim, kdim, brackets, \
     the polynomial system that has been solved and its solutions.
     The length of the list of solution should match the root count.
     """
-    from phcpy2c import py2c_solcon_clear_solutions
+    from phcpy2c import py2c_solcon_clear_standard_solutions
     from phcpy2c import py2c_schubert_littlewood_richardson_homotopies as lrhom
     from interface import load_standard_solutions, load_standard_system
-    py2c_solcon_clear_solutions()
+    py2c_solcon_clear_standard_solutions()
     nbc = len(brackets)
     cds = ''
     for bracket in brackets:
@@ -151,9 +151,9 @@ def run_pieri_homotopies(mdim, pdim, qdeg, planes, *pts):
     from phcpy2c import py2c_schubert_pieri_count
     from phcpy2c import py2c_schubert_pieri_homotopies
     from phcpy2c import py2c_syscon_load_polynomial
-    from phcpy2c import py2c_solcon_number_of_solutions
-    from phcpy2c import py2c_solcon_length_solution_string
-    from phcpy2c import py2c_solcon_write_solution_string
+    from phcpy2c import py2c_solcon_number_of_standard_solutions
+    from phcpy2c import py2c_solcon_length_standard_solution_string
+    from phcpy2c import py2c_solcon_write_standard_solution_string
     root_count = py2c_schubert_pieri_count(mdim, pdim, qdeg)
     print 'Pieri root count for', (mdim, pdim, qdeg), 'is', root_count
     strplanes = planes_to_string(planes)
@@ -180,11 +180,11 @@ def run_pieri_homotopies(mdim, pdim, qdeg, planes, *pts):
     for poly in pols:
         print poly
     print 'root count :', root_count
-    nbsols = py2c_solcon_number_of_solutions()
+    nbsols = py2c_solcon_number_of_standard_solutions()
     sols = []
     for k in range(1, nbsols+1):
-        lns = py2c_solcon_length_solution_string(k)
-        sol = py2c_solcon_write_solution_string(k, lns)
+        lns = py2c_solcon_length_standard_solution_string(k)
+        sol = py2c_solcon_write_standard_solution_string(k, lns)
         sols.append(sol)
     print 'the solutions :'
     for solution in sols:

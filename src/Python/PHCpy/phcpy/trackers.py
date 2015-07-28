@@ -54,10 +54,10 @@ def standard_double_track(target, start, sols, gamma=0, tasks=0):
     from phcpy2c import py2c_copy_container_to_target_system
     from phcpy2c import py2c_copy_container_to_start_system
     from phcpy2c import py2c_copy_container_to_start_solutions
-    from phcpy2c import py2c_create_homotopy
-    from phcpy2c import py2c_create_homotopy_with_gamma
+    from phcpy2c import py2c_create_standard_homotopy
+    from phcpy2c import py2c_create_standard_homotopy_with_gamma
     from phcpy2c import py2c_solve_by_standard_homotopy_continuation
-    from phcpy2c import py2c_solcon_clear_solutions
+    from phcpy2c import py2c_solcon_clear_standard_solutions
     from phcpy2c import py2c_copy_target_solutions_to_container
     from interface import store_standard_system
     from interface import store_standard_solutions, load_standard_solutions
@@ -65,16 +65,16 @@ def standard_double_track(target, start, sols, gamma=0, tasks=0):
     py2c_copy_container_to_target_system()
     store_standard_system(start)
     py2c_copy_container_to_start_system()
-    # py2c_clear_homotopy()
+    # py2c_clear_standard_homotopy()
     if(gamma == 0):
-        py2c_create_homotopy()
+        py2c_create_standard_homotopy()
     else:
-        py2c_create_homotopy_with_gamma(gamma.real, gamma.imag)
+        py2c_create_standard_homotopy_with_gamma(gamma.real, gamma.imag)
     dim = len(start)
     store_standard_solutions(dim, sols)
     py2c_copy_container_to_start_solutions()
     py2c_solve_by_standard_homotopy_continuation(tasks)
-    py2c_solcon_clear_solutions()
+    py2c_solcon_clear_standard_solutions()
     py2c_copy_target_solutions_to_container()
     return load_standard_solutions()
 
@@ -107,7 +107,7 @@ def double_double_track(target, start, sols, gamma=0, tasks=0):
     py2c_copy_dobldobl_container_to_target_system()
     store_dobldobl_system(start)
     py2c_copy_dobldobl_container_to_start_system()
-    # py2c_clear_homotopy()
+    # py2c_clear_dobldobl_homotopy()
     if(gamma == 0):
         py2c_create_dobldobl_homotopy()
     else:
@@ -149,7 +149,7 @@ def quad_double_track(target, start, sols, gamma=0, tasks=0):
     py2c_copy_quaddobl_container_to_target_system()
     store_quaddobl_system(start)
     py2c_copy_quaddobl_container_to_start_system()
-    # py2c_clear_homotopy()
+    # py2c_clear_quaddobl_homotopy()
     if(gamma == 0):
         py2c_create_quaddobl_homotopy()
     else:
@@ -405,11 +405,11 @@ def next_standard_solution():
     have been executed properly.
     """
     from phcpy2c import py2c_next_standard_solution
-    from phcpy2c import py2c_solcon_length_solution_string
-    from phcpy2c import py2c_solcon_write_solution_string
+    from phcpy2c import py2c_solcon_length_standard_solution_string
+    from phcpy2c import py2c_solcon_write_standard_solution_string
     py2c_next_standard_solution(1)
-    lns = py2c_solcon_length_solution_string(1)
-    sol = py2c_solcon_write_solution_string(1, lns)
+    lns = py2c_solcon_length_standard_solution_string(1)
+    sol = py2c_solcon_write_standard_solution_string(1, lns)
     return sol
 
 def next_dobldobl_solution():
