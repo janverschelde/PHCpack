@@ -12,6 +12,7 @@
 #include "product.h"
 #include "lists_and_strings.h"
 #include "celcon.h"
+#include "scalers.h"
 #include "witset.h"
 #include "mapcon.h"
 #include "next_track.h"
@@ -3453,6 +3454,38 @@ static PyObject *py2c_celcon_clear_container
    return Py_BuildValue("i",fail);
 }
 
+/* wrapping functions to scale polynomial systems and solutions */
+
+static PyObject *py2c_standard_scale_system ( PyObject *self, PyObject *args )
+{
+   int fail,mode,dim,i;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&mode)) return NULL;
+   fail = syscon_number_of_polynomials(&dim);
+   if((fail == 0) && (dim > 0))
+   {
+      double cff[4*dim+2];  
+
+      fail = standard_scale_system(mode,cff);
+      if(fail == 0)
+      {
+         if(mode > 0)
+         {
+            PyObject *result, *item;
+            result = PyList_New(4*dim+1);
+            for(i=0; i<4*dim+1; i++)
+            {
+               item = PyFloat_FromDouble(cff[i]);
+               PyList_SET_ITEM(result,i,item);
+            }
+            return result;
+         }
+      }
+   }
+   return Py_BuildValue("i",fail);
+}
+
 /* wrapping functions to manipulate algebraic sets */
 
 static PyObject *py2c_embed_system ( PyObject *self, PyObject *args )
@@ -5151,6 +5184,8 @@ static PyMethodDef phcpy2c_methods[] =
     "Permutes the systems in the container for polynomial and Laurent systems\n with quad double coefficients corresponding to the permutation\n used to compute the mixed-cell configuration.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_celcon_clear_container", py2c_celcon_clear_container, METH_VARARGS,
     "Deallocates the data in the cell container."},
+   {"py2c_standard_scale_system", py2c_standard_scale_system, METH_VARARGS,
+    "Applies scaling to the system in the standard systems container,\n with standard double precision arithmetic.  The system in the standard\n systems container is replaced by the scaled system.\n On entry is one integer, which should be either 0, 1, or 2:\n 0 for only scaling of the equations,\n 1 variable scaling without variability reduction,\n 2 variable scaling with variability reduction.\n On return is a tuple with the scaling coefficients (if mode > 0)\n and the estimated inverse condition number of the scaling problem."},
    {"py2c_embed_system", py2c_embed_system, METH_VARARGS,
     "Replaces the system with coefficients in standard double precision\n in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_standard_cascade_homotopy", py2c_standard_cascade_homotopy,

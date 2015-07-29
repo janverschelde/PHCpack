@@ -153,21 +153,23 @@ static PyObject *py2c_define_output_file ( PyObject *self, PyObject *args );
  *   Prompts the user to define the output file.
  *   On return is the failure code, which is zero if all went well. */
 
-static PyObject *py2c_write_target_system ( PyObject *self, PyObject *args );
+static PyObject *py2c_write_standard_target_system
+ ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Writes the target system as stored in standard double precision
  *   to screen or to the defined output file. */
 
-static PyObject *py2c_write_start_system ( PyObject *self, PyObject *args );
+static PyObject *py2c_write_standard_start_system
+ ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Writes the target system as stored in standard double precision
+ *   Writes the start system as stored in standard double precision
  *   to screen or to the defined output file. */
 
 /* Copying systems from and to containers. */
 
-static PyObject *py2c_copy_target_system_to_container
+static PyObject *py2c_copy_standard_target_system_to_container
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -195,7 +197,7 @@ static PyObject *py2c_copy_multprec_target_system_to_container
  *   Copies the target system to the container for systems
  *   with coefficients in arbitrary multiprecision. */
 
-static PyObject *py2c_copy_container_to_target_system
+static PyObject *py2c_copy_standard_container_to_target_system
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -251,7 +253,7 @@ static PyObject *py2c_copy_multprec_start_system_to_container
  *   Copies the start system to the container for systems
  *   with coefficients in arbitrary multiprecision. */
 
-static PyObject *py2c_copy_container_to_start_system 
+static PyObject *py2c_copy_standard_container_to_start_system 
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -443,9 +445,9 @@ static PyObject *py2c_solve_by_multprec_homotopy_continuation
  *   On input is one integer: the number of decimal places in the precision.
  *   On return is the failure code, which is zero when all went well. */
 
-/* moving solutions from and to containers */
+/* copying solutions from and to containers */
 
-static PyObject *py2c_copy_target_solutions_to_container
+static PyObject *py2c_copy_standard_target_solutions_to_container
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -473,7 +475,7 @@ static PyObject *py2c_copy_multprec_target_solutions_to_container
  *   Copies the target solutions in arbitrary multiprecision to the
  *   container for solutions in arbitrary multiprecision. */
 
-static PyObject *py2c_copy_container_to_target_solutions
+static PyObject *py2c_copy_standard_container_to_target_solutions
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -529,7 +531,7 @@ static PyObject *py2c_copy_multprec_start_solutions_to_container
  *   Copies the start solutions in arbitrary multiprecision to the
  *   container for solutions in arbitrary multiprecision. */
 
-static PyObject *py2c_copy_container_to_start_solutions
+static PyObject *py2c_copy_standard_container_to_start_solutions
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -2357,6 +2359,21 @@ static PyObject *py2c_celcon_clear_container
 /*
  * DESCRIPTION :
  *   Deallocates the data in the cell container. */
+
+/* wrapping functions to scale polynomial systems and solutions */
+
+static PyObject *py2c_standard_scale_system ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Applies scaling to the system in the standard systems container,
+ *   with standard double precision arithmetic.  The system in the standard
+ *   systems container is replaced by the scaled system.
+ *   On entry is one integer, which should be either 0, 1, or 2:
+ *   0 for only scaling of the equations,
+ *   1 variable scaling without variability reduction,
+ *   2 variable scaling with variability reduction.
+ *   On return is a tuple with the scaling coefficients (if mode > 0)
+ *   and the estimated inverse condition number of the scaling problem. */
 
 /* wrapping functions to manipulate algebraic sets */
 
