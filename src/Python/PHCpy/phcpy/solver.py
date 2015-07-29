@@ -691,6 +691,28 @@ def test_usolve():
     for root in roots:
         print root
 
+def standard_scale_system(pols):
+    """
+    Applies equation and variable scaling in standard double precision
+    to the polynomials in the list pols.
+    """
+    from interface import store_standard_system, load_standard_system
+    from phcpy2c import py2c_standard_scale_system
+    store_standard_system(pols)
+    cffs = py2c_standard_scale_system(2)
+    spol = load_standard_system()
+    return (spol, cffs)
+
+def test_scale():
+    """
+    Performs a basic test on variable scaling.
+    """
+    s = ['100*x^2 + 10*x + 1;']
+    print 'scaling a polynomial', s
+    p = standard_scale_system(s)
+    print 'the scaled polynomial', p[0]
+    print 'the scaling coefficients :', p[1]
+
 def test_dobldobl_polyhedral_homotopy():
     """
     Test polyhedral homotopy in double double precision

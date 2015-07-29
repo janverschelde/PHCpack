@@ -1,3 +1,6 @@
+Wed 29 Jul 2015 : extended solver.py with a function to scale a polynomial
+  system with standard double precision arithmetic.
+
 Tue 28 Jul 2015 : changes in trackers.py for name changes in py2c functions.
   Also made changes to interface.py, solver.py, schubert.py, and sets.py
   for changed py2c_clear_solutions into py2c_clear_standard_solutions,
