@@ -270,7 +270,7 @@ static PyObject *py2c_write_standard_start_system
 
 /* moving systems from and to containers */
 
-static PyObject *py2c_copy_target_system_to_container
+static PyObject *py2c_copy_standard_target_system_to_container
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -318,7 +318,7 @@ static PyObject *py2c_copy_multprec_target_system_to_container
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_copy_container_to_target_system
+static PyObject *py2c_copy_standard_container_to_target_system
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -414,7 +414,7 @@ static PyObject *py2c_copy_multprec_start_system_to_container
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_copy_container_to_start_system 
+static PyObject *py2c_copy_standard_container_to_start_system 
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -720,9 +720,9 @@ static PyObject *py2c_solve_by_multprec_homotopy_continuation
    return Py_BuildValue("i",fail);
 }
 
-/* moving solutions from and to containers */
+/* copying solutions from and to containers */
 
-static PyObject *py2c_copy_target_solutions_to_container
+static PyObject *py2c_copy_standard_target_solutions_to_container
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -766,7 +766,7 @@ static PyObject *py2c_copy_multprec_target_solutions_to_container
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_copy_container_to_target_solutions
+static PyObject *py2c_copy_standard_container_to_target_solutions
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -854,7 +854,7 @@ static PyObject *py2c_copy_multprec_start_solutions_to_container
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_copy_container_to_start_solutions
+static PyObject *py2c_copy_standard_container_to_start_solutions
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -4421,26 +4421,28 @@ static PyMethodDef phcpy2c_methods[] =
     "The two input arguments are a number and a string:\n 1) The number equals the number of characters in the string.\n 2) The string given on input is the name of a file which contains\n a start system to be parsed in quad double precision.\n The failure code is returned, which is zero if all went well."},
    {"py2c_define_output_file", py2c_define_output_file, METH_VARARGS,
     "Prompts the user to define the output file.\n On return is the failure code, which is zero if all went well."},
-   {"py2c_write_standard_target_system", py2c_write_standard_target_system,
-     METH_VARARGS, "writes the target system in standard doubles to file"},
-   {"py2c_write_standard_start_system", py2c_write_standard_start_system,
-     METH_VARARGS, "writes the start system in standard doubles to file"},
-   {"py2c_write_start_solutions", py2c_write_start_solutions,
-    METH_VARARGS, "writes the start solution to file"},
-   {"py2c_copy_target_system_to_container",
-     py2c_copy_target_system_to_container,
-    METH_VARARGS, "copies target system to container"},
+   {"py2c_write_standard_target_system",
+     py2c_write_standard_target_system, METH_VARARGS, 
+    "Writes the target system as stored in standard double precision\n to screen or to the defined output file."},
+   {"py2c_write_standard_start_system",
+     py2c_write_standard_start_system, METH_VARARGS,
+    "Writes the start system as stored in standard double precision\n to screen or to the defined output file."},
+   {"py2c_write_start_solutions", py2c_write_start_solutions, METH_VARARGS,
+    "Writes the start solutions in standard double precision either to\n the screen (standard output) or to the defined output file.\n On return is the failure code, which is zero if all is well."},
+   {"py2c_copy_standard_target_system_to_container",
+     py2c_copy_standard_target_system_to_container, METH_VARARGS,
+    "Copies the target system to the container for systems\n with coefficients in standard double precision."},
    {"py2c_copy_dobldobl_target_system_to_container",
-     py2c_copy_dobldobl_target_system_to_container,
-    METH_VARARGS, "copies double double target system to container"},
+     py2c_copy_dobldobl_target_system_to_container, METH_VARARGS,
+    "Copies the target system to the container for systems\n with coefficients in double double precision."},
    {"py2c_copy_quaddobl_target_system_to_container",
-     py2c_copy_quaddobl_target_system_to_container,
-    METH_VARARGS, "copies quad double target system to container"},
+     py2c_copy_quaddobl_target_system_to_container, METH_VARARGS,
+    "Copies the target system to the container for systems\n with coefficients in quad double precision."},
    {"py2c_copy_multprec_target_system_to_container",
-     py2c_copy_multprec_target_system_to_container,
-    METH_VARARGS, "copies multiprecision target system to container"},
-   {"py2c_copy_container_to_target_system",
-     py2c_copy_container_to_target_system, METH_VARARGS,
+     py2c_copy_multprec_target_system_to_container, METH_VARARGS,
+    "copies multiprecision target system to container"},
+   {"py2c_copy_standard_container_to_target_system",
+     py2c_copy_standard_container_to_target_system, METH_VARARGS,
     "Copies the system in the container for systems with coefficients\n in standard double precision to the target system."},
    {"py2c_copy_dobldobl_container_to_target_system",
      py2c_copy_dobldobl_container_to_target_system, METH_VARARGS,
@@ -4463,8 +4465,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_copy_multprec_start_system_to_container",
      py2c_copy_multprec_start_system_to_container, METH_VARARGS, 
     "Copies the start system to the container for systems\n with coefficients in arbitrary multiprecision."},
-   {"py2c_copy_container_to_start_system",
-     py2c_copy_container_to_start_system, METH_VARARGS, 
+   {"py2c_copy_standard_container_to_start_system",
+     py2c_copy_standard_container_to_start_system, METH_VARARGS, 
     "Copies the system in the container for systems with coefficients\n in standard double precision to the start system."},
    {"py2c_copy_dobldobl_container_to_start_system",
      py2c_copy_dobldobl_container_to_start_system, METH_VARARGS,
@@ -4531,8 +4533,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_solve_by_multprec_homotopy_continuation",
      py2c_solve_by_multprec_homotopy_continuation, METH_VARARGS, 
     "Tracks the paths defined by the homotopy in arbitrary multiprecision.\n On input is one integer: the number of decimal places in the precision.\n On return is the failure code, which is zero when all went well."},
-   {"py2c_copy_target_solutions_to_container",
-     py2c_copy_target_solutions_to_container, METH_VARARGS,
+   {"py2c_copy_standard_target_solutions_to_container",
+     py2c_copy_standard_target_solutions_to_container, METH_VARARGS,
     "Copies the target solutions in standard double precision to the\n container for solutions in standard double precision."},
    {"py2c_copy_dobldobl_target_solutions_to_container",
      py2c_copy_dobldobl_target_solutions_to_container, METH_VARARGS,
@@ -4543,8 +4545,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_copy_multprec_target_solutions_to_container",
      py2c_copy_multprec_target_solutions_to_container, METH_VARARGS,
     "Copies the target solutions in arbitrary multiprecision to the\n container for solutions in arbitrary multiprecision."},
-   {"py2c_copy_container_to_target_solutions",
-     py2c_copy_container_to_target_solutions, METH_VARARGS,
+   {"py2c_copy_standard_container_to_target_solutions",
+     py2c_copy_standard_container_to_target_solutions, METH_VARARGS,
     "Copies the solutions in standard double precision from the\n container to the target solutions in standard double precision."},
    {"py2c_copy_dobldobl_container_to_target_solutions",
      py2c_copy_dobldobl_container_to_target_solutions, METH_VARARGS,
@@ -4567,8 +4569,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_copy_multprec_start_solutions_to_container",
      py2c_copy_multprec_start_solutions_to_container, METH_VARARGS,
     "Copies the start solutions in arbitrary multiprecision to the\n container for solutions in arbitrary multiprecision."},
-   {"py2c_copy_container_to_start_solutions",
-     py2c_copy_container_to_start_solutions, METH_VARARGS,
+   {"py2c_copy_standard_container_to_start_solutions",
+     py2c_copy_standard_container_to_start_solutions, METH_VARARGS,
     "Copies the solutions in standard double precision from the\n container to the start solutions in standard double precision."},
    {"py2c_copy_dobldobl_container_to_start_solutions",
      py2c_copy_dobldobl_container_to_start_solutions, METH_VARARGS, 
