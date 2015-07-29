@@ -1935,6 +1935,7 @@ phcpy2c.so:
 	gcc -c -O2 $(PHCLib)/product.c
 	gcc -c -O2 $(PHCLib)/lists_and_strings.c
 	gcc -c -O2 $(PHCLib)/celcon.c
+	gcc -c -O2 $(PHCLib)/scalers.c
 	gcc -c -O2 $(PHCLib)/witset.c
 	gcc -c -O2 $(PHCLib)/schubert.c
 	gcc -c -O2 $(PHCLib)/unisolvers.c
@@ -1948,7 +1949,8 @@ phcpy2c.so:
 	gnatbind -n use_c2phc
 	gnatlink -dynamiclib -C use_c2phc phcpy2c.o phcpack.o syscon.o \
             witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
-            solcon.o product.o lists_and_strings.o celcon.o schubert.o \
+            solcon.o product.o lists_and_strings.o celcon.o scalers.o \
+            schubert.o \
                  -o ../Python/PHCpy/phcpy/phcpy2c.so -framework Python
 
 # how to make the executables with MPI:

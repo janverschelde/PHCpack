@@ -2044,6 +2044,7 @@ phcpy2c.so:
 	gcc -static -c -fPIC -O2 $(PHCLib)/product.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/lists_and_strings.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/celcon.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/scalers.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/witset.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/unisolvers.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/giftwrappers.c
@@ -2056,9 +2057,9 @@ phcpy2c.so:
 	gnatmake -static -c -fPIC $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	gnatbind -n -shared use_c2phc
 	gnatlink -shared -C use_c2phc syscon.o solcon.o product.o celcon.o \
-                  lists_and_strings.o phcpack.o witset.o schubert.o mapcon.o \
-                  next_track.o phcpy2c.o unisolvers.o giftwrappers.o \
-                 -o ../Python/PHCpy/phcpy/phcpy2c.so -lm
+            lists_and_strings.o phcpack.o witset.o schubert.o mapcon.o \
+            next_track.o phcpy2c.o unisolvers.o giftwrappers.o scalers.o \
+            -o ../Python/PHCpy/phcpy/phcpy2c.so -lm
 
 # note using static flags with gnatbind and gnatlink does not work
 
