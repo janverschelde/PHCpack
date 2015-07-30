@@ -1,3 +1,5 @@
+Thu 30 Jul 2015 : bug fix in use_scaling for scaling of solutions.
+
 Tue 21 Jul 2015 : bug fix in use_scaling, both in the implementation and the
   specification; corresponding job codes added to use_c2phc.
   Bug fix in assignments_in_ada_and_c.adb for qd complex vector assignment,

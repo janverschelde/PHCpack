@@ -178,8 +178,8 @@ function use_scaling ( job : integer32;
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     dim : constant integer32 := integer32(v_a(v_a'first));
-    v_b : constant C_Integer_Array := C_intarrs.Value(a);
-    bas : constant natural32 := natural32(v_a(v_a'first));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    bas : constant natural32 := natural32(v_b(v_b'first));
     sols : Solution_List := Standard_Solutions_Container.Retrieve;
     scf : Standard_Complex_Vectors.Vector(1..dim/2); 
  
@@ -202,8 +202,8 @@ function use_scaling ( job : integer32;
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     dim : constant integer32 := integer32(v_a(v_a'first));
-    v_b : constant C_Integer_Array := C_intarrs.Value(a);
-    bas : constant natural32 := natural32(v_a(v_a'first));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    bas : constant natural32 := natural32(v_b(v_b'first));
     sols : Solution_List := DoblDobl_Solutions_Container.Retrieve;
     scf : DoblDobl_Complex_Vectors.Vector(1..dim/4); 
  
@@ -226,8 +226,8 @@ function use_scaling ( job : integer32;
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     dim : constant integer32 := integer32(v_a(v_a'first));
-    v_b : constant C_Integer_Array := C_intarrs.Value(a);
-    bas : constant natural32 := natural32(v_a(v_a'first));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    bas : constant natural32 := natural32(v_b(v_b'first));
     sols : Solution_List := QuadDobl_Solutions_Container.Retrieve;
     scf : QuadDobl_Complex_Vectors.Vector(1..dim/8); 
  
