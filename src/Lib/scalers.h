@@ -90,7 +90,7 @@ int standard_scale_solutions ( int dim, int basis, double *cff );
  * DESCRIPTION :
  *   Replaces the solutions in the standard solutions container with
  *   the scaled solutions, scaled with standard double precision arithmetic,
- *   using the give scaling coefficients.
+ *   using the given scaling coefficients.
  *
  * ON ENTRY :
  *   dim     the number of doubles in the scaling coefficients cff,
@@ -104,7 +104,7 @@ int dobldobl_scale_solutions ( int dim, int basis, double *cff );
  * DESCRIPTION :
  *   Replaces the solutions in the dobldobl solutions container with
  *   the scaled solutions, scaled with double double precision arithmetic,
- *   using the give scaling coefficients.
+ *   using the given scaling coefficients.
  *
  * ON ENTRY :
  *   dim     the number of doubles in the scaling coefficients cff,
@@ -118,7 +118,7 @@ int quaddobl_scale_solutions ( int dim, int basis, double *cff );
  * DESCRIPTION :
  *   Replaces the solutions in the quaddobl solutions container with
  *   the scaled solutions, scaled with quad double precision arithmetic,
- *   using the give scaling coefficients.
+ *   using the given scaling coefficients.
  *
  * ON ENTRY :
  *   dim     the number of doubles in the scaling coefficients cff,
