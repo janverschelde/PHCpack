@@ -2362,7 +2362,7 @@ static PyObject *py2c_celcon_clear_container
 
 /* wrapping functions to scale polynomial systems and solutions */
 
-static PyObject *py2c_standard_scale_system ( PyObject *self, PyObject *args );
+static PyObject *py2c_scale_standard_system ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Applies scaling to the system in the standard systems container,
@@ -2374,6 +2374,65 @@ static PyObject *py2c_standard_scale_system ( PyObject *self, PyObject *args );
  *   2 variable scaling with variability reduction.
  *   On return is a tuple with the scaling coefficients (if mode > 0)
  *   and the estimated inverse condition number of the scaling problem. */
+
+static PyObject *py2c_scale_dobldobl_system ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Applies scaling to the system in the dobldobl systems container,
+ *   with double double precision arithmetic.  The system in the dobldobl
+ *   systems container is replaced by the scaled system.
+ *   On entry is one integer, which should be either 0, 1, or 2:
+ *   0 for only scaling of the equations,
+ *   1 variable scaling without variability reduction,
+ *   2 variable scaling with variability reduction.
+ *   On return is a tuple with the scaling coefficients (if mode > 0)
+ *   and the estimated inverse condition number of the scaling problem. */
+
+static PyObject *py2c_scale_quaddobl_system ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Applies scaling to the system in the quaddobl systems container,
+ *   with quad double precision arithmetic.  The system in the quaddobl
+ *   systems container is replaced by the scaled system.
+ *   On entry is one integer, which should be either 0, 1, or 2:
+ *   0 for only scaling of the equations,
+ *   1 variable scaling without variability reduction,
+ *   2 variable scaling with variability reduction.
+ *   On return is a tuple with the scaling coefficients (if mode > 0)
+ *   and the estimated inverse condition number of the scaling problem. */
+
+static PyObject *py2c_scale_standard_solutions 
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the solutions in the standard solutions container with
+ *   the scaled solutions, scaled with standard double precision arithmetic,
+ *   using the given scaling coefficients.
+ *   On entry are two parameters: an integer and a string.
+ *   The integer contains the number of elements in the list
+ *   of scaling coefficients (doubles) stored in the string. */
+
+static PyObject *py2c_scale_dobldobl_solutions 
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the solutions in the dobldobl solutions container with
+ *   the scaled solutions, scaled with double double precision arithmetic,
+ *   using the given scaling coefficients.
+ *   On entry are two parameters: an integer and a string.
+ *   The integer contains the number of elements in the list
+ *   of scaling coefficients (doubles) stored in the string. */
+
+static PyObject *py2c_scale_quaddobl_solutions 
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the solutions in the quaddobl solutions container with
+ *   the scaled solutions, scaled with quad double precision arithmetic,
+ *   using the given scaling coefficients.
+ *   On entry are two parameters: an integer and a string.
+ *   The integer contains the number of elements in the list
+ *   of scaling coefficients (doubles) stored in a the string. */
 
 /* wrapping functions to manipulate algebraic sets */
 

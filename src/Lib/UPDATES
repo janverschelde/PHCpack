@@ -1,5 +1,6 @@
 Wed 29 Jul 2015 : phcpy2c has wrapper to scale polynomial systems in
-  standard double precision.
+  standard double precision.  Also done for double doubles and quad doubles.
+  Added scaling of double, double double, and quad double solutions.
 
 Tue 28 Jul 2015 : consistent naming of functions for standard doubles
   causes changes in phcpy2c, both the .h and .c file.

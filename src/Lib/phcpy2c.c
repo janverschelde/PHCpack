@@ -3456,7 +3456,7 @@ static PyObject *py2c_celcon_clear_container
 
 /* wrapping functions to scale polynomial systems and solutions */
 
-static PyObject *py2c_standard_scale_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_scale_standard_system ( PyObject *self, PyObject *args )
 {
    int fail,mode,dim,i;
 
@@ -3482,6 +3482,119 @@ static PyObject *py2c_standard_scale_system ( PyObject *self, PyObject *args )
             return result;
          }
       }
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_scale_dobldobl_system ( PyObject *self, PyObject *args )
+{
+   int fail,mode,dim,i;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&mode)) return NULL;
+   fail = syscon_number_of_dobldobl_polynomials(&dim);
+   if((fail == 0) && (dim > 0))
+   {
+      double cff[8*dim+4];  
+
+      fail = dobldobl_scale_system(mode,cff);
+      if(fail == 0)
+      {
+         if(mode > 0)
+         {
+            PyObject *result, *item;
+            result = PyList_New(8*dim+1);
+            for(i=0; i<8*dim+1; i++)
+            {
+               item = PyFloat_FromDouble(cff[i]);
+               PyList_SET_ITEM(result,i,item);
+            }
+            return result;
+         }
+      }
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_scale_quaddobl_system ( PyObject *self, PyObject *args )
+{
+   int fail,mode,dim,i;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&mode)) return NULL;
+   fail = syscon_number_of_quaddobl_polynomials(&dim);
+   if((fail == 0) && (dim > 0))
+   {
+      double cff[16*dim+8];  
+
+      fail = quaddobl_scale_system(mode,cff);
+      if(fail == 0)
+      {
+         if(mode > 0)
+         {
+            PyObject *result, *item;
+            result = PyList_New(16*dim+1);
+            for(i=0; i<16*dim+1; i++)
+            {
+               item = PyFloat_FromDouble(cff[i]);
+               PyList_SET_ITEM(result,i,item);
+            }
+            return result;
+         }
+      }
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_scale_standard_solutions 
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim;
+   char *cff;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&dim,&cff)) return NULL;
+   {
+      double scf[dim];
+
+      str2dbllist(dim,cff,scf);
+      fail = standard_scale_solutions(dim,10,scf);
+   }
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_scale_dobldobl_solutions 
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim;
+   char *cff;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&dim,&cff)) return NULL;
+   {
+      double scf[dim];
+
+      str2dbllist(dim,cff,scf);
+      fail = dobldobl_scale_solutions(dim,10,scf);
+   }
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_scale_quaddobl_solutions 
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim;
+   char *cff;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&dim,&cff)) return NULL;
+   {
+      double scf[dim];
+
+      str2dbllist(dim,cff,scf);
+      fail = quaddobl_scale_solutions(dim,10,scf);
    }
    return Py_BuildValue("i",fail);
 }
@@ -5184,8 +5297,21 @@ static PyMethodDef phcpy2c_methods[] =
     "Permutes the systems in the container for polynomial and Laurent systems\n with quad double coefficients corresponding to the permutation\n used to compute the mixed-cell configuration.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_celcon_clear_container", py2c_celcon_clear_container, METH_VARARGS,
     "Deallocates the data in the cell container."},
-   {"py2c_standard_scale_system", py2c_standard_scale_system, METH_VARARGS,
+   {"py2c_scale_standard_system", py2c_scale_standard_system, METH_VARARGS,
     "Applies scaling to the system in the standard systems container,\n with standard double precision arithmetic.  The system in the standard\n systems container is replaced by the scaled system.\n On entry is one integer, which should be either 0, 1, or 2:\n 0 for only scaling of the equations,\n 1 variable scaling without variability reduction,\n 2 variable scaling with variability reduction.\n On return is a tuple with the scaling coefficients (if mode > 0)\n and the estimated inverse condition number of the scaling problem."},
+   {"py2c_scale_dobldobl_system", py2c_scale_dobldobl_system, METH_VARARGS,
+    "Applies scaling to the system in the dobldobl systems container,\n with double double precision arithmetic.  The system in the dobldobl\n systems container is replaced by the scaled system.\n On entry is one integer, which should be either 0, 1, or 2:\n 0 for only scaling of the equations,\n 1 variable scaling without variability reduction,\n 2 variable scaling with variability reduction.\n On return is a tuple with the scaling coefficients (if mode > 0)\n and the estimated inverse condition number of the scaling problem."},
+   {"py2c_scale_quaddobl_system", py2c_scale_quaddobl_system, METH_VARARGS,
+    "Applies scaling to the system in the quaddobl systems container,\n with quad double precision arithmetic.  The system in the quaddobl\n systems container is replaced by the scaled system.\n On entry is one integer, which should be either 0, 1, or 2:\n 0 for only scaling of the equations,\n 1 variable scaling without variability reduction,\n 2 variable scaling with variability reduction.\n On return is a tuple with the scaling coefficients (if mode > 0)\n and the estimated inverse condition number of the scaling problem."},
+   {"py2c_scale_standard_solutions",
+     py2c_scale_standard_solutions, METH_VARARGS,
+    "Replaces the solutions in the standard solutions container with\n the scaled solutions, scaled with standard double precision arithmetic,\n using the given scaling coefficients.\n On entry are two parameters: an integer and a string.\n The integer contains the number of elements in the list\n of scaling coefficients (doubles) stored in the string."},
+   {"py2c_scale_dobldobl_solutions",
+     py2c_scale_dobldobl_solutions, METH_VARARGS,
+    "Replaces the solutions in the dobldobl solutions container with\n the scaled solutions, scaled with double double precision arithmetic,\n using the given scaling coefficients.\n On entry are two parameters: an integer and a string.\n The integer contains the number of elements in the list\n of scaling coefficients (doubles) stored in the string."},
+   {"py2c_scale_quaddobl_solutions",
+     py2c_scale_quaddobl_solutions, METH_VARARGS,
+    "Replaces the solutions in the quaddobl solutions container with\n the scaled solutions, scaled with quad double precision arithmetic,\n using the given scaling coefficients.\n On entry are two parameters: an integer and a string.\n The integer contains the number of elements in the list\n of scaling coefficients (doubles) stored in the string."},
    {"py2c_embed_system", py2c_embed_system, METH_VARARGS,
     "Replaces the system with coefficients in standard double precision\n in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_standard_cascade_homotopy", py2c_standard_cascade_homotopy,
