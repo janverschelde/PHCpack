@@ -695,23 +695,137 @@ def standard_scale_system(pols):
     """
     Applies equation and variable scaling in standard double precision
     to the polynomials in the list pols.
+    On return is the list of scaled polynomials and the scaling coefficients.
     """
     from interface import store_standard_system, load_standard_system
-    from phcpy2c import py2c_standard_scale_system
+    from phcpy2c import py2c_scale_standard_system
     store_standard_system(pols)
-    cffs = py2c_standard_scale_system(2)
+    cffs = py2c_scale_standard_system(2)
     spol = load_standard_system()
     return (spol, cffs)
+
+def dobldobl_scale_system(pols):
+    """
+    Applies equation and variable scaling in double double precision
+    to the polynomials in the list pols.
+    On return is the list of scaled polynomials and the scaling coefficients.
+    """
+    from interface import store_dobldobl_system, load_dobldobl_system
+    from phcpy2c import py2c_scale_dobldobl_system
+    store_dobldobl_system(pols)
+    cffs = py2c_scale_dobldobl_system(2)
+    spol = load_dobldobl_system()
+    return (spol, cffs)
+
+def quaddobl_scale_system(pols):
+    """
+    Applies equation and variable scaling in quad double precision
+    to the polynomials in the list pols.
+    On return is the list of scaled polynomials and the scaling coefficients.
+    """
+    from interface import store_quaddobl_system, load_quaddobl_system
+    from phcpy2c import py2c_scale_quaddobl_system
+    store_quaddobl_system(pols)
+    cffs = py2c_scale_quaddobl_system(2)
+    spol = load_quaddobl_system()
+    return (spol, cffs)
+
+def standard_scale_solutions(nvar, sols, cffs):
+    """
+    Scales the solutions in the list sols using the coefficients in cffs,
+    using standard double precision arithmetic.
+    The number of variables is given in the parameter nvar.
+    If the sols are the solution of the polynomials in the output of
+    standard_scale_system(pols), then the solutions on return will be
+    solutions of the original polynomials in the list pols.
+    """
+    from interface import store_standard_solutions, load_standard_solutions
+    from phcpy2c import py2c_scale_standard_solutions
+    store_standard_solutions(nvar, sols)
+    py2c_scale_standard_solutions(len(cffs), str(cffs))
+    return load_standard_solutions()
+
+def dobldobl_scale_solutions(nvar, sols, cffs):
+    """
+    Scales the solutions in the list sols using the coefficients in cffs,
+    using double double precision arithmetic.
+    The number of variables is given in the parameter nvar.
+    If the sols are the solution of the polynomials in the output of
+    dobldobl_scale_system(pols), then the solutions on return will be
+    solutions of the original polynomials in the list pols.
+    """
+    from interface import store_dobldobl_solutions, load_dobldobl_solutions
+    from phcpy2c import py2c_scale_dobldobl_solutions
+    store_dobldobl_solutions(nvar, sols)
+    py2c_scale_dobldobl_solutions(len(cffs), str(cffs))
+    return load_dobldobl_solutions()
+
+def quaddobl_scale_solutions(nvar, sols, cffs):
+    """
+    Scales the solutions in the list sols using the coefficients in cffs,
+    using quad double precision arithmetic.
+    The number of variables is given in the parameter nvar.
+    If the sols are the solution of the polynomials in the output of
+    quaddobl_scale_system(pols), then the solutions on return will be
+    solutions of the original polynomials in the list pols.
+    """
+    from interface import store_quaddobl_solutions, load_quaddobl_solutions
+    from phcpy2c import py2c_scale_quaddobl_solutions
+    store_quaddobl_solutions(nvar, sols)
+    py2c_scale_quaddobl_solutions(len(cffs), str(cffs))
+    return load_quaddobl_solutions()
 
 def test_scale():
     """
     Performs a basic test on variable scaling.
     """
-    s = ['100*x^2 + 10*x + 1;']
-    print 'scaling a polynomial', s
-    p = standard_scale_system(s)
-    print 'the scaled polynomial', p[0]
-    print 'the scaling coefficients :', p[1]
+    orgp = ['100*x^2 + 10*x + 1;']
+    print 'a badly scaled problem :', orgp
+    print 'scaling a polynomial in standard double precision'
+    (scp, cff) = standard_scale_system(orgp)
+    print 'the scaled polynomial', scp
+    print 'the scaling coefficients :', cff[0:-1]
+    print 'estimated inverse condition number :', cff[-1]
+    print 'solving the scaled problem ...'
+    scpsols = solve(scp)
+    print 'the solutions of the scaled problem :'
+    for sol in scpsols:
+        print sol
+    orgpsols = standard_scale_solutions(len(scp), scpsols, cff[0:-1])
+    print 'the solutions of the original problem :'
+    for sol in orgpsols:
+        print sol
+    print 'scaling a polynomial in double double precision'
+    (scp, cff) = dobldobl_scale_system(orgp)
+    print 'the scaled polynomial', scp
+    print 'the scaling coefficients :', cff[0:-1]
+    print 'estimated inverse condition number :', cff[-1]
+    print 'solving the scaled problem ...'
+    scpsols = solve(scp)
+    dd_scpsols = newton_step(scp, scpsols, precision='dd')
+    print 'the solutions of the scaled problem :'
+    for sol in dd_scpsols:
+        print sol
+    scpsols = dobldobl_scale_solutions(len(scp), dd_scpsols, cff[0:-1])
+    print 'the solutions of the original problem :'
+    for sol in scpsols:
+        print sol
+    print 'scaling a polynomial in quad double precision'
+    (scp, cff) = quaddobl_scale_system(orgp)
+    print 'the scaled polynomial', scp
+    print 'the scaling coefficients :', cff[0:-1]
+    print 'estimated inverse condition number :', cff[-1]
+    print 'solving the scaled problem ...'
+    scpsols = solve(scp)
+    dd_scpsols = newton_step(scp, scpsols, precision='dd')
+    qd_scpsols = newton_step(scp, dd_scpsols, precision='qd')
+    print 'the solutions of the scaled problem :'
+    for sol in qd_scpsols:
+        print sol
+    orgpsols = quaddobl_scale_solutions(len(scp), qd_scpsols, cff[0:-1])
+    print 'the solutions of the original problem :'
+    for sol in orgpsols:
+        print sol
 
 def test_dobldobl_polyhedral_homotopy():
     """
