@@ -2410,7 +2410,9 @@ static PyObject *py2c_scale_standard_solutions
  *   using the given scaling coefficients.
  *   On entry are two parameters: an integer and a string.
  *   The integer contains the number of elements in the list
- *   of scaling coefficients (doubles) stored in the string. */
+ *   of scaling coefficients (doubles) stored in the string.
+ *   The format of the string is the Python string representation
+ *   of a list of doubles, i.e.: starting with '[' and ending with ']'. */
 
 static PyObject *py2c_scale_dobldobl_solutions 
  ( PyObject *self, PyObject *args );
@@ -2421,7 +2423,9 @@ static PyObject *py2c_scale_dobldobl_solutions
  *   using the given scaling coefficients.
  *   On entry are two parameters: an integer and a string.
  *   The integer contains the number of elements in the list
- *   of scaling coefficients (doubles) stored in the string. */
+ *   of scaling coefficients (doubles) stored in the string.
+ *   The format of the string is the Python string representation
+ *   of a list of doubles, i.e.: starting with '[' and ending with ']'. */
 
 static PyObject *py2c_scale_quaddobl_solutions 
  ( PyObject *self, PyObject *args );
@@ -2432,7 +2436,9 @@ static PyObject *py2c_scale_quaddobl_solutions
  *   using the given scaling coefficients.
  *   On entry are two parameters: an integer and a string.
  *   The integer contains the number of elements in the list
- *   of scaling coefficients (doubles) stored in a the string. */
+ *   of scaling coefficients (doubles) stored in a the string.
+ *   The format of the string is the Python string representation
+ *   of a list of doubles, i.e.: starting with '[' and ending with ']'. */
 
 /* wrapping functions to manipulate algebraic sets */
 

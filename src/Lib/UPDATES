@@ -1,3 +1,6 @@
+Thu 30 Jul 2015 : fixed documentation strings for the input arguments
+  of the scaling of solutions in all precisions.
+
 Wed 29 Jul 2015 : phcpy2c has wrapper to scale polynomial systems in
   standard double precision.  Also done for double doubles and quad doubles.
   Added scaling of double, double double, and quad double solutions.
