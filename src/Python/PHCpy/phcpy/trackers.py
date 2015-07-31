@@ -240,11 +240,11 @@ def track(target, start, sols, precision='d', decimals=80, gamma=0, tasks=0):
         print 'wrong argument for precision'
         return None
 
-def initialize_standard_tracker(target, start, fixedGamma=True):
+def initialize_standard_tracker(target, start, fixedgamma=True):
     """
     Initializes a path tracker with a generator for a target
     and start system given in standard double precision.
-    If fixedGamma, then gamma will be a fixed default value,
+    If fixedgamma, then gamma will be a fixed default value,
     otherwise, a random complex constant for gamma is generated.
     """
     from phcpy2c import py2c_copy_container_to_target_system
@@ -255,16 +255,16 @@ def initialize_standard_tracker(target, start, fixedGamma=True):
     py2c_copy_container_to_target_system()
     store_standard_system(start)
     py2c_copy_container_to_start_system()
-    if fixedGamma:
+    if fixedgamma:
         return py2c_initialize_standard_homotopy(1)
     else:
         return py2c_initialize_standard_homotopy(0)
 
-def initialize_dobldobl_tracker(target, start, fixedGamma=True):
+def initialize_dobldobl_tracker(target, start, fixedgamma=True):
     """
     Initializes a path tracker with a generator for a target
     and start system given in double double precision.
-    If fixedGamma, then gamma will be a fixed default value,
+    If fixedgamma, then gamma will be a fixed default value,
     otherwise, a random complex constant for gamma is generated.
     """
     from phcpy2c import py2c_copy_dobldobl_container_to_target_system
@@ -275,16 +275,16 @@ def initialize_dobldobl_tracker(target, start, fixedGamma=True):
     py2c_copy_dobldobl_container_to_target_system()
     store_dobldobl_system(start)
     py2c_copy_dobldobl_container_to_start_system()
-    if fixedGamma:
+    if fixedgamma:
         return py2c_initialize_dobldobl_homotopy(1)
     else:
         return py2c_initialize_dobldobl_homotopy(0)
 
-def initialize_quaddobl_tracker(target, start, fixedGamma=True):
+def initialize_quaddobl_tracker(target, start, fixedgamma=True):
     """
     Initializes a path tracker with a generator for a target
     and start system given in quad double precision.
-    If fixedGamma, then gamma will be a fixed default value,
+    If fixedgamma, then gamma will be a fixed default value,
     otherwise, a random complex constant for gamma is generated.
     """
     from phcpy2c import py2c_copy_quaddobl_container_to_target_system
@@ -295,18 +295,18 @@ def initialize_quaddobl_tracker(target, start, fixedGamma=True):
     py2c_copy_quaddobl_container_to_target_system()
     store_quaddobl_system(start)
     py2c_copy_quaddobl_container_to_start_system()
-    if fixedGamma:
+    if fixedgamma:
         return py2c_initialize_quaddobl_homotopy(1)
     else:
         return py2c_initialize_quaddobl_homotopy(0)
 
-def initialize_multprec_tracker(target, start, fixedGamma=True, decimals=100):
+def initialize_multprec_tracker(target, start, fixedgamma=True, decimals=100):
     """
     Initializes a path tracker with a generator for a target
     and start system given in arbitrary multiprecision, with
     the number of decimal places in the working precision
     given by the value of decimals.
-    If fixedGamma, then gamma will be a fixed default value,
+    If fixedgamma, then gamma will be a fixed default value,
     otherwise, a random complex constant for gamma is generated.
     """
     from phcpy2c import py2c_copy_multprec_container_to_target_system
@@ -317,17 +317,17 @@ def initialize_multprec_tracker(target, start, fixedGamma=True, decimals=100):
     py2c_copy_multprec_container_to_target_system()
     store_multprec_system(start, decimals)
     py2c_copy_multprec_container_to_start_system()
-    if fixedGamma:
+    if fixedgamma:
         return py2c_initialize_multprec_homotopy(1, decimals)
     else:
         return py2c_initialize_multprec_homotopy(0, decimals)
 
-def initialize_varbprec_tracker(target, start, fixedGamma=True):
+def initialize_varbprec_tracker(target, start, fixedgamma=True):
     """
     Initializes a path tracker in variable precision with a target
     and start system, given as lists of string representations of
     multivariate polynomials.
-    If fixedGamma, then gamma will be a fixed default value,
+    If fixedgamma, then gamma will be a fixed default value,
     otherwise, a random complex constant for gamma is generated.
     """
     from phcpy2c import py2c_initialize_varbprec_homotopy
@@ -339,7 +339,7 @@ def initialize_varbprec_tracker(target, start, fixedGamma=True):
     for pol in start:
         strsys = strsys + pol
     ncs = len(strsys)
-    if fixedGamma:
+    if fixedgamma:
         return py2c_initialize_varbprec_homotopy(1, nct, tgtsys, ncs, strsys)
     else:
         return py2c_initialize_varbprec_homotopy(0, nct, tgtsys, ncs, strsys)

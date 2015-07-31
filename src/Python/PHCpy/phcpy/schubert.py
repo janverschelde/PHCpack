@@ -9,10 +9,10 @@ def prompt_for_dimensions():
     p is the dimension of the output planes, and
     q is the degree of the maps.
     """
-    mdim = input('give the dimension of the input planes : ')
-    pdim = input('give the dimension of the output planes : ')
-    qdeg = input('give the degree of the solution maps : ')
-    return (mdim, pdim, qdeg)
+    mdim = raw_input('give the dimension of the input planes : ')
+    pdim = raw_input('give the dimension of the output planes : ')
+    qdeg = raw_input('give the degree of the solution maps : ')
+    return (int(mdim), int(pdim), int(qdeg))
 
 def pieri_root_count(mdim, pdim, qdeg):
     """

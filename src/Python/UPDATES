@@ -1,3 +1,8 @@
+Fri 31 Jul 2015 : updated setup.py and __init__.py for version 0.2.8.
+  Replace input by raw_input in schubert.py.  Changed solutions.py
+  for a pylint warning (unused variables).  Replaced fixedGamma by
+  fixedgamma in trackers.py, also because of a pylint complaint.
+
 Thu 30 Jul 2015 : test_scale() in solver.py works.
 
 Wed 29 Jul 2015 : extended solver.py with a function to scale a polynomial

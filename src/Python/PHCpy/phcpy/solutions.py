@@ -172,7 +172,7 @@ def filter_regular(sols, tol, oper):
     """
     result = []
     for sol in sols:
-        (err, rco, res) = diagnostics(sol)
+        rco = diagnostics(sol)[1]
         if(oper == 'select'):
             if(rco > tol):
                 result.append(sol)
