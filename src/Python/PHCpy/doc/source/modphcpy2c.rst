@@ -16,8 +16,8 @@ then we can do the following:
 
 ::
 
-   >>> from phcpy.phcpy2c import py2c_syscon_read_system as readsys
-   >>> from phcpy.phcpy2c import py2c_syscon_write_system as writesys
+   >>> from phcpy.phcpy2c import py2c_syscon_read_standard_system as readsys
+   >>> from phcpy.phcpy2c import py2c_syscon_write_standard_system as writesys
    >>> readsys()
 
    Reading a polynomial system...
@@ -32,7 +32,7 @@ then we can do the following:
    2*y^2-x;
    0
    >>> from phcpy.phcpy2c import py2c_solve_system as solve
-   >>> solve()
+   >>> solve(0)
 
    ROOT COUNTS :
 
@@ -44,7 +44,7 @@ then we can do the following:
    mixed volume : 4
    stable mixed volume : 4
    4
-   >>> from phcpy.phcpy2c import py2c_solcon_write_solutions as writesols
+   >>> from phcpy.phcpy2c import py2c_solcon_write_standard_solutions as writesols
    >>> writesols()
    4 2
    ===========================================================================
@@ -84,6 +84,12 @@ and the parsing to strings.
 
 functions in the module
 -----------------------
+
+The module ``phcpy2c`` wraps the C functions in the C interface to PHCpack.
+The C interface to PHCpack was developed in the application of message passing
+(MPI) to run the path trackers on distributed memory multiprocessing computers.
+All functions documented below have their counterpart in C 
+that are therefore then also directly accessible from C programs.
 
 .. automodule:: phcpy2c
    :members:
