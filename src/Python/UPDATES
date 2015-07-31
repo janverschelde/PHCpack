@@ -3,6 +3,7 @@ Fri 31 Jul 2015 : updated setup.py and __init__.py for version 0.2.8.
   for a pylint warning (unused variables).  Replaced fixedGamma by
   fixedgamma in trackers.py, also because of a pylint complaint.
   Added scaling.py to the demo folder in PHCpy.
+  Updated the conf.py and blackbox.rst in the documentation.
 
 Thu 30 Jul 2015 : test_scale() in solver.py works.
 

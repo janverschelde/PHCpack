@@ -205,6 +205,90 @@ of Newton's method:
    == err :  5.192E-13 = rco :  5.314E-03 = res :  1.388E-16 =
    >>>
 
+equation and variable scaling
+-----------------------------
+
+Another source of numerical difficulties are systems
+that have extreme values as coefficients.
+With equation and variable scaling we solve an optimization problem
+to find coordinate transformations that lead to better values for
+the coefficients.  The common sense approach to scaling is 
+described in Chapter 5 of the book of Alexander Morgan on
+*Solving Polynomial Systems Using Continuation for Engineering
+and Scientific Problems*, volume 57 in the SIAM Classics in
+Applied Mathematics, 2009.  We consider a simple example.
+
+::
+
+   >>> from phcpy.solver import solve
+   >>> p = ['0.000001*x^2 + 0.000004*y^2 - 4;', '0.000002*y^2 - 0.001*x;']
+   >>> psols = solve(p, silent=True)
+   >>> print psols[0]
+   t :  1.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    x : -3.23606797749979E+03   8.71618409420601E-19
+    y :  2.30490982555757E-19   1.27201964951407E+03
+   == err :  2.853E-07 = rco :  2.761E-04 = res :  9.095E-13 =
+
+Observe the rather large values of the coordinates in the first solution
+and the estimate for the inverse condition number.
+We scale the system as follows:
+
+::
+
+   >>> from phcpy.solver import standard_scale_system as scalesys
+   >>> from phcpy.solver import standard_scale_solutions as scalesols
+   >>> (q, c) = scalesys(p)
+   >>> q[0]
+   'x^2 + 9.99999999999998E-01*y^2 - 1.00000000000000E+00;'
+   >>> q[1]
+   'y^2 - 1.00000000000000E+00*x;'
+
+The coefficients in the scaled system look indeed a lot nicer.
+In the parameter ``c`` returned along with the scaled system
+are the scaling coefficients, which we need to bring the solutions
+of the scaled system into the original coordinates.
+
+::
+
+   >>> qsols = solve(q, silent=True)
+   >>> ssols = scalesols(len(q), qsols, c)
+   >>> for sol in ssols: print sol
+   ... 
+   t :  1.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    x : -3.23606797749978E+03  -1.98276706040285E-115
+    y :  0.00000000000000E+00  -1.27201964951407E+03
+   == err :  1.746E-16 = rco :  2.268E-01 = res :  2.220E-16 =
+   t :  1.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    x : -3.23606797749978E+03  -1.98276706040285E-115
+    y :  0.00000000000000E+00   1.27201964951407E+03
+   == err :  1.746E-16 = rco :  2.268E-01 = res :  2.220E-16 =
+   t :  1.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    x :  1.23606797749979E+03   0.00000000000000E+00
+    y :  7.86151377757423E+02   0.00000000000000E+00
+   == err :  4.061E-17 = rco :  4.601E-01 = res :  5.551E-17 =
+   t :  1.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    x :  1.23606797749979E+03   0.00000000000000E+00
+    y : -7.86151377757423E+02   7.38638289422858E-124
+   == err :  4.061E-17 = rco :  4.601E-01 = res :  5.551E-17 =
+
+The estimates of the condition numbers in ``ssols`` are for
+the scaled problem.  With scaling, the condition numbers were
+reduced from 10^4 to 10.  For more extreme values of the
+coefficients, we may have to perform the scaling in higher precision,
+such as available in the functions
+``dobldobl_scale_system`` and ``quaddobl_scale_system``,
+respectively with double double and quad double arithmetic.
+
 functions in the module
 -----------------------
 
