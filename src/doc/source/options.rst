@@ -395,6 +395,81 @@ We distinguish two types of scaling:
 
 2. Variable scaling: multiplying variables with constants.
 
+Chapter 5 of the book of Alexander Morgan on
+*Solving Polynomial Systems Using Continuation for Engineering
+and Scientific Problems* (volume 57 in the SIAM Classics in
+Applied Mathematics, 2009)
+describes the setup of an optimization problem to compute coordinate 
+transformations that lead to better values of the coefficients.
+
+If the file ``/tmp/example`` contains the following lines
+
+::
+
+   2
+    0.000001*x^2 + 0.000004*y^2 - 4;
+    0.000002*y^2 - 0.001*x;
+
+then a session with ``phc -s`` (at the command prompt) 
+to scale the system goes as follows.
+
+::
+
+   $ phc -s
+   Welcome to PHC (Polynomial Homotopy Continuation) v2.3.99 31 Jul 2015
+   Equation/variable Scaling on polynomial system and solution list.
+
+   MENU for the precision of the scalers :
+     0. standard double precision;
+     1. double double precision;
+     2. quad double precision.
+   Type 0, 1, or 2 to select the precision : 0
+
+   Is the system on a file ? (y/n/i=info) y 
+
+   Reading the name of the input file.
+   Give a string of characters : /tmp/example
+
+   Reading the name of the output file.
+   Give a string of characters : /tmp/example.out
+
+   MENU for Scaling Polynomial Systems :
+     1 : Equation Scaling : divide by average coefficient      
+     2 : Variable Scaling : change of variables, as z = (2^c)*x
+     3 : Solution Scaling : back to original coordinates       
+   Type 1, 2, or 3 to select scaling, or i for info : 2
+     Reducing the variability of coefficients ? (y/n) y
+     The inverse condition is  4.029E-02.
+
+   Do you want the scaled system on separate file ? (y/n) y
+   Reading the name of the output file.
+   Give a string of characters : /tmp/scaled
+
+   $ 
+
+Then the contents of the file ``/tmp/scaled`` is
+
+::
+
+   2
+   x^2+ 9.99999999999998E-01*y^2-1.00000000000000E+00;
+   y^2-1.00000000000000E+00*x;
+
+   SCALING COEFFICIENTS :
+
+   10
+   3.30102999566398E+00   0.00000000000000E+00
+   3.00000000000000E+00   0.00000000000000E+00
+   -6.02059991327962E-01   0.00000000000000E+00
+   -3.01029995663981E-01   0.00000000000000E+00
+
+We see that the coefficients of the scaled system are much nicer
+than the coefficients of the original problem.
+The scaling coefficients are needed to transform the solutions
+of the scaled system into the coordinates of the original problem.
+To transform the solutions, choose the third option of the second
+menu of ``phc -s``.
+
 phc -t : Tasking for tracking paths using multiple threads     
 ----------------------------------------------------------
 
