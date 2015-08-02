@@ -1,3 +1,6 @@
+Sun 2 Aug 2015 : lib_scale.c did not include scalers.h properly,
+  which causes problems with the g++ compilation.
+
 Thu 30 Jul 2015 : fixed documentation strings for the input arguments
   of the scaling of solutions in all precisions.
 

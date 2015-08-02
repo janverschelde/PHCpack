@@ -5,6 +5,7 @@
 #include "syscon.h"
 #include "solcon.h"
 #include "phcpack.h"
+#include "scalers.h"
 
 int greetings( void );
 /*
