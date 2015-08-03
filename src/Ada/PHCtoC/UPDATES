@@ -1,3 +1,6 @@
+Mon 3 Aug 2015 : updates in ts_gpunewton.adb, new gpunewton_dd.cpp for use
+  in the new ts_gpunewton_dd.adb.
+
 Wed 1 Jul 2015 : gpunewton_d.cpp works on the host.
 
 Tue 30 Jun 2015 : gpunewton_d.cpp calls routines to transfer data from the
