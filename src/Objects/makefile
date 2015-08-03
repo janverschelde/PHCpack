@@ -1321,7 +1321,8 @@ ts_feedback:
 
 # Test programs for the C interface to GPU acceleration :
 
-test_phctoc: ts_cpu2norm_d ts_cpu2norm_dd ts_cpu2norm_qd ts_gpunewton
+test_phctoc: ts_cpu2norm_d ts_cpu2norm_dd ts_cpu2norm_qd ts_gpunewton \
+             ts_gpunewton_dd
 
 ts_cpu2norm_d:
 	make -f $(MAKEFILE) ts_cpu2norm_d
@@ -1334,6 +1335,9 @@ ts_cpu2norm_qd:
 
 ts_gpunewton:
 	make -f $(MAKEFILE) ts_gpunewton
+
+ts_gpunewton_dd:
+	make -f $(MAKEFILE) ts_gpunewton_dd
 
 # Test programs for the Tasking:
 
