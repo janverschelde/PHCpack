@@ -4,7 +4,7 @@
 #include <iomanip>
 #include "syscon.h"
 #include "solcon.h"
-// #include "ada_test.h"
+#include "ada_test_dd.h"
 #include "parameter.h"
 #include "path_gpu.h"
 #include "poly.h"
@@ -30,15 +30,15 @@ extern "C" int gpunewton_dd ( void )
    cout << endl;
    cout << "Acceleration of Newton's method ..." << endl;
 
-   fail = syscon_number_of_polynomials(&dim);
+   fail = syscon_number_of_dobldobl_polynomials(&dim);
    cout << "number of polynomials : " << dim << endl;
-   fail = solcon_number_of_solutions(&len);
+   fail = solcon_number_of_dobldobl_solutions(&len);
    cout << "number of solutions : " << len << endl;
 
-   // ada_read_sys(ps);
-   // ada_read_sols(ps,sols);
+   ada_read_sys(ps);
+   ada_read_sols(ps,sols);
 
-   // fail = newton(ps,sols);
+   fail = newton(ps,sols);
 
    return 0;
 }

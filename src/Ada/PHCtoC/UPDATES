@@ -1,3 +1,5 @@
+Tue 4 Aug 2015 : used the new ada_test_dd.h in gpunewton_dd.cpp.
+
 Mon 3 Aug 2015 : updates in ts_gpunewton.adb, new gpunewton_dd.cpp for use
   in the new ts_gpunewton_dd.adb.
 
