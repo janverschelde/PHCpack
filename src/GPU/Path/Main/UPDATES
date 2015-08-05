@@ -1,3 +1,7 @@
+Wed 5 Aug 2015 : number of symbols should be determined first when
+  allocating space for the string of symbols in ada_test.cpp and 
+  ada_test_dd.cpp.
+
 Tue 4 Aug 2015 : new ada_test_dd.h and ada_test_dd.cpp for double doubles.
 
 Tue 30 Jun 2015 : moved the adainit() and adafile() from ada_test.cpp

@@ -25,16 +25,18 @@ void var_name(char* x_string, int x_string_len, string*& x_names, int& dim)
 
 void ada_read_sys(PolySys& sys)
 {
-   int fail;
+   int fail,nbsym;
    std::cout << "testing reading and writing a system" << std::endl;
    //fail = syscon_read_system();
    std::cout << "the system is .." << std::endl;
    fail = syscon_write_dobldobl_system();
-
+   fail = syscon_number_of_symbols(&nbsym);
+   std::cout << "the number of symbols : " << nbsym << std::endl;
    // Get variable names
-   int s_dim = 80;
-   char *s = (char*) calloc(80,sizeof(char));
+   int s_dim = 80*nbsym;
+   char *s = (char*) calloc(s_dim,sizeof(char));
    fail = syscon_string_of_symbols(&s_dim, s);
+
    string* x_names;
    int dim = 0;
    var_name(s, s_dim, x_names, dim);
