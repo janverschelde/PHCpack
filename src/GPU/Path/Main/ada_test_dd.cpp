@@ -60,15 +60,15 @@ void ada_read_sys(PolySys& sys)
    {
       int nt;
       fail = syscon_number_of_dobldobl_terms(i,&nt);
-      //std::cout << " #terms in polynomial " << i << " : " << nt << std::endl;
+      std::cout << " #terms in polynomial " << i << " : " << nt << std::endl;
       tmp_eq->n_mon = nt;
       tmp_eq->dim = dim;
       for(int j=1; j<=nt; j++)
       {
          fail = syscon_retrieve_dobldobl_term(i,j,dim,d,c);
-         //std::cout << c[0] << " " << c[1] << std::endl;
-         //for (int k=0; k<n; k++) std::cout << " " << d[k];
-         //std::cout << std::endl;
+         std::cout << c[0] << " " << c[2] << std::endl;
+         for (int k=0; k<dim; k++) std::cout << " " << d[k];
+         std::cout << std::endl;
          bool constant_term = true;
          for(int k=0; k<dim; k++)
             if(d[k]!=0) constant_term = false;
@@ -82,14 +82,14 @@ void ada_read_sys(PolySys& sys)
          else
          {
             T1 cffs[2];
-            T1 *realpcff;
-            T1 *imagpcff;
-            realpcff->x[0] = c[0];
-            realpcff->x[1] = c[1];
-            imagpcff->x[0] = c[2];
-            imagpcff->x[1] = c[3];
-            cffs[0] = *realpcff;
-            cffs[1] = *imagpcff;
+            T1 realpcff;
+            T1 imagpcff;
+            realpcff.x[0] = c[0];
+            realpcff.x[1] = c[1];
+            imagpcff.x[0] = c[2];
+            imagpcff.x[1] = c[3];
+            cffs[0] = realpcff;
+            cffs[1] = imagpcff;
             PolyMon* a = new PolyMon(dim,d,cffs);
             tmp_eq->mon.push_back(a);
          }
