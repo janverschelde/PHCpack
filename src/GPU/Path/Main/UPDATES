@@ -1,6 +1,9 @@
+Thu 6 Aug 2015 : bug fix in ada_test_qd.cpp.
+
 Wed 5 Aug 2015 : number of symbols should be determined first when
   allocating space for the string of symbols in ada_test.cpp and 
   ada_test_dd.cpp.  Fixed passing of coefficients in ada_test_dd.cpp.
+  New ada_test_qd.h and ada_test_qd.cpp for quad doubles.
 
 Tue 4 Aug 2015 : new ada_test_dd.h and ada_test_dd.cpp for double doubles.
 
