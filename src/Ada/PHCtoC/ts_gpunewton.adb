@@ -1,8 +1,10 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
+with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_System_and_Solutions_io;
 with Standard_PolySys_Container;
 with Standard_Solutions_Container;
@@ -38,7 +40,7 @@ procedure ts_gpunewton is
     use Standard_Complex_Solutions;
 
     p : Link_to_Poly_Sys;
-    sols : Solution_List;
+    sols,newtsols : Solution_List;
 
   begin
     new_line;
@@ -51,6 +53,10 @@ procedure ts_gpunewton is
     put_line("Initializing the solutions container ...");
     Standard_Solutions_Container.Initialize(sols);
     Standard_GPU_Newton;
+    newtsols := Standard_Solutions_Container.Retrieve;
+    put_line("The solutions after Newton's method :");
+    put(standard_output,Length_Of(newtsols),
+        natural32(Head_Of(newtsols).n),newtsols);
   end Standard_Newton;
 
   procedure Main is

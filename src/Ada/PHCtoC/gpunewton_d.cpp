@@ -40,6 +40,9 @@ extern "C" int gpunewton_d ( void )
 
    fail = newton(ps,sols);
 
+   cout << "writing the solutions to the container ..." << endl;
+   ada_write_sols(sols);
+
    return 0;
 }
 
