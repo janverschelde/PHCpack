@@ -1,5 +1,7 @@
 Fri 7 Aug 2015 : writing of the updated solution caused changes in
-  gpunewton_d.cpp and ts_gpunewton.adb.
+  gpunewton_d.cpp and ts_gpunewton.adb.  Also modified the double double
+  and quad double versions: gpunewton_dd.cpp, gpunewton_qd.cpp and the
+  test programs in ts_gpunewton_dd.adb, ts_gpunewton_qd.adb.
 
 Thu 6 Aug 2015 : updated ts_gpunewton.adb, new gpunewt_qd.cpp called by
   ts_gpunewton_qd.adb.

@@ -40,6 +40,9 @@ extern "C" int gpunewton_dd ( void )
 
    fail = newton(ps,sols);
 
+   cout << "writing the solutions to the container ..." << endl;
+   ada_write_sols(sols);
+
    return 0;
 }
 
@@ -61,7 +64,7 @@ int newton ( PolySys& p, PolySolSet& s )
    for(int k=0; k<p.dim; k++)
    {
       cout << k << " :";
-      cout << setw(24) << scientific << setprecision(16) << sol[k];
+      cout << setw(40) << scientific << setprecision(32) << sol[k];
    }
 
    alpha = CT(1,0);
@@ -71,16 +74,18 @@ int newton ( PolySys& p, PolySolSet& s )
    workspace_cpu.update_x_t_value(sol,alpha);
 
    success = CPU_Newton(workspace_cpu,cpu_inst_hom,path_parameter,teval,tmgs);
-   cout.precision(16);
+   cout.precision(32);
    cout << "The first solution after CPU_Newton :" << endl;
    for(int k=0; k<p.dim; k++)
-      cout << k << " :" << setw(24) << workspace_cpu.x[k];
+      cout << k << " :" << setw(40) << setprecision(32) << workspace_cpu.x[k];
 
    alpha = CT(1,0);
    success = GPU_Newton(cpu_inst_hom,path_parameter,sol,alpha,x_gpu);
    cout << "The first solution after GPU_Newton :" << endl;
    for(int k=0; k<p.dim; k++)
-      cout << k << " :" << setw(24) << x_gpu[k];
+      cout << k << " :" << setw(40) << setprecision(32) << x_gpu[k];
+
+   s.change_sol(0,x_gpu);
 
    return 0;
 }

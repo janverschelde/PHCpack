@@ -1,8 +1,10 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Solutions;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with DoblDobl_System_and_Solutions_io;
 with DoblDobl_PolySys_Container;
 with DoblDobl_Solutions_Container;
@@ -38,7 +40,7 @@ procedure ts_gpunewton_dd is
     use DoblDobl_Complex_Solutions;
 
     p : Link_to_Poly_Sys;
-    sols : Solution_List;
+    sols,newtsols : Solution_List;
 
   begin
     new_line;
@@ -51,6 +53,10 @@ procedure ts_gpunewton_dd is
     put_line("Initializing the solutions container ...");
     DoblDobl_Solutions_Container.Initialize(sols);
     DoblDobl_GPU_Newton;
+    newtsols := DoblDobl_Solutions_Container.retrieve;
+    put_line("The updated solutions :");
+    put(standard_output,Length_Of(newtsols),
+        natural32(Head_Of(newtsols).n),newtsols);
   end DoblDobl_Newton;
 
   procedure Main is

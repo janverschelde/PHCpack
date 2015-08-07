@@ -40,6 +40,9 @@ extern "C" int gpunewton_qd ( void )
 
    fail = newton(ps,sols);
 
+   cout << "writing the solutions to the container ..." << endl;
+   ada_write_sols(sols);
+
    return 0;
 }
 
@@ -81,6 +84,8 @@ int newton ( PolySys& p, PolySolSet& s )
    cout << "The first solution after GPU_Newton :" << endl;
    for(int k=0; k<p.dim; k++)
       cout << k << " :" << setw(24) << x_gpu[k];
+
+   s.change_sol(0,x_gpu);
 
    return 0;
 }

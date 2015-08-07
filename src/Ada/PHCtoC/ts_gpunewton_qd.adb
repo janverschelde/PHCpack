@@ -1,8 +1,10 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with QuadDobl_System_and_Solutions_io;
 with QuadDobl_PolySys_Container;
 with QuadDobl_Solutions_Container;
@@ -38,7 +40,7 @@ procedure ts_gpunewton_qd is
     use QuadDobl_Complex_Solutions;
 
     p : Link_to_Poly_Sys;
-    sols : Solution_List;
+    sols,newtsols : Solution_List;
 
   begin
     new_line;
@@ -51,6 +53,10 @@ procedure ts_gpunewton_qd is
     put_line("Initializing the solutions container ...");
     QuadDobl_Solutions_Container.Initialize(sols);
     QuadDobl_GPU_Newton;
+    newtsols := QuadDobl_Solutions_Container.Retrieve;
+    put_line("The updated solutions :");
+    put(standard_output,Length_Of(newtsols),
+        natural32(Head_Of(newtsols).n),newtsols);
   end QuadDobl_Newton;
 
   procedure Main is

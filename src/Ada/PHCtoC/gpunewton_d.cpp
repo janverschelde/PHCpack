@@ -85,5 +85,7 @@ int newton ( PolySys& p, PolySolSet& s )
    for(int k=0; k<p.dim; k++)
       cout << k << " :" << setw(24) << x_gpu[k];
 
+   s.change_sol(0,x_gpu);
+
    return 0;
 }
