@@ -565,6 +565,10 @@ public:
 
 	void add_sol(PolySol* tmp_sol);
 
+        void change_sol ( int idx, CT* coords );
+        // updates the coordinates of the solution with index idx,
+        // using the values in coords
+
 	bool add_diff_sol(CT* new_sol);
 
 	void print();

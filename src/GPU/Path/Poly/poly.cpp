@@ -1506,6 +1506,11 @@ void PolySolSet::add_sol(CT* new_sol, T1 max_residual, T1 max_delta_x, int path_
 	add_sol(tmp_sol);
 }
 
+void PolySolSet::change_sol(int idx, CT* coords)
+{
+   PolySol* idxsol = sols[idx];
+   for(int k=0; k<dim; k++) idxsol->sol[k] = coords[k];
+}
 
 void PolySolSet::print(){
 	std::cout << "dim   = " << dim << std::endl\

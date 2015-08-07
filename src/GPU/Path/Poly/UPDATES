@@ -1,0 +1,2 @@
+Fri 7 Aug 2015 : added change_sol method to PolySolSet class in poly.h,
+  defined by the code in poly.cpp.
