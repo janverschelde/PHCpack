@@ -1,5 +1,6 @@
 Fri 7 Aug 2015 : added write_sols function to ada_test to write the updated
-  solution into the solutions container.
+  solution into the solutions container.  Did the same for the double double
+  and the quad double versions in ada_test_dd and ada_test_qd.
 
 Thu 6 Aug 2015 : bug fix in ada_test_qd.cpp.
 

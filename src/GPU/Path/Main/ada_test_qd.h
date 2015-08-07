@@ -43,6 +43,11 @@ void ada_read_sols ( PolySys& start_sys, PolySolSet& sols );
  *   into the provided data structure, respectively sols. 
  *   The dimension of the start_sys is used on input. */
 
+void ada_write_sols ( PolySolSet& sols );
+/*
+ * DESCRIPTION :
+ *   Takes the solutions in sols and places them in the solutions container. */
+
 void ada_read_homotopy
  ( char* start_file, char* target_file,
    PolySys& start_sys, PolySys& target_sys, PolySolSet& sols );

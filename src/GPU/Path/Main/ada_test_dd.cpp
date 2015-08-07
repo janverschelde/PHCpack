@@ -155,8 +155,35 @@ void ada_read_sols(PolySys& start_sys, PolySolSet& sols)
    std::cout << "sol finished" << std::endl;
 }
 
-void ada_read_homotopy(char* start_file, char* target_file, \
-		PolySys& start_sys, PolySys& target_sys, PolySolSet& sols)
+void ada_write_sols ( PolySolSet& sols )
+{
+   int fail = solcon_clear_dobldobl_solutions();
+   if(fail != 0)
+      std::cout << "failed to clear the solutions" << std::endl;
+   int dim = sols.dim;
+   CT* sol = sols.get_sol(0);
+   double csol[4*dim+10];
+   csol[0] = 0.0; csol[1] = 0.0;
+   csol[2] = 0.0; csol[3] = 0.0;
+   int idx = 4;
+   for(int k=0; k<dim; k++)
+   {
+      csol[idx++] = sol[k].real.x[0];
+      csol[idx++] = sol[k].real.x[1];
+      csol[idx++] = sol[k].imag.x[0];
+      csol[idx++] = sol[k].imag.x[1];
+   }
+   csol[4*dim+4] = 0.0; csol[4*dim+5] = 0.0;
+   csol[4*dim+6] = 0.0; csol[4*dim+7] = 0.0;
+   csol[4*dim+8] = 0.0; csol[4*dim+9] = 0.0;
+   fail = solcon_append_dobldobl_solution(dim,1,csol);
+   if(fail != 0)
+      std::cout << "failed to append the solution" << std::endl;
+}
+
+void ada_read_homotopy
+ ( char* start_file, char* target_file,
+   PolySys& start_sys, PolySys& target_sys, PolySolSet& sols )
 {
    int fail;
    std::cout << target_file << " " << strlen(target_file) << std::endl;
