@@ -1,6 +1,6 @@
 #include "ada_test.h"
 
-void var_name(char* x_string, int x_string_len, string*& x_names, int& dim)
+void var_name ( char* x_string, int x_string_len, string*& x_names, int& dim )
 {
    dim = 1;
    for(int pos=0; pos<x_string_len; pos++)
@@ -22,7 +22,7 @@ void var_name(char* x_string, int x_string_len, string*& x_names, int& dim)
    x_names[var_idx] = mystring.substr(begin, x_string_len-begin);
 }
 
-void ada_read_sys(PolySys& sys)
+void ada_read_sys ( PolySys& sys )
 {
    int fail,nbsym;
 
@@ -92,20 +92,20 @@ void ada_read_sys(PolySys& sys)
    std::cout << "End" << std::endl;
 }
 
-void ada_read_sols(PolySys& start_sys, PolySolSet& sols)
+void ada_read_sols ( PolySys& start_sys, PolySolSet& sols )
 {
    int fail, len;
-   //fail = copy_start_solutions_to_container();
+
    fail = solcon_number_of_solutions(&len);
    printf("Number of start solutions : %d\n",len);
-   int dim=start_sys.dim;
+   int dim = start_sys.dim;
    sols.dim = dim;
    double sol[2*dim+5];
 
    for(int sol_idx=1; sol_idx<len+1; sol_idx++)
    {
-      int mm;
-      int k;
+      int mm,k;
+
       solcon_retrieve_next_standard_solution(dim,&k,&mm,sol);
       //solcon_retrieve_solution(dim,sol_idx,&mm,sol);
       /*std::cout << sol[0] << " " << sol[1] << std::endl;
@@ -123,8 +123,35 @@ void ada_read_sols(PolySys& start_sys, PolySolSet& sols)
    std::cout << "sol finished" << std::endl;
 }
 
-void ada_read_homotopy(char* start_file, char* target_file, \
-		PolySys& start_sys, PolySys& target_sys, PolySolSet& sols)
+void ada_write_sols ( PolySolSet& sols )
+{
+   int fail = solcon_clear_solutions();
+   if(fail != 0)
+      std::cout << "failed to clear the solutions" << std::endl;
+   int dim = sols.dim;
+   CT* sol = sols.get_sol(0);
+   double csol[2*dim+5];
+   csol[0] = 0.0;
+   csol[1] = 0.0;
+   int idx = 2;
+   for(int k=0; k<dim; k++)
+   {
+      csol[idx++] = sol[k].real;
+      csol[idx++] = sol[k].imag;
+      // std::cout << sol[k].real << "  " << sol[k].imag << std::endl;
+      // std::cout << csol[idx-2] << "  " << csol[idx-1] << std::endl;
+   }
+   csol[2*dim+2] = 0.0;
+   csol[2*dim+3] = 0.0;
+   csol[2*dim+4] = 0.0;
+   fail = solcon_append_solution(dim,1,csol);
+   if(fail != 0)
+      std::cout << "failed to append the solution" << std::endl;
+}
+
+void ada_read_homotopy
+ ( char* start_file, char* target_file,
+   PolySys& start_sys, PolySys& target_sys, PolySolSet& sols)
 {
    // adainit();
    int fail;

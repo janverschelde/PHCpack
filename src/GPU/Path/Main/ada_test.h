@@ -30,22 +30,27 @@ void var_name(char* x_string, int x_string_len, string*& x_names, int& dim);
  * DESCRIPTION :
  *   Auxiliary function to read the names of the variables in a system. */
 
-void ada_read_sys(PolySys& sys);
+void ada_read_sys ( PolySys& sys );
 /*
  * DESCRIPTION :
  *   Reads a polynomial system from the systems container
  *   into the data structure provided by the parameter sys. */
 
-void ada_read_sols(PolySys& start_sys, PolySolSet& sols);
+void ada_read_sols ( PolySys& start_sys, PolySolSet& sols );
 /* 
  * DESCRIPTION :
  *   Reads the corresponding solutions of the start system start_sys,
  *   into the provided data structure, respectively sols. 
  *   The dimension of the start_sys is used on input. */
 
+void ada_write_sols ( PolySolSet& sols );
+/*
+ * DESCRIPTION :
+ *   Takes the solutions in sols and places them in the solutions container. */
+
 void ada_read_homotopy
  ( char* start_file, char* target_file,
-   PolySys& start_sys, PolySys& target_sys, PolySolSet& sols);
+   PolySys& start_sys, PolySys& target_sys, PolySolSet& sols );
 /*
  * DESCRIPTION :
  *   Given in the strings the names of the files for start and target system,
