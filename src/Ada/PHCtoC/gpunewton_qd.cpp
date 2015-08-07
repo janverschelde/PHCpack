@@ -64,7 +64,7 @@ int newton ( PolySys& p, PolySolSet& s )
    for(int k=0; k<p.dim; k++)
    {
       cout << k << " :";
-      cout << setw(24) << scientific << setprecision(16) << sol[k];
+      cout << setw(72) << scientific << setprecision(64) << sol[k];
    }
 
    alpha = CT(1,0);
@@ -74,16 +74,16 @@ int newton ( PolySys& p, PolySolSet& s )
    workspace_cpu.update_x_t_value(sol,alpha);
 
    success = CPU_Newton(workspace_cpu,cpu_inst_hom,path_parameter,teval,tmgs);
-   cout.precision(16);
+   cout.precision(64);
    cout << "The first solution after CPU_Newton :" << endl;
    for(int k=0; k<p.dim; k++)
-      cout << k << " :" << setw(24) << workspace_cpu.x[k];
+      cout << k << " :" << setw(72) << workspace_cpu.x[k];
 
    alpha = CT(1,0);
    success = GPU_Newton(cpu_inst_hom,path_parameter,sol,alpha,x_gpu);
    cout << "The first solution after GPU_Newton :" << endl;
    for(int k=0; k<p.dim; k++)
-      cout << k << " :" << setw(24) << x_gpu[k];
+      cout << k << " :" << setw(72) << x_gpu[k];
 
    s.change_sol(0,x_gpu);
 
