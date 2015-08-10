@@ -1556,7 +1556,7 @@ utilities_dd.o:
 	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Poly/utilities.cpp -o utilities_dd.o
 utilities_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Poly/utilities.cpp -o utilities_qd.o
 
 poly_d.o:
@@ -1565,9 +1565,10 @@ poly_d.o:
 
 poly_dd.o:
 	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+                -c $(PHCgpu)/Path/Poly/poly.cpp -o poly_dd.o
 
 poly_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Poly/poly.cpp -o poly_qd.o
 
 workspace_host_d.o:
@@ -1581,7 +1582,7 @@ workspace_host_dd.o:
                 -o workspace_host_dd.o
 
 workspace_host_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Path_CPU/workspace_host.cpp \
                 -o workspace_host_qd.o
 
@@ -1598,7 +1599,7 @@ eval_host_dd.o:
                 -o eval_host_dd.o
 
 eval_host_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/eval_host.cpp \
                 -o eval_host_qd.o
@@ -1616,7 +1617,7 @@ mgs_host_dd.o:
                 -o mgs_host_dd.o
 
 mgs_host_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/mgs_host.cpp \
                 -o mgs_host_qd.o
@@ -1634,7 +1635,7 @@ newton_host_dd.o:
                 -o newton_host_dd.o
 
 newton_host_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/newton_host.cpp \
                 -o newton_host_qd.o
@@ -1650,7 +1651,7 @@ ada_test_dd.o:
                 -c $(PHCgpu)/Path/Main/ada_test_dd.cpp -o ada_test_dd.o
 
 ada_test_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -I$(PHCLib) -I$(PHCgpu)/Path/Poly \
                 -c $(PHCgpu)/Path/Main/ada_test_qd.cpp -o ada_test_qd.o
 
@@ -1672,10 +1673,11 @@ gpunewton_dd.o:
             -I $(PHCgpu)/Path/DefineTypesDD -I $(PHCgpu)/Path/Main \
             -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -I$(PHCgpu)/Path/Path_GPU \
+            -o gpunewton_dd.o
 
 gpunewton_qd.o: 
 	g++ -c $(PHCAda)/PHCtoC/gpunewton_qd.cpp -I$(PHCLib) \
-            -I $(PHCgpu)/Path/DefineTypesDD -I $(PHCgpu)/Path/Main \
+            -I $(PHCgpu)/Path/DefineTypesQD -I $(PHCgpu)/Path/Main \
             -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -I$(PHCgpu)/Path/Path_GPU \
             -o gpunewton_qd.o
@@ -1704,8 +1706,8 @@ path_gpu_dd.o:
 
 path_gpu_qd.o:
 	@-echo ">>> compiling kernels ..."
-	nvcc -O2 --define-macro path_precision=cdd \
-             -I$(PHCgpu)/Path/DefineTypesDD -I$(PHCgpu)/Path/Complex \
+	nvcc -O2 --define-macro path_precision=cqd \
+             -I$(PHCgpu)/Path/DefineTypesQD -I$(PHCgpu)/Path/Complex \
              -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
              -I$(PHCgpu)/Path/Path_CPU -I$(PHCgpu)/Path/Path_GPU \
              -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
@@ -1768,7 +1770,7 @@ ts_gpunewton_qd: utilities_qd.o poly_qd.o workspace_host_qd.o eval_host_qd.o \
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
 	@-echo ">>> compiling the main Ada procedure ..."
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_gpunewton_qd.adb \
-                 -o ts_gpunewton.o
+                 -o ts_gpunewton_qd.o
 	gnatbind ts_gpunewton_qd use_c2phc
 	@-echo ">>> linking ..."
 	gnatlink ts_gpunewton_qd \
