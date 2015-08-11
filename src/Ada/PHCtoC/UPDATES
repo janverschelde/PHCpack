@@ -1,3 +1,6 @@
+Tue 11 Aug 2015 : added mode and verbose flags to gpunewton*cpp and the
+  corresponding Ada ts_gpunewton*adb procedures.
+
 Fri 7 Aug 2015 : writing of the updated solution caused changes in
   gpunewton_d.cpp and ts_gpunewton.adb.  Also modified the double double
   and quad double versions: gpunewton_dd.cpp, gpunewton_qd.cpp and the
