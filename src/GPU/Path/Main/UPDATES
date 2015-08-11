@@ -1,3 +1,6 @@
+Tue 11 Aug 2015 : added verbose parameter to ada_test, ada_test_dd, and
+  ada_test_qd, documented in header file and implemented in .cpp file.
+
 Fri 7 Aug 2015 : added write_sols function to ada_test to write the updated
   solution into the solutions container.  Did the same for the double double
   and the quad double versions in ada_test_dd and ada_test_qd.

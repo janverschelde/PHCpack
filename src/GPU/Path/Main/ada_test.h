@@ -25,16 +25,17 @@ extern void adainit( void );
 extern void adafinal( void );
 #endif
 
-void var_name(char* x_string, int x_string_len, string*& x_names, int& dim);
+void var_name ( char* x_string, int x_string_len, string*& x_names, int& dim );
 /*
  * DESCRIPTION :
  *   Auxiliary function to read the names of the variables in a system. */
 
-void ada_read_sys ( PolySys& sys );
+void ada_read_sys ( int verbose, PolySys& sys );
 /*
  * DESCRIPTION :
  *   Reads a polynomial system from the systems container
- *   into the data structure provided by the parameter sys. */
+ *   into the data structure provided by the parameter sys.
+ *   If verbose > 0, then extra output is written to screen. */
 
 void ada_read_sols ( PolySys& start_sys, PolySolSet& sols );
 /* 
