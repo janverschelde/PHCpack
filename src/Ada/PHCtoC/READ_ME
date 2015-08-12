@@ -35,3 +35,6 @@ gpunewton_d.cpp        : C++ program called by ts_gpunewton
 gpunewton_dd.cpp       : C++ program called by ts_gpunewton_dd
 gpunewton_qd.cpp       : C++ program called by ts_gpunewton_qd
 -------------------------------------------------------------------------------
+ts_gpuonepath_d        : accelerated tracking of one path in double precision
+gpuonepath_d.cpp       : C++ program called by ts_gpuonepath_d
+-------------------------------------------------------------------------------

@@ -1,3 +1,6 @@
+Wed 12 Aug 2015 : new ts_gpuonepath calls gpuonepath_d.cpp to track one
+  solution in standard double precision, accelerated by the GPU.
+
 Tue 11 Aug 2015 : added mode and verbose flags to gpunewton*cpp and the
   corresponding Ada ts_gpunewton*adb procedures.
 
