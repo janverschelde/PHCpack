@@ -5,8 +5,8 @@
 # swap the # symbol in the following lines to use makefile_windows
 # or to use makefile_mac on a Mac OS x computer
 
-MAKEFILE = makefile_unix
-# MAKEFILE = makefile_mac
+# MAKEFILE = makefile_unix
+MAKEFILE = makefile_mac
 # MAKEFILE = makefile_windows
 
 # the main executable is phc
@@ -244,7 +244,7 @@ ts_circuit:
 # Test programs for Math_Lib/Reduction :
 
 test_reduction: ts_fltlu ts_cmplu ts_ddlu ts_qdlu ts_qrd ts_svd ts_eigval \
-                ts_mgs ts_mgsrnk ts_backsubs ts_vvlu ts_perflu ts_vmplu
+                ts_mgs ts_mgsrnk ts_backsubs ts_perflu ts_vvlu ts_vmplu
 
 ts_fltlu:
 	make -f $(MAKEFILE) ts_fltlu
@@ -364,11 +364,14 @@ ts_expvec:
 
 # Test programs for Math_Lib/Circuits :
 
-test_circuits: ts_cffsup ts_speel ts_speelsys ts_cycfun \
-               ts_vmpeval ts_vmpdiff ts_gradcirc
+test_circuits: ts_cffsup ts_speel ts_cycfun ts_speelsys ts_gradcirc \
+               ts_vmpeval ts_vmpdiff
 
 ts_cffsup:
 	make -f $(MAKEFILE) ts_cffsup
+
+ts_gradcirc:
+	make -f $(MAKEFILE) ts_gradcirc
 
 ts_speel:
 	make -f $(MAKEFILE) ts_speel
@@ -384,9 +387,6 @@ ts_vmpeval:
 
 ts_vmpdiff:
 	make -f $(MAKEFILE) ts_vmpdiff
-
-ts_gradcirc:
-	make -f $(MAKEFILE) ts_gradcirc
 
 # Test programs for Math_Lib/Supports :
 
@@ -464,11 +464,11 @@ ts_contab:
 ts_quad:
 	make -f $(MAKEFILE) ts_quad
 
-ts_ptlists:
-	make -f $(MAKEFILE) ts_ptlists
-
 ts_soldrop:
 	make -f $(MAKEFILE) ts_soldrop
+
+ts_ptlists:
+	make -f $(MAKEFILE) ts_ptlists
 
 # Test programs for the Deformations/Homotopy library :
 
@@ -1248,14 +1248,14 @@ ts_csols:
 
 # test programs in the CtoPHC/State directory :
 
-test_state: ts_solcon ts_use_solcon ts_solpool ts_use_solpool \
+test_state: ts_filman ts_solcon ts_use_solcon ts_solpool ts_use_solpool \
             ts_syscon ts_use_syscon ts_syspool ts_use_syspool \
             ts_celcon ts_use_celcon ts_pirhom ts_use_c2pieri ts_c2phc \
             ts_c2str ts_use_c2phc ts_use_c2fac ts_unisolve ts_use_giftwrap \
             ts_giftwcon
 
-file_management.o:
-	make -f $(MAKEFILE) file_management.o
+ts_filman: file_management.o
+	make -f $(MAKEFILE) ts_filman
 
 ts_solcon:
 	make -f $(MAKEFILE) ts_solcon
@@ -1321,9 +1321,8 @@ ts_feedback:
 
 # Test programs for the C interface to GPU acceleration :
 
-test_phctoc: ts_cpu2norm_d ts_cpu2norm_dd ts_cpu2norm_qd \
-             ts_gpu2norm_d_in_c ts_gpu2norm_d ts_gpu2norm_dd ts_gpu2norm_qd \
-             ts_gpunewton ts_gpunewton_dd ts_gpunewton_qd
+test_phctoc: ts_cpu2norm_d ts_cpu2norm_dd ts_cpu2norm_qd ts_gpunewton \
+             ts_gpunewton_dd ts_gpunewton_qd ts_gpuonepath_d
 
 ts_cpu2norm_d:
 	make -f $(MAKEFILE) ts_cpu2norm_d
@@ -1334,18 +1333,6 @@ ts_cpu2norm_dd:
 ts_cpu2norm_qd:
 	make -f $(MAKEFILE) ts_cpu2norm_qd
 
-ts_gpu2norm_d_in_c:
-	make -f $(MAKEFILE) ts_gpu2norm_d_in_c
-
-ts_gpu2norm_d:
-	make -f $(MAKEFILE) ts_gpu2norm_d
-
-ts_gpu2norm_dd:
-	make -f $(MAKEFILE) ts_gpu2norm_dd
-
-ts_gpu2norm_qd:
-	make -f $(MAKEFILE) ts_gpu2norm_qd
-
 ts_gpunewton:
 	make -f $(MAKEFILE) ts_gpunewton
 
@@ -1354,6 +1341,9 @@ ts_gpunewton_dd:
 
 ts_gpunewton_qd:
 	make -f $(MAKEFILE) ts_gpunewton_qd
+
+ts_gpuonepath_d:
+	make -f $(MAKEFILE) ts_gpuonepath_d
 
 # Test programs for the Tasking:
 

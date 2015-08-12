@@ -1783,6 +1783,48 @@ ts_gpunewton_qd: utilities_qd.o poly_qd.o workspace_host_qd.o eval_host_qd.o \
                  -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
                  --LINK=g++
 
+predictor_host_d.o:
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+                -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
+                -c $(PHCgpu)/Path/Path_CPU/predictor_host.cpp \
+                -o predictor_host_d.o
+
+path_host_d.o:
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+                -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
+                -c $(PHCgpu)/Path/Path_CPU/path_host.cpp \
+                -o path_host_d.o
+
+gpuonepath_d.o: 
+	g++ -c $(PHCAda)/PHCtoC/gpuonepath_d.cpp -I$(PHCLib) \
+            -I $(PHCgpu)/Path/DefineTypesD -I $(PHCgpu)/Path/Main \
+            -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
+            -I$(PHCgpu)/Path/Path_GPU \
+            -o gpuonepath_d.o
+
+ts_gpuonepath_d: utilities_d.o poly_d.o workspace_host_d.o eval_host_d.o \
+                 mgs_host_d.o newton_host_d.o ada_test.o gqd_qd_util.o \
+                 path_gpu_d.o predictor_host_d.o path_host_d.o gpuonepath_d.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	@-echo ">>> compiling code for the containers ..."
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	@-echo ">>> compiling the main Ada procedure ..."
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_gpuonepath_d.adb \
+                 -o ts_gpuonepath_d.o
+	gnatbind ts_gpuonepath_d use_c2phc
+	@-echo ">>> linking ..."
+	gnatlink ts_gpuonepath_d \
+               gpuonepath_d.o syscon.o solcon.o phcpack.o ada_test.o \
+               utilities_d.o poly_d.o workspace_host_d.o eval_host_d.o \
+               mgs_host_d.o newton_host_d.o gqd_qd_util.o path_gpu_d.o \
+               predictor_host_d.o path_host_d.o \
+                 -o $(BIN)/ts_gpuonepath_d -lm \
+                 -lcutil_x86_64 -lcudart \
+                 -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
+                 --LINK=g++
+
 # Test programs for the Tasking :
 
 ts_mtmatvec:
