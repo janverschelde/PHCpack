@@ -1,3 +1,6 @@
+Thu 13 Aug 2015 : new gpuonepath_dd.cpp, gpuonepath_qd.cpp, called by
+  ts_gpuonepath_dd.adb and ts_gpuonepath_qd.adb respectively.
+
 Wed 12 Aug 2015 : new ts_gpuonepath calls gpuonepath_d.cpp to track one
   solution in standard double precision, accelerated by the GPU.
 
