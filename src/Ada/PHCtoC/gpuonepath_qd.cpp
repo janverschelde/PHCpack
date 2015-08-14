@@ -73,7 +73,7 @@ int track ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s )
    double tpred,teval,tmgs;
    bool success;
    CT* sol = s.get_sol(0);
-   CT alpha;
+   CT alpha,t;
    CT *x_gpu;
    CPUInstHom cpu_inst_hom;
    Workspace workspace_cpu;
@@ -92,14 +92,15 @@ int track ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s )
       }
    }
 
-   alpha = CT(0.0,0);
+   alpha = CT(1.0,0);
    cpu_inst_hom.init(p,q,p.dim,p.n_eq,1,alpha);
    cpu_inst_hom.init_workspace(workspace_cpu);
 
    if(mode == 0 || mode == 1)
    {
       workspace_cpu.init_x_t_idx();
-      workspace_cpu.update_x_t_value(sol,alpha);
+      workspace_cpu.update_x_t_value(sol,t);
+      workspace_cpu.update_x_t_idx();
       tpred = 0.0; teval = 0.0; tmgs = 0.0;
       success = path_tracker(workspace_cpu,cpu_inst_hom,path_parameter,
                              tpred,teval,tmgs);
@@ -114,8 +115,8 @@ int track ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s )
 
    if(mode == 0 || mode == 2)
    {
-      alpha = CT(0.0,0);
-      success = GPU_Path(cpu_inst_hom,path_parameter,sol,alpha,x_gpu);
+      t = CT(0.0,0);
+      success = GPU_Path(cpu_inst_hom,path_parameter,sol,t,x_gpu);
 
       if(verbose > 0)
       {
