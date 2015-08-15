@@ -1,0 +1,8 @@
+This directory contains the code for the path tracker on the host.
+
+-------------------------------------------------------------------------------
+file name              : short description
+-------------------------------------------------------------------------------
+workspace_host         : class to hold all data during path tracking
+path_host              : main function path_tracker
+-------------------------------------------------------------------------------
