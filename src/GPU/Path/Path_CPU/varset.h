@@ -10,6 +10,7 @@
 #define IntSet GeneralSet<int>
 #define ShortSet GeneralSet<short>
 #define EqSet GeneralSet<EqIdxCoef>
+#define PosExpSet GeneralSet<TwoInt>
 
 class VarSet{
 public:
@@ -205,7 +206,7 @@ public:
 		return n;
 	}
 
-	int get_element(int i){
+	T get_element(int i){
 		return elements[i];
 	}
 
@@ -310,42 +311,105 @@ public:
 	}
 };
 
+class TwoInt{
+public:
+	int int1;
+	int int2;
+
+	TwoInt(){
+		int1 = 0;
+		int2 = 0;
+	}
+
+	TwoInt(const int int1, const int int2){
+		init(int1, int2);
+	}
+
+	void init(int int1, int int2){
+		this->int1 = int1;
+		this->int2 = int2;
+	}
+
+	bool operator < (const TwoInt& that) const{
+		if(this->int2 < that.int2){
+			return true;
+		}
+		else if(this->int2 > that.int2){
+			return false;
+		}
+		if(this->int1 < that.int1){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+	bool operator > (const TwoInt& that) const{
+		if(this->int2 > that.int2){
+			return true;
+		}
+		else if(this->int2 < that.int2){
+			return false;
+		}
+		if(this->int1 > that.int1){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+	bool operator == (const TwoInt& that) const{
+		if(this->int1 == that.int1 && this->int2 == that.int2){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+};
 
 class MonIdxSet{
 	friend class MonSet;
 
 	IntSet pos;
+	IntSet exp;
 	int eq_idx;
 	int mon_idx;
 	bool sys_idx;
 	CT coef;
 
-	void init(const int n, const int* elements){
-		pos = IntSet(n, elements);
+	void init(const int n, const int* pos, const int* exp){
+		this->pos = IntSet(n, pos);
+		this->exp = IntSet(n, exp);
 		eq_idx = 0;
 		mon_idx = 0;
 		sys_idx = 0;
 		coef = 0.0;
 	}
 
-	void init(const int n, const int* elements, int eq_idx, int mon_idx, bool sys_idx){
-		pos = IntSet(n, elements);
+	void init(const int n, const int* pos, const int* exp, int eq_idx, int mon_idx, bool sys_idx){
+		this->pos = IntSet(n, pos);
+		this->exp = IntSet(n, exp);
 		this->eq_idx = eq_idx;
 		this->mon_idx = mon_idx;
 		this->sys_idx = sys_idx;
 		this->coef = 0.0;
 	}
 
-	void init(const int n, const int* elements, int eq_idx, int mon_idx, bool sys_idx, const CT& coef){
-		pos = IntSet(n, elements);
+	void init(const int n, const int* pos, const int* exp, int eq_idx, int mon_idx, bool sys_idx, const CT& coef){
+		this->pos = IntSet(n, pos);
+		this->exp = IntSet(n, exp);
 		this->eq_idx = eq_idx;
 		this->mon_idx = mon_idx;
 		this->sys_idx = sys_idx;
 		this->coef = coef;
 	}
 
-	void init(const IntSet& pos, int eq_idx, int mon_idx, bool sys_idx, const CT& coef){
+	void init(const IntSet& pos, const IntSet& exp, int eq_idx, int mon_idx, bool sys_idx, const CT& coef){
 		this->pos = pos;
+		this->exp = exp;
 		this->eq_idx = eq_idx;
 		this->mon_idx = mon_idx;
 		this->sys_idx = sys_idx;
@@ -360,24 +424,24 @@ public:
 		coef = 0.0;
 	};
 
-	MonIdxSet(const int n, const int* elements){
-		init(n, elements);
+	MonIdxSet(const int n, const int* pos, const int* exp){
+		init(n, pos, exp);
 	}
 
-	MonIdxSet(const int n, const int* elements, int eq_idx, int mon_idx, bool sys_idx){
-		init(n, elements, eq_idx, mon_idx, sys_idx);
+	MonIdxSet(const int n, const int* pos, const int* exp, int eq_idx, int mon_idx, bool sys_idx){
+		init(n, pos, exp, eq_idx, mon_idx, sys_idx);
 	}
 
-	MonIdxSet(const int n, const int* elements, int eq_idx, int mon_idx, bool sys_idx, const CT& coef){
-		init(n, elements, eq_idx, mon_idx, sys_idx, coef);
+	MonIdxSet(const int n, const int* pos, const int* exp, int eq_idx, int mon_idx, bool sys_idx, const CT& coef){
+		init(n, pos, exp, eq_idx, mon_idx, sys_idx, coef);
 	}
 
 	MonIdxSet(const MonIdxSet& original){
-		init(original.pos, original.eq_idx, original.mon_idx, original.sys_idx, original.coef);
+		init(original.pos, original.exp, original.eq_idx, original.mon_idx, original.sys_idx, original.coef);
 	}
 
 	MonIdxSet& operator= (const MonIdxSet& original){
-		init(original.pos, original.eq_idx, original.mon_idx, original.sys_idx, original.coef);
+		init(original.pos, original.exp, original.eq_idx, original.mon_idx, original.sys_idx, original.coef);
 		return *this;
 	}
 
@@ -389,6 +453,10 @@ public:
 
 	IntSet get_pos(){
 		return pos;
+	}
+
+	IntSet get_exp(){
+		return exp;
 	}
 
 	int get_eq_idx(){
@@ -409,26 +477,31 @@ public:
 
 	// comparison operators
 	bool operator < (const MonIdxSet& that) const{
+		// Compare exponent set
+		if(this->exp < that.exp){
+			return true;
+		}
+		else if(this->exp > that.exp){
+			return false;
+		}
+		// Compare exponent set
 		if(this->pos < that.pos){
 			return true;
 		}
-		else if(this->pos == that.pos){
-			// Compare equation index
-			if(this->eq_idx < that.eq_idx){
-				return true;
-			}
-			else if(this->eq_idx > that.eq_idx){
-				return false;
-			}
-
-			// Compare system index
-			if(this->sys_idx < that.sys_idx){
-				return true;
-			}
-			else if(this->sys_idx > that.sys_idx){
-				return false;
-			}
+		else if(this->pos > that.pos){
 			return false;
+		}
+		// Compare equation index
+		if(this->eq_idx < that.eq_idx){
+			return true;
+		}
+		else if(this->eq_idx > that.eq_idx){
+			return false;
+		}
+
+		// Compare system index
+		if(this->sys_idx < that.sys_idx){
+			return true;
 		}
 		else{
 			return false;
@@ -436,27 +509,31 @@ public:
 	}
 
 	bool operator > (const MonIdxSet& that) const{
+		// Compare exponent set
+		if(this->exp > that.exp){
+			return true;
+		}
+		else if(this->exp < that.exp){
+			return false;
+		}
+		// Compare exponent set
 		if(this->pos > that.pos){
 			return true;
 		}
-		else if(this->pos == that.pos){
-			// Compare equation index
-			if(this->eq_idx > that.eq_idx){
-				return true;
-			}
-			else if(this->eq_idx < that.eq_idx){
-				return false;
-			}
-
-			// Compare system index
-			if(this->sys_idx > that.sys_idx){
-				return true;
-			}
-			else if(this->sys_idx < that.sys_idx){
-				return false;
-			}
-
+		else if(this->pos < that.pos){
 			return false;
+		}
+		// Compare equation index
+		if(this->eq_idx > that.eq_idx){
+			return true;
+		}
+		else if(this->eq_idx < that.eq_idx){
+			return false;
+		}
+
+		// Compare system index
+		if(this->sys_idx > that.sys_idx){
+			return true;
 		}
 		else{
 			return false;
@@ -464,8 +541,8 @@ public:
 	}
 
 	bool operator == (const MonIdxSet& that) const{
-		if(this->pos == that.pos){
-			return true;
+		if(this->pos == that.pos && this->exp == that.exp){
+				return true;
 		}
 		else{
 			return false;
@@ -474,6 +551,7 @@ public:
 
 	void print(){
 		pos.print();
+		exp.print();
 		std::cout << "s" << sys_idx
 				  << " e" << eq_idx
 				  << " m" << mon_idx << std::endl;
@@ -482,7 +560,23 @@ public:
 	}
 
 	void sorted(){
-		pos.sorted();
+		int n_elements =pos.get_n();
+		TwoInt* tmp_pos_exp = new TwoInt[n_elements];
+		for(int idx=0; idx<n_elements; idx++){
+			tmp_pos_exp[idx].init(pos.get_element(idx), exp.get_element(idx));
+		}
+		PosExpSet tmp_set(n_elements, tmp_pos_exp);
+		tmp_set.sorted();
+
+		int* tmp_pos = new int[n_elements];
+		int* tmp_exp = new int[n_elements];
+		for(int idx=0; idx<n_elements; idx++){
+			TwoInt tmpTwoInt = tmp_set.get_element(idx);
+			tmp_pos[idx] = tmpTwoInt.int1;
+			tmp_exp[idx] = tmpTwoInt.int2;
+		}
+		pos.update(n_elements, tmp_pos);
+		exp.update(n_elements, tmp_exp);
 	}
 };
 
@@ -536,14 +630,17 @@ public:
 
 class MonSet{
 	IntSet pos;
+	IntSet exp;
 	EqSet eq_idx;
 
-	void init(const int n, const int* elements){
-		pos = IntSet(n, elements);
+	void init(const int n, const int* pos, const int* exp){
+		this->pos = IntSet(n, pos);
+		this->exp = IntSet(n, exp);
 	}
 
 	void init(const MonSet& original){
 		pos = original.pos;
+		exp = original.exp;
 		eq_idx = original.eq_idx;
 	}
 
@@ -553,14 +650,15 @@ public:
 
 	void copy_pos(const MonIdxSet& original){
 		this->pos = original.pos;
+		this->exp = original.exp;
 	}
 
 	void update_eq_idx(int n, EqIdxCoef* eq_idx_elements){
 		eq_idx.update(n,eq_idx_elements);
 	}
 
-	MonSet(const int n, const int* elements){
-		init(n, elements);
+	MonSet(const int n, const int* pos, const int* exp){
+		init(n, pos, exp);
 	}
 
 	MonSet(const MonSet& original){
@@ -576,6 +674,12 @@ public:
 	}
 
 	bool operator < (const MonSet& that) const{
+		if(this->exp < that.exp){
+			return true;
+		}
+		else if(this->exp > that.exp){
+			return false;
+		}
 		if(this->pos < that.pos){
 			return true;
 		}
@@ -585,6 +689,12 @@ public:
 	}
 
 	bool operator > (const MonSet& that) const{
+		if(this->exp > that.exp){
+			return true;
+		}
+		else if(this->exp < that.exp){
+			return false;
+		}
 		if(this->pos > that.pos){
 			return true;
 		}
@@ -594,7 +704,7 @@ public:
 	}
 
 	bool operator == (const MonSet& that) const{
-		if(this->pos == that.pos){
+		if(this->pos == that.pos && this->exp == that.exp){
 			return true;
 		}
 		else{
@@ -603,7 +713,23 @@ public:
 	}
 
 	void sorted(){
-		pos.sorted();
+		int n_elements =pos.get_n();
+		TwoInt* tmp_pos_exp = new TwoInt[n_elements];
+		for(int idx=0; idx<n_elements; idx++){
+			tmp_pos_exp[idx].init(pos.get_element(idx), exp.get_element(idx));
+		}
+		PosExpSet tmp_set(n_elements, tmp_pos_exp);
+		tmp_set.sorted();
+
+		int* tmp_pos = new int[n_elements];
+		int* tmp_exp = new int[n_elements];
+		for(int idx=0; idx<n_elements; idx++){
+			TwoInt tmpTwoInt = tmp_set.get_element(idx);
+			tmp_pos[idx] = tmpTwoInt.int1;
+			tmp_exp[idx] = tmpTwoInt.int2;
+		}
+		pos.update(n_elements, tmp_pos);
+		exp.update(n_elements, tmp_exp);
 	}
 
 	int get_n(){
@@ -616,6 +742,10 @@ public:
 
 	int get_pos(int pos_idx){
 		return pos.get_element(pos_idx);
+	}
+
+	int get_exp(int pos_idx){
+		return exp.get_element(pos_idx);
 	}
 
 	int get_eq_idx(int idx){
@@ -644,8 +774,47 @@ public:
 		}
 	}
 
+	void write_exp(int*& tmp_exp){
+		for(int i=0; i<exp.n; i++){
+			(*tmp_exp++) = exp.elements[i];
+		}
+	}
+
+	void write_exp(unsigned short*& tmp_exp){
+		for(int i=0; i<exp.n; i++){
+			(*tmp_exp++) = exp.elements[i];
+		}
+	}
+
+	bool has_base(){
+		for(int i=0; i<exp.n; i++){
+			if(exp.elements[i]>1){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	int get_base_size(){
+		for(int i=0; i<exp.n; i++){
+			if(exp.elements[i] > 1){
+				return exp.n - i;
+			}
+		}
+		return 0;
+	}
+
+	int get_base_start(){
+		for(int i=0; i<exp.n; i++){
+			if(exp.elements[i] > 1){
+				return i;
+			}
+		}
+		return exp.n;
+	}
+
 	friend std::ostream& operator << (std::ostream& o, const MonSet& c){
-	   return o << c.pos << c.eq_idx << std::endl;
+	   return o << c.pos << c.exp << c.eq_idx << std::endl;
 	}
 };
 

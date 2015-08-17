@@ -1,3 +1,6 @@
+Mon 17 Aug 2015 : updated varset.h, eval_host.h, eval_host.cpp, 
+  workspace_host.h and workspace_host.cpp.
+
 Sat 15 Aug 2015 : edited workspace_host.h, workspace_host.cpp, path_host.h,
   and path_host.cpp.  Similar edits in parameter.h, predictor_host.h,
   and predictor_host.cpp.

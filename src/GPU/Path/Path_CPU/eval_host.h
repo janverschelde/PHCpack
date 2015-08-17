@@ -9,6 +9,7 @@
 #define CPU_INSTRUCTION_EVAL_H_
 
 #include "varset.h"
+#include "parameter.h"
 //#include "utilities.h"
 #include "poly.h"
 #include "workspace_host.h"
@@ -20,7 +21,7 @@
 
 class CPUInstHomCoef{
   public:
-	int n_coef; // *2 = coef_orig size
+	int n_coef;
 	CT* coef_orig;
 	CT alpha;
 
@@ -56,6 +57,9 @@ class CPUInstHomMon{
 	int* mon_pos_start;
 	int mon_pos_size;
 	unsigned short* mon_pos;
+	unsigned short* mon_exp;
+	int* max_deg_base;
+	int n_mon_base_start;
 	int flops_multiple;
 
 	CPUInstHomMon(){
@@ -65,12 +69,15 @@ class CPUInstHomMon{
 		mon_pos_start = NULL;
 		mon_pos_size = 0;
 		mon_pos = NULL;
+		mon_exp = NULL;
+		max_deg_base = NULL;
 		flops_multiple = 0;
+		n_mon_base_start = 0;
 	}
 
-	CPUInstHomMon(MonSet* hom_monset, int n_monset, int total_n_mon, int n_constant){
+	CPUInstHomMon(MonSet* hom_monset, int n_monset, int total_n_mon, int n_constant, int* max_deg_base){
 		CPUInstHomMon();
-		init(hom_monset, n_monset, total_n_mon, n_constant);
+		init(hom_monset, n_monset, total_n_mon, n_constant, max_deg_base);
 	}
 
 	~CPUInstHomMon(){
@@ -78,11 +85,18 @@ class CPUInstHomMon{
 		delete[] n_mon_level;
 		delete[] mon_pos_start;
 		delete[] mon_pos;
+		delete[] mon_exp;
+		delete[] max_deg_base;
 	}
 
-	void init(MonSet* hom_monset, int n_monset, int total_n_mon, int n_constant);
+	void init(MonSet* hom_monset, int n_monset, int total_n_mon,\
+			int n_constant, int* max_deg_base);
 
-	void eval(const CT* sol, CT* mon, CT* coef);
+	void eval(int dim, const CT* x_val, CT* mon, CT* coef, CT** deg_table=NULL);
+
+	void eval_deg_table(int dim, const CT* x_val, CT** deg_table);
+
+	void eval_base(CT** deg_table, CT* coef);
 
 	void print();
 };
@@ -245,6 +259,7 @@ public:
 
 class CPUInstHom{
 public:
+	bool PED_hom; // true: homotopy, false: single
     CPUInstHomCoef CPU_inst_hom_coef;
     CPUInstHomMon CPU_inst_hom_mon;
     CPUInstHomSum CPU_inst_hom_sum;
@@ -281,11 +296,15 @@ public:
 	int n_mgs_GPU;
 
     void init(MonSet* hom_monset, int n_monset, \
-    		  int n_constant, int total_n_mon, int dim, int n_eq, int n_predictor, CT alpha);
+    		  int n_constant, int total_n_mon, int dim, \
+    		  int n_eq, int n_predictor, CT alpha, int* max_deg_base);
 
 	void init(PolySys& Target_Sys, PolySys& Start_Sys, int dim, int n_eq, int n_predictor, CT alpha);
 
+	void init(PolySys& Target_Sys, int dim, int n_eq, int n_predictor, CT alpha);
+
     CPUInstHom(){
+    	PED_hom = false;
     	n_constant = 0;
     	dim = 0;
     	n_eq = 0;
@@ -310,7 +329,9 @@ public:
     	n_mgs_GPU = 0;
     }
 
-    CPUInstHom(MonSet* hom_monset, int n_monset, int n_constant, int total_n_mon, int dim, int n_eq, int n_predictor, CT alpha)
+    CPUInstHom(MonSet* hom_monset, int n_monset, int n_constant, \
+    		int total_n_mon, int dim, int n_eq, int n_predictor, \
+    		CT alpha, int* max_deg_base)
 	{
     	// For record only
     	timeSec_Path_CPU = 0;
@@ -329,7 +350,8 @@ public:
     	n_eval_GPU = 0;
     	n_mgs_CPU = 0;
     	n_mgs_GPU = 0;
-    	init(hom_monset, n_monset, n_constant, total_n_mon, dim, n_eq, n_predictor, alpha);
+    	init(hom_monset, n_monset, n_constant, total_n_mon, \
+    			dim, n_eq, n_predictor, alpha, max_deg_base);
 	}
 
     ~CPUInstHom(){

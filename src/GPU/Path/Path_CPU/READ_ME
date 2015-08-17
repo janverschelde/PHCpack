@@ -3,6 +3,9 @@ This directory contains the code for the path tracker on the host.
 -------------------------------------------------------------------------------
 file name              : short description
 -------------------------------------------------------------------------------
+eval_host              : evaluation and differentiation of polynomials
+mgs_host               : modified Gram-Schmidt method
+-------------------------------------------------------------------------------
 parameter.h            : settings for the numerical constants
 predictor_host         : Newton extrapolation for the predictor
 -------------------------------------------------------------------------------
