@@ -1,20 +1,5 @@
 #include "poly.h"
 
-void PolyMon::read(const string& mon_string, VarDict& pos_dict, int* max_deg)
-{
-    int end = mon_string.length();
-    int loc = 0;
-    CT coef = get_coef_complex(mon_string, loc);
-    read(mon_string, pos_dict, loc, end, coef, max_deg);
-}
-
-void PolyMon::read(const string& mon_string, VarDict& pos_dict, CT coef, int* max_deg)
-{
-    int end = mon_string.length();
-    read(mon_string, pos_dict, 0, end, coef, max_deg);
-}
-
-
 inline int var_to_pos(string var){
     string var1 = var.substr(1,var.length()-1);
 	//return atoi(var1.c_str());
@@ -22,16 +7,59 @@ inline int var_to_pos(string var){
 	return (atoi(var1.c_str())+6)%8;
 }
 
-bool compare_sol(PolySol* sol1, PolySol* sol2){
-	if(*sol1 < *sol2){
-		return true;
-	}
-	else{
-		return false;
-	}
+CT pow(const CT x, int exp){
+    CT tmp = x;
+    for(int i=1; i<exp; i++){
+        tmp *= x;
+    }
+    return tmp;
 }
 
-void PolyMon::read(const string& eq_string, VarDict& pos_dict, int start, int end, CT coef, int* max_deg)
+int not_empty_line(const string& line){
+    int not_empty = -1;
+    for(unsigned int j=0; j < line.length(); j++){
+        char c = line[j];
+        if(c!=' '&&c!=';'&&c!='\n'){
+            not_empty = j;
+        }
+    }
+    return not_empty;
+}
+
+std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
+    std::stringstream ss(s);
+    std::string item;
+    std::string empy_str = "";
+    while (std::getline(ss, item, delim)) {
+    	if(item != empy_str){
+    		elems.push_back(item);
+    	}
+    }
+    return elems;
+}
+
+
+std::vector<std::string> split(const std::string &s, char delim) {
+    std::vector<std::string> elems;
+    split(s, delim, elems);
+    return elems;
+}
+
+void PolyMon::read(const string& mon_string, VarDict& pos_dict)
+{
+    int end = mon_string.length();
+    int loc = 0;
+    CT coef = get_coef_complex(mon_string, loc);
+    read(mon_string, pos_dict, loc, end, coef);
+}
+
+void PolyMon::read(const string& mon_string, VarDict& pos_dict, CT coef)
+{
+    int end = mon_string.length();
+    read(mon_string, pos_dict, 0, end, coef);
+}
+
+void PolyMon::read(const string& eq_string, VarDict& pos_dict, int start, int end, CT coef)
 {
     n_var = 1;
 
@@ -94,10 +122,6 @@ void PolyMon::read(const string& eq_string, VarDict& pos_dict, int start, int en
             else if(cur_type == 2){
                 int tmp_exp =  atoi(var.c_str());
                 exp[pos_ind-1] = tmp_exp;
-                int tmp_pos = pos[pos_ind-1];
-                if(tmp_exp > max_deg[tmp_pos]){
-                    max_deg[tmp_pos] = tmp_exp;
-                }
                 cur_type = 0;
             }
         }
@@ -123,6 +147,28 @@ void PolyMon::read(const string& eq_string, VarDict& pos_dict, int start, int en
     else if(cur_type == 2){
         exp[pos_ind-1] = atoi(var.c_str()); 
     }
+    update_base();
+}
+
+void PolyMon::update_base(){
+	n_base = 0;
+	for(int var_idx=0; var_idx<n_var; var_idx++){
+		if(exp[var_idx]>1){
+			n_base++;
+		}
+	}
+	pos_base = new int[n_base];
+	exp_base = new int[n_base];
+	exp_tbl_base = new int[n_base];
+	int base_idx = 0;
+	for(int var_idx=0; var_idx<n_var; var_idx++){
+		if(exp[var_idx]>1){
+			pos_base[base_idx] = pos[var_idx];
+			exp_base[base_idx] = exp[var_idx];
+			exp_tbl_base[base_idx] = exp[var_idx]-2;
+			base_idx++;
+		}
+	}
 }
 
 /*
@@ -155,18 +201,31 @@ CT PolyMon::speel(const CT* x_val, CT* deri){
         deri[i] *= tmp;
         tmp *= x_val[pos[i]];
     }
-
     deri[0] = tmp;
 
     return tmp*x_val[pos[0]];
 }
 
-CT pow(const CT x, int exp){
-    CT tmp = x;
-    for(int i=1; i<exp; i++){
-        tmp *= x;
+CT PolyMon::speel_with_base(const CT* x_val, CT* deri, CT base){
+    deri[1] = x_val[pos[0]];
+
+    for(int i=1; i<n_var-1; i++){
+        deri[i+1] = deri[i]*x_val[pos[i]];
     }
-    return tmp;
+
+    CT tmp = base;
+    for(int i=n_var-1; i>0; i--){
+    	if(exp[i]>1){
+    		deri[i] *= tmp*exp[i];
+    	}
+    	else{
+            deri[i] *= tmp;
+    	}
+        tmp *= x_val[pos[i]];
+    }
+    deri[0] = tmp*exp[0];
+
+    return tmp*x_val[pos[0]];
 }
 
 CT PolyMon::eval(const CT* x_val){
@@ -177,18 +236,28 @@ CT PolyMon::eval(const CT* x_val){
     return val;
 }
 
-CT PolyMon::eval_base(const CT* x_val){
+CT PolyMon::eval_base(const CT* x_val, CT** deg_table){
     CT val = coef;
-    for(int i=0; i<n_var; i++){
-        if(exp[i] > 1){
-            val *= pow(x_val[pos[i]],exp[i]-1);
-        }
+    for(int i=0; i<n_base; i++){
+    	val *= deg_table[pos_base[i]][exp_tbl_base[i]];
     }
     return val;
 }
 
 CT PolyMon::eval(const CT* x_val, CT* deri){
     CT val = speel(x_val, deri);
+    /*CT base = eval_base(x_val);
+    val *= base;
+
+    for(int i=0; i<n_var; i++){
+        deri[i] *= base*exp[i];
+    }*/
+    return val;
+}
+
+CT PolyMon::eval(const CT* x_val, CT* deri, CT** deg_table){
+	CT base = eval_base(x_val, deg_table);
+    CT val = speel_with_base(x_val, deri, base);
     /*CT base = eval_base(x_val);
     val *= base;
 
@@ -230,6 +299,28 @@ CT PolyEq::eval(const CT* x_val, CT* deri){
     return val;
 }
 
+CT PolyEq::eval(const CT* x_val, CT* deri, CT** deg_table){
+    for(int i=0; i<dim; i++){
+        deri[i].init(0.0,0.0);
+    }
+    CT val = constant;
+    //std::cout << constant << std::endl;
+
+    CT* mon_deri = new CT[dim];
+    for(int mon_idx=0; mon_idx<n_mon; mon_idx++){
+//    	std::cout << "mon " << mon_idx << std::endl;
+        PolyMon* m = mon[mon_idx];
+        val += m->eval(x_val, mon_deri, deg_table);
+        for(int j=0; j<m->n_var; j++){
+            deri[m->pos[j]] += mon_deri[j];
+        }
+    }
+
+    delete [] mon_deri;
+
+    return val;
+}
+
 CT* PolySys::eval(const CT* x_val){
     CT* val = new CT[n_eq];
     for(int i=0; i<n_eq; i++){
@@ -246,11 +337,63 @@ CT* PolySys::eval(const CT* x_val, CT** deri_val){
     return val;
 }
 
-void PolySys::eval(const CT* x_val, CT* f_val, CT** deri_val){
-    for(int i=0; i<n_eq; i++){
-        //cout << "eq " << i << endl;
-        f_val[i] = eq[i]->eval(x_val, deri_val[i]);
+void PolySys::balance_eq(const CT* x_val){
+    CT* f_val = eval(x_val);
+    for(int eq_idx=0; eq_idx<n_eq; eq_idx++){
+    	eq[eq_idx]->constant -= f_val[eq_idx];
     }
+}
+
+CT** PolySys::eval_deg(const CT* x_val){
+//	std::cout << "eval_deg" << std::endl;
+    // Allocate memory
+	int n_total_deg = 0;
+    for(int var_idx=0; var_idx<dim; var_idx++){
+    	n_total_deg += max_deg_base[var_idx];
+    }
+    CT** deg_table = new CT*[dim];
+//    std::cout << "n_total_deg = " << n_total_deg << std::endl;
+    deg_table[0] = new CT[n_total_deg];
+    for(int var_idx=1; var_idx<dim; var_idx++){
+    	deg_table[var_idx]=deg_table[var_idx-1]+max_deg_base[var_idx-1];
+    }
+
+    // Compute degree table
+    for(int var_idx=0; var_idx<dim; var_idx++){
+    	if(max_deg_base[var_idx]>0){
+    		CT* tmp_deg_table = deg_table[var_idx];
+			CT tmp_var = x_val[var_idx];
+			tmp_deg_table[0] = tmp_var;
+			for(int deg_idx=1; deg_idx<max_deg_base[var_idx]; deg_idx++){
+				tmp_deg_table[deg_idx] = tmp_deg_table[deg_idx-1]*tmp_var;
+			}
+    	}
+    }
+    // print degree table
+//    for(int var_idx=0; var_idx<dim; var_idx++){
+//    	for(int deg_idx=0; deg_idx<max_deg_base[var_idx]; deg_idx++){
+//    		std::cout << var_idx << " " << deg_idx << " " << deg_table[var_idx][deg_idx];
+//    	}
+//    }
+    return deg_table;
+}
+
+void PolySys::eval(const CT* x_val, CT* f_val, CT** deri_val){
+	if(eval_base){
+		CT** deg_table = eval_deg(x_val);
+		for(int i=0; i<n_eq; i++){
+//			cout << "eq " << i << endl;
+			f_val[i] = eq[i]->eval(x_val, deri_val[i], deg_table);
+		}
+		delete[] deg_table[0];
+		delete[] deg_table;
+	}
+	else{
+		for(int i=0; i<n_eq; i++){
+			//cout << "eq " << i << endl;
+			f_val[i] = eq[i]->eval(x_val, deri_val[i]);
+		}
+	}
 }
 
 void PolyMon::print(const string* pos_var)
@@ -271,12 +414,12 @@ void PolyMon::print(const string* pos_var)
     }
 }
 
-void PolyEq::read(const string& eq_string, VarDict& pos_dict, int* max_deg){
+void PolyEq::read(const string& eq_string, VarDict& pos_dict){
     int l = eq_string.length();
-    read(eq_string, pos_dict, 0, l, max_deg);
+    read(eq_string, pos_dict, 0, l);
 }
 
-void PolyEq::read(const string& eq_string, VarDict& pos_dict, int start, int end, int* max_deg){
+void PolyEq::read(const string& eq_string, VarDict& pos_dict, int start, int end){
     n_mon = 0;
 
     // Get the starting position of first monomial
@@ -319,7 +462,7 @@ void PolyEq::read(const string& eq_string, VarDict& pos_dict, int start, int end
                 n_mon++;
                 //std::cout << "n_mon = " << n_mon << std::endl;
                 PolyMon* mm = new PolyMon;
-                mm->read(eq_string, pos_dict, mon_start, i, tmp_coef, max_deg);
+                mm->read(eq_string, pos_dict, mon_start, i, tmp_coef);
                 mon.push_back(mm);
                 mon_start = i;
             }
@@ -336,7 +479,7 @@ void PolyEq::read(const string& eq_string, VarDict& pos_dict, int start, int end
         if(mon_start < end){
             n_mon++;
             PolyMon* mm = new PolyMon;
-            mm->read(eq_string, pos_dict, mon_start, end, tmp_coef, max_deg);
+            mm->read(eq_string, pos_dict, mon_start, end, tmp_coef);
             mon.push_back(mm);
         }
         else{
@@ -416,7 +559,7 @@ void PolySys::read(const string& sys_string, VarDict& pos_dict)
         //cout << n_eq << " "<< eq_start <<" " << eq_end<< endl;
         //string new_eq = sys_string.substr(eq_start, eq_end-eq_start);
         //cout << new_eq << endl;
-        new_eq->read(sys_string, pos_dict, eq_start, eq_end, max_deg);
+        new_eq->read(sys_string, pos_dict, eq_start, eq_end);
         eq.push_back(new_eq);
         eq_start = eq_end;
     }
@@ -434,23 +577,18 @@ void PolySys::read(const string* sys_string, int n_eq, VarDict& pos_dict){
     eq.reserve(n_eq);
     this->n_eq = n_eq;
     dim = n_eq;
-    max_deg = new int[dim];
-    for(int i=0; i<dim; i++){
-        max_deg[i] = 0;
-    }
 
     // ***Here is confusion, I should use either vector or array, but not to mix them
-
-
     eq_space = new PolyEq[n_eq];
     PolyEq* tmp_eq_space = eq_space;
     for(int i=0; i< n_eq; i++){
-        //cout << "eq" << i << endl;
-    	tmp_eq_space->read(sys_string[i], pos_dict, max_deg);
+    	tmp_eq_space->read(sys_string[i], pos_dict);
     	tmp_eq_space->dim = dim;
         eq.push_back(tmp_eq_space);
         tmp_eq_space++;
     }
+    pos_var = pos_dict.reverse();
+    update_max_deg_base();
 }
 
 
@@ -470,36 +608,6 @@ void PolySys::read_file(const string& file_name){
     for(int var_idx=0; var_idx<dim; var_idx++){
     	std::cout << var_idx << " " << pos_var[var_idx] << std::endl;
     }
-}
-
-int not_empty_line(const string& line){
-    int not_empty = -1;
-    for(unsigned int j=0; j < line.length(); j++){
-        char c = line[j];
-        if(c!=' '&&c!=';'&&c!='\n'){
-            not_empty = j;
-        }
-    }
-    return not_empty;
-}
-
-std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
-    std::stringstream ss(s);
-    std::string item;
-    std::string empy_str = "";
-    while (std::getline(ss, item, delim)) {
-    	if(item != empy_str){
-    		elems.push_back(item);
-    	}
-    }
-    return elems;
-}
-
-
-std::vector<std::string> split(const std::string &s, char delim) {
-    std::vector<std::string> elems;
-    split(s, delim, elems);
-    return elems;
 }
 
 void PolySys::read_file(ifstream& myfile, VarDict& pos_dict){
@@ -523,11 +631,6 @@ void PolySys::read_file(ifstream& myfile, VarDict& pos_dict){
     	n_eq = dim;
     }
 
-    max_deg = new int[dim];
-    for(int i=0; i<dim; i++){
-        max_deg[i] = 0;
-    }
-    
     eq.reserve(n_eq);
     eq_space = new PolyEq[n_eq];
     PolyEq* tmp_eq_space = eq_space;
@@ -554,7 +657,7 @@ void PolySys::read_file(ifstream& myfile, VarDict& pos_dict){
             line += tmp_line;
             if(finish){
             	//std::cout << line << std::endl << std::endl;
-            	tmp_eq_space->read(line, pos_dict, max_deg);
+            	tmp_eq_space->read(line, pos_dict);
             	tmp_eq_space->dim = dim;
                 eq.push_back(tmp_eq_space);
                 tmp_eq_space++;
@@ -569,6 +672,46 @@ void PolySys::read_file(ifstream& myfile, VarDict& pos_dict){
         }
     }
     pos_var = pos_dict.reverse();
+
+    update_max_deg_base();
+}
+
+void PolyMon::update_max_deg(int* max_deg){
+    for(int i=0; i<n_var; i++){
+        //cout << "var " << i << endl;
+        if(exp[i]>max_deg[pos[i]]){
+        	max_deg[pos[i]] = exp[i];
+        }
+    }
+}
+
+void PolyEq::update_max_deg(int* max_deg){
+    for(int i=0; i<n_mon; i++){
+        //cout << "mon " << i << endl;
+        mon[i]->update_max_deg(max_deg);
+    }
+}
+
+void PolySys::update_max_deg_base(){
+	max_deg_base = new int[dim];
+    for(int i=0; i<dim; i++){
+    	max_deg_base[i] = 0;
+    }
+    for(int i=0; i<n_eq; i++){
+        //cout << "eq " << i << endl;
+        eq[i]->update_max_deg(max_deg_base);
+    }
+
+    for(int var_idx=0; var_idx<dim; var_idx++){
+    	max_deg_base[var_idx] -= 1;
+    	if(max_deg_base[var_idx] > 0){
+    		eval_base = true;
+    	}
+    }
+
+//    for(int i=0; i<dim; i++){
+//        std::cout << i << " " << max_deg_base[i] << " " << pos_var[i] << std::endl;
+//    }
 }
 
 /*void PolyMon::print_level(){
@@ -1048,584 +1191,3 @@ void PolySys::gpu_mon(int& dim, int& level, int& workspace_size, int*& workspace
     delete[] sum_start_loc_data;
 }
 
-
-void PolySol::init(CT* sol, int dim, T1 max_residual, T1 max_delta_x, int path_idx, string path_info){
-	this->dim = dim;
-	this->sol = new CT[dim];
-	for(int i=0; i<dim; i++){
-		this->sol[i] = sol[i];
-	}
-	this->path_idx = path_idx;
-	idx = 0;
-	m = 0;
-	t = CT(0.0,0.0);
-	err = max_delta_x;
-	rco = 0.0;
-	res = max_residual;
-	info = path_info;
-}
-
-void PolySol::init(int dim, T1 t_real, T1 t_imag, T1* sol, \
-		T1 max_delta_x, T1 rco, T1 max_residual, \
-		int m, int path_idx, string path_info){
-	this->dim = dim;
-	this->sol = new CT[dim];
-	for(int i=0; i<dim; i++){
-		this->sol[i].real = sol[2*i];
-		this->sol[i].imag = sol[2*i+1];
-	}
-	this->path_idx = path_idx;
-	idx = 0;
-	this->m = m;
-	t = CT(t_real,t_imag);
-	err = max_delta_x;
-	this->rco = rco;
-	res = max_residual;
-	info = path_info;
-}
-
-void PolySol::init(ifstream& myfile, int dim){
-	this->dim = dim;
-	string tmp_line;
-
-    /*getline(myfile,tmp_line);
-	std::cout << tmp_line << std::endl;
-	std::cout << "dim = " << dim << std::endl;*/
-
-    // Get idx
-    getline(myfile,tmp_line, ' ');
-    //std::cout << tmp_line << std::endl;
-    myfile >> idx;
-    //std::cout << "idx = " << idx << std::endl;
-    getline(myfile,tmp_line);
-
-    int tmp_line_l = tmp_line.size();
-    if(tmp_line_l > 2){
-    	unsigned found = tmp_line.find_last_of(" ");
-    	tmp_line = tmp_line.substr(found+1);
-    	tmp_line_l = tmp_line.size();
-    	if(tmp_line[tmp_line_l-1]<'a' \
-    			or tmp_line[tmp_line_l-1]>'z'){
-    		tmp_line = tmp_line.substr(0,tmp_line_l-1);
-    	}
-    	info = tmp_line;
-    }
-
-    // Get t
-    getline(myfile,tmp_line, ':');
-    //std::cout << tmp_line << std::endl;
-    t = get_complex_number(myfile);
-    //std::cout << t << std::endl;
-    getline(myfile,tmp_line);
-
-    // Get m
-    getline(myfile,tmp_line, ':');
-    //std::cout << tmp_line << std::endl;
-    int m;
-    myfile >> m;
-    //std::cout << "m = " << m << std::endl;
-    getline(myfile,tmp_line);
-
-    getline(myfile,tmp_line);
-    //std::cout << tmp_line << std::endl;
-
-    sol = new CT[dim];
-
-    for(int i=0; i<dim; i++){
-        getline(myfile,tmp_line, ':');
-        sol[i] = get_complex_number(myfile);
-    	//std::cout<< sol[i];
-        getline(myfile,tmp_line);
-    }
-
-
-    // Get error
-    getline(myfile,tmp_line, ':');
-    myfile >> err;
-    //std::cout << "error = " << err << endl;
-
-    getline(myfile,tmp_line, ':');
-    myfile >> rco;
-    //std::cout << "rco = " << rco << endl;
-
-    getline(myfile,tmp_line, ':');
-    myfile >> res;
-    //std::cout << "res = " << res << endl;
-    getline(myfile,tmp_line);
-}
-
-void PolySol::init(ifstream& myfile, int dim, VarDict& pos_dict){
-	this->dim = dim;
-	string tmp_line;
-
-    /*getline(myfile,tmp_line);
-	std::cout << tmp_line << std::endl;
-	std::cout << "dim = " << dim << std::endl;*/
-
-    // Get idx
-    getline(myfile,tmp_line, ' ');
-    //std::cout << tmp_line << std::endl;
-    myfile >> idx;
-    //std::cout << "idx = " << idx << std::endl;
-    getline(myfile,tmp_line);
-
-    int tmp_line_l = tmp_line.size();
-    if(tmp_line_l > 2){
-    	unsigned found = tmp_line.find_last_of(" ");
-    	tmp_line = tmp_line.substr(found+1);
-    	tmp_line_l = tmp_line.size();
-    	if(tmp_line[tmp_line_l-1]<'a' \
-    			or tmp_line[tmp_line_l-1]>'z'){
-    		tmp_line = tmp_line.substr(0,tmp_line_l-1);
-    	}
-    	info = tmp_line;
-    }
-
-    // Get t
-    getline(myfile,tmp_line, ':');
-    //std::cout << tmp_line << std::endl;
-    t = get_complex_number(myfile);
-    //std::cout << t << std::endl;
-    getline(myfile,tmp_line);
-
-    // Get m
-    getline(myfile,tmp_line, ':');
-    //std::cout << tmp_line << std::endl;
-    int m;
-    myfile >> m;
-    //std::cout << "m = " << m << std::endl;
-    getline(myfile,tmp_line);
-
-    getline(myfile,tmp_line);
-    //std::cout << tmp_line << std::endl;
-
-    sol = new CT[dim];
-
-    //pos_dict.print();
-    for(int i=0; i<dim; i++){
-        getline(myfile,tmp_line, ':');
-        //std::cout << tmp_line << tmp_line.substr(1,tmp_line.length()-2);
-        int var_idx = pos_dict.get(tmp_line.substr(1,tmp_line.length()-2));
-        //std::cout << var_idx << std::endl;
-        sol[var_idx] = get_complex_number(myfile);
-    	//std::cout<< sol[i];
-        getline(myfile,tmp_line);
-    }
-
-
-    // Get error
-    getline(myfile,tmp_line, ':');
-    myfile >> err;
-    //std::cout << "error = " << err << endl;
-
-    getline(myfile,tmp_line, ':');
-    myfile >> rco;
-    //std::cout << "rco = " << rco << endl;
-
-    getline(myfile,tmp_line, ':');
-    myfile >> res;
-    //std::cout << "res = " << res << endl;
-    getline(myfile,tmp_line);
-}
-
-bool PolySol::operator == (const PolySol& that){
-	T1 dis = 0;
-	for(int i=0; i<dim; i++){
-		T1 tmp_dis = abs(sol[i].real - that.sol[i].real);
-		if(tmp_dis > dis){
-			dis = tmp_dis;
-		}
-		tmp_dis = abs(sol[i].imag - that.sol[i].imag);
-		if(tmp_dis > dis){
-			dis = tmp_dis;
-		}
-	}
-	if(dis > 1E-6){
-		return 0;
-	}
-	return 1;
-}
-
-void PolySol::print(){
-	std::cout << "dim = " << dim << std::endl;
-	for(int i=0; i<dim; i++){
-		std::cout << i << " " << sol[i];
-	}
-	std::cout << std::endl;
-}
-
-void PolySol::print_info(){
-	std::cout << "Solution " << idx << ":" << std::endl;
-	std::cout << "t : " << t;
-	for(int i=0; i<dim; i++){
-		std::cout << i << " : " << sol[i];
-	}
-	std::cout << "== err : " << err \
-		      << " = rco : " << rco \
-		      << " = res : " << res \
-		      << " ==" << std::endl;
-}
-
-void PolySol::print_info(string* pos_var){
-	std::cout << "Solution " << idx << ":" << std::endl;
-	std::cout << "t : " << t;
-	for(int i=0; i<dim; i++){
-		std::cout << pos_var[i] << " : " << sol[i];
-	}
-	std::cout << "== err : " << err \
-		      << " = rco : " << rco \
-		      << " = res : " << res \
-		      << " ==" << std::endl;
-}
-
-CT* PolySol::get_sol(){
-	CT* sol_tmp = new CT[dim];
-	for(int i=0; i<dim; i++){
-		sol_tmp[i] = sol[i];
-	}
-	return sol_tmp;
-}
-
-void PolySol::print_short(){
-	std::cout << std::scientific \
-			  << " " << err  << " " << res << " " << " x[0] = " << sol[0];
-}
-
-int to_int(double a){
-	int b = a;
-	return b;
-}
-
-/*int to_int(dd_real a){
-	int b = a.x[0];
-	return b;
-}
-
-int to_int(qd_real a){
-	int b = a.x[0];
-	return b;
-}*/
-
-bool PolySol::operator<(PolySol& that){
-	if(dim < that.dim){
-		return true;
-	}
-	if(dim > that.dim){
-		return false;
-	}
-
-	CT* this_sol = new CT[dim];
-	CT* that_sol = new CT[dim];
-
-	for(int i=0; i<dim; i++){
-		this_sol[i] = sol[i];
-		that_sol[i] = that.sol[i];
-	}
-
-	int digits_per_check = 2;
-
-	T1 digits_multiplier = 1;
-	T1 err_roundoff = 1E-4;
-
-	for(int i=0; i<digits_per_check; i++){
-		digits_multiplier *= 10;
-	}
-
-	int digits_checked = 0;
-
-	while(digits_checked < 8){
-		for(int i=0; i<dim; i++){
-			/*std::cout << i << std::endl;
-			std::cout << this_sol[i].real << std::endl;
-			std::cout << that_sol[i].real << std::endl;*/
-			int this_digit;
-			int that_digit;
-			int tmp_number;
-
-			// real check
-			this_sol[i].real *= digits_multiplier;
-			that_sol[i].real *= digits_multiplier;
-			/*std::cout << digits_multiplier << std::endl;
-			std::cout << this_sol[i].real << std::endl;
-			std::cout << that_sol[i].real << std::endl;*/
-
-			this_digit = to_int(this_sol[i].real);
-			tmp_number = to_int(this_sol[i].real+err_roundoff);
-			if(this_digit != tmp_number){
-				this_digit = tmp_number;
-			}
-			tmp_number = to_int(this_sol[i].real-err_roundoff);
-			if(this_digit != tmp_number){
-				this_digit = tmp_number;
-			}
-
-			that_digit = to_int(that_sol[i].real);
-			tmp_number = to_int(that_sol[i].real+err_roundoff);
-			if(that_digit != tmp_number){
-				that_digit = tmp_number;
-			}
-			tmp_number = to_int(that_sol[i].real-err_roundoff);
-			if(that_digit != tmp_number){
-				that_digit = tmp_number;
-			}
-
-			//std::cout << this_digit << " " << that_digit<< std::endl;
-
-			if(this_digit < that_digit){
-				return true;
-			}
-			else if(this_digit > that_digit){
-				return false;
-			}
-			this_sol[i].real -= this_digit;
-			that_sol[i].real -= that_digit;
-
-			// imag check
-			this_sol[i].imag *= digits_multiplier;
-			that_sol[i].imag *= digits_multiplier;
-			this_digit = to_int(this_sol[i].imag);
-			tmp_number = to_int(this_sol[i].imag+err_roundoff);
-			if(this_digit != tmp_number){
-				this_digit = tmp_number;
-			}
-			tmp_number = to_int(this_sol[i].imag-err_roundoff);
-			if(this_digit != tmp_number){
-				this_digit = tmp_number;
-			}
-			that_digit = to_int(that_sol[i].imag);
-			tmp_number = to_int(that_sol[i].imag+err_roundoff);
-			if(that_digit != tmp_number){
-				that_digit = tmp_number;
-			}
-			tmp_number = to_int(that_sol[i].imag-err_roundoff);
-			if(that_digit != tmp_number){
-				that_digit = tmp_number;
-			}
-			//std::cout << this_digit << " " << that_digit<< std::endl;
-			if(this_digit < that_digit){
-				return true;
-			}
-			else if(this_digit > that_digit){
-				return false;
-			}
-			this_sol[i].imag -= this_digit;
-			that_sol[i].imag -= that_digit;
-		}
-		digits_checked += digits_per_check;
-	}
-
-	delete[] this_sol;
-	delete[] that_sol;
-
-	return false;
-}
-
-void PolySolSet::init(ifstream& myfile){
-	n_sol = 0;
-	dim = 0;
-
-	string prefix_two[2] = {"START SOLUTIONS : ", "THE SOLUTIONS :"};
-	read_until_line(myfile, prefix_two, 2);
-
-	myfile >> n_sol;
-	myfile >> dim;
-
-	string prefix = "======";
-	read_until_line(myfile, prefix);
-
-	sols.reserve(n_sol);
-
-	//std::cout << "n_sol = " << n_sol << std::endl;
-	for(int i=0; i<n_sol; i++){
-		//std::cout << i << std::endl;
-		PolySol* tmp_sol= new PolySol(myfile, dim);
-		sols.push_back(tmp_sol);
-	}
-}
-
-void PolySolSet::init(ifstream& myfile, VarDict& pos_dict){
-	n_sol = 0;
-	dim = 0;
-
-	string prefix_two[2] = {"START SOLUTIONS : ", "THE SOLUTIONS :"};
-	read_until_line(myfile, prefix_two, 2);
-
-	myfile >> n_sol;
-	myfile >> dim;
-
-	string prefix = "======";
-	read_until_line(myfile, prefix);
-
-	sols.reserve(n_sol);
-
-	//std::cout << "n_sol = " << n_sol << std::endl;
-	for(int i=0; i<n_sol; i++){
-		//std::cout << i << std::endl;
-		PolySol* tmp_sol= new PolySol(myfile, dim, pos_dict);
-		sols.push_back(tmp_sol);
-	}
-}
-
-bool PolySolSet::find_same_sol(PolySol* tmp_sol){
-	for(int i=0; i<n_sol; i++){
-		if(*tmp_sol == *sols[i]){
-			return true;
-		}
-	}
-	return false;
-}
-
-int PolySolSet::count_same_sol(PolySol* tmp_sol){
-	int n_same_sol = 0;
-	for(int i=0; i<n_sol; i++){
-		if(*tmp_sol == *sols[i]){
-			n_same_sol++;
-		}
-	}
-	return n_same_sol;
-}
-
-bool PolySolSet::add_diff_sol(CT* new_sol){
-	PolySol* tmp_sol= new PolySol(new_sol, dim);
-	if(find_same_sol(tmp_sol)==true){
-		return false;
-	}
-	std::cout << "Add New Solution" << std::endl;
-	sols.push_back(tmp_sol);
-	n_sol++;
-	return true;
-}
-
-void PolySolSet::add_sol(PolySol* tmp_sol){
-	sols.push_back(tmp_sol);
-	n_sol++;
-}
-
-void PolySolSet::add_sol(CT* new_sol, T1 max_residual, T1 max_delta_x, int path_idx, string path_info){
-	PolySol* tmp_sol= new PolySol(new_sol, dim, max_residual, max_delta_x, path_idx, path_info);
-	add_sol(tmp_sol);
-}
-
-void PolySolSet::change_sol(int idx, CT* coords)
-{
-   PolySol* idxsol = sols[idx];
-   for(int k=0; k<dim; k++) idxsol->sol[k] = coords[k];
-}
-
-void PolySolSet::print(){
-	std::cout << "dim   = " << dim << std::endl\
-			  << "n_sol = " << n_sol << std::endl;
-
-	for(int i=0; i<n_sol; i++){
-		sols[i]->print();
-	}
-
-}
-
-void PolySolSet::print_info(string* pos_var){
-	std::cout << "dim   = " << dim << std::endl\
-			  << "n_sol = " << n_sol << std::endl;
-
-	for(int i=0; i<n_sol; i++){
-		sols[i]->print_info(pos_var);
-	}
-
-}
-
-void PolySolSet::print_short(){
-	std::cout << "n_sol = " << n_sol << std::endl;
-	for(int i=0; i<n_sol; i++){
-		std::cout << i << " " << sols[i]->info << " x[0] = " << sols[i]->sol[0];
-	}
-}
-
-CT* PolySolSet::get_sol(int idx){
-	return sols[idx]->get_sol();
-}
-
-void PolySolSet::sort_set(){
-	sort(sols.begin(), sols.end(), compare_sol);
-}
-
-void PolySolSet::compare(PolySolSet& that){
-	vector<PolySol*> that_sols(that.sols);
-	vector<PolySol*> this_sols(this->sols);
-
-	sort(this_sols.begin(), this_sols.end(), compare_sol);
-	sort(that_sols.begin(), that_sols.end(), compare_sol);
-
-	vector<PolySol*>::iterator this_pointer = this_sols.begin();
-	vector<PolySol*>::iterator that_pointer = that_sols.begin();
-
-
-	vector<PolySol*> this_sols_only;
-	vector<PolySol*> that_sols_only;
-
-	int same_sol = 0;
-	int this_sol = 0;
-	int that_sol = 0;
-
-	while(true){
-		if((**this_pointer)==(**that_pointer)){
-			this_pointer++;
-			that_pointer++;
-			same_sol++;
-		}
-		else{
-			if((**this_pointer)<(**that_pointer)){
-				this_sols_only.push_back(*this_pointer);
-				this_pointer++;
-				this_sol++;
-			}
-			else{
-				/*std::cout << this_pointer - this_sols.begin() << std::endl;
-				std::cout << that_pointer - that_sols.begin() << std::endl;
-				(*this_pointer)->print();
-				(*that_pointer)->print();*/
-				that_sols_only.push_back(*that_pointer);
-				that_pointer++;
-				that_sol++;
-			}
-		}
-		if(this_pointer==this_sols.end() || that_pointer==that_sols.end()){
-			break;
-		}
-	}
-
-	if(this_pointer != this_sols.end()){
-		this_sol += this_sols.end() - this_pointer;
-		while(this_pointer < this_sols.end()){
-			this_sols_only.push_back(*this_pointer);
-			this_pointer++;
-		}
-	}
-
-	if(that_pointer != that_sols.end()){
-		that_sol += that_sols.end() - that_pointer;
-		while(that_pointer < that_sols.end()){
-			that_sols_only.push_back(*that_pointer);
-			that_pointer++;
-		}
-	}
-	std::cout << "same_sol = " << same_sol << std::endl;
-
-	if(this_sol > 0){
-		std::cout << "this_sol = " << this_sol << std::endl;
-	}
-	if(that_sol > 0){
-		std::cout << "that_sol = " << that_sol << std::endl;
-	}
-
-	that_pointer = that_sols_only.begin();
-	int i=0;
-	while(that_pointer < that_sols_only.end()){
-		bool find_same_this = find_same_sol(*that_pointer);
-		int that_n_same_sol = that.count_same_sol(*that_pointer);
-		std::cout << std::setw(4) << i++ << " " \
-				  << std::setw(8) << (*that_pointer)->path_idx << " " \
-				  << std::setw(4) << find_same_this << " " \
-				  << std::setw(4) << that_n_same_sol;
-		(*that_pointer)->print_short();
-		that_pointer++;
-	}
-}

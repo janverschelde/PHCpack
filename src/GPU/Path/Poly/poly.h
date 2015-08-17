@@ -43,6 +43,11 @@ public:
 	/// exponent array of variables in the monomial
 	int* exp;
 
+	int n_base;
+	int* pos_base;
+	int* exp_base;
+	int* exp_tbl_base;
+
     //int** pos_level;
     //int* n_pos_level;
     //int* pos_level_last;
@@ -56,6 +61,10 @@ public:
         dim = 0;
 		pos = NULL;
 		exp = NULL;
+		n_base = 0;
+		pos_base = NULL;
+		exp_base = NULL;
+		exp_tbl_base = NULL;
 	}
 
 	PolyMon(int dim){
@@ -64,25 +73,43 @@ public:
         this -> dim = dim;
 		pos = NULL;
 		exp = NULL;
+		n_base = 0;
+		pos_base = NULL;
+		exp_base = NULL;
+		exp_tbl_base = NULL;
 	}
 
 	PolyMon(int n, int* d, T1* c){
 		coef = CT(c[0],c[1]);
 		dim = n;
 		n_var = 0;
+		n_base = 0;
 		for(int var_idx=0; var_idx<dim; var_idx++){
 			if(d[var_idx]!=0){
 				n_var++;
+				if(d[var_idx]>1){
+					n_base++;
+				}
 			}
 		}
 		pos = new int[n_var];
 		exp = new int[n_var];
+		pos_base = new int[n_base];
+		exp_base = new int[n_base];
+		exp_tbl_base = new int[n_base];
 		int pos_idx = 0;
+		int base_idx = 0;
 		for(int var_idx=0; var_idx<dim; var_idx++){
 			if(d[var_idx]!=0){
 				pos[pos_idx] = var_idx;
 				exp[pos_idx] = d[var_idx];
 				pos_idx++;
+				if(d[var_idx]>1){
+					pos_base[base_idx] = var_idx;
+					exp_base[base_idx] = d[var_idx];
+					exp_tbl_base[base_idx] = d[var_idx]-2;
+					base_idx++;
+				}
 			}
 		}
 	}
@@ -103,7 +130,7 @@ public:
 	@param end end index of the monomial in equation string
 	@param coef0 the coefficient of the monomail
 	*/
-	void read(const string& eq_string, VarDict& pos_dict, int start, int end, CT coef, int* max_deg);
+	void read(const string& eq_string, VarDict& pos_dict, int start, int end, CT coef);
 
 	/// Read monomial from monomial string
 	/**
@@ -112,7 +139,7 @@ public:
 	@param pos_dict the dictionary of variables and their positions
 	@param coef0 the coefficient of the monomail
 	*/
-	void read(const string& mon_string, VarDict& pos_dict, CT coef, int* max_deg); 
+	void read(const string& mon_string, VarDict& pos_dict, CT coef);
 
 	/// Read monomial from monomial string
 	/**
@@ -120,7 +147,7 @@ public:
 	@param mon_string monomial string
 	@param pos_dict the dictionary of variables and their positions
 	*/
-	void read(const string& mon_string, VarDict& pos_dict, int* max_deg);
+	void read(const string& mon_string, VarDict& pos_dict);
 
 	/// Use speel expanding to compute derivatives
 	/**
@@ -132,12 +159,14 @@ public:
 	*/
 	CT speel(const CT* x_val, CT* deri);
 
+	CT speel_with_base(const CT* x_val, CT* deri, CT base);
+
 	/// Compute base of monomial
 	/**
 	@param[in] x_val values of variables
 	@return value of base
 	*/
-	CT eval_base(const CT* x_val);
+	CT eval_base(const CT* x_val, CT** deg_table);
 
 	/// Evaluate monomial
 	/**
@@ -155,6 +184,8 @@ public:
 	*/
 	CT eval(const CT* x_val, CT* deri);
 
+	CT eval(const CT* x_val, CT* deri, CT** deg_table);
+
 	/// Print monomial
 	/**
 	Variable symbols are read from pos_dict.
@@ -167,6 +198,10 @@ public:
     /// print level structure
     void print_level();
     int job_number_block(int start_level);
+
+    void update_max_deg(int* max_deg);
+
+    void update_base();
 
 };
 
@@ -227,7 +262,7 @@ public:
 	@param pos_dict the dictionary of variables and their positions
 	@sa PolyMon::read()
 	*/
-	void read(const string& eq_string, VarDict& pos_dict, int* max_deg);
+	void read(const string& eq_string, VarDict& pos_dict);
 
 	/// Read equaiton from certain part of a string
 	/**
@@ -239,7 +274,7 @@ public:
 	@param end the end position of equation in the string
 	@sa PolyMon::read()
 	*/
-	void read(const string& eq_string, VarDict& pos_dict, int start, int end, int* max_deg);
+	void read(const string& eq_string, VarDict& pos_dict, int start, int end);
 
 	/// Print equation
 	/**
@@ -266,12 +301,17 @@ public:
 	*/
 	CT eval(const CT* x_val, CT* deri);
 
+	CT eval(const CT* x_val, CT* deri, CT** deg_table);
+
     int memory_size(int factor_size);
 
     void print_level();
 
     int workspace_size_block(int start_level, int factor_size);
+
     int job_number_block(int start_level);
+
+    void update_max_deg(int* max_deg);
 
 };
 
@@ -294,7 +334,8 @@ public:
 	
 	PolyEq* eq_space;
 
-	int* max_deg;
+	int* max_deg_base;
+	bool eval_base;
 
     int* job_number_level;
     int level;
@@ -305,7 +346,8 @@ public:
 		dim = 0;
 		pos_var = NULL;
 		eq_space = NULL;
-		max_deg = NULL;
+		max_deg_base = NULL;
+		eval_base = false;
 		job_number_level = NULL;
 		level = 0;
 	}
@@ -314,7 +356,7 @@ public:
 	~PolySys(){
 		//delete eq_space;
         //delete pos_var;
-        delete max_deg;
+        delete max_deg_base;
 		cout << "sys destructed" << endl;
 	}
 
@@ -403,6 +445,12 @@ public:
     void print_level();
 
     int job_number_block(int start_level);
+
+    void update_max_deg_base();
+
+    CT** eval_deg(const CT* x_val);
+
+    void balance_eq(const CT* x_val);
 };
 
 class PolySysHom{
@@ -440,148 +488,6 @@ class int_idx{
         eq_idx = i;
         mon_idx = j;
     }
-};
-
-class PolySol{
-public:
-	int dim;
-	// solution number
-	CT* sol;
-
-	int idx;
-	int path_idx;
-	// multiplicity
-	int m;
-
-	CT t;
-	// error
-	T1 err;
-	// conditional number
-	T1 rco;
-	// residual
-	T1 res;
-
-	// Success / Fail / Infinity
-	string info;
-
-	PolySol(){
-		dim = 0;
-		idx = 0;
-		path_idx = 0;
-		m = 0;
-		t = CT(0.0,0.0);
-		sol = NULL;
-		err = 0.0;
-		rco = 0.0;
-		res = 0.0;
-	}
-
-	void init(ifstream& myfile, int dim);
-
-	void init(ifstream& myfile, int dim, VarDict& pos_dict);
-
-	void init(CT* sol, int dim, T1 max_residual, T1 max_delta_x, int path_idx, string path_info);
-
-	void init(int dim, T1 t_real, T1 t_imag, T1* sol, \
-			T1 max_delta_x, T1 rco, T1 max_residual, \
-			int m, int path_idx, string path_info);
-
-	PolySol(ifstream& myfile, int dim){
-		init(myfile, dim);
-	}
-
-	PolySol(ifstream& myfile, int dim, VarDict& pos_dict){
-		init(myfile, dim, pos_dict);
-	}
-
-	PolySol(CT* sol, int dim, T1 max_residual = 0, T1 max_delta_x=0, int path_idx=0, string path_info=""){
-		init(sol, dim, max_residual, max_delta_x, path_idx, path_info);
-	}
-
-	PolySol(int dim, T1 t_real, T1 t_imag, T1* sol, \
-			T1 max_delta_x=0, T1 rco=0, T1 max_residual = 0, \
-			int m=0, int path_idx=0, string path_info=""){
-		init(dim, t_real, t_imag, sol, \
-			max_delta_x, rco, max_residual, m, path_idx, path_info);
-	}
-
-	~PolySol(){
-		delete[] sol;
-	}
-
-	bool operator == (const PolySol& that);
-
-	bool operator<(PolySol& that);
-
-	void print();
-
-	void print_short();
-
-	void print_info();
-
-	void print_info(string* pos_var);
-
-	CT* get_sol();
-};
-
-bool compare_sol(PolySol* sol1, PolySol* sol2);
-
-class PolySolSet{
-public:
-	int n_sol;
-	int dim;
-	vector<PolySol*> sols;
-
-	void init(ifstream& myfile);
-
-	void init(ifstream& myfile, VarDict& pos_dict);
-
-	PolySolSet(){
-		n_sol = 0;
-		dim = 0;
-	}
-
-	PolySolSet(ifstream& myfile){
-		init(myfile);
-	}
-
-	PolySolSet(int dim){
-		this->dim = dim;
-		n_sol = 0;
-	}
-
-	~PolySolSet(){
-		std::cout << "Delete PolySolSet" << std::endl;
-		for(int i=0; i<n_sol; i++){
-			delete sols[i];
-		}
-	}
-
-	bool find_same_sol(PolySol* tmp_sol);
-
-	int count_same_sol(PolySol* tmp_sol);
-
-	void add_sol(CT* new_sol, T1 max_residual=0, T1 max_delta_x=0, int path_idx=0, string path_info="");
-
-	void add_sol(PolySol* tmp_sol);
-
-        void change_sol ( int idx, CT* coords );
-        // updates the coordinates of the solution with index idx,
-        // using the values in coords
-
-	bool add_diff_sol(CT* new_sol);
-
-	void print();
-
-	void print_info(string* pos_var);
-
-	void print_short();
-
-	CT* get_sol(int idx);
-
-	void sort_set();
-
-	void compare(PolySolSet& that);
 };
 
 #endif

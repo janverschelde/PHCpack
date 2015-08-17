@@ -1,2 +1,5 @@
+Mon 17 Aug 2015 : upgrade code with new versions, and new polysol.h
+  and polysol.cpp, updated with change_sol() method.
+
 Fri 7 Aug 2015 : added change_sol method to PolySolSet class in poly.h,
   defined by the code in poly.cpp.

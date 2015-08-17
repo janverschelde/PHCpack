@@ -1,0 +1,2 @@
+This directory contains the definitions of polynomials and solutions
+for use in the code to accelerate the path tracking on the GPU.

@@ -161,13 +161,10 @@ CT get_coef_complex(const string& mon_string, int& loc)
 		}
     }
 
-    const char skip_symbols3[] = {')', ' ', '*'};
-    int n_skip_symbols3 = 3;
+    const char skip_symbols3[] = {')', ' ', '*', ';'};
+    int n_skip_symbols3 = 4;
     string_stop(mon_string, loc, skip_symbols3, n_skip_symbols3, l);
 
-    if (mon_string[loc] == ';'){
-		loc++;
-	}
     //std::cout << "real " << coef_string_real << std::endl;
     //std::cout << "imag " << coef_string_imag << std::endl;
 
@@ -443,6 +440,13 @@ void cpu_speel0(const CT* x_val, unsigned short* pos, CT* deri, const CT& coef){
     deri[1] = coef;
 }
 
+
+void cpu_speel_with_base0(const CT* x_val, unsigned short* pos, unsigned short* exp, CT* deri, const CT& coef){
+    //int n_var = pos[0];
+    deri[0] = coef*x_val[pos[1]]*exp[1];
+    deri[1] = coef;
+}
+
 // speelpanning on CPU
 void cpu_speel(const CT* x_val, unsigned short* pos, CT* deri, const CT& coef){
     int n_var = pos[0];
@@ -470,6 +474,43 @@ void cpu_speel(const CT* x_val, unsigned short* pos, CT* deri, const CT& coef){
     }
 
     deri[1] = tmp;
+    deri[0] = x_val[pos[1]]*tmp;
+
+    //std::cout << "deri[0] = " << deri[0];
+}
+
+// speelpanning on CPU
+void cpu_speel_with_base(const CT* x_val, unsigned short* pos, unsigned short* exp, CT* deri, const CT& coef){
+    int n_var = pos[0];
+    CT tmp = x_val[pos[1]];
+
+    //std::cout << pos[1] << " ";
+    CT* deri_tmp = deri + 1;
+    deri_tmp[1] = tmp;
+    for(int i=2; i<n_var; i++){
+        tmp *=x_val[pos[i]];
+        deri_tmp[i] = tmp;
+        //std::cout << pos[i] << " ";
+    }
+
+    /*if(n_var > 1){
+    	std::cout << pos[n_var] << std::endl;
+    }*/
+
+    tmp = coef;
+    //CT tmp2 = x_val[pos[n_var]];
+    int base_start = exp[0];
+    for(int i=n_var; i>base_start; i--){
+        deri[i] *= tmp*exp[i];
+        tmp *= x_val[pos[i]];
+    }
+
+    for(int i=base_start; i>1; i--){
+        deri[i] *= tmp;
+        tmp *= x_val[pos[i]];
+    }
+
+    deri[1] = tmp*exp[1];
     deri[0] = x_val[pos[1]]*tmp;
 
     //std::cout << "deri[0] = " << deri[0];

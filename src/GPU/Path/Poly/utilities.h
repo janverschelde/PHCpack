@@ -76,6 +76,10 @@ void cpu_speel0(const CT* x_val, unsigned short* pos, CT* deri, const CT& coef);
 
 void cpu_speel(const CT* x_val, unsigned short* pos, CT* deri, const CT& coef);
 
+void cpu_speel_with_base0(const CT* x_val, unsigned short* pos, unsigned short* exp, CT* deri, const CT& coef);
+
+void cpu_speel_with_base(const CT* x_val, unsigned short* pos, unsigned short* exp, CT* deri, const CT& coef);
+
 double time_interval1(struct timeval start, struct timeval end);
 
 int log2ceil(int n);
