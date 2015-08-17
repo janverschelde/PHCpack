@@ -1,3 +1,6 @@
+Mon 17 Aug 2015 : newton_single2() had to be used in newton.cu,
+  with more upgrades for the evaluation and differentiation.
+
 Thu 2 Jul 2015 : in newton.cu, changed on line 1239, the call to newton()
   into the call to newton_single().
 

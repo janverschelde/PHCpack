@@ -45,26 +45,6 @@ void eval_mon_tree(GPUWorkspace& workspace, const GPUInst& inst){
 			eval_mon_tree_kernel<4><<<inst.mon_level_grid[3], inst.mon_level_BS>>>(workspace.mon, workspace.x, workspace_coef_tmp,\
 					pos_start_tmp, inst.mon_pos, inst.n_mon_level[i]);
 		}
-		if(i==4){
-			eval_mon_tree_kernel<8><<<inst.mon_level_grid[4], inst.mon_level_BS>>>(workspace.mon, workspace.x, workspace_coef_tmp,\
-					pos_start_tmp, inst.mon_pos, inst.n_mon_level[i]);
-		}
-		if(i==5){
-			eval_mon_tree_kernel<16><<<inst.mon_level_grid[5], inst.mon_level_BS>>>(workspace.mon, workspace.x, workspace_coef_tmp,\
-					pos_start_tmp, inst.mon_pos, inst.n_mon_level[i]);
-		}
-		if(i==6){
-			eval_mon_tree_kernel<32><<<inst.mon_level_grid[6], inst.mon_level_BS>>>(workspace.mon, workspace.x, workspace_coef_tmp,\
-					pos_start_tmp, inst.mon_pos, inst.n_mon_level[i]);
-		}
-		if(i==7){
-			eval_mon_tree_kernel<64><<<inst.mon_level_grid[7], inst.mon_level_BS>>>(workspace.mon, workspace.x, workspace_coef_tmp,\
-					pos_start_tmp, inst.mon_pos, inst.n_mon_level[i]);
-		}
-		if(i==8){
-			eval_mon_tree_kernel<128><<<inst.mon_level_grid[8], inst.mon_level_BS>>>(workspace.mon, workspace.x, workspace_coef_tmp,\
-					pos_start_tmp, inst.mon_pos, inst.n_mon_level[i]);
-		}
 		pos_start_tmp += inst.n_mon_level[i];
 		workspace_coef_tmp += inst.n_mon_level[i];
 	}
@@ -87,31 +67,6 @@ void eval_mon_tree(GPUWorkspace& workspace, const GPUInst& inst){
 		else if(max_level == 3){
 			dim3 mon_level_rest_grid = get_grid(n_mon_tmp, inst.mon_level_BS, 1, 4);
 			eval_mon_tree_n_kernel<4><<<mon_level_rest_grid, inst.mon_level_BS>>>(workspace.mon, workspace.x, workspace_coef_tmp,\
-					pos_start_tmp, inst.mon_pos, n_mon_tmp);
-		}
-		else if(max_level == 4){
-			dim3 mon_level_rest_grid = get_grid(n_mon_tmp, inst.mon_level_BS, 1, 8);
-			eval_mon_tree_n_kernel<8><<<mon_level_rest_grid, inst.mon_level_BS>>>(workspace.mon, workspace.x, workspace_coef_tmp,\
-					pos_start_tmp, inst.mon_pos, n_mon_tmp);
-		}
-		else if(max_level == 5){
-			dim3 mon_level_rest_grid = get_grid(n_mon_tmp, inst.mon_level_BS, 1, 16);
-			eval_mon_tree_n_kernel<16><<<mon_level_rest_grid, inst.mon_level_BS>>>(workspace.mon, workspace.x, workspace_coef_tmp,\
-					pos_start_tmp, inst.mon_pos, n_mon_tmp);
-		}
-		else if(max_level == 6){
-			dim3 mon_level_rest_grid = get_grid(n_mon_tmp, inst.mon_level_BS, 1, 32);
-			eval_mon_tree_n_kernel<32><<<mon_level_rest_grid, inst.mon_level_BS>>>(workspace.mon, workspace.x, workspace_coef_tmp,\
-					pos_start_tmp, inst.mon_pos, n_mon_tmp);
-		}
-		else if(max_level == 7){
-			dim3 mon_level_rest_grid = get_grid(n_mon_tmp, inst.mon_level_BS, 1, 64);
-			eval_mon_tree_n_kernel<64><<<mon_level_rest_grid, inst.mon_level_BS>>>(workspace.mon, workspace.x, workspace_coef_tmp,\
-					pos_start_tmp, inst.mon_pos, n_mon_tmp);
-		}
-		else if(max_level == 8){
-			dim3 mon_level_rest_grid = get_grid(n_mon_tmp, inst.mon_level_BS, 1, 128);
-			eval_mon_tree_n_kernel<128><<<mon_level_rest_grid, inst.mon_level_BS>>>(workspace.mon, workspace.x, workspace_coef_tmp,\
 					pos_start_tmp, inst.mon_pos, n_mon_tmp);
 		}
 	}

@@ -16,7 +16,8 @@ __global__ void eval_sum_tree_single_kernel(GT* r_matrix_d, GT* workspace_d, int
 
 // Sum block, mulitithread gpu sum, sum-2
 __global__ void eval_sum_tree_2_kernel(GT* r_matrix_d, GT* workspace_d, int* sum_array_d, int* sum_start_d, int n_sum){
-    __shared__ GT x_sh[16];
+//    __shared__ GT x_sh[16]; // for double
+    __shared__ GT x_sh[32];  // for double double, quad double
     int tidx = threadIdx.x;
     int bidx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x;
     int idx = bidx + tidx;
@@ -58,7 +59,8 @@ __global__ void eval_sum_tree_2_kernel(GT* r_matrix_d, GT* workspace_d, int* sum
 // Sum block, mulitithread gpu sum, sum-2, sum-4, sum-8
 template <unsigned int n_th>
 __global__ void eval_sum_tree_kernel(GT* r_matrix_d, GT* workspace_d, int* sum_array_d, int* sum_start_d, int n_sum){
-    __shared__ GT x_sh[32];
+//    __shared__ GT x_sh[32]; // for double
+    __shared__ GT x_sh[64];  // for double double, for quad double
     int tidx = threadIdx.x;
     int bidx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x;
     int idx = bidx + tidx;

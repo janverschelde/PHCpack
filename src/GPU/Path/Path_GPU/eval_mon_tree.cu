@@ -99,7 +99,7 @@ __global__ void eval_mon_tree_kernel(GT* workspace_d, GT* x_d, GT* workspace_coe
         }
 
         if(pidx < 3){
-        	x_last_level[pidx] *= workspace_coef[midx];
+        	x_last_level[pidx] *= workspace_coef[midx_global];
         }
 
         // Common Factor to be multiplied
@@ -186,9 +186,6 @@ __global__ void eval_mon_tree_kernel(GT* workspace_d, GT* x_d, GT* workspace_coe
             __syncthreads();
         }
 
-        // Copy Derivative
-        //bidx *= 2;
-        //tidx += 1; // for test, keep tidx in memory
         int new_tidx = pidx ^ (n_th/2); // XOR to swith the term in last level
         GT x_upper = x_last_level[new_tidx];
         if(pidx2 < n){

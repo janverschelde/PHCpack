@@ -1,7 +1,7 @@
 //#include "eval_mon_single.cu"
 
 __global__ void eval_coef_mult_kernel(GT* workspace_coef, const GT* coef_orig, int n_path, \
-		GT* t, GT* one_minor_t) {
+		GT* t, GT* one_minor_t, int n_coef) {
 	//__shared__ GT div_diff_sh[shmemsize];
     int bidx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x;
 	int tidx = threadIdx.x;
@@ -20,12 +20,13 @@ __global__ void eval_coef_mult_kernel(GT* workspace_coef, const GT* coef_orig, i
 
 		//workspace_coef[idx] = coef_orig[idx];
 		// XXX align coef later (*t)*coef_orig[idx] + (*one_minor_t)*coef_orig[idx+n_coef]
-		workspace_coef[path_idx] = (*t)*coef_orig[2*coef_idx] + (*one_minor_t)*coef_orig[2*coef_idx+1];
+		//workspace_coef[path_idx] = (*t)*coef_orig[2*coef_idx] + (*one_minor_t)*coef_orig[2*coef_idx+1];
+		workspace_coef[path_idx] = (*t)*coef_orig[coef_idx] + (*one_minor_t)*coef_orig[coef_idx+n_coef];
 	}
 }
 
 __global__ void eval_coef_mult_kernel2(GT* workspace_coef, const GT* coef_orig, int n_path, int n_path_all, \
-		GT* t, GT* one_minor_t) {
+		GT* t, GT* one_minor_t, int n_coef) {
 	//__shared__ GT div_diff_sh[shmemsize];
     int bidx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x;
 	int tidx = threadIdx.x;
@@ -44,12 +45,13 @@ __global__ void eval_coef_mult_kernel2(GT* workspace_coef, const GT* coef_orig, 
 
 		//workspace_coef[idx] = coef_orig[idx];
 		// XXX align coef later (*t)*coef_orig[idx] + (*one_minor_t)*coef_orig[idx+n_coef]
-		workspace_coef[path_idx] = (*t)*coef_orig[2*coef_idx] + (*one_minor_t)*coef_orig[2*coef_idx+1];
+		//workspace_coef[path_idx] = (*t)*coef_orig[2*coef_idx] + (*one_minor_t)*coef_orig[2*coef_idx+1];
+		workspace_coef[path_idx] = (*t)*coef_orig[coef_idx] + (*one_minor_t)*coef_orig[coef_idx+n_coef];
 	}
 }
 
 __global__ void eval_coef_mult_kernel(GT* workspace_coef, const GT* coef_orig, int n_path, \
-		GT* t, GT* one_minor_t, int workspace_size, int* x_t_idx) {
+		GT* t, GT* one_minor_t, int workspace_size, int* x_t_idx, int n_coef) {
 	//__shared__ GT div_diff_sh[shmemsize];
     int bidx = (gridDim.x*blockIdx.y+blockIdx.x)*blockDim.x;
 	int tidx = threadIdx.x;
@@ -68,7 +70,8 @@ __global__ void eval_coef_mult_kernel(GT* workspace_coef, const GT* coef_orig, i
 
 		//workspace_coef[idx] = coef_orig[idx];
 		// XXX align coef later (*t)*coef_orig[idx] + (*one_minor_t)*coef_orig[idx+n_coef]
-		workspace_coef[path_idx] = (*t)*coef_orig[2*coef_idx] + (*one_minor_t)*coef_orig[2*coef_idx+1];
+		//workspace_coef[path_idx] = (*t)*coef_orig[2*coef_idx] + (*one_minor_t)*coef_orig[2*coef_idx+1];
+		workspace_coef[path_idx] = (*t)*coef_orig[coef_idx] + (*one_minor_t)*coef_orig[coef_idx+n_coef];
 	}
 }
 
@@ -586,7 +589,7 @@ void eval_mult(GPUWorkspace& workspace, const GPUInst& inst){
 			inst.coef, n_path, workspace.newton_t_mult, workspace.one_minor_t);
 
 	eval_coef_mult_kernel2<<<coef_grid, inst.coef_BS>>>(workspace.coef,\
-			inst.coef, n_path, n_path_all, workspace.newton_t_mult, workspace.one_minor_t);
+			inst.coef, n_path, n_path_all, workspace.newton_t_mult, workspace.one_minor_t, workspace.n_coef);
 
 	/*eval_coef_mult_kernel<<<coef_grid, inst.coef_BS>>>(workspace.coef,\
 			inst.coef, n_path, workspace.t_array, workspace.one_minor_t,\

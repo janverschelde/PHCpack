@@ -267,7 +267,10 @@ bool* GPU_Path_mult(CPUInstHom& hom, Parameter path_parameter, CT* cpu_sol0, CT*
 
 	GPUInst inst(hom, n_path);
 	GPUWorkspace workspace(inst.mon_pos_size, inst.n_coef, inst.n_constant, \
-			               inst.n_eq, inst.dim, path_parameter.n_predictor, inst.alpha, n_path);
+			               inst.n_eq, inst.dim, path_parameter.n_predictor, \
+			               inst.alpha, inst.base_table_size, n_path);
+
+	std::cout << "workspace.n_path = " << workspace.n_path << std::endl;
 
 	/*int* x_t_idx = (int *)malloc(n_path*sizeof(int));
 	for(int sys_idx=0; sys_idx<n_path; sys_idx++){

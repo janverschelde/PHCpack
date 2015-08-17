@@ -96,6 +96,8 @@ public:
 
 	GT* workspace_eq;
 
+	GT* deg_table;
+
 	// To be removed
 
 	int workspace_size;
@@ -106,15 +108,16 @@ public:
 	//int n;
 	//size_t size_all;
 
-	GPUWorkspace(int mon_pos_size, int n_coef, int n_constant, int n_eq, int dim, int n_predictor, CT alpha=CT(1,0), int n_path=1){
+	GPUWorkspace(int mon_pos_size, int n_coef, int n_constant, int n_eq, int dim, \
+			int n_predictor, CT alpha=CT(1,0), int base_table_size=0, int n_path=1){
 		this->mon_pos_size = mon_pos_size;
 		this->dim = dim;
 		this->n_eq = n_eq;
 		this->n_coef = n_coef;
 		this->n_constant = n_constant;
 		this->n_predictor = n_predictor;
-		this->dim = dim;
 		this->n_path = n_path;
+		std::cout << "this->n_path = " << this->n_path << std::endl;
 		this->n_path_continuous = n_path;
 		n_array = n_predictor + 1;
 
@@ -145,6 +148,7 @@ public:
 
 		n_GT_arrays = n_path*(n_eval_arrays+n_qr_arrays+n_predict_arrays+n_x_t_arrays);
 		size_GT_arrays = n_GT_arrays*sizeof(GT);
+		std::cout << "size_GT_arrays = " << size_GT_arrays << std::endl;
 		cudaMalloc((void **) &GT_arrays, size_GT_arrays);
 
 		// GT arrays: Eval arrays
@@ -233,6 +237,12 @@ public:
 		workspace_size += dim;
 
 		small_mgs_size = (n_matrix+n_matrix_R+32)*sizeof(GT) + dim*sizeof(T);
+
+		deg_table = NULL;
+		std::cout << "base_table_size = " << base_table_size << std::endl;
+		if(base_table_size > 0){
+			cudaMalloc((void **)&deg_table, base_table_size*sizeof(GT));
+		}
 	}
 
 	~GPUWorkspace(){
@@ -251,6 +261,8 @@ public:
 	void update_x_t_idx();
 
 	void update_x_t_idx_all(int* x_t_idx_host);
+
+	int* get_x_t_idx_all();
 
 	void update_t_value(CT cpu_t);
 
@@ -274,7 +286,7 @@ public:
 
 	void update_x_t_value_mult(CT* cpu_sol0, CT* cpu_t);
 
-	void update_x_value_mult2(CT* cpu_sol0, int* x_t_idx_host);
+	void update_x_mult_vertical(CT* cpu_sol0, int* x_t_idx_host);
 
 	void update_t_value_mult2(CT* cpu_t, int* x_t_idx_host);
 
@@ -282,11 +294,15 @@ public:
 
 	CT* get_matrix();
 
+	CT* get_matrix(int sys_idx);
+
+	CT** get_matrix_mult();
+
 	CT* get_workspace(int sys_idx);
 
 	CT* get_workspace();
 
-	CT* get_matrix(int sys_idx);
+	CT** get_workspace_mult();
 
 	CT* get_matrix_r(int sys_idx=0);
 
@@ -322,8 +338,6 @@ public:
 
 	CT* get_mon_mult();
 
-	CT* get_matrix_mult();
-
 	CT* get_x_last();
 
 	CT* get_sol(int path_idx=0);
@@ -339,6 +353,7 @@ public:
 
 class GPUInst{
 public:
+	bool PED_hom;
 	int n_path;
 
 	//Sol Instruction
@@ -430,16 +445,24 @@ public:
 	int n_sum_zero;
 	int* sum_zeros;
 
+	int base_table_size;
+	int* base_table_start;
+	int* max_deg_base;
+	unsigned short* mon_exp;
+	int n_mon_base;
+	int n_mon_base_start;
+
 
 	GPUInst(const CPUInstHom& cpu_inst, int n_path){
+		PED_hom = cpu_inst.PED_hom;
 		dim = cpu_inst.dim;
 		n_eq = cpu_inst.n_eq;
 		this->n_path = n_path;
 		init_predict();
 		init_coef(cpu_inst.CPU_inst_hom_coef);
-		if(MON_EVAL_METHOD == 1){
+		if(MON_EVAL_METHOD == 1 && n_path == 1){
 			init_mon(cpu_inst.CPU_inst_hom_block);
-			init_sum(cpu_inst.CPU_inst_hom_sum_block);
+			init_sum(cpu_inst.CPU_inst_hom_sum_block, cpu_inst.CPU_inst_hom_sum);
 		}
 		else{
 			init_mon(cpu_inst.CPU_inst_hom_mon);
@@ -455,6 +478,20 @@ public:
 	    n_mgs_GPU = 0;
 
 	    init_eq(cpu_inst.CPU_inst_hom_eq);
+
+	    // Initialize the base part
+	    if(cpu_inst.CPU_inst_hom_mon.max_deg_base != NULL){
+	    	init_base(cpu_inst.CPU_inst_hom_mon);
+	    }
+	    else{
+	    	// No base
+	    	base_table_size = 0;
+	    	base_table_start = NULL;
+	    	max_deg_base = NULL;
+	    	mon_exp = NULL;
+	    	n_mon_base = 0;
+	    	n_mon_base_start = 0;
+	    }
 	}
 
 	~GPUInst(){
@@ -473,7 +510,9 @@ public:
 
 	void init_mon(const CPUInstHomMonBlock& cpu_inst_mon_block);
 
-	void init_sum(const CPUInstHomSumBlock& cpu_inst_sum);
+	void init_base(const CPUInstHomMon& cpu_inst_mon);
+
+	void init_sum(const CPUInstHomSumBlock& cpu_inst_sum, const CPUInstHomSum& cpu_inst_sum_orig);
 
 	void init_sum(const CPUInstHomSum& cpu_inst_sum);
 

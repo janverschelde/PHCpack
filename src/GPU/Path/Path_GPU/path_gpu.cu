@@ -1,3 +1,6 @@
+#ifndef PATH_GPU_CU_
+#define PATH_GPU_CU_
+
 #include "cuda_set.cu"
 
 #include "complex.cu"
@@ -170,3 +173,5 @@ bool GPU_Path(CPUInstHom& hom, Parameter path_parameter, CT* cpu_sol0, CT cpu_t,
 
 	return success;
 }
+
+#endif /* PATH_GPU_CU_ */

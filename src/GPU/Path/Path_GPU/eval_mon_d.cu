@@ -5,11 +5,11 @@
 
 void eval_mon_tree(GPUWorkspace& workspace, const GPUInst& inst);
 
-void eval_mon(GPUWorkspace& workspace, const GPUInst& inst){
-	if(MON_EVAL_METHOD == 0){
+void eval_mon(GPUWorkspace& workspace, const GPUInst& inst, int eval_mon_method=MON_EVAL_METHOD){
+	if(eval_mon_method == 0){
 		eval_mon_seq(workspace, inst);
 	}
-	else if(MON_EVAL_METHOD == 1){
+	else if(eval_mon_method == 1){
 		eval_mon_seq_align(workspace, inst);
 	}
 	else{

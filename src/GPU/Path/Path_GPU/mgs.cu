@@ -11,7 +11,7 @@ int GPU_MGS(const CPUInstHom& hom, CT*& sol_gpu, CT*& matrix_gpu_q,  CT*& matrix
 	// CUDA configuration
 	cuda_set();
 
-	GPUWorkspace workspace(0, 0, 0, hom.n_eq, hom.dim, 0, 0, 1);
+	GPUWorkspace workspace(0, 0, 0, hom.n_eq, hom.dim, 0, 0, 0, 1);
 
 	workspace.init_V_value(V);
 
@@ -22,7 +22,9 @@ int GPU_MGS(const CPUInstHom& hom, CT*& sol_gpu, CT*& matrix_gpu_q,  CT*& matrix
 	gettimeofday(&start, NULL);
 
 	if(hom.dim <= BS_QR){
-		mgs_small(workspace.V, workspace.R, workspace.sol, hom.n_eq, hom.dim+1);
+		mgs_small_dynamic(workspace.V, workspace.R, workspace.sol, hom.n_eq, hom.dim+1, workspace.small_mgs_size, \
+				workspace.n_matrix, workspace.n_matrix_R, workspace.n_path);
+		//mgs_small_template(workspace.V, workspace.R, workspace.sol, hom.n_eq, hom.dim+1, workspace.n_matrix, workspace.n_matrix_R, workspace.n_path);
 	}
 	else{
 		mgs_large_block(workspace.V, workspace.R, workspace.P, workspace.sol, hom.n_eq, hom.dim+1);
@@ -53,7 +55,7 @@ int GPU_MGS_Mult(const CPUInstHom& hom, CT**& sol_gpu, CT**& matrix_gpu_q,  CT**
 	// CUDA configuration
 	cuda_set();
 
-	GPUWorkspace workspace(0, 0, 0, hom.n_eq, hom.dim, 0, 0, n_path);
+	GPUWorkspace workspace(0, 0, 0, hom.n_eq, hom.dim, 0, 0, 0, n_path);
 
 	std::cout << "n_path = " << n_path << std::endl;
 
@@ -65,7 +67,8 @@ int GPU_MGS_Mult(const CPUInstHom& hom, CT**& sol_gpu, CT**& matrix_gpu_q,  CT**
 	long seconds, useconds;
 	gettimeofday(&start, NULL);
 
-	if(hom.dim <= BS_QR){
+	if(hom.dim <= 32){
+		// Up to 32 for multiple
 		mgs_small_dynamic(workspace.V, workspace.R, workspace.sol, hom.n_eq, hom.dim+1, workspace.small_mgs_size, \
 				workspace.n_matrix, workspace.n_matrix_R, workspace.n_path);
 		//mgs_small_template(workspace.V, workspace.R, workspace.sol, hom.n_eq, hom.dim+1, workspace.n_matrix, workspace.n_matrix_R, workspace.n_path);
@@ -73,6 +76,7 @@ int GPU_MGS_Mult(const CPUInstHom& hom, CT**& sol_gpu, CT**& matrix_gpu_q,  CT**
 		//mgs_small1(workspace.V, workspace.R, workspace.sol, hom.n_eq, hom.dim+1, workspace.n_matrix, workspace.n_matrix_R, workspace.n_path);
 	}
 	else{
+		// Only work for single
 		mgs_large_block(workspace.V, workspace.R, workspace.P, workspace.sol, hom.n_eq, hom.dim+1);
 	}
 	sol_gpu = workspace.get_sol_mult();
