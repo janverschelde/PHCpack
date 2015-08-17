@@ -1,5 +1,6 @@
 Sun 16 Aug 2015 : reformatted path_multi_test.h, path_multi_test.cpp,
-  newton_test.h, newton_test.cpp, eval_test.h, and eval_test.cpp.
+  newton_test.h, newton_test.cpp, eval_test.h, eval_test.cpp, path_data.h,
+  and path_data.cpp.
 
 Sat 15 Aug 2015 : formatting in init_test.h, init_test.cpp, path_test.h,
   and path_test.cpp.

@@ -13,4 +13,5 @@ path_test              : calls the path trackers in the main_test
 path_multi_test        : path trackers for many solution paths
 newton_test            : calls Newton's method on CPU and GPU
 eval_test              : calls evaluation and differentiation methods
+path_data              : data structures for the path trackers
 -------------------------------------------------------------------------------

@@ -1,9 +1,4 @@
-/*
- * path_data.h
- *
- *  Created on: Feb 20, 2015
- *      Author: yxc
- */
+/* path_data.h created on Feb 20, 2015 by yxc with edits by jv */
 
 #ifndef PATH_DATA_H_
 #define PATH_DATA_H_
@@ -14,153 +9,168 @@
 
 using namespace std;
 
-struct correct_iteration{
-	double correct_a;
-	double correct_r;
-	double residual_a;
-	double residual_r;
+struct correct_iteration
+{
+   double correct_a;
+   double correct_r;
+   double residual_a;
+   double residual_r;
 };
 
-class PathStep{
-public:
-	int dim;
-	bool success;
-	CT t;
-	T1 delta_t;
-	CT* predict_pt;
-	CT* correct_pt;
-	vector<correct_iteration> correct_it;
-	int n_it;
+class PathStep
+{
+   public:
 
-	PathStep(){
-		dim = 0;
-		success = false;
-		t = CT(0.0,0.0);
-		delta_t = 0.0;
-		predict_pt = NULL;
-		correct_pt = NULL;
-		n_it =0;
-	}
+      int dim;
+      bool success;
+      CT t;
+      T1 delta_t;
+      CT* predict_pt;
+      CT* correct_pt;
+      vector<correct_iteration> correct_it;
+      int n_it;
 
-	PathStep(int dim){
-		this->dim = dim;
-		success = false;
-		t = CT(0.0,0.0);
-		delta_t = 0.0;
-		predict_pt = NULL;
-		correct_pt = NULL;
-		n_it =0;
-	}
+      PathStep()
+      {
+         dim = 0;
+         success = false;
+         t = CT(0.0,0.0);
+         delta_t = 0.0;
+         predict_pt = NULL;
+         correct_pt = NULL;
+         n_it =0;
+      }
 
-	~PathStep(){
-		delete[] predict_pt;
-		delete[] correct_pt;
-	}
+      PathStep ( int dim )
+      {
+         this->dim = dim;
+         success = false;
+         t = CT(0.0,0.0);
+         delta_t = 0.0;
+         predict_pt = NULL;
+         correct_pt = NULL;
+         n_it =0;
+      }
 
-	PathStep(int dim, ifstream& path_file){
-		this->dim = dim;
-		t = CT(0.0,0.0);
-		delta_t = 0.0;
-		n_it =0;
-		success = false;
-		read_phc_file(path_file);
-	}
+      ~PathStep()
+      {
+         delete[] predict_pt;
+         delete[] correct_pt;
+      }
 
-	void read_phc_file(ifstream& path_file);
+      PathStep ( int dim, ifstream& path_file )
+      {
+         this->dim = dim;
+         t = CT(0.0,0.0);
+         delta_t = 0.0;
+         n_it =0;
+         success = false;
+         read_phc_file(path_file);
+      }
 
-	void read_predict_pt(ifstream& path_file);
+      void read_phc_file(ifstream& path_file);
 
-	void read_correct_pt(ifstream& path_file);
+      void read_predict_pt(ifstream& path_file);
 
-	void read_correct_it(ifstream& path_file);
+      void read_correct_pt(ifstream& path_file);
 
-	void update_predict_pt(CT* predict_pt);
+      void read_correct_it(ifstream& path_file);
 
-	void update_correct_pt(CT* correct_pt);
+      void update_predict_pt(CT* predict_pt);
 
-	void update_t(CT delta_t, CT t);
+      void update_correct_pt(CT* correct_pt);
 
-	void add_iteration(double max_delta_x, double r_max_delta_x);
+      void update_t(CT delta_t, CT t);
 
-	void update_iteration_res(double residual_a, double residual_r);
+      void add_iteration(double max_delta_x, double r_max_delta_x);
 
-	void print();
+      void update_iteration_res(double residual_a, double residual_r);
 
-	void print_it();
+      void print();
+
+      void print_it();
 };
 
-class Path{
-public:
-	int dim;
-	int n_step;
-	bool success;
-	CT* start_pt;
-	CT* end_pt;
-	vector<PathStep*> steps;
-	Path(){
-		dim = 0;
-		n_step = 0;
-		success = false;
-		start_pt = NULL;
-		end_pt = NULL;
-	}
+class Path
+{
+   public:
 
-	~Path(){
-		for (vector<PathStep*>::iterator it = steps.begin(); \
-			it!=steps.end(); ++it) {
-			delete (*it);
-		}
-		if(start_pt != NULL){
-			delete[] start_pt;
-			start_pt = NULL;
-		}
-		if(end_pt != NULL){
-			delete[] end_pt;
-			end_pt = NULL;
-		}
-	}
+      int dim;
+      int n_step;
+      bool success;
+      CT* start_pt;
+      CT* end_pt;
+      vector<PathStep*> steps;
 
-	Path(int dim, ifstream& path_file){
-		this->dim = dim;
-		n_step = 0;
-		success = false;
-		start_pt = NULL;
-		end_pt = NULL;
-		read_phc_file(path_file);
-	}
+      Path()
+      {
+         dim = 0;
+         n_step = 0;
+         success = false;
+         start_pt = NULL;
+         end_pt = NULL;
+      }
 
-	void read_phc_file(ifstream& path_file);
+      ~Path()
+      {
+         for(vector<PathStep*>::iterator it = steps.begin(); 
+             it!=steps.end(); ++it) 
+         {
+            delete (*it);
+         }
+         if(start_pt != NULL)
+         {
+            delete[] start_pt;
+            start_pt = NULL;
+         }
+         if(end_pt != NULL)
+         {
+            delete[] end_pt;
+            end_pt = NULL;
+         }
+      }
 
-	void add_step(ifstream& path_file);
+      Path(int dim, ifstream& path_file)
+      {
+         this->dim = dim;
+         n_step = 0;
+         success = false;
+         start_pt = NULL;
+         end_pt = NULL;
+         read_phc_file(path_file);
+      }
 
-	void add_step_empty();
+      void read_phc_file(ifstream& path_file);
 
-	void update_step_predict_pt(CT* predict_pt);
+      void add_step(ifstream& path_file);
 
-	void update_step_correct_pt(CT* correct_pt);
+      void add_step_empty();
 
-	void update_step_t(CT delta_t, CT t);
+      void update_step_predict_pt(CT* predict_pt);
 
-	void add_iteration(double max_delta_x, double r_max_delta_x);
+      void update_step_correct_pt(CT* correct_pt);
 
-	void update_iteration_res(double residual_a, double residual_r);
+      void update_step_t(CT delta_t, CT t);
 
-	void print_t();
+      void add_iteration(double max_delta_x, double r_max_delta_x);
 
-	void print();
+      void update_iteration_res(double residual_a, double residual_r);
 
-	void print_phc();
+      void print_t();
 
-	void compare(Path& that);
+      void print();
 
-	void add_start_pt(CT* start_pt);
+      void print_phc();
 
-	void add_end_pt(CT* end_pt);
+      void compare(Path& that);
 
-	void update_success(bool success);
+      void add_start_pt(CT* start_pt);
 
-	void clear();
+      void add_end_pt(CT* end_pt);
+
+      void update_success(bool success);
+
+      void clear();
 };
-
 
 #endif /* PATH_DATA_H_ */
