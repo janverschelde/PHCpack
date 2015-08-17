@@ -16,6 +16,7 @@
 #include "jump_track.h"
 
 #include "poly.h"
+#include "polysol.h"
 
 #ifdef compilewgpp
 extern "C" void adainit ( void );

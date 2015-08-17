@@ -1,4 +1,6 @@
 Mon 17 Aug 2015 : reformatted mgs_test.h and mgs_test.cpp.
+  Updated ada_test.h, ada_test_dd.h, and ada_test_qd.h for the new
+  polysol.h and polysol.cpp, with the definitions of the PolySolSet class.
 
 Sun 16 Aug 2015 : reformatted path_multi_test.h, path_multi_test.cpp,
   newton_test.h, newton_test.cpp, eval_test.h, eval_test.cpp, path_data.h,
