@@ -1571,6 +1571,18 @@ poly_qd.o:
 	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Poly/poly.cpp -o poly_qd.o
 
+polysol_d.o:
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+                -c $(PHCgpu)/Path/Poly/polysol.cpp -o polysol_d.o
+
+polysol_dd.o:
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+                -c $(PHCgpu)/Path/Poly/polysol.cpp -o polysol_dd.o
+
+polysol_qd.o:
+	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
+                -c $(PHCgpu)/Path/Poly/polysol.cpp -o polysol_qd.o
+
 workspace_host_d.o:
 	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Path_CPU/workspace_host.cpp \
@@ -1715,9 +1727,9 @@ path_gpu_qd.o:
 	     -o path_gpu_qd.o \
              -c $(PHCgpu)/Path/Path_GPU/path_gpu.cu --ptxas-options=-v
 
-ts_gpunewton: utilities_d.o poly_d.o workspace_host_d.o eval_host_d.o \
-              mgs_host_d.o newton_host_d.o ada_test.o gqd_qd_util.o \
-              path_gpu_d.o gpunewton_d.o
+ts_gpunewton: utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
+              eval_host_d.o mgs_host_d.o newton_host_d.o ada_test.o \
+              gqd_qd_util.o path_gpu_d.o gpunewton_d.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	@-echo ">>> compiling code for the containers ..."
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -1730,16 +1742,17 @@ ts_gpunewton: utilities_d.o poly_d.o workspace_host_d.o eval_host_d.o \
 	@-echo ">>> linking ..."
 	gnatlink ts_gpunewton \
                gpunewton_d.o syscon.o solcon.o phcpack.o ada_test.o \
-               utilities_d.o poly_d.o workspace_host_d.o eval_host_d.o \
-               mgs_host_d.o newton_host_d.o gqd_qd_util.o path_gpu_d.o \
+               utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
+               eval_host_d.o mgs_host_d.o newton_host_d.o gqd_qd_util.o \
+               path_gpu_d.o \
                  -o $(BIN)/ts_gpunewton -lm \
                  -lcutil_x86_64 -lcudart \
                  -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
                  --LINK=g++
 
-ts_gpunewton_dd: utilities_dd.o poly_dd.o workspace_host_dd.o eval_host_dd.o \
-                 mgs_host_dd.o newton_host_dd.o gqd_qd_util.o ada_test_dd.o \
-                 path_gpu_dd.o gpunewton_dd.o
+ts_gpunewton_dd: utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \
+                 eval_host_dd.o mgs_host_dd.o newton_host_dd.o gqd_qd_util.o \
+                 ada_test_dd.o path_gpu_dd.o gpunewton_dd.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	@-echo ">>> compiling code for the containers ..."
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -1752,17 +1765,18 @@ ts_gpunewton_dd: utilities_dd.o poly_dd.o workspace_host_dd.o eval_host_dd.o \
 	@-echo ">>> linking ..."
 	gnatlink ts_gpunewton_dd \
                gpunewton_dd.o syscon.o solcon.o phcpack.o ada_test_dd.o \
-               utilities_dd.o poly_dd.o workspace_host_dd.o eval_host_dd.o \
-               mgs_host_dd.o newton_host_dd.o gqd_qd_util.o path_gpu_dd.o \
+               utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \
+               eval_host_dd.o mgs_host_dd.o newton_host_dd.o gqd_qd_util.o \
+               path_gpu_dd.o \
                $(QD_LIB)/libqd.a \
                  -o $(BIN)/ts_gpunewton_dd -lm \
                  -lcutil_x86_64 -lcudart \
                  -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
                  --LINK=g++
 
-ts_gpunewton_qd: utilities_qd.o poly_qd.o workspace_host_qd.o eval_host_qd.o \
-                 mgs_host_qd.o newton_host_qd.o gqd_qd_util.o ada_test_qd.o \
-                 path_gpu_qd.o gpunewton_qd.o
+ts_gpunewton_qd: utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
+                 eval_host_qd.o mgs_host_qd.o newton_host_qd.o gqd_qd_util.o \
+                 ada_test_qd.o path_gpu_qd.o gpunewton_qd.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	@-echo ">>> compiling code for the containers ..."
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -1775,8 +1789,9 @@ ts_gpunewton_qd: utilities_qd.o poly_qd.o workspace_host_qd.o eval_host_qd.o \
 	@-echo ">>> linking ..."
 	gnatlink ts_gpunewton_qd \
                gpunewton_qd.o syscon.o solcon.o phcpack.o ada_test_qd.o \
-               utilities_qd.o poly_qd.o workspace_host_qd.o eval_host_qd.o \
-               mgs_host_qd.o newton_host_qd.o gqd_qd_util.o path_gpu_qd.o \
+               utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
+               eval_host_qd.o mgs_host_qd.o newton_host_qd.o gqd_qd_util.o \
+               path_gpu_qd.o \
                $(QD_LIB)/libqd.a \
                  -o $(BIN)/ts_gpunewton_qd -lm \
                  -lcutil_x86_64 -lcudart \
@@ -1840,9 +1855,10 @@ gpuonepath_qd.o:
             -I$(PHCgpu)/Path/Path_GPU \
             -o gpuonepath_qd.o
 
-ts_gpuonepath_d: utilities_d.o poly_d.o workspace_host_d.o eval_host_d.o \
-                 mgs_host_d.o newton_host_d.o ada_test.o gqd_qd_util.o \
-                 path_gpu_d.o predictor_host_d.o path_host_d.o gpuonepath_d.o
+ts_gpuonepath_d: utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
+                 eval_host_d.o mgs_host_d.o newton_host_d.o ada_test.o \
+                 gqd_qd_util.o path_gpu_d.o predictor_host_d.o path_host_d.o \
+                 gpuonepath_d.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	@-echo ">>> compiling code for the containers ..."
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -1855,18 +1871,18 @@ ts_gpuonepath_d: utilities_d.o poly_d.o workspace_host_d.o eval_host_d.o \
 	@-echo ">>> linking ..."
 	gnatlink ts_gpuonepath_d \
                gpuonepath_d.o syscon.o solcon.o phcpack.o ada_test.o \
-               utilities_d.o poly_d.o workspace_host_d.o eval_host_d.o \
-               mgs_host_d.o newton_host_d.o gqd_qd_util.o path_gpu_d.o \
-               predictor_host_d.o path_host_d.o \
+               utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
+               eval_host_d.o mgs_host_d.o newton_host_d.o gqd_qd_util.o \
+               path_gpu_d.o predictor_host_d.o path_host_d.o \
                  -o $(BIN)/ts_gpuonepath_d -lm \
                  -lcutil_x86_64 -lcudart \
                  -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
                  --LINK=g++
 
-ts_gpuonepath_dd: utilities_dd.o poly_dd.o workspace_host_dd.o eval_host_dd.o \
-                 mgs_host_dd.o newton_host_dd.o ada_test_dd.o gqd_qd_util.o \
-                 path_gpu_dd.o predictor_host_dd.o path_host_dd.o \
-                 gpuonepath_dd.o
+ts_gpuonepath_dd: utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \
+                  eval_host_dd.o mgs_host_dd.o newton_host_dd.o ada_test_dd.o \
+                  gqd_qd_util.o path_gpu_dd.o predictor_host_dd.o \
+                  path_host_dd.o gpuonepath_dd.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	@-echo ">>> compiling code for the containers ..."
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -1879,18 +1895,19 @@ ts_gpuonepath_dd: utilities_dd.o poly_dd.o workspace_host_dd.o eval_host_dd.o \
 	@-echo ">>> linking ..."
 	gnatlink ts_gpuonepath_dd \
                gpuonepath_dd.o syscon.o solcon.o phcpack.o ada_test_dd.o \
-               utilities_dd.o poly_dd.o workspace_host_dd.o eval_host_dd.o \
-               mgs_host_dd.o newton_host_dd.o gqd_qd_util.o path_gpu_dd.o \
-               predictor_host_dd.o path_host_dd.o $(QD_LIB)/libqd.a \
+               utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \
+               eval_host_dd.o mgs_host_dd.o newton_host_dd.o gqd_qd_util.o \
+               path_gpu_dd.o predictor_host_dd.o path_host_dd.o \
+               $(QD_LIB)/libqd.a \
                  -o $(BIN)/ts_gpuonepath_dd -lm \
                  -lcutil_x86_64 -lcudart \
                  -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
                  --LINK=g++
 
-ts_gpuonepath_qd: utilities_qd.o poly_qd.o workspace_host_qd.o eval_host_qd.o \
-                 mgs_host_qd.o newton_host_qd.o ada_test_qd.o gqd_qd_util.o \
-                 path_gpu_qd.o predictor_host_qd.o path_host_qd.o \
-                 gpuonepath_qd.o
+ts_gpuonepath_qd: utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
+                  eval_host_qd.o mgs_host_qd.o newton_host_qd.o ada_test_qd.o \
+                  gqd_qd_util.o path_gpu_qd.o predictor_host_qd.o \
+                  path_host_qd.o gpuonepath_qd.o
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
 	@-echo ">>> compiling code for the containers ..."
 	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
@@ -1903,9 +1920,10 @@ ts_gpuonepath_qd: utilities_qd.o poly_qd.o workspace_host_qd.o eval_host_qd.o \
 	@-echo ">>> linking ..."
 	gnatlink ts_gpuonepath_qd \
                gpuonepath_qd.o syscon.o solcon.o phcpack.o ada_test_qd.o \
-               utilities_qd.o poly_qd.o workspace_host_qd.o eval_host_qd.o \
-               mgs_host_qd.o newton_host_qd.o gqd_qd_util.o path_gpu_qd.o \
-               predictor_host_qd.o path_host_qd.o $(QD_LIB)/libqd.a \
+               utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
+               eval_host_qd.o mgs_host_qd.o newton_host_qd.o gqd_qd_util.o \
+               path_gpu_qd.o predictor_host_qd.o path_host_qd.o \
+               $(QD_LIB)/libqd.a \
                  -o $(BIN)/ts_gpuonepath_qd -lm \
                  -lcutil_x86_64 -lcudart \
                  -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
