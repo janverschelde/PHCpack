@@ -1,5 +1,7 @@
 Tue 18 Aug 2015 : updates to gpuonepath_{d,dd,qd}.cpp for the new verbose
   option that has been added to the path_tracker on the host.
+  Tracking many paths in double precision works, via the new
+  gpumanypaths_d.cpp called by ts_gpumanypaths_d.adb.
 
 Fri 14 Aug 2015 : fixed bug in gpuonepath_{d,dd,qd}.cpp, so the CPU version
   of the path tracker works for all precision levels.
