@@ -105,7 +105,7 @@ int track ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s )
       tpred = 0.0; teval = 0.0; tmgs = 0.0;
       if(verbose > 0) cout << "calling path_tracker ..." << endl;
       success = path_tracker(workspace_cpu,cpu_inst_hom,path_parameter,
-                             tpred,teval,tmgs);
+                             tpred,teval,tmgs,0,verbose);
       if(verbose > 0) cout << "done with call to path_tracker." << endl;
       if(verbose > 0)
       {

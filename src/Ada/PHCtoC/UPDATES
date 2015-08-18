@@ -1,3 +1,6 @@
+Tue 18 Aug 2015 : updates to gpuonepath_{d,dd,qd}.cpp for the new verbose
+  option that has been added to the path_tracker on the host.
+
 Fri 14 Aug 2015 : fixed bug in gpuonepath_{d,dd,qd}.cpp, so the CPU version
   of the path tracker works for all precision levels.
 

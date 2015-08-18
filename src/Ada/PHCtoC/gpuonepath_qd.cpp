@@ -103,7 +103,7 @@ int track ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s )
       workspace_cpu.update_x_t_idx();
       tpred = 0.0; teval = 0.0; tmgs = 0.0;
       success = path_tracker(workspace_cpu,cpu_inst_hom,path_parameter,
-                             tpred,teval,tmgs);
+                             tpred,teval,tmgs,0,verbose);
       if(verbose > 0)
       {
          cout.precision(64);
