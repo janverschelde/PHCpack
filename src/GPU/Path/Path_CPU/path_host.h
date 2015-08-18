@@ -9,7 +9,7 @@
 bool path_tracker
  ( Workspace& workspace_cpu, CPUInstHom& cpu_inst_hom,
    Parameter path_parameter, double& timeSec_Predict, double& timeSec_Eval,
-   double& timeSec_MGS, int reverse = 0);
+   double& timeSec_MGS, int reverse = 0, int verbose = 0 );
 /*
  * DESCRIPTION :
  *   Runs the path tracker, tracking one single solution path, defined

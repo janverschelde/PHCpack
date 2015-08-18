@@ -5,7 +5,7 @@
 bool path_tracker
  ( Workspace& workspace_cpu, CPUInstHom& cpu_inst_hom,
    Parameter path_parameter, double& timeSec_Predict, double& timeSec_Eval,
-   double& timeSec_MGS, int reverse )
+   double& timeSec_MGS, int reverse, int verbose )
 {
    int n_point = 1;
    int n_step = 0;
@@ -41,8 +41,6 @@ bool path_tracker
    {
       cpu_inst_hom.path_data.add_start_pt(workspace_cpu.x_last);
    }
-
-   std::cout << "starting while loop ... " << std::endl;
 
    while(tmp_t_last->real < T1(1))
    {
@@ -162,16 +160,19 @@ bool path_tracker
       // std::cout << std::endl;
    }
    bool success = 0;
-   std::cout << "------------ Path Tracking Report -------------" << std::endl;
+   if(verbose > 0)
+      std::cout << "------------ Path Tracking Report -------------"
+                << std::endl;
    if(tmp_t_last->real == 1)
    {
       success = 1;
-      std::cout << "Success" << std::endl;
+      if(verbose > 0) std::cout << "Success" << std::endl;
    }
    else
    {
-      std::cout << "Fail " << fail_reason << " t ="
-                << tmp_t_last->real<< std::endl;
+      if(verbose > 0)
+         std::cout << "Fail " << fail_reason << " t ="
+                   << tmp_t_last->real<< std::endl;
    }
    if(Record)
    {
@@ -183,8 +184,11 @@ bool path_tracker
    cpu_inst_hom.n_step_CPU  = n_step;
    cpu_inst_hom.n_point_CPU = n_point;
 
-   std::cout << "n_point = " << n_point << std::endl;
-   std::cout << "n_step = " << n_step << std::endl;
+   if(verbose > 0)
+   {
+      std::cout << "n_point = " << n_point << std::endl;
+      std::cout << "n_step = " << n_step << std::endl;
+   }
 
    return success;
 }
