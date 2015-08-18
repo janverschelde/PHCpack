@@ -1,3 +1,5 @@
+Tue 18 Aug 2015 : reformatted newton_host.h and newton_host.cpp.
+
 Mon 17 Aug 2015 : updated varset.h, eval_host.h, eval_host.cpp, 
   workspace_host.h and workspace_host.cpp.
 
