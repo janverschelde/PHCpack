@@ -1,3 +1,6 @@
+Tue 18 Aug 2015 : extended write_sols of ada_test.cpp so that all solutions
+  of the PolySolSet are appended to the solution container.
+
 Mon 17 Aug 2015 : reformatted mgs_test.h and mgs_test.cpp.
   Updated ada_test.h, ada_test_dd.h, and ada_test_qd.h for the new
   polysol.h and polysol.cpp, with the definitions of the PolySolSet class.

@@ -131,24 +131,30 @@ void ada_write_sols ( PolySolSet& sols )
    if(fail != 0)
       std::cout << "failed to clear the solutions" << std::endl;
    int dim = sols.dim;
-   CT* sol = sols.get_sol(0);
-   double csol[2*dim+5];
-   csol[0] = 0.0;
-   csol[1] = 0.0;
-   int idx = 2;
-   for(int k=0; k<dim; k++)
+   int nbsols = sols.n_sol;
+   // std::cout << "number of solutions : " << nbsols << std::endl;
+
+   for(int sol_idx=0; sol_idx<nbsols; sol_idx++)
    {
-      csol[idx++] = sol[k].real;
-      csol[idx++] = sol[k].imag;
-      // std::cout << sol[k].real << "  " << sol[k].imag << std::endl;
-      // std::cout << csol[idx-2] << "  " << csol[idx-1] << std::endl;
+      CT* sol = sols.get_sol(sol_idx);
+      double csol[2*dim+5];
+      csol[0] = 0.0;
+      csol[1] = 0.0;
+      int idx = 2;
+      for(int k=0; k<dim; k++)
+      {
+         csol[idx++] = sol[k].real;
+         csol[idx++] = sol[k].imag;
+         // std::cout << sol[k].real << "  " << sol[k].imag << std::endl;
+         // std::cout << csol[idx-2] << "  " << csol[idx-1] << std::endl;
+      }
+      csol[2*dim+2] = 0.0;
+      csol[2*dim+3] = 0.0;
+      csol[2*dim+4] = 0.0;
+      fail = solcon_append_solution(dim,1,csol);
+      if(fail != 0)
+         std::cout << "failed to append the solution" << std::endl;
    }
-   csol[2*dim+2] = 0.0;
-   csol[2*dim+3] = 0.0;
-   csol[2*dim+4] = 0.0;
-   fail = solcon_append_solution(dim,1,csol);
-   if(fail != 0)
-      std::cout << "failed to append the solution" << std::endl;
 }
 
 void ada_read_homotopy
