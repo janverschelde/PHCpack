@@ -84,7 +84,7 @@ int newton ( int mode, int verbose, PolySys& p, PolySolSet& s )
       }
    }
    alpha = CT(1,0);
-   cpu_inst_hom.init(p,p,p.dim,p.n_eq,1,alpha);
+   cpu_inst_hom.init(p,p,p.dim,p.n_eq,1,alpha,verbose);
    cpu_inst_hom.init_workspace(workspace_cpu);
 
    if(mode == 0 || mode == 1)
@@ -104,6 +104,7 @@ int newton ( int mode, int verbose, PolySys& p, PolySolSet& s )
    if(mode == 0 || mode == 2)
    {
       alpha = CT(1,0);
+      cout << "*** calling GPU_Newton ***" << endl;
       success = GPU_Newton(cpu_inst_hom,path_parameter,sol,alpha,x_gpu);
       if(verbose > 0)
       {

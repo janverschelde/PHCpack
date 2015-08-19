@@ -93,7 +93,7 @@ int track ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s )
    }
 
    alpha = CT(1.0,0);
-   cpu_inst_hom.init(p,q,p.dim,p.n_eq,1,alpha);
+   cpu_inst_hom.init(p,q,p.dim,p.n_eq,1,alpha,verbose);
    cpu_inst_hom.init_workspace(workspace_cpu);
 
    if(mode == 0 || mode == 1)

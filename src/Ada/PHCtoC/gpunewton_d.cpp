@@ -85,7 +85,7 @@ int newton ( int mode, int verbose, PolySys& p, PolySolSet& s )
    }
 
    alpha = CT(1,0);
-   cpu_inst_hom.init(p,p,p.dim,p.n_eq,1,alpha);
+   cpu_inst_hom.init(p,p,p.dim,p.n_eq,1,alpha,verbose);
    cpu_inst_hom.init_workspace(workspace_cpu);
 
    if(mode == 0 || mode == 1)
