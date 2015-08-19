@@ -1,3 +1,5 @@
+Wed 19 Aug 2015 : reformatted workspace_host.h and workspace_host.cpp.
+
 Tue 18 Aug 2015 : reformatted newton_host.h and newton_host.cpp.
   Added a verbose option to the path_tracker function in path_host.h
   and in path_host.cpp.
