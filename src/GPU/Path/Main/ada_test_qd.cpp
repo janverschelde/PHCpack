@@ -187,27 +187,32 @@ void ada_write_sols ( PolySolSet& sols )
    if(fail != 0)
       std::cout << "failed to clear the solutions" << std::endl;
    int dim = sols.dim;
-   CT* sol = sols.get_sol(0);
-   double csol[8*dim+20];
-   csol[0] = 0.0; csol[1] = 0.0; csol[2] = 0.0; csol[3] = 0.0;
-   csol[4] = 0.0; csol[5] = 0.0; csol[6] = 0.0; csol[7] = 0.0;
-   int idx = 8;
-   for(int k=0; k<dim; k++)
+   int nbsols = sols.n_sol;
+
+   for(int sol_idx=0; sol_idx<nbsols; sol_idx++)
    {
-      csol[idx++] = sol[k].real.x[0]; csol[idx++] = sol[k].real.x[1];
-      csol[idx++] = sol[k].real.x[2]; csol[idx++] = sol[k].real.x[3];
-      csol[idx++] = sol[k].imag.x[0]; csol[idx++] = sol[k].imag.x[1];
-      csol[idx++] = sol[k].imag.x[2]; csol[idx++] = sol[k].imag.x[3];
+      CT* sol = sols.get_sol(sol_idx);
+      double csol[8*dim+20];
+      csol[0] = 0.0; csol[1] = 0.0; csol[2] = 0.0; csol[3] = 0.0;
+      csol[4] = 0.0; csol[5] = 0.0; csol[6] = 0.0; csol[7] = 0.0;
+      int idx = 8;
+      for(int k=0; k<dim; k++)
+      {
+         csol[idx++] = sol[k].real.x[0]; csol[idx++] = sol[k].real.x[1];
+         csol[idx++] = sol[k].real.x[2]; csol[idx++] = sol[k].real.x[3];
+         csol[idx++] = sol[k].imag.x[0]; csol[idx++] = sol[k].imag.x[1];
+         csol[idx++] = sol[k].imag.x[2]; csol[idx++] = sol[k].imag.x[3];
+      }
+      csol[8*dim+8] = 0.0; csol[8*dim+9] = 0.0;
+      csol[8*dim+10] = 0.0; csol[8*dim+11] = 0.0;
+      csol[8*dim+12] = 0.0; csol[8*dim+13] = 0.0;
+      csol[8*dim+14] = 0.0; csol[8*dim+15] = 0.0;
+      csol[8*dim+16] = 0.0; csol[8*dim+17] = 0.0;
+      csol[8*dim+18] = 0.0; csol[8*dim+19] = 0.0;
+      fail = solcon_append_quaddobl_solution(dim,1,csol);
+      if(fail != 0)
+         std::cout << "failed to append the solution" << std::endl;
    }
-   csol[8*dim+8] = 0.0; csol[8*dim+9] = 0.0;
-   csol[8*dim+10] = 0.0; csol[8*dim+11] = 0.0;
-   csol[8*dim+12] = 0.0; csol[8*dim+13] = 0.0;
-   csol[8*dim+14] = 0.0; csol[8*dim+15] = 0.0;
-   csol[8*dim+16] = 0.0; csol[8*dim+17] = 0.0;
-   csol[8*dim+18] = 0.0; csol[8*dim+19] = 0.0;
-   fail = solcon_append_quaddobl_solution(dim,1,csol);
-   if(fail != 0)
-      std::cout << "failed to append the solution" << std::endl;
 }
 
 void ada_read_homotopy
