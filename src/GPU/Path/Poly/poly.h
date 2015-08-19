@@ -357,7 +357,7 @@ public:
 		//delete eq_space;
         //delete pos_var;
         delete max_deg_base;
-		cout << "sys destructed" << endl;
+		// cout << "sys destructed" << endl;
 	}
 
 	/// Read polynomial system from string array
@@ -453,41 +453,51 @@ public:
     void balance_eq(const CT* x_val);
 };
 
-class PolySysHom{
-public:
-	PolySys* start_sys;
-	PolySys* target_sys;
-	int dim;
-	//int n_start_sol;
-	//CT* start_sols;
+class PolySysHom
+{
+   public:
 
-	PolySysHom(PolySys* start_sys, PolySys* target_sys){
-		if(start_sys->dim != target_sys->dim){
-			std::cout << "start system and end system " << std::endl;
-		}
-		else{
-			this->start_sys = start_sys;
-			this->target_sys = target_sys;
-			dim = start_sys->dim;
-		}
-	}
+      PolySys* start_sys;
+      PolySys* target_sys;
+      int dim;
+      // int n_start_sol;
+      // CT* start_sols;
 
-	void print(){
-		std::cout << "Start System : " << std::endl;
-		start_sys->print();
-		std::cout << "Target System : " << std::endl;
-		target_sys->print();
-	}
+      PolySysHom ( PolySys* start_sys, PolySys* target_sys )
+      {
+         if(start_sys->dim != target_sys->dim)
+         {
+            std::cout << "start system and end system " << std::endl;
+         }
+         else
+         {
+            this->start_sys = start_sys;
+            this->target_sys = target_sys;
+            dim = start_sys->dim;
+         }
+      }
+
+      void print()
+      {
+         std::cout << "Start System : " << std::endl;
+         start_sys->print();
+         std::cout << "Target System : " << std::endl;
+         target_sys->print();
+      }
 };
 
-class int_idx{
-  public:
-    int eq_idx;
-    int mon_idx;
-    int_idx(int i, int j){
-        eq_idx = i;
-        mon_idx = j;
-    }
+class int_idx
+{
+   public:
+
+      int eq_idx;
+      int mon_idx;
+
+      int_idx ( int i, int j )
+      {
+         eq_idx = i;
+         mon_idx = j;
+      }
 };
 
 #endif
