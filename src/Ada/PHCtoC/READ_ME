@@ -42,6 +42,10 @@ gpuonepath_d.cpp      : C++ program called by ts_gpuonepath_d
 gpuonepath_dd.cpp     : C++ program called by ts_gpuonepath_dd
 gpuonepath_qd.cpp     : C++ program called by ts_gpuonepath_qd
 -------------------------------------------------------------------------------
-ts_gpumanypaths_      : accelerated tracking of many paths in double precision
+ts_gpumanypaths_d     : accelerated tracking of many paths in double precision
+ts_gpumanypaths_dd    : accelerated tracking of many paths with double doubles 
+ts_gpumanypaths_qd    : accelerated tracking of many paths with quad doubles 
 gpumanypaths_d.cpp    : C++ program called by ts_gpumanypaths_d
+gpumanypaths_dd.cpp   : C++ program called by ts_gpumanypaths_dd
+gpumanypaths_qd.cpp   : C++ program called by ts_gpumanypaths_qd
 -------------------------------------------------------------------------------
