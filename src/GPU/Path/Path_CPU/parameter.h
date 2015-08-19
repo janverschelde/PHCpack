@@ -50,8 +50,8 @@ class Parameter
          this->err_min_round_off_refine = err_min_round_off_refine;
          this->step_increase = step_increase;
          this->step_decrease = step_decrease;
-         std::cout << "path_parameter.err_min_round_off = "
-                   << this->err_min_round_off << std::endl;
+         // std::cout << "path_parameter.err_min_round_off = "
+         //           << this->err_min_round_off << std::endl;
       }
 };
 
