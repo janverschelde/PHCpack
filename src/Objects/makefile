@@ -1324,6 +1324,7 @@ ts_feedback:
 test_phctoc: ts_cpu2norm_d ts_cpu2norm_dd ts_cpu2norm_qd ts_gpunewton \
              ts_gpunewton_dd ts_gpunewton_qd ts_gpuonepath_d \
              ts_gpuonepath_dd ts_gpuonepath_qd ts_gpumanypaths_d
+             ts_gpumanypaths_dd ts_gpumanypaths_qd
 
 ts_cpu2norm_d:
 	make -f $(MAKEFILE) ts_cpu2norm_d
