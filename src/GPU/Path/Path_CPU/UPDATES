@@ -1,5 +1,6 @@
 Wed 19 Aug 2015 : reformatted workspace_host.h and workspace_host.cpp.
   The instantiation in parameter.h is rendered mute.
+  Reformatted eval_host.h and eval_host.cpp, adding verbose option.
 
 Tue 18 Aug 2015 : reformatted newton_host.h and newton_host.cpp.
   Added a verbose option to the path_tracker function in path_host.h
