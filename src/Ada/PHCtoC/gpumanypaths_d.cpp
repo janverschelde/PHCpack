@@ -91,7 +91,6 @@ int track ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s )
          cout << setw(24) << scientific << setprecision(16) << sol[k];
       }
    }
-
    int fail,n_path;
    fail = solcon_number_of_solutions(&n_path);
 
@@ -116,7 +115,7 @@ int track ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s )
          success = path_tracker(workspace_cpu,cpu_inst_hom,path_parameter,
                                 tpred,teval,tmgs,0,verbose);
          if(verbose > 0) cout << "done with call to path_tracker." << endl;
-         s.change_sol(path_idx,workspace_cpu.x_last);
+         if(mode == 1) s.change_sol(path_idx,workspace_cpu.x_last);
          if(verbose > 0)
          {
             cout.precision(16);
@@ -126,24 +125,33 @@ int track ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s )
          }
       }
    }
-/*
    if(mode == 0 || mode == 2)
    {
-      alpha = CT(0.0,0);
-      success = GPU_Path(cpu_inst_hom,path_parameter,sol,alpha,x_gpu);
-
+      CT* sol0 = new CT[n_path*cpu_inst_hom.dim];
+      CT* sol_tmp_mult = sol0;
+      CT* tt = new CT[n_path];
+      CT** x_gpu = NULL;
+      for(int path_idx=0; path_idx<n_path; path_idx++)
+      {
+         CT* sol_tmp = s.get_sol(path_idx);
+         for(int sol_idx=0; sol_idx<cpu_inst_hom.dim; sol_idx++)
+         {
+            *sol_tmp_mult++ = sol_tmp[sol_idx];
+         }
+         tt[path_idx] = CT(0.0,0.0);
+      }
+      success = GPU_Path_mult(cpu_inst_hom,path_parameter,sol0,tt,x_gpu,n_path);
+      for(int path_idx=0; path_idx<n_path; path_idx++)
+      {
+         s.change_sol(path_idx,x_gpu[path_idx]);
+      }
       if(verbose > 0)
       {
          cout << "The first solution after GPU path tracker :" << endl;
          for(int k=0; k<p.dim; k++)
             cout << k << " :" << setw(24) << x_gpu[k];
       }
+      delete[] tt;
    }
-
-   if(mode == 1)
-      s.change_sol(0,workspace_cpu.x_last);
-   else
-      s.change_sol(0,x_gpu);
-*/
    return 0;
 }
