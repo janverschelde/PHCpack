@@ -1324,7 +1324,8 @@ ts_feedback:
 test_phctoc: ts_cpu2norm_d ts_cpu2norm_dd ts_cpu2norm_qd ts_gpunewton \
              ts_gpunewton_dd ts_gpunewton_qd ts_gpuonepath_d \
              ts_gpuonepath_dd ts_gpuonepath_qd ts_gpumanypaths_d
-             ts_gpumanypaths_dd ts_gpumanypaths_qd
+             ts_gpumanypaths_dd ts_gpumanypaths_qd \
+             ts_gpupath_d ts_gpupath_dd ts_gpupath_qd
 
 ts_cpu2norm_d:
 	make -f $(MAKEFILE) ts_cpu2norm_d
@@ -1354,7 +1355,22 @@ ts_gpuonepath_qd:
 	make -f $(MAKEFILE) ts_gpuonepath_qd
 
 ts_gpumanypaths_d:
-	make -f $(MAKEFILE) ts_gpuonepath_d
+	make -f $(MAKEFILE) ts_gpumanypaths_d
+
+ts_gpumanypaths_dd:
+	make -f $(MAKEFILE) ts_gpumanypaths_dd
+
+ts_gpumanypaths_qd:
+	make -f $(MAKEFILE) ts_gpumanypaths_qd
+
+ts_gpupath_d:
+	make -f $(MAKEFILE) ts_gpupath_d
+
+ts_gpupath_dd:
+	make -f $(MAKEFILE) ts_gpupath_dd
+
+ts_gpupath_qd:
+	make -f $(MAKEFILE) ts_gpupath_qd
 
 # Test programs for the Tasking:
 
