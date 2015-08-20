@@ -149,7 +149,7 @@ int track ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s )
       {
          cout << "The first solution after GPU path tracker :" << endl;
          for(int k=0; k<p.dim; k++)
-            cout << k << " :" << setw(24) << x_gpu[k];
+            cout << k << " :" << setw(24) << x_gpu[0][k];
       }
       delete[] tt;
    }
