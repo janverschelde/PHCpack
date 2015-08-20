@@ -13,7 +13,7 @@
 
 using namespace std;
 
-int track ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s );
+int manytrack ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s );
 /*
  * DESCRIPTION :
  *   Tracks many paths defined by an artificial parameter homotopy,
@@ -58,7 +58,7 @@ extern "C" int gpumanypaths_qd ( int mode, int verbose )
    ada_read_sys(verbose,qs);
    ada_read_sols(qs,sols);
 
-   fail = track(mode,verbose,ps,qs,sols);
+   fail = manytrack(mode,verbose,ps,qs,sols);
 
    if(verbose > 0)
       cout << "writing the solutions to the container ..." << endl;
@@ -68,7 +68,7 @@ extern "C" int gpumanypaths_qd ( int mode, int verbose )
    return 0;
 }
 
-int track ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s )
+int manytrack ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s )
 {
    double tpred,teval,tmgs;
    bool success;

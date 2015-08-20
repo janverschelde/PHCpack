@@ -1,6 +1,12 @@
 Thu 20 Aug 2015 : extended gpumanypaths_d.cpp with code for the GPU,
   and did the same for double double and quad double versions,
   in the files gpumanypaths_dd.cpp and gpumanypaths_qd.cpp.
+  New package standard_accelerated_trackers collects the wrappers in
+  the ts_gpu*_d.adb test programs, called by ts_gpupath_d.adb.
+  One small change in the name of the 'track' function in gpumanypaths_d.cpp
+  was needed to avoid a naming conflict with gpuonepath_d.cpp.
+  Similarly, new packages {dobldobl,quaddobl}_accelerated_trackers
+  are tested by ts_gpupath_dd and ts_gpupath_qd.
 
 Wed 19 Aug 2015 : added verbose option to the instantiation of the homotopy
   in gpunewton_{d,dd,qd}.cpp and gpuonepath_{d,dd,qd}.cpp

@@ -49,3 +49,10 @@ gpumanypaths_d.cpp    : C++ program called by ts_gpumanypaths_d
 gpumanypaths_dd.cpp   : C++ program called by ts_gpumanypaths_dd
 gpumanypaths_qd.cpp   : C++ program called by ts_gpumanypaths_qd
 -------------------------------------------------------------------------------
+standard_accelerated_trackers : bundles wrappers in standard double precision
+dobldobl_accelerated_trackers : bundles wrappers in double double precision
+quaddobl_accelerated_trackers : bundles wrappers in quad double precision
+ts_gpupath_d                  : tests GPU code in standard double precision
+ts_gpupath_dd                 : tests GPU code in double double precision
+ts_gpupath_qd                 : tests GPU code in quad double precision
+-------------------------------------------------------------------------------
