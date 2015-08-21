@@ -116,7 +116,7 @@ int track ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s )
    if(mode == 0 || mode == 2)
    {
       t = CT(0.0,0);
-      success = GPU_Path(cpu_inst_hom,path_parameter,sol,t,x_gpu);
+      success = GPU_Path(cpu_inst_hom,path_parameter,sol,t,x_gpu,verbose);
 
       if(verbose > 0)
       {

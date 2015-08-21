@@ -1,3 +1,8 @@
+Fri 21 Aug 2015 : changed menu to prompt for mode in ts_gpupath_{d,dd,qd}.adb,
+  added verbose option to the GPU path tracker in gpumanypaths_{d,dd,qd}.cpp.
+  Also added verbose option in the call to the GPU path tracker for one path
+  in gpuonepath_{d,dd,qd}.cpp.
+
 Thu 20 Aug 2015 : extended gpumanypaths_d.cpp with code for the GPU,
   and did the same for double double and quad double versions,
   in the files gpumanypaths_dd.cpp and gpumanypaths_qd.cpp.

@@ -30,9 +30,9 @@ procedure ts_gpupath_d is
   begin
     new_line;
     put_line("MENU for the mode of execution : ");
-    put_line("  0. Both the CPU and GPU will execute Newton's method.");
-    put_line("  1. Only the CPU will execute Newton's method.");
-    put_line("  2. Only the GPU will execute Newton's method.");
+    put_line("  0. Both the CPU and GPU will execute.");
+    put_line("  1. Only the CPU will execute.");
+    put_line("  2. Only the GPU will execute.");
     put("Type 0, 1, or 2 : ");
     Ask_Alternative(ans,"012");
     case ans is

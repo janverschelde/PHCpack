@@ -7,8 +7,8 @@
 #include "phcpack.h"
 #include "ada_test_qd.h"
 #include "parameter.h"
+#include "path_host.h"
 #include "path_gpu.h"
-#include "path_test.h"
 #include "poly.h"
 
 using namespace std;
@@ -141,7 +141,8 @@ int manytrack ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s )
          }
          tt[path_idx] = CT(0.0,0.0);
       }
-      success = GPU_Path_mult(cpu_inst_hom,path_parameter,sol0,tt,x_gpu,n_path);
+      success = GPU_Path_mult
+         (cpu_inst_hom,path_parameter,sol0,tt,x_gpu,n_path,verbose);
       for(int path_idx=0; path_idx<n_path; path_idx++)
       {
          s.change_sol(path_idx,x_gpu[path_idx]);
