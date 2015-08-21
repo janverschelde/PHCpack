@@ -83,7 +83,7 @@ __global__ void update_t_kernel
 
 int path_mult
  ( GPUWorkspace& workspace, GPUInst& inst, Parameter path_parameter,
-   CT* cpu_t, int inverse = 0 )
+   CT* cpu_t, int inverse = 0, int verbose = 0 )
 {
    bool debug = false; //debug = true;
    int path_idx_test = 0;
@@ -251,9 +251,12 @@ int path_mult
       }
       if(n_path_success + n_path_fail == workspace.n_path)
       {
-         std::cout << "ALL PATH Finished!!!" << std::endl;
-         std::cout << "Success " << n_path_success << std::endl;
-         std::cout << "Fail    " << n_path_fail << std::endl;
+         if(verbose > 0)
+         {
+            std::cout << "ALL PATH Finished!!!" << std::endl;
+            std::cout << "Success " << n_path_success << std::endl;
+            std::cout << "Fail    " << n_path_fail << std::endl;
+         }
          break;
       }
       cudaMemcpy(workspace.path_success,workspace.path_success_host,
@@ -291,10 +294,13 @@ int path_mult
          n_path_success++;
       }
    }
-   std::cout << "-------------- Path Tracking Report ---------------"
-             << std::endl;
-   std::cout << "Success " << n_path_success << std::endl;
-   std::cout << "Fail "  << workspace.n_path-n_path_success << std::endl;
+   if(verbose > 0)
+   {
+      std::cout << "-------------- Path Tracking Report ---------------"
+                << std::endl;
+      std::cout << "Success " << n_path_success << std::endl;
+      std::cout << "Fail "  << workspace.n_path-n_path_success << std::endl;
+   }
    inst.n_step_GPU = n_step;
    inst.n_point_GPU = n_point;
 
@@ -303,18 +309,21 @@ int path_mult
 
 bool* GPU_Path_mult
  ( CPUInstHom& hom, Parameter path_parameter, CT* cpu_sol0, CT* cpu_t,
-   CT**& x_gpu, int n_path, int inverse )
+   CT**& x_gpu, int n_path, int inverse, int verbose )
 {
    cuda_set();
 
-   std::cout << "n_path = " << n_path << std::endl;
+   if(verbose > 0) std::cout << "n_path = " << n_path << std::endl;
 
    GPUInst inst(hom, n_path);
    GPUWorkspace workspace(inst.mon_pos_size,inst.n_coef,inst.n_constant,
       inst.n_eq,inst.dim,path_parameter.n_predictor,inst.alpha,
       inst.base_table_size,n_path);
 
-   std::cout << "workspace.n_path = " << workspace.n_path << std::endl;
+   if(verbose > 0)
+   {
+      std::cout << "workspace.n_path = " << workspace.n_path << std::endl;
+   }
 
    /*
     int* x_t_idx = (int *)malloc(n_path*sizeof(int));
@@ -333,7 +342,7 @@ bool* GPU_Path_mult
    long seconds, useconds;
    gettimeofday(&start, NULL);
 
-   path_mult(workspace, inst, path_parameter, cpu_t, inverse);
+   path_mult(workspace, inst, path_parameter, cpu_t, inverse, verbose);
    x_gpu = workspace.get_mult_x_horizontal();
 
    gettimeofday(&end, NULL);
@@ -343,13 +352,15 @@ bool* GPU_Path_mult
    double timeMS_Path_GPU = seconds*1000 + useconds/1000.0;
    double timeSec_Path_GPU = timeMS_Path_GPU/1000;
 
-   cout << "Path GPU Test MS   Time: "<< timeMS_Path_GPU << endl;
-   cout << "Path GPU Test      Time: "<< timeSec_Path_GPU << endl;
-   cout << "Path GPU Step     Count: "<< inst.n_step_GPU << endl;
-   cout << "Path GPU Point    Count: "<< inst.n_point_GPU << endl;
-   cout << "Path GPU Eval     Count: "<< inst.n_eval_GPU << endl;
-   cout << "Path GPU MGS      Count: "<< inst.n_mgs_GPU << endl;
-
+   if(verbose > 0)
+   {
+      cout << "Path GPU Test MS   Time: "<< timeMS_Path_GPU << endl;
+      cout << "Path GPU Test      Time: "<< timeSec_Path_GPU << endl;
+      cout << "Path GPU Step     Count: "<< inst.n_step_GPU << endl;
+      cout << "Path GPU Point    Count: "<< inst.n_point_GPU << endl;
+      cout << "Path GPU Eval     Count: "<< inst.n_eval_GPU << endl;
+      cout << "Path GPU MGS      Count: "<< inst.n_mgs_GPU << endl;
+   }
    hom.timeSec_Path_GPU = timeSec_Path_GPU;
    hom.n_step_GPU = inst.n_step_GPU;
    hom.n_point_GPU = inst.n_point_GPU;

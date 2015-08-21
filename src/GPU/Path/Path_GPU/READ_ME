@@ -3,6 +3,7 @@ This directory contains the code for the path tracker on the device.
 -------------------------------------------------------------------------------
 file name              : short description
 -------------------------------------------------------------------------------
+path_gpu_data          : defines workspace for trackers on the device
 path_gpu               : tracking of one single path
 path_gpu_mult          : tracking many solution paths
 -------------------------------------------------------------------------------
