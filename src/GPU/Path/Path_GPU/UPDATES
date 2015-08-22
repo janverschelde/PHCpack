@@ -1,5 +1,6 @@
 Fri 21 Aug 2015 : added verbose option to path_gpu_mult.cu and path_gpu.cu,
   reformatted path_gpu_data.h and muted cuda_set.cu.
+  Turned off debug option in newton.cu to make it silent.
 
 Thu 20 Aug 2015 : reformatted code in path_gpu.cu and path_multi_gpu.cu.
 
