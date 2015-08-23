@@ -1,3 +1,8 @@
+Sun 23 Aug 2015 : dobldobl_algodiffeval_trackers calls the c++ code to
+  perform Newton's method and to track paths with algorithmic differentiation
+  in double double precision.  The c++ code is in adenewton_dd,
+  adeonepath_dd, and ademanypaths_dd, with test program in ts_adepath_dd.
+
 Sat 22 Aug 2015 : new package standard_algodiffeval_trackers, called by
   ts_adepath_d, and calling the c++ code adenewton_d, adeonepath_d, and
   ademanypaths_d to execute the c++ code only on the host (not the device).
