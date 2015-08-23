@@ -56,3 +56,9 @@ ts_gpupath_d                  : tests GPU code in standard double precision
 ts_gpupath_dd                 : tests GPU code in double double precision
 ts_gpupath_qd                 : tests GPU code in quad double precision
 -------------------------------------------------------------------------------
+standard_algodiffeval_trackers : algorithmic differentiation in path trackers
+adenewton_d                    : c++ code for Newton's method with doubles
+adeonepath_d                   : c++ code to track one path in double precision
+ademanypaths_d                 : c++ code to track many paths with doubles
+ts_adepath_d                   : main test program
+-------------------------------------------------------------------------------

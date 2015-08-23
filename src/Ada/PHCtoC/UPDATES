@@ -1,3 +1,7 @@
+Sat 22 Aug 2015 : new package standard_algodiffeval_trackers, called by
+  ts_adepath_d, and calling the c++ code adenewton_d, adeonepath_d, and
+  ademanypaths_d to execute the c++ code only on the host (not the device).
+
 Fri 21 Aug 2015 : changed menu to prompt for mode in ts_gpupath_{d,dd,qd}.adb,
   added verbose option to the GPU path tracker in gpumanypaths_{d,dd,qd}.cpp.
   Also added verbose option in the call to the GPU path tracker for one path
