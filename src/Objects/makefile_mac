@@ -9,6 +9,7 @@ PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
 MPI_HOME=/usr/local
 
 QD_ROOT=/usr/local/qd-2.3.14
+QD_LIB=/usr/local/lib
 
 PHCLib=../Lib
 PHCAda=../Ada
@@ -1719,7 +1720,8 @@ ts_adepath_dd: utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \
                  utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \
                  eval_host_dd.o mgs_host_dd.o newton_host_dd.o \
                  predictor_host_dd.o path_host_dd.o \
-                 -o $(BIN)/ts_adepath_dd -lm -lqd --LINK=g++
+                 $(QD_LIB)/libqd.a \
+                 -o $(BIN)/ts_adepath_dd -lm --LINK=g++
 
 ts_adepath_qd: utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
                eval_host_qd.o mgs_host_qd.o newton_host_qd.o ada_test_qd.o \
@@ -1740,7 +1742,8 @@ ts_adepath_qd: utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
                  utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
                  eval_host_qd.o mgs_host_qd.o newton_host_qd.o \
                  predictor_host_qd.o path_host_qd.o \
-                 -o $(BIN)/ts_gpupath_qd -lm -lqd --LINK=g++
+                 $(QD_LIB)/libqd.a \
+                 -o $(BIN)/ts_adepath_qd -lm --LINK=g++
 
 # Test programs for the Tasking :
 

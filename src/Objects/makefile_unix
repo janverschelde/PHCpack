@@ -2134,6 +2134,119 @@ ts_gpupath_qd: utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
                  -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
                  --LINK=g++
 
+adenewton_d.o: 
+	g++ -c $(PHCAda)/PHCtoC/adenewton_d.cpp -I$(PHCLib) \
+            -I $(PHCgpu)/Path/DefineTypesD -I $(PHCgpu)/Path/Main \
+            -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
+            -o adenewton_d.o
+adenewton_dd.o: 
+	g++ -c $(PHCAda)/PHCtoC/adenewton_dd.cpp -I$(PHCLib) \
+            -I $(PHCgpu)/Path/DefineTypesDD -I $(PHCgpu)/Path/Main \
+            -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
+            -o adenewton_dd.o
+adenewton_qd.o: 
+	g++ -c $(PHCAda)/PHCtoC/adenewton_qd.cpp -I$(PHCLib) \
+            -I $(PHCgpu)/Path/DefineTypesQD -I $(PHCgpu)/Path/Main \
+            -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
+            -o adenewton_qd.o
+
+adeonepath_d.o: 
+	g++ -c $(PHCAda)/PHCtoC/adeonepath_d.cpp -I$(PHCLib) \
+            -I $(PHCgpu)/Path/DefineTypesD -I $(PHCgpu)/Path/Main \
+            -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
+            -o adeonepath_d.o
+adeonepath_dd.o: 
+	g++ -c $(PHCAda)/PHCtoC/adeonepath_dd.cpp -I$(PHCLib) \
+            -I $(PHCgpu)/Path/DefineTypesDD -I $(PHCgpu)/Path/Main \
+            -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
+            -o adeonepath_dd.o
+adeonepath_qd.o: 
+	g++ -c $(PHCAda)/PHCtoC/adeonepath_qd.cpp -I$(PHCLib) \
+            -I $(PHCgpu)/Path/DefineTypesQD -I $(PHCgpu)/Path/Main \
+            -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
+            -o adeonepath_qd.o
+
+ademanypaths_d.o: 
+	g++ -c $(PHCAda)/PHCtoC/ademanypaths_d.cpp -I$(PHCLib) \
+            -I$(PHCgpu)/Path/DefineTypesD -I$(PHCgpu)/Path/Main \
+            -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
+            -o ademanypaths_d.o
+ademanypaths_dd.o: 
+	g++ -c $(PHCAda)/PHCtoC/ademanypaths_dd.cpp -I$(PHCLib) \
+            -I$(PHCgpu)/Path/DefineTypesDD -I$(PHCgpu)/Path/Main \
+            -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
+            -o ademanypaths_dd.o
+ademanypaths_qd.o: 
+	g++ -c $(PHCAda)/PHCtoC/ademanypaths_qd.cpp -I$(PHCLib) \
+            -I$(PHCgpu)/Path/DefineTypesQD -I$(PHCgpu)/Path/Main \
+            -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
+            -o ademanypaths_qd.o
+
+ts_adepath_d: utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
+              eval_host_d.o mgs_host_d.o newton_host_d.o ada_test.o \
+              predictor_host_d.o \
+              path_host_d.o adenewton_d.o adeonepath_d.o ademanypaths_d.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	@-echo ">>> compiling code for the containers ..."
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	@-echo ">>> compiling the main Ada procedure ..."
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_adepath_d.adb \
+                 -o ts_adepath_d.o
+	gnatbind ts_adepath_d use_c2phc
+	@-echo ">>> linking ..."
+	gnatlink ts_adepath_d adenewton_d.o adeonepath_d.o \
+               ademanypaths_d.o syscon.o solcon.o phcpack.o ada_test.o \
+               utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
+               eval_host_d.o mgs_host_d.o newton_host_d.o \
+               predictor_host_d.o path_host_d.o \
+                 -o $(BIN)/ts_adepath_d -lm --LINK=g++
+
+ts_adepath_dd: utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \
+               eval_host_dd.o mgs_host_dd.o newton_host_dd.o ada_test_dd.o \
+               predictor_host_dd.o path_host_dd.o \
+               adenewton_dd.o adeonepath_dd.o ademanypaths_dd.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	@-echo ">>> compiling code for the containers ..."
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	@-echo ">>> compiling the main Ada procedure ..."
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_adepath_dd.adb \
+                 -o ts_adepath_dd.o
+	gnatbind ts_adepath_dd use_c2phc
+	@-echo ">>> linking ..."
+	gnatlink ts_adepath_dd adenewton_dd.o adeonepath_dd.o \
+                 ademanypaths_dd.o syscon.o solcon.o phcpack.o ada_test_dd.o \
+                 utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \
+                 eval_host_dd.o mgs_host_dd.o newton_host_dd.o \
+                 predictor_host_dd.o path_host_dd.o \
+                 $(QD_LIB)/libqd.a \
+                 -o $(BIN)/ts_adepath_dd -lm --LINK=g++
+
+ts_adepath_qd: utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
+               eval_host_qd.o mgs_host_qd.o newton_host_qd.o ada_test_qd.o \
+               predictor_host_qd.o path_host_qd.o \
+               adenewton_qd.o adeonepath_qd.o ademanypaths_qd.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	@-echo ">>> compiling code for the containers ..."
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	@-echo ">>> compiling the main Ada procedure ..."
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) ts_adepath_qd.adb \
+                 -o ts_adepath_qd.o
+	gnatbind ts_adepath_qd use_c2phc
+	@-echo ">>> linking ..."
+	gnatlink ts_adepath_qd adenewton_qd.o adeonepath_qd.o \
+                 ademanypaths_qd.o syscon.o solcon.o phcpack.o ada_test_qd.o \
+                 utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
+                 eval_host_qd.o mgs_host_qd.o newton_host_qd.o \
+                 predictor_host_qd.o path_host_qd.o \
+                 $(QD_LIB)/libqd.a \
+                 -o $(BIN)/ts_adepath_qd -lm --LINK=g++
+
 # Test programs for the Tasking :
 
 ts_mtmatvec:
