@@ -6,7 +6,7 @@
 #include "syscon.h"
 #include "solcon.h"
 #include "phcpack.h"
-#include "ada_test.h"
+#include "ada_test_dd.h"
 #include "parameter.h"
 #include "path_host.h"
 #include "poly.h"
@@ -32,7 +32,7 @@ extern "C" int adeonepath_dd ( int verbose )
    PolySys qs;
    PolySolSet sols;
 
-   fail = copy_target_system_to_container();
+   fail = copy_dobldobl_target_system_to_container();
 
    if(verbose > 0)
    {
@@ -48,7 +48,7 @@ extern "C" int adeonepath_dd ( int verbose )
 
    ada_read_sys(verbose,ps);
 
-   fail = copy_start_system_to_container();
+   fail = copy_dobldobl_start_system_to_container();
 
    ada_read_sys(verbose,qs);
    ada_read_sols(qs,sols);
@@ -82,7 +82,7 @@ int track ( int verbose, PolySys& p, PolySys& q, PolySolSet& s )
       for(int k=0; k<p.dim; k++)
       {
          cout << k << " :";
-         cout << setw(24) << scientific << setprecision(16) << sol[k];
+         cout << setw(40) << scientific << setprecision(32) << sol[k];
       }
    }
 
@@ -101,10 +101,10 @@ int track ( int verbose, PolySys& p, PolySys& q, PolySolSet& s )
    if(verbose > 0) cout << "done with call to path_tracker." << endl;
    if(verbose > 0)
    {
-      cout.precision(16);
+      cout.precision(32);
       cout << "The first solution after CPU path tracker :" << endl;
       for(int k=0; k<p.dim; k++)
-         cout << k << " :" << setw(24) << workspace_cpu.x_last[k];
+         cout << k << " :" << setw(40) << workspace_cpu.x_last[k];
    }
 
    s.change_sol(0,workspace_cpu.x_last);

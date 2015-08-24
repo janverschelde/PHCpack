@@ -1,3 +1,6 @@
+Mon 24 Aug 2015 : fixed bugs in adeonepath_dd.cpp and ademanypaths_dd.cpp,
+  mainly due to forgotten adjustments to calls to dobldobl functions.
+
 Sun 23 Aug 2015 : dobldobl_algodiffeval_trackers calls the c++ code to
   perform Newton's method and to track paths with algorithmic differentiation
   in double double precision.  The c++ code is in adenewton_dd,

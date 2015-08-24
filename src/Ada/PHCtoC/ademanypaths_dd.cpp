@@ -6,7 +6,7 @@
 #include "syscon.h"
 #include "solcon.h"
 #include "phcpack.h"
-#include "ada_test.h"
+#include "ada_test_dd.h"
 #include "parameter.h"
 #include "path_host.h"
 #include "poly.h"
@@ -32,7 +32,7 @@ extern "C" int ademanypaths_dd ( int verbose )
    PolySys qs;
    PolySolSet sols;
 
-   fail = copy_target_system_to_container();
+   fail = copy_dobldobl_target_system_to_container();
 
    if(verbose > 0)
    {
@@ -48,7 +48,7 @@ extern "C" int ademanypaths_dd ( int verbose )
 
    ada_read_sys(verbose,ps);
 
-   fail = copy_start_system_to_container();
+   fail = copy_dobldobl_start_system_to_container();
 
    ada_read_sys(verbose,qs);
    ada_read_sols(qs,sols);
@@ -82,11 +82,11 @@ int manytrack ( int verbose, PolySys& p, PolySys& q, PolySolSet& s )
       for(int k=0; k<p.dim; k++)
       {
          cout << k << " :";
-         cout << setw(24) << scientific << setprecision(16) << sol[k];
+         cout << setw(40) << scientific << setprecision(32) << sol[k];
       }
    }
    int fail,n_path;
-   fail = solcon_number_of_solutions(&n_path);
+   fail = solcon_number_of_dobldobl_solutions(&n_path);
 
    alpha = CT(1.0,0);
    cpu_inst_hom.init(p,q,p.dim,p.n_eq,1,alpha,verbose);
@@ -110,10 +110,10 @@ int manytrack ( int verbose, PolySys& p, PolySys& q, PolySolSet& s )
       s.change_sol(path_idx,workspace_cpu.x_last);
       if(verbose > 0)
       {
-         cout.precision(16);
+         cout.precision(32);
          cout << "The solution " << path_idx << endl;
          for(int k=0; k<p.dim; k++)
-            cout << k << " :" << setw(24) << workspace_cpu.x_last[k];
+            cout << k << " :" << setw(40) << workspace_cpu.x_last[k];
       }
    }
    return 0;
