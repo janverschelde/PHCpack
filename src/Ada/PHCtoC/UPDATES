@@ -1,5 +1,8 @@
 Mon 24 Aug 2015 : fixed bugs in adeonepath_dd.cpp and ademanypaths_dd.cpp,
   mainly due to forgotten adjustments to calls to dobldobl functions.
+  Made the quad double analogues for algorithmic differentiation:
+  adenewton_qd.cpp, adeonepath_qd.cpp, ademanypaths_qd, called in
+  quaddobl_algodiffeval_trackers, and tested in ts_adepath_qd.
 
 Sun 23 Aug 2015 : dobldobl_algodiffeval_trackers calls the c++ code to
   perform Newton's method and to track paths with algorithmic differentiation
