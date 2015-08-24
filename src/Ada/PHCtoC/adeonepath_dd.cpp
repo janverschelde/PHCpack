@@ -40,9 +40,9 @@ extern "C" int adeonepath_dd ( int verbose )
 
       cout << endl;
       cout << "Tracking one path ..." << endl;
-      fail = syscon_number_of_polynomials(&dim);
+      fail = syscon_number_of_dobldobl_polynomials(&dim);
       cout << "number of polynomials : " << dim << endl;
-      fail = solcon_number_of_solutions(&len);
+      fail = solcon_number_of_dobldobl_solutions(&len);
       cout << "number of solutions : " << len << endl;
    }
 
