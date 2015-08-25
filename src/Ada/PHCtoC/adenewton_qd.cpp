@@ -10,22 +10,11 @@
 #include "parameter.h"
 #include "poly.h"
 #include "newton_host.h"
+#include "adenewton_qd.h"
 
 using namespace std;
 
-int newton ( int verbose, PolySys& p, PolySolSet& s );
-/*
- * DESCRIPTION :
- *   Applies Newton's method to the first solution in s,
- *   on the polynomial system p.
- *   If verbose > 0, then additional output is written to screen. */
-
 extern "C" int adenewton_qd ( int verbose )
-/*
- * DESCRIPTION :
- *   A C++ function to accelerate Newton's method,
- *   encapsulated as a C function for to be called from Ada.
- *   If verbose > 0, then additional output will be written. */
 {
    int fail;
    PolySys ps;

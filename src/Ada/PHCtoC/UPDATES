@@ -1,3 +1,8 @@
+Tue 25 Aug 2015 : made a separate header file from adenewton_d.cpp,
+  into adenewton_d.h, for use in the adepath_d in ../Lib.
+  Did the same of adeonepath_d and ademanypaths_d,
+  and also for {adenewton,adeonepath,ademanypaths}_{dd,qd}.
+
 Mon 24 Aug 2015 : fixed bugs in adeonepath_dd.cpp and ademanypaths_dd.cpp,
   mainly due to forgotten adjustments to calls to dobldobl functions.
   Made the quad double analogues for algorithmic differentiation:

@@ -10,22 +10,11 @@
 #include "parameter.h"
 #include "path_host.h"
 #include "poly.h"
+#include "adeonepath_qd.h"
 
 using namespace std;
 
-int track ( int verbose, PolySys& p, PolySys& q, PolySolSet& s );
-/*
- * DESCRIPTION :
- *   Tracks one path defined by an artificial parameter homotopy,
- *   starting at a solution s of q and ending at a solution of p.
- *   If verbose > 0, then additional output is written to screen. */
-
 extern "C" int adeonepath_qd ( int verbose )
-/*
- * DESCRIPTION :
- *   A C++ function to track one solution path,
- *   encapsulated as a C function for to be called from Ada.
- *   If verbose > 0, then additional output will be written. */
 {
    int fail;
    PolySys ps;
