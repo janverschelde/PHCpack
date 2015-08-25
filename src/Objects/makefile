@@ -1467,7 +1467,8 @@ test_lib: lib_syscon lib_syscon_cpp lib_solcon lib_solcon_cpp \
           lib_track lib_track_cpp lib_nxtsol lib_nxtsol_cpp \
           lib_factor lib_factor_cpp lib_pieri lib_pieri_cpp \
           lib_lrhom lib_lrhom_cpp phc_solve phc_solve_cpp \
-          lib_usolve lib_usolve_cpp lib_giftwrap lib_giftwrap_cpp ts_list2str
+          lib_usolve lib_usolve_cpp lib_giftwrap lib_giftwrap_cpp ts_list2str \
+          lib_adepath_d lib_adepath_dd lib_adepath_qd
 
 ts_list2str:
 	make -f $(MAKEFILE) ts_list2str
@@ -1573,6 +1574,15 @@ lib_giftwrap:
 
 lib_giftwrap_cpp:
 	make -f $(MAKEFILE) lib_giftwrap_cpp
+
+lib_adepath_d:
+	make -f $(MAKEFILE) lib_adepath_d
+
+lib_adepath_dd:
+	make -f $(MAKEFILE) lib_adepath_dd
+
+lib_adepath_qd:
+	make -f $(MAKEFILE) lib_adepath_qd
 
 phc_solve:
 	make -f $(MAKEFILE) phc_solve
