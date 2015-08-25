@@ -1,3 +1,8 @@
+Tue 25 Aug 2015 : new adepath_{d,dd,qd} provides interface to Newton's method
+  and the path trackers that use algorithmic differentiation in double,
+  double double, and quad double precision.  The test programs for each
+  level of precision are in lib_adepath_{d,dd,qd}.
+
 Sun 2 Aug 2015 : lib_scale.c did not include scalers.h properly,
   which causes problems with the g++ compilation.
 
