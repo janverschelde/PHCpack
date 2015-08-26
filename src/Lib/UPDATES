@@ -1,3 +1,6 @@
+Wed 26 Aug 2015 : new phcpy2cpath_d extends phcpy2c with the functions of
+  the adepath_d library.
+
 Tue 25 Aug 2015 : new adepath_{d,dd,qd} provides interface to Newton's method
   and the path trackers that use algorithmic differentiation in double,
   double double, and quad double precision.  The test programs for each

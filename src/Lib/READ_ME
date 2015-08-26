@@ -86,4 +86,5 @@ lib_adepath_qd      : test on functions in adepath_qd
 ------------------------------------------------------------------------------
 phc_solve.c         : test on the blackbox solver in PHCpack
 phcpy2c.c           : C extension module for Python
+phcpy2cpath_d.cpp   : C++ extension of phcpy2c with Path for doubles 
 ------------------------------------------------------------------------------
