@@ -19,6 +19,11 @@ phc:
 phcpy2c.so:
 	make -f $(MAKEFILE) phcpy2c.so
 
+# with the double version of the Path library :
+
+phcpy2cpath_d.so:
+	make -f $(MAKEFILE) phcpy2cpath_d.so
+
 # all interactive test programs, lib programs and MPI executables :
 
 testall: test_system test_math_lib test_deformations \

@@ -2294,6 +2294,39 @@ phcpy2c.so:
             schubert.o \
                  -o ../Python/PHCpy/phcpy/phcpy2c.so -framework Python
 
+# phcpy2c with double version of Path library :
+
+phcpy2cpath_d.so: utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
+            eval_host_d.o mgs_host_d.o newton_host_d.o ada_test.o \
+            predictor_host_d.o path_host_d.o adepath_d.o
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/syscon.c
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/solcon.c
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/product.c
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/lists_and_strings.c
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/celcon.c
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/scalers.c
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/witset.c
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/schubert.c
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/unisolvers.c
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/giftwrappers.c
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/phcpack.c
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/mapcon.c
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/next_track.c
+	g++ -Dcompilewgpp=1 -O2 -c -I$(PYTHON) -I$(PYTHON)/Include \
+                     $(PHCLib)/phcpy2cpath_d.cpp -o phcpy2cpath_d.o
+	gnatmake -c -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gnatbind -n use_c2phc
+	gnatlink -dynamiclib -C use_c2phc phcpy2cpath_d.o \
+            phcpack.o syscon.o witset.o mapcon.o next_track.o unisolvers.o \
+            giftwrappers.o solcon.o product.o lists_and_strings.o celcon.o \
+            scalers.o schubert.o \
+            utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
+            eval_host_d.o mgs_host_d.o newton_host_d.o ada_test.o \
+            predictor_host_d.o path_host_d.o \
+            adenewton_d.o adeonepath_d.o ademanypaths_d.o adepath_d.o \
+                 -lm --LINK=g++ \
+                 -o ../Python/PHCpy/phcpy/phcpy2cpath_d.so -framework Python
+
 # how to make the executables with MPI:
 
 adatest:
