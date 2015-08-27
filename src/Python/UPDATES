@@ -1,3 +1,7 @@
+Thu 27 Aug 2015 : fixed an error in the standard_double_track of trackers
+  and added a function (with a test) to trackers that calls ade_manypaths_d
+  to use algorithmic differentiation in the trackers in double precision.
+
 Fri 31 Jul 2015 : updated setup.py and __init__.py for version 0.2.8.
   Replace input by raw_input in schubert.py.  Changed solutions.py
   for a pylint warning (unused variables).  Replaced fixedGamma by

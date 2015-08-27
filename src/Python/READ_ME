@@ -1,4 +1,4 @@
-phcpy 0.2.8 offers a simple Python interface to PHCv2.3.99
+phcpy 0.2.9 offers a simple Python interface to PHCv2.4
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -33,11 +33,12 @@ sets.py                 : manipulate algebraic sets
 schubert.py             : numerical Schubert calculus
 ------------------------------------------------------------------------------
 
-The modules examples, solver, phcsols provide tests which are executed
+The modules examples, solver, solutions provide tests which are executed
 by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.2.9 :            : interface to the path trackers accelerated by GPUs
 0.2.8 : 2015-07-31 : added scaling and better documentation for py2c
 0.2.7 : 2015-06-26 : faster retrieval of solutions, reproducible runs
 0.2.6 : 2015-05-22 : improved documentation

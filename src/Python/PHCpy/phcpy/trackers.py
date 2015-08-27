@@ -51,20 +51,20 @@ def standard_double_track(target, start, sols, gamma=0, tasks=0):
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
-    from phcpy2c import py2c_copy_container_to_target_system
-    from phcpy2c import py2c_copy_container_to_start_system
-    from phcpy2c import py2c_copy_container_to_start_solutions
+    from phcpy2c import py2c_copy_standard_container_to_target_system
+    from phcpy2c import py2c_copy_standard_container_to_start_system
+    from phcpy2c import py2c_copy_standard_container_to_start_solutions
     from phcpy2c import py2c_create_standard_homotopy
     from phcpy2c import py2c_create_standard_homotopy_with_gamma
     from phcpy2c import py2c_solve_by_standard_homotopy_continuation
     from phcpy2c import py2c_solcon_clear_standard_solutions
-    from phcpy2c import py2c_copy_target_solutions_to_container
+    from phcpy2c import py2c_copy_standard_target_solutions_to_container
     from interface import store_standard_system
     from interface import store_standard_solutions, load_standard_solutions
     store_standard_system(target)
-    py2c_copy_container_to_target_system()
+    py2c_copy_standard_container_to_target_system()
     store_standard_system(start)
-    py2c_copy_container_to_start_system()
+    py2c_copy_standard_container_to_start_system()
     # py2c_clear_standard_homotopy()
     if(gamma == 0):
         py2c_create_standard_homotopy()
@@ -72,10 +72,40 @@ def standard_double_track(target, start, sols, gamma=0, tasks=0):
         py2c_create_standard_homotopy_with_gamma(gamma.real, gamma.imag)
     dim = len(start)
     store_standard_solutions(dim, sols)
-    py2c_copy_container_to_start_solutions()
+    py2c_copy_standard_container_to_start_solutions()
     py2c_solve_by_standard_homotopy_continuation(tasks)
     py2c_solcon_clear_standard_solutions()
-    py2c_copy_target_solutions_to_container()
+    py2c_copy_standard_target_solutions_to_container()
+    return load_standard_solutions()
+
+def ade_double_track(target, start, sols, verbose=1):
+    """
+    Does path tracking with algorithm differentiation.
+    On input are a target system, a start system with solutions.
+    The target is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The start is a list of strings representing the polynomials
+    of the start system, with known solutions in sols.
+    The sols is a list of strings representing start solutions.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    """
+    from phcpy2c import py2c_copy_standard_container_to_target_system
+    from phcpy2c import py2c_copy_standard_container_to_start_system
+    from phcpy2c import py2c_ade_manypaths_d
+    from interface import store_standard_system
+    from interface import store_standard_solutions, load_standard_solutions
+    store_standard_system(target)
+    py2c_copy_standard_container_to_target_system()
+    store_standard_system(start)
+    py2c_copy_standard_container_to_start_system()
+    dim = len(start)
+    store_standard_solutions(dim, sols)
+    fail = py2c_ade_manypaths_d(verbose)
+    if(fail == 0):
+        print 'Path tracking with AD was a success!'
+    else:
+        print 'Path tracking with AD failed!'
     return load_standard_solutions()
 
 def double_double_track(target, start, sols, gamma=0, tasks=0):
@@ -579,6 +609,67 @@ def test_monitored_track():
         targetsols.append(endsol[0])
     print 'tracked', len(targetsols), 'paths, running newton_step...'
     newton_step(quadrics, targetsols)
+
+def test_ade_double_track():
+    """
+    Tests the path tracker on the cyclic 3-roots problem.
+    """
+    c3 = ['x0 + x1 + x2;', 'x0*x1 + x1*x2 + x2*x0;', 'x0*x1*x2 - 1;']
+    c3q = ['+( 9.32743666318680E-01 - 3.60540223750954E-01*i)*x0' \
+        + ' +(-6.60494034825272E-01 + 7.50831292608554E-01*i)*x1' \
+        + ' +(-6.37456882105859E-01 - 7.70486030668874E-01*i)*x2;', \
+          ' +(-6.65114940988527E-01 + 7.46740996111656E-01*i)*x0*x1' \
+        + ' +( 6.01027652324430E-01 + 7.99228228443780E-01*i)*x0*x2' \
+        + ' +( 9.99999810085609E-01 + 6.16302478459703E-04*i)*x1*x2;', \
+          ' +(-5.95090196510060E-01 - 8.03658918956057E-01*i)*x0*x1*x2' \
+        + ' +(-4.08655719716833E-01 + 9.12688612146945E-01*i);']
+    c3qs0 = 't :  1.00000000000000E+00   0.00000000000000E+00\n' \
+          + 'm : 1\n' \
+          + 'the solution for t :\n' \
+          + ' x0 :  1.15429240714256E-01   6.09909582313413E-01\n' \
+          + ' x1 :  7.25702143828498E-01  -7.09583364893093E-01\n' \
+          + ' x2 :  1.43006908284017E+00   6.88642063770792E-01\n' \
+          + '== err :  2.203E-16 = rco :  1.557E-01 = res :  2.220E-16 =='
+    c3qs1 = ' t :  1.00000000000000E+00   0.00000000000000E+00\n' \
+          + 'm : 1\n' \
+          + 'the solution for t :\n' \
+          + ' x0 : -5.85911812652100E-01  -2.04990136358612E-01\n' \
+          + ' x1 :  2.51666148186012E-01   9.83268174582854E-01\n' \
+          + ' x2 : -1.31141606276013E+00   8.94155123020900E-01\n' \
+          + '== err :  2.232E-16 = rco :  1.540E-01 = res :  6.661E-16 =='
+    c3qs2 = 't :  1.00000000000000E+00   0.00000000000000E+00\n' \
+          + 'm : 1\n' \
+          + 'the solution for t :\n' \
+          + ' x0 :  4.70482571937844E-01  -4.04919445954801E-01\n' \
+          + ' x1 : -9.77368292014510E-01  -2.73684809689761E-01\n' \
+          + ' x2 : -1.18653020080034E-01  -1.58279718679169E+00\n' \
+          + '== err :  1.721E-16 = rco :  1.506E-01 = res :  3.331E-16 =='
+    c3qs3 = 't :  1.00000000000000E+00   0.00000000000000E+00\n' \
+          + 'm : 1\n' \
+          + 'the solution for t :\n' \
+          + ' x0 :  1.33160482410366E+00   9.06706762952865E-01\n' \
+          + ' x1 :  5.15653962776839E-01   8.39542362953949E-01\n' \
+          + ' x2 :  5.33980349490553E-01  -3.34360029828785E-01\n' \
+          + '== err :  1.040E-16 = rco :  2.696E-01 = res :  2.220E-16 =='
+    c3qs4 = 't :  1.00000000000000E+00   0.00000000000000E+00\n' \
+          + 'm : 1\n' \
+          + 'the solution for t :\n' \
+          + ' x0 : -1.45103350255217E+00   6.99850223999248E-01\n' \
+          + ' x1 : -9.84891995259755E-01   2.67982498498837E-02\n' \
+          + ' x2 :  2.25741050965737E-02   6.29620562694904E-01\n' \
+          + '== err :  2.796E-16 = rco :  3.004E-01 = res :  4.441E-16 =='
+    c3qs5 = 't :  1.00000000000000E+00   0.00000000000000E+00\n' \
+          + 'm : 1\n' \
+          + 'the solution for t :\n' \
+          + ' x0 :  1.19428678448505E-01  -1.60655698695211E+00\n' \
+          + ' x1 :  4.69238032482916E-01  -8.66340612803833E-01\n' \
+          + ' x2 : -5.56554454587126E-01  -2.95260532866119E-01\n' \
+          + '== err :  2.131E-16 = rco :  2.195E-01 = res :  5.551E-17 =='
+    c3qsols = [c3qs0, c3qs1, c3qs2, c3qs3, c3qs4, c3qs5]
+    sols = ade_double_track(c3, c3q, c3qsols)
+    # sols = standard_double_track(c3, c3q, c3qsols)
+    for sol in sols:
+        print sol
 
 def test():
     """
