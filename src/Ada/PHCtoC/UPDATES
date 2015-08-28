@@ -1,3 +1,8 @@
+Fri 28 Aug 2015 : added gamma constant as input parameter to the
+  adeonepath_{d,dd,qd} and ademanypaths_{d,dd,qd} routines, and
+  updated the {standard,dobldobl,quaddobl}_algodiffeval_trackers
+  along with the test programs ts_adepath_{d,dd,qd}.
+
 Tue 25 Aug 2015 : made a separate header file from adenewton_d.cpp,
   into adenewton_d.h, for use in the adepath_d in ../Lib.
   Did the same of adeonepath_d and ademanypaths_d,

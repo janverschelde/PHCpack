@@ -3,6 +3,9 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
+with Standard_Random_Numbers;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Solutions;
@@ -80,6 +83,8 @@ procedure ts_adepath_qd is
     target,start : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
     verbose : integer32;
+    gamma : constant Complex_Number
+          := Standard_Random_Numbers.Random1;
 
   begin
     new_line;
@@ -89,6 +94,8 @@ procedure ts_adepath_qd is
     put_line("Reading a start system with solutions ...");
     QuadDobl_System_and_Solutions_io.get(start,sols);
     new_line;
+    put("gamma = "); put(gamma); new_line;
+    new_line;
     put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
     put_line("Initializing the data for container copies ...");
     PHCpack_Operations.Store_Target_System(target.all);
@@ -96,7 +103,7 @@ procedure ts_adepath_qd is
     put_line("Initializing the solutions container ...");
     QuadDobl_Solutions_Container.Initialize(sols);
     verbose := Prompt_for_Verbose;
-    QuadDobl_ADE_Track_One(verbose);
+    QuadDobl_ADE_Track_One(verbose,gamma);
     newtsols := QuadDobl_Solutions_Container.Retrieve;
     put_line("The solutions after path tracking :");
     put(standard_output,Length_Of(newtsols),
@@ -115,6 +122,8 @@ procedure ts_adepath_qd is
     target,start : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
     verbose : integer32;
+    gamma : constant Complex_Number
+          := Standard_Random_Numbers.Random1;
 
   begin
     new_line;
@@ -124,6 +133,8 @@ procedure ts_adepath_qd is
     put_line("Reading a start system with solutions ...");
     QuadDobl_System_and_Solutions_io.get(start,sols);
     new_line;
+    put("gamma = "); put(gamma); new_line;
+    new_line;
     put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
     put_line("Initializing the data for container copies ...");
     PHCpack_Operations.Store_Target_System(target.all);
@@ -131,7 +142,7 @@ procedure ts_adepath_qd is
     put_line("Initializing the solutions container ...");
     QuadDobl_Solutions_Container.Initialize(sols);
     verbose := Prompt_for_Verbose;
-    QuadDobl_ADE_Track_Many(verbose);
+    QuadDobl_ADE_Track_Many(verbose,gamma);
     newtsols := QuadDobl_Solutions_Container.Retrieve;
     put_line("The solutions after path tracking :");
     put(standard_output,Length_Of(newtsols),

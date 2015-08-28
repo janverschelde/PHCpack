@@ -14,7 +14,7 @@
 
 using namespace std;
 
-extern "C" int ademanypaths_dd ( int verbose )
+extern "C" int ademanypaths_dd ( int verbose, double regamma, double imgamma )
 {
    int fail;
    PolySys ps;
@@ -29,6 +29,8 @@ extern "C" int ademanypaths_dd ( int verbose )
 
       cout << endl;
       cout << "Tracking many paths ..." << endl;
+      cout << "gamma = " << setprecision(16)
+           << regamma << " + i* " << imgamma << endl;
       fail = syscon_number_of_polynomials(&dim);
       cout << "number of polynomials : " << dim << endl;
       fail = solcon_number_of_solutions(&len);
@@ -42,7 +44,7 @@ extern "C" int ademanypaths_dd ( int verbose )
    ada_read_sys(verbose,qs);
    ada_read_sols(qs,sols);
 
-   fail = manytrack(verbose,ps,qs,sols);
+   fail = manytrack(verbose,regamma,imgamma,ps,qs,sols);
 
    if(verbose > 0)
       cout << "writing the solutions to the container ..." << endl;
@@ -52,7 +54,9 @@ extern "C" int ademanypaths_dd ( int verbose )
    return 0;
 }
 
-int manytrack ( int verbose, PolySys& p, PolySys& q, PolySolSet& s )
+int manytrack
+ ( int verbose, double regamma, double imgamma,
+   PolySys& p, PolySys& q, PolySolSet& s )
 {
    double tpred,teval,tmgs;
    bool success;
@@ -77,7 +81,7 @@ int manytrack ( int verbose, PolySys& p, PolySys& q, PolySolSet& s )
    int fail,n_path;
    fail = solcon_number_of_dobldobl_solutions(&n_path);
 
-   alpha = CT(1.0,0);
+   alpha = CT(regamma,imgamma);
    cpu_inst_hom.init(p,q,p.dim,p.n_eq,1,alpha,verbose);
    cpu_inst_hom.init_workspace(workspace_cpu);
 
