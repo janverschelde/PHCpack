@@ -3,6 +3,10 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
+with Standard_Random_Numbers;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Solutions;
@@ -19,7 +23,8 @@ procedure ts_gpuonepath_qd is
 --   The Ada procedure remains in control.
 --   Data is passed to the C++ code via the systems and solutions containers.
 
-  procedure QuadDobl_GPU_Track ( execmode,verbose : integer32 ) is
+  procedure QuadDobl_GPU_Track
+              ( execmode,verbose : in integer32; gamma : in Complex_Number ) is
 
   -- DESCRIPTION :
   --   Calls the accelerated path tracker in quad double precision.
@@ -27,12 +32,15 @@ procedure ts_gpuonepath_qd is
   --   If verbose > 0, then additional output is written to screen.
 
     return_of_call : integer32;
+    regamma : constant double_float := REAL_PART(gamma);
+    imgamma : constant double_float := IMAG_PART(gamma);
 
-    function track ( m,v : integer32 ) return integer32;
+    function track ( m,v : integer32;
+                     r,i : double_float ) return integer32;
     pragma import(C, track, "gpuonepath_qd");
 
   begin
-    return_of_call := track(execmode,verbose);
+    return_of_call := track(execmode,verbose,regamma,imgamma);
   end QuadDobl_GPU_Track;
 
   function Prompt_for_Mode return integer32 is
@@ -88,6 +96,8 @@ procedure ts_gpuonepath_qd is
     target,start : Link_to_Poly_Sys;
     sols,newtsols : Solution_List;
     execmode,verbose : integer32;
+    gamma : constant Complex_Number
+          := Standard_Random_Numbers.Random1;
 
   begin
     new_line;
@@ -97,6 +107,8 @@ procedure ts_gpuonepath_qd is
     put_line("Reading a start system with solutions ...");
     QuadDobl_System_and_Solutions_io.get(start,sols);
     new_line;
+    put("gamma = "); put(gamma); new_line;
+    new_line;
     put("Read "); put(Length_Of(sols),1); put_line(" solutions.");
     put_line("Initializing the data for container copies ...");
     PHCpack_Operations.Store_Target_System(target.all);
@@ -105,7 +117,7 @@ procedure ts_gpuonepath_qd is
     QuadDobl_Solutions_Container.Initialize(sols);
     execmode := Prompt_for_Mode;
     verbose := Prompt_for_Verbose;
-    QuadDobl_GPU_Track(execmode,verbose);
+    QuadDobl_GPU_Track(execmode,verbose,gamma);
     newtsols := QuadDobl_Solutions_Container.Retrieve;
     put_line("The solutions after path tracking :");
     put(standard_output,Length_Of(newtsols),

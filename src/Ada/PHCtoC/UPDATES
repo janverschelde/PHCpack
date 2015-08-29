@@ -1,3 +1,5 @@
+Sat 29 Aug 2015 : updated ad hoc interface in ts_gpuonepath_qd.adb.
+
 Fri 28 Aug 2015 : added gamma constant as input parameter to the
   adeonepath_{d,dd,qd} and ademanypaths_{d,dd,qd} routines, and
   updated the {standard,dobldobl,quaddobl}_algodiffeval_trackers
