@@ -1,4 +1,5 @@
-// C++ function called by Ada routine to accelerate the tracking of many paths
+// C++ function called by Ada routine to accelerate the tracking of many paths.
+// The prototypes of the functions are documented in gpumanypaths_d.h.
 
 #include <iostream>
 #include <iomanip>
@@ -10,26 +11,12 @@
 #include "path_host.h"
 #include "path_gpu.h"
 #include "poly.h"
+#include "gpumanypaths_d.h"
 
 using namespace std;
 
-int manytrack ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s );
-/*
- * DESCRIPTION :
- *   Tracks many paths defined by an artificial parameter homotopy,
- *   starting at solutions in s of q and ending at solutions of p.
- *   The execution mode is 0 (CPU+GPU), 1 (CPU), or 2 (GPU).
- *   If verbose > 0, then additional output is written to screen. */
-
-extern "C" int gpumanypaths_d ( int mode, int verbose )
-/*
- * DESCRIPTION :
- *   A C++ function to track one solution path,
- *   encapsulated as a C function for to be called from Ada.
- *   If mode = 0, then both CPU and GPU will execute,
- *   if mode = 1, then only CPU runs Newton's method,
- *   if mode = 2, then only GPU runs Newton's method.
- *   If verbose > 0, then additional output will be written. */
+extern "C" int gpumanypaths_d
+ ( int mode, int verbose, double regamma, double imgamma )
 {
    int fail;
    PolySys ps;
@@ -44,6 +31,8 @@ extern "C" int gpumanypaths_d ( int mode, int verbose )
 
       cout << endl;
       cout << "Acceleration of tracking many paths ..." << endl;
+      cout << "gamma = " << setprecision(16)
+           << regamma << " + i* " << imgamma << endl;
       cout << "Mode of execution : " << mode << endl;
       fail = syscon_number_of_polynomials(&dim);
       cout << "number of polynomials : " << dim << endl;
@@ -58,7 +47,7 @@ extern "C" int gpumanypaths_d ( int mode, int verbose )
    ada_read_sys(verbose,qs);
    ada_read_sols(qs,sols);
 
-   fail = manytrack(mode,verbose,ps,qs,sols);
+   fail = manytrack(mode,verbose,regamma,imgamma,ps,qs,sols);
 
    if(verbose > 0)
       cout << "writing the solutions to the container ..." << endl;
@@ -68,7 +57,9 @@ extern "C" int gpumanypaths_d ( int mode, int verbose )
    return 0;
 }
 
-int manytrack ( int mode, int verbose, PolySys& p, PolySys& q, PolySolSet& s )
+int manytrack
+ ( int mode, int verbose, double regamma, double imgamma,
+   PolySys& p, PolySys& q, PolySolSet& s )
 {
    double tpred,teval,tmgs;
    bool success;

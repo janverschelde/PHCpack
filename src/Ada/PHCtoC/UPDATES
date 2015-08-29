@@ -2,6 +2,10 @@ Fri 28 Aug 2015 : added gamma constant as input parameter to the
   adeonepath_{d,dd,qd} and ademanypaths_{d,dd,qd} routines, and
   updated the {standard,dobldobl,quaddobl}_algodiffeval_trackers
   along with the test programs ts_adepath_{d,dd,qd}.
+  Also updated the GPU versions with the gamma constant, leading to changes
+  in gpuonepath_{d,dd,qd}, gpumanypaths_{d,dd,qd}, and
+  {standard,dobldobl,quaddobl}_accelerated_trackers, with updates
+  in ts_gpupath_{d,dd,qd}.
 
 Tue 25 Aug 2015 : made a separate header file from adenewton_d.cpp,
   into adenewton_d.h, for use in the adepath_d in ../Lib.
