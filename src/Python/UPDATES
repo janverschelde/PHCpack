@@ -1,4 +1,5 @@
-Sun 30 Aug 2015 : extended ade_double_track in trackers.py with gamma option.
+Sun 30 Aug 2015 : extended ade_double_track in trackers.py with gamma option,
+  added gpu_double_track to trackers.py.
 
 Thu 27 Aug 2015 : fixed an error in the standard_double_track of trackers
   and added a function (with a test) to trackers that calls ade_manypaths_d
