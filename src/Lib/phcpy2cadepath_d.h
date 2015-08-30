@@ -1,5 +1,5 @@
 /* This file contains the prototypes for the py2c interface functions,
- * linked with the double version of the Path library. */
+ * linked with the double version of the Path library, for the host only. */
 
 void initialize ( void );
 /*
@@ -3065,7 +3065,7 @@ static PyObject *py2c_clear_varbprec_tracker
 
 /* The wrapping of Newton's method and path trackers with the evaluation
  * done by algorithmic differentiation in double precision by the 
- * functions in adepath_d.h, starts here. */
+ * functions in adepath.h, starts here. */
 
 static PyObject *py2c_ade_newton_d ( PyObject *self, PyObject *args );
 /*
@@ -3118,74 +3118,6 @@ static PyObject *py2c_ade_manypaths_d ( PyObject *self, PyObject *args );
  *   and the standard solutions container holds valid solutions.
  *
  * ON ENTRY :
- *   verbose  0 if no intermediate output is wanted,
- *            1 if extra information should be written to screen;
- *   regamma  real part of the random gamma constant;
- *   imgamma  imaginary part of the random constant.
- *
- * ON RETURN :
- *   fail     0 if all went well, and the solutions at the end of paths
- *              are in the solution container,
- *            if different from 0, then an error happened. */
-
-/* The wrapping of Newton's method and path trackers with the evaluation
- * done by algorithmic differentiation in double precision on the GPU 
- * by the functions in gpupath_d.h, starts here. */
-
-static PyObject *py2c_gpu_newton_d ( PyObject *self, PyObject *args );
-/*
- * DESCRIPTION :
- *   Runs Newton's method with algorithmic differentation on CPU and GPU
- *   in double precision on the data in the systems and solutions container.
- *
- * REQUIRED :
- *   The standard systems container contains a valid polynomial system
- *   and the standard solutions container holds a valid solution.
- *
- * ON ENTRY :
- *   mode     execution mode is 0 (CPU+GPU), 1 (CPU), or 2 (GPU);
- *   verbose  0 if no intermediate output is wanted,
- *            1 if extra information should be written to screen.
- *
- * ON RETURN :
- *   fail     0 if all went well, and the corrected solution is in the
- *              solution container,
- *            if different from zero, then an error happened. */
-
-static PyObject *py2c_gpu_onepath_d ( PyObject *self, PyObject *args );
-/*
- * DESCRIPTION :
- *   Tracks one solution path with algorithmic differentation on CPU and GPU
- *   in double precision on the data in the systems and solutions container.
- *
- * REQUIRED :
- *   The start and target systems have been defined
- *   and the standard solutions container holds a valid solution.
- *
- * ON ENTRY :
- *   mode     execution mode is 0 (CPU+GPU), 1 (CPU), or 2 (GPU);
- *   verbose  0 if no intermediate output is wanted,
- *            1 if extra information should be written to screen;
- *   regamma  real part of the random gamma constant;
- *   imgamma  imaginary part of the random constant.
- *
- * ON RETURN :
- *   fail     0 if all went well, and the solution at the end of the path 
- *              is in the  solution container,
- *            if different from 0, then an error happened. */
-
-static PyObject *py2c_gpu_manypaths_d ( PyObject *self, PyObject *args );
-/*
- * DESCRIPTION :
- *   Tracks many solution paths with algorithmic differentation on CPU and GPU
- *   in double precision on the data in the systems and solutions container.
- *
- * REQUIRED :
- *   The start and target systems have been defined
- *   and the standard solutions container holds valid solutions.
- *
- * ON ENTRY :
- *   mode     execution mode is 0 (CPU+GPU), 1 (CPU), or 2 (GPU);
  *   verbose  0 if no intermediate output is wanted,
  *            1 if extra information should be written to screen;
  *   regamma  real part of the random gamma constant;

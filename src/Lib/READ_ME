@@ -18,73 +18,79 @@ To create executable versions of the program, use the makefile(s)
 in the directory ../Objects.
 Files starting with the prefix lib_ are test files.
 
+The main upgrade in version 2.4 is the integration of the Path library
+of Xiangcheng Yu.
+
 ------------------------------------------------------------------------------
-file name           : short description
+file name            : short description
 ------------------------------------------------------------------------------
-phcpack.h           : prototypes for basic operations in PHCpack
-phcpack.c           : definitions of functions in phcpack.h
-syscon.h            : prototypes for systems container
-syscon.c            : definitions of functions in syscon.h
-lib_syscon.c        : test on operations in systems container
-syspool.h           : prototypes for systems pool
-syspool.c           : definitions of functions in syspool.h
-solcon.h            : prototypes for solutions container
-solcon.c            : definitions of functions in solcon.h
-lib_solcon.c        : test on operations in solutions container
-lib_read.c          : reading and writing a polynomial system
-lib_newton.c        : validation of solutions by Newton's method
-lib_conpar.c        : test on tuning the continuation parameters
-lib_poco.c          : calling the path trackers in PHCpack
+phcpack.h            : prototypes for basic operations in PHCpack
+phcpack.c            : definitions of functions in phcpack.h
+syscon.h             : prototypes for systems container
+syscon.c             : definitions of functions in syscon.h
+lib_syscon.c         : test on operations in systems container
+syspool.h            : prototypes for systems pool
+syspool.c            : definitions of functions in syspool.h
+solcon.h             : prototypes for solutions container
+solcon.c             : definitions of functions in solcon.h
+lib_solcon.c         : test on operations in solutions container
+lib_read.c           : reading and writing a polynomial system
+lib_newton.c         : validation of solutions by Newton's method
+lib_conpar.c         : test on tuning the continuation parameters
+lib_poco.c           : calling the path trackers in PHCpack
 -----------------------------------------------------------------------------
-product.h           : linear-product root counts and systems
-product.c           : definitions of functions in product.h
-lib_roco.c          : test on operations in product
-celcon.h            : prototypes for cells container
-celcon.c            : definitions of functions in celcon.h
-lib_celcon.c        : test on operations in cells container
-lib_celphc.c        : powers of t in polyhedral homotopy
-jump_track.h        : prototypes for jump starting homotopies
-jump_track.c        : definitions of the functions in jump_track.h
-lib_track.c         : tracking paths with incremental read/write
-next_track.h        : prototypes for path tracking with generator
-next_track.c        : definition of functions in next_track.h
-lib_nxtsol          : interactive testing tracking with generator
+product.h            : linear-product root counts and systems
+product.c            : definitions of functions in product.h
+lib_roco.c           : test on operations in product
+celcon.h             : prototypes for cells container
+celcon.c             : definitions of functions in celcon.h
+lib_celcon.c         : test on operations in cells container
+lib_celphc.c         : powers of t in polyhedral homotopy
+jump_track.h         : prototypes for jump starting homotopies
+jump_track.c         : definitions of the functions in jump_track.h
+lib_track.c          : tracking paths with incremental read/write
+next_track.h         : prototypes for path tracking with generator
+next_track.c         : definition of functions in next_track.h
+lib_nxtsol           : interactive testing tracking with generator
 -----------------------------------------------------------------------------
-witset.h            : prototypes for witness sets
-witset.c            : definitions of functions of witset.h
-lib_witset.c        : tests functions of witset  
-lib_factor.c        : factorization using monodromy breakup
+witset.h             : prototypes for witness sets
+witset.c             : definitions of functions of witset.h
+lib_witset.c         : tests functions of witset  
+lib_factor.c         : factorization using monodromy breakup
 ------------------------------------------------------------------------------
-schubert.h          : numerical Schubert calculus prototypes
-schubert.c          : definitions of numerical Schubert calculus
-pieri_tree.h        : prototypes for Pieri tree
-pieri_tree.c        : definitions of the Pieri tree operations
-ts_pieri_tree.c     : Pieri root count with the Pieri tree
-lib_pieri.c         : test on Pieri homotopies
-lib_lrhom.c         : calls Littlewood-Richardson homotopies
+schubert.h           : numerical Schubert calculus prototypes
+schubert.c           : definitions of numerical Schubert calculus
+pieri_tree.h         : prototypes for Pieri tree
+pieri_tree.c         : definitions of the Pieri tree operations
+ts_pieri_tree.c      : Pieri root count with the Pieri tree
+lib_pieri.c          : test on Pieri homotopies
+lib_lrhom.c          : calls Littlewood-Richardson homotopies
 ------------------------------------------------------------------------------
-unisolvers.h        : prototypes of univariate root finders
-unisolvers.c        : defines gateway functions to PHCpack
-lib_unisolve.c      : test on univariate root finders
+unisolvers.h         : prototypes of univariate root finders
+unisolvers.c         : defines gateway functions to PHCpack
+lib_unisolve.c       : test on univariate root finders
 ------------------------------------------------------------------------------
-giftwrappers.h      : prototypes for the giftwrapping method
-giftwrappers.c      : calls _ada_use_c2phc
-lib_giftwrap.c      : test on convex hull computation
+giftwrappers.h       : prototypes for the giftwrapping method
+giftwrappers.c       : calls _ada_use_c2phc
+lib_giftwrap.c       : test on convex hull computation
 ------------------------------------------------------------------------------
-lists_and_strings   : arrays of numbers <-> strings of lists
-ts_list2str         : interactive test on conversion
+lists_and_strings    : arrays of numbers <-> strings of lists
+ts_list2str          : interactive test on conversion
 ------------------------------------------------------------------------------
-scalers.c           : scale systems and solutions
-lib_scale.c         : test on the scaling methods
+scalers.c            : scale systems and solutions
+lib_scale.c          : test on the scaling methods
 ------------------------------------------------------------------------------
-adepath_d           : algorithmic diff in trackers with doubles
-adepath_dd          : algorithmic diff in trackers with double doubles
-adepath_qd          : algorithmic diff in trackers with quad doubles
-lib_adepath_d       : test on functions in adepath_d
-lib_adepath_dd      : test on functions in adepath_dd
-lib_adepath_qd      : test on functions in adepath_qd
+adepath_d            : algorithmic diff in trackers with doubles
+gpupath_d            : interface to Path library on GPU for doubles
+adepath_dd           : algorithmic diff in trackers with double doubles
+adepath_qd           : algorithmic diff in trackers with quad doubles
+lib_adepath_d        : test on functions in adepath_d
+lib_gpupath_d        : test on functions in gpupath_d
+lib_adepath_dd       : test on functions in adepath_dd
+lib_adepath_qd       : test on functions in adepath_qd
 ------------------------------------------------------------------------------
-phc_solve.c         : test on the blackbox solver in PHCpack
-phcpy2c.c           : C extension module for Python
-phcpy2cpath_d.cpp   : C++ extension of phcpy2c with Path for doubles 
+phc_solve.c          : test on the blackbox solver in PHCpack
+phcpy2c.c            : C extension module for Python
+phcpy2cadepath_d.cpp : C++ extension of phcpy2c with Path (CPU) for doubles 
+phcpy2cpath_d.cpp    : C++ extension of phcpy2c with Path (GPU) for doubles 
 ------------------------------------------------------------------------------

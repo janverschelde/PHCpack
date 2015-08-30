@@ -1,16 +1,16 @@
-/* The file adepath_d.h contains prototypes to call Newton's method and
+/* The file gpupath_d.h contains prototypes to call Newton's method and
  * the path tracking methods using algorithmic differentiation in double
  * precision wrapped so it can be used as a C library.
  * To compile with a C++ compiler such as g++, the flag compilewgpp must
  * be defined as "g++ -Dcompilewgpp=1." */
 
-#ifndef __ADEPATH_D_H__
-#define __ADEPATH_D_H__
+#ifndef __GPUPATH_D_H__
+#define __GPUPATH_D_H__
 
-int ade_newton_d ( int verbose );
+int gpu_newton_d ( int mode, int verbose );
 /*
  * DESCRIPTION :
- *   Runs Newton's method with algorithmic differentation
+ *   Runs Newton's method with algorithmic differentation on CPU or GPU
  *   in double precision on the data in the systems and solutions container.
  *
  * REQUIRED :
@@ -18,18 +18,22 @@ int ade_newton_d ( int verbose );
  *   and the standard solutions container holds a valid solution.
  *
  * ON ENTRY :
+ *   mode     execution mode equals 0, 1, or 2:
+ *            if mode = 0, then both CPU and GPU will execute,
+ *            if mode = 1, then only CPU runs Newton's method,
+ *            if mode = 2, then only GPU runs Newton's method;
  *   verbose  0 if no intermediate output is wanted,
- *            1 if extra information should be written to screen;
+ *            1 if extra information should be written to screen.
  *
  * ON RETURN :
  *   fail     0 if all went well, and the corrected solution is in the
  *              solution container,
  *            if different from zero, then an error happened. */
 
-int ade_onepath_d ( int verbose, double regamma, double imgamma );
+int gpu_onepath_d ( int mode, int verbose, double regamma, double imgamma );
 /*
  * DESCRIPTION :
- *   Tracks one solution path with algorithmic differentation
+ *   Tracks one solution path with algorithmic differentation on CPU or GPU
  *   in double precision on the data in the systems and solutions container.
  *
  * REQUIRED :
@@ -37,18 +41,24 @@ int ade_onepath_d ( int verbose, double regamma, double imgamma );
  *   and the standard solutions container holds a valid solution.
  *
  * ON ENTRY :
+ *   mode     execution mode equals 0, 1, or 2:
+ *            if mode = 0, then both CPU and GPU will execute,
+ *            if mode = 1, then only CPU runs Newton's method,
+ *            if mode = 2, then only GPU runs Newton's method;
  *   verbose  0 if no intermediate output is wanted,
  *            1 if extra information should be written to screen;
+ *   regamma  real part of the random gamma constant;
+ *   imgamma  imaginary part of the random gamma constant.
  *
  * ON RETURN :
  *   fail     0 if all went well, and the solution at the end of the path 
  *              is in the  solution container,
  *            if different from 0, then an error happened. */
 
-int ade_manypaths_d ( int verbose, double regamma, double imgamma );
+int gpu_manypaths_d ( int mode, int verbose, double regamma, double imgamma );
 /*
  * DESCRIPTION :
- *   Tracks many solution paths with algorithmic differentation
+ *   Tracks many solution paths with algorithmic differentation on CPU or GPU
  *   in double precision on the data in the systems and solutions container.
  *
  * REQUIRED :
@@ -56,6 +66,10 @@ int ade_manypaths_d ( int verbose, double regamma, double imgamma );
  *   and the standard solutions container holds valid solutions.
  *
  * ON ENTRY :
+ *   mode     execution mode equals 0, 1, or 2:
+ *            if mode = 0, then both CPU and GPU will execute,
+ *            if mode = 1, then only CPU runs Newton's method,
+ *            if mode = 2, then only GPU runs Newton's method;
  *   verbose  0 if no intermediate output is wanted,
  *            1 if extra information should be written to screen;
  *   regamma  real part of the random gamma constant;

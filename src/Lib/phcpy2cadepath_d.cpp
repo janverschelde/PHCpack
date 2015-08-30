@@ -1,5 +1,5 @@
 /* This file phcpy2cpath_d.cpp contains the definitions of the prototypes 
- * in phcpy2cpath_d.h, for compilation with the g++ compiler. */
+ * in phcpy2cadepath_d.h, for compilation with the g++ compiler. */
 
 #include <Python.h>
 #include <stdio.h>
@@ -19,7 +19,6 @@
 #include "next_track.h"
 #include "structmember.h"
 #include "adepath_d.h"
-#include "gpupath_d.h"
 
 extern void adainit ( void );
 extern void adafinal ( void );
@@ -4526,7 +4525,7 @@ static PyObject *py2c_clear_varbprec_tracker
 
 /* The wrapping of Newton's method and path trackers with the evaluation
  * done by algorithmic differentiation in double precision by the 
- * functions in adepath_d.h, starts here. */
+ * functions in adepath.h, starts here. */
 
 static PyObject *py2c_ade_newton_d ( PyObject *self, PyObject *args )
 {
@@ -4559,45 +4558,6 @@ static PyObject *py2c_ade_manypaths_d ( PyObject *self, PyObject *args )
    initialize();
    if(!PyArg_ParseTuple(args,"idd",&verbose,&reg,&img)) return NULL;
    fail = ade_manypaths_d(verbose,reg,img);
-
-   return Py_BuildValue("i",fail);
-}
-
-/* The wrapping of Newton's method and path trackers with the evaluation
- * done by algorithmic differentiation in double precision by the 
- * functions in gpupath_d.h, starts here. */
-
-static PyObject *py2c_gpu_newton_d ( PyObject *self, PyObject *args )
-{
-   int fail,mode,verbose;
-
-   initialize();
-   if(!PyArg_ParseTuple(args,"ii",&mode,&verbose)) return NULL;
-   fail = gpu_newton_d(mode,verbose);
-
-   return Py_BuildValue("i",fail);
-}
-
-static PyObject *py2c_gpu_onepath_d ( PyObject *self, PyObject *args )
-{
-   int fail,mode,verbose;
-   double reg,img;
-
-   initialize();
-   if(!PyArg_ParseTuple(args,"iidd",&mode,&verbose,&reg,&img)) return NULL;
-   fail = gpu_onepath_d(mode,verbose,reg,img);
-
-   return Py_BuildValue("i",fail);
-}
-
-static PyObject *py2c_gpu_manypaths_d ( PyObject *self, PyObject *args )
-{
-   int fail,mode,verbose;
-   double reg,img;
-
-   initialize();
-   if(!PyArg_ParseTuple(args,"iidd",&mode,&verbose,&reg,&img)) return NULL;
-   fail = gpu_manypaths_d(mode,verbose,reg,img);
 
    return Py_BuildValue("i",fail);
 }
@@ -5559,12 +5519,6 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_ade_onepath_d", py2c_ade_onepath_d, METH_VARARGS,
     "Tracks one solution path with algorithmic differentation\n in double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the standard solutions container must holds valid solution.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_ade_manypaths_d", py2c_ade_manypaths_d, METH_VARARGS,
-    "Tracks many solution paths with algorithmic differentation\n in double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the standard solutions container holds valid solutions.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
-   {"py2c_gpu_newton_d", py2c_gpu_newton_d, METH_VARARGS,
-    "Runs Newton's method with algorithmic differentation\n in double precision on the data in the systems and solutions container.\n The standard systems container must contain a valid polynomial system\n and the standard solutions container must hold a valid solution.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
-   {"py2c_gpu_onepath_d", py2c_gpu_onepath_d, METH_VARARGS,
-    "Tracks one solution path with algorithmic differentation\n in double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the standard solutions container must holds valid solution.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
-   {"py2c_gpu_manypaths_d", py2c_gpu_manypaths_d, METH_VARARGS,
     "Tracks many solution paths with algorithmic differentation\n in double precision on the data in the systems and solutions container.\n The start and target systems must have been defined\n and the standard solutions container holds valid solutions.\n On entry is the verbose flag, which equals zero if no output is wanted,\n or 1 if extra information should be written to screen.\n On return is the failure code, which equals zero if all went well."},
    {NULL, NULL, 0, NULL} 
 };
