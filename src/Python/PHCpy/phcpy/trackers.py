@@ -78,7 +78,7 @@ def standard_double_track(target, start, sols, gamma=0, tasks=0):
     py2c_copy_standard_target_solutions_to_container()
     return load_standard_solutions()
 
-def ade_double_track(target, start, sols, verbose=1):
+def ade_double_track(target, start, sols, gamma=0, verbose=1):
     """
     Does path tracking with algorithm differentiation.
     On input are a target system, a start system with solutions.
@@ -89,6 +89,8 @@ def ade_double_track(target, start, sols, verbose=1):
     The sols is a list of strings representing start solutions.
     On return are the string representations of the solutions
     computed at the end of the paths.
+    If gamma on input equals zero, then a random complex number is generated,
+    otherwise the real and imaginary parts of gamma are used.
     """
     from phcpy2c import py2c_copy_standard_container_to_target_system
     from phcpy2c import py2c_copy_standard_container_to_start_system
@@ -101,7 +103,14 @@ def ade_double_track(target, start, sols, verbose=1):
     py2c_copy_standard_container_to_start_system()
     dim = len(start)
     store_standard_solutions(dim, sols)
-    fail = py2c_ade_manypaths_d(verbose)
+    if(gamma == 0):
+        from random import uniform
+        from cmath import exp, pi
+        angle = uniform(0, 2*pi)
+        gamma = exp(angle*complex(0,1))
+        if(verbose > 0):
+            print 'random gamma constant :', gamma
+    fail = py2c_ade_manypaths_d(verbose,gamma.real,gamma.imag)
     if(fail == 0):
         print 'Path tracking with AD was a success!'
     else:
