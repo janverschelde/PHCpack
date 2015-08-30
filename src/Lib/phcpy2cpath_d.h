@@ -3098,7 +3098,9 @@ static PyObject *py2c_ade_onepath_d ( PyObject *self, PyObject *args );
  *
  * ON ENTRY :
  *   verbose  0 if no intermediate output is wanted,
- *            1 if extra information should be written to screen.
+ *            1 if extra information should be written to screen;
+ *   regamma  real part of the random gamma constant;
+ *   imgamma  imaginary part of the random constant.
  *
  * ON RETURN :
  *   fail     0 if all went well, and the solution at the end of the path 
@@ -3117,7 +3119,9 @@ static PyObject *py2c_ade_manypaths_d ( PyObject *self, PyObject *args );
  *
  * ON ENTRY :
  *   verbose  0 if no intermediate output is wanted,
- *            1 if extra information should be written to screen.
+ *            1 if extra information should be written to screen;
+ *   regamma  real part of the random gamma constant;
+ *   imgamma  imaginary part of the random constant.
  *
  * ON RETURN :
  *   fail     0 if all went well, and the solutions at the end of paths

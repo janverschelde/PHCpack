@@ -4541,10 +4541,11 @@ static PyObject *py2c_ade_newton_d ( PyObject *self, PyObject *args )
 static PyObject *py2c_ade_onepath_d ( PyObject *self, PyObject *args )
 {
    int fail,verbose;
+   double reg,img;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
-   fail = ade_onepath_d(verbose);
+   if(!PyArg_ParseTuple(args,"idd",&verbose,&reg,&img)) return NULL;
+   fail = ade_onepath_d(verbose,reg,img);
 
    return Py_BuildValue("i",fail);
 }
@@ -4552,10 +4553,11 @@ static PyObject *py2c_ade_onepath_d ( PyObject *self, PyObject *args )
 static PyObject *py2c_ade_manypaths_d ( PyObject *self, PyObject *args )
 {
    int fail,verbose;
+   double reg,img;
 
    initialize();
-   if(!PyArg_ParseTuple(args,"i",&verbose)) return NULL;
-   fail = ade_manypaths_d(verbose);
+   if(!PyArg_ParseTuple(args,"idd",&verbose,&reg,&img)) return NULL;
+   fail = ade_manypaths_d(verbose,reg,img);
 
    return Py_BuildValue("i",fail);
 }

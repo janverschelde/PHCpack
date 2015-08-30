@@ -15,16 +15,16 @@ int ade_newton_d ( int verbose )
    return fail;
 }
 
-int ade_onepath_d ( int verbose )
+int ade_onepath_d ( int verbose, double regamma, double imgamma )
 {
-   int fail = adeonepath_d(verbose);
+   int fail = adeonepath_d(verbose,regamma,imgamma);
 
    return fail;
 }
 
-int ade_manypaths_d ( int verbose )
+int ade_manypaths_d ( int verbose, double regamma, double imgamma )
 {
-   int fail = ademanypaths_d(verbose);
+   int fail = ademanypaths_d(verbose,regamma,imgamma);
 
    return fail;
 }

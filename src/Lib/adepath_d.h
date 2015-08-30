@@ -20,14 +20,14 @@ int ade_newton_d ( int verbose );
  *
  * ON ENTRY :
  *   verbose  0 if no intermediate output is wanted,
- *            1 if extra information should be written to screen.
+ *            1 if extra information should be written to screen;
  *
  * ON RETURN :
  *   fail     0 if all went well, and the corrected solution is in the
  *              solution container,
  *            if different from zero, then an error happened. */
 
-int ade_onepath_d ( int verbose );
+int ade_onepath_d ( int verbose, double regamma, double imgamma );
 /*
  * DESCRIPTION :
  *   Tracks one solution path with algorithmic differentation
@@ -39,14 +39,14 @@ int ade_onepath_d ( int verbose );
  *
  * ON ENTRY :
  *   verbose  0 if no intermediate output is wanted,
- *            1 if extra information should be written to screen.
+ *            1 if extra information should be written to screen;
  *
  * ON RETURN :
  *   fail     0 if all went well, and the solution at the end of the path 
  *              is in the  solution container,
  *            if different from 0, then an error happened. */
 
-int ade_manypaths_d ( int verbose );
+int ade_manypaths_d ( int verbose, double regamma, double imgamma );
 /*
  * DESCRIPTION :
  *   Tracks many solution paths with algorithmic differentation
@@ -58,7 +58,9 @@ int ade_manypaths_d ( int verbose );
  *
  * ON ENTRY :
  *   verbose  0 if no intermediate output is wanted,
- *            1 if extra information should be written to screen.
+ *            1 if extra information should be written to screen;
+ *   regamma  real part of the random gamma constant;
+ *   imgamma  imaginary part of the random gamma constant.
  *
  * ON RETURN :
  *   fail     0 if all went well, and the solutions at the end of paths
