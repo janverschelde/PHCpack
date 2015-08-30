@@ -3,7 +3,9 @@ Sun 30 Aug 2015 : updated functions in adepath_d with extra input arguments
   Applied the changes also to phcpy2cpath_d.  Before extending phcpy2cpath_d
   with GPU code, copied phcpy2cpath_d into phcpy2cadepath_d, so the code
   on the host that applies algorithmic differentiation is also available
-  on computers without NVIDIA GPUs.
+  on computers without NVIDIA GPUs.  Extended adepath_{dd,qd} for the
+  gamma constant input parameter, new gpupath_{dd,qd}, tested by the
+  corresponding lib_gpupath_{dd,qd}, and new phcp2cpath_{dd,qd}.
 
 Wed 26 Aug 2015 : new phcpy2cpath_d extends phcpy2c with the functions of
   the adepath_d library.
