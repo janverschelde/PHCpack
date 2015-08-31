@@ -1,3 +1,6 @@
+Mon 31 Aug 2015 : in lib_adepath_{d,dd,qd} added values for the gammas
+  in the function calls to onepath and manypaths.
+
 Sun 30 Aug 2015 : updated functions in adepath_d with extra input arguments
   the real and imaginary parts of the random gamma constant.
   Applied the changes also to phcpy2cpath_d.  Before extending phcpy2cpath_d

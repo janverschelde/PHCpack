@@ -82,7 +82,7 @@ void test_onepath ( void )
    fail = copy_quaddobl_start_solutions_to_container();
    fail = solcon_number_of_quaddobl_solutions(&len);
    printf("The solution container has size %d.\n",len);
-   fail = ade_onepath_qd(1);
+   fail = ade_onepath_qd(1,1.0,0.0);
    printf("The solutions after Newton's method :\n");
    fail = solcon_write_quaddobl_solutions();
 }
@@ -97,7 +97,7 @@ void test_manypaths ( void )
    fail = copy_quaddobl_start_solutions_to_container();
    fail = solcon_number_of_quaddobl_solutions(&len);
    printf("The solution container has size %d.\n",len);
-   fail = ade_manypaths_qd(1);
+   fail = ade_manypaths_qd(1,1.0,0.0);
    printf("The solutions after Newton's method :\n");
    fail = solcon_write_quaddobl_solutions();
 }
