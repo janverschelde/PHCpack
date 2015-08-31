@@ -16,4 +16,5 @@ pierisystems : generate hypersurface Pieri intersection conditions
              : for p-planes meeting m-planes in (m+p)-space
 randlrhom    : generate and enumerate random Schubert problems
              : for the Littlewood-Richardson homotopies (lrhom)
+runcyc10d.py : script to run the GPU accelerated path trackers
 -------------------------------------------------------------------------------
