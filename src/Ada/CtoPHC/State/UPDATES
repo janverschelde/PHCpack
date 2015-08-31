@@ -1,3 +1,6 @@
+Mon 31 Aug 2015 : blackbox solvers in use_c2phc.adb did not capture the
+  number of tasks, as arguments passed from the C interface, fixed this bug.
+
 Thu 30 Jul 2015 : bug fix in use_scaling for scaling of solutions.
 
 Tue 21 Jul 2015 : bug fix in use_scaling, both in the implementation and the

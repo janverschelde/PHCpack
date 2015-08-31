@@ -1614,9 +1614,13 @@ function use_c2phc ( job : integer32;
 
     use Standard_Complex_Poly_Systems,Standard_Complex_Solutions;
     use Standard_Complex_Laur_Systems;
-    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    use Interfaces.C;
+
+    v_b : constant C_Integer_Array(0..1)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
     silval : constant natural32 := natural32(v_b(v_b'first));
     silent : constant boolean := (silval = 1);
+    ntasks : constant natural32 := natural32(v_b(v_b'first+1));
     lp : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
@@ -1634,13 +1638,13 @@ function use_c2phc ( job : integer32;
       return 75;
     end if;
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(lp.all) then
-      Black_Box_Solvers.Solve(lp.all,silent,rc,sols);
+      Black_Box_Solvers.Solve(ntasks,lp.all,silent,rc,sols);
     else
       declare
         use Standard_Laur_Poly_Convertors;
         p : constant Poly_Sys := Positive_Laurent_Polynomial_System(lp.all);
       begin
-        Black_Box_Solvers.Solve(p,silent,rc,sols);
+        Black_Box_Solvers.Solve(ntasks,p,silent,rc,sols);
       end;
     end if;
     Assign(integer32(rc),a);
@@ -1652,6 +1656,8 @@ function use_c2phc ( job : integer32;
 
     use Standard_Complex_Poly_Systems,Standard_Complex_Solutions;
    -- n : constant natural := Standard_PolySys_Container.Dimension;
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    nt : constant natural32  := natural32(v_b(v_b'first));
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     nv : constant natural32 := Size_of_Support(lp.all);
     nq : constant natural32 := natural32(lp'last);
@@ -1667,7 +1673,7 @@ function use_c2phc ( job : integer32;
       put_line("The system is underdetermined, add linear equations.");
       return 77;
     end if;
-    Black_Box_Solvers.Solve(lp.all,false,rc,sols); -- not silent by default
+    Black_Box_Solvers.Solve(nt,lp.all,false,rc,sols); -- not silent by default
     Assign(integer32(rc),a);
     Standard_Solutions_Container.Initialize(sols);
     return 0;
