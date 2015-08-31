@@ -57,6 +57,8 @@ Improvements using pylint led to version 0.1.1
 and the module maps was added in version 0.1.2.
 Version 0.1.4 added path trackers with a generator
 so all solutions along a path are returned to the user.
+Version 0.2.9 coincides with version 2.4 of PHCpack and gives access
+to the first version of the GPU accelerated path trackers.
 
 References
 ==========

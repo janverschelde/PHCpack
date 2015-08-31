@@ -25,3 +25,6 @@ The paper **Modernizing PHCpack through phcpy**
 written for the EuroSciPy 2013 proceedings 
 and available at <http://arxiv.org/abs/1310.0056>
 describes the design of phcpy.
+
+Version 0.2.9 coincides with version 2.4 of PHCpack and gives access
+to the first version of the GPU accelerated path trackers.

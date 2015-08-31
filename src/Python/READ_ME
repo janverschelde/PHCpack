@@ -15,6 +15,11 @@ see the "doc" directory and the modules examples and phcsols were added.
 The module schubert.py was added in 2.3.73 and a plain version of the
 monodromy factorization was provided in phcsets.py in release 2.3.74.
 
+Release 2.4 corresponds to the first version of the GPU accelerated
+path trackers in the trackers module of phcpy.
+See the setup.py file for the specific shared object modules needed
+to install for the specific precision levels.
+
 The package phcpy is defined in the directory PHCpy.
 
 ------------------------------------------------------------------------------
@@ -38,7 +43,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
-0.2.9 :            : interface to the path trackers accelerated by GPUs
+0.2.9 : 2015-08-31 : interface to the path trackers accelerated by GPUs
 0.2.8 : 2015-07-31 : added scaling and better documentation for py2c
 0.2.7 : 2015-06-26 : faster retrieval of solutions, reproducible runs
 0.2.6 : 2015-05-22 : improved documentation

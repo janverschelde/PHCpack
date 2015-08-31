@@ -1,3 +1,8 @@
+Mon 31 Aug 2015 : updated setup.py, __init__.py and conf.py for 0.2.9.
+  Added a sentence to the history.rst to note that 0.2.9 coincides with
+  release 2.4 of PHCpack.  Added the content of the runcyc10d.py of the
+  examples directory to the documentation in pathtrack.rst.
+
 Sun 30 Aug 2015 : extended ade_double_track in trackers.py with gamma option,
   added gpu_double_track to trackers.py, and created versions for double
   double and quad double precision.
