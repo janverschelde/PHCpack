@@ -1549,146 +1549,146 @@ ts_gpu2norm_qd:
                  -L$(PHCAda)/Math_Lib/QD --LINK=g++
 
 utilities_d.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Poly/utilities.cpp -o utilities_d.o
 
 utilities_dd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Poly/utilities.cpp -o utilities_dd.o
 utilities_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Poly/utilities.cpp -o utilities_qd.o
 
 poly_d.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Poly/poly.cpp -o poly_d.o
 
 poly_dd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Poly/poly.cpp -o poly_dd.o
 
 poly_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Poly/poly.cpp -o poly_qd.o
 
 polysol_d.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Poly/polysol.cpp -o polysol_d.o
 
 polysol_dd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Poly/polysol.cpp -o polysol_dd.o
 
 polysol_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Poly/polysol.cpp -o polysol_qd.o
 
 workspace_host_d.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Path_CPU/workspace_host.cpp \
                 -o workspace_host_d.o
 
 workspace_host_dd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Path_CPU/workspace_host.cpp \
                 -o workspace_host_dd.o
 
 workspace_host_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -c $(PHCgpu)/Path/Path_CPU/workspace_host.cpp \
                 -o workspace_host_qd.o
 
 eval_host_d.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/eval_host.cpp \
                 -o eval_host_d.o
 
 eval_host_dd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/eval_host.cpp \
                 -o eval_host_dd.o
 
 eval_host_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/eval_host.cpp \
                 -o eval_host_qd.o
 
 mgs_host_d.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/mgs_host.cpp \
                 -o mgs_host_d.o
 
 mgs_host_dd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/mgs_host.cpp \
                 -o mgs_host_dd.o
 
 mgs_host_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/mgs_host.cpp \
                 -o mgs_host_qd.o
 
 newton_host_d.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/newton_host.cpp \
                 -o newton_host_d.o
 
 newton_host_dd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/newton_host.cpp \
                 -o newton_host_dd.o
 
 newton_host_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/newton_host.cpp \
                 -o newton_host_qd.o
 
 ada_test.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
                 -I$(PHCLib) -I$(PHCgpu)/Path/Poly \
                 -c $(PHCgpu)/Path/Main/ada_test.cpp -o ada_test.o
 
 ada_test_dd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
                 -I$(PHCLib) -I$(PHCgpu)/Path/Poly \
                 -c $(PHCgpu)/Path/Main/ada_test_dd.cpp -o ada_test_dd.o
 
 ada_test_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -I$(PHCLib) -I$(PHCgpu)/Path/Poly \
                 -c $(PHCgpu)/Path/Main/ada_test_qd.cpp -o ada_test_qd.o
 
 gqd_qd_util.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
                 -I$(PHCLib) -I$(PHCgpu)/Path/Complex -I$(GQD_HOME)/inc \
                 -I/usr/local/cuda/include \
                 -c $(PHCgpu)/Path/Complex/gqd_qd_util.cpp -o gqd_qd_util.o
 
 gpunewton_d.o: 
-	g++ -c $(PHCAda)/PHCtoC/gpunewton_d.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/gpunewton_d.cpp -I$(PHCLib) \
             -I $(PHCgpu)/Path/DefineTypesD -I $(PHCgpu)/Path/Main \
             -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -I$(PHCgpu)/Path/Path_GPU \
             -o gpunewton_d.o
 
 gpunewton_dd.o: 
-	g++ -c $(PHCAda)/PHCtoC/gpunewton_dd.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/gpunewton_dd.cpp -I$(PHCLib) \
             -I $(PHCgpu)/Path/DefineTypesDD -I $(PHCgpu)/Path/Main \
             -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -I$(PHCgpu)/Path/Path_GPU \
             -o gpunewton_dd.o
 
 gpunewton_qd.o: 
-	g++ -c $(PHCAda)/PHCtoC/gpunewton_qd.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/gpunewton_qd.cpp -I$(PHCLib) \
             -I $(PHCgpu)/Path/DefineTypesQD -I $(PHCgpu)/Path/Main \
             -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -I$(PHCgpu)/Path/Path_GPU \
@@ -1696,7 +1696,7 @@ gpunewton_qd.o:
 
 path_gpu_d.o:
 	@-echo ">>> compiling kernels ..."
-	nvcc -O2 --define-macro path_precision=cd \
+	nvcc -O2 -Xcompiler -fPIC --define-macro path_precision=cd \
              -I$(PHCgpu)/Path/DefineTypesD -I$(PHCgpu)/Path/Complex \
              -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
              -I$(PHCgpu)/Path/Path_CPU -I$(PHCgpu)/Path/Path_GPU \
@@ -1707,7 +1707,7 @@ path_gpu_d.o:
 
 path_gpu_dd.o:
 	@-echo ">>> compiling kernels ..."
-	nvcc -O2 --define-macro path_precision=cdd \
+	nvcc -O2 -Xcompiler -fPIC --define-macro path_precision=cdd \
              -I$(PHCgpu)/Path/DefineTypesDD -I$(PHCgpu)/Path/Complex \
              -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
              -I$(PHCgpu)/Path/Path_CPU -I$(PHCgpu)/Path/Path_GPU \
@@ -1718,7 +1718,7 @@ path_gpu_dd.o:
 
 path_gpu_qd.o:
 	@-echo ">>> compiling kernels ..."
-	nvcc -O2 --define-macro path_precision=cqd \
+	nvcc -O2 -Xcompiler -fPIC --define-macro path_precision=cqd \
              -I$(PHCgpu)/Path/DefineTypesQD -I$(PHCgpu)/Path/Complex \
              -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
              -I$(PHCgpu)/Path/Path_CPU -I$(PHCgpu)/Path/Path_GPU \
@@ -1799,57 +1799,57 @@ ts_gpunewton_qd: utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
                  --LINK=g++
 
 predictor_host_d.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/predictor_host.cpp \
                 -o predictor_host_d.o
 
 predictor_host_dd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/predictor_host.cpp \
                 -o predictor_host_dd.o
 
 predictor_host_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/predictor_host.cpp \
                 -o predictor_host_qd.o
 
 path_host_d.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/path_host.cpp \
                 -o path_host_d.o
 
 path_host_dd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesDD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/path_host.cpp \
                 -o path_host_dd.o
 
 path_host_qd.o:
-	g++ -O2 -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
+	g++ -O2 -fPIC -I$(PHCgpu)/Path/DefineTypesQD -I$(QD_ROOT)/include \
                 -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Main \
                 -c $(PHCgpu)/Path/Path_CPU/path_host.cpp \
                 -o path_host_qd.o
 
 gpuonepath_d.o: 
-	g++ -c $(PHCAda)/PHCtoC/gpuonepath_d.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/gpuonepath_d.cpp -I$(PHCLib) \
             -I $(PHCgpu)/Path/DefineTypesD -I $(PHCgpu)/Path/Main \
             -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -I$(PHCgpu)/Path/Path_GPU \
             -o gpuonepath_d.o
 
 gpuonepath_dd.o: 
-	g++ -c $(PHCAda)/PHCtoC/gpuonepath_dd.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/gpuonepath_dd.cpp -I$(PHCLib) \
             -I $(PHCgpu)/Path/DefineTypesDD -I $(PHCgpu)/Path/Main \
             -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -I$(PHCgpu)/Path/Path_GPU \
             -o gpuonepath_dd.o
 
 gpuonepath_qd.o: 
-	g++ -c $(PHCAda)/PHCtoC/gpuonepath_qd.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/gpuonepath_qd.cpp -I$(PHCLib) \
             -I $(PHCgpu)/Path/DefineTypesQD -I $(PHCgpu)/Path/Main \
             -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -I$(PHCgpu)/Path/Path_GPU \
@@ -1960,7 +1960,7 @@ path_test_d.o:
                 -o path_test_d.o
 
 gpumanypaths_d.o: 
-	g++ -c $(PHCAda)/PHCtoC/gpumanypaths_d.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/gpumanypaths_d.cpp -I$(PHCLib) \
             -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
             -I/usr/local/cuda/include \
             -I$(PHCgpu)/Path/DefineTypesD -I$(PHCgpu)/Path/Main \
@@ -1969,7 +1969,7 @@ gpumanypaths_d.o:
             -o gpumanypaths_d.o
 
 gpumanypaths_dd.o: 
-	g++ -c $(PHCAda)/PHCtoC/gpumanypaths_dd.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/gpumanypaths_dd.cpp -I$(PHCLib) \
             -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
             -I/usr/local/cuda/include \
             -I$(PHCgpu)/Path/DefineTypesDD -I$(PHCgpu)/Path/Main \
@@ -1978,7 +1978,7 @@ gpumanypaths_dd.o:
             -o gpumanypaths_dd.o
 
 gpumanypaths_qd.o: 
-	g++ -c $(PHCAda)/PHCtoC/gpumanypaths_qd.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/gpumanypaths_qd.cpp -I$(PHCLib) \
             -I$(GQD_HOME)/inc -I$(SDK_HOME)/C/common/inc \
             -I/usr/local/cuda/include \
             -I$(PHCgpu)/Path/DefineTypesQD -I$(PHCgpu)/Path/Main \
@@ -2135,49 +2135,49 @@ ts_gpupath_qd: utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
                  --LINK=g++
 
 adenewton_d.o: 
-	g++ -c $(PHCAda)/PHCtoC/adenewton_d.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/adenewton_d.cpp -I$(PHCLib) \
             -I $(PHCgpu)/Path/DefineTypesD -I $(PHCgpu)/Path/Main \
             -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -o adenewton_d.o
 adenewton_dd.o: 
-	g++ -c $(PHCAda)/PHCtoC/adenewton_dd.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/adenewton_dd.cpp -I$(PHCLib) \
             -I $(PHCgpu)/Path/DefineTypesDD -I $(PHCgpu)/Path/Main \
             -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -o adenewton_dd.o
 adenewton_qd.o: 
-	g++ -c $(PHCAda)/PHCtoC/adenewton_qd.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/adenewton_qd.cpp -I$(PHCLib) \
             -I $(PHCgpu)/Path/DefineTypesQD -I $(PHCgpu)/Path/Main \
             -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -o adenewton_qd.o
 
 adeonepath_d.o: 
-	g++ -c $(PHCAda)/PHCtoC/adeonepath_d.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/adeonepath_d.cpp -I$(PHCLib) \
             -I $(PHCgpu)/Path/DefineTypesD -I $(PHCgpu)/Path/Main \
             -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -o adeonepath_d.o
 adeonepath_dd.o: 
-	g++ -c $(PHCAda)/PHCtoC/adeonepath_dd.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/adeonepath_dd.cpp -I$(PHCLib) \
             -I $(PHCgpu)/Path/DefineTypesDD -I $(PHCgpu)/Path/Main \
             -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -o adeonepath_dd.o
 adeonepath_qd.o: 
-	g++ -c $(PHCAda)/PHCtoC/adeonepath_qd.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/adeonepath_qd.cpp -I$(PHCLib) \
             -I $(PHCgpu)/Path/DefineTypesQD -I $(PHCgpu)/Path/Main \
             -I $(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -o adeonepath_qd.o
 
 ademanypaths_d.o: 
-	g++ -c $(PHCAda)/PHCtoC/ademanypaths_d.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/ademanypaths_d.cpp -I$(PHCLib) \
             -I$(PHCgpu)/Path/DefineTypesD -I$(PHCgpu)/Path/Main \
             -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -o ademanypaths_d.o
 ademanypaths_dd.o: 
-	g++ -c $(PHCAda)/PHCtoC/ademanypaths_dd.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/ademanypaths_dd.cpp -I$(PHCLib) \
             -I$(PHCgpu)/Path/DefineTypesDD -I$(PHCgpu)/Path/Main \
             -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -o ademanypaths_dd.o
 ademanypaths_qd.o: 
-	g++ -c $(PHCAda)/PHCtoC/ademanypaths_qd.cpp -I$(PHCLib) \
+	g++ -O2 -fPIC -c $(PHCAda)/PHCtoC/ademanypaths_qd.cpp -I$(PHCLib) \
             -I$(PHCgpu)/Path/DefineTypesQD -I$(PHCgpu)/Path/Main \
             -I$(PHCgpu)/Path/Poly -I$(PHCgpu)/Path/Path_CPU \
             -o ademanypaths_qd.o
@@ -2646,20 +2646,35 @@ lib_giftwrap_cpp:
                  -o $(BIN)/lib_giftwrap -lm --LINK=g++
 
 adepath_d.o: adenewton_d.o adeonepath_d.o ademanypaths_d.o
-	g++ -O2 -Dcompilewgpp=1 -I$(PHCAda)/PHCtoC \
+	g++ -O2 -Dcompilewgpp=1 -fPIC -I$(PHCAda)/PHCtoC \
             -I$(PHCgpu)/Path/DefineTypesD -I$(PHCgpu)/Path/Poly \
             -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly \
             -c $(PHCLib)/adepath_d.c
+gpupath_d.o: gpunewton_d.o gpuonepath_d.o gpumanypaths_d.o
+	g++ -O2 -Dcompilewgpp=1 -fPIC -I$(PHCAda)/PHCtoC \
+            -I$(PHCgpu)/Path/DefineTypesD -I$(PHCgpu)/Path/Poly \
+            -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly \
+            -c $(PHCLib)/gpupath_d.c
 adepath_dd.o: adenewton_dd.o adeonepath_dd.o ademanypaths_dd.o
-	g++ -O2 -Dcompilewgpp=1 -I$(PHCAda)/PHCtoC \
+	g++ -O2 -Dcompilewgpp=1 -fPIC -I$(PHCAda)/PHCtoC \
             -I$(PHCgpu)/Path/DefineTypesDD -I$(PHCgpu)/Path/Poly \
             -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly \
             -c $(PHCLib)/adepath_dd.c
+gpupath_dd.o: gpunewton_dd.o gpuonepath_dd.o gpumanypaths_dd.o
+	g++ -O2 -Dcompilewgpp=1 -fPIC -I$(PHCAda)/PHCtoC \
+            -I$(PHCgpu)/Path/DefineTypesDD -I$(PHCgpu)/Path/Poly \
+            -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly \
+            -c $(PHCLib)/gpupath_dd.c
 adepath_qd.o: adenewton_qd.o adeonepath_qd.o ademanypaths_qd.o
-	g++ -O2 -Dcompilewgpp=1 -I$(PHCAda)/PHCtoC \
+	g++ -O2 -Dcompilewgpp=1 -fPIC -I$(PHCAda)/PHCtoC \
             -I$(PHCgpu)/Path/DefineTypesQD -I$(PHCgpu)/Path/Poly \
             -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly \
             -c $(PHCLib)/adepath_qd.c
+gpupath_qd.o: gpunewton_qd.o gpuonepath_qd.o gpumanypaths_qd.o
+	g++ -O2 -Dcompilewgpp=1 -fPIC -I$(PHCAda)/PHCtoC \
+            -I$(PHCgpu)/Path/DefineTypesDD -I$(PHCgpu)/Path/Poly \
+            -I$(PHCgpu)/Path/Complex -I$(PHCgpu)/Path/Poly \
+            -c $(PHCLib)/gpupath_qd.c
 
 lib_adepath_d: utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
                eval_host_d.o mgs_host_d.o newton_host_d.o ada_test.o \
@@ -2680,6 +2695,78 @@ lib_adepath_d: utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
                     eval_host_d.o mgs_host_d.o newton_host_d.o \
                     predictor_host_d.o path_host_d.o \
                  -o $(BIN)/lib_adepath_d -lm --LINK=g++
+
+lib_gpupath_d: utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
+               eval_host_d.o mgs_host_d.o newton_host_d.o ada_test.o \
+               predictor_host_d.o path_host_d.o path_gpu_d.o gpupath_d.o \
+               gqd_qd_util.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	@-echo ">>> compiling code for the containers ..."
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	@-echo ">>> compiling the main C program ..."
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/lib_gpupath_d.c
+	@-echo ">>> linking ..."
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc lib_gpupath_d.o gpupath_d.o \
+                    gpunewton_d.o gpuonepath_d.o gpumanypaths_d.o \
+                    syscon.o solcon.o phcpack.o ada_test.o \
+                    utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
+                    eval_host_d.o mgs_host_d.o newton_host_d.o \
+                    predictor_host_d.o path_host_d.o path_gpu_d.o \
+                    gqd_qd_util.o \
+                 -lcutil_x86_64 -lcudart \
+                 -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
+                 -o $(BIN)/lib_gpupath_d -lm --LINK=g++
+
+lib_gpupath_dd: utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \
+              eval_host_dd.o mgs_host_dd.o newton_host_dd.o ada_test_dd.o \
+              predictor_host_dd.o path_host_dd.o path_gpu_dd.o gpupath_dd.o \
+              gqd_qd_util.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	@-echo ">>> compiling code for the containers ..."
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	@-echo ">>> compiling the main C program ..."
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/lib_gpupath_dd.c
+	@-echo ">>> linking ..."
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc lib_gpupath_dd.o gpupath_dd.o \
+                    gpunewton_dd.o gpuonepath_dd.o gpumanypaths_dd.o \
+                    syscon.o solcon.o phcpack.o ada_test_dd.o \
+                    utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \
+                    eval_host_dd.o mgs_host_dd.o newton_host_dd.o \
+                    predictor_host_dd.o path_host_dd.o path_gpu_dd.o \
+                    gqd_qd_util.o \
+                 -lcutil_x86_64 -lcudart $(QD_LIB)/libqd.a \
+                 -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
+                 -o $(BIN)/lib_gpupath_dd -lm --LINK=g++
+
+lib_gpupath_qd: utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
+              eval_host_qd.o mgs_host_qd.o newton_host_qd.o ada_test_qd.o \
+              predictor_host_qd.o path_host_qd.o path_gpu_qd.o gpupath_qd.o \
+              gqd_qd_util.o
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	@-echo ">>> compiling code for the containers ..."
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	@-echo ">>> compiling the main C program ..."
+	g++ -O2 -Dcompilewgpp=1 -c $(PHCLib)/lib_gpupath_qd.c
+	@-echo ">>> linking ..."
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc lib_gpupath_qd.o gpupath_qd.o \
+                    gpunewton_qd.o gpuonepath_qd.o gpumanypaths_qd.o \
+                    syscon.o solcon.o phcpack.o ada_test_qd.o \
+                    utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
+                    eval_host_qd.o mgs_host_qd.o newton_host_qd.o \
+                    predictor_host_qd.o path_host_qd.o path_gpu_qd.o \
+                    gqd_qd_util.o \
+                 -lcutil_x86_64 -lcudart $(QD_LIB)/libqd.a \
+                 -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
+                 -o $(BIN)/lib_gpupath_qd -lm --LINK=g++
 
 lib_adepath_dd: utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \
                 eval_host_dd.o mgs_host_dd.o newton_host_dd.o ada_test_dd.o \
@@ -2766,7 +2853,147 @@ phcpy2c.so:
             next_track.o phcpy2c.o unisolvers.o giftwrappers.o scalers.o \
             -o ../Python/PHCpy/phcpy/phcpy2c.so -lm
 
-# note using static flags with gnatbind and gnatlink does not work
+# phcpy2c with double version of Path library :
+
+phcpy2cadepath_d.so: utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
+            eval_host_d.o mgs_host_d.o newton_host_d.o ada_test.o \
+            predictor_host_d.o path_host_d.o adepath_d.o
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/syscon.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/solcon.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/product.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/lists_and_strings.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/celcon.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/scalers.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/witset.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/schubert.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/unisolvers.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/giftwrappers.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/phcpack.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/mapcon.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/next_track.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 \
+                    -I$(PYTHON) -I$(PYTHON)/Include \
+                      $(PHCLib)/phcpy2cadepath_d.cpp -o phcpy2cadepath_d.o
+	gnatmake -static -c -fPIC $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatbind -n -shared use_c2phc
+	gnatlink -shared -C use_c2phc phcpy2cpath_d.o \
+            phcpack.o syscon.o witset.o mapcon.o next_track.o unisolvers.o \
+            giftwrappers.o solcon.o product.o lists_and_strings.o celcon.o \
+            scalers.o schubert.o \
+            utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
+            eval_host_d.o mgs_host_d.o newton_host_d.o ada_test.o \
+            predictor_host_d.o path_host_d.o \
+            adenewton_d.o adeonepath_d.o ademanypaths_d.o adepath_d.o \
+                 -lm --LINK=g++ -fPIC \
+                 -o ../Python/PHCpy/phcpy/phcpy2cadepath_d.so
+
+phcpy2cpath_d.so: utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
+            eval_host_d.o mgs_host_d.o newton_host_d.o ada_test.o \
+            predictor_host_d.o path_host_d.o adepath_d.o path_gpu_d.o \
+            gqd_qd_util.o gpupath_d.o
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/syscon.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/solcon.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/product.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/lists_and_strings.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/celcon.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/scalers.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/witset.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/schubert.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/unisolvers.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/giftwrappers.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/phcpack.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/mapcon.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/next_track.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 \
+                    -I$(PYTHON) -I$(PYTHON)/Include \
+                      $(PHCLib)/phcpy2cpath_d.cpp -o phcpy2cpath_d.o
+	gnatmake -static -c -fPIC $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatbind -n -shared use_c2phc
+	gnatlink -shared -C use_c2phc phcpy2cpath_d.o \
+            phcpack.o syscon.o witset.o mapcon.o next_track.o unisolvers.o \
+            giftwrappers.o solcon.o product.o lists_and_strings.o celcon.o \
+            scalers.o schubert.o \
+            utilities_d.o poly_d.o polysol_d.o workspace_host_d.o \
+            eval_host_d.o mgs_host_d.o newton_host_d.o ada_test.o \
+            predictor_host_d.o path_host_d.o gqd_qd_util.o path_gpu_d.o \
+            adenewton_d.o adeonepath_d.o ademanypaths_d.o adepath_d.o \
+            gpunewton_d.o gpuonepath_d.o gpumanypaths_d.o gpupath_d.o \
+                 -lcutil_x86_64 -lcudart \
+                 -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
+                 -lm --LINK=g++ -fPIC \
+                 -o ../Python/PHCpy/phcpy/phcpy2cpath_d.so
+
+phcpy2cpath_dd.so: utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \
+            eval_host_dd.o mgs_host_dd.o newton_host_dd.o ada_test_dd.o \
+            predictor_host_dd.o path_host_dd.o adepath_dd.o path_gpu_dd.o \
+            gqd_qd_util.o gpupath_dd.o
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/syscon.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/solcon.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/product.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/lists_and_strings.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/celcon.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/scalers.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/witset.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/schubert.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/unisolvers.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/giftwrappers.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/phcpack.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/mapcon.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/next_track.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 \
+                    -I$(PYTHON) -I$(PYTHON)/Include \
+                      $(PHCLib)/phcpy2cpath_dd.cpp -o phcpy2cpath_dd.o
+	gnatmake -static -c -fPIC $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatbind -n -shared use_c2phc
+	gnatlink -shared -C use_c2phc phcpy2cpath_dd.o \
+            phcpack.o syscon.o witset.o mapcon.o next_track.o unisolvers.o \
+            giftwrappers.o solcon.o product.o lists_and_strings.o celcon.o \
+            scalers.o schubert.o \
+            utilities_dd.o poly_dd.o polysol_dd.o workspace_host_dd.o \
+            eval_host_dd.o mgs_host_dd.o newton_host_dd.o ada_test_dd.o \
+            predictor_host_dd.o path_host_dd.o gqd_qd_util.o path_gpu_dd.o \
+            adenewton_dd.o adeonepath_dd.o ademanypaths_dd.o adepath_dd.o \
+            gpunewton_dd.o gpuonepath_dd.o gpumanypaths_dd.o gpupath_dd.o \
+                 -lcutil_x86_64 -lcudart $(QD_LIB)/libqd.a \
+                 -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
+                 -lm --LINK=g++ -fPIC \
+                 -o ../Python/PHCpy/phcpy/phcpy2cpath_dd.so
+
+phcpy2cpath_qd.so: utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
+            eval_host_qd.o mgs_host_qd.o newton_host_qd.o ada_test_qd.o \
+            predictor_host_qd.o path_host_qd.o adepath_qd.o path_gpu_qd.o \
+            gqd_qd_util.o gpupath_qd.o
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/syscon.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/solcon.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/product.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/lists_and_strings.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/celcon.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/scalers.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/witset.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/schubert.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/unisolvers.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/giftwrappers.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/phcpack.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/mapcon.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 $(PHCLib)/next_track.c
+	g++ -static -Dcompilewgpp=1 -c -fPIC -O2 \
+                    -I$(PYTHON) -I$(PYTHON)/Include \
+                      $(PHCLib)/phcpy2cpath_qd.cpp -o phcpy2cpath_qd.o
+	gnatmake -static -c -fPIC $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatbind -n -shared use_c2phc
+	gnatlink -shared -C use_c2phc phcpy2cpath_qd.o \
+            phcpack.o syscon.o witset.o mapcon.o next_track.o unisolvers.o \
+            giftwrappers.o solcon.o product.o lists_and_strings.o celcon.o \
+            scalers.o schubert.o \
+            utilities_qd.o poly_qd.o polysol_qd.o workspace_host_qd.o \
+            eval_host_qd.o mgs_host_qd.o newton_host_qd.o ada_test_qd.o \
+            predictor_host_qd.o path_host_qd.o gqd_qd_util.o path_gpu_qd.o \
+            adenewton_qd.o adeonepath_qd.o ademanypaths_qd.o adepath_qd.o \
+            gpunewton_qd.o gpuonepath_qd.o gpumanypaths_qd.o gpupath_qd.o \
+                 -lcutil_x86_64 -lcudart $(QD_LIB)/libqd.a \
+                 -L/usr/local/cuda/lib64 -L$(SDK_HOME)/C/lib \
+                 -lm --LINK=g++ -fPIC \
+                 -o ../Python/PHCpy/phcpy/phcpy2cpath_qd.so
 
 # how to make the executables with MPI:
 
