@@ -1,4 +1,4 @@
-Ada source code of Polynomial Homotopy Continuation version 2.3.99
+Ada source code of Polynomial Homotopy Continuation version 2.4
 
 The same hierarchical structure as in the original version is preserved,
 with the addition of numerical Schubert calculus in release 2,
@@ -22,6 +22,7 @@ Differentials was removed in release 2.3.75, and the Deformations directory
 houses the Homotopy, Newton, and Continuation directories.
 Release 2.3.84 offers path trackers with generators for use in phcpy.
 Variable precision Newton's method was introduced in version 2.3.96.
+The GPU acceleration of the path trackers was introduced in 2.4.
 
 The Ada sources are organized in a tree of directories:
 
