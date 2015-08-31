@@ -107,6 +107,13 @@ The blackbox solver operates in four stages:
 Through the options -s, -r, -p, and -v, 
 the user can go through the stages separately.
 
+The most computational intensive stage in the solver is in the
+path tracking.  Shared memory multitasked path trackers are
+available in the path trackers for both the polyhedral homotopies to solve
+a random coefficient system and for the
+artificial-parameter homotopy towards the target system.
+See the documentation for the option phc -t below.
+
 phc -c : Irreducible decomposition for solution components     
 ----------------------------------------------------------
 
@@ -485,6 +492,26 @@ makes that the blackbox solver uses 4 threads to solve the system.
 If there are at least 4 computational cores available,
 then the solver may finish its computations up to 4 times faster
 than a sequential run.
+
+With the time command, we can compare the wall clock time between
+a sequential run and a run with 16 tasks:
+
+::
+
+   time phc -b cyclic7 /tmp/cyc7t1
+
+   real    0m10.256s
+   user    0m10.202s
+   sys     0m0.009s
+
+   time phc -b -t16 cyclic7 /tmp/cyc7t16
+
+   real    0m0.851s
+   user    0m11.149s
+   sys     0m0.009s
+
+The speedup on the wall clock time is about 12,
+obtained as 10.256/0.851.
 
 phc -v : Verification, refinement and purification of solutions
 ---------------------------------------------------------------
