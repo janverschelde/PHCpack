@@ -80,7 +80,8 @@ def standard_double_track(target, start, sols, gamma=0, tasks=0):
 
 def ade_double_track(target, start, sols, gamma=0, verbose=1):
     """
-    Does path tracking with algorithm differentiation.
+    Does path tracking with algorithm differentiation,
+    in standard double precision.
     On input are a target system, a start system with solutions.
     The target is a list of strings representing the polynomials
     of the target system (which has to be solved).
@@ -112,14 +113,56 @@ def ade_double_track(target, start, sols, gamma=0, verbose=1):
             print 'random gamma constant :', gamma
     fail = py2c_ade_manypaths_d(verbose,gamma.real,gamma.imag)
     if(fail == 0):
-        print 'Path tracking with AD was a success!'
+        if(verbose > 0):
+            print 'Path tracking with AD was a success!'
     else:
         print 'Path tracking with AD failed!'
     return load_standard_solutions()
 
+def gpu_double_track(target, start, sols, gamma=0, verbose=1):
+    """
+    GPU accelerated path tracking with algorithm differentiation,
+    in standard double precision.
+    On input are a target system, a start system with solutions.
+    The target is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The start is a list of strings representing the polynomials
+    of the start system, with known solutions in sols.
+    The sols is a list of strings representing start solutions.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    If gamma on input equals zero, then a random complex number is generated,
+    otherwise the real and imaginary parts of gamma are used.
+    """
+    from phcpy2c import py2c_copy_standard_container_to_target_system
+    from phcpy2c import py2c_copy_standard_container_to_start_system
+    from phcpy2c import py2c_gpu_manypaths_d
+    from interface import store_standard_system
+    from interface import store_standard_solutions, load_standard_solutions
+    store_standard_system(target)
+    py2c_copy_standard_container_to_target_system()
+    store_standard_system(start)
+    py2c_copy_standard_container_to_start_system()
+    dim = len(start)
+    store_standard_solutions(dim, sols)
+    if(gamma == 0):
+        from random import uniform
+        from cmath import exp, pi
+        angle = uniform(0, 2*pi)
+        gamma = exp(angle*complex(0,1))
+        if(verbose > 0):
+            print 'random gamma constant :', gamma
+    fail = py2c_gpu_manypaths_d(2,verbose,gamma.real,gamma.imag)
+    if(fail == 0):
+        if(verbose > 0):
+            print 'Path tracking on the GPU was a success!'
+    else:
+        print 'Path tracking on the GPU failed!'
+    return load_standard_solutions()
+
 def double_double_track(target, start, sols, gamma=0, tasks=0):
     """
-    Does path tracking with double double precision.
+    Does path tracking in double double precision.
     On input are a target system, a start system with solutions,
     optionally a (random) gamma constant and the number of tasks.
     The target is a list of strings representing the polynomials
@@ -157,6 +200,88 @@ def double_double_track(target, start, sols, gamma=0, tasks=0):
     py2c_solve_by_dobldobl_homotopy_continuation(tasks)
     py2c_solcon_clear_dobldobl_solutions()
     py2c_copy_dobldobl_target_solutions_to_container()
+    return load_dobldobl_solutions()
+
+def ade_double_double_track(target, start, sols, gamma=0, verbose=1):
+    """
+    Does path tracking with algorithm differentiation,
+    in double double precision.
+    On input are a target system, a start system with solutions.
+    The target is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The start is a list of strings representing the polynomials
+    of the start system, with known solutions in sols.
+    The sols is a list of strings representing start solutions.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    If gamma on input equals zero, then a random complex number is generated,
+    otherwise the real and imaginary parts of gamma are used.
+    """
+    from phcpy2c import py2c_copy_dobldobl_container_to_target_system
+    from phcpy2c import py2c_copy_dobldobl_container_to_start_system
+    from phcpy2c import py2c_ade_manypaths_dd
+    from interface import store_dobldobl_system
+    from interface import store_dobldobl_solutions, load_dobldobl_solutions
+    store_dobldobl_system(target)
+    py2c_copy_dobldobl_container_to_target_system()
+    store_dobldobl_system(start)
+    py2c_copy_dobldobl_container_to_start_system()
+    dim = len(start)
+    store_dobldobl_solutions(dim, sols)
+    if(gamma == 0):
+        from random import uniform
+        from cmath import exp, pi
+        angle = uniform(0, 2*pi)
+        gamma = exp(angle*complex(0,1))
+        if(verbose > 0):
+            print 'random gamma constant :', gamma
+    fail = py2c_ade_manypaths_dd(verbose,gamma.real,gamma.imag)
+    if(fail == 0):
+        if(verbose > 0):
+            print 'Path tracking with AD was a success!'
+    else:
+        print 'Path tracking with AD failed!'
+    return load_dobldobl_solutions()
+
+def gpu_double_double_track(target, start, sols, gamma=0, verbose=1):
+    """
+    GPU accelerated path tracking with algorithm differentiation,
+    in double double precision.
+    On input are a target system, a start system with solutions.
+    The target is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The start is a list of strings representing the polynomials
+    of the start system, with known solutions in sols.
+    The sols is a list of strings representing start solutions.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    If gamma on input equals zero, then a random complex number is generated,
+    otherwise the real and imaginary parts of gamma are used.
+    """
+    from phcpy2c import py2c_copy_dobldobl_container_to_target_system
+    from phcpy2c import py2c_copy_dobldobl_container_to_start_system
+    from phcpy2c import py2c_gpu_manypaths_dd
+    from interface import store_dobldobl_system
+    from interface import store_dobldobl_solutions, load_dobldobl_solutions
+    store_dobldobl_system(target)
+    py2c_copy_dobldobl_container_to_target_system()
+    store_dobldobl_system(start)
+    py2c_copy_dobldobl_container_to_start_system()
+    dim = len(start)
+    store_dobldobl_solutions(dim, sols)
+    if(gamma == 0):
+        from random import uniform
+        from cmath import exp, pi
+        angle = uniform(0, 2*pi)
+        gamma = exp(angle*complex(0,1))
+        if(verbose > 0):
+            print 'random gamma constant :', gamma
+    fail = py2c_gpu_manypaths_dd(2,verbose,gamma.real,gamma.imag)
+    if(fail == 0):
+        if(verbose > 0):
+            print 'Path tracking on the GPU was a success!'
+    else:
+        print 'Path tracking on the GPU failed!'
     return load_dobldobl_solutions()
 
 def quad_double_track(target, start, sols, gamma=0, tasks=0):
@@ -199,6 +324,88 @@ def quad_double_track(target, start, sols, gamma=0, tasks=0):
     py2c_solve_by_quaddobl_homotopy_continuation(tasks)
     py2c_solcon_clear_quaddobl_solutions()
     py2c_copy_quaddobl_target_solutions_to_container()
+    return load_quaddobl_solutions()
+
+def ade_quad_double_track(target, start, sols, gamma=0, verbose=1):
+    """
+    Does path tracking with algorithm differentiation,
+    in quad double precision.
+    On input are a target system, a start system with solutions.
+    The target is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The start is a list of strings representing the polynomials
+    of the start system, with known solutions in sols.
+    The sols is a list of strings representing start solutions.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    If gamma on input equals zero, then a random complex number is generated,
+    otherwise the real and imaginary parts of gamma are used.
+    """
+    from phcpy2c import py2c_copy_quaddobl_container_to_target_system
+    from phcpy2c import py2c_copy_quaddobl_container_to_start_system
+    from phcpy2c import py2c_ade_manypaths_qd
+    from interface import store_quaddobl_system
+    from interface import store_quaddobl_solutions, load_quaddobl_solutions
+    store_quaddobl_system(target)
+    py2c_copy_quaddobl_container_to_target_system()
+    store_quaddobl_system(start)
+    py2c_copy_quaddobl_container_to_start_system()
+    dim = len(start)
+    store_quaddobl_solutions(dim, sols)
+    if(gamma == 0):
+        from random import uniform
+        from cmath import exp, pi
+        angle = uniform(0, 2*pi)
+        gamma = exp(angle*complex(0,1))
+        if(verbose > 0):
+            print 'random gamma constant :', gamma
+    fail = py2c_ade_manypaths_qd(verbose,gamma.real,gamma.imag)
+    if(fail == 0):
+        if(verbose > 0):
+            print 'Path tracking with AD was a success!'
+    else:
+        print 'Path tracking with AD failed!'
+    return load_quaddobl_solutions()
+
+def gpu_quad_double_track(target, start, sols, gamma=0, verbose=1):
+    """
+    GPU accelerated path tracking with algorithm differentiation,
+    in quad double precision.
+    On input are a target system, a start system with solutions.
+    The target is a list of strings representing the polynomials
+    of the target system (which has to be solved).
+    The start is a list of strings representing the polynomials
+    of the start system, with known solutions in sols.
+    The sols is a list of strings representing start solutions.
+    On return are the string representations of the solutions
+    computed at the end of the paths.
+    If gamma on input equals zero, then a random complex number is generated,
+    otherwise the real and imaginary parts of gamma are used.
+    """
+    from phcpy2c import py2c_copy_quaddobl_container_to_target_system
+    from phcpy2c import py2c_copy_quaddobl_container_to_start_system
+    from phcpy2c import py2c_gpu_manypaths_qd
+    from interface import store_quaddobl_system
+    from interface import store_quaddobl_solutions, load_quaddobl_solutions
+    store_quaddobl_system(target)
+    py2c_copy_quaddobl_container_to_target_system()
+    store_quaddobl_system(start)
+    py2c_copy_quaddobl_container_to_start_system()
+    dim = len(start)
+    store_quaddobl_solutions(dim, sols)
+    if(gamma == 0):
+        from random import uniform
+        from cmath import exp, pi
+        angle = uniform(0, 2*pi)
+        gamma = exp(angle*complex(0,1))
+        if(verbose > 0):
+            print 'random gamma constant :', gamma
+    fail = py2c_gpu_manypaths_qd(2,verbose,gamma.real,gamma.imag)
+    if(fail == 0):
+        if(verbose > 0):
+            print 'Path tracking on the GPU was a success!'
+    else:
+        print 'Path tracking on the GPU failed!'
     return load_quaddobl_solutions()
 
 def multiprecision_track(target, start, sols, gamma=0, decimals=80):
