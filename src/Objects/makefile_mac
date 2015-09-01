@@ -881,7 +881,7 @@ ts_mv:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mv.adb -o $(BIN)/ts_mv 
 
 ts_mva:
-	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) ts_mva.adb -o $(BIN)/ts_mva
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mva.adb -o $(BIN)/ts_mva
 
 # Test programs for the Root_Counts/Puiseux library :
 
