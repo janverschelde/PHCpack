@@ -144,7 +144,52 @@ package MixedVol_Algorithm is
   --   stlb      lifting bound for stable mixed volumes,
   --             equals 0.0 if no stable mixed volumes are needed.
   --   multprec_hermite indicates whether multiprecision arithmetic
-  --            must be used for the Hermite normal form.
+  --             must be used for the Hermite normal form.
+
+  -- ON RETURN :
+  --   nSpt      number of different supports;
+  --   SptType   type of each support;
+  --   perm      permutation of the original supports;
+  --   VtxIdx    index vector to the vertex set;
+  --   Vtx       vertices of the supports;
+  --   lft       lifting values for the vertex points;
+  --   CellSize  is the size of a mixed cell;
+  --   nbCells   total number of mixed cells;
+  --   cells     stack of mixed cells;
+  --   mixvol    mixed volume of the polytopes spanned by the supports,
+  --             note that this is the total mixed volume, if stlb /= 0.0.
+ 
+  procedure mv_with_callback
+               ( nVar,nPts : in integer32;
+                 ind,cnt,sup : in Standard_Integer_Vectors.Vector;
+                 stlb : in double_float; nSpt : out integer32;
+                 SptType,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                 VtxIdx : out Standard_Integer_Vectors.Link_to_Vector;
+                 Vtx : out Standard_Integer_VecVecs.Link_to_VecVec;
+                 lft : out Standard_Floating_Vectors.Link_to_Vector;
+                 CellSize,nbCells : out integer32; cells : out CellStack;
+                 mixvol : out natural32;
+                 multprec_hermite : in boolean := false;
+                 next_cell : access procedure
+                   ( idx : Standard_Integer_Vectors.Link_to_Vector ) := null );
+
+  -- DESCRITPION :
+  --   Computes the mixed volume of the polytopes spanned by given supports.
+  --   A regular mixed-cell configuration is available in CellStack.
+  --   Each time a new cell is found, the procedure next_cell is called.
+
+  -- ON ENTRY :
+  --   nVar      ambient dimension, length of the vectors in supports;
+  --   nPts      total number of points in the supports;
+  --   ind       ind(i) is the start of the i-th support;
+  --   cnt       cnt(i) counts the length of the i-th support;
+  --   sup       coordinates of the points in the supports;
+  --   stlb      lifting bound for stable mixed volumes,
+  --             equals 0.0 if no stable mixed volumes are needed.
+  --   multprec_hermite indicates whether multiprecision arithmetic
+  --             must be used for the Hermite normal form;
+  --   next_cell is a callback procedure, the input argument idx are the
+  --             indices to the points that span the new cell.
 
   -- ON RETURN :
   --   nSpt      number of different supports;

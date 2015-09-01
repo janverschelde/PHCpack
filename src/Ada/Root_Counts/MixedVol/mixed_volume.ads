@@ -40,6 +40,39 @@ package Mixed_Volume is
   --   multprec_hermite indicates whether multiprecision arithmetic
   --             must be used for the Hermite normal form.
 
+  procedure MixedVol_with_Callback
+               ( nVar,nSpt,CellSize : in integer32;
+                 SptType,SptIdx : in Standard_Integer_Vectors.Link_to_Vector;
+                 Spt : in Standard_Integer_VecVecs.Link_to_VecVec;
+                 lft : in Standard_Floating_Vectors.Link_to_Vector;
+                 nbCells : out integer32; MCells : out CellStack;
+                 MVol : out natural32;
+                 multprec_hermite : in boolean := false;
+                 next_cell : access procedure
+                   ( idx : Standard_Integer_Vectors.Link_to_Vector ) := null );
+
+  -- DESCRIPTION :
+  --   Computes the mixed volume of the given lifted supports.
+  --   Each time a new cell is found, next_cell is called.
+
+  -- ON ENTRY :
+  --   nVar      ambient dimension, number of variables;
+  --   nSpt      number of different supports;
+  --   CellSize  number of indices in one mixed cell;
+  --   SptType   type of each support;
+  --   SptIdx    SptIdx[i] indicates the start of i-th support in Spt;
+  --   Spt       coordinates of the points in the supports;
+  --   lft       lifting of the polynomial system.
+
+  -- ON RETURN :
+  --   nbCells   number of mixed cells;
+  --   MCells    mixed cells of a regular mixed-cell configuration;
+  --   MVol      the mixed volume of the polynomial system;
+  --   multprec_hermite indicates whether multiprecision arithmetic
+  --             must be used for the Hermite normal form;
+  --   next_cell is a callback procedure, the argument to next_cell are
+  --             indices to the points in the cell.
+
   procedure gcd ( r1,r2 : in integer32; k,l,d : out integer32 );
 
   -- DESCRIPTION :

@@ -1,3 +1,7 @@
+Tue 1 Sep 2015 : added callback procedure to the mixed volume calcuation,
+  adding a new procedure to the packages mixedvol_algorithm and mixed_volume,
+  tested by ts_mva.adb.
+
 Fri 30 May 2014 : modification in form_lp.adb for compiler warning and
   changed "out Boolean_Matrix" into "in out Boolean_Matrix" in the
   relation_table.ads and relation_table.adb for compiler warnings.

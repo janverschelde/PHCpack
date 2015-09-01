@@ -350,6 +350,94 @@ package body MixedVol_Algorithm is
     mixvol := MVol;
   end mv;
 
+  procedure mv_with_callback
+               ( nVar,nPts : in integer32;
+                 ind,cnt,sup : in Standard_Integer_Vectors.Vector;
+                 stlb : in double_float; nSpt : out integer32;
+                 SptType,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                 VtxIdx : out Standard_Integer_Vectors.Link_to_Vector;
+                 Vtx : out Standard_Integer_VecVecs.Link_to_VecVec;
+                 lft : out Standard_Floating_Vectors.Link_to_Vector;
+                 CellSize,nbCells : out integer32; cells : out CellStack;
+                 mixvol : out natural32;
+                 multprec_hermite : in boolean := false;
+                 next_cell : access procedure
+                   ( idx : Standard_Integer_Vectors.Link_to_Vector )
+                   := null ) is
+
+    SptIdx : Standard_Integer_Vectors.Link_to_Vector
+           := new Standard_Integer_Vectors.Vector(0..nVar);
+    Spt : Standard_Integer_VecVecs.Link_to_VecVec
+        := new Standard_Integer_VecVecs.VecVec(0..(nPts-1));
+    NuIdx2OldIdx,added : Standard_Integer_Vectors.Link_to_Vector;
+    idx,nbadd : integer32;
+    MVol : natural32;
+
+  begin
+   -- put("The vector cnt : "); put(cnt); new_line;
+    for i in 0..(nVar-1) loop
+      SptIdx(i) := cnt(i+1);
+    end loop;
+    SptIdx(nVar) := nPts;
+    for i in reverse 0..nVar-1 loop
+      SptIdx(i) := SptIdx(i+1) - SptIdx(i);
+    end loop;
+    idx := 0;
+    for i in Spt'range loop
+      Spt(i) := new Standard_Integer_Vectors.Vector(0..(nVar-1));
+      for j in 0..(nVar-1) loop
+        idx := idx + 1;
+        Spt(i)(j) := sup(idx);
+      end loop;
+    end loop;
+    if quick_return = 1 -- quick_return(nVar,SptIdx,Spt) = 1
+     then mixvol := 0; nSpt := nPts; CellSize := 0; nbCells := 0; return;
+    end if;
+    SptType := new Standard_Integer_Vectors.Vector(0..(nVar-1));
+    VtxIdx := new Standard_Integer_Vectors.Vector(0..nVar);
+    Vtx := new Standard_Integer_VecVecs.VecVec(0..(nPts-1));
+    for i in 0..(nPts-1) loop
+      Vtx(i) := new Standard_Integer_Vectors.Vector(0..(nVar-1));
+    end loop;
+    NuIdx2OldIdx := new Standard_Integer_Vectors.Vector(0..(nPts-1));
+    nSpt := nVar;
+   -- Write_Supports(nSpt,SptIdx,Spt);
+    Pre4MV(nVar,nSpt,nSpt,SptType,Spt,SptIdx,Vtx,VtxIdx,NuIdx2OldIdx,perm);
+    if stlb /= 0.0 then
+     -- put_line("Supports before adding artificial origins :");
+     -- Write_Supports(nSpt,VtxIdx,Vtx);
+      Add_Artificial_Origins(nVar,nSpt,VtxIdx,Vtx,nbadd,added);
+     -- put_line("Supports after adding artificial origins :");
+     -- Write_Supports(nSpt,VtxIdx,Vtx);
+    else
+      nbadd := 0;
+    end if;
+   -- Write_Supports(nSpt,VtxIdx,Vtx);
+    lft := new Standard_Floating_Vectors.Vector(0..(VtxIdx(nSpt)-1));
+    if nbadd = 0 then
+      for i in 0..(VtxIdx(nSpt)-1) loop
+        lft(i) := 2.0*(1.5 + Standard_Random_Numbers.Random);
+      end loop;
+    else
+      for i in 0..(VtxIdx(nSpt)-1) loop
+        lft(i) := Standard_Random_Numbers.Random;
+      end loop;
+      for i in added'range loop
+        lft(added(i)) := stlb;
+      end loop;
+    end if;
+   -- put_line("The lifting values : "); put_line(lft);
+    CellSize := cell_size(nSpt,SptType);
+    Cs_Init(cells,CellSize);
+    MixedVol_with_Callback
+      (nVar,nSpt,CellSize,SptType,VtxIdx,Vtx,lft,nbCells,cells,MVol,
+       multprec_hermite,next_cell);
+    Standard_Integer_Vectors.Clear(SptIdx);
+    Standard_Integer_Vectors.Clear(NuIdx2OldIdx);
+    Standard_Integer_VecVecs.Deep_Clear(Spt);
+    mixvol := MVol;
+  end mv_with_callback;
+
   procedure uliftmv 
                ( nVar,nPts : in integer32;
                  ind,cnt,sup : in Standard_Integer_Vectors.Vector;

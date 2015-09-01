@@ -261,6 +261,231 @@ package body Mixed_Volume is
     Standard_Floating_VecMats.Deep_Clear(A);
   end MixedVol;
 
+  procedure MixedVol_with_Callback
+               ( nVar,nSpt,CellSize : in integer32;
+                 SptType,SptIdx : in Standard_Integer_Vectors.Link_to_Vector;
+                 Spt : in Standard_Integer_VecVecs.Link_to_VecVec;
+                 lft : in Standard_Floating_Vectors.Link_to_Vector;
+                 nbCells : out integer32; MCells : out CellStack;
+                 MVol : out natural32;
+                 multprec_hermite : in boolean := false;
+                 next_cell : access procedure
+                   ( idx : Standard_Integer_Vectors.Link_to_Vector )
+                   := null ) is
+  
+    k,info,Strt1Pt,End1Pt,LPdim,Lvl : integer32;
+    labels : Standard_Integer_Vectors.Link_to_Vector
+           := new Standard_Integer_Vectors.Vector(0..CellSize-1);
+    NonZero : Standard_Integer_Vectors.Link_to_Vector
+            := new Standard_Integer_Vectors.Vector(0..CellSize-1);
+    Lvl2CoDim : Standard_Integer_Vectors.Link_to_Vector
+              := new Standard_Integer_Vectors.Vector(0..CellSize-1);
+    Cell : Standard_Integer_Vectors.Link_to_Vector
+         := new Standard_Integer_Vectors.Vector(0..CellSize-1);
+    Cell_Orig : Standard_Integer_Vectors.Link_to_Vector
+               := new Standard_Integer_Vectors.Vector(0..CellSize-1);
+    Lvl2LPdim : Standard_Integer_Vectors.Link_to_Vector
+              := new Standard_Integer_Vectors.Vector(0..CellSize-1);
+    Lvl2Spt : Standard_Integer_Vectors.Link_to_Vector
+            := new Standard_Integer_Vectors.Vector(0..CellSize-1);
+    MinNumPt : Standard_Integer_Vectors.Link_to_Vector
+             := new Standard_Integer_Vectors.Vector(0..CellSize-1);
+    FixFrstPt : Standard_Integer_Vectors.Link_to_Vector
+              := new Standard_Integer_Vectors.Vector(0..CellSize-1);
+    FixLstPt : Standard_Integer_Vectors.Link_to_Vector
+             := new Standard_Integer_Vectors.Vector(0..CellSize-1);
+    FrstPt : Standard_Integer_Vectors.Link_to_Vector
+           := new Standard_Integer_Vectors.Vector(0..CellSize-1);
+    LstPt : Standard_Integer_Vectors.Link_to_Vector
+          := new Standard_Integer_Vectors.Vector(0..CellSize-1);
+    Cur2Pre : Standard_Integer_Vectors.Link_to_Vector
+            := new Standard_Integer_Vectors.Vector(0..SptIdx(nSpt)-1);
+    Bidx : Standard_Integer_Vectors.Link_to_Vector
+         := new Standard_Integer_Vectors.Vector(0..nVar-1);
+    PtIn : Standard_Integer_VecVecs.Link_to_VecVec
+         := new Standard_Integer_VecVecs.VecVec(0..CellSize-1);
+    ToOrig : Standard_Integer_VecVecs.Link_to_VecVec
+           := new Standard_Integer_VecVecs.VecVec(0..CellSize-1);
+    Pre2Cur : Standard_Integer_VecVecs.Link_to_VecVec
+            := new Standard_Integer_VecVecs.VecVec(0..CellSize-1);
+    RelTab : Boolean_Matrix(0..(SptIdx(nSpt)-1),0..(SptIdx(nSpt)-1));
+    x : Standard_Floating_Vectors.Link_to_Vector
+      := new Standard_Floating_Vectors.Vector(0..nVar-1);
+    ElmMtrx : Standard_Floating_Matrices.Link_to_Matrix
+            := new Standard_Floating_Matrices.Matrix(0..CellSize-1,0..nVar);
+    Binv : Standard_Floating_Matrices.Link_to_Matrix
+         := new Standard_Floating_Matrices.Matrix(0..nVar-1,0..nVar-1);
+    A : Standard_Floating_VecMats.Link_to_VecMat
+      := new Standard_Floating_VecMats.VecMat(0..CellSize-1);
+    ItLp : Link_to_IT_LP := new IT_LP;
+    L0 : Link_to_L0_IML := new L0_IML;
+    ptr : Link_to_LPdata;
+    itcell : Standard_Integer_Vectors.Link_to_Vector;
+
+  begin
+    nbCells := 0; MVol := 0;
+    IT_LP_Init(ItLp,nSpt,SptType);
+    L0_IML_Init(L0);   
+    for i in 0..(CellSize-1) loop
+      PtIn(i) := new Standard_Integer_Vectors.Vector(0..SptIdx(nSpt)-1);
+      ToOrig(i) := new Standard_Integer_Vectors.Vector(0..SptIdx(nSpt)-1);
+      Pre2Cur(i) := new Standard_Integer_Vectors.Vector(0..SptIdx(nSpt)-1);
+    end loop;
+   -- put("creating relation table ... ");
+    RelTable(nVar,nSpt,Spt,SptIdx,lft,RelTab,L0);
+   -- put_line("done, the relation table :");
+   -- Write_Relation_Table(RelTab);
+    info := SptIdx(nSpt);                                      -- #rows in A
+    for i in 0..(nSpt-2) loop
+      for j in 0..(SptType(i)-1) loop
+        info := info + SptIdx(i+1);
+      end loop;
+      info := info + SptIdx(i+2);
+    end loop;
+    for j in 0..(SptType(nSpt-1)-1) loop
+      info := info + SptIdx(nSpt);
+    end loop;
+    for i in 0..(CellSize-1) loop
+      A(i) := new Standard_Floating_Matrices.Matrix(0..info-1,0..nVar);
+    end loop;
+    info := 0;             -- Note that the level 0 is the artificial head
+    Lvl2LPdim(0) := nVar + 1;  -- for conveniece, should = nVar, see below
+    Lvl2CoDim(0) := 0;              -- #variables eliminated. [0] not used
+    k := 0;
+    for i in 0..(nSpt-1) loop
+      k := k + 1;
+      Lvl2LPdim(k) := Lvl2LPdim(k-1) - 1;
+      Lvl2CoDim(k) := Lvl2CoDim(k-1);
+      Lvl2Spt(k) := i;
+      MinNumPt(k) := SptType(i);
+      FixFrstPt(k) := 1;
+      FixLstPt(k) := 0;
+      for j in 1..SptType(i) loop
+        k := k + 1;
+        exit when (k = CellSize);
+        Lvl2LPdim(k) := Lvl2LPdim(k-1) - 1;
+        Lvl2CoDim(k) := Lvl2CoDim(k-1) + 1;
+        Lvl2Spt(k) := i;
+        MinNumPt(k) := MinNumPt(k-1) - 1;
+        FixFrstPt(k) := 0;
+        FixLstPt(k) := 0;
+      end loop;
+      exit when (k = CellSize);
+      Lvl2LPdim(k) := Lvl2LPdim(k) + 1;         -- add alpha0 for next spt
+      if i < nSpt-1
+       then MinNumPt(k) := SptType(i+1) + 1;
+      end if;
+      FixLstPt(k) := 1;
+    end loop;
+    Lvl2LPdim(0) := nVar; -- =nVar+1-1, in RelTab, add alpha0, fix 1 point
+   -- put("Lvl2LPdim = "); put(Lvl2LPdim); new_line;
+    for i in SptIdx(0)..(SptIdx(nSpt)-1) loop               -- define A[0]
+      for j in 0..(nVar-1) loop
+        A(0)(i,j) := -double_float(Spt(i)(j));
+      end loop;
+      A(0)(i,nVar) := lft(i);                               -- bIdx = nVar
+    end loop;
+    for i in SptIdx(0)..(SptIdx(1)-1) loop
+      PtIn(0)(i) := 1;                                   -- define PtIn[0]
+    end loop;
+   -- put_line("entering the main loop ...");
+    loop               --  while(L0_Migrate(L0,IT_ResetCurLevelTo1(ItLp)))
+      declare
+        lnd : Link_to_IndexNode;
+        status : integer32;
+      begin
+        IT_ResetCurLevelTo1(ItLp,lnd);
+        L0_Migrate(L0,lnd,status);
+       -- put("status = "); put(status,1); new_line;
+        exit when (status = 0);
+      end;
+      IT_RenewNP1(ItLp);
+     -- put_line("entering the while loop ...");
+      while not IT_IsEmpty(ItLp) loop
+        if not IT_IsFull(ItLp) then
+          Lvl := IT_Level(ItLp);         -- level-0 is the artificial head
+          Cell(Lvl) := IT_FixedIdxNdPtr(ItLp).idx; 
+                                    --  The index of the point to be fixed
+          ptr := IT_FixedIdxNdPtr(ItLp).info;
+                                       --  The ptr to saved x, Binv and jj
+          if Lvl <= 1 then        -- eliminate and form new system Ax <= b
+            Cell_Orig(Lvl) := Cell(Lvl);
+           -- put_line("  executing Form_LP1");
+            Form_LP.Form_LP1
+              (nVar,nSpt,SptType,SptIdx,RelTab,A,Lvl,Cell,Lvl2LPdim,
+               FixLstPt,MinNumPt,PtIn,ToOrig,Pre2Cur,FrstPt,LstPt,info);
+           -- put("    Form_LP1 returns info = "); put(info,1); new_line;
+          else                -- eliminate, form new Ax <= b and solve the LP
+           -- put_line("  executing Form_LP");
+            Form_LP.Form_LP
+              (nVar,nSpt,SptType,SptIdx,RelTab,ElmMtrx,NonZero,Lvl2CoDim,A,
+               Lvl,ptr,Cell,Cell_Orig,Lvl2LPdim,Lvl2Spt,FixFrstPt,FixLstPt,
+               MinNumPt,PtIn,Strt1Pt,End1Pt,ToOrig,Pre2Cur,LPdim,FrstPt,LstPt,
+               Cur2Pre,x,Binv,Bidx,info);
+            if info = 0 then
+              One_Level_LP.one_level_LP
+                (Strt1Pt,End1Pt,PtIn(Lvl),LPdim,A(Lvl),nVar,x,Binv,Bidx,ItLp);
+            end if;
+          end if;
+        end if;                                      -- This level finished
+       -- put_line("entering the nextlevel loop ...");
+        loop -- while(not IT_NextLevel(ItLp) and not IT_IsEmpty(ItLp)) loop
+         -- put("  level is "); put(IT_Level(ItLp),1); new_line;
+          declare
+            rcase : integer32;
+          begin
+            IT_NextLevel(ItLp,rcase);
+           -- put("  IT_NextLevel, level is "); put(IT_Level(ItLp),1); new_line;
+           -- put("                rcase is "); put(rcase,1); new_line;
+           -- if IT_IsEmpty(ItLp)
+           --  then put_line("     ItLp is empty");
+           --  else put_line("     ItLp is not empty");
+           -- end if;
+            exit when ((rcase = 1) or IT_IsEmpty(ItLp));
+          end;
+          if IT_IsFull(ItLp) then
+            itcell := IT_Cell(ItLp);
+            labels(0) := itcell(1);
+            labels(1) := itcell(2);
+            for i in 2..(CellSize-1) loop
+              labels(i) := ToOrig(i)(itcell(i+1));
+            end loop;
+           -- put_line("  pushing a mixed cell to the stack");
+            Cs_Push(MCells,labels);                       -- store the cell
+            next_cell(labels);
+           -- important: crash on uliftmv, leave out for tropisms
+            CellVol(nVar,nSpt,Spt,SptType,labels,MVol,multprec_hermite);
+            nbCells := nbCells + 1; 
+          end if;
+         -- put_line("  executing IT_StepBack");
+          IT_StepBack(ItLp);
+         -- put_line("  leaving the next level loop");
+        end loop; 
+      end loop;                       -- End of while ( !IT_IsEmpty(ItLp) )
+    end loop;                           -- End of while ( L0.Migrate(inp) )
+    Standard_Integer_Vectors.Clear(labels);
+    Standard_Integer_Vectors.Clear(NonZero);
+    Standard_Integer_Vectors.Clear(Lvl2CoDim);
+    Standard_Integer_Vectors.Clear(Cell);
+    Standard_Integer_Vectors.Clear(Cell_Orig);
+    Standard_Integer_Vectors.Clear(Lvl2LPdim);
+    Standard_Integer_Vectors.Clear(Lvl2Spt);
+    Standard_Integer_Vectors.Clear(MinNumPt);
+    Standard_Integer_Vectors.Clear(FixFrstPt);
+    Standard_Integer_Vectors.Clear(FixLstPt);
+    Standard_Integer_Vectors.Clear(FrstPt);
+    Standard_Integer_Vectors.Clear(LstPt);
+    Standard_Integer_Vectors.Clear(Cur2Pre);
+    Standard_Integer_Vectors.Clear(Bidx);
+    Standard_Integer_VecVecs.Deep_Clear(PtIn);
+    Standard_Integer_VecVecs.Deep_Clear(ToOrig);
+    Standard_Integer_VecVecs.Deep_Clear(Pre2Cur);
+    Standard_Floating_Vectors.Clear(x);
+    Standard_Floating_Matrices.Clear(Binv);
+    Standard_Floating_Matrices.Clear(ElmMtrx);
+    Standard_Floating_VecMats.Deep_Clear(A);
+  end MixedVol_with_Callback;
+
   procedure gcd ( r1,r2 : in integer32; k,l,d : out integer32 ) is
 
     wr1,wr2,tempxx,tempyy,xx,yy,q,r3 : integer32;

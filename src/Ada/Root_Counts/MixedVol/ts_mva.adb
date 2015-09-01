@@ -119,17 +119,34 @@ procedure ts_mva is
     cells : CellStack;
     sub : Mixed_Subdivision;
     ulift : boolean;
+    cellcnt : natural32 := 0;
+
+    procedure write_labels ( idx : Standard_Integer_Vectors.Link_to_Vector ) is
+    begin
+      cellcnt := cellcnt + 1;
+      put("Cell "); put(cellcnt,1); put(" is spanned by ");
+      put(idx.all); new_line;
+    end write_labels;
 
   begin
     Extract_Supports(n,p,m,ind,cnt,sup);
     put("Special lifting ? (y/n) ");
     Ask_Yes_or_No(ans);
     ulift := (ans = 'y');
-    if ulift
-     then uliftmv(n,m,ind,cnt,sup.all,stlb,r,mtype,perm,idx,vtx,lft,
-                  size,nb,cells,mixvol);
-     else mv(n,m,ind,cnt,sup.all,stlb,r,mtype,perm,idx,vtx,lft,
-             size,nb,cells,mixvol);
+    if ulift then
+      uliftmv(n,m,ind,cnt,sup.all,stlb,r,mtype,perm,idx,vtx,lft,
+              size,nb,cells,mixvol);
+    else
+      new_line;
+      put("Test callback function ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        mv_with_callback(n,m,ind,cnt,sup.all,stlb,r,mtype,perm,idx,vtx,lft,
+                         size,nb,cells,mixvol,false,write_labels'access);
+      else
+        mv(n,m,ind,cnt,sup.all,stlb,r,mtype,perm,idx,vtx,lft,
+           size,nb,cells,mixvol);
+      end if;
     end if;
     put("The mixed volume is "); put(mixvol,1); put_line(".");
     put("There are "); put(nb,1); put_line(" mixed cells.");
