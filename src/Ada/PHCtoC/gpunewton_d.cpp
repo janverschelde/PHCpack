@@ -91,7 +91,8 @@ int newton ( int mode, int verbose, PolySys& p, PolySolSet& s )
    if(mode == 0 || mode == 2)
    {
       alpha = CT(1,0);
-      success = GPU_Newton(cpu_inst_hom,path_parameter,sol,alpha,x_gpu);
+      success = GPU_Newton(cpu_inst_hom,path_parameter,sol,alpha,x_gpu,
+                           1,verbose);
 
       if(verbose > 0)
       {

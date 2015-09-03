@@ -1,3 +1,10 @@
+Thu 3 Sep 2015 : used verbose option in gpu_newton_{d,dd,qd}.cpp.
+
+Wed 2 Sep 2015 : updated gpuonepath_qd.cpp for bug fix.
+
+Sun 30 Aug 2015 : separated header files gpunewton_{d,dd,qd}.h,
+  separated from gpunewton_{d,dd,qd}.cpp.
+
 Sat 29 Aug 2015 : updated ad hoc interface in ts_gpuonepath_qd.adb.
 
 Fri 28 Aug 2015 : added gamma constant as input parameter to the
