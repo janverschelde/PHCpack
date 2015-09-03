@@ -5,7 +5,7 @@
 
 #include "varset.h"
 #include "parameter.h"
-//#include "utilities.h"
+// #include "utilities.h"
 #include "poly.h"
 #include "workspace_host.h"
 #include <sys/time.h>
@@ -46,7 +46,7 @@ class CPUInstHomCoef
 
       void print();
 
-      void eval(const CT t, CT* coef, int reverse=0);
+      void eval ( const CT t, CT* coef, int reverse=0 );
 
       void update_alpha(CT alpha=CT(0.0,0.0));
 };
@@ -137,9 +137,9 @@ class CPUInstHomMonBlock
          mon_single_pos_block = NULL;
       }
 
-      CPUInstHomMonBlock ( CPUInstHomMon& orig, int BS )
+      CPUInstHomMonBlock ( CPUInstHomMon& orig, int BS, int verbose )
       {
-         init(orig, BS);
+         init(orig,BS,verbose);
       }
 
       ~CPUInstHomMonBlock()
@@ -149,7 +149,7 @@ class CPUInstHomMonBlock
          delete[] mon_pos_block;
       }
 
-      void init(CPUInstHomMon& orig, int BS);
+      void init ( CPUInstHomMon& orig, int BS, int verbose );
 
       void print();
 };
@@ -158,7 +158,7 @@ class CPUInstHomSumBlock
 {
    public:
 
-      int n_sum;         // size of sum_start
+      int n_sum; // size of sum_start
       int n_sum_levels;
       int* n_sum_level;
       int* n_sum_level_rest;
@@ -179,10 +179,11 @@ class CPUInstHomSumBlock
 
       CPUInstHomSumBlock
        ( MonSet* hom_monset, int n_monset, const int* mon_pos_start, int dim,
-         int n_eq, int n_constant, int n_mon0, int* mon_pos_start_block)
+         int n_eq, int n_constant, int n_mon0, int* mon_pos_start_block,
+         int verbose )
       {
          init(hom_monset,n_monset,mon_pos_start,dim,n_eq,n_constant,n_mon0,
-              mon_pos_start_block);
+              mon_pos_start_block,verbose);
       }
 
       ~CPUInstHomSumBlock()
@@ -194,7 +195,7 @@ class CPUInstHomSumBlock
 
       void init ( MonSet* hom_monset, int n_monset, const int* mon_pos_start,
                   int dim, int n_eq, int n_constant, int n_mon0,
-                  int* mon_pos_start_block);
+                  int* mon_pos_start_block, int verbose = 0 );
 
       void eval(CT* sum, CT* matrix);
 
@@ -276,9 +277,9 @@ class CPUInstHomEq
       }
 
       CPUInstHomEq
-       ( MonSet* hom_monset, int n_monset, int n_eq, int n_constant)
+       ( MonSet* hom_monset, int n_monset, int n_eq, int n_constant )
       {
-         init(hom_monset, n_monset, n_eq, n_constant);
+         init(hom_monset,n_monset,n_eq,n_constant);
       }
 
       void init ( MonSet* hom_monset, int n_monset, int n_eq, int n_constant );
@@ -307,6 +308,7 @@ class CPUInstHom
 
       // Record timing for both CPU and GPU
       Path path_data;
+      Path path_data_gpu;
       double timeSec_Path_CPU;
       double timeSec_Path_GPU;
 
@@ -393,13 +395,15 @@ class CPUInstHom
       ~CPUInstHom(){ }
 
       void print();
-
+ 
       void init_workspace ( Workspace& workspace_cpu );
 
       void eval ( Workspace& workspace_cpu, const CT* sol, const CT t,
                   int reverse=0 );
 
-      void update_alpha(CT alpha=CT(0.0,0.0));
+      void update_alpha ( CT alpha=CT(0.0,0.0) );
+
+      void compare_path_cpu_gpu();
 
 };
 

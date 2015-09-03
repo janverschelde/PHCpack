@@ -1,3 +1,6 @@
+Wed 2 Sep 2015 : updated and reformatted eval_host.h and eval_host.cpp,
+  also newton_host.cpp was updated.
+
 Wed 19 Aug 2015 : reformatted workspace_host.h and workspace_host.cpp.
   The instantiation in parameter.h is rendered mute.
   Reformatted eval_host.h and eval_host.cpp, adding verbose option.
