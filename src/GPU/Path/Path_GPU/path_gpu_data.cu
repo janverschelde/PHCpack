@@ -665,6 +665,26 @@ void GPUWorkspace::print_t_array(){
 }
 
 
+CT* GPUWorkspace::get_f_val(){
+	size_t f_val_size = n_eq*sizeof(GT);
+    GT* f_val_host = (GT*)malloc(f_val_size);
+	cudaMemcpy(f_val_host, f_val, f_val_size, cudaMemcpyDeviceToHost);
+
+	CT* f_val_cpu = (CT*)malloc(f_val_size);
+    for(int i=0; i<dim; i++) comp1_gqd2qd(&f_val_host[i], &f_val_cpu[i]);
+
+    free(f_val_host);
+    return f_val_cpu;
+}
+
+void GPUWorkspace::print_f_val(){
+	CT* f_val_cpu = get_f_val();
+	for(int eq_idx=0; eq_idx<n_eq; eq_idx++){
+		std::cout << eq_idx << " " << f_val_cpu[eq_idx];
+	}
+	free(f_val_cpu);
+}
+
 CT* GPUWorkspace::get_x_last(){
 	size_t x_size = dim*sizeof(GT);
     GT* x_host = (GT*)malloc(x_size);

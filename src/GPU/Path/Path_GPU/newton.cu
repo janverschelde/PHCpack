@@ -581,7 +581,8 @@ __global__ void array_max_double_kernel(GT* sol, int dim, int dimLog2, double* m
 }
 
 bool newton_single(GPUWorkspace& workspace, GPUInst& inst, Parameter path_parameter, bool end_range=false) {
-    bool debug = false; // debug = true;
+    bool debug = false;
+    //debug = true;
 	bool success = false;
 	int rowsLog2 = log2ceil(inst.n_eq); // ceil for sum reduction
 	int dimLog2 = log2ceil(inst.dim); // ceil for sum reduction
@@ -722,7 +723,7 @@ bool newton_single(GPUWorkspace& workspace, GPUInst& inst, Parameter path_parame
 // only difference is the function value check
 bool newton_single2(GPUWorkspace& workspace, GPUInst& inst, Parameter path_parameter, bool end_range=false) {
     bool debug = false;
-    // debug = true;
+    debug = true;
 	bool success = false;
 	int rowsLog2 = log2ceil(inst.n_eq); // ceil for sum reduction
 	int dimLog2 = log2ceil(inst.dim); // ceil for sum reduction
@@ -834,6 +835,8 @@ bool newton_single2(GPUWorkspace& workspace, GPUInst& inst, Parameter path_param
 		cudaMemcpy(&max_f_val, max_f_val_gpu, sizeof(double),
 				cudaMemcpyDeviceToHost);
 		r_max_f_val = max_f_val/max_x;
+
+		workspace.print_f_val();
 
 		if(debug){
 			std::cout << "   residual(a&r): " << max_f_val \
