@@ -1,9 +1,4 @@
-/*
- * Parameter_Header.h
- *
- *  Created on: Feb 1, 2015
- *      Author: yxc
- */
+/* Parameter_Header.h created on 1 Feb 2015 by yxc with edits by jv */
 
 #ifndef PARAMETER_HEADER_DD_H_
 #define PARAMETER_HEADER_DD_H_
@@ -16,7 +11,11 @@
 
 #define shmemsize 256
 
-#define MON_EVAL_METHOD 3
+#define MON_EVAL_METHOD 1
+// 0 : reverse mode
+// 1 : reverse mode with aligned memory for instructions
+// 2 : tree mode
+// 3 : for multiple evaluation (chosen when #paths > 1)
 
 #define BS_QR 128
 
@@ -48,6 +47,5 @@
 
 #define STEP_INCREASE   1.25
 #define STEP_DECREASE   0.7
-
 
 #endif /* PARAMETER_HEADER_DD_H_ */

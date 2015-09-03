@@ -1,3 +1,5 @@
+Thu 3 Sep 2015 : documented values of MON_EVAL_METHOD in Parameter_Header.h
+
 Wed 2 Sep 2015 : tracking of one path on the GPU with quad doubles is
   sensitive to the MON_EVAL_METHOD, which is defined in the file
   Parameter_Header.h.
