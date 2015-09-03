@@ -28,7 +28,7 @@ int GPU_MGS
 
 bool GPU_Newton
  ( CPUInstHom& hom, Parameter path_parameter, CT* cpu_sol0, CT cpu_t,
-   CT*& x_new,int n_path=1 );
+   CT*& x_new, int n_path=1, int verbose=0 );
 
 bool GPU_Path
  ( CPUInstHom& hom, Parameter path_parameter, CT* cpu_sol0, CT cpu_t,

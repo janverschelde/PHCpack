@@ -723,7 +723,7 @@ bool newton_single(GPUWorkspace& workspace, GPUInst& inst, Parameter path_parame
 // only difference is the function value check
 bool newton_single2(GPUWorkspace& workspace, GPUInst& inst, Parameter path_parameter, bool end_range=false) {
     bool debug = false;
-    debug = true;
+    // debug = true;
 	bool success = false;
 	int rowsLog2 = log2ceil(inst.n_eq); // ceil for sum reduction
 	int dimLog2 = log2ceil(inst.dim); // ceil for sum reduction
@@ -1327,40 +1327,48 @@ bool newton_align(GPUWorkspace& workspace, GPUInst& inst, Parameter path_paramet
 	return true;
 }
 
-bool GPU_Newton(CPUInstHom& hom, Parameter path_parameter, CT* cpu_sol0, CT cpu_t, CT*& x_new, int n_path) {
-	cout << "Newton ";
-	cout << "max_it = " << path_parameter.max_it << endl;
-	cout << "eps    = " << path_parameter.err_max_delta_x << endl;
+bool GPU_Newton
+ ( CPUInstHom& hom, Parameter path_parameter, CT* cpu_sol0, CT cpu_t, 
+   CT*& x_new, int n_path, int verbose )
+{
+   if(verbose > 0)
+   {
+      cout << "Newton ";
+      cout << "max_it = " << path_parameter.max_it << endl;
+      cout << "eps    = " << path_parameter.err_max_delta_x << endl;
+   }
+   // clock_t begin = clock();
 
-	//clock_t begin = clock();
+   cuda_set();
+   GPUInst inst(hom, n_path);
 
-	cuda_set();
-	GPUInst inst(hom, n_path);
+   GPUWorkspace workspace(inst.mon_pos_size,inst.n_coef,inst.n_constant,
+      inst.n_eq,inst.dim,path_parameter.n_predictor,inst.alpha,
+      inst.base_table_size);
 
-	GPUWorkspace workspace(inst.mon_pos_size, inst.n_coef, inst.n_constant, \
-			inst.n_eq, inst.dim, path_parameter.n_predictor, inst.alpha, inst.base_table_size);
+   workspace.update_x_t_value(cpu_sol0, cpu_t);
 
-	workspace.update_x_t_value(cpu_sol0, cpu_t);
+   struct timeval start, end;
+   long seconds, useconds;
+   double timeMS_gpu;
+   gettimeofday(&start, NULL);
 
+   bool success = newton_single2(workspace, inst, path_parameter);
 
-	struct timeval start, end;
-	long seconds, useconds;
-	double timeMS_gpu;
-	gettimeofday(&start, NULL);
+   x_new = workspace.get_x();
 
-	bool success = newton_single2(workspace, inst, path_parameter);
+   gettimeofday(&end, NULL);
+   seconds  = end.tv_sec  - start.tv_sec;
+   useconds = end.tv_usec - start.tv_usec;
+   timeMS_gpu = seconds*1000 + useconds/1000.0;
 
-	x_new = workspace.get_x();
-
-	gettimeofday(&end, NULL);
-	seconds  = end.tv_sec  - start.tv_sec;
-	useconds = end.tv_usec - start.tv_usec;
-	timeMS_gpu = seconds*1000 + useconds/1000.0;
-	std::cout.precision(8);
-	cout << "Path GPU Newton    Time: "<< timeMS_gpu << endl;
-
-	//return success;
-	return true;
+   if(verbose > 0)
+   {
+      std::cout.precision(8);
+      cout << "Path GPU Newton    Time: "<< timeMS_gpu << endl;
+   }
+   // return success;
+   return true;
 }
 #endif /* NEWTON_CU_ */
 
