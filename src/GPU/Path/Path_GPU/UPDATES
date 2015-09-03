@@ -1,6 +1,8 @@
 Thu 3 Sep 2015 : added verbose option to GPU_Newton in newton.cu and
   set the debug to false to mute the execution of Newton's method on the GPU.
   This verbose option is also added to the prototype in path_gpu.h.
+  Placed the call to print_f_val in newton.cu after the if(debug),
+  so the residual will not be printed.
 
 Wed 2 Sep 2015 : updated path_gpu_data.h, path_gpu_data.cu, path_gpu.cu,
   and newton.cu.

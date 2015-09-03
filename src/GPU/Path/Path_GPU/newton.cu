@@ -836,7 +836,7 @@ bool newton_single2(GPUWorkspace& workspace, GPUInst& inst, Parameter path_param
 				cudaMemcpyDeviceToHost);
 		r_max_f_val = max_f_val/max_x;
 
-		workspace.print_f_val();
+		if(debug) workspace.print_f_val();
 
 		if(debug){
 			std::cout << "   residual(a&r): " << max_f_val \
@@ -1341,7 +1341,6 @@ bool GPU_Newton
 
    cuda_set();
    GPUInst inst(hom, n_path);
-
    GPUWorkspace workspace(inst.mon_pos_size,inst.n_coef,inst.n_constant,
       inst.n_eq,inst.dim,path_parameter.n_predictor,inst.alpha,
       inst.base_table_size);
