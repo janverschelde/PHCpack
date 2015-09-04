@@ -493,30 +493,35 @@ void CPUInstHomCoef::eval ( const CT t, CT* coef, int reverse )
    CT one_minor_t_power_k = one_minor_t;
    for(int i=1; i<k; i++)
    {
-		t_power_k *= t;
-		one_minor_t_power_k *= one_minor_t;
-	}
-
-	CT t0, t1;
-	if(reverse == 0){
-		t0 = one_minor_t_power_k*alpha;
-		t1 = t_power_k;
-	}
-	else{
-		t0 = t_power_k*alpha;
-		t1 = one_minor_t_power_k;
-	}
-
-	for(int i=0; i<n_coef; i++){
-		//coef[i] = coef_orig[2*i]*t_power_k + coef_orig[2*i+1]*one_minor_t_power_k;
-		//alpha*(1-t)*P + t*Q
-		coef[i] = coef_orig[i+n_coef]*t0 + coef_orig[i]*t1;
-//		coef[i] = coef_orig[2*i+n_coef]*t0 + coef_orig[2*i]*t1;
-	}
-	/*std::cout << t1 << t0;
-	for(int i=0; i<10; i++){
-		std::cout << i << " " << coef[i];
-	}*/
+      t_power_k *= t;
+      one_minor_t_power_k *= one_minor_t;
+   }
+   CT t0, t1;
+   if(reverse == 0)
+   {
+      t0 = one_minor_t_power_k*alpha;
+      t1 = t_power_k;
+   }
+   else
+   {
+      t0 = t_power_k*alpha;
+      t1 = one_minor_t_power_k;
+   }
+   for(int i=0; i<n_coef; i++)
+   {
+      // coef[i] = coef_orig[2*i]*t_power_k
+      // + coef_orig[2*i+1]*one_minor_t_power_k;
+      // alpha*(1-t)*P + t*Q
+      coef[i] = coef_orig[i+n_coef]*t0 + coef_orig[i]*t1;
+      // coef[i] = coef_orig[2*i+n_coef]*t0 + coef_orig[2*i]*t1;
+   }
+   /*
+    std::cout << t1 << t0;
+    for(int i=0; i<10; i++)
+    {
+       std::cout << i << " " << coef[i];
+    }
+   */
 }
 
 void CPUInstHomEq::init
@@ -531,166 +536,193 @@ void CPUInstHomEq::init
    mon_pos_eq = NULL;
    coef = NULL;
 
-	/*for(int set_idx=0; set_idx<n_monset; set_idx++){
-		std::cout << "set_idx = " << set_idx << std::endl;
-		std::cout << hom_monset[set_idx];
-	}*/
+   /*
+    for(int set_idx=0; set_idx<n_monset; set_idx++)
+    {
+       std::cout << "set_idx = " << set_idx << std::endl;
+       std::cout << hom_monset[set_idx];
+    }
+   */
 
-	n_mon_eq = new int[n_eq];
-	for(int eq_idx=0; eq_idx<n_eq; eq_idx++){
-		n_mon_eq[eq_idx] = 0;
-	}
+   n_mon_eq = new int[n_eq];
+   for(int eq_idx=0; eq_idx<n_eq; eq_idx++)
+   {
+      n_mon_eq[eq_idx] = 0;
+   }
+   for(int set_idx=0; set_idx<n_monset; set_idx++)
+   {
+      if(hom_monset[set_idx].get_n()!=0)
+      {
+         int n_mon_set = hom_monset[set_idx].get_n_mon();
+         // std::cout << "n_mon_set = " << n_mon_set << std::endl;
+         for(int mon_idx=0; mon_idx<n_mon_set; mon_idx++)
+         {
+            // std::cout << mon_idx << " " 
+            // << hom_monset[set_idx].get_eq_idx(mon_idx) << std::endl;
+            int eq_idx = hom_monset[set_idx].get_eq_idx(mon_idx);
+            n_mon_eq[eq_idx]++;
+         }
+      }
+   }
+   eq_pos_start = new int[n_eq];
+   int tmp_pos=0;
+   eq_pos_start[0] = 0;
 
-	for(int set_idx=0; set_idx<n_monset; set_idx++){
-		if(hom_monset[set_idx].get_n()!=0){
-			int n_mon_set = hom_monset[set_idx].get_n_mon();
-			//std::cout << "n_mon_set = " << n_mon_set << std::endl;
-			for(int mon_idx=0; mon_idx<n_mon_set; mon_idx++){
-				// std::cout << mon_idx << " " \
-						  << hom_monset[set_idx].get_eq_idx(mon_idx) << std::endl;
-				int eq_idx = hom_monset[set_idx].get_eq_idx(mon_idx);
-				n_mon_eq[eq_idx]++;
-			}
-		}
-	}
+   for(int eq_idx=0; eq_idx<n_eq-1; eq_idx++)
+   {
+      eq_pos_start[eq_idx+1] = eq_pos_start[eq_idx] + (n_mon_eq[eq_idx]+1);
+   }
 
-	eq_pos_start = new int[n_eq];
-	int tmp_pos=0;
-	eq_pos_start[0] = 0;
+   // std::cout << "eq_pos_start" << std::endl;
+   // for(int eq_idx=0; eq_idx<n_eq; eq_idx++)
+   // {
+   //    std::cout << eq_idx << " " << n_mon_eq[eq_idx]
+   //              << " " << eq_pos_start[eq_idx] << std::endl;
+   // }
 
-	for(int eq_idx=0; eq_idx<n_eq-1; eq_idx++){
-		eq_pos_start[eq_idx+1] = eq_pos_start[eq_idx] + (n_mon_eq[eq_idx]+1);
-	}
+   n_mon_total = eq_pos_start[n_eq-1] + n_mon_eq[n_eq-1]+1;
+   // std::cout << "n_mon_total = " << n_mon_total << std::endl;
+   // std::cout << "n_mon = " << n_mon_total-n_eq << std::endl;
 
-//	std::cout << "eq_pos_start" << std::endl;
-//	for(int eq_idx=0; eq_idx<n_eq; eq_idx++){
-//		std::cout << eq_idx << " " << n_mon_eq[eq_idx] << " " << eq_pos_start[eq_idx] << std::endl;
-//	}
+   int* eq_mon_pos_size = new int[n_eq];
+   for(int eq_idx=0; eq_idx<n_eq; eq_idx++)
+   {
+      eq_mon_pos_size[eq_idx] = 0;
+   }
+   for(int set_idx=0; set_idx<n_monset; set_idx++)
+   {
+      if(hom_monset[set_idx].get_n()!=0)
+      {
+         int n_mon_set = hom_monset[set_idx].get_n_mon();
+         // std::cout << "n_mon_set = " << n_mon_set << std::endl;
+         for(int mon_idx=0; mon_idx<n_mon_set; mon_idx++)
+         {
+            // std::cout << mon_idx << " " 
+            //  << hom_monset[set_idx].get_eq_idx(mon_idx) << std::endl;
+            int eq_idx = hom_monset[set_idx].get_eq_idx(mon_idx);
+            eq_mon_pos_size[eq_idx] += hom_monset[set_idx].get_n() + 1;
+         }
+      }
+   }
+   n_pos_total = 0;
 
-	n_mon_total = eq_pos_start[n_eq-1] + n_mon_eq[n_eq-1]+1;
-	//std::cout << "n_mon_total = " << n_mon_total << std::endl;
-	//std::cout << "n_mon = " << n_mon_total-n_eq << std::endl;
+   // std::cout << "eq_mon_pos_size " << std::endl;
+   for(int eq_idx=0; eq_idx<n_eq; eq_idx++)
+   {
+      // std::cout << eq_idx << " " << eq_mon_pos_size[eq_idx] << std::endl;
+      n_pos_total += eq_mon_pos_size[eq_idx];
+   }
+   // std::cout << "n_pos_total = " << n_pos_total << std::endl;
 
-	int* eq_mon_pos_size = new int[n_eq];
-	for(int eq_idx=0; eq_idx<n_eq; eq_idx++){
-		eq_mon_pos_size[eq_idx] = 0;
-	}
+   mon_pos_start_eq = new int[n_mon_total];
+   coef = new CT[n_mon_total*2];
+   mon_pos_start_eq[0] = 0;
 
-	for(int set_idx=0; set_idx<n_monset; set_idx++){
-		if(hom_monset[set_idx].get_n()!=0){
-			int n_mon_set = hom_monset[set_idx].get_n_mon();
-			//std::cout << "n_mon_set = " << n_mon_set << std::endl;
-			for(int mon_idx=0; mon_idx<n_mon_set; mon_idx++){
-				// std::cout << mon_idx << " " \
-						  << hom_monset[set_idx].get_eq_idx(mon_idx) << std::endl;
-				int eq_idx = hom_monset[set_idx].get_eq_idx(mon_idx);
-				eq_mon_pos_size[eq_idx] += hom_monset[set_idx].get_n() + 1;
-			}
-		}
-	}
+   int* eq_mon_idx_tmp = new int[n_eq];
+   int* eq_mon_pos_tmp = new int[n_eq];
+   eq_mon_pos_tmp[0] = 0;
+   eq_mon_idx_tmp[0] = 0;
+   for(int eq_idx=0; eq_idx<n_eq-1; eq_idx++)
+   {
+      eq_mon_pos_tmp[eq_idx+1] = eq_mon_pos_tmp[eq_idx]
+                               + eq_mon_pos_size[eq_idx];
+   }
+   for(int eq_idx=0; eq_idx<n_eq; eq_idx++)
+   {
+      eq_mon_idx_tmp[eq_idx] = eq_pos_start[eq_idx];
+   }
+   // std::cout << "mon_pos_start" << std::endl;
+   for(int eq_idx=0; eq_idx<n_eq; eq_idx++)
+   {
+      mon_pos_start_eq[eq_pos_start[eq_idx]] = n_mon_eq[eq_idx];
+      eq_mon_idx_tmp[eq_idx]++;
+      // std::cout << eq_idx << " "
+      //           << mon_pos_start_eq[eq_pos_start[eq_idx]] << std::endl;
+   }
+   /*
+    std::cout << "eq current position" << std::endl;
+    for(int eq_idx=0; eq_idx<n_eq; eq_idx++)
+    {
+       std::cout << eq_idx << " " << eq_mon_idx_tmp[eq_idx]
+                 << " " << eq_mon_pos_tmp[eq_idx] << std::endl;
+    }
+   */
 
-	n_pos_total = 0;
-
-	//std::cout << "eq_mon_pos_size " << std::endl;
-	for(int eq_idx=0; eq_idx<n_eq; eq_idx++){
-		//std::cout << eq_idx << " " << eq_mon_pos_size[eq_idx] << std::endl;
-		n_pos_total += eq_mon_pos_size[eq_idx];
-	}
-	//std::cout << "n_pos_total = " << n_pos_total << std::endl;
-
-	mon_pos_start_eq = new int[n_mon_total];
-	coef = new CT[n_mon_total*2];
-	mon_pos_start_eq[0] = 0;
-
-	int* eq_mon_idx_tmp = new int[n_eq];
-	int* eq_mon_pos_tmp = new int[n_eq];
-	eq_mon_pos_tmp[0] = 0;
-	eq_mon_idx_tmp[0] = 0;
-	for(int eq_idx=0; eq_idx<n_eq-1; eq_idx++){
-		eq_mon_pos_tmp[eq_idx+1] = eq_mon_pos_tmp[eq_idx] + eq_mon_pos_size[eq_idx];
-	}
-	for(int eq_idx=0; eq_idx<n_eq; eq_idx++){
-		eq_mon_idx_tmp[eq_idx] = eq_pos_start[eq_idx];
-
-	}
-	//std::cout << "mon_pos_start" << std::endl;
-	for(int eq_idx=0; eq_idx<n_eq; eq_idx++){
-		mon_pos_start_eq[eq_pos_start[eq_idx]] = n_mon_eq[eq_idx];
-		eq_mon_idx_tmp[eq_idx]++;
-		//std::cout << eq_idx << " " << mon_pos_start_eq[eq_pos_start[eq_idx]] << std::endl;
-	}
-
-	/*std::cout << "eq current position" << std::endl;
-	for(int eq_idx=0; eq_idx<n_eq; eq_idx++){
-		std::cout << eq_idx << " " << eq_mon_idx_tmp[eq_idx] << " " << eq_mon_pos_tmp[eq_idx] << std::endl;
-	}*/
-
-	//init coef
-	for(int eq_idx=0; eq_idx<n_eq; eq_idx++){
-		//std::cout << eq_idx << " " << eq_pos_start[eq_idx] << std::endl;
-		coef[2*eq_pos_start[eq_idx]] = CT(0.0,0.0);
-		coef[2*eq_pos_start[eq_idx]+1] = CT(0.0,0.0);
-	}
-
-
-	mon_pos_eq = new unsigned short[n_pos_total];
-	for(int set_idx=0; set_idx<n_monset; set_idx++){
-		if(hom_monset[set_idx].get_n()!=0){
-			int n_mon_set = hom_monset[set_idx].get_n_mon();
-			//std::cout << "n_mon_set = " << n_mon_set << std::endl;
-			for(int mon_idx=0; mon_idx<n_mon_set; mon_idx++){
-				// std::cout << mon_idx << " " \
-						  << hom_monset[set_idx].get_eq_idx(mon_idx) << std::endl;
-				int eq_idx = hom_monset[set_idx].get_eq_idx(mon_idx);
-				mon_pos_start_eq[eq_mon_idx_tmp[eq_idx]] = eq_mon_pos_tmp[eq_idx];
-				CT* coef_tmp = coef + 2*eq_mon_idx_tmp[eq_idx];
-				hom_monset[set_idx].write_coef(coef_tmp, mon_idx);
-				int tmp_pos = eq_mon_pos_tmp[eq_idx];
-				mon_pos_eq[tmp_pos] = hom_monset[set_idx].get_n();
-				unsigned short* tmp_pointer = mon_pos_eq+tmp_pos+1;
-				hom_monset[set_idx].write_pos(tmp_pointer);
-				eq_mon_pos_tmp[eq_idx] += hom_monset[set_idx].get_n() + 1;
-				eq_mon_idx_tmp[eq_idx]++;
-			}
-		}
-		else{
-			int n_mon_set = hom_monset[set_idx].get_n_mon();
-			//std::cout << "n_mon_set = " << n_mon_set << std::endl;
-			for(int mon_idx=0; mon_idx<n_mon_set; mon_idx++){
-				int eq_idx = hom_monset[set_idx].get_eq_idx(mon_idx);
-				CT* coef_tmp = coef + 2*eq_pos_start[eq_idx];
-				hom_monset[set_idx].write_coef(coef_tmp, mon_idx);
-			}
-		}
-	}
+   // init coef
+   for(int eq_idx=0; eq_idx<n_eq; eq_idx++)
+   {
+      // std::cout << eq_idx << " " << eq_pos_start[eq_idx] << std::endl;
+      coef[2*eq_pos_start[eq_idx]] = CT(0.0,0.0);
+      coef[2*eq_pos_start[eq_idx]+1] = CT(0.0,0.0);
+   }
+   mon_pos_eq = new unsigned short[n_pos_total];
+   for(int set_idx=0; set_idx<n_monset; set_idx++)
+   {
+      if(hom_monset[set_idx].get_n()!=0)
+      {
+         int n_mon_set = hom_monset[set_idx].get_n_mon();
+         // std::cout << "n_mon_set = " << n_mon_set << std::endl;
+         for(int mon_idx=0; mon_idx<n_mon_set; mon_idx++)
+         {
+            // std::cout << mon_idx << " "
+	    // << hom_monset[set_idx].get_eq_idx(mon_idx) << std::endl;
+            int eq_idx = hom_monset[set_idx].get_eq_idx(mon_idx);
+            mon_pos_start_eq[eq_mon_idx_tmp[eq_idx]] = eq_mon_pos_tmp[eq_idx];
+            CT* coef_tmp = coef + 2*eq_mon_idx_tmp[eq_idx];
+            hom_monset[set_idx].write_coef(coef_tmp, mon_idx);
+            int tmp_pos = eq_mon_pos_tmp[eq_idx];
+            mon_pos_eq[tmp_pos] = hom_monset[set_idx].get_n();
+            unsigned short* tmp_pointer = mon_pos_eq+tmp_pos+1;
+            hom_monset[set_idx].write_pos(tmp_pointer);
+            eq_mon_pos_tmp[eq_idx] += hom_monset[set_idx].get_n() + 1;
+            eq_mon_idx_tmp[eq_idx]++;
+         }
+      }
+      else
+      {
+         int n_mon_set = hom_monset[set_idx].get_n_mon();
+         // std::cout << "n_mon_set = " << n_mon_set << std::endl;
+         for(int mon_idx=0; mon_idx<n_mon_set; mon_idx++)
+         {
+             int eq_idx = hom_monset[set_idx].get_eq_idx(mon_idx);
+             CT* coef_tmp = coef + 2*eq_pos_start[eq_idx];
+             hom_monset[set_idx].write_coef(coef_tmp, mon_idx);
+         }
+      }
+   }
 }
 
 void CPUInstHomEq::print()
 {
-	std::cout << "CPUInstHomMonEq" << std::endl;
-	std::cout << "n_eq = " << n_eq << std::endl;
-	std::cout << "n_mon       = " << n_mon_total-n_eq << std::endl;
-	std::cout << "n_mon+n_eq  = " << n_mon_total << std::endl;
-	std::cout << "n_pos       = " << n_pos_total-(n_mon_total-n_eq) << std::endl;
-	std::cout << "n_pos+n_mon = " << n_pos_total << std::endl;
+   std::cout << "CPUInstHomMonEq" << std::endl;
+   std::cout << "n_eq = " << n_eq << std::endl;
+   std::cout << "n_mon       = " << n_mon_total-n_eq << std::endl;
+   std::cout << "n_mon+n_eq  = " << n_mon_total << std::endl;
+   std::cout << "n_pos       = " << n_pos_total-(n_mon_total-n_eq) << std::endl;
+   std::cout << "n_pos+n_mon = " << n_pos_total << std::endl;
 }
 
-void CPUInstHom::print(){
-	std::cout << "*************** Coef Instruction ********************" << std::endl;
-	CPU_inst_hom_coef.print();
-	std::cout << "*************** Mon Instruction ********************" << std::endl;
-	CPU_inst_hom_mon.print();
-	std::cout << "*************** Sum Instruction ********************" << std::endl;
-	CPU_inst_hom_sum.print();
+void CPUInstHom::print()
+{
+   std::cout << "*************** Coef Instruction ********************"
+             << std::endl;
+   CPU_inst_hom_coef.print();
+   std::cout << "*************** Mon Instruction ********************"
+             << std::endl;
+   CPU_inst_hom_mon.print();
+   std::cout << "*************** Sum Instruction ********************"
+             << std::endl;
+   CPU_inst_hom_sum.print();
 }
 
 void CPUInstHom::init_workspace ( Workspace& workspace_cpu )
 {
-	int coef_size = CPU_inst_hom_coef.n_coef;
-	int workspace_size = coef_size + CPU_inst_hom_mon.mon_pos_size;
-	workspace_cpu.init(workspace_size, coef_size, n_constant, n_eq, dim, n_predictor, CPU_inst_hom_mon.max_deg_base);
-	//std::cout << "workspace_size = " << workspace_size << std::endl;
-	//std::cout << "coef_size = " << coef_size << std::endl;
+   int coef_size = CPU_inst_hom_coef.n_coef;
+   int workspace_size = coef_size + CPU_inst_hom_mon.mon_pos_size;
+   workspace_cpu.init(workspace_size,coef_size,n_constant,n_eq,dim,
+       n_predictor, CPU_inst_hom_mon.max_deg_base);
+   // std::cout << "workspace_size = " << workspace_size << std::endl;
+   // std::cout << "coef_size = " << coef_size << std::endl;
 }
 
 void CPUInstHom::eval
@@ -734,33 +766,39 @@ void CPUInstHom::eval
 
 void CPUInstHom::update_alpha(CT alpha)
 {
-	CPU_inst_hom_coef.update_alpha(alpha);
+   CPU_inst_hom_coef.update_alpha(alpha);
 }
 
 void CPUInstHom::compare_path_cpu_gpu()
 {
-	std::cout << "n_step_cpu = " << path_data.n_step << std::endl \
-			  << "n_step_gpu = " << path_data_gpu.n_step << std::endl;
-	int n_step = min(path_data.n_step, path_data_gpu.n_step);
-	for(int i=0; i<n_step; i++){
-		if(abs(path_data.steps[i]->t.real-path_data_gpu.steps[i]->t.real)>1E-6){
-			std::cout << i << " " << path_data.steps[i]->t.real << " " << path_data.steps[i]->delta_t << std::endl;
-			std::cout << i << " " << path_data_gpu.steps[i]->t.real << " " << path_data_gpu.steps[i]->delta_t << std::endl;
-			break;
-		}
-	}
+   std::cout << "n_step_cpu = " << path_data.n_step << std::endl
+             << "n_step_gpu = " << path_data_gpu.n_step << std::endl;
+   int n_step = min(path_data.n_step, path_data_gpu.n_step);
+   for(int i=0; i<n_step; i++)
+   {
+      if(abs(path_data.steps[i]->t.real-path_data_gpu.steps[i]->t.real)>1E-6)
+      {
+         std::cout << i << " " << path_data.steps[i]->t.real
+                   << " " << path_data.steps[i]->delta_t << std::endl;
+         std::cout << i << " " << path_data_gpu.steps[i]->t.real
+                   << " " << path_data_gpu.steps[i]->delta_t << std::endl;
+         break;
+      }
+   }
 }
 
 void CPUInstHomCoef::update_alpha(CT alpha)
 {
-	if(alpha.real == 0 && alpha.imag == 0){
-		int r = rand();
-		T1 tmp = T1(r);
-		this->alpha = CT(sin(tmp),cos(tmp));
-	}
-	else{
-		this->alpha = alpha;
-	}
+   if(alpha.real == 0 && alpha.imag == 0)
+   {
+      int r = rand();
+      T1 tmp = T1(r);
+      this->alpha = CT(sin(tmp),cos(tmp));
+   }
+   else
+   {
+      this->alpha = alpha;
+   }
 }
 
 void CPUInstHomMon::init
@@ -905,31 +943,40 @@ void CPUInstHomMon::eval
    {
       eval_deg_table(dim, x_val, deg_table);
       eval_base(deg_table, coef);
-		for(int j=0; j<n_mon_level[0]; j++){
-			//std::cout << " j = " << j << " tmp_mon_pos_start[j] = " << tmp_mon_pos_start[j] << std::endl;
-			int tmp_idx = mon_pos_start[j];
-			cpu_speel_with_base0(x_val, mon_pos+tmp_idx, mon_exp+tmp_idx, mon+tmp_idx, coef[j]);
-		}
-
-		for(int j=n_mon_level[0]; j<n_mon; j++){
-			//std::cout << " j = " << j << " tmp_mon_pos_start[j] = " << tmp_mon_pos_start[j] << std::endl;
-			int tmp_idx = mon_pos_start[j];
-			cpu_speel_with_base(x_val, mon_pos+tmp_idx, mon_exp+tmp_idx, mon+tmp_idx, coef[j]);
-		}
-	}
-	else{
-		for(int j=0; j<n_mon_level[0]; j++){
-			//std::cout << " j = " << j << " tmp_mon_pos_start[j] = " << tmp_mon_pos_start[j] << std::endl;
-			int tmp_idx = mon_pos_start[j];
-			cpu_speel0(x_val, mon_pos+tmp_idx, mon+tmp_idx, coef[j]);
-		}
-
-		for(int j=n_mon_level[0]; j<n_mon; j++){
-			//std::cout << " j = " << j << " tmp_mon_pos_start[j] = " << tmp_mon_pos_start[j] << std::endl;
-			int tmp_idx = mon_pos_start[j];
-			cpu_speel(x_val, mon_pos+tmp_idx, mon+tmp_idx, coef[j]);
-		}
-	}
+      for(int j=0; j<n_mon_level[0]; j++)
+      {
+         // std::cout << " j = " << j << " tmp_mon_pos_start[j] = " 
+         //           << tmp_mon_pos_start[j] << std::endl;
+         int tmp_idx = mon_pos_start[j];
+         cpu_speel_with_base0(x_val,mon_pos+tmp_idx,mon_exp+tmp_idx,
+            mon+tmp_idx, coef[j]);
+      }
+      for(int j=n_mon_level[0]; j<n_mon; j++)
+      {
+         // std::cout << " j = " << j << " tmp_mon_pos_start[j] = "
+         //           << tmp_mon_pos_start[j] << std::endl;
+         int tmp_idx = mon_pos_start[j];
+         cpu_speel_with_base(x_val,mon_pos+tmp_idx,mon_exp+tmp_idx,
+            mon+tmp_idx, coef[j]);
+      }
+   }
+   else
+   {
+      for(int j=0; j<n_mon_level[0]; j++)
+      {
+         // std::cout << " j = " << j << " tmp_mon_pos_start[j] = "
+         //           << tmp_mon_pos_start[j] << std::endl;
+         int tmp_idx = mon_pos_start[j];
+         cpu_speel0(x_val,mon_pos+tmp_idx,mon+tmp_idx,coef[j]);
+      }
+      for(int j=n_mon_level[0]; j<n_mon; j++)
+      {
+         // std::cout << " j = " << j << " tmp_mon_pos_start[j] = "
+         //           << tmp_mon_pos_start[j] << std::endl;
+         int tmp_idx = mon_pos_start[j];
+         cpu_speel(x_val,mon_pos+tmp_idx,mon+tmp_idx,coef[j]);
+      }
+   }
 }
 
 
@@ -938,41 +985,49 @@ void CPUInstHomMon::eval_deg_table
 {
    for(int var_idx=0; var_idx<dim; var_idx++)
    {
-    	if(max_deg_base[var_idx]>0){
-    		CT* tmp_deg_table = deg_table[var_idx];
-			CT tmp_var = x_val[var_idx];
-			tmp_deg_table[0] = tmp_var;
-			for(int deg_idx=1; deg_idx<max_deg_base[var_idx]; deg_idx++){
-				tmp_deg_table[deg_idx] = tmp_deg_table[deg_idx-1]*tmp_var;
-			}
-    	}
-    }
-    // print degree table
-//    for(int var_idx=0; var_idx<dim; var_idx++){
-//    	for(int deg_idx=0; deg_idx<max_deg_base[var_idx]; deg_idx++){
-//    		std::cout << var_idx << " " << deg_idx << " " << deg_table[var_idx][deg_idx];
-//    	}
-//    }
+      if(max_deg_base[var_idx]>0)
+      {
+         CT* tmp_deg_table = deg_table[var_idx];
+         CT tmp_var = x_val[var_idx];
+         tmp_deg_table[0] = tmp_var;
+         for(int deg_idx=1; deg_idx<max_deg_base[var_idx]; deg_idx++)
+         {
+            tmp_deg_table[deg_idx] = tmp_deg_table[deg_idx-1]*tmp_var;
+         }
+      }
+   }
+   // print degree table
+   // for(int var_idx=0; var_idx<dim; var_idx++)
+   // {
+   //    for(int deg_idx=0; deg_idx<max_deg_base[var_idx]; deg_idx++)
+   //    {
+   //       std::cout << var_idx << " " << deg_idx << " "
+   //                 << deg_table[var_idx][deg_idx];
+   //    }
+   // }
 }
 
 void CPUInstHomMon::eval_base ( CT** deg_table, CT* coef )
 {
-    for(int mon_idx=n_mon_base_start; mon_idx<n_mon; mon_idx++){
-		int tmp_idx = mon_pos_start[mon_idx];
-		unsigned short* tmp_mon_pos = mon_pos + tmp_idx;
-		unsigned short* tmp_mon_exp = mon_exp + tmp_idx;
-		int tmp_var_start = *tmp_mon_exp++;
-		int tmp_n_var = *tmp_mon_pos++;
-		if(tmp_var_start < tmp_n_var){
-	        CT tmp_val = coef[mon_idx];
-//	        std::cout << tmp_val;
-			for(int var_idx=tmp_var_start; var_idx<tmp_n_var; var_idx++){
-				tmp_val *= deg_table[tmp_mon_pos[var_idx]][tmp_mon_exp[var_idx]-2];
-			}
-//	        std::cout << tmp_val;
-			coef[mon_idx] = tmp_val;
-		}
-    }
+   for(int mon_idx=n_mon_base_start; mon_idx<n_mon; mon_idx++)
+   {
+      int tmp_idx = mon_pos_start[mon_idx];
+      unsigned short* tmp_mon_pos = mon_pos + tmp_idx;
+      unsigned short* tmp_mon_exp = mon_exp + tmp_idx;
+      int tmp_var_start = *tmp_mon_exp++;
+      int tmp_n_var = *tmp_mon_pos++;
+      if(tmp_var_start < tmp_n_var)
+      {
+         CT tmp_val = coef[mon_idx];
+         // std::cout << tmp_val;
+         for(int var_idx=tmp_var_start; var_idx<tmp_n_var; var_idx++)
+         {
+            tmp_val *= deg_table[tmp_mon_pos[var_idx]][tmp_mon_exp[var_idx]-2];
+         }
+         // std::cout << tmp_val;
+         coef[mon_idx] = tmp_val;
+      }
+   }
 }
 
 void CPUInstHomMon::print()
@@ -1552,45 +1607,54 @@ void CPUInstHomSum::init
     sum_pos_start = new int[n_sum];
     int tmp_idx = 0;
     int last_length = 0;
-    for(int i=1; i<max_n_sums+1; i++){
-		for(int j=0; j<n_sums_count[i]; j++){
-			if(tmp_idx == 0){
-				sum_pos_start[0] = 0;
-			}
-			else{
-				sum_pos_start[tmp_idx] = sum_pos_start[tmp_idx-1] + last_length;
-			}
-			tmp_idx++;
-			last_length = i+2;
-		}
-	}
-	/*std::cout << "sum_pos_start" << std::endl;
-	for(int i=0; i<n_sum; i++){
-		std::cout << i << " " << sum_pos_start[i] << std::endl;
-	}*/
+    for(int i=1; i<max_n_sums+1; i++)
+    {
+       for(int j=0; j<n_sums_count[i]; j++)
+       {
+          if(tmp_idx == 0)
+          {
+             sum_pos_start[0] = 0;
+          }
+          else
+          {
+             sum_pos_start[tmp_idx] = sum_pos_start[tmp_idx-1] + last_length;
+          }
+          tmp_idx++;
+          last_length = i+2;
+       }
+    }
+    /*
+     std::cout << "sum_pos_start" << std::endl;
+     for(int i=0; i<n_sum; i++)
+     {
+        std::cout << i << " " << sum_pos_start[i] << std::endl;
+     }
+    */
+    // Start pos of sums
+    int* n_sums_start = new int[max_n_sums+1];
+    n_sums_start[0] = 0;
+    n_sums_start[1] = 0;
+    for(int i=2; i<max_n_sums+1; i++)
+    {
+       n_sums_start[i] = n_sums_start[i-1] + n_sums_count[i-1]*(1+i);
+    }
+    sum_pos_size = n_sums_start[max_n_sums]
+                 + n_sums_count[max_n_sums]*(2+max_n_sums);
 
-	// Start pos of sums
-	int* n_sums_start = new int[max_n_sums+1];
-	n_sums_start[0] = 0;
-	n_sums_start[1] = 0;
-	for(int i=2; i<max_n_sums+1; i++){
-		n_sums_start[i] = n_sums_start[i-1] + n_sums_count[i-1]*(1+i);
-	}
+    // std::cout << "sum_pos_size = " << sum_pos_size << std::endl;
 
-	sum_pos_size = n_sums_start[max_n_sums] + n_sums_count[max_n_sums]*(2+max_n_sums);
-
-	//std::cout << "sum_pos_size = " << sum_pos_size << std::endl;
-
-	int* sum_pos_start_loc = new int[n_eq*(dim+1)];
-	for(int i=0; i<n_eq*(dim+1); i++){
-		sum_pos_start_loc[i] = 0;
-	}
-	int** sum_pos_start_matrix = new int*[n_eq];
-	int* sum_pos_start_matrix_tmp = sum_pos_start_loc;
-	for(int i=0; i<n_eq; i++){
-		sum_pos_start_matrix[i] = sum_pos_start_matrix_tmp;
-		sum_pos_start_matrix_tmp += dim+1;
-	}
+    int* sum_pos_start_loc = new int[n_eq*(dim+1)];
+    for(int i=0; i<n_eq*(dim+1); i++)
+    {
+       sum_pos_start_loc[i] = 0;
+    }
+    int** sum_pos_start_matrix = new int*[n_eq];
+    int* sum_pos_start_matrix_tmp = sum_pos_start_loc;
+    for(int i=0; i<n_eq; i++)
+    {
+       sum_pos_start_matrix[i] = sum_pos_start_matrix_tmp;
+       sum_pos_start_matrix_tmp += dim+1;
+    }
 
 	sum_pos = new int[sum_pos_size];
 	for(int i=0; i<sum_pos_size; i++){

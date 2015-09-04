@@ -1,3 +1,5 @@
+Fri 4 Sep 2015 : reformatting in eval_host.cpp for better readability.
+
 Wed 2 Sep 2015 : updated and reformatted eval_host.h and eval_host.cpp,
   also newton_host.cpp was updated.
 
