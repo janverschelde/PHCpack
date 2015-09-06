@@ -8,7 +8,7 @@ PYTHON=/usr/include/python2.6
 # MPI_HOME=/usr/lib64/openmpi
 MPI_HOME=/usr/local/mpi/gcc/openmpi-1.4.3
 
-QD_ROOT=/usr/local/qd-2.3.13
+QD_ROOT=/usr/local/qd-2.3.17
 QD_LIB=/usr/local/lib
 GQD_HOME=/usr/local/gqd_1_2
 SDK_HOME=/usr/local/cuda/sdk
@@ -651,6 +651,10 @@ ts_autotune:
 
 ts_poco:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_poco.adb -o $(BIN)/ts_poco
+
+ts_bbpoco:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_bbpoco.adb \
+              -o $(BIN)/ts_bbpoco
 
 ts_exp:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_exp.adb -o $(BIN)/ts_exp

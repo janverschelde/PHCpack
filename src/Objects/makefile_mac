@@ -674,6 +674,10 @@ ts_autotune:
 ts_poco:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_poco.adb -o $(BIN)/ts_poco
 
+ts_bbpoco:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_bbpoco.adb \
+              -o $(BIN)/ts_bbpoco
+
 ts_exp:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_exp.adb -o $(BIN)/ts_exp
 
