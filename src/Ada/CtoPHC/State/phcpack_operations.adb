@@ -30,10 +30,12 @@ with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
 with Standard_Homotopy;
-with DoblDobl_Homotopy;
-with QuadDobl_Homotopy;
-with Multprec_Homotopy;
 with Standard_Laurent_Homotopy;
+with DoblDobl_Homotopy;
+with DoblDobl_Laurent_Homotopy;
+with QuadDobl_Homotopy;
+with QuadDobl_Laurent_Homotopy;
+with Multprec_Homotopy;
 with Continuation_Parameters;
 with Standard_Continuation_Data;
 with Standard_Path_Trackers;
@@ -1076,6 +1078,118 @@ package body PHCpack_Operations is
     when others => crash := true; return;
   end Silent_Laurent_Path_Tracker;
 
+  procedure Silent_Laurent_Path_Tracker 
+               ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
+                 length : out double_float;
+                 nbstep,nbfail,nbiter,nbsyst : out natural32;
+                 crash : out boolean ) is
+
+    use DoblDobl_Complex_Numbers,DoblDobl_Complex_Vector_Norms;
+    use DoblDobl_Path_Trackers;
+
+    procedure Track_Path_along_Path is
+      new Linear_Single_Normal_Silent_Continue
+            (Max_Norm,DoblDobl_Laurent_Homotopy.Eval,
+             DoblDobl_Laurent_Homotopy.Diff,DoblDobl_Laurent_Homotopy.Diff);
+
+    procedure Track_Path_at_End is
+      new Linear_Single_Conditioned_Silent_Continue
+            (Max_Norm,DoblDobl_Laurent_Homotopy.Eval,
+             DoblDobl_Laurent_Homotopy.Diff,DoblDobl_Laurent_Homotopy.Diff);
+
+    one : constant double_double := create(1.0);
+    zero : constant double_double := create(0.0);
+    t1 : constant Complex_Number := Create(one);
+    tol : constant double_float := 1.0E-12;
+   -- tol_zero : constant double_float := 1.0E-8;
+    pp1 : constant Continuation_Parameters.Pred_Pars
+        := Continuation_Parameters.Create_for_Path;
+    pp2 : constant Continuation_Parameters.Pred_Pars
+        := Continuation_Parameters.Create_End_Game;
+    cp1 : constant Continuation_Parameters.Corr_Pars
+        := Continuation_Parameters.Create_for_Path;
+    cp2 : constant Continuation_Parameters.Corr_Pars
+        := Continuation_Parameters.Create_End_Game;
+    v : Double_Double_Vectors.Link_to_Vector;
+    e : double_double := create(0.0);
+    s : DoblDobl_Continuation_Data.Solu_Info;
+    dd_len : double_double;
+
+  begin
+    ls.t := Create(zero);
+    s := DoblDobl_Continuation_Data.Shallow_Create(ls);
+    Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
+    Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
+    dd_len := create(s.length_path);
+    ls.t := Create(REAL_PART(ls.t),dd_len);
+    ls.err := create(s.cora);
+    ls.rco := create(s.rcond);
+    ls.res := create(s.resa);
+    length := s.length_path;
+    nbstep := s.nstep; nbfail := s.nfail;
+    nbiter := s.niter; nbsyst := s.nsyst;
+    crash := false;
+  exception
+    when others => crash := true; return;
+  end Silent_Laurent_Path_Tracker;
+
+  procedure Silent_Laurent_Path_Tracker 
+               ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution;
+                 length : out double_float;
+                 nbstep,nbfail,nbiter,nbsyst : out natural32;
+                 crash : out boolean ) is
+
+    use QuadDobl_Complex_Numbers,QuadDobl_Complex_Vector_Norms;
+    use QuadDobl_Path_Trackers;
+
+    procedure Track_Path_along_Path is
+      new Linear_Single_Normal_Silent_Continue
+            (Max_Norm,QuadDobl_Laurent_Homotopy.Eval,
+             QuadDobl_Laurent_Homotopy.Diff,QuadDobl_Laurent_Homotopy.Diff);
+
+    procedure Track_Path_at_End is
+      new Linear_Single_Conditioned_Silent_Continue
+            (Max_Norm,QuadDobl_Laurent_Homotopy.Eval,
+             QuadDobl_Laurent_Homotopy.Diff,QuadDobl_Laurent_Homotopy.Diff);
+
+    one : constant quad_double := create(1.0);
+    zero : constant quad_double := create(0.0);
+    t1 : constant Complex_Number := Create(one);
+    tol : constant double_float := 1.0E-12;
+   -- tol_zero : constant double_float := 1.0E-8;
+    pp1 : constant Continuation_Parameters.Pred_Pars
+        := Continuation_Parameters.Create_for_Path;
+    pp2 : constant Continuation_Parameters.Pred_Pars
+        := Continuation_Parameters.Create_End_Game;
+    cp1 : constant Continuation_Parameters.Corr_Pars
+        := Continuation_Parameters.Create_for_Path;
+    cp2 : constant Continuation_Parameters.Corr_Pars
+        := Continuation_Parameters.Create_End_Game;
+    v : Quad_Double_Vectors.Link_to_Vector;
+    e : quad_double := create(0.0);
+    s : QuadDobl_Continuation_Data.Solu_Info;
+    dd_len : double_double;
+    qd_len : quad_double;
+
+  begin
+    ls.t := Create(zero);
+    s := QuadDobl_Continuation_Data.Shallow_Create(ls);
+    Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
+    Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
+    dd_len := create(s.length_path);
+    qd_len := create(dd_len);
+    ls.t := Create(REAL_PART(ls.t),qd_len);
+    ls.err := create(s.cora);
+    ls.rco := create(s.rcond);
+    ls.res := create(s.resa);
+    length := s.length_path;
+    nbstep := s.nstep; nbfail := s.nfail;
+    nbiter := s.niter; nbsyst := s.nsyst;
+    crash := false;
+  exception
+    when others => crash := true; return;
+  end Silent_Laurent_Path_Tracker;
+
   procedure Reporting_Path_Tracker
                ( ls : in Standard_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
@@ -1294,6 +1408,128 @@ package body PHCpack_Operations is
     end if;
     ls.t := Create(REAL_PART(ls.t),s.length_path);
     ls.err := s.cora; ls.rco := s.rcond; ls.res := s.resa;
+    length := s.length_path;
+    nbstep := s.nstep; nbfail := s.nfail;
+    nbiter := s.niter; nbsyst := s.nsyst;
+    crash := false;
+  exception
+    when others => crash := true;
+  end Reporting_Laurent_Path_Tracker;
+
+  procedure Reporting_Laurent_Path_Tracker
+               ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
+                 length : out double_float;
+                 nbstep,nbfail,nbiter,nbsyst : out natural32;
+                 crash : out boolean ) is
+
+    use DoblDobl_Complex_Numbers,DoblDobl_Complex_Vector_Norms;
+    use DoblDobl_Path_Trackers;
+
+    procedure Track_Path_along_Path is
+      new Linear_Single_Normal_Reporting_Continue
+            (Max_Norm,DoblDobl_Laurent_Homotopy.Eval,
+             DoblDobl_Laurent_Homotopy.Diff,DoblDobl_Laurent_Homotopy.Diff);
+
+    procedure Track_Path_at_End is
+      new Linear_Single_Conditioned_Reporting_Continue
+            (Max_Norm,DoblDobl_Laurent_Homotopy.Eval,
+             DoblDobl_Laurent_Homotopy.Diff,DoblDobl_Laurent_Homotopy.Diff);
+
+    one : constant double_double := create(1.0);
+    zero : constant double_double := create(0.0);
+    t1 : constant Complex_Number := Create(one);
+    tol : constant double_float := 1.0E-12;
+   -- tol_zero : constant double_float := 1.0E-8;
+    pp1 : constant Continuation_Parameters.Pred_Pars
+        := Continuation_Parameters.Create_for_Path;
+    pp2 : constant Continuation_Parameters.Pred_Pars
+        := Continuation_Parameters.Create_End_Game;
+    cp1 : constant Continuation_Parameters.Corr_Pars
+        := Continuation_Parameters.Create_for_Path;
+    cp2 : constant Continuation_Parameters.Corr_Pars
+        := Continuation_Parameters.Create_End_Game;
+    v : Double_Double_Vectors.Link_to_Vector;
+    e : double_double := zero;
+    s : DoblDobl_Continuation_Data.Solu_Info;
+    dd_len : double_double;
+
+  begin
+    ls.t := Create(zero);
+    s := DoblDobl_Continuation_Data.Shallow_Create(ls);
+    if file_okay then
+      Track_Path_along_Path(output_file,s,t1,tol,false,pp1,cp1);
+      Track_Path_at_End(output_file,s,t1,tol,false,0,v,e,pp2,cp2);
+    else
+      Track_Path_along_Path(standard_output,s,t1,tol,false,pp1,cp1);
+      Track_Path_at_End(standard_output,s,t1,tol,false,0,v,e,pp2,cp2);
+    end if;
+    dd_len := create(s.length_path);
+    ls.t := Create(REAL_PART(ls.t),dd_len);
+    ls.err := create(s.cora);
+    ls.rco := create(s.rcond);
+    ls.res := create(s.resa);
+    length := s.length_path;
+    nbstep := s.nstep; nbfail := s.nfail;
+    nbiter := s.niter; nbsyst := s.nsyst;
+    crash := false;
+  exception
+    when others => crash := true;
+  end Reporting_Laurent_Path_Tracker;
+
+  procedure Reporting_Laurent_Path_Tracker
+               ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution;
+                 length : out double_float;
+                 nbstep,nbfail,nbiter,nbsyst : out natural32;
+                 crash : out boolean ) is
+
+    use QuadDobl_Complex_Numbers,QuadDobl_Complex_Vector_Norms;
+    use QuadDobl_Path_Trackers;
+
+    procedure Track_Path_along_Path is
+      new Linear_Single_Normal_Reporting_Continue
+            (Max_Norm,QuadDobl_Laurent_Homotopy.Eval,
+             QuadDobl_Laurent_Homotopy.Diff,QuadDobl_Laurent_Homotopy.Diff);
+
+    procedure Track_Path_at_End is
+      new Linear_Single_Conditioned_Reporting_Continue
+            (Max_Norm,QuadDobl_Laurent_Homotopy.Eval,
+             QuadDobl_Laurent_Homotopy.Diff,QuadDobl_Laurent_Homotopy.Diff);
+
+    one : constant quad_double := create(1.0);
+    zero : constant quad_double := create(0.0);
+    t1 : constant Complex_Number := Create(one);
+    tol : constant double_float := 1.0E-12;
+   -- tol_zero : constant double_float := 1.0E-8;
+    pp1 : constant Continuation_Parameters.Pred_Pars
+        := Continuation_Parameters.Create_for_Path;
+    pp2 : constant Continuation_Parameters.Pred_Pars
+        := Continuation_Parameters.Create_End_Game;
+    cp1 : constant Continuation_Parameters.Corr_Pars
+        := Continuation_Parameters.Create_for_Path;
+    cp2 : constant Continuation_Parameters.Corr_Pars
+        := Continuation_Parameters.Create_End_Game;
+    v : Quad_Double_Vectors.Link_to_Vector;
+    e : quad_double := zero;
+    s : QuadDobl_Continuation_Data.Solu_Info;
+    dd_len : double_double;
+    qd_len : quad_double;
+
+  begin
+    ls.t := Create(zero);
+    s := QuadDobl_Continuation_Data.Shallow_Create(ls);
+    if file_okay then
+      Track_Path_along_Path(output_file,s,t1,tol,false,pp1,cp1);
+      Track_Path_at_End(output_file,s,t1,tol,false,0,v,e,pp2,cp2);
+    else
+      Track_Path_along_Path(standard_output,s,t1,tol,false,pp1,cp1);
+      Track_Path_at_End(standard_output,s,t1,tol,false,0,v,e,pp2,cp2);
+    end if;
+    dd_len := create(s.length_path);
+    qd_len := create(dd_len);
+    ls.t := Create(REAL_PART(ls.t),qd_len);
+    ls.err := create(s.cora);
+    ls.rco := create(s.rcond);
+    ls.res := create(s.resa);
     length := s.length_path;
     nbstep := s.nstep; nbfail := s.nfail;
     nbiter := s.niter; nbsyst := s.nsyst;

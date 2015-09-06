@@ -1,3 +1,6 @@
+Sun 6 Sep 2015 : extended phcpack_operations with path trackers for
+  Laurent systems in double double and quad double precision.
+
 Mon 31 Aug 2015 : blackbox solvers in use_c2phc.adb did not capture the
   number of tasks, as arguments passed from the C interface, fixed this bug.
 

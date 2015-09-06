@@ -258,8 +258,28 @@ package PHCpack_Operations is
                  length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
                  crash : out boolean );
+  procedure Silent_Laurent_Path_Tracker
+               ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
+                 length : out double_float;
+                 nbstep,nbfail,nbiter,nbsyst : out natural32;
+                 crash : out boolean );
+  procedure Silent_Laurent_Path_Tracker
+               ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution;
+                 length : out double_float;
+                 nbstep,nbfail,nbiter,nbsyst : out natural32;
+                 crash : out boolean );
   procedure Reporting_Laurent_Path_Tracker
                ( ls : in Standard_Complex_Solutions.Link_to_Solution;
+                 length : out double_float;
+                 nbstep,nbfail,nbiter,nbsyst : out natural32;
+                 crash : out boolean );
+  procedure Reporting_Laurent_Path_Tracker
+               ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
+                 length : out double_float;
+                 nbstep,nbfail,nbiter,nbsyst : out natural32;
+                 crash : out boolean );
+  procedure Reporting_Laurent_Path_Tracker
+               ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
                  crash : out boolean );
@@ -269,7 +289,8 @@ package PHCpack_Operations is
   --   given solution.  The reporting version writes extra output
   --   to the defined output file.
 
-  -- REQUIRED : Standard_Laurent_Homotopy has been initialized.
+  -- REQUIRED : {Standard,DoblDobl,QuadDobl}_Laurent_Homotopy has
+  --   been initialized.
 
   -- ON ENTRY :
   --   ls        solution of the start system.
