@@ -1,3 +1,7 @@
+Sun 6 Sep 2015 : extended multitasking_continuation with procedures to
+  track paths defined by a homotopy between Laurent polynomial systems,
+  in double double and quad double precision.
+
 Mon 14 Jul 2014 : updated test on start systems in quad double precision,
   in ts_mtvolcon.adb, which required modifications in the packages
   polyhedral_start_systems and multitasking_polyhedral_starters.

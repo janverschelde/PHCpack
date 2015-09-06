@@ -17,6 +17,7 @@ package Multitasking_Continuation is
                ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution );
   procedure Silent_Path_Tracker
                ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution );
+
   procedure Silent_Path_Tracker
                ( id,nb : in integer32;
                  ls : in Standard_Complex_Solutions.Link_to_Solution );
@@ -37,8 +38,19 @@ package Multitasking_Continuation is
   procedure Silent_Laurent_Path_Tracker
                ( ls : in Standard_Complex_Solutions.Link_to_Solution );
   procedure Silent_Laurent_Path_Tracker
+               ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution );
+  procedure Silent_Laurent_Path_Tracker
+               ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution );
+
+  procedure Silent_Laurent_Path_Tracker
                ( id,nb : in integer32;
                  ls : in Standard_Complex_Solutions.Link_to_Solution );
+  procedure Silent_Laurent_Path_Tracker
+               ( id,nb : in integer32;
+                 ls : in DoblDobl_Complex_Solutions.Link_to_Solution );
+  procedure Silent_Laurent_Path_Tracker
+               ( id,nb : in integer32;
+                 ls : in QuadDobl_Complex_Solutions.Link_to_Solution );
 
   -- DESCRIPTION :
   --   Path trackers for Laurent polynomial systems.
@@ -66,8 +78,21 @@ package Multitasking_Continuation is
   procedure Silent_Multitasking_Laurent_Path_Tracker
                ( sols : in out Standard_Complex_Solutions.Solution_List;
                  n : in integer32 );
+  procedure Silent_Multitasking_Laurent_Path_Tracker
+               ( sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 n : in integer32 );
+  procedure Silent_Multitasking_Laurent_Path_Tracker
+               ( sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 n : in integer32 );
+
   procedure Reporting_Multitasking_Laurent_Path_Tracker
                ( sols : in out Standard_Complex_Solutions.Solution_List;
+                 n : in integer32 );
+  procedure Reporting_Multitasking_Laurent_Path_Tracker
+               ( sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 n : in integer32 );
+  procedure Reporting_Multitasking_Laurent_Path_Tracker
+               ( sols : in out QuadDobl_Complex_Solutions.Solution_List;
                  n : in integer32 );
 
   -- DESCRIPTION :

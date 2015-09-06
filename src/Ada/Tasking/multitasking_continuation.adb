@@ -114,8 +114,64 @@ package body Multitasking_Continuation is
   end Silent_Laurent_Path_Tracker;
 
   procedure Silent_Laurent_Path_Tracker
+               ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution ) is
+
+    length : double_float := 0.0;
+    nbstep,nbfail,nbiter,nbsyst : natural32 := 0;
+    fail : boolean := true;
+
+  begin
+    PHCpack_Operations.Silent_Laurent_Path_Tracker
+      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail);
+  end Silent_Laurent_Path_Tracker;
+
+  procedure Silent_Laurent_Path_Tracker
+               ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution ) is
+
+    length : double_float := 0.0;
+    nbstep,nbfail,nbiter,nbsyst : natural32 := 0;
+    fail : boolean := true;
+
+  begin
+    PHCpack_Operations.Silent_Laurent_Path_Tracker
+      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail);
+  end Silent_Laurent_Path_Tracker;
+
+  procedure Silent_Laurent_Path_Tracker
                ( id,nb : in integer32;
                  ls : in Standard_Complex_Solutions.Link_to_Solution ) is
+
+    length : double_float := 0.0;
+    nbstep,nbfail,nbiter,nbsyst : natural32 := 0;
+    fail : boolean := true;
+
+  begin
+    put_line("Task " & Multitasking.to_String(natural32(id))
+                     & " received solution " 
+                     & Multitasking.to_String(natural32(nb)) & ".");
+    PHCpack_Operations.Silent_Laurent_Path_Tracker
+      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail);
+  end Silent_Laurent_Path_Tracker;
+
+  procedure Silent_Laurent_Path_Tracker
+               ( id,nb : in integer32;
+                 ls : in DoblDobl_Complex_Solutions.Link_to_Solution ) is
+
+    length : double_float := 0.0;
+    nbstep,nbfail,nbiter,nbsyst : natural32 := 0;
+    fail : boolean := true;
+
+  begin
+    put_line("Task " & Multitasking.to_String(natural32(id))
+                     & " received solution " 
+                     & Multitasking.to_String(natural32(nb)) & ".");
+    PHCpack_Operations.Silent_Laurent_Path_Tracker
+      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail);
+  end Silent_Laurent_Path_Tracker;
+
+  procedure Silent_Laurent_Path_Tracker
+               ( id,nb : in integer32;
+                 ls : in QuadDobl_Complex_Solutions.Link_to_Solution ) is
 
     length : double_float := 0.0;
     nbstep,nbfail,nbiter,nbsyst : natural32 := 0;
@@ -478,11 +534,211 @@ package body Multitasking_Continuation is
     do_jobs(n);
   end Silent_Multitasking_Laurent_Path_Tracker;
 
+  procedure Silent_Multitasking_Laurent_Path_Tracker
+               ( sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 n : in integer32 ) is
+
+    use DoblDobl_Complex_Solutions;
+    ptr : Solution_List;
+    cnt : natural32 := 0;
+    s : Semaphore.Lock;
+
+    procedure Next_Solution ( i,n : in integer32 ) is
+
+    -- DESCRIPTION :
+    --   The n threads will run through the solution list,
+    --   advancing the pointer ptr in a critical section,
+    --   simultanuously with the counter.
+
+    -- CORRESPONDENCE BETWEEN cnt AND ptr :
+    --   cnt = 0                   <=> ptr not set to sols yet
+    --   cnt in 1..Length_Of(sols) <=> ptr points to current solution
+    --   cnt = Length_Of(sols) + 1 <=> Is_Null(ptr)
+
+      myptr : Solution_List;
+      ls : Link_to_Solution;
+
+    begin
+      loop
+        Semaphore.Request(s);
+        if cnt = 0 then
+          cnt := 1;
+          ptr := sols;
+        else
+          cnt := cnt + 1;
+          if not Is_Null(ptr)
+           then ptr := Tail_Of(ptr);
+          end if;
+        end if;
+        myptr := ptr;
+        Semaphore.Release(s);
+        exit when Is_Null(myptr);
+        ls := Head_Of(myptr);
+        Silent_Laurent_Path_Tracker(ls);
+      end loop;
+    end Next_Solution;
+    procedure do_jobs is new Multitasking.Silent_Workers(Next_Solution);
+
+  begin
+    do_jobs(n);
+  end Silent_Multitasking_Laurent_Path_Tracker;
+
+  procedure Silent_Multitasking_Laurent_Path_Tracker
+               ( sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 n : in integer32 ) is
+
+    use QuadDobl_Complex_Solutions;
+    ptr : Solution_List;
+    cnt : natural32 := 0;
+    s : Semaphore.Lock;
+
+    procedure Next_Solution ( i,n : in integer32 ) is
+
+    -- DESCRIPTION :
+    --   The n threads will run through the solution list,
+    --   advancing the pointer ptr in a critical section,
+    --   simultanuously with the counter.
+
+    -- CORRESPONDENCE BETWEEN cnt AND ptr :
+    --   cnt = 0                   <=> ptr not set to sols yet
+    --   cnt in 1..Length_Of(sols) <=> ptr points to current solution
+    --   cnt = Length_Of(sols) + 1 <=> Is_Null(ptr)
+
+      myptr : Solution_List;
+      ls : Link_to_Solution;
+
+    begin
+      loop
+        Semaphore.Request(s);
+        if cnt = 0 then
+          cnt := 1;
+          ptr := sols;
+        else
+          cnt := cnt + 1;
+          if not Is_Null(ptr)
+           then ptr := Tail_Of(ptr);
+          end if;
+        end if;
+        myptr := ptr;
+        Semaphore.Release(s);
+        exit when Is_Null(myptr);
+        ls := Head_Of(myptr);
+        Silent_Laurent_Path_Tracker(ls);
+      end loop;
+    end Next_Solution;
+    procedure do_jobs is new Multitasking.Silent_Workers(Next_Solution);
+
+  begin
+    do_jobs(n);
+  end Silent_Multitasking_Laurent_Path_Tracker;
+
   procedure Reporting_Multitasking_Laurent_Path_Tracker
                ( sols : in out Standard_Complex_Solutions.Solution_List;
                  n : in integer32 ) is
 
     use Standard_Complex_Solutions;
+    ptr : Solution_List;
+    cnt : integer32 := 0;
+    s : Semaphore.Lock;
+
+    procedure Next_Solution ( i,n : in integer32 ) is
+
+    -- DESCRIPTION :
+    --   The n threads will run through the solution list,
+    --   advancing the pointer ptr in a critical section,
+    --   simultanuously with the counter.
+
+    -- CORRESPONDENCE BETWEEN cnt AND ptr :
+    --   cnt = 0                   <=> ptr not set to sols yet
+    --   cnt in 1..Length_Of(sols) <=> ptr points to current solution
+    --   cnt = Length_Of(sols) + 1 <=> Is_Null(ptr)
+
+      myjob : integer32;
+      myptr : Solution_List;
+      ls : Link_to_Solution;
+
+    begin
+      loop
+        Semaphore.Request(s);
+        if cnt = 0 then
+          cnt := 1;
+          ptr := sols;
+        else
+          cnt := cnt + 1;
+          if not Is_Null(ptr)
+           then ptr := Tail_Of(ptr);
+          end if;
+        end if;
+        myjob := cnt;
+        myptr := ptr;
+        Semaphore.Release(s);
+        exit when Is_Null(myptr);
+        ls := Head_Of(myptr);
+        Silent_Laurent_Path_Tracker(i,myjob,ls);
+      end loop;
+    end Next_Solution;
+    procedure do_jobs is new Multitasking.Reporting_Workers(Next_Solution);
+
+  begin
+    do_jobs(n);
+  end Reporting_Multitasking_Laurent_Path_Tracker;
+
+  procedure Reporting_Multitasking_Laurent_Path_Tracker
+               ( sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                 n : in integer32 ) is
+
+    use DoblDobl_Complex_Solutions;
+    ptr : Solution_List;
+    cnt : integer32 := 0;
+    s : Semaphore.Lock;
+
+    procedure Next_Solution ( i,n : in integer32 ) is
+
+    -- DESCRIPTION :
+    --   The n threads will run through the solution list,
+    --   advancing the pointer ptr in a critical section,
+    --   simultanuously with the counter.
+
+    -- CORRESPONDENCE BETWEEN cnt AND ptr :
+    --   cnt = 0                   <=> ptr not set to sols yet
+    --   cnt in 1..Length_Of(sols) <=> ptr points to current solution
+    --   cnt = Length_Of(sols) + 1 <=> Is_Null(ptr)
+
+      myjob : integer32;
+      myptr : Solution_List;
+      ls : Link_to_Solution;
+
+    begin
+      loop
+        Semaphore.Request(s);
+        if cnt = 0 then
+          cnt := 1;
+          ptr := sols;
+        else
+          cnt := cnt + 1;
+          if not Is_Null(ptr)
+           then ptr := Tail_Of(ptr);
+          end if;
+        end if;
+        myjob := cnt;
+        myptr := ptr;
+        Semaphore.Release(s);
+        exit when Is_Null(myptr);
+        ls := Head_Of(myptr);
+        Silent_Laurent_Path_Tracker(i,myjob,ls);
+      end loop;
+    end Next_Solution;
+    procedure do_jobs is new Multitasking.Reporting_Workers(Next_Solution);
+
+  begin
+    do_jobs(n);
+  end Reporting_Multitasking_Laurent_Path_Tracker;
+
+  procedure Reporting_Multitasking_Laurent_Path_Tracker
+               ( sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                 n : in integer32 ) is
+
+    use QuadDobl_Complex_Solutions;
     ptr : Solution_List;
     cnt : integer32 := 0;
     s : Semaphore.Lock;
