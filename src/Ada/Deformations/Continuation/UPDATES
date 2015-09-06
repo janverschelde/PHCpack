@@ -1,3 +1,6 @@
+Sun 6 Sep 2015 : in {dobldobl,quaddobl}_blackbox_continuations.adb, the
+  multitasked Laurent path trackers are enabled.
+
 Sat 5 Sep 2015 : new packages {dobldobl,quaddobl}_blackbox_continuations,
   with new test program ts_bbpoco.
 

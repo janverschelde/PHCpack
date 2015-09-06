@@ -910,7 +910,7 @@ package body DoblDobl_BlackBox_Continuations is
     DoblDobl_Laurent_Homotopy.Create(p,q,k,gamma);
     Continuation_Parameters.Tune(0);
     tstart(timer);
-   -- Silent_Multitasking_Laurent_Path_Tracker(sols,nt);
+    Silent_Multitasking_Laurent_Path_Tracker(sols,nt);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
     Silent_Black_Box_Refine(p,sols);
@@ -958,7 +958,7 @@ package body DoblDobl_BlackBox_Continuations is
     DoblDobl_Laurent_Homotopy.Create(p,q,k,gamma);
     Tune_Continuation_Parameters(file);
     tstart(timer);
-   -- Silent_Multitasking_Laurent_Path_Tracker(sols,nt);
+    Silent_Multitasking_Laurent_Path_Tracker(sols,nt);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
     Reporting_Black_Box_Refine(file,nt,p,sols);
