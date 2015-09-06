@@ -1,4 +1,5 @@
-Sat 5 Sep 2015 : new package dobldobl_laurent_homotopy.
+Sat 5 Sep 2015 : new packages {dobldobl,quaddobl}_laurent_homotopy 
+  and quaddobl_coefficient_homotopy.
 
 Wed 22 Jul 2015 : refactored code in mainscal.adb and extended the scalers
   to compute with double double and quad double arithmetic.
