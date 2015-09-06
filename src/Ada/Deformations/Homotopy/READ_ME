@@ -1,4 +1,4 @@
-Homotopies, scaling and reduction in PHCv2.3.99
+Homotopies, scaling and reduction in PHCv2.4.01
 
 The Creators in the package Homotopy allow more accessibility constants for
 the Cheater's homotopy.  A multiprecision version of the homotopy package
@@ -21,6 +21,7 @@ projective_transformations         : transform polynomials and solutions
 standard_homotopy                  : homotopy for standard polynomial systems
 standard_laurent_homotopy          : homotopy for standard Laurent systems
 dobldobl_homotopy                  : homotopy for systems of double doubles
+dobldobl_laurent_homotopy          : homotopy for dobldobl Laurent systems
 quaddobl_homotopy                  : homotopy for systems of quad doubles
 ts_qdhom                           : compares eval & diff for dd & qd
 multprec_homotopy                  : homotopy for multiprecision numbers
