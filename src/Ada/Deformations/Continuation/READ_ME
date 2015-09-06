@@ -53,6 +53,7 @@ ts_poco                          : calls the polynomial continuation driver
 scanners_for_continuation        : scans the continuation parameters
 black_box_poly_continuations     : black-box polynomial continuation
 dobldobl_blackbox_continuations  : blackbox continuation with double doubles
+quaddobl_blackbox_continuations  : blackbox continuation with quad doubles
 ts_bbpoco                        : calls the blackbox continuation 
 mainpoco                         : poco as called by the main program
 bablpoco                         : calls black-box polynomial continuation

@@ -1,5 +1,5 @@
-Sat 5 Sep 2015 : new package dobldobl_blackbox_continuations, with new
-  test program ts_bbpoco.
+Sat 5 Sep 2015 : new packages {dobldobl,quaddobl}_blackbox_continuations,
+  with new test program ts_bbpoco.
 
 Thu 19 Feb 2015 : fixed bug in printing relative residuals in process_io.adb.
 
