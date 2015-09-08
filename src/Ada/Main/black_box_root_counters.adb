@@ -20,6 +20,7 @@ with Random_Product_Start_Systems;       use Random_Product_Start_Systems;
 with Floating_Mixed_Subdivisions;        use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;
 with Black_Mixed_Volume_Computations;    use Black_Mixed_Volume_Computations;
+with Black_Polyhedral_Continuations;     use Black_Polyhedral_Continuations;
 
 package body Black_Box_Root_Counters is
 
