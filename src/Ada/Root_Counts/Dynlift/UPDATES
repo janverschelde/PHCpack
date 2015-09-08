@@ -1,3 +1,6 @@
+Mon 7 Sep 2015 : new package black_polyhedral_continuations with code
+  factored out of black_mixed_volume_computations, called by babldmvc.adb.
+
 Wed 9 Jul 2014 : fixed resetting of start_end_game parameters in one of
   the procedures of black_mixed_volume_computations.adb.
 

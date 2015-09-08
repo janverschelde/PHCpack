@@ -14,6 +14,7 @@ with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Arrays_of_Floating_Vector_Lists;  
 with Floating_Mixed_Subdivisions;
 with Black_Mixed_Volume_Computations;    use Black_Mixed_Volume_Computations;
+with Black_Polyhedral_Continuations;     use Black_Polyhedral_Continuations;
 
 procedure babldmvc ( nt : in natural32; infilename,outfilename : in string ) is
 

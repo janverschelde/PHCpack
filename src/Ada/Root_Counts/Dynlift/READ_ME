@@ -1,4 +1,4 @@
-Mixed-volume computation by dynamic lifting in PHCv2.3.90
+Mixed-volume computation by dynamic lifting in PHCv2.4.01
 
 The aim of dynamic lifting is to control the heights of the lifting values,
 to obtain a stable evaluation of the polyhedral homotopy.
@@ -49,10 +49,11 @@ triangulations_and_subdivisions  : convert triangulations <> subdivisions
 dynamic_mixed_subdivisions       : dynamic lifting in the mixed case
 dynamic_polyhedral_continuation  : incremental polyhedral continuation
 -------------------------------------------------------------------------------
-drivers_for_dynamic_lifting      : menu-driver for dynamic lifting
-ts_drivdynl                      : calls the menu-driver
-black_mixed_volume_computations  : black-box polyhedral methods
-babldmvc                         : calls the black-box mixed-volume computation
+drivers_for_dynamic_lifting      : menu driver for dynamic lifting
+ts_drivdynl                      : calls the menu driver
+black_mixed_volume_computations  : blackbox mixed volume computation
+black_polyhedral_continuations   : blackbox polyhedral continuation
+babldmvc                         : calls the blackbox mixed-volume computation
 -------------------------------------------------------------------------------
 
 The Cayley trick is an efficient way to construct all cells in a mixed
