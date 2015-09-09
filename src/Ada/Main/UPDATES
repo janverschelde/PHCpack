@@ -1,3 +1,6 @@
+Wed 9 Sep 2015 : extended blackbox root counters for Laurent polynomial 
+  systems to call the polyhedral homotopies in double double precision.
+
 Mon 7 Sep 2015 : added with/use of black_polyhedral_continuations to the 
   black_box_root_counters.adb.
 

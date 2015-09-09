@@ -3,10 +3,13 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;           use Standard_Integer_Vectors;
+with DoblDobl_Polynomial_Convertors;     use DoblDobl_Polynomial_Convertors;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
+with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 with Arrays_of_Floating_Vector_Lists;    use Arrays_of_Floating_Vector_Lists;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with Total_Degree_Start_Systems;         use Total_Degree_Start_Systems;
 with Partitions_of_Sets_Of_Unknowns_io;  use Partitions_of_Sets_of_Unknowns_io;
 with m_Homogeneous_Bezout_Numbers;       use m_Homogeneous_Bezout_Numbers;
@@ -307,7 +310,7 @@ package body Black_Box_Root_Counters is
                  stlb : in double_float; lifted : in Link_to_Array_of_Lists;
                  orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                  q : in out Standard_Complex_Poly_Systems.Poly_Sys;
-                 qsols,qsols0 : in out Solution_List;
+                 qsols,qsols0 : in out Standard_Complex_Solutions.Solution_List;
                  hocotime : out duration ) is
 
   -- DESCRIPTION :
@@ -385,7 +388,7 @@ package body Black_Box_Root_Counters is
                  stlb : in double_float; lifted : in Link_to_Array_of_Lists;
                  orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                  q : in out Standard_Complex_Poly_Systems.Poly_Sys;
-                 qsols,qsols0 : in out Solution_List;
+                 qsols,qsols0 : in out Standard_Complex_Solutions.Solution_List;
                  hocotime : out duration ) is
 
   -- DESCRIPTION :
@@ -413,6 +416,8 @@ package body Black_Box_Root_Counters is
   --   qsols     solutions of q;
   --   qsols0    solutions of q with zero components;
   --   hocotime  is the time it took to construct the start system.
+
+    use Standard_Complex_Solutions;
 
     timer : timing_widget;
     n : constant natural32 := natural32(p'length);
@@ -485,7 +490,7 @@ package body Black_Box_Root_Counters is
                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  deg : in boolean; rc : out natural32;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
-                 qsols,qsols0 : out Solution_List;
+                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
     d,bz,bs,wrc : natural64;
@@ -524,7 +529,7 @@ package body Black_Box_Root_Counters is
                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  deg : in boolean; rc : out natural32;
                  q : out Standard_Complex_Poly_Systems.Poly_Sys;
-                 qsols,qsols0 : out Solution_List;
+                 qsols,qsols0 : out Standard_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
     d,bz,bs,wrc : natural64;
@@ -556,7 +561,7 @@ package body Black_Box_Root_Counters is
                  p : in out Standard_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
-                 qsols : out Solution_List;
+                 qsols : out Standard_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
 
     timer : Timing_Widget;
@@ -579,12 +584,44 @@ package body Black_Box_Root_Counters is
   end Black_Box_Root_Counting;
 
   procedure Black_Box_Root_Counting 
+               ( nt : in integer32; silent : in boolean;
+                 p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out DoblDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration ) is
+
+    timer : Timing_Widget;
+    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    lifsup : Link_to_Array_of_Lists;
+    mixsub : Mixed_Subdivision;
+    sp : Standard_Complex_Laur_Systems.Laur_Sys(p'range)
+       := DoblDobl_Complex_to_Standard_Laur_Sys(p);
+
+  begin
+    tstart(timer);
+    Black_Box_Mixed_Volume_Computation(sp,mix,perm,lifsup,mixsub,rc);
+    tstop(timer);
+    if not silent
+     then put("mixed volume : "); put(rc,1); new_line;
+    end if;
+    rocotime := Elapsed_User_Time(timer);
+    tstart(timer);
+    Black_Box_Polyhedral_Continuation(nt,p,mix,perm,lifsup.all,mixsub,q,qsols);
+    tstop(timer);
+    Standard_Complex_Laur_Systems.Clear(sp);
+    hocotime := Elapsed_User_Time(timer);
+  end Black_Box_Root_Counting;
+
+  procedure Black_Box_Root_Counting 
                ( file : in file_type; nt : in integer32;
                  p : in out Standard_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32;
                  q : out Standard_Complex_Laur_Systems.Laur_Sys;
-                 qsols : out Solution_List;
+                 qsols : out Standard_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration ) is
+
+    use Standard_Complex_Solutions;
 
     timer : Timing_Widget;
     mix,perm : Standard_Integer_Vectors.Link_to_Vector;
@@ -617,6 +654,53 @@ package body Black_Box_Root_Counters is
     new_line(file);
     print_times(file,timer,"polyhedral homotopy continuation");
     flush(file);
+  end Black_Box_Root_Counting;
+
+  procedure Black_Box_Root_Counting 
+               ( file : in file_type; nt : in integer32;
+                 p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out DoblDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    timer : Timing_Widget;
+    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    lifsup : Link_to_Array_of_Lists;
+    mixsub : Mixed_Subdivision;
+    sp : Standard_Complex_Laur_Systems.Laur_Sys(p'range)
+       := DoblDobl_Complex_to_Standard_Laur_Sys(p);
+
+  begin
+    tstart(timer);
+    Black_Box_Mixed_Volume_Computation(sp,mix,perm,lifsup,mixsub,rc);
+    tstop(timer);
+    new_line(file);
+    put(file,"mixed volume : "); put(file,rc,1); new_line(file);
+    new_line(file);
+    print_times(file,timer,"mixed-volume computation");
+    flush(file);
+    rocotime := Elapsed_User_Time(timer);
+    put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
+   -- careful to apply the permutation on p!
+    tstart(timer);
+    Black_Box_Polyhedral_Continuation(nt,p,mix,perm,lifsup.all,mixsub,q,qsols);
+    tstop(timer);
+    hocotime := Elapsed_User_Time(timer);
+    new_line(file);
+    put_line(file,q);
+    new_line(file);
+    put_line(file,"START SOLUTIONS : ");
+    new_line(file);
+    if not Is_Null(qsols)
+     then put(file,Length_Of(qsols),natural32(q'last),qsols);
+    end if;
+    new_line(file);
+    print_times(file,timer,"polyhedral homotopy continuation");
+    flush(file);
+    Standard_Complex_Laur_Systems.Clear(sp);
   end Black_Box_Root_Counting;
 
 end Black_Box_Root_Counters;
