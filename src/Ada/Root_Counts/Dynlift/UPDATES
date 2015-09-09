@@ -1,3 +1,6 @@
+Wed 9 Sep 2015 : black_polyhedral_continuations contains path tracking with
+  quad double precision arithmetic in blackbox mode.
+
 Tue 8 Sep 2015 : updated black_polyhedral_continuations with routines in
   double double precision.
 
