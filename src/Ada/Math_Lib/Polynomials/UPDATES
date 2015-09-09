@@ -1,3 +1,5 @@
+Tue 8 Sep 2015 : new package dobldobl_complex_laur_randomizers.
+
 Fri 22 May 2015 : extra variables_in_support functions in the packages
   generic_polynomials and generic_laurent_polynomials as needed to define
   the size_of_support correctly in generic_{polynomials, laur_poly}_systems.

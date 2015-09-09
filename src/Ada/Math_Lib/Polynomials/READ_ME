@@ -1,4 +1,4 @@
-Multivariate polynomials and polynomial systems over rings in PHCv2.3.97.
+Multivariate polynomials and polynomial systems over rings in PHCv2.4.01
 
 New in release 2 is the availability of multiprecision numbers.
 The data structures are entirely redefined using Ada 95 concepts.
@@ -95,6 +95,8 @@ dobldobl_complex_laurentials_io   : basic output for dd complex Laurentials
 dobldobl_complex_laur_systems     : double double Laurent systems
 dobldobl_complex_laur_systems_io  : basic output for dd complex Laur systems
 dobldobl_complex_laur_jacomats    : Jacobians of double double Laurent systems
+dobldobl_complex_poly_randomizers : randomize coeffs of dobldobl polynomials
+dobldobl_complex_laur_randomizers : randomize coeffs of dobldobl polynomials
 dobldobl_polynomial_convertors    : standard poly <-> double double poly
 quad_double_polynomials           : polynomials with quad double coefficients
 quad_double_poly_systems          : quad double polynomial systems
