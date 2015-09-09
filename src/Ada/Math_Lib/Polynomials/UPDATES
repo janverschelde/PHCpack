@@ -1,3 +1,6 @@
+Wed 9 Sep 2015 : new packages quaddobl_complex_{laur,poly}_randomizers to
+  make random coefficient systems with quad double precision coefficients.
+
 Tue 8 Sep 2015 : new package dobldobl_complex_laur_randomizers.
 
 Fri 22 May 2015 : extra variables_in_support functions in the packages

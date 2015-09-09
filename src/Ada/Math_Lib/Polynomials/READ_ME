@@ -121,6 +121,8 @@ quaddobl_complex_laurentials_io   : basic output for qd complex Laurentials
 quaddobl_complex_laur_systems     : systems of quad double Laurent polynomials
 quaddobl_complex_laur_systems_io  : basic output for qd complex laur systems
 quaddobl_complex_laur_jacomats    : Jacobians of quad double Laurent systems
+dobldobl_complex_poly_randomizers : randomize coeffs of quaddobl polynomials
+dobldobl_complex_laur_randomizers : randomize coeffs of quaddobl polynomials
 quaddobl_polynomial_convertors    : standard poly <-> quad double poly
 multprec_to_standard_convertors   : convert from multiprecision to standard
 multprec_complex_polynomials      : polynomials over multprec complex numbers
