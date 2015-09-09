@@ -1,20 +1,32 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
 with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_VecVecs;
 with Standard_Complex_Laur_Functions;
 with Standard_Complex_Laur_SysFun;
 with Standard_Complex_Laur_JacoMats;
+with DoblDobl_Complex_Laur_Functions;
+with DoblDobl_Complex_Laur_SysFun;
+with DoblDobl_Complex_Laur_JacoMats;
 with Standard_Poly_Laur_Convertors;
 with Standard_Laur_Poly_Convertors;
+with DoblDobl_Poly_Laur_Convertors;
+with DoblDobl_Laur_Poly_Convertors;
 with Standard_Complex_Poly_Randomizers; 
 with Standard_Complex_Laur_Randomizers;  
+with DoblDobl_Complex_Poly_Randomizers; 
+with DoblDobl_Complex_Laur_Randomizers;  
 with Continuation_Parameters;
 with Exponent_Vectors;                   use Exponent_Vectors;
 with Random_Coefficient_Systems;
 with Integer_Lifting_Utilities;          use Integer_Lifting_Utilities;
 with Integer_Polyhedral_Continuation;    use Integer_Polyhedral_Continuation;
 with Floating_Polyhedral_Continuation;   use Floating_Polyhedral_Continuation;
+with DoblDobl_Polyhedral_Continuation;   use DoblDobl_Polyhedral_Continuation;
 with Stable_Polyhedral_Continuation;     use Stable_Polyhedral_Continuation;
 with Multitasking_Polyhedral_Trackers;   use Multitasking_Polyhedral_Trackers;
 
@@ -183,6 +195,59 @@ package body Black_Polyhedral_Continuations is
 
   procedure Black_Box_Polyhedral_Continuation
                ( nt : in integer32;
+                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 mix,perm : in Standard_Integer_Vectors.Link_to_Vector;
+                 lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                 mcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
+                 q : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Laur_Functions;
+    use DoblDobl_Complex_Laur_SysFun;
+    use DoblDobl_Complex_Laur_JacoMats;
+    use DoblDobl_Complex_Solutions;
+
+    hq : Eval_Coeff_Laur_Sys(p'range);
+    expvec : Exponent_Vectors_Array(p'range);
+    coeffv : DoblDobl_Complex_VecVecs.VecVec(p'range);
+    jacmat : Eval_Coeff_Jaco_Mat(p'range,p'first..p'last+1);
+    mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
+    zero : constant double_double := create(0.0);
+
+  begin
+    q := Random_Coefficient_Systems.Create(natural32(p'last),mix.all,lifsup);
+    hq := Create(q);
+    expvec := Create(q);
+    for i in q'range loop
+      declare
+        c : constant DoblDobl_Complex_Vectors.Vector := Coeff(q(i));
+      begin
+        coeffv(i) := new DoblDobl_Complex_Vectors.Vector(c'range);
+        for j in c'range loop
+          coeffv(i)(j) := c(j);
+        end loop;
+      end;
+    end loop;
+    Create(q,jacmat,mulfac);
+    Continuation_Parameters.Tune(0);
+    Continuation_Parameters.start_end_game := 0.0;
+    if nt = 0 then
+      Mixed_Solve(q,lifsup,hq,coeffv,expvec,jacmat,mulfac,
+                  mix.all,mcc,qsols);
+    else
+      Silent_Multitasking_Path_Tracker
+        (q,nt,p'last,mix'last,mix.all,lifsup,mcc,
+         hq,coeffv,expvec,jacmat,mulfac,qsols);
+    end if;
+    Set_Continuation_Parameter(qsols,Create(zero));
+    Continuation_Parameters.start_end_game := 0.1;
+    Clear(hq); Clear(jacmat); Clear(mulfac);
+    DoblDobl_Complex_VecVecs.Clear(coeffv);
+  end Black_Box_Polyhedral_Continuation;
+
+  procedure Black_Box_Polyhedral_Continuation
+               ( nt : in integer32;
                  p : in Standard_Complex_Poly_Systems.Poly_Sys;
                  mix,perm : in Standard_Integer_Vectors.Link_to_Vector;
                  stlb : in double_float;
@@ -249,6 +314,77 @@ package body Black_Polyhedral_Continuations is
     Continuation_Parameters.start_end_game := 0.1;
     Clear(lq); Clear(hq); Clear(jacmat); Clear(mulfac);
     Standard_Complex_VecVecs.Clear(coeffv);
+  end Black_Box_Polyhedral_Continuation;
+
+  procedure Black_Box_Polyhedral_Continuation
+               ( nt : in integer32;
+                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 mix,perm : in Standard_Integer_Vectors.Link_to_Vector;
+                 stlb : in double_float;
+                 lifsup : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                 orgmcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
+                 stbmcc : in Floating_Mixed_Subdivisions.Mixed_Subdivision;
+                 q : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 qsols,qsols0
+                  : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Laur_Functions;
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Poly_Laur_Convertors;
+    use DoblDobl_Complex_Laur_SysFun;
+    use DoblDobl_Complex_Laur_JacoMats;
+    use DoblDobl_Complex_Solutions;
+
+    lq : Laur_Sys(p'range);
+    hq : Eval_Coeff_Laur_Sys(p'range);
+    expvec : Exponent_Vectors_Array(p'range);
+    coeffv : DoblDobl_Complex_VecVecs.VecVec(p'range);
+    jacmat : Eval_Coeff_Jaco_Mat(p'range,p'first..p'last+1);
+    mulfac : Mult_Factors(jacmat'range(1),jacmat'range(2));
+    zero : constant double_double := create(0.0);
+
+  begin
+    q := Random_Coefficient_Systems.Create(natural32(p'last),mix.all,lifsup);
+    lq := Polynomial_to_Laurent_System(q);
+    hq := Create(lq);
+    expvec := Create(q);
+    for i in q'range loop
+      declare
+        c : constant DoblDobl_Complex_Vectors.Vector := Coeff(lq(i));
+      begin
+        coeffv(i) := new DoblDobl_Complex_Vectors.Vector(c'range);
+        for j in c'range loop
+          coeffv(i)(j) := c(j);
+        end loop;
+      end;
+    end loop;
+    Create(lq,jacmat,mulfac);
+    Continuation_Parameters.Tune(0);
+    Continuation_Parameters.start_end_game := 0.0;
+    if nt = 0 then
+      Mixed_Solve(lq,lifsup,hq,coeffv,expvec,jacmat,mulfac,
+                  mix.all,orgmcc,qsols);
+    else
+      Silent_Multitasking_Path_Tracker
+        (lq,nt,p'last,mix'last,mix.all,lifsup,orgmcc,
+         hq,coeffv,expvec,jacmat,mulfac,qsols);
+    end if;
+    Set_Continuation_Parameter(qsols,Create(zero));
+    if not Floating_Mixed_Subdivisions.Is_Null(stbmcc) then
+      Silent_Polyhedral_Continuation(lq,stlb,mix,lifsup,stbmcc,qsols0);
+     -- put_line("looking at the stable mixed cells ...");
+     -- Reporting_Polyhedral_Continuation
+     --   (standard_output,lq,stlb,mix,lifsup,stbmcc,qsols0);
+      Set_Continuation_Parameter(qsols0,Create(zero));
+     -- put("Length_Of(qsols0) = "); put(Length_Of(qsols0),1); new_line;
+   -- else
+   --   put_line("no stable mixed cells");
+    end if;
+    Set_Continuation_Parameter(qsols,Create(zero));
+    Continuation_Parameters.start_end_game := 0.1;
+    Clear(lq); Clear(hq); Clear(jacmat); Clear(mulfac);
+    DoblDobl_Complex_VecVecs.Clear(coeffv);
   end Black_Box_Polyhedral_Continuation;
 
 end Black_Polyhedral_Continuations;

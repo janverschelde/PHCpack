@@ -1,3 +1,6 @@
+Tue 8 Sep 2015 : updated black_polyhedral_continuations with routines in
+  double double precision.
+
 Mon 7 Sep 2015 : new package black_polyhedral_continuations with code
   factored out of black_mixed_volume_computations, called by babldmvc.adb.
 
