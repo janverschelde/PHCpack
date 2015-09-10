@@ -30,6 +30,7 @@ with Drivers_for_Homotopy_Creation;      use Drivers_for_Homotopy_Creation;
 with Driver_for_Root_Refining;
 with String_System_Readers;
 with Black_Box_Poly_Continuations;       use Black_Box_Poly_Continuations;
+with Greeting_Banners;
 --with Bye_Bye_Message;
 
 procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
@@ -195,6 +196,7 @@ procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
     put_line(outpt,".");
     Write_Elapsed_Time(outpt,start_moment,ended_moment);
     Write_Seed_Number(outpt);
+    put_line(outpt,Greeting_Banners.Version);
     Close(outpt);
   end Main_Dispatch;
 

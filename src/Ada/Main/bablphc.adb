@@ -126,6 +126,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
         put_line(outfile,".");
         Write_Elapsed_Time(outfile,start_moment,ended_moment);
         Write_Seed_Number(outfile);
+        put_line(outfile,Greeting_Banners.Version);
         close(outfile);
       else
         new_line;
@@ -140,6 +141,7 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
         put_line(".");
         Write_Elapsed_Time(standard_output,start_moment,ended_moment);
         Write_Seed_Number(standard_output);
+        put_line(Greeting_Banners.Version);
       end if;
     end if;
   end Toric_Binomial_Solver;

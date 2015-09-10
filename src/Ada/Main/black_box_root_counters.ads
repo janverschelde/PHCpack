@@ -5,8 +5,10 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 with Partitions_of_Sets_Of_Unknowns;     use Partitions_of_Sets_of_Unknowns;
 
 package Black_Box_Root_Counters is
@@ -91,6 +93,22 @@ package Black_Box_Root_Counters is
                  rocotime,hocotime : out duration );
 
   procedure Black_Box_Root_Counting 
+               ( nt : in integer32; silent : in boolean;
+                 p : in out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out DoblDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration );
+
+  procedure Black_Box_Root_Counting 
+               ( nt : in integer32; silent : in boolean;
+                 p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration );
+
+  procedure Black_Box_Root_Counting 
                ( file : in file_type; nt : in integer32;
                  p : in out Standard_Complex_Laur_Systems.Laur_Sys;
                  rc : out natural32;
@@ -104,6 +122,14 @@ package Black_Box_Root_Counters is
                  rc : out natural32;
                  q : out DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  qsols : out DoblDobl_Complex_Solutions.Solution_List;
+                 rocotime,hocotime : out duration );
+
+  procedure Black_Box_Root_Counting 
+               ( file : in file_type; nt : in integer32;
+                 p : in out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 rc : out natural32;
+                 q : out QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 qsols : out QuadDobl_Complex_Solutions.Solution_List;
                  rocotime,hocotime : out duration );
 
   -- DESCRIPTION :

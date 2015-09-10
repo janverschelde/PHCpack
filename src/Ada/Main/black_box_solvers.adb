@@ -21,6 +21,7 @@ with Black_Box_Binomial_Solvers;         use Black_Box_Binomial_Solvers;
 with Black_Box_Factorization;
 with Black_Box_Root_Counters;            use Black_Box_Root_Counters;
 with Black_Box_Poly_Continuations;       use Black_Box_Poly_Continuations;
+with Greeting_Banners;
 
 package body Black_Box_Solvers is
 
@@ -256,6 +257,7 @@ package body Black_Box_Solvers is
       put_line(outfile,".");
       Write_Elapsed_Time(outfile,start_moment,ended_moment);
       Write_Seed_Number(outfile);
+      put_line(outfile,Greeting_Banners.Version);
       Close(outfile);
       if maps /= null
        then Append(infilename,maps.all);
@@ -274,6 +276,7 @@ package body Black_Box_Solvers is
       put_line(".");
       Write_Elapsed_Time(standard_output,start_moment,ended_moment);
       Write_Seed_Number(standard_output);
+      put_line(Greeting_Banners.Version);
     end if;
   end Square_Main;
 
@@ -367,6 +370,7 @@ package body Black_Box_Solvers is
         put_line(outfile,".");
         Write_Elapsed_Time(outfile,start_moment,ended_moment);
         Write_Seed_Number(outfile);
+        put_line(outfile,Greeting_Banners.Version);
         Close(outfile);
         Append_Solutions_to_Input_File(infilename,sols,append_sols);
       exception
@@ -383,6 +387,7 @@ package body Black_Box_Solvers is
       put_line(".");
       Write_Elapsed_Time(standard_output,start_moment,ended_moment);
       Write_Seed_Number(standard_output);
+      put_line(Greeting_Banners.Version);
     end if;
   exception
     when others =>
