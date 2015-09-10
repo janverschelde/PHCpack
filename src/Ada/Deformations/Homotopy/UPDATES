@@ -1,3 +1,8 @@
+Thu 10 Sep 2015 : new package {dobldobl,quaddobl}_linear_poly_solvers with
+  added test in ts_linsol.adb, for use in the blackbox solver, to solve
+  linear systems given in symbolic polynomial form with double doubles
+  and quad doubles.
+
 Sat 5 Sep 2015 : new packages {dobldobl,quaddobl}_laurent_homotopy 
   and quaddobl_coefficient_homotopy.
 

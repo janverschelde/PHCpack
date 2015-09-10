@@ -49,7 +49,9 @@ reduction_of_nonsquare_systems     : transform overconstrained into square
 drivers_for_reduction              : menu-drivers for reducing systems
 mainred                            : reduction tool, as called by phc
 ------------------------------------------------------------------------------
-standard_linear_poly_solvers       : solve linear polynomial systems
+standard_linear_poly_solvers       : solve linear poly systems with doubles
+dobldobl_linear_poly_solvers       : solve linear poly systems with dobldobls
+quaddobl_linear_poly_solvers       : solve linear poly systems with quaddobls
 ts_linsol                          : test on the linear poly solvers
 polynomial_drops                   : drop a variable from polynomials
 ts_poldrop                         : interactive test on dropping
