@@ -1,10 +1,35 @@
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Integer_Vectors;
 with QuadDobl_Complex_Vector_Norms;      use QuadDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Matrices;          use QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
 
 package body QuadDobl_Root_Refiners is
+
+  procedure Write_Diagnostics
+              ( file : in file_type; step : natural32;
+                err,rco,res : in quad_double ) is
+
+  -- DESCRIPTION :
+  --   Writes diagnostics in one line about the Newton step to file.
+  --   This procedure defines the formatting in the Reporting
+  --   versions of a sequence of Newton steps.
+
+  -- ON ENTRY :
+  --   file     must be opened for output;
+  --   step     the current step number;
+  --   err      forward error, magnitude of the update;
+  --   rco      estimate for the inverse of the condition number;
+  --   res      backward error, residual.
+
+  begin
+    put(file,"Step "); put(file,step,4); put(file," : ");
+    put(file," |errxa| : "); put(file,err,3);
+    put(file," est rco : "); put(file,rco,3);
+    put(file," |errfa| : "); put(file,res,3); new_line(file);
+  end Write_Diagnostics;
 
   procedure QuadDobl_Newton_Step
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys; 
@@ -104,6 +129,25 @@ package body QuadDobl_Root_Refiners is
     end loop;
   end Silent_Newton;
 
+  procedure Reporting_Newton
+              ( file : in file_type;
+                f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in  QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out QuadDobl_Complex_Solutions.Solution;
+                epsxa,epsfa : in quad_double; numit : in out natural32;
+                max : in natural32; fail : out boolean ) is
+  begin
+    fail := true;
+    while numit < max loop
+      numit := numit + 1;
+      QuadDobl_Newton_Step(f,jf,x.v,x.err,x.rco,x.res);
+      Write_Diagnostics(file,numit,x.err,x.rco,x.res);
+      if (x.err < epsxa) or (x.res < epsfa)
+       then fail := false; exit;
+      end if;
+    end loop;
+  end Reporting_Newton;
+
   procedure Silent_Newton
               ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in  QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
@@ -120,6 +164,25 @@ package body QuadDobl_Root_Refiners is
       end if;
     end loop;
   end Silent_Newton;
+
+  procedure Reporting_Newton
+              ( file : in file_type;
+                f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
+                jf : in  QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
+                x : in out QuadDobl_Complex_Solutions.Solution;
+                epsxa,epsfa : in quad_double; numit : in out natural32;
+                max : in natural32; fail : out boolean ) is
+  begin
+    fail := true;
+    while numit < max loop
+      numit := numit + 1;
+      QuadDobl_Newton_Step(f,jf,x.v,x.err,x.rco,x.res);
+      Write_Diagnostics(file,numit,x.err,x.rco,x.res);
+      if (x.err < epsxa) or (x.res < epsfa)
+       then fail := false; exit;
+      end if;
+    end loop;
+  end Reporting_Newton;
 
   procedure Silent_Newton
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;

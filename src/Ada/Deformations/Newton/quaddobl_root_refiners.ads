@@ -1,3 +1,4 @@
+with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with QuadDobl_Complex_Vectors;
@@ -69,8 +70,22 @@ package QuadDobl_Root_Refiners is
                 x : in out QuadDobl_Complex_Solutions.Solution;
                 epsxa,epsfa : in quad_double; numit : in out natural32;
                 max : in natural32; fail : out boolean );
+  procedure Reporting_Newton
+              ( file : in file_type;
+                f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in  QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out QuadDobl_Complex_Solutions.Solution;
+                epsxa,epsfa : in quad_double; numit : in out natural32;
+                max : in natural32; fail : out boolean );
   procedure Silent_Newton
               ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
+                jf : in  QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
+                x : in out QuadDobl_Complex_Solutions.Solution;
+                epsxa,epsfa : in quad_double; numit : in out natural32;
+                max : in natural32; fail : out boolean );
+  procedure Reporting_Newton
+              ( file : in file_type;
+                f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in  QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Solutions.Solution;
                 epsxa,epsfa : in quad_double; numit : in out natural32;
@@ -82,8 +97,11 @@ package QuadDobl_Root_Refiners is
   --   (1) numit >= max (reached maximum number of iterations),
   --   (2) x.err < epsxa (update factor to x is less than epsxa),
   --   (3) x.res < epsfa (residual smaller than epsfa).
+  --   The reporting version writes diagnostics to file.
 
   -- ON ENTRY :
+  --   file     must be opened for output, for diagnostics in the
+  --            reporting versions of the Newton's method.
   --   f        evaluable form of a (Laurent) polynomial system;
   --   jf       Jacobian matrix of f;
   --   x        current approximate solution,

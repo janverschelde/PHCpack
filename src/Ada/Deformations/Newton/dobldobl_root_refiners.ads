@@ -1,3 +1,4 @@
+with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with DoblDobl_Complex_Vectors;
@@ -69,8 +70,22 @@ package DoblDobl_Root_Refiners is
                 x : in out DoblDobl_Complex_Solutions.Solution;
                 epsxa,epsfa : in double_double; numit : in out natural32;
                 max : in natural32; fail : out boolean );
+  procedure Reporting_Newton
+              ( file : in file_type;
+                f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in  DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out DoblDobl_Complex_Solutions.Solution;
+                epsxa,epsfa : in double_double; numit : in out natural32;
+                max : in natural32; fail : out boolean );
   procedure Silent_Newton
               ( f : in DoblDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
+                jf : in  DoblDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
+                x : in out DoblDobl_Complex_Solutions.Solution;
+                epsxa,epsfa : in double_double; numit : in out natural32;
+                max : in natural32; fail : out boolean );
+  procedure Reporting_Newton
+              ( file : in file_type;
+                f : in DoblDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in  DoblDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out DoblDobl_Complex_Solutions.Solution;
                 epsxa,epsfa : in double_double; numit : in out natural32;
@@ -84,6 +99,7 @@ package DoblDobl_Root_Refiners is
   --   (3) x.res < epsfa (residual smaller than epsfa).
 
   -- ON ENTRY :
+  --   file     to write intermediate diagnostics at each step;
   --   f        evaluable form of a (Laurent) polynomial system;
   --   jf       Jacobian matrix of f;
   --   x        current approximate solution,
@@ -105,6 +121,14 @@ package DoblDobl_Root_Refiners is
                 wrk : in out DoblDobl_Complex_VecVecs.VecVec;
                 epsxa,epsfa : in double_double; numit : in out natural32;
                 max : in natural32; fail : out boolean );
+  procedure Reporting_Newton
+              ( file : in file_type;
+                f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in  DoblDobl_Jacobian_Circuits.Circuit;
+                x : in out DoblDobl_Complex_Solutions.Solution;
+                wrk : in out DoblDobl_Complex_VecVecs.VecVec;
+                epsxa,epsfa : in double_double; numit : in out natural32;
+                max : in natural32; fail : out boolean );
 
   -- DESCRIPTION :
   --   Applies Newton's method to refine an approximate root x of f.
@@ -112,8 +136,10 @@ package DoblDobl_Root_Refiners is
   --   (1) numit >= max (reached maximum number of iterations),
   --   (2) x.err < epsxa (update factor to x is less than epsxa),
   --   (3) x.res < epsfa (residual smaller than epsfa).
+  --   The reporting version writes information about the solution to file.
 
   -- ON ENTRY :
+  --   file     for writing diagnostics about the Newton updates;
   --   f        evaluable form of a (Laurent) polynomial system;
   --   jf       Jacobian matrix of f, defined as a circuit.
   --   x        current approximate solution,
@@ -178,6 +204,13 @@ package DoblDobl_Root_Refiners is
                  s : in out DoblDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa : in double_double;
                  numit : in out natural32; max : in natural32 );
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
+                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 s : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa : in double_double;
+                 numit : in out natural32; max : in natural32;
+                 wout : in boolean );
 
   -- DESCRIPTION :
   --   Applies Newton's method to refine roots of p in s.
@@ -188,12 +221,15 @@ package DoblDobl_Root_Refiners is
   --   (3) x.res < epsfa (residual smaller than epsfa).
 
   -- ON ENTRY :
+  --   file     for writing intermediate output and diagnostics;
   --   p        a polynomial system;
   --   s        current approximate solutions;
   --   epsxa    accuracy requirement on update factor;
   --   epsfa    accuracy requirement on residual;
   --   numit    number of iterations, must be zero on entry,
-  --   max      maximum number of iterations allowed.
+  --   max      maximum number of iterations allowed;
+  --   wout     if true, then information about each Newton update
+  --            is written to file.
 
   -- ON RETURN :
   --   s        updated approximate solutions;

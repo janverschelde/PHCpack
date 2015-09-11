@@ -1,3 +1,5 @@
+Fri 11 Sep 2015 : added reporting Newton to {dobldobl,quaddobl}_root_refiners.
+
 Fri 26 Jun 2015 : suppress 'exception raised in reporting deflate'
   in standard_root_refiners.adb.
 
