@@ -1,3 +1,7 @@
+Fri 11 Sep 2015 : edits in black_box_{binomial,simplex}_solvers.
+
+Wed 9 Sep 2015 : prepared black_box_simplex_solvers for extended precision.
+
 Wed 10 Sep 2014 : commented out tracing of the gcd calculations in the
   calculation of an eliminating power transformation in {standard,multprec}_
   power_transformations.adb.

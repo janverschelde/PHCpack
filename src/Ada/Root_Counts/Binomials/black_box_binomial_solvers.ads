@@ -1,6 +1,6 @@
 with text_io;                            use text_io;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
-with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
 with Standard_Monomial_Maps;             use Standard_Monomial_Maps;
 
 package Black_Box_Binomial_Solvers is
@@ -10,19 +10,23 @@ package Black_Box_Binomial_Solvers is
 --   solvers in PHCpack, to be called by phc -b.
  
   procedure Black_Box_Binomial_Solver
-              ( p : in Poly_Sys; pure : in boolean;
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                pure : in boolean;
                 sols : out Link_to_Array_of_Monomial_Map_Lists;
                 fail : out boolean );
   procedure Black_Box_Binomial_Solver
-              ( p : in Laur_Sys; pure : in boolean;
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                pure : in boolean;
                 sols : out Link_to_Array_of_Monomial_Map_Lists;
                 fail : out boolean );
   procedure Black_Box_Binomial_Solver
-              ( file : in file_type; p : in Poly_Sys;
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : out Link_to_Array_of_Monomial_Map_Lists;
                 fail : out boolean );
   procedure Black_Box_Binomial_Solver
-              ( file : in file_type; p : in Laur_Sys;
+              ( file : in file_type;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : out Link_to_Array_of_Monomial_Map_Lists;
                 fail : out boolean );
 

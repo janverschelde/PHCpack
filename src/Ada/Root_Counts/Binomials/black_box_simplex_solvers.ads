@@ -1,7 +1,10 @@
 with text_io;                            use text_io;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
-with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Laur_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
 
 package Black_Box_Simplex_Solvers is
 
@@ -10,18 +13,32 @@ package Black_Box_Simplex_Solvers is
 --   solvers in PHCpack, to be called by phc -b.
  
   procedure Black_Box_Simplex_Solver
-              ( p : in Poly_Sys; sols : out Solution_List;
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : out Standard_Complex_Solutions.Solution_List;
                 fail : out boolean );
   procedure Black_Box_Simplex_Solver
-              ( p : in Laur_Sys; sols : out Solution_List;
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                fail : out boolean );
+
+  procedure Black_Box_Simplex_Solver
+              ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : out Standard_Complex_Solutions.Solution_List;
+                fail : out boolean );
+  procedure Black_Box_Simplex_Solver
+              ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : out DoblDobl_Complex_Solutions.Solution_List;
+                fail : out boolean );
+
+  procedure Black_Box_Simplex_Solver
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : out Standard_Complex_Solutions.Solution_List;
                 fail : out boolean );
   procedure Black_Box_Simplex_Solver
               ( file : in file_type;
-                p : in Poly_Sys; sols : out Solution_List;
-                fail : out boolean );
-  procedure Black_Box_Simplex_Solver
-              ( file : in file_type;
-                p : in Laur_Sys; sols : out Solution_List;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                sols : out Standard_Complex_Solutions.Solution_List;
                 fail : out boolean );
 
   -- DESCRIPTION :
