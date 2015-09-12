@@ -1,3 +1,6 @@
+Sat 12 Sep 2015 : added procedures to black_box_solvers to deal with the
+  special case of a linear system in double double and quad double precision.
+
 Wed 9 Sep 2015 : extended blackbox root counters for Laurent polynomial 
   systems to call the polyhedral homotopies in double double precision
   and in quad double precision.  Added writing of the version string

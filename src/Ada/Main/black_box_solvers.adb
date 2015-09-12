@@ -9,9 +9,15 @@ with Standard_Random_Numbers;
 with Write_Seed_Number;
 with Standard_Natural_Vectors;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Standard_Linear_Poly_Solvers;
+with DoblDobl_Linear_Poly_Solvers;
+with QuadDobl_Linear_Poly_Solvers;
 with Standard_Scaling;
 with Black_Box_Univariate_Solvers;       use Black_Box_Univariate_Solvers;
 with Black_Box_Simplex_Solvers;          use Black_Box_Simplex_Solvers;
@@ -79,7 +85,48 @@ package body Black_Box_Solvers is
 
   procedure Append_Solutions_to_Input_File
               ( infilename : in string;
-                sols : in Solution_list; append_sols : in boolean ) is
+                sols : in Standard_Complex_Solutions.Solution_list;
+                append_sols : in boolean ) is
+
+    use Standard_Complex_Solutions;
+
+    infile : file_type;
+
+  begin
+    if not Is_Null(sols) and append_sols then
+      Open_Append_File(infile,infilename);
+      new_line(infile);
+      put_line(infile,"THE SOLUTIONS :");
+      put(infile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      Close(infile);
+    end if;
+  end Append_Solutions_to_Input_File;
+
+  procedure Append_Solutions_to_Input_File
+              ( infilename : in string;
+                sols : in DoblDobl_Complex_Solutions.Solution_list;
+                append_sols : in boolean ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    infile : file_type;
+
+  begin
+    if not Is_Null(sols) and append_sols then
+      Open_Append_File(infile,infilename);
+      new_line(infile);
+      put_line(infile,"THE SOLUTIONS :");
+      put(infile,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+      Close(infile);
+    end if;
+  end Append_Solutions_to_Input_File;
+
+  procedure Append_Solutions_to_Input_File
+              ( infilename : in string;
+                sols : in QuadDobl_Complex_Solutions.Solution_list;
+                append_sols : in boolean ) is
+
+    use QuadDobl_Complex_Solutions;
 
     infile : file_type;
 
@@ -116,6 +163,8 @@ package body Black_Box_Solvers is
                 p : in Standard_Complex_Polynomials.Poly;
                 append_sols : in boolean ) is
 
+    use Standard_Complex_Solutions;
+
     n : constant natural32
       := Standard_Complex_Polynomials.Number_of_Unknowns(p);
     sols : Solution_List;
@@ -139,10 +188,11 @@ package body Black_Box_Solvers is
     elsif n > 1 then
       Black_Box_Factorization(infilename,outfile,p);
     else
-      if output_to_file
-       then put(outfile,"Number of unknowns = "); put(outfile,n,1);
-            put_line(outfile,"...");
-       else put("Number of unknowns = "); put(n,1); put_line("...");
+      if output_to_file then
+        put(outfile,"Number of unknowns = "); put(outfile,n,1);
+        put_line(outfile,"...");
+      else 
+        put("Number of unknowns = "); put(n,1); put_line("...");
       end if;
     end if;
   end Single_Main;
@@ -152,6 +202,8 @@ package body Black_Box_Solvers is
                  p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                  n : in natural32; append_sols : in boolean;
                  fail : out boolean ) is
+
+    use Standard_Complex_Solutions;
 
     outfile : file_type;
     s : Solution(integer32(n));
@@ -185,11 +237,93 @@ package body Black_Box_Solvers is
     end if;
   end Linear_Main;
 
+  procedure Linear_Main
+               ( infilename,outfilename : in string;
+                 p : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 n : in natural32; append_sols : in boolean;
+                 fail : out boolean ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    outfile : file_type;
+    s : Solution(integer32(n));
+    ls : Link_to_Solution;
+    sols : Solution_List;
+    timer : timing_widget;
+    output_to_file : boolean;
+
+  begin
+    tstart(timer);
+    DoblDobl_Linear_Poly_Solvers.Solve(p.all,s,fail);
+    tstop(timer);
+    if not fail then
+      ls := new Solution'(s);
+      Construct(ls,sols);
+      Ask_Output_File(outfile,outfilename,output_to_file);
+      if output_to_file then
+        put(outfile,p.all);
+        Append_Solutions_to_Input_File(infilename,sols,append_sols);
+        new_line(outfile);
+        put_line(outfile,"THE SOLUTIONS :");
+        put(outfile,1,n,sols);
+        new_line(outfile);
+        print_times(outfile,timer,"Solving the polynomial system");
+        Close(outfile);
+      else
+        new_line;
+        put_line("THE SOLUTIONS :");
+        put(1,natural32(s.n),sols);
+      end if;
+    end if;
+  end Linear_Main;
+
+  procedure Linear_Main
+               ( infilename,outfilename : in string;
+                 p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 n : in natural32; append_sols : in boolean;
+                 fail : out boolean ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    outfile : file_type;
+    s : Solution(integer32(n));
+    ls : Link_to_Solution;
+    sols : Solution_List;
+    timer : timing_widget;
+    output_to_file : boolean;
+
+  begin
+    tstart(timer);
+    QuadDobl_Linear_Poly_Solvers.Solve(p.all,s,fail);
+    tstop(timer);
+    if not fail then
+      ls := new Solution'(s);
+      Construct(ls,sols);
+      Ask_Output_File(outfile,outfilename,output_to_file);
+      if output_to_file then
+        put(outfile,p.all);
+        Append_Solutions_to_Input_File(infilename,sols,append_sols);
+        new_line(outfile);
+        put_line(outfile,"THE SOLUTIONS :");
+        put(outfile,1,n,sols);
+        new_line(outfile);
+        print_times(outfile,timer,"Solving the polynomial system");
+        Close(outfile);
+      else
+        new_line;
+        put_line("THE SOLUTIONS :");
+        put(1,natural32(s.n),sols);
+      end if;
+    end if;
+  end Linear_Main;
+
   procedure Square_Main
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
                 p : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
                 append_sols : in boolean ) is
+
+    use Standard_Complex_Solutions;
 
     timer : Timing_Widget;
     ended_moment : Ada.Calendar.Time;
@@ -285,6 +419,8 @@ package body Black_Box_Solvers is
                 start_moment : in Ada.Calendar.Time;
                 p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 append_sols : in boolean ) is
+
+    use Standard_Complex_Solutions;
 
     timer : timing_widget;
     outfile : file_type;
@@ -398,7 +534,10 @@ package body Black_Box_Solvers is
 
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean;
-                    rc : out natural32; sols : out Solution_List ) is
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Solutions;
  
     fail : boolean;
     ls : Link_to_Solution;
@@ -447,7 +586,10 @@ package body Black_Box_Solvers is
 
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                    rc : out natural32; sols : out Solution_List ) is
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Solutions;
  
     fail : boolean;
     ls : Link_to_Solution;
@@ -496,7 +638,8 @@ package body Black_Box_Solvers is
 
   procedure Solve ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean;
-                    rc : out natural32; sols : out Solution_List ) is
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List ) is
  
     fail : boolean;
     pp,q : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
@@ -504,7 +647,7 @@ package body Black_Box_Solvers is
 
   begin
     Black_Box_Simplex_Solver(p,sols,fail);
-    rc := Length_Of(sols);
+    rc := Standard_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       Standard_Complex_Laur_Systems.Copy(p,pp);
       Black_Box_Root_Counting(0,silent,pp,rc,q,sols,roco,hoco);
@@ -518,7 +661,8 @@ package body Black_Box_Solvers is
 
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                    rc : out natural32; sols : out Solution_List ) is
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List ) is
  
     fail : boolean;
     pp,q : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
@@ -526,7 +670,7 @@ package body Black_Box_Solvers is
 
   begin
     Black_Box_Simplex_Solver(p,sols,fail);
-    rc := Length_Of(sols);
+    rc := Standard_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       Standard_Complex_Laur_Systems.Copy(p,pp);
       Black_Box_Root_Counting(file,0,pp,rc,q,sols,roco,hoco);
@@ -541,7 +685,10 @@ package body Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean;
-                    rc : out natural32; sols : out Solution_List ) is
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Solutions;
  
     fail : boolean;
     ls : Link_to_Solution;
@@ -592,8 +739,11 @@ package body Black_Box_Solvers is
 
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                    rc : out natural32; sols : out Solution_List ) is
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List ) is
  
+    use Standard_Complex_Solutions;
+
     fail : boolean;
     ls : Link_to_Solution;
     s : Solution(p'last);
@@ -644,7 +794,8 @@ package body Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean;
-                    rc : out natural32; sols : out Solution_List ) is
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List ) is
  
     fail : boolean;
     pp,q : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
@@ -652,7 +803,7 @@ package body Black_Box_Solvers is
 
   begin
     Black_Box_Simplex_Solver(p,sols,fail);
-    rc := Length_Of(sols);
+    rc := Standard_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       Standard_Complex_Laur_Systems.Copy(p,pp);
       Black_Box_Root_Counting(integer32(nt),silent,pp,rc,q,sols,roco,hoco);
@@ -666,7 +817,8 @@ package body Black_Box_Solvers is
 
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                    rc : out natural32; sols : out Solution_List ) is
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List ) is
  
     fail : boolean;
     pp,q : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
@@ -674,7 +826,7 @@ package body Black_Box_Solvers is
 
   begin
     Black_Box_Simplex_Solver(p,sols,fail);
-    rc := Length_Of(sols);
+    rc := Standard_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       Standard_Complex_Laur_Systems.Copy(p,pp);
       Black_Box_Root_Counting(file,integer32(nt),pp,rc,q,sols,roco,hoco);

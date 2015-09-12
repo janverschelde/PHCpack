@@ -3,8 +3,12 @@ with Ada.Calendar;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Black_Box_Solvers is
 
@@ -32,7 +36,16 @@ package Black_Box_Solvers is
 
   procedure Append_Solutions_to_Input_File
               ( infilename : in string;
-                sols : in Solution_list; append_sols : in boolean );
+                sols : in Standard_Complex_Solutions.Solution_list;
+                append_sols : in boolean );
+  procedure Append_Solutions_to_Input_File
+              ( infilename : in string;
+                sols : in DoblDobl_Complex_Solutions.Solution_list;
+                append_sols : in boolean );
+  procedure Append_Solutions_to_Input_File
+              ( infilename : in string;
+                sols : in QuadDobl_Complex_Solutions.Solution_list;
+                append_sols : in boolean );
 
   -- DESCRIPTION :
   --   If the solution list is not empty and append_sols is true,
@@ -62,6 +75,16 @@ package Black_Box_Solvers is
   procedure Linear_Main 
               ( infilename,outfilename : in string;
                 p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                n : in natural32; append_sols : in boolean;
+                fail : out boolean );
+  procedure Linear_Main 
+              ( infilename,outfilename : in string;
+                p : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                n : in natural32; append_sols : in boolean;
+                fail : out boolean );
+  procedure Linear_Main 
+              ( infilename,outfilename : in string;
+                p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 n : in natural32; append_sols : in boolean;
                 fail : out boolean );
 
@@ -107,16 +130,20 @@ package Black_Box_Solvers is
 
   procedure Solve ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean;
-                    rc : out natural32; sols : out Solution_List );
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List );
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                    rc : out natural32; sols : out Solution_List );
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List );
   procedure Solve ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean;
-                    rc : out natural32; sols : out Solution_List );
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List );
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                    rc : out natural32; sols : out Solution_List );
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Calls the blackbox solver to solve the system p.
@@ -135,17 +162,21 @@ package Black_Box_Solvers is
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     silent : in boolean;
-                    rc : out natural32; sols : out Solution_List );
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List );
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                    rc : out natural32; sols : out Solution_List );
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List );
   procedure Solve ( nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     silent : in boolean;
-                    rc : out natural32; sols : out Solution_List );
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List );
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                    rc : out natural32; sols : out Solution_List );
+                    rc : out natural32;
+                    sols : out Standard_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Calls the blackbox solver to solve the system p.
