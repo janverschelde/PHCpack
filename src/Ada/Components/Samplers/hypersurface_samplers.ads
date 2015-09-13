@@ -3,12 +3,12 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Floating_Vectors;
-with Standard_Complex_Vectors;          use Standard_Complex_Vectors;
-with Standard_Complex_VecVecs;          use standard_Complex_VecVecs;
-with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
-with Standard_Complex_Poly_Functions;   use Standard_Complex_Poly_Functions;
-with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
-with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
+with Standard_Complex_Vectors;
+with Standard_Complex_VecVecs;
+with Standard_Complex_Polynomials;
+with Standard_Complex_Poly_Functions;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_SysFun;
 with Partitions_of_Sets_of_Unknowns;    use Partitions_of_Sets_of_Unknowns;
 
 package Hypersurface_Samplers is
@@ -29,59 +29,83 @@ package Hypersurface_Samplers is
 
   procedure Generic_Points
                 ( file : in file_type;
-                  p : in Poly; ep : in Eval_Poly;
-                  d : in natural32; b,v : in Vector;
+                  p : in Standard_Complex_Polynomials.Poly;
+                  ep : in Standard_Complex_Poly_Functions.Eval_Poly;
+                  d : in natural32;
+                  b,v : in Standard_Complex_Vectors.Vector;
                   eps : in double_float; maxit : in natural32;
-                  t : out Vector; fail : out boolean );
+                  t : out Standard_Complex_Vectors.Vector;
+                  fail : out boolean );
   procedure Generic_Points
                 ( file : in file_type;
-                  p : in Poly; ep : in Eval_Poly;
-                  d : in natural32; b,v : in Vector;
+                  p : in Standard_Complex_Polynomials.Poly;
+                  ep : in Standard_Complex_Poly_Functions.Eval_Poly;
+                  d : in natural32;
+                  b,v : in Standard_Complex_Vectors.Vector;
                   eps : in double_float; maxit : in natural32;
-                  t : out Vector; fail : out boolean;
+                  t : out Standard_Complex_Vectors.Vector;
+                  fail : out boolean;
                   m : out Standard_Natural_Vectors.Vector );
   procedure Generic_Points
                 ( file : in file_type;
-                  p : in Poly; ep : in Eval_Poly;
-                  d : in natural32; b,v : in Vector;
+                  p : in Standard_Complex_Polynomials.Poly;
+                  ep : in Standard_Complex_Poly_Functions.Eval_Poly;
+                  d : in natural32;
+                  b,v : in Standard_Complex_Vectors.Vector;
                   eps : in double_float; maxit : in natural32;
-                  t : out Vector; fail : out boolean;
+                  t : out Standard_Complex_Vectors.Vector;
+                  fail : out boolean;
                   m : out Standard_Natural_Vectors.Vector;
-                  rdp : out Link_to_Poly_Sys );
+                  rdp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Generic_Points
                 ( file : in file_type;
-                  p : in Poly; ep : in Eval_Poly;
-                  d : in natural32; b,v : in Vector;
+                  p : in Standard_Complex_Polynomials.Poly;
+                  ep : in Standard_Complex_Poly_Functions.Eval_Poly;
+                  d : in natural32;
+                  b,v : in Standard_Complex_Vectors.Vector;
                   eps : in double_float; maxit : in natural32;
-                  t : out Vector; fail : out boolean;
+                  t : out Standard_Complex_Vectors.Vector;
+                  fail : out boolean;
                   m : out Standard_Natural_Vectors.Vector;
-                  rdp : out Link_to_Poly_Sys;
+                  rdp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                   rad,dst : out Standard_Floating_Vectors.Vector );
   procedure Generic_Points
-                ( p : in Poly; ep : in Eval_Poly;
-                  d : in natural32; b,v : in Vector;
+                ( p : in Standard_Complex_Polynomials.Poly;
+                  ep : in Standard_Complex_Poly_Functions.Eval_Poly;
+                  d : in natural32;
+                  b,v : in Standard_Complex_Vectors.Vector;
                   eps : in double_float; maxit : in natural32;
-                  t : out Vector; fail : out boolean );
+                  t : out Standard_Complex_Vectors.Vector;
+                  fail : out boolean );
   procedure Generic_Points
-                ( p : in Poly; ep : in Eval_Poly;
-                  d : in natural32; b,v : in Vector;
+                ( p : in Standard_Complex_Polynomials.Poly;
+                  ep : in Standard_Complex_Poly_Functions.Eval_Poly;
+                  d : in natural32;
+                  b,v : in Standard_Complex_Vectors.Vector;
                   eps : in double_float; maxit : in natural32;
-                  t : out Vector; fail : out boolean;
+                  t : out Standard_Complex_Vectors.Vector;
+                  fail : out boolean;
                   m : out Standard_Natural_Vectors.Vector );
   procedure Generic_Points
-                ( p : in Poly; ep : in Eval_Poly;
-                  d : in natural32; b,v : in Vector;
+                ( p : in Standard_Complex_Polynomials.Poly;
+                  ep : in Standard_Complex_Poly_Functions.Eval_Poly;
+                  d : in natural32;
+                  b,v : in Standard_Complex_Vectors.Vector;
                   eps : in double_float; maxit : in natural32;
-                  t : out Vector; fail : out boolean;
+                  t : out Standard_Complex_Vectors.Vector;
+                  fail : out boolean;
                   m : out Standard_Natural_Vectors.Vector;
-                  rdp : out Link_to_Poly_Sys );
+                  rdp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Generic_Points
-                ( p : in Poly; ep : in Eval_Poly;
-                  d : in natural32; b,v : in Vector;
+                ( p : in Standard_Complex_Polynomials.Poly;
+                  ep : in Standard_Complex_Poly_Functions.Eval_Poly;
+                  d : in natural32;
+                  b,v : in Standard_Complex_Vectors.Vector;
                   eps : in double_float; maxit : in natural32;
-                  t : out Vector; fail : out boolean;
+                  t : out Standard_Complex_Vectors.Vector;
+                  fail : out boolean;
                   m : out Standard_Natural_Vectors.Vector;
-                  rdp : out Link_to_Poly_Sys;
+                  rdp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                   rad,dst : out Standard_Floating_Vectors.Vector );
 
   -- DESCRIPTION :
@@ -123,7 +147,8 @@ package Hypersurface_Samplers is
 -- PART II : exploitation of multihomogeneous and set structure
 
   function Random_Multihomogeneous_Directions
-                ( n : natural32; z : Partition ) return VecVec;
+                ( n : natural32; z : Partition )
+                return Standard_Complex_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Returns a vector of random multi-homogeneous directions:
@@ -131,7 +156,8 @@ package Hypersurface_Samplers is
   --   the corresponding variable belongs to the i-th set in z.
 
   function Random_Set_Structure_Directions
-                ( n,i : natural32 ) return VecVec;
+                ( n,i : natural32 )
+                return Standard_Complex_VecVecs.VecVec;
 
   -- DESCRIPTION :
   --   Returns a vector of random directions according to the set structure
@@ -143,15 +169,24 @@ package Hypersurface_Samplers is
   --   The i-th component of the set structure has been built.
 
   procedure Generic_Points
-                ( p : in Poly; ep : in Eval_Poly;
-                  z : in Partition; b : in Vector; v : in VecVec;
+                ( p : in Standard_Complex_Polynomials.Poly;
+                  ep : in Standard_Complex_Poly_Functions.Eval_Poly;
+                  z : in Partition;
+                  b : in Standard_Complex_Vectors.Vector;
+                  v : in Standard_Complex_VecVecs.VecVec;
                   eps : in double_float; maxit : in natural32;
-                  t : out VecVec; fail : out boolean );
+                  t : out Standard_Complex_VecVecs.VecVec;
+                  fail : out boolean );
   procedure Generic_Points
-                ( file : in file_type; p : in Poly; ep : in Eval_Poly;
-                  z : in Partition; b : in Vector; v : in VecVec;
+                ( file : in file_type;
+                  p : in Standard_Complex_Polynomials.Poly;
+                  ep : in Standard_Complex_Poly_Functions.Eval_Poly;
+                  z : in Partition;
+                  b : in Standard_Complex_Vectors.Vector;
+                  v : in Standard_Complex_VecVecs.VecVec;
                   eps : in double_float; maxit : in natural32;
-                  t : out VecVec; fail : out boolean );
+                  t : out Standard_Complex_VecVecs.VecVec;
+                  fail : out boolean );
 
   -- DESCRIPTION :
   --   Computes generic points on the hypersurface p(x) = 0 intersected
@@ -211,24 +246,32 @@ package Hypersurface_Samplers is
 -- PART III : sampling and refining along moving lines
 
   procedure Silent_Refiner
-                ( p : in Eval_Poly_Sys; b,v : in Vector;
-                  t : in out Vector; ft,dt : out Vector;
+                ( p : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                  b,v : in Standard_Complex_Vectors.Vector;
+                  t : in out Standard_Complex_Vectors.Vector;
+                  ft,dt : out Standard_Complex_Vectors.Vector;
                   eps : in double_float; maxit : in natural32 );
   procedure Silent_Refiner
-                ( p : in Eval_Poly_Sys; b,v : in Vector;
+                ( p : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                  b,v : in Standard_Complex_Vectors.Vector;
                   m : in Standard_Natural_Vectors.Vector;
-                  t : in out Vector; ft,dt : out Vector;
+                  t : in out Standard_Complex_Vectors.Vector;
+                  ft,dt : out Standard_Complex_Vectors.Vector;
                   eps : in double_float; maxit : in natural32 );
   procedure Reporting_Refiner
                 ( file : in file_type;
-                  p : in Eval_Poly_Sys; b,v : in Vector;
-                  t : in out Vector; ft,dt : out Vector;
+                  p : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                  b,v : in Standard_Complex_Vectors.Vector;
+                  t : in out Standard_Complex_Vectors.Vector;
+                  ft,dt : out Standard_Complex_Vectors.Vector;
                   eps : in double_float; maxit : in natural32 );
   procedure Reporting_Refiner
                 ( file : in file_type;
-                  p : in Eval_Poly_Sys; b,v : in Vector;
+                  p : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                  b,v : in Standard_Complex_Vectors.Vector;
                   m : in Standard_Natural_Vectors.Vector;
-                  t : in out Vector; ft,dt : out Vector;
+                  t : in out Standard_Complex_Vectors.Vector;
+                  ft,dt : out Standard_Complex_Vectors.Vector;
                   eps : in double_float; maxit : in natural32 );
 
   -- DESCRIPTION :
@@ -252,12 +295,15 @@ package Hypersurface_Samplers is
   --   dt         dt(i) is the last correction term.
 
   procedure Silent_Hypersurface_Sampler
-                ( p : in Eval_Poly_Sys; b0,v0,b1,v1 : in Vector;
-                  t : in out Vector );
+                ( p : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                  b0,v0,b1,v1 : in Standard_Complex_Vectors.Vector;
+                  t : in out Standard_Complex_Vectors.Vector );
   procedure Reporting_Hypersurface_Sampler
                 ( file : in file_type;
-                  p : in Eval_Poly_Sys; b0,v0,b1,v1 : in Vector;
-                  output : in boolean; t : in out Vector );
+                  p : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                  b0,v0,b1,v1 : in Standard_Complex_Vectors.Vector;
+                  output : in boolean;
+                  t : in out Standard_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Computes new samples of the hypersurface defined by the polynomial p,
