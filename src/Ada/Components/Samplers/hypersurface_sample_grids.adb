@@ -9,7 +9,7 @@ with Standard_Complex_Linear_Solvers;   use Standard_Complex_Linear_Solvers;
 with Standard_Complex_Poly_Functions;   use Standard_Complex_Poly_Functions;
 with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
 with Standard_Plane_Representations;    use Standard_Plane_Representations;
-with Hypersurface_Samplers;             use Hypersurface_Samplers;
+with Standard_Lined_Hypersurfaces;      use Standard_Lined_Hypersurfaces;
 
 package body Hypersurface_Sample_Grids is
 

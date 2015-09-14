@@ -24,6 +24,7 @@ with Partitions_of_Sets_of_Unknowns_io;  use Partitions_of_Sets_of_Unknowns_io;
 with Set_Structure,Set_Structure_io;
 with Random_Product_Start_Systems;       use Random_Product_Start_Systems;
 with Hypersurface_Samplers;              use Hypersurface_Samplers;
+with Standard_Lined_Hypersurfaces;       use Standard_Lined_Hypersurfaces;
 
 procedure ts_hypsam is
 
