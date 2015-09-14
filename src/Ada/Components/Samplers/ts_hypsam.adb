@@ -23,8 +23,8 @@ with Partitions_of_Sets_of_Unknowns;     use Partitions_of_Sets_of_Unknowns;
 with Partitions_of_Sets_of_Unknowns_io;  use Partitions_of_Sets_of_Unknowns_io;
 with Set_Structure,Set_Structure_io;
 with Random_Product_Start_Systems;       use Random_Product_Start_Systems;
-with Hypersurface_Samplers;              use Hypersurface_Samplers;
-with Standard_Lined_Hypersurfaces;       use Standard_Lined_Hypersurfaces;
+with Standard_Lined_Hypersurfaces;
+with Hypersurface_Samplers;
 
 procedure ts_hypsam is
 
@@ -35,6 +35,8 @@ procedure ts_hypsam is
 
   -- DESCRIPTION :
   --   Samples generic points from the surface defined by p.
+
+    use Standard_Lined_Hypersurfaces;
 
     d : constant integer32 := Degree(p);
     ep : constant Eval_Poly := Create(p);
@@ -65,6 +67,8 @@ procedure ts_hypsam is
 
   -- DESCRIPTION :
   --   Samples generic points of an m-homogeneous polynomial p in n variables.
+
+    use Hypersurface_Samplers;
 
     z : Partition(1..natural32(m));
     b : Vector(1..n) := Random_Vector(1,n);
