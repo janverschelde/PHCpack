@@ -1,3 +1,6 @@
+Mon 14 Sep 2015 : changes in multivariate_factorization.adb and
+  monodromy_polynomial_breakup.adb for the new standard_lined_hypersurfaces.
+
 Sat 9 Aug 2014 : upgraded drivers_to_factor_components with procedures to
   call the monodromy factorization in double double and quad double precision.
   The main driver mainfac exports factorization as options 8 and 9,

@@ -5,7 +5,7 @@ with Standard_Natural_Vectors;
 with Standard_Random_Vectors;            use Standard_Random_Vectors;
 with Standard_Complex_Poly_SysFun;       use Standard_Complex_Poly_SysFun;
 with Standard_Complex_VecLists;          use Standard_Complex_VecLists;
-with Hypersurface_Samplers;              use Hypersurface_Samplers;
+with Standard_Lined_Hypersurfaces;       use Standard_Lined_Hypersurfaces;
 with Monodromy_Partitions;               use Monodromy_Partitions;
 
 package body Monodromy_Polynomial_Breakup is
