@@ -13,7 +13,6 @@ with Sample_Points;                      use Sample_Points;
 with Sample_Point_Lists;                 use Sample_Point_Lists;
 with Sample_Point_Lists_io;              use Sample_Point_Lists_io;
 with Standard_Lined_Hypersurfaces;       use Standard_Lined_Hypersurfaces;
-with Hypersurface_Samplers;              use Hypersurface_Samplers;
 with Hypersurface_Sample_Grids;          use Hypersurface_Sample_Grids;
 with Standard_Stacked_Sample_Grids;      use Standard_Stacked_Sample_Grids;
 with Standard_Trace_Interpolators;       use Standard_Trace_Interpolators;
