@@ -107,6 +107,8 @@ ts_mulhom                         : test on multiplicity samplers
 ------------------------------------------------------------------------------
 ts_unisam                         : test on the use of Weierstrass method
 standard_lined_hypersurfaces      : generic points on hypersurfaces
+dobldobl_lined_hypersurfaces      : generic points in double double precision
+quaddobl_lined_hypersurfaces      : generic points in quad double precision
 hypersurface_samplers             : sample points on hypersurface
 hypersurface_sample_grids         : building grids for interpolation
 ts_hypsam                         : test on hypersurface sampler
