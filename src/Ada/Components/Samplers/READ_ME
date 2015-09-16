@@ -111,6 +111,8 @@ dobldobl_lined_hypersurfaces      : generic points in double double precision
 quaddobl_lined_hypersurfaces      : generic points in quad double precision
 hypersurface_samplers             : sample points on hypersurface
 hypersurface_sample_grids         : building grids for interpolation
+dobldobl_gridded_hypersurfaces    : grids on hypersurfaces with double doubles
+quaddobl_gridded_hypersurfaces    : grids on hypersurfaces with quad doubles
 ts_hypsam                         : test on hypersurface sampler
 polynomial_roots                  : homotopies to solve p(x) = 0
 ts_roots                          : calls root finder

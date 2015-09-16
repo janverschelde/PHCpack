@@ -44,6 +44,8 @@ with Standard_Lined_Hypersurfaces;
 with DoblDobl_Lined_Hypersurfaces;
 with QuadDobl_Lined_Hypersurfaces;
 with Hypersurface_Samplers;
+with DoblDobl_Gridded_Hypersurfaces;
+with QuadDobl_Gridded_Hypersurfaces;
 
 procedure ts_hypsam is
 

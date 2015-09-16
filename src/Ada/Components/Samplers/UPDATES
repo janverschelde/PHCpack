@@ -1,3 +1,7 @@
+Wed 16 Sep 2015 : new packages {dobldobl,quaddobl}_gridded_hypersurfaces for
+  storing grids of points sampled from hypersurfaces in double double and
+  quad double precision, compiled via a with clause in ts_hypsam.
+
 Tue 15 Sep 2015 : new packages {dobldobl,quaddobl}_lined_hypersurfaces for
   sampling points on hypersurfaces in double double and quad double precision,
   with tests added to ts_hypsam.adb.
