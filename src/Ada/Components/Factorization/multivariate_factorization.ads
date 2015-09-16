@@ -5,8 +5,8 @@ with Standard_Natural_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Natural_VecVecs;
-with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
+with Standard_Complex_Polynomials;
+with Standard_Complex_Poly_Systems;
 
 package Multivariate_Factorization is
 
@@ -19,8 +19,8 @@ package Multivariate_Factorization is
 --   Complementary to stages 1) and 2) is the "Trace_Factor", this
 --   combinatorially exploits linear traces to find the factorization.
 
-  procedure Normalize ( p : in out Poly );
-  procedure Normalize ( p : in out Poly_Sys );
+  procedure Normalize ( p : in out Standard_Complex_Polynomials.Poly );
+  procedure Normalize ( p : in out Standard_Complex_Poly_Systems.Poly_Sys );
 
   -- DESCRIPTION :
   --   A polynomial is normalized if its leading coefficient is one.
@@ -28,44 +28,50 @@ package Multivariate_Factorization is
   --   by its leading coefficient.
 
   procedure Factor 
-              ( p : in Poly; n,d : in natural32;
+              ( p : in Standard_Complex_Polynomials.Poly;
+                n,d : in natural32;
                 factors : out Standard_Natural_VecVecs.Link_to_VecVec;
                 mf : out Standard_Natural_Vectors.Link_to_Vector;
                 b,v : out Standard_Complex_Vectors.Vector;
                 wp : out Standard_Complex_Vectors.Link_to_Vector;
                 mw : out Standard_Natural_Vectors.Link_to_Vector;
-                rdp : out Link_to_Poly_Sys; fail : out boolean );
+                rdp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                fail : out boolean );
 
   procedure Factor 
-              ( p : in Poly; n,d : in natural32;
+              ( p : in Standard_Complex_Polynomials.Poly;
+                n,d : in natural32;
                 factors : out Standard_Natural_VecVecs.Link_to_VecVec;
                 mf : out Standard_Natural_Vectors.Link_to_Vector;
                 b,v : out Standard_Complex_Vectors.Vector;
                 wp : out Standard_Complex_Vectors.Link_to_Vector;
                 mw : out Standard_Natural_Vectors.Link_to_Vector;
-                rdp : out Link_to_Poly_Sys;
+                rdp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 rad,dst : out Standard_Floating_Vectors.Vector;
                 fail : out boolean );
 
   procedure Factor
               ( file : in file_type; output : in boolean;
-                p : in Poly; n,d : in natural32;
+                p : in Standard_Complex_Polynomials.Poly;
+                n,d : in natural32;
                 factors : out Standard_Natural_VecVecs.Link_to_VecVec;
                 mf : out Standard_Natural_Vectors.Link_to_Vector;
                 b,v : out Standard_Complex_Vectors.Vector;
                 wp : out Standard_Complex_Vectors.Link_to_Vector;
                 mw : out Standard_Natural_Vectors.Link_to_Vector;
-                rdp : out Link_to_Poly_Sys; fail : out boolean );
+                rdp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                fail : out boolean );
 
   procedure Factor
               ( file : in file_type; output : in boolean;
-                p : in Poly; n,d : in natural32;
+                p : in Standard_Complex_Polynomials.Poly;
+                n,d : in natural32;
                 factors : out Standard_Natural_VecVecs.Link_to_VecVec;
                 mf : out Standard_Natural_Vectors.Link_to_Vector;
                 b,v : out Standard_Complex_Vectors.Vector;
                 wp : out Standard_Complex_Vectors.Link_to_Vector;
                 mw : out Standard_Natural_Vectors.Link_to_Vector;
-                rdp : out Link_to_Poly_Sys;
+                rdp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 rad,dst : out Standard_Floating_Vectors.Vector;
                 fail : out boolean );
 
@@ -95,20 +101,21 @@ package Multivariate_Factorization is
   --   fail     calculation of witness points failed.
 
   procedure Certify
-              ( p : in Poly;                       
+              ( p : in Standard_Complex_Polynomials.Poly;                       
                 b,v,wp : in Standard_Complex_Vectors.Vector;
                 mw : in Standard_Natural_Vectors.Vector;
                 f : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Natural_Vectors.Vector;
-                rdp : in Link_to_Poly_Sys;
+                rdp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 maxdif : out double_float );
   procedure Certify
-              ( file : in file_type; p : in Poly;
+              ( file : in file_type;
+                p : in Standard_Complex_Polynomials.Poly;
                 b,v,wp : in Standard_Complex_Vectors.Vector;
                 mw : in Standard_Natural_Vectors.Vector;
                 f : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Natural_Vectors.Vector;
-                rdp : in Link_to_Poly_Sys;
+                rdp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 maxdif : out double_float );
 
   -- DESCRITPION :
@@ -130,21 +137,22 @@ package Multivariate_Factorization is
   --            and the sum of one component at all solutions.
 
   procedure Interpolate
-              ( p : in Poly;                       
+              ( p : in Standard_Complex_Polynomials.Poly;
                 b,v,wp : in Standard_Complex_Vectors.Vector;
                 mw : in Standard_Natural_Vectors.Vector;
                 f : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Natural_Vectors.Vector;
-                rdp : in Link_to_Poly_Sys;
-                factors : out Link_to_Poly_Sys );
+                rdp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                factors : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Interpolate
-              ( file : in file_type; p : in Poly;
+              ( file : in file_type;
+                p : in Standard_Complex_Polynomials.Poly;
                 b,v,wp : in Standard_Complex_Vectors.Vector;
                 mw : in Standard_Natural_Vectors.Vector;
                 f : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Natural_Vectors.Vector;
-                rdp : in Link_to_Poly_Sys;
-                factors : out Link_to_Poly_Sys );
+                rdp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                factors : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRITPION :
   --   Certifies the factorization of p using linear traces.
@@ -164,31 +172,35 @@ package Multivariate_Factorization is
   --   factors  polynomials interpolating at the factors,
   --            the polynomials on return are normalized.
 
-  function Multiply ( factors : Poly_Sys;
-                      mu : Standard_Natural_Vectors.Vector ) return Poly;
+  function Multiply ( factors : Standard_Complex_Poly_Systems.Poly_Sys;
+                      mu : Standard_Natural_Vectors.Vector )
+                    return Standard_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns the result of the multiplication of the factors,
   --   with their multiplicities in the vector mu.
 
   procedure Trace_Factor
-              ( p : in Poly; n,d : in natural32;
+              ( p : in Standard_Complex_Polynomials.Poly;
+                n,d : in natural32;
                 factors : out Standard_Natural_VecVecs.Link_to_VecVec;
                 mf : out Standard_Natural_Vectors.Link_to_Vector;
                 b,v : out Standard_Complex_Vectors.Vector;
                 wp : out Standard_Complex_Vectors.Link_to_Vector;
                 mw : out Standard_Natural_Vectors.Link_to_Vector;
-                rdp : out Link_to_Poly_Sys;
+                rdp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 rad,dst : out Standard_Floating_Vectors.Vector;
                 fail : out boolean );
   procedure Trace_Factor
-              ( file : in file_type; p : in Poly; n,d : in natural32;
+              ( file : in file_type;
+                p : in Standard_Complex_Polynomials.Poly;
+                n,d : in natural32;
                 factors : out Standard_Natural_VecVecs.Link_to_VecVec;
                 mf : out Standard_Natural_Vectors.Link_to_Vector;
                 b,v : out Standard_Complex_Vectors.Vector;
                 wp : out Standard_Complex_Vectors.Link_to_Vector;
                 mw : out Standard_Natural_Vectors.Link_to_Vector;
-                rdp : out Link_to_Poly_Sys;
+                rdp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 rad,dst : out Standard_Floating_Vectors.Vector;
                 fail : out boolean );
 

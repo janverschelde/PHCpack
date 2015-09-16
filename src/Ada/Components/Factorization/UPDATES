@@ -1,3 +1,6 @@
+Wed 16 Sep 2015 : edits in multivariate_factorization to make room to extend
+  the package for double double and quad double precision.
+
 Mon 14 Sep 2015 : changes in multivariate_factorization.adb and
   monodromy_polynomial_breakup.adb for the new standard_lined_hypersurfaces.
 
