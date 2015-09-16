@@ -1,4 +1,4 @@
-Interpolation module for solution components with PHCv2.3.91
+Interpolation module for solution components with PHCv2.4.01
 
 The interpolation routines constitute a separate module.
 Three approaches have been studied and implemented :
@@ -35,7 +35,9 @@ ts_stpolin                         : test on standard arithmetic interpolation
 ts_mupolin                         : test on multi-precision interpolation
 ts_adpolin                         : interpolation with adaptive precision
 divided_differences                : shadow calculations for debugging
-standard_divided_differences       : Newton interpolation with standard arith
+standard_divided_differences       : Newton interpolation with standard doubles
+dobldobl_divided_differences       : Newton interpolation with double doubles
+quaddobl_divided_differences       : Newton interpolation with quad doubles
 multprec_divided_differences       : multi-precision Newton interpolation
 ts_divdif                          : interactive test on Newton interpolation
 ts_dvdexp                          : experiment on conditioning/stability

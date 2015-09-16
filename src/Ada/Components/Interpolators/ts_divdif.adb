@@ -43,6 +43,8 @@ with Multprec_Stacked_Sample_Grids;
 with Drivers_to_Grid_Creators;           use Drivers_to_Grid_Creators;
 with Divided_Differences;
 with Standard_Divided_Differences;
+with QuadDobl_Divided_Differences;
+with DoblDobl_Divided_Differences;
 with Multprec_Divided_Differences;
 
 procedure ts_divdif is
