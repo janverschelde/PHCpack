@@ -42,6 +42,7 @@ ts_mbthom                        : test on the homotopy membership test
 monodromy_partitions             : management of partitions of witness points
 monodromy_polynomial_breakup     : monodromy to factor polynomials
 monodromy_component_breakup      : monodromy to factor solution sets
+factored_witness_vectors         : manipulating vectors of witness points
 multivariate_factorization       : factorization of multivariate polynomials
 drivers_to_factor_polynomials    : provides main driver, needed in mainfac
 sensitivity_of_factorization     : experiment on sensitivity of factorization

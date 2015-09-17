@@ -2,8 +2,11 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Random_Vectors;            use Standard_Random_Vectors;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
@@ -20,6 +23,7 @@ with Standard_Divided_Differences;       use Standard_Divided_Differences;
 with Monodromy_Partitions;               use Monodromy_Partitions;
 with Monodromy_Polynomial_Breakup;       use Monodromy_Polynomial_Breakup;
 with Combinatorial_Factorization;        use Combinatorial_Factorization;
+with Factored_Witness_Vectors;           use Factored_Witness_Vectors;
 
 package body Multivariate_Factorization is
 
@@ -29,188 +33,6 @@ package body Multivariate_Factorization is
 --     2) monodromy breakup;
 --     3) call for the interpolation routines.
 --   In addition, there is the complication of multiple factors.
-
--- AUXILIARY OPERATIONS FOR FACTORIZATION :
-
-  procedure Swap ( m : in out Standard_Natural_Vectors.Vector;
-                   i,j : in integer32 ) is
-
-  -- DESCRIPTION :
-  --   Swaps the elements m(i) and m(j).
-
-    tmp : constant natural32 := m(i);
-
-  begin
-    m(i) := m(j);
-    m(j) := tmp;
-  end Swap;
-
-  procedure Swap ( v : in out Standard_Complex_Vectors.Vector;
-                   i,j : in integer32 ) is
-
-  -- DESCRIPTION :
-  --   Swaps the elements v(i) and v(j).
-
-    tmp : constant Complex_Number := v(i);
-
-  begin
-    v(i) := v(j);
-    v(j) := tmp;
-  end Swap;
-
-  procedure Sort ( m : in out Standard_Natural_Vectors.Vector;
-                   w : in out Standard_Complex_Vectors.Vector ) is
-
-  -- DESCRIPTION :
-  --   Sorts the generic points in w according to the multiplicities in m
-  --   in ascending order.
-
-  begin
-    for i in m'range loop
-      for j in i+1..m'last loop
-        if m(i) > m(j) then
-          Swap(m,i,j);
-          Swap(w,i,j);
-        end if;
-      end loop;
-    end loop;
-  end Sort;
-
-  function Count ( m : Standard_Natural_Vectors.Vector; mu : natural32 )
-                 return natural32 is
-
-  -- DESCRIPTION :
-  --   Returns the number of entries i in m for which m(i) = mu.
-
-    res : natural32 := 0;
-
-  begin
-    for i in m'range loop
-      if m(i) = mu 
-       then res := res + 1;
-      end if;
-    end loop;
-    return res;
-  end Count;
-
-  function Select_Multiple_Factors
-               ( m : Standard_Natural_Vectors.Vector;
-                 w : Standard_Complex_Vectors.Vector; mu : natural32 ) 
-               return Standard_Complex_Vectors.Vector is
-
-  -- DESCRIPTION :
-  --   Selects those witness points in w with multiplicity k.
-
-  -- ASSUMED :
-  --   There is at least one witness point of multiplicity k.
-
-    res : Standard_Complex_Vectors.Vector(w'range);
-    ind : integer32 := w'first-1;
-
-  begin
-    for i in m'range loop
-      if m(i) = mu then
-        ind := ind + 1;
-        res(ind) := w(i);
-      end if;
-    end loop;
-    return res(res'first..ind);
-  end Select_Multiple_Factors;
-
-  function Is_In ( v : Standard_Complex_Vectors.Vector; x : Complex_Number;
-                   tol : double_float ) return boolean is
-
-  -- DESCRIPTION :
-  --   Returns true if there is an entry i in v such that |v(i) - x| <= tol.
-
-  begin
-    for i in v'range loop
-      if AbsVal(v(i)-x) <= tol
-       then return true;
-      end if;
-    end loop;
-    return false;
-  end Is_In; 
-
-  function Position ( v : Standard_Complex_Vectors.Vector; x : Complex_Number;
-                      tol : double_float ) return integer32 is
-
-  -- DESCRIPTION :
-  --   Returns the position of the point x in the vector v.
-
-  begin
-    for i in v'range loop
-      if AbsVal(v(i)-x) <= tol
-       then return i;
-      end if;
-    end loop;
-    return v'first-1;
-  end Position;
-
-  function Positions ( v,x : Standard_Complex_Vectors.Vector;
-                       tol : double_float )
-                     return Standard_Natural_Vectors.Vector is
-
-  -- DESCRIPTION :
-  --   Returns the vector of positions of the elements of x in v.
-
-    res : Standard_Natural_Vectors.Vector(x'range);
-
-  begin
-    for i in x'range loop
-      res(i) := natural32(Position(v,x(i),tol));
-    end loop;
-    return res;
-  end Positions;
-
-  function Remove_Duplicates
-               ( w : Standard_Complex_Vectors.Vector; tol : double_float )
-               return Standard_Complex_Vectors.Vector is
-
-  -- DESCRIPTION :
-  --   The vector on return does not contain elements that are as close
-  --   to other elements as indicated by the given tolerance tol.
-
-    res : Standard_Complex_Vectors.Vector(w'range);
-    ind : integer32 := w'first;
-
-  begin
-    res(ind) := w(ind);
-    for i in w'first+1..w'last loop
-      if not Is_In(res(res'first..ind),w(i),tol) then
-        ind := ind + 1;
-        res(ind) := w(i);
-      end if;
-    end loop;
-    return res(res'first..ind);
-  end Remove_Duplicates;
-
-  function Remove_Duplicates
-               ( w : Standard_Complex_Vectors.Vector; tol : double_float;
-                 m : Standard_Natural_Vectors.Vector )
-               return Standard_Natural_Vectors.Vector is
-
-  -- DESCRIPTION :
-  --   Only the multiplicity of the first occurrence of a multiple root
-  --   will be retained.
-
-  -- ON ENTRY :
-  --   w         witness points, with multiple occurrences;
-  --   tol       tolerance to decide whether two numbers are equal;
-  --   m         multiplicities of the witness points in w.
-
-    res : Standard_Natural_Vectors.Vector(w'range) := m;
-    ind : integer32 := m'first;
-
-  begin
-    for i in w'first+1..w'last loop
-      if not Is_In(w(w'first..i-1),w(i),tol) then
-        ind := ind + 1;
-        res(ind) := m(i);
-      end if;
-    end loop;
-    return res(res'first..ind);
-  end Remove_Duplicates;
 
   procedure Subfactor_with_Multiplicities
                ( n,d : in natural32;
@@ -411,7 +233,7 @@ package body Multivariate_Factorization is
     end loop;
     factors := Init_Factors(natural32(m1'last));
     for i in 1..rdp'last loop
-      k := Count(m,natural32(i));
+      k := Countmu(m,natural32(i));
       if k > 0 then
         Subfactor_with_Multiplicities
           (n,d,p,ep,b,v,t1,m1,natural32(i),k,rdp.all,eva_rdp,factors); 
@@ -481,7 +303,7 @@ package body Multivariate_Factorization is
     put(file,m1); new_line(file);
     factors := Init_Factors(natural32(m1'last));
     for i in 1..natural32(rdp'last) loop
-      k := Count(m,i);
+      k := Countmu(m,i);
       if k = 0 then
         put(file,"There is no factor with multiplicity ");
         put(file,i,1); put_line(file,".");
@@ -537,7 +359,7 @@ package body Multivariate_Factorization is
   begin
     factors := Init_Factors(natural32(m1'last));
     for i in 1..natural32(rdp'last) loop
-      k := Count(m,i);
+      k := Countmu(m,i);
       if k > 0 then
         Sub_Trace_Factor_with_Multiplicities
           (n,d,p,b,v,t1,m1,i,k,rdp.all,factors); 
@@ -597,7 +419,7 @@ package body Multivariate_Factorization is
     put(file,m1); new_line(file);
     factors := Init_Factors(natural32(m1'last));
     for i in 1..natural32(rdp'last) loop
-      k := Count(m,i);
+      k := Countmu(m,i);
       if k = 0 then
         put(file,"There is no factor with multiplicity ");
         put(file,i,1); put_line(file,".");
@@ -671,6 +493,7 @@ package body Multivariate_Factorization is
   --             and the sum of one component over all test points.
 
     grid : Array_of_Standard_Sample_Lists(0..2);
+    use Standard_Complex_Numbers;
 
   begin
     Hypersurface_Sample_Grids.Initialize(p);
@@ -697,6 +520,7 @@ package body Multivariate_Factorization is
   --   with intermediate output written to the file.
 
     grid : Array_of_Standard_Sample_Lists(0..2);
+    use Standard_Complex_Numbers;
 
   begin
     Hypersurface_Sample_Grids.Initialize(p);
@@ -730,6 +554,8 @@ package body Multivariate_Factorization is
   -- NOTICE : 
   --   For n = 2, the Newton-Taylor form is used, while for n > 2,
   --   we rely on traces to find the expanded form.
+
+    use Standard_Complex_Numbers;
 
     res : Standard_Complex_Polynomials.Poly;
     n : constant integer32 := b'length;
@@ -770,6 +596,8 @@ package body Multivariate_Factorization is
   -- DESCRIPTION :
   --   Finds a polynomial interpolating through a factor of p,
   --   with intermediate output.
+
+    use Standard_Complex_Numbers;
 
     res : Standard_Complex_Polynomials.Poly;
     n : constant integer32 := b'length;
@@ -819,11 +647,12 @@ package body Multivariate_Factorization is
   function Leading_Coefficient
               ( p : Standard_Complex_Polynomials.Poly;
                 tol : double_float )
-              return Complex_Number is
+              return Standard_Complex_Numbers.Complex_Number is
 
   -- DESCRIPTION :
   --   Returns the first coefficient in p larger than tol.
 
+    use Standard_Complex_Numbers;
     res : Complex_Number;
 
     procedure Scan_Term
@@ -846,6 +675,8 @@ package body Multivariate_Factorization is
   end Leading_Coefficient;
 
   procedure Normalize ( p : in out Standard_Complex_Polynomials.Poly ) is
+
+    use Standard_Complex_Numbers;
 
     tol : constant double_float := 1.0E-10;
     leadcff : constant Complex_Number := Leading_Coefficient(p,tol);
