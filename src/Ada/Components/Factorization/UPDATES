@@ -2,7 +2,11 @@ Thu 17 Sep 2015 : new package factored_witness_vectors with code factored out
   of multivariate_factorization.adb, extended with operations for double
   double and quad double precision.  The new package certify_factor_with_trace
   extracts code of multivariate_factorization, extended to work with
-  double double and quad double arithmetic.
+  double double and quad double arithmetic.  In similar fashion, the new
+  package interpolate_multivariate_factor extracts code from the package
+  multivariate_factorization, for extension to double doubles and quad doubles.
+  The move of Normalize() from multivariate_factorization to this new package
+  changed drivers_to_factor_polynomials.adb and ts_factor.adb.
 
 Wed 16 Sep 2015 : edits in multivariate_factorization to make room to extend
   the package for double double and quad double precision.

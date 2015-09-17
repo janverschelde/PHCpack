@@ -23,18 +23,6 @@ package Multivariate_Factorization is
 --   Complementary to stages 1) and 2) is the "Trace_Factor", this
 --   combinatorially exploits linear traces to find the factorization.
 
-  procedure Normalize ( p : in out Standard_Complex_Polynomials.Poly );
-  procedure Normalize ( p : in out DoblDobl_Complex_Polynomials.Poly );
-  procedure Normalize ( p : in out QuadDobl_Complex_Polynomials.Poly );
-  procedure Normalize ( p : in out Standard_Complex_Poly_Systems.Poly_Sys );
-  procedure Normalize ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys );
-  procedure Normalize ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys );
-
-  -- DESCRIPTION :
-  --   A polynomial is normalized if its leading coefficient is one.
-  --   This procedure normalizes the polynomial dividing the polynomial
-  --   by its leading coefficient.
-
   procedure Factor 
               ( p : in Standard_Complex_Polynomials.Poly;
                 n,d : in natural32;

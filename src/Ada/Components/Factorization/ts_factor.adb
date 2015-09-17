@@ -23,6 +23,7 @@ with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Random_Polynomials;        use Standard_Random_Polynomials;
 with Sensitivity_of_Factorization;
 with Monodromy_Partitions;               use Monodromy_Partitions;
+with Interpolate_Multivariate_Factor;    use Interpolate_Multivariate_Factor;
 with Multivariate_Factorization;         use Multivariate_Factorization;
 
 procedure ts_factor is

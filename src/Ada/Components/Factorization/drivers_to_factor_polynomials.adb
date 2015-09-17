@@ -14,6 +14,7 @@ with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Symbol_Table;
 with Standard_Complex_Polynomials_io;    use Standard_Complex_Polynomials_io;
 with Monodromy_Partitions;               use Monodromy_Partitions;
+with Interpolate_Multivariate_Factor;    use Interpolate_Multivariate_Factor;
 with Multivariate_Factorization;         use Multivariate_Factorization;
 
 package body Drivers_to_Factor_Polynomials is
