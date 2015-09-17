@@ -7,6 +7,10 @@ with Standard_Complex_Vectors;
 with Standard_Natural_VecVecs;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Poly_Systems;
 
 package Multivariate_Factorization is
 
@@ -20,7 +24,11 @@ package Multivariate_Factorization is
 --   combinatorially exploits linear traces to find the factorization.
 
   procedure Normalize ( p : in out Standard_Complex_Polynomials.Poly );
+  procedure Normalize ( p : in out DoblDobl_Complex_Polynomials.Poly );
+  procedure Normalize ( p : in out QuadDobl_Complex_Polynomials.Poly );
   procedure Normalize ( p : in out Standard_Complex_Poly_Systems.Poly_Sys );
+  procedure Normalize ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure Normalize ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys );
 
   -- DESCRIPTION :
   --   A polynomial is normalized if its leading coefficient is one.

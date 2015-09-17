@@ -5,6 +5,7 @@ with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
+with Standard_Natural_VecVecs;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
@@ -145,5 +146,26 @@ package Factored_Witness_Vectors is
   --   w         witness points, with multiple occurrences;
   --   tol       tolerance to decide whether two numbers are equal;
   --   m         multiplicities of the witness points in w.
+
+  function Select_Points ( w : in Standard_Complex_Vectors.Vector;
+                           k : in Standard_Natural_Vectors.Vector )
+                         return Standard_Complex_Vectors.Vector;
+  function Select_Points ( w : in DoblDobl_Complex_Vectors.Vector;
+                           k : in Standard_Natural_Vectors.Vector )
+                         return DoblDobl_Complex_Vectors.Vector;
+  function Select_Points ( w : in QuadDobl_Complex_Vectors.Vector;
+                           k : in Standard_Natural_Vectors.Vector )
+                         return QuadDobl_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns those points in w whose entries are in k.
+
+  function Multiplicity_of_Factors
+              ( factors : Standard_Natural_VecVecs.VecVec;
+                m : in Standard_Natural_Vectors.Vector )
+              return Standard_Natural_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the multiplicity of each factor.
 
 end Factored_Witness_Vectors;

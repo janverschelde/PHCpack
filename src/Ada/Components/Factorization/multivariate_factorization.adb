@@ -5,7 +5,9 @@ with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with DoblDobl_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Random_Vectors;            use Standard_Random_Vectors;
@@ -24,6 +26,7 @@ with Monodromy_Partitions;               use Monodromy_Partitions;
 with Monodromy_Polynomial_Breakup;       use Monodromy_Polynomial_Breakup;
 with Combinatorial_Factorization;        use Combinatorial_Factorization;
 with Factored_Witness_Vectors;           use Factored_Witness_Vectors;
+with Certify_Factor_with_Trace;          use Certify_Factor_with_Trace;
 
 package body Multivariate_Factorization is
 
@@ -432,114 +435,6 @@ package body Multivariate_Factorization is
     mw := new Standard_Natural_Vectors.Vector'(m1);
   end Trace_Factor_with_Multiplicities;
 
-  function Multiplicity_of_Factors
-              ( factors : Standard_Natural_VecVecs.VecVec;
-                m : in Standard_Natural_Vectors.Vector )
-              return Standard_Natural_Vectors.Vector is
-
-  -- DESCRIPTION :
-  --   Returns the multiplicity of each factor.
-
-    use Standard_Natural_VecVecs,Standard_Natural_Vectors;
-
-    res : Standard_Natural_Vectors.Vector(factors'range);
-    ind : integer32 := res'first-1;
-
-  begin
-    for i in factors'range loop
-      if factors(i) /= null then
-        ind := ind + 1;
-        res(ind) := m(integer32(factors(i)(1)));
-      end if;
-    end loop;
-    return res(res'first..ind);
-  end Multiplicity_of_Factors;
-
--- AUXILIARY OPERATIONS FOR CERTIFY :
-
-  function Select_Points ( w : in Standard_Complex_Vectors.Vector;
-                           k : in Standard_Natural_Vectors.Vector )
-                         return Standard_Complex_Vectors.Vector is
-
-  -- DESCRIPTION :
-  --   Returns those points in w whose entries are in k.
-
-    res : Standard_Complex_Vectors.Vector(k'range);
-
-  begin
-    for i in k'range loop
-      res(i) := w(integer32(k(i)));
-    end loop;
-    return res;
-  end Select_Points;
-
-  procedure Certify_Factor
-               ( p : in Standard_Complex_Polynomials.Poly;
-                 b,v,w : in Standard_Complex_Vectors.Vector;
-                 testres : out double_float ) is
-
-  -- DESCRIPTION :
-  --   Applies linear traces to certify one factor, without output.
-
-  -- ON ENTRY :
-  --   p         polynomial in n variables, contains a factor;
-  --   b         offset vector for a random line b + t*v;
-  --   v         direction of a random line b + t*v;
-  --   w         witness points on a factor of p, on a random line.
-
-  -- ON RETURN :
-  --   testres   test residual: absolute value of the difference 
-  --             between the value of the linear trace at the test points,
-  --             and the sum of one component over all test points.
-
-    grid : Array_of_Standard_Sample_Lists(0..2);
-    use Standard_Complex_Numbers;
-
-  begin
-    Hypersurface_Sample_Grids.Initialize(p);
-    grid := Parallel_Sample1(b,v,w,2);
-    declare
-      q : constant Standard_Complex_Vectors.Vector := Create(grid,1);
-      val,eva : Complex_Number;
-    begin
-      Eval_Trace(q,1,grid(2),val,eva);
-      testres := AbsVal(val-eva);
-    end;
-    Deep_Clear(grid);
-    Hypersurface_Sample_Grids.Clear;
-  end Certify_Factor;
-
-  procedure Certify_Factor
-               ( file : in file_type;
-                 p : in Standard_Complex_Polynomials.Poly;
-                 b,v,w : in Standard_Complex_Vectors.Vector;
-                 testres : out double_float ) is
-
-  -- DESCRIPTION :
-  --   Applies linear traces to certify one factor,
-  --   with intermediate output written to the file.
-
-    grid : Array_of_Standard_Sample_Lists(0..2);
-    use Standard_Complex_Numbers;
-
-  begin
-    Hypersurface_Sample_Grids.Initialize(p);
-    grid := Parallel_Sample1(file,false,b,v,w,2);
-    declare
-      q : constant Standard_Complex_Vectors.Vector := Create(grid,1);
-      val,eva : Complex_Number;
-    begin
-      Eval_Trace(q,1,grid(2),val,eva);
-      put(file,"Value at trace : "); put(file,val); new_line(file);
-      put(file,"Computed sum   : "); put(file,eva); new_line(file);
-      testres := AbsVal(val-eva);
-      put(file,"Absolute Value of Difference : "); put(file,testres);
-      new_line(file);
-    end;
-    Deep_Clear(grid);
-    Hypersurface_Sample_Grids.Clear;
-  end Certify_Factor;
-
 -- AUXILIARY OPERATIONS FOR INTERPOLATION :
 
   function Interpolate_Factor
@@ -674,6 +569,72 @@ package body Multivariate_Factorization is
     return res;
   end Leading_Coefficient;
 
+  function Leading_Coefficient
+              ( p : DoblDobl_Complex_Polynomials.Poly;
+                tol : double_float )
+              return DoblDobl_Complex_Numbers.Complex_Number is
+
+  -- DESCRIPTION :
+  --   Returns the first coefficient in p larger than tol.
+
+    use DoblDobl_Complex_Numbers;
+    res : Complex_Number;
+
+    procedure Scan_Term
+                ( t : in DoblDobl_Complex_Polynomials.Term;
+                  continue : out boolean ) is
+
+      val : constant double_double := AbsVal(t.cf);
+ 
+    begin
+      if val > tol then
+        res := t.cf;
+        continue := false;
+      else
+        continue := true;
+      end if;
+    end Scan_Term;
+    procedure Scan_Terms is
+      new DoblDobl_Complex_Polynomials.Visiting_Iterator(Scan_Term);
+
+  begin
+    Scan_Terms(p);
+    return res;
+  end Leading_Coefficient;
+
+  function Leading_Coefficient
+              ( p : QuadDobl_Complex_Polynomials.Poly;
+                tol : double_float )
+              return QuadDobl_Complex_Numbers.Complex_Number is
+
+  -- DESCRIPTION :
+  --   Returns the first coefficient in p larger than tol.
+
+    use QuadDobl_Complex_Numbers;
+    res : Complex_Number;
+
+    procedure Scan_Term
+                ( t : in QuadDobl_Complex_Polynomials.Term;
+                  continue : out boolean ) is
+
+      val : constant quad_double := AbsVal(t.cf);
+ 
+    begin
+      if val > tol then
+        res := t.cf;
+        continue := false;
+      else
+        continue := true;
+      end if;
+    end Scan_Term;
+    procedure Scan_Terms is
+      new QuadDobl_Complex_Polynomials.Visiting_Iterator(Scan_Term);
+
+  begin
+    Scan_Terms(p);
+    return res;
+  end Leading_Coefficient;
+
   procedure Normalize ( p : in out Standard_Complex_Polynomials.Poly ) is
 
     use Standard_Complex_Numbers;
@@ -695,7 +656,63 @@ package body Multivariate_Factorization is
     Normalize_Terms(p);
   end Normalize;
 
+  procedure Normalize ( p : in out DoblDobl_Complex_Polynomials.Poly ) is
+
+    use DoblDobl_Complex_Numbers;
+
+    tol : constant double_float := 1.0E-10;
+    leadcff : constant Complex_Number := Leading_Coefficient(p,tol);
+
+    procedure Normalize_Term
+                ( t : in out DoblDobl_Complex_Polynomials.Term;
+                  continue : out boolean ) is
+    begin
+      t.cf := t.cf/leadcff;
+      continue := true;
+    end Normalize_Term;
+    procedure Normalize_Terms is
+      new DoblDobl_Complex_Polynomials.Changing_Iterator(Normalize_Term);
+
+  begin
+    Normalize_Terms(p);
+  end Normalize;
+
+  procedure Normalize ( p : in out QuadDobl_Complex_Polynomials.Poly ) is
+
+    use QuadDobl_Complex_Numbers;
+
+    tol : constant double_float := 1.0E-10;
+    leadcff : constant Complex_Number := Leading_Coefficient(p,tol);
+
+    procedure Normalize_Term
+                ( t : in out QuadDobl_Complex_Polynomials.Term;
+                  continue : out boolean ) is
+    begin
+      t.cf := t.cf/leadcff;
+      continue := true;
+    end Normalize_Term;
+    procedure Normalize_Terms is
+      new QuadDobl_Complex_Polynomials.Changing_Iterator(Normalize_Term);
+
+  begin
+    Normalize_Terms(p);
+  end Normalize;
+
   procedure Normalize ( p : in out Standard_Complex_Poly_Systems.Poly_Sys ) is
+  begin
+    for i in p'range loop
+      Normalize(p(i));
+    end loop;
+  end Normalize;
+
+  procedure Normalize ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
+  begin
+    for i in p'range loop
+      Normalize(p(i));
+    end loop;
+  end Normalize;
+
+  procedure Normalize ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
   begin
     for i in p'range loop
       Normalize(p(i));

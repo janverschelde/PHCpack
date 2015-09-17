@@ -398,4 +398,63 @@ package body Factored_Witness_Vectors is
     return res(res'first..ind);
   end Remove_Duplicates;
 
+  function Select_Points ( w : in Standard_Complex_Vectors.Vector;
+                           k : in Standard_Natural_Vectors.Vector )
+                         return Standard_Complex_Vectors.Vector is
+
+    res : Standard_Complex_Vectors.Vector(k'range);
+
+  begin
+    for i in k'range loop
+      res(i) := w(integer32(k(i)));
+    end loop;
+    return res;
+  end Select_Points;
+
+  function Select_Points ( w : in DoblDobl_Complex_Vectors.Vector;
+                           k : in Standard_Natural_Vectors.Vector )
+                         return DoblDobl_Complex_Vectors.Vector is
+
+    res : DoblDobl_Complex_Vectors.Vector(k'range);
+
+  begin
+    for i in k'range loop
+      res(i) := w(integer32(k(i)));
+    end loop;
+    return res;
+  end Select_Points;
+
+  function Select_Points ( w : in QuadDobl_Complex_Vectors.Vector;
+                           k : in Standard_Natural_Vectors.Vector )
+                         return QuadDobl_Complex_Vectors.Vector is
+
+    res : QuadDobl_Complex_Vectors.Vector(k'range);
+
+  begin
+    for i in k'range loop
+      res(i) := w(integer32(k(i)));
+    end loop;
+    return res;
+  end Select_Points;
+
+  function Multiplicity_of_Factors
+              ( factors : Standard_Natural_VecVecs.VecVec;
+                m : in Standard_Natural_Vectors.Vector )
+              return Standard_Natural_Vectors.Vector is
+
+    use Standard_Natural_VecVecs,Standard_Natural_Vectors;
+
+    res : Standard_Natural_Vectors.Vector(factors'range);
+    ind : integer32 := res'first-1;
+
+  begin
+    for i in factors'range loop
+      if factors(i) /= null then
+        ind := ind + 1;
+        res(ind) := m(integer32(factors(i)(1)));
+      end if;
+    end loop;
+    return res(res'first..ind);
+  end Multiplicity_of_Factors;
+
 end Factored_Witness_Vectors;
