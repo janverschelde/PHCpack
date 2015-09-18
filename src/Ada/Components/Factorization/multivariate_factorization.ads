@@ -40,6 +40,26 @@ package Multivariate_Factorization is
                  factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
                  wp : out Standard_Complex_Vectors.Link_to_Vector;     
                  mw : out Standard_Natural_Vectors.Link_to_Vector );
+  procedure Factor_with_Multiplicities
+               ( n,d : in natural32;
+                 p : in DoblDobl_Complex_Polynomials.Poly;
+                 ep : in DoblDobl_Complex_Poly_Functions.Eval_Poly;
+                 b,v,t : in DoblDobl_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 rdp : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
+                 wp : out DoblDobl_Complex_Vectors.Link_to_Vector;     
+                 mw : out Standard_Natural_Vectors.Link_to_Vector );
+  procedure Factor_with_Multiplicities
+               ( n,d : in natural32;
+                 p : in QuadDobl_Complex_Polynomials.Poly;
+                 ep : in QuadDobl_Complex_Poly_Functions.Eval_Poly;
+                 b,v,t : in QuadDobl_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 rdp : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
+                 wp : out QuadDobl_Complex_Vectors.Link_to_Vector;     
+                 mw : out Standard_Natural_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
   --   Performs the factorization when multiplicities > 1, 
@@ -71,6 +91,28 @@ package Multivariate_Factorization is
                  rdp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                  factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
                  wp : out Standard_Complex_Vectors.Link_to_Vector;
+                 mw : out Standard_Natural_Vectors.Link_to_Vector );
+  procedure Factor_with_Multiplicities
+               ( file : in file_type; output : in boolean;
+                 n,d : in natural32;
+                 p : in DoblDobl_Complex_Polynomials.Poly;
+                 ep : in DoblDobl_Complex_Poly_Functions.Eval_Poly;
+                 b,v,t : in DoblDobl_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 rdp : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
+                 wp : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                 mw : out Standard_Natural_Vectors.Link_to_Vector );
+  procedure Factor_with_Multiplicities
+               ( file : in file_type; output : in boolean;
+                 n,d : in natural32;
+                 p : in QuadDobl_Complex_Polynomials.Poly;
+                 ep : in QuadDobl_Complex_Poly_Functions.Eval_Poly;
+                 b,v,t : in QuadDobl_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 rdp : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
+                 wp : out QuadDobl_Complex_Vectors.Link_to_Vector;
                  mw : out Standard_Natural_Vectors.Link_to_Vector );
 
   -- DESCRIPTION :
@@ -206,6 +248,26 @@ package Multivariate_Factorization is
                 mw : out Standard_Natural_Vectors.Link_to_Vector;
                 rdp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 fail : out boolean );
+  procedure Factor 
+              ( p : in DoblDobl_Complex_Polynomials.Poly;
+                n,d : in natural32;
+                factors : out Standard_Natural_VecVecs.Link_to_VecVec;
+                mf : out Standard_Natural_Vectors.Link_to_Vector;
+                b,v : out DoblDobl_Complex_Vectors.Vector;
+                wp : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                mw : out Standard_Natural_Vectors.Link_to_Vector;
+                rdp : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                fail : out boolean );
+  procedure Factor 
+              ( p : in QuadDobl_Complex_Polynomials.Poly;
+                n,d : in natural32;
+                factors : out Standard_Natural_VecVecs.Link_to_VecVec;
+                mf : out Standard_Natural_Vectors.Link_to_Vector;
+                b,v : out QuadDobl_Complex_Vectors.Vector;
+                wp : out QuadDobl_Complex_Vectors.Link_to_Vector;
+                mw : out Standard_Natural_Vectors.Link_to_Vector;
+                rdp : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                fail : out boolean );
 
   procedure Factor 
               ( p : in Standard_Complex_Polynomials.Poly;
@@ -216,6 +278,28 @@ package Multivariate_Factorization is
                 wp : out Standard_Complex_Vectors.Link_to_Vector;
                 mw : out Standard_Natural_Vectors.Link_to_Vector;
                 rdp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                rad,dst : out Standard_Floating_Vectors.Vector;
+                fail : out boolean );
+  procedure Factor 
+              ( p : in DoblDobl_Complex_Polynomials.Poly;
+                n,d : in natural32;
+                factors : out Standard_Natural_VecVecs.Link_to_VecVec;
+                mf : out Standard_Natural_Vectors.Link_to_Vector;
+                b,v : out DoblDobl_Complex_Vectors.Vector;
+                wp : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                mw : out Standard_Natural_Vectors.Link_to_Vector;
+                rdp : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                rad,dst : out Standard_Floating_Vectors.Vector;
+                fail : out boolean );
+  procedure Factor 
+              ( p : in QuadDobl_Complex_Polynomials.Poly;
+                n,d : in natural32;
+                factors : out Standard_Natural_VecVecs.Link_to_VecVec;
+                mf : out Standard_Natural_Vectors.Link_to_Vector;
+                b,v : out QuadDobl_Complex_Vectors.Vector;
+                wp : out QuadDobl_Complex_Vectors.Link_to_Vector;
+                mw : out Standard_Natural_Vectors.Link_to_Vector;
+                rdp : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 rad,dst : out Standard_Floating_Vectors.Vector;
                 fail : out boolean );
 
@@ -230,6 +314,28 @@ package Multivariate_Factorization is
                 mw : out Standard_Natural_Vectors.Link_to_Vector;
                 rdp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 fail : out boolean );
+  procedure Factor
+              ( file : in file_type; output : in boolean;
+                p : in DoblDobl_Complex_Polynomials.Poly;
+                n,d : in natural32;
+                factors : out Standard_Natural_VecVecs.Link_to_VecVec;
+                mf : out Standard_Natural_Vectors.Link_to_Vector;
+                b,v : out DoblDobl_Complex_Vectors.Vector;
+                wp : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                mw : out Standard_Natural_Vectors.Link_to_Vector;
+                rdp : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                fail : out boolean );
+  procedure Factor
+              ( file : in file_type; output : in boolean;
+                p : in QuadDobl_Complex_Polynomials.Poly;
+                n,d : in natural32;
+                factors : out Standard_Natural_VecVecs.Link_to_VecVec;
+                mf : out Standard_Natural_Vectors.Link_to_Vector;
+                b,v : out QuadDobl_Complex_Vectors.Vector;
+                wp : out QuadDobl_Complex_Vectors.Link_to_Vector;
+                mw : out Standard_Natural_Vectors.Link_to_Vector;
+                rdp : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                fail : out boolean );
 
   procedure Factor
               ( file : in file_type; output : in boolean;
@@ -241,6 +347,30 @@ package Multivariate_Factorization is
                 wp : out Standard_Complex_Vectors.Link_to_Vector;
                 mw : out Standard_Natural_Vectors.Link_to_Vector;
                 rdp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                rad,dst : out Standard_Floating_Vectors.Vector;
+                fail : out boolean );
+  procedure Factor
+              ( file : in file_type; output : in boolean;
+                p : in DoblDobl_Complex_Polynomials.Poly;
+                n,d : in natural32;
+                factors : out Standard_Natural_VecVecs.Link_to_VecVec;
+                mf : out Standard_Natural_Vectors.Link_to_Vector;
+                b,v : out DoblDobl_Complex_Vectors.Vector;
+                wp : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                mw : out Standard_Natural_Vectors.Link_to_Vector;
+                rdp : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                rad,dst : out Standard_Floating_Vectors.Vector;
+                fail : out boolean );
+  procedure Factor
+              ( file : in file_type; output : in boolean;
+                p : in QuadDobl_Complex_Polynomials.Poly;
+                n,d : in natural32;
+                factors : out Standard_Natural_VecVecs.Link_to_VecVec;
+                mf : out Standard_Natural_Vectors.Link_to_Vector;
+                b,v : out QuadDobl_Complex_Vectors.Vector;
+                wp : out QuadDobl_Complex_Vectors.Link_to_Vector;
+                mw : out Standard_Natural_Vectors.Link_to_Vector;
+                rdp : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 rad,dst : out Standard_Floating_Vectors.Vector;
                 fail : out boolean );
 
