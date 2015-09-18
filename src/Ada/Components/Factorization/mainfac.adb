@@ -1097,7 +1097,11 @@ procedure mainfac ( infilename,outfilename : in string ) is
       when '3' => Trace_Form_Interpolation;
       when '4' => Incremental_Interpolation;
       when '5' => Eliminate_Variables;
-      when '6' => Driver_to_Factor_Polynomial(infilename);
+      when '6' =>
+        if infilename = ""
+         then Driver_to_Factor_Polynomial;
+         else Driver_to_Factor_Polynomial(infilename);
+        end if;
       when '7' => Driver_for_Common_Factor;
       when '8' => DoblDobl_Breakup;
       when '9' => QuadDobl_Breakup;

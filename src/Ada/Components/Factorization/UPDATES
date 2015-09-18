@@ -4,6 +4,8 @@ Fri 18 Sep 2015 : multivariate_factorization exports the factorization of
   Extended monodromy_polynomial_breakup with factorization procedures to run
   in standard double, double double, and quad double precision arithmetic.
   Updated multivariate_factorization with extended monodromy poly breakup.
+  The new routines are called in the updated drivers_to_factor_polynomials,
+  and in mainfac.adb.
 
 Thu 17 Sep 2015 : new package factored_witness_vectors with code factored out
   of multivariate_factorization.adb, extended with operations for double
