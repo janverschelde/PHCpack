@@ -8,17 +8,27 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
-with DoblDobl_Complex_Vectors;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
+with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
 with Standard_Random_Vectors;            use Standard_Random_Vectors;
+with DoblDobl_Random_Vectors;            use DoblDobl_Random_Vectors;
+with QuadDobl_Random_Vectors;            use QuadDobl_Random_Vectors;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
-with Standard_Complex_Poly_Functions;
 with Standard_Complex_Poly_SysFun;
+with DoblDobl_Complex_Poly_SysFun;
+with QuadDobl_Complex_Poly_SysFun;
 with Sample_Points;                      use Sample_Points;
 with Sample_Point_Lists;                 use Sample_Point_Lists;
 with Sample_Point_Lists_io;              use Sample_Point_Lists_io;
+with DoblDobl_Sample_Lists;              use DoblDobl_Sample_Lists;
+with QuadDobl_Sample_Lists;              use QuadDobl_Sample_Lists;
 with Standard_Lined_Hypersurfaces;       use Standard_Lined_Hypersurfaces;
+with DoblDobl_Lined_Hypersurfaces;       use DoblDobl_Lined_Hypersurfaces;
+with QuadDobl_Lined_Hypersurfaces;       use QuadDobl_Lined_Hypersurfaces;
 with Hypersurface_Sample_Grids;          use Hypersurface_Sample_Grids;
+with DoblDobl_Gridded_Hypersurfaces;     use DoblDobl_Gridded_Hypersurfaces;
+with QuadDobl_Gridded_Hypersurfaces;     use QuadDobl_Gridded_Hypersurfaces;
 with Standard_Stacked_Sample_Grids;      use Standard_Stacked_Sample_Grids;
 with Standard_Trace_Interpolators;       use Standard_Trace_Interpolators;
 with Standard_Divided_Differences;       use Standard_Divided_Differences;
@@ -62,6 +72,70 @@ package body Multivariate_Factorization is
       subfactors := Init_Factors(natural32(wp'last));
       Monodromy_Breakup(rdp(integer32(mu)),eva_rdp(integer32(mu)),
                         b,v,w0,subfactors);
+      if Number_of_Factors(subfactors.all) /= wp'length then
+        Assign_Legend(subfactors,wp);
+        Merge(factors,subfactors);
+      end if;
+    end if;
+  end Subfactor_with_Multiplicities;
+
+  procedure Subfactor_with_Multiplicities
+               ( n,d : in natural32;
+                 p : in DoblDobl_Complex_Polynomials.Poly;
+                 ep : in DoblDobl_Complex_Poly_Functions.Eval_Poly;
+                 b,v,t : in DoblDobl_Complex_Vectors.Vector;
+                 m : in Standard_Natural_Vectors.Vector; mu,k : in natural32;
+                 rdp : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 eva_rdp : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                 factors : in Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+  -- DESCRIPTION :
+  --   Subroutine to factor one component of multiplicy mu, without output.
+
+    tol : constant double_float := 1.0E-8;
+    w0 : constant DoblDobl_Complex_Vectors.Vector
+       := Select_Multiple_Factors(m,t,mu);
+    wp : constant Standard_Natural_Vectors.Vector := Positions(t,w0,tol);
+    subfactors : Standard_Natural_VecVecs.Link_to_VecVec;
+
+  begin
+    if k > mu then
+      subfactors := Init_Factors(natural32(wp'last));
+     -- still to do : dobldobl version
+     -- Monodromy_Breakup(rdp(integer32(mu)),eva_rdp(integer32(mu)),
+     --                   b,v,w0,subfactors);
+      if Number_of_Factors(subfactors.all) /= wp'length then
+        Assign_Legend(subfactors,wp);
+        Merge(factors,subfactors);
+      end if;
+    end if;
+  end Subfactor_with_Multiplicities;
+
+  procedure Subfactor_with_Multiplicities
+               ( n,d : in natural32;
+                 p : in QuadDobl_Complex_Polynomials.Poly;
+                 ep : in QuadDobl_Complex_Poly_Functions.Eval_Poly;
+                 b,v,t : in QuadDobl_Complex_Vectors.Vector;
+                 m : in Standard_Natural_Vectors.Vector; mu,k : in natural32;
+                 rdp : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 eva_rdp : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                 factors : in Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+  -- DESCRIPTION :
+  --   Subroutine to factor one component of multiplicy mu, without output.
+
+    tol : constant double_float := 1.0E-8;
+    w0 : constant QuadDobl_Complex_Vectors.Vector
+       := Select_Multiple_Factors(m,t,mu);
+    wp : constant Standard_Natural_Vectors.Vector := Positions(t,w0,tol);
+    subfactors : Standard_Natural_VecVecs.Link_to_VecVec;
+
+  begin
+    if k > mu then
+      subfactors := Init_Factors(natural32(wp'last));
+     -- still to do : quad double version
+     -- Monodromy_Breakup(rdp(integer32(mu)),eva_rdp(integer32(mu)),
+     --                   b,v,w0,subfactors);
       if Number_of_Factors(subfactors.all) /= wp'length then
         Assign_Legend(subfactors,wp);
         Merge(factors,subfactors);
@@ -148,6 +222,70 @@ package body Multivariate_Factorization is
   end Sub_Trace_Factor_with_Multiplicities;
 
   procedure Sub_Trace_Factor_with_Multiplicities
+               ( n,d : in natural32;
+                 p : in DoblDobl_Complex_Polynomials.Poly;
+                 b,v,t : in DoblDobl_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 mu,k : in natural32;
+                 rdp : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 factors : in Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+  -- DESCRIPTION :
+  --   Subroutine to factor one component of multiplicity mu, without output.
+
+    tol : constant double_float := 1.0E-8;
+    w0 : constant DoblDobl_Complex_Vectors.Vector
+       := Select_Multiple_Factors(m,t,mu);
+    wp : constant Standard_Natural_Vectors.Vector := Positions(t,w0,tol);
+    subfactors : Standard_Natural_VecVecs.Link_to_VecVec;
+    grid : Array_of_DoblDobl_Sample_Lists(0..2);
+
+  begin
+    if k > mu then
+      DoblDobl_Gridded_Hypersurfaces.Initialize(rdp(integer32(mu)));
+      grid := Parallel_Sample1(b,v,w0,2);
+      subfactors
+        := new Standard_Natural_VecVecs.VecVec'(Factor(w0'length,grid));
+      if Number_of_Factors(subfactors.all) /= natural32(wp'length) then
+        Assign_Legend(subfactors,wp);
+        Merge(factors,subfactors);
+      end if;
+    end if;
+  end Sub_Trace_Factor_with_Multiplicities;
+
+  procedure Sub_Trace_Factor_with_Multiplicities
+               ( n,d : in natural32;
+                 p : in QuadDobl_Complex_Polynomials.Poly;
+                 b,v,t : in QuadDobl_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 mu,k : in natural32;
+                 rdp : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 factors : in Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+  -- DESCRIPTION :
+  --   Subroutine to factor one component of multiplicity mu, without output.
+
+    tol : constant double_float := 1.0E-8;
+    w0 : constant QuadDobl_Complex_Vectors.Vector
+       := Select_Multiple_Factors(m,t,mu);
+    wp : constant Standard_Natural_Vectors.Vector := Positions(t,w0,tol);
+    subfactors : Standard_Natural_VecVecs.Link_to_VecVec;
+    grid : Array_of_QuadDobl_Sample_Lists(0..2);
+
+  begin
+    if k > mu then
+      QuadDobl_Gridded_Hypersurfaces.Initialize(rdp(integer32(mu)));
+      grid := Parallel_Sample1(b,v,w0,2);
+      subfactors
+        := new Standard_Natural_VecVecs.VecVec'(Factor(w0'length,grid));
+      if Number_of_Factors(subfactors.all) /= natural32(wp'length) then
+        Assign_Legend(subfactors,wp);
+        Merge(factors,subfactors);
+      end if;
+    end if;
+  end Sub_Trace_Factor_with_Multiplicities;
+
+  procedure Sub_Trace_Factor_with_Multiplicities
                ( file : in file_type;
                  n,d : in natural32;
                  p : in Standard_Complex_Polynomials.Poly;
@@ -191,6 +329,96 @@ package body Multivariate_Factorization is
     end if;
   end Sub_Trace_Factor_with_Multiplicities;
 
+  procedure Sub_Trace_Factor_with_Multiplicities
+               ( file : in file_type;
+                 n,d : in natural32;
+                 p : in DoblDobl_Complex_Polynomials.Poly;
+                 b,v,t : in DoblDobl_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector; mu,k : in natural32;
+                 rdp : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 factors : in Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+  -- DESCRIPTION :
+  --   Subroutine to factor one component of multiplicity mu,
+  --   with intermediate output.
+
+    tol : constant double_float := 1.0E-8;
+    w0 : constant DoblDobl_Complex_Vectors.Vector
+       := Select_Multiple_Factors(m,t,mu);
+    wp : constant Standard_Natural_Vectors.Vector := Positions(t,w0,tol);
+    subfactors : Standard_Natural_VecVecs.Link_to_VecVec;
+    grid : Array_of_DoblDobl_Sample_Lists(0..2);
+
+  begin
+    put(file,"Finding factors of multiplicity ");
+    put(file,mu,1); put(file," with sum of degrees = ");
+    put(file,k,1); put_line(file," ...");
+    put(file,"The positions of those points : ");
+    put(file,wp); new_line(file);
+    if mu = k then
+      put_line(file," -> only one factor.");
+    else
+      DoblDobl_Gridded_Hypersurfaces.Initialize(rdp(integer32(mu)));
+      grid := Parallel_Sample1(file,false,b,v,w0,2);
+      subfactors
+        := new Standard_Natural_VecVecs.VecVec'(Factor(file,w0'length,grid));
+      if Number_of_Factors(subfactors.all) /= natural32(wp'length) then
+        Assign_Legend(subfactors,wp);
+        put_line(file,"The factors after legend assignment :");
+        Write_Factors(file,subfactors.all);
+        Merge(factors,subfactors);
+        put_line(file,"The factors after merging : ");
+        Write_Factors(file,factors.all);
+      end if;
+    end if;
+  end Sub_Trace_Factor_with_Multiplicities;
+
+  procedure Sub_Trace_Factor_with_Multiplicities
+               ( file : in file_type;
+                 n,d : in natural32;
+                 p : in QuadDobl_Complex_Polynomials.Poly;
+                 b,v,t : in QuadDobl_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector; mu,k : in natural32;
+                 rdp : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 factors : in Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+  -- DESCRIPTION :
+  --   Subroutine to factor one component of multiplicity mu,
+  --   with intermediate output.
+
+    tol : constant double_float := 1.0E-8;
+    w0 : constant QuadDobl_Complex_Vectors.Vector
+       := Select_Multiple_Factors(m,t,mu);
+    wp : constant Standard_Natural_Vectors.Vector := Positions(t,w0,tol);
+    subfactors : Standard_Natural_VecVecs.Link_to_VecVec;
+    grid : Array_of_QuadDobl_Sample_Lists(0..2);
+
+  begin
+    put(file,"Finding factors of multiplicity ");
+    put(file,mu,1); put(file," with sum of degrees = ");
+    put(file,k,1); put_line(file," ...");
+    put(file,"The positions of those points : ");
+    put(file,wp); new_line(file);
+    if mu = k then
+      put_line(file," -> only one factor.");
+    else
+      QuadDobl_Gridded_Hypersurfaces.Initialize(rdp(integer32(mu)));
+      grid := Parallel_Sample1(file,false,b,v,w0,2);
+      subfactors
+        := new Standard_Natural_VecVecs.VecVec'(Factor(file,w0'length,grid));
+      if Number_of_Factors(subfactors.all) /= natural32(wp'length) then
+        Assign_Legend(subfactors,wp);
+        put_line(file,"The factors after legend assignment :");
+        Write_Factors(file,subfactors.all);
+        Merge(factors,subfactors);
+        put_line(file,"The factors after merging : ");
+        Write_Factors(file,factors.all);
+      end if;
+    end if;
+  end Sub_Trace_Factor_with_Multiplicities;
+
+-- FACTORING WITH GIVEN GENERIC POINTS :
+
   procedure Factor_with_Multiplicities
                ( n,d : in natural32;
                  p : in Standard_Complex_Polynomials.Poly;
@@ -201,26 +429,6 @@ package body Multivariate_Factorization is
                  factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
                  wp : out Standard_Complex_Vectors.Link_to_Vector;     
                  mw : out Standard_Natural_Vectors.Link_to_Vector ) is
-
-  -- DESCRIPTION :
-  --   Performs the factorization when multiplicities > 1, 
-  --   without any intermediate output.
-
-  -- ON ENTRY :
-  --   n         number of variables of the polynomial;
-  --   p         a polynomial in n variables;
-  --   ep        nested Horner form of the polynomial;
-  --   b         offset vector of a random affine line b + t*v;
-  --   v         direction of a random affine line b + t*v;
-  --   t         values for t on the random affine line b + t*v;
-  --   m         multiplicities sorted in ascending order of t-values;
-  --   rdp       contains random derivatives of p,
-  --             rdp'last = highest multiplicity in m.
-
-  -- ON RETURN :
-  --   factors   labels for generic points grouped together on same factor;
-  --   wp        witness points with duplicates removed;
-  --   mw        mw(i) is the multiplicity of wp(i).
 
     tol : constant double_float := 1.0E-8;
     k : natural32;
@@ -261,28 +469,6 @@ package body Multivariate_Factorization is
                  factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
                  wp : out Standard_Complex_Vectors.Link_to_Vector;
                  mw : out Standard_Natural_Vectors.Link_to_Vector ) is
-
-  -- DESCRIPTION :
-  --   Performs the factorization when multiplicities > 1,
-  --   with intermediate output to file.
-
-  -- ON ENTRY :
-  --   file      for intermediate output and diagnostics;
-  --   output    if output needed during continuation;
-  --   n         number of variables of the polynomial;
-  --   p         a polynomial in n variables;
-  --   ep        nested Horner form of the polynomial;
-  --   b         offset vector of a random affine line b + t*v;
-  --   v         direction of a random affine line b + t*v;
-  --   t         values for t on the random affine line b + t*v;
-  --   m         multiplicities sorted in ascending order of t-values;
-  --   rdp       contains random derivatives of p,
-  --             rdp'last = highest multiplicity in m.
-
-  -- ON RETURN :
-  --   factors   labels for generic points grouped together on same factor;
-  --   wp        witness points with duplicates removed;
-  --   mw        mw(i) is the multiplicity of wp(i).
 
     tol : constant double_float := 1.0E-8;
     k : natural32;
@@ -333,26 +519,6 @@ package body Multivariate_Factorization is
                  wp : out Standard_Complex_Vectors.Link_to_Vector;
                  mw : out Standard_Natural_Vectors.Link_to_Vector ) is
 
-  -- DESCRIPTION :
-  --   Applies the combinatorial factorization with linear traces
-  --   to the case with witness points of higher multiplicity,
-  --   without any intermediate output.
-
-  -- ON ENTRY :
-  --   n         number of variables of the polynomial;
-  --   p         a polynomial in n variables;
-  --   b         offset vector of a random affine line b + t*v;
-  --   v         direction of a random affine line b + t*v;
-  --   t         values for t on the random affine line b + t*v;
-  --   m         multiplicities sorted in ascending order of t-values;
-  --   rdp       contains random derivatives of p,
-  --             rdp'last = highest multiplicity in m.
-
-  -- ON RETURN :
-  --   factors   labels for generic points grouped together on same factor;
-  --   wp        witness points with duplicates removed;
-  --   mw        mw(i) is the multiplicity of wp(i).
-
     tol : constant double_float := 1.0E-8;
     k : natural32;
     t1 : constant Standard_Complex_Vectors.Vector
@@ -374,6 +540,66 @@ package body Multivariate_Factorization is
   end Trace_Factor_with_Multiplicities;
 
   procedure Trace_Factor_with_Multiplicities
+               ( n,d : in natural32;
+                 p : in DoblDobl_Complex_Polynomials.Poly;
+                 b,v,t : in DoblDobl_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 rdp : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
+                 wp : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                 mw : out Standard_Natural_Vectors.Link_to_Vector ) is
+
+    tol : constant double_float := 1.0E-8;
+    k : natural32;
+    t1 : constant DoblDobl_Complex_Vectors.Vector
+       := Remove_Duplicates(t,tol);
+    m1 : constant Standard_Natural_Vectors.Vector
+       := Remove_Duplicates(t,tol,m);
+
+  begin
+    factors := Init_Factors(natural32(m1'last));
+    for i in 1..natural32(rdp'last) loop
+      k := Countmu(m,i);
+      if k > 0 then
+        Sub_Trace_Factor_with_Multiplicities
+          (n,d,p,b,v,t1,m1,i,k,rdp.all,factors); 
+      end if;
+    end loop;
+    wp := new DoblDobl_Complex_Vectors.Vector'(t1);
+    mw := new Standard_Natural_Vectors.Vector'(m1);
+  end Trace_Factor_with_Multiplicities;
+
+  procedure Trace_Factor_with_Multiplicities
+               ( n,d : in natural32;
+                 p : in QuadDobl_Complex_Polynomials.Poly;
+                 b,v,t : in QuadDobl_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 rdp : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
+                 wp : out QuadDobl_Complex_Vectors.Link_to_Vector;
+                 mw : out Standard_Natural_Vectors.Link_to_Vector ) is
+
+    tol : constant double_float := 1.0E-8;
+    k : natural32;
+    t1 : constant QuadDobl_Complex_Vectors.Vector
+       := Remove_Duplicates(t,tol);
+    m1 : constant Standard_Natural_Vectors.Vector
+       := Remove_Duplicates(t,tol,m);
+
+  begin
+    factors := Init_Factors(natural32(m1'last));
+    for i in 1..natural32(rdp'last) loop
+      k := Countmu(m,i);
+      if k > 0 then
+        Sub_Trace_Factor_with_Multiplicities
+          (n,d,p,b,v,t1,m1,i,k,rdp.all,factors); 
+      end if;
+    end loop;
+    wp := new QuadDobl_Complex_Vectors.Vector'(t1);
+    mw := new Standard_Natural_Vectors.Vector'(m1);
+  end Trace_Factor_with_Multiplicities;
+
+  procedure Trace_Factor_with_Multiplicities
                ( file : in file_type; n,d : in natural32;
                  p : in Standard_Complex_Polynomials.Poly;
                  b,v,t : in Standard_Complex_Vectors.Vector; 
@@ -382,28 +608,6 @@ package body Multivariate_Factorization is
                  factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
                  wp : out Standard_Complex_Vectors.Link_to_Vector;
                  mw : out Standard_Natural_Vectors.Link_to_Vector ) is
-
-  -- DESCRIPTION :
-  --   Applies the combinatorial factorization with linear traces
-  --   to the case with witness points of higher multiplicity,
-  --   with intermediate output to file.
-
-  -- ON ENTRY :
-  --   file      for intermediate output and diagnostics;
-  --   n         number of variables of the polynomial;
-  --   p         a polynomial in n variables;
-  --   ep        nested Horner form of the polynomial;
-  --   b         offset vector of a random affine line b + t*v;
-  --   v         direction of a random affine line b + t*v;
-  --   t         values for t on the random affine line b + t*v;
-  --   m         multiplicities sorted in ascending order of t-values;
-  --   rdp       contains random derivatives of p,
-  --             rdp'last = highest multiplicity in m.
-
-  -- ON RETURN :
-  --   factors   labels for generic points grouped together on same factor;
-  --   wp        witness points with duplicates removed;
-  --   mw        mw(i) is the multiplicity of wp(i).
 
     tol : constant double_float := 1.0E-8;
     k : natural32;
@@ -436,7 +640,90 @@ package body Multivariate_Factorization is
     mw := new Standard_Natural_Vectors.Vector'(m1);
   end Trace_Factor_with_Multiplicities;
 
--- TARGET ROUTINES :
+  procedure Trace_Factor_with_Multiplicities
+               ( file : in file_type; n,d : in natural32;
+                 p : in DoblDobl_Complex_Polynomials.Poly;
+                 b,v,t : in DoblDobl_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 rdp : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
+                 wp : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                 mw : out Standard_Natural_Vectors.Link_to_Vector ) is
+
+    tol : constant double_float := 1.0E-8;
+    k : natural32;
+    t1 : constant DoblDobl_Complex_Vectors.Vector
+       := Remove_Duplicates(t,tol);
+    m1 : constant Standard_Natural_Vectors.Vector
+       := Remove_Duplicates(t,tol,m);
+
+  begin
+    put(file,"Sorted multiplicities : "); put(file,m);
+    put(file," with max = "); put(file,rdp'last,1); new_line(file);
+    put_line(file,"The original list of witness points:");
+    put_line(file,t);
+    put_line(file,"witness point with duplicates removed : ");
+    put_line(file,t1);
+    put(file,"with corresponding multiplicities : ");
+    put(file,m1); new_line(file);
+    factors := Init_Factors(natural32(m1'last));
+    for i in 1..natural32(rdp'last) loop
+      k := Countmu(m,i);
+      if k = 0 then
+        put(file,"There is no factor with multiplicity ");
+        put(file,i,1); put_line(file,".");
+      else
+        Sub_Trace_Factor_with_Multiplicities
+          (file,n,d,p,b,v,t1,m1,i,k,rdp.all,factors); 
+      end if;
+    end loop;
+    wp := new DoblDobl_Complex_Vectors.Vector'(t1);
+    mw := new Standard_Natural_Vectors.Vector'(m1);
+  end Trace_Factor_with_Multiplicities;
+
+
+  procedure Trace_Factor_with_Multiplicities
+               ( file : in file_type; n,d : in natural32;
+                 p : in QuadDobl_Complex_Polynomials.Poly;
+                 b,v,t : in QuadDobl_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 rdp : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
+                 wp : out QuadDobl_Complex_Vectors.Link_to_Vector;
+                 mw : out Standard_Natural_Vectors.Link_to_Vector ) is
+
+    tol : constant double_float := 1.0E-8;
+    k : natural32;
+    t1 : constant QuadDobl_Complex_Vectors.Vector
+       := Remove_Duplicates(t,tol);
+    m1 : constant Standard_Natural_Vectors.Vector
+       := Remove_Duplicates(t,tol,m);
+
+  begin
+    put(file,"Sorted multiplicities : "); put(file,m);
+    put(file," with max = "); put(file,rdp'last,1); new_line(file);
+    put_line(file,"The original list of witness points:");
+    put_line(file,t);
+    put_line(file,"witness point with duplicates removed : ");
+    put_line(file,t1);
+    put(file,"with corresponding multiplicities : ");
+    put(file,m1); new_line(file);
+    factors := Init_Factors(natural32(m1'last));
+    for i in 1..natural32(rdp'last) loop
+      k := Countmu(m,i);
+      if k = 0 then
+        put(file,"There is no factor with multiplicity ");
+        put(file,i,1); put_line(file,".");
+      else
+        Sub_Trace_Factor_with_Multiplicities
+          (file,n,d,p,b,v,t1,m1,i,k,rdp.all,factors); 
+      end if;
+    end loop;
+    wp := new QuadDobl_Complex_Vectors.Vector'(t1);
+    mw := new Standard_Natural_Vectors.Vector'(m1);
+  end Trace_Factor_with_Multiplicities;
+
+-- FACTORING WITHOUT GIVEN GENERIC POINTS :
 
   procedure Factor ( p : in Standard_Complex_Polynomials.Poly;
                      n,d : in natural32;
@@ -594,6 +881,54 @@ package body Multivariate_Factorization is
     end loop;
   end Certify;
 
+  procedure Certify ( p : in DoblDobl_Complex_Polynomials.Poly;
+                      b,v,wp : in DoblDobl_Complex_Vectors.Vector;
+                      mw : in Standard_Natural_Vectors.Vector;
+                      f : in Standard_Natural_VecVecs.VecVec;
+                      mf : in Standard_Natural_Vectors.Vector;
+                      rdp : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                      maxdif : out double_float ) is
+
+    res : double_float;
+
+  begin
+    maxdif := 0.0;
+    for i in f'range loop
+      if mf(i) = 1
+       then Certify_Factor(p,b,v,Select_Points(wp,f(i).all),res);
+       else Certify_Factor(rdp(integer32(mf(i))),b,v,
+                           Select_Points(wp,f(i).all),res);
+      end if;
+      if res > maxdif
+       then maxdif := res;
+      end if;
+    end loop;
+  end Certify;
+
+  procedure Certify ( p : in QuadDobl_Complex_Polynomials.Poly;
+                      b,v,wp : in QuadDobl_Complex_Vectors.Vector;
+                      mw : in Standard_Natural_Vectors.Vector;
+                      f : in Standard_Natural_VecVecs.VecVec;
+                      mf : in Standard_Natural_Vectors.Vector;
+                      rdp : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                      maxdif : out double_float ) is
+
+    res : double_float;
+
+  begin
+    maxdif := 0.0;
+    for i in f'range loop
+      if mf(i) = 1
+       then Certify_Factor(p,b,v,Select_Points(wp,f(i).all),res);
+       else Certify_Factor(rdp(integer32(mf(i))),b,v,
+                           Select_Points(wp,f(i).all),res);
+      end if;
+      if res > maxdif
+       then maxdif := res;
+      end if;
+    end loop;
+  end Certify;
+
   procedure Certify ( file : in file_type;
                       p : in Standard_Complex_Polynomials.Poly;
                       b,v,wp : in Standard_Complex_Vectors.Vector;
@@ -601,6 +936,60 @@ package body Multivariate_Factorization is
                       f : in Standard_Natural_VecVecs.VecVec;
                       mf : in Standard_Natural_Vectors.Vector;
                       rdp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                      maxdif : out double_float ) is
+
+    res : double_float;
+
+  begin
+    maxdif := 0.0;
+    for i in f'range loop
+      put(file,"Certification of factor "); put(file,i,1);
+      put_line(file," :");
+      if mf(i) = 1
+       then Certify_Factor(file,p,b,v,Select_Points(wp,f(i).all),res);
+       else Certify_Factor(file,rdp(integer32(mf(i))),b,v,
+                           Select_Points(wp,f(i).all),res);
+      end if;
+      if res > maxdif
+       then maxdif := res;
+      end if;
+    end loop;
+  end Certify;
+
+  procedure Certify ( file : in file_type;
+                      p : in DoblDobl_Complex_Polynomials.Poly;
+                      b,v,wp : in DoblDobl_Complex_Vectors.Vector;
+                      mw : in Standard_Natural_Vectors.Vector;
+                      f : in Standard_Natural_VecVecs.VecVec;
+                      mf : in Standard_Natural_Vectors.Vector;
+                      rdp : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                      maxdif : out double_float ) is
+
+    res : double_float;
+
+  begin
+    maxdif := 0.0;
+    for i in f'range loop
+      put(file,"Certification of factor "); put(file,i,1);
+      put_line(file," :");
+      if mf(i) = 1
+       then Certify_Factor(file,p,b,v,Select_Points(wp,f(i).all),res);
+       else Certify_Factor(file,rdp(integer32(mf(i))),b,v,
+                           Select_Points(wp,f(i).all),res);
+      end if;
+      if res > maxdif
+       then maxdif := res;
+      end if;
+    end loop;
+  end Certify;
+
+  procedure Certify ( file : in file_type;
+                      p : in QuadDobl_Complex_Polynomials.Poly;
+                      b,v,wp : in QuadDobl_Complex_Vectors.Vector;
+                      mw : in Standard_Natural_Vectors.Vector;
+                      f : in Standard_Natural_VecVecs.VecVec;
+                      mf : in Standard_Natural_Vectors.Vector;
+                      rdp : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                       maxdif : out double_float ) is
 
     res : double_float;
@@ -644,6 +1033,50 @@ package body Multivariate_Factorization is
   end Interpolate;
 
   procedure Interpolate
+              ( p : in DoblDobl_Complex_Polynomials.Poly;
+                b,v,wp : in DoblDobl_Complex_Vectors.Vector;
+                mw : in Standard_Natural_Vectors.Vector;
+                f : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Natural_Vectors.Vector;
+                rdp : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                factors
+                  : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+  begin
+    factors := new DoblDobl_Complex_Poly_Systems.Poly_Sys(f'range);
+    for i in f'range loop
+      if mf(i) = 1 then
+        factors(i) := Interpolate_Factor(p,b,v,Select_Points(wp,f(i).all));
+      else
+        factors(i)
+          := Interpolate_Factor(rdp(integer32(mf(i))),b,v,
+                                Select_Points(wp,f(i).all));
+      end if;
+    end loop;
+  end Interpolate;
+
+  procedure Interpolate
+              ( p : in QuadDobl_Complex_Polynomials.Poly;
+                b,v,wp : in QuadDobl_Complex_Vectors.Vector;
+                mw : in Standard_Natural_Vectors.Vector;
+                f : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Natural_Vectors.Vector;
+                rdp : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                factors
+                  : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+  begin
+    factors := new QuadDobl_Complex_Poly_Systems.Poly_Sys(f'range);
+    for i in f'range loop
+      if mf(i) = 1 then
+        factors(i) := Interpolate_Factor(p,b,v,Select_Points(wp,f(i).all));
+      else
+        factors(i)
+          := Interpolate_Factor(rdp(integer32(mf(i))),b,v,
+                                Select_Points(wp,f(i).all));
+      end if;
+    end loop;
+  end Interpolate;
+
+  procedure Interpolate
               ( file : in file_type;
                 p : in Standard_Complex_Polynomials.Poly;
                 b,v,wp : in Standard_Complex_Vectors.Vector;
@@ -669,11 +1102,105 @@ package body Multivariate_Factorization is
     end loop;
   end Interpolate;
 
+  procedure Interpolate
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Polynomials.Poly;
+                b,v,wp : in DoblDobl_Complex_Vectors.Vector;
+                mw : in Standard_Natural_Vectors.Vector;
+                f : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Natural_Vectors.Vector;
+                rdp : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                factors
+                  : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+  begin
+    factors := new DoblDobl_Complex_Poly_Systems.Poly_Sys(f'range);
+    for i in f'range loop
+      put(file,"Interpolation of factor "); put(file,i,1);
+      put_line(file," :");
+      if mf(i) = 1 then
+        factors(i) 
+          := Interpolate_Factor(file,p,b,v,Select_Points(wp,f(i).all));
+      else
+        factors(i)
+          := Interpolate_Factor
+               (file,rdp(integer32(mf(i))),b,v,Select_Points(wp,f(i).all));
+      end if;
+    end loop;
+  end Interpolate;
+
+  procedure Interpolate
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Polynomials.Poly;
+                b,v,wp : in QuadDobl_Complex_Vectors.Vector;
+                mw : in Standard_Natural_Vectors.Vector;
+                f : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Natural_Vectors.Vector;
+                rdp : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                factors
+                  : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+  begin
+    factors := new QuadDobl_Complex_Poly_Systems.Poly_Sys(f'range);
+    for i in f'range loop
+      put(file,"Interpolation of factor "); put(file,i,1);
+      put_line(file," :");
+      if mf(i) = 1 then
+        factors(i) 
+          := Interpolate_Factor(file,p,b,v,Select_Points(wp,f(i).all));
+      else
+        factors(i)
+          := Interpolate_Factor
+               (file,rdp(integer32(mf(i))),b,v,Select_Points(wp,f(i).all));
+      end if;
+    end loop;
+  end Interpolate;
+
   function Multiply ( factors : Standard_Complex_Poly_Systems.Poly_Sys;
                       mu : Standard_Natural_Vectors.Vector )
                     return Standard_Complex_Polynomials.Poly is
 
     use Standard_Complex_Polynomials;
+
+    res : Poly;
+
+  begin
+    Copy(factors(factors'first),res);
+    for i in 2..mu(mu'first) loop
+      Mul(res,factors(factors'first));
+    end loop;
+    for i in factors'first+1..factors'last loop
+      for j in 1..mu(i) loop
+        Mul(res,factors(i));
+      end loop;
+    end loop;
+    return res;
+  end Multiply;
+
+  function Multiply ( factors : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                      mu : Standard_Natural_Vectors.Vector )
+                    return DoblDobl_Complex_Polynomials.Poly is
+
+    use DoblDobl_Complex_Polynomials;
+
+    res : Poly;
+
+  begin
+    Copy(factors(factors'first),res);
+    for i in 2..mu(mu'first) loop
+      Mul(res,factors(factors'first));
+    end loop;
+    for i in factors'first+1..factors'last loop
+      for j in 1..mu(i) loop
+        Mul(res,factors(i));
+      end loop;
+    end loop;
+    return res;
+  end Multiply;
+
+  function Multiply ( factors : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                      mu : Standard_Natural_Vectors.Vector )
+                    return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Polynomials;
 
     res : Poly;
 
@@ -738,6 +1265,100 @@ package body Multivariate_Factorization is
   end Trace_Factor;
 
   procedure Trace_Factor
+              ( p : in DoblDobl_Complex_Polynomials.Poly;
+                n,d : in natural32;
+                factors : out Standard_Natural_VecVecs.Link_to_VecVec;
+                mf : out Standard_Natural_Vectors.Link_to_Vector;
+                b,v : out DoblDobl_Complex_Vectors.Vector;
+                wp : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                mw : out Standard_Natural_Vectors.Link_to_Vector;
+                rdp : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                rad,dst : out Standard_Floating_Vectors.Vector;
+                fail : out boolean ) is
+
+    ep : DoblDobl_Complex_Poly_Functions.Eval_Poly
+       := DoblDobl_Complex_Poly_Functions.Create(p);
+    genpts : DoblDobl_Complex_Vectors.Vector(1..integer32(d));
+    m : Standard_Natural_Vectors.Vector(1..integer32(d));
+    eps : constant double_float := 1.0E-13;
+    maxit : constant natural32 := 20*d;
+    grid : Array_of_DoblDobl_Sample_Lists(0..2);
+
+  begin
+    for i in 1..2 loop
+      b := Random_Vector(1,integer32(n)); v := Random_Vector(1,integer32(n));
+      Generic_Points(p,ep,d,b,v,eps,maxit,genpts,fail,m,rdp,rad,dst);
+      exit when not fail;
+    end loop;
+    if not fail then
+      if rdp'last = 1 then
+        DoblDobl_Gridded_Hypersurfaces.Initialize(p);
+        grid := Parallel_Sample1(b,v,genpts,2);
+        wp := new DoblDobl_Complex_Vectors.Vector'(genpts);
+        mw := new Standard_Natural_Vectors.Vector'(m);
+        factors := new Standard_Natural_VecVecs.VecVec'(Factor(d,grid));
+      else
+        Normalize(rdp.all);
+        Sort(m,genpts);
+        Trace_Factor_with_Multiplicities
+          (n,d,p,b,v,genpts,m,rdp,factors,wp,mw);
+      end if;
+    else 
+      factors := Init_Factors(d);
+    end if;
+    Remove_Empty_Entries(factors);
+    mf := new Standard_Natural_Vectors.Vector'
+                (Multiplicity_of_Factors(factors.all,mw.all));
+  end Trace_Factor;
+
+  procedure Trace_Factor
+              ( p : in QuadDobl_Complex_Polynomials.Poly;
+                n,d : in natural32;
+                factors : out Standard_Natural_VecVecs.Link_to_VecVec;
+                mf : out Standard_Natural_Vectors.Link_to_Vector;
+                b,v : out QuadDobl_Complex_Vectors.Vector;
+                wp : out QuadDobl_Complex_Vectors.Link_to_Vector;
+                mw : out Standard_Natural_Vectors.Link_to_Vector;
+                rdp : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                rad,dst : out Standard_Floating_Vectors.Vector;
+                fail : out boolean ) is
+
+    ep : QuadDobl_Complex_Poly_Functions.Eval_Poly
+       := QuadDobl_Complex_Poly_Functions.Create(p);
+    genpts : QuadDobl_Complex_Vectors.Vector(1..integer32(d));
+    m : Standard_Natural_Vectors.Vector(1..integer32(d));
+    eps : constant double_float := 1.0E-13;
+    maxit : constant natural32 := 20*d;
+    grid : Array_of_QuadDobl_Sample_Lists(0..2);
+
+  begin
+    for i in 1..2 loop
+      b := Random_Vector(1,integer32(n)); v := Random_Vector(1,integer32(n));
+      Generic_Points(p,ep,d,b,v,eps,maxit,genpts,fail,m,rdp,rad,dst);
+      exit when not fail;
+    end loop;
+    if not fail then
+      if rdp'last = 1 then
+        QuadDobl_Gridded_Hypersurfaces.Initialize(p);
+        grid := Parallel_Sample1(b,v,genpts,2);
+        wp := new QuadDobl_Complex_Vectors.Vector'(genpts);
+        mw := new Standard_Natural_Vectors.Vector'(m);
+        factors := new Standard_Natural_VecVecs.VecVec'(Factor(d,grid));
+      else
+        Normalize(rdp.all);
+        Sort(m,genpts);
+        Trace_Factor_with_Multiplicities
+          (n,d,p,b,v,genpts,m,rdp,factors,wp,mw);
+      end if;
+    else 
+      factors := Init_Factors(d);
+    end if;
+    Remove_Empty_Entries(factors);
+    mf := new Standard_Natural_Vectors.Vector'
+                (Multiplicity_of_Factors(factors.all,mw.all));
+  end Trace_Factor;
+
+  procedure Trace_Factor
               ( file : in file_type;
                 p : in Standard_Complex_Polynomials.Poly;
                 n,d : in natural32;
@@ -769,6 +1390,108 @@ package body Multivariate_Factorization is
         Hypersurface_Sample_Grids.Initialize(p);
         grid := Parallel_Sample1(file,false,b,v,genpts,2);
         wp := new Standard_Complex_Vectors.Vector'(genpts);
+        mw := new Standard_Natural_Vectors.Vector'(m);
+        factors := new Standard_Natural_VecVecs.VecVec'(Factor(file,d,grid));
+      else
+        Normalize(rdp.all);
+        Sort(m,genpts);
+        Trace_Factor_with_Multiplicities
+          (file,n,d,p,b,v,genpts,m,rdp,factors,wp,mw);
+        put(file,"The multiplicity of the factors :");
+        put(file,Multiplicity_of_Factors(factors.all,mw.all));
+        new_line(file);
+      end if;
+    else
+      factors := Init_Factors(d);
+    end if;
+    Remove_Empty_Entries(factors);
+    mf := new Standard_Natural_Vectors.Vector'
+                (Multiplicity_of_Factors(factors.all,mw.all));
+  end Trace_Factor;
+
+  procedure Trace_Factor
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Polynomials.Poly;
+                n,d : in natural32;
+                factors : out Standard_Natural_VecVecs.Link_to_VecVec;
+                mf : out Standard_Natural_Vectors.Link_to_Vector;
+                b,v : out DoblDobl_Complex_Vectors.Vector;
+                wp : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                mw : out Standard_Natural_Vectors.Link_to_Vector;
+                rdp : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                rad,dst : out Standard_Floating_Vectors.Vector;
+                fail : out boolean ) is
+
+    ep : DoblDobl_Complex_Poly_Functions.Eval_Poly
+       := DoblDobl_Complex_Poly_Functions.Create(p);
+    genpts : DoblDobl_Complex_Vectors.Vector(1..integer32(d));
+    m : Standard_Natural_Vectors.Vector(1..integer32(d));
+    eps : constant double_float := 1.0E-13;
+    maxit : constant natural32 := 20*d;
+    grid : Array_of_DoblDobl_Sample_Lists(0..2);
+
+  begin
+    for i in 1..2 loop
+      b := Random_Vector(1,integer32(n)); v := Random_Vector(1,integer32(n));
+      Generic_Points(p,ep,d,b,v,eps,maxit,genpts,fail,m,rdp,rad,dst);
+      exit when not fail;
+    end loop;
+    if not fail then
+      if rdp'last = 1 then
+        DoblDobl_Gridded_Hypersurfaces.Initialize(p);
+        grid := Parallel_Sample1(file,false,b,v,genpts,2);
+        wp := new DoblDobl_Complex_Vectors.Vector'(genpts);
+        mw := new Standard_Natural_Vectors.Vector'(m);
+        factors := new Standard_Natural_VecVecs.VecVec'(Factor(file,d,grid));
+      else
+        Normalize(rdp.all);
+        Sort(m,genpts);
+        Trace_Factor_with_Multiplicities
+          (file,n,d,p,b,v,genpts,m,rdp,factors,wp,mw);
+        put(file,"The multiplicity of the factors :");
+        put(file,Multiplicity_of_Factors(factors.all,mw.all));
+        new_line(file);
+      end if;
+    else
+      factors := Init_Factors(d);
+    end if;
+    Remove_Empty_Entries(factors);
+    mf := new Standard_Natural_Vectors.Vector'
+                (Multiplicity_of_Factors(factors.all,mw.all));
+  end Trace_Factor;
+
+  procedure Trace_Factor
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Polynomials.Poly;
+                n,d : in natural32;
+                factors : out Standard_Natural_VecVecs.Link_to_VecVec;
+                mf : out Standard_Natural_Vectors.Link_to_Vector;
+                b,v : out QuadDobl_Complex_Vectors.Vector;
+                wp : out QuadDobl_Complex_Vectors.Link_to_Vector;
+                mw : out Standard_Natural_Vectors.Link_to_Vector;
+                rdp : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                rad,dst : out Standard_Floating_Vectors.Vector;
+                fail : out boolean ) is
+
+    ep : QuadDobl_Complex_Poly_Functions.Eval_Poly
+       := QuadDobl_Complex_Poly_Functions.Create(p);
+    genpts : QuadDobl_Complex_Vectors.Vector(1..integer32(d));
+    m : Standard_Natural_Vectors.Vector(1..integer32(d));
+    eps : constant double_float := 1.0E-13;
+    maxit : constant natural32 := 20*d;
+    grid : Array_of_QuadDobl_Sample_Lists(0..2);
+
+  begin
+    for i in 1..2 loop
+      b := Random_Vector(1,integer32(n)); v := Random_Vector(1,integer32(n));
+      Generic_Points(p,ep,d,b,v,eps,maxit,genpts,fail,m,rdp,rad,dst);
+      exit when not fail;
+    end loop;
+    if not fail then
+      if rdp'last = 1 then
+        QuadDobl_Gridded_Hypersurfaces.Initialize(p);
+        grid := Parallel_Sample1(file,false,b,v,genpts,2);
+        wp := new QuadDobl_Complex_Vectors.Vector'(genpts);
         mw := new Standard_Natural_Vectors.Vector'(m);
         factors := new Standard_Natural_VecVecs.VecVec'(Factor(file,d,grid));
       else

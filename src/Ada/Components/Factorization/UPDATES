@@ -1,3 +1,7 @@
+Fri 18 Sep 2015 : multivariate_factorization exports the factorization of
+  complex multivariate polynomials in double double and quad double precision,
+  with the combinatorial exploration using the linear trace.
+
 Thu 17 Sep 2015 : new package factored_witness_vectors with code factored out
   of multivariate_factorization.adb, extended with operations for double
   double and quad double precision.  The new package certify_factor_with_trace

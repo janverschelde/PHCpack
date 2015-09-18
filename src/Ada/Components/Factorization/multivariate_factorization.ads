@@ -4,12 +4,17 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Standard_Natural_VecVecs;
 with Standard_Complex_Polynomials;
+with Standard_Complex_Poly_Functions;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Poly_Functions;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Poly_Functions;
 with QuadDobl_Complex_Poly_Systems;
 
 package Multivariate_Factorization is
@@ -17,11 +22,179 @@ package Multivariate_Factorization is
 -- DESCRIPTION :
 --   This package offers some routines to factor multivariate polynomials
 --   with complex coefficients.  There are three stages :
---     1) with monodromy we group witness points on same factor;
---     2) certification of monodromy groupings with linear traces;
---     3) interpolation at the witness points of the factors.
---   Complementary to stages 1) and 2) is the "Trace_Factor", this
---   combinatorially exploits linear traces to find the factorization.
+--     (1) with monodromy we group witness points on same factor;
+--     (2) certification of monodromy groupings with linear traces;
+--     (3) interpolation at the witness points of the factors.
+--   Stage (2) is also applied in the "Trace_Factor", in the combinatorial
+--   exploration with linear traces to find the factorization.
+
+-- FACTORING WITH GIVEN GENERIC POINTS :
+
+  procedure Factor_with_Multiplicities
+               ( n,d : in natural32;
+                 p : in Standard_Complex_Polynomials.Poly;
+                 ep : in Standard_Complex_Poly_Functions.Eval_Poly;
+                 b,v,t : in Standard_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 rdp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
+                 wp : out Standard_Complex_Vectors.Link_to_Vector;     
+                 mw : out Standard_Natural_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Performs the factorization when multiplicities > 1, 
+  --   without any intermediate output.
+
+  -- ON ENTRY :
+  --   n         number of variables of the polynomial;
+  --   p         a polynomial in n variables;
+  --   ep        nested Horner form of the polynomial;
+  --   b         offset vector of a random affine line b + t*v;
+  --   v         direction of a random affine line b + t*v;
+  --   t         values for t on the random affine line b + t*v;
+  --   m         multiplicities sorted in ascending order of t-values;
+  --   rdp       contains random derivatives of p,
+  --             rdp'last = highest multiplicity in m.
+
+  -- ON RETURN :
+  --   factors   labels for generic points grouped together on same factor;
+  --   wp        witness points with duplicates removed;
+  --   mw        mw(i) is the multiplicity of wp(i).
+
+  procedure Factor_with_Multiplicities
+               ( file : in file_type; output : in boolean;
+                 n,d : in natural32;
+                 p : in Standard_Complex_Polynomials.Poly;
+                 ep : in Standard_Complex_Poly_Functions.Eval_Poly;
+                 b,v,t : in Standard_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 rdp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
+                 wp : out Standard_Complex_Vectors.Link_to_Vector;
+                 mw : out Standard_Natural_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Performs the factorization when multiplicities > 1,
+  --   with intermediate output to file.
+
+  -- ON ENTRY :
+  --   file      for intermediate output and diagnostics;
+  --   output    if output needed during continuation;
+  --   n         number of variables of the polynomial;
+  --   p         a polynomial in n variables;
+  --   ep        nested Horner form of the polynomial;
+  --   b         offset vector of a random affine line b + t*v;
+  --   v         direction of a random affine line b + t*v;
+  --   t         values for t on the random affine line b + t*v;
+  --   m         multiplicities sorted in ascending order of t-values;
+  --   rdp       contains random derivatives of p,
+  --             rdp'last = highest multiplicity in m.
+
+  -- ON RETURN :
+  --   factors   labels for generic points grouped together on same factor;
+  --   wp        witness points with duplicates removed;
+  --   mw        mw(i) is the multiplicity of wp(i).
+
+  procedure Trace_Factor_with_Multiplicities
+               ( n,d : in natural32;
+                 p : in Standard_Complex_Polynomials.Poly;
+                 b,v,t : in Standard_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 rdp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
+                 wp : out Standard_Complex_Vectors.Link_to_Vector;
+                 mw : out Standard_Natural_Vectors.Link_to_Vector );
+  procedure Trace_Factor_with_Multiplicities
+               ( n,d : in natural32;
+                 p : in DoblDobl_Complex_Polynomials.Poly;
+                 b,v,t : in DoblDobl_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 rdp : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
+                 wp : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                 mw : out Standard_Natural_Vectors.Link_to_Vector );
+  procedure Trace_Factor_with_Multiplicities
+               ( n,d : in natural32;
+                 p : in QuadDobl_Complex_Polynomials.Poly;
+                 b,v,t : in QuadDobl_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 rdp : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
+                 wp : out QuadDobl_Complex_Vectors.Link_to_Vector;
+                 mw : out Standard_Natural_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Applies the combinatorial factorization with linear traces
+  --   to the case with witness points of higher multiplicity,
+  --   in standard double, double double, or quad double precision,
+  --   without any intermediate output.
+
+  -- ON ENTRY :
+  --   n         number of variables of the polynomial;
+  --   p         a polynomial in n variables;
+  --   b         offset vector of a random affine line b + t*v;
+  --   v         direction of a random affine line b + t*v;
+  --   t         values for t on the random affine line b + t*v;
+  --   m         multiplicities sorted in ascending order of t-values;
+  --   rdp       contains random derivatives of p,
+  --             rdp'last = highest multiplicity in m.
+
+  -- ON RETURN :
+  --   factors   labels for generic points grouped together on same factor;
+  --   wp        witness points with duplicates removed;
+  --   mw        mw(i) is the multiplicity of wp(i).
+
+  procedure Trace_Factor_with_Multiplicities
+               ( file : in file_type; n,d : in natural32;
+                 p : in Standard_Complex_Polynomials.Poly;
+                 b,v,t : in Standard_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 rdp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
+                 wp : out Standard_Complex_Vectors.Link_to_Vector;
+                 mw : out Standard_Natural_Vectors.Link_to_Vector );
+  procedure Trace_Factor_with_Multiplicities
+               ( file : in file_type; n,d : in natural32;
+                 p : in DoblDobl_Complex_Polynomials.Poly;
+                 b,v,t : in DoblDobl_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 rdp : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
+                 wp : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                 mw : out Standard_Natural_Vectors.Link_to_Vector );
+  procedure Trace_Factor_with_Multiplicities
+               ( file : in file_type; n,d : in natural32;
+                 p : in QuadDobl_Complex_Polynomials.Poly;
+                 b,v,t : in QuadDobl_Complex_Vectors.Vector; 
+                 m : in Standard_Natural_Vectors.Vector;
+                 rdp : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                 factors : in out Standard_Natural_VecVecs.Link_to_VecVec;
+                 wp : out QuadDobl_Complex_Vectors.Link_to_Vector;
+                 mw : out Standard_Natural_Vectors.Link_to_Vector );
+
+  -- DESCRIPTION :
+  --   Applies the combinatorial factorization with linear traces
+  --   to the case with witness points of higher multiplicity,
+  --   with intermediate output to file.
+
+  -- ON ENTRY :
+  --   file      for intermediate output and diagnostics;
+  --   n         number of variables of the polynomial;
+  --   p         a polynomial in n variables;
+  --   ep        nested Horner form of the polynomial;
+  --   b         offset vector of a random affine line b + t*v;
+  --   v         direction of a random affine line b + t*v;
+  --   t         values for t on the random affine line b + t*v;
+  --   m         multiplicities sorted in ascending order of t-values;
+  --   rdp       contains random derivatives of p,
+  --             rdp'last = highest multiplicity in m.
+
+  -- ON RETURN :
+  --   factors   labels for generic points grouped together on same factor;
+  --   wp        witness points with duplicates removed;
+  --   mw        mw(i) is the multiplicity of wp(i).
+
+-- FACTORING WITH MONODROMY :
 
   procedure Factor 
               ( p : in Standard_Complex_Polynomials.Poly;
@@ -97,12 +270,28 @@ package Multivariate_Factorization is
   --   fail     calculation of witness points failed.
 
   procedure Certify
-              ( p : in Standard_Complex_Polynomials.Poly;                       
+              ( p : in Standard_Complex_Polynomials.Poly;
                 b,v,wp : in Standard_Complex_Vectors.Vector;
                 mw : in Standard_Natural_Vectors.Vector;
                 f : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Natural_Vectors.Vector;
                 rdp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                maxdif : out double_float );
+  procedure Certify
+              ( p : in DoblDobl_Complex_Polynomials.Poly;
+                b,v,wp : in DoblDobl_Complex_Vectors.Vector;
+                mw : in Standard_Natural_Vectors.Vector;
+                f : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Natural_Vectors.Vector;
+                rdp : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                maxdif : out double_float );
+  procedure Certify
+              ( p : in QuadDobl_Complex_Polynomials.Poly;
+                b,v,wp : in QuadDobl_Complex_Vectors.Vector;
+                mw : in Standard_Natural_Vectors.Vector;
+                f : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Natural_Vectors.Vector;
+                rdp : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 maxdif : out double_float );
   procedure Certify
               ( file : in file_type;
@@ -113,9 +302,29 @@ package Multivariate_Factorization is
                 mf : in Standard_Natural_Vectors.Vector;
                 rdp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 maxdif : out double_float );
+  procedure Certify
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Polynomials.Poly;
+                b,v,wp : in DoblDobl_Complex_Vectors.Vector;
+                mw : in Standard_Natural_Vectors.Vector;
+                f : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Natural_Vectors.Vector;
+                rdp : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                maxdif : out double_float );
+  procedure Certify
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Polynomials.Poly;
+                b,v,wp : in QuadDobl_Complex_Vectors.Vector;
+                mw : in Standard_Natural_Vectors.Vector;
+                f : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Natural_Vectors.Vector;
+                rdp : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                maxdif : out double_float );
 
   -- DESCRITPION :
-  --   Certifies the factorization of p using linear traces.
+  --   Certifies the factorization of p using linear traces,
+  --   in standard double, double double, or quad double precision,
+  --   without intermediate output or with output written to file.
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
@@ -141,6 +350,22 @@ package Multivariate_Factorization is
                 rdp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 factors : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
   procedure Interpolate
+              ( p : in DoblDobl_Complex_Polynomials.Poly;
+                b,v,wp : in DoblDobl_Complex_Vectors.Vector;
+                mw : in Standard_Natural_Vectors.Vector;
+                f : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Natural_Vectors.Vector;
+                rdp : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                factors : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Interpolate
+              ( p : in QuadDobl_Complex_Polynomials.Poly;
+                b,v,wp : in QuadDobl_Complex_Vectors.Vector;
+                mw : in Standard_Natural_Vectors.Vector;
+                f : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Natural_Vectors.Vector;
+                rdp : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                factors : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Interpolate
               ( file : in file_type;
                 p : in Standard_Complex_Polynomials.Poly;
                 b,v,wp : in Standard_Complex_Vectors.Vector;
@@ -149,9 +374,29 @@ package Multivariate_Factorization is
                 mf : in Standard_Natural_Vectors.Vector;
                 rdp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 factors : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Interpolate
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Polynomials.Poly;
+                b,v,wp : in DoblDobl_Complex_Vectors.Vector;
+                mw : in Standard_Natural_Vectors.Vector;
+                f : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Natural_Vectors.Vector;
+                rdp : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                factors : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Interpolate
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Polynomials.Poly;
+                b,v,wp : in QuadDobl_Complex_Vectors.Vector;
+                mw : in Standard_Natural_Vectors.Vector;
+                f : in Standard_Natural_VecVecs.VecVec;
+                mf : in Standard_Natural_Vectors.Vector;
+                rdp : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                factors : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRITPION :
-  --   Certifies the factorization of p using linear traces.
+  --   Certifies the factorization of p using linear traces,
+  --   in standard double, double double, or quad double precision,
+  --   without intermediate output or with output written to file.
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
@@ -171,10 +416,19 @@ package Multivariate_Factorization is
   function Multiply ( factors : Standard_Complex_Poly_Systems.Poly_Sys;
                       mu : Standard_Natural_Vectors.Vector )
                     return Standard_Complex_Polynomials.Poly;
+  function Multiply ( factors : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                      mu : Standard_Natural_Vectors.Vector )
+                    return DoblDobl_Complex_Polynomials.Poly;
+  function Multiply ( factors : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                      mu : Standard_Natural_Vectors.Vector )
+                    return QuadDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns the result of the multiplication of the factors,
+  --   in standard double, double double, or quad double precision,
   --   with their multiplicities in the vector mu.
+
+-- COMBINATORIAL EXPLORATION :
 
   procedure Trace_Factor
               ( p : in Standard_Complex_Polynomials.Poly;
@@ -188,6 +442,28 @@ package Multivariate_Factorization is
                 rad,dst : out Standard_Floating_Vectors.Vector;
                 fail : out boolean );
   procedure Trace_Factor
+              ( p : in DoblDobl_Complex_Polynomials.Poly;
+                n,d : in natural32;
+                factors : out Standard_Natural_VecVecs.Link_to_VecVec;
+                mf : out Standard_Natural_Vectors.Link_to_Vector;
+                b,v : out DoblDobl_Complex_Vectors.Vector;
+                wp : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                mw : out Standard_Natural_Vectors.Link_to_Vector;
+                rdp : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                rad,dst : out Standard_Floating_Vectors.Vector;
+                fail : out boolean );
+  procedure Trace_Factor
+              ( p : in QuadDobl_Complex_Polynomials.Poly;
+                n,d : in natural32;
+                factors : out Standard_Natural_VecVecs.Link_to_VecVec;
+                mf : out Standard_Natural_Vectors.Link_to_Vector;
+                b,v : out QuadDobl_Complex_Vectors.Vector;
+                wp : out QuadDobl_Complex_Vectors.Link_to_Vector;
+                mw : out Standard_Natural_Vectors.Link_to_Vector;
+                rdp : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                rad,dst : out Standard_Floating_Vectors.Vector;
+                fail : out boolean );
+  procedure Trace_Factor
               ( file : in file_type;
                 p : in Standard_Complex_Polynomials.Poly;
                 n,d : in natural32;
@@ -197,6 +473,30 @@ package Multivariate_Factorization is
                 wp : out Standard_Complex_Vectors.Link_to_Vector;
                 mw : out Standard_Natural_Vectors.Link_to_Vector;
                 rdp : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                rad,dst : out Standard_Floating_Vectors.Vector;
+                fail : out boolean );
+  procedure Trace_Factor
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Polynomials.Poly;
+                n,d : in natural32;
+                factors : out Standard_Natural_VecVecs.Link_to_VecVec;
+                mf : out Standard_Natural_Vectors.Link_to_Vector;
+                b,v : out DoblDobl_Complex_Vectors.Vector;
+                wp : out DoblDobl_Complex_Vectors.Link_to_Vector;
+                mw : out Standard_Natural_Vectors.Link_to_Vector;
+                rdp : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                rad,dst : out Standard_Floating_Vectors.Vector;
+                fail : out boolean );
+  procedure Trace_Factor
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Polynomials.Poly;
+                n,d : in natural32;
+                factors : out Standard_Natural_VecVecs.Link_to_VecVec;
+                mf : out Standard_Natural_Vectors.Link_to_Vector;
+                b,v : out QuadDobl_Complex_Vectors.Vector;
+                wp : out QuadDobl_Complex_Vectors.Link_to_Vector;
+                mw : out Standard_Natural_Vectors.Link_to_Vector;
+                rdp : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 rad,dst : out Standard_Floating_Vectors.Vector;
                 fail : out boolean );
 
