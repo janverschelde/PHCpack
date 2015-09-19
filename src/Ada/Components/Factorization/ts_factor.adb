@@ -19,12 +19,12 @@ with Symbol_Table;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;    use Standard_Complex_Polynomials_io;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
---with Random_Complex_Polynomials;         use Random_Complex_Polynomials;
 with Standard_Random_Polynomials;        use Standard_Random_Polynomials;
 with Sensitivity_of_Factorization;
 with Monodromy_Partitions;               use Monodromy_Partitions;
 with Interpolate_Multivariate_Factor;    use Interpolate_Multivariate_Factor;
 with Multivariate_Factorization;         use Multivariate_Factorization;
+with Drivers_to_Factor_Polynomials;      use Drivers_to_Factor_Polynomials;
 
 procedure ts_factor is
 
@@ -32,36 +32,6 @@ procedure ts_factor is
 --   Test on factorization of complex multivariate polynomials.
 
 -- GENERATING THE INPUT :
-
-  procedure Read_Polynomial ( n : out natural32; p : out Poly ) is
-
-    ans : character;
-    file : file_type;
-
-  begin
-    n := 0;
-    new_line;
-    put("Is the polynomial on file ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    if ans = 'y' then
-      new_line;
-      put_line("Reading the name of the file for the polynomial...");
-      Read_Name_and_Open_File(file);
-      get(file,n);
-      Symbol_Table.Init(n);
-      get(file,p);
-    else
-      new_line;
-      put("Give the number of variables : ");
-      get(n);
-      Symbol_Table.Init(n);
-      put("Give your polynomial : ");
-      get(p);
-      skip_line;
-    end if;
-    new_line;
-    put("Your polynomial is "); put(p); new_line;
-  end Read_Polynomial;
 
   function Generate_Polynomial
               ( n : natural32; d,nt,mu : Standard_Natural_Vectors.Vector )
@@ -172,86 +142,6 @@ procedure ts_factor is
       new_line(file);
     end loop;
   end Write_Factors;
-
-  function Maximal_Coefficient_Norm ( p : Poly ) return double_float is
-
-  -- DESCRIPTION :
-  --   Returns the maximal absolute value norm over all coefficients of p.
-
-    max : double_float := 0.0;
-
-    procedure Scan_Term ( t : Term; continue : out boolean ) is
-    begin
-      if AbsVal(t.cf) > max
-       then max := AbsVal(t.cf);
-      end if;
-      continue := true;
-    end Scan_Term;
-    procedure Scan_Terms is new Visiting_Iterator(Scan_Term);
-
-  begin
-    Scan_Terms(p);
-    return max;
-  end Maximal_Coefficient_Norm; 
-
-  procedure Multiply_Factors ( p : in Poly; f : in Poly_Sys;
-                               mu : in Standard_Natural_Vectors.Vector;
-                               maxres : out double_float ) is
-
-  -- DESCRIPTION :
-  --   Multiplies the factors as many times as their multiplicities
-  --   and compares with the given normalized polynomial p.
-
-    mf : constant Poly := Multiply(f,mu);
-    res : constant Poly := p - mf;
-
-  begin
-   -- put_line("The original polynomial :"); put_line(p);
-   -- put_line("The multiplied factors :"); put_line(mf);
-   -- put_line("The residual polynomial :"); put_line(res);
-    maxres := Maximal_Coefficient_Norm(res);
-  end Multiply_Factors; 
-
-  procedure Multiply_Factors ( file : in file_type;
-                               p : in Poly; f : in Poly_Sys;
-                               mu : in Standard_Natural_Vectors.Vector;
-                               maxres : out double_float ) is
-
-  -- DESCRIPTION :
-  --   Multiplies the factors as many times as their multiplicities
-  --   and compares with the given polynomial p.
-
-    mf : constant Poly := Multiply(f,mu);
-    res : constant Poly := p - mf;
-
-  begin
-    put_line(file,"The original polynomial :"); put_line(file,p);
-    put_line(file,"The multiplied factors :"); put_line(file,mf);
-    put_line(file,"The residual polynomial :"); put_line(file,res);
-    maxres := Maximal_Coefficient_Norm(res);
-  end Multiply_Factors;
-
-  procedure Write_Timing_Summary
-               ( file : in file_type;
-                 mongrp,lintrc,itrpol,mulval,total : in duration ) is
-
-  -- DESCRIPTION :
-  --   Writes the elapsed user times for monodromy groupings,
-  --   linear trace certification, interpolation at the factors,
-  --   and validation by multiplying the factors.
-
-  begin
-    put(file,"User time for monodromy grouping          : ");
-    print_hms(file,mongrp); new_line(file);
-    put(file,"User time for linear traces certification : ");
-    print_hms(file,lintrc); new_line(file);
-    put(file,"User time for interpolation at factors    : ");
-    print_hms(file,itrpol); new_line(file);
-    put(file,"User time for multiplication validation   : ");
-    print_hms(file,mulval); new_line(file);
-    put(file,"Total elapsed user time for all stages    : ");
-    print_hms(file,total); new_line(file);               
-  end Write_Timing_Summary;
 
 -- THE MAIN DRIVERS :
 
@@ -722,7 +612,7 @@ procedure ts_factor is
 
   procedure Factor_Random_Polynomials is
 
-    n,m,nb : natural32;
+    n,m,nb : natural32 := 0;
     ldeg,lnbt,lmul : Standard_Natural_Vectors.Link_to_Vector;
     p : Poly;
     ans : character;

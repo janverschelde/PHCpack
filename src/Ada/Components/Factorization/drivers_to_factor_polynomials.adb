@@ -5,7 +5,6 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
@@ -419,7 +418,7 @@ package body Drivers_to_Factor_Polynomials is
     print_hms(file,total); new_line(file);               
   end Write_Timing_Summary;
 
--- TARGET ROUTINES :
+-- FACTORIZATION ROUTINES :
 
   procedure Factor
               ( monodromy : in boolean; n : in natural32;
