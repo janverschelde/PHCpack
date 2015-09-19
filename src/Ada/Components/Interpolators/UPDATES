@@ -1,3 +1,6 @@
+Sat 19 Sep 2015 : in {dobldobl,quaddobl}_trace_interpolators.adb, bug fix
+  in the normalize of a polynomial, changed tuning in ts_traces.adb.
+
 Wed 16 Sep 2015 : new packages {dobldobl,quaddobl}_divided_differences to
   compute divded differences in double double and quad double precision,
   added with clause in ts_divdif.adb for compilation.

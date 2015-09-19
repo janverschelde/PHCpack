@@ -434,10 +434,11 @@ package body DoblDobl_Trace_Interpolators is
 
     procedure Assign_Coefficient ( t : in Term; continue : out boolean ) is
     begin
-      if AbsVal(t.cf) > tol
-       then res := t.cf;
-            continue := false;
-       else continue := true;
+      if AbsVal(t.cf) > tol then
+        res := t.cf;
+        continue := false;
+      else
+        continue := true;
       end if;
     end Assign_Coefficient;
     procedure Get_Coefficient is new Visiting_Iterator(Assign_Coefficient);
@@ -447,18 +448,39 @@ package body DoblDobl_Trace_Interpolators is
     return res;
   end Leading_Coefficient;
 
-  procedure Normalize ( p : in out Poly ) is
+  procedure Normalize ( p : in out DoblDobl_Complex_Polynomials.Poly ) is
+
+    use DoblDobl_Complex_Numbers;
+
+    tol : constant double_double := create(1.0E-10);
+    leadcff : constant Complex_Number := Leading_Coefficient(p,tol);
+
+    procedure Normalize_Term
+                ( t : in out DoblDobl_Complex_Polynomials.Term;
+                  continue : out boolean ) is
+    begin
+      t.cf := t.cf/leadcff;
+      continue := true;
+    end Normalize_Term;
+    procedure Normalize_Terms is
+      new DoblDobl_Complex_Polynomials.Changing_Iterator(Normalize_Term);
+
+  begin
+    Normalize_Terms(p);
+  end Normalize;
+
+  --procedure Normalize ( p : in out Poly ) is
 
   -- DESCRIPTION :
   --   Makes the polynomial p monic by dividing p by the leading coefficient.
 
-    tol : constant double_double := create(1.0E-10);
-    lead : constant Complex_Number := Leading_Coefficient(p,tol);
-    divisor : constant Complex_Number := Create(1.0)/lead;
+  --  tol : constant double_double := create(1.0E-10);
+  --  lead : constant Complex_Number := Leading_Coefficient(p,tol);
+  --  divisor : constant Complex_Number := Create(1.0)/lead;
 
-  begin
-    Mul(p,divisor);
-  end Normalize;
+  --begin
+  --  Mul(p,divisor);
+  --end Normalize;
 
   function Add_Last_Variable ( t : Term ) return Term is
 
@@ -1032,6 +1054,7 @@ package body DoblDobl_Trace_Interpolators is
     end loop;
    -- put_line("Before normalization : "); put_line(res);
     Normalize(res);
+   -- put_line("After normalization : "); put_line(res);
     Clear(px); Clear(py); Clear(tt);
     return res;
   end Expand;
@@ -1066,9 +1089,9 @@ package body DoblDobl_Trace_Interpolators is
       -- put_line(res);
       subres := Substitute(nv,t.rot,res);
       Clear(res); res := subres;
-      -- put_line("The polynomial before normalization : ");
-      -- put_line(res);
+     -- put_line("The polynomial before normalization : "); put_line(res);
       Normalize(res);
+     -- put_line("The polynomial after normalization : "); put_line(res);
     end if;
     return res;
   end Expand;

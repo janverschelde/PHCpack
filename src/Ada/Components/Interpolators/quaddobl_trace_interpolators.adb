@@ -447,18 +447,41 @@ package body QuadDobl_Trace_Interpolators is
     return res;
   end Leading_Coefficient;
 
-  procedure Normalize ( p : in out Poly ) is
+
+  procedure Normalize ( p : in out QuadDobl_Complex_Polynomials.Poly ) is
+
+    use QuadDobl_Complex_Numbers;
+
+    tol : constant quad_double := create(1.0E-10);
+    leadcff : constant Complex_Number := Leading_Coefficient(p,tol);
+
+    procedure Normalize_Term
+                ( t : in out QuadDobl_Complex_Polynomials.Term;
+                  continue : out boolean ) is
+    begin
+      t.cf := t.cf/leadcff;
+      continue := true;
+    end Normalize_Term;
+    procedure Normalize_Terms is
+      new QuadDobl_Complex_Polynomials.Changing_Iterator(Normalize_Term);
+
+  begin
+    Normalize_Terms(p);
+  end Normalize;
+
+  -- the procedure below has a bug ?!
+  -- procedure Normalize ( p : in out Poly ) is
 
   -- DESCRIPTION :
   --   Makes the polynomial p monic by dividing p by the leading coefficient.
 
-    tol : constant quad_double := create(1.0E-10);
-    lead : constant Complex_Number := Leading_Coefficient(p,tol);
-    divisor : constant Complex_Number := Create(1.0)/lead;
+  --   tol : constant quad_double := create(1.0E-10);
+  --   lead : constant Complex_Number := Leading_Coefficient(p,tol);
+  --   divisor : constant Complex_Number := Create(1.0)/lead;
 
-  begin
-    Mul(p,divisor);
-  end Normalize;
+  -- begin
+  --   Mul(p,divisor);
+  -- end Normalize;
 
   function Add_Last_Variable ( t : Term ) return Term is
 

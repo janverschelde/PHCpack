@@ -702,7 +702,7 @@ procedure ts_traces is
 
   begin
     DoblDobl_Sampling_Machine.Initialize(p);
-    DoblDobl_Sampling_Machine.Default_Tune_Sampler(2);
+    DoblDobl_Sampling_Machine.Default_Tune_Sampler(0); -- 2 is too restrictive?
     DoblDobl_Sampling_Machine.Interactive_Tune_Sampler;
     DoblDobl_Sampling_Machine.Default_Tune_Refiner;
     new_line;
@@ -733,7 +733,7 @@ procedure ts_traces is
 
   begin
     QuadDobl_Sampling_Machine.Initialize(p);
-    QuadDobl_Sampling_Machine.Default_Tune_Sampler(2);
+    QuadDobl_Sampling_Machine.Default_Tune_Sampler(0); -- 2 too restrictive ?
     QuadDobl_Sampling_Machine.Interactive_Tune_Sampler;
     QuadDobl_Sampling_Machine.Default_Tune_Refiner;
     new_line;
@@ -804,7 +804,7 @@ procedure ts_traces is
     put("Number of samples : "); put(gsz,1); new_line;
     new_line;
     DoblDobl_Sampling_Machine.Initialize(p);
-    DoblDobl_Sampling_Machine.Default_Tune_Sampler(2);
+    DoblDobl_Sampling_Machine.Default_Tune_Sampler(0); -- 2 too restrictive?
     DoblDobl_Sampling_Machine.Interactive_Tune_Sampler;
     DoblDobl_Sampling_Machine.Default_Tune_Refiner;
     new_line;
@@ -840,7 +840,7 @@ procedure ts_traces is
     put("Number of samples : "); put(gsz,1); new_line;
     new_line;
     QuadDobl_Sampling_Machine.Initialize(p);
-    QuadDobl_Sampling_Machine.Default_Tune_Sampler(2);
+    QuadDobl_Sampling_Machine.Default_Tune_Sampler(0); -- 2 too restrictive ?
     QuadDobl_Sampling_Machine.Interactive_Tune_Sampler;
     QuadDobl_Sampling_Machine.Default_Tune_Refiner;
     new_line;
