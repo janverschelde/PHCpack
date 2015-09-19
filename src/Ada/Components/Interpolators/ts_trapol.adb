@@ -15,8 +15,8 @@ with Standard_Complex_Poly_Functions;   use Standard_Complex_Poly_Functions;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Random_Polynomials;       use Standard_Random_Polynomials;
 with Standard_Stacked_Sample_Grids;     use Standard_Stacked_Sample_Grids;
-with Hypersurface_Samplers;             use Hypersurface_Samplers;
 with Hypersurface_Sample_Grids;         use Hypersurface_Sample_Grids;
+with Standard_Lined_Hypersurfaces;      use Standard_Lined_Hypersurfaces;
 with Standard_Trace_Interpolators;      use Standard_Trace_Interpolators;
 
 procedure ts_trapol is

@@ -1,5 +1,6 @@
 Sat 19 Sep 2015 : in {dobldobl,quaddobl}_trace_interpolators.adb, bug fix
   in the normalize of a polynomial, changed tuning in ts_traces.adb.
+  The test ts_trapol.adb must use the new standard_lined_hypersurfaces.
 
 Wed 16 Sep 2015 : new packages {dobldobl,quaddobl}_divided_differences to
   compute divded differences in double double and quad double precision,
