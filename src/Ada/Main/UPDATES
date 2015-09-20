@@ -1,3 +1,6 @@
+Sun 20 Sep 2015 : in black_box_solvers.adb, modified the call to the 
+  black_box_factorization procedure.
+
 Sat 12 Sep 2015 : added procedures to black_box_solvers to deal with the
   special case of a linear system in double double and quad double precision.
 

@@ -24,7 +24,7 @@ with Black_Box_Simplex_Solvers;          use Black_Box_Simplex_Solvers;
 with Standard_Monomial_Maps;             use Standard_Monomial_Maps;
 with Standard_Monomial_Maps_io;          use Standard_Monomial_Maps_io;
 with Black_Box_Binomial_Solvers;         use Black_Box_Binomial_Solvers;
-with Black_Box_Factorization;
+with Black_Box_Factorization;            use Black_Box_Factorization;
 with Black_Box_Root_Counters;            use Black_Box_Root_Counters;
 with Black_Box_Poly_Continuations;       use Black_Box_Poly_Continuations;
 with Greeting_Banners;
@@ -186,7 +186,7 @@ package body Black_Box_Solvers is
         put(Length_Of(sols),1,sols);
       end if;
     elsif n > 1 then
-      Black_Box_Factorization(infilename,outfile,p);
+      Standard_Black_Box_Factorization(infilename,outfile,p);
     else
       if output_to_file then
         put(outfile,"Number of unknowns = "); put(outfile,n,1);
