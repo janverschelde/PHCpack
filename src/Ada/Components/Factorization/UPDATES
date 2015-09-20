@@ -1,3 +1,6 @@
+Sun 20 Sep 2015 : extended black_box_factorization into a package with versions
+  for double double and quad double precision.
+
 Sat 19 Sep 2015 : change in ts_factor.adb for compiler warning and removed
   code from ts_factor.adb that was already in drivers_to_factor_polynomials.
 
