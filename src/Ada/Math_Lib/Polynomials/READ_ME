@@ -166,6 +166,7 @@ ts_subs                           : test on substitution of variables
 ts_ddpol                          : test on double double polynomials
 ts_qdpol                          : test on quad double polynomials
 ts_termlist                       : tests on lists of terms
+ts_rwspol                         : test on writing, for long polynomials
 -------------------------------------------------------------------------------
 parse_strings_to_polynomials      : to parse strings into a system
 maingood                          : code for the phc -g

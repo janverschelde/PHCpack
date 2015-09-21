@@ -1,3 +1,7 @@
+Mon 21 Sep 2015 : rewrote the write in standard_complex_poly_strings.adb
+  to reduce the number of recursive calls and thus to avoid the stack_overflow
+  with polynomial with many calls, tested by the new ts_rwspol.
+
 Wed 9 Sep 2015 : new packages quaddobl_complex_{laur,poly}_randomizers to
   make random coefficient systems with quad double precision coefficients.
 
