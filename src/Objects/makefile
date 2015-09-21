@@ -5,8 +5,8 @@
 # swap the # symbol in the following lines to use makefile_windows
 # or to use makefile_mac on a Mac OS x computer
 
-# MAKEFILE = makefile_unix
-MAKEFILE = makefile_mac
+MAKEFILE = makefile_unix
+# MAKEFILE = makefile_mac
 # MAKEFILE = makefile_windows
 
 # the main executable is phc
@@ -19,10 +19,19 @@ phc:
 phcpy2c.so:
 	make -f $(MAKEFILE) phcpy2c.so
 
-# with the double version of the Path library :
+# with the double version of the path library :
+
+phcpy2cadepath_d.so:
+	make -f $(MAKEFILE) phcpy2cadepath_d.so
 
 phcpy2cpath_d.so:
 	make -f $(MAKEFILE) phcpy2cpath_d.so
+
+phcpy2cpath_dd.so:
+	make -f $(MAKEFILE) phcpy2cpath_dd.so
+
+phcpy2cpath_qd.so:
+	make -f $(MAKEFILE) phcpy2cpath_qd.so
 
 # all interactive test programs, lib programs and MPI executables :
 
@@ -249,7 +258,7 @@ ts_circuit:
 # Test programs for Math_Lib/Reduction :
 
 test_reduction: ts_fltlu ts_cmplu ts_ddlu ts_qdlu ts_qrd ts_svd ts_eigval \
-                ts_mgs ts_mgsrnk ts_backsubs ts_perflu ts_vvlu ts_vmplu
+                ts_mgs ts_mgsrnk ts_backsubs ts_vvlu ts_perflu ts_vmplu
 
 ts_fltlu:
 	make -f $(MAKEFILE) ts_fltlu
@@ -297,7 +306,7 @@ ts_vmplu:
 
 test_polynomials: ts_poly ts_laurpoly ts_laurlist ts_rpol ts_ddpol ts_qdpol \
                   ts_polmat ts_jaco ts_parse ts_subs ts_tabform ts_randpoly \
-                  ts_str2pol ts_termlist
+                  ts_str2pol ts_termlist ts_rwspol
 
 ts_poly:
 	make -f $(MAKEFILE) ts_poly
@@ -341,6 +350,9 @@ ts_str2pol:
 ts_termlist:
 	make -f $(MAKEFILE) ts_termlist
 
+ts_rwspol:
+	make -f $(MAKEFILE) ts_rwspol
+
 # Test programs for Math_Lib/Functions :
 
 test_functions: ts_evaline ts_evalpoly ts_evalform ts_lineva \
@@ -369,14 +381,11 @@ ts_expvec:
 
 # Test programs for Math_Lib/Circuits :
 
-test_circuits: ts_cffsup ts_speel ts_cycfun ts_speelsys ts_gradcirc \
-               ts_vmpeval ts_vmpdiff
+test_circuits: ts_cffsup ts_speel ts_speelsys ts_cycfun \
+               ts_vmpeval ts_vmpdiff ts_gradcirc
 
 ts_cffsup:
 	make -f $(MAKEFILE) ts_cffsup
-
-ts_gradcirc:
-	make -f $(MAKEFILE) ts_gradcirc
 
 ts_speel:
 	make -f $(MAKEFILE) ts_speel
@@ -392,6 +401,9 @@ ts_vmpeval:
 
 ts_vmpdiff:
 	make -f $(MAKEFILE) ts_vmpdiff
+
+ts_gradcirc:
+	make -f $(MAKEFILE) ts_gradcirc
 
 # Test programs for Math_Lib/Supports :
 
@@ -469,11 +481,11 @@ ts_contab:
 ts_quad:
 	make -f $(MAKEFILE) ts_quad
 
-ts_soldrop:
-	make -f $(MAKEFILE) ts_soldrop
-
 ts_ptlists:
 	make -f $(MAKEFILE) ts_ptlists
+
+ts_soldrop:
+	make -f $(MAKEFILE) ts_soldrop
 
 # Test programs for the Deformations/Homotopy library :
 
@@ -1256,14 +1268,14 @@ ts_csols:
 
 # test programs in the CtoPHC/State directory :
 
-test_state: ts_filman ts_solcon ts_use_solcon ts_solpool ts_use_solpool \
+test_state: ts_solcon ts_use_solcon ts_solpool ts_use_solpool \
             ts_syscon ts_use_syscon ts_syspool ts_use_syspool \
             ts_celcon ts_use_celcon ts_pirhom ts_use_c2pieri ts_c2phc \
             ts_c2str ts_use_c2phc ts_use_c2fac ts_unisolve ts_use_giftwrap \
             ts_giftwcon
 
-ts_filman: file_management.o
-	make -f $(MAKEFILE) ts_filman
+file_management.o:
+	make -f $(MAKEFILE) file_management.o
 
 ts_solcon:
 	make -f $(MAKEFILE) ts_solcon
@@ -1329,12 +1341,13 @@ ts_feedback:
 
 # Test programs for the C interface to GPU acceleration :
 
-test_phctoc: ts_cpu2norm_d ts_cpu2norm_dd ts_cpu2norm_qd ts_gpunewton \
-             ts_gpunewton_dd ts_gpunewton_qd ts_gpuonepath_d \
-             ts_gpuonepath_dd ts_gpuonepath_qd ts_gpumanypaths_d \
-             ts_gpumanypaths_dd ts_gpumanypaths_qd \
-             ts_gpupath_d ts_gpupath_dd ts_gpupath_qd \
-             ts_adepath_d ts_adepath_dd ts_adepath_qd
+test_phctoc: ts_cpu2norm_d ts_cpu2norm_dd ts_cpu2norm_qd \
+             ts_gpu2norm_d_in_c ts_gpu2norm_d ts_gpu2norm_dd ts_gpu2norm_qd \
+             ts_gpunewton ts_gpunewton_dd ts_gpunewton_qd \
+             ts_gpuonepath_d ts_gpuonepath_dd ts_gpuonepath_qd \
+             ts_gpumanypaths_d ts_gpumanypaths_dd ts_gpumanypaths_qd \
+             ts_gpupathd_d ts_gpupathd_dd ts_gpupath_qd \
+             ts_adepathd_d ts_adepathd_dd ts_adepath_qd
 
 ts_cpu2norm_d:
 	make -f $(MAKEFILE) ts_cpu2norm_d
@@ -1344,6 +1357,18 @@ ts_cpu2norm_dd:
 
 ts_cpu2norm_qd:
 	make -f $(MAKEFILE) ts_cpu2norm_qd
+
+ts_gpu2norm_d_in_c:
+	make -f $(MAKEFILE) ts_gpu2norm_d_in_c
+
+ts_gpu2norm_d:
+	make -f $(MAKEFILE) ts_gpu2norm_d
+
+ts_gpu2norm_dd:
+	make -f $(MAKEFILE) ts_gpu2norm_dd
+
+ts_gpu2norm_qd:
+	make -f $(MAKEFILE) ts_gpu2norm_qd
 
 ts_gpunewton:
 	make -f $(MAKEFILE) ts_gpunewton
@@ -1476,7 +1501,8 @@ test_lib: lib_syscon lib_syscon_cpp lib_solcon lib_solcon_cpp \
           lib_factor lib_factor_cpp lib_pieri lib_pieri_cpp \
           lib_lrhom lib_lrhom_cpp phc_solve phc_solve_cpp \
           lib_usolve lib_usolve_cpp lib_giftwrap lib_giftwrap_cpp ts_list2str \
-          lib_adepath_d lib_adepath_dd lib_adepath_qd
+          lib_adepath_d lib_adepath_dd lib_adepath_qd \
+          lib_gpupath_d lib_gpupath_dd lib_gpupath_qd
 
 ts_list2str:
 	make -f $(MAKEFILE) ts_list2str
@@ -1585,6 +1611,15 @@ lib_giftwrap_cpp:
 
 lib_adepath_d:
 	make -f $(MAKEFILE) lib_adepath_d
+
+lib_gpupath_d:
+	make -f $(MAKEFILE) lib_gpupath_d
+
+lib_gpupath_dd:
+	make -f $(MAKEFILE) lib_gpupath_dd
+
+lib_gpupath_qd:
+	make -f $(MAKEFILE) lib_gpupath_qd
 
 lib_adepath_dd:
 	make -f $(MAKEFILE) lib_adepath_dd

@@ -374,6 +374,10 @@ ts_termlist:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_termlist.adb \
               -o $(BIN)/ts_termlist
 
+ts_rwspol:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_rwspol.adb \
+              -o $(BIN)/ts_rwspol
+
 # Test programs for Math_Lib/Functions :
 
 ts_evaline:
