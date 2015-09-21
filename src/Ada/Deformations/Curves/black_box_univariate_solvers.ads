@@ -126,6 +126,14 @@ package Black_Box_Univariate_Solvers is
                 sols : out Standard_Complex_Solutions.Solution_List );
   procedure Black_Box_Durand_Kerner
               ( file : in file_type;
+                p : in DoblDobl_Complex_Polynomials.Poly;
+                sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Black_Box_Durand_Kerner
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Polynomials.Poly;
+                sols : out QuadDobl_Complex_Solutions.Solution_List );
+  procedure Black_Box_Durand_Kerner
+              ( file : in file_type;
                 p : in Standard_Complex_Laurentials.Poly;
                 sols : out Standard_Complex_Solutions.Solution_List );
   procedure Black_Box_Durand_Kerner

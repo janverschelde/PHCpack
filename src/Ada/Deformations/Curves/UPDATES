@@ -1,3 +1,6 @@
+Mon 21 Sep 2015 : extended black_box_univariate_solvers with routines in
+  double double and quad double precision.
+
 Thu 28 Aug 2013 : extended black_box_univariate_solvers with routines to
   solving univariate Laurent polynomials with multiprecision arithmetic.
   Exported more routines for the C to PHCpack interface.

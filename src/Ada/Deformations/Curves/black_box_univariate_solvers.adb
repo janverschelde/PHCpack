@@ -3,12 +3,18 @@ with Standard_Natural_Numbers_io;      use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers;        use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;     use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers_io;      use Standard_Complex_Numbers_io;
+with DoblDobl_Complex_Numbers_io;      use DoblDobl_Complex_Numbers_io;
+with QuadDobl_Complex_Numbers_io;      use QuadDobl_Complex_Numbers_io;
 with Multprec_Floating_Numbers;
 with Multprec_Floating_Numbers_io;     use Multprec_Floating_Numbers_io;
 with Multprec_Complex_Numbers_io;      use Multprec_Complex_Numbers_io;
 with Double_Double_Numbers;
+with Double_Double_Numbers_io;         use Double_Double_Numbers_io;
 with Quad_Double_Numbers;
+with Quad_Double_Numbers_io;           use Quad_Double_Numbers_io;
 with Standard_Complex_Vectors_io;      use Standard_Complex_Vectors_io;
+with DoblDobl_Complex_Vectors_io;      use DoblDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vectors_io;      use QuadDobl_Complex_Vectors_io;
 with Multprec_Complex_Vectors_io;      use Multprec_Complex_Vectors_io;
 with Standard_Random_Vectors;          use Standard_Random_Vectors;
 with DoblDobl_Random_Vectors;          use DoblDobl_Random_Vectors;
@@ -16,9 +22,13 @@ with QuadDobl_Random_Vectors;          use QuadDobl_Random_Vectors;
 with Multprec_Random_Vectors;          use Multprec_Random_Vectors;
 with Multprec_Complex_Vector_Tools;
 with Standard_Complex_Polynomials_io;  use Standard_Complex_Polynomials_io;
+with DoblDobl_Complex_Polynomials_io;  use DoblDobl_Complex_Polynomials_io;
+with QuadDobl_Complex_Polynomials_io;  use QuadDobl_Complex_Polynomials_io;
 with Standard_Complex_Laurentials_io;  use Standard_Complex_Laurentials_io;
 with Multprec_Complex_Laurentials_io;  use Multprec_Complex_Laurentials_io;
 with Standard_Complex_Solutions_io;    use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;    use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;    use QuadDobl_Complex_Solutions_io;
 with Multprec_Complex_Solutions_io;    use Multprec_Complex_Solutions_io;
 with Standard_Durand_Kerner;
 with DoblDobl_Durand_Kerner;
@@ -218,7 +228,61 @@ package body Black_Box_Univariate_Solvers is
     for i in z'range loop
       absres := Standard_Complex_Numbers.AbsVal(res(i));
       put(file,"| "); put(file,z(i)); put(file," | "); 
-      put(file,absres); put(file," |");
+      put(file,absres,3); put(file," |");
+      new_line(file);
+    end loop;
+    put_line(file,
+    "------------------------------------------------------------------------");
+  end Write_Results;
+
+  procedure Write_Results
+               ( file : in file_type; step : in natural32;
+                 z,res : in DoblDobl_Complex_Vectors.Vector ) is
+
+    use Double_Double_Numbers;
+    absres : double_double;
+
+  begin
+    new_line(file);
+    put(file,"Results after "); put(file,step,1);
+    put_line(file," iterations :");
+    put_line(file,
+    "------------------------------------------------------------------------");
+    put_line(file,
+    "| APPROXIMATED ROOTS (real and imaginary part) |     RESIDUALS         |");
+    put_line(file,
+    "------------------------------------------------------------------------");
+    for i in z'range loop
+      absres := DoblDobl_Complex_Numbers.AbsVal(res(i));
+      put(file,"| "); put(file,z(i)); put(file," | "); 
+      put(file,absres,3); put(file," |");
+      new_line(file);
+    end loop;
+    put_line(file,
+    "------------------------------------------------------------------------");
+  end Write_Results;
+
+  procedure Write_Results
+               ( file : in file_type; step : in natural32;
+                 z,res : in QuadDobl_Complex_Vectors.Vector ) is
+
+    use Quad_Double_Numbers;
+    absres : quad_double;
+
+  begin
+    new_line(file);
+    put(file,"Results after "); put(file,step,1);
+    put_line(file," iterations :");
+    put_line(file,
+    "------------------------------------------------------------------------");
+    put_line(file,
+    "| APPROXIMATED ROOTS (real and imaginary part) |     RESIDUALS         |");
+    put_line(file,
+    "------------------------------------------------------------------------");
+    for i in z'range loop
+      absres := QuadDobl_Complex_Numbers.AbsVal(res(i));
+      put(file,"| "); put(file,z(i)); put(file," | "); 
+      put(file,absres,3); put(file," |");
       new_line(file);
     end loop;
     put_line(file,
@@ -245,7 +309,7 @@ package body Black_Box_Univariate_Solvers is
     for i in z'range loop
       absres := Multprec_Complex_Numbers.AbsVal(res(i));
       put(file,"| "); put(file,z(i)); put(file," | "); 
-      put(file,absres); put(file," |");
+      put(file,absres,3); put(file," |");
       new_line(file);
       Clear(absres);
     end loop;
@@ -396,6 +460,58 @@ package body Black_Box_Univariate_Solvers is
     Newton(cp,dcp,z,err,rco,res);
     sols := Create_Solution_List(z,err,rco,res);
   end Standard_Find_Roots;
+
+  procedure DoblDobl_Find_Roots
+              ( file : in file_type; d : in integer32;
+                cp : in DoblDobl_Complex_Vectors.Vector;
+                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Durand_Kerner;
+
+    max : constant natural32 := 10*natural32(d);
+    eps : constant double_float := 1.0E-13;
+    z,r : DoblDobl_Complex_Vectors.Vector(1..d);
+    dcp : constant DoblDobl_Complex_Vectors.Vector(0..d-1) := Derivative(cp);
+    err,rco,res : Standard_Floating_Vectors.Vector(z'range);
+    nb : natural32;
+    fail : boolean;
+
+  begin
+    z := Random_Vector(1,d);
+    Silent_Durand_Kerner(cp,z,r,max,eps,nb,fail);
+    if fail
+     then put_line(file,"precision insufficient to reach results");
+    end if;
+    Write_Results(file,nb,z,r);
+    Newton(cp,dcp,z,err,rco,res);
+    sols := Create_Solution_List(z,err,rco,res);
+  end DoblDobl_Find_Roots;
+
+  procedure QuadDobl_Find_Roots
+              ( file : in file_type; d : in integer32;
+                cp : in QuadDobl_Complex_Vectors.Vector;
+                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Durand_Kerner;
+
+    max : constant natural32 := 10*natural32(d);
+    eps : constant double_float := 1.0E-13;
+    z,r : QuadDobl_Complex_Vectors.Vector(1..d);
+    dcp : constant QuadDobl_Complex_Vectors.Vector(0..d-1) := Derivative(cp);
+    err,rco,res : Standard_Floating_Vectors.Vector(z'range);
+    nb : natural32;
+    fail : boolean;
+
+  begin
+    z := Random_Vector(1,d);
+    Silent_Durand_Kerner(cp,z,r,max,eps,nb,fail);
+    if fail
+     then put_line(file,"precision insufficient to reach results");
+    end if;
+    Write_Results(file,nb,z,r);
+    Newton(cp,dcp,z,err,rco,res);
+    sols := Create_Solution_List(z,err,rco,res);
+  end QuadDobl_Find_Roots;
 
   procedure Multprec_Find_Roots
               ( file : in file_type; d : in integer32; size : in natural32;
@@ -691,6 +807,64 @@ package body Black_Box_Univariate_Solvers is
   end Call_Durand_Kerner;
 
   procedure Call_Durand_Kerner
+              ( file : in file_type; d : in integer32;
+                p : in DoblDobl_Complex_Polynomials.Poly;
+                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Solutions;
+
+    timer : Timing_Widget;
+    cff : DoblDobl_Complex_Vectors.Vector(0..d);
+
+  begin
+    tstart(timer);
+    cff := Coefficient_Vector(natural32(d),p);
+    new_line(file);
+    put_line(file,"The coefficient vector :");
+    put_line(file,cff);
+    if d = 1 
+     then sols := Create_Solution_List(-cff(0));
+     else DoblDobl_Find_Roots(file,d,cff,sols);
+    end if;
+    tstop(timer);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    new_line(file);
+    print_times(file,timer,"application of the method of Weierstrass");
+  end Call_Durand_Kerner;
+
+  procedure Call_Durand_Kerner
+              ( file : in file_type; d : in integer32;
+                p : in QuadDobl_Complex_Polynomials.Poly;
+                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Solutions;
+
+    timer : Timing_Widget;
+    cff : QuadDobl_Complex_Vectors.Vector(0..d);
+
+  begin
+    tstart(timer);
+    cff := Coefficient_Vector(natural32(d),p);
+    new_line(file);
+    put_line(file,"The coefficient vector :");
+    put_line(file,cff);
+    if d = 1 
+     then sols := Create_Solution_List(-cff(0));
+     else QuadDobl_Find_Roots(file,d,cff,sols);
+    end if;
+    tstop(timer);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    new_line(file);
+    print_times(file,timer,"application of the method of Weierstrass");
+  end Call_Durand_Kerner;
+
+  procedure Call_Durand_Kerner
               ( file : in file_type; mind,maxd : in integer32;
                 p : in Standard_Complex_Laurentials.Poly;
                 sols : out Standard_Complex_Solutions.Solution_List ) is
@@ -863,6 +1037,44 @@ package body Black_Box_Univariate_Solvers is
                 sols : out Standard_Complex_Solutions.Solution_List ) is
 
     d : constant integer32 := Standard_Complex_Polynomials.Degree(p);
+
+  begin
+    put_line(file,"1 1");
+    put(file,p); new_line(file);
+    if d = 0 then
+      new_line(file);
+      put_line(file,"There are no roots to compute.");
+      new_line(file);
+    else
+      Call_Durand_Kerner(file,d,p,sols);
+    end if;
+  end Black_Box_Durand_Kerner;
+
+  procedure Black_Box_Durand_Kerner
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Polynomials.Poly;
+                sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    d : constant integer32 := DoblDobl_Complex_Polynomials.Degree(p);
+
+  begin
+    put_line(file,"1 1");
+    put(file,p); new_line(file);
+    if d = 0 then
+      new_line(file);
+      put_line(file,"There are no roots to compute.");
+      new_line(file);
+    else
+      Call_Durand_Kerner(file,d,p,sols);
+    end if;
+  end Black_Box_Durand_Kerner;
+
+  procedure Black_Box_Durand_Kerner
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Polynomials.Poly;
+                sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    d : constant integer32 := QuadDobl_Complex_Polynomials.Degree(p);
 
   begin
     put_line(file,"1 1");
