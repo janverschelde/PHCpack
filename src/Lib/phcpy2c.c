@@ -1987,7 +1987,7 @@ static PyObject *py2c_syscon_load_standard_polynomial
  ( PyObject *self, PyObject *args )
 {      
    int fail,nc,k;
-   char p[25600];  /* must be computed or retrieved !!!! */
+   char p[51200];  /* must be computed or retrieved !!!! */
                  
    initialize();
    if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
@@ -2091,7 +2091,7 @@ static PyObject *py2c_syscon_load_standard_Laurential
  ( PyObject *self, PyObject *args )
 {      
    int fail,nc,k;
-   char p[25600];  /* must be computed or retrieved !!!! */
+   char p[51200];  /* must be computed or retrieved !!!! */
                  
    initialize();
    if(!PyArg_ParseTuple(args,"i",&k)) return NULL;

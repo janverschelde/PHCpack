@@ -1,3 +1,6 @@
+Mon 21 Sep 2015 : extended number of characters in loading a string
+  representation of a polynomial in syscon.c and phcpy2c.c.
+
 Mon 31 Aug 2015 : in lib_adepath_{d,dd,qd} added values for the gammas
   in the function calls to onepath and manypaths.
 

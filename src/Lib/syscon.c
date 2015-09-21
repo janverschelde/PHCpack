@@ -370,7 +370,7 @@ int syscon_store_multprec_polynomial
 int syscon_load_polynomial ( int k, int *nc, char *p )
 {
    int fail,i;
-   int b[25600];
+   int b[51200];
    int size = k;
    double *c;
 
@@ -496,7 +496,7 @@ int syscon_store_multprec_Laurential
 int syscon_load_standard_Laurential ( int k, int *nc, char *p )
 {
    int fail,i;
-   int b[25600];
+   int b[51200];
    int size = k;
    double *c;
 
