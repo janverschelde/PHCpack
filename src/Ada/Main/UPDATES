@@ -1,3 +1,6 @@
+Mon 21 Sep 2015 : extended black_box_solvers with procedures to solve one
+  single polynomial equation in double double and quad double precision.
+
 Sun 20 Sep 2015 : in black_box_solvers.adb, modified the call to the 
   black_box_factorization procedure.
 

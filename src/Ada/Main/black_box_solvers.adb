@@ -197,6 +197,84 @@ package body Black_Box_Solvers is
     end if;
   end Single_Main;
 
+  procedure Single_Main
+              ( infilename,outfilename : in string;
+                p : in DoblDobl_Complex_Polynomials.Poly;
+                append_sols : in boolean ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    n : constant natural32
+      := DoblDobl_Complex_Polynomials.Number_of_Unknowns(p);
+    sols : Solution_List;
+    outfile : file_type;
+    output_to_file : boolean;
+
+  begin
+   -- put("we have one single polynomial in ");
+   -- put(n,1); put_line(" variable(s)...");
+    Ask_Output_File(outfile,outfilename,output_to_file);
+    if n = 1 then
+      if output_to_file then
+        Black_Box_Durand_Kerner(outfile,p,sols);
+        Append_Solutions_to_Input_file(infilename,sols,append_sols);
+      else
+        Black_Box_Durand_Kerner(p,sols);
+        new_line;
+        put_line("THE SOLUTIONS :");
+        put(Length_Of(sols),1,sols);
+      end if;
+    elsif n > 1 then
+      DoblDobl_Black_Box_Factorization(infilename,outfile,p);
+    else
+      if output_to_file then
+        put(outfile,"Number of unknowns = "); put(outfile,n,1);
+        put_line(outfile,"...");
+      else 
+        put("Number of unknowns = "); put(n,1); put_line("...");
+      end if;
+    end if;
+  end Single_Main;
+
+  procedure Single_Main
+              ( infilename,outfilename : in string;
+                p : in QuadDobl_Complex_Polynomials.Poly;
+                append_sols : in boolean ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    n : constant natural32
+      := QuadDobl_Complex_Polynomials.Number_of_Unknowns(p);
+    sols : Solution_List;
+    outfile : file_type;
+    output_to_file : boolean;
+
+  begin
+   -- put("we have one single polynomial in ");
+   -- put(n,1); put_line(" variable(s)...");
+    Ask_Output_File(outfile,outfilename,output_to_file);
+    if n = 1 then
+      if output_to_file then
+        Black_Box_Durand_Kerner(outfile,p,sols);
+        Append_Solutions_to_Input_file(infilename,sols,append_sols);
+      else
+        Black_Box_Durand_Kerner(p,sols);
+        new_line;
+        put_line("THE SOLUTIONS :");
+        put(Length_Of(sols),1,sols);
+      end if;
+    elsif n > 1 then
+      QuadDobl_Black_Box_Factorization(infilename,outfile,p);
+    else
+      if output_to_file then
+        put(outfile,"Number of unknowns = "); put(outfile,n,1);
+        put_line(outfile,"...");
+      else 
+        put("Number of unknowns = "); put(n,1); put_line("...");
+      end if;
+    end if;
+  end Single_Main;
+
   procedure Linear_Main
                ( infilename,outfilename : in string;
                  p : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;

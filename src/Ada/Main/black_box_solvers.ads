@@ -3,7 +3,9 @@ with Ada.Calendar;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
 with Standard_Complex_Solutions;
@@ -66,6 +68,14 @@ package Black_Box_Solvers is
   procedure Single_Main
                ( infilename,outfilename : in string;
                  p : in Standard_Complex_Polynomials.Poly;
+                 append_sols : in boolean );
+  procedure Single_Main
+               ( infilename,outfilename : in string;
+                 p : in DoblDobl_Complex_Polynomials.Poly;
+                 append_sols : in boolean );
+  procedure Single_Main
+               ( infilename,outfilename : in string;
+                 p : in QuadDobl_Complex_Polynomials.Poly;
                  append_sols : in boolean );
 
   -- DESCRIPTION :
