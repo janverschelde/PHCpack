@@ -2,7 +2,8 @@ Tue 22 Sep 2015 : made naming of functions in syscon consistent,
   adding _standard_ when operating on the standard systems container.
   This caused changes in lib_syscon, lib_newton, lib_roco, lib_celcon,
   lib_celphc, lib_scale, lib_track, phc_solve, lib_usolve, lib_adepath_d,
-  and lib_gpupath_d.
+  and lib_gpupath_d.  Added functions to syscon to return the size limit
+  of string representations of polynomials, used in phcpy2c.c.
 
 Mon 21 Sep 2015 : extended number of characters in loading a string
   representation of a polynomial in syscon.c and phcpy2c.c.

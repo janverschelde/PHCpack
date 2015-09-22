@@ -333,6 +333,70 @@ int syscon_store_multprec_polynomial
  *   The systems container must be initialized with the number of
  *   polynomials and this number must be larger than or equal to k. */
 
+int syscon_standard_size_limit ( int k, int *szl );
+/*
+ * DESCRIPTION :
+ *   Returns in szl a limit on the size of the string representation
+ *   of the k-th polynomial in the standard systems container.
+ *   This limit is used to allocate memory when loading the k-th
+ *   polynomial from the standard systems container into a string. */
+
+int syscon_dobldobl_size_limit ( int k, int *szl );
+/*
+ * DESCRIPTION :
+ *   Returns in szl a limit on the size of the string representation
+ *   of the k-th polynomial in the double double systems container.
+ *   This limit is used to allocate memory when loading the k-th
+ *   polynomial from the double double systems container into a string. */
+
+int syscon_quaddobl_size_limit ( int k, int *szl );
+/*
+ * DESCRIPTION :
+ *   Returns in szl a limit on the size of the string representation
+ *   of the k-th polynomial in the quad double systems container.
+ *   This limit is used to allocate memory when loading the k-th
+ *   polynomial from the quad double systems container into a string. */
+
+int syscon_multprec_size_limit ( int k, int *szl );
+/*
+ * DESCRIPTION :
+ *   Returns in szl a limit on the size of the string representation
+ *   of the k-th polynomial in the multiprecision systems container.
+ *   This limit is used to allocate memory when loading the k-th
+ *   polynomial from the multiprecision systems container into a string. */
+
+int syscon_standard_Laurent_size_limit ( int k, int *szl );
+/*
+ * DESCRIPTION :
+ *   Returns in szl a limit on the size of the string representation
+ *   of the k-th polynomial in the standard Laurent systems container.
+ *   This limit is used to allocate memory when loading the k-th Laurent
+ *   polynomial from the standard systems container into a string. */
+
+int syscon_dobldobl_Laurent_size_limit ( int k, int *szl );
+/*
+ * DESCRIPTION :
+ *   Returns in szl a limit on the size of the string representation
+ *   of the k-th polynomial in the double double Laurent systems container.
+ *   This limit is used to allocate memory when loading the k-th Laurent
+ *   polynomial from the double double systems container into a string. */
+
+int syscon_quaddobl_Laurent_size_limit ( int k, int *szl );
+/*
+ * DESCRIPTION :
+ *   Returns in szl a limit on the size of the string representation
+ *   of the k-th polynomial in the quad double Laurent systems container.
+ *   This limit is used to allocate memory when loading the k-th Laurent
+ *   polynomial from the quad double systems container into a string. */
+
+int syscon_multprec_Laurent_size_limit ( int k, int *szl );
+/*
+ * DESCRIPTION :
+ *   Returns in szl a limit on the size of the string representation
+ *   of the k-th polynomial in the multiprecision Laurent systems container.
+ *   This limit is used to allocate memory when loading the k-th Laurent
+ *   polynomial from the multiprecision systems container into a string. */
+
 int syscon_load_standard_polynomial ( int k, int *nc, char *p );
 /*
  * DESCRIPTION :

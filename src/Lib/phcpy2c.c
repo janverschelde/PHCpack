@@ -1986,53 +1986,69 @@ static PyObject *py2c_syscon_store_multprec_polynomial
 static PyObject *py2c_syscon_load_standard_polynomial
  ( PyObject *self, PyObject *args )
 {      
-   int fail,nc,k;
-   char p[51200];  /* must be computed or retrieved !!!! */
-                 
+   int fail,nc,k,szl;
+   
    initialize();
    if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
-   fail = syscon_load_standard_polynomial(k,&nc,p);
+   fail = syscon_standard_size_limit(k,&szl);
+   {
+      char p[szl];
+
+      fail = syscon_load_standard_polynomial(k,&nc,p);
                  
-   return Py_BuildValue("s",p);
+      return Py_BuildValue("s",p);
+   }
 }
 
 static PyObject *py2c_syscon_load_dobldobl_polynomial
  ( PyObject *self, PyObject *args )
 {      
-   int fail,nc,k;
-   char p[51200];  /* must be computed or retrieved !!!! */
+   int fail,nc,k,szl;
                  
    initialize();
    if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
-   fail = syscon_load_dobldobl_polynomial(k,&nc,p);
+   fail = syscon_dobldobl_size_limit(k,&szl);
+   {
+      char p[szl];
+
+      fail = syscon_load_dobldobl_polynomial(k,&nc,p);
                  
-   return Py_BuildValue("s",p);
+      return Py_BuildValue("s",p);
+   }
 }
 
 static PyObject *py2c_syscon_load_quaddobl_polynomial
  ( PyObject *self, PyObject *args )
 {      
-   int fail,nc,k;
-   char p[102400];  /* must be computed or retrieved !!!! */
+   int fail,nc,k,szl;
                  
    initialize();
    if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
-   fail = syscon_load_quaddobl_polynomial(k,&nc,p);
+   fail = syscon_quaddobl_size_limit(k,&szl);
+   {
+      char p[szl];
+
+      fail = syscon_load_quaddobl_polynomial(k,&nc,p);
                  
-   return Py_BuildValue("s",p);
+      return Py_BuildValue("s",p);
+   }
 }
 
 static PyObject *py2c_syscon_load_multprec_polynomial
  ( PyObject *self, PyObject *args )
 {      
-   int fail,nc,k;
-   char p[102400];  /* must be computed or retrieved !!!! */
+   int fail,nc,k,szl;
                  
    initialize();
    if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
-   fail = syscon_load_multprec_polynomial(k,&nc,p);
+   fail = syscon_multprec_size_limit(k,&szl);
+   {
+      char p[szl];
+
+      fail = syscon_load_multprec_polynomial(k,&nc,p);
                  
-   return Py_BuildValue("s",p);
+      return Py_BuildValue("s",p);
+   }
 }
 
 static PyObject *py2c_syscon_store_standard_Laurential
@@ -2090,53 +2106,69 @@ static PyObject *py2c_syscon_store_multprec_Laurential
 static PyObject *py2c_syscon_load_standard_Laurential
  ( PyObject *self, PyObject *args )
 {      
-   int fail,nc,k;
-   char p[51200];  /* must be computed or retrieved !!!! */
+   int fail,nc,k,szl;
                  
    initialize();
    if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
-   fail = syscon_load_standard_Laurential(k,&nc,p);
+   fail = syscon_standard_Laurent_size_limit(k,&szl);
+   {
+      char p[szl];
+
+      fail = syscon_load_standard_Laurential(k,&nc,p);
                  
-   return Py_BuildValue("s",p);
+      return Py_BuildValue("s",p);
+   }
 }
 
 static PyObject *py2c_syscon_load_dobldobl_Laurential
  ( PyObject *self, PyObject *args )
 {      
-   int fail,nc,k;
-   char p[51200];  /* must be computed or retrieved !!!! */
+   int fail,nc,k,szl;
                  
    initialize();
    if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
-   fail = syscon_load_dobldobl_Laurential(k,&nc,p);
+   fail = syscon_dobldobl_Laurent_size_limit(k,&szl);
+   {
+      char p[szl];
+
+      fail = syscon_load_dobldobl_Laurential(k,&nc,p);
                  
-   return Py_BuildValue("s",p);
+      return Py_BuildValue("s",p);
+   }
 }
 
 static PyObject *py2c_syscon_load_quaddobl_Laurential
  ( PyObject *self, PyObject *args )
 {      
-   int fail,nc,k;
-   char p[102400];  /* must be computed or retrieved !!!! */
+   int fail,nc,k,szl;
                  
    initialize();
    if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
-   fail = syscon_load_quaddobl_Laurential(k,&nc,p);
-                 
-   return Py_BuildValue("s",p);
+   fail = syscon_quaddobl_Laurent_size_limit(k,&szl);
+   {
+      char p[szl];
+
+      fail = syscon_load_quaddobl_Laurential(k,&nc,p);
+
+      return Py_BuildValue("s",p);
+   }
 }
 
 static PyObject *py2c_syscon_load_multprec_Laurential
  ( PyObject *self, PyObject *args )
 {      
-   int fail,nc,k;
-   char p[102400];  /* must be computed or retrieved !!!! */
+   int fail,nc,k,szl;
                  
    initialize();
    if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
-   fail = syscon_load_multprec_Laurential(k,&nc,p);
+   fail = syscon_multprec_Laurent_size_limit(k,&szl);
+   {
+      char p[szl];
+
+      fail = syscon_load_multprec_Laurential(k,&nc,p);
                  
-   return Py_BuildValue("s",p);
+      return Py_BuildValue("s",p);
+   }
 }
 
 static PyObject *py2c_syscon_total_degree ( PyObject *self, PyObject *args )

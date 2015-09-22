@@ -2,6 +2,7 @@
  * declared in the file "syscon.h". */
 
 /* #include<stdio.h> only used for extra print statements */
+#include <stdlib.h>
 #include "syscon.h"
 
 int syscon_read_standard_system ( void )
@@ -367,66 +368,158 @@ int syscon_store_multprec_polynomial
    return fail;
 }
 
+int syscon_standard_size_limit ( int k, int *szl )
+{
+   int fail;
+   double *c;
+
+   fail = _ada_use_c2phc(600,&k,szl,c);
+
+   return fail;
+}
+
+int syscon_dobldobl_size_limit ( int k, int *szl )
+{
+   int fail;
+   double *c;
+
+   fail = _ada_use_c2phc(601,&k,szl,c);
+
+   return fail;
+}
+
+int syscon_quaddobl_size_limit ( int k, int *szl )
+{
+   int fail;
+   double *c;
+
+   fail = _ada_use_c2phc(602,&k,szl,c);
+
+   return fail;
+}
+
+int syscon_multprec_size_limit ( int k, int *szl )
+{
+   int fail;
+   double *c;
+
+   fail = _ada_use_c2phc(603,&k,szl,c);
+
+   return fail;
+}
+
+int syscon_standard_Laurent_size_limit ( int k, int *szl )
+{
+   int fail;
+   double *c;
+
+   fail = _ada_use_c2phc(604,&k,szl,c);
+
+   return fail;
+}
+
+int syscon_dobldobl_Laurent_size_limit ( int k, int *szl )
+{
+   int fail;
+   double *c;
+
+   fail = _ada_use_c2phc(605,&k,szl,c);
+
+   return fail;
+}
+
+int syscon_quaddobl_Laurent_size_limit ( int k, int *szl )
+{
+   int fail;
+   double *c;
+
+   fail = _ada_use_c2phc(606,&k,szl,c);
+
+   return fail;
+}
+
+int syscon_multprec_Laurent_size_limit ( int k, int *szl )
+{
+   int fail;
+   double *c;
+
+   fail = _ada_use_c2phc(607,&k,szl,c);
+
+   return fail;
+}
+
 int syscon_load_standard_polynomial ( int k, int *nc, char *p )
 {
-   int fail,i;
-   int b[51200];
+   int fail,i,szl;
+   int *buffer;
    int size = k;
    double *c;
 
-   fail = _ada_use_c2phc(67,&size,b,c);
+   fail = syscon_standard_size_limit(k,&szl);
+   buffer = (int*)calloc(szl,sizeof(int));
+   fail = _ada_use_c2phc(67,&size,buffer,c);
    /* printf("number of characters : %d\n",size); */
-   for(i=0; i<size; i++) p[i] = (char) b[i];
+   for(i=0; i<size; i++) p[i] = (char) buffer[i];
    p[size] = '\0';
    /* printf("the string : %s\n",p); */
+   free(buffer);
 
    return fail;
 }
 
 int syscon_load_dobldobl_polynomial ( int k, int *nc, char *p )
 {
-   int fail,i;
-   int b[51200];
+   int fail,i,szl;
+   int *buffer;
    int size = k;
    double *c;
 
-   fail = _ada_use_c2phc(106,&size,b,c);
+   fail = syscon_dobldobl_size_limit(k,&szl);
+   buffer = (int*)calloc(szl,sizeof(int));
+   fail = _ada_use_c2phc(106,&size,buffer,c);
    /* printf("number of characters : %d\n",size); */
-   for(i=0; i<size; i++) p[i] = (char) b[i];
+   for(i=0; i<size; i++) p[i] = (char) buffer[i];
    p[size] = '\0';
    /* printf("the string : %s\n",p); */
+   free(buffer);
 
    return fail;
 }
 
 int syscon_load_quaddobl_polynomial ( int k, int *nc, char *p )
 {
-   int fail,i;
-   int b[102400];
+   int fail,i,szl;
+   int *buffer;
    int size = k;
    double *c;
 
-   fail = _ada_use_c2phc(107,&size,b,c);
+   fail = syscon_quaddobl_size_limit(k,&szl);
+   buffer = (int*)calloc(szl,sizeof(int));
+   fail = _ada_use_c2phc(107,&size,buffer,c);
    /* printf("number of characters : %d\n",size); */
-   for(i=0; i<size; i++) p[i] = (char) b[i];
+   for(i=0; i<size; i++) p[i] = (char) buffer[i];
    p[size] = '\0';
    /* printf("the string : %s\n",p); */
+   free(buffer);
 
    return fail;
 }
 
 int syscon_load_multprec_polynomial ( int k, int *nc, char *p )
 {
-   int fail,i;
-   int b[102400];
+   int fail,i,szl;
+   int *buffer;
    int size = k;
    double *c;
 
-   fail = _ada_use_c2phc(108,&size,b,c);
+   fail = syscon_multprec_size_limit(k,&szl);
+   buffer = (int*)calloc(szl,sizeof(int));
+   fail = _ada_use_c2phc(108,&size,buffer,c);
    /* printf("number of characters : %d\n",size); */
-   for(i=0; i<size; i++) p[i] = (char) b[i];
+   for(i=0; i<size; i++) p[i] = (char) buffer[i];
    p[size] = '\0';
    /* printf("the string : %s\n",p); */
+   free(buffer);
 
    return fail;
 }
@@ -495,64 +588,76 @@ int syscon_store_multprec_Laurential
 
 int syscon_load_standard_Laurential ( int k, int *nc, char *p )
 {
-   int fail,i;
-   int b[51200];
+   int fail,i,szl;
+   int *buffer;
    int size = k;
    double *c;
 
-   fail = _ada_use_c2phc(128,&size,b,c);
+   fail = syscon_standard_Laurent_size_limit(k,&szl);
+   buffer = (int*)calloc(szl,sizeof(int));
+   fail = _ada_use_c2phc(128,&size,buffer,c);
    /* printf("number of characters : %d\n",size); */
-   for(i=0; i<size; i++) p[i] = (char) b[i];
+   for(i=0; i<size; i++) p[i] = (char) buffer[i];
    p[size] = '\0';
    /* printf("the string : %s\n",p); */
+   free(buffer);
 
    return fail;
 }
 
 int syscon_load_dobldobl_Laurential ( int k, int *nc, char *p )
 {
-   int fail,i;
-   int b[51200];
+   int fail,i,szl;
+   int *buffer;
    int size = k;
    double *c;
 
-   fail = _ada_use_c2phc(559,&size,b,c);
+   fail = syscon_dobldobl_Laurent_size_limit(k,&szl);
+   buffer = (int*)calloc(szl,sizeof(int));
+   fail = _ada_use_c2phc(559,&size,buffer,c);
    /* printf("number of characters : %d\n",size); */
-   for(i=0; i<size; i++) p[i] = (char) b[i];
+   for(i=0; i<size; i++) p[i] = (char) buffer[i];
    p[size] = '\0';
    /* printf("the string : %s\n",p); */
+   free(buffer);
 
    return fail;
 }
 
 int syscon_load_quaddobl_Laurential ( int k, int *nc, char *p )
 {
-   int fail,i;
-   int b[102400];
+   int fail,i,szl;
+   int *buffer;
    int size = k;
    double *c;
 
-   fail = _ada_use_c2phc(569,&size,b,c);
+   fail = syscon_quaddobl_Laurent_size_limit(k,&szl);
+   buffer = (int*)calloc(szl,sizeof(int));
+   fail = _ada_use_c2phc(569,&size,buffer,c);
    /* printf("number of characters : %d\n",size); */
-   for(i=0; i<size; i++) p[i] = (char) b[i];
+   for(i=0; i<size; i++) p[i] = (char) buffer[i];
    p[size] = '\0';
    /* printf("the string : %s\n",p); */
+   free(buffer);
 
    return fail;
 }
 
 int syscon_load_multprec_Laurential ( int k, int *nc, char *p )
 {
-   int fail,i;
-   int b[102400];
+   int fail,i,szl;
+   int *buffer;
    int size = k;
    double *c;
 
-   fail = _ada_use_c2phc(579,&size,b,c);
+   fail = syscon_multprec_Laurent_size_limit(k,&szl);
+   buffer = (int*)calloc(szl,sizeof(int));
+   fail = _ada_use_c2phc(579,&size,buffer,c);
    /* printf("number of characters : %d\n",size); */
-   for(i=0; i<size; i++) p[i] = (char) b[i];
+   for(i=0; i<size; i++) p[i] = (char) buffer[i];
    p[size] = '\0';
    /* printf("the string : %s\n",p); */
+   free(buffer);
 
    return fail;
 }
