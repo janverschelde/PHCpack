@@ -502,7 +502,7 @@ void mainloop_initialize(WSET* ws, int NUM_GROUP, int stages, int numbprocs, cha
         if(fail>0) printf("failed to read a witness set.\n");
         printf("  n = %d  dimension = %d  degree = %d\n",n,dim,deg);
         fail = solcon_clear_solutions();
-        fail = syscon_clear_system( ); 
+        fail = syscon_clear_standard_system( ); 
         make_ws(ws_p,1,n,deg,dim);
         ws_p->source[0] = r+1;
         /*for(k=0;k<ws_p->deg;k++)
@@ -566,7 +566,7 @@ void slave_initialize(int id, int NUM_GROUP, char filename[50])
      /* clean the system and solution container */
      fail = solcon_clear_solutions( );  
      if(fail>0) printf("fail to clear solution container.\n");
-     fail = syscon_clear_system( );
+     fail = syscon_clear_standard_system( );
      if(fail>0) printf("fail to clear system container.\n");
      /* end of cleaning the system and solution container */
      quit_flag =1; 
@@ -787,7 +787,7 @@ void run_slave(int id)
        quit_flag=1; 
        fail = solcon_clear_solutions( );  
        if(fail>0) printf("fail to clear solution container.\n");
-       fail = syscon_clear_system( );
+       fail = syscon_clear_standard_system( );
        if(fail>0) printf("fail to clear system container.\n");
        if(v>3) printf("node %d terminate!! \n", id); 
        fflush; 
@@ -1217,7 +1217,7 @@ void start_a_diagonal_homotopy(int myid, int numbprocs, char *name_1,
      fail = read_witness_set_from_file((int)strlen(outfile),
                                        outfile,&n,dim,&deg); 
      fail = solcon_clear_solutions();
-     fail = syscon_clear_system( );
+     fail = syscon_clear_standard_system( );
      printf("end of start_a_diagonal_homotopy\n");
      fflush;
    }
@@ -1264,14 +1264,16 @@ void cascade_one_level_down(int myid, int numbprocs, char *infile,
      fail = solcon_scan_solution_banner();
      fail = solcon_read_solution_dimensions(&nbsols,dimension); 
    }
-   else fail = syscon_initialize_number(n);  /* initialize system container */
+   else
+     /* initialize system container */
+     fail = syscon_initialize_number_of_standard_polynomials(n);
    
    monomials_broadcast(myid,n);            /* broadcast container */
 
    if(myid != 0)                           /* copy result of broadcast */
    {
       fail = copy_container_to_start_system();
-      fail = syscon_clear_system();        /* clear system container */
+      fail = syscon_clear_standard_system();  /* clear system container */
    }
    
    fail = create_cascade_homotopy(); 
@@ -1353,7 +1355,7 @@ int remove_last_slack_variable(char *infile, char *outfile)
    fail = remove_last_slack(dim);
    fail = write_witness_set_to_file((int)strlen(outfile),outfile);
    fail = solcon_clear_solutions();
-   fail = syscon_clear_system( ); 
+   fail = syscon_clear_standard_system( ); 
    return fail;
 }
 

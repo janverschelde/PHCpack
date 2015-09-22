@@ -28,10 +28,11 @@ void dimension_broadcast ( int myid, int *n )
    if(myid != 0)
    {
       if(v>0) printf("Node %d knowns that the dimension is %d\n", myid, *n);
-      fail = syscon_initialize_number(*n); /* initialize container */
+      /* initialize container */
+      fail = syscon_initialize_number_of_standard_polynomials(*n);
       if(v>0)
-      {
-         fail = syscon_number_of_polynomials(&m); /* get dimension as test */
+      {  /* get dimension as test */
+         fail = syscon_number_of_standard_polynomials(&m);
          printf("  and initialized container with dimension %d.\n", m);
       }
    }
@@ -50,7 +51,7 @@ void monomials_broadcast ( int myid, int n )
    {
       if(myid == 0)
       {
-         fail = syscon_number_of_terms(i,&mm);   /* get #monomials */
+         fail = syscon_number_of_standard_terms(i,&mm); /* get #monomials */
          if(v>1) printf("Polynomial %d has %d monomials.\n",i,mm);
       }
 
@@ -58,10 +59,10 @@ void monomials_broadcast ( int myid, int n )
 
       for(j=1; j<=mm; j++)    /* broadcast j-th term of i-th polynomial */
       {
-         if(myid == 0) fail = syscon_retrieve_term(i,j,n,exp,cff); 
+         if(myid == 0) fail = syscon_retrieve_standard_term(i,j,n,exp,cff); 
          MPI_Bcast(cff,2,MPI_DOUBLE,0,MPI_COMM_WORLD); 
          MPI_Bcast(exp,n,MPI_INT,0,MPI_COMM_WORLD); 
-         if(myid != 0) fail = syscon_add_term(i,n,exp,cff);
+         if(myid != 0) fail = syscon_add_standard_term(i,n,exp,cff);
       }
    }
 
@@ -79,14 +80,15 @@ int start_system_broadcast ( int myid, int n, int *nbsols )
       fail = copy_start_solutions_to_container();
    }
    else
-      fail = syscon_initialize_number(n);  /* initialize system container */
+      /* initialize system container */
+      fail = syscon_initialize_number_of_standard_polynomials(n);
 
    monomials_broadcast(myid,n);            /* broadcast container */
 
    if(myid != 0)                           /* copy result of broadcast */
    {
       fail = copy_container_to_start_system();
-      fail = syscon_clear_system();        /* clear system container */
+      fail = syscon_clear_standard_system(); /* clear system container */
    }
    else
       fail = solcon_number_of_solutions(nbsols);
@@ -108,14 +110,15 @@ int start_system_broadcast_without_solutions ( int myid, int n, int *nbsols )
       printf("read the solution dimensions : %d\n",*nbsols);
    }
    else
-      fail = syscon_initialize_number(n);  /* initialize system container */
+      /* initialize system container */
+      fail = syscon_initialize_number_of_standard_polynomials(n);
 
    monomials_broadcast(myid,n);            /* broadcast container */
 
    if(myid != 0)                           /* copy result of broadcast */
    {
       fail = copy_container_to_start_system();
-      fail = syscon_clear_system();        /* clear system container */
+      fail = syscon_clear_standard_system();  /* clear system container */
    }
 
    return fail;
@@ -133,7 +136,7 @@ int start_in_container_broadcast ( int myid, int n )
    else
    {
       if(v>0) printf("Node %d initializes container with n = %d.\n",myid,n);
-      fail = syscon_initialize_number(n);
+      fail = syscon_initialize_number_of_standard_polynomials(n);
    }
 
    monomials_broadcast(myid,n);
@@ -142,7 +145,7 @@ int start_in_container_broadcast ( int myid, int n )
    {
       if(v>0) printf("Node %d copies container to target.\n",myid);
       fail = copy_container_to_start_system();
-      fail = syscon_clear_system();
+      fail = syscon_clear_standard_system();
    }
 
    return fail;
@@ -160,7 +163,7 @@ int target_in_container_broadcast ( int myid, int n )
    else
    {
       if(v>0) printf("Node %d initializes container with n = %d.\n",myid,n);
-      fail = syscon_initialize_number(n);
+      fail = syscon_initialize_number_of_standard_polynomials(n);
    }
 
    monomials_broadcast(myid,n);
@@ -169,7 +172,7 @@ int target_in_container_broadcast ( int myid, int n )
    {
       if(v>0) printf("Node %d copies container to target.\n",myid);
       fail = copy_container_to_target_system();
-      fail = syscon_clear_system();
+      fail = syscon_clear_standard_system();
    }
 
    return fail;
@@ -210,14 +213,15 @@ int named_start_system_broadcast
       if(v>0) printf("the number of solution paths : %d\n",*nbsols);
    }
    else
-      fail = syscon_initialize_number(n);  /* initialize system container */
+      /* initialize system container */
+      fail = syscon_initialize_number_of_standard_polynomials(n);
 
    monomials_broadcast(myid,n);            /* broadcast container */
 
    if(myid != 0)                           /* copy result of broadcast */
    {
       fail = copy_container_to_start_system();
-      fail = syscon_clear_system();        /* clear system container */
+      fail = syscon_clear_standard_system(); /* clear system container */
    }
 
    return fail;
@@ -320,17 +324,17 @@ void print_monomials ( void )
    int *d,i,j,k,n,mm,fail;
    double c[2];
 
-   fail = syscon_number_of_polynomials(&n);
+   fail = syscon_number_of_standard_polynomials(&n);
 
    d = (int*)calloc(n,sizeof(int));
 
    for(i=1; i<=n; i++)
    {
-      fail = syscon_number_of_terms(i,&mm);
+      fail = syscon_number_of_standard_terms(i,&mm);
       printf("Polynomial %d has %d monomials :\n",i,mm);
       for(j=1; j<=mm; j++)
       {
-         fail = syscon_retrieve_term(i,j,n,d,c);
+         fail = syscon_retrieve_standard_term(i,j,n,d,c);
          printf(" %.15e  %.15e",c[0],c[1]);
          for(k=0; k<n; k++) printf(" %d",d[k]);
          printf("\n");

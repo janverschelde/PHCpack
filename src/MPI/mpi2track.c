@@ -182,7 +182,7 @@ int main ( int argc, char *argv[] )
       {
          fail = read_target_system_without_solutions();
          fail = copy_target_system_to_container();
-         fail = syscon_number_of_polynomials(&n);
+         fail = syscon_number_of_standard_polynomials(&n);
       }
       if(kind < 5)
       {
@@ -623,7 +623,7 @@ int copy_broadcast ( int myid )
    if(myid != 0)
    {
       fail = copy_container_to_target_system();
-      fail = syscon_clear_system();
+      fail = syscon_clear_standard_system();
    }
 
    return fail;

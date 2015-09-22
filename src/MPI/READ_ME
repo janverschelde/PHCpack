@@ -1,4 +1,4 @@
-Using MPI with PHCpack version 2.3.89
+Using MPI with PHCpack version 2.4.01
 
 This directory is entirely new in release 2.2 of PHCpack,
 we try to provide a parallel version of PHCpack, using MPI.
@@ -39,9 +39,6 @@ takes to trace paths.
 
 The parallel subsystem-by-subsystem solver was developed in
 collaboration in Yun Guan.
-
-Support for path tracking in double double and quad double precision
-was added in version 2.3.77.
 
 -------------------------------------------------------------------------------
 file name                        : short description

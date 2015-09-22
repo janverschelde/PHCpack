@@ -1,3 +1,6 @@
+Tue 22 Sep 2015 : name changes in syscon caused changed in mpi2track.c,
+  parallel_phcpack.c, parallel_cells.c, and parallel_subsystem.c.
+
 Mon 16 Jun 2014 : fixed compilation errors (due to renaming of functions)
   in parallel_phcpack.c and mpi2track.c.
 
