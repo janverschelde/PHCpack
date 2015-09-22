@@ -579,6 +579,33 @@ function use_c2phc ( job : integer32;
 --                 system in the container and fills the cells container with
 --                 the mixed cells.
 --
+-- the size limit of the string representation of a polynomial :
+-- 
+--   job   = 600 : given on entry in a[0] the index k of a polynomial in
+--                 the standard systems container, returns in b
+--                 the size limit of the k-th standard polynomial;
+--         = 601 : given on entry in a[0] the index k of a polynomial in
+--                 the dobldobl systems container, returns in b
+--                 the size limit of the k-th dobldobl polynomial;
+--         = 602 : given on entry in a[0] the index k of a polynomial in
+--                 the quaddobl systems container, returns in b
+--                 the size limit of the k-th quaddobl polynomial;
+--         = 603 : given on entry in a[0] the index k of a polynomial in
+--                 the multprec systems container, returns in b
+--                 the size limit of the k-th multprec polynomial;
+--         = 604 : given on entry in a[0] the index k of a polynomial in
+--                 the standard Laurent systems container, returns in b
+--                 the size limit of the k-th standard Laurent polynomial;
+--         = 605 : given on entry in a[0] the index k of a polynomial in
+--                 the dobldobl Laurent systems container, returns in b
+--                 the size limit of the k-th dobldobl Laurent polynomial;
+--         = 606 : given on entry in a[0] the index k of a polynomial in
+--                 the quaddobl Laurent systems container, returns in b
+--                 the size limit of the k-th quaddobl Laurent polynomial;
+--         = 607 : given on entry in a[0] the index k of a polynomial in
+--                 the multprec Laurent systems container, returns in b
+--                 the size limit of the k-th multprec Laurent polynomial.
+--
 -- the operations in the cells container :
 --
 --   job   =  80 : read mixed-cell configuration from file,

@@ -1091,6 +1091,143 @@ function use_syscon ( job : integer32;
       return 76;
   end Job76;
 
+  function Job80 return integer32 is -- size limit of k-th standard polynomial
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    p : constant Standard_Complex_Polynomials.Poly
+      := Standard_PolySys_Container.Retrieve_Poly(equ);
+    sz : constant integer32
+       := integer32(Standard_Complex_Poly_Strings.Size_Limit(p));
+
+  begin
+    Assign(sz,b);
+    return 0;
+  exception
+    when others => put_line("Exception raised in job 80 of use_syscon.");
+                   return 80;
+  end Job80;
+
+  function Job81 return integer32 is -- size limit of k-th dobldobl polynomial
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    p : constant DoblDobl_Complex_Polynomials.Poly
+      := DoblDobl_PolySys_Container.Retrieve_Poly(equ);
+    sz : constant integer32
+       := integer32(DoblDobl_Complex_Poly_Strings.Size_Limit(p));
+
+  begin
+    Assign(sz,b);
+    return 0;
+  exception
+    when others => put_line("Exception raised in job 81 of use_syscon.");
+                   return 81;
+  end Job81;
+
+  function Job82 return integer32 is -- size limit of k-th quaddobl polynomial
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    p : constant QuadDobl_Complex_Polynomials.Poly
+      := QuadDobl_PolySys_Container.Retrieve_Poly(equ);
+    sz : constant integer32
+       := integer32(QuadDobl_Complex_Poly_Strings.Size_Limit(p));
+
+  begin
+    Assign(sz,b);
+    return 0;
+  exception
+    when others => put_line("Exception raised in job 82 of use_syscon.");
+                   return 82;
+  end Job82;
+
+  function Job83 return integer32 is -- size limit of k-th multprec polynomial
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    p : constant Multprec_Complex_Polynomials.Poly
+      := Multprec_PolySys_Container.Retrieve_Poly(equ);
+    sz : constant integer32
+       := integer32(Multprec_Complex_Poly_Strings.Size_Limit(p));
+
+  begin
+    Assign(sz,b);
+    return 0;
+  exception
+    when others => put_line("Exception raised in job 83 of use_syscon.");
+                   return 83;
+  end Job83;
+
+  function Job84 return integer32 is -- size limit of k-th standard Laurential
+
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    p : constant Standard_Complex_Polynomials.Poly
+      := Standard_PolySys_Container.Retrieve_Poly(equ);
+    sz : constant integer32
+       := integer32(Standard_Complex_Poly_Strings.Size_Limit(p));
+
+  begin
+    Assign(sz,b);
+    return 0;
+  exception
+    when others => put_line("Exception raised in job 80 of use_syscon.");
+                   return 80;
+  end Job84;
+
+  function Job85 return integer32 is -- size limit of k-th dobldobl Laurential
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    p : constant DoblDobl_Complex_Laurentials.Poly
+      := DoblDobl_LaurSys_Container.Retrieve_Poly(equ);
+    sz : constant integer32
+       := integer32(DoblDobl_Complex_Laur_Strings.Size_Limit(p));
+
+  begin
+    Assign(sz,b);
+    return 0;
+  exception
+    when others => put_line("Exception raised in job 85 of use_syscon.");
+                   return 85;
+  end Job85;
+
+  function Job86 return integer32 is -- size limit of k-th quaddobl Laurential
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    p : constant QuadDobl_Complex_Laurentials.Poly
+      := QuadDobl_LaurSys_Container.Retrieve_Poly(equ);
+    sz : constant integer32
+       := integer32(QuadDobl_Complex_Laur_Strings.Size_Limit(p));
+
+  begin
+    Assign(sz,b);
+    return 0;
+  exception
+    when others => put_line("Exception raised in job 86 of use_syscon.");
+                   return 86;
+  end Job86;
+
+  function Job87 return integer32 is -- size limit of k-th multprec Laurential
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    equ : constant integer32 := integer32(v_a(v_a'first));
+    p : constant Multprec_Complex_Laurentials.Poly
+      := Multprec_LaurSys_Container.Retrieve_Poly(equ);
+    sz : constant integer32
+       := integer32(Multprec_Complex_Laur_Strings.Size_Limit(p));
+
+  begin
+    Assign(sz,b);
+    return 0;
+  exception
+    when others => put_line("Exception raised in job 87 of use_syscon.");
+                   return 87;
+  end Job87;
+
   function Job118 return integer32 is -- dd laur poly as str to container
 
     use Interfaces.C;
@@ -1725,6 +1862,15 @@ function use_syscon ( job : integer32;
       when 74 => return Job74; -- store standard Laurential in container
       when 76 => return Job76; -- store standard polynomial in container
       when 77 => return Job77; -- load standard Laurential from container
+     -- jobs to return the size limit of the string representations
+      when 80 => return Job80; -- size limit of k-th standard polynomial
+      when 81 => return Job81; -- size limit of k-th dobldobl polynomial
+      when 82 => return Job82; -- size limit of k-th quaddobl polynomial
+      when 83 => return Job83; -- size limit of k-th multprec polynomial
+      when 84 => return Job84; -- size limit of k-th standard Laurential
+      when 85 => return Job85; -- size limit of k-th dobldobl Laurential
+      when 86 => return Job86; -- size limit of k-th quaddobl Laurential
+      when 87 => return Job87; -- size limit of k-th multprec Laurential
      -- reading systems into the containers :
       when 540 => return Job540; -- read standard system from file
       when 541 => return Job541; -- read double double system from file

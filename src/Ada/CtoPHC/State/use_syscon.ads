@@ -243,6 +243,33 @@ function use_syscon ( job : integer32;
 --                        the k-th polynomial in the container,
 --                  this is the reverse of operation 74.   
 --
+-- the size limit of the string representation of a polynomial :
+-- 
+--   job    =  80 : given on entry in a[0] the index k of a polynomial in
+--                  the standard systems container, returns in b
+--                  the size limit of the k-th standard polynomial;
+--          =  81 : given on entry in a[0] the index k of a polynomial in
+--                  the dobldobl systems container, returns in b
+--                  the size limit of the k-th dobldobl polynomial;
+--          =  82 : given on entry in a[0] the index k of a polynomial in
+--                  the quaddobl systems container, returns in b
+--                  the size limit of the k-th quaddobl polynomial;
+--          =  83 : given on entry in a[0] the index k of a polynomial in
+--                  the multprec systems container, returns in b
+--                  the size limit of the k-th multprec polynomial;
+--          =  84 : given on entry in a[0] the index k of a polynomial in
+--                  the standard Laurent systems container, returns in b
+--                  the size limit of the k-th standard Laurent polynomial;
+--          =  85 : given on entry in a[0] the index k of a polynomial in
+--                  the dobldobl Laurent systems container, returns in b
+--                  the size limit of the k-th dobldobl Laurent polynomial;
+--          =  86 : given on entry in a[0] the index k of a polynomial in
+--                  the quaddobl Laurent systems container, returns in b
+--                  the size limit of the k-th quaddobl Laurent polynomial;
+--          =  87 : given on entry in a[0] the index k of a polynomial in
+--                  the multprec Laurent systems container, returns in b
+--                  the size limit of the k-th multprec Laurent polynomial.
+--
 -- the operations to drop variables from a polynomial :
 --  
 --   job    =  12 : replaces the system in the standard double container

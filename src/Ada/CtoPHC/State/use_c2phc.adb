@@ -2160,6 +2160,8 @@ function use_c2phc ( job : integer32;
       when 580..589 => return use_giftwrap(job-579,a,b,c);
      -- scaling systems and solutions :
       when 590..596 => return use_scaling(job-589,a,b,c);
+     -- size limits of string representations of polynomials
+      when 600..607 => return use_syscon(job-520,a,b,c);
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;
