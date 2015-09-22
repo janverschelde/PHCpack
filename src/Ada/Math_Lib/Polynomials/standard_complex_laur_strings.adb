@@ -557,29 +557,36 @@ package body Standard_Complex_Laur_Strings is
       continue := true;
     end Store_Term;
     procedure Store_Terms is new Visiting_Iterator(Store_Term);
- 
-    function Write_Terms ( k : natural32; accu : string ) return string is
+
+    function Write_Terms ( tfirst,tlast : natural32 ) return string is
+
+    -- DESCRIPTION :
+    --   Returns the string representation of all terms in the
+    --   range tfirst..tlast of terms.
+
     begin
-      if k > nb then
-        return accu;
-      elsif k = 1 then
-        declare
-          new_accu : constant string := accu & Write(terms(k),true);
-        begin
-          return Write_Terms(k+1,new_accu);
-        end;
+      if tfirst > tlast then
+        return "";
+      elsif tfirst = tlast then
+        if tfirst = 1
+         then return Write(terms(tfirst),true);  -- lead term
+         else return Write(terms(tfirst),false); -- trailing term
+        end if;
       else
         declare
-          new_accu : constant string := accu & Write(terms(k),false);
+          middle : constant natural32 := (tfirst+tlast)/2;
+          midterm : constant string := Write(terms(middle),false);
+          firsthalf : constant string := Write_Terms(tfirst,middle-1);
+          secondhalf : constant string := Write_Terms(middle+1,tlast);
         begin
-          return Write_Terms(k+1,new_accu);
+          return firsthalf & midterm & secondhalf;
         end;
       end if;
     end Write_Terms;
 
   begin
     Store_Terms(p);
-    return Write_Terms(1,"") & ";";
+    return Write_Terms(1,nb) & ";";
   end Write;
 
   function Write ( p : Laur_Sys ) return Array_of_Strings is
