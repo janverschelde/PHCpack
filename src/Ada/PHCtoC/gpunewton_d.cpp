@@ -26,7 +26,7 @@ extern "C" int gpunewton_d ( int mode, int verbose )
       cout << endl;
       cout << "Acceleration of Newton's method ..." << endl;
       cout << "Mode of execution : " << mode << endl;
-      fail = syscon_number_of_polynomials(&dim);
+      fail = syscon_number_of_standard_polynomials(&dim);
       cout << "number of polynomials : " << dim << endl;
       fail = solcon_number_of_solutions(&len);
       cout << "number of solutions : " << len << endl;

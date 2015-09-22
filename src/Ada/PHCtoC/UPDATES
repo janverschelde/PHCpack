@@ -1,3 +1,8 @@
+Tue 22 Sep 2015 : name changes in syscon caused updates in adenewton_d.cpp,
+  adeonepath_d.cpp, ademanypaths_d.cpp, gpunewton_d.cp, gpuonepath_d.cpp,
+  gpumanypaths_d.cpp; also modified adenewton_dd.cpp, adenewton_qd.cpp,
+  and ademanypaths_dd.cpp.
+
 Thu 3 Sep 2015 : used verbose option in gpu_newton_{d,dd,qd}.cpp.
 
 Wed 2 Sep 2015 : updated gpuonepath_qd.cpp for bug fix.

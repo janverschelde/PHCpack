@@ -143,9 +143,9 @@ int compute_mixed_volume( void )
 {
    int fail,mv,len,dim,r;
 
-   fail = syscon_read_system();
+   fail = syscon_read_standard_system();
    printf("\nThe system in the container : \n");
-   fail = syscon_write_system();
+   fail = syscon_write_standard_system();
    fail = mixed_volume(&mv);
    printf("\nThe mixed volume : %d\n",mv);
    fail = celcon_number_of_cells(&len);

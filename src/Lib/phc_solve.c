@@ -77,9 +77,9 @@ int input_output_on_files ( void )
 {
    int fail,rc,nbtasks;
 
-   fail = syscon_read_system();
+   fail = syscon_read_standard_system();
    printf("\nThe system in the container : \n");
-   fail = syscon_write_system();
+   fail = syscon_write_standard_system();
    printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
    fail = solve_system(&rc,nbtasks);
    printf("\nThe root count : %d\n",rc);
@@ -93,9 +93,9 @@ int Laurent_input_output_on_files ( void )
 {
    int fail,rc,nbtasks;
 
-   fail = syscon_read_Laurent_system();
+   fail = syscon_read_standard_Laurent_system();
    printf("\nThe system in the container : \n");
-   fail = syscon_write_Laurent_system();
+   fail = syscon_write_standard_Laurent_system();
    printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
    fail = solve_Laurent_system(&rc,0,nbtasks); /* not silent by default */
    printf("\nThe root count : %d\n",rc);
@@ -113,7 +113,7 @@ int interactive_input_output ( void )
    printf("\nGive the number of polynomials in the system : ");
    scanf("%d",&n);
 
-   fail = syscon_initialize_number(n);
+   fail = syscon_initialize_number_of_standard_polynomials(n);
    printf("\nReading %d polynomials, ",n);
    printf("terminate each with ; (semicolon)...\n");
    for(k=1; k<=n; k++)
@@ -124,10 +124,10 @@ int interactive_input_output ( void )
      /* printf("  p[%d] = ",k); 
         for(i=0; i<nc; i++) printf("%c",p[i]);
         printf("\n"); */
-      fail = syscon_store_polynomial(nc,n,k,p);
+      fail = syscon_store_standard_polynomial(nc,n,k,p);
    }
    printf("The system in the container : \n");
-   syscon_write_system();
+   syscon_write_standard_system();
    printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
    fail = solve_system(&rc,nbtasks);
    printf("\nThe root count : %d\n",rc);
@@ -158,7 +158,7 @@ int interactive_Laurent_input_output ( void )
    printf("\nGive the number of polynomials in the system : ");
    scanf("%d",&n);
 
-   fail = syscon_initialize_number_of_Laurentials(n);
+   fail = syscon_initialize_number_of_standard_Laurentials(n);
    printf("\nReading %d polynomials, ",n);
    printf("terminate each with ; (semicolon)...\n");
    for(k=1; k<=n; k++)
@@ -169,10 +169,10 @@ int interactive_Laurent_input_output ( void )
      /* printf("  p[%d] = ",k); 
         for(i=0; i<nc; i++) printf("%c",p[i]);
         printf("\n"); */
-      fail = syscon_store_Laurential(nc,n,k,p);
+      fail = syscon_store_standard_Laurential(nc,n,k,p);
    }
    printf("The system in the container : \n");
-   syscon_write_Laurent_system();
+   syscon_write_standard_Laurent_system();
    printf("\nGive the number of tasks : "); scanf("%d",&nbtasks);
    fail = solve_Laurent_system(&rc,0,nbtasks); /* not silent by default */
    printf("\nThe root count : %d\n",rc);

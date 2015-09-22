@@ -25,7 +25,7 @@ extern "C" int adenewton_d ( int verbose )
 
       cout << endl;
       cout << "Newton's method ..." << endl;
-      fail = syscon_number_of_polynomials(&dim);
+      fail = syscon_number_of_standard_polynomials(&dim);
       cout << "number of polynomials : " << dim << endl;
       fail = solcon_number_of_solutions(&len);
       cout << "number of solutions : " << len << endl;

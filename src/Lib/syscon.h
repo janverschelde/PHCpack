@@ -17,14 +17,14 @@ extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
 extern void adafinal( void );
 #endif
 
-int syscon_read_system ( void );
+int syscon_read_standard_system ( void );
 /* 
  * DESCRIPTION :
  *   Prompts the user for a file, reads system from file, and puts the
  *   system in the container for systems with standard coefficients;
  *   returns 0 if okay, otherwise fail value. */
 
-int syscon_read_Laurent_system ( void );
+int syscon_read_standard_Laurent_system ( void );
 /* 
  * DESCRIPTION :
  *   Prompts the user for a file, reads Laurent system from file, and puts
@@ -90,13 +90,13 @@ int syscon_random_system ( int n, int m, int d, int c );
  *   c = 1 : all coefficients are equal to one;
  *   c = 2 : coefficients are random floats, uniform in [-1,+1]. */
 
-int syscon_write_system ( void );
+int syscon_write_standard_system ( void );
 /*
  * DESCRIPTION :
  *   Writes the system in the container of systems 
  *   with standard coefficients to screen. */
 
-int syscon_write_Laurent_system ( void );
+int syscon_write_standard_Laurent_system ( void );
 /*
  * DESCRIPTION :
  *   Writes the Laurent system in the container to screen. */
@@ -137,12 +137,12 @@ int syscon_write_multprec_Laurent_system ( void );
  *   Writes the system in the container of Laurent systems 
  *   with multiprecision coefficients to screen. */
 
-int syscon_number_of_polynomials ( int *length );
+int syscon_number_of_standard_polynomials ( int *length );
 /*
  * DESCRIPTION :
  *   Returns in length the number of polynomials in the container. */
 
-int syscon_number_of_Laurentials ( int *length );
+int syscon_number_of_standard_Laurentials ( int *length );
 /*
  * DESCRIPTION :
  *   Returns in length the number of Laurent polynomials in the container. */
@@ -183,13 +183,13 @@ int syscon_number_of_multprec_Laurentials ( int *length );
  *   Returns in length the number of polynomials in the container
  *   for Laurent systems with multiprecision coefficients. */
 
-int syscon_initialize_number ( int length );
+int syscon_initialize_number_of_standard_polynomials ( int length );
 /*
  * DESCRIPTION :
  *   Initializes the container with length, the number of polynomials. 
  *   Also initializes the symbol table. */
 
-int syscon_initialize_number_of_Laurentials ( int length );
+int syscon_initialize_number_of_standard_Laurentials ( int length );
 /*
  * DESCRIPTION :
  *   Initializes the container with length, the number of Laurent polynomials. 
@@ -235,7 +235,7 @@ int syscon_initialize_number_of_multprec_Laurentials ( int length );
  *   Initializes the container with length, the number of polynomials. 
  *   Also initializes the symbol table. */
 
-int syscon_degree_of_polynomial ( int k, int *d );
+int syscon_degree_of_standard_polynomial ( int k, int *d );
 /*
  * DESCRIPTION :
  *   Returns in d the degree of the k-th polynomial stored in
@@ -259,7 +259,7 @@ int syscon_degree_of_multprec_polynomial ( int k, int *d );
  *   Returns in d the degree of the k-th polynomial stored in
  *   the multiprecision polynomial systems container. */
 
-int syscon_store_polynomial ( int nc, int n, int k, char *p );
+int syscon_store_standard_polynomial ( int nc, int n, int k, char *p );
 /*
  * DESCRIPTION :
  *   Defines the k-th polynomial in the systems container with
@@ -333,7 +333,7 @@ int syscon_store_multprec_polynomial
  *   The systems container must be initialized with the number of
  *   polynomials and this number must be larger than or equal to k. */
 
-int syscon_load_polynomial ( int k, int *nc, char *p );
+int syscon_load_standard_polynomial ( int k, int *nc, char *p );
 /*
  * DESCRIPTION :
  *   Returns the k-th polynomial in the systems container 
@@ -361,7 +361,7 @@ int syscon_load_multprec_polynomial ( int k, int *nc, char *p );
  *   with multiprecision complex coefficients in the string p,
  *   where nc equals the number of characters in the string p. */
 
-int syscon_store_Laurential ( int nc, int n, int k, char *p );
+int syscon_store_standard_Laurential ( int nc, int n, int k, char *p );
 /*
  * DESCRIPTION :
  *   Defines the k-th Laurent polynomial in the systems container 
@@ -478,13 +478,13 @@ int syscon_create_Jacobian_evaluator ( void );
  *   Creates an evaluator for the Jacobian matrix 
  *   of the system in the container. */
 
-int syscon_number_of_terms ( int i, int *nt );
+int syscon_number_of_standard_terms ( int i, int *nt );
 /*
  * DESCRIPTION :
  *   Returns in nt the number of terms in the i-th polynomial
  *   with complex standard double coefficients. */
 
-int syscon_number_of_Laurent_terms ( int i, int *nt );
+int syscon_number_of_standard_Laurent_terms ( int i, int *nt );
 /*
  * DESCRIPTION :
  *   Returns in nt the number of terms in the i-th Laurent polynomial
@@ -522,7 +522,7 @@ int syscon_number_of_multprec_terms ( int i, int *nt );
  *   Returns in nt the number of terms in the i-th polynomial
  *   in the constainer for systems with multiprecision coefficients. */
 
-int syscon_retrieve_term ( int i, int j, int n, int *exp, double *c );
+int syscon_retrieve_standard_term ( int i, int j, int n, int *exp, double *c );
 /*
  * DESCRIPTION :
  *   Retrieves the j-th term of the i-th polynomial in the system;
@@ -535,8 +535,7 @@ int syscon_retrieve_term ( int i, int j, int n, int *exp, double *c );
  *   exp      exponents of the variables, of dimension n;
  *   c        real and imaginary part of the coefficient. */
 
-int syscon_retrieve_dobldobl_term
- ( int i, int j, int n, int *exp, double *c );
+int syscon_retrieve_dobldobl_term ( int i, int j, int n, int *exp, double *c );
 /*
  * DESCRIPTION :
  *   Retrieves the j-th term of the i-th polynomial in the system
@@ -595,7 +594,7 @@ int syscon_retrieve_quaddobl_Laurent_term
  *   exp      exponents of the variables, of dimension n;
  *   c        real and imaginary part of the coefficient. */
 
-int syscon_add_term ( int i, int n, int *exp, double *c );
+int syscon_add_standard_term ( int i, int n, int *exp, double *c );
 /*
  * DESCRIPTION :
  *   Adds to the i-th polynomial the term with coefficients in c
@@ -664,12 +663,12 @@ int syscon_total_degree ( int *d );
  * DESCRIPTION :
  *   Returns in d the total degree of the system in the container. */
 
-int syscon_clear_system ( void );
+int syscon_clear_standard_system ( void );
 /*
  * DESCRIPTION :
  *   Clears the content of the systems container. */
 
-int syscon_clear_Laurent_system ( void );
+int syscon_clear_standard_Laurent_system ( void );
 /*
  * DESCRIPTION :
  *   Clears the content of the Laurent systems container,

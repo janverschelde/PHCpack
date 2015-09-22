@@ -1273,7 +1273,7 @@ static PyObject *py2c_syscon_read_standard_system
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = syscon_read_system();
+   fail = syscon_read_standard_system();
               
    return Py_BuildValue("i",fail);
 }
@@ -1285,7 +1285,7 @@ static PyObject *py2c_syscon_read_standard_Laurent_system
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = syscon_read_Laurent_system();
+   fail = syscon_read_standard_Laurent_system();
               
    return Py_BuildValue("i",fail);
 }
@@ -1380,7 +1380,7 @@ static PyObject *py2c_syscon_write_standard_system
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = syscon_write_system();
+   fail = syscon_write_standard_system();
               
    return Py_BuildValue("i",fail);
 }
@@ -1392,7 +1392,7 @@ static PyObject *py2c_syscon_write_standard_Laurent_system
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = syscon_write_Laurent_system();
+   fail = syscon_write_standard_Laurent_system();
               
    return Py_BuildValue("i",fail);
 }
@@ -1476,7 +1476,7 @@ static PyObject *py2c_syscon_clear_standard_system
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = syscon_clear_system();
+   fail = syscon_clear_standard_system();
               
    return Py_BuildValue("i",fail);
 }
@@ -1488,7 +1488,7 @@ static PyObject *py2c_syscon_clear_standard_Laurent_system
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = syscon_clear_Laurent_system();
+   fail = syscon_clear_standard_Laurent_system();
               
    return Py_BuildValue("i",fail);
 }
@@ -1637,7 +1637,7 @@ static PyObject *py2c_syscon_number_of_standard_polynomials
 
    initialize();
    if (!PyArg_ParseTuple(args,"")) return NULL;
-   fail = syscon_number_of_polynomials(&number);
+   fail = syscon_number_of_standard_polynomials(&number);
 
    return Py_BuildValue("i",number);
 }
@@ -1687,7 +1687,7 @@ static PyObject *py2c_syscon_number_of_standard_Laurentials
    initialize();
    /* if (!PyArg_ParseTuple(args,"i",&number)) return NULL; */
    if (!PyArg_ParseTuple(args,"")) return NULL;
-   fail = syscon_number_of_Laurentials(&number);
+   fail = syscon_number_of_standard_Laurentials(&number);
 
    /* a = Py_BuildValue("{i:i}",fail,number);	 
    return a; */
@@ -1738,7 +1738,7 @@ static PyObject *py2c_syscon_initialize_number_of_standard_polynomials
 
    if(!PyArg_ParseTuple(args,"i",&dim)) return NULL;
    initialize();
-   fail = syscon_initialize_number(dim);
+   fail = syscon_initialize_number_of_standard_polynomials(dim);
                  
    return Py_BuildValue("i",fail);
 }
@@ -1786,7 +1786,7 @@ static PyObject *py2c_syscon_initialize_number_of_standard_Laurentials
 
    if(!PyArg_ParseTuple(args,"i",&dim)) return NULL;
    initialize();
-   fail = syscon_initialize_number_of_Laurentials(dim);
+   fail = syscon_initialize_number_of_standard_Laurentials(dim);
                  
    return Py_BuildValue("i",fail);
 }
@@ -1834,7 +1834,7 @@ static PyObject *py2c_syscon_degree_of_standard_polynomial
 
    if(!PyArg_ParseTuple(args,"i",&equ)) return NULL;
    initialize();
-   fail = syscon_degree_of_polynomial(equ,&deg);
+   fail = syscon_degree_of_standard_polynomial(equ,&deg);
                  
    return Py_BuildValue("i",deg);
 }
@@ -1882,7 +1882,7 @@ static PyObject *py2c_syscon_number_of_terms ( PyObject *self, PyObject *args )
    initialize();
    /* if (!PyArg_ParseTuple(args,"ii",&i,&number)) return NULL; */
    if (!PyArg_ParseTuple(args,"i",&i)) return NULL;
-   fail = syscon_number_of_terms(i,&number);
+   fail = syscon_number_of_standard_terms(i,&number);
 
    return Py_BuildValue("i",number);
 }
@@ -1895,7 +1895,7 @@ static PyObject *py2c_syscon_number_of_Laurent_terms
    initialize();
    /* if (!PyArg_ParseTuple(args,"ii",&i,&number)) return NULL; */
    if (!PyArg_ParseTuple(args,"i",&i)) return NULL;
-   fail = syscon_number_of_Laurent_terms(i,&number);
+   fail = syscon_number_of_standard_Laurent_terms(i,&number);
 
    return Py_BuildValue("i",number);
 }
@@ -1913,7 +1913,7 @@ static PyObject *py2c_syscon_retrieve_term ( PyObject *self, PyObject *args )
    exp = (int *)malloc(n * sizeof(int));
    c   = (double *)malloc(2*sizeof(double));
 
-   fail = syscon_retrieve_term(i,j,n,exp,c);
+   fail = syscon_retrieve_standard_term(i,j,n,exp,c);
      
    a = Py_BuildValue("i", fail);	 
    
@@ -1931,7 +1931,7 @@ static PyObject *py2c_syscon_store_standard_polynomial
                  
    initialize();
    if(!PyArg_ParseTuple(args,"iiis",&nc,&n,&k,&p)) return NULL;
-   fail = syscon_store_polynomial(nc,n,k,p);
+   fail = syscon_store_standard_polynomial(nc,n,k,p);
 
    if(fail != 0) printf("Failed to store %s.\n",p);
 
@@ -1991,7 +1991,7 @@ static PyObject *py2c_syscon_load_standard_polynomial
                  
    initialize();
    if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
-   fail = syscon_load_polynomial(k,&nc,p);
+   fail = syscon_load_standard_polynomial(k,&nc,p);
                  
    return Py_BuildValue("s",p);
 }
@@ -2043,7 +2043,7 @@ static PyObject *py2c_syscon_store_standard_Laurential
                  
    initialize();
    if(!PyArg_ParseTuple(args,"iiis",&nc,&n,&k,&p)) return NULL;
-   fail = syscon_store_Laurential(nc,n,k,p);
+   fail = syscon_store_standard_Laurential(nc,n,k,p);
                  
    return Py_BuildValue("i",fail);
 }
@@ -3462,7 +3462,7 @@ static PyObject *py2c_scale_standard_system ( PyObject *self, PyObject *args )
 
    initialize();
    if(!PyArg_ParseTuple(args,"i",&mode)) return NULL;
-   fail = syscon_number_of_polynomials(&dim);
+   fail = syscon_number_of_standard_polynomials(&dim);
    if((fail == 0) && (dim > 0))
    {
       double cff[4*dim+2];  

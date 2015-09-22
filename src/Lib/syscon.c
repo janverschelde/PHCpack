@@ -4,7 +4,7 @@
 /* #include<stdio.h> only used for extra print statements */
 #include "syscon.h"
 
-int syscon_read_system ( void )
+int syscon_read_standard_system ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -12,7 +12,7 @@ int syscon_read_system ( void )
    return fail;
 }
 
-int syscon_read_Laurent_system ( void )
+int syscon_read_standard_Laurent_system ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -79,7 +79,7 @@ int syscon_random_system ( int n, int m, int d, int c )
    return fail;
 }
 
-int syscon_write_system ( void )
+int syscon_write_standard_system ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -87,7 +87,7 @@ int syscon_write_system ( void )
    return fail;
 }
 
-int syscon_write_Laurent_system ( void )
+int syscon_write_standard_Laurent_system ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -143,7 +143,7 @@ int syscon_write_multprec_Laurent_system ( void )
    return fail;
 }
 
-int syscon_number_of_polynomials ( int *length )
+int syscon_number_of_standard_polynomials ( int *length )
 {
    int *b,fail;
    double *c;
@@ -151,7 +151,7 @@ int syscon_number_of_polynomials ( int *length )
    return fail;
 }
 
-int syscon_number_of_Laurentials ( int *length )
+int syscon_number_of_standard_Laurentials ( int *length )
 {
    int *b,fail;
    double *c;
@@ -207,7 +207,7 @@ int syscon_number_of_multprec_Laurentials ( int *length )
    return fail;
 }
 
-int syscon_initialize_number ( int length )
+int syscon_initialize_number_of_standard_polynomials ( int length )
 {
    int *b,fail;
    double *c;
@@ -215,7 +215,7 @@ int syscon_initialize_number ( int length )
    return fail;
 }
 
-int syscon_initialize_number_of_Laurentials ( int length )
+int syscon_initialize_number_of_standard_Laurentials ( int length )
 {
    int *b,fail;
    double *c;
@@ -271,7 +271,7 @@ int syscon_initialize_number_of_multprec_Laurentials ( int length )
    return fail;
 }
 
-int syscon_degree_of_polynomial ( int k, int *d )
+int syscon_degree_of_standard_polynomial ( int k, int *d )
 {
    int fail;
    double *c;
@@ -303,7 +303,7 @@ int syscon_degree_of_multprec_polynomial ( int k, int *d )
    return fail;
 }
 
-int syscon_store_polynomial ( int nc, int n, int k, char *p )
+int syscon_store_standard_polynomial ( int nc, int n, int k, char *p )
 {
    int a[3],b[nc],i,fail;
    double *c;
@@ -367,7 +367,7 @@ int syscon_store_multprec_polynomial
    return fail;
 }
 
-int syscon_load_polynomial ( int k, int *nc, char *p )
+int syscon_load_standard_polynomial ( int k, int *nc, char *p )
 {
    int fail,i;
    int b[51200];
@@ -431,7 +431,7 @@ int syscon_load_multprec_polynomial ( int k, int *nc, char *p )
    return fail;
 }
 
-int syscon_store_Laurential ( int nc, int n, int k, char *p )
+int syscon_store_standard_Laurential ( int nc, int n, int k, char *p )
 {
    int a[3],b[nc],i,fail;
    double *c;
@@ -573,7 +573,7 @@ int syscon_create_Jacobian_evaluator ( void )
    return fail;
 }
 
-int syscon_number_of_terms ( int i, int *nt )
+int syscon_number_of_standard_terms ( int i, int *nt )
 {
    int a[2],*b,fail;
    double *c;
@@ -583,7 +583,7 @@ int syscon_number_of_terms ( int i, int *nt )
    return fail;
 }
 
-int syscon_number_of_Laurent_terms ( int i, int *nt )
+int syscon_number_of_standard_Laurent_terms ( int i, int *nt )
 {
    int a[2],*b,fail;
    double *c;
@@ -643,7 +643,7 @@ int syscon_number_of_multprec_terms ( int i, int *nt )
    return fail;
 }
 
-int syscon_retrieve_term ( int i, int j, int n, int *exp, double *c )
+int syscon_retrieve_standard_term ( int i, int j, int n, int *exp, double *c )
 {
    int a[3],fail;
    a[0] = n;
@@ -653,8 +653,7 @@ int syscon_retrieve_term ( int i, int j, int n, int *exp, double *c )
    return fail;
 }
 
-int syscon_retrieve_dobldobl_term
- ( int i, int j, int n, int *exp, double *c )
+int syscon_retrieve_dobldobl_term ( int i, int j, int n, int *exp, double *c )
 {
    int a[3],fail;
    a[0] = n;
@@ -697,7 +696,7 @@ int syscon_retrieve_quaddobl_Laurent_term
    return fail;
 }
 
-int syscon_add_term ( int i, int n, int *exp, double *c )
+int syscon_add_standard_term ( int i, int n, int *exp, double *c )
 {
    int a[2],fail;
    a[0] = n;
@@ -750,7 +749,7 @@ int syscon_total_degree ( int *d )
    return fail;
 }
 
-int syscon_clear_system ( void )
+int syscon_clear_standard_system ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -758,7 +757,7 @@ int syscon_clear_system ( void )
    return fail;
 }
 
-int syscon_clear_Laurent_system ( void )
+int syscon_clear_standard_Laurent_system ( void )
 {
    int *a,*b,fail;
    double *c;

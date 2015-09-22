@@ -63,7 +63,7 @@ void test_newton ( void )
    fail = read_standard_start_system();
    fail = copy_start_system_to_container();
    fail = copy_start_solutions_to_container();
-   fail = syscon_number_of_polynomials(&dim);
+   fail = syscon_number_of_standard_polynomials(&dim);
    printf("The system container has %d polynomials.\n",dim);
    fail = solcon_number_of_solutions(&len);
    printf("The solution container has size %d.\n",len);

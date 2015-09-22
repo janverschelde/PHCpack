@@ -63,8 +63,8 @@ void standard_test ( void )
    int fail,max,nit;
    const double eps = 1.0e-12;
 
-   fail = syscon_read_system();
-   fail = syscon_write_system();
+   fail = syscon_read_standard_system();
+   fail = syscon_write_standard_system();
    
    printf("\nGive the maximum number of iterations : ");
    scanf("%d",&max);

@@ -73,12 +73,12 @@ int standard_scaler ( void )
 {
    int fail,dim,i;
 
-   fail = syscon_read_system();
+   fail = syscon_read_standard_system();
    if(fail == 0)
    {
       printf("\nThe system in the container : \n");
-      fail = syscon_write_system();
-      fail = syscon_number_of_polynomials(&dim);
+      fail = syscon_write_standard_system();
+      fail = syscon_number_of_standard_polynomials(&dim);
       if(fail == 0)
       {
          double c[4*dim+2];
@@ -88,7 +88,7 @@ int standard_scaler ( void )
          for(i=0; i<4*dim; i=i+2)
             printf("%2d : %.15e  %.15e\n",i/2,c[i],c[i+1]);
          printf("\nThe system in the container : \n");
-         fail = syscon_write_system();
+         fail = syscon_write_standard_system();
 
       }
    }

@@ -34,7 +34,7 @@ extern "C" int gpuonepath_d
       cout << "gamma = " << setprecision(16)
            << regamma << " + i* " << imgamma << endl;
       cout << "Mode of execution : " << mode << endl;
-      fail = syscon_number_of_polynomials(&dim);
+      fail = syscon_number_of_standard_polynomials(&dim);
       cout << "number of polynomials : " << dim << endl;
       fail = solcon_number_of_solutions(&len);
       cout << "number of solutions : " << len << endl;

@@ -30,7 +30,7 @@ void ada_read_sys ( int verbose, PolySys& sys )
    if(verbose > 0)
    {
       std::cout << "the system is .." << std::endl;
-      fail = syscon_write_system();
+      fail = syscon_write_standard_system();
       std::cout << "the number of symbols : " << nbsym << std::endl;
    }
    int s_dim = 80*nbsym;
@@ -46,7 +46,7 @@ void ada_read_sys ( int verbose, PolySys& sys )
    int d[dim];
 
    int n_eq = 0;
-   fail = syscon_number_of_polynomials(&n_eq);
+   fail = syscon_number_of_standard_polynomials(&n_eq);
 
    sys.n_eq = n_eq;
    sys.dim  = dim;
@@ -58,14 +58,14 @@ void ada_read_sys ( int verbose, PolySys& sys )
    for(int i=1; i<n_eq+1; i++)
    {
       int nt;
-      fail = syscon_number_of_terms(i,&nt);
+      fail = syscon_number_of_standard_terms(i,&nt);
       if(verbose > 0)
          std::cout << " #terms in polynomial " << i << " : " << nt << std::endl;
       tmp_eq->n_mon = nt;
       tmp_eq->dim = dim;
       for(int j=1; j<=nt; j++)
       {
-         fail = syscon_retrieve_term(i,j,dim,d,c);
+         fail = syscon_retrieve_standard_term(i,j,dim,d,c);
          if(verbose > 0)
          {
             std::cout << c[0] << " " << c[1] << std::endl;

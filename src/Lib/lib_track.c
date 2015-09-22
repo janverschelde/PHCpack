@@ -326,7 +326,7 @@ int run_path_trackers ( int kind, int monitor )
    else
    {
       fail = copy_target_system_to_container();
-      fail = syscon_number_of_polynomials(&dim);
+      fail = syscon_number_of_standard_polynomials(&dim);
       fail = syscon_total_degree(&len);
    }
 
@@ -544,14 +544,14 @@ int witness_set_for_hypersurface ( void )
    int fail,k,n;
    char outfile[80];
 
-   fail = syscon_read_system();
+   fail = syscon_read_standard_system();
 
    printf("\nReading the name of the output file...");
    printf("\nGive a string of characters : "); scanf("%s",outfile);
 
    printf("\nThe system in the container :\n");
-   fail = syscon_write_system();
-   fail = syscon_number_of_polynomials(&n);
+   fail = syscon_write_standard_system();
+   fail = syscon_number_of_standard_polynomials(&n);
    printf("Number of polynomials in container : %d\n",n);
    printf("Give the number of the equation : ");
    scanf("%d",&k);

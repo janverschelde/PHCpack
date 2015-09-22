@@ -63,9 +63,9 @@ int compute_root_count ( int *r )
 {
    int fail,inout;
 
-   fail = syscon_read_system();
+   fail = syscon_read_standard_system();
    printf("\nThe system in the container : \n");
-   fail = syscon_write_system();
+   fail = syscon_write_standard_system();
    fail = supporting_set_structure();
    printf("\nA supporting set structure : \n");
    fail = write_set_structure();
@@ -100,9 +100,9 @@ int compute_m_homogeneous_Bezout_number ( int *b )
    char partition[size];
    char answer;
 
-   fail = syscon_read_system();
+   fail = syscon_read_standard_system();
    printf("\nThe system in the container : \n");
-   fail = syscon_write_system();
+   fail = syscon_write_standard_system();
 
    fail = m_homogeneous_Bezout_number(&mbz,&ncp,partition);
    printf("\nA m-homogeneous Bezout number : %d\n",mbz);
@@ -128,7 +128,7 @@ int compute_m_homogeneous_Bezout_number ( int *b )
    printf("\nConstructing a m-homogeneous start system ...\n");
    fail = m_homogeneous_start_system(ncp,partition);
    printf("An m-homogeneous linear-product start system :\n");
-   fail = syscon_write_system();
+   fail = syscon_write_standard_system();
 
    fail = solve_linear_product_system();
    printf("\nThe solutions : \n");
@@ -150,7 +150,7 @@ int construct_start_system ( int r )
 
    fail = random_linear_product_system();
    printf("\nA random linear-product system :\n");
-   fail = syscon_write_system();
+   fail = syscon_write_standard_system();
    fail = solve_linear_product_system();
    printf("\nThe solutions : \n");
    fail = solcon_write_solutions();

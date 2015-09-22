@@ -116,8 +116,8 @@ void test_standard_Newton_step ( void )
    int fail,dim,len;
 
    printf("\nRunning Newton step with standard arithmetic ...\n");
-   fail = syscon_read_system();
-   fail = syscon_number_of_polynomials(&dim);
+   fail = syscon_read_standard_system();
+   fail = syscon_number_of_standard_polynomials(&dim);
    printf("The system container has %d polynomials.\n",dim);
    fail = solcon_read_solutions();
    fail = solcon_number_of_solutions(&len);
@@ -134,8 +134,8 @@ void test_standard_Newton_Laurent_step ( void )
    int fail,dim,len;
 
    printf("\nRunning Newton step with standard arithmetic ...\n");
-   fail = syscon_read_Laurent_system();
-   fail = syscon_number_of_Laurentials(&dim);
+   fail = syscon_read_standard_Laurent_system();
+   fail = syscon_number_of_standard_Laurentials(&dim);
    printf("The system container has %d Laurent polynomials.\n",dim);
    fail = solcon_read_solutions();
    fail = solcon_number_of_solutions(&len);
@@ -267,7 +267,7 @@ void test_deflate ( void )
    fail = read_standard_start_system();
    fail = copy_start_system_to_container();
    fail = copy_start_solutions_to_container();
-   fail = syscon_number_of_polynomials(&dim);
+   fail = syscon_number_of_standard_polynomials(&dim);
    printf("The system container has %d polynomials.\n",dim);
    fail = solcon_number_of_solutions(&len);
    printf("The solution container has size %d.\n",len);

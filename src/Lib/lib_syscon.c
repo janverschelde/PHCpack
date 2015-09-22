@@ -84,13 +84,13 @@ void test_retrievals ( int n, LIST *p[] )
 
    for(i=1; i<=n; i++)
    {
-      fail = syscon_number_of_terms(i,&nt);
+      fail = syscon_number_of_standard_terms(i,&nt);
       printf("  #terms in polynomial %d : %d\n", i, nt);
 
       p[i-1] = NULL;
       for(j=1; j<=nt; j++)
       {
-         fail = syscon_retrieve_term(i,j,n,d,c);
+         fail = syscon_retrieve_standard_term(i,j,n,d,c);
          printf(" %.15f  %.15f", c[0], c[1]);
          for (k=0; k<n; k++) printf(" %d", d[k]);
          printf("\n");
@@ -105,17 +105,17 @@ void test_additions ( int n, LIST *p[] )
    double *c;
    LIST *l;
 
-   fail = syscon_initialize_number(n);
+   fail = syscon_initialize_number_of_standard_polynomials(n);
    for(i=0; i<n; i++)
       for(l=p[i]; l!=NULL; l=l->next)
       {
          double cf[2];
          cf[0] = l->rc;
          cf[1] = l->ic;
-         fail = syscon_add_term(i+1,n,l->exp,cf);
+         fail = syscon_add_standard_term(i+1,n,l->exp,cf);
       }
    printf("\nThe reconstructed system :\n");
-   fail = syscon_write_system();
+   fail = syscon_write_standard_system();
 }
 
 LIST *push ( LIST *l, int n, double *c, int *e )
@@ -126,8 +126,8 @@ LIST *push ( LIST *l, int n, double *c, int *e )
    nl->rc = c[0];
    nl->ic = c[1];
    nl->exp = (int*)calloc(n,sizeof(int));
-   for (i=0; i<n; i++)
-     nl->exp[i] = e[i];
+   for(i=0; i<n; i++)
+      nl->exp[i] = e[i];
 
    nl->next = l;
 
@@ -142,7 +142,7 @@ void write_monomial_list ( LIST *l, int n )
    for(p=l; p!= NULL; p=p->next)
    {
       printf(" %.15f  %.15f", p->rc, p->ic);
-      for (k=0; k<n; k++) printf(" %d", p->exp[k]);
+      for(k=0; k<n; k++) printf(" %d", p->exp[k]);
       printf("\n");
    }
 }
@@ -171,9 +171,9 @@ void test_standard_container ( void )
    int n,fail,*d;
    double *c;
 
-   fail = syscon_read_system();
-   fail = syscon_write_system();
-   fail = syscon_number_of_polynomials(&n);
+   fail = syscon_read_standard_system();
+   fail = syscon_write_standard_system();
+   fail = syscon_number_of_standard_polynomials(&n);
 
    test_symbol_table();
 
@@ -184,7 +184,7 @@ void test_standard_container ( void )
 
       test_retrievals(n,p);
 
-      fail = syscon_clear_system();
+      fail = syscon_clear_standard_system();
 
       for(i=0; i<n; i++)
       {
@@ -305,5 +305,5 @@ void show_random_system ( void )
    printf("-> enter the coefficient type : "); scanf("%d", &c);
 
    syscon_random_system(n,m,d,c);
-   syscon_write_system();
+   syscon_write_standard_system();
 }
