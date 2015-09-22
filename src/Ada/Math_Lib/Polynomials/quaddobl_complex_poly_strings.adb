@@ -148,6 +148,22 @@ package body QuadDobl_Complex_Poly_Strings is
     return res;
   end Parse;
 
+  function Size_Limit ( p : Poly ) return natural32 is
+
+    nbtrm : constant natural64 := natural64(Number_of_Terms(p));
+    nbvar : constant natural64 := natural64(Number_of_Unknowns(p));
+    symsz : constant natural64 := 5;
+    cffsz : constant natural64 := 160;
+    bound : constant natural64 := 2**32 - 1;
+    res : constant natural64 := nbtrm*nbvar*symsz*cffsz;
+
+  begin
+    if res > bound
+     then return natural32(bound);
+     else return natural32(res);
+    end if;
+  end Size_Limit;
+
   function Write ( p : Poly ) return string is
 
     q : Multprec_Complex_Polynomials.Poly

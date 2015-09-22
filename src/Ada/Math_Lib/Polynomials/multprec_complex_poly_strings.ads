@@ -50,6 +50,15 @@ package Multprec_Complex_Poly_Strings is
   --   Parses the strings in s into polynomials in m variables,
   --   using working precision set at size to evaluate fractions.
 
+  function Size_Limit ( p : Poly ) return natural32;
+
+  -- DESCRIPTION :
+  --   Estimates the size of the string representation of the polynomial,
+  --   providing a likely upper bound as needed for allocation in the
+  --   interface programs, multiplying the number of terms with the 
+  --   number of variables, the coefficient size and the symbol size.
+  --   The size is limited by 2**32 - 1, the largest positive integer.
+
   function Write ( p : Poly ) return string;
 
   -- DESCRIPTION :

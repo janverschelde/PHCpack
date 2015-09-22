@@ -1,5 +1,7 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;    use Standard_Complex_Polynomials_io;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
@@ -74,6 +76,8 @@ procedure ts_rwspol is
       s : constant string := Write(p);
     begin
       put_line("The string : "); put_line(s);
+      put("string size : "); put(natural32(s'last)); new_line;
+      put("size limit : "); put(Size_Limit(p)); new_line;
     end;
   end Standard_Test;
 
@@ -90,6 +94,8 @@ procedure ts_rwspol is
       s : constant string := Write(p);
     begin
       put_line("The string : "); put_line(s);
+      put("string size : "); put(natural32(s'last)); new_line;
+      put("size limit : "); put(Size_Limit(p)); new_line;
     end;
   end DoblDobl_Test;
 
@@ -106,6 +112,8 @@ procedure ts_rwspol is
       s : constant string := Write(p);
     begin
       put_line("The string : "); put_line(s);
+      put("string size : "); put(natural32(s'last)); new_line;
+      put("size limit : "); put(Size_Limit(p)); new_line;
     end;
   end QuadDobl_Test;
 
