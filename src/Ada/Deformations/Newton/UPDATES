@@ -1,3 +1,5 @@
+Wed 23 Sep 2015 : extended quaddobl_root_refiners with a reporting version.
+
 Fri 11 Sep 2015 : added reporting Newton to {dobldobl,quaddobl}_root_refiners.
 
 Fri 26 Jun 2015 : suppress 'exception raised in reporting deflate'
