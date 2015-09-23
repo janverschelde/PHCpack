@@ -1,3 +1,6 @@
+Wed 23 Sep 2015 : extended black_box_simplex_solvers with versions for
+  quad double precision arithmetic.
+
 Fri 11 Sep 2015 : edits in black_box_{binomial,simplex}_solvers.
 
 Wed 9 Sep 2015 : prepared black_box_simplex_solvers for extended precision.
