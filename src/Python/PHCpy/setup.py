@@ -17,7 +17,7 @@ setup(
     author_email = 'jan@math.uic.edu' ,
     description = 'a package for Polynomial Homotopy Continuation' ,
     url = 'http://www.math.uic.edu/~jan/download.html' ,
-    version = '0.2.9' ,
+    version = '0.3.0' ,
     packages = ['phcpy'] ,
     py_modules = ['phcpy/interface', 'phcpy/solver', 'phcpy/solutions', \
                   'phcpy/trackers', 'phcpy/sets', 'phcpy/maps', \

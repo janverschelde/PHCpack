@@ -1,4 +1,4 @@
-phcpy 0.2.9 offers a simple Python interface to PHCv2.4
+phcpy 0.2.9 offers a simple Python interface to PHCv2.4.01
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -43,6 +43,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.3.0 : 2015-09-24 : bug fix in passing string representations of polynomials
 0.2.9 : 2015-08-31 : interface to the path trackers accelerated by GPUs
 0.2.8 : 2015-07-31 : added scaling and better documentation for py2c
 0.2.7 : 2015-06-26 : faster retrieval of solutions, reproducible runs

@@ -104,6 +104,10 @@ References
    pages 71-76, 2014, available at
    <http://arxiv.org/abs/1310.0056>.
 
+8. J. Verschelde and X. Yu:
+   **Polynomial Homotopy Continuation on GPUs.**
+   *ACM Communications in Computer Algebra*, to appear.
+
 Acknowledgments
 ===============
 
