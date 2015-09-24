@@ -1,3 +1,6 @@
+Thu 24 Sep 2015 : changed the bound from 2**32 - 1 to 2**31 - 1 in the
+  files {standard,dobldobl,quaddobl,multprec}_complex_{laur,poly}_strings.adb.
+
 Tue 22 Sep 2015 : applied rewriting also to the Laurent polynomials in the
   packages {standard,multprec}_complex_laur_strings.adb.
   Added function Size_Limit to all *_{laur,poly}_strings packages,

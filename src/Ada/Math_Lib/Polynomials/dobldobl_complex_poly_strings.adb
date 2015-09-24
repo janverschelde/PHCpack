@@ -153,7 +153,7 @@ package body DoblDobl_Complex_Poly_Strings is
     nbvar : constant natural64 := natural64(Number_of_Unknowns(p));
     symsz : constant natural64 := 5;
     cffsz : constant natural64 := 80;
-    bound : constant natural64 := 2**32 - 1;
+    bound : constant natural64 := 2**31 - 1;
     res : constant natural64 := nbtrm*nbvar*symsz*cffsz;
 
   begin
