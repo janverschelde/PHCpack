@@ -27,6 +27,8 @@ with Black_Box_Binomial_Solvers;         use Black_Box_Binomial_Solvers;
 with Black_Box_Factorization;            use Black_Box_Factorization;
 with Black_Box_Root_Counters;            use Black_Box_Root_Counters;
 with Black_Box_Poly_Continuations;       use Black_Box_Poly_Continuations;
+with DoblDobl_Blackbox_Continuations;    use DoblDobl_Blackbox_Continuations;
+with QuadDobl_Blackbox_Continuations;    use QuadDobl_Blackbox_Continuations;
 with Greeting_Banners;
 
 package body Black_Box_Solvers is
@@ -737,6 +739,52 @@ package body Black_Box_Solvers is
     end if;
   end Solve;
 
+  procedure Solve ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    silent : in boolean;
+                    rc : out natural32;
+                    sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+ 
+    fail : boolean;
+    pp,q : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    roco,hoco,poco : duration;
+
+  begin
+    Black_Box_Simplex_Solver(p,sols,fail);
+    rc := DoblDobl_Complex_Solutions.Length_Of(sols);
+    if fail or (rc = 0) then
+      DoblDobl_Complex_Laur_Systems.Copy(p,pp);
+      Black_Box_Root_Counting(0,silent,pp,rc,q,sols,roco,hoco);
+      if rc /= 0
+       then Black_Box_Polynomial_Continuation(pp,q,sols,poco);
+      end if;
+    else
+      roco := 0.0; hoco := 0.0; poco := 0.0;
+    end if;
+  end Solve;
+
+  procedure Solve ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    silent : in boolean;
+                    rc : out natural32;
+                    sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+ 
+    fail : boolean;
+    pp,q : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    roco,hoco,poco : duration;
+
+  begin
+    Black_Box_Simplex_Solver(p,sols,fail);
+    rc := QuadDobl_Complex_Solutions.Length_Of(sols);
+    if fail or (rc = 0) then
+      QuadDobl_Complex_Laur_Systems.Copy(p,pp);
+      Black_Box_Root_Counting(0,silent,pp,rc,q,sols,roco,hoco);
+      if rc /= 0
+       then Black_Box_Polynomial_Continuation(pp,q,sols,poco);
+      end if;
+    else
+      roco := 0.0; hoco := 0.0; poco := 0.0;
+    end if;
+  end Solve;
+
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
@@ -751,6 +799,52 @@ package body Black_Box_Solvers is
     rc := Standard_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       Standard_Complex_Laur_Systems.Copy(p,pp);
+      Black_Box_Root_Counting(file,0,pp,rc,q,sols,roco,hoco);
+      if rc /= 0
+       then Black_Box_Polynomial_Continuation(file,pp,q,sols,poco);
+      end if;
+    else
+      roco := 0.0; hoco := 0.0; poco := 0.0;
+    end if;
+  end Solve;
+
+  procedure Solve ( file : in file_type;
+                    p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    rc : out natural32;
+                    sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+ 
+    fail : boolean;
+    pp,q : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    roco,hoco,poco : duration;
+
+  begin
+    Black_Box_Simplex_Solver(p,sols,fail);
+    rc := DoblDobl_Complex_Solutions.Length_Of(sols);
+    if fail or (rc = 0) then
+      DoblDobl_Complex_Laur_Systems.Copy(p,pp);
+      Black_Box_Root_Counting(file,0,pp,rc,q,sols,roco,hoco);
+      if rc /= 0
+       then Black_Box_Polynomial_Continuation(file,pp,q,sols,poco);
+      end if;
+    else
+      roco := 0.0; hoco := 0.0; poco := 0.0;
+    end if;
+  end Solve;
+
+  procedure Solve ( file : in file_type;
+                    p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    rc : out natural32;
+                    sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+ 
+    fail : boolean;
+    pp,q : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    roco,hoco,poco : duration;
+
+  begin
+    Black_Box_Simplex_Solver(p,sols,fail);
+    rc := QuadDobl_Complex_Solutions.Length_Of(sols);
+    if fail or (rc = 0) then
+      QuadDobl_Complex_Laur_Systems.Copy(p,pp);
       Black_Box_Root_Counting(file,0,pp,rc,q,sols,roco,hoco);
       if rc /= 0
        then Black_Box_Polynomial_Continuation(file,pp,q,sols,poco);
@@ -893,6 +987,54 @@ package body Black_Box_Solvers is
     end if;
   end Solve;
 
+  procedure Solve ( nt : in natural32;
+                    p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    silent : in boolean;
+                    rc : out natural32;
+                    sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+ 
+    fail : boolean;
+    pp,q : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    roco,hoco,poco : duration;
+
+  begin
+    Black_Box_Simplex_Solver(p,sols,fail);
+    rc := DoblDobl_Complex_Solutions.Length_Of(sols);
+    if fail or (rc = 0) then
+      DoblDobl_Complex_Laur_Systems.Copy(p,pp);
+      Black_Box_Root_Counting(integer32(nt),silent,pp,rc,q,sols,roco,hoco);
+      if rc /= 0 then
+        Black_Box_Polynomial_Continuation(integer32(nt),pp,q,sols,poco);
+      end if;
+    else
+      roco := 0.0; hoco := 0.0; poco := 0.0;
+    end if;
+  end Solve;
+
+  procedure Solve ( nt : in natural32;
+                    p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    silent : in boolean;
+                    rc : out natural32;
+                    sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+ 
+    fail : boolean;
+    pp,q : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    roco,hoco,poco : duration;
+
+  begin
+    Black_Box_Simplex_Solver(p,sols,fail);
+    rc := QuadDobl_Complex_Solutions.Length_Of(sols);
+    if fail or (rc = 0) then
+      QuadDobl_Complex_Laur_Systems.Copy(p,pp);
+      Black_Box_Root_Counting(integer32(nt),silent,pp,rc,q,sols,roco,hoco);
+      if rc /= 0 then
+        Black_Box_Polynomial_Continuation(integer32(nt),pp,q,sols,poco);
+      end if;
+    else
+      roco := 0.0; hoco := 0.0; poco := 0.0;
+    end if;
+  end Solve;
+
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Laur_Systems.Laur_Sys;
                     rc : out natural32;
@@ -907,6 +1049,52 @@ package body Black_Box_Solvers is
     rc := Standard_Complex_Solutions.Length_Of(sols);
     if fail or (rc = 0) then
       Standard_Complex_Laur_Systems.Copy(p,pp);
+      Black_Box_Root_Counting(file,integer32(nt),pp,rc,q,sols,roco,hoco);
+      if rc /= 0 then
+        Black_Box_Polynomial_Continuation(file,integer32(nt),pp,q,sols,poco);
+      end if;
+    else
+      roco := 0.0; hoco := 0.0; poco := 0.0;
+    end if;
+  end Solve;
+
+  procedure Solve ( file : in file_type; nt : in natural32;
+                    p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                    rc : out natural32;
+                    sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+ 
+    fail : boolean;
+    pp,q : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    roco,hoco,poco : duration;
+
+  begin
+    Black_Box_Simplex_Solver(p,sols,fail);
+    rc := DoblDobl_Complex_Solutions.Length_Of(sols);
+    if fail or (rc = 0) then
+      DoblDobl_Complex_Laur_Systems.Copy(p,pp);
+      Black_Box_Root_Counting(file,integer32(nt),pp,rc,q,sols,roco,hoco);
+      if rc /= 0 then
+        Black_Box_Polynomial_Continuation(file,integer32(nt),pp,q,sols,poco);
+      end if;
+    else
+      roco := 0.0; hoco := 0.0; poco := 0.0;
+    end if;
+  end Solve;
+
+  procedure Solve ( file : in file_type; nt : in natural32;
+                    p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                    rc : out natural32;
+                    sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+ 
+    fail : boolean;
+    pp,q : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+    roco,hoco,poco : duration;
+
+  begin
+    Black_Box_Simplex_Solver(p,sols,fail);
+    rc := QuadDobl_Complex_Solutions.Length_Of(sols);
+    if fail or (rc = 0) then
+      QuadDobl_Complex_Laur_Systems.Copy(p,pp);
       Black_Box_Root_Counting(file,integer32(nt),pp,rc,q,sols,roco,hoco);
       if rc /= 0 then
         Black_Box_Polynomial_Continuation(file,integer32(nt),pp,q,sols,poco);
