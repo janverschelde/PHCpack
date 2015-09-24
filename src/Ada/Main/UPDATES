@@ -1,3 +1,6 @@
+Thu 24 Sep 2015 : extended black_box_root_counters with procedures on
+  systems with coefficients in double double and quad double precision.
+
 Mon 21 Sep 2015 : extended black_box_solvers with procedures to solve one
   single polynomial equation in double double and quad double precision.
 
