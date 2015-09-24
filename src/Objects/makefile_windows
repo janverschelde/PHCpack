@@ -3,19 +3,20 @@
 
 PHCAda=../Ada
 PHCLib=../LIB
-PYTHON = c:/Python27
-MINGCC = c:/MINGW/bin/gcc
+PYTHON = c:/Python25
+MINGCC = c:/mingw/bin/gcc
+#BIN=/tmp
 BIN=../bin
 INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Basic_Timer \
  -I$(PHCAda)/Math_Lib/Numbers -I$(PHCAda)/Math_Lib/QD \
  -I$(PHCAda)/Math_Lib/Vectors -I$(PHCAda)/Math_Lib/Matrices \
  -I$(PHCAda)/Math_Lib/Divisors -I$(PHCAda)/Math_Lib/Reduction \
  -I$(PHCAda)/Math_Lib/Polynomials -I$(PHCAda)/Math_Lib/Functions \
- -I$(PHCAda)/Math_Lib/Supports \
+ -I$(PHCAda)/Math_Lib/Circuits -I$(PHCAda)/Math_Lib/Supports \
  -I$(PHCAda)/Deformations/Solutions -I$(PHCAda)/Deformations/Homotopy \
- -I$(PHCAda)/Deformations/Newton -I$(PHCAda)/Deformations/Curves \
- -I$(PHCAda)/Deformations/End_Games -I$(PHCAda)/Deformations/Sweep \
- -I$(PHCAda)/Deformations/Trackers -I$(PHCAda)/Deformations/Continuation \
+ -I$(PHCAda)/Deformations/Newton -I$(PHCAda)/Deformations/End_Games \
+ -I$(PHCAda)/Deformations/Sweep -I$(PHCAda)/Deformations/Trackers \
+ -I$(PHCAda)/Deformations/Continuation \
  -I$(PHCAda)/Root_Counts/Product -I$(PHCAda)/Root_Counts/Binomials \
  -I$(PHCAda)/Root_Counts/Implift -I$(PHCAda)/Root_Counts/Stalift \
  -I$(PHCAda)/Root_Counts/Dynlift -I$(PHCAda)/Root_Counts/Symmetry \
@@ -1255,21 +1256,16 @@ phc_solve: get_clock.o get_clocks_per_sec.o
 	gnatlink -C use_c2phc syscon.o solcon.o phcpack.o phc_solve.o \
                     get_clock.o get_clocks_per_sec.o -o ../bin/phc_solve
 
-phcpy2c.so: standard_solutions_container.o get_clock.o get_clocks_per_sec.o
+phcpy2c.so:
 	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/solcon.c
-	gcc -c $(PHCLib)/product.c
-	gcc -c $(PHCLib)/celcon.c
-	gcc -c $(PHCLib)/witset.c
 	gcc -c $(PHCLib)/phcpack.c
-	gcc -c $(PHCLib)/schubert.c
-	gcc -c -I$(PYTHON) -I$(PYTHON)/include $(PHCLib)/phcpy2c.c
+	$(MINGCC) -c -I$(PYTHON) -I$(PYTHON)/include $(PHCLib)/phcpy2c.c
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
-	gnatbind -n -shared use_c2phc
-	gnatlink -shared -C use_c2phc syscon.o solcon.o product.o celcon.o \
-                            phcpack.o witset.o schubert.o phcpy2c.o \
+	gnatbind -n -C use_c2phc
+	gnatlink -shared -C use_c2phc syscon.o solcon.o phcpack.o phcpy2c.o \
 	                    get_clock.o get_clocks_per_sec.o \
-                 -o ../Python/phcpy2c.dll $(PYTHON)/libs/libpython27.a
+                 -o ../Python/phcpy2c.dll
 
 # cleaning up the object files :
 
