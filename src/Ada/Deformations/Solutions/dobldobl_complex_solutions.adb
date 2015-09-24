@@ -362,6 +362,19 @@ package body DoblDobl_Complex_Solutions is
 
 -- CONSTRUCTORS :
 
+  procedure Push ( s0 : in Solution_List; s1 : in out Solution_List ) is
+
+    tmp : Solution_List := s0;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Construct(ls,s1);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Push;
+
   procedure Append ( first,last : in out Solution_List;
                      ls : in Link_to_Solution ) is
   begin

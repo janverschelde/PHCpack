@@ -1,3 +1,6 @@
+Thu 24 Sep 2015 : to {dobldobl,quaddobl}_complex_solutions, added a push
+  procedure to insert a list of solutions to the front of another list.
+
 Mon 29 Dec 2014 : extended standard_solution_strings with write functions
   to string for variable precision use.  Be careful with one variable case!
 

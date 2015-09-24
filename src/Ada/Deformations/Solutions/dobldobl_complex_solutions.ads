@@ -135,6 +135,12 @@ package DoblDobl_Complex_Solutions is
 
 -- CONSTRUCTORS :
 
+  procedure Push ( s0 : in Solution_List; s1 : in out Solution_List );
+
+  -- DESCRIPTION :
+  --   Pushes all solutions of s0 in front of the list s1.
+  --   Note: only the pointers of solutions in s0 are pushed.
+
   procedure Append ( first,last : in out Solution_List;
                      ls : in Link_to_Solution );
 
