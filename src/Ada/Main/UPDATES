@@ -3,6 +3,7 @@ Thu 24 Sep 2015 : extended black_box_root_counters with procedures on
   Added solve procedures for Laurent systems to black_box_solvers
   in double double and quad double precision.
   Updated greeting_banners for release 2.4.01.
+  Included black_box_polyhedral_continuations in phcpack.adb.
 
 Mon 21 Sep 2015 : extended black_box_solvers with procedures to solve one
   single polynomial equation in double double and quad double precision.

@@ -19,6 +19,7 @@ with Standard_Linear_Product_System;
 with Random_Product_Start_Systems;       use Random_Product_Start_Systems;
 with Integer_Mixed_Subdivisions;         use Integer_Mixed_Subdivisions;
 with Black_Mixed_Volume_Computations;    use Black_Mixed_Volume_Computations;
+with Black_Polyhedral_Continuations;     use Black_Polyhedral_Continuations;
 with BKK_Bound_Computations;             use BKK_Bound_Computations;
 with Continuation_Parameters;
 with Standard_IncFix_Continuation;       use Standard_IncFix_Continuation; 
