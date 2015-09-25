@@ -129,12 +129,59 @@ package Black_Box_Solvers is
   procedure Square_Main
               ( nt : in natural32; infilename,outfilename : in string;
                 start_moment : in Ada.Calendar.Time;
-                p : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                p : in DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                append_sols : in boolean );
+  procedure Square_Main
+              ( nt : in natural32; infilename,outfilename : in string;
+                start_moment : in Ada.Calendar.Time;
+                p : in QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
                 append_sols : in boolean );
 
   -- DESCRIPTION :
-  --   Solves general square polynomial systems.  Must be called after
-  --   the special cases (single and linear) have been dealt with.
+  --   A polynomial system with as many equations as unknowns is square.
+  --   This procedure solves a square polynomial system p,
+  --   using standard double, double double, or quad double arithmetic.
+  --
+  -- REQUIRED :
+  --   Must be called after the special cases (one single equation
+  --   and a linear system) have been dealt with.
+
+  -- ON ENTRY :
+  --   nt             the number of tasks, if 0 then no multitasking,
+  --                  otherwise nt tasks will be used to track the paths;
+  --   infilename     the name of the input file;
+  --   outfilename    the name of the output file;
+  --   start_moment   clock time when phc was started;
+  --   p              polynomial system to be solved.
+  --   append_sols    true if solutions need to be appended to input file.
+
+  -- ON RETURN :
+  --   p              system may be scaled or reduced.
+
+  procedure Square_Main
+              ( nt : in natural32; infilename,outfilename : in string;
+                start_moment : in Ada.Calendar.Time;
+                p : in Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
+                append_sols : in boolean );
+  procedure Square_Main
+              ( nt : in natural32; infilename,outfilename : in string;
+                start_moment : in Ada.Calendar.Time;
+                p : in DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                append_sols : in boolean );
+  procedure Square_Main
+              ( nt : in natural32; infilename,outfilename : in string;
+                start_moment : in Ada.Calendar.Time;
+                p : in QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+                append_sols : in boolean );
+
+  -- DESCRIPTION :
+  --   A polynomial system with as many equations as unknowns is square.
+  --   This procedure solves a square Laurent polynomial system p,
+  --   with standard double, double double, or quad double arithmetic.
+  --
+  -- REQUIRED :
+  --   Must be called after the special cases (one single equation
+  --   and a linear system) have been dealt with.
 
   -- ON ENTRY :
   --   nt             the number of tasks, if 0 then no multitasking,
