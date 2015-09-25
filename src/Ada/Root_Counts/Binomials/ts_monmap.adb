@@ -25,6 +25,8 @@ with Standard_Monomial_Map_Ideals;      use Standard_Monomial_Map_Ideals;
 with Standard_Monomial_Map_Filters;     use Standard_Monomial_Map_Filters;
 with Standard_Permanent_Factors;
 with Black_Box_Binomial_Solvers;        use Black_Box_Binomial_Solvers;
+-- with DoblDobl_Monomial_Maps;
+-- with QuadDobl_Monomial_Maps;
 
 procedure ts_monmap is
 

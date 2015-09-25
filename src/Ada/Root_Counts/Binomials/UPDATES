@@ -1,3 +1,6 @@
+Fri 25 Sep 2015 : new packages {dobldobl,quaddobl}_monomial_maps, for use
+  to stub in the black_box_binomial_solvers.
+
 Wed 23 Sep 2015 : extended black_box_simplex_solvers with versions for
   quad double precision arithmetic.
 
