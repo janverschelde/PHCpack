@@ -4,7 +4,11 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Random_Numbers;
 with Write_Seed_Number;
 with Standard_Natural_Vectors;
@@ -19,9 +23,11 @@ with Standard_Linear_Poly_Solvers;
 with DoblDobl_Linear_Poly_Solvers;
 with QuadDobl_Linear_Poly_Solvers;
 with Standard_Scaling;
+with DoblDobl_Scaling;
+with QuadDobl_Scaling;
 with Black_Box_Univariate_Solvers;       use Black_Box_Univariate_Solvers;
 with Black_Box_Simplex_Solvers;          use Black_Box_Simplex_Solvers;
-with Standard_Monomial_Maps;             use Standard_Monomial_Maps;
+with Standard_Monomial_Maps;
 with Standard_Monomial_Maps_io;          use Standard_Monomial_Maps_io;
 with Black_Box_Binomial_Solvers;         use Black_Box_Binomial_Solvers;
 with Black_Box_Factorization;            use Black_Box_Factorization;
@@ -36,6 +42,8 @@ package body Black_Box_Solvers is
   function Is_Constant_In
               ( p : Standard_Complex_Polynomials.Poly ) return boolean is
 
+    use Standard_Complex_Numbers;
+
     n : constant natural32
       := Standard_Complex_Polynomials.Number_of_Unknowns(p);
     z : constant Standard_Complex_Polynomials.Degrees
@@ -49,8 +57,68 @@ package body Black_Box_Solvers is
     end if;
   end Is_Constant_In;
 
+  function Is_Constant_In
+              ( p : DoblDobl_Complex_Polynomials.Poly ) return boolean is
+
+    use DoblDobl_Complex_Numbers;
+
+    n : constant natural32
+      := DoblDobl_Complex_Polynomials.Number_of_Unknowns(p);
+    z : constant DoblDobl_Complex_Polynomials.Degrees
+      := new Standard_Natural_Vectors.Vector'(1..integer32(n) => 0);
+    c : constant Complex_Number := DoblDobl_Complex_Polynomials.Coeff(p,z);
+    zero : constant double_double := create(0.0);
+
+  begin
+    if REAL_PART(c) = zero and IMAG_PART(c) = zero
+     then return false;
+     else return true;
+    end if;
+  end Is_Constant_In;
+
+  function Is_Constant_In
+              ( p : QuadDobl_Complex_Polynomials.Poly ) return boolean is
+
+    use QuadDobl_Complex_Numbers;
+
+    n : constant natural32
+      := QuadDobl_Complex_Polynomials.Number_of_Unknowns(p);
+    z : constant QuadDobl_Complex_Polynomials.Degrees
+      := new Standard_Natural_Vectors.Vector'(1..integer32(n) => 0);
+    c : constant Complex_Number := QuadDobl_Complex_Polynomials.Coeff(p,z);
+    zero : constant quad_double := create(0.0);
+
+  begin
+    if REAL_PART(c) = zero and IMAG_PART(c) = zero
+     then return false;
+     else return true;
+    end if;
+  end Is_Constant_In;
+
   function Are_Constants_In
               ( p : Standard_Complex_Poly_Systems.Poly_Sys ) return boolean is
+  begin
+    for i in p'range loop
+      if not Is_Constant_In(p(i))
+       then return false;
+      end if;
+    end loop;
+    return true;
+  end Are_Constants_In;
+
+  function Are_Constants_In
+              ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys ) return boolean is
+  begin
+    for i in p'range loop
+      if not Is_Constant_In(p(i))
+       then return false;
+      end if;
+    end loop;
+    return true;
+  end Are_Constants_In;
+
+  function Are_Constants_In
+              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys ) return boolean is
   begin
     for i in p'range loop
       if not Is_Constant_In(p(i))
@@ -404,6 +472,7 @@ package body Black_Box_Solvers is
                 append_sols : in boolean ) is
 
     use Standard_Complex_Solutions;
+    use Standard_Monomial_Maps;
 
     timer : Timing_Widget;
     ended_moment : Ada.Calendar.Time;
@@ -664,6 +733,110 @@ package body Black_Box_Solvers is
     end if;
   end Solve;
 
+  procedure Solve ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    silent : in boolean;
+                    rc : out natural32;
+                    sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Solutions;
+ 
+    fail : boolean;
+    ls : Link_to_Solution;
+    s : Solution(p'last);
+    n : natural32;
+    pp,q : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+    roco,hoco,poco : duration;
+    sols0 : Solution_List;
+
+  begin
+    if p'first = p'last then
+      n := DoblDobl_Complex_Polynomials.Number_of_Unknowns(p(p'first));
+      if n > 0 then
+        rc := natural32(DoblDobl_Complex_Polynomials.Degree(p(p'first)));
+        if n = 1
+         then Black_Box_Durand_Kerner(p(p'first),sols);
+        end if;
+      end if;
+    else
+      DoblDobl_Linear_Poly_Solvers.Solve(p,s,fail);
+      if not fail then
+        rc := 1;
+        ls := new Solution'(s);
+        Construct(ls,sols);
+      else
+        if Are_Constants_In(p) then
+          Black_Box_Simplex_Solver(p,sols,fail);
+          fail := (fail or (Length_Of(sols) = 0));
+        else
+          fail := true;
+        end if;
+        if not fail then
+          rc := Length_Of(sols);
+        else
+          DoblDobl_Complex_Poly_Systems.Copy(p,pp);
+          Black_Box_Root_Counting(0,silent,pp,false,rc,q,sols,sols0,roco,hoco);
+          if rc /= 0 then
+            DoblDobl_Scaling.Scale(pp);
+            Black_Box_Polynomial_Continuation(pp,q,sols,sols0,poco);
+            Push(sols0,sols);
+          end if;
+        end if;
+      end if;
+    end if;
+  end Solve;
+
+  procedure Solve ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    silent : in boolean;
+                    rc : out natural32;
+                    sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Solutions;
+ 
+    fail : boolean;
+    ls : Link_to_Solution;
+    s : Solution(p'last);
+    n : natural32;
+    pp,q : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+    roco,hoco,poco : duration;
+    sols0 : Solution_List;
+
+  begin
+    if p'first = p'last then
+      n := QuadDobl_Complex_Polynomials.Number_of_Unknowns(p(p'first));
+      if n > 0 then
+        rc := natural32(QuadDobl_Complex_Polynomials.Degree(p(p'first)));
+        if n = 1
+         then Black_Box_Durand_Kerner(p(p'first),sols);
+        end if;
+      end if;
+    else
+      QuadDobl_Linear_Poly_Solvers.Solve(p,s,fail);
+      if not fail then
+        rc := 1;
+        ls := new Solution'(s);
+        Construct(ls,sols);
+      else
+        if Are_Constants_In(p) then
+          Black_Box_Simplex_Solver(p,sols,fail);
+          fail := (fail or (Length_Of(sols) = 0));
+        else
+          fail := true;
+        end if;
+        if not fail then
+          rc := Length_Of(sols);
+        else
+          QuadDobl_Complex_Poly_Systems.Copy(p,pp);
+          Black_Box_Root_Counting(0,silent,pp,false,rc,q,sols,sols0,roco,hoco);
+          if rc /= 0 then
+            QuadDobl_Scaling.Scale(pp);
+            Black_Box_Polynomial_Continuation(pp,q,sols,sols0,poco);
+            Push(sols0,sols);
+          end if;
+        end if;
+      end if;
+    end if;
+  end Solve;
+
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32;
@@ -708,6 +881,110 @@ package body Black_Box_Solvers is
           Black_Box_Root_Counting(file,0,pp,false,rc,q,sols,sols0,roco,hoco);
           if rc /= 0 then
             Standard_Scaling.Scale(pp);
+            Black_Box_Polynomial_Continuation(file,pp,q,sols,sols0,poco);
+            Push(sols0,sols);
+          end if;
+        end if;
+      end if;
+    end if;
+  end Solve;
+
+  procedure Solve ( file : in file_type;
+                    p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    rc : out natural32;
+                    sols : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Solutions;
+ 
+    fail : boolean;
+    ls : Link_to_Solution;
+    s : Solution(p'last);
+    n : natural32;
+    pp,q : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+    roco,hoco,poco : duration;
+    sols0 : Solution_List;
+
+  begin
+    if p'first = p'last then
+      n := DoblDobl_Complex_Polynomials.Number_of_Unknowns(p(p'first));
+      if n > 0 then
+        rc := natural32(DoblDobl_Complex_Polynomials.Degree(p(p'first)));
+        if n = 1
+         then Black_Box_Durand_Kerner(p(p'first),sols);
+        end if;
+      end if;
+    else
+      DoblDobl_Linear_Poly_Solvers.Solve(p,s,fail);
+      if not fail then
+        rc := 1;
+        ls := new Solution'(s);
+        Construct(ls,sols);
+      else
+        if Are_Constants_In(p) then
+          Black_Box_Simplex_Solver(p,sols,fail);
+          fail := (fail or (Length_Of(sols) = 0));
+        else
+          fail := true;
+        end if;
+        if not fail then
+          rc := Length_Of(sols);
+        else
+          DoblDobl_Complex_Poly_Systems.Copy(p,pp);
+          Black_Box_Root_Counting(file,0,pp,false,rc,q,sols,sols0,roco,hoco);
+          if rc /= 0 then
+            DoblDobl_Scaling.Scale(pp);
+            Black_Box_Polynomial_Continuation(file,pp,q,sols,sols0,poco);
+            Push(sols0,sols);
+          end if;
+        end if;
+      end if;
+    end if;
+  end Solve;
+
+  procedure Solve ( file : in file_type;
+                    p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    rc : out natural32;
+                    sols : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Solutions;
+ 
+    fail : boolean;
+    ls : Link_to_Solution;
+    s : Solution(p'last);
+    n : natural32;
+    pp,q : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+    roco,hoco,poco : duration;
+    sols0 : Solution_List;
+
+  begin
+    if p'first = p'last then
+      n := QuadDobl_Complex_Polynomials.Number_of_Unknowns(p(p'first));
+      if n > 0 then
+        rc := natural32(QuadDobl_Complex_Polynomials.Degree(p(p'first)));
+        if n = 1
+         then Black_Box_Durand_Kerner(p(p'first),sols);
+        end if;
+      end if;
+    else
+      QuadDobl_Linear_Poly_Solvers.Solve(p,s,fail);
+      if not fail then
+        rc := 1;
+        ls := new Solution'(s);
+        Construct(ls,sols);
+      else
+        if Are_Constants_In(p) then
+          Black_Box_Simplex_Solver(p,sols,fail);
+          fail := (fail or (Length_Of(sols) = 0));
+        else
+          fail := true;
+        end if;
+        if not fail then
+          rc := Length_Of(sols);
+        else
+          QuadDobl_Complex_Poly_Systems.Copy(p,pp);
+          Black_Box_Root_Counting(file,0,pp,false,rc,q,sols,sols0,roco,hoco);
+          if rc /= 0 then
+            QuadDobl_Scaling.Scale(pp);
             Black_Box_Polynomial_Continuation(file,pp,q,sols,sols0,poco);
             Push(sols0,sols);
           end if;

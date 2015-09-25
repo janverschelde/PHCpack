@@ -22,12 +22,20 @@ package Black_Box_Solvers is
 
   function Is_Constant_In 
               ( p : Standard_Complex_Polynomials.Poly ) return boolean;
+  function Is_Constant_In 
+              ( p : DoblDobl_Complex_Polynomials.Poly ) return boolean;
+  function Is_Constant_In 
+              ( p : QuadDobl_Complex_Polynomials.Poly ) return boolean;
 
   -- DESCRIPTION :
   --   Returns true if the polynomial has a constant term.
 
   function Are_Constants_In
               ( p : Standard_Complex_Poly_Systems.Poly_Sys ) return boolean;
+  function Are_Constants_In
+              ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys ) return boolean;
+  function Are_Constants_In
+              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys ) return boolean;
 
   -- DESCRIPTION :
   --   Returns true if all polynomials in p have a constant term.
@@ -144,10 +152,42 @@ package Black_Box_Solvers is
                     silent : in boolean;
                     rc : out natural32;
                     sols : out Standard_Complex_Solutions.Solution_List );
+  procedure Solve ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    silent : in boolean;
+                    rc : out natural32;
+                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Solve ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    silent : in boolean;
+                    rc : out natural32;
+                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Calls the blackbox solver to solve the polynomial system p,
+  --   without output to file, available for three levels of precision:
+  --   standard double, double double, and quad double.
+
+  -- ON INPUT :
+  --    p       a polynomial system, or a system with Laurent polynomials;
+  --    silent  if true, then the computed root counts will not be shown,
+  --            if false, then the user will see the computed root counts
+  --            displayed on screen.
+
+  -- ON RETURN :
+  --   rc       root count used in the homotopy to solve p;
+  --   sols     solutions found at the end of the paths.
+
   procedure Solve ( file : in file_type;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32;
                     sols : out Standard_Complex_Solutions.Solution_List );
+  procedure Solve ( file : in file_type;
+                    p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    rc : out natural32;
+                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Solve ( file : in file_type;
+                    p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    rc : out natural32;
+                    sols : out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Calls the blackbox solver to solve the polynomial system p.
