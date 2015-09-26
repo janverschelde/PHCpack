@@ -1,3 +1,5 @@
+Fri 25 Sep 2015 : new packages {dobldobl,quaddobl}_system_readers.
+
 Thu 24 Sep 2015 : changed the bound from 2**32 - 1 to 2**31 - 1 in the
   files {standard,dobldobl,quaddobl,multprec}_complex_{laur,poly}_strings.adb.
 

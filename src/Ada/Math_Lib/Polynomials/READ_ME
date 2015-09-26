@@ -150,6 +150,8 @@ multprec_complex_laur_systems_io  : i/o for multiprecision Laurent systems
 exponent_vectors                  : management of exponents of a system
 matrix_indeterminates             : manipulate symbols for xij
 standard_system_readers           : interactive reading from file
+dobldobl_system_readers           : double double version of system readers
+quaddobl_system_readers           : quad double version of system readers
 multprec_system_readers           : multiprecision version of system readers
 string_system_readers             : reading strings from file
 standard_complex_laur_lists       : lists of standard complex Laurentials
