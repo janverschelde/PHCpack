@@ -1,3 +1,6 @@
+Sat 26 Sep 2015 : black_box_solvers is now finally complete with all versions
+  for double double and quad double precision.
+
 Fri 25 Sep 2015 : more versions of Solve in double double and quad double
   precision in black_box_solvers, completed with Square_Main as well.
   New bablphc2 and bablphc4 to perform the phc -b2 and phc -b4,

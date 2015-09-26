@@ -214,8 +214,8 @@ package Black_Box_Solvers is
   --   standard double, double double, and quad double.
 
   -- ON INPUT :
-  --    p       a polynomial system, or a system with Laurent polynomials;
-  --    silent  if true, then the computed root counts will not be shown,
+  --   p        a polynomial system, or a system with Laurent polynomials;
+  --   silent   if true, then the computed root counts will not be shown,
   --            if false, then the user will see the computed root counts
   --            displayed on screen.
 
@@ -240,9 +240,9 @@ package Black_Box_Solvers is
   --   Calls the blackbox solver to solve the polynomial system p.
 
   -- ON INPUT :
-  --    file    must be opened for output;
-  --    p       a polynomial system, or a system with Laurent polynomials;
-  --    silent  if true, then the computed root counts will not be shown,
+  --   file     must be opened for output;
+  --   p        a polynomial system, or a system with Laurent polynomials;
+  --   silent   if true, then the computed root counts will not be shown,
   --            if false, then the user will see the computed root counts
   --            displayed on screen.
 
@@ -269,8 +269,8 @@ package Black_Box_Solvers is
   --   in standard double, double double, or quad double precision.
 
   -- ON INPUT :
-  --    p       a polynomial system, or a system with Laurent polynomials;
-  --    silent  if true, then the computed root counts will not be shown,
+  --   p        a polynomial system, or a system with Laurent polynomials;
+  --   silent   if true, then the computed root counts will not be shown,
   --            if false, then the user will see the computed root counts
   --            displayed on screen.
 
@@ -297,8 +297,8 @@ package Black_Box_Solvers is
   --   in standard double, double double, or quad double precision.
 
   -- ON INPUT :
-  --    file    must be opened for output;
-  --    p       a Laurent polynomial system.
+  --   file     must be opened for output;
+  --   p        a Laurent polynomial system.
 
   -- ON RETURN :
   --   rc       root count used in the homotopy to solve p;
@@ -309,18 +309,52 @@ package Black_Box_Solvers is
                     silent : in boolean;
                     rc : out natural32;
                     sols : out Standard_Complex_Solutions.Solution_List );
+  procedure Solve ( nt : in natural32;
+                    p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    silent : in boolean;
+                    rc : out natural32;
+                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Solve ( nt : in natural32;
+                    p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    silent : in boolean;
+                    rc : out natural32;
+                    sols : out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Calls the blackbox solver to solve the polynomial system p,
+  --   using nt tasks, without output to file, and with
+  --   standard double, double double, or quad double arithmetic.
+
+  -- ON INPUT :
+  --    nt      number of tasks for multithreading, 0 if no multitasking;
+  --    p       a polynomial system.
+
+  -- ON RETURN :
+  --   rc       root count used in the homotopy to solve p;
+  --   sols     solutions found at the end of the paths.
+
   procedure Solve ( file : in file_type; nt : in natural32;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
                     rc : out natural32;
                     sols : out Standard_Complex_Solutions.Solution_List );
+  procedure Solve ( file : in file_type; nt : in natural32;
+                    p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    rc : out natural32;
+                    sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Solve ( file : in file_type; nt : in natural32;
+                    p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    rc : out natural32;
+                    sols : out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
-  --   Calls the blackbox solver to solve the polynomial system p.
+  --   Calls the blackbox solver to solve the polynomial system p,
+  --   using nt tasks, with output to file, and with
+  --   standard double, double double, or quad double arithmetic.
 
   -- ON INPUT :
-  --    file    must be opened for output;
-  --    nt      number of tasks for multithreading, 0 if no multitasking;
-  --    p       a polynomial system.
+  --   file     must be opened for output;
+  --   nt       number of tasks for multithreading, 0 if no multitasking;
+  --   p        a polynomial system.
 
   -- ON RETURN :
   --   rc       root count used in the homotopy to solve p;
@@ -348,9 +382,9 @@ package Black_Box_Solvers is
   --   in standard double, double double, or quad double precision.
 
   -- ON INPUT :
-  --    nt      number of tasks for multithreading, 0 if no multitasking;
-  --    p       a polynomial system, or a system with Laurent polynomials;
-  --    silent  if true, then the computed root counts will not be shown,
+  --   nt       number of tasks for multithreading, 0 if no multitasking;
+  --   p        a polynomial system, or a system with Laurent polynomials;
+  --   silent   if true, then the computed root counts will not be shown,
   --            if false, then the user will see the computed root counts
   --            displayed on screen.
 
@@ -377,9 +411,9 @@ package Black_Box_Solvers is
   --   with intermediate output written to file.
 
   -- ON INPUT :
-  --    file    must be opened for output.
-  --    nt      number of tasks for multithreading, 0 if no multitasking;
-  --    p       a Laurent polynomial system.
+  --   file     must be opened for output;
+  --   nt       number of tasks for multithreading, 0 if no multitasking;
+  --   p        a Laurent polynomial system.
 
   -- ON RETURN :
   --   rc       root count used in the homotopy to solve p;
