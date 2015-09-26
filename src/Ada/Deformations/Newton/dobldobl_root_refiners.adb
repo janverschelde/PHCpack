@@ -329,6 +329,35 @@ package body DoblDobl_Root_Refiners is
     Clear(f); Clear(jm); Clear(jf);
   end Silent_Root_Refiner;
 
+  procedure Silent_Root_Refiner
+               ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 s : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa : in double_double;
+                 numit : in out natural32; max : in natural32 ) is
+
+    use DoblDobl_Complex_Laur_SysFun;
+    use DoblDobl_Complex_Laur_JacoMats;
+    use DoblDobl_Complex_Solutions;
+    
+    f : Eval_Laur_Sys(p'range) := Create(p);
+    jm : Jaco_Mat(p'range,p'range) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    tmp : Solution_List := s;
+    ls : Link_to_Solution;
+    nb : natural32;
+    fail : boolean;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      nb := 0;
+      Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+      numit := numit + nb;
+      tmp := Tail_Of(tmp);
+    end loop;
+    Clear(f); Clear(jm); Clear(jf);
+  end Silent_Root_Refiner;
+
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -342,6 +371,40 @@ package body DoblDobl_Root_Refiners is
     use DoblDobl_Complex_Solutions;
     
     f : Eval_Poly_Sys(p'range) := Create(p);
+    jm : Jaco_Mat(p'range,p'range) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    tmp : Solution_List := s;
+    ls : Link_to_Solution;
+    nb : natural32;
+    fail : boolean;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      nb := 0;
+      if wout
+       then Reporting_Newton(file,f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+       else Silent_Newton(f,jf,ls.all,epsxa,epsfa,nb,max,fail);
+      end if;
+      numit := numit + nb;
+      tmp := Tail_Of(tmp);
+    end loop;
+    Clear(f); Clear(jm); Clear(jf);
+  end Reporting_Root_Refiner;
+
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
+                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 s : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa : in double_double;
+                 numit : in out natural32; max : in natural32;
+                 wout : in boolean ) is
+
+    use DoblDobl_Complex_Laur_SysFun;
+    use DoblDobl_Complex_Laur_JacoMats;
+    use DoblDobl_Complex_Solutions;
+    
+    f : Eval_Laur_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,p'range) := Create(p);
     jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
     tmp : Solution_List := s;
