@@ -1,3 +1,7 @@
+Fri 25 Sep 2015 : from {dobldobl,quaddobl}_blackbox_continuations.adb
+  remove the statement to write a superfluous solutions banner;
+  added calls to the root refiners, still without multitasking.
+
 Sun 6 Sep 2015 : in {dobldobl,quaddobl}_blackbox_continuations.adb, the
   multitasked Laurent path trackers are enabled.
 

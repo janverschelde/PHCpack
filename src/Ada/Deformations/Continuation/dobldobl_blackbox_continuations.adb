@@ -167,6 +167,7 @@ package body DoblDobl_BlackBox_Continuations is
 
   begin
     if Length_Of(sols) > 0 then
+      Reporting_Root_Refiner(outfile,p,sols,epsxa,epsfa,nb,5,false);
       --Reporting_Root_Refiner
       --  (outfile,p,sols,ref_sols,epsxa,epsfa,tolsing,nb,5,deflate,false);
       null;
@@ -194,6 +195,7 @@ package body DoblDobl_BlackBox_Continuations is
 
   begin
     if Length_Of(sols) > 0 then
+      Reporting_Root_Refiner(outfile,p,sols,epsxa,epsfa,nb,5,false);
      -- note that Silent means no writing concerning job scheduling
      -- Silent_Multitasking_Root_Refiner
      --   (outfile,nt,p,sols,epsxa,epsfa,tolsing,nb,5,deflate);
@@ -220,6 +222,7 @@ package body DoblDobl_BlackBox_Continuations is
 
   begin
     if Length_Of(sols) > 0 then
+      Reporting_Root_Refiner(outfile,p,sols,epsxa,epsfa,nb,5,false);
       -- Reporting_Root_Refiner
       --   (outfile,p,sols,ref_sols,epsxa,epsfa,tolsing,nb,5,false);
       null;
@@ -244,6 +247,7 @@ package body DoblDobl_BlackBox_Continuations is
 
   begin
     if Length_Of(sols) > 0 then
+      Reporting_Root_Refiner(outfile,p,sols,epsxa,epsfa,nb,5,false);
       --Silent_Multitasking_Root_Refiner
       --  (outfile,nt,p,sols,epsxa,epsfa,tolsing,nb,5,deflate);
       null;
@@ -283,8 +287,7 @@ package body DoblDobl_BlackBox_Continuations is
 
   begin
     if Length_Of(sols) > 0 then
-     -- Silent_Root_Refiner(p,sols,epsxa,epsfa,nb,5);
-      null;
+      Silent_Root_Refiner(p,sols,epsxa,epsfa,nb,5);
     end if;
   end Silent_Black_Box_Refine;
 
@@ -660,11 +663,11 @@ package body DoblDobl_BlackBox_Continuations is
     DoblDobl_Homotopy.Create(p,q,k,gamma);
     DoblDobl_Coefficient_Homotopy.Create(q,p,k,gamma);
     Tune_Continuation_Parameters(file);
-    new_line(file);
-    put_line(file,"THE SOLUTIONS :");
-    put(file,Length_Of(sols),1);
-    put(file," "); put(file,Head_Of(sols).n,1);
-    new_line(file);
+   -- new_line(file);
+   -- put_line(file,"THE SOLUTIONS :");
+   -- put(file,Length_Of(sols),1);
+   -- put(file," "); put(file,Head_Of(sols).n,1);
+   -- new_line(file);
     tstart(timer);
     Cont(file,sols,target);
     tstop(timer);
