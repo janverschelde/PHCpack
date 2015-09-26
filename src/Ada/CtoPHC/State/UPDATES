@@ -1,3 +1,6 @@
+Sat 26 Sep 2015 : added jobs to use_c2phc to call the blackbox solvers in
+  double double and quad double precision.
+
 Tue 22 Sep 2015 : use_syscon and use_c2phc provide operations to return the
   computed size limit of a string representation for (Laurent) polynomials
   stored in the systems containers.

@@ -563,6 +563,9 @@ function use_c2phc ( job : integer32;
 --                   a[1] : number of variables in the Laurent polynomial,
 --                   a[2] : index of the polynomial in the system,
 --                   b : string converted to an integer array,
+--         =  75 : solves the Laurent system in the system container
+--                 with the blackbox solver in standard double precision
+--                 and puts the solutions into the solution container;
 --         =  76 : puts a polynomial given as a string in the system 
 --                 container, with the input parameters as follows:
 --                   a[0] : number of characters in the string,
@@ -571,6 +574,7 @@ function use_c2phc ( job : integer32;
 --                   b : string converted to an integer array,
 --                 this operation is the reverse of job 67;
 --         =  77 : solves the polynomial system in the system container
+--                 with the blackbox solver in standard double precision
 --                 and puts the solutions into the solution container;
 --         =  78 : computes the mixed volume for the system in the systems
 --                 container and fills the cells container with the regular
@@ -578,6 +582,18 @@ function use_c2phc ( job : integer32;
 --         =  79 : computes the mixed volume and stable mixed volume of the
 --                 system in the container and fills the cells container with
 --                 the mixed cells.
+--         = 700 : solves the polynomial system in the system container
+--                 with the blackbox solver in double double precision 
+--                 and puts the solutions into the solution container;
+--         = 701 : solves the Laurent system in the system container
+--                 with the blackbox solver in double double precision 
+--                 and puts the solutions into the solution container;
+--         = 702 : solves the polynomial system in the system container
+--                 with the blackbox solver in quad double precision 
+--                 and puts the solutions into the solution container;
+--         = 703 : solves the Laurent system in the system container
+--                 with the blackbox solver in quad double precision 
+--                 and puts the solutions into the solution container.
 --
 -- the size limit of the string representation of a polynomial :
 -- 
