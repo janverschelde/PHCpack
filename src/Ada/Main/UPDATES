@@ -1,5 +1,7 @@
 Fri 25 Sep 2015 : more versions of Solve in double double and quad double
   precision in black_box_solvers, completed with Square_Main as well.
+  New bablphc2 and bablphc4 to perform the phc -b2 and phc -b4,
+  enabled by changes in dispatch.adb.
 
 Thu 24 Sep 2015 : extended black_box_root_counters with procedures on
   systems with coefficients in double double and quad double precision.

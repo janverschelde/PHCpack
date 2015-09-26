@@ -277,12 +277,13 @@ procedure bablphc ( nt : in natural32; infilename,outfilename : in string ) is
   begin
     Standard_System_Readers.Read_System(infile,infilename,q);
     if q = null then
-      put_line(Greeting_Banners.welcome);
-      put("running the blackbox solver of PHCpack");
+      put_line(Greeting_Banners.welcome & ".");
+      put("Running the blackbox solver");
       if nt = 0
-       then put_line(", no tasking");
-       else put(", with "); put(nt,1); put_line(" tasks");
+       then put(", no tasking");
+       else put(", with "); put(nt,1); put(" tasks");
       end if;
+      put_line(", in double precision.");
       new_line; get(q);
     else
       Scan_and_Skip(infile,"SOLUTIONS",append_sols);

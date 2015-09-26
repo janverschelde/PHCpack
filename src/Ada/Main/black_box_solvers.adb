@@ -905,10 +905,11 @@ package body Black_Box_Solvers is
     output_to_file : boolean;
 
   begin
-   -- put_line("in Black_Box_Solvers.Square_Main for regular poly system");
+   -- put_line("in Black_Box_Solvers.Square_Main for dobldobl poly system");
     Ask_Output_File(outfile,outfilename,output_to_file);
-    if output_to_file
-     then put(outfile,p.all);
+    if output_to_file then
+      put(outfile,natural32(p'last),1); new_line(outfile);
+      put(outfile,p.all);
     end if;
     tstart(timer);
     if Are_Constants_In(p.all) then
@@ -1025,8 +1026,9 @@ package body Black_Box_Solvers is
   begin
    -- put_line("in Black_Box_Solvers.Square_Main for regular poly system");
     Ask_Output_File(outfile,outfilename,output_to_file);
-    if output_to_file
-     then put(outfile,p.all);
+    if output_to_file then
+      put(outfile,natural32(p'last),1); new_line(outfile);
+      put(outfile,p.all);
     end if;
     tstart(timer);
     if Are_Constants_In(p.all) then

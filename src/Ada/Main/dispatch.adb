@@ -11,6 +11,7 @@ with mainsmvc,babldmvc;       -- mixed-volume computation
 with maintrack;               -- path tracking
 with mainpoco,bablpoco;       -- polynomial continuation
 with mainphc,bablphc;         -- main phc driver + blackbox
+with bablphc2,bablphc4;       -- blackbox in double double and quad double
 with mainvali,bablvali;       -- validation tool
 with mainenum,bablenum;       -- numerical Schubert calculus
 with mainfeed;                -- realization of pole placing feedback
@@ -208,6 +209,31 @@ procedure Dispatch is
     return res;
   end Number_of_Tasks;
 
+  function BlackBox_Precision return natural32 is
+
+  -- DESCRIPTION :
+  --   Returns the precision of the blackbox solver:
+  --   1 : the -b is followed by a space (or nothing);
+  --   2 : double double precision, as we have -b2 at the command line;
+  --   4 : quad double precision is given as -b4 at the command line.
+
+    res : natural32 := 1;
+
+  begin
+    for i in 1..Unix_Command_Line.Number_of_Arguments loop
+      declare
+        s : constant string := Unix_Command_Line.Argument(i);
+      begin
+        if s(2) = 'b' then
+          if s'last > 2 
+           then res := Convert(s(3..s'last)); exit;
+          end if;
+        end if;
+      end;
+    end loop;
+    return res;
+  end BlackBox_Precision;
+
   function Find_Seed return natural32 is
 
   -- DESCRIPTION :
@@ -257,19 +283,20 @@ procedure Dispatch is
   --   When the first option is 'b', then this routine handles the
   --   second option and calls the appropriate main driver.
 
+    bbprc : constant natural32 := BlackBox_Precision;
+
   begin
+   -- put("The blackbox precision : "); put(bbprc,1); new_line;
     case option2 is
       when 's'    => mainscal(file1,file2);
       when 'd'    => mainred(file1,file2);
       when 'r'    =>
         case option3 is
-         -- when 't' => bablroco(Number_of_Tasks(3),file1,file2);
           when 't' => bablroco(Number_of_Tasks,file1,file2);
           when others => bablroco(0,file1,file2);
         end case;
       when 'm'    =>
         case option3 is
-         -- when 't' => babldmvc(Number_of_Tasks(3),file1,file2);
           when 't' => babldmvc(Number_of_Tasks,file1,file2);
           when others => babldmvc(0,file1,file2);
         end case;
@@ -278,12 +305,20 @@ procedure Dispatch is
       when 'e'    => bablenum(file1,file2);
       when 't'    => 
         case option3 is
-         -- when 'm' => babldmvc(Number_of_Tasks(2),file1,file2);
           when 'm' => babldmvc(Number_of_Tasks,file1,file2);
-         -- when others => bablphc(Number_of_Tasks(2),file1,file2);
-          when others => bablphc(Number_of_Tasks,file1,file2);
+          when others =>
+            case bbprc is
+              when 2 => bablphc2(Number_of_Tasks,file1,file2);
+              when 4 => bablphc4(Number_of_Tasks,file1,file2);
+              when others => bablphc(Number_of_Tasks,file1,file2);
+            end case;
         end case;
-      when others => bablphc(0,file1,file2);
+      when others =>
+        case bbprc is
+          when 2 => bablphc2(0,file1,file2);
+          when 4 => bablphc4(0,file1,file2);
+          when others => bablphc(0,file1,file2);
+        end case;
     end case;
   end Black_Box_Dispatcher;
 
@@ -447,6 +482,7 @@ procedure Dispatch is
    -- nt : constant natural := Number_of_Tasks(1);
     nt : constant natural32 := Number_of_Tasks;
     ns : constant string := Convert(integer32(nt));
+    bbprc : constant natural32 := BlackBox_Precision;
 
   begin
     case o2 is
@@ -463,7 +499,12 @@ procedure Dispatch is
       when 'b' =>
         case o3 is
           when 'm' => babldmvc(nt,infile,outfile);
-          when others => bablphc(nt,infile,outfile);
+          when others =>
+            case bbprc is
+              when 2 => bablphc2(nt,infile,outfile);
+              when 4 => bablphc4(nt,infile,outfile);
+              when others => bablphc(nt,infile,outfile);
+            end case;
         end case;
       when others => mainphc(nt,infile,outfile);
     end case;
