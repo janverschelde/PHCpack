@@ -571,6 +571,26 @@ static PyObject *py2c_solve_system ( PyObject *self, PyObject *args );
  *   On return, the container for solutions in standard double precision
  *   contains the solutions to the system in the standard systems container. */
 
+static PyObject *py2c_solve_dobldobl_system ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Calls the blackbox solver on the system stored in the container for
+ *   systems with coefficients in double double precision.
+ *   One integer is expected on input: the number of tasks.
+ *   If that number is zero, then no multitasking is applied.
+ *   On return, the container for solutions in double double precision
+ *   contains the solutions to the system in the dobldobl systems container. */
+
+static PyObject *py2c_solve_quaddobl_system ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Calls the blackbox solver on the system stored in the container for
+ *   systems with coefficients in quad double precision.
+ *   One integer is expected on input: the number of tasks.
+ *   If that number is zero, then no multitasking is applied.
+ *   On return, the container for solutions in quad double precision
+ *   contains the solutions to the system in the quaddobl systems container. */
+
 static PyObject *py2c_solve_Laurent_system ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -583,6 +603,36 @@ static PyObject *py2c_solve_Laurent_system ( PyObject *self, PyObject *args );
  *   otherwise as many tasks as the number will run.
  *   On return, the container for solutions in standard double precision
  *   contains the solutions to the system in the standard Laurent systems
+ *   container. */
+
+static PyObject *py2c_solve_dobldobl_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Calls the blackbox solver on the system stored in the container for
+ *   Laurent systems with coefficients in double double precision.
+ *   Two integers are expected on input:
+ *   1) a boolean flag silent: if 1, then no intermediate output about
+ *   the root counts is printed, if 0, then the solver is verbose; and 
+ *   2) the number of tasks: if 0, then no multitasking is applied,
+ *   otherwise as many tasks as the number will run.
+ *   On return, the container for solutions in double double precision
+ *   contains the solutions to the system in the dobldobl Laurent systems
+ *   container. */
+
+static PyObject *py2c_solve_quaddobl_Laurent_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Calls the blackbox solver on the system stored in the container for
+ *   Laurent systems with coefficients in quad double precision.
+ *   Two integers are expected on input:
+ *   1) a boolean flag silent: if 1, then no intermediate output about
+ *   the root counts is printed, if 0, then the solver is verbose; and 
+ *   2) the number of tasks: if 0, then no multitasking is applied,
+ *   otherwise as many tasks as the number will run.
+ *   On return, the container for solutions in quad double precision
+ *   contains the solutions to the system in the quaddobl Laurent systems
  *   container. */
 
 static PyObject *py2c_mixed_volume ( PyObject *self, PyObject *args );

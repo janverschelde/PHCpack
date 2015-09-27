@@ -1,5 +1,6 @@
 Sun 27 Sep 2015 : extended phcpack with blackbox solvers in double double
-  and quad double precision, tested by phc_solve.c
+  and quad double precision, tested by phc_solve.c.  Used the new solvers
+  in the wrappers for the blackbox solves in phcpy2c for use in Python. 
 
 Tue 22 Sep 2015 : made naming of functions in syscon consistent,
   adding _standard_ when operating on the standard systems container.
