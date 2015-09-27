@@ -1,3 +1,6 @@
+Sun 27 Sep 2015 : to solver.py extended the solve() with an extra option
+  to set the working precision, to double, double double, or quad double.
+
 Thu 24 Sep 2015 : in preparation for 0.3.0, updated setup.py, __init__.py,
   and conf.py, added reference to GPU paper in references.rst.
 

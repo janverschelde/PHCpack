@@ -64,14 +64,13 @@ def random_system(dim, nbrmon, deg, cff):
     py2c_syscon_random_system(dim, nbrmon, deg, cff)
     return load_standard_system()
 
-def solve(pols, silent=False, tasks=0):
+def standard_solve(pols, silent=False, tasks=0):
     """
-    Calls the blackbox solver of PHCpack.
-    On input in pols is a list of strings.
-    By default, the solver will print to screen the
-    computed root counts.  To make the solver silent,
-    set the flag silent to True.
+    Calls the blackbox solver.  On input in pols is a list of strings.
+    By default, the solver will print to screen the computed root counts.
+    To make the solver silent, set the flag silent to True.
     The number of tasks for multithreading is given by tasks.
+    The solving happens in standard double precision arithmetic.
     """
     from phcpy2c import py2c_syscon_clear_standard_Laurent_system
     from phcpy2c import py2c_syscon_initialize_number_of_standard_Laurentials
@@ -89,6 +88,76 @@ def solve(pols, silent=False, tasks=0):
         py2c_syscon_store_standard_Laurential(nchar, dim, ind+1, pol)
     py2c_solve_Laurent_system(silent, tasks)
     return load_standard_solutions()
+
+def dobldobl_solve(pols, silent=False, tasks=0):
+    """
+    Calls the blackbox solver.  On input in pols is a list of strings.
+    By default, the solver will print to screen the computed root counts.
+    To make the solver silent, set the flag silent to True.
+    The number of tasks for multithreading is given by tasks.
+    The solving happens in double double precision arithmetic.
+    """
+    from phcpy2c import py2c_syscon_clear_dobldobl_Laurent_system
+    from phcpy2c import py2c_syscon_initialize_number_of_dobldobl_Laurentials
+    from phcpy2c import py2c_syscon_store_dobldobl_Laurential
+    from phcpy2c import py2c_solcon_clear_dobldobl_solutions
+    from phcpy2c import py2c_solve_dobldobl_Laurent_system
+    from interface import load_dobldobl_solutions
+    py2c_syscon_clear_dobldobl_Laurent_system()
+    py2c_solcon_clear_dobldobl_solutions()
+    dim = len(pols)
+    py2c_syscon_initialize_number_of_dobldobl_Laurentials(dim)
+    for ind in range(0, dim):
+        pol = pols[ind]
+        nchar = len(pol)
+        py2c_syscon_store_dobldobl_Laurential(nchar, dim, ind+1, pol)
+    py2c_solve_dobldobl_Laurent_system(silent, tasks)
+    return load_dobldobl_solutions()
+
+def quaddobl_solve(pols, silent=False, tasks=0):
+    """
+    Calls the blackbox solver.  On input in pols is a list of strings.
+    By default, the solver will print to screen the computed root counts.
+    To make the solver silent, set the flag silent to True.
+    The number of tasks for multithreading is given by tasks.
+    The solving happens in quad double precision arithmetic.
+    """
+    from phcpy2c import py2c_syscon_clear_quaddobl_Laurent_system
+    from phcpy2c import py2c_syscon_initialize_number_of_quaddobl_Laurentials
+    from phcpy2c import py2c_syscon_store_quaddobl_Laurential
+    from phcpy2c import py2c_solcon_clear_quaddobl_solutions
+    from phcpy2c import py2c_solve_quaddobl_Laurent_system
+    from interface import load_quaddobl_solutions
+    py2c_syscon_clear_quaddobl_Laurent_system()
+    py2c_solcon_clear_quaddobl_solutions()
+    dim = len(pols)
+    py2c_syscon_initialize_number_of_quaddobl_Laurentials(dim)
+    for ind in range(0, dim):
+        pol = pols[ind]
+        nchar = len(pol)
+        py2c_syscon_store_quaddobl_Laurential(nchar, dim, ind+1, pol)
+    py2c_solve_quaddobl_Laurent_system(silent, tasks)
+    return load_quaddobl_solutions()
+
+def solve(pols, silent=False, tasks=0, precision='d'):
+    """
+    Calls the blackbox solver.  On input in pols is a list of strings.
+    By default, the solver will print to screen the computed root counts.
+    To make the solver silent, set the flag silent to True.
+    The number of tasks for multithreading is given by tasks.
+    Three levels of precision are supported:
+    d  : standard double precision (1.1e-15 or 2^(-53)),
+    dd : double double precision (4.9e-32 or 2^(-104)),
+    qd : quad double precision (1.2e-63 or 2^(-209)).
+    """
+    if(precision == 'd'):
+        return standard_solve(pols, silent, tasks)
+    elif(precision == 'dd'):
+        return dobldobl_solve(pols, silent, tasks)
+    elif(precision == 'qd'):
+        return quaddobl_solve(pols, silent, tasks)
+    else:
+        print 'wrong level of precision, use d, dd, or qd'
 
 def newton_step(system, solutions, precision='d', decimals=100):
     """
