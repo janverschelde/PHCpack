@@ -14,12 +14,14 @@ with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
 with Standard_Random_Vectors;            use Standard_Random_Vectors;
 with Standard_Natural_Matrices;
 with Standard_Natural_Matrices_io;       use Standard_Natural_Matrices_io;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_Point_Lists;               use Standard_Point_Lists;
 with Standard_Quad_Trees;                use Standard_Quad_Trees;
 with Standard_Quad_Trees_io;             use Standard_Quad_Trees_io;
 with Standard_Condition_Report;          use Standard_Condition_Report;
+with DoblDobl_Quad_Trees;
+with QuadDobl_Quad_Trees;
 with Drivers_for_Condition_Tables;       use Drivers_for_Condition_Tables;
 with Standard_Select_Solutions;
 
@@ -195,6 +197,8 @@ procedure ts_quad is
               ( infile : in file_type; len,dim : in natural32;
                 pl : out Point_List ) is
 
+    use Standard_Complex_Solutions;
+
     timer : Timing_Widget;
     s : Solution(integer32(dim));
     h1 : Vector(1..integer32(dim)) := Random_Vector(1,integer32(dim));
@@ -237,6 +241,8 @@ procedure ts_quad is
   --            of hash functions on the list of solutions;
   --   length   size of the list pl, equals number of solutions.
 
+    use Standard_Select_Solutions;
+
     dim : natural32;
     fail : boolean;
 
@@ -262,6 +268,8 @@ procedure ts_quad is
   -- DESCRIPTION :
   --   Scans all sorted leaves of the quad node and reports all pairs
   --   of clustered points.
+
+    use Standard_Complex_Solutions;
 
     cnt : natural32 := 0;
     ind : integer32 := 0;
@@ -384,6 +392,8 @@ procedure ts_quad is
   -- DESCRIPTION :
   --   This procedure test the quad tree construction for a solution list
   --   entirely loaded into main memory.
+
+    use Standard_Complex_Solutions;
 
     infile : file_type;
     ans : character;

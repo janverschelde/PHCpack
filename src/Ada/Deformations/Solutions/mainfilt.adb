@@ -5,7 +5,8 @@ with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 --with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 --with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Drivers_for_Solution_Filters;      use Drivers_for_Solution_Filters;
-with Drivers_for_Condition_Tables;      use Drivers_for_Condition_Tables;
+with Standard_Select_Solutions;         use Standard_Select_Solutions;
+-- with Drivers_for_Condition_Tables;      use Drivers_for_Condition_Tables;
 
 procedure mainfilt ( infilename,outfilename : in string ) is
 
