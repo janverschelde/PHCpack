@@ -488,6 +488,10 @@ ts_solstr:
 ts_quad:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_quad.adb -o $(BIN)/ts_quad
 
+ts_quadpart:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_quadpart.adb \
+              -o $(BIN)/ts_quadpart
+
 ts_contab:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_contab.adb -o $(BIN)/ts_contab
 
@@ -2859,6 +2863,30 @@ phcpy2c.so:
             lists_and_strings.o phcpack.o witset.o schubert.o mapcon.o \
             next_track.o phcpy2c.o unisolvers.o giftwrappers.o scalers.o \
             -o ../Python/PHCpy/phcpy/phcpy2c.so -lm
+
+phcpy2c.a:
+	gcc -static -c -fPIC -O2 $(PHCLib)/syscon.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/solcon.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/product.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/lists_and_strings.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/celcon.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/scalers.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/witset.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/unisolvers.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/giftwrappers.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/phcpack.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/schubert.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/mapcon.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/next_track.c
+	gcc -static -c -fPIC -I$(PYTHON) -I$(PYTHON)/Include \
+                               $(PHCLib)/phcpy2c.c
+	gnatmake -static -c -fPIC $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatbind -static -n use_c2phc
+	gnatlink -v -static -C use_c2phc syscon.o solcon.o product.o celcon.o \
+            lists_and_strings.o phcpack.o witset.o schubert.o mapcon.o \
+            next_track.o phcpy2c.o -Lpython2.6 \
+            unisolvers.o giftwrappers.o scalers.o \
+            -lm -o ../Python/PHCpy/phcpy/phcpy2c.o
 
 # phcpy2c with double version of Path library :
 
