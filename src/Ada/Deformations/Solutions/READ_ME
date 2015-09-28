@@ -60,12 +60,17 @@ standard_system_and_solutions_io   : get/put standard systems and solutions
 dobldobl_system_and_solutions_io   : basic output for dd complex sys & sols
 quaddobl_system_and_solutions_io   : basic output for qd complex sys & sols
 multprec_system_and_solutions_io   : get/put multprec systems and solutions
-standard_point_lists               : hashing solutions into the plane
+standard_point_lists               : hashing standard solutions into the plane
+dobldobl_point_lists               : hashing dobldobl solutions into the plane
+quaddobl_point_lists               : hashing quaddobl solutions into the plane
 ts_ptlists                         : test on sorting point lists
-standard_quad_trees                : processing hashed solutions via quadtree
-standard_quad_trees_io             : output of cardinalities of quadtree
+standard_quad_trees                : processing hashed solutions via quad tree
+standard_quad_trees_io             : output of cardinalities of quad tree
+dobldobl_quad_trees                : quad trees for double double points
+quaddobl_quad_trees                : quad trees for quad double points
+ts_quadpart                        : test on the partitioning with quad tree
 standard_select_solutions          : tools to select solutions
-ts_quad                            : test on quadtree development
+ts_quad                            : test on quad tree development
 ts_selsol                          : select solutions from file
 solution_drops                     : drop a coordinate of a solution
 ts_drops                           : interactive tests on solution drops
