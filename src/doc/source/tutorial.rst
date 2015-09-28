@@ -9,18 +9,24 @@ Executable versions of the program for various machine architectures
 and operating systems are available via
 <http://www.math.uic.edu/~jan/download.html>.
 
-If you are frugal with disk space,
-it may be a good idea to download on the /tmp.
-On Linux, type in the following commands to unzip
-and untar the downloaded file:
+For Windows operating systems, the 
+executable version of phc is in the file ``phc.exe``
+and is available for download in its uncompressed format.
+Using the plain version of phc on a Windows system 
+requires the opening of a command prompt window.
+
+For Mac OS X and Linux versions, the executable is tarred and gzipped.
+If the downloaded file is saved as ``x_phcv2_4.p.tar.gz``,
+then the following commands to unzip and untar the downloaded file 
+can be typed at the command prompt:
 
 ::
 
-   gunzip lin_phcv2p.tar.gz
-   tar xpf lin_phcv2p.tar
+   gunzip x_phcv2_4p.tar.gz
+   tar xpf x_phcv2_4p.tar
 
-If all went well, typing /tmp/phc at the command prompt should bring up 
-the welcome message and the screen with available options.
+If all went well, typing ``./phc`` at the command prompt should bring
+up the welcome message and the screen with available options.
 
 Input formats
 -------------
@@ -98,6 +104,20 @@ This list is returned in Maple format.
 
 Other interfaces are PHClab (for Octave and MATLAB),
 phc.py (for Sage), and PHCpack.m2 (for Macaulay 2).
+These interfaces require only the executable phc to be present
+in some directory contained in the execution path.
+Interfaces for C and C++ programmers require the compilation
+of the source code.  For Python, a shared object file needs
+to exist for the particular architecture.
+
+A diagram of the interfaces to PHCpack and phc is depicted below:
+
+.. image:: ./honeyface.png
+
+The interfaces PHCpack.m2, PHCmaple, PHClab, shown to the right
+of the antidiagonal require only the executable version phc.
+The other interfaces PHClib, PHCmpi, and phcpy are tied
+to the source code.
 
 Calling the blackbox solver
 ---------------------------
