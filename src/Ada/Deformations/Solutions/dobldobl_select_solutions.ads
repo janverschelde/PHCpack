@@ -2,53 +2,13 @@ with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Natural_Vectors;           use Standard_Natural_Vectors;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;         use DoblDobl_Complex_Solutions;
 
-package Standard_Select_Solutions is
+package DoblDobl_Select_Solutions is
 
 -- DESCRIPTION :
 --   This package offers routines to select solutions 
---   computing in standard double floating-point precision from file.
-
-  procedure Read_Dimensions
-               ( file : in file_type; len,dim : out natural32;
-                 fail : out boolean );
-
-  -- DESCRIPTION :
-  --   Reads the length of a solution list and the dimension
-  --   of its solution vectors from file and reports failure.
-
-  procedure Prompt_to_Scan_Banner
-              ( infile : in file_type; bannered : out boolean;
-                fail : out boolean );
-
-  -- DESCRIPTION :
-  --   Prompts the user whether the solutions on the infile are preceeded
-  --   by a system.  The fail is true if the banner was not found.
-
-  -- ON RETURN :
-  --   bannered is true if the user indicated that the solutions
-  --            are preceeded by a banner, false otherwise;
-  --   fail     true if bannered and if the banner was not found;
-  --            false otherwise.
-
-  procedure Scan_Banner_Dimensions
-              ( infile : in file_type; len,dim : out natural32;
-                bannered,fail : out boolean );
-
-  -- DESCRIPTION :
-  --   Prompts the user, asking whether the solutions on file are
-  --   preceeded by a banner, before reading the solution dimensions.
-
-  -- ON ENTRY :
-  --   infile   input file, must be opened for reading.
-
-  -- ON RETURN :
-  --   len      length of the solution list on file, if not fail;
-  --   dim      dimensions of the solutions on file, if not fail;
-  --   bannered is true if the user indicated that the solutions are
-  --            proceeded by a banner, false otherwise;
-  --   fail     true if the length and dimensions could not be read.
+--   computed with double double precision arithmetic from file.
 
   procedure Scan_Solutions
               ( file : in file_type; len,dim : in natural32;
@@ -197,4 +157,4 @@ package Standard_Select_Solutions is
   --   sols     selected solutions as list;
   --   fail     true if something went wrong...
 
-end Standard_Select_Solutions;
+end DoblDobl_Select_Solutions;

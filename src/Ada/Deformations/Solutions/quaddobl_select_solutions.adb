@@ -1,62 +1,9 @@
-with Communications_with_User;           use Communications_with_User;
 with File_Scanning;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
-with Drivers_for_Condition_Tables;
+with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
+with Standard_Select_Solutions;
 
-package body Standard_Select_Solutions is
-
-  procedure Read_Dimensions
-              ( file : in file_type; len,dim : out natural32;
-                fail : out boolean ) is
-
-  begin
-    fail := true;
-    len := 0; get(file,len);
-    dim := 0; get(file,dim);
-    fail := false;
-  exception
-    when others
-      => put_line("Something bad happened while reading dimensions.");
-         fail := true;
-  end Read_Dimensions;
-
-  procedure Prompt_to_Scan_Banner
-              ( infile : in file_type; bannered,fail : out boolean ) is
-
-    ans : character;
-    found : boolean;
-
-  begin
-    new_line;
-    put("Are the solutions preceeded by a system ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    if ans = 'y' then
-      bannered := true;
-      put_line("Scanning for THE SOLUTIONS banner...");
-      File_Scanning.Scan_and_Skip(infile,"THE SOLUTIONS",found);
-      if found then
-        put_line("  found banner, ready to continue reading dimensions...");
-        fail := false;
-      else
-        put_line("  did not find banner, format of file maybe wrong...");
-        fail := true;
-      end if;
-    else
-      bannered := false;
-      fail := false;
-    end if;
-  end Prompt_to_Scan_Banner;
-
-  procedure Scan_Banner_Dimensions
-              ( infile : in file_type; len,dim : out natural32;
-                bannered,fail : out boolean ) is
-  begin
-    Prompt_to_Scan_Banner(infile,bannered,fail);
-    if not fail
-     then Read_Dimensions(infile,len,dim,fail);
-    end if;
-  end Scan_Banner_Dimensions;
+package body QuadDobl_Select_Solutions is
 
   procedure Scan_Solutions
               ( file : in file_type; len,dim : in natural32;
@@ -204,7 +151,8 @@ package body Standard_Select_Solutions is
    bannered : boolean;
 
   begin
-    Scan_Banner_Dimensions(file,length,dim,bannered,fail);
+    Standard_Select_Solutions.Scan_Banner_Dimensions
+      (file,length,dim,bannered,fail);
     if fail then
       put_line("failed to scan the solution file again...");
     else
@@ -225,7 +173,8 @@ package body Standard_Select_Solutions is
    bannered : boolean;
 
   begin
-    Scan_Banner_Dimensions(file,length,dim,bannered,fail);
+    Standard_Select_Solutions.Scan_Banner_Dimensions
+      (file,length,dim,bannered,fail);
     if fail then
       put_line("failed to scan the solution file again...");
     else
@@ -268,7 +217,7 @@ package body Standard_Select_Solutions is
       fail := not found;
     end if;
     if not fail
-     then Read_Dimensions(file,length,dim,fail);
+     then Standard_Select_Solutions.Read_Dimensions(file,length,dim,fail);
     end if;
     if fail then
       put_line("failed to scan the solution file again...");
@@ -297,4 +246,4 @@ package body Standard_Select_Solutions is
     end if;
   end Select_from_File;
 
-end Standard_Select_Solutions;
+end QuadDobl_Select_Solutions;

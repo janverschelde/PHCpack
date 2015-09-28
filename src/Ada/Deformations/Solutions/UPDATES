@@ -1,6 +1,8 @@
 Mon 28 Sep 2015 : new packages {dobldobl,quaddobl}_point_lists,
   tested by ts_ptlists, and new packages {dobldobl,quaddobl}_quad_trees,
-  tested by ts_quadpart.
+  tested by ts_quadpart.  Factored code of the drivers_for_condition_tables
+  into standard_select_solutions, new packages *dobl_select_solutions,
+  tested by ts_selsol.
 
 Thu 24 Sep 2015 : to {dobldobl,quaddobl}_complex_solutions, added a push
   procedure to insert a list of solutions to the front of another list.
