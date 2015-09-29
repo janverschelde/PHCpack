@@ -1,13 +1,22 @@
 with text_io;                           use text_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
-with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
+with Standard_Complex_Numbers;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with DoblDobl_Complex_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with QuadDobl_Complex_Numbers;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Drivers_for_Solution_Filters is
 
 -- DESCRIPTION :
---   This package provides some utilities and the main driver to
+--   This package provides some utilities and the main drivers to
 --   filter lists of solutions, subject to user given criteria.
+--   The drivers support double, double double, and quad double precision
+--   and work on solution lists that are entirely in main memory
+--   and on solution lists that are directly read from file.
 
   procedure Write_Symbols;
 
@@ -20,7 +29,19 @@ package Drivers_for_Solution_Filters is
   --   Prompts the user for a symbol and returns 
   --   the position of the symbol in the symbol table.
 
-  procedure Read_Double_Complex ( c : out Complex_Number );
+  procedure Read_Double_Double ( f : out double_double );
+  procedure Read_Quad_Double ( f : out quad_double );
+
+  -- DESCRIPTION :
+  --   Reads a double double or a quad double.
+  --   In case of an exception, the user is invited to try again.
+
+  procedure Read_Double_Complex
+              ( c : out Standard_Complex_Numbers.Complex_Number );
+  procedure Read_DoblDobl_Complex
+              ( c : out DoblDobl_Complex_Numbers.Complex_Number );
+  procedure Read_QuadDobl_Complex
+              ( c : out QuadDobl_Complex_Numbers.Complex_Number );
 
   -- DESCRIPTION :
   --   Prompts the user to give the real and imaginary part
@@ -33,7 +54,14 @@ package Drivers_for_Solution_Filters is
   --   returns the selected answer.
 
   procedure Driver_for_Solution_Filters
-               ( file : in file_type; sols : in Solution_List );
+               ( file : in file_type;
+                 sols : in Standard_Complex_Solutions.Solution_List );
+  procedure Driver_for_Solution_Filters
+               ( file : in file_type;
+                 sols : in DoblDobl_Complex_Solutions.Solution_List );
+  procedure Driver_for_Solution_Filters
+               ( file : in file_type;
+                 sols : in QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Creates new solution lists from filtering a given list subject
@@ -44,7 +72,11 @@ package Drivers_for_Solution_Filters is
   --     4) reached a target value.
   --   The criteria are set up with respect to a given tolerance.
 
-  procedure Driver_for_Solution_Filters
+  procedure Driver_for_Standard_Solution_Filters
+               ( infile,outfile : in file_type; len,dim : in natural32 );
+  procedure Driver_for_DoblDobl_Solution_Filters
+               ( infile,outfile : in file_type; len,dim : in natural32 );
+  procedure Driver_for_QuadDobl_Solution_Filters
                ( infile,outfile : in file_type; len,dim : in natural32 );
 
   -- DESCRIPTION :
