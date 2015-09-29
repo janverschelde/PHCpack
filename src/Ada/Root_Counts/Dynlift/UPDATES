@@ -1,3 +1,6 @@
+Tue 29 Sep 2015 : eliminated the unused parameter perm from all calls in
+  black_polyhedral_continuations, which caused change in babldmvc.adb.
+
 Wed 9 Sep 2015 : black_polyhedral_continuations contains path tracking with
   quad double precision arithmetic in blackbox mode.
 

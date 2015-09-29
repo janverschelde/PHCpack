@@ -83,7 +83,7 @@ procedure babldmvc ( nt : in natural32; infilename,outfilename : in string ) is
     if mv > 0 then
       tstart(timer);
       Black_Box_Polyhedral_Continuation
-        (integer32(nt),p,mix,perm,stlb,lifsup.all,orgmcc,stbmcc,q,qsols,qsols0);
+        (integer32(nt),p,mix,stlb,lifsup.all,orgmcc,stbmcc,q,qsols,qsols0);
       tstop(timer);
       new_line(file);
       put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
