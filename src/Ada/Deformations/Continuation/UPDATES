@@ -1,3 +1,6 @@
+Tue 29 Sep 2015 : tuned continuation parameters for double double and quad
+  double in {dobldobl,quaddobl}_blackbox_continuations.adb.
+
 Fri 25 Sep 2015 : from {dobldobl,quaddobl}_blackbox_continuations.adb
   remove the statement to write a superfluous solutions banner;
   added calls to the root refiners, still without multitasking.

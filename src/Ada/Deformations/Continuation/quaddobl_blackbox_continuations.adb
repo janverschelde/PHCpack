@@ -142,7 +142,7 @@ package body QuadDobl_BlackBox_Continuations is
 
   begin
    -- Continuation_Parameters.Tune(2);  -- too restrictive !!
-    Continuation_Parameters.Tune(0);
+    Continuation_Parameters.Tune(0,64); -- 64 decimal places
     new_line(outfile);
     put_line(outfile,"****************** CURRENT CONTINUATION PARAMETERS "
       & "*****************");
@@ -496,7 +496,7 @@ package body QuadDobl_BlackBox_Continuations is
     ls : Link_to_Solution;
 
   begin
-    Continuation_Parameters.Tune(0);
+    Continuation_Parameters.Tune(0,64);
     tstart(timer);
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
@@ -605,7 +605,7 @@ package body QuadDobl_BlackBox_Continuations is
   begin
     QuadDobl_Homotopy.Create(p,q,k,gamma);
     QuadDobl_Coefficient_Homotopy.Create(q,p,k,gamma);
-    Continuation_Parameters.Tune(0);
+    Continuation_Parameters.Tune(0,64);
     tstart(timer);
     Cont(sols,target);
     tstop(timer);
@@ -631,7 +631,7 @@ package body QuadDobl_BlackBox_Continuations is
   begin
     QuadDobl_Homotopy.Create(p,q,k,gamma);
     QuadDobl_Coefficient_Homotopy.Create(q,p,k,gamma);
-    Continuation_Parameters.Tune(0);
+    Continuation_Parameters.Tune(0,64);
     tstart(timer);
     Silent_Multitasking_Path_Tracker(sols,nt);
     tstop(timer);
@@ -891,7 +891,7 @@ package body QuadDobl_BlackBox_Continuations is
 
   begin
     QuadDobl_Laurent_Homotopy.Create(p,q,k,gamma);
-    Continuation_Parameters.Tune(0);
+    Continuation_Parameters.Tune(0,64);
     tstart(timer);
     Cont(sols,target);
     tstop(timer);
@@ -911,7 +911,7 @@ package body QuadDobl_BlackBox_Continuations is
 
   begin
     QuadDobl_Laurent_Homotopy.Create(p,q,k,gamma);
-    Continuation_Parameters.Tune(0);
+    Continuation_Parameters.Tune(0,64);
     tstart(timer);
     Silent_Multitasking_Laurent_Path_Tracker(sols,nt);
     tstop(timer);
