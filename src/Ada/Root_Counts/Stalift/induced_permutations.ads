@@ -48,6 +48,27 @@ package Induced_Permutations is
   --   In case of multiple correspondences, the smallest enclosing list
   --   of the lifted support is selected.
 
+  function Shift_Indices 
+             ( p : Standard_Integer_Vectors.Vector )
+             return Standard_Integer_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   If p'first = 1, then p is returned, otherwise p'first = 0
+  --   is assumed and the vector on return has the same contents as p,
+  --   but the indexing starts at one.
+
+  function Relabel_for_Zero
+             ( p : Standard_Integer_Vectors.Vector )
+             return Standard_Integer_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   If p contains a zero, then the vector on return contains
+  --   all entries of p increased by one, otherwise p is returned.
+  --   This is a patch for the permutation returned by MixedVol,
+  --   which starts its indexing apparently at zero.
+  --   The Shift_Indices of above is also applied to the vector on return.
+  --   The relabeling happens automatically in the Permute operations below.
+
   procedure Permute ( p : in Standard_Integer_Vectors.Vector;
                       f : in out Standard_Complex_Poly_Systems.Poly_Sys );
   procedure Permute ( p : in Standard_Integer_Vectors.Vector;

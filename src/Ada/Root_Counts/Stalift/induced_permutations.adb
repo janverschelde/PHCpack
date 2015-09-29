@@ -98,14 +98,59 @@ package body Induced_Permutations is
     return res;
   end Permutation;
 
+  function Shift_Indices 
+             ( p : Standard_Integer_Vectors.Vector )
+             return Standard_Integer_Vectors.Vector is
+  begin
+    if p'first = 1 then
+      return p;
+    else
+      declare
+        res : Standard_Integer_Vectors.Vector(1..p'last+1);
+      begin
+        for i in p'range loop
+          res(i+1) := p(i);
+        end loop;
+        return res;
+      end;
+    end if;
+  end Shift_Indices;
+
+  function Relabel_for_Zero
+             ( p : Standard_Integer_Vectors.Vector )
+             return Standard_Integer_Vectors.Vector is
+
+     inzero : boolean := false;
+
+  begin
+    for i in p'range loop
+      if p(i) = 0
+       then inzero := true; exit;
+      end if;
+    end loop;
+    if not inzero then
+      return Shift_Indices(p);
+    else
+      declare
+        rlp : Standard_Integer_Vectors.Vector(p'range);
+      begin
+        for i in p'range loop
+          rlp(i) := p(i) + 1;
+        end loop;
+        return Shift_Indices(rlp);
+      end;
+    end if;
+  end Relabel_for_Zero;
+ 
   procedure Permute ( p : in Standard_Integer_Vectors.Vector;
                       f : in out Standard_Complex_Poly_Systems.Poly_Sys ) is
 
     pf : Standard_Complex_Poly_Systems.Poly_Sys(f'range);
+    rp : constant Standard_Integer_Vectors.Vector := Relabel_for_Zero(p);
 
   begin
     for i in p'range loop
-      pf(p(i)) := f(i);
+      pf(rp(i)) := f(i);
     end loop;
     f := pf;
   end Permute;
@@ -114,10 +159,11 @@ package body Induced_Permutations is
                       f : in out Standard_Complex_Laur_Systems.Laur_Sys ) is
 
     pf : Standard_Complex_Laur_Systems.Laur_Sys(f'range);
-
+    rp : constant Standard_Integer_Vectors.Vector := Relabel_for_Zero(p);
+  
   begin
     for i in p'range loop
-      pf(p(i)) := f(i);
+      pf(rp(i)) := f(i);
     end loop;
     f := pf;
   end Permute;
@@ -126,10 +172,11 @@ package body Induced_Permutations is
                       f : in out DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
 
     pf : DoblDobl_Complex_Poly_Systems.Poly_Sys(f'range);
+    rp : constant Standard_Integer_Vectors.Vector := Relabel_for_Zero(p);
 
   begin
-    for i in p'range loop
-      pf(p(i)) := f(i);
+    for i in pf'range loop
+      pf(rp(i)) := f(i);
     end loop;
     f := pf;
   end Permute;
@@ -138,10 +185,11 @@ package body Induced_Permutations is
                       f : in out DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
 
     pf : DoblDobl_Complex_Laur_Systems.Laur_Sys(f'range);
+    rp : constant Standard_Integer_Vectors.Vector := Relabel_for_Zero(p);
 
   begin
     for i in p'range loop
-      pf(p(i)) := f(i);
+      pf(rp(i)) := f(i);
     end loop;
     f := pf;
   end Permute;
@@ -150,10 +198,11 @@ package body Induced_Permutations is
                       f : in out QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
 
     pf : QuadDobl_Complex_Poly_Systems.Poly_Sys(f'range);
+    rp : constant Standard_Integer_Vectors.Vector := Relabel_for_Zero(p);
 
   begin
     for i in p'range loop
-      pf(p(i)) := f(i);
+      pf(rp(i)) := f(i);
     end loop;
     f := pf;
   end Permute;
@@ -162,10 +211,11 @@ package body Induced_Permutations is
                       f : in out QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
 
     pf : QuadDobl_Complex_Laur_Systems.Laur_Sys(f'range);
+    rp : constant Standard_Integer_Vectors.Vector := Relabel_for_Zero(p);
 
   begin
     for i in p'range loop
-      pf(p(i)) := f(i);
+      pf(rp(i)) := f(i);
     end loop;
     f := pf;
   end Permute;

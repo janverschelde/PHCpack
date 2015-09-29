@@ -1,3 +1,6 @@
+Tue 29 Sep 2015 : relabeling of permutations in induced_permutations,
+  just in case the permutation would starts its indexing at zero.
+
 Thu 21 May 2015 : in drivers_for_mixedvol_algorithm, added a flag in the 
   specification to avoid a superfluous question about the start system.
   Also ts_drivstal.adb changed for the same reason.
