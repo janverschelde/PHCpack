@@ -23,8 +23,12 @@ with Standard_Complex_Prod_Systems_io;   use Standard_Complex_Prod_Systems_io;
 with Standard_Complex_Prod_Planes;
 with Random_Product_Start_Systems;       use Random_Product_Start_Systems;
 with Floating_Mixed_Subdivisions_io;
+with Induced_Permutations;
 with Black_Mixed_Volume_Computations;    use Black_Mixed_Volume_Computations;
 with Black_Polyhedral_Continuations;     use Black_Polyhedral_Continuations;
+
+--with Standard_Integer_Vectors_io;
+-- use Standard_Integer_Vectors_io;
 
 package body Black_Box_Root_Counters is
 
@@ -149,6 +153,12 @@ package body Black_Box_Root_Counters is
   begin
     Count_Roots(q,deg,tode,mptode,mhbz,setb,mivo,stmv,zz,nz,stlb,lifsup,
                 mix,perm,orgmcc,stbmcc,rocotime);
+   -- if perm /= null then
+   --   put("The permutation : "); put(perm); new_line;
+   --   put_line("The system before the permutation : "); put_line(p);
+   --   Induced_Permutations.Permute(perm.all,p);
+   --   put_line("The system after the permutation : "); put_line(p);
+   -- end if;
     Standard_Complex_Poly_Systems.Clear(q);
   end Count_Roots;
 
@@ -171,6 +181,9 @@ package body Black_Box_Root_Counters is
   begin
     Count_Roots(q,deg,tode,mptode,mhbz,setb,mivo,stmv,zz,nz,stlb,lifsup,
                 mix,perm,orgmcc,stbmcc,rocotime);
+   -- if perm /= null
+   --  then Induced_Permutations.Permute(perm.all,p);
+   -- end if;
     Standard_Complex_Poly_Systems.Clear(q);
   end Count_Roots;
 
@@ -299,6 +312,12 @@ package body Black_Box_Root_Counters is
   begin
     Count_Roots(file,sp,deg,tode,mptode,mhbz,setb,mivo,stmv,
                 zz,nz,stlb,lifsup,mix,perm,orgmcc,stbmcc,rocotime);
+   -- if perm /= null then
+   --   put("The permutation : "); put(perm); new_line;
+   --   put_line("The system before the permutation : "); put_line(p);
+   --   Induced_Permutations.Permute(perm.all,p);
+   --   put_line("The system after the permutation : "); put_line(p);
+   -- end if;
     Standard_Complex_Poly_Systems.Clear(sp);
   end Count_Roots;
 
@@ -322,6 +341,9 @@ package body Black_Box_Root_Counters is
   begin
     Count_Roots(file,sp,deg,tode,mptode,mhbz,setb,mivo,stmv,
                 zz,nz,stlb,lifsup,mix,perm,orgmcc,stbmcc,rocotime);
+   -- if perm /= null
+   --  then Induced_Permutations.Permute(perm.all,p);
+   -- end if;
     Standard_Complex_Poly_Systems.Clear(sp);
   end Count_Roots;
 
@@ -402,11 +424,11 @@ package body Black_Box_Root_Counters is
         Standard_Linear_Product_System.Clear;
       else 
         Black_Box_Polyhedral_Continuation
-          (nt,p,mix,perm,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
       end if;
     else 
       Black_Box_Polyhedral_Continuation
-        (nt,p,mix,perm,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
     end if;
     tstop(timer);
     hocotime := Elapsed_User_Time(timer);
@@ -469,11 +491,11 @@ package body Black_Box_Root_Counters is
         end;
       else 
         Black_Box_Polyhedral_Continuation
-          (nt,p,mix,perm,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
       end if;
     else 
       Black_Box_Polyhedral_Continuation
-        (nt,p,mix,perm,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
     end if;
     tstop(timer);
     hocotime := Elapsed_User_Time(timer);
@@ -536,11 +558,11 @@ package body Black_Box_Root_Counters is
         end;
       else 
         Black_Box_Polyhedral_Continuation
-          (nt,p,mix,perm,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
       end if;
     else 
       Black_Box_Polyhedral_Continuation
-        (nt,p,mix,perm,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
     end if;
     tstop(timer);
     hocotime := Elapsed_User_Time(timer);
@@ -602,12 +624,12 @@ package body Black_Box_Root_Counters is
       else
         put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
         Black_Box_Polyhedral_Continuation
-          (nt,p,mix,perm,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
       end if;
     else
       put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
       Black_Box_Polyhedral_Continuation
-        (nt,p,mix,perm,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
     end if;
     tstop(timer);
     new_line(file);
@@ -695,12 +717,12 @@ package body Black_Box_Root_Counters is
       else
         put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
         Black_Box_Polyhedral_Continuation
-          (nt,p,mix,perm,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
       end if;
     else
       put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
       Black_Box_Polyhedral_Continuation
-        (nt,p,mix,perm,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
     end if;
     tstop(timer);
     new_line(file);
@@ -788,12 +810,12 @@ package body Black_Box_Root_Counters is
       else
         put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
         Black_Box_Polyhedral_Continuation
-          (nt,p,mix,perm,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+          (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
       end if;
     else
       put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
       Black_Box_Polyhedral_Continuation
-        (nt,p,mix,perm,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
+        (nt,p,mix,stlb,lifted.all,orgmcc,stbmcc,q,qsols,qsols0);
     end if;
     tstop(timer);
     new_line(file);
@@ -1052,7 +1074,7 @@ package body Black_Box_Root_Counters is
     end if;
     rocotime := Elapsed_User_Time(timer);
     tstart(timer);
-    Black_Box_Polyhedral_Continuation(nt,p,mix,perm,lifsup.all,mixsub,q,qsols);
+    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
     tstop(timer);
     hocotime := Elapsed_User_Time(timer);
   end Black_Box_Root_Counting;
@@ -1081,7 +1103,7 @@ package body Black_Box_Root_Counters is
     end if;
     rocotime := Elapsed_User_Time(timer);
     tstart(timer);
-    Black_Box_Polyhedral_Continuation(nt,p,mix,perm,lifsup.all,mixsub,q,qsols);
+    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
     tstop(timer);
     Standard_Complex_Laur_Systems.Clear(sp);
     hocotime := Elapsed_User_Time(timer);
@@ -1111,7 +1133,7 @@ package body Black_Box_Root_Counters is
     end if;
     rocotime := Elapsed_User_Time(timer);
     tstart(timer);
-    Black_Box_Polyhedral_Continuation(nt,p,mix,perm,lifsup.all,mixsub,q,qsols);
+    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
     tstop(timer);
     Standard_Complex_Laur_Systems.Clear(sp);
     hocotime := Elapsed_User_Time(timer);
@@ -1144,7 +1166,7 @@ package body Black_Box_Root_Counters is
     rocotime := Elapsed_User_Time(timer);
     put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
     tstart(timer);
-    Black_Box_Polyhedral_Continuation(nt,p,mix,perm,lifsup.all,mixsub,q,qsols);
+    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
     tstop(timer);
     hocotime := Elapsed_User_Time(timer);
     new_line(file);
@@ -1190,7 +1212,7 @@ package body Black_Box_Root_Counters is
     put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
    -- careful to apply the permutation on p!
     tstart(timer);
-    Black_Box_Polyhedral_Continuation(nt,p,mix,perm,lifsup.all,mixsub,q,qsols);
+    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
     tstop(timer);
     hocotime := Elapsed_User_Time(timer);
     new_line(file);
@@ -1237,7 +1259,7 @@ package body Black_Box_Root_Counters is
     put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
    -- careful to apply the permutation on p!
     tstart(timer);
-    Black_Box_Polyhedral_Continuation(nt,p,mix,perm,lifsup.all,mixsub,q,qsols);
+    Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
     tstop(timer);
     hocotime := Elapsed_User_Time(timer);
     new_line(file);

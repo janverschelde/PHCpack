@@ -1,3 +1,6 @@
+Tue 29 Sep 2015 : updated black_box_solvers.adb for changed calls to the
+  black_box_polyhedral_continuation routines.
+
 Sat 26 Sep 2015 : black_box_solvers is now finally complete with all versions
   for double double and quad double precision.
 
