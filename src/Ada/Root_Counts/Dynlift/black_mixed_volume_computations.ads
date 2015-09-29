@@ -38,13 +38,15 @@ package Black_Mixed_Volume_Computations is
   --   mv        mixed volume.
 
   procedure Black_Box_Mixed_Volume_Computation
-               ( p : in out Poly_Sys; mix,perm : out Link_to_Vector;
+               ( p : in out Poly_Sys;
+                 mix,perm,iprm : out Link_to_Vector;
                  lifsup : out 
                    Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
                  mixsub : out Floating_Mixed_Subdivisions.Mixed_Subdivision;
                  mv : out natural32 );
   procedure Black_Box_Mixed_Volume_Computation
-               ( p : in out Laur_Sys; mix,perm : out Link_to_Vector;
+               ( p : in out Laur_Sys;
+                 mix,perm,iprm : out Link_to_Vector;
                  lifsup : out 
                    Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
                  mixsub : out Floating_Mixed_Subdivisions.Mixed_Subdivision;
@@ -61,12 +63,14 @@ package Black_Mixed_Volume_Computations is
   --   p         permuted if type of mixture is not fully mixed;
   --   mix       type of mixture;
   --   perm      permutation of equations in p for semimixed systems;
+  --   iprm      induced permutation on the supports;
   --   lifsup    lifted supports of the system;
   --   mixsub    a regular mixed-cell configuration;
   --   mv        mixed volume.
 
   procedure Black_Box_Mixed_Volume_Computation
-               ( p : in out Poly_Sys; mix,perm : out Link_to_Vector;
+               ( p : in out Poly_Sys;
+                 mix,perm,iprm : out Link_to_Vector;
                  stlb : out double_float;
                  lifsup : out 
                    Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
@@ -87,6 +91,7 @@ package Black_Mixed_Volume_Computations is
   --   stlb      lifting used for the articial origin;
   --   mix       type of mixture;
   --   perm      permutation of equations in p for semimixed systems;
+  --   iprm      induced permutation of the supports;
   --   lifsup    lifted supports of the system;
   --   mixsub    a regular mixed-cell configuration;
   --   orgmcc    original mixed cells, without artifical origin;

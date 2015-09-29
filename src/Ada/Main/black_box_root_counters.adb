@@ -78,7 +78,7 @@ package body Black_Box_Root_Counters is
                  zz : out Partition; nz : out natural32;
                  stlb : out double_float;
                  lifsup : out Link_to_Array_of_Lists;
-                 mix,perm : out Link_to_Vector;
+                 mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
                  rocotime : out duration ) is
 
@@ -118,7 +118,7 @@ package body Black_Box_Root_Counters is
       declare -- problems with systems with one monomial equation
       begin
         Black_Box_Mixed_Volume_Computation
-          (p,mix,perm,stlb,lifsup,mixsub,orgmcc,stbmcc,
+          (p,mix,perm,iprm,stlb,lifsup,mixsub,orgmcc,stbmcc,
            mv,smv,tmv,orgcnt,stbcnt);
       exception
         when others => mv := 0; smv := 0; tmv := 0;
@@ -143,7 +143,7 @@ package body Black_Box_Root_Counters is
                  zz : out Partition; nz : out natural32;
                  stlb : out double_float;
                  lifsup : out Link_to_Array_of_Lists;
-                 mix,perm : out Link_to_Vector;
+                 mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
                  rocotime : out duration ) is
 
@@ -152,13 +152,13 @@ package body Black_Box_Root_Counters is
 
   begin
     Count_Roots(q,deg,tode,mptode,mhbz,setb,mivo,stmv,zz,nz,stlb,lifsup,
-                mix,perm,orgmcc,stbmcc,rocotime);
-   -- if perm /= null then
-   --   put("The permutation : "); put(perm); new_line;
-   --   put_line("The system before the permutation : "); put_line(p);
-   --   Induced_Permutations.Permute(perm.all,p);
-   --   put_line("The system after the permutation : "); put_line(p);
-   -- end if;
+                mix,perm,iprm,orgmcc,stbmcc,rocotime);
+    if iprm /= null then
+     -- put("The permutation : "); put(iprm); new_line;
+     -- put_line("The system before the permutation : "); put_line(p);
+      Induced_Permutations.Permute(iprm.all,p);
+     -- put_line("The system after the permutation : "); put_line(p);
+    end if;
     Standard_Complex_Poly_Systems.Clear(q);
   end Count_Roots;
 
@@ -171,7 +171,7 @@ package body Black_Box_Root_Counters is
                  zz : out Partition; nz : out natural32;
                  stlb : out double_float;
                  lifsup : out Link_to_Array_of_Lists;
-                 mix,perm : out Link_to_Vector;
+                 mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
                  rocotime : out duration ) is
 
@@ -180,10 +180,10 @@ package body Black_Box_Root_Counters is
 
   begin
     Count_Roots(q,deg,tode,mptode,mhbz,setb,mivo,stmv,zz,nz,stlb,lifsup,
-                mix,perm,orgmcc,stbmcc,rocotime);
-   -- if perm /= null
-   --  then Induced_Permutations.Permute(perm.all,p);
-   -- end if;
+                mix,perm,iprm,orgmcc,stbmcc,rocotime);
+    if iprm /= null
+     then Induced_Permutations.Permute(iprm.all,p);
+    end if;
     Standard_Complex_Poly_Systems.Clear(q);
   end Count_Roots;
 
@@ -228,7 +228,7 @@ package body Black_Box_Root_Counters is
                  zz : out Partition; nz : out natural32;
                  stlb : out double_float;
                  lifsup : out Link_to_Array_of_Lists;
-                 mix,perm : out Link_to_Vector;
+                 mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
                  rocotime : out duration ) is
 
@@ -270,7 +270,7 @@ package body Black_Box_Root_Counters is
       declare -- problems with systems with one monomial equation
       begin
         Black_Box_Mixed_Volume_Computation
-          (p,mix,perm,stlb,lifsup,mixsub,orgmcc,stbmcc,
+          (p,mix,perm,iprm,stlb,lifsup,mixsub,orgmcc,stbmcc,
            mv,smv,tmv,orgcnt,stbcnt);
        -- put("the mixed volume : "); put(mv,1); new_line;
        -- put("the stable mixed volume : "); put(smv,1); new_line;
@@ -302,7 +302,7 @@ package body Black_Box_Root_Counters is
                  zz : out Partition; nz : out natural32;
                  stlb : out double_float;
                  lifsup : out Link_to_Array_of_Lists;
-                 mix,perm : out Link_to_Vector;
+                 mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
                  rocotime : out duration ) is
 
@@ -311,13 +311,13 @@ package body Black_Box_Root_Counters is
 
   begin
     Count_Roots(file,sp,deg,tode,mptode,mhbz,setb,mivo,stmv,
-                zz,nz,stlb,lifsup,mix,perm,orgmcc,stbmcc,rocotime);
-   -- if perm /= null then
-   --   put("The permutation : "); put(perm); new_line;
-   --   put_line("The system before the permutation : "); put_line(p);
-   --   Induced_Permutations.Permute(perm.all,p);
-   --   put_line("The system after the permutation : "); put_line(p);
-   -- end if;
+                zz,nz,stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+    if iprm /= null then
+     -- put("The permutation : "); put(iprm); new_line;
+     -- put_line("The system before the permutation : "); put_line(p);
+      Induced_Permutations.Permute(iprm.all,p);
+     -- put_line("The system after the permutation : "); put_line(p);
+    end if;
     Standard_Complex_Poly_Systems.Clear(sp);
   end Count_Roots;
 
@@ -331,7 +331,7 @@ package body Black_Box_Root_Counters is
                  zz : out Partition; nz : out natural32;
                  stlb : out double_float;
                  lifsup : out Link_to_Array_of_Lists;
-                 mix,perm : out Link_to_Vector;
+                 mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
                  rocotime : out duration ) is
 
@@ -340,10 +340,10 @@ package body Black_Box_Root_Counters is
 
   begin
     Count_Roots(file,sp,deg,tode,mptode,mhbz,setb,mivo,stmv,
-                zz,nz,stlb,lifsup,mix,perm,orgmcc,stbmcc,rocotime);
-   -- if perm /= null
-   --  then Induced_Permutations.Permute(perm.all,p);
-   -- end if;
+                zz,nz,stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
+    if iprm /= null
+     then Induced_Permutations.Permute(iprm.all,p);
+    end if;
     Standard_Complex_Poly_Systems.Clear(sp);
   end Count_Roots;
 
@@ -392,7 +392,7 @@ package body Black_Box_Root_Counters is
                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                 d,bz,bs : in natural64;
                 mv,smv : in natural32; z : in Partition;
-                mix,perm : in Link_to_Vector;
+                mix : in Link_to_Vector;
                 stlb : in double_float; lifted : in Link_to_Array_of_Lists;
                 orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                 q : in out Standard_Complex_Poly_Systems.Poly_Sys;
@@ -436,7 +436,6 @@ package body Black_Box_Root_Counters is
     when others => put_line("exception raised in construct start system");
                    put_line("the lifted supports : ");
                    Floating_Mixed_Subdivisions_io.put(lifted.all);
-                   -- put("the permutation : "); put(perm); new_line;
                    raise;
   end Construct_Start_System;
 
@@ -445,7 +444,7 @@ package body Black_Box_Root_Counters is
                 p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 d,bz,bs : in natural64;
                 mv,smv : in natural32; z : in Partition;
-                mix,perm : in Link_to_Vector;
+                mix : in Link_to_Vector;
                 stlb : in double_float; lifted : in Link_to_Array_of_Lists;
                 orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                 q : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -503,7 +502,6 @@ package body Black_Box_Root_Counters is
     when others => put_line("exception raised in construct start system");
                    put_line("the lifted supports : ");
                    Floating_Mixed_Subdivisions_io.put(lifted.all);
-                   -- put("the permutation : "); put(perm); new_line;
                    raise;
   end Construct_Start_System;
 
@@ -512,7 +510,7 @@ package body Black_Box_Root_Counters is
                 p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 d,bz,bs : in natural64;
                 mv,smv : in natural32; z : in Partition;
-                mix,perm : in Link_to_Vector;
+                mix : in Link_to_Vector;
                 stlb : in double_float; lifted : in Link_to_Array_of_Lists;
                 orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                 q : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -570,7 +568,6 @@ package body Black_Box_Root_Counters is
     when others => put_line("exception raised in construct start system");
                    put_line("the lifted supports : ");
                    Floating_Mixed_Subdivisions_io.put(lifted.all);
-                   -- put("the permutation : "); put(perm); new_line;
                    raise;
   end Construct_Start_System;
 
@@ -578,7 +575,7 @@ package body Black_Box_Root_Counters is
               ( file : in file_type; nt : in integer32;
                 p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                 d,bz,bs : in natural64; mv,smv : in natural32;
-                z : in Partition; mix,perm : in Link_to_Vector;
+                z : in Partition; mix : in Link_to_Vector;
                 stlb : in double_float; lifted : in Link_to_Array_of_Lists;
                 orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                 q : in out Standard_Complex_Poly_Systems.Poly_Sys;
@@ -657,7 +654,7 @@ package body Black_Box_Root_Counters is
               ( file : in file_type; nt : in integer32;
                 p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 d,bz,bs : in natural64; mv,smv : in natural32;
-                z : in Partition; mix,perm : in Link_to_Vector;
+                z : in Partition; mix : in Link_to_Vector;
                 stlb : in double_float; lifted : in Link_to_Array_of_Lists;
                 orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                 q : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -750,7 +747,7 @@ package body Black_Box_Root_Counters is
               ( file : in file_type; nt : in integer32;
                 p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 d,bz,bs : in natural64; mv,smv : in natural32;
-                z : in Partition; mix,perm : in Link_to_Vector;
+                z : in Partition; mix : in Link_to_Vector;
                 stlb : in double_float; lifted : in Link_to_Array_of_Lists;
                 orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                 q : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -851,7 +848,7 @@ package body Black_Box_Root_Counters is
     mv,smv : natural32;
     z : partition(1..natural32(p'last));
     nz : natural32;
-    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     orgmcc,stbmcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
@@ -860,12 +857,12 @@ package body Black_Box_Root_Counters is
 
   begin
     Count_Roots(p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
-                stlb,lifsup,mix,perm,orgmcc,stbmcc,rocotime);
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
     if not silent
      then Write_Root_Counts(standard_output,no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
     end if;
     Construct_Start_System
-      (nt,p,d,bz,bs,mv,smv,z(1..nz),mix,perm,stlb,lifsup,orgmcc,stbmcc,wrc,
+      (nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,wrc,
        q,qsols,qsols0,hocotime);
     rc := natural32(wrc);
     Clear(z);
@@ -890,7 +887,7 @@ package body Black_Box_Root_Counters is
     mv,smv : natural32;
     z : partition(1..natural32(p'last));
     nz : natural32;
-    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     orgmcc,stbmcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
@@ -899,12 +896,12 @@ package body Black_Box_Root_Counters is
 
   begin
     Count_Roots(p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
-                stlb,lifsup,mix,perm,orgmcc,stbmcc,rocotime);
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
     if not silent
      then Write_Root_Counts(standard_output,no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
     end if;
     Construct_Start_System
-      (nt,p,d,bz,bs,mv,smv,z(1..nz),mix,perm,stlb,lifsup,orgmcc,stbmcc,wrc,
+      (nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,wrc,
        q,qsols,qsols0,hocotime);
     rc := natural32(wrc);
     Clear(z);
@@ -929,7 +926,7 @@ package body Black_Box_Root_Counters is
     mv,smv : natural32;
     z : partition(1..natural32(p'last));
     nz : natural32;
-    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     orgmcc,stbmcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
@@ -938,12 +935,12 @@ package body Black_Box_Root_Counters is
 
   begin
     Count_Roots(p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
-                stlb,lifsup,mix,perm,orgmcc,stbmcc,rocotime);
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
     if not silent
      then Write_Root_Counts(standard_output,no_mv,d,mptdeg,nz,bz,bs,mv,smv,z);
     end if;
     Construct_Start_System
-      (nt,p,d,bz,bs,mv,smv,z(1..nz),mix,perm,stlb,lifsup,orgmcc,stbmcc,wrc,
+      (nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,wrc,
        q,qsols,qsols0,hocotime);
     rc := natural32(wrc);
     Clear(z);
@@ -968,7 +965,7 @@ package body Black_Box_Root_Counters is
     mv,smv : natural32;
     z : partition(1..natural32(p'last));
     nz : natural32;
-    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     orgmcc,stbmcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
@@ -976,9 +973,9 @@ package body Black_Box_Root_Counters is
 
   begin
     Count_Roots(file,p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
-                stlb,lifsup,mix,perm,orgmcc,stbmcc,rocotime);
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
     Construct_Start_System
-      (file,nt,p,d,bz,bs,mv,smv,z(1..nz),mix,perm,stlb,lifsup,orgmcc,stbmcc,
+      (file,nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,
        wrc,q,qsols,qsols0,hocotime);
     rc := natural32(wrc);
     Clear(z);
@@ -1000,7 +997,7 @@ package body Black_Box_Root_Counters is
     mv,smv : natural32;
     z : partition(1..natural32(p'last));
     nz : natural32;
-    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     orgmcc,stbmcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
@@ -1008,9 +1005,9 @@ package body Black_Box_Root_Counters is
 
   begin
     Count_Roots(file,p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
-                stlb,lifsup,mix,perm,orgmcc,stbmcc,rocotime);
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
     Construct_Start_System
-      (file,nt,p,d,bz,bs,mv,smv,z(1..nz),mix,perm,stlb,lifsup,orgmcc,stbmcc,
+      (file,nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,
        wrc,q,qsols,qsols0,hocotime);
     rc := natural32(wrc);
     Clear(z);
@@ -1032,7 +1029,7 @@ package body Black_Box_Root_Counters is
     mv,smv : natural32;
     z : partition(1..natural32(p'last));
     nz : natural32;
-    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     orgmcc,stbmcc : Mixed_Subdivision;
     stlb : double_float;
     lifsup : Link_to_Array_of_Lists;
@@ -1040,9 +1037,9 @@ package body Black_Box_Root_Counters is
 
   begin
     Count_Roots(file,p,deg,d,mptdeg,bz,bs,mv,smv,z,nz,
-                stlb,lifsup,mix,perm,orgmcc,stbmcc,rocotime);
+                stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc,rocotime);
     Construct_Start_System
-      (file,nt,p,d,bz,bs,mv,smv,z(1..nz),mix,perm,stlb,lifsup,orgmcc,stbmcc,
+      (file,nt,p,d,bz,bs,mv,smv,z(1..nz),mix,stlb,lifsup,orgmcc,stbmcc,
        wrc,q,qsols,qsols0,hocotime);
     rc := natural32(wrc);
     Clear(z);
@@ -1061,13 +1058,13 @@ package body Black_Box_Root_Counters is
                  rocotime,hocotime : out duration ) is
 
     timer : Timing_Widget;
-    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     lifsup : Link_to_Array_of_Lists;
     mixsub : Mixed_Subdivision;
 
   begin
     tstart(timer);
-    Black_Box_Mixed_Volume_Computation(p,mix,perm,lifsup,mixsub,rc);
+    Black_Box_Mixed_Volume_Computation(p,mix,perm,iprm,lifsup,mixsub,rc);
     tstop(timer);
     if not silent
      then put("mixed volume : "); put(rc,1); new_line;
@@ -1088,7 +1085,7 @@ package body Black_Box_Root_Counters is
                  rocotime,hocotime : out duration ) is
 
     timer : Timing_Widget;
-    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     lifsup : Link_to_Array_of_Lists;
     mixsub : Mixed_Subdivision;
     sp : Standard_Complex_Laur_Systems.Laur_Sys(p'range)
@@ -1096,7 +1093,7 @@ package body Black_Box_Root_Counters is
 
   begin
     tstart(timer);
-    Black_Box_Mixed_Volume_Computation(sp,mix,perm,lifsup,mixsub,rc);
+    Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
     tstop(timer);
     if not silent
      then put("mixed volume : "); put(rc,1); new_line;
@@ -1118,7 +1115,7 @@ package body Black_Box_Root_Counters is
                  rocotime,hocotime : out duration ) is
 
     timer : Timing_Widget;
-    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     lifsup : Link_to_Array_of_Lists;
     mixsub : Mixed_Subdivision;
     sp : Standard_Complex_Laur_Systems.Laur_Sys(p'range)
@@ -1126,7 +1123,7 @@ package body Black_Box_Root_Counters is
 
   begin
     tstart(timer);
-    Black_Box_Mixed_Volume_Computation(sp,mix,perm,lifsup,mixsub,rc);
+    Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
     tstop(timer);
     if not silent
      then put("mixed volume : "); put(rc,1); new_line;
@@ -1150,13 +1147,13 @@ package body Black_Box_Root_Counters is
     use Standard_Complex_Solutions;
 
     timer : Timing_Widget;
-    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     lifsup : Link_to_Array_of_Lists;
     mixsub : Mixed_Subdivision;
 
   begin
     tstart(timer);
-    Black_Box_Mixed_Volume_Computation(p,mix,perm,lifsup,mixsub,rc);
+    Black_Box_Mixed_Volume_Computation(p,mix,perm,iprm,lifsup,mixsub,rc);
     tstop(timer);
     new_line(file);
     put(file,"mixed volume : "); put(file,rc,1); new_line(file);
@@ -1193,7 +1190,7 @@ package body Black_Box_Root_Counters is
     use DoblDobl_Complex_Solutions;
 
     timer : Timing_Widget;
-    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     lifsup : Link_to_Array_of_Lists;
     mixsub : Mixed_Subdivision;
     sp : Standard_Complex_Laur_Systems.Laur_Sys(p'range)
@@ -1201,7 +1198,7 @@ package body Black_Box_Root_Counters is
 
   begin
     tstart(timer);
-    Black_Box_Mixed_Volume_Computation(sp,mix,perm,lifsup,mixsub,rc);
+    Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
     tstop(timer);
     new_line(file);
     put(file,"mixed volume : "); put(file,rc,1); new_line(file);
@@ -1240,7 +1237,7 @@ package body Black_Box_Root_Counters is
     use QuadDobl_Complex_Solutions;
 
     timer : Timing_Widget;
-    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     lifsup : Link_to_Array_of_Lists;
     mixsub : Mixed_Subdivision;
     sp : Standard_Complex_Laur_Systems.Laur_Sys(p'range)
@@ -1248,7 +1245,7 @@ package body Black_Box_Root_Counters is
 
   begin
     tstart(timer);
-    Black_Box_Mixed_Volume_Computation(sp,mix,perm,lifsup,mixsub,rc);
+    Black_Box_Mixed_Volume_Computation(sp,mix,perm,iprm,lifsup,mixsub,rc);
     tstop(timer);
     new_line(file);
     put(file,"mixed volume : "); put(file,rc,1); new_line(file);
@@ -1257,7 +1254,6 @@ package body Black_Box_Root_Counters is
     flush(file);
     rocotime := Elapsed_User_Time(timer);
     put_line(file,"RANDOM COEFFICIENT START SYSTEM :");
-   -- careful to apply the permutation on p!
     tstart(timer);
     Black_Box_Polyhedral_Continuation(nt,p,mix,lifsup.all,mixsub,q,qsols);
     tstop(timer);

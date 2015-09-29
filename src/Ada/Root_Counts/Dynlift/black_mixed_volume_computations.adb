@@ -20,6 +20,12 @@ with Mixed_Volume_Computation;           use Mixed_Volume_Computation;
 with Drivers_for_Static_Lifting;
 with Drivers_for_MixedVol_Algorithm;     use Drivers_for_MixedVol_Algorithm;
 
+--with text_io; use text_io;
+--with Standard_Integer_Numbers_io;
+-- use Standard_Integer_Numbers_io;
+--with Standard_Integer_Vectors_io;
+-- use Standard_Integer_Vectors_io;
+
 package body Black_Mixed_Volume_Computations is
 
   procedure Black_Box_Mixed_Volume_Computation
@@ -98,7 +104,8 @@ package body Black_Mixed_Volume_Computations is
   end Black_Box_Mixed_Volume_Computation;
 
   procedure Black_Box_Mixed_Volume_Computation
-               ( p : in out Poly_Sys; mix,perm : out Link_to_Vector;
+               ( p : in out Poly_Sys;
+                 mix,perm,iprm : out Link_to_Vector;
                  lifsup : out 
                    Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
                  mixsub : out Floating_Mixed_Subdivisions.Mixed_Subdivision;
@@ -120,6 +127,8 @@ package body Black_Mixed_Volume_Computations is
       ip : Standard_Integer_Vectors.Vector(fs'range);
     begin
       ip := Induced_Permutations.Permutation(fs,ls,mix.all);
+      iprm := new Standard_Integer_Vectors.Vector'(ip);
+     -- put("induced permutation : "); put(ip); new_line;
       Induced_Permutations.Permute(ip,p);
       Arrays_of_Floating_Vector_Lists.Deep_Clear(fs);
       lifsup := new Arrays_of_Floating_Vector_Lists.Array_of_Lists'(ls);
@@ -127,7 +136,8 @@ package body Black_Mixed_Volume_Computations is
   end Black_Box_Mixed_Volume_Computation;
 
   procedure Black_Box_Mixed_Volume_Computation
-               ( p : in out Laur_Sys; mix,perm : out Link_to_Vector;
+               ( p : in out Laur_Sys;
+                 mix,perm,iprm : out Link_to_Vector;
                  lifsup : out 
                    Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
                  mixsub : out Floating_Mixed_Subdivisions.Mixed_Subdivision;
@@ -149,6 +159,8 @@ package body Black_Mixed_Volume_Computations is
       ip : Standard_Integer_Vectors.Vector(fs'range);
     begin
       ip := Induced_Permutations.Permutation(fs,ls,mix.all);
+      iprm := new Standard_Integer_Vectors.Vector'(ip);
+     -- put("induced permutation : "); put(ip); new_line;
       Induced_Permutations.Permute(ip,p);
       Arrays_of_Floating_Vector_Lists.Deep_Clear(fs);
       lifsup := new Arrays_of_Floating_Vector_Lists.Array_of_Lists'(ls);
@@ -156,7 +168,8 @@ package body Black_Mixed_Volume_Computations is
   end Black_Box_Mixed_Volume_Computation;
 
   procedure Black_Box_Mixed_Volume_Computation
-               ( p : in out Poly_Sys; mix,perm : out Link_to_Vector;
+               ( p : in out Poly_Sys;
+                 mix,perm,iprm : out Link_to_Vector;
                  stlb : out double_float;
                  lifsup : out 
                    Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
@@ -183,6 +196,9 @@ package body Black_Mixed_Volume_Computations is
     begin
       Induced_Permutations.Remove_Artificial_Origin(ls,stlb);
       ip := Induced_Permutations.Permutation(fs,ls,mix.all);
+      iprm := new Standard_Integer_Vectors.Vector'(ip);
+     -- put("ip'first = "); put(ip'first,1); new_line;
+     -- put("induced permutation : "); put(ip); new_line;
       Induced_Permutations.Permute(ip,p);
       Arrays_of_Floating_Vector_Lists.Deep_Clear(fs);
       lifsup := new Arrays_of_Floating_Vector_Lists.Array_of_Lists'(ls);

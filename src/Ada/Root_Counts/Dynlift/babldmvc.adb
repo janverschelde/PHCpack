@@ -43,7 +43,7 @@ procedure babldmvc ( nt : in natural32; infilename,outfilename : in string ) is
         mivo,stmv : out natural32;
         stlb : out double_float;
         lifsup : out Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
-        mix,perm : out Link_to_Vector;
+        mix,perm,iprm : out Link_to_Vector;
         orgmcc,stbmcc : out Floating_Mixed_Subdivisions.Mixed_Subdivision ) is
 
     mixsub : Floating_Mixed_Subdivisions.Mixed_Subdivision;
@@ -51,7 +51,7 @@ procedure babldmvc ( nt : in natural32; infilename,outfilename : in string ) is
 
   begin
     Black_Box_Mixed_Volume_Computation
-      (p,mix,perm,stlb,lifsup,mixsub,orgmcc,stbmcc,
+      (p,mix,perm,iprm,stlb,lifsup,mixsub,orgmcc,stbmcc,
        mv,smv,tmv,orgcnt,stbcnt);
     mivo := mv; stmv := smv;
   end Call_MixedVol;
@@ -64,7 +64,7 @@ procedure babldmvc ( nt : in natural32; infilename,outfilename : in string ) is
     timer : Timing_Widget;
     q : Poly_Sys(p'range);
     qsols,qsols0 : Solution_List;
-    mix,perm : Link_to_Vector;
+    mix,perm,iprm : Link_to_Vector;
     lifsup : Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
     stlb : double_float;
     orgmcc,stbmcc : Floating_Mixed_Subdivisions.Mixed_Subdivision;
@@ -72,7 +72,7 @@ procedure babldmvc ( nt : in natural32; infilename,outfilename : in string ) is
 
   begin
     tstart(timer);
-    Call_MixedVol(p,mv,stmv,stlb,lifsup,mix,perm,orgmcc,stbmcc);
+    Call_MixedVol(p,mv,stmv,stlb,lifsup,mix,perm,iprm,orgmcc,stbmcc);
     tstop(timer);
     new_line(file);
     put(file,"mixed volume : "); put(file,mv,1); new_line(file);

@@ -45,7 +45,7 @@ package Black_Box_Root_Counters is
                  zz : out Partition; nz : out natural32;
                  stlb : out double_float;
                  lifsup : out Link_to_Array_of_Lists;
-                 mix,perm : out Link_to_Vector;
+                 mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
                  rocotime : out duration );
   procedure Count_Roots 
@@ -57,7 +57,7 @@ package Black_Box_Root_Counters is
                  zz : out Partition; nz : out natural32;
                  stlb : out double_float;
                  lifsup : out Link_to_Array_of_Lists;
-                 mix,perm : out Link_to_Vector;
+                 mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
                  rocotime : out duration );
   procedure Count_Roots 
@@ -69,7 +69,7 @@ package Black_Box_Root_Counters is
                  zz : out Partition; nz : out natural32;
                  stlb : out double_float;
                  lifsup : out Link_to_Array_of_Lists;
-                 mix,perm : out Link_to_Vector;
+                 mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
                  rocotime : out duration );
 
@@ -94,6 +94,7 @@ package Black_Box_Root_Counters is
   --   stlb      lifting of the artificial origin;
   --   mix       type of mixture;
   --   perm      permutation of the equations in p;
+  --   iprm      induced permutation of the blackbox mixed volume calculator;
   --   orgmcc    regular mixed-cell configuration to compute mivo;
   --   stbmcc    extra stable mixed cells that contribute to stmv;
   --   rocotime  is the time it took to compute the root count.
@@ -129,7 +130,7 @@ package Black_Box_Root_Counters is
                  zz : out Partition; nz : out natural32;
                  stlb : out double_float;
                  lifsup : out Link_to_Array_of_Lists;
-                 mix,perm : out Link_to_Vector;
+                 mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
                  rocotime : out duration );
   procedure Count_Roots 
@@ -142,7 +143,7 @@ package Black_Box_Root_Counters is
                  zz : out Partition; nz : out natural32;
                  stlb : out double_float;
                  lifsup : out Link_to_Array_of_Lists;
-                 mix,perm : out Link_to_Vector;
+                 mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
                  rocotime : out duration );
   procedure Count_Roots 
@@ -155,7 +156,7 @@ package Black_Box_Root_Counters is
                  zz : out Partition; nz : out natural32;
                  stlb : out double_float;
                  lifsup : out Link_to_Array_of_Lists;
-                 mix,perm : out Link_to_Vector;
+                 mix,perm,iprm : out Link_to_Vector;
                  orgmcc,stbmcc : out Mixed_Subdivision;
                  rocotime : out duration );
 
@@ -181,6 +182,7 @@ package Black_Box_Root_Counters is
   --   lifsup    lifted supports of the system;
   --   mix       type of mixture;
   --   perm      permutation of the equations in p;
+  --   iprm      induced permutation of the blackbox mixed volume calculator;
   --   orgmcc    regular mixed-cell configuration to compute mivo;
   --   stbmcc    extra stable mixed cells that contribute to stmv;
   --   rocotime  is the time it took to compute the root count.
@@ -190,7 +192,7 @@ package Black_Box_Root_Counters is
                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  d,bz,bs : in natural64;
                  mv,smv : in natural32; z : in Partition;
-                 mix,perm : in Link_to_Vector;
+                 mix : in Link_to_Vector;
                  stlb : in double_float; lifted : in Link_to_Array_of_Lists;
                  orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                  q : in out Standard_Complex_Poly_Systems.Poly_Sys;
@@ -201,7 +203,7 @@ package Black_Box_Root_Counters is
                  p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  d,bz,bs : in natural64;
                  mv,smv : in natural32; z : in Partition;
-                 mix,perm : in Link_to_Vector;
+                 mix : in Link_to_Vector;
                  stlb : in double_float; lifted : in Link_to_Array_of_Lists;
                  orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                  q : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -212,7 +214,7 @@ package Black_Box_Root_Counters is
                  p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  d,bz,bs : in natural64;
                  mv,smv : in natural32; z : in Partition;
-                 mix,perm : in Link_to_Vector;
+                 mix : in Link_to_Vector;
                  stlb : in double_float; lifted : in Link_to_Array_of_Lists;
                  orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                  q : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -232,7 +234,6 @@ package Black_Box_Root_Counters is
   --   smv       stable mixed volume;
   --   z         partition that corresponds with bz;
   --   mix       type of mixture of the supports;
-  --   perm      permutation of the equations in p;
   --   stlb      lifting for the artificial origin;
   --   lifted    lifted supports;
   --   orgmcc    regular mixed-cell configuration to compute mv;
@@ -249,7 +250,7 @@ package Black_Box_Root_Counters is
                ( file : in file_type; nt : in integer32;
                  p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  d,bz,bs : in natural64; mv,smv : in natural32;
-                 z : in Partition; mix,perm : in Link_to_Vector;
+                 z : in Partition; mix : in Link_to_Vector;
                  stlb : in double_float; lifted : in Link_to_Array_of_Lists;
                  orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                  q : in out Standard_Complex_Poly_Systems.Poly_Sys;
@@ -259,7 +260,7 @@ package Black_Box_Root_Counters is
                ( file : in file_type; nt : in integer32;
                  p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  d,bz,bs : in natural64; mv,smv : in natural32;
-                 z : in Partition; mix,perm : in Link_to_Vector;
+                 z : in Partition; mix : in Link_to_Vector;
                  stlb : in double_float; lifted : in Link_to_Array_of_Lists;
                  orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                  q : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -269,7 +270,7 @@ package Black_Box_Root_Counters is
                ( file : in file_type; nt : in integer32;
                  p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  d,bz,bs : in natural64; mv,smv : in natural32;
-                 z : in Partition; mix,perm : in Link_to_Vector;
+                 z : in Partition; mix : in Link_to_Vector;
                  stlb : in double_float; lifted : in Link_to_Array_of_Lists;
                  orgmcc,stbmcc : in Mixed_Subdivision; roco : out natural64;
                  q : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -290,7 +291,6 @@ package Black_Box_Root_Counters is
   --   smv       stable mixed volume;
   --   z         partition that corresponds with bz;
   --   mix       type of mixture of the supports;
-  --   perm      permutation of the equations in p;
   --   stlb      lifting of the artificial origin;
   --   orgmcc    regular mixed-cell configuration to compute mv;
   --   stbmcc    extra stable mixed cells that contribute to smv.
