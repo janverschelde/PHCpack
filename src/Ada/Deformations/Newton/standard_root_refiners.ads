@@ -15,10 +15,10 @@ package Standard_Root_Refiners is
 
 -- DESCRIPTION:
 --   The aim of this package is to provide some routines to
---   perform root refining, to validate the approximate solutions.
---   It can be used as a postprocessor to check the computed roots,
---   or, as preprocessor, to find some suitable starting values for
---   the continuation procedure.
+--   perform root refining, to verify the approximate solutions,
+--   for use as a postprocessor to check the computed roots,
+--   or, as preprocessor, to check whether solutions are suitable
+--   starting values for the path trackers.
 
 --   The basic root refiner is Newton's method, with a modification
 --   to estimate multiplicities.  There are six versions:
@@ -34,7 +34,7 @@ package Standard_Root_Refiners is
                          fail,infty : in boolean );
 
   -- DESCRIPTION :
-  --   The information concerning the zero is written
+  --   The information concerning the zero is written to file.
 
   -- ON ENTRY :
   --   file     file which must be opened for output;

@@ -1,3 +1,8 @@
+Wed 30 Sep 2015 : minor documentation edits in standard_root_refiners.
+  Extended {dobldobl,quaddobl}_root_refiners with root accounting procedures.
+  The reporting root refiners write a condition report on the solutions
+  computed in double double and quad double precision.
+
 Fri 25 Sep 2015 : extended {dobldobl,quaddobl}_root_refiners with versions
   for Laurent polynomial systems.
 

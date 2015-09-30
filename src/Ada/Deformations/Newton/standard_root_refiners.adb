@@ -14,7 +14,7 @@ with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_Solution_Diagnostics;      use Standard_Solution_Diagnostics;
-with Standard_Condition_Tables; --         use Standard_Condition_Tables;
+with Standard_Condition_Tables;
 with Standard_Condition_Report;
 with Handle_Underflow_Gracefully;
 with Standard_Jacobian_Trees;            use Standard_Jacobian_Trees;
@@ -56,13 +56,7 @@ package body Standard_Root_Refiners is
                  nb : in natural32; sa : in out Solution_Array;
                  fail,infty,deflate : in boolean;
                  tolsing,tolclus : in double_float; nbfail,nbinfty,
-		 nbreal,nbcomp,nbreg,nbsing,nbclus : in out natural32 ) is
-
-  -- DESCRIPTION :
-  --   This procedure does root accounting of the solution sol, w.r.t. the
-  --   solution list sols.  Information will be provided concerning the type
-  --   of solution.
-
+                 nbreal,nbcomp,nbreg,nbsing,nbclus : in out natural32 ) is
   begin
     if infty then
       put_line(file," at infinity ==");
