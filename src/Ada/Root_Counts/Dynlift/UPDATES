@@ -1,3 +1,6 @@
+Wed 30 Sep 2015 : changed tuning in black_polyhedral_continuations.adb
+  back to the original default values for double precision.
+
 Tue 29 Sep 2015 : eliminated the unused parameter perm from all calls in
   black_polyhedral_continuations, which caused change in babldmvc.adb.
   The induced permutation is returned in black_mixed_volume_computations,

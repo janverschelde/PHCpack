@@ -242,7 +242,7 @@ package body Black_Polyhedral_Continuations is
       end;
     end loop;
     Create(q,jacmat,mulfac);
-    Continuation_Parameters.Tune(0,32);
+    Continuation_Parameters.Tune(0); --,32);
     Continuation_Parameters.start_end_game := 0.0;
     if nt = 0 then
       Mixed_Solve(q,lifsup,hq,coeffv,expvec,jacmat,mulfac,
@@ -295,7 +295,7 @@ package body Black_Polyhedral_Continuations is
       end;
     end loop;
     Create(q,jacmat,mulfac);
-    Continuation_Parameters.Tune(0,64);
+    Continuation_Parameters.Tune(0); --,64);
     Continuation_Parameters.start_end_game := 0.0;
     if nt = 0 then
       Mixed_Solve(q,lifsup,hq,coeffv,expvec,jacmat,mulfac,
@@ -425,7 +425,7 @@ package body Black_Polyhedral_Continuations is
       end;
     end loop;
     Create(lq,jacmat,mulfac);
-    Continuation_Parameters.Tune(0,32);
+    Continuation_Parameters.Tune(0); --,32);
     Continuation_Parameters.start_end_game := 0.0;
     if nt = 0 then
       Mixed_Solve(lq,lifsup,hq,coeffv,expvec,jacmat,mulfac,
@@ -496,7 +496,7 @@ package body Black_Polyhedral_Continuations is
       end;
     end loop;
     Create(lq,jacmat,mulfac);
-    Continuation_Parameters.Tune(0,64);
+    Continuation_Parameters.Tune(0); --,64);
     Continuation_Parameters.start_end_game := 0.0;
     if nt = 0 then
       Mixed_Solve(lq,lifsup,hq,coeffv,expvec,jacmat,mulfac,

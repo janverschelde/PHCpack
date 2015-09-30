@@ -1,3 +1,6 @@
+Wed 30 Sep 2015 : settings in {dobldobl,quaddobl}_blackbox_continuations.adb
+  were too severe, lessened to the default values for double precision.
+
 Tue 29 Sep 2015 : tuned continuation parameters for double double and quad
   double in {dobldobl,quaddobl}_blackbox_continuations.adb.
 
