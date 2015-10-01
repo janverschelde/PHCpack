@@ -390,8 +390,18 @@ package QuadDobl_Root_Refiners is
                  epsxa,epsfa : in quad_double;
                  numit : in out natural32; max : in natural32 );
   procedure Silent_Root_Refiner
+               ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa : in quad_double;
+                 numit : in out natural32; max : in natural32 );
+  procedure Silent_Root_Refiner
                ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa : in quad_double;
+                 numit : in out natural32; max : in natural32 );
+  procedure Silent_Root_Refiner
+               ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa : in quad_double;
                  numit : in out natural32; max : in natural32 );
   procedure Reporting_Root_Refiner
@@ -403,8 +413,22 @@ package QuadDobl_Root_Refiners is
                  wout : in boolean );
   procedure Reporting_Root_Refiner
                ( file : in file_type;
+                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa : in quad_double;
+                 numit : in out natural32; max : in natural32;
+                 wout : in boolean );
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
                  p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa : in quad_double;
+                 numit : in out natural32; max : in natural32;
+                 wout : in boolean );
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
+                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                 s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa : in quad_double;
                  numit : in out natural32; max : in natural32;
                  wout : in boolean );
@@ -428,6 +452,7 @@ package QuadDobl_Root_Refiners is
 
   -- ON RETURN :
   --   s        updated approximate solutions;
-  --   numit    number of iterations spent on refining x;
+  --   refs     refined solutions without path failures;
+  --   numit    number of iterations spent on refining x.
 
 end QuadDobl_Root_Refiners;

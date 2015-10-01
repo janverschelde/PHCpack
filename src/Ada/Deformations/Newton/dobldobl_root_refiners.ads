@@ -257,6 +257,8 @@ package DoblDobl_Root_Refiners is
   --   rco      estimate for the inverse condition number;
   --   res      residual, norm of the function value.
 
+-- SEVERAL NEWTON STEPS :
+
   procedure Silent_Newton
               ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in  DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
@@ -348,6 +350,8 @@ package DoblDobl_Root_Refiners is
   --   fail     true if spent max number of iterations
   --            and none of the accuracy requirements is met.
 
+-- REFINING A LIST OF SOLUTIONS :
+
   procedure DoblDobl_Root_Refiner
               ( f : in DoblDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in DoblDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
@@ -392,14 +396,26 @@ package DoblDobl_Root_Refiners is
   --   Applies Newton's method to the solutions s of the system p,
   --   using the circuit representation for the Jacobian matrix.
 
+-- THE MAIN ROOT REFINERS :
+
   procedure Silent_Root_Refiner
                ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  s : in out DoblDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa : in double_double;
                  numit : in out natural32; max : in natural32 );
   procedure Silent_Root_Refiner
+               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa : in double_double;
+                 numit : in out natural32; max : in natural32 );
+  procedure Silent_Root_Refiner
                ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  s : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa : in double_double;
+                 numit : in out natural32; max : in natural32 );
+  procedure Silent_Root_Refiner
+               ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa : in double_double;
                  numit : in out natural32; max : in natural32 );
   procedure Reporting_Root_Refiner
@@ -411,8 +427,22 @@ package DoblDobl_Root_Refiners is
                  wout : in boolean );
   procedure Reporting_Root_Refiner
                ( file : in file_type;
+                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa : in double_double;
+                 numit : in out natural32; max : in natural32;
+                 wout : in boolean );
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
                  p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  s : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa : in double_double;
+                 numit : in out natural32; max : in natural32;
+                 wout : in boolean );
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
+                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa : in double_double;
                  numit : in out natural32; max : in natural32;
                  wout : in boolean );
@@ -438,6 +468,7 @@ package DoblDobl_Root_Refiners is
 
   -- ON RETURN :
   --   s        updated approximate solutions;
+  --   refs     list that does not include the path failures;
   --   numit    number of iterations spent on refining x;
 
 end DoblDobl_Root_Refiners;

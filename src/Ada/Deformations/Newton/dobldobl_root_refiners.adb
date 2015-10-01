@@ -616,6 +616,52 @@ package body DoblDobl_Root_Refiners is
   end Silent_Root_Refiner;
 
   procedure Silent_Root_Refiner
+               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa : in double_double;
+                 numit : in out natural32; max : in natural32 ) is
+
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_Jaco_Matrices;
+    use DoblDobl_Complex_Solutions;
+    
+    n : constant integer32 := p'last;
+    f : Eval_Poly_Sys(p'range) := Create(p);
+    jm : Jaco_Mat(p'range,p'range) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
+    refs_last : Solution_List;
+    nb : natural32;
+    fail,infty : boolean;
+    h1 : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+    h2 : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+    pl : Point_List;
+    tolsing : constant double_float := 1.0E-8;
+
+  begin
+    for i in sa'range loop
+      nb := 0;
+      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
+      infty := At_Infinity(sa(i).all,false,1.0E+8);
+      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+        Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+        Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                     infty,false,tolsing,hi_part(epsxa));
+        numit := numit + nb;
+        if not fail
+         then Append(refs,refs_last,sa(i).all);
+        end if;
+      else
+        fail := true;
+      end if;
+    end loop;
+    Deep_Clear(s); s := Create(sa); Clear(sa);
+    Clear(pl); Clear(f); Clear(jm); Clear(jf);
+  end Silent_Root_Refiner;
+
+  procedure Silent_Root_Refiner
                ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  s : in out DoblDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa : in double_double;
@@ -649,6 +695,52 @@ package body DoblDobl_Root_Refiners is
         Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
                      infty,false,tolsing,hi_part(epsxa));
         numit := numit + nb;
+      else
+        fail := true;
+      end if;
+    end loop;
+    Deep_Clear(s); s := Create(sa); Clear(sa);
+    Clear(pl); Clear(f); Clear(jm); Clear(jf);
+  end Silent_Root_Refiner;
+
+  procedure Silent_Root_Refiner
+               ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa : in double_double;
+                 numit : in out natural32; max : in natural32 ) is
+
+    use DoblDobl_Complex_Laur_SysFun;
+    use DoblDobl_Complex_Laur_JacoMats;
+    use DoblDobl_Complex_Solutions;
+    
+    n : constant integer32 := p'last;
+    f : Eval_Laur_Sys(p'range) := Create(p);
+    jm : Jaco_Mat(p'range,p'range) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
+    refs_last : Solution_List;
+    nb : natural32;
+    fail,infty : boolean;
+    h1 : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+    h2 : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+    pl : Point_List;
+    tolsing : constant double_float := 1.0E-8;
+
+  begin
+    for i in sa'range loop
+      nb := 0;
+      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
+      infty := At_Infinity(sa(i).all,false,1.0E+8);
+      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+        Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+        Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                     infty,false,tolsing,hi_part(epsxa));
+        numit := numit + nb;
+        if not fail
+         then Append(refs,refs_last,sa(i).all);
+        end if;
       else
         fail := true;
       end if;
@@ -727,6 +819,78 @@ package body DoblDobl_Root_Refiners is
 
   procedure Reporting_Root_Refiner
                ( file : in file_type;
+                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa : in double_double;
+                 numit : in out natural32; max : in natural32;
+                 wout : in boolean ) is
+
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_Jaco_Matrices;
+    use DoblDobl_Complex_Solutions;
+    
+    n : constant integer32 := p'last;
+    f : Eval_Poly_Sys(p'range) := Create(p);
+    jm : Jaco_Mat(p'range,p'range) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
+    refs_last : Solution_List;
+    nb : natural32;
+    nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
+    t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..30)
+                      := DoblDobl_Condition_Tables.Create(30); 
+    fail,infty : boolean;
+    h1 : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+    h2 : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+    pl : Point_List;
+    initres : double_double;
+    tolsing : constant double_float := 1.0E-8;
+
+  begin
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,sa'last,1); put(file," "); put(file,n,1); new_line(file);
+    Standard_Complex_Solutions_io.put_bar(file);
+    for i in sa'range loop
+      nb := 0;
+      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
+      initres := sa(i).res;
+      infty := At_Infinity(sa(i).all,false,1.0E+8);
+      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+        if wout
+         then Reporting_Newton(file,f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+         else Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+        end if;
+        numit := numit + nb;
+      else
+        fail := true;
+      end if;
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,hi_part(epsxa));
+      Write_Info(file,sa(i).all,initres,natural32(i),nb,0,fail,infty);
+      Write_Type
+        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
+         tolsing,hi_part(epsxa),
+         nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+      DoblDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
+      DoblDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
+      DoblDobl_Condition_Tables.Update_Residuals(t_res,sa(i).all);
+      if not fail
+       then Append(refs,refs_last,sa(i).all);
+      end if;
+    end loop;
+    Write_Global_Info
+      (file,natural32(sa'last),
+       nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+    DoblDobl_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
+    Deep_Clear(s); s := Create(sa); Clear(sa);
+    Clear(pl); Clear(f); Clear(jm); Clear(jf);
+  end Reporting_Root_Refiner;
+
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
                  p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  s : in out DoblDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa : in double_double;
@@ -784,6 +948,78 @@ package body DoblDobl_Root_Refiners is
       DoblDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
       DoblDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
       DoblDobl_Condition_Tables.Update_Residuals(t_res,sa(i).all);
+    end loop;
+    Write_Global_Info
+      (file,natural32(sa'last),
+       nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+    DoblDobl_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
+    Deep_Clear(s); s := Create(sa); Clear(sa);
+    Clear(pl); Clear(f); Clear(jm); Clear(jf);
+  end Reporting_Root_Refiner;
+
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
+                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                 s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa : in double_double;
+                 numit : in out natural32; max : in natural32;
+                 wout : in boolean ) is
+
+    use DoblDobl_Complex_Laur_SysFun;
+    use DoblDobl_Complex_Laur_JacoMats;
+    use DoblDobl_Complex_Solutions;
+    
+    n : constant integer32 := p'last;
+    f : Eval_Laur_Sys(p'range) := Create(p);
+    jm : Jaco_Mat(p'range,p'range) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
+    refs_last : Solution_List;
+    nb : natural32;
+    nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
+    t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..30)
+                      := DoblDobl_Condition_Tables.Create(30); 
+    fail,infty : boolean;
+    h1 : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+    h2 : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+    pl : Point_List;
+    initres : double_double;
+    tolsing : constant double_float := 1.0E-8;
+
+  begin
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,sa'last,1); put(file," "); put(file,n,1); new_line(file);
+    Standard_Complex_Solutions_io.put_bar(file);
+    for i in sa'range loop
+      nb := 0;
+      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
+      initres := sa(i).res;
+      infty := At_Infinity(sa(i).all,false,1.0E+8);
+      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+        if wout
+         then Reporting_Newton(file,f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+         else Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+        end if;
+        numit := numit + nb;
+      else
+        fail := true;
+      end if;
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,hi_part(epsxa));
+      Write_Info(file,sa(i).all,initres,natural32(i),nb,0,fail,infty);
+      Write_Type
+        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
+         tolsing,hi_part(epsxa),
+         nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+      DoblDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
+      DoblDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
+      DoblDobl_Condition_Tables.Update_Residuals(t_res,sa(i).all);
+      if not fail
+       then Append(refs,refs_last,sa(i).all);
+      end if;
     end loop;
     Write_Global_Info
       (file,natural32(sa'last),
