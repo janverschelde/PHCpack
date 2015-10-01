@@ -1,3 +1,6 @@
+Thu 1 Oct 2015 : changes in cells_container.adb and use_c2phc.adb for the
+  added induced permutation to Black_Mixed_Volume_Computations procedures.
+
 Sat 26 Sep 2015 : added jobs to use_c2phc to call the blackbox solvers in
   double double and quad double precision.
 

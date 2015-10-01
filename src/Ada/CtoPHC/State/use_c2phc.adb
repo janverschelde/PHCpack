@@ -1824,19 +1824,21 @@ function use_c2phc ( job : integer32;
     use Black_Mixed_Volume_Computations;
 
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     lifsup : Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
     mixsub : Floating_Mixed_Subdivisions.Mixed_Subdivision;
     mv : natural32;
 
   begin
     if lp /= null then
-      Black_Box_Mixed_Volume_Computation(lp.all,mix,perm,lifsup,mixsub,mv);
+      Black_Box_Mixed_Volume_Computation
+        (lp.all,mix,perm,iprm,lifsup,mixsub,mv);
     else
       declare
         lq : constant Link_to_Laur_Sys := Laurent_Systems_Container.Retrieve;
       begin
-        Black_Box_Mixed_Volume_Computation(lq.all,mix,perm,lifsup,mixsub,mv);
+        Black_Box_Mixed_Volume_Computation
+          (lq.all,mix,perm,iprm,lifsup,mixsub,mv);
       end;
     end if;
     Assign(integer32(mv),a);
@@ -1850,7 +1852,7 @@ function use_c2phc ( job : integer32;
     use Black_Mixed_Volume_Computations;
 
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-    mix,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mix,perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
     lifsup : Arrays_of_Floating_Vector_Lists.Link_to_Array_of_Lists;
     mixsub,mcc1,mcc2 : Floating_Mixed_Subdivisions.Mixed_Subdivision;
     mv,smv,tot,c1,c2 : natural32;
@@ -1858,7 +1860,7 @@ function use_c2phc ( job : integer32;
 
   begin
     Black_Box_Mixed_Volume_Computation
-      (lp.all,mix,perm,stlb,lifsup,mixsub,mcc1,mcc2,mv,smv,tot,c1,c2);
+      (lp.all,mix,perm,iprm,stlb,lifsup,mixsub,mcc1,mcc2,mv,smv,tot,c1,c2);
     Assign(integer32(mv),a);
     Assign(integer32(smv),b);
     Cells_Container.Initialize(mix,lifsup,mixsub);

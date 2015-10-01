@@ -943,11 +943,11 @@ package body Cells_Container is
     n : constant natural32 := Dimension_of_Supports-1;
     q : Standard_Complex_Laur_Systems.Laur_Sys(1..integer32(n))
       := Random_Coefficient_Systems.Create(n,mix.all,lifsup.all);
-    perm : Standard_Integer_Vectors.Link_to_Vector;
+    perm,iprm : Standard_Integer_Vectors.Link_to_Vector;
 
   begin
     Deep_Clear(lifsup); Clear(cells);
-    Black_Box_Mixed_Volume_Computation(q,mix,perm,lifsup,cells,res);
+    Black_Box_Mixed_Volume_Computation(q,mix,perm,iprm,lifsup,cells,res);
     Standard_Complex_Laur_Systems.Clear(q);
     return res;
   end Mixed_Volume;
