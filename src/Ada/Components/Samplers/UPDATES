@@ -1,3 +1,6 @@
+Thu 1 Oct 2015 : changed {dobldob,quaddobl}_sampling_machine.adb for
+  changed type of tolerances in the root refiners.
+
 Wed 16 Sep 2015 : new packages {dobldobl,quaddobl}_gridded_hypersurfaces for
   storing grids of points sampled from hypersurfaces in double double and
   quad double precision, compiled via a with clause in ts_hypsam.

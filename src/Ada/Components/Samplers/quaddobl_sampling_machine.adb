@@ -29,7 +29,7 @@ package body QuadDobl_Sampling_Machine is
 
 -- PARAMETERS FOR ROOT REFINER :
 
-  epsxa,epsfa,tolsing : quad_double;
+  epsxa,epsfa,tolsing : double_float;
   maxit : natural32;
 
 -- AUXILIARY ROUTINES :
@@ -685,9 +685,9 @@ package body QuadDobl_Sampling_Machine is
 
   procedure Default_Tune_Refiner is
   begin
-    epsxa := Quad_Double_Numbers.Create(1.0E-48);
-    epsfa := Quad_Double_Numbers.Create(1.0E-48);
-    tolsing := Quad_Double_Numbers.Create(1.0E-32);
+    epsxa := 1.0E-48;
+    epsfa := 1.0E-48;
+    tolsing := 1.0E-32;
     maxit := 4;
   end Default_Tune_Refiner;
 
@@ -700,7 +700,6 @@ package body QuadDobl_Sampling_Machine is
   procedure Interactive_Tune_Refiner is
  
     ans : character;
-    d_epsxa,d_epsfa,d_tolsing : double_float;
 
   begin
     Default_Tune_Refiner;
@@ -711,14 +710,11 @@ package body QuadDobl_Sampling_Machine is
       exit when (ans = '0');
       case ans is
         when '1' => put("Give new tolerance on error on root : ");
-                    Read_Double_Float(d_epsxa);
-                    epsxa := Quad_Double_Numbers.Create(d_epsxa);
+                    Read_Double_Float(epsxa);
         when '2' => put("Give new tolerance on residual : ");
-                    Read_Double_Float(d_epsfa);
-                    epsfa := Quad_Double_Numbers.Create(d_epsfa);
+                    Read_Double_Float(epsfa);
         when '3' => put("Give new tolerance on singular rcond : ");
-                    Read_Double_Float(d_tolsing);
-                    tolsing := Quad_Double_Numbers.Create(d_tolsing);
+                    Read_Double_Float(tolsing);
         when '4' => put("Give new maximal number of iterations : ");
                     Read_Natural(maxit);
         when others => null;

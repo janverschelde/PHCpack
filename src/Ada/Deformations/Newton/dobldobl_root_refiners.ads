@@ -263,27 +263,27 @@ package DoblDobl_Root_Refiners is
               ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in  DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out DoblDobl_Complex_Solutions.Solution;
-                epsxa,epsfa : in double_double; numit : in out natural32;
+                epsxa,epsfa : in double_float; numit : in out natural32;
                 max : in natural32; fail : out boolean );
   procedure Reporting_Newton
               ( file : in file_type;
                 f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in  DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out DoblDobl_Complex_Solutions.Solution;
-                epsxa,epsfa : in double_double; numit : in out natural32;
+                epsxa,epsfa : in double_float; numit : in out natural32;
                 max : in natural32; fail : out boolean );
   procedure Silent_Newton
               ( f : in DoblDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in  DoblDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out DoblDobl_Complex_Solutions.Solution;
-                epsxa,epsfa : in double_double; numit : in out natural32;
+                epsxa,epsfa : in double_float; numit : in out natural32;
                 max : in natural32; fail : out boolean );
   procedure Reporting_Newton
               ( file : in file_type;
                 f : in DoblDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in  DoblDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out DoblDobl_Complex_Solutions.Solution;
-                epsxa,epsfa : in double_double; numit : in out natural32;
+                epsxa,epsfa : in double_float; numit : in out natural32;
                 max : in natural32; fail : out boolean );
 
   -- DESCRIPTION :
@@ -314,7 +314,7 @@ package DoblDobl_Root_Refiners is
                 jf : in  DoblDobl_Jacobian_Circuits.Circuit;
                 x : in out DoblDobl_Complex_Solutions.Solution;
                 wrk : in out DoblDobl_Complex_VecVecs.VecVec;
-                epsxa,epsfa : in double_double; numit : in out natural32;
+                epsxa,epsfa : in double_float; numit : in out natural32;
                 max : in natural32; fail : out boolean );
   procedure Reporting_Newton
               ( file : in file_type;
@@ -322,7 +322,7 @@ package DoblDobl_Root_Refiners is
                 jf : in  DoblDobl_Jacobian_Circuits.Circuit;
                 x : in out DoblDobl_Complex_Solutions.Solution;
                 wrk : in out DoblDobl_Complex_VecVecs.VecVec;
-                epsxa,epsfa : in double_double; numit : in out natural32;
+                epsxa,epsfa : in double_float; numit : in out natural32;
                 max : in natural32; fail : out boolean );
 
   -- DESCRIPTION :
@@ -401,49 +401,49 @@ package DoblDobl_Root_Refiners is
   procedure Silent_Root_Refiner
                ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  s : in out DoblDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in double_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32 );
   procedure Silent_Root_Refiner
                ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in double_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32 );
   procedure Silent_Root_Refiner
                ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  s : in out DoblDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in double_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32 );
   procedure Silent_Root_Refiner
                ( p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in double_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32 );
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  s : in out DoblDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in double_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
                  wout : in boolean );
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in double_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
                  wout : in boolean );
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  s : in out DoblDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in double_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
                  wout : in boolean );
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
                  s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in double_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
                  wout : in boolean );
 
@@ -461,6 +461,8 @@ package DoblDobl_Root_Refiners is
   --   s        current approximate solutions;
   --   epsxa    accuracy requirement on update factor;
   --   epsfa    accuracy requirement on residual;
+  --   tolsing  tolerance on inverse condition number of the Jacobian
+  --            matrix at the root for consideration as singular solution;
   --   numit    number of iterations, must be zero on entry,
   --   max      maximum number of iterations allowed;
   --   wout     if true, then information about each Newton update

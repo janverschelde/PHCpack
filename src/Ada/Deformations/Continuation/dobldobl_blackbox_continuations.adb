@@ -3,6 +3,7 @@ with File_Scanning;                      use File_Scanning;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
 with DoblDobl_Random_Numbers;            use DoblDobl_Random_Numbers;
@@ -161,17 +162,15 @@ package body DoblDobl_BlackBox_Continuations is
   --   Refines the roots in sols w.r.t. the system p.
   --   By default, deflation is applied.
 
-    epsxa,epsfa : constant double_double := create(1.0E-8);
-    tolsing : constant double_double := create(1.0E-8);
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-8;
     ref_sols : Solution_List;
     nb : natural32 := 0;
     deflate : boolean := true;
 
   begin
     if Length_Of(sols) > 0 then
-      Reporting_Root_Refiner(outfile,p,sols,ref_sols,epsxa,epsfa,nb,5,false);
-      --Reporting_Root_Refiner
-      --  (outfile,p,sols,ref_sols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+      Reporting_Root_Refiner
+        (outfile,p,sols,ref_sols,epsxa,epsfa,tolsing,nb,5,false);
     end if;
     Clear(sols);
     sols := ref_sols;
@@ -189,15 +188,15 @@ package body DoblDobl_BlackBox_Continuations is
   --   Refines the roots in sols w.r.t. the system p, with nt tasks.
   --   With multitasking, deflation is not yet available...
 
-    epsxa,epsfa : constant double_double := create(1.0E-8);
-    tolsing : constant double_double := create(1.0E-8);
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-8;
    -- ref_sols : Solution_List;
     nb : natural32 := 0;
     deflate : boolean := true;
 
   begin
     if Length_Of(sols) > 0 then
-      Reporting_Root_Refiner(outfile,p,sols,epsxa,epsfa,nb,5,false);
+      Reporting_Root_Refiner
+        (outfile,p,sols,epsxa,epsfa,tolsing,nb,5,false);
      -- note that Silent means no writing concerning job scheduling
      -- Silent_Multitasking_Root_Refiner
      --   (outfile,nt,p,sols,epsxa,epsfa,tolsing,nb,5,deflate);
@@ -217,14 +216,14 @@ package body DoblDobl_BlackBox_Continuations is
   --   Refines the roots in sols w.r.t. the system p.
   --   Deflation is not yet available for Laurent systems.
 
-    epsxa,epsfa : constant double_double := create(1.0E-8);
-    tolsing : constant double_double := create(1.0E-8);
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-8;
     ref_sols : Solution_List;
     nb : natural32 := 0;
 
   begin
     if Length_Of(sols) > 0 then
-      Reporting_Root_Refiner(outfile,p,sols,epsxa,epsfa,nb,5,false);
+      Reporting_Root_Refiner
+        (outfile,p,sols,epsxa,epsfa,tolsing,nb,5,false);
       -- Reporting_Root_Refiner
       --   (outfile,p,sols,ref_sols,epsxa,epsfa,tolsing,nb,5,false);
       null;
@@ -241,15 +240,15 @@ package body DoblDobl_BlackBox_Continuations is
   --   Refines the roots in sols w.r.t. the system p with nt tasks.
   --   Deflation is not yet available for Laurent systems.
 
-    epsxa,epsfa : constant double_double := create(1.0E-8);
-    tolsing : constant double_double := create(1.0E-8);
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-8;
    -- ref_sols : Solution_List;
     deflate : boolean := false;
     nb : natural32 := 0;
 
   begin
     if Length_Of(sols) > 0 then
-      Reporting_Root_Refiner(outfile,p,sols,epsxa,epsfa,nb,5,false);
+      Reporting_Root_Refiner
+        (outfile,p,sols,epsxa,epsfa,tolsing,nb,5,false);
       --Silent_Multitasking_Root_Refiner
       --  (outfile,nt,p,sols,epsxa,epsfa,tolsing,nb,5,deflate);
     end if;
@@ -263,13 +262,13 @@ package body DoblDobl_BlackBox_Continuations is
   --   without output written to file.
   --   By default, deflation is applied.
 
-    epsxa,epsfa : constant double_double := create(1.0E-8);
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-8;
     ref_sols : Solution_List;
     nb : natural32 := 0;
 
   begin
     if Length_Of(sols) > 0 then
-      Silent_Root_Refiner(p,sols,ref_sols,epsxa,epsfa,nb,5);
+      Silent_Root_Refiner(p,sols,ref_sols,epsxa,epsfa,tolsing,nb,5);
       Clear(sols);
       sols := ref_sols;
     end if;
@@ -286,13 +285,13 @@ package body DoblDobl_BlackBox_Continuations is
   --   without output written to file.
   --   For Laurent systems, deflation is not yet available.
 
-    epsxa,epsfa : constant double_double := create(1.0E-8);
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-8;
     ref_sols : Solution_List;
     nb : natural32 := 0;
 
   begin
     if Length_Of(sols) > 0 then
-      Silent_Root_Refiner(p,sols,ref_sols,epsxa,epsfa,nb,5);
+      Silent_Root_Refiner(p,sols,ref_sols,epsxa,epsfa,tolsing,nb,5);
       Clear(sols);
       sols := ref_sols;
     end if;

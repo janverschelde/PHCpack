@@ -43,7 +43,7 @@ package body Black_Box_Simplex_Solvers is
 
     use DoblDobl_Complex_Solutions;
 
-    epsxa,epsfa : double_double;
+    epsxa,epsfa,tolsing : double_float;
     numit,max : natural32;
     tol_zero : constant double_double := create(1.0E-24);
     zero_y : boolean;
@@ -51,11 +51,12 @@ package body Black_Box_Simplex_Solvers is
   begin
     DoblDobl_Simpomial_Solvers.Solve(p,tol_zero,sols,fail,zero_y);
     if (not fail and then (Length_Of(sols) > 0)) then
-      epsxa := create(1.0E-24);
-      epsfa := create(1.0E-24);
+      epsxa := 1.0E-24;
+      epsfa := 1.0E-24;
+      tolsing := 1.0E-16;
       max := 5;
       numit := 0;
-      Silent_Root_Refiner(p,sols,epsxa,epsfa,numit,max);
+      Silent_Root_Refiner(p,sols,epsxa,epsfa,tolsing,numit,max);
     end if;
   end Black_Box_Simplex_Solver;
 
@@ -66,7 +67,7 @@ package body Black_Box_Simplex_Solvers is
 
     use QuadDobl_Complex_Solutions;
 
-    epsxa,epsfa : quad_double;
+    epsxa,epsfa,tolsing : double_float;
     numit,max : natural32;
     tol_zero : constant quad_double := create(1.0E-48);
     zero_y : boolean;
@@ -74,11 +75,12 @@ package body Black_Box_Simplex_Solvers is
   begin
     QuadDobl_Simpomial_Solvers.Solve(p,tol_zero,sols,fail,zero_y);
     if (not fail and then (Length_Of(sols) > 0)) then
-      epsxa := create(1.0E-48);
-      epsfa := create(1.0E-48);
+      epsxa := 1.0E-48;
+      epsfa := 1.0E-48;
+      tolsing := 1.0E-24;
       max := 5;
       numit := 0;
-      Silent_Root_Refiner(p,sols,epsxa,epsfa,numit,max);
+      Silent_Root_Refiner(p,sols,epsxa,epsfa,tolsing,numit,max);
     end if;
   end Black_Box_Simplex_Solver;
 
@@ -169,7 +171,7 @@ package body Black_Box_Simplex_Solvers is
 
     use DoblDobl_Complex_Solutions;
 
-    epsxa,epsfa : double_double;
+    epsxa,epsfa,tolsing : double_float;
     numit,max : natural32;
     tol_zero : constant double_double := create(1.0E-24);
     zero_y : boolean;
@@ -187,11 +189,12 @@ package body Black_Box_Simplex_Solvers is
         put_line(file,
     "remove the perturbations then again via homotopy continuation.");
       elsif Length_Of(sols) > 0 then
-        epsxa := create(1.0E-24);
-        epsfa := create(1.0E-24);
+        epsxa := 1.0E-24;
+        epsfa := 1.0E-24;
+        tolsing := 1.0E-16;
         max := 5;
         numit := 0;
-        Reporting_Root_Refiner(file,p,sols,epsxa,epsfa,numit,max,false);
+        Reporting_Root_Refiner(file,p,sols,epsxa,epsfa,tolsing,numit,max,false);
       end if;
     end if;
   end Black_Box_Simplex_Solver;
@@ -204,7 +207,7 @@ package body Black_Box_Simplex_Solvers is
 
     use QuadDobl_Complex_Solutions;
 
-    epsxa,epsfa : quad_double;
+    epsxa,epsfa,tolsing : double_float;
     numit,max : natural32;
     tol_zero : constant quad_double := create(1.0E-48);
     zero_y : boolean;
@@ -222,11 +225,12 @@ package body Black_Box_Simplex_Solvers is
         put_line(file,
     "remove the perturbations then again via homotopy continuation.");
       elsif Length_Of(sols) > 0 then
-        epsxa := create(1.0E-48);
-        epsfa := create(1.0E-48);
+        epsxa := 1.0E-48;
+        epsfa := 1.0E-48;
+        tolsing := 1.0E-24;
         max := 5;
         numit := 0;
-        Reporting_Root_Refiner(file,p,sols,epsxa,epsfa,numit,max,false);
+        Reporting_Root_Refiner(file,p,sols,epsxa,epsfa,tolsing,numit,max,false);
       end if;
     end if;
   end Black_Box_Simplex_Solver;

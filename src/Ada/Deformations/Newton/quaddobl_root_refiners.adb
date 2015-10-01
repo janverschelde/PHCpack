@@ -389,7 +389,7 @@ package body QuadDobl_Root_Refiners is
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in  QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Solutions.Solution;
-                epsxa,epsfa : in quad_double; numit : in out natural32;
+                epsxa,epsfa : in double_float; numit : in out natural32;
                 max : in natural32; fail : out boolean ) is
   begin
     fail := true;
@@ -407,7 +407,7 @@ package body QuadDobl_Root_Refiners is
                 f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in  QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Solutions.Solution;
-                epsxa,epsfa : in quad_double; numit : in out natural32;
+                epsxa,epsfa : in double_float; numit : in out natural32;
                 max : in natural32; fail : out boolean ) is
   begin
     fail := true;
@@ -425,7 +425,7 @@ package body QuadDobl_Root_Refiners is
               ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in  QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Solutions.Solution;
-                epsxa,epsfa : in quad_double; numit : in out natural32;
+                epsxa,epsfa : in double_float; numit : in out natural32;
                 max : in natural32; fail : out boolean ) is
   begin
     fail := true;
@@ -443,7 +443,7 @@ package body QuadDobl_Root_Refiners is
                 f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in  QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Solutions.Solution;
-                epsxa,epsfa : in quad_double; numit : in out natural32;
+                epsxa,epsfa : in double_float; numit : in out natural32;
                 max : in natural32; fail : out boolean ) is
   begin
     fail := true;
@@ -462,7 +462,7 @@ package body QuadDobl_Root_Refiners is
                 jf : in  QuadDobl_Jacobian_Circuits.Circuit;
                 x : in out QuadDobl_Complex_Solutions.Solution;
                 wrk : in out QuadDobl_Complex_VecVecs.VecVec;
-                epsxa,epsfa : in quad_double; numit : in out natural32;
+                epsxa,epsfa : in double_float; numit : in out natural32;
                 max : in natural32; fail : out boolean ) is
   begin
     fail := true;
@@ -551,10 +551,12 @@ package body QuadDobl_Root_Refiners is
     QuadDobl_Complex_VecVecs.Clear(wrk);
   end QuadDobl_Root_Refiner;
 
+-- THE MAIN ROOT REFINERS :
+
   procedure Silent_Root_Refiner
                ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in quad_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
@@ -573,7 +575,6 @@ package body QuadDobl_Root_Refiners is
     h2 : constant QuadDobl_Complex_Vectors.Vector
        := QuadDobl_Random_Vectors.Random_Vector(1,n);
     pl : Point_List;
-    tolsing : constant double_float := 1.0E-8;
 
   begin
     for i in sa'range loop
@@ -583,7 +584,7 @@ package body QuadDobl_Root_Refiners is
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
         Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
         Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                     infty,false,tolsing,hihi_part(epsxa));
+                     infty,false,tolsing,epsxa);
         numit := numit + nb;
       else
         fail := true;
@@ -596,7 +597,7 @@ package body QuadDobl_Root_Refiners is
   procedure Silent_Root_Refiner
                ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in quad_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32 ) is
 
     use QuadDobl_Complex_Poly_SysFun;
@@ -616,7 +617,6 @@ package body QuadDobl_Root_Refiners is
     h2 : constant QuadDobl_Complex_Vectors.Vector
        := QuadDobl_Random_Vectors.Random_Vector(1,n);
     pl : Point_List;
-    tolsing : constant double_float := 1.0E-8;
 
   begin
     for i in sa'range loop
@@ -626,7 +626,7 @@ package body QuadDobl_Root_Refiners is
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
         Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
         Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                     infty,false,tolsing,hihi_part(epsxa));
+                     infty,false,tolsing,epsxa);
         numit := numit + nb;
         if not fail
          then Append(refs,refs_last,sa(i).all);
@@ -642,7 +642,7 @@ package body QuadDobl_Root_Refiners is
   procedure Silent_Root_Refiner
                ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in quad_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32 ) is
 
     use QuadDobl_Complex_Laur_SysFun;
@@ -661,7 +661,6 @@ package body QuadDobl_Root_Refiners is
     h2 : constant QuadDobl_Complex_Vectors.Vector
        := QuadDobl_Random_Vectors.Random_Vector(1,n);
     pl : Point_List;
-    tolsing : constant double_float := 1.0E-8;
 
   begin
     for i in sa'range loop
@@ -671,7 +670,7 @@ package body QuadDobl_Root_Refiners is
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
         Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
         Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                     infty,false,tolsing,hihi_part(epsxa));
+                     infty,false,tolsing,epsxa);
         numit := numit + nb;
       else
         fail := true;
@@ -684,7 +683,7 @@ package body QuadDobl_Root_Refiners is
   procedure Silent_Root_Refiner
                ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in quad_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32 ) is
 
     use QuadDobl_Complex_Laur_SysFun;
@@ -704,7 +703,6 @@ package body QuadDobl_Root_Refiners is
     h2 : constant QuadDobl_Complex_Vectors.Vector
        := QuadDobl_Random_Vectors.Random_Vector(1,n);
     pl : Point_List;
-    tolsing : constant double_float := 1.0E-8;
 
   begin
     for i in sa'range loop
@@ -714,7 +712,7 @@ package body QuadDobl_Root_Refiners is
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
         Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
         Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                     infty,false,tolsing,hihi_part(epsxa));
+                     infty,false,tolsing,epsxa);
         numit := numit + nb;
         if not fail
          then Append(refs,refs_last,sa(i).all);
@@ -731,7 +729,7 @@ package body QuadDobl_Root_Refiners is
                ( file : in file_type;
                  p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in quad_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
                  wout : in boolean ) is
 
@@ -755,7 +753,6 @@ package body QuadDobl_Root_Refiners is
        := QuadDobl_Random_Vectors.Random_Vector(1,n);
     pl : Point_List;
     initres : quad_double;
-    tolsing : constant double_float := 1.0E-8;
 
   begin
     new_line(file);
@@ -777,12 +774,11 @@ package body QuadDobl_Root_Refiners is
         fail := true;
       end if;
       Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,false,tolsing,hihi_part(epsxa));
+                   infty,false,tolsing,epsxa);
       Write_Info(file,sa(i).all,initres,natural32(i),nb,0,fail,infty);
       Write_Type
         (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
-         tolsing,hihi_part(epsxa),
-         nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
       QuadDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
       QuadDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
       QuadDobl_Condition_Tables.Update_Residuals(t_res,sa(i).all);
@@ -799,7 +795,7 @@ package body QuadDobl_Root_Refiners is
                ( file : in file_type;
                  p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in quad_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
                  wout : in boolean ) is
 
@@ -824,7 +820,6 @@ package body QuadDobl_Root_Refiners is
        := QuadDobl_Random_Vectors.Random_Vector(1,n);
     pl : Point_List;
     initres : quad_double;
-    tolsing : constant double_float := 1.0E-8;
 
   begin
     new_line(file);
@@ -846,12 +841,11 @@ package body QuadDobl_Root_Refiners is
         fail := true;
       end if;
       Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,false,tolsing,hihi_part(epsxa));
+                   infty,false,tolsing,epsxa);
       Write_Info(file,sa(i).all,initres,natural32(i),nb,0,fail,infty);
       Write_Type
         (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
-         tolsing,hihi_part(epsxa),
-         nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
       QuadDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
       QuadDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
       QuadDobl_Condition_Tables.Update_Residuals(t_res,sa(i).all);
@@ -871,7 +865,7 @@ package body QuadDobl_Root_Refiners is
                ( file : in file_type;
                  p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in quad_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
                  wout : in boolean ) is
 
@@ -895,7 +889,6 @@ package body QuadDobl_Root_Refiners is
        := QuadDobl_Random_Vectors.Random_Vector(1,n);
     pl : Point_List;
     initres : quad_double;
-    tolsing : constant double_float := 1.0E-8;
 
   begin
     new_line(file);
@@ -917,12 +910,11 @@ package body QuadDobl_Root_Refiners is
         fail := true;
       end if;
       Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,false,tolsing,hihi_part(epsxa));
+                   infty,false,tolsing,epsxa);
       Write_Info(file,sa(i).all,initres,natural32(i),nb,0,fail,infty);
       Write_Type
         (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
-         tolsing,hihi_part(epsxa),
-         nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
       QuadDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
       QuadDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
       QuadDobl_Condition_Tables.Update_Residuals(t_res,sa(i).all);
@@ -939,7 +931,7 @@ package body QuadDobl_Root_Refiners is
                ( file : in file_type;
                  p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in quad_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
                  wout : in boolean ) is
 
@@ -964,7 +956,6 @@ package body QuadDobl_Root_Refiners is
        := QuadDobl_Random_Vectors.Random_Vector(1,n);
     pl : Point_List;
     initres : quad_double;
-    tolsing : constant double_float := 1.0E-8;
 
   begin
     new_line(file);
@@ -986,12 +977,11 @@ package body QuadDobl_Root_Refiners is
         fail := true;
       end if;
       Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,false,tolsing,hihi_part(epsxa));
+                   infty,false,tolsing,epsxa);
       Write_Info(file,sa(i).all,initres,natural32(i),nb,0,fail,infty);
       Write_Type
         (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
-         tolsing,hihi_part(epsxa),
-         nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
       QuadDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
       QuadDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
       QuadDobl_Condition_Tables.Update_Residuals(t_res,sa(i).all);

@@ -257,31 +257,33 @@ package QuadDobl_Root_Refiners is
   --   rco      estimate for the inverse condition number;
   --   res      residual, norm of the function value.
 
+-- SEVERAL STEPS ON ONE SOLUTION :
+
   procedure Silent_Newton
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in  QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Solutions.Solution;
-                epsxa,epsfa : in quad_double; numit : in out natural32;
+                epsxa,epsfa : in double_float; numit : in out natural32;
                 max : in natural32; fail : out boolean );
   procedure Reporting_Newton
               ( file : in file_type;
                 f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in  QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Solutions.Solution;
-                epsxa,epsfa : in quad_double; numit : in out natural32;
+                epsxa,epsfa : in double_float; numit : in out natural32;
                 max : in natural32; fail : out boolean );
   procedure Silent_Newton
               ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in  QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Solutions.Solution;
-                epsxa,epsfa : in quad_double; numit : in out natural32;
+                epsxa,epsfa : in double_float; numit : in out natural32;
                 max : in natural32; fail : out boolean );
   procedure Reporting_Newton
               ( file : in file_type;
                 f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in  QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Solutions.Solution;
-                epsxa,epsfa : in quad_double; numit : in out natural32;
+                epsxa,epsfa : in double_float; numit : in out natural32;
                 max : in natural32; fail : out boolean );
 
   -- DESCRIPTION :
@@ -314,7 +316,7 @@ package QuadDobl_Root_Refiners is
                 jf : in  QuadDobl_Jacobian_Circuits.Circuit;
                 x : in out QuadDobl_Complex_Solutions.Solution;
                 wrk : in out QuadDobl_Complex_VecVecs.VecVec;
-                epsxa,epsfa : in quad_double; numit : in out natural32;
+                epsxa,epsfa : in double_float; numit : in out natural32;
                 max : in natural32; fail : out boolean );
 
   -- DESCRIPTION :
@@ -369,6 +371,8 @@ package QuadDobl_Root_Refiners is
   --   s        content where the pointer refers to is updated;
   --   wrk      modified work space for the evaluated monomials.
 
+-- REFINING A LIST OF SOLUTIONS :
+
   procedure QuadDobl_Root_Refiner
               ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                 s : in out QuadDobl_Complex_Solutions.Solution_List );
@@ -384,52 +388,54 @@ package QuadDobl_Root_Refiners is
   --   Applies Newton's method to the solutions s of the system p,
   --   using the circuit representation for the Jacobian matrix.
 
+-- THE MAIN ROOT REFINERS :
+
   procedure Silent_Root_Refiner
                ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in quad_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32 );
   procedure Silent_Root_Refiner
                ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in quad_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32 );
   procedure Silent_Root_Refiner
                ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in quad_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32 );
   procedure Silent_Root_Refiner
                ( p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in quad_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32 );
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in quad_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
                  wout : in boolean );
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in quad_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
                  wout : in boolean );
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  s : in out QuadDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in quad_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
                  wout : in boolean );
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
                  s,refs : in out QuadDobl_Complex_Solutions.Solution_List;
-                 epsxa,epsfa : in quad_double;
+                 epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
                  wout : in boolean );
 
@@ -447,6 +453,9 @@ package QuadDobl_Root_Refiners is
   --   s        current approximate solutions;
   --   epsxa    accuracy requirement on update factor;
   --   epsfa    accuracy requirement on residual;
+  --   tolsing  is the tolerance on the inverse condition number of
+  --            the Jacobian matrix at the root for consideration
+  --            as a singular solution;
   --   numit    number of iterations, must be zero on entry,
   --   max      maximum number of iterations allowed.
 
