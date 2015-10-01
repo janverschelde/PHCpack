@@ -163,17 +163,18 @@ package body DoblDobl_BlackBox_Continuations is
 
     epsxa,epsfa : constant double_double := create(1.0E-8);
     tolsing : constant double_double := create(1.0E-8);
+    ref_sols : Solution_List;
     nb : natural32 := 0;
     deflate : boolean := true;
 
   begin
     if Length_Of(sols) > 0 then
-      Reporting_Root_Refiner(outfile,p,sols,epsxa,epsfa,nb,5,false);
+      Reporting_Root_Refiner(outfile,p,sols,ref_sols,epsxa,epsfa,nb,5,false);
       --Reporting_Root_Refiner
       --  (outfile,p,sols,ref_sols,epsxa,epsfa,tolsing,nb,5,deflate,false);
-      null;
     end if;
     Clear(sols);
+    sols := ref_sols;
   --exception
   --  when others =>
   --    put_line("exception in the calling of reporting root refiner...");
@@ -251,7 +252,6 @@ package body DoblDobl_BlackBox_Continuations is
       Reporting_Root_Refiner(outfile,p,sols,epsxa,epsfa,nb,5,false);
       --Silent_Multitasking_Root_Refiner
       --  (outfile,nt,p,sols,epsxa,epsfa,tolsing,nb,5,deflate);
-      null;
     end if;
   end Reporting_Black_Box_Refine;
 
@@ -264,11 +264,14 @@ package body DoblDobl_BlackBox_Continuations is
   --   By default, deflation is applied.
 
     epsxa,epsfa : constant double_double := create(1.0E-8);
+    ref_sols : Solution_List;
     nb : natural32 := 0;
 
   begin
     if Length_Of(sols) > 0 then
-      Silent_Root_Refiner(p,sols,epsxa,epsfa,nb,5);
+      Silent_Root_Refiner(p,sols,ref_sols,epsxa,epsfa,nb,5);
+      Clear(sols);
+      sols := ref_sols;
     end if;
   --exception 
   --  when others => put_line("exception raised in silent black box refine");
@@ -284,11 +287,14 @@ package body DoblDobl_BlackBox_Continuations is
   --   For Laurent systems, deflation is not yet available.
 
     epsxa,epsfa : constant double_double := create(1.0E-8);
+    ref_sols : Solution_List;
     nb : natural32 := 0;
 
   begin
     if Length_Of(sols) > 0 then
-      Silent_Root_Refiner(p,sols,epsxa,epsfa,nb,5);
+      Silent_Root_Refiner(p,sols,ref_sols,epsxa,epsfa,nb,5);
+      Clear(sols);
+      sols := ref_sols;
     end if;
   end Silent_Black_Box_Refine;
 

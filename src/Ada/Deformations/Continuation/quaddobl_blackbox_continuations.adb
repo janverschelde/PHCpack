@@ -264,11 +264,14 @@ package body QuadDobl_BlackBox_Continuations is
   --   By default, deflation is applied.
 
     epsxa,epsfa : constant quad_double := create(1.0E-8);
+    ref_sols : Solution_List;
     nb : natural32 := 0;
 
   begin
     if Length_Of(sols) > 0 then
-      Silent_Root_Refiner(p,sols,epsxa,epsfa,nb,5);
+      Silent_Root_Refiner(p,sols,ref_sols,epsxa,epsfa,nb,5);
+      Clear(sols);
+      sols := ref_sols;
     end if;
   --exception 
   --  when others => put_line("exception raised in silent black box refine");
@@ -284,11 +287,14 @@ package body QuadDobl_BlackBox_Continuations is
   --   For Laurent systems, deflation is not yet available.
 
     epsxa,epsfa : constant quad_double := create(1.0E-8);
+    ref_sols : Solution_List;
     nb : natural32 := 0;
 
   begin
     if Length_Of(sols) > 0 then
-      Silent_Root_Refiner(p,sols,epsxa,epsfa,nb,5);
+      Silent_Root_Refiner(p,sols,ref_sols,epsxa,epsfa,nb,5);
+      Clear(sols);
+      sols := ref_sols;
     end if;
   end Silent_Black_Box_Refine;
 
