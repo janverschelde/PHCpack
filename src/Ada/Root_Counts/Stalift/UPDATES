@@ -1,3 +1,6 @@
+Fri 2 Oct 2015 : updated drivers_for_mixedvol_algorithm.adb to set the tuning
+  of tolerances for double double and quad double precision.
+
 Tue 29 Sep 2015 : relabeling of permutations in induced_permutations,
   just in case the permutation would starts its indexing at zero.
 

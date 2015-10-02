@@ -1944,7 +1944,8 @@ package body Drivers_for_mixedvol_algorithm is
       put_line("Reading the name of the file to write the start system ...");
       Read_Name_and_Create_File(startfile);
       new_line;
-      Drivers_for_Poly_Continuation.Driver_for_Continuation_Parameters(file,32);
+   -- Drivers_for_Poly_Continuation.Driver_for_Continuation_Parameters(file,32);
+      Drivers_for_Poly_Continuation.Driver_for_Continuation_Parameters(file);
       new_line;
       Drivers_for_Poly_Continuation.Driver_for_Process_io(file,oc);
       contrep := (oc /= 0);
@@ -1989,7 +1990,8 @@ package body Drivers_for_mixedvol_algorithm is
       put_line("Reading the name of the file to write the start system ...");
       Read_Name_and_Create_File(startfile);
       new_line;
-      Drivers_for_Poly_Continuation.Driver_for_Continuation_Parameters(file,64);
+   -- Drivers_for_Poly_Continuation.Driver_for_Continuation_Parameters(file,64);
+      Drivers_for_Poly_Continuation.Driver_for_Continuation_Parameters(file);
       new_line;
       Drivers_for_Poly_Continuation.Driver_for_Process_io(file,oc);
       contrep := (oc /= 0);
@@ -2082,7 +2084,8 @@ package body Drivers_for_mixedvol_algorithm is
       put_line("Reading the name of the file to write the start system ...");
       Read_Name_and_Create_File(startfile);
       new_line;
-      Drivers_for_Poly_Continuation.Driver_for_Continuation_Parameters(file,32);
+   -- Drivers_for_Poly_Continuation.Driver_for_Continuation_Parameters(file,32);
+      Drivers_for_Poly_Continuation.Driver_for_Continuation_Parameters(file);
       new_line;
       Drivers_for_Poly_Continuation.Driver_for_Process_io(file,oc);
       contrep := (oc /= 0);
@@ -2128,7 +2131,8 @@ package body Drivers_for_mixedvol_algorithm is
       put_line("Reading the name of the file to write the start system ...");
       Read_Name_and_Create_File(startfile);
       new_line;
-      Drivers_for_Poly_Continuation.Driver_for_Continuation_Parameters(file,64);
+   -- Drivers_for_Poly_Continuation.Driver_for_Continuation_Parameters(file,64);
+      Drivers_for_Poly_Continuation.Driver_for_Continuation_Parameters(file);
       new_line;
       Drivers_for_Poly_Continuation.Driver_for_Process_io(file,oc);
       contrep := (oc /= 0);
