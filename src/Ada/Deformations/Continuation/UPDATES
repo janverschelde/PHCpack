@@ -1,3 +1,6 @@
+Fri 2 Oct 2015 : in {dobldobl,quaddobl}_blackbox_continuations.adb changed
+  the values for the tolerances for the black box root refiners.
+
 Thu 1 Oct 2015 : {dobldobl,quaddobl}_blackbox_continuations.adb apply the
   silent root refiners that filter out the path failures.
   Changed {dobldobl,quaddobl}_blackbox_continuations.adb because of

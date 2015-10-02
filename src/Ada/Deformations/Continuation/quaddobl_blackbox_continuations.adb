@@ -162,7 +162,7 @@ package body QuadDobl_BlackBox_Continuations is
   --   Refines the roots in sols w.r.t. the system p.
   --   By default, deflation is applied.
 
-    epsxa,epsfa,tolsing : constant double_float := 1.0E-8;
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-32;
     nb : natural32 := 0;
     deflate : boolean := true;
 
@@ -188,7 +188,7 @@ package body QuadDobl_BlackBox_Continuations is
   --   Refines the roots in sols w.r.t. the system p, with nt tasks.
   --   With multitasking, deflation is not yet available...
 
-    epsxa,epsfa,tolsing : constant double_float := 1.0E-8;
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-32;
    -- ref_sols : Solution_List;
     nb : natural32 := 0;
     deflate : boolean := true;
@@ -215,7 +215,7 @@ package body QuadDobl_BlackBox_Continuations is
   --   Refines the roots in sols w.r.t. the system p.
   --   Deflation is not yet available for Laurent systems.
 
-    epsxa,epsfa,tolsing : constant double_float := 1.0E-8;
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-32;
     ref_sols : Solution_List;
     nb : natural32 := 0;
 
@@ -238,7 +238,7 @@ package body QuadDobl_BlackBox_Continuations is
   --   Refines the roots in sols w.r.t. the system p with nt tasks.
   --   Deflation is not yet available for Laurent systems.
 
-    epsxa,epsfa,tolsing : constant double_float := 1.0E-8;
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-32;
    -- ref_sols : Solution_List;
     deflate : boolean := false;
     nb : natural32 := 0;
@@ -260,7 +260,7 @@ package body QuadDobl_BlackBox_Continuations is
   --   without output written to file.
   --   By default, deflation is applied.
 
-    epsxa,epsfa,tolsing : constant double_float := 1.0E-8;
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-32;
     ref_sols : Solution_List;
     nb : natural32 := 0;
 
@@ -283,7 +283,7 @@ package body QuadDobl_BlackBox_Continuations is
   --   without output written to file.
   --   For Laurent systems, deflation is not yet available.
 
-    epsxa,epsfa,tolsing : constant double_float := 1.0E-8;
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-32;
     ref_sols : Solution_List;
     nb : natural32 := 0;
 
