@@ -1,5 +1,7 @@
 Fri 2 Oct 2015 : updated drivers_for_mixedvol_algorithm.adb to set the tuning
   of tolerances for double double and quad double precision.
+  In polyhedral_coefficient_homotopies, used a better approximation for
+  t**m in case t is a double double or quad double and m a double float.
 
 Tue 29 Sep 2015 : relabeling of permutations in induced_permutations,
   just in case the permutation would starts its indexing at zero.

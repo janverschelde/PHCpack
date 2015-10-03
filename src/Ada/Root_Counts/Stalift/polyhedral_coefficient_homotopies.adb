@@ -460,20 +460,55 @@ package body Polyhedral_Coefficient_Homotopies is
     end loop;
   end Eval;
 
+  function PowerFloat ( t : double_double;
+                        m : double_float ) return double_double is
+
+  -- DESCRIPTION :
+  --   The approximation hi_part(t)**m is better than t**integer(m).
+
+    use Standard_Mathematical_Functions;
+
+    tsd : double_float := hi_part(t);
+    rsd : double_float := tsd**m;
+    res : double_double := create(rsd);
+
+  begin
+    return res;
+  end PowerFloat;
+
+  function PowerFloat ( t : quad_double;
+                        m : double_float ) return quad_double is
+
+  -- DESCRIPTION :
+  --   The approximation hi_part(t)**m is better than t**integer(m).
+
+    use Standard_Mathematical_Functions;
+
+    tsd : double_float := hihi_part(t);
+    rsd : double_float := tsd**m;
+    res : quad_double := create(rsd);
+
+  begin
+    return res;
+  end PowerFloat;
+
   procedure Eval ( c : in DoblDobl_Complex_Vectors.Vector;
                    t : in double_double;
                    m : in Standard_Floating_Vectors.Vector;
                    ctm : in out DoblDobl_Complex_Vectors.Vector ) is
 
     use DoblDobl_Complex_Numbers,DoblDobl_Mathematical_Functions;
+
     zero : constant double_double := create(0.0);
     tmi : double_double;
 
   begin
     for i in ctm'range loop
-      if (REAL_PART(c(i)) = zero) and (IMAG_PART(c(i)) = zero)
-       then ctm(i) := Create(zero);
-       else tmi := t**integer(m(i)); ctm(i) := c(i)*Create(tmi);
+      if (REAL_PART(c(i)) = zero) and (IMAG_PART(c(i)) = zero) then
+        ctm(i) := Create(zero);
+      else
+        tmi := PowerFloat(t,m(i)); -- t**integer(m(i));
+        ctm(i) := c(i)*Create(tmi);
       end if;
     end loop;
   end Eval;
@@ -522,9 +557,11 @@ package body Polyhedral_Coefficient_Homotopies is
 
   begin
     for i in ctm'range loop
-      if (REAL_PART(c(i)) = zero) and (IMAG_PART(c(i)) = zero)
-       then ctm(i) := Create(zero);
-       else tmi := t**integer(m(i)); ctm(i) := c(i)*Create(tmi);
+      if (REAL_PART(c(i)) = zero) and (IMAG_PART(c(i)) = zero) then
+        ctm(i) := Create(zero);
+      else
+        tmi := PowerFloat(t,m(i));
+        ctm(i) := c(i)*Create(tmi);
       end if;
     end loop;
   end Eval;
