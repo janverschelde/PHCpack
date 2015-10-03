@@ -1,3 +1,6 @@
+Sat 3 Oct 2015 : extended {double,quad}_double_numbers with x^y where y is of
+  the type double_float, needed for polyhedral path tracking.
+
 Sat 22 Nov 2014 : added one extra character in the strings for tiny numbers
   in {dobl,quad}dobl_complex_numbers_io.adb.
 

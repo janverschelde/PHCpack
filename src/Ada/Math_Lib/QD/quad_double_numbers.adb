@@ -1179,6 +1179,22 @@ package body Quad_Double_Numbers is
   begin
     return exp(y*log(x));
   end "**";
+
+  function "**" ( x : quad_double; y : double_double ) return quad_double is
+
+    qd_y : constant quad_double := create(y);
+
+  begin
+    return x**qd_y;
+  end "**";
+
+  function "**" ( x : quad_double; y : double_float ) return quad_double is
+
+    qd_y : constant quad_double := create(y);
+
+  begin
+    return x**qd_y;
+  end "**";
  
   function exp ( x : quad_double ) return quad_double is
 

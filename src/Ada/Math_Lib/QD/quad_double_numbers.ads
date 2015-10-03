@@ -217,6 +217,8 @@ package Quad_Double_Numbers is
   function ldexp ( x : quad_double; n : integer ) return quad_double;
      -- multiplies the quad double in x with 2^n
   function "**" ( x,y : quad_double ) return quad_double; -- x^y
+  function "**" ( x : quad_double; y : double_double ) return quad_double;
+  function "**" ( x : quad_double; y : double_float ) return quad_double;
  
   function exp ( x : quad_double ) return quad_double;   -- returns exp(x)
   function log ( x : quad_double ) return quad_double;   -- natural log

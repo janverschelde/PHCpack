@@ -145,6 +145,7 @@ package Double_Double_Numbers is
   function ldexp ( x : double_double; n : integer ) return double_double;
      -- multiplies the double double in x with 2^n
   function "**" ( x,y : double_double ) return double_double; -- x^y
+  function "**" ( x : double_double; y : double_float ) return double_double;
  
   function exp ( x : double_double ) return double_double;   -- returns exp(x)
   function log ( x : double_double ) return double_double;   -- natural log

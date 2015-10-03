@@ -668,6 +668,14 @@ package body Double_Double_Numbers is
     return exp(y*log(x));
   end "**";
 
+  function "**" ( x : double_double; y : double_float ) return double_double is
+
+    dd_y : constant double_double := create(y);
+
+  begin
+    return x**dd_y;
+  end "**";
+
   function exp ( x : double_double ) return double_double is
 
   -- Strategy:  We first reduce the size of x by noting that
