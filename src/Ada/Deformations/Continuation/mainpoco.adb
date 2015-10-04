@@ -28,6 +28,8 @@ with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
 with Systems_with_Parameters;            use Systems_with_Parameters;
 with Parameter_Homotopy_Continuation;    use Parameter_Homotopy_Continuation;
 with Multitasking_Continuation;
+with Write_Seed_Number;
+with Greeting_Banners;
 --with Bye_Bye_Message;
 
 procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
@@ -105,6 +107,9 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
     if Length_Of(sols) > 0
      then Refine_Solutions(outft,p,target,sols,refsols,solsfile);
     end if;
+    new_line(outft);
+    Write_Seed_Number(outft);
+    put_line(outft,Greeting_Banners.Version);
    -- put(outft,Bye_Bye_Message);
     Close(outft);
     if solsfile then
@@ -149,6 +154,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
    -- if Length_Of(sols) > 0
    --  then Refine_Solutions(outft,p,target,sols,refsols,solsfile);
    -- end if;
+    Write_Seed_Number(outft);
+    put_line(outft,Greeting_Banners.Version);
    -- put(outft,Bye_Bye_Message);
     Close(outft);
     if solsfile then

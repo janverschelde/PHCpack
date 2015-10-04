@@ -1,3 +1,6 @@
+Sun 4 Oct 2015 : updated mainpoco.adb so that phc -p writes the version number
+  and the seed used in the random number generators.
+
 Fri 2 Oct 2015 : in {dobldobl,quaddobl}_blackbox_continuations.adb changed
   the values for the tolerances for the black box root refiners.
 
