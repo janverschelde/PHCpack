@@ -1,4 +1,4 @@
-Exploitation of permutation symmetry for symmetric homotopies in PHCv2.3.97
+Exploitation of permutation symmetry for symmetric homotopies in PHCv2.4.02
 
 If the polynomial system is invariant under permutations of its unknowns,
 then it suffices to compute the generators of the solution set.

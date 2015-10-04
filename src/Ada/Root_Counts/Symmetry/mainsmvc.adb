@@ -19,6 +19,8 @@ with Drivers_for_Static_Lifting;         use Drivers_for_Static_Lifting;
 with Drivers_for_Dynamic_Lifting;        use Drivers_for_Dynamic_Lifting;
 with Drivers_for_Symmetric_Lifting;      use Drivers_for_Symmetric_Lifting;
 with Drivers_for_MixedVol_Algorithm;     use Drivers_for_MixedVol_Algorithm;
+with Write_Seed_Number;
+with Greeting_Banners;
 
 procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
 
@@ -210,6 +212,9 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
           (outft,pq,qsols,epsxa,epsfa,tolsing,nb,5,deflate,false);
       end;
     end if;
+    new_line(outft);
+    Write_Seed_Number(outft);
+    put_line(outft,Greeting_Banners.Version);
     Close(outft);
   end Ask_and_Dispatch_Lifting_Strategy;
 

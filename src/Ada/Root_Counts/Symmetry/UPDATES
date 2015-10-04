@@ -1,3 +1,6 @@
+Sun 4 Oct 2015 : updated mainsmvc.adb so the seed for the random number
+  generators and the version number is printed to the output file of phc -m.
+
 Thu 21 May 2015 : adjusted mainsmvc.adb for changed specifications in the
   calls to the drivers for MixedVol algorithm.
 
