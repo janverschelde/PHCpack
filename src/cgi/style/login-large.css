@@ -1,0 +1,20 @@
+.content{
+   min-width: 400px;
+   max-width: 800px;
+   width: 100%;
+}
+.signin-box{
+   float: right;
+   width: 220px;
+   margin: 0;
+}
+.photo
+{
+min-width: 100px;
+max-width: 450px;
+overflow:hidden;
+margin-left: auto;
+margin-right: auto;
+}
+.hidden_column{
+}

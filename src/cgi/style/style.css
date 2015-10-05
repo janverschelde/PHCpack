@@ -1,0 +1,21 @@
+table{
+   width:100%;
+}
+textarea{
+	width: 100%;
+}
+.userbar{
+   margin: 15px auto 15px;
+}
+.notice{
+   margin: 15px auto 15px;
+}
+.mypolys{
+	width: 100%;
+	margin-bottom: 50px;
+}
+.report_text{
+	border:1px dashed black; 
+	white-space: wrap; 
+	word-wrap: break-word;
+}

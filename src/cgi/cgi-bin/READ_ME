@@ -1,0 +1,8 @@
+This directory contains the Python CGI scripts.
+
+-------------------------------------------------------------------------------
+file name     : short description
+-------------------------------------------------------------------------------
+activate.py   : to activate a new account
+login.py      : defines the login screen
+-------------------------------------------------------------------------------

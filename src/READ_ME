@@ -3,6 +3,7 @@ The public distribution for PHCpack version 2.4.01 contains
   Ada        Ada sources
   bin        binary versions of phc
   doc        documentation in restructured text for Sphinx
+  cgi        scripts for the web interface, developed by Xiangcheng Yu
   Feedback   realization of feedback laws, with Yusong Wang
   GPU        code for NVIDIA Graphics Processing Units
              developed in collaboration with Genady Yoffe and Xiangcheng Yu

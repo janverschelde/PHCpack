@@ -1,0 +1,15 @@
+h1{
+	font-size: 130%;
+	margin-bottom: 20;
+}
+h2{
+	font-size: 120%;
+	text-align: center;
+}
+.content{
+width: 100%;
+}
+.photo
+{ 
+display:none;
+}

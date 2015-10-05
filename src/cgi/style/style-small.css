@@ -1,0 +1,23 @@
+h1{
+	font-size: 120%;
+}
+h2{
+	font-size: 110%;
+}
+th{
+	font-size: 90%;
+}
+.content{
+   width: 95%;
+}
+.hidden_column{
+	display: none;
+}
+.area_report{
+	width: 95%;
+}
+.sol_high{
+	display: none;
+}
+.sol_low{
+}

@@ -1,0 +1,12 @@
+This directory contains the Python CGI scripts for the web interface,
+developed in collaboration with Xiangcheng Yu.
+
+-------------------------------------------------------------------------------
+file name     : short description
+-------------------------------------------------------------------------------
+index.html    : directs the user to the login.py script
+cgi-bin       : directory with the Python scripts
+imag          : directory with images, the logo and demonstration screenshots
+style         : style files used
+users         : directory with data from users
+-------------------------------------------------------------------------------

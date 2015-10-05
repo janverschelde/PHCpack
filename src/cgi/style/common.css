@@ -1,0 +1,46 @@
+img {
+max-width: 100%;
+height: auto;
+width: auto\9; /* ie8 */
+}
+textarea
+{
+   font-size: 120%;
+   resize:none;
+}
+.header{
+   margin: 0, auto;
+}
+.content{
+   margin: auto;
+   min-height: 1px;
+   max-height: 999999px;
+}
+.userbar{
+   margin: 15px auto 15px;
+}
+.footer
+{
+margin-top: 50px;
+margin-left: auto;
+margin-right: auto;
+width: 100%;
+max-width: 800px;
+}
+.footer_link
+{
+margin-left: auto;
+margin-right: auto;
+border-top: 2px solid #ebebeb;
+width: 100%;
+}
+.grant
+{
+margin-top: 30px;
+margin-left: auto;
+margin-right: auto;
+top: 500px;
+color: #4c4c4c;
+font-size: 90%;
+width: 90%;
+}
