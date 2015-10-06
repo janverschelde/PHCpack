@@ -17,7 +17,22 @@ package body Quad_Double_Numbers is
     return Create(integer32(n));
   end Create;
 
+  function Create ( n : natural64 ) return quad_double is
+  begin
+    return Create(integer64(n));
+  end Create;
+
   function Create ( i : integer32 ) return quad_double is
+
+    q : quad_double;
+
+  begin
+    q.hihi := double_float(i);
+    q.lohi := 0.0; q.hilo := 0.0; q.lolo := 0.0;
+    return q;
+  end Create;
+
+  function Create ( i : integer64 ) return quad_double is
 
     q : quad_double;
 

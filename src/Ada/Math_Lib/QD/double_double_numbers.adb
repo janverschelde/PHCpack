@@ -26,7 +26,27 @@ package body Double_Double_Numbers is
     return d;
   end Create;
 
+  function Create ( n : natural64 ) return double_double is
+
+    d : double_double;
+
+  begin
+    d.hi := double_float(n);
+    d.lo := 0.0;
+    return d;
+  end Create;
+
   function Create ( i : integer32 ) return double_double is
+
+    d : double_double;
+
+  begin
+    d.hi := double_float(i);
+    d.lo := 0.0;
+    return d;
+  end Create;
+
+  function Create ( i : integer64 ) return double_double is
 
     d : double_double;
 

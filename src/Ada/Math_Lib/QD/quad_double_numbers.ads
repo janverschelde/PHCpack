@@ -20,14 +20,18 @@ package Quad_Double_Numbers is
   --   Returns the quad double representation of the standard integer i.
 
   function Create ( n : natural32 ) return quad_double;
+  function Create ( n : natural64 ) return quad_double;
 
   -- DESCRIPTION :
-  --   Returns the quad double representation of the 32-bit natural n.
+  --   Returns the quad double representation of the 32-bit or 64-bit
+  --   natural number n.
 
   function Create ( i : integer32 ) return quad_double;
+  function Create ( i : integer64 ) return quad_double;
 
   -- DESCRIPTION :
-  --   Returns the quad double representation of the 32-bit integer i.
+  --   Returns the quad double representation of the 32-bit or 64-bit
+  --   integer number i.
 
   function Create ( f : double_float ) return quad_double;
 

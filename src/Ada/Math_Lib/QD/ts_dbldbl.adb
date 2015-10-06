@@ -62,7 +62,7 @@ procedure ts_dbldbl is
   --   Makes a double double from an integer given by the user
   --   and tests the from C imported ldexp function.
 
-    i,n : integer32;
+    i,n : integer32 := 0;
     d,dn : double_double;
 
   begin
@@ -197,7 +197,7 @@ procedure ts_dbldbl is
 
   procedure Test_Random is
 
-    m : natural32;
+    m : natural32 := 0;
     r : double_double;
 
   begin

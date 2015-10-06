@@ -19,14 +19,18 @@ package Double_Double_Numbers is
   --   Returns the double double representation of the standard integer i.
 
   function Create ( n : natural32 ) return double_double;
+  function Create ( n : natural64 ) return double_double;
 
   -- DESCRIPTION :
-  --   Returns the double double representation of the 32-bit natural n.
+  --   Returns the double double representation of the 32-bit or 64-bit
+  --   machine natural number n.
 
   function Create ( i : integer32 ) return double_double;
+  function Create ( i : integer64 ) return double_double;
 
   -- DESCRIPTION :
-  --   Returns the double double representation of the 32-bit integer i.
+  --   Returns the double double representation of the 32-bit or 64-bit
+  --   machine integer number i.
 
   function Create ( f : double_float ) return double_double;
 
