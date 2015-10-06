@@ -1,3 +1,7 @@
+Tue 6 Oct 2015 : in multitasking_polyhedral_trackers.adb, the end of the
+  second critical section had to be moved farther for double double and
+  quad double arithmetic. 
+
 Mon 5 Oct 2015 : added scaling of the powers in the polyhedral homotopies
   in multitasking_polyhedral_trackers.adb.
 

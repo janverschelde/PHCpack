@@ -53,6 +53,11 @@ with Polyhedral_Coefficient_Homotopies;
 with Multitasking,Semaphore;
 with Multitasking_Volume_Computation;    use Multitasking_Volume_Computation;
 with Polyhedral_Start_Systems;           use Polyhedral_Start_Systems;
+-- added for Check_Solution :
+--with Strings_and_Numbers;                use Strings_and_Numbers;
+--with Standard_Integer64_Matrices_io;     use Standard_Integer64_Matrices_io;
+--with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
+--with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 
 package body Multitasking_Polyhedral_Trackers is
 
@@ -638,6 +643,34 @@ package body Multitasking_Polyhedral_Trackers is
         end;
       end Call_Path_Tracker;
 
+     -- procedure Check_Solution is
+    
+     --   y : constant DoblDobl_Complex_Vectors.Vector
+     --     := DoblDobl_Binomial_Systems.Eval(A,b,ls.v);
+     --   r : constant double_double
+     --     := DoblDobl_Complex_Vector_Norms.Max_Norm(y);
+     --   residual : constant double_float := hi_part(r);
+     --   use Polyhedral_Coefficient_Homotopies;
+     --   fp : Standard_Floating_VecVecs.VecVec(c'range)
+     --      := Power_Transform(e,lif,mix,mic.nor.all);
+     --   sq : DoblDobl_Complex_Laur_Systems.Laur_Sys(q'range)
+     --      := Supports_of_Polynomial_Systems.Select_Terms(q,mix,mic.pts.all);
+     --   yz : constant DoblDobl_Complex_Vectors.Vector
+     --      := DoblDobl_Complex_Laur_SysFun.Eval(sq,ls.v);
+     
+     --  begin
+     --    put_line("*** residual : " & convert(residual)
+     --             & " by task " & Multitasking.to_string(task_id) & "***");
+     --    if residual > 1.0E-8 then
+     --      put_line("The binomial start system :"); put(sq);
+     --      put_line("The start solution evaluated : "); put_line(yz);
+     --      put_line("The points in the cell :");
+     --      Floating_Mixed_Subdivisions_io.put(mic.pts.all);
+     --      put_line("The matrix A "); put(A);
+     --      put_line("The coefficients :"); put_line(s_c);
+     --    end if;
+     --  end Check_Solution;
+
     begin
       loop
         Semaphore.Request(s_cell);  -- request new cell
@@ -668,10 +701,11 @@ package body Multitasking_Polyhedral_Trackers is
         for i in 1..pdetU loop
           sols_ptr := Tail_Of(sols_ptr);
         end loop;
-        Semaphore.Release(s_sols);    -- end of second critical section
+       -- Semaphore.Release(s_sols);    -- end of second critical section
         brd := DoblDobl_Radial_Solvers.Radii(b);
         bsc := DoblDobl_Radial_Solvers.Scale(b,brd);
         DoblDobl_Binomial_Solvers.Solve_Upper_Square(U,bsc,mysols);
+        Semaphore.Release(s_sols); -- critical section must end here !?
         logbrd := DoblDobl_Radial_Solvers.Log10(brd);
         logx := DoblDobl_Radial_Solvers.Radial_Upper_Solve(U,logbrd);
         logx := DoblDobl_Radial_Solvers.Multiply(M,logx);
@@ -682,6 +716,7 @@ package body Multitasking_Polyhedral_Trackers is
           DoblDobl_Binomial_Systems.Eval(M,ls.v,wrk);
           ls.v := wrk;
           DoblDobl_Radial_Solvers.Multiply(ls.v,e10x);
+         -- Check_Solution;
           Call_Path_Tracker;
           mysols_ptr := Tail_Of(mysols_ptr);
         end loop;
@@ -847,28 +882,28 @@ package body Multitasking_Polyhedral_Trackers is
         end;
       end Call_Path_Tracker;
 
-    --  procedure Check_Solution is
-    --
-    --    y : constant Standard_Complex_Vectors.Vector
-    --      := Standard_Binomial_Systems.Eval(A,b,ls.v);
-    --    r : constant double_float
-    --      := Standard_Complex_Norms_Equals.Max_Norm(y);
-    --    use Polyhedral_Coefficient_Homotopies;
-    --    fp : Standard_Floating_VecVecs.VecVec(c'range)
-    --       := Power_Transform(e,lif,mix,mic.nor.all);
-    --    sq : Laur_Sys(q'range)
-    --       := Supports_of_Polynomial_Systems.Select_Terms(q,mix,mic.pts.all);
-    --    yz : constant Standard_Complex_Vectors.Vector
-    --       := Standard_Complex_Laur_SysFun.Eval(sq,ls.v);
-    -- 
-    --   begin
-    --     put_line("The start solution evaluated : "); put_line(yz);
-    --     put_line("The binomial start system :"); put(sq);
-    --     put_line("The points in the cell :");
-    --     Floating_Mixed_Subdivisions_io.put(mic.pts.all);
-    --     put_line("The matrix A "); put(A);
-    --     put_line("The coefficients :"); put_line(s_c);
-    --   end Check_Solution;
+     -- procedure Check_Solution is
+    
+     --   y : constant DoblDobl_Complex_Vectors.Vector
+     --     := DoblDobl_Binomial_Systems.Eval(A,b,ls.v);
+     --   r : constant double_double
+     --     := DoblDobl_Complex_Vector_Norms.Max_Norm(y);
+     --   use Polyhedral_Coefficient_Homotopies;
+     --   fp : Standard_Floating_VecVecs.VecVec(c'range)
+     --      := Power_Transform(e,lif,mix,mic.nor.all);
+     --   sq : DoblDobl_Complex_Laur_Systems.Laur_Sys(q'range)
+     --      := Supports_of_Polynomial_Systems.Select_Terms(q,mix,mic.pts.all);
+     --   yz : constant DoblDobl_Complex_Vectors.Vector
+     --      := DoblDobl_Complex_Laur_SysFun.Eval(sq,ls.v);
+     
+     --  begin
+     --    put_line("The start solution evaluated : "); put_line(yz);
+     --    put_line("The binomial start system :"); put(sq);
+     --    put_line("The points in the cell :");
+     --    Floating_Mixed_Subdivisions_io.put(mic.pts.all);
+     --    put_line("The matrix A "); put(A);
+     --    put_line("The coefficients :"); put_line(s_c);
+     --  end Check_Solution;
 
     begin
       put_line("hello from task " & Multitasking.to_string(natural32(task_id)));
@@ -906,10 +941,11 @@ package body Multitasking_Polyhedral_Trackers is
         for k in 1..pdetU loop
           sols_ptr := Tail_Of(sols_ptr);
         end loop;
-        Semaphore.Release(s_sols);    -- end of second critical section
+       -- Semaphore.Release(s_sols);    -- end of second critical section
         brd := DoblDobl_Radial_Solvers.Radii(b);
         bsc := DoblDobl_Radial_Solvers.Scale(b,brd);
         DoblDobl_Binomial_Solvers.Solve_Upper_Square(U,bsc,mysols);
+        Semaphore.Release(s_sols); -- critical section must end here !?
         logbrd := DoblDobl_Radial_Solvers.Log10(brd);
         logx := DoblDobl_Radial_Solvers.Radial_Upper_Solve(U,logbrd);
         logx := DoblDobl_Radial_Solvers.Multiply(M,logx);
@@ -1129,10 +1165,11 @@ package body Multitasking_Polyhedral_Trackers is
         for i in 1..pdetU loop
           sols_ptr := Tail_Of(sols_ptr);
         end loop;
-        Semaphore.Release(s_sols);    -- end of second critical section
+       -- Semaphore.Release(s_sols);    -- end of second critical section
         brd := QuadDobl_Radial_Solvers.Radii(b);
         bsc := QuadDobl_Radial_Solvers.Scale(b,brd);
         QuadDobl_Binomial_Solvers.Solve_Upper_Square(U,bsc,mysols);
+        Semaphore.Release(s_sols); -- critical section must end here !?
         logbrd := QuadDobl_Radial_Solvers.Log10(brd);
         logx := QuadDobl_Radial_Solvers.Radial_Upper_Solve(U,logbrd);
         logx := QuadDobl_Radial_Solvers.Multiply(M,logx);
@@ -1367,10 +1404,11 @@ package body Multitasking_Polyhedral_Trackers is
         for k in 1..pdetU loop
           sols_ptr := Tail_Of(sols_ptr);
         end loop;
-        Semaphore.Release(s_sols);    -- end of second critical section
+       -- Semaphore.Release(s_sols);    -- end of second critical section
         brd := QuadDobl_Radial_Solvers.Radii(b);
         bsc := QuadDobl_Radial_Solvers.Scale(b,brd);
         QuadDobl_Binomial_Solvers.Solve_Upper_Square(U,bsc,mysols);
+        Semaphore.Release(s_sols); -- critical section must end here !?
         logbrd := QuadDobl_Radial_Solvers.Log10(brd);
         logx := QuadDobl_Radial_Solvers.Radial_Upper_Solve(U,logbrd);
         logx := QuadDobl_Radial_Solvers.Multiply(M,logx);
