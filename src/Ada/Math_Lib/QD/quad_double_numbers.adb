@@ -1176,6 +1176,47 @@ package body Quad_Double_Numbers is
     return res;
   end "**";
 
+  function "**" ( x : quad_double; n : integer32 ) return quad_double is
+  begin
+    return x**integer(n);
+  end "**";
+
+  function "**" ( x : quad_double; n : integer64 ) return quad_double is
+
+    res,acc : quad_double;
+    absn : natural64;
+
+  begin
+    if n = 0 then
+      res := Create(1.0);
+    else
+      if n > 0
+       then absn := natural64(n);
+       else absn := natural64(-n);
+      end if;
+      copy(x,res);
+      acc := Create(1.0);
+      if absn > 1 then         -- use binary exponentiation
+        while absn > 0 loop     
+          if absn mod 2 = 1    -- if odd multiply by res
+           then Mul(acc,res);  -- eventually absn = 1, so this executes
+          end if;
+          absn := absn/2;
+          if absn > 0
+           then res := sqr(res);
+          end if;
+        end loop;
+      else
+        copy(res,acc);
+      end if;
+      if n < 0                 -- compute reciprocal
+       then res := 1.0/acc;
+       else copy(acc,res);
+      end if;
+    end if;
+    return res;
+  end "**";
+
   function ldexp ( x : quad_double; n : integer ) return quad_double is
 
     res : quad_double;

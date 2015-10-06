@@ -97,7 +97,7 @@ package body Quad_Double_Numbers_io is
       log10x := Standard_Mathematical_Functions.LOG10(hihi_part(acc));
       e := integer32(double_float'floor(log10x));
       if (e < -300) then
-        tmp := Create(10.0)**300;
+        tmp := Create(10.0)**integer(300);
         Mul(acc,tmp);
         tmp := Create(10.0)**integer(e+300);
         Div(acc,tmp);

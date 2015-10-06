@@ -6,7 +6,7 @@ package body QuadDobl_Complex_Numbers_Polar is
 
   function Radius ( c : Complex_Number ) return quad_double is
   begin
-    return SQRT(REAL_PART(c)**2 + IMAG_PART(c)**2);
+    return SQRT(sqr(REAL_PART(c)) + sqr(IMAG_PART(c)));
   end Radius;
 
   function Angle ( c : Complex_Number ) return quad_double is

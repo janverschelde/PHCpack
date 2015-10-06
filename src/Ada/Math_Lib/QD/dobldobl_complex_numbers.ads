@@ -55,7 +55,10 @@ package DoblDobl_Complex_Numbers is
   function "*" ( x,y : Complex_Number ) return Complex_Number;
   function "/" ( x,y : Complex_Number ) return Complex_Number;
 
+  function sqr ( x : Complex_Number ) return Complex_Number;
+
   function "**" ( x : Complex_Number; m : integer ) return Complex_Number;
+  function "**" ( x : Complex_Number; m : integer64 ) return Complex_Number;
 
 -- ARITHMETIC OPERATIONS AS PROCEDURES :
 

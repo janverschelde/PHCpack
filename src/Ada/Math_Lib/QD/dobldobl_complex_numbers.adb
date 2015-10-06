@@ -218,7 +218,33 @@ package body DoblDobl_Complex_Numbers is
     return res;
   end "/";
 
+  function sqr ( x : Complex_Number ) return Complex_Number is
+  begin
+    return x*x;
+  end sqr;
+
   function "**" ( x : Complex_Number; m : integer ) return Complex_Number is
+
+    res : Complex_Number;
+
+  begin
+    if m = 0 then
+      res := Create(natural32(1));
+    elsif m > 0 then
+      res := x;
+      for j in 2..m loop
+        res := res*x;
+      end loop;
+    else
+      res := Create(natural32(1));
+      for j in 1..(-m) loop
+        res := res/x;
+      end loop;
+    end if;
+    return res;
+  end "**";
+
+  function "**" ( x : Complex_Number; m : integer64 ) return Complex_Number is
 
     res : Complex_Number;
 

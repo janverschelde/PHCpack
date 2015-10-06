@@ -218,6 +218,9 @@ package Quad_Double_Numbers is
   function sqr ( x : double_double ) return quad_double; -- x^2
   function sqr ( x : quad_double ) return quad_double;   -- x^2
   function "**" ( x : quad_double; n : integer ) return quad_double; -- x^n
+  function "**" ( x : quad_double; n : integer32 ) return quad_double; -- x^n
+  function "**" ( x : quad_double; n : integer64 ) return quad_double; -- x^n
+
   function ldexp ( x : quad_double; n : integer ) return quad_double;
      -- multiplies the quad double in x with 2^n
   function "**" ( x,y : quad_double ) return quad_double; -- x^y

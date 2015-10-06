@@ -1,5 +1,6 @@
 Tue 6 Oct 2015 : added to {double,quad}_double_numbers a create function
-  for 64-bit natural and integer numbers.
+  for 64-bit natural and integer numbers.  Also added exponentiation for
+  64-bit integer numbers to double doubles and quad doubles.
 
 Sat 3 Oct 2015 : extended {double,quad}_double_numbers with x^y where y is of
   the type double_float, needed for polyhedral path tracking.

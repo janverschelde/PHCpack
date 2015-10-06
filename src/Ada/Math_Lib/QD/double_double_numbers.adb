@@ -671,6 +671,47 @@ package body Double_Double_Numbers is
     return res;
   end "**";
 
+  function "**" ( x : double_double; n : integer32 ) return double_double is
+  begin
+    return x**integer(n);
+  end "**";
+
+  function "**" ( x : double_double; n : integer64 ) return double_double is
+
+    res,acc : double_double;
+    absn : natural64;
+
+  begin
+    if n = 0 then
+      res.hi := 1.0; res.lo := 0.0;
+    else
+      if n > 0
+       then absn := natural64(n);
+       else absn := natural64(-n);
+      end if;
+      res.hi := x.hi; res.lo := x.lo;
+      acc.hi := 1.0;  acc.lo := 0.0;
+      if absn > 1 then          -- use binary exponentiation
+        while absn > 0 loop
+          if absn mod 2 = 1
+           then Mul(acc,res);
+          end if;
+          absn := absn/2;
+          if absn > 0
+           then res := sqr(res);
+          end if;
+        end loop;
+      else
+        acc.hi := res.hi; acc.lo := res.lo;
+      end if;
+      if n < 0
+       then res := 1.0/acc;          -- compute reciprocal
+       else res.hi := acc.hi; res.lo := acc.lo;
+      end if;
+    end if;
+    return res;
+  end "**";
+
   function ldexp ( x : double_double; n : integer ) return double_double is
 
     res : double_double;

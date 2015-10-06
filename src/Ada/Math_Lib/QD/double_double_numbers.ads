@@ -146,6 +146,9 @@ package Double_Double_Numbers is
   function sqr ( x : double_float ) return double_double;  -- x^2
   function sqr ( x : double_double ) return double_double; -- x^2
   function "**" ( x : double_double; n : integer ) return double_double; -- x^n
+  function "**" ( x : double_double; n : integer32 ) return double_double;
+  function "**" ( x : double_double; n : integer64 ) return double_double;
+
   function ldexp ( x : double_double; n : integer ) return double_double;
      -- multiplies the double double in x with 2^n
   function "**" ( x,y : double_double ) return double_double; -- x^y
