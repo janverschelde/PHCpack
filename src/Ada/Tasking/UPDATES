@@ -1,3 +1,6 @@
+Mon 5 Oct 2015 : added scaling of the powers in the polyhedral homotopies
+  in multitasking_polyhedral_trackers.adb.
+
 Sun 6 Sep 2015 : extended multitasking_continuation with procedures to
   track paths defined by a homotopy between Laurent polynomial systems,
   in double double and quad double precision.

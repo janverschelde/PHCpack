@@ -167,6 +167,7 @@ package body Multitasking_Polyhedral_Trackers is
 
       begin
         Power_Transform(e,lif,mix,mic.nor.all,dpow(task_id).all);
+        Polyhedral_Coefficient_Homotopies.Scale(dpow(task_id).all);
         ls.t := Create(0.0);
         declare
           s : Solu_Info := Shallow_Create(ls);
@@ -371,6 +372,7 @@ package body Multitasking_Polyhedral_Trackers is
 
       begin
         Power_Transform(e,lif,mix,mic.nor.all,dpow(task_id).all);
+        Polyhedral_Coefficient_Homotopies.Scale(dpow(task_id).all);
         ls.t := Create(0.0);
         declare
           s : Solu_Info := Shallow_Create(ls);
@@ -620,6 +622,7 @@ package body Multitasking_Polyhedral_Trackers is
 
       begin
         Power_Transform(e,lif,mix,mic.nor.all,dpow(task_id).all);
+        Polyhedral_Coefficient_Homotopies.Scale(dpow(task_id).all);
         ls.t := Create(zero);
         declare
           s : Solu_Info := Shallow_Create(ls);
@@ -828,6 +831,7 @@ package body Multitasking_Polyhedral_Trackers is
 
       begin
         Power_Transform(e,lif,mix,mic.nor.all,dpow(task_id).all);
+        Polyhedral_Coefficient_Homotopies.Scale(dpow(task_id).all);
         ls.t := Create(zero);
         declare
           s : Solu_Info := Shallow_Create(ls);
@@ -1079,6 +1083,7 @@ package body Multitasking_Polyhedral_Trackers is
 
       begin
         Power_Transform(e,lif,mix,mic.nor.all,dpow(task_id).all);
+        Polyhedral_Coefficient_Homotopies.Scale(dpow(task_id).all);
         ls.t := Create(zero);
         declare
           s : Solu_Info := Shallow_Create(ls);
@@ -1287,6 +1292,7 @@ package body Multitasking_Polyhedral_Trackers is
 
       begin
         Power_Transform(e,lif,mix,mic.nor.all,dpow(task_id).all);
+        Polyhedral_Coefficient_Homotopies.Scale(dpow(task_id).all);
         ls.t := Create(zero);
         declare
           s : Solu_Info := Shallow_Create(ls);
