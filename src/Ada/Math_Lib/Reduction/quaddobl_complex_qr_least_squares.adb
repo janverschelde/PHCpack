@@ -34,7 +34,7 @@ package body QuadDobl_Complex_QR_Least_Squares is
   --   Computes the modulus of the complex number, hopefully this
   --   corresponds to the 'cdabs' fortran function.
 
-    res : constant quad_double := SQRT(REAL_PART(a)**2 + IMAG_PART(a)**2);
+    res : constant quad_double := SQRT(sqr(REAL_PART(a)) + sqr(IMAG_PART(a)));
 
   begin
     return res;
@@ -250,10 +250,10 @@ package body QuadDobl_Complex_QR_Least_Squares is
             t := -zdot(x,ell,ell,j)/x(ell,ell);
             zaxpy(x,t,ell,ell,j);
             if (j >= pl) and (j <= pu) and (AbsVal(qraux(j)) /= zero) then
-              tt := 1.0 - (cdabs(x(ell,j))/REAL_PART(qraux(j)))**2;
+              tt := 1.0 - sqr(cdabs(x(ell,j))/REAL_PART(qraux(j)));
               tt := dmax1(tt,zero);
               t := Create(tt);
-              tt := 1.0 + 0.05*tt*(REAL_PART(qraux(j))/REAL_PART(work(j)))**2;
+              tt := 1.0 + 0.05*tt*sqr(REAL_PART(qraux(j))/REAL_PART(work(j)));
               if tt /= one then
                 qraux(j) := qraux(j)*Create(SQRT(REAL_PART(t)));
               else 

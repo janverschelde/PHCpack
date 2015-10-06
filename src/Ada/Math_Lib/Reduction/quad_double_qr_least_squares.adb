@@ -234,10 +234,10 @@ package body Quad_Double_QR_Least_Squares is
             t := -ddot(x,l,l,j)/x(l,l);
             daxpy(x,t,l,l,j);
             if (j >= pl) and (j <= pu) and (qraux(j) /= zero) then
-              tt := one - (abs(x(l,j))/qraux(j))**2;
+              tt := one - sqr(abs(x(l,j))/qraux(j));
               tt := dmax1(tt,zero);
               t := tt;
-              tt := one + 0.05*tt*(qraux(j)/work(j))**2;
+              tt := one + 0.05*tt*sqr(qraux(j)/work(j));
               if tt /= one
                then qraux(j) := qraux(j)*SQRT(t);
                else qraux(j) := dnrm2(x,l+1,j); work(j) := qraux(j);

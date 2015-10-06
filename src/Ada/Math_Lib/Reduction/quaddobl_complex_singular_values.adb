@@ -103,7 +103,7 @@ package body QuadDobl_Complex_Singular_Values is
   --   corresponds to the `cdabs' fortran function.
 
   begin
-    return SQRT(REAL_PART(z)**2 + IMAG_PART(z)**2);
+    return SQRT(sqr(REAL_PART(z)) + sqr(IMAG_PART(z)));
   end cdabs;
 
   function csign ( z1,z2 : Complex_Number ) return Complex_Number is
@@ -157,19 +157,19 @@ package body QuadDobl_Complex_Singular_Values is
         if REAL_PART(x(ix)) /= zero then
           temp := abs(REAL_PART(x(ix)));
           if scale < temp then
-            ssq := 1.0 + ssq*(scale/temp)**2;
+            ssq := 1.0 + ssq*sqr(scale/temp);
             scale := temp;
           else
-            ssq := ssq + (temp/scale)**2;
+            ssq := ssq + sqr(temp/scale);
           end if;
         end if;
         if IMAG_PART(x(ix)) /= zero then
           temp := abs(IMAG_PART(x(ix)));
           if scale < temp then
-            ssq := 1.0 + ssq*(scale/temp)**2;
+            ssq := 1.0 + ssq*sqr(scale/temp);
             scale := temp;
           else
-            ssq := ssq + (temp/scale)**2;
+            ssq := ssq + sqr(temp/scale);
           end if;
         end if;
         ix := ix + incx;
@@ -202,17 +202,17 @@ package body QuadDobl_Complex_Singular_Values is
         if REAL_PART(x(ix,col)) /= zero then
           temp := abs(REAL_PART(x(ix,col)));
           if scale < temp then
-            ssq := 1.0 + ssq*(scale/temp)**2; scale := temp;
+            ssq := 1.0 + ssq*sqr(scale/temp); scale := temp;
           else
-            ssq := ssq + (temp/scale)**2;
+            ssq := ssq + sqr(temp/scale);
           end if;
         end if;
         if IMAG_PART(x(ix,col)) /= zero then
           temp := abs(IMAG_PART(x(ix,col)));
           if scale < temp then
-            ssq := 1.0 + ssq*(scale/temp)**2; scale := temp;
+            ssq := 1.0 + ssq*sqr(scale/temp); scale := temp;
           else
-            ssq := ssq + (temp/scale)**2;
+            ssq := ssq + sqr(temp/scale);
           end if;
         end if;
         ix := ix + incx;
@@ -446,7 +446,7 @@ package body QuadDobl_Complex_Singular_Values is
       c := one;  s := zero;
       r := zero; z := zero;
     else
-      r := scale*SQRT((da/scale)**2 + (db/scale)**2);
+      r := scale*SQRT(sqr(da/scale) + sqr(db/scale));
       r := dsign(one,roe)*r;
       c := da/r;
       s := db/r;
@@ -848,11 +848,11 @@ package body QuadDobl_Complex_Singular_Values is
            emm1 := REAL_PART(e(m-1))/scale;
            sl := REAL_PART(s(ll))/scale;
            el := REAL_PART(e(ll))/scale;
-           b := ((smm1 + sm)*(smm1 - sm) + emm1**2)/2.0;
-           c := (sm*emm1)**2;
+           b := ((smm1 + sm)*(smm1 - sm) + sqr(emm1))/2.0;
+           c := sqr(sm*emm1);
            shift := zero;
            if b = zero or c = zero then
-             shift := SQRT(b**2+c);
+             shift := SQRT(sqr(b)+c);
              if b < 0.0 then shift := -shift; end if;
              shift := c/(b + shift);
            end if;

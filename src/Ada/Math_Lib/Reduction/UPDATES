@@ -1,3 +1,7 @@
+Tue 6 Oct 2015 : used sqr() in {dobldobl,quaddobl}_complex_singular_values,
+  in {double,quad}_double_qr_least_squares and
+  in {dobldobl,quaddobl}_complex_qr_least_squares. 
+
 Tue 16 Jun 2015 : extra tests in ts_vmplu.adb.
 
 Mon 15 Jun 2015 : extended varbprec_complex_linear_solvers with versions
