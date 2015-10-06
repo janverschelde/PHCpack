@@ -597,8 +597,8 @@ package body DoblDobl_Predictors is
   begin
     t10 := t1 - t0;
     v10 := (x1 - x0)/t10;
-    a3 := (v1 + v0 - two*v10)/(t10**2);
-    a2 := (v10 - v0 - (t1**2 + t1*t0 - two*t0**2)*a3)/t10;
+    a3 := (v1 + v0 - two*v10)/sqr(t10);
+    a2 := (v10 - v0 - (sqr(t1) + t1*t0 - two*sqr(t0))*a3)/t10;
     a1 := v0 - (three*a3*t0 + two*a2)*t0;
     a0 := x0 - ((a3*t0 + a2)*t0 + a1)*t0;
     return (((a3*t + a2)*t + a1)*t + a0);

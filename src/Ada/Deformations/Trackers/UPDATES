@@ -1,3 +1,8 @@
+Tue 6 Oct 2015 : change in dobldobl_predictors.adb for exponentiation of
+  double double with 64-bit integers.
+
+Mon 19 Jan 2015 : uncommented print statements in varbprec_path_trackers.adb.
+
 Mon 29 Dec 2014 : extended interface of varbprec_corrector_steps with the
   tuning parameters, called in varbprec_path_tracker, tested in ts_nxtsol.
   With the mixed-precision write of solutions to string, the get_next() in
