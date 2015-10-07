@@ -1,3 +1,6 @@
+Wed 7 Oct 2015 : fixed call to silent root refiners in ts_extrapts for
+  double double and quad double precisin.
+
 Mon 21 Sep 2015 : extended black_box_univariate_solvers with routines in
   double double and quad double precision.
 

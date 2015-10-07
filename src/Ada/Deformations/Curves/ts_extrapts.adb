@@ -191,12 +191,13 @@ procedure ts_extrapts is
 
     use DoblDobl_Root_Refiners;
 
-    epsxa : constant double_double := create(1.0E-24);
-    epsfa : constant double_double := create(1.0E-24);
+    epsxa : constant double_float := 1.0E-24;
+    epsfa : constant double_float := 1.0E-24;
+    tolsing : constant double_float := 1.0E-8;
     nb : natural32 := 0;
 
   begin
-    Silent_Root_Refiner(f,s,epsxa,epsfa,nb,5);
+    Silent_Root_Refiner(f,s,epsxa,epsfa,tolsing,nb,5);
   end DoblDobl_Newton;
 
   procedure QuadDobl_Newton
@@ -209,12 +210,13 @@ procedure ts_extrapts is
 
     use QuadDobl_Root_Refiners;
 
-    epsxa : constant quad_double := create(1.0E-48);
-    epsfa : constant quad_double := create(1.0E-48);
+    epsxa : constant double_float := 1.0E-48;
+    epsfa : constant double_float := 1.0E-48;
+    tolsing : constant double_float := 1.0E-8;
     nb : natural32 := 0;
 
   begin
-    Silent_Root_Refiner(f,s,epsxa,epsfa,nb,9);
+    Silent_Root_Refiner(f,s,epsxa,epsfa,tolsing,nb,9);
   end QuadDobl_Newton;
 
   procedure Multprec_Newton
