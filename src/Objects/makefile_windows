@@ -16,7 +16,7 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Basic_Timer \
  -I$(PHCAda)/Deformations/Solutions -I$(PHCAda)/Deformations/Homotopy \
  -I$(PHCAda)/Deformations/Newton -I$(PHCAda)/Deformations/End_Games \
  -I$(PHCAda)/Deformations/Sweep -I$(PHCAda)/Deformations/Trackers \
- -I$(PHCAda)/Deformations/Continuation \
+ -I$(PHCAda)/Deformations/Curves -I$(PHCAda)/Deformations/Continuation \
  -I$(PHCAda)/Root_Counts/Product -I$(PHCAda)/Root_Counts/Binomials \
  -I$(PHCAda)/Root_Counts/Implift -I$(PHCAda)/Root_Counts/Stalift \
  -I$(PHCAda)/Root_Counts/Dynlift -I$(PHCAda)/Root_Counts/Symmetry \
