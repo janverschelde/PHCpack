@@ -216,10 +216,12 @@ package body Multitasking_Polyhedral_Trackers is
         for i in 1..pdetU loop
           sols_ptr := Tail_Of(sols_ptr);
         end loop;
-        Semaphore.Release(s_sols);    -- end of second critical section
+       -- Semaphore.Release(s_sols);    -- end of second critical section
         brd := Standard_Radial_Solvers.Radii(b);
         bsc := Standard_Radial_Solvers.Scale(b,brd);
         Standard_Binomial_Solvers.Solve_Upper_Square(U,bsc,mysols);
+        Semaphore.Release(s_sols);    -- end of second critical section
+       -- make this end consistent with dd and qd ...
         logbrd := Standard_Radial_Solvers.Log10(brd);
         logx := Standard_Radial_Solvers.Radial_Upper_Solve(U,logbrd);
         logx := Standard_Radial_Solvers.Multiply(M,logx);
@@ -450,10 +452,13 @@ package body Multitasking_Polyhedral_Trackers is
         for k in 1..pdetU loop
           sols_ptr := Tail_Of(sols_ptr);
         end loop;
-        Semaphore.Release(s_sols);    -- end of second critical section
+       -- Semaphore.Release(s_sols);    -- end of second critical section
         brd := Standard_Radial_Solvers.Radii(b);
         bsc := Standard_Radial_Solvers.Scale(b,brd);
         Standard_Binomial_Solvers.Solve_Upper_Square(U,bsc,mysols);
+        Semaphore.Release(s_sols);    -- end of second critical section
+       -- no problems observed, but for dd/qd, the critical section
+       -- had to be extended, so do so too here for consistency
         logbrd := Standard_Radial_Solvers.Log10(brd);
         logx := Standard_Radial_Solvers.Radial_Upper_Solve(U,logbrd);
         logx := Standard_Radial_Solvers.Multiply(M,logx);
