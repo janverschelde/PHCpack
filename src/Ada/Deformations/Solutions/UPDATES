@@ -1,3 +1,6 @@
+Wed 7 Oct 2015 : fixed ts_grepsols.adb for code that was factored out of
+  the drivers_for_condition_tables.
+
 Tue 29 Sep 2015 : new packages {dobldobl,quaddobl}_solution_filters to filter
   solutions given in double double and quad double precision, with drivers in
   drivers_for_solution_filters, tested by ts_solfilt and called by mainfilt.

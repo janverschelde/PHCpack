@@ -9,7 +9,7 @@ with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_Solution_Filters;          use Standard_Solution_Filters;
-with Drivers_for_Condition_Tables;       use Drivers_for_Condition_Tables;
+with Standard_Select_Solutions;          use Standard_Select_Solutions;
 
 procedure ts_grepsols is
 

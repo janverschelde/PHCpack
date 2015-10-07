@@ -300,7 +300,7 @@ ts_vmplu:
 
 test_polynomials: ts_poly ts_laurpoly ts_laurlist ts_rpol ts_ddpol ts_qdpol \
                   ts_polmat ts_jaco ts_parse ts_subs ts_tabform ts_randpoly \
-                  ts_str2pol ts_termlist ts_rwspoly
+                  ts_str2pol ts_termlist ts_rwspol
 
 ts_poly:
 	make -f $(MAKEFILE) ts_poly
