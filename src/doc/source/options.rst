@@ -107,6 +107,15 @@ The blackbox solver operates in four stages:
 Through the options -s, -r, -p, and -v, 
 the user can go through the stages separately.
 
+New since version 2.4.02 are the options -b2 and -b4 to run the
+blackbox solver respectively in double double and quad double precision,
+for example as
+
+::
+
+   phc -b2 cyclic7 /tmp/c7out2
+   phc -b4 cyclic7 /tmp/c7out4
+
 The most computational intensive stage in the solver is in the
 path tracking.  Shared memory multitasked path trackers are
 available in the path trackers for both the polyhedral homotopies to solve
@@ -512,6 +521,52 @@ a sequential run and a run with 16 tasks:
 
 The speedup on the wall clock time is about 12,
 obtained as 10.256/0.851.
+
+The relationship with double double and quad double precision
+is interesting, consider the following sequence of runs:
+
+::
+
+   time phc -b cyclic7 /tmp/c7out1
+
+   real    0m9.337s
+   user    0m9.292s
+   sys     0m0.014s
+
+   time phc -b -t16 cyclic7 /tmp/c7out2
+
+   real    0m0.923s
+   user    0m13.034s
+   sys     0m0.010s
+
+With 16 tasks we get about a tenfold speedup,
+but what if we ask to double the precision?
+
+::
+
+   time phc -b2 -t16 cyclic7 /tmp/c7out3
+
+   real    0m4.107s
+   user    0m59.164s
+   sys     0m0.018s
+
+We see that with 16 tasks in double precision, the elapsed time
+equals 4.107 seconds, whereas the time without tasking was 9.337 seconds.
+This means that with 16 tasks, for this example, we can double the
+working precision and still finish the computation is less than half
+of the time without tasking.
+
+For quad double precision, more than 16 tasks are needed to offset
+the overhead caused by the quad double arithmetic:
+
+::
+
+   time phc -b4 -t16 cyclic7 /tmp/c7out4
+
+   real    0m53.865s
+   user    11m56.630s
+   sys     0m0.248s
+
 
 phc -v : Verification, refinement and purification of solutions
 ---------------------------------------------------------------
