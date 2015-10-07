@@ -1,3 +1,5 @@
+Tue 7 Oct 2015 : adjusted greeting_banners for version 2.4.02.
+
 Sun 4 Oct 2015 : changed mainroco.adb so it writes the seed and version
   number at the end of the output file written by phc -r.
 
