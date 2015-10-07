@@ -1271,7 +1271,7 @@ test_state: ts_filman ts_solcon ts_use_solcon ts_solpool ts_use_solpool \
             ts_c2str ts_use_c2phc ts_use_c2fac ts_unisolve ts_use_giftwrap \
             ts_giftwcon
 
-ts_filman: file_management.o
+ts_filman:
 	make -f $(MAKEFILE) ts_filman
 
 ts_solcon:
