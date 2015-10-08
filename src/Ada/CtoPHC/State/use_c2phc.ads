@@ -549,6 +549,13 @@ function use_c2phc ( job : integer32;
 --         =  71 : interactive setting of output level during continuation;
 --         =  72 : retrieve in c the values of the continuation parameters;
 --         =  73 : set the continuation parameters with the values in c.
+--         = 189 : given in a[0] an integer in the range 1..34,
+--                 returns in c the value of the corresponding continuation
+--                 parameter with index equal to a[0];
+--         = 190 : given in a[0] an integer in the range 1..34, and
+--                 given in c[0] the value of the corresponding continuation
+--                 parameter with index equal to a[0], sets the value of
+--                 that continuation parameter to the value of c[0];
 --         = 193 : autotune of the continuation parameters with two values:
 --                 in a : the difficulty level of the solution path;
 --                 in b : the number of decimal places in the precision.

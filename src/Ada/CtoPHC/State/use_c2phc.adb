@@ -1867,6 +1867,39 @@ function use_c2phc ( job : integer32;
     return 0;
   end Job79;
 
+  function Job189 return integer32 is -- get value of continuation parameter
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant natural32 := natural32(v_a(v_a'first));
+    res : Standard_Floating_Vectors.Vector(1..1);
+
+  begin
+    if k = 0 or k > 34 then
+      return 189;
+    else
+      res(1) := Pack_Continuation_Parameters.Get_Value(k);
+      Assign(res,c);
+    end if;
+    return 0;
+  exception
+    when others => return 189;
+  end Job189;
+
+  function Job190 return integer32 is -- set value of continuation parameter
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant natural32 := natural32(v_a(v_a'first));
+    v_c : constant C_Double_Array := C_dblarrs.Value(c);
+    v : constant double_float := double_float(v_c(v_c'first));
+
+  begin
+    if k = 0 or k > 34
+     then return 190;
+     else Pack_Continuation_Parameters.Set_Value(k,v);
+    end if;
+    return 0;
+  end Job190;
+
   function Job191 return integer32 is -- define output file from string
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
@@ -2144,6 +2177,8 @@ function use_c2phc ( job : integer32;
      -- track operations for quad double precision :
       when 182..188 => return use_track(job-150,a,b,c);
      -- tuning continuation parameters, deflation, and Newton step
+      when 189 => return Job189; -- get value of a continuation parameter
+      when 190 => return Job190; -- set value of a continuation parameter
       when 191 => return Job191; -- define output file from string
       when 192 => return Job192; -- close the defined output file
       when 193 => return Job193; -- autotune continuation parameters
