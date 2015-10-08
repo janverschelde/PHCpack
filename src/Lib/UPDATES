@@ -1,5 +1,6 @@
 Thu 8 Oct 2015 : extended phcpack with two functions to get and set
   individual values of the continuation parameters, tested by lib_conpar.c.
+  Added wrappers to those two functions in phcpy2c.
 
 Sun 27 Sep 2015 : extended phcpack with blackbox solvers in double double
   and quad double precision, tested by phc_solve.c.  Used the new solvers

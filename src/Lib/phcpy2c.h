@@ -403,6 +403,22 @@ static PyObject *py2c_autotune_continuation_parameters
  *   1) the difficulty level of the solution paths; and
  *   2) the number of decimal places in the precision. */
 
+static PyObject *py2c_get_value_of_continuation_parameter
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the current value of a continuation parameter.
+ *   On input is an index of a continuation parameter, in the range 1..34,
+ *   on return is the current value of that continuation parameter. */
+
+static PyObject *py2c_set_value_of_continuation_parameter
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Sets the value of a continuation parameter.
+ *   On input is an index of a continuation parameter, in the range 1..34,
+ *   and the new value for the corresponding continuation parameter. */
+
 static PyObject *py2c_determine_output_during_continuation
  ( PyObject *self, PyObject *args );
 /*

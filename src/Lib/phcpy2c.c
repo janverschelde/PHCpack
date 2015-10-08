@@ -661,6 +661,32 @@ static PyObject *py2c_autotune_continuation_parameters
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_get_value_of_continuation_parameter
+ ( PyObject *self, PyObject *args )
+{
+   int fail,idx;
+   double val;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&idx)) return NULL;   
+   fail = get_value_of_continuation_parameter(idx,&val);
+   
+   return Py_BuildValue("d",val);
+}
+
+static PyObject *py2c_set_value_of_continuation_parameter
+ ( PyObject *self, PyObject *args )
+{
+   int fail,idx;
+   double val;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"id",&idx,&val)) return NULL;   
+   fail = set_value_of_continuation_parameter(idx,&val);
+   
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_determine_output_during_continuation
  ( PyObject *self, PyObject *args )
 {
@@ -4738,6 +4764,12 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_autotune_continuation_parameters",
      py2c_autotune_continuation_parameters, METH_VARARGS, 
     "Tunes the values of the continuation parameters.\n On input are two integers:\n 1) the difficulty level of the solution paths; and\n 2) the number of decimal places in the precision."},
+   {"py2c_get_value_of_continuation_parameter",
+     py2c_get_value_of_continuation_parameter, METH_VARARGS,
+   "Returns the value of a continuation parameter.\n On input is the index of this continuation parameter, an integer ranging from 1 to 34.\n On return is a double with the value of the corresponding parameter."},
+   {"py2c_set_value_of_continuation_parameter",
+     py2c_set_value_of_continuation_parameter, METH_VARARGS,
+   "Sets the value of a continuation parameter.\n On input is the index of this continuation parameter, an integer ranging from 1 to 34;\n and the new value for the continuation parameter.\n On return is a double with the value of the corresponding parameter."},
    {"py2c_determine_output_during_continuation", 
      py2c_determine_output_during_continuation, METH_VARARGS, 
     "Interactive procedure to determine the level of output during the path tracking."},
