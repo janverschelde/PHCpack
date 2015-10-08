@@ -516,6 +516,18 @@ int show_continuation_parameters ( void );
  * DESCRIPTION :
  *   Writes the current values of the continuation parameters to screen. */
 
+int get_value_of_continuation_parameter ( int k, double *val );
+/*
+ * DESCRIPTION :
+ *   Returns in val the value of the k-th continuation parameter,
+ *   if k ranges between 1 and 34. */
+
+int set_value_of_continuation_parameter ( int k, double *val );
+/*
+ * DESCRIPTION :
+ *   Sets the value of the k-th continuation parameter to val,
+ *   if k ranges between 1 and 34. */
+
 int create_homotopy ( void );
 /*
  * DESCRIPTION :

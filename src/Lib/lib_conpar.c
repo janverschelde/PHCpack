@@ -28,6 +28,23 @@ int main ( int argc, char *argv[] )
          printf("Give value for parameter %d : ",i); scanf("%lf",&x);
          v[i-1] = x;
          set_continuation_parameters(v);
+         {
+            char ans = 'y';
+            do
+            {
+               fail = get_value_of_continuation_parameter(i,&x);
+               printf("-> the value for parameter %d : %.3e.\n",i,x);
+               printf("-> change value of index ? (y/n) ");
+               scanf("%d",&ans); /* skip previous newline symbol */
+               scanf("%c",&ans);
+               if(ans != 'y') break;
+               scanf("%c",&ans); /* skip the new line */
+               printf("-> give value for index %d : ",i);
+               scanf("%lf",&x);
+               fail = set_value_of_continuation_parameter(i,&x);
+            }
+            while (ans != 0);
+         }
       }
    } while ( i > 0);
 

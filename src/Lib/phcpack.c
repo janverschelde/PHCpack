@@ -748,6 +748,20 @@ int show_continuation_parameters ( void )
    return fail;
 }
 
+int get_value_of_continuation_parameter ( int k, double *val )
+{
+   int *b,fail;
+   fail = _ada_use_c2phc(189,&k,b,val);
+   return fail;
+}
+
+int set_value_of_continuation_parameter ( int k, double *val )
+{
+   int *b,fail;
+   fail = _ada_use_c2phc(190,&k,b,val);
+   return fail;
+}
+
 int create_homotopy ( void )
 {
    int *a,*b,fail;
