@@ -1,3 +1,6 @@
+Thu 8 Oct 2015 : extended pack_continuation_parameters with get_value and
+  set_value to get and set individual values, tested by ts_pactun.adb.
+
 Sun 4 Oct 2015 : updated mainpoco.adb so that phc -p writes the version number
   and the seed used in the random number generators.
 
