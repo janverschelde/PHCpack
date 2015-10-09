@@ -1,3 +1,6 @@
+Fri 9 Oct 2015 : extended multitasking_root_refiners with procedures in
+  double double and quad double precision, tested by ts_mtverify.
+
 Wed 7 Oct 2015 : for consistency with double double and quad double
   precision, moved in multitasking_polyhedral_trackers.adb the end of the
   second critical section also farther.

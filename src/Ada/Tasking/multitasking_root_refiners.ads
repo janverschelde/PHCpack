@@ -4,18 +4,45 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;
+with Dobldobl_Complex_Poly_Systems;
+with Dobldobl_Complex_Laur_Systems;
+with Quaddobl_Complex_Laur_Systems;
+with Quaddobl_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Multitasking_Root_Refiners is
 
 -- DESCRIPTION :
 --   Newton's method is executed with multitasking on a list of solutions
 --   to verify the quality of the solution list.
+--   The procedures come in different flavors:
+--   (1) whether the systems is Laurent or simply polynomial;
+--   (2) whether the multitasking is silent or reporting its progress;
+--   (3) whether the precision is double, double double, or quad double;
+--   so therefore this package offers 2 x 2 x 3 = 12 procedures.
 
   procedure Silent_Multitasking_Root_Refiner
               ( file : in file_type; nt : in integer32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
+                epsxa,epsfa,tolsing : in double_float;
+                numit : in out natural32; max : in natural32;
+                deflate : in out boolean );
+
+  procedure Silent_Multitasking_Root_Refiner
+              ( file : in file_type; nt : in integer32;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                epsxa,epsfa,tolsing : in double_float;
+                numit : in out natural32; max : in natural32;
+                deflate : in out boolean );
+
+  procedure Silent_Multitasking_Root_Refiner
+              ( file : in file_type; nt : in integer32;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 epsxa,epsfa,tolsing : in double_float;
                 numit : in out natural32; max : in natural32;
                 deflate : in out boolean );
@@ -44,6 +71,22 @@ package Multitasking_Root_Refiners is
               ( file : in file_type; nt : in integer32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
+                epsxa,epsfa,tolsing : in double_float;
+                numit : in out natural32; max : in natural32;
+                deflate : in out boolean );
+
+  procedure Reporting_Multitasking_Root_Refiner
+              ( file : in file_type; nt : in integer32;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                epsxa,epsfa,tolsing : in double_float;
+                numit : in out natural32; max : in natural32;
+                deflate : in out boolean );
+
+  procedure Reporting_Multitasking_Root_Refiner
+              ( file : in file_type; nt : in integer32;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 epsxa,epsfa,tolsing : in double_float;
                 numit : in out natural32; max : in natural32;
                 deflate : in out boolean );
@@ -76,6 +119,22 @@ package Multitasking_Root_Refiners is
                 numit : in out natural32; max : in natural32;
                 deflate : in out boolean );
 
+  procedure Silent_Multitasking_Root_Refiner
+              ( file : in file_type; nt : in integer32;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                epsxa,epsfa,tolsing : in double_float;
+                numit : in out natural32; max : in natural32;
+                deflate : in out boolean );
+
+  procedure Silent_Multitasking_Root_Refiner
+              ( file : in file_type; nt : in integer32;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                epsxa,epsfa,tolsing : in double_float;
+                numit : in out natural32; max : in natural32;
+                deflate : in out boolean );
+
   -- DESCRIPTION :
   --   Applies the root refinement to the solutions in sols
   --   and the Laurent polynomial system in p with nt tasks.
@@ -102,6 +161,22 @@ package Multitasking_Root_Refiners is
               ( file : in file_type; nt : in integer32;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys;
                 sols : in out Standard_Complex_Solutions.Solution_List;
+                epsxa,epsfa,tolsing : in double_float;
+                numit : in out natural32; max : in natural32;
+                deflate : in out boolean );
+
+  procedure Reporting_Multitasking_Root_Refiner
+              ( file : in file_type; nt : in integer32;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                epsxa,epsfa,tolsing : in double_float;
+                numit : in out natural32; max : in natural32;
+                deflate : in out boolean );
+
+  procedure Reporting_Multitasking_Root_Refiner
+              ( file : in file_type; nt : in integer32;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 epsxa,epsfa,tolsing : in double_float;
                 numit : in out natural32; max : in natural32;
                 deflate : in out boolean );
