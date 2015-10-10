@@ -195,11 +195,10 @@ package body QuadDobl_BlackBox_Continuations is
 
   begin
     if Length_Of(sols) > 0 then
-      Reporting_Root_Refiner(outfile,p,sols,epsxa,epsfa,tolsing,nb,5,false);
+     -- Reporting_Root_Refiner(outfile,p,sols,epsxa,epsfa,tolsing,nb,5,false);
      -- note that Silent means no writing concerning job scheduling
-     -- Silent_Multitasking_Root_Refiner
-     --   (outfile,nt,p,sols,epsxa,epsfa,tolsing,nb,5,deflate);
-      null;
+      Silent_Multitasking_Root_Refiner
+        (outfile,nt,p,sols,epsxa,epsfa,tolsing,nb,5,deflate);
     end if;
   --exception
   --  when others =>
@@ -245,10 +244,9 @@ package body QuadDobl_BlackBox_Continuations is
 
   begin
     if Length_Of(sols) > 0 then
-      Reporting_Root_Refiner(outfile,p,sols,epsxa,epsfa,tolsing,nb,5,false);
-      --Silent_Multitasking_Root_Refiner
-      --  (outfile,nt,p,sols,epsxa,epsfa,tolsing,nb,5,deflate);
-      null;
+      --Reporting_Root_Refiner(outfile,p,sols,epsxa,epsfa,tolsing,nb,5,false);
+      Silent_Multitasking_Root_Refiner
+        (outfile,nt,p,sols,epsxa,epsfa,tolsing,nb,5,deflate);
     end if;
   end Reporting_Black_Box_Refine;
 

@@ -1,3 +1,6 @@
+Sat 10 Oct 2015 : called the multitasking root refiners in the packages
+  {dobldobl,quaddobl}_blackbox_continuations.adb.
+
 Thu 8 Oct 2015 : extended pack_continuation_parameters with get_value and
   set_value to get and set individual values, tested by ts_pactun.adb.
 
