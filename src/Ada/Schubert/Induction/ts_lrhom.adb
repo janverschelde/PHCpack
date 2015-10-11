@@ -24,6 +24,7 @@ with Checker_Moves;                      use Checker_Moves;
 with Checker_Posets,Checker_Posets_io;   use Checker_Posets,Checker_Posets_io;
 with Intersection_Posets;
 with Intersection_Posets_io;             use Intersection_Posets_io;
+with Moving_Flag_Continuation;
 with Moving_Flag_Homotopies;
 with Intersection_Solution_Posets;       use Intersection_Solution_Posets;
 with Resolve_Schubert_Problems;          use Resolve_Schubert_Problems;
@@ -319,7 +320,7 @@ procedure ts_lrhom is
     sols : Solution_List;
     tol : constant double_float := 1.0E-6;
     ans : character;
-    monitor_games : boolean;
+    monitor_games,report : boolean;
     timer : Timing_Widget;
 
   begin
@@ -346,12 +347,13 @@ procedure ts_lrhom is
         flags(i) := new Standard_Complex_Matrices.Matrix'(randflag);
       end;
     end loop;
-    put_line("... resolving the Schubert problem ...");
-    new_line;
-    put_line("See the output file for results ...");
-    new_line;
+   -- put_line("... resolving the Schubert problem ...");
+   -- new_line;
+   -- put_line("See the output file for results ...");
+   -- new_line;
+    Moving_Flag_Continuation.Set_Parameters(file,report);
     tstart(timer);
-    Resolve(file,monitor_games,n,k,tol,ips,sps,conds,flags,sols);
+    Resolve(file,monitor_games,report,n,k,tol,ips,sps,conds,flags,sols);
     tstop(timer);
     Write_Results(file,n,k,q,rows,cols,link2conds,flags,sols,fsys);
     new_line(file);

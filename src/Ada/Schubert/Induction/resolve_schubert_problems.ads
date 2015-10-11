@@ -171,7 +171,7 @@ package Resolve_Schubert_Problems is
   --   roco     the formal root count.
 
   procedure Resolve
-              ( file : in file_type; extopt : in boolean;
+              ( file : in file_type; extopt,repcon : in boolean;
                 n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out Solution_Poset;
@@ -193,6 +193,8 @@ package Resolve_Schubert_Problems is
   --   file     for intermediate output and diagnostics;
   --   extopt   extra output about monitoring the Littlewood-Richardson
   --            homotopies in each and every checker game;
+  --   repcon   true for the path trackers to run in reporting version,
+  --            false if the path trackers have to stay mute;
   --   n        the ambient dimension;
   --   k        dimension of the solution plane;
   --   tol      tolerance on residual to decide failure in checker games;

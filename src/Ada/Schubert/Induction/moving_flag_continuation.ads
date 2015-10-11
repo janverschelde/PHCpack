@@ -22,6 +22,10 @@ package Moving_Flag_Continuation is
 
   -- DESCRIPTION :
   --   Interactive determination of the continuation and output parameters.
+  --   The values for the continuation parameters and output code are
+  --   written to the file.
+  --   The output parameter report is true if the output level was nonzero,
+  --   i.e.: if the path trackers are reporting.
 
   procedure Call_Path_Trackers
               ( n : in integer32; h : in Poly_Sys;

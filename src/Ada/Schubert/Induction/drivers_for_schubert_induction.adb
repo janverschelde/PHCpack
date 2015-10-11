@@ -15,8 +15,9 @@ with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 --with Standard_Complex_Poly_SysFun;
 with Matrix_Indeterminates;
 with Standard_Homotopy;
-with Standard_IncFix_Continuation;       use Standard_IncFix_Continuation;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with Standard_IncFix_Continuation;       use Standard_IncFix_Continuation;
+with Drivers_for_Poly_Continuation;
 with Brackets_io;                        use Brackets_io;
 with Bracket_Monomials_io;               use Bracket_Monomials_io;
 with Drivers_for_Pieri_Homotopies;       use Drivers_for_Pieri_Homotopies;
@@ -28,6 +29,8 @@ with Intersection_Posets_io;             use Intersection_Posets_io;
 with Moving_Flag_Homotopies;
 with Moving_Flag_Continuation;
 with Resolve_Schubert_Problems;          use Resolve_Schubert_Problems;
+with Write_Seed_Number;
+with Greeting_Banners;
 
 package body Drivers_for_Schubert_Induction is
 
@@ -800,7 +803,7 @@ package body Drivers_for_Schubert_Induction is
     sols : Solution_List;
     tol : constant double_float := 1.0E-6;
     ans : character;
-    monitor_games : boolean;
+    monitor_games,report : boolean;
     timer : Timing_Widget;
 
   begin
@@ -819,16 +822,22 @@ package body Drivers_for_Schubert_Induction is
     Count_Roots(file,ips,bottom_roco);
     put(" Top down root count : "); put(top_roco); new_line;
     put("Bottom up root count : "); put(bottom_roco); new_line;
-    put_line("... resolving the Schubert problem ...");
-    new_line;
-    put_line("See the output file for results ...");
-    new_line;
+    Moving_Flag_Continuation.Set_Parameters(file,report);
+   -- new_line;
+   -- put_line("... resolving the Schubert problem ...");
+   -- new_line;
+   -- put_line("See the output file for results ...");
+   -- new_line;
     tstart(timer);
-    Resolve(file,monitor_games,n,k,tol,ips,sps,conds,flags,sols);
+    Resolve(file,monitor_games,report,n,k,tol,ips,sps,conds,flags,sols);
     tstop(timer);
     Write_Results(file,n,k,q,rows,cols,link2conds,flags,sols,fsys);
     new_line(file);
     print_times(file,timer,"resolving a Schubert problem");
+    new_line(file);
+    Write_Seed_Number(file);
+    put_line(file,Greeting_Banners.Version);
+    close(file);
   end Resolve_Schubert_Problem;
 
   procedure Solve_Schubert_Problems ( n : in integer32 ) is

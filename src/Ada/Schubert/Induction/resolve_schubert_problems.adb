@@ -512,7 +512,7 @@ package body Resolve_Schubert_Problems is
   end Count_Roots;
 
   procedure Resolve
-              ( file : in file_type; extopt : in boolean;
+              ( file : in file_type; extopt,repcon : in boolean;
                 n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out Solution_Poset;
@@ -566,7 +566,7 @@ package body Resolve_Schubert_Problems is
         put_line(file," ***");
         if i > 1 then
           put_line(file,"-> solving at the leaves of its parents :");
-          if extopt then
+          if extopt or repcon then
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
                 (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,conds,flags);
