@@ -46,6 +46,8 @@ package Checker_Posets_io is
   --   as well as the localization patterns.
 
   procedure Write_Formal_Sum ( nd : in Link_to_Node );
+  procedure Write_Formal_Sum
+              ( file : in file_type; nd : in Link_to_Node );
 
   -- DESCRIPTION :
   --   Writes the formal sum of Littlewood-Richardson coefficients
@@ -58,17 +60,24 @@ package Checker_Posets_io is
   --   at every level of the poset ps.
 
   procedure Write_Final_Sum ( ps : in Poset );
+  procedure Write_Final_Sum
+              ( file : in file_type; ps : in Poset );
 
   -- DESCRIPTION :
   --   Writes the final form sum at the leaves of the poset.
 
   procedure Write_Formal_Product ( ps : in Poset );
+  procedure Write_Formal_Product
+              ( file : in file_type; ps : in Poset );
 
   -- DESCRIPTION :
   --   Writes the formal product elaborated by the poset,
+  --   either to standard output or to file,
   --   which appears at the lefthand side of the formal equation.
 
   procedure Write_Formal_Equation ( ps : in Poset );
+  procedure Write_Formal_Equation
+              ( file : in file_type; ps : in Poset );
 
   -- DESCRIPTION :
   --   Writes the formal equation produced by the poset.

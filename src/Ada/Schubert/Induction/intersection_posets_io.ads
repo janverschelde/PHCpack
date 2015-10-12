@@ -1,3 +1,4 @@
+with text_io;                           use text_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Intersection_Posets;               use Intersection_Posets;
 
@@ -16,6 +17,9 @@ package Intersection_Posets_io is
 
   procedure Write_Formal_Equations
                ( ips : in Intersection_Poset; k : in integer32 );
+  procedure Write_Formal_Equations
+               ( file : in file_type;
+                 ips : in Intersection_Poset; k : in integer32 );
 
   -- DESCRIPTION :
   --   Writes the formal equations for level k in the poset.
@@ -23,12 +27,18 @@ package Intersection_Posets_io is
   -- REQUIRED : 1 <= k <= ips.level.
 
   procedure Write_Formal_Equations ( ips : in Intersection_Poset );
+  procedure Write_Formal_Equations
+              ( file : in file_type; ips : in Intersection_Poset );
 
   -- DESCRIPTION :
-  --   Writes a formal equation for each level in the poset.
+  --   Writes a formal equation for each level in the poset,
+  --   either to standard output or to file.
 
   procedure Write_Lefthand_Product
               ( ips : in Intersection_Poset; k : in integer32 );
+  procedure Write_Lefthand_Product
+              ( file : in file_type;
+                ips : in Intersection_Poset; k : in integer32 );
 
   -- DESCRIPTION :
   --   Writes the lefthand product of intersection conditions resolved
@@ -36,21 +46,26 @@ package Intersection_Posets_io is
   --   If k equals 1, then the writing starts at the root of the poset.
 
   procedure Write_Lefthand_Product ( ips : in Intersection_Poset );
+  procedure Write_Lefthand_Product
+              ( file : in file_type; ips : in Intersection_Poset );
 
   -- DESCRIPTION :
   --   Writes the complete list of intersection conditions as a product
   --   of brackets as defined by the first nodes at each level.
 
   procedure Write_Final_Sum ( pl : in Poset_List );
+  procedure Write_Final_Sum ( file : in file_type; pl : in Poset_List );
 
   -- DESCRIPTION :
   --   Writes the formal sum of intersection conditions at the leaves
   --   of all the posets in the list of poset in pl.
 
   procedure Write_Expansion ( ips : in Intersection_Poset );
+  procedure Write_Expansion
+              ( file : in file_type; ips : in Intersection_Poset );
 
   -- DESCRIPTION :
   --   Writes the expansion of the intersection conditions as computed
-  --   in the intersection poset.
+  --   in the intersection poset, to standard output or to file.
 
 end Intersection_Posets_io;

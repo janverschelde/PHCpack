@@ -155,6 +155,20 @@ package body Checker_Posets_io is
     end loop;
   end Write_Formal_Sum;
 
+  procedure Write_Formal_Sum
+              ( file : in file_type; nd : in Link_to_Node ) is
+
+    tmp : Link_to_Node := nd;
+
+  begin
+    while tmp /= null loop
+      put(file,"+");
+      put(file,tmp.coeff);
+      Write_Bracket(file,tmp.cols);
+      tmp := tmp.next_sibling;
+    end loop;
+  end Write_Formal_Sum;
+
   procedure Write_Formal_Sums ( ps : in Poset ) is
   begin
     for i in ps.white'range loop
@@ -169,11 +183,27 @@ package body Checker_Posets_io is
     Write_Formal_Sum(ps.white(ps.white'last));
   end Write_Final_Sum;
 
+  procedure Write_Final_Sum
+             ( file : in file_type; ps : in Poset ) is
+  begin
+    Write_Formal_Sum(file,ps.white(ps.white'last));
+  end Write_Final_Sum;
+
   procedure Write_Formal_Product ( ps : in Poset ) is
   begin
     put("+"); put(ps.white(ps.white'first).coeff);
     Write_Bracket(ps.white(ps.white'first).rows); put("*");
     Write_Bracket(ps.white(ps.white'first).cols);
+  end Write_Formal_Product;
+
+  procedure Write_Formal_Product
+              ( file : in file_type; ps : in Poset ) is
+  begin
+    put(file,"+");
+    put(file,ps.white(ps.white'first).coeff);
+    Write_Bracket(file,ps.white(ps.white'first).rows);
+    put(file,"*");
+    Write_Bracket(file,ps.white(ps.white'first).cols);
   end Write_Formal_Product;
 
   procedure Write_Formal_Equation ( ps : in Poset ) is
@@ -182,6 +212,15 @@ package body Checker_Posets_io is
     put(" = ");
     Write_Final_Sum(ps);
     new_line;
+  end Write_Formal_Equation;
+
+  procedure Write_Formal_Equation
+              ( file : in file_type; ps : in Poset ) is
+  begin
+    Write_Formal_Product(file,ps);
+    put(file," = ");
+    Write_Final_Sum(file,ps);
+    new_line(file);
   end Write_Formal_Equation;
 
   procedure Write_Node_in_Path
