@@ -2,7 +2,8 @@ Sun 11 Oct 2015 : the random seed is written at the end of the output file
   in drivers_for_schubert_induction.adb.  Improved the documentation of
   Set_Parameters in moving_flag_continuation.ads.  An extra parameter in the
   Resolve in resolve_schubert_problems to make the path trackers reporting,
-  which then also changed ts_lrhom.
+  which then also changed ts_lrhom.  In drivers_for_schubert_induction.adb,
+  written the random flags at the start as well as the fixed flags at the end.
 
 Fri 31 Oct 2014 : used Random_Flags in the Resolve_Schubert_Problem
   in drivers_for_schubert_induction.adb.

@@ -828,6 +828,11 @@ package body Drivers_for_Schubert_Induction is
    -- new_line;
    -- put_line("See the output file for results ...");
    -- new_line;
+    put_line(file,"THE RANDOM FLAGS :");
+    for i in flags'range loop
+      put(file,flags(i).all);
+      new_line(file);
+    end loop;
     tstart(timer);
     Resolve(file,monitor_games,report,n,k,tol,ips,sps,conds,flags,sols);
     tstop(timer);
