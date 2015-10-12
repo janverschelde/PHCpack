@@ -819,6 +819,7 @@ package body Drivers_for_Schubert_Induction is
     top_roco := Final_Sum(ips);
     put("The formal root count : "); put(top_roco); new_line;
     put_line("... running the root counting from the bottom up ...");
+    Write_Expansion(file,ips);
     Count_Roots(file,ips,bottom_roco);
     put(" Top down root count : "); put(top_roco); new_line;
     put("Bottom up root count : "); put(bottom_roco); new_line;

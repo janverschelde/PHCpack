@@ -1,5 +1,7 @@
 Mon 12 Oct 2015 : updated checker_posets_io and intersection_posets_io
   with procedures to write to file, in addition to standard output.
+  Added Write_Expansion in drivers_for_schubert_induction.adb when
+  resolving a general Schubert problem.
 
 Sun 11 Oct 2015 : the random seed is written at the end of the output file
   in drivers_for_schubert_induction.adb.  Improved the documentation of
