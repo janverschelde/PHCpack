@@ -47,7 +47,6 @@ package Drivers_for_Schubert_Induction is
 
   -- REQUIRED : b'last > 2.
 
-
   function Is_Isolated 
               ( b : Standard_Natural_Vectors.Vector ) return boolean;
 
@@ -137,6 +136,23 @@ package Drivers_for_Schubert_Induction is
 
   -- DESCRIPTION :
   --   Returns a vector of range 1..m with n-dimensional random flags.
+
+  function Read_Flags
+             ( file : file_type; n,m : integer32 )
+             return Standard_Complex_VecMats.VecMat;
+
+  -- DESCRIPTION :
+  --   Reads m n-by-n complex matrices from file
+  --   and returns a vector of range 1..m of n-by-n complex matrices.
+
+  function Prompt_for_Generic_Flags
+             ( n,m : integer32 ) return Standard_Complex_VecMats.VecMat;
+
+  -- DESCRIPTION :
+  --   The user is prompted to make a choice between having the
+  --   computer generate a vector of range 1..m with n-dimensional flags,
+  --   or to input those m flags, either from standard input,
+  --   or to be read from file.
 
   procedure Run_Moving_Flag_Continuation ( n,k : in integer32 );
 
@@ -256,7 +272,7 @@ package Drivers_for_Schubert_Induction is
   --            if false, then user will generate random flags.
 
   procedure Resolve_Schubert_Problem
-              ( file : in file_type; monitor,report : in boolean;
+              ( file : in file_type;
                 n,k : in integer32; cnd : in Array_of_Brackets;
                 flags : in Standard_Complex_VecMats.VecMat );
 
@@ -268,8 +284,6 @@ package Drivers_for_Schubert_Induction is
 
   -- ON INPUT :
   --   file     for extra output;
-  --   monitor  to monitor the progress of the checker games;
-  --   report   to report extra output during path tracking;
   --   n        ambient space;
   --   k        dimension of the solution planes;
   --   cnt      intersection conditions;

@@ -360,6 +360,58 @@ package body Drivers_for_Schubert_Induction is
     return res;
   end Random_Flags;
 
+  function Read_Flags
+             ( file : file_type; n,m : integer32 )
+             return Standard_Complex_VecMats.VecMat is
+
+    res : Standard_Complex_VecMats.VecMat(1..m);
+
+  begin
+    for i in res'range loop
+      declare
+        rf : Standard_Complex_Matrices.Matrix(1..n,1..n);
+      begin
+        get(file,rf);
+        res(i) := new Standard_Complex_Matrices.Matrix'(rf);
+      end;
+    end loop;
+    return res;
+  end Read_Flags;
+
+  function Prompt_for_Generic_Flags
+             ( n,m : integer32 ) return Standard_Complex_VecMats.VecMat is
+
+    res : Standard_Complex_VecMats.VecMat(1..m);
+    ans : character;
+    file : file_type;
+
+  begin
+    new_line;
+    put_line("MENU for the generic flags :");
+    put_line("  0. generate random flags;");
+    put_line("  1. enter flags via standard input;");
+    put_line("  2. read coordinates of the flags from file.");
+    put("Type 0, 1, or 2 to select type of generic flags : ");
+    Ask_Alternative(ans,"012");
+    case ans is
+      when '0' =>
+        res := Random_Flags(n,m);
+      when '1' =>
+        new_line;
+        put("Enter "); put(m*n*n,1); put_line(" complex numbers :");
+        res := Read_Flags(standard_input,n,m);
+        skip_line; -- for the last new line symbol
+      when '2' =>
+        new_line;
+        put_line("Reading the name of an input file ...");
+        Read_Name_and_Open_File(file);
+        res := Read_Flags(file,n,m);
+        close(file);
+      when others => null;
+    end case;
+    return res;
+  end Prompt_for_Generic_Flags;
+
   procedure Reporting_Moving_Flag_Continuation
               ( n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
@@ -695,15 +747,15 @@ package body Drivers_for_Schubert_Induction is
       := Identity_Permutation(natural32(n));
     rows,cols : Standard_Natural_Vectors.Vector(1..k);
     ps : Poset;
-    ans : character;
+   -- ans : character;
     silent : boolean;
     top_roco : Natural_Number;
 
   begin
-    new_line;
-    put("Intermediate output during formal root count ? (y/n) "); 
-    Ask_Yes_or_No(ans);
-    silent := (ans = 'n');
+   -- new_line;
+   -- put("Intermediate output during formal root count ? (y/n) "); 
+   -- Ask_Yes_or_No(ans);
+    silent := true; -- (ans = 'n');
    -- put_line("Reading the first two intersection conditions...");
     rows := Standard_Natural_Vectors.Vector(conds(1).all);
     cols := Standard_Natural_Vectors.Vector(conds(2).all);
@@ -768,12 +820,14 @@ package body Drivers_for_Schubert_Induction is
   end Remaining_Intersection_Conditions;            
 
   procedure Resolve_Schubert_Problem
-              ( file : in file_type; monitor,report : in boolean;
+              ( file : in file_type;
                 n,k : in integer32; cnd : in Array_of_Brackets;
                 flags : in Standard_Complex_VecMats.VecMat ) is
 
     use Intersection_Posets;
 
+    monitor,report : boolean;
+    ans : character;
     nbc : constant integer32 := cnd'last;
     ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
     sps : Solution_Poset(ips.m) := Create(ips);
@@ -794,6 +848,7 @@ package body Drivers_for_Schubert_Induction is
     timer : Timing_Widget;
 
   begin
+    new_line;
     top_roco := Final_Sum(ips);
     put("The formal root count : "); put(top_roco); new_line;
     put_line("... running the root counting from the bottom up ...");
@@ -801,11 +856,18 @@ package body Drivers_for_Schubert_Induction is
     Count_Roots(file,ips,bottom_roco);
     put(" Top down root count : "); put(top_roco); new_line;
     put("Bottom up root count : "); put(bottom_roco); new_line;
+    new_line(file);
     put_line(file,"THE RANDOM FLAGS :");
     for i in flags'range loop
       put(file,flags(i).all);
       new_line(file);
     end loop;
+    new_line;
+    put("Monitor Littlewood-Richardson homotopies"
+      & " in each checker game ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    monitor := (ans = 'y');
+    Moving_Flag_Continuation.Set_Parameters(file,report);
     tstart(timer);
     Resolve(file,monitor,report,n,k,tol,ips,sps,conds,flags,sols);
     tstop(timer);
@@ -821,25 +883,17 @@ package body Drivers_for_Schubert_Induction is
               ( n,k : in integer32; bm : in Bracket_Monomial ) is
 
     file : file_type;
-    montor,report : boolean;
-    ans : character;
     cnd : constant Array_of_Brackets := Create(bm);
     nbc : constant integer32 := cnd'last;
     flags : Standard_Complex_VecMats.VecMat(1..nbc-2)
-          := Random_Flags(n,nbc-2);
+       -- := Random_Flags(n,nbc-2);
+          := Prompt_for_Generic_Flags(n,nbc-2);
 
   begin
     new_line;
     put_line("Reading a name for the output file ...");
     Read_Name_and_Create_File(file);
-    new_line;
-    put("Monitor Littlewood-Richardson homotopies"
-      & " in each checker game ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    montor := (ans = 'y');
-    new_line;
-    Moving_Flag_Continuation.Set_Parameters(file,report);
-    Resolve_Schubert_Problem(file,montor,report,n,k,cnd,flags);
+    Resolve_Schubert_Problem(file,n,k,cnd,flags);
     close(file);
   end Resolve_Schubert_Problem;
 

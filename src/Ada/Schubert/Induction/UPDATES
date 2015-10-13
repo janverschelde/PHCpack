@@ -1,3 +1,6 @@
+Tue 13 Oct 2015 : drivers_for_schubert_condition changed so the user can
+  enter values for the generic flags.
+
 Mon 12 Oct 2015 : updated checker_posets_io and intersection_posets_io
   with procedures to write to file, in addition to standard output.
   Added Write_Expansion in drivers_for_schubert_induction.adb when
