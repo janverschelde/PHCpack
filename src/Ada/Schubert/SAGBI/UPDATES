@@ -1,3 +1,7 @@
+Tue 13 Oct 2015 : added <= operation to brackets as needed to define the
+  'not above' in the partial order of brackets, needed in the efficient
+  representation of Schubert problems.
+
 Sun 15 Jun 2014 : modified ts_shapiro.adb for a compiler warning.
 
 Tue 27 May 2014 : small change in brackets_io.adb for a compiler warning.

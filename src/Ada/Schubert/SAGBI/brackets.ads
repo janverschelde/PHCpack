@@ -76,6 +76,12 @@ package Brackets is
 
   -- REQUIRED : b1 < b2, b1 precedes b2 lexicographically.
 
+  function "<=" ( alpha,beta : Bracket ) return boolean;
+
+  -- DESCRIPTION :
+  --   We have that alpha <= beta if for alpha(i) <= beta(i)
+  --   for all i in alpha'range = beta'range.
+
 -- DESTRUCTORS :
 
   procedure Clear ( b : in out Link_to_Bracket );

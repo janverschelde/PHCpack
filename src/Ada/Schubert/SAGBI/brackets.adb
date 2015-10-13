@@ -173,6 +173,16 @@ package body Brackets is
     return 0;
   end Is_Standard;
 
+  function "<=" ( alpha,beta : Bracket ) return boolean is
+  begin
+    for i in alpha'range loop
+      if alpha(i) > beta(i)
+       then return false;
+      end if;
+    end loop;
+    return true;
+  end "<=";
+
 -- DESTRUCTORS :
 
   procedure Clear ( b : in out Link_to_Bracket ) is
