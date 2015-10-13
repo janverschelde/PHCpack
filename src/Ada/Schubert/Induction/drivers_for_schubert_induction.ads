@@ -255,10 +255,43 @@ package Drivers_for_Schubert_Induction is
   --   inpt     if true, then user will give fixed flags,
   --            if false, then user will generate random flags.
 
+  procedure Resolve_Schubert_Problem
+              ( file : in file_type; monitor,report : in boolean;
+                n,k : in integer32; cnd : in Array_of_Brackets;
+                flags : in Standard_Complex_VecMats.VecMat );
+
+  -- DESCRIPTION :
+  --   Resolves the Schubert problem defined by the brackets in cnd
+  --   on k-planes in n-space for the given flags.
+
+  -- REQUIRED : flags'range = 1..cnd'last-2.
+
+  -- ON INPUT :
+  --   file     for extra output;
+  --   monitor  to monitor the progress of the checker games;
+  --   report   to report extra output during path tracking;
+  --   n        ambient space;
+  --   k        dimension of the solution planes;
+  --   cnt      intersection conditions;
+  --   flags    random flags. 
+
+  procedure Resolve_Schubert_Problem
+              ( n,k : in integer32; bm : in Bracket_Monomial );
+
+  -- DESCRIPTION :
+  --   Prompts the user for the name of the output file and for other
+  --   execution parameters and then resolves the Schubert problem.
+
+  -- ON ENTRY :
+  --   n        ambient space;
+  --   k        dimension of the solution planes;
+  --   bm       product of k-brackets, with conditions on the k-planes.
+
   procedure Solve_Schubert_Problems ( n : in integer32 );
 
   -- DESCRIPTION :
   --   Interactive procedure to compute solutions to Schubert problems
-  --   in n-space.  Prompts the user for data.
+  --   in n-space.  Prompts the user for data: for intersections conditions
+  --   on k-planes in n-space and resolve the Schubert problem.
 
 end Drivers_for_Schubert_Induction;

@@ -768,21 +768,12 @@ package body Drivers_for_Schubert_Induction is
   end Remaining_Intersection_Conditions;            
 
   procedure Resolve_Schubert_Problem
-              ( n,k : in integer32; bm : in Bracket_Monomial ) is
-
-  -- DESCRIPTION :
-  --   Prompts the user for m intersection conditions on k-planes in n-space,
-  --   and writes the evolution of the root count from the leaves to the root.
-
-  -- ON ENTRY :
-  --   n        ambient space
-  --   k        dimension of the solution planes;
-  --   bm       product of k-brackets, with conditions on the k-planes.
+              ( file : in file_type; monitor,report : in boolean;
+                n,k : in integer32; cnd : in Array_of_Brackets;
+                flags : in Standard_Complex_VecMats.VecMat ) is
 
     use Intersection_Posets;
 
-    file : file_type;
-    cnd : constant Array_of_Brackets := Create(bm);
     nbc : constant integer32 := cnd'last;
     ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
     sps : Solution_Poset(ips.m) := Create(ips);
@@ -797,14 +788,45 @@ package body Drivers_for_Schubert_Induction is
           := Remaining_Intersection_Conditions(cnd);
     link2conds : constant Standard_Natural_VecVecs.Link_to_VecVec
                := new Standard_Natural_VecVecs.VecVec'(conds);
-    flags : Standard_Complex_VecMats.VecMat(1..nbc-2)
-          := Random_Flags(n,nbc-2);
     fsys : Link_to_Poly_Sys;
     sols : Solution_List;
     tol : constant double_float := 1.0E-6;
-    ans : character;
-    monitor_games,report : boolean;
     timer : Timing_Widget;
+
+  begin
+    top_roco := Final_Sum(ips);
+    put("The formal root count : "); put(top_roco); new_line;
+    put_line("... running the root counting from the bottom up ...");
+    Write_Expansion(file,ips);
+    Count_Roots(file,ips,bottom_roco);
+    put(" Top down root count : "); put(top_roco); new_line;
+    put("Bottom up root count : "); put(bottom_roco); new_line;
+    put_line(file,"THE RANDOM FLAGS :");
+    for i in flags'range loop
+      put(file,flags(i).all);
+      new_line(file);
+    end loop;
+    tstart(timer);
+    Resolve(file,monitor,report,n,k,tol,ips,sps,conds,flags,sols);
+    tstop(timer);
+    Write_Results(file,n,k,q,rows,cols,link2conds,flags,sols,fsys);
+    new_line(file);
+    print_times(file,timer,"resolving a Schubert problem");
+    new_line(file);
+    Write_Seed_Number(file);
+    put_line(file,Greeting_Banners.Version);
+  end Resolve_Schubert_Problem;
+
+  procedure Resolve_Schubert_Problem
+              ( n,k : in integer32; bm : in Bracket_Monomial ) is
+
+    file : file_type;
+    montor,report : boolean;
+    ans : character;
+    cnd : constant Array_of_Brackets := Create(bm);
+    nbc : constant integer32 := cnd'last;
+    flags : Standard_Complex_VecMats.VecMat(1..nbc-2)
+          := Random_Flags(n,nbc-2);
 
   begin
     new_line;
@@ -814,35 +836,10 @@ package body Drivers_for_Schubert_Induction is
     put("Monitor Littlewood-Richardson homotopies"
       & " in each checker game ? (y/n) ");
     Ask_Yes_or_No(ans);
+    montor := (ans = 'y');
     new_line;
-    monitor_games := (ans = 'y');
-    top_roco := Final_Sum(ips);
-    put("The formal root count : "); put(top_roco); new_line;
-    put_line("... running the root counting from the bottom up ...");
-    Write_Expansion(file,ips);
-    Count_Roots(file,ips,bottom_roco);
-    put(" Top down root count : "); put(top_roco); new_line;
-    put("Bottom up root count : "); put(bottom_roco); new_line;
     Moving_Flag_Continuation.Set_Parameters(file,report);
-   -- new_line;
-   -- put_line("... resolving the Schubert problem ...");
-   -- new_line;
-   -- put_line("See the output file for results ...");
-   -- new_line;
-    put_line(file,"THE RANDOM FLAGS :");
-    for i in flags'range loop
-      put(file,flags(i).all);
-      new_line(file);
-    end loop;
-    tstart(timer);
-    Resolve(file,monitor_games,report,n,k,tol,ips,sps,conds,flags,sols);
-    tstop(timer);
-    Write_Results(file,n,k,q,rows,cols,link2conds,flags,sols,fsys);
-    new_line(file);
-    print_times(file,timer,"resolving a Schubert problem");
-    new_line(file);
-    Write_Seed_Number(file);
-    put_line(file,Greeting_Banners.Version);
+    Resolve_Schubert_Problem(file,montor,report,n,k,cnd,flags);
     close(file);
   end Resolve_Schubert_Problem;
 
