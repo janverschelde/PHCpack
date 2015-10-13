@@ -1,3 +1,5 @@
+Tue 14 Oct 2015 : updated LRhomotopies.m2 for changes in phc -e.
+
 Thu 21 May 2015 : fixed bug in mixedVolume function of PHCpack.m2 which
   was introduced with the polyhedral homotopies in double double and
   quad double arithmetic.  Needs version 2.3.97 of PHCpack.
