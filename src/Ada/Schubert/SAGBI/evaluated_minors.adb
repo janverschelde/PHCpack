@@ -133,4 +133,37 @@ package body Evaluated_Minors is
     return res;
   end Determinant;
 
+  function Determinant ( m : Standard_Complex_Matrices.Matrix;
+                         rows,cols : Bracket )
+                       return Complex_Number is
+
+    res : Complex_Number;
+    sqm : Standard_Complex_Matrices.Matrix(rows'range,cols'range);
+    piv : Standard_Integer_Vectors.Vector(rows'range);
+    inf : integer32;
+
+  begin
+    for i in rows'range loop
+      piv(i) := i;
+      for j in cols'range loop
+        sqm(i,j) := m(integer32(rows(i)),integer32(cols(j)));
+      end loop;
+    end loop;
+    lufac(sqm,rows'last,piv,inf);
+    if inf /= 0 then
+      res := Create(0.0);
+    else
+      res := Create(1.0);
+      for i in sqm'range(1) loop
+        res := res*sqm(i,i);
+      end loop;
+      for i in piv'range loop
+        if piv(i) > i
+         then res := -res;
+        end if;
+      end loop;
+    end if;
+    return res;
+  end Determinant;
+
 end Evaluated_Minors;

@@ -30,4 +30,14 @@ package Evaluated_Minors is
   --   The matrix m should at least have as many columns as b'range and
   --   as many rows as b(b'last).  If b is omitted, then m must be square.
 
+  function Determinant ( m : Standard_Complex_Matrices.Matrix;
+                         rows,cols : Bracket ) return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the determinant of the matrix obtained from selecting
+  --   those rows and columns as defined by the brackets rows and cols.
+
+  -- REQUIRED : m'range(1) contains all indices of rows
+  --   and m'range(2) contains all indices of cols.
+
 end Evaluated_Minors;
