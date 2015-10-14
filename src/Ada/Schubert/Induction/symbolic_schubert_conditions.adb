@@ -93,6 +93,53 @@ package body Symbolic_Schubert_Conditions is
     return res;
   end Number_of_Equations;
 
+  procedure Enumerate_NotAbove ( n : in natural32; b : in Bracket ) is
+
+    k : constant integer32 := b'last;
+    accu : Bracket(1..k);
+    start : natural32;
+    cont : boolean := true;
+
+    procedure Enumerate ( i : in integer32 ) is
+    begin
+      if i > k then
+        if not (accu <= b)
+         then Process(accu,cont);
+        end if;
+      else
+        if i = 1
+         then start := 1;
+         else start := accu(i-1) + 1;
+        end if;
+        for j in start..n loop
+          accu(i) := j;
+          Enumerate(i+1);
+          exit when not cont;
+        end loop;
+      end if;
+    end Enumerate;
+ 
+  begin
+    Enumerate(1);
+  end Enumerate_NotAbove;
+
+  function Number_of_NotAbove
+             ( n : natural32; b : Bracket ) return natural32 is
+
+    res : natural32 := 0;
+
+    procedure Count ( b : in Bracket; cont : out boolean ) is
+    begin
+      res := res + 1;
+      cont := true;
+    end Count;
+    procedure Enum is new Enumerate_NotAbove(Count);
+
+  begin
+    Enum(n,b);
+    return res;
+  end Number_of_NotAbove;
+
   procedure Explain_Equations
                ( n : in natural32; b : in bracket; nq : out natural32 ) is
 

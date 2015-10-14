@@ -241,12 +241,16 @@ procedure ts_flagcond is
     ind : integer32 := 0;
     sys : Poly_Sys(1..integer32(nq));
     ans : character;
+    cnteffeqs : natural32;
 
   begin
     put_line("The symbolic form of the plane : "); put(xpm);
     Explain_Equations(natural32(n),b,nq);
     put("We have "); put(nq,1); put(" equations in ");
     put(nv,1); put_line(" variables.");
+    cnteffeqs := Number_of_NotAbove(natural32(n),b);
+    put("Number of equations in efficient representation : ");
+    put(cnteffeqs,1); put_line(".");
     put("Continue to compute the flag minors ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then

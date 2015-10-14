@@ -42,6 +42,21 @@ package Symbolic_Schubert_Conditions is
   --   by a general flag in n-space.  The k-bracket lists the
   --   dimensions of the spaces defined by the flag.
 
+  generic
+    with procedure Process ( c : in Bracket; continue : out boolean );
+  procedure Enumerate_NotAbove ( n : in natural32; b : in Bracket );
+
+  -- DESCRIPTION :
+  --   Enumerates all brackets c that are not (c <= b).
+  --   With each new bracket, the procedure Process is executed.
+  --   The enumeration stops when the execution of Process results
+  --   in the output parameter continue set to false.
+
+  function Number_of_NotAbove ( n : natural32; b : Bracket ) return natural32;
+
+  -- DESCRIPTION :
+  --   Returns the number of brackets that are not above b.
+
   procedure Explain_Equations
               ( n : in natural32; b : in Bracket; nq : out natural32 );
 

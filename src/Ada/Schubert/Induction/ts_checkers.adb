@@ -16,6 +16,7 @@ with Standard_Natural_Matrices_io;      use Standard_Natural_Matrices_io;
 with Brackets,Brackets_io;              use Brackets,Brackets_io;
 with Bracket_Monomials;                 use Bracket_Monomials;
 with Bracket_Monomials_io;              use Bracket_Monomials_io;
+with Symbolic_Schubert_Conditions;
 with Checker_Boards,Checker_Boards_io;  use Checker_Boards,Checker_Boards_io;
 with Checker_Moves;                     use Checker_Moves;
 with Checker_Posets,Checker_Posets_io;  use Checker_Posets,Checker_Posets_io;
@@ -1001,6 +1002,53 @@ procedure ts_checkers is
     end loop;
   end Random_Intersection_Problem;
 
+  procedure NotAbove ( k,n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Checks for brackets not above a given bracket.
+
+    use Symbolic_Schubert_Conditions;
+
+    alpha,beta : Bracket(1..k);
+    ans : character;
+    cnt : natural32 := 0;
+
+    procedure Write_and_Count ( b : in Bracket; c : out boolean ) is
+
+    -- DESCRIPTION :
+    --   Increases the global counter cnt, prints the counter
+    --   and the new bracket in the instantiation of Process.
+
+    begin
+      cnt := cnt + 1;
+      put(cnt,2); put(" : "); put(b); new_line;
+      c := true;
+    end Write_and_Count;
+    procedure Enum is new Enumerate_NotAbove(Write_and_Count);
+
+  begin
+    put("Reading two ");
+    put(k,1); put(" brackets of ");
+    put(n,1); put_line(" elements ...");
+    put("Give alpha : "); get(alpha);
+    put("Give beta : "); get(beta);
+    put(alpha); put(" <= "); put(beta);
+    if alpha <= beta
+     then put_line(" true");
+     else put_line(" false");
+    end if;
+    new_line;
+    put("Number of bracket not above : ");
+    put(Number_of_NotAbove(natural32(n),alpha),1);
+    put_line(".");
+    put("Enumerate all brackets not above ");
+    put(alpha); put(" ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Enum(natural32(n),alpha);
+    end if;
+  end NotAbove;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -1026,15 +1074,16 @@ procedure ts_checkers is
     put_line("  8. enumerate all paths from leaves to root of poset");
     put_line("  9. group black checkers into four zones");
     put_line("  A. generate a random intersection problem");
-    put("Type 1, 2, 3, 4, 5, 6, 7, 8, 9, or A to make a choice : ");
-    Ask_Alternative(ans,"123456789A");
+    put_line("  B. check for brackets not above a given bracket");
+    put("Type 1, 2, 3, 4, 5, 6, 7, 8, 9, A, or B to make a choice : ");
+    Ask_Alternative(ans,"123456789AB");
     new_line;
     put("Give n (dimension of ambient space) : "); get(n);
     case ans is
       when '1' => Interactive_Test(n);
       when '2' => Specialization_Order(n);
       when '3' => Show_All_Moves(natural32(n));
-      when '4' | '5' | '6' | '8' | '9' | 'A' =>
+      when '4' | '5' | '6' | '8' | '9' | 'A' | 'B' =>
         put("Give k (dimension of subspace) : "); get(k);
         case ans is
           when '4' => Test_White_Moves(k,n);
@@ -1043,6 +1092,7 @@ procedure ts_checkers is
           when '8' => Enumerate_Paths_in_Poset(k,n);
           when '9' => Group_Black_Checkers(k,n);
           when 'A' => Random_Intersection_Problem(k,n);
+          when 'B' => NotAbove(k,n);
           when others => null;
         end case;
       when '7' => Resolve_Intersection_Condition(n);

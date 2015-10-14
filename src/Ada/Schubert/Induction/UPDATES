@@ -1,3 +1,7 @@
+Wed 14 Oct 2015 : extended symbolic_schubert_conditions with a procedure
+  and a function to enumerate and count all brackets not above a bracket,
+  tested in ts_checkers and ts_flagcond.
+
 Tue 13 Oct 2015 : drivers_for_schubert_condition changed so the user can
   enter values for the generic flags.
 
