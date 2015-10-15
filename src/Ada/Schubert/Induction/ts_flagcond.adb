@@ -445,10 +445,10 @@ procedure ts_flagcond is
       -- pivot is at x(b(j),j), make zeroes at the right of pivot
       for k in j+1..x'last(2) loop
         fac := x(integer32(b(j)),k);
-        for i in 1..integer32(b(j))-1 loop
+        for i in 1..integer32(b(j)) loop
           x(i,k) := x(i,k) - fac*x(i,j);
         end loop;
-        x(integer32(b(j)),k) := Create(0.0);
+       -- x(integer32(b(j)),k) := Create(0.0);
       end loop;
     end loop;
   end Eliminate_Pivots;
@@ -633,8 +633,8 @@ procedure ts_flagcond is
   begin
     for k in reverse A'first(2)+1..A'last(2) loop
       -- add multiple of k-th column to previous columns
-      rnd := Standard_Random_Numbers.Random1;
       for j in A'first(2)..k-1 loop
+        rnd := Standard_Random_Numbers.Random1;
         for i in A'range(1) loop
           A(i,j) := A(i,j) + rnd*A(i,k);
         end loop;
@@ -653,11 +653,15 @@ procedure ts_flagcond is
     nq : integer32;
     flag : Standard_Complex_Matrices.Matrix(1..n,1..n)
          := Random_Matrix(natural32(n),natural32(n));
+    trans : Standard_Complex_Matrices.Matrix(1..n,1..n)
+          := Random_Matrix(natural32(n),natural32(n));
     locmap : Standard_Natural_Matrices.Matrix(1..n,1..k);
     xpm : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
     x : Standard_Complex_Matrices.Matrix(1..n,1..k);
     nv : natural32;
     ans : character;
+
+    use Standard_Complex_Matrices;
 
   begin
     new_line;
@@ -671,12 +675,14 @@ procedure ts_flagcond is
     nq := integer32(Number_of_NotAbove(natural32(n),lambda));
     put("The number of equations equals "); put(nq,1); put_line(".");
     put("The number of variables equals "); put(nv,1); put_line(".");
-    Truncate_Triangular_Part(flag); -- to fix localization map
+    Truncate_Triangular_Part(flag);  -- to fix localization map
+    Truncate_Triangular_Part(trans); -- upper triangular to multiply flag with
     x := Generate_Point(n,k,lambda,flag);
     Divide_Pivots(x,lambda);
     Eliminate_Pivots(x,lambda);
     put_line("The solution plane : "); put(x,3);
-    Add_Random_Last_Columns(flag);   -- so no longer upper triangular
+   -- Add_Random_Last_Columns(flag);   -- so no longer upper triangular
+    flag := flag*trans;
    -- Explain_Equations(natural32(n),lambda,natural32(nq));
     declare
       p : constant Poly_Sys(1..nq)
