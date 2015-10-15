@@ -439,6 +439,7 @@ package body Drivers_for_Schubert_Induction is
        := Identity_Permutation(natural32(n));
     ps : Poset;
     report : boolean;
+    minrep : boolean := true;
     timer : Timing_Widget;
 
   begin
@@ -449,7 +450,7 @@ package body Drivers_for_Schubert_Induction is
     flags := Random_Flags(n,cnds'last);
     tstart(timer);
     Moving_Flag_Continuation.Track_All_Paths_in_Poset
-      (file,n,k,ps,cnds.all,flags,tol,sols);
+      (file,n,k,ps,minrep,cnds.all,flags,tol,sols);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"tracking all paths");
@@ -826,7 +827,7 @@ package body Drivers_for_Schubert_Induction is
 
     use Intersection_Posets;
 
-    monitor,report : boolean;
+    monitor,report,minrep : boolean;
     ans : character;
     nbc : constant integer32 := cnd'last;
     ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
@@ -867,9 +868,13 @@ package body Drivers_for_Schubert_Induction is
       & " in each checker game ? (y/n) ");
     Ask_Yes_or_No(ans);
     monitor := (ans = 'y');
+    new_line;
+    put("Use a more efficient problem formulation ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    minrep := (ans = 'y');
     Moving_Flag_Continuation.Set_Parameters(file,report);
     tstart(timer);
-    Resolve(file,monitor,report,n,k,tol,ips,sps,conds,flags,sols);
+    Resolve(file,monitor,report,n,k,tol,ips,sps,minrep,conds,flags,sols);
     tstop(timer);
     Write_Results(file,n,k,q,rows,cols,link2conds,flags,sols,fsys);
     new_line(file);

@@ -305,6 +305,7 @@ package body Resolve_Schubert_Problems is
                 pl : in Poset_List; snd : in Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Solution_Poset;
+                minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat ) is
 
@@ -378,7 +379,7 @@ package body Resolve_Schubert_Problems is
             put(file,"number of flags = ");
             put(file,nbflags,1); put_line(file,".");
             Track_All_Paths_in_Poset
-              (file,n,k,node.ps,childconds,
+              (file,n,k,node.ps,childconds,minrep,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -408,6 +409,7 @@ package body Resolve_Schubert_Problems is
                 pl : in Poset_List; snd : in Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Solution_Poset;
+                minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat ) is
 
@@ -457,7 +459,7 @@ package body Resolve_Schubert_Problems is
             nbflags : constant integer32 := sps.m - level;
           begin
             Track_All_Paths_in_Poset
-              (n,k,node.ps,childconds,
+              (n,k,node.ps,childconds,minrep,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -516,6 +518,7 @@ package body Resolve_Schubert_Problems is
                 n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out Solution_Poset;
+                minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
                 sols : out Solution_List ) is
@@ -569,19 +572,21 @@ package body Resolve_Schubert_Problems is
           if extopt or repcon then
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
-                (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,conds,flags);
+                (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                 minrep,conds,flags);
             else
               Connect_Checker_Posets_to_Track
-                (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,conds,
-                 workf.all);
+                (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                 minrep,conds,workf.all);
             end if;
           else
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
-                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,conds,flags);
+                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,minrep,conds,flags);
             else
               Connect_Checker_Posets_to_Track
-                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,conds,workf.all);
+                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                 minrep,conds,workf.all);
             end if;
           end if;
         end if;

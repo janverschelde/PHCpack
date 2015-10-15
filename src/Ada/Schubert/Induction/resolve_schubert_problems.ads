@@ -116,6 +116,7 @@ package Resolve_Schubert_Problems is
                 pl : in Poset_List; snd : in Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Solution_Poset;
+                minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat );
   procedure Connect_Checker_Posets_to_Track
@@ -124,6 +125,7 @@ package Resolve_Schubert_Problems is
                 pl : in Poset_List; snd : in Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Solution_Poset;
+                minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat );
 
@@ -141,6 +143,7 @@ package Resolve_Schubert_Problems is
   --   snd      solution node that contains the poset of the child;
   --   tmfo     transformation for use at start solution if not null;
   --   sps      solution poset constructed up to the proper level;
+  --   minrep   to use a more efficient problem formulation;
   --   conds    conditions on the current fixed flags;
   --   flags    current fixed flags.
 
@@ -175,6 +178,7 @@ package Resolve_Schubert_Problems is
                 n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out Solution_Poset;
+                minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
                 sols : out Solution_List );
@@ -200,6 +204,7 @@ package Resolve_Schubert_Problems is
   --   tol      tolerance on residual to decide failure in checker games;
   --   ips      an intersection poset built to resolve Schubert conditions;
   --   sps      an initialized solution poset corresponding to ips;
+  --   minrep   tu use a more efficient problem formulation;
   --   conds    intersection conditions on the fixed flags;
   --   flags    generic complex matrices that represented nested linear
   --            space for use in the homotopies.

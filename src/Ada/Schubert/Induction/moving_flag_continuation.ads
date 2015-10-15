@@ -187,6 +187,7 @@ package Moving_Flag_Continuation is
   procedure Verify_Intersection_Conditions
               ( file : in file_type; n,k : in integer32;
                 q,rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -203,6 +204,7 @@ package Moving_Flag_Continuation is
   --   q        parent permutation in the poset, used for the localization;
   --   rows     position of the rows of the white checkers;
   --   cols     position of the columns of the white checkers;
+  --   minrep   use a more efficient representation for the Schubert problem;
   --   cond     specifications for the intersection conditions;
   --   mf       coordinates for the moving flag;
   --   vf       coordinates for the input flags;
@@ -211,6 +213,7 @@ package Moving_Flag_Continuation is
   procedure Verify_Intersection_Conditions
               ( file : in file_type; n,k : in integer32;
                 q,rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -228,6 +231,8 @@ package Moving_Flag_Continuation is
   --   q        parent permutation in the poset, used for the localization;
   --   rows     position of the rows of the white checkers;
   --   cols     position of the columns of the white checkers;
+  --   minrep   if true, then use the more efficient representation
+  --            for the Schubert problems;
   --   cond     specifications for the intersection conditions;
   --   mf       coordinates for the moving flag;
   --   vf       coordinates for the input flags;
@@ -249,6 +254,7 @@ package Moving_Flag_Continuation is
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -270,6 +276,7 @@ package Moving_Flag_Continuation is
   --   qc       position of the columns of the white checkers with q;
   --   pr       position of the rows of the white checkers with p;
   --   pc       position of the columns of the white checkers with p;
+  --   minrep   to use the more efficient representation for the problem;
   --   cond     intersection conditions for the general fixed flags;
   --   mf       coordinates of the moving flag;
   --   vf       coordinates of general flags to keep fixed;
@@ -289,6 +296,7 @@ package Moving_Flag_Continuation is
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -301,7 +309,7 @@ package Moving_Flag_Continuation is
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics,
-  --            if omitted, then there is no output;
+  --            if omitted, then there is no output and no checks either;
   --   n        dimension of the ambient space, number of black checkers;
   --   k        dimension of the plane, number of white checkers;
   --   ctr      index of the critical row;
@@ -312,6 +320,7 @@ package Moving_Flag_Continuation is
   --   qc       position of the columns of the white checkers with q;
   --   pr       position of the rows of the white checkers with p;
   --   pc       position of the columns of the white checkers with p;
+  --   minrep   to use a more efficient representation of the problem;
   --   cond     intersection conditions for the general fixed flags;
   --   mf       coordinates of the moving flag;
   --   vf       coordinates of general flags to keep fixed;
@@ -325,6 +334,7 @@ package Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
@@ -347,6 +357,7 @@ package Moving_Flag_Continuation is
   --   qc       position of the columns of the white checkers with q;
   --   pr       position of the rows of the white checkers with p;
   --   pc       position of the columns of the white checkers with p;
+  --   minrep   to use a more efficient representation for the problem;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
   --   mf       the new moving flag at the target;
@@ -361,6 +372,7 @@ package Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
@@ -369,6 +381,7 @@ package Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
@@ -391,6 +404,8 @@ package Moving_Flag_Continuation is
   --   qc       position of the columns of the white checkers with q;
   --   pr       position of the rows of the white checkers with p;
   --   pc       position of the columns of the white checkers with p;
+  --   minrep   to use a more efficient representation for the problem,
+  --            only for checking with intermediate output;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
   --   mf       the new moving flag at the target;
@@ -405,6 +420,7 @@ package Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -427,6 +443,7 @@ package Moving_Flag_Continuation is
   --   qc       position of the columns of the white checkers with q;
   --   pr       position of the rows of the white checkers with p;
   --   pc       position of the columns of the white checkers with p;
+  --   minrep   to use a more efficient representation for the problem;
   --   cond     intersection conditions for the general fixed flags;
    --  mf       coordinates of the moving flag;
   --   start_mf is the moving flag at the start of the homotopy;
@@ -441,6 +458,7 @@ package Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -449,6 +467,7 @@ package Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -472,8 +491,9 @@ package Moving_Flag_Continuation is
   --   qc       position of the columns of the white checkers with q;
   --   pr       position of the rows of the white checkers with p;
   --   pc       position of the columns of the white checkers with p;
+  --   minrep   to use a more efficient representation for the problem;
   --   cond     intersection conditions for the general fixed flags;
-   --  mf       coordinates of the moving flag;
+  --   mf       coordinates of the moving flag;
   --   start_mf is the moving flag at the start of the homotopy;
   --   vf       coordinates of general flags to keep fixed;
   --   sols     start solutions for the homotopy;
@@ -486,6 +506,7 @@ package Moving_Flag_Continuation is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
@@ -503,6 +524,7 @@ package Moving_Flag_Continuation is
   --   ps       checker poset for one game;
   --   path     path of nodes in the poset;
   --   count    number of the path;
+  --   minrep   to use a more efficient problem formulation;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
   --   mf       coordinates of the moving flag,
@@ -518,6 +540,7 @@ package Moving_Flag_Continuation is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
@@ -535,6 +558,7 @@ package Moving_Flag_Continuation is
   --   ps       checker poset for one game;
   --   path     path of nodes in the poset;
   --   count    number of the path;
+  --   minrep   to use a more efficient problem formulation;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
   --   mf       coordinates of the moving flag,
@@ -551,6 +575,7 @@ package Moving_Flag_Continuation is
 
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float; sols : out Solution_List );
@@ -564,6 +589,7 @@ package Moving_Flag_Continuation is
   --   n        dimension of the ambient space, number of black checkers;
   --   k        dimension of the plane, number of white checkers;
   --   ps       checker poset for one game;
+  --   minrep   to use a more efficient problem formulation;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
   --   tol      tolerance on residuals to decide failure.
@@ -574,6 +600,7 @@ package Moving_Flag_Continuation is
   procedure Track_All_Paths_in_Poset
               ( n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -581,6 +608,7 @@ package Moving_Flag_Continuation is
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -599,6 +627,7 @@ package Moving_Flag_Continuation is
   --   ps       checker poset for one game;
   --   child    conditions on the child for which the start solutions
   --            are provided and which should match leaves of ps;
+  --   minrep   to use a more efficient problem formulation;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
   --   start    contains solutions of the previous level, transformed

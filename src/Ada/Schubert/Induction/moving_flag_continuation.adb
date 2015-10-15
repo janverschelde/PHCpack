@@ -524,6 +524,7 @@ package body Moving_Flag_Continuation is
   procedure Verify_Intersection_Conditions
               ( file : in file_type; n,k : in integer32;
                 q,rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -542,7 +543,10 @@ package body Moving_Flag_Continuation is
     Matrix_Indeterminates.Initialize_Symbols(dim,locmap);
    -- note: p and parameters mf and nf needed for this call ...
    -- Flag_Conditions(file,n,k,q,p,rows,cols,cond,vf,mf,nf,f);
-    Flag_Conditions(n,k,q,rows,cols,cond,mf,vf,f);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,q,rows,cols,cond,mf,vf,f);
+     else Flag_Conditions(n,k,q,rows,cols,cond,mf,vf,f);
+    end if;
     put(file,"At q = "); put(file,q);
     put(file,"  rows = "); put(file,rows);
     put(file,"  cols = "); put(file,cols); new_line(file);
@@ -574,6 +578,7 @@ package body Moving_Flag_Continuation is
   procedure Verify_Intersection_Conditions
               ( file : in file_type; n,k : in integer32;
                 q,rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -595,7 +600,10 @@ package body Moving_Flag_Continuation is
     Matrix_Indeterminates.Initialize_Symbols(dim,locmap);
    -- note: p and parameters mf and nf needed for this call ...
    -- Flag_Conditions(file,n,k,q,p,rows,cols,cond,vf,mf,nf,f);
-    Flag_Conditions(n,k,q,rows,cols,cond,mf,vf,f);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,q,rows,cols,cond,mf,vf,f);
+     else Flag_Conditions(n,k,q,rows,cols,cond,mf,vf,f);
+    end if;
     put(file,"At q = "); put(file,q);
     put(file,"  rows = "); put(file,rows);
     put(file,"  cols = "); put(file,cols); new_line(file);
@@ -641,6 +649,7 @@ package body Moving_Flag_Continuation is
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -655,7 +664,10 @@ package body Moving_Flag_Continuation is
   begin
     fail := false;
     if ind = 0 then
-      Flag_Conditions(n,k,q,qr,qc,cond,vf,gh);
+      if minrep
+       then Minimal_Flag_Conditions(n,k,q,qr,qc,cond,vf,gh);
+       else Flag_Conditions(n,k,q,qr,qc,cond,vf,gh);
+      end if;
       First_Solution(gh.all,fail,x,res);
       put_line(file,"The first solution :"); put_line(file,x);
       put(file,"Residual of first solution : "); put(file,res,3);
@@ -678,7 +690,7 @@ package body Moving_Flag_Continuation is
       Checker_Homotopies.Trivial_Stay_Coordinates
         (file,n,k,ctr,q,p,qr,qc,pr,pc,ls.v);
       put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,ls.v);
+      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
     end if;
     Clear(gh);
   end Trivial_Stay;
@@ -686,6 +698,7 @@ package body Moving_Flag_Continuation is
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -699,7 +712,8 @@ package body Moving_Flag_Continuation is
     Checker_Homotopies.Trivial_Stay_Coordinates
       (file,n,k,ctr,q,p,qr,qc,pr,pc,sols);
     put_line(file,"Verifying after coordinate changes ...");
-    Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,sols,tol,fail);
+    Verify_Intersection_Conditions
+      (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
   end Trivial_Stay;
 
   procedure Trivial_Stay
@@ -718,6 +732,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
@@ -744,7 +759,10 @@ package body Moving_Flag_Continuation is
     xpm := Moving_Flag(start_mf,xp);
     put_line(file,"The moving coordinates after multiplication by M :");
     put(file,xpm);
-    Flag_Conditions(n,k,xpm,cond,vf,gh);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
     if ind = 0
      then Track_First_Move(file,dim,gh.all,tol,ls,fail);
      else Track_Next_Move(file,dim,gh.all,tol,ls,fail);
@@ -755,7 +773,7 @@ package body Moving_Flag_Continuation is
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (file,n,k,ctr,q,qr,qc,mf,xpm,ls.v);
       put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,ls.v);
+      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
     end if;
     Standard_Complex_Poly_Matrices.Clear(xp);
     Standard_Complex_Poly_Matrices.Clear(xpm);
@@ -767,6 +785,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
@@ -793,7 +812,10 @@ package body Moving_Flag_Continuation is
     xpm := Moving_Flag(start_mf,xp);
     put_line(file,"The moving coordinates after multiplication by M :");
     put(file,xpm);
-    Flag_Conditions(n,k,xpm,cond,vf,gh);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
     Track_Next_Move(file,dim,gh.all,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -802,7 +824,7 @@ package body Moving_Flag_Continuation is
         (file,n,k,ctr,q,qr,qc,mf,xpm,sols);
       put_line(file,"Verifying after coordinate changes ...");
       Verify_Intersection_Conditions
-        (file,n,k,q,qr,qc,cond,mf,vf,sols,tol,fail);
+        (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
     end if;
     Standard_Complex_Poly_Matrices.Clear(xp);
     Standard_Complex_Poly_Matrices.Clear(xpm);
@@ -814,6 +836,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
@@ -832,7 +855,10 @@ package body Moving_Flag_Continuation is
   begin
     fail := true;
     xpm := Moving_Flag(start_mf,xp);
-    Flag_Conditions(n,k,xpm,cond,vf,gh);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
     Track_Next_Move(dim,gh.all,tol,sols,fail);
     if not fail then
       Checker_Homotopies.Homotopy_Stay_Coordinates
@@ -848,6 +874,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -873,7 +900,10 @@ package body Moving_Flag_Continuation is
     put_line(file,"The moving coordinates after multiplication by M :");
     put(file,xpm);
     fail := true;
-    Flag_Conditions(n,k,xpm,cond,vf,gh);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
     if ind = 0
      then Track_First_Move(file,dim,gh.all,tol,ls,fail);
      else Track_Next_Move(file,dim,gh.all,tol,ls,fail);
@@ -888,7 +918,7 @@ package body Moving_Flag_Continuation is
               (file,n,k,ctr,s,q,qr,qc,mf,xpm,ls.v);
       end if;
       put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions(file,n,k,q,qr,qc,cond,mf,vf,ls.v);
+      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
     end if;
     Standard_Complex_Poly_Systems.Clear(gh);
     Standard_Complex_Poly_Matrices.Clear(xp);
@@ -900,6 +930,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -925,7 +956,10 @@ package body Moving_Flag_Continuation is
     put_line(file,"The moving coordinates after multiplication by M :");
     put(file,xpm);
     fail := true;
-    Flag_Conditions(n,k,xpm,cond,vf,gh);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
     Track_Next_Move(file,dim,gh.all,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -938,7 +972,7 @@ package body Moving_Flag_Continuation is
       end if;
       put_line(file,"Verifying after coordinate changes ...");
       Verify_Intersection_Conditions
-        (file,n,k,q,qr,qc,cond,mf,vf,sols,tol,fail);
+        (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
     end if;
     Standard_Complex_Poly_Systems.Clear(gh);
     Standard_Complex_Poly_Matrices.Clear(xp);
@@ -950,6 +984,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -971,7 +1006,10 @@ package body Moving_Flag_Continuation is
   begin
     xpm := Moving_Flag(start_mf,xp);
     fail := true;
-    Flag_Conditions(n,k,xpm,cond,vf,gh);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
     Track_Next_Move(dim,gh.all,tol,sols,fail);
     if not fail then
       if big_r > ctr + 1
@@ -991,6 +1029,7 @@ package body Moving_Flag_Continuation is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
@@ -1054,13 +1093,13 @@ package body Moving_Flag_Continuation is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,ls,fail);
+            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,mf,vf,ls,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
+          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
                         vf,mf,start_mf,ls,tol,fail);
         else -- homtp = 2
           Moving_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
+          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
                         mf,start_mf,vf,ls,tol,fail);
         end if;
         if fail then
@@ -1075,6 +1114,7 @@ package body Moving_Flag_Continuation is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
@@ -1148,13 +1188,13 @@ package body Moving_Flag_Continuation is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,tol,fail);
+            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,mf,vf,sols,tol,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
+          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
                         vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
           Moving_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
+          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
                         mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
@@ -1170,6 +1210,7 @@ package body Moving_Flag_Continuation is
   procedure Track_Path_in_Poset
               ( n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
@@ -1218,10 +1259,10 @@ package body Moving_Flag_Continuation is
           Trivial_Stay
             (n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,mf,vf,sols,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
+          Stay_Homotopy(n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
                         vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
-          Swap_Homotopy(n,k,ctr,ind,q,p,qr,qc,pr,pc,cond,
+          Swap_Homotopy(n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
                         mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
@@ -1234,6 +1275,7 @@ package body Moving_Flag_Continuation is
 
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float; sols : out Solution_List ) is
@@ -1249,7 +1291,7 @@ package body Moving_Flag_Continuation is
 
     begin
       cnt := cnt + 1;
-      Track_Path_in_Poset(file,n,k,ps,nds,cnt,cond,vf,mf,ls,tol,fail);
+      Track_Path_in_Poset(file,n,k,ps,nds,cnt,minrep,cond,vf,mf,ls,tol,fail);
       if not fail
        then Append(sols,sols_last,ls.all);
       end if;
@@ -1264,6 +1306,7 @@ package body Moving_Flag_Continuation is
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -1291,7 +1334,7 @@ package body Moving_Flag_Continuation is
       else
         put(file," match at path "); put(file,cnt,1); new_line(file);
         Track_Path_in_Poset
-          (file,n,k,ps,nds,cnt,cond,vf,mf,start,pp_sols,tol,fail);
+          (file,n,k,ps,nds,cnt,minrep,cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
@@ -1307,6 +1350,7 @@ package body Moving_Flag_Continuation is
   procedure Track_All_Paths_in_Poset
               ( n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -1325,7 +1369,8 @@ package body Moving_Flag_Continuation is
     begin
       cnt := cnt + 1;
       if Standard_Natural_Vectors.Equal(leaf,child) then
-        Track_Path_in_Poset(n,k,ps,nds,cnt,cond,vf,mf,start,pp_sols,tol,fail);
+        Track_Path_in_Poset
+          (n,k,ps,nds,cnt,minrep,cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
