@@ -320,7 +320,7 @@ procedure ts_lrhom is
     sols : Solution_List;
     tol : constant double_float := 1.0E-6;
     ans : character;
-    monitor_games,report : boolean;
+    monitor_games,report,minrep : boolean;
     timer : Timing_Widget;
 
   begin
@@ -333,6 +333,10 @@ procedure ts_lrhom is
     Ask_Yes_or_No(ans);
     new_line;
     monitor_games := (ans = 'y');
+    new_line;
+    put("Use an efficient problem formulation ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    minrep := (ans = 'y');
     top_roco := Final_Sum(ips);
     put("The formal root count : "); put(top_roco); new_line;
     put_line("... running the root counting from the bottom up ...");
@@ -353,9 +357,9 @@ procedure ts_lrhom is
    -- new_line;
     Moving_Flag_Continuation.Set_Parameters(file,report);
     tstart(timer);
-    Resolve(file,monitor_games,report,n,k,tol,ips,sps,conds,flags,sols);
+    Resolve(file,monitor_games,report,n,k,tol,ips,sps,minrep,conds,flags,sols);
     tstop(timer);
-    Write_Results(file,n,k,q,rows,cols,link2conds,flags,sols,fsys);
+    Write_Results(file,n,k,q,rows,cols,minrep,link2conds,flags,sols,fsys);
     new_line(file);
     print_times(file,timer,"resolving a Schubert problem");
   end Resolve_Schubert_Problem;
