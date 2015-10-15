@@ -26,8 +26,9 @@ with Checker_Moves;                      use Checker_Moves;
 with Checker_Posets,Checker_Posets_io;   use Checker_Posets,Checker_Posets_io;
 with Checker_Localization_Patterns;      use Checker_Localization_Patterns;
 with Intersection_Posets_io;             use Intersection_Posets_io;
-with Moving_Flag_Homotopies;
+with Wrapped_Path_Trackers;
 with Moving_Flag_Continuation;
+with Moving_Flag_Homotopies;
 with Resolve_Schubert_Problems;          use Resolve_Schubert_Problems;
 with Write_Seed_Number;
 with Greeting_Banners;
@@ -452,7 +453,7 @@ package body Drivers_for_Schubert_Induction is
 
   begin
     if tune
-     then Moving_Flag_Continuation.Set_Parameters(file,report);
+     then Wrapped_Path_Trackers.Set_Parameters(file,report);
     end if;
     ps := Create(n,rows,cols);
     flags := Random_Flags(n,cnds'last);
@@ -892,7 +893,7 @@ package body Drivers_for_Schubert_Induction is
      then put_line(file,"An efficient problem formulation will be used.");
      else put_line(file,"A less efficient problem formulation will be used.");
     end if;
-    Moving_Flag_Continuation.Set_Parameters(file,report);
+    Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     Resolve(file,monitor,report,n,k,tol,ips,sps,minrep,conds,flags,sols);
     tstop(timer);

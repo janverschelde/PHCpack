@@ -110,6 +110,7 @@ package Drivers_for_Schubert_Induction is
   procedure Write_Results
               ( file : in file_type; n,k : in integer32;
                 q,rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 vfs : in Standard_Complex_VecMats.VecMat;
                 sols : in Solution_List; fsys : out Link_to_Poly_Sys );
@@ -124,6 +125,7 @@ package Drivers_for_Schubert_Induction is
   --   q        permutation defines the location of the black checkers;
   --   rows     row positions for white checkers
   --   cols     columns of white checkers of resolved condition;
+  --   minrep   if an efficient problem was use to solve the problem;
   --   cnds     conditions kept fixed during flag continuation;
   --   vfs      fixed flags, vfs'range = cnds'range;
   --   sols     solution k-planes.
@@ -164,6 +166,7 @@ package Drivers_for_Schubert_Induction is
   procedure Reporting_Moving_Flag_Continuation
               ( n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec );
 
   -- DESCRIPTION :
@@ -177,12 +180,14 @@ package Drivers_for_Schubert_Induction is
   --   tol      tolerance on the residual of the original problem;
   --   rows     row positions for white checkers;
   --   cols     columns of white checkers of resolved condition;
+  --   minrep   if an efficient problem formulation is to be used;
   --   cnds     conditions kept fixed during flag continuation.
 
   procedure Reporting_Moving_Flag_Continuation
               ( file : in file_type;
                 n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec );
 
   -- DESCRIPTION :
@@ -197,12 +202,14 @@ package Drivers_for_Schubert_Induction is
   --   tol      tolerance on the residual of the original problem;
   --   rows     row positions for white checkers;
   --   cols     columns of white checkers of resolved condition;
+  --   minrep   if an efficient problem formulation is to be used;
   --   cnds     conditions kept fixed during flag continuation.
 
   procedure Reporting_Moving_Flag_Continuation
               ( file : in file_type; tune : in boolean;
                 n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 sols : out Solution_list; fsys : out Link_to_Poly_Sys;
                 flags : out Standard_Complex_VecMats.VecMat );
@@ -220,6 +227,7 @@ package Drivers_for_Schubert_Induction is
   --   k        dimension of the solution planes;
   --   rows     row positions for white checkers
   --   cols     columns of white checkers of resolved condition;
+  --   minrep   if an efficient problem formulation is to be used;
   --   cnds     conditions kept fixed during flag continuation.
 
   -- ON RETURN :

@@ -6,6 +6,10 @@ Thu 15 Oct 2015 : moving_flag_continuation and resolve_schubrt_problems
   Update in ts_lrhom.adb for the extra option in resolve.
   Extended flag_transformations for double doubles and quad doubles,
   which required changes in moving_flag_homotopies, tested by ts_induce.
+  New package wrapped_path_trackers with code factored out of the package
+  moving_flag_continuation, for extension to double doubles and quad doubles.
+  This refactoring changed moving_flag_continuation and the body of
+  drivers_for_schubert_induction.
 
 Wed 14 Oct 2015 : extended symbolic_schubert_conditions with a procedure
   and a function to enumerate and count all brackets not above a bracket,

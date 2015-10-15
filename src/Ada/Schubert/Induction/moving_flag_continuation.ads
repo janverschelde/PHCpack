@@ -4,10 +4,13 @@ with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
 with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
 with Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
-with Standard_Complex_Poly_Systems;       use Standard_Complex_Poly_Systems;
-with Standard_Complex_Solutions;          use Standard_Complex_Solutions;
+with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
 with Checker_Posets;                      use Checker_Posets;
 with Intersection_Solution_Posets;        use Intersection_Solution_Posets;
 
@@ -18,69 +21,12 @@ package Moving_Flag_Continuation is
 --   Following the moving flag, path trackers compute solutions to a fixed
 --   general flag and a special flag.
 
-  procedure Set_Parameters ( file : in file_type; report : out boolean );
-
-  -- DESCRIPTION :
-  --   Interactive determination of the continuation and output parameters.
-  --   The values for the continuation parameters and output code are
-  --   written to the file.
-  --   The output parameter report is true if the output level was nonzero,
-  --   i.e.: if the path trackers are reporting.
-
-  procedure Call_Path_Trackers
-              ( n : in integer32; h : in Poly_Sys;
-                xt : in out Standard_Complex_Vectors.Vector;
-                sol : out Link_to_Solution ); 
-  procedure Call_Path_Trackers
-              ( file : in file_type; n : in integer32; h : in Poly_Sys;
-                xt : in out Standard_Complex_Vectors.Vector;
-                sol : out Link_to_Solution ); 
-
-  -- DESCRIPTION :
-  --   Tracks one path starting at the solution in xt,
-  --   as defined by the homotopy h.
-
-  -- ON ENTRY :
-  --   file     output file for intermediate results and diagnostics,
-  --            if omitted, then there is no intermediate output;
-  --   n        number of variables in the ambient space;
-  --   h        homotopy in n+1 variables;
-  --   xt       start solution with its last component equal to zero,
-  --            satisfies the homotopy h (upto tolerance).
-
-  -- ON RETURN :
-  --   xt       solution at the end of the path, tracked to the
-  --            last component of xt to be equal to one;
-  --   sol      standard representation of the solution.
-
-  procedure Call_Path_Trackers
-              ( n : in integer32; h : in Poly_Sys;
-                xtsols,sols : in out Solution_List );
-  procedure Call_Path_Trackers
-              ( file : in file_type; n : in integer32; h : in Poly_Sys;
-                xtsols,sols : in out Solution_List );
-
-  -- DESCRIPTION :
-  --   Tracks one path starting at the solution in xt,
-  --   as defined by the homotopy h.
-
-  -- ON ENTRY :
-  --   file     output file for intermediate results and diagnostics,
-  --            if omitted, then there is no intermediate output;
-  --   n        number of variables in the ambient space;
-  --   h        homotopy in n+1 variables;
-  --   xtsols   start solutions with their last component equal to zero,
-  --            satisfies the homotopy h (upto tolerance).
-
-  -- ON RETURN :
-  --   xtsols   solutions at the end of the path, tracked to the
-  --            last component of vectors in xtsols to be equal to one;
-  --   sols     standard representation of the solutions.
-
   procedure Track_First_Move
-              ( file : in file_type;
-                n : in integer32; h : in Poly_Sys; tol : in double_float;
-                sol : in out Link_to_Solution; fail : out boolean );
+              ( file : in file_type; n : in integer32;
+                h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                tol : in double_float;
+                sol : in out Standard_Complex_Solutions.Link_to_Solution;
+                fail : out boolean );
 
   -- DESCRIPTION :
   --   Given a homotopy with last variable (with index n+1) the 
@@ -101,9 +47,11 @@ package Moving_Flag_Continuation is
   --            or if the path tracker failed to reach a solution.
 
   procedure Track_Next_Move
-              ( file : in file_type;
-                n : in integer32; h : in Poly_Sys; tol : in double_float;
-                sol : in out Link_to_Solution; fail : out boolean );
+              ( file : in file_type; n : in integer32;
+                h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                tol : in double_float;
+                sol : in out Standard_Complex_Solutions.Link_to_Solution;
+                fail : out boolean );
 
   -- DESCRIPTION :
   --   Tracks a path for the next move in the checker poset,
@@ -122,12 +70,18 @@ package Moving_Flag_Continuation is
   --            or if the path tracker failed to reach a solution.
 
   procedure Track_Next_Move
-              ( n : in integer32; h : in Poly_Sys; tol : in double_float;
-                sols : in out Solution_List; fail : out boolean );
+              ( n : in integer32;
+                h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                tol : in double_float;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                fail : out boolean );
   procedure Track_Next_Move
               ( file : in file_type;
-                n : in integer32; h : in Poly_Sys; tol : in double_float;
-                sols : in out Solution_List; fail : out boolean );
+                n : in integer32;
+                h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                tol : in double_float;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                fail : out boolean );
 
   -- DESCRIPTION :
   --   Tracks a path for the next move in the checker poset,
@@ -153,14 +107,16 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,nf : in Standard_Complex_Matrices.Matrix;
-                h : out Link_to_Poly_Sys; dim : out integer32 );
+                h : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                dim : out integer32 );
   procedure Generalizing_Homotopy
               ( file : in file_type; n,k : in integer32;
                 q,p,rows,cols : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,nf : in Standard_Complex_Matrices.Matrix;
-                h : out Link_to_Poly_Sys; dim : out integer32 );
+                h : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                dim : out integer32 );
 
   -- DESCRIPTION :
   --   A generalizing homotopy to move the black checkers from p to q.
@@ -217,7 +173,7 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
-                sols : in Solution_List;
+                sols : in Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean );
 
   -- DESCRIPTION :
@@ -258,7 +214,8 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
-                ls : in out Link_to_Solution; fail : out boolean );
+                ls : in out Standard_Complex_Solutions.Link_to_Solution;
+                fail : out boolean );
 
   -- DESCRIPTION :
   --   In the trivial stay case instead of a homotopy,
@@ -292,7 +249,8 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
-                sols : in out Solution_List; fail : out boolean );
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                fail : out boolean );
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
@@ -300,7 +258,7 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
-                sols : in out Solution_List;
+                sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean );
 
   -- DESCRIPTION :
@@ -338,7 +296,7 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
-                ls : in out Link_to_Solution;
+                ls : in out Standard_Complex_Solutions.Link_to_Solution;
                 tol : in double_float; fail : out boolean );
 
   -- DESCRIPTION :
@@ -376,7 +334,7 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
-                sols : in out Solution_List;
+                sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean );
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
@@ -385,7 +343,7 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
-                sols : in out Solution_List;
+                sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean );
 
   -- DESCRIPTION :
@@ -424,7 +382,7 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
-                ls : in out Link_to_Solution;
+                ls : in out Standard_Complex_Solutions.Link_to_Solution;
                 tol : in double_float; fail : out boolean );
 
   -- DESCRIPTION :
@@ -462,7 +420,7 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
-                sols : in out Solution_List;
+                sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean );
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
@@ -471,7 +429,7 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
-                sols : in out Solution_List;
+                sols : in out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; fail : out boolean );
 
   -- DESCRIPTION :
@@ -510,7 +468,7 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
-                ls : in out Link_to_Solution;
+                ls : in out Standard_Complex_Solutions.Link_to_Solution;
                 tol : in double_float; unhappy : out boolean );
 
   -- DESCRIPTION :
@@ -544,7 +502,8 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
-                start : in Solution_List; sols : out Solution_List;
+                start : in Standard_Complex_Solutions.Solution_List;
+                sols : out Standard_Complex_Solutions.Solution_List;
                 tol : in double_float; unhappy : out boolean );
 
   -- DESCRIPTION :
@@ -578,7 +537,8 @@ package Moving_Flag_Continuation is
                 minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
-                tol : in double_float; sols : out Solution_List );
+                tol : in double_float;
+                sols : out Standard_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Tracks paths for one entire checker game in n-space,
@@ -604,7 +564,8 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
-                start : in Solution_List; sols : out Solution_List );
+                start : in Standard_Complex_Solutions.Solution_List;
+                sols : out Standard_Complex_Solutions.Solution_List );
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
@@ -612,7 +573,8 @@ package Moving_Flag_Continuation is
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
-                start : in Solution_List; sols : out Solution_List );
+                start : in Standard_Complex_Solutions.Solution_List;
+                sols : out Standard_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Tracks paths for one entire checker game in n-space,

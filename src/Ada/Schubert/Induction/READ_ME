@@ -15,12 +15,14 @@ checker_posets_io              : output of posets with moves in checker game
 intersection_posets            : combine posets for several conditions
 intersection_posets_io         : output of formal sums and equations
 ts_checkers                    : interactive test program
+-----------------------------------------------------------------------------
 moving_flag_homotopies         : defines homotopies in one checker game
 flag_transformations           : transforming pairs of flags
 ts_induce                      : interactive test program for homotopies
 numeric_schubert_conditions    : numerical evaluation of Schubert conditions
 symbolic_schubert_conditions   : symbolic definition of Schubert conditions
 remember_symbolic_minors       : remember table for symbolic minors
+wrapped_path_trackers          : calling path trackers on natural homotopy
 moving_flag_continuation       : trackers for moving flag homotopies
 ts_flagcond                    : test conditions imposed by bracket + flag
 intersection_solution_posets   : to store solutions at each node and level
