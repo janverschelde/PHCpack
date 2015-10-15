@@ -1,3 +1,6 @@
+Thu 15 Oct 2015 : extended evaluated_minors with functions in double double
+  and quad double precision.
+
 Wed 14 Oct 2015 : extended evaluated_minors with a Determinant function 
   of a matrix where the submatrix is defined by rows and columns brackets.
 
