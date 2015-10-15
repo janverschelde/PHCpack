@@ -237,6 +237,29 @@ package Moving_Flag_Homotopies is
   --   f       conditions of the flag on a k-plane in n-space
   --           meeting the input planes in vf.
 
+  procedure Minimal_Flag_Conditions
+             ( n,k : in integer32;
+               x : in Standard_Complex_Poly_Matrices.Matrix;
+               ic : in Standard_Natural_VecVecs.VecVec;
+               vf : in Standard_Complex_VecMats.VecMat;
+               f : out Link_to_Poly_Sys );
+
+  -- DESCRIPTION :
+  --   Returns in f the system of polynomial equations to express the
+  --   conditions inposed by the input planes on a k-plane in n-space x,
+  --   using a more efficient representation for the Schubert problem.
+
+  -- ON ENTRY :
+  --   n       dimension of the ambient space, number of black checkers;
+  --   k       dimension of the plane, number of white checkers;
+  --   x       represents a moving k-plane in n-space;
+  --   ic      intersection conditions for the fixed flags;
+  --   vf      coordinates of general flags to keep fixed.
+
+  -- ON RETURN :
+  --   f       conditions of the flag on a k-plane in n-space
+  --           meeting the input planes in vf.
+
   procedure Flag_Conditions
              ( n,k : in integer32;
                p,rows,cols : in Standard_Natural_Vectors.Vector;
@@ -248,6 +271,32 @@ package Moving_Flag_Homotopies is
   --   Returns in f the system of polynomial equations to express the
   --   conditions inposed by the input planes on a k-plane in n-space,
   --   for a degenerate moving flag, equal to the identity matrix.
+
+  -- ON ENTRY :
+  --   n       dimension of the ambient space, number of black checkers;
+  --   k       dimension of the plane, number of white checkers;
+  --   p       permutation of n numbers in the specializing poset;
+  --   rows    row positions of the white checkers;
+  --   cols    column position of the white checkers;
+  --   ic      intersection conditions for the fixed flags;
+  --   vf      coordinates of general flags to keep fixed.
+
+  -- ON RETURN :
+  --   f       conditions of the flag on a k-plane in n-space
+  --           meeting the input planes in vf.
+
+  procedure Minimal_Flag_Conditions
+             ( n,k : in integer32;
+               p,rows,cols : in Standard_Natural_Vectors.Vector;
+               ic : in Standard_Natural_VecVecs.VecVec;
+               vf : in Standard_Complex_VecMats.VecMat;
+               f : out Link_to_Poly_Sys );
+
+  -- DESCRIPTION :
+  --   Returns in f the system of polynomial equations to express the
+  --   conditions inposed by the input planes on a k-plane in n-space,
+  --   for a degenerate moving flag, equal to the identity matrix,
+  --   using a more efficient formulation for the Schubert problem.
 
   -- ON ENTRY :
   --   n       dimension of the ambient space, number of black checkers;
@@ -274,6 +323,35 @@ package Moving_Flag_Homotopies is
   --   Returns in f the system of polynomial equations to express the
   --   conditions inposed by the input planes on a k-plane in n-space,
   --   for a particular moving flag.
+
+  -- ON ENTRY :
+  --   n       dimension of the ambient space, number of black checkers;
+  --   k       dimension of the plane, number of white checkers;
+  --   p       permutation of n numbers in the specializing poset;
+  --   rows    row positions of the white checkers;
+  --   cols    column position of the white checkers;
+  --   ic      intersection conditions for the fixed flags;
+  --   mf      coordinates of the moving flag;
+  --   vf      coordinates of general flags to keep fixed.
+
+  -- ON RETURN :
+  --   f       conditions of the flag on a k-plane in n-space
+  --           meeting the input planes in vf, where the solution
+  --           plane x is multiplied by mf, as mf*x.
+
+  procedure Minimal_Flag_Conditions
+             ( n,k : in integer32;
+               p,rows,cols : in Standard_Natural_Vectors.Vector;
+               ic : in Standard_Natural_VecVecs.VecVec;
+               mf : in Standard_Complex_Matrices.Matrix;
+               vf : in Standard_Complex_VecMats.VecMat;
+               f : out Link_to_Poly_Sys );
+
+  -- DESCRIPTION :
+  --   Returns in f the system of polynomial equations to express the
+  --   conditions inposed by the input planes on a k-plane in n-space,
+  --   for a particular moving flag,
+  --   using a more efficient formulation for the Schubert problem.
 
   -- ON ENTRY :
   --   n       dimension of the ambient space, number of black checkers;

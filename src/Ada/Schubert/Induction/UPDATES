@@ -1,6 +1,8 @@
 Wed 14 Oct 2015 : extended symbolic_schubert_conditions with a procedure
   and a function to enumerate and count all brackets not above a bracket,
-  tested in ts_checkers and ts_flagcond.
+  tested in ts_checkers and ts_flagcond.  Added a minimal_expand to
+  numeric_schubert_conditions, for use in moving_flag_homotopies, and
+  tested by ts_flagcond.adb.
 
 Tue 13 Oct 2015 : drivers_for_schubert_condition changed so the user can
   enter values for the generic flags.

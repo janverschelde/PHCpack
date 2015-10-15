@@ -1,9 +1,12 @@
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_Matrices;
+with Standard_Complex_Vectors;
 with Bracket_Monomials;                 use Bracket_Monomials;
 with Bracket_Systems;                   use Bracket_Systems;
 with Straightening_Syzygies;
+with Evaluated_Minors;
+with Standard_Matrix_Inversion;
 with Symbolic_Schubert_Conditions;      use Symbolic_Schubert_Conditions;
 with Checker_Moves;
 with Checker_Localization_Patterns;
@@ -568,6 +571,56 @@ package body Numeric_Schubert_Conditions is
    -- Clear(fm);
     return res;
   end Expand;
+
+-- MINIMAL REPRESENTATION of Schubert Problems :
+
+  function Minimal_Expand
+             ( n,k,nq : integer32; lambda : Bracket;
+               X : Standard_Complex_Poly_Matrices.Matrix;
+               flag : Standard_Complex_Matrices.Matrix ) return Poly_Sys is
+
+    res : Poly_Sys(1..nq);
+    dim : constant natural32 := natural32(n);
+    ntk : constant natural32 := natural32(k);
+    nbm : constant natural32
+        := Remember_Symbolic_Minors.Number_of_Minors(dim,ntk);
+    rst : Symbolic_Minor_Table(integer32(nbm)) := Create(dim,ntk,X);
+    invflag : Standard_Complex_Matrices.Matrix(flag'range(1),flag'range(2))
+            := Standard_Matrix_Inversion.Inverse(flag);
+    cff : Standard_Complex_Vectors.Vector(rst.b'range);
+    idx : integer32 := 0;
+
+    procedure Expand_Condition ( b : in Bracket; cont : out boolean ) is
+
+    -- DESCRIPTION :
+    --   For a given bracket b that is not above lambda,
+    --   the coefficients are computed for the inverse flag invflag,
+    --   and one new polynomial is added to the result.
+
+      acc : Poly;
+
+    begin
+      for i in cff'range loop
+        cff(i) := Evaluated_Minors.Determinant(invflag,b,rst.b(i).all);
+      end loop;
+      idx := idx + 1;
+      res(idx) := Null_Poly;
+      for i in cff'range loop
+        acc := cff(i)*rst.p(i);
+        Add(res(idx),acc);
+        Clear(acc);
+      end loop;
+      cont := true;
+    end Expand_Condition;
+    procedure Enumerate is new Enumerate_NotAbove(Expand_Condition);
+
+  begin
+    Enumerate(dim,lambda);
+    Remember_Symbolic_Minors.Clear(rst);
+    return res;
+  end Minimal_Expand;
+
+-- WRAPPER :
 
   function Expanded_Polynomial_Equations 
              ( n,k : integer32; cond : Bracket;

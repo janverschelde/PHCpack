@@ -142,6 +142,28 @@ package Numeric_Schubert_Conditions is
   -- REQUIRED :
   --   The number of unknowns in all polynomial matrices is the same for all.
 
+-- MINIMAL REPRESENTATION of Schubert Problems :
+
+  function Minimal_Expand
+             ( n,k,nq : integer32; lambda : Bracket;
+               X : Standard_Complex_Poly_Matrices.Matrix;
+               flag : Standard_Complex_Matrices.Matrix ) return Poly_Sys;
+
+  -- DECRIPTION :
+  --   Expands all symbolic and numeric minors to return a polynomial
+  --   system of nq equations for the Schubert conditions in lambda on
+  --   a k-plane X in n-space meeting the given flag.
+  --   This uses a more efficient formulation of the Schubert problem.
+
+  -- ON ENTRY :
+  --   n       ambient dimension;
+  --   k       dimension of the solution plane;
+  --   nq      total number of equations, which must be computed with
+  --           Symbolic_Schubert_Conditions.Number_of_NotAbove(k,lambda);
+  --   lambda  conditions imposed by the flag;
+  --   X       matrix of indeterminates along some localization pattern;
+  --   flag    numerical values for the coordinates in the flag.
+
 -- WRAPPER FUNCTION :
 
   function Expanded_Polynomial_Equations 

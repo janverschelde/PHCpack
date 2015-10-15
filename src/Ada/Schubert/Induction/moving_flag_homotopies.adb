@@ -521,6 +521,31 @@ package body Moving_Flag_Homotopies is
     f := Concatenate(s);
   end Flag_Conditions;
 
+  procedure Minimal_Flag_Conditions
+             ( n,k : in integer32;
+               x : in Standard_Complex_Poly_Matrices.Matrix;
+               ic : in Standard_Natural_VecVecs.VecVec;
+               vf : in Standard_Complex_VecMats.VecMat;
+               f : out Link_to_Poly_Sys ) is
+
+    s : Array_of_Poly_Sys(ic'range);
+
+  begin
+    for i in ic'range loop
+      declare
+        c : constant Brackets.Bracket(1..k) := Brackets.Bracket(ic(i).all);
+        nq : constant integer32
+           := integer32(Symbolic_Schubert_Conditions.Number_of_NotAbove
+                          (natural32(n),c));
+        sc : constant Poly_Sys(1..nq)
+           := Numeric_Schubert_Conditions.Minimal_Expand(n,k,nq,c,x,vf(i).all);
+      begin
+        s(i) := new Poly_Sys'(Filter_Zero_Equations(sc));
+      end;
+    end loop;
+    f := Concatenate(s);
+  end Minimal_Flag_Conditions;
+
   procedure Flag_Conditions
              ( n,k : in integer32;
                p,rows,cols : in Standard_Natural_Vectors.Vector;
@@ -549,6 +574,35 @@ package body Moving_Flag_Homotopies is
     end loop;
     f := Concatenate(s);
   end Flag_Conditions;
+
+  procedure Minimal_Flag_Conditions
+             ( n,k : in integer32;
+               p,rows,cols : in Standard_Natural_Vectors.Vector;
+               ic : in Standard_Natural_VecVecs.VecVec;
+               vf : in Standard_Complex_VecMats.VecMat;
+               f : out Link_to_Poly_Sys ) is
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Column_Pattern(n,k,p,rows,cols);
+    x : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    s : Array_of_Poly_Sys(ic'range);
+
+  begin
+    x := Symbolic_Schubert_Conditions.Symbolic_Form_of_Plane(n,k,locmap);
+    for i in ic'range loop
+      declare
+        c : constant Brackets.Bracket(1..k) := Brackets.Bracket(ic(i).all);
+        nq : constant integer32
+           := integer32(Symbolic_Schubert_Conditions.Number_of_NotAbove
+                          (natural32(n),c));
+        sc : constant Poly_Sys(1..nq)
+           := Numeric_Schubert_Conditions.Minimal_Expand(n,k,nq,c,x,vf(i).all);
+      begin
+        s(i) := new Poly_Sys'(Filter_Zero_Equations(sc));
+      end;
+    end loop;
+    f := Concatenate(s);
+  end Minimal_Flag_Conditions;
 
   procedure Flag_Conditions
              ( n,k : in integer32;
@@ -580,6 +634,38 @@ package body Moving_Flag_Homotopies is
     end loop;
     f := Concatenate(s);
   end Flag_Conditions;
+
+  procedure Minimal_Flag_Conditions
+             ( n,k : in integer32;
+               p,rows,cols : in Standard_Natural_Vectors.Vector;
+               ic : in Standard_Natural_VecVecs.VecVec;
+               mf : in Standard_Complex_Matrices.Matrix;
+               vf : in Standard_Complex_VecMats.VecMat;
+               f : out Link_to_Poly_Sys ) is
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Column_Pattern(n,k,p,rows,cols);
+    x,mfx : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    s : Array_of_Poly_Sys(ic'range);
+
+  begin
+    x := Symbolic_Schubert_Conditions.Symbolic_Form_of_Plane(n,k,locmap);
+    mfx := Moving_Flag(mf,x);
+    for i in ic'range loop
+      declare
+        c : constant Brackets.Bracket(1..k) := Brackets.Bracket(ic(i).all);
+        nq : constant integer32
+           := integer32(Symbolic_Schubert_Conditions.Number_of_NotAbove
+                          (natural32(n),c));
+        sc : constant Poly_Sys(1..nq)
+           := Numeric_Schubert_Conditions.Minimal_Expand
+               (n,k,nq,c,mfx,vf(i).all);
+      begin
+        s(i) := new Poly_Sys'(Filter_Zero_Equations(sc));
+      end;
+    end loop;
+    f := Concatenate(s);
+  end Minimal_Flag_Conditions;
 
   procedure Flag_Conditions
              ( file: in file_type; n,k : in integer32;
@@ -627,6 +713,53 @@ package body Moving_Flag_Homotopies is
     end loop;
     f := Concatenate(s);
   end Flag_Conditions;
+
+  procedure Minimal_Flag_Conditions
+             ( file: in file_type; n,k : in integer32;
+               q,p,rows,cols : in Standard_Natural_Vectors.Vector;
+               ic : in Standard_Natural_VecVecs.VecVec;
+               vf : in Standard_Complex_VecMats.VecMat;
+               mf,nf : in Standard_Complex_Matrices.Matrix;
+               f : out Link_to_Poly_Sys ) is
+
+   -- fc : constant natural := Checker_Moves.Falling_Checker(p);
+   -- ac : constant natural := Checker_Moves.Ascending_Checker(p,fc);
+   -- t : constant Standard_Natural_Matrices.Matrix(1..n,1..n)
+   --   := Transformation(n,q(fc));
+   -- gamma : constant Complex_Number := Create(0.0); -- start solution !
+    nt : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+      -- := Numeric_Transformation(t,gamma);
+       := Identity(n);
+    st : Standard_Complex_Matrices.Matrix(1..n,1..n);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Column_Pattern(n,k,p,rows,cols);
+   -- dim : constant natural := Degree_of_Freedom(locmap);
+    x,xp : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    s : Array_of_Poly_Sys(ic'range);
+
+    use Standard_Complex_Matrices;
+    use Standard_Complex_Poly_Matrices;
+
+  begin
+    x := Symbolic_Schubert_Conditions.Symbolic_Form_of_Plane(n,k,locmap);
+    st := mf; -- nf*nt;
+    put_line(file,"Moving flag in intersection conditions : ");
+    put(file,st,2);
+    xp := Moving_Flag(st,x);
+    for i in ic'range loop
+      declare
+        c : constant Brackets.Bracket(1..k) := Brackets.Bracket(ic(i).all);
+        nq : constant integer32
+           := integer32(Symbolic_Schubert_Conditions.Number_of_NotAbove
+                          (natural32(n),c));
+        sc : constant Poly_Sys(1..nq)
+           := Numeric_Schubert_Conditions.Minimal_Expand(n,k,nq,c,xp,vf(i).all);
+      begin
+        s(i) := new Poly_Sys'(Filter_Zero_Equations(sc));
+      end;
+    end loop;
+    f := Concatenate(s);
+  end Minimal_Flag_Conditions;
 
   procedure Moving_Flag_Homotopy
              ( n,k : in integer32;

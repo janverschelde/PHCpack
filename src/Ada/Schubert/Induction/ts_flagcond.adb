@@ -7,6 +7,7 @@ with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Random_Numbers;
 with Multprec_Natural_Numbers;          use Multprec_Natural_Numbers;
 with Multprec_Natural_Numbers_io;       use Multprec_Natural_Numbers_io;
 with Standard_Natural_Vectors;
@@ -412,6 +413,46 @@ procedure ts_flagcond is
     end loop;
   end Eliminate;
 
+  procedure Divide_Pivots ( x : in out Standard_Complex_Matrices.Matrix;
+                            b : in Bracket ) is
+
+  -- DESCRIPTION :
+  --   Divides the columns of x by x(b(i),i), for i in b'range.
+
+    pivot : Complex_Number;
+
+  begin
+    for j in b'range loop
+      pivot := x(integer32(b(j)),j);
+      for i in 1..integer32(b(j)) loop
+        x(i,j) := x(i,j)/pivot;
+      end loop;
+    end loop;
+  end Divide_Pivots;
+
+  procedure Eliminate_Pivots
+              ( x : in out Standard_Complex_Matrices.Matrix;
+                b : in Bracket ) is
+
+  -- DESCRIPTION :
+  --   Makes the numbers at the right of the pivots equal to zero
+  --   by making column combinations so x fits the pattern imposed by b.
+ 
+    fac : Complex_Number;
+
+  begin
+    for j in b'range loop
+      -- pivot is at x(b(j),j), make zeroes at the right of pivot
+      for k in j+1..x'last(2) loop
+        fac := x(integer32(b(j)),k);
+        for i in 1..integer32(b(j))-1 loop
+          x(i,k) := x(i,k) - fac*x(i,j);
+        end loop;
+        x(integer32(b(j)),k) := Create(0.0);
+      end loop;
+    end loop;
+  end Eliminate_Pivots;
+
   function Generate_Standard_Point
              ( n,k : integer32; b : Bracket;
                flag : Standard_Complex_Matrices.Matrix ) 
@@ -446,6 +487,35 @@ procedure ts_flagcond is
     end loop;
     return res;
   end Full_Localization_Map;
+
+  function Stiefel_Localization_Map
+             ( n,k : in integer32; b : in Bracket )
+             return Standard_Natural_Matrices.Matrix is 
+
+  -- DESCRIPTION :
+  --   Returns a localization map for a k-plane in n-space that
+  --   represents the Stiefel coordinates for the Schubert variety
+  --   defined by the bracket b.
+
+    res : Standard_Natural_Matrices.Matrix(1..n,1..k);
+
+  begin
+    for i in 1..n loop
+      for j in 1..k loop
+        res(i,j) := 2;
+      end loop;
+    end loop;
+    for i in b'range loop
+      for j in 1..k loop
+        res(integer32(b(i)),j) := 0;
+      end loop;
+      res(integer32(b(i)),i) := 1;
+      for j in integer32(b(i))+1..n loop
+        res(j,i) := 0;
+      end loop;
+    end loop;
+    return res;
+  end Stiefel_Localization_Map;
 
   function Full_Flatten
              ( x : Standard_Complex_Matrices.Matrix )
@@ -533,6 +603,96 @@ procedure ts_flagcond is
       put_line("The residual at a random plane : "); put_line(y);
     end;
   end Point_Test_at_Conditions;
+
+  procedure Truncate_Triangular_Part
+              ( A : in out Standard_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Sets all elements below the diagonal equal to zero.
+  --   The diagonal elements are set to one.
+  
+  begin
+    for j in A'range(2) loop
+     -- for i in A'first(1)..j-1 loop
+      A(j,j) := Create(1.0);
+      for i in j+1..A'last(1) loop
+        A(i,j) := Create(0.0);
+      end loop;
+    end loop;
+  end Truncate_Triangular_Part;
+
+  procedure Add_Random_Last_Columns
+              ( A : in out Standard_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Adds a random multiple of the last column to the other columns
+  --   to make the matrix no longer upper triangular.
+
+    rnd : Complex_Number;
+
+  begin
+    for k in reverse A'first(2)+1..A'last(2) loop
+      -- add multiple of k-th column to previous columns
+      rnd := Standard_Random_Numbers.Random1;
+      for j in A'first(2)..k-1 loop
+        for i in A'range(1) loop
+          A(i,j) := A(i,j) + rnd*A(i,k);
+        end loop;
+      end loop;
+    end loop;
+  end Add_Random_Last_Columns;
+
+  procedure Point_Test_at_Minimal_Conditions ( n,k : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a k-bracket and generates the corresponding
+  --   polynomial system that expresses the Schubert conditions,
+  --   using the more efficient formulation for the Schubert problem.
+
+    lambda : Bracket(1..k);
+    nq : integer32;
+    flag : Standard_Complex_Matrices.Matrix(1..n,1..n)
+         := Random_Matrix(natural32(n),natural32(n));
+    locmap : Standard_Natural_Matrices.Matrix(1..n,1..k);
+    xpm : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    x : Standard_Complex_Matrices.Matrix(1..n,1..k);
+    nv : natural32;
+    ans : character;
+
+  begin
+    new_line;
+    put("Give a bracket : "); get(lambda);
+    locmap := Stiefel_Localization_Map(n,k,lambda);
+    put_line("The localization map :"); put(locmap);
+    nv := Dimension(locmap);
+    Initialize_Symbols(nv,locmap);
+    xpm := Symbolic_Form_of_Plane(n,k,locmap);
+    put_line("The symbolic form of the solution plane :"); put(xpm);
+    nq := integer32(Number_of_NotAbove(natural32(n),lambda));
+    put("The number of equations equals "); put(nq,1); put_line(".");
+    put("The number of variables equals "); put(nv,1); put_line(".");
+    Truncate_Triangular_Part(flag); -- to fix localization map
+    x := Generate_Point(n,k,lambda,flag);
+    Divide_Pivots(x,lambda);
+    Eliminate_Pivots(x,lambda);
+    put_line("The solution plane : "); put(x,3);
+    Add_Random_Last_Columns(flag);   -- so no longer upper triangular
+   -- Explain_Equations(natural32(n),lambda,natural32(nq));
+    declare
+      p : constant Poly_Sys(1..nq)
+        := Minimal_Expand(n,k,nq,lambda,xpm,flag);
+       -- := Expand(n,k,nq,lambda,xpm,flag);
+      v : constant Standard_Complex_Vectors.Vector(1..n*k) := Full_Flatten(x);
+      y : constant Standard_Complex_Vectors.Vector(1..nq) := Eval(p,v);
+    begin
+      put("Do you want to see the polynomial system (y/n) ? ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y'
+       then put_line(p);
+      end if;
+      put_line("The residual at a random plane : "); put_line(y);
+    end;
+  end Point_Test_at_Minimal_Conditions;
 
   procedure Cheater_Homotopy ( n,k,nq : in integer32; b : in Bracket ) is
 
@@ -1339,7 +1499,14 @@ procedure ts_flagcond is
       when '1' => Test_Minor_Expansions(n,k);
       when '2' => Symbolic_Plane(n,k);
                   Test_Schubert_Conditions(n,k);
-      when '3' => Point_Test_at_Conditions(n,k);
+      when '3' =>
+        new_line;
+        put("Use the more efficient representation ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        if ans = 'y'
+         then Point_Test_at_Minimal_Conditions(n,k);
+         else Point_Test_at_Conditions(n,k);
+        end if;
       when '4' => Test_Cheater_Homotopy(n,k);
       when '5' => Symbolic_Moving_Flags(n);
       when '6' => Symbolic_Localization_Patterns(n,k);
