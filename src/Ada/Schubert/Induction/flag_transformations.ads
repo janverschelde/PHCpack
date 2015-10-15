@@ -1,7 +1,13 @@
 with Standard_Integer_Numbers;           use Standard_Integer_NUmbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Matrices;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Matrices;
 with Standard_Complex_VecMats;
 
 package Flag_Transformations is
@@ -33,6 +39,14 @@ package Flag_Transformations is
              ( n : integer32;
                f1,f2,g1,g2 : Standard_Complex_Matrices.Matrix )
              return Standard_Complex_Matrices.Matrix;
+  function Coefficient_Matrix
+             ( n : integer32;
+               f1,f2,g1,g2 : DoblDobl_Complex_Matrices.Matrix )
+             return DoblDobl_Complex_Matrices.Matrix;
+  function Coefficient_Matrix
+             ( n : integer32;
+               f1,f2,g1,g2 : QuadDobl_Complex_Matrices.Matrix )
+             return QuadDobl_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns the coefficient matrix to compute the matrix A
@@ -54,6 +68,12 @@ package Flag_Transformations is
   function Right_Hand_Side
              ( n : integer32; g : Standard_Complex_Matrices.Matrix )
              return Standard_Complex_Vectors.Vector;
+  function Right_Hand_Side
+             ( n : integer32; g : DoblDobl_Complex_Matrices.Matrix )
+             return DoblDobl_Complex_Vectors.Vector;
+  function Right_Hand_Side
+             ( n : integer32; g : QuadDobl_Complex_Matrices.Matrix )
+             return QuadDobl_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Returns the right hand side vector in the linear system to
@@ -64,6 +84,12 @@ package Flag_Transformations is
   procedure Extract_Matrices
               ( n : in integer32; sol : in Standard_Complex_Vectors.Vector;
                 A,T1,T2 : out Standard_Complex_Matrices.Matrix );
+  procedure Extract_Matrices
+              ( n : in integer32; sol : in DoblDobl_Complex_Vectors.Vector;
+                A,T1,T2 : out DoblDobl_Complex_Matrices.Matrix );
+  procedure Extract_Matrices
+              ( n : in integer32; sol : in QuadDobl_Complex_Vectors.Vector;
+                A,T1,T2 : out QuadDobl_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
   --   Given a vector sol of size 2*n*n, extracts three n-dimensional 
@@ -76,6 +102,14 @@ package Flag_Transformations is
               ( n : in integer32; 
                 f1,f2,g1,g2 : in Standard_Complex_Matrices.Matrix;
                 A,T1,T2 : out Standard_Complex_Matrices.Matrix );
+  procedure Transform
+              ( n : in integer32; 
+                f1,f2,g1,g2 : in DoblDobl_Complex_Matrices.Matrix;
+                A,T1,T2 : out DoblDobl_Complex_Matrices.Matrix );
+  procedure Transform
+              ( n : in integer32; 
+                f1,f2,g1,g2 : in QuadDobl_Complex_Matrices.Matrix;
+                A,T1,T2 : out QuadDobl_Complex_Matrices.Matrix );
 
   -- DECRIPTION :
   --   Transforms two pairs of flags in n-space.
@@ -95,6 +129,12 @@ package Flag_Transformations is
   function Residual 
               ( f1,f2,g1,g2,A,T1,T2 : Standard_Complex_Matrices.Matrix ) 
               return double_float;
+  function Residual 
+              ( f1,f2,g1,g2,A,T1,T2 : DoblDobl_Complex_Matrices.Matrix ) 
+              return double_double;
+  function Residual 
+              ( f1,f2,g1,g2,A,T1,T2 : QuadDobl_Complex_Matrices.Matrix ) 
+              return quad_double;
 
   -- DESCRIPTION :
   --   Returns the 1-norm of the differences A*f1 - g1*T1 and A*f2 - g2*T2,

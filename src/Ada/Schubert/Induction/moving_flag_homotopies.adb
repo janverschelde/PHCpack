@@ -1,5 +1,9 @@
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with DoblDobl_Complex_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Natural_Matrices;         use Standard_Natural_Matrices;
 --with Standard_Natural_Matrices_io;      use Standard_Natural_Matrices_io;
 --with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
@@ -7,6 +11,8 @@ with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
 with Standard_Complex_Poly_Matrices_io; use Standard_Complex_Poly_Matrices_io;
 
 with Standard_Random_Numbers;           use Standard_Random_Numbers;
+with DoblDobl_Random_Numbers;           use DoblDobl_Random_Numbers;
+with QuadDobl_Random_Numbers;           use QuadDobl_Random_Numbers;
 with Standard_Complex_Norms_Equals;
 with Standard_Complex_Singular_Values;  use Standard_Complex_Singular_Values;
 with Symbol_Table;
@@ -43,6 +49,34 @@ package body Moving_Flag_Homotopies is
     return res;
   end Random_Flag;
 
+  function Random_Flag
+             ( n : integer32 ) return DoblDobl_Complex_Matrices.Matrix is
+
+    res : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
+
+  begin
+    for j in 1..n loop
+      for i in 1..n loop
+        res(i,j) := Random1;
+      end loop;
+    end loop;
+    return res;
+  end Random_Flag;
+
+  function Random_Flag
+             ( n : integer32 ) return QuadDobl_Complex_Matrices.Matrix is
+
+    res : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
+
+  begin
+    for j in 1..n loop
+      for i in 1..n loop
+        res(i,j) := Random1;
+      end loop;
+    end loop;
+    return res;
+  end Random_Flag;
+
   function One_Flag
              ( n : integer32 ) return Standard_Complex_Matrices.Matrix is
 
@@ -51,10 +85,48 @@ package body Moving_Flag_Homotopies is
   begin
     for j in 1..n loop
       for i in 1..(n-j+1) loop
-        res(i,j) := Create(1.0);
+        res(i,j) := Standard_Complex_Numbers.Create(1.0);
       end loop; 
       for i in (n-j+2)..n loop
-        res(i,j) := Create(0.0);
+        res(i,j) := Standard_Complex_Numbers.Create(0.0);
+      end loop;
+    end loop;
+    return res;
+  end One_Flag;
+
+  function One_Flag
+             ( n : integer32 ) return DoblDobl_Complex_Matrices.Matrix is
+
+    res : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
+    zero : constant double_double := create(0.0);
+    one : constant double_double := create(1.0);
+
+  begin
+    for j in 1..n loop
+      for i in 1..(n-j+1) loop
+        res(i,j) := DoblDobl_Complex_Numbers.Create(one);
+      end loop; 
+      for i in (n-j+2)..n loop
+        res(i,j) := DoblDobl_Complex_Numbers.Create(zero);
+      end loop;
+    end loop;
+    return res;
+  end One_Flag;
+
+  function One_Flag
+             ( n : integer32 ) return QuadDobl_Complex_Matrices.Matrix is
+
+    res : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
+    zero : constant quad_double := create(0.0);
+    one : constant quad_double := create(1.0);
+
+  begin
+    for j in 1..n loop
+      for i in 1..(n-j+1) loop
+        res(i,j) := QuadDobl_Complex_Numbers.Create(one);
+      end loop; 
+      for i in (n-j+2)..n loop
+        res(i,j) := QuadDobl_Complex_Numbers.Create(zero);
       end loop;
     end loop;
     return res;
@@ -69,8 +141,46 @@ package body Moving_Flag_Homotopies is
     for i in res'range(1) loop
       for j in res'range(2) loop
         if i = j
-         then res(i,j) := Create(1.0);
-         else res(i,j) := Create(0.0);
+         then res(i,j) := Standard_Complex_Numbers.Create(1.0);
+         else res(i,j) := Standard_Complex_Numbers.Create(0.0);
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Identity;
+
+  function Identity
+             ( n : integer32 ) return DoblDobl_Complex_Matrices.Matrix is
+
+    res : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
+    one : constant double_double := create(1.0);
+    zero : constant double_double := create(0.0);
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        if i = j
+         then res(i,j) := DoblDobl_Complex_Numbers.Create(one);
+         else res(i,j) := DoblDobl_Complex_Numbers.Create(zero);
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Identity;
+
+  function Identity
+             ( n : integer32 ) return QuadDobl_Complex_Matrices.Matrix is
+
+    res : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
+    one : constant quad_double := create(1.0);
+    zero : constant quad_double := create(0.0);
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        if i = j
+         then res(i,j) := QuadDobl_Complex_Numbers.Create(one);
+         else res(i,j) := QuadDobl_Complex_Numbers.Create(zero);
         end if;
       end loop;
     end loop;
@@ -81,6 +191,8 @@ package body Moving_Flag_Homotopies is
              ( n : integer32 ) return Standard_Complex_Matrices.Matrix is
 
     res : Standard_Complex_Matrices.Matrix(1..n,1..n);
+
+    use Standard_Complex_Numbers;
 
   begin
     for i in 1..n loop
@@ -97,9 +209,61 @@ package body Moving_Flag_Homotopies is
     return res;
   end Moved_Flag;
 
+  function Moved_Flag
+             ( n : integer32 ) return DoblDobl_Complex_Matrices.Matrix is
+
+    res : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
+    zero : constant double_double := create(0.0);
+    one : constant double_double := create(1.0);
+    minone : constant double_double := create(-1.0);
+
+    use DoblDobl_Complex_Numbers;
+
+  begin
+    for i in 1..n loop
+      for j in 1..n-i+1 loop
+        if i mod 2 = 0
+         then res(i,j) := Create(minone);
+         else res(i,j) := Create(one);
+        end if;
+      end loop;
+      for j in (n-i+2)..n loop
+        res(i,j) := Create(zero);
+      end loop;
+    end loop;
+    return res;
+  end Moved_Flag;
+
+  function Moved_Flag
+             ( n : integer32 ) return QuadDobl_Complex_Matrices.Matrix is
+
+    res : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
+    zero : constant quad_double := create(0.0);
+    one : constant quad_double := create(1.0);
+    minone : constant quad_double := create(-1.0);
+
+    use QuadDobl_Complex_Numbers;
+
+  begin
+    for i in 1..n loop
+      for j in 1..n-i+1 loop
+        if i mod 2 = 0
+         then res(i,j) := Create(minone);
+         else res(i,j) := Create(one);
+        end if;
+      end loop;
+      for j in (n-i+2)..n loop
+        res(i,j) := Create(zero);
+      end loop;
+    end loop;
+    return res;
+  end Moved_Flag;
+
   procedure Write_Moving_Flag
               ( file : in file_type;
                 flag : in Standard_Complex_Matrices.Matrix ) is
+
+    use Standard_Complex_Numbers;
 
     realcff : double_float;
     intcff : integer32;
@@ -116,8 +280,11 @@ package body Moving_Flag_Homotopies is
   end Write_Moving_Flag;
 
   function Numeric_Transformation
-              ( t : Standard_Natural_Matrices.Matrix; g : Complex_Number )
+              ( t : Standard_Natural_Matrices.Matrix;
+                g : Standard_Complex_Numbers.Complex_Number )
               return Standard_Complex_Matrices.Matrix is
+
+    use Standard_Complex_Numbers;
 
     res : Standard_Complex_Matrices.Matrix(t'range(1),t'range(2));
 
@@ -139,6 +306,8 @@ package body Moving_Flag_Homotopies is
   function Numeric_Transformation
               ( t : Standard_Natural_Matrices.Matrix )
               return Standard_Complex_Matrices.Matrix is
+
+    use Standard_Complex_Numbers;
 
     res : Standard_Complex_Matrices.Matrix(t'range(1),t'range(2));
 
@@ -190,16 +359,20 @@ package body Moving_Flag_Homotopies is
              ( n,v : integer32; t : Standard_Natural_Matrices.Matrix ) 
              return Standard_Complex_Poly_Matrices.Matrix is
 
-    gamma : constant Complex_Number := Create(-1.0); --Create(1.0);
+    gamma : constant Standard_Complex_Numbers.Complex_Number
+          := Standard_Complex_Numbers.Create(-1.0); --Create(1.0);
 
   begin
     return Symbolic_Transformation(n,v,gamma,t);
   end Symbolic_Transformation;
 
   function Symbolic_Transformation
-             ( n,v : integer32; gamma : Complex_Number;
+             ( n,v : integer32;
+               gamma : Standard_Complex_Numbers.Complex_Number;
                t : Standard_Natural_Matrices.Matrix ) 
              return Standard_Complex_Poly_Matrices.Matrix is
+
+     use Standard_Complex_Numbers;
 
      res : Standard_Complex_Poly_Matrices.Matrix(t'range(1),t'range(2));
      trm : Term;
@@ -230,6 +403,7 @@ package body Moving_Flag_Homotopies is
              ( n,v : integer32; t : Standard_Natural_Matrices.Matrix ) 
              return Standard_Complex_Poly_Matrices.Matrix is
 
+    use Standard_Complex_Numbers;
     gamma : constant Complex_Number := Create(1.0);
 
   begin
@@ -237,9 +411,12 @@ package body Moving_Flag_Homotopies is
   end Inverse_Symbolic_Transformation;
 
   function Inverse_Symbolic_Transformation
-             ( n,v : integer32; gamma : Complex_Number;
+             ( n,v : integer32;
+               gamma : Standard_Complex_Numbers.Complex_Number;
                t : Standard_Natural_Matrices.Matrix ) 
              return Standard_Complex_Poly_Matrices.Matrix is
+
+     use Standard_Complex_Numbers;
 
      res : Standard_Complex_Poly_Matrices.Matrix(t'range(1),t'range(2));
      trm : Term;
@@ -268,8 +445,11 @@ package body Moving_Flag_Homotopies is
   end Inverse_Symbolic_Transformation;
 
   function Evaluate_Transformation
-             ( t : Standard_Complex_Poly_Matrices.Matrix; v : Complex_Number )
+             ( t : Standard_Complex_Poly_Matrices.Matrix;
+               v : Standard_Complex_Numbers.Complex_Number )
              return Standard_Complex_Poly_Matrices.Matrix is
+
+    use Standard_Complex_Numbers;
 
     res : Standard_Complex_Poly_Matrices.Matrix(t'range(1),t'range(2));
     n : integer32;
@@ -300,6 +480,8 @@ package body Moving_Flag_Homotopies is
              ( f : Standard_Complex_Matrices.Matrix;
                t : Standard_Complex_Poly_Matrices.Matrix )
              return Standard_Complex_Poly_Matrices.Matrix is
+
+    use Standard_Complex_Numbers;
 
     res : Standard_Complex_Poly_Matrices.Matrix(f'range(1),t'range(2));
     zero : constant Complex_Number := Create(0.0);
@@ -336,7 +518,7 @@ package body Moving_Flag_Homotopies is
     ac : constant integer32 := Checker_Moves.Ascending_Checker(p,fc);
     t : constant Standard_Natural_Matrices.Matrix(1..n,1..n)
       := Transformation(n,integer32(q(fc)));
-    gamma : constant Complex_Number := mf(n+1-ac,fc);
+    gamma : constant Standard_Complex_Numbers.Complex_Number := mf(n+1-ac,fc);
     nt : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
        := Numeric_Transformation(t,gamma);
 
@@ -402,7 +584,7 @@ package body Moving_Flag_Homotopies is
     a : constant integer32 := Checker_Moves.Ascending_Checker(p,f);
     t : constant Standard_Natural_Matrices.Matrix(1..n,1..n)
       := Transformation(n,integer32(q(f)));
-    gamma : constant Complex_Number := mf(n+1-a,f);
+    gamma : constant Standard_Complex_Numbers.Complex_Number := mf(n+1-a,f);
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Column_Pattern(n,k,p,rows,cols);
     dim : constant natural32 := Degree_of_Freedom(locmap);
@@ -440,7 +622,7 @@ package body Moving_Flag_Homotopies is
     a : constant integer32 := Checker_Moves.Ascending_Checker(p,f);
     t : constant Standard_Natural_Matrices.Matrix(1..n,1..n)
       := Transformation(n,integer32(q(f)));
-    gamma : constant Complex_Number := mf(n+1-a,f);
+    gamma : constant Standard_Complex_Numbers.Complex_Number := mf(n+1-a,f);
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
           -- := Column_Pattern(n,k,p,rows,cols); -- change from p
            := Column_Pattern(n,k,q,rows,cols);   -- to current q
@@ -773,7 +955,7 @@ package body Moving_Flag_Homotopies is
     a : constant integer32 := Checker_Moves.Ascending_Checker(p,f);
     t : constant Standard_Natural_Matrices.Matrix(1..n,1..n)
       := Transformation(n,integer32(q(f)));
-    gamma : constant Complex_Number := mf(n+1-a,f);
+    gamma : constant Standard_Complex_Numbers.Complex_Number := mf(n+1-a,f);
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Column_Pattern(n,k,p,rows,cols);
     dim : constant natural32 := Degree_of_Freedom(locmap);
@@ -820,7 +1002,7 @@ package body Moving_Flag_Homotopies is
     a : constant integer32 := Checker_Moves.Ascending_Checker(p,f);
     t : constant Standard_Natural_Matrices.Matrix(1..n,1..n)
       := Transformation(n,integer32(q(f)));
-    gamma : constant Complex_Number := mf(n+1-a,f);
+    gamma : constant Standard_Complex_Numbers.Complex_Number := mf(n+1-a,f);
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Column_Pattern(n,k,p,rows,cols); -- change from p
           -- rows and cols must be with p
@@ -900,6 +1082,8 @@ package body Moving_Flag_Homotopies is
                A : out Standard_Complex_Matrices.Matrix;
                b : out Standard_Complex_Vectors.Vector ) is
 
+    use Standard_Complex_Numbers;
+
     n : constant natural32 := Number_of_Unknowns(p(p'first));
     h : Standard_Complex_Vectors.Vector(0..integer32(n));
 
@@ -948,6 +1132,8 @@ package body Moving_Flag_Homotopies is
                x : out Standard_Complex_Vectors.Vector;
                res : out double_float ) is
 
+    use Standard_Complex_Numbers;
+
     n : constant integer32 := x'last;
 
   begin
@@ -976,6 +1162,8 @@ package body Moving_Flag_Homotopies is
                x : out Standard_Complex_Vectors.Vector;
                res : out double_float ) is
 
+    use Standard_Complex_Numbers;
+
     n : constant integer32 := x'last;
     h0 : Poly_Sys(h'range) := Eval(h,Create(0.0),n+1);
       -- h0 is system h where t is substituted by zero
@@ -989,6 +1177,8 @@ package body Moving_Flag_Homotopies is
              ( nv : in integer32;
                start,target : Standard_Complex_Matrices.Matrix )
              return Standard_Complex_Poly_Matrices.Matrix is
+
+    use Standard_Complex_Numbers;
  
     res : Standard_Complex_Poly_Matrices.Matrix(start'range(1),start'range(2));
     z : Complex_Number;

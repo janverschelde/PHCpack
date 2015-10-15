@@ -4,6 +4,8 @@ Thu 15 Oct 2015 : moving_flag_continuation and resolve_schubrt_problems
   drivers_for_schubert_induction.adb.  In ts_flagcond.adb, the generic
   point test for the efficient problem formulation is harder to compute...
   Update in ts_lrhom.adb for the extra option in resolve.
+  Extended flag_transformations for double doubles and quad doubles,
+  which required changes in moving_flag_homotopies, tested by ts_induce.
 
 Wed 14 Oct 2015 : extended symbolic_schubert_conditions with a procedure
   and a function to enumerate and count all brackets not above a bracket,

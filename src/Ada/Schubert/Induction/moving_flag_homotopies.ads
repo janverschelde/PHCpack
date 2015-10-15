@@ -5,9 +5,11 @@ with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_Vecvecs;
 with Standard_Natural_Matrices;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
+with DoblDobl_Complex_Matrices;
+with QuadDobl_Complex_Matrices;
 with Standard_Complex_VecMats;
 with Standard_Complex_Poly_Matrices;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
@@ -21,6 +23,10 @@ package Moving_Flag_Homotopies is
 
   function Random_Flag
              ( n : integer32 ) return Standard_Complex_Matrices.Matrix;
+  function Random_Flag
+             ( n : integer32 ) return DoblDobl_Complex_Matrices.Matrix;
+  function Random_Flag
+             ( n : integer32 ) return QuadDobl_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns a random upper triangular matrix as a
@@ -28,24 +34,35 @@ package Moving_Flag_Homotopies is
 
   function One_Flag
              ( n : integer32 ) return Standard_Complex_Matrices.Matrix;
+  function One_Flag
+             ( n : integer32 ) return DoblDobl_Complex_Matrices.Matrix;
+  function One_Flag
+             ( n : integer32 ) return QuadDobl_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns a flag with the same support as a random flag,
   --   filled with ones instead of random complex numbers.
 
   function Identity ( n : integer32 ) return Standard_Complex_Matrices.Matrix;
+  function Identity ( n : integer32 ) return DoblDobl_Complex_Matrices.Matrix;
+  function Identity ( n : integer32 ) return QuadDobl_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns the n-by-n identity matrix.
 
   function Moved_Flag
              ( n : integer32 ) return Standard_Complex_Matrices.Matrix;
+  function Moved_Flag
+             ( n : integer32 ) return DoblDobl_Complex_Matrices.Matrix;
+  function Moved_Flag
+             ( n : integer32 ) return QuadDobl_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns the coordinates for the moved flag in n-space.
 
   function Numeric_Transformation
-             ( t : Standard_Natural_Matrices.Matrix; g : Complex_Number )
+             ( t : Standard_Natural_Matrices.Matrix;
+               g : Standard_Complex_Numbers.Complex_Number )
              return Standard_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
@@ -86,7 +103,8 @@ package Moving_Flag_Homotopies is
              ( n,v : integer32; t : Standard_Natural_Matrices.Matrix )
              return Standard_Complex_Poly_Matrices.Matrix;
   function Symbolic_Transformation
-             ( n,v : integer32; gamma : Complex_Number;
+             ( n,v : integer32;
+               gamma : Standard_Complex_Numbers.Complex_Number;
                t : Standard_Natural_Matrices.Matrix )
              return Standard_Complex_Poly_Matrices.Matrix;
 
@@ -108,7 +126,8 @@ package Moving_Flag_Homotopies is
              ( n,v : integer32; t : Standard_Natural_Matrices.Matrix )
              return Standard_Complex_Poly_Matrices.Matrix;
   function Inverse_Symbolic_Transformation
-             ( n,v : integer32; gamma : Complex_Number;
+             ( n,v : integer32;
+               gamma : Standard_Complex_Numbers.Complex_Number;
                t : Standard_Natural_Matrices.Matrix )
              return Standard_Complex_Poly_Matrices.Matrix;
 
@@ -128,7 +147,8 @@ package Moving_Flag_Homotopies is
   --           of zeroes, ones, and a '2'.  The '2' locates t.
 
   function Evaluate_Transformation
-             ( t : Standard_Complex_Poly_Matrices.Matrix; v : Complex_Number )
+             ( t : Standard_Complex_Poly_Matrices.Matrix;
+               v : Standard_Complex_Numbers.Complex_Number )
              return Standard_Complex_Poly_Matrices.Matrix;
 
   -- DESCRIPTION :

@@ -6,7 +6,13 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;           use Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Standard_Natural_VecVecs;
@@ -15,11 +21,23 @@ with Standard_Natural_Matrices;          use Standard_Natural_Matrices;
 with Standard_Natural_Matrices_io;       use Standard_Natural_Matrices_io;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
+with DoblDobl_Complex_Matrices;
+with DoblDobl_Complex_Matrices_io;       use DoblDobl_Complex_Matrices_io;
+with QuadDobl_Complex_Matrices;
+with QuadDobl_Complex_Matrices_io;       use QuadDobl_Complex_Matrices_io;
 with Standard_Random_Matrices;
+with DoblDobl_Random_Matrices;
+with QuadDobl_Random_Matrices;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
+with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
+with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
 with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
+with DoblDobl_Complex_Vector_Norms;      use DoblDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Vector_Norms;      use QuadDobl_Complex_Vector_Norms;
 with Checker_Boards,Checker_Boards_io;   use Checker_Boards,Checker_Boards_io;
 with Checker_Moves;                      use Checker_Moves;
 with Checker_Localization_Patterns;      use Checker_Localization_Patterns;
@@ -42,6 +60,8 @@ procedure ts_induce is
   --   Writes the matrix in short format, without the imaginary part,
   --   and as an integer.
 
+    use Standard_Complex_Numbers;
+
     xre : double_float;
 
   begin
@@ -59,6 +79,8 @@ procedure ts_induce is
   -- DESCRIPTION :
   --   Shows all boards, flags and transformations in a generalizing
   --   moving flag homotopy towards a general triangular matrix.
+
+    use Standard_Complex_Numbers;
 
     fg : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
        := Random_Flag(n);
@@ -463,6 +485,8 @@ procedure ts_induce is
   --   Writes the real part of the matrix A with only one decimal place
   --   of precision, enough to see the structure of the matrix.
 
+    use Standard_Complex_Numbers;
+
     rp : double_float;
 
   begin
@@ -479,11 +503,58 @@ procedure ts_induce is
     end loop;
   end real_small_put;
 
-  procedure Test_Flag_Transformation
+  procedure real_small_put ( A : in DoblDobl_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Writes the real part of the matrix A with only one decimal place
+  --   of precision, enough to see the structure of the matrix.
+
+    use DoblDobl_Complex_Numbers;
+    rp : double_double;
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        rp := REAL_PART(A(i,j));
+        if rp < 0.0
+         then put(" "); 
+         else put("  ");
+        end if;
+        put(REAL_PART(A(i,j)),1);
+      end loop;
+      new_line;
+    end loop;
+  end real_small_put;
+
+  procedure real_small_put ( A : in QuadDobl_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Writes the real part of the matrix A with only one decimal place
+  --   of precision, enough to see the structure of the matrix.
+
+    use QuadDobl_Complex_Numbers;
+    rp : quad_double;
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        rp := REAL_PART(A(i,j));
+        if rp < 0.0
+         then put(" "); 
+         else put("  ");
+        end if;
+        put(REAL_PART(A(i,j)),1);
+      end loop;
+      new_line;
+    end loop;
+  end real_small_put;
+
+  procedure Standard_Test_Flag_Transformation
               ( f1,f2,g1,g2,A,T1,T2 : in Standard_Complex_Matrices.Matrix ) is
 
   -- DESCRIPTION :
-  --   Tests whether A*f1 = g1*T1 and A*f2 = g2*T2.
+  --   Tests whether A*f1 = g1*T1 and A*f2 = g2*T2,
+  --   using standard double precision arithmetic.
 
     rsd : double_float;
 
@@ -495,15 +566,56 @@ procedure ts_induce is
     put_line("A*f2 : "); put(A*f2);
     put_line("g2*T2 : "); put(g2*T2);
     rsd := Flag_Transformations.Residual(f1,f2,g1,g2,A,T1,T2);
-    put("The residual : "); put(rsd); new_line;
-  end Test_Flag_Transformation;
+    put("The residual : "); put(rsd,3); new_line;
+  end Standard_Test_Flag_Transformation;
 
-  procedure Test_Random_Flags2Flags ( n : in integer32 ) is
+  procedure DoblDobl_Test_Flag_Transformation
+              ( f1,f2,g1,g2,A,T1,T2 : in DoblDobl_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Tests whether A*f1 = g1*T1 and A*f2 = g2*T2,
+  --   using double double precision arithmetic.
+
+    rsd : double_double;
+
+    use DoblDobl_Complex_Matrices;
+
+  begin
+    put_line("A*f1 : "); put(A*f1);
+    put_line("g1*T1 : "); put(g1*T1);
+    put_line("A*f2 : "); put(A*f2);
+    put_line("g2*T2 : "); put(g2*T2);
+    rsd := Flag_Transformations.Residual(f1,f2,g1,g2,A,T1,T2);
+    put("The residual : "); put(rsd,3); new_line;
+  end DoblDobl_Test_Flag_Transformation;
+
+  procedure QuadDobl_Test_Flag_Transformation
+              ( f1,f2,g1,g2,A,T1,T2 : in QuadDobl_Complex_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Tests whether A*f1 = g1*T1 and A*f2 = g2*T2,
+  --   using quad double precision arithmetic.
+
+    rsd : quad_double;
+
+    use QuadDobl_Complex_Matrices;
+
+  begin
+    put_line("A*f1 : "); put(A*f1);
+    put_line("g1*T1 : "); put(g1*T1);
+    put_line("A*f2 : "); put(A*f2);
+    put_line("g2*T2 : "); put(g2*T2);
+    rsd := Flag_Transformations.Residual(f1,f2,g1,g2,A,T1,T2);
+    put("The residual : "); put(rsd,3); new_line;
+  end QuadDobl_Test_Flag_Transformation;
+
+  procedure Standard_Test_Random_Flags2Flags ( n : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates two pairs of random flags (F1, F2) and (G1, G2) in n-space
   --   and computes the matrix A, upper triangular matrices T1 and T2
   --   so that A*F1 = G1*T1 and A*F2 = G2*T2.
+  --   The test is done in standard double precision.
 
     f1 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
        := Standard_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
@@ -524,6 +636,7 @@ procedure ts_induce is
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     info : integer32;
     nrm : double_float;
+    ans : character;
     A,T1,T2 : Standard_Complex_Matrices.Matrix(1..n,1..n);
 
     use Standard_Complex_Vectors,Standard_Complex_Matrices;
@@ -538,12 +651,118 @@ procedure ts_induce is
     lusolve(wrk,dim,ipvt,sol);
     res := rhs - mat*sol;
     nrm := Max_Norm(res);
-    put("The norm of the residual : "); put(nrm); new_line;
-    Flag_Transformations.Extract_Matrices(n,sol,A,T1,T2);
-    Test_Flag_Transformation(f1,f2,g1,g2,A,T1,T2);
-  end Test_Random_Flags2Flags;
+    put("The norm of the residual : "); put(nrm,3); new_line;
+    put("Continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Flag_Transformations.Extract_Matrices(n,sol,A,T1,T2);
+      Standard_Test_Flag_Transformation(f1,f2,g1,g2,A,T1,T2);
+    end if;
+  end Standard_Test_Random_Flags2Flags;
 
-  procedure Test_Specific_Flags2Flags ( n : in integer32 ) is
+  procedure DoblDobl_Test_Random_Flags2Flags ( n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates two pairs of random flags (F1, F2) and (G1, G2) in n-space
+  --   and computes the matrix A, upper triangular matrices T1 and T2
+  --   so that A*F1 = G1*T1 and A*F2 = G2*T2.
+  --   The test is done in double double precision.
+
+    f1 : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := DoblDobl_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
+    f2 : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := DoblDobl_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
+    g1 : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := DoblDobl_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
+    g2 : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := DoblDobl_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
+    dim : constant integer32 := 2*n*n;
+    mat : constant DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim)
+        := Flag_Transformations.Coefficient_Matrix(n,f1,f2,g1,g2);
+    rhs : constant DoblDobl_Complex_Vectors.Vector(1..dim)
+        := Flag_Transformations.Right_Hand_Side(n,g1);
+    wrk : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim) := mat;
+    sol : DoblDobl_Complex_Vectors.Vector(1..dim) := rhs;
+    res : DoblDobl_Complex_Vectors.Vector(1..dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info : integer32;
+    nrm : double_double;
+    ans : character;
+    A,T1,T2 : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
+
+    use DoblDobl_Complex_Vectors,DoblDobl_Complex_Matrices;
+
+  begin
+    put_line("The flag f1 : "); put(f1,1); new_line;
+    put_line("The flag f2 : "); put(f2,1); new_line;
+    put_line("The flag g1 : "); put(g1,1); new_line;
+    put_line("The flag g2 : "); put(g2,1); new_line;
+    put_line("The coefficient matrix "); real_small_put(mat); new_line;
+    lufac(wrk,dim,ipvt,info);
+    lusolve(wrk,dim,ipvt,sol);
+    res := rhs - mat*sol;
+    nrm := Max_Norm(res);
+    put("The norm of the residual : "); put(nrm,3); new_line;
+    put("Continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Flag_Transformations.Extract_Matrices(n,sol,A,T1,T2);
+      DoblDobl_Test_Flag_Transformation(f1,f2,g1,g2,A,T1,T2);
+    end if;
+  end DoblDobl_Test_Random_Flags2Flags;
+
+  procedure QuadDobl_Test_Random_Flags2Flags ( n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates two pairs of random flags (F1, F2) and (G1, G2) in n-space
+  --   and computes the matrix A, upper triangular matrices T1 and T2
+  --   so that A*F1 = G1*T1 and A*F2 = G2*T2.
+  --   The test is done in quad double precision.
+
+    f1 : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := QuadDobl_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
+    f2 : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := QuadDobl_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
+    g1 : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := QuadDobl_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
+    g2 : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := QuadDobl_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
+    dim : constant integer32 := 2*n*n;
+    mat : constant QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim)
+        := Flag_Transformations.Coefficient_Matrix(n,f1,f2,g1,g2);
+    rhs : constant QuadDobl_Complex_Vectors.Vector(1..dim)
+        := Flag_Transformations.Right_Hand_Side(n,g1);
+    wrk : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim) := mat;
+    sol : QuadDobl_Complex_Vectors.Vector(1..dim) := rhs;
+    res : QuadDobl_Complex_Vectors.Vector(1..dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info : integer32;
+    nrm : quad_double;
+    ans : character;
+    A,T1,T2 : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
+
+    use QuadDobl_Complex_Vectors,QuadDobl_Complex_Matrices;
+
+  begin
+    put_line("The flag f1 : "); put(f1,1); new_line;
+    put_line("The flag f2 : "); put(f2,1); new_line;
+    put_line("The flag g1 : "); put(g1,1); new_line;
+    put_line("The flag g2 : "); put(g2,1); new_line;
+    put_line("The coefficient matrix "); real_small_put(mat); new_line;
+    lufac(wrk,dim,ipvt,info);
+    lusolve(wrk,dim,ipvt,sol);
+    res := rhs - mat*sol;
+    nrm := Max_Norm(res);
+    put("The norm of the residual : "); put(nrm,3); new_line;
+    put("Continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Flag_Transformations.Extract_Matrices(n,sol,A,T1,T2);
+      QuadDobl_Test_Flag_Transformation(f1,f2,g1,g2,A,T1,T2);
+    end if;
+  end QuadDobl_Test_Random_Flags2Flags;
+
+  procedure Standard_Test_Specific_Flags2Flags ( n : in integer32 ) is
 
   -- DESCRIPTION :
   --   For two pairs of flags (M, I) and (I, F) in n-space
@@ -551,6 +770,7 @@ procedure ts_induce is
   --   and F some random n-dimensional matrix,
   --   computes the matrix A, upper triangular matrices T1 and T2
   --   so that A*F1 = G1*T1 and A*F2 = G2*T2.
+  --   The test is executed in standard double precision.
 
     f1 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
        := Moving_Flag_Homotopies.Moved_Flag(n);
@@ -571,6 +791,7 @@ procedure ts_induce is
     ipvt : Standard_Integer_Vectors.Vector(1..dim);
     info : integer32;
     nrm : double_float;
+    ans : character;
     A,T1,T2 : Standard_Complex_Matrices.Matrix(1..n,1..n);
 
     use Standard_Complex_Vectors,Standard_Complex_Matrices;
@@ -585,10 +806,147 @@ procedure ts_induce is
     lusolve(wrk,dim,ipvt,sol);
     res := rhs - mat*sol;
     nrm := Max_Norm(res);
-    put("The norm of the residual : "); put(nrm); new_line;
-    Flag_Transformations.Extract_Matrices(n,sol,A,T1,T2);
-    Test_Flag_Transformation(f1,f2,g1,g2,A,T1,T2);
-  end Test_Specific_Flags2Flags;
+    put("The norm of the residual : "); put(nrm,3); new_line;
+    put("Continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Flag_Transformations.Extract_Matrices(n,sol,A,T1,T2);
+      Standard_Test_Flag_Transformation(f1,f2,g1,g2,A,T1,T2);
+    end if;
+  end Standard_Test_Specific_Flags2Flags;
+
+  procedure DoblDobl_Test_Specific_Flags2Flags ( n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   For two pairs of flags (M, I) and (I, F) in n-space
+  --   where M is the moved flags, I the identity matrix,
+  --   and F some random n-dimensional matrix,
+  --   computes the matrix A, upper triangular matrices T1 and T2
+  --   so that A*F1 = G1*T1 and A*F2 = G2*T2.
+  --   The test is executed in double double precision.
+
+    f1 : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := Moving_Flag_Homotopies.Moved_Flag(n);
+    f2 : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := Moving_Flag_Homotopies.Identity(n);
+    g1 : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := Moving_Flag_Homotopies.Identity(n);
+    g2 : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := DoblDobl_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
+    dim : constant integer32 := 2*n*n;
+    mat : constant DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim)
+        := Flag_Transformations.Coefficient_Matrix(n,f1,f2,g1,g2);
+    rhs : constant DoblDobl_Complex_Vectors.Vector(1..dim)
+        := Flag_Transformations.Right_Hand_Side(n,g1);
+    wrk : DoblDobl_Complex_Matrices.Matrix(1..dim,1..dim) := mat;
+    sol : DoblDobl_Complex_Vectors.Vector(1..dim) := rhs;
+    res : DoblDobl_Complex_Vectors.Vector(1..dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info : integer32;
+    nrm : double_double;
+    ans : character;
+    A,T1,T2 : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
+
+    use DoblDobl_Complex_Vectors,DoblDobl_Complex_Matrices;
+
+  begin
+    put_line("The flag f1 : "); put(f1,1); new_line;
+    put_line("The flag f2 : "); put(f2,1); new_line;
+    put_line("The flag g1 : "); put(g1,1); new_line;
+    put_line("The flag g2 : "); put(g2,1); new_line;
+    put_line("The coefficient matrix "); real_small_put(mat); new_line;
+    lufac(wrk,dim,ipvt,info);
+    lusolve(wrk,dim,ipvt,sol);
+    res := rhs - mat*sol;
+    nrm := Max_Norm(res);
+    put("The norm of the residual : "); put(nrm,3); new_line;
+    put("Continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Flag_Transformations.Extract_Matrices(n,sol,A,T1,T2);
+      DoblDobl_Test_Flag_Transformation(f1,f2,g1,g2,A,T1,T2);
+    end if;
+  end DoblDobl_Test_Specific_Flags2Flags;
+
+  procedure QuadDobl_Test_Specific_Flags2Flags ( n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   For two pairs of flags (M, I) and (I, F) in n-space
+  --   where M is the moved flags, I the identity matrix,
+  --   and F some random n-dimensional matrix,
+  --   computes the matrix A, upper triangular matrices T1 and T2
+  --   so that A*F1 = G1*T1 and A*F2 = G2*T2.
+  --   The test is executed in double double precision.
+
+    f1 : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := Moving_Flag_Homotopies.Moved_Flag(n);
+    f2 : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := Moving_Flag_Homotopies.Identity(n);
+    g1 : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := Moving_Flag_Homotopies.Identity(n);
+    g2 : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := QuadDobl_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
+    dim : constant integer32 := 2*n*n;
+    mat : constant QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim)
+        := Flag_Transformations.Coefficient_Matrix(n,f1,f2,g1,g2);
+    rhs : constant QuadDobl_Complex_Vectors.Vector(1..dim)
+        := Flag_Transformations.Right_Hand_Side(n,g1);
+    wrk : QuadDobl_Complex_Matrices.Matrix(1..dim,1..dim) := mat;
+    sol : QuadDobl_Complex_Vectors.Vector(1..dim) := rhs;
+    res : QuadDobl_Complex_Vectors.Vector(1..dim);
+    ipvt : Standard_Integer_Vectors.Vector(1..dim);
+    info : integer32;
+    nrm : quad_double;
+    ans : character;
+    A,T1,T2 : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
+
+    use QuadDobl_Complex_Vectors,QuadDobl_Complex_Matrices;
+
+  begin
+    put_line("The flag f1 : "); put(f1,1); new_line;
+    put_line("The flag f2 : "); put(f2,1); new_line;
+    put_line("The flag g1 : "); put(g1,1); new_line;
+    put_line("The flag g2 : "); put(g2,1); new_line;
+    put_line("The coefficient matrix "); real_small_put(mat); new_line;
+    lufac(wrk,dim,ipvt,info);
+    lusolve(wrk,dim,ipvt,sol);
+    res := rhs - mat*sol;
+    nrm := Max_Norm(res);
+    put("The norm of the residual : "); put(nrm,3); new_line;
+    put("Continue ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Flag_Transformations.Extract_Matrices(n,sol,A,T1,T2);
+      QuadDobl_Test_Flag_Transformation(f1,f2,g1,g2,A,T1,T2);
+    end if;
+  end QuadDobl_Test_Specific_Flags2Flags;
+
+  procedure Test_Flag_Transformations ( n : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the level of precision and then generates
+  --   random flags in n-space and test the transformations.
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU to select the precision : ");
+    put_line("  0. standard double precision;");
+    put_line("  1. double double precision;");
+    put_line("  2. quad double precision.");
+    put("Type 0, 1, or 2 to select the precision : ");
+    Ask_Alternative(ans,"012");
+    case ans is 
+      when '0' => Standard_Test_Random_Flags2Flags(n);
+                  Standard_Test_Specific_Flags2Flags(n);
+      when '1' => DoblDobl_Test_Random_Flags2Flags(n);
+                  DoblDobl_Test_Specific_Flags2Flags(n);
+      when '2' => QuadDobl_Test_Random_Flags2Flags(n);
+                  QuadDobl_Test_Specific_Flags2Flags(n);
+      when others => null;
+    end case;
+  end Test_Flag_Transformations; 
 
   procedure Main is
  
@@ -622,8 +980,7 @@ procedure ts_induce is
                   get(m);
                   Intersecting_Homotopies(n,k,m);
       when '6' => Run_along_Paths_in_Poset(n,k);
-      when '7' => Test_Random_Flags2Flags(n);
-                  Test_Specific_Flags2Flags(n);
+      when '7' => Test_Flag_Transformations(n);
       when others => null;
     end case;
   end Main;
