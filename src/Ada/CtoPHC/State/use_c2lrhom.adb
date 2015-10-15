@@ -212,6 +212,7 @@ function use_c2lrhom ( job : integer32;
     rc : Natural_Number;
     nrc : natural32;
     tol : constant double_float := 1.0E-5;
+    minrep : boolean := true;
 
   begin
     Get_Dimensions2(a,n,k,nbc,nbchar,otp);
@@ -262,9 +263,9 @@ function use_c2lrhom ( job : integer32;
       Count_Roots(file,ips,rc);
       put("the root count : "); put(rc,1); new_line;
       tstart(timer);
-      Resolve(file,monitor,n,k,tol,ips,sps,cnds.all,flgs,sols);
+      Resolve(file,monitor,otp,n,k,tol,ips,sps,minrep,cnds.all,flgs,sols);
       tstop(timer);
-      Write_Results(file,n,k,q,rows,cols,cnds,flgs,sols,fsys);
+      Write_Results(file,n,k,q,rows,cols,minrep,cnds,flgs,sols,fsys);
       Standard_PolySys_Container.Initialize(fsys.all);
       Standard_Solutions_Container.Initialize(sols);
       new_line(file);
