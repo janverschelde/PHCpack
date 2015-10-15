@@ -1,6 +1,7 @@
 Thu 15 Oct 2015 : moving_flag_continuation and resolve_schubrt_problems
   have the option of using a more efficient problem formulation, deterimined
-  in drivers_for_schubert_induction.adb.
+  in drivers_for_schubert_induction.adb.  Improved driver procedures in
+  drivers_for_schubert_induction.adb.
 
 Wed 14 Oct 2015 : extended symbolic_schubert_conditions with a procedure
   and a function to enumerate and count all brackets not above a bracket,

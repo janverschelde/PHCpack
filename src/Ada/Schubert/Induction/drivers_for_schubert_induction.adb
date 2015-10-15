@@ -277,6 +277,7 @@ package body Drivers_for_Schubert_Induction is
   procedure Write_Results
                ( file : in file_type; n,k : in integer32;
                  q,rows,cols : in Standard_Natural_Vectors.Vector;
+                 minrep : in boolean;
                  cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                  vfs : in Standard_Complex_VecMats.VecMat;
                  sols : in Solution_List; fsys : out Link_to_Poly_Sys ) is
@@ -333,7 +334,13 @@ package body Drivers_for_Schubert_Induction is
         tmp := Tail_Of(tmp);
       end loop;
     end if;
-    Moving_Flag_Homotopies.Flag_Conditions(n,k,q,rows,cols,cnds.all,mf,vfs,f);
+    if minrep then
+      Moving_Flag_Homotopies.Minimal_Flag_Conditions
+        (n,k,q,rows,cols,cnds.all,mf,vfs,f);
+    else
+      Moving_Flag_Homotopies.Flag_Conditions
+        (n,k,q,rows,cols,cnds.all,mf,vfs,f);
+    end if;
     put_line(file,"THE POLYNOMIAL SYSTEM :"); put_line(file,f.all);
     if not Is_Null(sols) then
       new_line(file);
@@ -415,6 +422,7 @@ package body Drivers_for_Schubert_Induction is
   procedure Reporting_Moving_Flag_Continuation
               ( n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     file : file_type;
@@ -424,13 +432,14 @@ package body Drivers_for_Schubert_Induction is
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
     new_line;
-    Reporting_Moving_Flag_Continuation(file,n,k,tol,rows,cols,cnds);
+    Reporting_Moving_Flag_Continuation(file,n,k,tol,rows,cols,minrep,cnds);
   end Reporting_Moving_Flag_Continuation;
 
   procedure Reporting_Moving_Flag_Continuation
               ( file : in file_type; tune : in boolean;
                 n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 sols : out Solution_List; fsys : out Link_to_Poly_Sys;
                 flags : out Standard_Complex_VecMats.VecMat ) is
@@ -439,7 +448,6 @@ package body Drivers_for_Schubert_Induction is
        := Identity_Permutation(natural32(n));
     ps : Poset;
     report : boolean;
-    minrep : boolean := true;
     timer : Timing_Widget;
 
   begin
@@ -454,13 +462,14 @@ package body Drivers_for_Schubert_Induction is
     tstop(timer);
     new_line(file);
     print_times(file,timer,"tracking all paths");
-    Write_Results(file,n,k,ip,rows,cols,cnds,flags,sols,fsys);
+    Write_Results(file,n,k,ip,rows,cols,minrep,cnds,flags,sols,fsys);
   end Reporting_Moving_Flag_Continuation;
 
   procedure Reporting_Moving_Flag_Continuation
               ( file : in file_type;
                 n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     sols : Solution_List;
@@ -469,7 +478,7 @@ package body Drivers_for_Schubert_Induction is
 
   begin
     Reporting_Moving_Flag_Continuation
-      (file,true,n,k,tol,rows,cols,cnds,sols,fsys,flgs);
+      (file,true,n,k,tol,rows,cols,minrep,cnds,sols,fsys,flgs);
   end Reporting_Moving_Flag_Continuation;
 
   procedure Run_Moving_Flag_Continuation ( n,k : in integer32 ) is
@@ -480,6 +489,8 @@ package body Drivers_for_Schubert_Induction is
     cnds : Standard_Natural_VecVecs.Link_to_VecVec;
     happy : boolean;
     tol : constant double_float := 1.0E-5;
+    ans : character;
+    minrep : boolean;
 
   begin
     new_line;
@@ -496,7 +507,11 @@ package body Drivers_for_Schubert_Induction is
     cnds := new Standard_Natural_VecVecs.VecVec(1..1);
     cnds(1) := new Standard_Natural_Vectors.Vector'(cond);
     skip_line; -- skip enter symbol
-    Reporting_Moving_Flag_Continuation(n,k,tol,rows,cols,cnds);
+    new_line;
+    put("Use an efficient problem formulation ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    minrep := (ans = 'y');
+    Reporting_Moving_Flag_Continuation(n,k,tol,rows,cols,minrep,cnds);
   end Run_Moving_Flag_Continuation;
 
   procedure Set_Symbol_Table
@@ -869,14 +884,19 @@ package body Drivers_for_Schubert_Induction is
     Ask_Yes_or_No(ans);
     monitor := (ans = 'y');
     new_line;
-    put("Use a more efficient problem formulation ? (y/n) ");
+    put("Use an efficient problem formulation ? (y/n) ");
     Ask_Yes_or_No(ans);
     minrep := (ans = 'y');
+    new_line(file);
+    if minrep
+     then put_line(file,"An efficient problem formulation will be used.");
+     else put_line(file,"A less efficient problem formulation will be used.");
+    end if;
     Moving_Flag_Continuation.Set_Parameters(file,report);
     tstart(timer);
     Resolve(file,monitor,report,n,k,tol,ips,sps,minrep,conds,flags,sols);
     tstop(timer);
-    Write_Results(file,n,k,q,rows,cols,link2conds,flags,sols,fsys);
+    Write_Results(file,n,k,q,rows,cols,minrep,link2conds,flags,sols,fsys);
     new_line(file);
     print_times(file,timer,"resolving a Schubert problem");
     new_line(file);
