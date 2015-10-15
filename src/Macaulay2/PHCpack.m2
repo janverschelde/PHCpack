@@ -2,7 +2,7 @@
 newPackage(
   "PHCpack",
   Version => "1.6.3", 
-  Date => "21 May 2015",
+  Date => "27 May 2015",
   Authors => {
     {Name => "Elizabeth Gross",
      Email => "egross7@uic.edu",
@@ -947,7 +947,7 @@ solveSystem  List := List =>  o->system -> (
     rM := random(CC^n,CC^nSlacks);
     system = apply(#system, i->sub(system#i,newR)
       +(rM^{i}*transpose submatrix'(vars newR,toList(0..numgens R - 1)))_(0,0))
-  ) else newR := R; 
+  ) else newR=R; 
 
   -- writing data to the corresponding files:    
   systemToFile(system,infile);
@@ -980,7 +980,6 @@ solveSystem  List := List =>  o->system -> (
       stdio << "after filtering nonsolutions : "
             << #result << " solutions left" << endl;
     scan(result, (sol -> sol#Coordinates = take(sol#Coordinates, numgens R)));
-    newR := (coefficientRing R)(gens R);
   );
   result
 )
@@ -1142,6 +1141,7 @@ trackPaths (List,List,List) := List => o -> (T,S,Ssols) -> (
   Ssolsfile := temporaryFileName() | "PHCstartsols";
   Tsolsfile := temporaryFileName() | "PHCtargetsols";
   batchfile := temporaryFileName() | "PHCbat";
+  logfile := temporaryFileName() | "PHCbat";
   if o.Verbose then
     stdio   << "using temporary files " << outfile << " and " << Tsolsfile << endl;
   
@@ -1173,7 +1173,7 @@ trackPaths (List,List,List) := List => o -> (T,S,Ssols) -> (
   -- fourth menu
   bat << "0" << endl; -- exit for now
   close bat;
-  run(PHCexe|" -p <"|batchfile|" >phc_session.log");
+  run(PHCexe|" -p <"|batchfile|" > logfile");
   run(PHCexe|" -z "|outfile|" "|Tsolsfile);
   
   -- parse and output the solutions
