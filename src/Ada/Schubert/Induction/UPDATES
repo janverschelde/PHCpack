@@ -5,7 +5,8 @@ Fri 16 Oct 2015 : symbolic_schubert_conditions and remember_symbolic_minors
   changed the test programs ts_induce, ts_lrhom, and ts_flagcond.
   Extended remember_numeric_minors with remember tables for minors in
   double double and quad double precision, used in numeric_schubert_conditions
-  and in moving_flag_homotopies.
+  and in moving_flag_homotopies.  The specifications for the procedures in
+  wrapped_path_trackers.ads were incomplete.
 
 Thu 15 Oct 2015 : moving_flag_continuation and resolve_schubrt_problems
   have the option of using a more efficient problem formulation, deterimined

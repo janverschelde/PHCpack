@@ -159,10 +159,21 @@ package Wrapped_Path_Trackers is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 xtsols : in out Standard_Complex_Solutions.Solution_List;
                 sols : in out Standard_Complex_Solutions.Solution_List );
+  procedure Call_Path_Trackers
+              ( file : in file_type; n : in integer32;
+                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                xtsols : in out DoblDobl_Complex_Solutions.Solution_List;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Call_Path_Trackers
+              ( file : in file_type; n : in integer32;
+                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                xtsols : in out QuadDobl_Complex_Solutions.Solution_List;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
-  --   Tracks one path starting at the solution in xt,
-  --   as defined by the homotopy h.
+  --   Tracks paths starting at the solution in xtsols,
+  --   as defined by the homotopy h, 
+  --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   file     output file for intermediate results and diagnostics,
