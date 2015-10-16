@@ -15,6 +15,8 @@ with Checker_Posets,Checker_Posets_io;   use Checker_Posets_io;
 with Checker_Localization_Patterns;
 with Checker_Homotopies;
 with Flag_Transformations;
+with Setup_Flag_Homotopies;              use Setup_Flag_Homotopies;
+with Start_Flag_Homotopies;              use Start_Flag_Homotopies;
 with Moving_Flag_Homotopies;             use Moving_Flag_Homotopies;
 with Moving_Flag_Continuation;
 

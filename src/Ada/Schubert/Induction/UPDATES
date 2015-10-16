@@ -9,7 +9,10 @@ Thu 15 Oct 2015 : moving_flag_continuation and resolve_schubrt_problems
   New package wrapped_path_trackers with code factored out of the package
   moving_flag_continuation, for extension to double doubles and quad doubles.
   This refactoring changed moving_flag_continuation and the body of
-  drivers_for_schubert_induction.
+  drivers_for_schubert_induction.  New packages start_flag_homotopies
+  and setup_flag_homotopies, factored from moving_flag_homotopies.
+  This changed resolve_schubert_problems.adb and
+  drivers_for_schubert_induction.adb.
 
 Wed 14 Oct 2015 : extended symbolic_schubert_conditions with a procedure
   and a function to enumerate and count all brackets not above a bracket,

@@ -6,7 +6,7 @@ with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
 with Standard_Matrix_Inversion;
-with Moving_Flag_Homotopies;
+with Setup_Flag_Homotopies;
 
 package body Flag_Transformations is
 
@@ -524,9 +524,9 @@ package body Flag_Transformations is
 
     res : Standard_Complex_Matrices.Matrix(1..n,1..n) := G;
     moved : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-          := Moving_Flag_Homotopies.Moved_Flag(n);
+          := Setup_Flag_Homotopies.Moved_Flag(n);
     idemat : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-           :=  Moving_Flag_Homotopies.Identity(n);
+           :=  Setup_Flag_Homotopies.Identity(n);
     A,T1,T2,invT1 : Standard_Complex_Matrices.Matrix(1..n,1..n);
 
     use Standard_Complex_Matrices;
@@ -542,7 +542,7 @@ package body Flag_Transformations is
               ( n : integer32 ) return Standard_Complex_Matrices.Matrix is
 
     ranflag : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-            := Moving_Flag_Homotopies.Random_Flag(n);
+            := Setup_Flag_Homotopies.Random_Flag(n);
     res : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
         := Move_to_Generic_Flag(n,ranflag);
 
@@ -557,9 +557,9 @@ package body Flag_Transformations is
                 rsd : out double_float ) is
 
     moved : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-          := Moving_Flag_Homotopies.Moved_Flag(n);
+          := Setup_Flag_Homotopies.Moved_Flag(n);
     idemat : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-           :=  Moving_Flag_Homotopies.Identity(n);
+           :=  Setup_Flag_Homotopies.Identity(n);
     ranflag : Standard_Complex_Matrices.Matrix(1..n,1..n) := G;
     A,T1,T2,invT1 : Standard_Complex_Matrices.Matrix(1..n,1..n);
 
@@ -578,7 +578,7 @@ package body Flag_Transformations is
                 rsd : out double_float ) is
 
     ranflag : Standard_Complex_Matrices.Matrix(1..n,1..n)
-            := Moving_Flag_Homotopies.Random_Flag(n);
+            := Setup_Flag_Homotopies.Random_Flag(n);
 
   begin
     Move_to_Generic_Flag(n,ranflag,F,rsd);
@@ -592,9 +592,9 @@ package body Flag_Transformations is
                 A,invA,sT : out Standard_Complex_Matrices.Matrix ) is
 
     moved : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-          := Moving_Flag_Homotopies.Moved_Flag(n);
+          := Setup_Flag_Homotopies.Moved_Flag(n);
     idemat : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-           :=  Moving_Flag_Homotopies.Identity(n);
+           :=  Setup_Flag_Homotopies.Identity(n);
     flag,T2 : Standard_Complex_Matrices.Matrix(1..n,1..n);
 
     use Standard_Complex_Matrices;

@@ -16,6 +16,8 @@ intersection_posets            : combine posets for several conditions
 intersection_posets_io         : output of formal sums and equations
 ts_checkers                    : interactive test program
 -----------------------------------------------------------------------------
+start_flag_homotopies          : start solutions for flag homotopies
+setup_flag_homotopies          : utilities to setup flag homotopies
 moving_flag_homotopies         : defines homotopies in one checker game
 flag_transformations           : transforming pairs of flags
 ts_induce                      : interactive test program for homotopies

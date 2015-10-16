@@ -28,6 +28,7 @@ with Checker_Localization_Patterns;      use Checker_Localization_Patterns;
 with Intersection_Posets_io;             use Intersection_Posets_io;
 with Wrapped_Path_Trackers;
 with Moving_Flag_Continuation;
+with Setup_Flag_Homotopies;
 with Moving_Flag_Homotopies;
 with Resolve_Schubert_Problems;          use Resolve_Schubert_Problems;
 with Write_Seed_Number;
@@ -285,7 +286,7 @@ package body Drivers_for_Schubert_Induction is
 
     f : Link_to_Poly_Sys;
     mf : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-       := Moving_Flag_Homotopies.Moved_Flag(n);
+       := Setup_Flag_Homotopies.Moved_Flag(n);
     locmap : Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
     dim : constant natural32
@@ -315,7 +316,7 @@ package body Drivers_for_Schubert_Induction is
       new_line(file);
     end loop;
     put_line(file,"THE MOVED FLAG :");
-    Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+    Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
     if Is_Null(sols) then
       put_line(file,"No solutions found ...");
     else
@@ -360,7 +361,7 @@ package body Drivers_for_Schubert_Induction is
     for i in res'range loop
       declare
         rf : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-           := Moving_Flag_Homotopies.Random_Flag(n);
+           := Setup_Flag_Homotopies.Random_Flag(n);
       begin
         res(i) := new Standard_Complex_Matrices.Matrix'(rf);
       end;
@@ -669,7 +670,7 @@ package body Drivers_for_Schubert_Induction is
    -- end loop;
    -- put_line(file,"the start flags : ");  put(file,a);
    -- put_line(file,"the target flags : "); put(file,b);
-    Moving_Flag_Homotopies.Add_t_Symbol;
+    Setup_Flag_Homotopies.Add_t_Symbol;
     Moving_Flag_Homotopies.Flag_Conditions(n,k,q,rows,cols,cnd,stf,tgf,hom);
    -- put_line(file,"the cheater's homotopy : ");
    -- put_line(file,hom.all);

@@ -25,259 +25,9 @@ with Checker_Moves;
 with Checker_Localization_Patterns;     use Checker_Localization_Patterns;
 with Symbolic_Schubert_Conditions;
 with Numeric_Schubert_Conditions;
+with Setup_Flag_Homotopies;             use Setup_Flag_Homotopies;
 
 package body Moving_Flag_Homotopies is
-
-  function Random_Flag
-             ( n : integer32 ) return Standard_Complex_Matrices.Matrix is
-
-    res : Standard_Complex_Matrices.Matrix(1..n,1..n);
-
-  begin
-    for j in 1..n loop
-      for i in 1..n loop
-        res(i,j) := Random1;
-      end loop;
-     -- for i in 1..(n-j) loop
-     --   res(i,j) := Random1;
-     -- end loop; 
-     -- res(n-j+1,j) := Create(1.0);
-     -- for i in (n-j+2)..n loop
-     --   res(i,j) := Create(0.0);
-     -- end loop;
-    end loop;
-    return res;
-  end Random_Flag;
-
-  function Random_Flag
-             ( n : integer32 ) return DoblDobl_Complex_Matrices.Matrix is
-
-    res : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
-
-  begin
-    for j in 1..n loop
-      for i in 1..n loop
-        res(i,j) := Random1;
-      end loop;
-    end loop;
-    return res;
-  end Random_Flag;
-
-  function Random_Flag
-             ( n : integer32 ) return QuadDobl_Complex_Matrices.Matrix is
-
-    res : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
-
-  begin
-    for j in 1..n loop
-      for i in 1..n loop
-        res(i,j) := Random1;
-      end loop;
-    end loop;
-    return res;
-  end Random_Flag;
-
-  function One_Flag
-             ( n : integer32 ) return Standard_Complex_Matrices.Matrix is
-
-    res : Standard_Complex_Matrices.Matrix(1..n,1..n);
-
-  begin
-    for j in 1..n loop
-      for i in 1..(n-j+1) loop
-        res(i,j) := Standard_Complex_Numbers.Create(1.0);
-      end loop; 
-      for i in (n-j+2)..n loop
-        res(i,j) := Standard_Complex_Numbers.Create(0.0);
-      end loop;
-    end loop;
-    return res;
-  end One_Flag;
-
-  function One_Flag
-             ( n : integer32 ) return DoblDobl_Complex_Matrices.Matrix is
-
-    res : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
-    zero : constant double_double := create(0.0);
-    one : constant double_double := create(1.0);
-
-  begin
-    for j in 1..n loop
-      for i in 1..(n-j+1) loop
-        res(i,j) := DoblDobl_Complex_Numbers.Create(one);
-      end loop; 
-      for i in (n-j+2)..n loop
-        res(i,j) := DoblDobl_Complex_Numbers.Create(zero);
-      end loop;
-    end loop;
-    return res;
-  end One_Flag;
-
-  function One_Flag
-             ( n : integer32 ) return QuadDobl_Complex_Matrices.Matrix is
-
-    res : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
-    zero : constant quad_double := create(0.0);
-    one : constant quad_double := create(1.0);
-
-  begin
-    for j in 1..n loop
-      for i in 1..(n-j+1) loop
-        res(i,j) := QuadDobl_Complex_Numbers.Create(one);
-      end loop; 
-      for i in (n-j+2)..n loop
-        res(i,j) := QuadDobl_Complex_Numbers.Create(zero);
-      end loop;
-    end loop;
-    return res;
-  end One_Flag;
-
-  function Identity
-             ( n : integer32 ) return Standard_Complex_Matrices.Matrix is
-
-    res : Standard_Complex_Matrices.Matrix(1..n,1..n);
-
-  begin
-    for i in res'range(1) loop
-      for j in res'range(2) loop
-        if i = j
-         then res(i,j) := Standard_Complex_Numbers.Create(1.0);
-         else res(i,j) := Standard_Complex_Numbers.Create(0.0);
-        end if;
-      end loop;
-    end loop;
-    return res;
-  end Identity;
-
-  function Identity
-             ( n : integer32 ) return DoblDobl_Complex_Matrices.Matrix is
-
-    res : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
-    one : constant double_double := create(1.0);
-    zero : constant double_double := create(0.0);
-
-  begin
-    for i in res'range(1) loop
-      for j in res'range(2) loop
-        if i = j
-         then res(i,j) := DoblDobl_Complex_Numbers.Create(one);
-         else res(i,j) := DoblDobl_Complex_Numbers.Create(zero);
-        end if;
-      end loop;
-    end loop;
-    return res;
-  end Identity;
-
-  function Identity
-             ( n : integer32 ) return QuadDobl_Complex_Matrices.Matrix is
-
-    res : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
-    one : constant quad_double := create(1.0);
-    zero : constant quad_double := create(0.0);
-
-  begin
-    for i in res'range(1) loop
-      for j in res'range(2) loop
-        if i = j
-         then res(i,j) := QuadDobl_Complex_Numbers.Create(one);
-         else res(i,j) := QuadDobl_Complex_Numbers.Create(zero);
-        end if;
-      end loop;
-    end loop;
-    return res;
-  end Identity;
-
-  function Moved_Flag
-             ( n : integer32 ) return Standard_Complex_Matrices.Matrix is
-
-    res : Standard_Complex_Matrices.Matrix(1..n,1..n);
-
-    use Standard_Complex_Numbers;
-
-  begin
-    for i in 1..n loop
-      for j in 1..n-i+1 loop
-        if i mod 2 = 0
-         then res(i,j) := Create(-1.0);
-         else res(i,j) := Create(1.0);
-        end if;
-      end loop;
-      for j in (n-i+2)..n loop
-        res(i,j) := Create(0.0);
-      end loop;
-    end loop;
-    return res;
-  end Moved_Flag;
-
-  function Moved_Flag
-             ( n : integer32 ) return DoblDobl_Complex_Matrices.Matrix is
-
-    res : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
-    zero : constant double_double := create(0.0);
-    one : constant double_double := create(1.0);
-    minone : constant double_double := create(-1.0);
-
-    use DoblDobl_Complex_Numbers;
-
-  begin
-    for i in 1..n loop
-      for j in 1..n-i+1 loop
-        if i mod 2 = 0
-         then res(i,j) := Create(minone);
-         else res(i,j) := Create(one);
-        end if;
-      end loop;
-      for j in (n-i+2)..n loop
-        res(i,j) := Create(zero);
-      end loop;
-    end loop;
-    return res;
-  end Moved_Flag;
-
-  function Moved_Flag
-             ( n : integer32 ) return QuadDobl_Complex_Matrices.Matrix is
-
-    res : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
-    zero : constant quad_double := create(0.0);
-    one : constant quad_double := create(1.0);
-    minone : constant quad_double := create(-1.0);
-
-    use QuadDobl_Complex_Numbers;
-
-  begin
-    for i in 1..n loop
-      for j in 1..n-i+1 loop
-        if i mod 2 = 0
-         then res(i,j) := Create(minone);
-         else res(i,j) := Create(one);
-        end if;
-      end loop;
-      for j in (n-i+2)..n loop
-        res(i,j) := Create(zero);
-      end loop;
-    end loop;
-    return res;
-  end Moved_Flag;
-
-  procedure Write_Moving_Flag
-              ( file : in file_type;
-                flag : in Standard_Complex_Matrices.Matrix ) is
-
-    use Standard_Complex_Numbers;
-
-    realcff : double_float;
-    intcff : integer32;
-
-  begin
-    for i in flag'range(1) loop
-      for j in flag'range(2) loop
-        realcff := REAL_PART(flag(i,j));
-        intcff := integer32(realcff);
-        put(file,intcff,3);
-      end loop;
-      new_line(file);
-    end loop;
-  end Write_Moving_Flag;
 
   function Numeric_Transformation
               ( t : Standard_Natural_Matrices.Matrix;
@@ -541,7 +291,12 @@ package body Moving_Flag_Homotopies is
     return res;
   end Symbolic_Plane;
 
-  function Filter_Zero_Equations ( p : Poly_Sys ) return Poly_Sys is
+  function Filter_Zero_Equations
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    use Standard_Complex_Polynomials;
+    use Standard_Complex_Poly_Systems;
 
     res : Poly_Sys(p'range);
     cnt : integer32 := p'first-1;
@@ -556,7 +311,12 @@ package body Moving_Flag_Homotopies is
     return res(res'first..cnt);
   end Filter_Zero_Equations;
 
-  function Square ( n : integer32; p : Poly_Sys ) return Poly_Sys is
+  function Square ( n : integer32;
+                    p : Standard_Complex_Poly_Systems.Poly_Sys )
+                  return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    use Standard_Complex_Polynomials;
+    use Standard_Complex_Poly_Systems;
 
     res : Poly_Sys(1..n);
     acc : Poly;
@@ -578,7 +338,9 @@ package body Moving_Flag_Homotopies is
                q,p,rows,cols : in Standard_Natural_Vectors.Vector;
                ic : in Bracket;
                vf,mf,nf : in Standard_Complex_Matrices.Matrix;
-               h : out Link_to_Poly_Sys ) is
+               h : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
 
     f : constant integer32 := Checker_Moves.Falling_Checker(p);
     a : constant integer32 := Checker_Moves.Ascending_Checker(p,f);
@@ -616,7 +378,9 @@ package body Moving_Flag_Homotopies is
                q,p,rows,cols : in Standard_Natural_Vectors.Vector;
                ic : in Bracket;
                vf,mf,nf : in Standard_Complex_Matrices.Matrix;
-               h : out Link_to_Poly_Sys ) is
+               h : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
 
     f : constant integer32 := Checker_Moves.Falling_Checker(p);
     a : constant integer32 := Checker_Moves.Ascending_Checker(p,f);
@@ -658,32 +422,14 @@ package body Moving_Flag_Homotopies is
     h := new Poly_Sys'(Filter_Zero_Equations(sc));
   end One_Flag_Homotopy;
 
-  function Concatenate ( s : Array_of_Poly_Sys ) return Link_to_Poly_Sys is
-
-    res : Link_to_Poly_Sys;
-    cnt : integer32 := 0;
-    ind : integer32 := 0;
-
-  begin
-    for i in s'range loop
-      cnt := cnt + s(i)'last;
-    end loop;
-    res := new Poly_Sys(1..cnt);
-    for i in s'range loop
-      for j in s(i)'range loop
-        ind := ind + 1;
-        res(ind) := s(i)(j);
-      end loop;    
-    end loop;
-    return res;
-  end Concatenate;
-
   procedure Flag_Conditions
              ( n,k : in integer32;
                x : in Standard_Complex_Poly_Matrices.Matrix;
                ic : in Standard_Natural_VecVecs.VecVec;
                vf : in Standard_Complex_VecMats.VecMat;
-               f : out Link_to_Poly_Sys ) is
+               f : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
 
     s : Array_of_Poly_Sys(ic'range);
 
@@ -708,7 +454,9 @@ package body Moving_Flag_Homotopies is
                x : in Standard_Complex_Poly_Matrices.Matrix;
                ic : in Standard_Natural_VecVecs.VecVec;
                vf : in Standard_Complex_VecMats.VecMat;
-               f : out Link_to_Poly_Sys ) is
+               f : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
 
     s : Array_of_Poly_Sys(ic'range);
 
@@ -733,7 +481,9 @@ package body Moving_Flag_Homotopies is
                p,rows,cols : in Standard_Natural_Vectors.Vector;
                ic : in Standard_Natural_VecVecs.VecVec;
                vf : in Standard_Complex_VecMats.VecMat;
-               f : out Link_to_Poly_Sys ) is
+               f : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Column_Pattern(n,k,p,rows,cols);
@@ -762,7 +512,9 @@ package body Moving_Flag_Homotopies is
                p,rows,cols : in Standard_Natural_Vectors.Vector;
                ic : in Standard_Natural_VecVecs.VecVec;
                vf : in Standard_Complex_VecMats.VecMat;
-               f : out Link_to_Poly_Sys ) is
+               f : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Column_Pattern(n,k,p,rows,cols);
@@ -792,7 +544,9 @@ package body Moving_Flag_Homotopies is
                ic : in Standard_Natural_VecVecs.VecVec;
                mf : in Standard_Complex_Matrices.Matrix;
                vf : in Standard_Complex_VecMats.VecMat;
-               f : out Link_to_Poly_Sys ) is
+               f : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Column_Pattern(n,k,p,rows,cols);
@@ -823,7 +577,9 @@ package body Moving_Flag_Homotopies is
                ic : in Standard_Natural_VecVecs.VecVec;
                mf : in Standard_Complex_Matrices.Matrix;
                vf : in Standard_Complex_VecMats.VecMat;
-               f : out Link_to_Poly_Sys ) is
+               f : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Column_Pattern(n,k,p,rows,cols);
@@ -855,7 +611,9 @@ package body Moving_Flag_Homotopies is
                ic : in Standard_Natural_VecVecs.VecVec;
                vf : in Standard_Complex_VecMats.VecMat;
                mf,nf : in Standard_Complex_Matrices.Matrix;
-               f : out Link_to_Poly_Sys ) is
+               f : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
 
    -- fc : constant natural := Checker_Moves.Falling_Checker(p);
    -- ac : constant natural := Checker_Moves.Ascending_Checker(p,fc);
@@ -902,7 +660,9 @@ package body Moving_Flag_Homotopies is
                ic : in Standard_Natural_VecVecs.VecVec;
                vf : in Standard_Complex_VecMats.VecMat;
                mf,nf : in Standard_Complex_Matrices.Matrix;
-               f : out Link_to_Poly_Sys ) is
+               f : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
 
    -- fc : constant natural := Checker_Moves.Falling_Checker(p);
    -- ac : constant natural := Checker_Moves.Ascending_Checker(p,fc);
@@ -949,7 +709,9 @@ package body Moving_Flag_Homotopies is
                ic : in Standard_Natural_VecVecs.VecVec;
                vf : in Standard_Complex_VecMats.VecMat;
                mf,nf : in Standard_Complex_Matrices.Matrix;
-               h : out Link_to_Poly_Sys ) is
+               h : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
 
     f : constant integer32 := Checker_Moves.Falling_Checker(p);
     a : constant integer32 := Checker_Moves.Ascending_Checker(p,f);
@@ -996,7 +758,9 @@ package body Moving_Flag_Homotopies is
                ic : in Standard_Natural_VecVecs.VecVec;
                vf : in Standard_Complex_VecMats.VecMat;
                mf,nf : in Standard_Complex_Matrices.Matrix;
-               h : out Link_to_Poly_Sys ) is
+               h : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
 
     f : constant integer32 := Checker_Moves.Falling_Checker(p);
     a : constant integer32 := Checker_Moves.Ascending_Checker(p,f);
@@ -1048,131 +812,6 @@ package body Moving_Flag_Homotopies is
    -- nf := nf*nt;
   end Moving_Flag_Homotopy;
 
-  function Inconsistent ( p : Poly_Sys ) return boolean is
-  begin
-    for i in p'range loop
-      if p(i) /= Null_Poly then
-        if degree(p(i)) = 0
-         then return true;
-        end if;
-      end if;
-    end loop;
-    return false;
-  end Inconsistent;
-
-  function Linear_Equations ( p : Poly_Sys ) return Poly_Sys is
-
-    res : Poly_Sys(p'range);
-    cnt : integer32 := res'first-1;
-
-  begin
-    for i in p'range loop
-      if p(i) /= Null_Poly then
-        if Degree(p(i)) = 1 then
-          cnt := cnt + 1;
-          res(cnt) := p(i);
-        end if;
-      end if;
-    end loop;
-    return res(res'first..cnt);
-  end Linear_Equations;
-
-  procedure Coefficients
-             ( p : in Poly_Sys; 
-               A : out Standard_Complex_Matrices.Matrix;
-               b : out Standard_Complex_Vectors.Vector ) is
-
-    use Standard_Complex_Numbers;
-
-    n : constant natural32 := Number_of_Unknowns(p(p'first));
-    h : Standard_Complex_Vectors.Vector(0..integer32(n));
-
-  begin
-    for i in p'range loop
-      h := Planes_and_Polynomials.Polynomial(p(i));
-      b(i) := -h(0);
-      for j in A'range(2) loop
-        A(i,j) := h(j);
-      end loop;
-    end loop;
-  end Coefficients;
-
-  procedure Solve ( A : in out Standard_Complex_Matrices.Matrix;
-                    b : in Standard_Complex_Vectors.Vector;
-                    x : out Standard_Complex_Vectors.Vector;
-                    res : out double_float ) is
-
-  -- DESCRIPTION :
-  --   Applies singular value decomposition to A to solve A*x = b.
-
-    AA : constant Standard_Complex_Matrices.Matrix(A'range(1),A'range(2)) := A;
-    n : constant integer32 := A'last(1);
-    p : constant integer32 := A'last(2);
-    m : constant integer32 := Min0(n+1,p);
-    s : Standard_Complex_Vectors.Vector(1..m);
-    e : Standard_Complex_Vectors.Vector(1..p);
-    u : Standard_Complex_Matrices.Matrix(1..n,1..n);
-    v : Standard_Complex_Matrices.Matrix(1..p,1..p);
-    info : integer32;
-    r : Standard_Complex_Vectors.Vector(b'range);
-    use Standard_Complex_Vectors;
-    use Standard_Complex_Matrices;
-
-  begin
-    SVD(A,n,p,s,e,u,v,11,info);
-    x := Solve(u,v,s,b);
-    r := b - AA*x;
-   -- put_line("the singular values : "); put_line(s);
-   -- put_line("The residual :"); put_line(r);
-    res := Standard_Complex_Norms_Equals.Norm2(r);
-  end Solve;
-
-  procedure First_Solution
-             ( f : in Poly_Sys; fail : out boolean;
-               x : out Standard_Complex_Vectors.Vector;
-               res : out double_float ) is
-
-    use Standard_Complex_Numbers;
-
-    n : constant integer32 := x'last;
-
-  begin
-    fail := true;
-    x := (x'range => Create(0.0));
-    if not Inconsistent(f) then
-      declare
-        s : constant Poly_Sys := Linear_Equations(f);
-        m : constant integer32 := s'last;
-        A : Standard_Complex_Matrices.Matrix(1..m,1..n);
-        b : Standard_Complex_Vectors.Vector(1..m);
-      begin
-        if s'last >= n then
-          Coefficients(s,A,b);
-         -- put_line("The coefficient matrix : "); put(A,3);
-         -- put_line("The righthandside vector : "); put_line(b);
-          Solve(A,b,x,res);
-          fail := (res > 1.0E-8);
-        end if;
-      end;
-    end if;
-  end First_Solution;
-
-  procedure Start_Solution
-             ( h : in Poly_Sys; fail : out boolean;
-               x : out Standard_Complex_Vectors.Vector;
-               res : out double_float ) is
-
-    use Standard_Complex_Numbers;
-
-    n : constant integer32 := x'last;
-    h0 : Poly_Sys(h'range) := Eval(h,Create(0.0),n+1);
-      -- h0 is system h where t is substituted by zero
-
-  begin
-    First_Solution(h0,fail,x,res);
-    Clear(h0);
-  end Start_Solution;
-
   function Cheater_Homotopy_Flag 
              ( nv : in integer32;
                start,target : Standard_Complex_Matrices.Matrix )
@@ -1216,7 +855,9 @@ package body Moving_Flag_Homotopies is
                p,rows,cols : in Standard_Natural_Vectors.Vector;
                cond : in Bracket;
                start,target : in Standard_Complex_Matrices.Matrix;
-               f : out Link_to_Poly_Sys ) is
+               f : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
 
     nq : constant integer32
        := integer32(Symbolic_Schubert_Conditions.Number_of_Equations
@@ -1241,7 +882,9 @@ package body Moving_Flag_Homotopies is
                p,rows,cols : in Standard_Natural_Vectors.Vector;
                conds : in Array_of_Brackets;
                start,target : in Standard_Complex_VecMats.VecMat;
-               f : out Link_to_Poly_Sys ) is
+               f : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
 
     eqs : Array_of_Poly_Sys(conds'range);
     cnt : integer32 := 0;

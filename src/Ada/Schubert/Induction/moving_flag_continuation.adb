@@ -27,6 +27,8 @@ with Checker_Posets_io;
 with Checker_Localization_Patterns;
 with Checker_Homotopies;
 with Wrapped_Path_Trackers;             use Wrapped_Path_Trackers;
+with Start_Flag_Homotopies;             use Start_Flag_Homotopies;
+with Setup_Flag_Homotopies;             use Setup_Flag_Homotopies;
 with Moving_Flag_Homotopies;            use Moving_Flag_Homotopies;
 
 package body Moving_Flag_Continuation is
@@ -414,7 +416,7 @@ package body Moving_Flag_Continuation is
     put(file,"  cols = "); put(file,cols); new_line(file);
     put_line(file,"Verification of intersection conditions :");
     put_line(file,"The moving flag : ");
-    Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+    Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
     declare
       z : Standard_Complex_Vectors.Vector(x'range);
       fail : boolean;
@@ -475,7 +477,7 @@ package body Moving_Flag_Continuation is
     put(file,"  cols = "); put(file,cols); new_line(file);
     put_line(file,"Verification of intersection conditions :");
     put_line(file,"The moving flag : ");
-    Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+    Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
     fail := true; -- assume all solutions are failures
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
@@ -627,9 +629,9 @@ package body Moving_Flag_Continuation is
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
     put_line(file,"The moving coordinates : "); put(file,xp);
     put_line(file,"the new moving flag when making the stay homotopy :");
-    Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+    Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
     put_line(file,"the old moving flag when making the stay homotopy :");
-    Moving_Flag_Homotopies.Write_Moving_Flag(file,start_mf);
+    Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,start_mf);
     xpm := Moving_Flag(start_mf,xp);
     put_line(file,"The moving coordinates after multiplication by M :");
     put(file,xpm);
@@ -680,9 +682,9 @@ package body Moving_Flag_Continuation is
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
     put_line(file,"The moving coordinates : "); put(file,xp);
     put_line(file,"the new moving flag when making the stay homotopy :");
-    Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+    Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
     put_line(file,"the old moving flag when making the stay homotopy :");
-    Moving_Flag_Homotopies.Write_Moving_Flag(file,start_mf);
+    Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,start_mf);
     xpm := Moving_Flag(start_mf,xp);
     put_line(file,"The moving coordinates after multiplication by M :");
     put(file,xpm);
@@ -954,13 +956,13 @@ package body Moving_Flag_Continuation is
         put_line(file,"The pattern t for the numerical transformation ");
         put(file,t);
         put_line(file,"The numerical transformation :");
-        Write_Moving_Flag(file,Numeric_Transformation(t));
+        Write_Standard_Moving_Flag(file,Numeric_Transformation(t));
         put_line(file,"The moving flag before the update :");
-        Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+        Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
         start_mf := mf;
         mf := mf*Numeric_Transformation(t);
         put_line(file,"The moving flag after the update :");
-        Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+        Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
         Checker_Homotopies.Define_Generalizing_Homotopy
            (file,n,q,qr,qc,stay_child,homtp,ctr);
         Initialize_Symbol_Table(n,k,q,qr,qc,dim);
@@ -972,7 +974,7 @@ package body Moving_Flag_Continuation is
           Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
                         vf,mf,start_mf,ls,tol,fail);
         else -- homtp = 2
-          Moving_Flag_Homotopies.Add_t_Symbol;
+          Setup_Flag_Homotopies.Add_t_Symbol;
           Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
                         mf,start_mf,vf,ls,tol,fail);
         end if;
@@ -1051,13 +1053,13 @@ package body Moving_Flag_Continuation is
         put_line(file,"The pattern t for the numerical transformation ");
         put(file,t);
         put_line(file,"The numerical transformation :");
-        Write_Moving_Flag(file,Numeric_Transformation(t));
+        Write_Standard_Moving_Flag(file,Numeric_Transformation(t));
         put_line(file,"The moving flag before the update :");
-        Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+        Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
         start_mf := mf;
         mf := mf*Numeric_Transformation(t);
         put_line(file,"The moving flag after the update :");
-        Moving_Flag_Homotopies.Write_Moving_Flag(file,mf);
+        Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
         Checker_Homotopies.Define_Generalizing_Homotopy
           (file,n,q,qr,qc,stay_child,homtp,ctr);
         Initialize_Symbol_Table(n,k,q,qr,qc,dim);
@@ -1069,7 +1071,7 @@ package body Moving_Flag_Continuation is
           Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
                         vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
-          Moving_Flag_Homotopies.Add_t_Symbol;
+          Setup_Flag_Homotopies.Add_t_Symbol;
           Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
                         mf,start_mf,vf,sols,tol,fail);
         end if;
