@@ -1,6 +1,10 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
-with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
+with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Matrices;
+with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Poly_Matrices;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Poly_Matrices;
 with Brackets;                           use Brackets;
 with Bracket_Monomials;                  use Bracket_Monomials;
 with Bracket_Polynomials;                use Bracket_Polynomials;
@@ -15,16 +19,30 @@ package Symbolic_Minor_Equations is
 
 -- LOCALIZATION PATTERNS :
 
-  function Schubert_Pattern ( n : natural32; b1,b2 : Bracket )
-                            return Standard_Complex_Poly_Matrices.Matrix;
+  function Schubert_Pattern
+             ( n : natural32; b1,b2 : Bracket )
+             return Standard_Complex_Poly_Matrices.Matrix;
+  function Schubert_Pattern
+             ( n : natural32; b1,b2 : Bracket )
+             return DoblDobl_Complex_Poly_Matrices.Matrix;
+  function Schubert_Pattern
+             ( n : natural32; b1,b2 : Bracket )
+             return QuadDobl_Complex_Poly_Matrices.Matrix;
 
   -- DESCRIPTON :
   --   Returns the representation of the pattern of the p-plane that satisfies
   --   the Schubert conditions as a polynomial matrix.
   --   This definition is used in the original Pieri implementation.
 
-  function Localization_Pattern ( n : natural32; top,bottom : Bracket )
-                                return Standard_Complex_Poly_Matrices.Matrix;
+  function Localization_Pattern
+             ( n : natural32; top,bottom : Bracket )
+             return Standard_Complex_Poly_Matrices.Matrix;
+  function Localization_Pattern
+             ( n : natural32; top,bottom : Bracket )
+             return DoblDobl_Complex_Poly_Matrices.Matrix;
+  function Localization_Pattern
+             ( n : natural32; top,bottom : Bracket )
+             return QuadDobl_Complex_Poly_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns the matrix of indeterminates for the top and bottom pivots.
@@ -75,13 +93,22 @@ package Symbolic_Minor_Equations is
   --   Equation 0 in the result is the generic bracket representation of
   --   the Laplace expansion.
 
-  function Expanded_Minor ( m : Standard_Complex_Poly_Matrices.Matrix;
-                            b : Bracket ) return Poly;
+  function Expanded_Minor
+             ( m : Standard_Complex_Poly_Matrices.Matrix; b : Bracket )
+             return Standard_Complex_Polynomials.Poly;
+  function Expanded_Minor
+             ( m : DoblDobl_Complex_Poly_Matrices.Matrix; b : Bracket )
+             return DoblDobl_Complex_Polynomials.Poly;
+  function Expanded_Minor
+             ( m : QuadDobl_Complex_Poly_Matrices.Matrix; b : Bracket )
+             return QuadDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   The minor that selects rows from m, according to b is expanded.
 
-  function Extend_Zero_Lifting ( p : Poly ) return Poly;
+  function Extend_Zero_Lifting
+             ( p : Standard_Complex_Polynomials.Poly )
+             return Standard_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Extends every term with a new variable t^0.

@@ -1,6 +1,10 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Matrix_Indeterminates;
 with Straightening_Syzygies;             use Straightening_Syzygies;
@@ -119,10 +123,13 @@ package body Symbolic_Minor_Equations is
 
   function General_Expanded_Minor
              ( m : Standard_Complex_Poly_Matrices.Matrix;
-               b : Bracket ) return Poly is
+               b : Bracket )
+             return Standard_Complex_Polynomials.Poly is
 
   -- DESCRIPTION :
   --   This function treats the case for Expanded_Minor when b'length > 2.
+
+    use Standard_Complex_Polynomials;
 
     res : Poly := Null_Poly;
     sig : integer32;
@@ -151,12 +158,141 @@ package body Symbolic_Minor_Equations is
     return res;
   end General_Expanded_Minor;
 
-  procedure Purify ( p : in out Poly ) is
+  function General_Expanded_Minor
+             ( m : DoblDobl_Complex_Poly_Matrices.Matrix;
+               b : Bracket )
+             return DoblDobl_Complex_Polynomials.Poly is
 
   -- DESCRIPTION :
-  --   Eliminates terms that have coefficients less that 10.0**(-10).
+  --   This function treats the case for Expanded_Minor when b'length > 2.
 
-    tol : constant double_float := 10.0**(-10);
+    use DoblDobl_Complex_Polynomials;
+
+    res : Poly := Null_Poly;
+    sig : integer32;
+    submin,acc : Poly;
+
+  begin
+    if b'last mod 2 = 0
+     then sig := -1;
+     else sig := +1;
+    end if;
+    for i in b'range loop
+      if m(integer32(b(i)),b'last) /= Null_Poly then
+        submin := Expanded_Minor(m,Subtract(b,i));
+        if submin /= Null_Poly then
+          acc := m(integer32(b(i)),b'last)*submin;
+          if sig > 0
+           then Add(res,acc);
+           else Sub(res,acc);
+          end if;
+          Clear(acc);
+        end if;
+        Clear(submin);
+      end if;
+      sig := -sig;
+    end loop;
+    return res;
+  end General_Expanded_Minor;
+
+  function General_Expanded_Minor
+             ( m : QuadDobl_Complex_Poly_Matrices.Matrix;
+               b : Bracket )
+             return QuadDobl_Complex_Polynomials.Poly is
+
+  -- DESCRIPTION :
+  --   This function treats the case for Expanded_Minor when b'length > 2.
+
+    use QuadDobl_Complex_Polynomials;
+
+    res : Poly := Null_Poly;
+    sig : integer32;
+    submin,acc : Poly;
+
+  begin
+    if b'last mod 2 = 0
+     then sig := -1;
+     else sig := +1;
+    end if;
+    for i in b'range loop
+      if m(integer32(b(i)),b'last) /= Null_Poly then
+        submin := Expanded_Minor(m,Subtract(b,i));
+        if submin /= Null_Poly then
+          acc := m(integer32(b(i)),b'last)*submin;
+          if sig > 0
+           then Add(res,acc);
+           else Sub(res,acc);
+          end if;
+          Clear(acc);
+        end if;
+        Clear(submin);
+      end if;
+      sig := -sig;
+    end loop;
+    return res;
+  end General_Expanded_Minor;
+
+  procedure Purify ( p : in out Standard_Complex_Polynomials.Poly ) is
+
+  -- DESCRIPTION :
+  --   Eliminates terms that have coefficients less than 10.0E-10.
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Polynomials;
+
+    tol : constant double_float := 10.0E-10;
+    res : Poly := Null_Poly;
+
+    procedure Scan_Term ( t : in Term; cont : out boolean ) is
+    begin
+      if AbsVal(t.cf) > tol
+       then Add(res,t);
+      end if;
+      cont := true;
+    end Scan_Term;
+    procedure Scan_Terms is new Visiting_Iterator(Scan_Term);
+
+  begin
+    Scan_Terms(p);
+    Clear(p);
+    p := res;
+  end Purify;
+
+  procedure Purify ( p : in out DoblDobl_Complex_Polynomials.Poly ) is
+
+  -- DESCRIPTION :
+  --   Eliminates terms that have coefficients less than 10.0E-10.
+  
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Polynomials;
+
+    tol : constant double_float := 10.0E-10;
+    res : Poly := Null_Poly;
+
+    procedure Scan_Term ( t : in Term; cont : out boolean ) is
+    begin
+      if AbsVal(t.cf) > tol
+       then Add(res,t);
+      end if;
+      cont := true;
+    end Scan_Term;
+    procedure Scan_Terms is new Visiting_Iterator(Scan_Term);
+
+  begin
+    Scan_Terms(p);
+    Clear(p);
+    p := res;
+  end Purify;
+
+  procedure Purify ( p : in out QuadDobl_Complex_Polynomials.Poly ) is
+
+  -- DESCRIPTION :
+  --   Eliminates terms that have coefficients less than 10.0E-10.
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Polynomials;
+
+    tol : constant double_float := 10.0E-10;
     res : Poly := Null_Poly;
 
     procedure Scan_Term ( t : in Term; cont : out boolean ) is
@@ -176,11 +312,14 @@ package body Symbolic_Minor_Equations is
 
 -- TARGET ROUTINES :
 
-  function Schubert_Pattern ( n : natural32; b1,b2 : Bracket )
-                            return Standard_Complex_Poly_Matrices.Matrix is
+  function Schubert_Pattern
+             ( n : natural32; b1,b2 : Bracket )
+             return Standard_Complex_Poly_Matrices.Matrix is
 
     res : Standard_Complex_Poly_Matrices.Matrix(1..integer32(n),b1'range);
     d : constant natural32 := natural32(b1'last);
+
+    use Standard_Complex_Polynomials;
 
   begin
     for i in res'range(1) loop
@@ -195,11 +334,102 @@ package body Symbolic_Minor_Equations is
     return res;
   end Schubert_Pattern;
 
-  function Localization_Pattern ( n : natural32; top,bottom : Bracket )
-                                return Standard_Complex_Poly_Matrices.Matrix is
+  function Schubert_Pattern
+             ( n : natural32; b1,b2 : Bracket )
+             return DoblDobl_Complex_Poly_Matrices.Matrix is
+
+    res : DoblDobl_Complex_Poly_Matrices.Matrix(1..integer32(n),b1'range);
+    d : constant natural32 := natural32(b1'last);
+
+    use DoblDobl_Complex_Polynomials;
+
+  begin
+    for i in res'range(1) loop
+      for j in b1'range loop
+        if ((natural32(i) < b2(j)) or (natural32(i) > n+1-b1(b1'last+1-j)))
+         then res(i,j) := Null_Poly;
+         else res(i,j) := Matrix_Indeterminates.Monomial
+                            (n,d,natural32(i),natural32(j));
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Schubert_Pattern;
+
+  function Schubert_Pattern
+             ( n : natural32; b1,b2 : Bracket )
+             return QuadDobl_Complex_Poly_Matrices.Matrix is
+
+    res : QuadDobl_Complex_Poly_Matrices.Matrix(1..integer32(n),b1'range);
+    d : constant natural32 := natural32(b1'last);
+
+    use QuadDobl_Complex_Polynomials;
+
+  begin
+    for i in res'range(1) loop
+      for j in b1'range loop
+        if ((natural32(i) < b2(j)) or (natural32(i) > n+1-b1(b1'last+1-j)))
+         then res(i,j) := Null_Poly;
+         else res(i,j) := Matrix_Indeterminates.Monomial
+                            (n,d,natural32(i),natural32(j));
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Schubert_Pattern;
+
+  function Localization_Pattern
+             ( n : natural32; top,bottom : Bracket )
+             return Standard_Complex_Poly_Matrices.Matrix is
 
     p : constant integer32 := top'length;
     res : Standard_Complex_Poly_Matrices.Matrix(1..integer32(n),1..p);
+
+    use Standard_Complex_Polynomials;
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        if natural32(i) < top(j) or natural32(i) > bottom(j)
+         then res(i,j) := Null_Poly;
+         else res(i,j) := Matrix_Indeterminates.Monomial
+                            (n,natural32(p),natural32(i),natural32(j));
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Localization_Pattern;
+
+  function Localization_Pattern
+             ( n : natural32; top,bottom : Bracket )
+             return DoblDobl_Complex_Poly_Matrices.Matrix is
+
+    p : constant integer32 := top'length;
+    res : DoblDobl_Complex_Poly_Matrices.Matrix(1..integer32(n),1..p);
+
+    use DoblDobl_Complex_Polynomials;
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        if natural32(i) < top(j) or natural32(i) > bottom(j)
+         then res(i,j) := Null_Poly;
+         else res(i,j) := Matrix_Indeterminates.Monomial
+                            (n,natural32(p),natural32(i),natural32(j));
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Localization_Pattern;
+
+  function Localization_Pattern
+             ( n : natural32; top,bottom : Bracket )
+             return QuadDobl_Complex_Poly_Matrices.Matrix is
+
+    p : constant integer32 := top'length;
+    res : QuadDobl_Complex_Poly_Matrices.Matrix(1..integer32(n),1..p);
+
+    use QuadDobl_Complex_Polynomials;
 
   begin
     for i in res'range(1) loop
@@ -306,7 +536,7 @@ package body Symbolic_Minor_Equations is
 
     begin
       if row > integer32(s) then
-        bt.coeff := Create(1.0);
+        bt.coeff := Standard_Complex_Numbers.Create(1.0);
         bt.monom := Create(accu_row);
         Enumerate_Columns(1,1);
         Frontal_Construct(res,bt); Clear(bt);
@@ -346,8 +576,11 @@ package body Symbolic_Minor_Equations is
     return res;
   end Minor_Equations;
 
-  function Expanded_Minor ( m : Standard_Complex_Poly_Matrices.Matrix;
-                            b : Bracket ) return Poly is
+  function Expanded_Minor
+             ( m : Standard_Complex_Poly_Matrices.Matrix; b : Bracket )
+             return Standard_Complex_Polynomials.Poly is
+
+    use Standard_Complex_Polynomials;
 
     res : Poly := Null_Poly;
     acc : Poly;
@@ -373,7 +606,71 @@ package body Symbolic_Minor_Equations is
     return res;
   end Expanded_Minor;
 
-  function Extend_Zero_Lifting ( p : Poly ) return Poly is
+  function Expanded_Minor
+             ( m : DoblDobl_Complex_Poly_Matrices.Matrix; b : Bracket )
+             return DoblDobl_Complex_Polynomials.Poly is
+
+    use DoblDobl_Complex_Polynomials;
+
+    res : Poly := Null_Poly;
+    acc : Poly;
+
+  begin
+    if b'length = 1 then
+      Copy(m(integer32(b(1)),1),res);
+    elsif b'length = 2 then
+      if (m(integer32(b(1)),1) /= Null_Poly)
+         and (m(integer32(b(2)),2) /= Null_Poly)
+       then res := m(integer32(b(1)),1)*m(integer32(b(2)),2);
+      end if;
+      if (m(integer32(b(2)),1) /= Null_Poly)
+          and (m(integer32(b(1)),2) /= Null_Poly) then
+        acc := m(integer32(b(2)),1)*m(integer32(b(1)),2);
+        Sub(res,acc);
+        Clear(acc);
+      end if;
+    else
+      res := General_Expanded_Minor(m,b);
+    end if;
+    Purify(res);
+    return res;
+  end Expanded_Minor;
+
+  function Expanded_Minor
+             ( m : QuadDobl_Complex_Poly_Matrices.Matrix; b : Bracket )
+             return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Polynomials;
+
+    res : Poly := Null_Poly;
+    acc : Poly;
+
+  begin
+    if b'length = 1 then
+      Copy(m(integer32(b(1)),1),res);
+    elsif b'length = 2 then
+      if (m(integer32(b(1)),1) /= Null_Poly)
+         and (m(integer32(b(2)),2) /= Null_Poly)
+       then res := m(integer32(b(1)),1)*m(integer32(b(2)),2);
+      end if;
+      if (m(integer32(b(2)),1) /= Null_Poly)
+          and (m(integer32(b(1)),2) /= Null_Poly) then
+        acc := m(integer32(b(2)),1)*m(integer32(b(1)),2);
+        Sub(res,acc);
+        Clear(acc);
+      end if;
+    else
+      res := General_Expanded_Minor(m,b);
+    end if;
+    Purify(res);
+    return res;
+  end Expanded_Minor;
+
+  function Extend_Zero_Lifting
+             ( p : Standard_Complex_Polynomials.Poly )
+             return Standard_Complex_Polynomials.Poly is
+
+    use Standard_Complex_Polynomials;
 
     res : Poly := Null_Poly;
 

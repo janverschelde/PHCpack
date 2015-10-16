@@ -1,3 +1,7 @@
+Fri 16 Oct 2015 : extended symbolic_minor_equations with expansion routines
+  for matrix of polynomials with coefficients in double double and quad
+  double precision.
+
 Sat 20 Sep 2014 : new package dobldobl_matrix_inversion, tested by ts_matinv.
   For quad doubles, there is the new package quaddobl_matrix_inversion.
 
