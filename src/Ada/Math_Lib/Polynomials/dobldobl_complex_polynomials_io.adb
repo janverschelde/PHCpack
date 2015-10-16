@@ -15,7 +15,7 @@ package body DoblDobl_Complex_Polynomials_io is
     get(standard_input,p);
   end get;
 
-  procedure get ( file : in file_type; p : out Poly ) is
+  procedure get ( file : in file_type; p : in out Poly ) is
 
     mp : Multprec_Complex_Polynomials.Poly;
 
@@ -92,6 +92,16 @@ package body DoblDobl_Complex_Polynomials_io is
   begin
     put_line(standard_output,p);
   end put_line;
+
+  procedure put ( p : in Poly; dp : in natural32 ) is
+  begin
+    put(Standard_Output,p,dp);
+  end put;
+
+  procedure put ( file : in file_type; p : in Poly; dp : in natural32 ) is
+  begin
+    put(file,p);
+  end put;
 
   procedure put_line ( file : in file_type; p : in Poly ) is
 

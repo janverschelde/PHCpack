@@ -10,12 +10,12 @@ with Multprec_Complex_Polynomials_io;
 
 package body QuadDobl_Complex_Polynomials_io is
 
-  procedure get ( p : out Poly ) is
+  procedure get ( p : in out Poly ) is
   begin
     get(standard_input,p);
   end get;
 
-  procedure get ( file : in file_type; p : out Poly ) is
+  procedure get ( file : in file_type; p : in out Poly ) is
 
     mp : Multprec_Complex_Polynomials.Poly;
 
@@ -86,6 +86,16 @@ package body QuadDobl_Complex_Polynomials_io is
   procedure put ( file : in file_type; p : in Poly ) is
   begin
     put_line(file,p);
+  end put;
+
+  procedure put ( p : in Poly; dp : in natural32 ) is
+  begin
+    put(Standard_Output,p,dp);
+  end put;
+
+  procedure put ( file : in file_type; p : in Poly; dp : in natural32 ) is
+  begin
+    put(file,p);
   end put;
 
   procedure put_line ( p : in Poly ) is

@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with QuadDobl_Complex_Polynomials;       use QuadDobl_Complex_Polynomials;
 
 package QuadDobl_Complex_Polynomials_io is
@@ -7,8 +8,8 @@ package QuadDobl_Complex_Polynomials_io is
 --   This package provides very basic output routines for polynomials
 --   with quad double complex coefficients.
 
-  procedure get ( p : out Poly );
-  procedure get ( file : in file_type; p : out Poly );
+  procedure get ( p : in out Poly );
+  procedure get ( file : in file_type; p : in out Poly );
 
   -- DESCRIPTION :
   --   Reads a multivariate polynomial from standard input or from file.
@@ -23,6 +24,13 @@ package QuadDobl_Complex_Polynomials_io is
   --   file       file where the output must come,
   --              if not specified, then standard output is assumed;
   --   p          a polynomial in n unknows.
+
+  procedure put ( p : in Poly; dp : in natural32 ); 
+  procedure put ( file : in file_type; p : in Poly; dp : in natural32 );
+
+  -- DESCRIPTION :
+  --   Writes the coefficients of the polynomial with as many decimal places
+  --   as the value of dp, as needed to instantiate the abstract_ring_io.
 
   procedure put_line ( p : in Poly );
   procedure put_line ( file : in file_type; p : in Poly );

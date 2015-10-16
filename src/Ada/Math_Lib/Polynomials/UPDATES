@@ -1,5 +1,8 @@
 Fri 16 Oct 2015 : extended matrix_indeterminates that return monomials as
   polynomials with coefficients in double double and quad double precision.
+  Extensions in {dobldobl,quaddobl}_complex_polynomials_io to instantiate
+  {dobldobl,quaddobl}_complex_poly_ring_io, needed for the new package
+  {dobldobl,quaddobl}_complex_poly_matrices_io.
 
 Fri 25 Sep 2015 : new packages {dobldobl,quaddobl}_system_readers.
 
