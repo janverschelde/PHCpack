@@ -12,7 +12,8 @@ Thu 15 Oct 2015 : moving_flag_continuation and resolve_schubrt_problems
   drivers_for_schubert_induction.  New packages start_flag_homotopies
   and setup_flag_homotopies, factored from moving_flag_homotopies.
   This changed resolve_schubert_problems.adb and
-  drivers_for_schubert_induction.adb.
+  drivers_for_schubert_induction.adb.  Updated numeric_schubert_conditions.adb
+  to prepare for double double and quad double precision.
 
 Wed 14 Oct 2015 : extended symbolic_schubert_conditions with a procedure
   and a function to enumerate and count all brackets not above a bracket,

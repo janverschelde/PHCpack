@@ -127,8 +127,9 @@ package body Numeric_Schubert_Conditions is
   end Substitute;
 
   function Substitute ( p : Bracket_Polynomial; t : Symbolic_Minor_Table )
-                      return Poly is
+                      return Standard_Complex_Polynomials.Poly is
 
+    use Standard_Complex_Polynomials;
     res : Poly := Null_Poly;
 
     procedure Subs_Term ( bt : in Bracket_Term; ct : out boolean ) is
@@ -157,8 +158,10 @@ package body Numeric_Schubert_Conditions is
   end Substitute;
 
   function Substitute ( p : Bracket_Polynomial; t : Symbolic_Minor_Table;
-                        rows : Bracket ) return Poly is
+                        rows : Bracket )
+                      return Standard_Complex_Polynomials.Poly is
 
+    use Standard_Complex_Polynomials;
     res : Poly := Null_Poly;
 
     procedure Subs_Term ( bt : in Bracket_Term; ct : out boolean ) is
@@ -186,8 +189,10 @@ package body Numeric_Schubert_Conditions is
   end Substitute;
 
   function Substitute ( p : Bracket_Polynomial; nt,st : Symbolic_Minor_Table;
-                        rows : Bracket ) return Poly is
+                        rows : Bracket )
+                      return Standard_Complex_Polynomials.Poly is
 
+    use Standard_Complex_Polynomials;
     res : Poly := Null_Poly;
 
     procedure Subs_Term ( bt : in Bracket_Term; ct : out boolean ) is
@@ -259,6 +264,8 @@ package body Numeric_Schubert_Conditions is
                 col : Bracket; d,k : integer32 )
               return Standard_Complex_Poly_Matrices.Matrix is
 
+    use Standard_Complex_Polynomials;
+
     res : Standard_Complex_Poly_Matrices.Matrix(A'range(1),1..d);
     ind : integer32 := 0;
 
@@ -328,7 +335,10 @@ package body Numeric_Schubert_Conditions is
   function Laplace_One_Minor
                ( n,k : integer32; row,col : Bracket;
                  X : Standard_Complex_Poly_Matrices.Matrix;
-                 A : Standard_Complex_Matrices.Matrix ) return Poly is
+                 A : Standard_Complex_Matrices.Matrix )
+               return Standard_Complex_Polynomials.Poly is
+
+    use Standard_Complex_Polynomials;
 
     res : Poly;
     c : constant integer32 := Degree(col,natural32(k));
@@ -367,7 +377,10 @@ package body Numeric_Schubert_Conditions is
 
   function Laplace_One_Minor
                ( n,k : integer32; row,col : Bracket;
-                 X,A : Standard_Complex_Poly_Matrices.Matrix ) return Poly is
+                 X,A : Standard_Complex_Poly_Matrices.Matrix )
+               return Standard_Complex_Polynomials.Poly is
+
+    use Standard_Complex_Polynomials;
 
     res : Poly;
     c : constant integer32 := Degree(col,natural32(k));
@@ -440,7 +453,10 @@ package body Numeric_Schubert_Conditions is
   function Elaborate_One_Flag_Minor
                ( n,k,f,i : integer32; fm : Bracket_Polynomial;
                  X : Standard_Complex_Poly_Matrices.Matrix;
-                 A : Standard_Complex_Matrices.Matrix ) return Poly is
+                 A : Standard_Complex_Matrices.Matrix )
+               return Standard_Complex_Polynomials.Poly is
+
+    use Standard_Complex_Polynomials;
 
     res : Poly;
     r : constant integer32 := k+f-i+1;
@@ -474,7 +490,10 @@ package body Numeric_Schubert_Conditions is
 
   function Elaborate_One_Flag_Minor
                ( n,k,f,i : integer32; fm : Bracket_Polynomial;
-                 X,A : Standard_Complex_Poly_Matrices.Matrix ) return Poly is
+                 X,A : Standard_Complex_Poly_Matrices.Matrix )
+               return Standard_Complex_Polynomials.Poly is
+
+    use Standard_Complex_Polynomials;
 
     res : Poly := Null_Poly;
     r : constant integer32 := k+f-i+1;
@@ -509,7 +528,9 @@ package body Numeric_Schubert_Conditions is
   function Expand ( n,k,nq : integer32; lambda : Bracket;
                     X : Standard_Complex_Poly_Matrices.Matrix;
                     flag : Standard_Complex_Matrices.Matrix )
-                  return Poly_Sys is
+                  return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    use Standard_Complex_Poly_Systems;
 
     res : Poly_Sys(1..nq);
     fm : constant Bracket_System(lambda'range)
@@ -541,7 +562,9 @@ package body Numeric_Schubert_Conditions is
 
   function Expand ( n,k,nq : integer32; lambda : Bracket;
                     X,F : Standard_Complex_Poly_Matrices.Matrix )
-                  return Poly_Sys is
+                  return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    use Standard_Complex_Poly_Systems;
 
     res : Poly_Sys(1..nq);
     fm : constant Bracket_System(lambda'range)
@@ -577,7 +600,11 @@ package body Numeric_Schubert_Conditions is
   function Minimal_Expand
              ( n,k,nq : integer32; lambda : Bracket;
                X : Standard_Complex_Poly_Matrices.Matrix;
-               flag : Standard_Complex_Matrices.Matrix ) return Poly_Sys is
+               flag : Standard_Complex_Matrices.Matrix )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    use Standard_Complex_Polynomials;
+    use Standard_Complex_Poly_Systems;
 
     res : Poly_Sys(1..nq);
     dim : constant natural32 := natural32(n);
@@ -624,7 +651,10 @@ package body Numeric_Schubert_Conditions is
 
   function Expanded_Polynomial_Equations 
              ( n,k : integer32; cond : Bracket;
-               flag : Standard_Complex_Matrices.Matrix ) return Poly_Sys is
+               flag : Standard_Complex_Matrices.Matrix )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    use Standard_Complex_Poly_Systems;
 
     p : constant Standard_Natural_Vectors.Vector(1..n)
       := Checker_Moves.Identity_Permutation(natural32(n));

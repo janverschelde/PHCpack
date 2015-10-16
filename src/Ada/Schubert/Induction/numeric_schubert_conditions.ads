@@ -1,8 +1,8 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Matrices;
-with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
-with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
+with Standard_Complex_Polynomials;
+with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Matrices;
 with Brackets;                          use Brackets;
 with Bracket_Polynomials;               use Bracket_Polynomials;
@@ -47,9 +47,10 @@ package Numeric_Schubert_Conditions is
   --            in the Laplace expansion.
 
   function Substitute ( p : Bracket_Polynomial; t : Symbolic_Minor_Table )
-                      return Poly;
+                      return Standard_Complex_Polynomials.Poly;
   function Substitute ( p : Bracket_Polynomial; t : Symbolic_Minor_Table;
-                        rows : Bracket ) return Poly;
+                        rows : Bracket )
+                      return Standard_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Substitutes the minors in p by the corresponding polynomials of t,
@@ -57,7 +58,8 @@ package Numeric_Schubert_Conditions is
 
   function Substitute ( p : Bracket_Polynomial;
                         nt,st : Symbolic_Minor_Table;
-                        rows : Bracket ) return Poly;
+                        rows : Bracket )
+                      return Standard_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Substitutes minors in p by the corresponding polynomials in nt
@@ -93,10 +95,12 @@ package Numeric_Schubert_Conditions is
   function Laplace_One_Minor
                ( n,k : integer32; row,col : Bracket;
                  X : Standard_Complex_Poly_Matrices.Matrix; 
-                 A : Standard_Complex_Matrices.Matrix ) return Poly;
+                 A : Standard_Complex_Matrices.Matrix )
+               return Standard_Complex_Polynomials.Poly;
   function Laplace_One_Minor
                ( n,k : integer32; row,col : Bracket;
-                 X,A : Standard_Complex_Poly_Matrices.Matrix) return Poly;
+                 X,A : Standard_Complex_Poly_Matrices.Matrix)
+               return Standard_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Applies Laplace expansion to one minor defined by row and col
@@ -110,10 +114,12 @@ package Numeric_Schubert_Conditions is
   function Elaborate_One_Flag_Minor
                ( n,k,f,i : integer32; fm : Bracket_Polynomial;
                  X : Standard_Complex_Poly_Matrices.Matrix;
-                 A : Standard_Complex_Matrices.Matrix ) return Poly;
+                 A : Standard_Complex_Matrices.Matrix )
+               return Standard_Complex_Polynomials.Poly;
   function Elaborate_One_Flag_Minor
                ( n,k,f,i : integer32; fm : Bracket_Polynomial;
-                 X,A : Standard_Complex_Poly_Matrices.Matrix ) return Poly;
+                 X,A : Standard_Complex_Poly_Matrices.Matrix )
+               return Standard_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Retrieves the row and column from the one monomial in fm
@@ -123,7 +129,7 @@ package Numeric_Schubert_Conditions is
   function Expand ( n,k,nq : integer32; lambda : Bracket;
                     X : Standard_Complex_Poly_Matrices.Matrix;
                     flag : Standard_Complex_Matrices.Matrix )
-                  return Poly_Sys;
+                  return Standard_Complex_Poly_Systems.Poly_Sys;
 
   -- DECRIPTION :
   --   Expands all symbolic and numeric minors to return a polynomial
@@ -132,7 +138,7 @@ package Numeric_Schubert_Conditions is
 
   function Expand ( n,k,nq : integer32; lambda : Bracket;
                     X,F : Standard_Complex_Poly_Matrices.Matrix )
-                  return Poly_Sys;
+                  return Standard_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   All minors, both in X and F are now polynomials for expansion
@@ -147,7 +153,8 @@ package Numeric_Schubert_Conditions is
   function Minimal_Expand
              ( n,k,nq : integer32; lambda : Bracket;
                X : Standard_Complex_Poly_Matrices.Matrix;
-               flag : Standard_Complex_Matrices.Matrix ) return Poly_Sys;
+               flag : Standard_Complex_Matrices.Matrix )
+             return Standard_Complex_Poly_Systems.Poly_Sys;
 
   -- DECRIPTION :
   --   Expands all symbolic and numeric minors to return a polynomial
@@ -168,7 +175,8 @@ package Numeric_Schubert_Conditions is
 
   function Expanded_Polynomial_Equations 
              ( n,k : integer32; cond : Bracket;
-               flag : Standard_Complex_Matrices.Matrix ) return Poly_Sys;
+               flag : Standard_Complex_Matrices.Matrix )
+             return Standard_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Returns the expanded polynomial equation for the condition on
