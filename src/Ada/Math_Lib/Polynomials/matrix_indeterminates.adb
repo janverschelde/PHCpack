@@ -1,6 +1,10 @@
 with Characters_and_Numbers;             use Characters_and_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 
 package body Matrix_Indeterminates is
@@ -73,13 +77,55 @@ package body Matrix_Indeterminates is
     return res;
   end X_ij;
 
-  function Monomial ( n,d,i,j : natural32 ) return Poly is
+  function Monomial ( n,d,i,j : natural32 )
+                    return Standard_Complex_Polynomials.Poly is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Polynomials;
 
     res : Poly;
     t : Term;
 
   begin
     t.cf := Create(1.0);
+    t.dg := new Standard_Natural_Vectors.Vector'(1..integer32(n*d) => 0);
+    t.dg(integer32((i-1)*d+j)) := 1;
+    res := Create(t);
+    Clear(t.dg);
+    return res;
+  end Monomial;
+
+  function Monomial ( n,d,i,j : natural32 )
+                    return DoblDobl_Complex_Polynomials.Poly is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Polynomials;
+
+    res : Poly;
+    one : constant double_double := create(1.0);
+    t : Term;
+
+  begin
+    t.cf := Create(one);
+    t.dg := new Standard_Natural_Vectors.Vector'(1..integer32(n*d) => 0);
+    t.dg(integer32((i-1)*d+j)) := 1;
+    res := Create(t);
+    Clear(t.dg);
+    return res;
+  end Monomial;
+
+  function Monomial ( n,d,i,j : natural32 )
+                    return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Polynomials;
+
+    res : Poly;
+    one : constant quad_double := create(1.0);
+    t : Term;
+
+  begin
+    t.cf := Create(one);
     t.dg := new Standard_Natural_Vectors.Vector'(1..integer32(n*d) => 0);
     t.dg(integer32((i-1)*d+j)) := 1;
     res := Create(t);

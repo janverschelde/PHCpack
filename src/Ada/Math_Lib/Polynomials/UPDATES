@@ -1,3 +1,6 @@
+Fri 16 Oct 2015 : extended matrix_indeterminates that return monomials as
+  polynomials with coefficients in double double and quad double precision.
+
 Fri 25 Sep 2015 : new packages {dobldobl,quaddobl}_system_readers.
 
 Thu 24 Sep 2015 : changed the bound from 2**32 - 1 to 2**31 - 1 in the

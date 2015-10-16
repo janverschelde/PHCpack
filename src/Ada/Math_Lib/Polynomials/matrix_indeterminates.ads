@@ -1,7 +1,9 @@
 with Symbol_Table;                       use Symbol_Table;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Matrices;          use Standard_Natural_Matrices;
-with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
+with Standard_Complex_Polynomials;
+with DoblDobl_Complex_Polynomials;
+with QuadDobl_Complex_Polynomials;
 
 package Matrix_Indeterminates is
 
@@ -36,7 +38,12 @@ package Matrix_Indeterminates is
   -- DESCRIPTION : 
   --   Returns the symbol that represents the variable xij.
 
-  function Monomial ( n,d,i,j : natural32 ) return Poly;
+  function Monomial ( n,d,i,j : natural32 )
+                    return Standard_Complex_Polynomials.Poly;
+  function Monomial ( n,d,i,j : natural32 )
+                    return DoblDobl_Complex_Polynomials.Poly;
+  function Monomial ( n,d,i,j : natural32 )
+                    return QuadDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns the representation of X_ij as a polynomial.
