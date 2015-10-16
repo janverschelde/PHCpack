@@ -2,11 +2,15 @@ with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_Matrices;
 with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Bracket_Monomials;                 use Bracket_Monomials;
 with Bracket_Systems;                   use Bracket_Systems;
 with Straightening_Syzygies;
 with Evaluated_Minors;
 with Standard_Matrix_Inversion;
+with DoblDobl_Matrix_Inversion;
+with QuadDobl_Matrix_Inversion;
 with Symbolic_Schubert_Conditions;      use Symbolic_Schubert_Conditions;
 with Checker_Moves;
 with Checker_Localization_Patterns;
@@ -23,7 +27,7 @@ package body Numeric_Schubert_Conditions is
     return b'last;
   end Degree;
 
-  function Substitute ( p : Bracket_Polynomial; t : Numeric_Minor_Table )
+  function Substitute ( p : Bracket_Polynomial; t : Standard_Numeric_Minors )
                       return Bracket_Polynomial is
 
     res : Bracket_Polynomial := Null_Bracket_Poly;
@@ -80,7 +84,7 @@ package body Numeric_Schubert_Conditions is
     return res;
   end Permute;
 
-  function Substitute ( p : Bracket_Polynomial; t : Numeric_Minor_Table;
+  function Substitute ( p : Bracket_Polynomial; t : Standard_Numeric_Minors;
                         rows : Bracket ) return Bracket_Polynomial is
 
     res : Bracket_Polynomial := Null_Bracket_Poly;
@@ -318,7 +322,7 @@ package body Numeric_Schubert_Conditions is
        := Select_Columns(A,col,d,k);
     nm : constant natural32
        := Remember_Numeric_Minors.Number_of_Minors(natural32(n),natural32(d));
-    rt : Numeric_Minor_Table(integer32(nm))
+    rt : Standard_Numeric_Minors(integer32(nm))
        := Create(natural32(n),natural32(d),sA);
 
   begin
@@ -355,7 +359,7 @@ package body Numeric_Schubert_Conditions is
        := Remember_Numeric_Minors.Number_of_Minors(natural32(n),natural32(d));
     sm : constant natural32
        := Remember_Symbolic_Minors.Number_of_Minors(natural32(n),natural32(c));
-    nt : Numeric_Minor_Table(integer32(nm))
+    nt : Standard_Numeric_Minors(integer32(nm))
        := Create(natural32(n),natural32(d),sA);
     st : Standard_Symbolic_Minors(integer32(sm))
        := Create(natural32(n),natural32(c),sX);
@@ -616,6 +620,106 @@ package body Numeric_Schubert_Conditions is
     invflag : Standard_Complex_Matrices.Matrix(flag'range(1),flag'range(2))
             := Standard_Matrix_Inversion.Inverse(flag);
     cff : Standard_Complex_Vectors.Vector(rst.b'range);
+    idx : integer32 := 0;
+
+    procedure Expand_Condition ( b : in Bracket; cont : out boolean ) is
+
+    -- DESCRIPTION :
+    --   For a given bracket b that is not above lambda,
+    --   the coefficients are computed for the inverse flag invflag,
+    --   and one new polynomial is added to the result.
+
+      acc : Poly;
+
+    begin
+      for i in cff'range loop
+        cff(i) := Evaluated_Minors.Determinant(invflag,b,rst.b(i).all);
+      end loop;
+      idx := idx + 1;
+      res(idx) := Null_Poly;
+      for i in cff'range loop
+        acc := cff(i)*rst.p(i);
+        Add(res(idx),acc);
+        Clear(acc);
+      end loop;
+      cont := true;
+    end Expand_Condition;
+    procedure Enumerate is new Enumerate_NotAbove(Expand_Condition);
+
+  begin
+    Enumerate(dim,lambda);
+    Remember_Symbolic_Minors.Clear(rst);
+    return res;
+  end Minimal_Expand;
+
+  function Minimal_Expand
+             ( n,k,nq : integer32; lambda : Bracket;
+               X : DoblDobl_Complex_Poly_Matrices.Matrix;
+               flag : DoblDobl_Complex_Matrices.Matrix )
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+    use DoblDobl_Complex_Polynomials;
+    use DoblDobl_Complex_Poly_Systems;
+
+    res : Poly_Sys(1..nq);
+    dim : constant natural32 := natural32(n);
+    ntk : constant natural32 := natural32(k);
+    nbm : constant natural32
+        := Remember_Symbolic_Minors.Number_of_Minors(dim,ntk);
+    rst : DoblDobl_Symbolic_Minors(integer32(nbm)) := Create(dim,ntk,X);
+    invflag : DoblDobl_Complex_Matrices.Matrix(flag'range(1),flag'range(2))
+            := DoblDobl_Matrix_Inversion.Inverse(flag);
+    cff : DoblDobl_Complex_Vectors.Vector(rst.b'range);
+    idx : integer32 := 0;
+
+    procedure Expand_Condition ( b : in Bracket; cont : out boolean ) is
+
+    -- DESCRIPTION :
+    --   For a given bracket b that is not above lambda,
+    --   the coefficients are computed for the inverse flag invflag,
+    --   and one new polynomial is added to the result.
+
+      acc : Poly;
+
+    begin
+      for i in cff'range loop
+        cff(i) := Evaluated_Minors.Determinant(invflag,b,rst.b(i).all);
+      end loop;
+      idx := idx + 1;
+      res(idx) := Null_Poly;
+      for i in cff'range loop
+        acc := cff(i)*rst.p(i);
+        Add(res(idx),acc);
+        Clear(acc);
+      end loop;
+      cont := true;
+    end Expand_Condition;
+    procedure Enumerate is new Enumerate_NotAbove(Expand_Condition);
+
+  begin
+    Enumerate(dim,lambda);
+    Remember_Symbolic_Minors.Clear(rst);
+    return res;
+  end Minimal_Expand;
+
+  function Minimal_Expand
+             ( n,k,nq : integer32; lambda : Bracket;
+               X : QuadDobl_Complex_Poly_Matrices.Matrix;
+               flag : QuadDobl_Complex_Matrices.Matrix )
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+    use QuadDobl_Complex_Polynomials;
+    use QuadDobl_Complex_Poly_Systems;
+
+    res : Poly_Sys(1..nq);
+    dim : constant natural32 := natural32(n);
+    ntk : constant natural32 := natural32(k);
+    nbm : constant natural32
+        := Remember_Symbolic_Minors.Number_of_Minors(dim,ntk);
+    rst : QuadDobl_Symbolic_Minors(integer32(nbm)) := Create(dim,ntk,X);
+    invflag : QuadDobl_Complex_Matrices.Matrix(flag'range(1),flag'range(2))
+            := QuadDobl_Matrix_Inversion.Inverse(flag);
+    cff : QuadDobl_Complex_Vectors.Vector(rst.b'range);
     idx : integer32 := 0;
 
     procedure Expand_Condition ( b : in Bracket; cont : out boolean ) is

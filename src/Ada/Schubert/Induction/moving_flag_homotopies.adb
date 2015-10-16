@@ -476,6 +476,60 @@ package body Moving_Flag_Homotopies is
     f := Concatenate(s);
   end Minimal_Flag_Conditions;
 
+  procedure Minimal_Flag_Conditions
+             ( n,k : in integer32;
+               x : in DoblDobl_Complex_Poly_Matrices.Matrix;
+               ic : in Standard_Natural_VecVecs.VecVec;
+               vf : in DoblDobl_Complex_VecMats.VecMat;
+               f : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+
+    s : Array_of_Poly_Sys(ic'range);
+
+  begin
+    for i in ic'range loop
+      declare
+        c : constant Brackets.Bracket(1..k) := Brackets.Bracket(ic(i).all);
+        nq : constant integer32
+           := integer32(Symbolic_Schubert_Conditions.Number_of_NotAbove
+                          (natural32(n),c));
+        sc : constant Poly_Sys(1..nq)
+           := Numeric_Schubert_Conditions.Minimal_Expand(n,k,nq,c,x,vf(i).all);
+      begin
+        s(i) := new Poly_Sys'(Filter_Zero_Equations(sc));
+      end;
+    end loop;
+    f := Concatenate(s);
+  end Minimal_Flag_Conditions;
+
+  procedure Minimal_Flag_Conditions
+             ( n,k : in integer32;
+               x : in QuadDobl_Complex_Poly_Matrices.Matrix;
+               ic : in Standard_Natural_VecVecs.VecVec;
+               vf : in QuadDobl_Complex_VecMats.VecMat;
+               f : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use QuadDobl_Complex_Poly_Systems;
+
+    s : Array_of_Poly_Sys(ic'range);
+
+  begin
+    for i in ic'range loop
+      declare
+        c : constant Brackets.Bracket(1..k) := Brackets.Bracket(ic(i).all);
+        nq : constant integer32
+           := integer32(Symbolic_Schubert_Conditions.Number_of_NotAbove
+                          (natural32(n),c));
+        sc : constant Poly_Sys(1..nq)
+           := Numeric_Schubert_Conditions.Minimal_Expand(n,k,nq,c,x,vf(i).all);
+      begin
+        s(i) := new Poly_Sys'(Filter_Zero_Equations(sc));
+      end;
+    end loop;
+    f := Concatenate(s);
+  end Minimal_Flag_Conditions;
+
   procedure Flag_Conditions
              ( n,k : in integer32;
                p,rows,cols : in Standard_Natural_Vectors.Vector;
@@ -519,6 +573,68 @@ package body Moving_Flag_Homotopies is
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Column_Pattern(n,k,p,rows,cols);
     x : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    s : Array_of_Poly_Sys(ic'range);
+
+  begin
+    x := Symbolic_Schubert_Conditions.Symbolic_Form_of_Plane(n,k,locmap);
+    for i in ic'range loop
+      declare
+        c : constant Brackets.Bracket(1..k) := Brackets.Bracket(ic(i).all);
+        nq : constant integer32
+           := integer32(Symbolic_Schubert_Conditions.Number_of_NotAbove
+                          (natural32(n),c));
+        sc : constant Poly_Sys(1..nq)
+           := Numeric_Schubert_Conditions.Minimal_Expand(n,k,nq,c,x,vf(i).all);
+      begin
+        s(i) := new Poly_Sys'(Filter_Zero_Equations(sc));
+      end;
+    end loop;
+    f := Concatenate(s);
+  end Minimal_Flag_Conditions;
+
+  procedure Minimal_Flag_Conditions
+             ( n,k : in integer32;
+               p,rows,cols : in Standard_Natural_Vectors.Vector;
+               ic : in Standard_Natural_VecVecs.VecVec;
+               vf : in DoblDobl_Complex_VecMats.VecMat;
+               f : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Column_Pattern(n,k,p,rows,cols);
+    x : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    s : Array_of_Poly_Sys(ic'range);
+
+  begin
+    x := Symbolic_Schubert_Conditions.Symbolic_Form_of_Plane(n,k,locmap);
+    for i in ic'range loop
+      declare
+        c : constant Brackets.Bracket(1..k) := Brackets.Bracket(ic(i).all);
+        nq : constant integer32
+           := integer32(Symbolic_Schubert_Conditions.Number_of_NotAbove
+                          (natural32(n),c));
+        sc : constant Poly_Sys(1..nq)
+           := Numeric_Schubert_Conditions.Minimal_Expand(n,k,nq,c,x,vf(i).all);
+      begin
+        s(i) := new Poly_Sys'(Filter_Zero_Equations(sc));
+      end;
+    end loop;
+    f := Concatenate(s);
+  end Minimal_Flag_Conditions;
+
+  procedure Minimal_Flag_Conditions
+             ( n,k : in integer32;
+               p,rows,cols : in Standard_Natural_Vectors.Vector;
+               ic : in Standard_Natural_VecVecs.VecVec;
+               vf : in QuadDobl_Complex_VecMats.VecMat;
+               f : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use QuadDobl_Complex_Poly_Systems;
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Column_Pattern(n,k,p,rows,cols);
+    x : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
     s : Array_of_Poly_Sys(ic'range);
 
   begin

@@ -4,6 +4,14 @@ with Standard_Complex_Matrices;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Matrices;
+with DoblDobl_Complex_Matrices;
+with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Matrices;
+with QuadDobl_Complex_Matrices;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Matrices;
 with Brackets;                          use Brackets;
 with Bracket_Polynomials;               use Bracket_Polynomials;
 with Remember_Numeric_Minors;           use Remember_Numeric_Minors;
@@ -29,14 +37,15 @@ package Numeric_Schubert_Conditions is
   -- DESCRIPTION :
   --   Returns p(b), the entries in b are filtered through p.
 
-  function Substitute ( p : Bracket_Polynomial; t : Numeric_Minor_Table )
+  function Substitute ( p : Bracket_Polynomial; t : Standard_Numeric_Minors )
                       return Bracket_Polynomial;
-  function Substitute ( p : Bracket_Polynomial; t : Numeric_Minor_Table;
+  function Substitute ( p : Bracket_Polynomial; t : Standard_Numeric_Minors;
                         rows : Bracket ) return Bracket_Polynomial;
 
   -- DESCRIPTION :
   --   Substitutes the second bracket of each monomial in p
-  --   by the corresponding value in the numeric minor table.
+  --   by the corresponding value in the numeric minor table, computed in
+  --   standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   p        bracket polynomial encodes a Laplace expansion,
@@ -155,6 +164,16 @@ package Numeric_Schubert_Conditions is
                X : Standard_Complex_Poly_Matrices.Matrix;
                flag : Standard_Complex_Matrices.Matrix )
              return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Minimal_Expand
+             ( n,k,nq : integer32; lambda : Bracket;
+               X : DoblDobl_Complex_Poly_Matrices.Matrix;
+               flag : DoblDobl_Complex_Matrices.Matrix )
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Minimal_Expand
+             ( n,k,nq : integer32; lambda : Bracket;
+               X : QuadDobl_Complex_Poly_Matrices.Matrix;
+               flag : QuadDobl_Complex_Matrices.Matrix )
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DECRIPTION :
   --   Expands all symbolic and numeric minors to return a polynomial

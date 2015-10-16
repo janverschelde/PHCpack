@@ -11,8 +11,14 @@ with Standard_Complex_Matrices;
 with DoblDobl_Complex_Matrices;
 with QuadDobl_Complex_Matrices;
 with Standard_Complex_VecMats;
+with DoblDobl_Complex_VecMats;
+with QuadDobl_Complex_VecMats;
 with Standard_Complex_Poly_Matrices;
+with DoblDobl_Complex_Poly_Matrices;
+with QuadDobl_Complex_Poly_Matrices;
 with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
 with Brackets;                          use Brackets;
 
 package Moving_Flag_Homotopies is
@@ -82,11 +88,24 @@ package Moving_Flag_Homotopies is
                ic : in Standard_Natural_VecVecs.VecVec;
                vf : in Standard_Complex_VecMats.VecMat;
                f : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Minimal_Flag_Conditions
+             ( n,k : in integer32;
+               x : in DoblDobl_Complex_Poly_Matrices.Matrix;
+               ic : in Standard_Natural_VecVecs.VecVec;
+               vf : in DoblDobl_Complex_VecMats.VecMat;
+               f : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Minimal_Flag_Conditions
+             ( n,k : in integer32;
+               x : in QuadDobl_Complex_Poly_Matrices.Matrix;
+               ic : in Standard_Natural_VecVecs.VecVec;
+               vf : in QuadDobl_Complex_VecMats.VecMat;
+               f : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRIPTION :
   --   Returns in f the system of polynomial equations to express the
   --   conditions inposed by the input planes on a k-plane in n-space x,
-  --   using a more efficient representation for the Schubert problem.
+  --   using a more efficient representation for the Schubert problem,
+  --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   n       dimension of the ambient space, number of black checkers;
@@ -130,12 +149,25 @@ package Moving_Flag_Homotopies is
                ic : in Standard_Natural_VecVecs.VecVec;
                vf : in Standard_Complex_VecMats.VecMat;
                f : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Minimal_Flag_Conditions
+             ( n,k : in integer32;
+               p,rows,cols : in Standard_Natural_Vectors.Vector;
+               ic : in Standard_Natural_VecVecs.VecVec;
+               vf : in DoblDobl_Complex_VecMats.VecMat;
+               f : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Minimal_Flag_Conditions
+             ( n,k : in integer32;
+               p,rows,cols : in Standard_Natural_Vectors.Vector;
+               ic : in Standard_Natural_VecVecs.VecVec;
+               vf : in QuadDobl_Complex_VecMats.VecMat;
+               f : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRIPTION :
   --   Returns in f the system of polynomial equations to express the
   --   conditions inposed by the input planes on a k-plane in n-space,
   --   for a degenerate moving flag, equal to the identity matrix,
-  --   using a more efficient formulation for the Schubert problem.
+  --   using a more efficient formulation for the Schubert problem,
+  --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   n       dimension of the ambient space, number of black checkers;
