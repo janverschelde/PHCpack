@@ -46,9 +46,9 @@ package Numeric_Schubert_Conditions is
   --   rows     optional displacement of the rows selected by the brackets
   --            in the Laplace expansion.
 
-  function Substitute ( p : Bracket_Polynomial; t : Symbolic_Minor_Table )
+  function Substitute ( p : Bracket_Polynomial; t : Standard_Symbolic_Minors )
                       return Standard_Complex_Polynomials.Poly;
-  function Substitute ( p : Bracket_Polynomial; t : Symbolic_Minor_Table;
+  function Substitute ( p : Bracket_Polynomial; t : Standard_Symbolic_Minors;
                         rows : Bracket )
                       return Standard_Complex_Polynomials.Poly;
 
@@ -57,7 +57,7 @@ package Numeric_Schubert_Conditions is
   --   eventually taking the displacement with the rows into account.
 
   function Substitute ( p : Bracket_Polynomial;
-                        nt,st : Symbolic_Minor_Table;
+                        nt,st : Standard_Symbolic_Minors;
                         rows : Bracket )
                       return Standard_Complex_Polynomials.Poly;
 

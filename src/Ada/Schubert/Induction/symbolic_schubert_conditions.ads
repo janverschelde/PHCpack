@@ -2,6 +2,8 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Natural_Matrices;
 with Standard_Complex_Poly_Matrices;
+with DoblDobl_Complex_Poly_Matrices;
+with QuadDobl_Complex_Poly_Matrices;
 with Brackets;                          use Brackets;
 with Bracket_Polynomials;               use Bracket_Polynomials;
 with Bracket_Systems;                   use Bracket_Systems;
@@ -24,6 +26,12 @@ package Symbolic_Schubert_Conditions is
   function Symbolic_Form_of_Plane
              ( n,k : integer32; locmap : Standard_Natural_Matrices.Matrix )
              return Standard_Complex_Poly_Matrices.Matrix;
+  function Symbolic_Form_of_Plane
+             ( n,k : integer32; locmap : Standard_Natural_Matrices.Matrix )
+             return DoblDobl_Complex_Poly_Matrices.Matrix;
+  function Symbolic_Form_of_Plane
+             ( n,k : integer32; locmap : Standard_Natural_Matrices.Matrix )
+             return QuadDobl_Complex_Poly_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns a symbolic form of a k-plane in n-space,

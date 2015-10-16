@@ -24,7 +24,9 @@ with Checker_Moves;                      use Checker_Moves;
 with Checker_Posets,Checker_Posets_io;   use Checker_Posets,Checker_Posets_io;
 with Intersection_Posets;
 with Intersection_Posets_io;             use Intersection_Posets_io;
+with Wrapped_Path_Trackers;
 with Moving_Flag_Continuation;
+with Setup_Flag_Homotopies;
 with Moving_Flag_Homotopies;
 with Intersection_Solution_Posets;       use Intersection_Solution_Posets;
 with Resolve_Schubert_Problems;          use Resolve_Schubert_Problems;
@@ -346,7 +348,7 @@ procedure ts_lrhom is
     for i in flags'range loop
       declare
         randflag : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-                 := Moving_Flag_Homotopies.Random_Flag(n);
+                 := Setup_Flag_Homotopies.Random_Flag(n);
       begin
         flags(i) := new Standard_Complex_Matrices.Matrix'(randflag);
       end;
@@ -355,7 +357,7 @@ procedure ts_lrhom is
    -- new_line;
    -- put_line("See the output file for results ...");
    -- new_line;
-    Moving_Flag_Continuation.Set_Parameters(file,report);
+    Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     Resolve(file,monitor_games,report,n,k,tol,ips,sps,minrep,conds,flags,sols);
     tstop(timer);

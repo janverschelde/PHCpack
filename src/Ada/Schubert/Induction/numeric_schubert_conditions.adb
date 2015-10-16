@@ -126,7 +126,7 @@ package body Numeric_Schubert_Conditions is
     return res;
   end Substitute;
 
-  function Substitute ( p : Bracket_Polynomial; t : Symbolic_Minor_Table )
+  function Substitute ( p : Bracket_Polynomial; t : Standard_Symbolic_Minors )
                       return Standard_Complex_Polynomials.Poly is
 
     use Standard_Complex_Polynomials;
@@ -157,7 +157,7 @@ package body Numeric_Schubert_Conditions is
     return res;
   end Substitute;
 
-  function Substitute ( p : Bracket_Polynomial; t : Symbolic_Minor_Table;
+  function Substitute ( p : Bracket_Polynomial; t : Standard_Symbolic_Minors;
                         rows : Bracket )
                       return Standard_Complex_Polynomials.Poly is
 
@@ -188,7 +188,8 @@ package body Numeric_Schubert_Conditions is
     return res;
   end Substitute;
 
-  function Substitute ( p : Bracket_Polynomial; nt,st : Symbolic_Minor_Table;
+  function Substitute ( p : Bracket_Polynomial;
+                        nt,st : Standard_Symbolic_Minors;
                         rows : Bracket )
                       return Standard_Complex_Polynomials.Poly is
 
@@ -356,7 +357,7 @@ package body Numeric_Schubert_Conditions is
        := Remember_Symbolic_Minors.Number_of_Minors(natural32(n),natural32(c));
     nt : Numeric_Minor_Table(integer32(nm))
        := Create(natural32(n),natural32(d),sA);
-    st : Symbolic_Minor_Table(integer32(sm))
+    st : Standard_Symbolic_Minors(integer32(sm))
        := Create(natural32(n),natural32(c),sX);
     sp : constant Bracket_Polynomial := Substitute(lp,nt,row);
 
@@ -396,9 +397,9 @@ package body Numeric_Schubert_Conditions is
        := Remember_Symbolic_Minors.Number_of_Minors(natural32(n),natural32(d));
     sm : constant natural32
        := Remember_Symbolic_Minors.Number_of_Minors(natural32(n),natural32(c));
-    nt : Symbolic_Minor_Table(integer32(nm))
+    nt : Standard_Symbolic_Minors(integer32(nm))
        := Create(natural32(n),natural32(d),sA);
-    st : Symbolic_Minor_Table(integer32(sm))
+    st : Standard_Symbolic_Minors(integer32(sm))
        := Create(natural32(n),natural32(c),sX);
 
   begin
@@ -611,7 +612,7 @@ package body Numeric_Schubert_Conditions is
     ntk : constant natural32 := natural32(k);
     nbm : constant natural32
         := Remember_Symbolic_Minors.Number_of_Minors(dim,ntk);
-    rst : Symbolic_Minor_Table(integer32(nbm)) := Create(dim,ntk,X);
+    rst : Standard_Symbolic_Minors(integer32(nbm)) := Create(dim,ntk,X);
     invflag : Standard_Complex_Matrices.Matrix(flag'range(1),flag'range(2))
             := Standard_Matrix_Inversion.Inverse(flag);
     cff : Standard_Complex_Vectors.Vector(rst.b'range);

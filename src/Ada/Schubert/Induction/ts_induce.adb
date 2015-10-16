@@ -45,6 +45,7 @@ with Checker_Posets,Checker_Posets_io;   use Checker_Posets,Checker_Posets_io;
 with Checker_Homotopies;
 with Intersection_Posets;                use Intersection_Posets;
 with Intersection_Posets_io;             use Intersection_Posets_io;
+with Setup_Flag_Homotopies;              use Setup_Flag_Homotopies;
 with Moving_Flag_Homotopies;             use Moving_Flag_Homotopies;
 with Flag_Transformations;
 
@@ -773,11 +774,11 @@ procedure ts_induce is
   --   The test is executed in standard double precision.
 
     f1 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-       := Moving_Flag_Homotopies.Moved_Flag(n);
+       := Setup_Flag_Homotopies.Moved_Flag(n);
     f2 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-       := Moving_Flag_Homotopies.Identity(n);
+       := Setup_Flag_Homotopies.Identity(n);
     g1 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-       := Moving_Flag_Homotopies.Identity(n);
+       := Setup_Flag_Homotopies.Identity(n);
     g2 : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
        := Standard_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
     dim : constant integer32 := 2*n*n;
@@ -826,11 +827,11 @@ procedure ts_induce is
   --   The test is executed in double double precision.
 
     f1 : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
-       := Moving_Flag_Homotopies.Moved_Flag(n);
+       := Setup_Flag_Homotopies.Moved_Flag(n);
     f2 : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
-       := Moving_Flag_Homotopies.Identity(n);
+       := Setup_Flag_Homotopies.Identity(n);
     g1 : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
-       := Moving_Flag_Homotopies.Identity(n);
+       := Setup_Flag_Homotopies.Identity(n);
     g2 : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
        := DoblDobl_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
     dim : constant integer32 := 2*n*n;
@@ -879,11 +880,11 @@ procedure ts_induce is
   --   The test is executed in double double precision.
 
     f1 : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
-       := Moving_Flag_Homotopies.Moved_Flag(n);
+       := Setup_Flag_Homotopies.Moved_Flag(n);
     f2 : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
-       := Moving_Flag_Homotopies.Identity(n);
+       := Setup_Flag_Homotopies.Identity(n);
     g1 : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
-       := Moving_Flag_Homotopies.Identity(n);
+       := Setup_Flag_Homotopies.Identity(n);
     g2 : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
        := QuadDobl_Random_Matrices.Random_Matrix(natural32(n),natural32(n));
     dim : constant integer32 := 2*n*n;

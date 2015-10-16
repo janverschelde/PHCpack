@@ -1,9 +1,13 @@
 with text_io;                           use text_io;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
-with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
+with Standard_Complex_Polynomials;
+with DoblDobl_Complex_Polynomials;
+with QuadDobl_Complex_Polynomials;
 with Matrix_Indeterminates;
 with Bracket_Monomials;                 use Bracket_Monomials;
 with Symbolic_Minor_Equations;          use Symbolic_Minor_Equations;
@@ -34,7 +38,82 @@ package body Symbolic_Schubert_Conditions is
              ( n,k : integer32; locmap : Standard_Natural_Matrices.Matrix )
              return Standard_Complex_Poly_Matrices.Matrix is
 
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Polynomials;
+
     res : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    dim : constant integer32
+        := integer32(Matrix_Indeterminates.Dimension(locmap));
+    ind : integer32 := 0;
+    t : Term;
+
+  begin
+    for i in 1..n loop
+      for j in 1..k loop
+        if locmap(i,j) = 0 then
+          res(i,j) := Null_Poly;
+        elsif locmap(i,j) = 1 then
+          t.cf := Create(integer(1));
+          t.dg := new Standard_Natural_Vectors.Vector'(1..dim => 0);
+          res(i,j) := Create(t);
+          Clear(t);
+        else
+          ind := ind + 1;
+          t.cf := Create(integer(1));
+          t.dg := new Standard_Natural_Vectors.Vector'(1..dim => 0);
+          t.dg(ind) := 1;
+          res(i,j) := Create(t);
+          Clear(t);
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Symbolic_Form_of_Plane;
+
+  function Symbolic_Form_of_Plane
+             ( n,k : integer32; locmap : Standard_Natural_Matrices.Matrix )
+             return DoblDobl_Complex_Poly_Matrices.Matrix is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Polynomials;
+
+    res : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    dim : constant integer32
+        := integer32(Matrix_Indeterminates.Dimension(locmap));
+    ind : integer32 := 0;
+    t : Term;
+
+  begin
+    for i in 1..n loop
+      for j in 1..k loop
+        if locmap(i,j) = 0 then
+          res(i,j) := Null_Poly;
+        elsif locmap(i,j) = 1 then
+          t.cf := Create(integer(1));
+          t.dg := new Standard_Natural_Vectors.Vector'(1..dim => 0);
+          res(i,j) := Create(t);
+          Clear(t);
+        else
+          ind := ind + 1;
+          t.cf := Create(integer(1));
+          t.dg := new Standard_Natural_Vectors.Vector'(1..dim => 0);
+          t.dg(ind) := 1;
+          res(i,j) := Create(t);
+          Clear(t);
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Symbolic_Form_of_Plane;
+
+  function Symbolic_Form_of_Plane
+             ( n,k : integer32; locmap : Standard_Natural_Matrices.Matrix )
+             return QuadDobl_Complex_Poly_Matrices.Matrix is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Polynomials;
+
+    res : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
     dim : constant integer32
         := integer32(Matrix_Indeterminates.Dimension(locmap));
     ind : integer32 := 0;
@@ -219,7 +298,7 @@ package body Symbolic_Schubert_Conditions is
           first := false;
           row := Create(b);
         else
-          t.coeff := Create(integer(1));
+          t.coeff := Standard_Complex_Numbers.Create(integer(1));
           Copy_Append(row,t.monom);
           Append(t.monom,b);
           ind := ind + 1;

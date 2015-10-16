@@ -31,6 +31,10 @@ with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
 with Matrix_Indeterminates;             use Matrix_Indeterminates;
 with Standard_Complex_Poly_Matrices;
 with Standard_Complex_Poly_Matrices_io; use Standard_Complex_Poly_Matrices_io;
+with DoblDobl_Complex_Poly_Matrices;
+with DoblDobl_Complex_Poly_Matrices_io; use DoblDobl_Complex_Poly_Matrices_io;
+with QuadDobl_Complex_Poly_Matrices;
+with QuadDobl_Complex_Poly_Matrices_io; use QuadDobl_Complex_Poly_Matrices_io;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Standard_Embed_Polynomials;        use Standard_Embed_Polynomials;
@@ -55,6 +59,8 @@ with Intersection_Posets_io;            use Intersection_Posets_io;
 with Checker_Homotopies;
 with Numeric_Schubert_Conditions;       use Numeric_Schubert_Conditions;
 with Remember_Symbolic_Minors;          use Remember_Symbolic_Minors;
+with Setup_Flag_Homotopies;             use Setup_Flag_Homotopies;
+with Start_Flag_Homotopies;             use Start_Flag_Homotopies;
 with Moving_Flag_Homotopies;            use Moving_Flag_Homotopies;
 with Schubert_Posets;
 with Flag_Transformations;
@@ -169,11 +175,12 @@ procedure ts_flagcond is
     end if;
   end Impose_Schubert_Condition;
 
-  procedure Test_Minor_Expansions ( n,k : in integer32 ) is
+  procedure Standard_Test_Minor_Expansions ( n,k : in integer32 ) is
 
   -- DESCRIPTION :
   --   Shows all k-by-k minors of a general k-plane in n-space,
-  --   represented by a general symbolic localization pattern.
+  --   represented by a general symbolic localization pattern,
+  --   as a matrix of polynomials with standard double coefficients.
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := General_Localization_Map(n,k);
@@ -182,7 +189,7 @@ procedure ts_flagcond is
         := Symbolic_Form_of_Plane(n,k,locmap);
     nq : constant natural32 
        := Remember_Symbolic_Minors.Number_of_Minors(natural32(n),natural32(k));
-    mt : constant Symbolic_Minor_Table(integer32(nq))
+    mt : constant Standard_Symbolic_Minors(integer32(nq))
        := Create(natural32(n),natural32(k),xpm);
    
   begin
@@ -198,6 +205,94 @@ procedure ts_flagcond is
     put_line("The remember table of symbolic minors : "); Write(mt);
     Query(mt,k);
     Impose_Schubert_Condition(natural32(n),natural32(k));
+  end Standard_Test_Minor_Expansions;
+
+  procedure DoblDobl_Test_Minor_Expansions ( n,k : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Shows all k-by-k minors of a general k-plane in n-space,
+  --   represented by a general symbolic localization pattern,
+  --   as a matrix of polynomials with double double coefficients.
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := General_Localization_Map(n,k);
+    dim : constant natural32 := Dimension(locmap);
+    xpm : constant DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+        := Symbolic_Form_of_Plane(n,k,locmap);
+    nq : constant natural32 
+       := Remember_Symbolic_Minors.Number_of_Minors(natural32(n),natural32(k));
+    mt : constant DoblDobl_Symbolic_Minors(integer32(nq))
+       := Create(natural32(n),natural32(k),xpm);
+   
+  begin
+    put("A general localization pattern for a "); put(k,1);
+    put("-plane in "); put(n,1); put_line("-space :");
+    put(locmap);
+    put("The dimension of the space of "); put(k,1);
+    put("-planes is "); put(dim,1); new_line;
+    Initialize_Symbols(dim,locmap);
+    put("The symbolic "); put(k,1); put("-plane in ");
+    put(n,1); put_line("-space :"); put(xpm);
+    put("The number of maximal minors : "); put(nq,1); new_line;
+    put_line("The remember table of symbolic minors : "); Write(mt);
+    Query(mt,k);
+    Impose_Schubert_Condition(natural32(n),natural32(k));
+  end DoblDobl_Test_Minor_Expansions;
+
+  procedure QuadDobl_Test_Minor_Expansions ( n,k : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Shows all k-by-k minors of a general k-plane in n-space,
+  --   represented by a general symbolic localization pattern,
+  --   as a matrix of polynomials with quad double coefficients.
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := General_Localization_Map(n,k);
+    dim : constant natural32 := Dimension(locmap);
+    xpm : constant QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+        := Symbolic_Form_of_Plane(n,k,locmap);
+    nq : constant natural32 
+       := Remember_Symbolic_Minors.Number_of_Minors(natural32(n),natural32(k));
+    mt : constant QuadDobl_Symbolic_Minors(integer32(nq))
+       := Create(natural32(n),natural32(k),xpm);
+   
+  begin
+    put("A general localization pattern for a "); put(k,1);
+    put("-plane in "); put(n,1); put_line("-space :");
+    put(locmap);
+    put("The dimension of the space of "); put(k,1);
+    put("-planes is "); put(dim,1); new_line;
+    Initialize_Symbols(dim,locmap);
+    put("The symbolic "); put(k,1); put("-plane in ");
+    put(n,1); put_line("-space :"); put(xpm);
+    put("The number of maximal minors : "); put(nq,1); new_line;
+    put_line("The remember table of symbolic minors : "); Write(mt);
+    Query(mt,k);
+    Impose_Schubert_Condition(natural32(n),natural32(k));
+  end QuadDobl_Test_Minor_Expansions;
+
+  procedure Test_Minor_Expansions ( n,k : integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the precision and then calls the
+  --   appropriate testing procedure.
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU to select the precision of the coefficients : ");
+    put_line("  0. standard double precision;");
+    put_line("  1. double double precision;");
+    put_line("  2. quad double precision.");
+    put("Type 0, 1, or 2 to select the precision : ");
+    Ask_Alternative(ans,"012");
+    case ans is
+      when '0' => Standard_Test_Minor_Expansions(n,k);
+      when '1' => DoblDobl_Test_Minor_Expansions(n,k);
+      when '2' => QuadDobl_Test_Minor_Expansions(n,k);
+      when others => null;
+    end case;
   end Test_Minor_Expansions;
 
   function Read_Localization_Map ( n,k : integer32 )
@@ -1426,11 +1521,11 @@ procedure ts_flagcond is
     flag : Standard_Complex_Matrices.Matrix(1..n,1..n);
     cond : Bracket(1..k);
     moved : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-          := Moving_Flag_Homotopies.Moved_Flag(n);
+          := Setup_Flag_Homotopies.Moved_Flag(n);
     inverse_moved : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
                   := Standard_Matrix_Inversion.Inverse(moved);
     idemat : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
-           :=  Moving_Flag_Homotopies.Identity(n);
+           :=  Setup_Flag_Homotopies.Identity(n);
     ranflag : Standard_Complex_Matrices.Matrix(1..n,1..n);
     rsd : double_float;
     tol : constant double_float := 1.0E-6;
