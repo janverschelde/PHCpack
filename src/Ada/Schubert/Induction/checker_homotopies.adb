@@ -2,17 +2,33 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 with Standard_Natural_Matrices_io;      use Standard_Natural_Matrices_io;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
+with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_Matrices_io;      use DoblDobl_Complex_Matrices_io;
+with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Matrices_io;      use QuadDobl_Complex_Matrices_io;
 with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Functions;   use Standard_Complex_Poly_Functions;
+with DoblDobl_Complex_Poly_Functions;   use DoblDobl_Complex_Poly_Functions;
+with QuadDobl_Complex_Poly_Functions;   use QuadDobl_Complex_Poly_Functions;
 with Standard_Complex_Poly_Matrices_io; use Standard_Complex_Poly_Matrices_io;
+with DoblDobl_Complex_Poly_Matrices_io; use DoblDobl_Complex_Poly_Matrices_io;
+with QuadDobl_Complex_Poly_Matrices_io; use QuadDobl_Complex_Poly_Matrices_io;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with Standard_Matrix_Inversion;
+with DoblDobl_Matrix_Inversion;
+with QuadDobl_Matrix_Inversion;
 with Checker_Moves;                     use Checker_Moves;
 with Checker_Localization_Patterns;     use Checker_Localization_Patterns;
 
@@ -200,6 +216,37 @@ package body Checker_Homotopies is
               ( r : in integer32;
                 x : in out Standard_Complex_Matrices.Matrix ) is
 
+    use Standard_Complex_Numbers;
+    tmp : Complex_Number;
+
+  begin
+    for k in x'range(2) loop
+      tmp := x(r,k);
+      x(r,k) := -x(r+1,k);
+      x(r+1,k) := tmp + x(r+1,k);
+    end loop;
+  end Inverse_Row_Transformation;
+
+  procedure Inverse_Row_Transformation
+              ( r : in integer32;
+                x : in out DoblDobl_Complex_Matrices.Matrix ) is
+
+    use DoblDobl_Complex_Numbers;
+    tmp : Complex_Number;
+
+  begin
+    for k in x'range(2) loop
+      tmp := x(r,k);
+      x(r,k) := -x(r+1,k);
+      x(r+1,k) := tmp + x(r+1,k);
+    end loop;
+  end Inverse_Row_Transformation;
+
+  procedure Inverse_Row_Transformation
+              ( r : in integer32;
+                x : in out QuadDobl_Complex_Matrices.Matrix ) is
+
+    use QuadDobl_Complex_Numbers;
     tmp : Complex_Number;
 
   begin
@@ -223,10 +270,37 @@ package body Checker_Homotopies is
     x := invm*x;
   end Inverse_Row_Transformation;
 
+  procedure Inverse_Row_Transformation
+              ( mf : in DoblDobl_Complex_Matrices.Matrix;
+                x : in out DoblDobl_Complex_Matrices.Matrix ) is
+
+    invm : constant DoblDobl_Complex_Matrices.Matrix(mf'range(1),mf'range(2))
+         := DoblDobl_Matrix_Inversion.Inverse(mf);
+
+    use DoblDobl_Complex_Matrices;
+
+  begin
+    x := invm*x;
+  end Inverse_Row_Transformation;
+
+  procedure Inverse_Row_Transformation
+              ( mf : in QuadDobl_Complex_Matrices.Matrix;
+                x : in out QuadDobl_Complex_Matrices.Matrix ) is
+
+    invm : constant QuadDobl_Complex_Matrices.Matrix(mf'range(1),mf'range(2))
+         := QuadDobl_Matrix_Inversion.Inverse(mf);
+
+    use QuadDobl_Complex_Matrices;
+
+  begin
+    x := invm*x;
+  end Inverse_Row_Transformation;
+
   procedure Normalize_to_Fit
               ( pattern : in Standard_Natural_Matrices.Matrix;
                 x : in out Standard_Complex_Matrices.Matrix ) is
 
+    use Standard_Complex_Numbers;
     pivot : integer32;
 
   begin
@@ -248,10 +322,63 @@ package body Checker_Homotopies is
     end loop;
   end Normalize_to_Fit;
 
+  procedure Normalize_to_Fit
+              ( pattern : in Standard_Natural_Matrices.Matrix;
+                x : in out DoblDobl_Complex_Matrices.Matrix ) is
+
+    use DoblDobl_Complex_Numbers;
+    pivot : integer32;
+
+  begin
+    for k in pattern'range(2) loop
+      pivot := 0;
+      for i in pattern'range(1) loop
+        if pattern(i,k) = 1
+         then pivot := i;
+        end if;
+        exit when (pivot > 0);
+      end loop;
+      for i in x'first(1)..pivot-1 loop
+        Div(x(i,k),x(pivot,k));
+      end loop;
+      for i in pivot+1..x'last(1) loop
+        Div(x(i,k),x(pivot,k));
+      end loop;
+      x(pivot,k) := Create(integer(1));
+    end loop;
+  end Normalize_to_Fit;
+
+  procedure Normalize_to_Fit
+              ( pattern : in Standard_Natural_Matrices.Matrix;
+                x : in out QuadDobl_Complex_Matrices.Matrix ) is
+
+    use QuadDobl_Complex_Numbers;
+    pivot : integer32;
+
+  begin
+    for k in pattern'range(2) loop
+      pivot := 0;
+      for i in pattern'range(1) loop
+        if pattern(i,k) = 1
+         then pivot := i;
+        end if;
+        exit when (pivot > 0);
+      end loop;
+      for i in x'first(1)..pivot-1 loop
+        Div(x(i,k),x(pivot,k));
+      end loop;
+      for i in pivot+1..x'last(1) loop
+        Div(x(i,k),x(pivot,k));
+      end loop;
+      x(pivot,k) := Create(integer(1));
+    end loop;
+  end Normalize_to_Fit;
+
   procedure Reduce_to_Fit
               ( pattern : in Standard_Natural_Matrices.Matrix;
                 x : in out Standard_Complex_Matrices.Matrix ) is
 
+    use Standard_Complex_Numbers;
     tol : constant double_float := 1.0e-8;
     avx : double_float;
     pivot : integer32;
@@ -284,9 +411,101 @@ package body Checker_Homotopies is
     end loop;
   end Reduce_to_Fit;
 
+  procedure Reduce_to_Fit
+              ( pattern : in Standard_Natural_Matrices.Matrix;
+                x : in out DoblDobl_Complex_Matrices.Matrix ) is
+
+    use DoblDobl_Complex_Numbers;
+    tol : constant double_float := 1.0e-8;
+    avx : double_double;
+    pivot : integer32;
+
+  begin
+    for k in pattern'range(2) loop
+      for i in pattern'range(1) loop
+        if pattern(i,k) = 0 then
+          avx := AbsVal(x(i,k));
+          if avx > tol then
+            pivot := 0;
+            for j in 1..k-1 loop
+              if pattern(i,j) = 1
+               then pivot := j;
+              end if;
+              exit when (pivot > 0);
+            end loop;
+            if pivot > 0 then
+              for ii in x'first(1)..i-1 loop
+                x(ii,k) := x(ii,k) - x(i,k)*x(ii,pivot);
+              end loop;
+              for ii in i+1..x'last(1) loop
+                x(ii,k) := x(ii,k) - x(i,k)*x(ii,pivot);
+              end loop;
+              x(i,k) := Create(integer(0));
+            end if;
+          end if;
+        end if;
+      end loop;
+    end loop;
+  end Reduce_to_Fit;
+
+  procedure Reduce_to_Fit
+              ( pattern : in Standard_Natural_Matrices.Matrix;
+                x : in out QuadDobl_Complex_Matrices.Matrix ) is
+
+    use QuadDobl_Complex_Numbers;
+    tol : constant double_float := 1.0e-8;
+    avx : quad_double;
+    pivot : integer32;
+
+  begin
+    for k in pattern'range(2) loop
+      for i in pattern'range(1) loop
+        if pattern(i,k) = 0 then
+          avx := AbsVal(x(i,k));
+          if avx > tol then
+            pivot := 0;
+            for j in 1..k-1 loop
+              if pattern(i,j) = 1
+               then pivot := j;
+              end if;
+              exit when (pivot > 0);
+            end loop;
+            if pivot > 0 then
+              for ii in x'first(1)..i-1 loop
+                x(ii,k) := x(ii,k) - x(i,k)*x(ii,pivot);
+              end loop;
+              for ii in i+1..x'last(1) loop
+                x(ii,k) := x(ii,k) - x(i,k)*x(ii,pivot);
+              end loop;
+              x(i,k) := Create(integer(0));
+            end if;
+          end if;
+        end if;
+      end loop;
+    end loop;
+  end Reduce_to_Fit;
+
   procedure Normalize_and_Reduce_to_Fit
               ( pattern : in Standard_Natural_Matrices.Matrix;
                 x : in out Standard_Complex_Matrices.Matrix ) is
+
+  begin
+    Normalize_to_Fit(pattern,x);
+    Reduce_to_Fit(pattern,x);
+  end Normalize_and_Reduce_to_Fit;
+
+  procedure Normalize_and_Reduce_to_Fit
+              ( pattern : in Standard_Natural_Matrices.Matrix;
+                x : in out DoblDobl_Complex_Matrices.Matrix ) is
+
+  begin
+    Normalize_to_Fit(pattern,x);
+    Reduce_to_Fit(pattern,x);
+  end Normalize_and_Reduce_to_Fit;
+
+  procedure Normalize_and_Reduce_to_Fit
+              ( pattern : in Standard_Natural_Matrices.Matrix;
+                x : in out QuadDobl_Complex_Matrices.Matrix ) is
 
   begin
     Normalize_to_Fit(pattern,x);
@@ -314,13 +533,105 @@ package body Checker_Homotopies is
   procedure Trivial_Stay_Coordinates
               ( n,k,r : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                sols : in out Solution_List) is
+                x : in out DoblDobl_Complex_Vectors.Vector ) is
+
+    plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    y : DoblDobl_Complex_Matrices.Matrix(1..n,1..k);
+
+  begin
+    y := Map(plocmap,x);
+    Inverse_Row_Transformation(r,y);
+    Normalize_and_Reduce_to_Fit(qlocmap,y);
+    x := Map(qlocmap,y);
+  end Trivial_Stay_Coordinates;
+
+  procedure Trivial_Stay_Coordinates
+              ( n,k,r : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                x : in out QuadDobl_Complex_Vectors.Vector ) is
+
+    plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    y : QuadDobl_Complex_Matrices.Matrix(1..n,1..k);
+
+  begin
+    y := Map(plocmap,x);
+    Inverse_Row_Transformation(r,y);
+    Normalize_and_Reduce_to_Fit(qlocmap,y);
+    x := Map(qlocmap,y);
+  end Trivial_Stay_Coordinates;
+
+  procedure Trivial_Stay_Coordinates
+              ( n,k,r : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                sols : in out Standard_Complex_Solutions.Solution_List) is
+
+    use Standard_Complex_Solutions;
 
     plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
             := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
     qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
             := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
     y : Standard_Complex_Matrices.Matrix(1..n,1..k);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      y := Map(plocmap,ls.v);
+      Inverse_Row_Transformation(r,y);
+      Normalize_and_Reduce_to_Fit(qlocmap,y);
+      ls.v := Map(qlocmap,y);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Trivial_Stay_Coordinates;
+
+  procedure Trivial_Stay_Coordinates
+              ( n,k,r : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List) is
+
+    use DoblDobl_Complex_Solutions;
+
+    plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    y : DoblDobl_Complex_Matrices.Matrix(1..n,1..k);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      y := Map(plocmap,ls.v);
+      Inverse_Row_Transformation(r,y);
+      Normalize_and_Reduce_to_Fit(qlocmap,y);
+      ls.v := Map(qlocmap,y);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Trivial_Stay_Coordinates;
+
+  procedure Trivial_Stay_Coordinates
+              ( n,k,r : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List) is
+
+    use QuadDobl_Complex_Solutions;
+
+    plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    y : QuadDobl_Complex_Matrices.Matrix(1..n,1..k);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
 
@@ -378,7 +689,87 @@ package body Checker_Homotopies is
   procedure Trivial_Stay_Coordinates
               ( file : in file_type; n,k,r : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                sols : in out Solution_List ) is
+                x : in out DoblDobl_Complex_Vectors.Vector ) is
+
+    plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    inrowrp1 : integer32 := 0;
+    y : DoblDobl_Complex_Matrices.Matrix(1..n,1..k);
+
+  begin
+    put(file,"Trivial Stay with critical row = "); put(file,r,1);
+    put_line(file,".");
+    put_line(file,"The previous localization map : "); put(file,plocmap);
+    put_line(file,"The current localization map : "); put(file,qlocmap);
+    put(file,"rows of white checkers : "); put(file,qr); new_line(file);
+    for j in qlocmap'range(2) loop
+      if qlocmap(r+1,j) = 1 then
+        inrowrp1 := j;
+      end if;
+    end loop;
+    if inrowrp1 = 0 then
+      put(file,"no white checker in row ");
+    else
+      put(file,"white checker "); 
+      put(file,inrowrp1,1); put(file," in row ");
+    end if;
+    put(file,r+1,1); new_line(file);
+    y := Map(plocmap,x);
+    put_line(file,"the given solution plane :"); put(file,y,3);
+    Inverse_Row_Transformation(r,y);
+    put_line(file,"after the inverse transformation :"); put(file,y,3);
+    Normalize_and_Reduce_to_Fit(qlocmap,y);
+    put_line(file,"The transformed plane :"); put(file,y,3);
+    x := Map(qlocmap,y);
+  end Trivial_Stay_Coordinates;
+
+  procedure Trivial_Stay_Coordinates
+              ( file : in file_type; n,k,r : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                x : in out QuadDobl_Complex_Vectors.Vector ) is
+
+    plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    inrowrp1 : integer32 := 0;
+    y : QuadDobl_Complex_Matrices.Matrix(1..n,1..k);
+
+  begin
+    put(file,"Trivial Stay with critical row = "); put(file,r,1);
+    put_line(file,".");
+    put_line(file,"The previous localization map : "); put(file,plocmap);
+    put_line(file,"The current localization map : "); put(file,qlocmap);
+    put(file,"rows of white checkers : "); put(file,qr); new_line(file);
+    for j in qlocmap'range(2) loop
+      if qlocmap(r+1,j) = 1 then
+        inrowrp1 := j;
+      end if;
+    end loop;
+    if inrowrp1 = 0 then
+      put(file,"no white checker in row ");
+    else
+      put(file,"white checker "); 
+      put(file,inrowrp1,1); put(file," in row ");
+    end if;
+    put(file,r+1,1); new_line(file);
+    y := Map(plocmap,x);
+    put_line(file,"the given solution plane :"); put(file,y,3);
+    Inverse_Row_Transformation(r,y);
+    put_line(file,"after the inverse transformation :"); put(file,y,3);
+    Normalize_and_Reduce_to_Fit(qlocmap,y);
+    put_line(file,"The transformed plane :"); put(file,y,3);
+    x := Map(qlocmap,y);
+  end Trivial_Stay_Coordinates;
+
+  procedure Trivial_Stay_Coordinates
+              ( file : in file_type; n,k,r : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Solutions;
 
     plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
             := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
@@ -386,6 +777,102 @@ package body Checker_Homotopies is
             := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
     inrowrp1 : integer32 := 0;
     y : Standard_Complex_Matrices.Matrix(1..n,1..k);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    put(file,"Trivial Stay with critical row = "); put(file,r,1);
+    put_line(file,".");
+    put_line(file,"The previous localization map : "); put(file,plocmap);
+    put_line(file,"The current localization map : "); put(file,qlocmap);
+    put(file,"rows of white checkers : "); put(file,qr); new_line(file);
+    for j in qlocmap'range(2) loop
+      if qlocmap(r+1,j) = 1 then
+        inrowrp1 := j;
+      end if;
+    end loop;
+    if inrowrp1 = 0 then
+      put(file,"no white checker in row ");
+    else
+      put(file,"white checker "); 
+      put(file,inrowrp1,1); put(file," in row ");
+    end if;
+    put(file,r+1,1); new_line(file);
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      y := Map(plocmap,ls.v);
+      put_line(file,"the given solution plane :"); put(file,y,3);
+      Inverse_Row_Transformation(r,y);
+      put_line(file,"after the inverse transformation :"); put(file,y,3);
+      Normalize_and_Reduce_to_Fit(qlocmap,y);
+      put_line(file,"The transformed plane :"); put(file,y,3);
+      ls.v := Map(qlocmap,y);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Trivial_Stay_Coordinates;
+
+  procedure Trivial_Stay_Coordinates
+              ( file : in file_type; n,k,r : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    inrowrp1 : integer32 := 0;
+    y : DoblDobl_Complex_Matrices.Matrix(1..n,1..k);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    put(file,"Trivial Stay with critical row = "); put(file,r,1);
+    put_line(file,".");
+    put_line(file,"The previous localization map : "); put(file,plocmap);
+    put_line(file,"The current localization map : "); put(file,qlocmap);
+    put(file,"rows of white checkers : "); put(file,qr); new_line(file);
+    for j in qlocmap'range(2) loop
+      if qlocmap(r+1,j) = 1 then
+        inrowrp1 := j;
+      end if;
+    end loop;
+    if inrowrp1 = 0 then
+      put(file,"no white checker in row ");
+    else
+      put(file,"white checker "); 
+      put(file,inrowrp1,1); put(file," in row ");
+    end if;
+    put(file,r+1,1); new_line(file);
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      y := Map(plocmap,ls.v);
+      put_line(file,"the given solution plane :"); put(file,y,3);
+      Inverse_Row_Transformation(r,y);
+      put_line(file,"after the inverse transformation :"); put(file,y,3);
+      Normalize_and_Reduce_to_Fit(qlocmap,y);
+      put_line(file,"The transformed plane :"); put(file,y,3);
+      ls.v := Map(qlocmap,y);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Trivial_Stay_Coordinates;
+
+  procedure Trivial_Stay_Coordinates
+              ( file : in file_type; n,k,r : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    inrowrp1 : integer32 := 0;
+    y : QuadDobl_Complex_Matrices.Matrix(1..n,1..k);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
 
@@ -439,12 +926,50 @@ package body Checker_Homotopies is
     return res;
   end Eval;
 
+  function Eval ( m : DoblDobl_Complex_Poly_Matrices.Matrix;
+                  x : DoblDobl_Complex_Vectors.Vector )
+                return DoblDobl_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the value of m evaluated at  x.
+
+    res : DoblDobl_Complex_Matrices.Matrix(m'range(1),m'range(2));
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        res(i,j) := Eval(m(i,j),x);
+      end loop;
+    end loop;
+    return res;
+  end Eval;
+
+  function Eval ( m : QuadDobl_Complex_Poly_Matrices.Matrix;
+                  x : QuadDobl_Complex_Vectors.Vector )
+                return QuadDobl_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the value of m evaluated at  x.
+
+    res : QuadDobl_Complex_Matrices.Matrix(m'range(1),m'range(2));
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        res(i,j) := Eval(m(i,j),x);
+      end loop;
+    end loop;
+    return res;
+  end Eval;
+
   procedure Homotopy_Stay_Coordinates
               ( n,k,r : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
                 mf : in Standard_Complex_Matrices.Matrix;
                 xtm : in Standard_Complex_Poly_Matrices.Matrix;
                 x : in out Standard_Complex_Vectors.Vector ) is
+
+    use Standard_Complex_Numbers;
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
@@ -463,9 +988,58 @@ package body Checker_Homotopies is
   procedure Homotopy_Stay_Coordinates
               ( n,k,r : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in DoblDobl_Complex_Matrices.Matrix;
+                xtm : in DoblDobl_Complex_Poly_Matrices.Matrix;
+                x : in out DoblDobl_Complex_Vectors.Vector ) is
+
+    use DoblDobl_Complex_Numbers;
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+    y : DoblDobl_Complex_Matrices.Matrix(1..n,1..k);
+    xt : DoblDobl_Complex_Vectors.Vector(x'first..x'last+1);
+
+  begin
+    xt(x'range) := x;
+    xt(xt'last) := Create(integer(1));
+    y := Eval(xtm,xt);
+    Inverse_Row_Transformation(mf,y);
+    Normalize_and_Reduce_to_Fit(locmap,y);
+    x := Map(locmap,y);
+  end Homotopy_Stay_Coordinates;
+
+  procedure Homotopy_Stay_Coordinates
+              ( n,k,r : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in QuadDobl_Complex_Matrices.Matrix;
+                xtm : in QuadDobl_Complex_Poly_Matrices.Matrix;
+                x : in out QuadDobl_Complex_Vectors.Vector ) is
+
+    use QuadDobl_Complex_Numbers;
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+    y : QuadDobl_Complex_Matrices.Matrix(1..n,1..k);
+    xt : QuadDobl_Complex_Vectors.Vector(x'first..x'last+1);
+
+  begin
+    xt(x'range) := x;
+    xt(xt'last) := Create(integer(1));
+    y := Eval(xtm,xt);
+    Inverse_Row_Transformation(mf,y);
+    Normalize_and_Reduce_to_Fit(locmap,y);
+    x := Map(locmap,y);
+  end Homotopy_Stay_Coordinates;
+
+  procedure Homotopy_Stay_Coordinates
+              ( n,k,r : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
                 mf : in Standard_Complex_Matrices.Matrix;
                 xtm : in Standard_Complex_Poly_Matrices.Matrix;
-                sols : in out Solution_List) is
+                sols : in out Standard_Complex_Solutions.Solution_List) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
@@ -492,11 +1066,81 @@ package body Checker_Homotopies is
   end Homotopy_Stay_Coordinates;
 
   procedure Homotopy_Stay_Coordinates
+              ( n,k,r : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in DoblDobl_Complex_Matrices.Matrix;
+                xtm : in DoblDobl_Complex_Poly_Matrices.Matrix;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Solutions;
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+    y : DoblDobl_Complex_Matrices.Matrix(1..n,1..k);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      declare
+        xt : DoblDobl_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
+      begin
+        xt(ls.v'range) := ls.v;
+        xt(xt'last) := Create(integer(1));
+        y := Eval(xtm,xt);
+      end;
+      Inverse_Row_Transformation(mf,y);
+      Normalize_and_Reduce_to_Fit(locmap,y);
+      ls.v := Map(locmap,y);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Homotopy_Stay_Coordinates;
+
+  procedure Homotopy_Stay_Coordinates
+              ( n,k,r : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in QuadDobl_Complex_Matrices.Matrix;
+                xtm : in QuadDobl_Complex_Poly_Matrices.Matrix;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List) is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Solutions;
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+    y : QuadDobl_Complex_Matrices.Matrix(1..n,1..k);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      declare
+        xt : QuadDobl_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
+      begin
+        xt(ls.v'range) := ls.v;
+        xt(xt'last) := Create(integer(1));
+        y := Eval(xtm,xt);
+      end;
+      Inverse_Row_Transformation(mf,y);
+      Normalize_and_Reduce_to_Fit(locmap,y);
+      ls.v := Map(locmap,y);
+      Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Homotopy_Stay_Coordinates;
+
+  procedure Homotopy_Stay_Coordinates
               ( file : in file_type; n,k,r : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
                 mf : in Standard_Complex_Matrices.Matrix;
                 xtm : in Standard_Complex_Poly_Matrices.Matrix;
                 x : in out Standard_Complex_Vectors.Vector ) is
+
+    use Standard_Complex_Numbers;
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
@@ -524,9 +1168,76 @@ package body Checker_Homotopies is
   procedure Homotopy_Stay_Coordinates
               ( file : in file_type; n,k,r : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in DoblDobl_Complex_Matrices.Matrix;
+                xtm : in DoblDobl_Complex_Poly_Matrices.Matrix;
+                x : in out DoblDobl_Complex_Vectors.Vector ) is
+
+    use DoblDobl_Complex_Numbers;
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+    y : DoblDobl_Complex_Matrices.Matrix(1..n,1..k);
+    xt : DoblDobl_Complex_Vectors.Vector(x'first..x'last+1);
+
+  begin
+    put(file,"Homotopy Stay with critical row = "); put(file,r,1);
+    put_line(file,".");
+    put_line(file,"The localization map : "); put(file,locmap);
+    put_line(file,"The matrix xtm : "); put(file,xtm);
+    xt(x'range) := x;
+    xt(xt'last) := Create(integer(1));
+    put_line(file,"The vector xt : "); put_line(file,xt);
+    y := Eval(xtm,xt);
+    put_line(file,"The matrix xtm evaluated at the solution : ");
+    put(file,y,2);
+    Inverse_Row_Transformation(mf,y);
+    put_line(file,"after the inverse transformation :"); put(file,y,3);
+    Normalize_and_Reduce_to_Fit(locmap,y);
+    put_line(file,"The transformed plane :"); put(file,y,3);
+    x := Map(locmap,y);
+  end Homotopy_Stay_Coordinates;
+
+  procedure Homotopy_Stay_Coordinates
+              ( file : in file_type; n,k,r : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in QuadDobl_Complex_Matrices.Matrix;
+                xtm : in QuadDobl_Complex_Poly_Matrices.Matrix;
+                x : in out QuadDobl_Complex_Vectors.Vector ) is
+
+    use QuadDobl_Complex_Numbers;
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+    y : QuadDobl_Complex_Matrices.Matrix(1..n,1..k);
+    xt : QuadDobl_Complex_Vectors.Vector(x'first..x'last+1);
+
+  begin
+    put(file,"Homotopy Stay with critical row = "); put(file,r,1);
+    put_line(file,".");
+    put_line(file,"The localization map : "); put(file,locmap);
+    put_line(file,"The matrix xtm : "); put(file,xtm);
+    xt(x'range) := x;
+    xt(xt'last) := Create(integer(1));
+    put_line(file,"The vector xt : "); put_line(file,xt);
+    y := Eval(xtm,xt);
+    put_line(file,"The matrix xtm evaluated at the solution : ");
+    put(file,y,2);
+    Inverse_Row_Transformation(mf,y);
+    put_line(file,"after the inverse transformation :"); put(file,y,3);
+    Normalize_and_Reduce_to_Fit(locmap,y);
+    put_line(file,"The transformed plane :"); put(file,y,3);
+    x := Map(locmap,y);
+  end Homotopy_Stay_Coordinates;
+
+  procedure Homotopy_Stay_Coordinates
+              ( file : in file_type; n,k,r : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
                 mf : in Standard_Complex_Matrices.Matrix;
                 xtm : in Standard_Complex_Poly_Matrices.Matrix;
-                sols : in out Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
@@ -563,12 +1274,104 @@ package body Checker_Homotopies is
     put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
   end Homotopy_Stay_Coordinates;
 
+  procedure Homotopy_Stay_Coordinates
+              ( file : in file_type; n,k,r : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in DoblDobl_Complex_Matrices.Matrix;
+                xtm : in DoblDobl_Complex_Poly_Matrices.Matrix;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Solutions;
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+    y : DoblDobl_Complex_Matrices.Matrix(1..n,1..k);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    put(file,"Homotopy Stay with critical row = "); put(file,r,1);
+    put_line(file,".");
+    put_line(file,"The localization map : "); put(file,locmap);
+    put_line(file,"The matrix xtm : "); put(file,xtm);
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      declare
+        xt : DoblDobl_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
+      begin
+        xt(ls.v'range) := ls.v;
+        xt(xt'last) := Create(integer(1));
+        put_line(file,"The vector xt : "); put_line(file,xt);
+        y := Eval(xtm,xt);
+      end;
+      put_line(file,"The matrix xtm evaluated at the solution : ");
+      put(file,y,2);
+      Inverse_Row_Transformation(mf,y);
+      put_line(file,"after the inverse transformation :"); put(file,y,3);
+      Normalize_and_Reduce_to_Fit(locmap,y);
+      put_line(file,"The transformed plane :"); put(file,y,3);
+      ls.v := Map(locmap,y);
+     -- Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+    end loop;
+    put_line(file,"The transformed solution list :");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+  end Homotopy_Stay_Coordinates;
+
+  procedure Homotopy_Stay_Coordinates
+              ( file : in file_type; n,k,r : in integer32;
+                p,rows,cols : in Standard_Natural_Vectors.Vector;
+                mf : in QuadDobl_Complex_Matrices.Matrix;
+                xtm : in QuadDobl_Complex_Poly_Matrices.Matrix;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Solutions;
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
+    y : QuadDobl_Complex_Matrices.Matrix(1..n,1..k);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    put(file,"Homotopy Stay with critical row = "); put(file,r,1);
+    put_line(file,".");
+    put_line(file,"The localization map : "); put(file,locmap);
+    put_line(file,"The matrix xtm : "); put(file,xtm);
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      declare
+        xt : QuadDobl_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
+      begin
+        xt(ls.v'range) := ls.v;
+        xt(xt'last) := Create(integer(1));
+        put_line(file,"The vector xt : "); put_line(file,xt);
+        y := Eval(xtm,xt);
+      end;
+      put_line(file,"The matrix xtm evaluated at the solution : ");
+      put(file,y,2);
+      Inverse_Row_Transformation(mf,y);
+      put_line(file,"after the inverse transformation :"); put(file,y,3);
+      Normalize_and_Reduce_to_Fit(locmap,y);
+      put_line(file,"The transformed plane :"); put(file,y,3);
+      ls.v := Map(locmap,y);
+     -- Set_Head(tmp,ls);
+      tmp := Tail_Of(tmp);
+    end loop;
+    put_line(file,"The transformed solution list :");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+  end Homotopy_Stay_Coordinates;
+
   procedure Update_Swap_Column
               ( x : in out Standard_Complex_Matrices.Matrix;
                 s : in integer32 ) is
 
   -- DESCRIPTION :
   --   Replaces column s+1 by the sum of columns s and s+1.
+
+    use Standard_Complex_Numbers;
 
   begin
     for i in x'range(1) loop
@@ -582,6 +1385,8 @@ package body Checker_Homotopies is
                 mf : in Standard_Complex_Matrices.Matrix;
                 xtm : in Standard_Complex_Poly_Matrices.Matrix;
                 x : in out Standard_Complex_Vectors.Vector ) is
+
+    use Standard_Complex_Numbers;
 
     qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
             := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
@@ -603,7 +1408,10 @@ package body Checker_Homotopies is
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 mf : in Standard_Complex_Matrices.Matrix;
                 xtm : in Standard_Complex_Poly_Matrices.Matrix;
-                sols : in out Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
 
     qlocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
             := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
@@ -636,6 +1444,8 @@ package body Checker_Homotopies is
                 mf : in Standard_Complex_Matrices.Matrix;
                 xtm : in Standard_Complex_Poly_Matrices.Matrix;
                 x : in out Standard_Complex_Vectors.Vector ) is
+
+    use Standard_Complex_Numbers;
 
     plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
             := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
@@ -671,7 +1481,10 @@ package body Checker_Homotopies is
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 mf : in Standard_Complex_Matrices.Matrix;
                 xtm : in Standard_Complex_Poly_Matrices.Matrix;
-                sols : in out Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
 
     plocmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
             := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
@@ -719,6 +1532,8 @@ package body Checker_Homotopies is
                 xtm : in Standard_Complex_Poly_Matrices.Matrix;
                 x : in out Standard_Complex_Vectors.Vector ) is
 
+    use Standard_Complex_Numbers;
+
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
     y : Standard_Complex_Matrices.Matrix(1..n,1..k); -- := Map(locmap,x);
@@ -739,7 +1554,10 @@ package body Checker_Homotopies is
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
                 mf : in Standard_Complex_Matrices.Matrix;
                 xtm : in Standard_Complex_Poly_Matrices.Matrix;
-                sols : in out Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
@@ -773,6 +1591,8 @@ package body Checker_Homotopies is
                 xtm : in Standard_Complex_Poly_Matrices.Matrix;
                 x : in out Standard_Complex_Vectors.Vector ) is
 
+    use Standard_Complex_Numbers;
+
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
     y : Standard_Complex_Matrices.Matrix(1..n,1..k); -- := Map(locmap,x);
@@ -803,7 +1623,10 @@ package body Checker_Homotopies is
                 p,rows,cols : in Standard_Natural_Vectors.Vector;
                 mf : in Standard_Complex_Matrices.Matrix;
                 xtm : in Standard_Complex_Poly_Matrices.Matrix;
-                sols : in out Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
 
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,p,rows,cols);
@@ -846,6 +1669,8 @@ package body Checker_Homotopies is
               ( x : in out Standard_Complex_Poly_Matrices.Matrix;
                 m : in Standard_Natural_Matrices.Matrix ) is
 
+    use Standard_Complex_Numbers;
+
     n : constant integer32 := integer32(Degree_of_Freedom(m));
     ind : integer32 := 0;
     t : Term;
@@ -874,6 +1699,8 @@ package body Checker_Homotopies is
   procedure Initialize_Moving_Plane
               ( x : in out Standard_Complex_Poly_Matrices.Matrix;
                 m : in Standard_Natural_Matrices.Matrix; s : in integer32 ) is
+
+    use Standard_Complex_Numbers;
 
     n : constant integer32 := integer32(Degree_of_Freedom(m));
     ind : integer32 := 0;
@@ -905,6 +1732,8 @@ package body Checker_Homotopies is
                 r,big_r,dc,s : in integer32;
                 p : in Standard_Natural_Vectors.Vector;
                 locmap : in Standard_Natural_Matrices.Matrix ) is
+
+    use Standard_Complex_Numbers;
 
     dim : constant natural32 := Degree_of_Freedom(locmap);
     np1 : constant integer32 := integer32(dim)+1;
@@ -994,6 +1823,8 @@ package body Checker_Homotopies is
                 r,big_r,dc,s : in integer32;
                 p : in Standard_Natural_Vectors.Vector;
                 locmap : in Standard_Natural_Matrices.Matrix ) is
+
+    use Standard_Complex_Numbers;
 
     dim : constant natural32 := Degree_of_Freedom(locmap);
     np1 : constant integer32 := integer32(dim)+1;
@@ -1112,6 +1943,8 @@ package body Checker_Homotopies is
                 p : in Standard_Natural_Vectors.Vector;
                 locmap : in Standard_Natural_Matrices.Matrix ) is
 
+    use Standard_Complex_Numbers;
+
     dim : constant natural32 := Degree_of_Freedom(locmap);
     np1 : constant integer32 := integer32(dim)+1;
     ind : integer32;
@@ -1174,6 +2007,8 @@ package body Checker_Homotopies is
                 r,dc,s : in integer32;
                 p : in Standard_Natural_Vectors.Vector;
                 locmap : in Standard_Natural_Matrices.Matrix ) is
+
+    use Standard_Complex_Numbers;
 
     dim : constant natural32 := Degree_of_Freedom(locmap);
     np1 : constant integer32 := integer32(dim)+1;
@@ -1286,6 +2121,8 @@ package body Checker_Homotopies is
               ( n,k,r : in integer32;
                 p,rows,cols : in Standard_Natural_Vectors.Vector ) 
               return Standard_Complex_Poly_Matrices.Matrix is
+
+    use Standard_Complex_Numbers;
 
     res : Standard_Complex_Poly_Matrices.Matrix(1..n,1..k);
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)

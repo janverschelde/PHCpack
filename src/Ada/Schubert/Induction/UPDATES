@@ -1,5 +1,6 @@
 Sat 17 Oct 2015 : mapping in double double and quad double precision added
-  to checker_localization_patterns.
+  to checker_localization_patterns.  In checker_homotopies, added procedures
+  in double double and quad double precision.
 
 Fri 16 Oct 2015 : symbolic_schubert_conditions and remember_symbolic_minors
   are extended to return matrices of polynomials with coefficients in
