@@ -1,4 +1,6 @@
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 
 package body Checker_Localization_Patterns is
 
@@ -223,6 +225,8 @@ package body Checker_Localization_Patterns is
                  x : Standard_Complex_Vectors.Vector )
                return Standard_Complex_Matrices.Matrix is
 
+    use Standard_Complex_Numbers;
+
     res : Standard_Complex_Matrices.Matrix(m'range(1),m'range(2));
     ind : integer32 := x'first-1;
 
@@ -243,11 +247,101 @@ package body Checker_Localization_Patterns is
   end Map;
 
   function Map ( m : Standard_Natural_Matrices.Matrix;
+                 x : DoblDobl_Complex_Vectors.Vector )
+               return DoblDobl_Complex_Matrices.Matrix is
+
+    use DoblDobl_Complex_Numbers;
+
+    res : DoblDobl_Complex_Matrices.Matrix(m'range(1),m'range(2));
+    ind : integer32 := x'first-1;
+
+  begin
+    for i in m'range(1) loop
+      for j in m'range(2) loop
+        if m(i,j) = 0 then
+          res(i,j) := Create(integer(0));
+        elsif m(i,j) = 1 then
+          res(i,j) := Create(integer(1));
+        else
+          ind := ind + 1;
+          res(i,j) := x(ind);
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Map;
+
+  function Map ( m : Standard_Natural_Matrices.Matrix;
+                 x : QuadDobl_Complex_Vectors.Vector )
+               return QuadDobl_Complex_Matrices.Matrix is
+
+    use QuadDobl_Complex_Numbers;
+
+    res : QuadDobl_Complex_Matrices.Matrix(m'range(1),m'range(2));
+    ind : integer32 := x'first-1;
+
+  begin
+    for i in m'range(1) loop
+      for j in m'range(2) loop
+        if m(i,j) = 0 then
+          res(i,j) := Create(integer(0));
+        elsif m(i,j) = 1 then
+          res(i,j) := Create(integer(1));
+        else
+          ind := ind + 1;
+          res(i,j) := x(ind);
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Map;
+
+  function Map ( m : Standard_Natural_Matrices.Matrix;
                  x : Standard_Complex_Matrices.Matrix )
                return Standard_Complex_Vectors.Vector is
 
     deg : constant natural32 := Degree_of_Freedom(m);
     res : Standard_Complex_Vectors.Vector(1..integer32(deg));
+    ind : integer32 := 0;
+
+  begin
+    for i in m'range(1) loop
+      for j in m'range(2) loop
+        if m(i,j) = 2 then
+          ind := ind + 1;
+          res(ind) := x(i,j);
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Map;
+
+  function Map ( m : Standard_Natural_Matrices.Matrix;
+                 x : DoblDobl_Complex_Matrices.Matrix )
+               return DoblDobl_Complex_Vectors.Vector is
+
+    deg : constant natural32 := Degree_of_Freedom(m);
+    res : DoblDobl_Complex_Vectors.Vector(1..integer32(deg));
+    ind : integer32 := 0;
+
+  begin
+    for i in m'range(1) loop
+      for j in m'range(2) loop
+        if m(i,j) = 2 then
+          ind := ind + 1;
+          res(ind) := x(i,j);
+        end if;
+      end loop;
+    end loop;
+    return res;
+  end Map;
+
+  function Map ( m : Standard_Natural_Matrices.Matrix;
+                 x : QuadDobl_Complex_Matrices.Matrix )
+               return QuadDobl_Complex_Vectors.Vector is
+
+    deg : constant natural32 := Degree_of_Freedom(m);
+    res : QuadDobl_Complex_Vectors.Vector(1..integer32(deg));
     ind : integer32 := 0;
 
   begin

@@ -4,6 +4,10 @@ with Standard_Natural_Vectors;
 with Standard_Natural_Matrices;
 with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Matrices;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Matrices;
 
 package Checker_Localization_Patterns is
 
@@ -107,9 +111,16 @@ package Checker_Localization_Patterns is
   function Map ( m : Standard_Natural_Matrices.Matrix;
                  x : Standard_Complex_Vectors.Vector )
                return Standard_Complex_Matrices.Matrix;
+  function Map ( m : Standard_Natural_Matrices.Matrix;
+                 x : DoblDobl_Complex_Vectors.Vector )
+               return DoblDobl_Complex_Matrices.Matrix;
+  function Map ( m : Standard_Natural_Matrices.Matrix;
+                 x : QuadDobl_Complex_Vectors.Vector )
+               return QuadDobl_Complex_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Maps the values in the vector x into a complex matrix,
+  --   in standard double, double double, or quad double precision,
   --   using the localization pattern m.
 
   -- REQUIRED : x'length >= Degree_of_Freedom(m).
@@ -117,9 +128,16 @@ package Checker_Localization_Patterns is
   function Map ( m : Standard_Natural_Matrices.Matrix;
                  x : Standard_Complex_Matrices.Matrix )
                return Standard_Complex_Vectors.Vector;
+  function Map ( m : Standard_Natural_Matrices.Matrix;
+                 x : DoblDobl_Complex_Matrices.Matrix )
+               return DoblDobl_Complex_Vectors.Vector;
+  function Map ( m : Standard_Natural_Matrices.Matrix;
+                 x : QuadDobl_Complex_Matrices.Matrix )
+               return QuadDobl_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Maps the values in the matrix x into a complex vector,
+  --   in standard double, double double, or quad double precision,
   --   using the localization pattern m.
 
 end Checker_Localization_Patterns;
