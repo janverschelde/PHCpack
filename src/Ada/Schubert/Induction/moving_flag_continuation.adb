@@ -4,22 +4,35 @@ with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Double_Double_Numbers;             use Double_Double_Numbers;
+with Double_Double_Numbers_io;          use Double_Double_Numbers_io;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;            use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 with Standard_Natural_Matrices;
 with Standard_Natural_Matrices_io;      use Standard_Natural_Matrices_io;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
+with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
 with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
 with Standard_Complex_Norms_Equals;     use Standard_Complex_Norms_Equals;
 with DoblDobl_Complex_Vector_Norms;     use DoblDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Vector_Norms;     use QuadDobl_Complex_Vector_Norms;
 with Symbol_Table;
 with Matrix_Indeterminates;
 with Standard_Complex_Poly_SysFun;
+with DoblDobl_Complex_Poly_SysFun;
+with QuadDobl_Complex_Poly_SysFun;
 with Standard_Complex_Poly_Matrices;
 with Standard_Complex_Poly_Matrices_io; use Standard_Complex_Poly_Matrices_io;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
+with DobLDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with Standard_Root_Refiners;            use Standard_Root_Refiners;
+with DoblDobl_Root_Refiners;            use DoblDobl_Root_Refiners;
+with QuadDobl_Root_Refiners;            use QuadDobl_Root_Refiners;
 with Brackets;
 with Checker_Boards_io;
 with Checker_Moves;
@@ -95,6 +108,128 @@ package body Moving_Flag_Continuation is
     when others => put_line("exception in Track_First_Move"); raise;
   end Track_First_Move;
 
+  procedure Track_First_Move
+              ( file : in file_type; n : in integer32;
+                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                tol : in double_float;
+                sol : in out DoblDobl_Complex_Solutions.Link_to_Solution;
+                fail : out boolean ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_Solutions;
+
+    x : DoblDobl_Complex_Vectors.Vector(1..n);
+    xt : DoblDobl_Complex_Vectors.Vector(1..n+1);
+    y : DoblDobl_Complex_Vectors.Vector(h'range);
+    res : double_double;
+    sh : Poly_Sys(1..n) := Square(n,h);
+    yh : DoblDobl_Complex_Vectors.Vector(sh'range);
+    sh0 : Poly_Sys(sh'range);
+    sols : Solution_List;
+    epsxa : constant double_float := 1.0E-12;
+    tolsing : constant double_float := tol;
+    epsfa : constant double_float := 1.0E-12;
+    numit : natural32 := 0;
+
+  begin
+    Start_Solution(h,fail,x,res);
+    if fail then
+      put_line(file,"no start solution found...");
+    else
+      new_line(file);
+      put(file,"The residual of the start solution : ");
+      put(file,res,3); new_line(file);
+      xt(x'range) := x;
+      xt(xt'last) := DoblDobl_Complex_Numbers.Create(integer(0));
+      yh := Eval(sh,xt);
+      put_line(file,"Value of the start solution at the squared homotopy :");
+      put_line(file,yh);
+      sols := Create(xt);
+      if sol = null then
+        put_line(file,"In Track_First_Move, sol is null.");
+      else
+        put_line(file,"In Track_First_Move, the solution on input :");
+        put(file,sol.all); new_line(file);
+      end if;
+      put_line(file,"The start solution in Track_First_Move : ");
+      put(file,Head_Of(sols).all); new_line(file);
+      sh0 := Eval(sh,DoblDobl_Complex_Numbers.Create(integer(0)),n+1);
+      Reporting_Root_Refiner
+        (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
+      Clear(sh0); --Clear(sols);
+      Call_Path_Trackers(file,n,sh,xt,sol);
+      put(file,"The residual of the end solution : ");
+      y := Eval(h,xt); res := Max_Norm(y);
+      put(file,res,3); new_line(file); new_line(file);
+      fail := (res > epsfa);
+    end if;
+    DoblDobl_Complex_Poly_Systems.Clear(sh);
+  exception
+    when others => put_line("exception in Track_First_Move"); raise;
+  end Track_First_Move;
+
+  procedure Track_First_Move
+              ( file : in file_type; n : in integer32;
+                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                tol : in double_float;
+                sol : in out QuadDobl_Complex_Solutions.Link_to_Solution;
+                fail : out boolean ) is
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Poly_SysFun;
+    use QuadDobl_Complex_Solutions;
+
+    x : QuadDobl_Complex_Vectors.Vector(1..n);
+    xt : QuadDobl_Complex_Vectors.Vector(1..n+1);
+    y : QuadDobl_Complex_Vectors.Vector(h'range);
+    res : quad_double;
+    sh : Poly_Sys(1..n) := Square(n,h);
+    yh : QuadDobl_Complex_Vectors.Vector(sh'range);
+    sh0 : Poly_Sys(sh'range);
+    sols : Solution_List;
+    epsxa : constant double_float := 1.0E-12;
+    tolsing : constant double_float := tol;
+    epsfa : constant double_float := 1.0E-12;
+    numit : natural32 := 0;
+
+  begin
+    Start_Solution(h,fail,x,res);
+    if fail then
+      put_line(file,"no start solution found...");
+    else
+      new_line(file);
+      put(file,"The residual of the start solution : ");
+      put(file,res,3); new_line(file);
+      xt(x'range) := x;
+      xt(xt'last) := QuadDobl_Complex_Numbers.Create(integer(0));
+      yh := Eval(sh,xt);
+      put_line(file,"Value of the start solution at the squared homotopy :");
+      put_line(file,yh);
+      sols := Create(xt);
+      if sol = null then
+        put_line(file,"In Track_First_Move, sol is null.");
+      else
+        put_line(file,"In Track_First_Move, the solution on input :");
+        put(file,sol.all); new_line(file);
+      end if;
+      put_line(file,"The start solution in Track_First_Move : ");
+      put(file,Head_Of(sols).all); new_line(file);
+      sh0 := Eval(sh,QuadDobl_Complex_Numbers.Create(integer(0)),n+1);
+      Reporting_Root_Refiner
+        (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
+      Clear(sh0); --Clear(sols);
+      Call_Path_Trackers(file,n,sh,xt,sol);
+      put(file,"The residual of the end solution : ");
+      y := Eval(h,xt); res := Max_Norm(y);
+      put(file,res,3); new_line(file); new_line(file);
+      fail := (res > epsfa);
+    end if;
+    QuadDobl_Complex_Poly_Systems.Clear(sh);
+  exception
+    when others => put_line("exception in Track_First_Move"); raise;
+  end Track_First_Move;
+
   procedure Track_Next_Move
               ( file : in file_type; n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -142,6 +277,120 @@ package body Moving_Flag_Continuation is
       sh0 := Eval(sh,Standard_Complex_Numbers.Create(0.0),n+1);
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,deflate,false);
+      Call_Path_Trackers(file,n,sh,xt,sol);
+      put(file,"The residual of the end solution at original homotopy : ");
+      y := Eval(h,xt); res := Max_Norm(y);
+      put(file,res,3); new_line(file); new_line(file);
+      fail := (res > tolsing);
+    end if;
+    Clear(sh); Clear(sh0); --Clear(sols);
+  exception
+    when others => put_line("exception in Track_Next_Move ..."); raise;
+  end Track_Next_Move;
+
+  procedure Track_Next_Move
+              ( file : in file_type; n : in integer32;
+                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                tol : in double_float;
+                sol : in out DoblDobl_Complex_Solutions.Link_to_Solution;
+                fail : out boolean ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_Solutions;
+
+    xt : DoblDobl_Complex_Vectors.Vector(1..n+1);
+    y : DoblDobl_Complex_Vectors.Vector(h'range);
+    res : double_double;
+    sh : Poly_Sys(1..n) := Square(n,h);
+    yh : DoblDobl_Complex_Vectors.Vector(sh'range);
+    sh0 : Poly_Sys(sh'range);
+    sols : Solution_List;
+    epsxa : constant double_float := 1.0E-12;
+    tolsing : constant double_float := tol;
+    epsfa : constant double_float := 1.0E-12;
+    numit : natural32 := 0;
+
+  begin
+    xt(sol.v'range) := sol.v;
+    xt(xt'last) := DoblDobl_Complex_Numbers.Create(integer(0));
+    y := Eval(h,xt);
+    new_line(file);
+    put_line(file,"Value of the start solution at the original homotopy :");
+    put_line(file,y);
+    res := Max_Norm(y);
+    put(file,"The residual : "); put(file,res,3); new_line(file);
+    fail := (res > tolsing);
+    yh := Eval(sh,xt);
+    put_line(file,"Value of the start solution at the squared homotopy :");
+    put_line(file,yh);
+    res := Max_Norm(y);
+    put(file,"The residual : "); put(file,res,3); new_line(file);
+    fail := fail and (res > tolsing);
+    if fail then
+      put_line(file,"-> residual too high, abort path tracking");
+    else
+      sols := Create(xt);
+      sh0 := Eval(sh,DoblDobl_Complex_Numbers.Create(integer(0)),n+1);
+      Reporting_Root_Refiner
+        (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
+      Call_Path_Trackers(file,n,sh,xt,sol);
+      put(file,"The residual of the end solution at original homotopy : ");
+      y := Eval(h,xt); res := Max_Norm(y);
+      put(file,res,3); new_line(file); new_line(file);
+      fail := (res > tolsing);
+    end if;
+    Clear(sh); Clear(sh0); --Clear(sols);
+  exception
+    when others => put_line("exception in Track_Next_Move ..."); raise;
+  end Track_Next_Move;
+
+  procedure Track_Next_Move
+              ( file : in file_type; n : in integer32;
+                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                tol : in double_float;
+                sol : in out QuadDobl_Complex_Solutions.Link_to_Solution;
+                fail : out boolean ) is
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Poly_SysFun;
+    use QuadDobl_Complex_Solutions;
+
+    xt : QuadDobl_Complex_Vectors.Vector(1..n+1);
+    y : QuadDobl_Complex_Vectors.Vector(h'range);
+    res : quad_double;
+    sh : Poly_Sys(1..n) := Square(n,h);
+    yh : QuadDobl_Complex_Vectors.Vector(sh'range);
+    sh0 : Poly_Sys(sh'range);
+    sols : Solution_List;
+    epsxa : constant double_float := 1.0E-12;
+    tolsing : constant double_float := tol;
+    epsfa : constant double_float := 1.0E-12;
+    numit : natural32 := 0;
+
+  begin
+    xt(sol.v'range) := sol.v;
+    xt(xt'last) := QuadDobl_Complex_Numbers.Create(integer(0));
+    y := Eval(h,xt);
+    new_line(file);
+    put_line(file,"Value of the start solution at the original homotopy :");
+    put_line(file,y);
+    res := Max_Norm(y);
+    put(file,"The residual : "); put(file,res,3); new_line(file);
+    fail := (res > tolsing);
+    yh := Eval(sh,xt);
+    put_line(file,"Value of the start solution at the squared homotopy :");
+    put_line(file,yh);
+    res := Max_Norm(y);
+    put(file,"The residual : "); put(file,res,3); new_line(file);
+    fail := fail and (res > tolsing);
+    if fail then
+      put_line(file,"-> residual too high, abort path tracking");
+    else
+      sols := Create(xt);
+      sh0 := Eval(sh,QuadDobl_Complex_Numbers.Create(integer(0)),n+1);
+      Reporting_Root_Refiner
+        (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
       Call_Path_Trackers(file,n,sh,xt,sol);
       put(file,"The residual of the end solution at original homotopy : ");
       y := Eval(h,xt); res := Max_Norm(y);
@@ -241,6 +490,178 @@ package body Moving_Flag_Continuation is
   end Track_Next_Move;
 
   procedure Track_Next_Move
+              ( file : in file_type; n : in integer32;
+                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                tol : in double_float;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                fail : out boolean ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_Solutions;
+
+    xt : DoblDobl_Complex_Vectors.Vector(1..n+1);
+    y : DoblDobl_Complex_Vectors.Vector(h'range);
+    res : double_double;
+    sh : Poly_Sys(1..n) := Square(n,h);
+    yh : DoblDobl_Complex_Vectors.Vector(sh'range);
+    sh0 : Poly_Sys(sh'range);
+    epsxa : constant double_float := 1.0E-12;
+    tolsing : constant double_float := tol;
+    epsfa : constant double_float := 1.0E-12;
+    numit : natural32 := 0;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+    xtsols,xt_sols_last : Solution_List;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      xt(ls.v'range) := ls.v;
+      xt(xt'last) := DoblDobl_Complex_Numbers.Create(integer(0));
+      y := Eval(h,xt);
+      new_line(file);
+      put_line(file,"Value of the start solution at the original homotopy :");
+      put_line(file,y);
+      res := Max_Norm(y);
+      put(file,"The residual : "); put(file,res,3); new_line(file);
+      fail := (res > tolsing);
+      yh := Eval(sh,xt);
+      put_line(file,"Value of the start solution at the squared homotopy :");
+      put_line(file,yh);
+      res := Max_Norm(y);
+      put(file,"The residual : "); put(file,res,3); new_line(file);
+      fail := fail and (res > tolsing);
+      Append(xtsols,xt_sols_last,Create(xt));
+      tmp := Tail_Of(tmp);
+    end loop;
+    if fail then
+      put_line(file,"-> residual too high, abort path tracking");
+    else
+      sh0 := Eval(sh,DoblDobl_Complex_Numbers.Create(integer(0)),n+1);
+      Reporting_Root_Refiner
+        (file,sh0,xtsols,epsxa,epsfa,tolsing,numit,3,false);
+      put(file,"Number of solutions in xtsols : ");
+      put(file,Length_Of(xtsols),1); new_line(file);
+      put(file,"Number of solutions in sols   : ");
+      put(file,Length_Of(sols),1); new_line(file);
+      Call_Path_Trackers(file,n,sh,xtsols,sols);
+      tmp := xtsols;
+      Clear(sh0);
+      sh0 := Eval(sh,DoblDobl_Complex_Numbers.Create(integer(1)),n+1);
+      while not Is_Null(tmp) loop
+        ls := Head_Of(tmp);
+        put(file,"The residual of the end solution at squared homotopy  :");
+        yh := Eval(sh0,ls.v); res := Max_Norm(yh);
+        put(file,res,3); new_line(file);
+        put_line(file,"Evaluating the end solution at the original homotopy :");
+        declare
+          xt : DoblDobl_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
+        begin
+          xt(ls.v'range) := ls.v;
+          xt(xt'last) := ls.t;
+          y := Eval(h,xt);
+        end;
+        put_line(file,y);
+        put(file,"The residual of the end solution at original homotopy :");
+        res := Max_Norm(y);
+        put(file,res,3); new_line(file);
+        fail := (res > tolsing);
+        tmp := Tail_Of(tmp);
+      end loop;
+    end if;
+    Clear(sh); Clear(sh0); --Clear(sols);
+  exception
+    when others => put_line("exception in Track_Next_Move ..."); raise;
+  end Track_Next_Move;
+
+  procedure Track_Next_Move
+              ( file : in file_type; n : in integer32;
+                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                tol : in double_float;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                fail : out boolean ) is
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Poly_SysFun;
+    use QuadDobl_Complex_Solutions;
+
+    xt : QuadDobl_Complex_Vectors.Vector(1..n+1);
+    y : QuadDobl_Complex_Vectors.Vector(h'range);
+    res : quad_double;
+    sh : Poly_Sys(1..n) := Square(n,h);
+    yh : QuadDobl_Complex_Vectors.Vector(sh'range);
+    sh0 : Poly_Sys(sh'range);
+    epsxa : constant double_float := 1.0E-12;
+    tolsing : constant double_float := tol;
+    epsfa : constant double_float := 1.0E-12;
+    numit : natural32 := 0;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+    xtsols,xt_sols_last : Solution_List;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      xt(ls.v'range) := ls.v;
+      xt(xt'last) := QuadDobl_Complex_Numbers.Create(integer(0));
+      y := Eval(h,xt);
+      new_line(file);
+      put_line(file,"Value of the start solution at the original homotopy :");
+      put_line(file,y);
+      res := Max_Norm(y);
+      put(file,"The residual : "); put(file,res,3); new_line(file);
+      fail := (res > tolsing);
+      yh := Eval(sh,xt);
+      put_line(file,"Value of the start solution at the squared homotopy :");
+      put_line(file,yh);
+      res := Max_Norm(y);
+      put(file,"The residual : "); put(file,res,3); new_line(file);
+      fail := fail and (res > tolsing);
+      Append(xtsols,xt_sols_last,Create(xt));
+      tmp := Tail_Of(tmp);
+    end loop;
+    if fail then
+      put_line(file,"-> residual too high, abort path tracking");
+    else
+      sh0 := Eval(sh,QuadDobl_Complex_Numbers.Create(integer(0)),n+1);
+      Reporting_Root_Refiner
+        (file,sh0,xtsols,epsxa,epsfa,tolsing,numit,3,false);
+      put(file,"Number of solutions in xtsols : ");
+      put(file,Length_Of(xtsols),1); new_line(file);
+      put(file,"Number of solutions in sols   : ");
+      put(file,Length_Of(sols),1); new_line(file);
+      Call_Path_Trackers(file,n,sh,xtsols,sols);
+      tmp := xtsols;
+      Clear(sh0);
+      sh0 := Eval(sh,QuadDobl_Complex_Numbers.Create(integer(1)),n+1);
+      while not Is_Null(tmp) loop
+        ls := Head_Of(tmp);
+        put(file,"The residual of the end solution at squared homotopy  :");
+        yh := Eval(sh0,ls.v); res := Max_Norm(yh);
+        put(file,res,3); new_line(file);
+        put_line(file,"Evaluating the end solution at the original homotopy :");
+        declare
+          xt : QuadDobl_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
+        begin
+          xt(ls.v'range) := ls.v;
+          xt(xt'last) := ls.t;
+          y := Eval(h,xt);
+        end;
+        put_line(file,y);
+        put(file,"The residual of the end solution at original homotopy :");
+        res := Max_Norm(y);
+        put(file,res,3); new_line(file);
+        fail := (res > tolsing);
+        tmp := Tail_Of(tmp);
+      end loop;
+    end if;
+    Clear(sh); Clear(sh0); --Clear(sols);
+  exception
+    when others => put_line("exception in Track_Next_Move ..."); raise;
+  end Track_Next_Move;
+
+  procedure Track_Next_Move
               ( n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 tol : in double_float;
@@ -273,6 +694,98 @@ package body Moving_Flag_Continuation is
         ls := Head_Of(tmp);
         declare
           xt : Standard_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
+        begin
+          xt(ls.v'range) := ls.v;
+          xt(xt'last) := ls.t;
+        end;
+        fail := fail and (ls.res > tol);
+        tmp := Tail_Of(tmp);
+      end loop;
+    end if;
+    Clear(sh);
+  exception
+    when others => put_line("exception in Track_Next_Move ..."); raise;
+  end Track_Next_Move;
+
+  procedure Track_Next_Move
+              ( n : in integer32;
+                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                tol : in double_float;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                fail : out boolean ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    xt : DoblDobl_Complex_Vectors.Vector(1..n+1);
+    sh : Poly_Sys(1..n) := Square(n,h);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+    xtsols,xt_sols_last : Solution_List;
+
+  begin
+    fail := false;
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      xt(ls.v'range) := ls.v;
+      xt(xt'last) := DoblDobl_Complex_Numbers.Create(integer(0));
+      fail := fail and (ls.res > tol);
+      Append(xtsols,xt_sols_last,Create(xt));
+      tmp := Tail_Of(tmp);
+    end loop;
+    if not fail then
+      Call_Path_Trackers(n,sh,xtsols,sols);
+      tmp := xtsols;
+      while not Is_Null(tmp) loop
+        ls := Head_Of(tmp);
+        declare
+          xt : DoblDobl_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
+        begin
+          xt(ls.v'range) := ls.v;
+          xt(xt'last) := ls.t;
+        end;
+        fail := fail and (ls.res > tol);
+        tmp := Tail_Of(tmp);
+      end loop;
+    end if;
+    Clear(sh);
+  exception
+    when others => put_line("exception in Track_Next_Move ..."); raise;
+  end Track_Next_Move;
+
+  procedure Track_Next_Move
+              ( n : in integer32;
+                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                tol : in double_float;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                fail : out boolean ) is
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    xt : QuadDobl_Complex_Vectors.Vector(1..n+1);
+    sh : Poly_Sys(1..n) := Square(n,h);
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+    xtsols,xt_sols_last : Solution_List;
+
+  begin
+    fail := false;
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      xt(ls.v'range) := ls.v;
+      xt(xt'last) := QuadDobl_Complex_Numbers.Create(integer(0));
+      fail := fail and (ls.res > tol);
+      Append(xtsols,xt_sols_last,Create(xt));
+      tmp := Tail_Of(tmp);
+    end loop;
+    if not fail then
+      Call_Path_Trackers(n,sh,xtsols,sols);
+      tmp := xtsols;
+      while not Is_Null(tmp) loop
+        ls := Head_Of(tmp);
+        declare
+          xt : QuadDobl_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
         begin
           xt(ls.v'range) := ls.v;
           xt(xt'last) := ls.t;
