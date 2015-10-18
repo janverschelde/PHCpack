@@ -21,8 +21,17 @@ bracket_monomials                : monomials of brackets
 bracket_monomials_io             : input/output of bracket monomials
 bracket_polynomials              : polynomials in the brackets, complex coeff
 bracket_polynomials_io           : input/output for bracket polynomials
+dobldobl_bracket_polynomials     : bracket polynomials with double doubles
+dobldobl_bracket_polynomials_io  : i/o for double double bracket polynomials
+quaddobl_bracket_polynomials     : bracket polynomials with quad doubles
+quaddobl_bracket_polynomials_io  : i/o for quad double bracket polynomials
+bracket_polynomial_convertors    : converting bracket polynomials
 bracket_systems                  : defines systems of bracket polynomials
 bracket_systems_io               : output for systems of bracket polynomials
+dobldobl_bracket_systems         : systems of double double bracket polynomials
+dobldobl_bracket_systems_io      : i/o for double double bracket systems
+quaddobl_bracket_systems         : systems of quad double bracket polynomials
+quaddobl_bracket_systems_io      : i/o for quad double bracket systems
 straightening_syzygies           : implementation of straightening algorithm
 bracket_expansions               : expansion of brackets
 chebychev_polynomials            : Chebychev polynomials for the conjecture

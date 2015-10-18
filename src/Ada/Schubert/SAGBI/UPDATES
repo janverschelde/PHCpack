@@ -1,3 +1,7 @@
+Sat 17 Oct 2015 : new packages {dobldobl,quaddobl}_bracket_polynomials{_io}
+  tested by ts_brackpols.  For systems of bracket polynomials, added the
+  new packages {dobldobl,quaddobl}_bracket_systems{_io}.
+
 Thu 15 Oct 2015 : extended evaluated_minors with functions in double double
   and quad double precision.
 
