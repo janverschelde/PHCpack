@@ -1,3 +1,7 @@
+Sun 18 Oct 2015 : added package bracket_polynomial_convertors to convert
+  bracket polynomials into polynomial with double double and quad double
+  precison coefficients.
+
 Sat 17 Oct 2015 : new packages {dobldobl,quaddobl}_bracket_polynomials{_io}
   tested by ts_brackpols.  For systems of bracket polynomials, added the
   new packages {dobldobl,quaddobl}_bracket_systems{_io}.
