@@ -1,5 +1,6 @@
 Sun 18 Oct 2015 : numeric_schubert_conditions supports the expansion of
   minors in double double and quad double precision.
+  Moved code from moving_flag_homotopies.adb to setup_flag_homotopies.
 
 Sat 17 Oct 2015 : mapping in double double and quad double precision added
   to checker_localization_patterns.  In checker_homotopies, added procedures

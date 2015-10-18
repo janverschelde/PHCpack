@@ -1078,6 +1078,32 @@ package body Setup_Flag_Homotopies is
     return res;
   end Symbolic_Plane;
 
+  function Symbolic_Plane
+             ( n,k : integer32; p,rows,cols : Standard_Natural_Vectors.Vector )
+             return DoblDobl_Complex_Poly_Matrices.Matrix is
+
+    res : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    xmp : Standard_Natural_Matrices.Matrix(1..n,1..k);
+
+  begin
+    xmp := Column_Pattern(n,k,p,rows,cols);
+    res := Symbolic_Schubert_Conditions.Symbolic_Form_of_Plane(n,k,xmp);
+    return res;
+  end Symbolic_Plane;
+
+  function Symbolic_Plane
+             ( n,k : integer32; p,rows,cols : Standard_Natural_Vectors.Vector )
+             return QuadDobl_Complex_Poly_Matrices.Matrix is
+
+    res : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    xmp : Standard_Natural_Matrices.Matrix(1..n,1..k);
+
+  begin
+    xmp := Column_Pattern(n,k,p,rows,cols);
+    res := Symbolic_Schubert_Conditions.Symbolic_Form_of_Plane(n,k,xmp);
+    return res;
+  end Symbolic_Plane;
+
   function Filter_Zero_Equations
              ( p : Standard_Complex_Poly_Systems.Poly_Sys )
              return Standard_Complex_Poly_Systems.Poly_Sys is

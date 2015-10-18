@@ -292,6 +292,12 @@ package Setup_Flag_Homotopies is
   function Symbolic_Plane
              ( n,k : integer32; p,rows,cols : Standard_Natural_Vectors.Vector )
              return Standard_Complex_Poly_Matrices.Matrix;
+  function Symbolic_Plane
+             ( n,k : integer32; p,rows,cols : Standard_Natural_Vectors.Vector )
+             return DoblDobl_Complex_Poly_Matrices.Matrix;
+  function Symbolic_Plane
+             ( n,k : integer32; p,rows,cols : Standard_Natural_Vectors.Vector )
+             return QuadDobl_Complex_Poly_Matrices.Matrix;
 
   -- DESCRIPTION :
   --   Returns the symbolic representation of a k-plane in n-space
