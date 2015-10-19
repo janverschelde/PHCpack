@@ -1,3 +1,6 @@
+Mon 19 Oct 2015 : upgraded moving_flag_homotopies with procedures to make
+  equations for homotopies in double double and quad double precision.
+
 Sun 18 Oct 2015 : numeric_schubert_conditions supports the expansion of
   minors in double double and quad double precision.
   Moved code from moving_flag_homotopies.adb to setup_flag_homotopies.
