@@ -2,6 +2,10 @@ Tue 20 Oct 2015 : new package checker_poset_deformations with code out of
   moving_flag_continuation, which changed resolve_schubert_problems.adb
   and drivers_for_schubert_induction.adb.  Added procedues for double
   double and quad double precision to checker_poset_deformations.
+  Renamed intersection_solution_posets into standard_solution_posets
+  for the new packages {dobldobl,quaddobl}_solution_posets.
+  This led to changes in checker_poset_deformations.ads,
+  resolve_schubert_problems, and drivers_for_schubert_induction.ads.
 
 Mon 19 Oct 2015 : upgraded moving_flag_homotopies with procedures to make
   equations for homotopies in double double and quad double precision.

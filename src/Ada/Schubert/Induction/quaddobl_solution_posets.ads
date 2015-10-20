@@ -1,10 +1,10 @@
 with generic_lists;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Natural_Vectors;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with QuadDobl_Complex_Solutions;         use QuadDobl_Complex_Solutions;
 with Intersection_Posets;                use Intersection_Posets;
 
-package Intersection_Solution_Posets is
+package QuadDobl_Solution_Posets is
 
 -- DESCRIPTION :
 --   An intersection solution poset adds the solutions to the intersection
@@ -12,6 +12,7 @@ package Intersection_Solution_Posets is
 --   In particular, to any poset node in an intersection poset there is
 --   a corresponding solution node.  At each level in the intersection
 --   poset there is a corresponding list of solution nodes.
+--   The solutions in the nodes are in double double precision.
 
   type Solution_Node;
   type Link_to_Solution_Node is access Solution_Node;
@@ -90,4 +91,4 @@ package Intersection_Solution_Posets is
   -- DESCRIPTION :
   --   Clears all solution lists in the solution poset.
 
-end Intersection_Solution_Posets;
+end QuadDobl_Solution_Posets;

@@ -9,7 +9,7 @@ with Standard_Natural_Matrices;
 with Standard_Natural_Matrices_io;       use Standard_Natural_Matrices_io;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
 with Standard_Matrix_Inversion;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems;
 with Checker_Moves;
 with Checker_Posets,Checker_Posets_io;   use Checker_Posets_io;
 with Checker_Localization_Patterns;
@@ -73,9 +73,11 @@ package body Resolve_Schubert_Problems is
               ( file : in file_type; n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                snd : in out Link_to_Solution_Node;
+                snd : in out Standard_Solution_Posets.Link_to_Solution_Node;
                 fail : out boolean;
                 res : out double_float ) is
+
+    use Standard_Complex_Solutions;
 
     slnp : constant Checker_Posets.Poset := snd.lpnd.ps;
     rows : Standard_Natural_Vectors.Vector
@@ -88,7 +90,7 @@ package body Resolve_Schubert_Problems is
     dim : constant natural32
         := Checker_Localization_Patterns.Degree_of_Freedom(locmap);
     x : Standard_Complex_Vectors.Vector(1..integer32(dim));
-    eqs : Link_to_Poly_Sys;
+    eqs : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
 
   begin
     put_line(file,"The localization map : "); put(file,locmap);
@@ -120,8 +122,10 @@ package body Resolve_Schubert_Problems is
               ( file : in file_type; n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                nodes : in out Solnode_List;
+                nodes : in out Standard_Solution_Posets.Solnode_List;
                 res : out double_float ) is
+
+    use Standard_Solution_Posets;
 
     tmp : Solnode_List := nodes;
     snd : Link_to_Solution_Node;
@@ -152,7 +156,9 @@ package body Resolve_Schubert_Problems is
               ( file : in file_type; n,k : in integer32;
                 r_src,c_src,r_tgt,c_tgt : in Standard_Natural_Vectors.Vector;
                 tm : in Standard_Complex_Matrices.Matrix;
-                sols : in out Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+     use Standard_Complex_Solutions;
 
      p : constant Standard_Natural_Vectors.Vector
        := Checker_Moves.Identity_Permutation(natural32(n));
@@ -216,7 +222,9 @@ package body Resolve_Schubert_Problems is
               ( n,k : in integer32;
                 r_src,c_src,r_tgt,c_tgt : in Standard_Natural_Vectors.Vector;
                 tm : in Standard_Complex_Matrices.Matrix;
-                sols : in out Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+     use Standard_Complex_Solutions;
 
      p : constant Standard_Natural_Vectors.Vector
        := Checker_Moves.Identity_Permutation(natural32(n));
@@ -304,14 +312,18 @@ package body Resolve_Schubert_Problems is
   procedure Connect_Checker_Posets_to_Track
               ( file : in file_type; n,k,level : in integer32;
                 tol : in double_float;
-                pl : in Poset_List; snd : in Link_to_Solution_Node;
+                pl : in Poset_List;
+                snd : in Standard_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
-                sps : in out Solution_Poset;
+                sps : in out Standard_Solution_Posets.Solution_Poset;
                 minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
+
+    use Standard_Complex_Solutions;
+    use Standard_Solution_Posets;
 
     procedure Connect_Parent ( node : in Link_to_Poset_Node ) is
 
@@ -408,14 +420,18 @@ package body Resolve_Schubert_Problems is
 
   procedure Connect_Checker_Posets_to_Track
               ( n,k,level : in integer32; tol : in double_float;
-                pl : in Poset_List; snd : in Link_to_Solution_Node;
+                pl : in Poset_List;
+                snd : in Standard_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
-                sps : in out Solution_Poset;
+                sps : in out Standard_Solution_Posets.Solution_Poset;
                 minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat ) is
 
     nd : constant Link_to_Poset_Node := snd.lpnd;
+
+    use Standard_Complex_Solutions;
+    use Standard_Solution_Posets;
 
     procedure Connect_Parent ( node : in Link_to_Poset_Node ) is
 
@@ -519,11 +535,13 @@ package body Resolve_Schubert_Problems is
               ( file : in file_type; extopt,repcon : in boolean;
                 n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
-                sps : in out Solution_Poset;
+                sps : in out Standard_Solution_Posets.Solution_Poset;
                 minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                sols : out Solution_List ) is
+                sols : out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Solution_Posets;
 
     tmp : Solnode_List;
     snd : Link_to_Solution_Node;

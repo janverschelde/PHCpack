@@ -13,7 +13,6 @@ with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Checker_Posets;                      use Checker_Posets;
-with Intersection_Solution_Posets;        use Intersection_Solution_Posets;
 
 package Checker_Poset_Deformations is
 

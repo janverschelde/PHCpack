@@ -1,7 +1,7 @@
 with unchecked_deallocation;
 with Checker_Posets;
 
-package body Intersection_Solution_Posets is
+package body DoblDobl_Solution_Posets is
 
 -- CONSTRUCTORS :
 
@@ -124,4 +124,4 @@ package body Intersection_Solution_Posets is
     end loop;
   end Clear;
 
-end Intersection_Solution_Posets;
+end DoblDobl_Solution_Posets;

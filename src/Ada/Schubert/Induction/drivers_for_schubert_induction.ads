@@ -11,7 +11,7 @@ with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 with Brackets;                           use Brackets;
 with Bracket_Monomials;                  use Bracket_Monomials;
 with Intersection_Posets;                use Intersection_Posets;
-with Intersection_Solution_Posets;       use Intersection_Solution_Posets;
+with Standard_Solution_Posets;           use Standard_Solution_Posets;
 
 package Drivers_for_Schubert_Induction is
 

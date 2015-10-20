@@ -27,7 +27,9 @@ remember_symbolic_minors       : remember table for symbolic minors
 wrapped_path_trackers          : calling path trackers on natural homotopy
 moving_flag_continuation       : trackers for moving flag homotopies
 ts_flagcond                    : test conditions imposed by bracket + flag
-intersection_solution_posets   : to store solutions at each node and level
+standard_solution_posets       : to store solutions at each node and level
+dobldobl_solution_posets       : posets of double double solution lists
+quaddobl_solution_posets       : posets of quad double solution lists
 checker_poset_deformations     : tracking paths to connect the posets
 resolve_schubert_problems      : code to resolve general Schubert problems
 ts_lrhom                       : development to solve general problems
@@ -37,5 +39,5 @@ mainenum                       : called by general dispatcher in phc
 ------------------------------------------------------------------------------
 
 The program "ts_checkers" is based on the paper by Ravi Vakil
-on "A geometric Littlewood-Richardson rule", Manuscript Feb 2003.
-A joint project with Frank Sottile and Ravi Vakil will yield homotopies.
+on "A geometric Littlewood-Richardson rule",
+Annals of Mathematics 164(2): 489-512, 2006.

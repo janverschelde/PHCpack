@@ -7,10 +7,10 @@ with Standard_Natural_VecVecs;
 with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with Standard_Complex_Solutions;
 with Brackets;                           use Brackets;
 with Intersection_Posets;                use Intersection_Posets;
-with Intersection_Solution_Posets;       use Intersection_Solution_Posets;
+with Standard_Solution_Posets;
 
 package Resolve_Schubert_Problems is
 
@@ -33,7 +33,7 @@ package Resolve_Schubert_Problems is
               ( file : in file_type; n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                snd : in out Link_to_Solution_Node;
+                snd : in out Standard_Solution_Posets.Link_to_Solution_Node;
                 fail : out boolean;
                 res : out double_float );
 
@@ -68,12 +68,12 @@ package Resolve_Schubert_Problems is
               ( n,k : in integer32;
                 r_src,c_src,r_tgt,c_tgt : in Standard_Natural_Vectors.Vector;
                 tm : in Standard_Complex_Matrices.Matrix;
-                sols : in out Solution_List );
+                sols : in out Standard_Complex_Solutions.Solution_List );
   procedure Transform_Start_Solutions
               ( file : in file_type; n,k : in integer32;
                 r_src,c_src,r_tgt,c_tgt : in Standard_Natural_Vectors.Vector;
                 tm : in Standard_Complex_Matrices.Matrix;
-                sols : in out Solution_List );
+                sols : in out Standard_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Applies the tm transformation to all solutions and column reduces
@@ -113,18 +113,20 @@ package Resolve_Schubert_Problems is
 
   procedure Connect_Checker_Posets_to_Track
               ( n,k,level : in integer32; tol : in double_float;
-                pl : in Poset_List; snd : in Link_to_Solution_Node;
+                pl : in Poset_List;
+                snd : in Standard_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
-                sps : in out Solution_Poset;
+                sps : in out Standard_Solution_Posets.Solution_Poset;
                 minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat );
   procedure Connect_Checker_Posets_to_Track
               ( file : in file_type;
                 n,k,level : in integer32; tol : in double_float;
-                pl : in Poset_List; snd : in Link_to_Solution_Node;
+                pl : in Poset_List;
+                snd : in Standard_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
-                sps : in out Solution_Poset;
+                sps : in out Standard_Solution_Posets.Solution_Poset;
                 minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat );
@@ -177,11 +179,11 @@ package Resolve_Schubert_Problems is
               ( file : in file_type; extopt,repcon : in boolean;
                 n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
-                sps : in out Solution_Poset;
+                sps : in out Standard_Solution_Posets.Solution_Poset;
                 minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
-                sols : out Solution_List );
+                sols : out Standard_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Performs a bottom up root count, in the same order as the
