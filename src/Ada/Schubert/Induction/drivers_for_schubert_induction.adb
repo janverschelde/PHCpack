@@ -2,20 +2,27 @@ with Communications_with_User;           use Communications_with_User;
 with File_Scanning,Timing_Package;       use File_Scanning,Timing_Package;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Standard_Complex_Numbers;
 with Multprec_Natural_Numbers_io;        use Multprec_Natural_Numbers_io;
 with Standard_Natural_Vectors_io;        use Standard_Natural_Vectors_io;
 with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
 with Standard_Natural_Matrices;          use Standard_Natural_Matrices;
 with Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;       use Standard_Complex_Matrices_io;
+with DoblDobl_Complex_Matrices;
+with DoblDobl_Complex_Matrices_io;       use DoblDobl_Complex_Matrices_io;
+with QuadDobl_Complex_Matrices;
+with QuadDobl_Complex_Matrices_io;       use QuadDobl_Complex_Matrices_io;
 with Standard_Random_Matrices;
 with Symbol_Table;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
---with Standard_Complex_Poly_SysFun;
+with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Matrix_Indeterminates;
 with Standard_Homotopy;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Standard_IncFix_Continuation;       use Standard_IncFix_Continuation;
 with Drivers_for_Poly_Continuation;
 with Brackets_io;                        use Brackets_io;
@@ -26,6 +33,9 @@ with Checker_Moves;                      use Checker_Moves;
 with Checker_Posets,Checker_Posets_io;   use Checker_Posets,Checker_Posets_io;
 with Checker_Localization_Patterns;      use Checker_Localization_Patterns;
 with Intersection_Posets_io;             use Intersection_Posets_io;
+with Standard_Solution_Posets;
+with DoblDobl_Solution_Posets;
+with QuadDobl_Solution_Posets;
 with Wrapped_Path_Trackers;
 with Setup_Flag_Homotopies;
 with Moving_Flag_Homotopies;
@@ -278,12 +288,16 @@ package body Drivers_for_Schubert_Induction is
   end Read_Intersection_Conditions;
 
   procedure Write_Results
-               ( file : in file_type; n,k : in integer32;
-                 q,rows,cols : in Standard_Natural_Vectors.Vector;
-                 minrep : in boolean;
-                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
-                 vfs : in Standard_Complex_VecMats.VecMat;
-                 sols : in Solution_List; fsys : out Link_to_Poly_Sys ) is
+              ( file : in file_type; n,k : in integer32;
+                q,rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
+                vfs : in Standard_Complex_VecMats.VecMat;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                fsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     f : Link_to_Poly_Sys;
     mf : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
@@ -353,6 +367,166 @@ package body Drivers_for_Schubert_Induction is
     fsys := f;
   end Write_Results;
 
+  procedure Write_Results
+              ( file : in file_type; n,k : in integer32;
+                q,rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
+                vfs : in DoblDobl_Complex_VecMats.VecMat;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                fsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    f : Link_to_Poly_Sys;
+    mf : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := Setup_Flag_Homotopies.Moved_Flag(n);
+    locmap : Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
+    dim : constant natural32
+        := Checker_Localization_Patterns.Degree_of_Freedom(locmap);
+    tmp : Solution_List;
+    ls : Link_to_Solution;
+
+  begin
+    if Symbol_Table.Number < dim 
+     then Matrix_Indeterminates.Initialize_Symbols(dim,locmap);
+    end if;
+    new_line(file);
+    put(file,"Resolved "); put(file,Bracket(rows)); put(file,"*");
+    put(file,Bracket(cols));
+    put(file," in "); put(file,n,1); put_line(file,"-space,");
+    put(file,"with "); put(file,cnds'last,1);
+    put(file," fixed conditions : ");
+    for i in cnds'range loop
+      put(file,Bracket(cnds(i).all));
+    end loop;
+    put(file," q = "); Standard_Natural_Vectors_io.put(file,q);
+    put_line(file," ...");
+    new_line(file);
+    put_line(file,"THE FIXED FLAGS :");
+    for i in vfs'range loop
+      put(file,vfs(i).all);
+      new_line(file);
+    end loop;
+    put_line(file,"THE MOVED FLAG :");
+    Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,mf);
+    if Is_Null(sols) then
+      put_line(file,"No solutions found ...");
+    else
+      new_line(file);
+      put(file,"THE "); put(file,k,1);
+      put_line(file,"-SOLUTION PLANES :");
+      tmp := sols;
+      while not Is_Null(tmp) loop
+        ls := Head_Of(tmp);
+        declare
+          x : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Map(locmap,ls.v);
+        begin
+          put(file,x);
+          new_line(file);
+        end;     
+        tmp := Tail_Of(tmp);
+      end loop;
+    end if;
+    if minrep then
+      Moving_Flag_Homotopies.Minimal_Flag_Conditions
+        (n,k,q,rows,cols,cnds.all,mf,vfs,f);
+    else
+      Moving_Flag_Homotopies.Flag_Conditions
+        (n,k,q,rows,cols,cnds.all,mf,vfs,f);
+    end if;
+    put_line(file,"THE POLYNOMIAL SYSTEM :"); put_line(file,f.all);
+    if not Is_Null(sols) then
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    end if;
+    fsys := f;
+  end Write_Results;
+
+  procedure Write_Results
+              ( file : in file_type; n,k : in integer32;
+                q,rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
+                vfs : in QuadDobl_Complex_VecMats.VecMat;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                fsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    f : Link_to_Poly_Sys;
+    mf : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := Setup_Flag_Homotopies.Moved_Flag(n);
+    locmap : Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
+    dim : constant natural32
+        := Checker_Localization_Patterns.Degree_of_Freedom(locmap);
+    tmp : Solution_List;
+    ls : Link_to_Solution;
+
+  begin
+    if Symbol_Table.Number < dim 
+     then Matrix_Indeterminates.Initialize_Symbols(dim,locmap);
+    end if;
+    new_line(file);
+    put(file,"Resolved "); put(file,Bracket(rows)); put(file,"*");
+    put(file,Bracket(cols));
+    put(file," in "); put(file,n,1); put_line(file,"-space,");
+    put(file,"with "); put(file,cnds'last,1);
+    put(file," fixed conditions : ");
+    for i in cnds'range loop
+      put(file,Bracket(cnds(i).all));
+    end loop;
+    put(file," q = "); Standard_Natural_Vectors_io.put(file,q);
+    put_line(file," ...");
+    new_line(file);
+    put_line(file,"THE FIXED FLAGS :");
+    for i in vfs'range loop
+      put(file,vfs(i).all);
+      new_line(file);
+    end loop;
+    put_line(file,"THE MOVED FLAG :");
+    Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,mf);
+    if Is_Null(sols) then
+      put_line(file,"No solutions found ...");
+    else
+      new_line(file);
+      put(file,"THE "); put(file,k,1);
+      put_line(file,"-SOLUTION PLANES :");
+      tmp := sols;
+      while not Is_Null(tmp) loop
+        ls := Head_Of(tmp);
+        declare
+          x : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..k)
+            := Checker_Localization_Patterns.Map(locmap,ls.v);
+        begin
+          put(file,x);
+          new_line(file);
+        end;     
+        tmp := Tail_Of(tmp);
+      end loop;
+    end if;
+    if minrep then
+      Moving_Flag_Homotopies.Minimal_Flag_Conditions
+        (n,k,q,rows,cols,cnds.all,mf,vfs,f);
+    else
+      Moving_Flag_Homotopies.Flag_Conditions
+        (n,k,q,rows,cols,cnds.all,mf,vfs,f);
+    end if;
+    put_line(file,"THE POLYNOMIAL SYSTEM :"); put_line(file,f.all);
+    if not Is_Null(sols) then
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    end if;
+    fsys := f;
+  end Write_Results;
+
   function Random_Flags
              ( n,m : integer32 ) return Standard_Complex_VecMats.VecMat is
 
@@ -365,6 +539,40 @@ package body Drivers_for_Schubert_Induction is
            := Setup_Flag_Homotopies.Random_Flag(n);
       begin
         res(i) := new Standard_Complex_Matrices.Matrix'(rf);
+      end;
+    end loop;
+    return res;
+  end Random_Flags;
+
+  function Random_Flags
+             ( n,m : integer32 ) return DoblDobl_Complex_VecMats.VecMat is
+
+    res : DoblDobl_Complex_VecMats.VecMat(1..m);
+
+  begin
+    for i in res'range loop
+      declare
+        rf : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+           := Setup_Flag_Homotopies.Random_Flag(n);
+      begin
+        res(i) := new DoblDobl_Complex_Matrices.Matrix'(rf);
+      end;
+    end loop;
+    return res;
+  end Random_Flags;
+
+  function Random_Flags
+             ( n,m : integer32 ) return QuadDobl_Complex_VecMats.VecMat is
+
+    res : QuadDobl_Complex_VecMats.VecMat(1..m);
+
+  begin
+    for i in res'range loop
+      declare
+        rf : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+           := Setup_Flag_Homotopies.Random_Flag(n);
+      begin
+        res(i) := new QuadDobl_Complex_Matrices.Matrix'(rf);
       end;
     end loop;
     return res;
@@ -388,10 +596,114 @@ package body Drivers_for_Schubert_Induction is
     return res;
   end Read_Flags;
 
+  function Read_Flags
+             ( file : file_type; n,m : integer32 )
+             return DoblDobl_Complex_VecMats.VecMat is
+
+    res : DoblDobl_Complex_VecMats.VecMat(1..m);
+
+  begin
+    for i in res'range loop
+      declare
+        rf : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
+      begin
+        get(file,rf);
+        res(i) := new DoblDobl_Complex_Matrices.Matrix'(rf);
+      end;
+    end loop;
+    return res;
+  end Read_Flags;
+
+  function Read_Flags
+             ( file : file_type; n,m : integer32 )
+             return QuadDobl_Complex_VecMats.VecMat is
+
+    res : QuadDobl_Complex_VecMats.VecMat(1..m);
+
+  begin
+    for i in res'range loop
+      declare
+        rf : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
+      begin
+        get(file,rf);
+        res(i) := new QuadDobl_Complex_Matrices.Matrix'(rf);
+      end;
+    end loop;
+    return res;
+  end Read_Flags;
+
   function Prompt_for_Generic_Flags
              ( n,m : integer32 ) return Standard_Complex_VecMats.VecMat is
 
     res : Standard_Complex_VecMats.VecMat(1..m);
+    ans : character;
+    file : file_type;
+
+  begin
+    new_line;
+    put_line("MENU for the generic flags :");
+    put_line("  0. generate random flags;");
+    put_line("  1. enter flags via standard input;");
+    put_line("  2. read coordinates of the flags from file.");
+    put("Type 0, 1, or 2 to select type of generic flags : ");
+    Ask_Alternative(ans,"012");
+    case ans is
+      when '0' =>
+        res := Random_Flags(n,m);
+      when '1' =>
+        new_line;
+        put("Enter "); put(m*n*n,1); put_line(" complex numbers :");
+        res := Read_Flags(standard_input,n,m);
+        skip_line; -- for the last new line symbol
+      when '2' =>
+        new_line;
+        put_line("Reading the name of an input file ...");
+        Read_Name_and_Open_File(file);
+        res := Read_Flags(file,n,m);
+        close(file);
+      when others => null;
+    end case;
+    return res;
+  end Prompt_for_Generic_Flags;
+
+  function Prompt_for_Generic_Flags
+             ( n,m : integer32 ) return DoblDobl_Complex_VecMats.VecMat is
+
+    res : DoblDobl_Complex_VecMats.VecMat(1..m);
+    ans : character;
+    file : file_type;
+
+  begin
+    new_line;
+    put_line("MENU for the generic flags :");
+    put_line("  0. generate random flags;");
+    put_line("  1. enter flags via standard input;");
+    put_line("  2. read coordinates of the flags from file.");
+    put("Type 0, 1, or 2 to select type of generic flags : ");
+    Ask_Alternative(ans,"012");
+    case ans is
+      when '0' =>
+        res := Random_Flags(n,m);
+      when '1' =>
+        new_line;
+        put("Enter "); put(m*n*n,1); put_line(" complex numbers :");
+        res := Read_Flags(standard_input,n,m);
+        skip_line; -- for the last new line symbol
+      when '2' =>
+        new_line;
+        put_line("Reading the name of an input file ...");
+        Read_Name_and_Open_File(file);
+        res := Read_Flags(file,n,m);
+        close(file);
+      when others => null;
+    end case;
+    return res;
+  end Prompt_for_Generic_Flags;
+
+  function Prompt_for_Generic_Flags
+             ( n,m : integer32 ) return QuadDobl_Complex_VecMats.VecMat is
+
+    res : QuadDobl_Complex_VecMats.VecMat(1..m);
     ans : character;
     file : file_type;
 
@@ -444,7 +756,8 @@ package body Drivers_for_Schubert_Induction is
                 rows,cols : in Standard_Natural_Vectors.Vector;
                 minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
-                sols : out Solution_List; fsys : out Link_to_Poly_Sys;
+                sols : out Standard_Complex_Solutions.Solution_List;
+                fsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 flags : out Standard_Complex_VecMats.VecMat ) is
 
     ip : constant Standard_Natural_Vectors.Vector(1..n)
@@ -475,8 +788,8 @@ package body Drivers_for_Schubert_Induction is
                 minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec ) is
 
-    sols : Solution_List;
-    fsys : Link_to_Poly_Sys;
+    sols : Standard_Complex_Solutions.Solution_List;
+    fsys : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     flgs : Standard_Complex_VecMats.VecMat(cnds'range);
 
   begin
@@ -532,7 +845,8 @@ package body Drivers_for_Schubert_Induction is
   procedure Scan_for_Start_Schubert_Problem
               ( file : in file_type; n : in integer32;
                 vf : out Standard_Complex_VecMats.VecMat;
-                p : out Link_to_Poly_Sys; sols : out Solution_List;
+                p : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : out Standard_Complex_Solutions.Solution_List;
                 fail : out boolean ) is
 
     found : boolean;
@@ -588,6 +902,8 @@ package body Drivers_for_Schubert_Induction is
   --     t = 1 : complex random numbers are generated for the flags,
   --     t = 2 : real random numbers are generated for the flags.
 
+    use Standard_Complex_Numbers;
+
     res : Standard_Complex_VecMats.VecMat(1..m);
 
   begin
@@ -622,8 +938,12 @@ package body Drivers_for_Schubert_Induction is
   end Target_Flags;
 
   procedure Run_Cheater_Continuation
-              ( file : in file_type; h : in Poly_Sys;
-                sols : in out Solution_List ) is
+              ( file : in file_type;
+                h : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
 
     procedure Rep_Cont is
       new Reporting_Continue(Max_Norm,Standard_Homotopy.Eval,
@@ -644,7 +964,10 @@ package body Drivers_for_Schubert_Induction is
                 rows,cols : in Standard_Natural_Vectors.Vector;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 stvf,tgvf : in Standard_Complex_VecMats.VecMat;
-                sols : in out Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     q : constant Standard_Natural_Vectors.Vector(1..n)
       := Identity_Permutation(natural32(n));
@@ -694,6 +1017,9 @@ package body Drivers_for_Schubert_Induction is
                 rows,cols : in Standard_Natural_Vectors.Vector;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 inpt : in boolean ) is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     infile,outfile : file_type;
     start,f : Link_to_Poly_Sys;
@@ -843,6 +1169,9 @@ package body Drivers_for_Schubert_Induction is
                 n,k : in integer32; cnd : in Array_of_Brackets;
                 flags : in Standard_Complex_VecMats.VecMat ) is
 
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
+    use Standard_Solution_Posets;
     use Intersection_Posets;
 
     monitor,report,minrep : boolean;
@@ -908,6 +1237,150 @@ package body Drivers_for_Schubert_Induction is
   end Resolve_Schubert_Problem;
 
   procedure Resolve_Schubert_Problem
+              ( file : in file_type;
+                n,k : in integer32; cnd : in Array_of_Brackets;
+                flags : in DoblDobl_Complex_VecMats.VecMat ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Solution_Posets;
+    use Intersection_Posets;
+
+    monitor,report,minrep : boolean;
+    ans : character;
+    nbc : constant integer32 := cnd'last;
+    ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
+    sps : Solution_Poset(ips.m) := Create(ips);
+    top_roco,bottom_roco : Natural_Number;
+    q : constant Standard_Natural_Vectors.Vector
+      := Identity_Permutation(natural32(n));
+    rows : constant Standard_Natural_Vectors.Vector
+         := Bracket_to_Vector(cnd(cnd'first).all);
+    cols : constant Standard_Natural_Vectors.Vector
+         := Bracket_to_Vector(cnd(cnd'first+1).all);
+    conds : Standard_Natural_VecVecs.VecVec(1..nbc-2)
+          := Remaining_Intersection_Conditions(cnd);
+    link2conds : constant Standard_Natural_VecVecs.Link_to_VecVec
+               := new Standard_Natural_VecVecs.VecVec'(conds);
+    fsys : Link_to_Poly_Sys;
+    sols : Solution_List;
+    tol : constant double_float := 1.0E-6;
+    timer : Timing_Widget;
+
+  begin
+    new_line;
+    top_roco := Final_Sum(ips);
+    put("The formal root count : "); put(top_roco); new_line;
+    put_line("... running the root counting from the bottom up ...");
+    Write_Expansion(file,ips);
+    Count_Roots(file,ips,bottom_roco);
+    put(" Top down root count : "); put(top_roco); new_line;
+    put("Bottom up root count : "); put(bottom_roco); new_line;
+    new_line(file);
+    put_line(file,"THE RANDOM FLAGS :");
+    for i in flags'range loop
+      put(file,flags(i).all);
+      new_line(file);
+    end loop;
+    new_line;
+    put("Monitor Littlewood-Richardson homotopies"
+      & " in each checker game ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    monitor := (ans = 'y');
+    new_line;
+    put("Use an efficient problem formulation ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    minrep := (ans = 'y');
+    new_line(file);
+    if minrep
+     then put_line(file,"An efficient problem formulation will be used.");
+     else put_line(file,"A less efficient problem formulation will be used.");
+    end if;
+    Wrapped_Path_Trackers.Set_Parameters(file,report);
+    tstart(timer);
+    Resolve(file,monitor,report,n,k,tol,ips,sps,minrep,conds,flags,sols);
+    tstop(timer);
+    Write_Results(file,n,k,q,rows,cols,minrep,link2conds,flags,sols,fsys);
+    new_line(file);
+    print_times(file,timer,"resolving a Schubert problem");
+    new_line(file);
+    Write_Seed_Number(file);
+    put_line(file,Greeting_Banners.Version);
+  end Resolve_Schubert_Problem;
+
+  procedure Resolve_Schubert_Problem
+              ( file : in file_type;
+                n,k : in integer32; cnd : in Array_of_Brackets;
+                flags : in QuadDobl_Complex_VecMats.VecMat ) is
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Solution_Posets;
+    use Intersection_Posets;
+
+    monitor,report,minrep : boolean;
+    ans : character;
+    nbc : constant integer32 := cnd'last;
+    ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
+    sps : Solution_Poset(ips.m) := Create(ips);
+    top_roco,bottom_roco : Natural_Number;
+    q : constant Standard_Natural_Vectors.Vector
+      := Identity_Permutation(natural32(n));
+    rows : constant Standard_Natural_Vectors.Vector
+         := Bracket_to_Vector(cnd(cnd'first).all);
+    cols : constant Standard_Natural_Vectors.Vector
+         := Bracket_to_Vector(cnd(cnd'first+1).all);
+    conds : Standard_Natural_VecVecs.VecVec(1..nbc-2)
+          := Remaining_Intersection_Conditions(cnd);
+    link2conds : constant Standard_Natural_VecVecs.Link_to_VecVec
+               := new Standard_Natural_VecVecs.VecVec'(conds);
+    fsys : Link_to_Poly_Sys;
+    sols : Solution_List;
+    tol : constant double_float := 1.0E-6;
+    timer : Timing_Widget;
+
+  begin
+    new_line;
+    top_roco := Final_Sum(ips);
+    put("The formal root count : "); put(top_roco); new_line;
+    put_line("... running the root counting from the bottom up ...");
+    Write_Expansion(file,ips);
+    Count_Roots(file,ips,bottom_roco);
+    put(" Top down root count : "); put(top_roco); new_line;
+    put("Bottom up root count : "); put(bottom_roco); new_line;
+    new_line(file);
+    put_line(file,"THE RANDOM FLAGS :");
+    for i in flags'range loop
+      put(file,flags(i).all);
+      new_line(file);
+    end loop;
+    new_line;
+    put("Monitor Littlewood-Richardson homotopies"
+      & " in each checker game ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    monitor := (ans = 'y');
+    new_line;
+    put("Use an efficient problem formulation ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    minrep := (ans = 'y');
+    new_line(file);
+    if minrep
+     then put_line(file,"An efficient problem formulation will be used.");
+     else put_line(file,"A less efficient problem formulation will be used.");
+    end if;
+    Wrapped_Path_Trackers.Set_Parameters(file,report);
+    tstart(timer);
+    Resolve(file,monitor,report,n,k,tol,ips,sps,minrep,conds,flags,sols);
+    tstop(timer);
+    Write_Results(file,n,k,q,rows,cols,minrep,link2conds,flags,sols,fsys);
+    new_line(file);
+    print_times(file,timer,"resolving a Schubert problem");
+    new_line(file);
+    Write_Seed_Number(file);
+    put_line(file,Greeting_Banners.Version);
+  end Resolve_Schubert_Problem;
+
+  procedure Standard_Resolve_Schubert_Problem
               ( n,k : in integer32; bm : in Bracket_Monomial ) is
 
     file : file_type;
@@ -923,6 +1396,63 @@ package body Drivers_for_Schubert_Induction is
     Read_Name_and_Create_File(file);
     Resolve_Schubert_Problem(file,n,k,cnd,flags);
     close(file);
+  end Standard_Resolve_Schubert_Problem;
+
+  procedure DoblDobl_Resolve_Schubert_Problem
+              ( n,k : in integer32; bm : in Bracket_Monomial ) is
+
+    file : file_type;
+    cnd : constant Array_of_Brackets := Create(bm);
+    nbc : constant integer32 := cnd'last;
+    flags : DoblDobl_Complex_VecMats.VecMat(1..nbc-2)
+       -- := Random_Flags(n,nbc-2);
+          := Prompt_for_Generic_Flags(n,nbc-2);
+
+  begin
+    new_line;
+    put_line("Reading a name for the output file ...");
+    Read_Name_and_Create_File(file);
+    Resolve_Schubert_Problem(file,n,k,cnd,flags);
+    close(file);
+  end DoblDobl_Resolve_Schubert_Problem;
+
+  procedure QuadDobl_Resolve_Schubert_Problem
+              ( n,k : in integer32; bm : in Bracket_Monomial ) is
+
+    file : file_type;
+    cnd : constant Array_of_Brackets := Create(bm);
+    nbc : constant integer32 := cnd'last;
+    flags : QuadDobl_Complex_VecMats.VecMat(1..nbc-2)
+       -- := Random_Flags(n,nbc-2);
+          := Prompt_for_Generic_Flags(n,nbc-2);
+
+  begin
+    new_line;
+    put_line("Reading a name for the output file ...");
+    Read_Name_and_Create_File(file);
+    Resolve_Schubert_Problem(file,n,k,cnd,flags);
+    close(file);
+  end QuadDobl_Resolve_Schubert_Problem;
+
+  procedure Resolve_Schubert_Problem
+              ( n,k : in integer32; bm : in Bracket_Monomial ) is
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU for the working precision :");
+    put_line("  0. standard double precision; or");
+    put_line("  1. double double precision; or");
+    put_line("  2. quad double precision.");
+    put("Type 0, 1, or 2 to select the precision : ");
+    Ask_Alternative(ans,"012");
+    case ans is
+      when '0' => Standard_Resolve_Schubert_Problem(n,k,bm);
+      when '1' => DoblDobl_Resolve_Schubert_Problem(n,k,bm);
+      when '2' => QuadDobl_Resolve_Schubert_Problem(n,k,bm);
+      when others => null;
+    end case;
   end Resolve_Schubert_Problem;
 
   procedure Solve_Schubert_Problems ( n : in integer32 ) is

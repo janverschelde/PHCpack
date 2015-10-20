@@ -6,12 +6,17 @@ with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
 with Standard_Complex_VecMats;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with DoblDobl_Complex_VecMats;
+with QuadDobl_Complex_VecMats;
+with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 with Brackets;                           use Brackets;
 with Bracket_Monomials;                  use Bracket_Monomials;
 with Intersection_Posets;                use Intersection_Posets;
-with Standard_Solution_Posets;           use Standard_Solution_Posets;
 
 package Drivers_for_Schubert_Induction is
 
@@ -113,7 +118,24 @@ package Drivers_for_Schubert_Induction is
                 minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 vfs : in Standard_Complex_VecMats.VecMat;
-                sols : in Solution_List; fsys : out Link_to_Poly_Sys );
+                sols : in Standard_Complex_Solutions.Solution_List;
+                fsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Write_Results
+              ( file : in file_type; n,k : in integer32;
+                q,rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
+                vfs : in DoblDobl_Complex_VecMats.VecMat;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                fsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Write_Results
+              ( file : in file_type; n,k : in integer32;
+                q,rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
+                vfs : in QuadDobl_Complex_VecMats.VecMat;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                fsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRIPTION :
   --   Writes the polynomial system and the solutions to file.
@@ -135,24 +157,41 @@ package Drivers_for_Schubert_Induction is
 
   function Random_Flags
              ( n,m : integer32 ) return Standard_Complex_VecMats.VecMat;
+  function Random_Flags
+             ( n,m : integer32 ) return DoblDobl_Complex_VecMats.VecMat;
+  function Random_Flags
+             ( n,m : integer32 ) return QuadDobl_Complex_VecMats.VecMat;
 
   -- DESCRIPTION :
-  --   Returns a vector of range 1..m with n-dimensional random flags.
+  --   Returns a vector of range 1..m with n-dimensional random flags,
+  --   in standard double, double double, or quad double precision.
 
   function Read_Flags
              ( file : file_type; n,m : integer32 )
              return Standard_Complex_VecMats.VecMat;
+  function Read_Flags
+             ( file : file_type; n,m : integer32 )
+             return DoblDobl_Complex_VecMats.VecMat;
+  function Read_Flags
+             ( file : file_type; n,m : integer32 )
+             return QuadDobl_Complex_VecMats.VecMat;
 
   -- DESCRIPTION :
   --   Reads m n-by-n complex matrices from file
-  --   and returns a vector of range 1..m of n-by-n complex matrices.
+  --   and returns a vector of range 1..m of n-by-n complex matrices,
+  --   in standard double, double double, or quad double precision.
 
   function Prompt_for_Generic_Flags
              ( n,m : integer32 ) return Standard_Complex_VecMats.VecMat;
+  function Prompt_for_Generic_Flags
+             ( n,m : integer32 ) return DoblDobl_Complex_VecMats.VecMat;
+  function Prompt_for_Generic_Flags
+             ( n,m : integer32 ) return QuadDobl_Complex_VecMats.VecMat;
 
   -- DESCRIPTION :
   --   The user is prompted to make a choice between having the
-  --   computer generate a vector of range 1..m with n-dimensional flags,
+  --   computer generate a vector of range 1..m with n-dimensional flags
+  --   (in standard double, double double, or quad double precision),
   --   or to input those m flags, either from standard input,
   --   or to be read from file.
 
@@ -211,7 +250,8 @@ package Drivers_for_Schubert_Induction is
                 rows,cols : in Standard_Natural_Vectors.Vector;
                 minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
-                sols : out Solution_list; fsys : out Link_to_Poly_Sys;
+                sols : out Standard_Complex_Solutions.Solution_list;
+                fsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 flags : out Standard_Complex_VecMats.VecMat );
 
   -- DESCRIPTION :
@@ -250,7 +290,8 @@ package Drivers_for_Schubert_Induction is
   procedure Scan_for_Start_Schubert_Problem
               ( file : in file_type; n : in integer32;
                 vf : out Standard_Complex_VecMats.VecMat;
-                p : out Link_to_Poly_Sys; sols : out Solution_List;
+                p : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                sols : out Standard_Complex_Solutions.Solution_List;
                 fail : out boolean );
 
   -- DESCRIPTION :
@@ -283,10 +324,19 @@ package Drivers_for_Schubert_Induction is
               ( file : in file_type;
                 n,k : in integer32; cnd : in Array_of_Brackets;
                 flags : in Standard_Complex_VecMats.VecMat );
+  procedure Resolve_Schubert_Problem
+              ( file : in file_type;
+                n,k : in integer32; cnd : in Array_of_Brackets;
+                flags : in DoblDobl_Complex_VecMats.VecMat );
+  procedure Resolve_Schubert_Problem
+              ( file : in file_type;
+                n,k : in integer32; cnd : in Array_of_Brackets;
+                flags : in QuadDobl_Complex_VecMats.VecMat );
 
   -- DESCRIPTION :
   --   Resolves the Schubert problem defined by the brackets in cnd
-  --   on k-planes in n-space for the given flags.
+  --   on k-planes in n-space for the given flags.  Computations happen
+  --   in standard double, double double, or quad double precision.
 
   -- REQUIRED : flags'range = 1..cnd'last-2.
 
@@ -297,12 +347,29 @@ package Drivers_for_Schubert_Induction is
   --   cnt      intersection conditions;
   --   flags    random flags. 
 
-  procedure Resolve_Schubert_Problem
+  procedure Standard_Resolve_Schubert_Problem
+              ( n,k : in integer32; bm : in Bracket_Monomial );
+  procedure DoblDobl_Resolve_Schubert_Problem
+              ( n,k : in integer32; bm : in Bracket_Monomial );
+  procedure QuadDobl_Resolve_Schubert_Problem
               ( n,k : in integer32; bm : in Bracket_Monomial );
 
   -- DESCRIPTION :
   --   Prompts the user for the name of the output file and for other
-  --   execution parameters and then resolves the Schubert problem.
+  --   execution parameters and then resolves the Schubert problem
+  --   in standard double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   n        ambient space;
+  --   k        dimension of the solution planes;
+  --   bm       product of k-brackets, with conditions on the k-planes.
+
+  procedure Resolve_Schubert_Problem
+              ( n,k : in integer32; bm : in Bracket_Monomial );
+
+  -- DESCRIPTION :
+  --   Prompts the user for the working precision 
+  --   and then calls the proper resolution procedure.
 
   -- ON ENTRY :
   --   n        ambient space;
