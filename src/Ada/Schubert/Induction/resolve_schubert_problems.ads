@@ -1,16 +1,25 @@
 with text_io;                            use text_io;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Multprec_Natural_Numbers;           use Multprec_Natural_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
-with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
+with DoblDobl_Complex_Matrices;
+with DoblDobl_Complex_VecMats;
+with QuadDobl_Complex_Matrices;
+with QuadDobl_Complex_VecMats;
 with Standard_Complex_Solutions;
+with Standard_Solution_Posets;
+with DoblDobl_Complex_Solutions;
+with DoblDobl_Solution_Posets;
+with QuadDobl_Complex_Solutions;
+with QuadDobl_Solution_Posets;
 with Brackets;                           use Brackets;
 with Intersection_Posets;                use Intersection_Posets;
-with Standard_Solution_Posets;
 
 package Resolve_Schubert_Problems is
 
@@ -29,16 +38,63 @@ package Resolve_Schubert_Problems is
   -- DESCRIPTION :
   --   Initializes the coefficient at every node in pl to zero.
 
+  procedure Initialize_Solution_Nodes
+              ( file : in file_type; n,k : in integer32;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in Standard_Complex_VecMats.VecMat;
+                nodes : in out Standard_Solution_Posets.Solnode_List;
+                res : out double_float );
+  procedure Initialize_Solution_Nodes
+              ( file : in file_type; n,k : in integer32;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in DoblDobl_Complex_VecMats.VecMat;
+                nodes : in out DoblDobl_Solution_Posets.Solnode_List;
+                res : out double_double );
+  procedure Initialize_Solution_Nodes
+              ( file : in file_type; n,k : in integer32;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in QuadDobl_Complex_VecMats.VecMat;
+                nodes : in out QuadDobl_Solution_Posets.Solnode_List;
+                res : out quad_double );
+
+  -- DESCRIPTION :
+  --   Initializes the nodes with the start solutions, computed
+  --   in standard double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   file     for diagnostic output;
+  --   n        ambient dimension;
+  --   k        dimension of the solution planes;
+  --   conds    intersection conditions;
+  --   flags    generic flags in n-space;
+  --   nodes    list of solution nodes.
+
+  -- ON RETURN :
+  --   nodes    initialized with start solutions;
+  --   res      sum of all residuals.
+
   procedure Start_Solution 
               ( file : in file_type; n,k : in integer32;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
                 snd : in out Standard_Solution_Posets.Link_to_Solution_Node;
-                fail : out boolean;
-                res : out double_float );
+                fail : out boolean; res : out double_float );
+  procedure Start_Solution 
+              ( file : in file_type; n,k : in integer32;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in DoblDobl_Complex_VecMats.VecMat;
+                snd : in out DoblDobl_Solution_Posets.Link_to_Solution_Node;
+                fail : out boolean; res : out double_double );
+  procedure Start_Solution 
+              ( file : in file_type; n,k : in integer32;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in QuadDobl_Complex_VecMats.VecMat;
+                snd : in out QuadDobl_Solution_Posets.Link_to_Solution_Node;
+                fail : out boolean; res : out quad_double );
 
   -- DESCRIPTION :
   --   Computes the start solution at a solution node,
+  --   in standard double, double double, or quad double precision,
   --   positioned at the leaves of the intersection poset,
   --   as the analogue to the Initialize_Leaves from above.
 
@@ -70,14 +126,57 @@ package Resolve_Schubert_Problems is
                 tm : in Standard_Complex_Matrices.Matrix;
                 sols : in out Standard_Complex_Solutions.Solution_List );
   procedure Transform_Start_Solutions
+              ( n,k : in integer32;
+                r_src,c_src,r_tgt,c_tgt : in Standard_Natural_Vectors.Vector;
+                tm : in DoblDobl_Complex_Matrices.Matrix;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Transform_Start_Solutions
+              ( n,k : in integer32;
+                r_src,c_src,r_tgt,c_tgt : in Standard_Natural_Vectors.Vector;
+                tm : in QuadDobl_Complex_Matrices.Matrix;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Applies the tm transformation to all solutions and column reduces
+  --   the result to fit in the pattern defined by rows and cols,
+  --   in standard double, double double, or quad double precision,
+  --   without intermediate output to file.
+
+  -- ON ENTRY :
+  --   n        ambient dimension;
+  --   k        dimension of the solution plane
+  --   r_src    rows of the conditions at the source: incoming solutions;
+  --   c_src    columns of the conditions at the source;
+  --   r_src    rows of the conditions at the target: transformed solutions;
+  --   c_src    columns of the conditions at the target;
+  --   tm       transformation matrix, equals T1*M;
+  --   sols     solutions that fit the pattern as defined by r_src, c_src.
+
+  -- ON RETURN :
+  --   sols     transformed solutions that fit the pattern prescribed by
+  --            r_tgt and c_tgt.
+
+  procedure Transform_Start_Solutions
               ( file : in file_type; n,k : in integer32;
                 r_src,c_src,r_tgt,c_tgt : in Standard_Natural_Vectors.Vector;
                 tm : in Standard_Complex_Matrices.Matrix;
                 sols : in out Standard_Complex_Solutions.Solution_List );
+  procedure Transform_Start_Solutions
+              ( file : in file_type; n,k : in integer32;
+                r_src,c_src,r_tgt,c_tgt : in Standard_Natural_Vectors.Vector;
+                tm : in DoblDobl_Complex_Matrices.Matrix;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Transform_Start_Solutions
+              ( file : in file_type; n,k : in integer32;
+                r_src,c_src,r_tgt,c_tgt : in Standard_Natural_Vectors.Vector;
+                tm : in QuadDobl_Complex_Matrices.Matrix;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
   --   Applies the tm transformation to all solutions and column reduces
-  --   the result to fit in the pattern defined by rows and cols.
+  --   the result to fit in the pattern defined by rows and cols,
+  --   in standard double, double double, or quad double precision,
+  --   with diagnostic intermediate output written to file.
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics,
@@ -121,6 +220,46 @@ package Resolve_Schubert_Problems is
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat );
   procedure Connect_Checker_Posets_to_Track
+              ( n,k,level : in integer32; tol : in double_float;
+                pl : in Poset_List;
+                snd : in DoblDobl_Solution_Posets.Link_to_Solution_Node;
+                tmfo : in DoblDobl_Complex_Matrices.Link_to_Matrix;
+                sps : in out DoblDobl_Solution_Posets.Solution_Poset;
+                minrep : in boolean;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in DoblDobl_Complex_VecMats.VecMat );
+  procedure Connect_Checker_Posets_to_Track
+              ( n,k,level : in integer32; tol : in double_float;
+                pl : in Poset_List;
+                snd : in QuadDobl_Solution_Posets.Link_to_Solution_Node;
+                tmfo : in QuadDobl_Complex_Matrices.Link_to_Matrix;
+                sps : in out QuadDobl_Solution_Posets.Solution_Poset;
+                minrep : in boolean;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in QuadDobl_Complex_VecMats.VecMat );
+
+  -- DESCRIPTION :
+  --   Extension of the Connect_Checker_Posets_to_Count to track the
+  --   paths in standard double, double double, or quad double precision.
+  --   This version is silent, does not write diagnostic output to file.
+
+  -- ON ENTRY :
+  --   n        the ambient dimension;
+  --   k        dimension of the solution planes;
+  --   level    level of the parent nodes in the list pl;
+  --   pl       list of checker posets at some level of the parent nodes
+  --            to the node nd in the intersection poset;
+  --   snd      solution node that contains the poset of the child;
+  --   tmfo     transformation for use at start solution if not null;
+  --   sps      solution poset constructed up to the proper level;
+  --   minrep   to use a more efficient problem formulation;
+  --   conds    conditions on the current fixed flags;
+  --   flags    current fixed flags.
+
+  -- ON RETURN :
+  --   sps      updated solution poset.
+
+  procedure Connect_Checker_Posets_to_Track
               ( file : in file_type;
                 n,k,level : in integer32; tol : in double_float;
                 pl : in Poset_List;
@@ -130,10 +269,31 @@ package Resolve_Schubert_Problems is
                 minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat );
+  procedure Connect_Checker_Posets_to_Track
+              ( file : in file_type;
+                n,k,level : in integer32; tol : in double_float;
+                pl : in Poset_List;
+                snd : in DoblDobl_Solution_Posets.Link_to_Solution_Node;
+                tmfo : in DoblDobl_Complex_Matrices.Link_to_Matrix;
+                sps : in out DoblDobl_Solution_Posets.Solution_Poset;
+                minrep : in boolean;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in DoblDobl_Complex_VecMats.VecMat );
+  procedure Connect_Checker_Posets_to_Track
+              ( file : in file_type;
+                n,k,level : in integer32; tol : in double_float;
+                pl : in Poset_List;
+                snd : in QuadDobl_Solution_Posets.Link_to_Solution_Node;
+                tmfo : in QuadDobl_Complex_Matrices.Link_to_Matrix;
+                sps : in out QuadDobl_Solution_Posets.Solution_Poset;
+                minrep : in boolean;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in QuadDobl_Complex_VecMats.VecMat );
 
   -- DESCRIPTION :
   --   Extension of the Connect_Checker_Posets_to_Count to track the
-  --   solution paths.
+  --   paths in standard double, double double, or quad double precision.
+  --   This version writes diagnostic output to file.
 
   -- ON ENTRY :
   --   file     for intermediate output, if provided, otherwise silent;
@@ -184,12 +344,29 @@ package Resolve_Schubert_Problems is
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
                 sols : out Standard_Complex_Solutions.Solution_List );
+  procedure Resolve
+              ( file : in file_type; extopt,repcon : in boolean;
+                n,k : in integer32; tol : in double_float;
+                ips : in out Intersection_Poset;
+                sps : in out DoblDobl_Solution_Posets.Solution_Poset;
+                minrep : in boolean;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in DoblDobl_Complex_VecMats.VecMat;
+                sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Resolve
+              ( file : in file_type; extopt,repcon : in boolean;
+                n,k : in integer32; tol : in double_float;
+                ips : in out Intersection_Poset;
+                sps : in out QuadDobl_Solution_Posets.Solution_Poset;
+                minrep : in boolean;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in QuadDobl_Complex_VecMats.VecMat;
+                sols : out QuadDobl_Complex_Solutions.Solution_List );
 
   -- DESCRIPTION :
-  --   Performs a bottom up root count, in the same order as the
-  --   resolution with Littlewood-Richardson homotopies proceeds.
-  --   This root counter can be viewed as a stub for the resolution
-  --   of the intersection conditions by Littlewood-Richardson homotopies.
+  --   Applies the Littlewood-Richardson homotopies running in
+  --   standard double, double double, or quad double precision,
+  --   to resolve a sequence of intersection conditions.
 
   -- REQUIRED :
   --   The intersection conditions are processed into an intersection poset,

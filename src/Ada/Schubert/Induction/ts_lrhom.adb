@@ -28,7 +28,7 @@ with Wrapped_Path_Trackers;
 with Moving_Flag_Continuation;
 with Setup_Flag_Homotopies;
 with Moving_Flag_Homotopies;
-with Intersection_Solution_Posets;       use Intersection_Solution_Posets;
+with Standard_Solution_Posets;           use Standard_Solution_Posets;
 with Resolve_Schubert_Problems;          use Resolve_Schubert_Problems;
 with Drivers_for_Schubert_Induction;     use Drivers_for_Schubert_Induction;
 

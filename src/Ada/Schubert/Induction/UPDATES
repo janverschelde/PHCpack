@@ -6,6 +6,8 @@ Tue 20 Oct 2015 : new package checker_poset_deformations with code out of
   for the new packages {dobldobl,quaddobl}_solution_posets.
   This led to changes in checker_poset_deformations.ads,
   resolve_schubert_problems, and drivers_for_schubert_induction.ads.
+  Also ts_lrhom.adb changed.  Added versions for double doubles and
+  quad double in resolve_schubert_problems and flag_transformations.
 
 Mon 19 Oct 2015 : upgraded moving_flag_homotopies with procedures to make
   equations for homotopies in double double and quad double precision.

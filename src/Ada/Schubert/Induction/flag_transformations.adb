@@ -6,6 +6,8 @@ with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
 with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
 with Standard_Matrix_Inversion;
+with DoblDobl_Matrix_Inversion;
+with QuadDobl_Matrix_Inversion;
 with Setup_Flag_Homotopies;
 
 package body Flag_Transformations is
@@ -608,9 +610,53 @@ package body Flag_Transformations is
     end loop;
   end Transform_Sequence_with_Flag;
 
+  procedure Transform_Sequence_with_Flag
+              ( n,i : in integer32;
+                flags : in out DoblDobl_Complex_VecMats.VecMat;
+                A,invA,sT : out DoblDobl_Complex_Matrices.Matrix ) is
+
+    moved : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+          := Setup_Flag_Homotopies.Moved_Flag(n);
+    idemat : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+           :=  Setup_Flag_Homotopies.Identity(n);
+    flag,T2 : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
+
+    use DoblDobl_Complex_Matrices;
+
+  begin
+    flag := flags(i).all;
+    Transform(n,moved,idemat,idemat,flag,A,sT,T2);
+    invA := DoblDobl_Matrix_Inversion.Inverse(A);
+    for j in i+1..flags'last loop
+      flags(j).all := invA*flags(j).all;
+    end loop;
+  end Transform_Sequence_with_Flag;
+
+  procedure Transform_Sequence_with_Flag
+              ( n,i : in integer32;
+                flags : in out QuadDobl_Complex_VecMats.VecMat;
+                A,invA,sT : out QuadDobl_Complex_Matrices.Matrix ) is
+
+    moved : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+          := Setup_Flag_Homotopies.Moved_Flag(n);
+    idemat : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+           :=  Setup_Flag_Homotopies.Identity(n);
+    flag,T2 : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
+
+    use QuadDobl_Complex_Matrices;
+
+  begin
+    flag := flags(i).all;
+    Transform(n,moved,idemat,idemat,flag,A,sT,T2);
+    invA := QuadDobl_Matrix_Inversion.Inverse(A);
+    for j in i+1..flags'last loop
+      flags(j).all := invA*flags(j).all;
+    end loop;
+  end Transform_Sequence_with_Flag;
+
   procedure Create ( n : in integer32;
                      flags : in Standard_Complex_VecMats.VecMat;
-                     stack : out Stack_of_Flags;
+                     stack : out Standard_Stack_of_Flags;
                      A,invA,sT : out Standard_Complex_VecMats.VecMat ) is
 
     AA,invAA,T1 : Standard_Complex_Matrices.Matrix(1..n,1..n);
@@ -641,10 +687,90 @@ package body Flag_Transformations is
     end loop;
   end Create;
 
-  procedure Clear ( s : in out Stack_of_Flags ) is
+  procedure Create ( n : in integer32;
+                     flags : in DoblDobl_Complex_VecMats.VecMat;
+                     stack : out DoblDobl_Stack_of_Flags;
+                     A,invA,sT : out DoblDobl_Complex_VecMats.VecMat ) is
+
+    AA,invAA,T1 : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
+    work : DoblDobl_Complex_VecMats.VecMat(flags'range);
+
+  begin
+    for i in flags'first..flags'last-1 loop
+      declare
+        work : DoblDobl_Complex_VecMats.VecMat(flags'range);
+        flag : DoblDobl_Complex_Matrices.Matrix(1..n,1..n);
+        ptr2flags : DoblDobl_Complex_VecMats.Link_to_VecMat;
+      begin
+        for j in work'range loop
+          if i = flags'first then  -- use original flags at the start
+            DoblDobl_Complex_Matrices.Copy(flags(j).all,flag);
+          else -- work with transformed flags in later stages
+            ptr2flags := stack(i-1);
+            DoblDobl_Complex_Matrices.Copy(ptr2flags(j).all,flag);
+          end if;
+          work(j) := new DoblDobl_Complex_Matrices.Matrix'(flag);
+        end loop;
+        Transform_Sequence_with_Flag(n,i,work,AA,invAA,T1);
+        stack(i) := new DoblDobl_Complex_VecMats.VecMat'(work);
+        A(i) := new DoblDobl_Complex_Matrices.Matrix'(AA);
+        invA(i) := new DoblDobl_Complex_Matrices.Matrix'(invAA);
+        st(i) := new DoblDobl_Complex_Matrices.Matrix'(T1);
+      end;
+    end loop;
+  end Create;
+
+  procedure Create ( n : in integer32;
+                     flags : in QuadDobl_Complex_VecMats.VecMat;
+                     stack : out QuadDobl_Stack_of_Flags;
+                     A,invA,sT : out QuadDobl_Complex_VecMats.VecMat ) is
+
+    AA,invAA,T1 : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
+    work : QuadDobl_Complex_VecMats.VecMat(flags'range);
+
+  begin
+    for i in flags'first..flags'last-1 loop
+      declare
+        work : QuadDobl_Complex_VecMats.VecMat(flags'range);
+        flag : QuadDobl_Complex_Matrices.Matrix(1..n,1..n);
+        ptr2flags : QuadDobl_Complex_VecMats.Link_to_VecMat;
+      begin
+        for j in work'range loop
+          if i = flags'first then  -- use original flags at the start
+            QuadDobl_Complex_Matrices.Copy(flags(j).all,flag);
+          else -- work with transformed flags in later stages
+            ptr2flags := stack(i-1);
+            QuadDobl_Complex_Matrices.Copy(ptr2flags(j).all,flag);
+          end if;
+          work(j) := new QuadDobl_Complex_Matrices.Matrix'(flag);
+        end loop;
+        Transform_Sequence_with_Flag(n,i,work,AA,invAA,T1);
+        stack(i) := new QuadDobl_Complex_VecMats.VecMat'(work);
+        A(i) := new QuadDobl_Complex_Matrices.Matrix'(AA);
+        invA(i) := new QuadDobl_Complex_Matrices.Matrix'(invAA);
+        st(i) := new QuadDobl_Complex_Matrices.Matrix'(T1);
+      end;
+    end loop;
+  end Create;
+
+  procedure Clear ( s : in out Standard_Stack_of_Flags ) is
   begin
     for i in s'range loop
       Standard_Complex_VecMats.Deep_Clear(s(i));
+    end loop;
+  end Clear;
+
+  procedure Clear ( s : in out DoblDobl_Stack_of_Flags ) is
+  begin
+    for i in s'range loop
+      DoblDobl_Complex_VecMats.Deep_Clear(s(i));
+    end loop;
+  end Clear;
+
+  procedure Clear ( s : in out QuadDobl_Stack_of_Flags ) is
+  begin
+    for i in s'range loop
+      QuadDobl_Complex_VecMats.Deep_Clear(s(i));
     end loop;
   end Clear;
 
