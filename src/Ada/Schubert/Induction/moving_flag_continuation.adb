@@ -23,12 +23,16 @@ with QuadDobl_Complex_Vector_Norms;     use QuadDobl_Complex_Vector_Norms;
 with Symbol_Table;
 with Matrix_Indeterminates;
 with Standard_Complex_Poly_SysFun;
-with DoblDobl_Complex_Poly_SysFun;
-with QuadDobl_Complex_Poly_SysFun;
 with Standard_Complex_Poly_Matrices;
 with Standard_Complex_Poly_Matrices_io; use Standard_Complex_Poly_Matrices_io;
+with DoblDobl_Complex_Poly_SysFun;
+with DoblDobl_Complex_Poly_Matrices;
+with DoblDobl_Complex_Poly_Matrices_io; use DoblDobl_Complex_Poly_Matrices_io;
+with QuadDobl_Complex_Poly_SysFun;
+with QuadDobl_Complex_Poly_Matrices;
+with QuadDobl_Complex_Poly_Matrices_io; use QuadDobl_Complex_Poly_Matrices_io;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
-with DobLDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with Standard_Root_Refiners;            use Standard_Root_Refiners;
 with DoblDobl_Root_Refiners;            use DoblDobl_Root_Refiners;
@@ -804,10 +808,6 @@ package body Moving_Flag_Continuation is
                 q,rows,cols : in Standard_Natural_Vectors.Vector;
                 dim : out integer32 ) is
 
-  -- DESCRIPTION :
-  --   Uses the localization pattern to initialize the symbol table.
-  --   On return in dim is the number of free variables.
-
     locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
            := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
 
@@ -958,6 +958,116 @@ package body Moving_Flag_Continuation is
                 q,rows,cols : in Standard_Natural_Vectors.Vector;
                 minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in DoblDobl_Complex_Matrices.Matrix;
+                vf : in DoblDobl_Complex_VecMats.VecMat;
+                x : in DoblDobl_Complex_Vectors.Vector ) is
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
+    dim : natural32;
+    f : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    dim := Checker_Localization_Patterns.Degree_of_Freedom(locmap);
+    if not Symbol_Table.Empty
+     then Symbol_Table.Clear;
+    end if;
+    Matrix_Indeterminates.Initialize_Symbols(dim,locmap);
+   -- note: p and parameters mf and nf needed for this call ...
+   -- Flag_Conditions(file,n,k,q,p,rows,cols,cond,vf,mf,nf,f);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,q,rows,cols,cond,mf,vf,f);
+     else Flag_Conditions(n,k,q,rows,cols,cond,mf,vf,f);
+    end if;
+    put(file,"At q = "); put(file,q);
+    put(file,"  rows = "); put(file,rows);
+    put(file,"  cols = "); put(file,cols); new_line(file);
+    put_line(file,"Verification of intersection conditions :");
+    put_line(file,"The moving flag : ");
+    Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,mf);
+    declare
+      z : DoblDobl_Complex_Vectors.Vector(x'range);
+      fail : boolean;
+      res : double_double;
+      y : constant DoblDobl_Complex_Vectors.Vector(f'range)
+        := DoblDobl_Complex_Poly_SysFun.Eval(f.all,x);
+    begin
+      put_line(file,"The given solution :"); put_line(file,x);
+      put_line(file,"The value of the given solution :"); put_line(file,y);
+      First_Solution(f.all,fail,z,res);
+      if fail then
+        put_line(file,"failed to recompute the solution");
+      else
+        put_line(file,"The recomputed solution :"); put_line(file,z);
+        put(file,"with residual :"); put(file,res,3); new_line(file);
+      end if;
+    end;
+   -- Clear(f); -- executing this Clear(f) results in a crash ...
+  exception
+    when others => put_line("exception in verify_intersection conditions");
+                   raise;
+  end Verify_Intersection_Conditions;
+
+  procedure Verify_Intersection_Conditions
+              ( file : in file_type; n,k : in integer32;
+                q,rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in QuadDobl_Complex_Matrices.Matrix;
+                vf : in QuadDobl_Complex_VecMats.VecMat;
+                x : in QuadDobl_Complex_Vectors.Vector ) is
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
+    dim : natural32;
+    f : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    dim := Checker_Localization_Patterns.Degree_of_Freedom(locmap);
+    if not Symbol_Table.Empty
+     then Symbol_Table.Clear;
+    end if;
+    Matrix_Indeterminates.Initialize_Symbols(dim,locmap);
+   -- note: p and parameters mf and nf needed for this call ...
+   -- Flag_Conditions(file,n,k,q,p,rows,cols,cond,vf,mf,nf,f);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,q,rows,cols,cond,mf,vf,f);
+     else Flag_Conditions(n,k,q,rows,cols,cond,mf,vf,f);
+    end if;
+    put(file,"At q = "); put(file,q);
+    put(file,"  rows = "); put(file,rows);
+    put(file,"  cols = "); put(file,cols); new_line(file);
+    put_line(file,"Verification of intersection conditions :");
+    put_line(file,"The moving flag : ");
+    Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,mf);
+    declare
+      z : QuadDobl_Complex_Vectors.Vector(x'range);
+      fail : boolean;
+      res : quad_double;
+      y : constant QuadDobl_Complex_Vectors.Vector(f'range)
+        := QuadDobl_Complex_Poly_SysFun.Eval(f.all,x);
+    begin
+      put_line(file,"The given solution :"); put_line(file,x);
+      put_line(file,"The value of the given solution :"); put_line(file,y);
+      First_Solution(f.all,fail,z,res);
+      if fail then
+        put_line(file,"failed to recompute the solution");
+      else
+        put_line(file,"The recomputed solution :"); put_line(file,z);
+        put(file,"with residual :"); put(file,res,3); new_line(file);
+      end if;
+    end;
+   -- Clear(f); -- executing this Clear(f) results in a crash ...
+  exception
+    when others => put_line("exception in verify_intersection conditions");
+                   raise;
+  end Verify_Intersection_Conditions;
+
+  procedure Verify_Intersection_Conditions
+              ( file : in file_type; n,k : in integer32;
+                q,rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 sols : in Standard_Complex_Solutions.Solution_List;
@@ -997,6 +1107,130 @@ package body Moving_Flag_Continuation is
       declare
         res : double_float;
         y : constant Standard_Complex_Vectors.Vector(f'range)
+          := Eval(f.all,ls.v);
+      begin
+        put_line(file,"The given solution :"); put_line(file,ls.v);
+        put_line(file,"The value of the given solution :"); put_line(file,y);
+        res := Max_Norm(y);
+        put(file,"The residual : "); put(file,res,3); new_line(file);
+        if fail
+         then fail := (res > tol); -- no fail as soon as one succeeds
+        end if;
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+   -- Clear(f); -- executing this Clear(f) results in a crash ...
+  exception
+    when others => put_line("exception in verify_intersection conditions");
+                   raise;
+  end Verify_Intersection_Conditions;
+
+  procedure Verify_Intersection_Conditions
+              ( file : in file_type; n,k : in integer32;
+                q,rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in DoblDobl_Complex_Matrices.Matrix;
+                vf : in DoblDobl_Complex_VecMats.VecMat;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                tol : in double_float; fail : out boolean ) is
+
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_Solutions;
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
+    dim : natural32;
+    f : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    dim := Checker_Localization_Patterns.Degree_of_Freedom(locmap);
+    if not Symbol_Table.Empty
+     then Symbol_Table.Clear;
+    end if;
+    Matrix_Indeterminates.Initialize_Symbols(dim,locmap);
+   -- note: p and parameters mf and nf needed for this call ...
+   -- Flag_Conditions(file,n,k,q,p,rows,cols,cond,vf,mf,nf,f);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,q,rows,cols,cond,mf,vf,f);
+     else Flag_Conditions(n,k,q,rows,cols,cond,mf,vf,f);
+    end if;
+    put(file,"At q = "); put(file,q);
+    put(file,"  rows = "); put(file,rows);
+    put(file,"  cols = "); put(file,cols); new_line(file);
+    put_line(file,"Verification of intersection conditions :");
+    put_line(file,"The moving flag : ");
+    Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,mf);
+    fail := true; -- assume all solutions are failures
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      declare
+        res : double_double;
+        y : constant DoblDobl_Complex_Vectors.Vector(f'range)
+          := Eval(f.all,ls.v);
+      begin
+        put_line(file,"The given solution :"); put_line(file,ls.v);
+        put_line(file,"The value of the given solution :"); put_line(file,y);
+        res := Max_Norm(y);
+        put(file,"The residual : "); put(file,res,3); new_line(file);
+        if fail
+         then fail := (res > tol); -- no fail as soon as one succeeds
+        end if;
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+   -- Clear(f); -- executing this Clear(f) results in a crash ...
+  exception
+    when others => put_line("exception in verify_intersection conditions");
+                   raise;
+  end Verify_Intersection_Conditions;
+
+  procedure Verify_Intersection_Conditions
+              ( file : in file_type; n,k : in integer32;
+                q,rows,cols : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in QuadDobl_Complex_Matrices.Matrix;
+                vf : in QuadDobl_Complex_VecMats.VecMat;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                tol : in double_float; fail : out boolean ) is
+
+    use QuadDobl_Complex_Poly_SysFun;
+    use QuadDobl_Complex_Solutions;
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
+    dim : natural32;
+    f : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    dim := Checker_Localization_Patterns.Degree_of_Freedom(locmap);
+    if not Symbol_Table.Empty
+     then Symbol_Table.Clear;
+    end if;
+    Matrix_Indeterminates.Initialize_Symbols(dim,locmap);
+   -- note: p and parameters mf and nf needed for this call ...
+   -- Flag_Conditions(file,n,k,q,p,rows,cols,cond,vf,mf,nf,f);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,q,rows,cols,cond,mf,vf,f);
+     else Flag_Conditions(n,k,q,rows,cols,cond,mf,vf,f);
+    end if;
+    put(file,"At q = "); put(file,q);
+    put(file,"  rows = "); put(file,rows);
+    put(file,"  cols = "); put(file,cols); new_line(file);
+    put_line(file,"Verification of intersection conditions :");
+    put_line(file,"The moving flag : ");
+    Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,mf);
+    fail := true; -- assume all solutions are failures
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      declare
+        res : quad_double;
+        y : constant QuadDobl_Complex_Vectors.Vector(f'range)
           := Eval(f.all,ls.v);
       begin
         put_line(file,"The given solution :"); put_line(file,ls.v);
@@ -1085,6 +1319,116 @@ package body Moving_Flag_Continuation is
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in DoblDobl_Complex_Matrices.Matrix;
+                vf : in DoblDobl_Complex_VecMats.VecMat;
+                ls : in out DoblDobl_Complex_Solutions.Link_to_Solution;
+                fail : out boolean ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    gh : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(q,qr,qc));
+    x : DoblDobl_Complex_Vectors.Vector(1..dim);
+    res : double_double;
+
+  begin
+    fail := false;
+    if ind = 0 then
+      if minrep
+       then Minimal_Flag_Conditions(n,k,q,qr,qc,cond,vf,gh);
+       else Flag_Conditions(n,k,q,qr,qc,cond,vf,gh);
+      end if;
+      First_Solution(gh.all,fail,x,res);
+      put_line(file,"The first solution :"); put_line(file,x);
+      put(file,"Residual of first solution : "); put(file,res,3);
+      if fail then
+        put_line(file," failed first solution.");
+      else
+        put_line(file," found first solution.");
+        declare
+          sol : Solution(dim);
+        begin
+          sol.t := DoblDobl_Complex_Numbers.Create(integer(0));
+          sol.m := 1; sol.v := x;
+          sol.err := create(0.0);
+          sol.res := res;
+          sol.rco := create(1.0);
+          ls := new Solution'(sol);
+        end;
+      end if;
+    end if;
+    if not fail then
+      put(file,"Transforming solution planes with critical row = ");
+      put(file,ctr,1); put_line(file,".");
+      Checker_Homotopies.Trivial_Stay_Coordinates
+        (file,n,k,ctr,q,p,qr,qc,pr,pc,ls.v);
+      put_line(file,"Verifying after coordinate changes ...");
+      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+    end if;
+    DoblDobl_Complex_Poly_Systems.Clear(gh);
+  end Trivial_Stay;
+
+  procedure Trivial_Stay
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in QuadDobl_Complex_Matrices.Matrix;
+                vf : in QuadDobl_Complex_VecMats.VecMat;
+                ls : in out QuadDobl_Complex_Solutions.Link_to_Solution;
+                fail : out boolean ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    gh : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(q,qr,qc));
+    x : QuadDobl_Complex_Vectors.Vector(1..dim);
+    res : quad_double;
+
+  begin
+    fail := false;
+    if ind = 0 then
+      if minrep
+       then Minimal_Flag_Conditions(n,k,q,qr,qc,cond,vf,gh);
+       else Flag_Conditions(n,k,q,qr,qc,cond,vf,gh);
+      end if;
+      First_Solution(gh.all,fail,x,res);
+      put_line(file,"The first solution :"); put_line(file,x);
+      put(file,"Residual of first solution : "); put(file,res,3);
+      if fail then
+        put_line(file," failed first solution.");
+      else
+        put_line(file," found first solution.");
+        declare
+          sol : Solution(dim);
+        begin
+          sol.t := QuadDobl_Complex_Numbers.Create(integer(0));
+          sol.m := 1; sol.v := x;
+          sol.err := create(0.0);
+          sol.res := res;
+          sol.rco := create(1.0);
+          ls := new Solution'(sol);
+        end;
+      end if;
+    end if;
+    if not fail then
+      put(file,"Transforming solution planes with critical row = ");
+      put(file,ctr,1); put_line(file,".");
+      Checker_Homotopies.Trivial_Stay_Coordinates
+        (file,n,k,ctr,q,p,qr,qc,pr,pc,ls.v);
+      put_line(file,"Verifying after coordinate changes ...");
+      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+    end if;
+    QuadDobl_Complex_Poly_Systems.Clear(gh);
+  end Trivial_Stay;
+
+  procedure Trivial_Stay
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
@@ -1105,12 +1449,88 @@ package body Moving_Flag_Continuation is
   end Trivial_Stay;
 
   procedure Trivial_Stay
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in DoblDobl_Complex_Matrices.Matrix;
+                vf : in DoblDobl_Complex_VecMats.VecMat;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                tol : in double_float; fail : out boolean ) is
+
+    use DoblDobl_Complex_Solutions;
+
+  begin
+    put(file,"Transforming solution planes with critical row = ");
+    put(file,ctr,1); put_line(file,".");
+    put_line(file,"The solution given to the Trivial_Stay_Coordinates : ");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    Checker_Homotopies.Trivial_Stay_Coordinates
+      (file,n,k,ctr,q,p,qr,qc,pr,pc,sols);
+    put_line(file,"Verifying after coordinate changes ...");
+    Verify_Intersection_Conditions
+      (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+  end Trivial_Stay;
+
+  procedure Trivial_Stay
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in QuadDobl_Complex_Matrices.Matrix;
+                vf : in QuadDobl_Complex_VecMats.VecMat;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                tol : in double_float; fail : out boolean ) is
+
+    use QuadDobl_Complex_Solutions;
+
+  begin
+    put(file,"Transforming solution planes with critical row = ");
+    put(file,ctr,1); put_line(file,".");
+    put_line(file,"The solution given to the Trivial_Stay_Coordinates : ");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    Checker_Homotopies.Trivial_Stay_Coordinates
+      (file,n,k,ctr,q,p,qr,qc,pr,pc,sols);
+    put_line(file,"Verifying after coordinate changes ...");
+    Verify_Intersection_Conditions
+      (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+  end Trivial_Stay;
+
+  procedure Trivial_Stay
               ( n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
+                fail : out boolean ) is
+  begin
+    fail := false; -- no checks anymore ...
+    Checker_Homotopies.Trivial_Stay_Coordinates
+      (n,k,ctr,q,p,qr,qc,pr,pc,sols);
+  end Trivial_Stay;
+
+  procedure Trivial_Stay
+              ( n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in DoblDobl_Complex_Matrices.Matrix;
+                vf : in DoblDobl_Complex_VecMats.VecMat;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                fail : out boolean ) is
+  begin
+    fail := false; -- no checks anymore ...
+    Checker_Homotopies.Trivial_Stay_Coordinates
+      (n,k,ctr,q,p,qr,qc,pr,pc,sols);
+  end Trivial_Stay;
+
+  procedure Trivial_Stay
+              ( n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf : in QuadDobl_Complex_Matrices.Matrix;
+                vf : in QuadDobl_Complex_VecMats.VecMat;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 fail : out boolean ) is
   begin
     fail := false; -- no checks anymore ...
@@ -1176,6 +1596,112 @@ package body Moving_Flag_Continuation is
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in DoblDobl_Complex_VecMats.VecMat;
+                mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
+                ls : in out DoblDobl_Complex_Solutions.Link_to_Solution; 
+                tol : in double_float; fail : out boolean ) is
+
+    gh : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    xp : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Stay_Moving_Plane(n,k,ctr,p,pr,pc);
+    xpm : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+
+  begin
+    fail := true;
+    Initialize_Homotopy_Symbols(natural32(dim),locmap);
+    put_line(file,"The moving coordinates : "); put(file,xp);
+    put_line(file,"the new moving flag when making the stay homotopy :");
+    Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,mf);
+    put_line(file,"the old moving flag when making the stay homotopy :");
+    Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,start_mf);
+    xpm := Moving_Flag(start_mf,xp);
+    put_line(file,"The moving coordinates after multiplication by M :");
+    put(file,xpm);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
+    if ind = 0
+     then Track_First_Move(file,dim,gh.all,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,tol,ls,fail);
+    end if;
+    if not fail then
+      put(file,"Transforming solution planes with critical row = ");
+      put(file,ctr,1); put_line(file,".");
+      Checker_Homotopies.Homotopy_Stay_Coordinates
+        (file,n,k,ctr,q,qr,qc,mf,xpm,ls.v);
+      put_line(file,"Verifying after coordinate changes ...");
+      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+    end if;
+    DoblDobl_Complex_Poly_Matrices.Clear(xp);
+    DoblDobl_Complex_Poly_Matrices.Clear(xpm);
+    DoblDobl_Complex_Poly_Systems.Clear(gh);
+  exception
+    when others => put_line("exception in Stay_Homotopy"); raise;
+  end Stay_Homotopy;
+
+  procedure Stay_Homotopy
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in QuadDobl_Complex_VecMats.VecMat;
+                mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
+                ls : in out QuadDobl_Complex_Solutions.Link_to_Solution; 
+                tol : in double_float; fail : out boolean ) is
+
+    gh : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    xp : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Stay_Moving_Plane(n,k,ctr,p,pr,pc);
+    xpm : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+
+  begin
+    fail := true;
+    Initialize_Homotopy_Symbols(natural32(dim),locmap);
+    put_line(file,"The moving coordinates : "); put(file,xp);
+    put_line(file,"the new moving flag when making the stay homotopy :");
+    Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,mf);
+    put_line(file,"the old moving flag when making the stay homotopy :");
+    Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,start_mf);
+    xpm := Moving_Flag(start_mf,xp);
+    put_line(file,"The moving coordinates after multiplication by M :");
+    put(file,xpm);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
+    if ind = 0
+     then Track_First_Move(file,dim,gh.all,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,tol,ls,fail);
+    end if;
+    if not fail then
+      put(file,"Transforming solution planes with critical row = ");
+      put(file,ctr,1); put_line(file,".");
+      Checker_Homotopies.Homotopy_Stay_Coordinates
+        (file,n,k,ctr,q,qr,qc,mf,xpm,ls.v);
+      put_line(file,"Verifying after coordinate changes ...");
+      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+    end if;
+    QuadDobl_Complex_Poly_Matrices.Clear(xp);
+    QuadDobl_Complex_Poly_Matrices.Clear(xpm);
+    QuadDobl_Complex_Poly_Systems.Clear(gh);
+  exception
+    when others => put_line("exception in Stay_Homotopy"); raise;
+  end Stay_Homotopy;
+
+  procedure Stay_Homotopy
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 sols : in out Standard_Complex_Solutions.Solution_List;
@@ -1223,6 +1749,108 @@ package body Moving_Flag_Continuation is
   end Stay_Homotopy;
 
   procedure Stay_Homotopy
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in DoblDobl_Complex_VecMats.VecMat;
+                mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                tol : in double_float; fail : out boolean ) is
+
+    gh : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    xp : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Stay_Moving_Plane(n,k,ctr,p,pr,pc);
+    xpm : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+
+  begin
+    fail := true;
+    Initialize_Homotopy_Symbols(natural32(dim),locmap);
+    put_line(file,"The moving coordinates : "); put(file,xp);
+    put_line(file,"the new moving flag when making the stay homotopy :");
+    Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,mf);
+    put_line(file,"the old moving flag when making the stay homotopy :");
+    Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,start_mf);
+    xpm := Moving_Flag(start_mf,xp);
+    put_line(file,"The moving coordinates after multiplication by M :");
+    put(file,xpm);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
+    Track_Next_Move(file,dim,gh.all,tol,sols,fail);
+    if not fail then
+      put(file,"Transforming solution planes with critical row = ");
+      put(file,ctr,1); put_line(file,".");
+      Checker_Homotopies.Homotopy_Stay_Coordinates
+        (file,n,k,ctr,q,qr,qc,mf,xpm,sols);
+      put_line(file,"Verifying after coordinate changes ...");
+      Verify_Intersection_Conditions
+        (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+    end if;
+    DoblDobl_Complex_Poly_Matrices.Clear(xp);
+    DoblDobl_Complex_Poly_Matrices.Clear(xpm);
+    DoblDobl_Complex_Poly_Systems.Clear(gh);
+  exception
+    when others => put_line("exception in Stay_Homotopy"); raise;
+  end Stay_Homotopy;
+
+  procedure Stay_Homotopy
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in QuadDobl_Complex_VecMats.VecMat;
+                mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                tol : in double_float; fail : out boolean ) is
+
+    gh : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    xp : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Stay_Moving_Plane(n,k,ctr,p,pr,pc);
+    xpm : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+
+  begin
+    fail := true;
+    Initialize_Homotopy_Symbols(natural32(dim),locmap);
+    put_line(file,"The moving coordinates : "); put(file,xp);
+    put_line(file,"the new moving flag when making the stay homotopy :");
+    Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,mf);
+    put_line(file,"the old moving flag when making the stay homotopy :");
+    Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,start_mf);
+    xpm := Moving_Flag(start_mf,xp);
+    put_line(file,"The moving coordinates after multiplication by M :");
+    put(file,xpm);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
+    Track_Next_Move(file,dim,gh.all,tol,sols,fail);
+    if not fail then
+      put(file,"Transforming solution planes with critical row = ");
+      put(file,ctr,1); put_line(file,".");
+      Checker_Homotopies.Homotopy_Stay_Coordinates
+        (file,n,k,ctr,q,qr,qc,mf,xpm,sols);
+      put_line(file,"Verifying after coordinate changes ...");
+      Verify_Intersection_Conditions
+        (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+    end if;
+    QuadDobl_Complex_Poly_Matrices.Clear(xp);
+    QuadDobl_Complex_Poly_Matrices.Clear(xpm);
+    QuadDobl_Complex_Poly_Systems.Clear(gh);
+  exception
+    when others => put_line("exception in Stay_Homotopy"); raise;
+  end Stay_Homotopy;
+
+  procedure Stay_Homotopy
               ( n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep : in boolean;
@@ -1256,6 +1884,83 @@ package body Moving_Flag_Continuation is
     Standard_Complex_Poly_Matrices.Clear(xp);
     Standard_Complex_Poly_Matrices.Clear(xpm);
     Standard_Complex_Poly_Systems.Clear(gh);
+  exception
+    when others => put_line("exception in Stay_Homotopy"); raise;
+  end Stay_Homotopy;
+
+
+  procedure Stay_Homotopy
+              ( n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in DoblDobl_Complex_VecMats.VecMat;
+                mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                tol : in double_float; fail : out boolean ) is
+
+    gh : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    xp : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Stay_Moving_Plane(n,k,ctr,p,pr,pc);
+    xpm : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+
+  begin
+    fail := true;
+    xpm := Moving_Flag(start_mf,xp);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
+    Track_Next_Move(dim,gh.all,tol,sols,fail);
+    if not fail then
+      Checker_Homotopies.Homotopy_Stay_Coordinates
+        (n,k,ctr,q,qr,qc,mf,xpm,sols);
+    end if;
+    DoblDobl_Complex_Poly_Matrices.Clear(xp);
+    DoblDobl_Complex_Poly_Matrices.Clear(xpm);
+    DoblDobl_Complex_Poly_Systems.Clear(gh);
+  exception
+    when others => put_line("exception in Stay_Homotopy"); raise;
+  end Stay_Homotopy;
+
+  procedure Stay_Homotopy
+              ( n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                vf : in QuadDobl_Complex_VecMats.VecMat;
+                mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                tol : in double_float; fail : out boolean ) is
+
+    gh : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    xp : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Stay_Moving_Plane(n,k,ctr,p,pr,pc);
+    xpm : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,qr,qc);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+
+  begin
+    fail := true;
+    xpm := Moving_Flag(start_mf,xp);
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
+    Track_Next_Move(dim,gh.all,tol,sols,fail);
+    if not fail then
+      Checker_Homotopies.Homotopy_Stay_Coordinates
+        (n,k,ctr,q,qr,qc,mf,xpm,sols);
+    end if;
+    QuadDobl_Complex_Poly_Matrices.Clear(xp);
+    QuadDobl_Complex_Poly_Matrices.Clear(xpm);
+    QuadDobl_Complex_Poly_Systems.Clear(gh);
   exception
     when others => put_line("exception in Stay_Homotopy"); raise;
   end Stay_Homotopy;
@@ -1321,6 +2026,119 @@ package body Moving_Flag_Continuation is
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
+                mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
+                vf : in DoblDobl_Complex_VecMats.VecMat;
+                ls : in out DoblDobl_Complex_Solutions.Link_to_Solution;
+                tol : in double_float; fail : out boolean ) is
+
+    big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
+    dc : constant integer32 := Checker_Moves.Descending_Checker(q);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    s : constant integer32 := Checker_Homotopies.Swap_Column(ctr,locmap);
+    xp : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Swap_Moving_Plane(file,n,k,ctr,big_r,s,q,p,pr,pc);
+    xpm : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+    gh : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    Initialize_Homotopy_Symbols(natural32(dim),locmap);
+    put_line(file,"The moving coordinates : "); put(file,xp); 
+    xpm := Moving_Flag(start_mf,xp);
+    put_line(file,"The moving coordinates after multiplication by M :");
+    put(file,xpm);
+    fail := true;
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
+    if ind = 0
+     then Track_First_Move(file,dim,gh.all,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,tol,ls,fail);
+    end if;
+    if not fail then
+      put(file,"Transforming solution planes with critical row = ");
+      put(file,ctr,1); put_line(file,".");
+      if big_r > ctr + 1
+       then Checker_Homotopies.First_Swap_Coordinates
+              (file,n,k,ctr,big_r,dc,s,q,p,qr,qc,pr,pc,mf,xpm,ls.v);
+       else Checker_Homotopies.Second_Swap_Coordinates
+              (file,n,k,ctr,s,q,qr,qc,mf,xpm,ls.v);
+      end if;
+      put_line(file,"Verifying after coordinate changes ...");
+      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+    end if;
+    DoblDobl_Complex_Poly_Systems.Clear(gh);
+    DoblDobl_Complex_Poly_Matrices.Clear(xp);
+    DoblDobl_Complex_Poly_Matrices.Clear(xpm);
+  exception
+    when others => put_line("exception in Swap_Homotopy"); raise;
+  end Swap_Homotopy;
+
+
+  procedure Swap_Homotopy
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
+                vf : in QuadDobl_Complex_VecMats.VecMat;
+                ls : in out QuadDobl_Complex_Solutions.Link_to_Solution;
+                tol : in double_float; fail : out boolean ) is
+
+    big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
+    dc : constant integer32 := Checker_Moves.Descending_Checker(q);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    s : constant integer32 := Checker_Homotopies.Swap_Column(ctr,locmap);
+    xp : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Swap_Moving_Plane(file,n,k,ctr,big_r,s,q,p,pr,pc);
+    xpm : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+    gh : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    Initialize_Homotopy_Symbols(natural32(dim),locmap);
+    put_line(file,"The moving coordinates : "); put(file,xp); 
+    xpm := Moving_Flag(start_mf,xp);
+    put_line(file,"The moving coordinates after multiplication by M :");
+    put(file,xpm);
+    fail := true;
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
+    if ind = 0
+     then Track_First_Move(file,dim,gh.all,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,tol,ls,fail);
+    end if;
+    if not fail then
+      put(file,"Transforming solution planes with critical row = ");
+      put(file,ctr,1); put_line(file,".");
+      if big_r > ctr + 1
+       then Checker_Homotopies.First_Swap_Coordinates
+              (file,n,k,ctr,big_r,dc,s,q,p,qr,qc,pr,pc,mf,xpm,ls.v);
+       else Checker_Homotopies.Second_Swap_Coordinates
+              (file,n,k,ctr,s,q,qr,qc,mf,xpm,ls.v);
+      end if;
+      put_line(file,"Verifying after coordinate changes ...");
+      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+    end if;
+    QuadDobl_Complex_Poly_Systems.Clear(gh);
+    QuadDobl_Complex_Poly_Matrices.Clear(xp);
+    QuadDobl_Complex_Poly_Matrices.Clear(xpm);
+  exception
+    when others => put_line("exception in Swap_Homotopy"); raise;
+  end Swap_Homotopy;
+
+  procedure Swap_Homotopy
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
                 sols : in out Standard_Complex_Solutions.Solution_List;
@@ -1371,6 +2189,114 @@ package body Moving_Flag_Continuation is
   end Swap_Homotopy;
 
   procedure Swap_Homotopy
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
+                vf : in DoblDobl_Complex_VecMats.VecMat;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                tol : in double_float; fail : out boolean ) is
+
+    big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
+    dc : constant integer32 := Checker_Moves.Descending_Checker(q);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    s : constant integer32 := Checker_Homotopies.Swap_Column(ctr,locmap);
+    xp : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Swap_Moving_Plane(file,n,k,ctr,big_r,s,q,p,pr,pc);
+    xpm : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+    gh : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    Initialize_Homotopy_Symbols(natural32(dim),locmap);
+    put_line(file,"The moving coordinates : "); put(file,xp); 
+    xpm := Moving_Flag(start_mf,xp);
+    put_line(file,"The moving coordinates after multiplication by M :");
+    put(file,xpm);
+    fail := true;
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
+    Track_Next_Move(file,dim,gh.all,tol,sols,fail);
+    if not fail then
+      put(file,"Transforming solution planes with critical row = ");
+      put(file,ctr,1); put_line(file,".");
+      if big_r > ctr + 1
+       then Checker_Homotopies.First_Swap_Coordinates
+              (file,n,k,ctr,big_r,dc,s,q,p,qr,qc,pr,pc,mf,xpm,sols);
+       else Checker_Homotopies.Second_Swap_Coordinates
+              (file,n,k,ctr,s,q,qr,qc,mf,xpm,sols);
+      end if;
+      put_line(file,"Verifying after coordinate changes ...");
+      Verify_Intersection_Conditions
+        (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+    end if;
+    DoblDobl_Complex_Poly_Systems.Clear(gh);
+    DoblDobl_Complex_Poly_Matrices.Clear(xp);
+    DoblDobl_Complex_Poly_Matrices.Clear(xpm);
+  exception
+    when others => put_line("exception in Swap_Homotopy"); raise;
+  end Swap_Homotopy;
+
+  procedure Swap_Homotopy
+              ( file : in file_type; n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
+                vf : in QuadDobl_Complex_VecMats.VecMat;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                tol : in double_float; fail : out boolean ) is
+
+    big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
+    dc : constant integer32 := Checker_Moves.Descending_Checker(q);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    s : constant integer32 := Checker_Homotopies.Swap_Column(ctr,locmap);
+    xp : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Swap_Moving_Plane(file,n,k,ctr,big_r,s,q,p,pr,pc);
+    xpm : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+    gh : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    Initialize_Homotopy_Symbols(natural32(dim),locmap);
+    put_line(file,"The moving coordinates : "); put(file,xp); 
+    xpm := Moving_Flag(start_mf,xp);
+    put_line(file,"The moving coordinates after multiplication by M :");
+    put(file,xpm);
+    fail := true;
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
+    Track_Next_Move(file,dim,gh.all,tol,sols,fail);
+    if not fail then
+      put(file,"Transforming solution planes with critical row = ");
+      put(file,ctr,1); put_line(file,".");
+      if big_r > ctr + 1
+       then Checker_Homotopies.First_Swap_Coordinates
+              (file,n,k,ctr,big_r,dc,s,q,p,qr,qc,pr,pc,mf,xpm,sols);
+       else Checker_Homotopies.Second_Swap_Coordinates
+              (file,n,k,ctr,s,q,qr,qc,mf,xpm,sols);
+      end if;
+      put_line(file,"Verifying after coordinate changes ...");
+      Verify_Intersection_Conditions
+        (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+    end if;
+    QuadDobl_Complex_Poly_Systems.Clear(gh);
+    QuadDobl_Complex_Poly_Matrices.Clear(xp);
+    QuadDobl_Complex_Poly_Matrices.Clear(xpm);
+  exception
+    when others => put_line("exception in Swap_Homotopy"); raise;
+  end Swap_Homotopy;
+
+  procedure Swap_Homotopy
               ( n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
                 minrep : in boolean;
@@ -1411,6 +2337,96 @@ package body Moving_Flag_Continuation is
     Standard_Complex_Poly_Systems.Clear(gh);
     Standard_Complex_Poly_Matrices.Clear(xp);
     Standard_Complex_Poly_Matrices.Clear(xpm);
+  exception
+    when others => put_line("exception in Swap_Homotopy"); raise;
+  end Swap_Homotopy;
+
+  procedure Swap_Homotopy
+              ( n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
+                vf : in DoblDobl_Complex_VecMats.VecMat;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                tol : in double_float; fail : out boolean ) is
+
+    big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
+    dc : constant integer32 := Checker_Moves.Descending_Checker(q);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    s : constant integer32 := Checker_Homotopies.Swap_Column(ctr,locmap);
+    xp : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Swap_Moving_Plane(n,k,ctr,big_r,s,q,p,pr,pc);
+    xpm : DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+    gh : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    xpm := Moving_Flag(start_mf,xp);
+    fail := true;
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
+    Track_Next_Move(dim,gh.all,tol,sols,fail);
+    if not fail then
+      if big_r > ctr + 1
+       then Checker_Homotopies.First_Swap_Coordinates
+              (n,k,ctr,big_r,dc,s,q,p,qr,qc,pr,pc,mf,xpm,sols);
+       else Checker_Homotopies.Second_Swap_Coordinates
+              (n,k,ctr,s,q,qr,qc,mf,xpm,sols);
+      end if;
+    end if;
+    DoblDobl_Complex_Poly_Systems.Clear(gh);
+    DoblDobl_Complex_Poly_Matrices.Clear(xp);
+    DoblDobl_Complex_Poly_Matrices.Clear(xpm);
+  exception
+    when others => put_line("exception in Swap_Homotopy"); raise;
+  end Swap_Homotopy;
+
+  procedure Swap_Homotopy
+              ( n,k,ctr,ind : in integer32;
+                q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
+                minrep : in boolean;
+                cond : in Standard_Natural_VecVecs.VecVec;
+                mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
+                vf : in QuadDobl_Complex_VecMats.VecMat;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                tol : in double_float; fail : out boolean ) is
+
+    big_r : constant integer32 := Checker_Homotopies.Swap_Checker(q,qr,qc);
+    dc : constant integer32 := Checker_Moves.Descending_Checker(q);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,p,pr,pc);
+    s : constant integer32 := Checker_Homotopies.Swap_Column(ctr,locmap);
+    xp : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+       := Checker_Homotopies.Swap_Moving_Plane(n,k,ctr,big_r,s,q,p,pr,pc);
+    xpm : QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k);
+    dim : constant integer32
+        := integer32(Checker_Localization_Patterns.Degree_of_Freedom(locmap));
+    gh : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+    xpm := Moving_Flag(start_mf,xp);
+    fail := true;
+    if minrep
+     then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
+     else Flag_Conditions(n,k,xpm,cond,vf,gh);
+    end if;
+    Track_Next_Move(dim,gh.all,tol,sols,fail);
+    if not fail then
+      if big_r > ctr + 1
+       then Checker_Homotopies.First_Swap_Coordinates
+              (n,k,ctr,big_r,dc,s,q,p,qr,qc,pr,pc,mf,xpm,sols);
+       else Checker_Homotopies.Second_Swap_Coordinates
+              (n,k,ctr,s,q,qr,qc,mf,xpm,sols);
+      end if;
+    end if;
+    QuadDobl_Complex_Poly_Systems.Clear(gh);
+    QuadDobl_Complex_Poly_Matrices.Clear(xp);
+    QuadDobl_Complex_Poly_Matrices.Clear(xpm);
   exception
     when others => put_line("exception in Swap_Homotopy"); raise;
   end Swap_Homotopy;

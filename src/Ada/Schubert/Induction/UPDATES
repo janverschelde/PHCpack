@@ -1,5 +1,6 @@
 Mon 19 Oct 2015 : upgraded moving_flag_homotopies with procedures to make
   equations for homotopies in double double and quad double precision.
+  Extensions in moving_flag_continuation for double double and quad doubles.
 
 Sun 18 Oct 2015 : numeric_schubert_conditions supports the expansion of
   minors in double double and quad double precision.
