@@ -18,7 +18,7 @@ with Flag_Transformations;
 with Setup_Flag_Homotopies;              use Setup_Flag_Homotopies;
 with Start_Flag_Homotopies;              use Start_Flag_Homotopies;
 with Moving_Flag_Homotopies;             use Moving_Flag_Homotopies;
-with Moving_Flag_Continuation;
+with Checker_Poset_Deformations;
 
 package body Resolve_Schubert_Problems is
 
@@ -339,7 +339,7 @@ package body Resolve_Schubert_Problems is
       startsols : Solution_List;
 
       use Standard_Complex_Matrices;
-      use Checker_Posets,Moving_Flag_Continuation;
+      use Checker_Posets,Checker_Poset_Deformations;
 
     begin
       put(file,"Number of start solutions at child : ");
@@ -443,7 +443,7 @@ package body Resolve_Schubert_Problems is
       startsols : Solution_List;
 
       use Standard_Complex_Matrices;
-      use Checker_Posets,Moving_Flag_Continuation;
+      use Checker_Posets,Checker_Poset_Deformations;
 
     begin
       loop

@@ -27,9 +27,10 @@ with Checker_Posets,Checker_Posets_io;   use Checker_Posets,Checker_Posets_io;
 with Checker_Localization_Patterns;      use Checker_Localization_Patterns;
 with Intersection_Posets_io;             use Intersection_Posets_io;
 with Wrapped_Path_Trackers;
-with Moving_Flag_Continuation;
 with Setup_Flag_Homotopies;
 with Moving_Flag_Homotopies;
+with Moving_Flag_Continuation;
+with Checker_Poset_Deformations;
 with Resolve_Schubert_Problems;          use Resolve_Schubert_Problems;
 with Write_Seed_Number;
 with Greeting_Banners;
@@ -459,7 +460,7 @@ package body Drivers_for_Schubert_Induction is
     ps := Create(n,rows,cols);
     flags := Random_Flags(n,cnds'last);
     tstart(timer);
-    Moving_Flag_Continuation.Track_All_Paths_in_Poset
+    Checker_Poset_Deformations.Track_All_Paths_in_Poset
       (file,n,k,ps,minrep,cnds.all,flags,tol,sols);
     tstop(timer);
     new_line(file);

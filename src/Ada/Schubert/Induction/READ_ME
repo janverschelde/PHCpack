@@ -28,6 +28,7 @@ wrapped_path_trackers          : calling path trackers on natural homotopy
 moving_flag_continuation       : trackers for moving flag homotopies
 ts_flagcond                    : test conditions imposed by bracket + flag
 intersection_solution_posets   : to store solutions at each node and level
+checker_poset_deformations     : tracking paths to connect the posets
 resolve_schubert_problems      : code to resolve general Schubert problems
 ts_lrhom                       : development to solve general problems
 drivers_for_schubert_induction : interface to Littlewood-Richardson homotopies
