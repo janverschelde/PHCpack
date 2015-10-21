@@ -1,3 +1,6 @@
+Wed 21 Oct 2015 : bug fix in bracket_polynomial_convertors.adb, must use
+  Frontal_Construct instead of Add when adding terms to a polynomial.
+
 Sun 18 Oct 2015 : added package bracket_polynomial_convertors to convert
   bracket polynomials into polynomial with double double and quad double
   precison coefficients.

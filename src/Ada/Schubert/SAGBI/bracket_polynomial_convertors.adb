@@ -19,7 +19,7 @@ package body Bracket_Polynomial_Convertors is
     begin
       dd_t.coeff := Standard_to_DoblDobl_Complex(t.coeff);
       Copy_Append(t.monom,dd_t.monom);
-      DoblDobl_Bracket_Polynomials.Add(res,dd_t);
+      DoblDobl_Bracket_Polynomials.Frontal_Construct(res,dd_t);
       c := true;
     end Convert_Term;
     procedure Convert_Terms is new
@@ -45,7 +45,7 @@ package body Bracket_Polynomial_Convertors is
     begin
       dd_t.coeff := Standard_to_QuadDobl_Complex(t.coeff);
       Copy_Append(t.monom,dd_t.monom);
-      QuadDobl_Bracket_Polynomials.Add(res,dd_t);
+      QuadDobl_Bracket_Polynomials.Frontal_Construct(res,dd_t);
       c := true;
     end Convert_Term;
     procedure Convert_Terms is new
