@@ -1,3 +1,6 @@
+Wed 21 Oct 2015 : updated ts_flagcond.adb with tests in double double
+  and quad double precision.
+
 Tue 20 Oct 2015 : new package checker_poset_deformations with code out of
   moving_flag_continuation, which changed resolve_schubert_problems.adb
   and drivers_for_schubert_induction.adb.  Added procedues for double

@@ -6,7 +6,9 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Random_Numbers;
 with Multprec_Natural_Numbers;          use Multprec_Natural_Numbers;
 with Multprec_Natural_Numbers_io;       use Multprec_Natural_Numbers_io;
@@ -20,14 +22,30 @@ with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Standard_Complex_Matrices;
 with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
+with DoblDobl_Complex_Matrices;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Matrices;
 with Standard_Random_Vectors;           use Standard_Random_Vectors;
 with Standard_Random_Matrices;          use Standard_Random_Matrices;
+with DoblDobl_Random_Vectors;           use DoblDobl_Random_Vectors;
+with DoblDobl_Random_Matrices;          use DoblDobl_Random_Matrices;
+with QuadDobl_Random_Vectors;           use QuadDobl_Random_Vectors;
+with QuadDobl_Random_Matrices;          use QuadDobl_Random_Matrices;
 with Symbol_Table,Symbol_Table_io;      use Symbol_Table;
 with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;   use Standard_Complex_Polynomials_io;
-with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
-with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
+with Standard_Complex_Poly_SysFun;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_SysFun;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems_io;  use QuadDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_SysFun;
 with Matrix_Indeterminates;             use Matrix_Indeterminates;
 with Standard_Complex_Poly_Matrices;
 with Standard_Complex_Poly_Matrices_io; use Standard_Complex_Poly_Matrices_io;
@@ -44,8 +62,11 @@ with Bracket_Monomials;                 use Bracket_Monomials;
 with Bracket_Monomials_io;              use Bracket_Monomials_io;
 with Bracket_Polynomials;               use Bracket_Polynomials;
 with Bracket_Polynomials_io;            use Bracket_Polynomials_io;
-with Bracket_Systems;                   use Bracket_Systems;
+with Bracket_Systems;
 with Bracket_Systems_io;                use Bracket_Systems_io;
+with DoblDobl_Bracket_Polynomials;
+with QuadDobl_Bracket_Polynomials;
+with Bracket_Polynomial_Convertors;     use Bracket_Polynomial_Convertors;
 with Plane_Representations;
 with Standard_Matrix_Inversion;
 with Symbolic_Schubert_Conditions;      use Symbolic_Schubert_Conditions;
@@ -100,6 +121,8 @@ procedure ts_flagcond is
   --   Returns the n-by-n identity matrix where the ones are polynomials
   --   in nv variables.
 
+    use Standard_Complex_Numbers;
+
     res : Standard_Complex_Poly_Matrices.Matrix(1..n,1..n);
     one : Term;
 
@@ -121,6 +144,8 @@ procedure ts_flagcond is
   procedure Elaborate_Flag_Minors
                ( n,k,f,i : in natural32; fm : in Bracket_Polynomial;
                  A : in Standard_Complex_Matrices.Matrix ) is
+
+    use Bracket_Systems;
 
     nq : constant natural32 := Number_of_Equations(n,k,f,i);
     fms : Bracket_System(1..integer32(nq));
@@ -319,11 +344,14 @@ procedure ts_flagcond is
     return res;
   end Read_Localization_Map;
 
-  procedure Flag_Conditions ( n,k : in integer32; b : in Bracket ) is
+  procedure Standard_Flag_Conditions ( n,k : in integer32; b : in Bracket ) is
 
   -- DESCRIPTION :
   --   Enumerates all conditions imposed by the flag,
-  --   according to the k-bracket.
+  --   according to the k-bracket, in standard double precision.
+
+    use Standard_Complex_Poly_Systems;
+    use Bracket_Systems;
 
     fm : Bracket_System(b'range);
     flag : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
@@ -391,7 +419,87 @@ procedure ts_flagcond is
        then put_line("The polynomial system :"); put_line(sys);
       end if;
     end if;
-  end Flag_Conditions;
+  end Standard_Flag_Conditions;
+
+  procedure DoblDobl_Flag_Conditions ( n,k : in integer32; b : in Bracket ) is
+
+  -- DESCRIPTION :
+  --   Enumerates all conditions imposed by the flag,
+  --   according to the k-bracket, in double double precision.
+
+    use DoblDobl_Complex_Poly_Systems;
+    use Bracket_Systems;
+
+    fm : Bracket_System(b'range);
+    flag : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+         := Random_Flag(n); -- := Random_Matrix(n,n);
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Read_Localization_Map(n,k);
+    xpm : constant DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+        := Symbolic_Form_of_Plane(n,k,locmap);
+    nv : constant natural32 := Dimension(locmap);
+    nq : natural32 := Number_of_Equations(natural32(n),b);
+    ind : integer32 := 0;
+    sys : Poly_Sys(1..integer32(nq));
+    ans : character;
+    cnteffeqs : natural32;
+
+  begin
+    put_line("The symbolic form of the plane : "); put(xpm);
+    Explain_Equations(natural32(n),b,nq);
+    put("We have "); put(nq,1); put(" equations in ");
+    put(nv,1); put_line(" variables.");
+    cnteffeqs := Number_of_NotAbove(natural32(n),b);
+    put("Number of equations in efficient representation : ");
+    put(cnteffeqs,1); put_line(".");
+    put("Continue to compute the flag minors ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      fm := Flag_Minors(natural32(n),b);
+      put_line("The flag minors as bracket polynomials :"); put(fm);
+      declare
+        fms : Bracket_System(1..integer32(nq));
+      begin
+        put("Continue to see the flag minors as row/column pairs ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        if ans = 'y' then
+          fms := Flag_Minor_System(nq,fm);
+          put_line("Flag minors as pairs of rows and colums :"); put(fms);
+        end if;
+      end;
+     -- put("The linear system in "); put(k,1); put_line("-brackets :");
+      for i in b'range loop
+        if fm(i) /= Null_Bracket_Poly then
+          nq := Number_of_Equations
+                  (natural32(n),natural32(k),b(i),natural32(i));
+          declare
+            fms : constant Bracket_system(1..integer32(nq))
+                := Flag_Minor_System(nq,fm(i));
+           -- linsys : Bracket_System(1..nq);
+           -- polsys : Poly_Sys(1..nq);
+            dd_bp : DoblDobl_Bracket_Polynomials.Bracket_Polynomial;
+          begin
+            for j in fms'range loop
+             -- linsys(j) := Elaborate_One_Flag_Minor(n,k,b(i),i,fms(j),flag);
+           -- polsys(j) := Elaborate_One_Flag_Minor(n,k,b(i),i,fms(j),xpm,flag);
+              ind := ind + 1;
+              dd_bp := Convert(fms(j));
+              sys(ind) := Elaborate_One_Flag_Minor
+                            (n,k,integer32(b(i)),i,dd_bp,xpm,flag);
+              DoblDobl_Bracket_Polynomials.Clear(dd_bp);
+            end loop;
+           -- put_line(linsys);
+           -- put_line(polsys);
+          end;
+        end if;
+      end loop;
+      put("Continue to see the polynomial equations ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y'
+       then put_line("The polynomial system :"); put_line(sys);
+      end if;
+    end if;
+  end DoblDobl_Flag_Conditions;
 
   procedure Flag_Conditions ( n,k : in integer32; bm : in Bracket_Monomial ) is
 
@@ -429,6 +537,7 @@ procedure ts_flagcond is
 
     lambda : Bracket(1..k);
     m : integer32;
+    ans : character;
 
   begin
     put("Give a bracket : "); get(lambda);
@@ -440,7 +549,18 @@ procedure ts_flagcond is
       put("-plane : Rank([ X | F("); put(lambda(i),1); put(") ]) = ");
       put(m,1); new_line;
     end loop;
-    Flag_Conditions(n,k,lambda);
+    new_line;
+    put_line("MENU to select the working precision :");
+    put_line("  0. standard double precision;");
+    put_line("  1. double double precision; or");
+    put_line("  2. quad double precision.");
+    put("Type 0, 1, or 2 to select the precision : ");
+    Ask_Alternative(ans,"012");
+    case ans is
+      when '0' => Standard_Flag_Conditions(n,k,lambda);
+      when '1' => DoblDobl_Flag_Conditions(n,k,lambda);
+      when others => null;
+    end case;
   end Test_Schubert_Conditions;
 
   function Generate_Point
@@ -451,7 +571,9 @@ procedure ts_flagcond is
   -- DESCRIPTION :
   --   Generates a random point in the variety of k-planes in n-space
   --   that satisfies the Schubert condition imposed by the bracket b
-  --   and the flag.
+  --   and the flag, in standard double precision.
+
+    use Standard_Complex_Numbers;
 
     res : Standard_Complex_Matrices.Matrix(1..n,1..k);
 
@@ -472,6 +594,68 @@ procedure ts_flagcond is
     return res;
   end Generate_Point;
 
+  function Generate_Point
+             ( n,k : integer32; b : Bracket;
+               flag : DoblDobl_Complex_Matrices.Matrix ) 
+             return DoblDobl_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Generates a random point in the variety of k-planes in n-space
+  --   that satisfies the Schubert condition imposed by the bracket b
+  --   and the flag, in double double precision.
+
+    use DoblDobl_Complex_Numbers;
+
+    res : DoblDobl_Complex_Matrices.Matrix(1..n,1..k);
+
+  begin
+    for j in b'range loop       -- the j-th column is a random combination
+      declare                   -- of the first b(j) vectors of the flag
+        rv : DoblDobl_Complex_Vectors.Vector(1..integer32(b(j)));
+      begin
+        rv := Random_Vector(1,integer32(b(j)));
+        for i in 1..n loop
+          res(i,j) := Create(integer(0));
+          for kk in 1..integer32(b(j)) loop
+            res(i,j) := res(i,j) + rv(kk)*flag(i,kk);
+          end loop;
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Generate_Point;
+
+  function Generate_Point
+             ( n,k : integer32; b : Bracket;
+               flag : QuadDobl_Complex_Matrices.Matrix ) 
+             return QuadDobl_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Generates a random point in the variety of k-planes in n-space
+  --   that satisfies the Schubert condition imposed by the bracket b
+  --   and the flag, in double double precision.
+
+    use QuadDobl_Complex_Numbers;
+
+    res : QuadDobl_Complex_Matrices.Matrix(1..n,1..k);
+
+  begin
+    for j in b'range loop       -- the j-th column is a random combination
+      declare                   -- of the first b(j) vectors of the flag
+        rv : QuadDobl_Complex_Vectors.Vector(1..integer32(b(j)));
+      begin
+        rv := Random_Vector(1,integer32(b(j)));
+        for i in 1..n loop
+          res(i,j) := Create(integer(0));
+          for kk in 1..integer32(b(j)) loop
+            res(i,j) := res(i,j) + rv(kk)*flag(i,kk);
+          end loop;
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Generate_Point;
+
   procedure Eliminate ( x : in out Standard_Complex_Matrices.Matrix ) is
 
   -- DESCRIPTION :
@@ -479,6 +663,8 @@ procedure ts_flagcond is
   --   a general localization pattern.
 
   -- REQUIRED : x is a generic k-plane and no pivoting is needed.
+
+    use Standard_Complex_Numbers;
 
     ind : integer32;
     m : Complex_Number;
@@ -514,6 +700,8 @@ procedure ts_flagcond is
   -- DESCRIPTION :
   --   Divides the columns of x by x(b(i),i), for i in b'range.
 
+    use Standard_Complex_Numbers;
+
     pivot : Complex_Number;
 
   begin
@@ -533,6 +721,8 @@ procedure ts_flagcond is
   --   Makes the numbers at the right of the pivots equal to zero
   --   by making column combinations so x fits the pattern imposed by b.
  
+    use Standard_Complex_Numbers;
+
     fac : Complex_Number;
 
   begin
@@ -634,6 +824,50 @@ procedure ts_flagcond is
     return res;
   end Full_Flatten;
 
+  function Full_Flatten
+             ( x : DoblDobl_Complex_Matrices.Matrix )
+             return DoblDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Stacks the columns of x one after the other into a big vector.
+  --   Assumed is that x fits a full localization map.
+
+    n : constant integer32 := x'last(1)*x'last(2);
+    res : DoblDobl_Complex_Vectors.Vector(1..n);
+    ind : integer32 := 0;
+
+  begin
+    for i in x'range(1) loop
+      for j in x'range(2) loop
+        ind := ind + 1;
+        res(ind) := x(i,j);
+      end loop;
+    end loop;
+    return res;
+  end Full_Flatten;
+
+  function Full_Flatten
+             ( x : QuadDobl_Complex_Matrices.Matrix )
+             return QuadDobl_Complex_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Stacks the columns of x one after the other into a big vector.
+  --   Assumed is that x fits a full localization map.
+
+    n : constant integer32 := x'last(1)*x'last(2);
+    res : QuadDobl_Complex_Vectors.Vector(1..n);
+    ind : integer32 := 0;
+
+  begin
+    for i in x'range(1) loop
+      for j in x'range(2) loop
+        ind := ind + 1;
+        res(ind) := x(i,j);
+      end loop;
+    end loop;
+    return res;
+  end Full_Flatten;
+
   function General_Flatten
              ( x : Standard_Complex_Matrices.Matrix )
              return Standard_Complex_Vectors.Vector is
@@ -659,11 +893,15 @@ procedure ts_flagcond is
     return res;
   end General_Flatten;
 
-  procedure Point_Test_at_Conditions ( n,k : in integer32 ) is
+  procedure Standard_Point_Test_at_Conditions ( n,k : in integer32 ) is
 
   -- DESCRIPTION :
   --   Prompts the user for a k-bracket and generates the corresponding
-  --   polynomial system that expresses the Schubert conditions.
+  --   polynomial system that expresses the Schubert conditions,
+  --   in standard double precision.
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Poly_SysFun;
 
     lambda : Bracket(1..k);
     nq : integer32;
@@ -697,6 +935,117 @@ procedure ts_flagcond is
       end if;
       put_line("The residual at a random plane : "); put_line(y);
     end;
+  end Standard_Point_Test_at_Conditions;
+
+  procedure DoblDobl_Point_Test_at_Conditions ( n,k : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a k-bracket and generates the corresponding
+  --   polynomial system that expresses the Schubert conditions,
+  --   in double double precision.
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Poly_SysFun;
+
+    lambda : Bracket(1..k);
+    nq : integer32;
+    flag : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+         := Random_Matrix(natural32(n),natural32(n));
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Full_Localization_Map(n,k); -- := General_Localization_Map(n,k);
+    dim : constant natural32 := Dimension(locmap);
+    xpm : constant DoblDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+        := Symbolic_Form_of_Plane(n,k,locmap);
+    nv : constant natural32 := Dimension(locmap);
+    ans : character;
+
+  begin
+    new_line;
+    put("Give a bracket : "); get(lambda);
+    Explain_Equations(natural32(n),lambda,natural32(nq));
+    put("The number of variables equals "); put(nv,1); put_line(".");
+    declare
+      p : constant Poly_Sys(1..nq) := Expand(n,k,nq,lambda,xpm,flag);
+      x : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..k)
+        := Generate_Point(n,k,lambda,flag);
+      v : constant DoblDobl_Complex_Vectors.Vector(1..n*k) := Full_Flatten(x);
+      y : constant DoblDobl_Complex_Vectors.Vector(1..nq) := Eval(p,v);
+    begin
+      put("Do you want to see the polynomial system (y/n) ? ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        Initialize_Symbols(dim,locmap);
+        put_line(p);
+      end if;
+      put_line("The residual at a random plane : "); put_line(y);
+    end;
+  end DoblDobl_Point_Test_at_Conditions;
+
+  procedure QuadDobl_Point_Test_at_Conditions ( n,k : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a k-bracket and generates the corresponding
+  --   polynomial system that expresses the Schubert conditions,
+  --   in quad double precision.
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Poly_SysFun;
+
+    lambda : Bracket(1..k);
+    nq : integer32;
+    flag : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+         := Random_Matrix(natural32(n),natural32(n));
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Full_Localization_Map(n,k); -- := General_Localization_Map(n,k);
+    dim : constant natural32 := Dimension(locmap);
+    xpm : constant QuadDobl_Complex_Poly_Matrices.Matrix(1..n,1..k)
+        := Symbolic_Form_of_Plane(n,k,locmap);
+    nv : constant natural32 := Dimension(locmap);
+    ans : character;
+
+  begin
+    new_line;
+    put("Give a bracket : "); get(lambda);
+    Explain_Equations(natural32(n),lambda,natural32(nq));
+    put("The number of variables equals "); put(nv,1); put_line(".");
+    declare
+      p : constant Poly_Sys(1..nq) := Expand(n,k,nq,lambda,xpm,flag);
+      x : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..k)
+        := Generate_Point(n,k,lambda,flag);
+      v : constant QuadDobl_Complex_Vectors.Vector(1..n*k) := Full_Flatten(x);
+      y : constant QuadDobl_Complex_Vectors.Vector(1..nq) := Eval(p,v);
+    begin
+      put("Do you want to see the polynomial system (y/n) ? ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        Initialize_Symbols(dim,locmap);
+        put_line(p);
+      end if;
+      put_line("The residual at a random plane : "); put_line(y);
+    end;
+  end QuadDobl_Point_Test_at_Conditions;
+
+  procedure Point_Test_at_Conditions ( n,k : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the working precision.
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU to select the working precision :");
+    put_line("  0. standard double precision;");
+    put_line("  1. double double precision; or");
+    put_line("  2. quad double precision.");
+    put("Type 0, 1, or 2 to select the precision : ");
+    Ask_Alternative(ans,"012");
+    case ans is
+      when '0' => Standard_Point_Test_at_Conditions(n,k);
+      when '1' => DoblDobl_Point_Test_at_Conditions(n,k);
+      when '2' => QuadDobl_Point_Test_at_Conditions(n,k);
+      when others => null;
+    end case;
   end Point_Test_at_Conditions;
 
   procedure Truncate_Triangular_Part
@@ -705,6 +1054,8 @@ procedure ts_flagcond is
   -- DESCRIPTION :
   --   Sets all elements below the diagonal equal to zero.
   --   The diagonal elements are set to one.
+
+    use Standard_Complex_Numbers;
   
   begin
     for j in A'range(2) loop
@@ -722,6 +1073,8 @@ procedure ts_flagcond is
   -- DESCRIPTION :
   --   Adds a random multiple of the last column to the other columns
   --   to make the matrix no longer upper triangular.
+
+    use Standard_Complex_Numbers;
 
     rnd : Complex_Number;
 
@@ -757,6 +1110,8 @@ procedure ts_flagcond is
     ans : character;
 
     use Standard_Complex_Matrices;
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Poly_SysFun;
 
   begin
     new_line;
@@ -800,6 +1155,10 @@ procedure ts_flagcond is
   -- DESCRIPTION :
   --   Generates a random flag and generates a k-plane that satisfies
   --   all the Schubert conditions imposed by the k-bracket.
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Poly_SysFun;
 
     flag : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
          := Random_Matrix(natural32(n),natural32(n));
@@ -1046,6 +1405,7 @@ procedure ts_flagcond is
     --   cx       n-by-k matrix is localization pattern for k-plane
     --            of the current move.
 
+      use Standard_Complex_Numbers;
       use Standard_Complex_Poly_Matrices;
 
      -- valpvt : constant Matrix(pvt'range(1),pvt'range(2))
@@ -1094,6 +1454,8 @@ procedure ts_flagcond is
     --   pvt      transformation of current move;
     --   pvx      symbolic form of solution plane in current move.
 
+      use Standard_Complex_Numbers;
+      use Standard_Complex_Matrices;
       use Standard_Complex_Poly_Matrices;
 
       f : constant integer32 := Checker_Moves.Falling_Checker(p);
@@ -1110,8 +1472,6 @@ procedure ts_flagcond is
       st,invst,sf : Standard_Complex_Poly_Matrices.Matrix(1..n,1..n);
       nt : Standard_Complex_Matrices.Matrix(1..n,1..n);
       gamma : Complex_Number;
-
-      use Standard_Complex_Matrices;
 
     begin
       put("Checker board at node "); put(i,1); put(" : "); 
@@ -1251,6 +1611,10 @@ procedure ts_flagcond is
   end Define_Moving_Flag_Homotopy;
 
   procedure Test_One_Flag_Homotopy ( n,k : in integer32 ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Poly_SysFun;
 
     vf : constant Standard_Complex_Matrices.Matrix(1..n,1..n) := Random_Flag(n);
     mf : constant Standard_Complex_Matrices.Matrix(1..n,1..n) := Random_Flag(n);
@@ -1492,6 +1856,9 @@ procedure ts_flagcond is
 
   -- DESCRIPTION :
   --   Evaluates the solutions at the expanded polynomial equations.
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Poly_SysFun;
 
     sys : constant Poly_Sys := Expanded_Polynomial_Equations(n,k,cond,flag);
     tmp : Solution_List := sols;
