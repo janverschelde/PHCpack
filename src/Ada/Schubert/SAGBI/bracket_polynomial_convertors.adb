@@ -5,14 +5,15 @@ with QuadDobl_Complex_Numbers_cv;      use QuadDobl_Complex_Numbers_cv;
 package body Bracket_Polynomial_Convertors is
 
   function Convert
-             ( p : Bracket_Polynomials.Bracket_Polynomial )
+             ( p : Standard_Bracket_Polynomials.Bracket_Polynomial )
              return  DoblDobl_Bracket_Polynomials.Bracket_Polynomial is
 
     res : DoblDobl_Bracket_Polynomials.Bracket_Polynomial
         := DoblDobl_Bracket_Polynomials.Null_Bracket_Poly;
 
     procedure Convert_Term
-                ( t : Bracket_Polynomials.Bracket_Term; c : out boolean ) is
+                ( t : in Standard_Bracket_Polynomials.Bracket_Term;
+                  c : out boolean ) is
 
       dd_t : DoblDobl_Bracket_Polynomials.Bracket_Term;
 
@@ -23,7 +24,7 @@ package body Bracket_Polynomial_Convertors is
       c := true;
     end Convert_Term;
     procedure Convert_Terms is new
-      Bracket_Polynomials.Enumerate_Terms(Convert_Term);
+      Standard_Bracket_Polynomials.Enumerate_Terms(Convert_Term);
 
   begin
     Convert_Terms(p);
@@ -31,14 +32,15 @@ package body Bracket_Polynomial_Convertors is
   end Convert;
 
   function Convert
-             ( p : Bracket_Polynomials.Bracket_Polynomial )
+             ( p : Standard_Bracket_Polynomials.Bracket_Polynomial )
              return QuadDobl_Bracket_Polynomials.Bracket_Polynomial is
 
     res : QuadDobl_Bracket_Polynomials.Bracket_Polynomial
         := QuadDobl_Bracket_Polynomials.Null_Bracket_Poly;
 
     procedure Convert_Term
-                ( t : Bracket_Polynomials.Bracket_Term; c : out boolean ) is
+                ( t : in Standard_Bracket_Polynomials.Bracket_Term;
+                  c : out boolean ) is
 
       dd_t : QuadDobl_Bracket_Polynomials.Bracket_Term;
 
@@ -49,7 +51,7 @@ package body Bracket_Polynomial_Convertors is
       c := true;
     end Convert_Term;
     procedure Convert_Terms is new
-      Bracket_Polynomials.Enumerate_Terms(Convert_Term);
+      Standard_Bracket_Polynomials.Enumerate_Terms(Convert_Term);
 
   begin
     Convert_Terms(p);

@@ -5,8 +5,8 @@ with Standard_Complex_Poly_Matrices;
 with DoblDobl_Complex_Poly_Matrices;
 with QuadDobl_Complex_Poly_Matrices;
 with Brackets;                          use Brackets;
-with Bracket_Polynomials;               use Bracket_Polynomials;
-with Bracket_Systems;                   use Bracket_Systems;
+with Standard_Bracket_Polynomials;      use Standard_Bracket_Polynomials;
+with Standard_Bracket_Systems;          use Standard_Bracket_Systems;
 
 package Symbolic_Schubert_Conditions is
 

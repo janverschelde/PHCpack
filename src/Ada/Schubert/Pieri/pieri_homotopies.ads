@@ -7,8 +7,8 @@ with Standard_Complex_VecMats;           use Standard_Complex_VecMats;
 with Standard_Complex_Poly_Matrices;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
-with Bracket_Polynomials;                use Bracket_Polynomials;
-with Bracket_Systems;                    use Bracket_Systems;
+with Standard_Bracket_Polynomials;       use Standard_Bracket_Polynomials;
+with Standard_Bracket_Systems;           use Standard_Bracket_Systems;
 with Localization_Posets;                use Localization_Posets;
 
 package Pieri_Homotopies is

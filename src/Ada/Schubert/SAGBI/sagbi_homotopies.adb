@@ -4,7 +4,7 @@ with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Natural_Vectors;           use Standard_Natural_Vectors;
 with Brackets;                           use Brackets;
 with Bracket_Monomials;                  use Bracket_Monomials;
-with Bracket_Polynomials;                use Bracket_Polynomials;
+with Standard_Bracket_Polynomials;       use Standard_Bracket_Polynomials;
 with Straightening_Syzygies;             use Straightening_Syzygies;
 with Bracket_Expansions;                 use Bracket_Expansions;
 with Evaluated_Minors;                   use Evaluated_Minors;

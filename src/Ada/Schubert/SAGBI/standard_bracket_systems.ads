@@ -1,8 +1,8 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Bracket_Polynomials;                use Bracket_Polynomials;
+with Standard_Bracket_Polynomials;       use Standard_Bracket_Polynomials;
 
-package Bracket_Systems is
+package Standard_Bracket_Systems is
 
 -- DESCRIPTION :
 --   This package contains routines to manipulate systems of
@@ -21,4 +21,4 @@ package Bracket_Systems is
   -- DESCRIPTION :
   --   Deallocates the space occupied by the bracket system.
 
-end Bracket_Systems;
+end Standard_Bracket_Systems;

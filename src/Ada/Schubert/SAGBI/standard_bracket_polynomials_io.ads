@@ -1,7 +1,7 @@
 with text_io;                        use text_io;
-with Bracket_Polynomials;            use Bracket_Polynomials;
+with Standard_Bracket_Polynomials;   use Standard_Bracket_Polynomials;
 
-package Bracket_Polynomials_io is
+package Standard_Bracket_Polynomials_io is
 
 -- DESCRIPTION :
 --   This package provides output operations for bracket polynomials.
@@ -28,4 +28,4 @@ package Bracket_Polynomials_io is
   --   depending whether a file is an argument of the procedure,
   --   taking a new line for each term.
 
-end Bracket_Polynomials_io;
+end Standard_Bracket_Polynomials_io;

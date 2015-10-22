@@ -60,10 +60,10 @@ with Standard_Numerical_Rank;
 with Brackets,Brackets_io;              use Brackets,Brackets_io;
 with Bracket_Monomials;                 use Bracket_Monomials;
 with Bracket_Monomials_io;              use Bracket_Monomials_io;
-with Bracket_Polynomials;               use Bracket_Polynomials;
-with Bracket_Polynomials_io;            use Bracket_Polynomials_io;
-with Bracket_Systems;
-with Bracket_Systems_io;                use Bracket_Systems_io;
+with Standard_Bracket_Polynomials;      use Standard_Bracket_Polynomials;
+with Standard_Bracket_Polynomials_io;   use Standard_Bracket_Polynomials_io;
+with Standard_Bracket_Systems;
+with Standard_Bracket_Systems_io;       use Standard_Bracket_Systems_io;
 with DoblDobl_Bracket_Polynomials;
 with QuadDobl_Bracket_Polynomials;
 with Bracket_Polynomial_Convertors;     use Bracket_Polynomial_Convertors;
@@ -145,7 +145,7 @@ procedure ts_flagcond is
                ( n,k,f,i : in natural32; fm : in Bracket_Polynomial;
                  A : in Standard_Complex_Matrices.Matrix ) is
 
-    use Bracket_Systems;
+    use Standard_Bracket_Systems;
 
     nq : constant natural32 := Number_of_Equations(n,k,f,i);
     fms : Bracket_System(1..integer32(nq));
@@ -351,7 +351,7 @@ procedure ts_flagcond is
   --   according to the k-bracket, in standard double precision.
 
     use Standard_Complex_Poly_Systems;
-    use Bracket_Systems;
+    use Standard_Bracket_Systems;
 
     fm : Bracket_System(b'range);
     flag : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
@@ -428,7 +428,7 @@ procedure ts_flagcond is
   --   according to the k-bracket, in double double precision.
 
     use DoblDobl_Complex_Poly_Systems;
-    use Bracket_Systems;
+    use Standard_Bracket_Systems;
 
     fm : Bracket_System(b'range);
     flag : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)

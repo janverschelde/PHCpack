@@ -19,15 +19,16 @@ brackets                         : representation/manipulation of brackets
 brackets_io                      : input/output of brackets
 bracket_monomials                : monomials of brackets
 bracket_monomials_io             : input/output of bracket monomials
-bracket_polynomials              : polynomials in the brackets, complex coeff
-bracket_polynomials_io           : input/output for bracket polynomials
+generic_bracket_polynomials      : bracket polynomials over any coeff ring
+standard_bracket_polynomials     : polynomials in the brackets, complex coeff
+standard_bracket_polynomials_io  : input/output for bracket polynomials
 dobldobl_bracket_polynomials     : bracket polynomials with double doubles
 dobldobl_bracket_polynomials_io  : i/o for double double bracket polynomials
 quaddobl_bracket_polynomials     : bracket polynomials with quad doubles
 quaddobl_bracket_polynomials_io  : i/o for quad double bracket polynomials
 bracket_polynomial_convertors    : converting bracket polynomials
-bracket_systems                  : defines systems of bracket polynomials
-bracket_systems_io               : output for systems of bracket polynomials
+standard_bracket_systems         : defines systems of bracket polynomials
+standard_bracket_systems_io      : output for systems of bracket polynomials
 dobldobl_bracket_systems         : systems of double double bracket polynomials
 dobldobl_bracket_systems_io      : i/o for double double bracket systems
 quaddobl_bracket_systems         : systems of quad double bracket polynomials

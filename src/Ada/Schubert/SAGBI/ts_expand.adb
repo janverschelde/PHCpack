@@ -13,8 +13,8 @@ with Standard_Complex_Poly_Functions;    use Standard_Complex_Poly_Functions;
 with Matrix_Indeterminates;
 with Brackets,Brackets_io;               use Brackets,Brackets_io;
 with Bracket_Monomials;                  use Bracket_Monomials;
-with Bracket_Polynomials;                use Bracket_Polynomials;
-with Bracket_Polynomials_io;             use Bracket_Polynomials_io;
+with Standard_Bracket_Polynomials;       use Standard_Bracket_Polynomials;
+with Standard_Bracket_Polynomials_io;    use Standard_Bracket_Polynomials_io;
 with Straightening_Syzygies;             use Straightening_Syzygies;
 with Bracket_Expansions;                 use Bracket_Expansions;
 

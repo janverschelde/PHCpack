@@ -1,7 +1,7 @@
 with text_io;                         use text_io;
-with Bracket_Systems;                 use Bracket_Systems;
+with Standard_Bracket_Systems;        use Standard_Bracket_Systems;
 
-package Bracket_Systems_io is
+package Standard_Bracket_Systems_io is
 
 -- DESCRIPTION :
 --   This package provides output routines for systems of bracket polynomials.
@@ -19,4 +19,4 @@ package Bracket_Systems_io is
   --   In writing the bracket system to standard output or to file,
   --   a new line is started for every monomial.
 
-end Bracket_Systems_io;
+end Standard_Bracket_Systems_io;

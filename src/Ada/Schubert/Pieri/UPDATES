@@ -1,3 +1,9 @@
+Thu 22 Oct 2015 : the renaming of bracket_polynomials (& _systems) into
+  standard_bracket_polynomials (& _systems) changed determinantal_systems.adb,
+  symbolic_minor_equations.ads, numeric_minor_equations.ads,
+  pieri_homotopies.ads deformation_posets.adb, and
+  drivers_for_pieri_homotopies.adb.
+
 Fri 16 Oct 2015 : extended symbolic_minor_equations with expansion routines
   for matrix of polynomials with coefficients in double double and quad
   double precision.

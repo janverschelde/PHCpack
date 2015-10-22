@@ -3,7 +3,7 @@ with Brackets;                           use Brackets;
 with Bracket_Monomials;                  use Bracket_Monomials;
 with Standard_Natural_Matrices;          use Standard_Natural_Matrices;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
-with Bracket_Polynomials;                use Bracket_Polynomials;
+with Standard_Bracket_Polynomials;       use Standard_Bracket_Polynomials;
 
 package Bracket_Expansions is
 

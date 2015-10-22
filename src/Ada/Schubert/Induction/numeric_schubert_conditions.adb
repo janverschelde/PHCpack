@@ -8,7 +8,7 @@ with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
 with Bracket_Monomials;                 use Bracket_Monomials;
 with Bracket_Polynomial_Convertors;     use Bracket_Polynomial_Convertors;
-with Bracket_Systems;
+with Standard_Bracket_Systems;
 with DoblDobl_Bracket_Systems;
 with QuadDobl_Bracket_Systems;
 with Straightening_Syzygies;
@@ -33,12 +33,12 @@ package body Numeric_Schubert_Conditions is
   end Degree;
 
   function Substitute
-             ( p : Bracket_Polynomials.Bracket_Polynomial;
+             ( p : Standard_Bracket_Polynomials.Bracket_Polynomial;
                t : Standard_Numeric_Minors )
-             return Bracket_Polynomials.Bracket_Polynomial is
+             return Standard_Bracket_Polynomials.Bracket_Polynomial is
 
     use Standard_Complex_Numbers;
-    use Bracket_Polynomials;
+    use Standard_Bracket_Polynomials;
 
     res : Bracket_Polynomial := Null_Bracket_Poly;
 
@@ -197,12 +197,12 @@ package body Numeric_Schubert_Conditions is
   end Permute;
 
   function Substitute
-             ( p : Bracket_Polynomials.Bracket_Polynomial;
+             ( p : Standard_Bracket_Polynomials.Bracket_Polynomial;
                t : Standard_Numeric_Minors; rows : Bracket )
-             return Bracket_Polynomials.Bracket_Polynomial is
+             return Standard_Bracket_Polynomials.Bracket_Polynomial is
 
     use Standard_Complex_Numbers;
-    use Bracket_Polynomials;
+    use Standard_Bracket_Polynomials;
 
     res : Bracket_Polynomial := Null_Bracket_Poly;
 
@@ -350,13 +350,13 @@ package body Numeric_Schubert_Conditions is
   end Substitute;
 
   function Substitute
-             ( p : Bracket_Polynomials.Bracket_Polynomial;
+             ( p : Standard_Bracket_Polynomials.Bracket_Polynomial;
                t : Standard_Symbolic_Minors )
              return Standard_Complex_Polynomials.Poly is
 
     use Standard_Complex_Numbers;
     use Standard_Complex_Polynomials;
-    use Bracket_Polynomials;
+    use Standard_Bracket_Polynomials;
     
     res : Poly := Null_Poly;
 
@@ -458,13 +458,13 @@ package body Numeric_Schubert_Conditions is
   end Substitute;
 
   function Substitute
-             ( p : Bracket_Polynomials.Bracket_Polynomial;
+             ( p : Standard_Bracket_Polynomials.Bracket_Polynomial;
                t : Standard_Symbolic_Minors; rows : Bracket )
              return Standard_Complex_Polynomials.Poly is
 
     use Standard_Complex_Numbers;
     use Standard_Complex_Polynomials;
-    use Bracket_Polynomials;
+    use Standard_Bracket_Polynomials;
 
     res : Poly := Null_Poly;
 
@@ -563,13 +563,13 @@ package body Numeric_Schubert_Conditions is
   end Substitute;
 
   function Substitute
-             ( p : Bracket_Polynomials.Bracket_Polynomial;
+             ( p : Standard_Bracket_Polynomials.Bracket_Polynomial;
                nt,st : Standard_Symbolic_Minors; rows : Bracket )
              return Standard_Complex_Polynomials.Poly is
 
     use Standard_Complex_Numbers;
     use Standard_Complex_Polynomials;
-    use Bracket_Polynomials;
+    use Standard_Bracket_Polynomials;
 
     res : Poly := Null_Poly;
 
@@ -919,9 +919,9 @@ package body Numeric_Schubert_Conditions is
   function Laplace_One_Minor
              ( n,k : integer32; row,col : Bracket;
                A : Standard_Complex_Matrices.Matrix ) 
-             return Bracket_Polynomials.Bracket_Polynomial is
+             return Standard_Bracket_Polynomials.Bracket_Polynomial is
 
-    use Bracket_Polynomials;
+    use Standard_Bracket_Polynomials;
 
     res : Bracket_Polynomial;
     c : constant integer32 := Degree(col,natural32(k));
@@ -957,7 +957,7 @@ package body Numeric_Schubert_Conditions is
     c : constant integer32 := Degree(col,natural32(k));
     m : constant integer32 := col'last;
     d : constant integer32 := m - c;
-    lp : Bracket_Polynomials.Bracket_Polynomial
+    lp : Standard_Bracket_Polynomials.Bracket_Polynomial
        := Straightening_Syzygies.Laplace_Expansion(natural32(m),natural32(c));
     dd_lp : DoblDobl_Bracket_Polynomials.Bracket_Polynomial
           := Convert(lp);
@@ -976,7 +976,7 @@ package body Numeric_Schubert_Conditions is
    -- Query(rt,d);
     res := Substitute(dd_lp,rt,row);
    -- put("After substitution with numerical minors : "); put_line(res);
-    Bracket_Polynomials.Clear(lp); 
+    Standard_Bracket_Polynomials.Clear(lp); 
     DoblDobl_Bracket_Polynomials.Clear(dd_lp); 
     Clear(rt);
     return res;
@@ -991,7 +991,7 @@ package body Numeric_Schubert_Conditions is
     c : constant integer32 := Degree(col,natural32(k));
     m : constant integer32 := col'last;
     d : constant integer32 := m - c;
-    lp : Bracket_Polynomials.Bracket_Polynomial
+    lp : Standard_Bracket_Polynomials.Bracket_Polynomial
        := Straightening_Syzygies.Laplace_Expansion(natural32(m),natural32(c));
     dd_lp : QuadDobl_Bracket_Polynomials.Bracket_Polynomial
           := Convert(lp);
@@ -1010,7 +1010,7 @@ package body Numeric_Schubert_Conditions is
    -- Query(rt,d);
     res := Substitute(dd_lp,rt,row);
    -- put("After substitution with numerical minors : "); put_line(res);
-    Bracket_Polynomials.Clear(lp); 
+    Standard_Bracket_Polynomials.Clear(lp); 
     QuadDobl_Bracket_Polynomials.Clear(dd_lp); 
     Clear(rt);
     return res;
@@ -1022,13 +1022,13 @@ package body Numeric_Schubert_Conditions is
                A : Standard_Complex_Matrices.Matrix )
              return Standard_Complex_Polynomials.Poly is
 
-    use Standard_Complex_Polynomials,Bracket_Polynomials;
+    use Standard_Complex_Polynomials;
 
     res : Poly;
     c : constant integer32 := Degree(col,natural32(k));
     m : constant integer32 := col'last;
     d : constant integer32 := m - c;
-    lp : Bracket_Polynomial
+    lp : Standard_Bracket_Polynomials.Bracket_Polynomial
        := Straightening_Syzygies.Laplace_Expansion(natural32(m),natural32(c));
     sA : constant Standard_Complex_Matrices.Matrix(A'range(1),1..d)
        := Select_Columns(A,col,d,k);
@@ -1042,7 +1042,8 @@ package body Numeric_Schubert_Conditions is
        := Create(natural32(n),natural32(d),sA);
     st : Standard_Symbolic_Minors(integer32(sm))
        := Create(natural32(n),natural32(c),sX);
-    sp : constant Bracket_Polynomial := Substitute(lp,nt,row);
+    sp : constant Standard_Bracket_Polynomials.Bracket_Polynomial
+       := Substitute(lp,nt,row);
 
   begin
    -- put("Row "); put(row); put(" and column "); put(col);
@@ -1055,7 +1056,8 @@ package body Numeric_Schubert_Conditions is
    -- Query(st,c);
     res := Substitute(sp,st,row);
    -- put("After substitution with symbolic minors : "); put_line(res);
-    Clear(lp); Clear(nt); Clear(st);
+    Standard_Bracket_Polynomials.Clear(lp);
+    Clear(nt); Clear(st);
     return res;
   end Laplace_One_Minor;
 
@@ -1071,7 +1073,7 @@ package body Numeric_Schubert_Conditions is
     c : constant integer32 := Degree(col,natural32(k));
     m : constant integer32 := col'last;
     d : constant integer32 := m - c;
-    lp : Bracket_Polynomials.Bracket_Polynomial
+    lp : Standard_Bracket_Polynomials.Bracket_Polynomial
        := Straightening_Syzygies.Laplace_Expansion(natural32(m),natural32(c));
     dd_lp : DoblDobl_Bracket_Polynomials.Bracket_Polynomial
           := Convert(lp);
@@ -1101,7 +1103,7 @@ package body Numeric_Schubert_Conditions is
    -- Query(st,c);
     res := Substitute(sp,st,row);
    -- put("After substitution with symbolic minors : "); put_line(res);
-    Bracket_Polynomials.Clear(lp);
+    Standard_Bracket_Polynomials.Clear(lp);
     DoblDobl_Bracket_Polynomials.Clear(dd_lp);
     Clear(nt); Clear(st);
     return res;
@@ -1119,7 +1121,7 @@ package body Numeric_Schubert_Conditions is
     c : constant integer32 := Degree(col,natural32(k));
     m : constant integer32 := col'last;
     d : constant integer32 := m - c;
-    lp : Bracket_Polynomials.Bracket_Polynomial
+    lp : Standard_Bracket_Polynomials.Bracket_Polynomial
        := Straightening_Syzygies.Laplace_Expansion(natural32(m),natural32(c));
     qd_lp : QuadDobl_Bracket_Polynomials.Bracket_Polynomial
           := Convert(lp);
@@ -1149,7 +1151,7 @@ package body Numeric_Schubert_Conditions is
    -- Query(st,c);
     res := Substitute(sp,st,row);
    -- put("After substitution with symbolic minors : "); put_line(res);
-    Bracket_Polynomials.Clear(lp);
+    Standard_Bracket_Polynomials.Clear(lp);
     QuadDobl_Bracket_Polynomials.Clear(qd_lp);
     Clear(nt); Clear(st);
     return res;
@@ -1160,13 +1162,13 @@ package body Numeric_Schubert_Conditions is
                  X,A : Standard_Complex_Poly_Matrices.Matrix )
                return Standard_Complex_Polynomials.Poly is
 
-    use Standard_Complex_Polynomials,Bracket_Polynomials;
+    use Standard_Complex_Polynomials;
 
     res : Poly;
     c : constant integer32 := Degree(col,natural32(k));
     m : constant integer32 := col'last;
     d : constant integer32 := m - c;
-    lp : Bracket_Polynomial
+    lp : Standard_Bracket_Polynomials.Bracket_Polynomial
        := Straightening_Syzygies.Laplace_Expansion(natural32(m),natural32(c));
     sA : constant Standard_Complex_Poly_Matrices.Matrix(A'range(1),1..d)
        := Select_Columns(A,col,d,k);
@@ -1191,7 +1193,8 @@ package body Numeric_Schubert_Conditions is
    -- Query(st,c);
     res := Substitute(lp,nt,st,row);
    -- put("After substitution with symbolic minors : "); put_line(res);
-    Clear(lp); Clear(nt); Clear(st);
+    Standard_Bracket_Polynomials.Clear(lp);
+    Clear(nt); Clear(st);
     return res;
   end Laplace_One_Minor;
 
@@ -1206,7 +1209,7 @@ package body Numeric_Schubert_Conditions is
     c : constant integer32 := Degree(col,natural32(k));
     m : constant integer32 := col'last;
     d : constant integer32 := m - c;
-    lp : Bracket_Polynomials.Bracket_Polynomial
+    lp : Standard_Bracket_Polynomials.Bracket_Polynomial
        := Straightening_Syzygies.Laplace_Expansion(natural32(m),natural32(c));
     dd_lp : DoblDobl_Bracket_Polynomials.Bracket_Polynomial
           := Convert(lp);
@@ -1233,9 +1236,9 @@ package body Numeric_Schubert_Conditions is
    -- Query(st,c);
     res := Substitute(dd_lp,nt,st,row);
    -- put("After substitution with symbolic minors : "); put_line(res);
-     Bracket_Polynomials.Clear(lp);
-     DoblDobl_Bracket_Polynomials.Clear(dd_lp);
-     Clear(nt); Clear(st);
+    Standard_Bracket_Polynomials.Clear(lp);
+    DoblDobl_Bracket_Polynomials.Clear(dd_lp);
+    Clear(nt); Clear(st);
     return res;
   end Laplace_One_Minor;
 
@@ -1250,7 +1253,7 @@ package body Numeric_Schubert_Conditions is
     c : constant integer32 := Degree(col,natural32(k));
     m : constant integer32 := col'last;
     d : constant integer32 := m - c;
-    lp : Bracket_Polynomials.Bracket_Polynomial
+    lp : Standard_Bracket_Polynomials.Bracket_Polynomial
        := Straightening_Syzygies.Laplace_Expansion(natural32(m),natural32(c));
     qd_lp : QuadDobl_Bracket_Polynomials.Bracket_Polynomial
           := Convert(lp);
@@ -1277,7 +1280,7 @@ package body Numeric_Schubert_Conditions is
    -- Query(st,c);
     res := Substitute(qd_lp,nt,st,row);
    -- put("After substitution with symbolic minors : "); put_line(res);
-     Bracket_Polynomials.Clear(lp);
+     Standard_Bracket_Polynomials.Clear(lp);
      QuadDobl_Bracket_Polynomials.Clear(qd_lp);
      Clear(nt); Clear(st);
     return res;
@@ -1285,11 +1288,11 @@ package body Numeric_Schubert_Conditions is
 
   function Elaborate_One_Flag_Minor
              ( n,k,f,i : integer32;
-               fm : Bracket_Polynomials.Bracket_Polynomial;
+               fm : Standard_Bracket_Polynomials.Bracket_Polynomial;
                A : Standard_Complex_Matrices.Matrix )
-             return Bracket_Polynomials.Bracket_Polynomial is
+             return Standard_Bracket_Polynomials.Bracket_Polynomial is
 
-    use Bracket_Polynomials;
+    use Standard_Bracket_Polynomials;
 
     res : Bracket_Polynomial;
     r : constant integer32 := k+f-i+1;
@@ -1399,12 +1402,13 @@ package body Numeric_Schubert_Conditions is
 
   function Elaborate_One_Flag_Minor
              ( n,k,f,i : integer32;
-               fm : Bracket_Polynomials.Bracket_Polynomial;
+               fm : Standard_Bracket_Polynomials.Bracket_Polynomial;
                X : Standard_Complex_Poly_Matrices.Matrix;
                A : Standard_Complex_Matrices.Matrix )
              return Standard_Complex_Polynomials.Poly is
 
-    use Standard_Complex_Polynomials,Bracket_Polynomials;
+    use Standard_Complex_Polynomials;
+    use Standard_Bracket_Polynomials;
 
     res : Poly;
     r : constant integer32 := k+f-i+1;
@@ -1443,7 +1447,8 @@ package body Numeric_Schubert_Conditions is
                A : DoblDobl_Complex_Matrices.Matrix )
              return DoblDobl_Complex_Polynomials.Poly is
 
-    use DoblDobl_Complex_Polynomials,DoblDobl_Bracket_Polynomials;
+    use DoblDobl_Complex_Polynomials;
+    use DoblDobl_Bracket_Polynomials;
 
     res : Poly;
     r : constant integer32 := k+f-i+1;
@@ -1482,7 +1487,8 @@ package body Numeric_Schubert_Conditions is
                A : QuadDobl_Complex_Matrices.Matrix )
              return QuadDobl_Complex_Polynomials.Poly is
 
-    use QuadDobl_Complex_Polynomials,QuadDobl_Bracket_Polynomials;
+    use QuadDobl_Complex_Polynomials;
+    use QuadDobl_Bracket_Polynomials;
 
     res : Poly;
     r : constant integer32 := k+f-i+1;
@@ -1516,11 +1522,12 @@ package body Numeric_Schubert_Conditions is
 
   function Elaborate_One_Flag_Minor
              ( n,k,f,i : integer32;
-               fm : Bracket_Polynomials.Bracket_Polynomial;
+               fm : Standard_Bracket_Polynomials.Bracket_Polynomial;
                X,A : Standard_Complex_Poly_Matrices.Matrix )
              return Standard_Complex_Polynomials.Poly is
 
-    use Standard_Complex_Polynomials,Bracket_Polynomials;
+    use Standard_Complex_Polynomials;
+    use Standard_Bracket_Polynomials;
 
     res : Poly := Null_Poly;
     r : constant integer32 := k+f-i+1;
@@ -1558,7 +1565,8 @@ package body Numeric_Schubert_Conditions is
                X,A : DoblDobl_Complex_Poly_Matrices.Matrix )
              return DoblDobl_Complex_Polynomials.Poly is
 
-    use DoblDobl_Complex_Polynomials,DoblDobl_Bracket_Polynomials;
+    use DoblDobl_Complex_Polynomials;
+    use DoblDobl_Bracket_Polynomials;
 
     res : Poly := Null_Poly;
     r : constant integer32 := k+f-i+1;
@@ -1596,7 +1604,8 @@ package body Numeric_Schubert_Conditions is
                X,A : QuadDobl_Complex_Poly_Matrices.Matrix )
              return QuadDobl_Complex_Polynomials.Poly is
 
-    use QuadDobl_Complex_Polynomials,QuadDobl_Bracket_Polynomials;
+    use QuadDobl_Complex_Polynomials;
+    use QuadDobl_Bracket_Polynomials;
 
     res : Poly := Null_Poly;
     r : constant integer32 := k+f-i+1;
@@ -1634,7 +1643,8 @@ package body Numeric_Schubert_Conditions is
                   return Standard_Complex_Poly_Systems.Poly_Sys is
 
     use Standard_Complex_Poly_Systems;
-    use Bracket_Polynomials,Bracket_Systems;
+    use Standard_Bracket_Polynomials;
+    use Standard_Bracket_Systems;
 
     res : Poly_Sys(1..nq);
     fm : constant Bracket_System(lambda'range)
@@ -1670,10 +1680,11 @@ package body Numeric_Schubert_Conditions is
                   return DoblDobl_Complex_Poly_Systems.Poly_Sys is
 
     use DoblDobl_Complex_Poly_Systems;
-    use Bracket_Polynomials;
+    use Standard_Bracket_Polynomials;
+    use Standard_Bracket_Systems;
 
     res : Poly_Sys(1..nq);
-    fm : constant Bracket_Systems.Bracket_System(lambda'range)
+    fm : constant Bracket_System(lambda'range)
        := Flag_Minors(natural32(n),lambda);
     ind : integer32 := 0;
     nq1 : natural32;
@@ -1684,7 +1695,7 @@ package body Numeric_Schubert_Conditions is
         nq1 := Number_of_Equations
                  (natural32(n),natural32(k),lambda(i),natural32(i));
         declare
-          fms : constant Bracket_Systems.Bracket_system(1..integer32(nq1))
+          fms : constant Bracket_system(1..integer32(nq1))
               := Flag_Minor_System(nq1,fm(i));
           dd_bp : DoblDobl_Bracket_Polynomials.Bracket_Polynomial;
         begin
@@ -1709,10 +1720,11 @@ package body Numeric_Schubert_Conditions is
                   return QuadDobl_Complex_Poly_Systems.Poly_Sys is
 
     use QuadDobl_Complex_Poly_Systems;
-    use Bracket_Polynomials;
+    use Standard_Bracket_Polynomials;
+    use Standard_Bracket_Systems;
 
     res : Poly_Sys(1..nq);
-    fm : constant Bracket_Systems.Bracket_System(lambda'range)
+    fm : constant Bracket_System(lambda'range)
        := Flag_Minors(natural32(n),lambda);
     ind : integer32 := 0;
     nq1 : natural32;
@@ -1723,7 +1735,7 @@ package body Numeric_Schubert_Conditions is
         nq1 := Number_of_Equations
                  (natural32(n),natural32(k),lambda(i),natural32(i));
         declare
-          fms : constant Bracket_Systems.Bracket_system(1..integer32(nq1))
+          fms : constant Bracket_system(1..integer32(nq1))
               := Flag_Minor_System(nq1,fm(i));
           qd_bp : QuadDobl_Bracket_Polynomials.Bracket_Polynomial;
         begin
@@ -1747,7 +1759,8 @@ package body Numeric_Schubert_Conditions is
                   return Standard_Complex_Poly_Systems.Poly_Sys is
 
     use Standard_Complex_Poly_Systems;
-    use Bracket_Polynomials,Bracket_Systems;
+    use Standard_Bracket_Polynomials;
+    use Standard_Bracket_Systems;
 
     res : Poly_Sys(1..nq);
     fm : constant Bracket_System(lambda'range)
@@ -1783,10 +1796,11 @@ package body Numeric_Schubert_Conditions is
                   return DoblDobl_Complex_Poly_Systems.Poly_Sys is
 
     use DoblDobl_Complex_Poly_Systems;
-    use Bracket_Polynomials;
+    use Standard_Bracket_Polynomials;
+    use Standard_Bracket_Systems;
 
     res : Poly_Sys(1..nq);
-    fm : constant Bracket_Systems.Bracket_System(lambda'range)
+    fm : constant Bracket_System(lambda'range)
        := Flag_Minors(natural32(n),lambda);
     ind : integer32 := 0;
     nq1 : natural32;
@@ -1797,7 +1811,7 @@ package body Numeric_Schubert_Conditions is
         nq1 := Number_of_Equations
                  (natural32(n),natural32(k),lambda(i),natural32(i));
         declare
-          fms : constant Bracket_Systems.Bracket_system(1..integer32(nq1))
+          fms : constant Bracket_system(1..integer32(nq1))
               := Flag_Minor_System(nq1,fm(i));
           dd_bp : DoblDobl_Bracket_Polynomials.Bracket_Polynomial;
         begin
@@ -1822,10 +1836,11 @@ package body Numeric_Schubert_Conditions is
                   return QuadDobl_Complex_Poly_Systems.Poly_Sys is
 
     use QuadDobl_Complex_Poly_Systems;
-    use Bracket_Polynomials;
+    use Standard_Bracket_Polynomials;
+    use Standard_Bracket_Systems;
 
     res : Poly_Sys(1..nq);
-    fm : constant Bracket_Systems.Bracket_System(lambda'range)
+    fm : constant Bracket_System(lambda'range)
        := Flag_Minors(natural32(n),lambda);
     ind : integer32 := 0;
     nq1 : natural32;
@@ -1836,7 +1851,7 @@ package body Numeric_Schubert_Conditions is
         nq1 := Number_of_Equations
                  (natural32(n),natural32(k),lambda(i),natural32(i));
         declare
-          fms : constant Bracket_Systems.Bracket_system(1..integer32(nq1))
+          fms : constant Bracket_system(1..integer32(nq1))
               := Flag_Minor_System(nq1,fm(i));
           qd_bp : QuadDobl_Bracket_Polynomials.Bracket_Polynomial;
         begin

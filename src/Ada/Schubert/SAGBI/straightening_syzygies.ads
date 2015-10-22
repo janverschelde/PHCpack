@@ -1,6 +1,6 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Brackets,Bracket_Monomials;         use Brackets,Bracket_Monomials;
-with Bracket_Polynomials;                use Bracket_Polynomials;
+with Standard_Bracket_Polynomials;       use Standard_Bracket_Polynomials;
 
 package Straightening_Syzygies is
 

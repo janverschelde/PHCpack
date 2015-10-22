@@ -13,7 +13,7 @@ with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Matrices;
 with Brackets;                          use Brackets;
-with Bracket_Polynomials;
+with Standard_Bracket_Polynomials;
 with DoblDobl_Bracket_Polynomials;
 with QuadDobl_Bracket_Polynomials;
 with Remember_Numeric_Minors;           use Remember_Numeric_Minors;
@@ -40,9 +40,9 @@ package Numeric_Schubert_Conditions is
   --   Returns p(b), the entries in b are filtered through p.
 
   function Substitute
-             ( p : Bracket_Polynomials.Bracket_Polynomial;
+             ( p : Standard_Bracket_Polynomials.Bracket_Polynomial;
                t : Standard_Numeric_Minors )
-             return Bracket_Polynomials.Bracket_Polynomial;
+             return Standard_Bracket_Polynomials.Bracket_Polynomial;
   function Substitute
              ( p : DoblDobl_Bracket_Polynomials.Bracket_Polynomial;
                t : DoblDobl_Numeric_Minors )
@@ -64,9 +64,9 @@ package Numeric_Schubert_Conditions is
   --   t        remember table for numerical minors.
 
   function Substitute
-             ( p : Bracket_Polynomials.Bracket_Polynomial;
+             ( p : Standard_Bracket_Polynomials.Bracket_Polynomial;
                t : Standard_Numeric_Minors; rows : Bracket )
-             return Bracket_Polynomials.Bracket_Polynomial;
+             return Standard_Bracket_Polynomials.Bracket_Polynomial;
   function Substitute
              ( p : DoblDobl_Bracket_Polynomials.Bracket_Polynomial;
                t : DoblDobl_Numeric_Minors; rows : Bracket )
@@ -90,7 +90,7 @@ package Numeric_Schubert_Conditions is
   --           in the Laplace expansion.
 
   function Substitute
-             ( p : Bracket_Polynomials.Bracket_Polynomial;
+             ( p : Standard_Bracket_Polynomials.Bracket_Polynomial;
                t : Standard_Symbolic_Minors )
              return Standard_Complex_Polynomials.Poly;
   function Substitute
@@ -107,7 +107,7 @@ package Numeric_Schubert_Conditions is
   --   in standard double, double double, or quad double precision.
 
   function Substitute
-             ( p : Bracket_Polynomials.Bracket_Polynomial;
+             ( p : Standard_Bracket_Polynomials.Bracket_Polynomial;
                t : Standard_Symbolic_Minors; rows : Bracket )
              return Standard_Complex_Polynomials.Poly;
   function Substitute
@@ -125,7 +125,7 @@ package Numeric_Schubert_Conditions is
   --   taking the displacement with the rows into account.
 
   function Substitute
-             ( p : Bracket_Polynomials.Bracket_Polynomial;
+             ( p : Standard_Bracket_Polynomials.Bracket_Polynomial;
                nt,st : Standard_Symbolic_Minors; rows : Bracket )
              return Standard_Complex_Polynomials.Poly;
   function Substitute
@@ -201,7 +201,7 @@ package Numeric_Schubert_Conditions is
   function Laplace_One_Minor
              ( n,k : integer32; row,col : Bracket;
                A : Standard_Complex_Matrices.Matrix ) 
-             return Bracket_Polynomials.Bracket_Polynomial;
+             return Standard_Bracket_Polynomials.Bracket_Polynomial;
   function Laplace_One_Minor
              ( n,k : integer32; row,col : Bracket;
                A : DoblDobl_Complex_Matrices.Matrix ) 
@@ -263,9 +263,9 @@ package Numeric_Schubert_Conditions is
 
   function Elaborate_One_Flag_Minor
              ( n,k,f,i : integer32;
-               fm : Bracket_Polynomials.Bracket_Polynomial;
+               fm : Standard_Bracket_Polynomials.Bracket_Polynomial;
                A : Standard_Complex_Matrices.Matrix )
-             return Bracket_Polynomials.Bracket_Polynomial;
+             return Standard_Bracket_Polynomials.Bracket_Polynomial;
   function Elaborate_One_Flag_Minor
              ( n,k,f,i : integer32;
                fm : DoblDobl_Bracket_Polynomials.Bracket_Polynomial;
@@ -286,7 +286,7 @@ package Numeric_Schubert_Conditions is
 
   function Elaborate_One_Flag_Minor
              ( n,k,f,i : integer32;
-               fm : Bracket_Polynomials.Bracket_Polynomial;
+               fm : Standard_Bracket_Polynomials.Bracket_Polynomial;
                X : Standard_Complex_Poly_Matrices.Matrix;
                A : Standard_Complex_Matrices.Matrix )
              return Standard_Complex_Polynomials.Poly;
@@ -314,7 +314,7 @@ package Numeric_Schubert_Conditions is
 
   function Elaborate_One_Flag_Minor
              ( n,k,f,i : integer32;
-               fm : Bracket_Polynomials.Bracket_Polynomial;
+               fm : Standard_Bracket_Polynomials.Bracket_Polynomial;
                X,A : Standard_Complex_Poly_Matrices.Matrix )
              return Standard_Complex_Polynomials.Poly;
   function Elaborate_One_Flag_Minor

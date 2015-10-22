@@ -1,6 +1,6 @@
-with Bracket_Polynomials_io;          use Bracket_Polynomials_io;
+with Standard_Bracket_Polynomials_io; use Standard_Bracket_Polynomials_io;
 
-package body Bracket_Systems_io is
+package body Standard_Bracket_Systems_io is
 
   procedure put ( s : in Bracket_System ) is
   begin
@@ -26,4 +26,4 @@ package body Bracket_Systems_io is
     end loop;
   end put_line;
 
-end Bracket_Systems_io;
+end Standard_Bracket_Systems_io;

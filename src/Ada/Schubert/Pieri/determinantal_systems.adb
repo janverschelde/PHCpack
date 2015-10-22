@@ -4,7 +4,7 @@ with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials; 
 with Bracket_Monomials;                  use Bracket_Monomials;
-with Bracket_Systems;                    use Bracket_Systems;
+with Standard_Bracket_Systems;           use Standard_Bracket_Systems;
 with Evaluated_Minors;                   use Evaluated_Minors;
 with Symbolic_Minor_Equations;           use Symbolic_Minor_Equations;
 with Numeric_Minor_Equations;            use Numeric_Minor_Equations;

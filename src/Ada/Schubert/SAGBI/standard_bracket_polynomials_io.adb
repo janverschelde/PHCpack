@@ -4,7 +4,7 @@ with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Bracket_Monomials_io;               use Bracket_Monomials_io;
 
-package body Bracket_Polynomials_io is
+package body Standard_Bracket_Polynomials_io is
 
   procedure Write_Number ( file : in file_type; c : in Complex_Number;
                            ic : out integer ) is
@@ -110,4 +110,4 @@ package body Bracket_Polynomials_io is
     put_line(file,";");
   end put_line;
 
-end Bracket_Polynomials_io;
+end Standard_Bracket_Polynomials_io;

@@ -6,8 +6,8 @@ with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Brackets,Brackets_io;               use Brackets,Brackets_io;
 with Bracket_Monomials;                  use Bracket_Monomials;
-with Bracket_Polynomials;                use Bracket_Polynomials;
-with Bracket_Polynomials_io;             use Bracket_Polynomials_io;
+with Standard_Bracket_Polynomials;       use Standard_Bracket_Polynomials;
+with Standard_Bracket_Polynomials_io;    use Standard_Bracket_Polynomials_io;
 with Straightening_Syzygies;             use Straightening_Syzygies;
 
 procedure ts_straighten is

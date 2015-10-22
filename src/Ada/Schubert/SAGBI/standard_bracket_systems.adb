@@ -1,6 +1,6 @@
 with Straightening_Syzygies;             use Straightening_Syzygies;
 
-package body Bracket_Systems is
+package body Standard_Bracket_Systems is
 
   function Straightening_Syzygies ( n,d : natural32 ) return Bracket_System is
 
@@ -28,4 +28,4 @@ package body Bracket_Systems is
     end loop;
   end Clear;
 
-end Bracket_Systems;
+end Standard_Bracket_Systems;

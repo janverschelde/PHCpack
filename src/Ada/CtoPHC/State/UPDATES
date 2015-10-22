@@ -1,6 +1,7 @@
 Thu 22 Oct 2015 : changed use_c2lrhom.adb for the renaming of the
   intersection_solution_posets into standard_solution_posets.
-  Added documentation to use_c2lrhom.ads.
+  Added documentation to use_c2lrhom.ads.  Placing standard_ in front of
+  bracket_polynomials (& _systems) changed pieri_homotopy.adb.
 
 Thu 15 Oct 2015 : updated use_c2lrhom.adb for the new option to resolve
   Schubert problem with an efficient formulation of the equations.
