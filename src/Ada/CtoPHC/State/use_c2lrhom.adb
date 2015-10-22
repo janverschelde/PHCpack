@@ -20,7 +20,7 @@ with Brackets;                          use Brackets;
 with Brackets_io;                       use Brackets_io;
 with Checker_Moves;
 with Intersection_Posets;               use Intersection_Posets;
-with Intersection_Solution_Posets;      use Intersection_Solution_Posets;
+with Standard_Solution_Posets;          use Standard_Solution_Posets;
 with Resolve_Schubert_Problems;         use Resolve_Schubert_Problems;
 with Drivers_for_Schubert_Induction;    use Drivers_for_Schubert_Induction;
 with Standard_PolySys_Container;
