@@ -3,6 +3,8 @@ Thu 22 Oct 2015 : extra verify parameter in use_c2lrhom changed the
   and phcpy2.c for the extra verification parameter.
   Two new functions in schubert to run the L-R homotopies in double double
   and quad double precision, tested by lib_lrhom.c, added to phcpy2c.
+  Forgot to adjust number of arguments in phcpy2c.c, for the verify flag
+  in the littlewood_richardson_homotopies.
 
 Thu 8 Oct 2015 : extended phcpack with two functions to get and set
   individual values of the continuation parameters, tested by lib_conpar.c.
