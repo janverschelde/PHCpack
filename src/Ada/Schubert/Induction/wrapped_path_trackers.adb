@@ -410,7 +410,7 @@ package body Wrapped_Path_Trackers is
     Track(file,xtsols,false,Standard_Complex_Numbers.Create(1.0));
     tmp := sols;
     xtp := xtsols;
-    put_line(file,"In Call_Path_Trackers ...");
+   -- put_line(file,"In Call_Path_Trackers ...");
     put(file,"Number of solutions in sols   : ");
     put(file,Length_Of(sols),1); new_line(file);
     put(file,"Number of solutions in xtsols : ");
@@ -451,7 +451,7 @@ package body Wrapped_Path_Trackers is
     Track(file,xtsols,DoblDobl_Complex_Numbers.Create(one));
     tmp := sols;
     xtp := xtsols;
-    put_line(file,"In Call_Path_Trackers ...");
+   -- put_line(file,"In Call_Path_Trackers ...");
     put(file,"Number of solutions in sols   : ");
     put(file,Length_Of(sols),1); new_line(file);
     put(file,"Number of solutions in xtsols : ");
@@ -492,7 +492,7 @@ package body Wrapped_Path_Trackers is
     Track(file,xtsols,QuadDobl_Complex_Numbers.Create(one));
     tmp := sols;
     xtp := xtsols;
-    put_line(file,"In Call_Path_Trackers ...");
+   -- put_line(file,"In Call_Path_Trackers ...");
     put(file,"Number of solutions in sols   : ");
     put(file,Length_Of(sols),1); new_line(file);
     put(file,"Number of solutions in xtsols : ");

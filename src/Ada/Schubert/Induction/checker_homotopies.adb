@@ -664,8 +664,8 @@ package body Checker_Homotopies is
   begin
     put(file,"Trivial Stay with critical row = "); put(file,r,1);
     put_line(file,".");
-    put_line(file,"The previous localization map : "); put(file,plocmap);
-    put_line(file,"The current localization map : "); put(file,qlocmap);
+   -- put_line(file,"The previous localization map : "); put(file,plocmap);
+   -- put_line(file,"The current localization map : "); put(file,qlocmap);
     put(file,"rows of white checkers : "); put(file,qr); new_line(file);
     for j in qlocmap'range(2) loop
       if qlocmap(r+1,j) = 1 then
@@ -680,11 +680,11 @@ package body Checker_Homotopies is
     end if;
     put(file,r+1,1); new_line(file);
     y := Map(plocmap,x);
-    put_line(file,"the given solution plane :"); put(file,y,3);
+   -- put_line(file,"the given solution plane :"); put(file,y,3);
     Inverse_Row_Transformation(r,y);
-    put_line(file,"after the inverse transformation :"); put(file,y,3);
+   -- put_line(file,"after the inverse transformation :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(qlocmap,y);
-    put_line(file,"The transformed plane :"); put(file,y,3);
+   -- put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(qlocmap,y);
   end Trivial_Stay_Coordinates;
 
@@ -703,8 +703,8 @@ package body Checker_Homotopies is
   begin
     put(file,"Trivial Stay with critical row = "); put(file,r,1);
     put_line(file,".");
-    put_line(file,"The previous localization map : "); put(file,plocmap);
-    put_line(file,"The current localization map : "); put(file,qlocmap);
+   -- put_line(file,"The previous localization map : "); put(file,plocmap);
+   -- put_line(file,"The current localization map : "); put(file,qlocmap);
     put(file,"rows of white checkers : "); put(file,qr); new_line(file);
     for j in qlocmap'range(2) loop
       if qlocmap(r+1,j) = 1 then
@@ -719,11 +719,11 @@ package body Checker_Homotopies is
     end if;
     put(file,r+1,1); new_line(file);
     y := Map(plocmap,x);
-    put_line(file,"the given solution plane :"); put(file,y,3);
+   -- put_line(file,"the given solution plane :"); put(file,y,3);
     Inverse_Row_Transformation(r,y);
-    put_line(file,"after the inverse transformation :"); put(file,y,3);
+   -- put_line(file,"after the inverse transformation :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(qlocmap,y);
-    put_line(file,"The transformed plane :"); put(file,y,3);
+   -- put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(qlocmap,y);
   end Trivial_Stay_Coordinates;
 
@@ -742,8 +742,8 @@ package body Checker_Homotopies is
   begin
     put(file,"Trivial Stay with critical row = "); put(file,r,1);
     put_line(file,".");
-    put_line(file,"The previous localization map : "); put(file,plocmap);
-    put_line(file,"The current localization map : "); put(file,qlocmap);
+   -- put_line(file,"The previous localization map : "); put(file,plocmap);
+   -- put_line(file,"The current localization map : "); put(file,qlocmap);
     put(file,"rows of white checkers : "); put(file,qr); new_line(file);
     for j in qlocmap'range(2) loop
       if qlocmap(r+1,j) = 1 then
@@ -758,11 +758,11 @@ package body Checker_Homotopies is
     end if;
     put(file,r+1,1); new_line(file);
     y := Map(plocmap,x);
-    put_line(file,"the given solution plane :"); put(file,y,3);
+   -- put_line(file,"the given solution plane :"); put(file,y,3);
     Inverse_Row_Transformation(r,y);
-    put_line(file,"after the inverse transformation :"); put(file,y,3);
+   -- put_line(file,"after the inverse transformation :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(qlocmap,y);
-    put_line(file,"The transformed plane :"); put(file,y,3);
+   -- put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(qlocmap,y);
   end Trivial_Stay_Coordinates;
 
@@ -785,8 +785,8 @@ package body Checker_Homotopies is
   begin
     put(file,"Trivial Stay with critical row = "); put(file,r,1);
     put_line(file,".");
-    put_line(file,"The previous localization map : "); put(file,plocmap);
-    put_line(file,"The current localization map : "); put(file,qlocmap);
+   -- put_line(file,"The previous localization map : "); put(file,plocmap);
+   -- put_line(file,"The current localization map : "); put(file,qlocmap);
     put(file,"rows of white checkers : "); put(file,qr); new_line(file);
     for j in qlocmap'range(2) loop
       if qlocmap(r+1,j) = 1 then
@@ -803,11 +803,11 @@ package body Checker_Homotopies is
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       y := Map(plocmap,ls.v);
-      put_line(file,"the given solution plane :"); put(file,y,3);
+     -- put_line(file,"the given solution plane :"); put(file,y,3);
       Inverse_Row_Transformation(r,y);
-      put_line(file,"after the inverse transformation :"); put(file,y,3);
+     -- put_line(file,"after the inverse transformation :"); put(file,y,3);
       Normalize_and_Reduce_to_Fit(qlocmap,y);
-      put_line(file,"The transformed plane :"); put(file,y,3);
+     -- put_line(file,"The transformed plane :"); put(file,y,3);
       ls.v := Map(qlocmap,y);
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
@@ -833,8 +833,8 @@ package body Checker_Homotopies is
   begin
     put(file,"Trivial Stay with critical row = "); put(file,r,1);
     put_line(file,".");
-    put_line(file,"The previous localization map : "); put(file,plocmap);
-    put_line(file,"The current localization map : "); put(file,qlocmap);
+   -- put_line(file,"The previous localization map : "); put(file,plocmap);
+   -- put_line(file,"The current localization map : "); put(file,qlocmap);
     put(file,"rows of white checkers : "); put(file,qr); new_line(file);
     for j in qlocmap'range(2) loop
       if qlocmap(r+1,j) = 1 then
@@ -851,11 +851,11 @@ package body Checker_Homotopies is
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       y := Map(plocmap,ls.v);
-      put_line(file,"the given solution plane :"); put(file,y,3);
+     -- put_line(file,"the given solution plane :"); put(file,y,3);
       Inverse_Row_Transformation(r,y);
-      put_line(file,"after the inverse transformation :"); put(file,y,3);
+     -- put_line(file,"after the inverse transformation :"); put(file,y,3);
       Normalize_and_Reduce_to_Fit(qlocmap,y);
-      put_line(file,"The transformed plane :"); put(file,y,3);
+     -- put_line(file,"The transformed plane :"); put(file,y,3);
       ls.v := Map(qlocmap,y);
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
@@ -881,8 +881,8 @@ package body Checker_Homotopies is
   begin
     put(file,"Trivial Stay with critical row = "); put(file,r,1);
     put_line(file,".");
-    put_line(file,"The previous localization map : "); put(file,plocmap);
-    put_line(file,"The current localization map : "); put(file,qlocmap);
+   -- put_line(file,"The previous localization map : "); put(file,plocmap);
+   -- put_line(file,"The current localization map : "); put(file,qlocmap);
     put(file,"rows of white checkers : "); put(file,qr); new_line(file);
     for j in qlocmap'range(2) loop
       if qlocmap(r+1,j) = 1 then
@@ -899,11 +899,11 @@ package body Checker_Homotopies is
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       y := Map(plocmap,ls.v);
-      put_line(file,"the given solution plane :"); put(file,y,3);
+     -- put_line(file,"the given solution plane :"); put(file,y,3);
       Inverse_Row_Transformation(r,y);
-      put_line(file,"after the inverse transformation :"); put(file,y,3);
+     -- put_line(file,"after the inverse transformation :"); put(file,y,3);
       Normalize_and_Reduce_to_Fit(qlocmap,y);
-      put_line(file,"The transformed plane :"); put(file,y,3);
+     -- put_line(file,"The transformed plane :"); put(file,y,3);
       ls.v := Map(qlocmap,y);
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
@@ -1152,18 +1152,18 @@ package body Checker_Homotopies is
   begin
     put(file,"Homotopy Stay with critical row = "); put(file,r,1);
     put_line(file,".");
-    put_line(file,"The localization map : "); put(file,locmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The localization map : "); put(file,locmap);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     xt(x'range) := x;
     xt(xt'last) := Create(1.0);
     put_line(file,"The vector xt : "); put_line(file,xt);
     y := Eval(xtm,xt);
-    put_line(file,"The matrix xtm evaluated at the solution : ");
-    put(file,y,2);
+   -- put_line(file,"The matrix xtm evaluated at the solution : ");
+   -- put(file,y,2);
     Inverse_Row_Transformation(mf,y);
-    put_line(file,"after the inverse transformation :"); put(file,y,3);
+   -- put_line(file,"after the inverse transformation :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(locmap,y);
-    put_line(file,"The transformed plane :"); put(file,y,3);
+   -- put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(locmap,y);
   end Homotopy_Stay_Coordinates;
 
@@ -1184,18 +1184,18 @@ package body Checker_Homotopies is
   begin
     put(file,"Homotopy Stay with critical row = "); put(file,r,1);
     put_line(file,".");
-    put_line(file,"The localization map : "); put(file,locmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The localization map : "); put(file,locmap);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     xt(x'range) := x;
     xt(xt'last) := Create(integer(1));
     put_line(file,"The vector xt : "); put_line(file,xt);
     y := Eval(xtm,xt);
-    put_line(file,"The matrix xtm evaluated at the solution : ");
-    put(file,y,2);
+   -- put_line(file,"The matrix xtm evaluated at the solution : ");
+   -- put(file,y,2);
     Inverse_Row_Transformation(mf,y);
-    put_line(file,"after the inverse transformation :"); put(file,y,3);
+   -- put_line(file,"after the inverse transformation :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(locmap,y);
-    put_line(file,"The transformed plane :"); put(file,y,3);
+   -- put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(locmap,y);
   end Homotopy_Stay_Coordinates;
 
@@ -1216,18 +1216,18 @@ package body Checker_Homotopies is
   begin
     put(file,"Homotopy Stay with critical row = "); put(file,r,1);
     put_line(file,".");
-    put_line(file,"The localization map : "); put(file,locmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The localization map : "); put(file,locmap);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     xt(x'range) := x;
     xt(xt'last) := Create(integer(1));
     put_line(file,"The vector xt : "); put_line(file,xt);
     y := Eval(xtm,xt);
-    put_line(file,"The matrix xtm evaluated at the solution : ");
-    put(file,y,2);
+   -- put_line(file,"The matrix xtm evaluated at the solution : ");
+   -- put(file,y,2);
     Inverse_Row_Transformation(mf,y);
-    put_line(file,"after the inverse transformation :"); put(file,y,3);
+   -- put_line(file,"after the inverse transformation :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(locmap,y);
-    put_line(file,"The transformed plane :"); put(file,y,3);
+   -- put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(locmap,y);
   end Homotopy_Stay_Coordinates;
 
@@ -1250,8 +1250,8 @@ package body Checker_Homotopies is
   begin
     put(file,"Homotopy Stay with critical row = "); put(file,r,1);
     put_line(file,".");
-    put_line(file,"The localization map : "); put(file,locmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The localization map : "); put(file,locmap);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       declare
@@ -1262,12 +1262,12 @@ package body Checker_Homotopies is
         put_line(file,"The vector xt : "); put_line(file,xt);
         y := Eval(xtm,xt);
       end;
-      put_line(file,"The matrix xtm evaluated at the solution : ");
-      put(file,y,2);
+     -- put_line(file,"The matrix xtm evaluated at the solution : ");
+     -- put(file,y,2);
       Inverse_Row_Transformation(mf,y);
-      put_line(file,"after the inverse transformation :"); put(file,y,3);
+     -- put_line(file,"after the inverse transformation :"); put(file,y,3);
       Normalize_and_Reduce_to_Fit(locmap,y);
-      put_line(file,"The transformed plane :"); put(file,y,3);
+     -- put_line(file,"The transformed plane :"); put(file,y,3);
       ls.v := Map(locmap,y);
      -- Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
@@ -1295,8 +1295,8 @@ package body Checker_Homotopies is
   begin
     put(file,"Homotopy Stay with critical row = "); put(file,r,1);
     put_line(file,".");
-    put_line(file,"The localization map : "); put(file,locmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The localization map : "); put(file,locmap);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       declare
@@ -1307,12 +1307,12 @@ package body Checker_Homotopies is
         put_line(file,"The vector xt : "); put_line(file,xt);
         y := Eval(xtm,xt);
       end;
-      put_line(file,"The matrix xtm evaluated at the solution : ");
-      put(file,y,2);
+     -- put_line(file,"The matrix xtm evaluated at the solution : ");
+     -- put(file,y,2);
       Inverse_Row_Transformation(mf,y);
-      put_line(file,"after the inverse transformation :"); put(file,y,3);
+     -- put_line(file,"after the inverse transformation :"); put(file,y,3);
       Normalize_and_Reduce_to_Fit(locmap,y);
-      put_line(file,"The transformed plane :"); put(file,y,3);
+     -- put_line(file,"The transformed plane :"); put(file,y,3);
       ls.v := Map(locmap,y);
      -- Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
@@ -1340,8 +1340,8 @@ package body Checker_Homotopies is
   begin
     put(file,"Homotopy Stay with critical row = "); put(file,r,1);
     put_line(file,".");
-    put_line(file,"The localization map : "); put(file,locmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The localization map : "); put(file,locmap);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       declare
@@ -1352,12 +1352,12 @@ package body Checker_Homotopies is
         put_line(file,"The vector xt : "); put_line(file,xt);
         y := Eval(xtm,xt);
       end;
-      put_line(file,"The matrix xtm evaluated at the solution : ");
-      put(file,y,2);
+     -- put_line(file,"The matrix xtm evaluated at the solution : ");
+     -- put(file,y,2);
       Inverse_Row_Transformation(mf,y);
-      put_line(file,"after the inverse transformation :"); put(file,y,3);
+     -- put_line(file,"after the inverse transformation :"); put(file,y,3);
       Normalize_and_Reduce_to_Fit(locmap,y);
-      put_line(file,"The transformed plane :"); put(file,y,3);
+     -- put_line(file,"The transformed plane :"); put(file,y,3);
       ls.v := Map(locmap,y);
      -- Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
@@ -1610,19 +1610,19 @@ package body Checker_Homotopies is
     put(file," and s = "); put(file,s,1); put_line(file,".");
     put_line(file,"The start localization map : "); put(file,plocmap);
     put_line(file,"The target localization map : "); put(file,qlocmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     xt(x'range) := x;
     xt(xt'last) := Create(1.0);
     put_line(file,"The vector xt : "); put_line(file,xt);
     y := Eval(xtm,xt);
-    put_line(file,"The matrix xtm evaluated at the solution : ");
-    put(file,y,2);
+   -- put_line(file,"The matrix xtm evaluated at the solution : ");
+   -- put(file,y,2);
     Inverse_Row_Transformation(mf,y);
-    put_line(file,"after the inverse transformation :"); put(file,y,3);
+   -- put_line(file,"after the inverse transformation :"); put(file,y,3);
     Update_Swap_Column(y,s);
-    put_line(file,"After updating the swap column :"); put(file,y,3);
+   -- put_line(file,"After updating the swap column :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(qlocmap,y);
-    put_line(file,"The transformed plane :"); put(file,y,3);
+   -- put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(qlocmap,y);
   end First_Swap_Coordinates;
 
@@ -1648,15 +1648,15 @@ package body Checker_Homotopies is
     put(file," and s = "); put(file,s,1); put_line(file,".");
     put_line(file,"The start localization map : "); put(file,plocmap);
     put_line(file,"The target localization map : "); put(file,qlocmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     xt(x'range) := x;
     xt(xt'last) := Create(integer(1));
     put_line(file,"The vector xt : "); put_line(file,xt);
     y := Eval(xtm,xt);
-    put_line(file,"The matrix xtm evaluated at the solution : ");
-    put(file,y,2);
+   -- put_line(file,"The matrix xtm evaluated at the solution : ");
+   -- put(file,y,2);
     Inverse_Row_Transformation(mf,y);
-    put_line(file,"after the inverse transformation :"); put(file,y,3);
+   -- put_line(file,"after the inverse transformation :"); put(file,y,3);
     Update_Swap_Column(y,s);
     put_line(file,"After updating the swap column :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(qlocmap,y);
@@ -1686,19 +1686,19 @@ package body Checker_Homotopies is
     put(file," and s = "); put(file,s,1); put_line(file,".");
     put_line(file,"The start localization map : "); put(file,plocmap);
     put_line(file,"The target localization map : "); put(file,qlocmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     xt(x'range) := x;
     xt(xt'last) := Create(integer(1));
     put_line(file,"The vector xt : "); put_line(file,xt);
     y := Eval(xtm,xt);
-    put_line(file,"The matrix xtm evaluated at the solution : ");
-    put(file,y,2);
+   -- put_line(file,"The matrix xtm evaluated at the solution : ");
+   -- put(file,y,2);
     Inverse_Row_Transformation(mf,y);
-    put_line(file,"after the inverse transformation :"); put(file,y,3);
+   -- put_line(file,"after the inverse transformation :"); put(file,y,3);
     Update_Swap_Column(y,s);
-    put_line(file,"After updating the swap column :"); put(file,y,3);
+   -- put_line(file,"After updating the swap column :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(qlocmap,y);
-    put_line(file,"The transformed plane :"); put(file,y,3);
+   -- put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(qlocmap,y);
   end First_Swap_Coordinates;
 
@@ -1726,7 +1726,7 @@ package body Checker_Homotopies is
     put(file," and s = "); put(file,s,1); put_line(file,".");
     put_line(file,"The start localization map : "); put(file,plocmap);
     put_line(file,"The target localization map : "); put(file,qlocmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       declare
@@ -1737,14 +1737,14 @@ package body Checker_Homotopies is
         put_line(file,"The vector xt : "); put_line(file,xt);
         y := Eval(xtm,xt);
       end;
-      put_line(file,"The matrix xtm evaluated at the solution : ");
-      put(file,y,2);
+     -- put_line(file,"The matrix xtm evaluated at the solution : ");
+     -- put(file,y,2);
       Inverse_Row_Transformation(mf,y);
-      put_line(file,"after the inverse transformation :"); put(file,y,3);
+     -- put_line(file,"after the inverse transformation :"); put(file,y,3);
       Update_Swap_Column(y,s);
-      put_line(file,"After updating the swap column :"); put(file,y,3);
+     -- put_line(file,"After updating the swap column :"); put(file,y,3);
       Normalize_and_Reduce_to_Fit(qlocmap,y);
-      put_line(file,"The transformed plane :"); put(file,y,3);
+     -- put_line(file,"The transformed plane :"); put(file,y,3);
       ls.v := Map(qlocmap,y);
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
@@ -1775,7 +1775,7 @@ package body Checker_Homotopies is
     put(file," and s = "); put(file,s,1); put_line(file,".");
     put_line(file,"The start localization map : "); put(file,plocmap);
     put_line(file,"The target localization map : "); put(file,qlocmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       declare
@@ -1786,14 +1786,14 @@ package body Checker_Homotopies is
         put_line(file,"The vector xt : "); put_line(file,xt);
         y := Eval(xtm,xt);
       end;
-      put_line(file,"The matrix xtm evaluated at the solution : ");
-      put(file,y,2);
+     -- put_line(file,"The matrix xtm evaluated at the solution : ");
+     -- put(file,y,2);
       Inverse_Row_Transformation(mf,y);
-      put_line(file,"after the inverse transformation :"); put(file,y,3);
+     -- put_line(file,"after the inverse transformation :"); put(file,y,3);
       Update_Swap_Column(y,s);
-      put_line(file,"After updating the swap column :"); put(file,y,3);
+     -- put_line(file,"After updating the swap column :"); put(file,y,3);
       Normalize_and_Reduce_to_Fit(qlocmap,y);
-      put_line(file,"The transformed plane :"); put(file,y,3);
+     -- put_line(file,"The transformed plane :"); put(file,y,3);
       ls.v := Map(qlocmap,y);
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
@@ -1824,7 +1824,7 @@ package body Checker_Homotopies is
     put(file," and s = "); put(file,s,1); put_line(file,".");
     put_line(file,"The start localization map : "); put(file,plocmap);
     put_line(file,"The target localization map : "); put(file,qlocmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       declare
@@ -1835,14 +1835,14 @@ package body Checker_Homotopies is
         put_line(file,"The vector xt : "); put_line(file,xt);
         y := Eval(xtm,xt);
       end;
-      put_line(file,"The matrix xtm evaluated at the solution : ");
-      put(file,y,2);
+     -- put_line(file,"The matrix xtm evaluated at the solution : ");
+     -- put(file,y,2);
       Inverse_Row_Transformation(mf,y);
-      put_line(file,"after the inverse transformation :"); put(file,y,3);
+     -- put_line(file,"after the inverse transformation :"); put(file,y,3);
       Update_Swap_Column(y,s);
-      put_line(file,"After updating the swap column :"); put(file,y,3);
+     -- put_line(file,"After updating the swap column :"); put(file,y,3);
       Normalize_and_Reduce_to_Fit(qlocmap,y);
-      put_line(file,"The transformed plane :"); put(file,y,3);
+     -- put_line(file,"The transformed plane :"); put(file,y,3);
       ls.v := Map(qlocmap,y);
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
@@ -2043,20 +2043,20 @@ package body Checker_Homotopies is
   begin
     put(file,"Swap type II with critical row = "); put(file,r,1);
     put(file," and s = "); put(file,s,1); put_line(file,".");
-    put_line(file,"The localization map : "); put(file,locmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The localization map : "); put(file,locmap);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     xt(x'range) := x;
     xt(xt'last) := Create(1.0);
     put_line(file,"The vector xt : "); put_line(file,xt);
     y := Eval(xtm,xt);
-    put_line(file,"The matrix xtm evaluated at the solution : ");
-    put(file,y,2);
+   -- put_line(file,"The matrix xtm evaluated at the solution : ");
+   -- put(file,y,2);
     Inverse_Row_Transformation(mf,y);
-    put_line(file,"after the inverse transformation :"); put(file,y,3);
+   -- put_line(file,"after the inverse transformation :"); put(file,y,3);
     Update_Swap_Column(y,s);
-    put_line(file,"After updating the swap column :"); put(file,y,3);
+   -- put_line(file,"After updating the swap column :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(locmap,y);
-    put_line(file,"The transformed plane :"); put(file,y,3);
+   -- put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(locmap,y);
   end Second_Swap_Coordinates;
 
@@ -2077,20 +2077,20 @@ package body Checker_Homotopies is
   begin
     put(file,"Swap type II with critical row = "); put(file,r,1);
     put(file," and s = "); put(file,s,1); put_line(file,".");
-    put_line(file,"The localization map : "); put(file,locmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The localization map : "); put(file,locmap);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     xt(x'range) := x;
     xt(xt'last) := Create(integer(1));
     put_line(file,"The vector xt : "); put_line(file,xt);
     y := Eval(xtm,xt);
-    put_line(file,"The matrix xtm evaluated at the solution : ");
-    put(file,y,2);
+   -- put_line(file,"The matrix xtm evaluated at the solution : ");
+   -- put(file,y,2);
     Inverse_Row_Transformation(mf,y);
-    put_line(file,"after the inverse transformation :"); put(file,y,3);
+   -- put_line(file,"after the inverse transformation :"); put(file,y,3);
     Update_Swap_Column(y,s);
-    put_line(file,"After updating the swap column :"); put(file,y,3);
+   -- put_line(file,"After updating the swap column :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(locmap,y);
-    put_line(file,"The transformed plane :"); put(file,y,3);
+   -- put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(locmap,y);
   end Second_Swap_Coordinates;
 
@@ -2111,20 +2111,20 @@ package body Checker_Homotopies is
   begin
     put(file,"Swap type II with critical row = "); put(file,r,1);
     put(file," and s = "); put(file,s,1); put_line(file,".");
-    put_line(file,"The localization map : "); put(file,locmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The localization map : "); put(file,locmap);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     xt(x'range) := x;
     xt(xt'last) := Create(integer(1));
     put_line(file,"The vector xt : "); put_line(file,xt);
     y := Eval(xtm,xt);
-    put_line(file,"The matrix xtm evaluated at the solution : ");
-    put(file,y,2);
+   -- put_line(file,"The matrix xtm evaluated at the solution : ");
+   -- put(file,y,2);
     Inverse_Row_Transformation(mf,y);
-    put_line(file,"after the inverse transformation :"); put(file,y,3);
+   -- put_line(file,"after the inverse transformation :"); put(file,y,3);
     Update_Swap_Column(y,s);
-    put_line(file,"After updating the swap column :"); put(file,y,3);
+   -- put_line(file,"After updating the swap column :"); put(file,y,3);
     Normalize_and_Reduce_to_Fit(locmap,y);
-    put_line(file,"The transformed plane :"); put(file,y,3);
+   -- put_line(file,"The transformed plane :"); put(file,y,3);
     x := Map(locmap,y);
   end Second_Swap_Coordinates;
 
@@ -2147,8 +2147,8 @@ package body Checker_Homotopies is
   begin
     put(file,"Swap type II with critical row = "); put(file,r,1);
     put(file," and s = "); put(file,s,1); put_line(file,".");
-    put_line(file,"The localization map : "); put(file,locmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The localization map : "); put(file,locmap);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       declare
@@ -2159,14 +2159,14 @@ package body Checker_Homotopies is
         put_line(file,"The vector xt : "); put_line(file,xt);
         y := Eval(xtm,xt);
       end;
-      put_line(file,"The matrix xtm evaluated at the solution : ");
-      put(file,y,2);
+     -- put_line(file,"The matrix xtm evaluated at the solution : ");
+     -- put(file,y,2);
       Inverse_Row_Transformation(mf,y);
-      put_line(file,"after the inverse transformation :"); put(file,y,3);
+     -- put_line(file,"after the inverse transformation :"); put(file,y,3);
       Update_Swap_Column(y,s);
-      put_line(file,"After updating the swap column :"); put(file,y,3);
+     -- put_line(file,"After updating the swap column :"); put(file,y,3);
       Normalize_and_Reduce_to_Fit(locmap,y);
-      put_line(file,"The transformed plane :"); put(file,y,3);
+     -- put_line(file,"The transformed plane :"); put(file,y,3);
       ls.v := Map(locmap,y);
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
@@ -2192,8 +2192,8 @@ package body Checker_Homotopies is
   begin
     put(file,"Swap type II with critical row = "); put(file,r,1);
     put(file," and s = "); put(file,s,1); put_line(file,".");
-    put_line(file,"The localization map : "); put(file,locmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The localization map : "); put(file,locmap);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       declare
@@ -2204,14 +2204,14 @@ package body Checker_Homotopies is
         put_line(file,"The vector xt : "); put_line(file,xt);
         y := Eval(xtm,xt);
       end;
-      put_line(file,"The matrix xtm evaluated at the solution : ");
-      put(file,y,2);
+     -- put_line(file,"The matrix xtm evaluated at the solution : ");
+     -- put(file,y,2);
       Inverse_Row_Transformation(mf,y);
-      put_line(file,"after the inverse transformation :"); put(file,y,3);
+     -- put_line(file,"after the inverse transformation :"); put(file,y,3);
       Update_Swap_Column(y,s);
-      put_line(file,"After updating the swap column :"); put(file,y,3);
+     -- put_line(file,"After updating the swap column :"); put(file,y,3);
       Normalize_and_Reduce_to_Fit(locmap,y);
-      put_line(file,"The transformed plane :"); put(file,y,3);
+     -- put_line(file,"The transformed plane :"); put(file,y,3);
       ls.v := Map(locmap,y);
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
@@ -2237,8 +2237,8 @@ package body Checker_Homotopies is
   begin
     put(file,"Swap type II with critical row = "); put(file,r,1);
     put(file," and s = "); put(file,s,1); put_line(file,".");
-    put_line(file,"The localization map : "); put(file,locmap);
-    put_line(file,"The matrix xtm : "); put(file,xtm);
+   -- put_line(file,"The localization map : "); put(file,locmap);
+   -- put_line(file,"The matrix xtm : "); put(file,xtm);
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
       declare
@@ -2249,14 +2249,14 @@ package body Checker_Homotopies is
         put_line(file,"The vector xt : "); put_line(file,xt);
         y := Eval(xtm,xt);
       end;
-      put_line(file,"The matrix xtm evaluated at the solution : ");
-      put(file,y,2);
+     -- put_line(file,"The matrix xtm evaluated at the solution : ");
+     -- put(file,y,2);
       Inverse_Row_Transformation(mf,y);
-      put_line(file,"after the inverse transformation :"); put(file,y,3);
+     -- put_line(file,"after the inverse transformation :"); put(file,y,3);
       Update_Swap_Column(y,s);
-      put_line(file,"After updating the swap column :"); put(file,y,3);
+     -- put_line(file,"After updating the swap column :"); put(file,y,3);
       Normalize_and_Reduce_to_Fit(locmap,y);
-      put_line(file,"The transformed plane :"); put(file,y,3);
+     -- put_line(file,"The transformed plane :"); put(file,y,3);
       ls.v := Map(locmap,y);
       Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
@@ -2749,7 +2749,7 @@ package body Checker_Homotopies is
     empty_zone_A : boolean;
 
   begin
-    put_line(file,"the localization map : "); put(file,locmap);
+   -- put_line(file,"the localization map : "); put(file,locmap);
     put(file,"dim = "); put(file,dim,1); new_line(file);
     put(file,"np1 = "); put(file,np1,1); new_line(file);
     t.dg := new Standard_Natural_Vectors.Vector'(1..np1 => 0);
@@ -2870,7 +2870,7 @@ package body Checker_Homotopies is
     empty_zone_A : boolean;
 
   begin
-    put_line(file,"the localization map : "); put(file,locmap);
+   -- put_line(file,"the localization map : "); put(file,locmap);
     put(file,"dim = "); put(file,dim,1); new_line(file);
     put(file,"np1 = "); put(file,np1,1); new_line(file);
     t.dg := new Standard_Natural_Vectors.Vector'(1..np1 => 0);
@@ -2991,7 +2991,7 @@ package body Checker_Homotopies is
     empty_zone_A : boolean;
 
   begin
-    put_line(file,"the localization map : "); put(file,locmap);
+   -- put_line(file,"the localization map : "); put(file,locmap);
     put(file,"dim = "); put(file,dim,1); new_line(file);
     put(file,"np1 = "); put(file,np1,1); new_line(file);
     t.dg := new Standard_Natural_Vectors.Vector'(1..np1 => 0);
@@ -3304,7 +3304,7 @@ package body Checker_Homotopies is
     t : Term;
 
   begin
-    put_line(file,"the localization map : "); put(file,locmap);
+   -- put_line(file,"the localization map : "); put(file,locmap);
     put(file,"dim = "); put(file,dim,1);
     put(file,"  np1 = "); put(file,np1,1); new_line(file);
     t.dg := new Standard_Natural_Vectors.Vector'(1..np1 => 0);
@@ -3376,7 +3376,7 @@ package body Checker_Homotopies is
     t : Term;
 
   begin
-    put_line(file,"the localization map : "); put(file,locmap);
+   -- put_line(file,"the localization map : "); put(file,locmap);
     put(file,"dim = "); put(file,dim,1);
     put(file,"  np1 = "); put(file,np1,1); new_line(file);
     t.dg := new Standard_Natural_Vectors.Vector'(1..np1 => 0);
@@ -3448,7 +3448,7 @@ package body Checker_Homotopies is
     t : Term;
 
   begin
-    put_line(file,"the localization map : "); put(file,locmap);
+   -- put_line(file,"the localization map : "); put(file,locmap);
     put(file,"dim = "); put(file,dim,1);
     put(file,"  np1 = "); put(file,np1,1); new_line(file);
     t.dg := new Standard_Natural_Vectors.Vector'(1..np1 => 0);
@@ -3708,7 +3708,7 @@ package body Checker_Homotopies is
 
   begin
     put_line(file,"defining coordinates of moving plane for swap homotopy");
-    put_line(file,"the localization map :"); put(file,locmap);
+   -- put_line(file,"the localization map :"); put(file,locmap);
     put(file,"critical row : "); put(file,r,1);
     put(file,"  s = "); put(file,s,1);
     put(file,"  top white checker : "); put(file,cd,1);
@@ -3719,8 +3719,8 @@ package body Checker_Homotopies is
     put(file,"  rows = "); put(file,rows);
     put(file,"  cols = "); put(file,cols); new_line(file);
     Initialize_Moving_Plane(res,locmap,s);
-    put_line(file,"After initialization of the moving plane :");
-    put(file,res);
+   -- put_line(file,"After initialization of the moving plane :");
+   -- put(file,res);
     put(file,"Black checkers in upper right (zone A) : ");
     for i in p'range loop
       if integer32(p(i)) < r and p'last+1-i > p'last-dc+1
@@ -3771,7 +3771,7 @@ package body Checker_Homotopies is
 
   begin
     put_line(file,"defining coordinates of moving plane for swap homotopy");
-    put_line(file,"the localization map :"); put(file,locmap);
+   -- put_line(file,"the localization map :"); put(file,locmap);
     put(file,"critical row : "); put(file,r,1);
     put(file,"  s = "); put(file,s,1);
     put(file,"  top white checker : "); put(file,cd,1);
@@ -3782,8 +3782,8 @@ package body Checker_Homotopies is
     put(file,"  rows = "); put(file,rows);
     put(file,"  cols = "); put(file,cols); new_line(file);
     Initialize_Moving_Plane(res,locmap,s);
-    put_line(file,"After initialization of the moving plane :");
-    put(file,res);
+   -- put_line(file,"After initialization of the moving plane :");
+   -- put(file,res);
     put(file,"Black checkers in upper right (zone A) : ");
     for i in p'range loop
       if integer32(p(i)) < r and p'last+1-i > p'last-dc+1
@@ -3834,7 +3834,7 @@ package body Checker_Homotopies is
 
   begin
     put_line(file,"defining coordinates of moving plane for swap homotopy");
-    put_line(file,"the localization map :"); put(file,locmap);
+   -- put_line(file,"the localization map :"); put(file,locmap);
     put(file,"critical row : "); put(file,r,1);
     put(file,"  s = "); put(file,s,1);
     put(file,"  top white checker : "); put(file,cd,1);
@@ -3845,8 +3845,8 @@ package body Checker_Homotopies is
     put(file,"  rows = "); put(file,rows);
     put(file,"  cols = "); put(file,cols); new_line(file);
     Initialize_Moving_Plane(res,locmap,s);
-    put_line(file,"After initialization of the moving plane :");
-    put(file,res);
+   -- put_line(file,"After initialization of the moving plane :");
+   -- put(file,res);
     put(file,"Black checkers in upper right (zone A) : ");
     for i in p'range loop
       if integer32(p(i)) < r and p'last+1-i > p'last-dc+1

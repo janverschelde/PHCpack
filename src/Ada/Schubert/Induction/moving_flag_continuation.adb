@@ -80,7 +80,7 @@ package body Moving_Flag_Continuation is
       put_line(file,"no start solution found...");
     else
       new_line(file);
-      put(file,"The residual of the start solution : ");
+      put(file,"Residual of the start solution : ");
       put(file,res,3); new_line(file);
       xt(x'range) := x;
       xt(xt'last) := Standard_Complex_Numbers.Create(0.0);
@@ -101,7 +101,7 @@ package body Moving_Flag_Continuation is
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,deflate,false);
       Clear(sh0); --Clear(sols);
       Call_Path_Trackers(file,n,sh,xt,sol);
-      put(file,"The residual of the end solution : ");
+      put(file,"Residual of the end solution : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
       fail := (res > epsfa);
@@ -141,7 +141,7 @@ package body Moving_Flag_Continuation is
       put_line(file,"no start solution found...");
     else
       new_line(file);
-      put(file,"The residual of the start solution : ");
+      put(file,"Residual of the start solution : ");
       put(file,res,3); new_line(file);
       xt(x'range) := x;
       xt(xt'last) := DoblDobl_Complex_Numbers.Create(integer(0));
@@ -162,7 +162,7 @@ package body Moving_Flag_Continuation is
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
       Clear(sh0); --Clear(sols);
       Call_Path_Trackers(file,n,sh,xt,sol);
-      put(file,"The residual of the end solution : ");
+      put(file,"Residual of the end solution : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
       fail := (res > epsfa);
@@ -202,7 +202,7 @@ package body Moving_Flag_Continuation is
       put_line(file,"no start solution found...");
     else
       new_line(file);
-      put(file,"The residual of the start solution : ");
+      put(file,"Residual of the start solution : ");
       put(file,res,3); new_line(file);
       xt(x'range) := x;
       xt(xt'last) := QuadDobl_Complex_Numbers.Create(integer(0));
@@ -223,7 +223,7 @@ package body Moving_Flag_Continuation is
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
       Clear(sh0); --Clear(sols);
       Call_Path_Trackers(file,n,sh,xt,sol);
-      put(file,"The residual of the end solution : ");
+      put(file,"Residual of the end solution : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
       fail := (res > epsfa);
@@ -262,16 +262,18 @@ package body Moving_Flag_Continuation is
     xt(xt'last) := Standard_Complex_Numbers.Create(0.0);
     y := Eval(h,xt);
     new_line(file);
-    put_line(file,"Value of the start solution at the original homotopy :");
-    put_line(file,y);
+   -- put_line(file,"Value of the start solution at the original homotopy :");
+   -- put_line(file,y);
     res := Max_Norm(y);
-    put(file,"The residual : "); put(file,res,3); new_line(file);
+    put(file,"Residual of the start solution at original homotopy : ");
+    put(file,res,3); new_line(file);
     fail := (res > tolsing);
     yh := Eval(sh,xt);
-    put_line(file,"Value of the start solution at the squared homotopy :");
-    put_line(file,yh);
+   -- put_line(file,"Value of the start solution at the squared homotopy :");
+   -- put_line(file,yh);
     res := Max_Norm(y);
-    put(file,"The residual : "); put(file,res,3); new_line(file);
+    put(file,"Residual of the start solution at the squared homotopy : ");
+    put(file,res,3); new_line(file);
     fail := fail and (res > tolsing);
     if fail then
       put_line(file,"-> residual too high, abort path tracking");
@@ -281,7 +283,7 @@ package body Moving_Flag_Continuation is
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,deflate,false);
       Call_Path_Trackers(file,n,sh,xt,sol);
-      put(file,"The residual of the end solution at original homotopy : ");
+      put(file,"Residual of the end solution at original homotopy : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
       fail := (res > tolsing);
@@ -319,16 +321,18 @@ package body Moving_Flag_Continuation is
     xt(xt'last) := DoblDobl_Complex_Numbers.Create(integer(0));
     y := Eval(h,xt);
     new_line(file);
-    put_line(file,"Value of the start solution at the original homotopy :");
-    put_line(file,y);
+   -- put_line(file,"Value of the start solution at the original homotopy :");
+   -- put_line(file,y);
     res := Max_Norm(y);
-    put(file,"The residual : "); put(file,res,3); new_line(file);
+    put(file,"Residual of the start solution at the original homotopy : ");
+    put(file,res,3); new_line(file);
     fail := (res > tolsing);
     yh := Eval(sh,xt);
-    put_line(file,"Value of the start solution at the squared homotopy :");
-    put_line(file,yh);
+   -- put_line(file,"Value of the start solution at the squared homotopy :");
+   -- put_line(file,yh);
     res := Max_Norm(y);
-    put(file,"The residual : "); put(file,res,3); new_line(file);
+    put(file,"Residual of the start solution at the squared homotopy : ");
+    put(file,res,3); new_line(file);
     fail := fail and (res > tolsing);
     if fail then
       put_line(file,"-> residual too high, abort path tracking");
@@ -338,7 +342,7 @@ package body Moving_Flag_Continuation is
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
       Call_Path_Trackers(file,n,sh,xt,sol);
-      put(file,"The residual of the end solution at original homotopy : ");
+      put(file,"Residual of the end solution at original homotopy : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
       fail := (res > tolsing);
@@ -376,16 +380,18 @@ package body Moving_Flag_Continuation is
     xt(xt'last) := QuadDobl_Complex_Numbers.Create(integer(0));
     y := Eval(h,xt);
     new_line(file);
-    put_line(file,"Value of the start solution at the original homotopy :");
-    put_line(file,y);
+   -- put_line(file,"Value of the start solution at the original homotopy :");
+   -- put_line(file,y);
     res := Max_Norm(y);
-    put(file,"The residual : "); put(file,res,3); new_line(file);
+    put(file,"Residual of the start solution at the original homtopy : ");
+    put(file,res,3); new_line(file);
     fail := (res > tolsing);
     yh := Eval(sh,xt);
-    put_line(file,"Value of the start solution at the squared homotopy :");
-    put_line(file,yh);
+   -- put_line(file,"Value of the start solution at the squared homotopy :");
+   -- put_line(file,yh);
     res := Max_Norm(y);
-    put(file,"The residual : "); put(file,res,3); new_line(file);
+    put(file,"Residual of the start solution at the squared homotopy : ");
+    put(file,res,3); new_line(file);
     fail := fail and (res > tolsing);
     if fail then
       put_line(file,"-> residual too high, abort path tracking");
@@ -395,7 +401,7 @@ package body Moving_Flag_Continuation is
       Reporting_Root_Refiner
         (file,sh0,sols,epsxa,epsfa,tolsing,numit,3,false);
       Call_Path_Trackers(file,n,sh,xt,sol);
-      put(file,"The residual of the end solution at original homotopy : ");
+      put(file,"Residual of the end solution at original homotopy : ");
       y := Eval(h,xt); res := Max_Norm(y);
       put(file,res,3); new_line(file); new_line(file);
       fail := (res > tolsing);
@@ -438,16 +444,18 @@ package body Moving_Flag_Continuation is
       xt(xt'last) := Standard_Complex_Numbers.Create(0.0);
       y := Eval(h,xt);
       new_line(file);
-      put_line(file,"Value of the start solution at the original homotopy :");
-      put_line(file,y);
+     -- put_line(file,"Value of the start solution at the original homotopy :");
+     -- put_line(file,y);
       res := Max_Norm(y);
-      put(file,"The residual : "); put(file,res,3); new_line(file);
+      put(file,"Residual of the start solution at the original homotopy : ");
+      put(file,res,3); new_line(file);
       fail := (res > tolsing);
       yh := Eval(sh,xt);
-      put_line(file,"Value of the start solution at the squared homotopy :");
-      put_line(file,yh);
+     -- put_line(file,"Value of the start solution at the squared homotopy :");
+     -- put_line(file,yh);
       res := Max_Norm(y);
-      put(file,"The residual : "); put(file,res,3); new_line(file);
+      put(file,"Residual of the start solution at the squared hootopy : ");
+      put(file,res,3); new_line(file);
       fail := fail and (res > tolsing);
       Append(xtsols,xt_sols_last,Create(xt));
       tmp := Tail_Of(tmp);
@@ -468,10 +476,10 @@ package body Moving_Flag_Continuation is
       sh0 := Eval(sh,Standard_Complex_Numbers.Create(1.0),n+1);
       while not Is_Null(tmp) loop
         ls := Head_Of(tmp);
-        put(file,"The residual of the end solution at squared homotopy  :");
+        put(file,"Residual of the end solution at squared homotopy : ");
         yh := Eval(sh0,ls.v); res := Max_Norm(yh);
         put(file,res,3); new_line(file);
-        put_line(file,"Evaluating the end solution at the original homotopy :");
+     -- put_line(file,"Evaluating the end solution at the original homotopy :");
         declare
           xt : Standard_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
         begin
@@ -479,8 +487,8 @@ package body Moving_Flag_Continuation is
           xt(xt'last) := ls.t;
           y := Eval(h,xt);
         end;
-        put_line(file,y);
-        put(file,"The residual of the end solution at original homotopy :");
+       -- put_line(file,y);
+        put(file,"Residual of the end solution at original homotopy : ");
         res := Max_Norm(y);
         put(file,res,3); new_line(file);
         fail := (res > tolsing);
@@ -524,16 +532,18 @@ package body Moving_Flag_Continuation is
       xt(xt'last) := DoblDobl_Complex_Numbers.Create(integer(0));
       y := Eval(h,xt);
       new_line(file);
-      put_line(file,"Value of the start solution at the original homotopy :");
-      put_line(file,y);
+     -- put_line(file,"Value of the start solution at the original homotopy :");
+     -- put_line(file,y);
       res := Max_Norm(y);
-      put(file,"The residual : "); put(file,res,3); new_line(file);
+      put(file,"Residual of the start solution at the original homotopy : ");
+      put(file,res,3); new_line(file);
       fail := (res > tolsing);
       yh := Eval(sh,xt);
-      put_line(file,"Value of the start solution at the squared homotopy :");
-      put_line(file,yh);
+     -- put_line(file,"Value of the start solution at the squared homotopy :");
+     -- put_line(file,yh);
       res := Max_Norm(y);
-      put(file,"The residual : "); put(file,res,3); new_line(file);
+      put(file,"Residual of the start solution at the squared homotopy : ");
+      put(file,res,3); new_line(file);
       fail := fail and (res > tolsing);
       Append(xtsols,xt_sols_last,Create(xt));
       tmp := Tail_Of(tmp);
@@ -554,10 +564,10 @@ package body Moving_Flag_Continuation is
       sh0 := Eval(sh,DoblDobl_Complex_Numbers.Create(integer(1)),n+1);
       while not Is_Null(tmp) loop
         ls := Head_Of(tmp);
-        put(file,"The residual of the end solution at squared homotopy  :");
+        put(file,"Residual of the end solution at squared homotopy : ");
         yh := Eval(sh0,ls.v); res := Max_Norm(yh);
         put(file,res,3); new_line(file);
-        put_line(file,"Evaluating the end solution at the original homotopy :");
+     -- put_line(file,"Evaluating the end solution at the original homotopy :");
         declare
           xt : DoblDobl_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
         begin
@@ -565,8 +575,8 @@ package body Moving_Flag_Continuation is
           xt(xt'last) := ls.t;
           y := Eval(h,xt);
         end;
-        put_line(file,y);
-        put(file,"The residual of the end solution at original homotopy :");
+       -- put_line(file,y);
+        put(file,"Residual of the end solution at original homotopy : ");
         res := Max_Norm(y);
         put(file,res,3); new_line(file);
         fail := (res > tolsing);
@@ -610,16 +620,18 @@ package body Moving_Flag_Continuation is
       xt(xt'last) := QuadDobl_Complex_Numbers.Create(integer(0));
       y := Eval(h,xt);
       new_line(file);
-      put_line(file,"Value of the start solution at the original homotopy :");
-      put_line(file,y);
+     -- put_line(file,"Value of the start solution at the original homotopy :");
+     -- put_line(file,y);
       res := Max_Norm(y);
-      put(file,"The residual : "); put(file,res,3); new_line(file);
+      put(file,"Residual of the start solution at the original homotopy : ");
+      put(file,res,3); new_line(file);
       fail := (res > tolsing);
       yh := Eval(sh,xt);
-      put_line(file,"Value of the start solution at the squared homotopy :");
-      put_line(file,yh);
+     -- put_line(file,"Value of the start solution at the squared homotopy :");
+     -- put_line(file,yh);
       res := Max_Norm(y);
-      put(file,"The residual : "); put(file,res,3); new_line(file);
+      put(file,"Residual of the start solution at the squared homotopy : ");
+      put(file,res,3); new_line(file);
       fail := fail and (res > tolsing);
       Append(xtsols,xt_sols_last,Create(xt));
       tmp := Tail_Of(tmp);
@@ -640,10 +652,10 @@ package body Moving_Flag_Continuation is
       sh0 := Eval(sh,QuadDobl_Complex_Numbers.Create(integer(1)),n+1);
       while not Is_Null(tmp) loop
         ls := Head_Of(tmp);
-        put(file,"The residual of the end solution at squared homotopy  :");
+        put(file,"Residual of the end solution at squared homotopy : ");
         yh := Eval(sh0,ls.v); res := Max_Norm(yh);
         put(file,res,3); new_line(file);
-        put_line(file,"Evaluating the end solution at the original homotopy :");
+     -- put_line(file,"Evaluating the end solution at the original homotopy :");
         declare
           xt : QuadDobl_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
         begin
@@ -651,8 +663,8 @@ package body Moving_Flag_Continuation is
           xt(xt'last) := ls.t;
           y := Eval(h,xt);
         end;
-        put_line(file,y);
-        put(file,"The residual of the end solution at original homotopy :");
+       -- put_line(file,y);
+        put(file,"Residual of the end solution at original homotopy : ");
         res := Max_Norm(y);
         put(file,res,3); new_line(file);
         fail := (res > tolsing);
@@ -927,8 +939,8 @@ package body Moving_Flag_Continuation is
     put(file,"  rows = "); put(file,rows);
     put(file,"  cols = "); put(file,cols); new_line(file);
     put_line(file,"Verification of intersection conditions :");
-    put_line(file,"The moving flag : ");
-    Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
+   -- put_line(file,"The moving flag : ");
+   -- Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
     declare
       z : Standard_Complex_Vectors.Vector(x'range);
       fail : boolean;
@@ -982,8 +994,8 @@ package body Moving_Flag_Continuation is
     put(file,"  rows = "); put(file,rows);
     put(file,"  cols = "); put(file,cols); new_line(file);
     put_line(file,"Verification of intersection conditions :");
-    put_line(file,"The moving flag : ");
-    Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,mf);
+   -- put_line(file,"The moving flag : ");
+   -- Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,mf);
     declare
       z : DoblDobl_Complex_Vectors.Vector(x'range);
       fail : boolean;
@@ -1037,8 +1049,8 @@ package body Moving_Flag_Continuation is
     put(file,"  rows = "); put(file,rows);
     put(file,"  cols = "); put(file,cols); new_line(file);
     put_line(file,"Verification of intersection conditions :");
-    put_line(file,"The moving flag : ");
-    Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,mf);
+   -- put_line(file,"The moving flag : ");
+   -- Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,mf);
     declare
       z : QuadDobl_Complex_Vectors.Vector(x'range);
       fail : boolean;
@@ -1098,8 +1110,8 @@ package body Moving_Flag_Continuation is
     put(file,"  rows = "); put(file,rows);
     put(file,"  cols = "); put(file,cols); new_line(file);
     put_line(file,"Verification of intersection conditions :");
-    put_line(file,"The moving flag : ");
-    Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
+   -- put_line(file,"The moving flag : ");
+   -- Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
     fail := true; -- assume all solutions are failures
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
@@ -1109,9 +1121,10 @@ package body Moving_Flag_Continuation is
           := Eval(f.all,ls.v);
       begin
         put_line(file,"The given solution :"); put_line(file,ls.v);
-        put_line(file,"The value of the given solution :"); put_line(file,y);
+       -- put_line(file,"The value of the given solution :"); put_line(file,y);
         res := Max_Norm(y);
-        put(file,"The residual : "); put(file,res,3); new_line(file);
+        put(file,"Residual of the given solution : ");
+        put(file,res,3); new_line(file);
         if fail
          then fail := (res > tol); -- no fail as soon as one succeeds
         end if;
@@ -1160,8 +1173,8 @@ package body Moving_Flag_Continuation is
     put(file,"  rows = "); put(file,rows);
     put(file,"  cols = "); put(file,cols); new_line(file);
     put_line(file,"Verification of intersection conditions :");
-    put_line(file,"The moving flag : ");
-    Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,mf);
+   -- put_line(file,"The moving flag : ");
+   -- Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,mf);
     fail := true; -- assume all solutions are failures
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
@@ -1171,9 +1184,10 @@ package body Moving_Flag_Continuation is
           := Eval(f.all,ls.v);
       begin
         put_line(file,"The given solution :"); put_line(file,ls.v);
-        put_line(file,"The value of the given solution :"); put_line(file,y);
+       -- put_line(file,"The value of the given solution :"); put_line(file,y);
         res := Max_Norm(y);
-        put(file,"The residual : "); put(file,res,3); new_line(file);
+        put(file,"Residual of the given solution : ");
+        put(file,res,3); new_line(file);
         if fail
          then fail := (res > tol); -- no fail as soon as one succeeds
         end if;
@@ -1222,8 +1236,8 @@ package body Moving_Flag_Continuation is
     put(file,"  rows = "); put(file,rows);
     put(file,"  cols = "); put(file,cols); new_line(file);
     put_line(file,"Verification of intersection conditions :");
-    put_line(file,"The moving flag : ");
-    Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,mf);
+   -- put_line(file,"The moving flag : ");
+   -- Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,mf);
     fail := true; -- assume all solutions are failures
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
@@ -1233,9 +1247,10 @@ package body Moving_Flag_Continuation is
           := Eval(f.all,ls.v);
       begin
         put_line(file,"The given solution :"); put_line(file,ls.v);
-        put_line(file,"The value of the given solution :"); put_line(file,y);
+       -- put_line(file,"The value of the given solution :"); put_line(file,y);
         res := Max_Norm(y);
-        put(file,"The residual : "); put(file,res,3); new_line(file);
+        put(file,"Residual of the given solution : ");
+        put(file,res,3); new_line(file);
         if fail
          then fail := (res > tol); -- no fail as soon as one succeeds
         end if;
@@ -1559,14 +1574,14 @@ package body Moving_Flag_Continuation is
   begin
     fail := true;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
-    put_line(file,"The moving coordinates : "); put(file,xp);
-    put_line(file,"the new moving flag when making the stay homotopy :");
-    Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
-    put_line(file,"the old moving flag when making the stay homotopy :");
-    Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,start_mf);
+   -- put_line(file,"The moving coordinates : "); put(file,xp);
+   -- put_line(file,"the new moving flag when making the stay homotopy :");
+   -- Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
+   -- put_line(file,"the old moving flag when making the stay homotopy :");
+   -- Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,start_mf);
     xpm := Moving_Flag(start_mf,xp);
-    put_line(file,"The moving coordinates after multiplication by M :");
-    put(file,xpm);
+   -- put_line(file,"The moving coordinates after multiplication by M :");
+   -- put(file,xpm);
     if minrep
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
@@ -1612,14 +1627,14 @@ package body Moving_Flag_Continuation is
   begin
     fail := true;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
-    put_line(file,"The moving coordinates : "); put(file,xp);
-    put_line(file,"the new moving flag when making the stay homotopy :");
-    Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,mf);
-    put_line(file,"the old moving flag when making the stay homotopy :");
-    Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,start_mf);
+   -- put_line(file,"The moving coordinates : "); put(file,xp);
+   -- put_line(file,"the new moving flag when making the stay homotopy :");
+   -- Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,mf);
+   -- put_line(file,"the old moving flag when making the stay homotopy :");
+   -- Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,start_mf);
     xpm := Moving_Flag(start_mf,xp);
-    put_line(file,"The moving coordinates after multiplication by M :");
-    put(file,xpm);
+   -- put_line(file,"The moving coordinates after multiplication by M :");
+   -- put(file,xpm);
     if minrep
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
@@ -1665,14 +1680,14 @@ package body Moving_Flag_Continuation is
   begin
     fail := true;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
-    put_line(file,"The moving coordinates : "); put(file,xp);
-    put_line(file,"the new moving flag when making the stay homotopy :");
-    Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,mf);
-    put_line(file,"the old moving flag when making the stay homotopy :");
-    Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,start_mf);
+   -- put_line(file,"The moving coordinates : "); put(file,xp);
+   -- put_line(file,"the new moving flag when making the stay homotopy :");
+   -- Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,mf);
+   -- put_line(file,"the old moving flag when making the stay homotopy :");
+   -- Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,start_mf);
     xpm := Moving_Flag(start_mf,xp);
-    put_line(file,"The moving coordinates after multiplication by M :");
-    put(file,xpm);
+   -- put_line(file,"The moving coordinates after multiplication by M :");
+   -- put(file,xpm);
     if minrep
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
@@ -1718,14 +1733,14 @@ package body Moving_Flag_Continuation is
   begin
     fail := true;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
-    put_line(file,"The moving coordinates : "); put(file,xp);
-    put_line(file,"the new moving flag when making the stay homotopy :");
-    Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
-    put_line(file,"the old moving flag when making the stay homotopy :");
-    Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,start_mf);
+   -- put_line(file,"The moving coordinates : "); put(file,xp);
+   -- put_line(file,"the new moving flag when making the stay homotopy :");
+   -- Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,mf);
+   -- put_line(file,"the old moving flag when making the stay homotopy :");
+   -- Setup_Flag_Homotopies.Write_Standard_Moving_Flag(file,start_mf);
     xpm := Moving_Flag(start_mf,xp);
-    put_line(file,"The moving coordinates after multiplication by M :");
-    put(file,xpm);
+   -- put_line(file,"The moving coordinates after multiplication by M :");
+   -- put(file,xpm);
     if minrep
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
@@ -1769,14 +1784,14 @@ package body Moving_Flag_Continuation is
   begin
     fail := true;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
-    put_line(file,"The moving coordinates : "); put(file,xp);
-    put_line(file,"the new moving flag when making the stay homotopy :");
-    Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,mf);
-    put_line(file,"the old moving flag when making the stay homotopy :");
-    Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,start_mf);
+   -- put_line(file,"The moving coordinates : "); put(file,xp);
+   -- put_line(file,"the new moving flag when making the stay homotopy :");
+   -- Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,mf);
+   -- put_line(file,"the old moving flag when making the stay homotopy :");
+   -- Setup_Flag_Homotopies.Write_DoblDobl_Moving_Flag(file,start_mf);
     xpm := Moving_Flag(start_mf,xp);
-    put_line(file,"The moving coordinates after multiplication by M :");
-    put(file,xpm);
+   -- put_line(file,"The moving coordinates after multiplication by M :");
+   -- put(file,xpm);
     if minrep
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
@@ -1820,14 +1835,14 @@ package body Moving_Flag_Continuation is
   begin
     fail := true;
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
-    put_line(file,"The moving coordinates : "); put(file,xp);
-    put_line(file,"the new moving flag when making the stay homotopy :");
-    Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,mf);
-    put_line(file,"the old moving flag when making the stay homotopy :");
-    Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,start_mf);
+   -- put_line(file,"The moving coordinates : "); put(file,xp);
+   -- put_line(file,"the new moving flag when making the stay homotopy :");
+   -- Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,mf);
+   -- put_line(file,"the old moving flag when making the stay homotopy :");
+   -- Setup_Flag_Homotopies.Write_QuadDobl_Moving_Flag(file,start_mf);
     xpm := Moving_Flag(start_mf,xp);
-    put_line(file,"The moving coordinates after multiplication by M :");
-    put(file,xpm);
+   -- put_line(file,"The moving coordinates after multiplication by M :");
+   -- put(file,xpm);
     if minrep
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
@@ -1988,10 +2003,10 @@ package body Moving_Flag_Continuation is
 
   begin
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
-    put_line(file,"The moving coordinates : "); put(file,xp); 
+   -- put_line(file,"The moving coordinates : "); put(file,xp); 
     xpm := Moving_Flag(start_mf,xp);
-    put_line(file,"The moving coordinates after multiplication by M :");
-    put(file,xpm);
+   -- put_line(file,"The moving coordinates after multiplication by M :");
+   -- put(file,xpm);
     fail := true;
     if minrep
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
@@ -2044,10 +2059,10 @@ package body Moving_Flag_Continuation is
 
   begin
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
-    put_line(file,"The moving coordinates : "); put(file,xp); 
+   -- put_line(file,"The moving coordinates : "); put(file,xp); 
     xpm := Moving_Flag(start_mf,xp);
-    put_line(file,"The moving coordinates after multiplication by M :");
-    put(file,xpm);
+   -- put_line(file,"The moving coordinates after multiplication by M :");
+   -- put(file,xpm);
     fail := true;
     if minrep
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
@@ -2101,10 +2116,10 @@ package body Moving_Flag_Continuation is
 
   begin
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
-    put_line(file,"The moving coordinates : "); put(file,xp); 
+   -- put_line(file,"The moving coordinates : "); put(file,xp); 
     xpm := Moving_Flag(start_mf,xp);
-    put_line(file,"The moving coordinates after multiplication by M :");
-    put(file,xpm);
+   -- put_line(file,"The moving coordinates after multiplication by M :");
+   -- put(file,xpm);
     fail := true;
     if minrep
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
@@ -2157,10 +2172,10 @@ package body Moving_Flag_Continuation is
 
   begin
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
-    put_line(file,"The moving coordinates : "); put(file,xp); 
+   -- put_line(file,"The moving coordinates : "); put(file,xp); 
     xpm := Moving_Flag(start_mf,xp);
-    put_line(file,"The moving coordinates after multiplication by M :");
-    put(file,xpm);
+   -- put_line(file,"The moving coordinates after multiplication by M :");
+   -- put(file,xpm);
     fail := true;
     if minrep
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
@@ -2211,10 +2226,10 @@ package body Moving_Flag_Continuation is
 
   begin
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
-    put_line(file,"The moving coordinates : "); put(file,xp); 
+   -- put_line(file,"The moving coordinates : "); put(file,xp); 
     xpm := Moving_Flag(start_mf,xp);
-    put_line(file,"The moving coordinates after multiplication by M :");
-    put(file,xpm);
+   -- put_line(file,"The moving coordinates after multiplication by M :");
+   -- put(file,xpm);
     fail := true;
     if minrep
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
@@ -2265,10 +2280,10 @@ package body Moving_Flag_Continuation is
 
   begin
     Initialize_Homotopy_Symbols(natural32(dim),locmap);
-    put_line(file,"The moving coordinates : "); put(file,xp); 
+   -- put_line(file,"The moving coordinates : "); put(file,xp); 
     xpm := Moving_Flag(start_mf,xp);
-    put_line(file,"The moving coordinates after multiplication by M :");
-    put(file,xpm);
+   -- put_line(file,"The moving coordinates after multiplication by M :");
+   -- put(file,xpm);
     fail := true;
     if minrep
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);

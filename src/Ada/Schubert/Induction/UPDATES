@@ -1,5 +1,8 @@
 Wed 21 Oct 2015 : updated ts_flagcond.adb with tests in double double
-  and quad double precision.
+  and quad double precision.  Commented out print statements from
+  checker_homotopies.adb, checker_poset_deformations.adb,
+  moving_flag_continuation.adb, start_flag_homotopies.adb, and
+  wrapped_path_trackers.adb to reduce the size of output files.
 
 Tue 20 Oct 2015 : new package checker_poset_deformations with code out of
   moving_flag_continuation, which changed resolve_schubert_problems.adb

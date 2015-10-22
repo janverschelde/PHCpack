@@ -233,6 +233,7 @@ package body Start_Flag_Homotopies is
                     x : out DoblDobl_Complex_Vectors.Vector;
                     res : out double_double ) is
 
+
     use DoblDobl_Complex_Singular_Values;
 
     AA : constant DoblDobl_Complex_Matrices.Matrix(A'range(1),A'range(2)) := A;
