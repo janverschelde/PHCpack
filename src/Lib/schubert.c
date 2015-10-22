@@ -35,7 +35,7 @@ int resolve_Schubert_conditions
    return fail;
 }
 
-int Littlewood_Richardson_homotopies
+int standard_Littlewood_Richardson_homotopies
  ( int n, int k, int c, int *brackets, int verbose, int verify,
    int nbchar, char *filename, int *r, double *flags )
 {
@@ -54,6 +54,60 @@ int Littlewood_Richardson_homotopies
    for(i=0; i<nbchar; i++) rc[i] = (double) filename[i];
 
    fail = _ada_use_c2phc(229,dim,brackets,rc);
+
+   (*r) = (int) rc[0];
+
+   for(i=1; i<size; i++) flags[i-1] = rc[i];
+
+   return fail;
+}
+
+int dobldobl_Littlewood_Richardson_homotopies
+ ( int n, int k, int c, int *brackets, int verbose, int verify,
+   int nbchar, char *filename, int *r, double *flags )
+{
+   int fail,i;
+   int size = 4*(c-2)*n*n+1;
+   double rc[size]; /* filename on input, count & flags on return */
+   int dim[6];
+
+   dim[0] = n;
+   dim[1] = k;
+   dim[2] = c;
+   dim[3] = verbose;
+   dim[4] = verify;
+   dim[5] = nbchar;
+
+   for(i=0; i<nbchar; i++) rc[i] = (double) filename[i];
+
+   fail = _ada_use_c2phc(180,dim,brackets,rc);
+
+   (*r) = (int) rc[0];
+
+   for(i=1; i<size; i++) flags[i-1] = rc[i];
+
+   return fail;
+}
+
+int quaddobl_Littlewood_Richardson_homotopies
+ ( int n, int k, int c, int *brackets, int verbose, int verify,
+   int nbchar, char *filename, int *r, double *flags )
+{
+   int fail,i;
+   int size = 8*(c-2)*n*n+1;
+   double rc[size]; /* filename on input, count & flags on return */
+   int dim[6];
+
+   dim[0] = n;
+   dim[1] = k;
+   dim[2] = c;
+   dim[3] = verbose;
+   dim[4] = verify;
+   dim[5] = nbchar;
+
+   for(i=0; i<nbchar; i++) rc[i] = (double) filename[i];
+
+   fail = _ada_use_c2phc(181,dim,brackets,rc);
 
    (*r) = (int) rc[0];
 

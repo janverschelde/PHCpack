@@ -4144,7 +4144,7 @@ static PyObject *py2c_schubert_resolve_conditions
    return Py_BuildValue("i",r);
 }
 
-static PyObject *py2c_schubert_littlewood_richardson_homotopies
+static PyObject *py2c_schubert_standard_littlewood_richardson_homotopies
  ( PyObject *self, PyObject *args )
 {
    int i,n,k,nbc,nc,fail,r,vrb,vrf,szn;
@@ -4183,7 +4183,119 @@ static PyObject *py2c_schubert_littlewood_richardson_homotopies
       const int fgsize = 2*(nbc-2)*n*n;
       double fg[fgsize];
       char stfg[fgsize*24+2];
-      fail = Littlewood_Richardson_homotopies
+      fail = standard_Littlewood_Richardson_homotopies
+               (n,k,nbc,cds,vrb,vrf,szn,name,&r,fg);
+      stfg[0] = '[';
+      idx = 1;
+      for(i=0; i<fgsize; i++)
+      {
+         sprintf(&stfg[idx],"%+.16e",fg[i]); idx = idx + 23;
+         stfg[idx] = ','; idx = idx + 1;
+      }
+      stfg[idx-1] = ']';
+      stfg[idx] = '\0';
+      /* printf("The string with flag coefficients :\n%s\n", stfg); */
+
+      return Py_BuildValue("(i,s)",r,stfg);
+   }
+}
+
+static PyObject *py2c_schubert_dobldobl_littlewood_richardson_homotopies
+ ( PyObject *self, PyObject *args )
+{
+   int i,n,k,nbc,nc,fail,r,vrb,vrf,szn;
+   char *cond;
+   char *name;
+
+   initialize();
+   if(!PyArg_ParseTuple
+         (args,"iiiisiis",&n,&k,&nbc,&nc,&cond,&vrb,&vrf,&szn,&name))
+      return NULL;
+/*
+   printf("name of the output file : %s\n", name);
+   printf("the number of characters : %d\n", nc);
+   printf("the conditions : %s\n", cond);
+   printf("the conditions parsed : ");
+*/
+   {
+      int cds[k*nbc];
+      int pos = 0;
+      int idx = 0;
+      while((idx < k*nbc) && (pos < nc))
+      {
+         while(cond[pos] == ' ' && pos < nc) pos++;
+         if(pos > nc) break;
+         cds[idx] = 0;
+         while(cond[pos] != ' ')
+         {
+            if(cond[pos] == '\0') break;
+            cds[idx] = cds[idx]*10 + (cond[pos] - '0');
+            pos = pos + 1;
+            if(pos >= nc) break;
+         }
+         /* printf(" %d", cds[idx]); */
+         idx = idx + 1;
+      }
+      const int fgsize = 4*(nbc-2)*n*n;
+      double fg[fgsize];
+      char stfg[fgsize*24+2];
+      fail = dobldobl_Littlewood_Richardson_homotopies
+               (n,k,nbc,cds,vrb,vrf,szn,name,&r,fg);
+      stfg[0] = '[';
+      idx = 1;
+      for(i=0; i<fgsize; i++)
+      {
+         sprintf(&stfg[idx],"%+.16e",fg[i]); idx = idx + 23;
+         stfg[idx] = ','; idx = idx + 1;
+      }
+      stfg[idx-1] = ']';
+      stfg[idx] = '\0';
+      /* printf("The string with flag coefficients :\n%s\n", stfg); */
+
+      return Py_BuildValue("(i,s)",r,stfg);
+   }
+}
+
+static PyObject *py2c_schubert_quaddobl_littlewood_richardson_homotopies
+ ( PyObject *self, PyObject *args )
+{
+   int i,n,k,nbc,nc,fail,r,vrb,vrf,szn;
+   char *cond;
+   char *name;
+
+   initialize();
+   if(!PyArg_ParseTuple
+         (args,"iiiisiis",&n,&k,&nbc,&nc,&cond,&vrb,&vrf,&szn,&name))
+      return NULL;
+/*
+   printf("name of the output file : %s\n", name);
+   printf("the number of characters : %d\n", nc);
+   printf("the conditions : %s\n", cond);
+   printf("the conditions parsed : ");
+*/
+   {
+      int cds[k*nbc];
+      int pos = 0;
+      int idx = 0;
+      while((idx < k*nbc) && (pos < nc))
+      {
+         while(cond[pos] == ' ' && pos < nc) pos++;
+         if(pos > nc) break;
+         cds[idx] = 0;
+         while(cond[pos] != ' ')
+         {
+            if(cond[pos] == '\0') break;
+            cds[idx] = cds[idx]*10 + (cond[pos] - '0');
+            pos = pos + 1;
+            if(pos >= nc) break;
+         }
+         /* printf(" %d", cds[idx]); */
+         idx = idx + 1;
+      }
+      const int fgsize = 8*(nbc-2)*n*n;
+      double fg[fgsize];
+      char stfg[fgsize*24+2];
+      fail = quaddobl_Littlewood_Richardson_homotopies
                (n,k,nbc,cds,vrb,vrf,szn,name,&r,fg);
       stfg[0] = '[';
       idx = 1;
@@ -5505,9 +5617,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_schubert_resolve_conditions", py2c_schubert_resolve_conditions,
      METH_VARARGS,
     "Resolves a general Schubert intersection condition in n-space\n for k-planes subject to conditions defined by brackers.\n On return is the root count, the number of k-planes that satisfy\n the intersection conditions imposed by the brackets for general flags.\n On entry are five integers and one string:\n 1) n, the ambient dimension, where the k-planes live;\n 2) k, the dimension of the solution planes;\n 3) c, the number of intersection conditions;\n 4) nc, the number of characters in the string brackets;\n 5) brackets is a string representation of c brackets, where the numbers\n in each bracket are separated by spaces;\n 6) the flag verbose: when 0, no intermediate output is written,\n when 1, then the resolution is dispayed on screen."},
-   {"py2c_schubert_littlewood_richardson_homotopies",
-     py2c_schubert_littlewood_richardson_homotopies, METH_VARARGS,
-    "Runs the Littlewood-Richardson homotopies to resolve a number of\n general Schubert intersection conditions on k-planes in n-space.\n The polynomial system that was solved is in the container for\n systems with coefficients in standard double precision and the\n corresponding solutions are in the standard solutions container.\n On entry are six integers and two strings, in the following order:\n 1) n, the ambient dimension, where the k-planes live;\n 2) k, the dimension of the solution planes;\n 3) c,the number of intersection conditions;\n 4) nc, the number of characters in the string brackets;\n 5) brackets is a string representation of c brackets, where the numbers\n in each bracket are separated by spaces;\n 6) the flag verbose: when 0, no intermediate output is written,\n when 1, then the resolution is dispayed on screen;\n 7) the flag verify: when 0, no diagnostic verification is done,\n when 1, then diagnostic verification is written to file;\n 8) nbchar, the number of characters in the string filename;\n 9) filename is the name of the output file.\n The function returns a tuple of an integer and a string:\n 0) r is the formal root count as the number of k-planes\n for conditions imposed by the brackets for general flags;\n 1) flags, a string with the coefficients of the general flags."},
+   {"py2c_schubert_standard_littlewood_richardson_homotopies",
+     py2c_schubert_standard_littlewood_richardson_homotopies, METH_VARARGS,
+    "Runs the Littlewood-Richardson homotopies to resolve a number of\n general Schubert intersection conditions on k-planes in n-space,\n in standard double precision.\n The polynomial system that was solved is in the container for\n systems with coefficients in standard double precision and the\n corresponding solutions are in the standard solutions container.\n On entry are six integers and two strings, in the following order:\n 1) n, the ambient dimension, where the k-planes live;\n 2) k, the dimension of the solution planes;\n 3) c,the number of intersection conditions;\n 4) nc, the number of characters in the string brackets;\n 5) brackets is a string representation of c brackets, where the numbers\n in each bracket are separated by spaces;\n 6) the flag verbose: when 0, no intermediate output is written,\n when 1, then the resolution is dispayed on screen;\n 7) the flag verify: when 0, no diagnostic verification is done,\n when 1, then diagnostic verification is written to file;\n 8) nbchar, the number of characters in the string filename;\n 9) filename is the name of the output file.\n The function returns a tuple of an integer and a string:\n 0) r is the formal root count as the number of k-planes\n for conditions imposed by the brackets for general flags;\n 1) flags, a string with the coefficients of the general flags."},
+   {"py2c_schubert_dobldobl_littlewood_richardson_homotopies",
+     py2c_schubert_dobldobl_littlewood_richardson_homotopies, METH_VARARGS,
+    "Runs the Littlewood-Richardson homotopies to resolve a number of\n general Schubert intersection conditions on k-planes in n-space,\n in double double precision.\n The polynomial system that was solved is in the container for\n systems with coefficients in double double precision and the\n corresponding solutions are in the dobldobl solutions container.\n On entry are six integers and two strings, in the following order:\n 1) n, the ambient dimension, where the k-planes live;\n 2) k, the dimension of the solution planes;\n 3) c,the number of intersection conditions;\n 4) nc, the number of characters in the string brackets;\n 5) brackets is a string representation of c brackets, where the numbers\n in each bracket are separated by spaces;\n 6) the flag verbose: when 0, no intermediate output is written,\n when 1, then the resolution is dispayed on screen;\n 7) the flag verify: when 0, no diagnostic verification is done,\n when 1, then diagnostic verification is written to file;\n 8) nbchar, the number of characters in the string filename;\n 9) filename is the name of the output file.\n The function returns a tuple of an integer and a string:\n 0) r is the formal root count as the number of k-planes\n for conditions imposed by the brackets for general flags;\n 1) flags, a string with the coefficients of the general flags."},
+   {"py2c_schubert_quaddobl_littlewood_richardson_homotopies",
+     py2c_schubert_quaddobl_littlewood_richardson_homotopies, METH_VARARGS,
+    "Runs the Littlewood-Richardson homotopies to resolve a number of\n general Schubert intersection conditions on k-planes in n-space,\n in quad double precision.\n The polynomial system that was solved is in the container for\n systems with coefficients in quad double precision and the\n corresponding solutions are in the quaddobl solutions container.\n On entry are six integers and two strings, in the following order:\n 1) n, the ambient dimension, where the k-planes live;\n 2) k, the dimension of the solution planes;\n 3) c,the number of intersection conditions;\n 4) nc, the number of characters in the string brackets;\n 5) brackets is a string representation of c brackets, where the numbers\n in each bracket are separated by spaces;\n 6) the flag verbose: when 0, no intermediate output is written,\n when 1, then the resolution is dispayed on screen;\n 7) the flag verify: when 0, no diagnostic verification is done,\n when 1, then diagnostic verification is written to file;\n 8) nbchar, the number of characters in the string filename;\n 9) filename is the name of the output file.\n The function returns a tuple of an integer and a string:\n 0) r is the formal root count as the number of k-planes\n for conditions imposed by the brackets for general flags;\n 1) flags, a string with the coefficients of the general flags."},
    {"py2c_schubert_localization_poset", py2c_schubert_localization_poset,
      METH_VARARGS,
     "Returns the string representation of the localization poset for the\n Pieri root count for m, p, and q.  The input parameters are the\n integer values for m, p, and q:\n 1) m, the dimension of the input planes;\n 2) p, the dimension of the output planes;\n 3) q, the degree of the curves that produce p-planes."},

@@ -2771,15 +2771,572 @@ static PyObject *py2c_schubert_resolve_conditions
  *   6) the flag verbose: when 0, no intermediate output is written,
  *   when 1, then the resolution is dispayed on screen. */
 
-static PyObject *py2c_schubert_littlewood_richardson_homotopies
+static PyObject *py2c_schubert_standard_littlewood_richardson_homotopies
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Runs the Littlewood-Richardson homotopies to resolve a number of
- *   general Schubert intersection conditions on k-planes in n-space.
+ *   general Schubert intersection conditions on k-planes in n-space,
+ *   in standard double precision.
  *   The polynomial system that was solved is in the container for
  *   systems with coefficients in standard double precision and the
  *   corresponding solutions are in the standard solutions container.
+ *   On entry are seven integers and two strings, in the following order:
+ *   1) n, the ambient dimension, where the k-planes live;
+ *   2) k, the dimension of the solution planes;
+ *   3) c,the number of intersection conditions;
+ *   4) nc, the number of characters in the string brackets;
+ *   5) brackets is a string representation of c brackets, where the numbers
+ *   in each bracket are separated by spaces;
+ *   6) the flag verbose: when 0, no intermediate output is written,
+ *      when 1, then the resolution is dispayed on screen;
+ *   7) the flag verify: when 0, no diagnostic output is written to file,
+ *      when 1, then diagnostic output is written to file;
+ *   8) nbchar, the number of characters in the string filename;
+ *   9) filename is the name of the output file.
+ *   The function returns a tuple of an integer and a string:
+ *   0) r is the formal root count as the number of k-planes
+ *   for conditions imposed by the brackets for general flags;
+ *   1) flags, a string with the coefficients of the general flags. */
+ *   The lifted supports and the random coefficient system are defined.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_celcon_quaddobl_polyhedral_homotopy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Based on the lifting and the random coefficient system,
+ *   the polyhedral homotopy to solve the random coefficient system 
+ *   in quad double precision is constructed.
+ *   This function also initializes the internal data structures to store
+ *   the solutions of start and target systems.
+ *   The lifted supports and the random coefficient system are defined.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_celcon_solve_standard_start_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Solves the start system corresponding to the k-th mixed cell,
+ *   using standard double precision arithmetic.
+ *   The precondition for this function is that the creation of
+ *   the polyhedral homotopy in standard double precision ended well.
+ *   On return is the number of solution found, which must equal
+ *   the mixed volume of the k-th mixed cell. */
+
+static PyObject *py2c_celcon_solve_dobldobl_start_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Solves the start system corresponding to the k-th mixed cell,
+ *   using double double precision arithmetic.
+ *   The precondition for this function is that the creation of
+ *   the polyhedral homotopy in double double precision ended well.
+ *   On return is the number of solution found, which must equal
+ *   the mixed volume of the k-th mixed cell. */
+
+static PyObject *py2c_celcon_solve_quaddobl_start_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Solves the start system corresponding to the k-th mixed cell,
+ *   using quad double precision arithmetic.
+ *   The precondition for this function is that the creation of
+ *   the polyhedral homotopy in quad double precision ended well.
+ *   On return is the number of solution found, which must equal
+ *   the mixed volume of the k-th mixed cell. */
+
+static PyObject *py2c_celcon_track_standard_solution_path
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Tracks a solution path starting at the i-th solution of the k-th cell,
+ *   using standard double precision arithmetic.
+ *   The precondition for this function is that the start system defined
+ *   by the k-th mixed cell is solved in standard double precision.
+ *   There are three input parameters:
+ *   1) k, the index to a mixed cell in the cell container;
+ *   2) i, the index to a solution path defined by that mixed cell;
+ *   3) otp, the level for intermediate output during path tracking.
+ *   A target solution corresponding to the k-th cell is added on return. */
+
+static PyObject *py2c_celcon_track_dobldobl_solution_path
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Tracks a solution path starting at the i-th solution of the k-th cell,
+ *   using double double precision arithmetic.
+ *   The precondition for this function is that the start system defined
+ *   by the k-th mixed cell is solved in double double precision.
+ *   There are three input parameters:
+ *   1) k, the index to a mixed cell in the cell container;
+ *   2) i, the index to a solution path defined by that mixed cell;
+ *   3) otp, the level for intermediate output during path tracking.
+ *   A target solution corresponding to the k-th cell is added on return. */
+
+static PyObject *py2c_celcon_track_quaddobl_solution_path
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Tracks a solution path starting at the i-th solution of the k-th cell,
+ *   using quad double precision arithmetic.
+ *   The precondition for this function is that the start system defined
+ *   by the k-th mixed cell is solved in quad double precision.
+ *   There are three input parameters:
+ *   1) k, the index to a mixed cell in the cell container;
+ *   2) i, the index to a solution path defined by that mixed cell;
+ *   3) otp, the level for intermediate output during path tracking.
+ *   A target solution corresponding to the k-th cell is added on return. */
+
+static PyObject *py2c_celcon_copy_target_standard_solution_to_container
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the i-th target solution corresponding to the k-th mixed cell
+ *   to the container for solutions in standard double precision.
+ *   There are two input parameters for this function:
+ *   1) k, the index to the mixed cell;
+ *   2) i, the index to the i-th solution path defined by the cell.
+ *   On return is the failure code, which equals zero when all went well. */
+
+static PyObject *py2c_celcon_copy_target_dobldobl_solution_to_container
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the i-th target solution corresponding to the k-th mixed cell
+ *   to the container for solutions in double double precision.
+ *   There are two input parameters for this function:
+ *   1) k, the index to the mixed cell;
+ *   2) i, the index to the i-th solution path defined by the cell.
+ *   On return is the failure code, which equals zero when all went well. */
+
+static PyObject *py2c_celcon_copy_target_quaddobl_solution_to_container
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the i-th target solution corresponding to the k-th mixed cell
+ *   to the container for solutions in quad double precision.
+ *   There are two input parameters for this function:
+ *   1) k, the index to the mixed cell;
+ *   2) i, the index to the i-th solution path defined by the cell.
+ *   On return is the failure code, which equals zero when all went well. */
+
+static PyObject *py2c_celcon_permute_standard_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Permutes the systems in the container for polynomial and Laurent systems
+ *   with standard double coefficients corresponding to the permutation
+ *   used to compute the mixed-cell configuration.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_celcon_permute_dobldobl_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Permutes the systems in the container for polynomial and Laurent systems
+ *   with double double coefficients corresponding to the permutation
+ *   used to compute the mixed-cell configuration.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_celcon_permute_quaddobl_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Permutes the systems in the container for polynomial and Laurent systems
+ *   with quad double coefficients corresponding to the permutation
+ *   used to compute the mixed-cell configuration.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_celcon_clear_container
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates the data in the cell container. */
+
+/* wrapping functions to scale polynomial systems and solutions */
+
+static PyObject *py2c_scale_standard_system ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Applies scaling to the system in the standard systems container,
+ *   with standard double precision arithmetic.  The system in the standard
+ *   systems container is replaced by the scaled system.
+ *   On entry is one integer, which should be either 0, 1, or 2:
+ *   0 for only scaling of the equations,
+ *   1 variable scaling without variability reduction,
+ *   2 variable scaling with variability reduction.
+ *   On return is a tuple with the scaling coefficients (if mode > 0)
+ *   and the estimated inverse condition number of the scaling problem. */
+
+static PyObject *py2c_scale_dobldobl_system ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Applies scaling to the system in the dobldobl systems container,
+ *   with double double precision arithmetic.  The system in the dobldobl
+ *   systems container is replaced by the scaled system.
+ *   On entry is one integer, which should be either 0, 1, or 2:
+ *   0 for only scaling of the equations,
+ *   1 variable scaling without variability reduction,
+ *   2 variable scaling with variability reduction.
+ *   On return is a tuple with the scaling coefficients (if mode > 0)
+ *   and the estimated inverse condition number of the scaling problem. */
+
+static PyObject *py2c_scale_quaddobl_system ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Applies scaling to the system in the quaddobl systems container,
+ *   with quad double precision arithmetic.  The system in the quaddobl
+ *   systems container is replaced by the scaled system.
+ *   On entry is one integer, which should be either 0, 1, or 2:
+ *   0 for only scaling of the equations,
+ *   1 variable scaling without variability reduction,
+ *   2 variable scaling with variability reduction.
+ *   On return is a tuple with the scaling coefficients (if mode > 0)
+ *   and the estimated inverse condition number of the scaling problem. */
+
+static PyObject *py2c_scale_standard_solutions 
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the solutions in the standard solutions container with
+ *   the scaled solutions, scaled with standard double precision arithmetic,
+ *   using the given scaling coefficients.
+ *   On entry are two parameters: an integer and a string.
+ *   The integer contains the number of elements in the list
+ *   of scaling coefficients (doubles) stored in the string.
+ *   The format of the string is the Python string representation
+ *   of a list of doubles, i.e.: starting with '[' and ending with ']'. */
+
+static PyObject *py2c_scale_dobldobl_solutions 
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the solutions in the dobldobl solutions container with
+ *   the scaled solutions, scaled with double double precision arithmetic,
+ *   using the given scaling coefficients.
+ *   On entry are two parameters: an integer and a string.
+ *   The integer contains the number of elements in the list
+ *   of scaling coefficients (doubles) stored in the string.
+ *   The format of the string is the Python string representation
+ *   of a list of doubles, i.e.: starting with '[' and ending with ']'. */
+
+static PyObject *py2c_scale_quaddobl_solutions 
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the solutions in the quaddobl solutions container with
+ *   the scaled solutions, scaled with quad double precision arithmetic,
+ *   using the given scaling coefficients.
+ *   On entry are two parameters: an integer and a string.
+ *   The integer contains the number of elements in the list
+ *   of scaling coefficients (doubles) stored in a the string.
+ *   The format of the string is the Python string representation
+ *   of a list of doubles, i.e.: starting with '[' and ending with ']'. */
+
+/* wrapping functions to manipulate algebraic sets */
+
+static PyObject *py2c_embed_system ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the system with coefficients in standard double precision
+ *   in the container with its embedding of dimension d.
+ *   The dimension d is given as an integer parameter on input.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_standard_cascade_homotopy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Creates a homotopy in standard double precision using the stored
+ *   systems to go one level down the cascade, removing one slice.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_dobldobl_cascade_homotopy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Creates a homotopy in double double precision using the stored
+ *   systems to go one level down the cascade, removing one slice.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_quaddobl_cascade_homotopy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Creates a homotopy in quad double precision using the stored
+ *   systems to go one level down the cascade, removing one slice.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_factor_set_to_mute ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Sets the state of monodromy permutations to silent. */
+
+static PyObject *py2c_factor_define_output_file_with_string
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Defines the output file for the factorization.
+ *   On input are an integer and a string:
+ *   1) the integer equals the number of characters in the string; and
+ *   2) the string contains the name of a file.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_factor_assign_labels ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Assigns labels, replacing the multiplicity field of each solution
+ *   in standard double precision stored in the container.
+ *   On entry are two integers:
+ *   1) n, the number of coordinates of the solutions;
+ *   2) nbsols, the number of solutions in the container.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_factor_initialize_sampler
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the sampling machine with a witness set.
+ *   On entry is the dimension or the number of hyperplanes
+ *   to slide the positive dimensional solution set. */
+
+static PyObject *py2c_factor_initialize_monodromy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the internal data structures for n loops,
+ *   to factor a k-dimensional solution component of degree d.
+ *   There are three integers on input, in the following order:
+ *   1) n, the number of loops;
+ *   2) d, the degree of the solution set;
+ *   3) k, the dimensional of the solution set.
+ *   On return is the failure code, which equals zero when all went well. */
+
+static PyObject *py2c_factor_store_solutions
+ ( PyObject *self, PyObject *args );
+/* 
+ * DESCRIPTION :
+ *   Stores the solutions in the container to the data for monodromy loops. */
+
+static PyObject *py2c_factor_restore_solutions
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Restores the first initialized solutions from sampler to the container. */
+
+static PyObject *py2c_factor_track_paths ( PyObject *self, PyObject *args );
+/* 
+ * DESCRIPTION :
+ *   Tracks as many paths as defined by witness set.
+ *   On return is the failure code, which is zero when all went well. */
+
+static PyObject *py2c_factor_swap_slices ( PyObject *self, PyObject *args );
+/* 
+ * DESCRIPTION :
+ *   Swaps the current slices with new slices and takes new solutions
+ *   as start to turn back.
+ *   On return is the failure code, which is zero when all went well. */
+
+static PyObject *py2c_factor_new_slices ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Generates k random slides in n-space.
+ *   The k and the n are the two input parameters.
+ *   On return is the failure code, which is zero when all went well. */
+
+static PyObject *py2c_factor_set_trace_slice
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Assigns the constant coefficient of the first slice.
+ *   On entry is a flag to indicate if it was the first time or not.
+ *   On return is the failure code, which is zero if all went well. */
+
+static PyObject *py2c_factor_store_gammas ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Stores the gamma constants for the sampler in the monodromy loops.
+ *   Generates as many random complex constants as the value on input.
+ *   On return is the failure code, which is zero if all went well. */
+
+static PyObject *py2c_factor_permutation_after_loop
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   For a solution set of degree d, computes the permutation using the
+ *   solutions most recently stored, after a loop. 
+ *   The number d is the input parameter of this function.
+ *   On return is the string representation of the permutation. */
+
+static PyObject *py2c_factor_update_decomposition
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Updates the decomposition with the given permutation of d elements.
+ *   On entry are two integers and one string:
+ *   1) d, the number of elements in the permutation;
+ *   2) nc, the number of characters in the string;
+ *   3) p, the string representation of the permutation.
+ *   Returns one if the current decomposition is certified,
+ *   otherwise returns zero. */
+
+static PyObject *py2c_factor_number_of_components
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of irreducible factors in the current
+ *   decomposition of the witness set. */
+
+static PyObject *py2c_factor_witness_points_of_component
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns a string which represents an irreducible component.
+ *   On entry are two integers:
+ *   1) the sum of the degrees of all components;
+ *   2) the index of the component. */
+
+static PyObject *py2c_factor_trace_sum_difference
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the difference between the actual sum at the samples
+ *   defined by the labels to the generic points in the factor,
+ *   and the trace sum.
+ *   On entry are three integer numbers and one string:
+ *   1) d, the number of points in the witness set;
+ *   2) k, the dimension of the solution set;
+ *   3) nc, the number of characters in the string;
+ *   4) ws, the string representing the labels of the witness set. */
+
+static PyObject *py2c_witness_set_of_hypersurface
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Given in the string p of nc characters a polynomial in nv variables,
+ *   terminated by a semicolon, the systems and solutions container on
+ *   return contain a witness set for the hypersurface defined by p.
+ *   On entry are two integers and one string, in the following order:
+ *   1) nv, the number of variables of the polynomials;
+ *   2) nc, the number of characters in the string p;
+ *   3) p, string representation of a polynomial, terminates with ';'.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_create_diagonal_homotopy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Creates a diagonal homotopy to intersect two solution sets of
+ *   dimensions a and b respectively, where a >= b.
+ *   The two input parameters are values for a and b.
+ *   The systems stored as target and start system in the container
+ *   define the witness sets for these two solution sets. */
+
+static PyObject *py2c_start_diagonal_cascade_solutions
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Makes the start solutions to start the cascade homotopy to
+ *   intersect two solution sets of dimensions a and b, where a >= b.
+ *   The dimensions a and b are given as input parameters.
+ *   The systems stored as target and start system in the container
+ *   define the witness sets for these two solution sets.
+ *   On return is the failure code, which equals zero when all went well. */
+
+static PyObject *py2c_extrinsic_top_diagonal_dimension
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the dimension of the start and target system to
+ *   start the extrinsic cascade to intersect two witness sets,
+ *   respectively of dimensions a and b, with ambient dimensions
+ *   respectively equal to n1 and n2.
+ *   There are four integers as parameters on input: n1, n2, a and b. */
+
+static PyObject *py2c_collapse_diagonal ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Eliminates the extrinsic diagonal for the system and solutions
+ *   in the containers.  On input are two integers:
+ *   1) k, the current number of slack variables in the embedding;
+ *   2) d, the number of slack variables to add to the final embedding.
+ *   The system in the container has its diagonal eliminated and is
+ *   embedded with k+d slack variables.  The solutions corresponding
+ *   to this system are in the solutions container.
+ *   On return is the failure code, which equals zero if all went well. */
+
+/* The wrapping of Pieri and Littlewood-Richardson homotopies,
+ * with prototypes in schubert.h starts here. */
+
+static PyObject *py2c_schubert_pieri_count
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of p-plane producing curves of degree q
+ *   that meet m*p + q*(m+p) given general m-planes.
+ *   On input are three integer numbers:
+ *   1) m, the dimension of the input planes;
+ *   2) p, the dimension of the output planes; and
+ *   3) q, the degree of the curve that produces p-planes.
+ *   The dimension of the ambient space of this Pieri problem is m+p. */
+
+static PyObject *py2c_schubert_resolve_conditions
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Resolves a general Schubert intersection condition in n-space
+ *   for k-planes subject to conditions defined by brackers.
+ *   On return is the root count, the number of k-planes that satisfy
+ *   the intersection conditions imposed by the brackets for general flags.
+ *   On entry are five integers and one string:
+ *   1) n, the ambient dimension, where the k-planes live;
+ *   2) k, the dimension of the solution planes;
+ *   3) c, the number of intersection conditions;
+ *   4) nc, the number of characters in the string brackets;
+ *   5) brackets is a string representation of c brackets, where the numbers
+ *   in each bracket are separated by spaces;
+ *   6) the flag verbose: when 0, no intermediate output is written,
+ *   when 1, then the resolution is dispayed on screen. */
+
+static PyObject *py2c_schubert_dobldobl_littlewood_richardson_homotopies
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Runs the Littlewood-Richardson homotopies to resolve a number of
+ *   general Schubert intersection conditions on k-planes in n-space,
+ *   in double double precision.
+ *   The polynomial system that was solved is in the container for
+ *   systems with coefficients in double double precision and the
+ *   corresponding solutions are in the dobldobl solutions container.
+ *   On entry are seven integers and two strings, in the following order:
+ *   1) n, the ambient dimension, where the k-planes live;
+ *   2) k, the dimension of the solution planes;
+ *   3) c,the number of intersection conditions;
+ *   4) nc, the number of characters in the string brackets;
+ *   5) brackets is a string representation of c brackets, where the numbers
+ *   in each bracket are separated by spaces;
+ *   6) the flag verbose: when 0, no intermediate output is written,
+ *      when 1, then the resolution is dispayed on screen;
+ *   7) the flag verify: when 0, no diagnostic output is written to file,
+ *      when 1, then diagnostic output is written to file;
+ *   8) nbchar, the number of characters in the string filename;
+ *   9) filename is the name of the output file.
+ *   The function returns a tuple of an integer and a string:
+ *   0) r is the formal root count as the number of k-planes
+ *   for conditions imposed by the brackets for general flags;
+ *   1) flags, a string with the coefficients of the general flags. */
+
+static PyObject *py2c_schubert_quaddobl_littlewood_richardson_homotopies
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Runs the Littlewood-Richardson homotopies to resolve a number of
+ *   general Schubert intersection conditions on k-planes in n-space,
+ *   in quad double precision.
+ *   The polynomial system that was solved is in the container for
+ *   systems with coefficients in quad double precision and the
+ *   corresponding solutions are in the quaddobl solutions container.
  *   On entry are seven integers and two strings, in the following order:
  *   1) n, the ambient dimension, where the k-planes live;
  *   2) k, the dimension of the solution planes;

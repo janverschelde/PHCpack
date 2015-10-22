@@ -41,14 +41,72 @@ int resolve_Schubert_conditions
  *   r        the formal root count as the number of k-planes
  *            for conditions imposed by the brackets for general flags. */
 
-int Littlewood_Richardson_homotopies
+int standard_Littlewood_Richardson_homotopies
  ( int n, int k, int c, int *brackets, int verbose, int verify,
    int nbchar, char *filename, int *r, double *flags );
 /*
  * In n-space for k-planes subject to c general Schubert intersection
  * conditions as defined by the brackets, the root count r is computed
  * and the Littlewood-Richardson homotopies compute as many k-planes
- * as the value of r for generic flags.
+ * as the value of r for generic flags, in standard double precision.
+ * Upon return, the polynomial system that was solved is in the systems
+ * container and its solutions are in the solutions container.
+ *
+ * ON ENTRY :
+ *   n        the ambient dimension, where the k-planes live;
+ *   k        the dimension of the solution planes;
+ *   c        the number of intersection conditions;
+ *   brackets is an array of k*c integer numbers with the conditions
+ *            imposed by the flags on the k-plane;
+ *   verify   when 0, no diagnostic verification is done,
+ *            when 1, diagnostic verification output is written to file;
+ *   verbose  when 0, no intermediate output is written,
+ *            when 1, then the resolution is dispayed on screen;
+ *   nbchar   number of characters in the string filename;
+ *   filename is the name of the output file.
+ *
+ * ON RETURN :
+ *   r        the formal root count as the number of k-planes
+ *            for conditions imposed by the brackets for general flags;
+ *   flags    coefficients of the general flags. */
+
+int dobldobl_Littlewood_Richardson_homotopies
+ ( int n, int k, int c, int *brackets, int verbose, int verify,
+   int nbchar, char *filename, int *r, double *flags );
+/*
+ * In n-space for k-planes subject to c general Schubert intersection
+ * conditions as defined by the brackets, the root count r is computed
+ * and the Littlewood-Richardson homotopies compute as many k-planes
+ * as the value of r for generic flags, in double double precision.
+ * Upon return, the polynomial system that was solved is in the systems
+ * container and its solutions are in the solutions container.
+ *
+ * ON ENTRY :
+ *   n        the ambient dimension, where the k-planes live;
+ *   k        the dimension of the solution planes;
+ *   c        the number of intersection conditions;
+ *   brackets is an array of k*c integer numbers with the conditions
+ *            imposed by the flags on the k-plane;
+ *   verify   when 0, no diagnostic verification is done,
+ *            when 1, diagnostic verification output is written to file;
+ *   verbose  when 0, no intermediate output is written,
+ *            when 1, then the resolution is dispayed on screen;
+ *   nbchar   number of characters in the string filename;
+ *   filename is the name of the output file.
+ *
+ * ON RETURN :
+ *   r        the formal root count as the number of k-planes
+ *            for conditions imposed by the brackets for general flags;
+ *   flags    coefficients of the general flags. */
+
+int quaddobl_Littlewood_Richardson_homotopies
+ ( int n, int k, int c, int *brackets, int verbose, int verify,
+   int nbchar, char *filename, int *r, double *flags );
+/*
+ * In n-space for k-planes subject to c general Schubert intersection
+ * conditions as defined by the brackets, the root count r is computed
+ * and the Littlewood-Richardson homotopies compute as many k-planes
+ * as the value of r for generic flags, in quad double precision.
  * Upon return, the polynomial system that was solved is in the systems
  * container and its solutions are in the solutions container.
  *

@@ -9,7 +9,8 @@ extern void adainit();
 extern void adafinal();
 
 int call_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets, int verbose, int verify, int *r );
+ ( int n, int k, int c, int *brackets, int verbose, int verify, int size,
+   int *r );
 /*
  * DESCRIPTION :
  *   Tests the call to the Littlewood-Richardson homotopies.
@@ -20,7 +21,8 @@ int call_Littlewood_Richardson_homotopies
  *   c         number of intersection conditions;
  *   brackets  contains c*k integer numbers with the intersection conditions;
  *   verify    1 if diagnostic verification is needed, 0 if no;
- *   verbose   1 if intermediate output is needed, 0 to be silent.
+ *   verbose   1 if intermediate output is needed, 0 to be silent;
+ *   size      number of doubles in the flags, depends on the precision.
  *
  * ON RETURN :
  *   r         the formal root count.  */
@@ -32,6 +34,7 @@ int main ( int argc, char *argv[] )
    int verbose=0;
    int verify=0;
    char ans;
+   int precision,size;
 
    printf("\nresolving a general Schubert intersection condition ...\n");
    printf("  give the ambient dimension of the space : "); scanf("%d",&n);
@@ -63,8 +66,21 @@ int main ( int argc, char *argv[] )
    if(ans != 'y')
       fail = resolve_Schubert_conditions(n,k,c,brackets,verbose,&r);
    else
+   {
+      printf("\nMENU for the precision : \n");
+      printf("  0. standard double precision; \n");
+      printf("  1. double double precision; \n");
+      printf("  2. quad double precision; \n");
+      printf("Type 0, 1, or 2 to select the precision : ");
+      scanf("%d",&precision);
+
+      if(precision == 0) size = 2*(c-2)*n*n;
+      if(precision == 1) size = 4*(c-2)*n*n;
+      if(precision == 2) size = 8*(c-2)*n*n;
+
       fail = call_Littlewood_Richardson_homotopies
-               (n,k,c,brackets,verbose,verify,&r);
+               (n,k,c,brackets,verbose,verify,size,&r);
+   }
 
    printf("The formal root count : %d\n",r);
 
@@ -74,23 +90,30 @@ int main ( int argc, char *argv[] )
 }
 
 int call_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets, int verbose, int verify, int *r )
+ ( int n, int k, int c, int *brackets, int verbose, int verify,
+   int size, int *r )
 {
-   const int size = 2*(c-2)*n*n;
    double flags[size]; /* real + imaginary parts stored rowwise */
    char ans,filename[80];
-   int i,fail,nbname;
+   int i,fail,nbname,prec;
 
    scanf("%c",&ans); /* skip newline symbol */
    printf("Give the name of the output file : ");
    scanf("%s",filename);
-   scanf("%c",&ans); /* skip newline symbol */
+   /* scanf("%c",&ans);  skip newline symbol */
 
    nbname = strlen(filename);
    printf("Number of characters in %s is %d\n",filename,nbname);
 
-   fail = Littlewood_Richardson_homotopies
-            (n,k,c,brackets,verbose,verify,nbname,filename,r,flags);
+   if(prec == 0)
+      fail = standard_Littlewood_Richardson_homotopies
+                (n,k,c,brackets,verbose,verify,nbname,filename,r,flags);
+   if(prec == 1)
+      fail = dobldobl_Littlewood_Richardson_homotopies
+                (n,k,c,brackets,verbose,verify,nbname,filename,r,flags);
+   if(prec == 2)
+      fail = quaddobl_Littlewood_Richardson_homotopies
+                (n,k,c,brackets,verbose,verify,nbname,filename,r,flags);
 
    printf("\nThe coefficients of the fixed flag :");
    for(i=0; i<size; i++)
