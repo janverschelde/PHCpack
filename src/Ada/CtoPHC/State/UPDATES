@@ -3,6 +3,8 @@ Thu 22 Oct 2015 : changed use_c2lrhom.adb for the renaming of the
   Added documentation to use_c2lrhom.ads.  Placing standard_ in front of
   bracket_polynomials (& _systems) changed pieri_homotopy.adb.
   Added verify flag as extra input in use_c2lrhom.adb.
+  Two extra jobs were added to use_c2lrhom to run L-R homotopies in
+  double double and quad double precision, extended to use_c2phc.
 
 Thu 15 Oct 2015 : updated use_c2lrhom.adb for the new option to resolve
   Schubert problem with an efficient formulation of the equations.

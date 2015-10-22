@@ -2174,6 +2174,8 @@ function use_c2phc ( job : integer32;
       when 172..178 => return use_track(job-150,a,b,c);
      -- variable precision Newton step :
       when 179 => return Job179;
+     -- double double and quad double L-R homotopies :
+      when 180..181 => return use_c2lrhom(job-178,a,b,c);
      -- track operations for quad double precision :
       when 182..188 => return use_track(job-150,a,b,c);
      -- tuning continuation parameters, deflation, and Newton step
