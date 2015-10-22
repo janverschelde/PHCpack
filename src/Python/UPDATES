@@ -1,5 +1,6 @@
 Thu 22 Oct 2015 : extended schubert.py to run L-R homotopies in double double
-  and quad double precision.
+  and quad double precision.  
+  For version 0.3.2, updated setup.py, __init__.py, and conf.py.
 
 Wed 7 Oct 2015 : updated setup.py, __init__.py, and conf.py for version 0.3.1.
 

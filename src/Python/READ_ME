@@ -1,4 +1,4 @@
-phcpy 0.3.1 offers a simple Python interface to PHCv2.4.02
+phcpy 0.3.2 offers a simple Python interface to PHCv2.4.03
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -43,6 +43,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.3.2 : 2015-10-22 : L-R homotopies with double double and quad doubles
 0.3.1 : 2015-10-07 : blackbox solver with double doubles and quad doubles
 0.3.0 : 2015-09-24 : bug fix in passing string representations of polynomials
 0.2.9 : 2015-08-31 : interface to the path trackers accelerated by GPUs
