@@ -1,4 +1,4 @@
-Numerical Schubert Calculus with PHCv2.3.88
+Numerical Schubert Calculus with PHCv2.4.03
 
 This directory was delivered with release 2 of PHCpack,
 with some minor updates in release 2.1 for the connection with C.
@@ -6,6 +6,9 @@ In release 2.2, the code for SAGBI and Pieri homotopies was
 dispersed in two separate subdirectories, to make room for the
 new homotopies to implement Schubert Induction.
 In release 2.3 most changes are in Induction.
+
+The Littlewood-Richardson homotopies became available in double double
+and quad double precision in version 2.4.03.
 
 The organization of this library as part of the organization tree
 of the source code of PHCpack is as follows:

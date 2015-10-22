@@ -734,10 +734,29 @@ package body Drivers_for_Schubert_Induction is
     return res;
   end Prompt_for_Generic_Flags;
 
+  function Prompt_for_Output_Level return natural32 is
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU for kind of output in Littlewood-Richardson homotopies :");
+    put_line("  0. no intermediate output will be written to file;");
+    put_line("  1. output to file allows to monitor the progress;");
+    put_line("  2. monitoring progress with extra verifying diagnostics.");
+    put("Type 0, 1, or 2 to select the kind of output : ");
+    Ask_Alternative(ans,"012");
+    case ans is
+      when '1' => return 1;
+      when '2' => return 2;
+      when others  => return 0;
+    end case;
+  end Prompt_for_Output_Level;
+
   procedure Reporting_Moving_Flag_Continuation
               ( n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     file : file_type;
@@ -747,14 +766,15 @@ package body Drivers_for_Schubert_Induction is
     put_line("Reading the name of the output file ...");
     Read_Name_and_Create_File(file);
     new_line;
-    Reporting_Moving_Flag_Continuation(file,n,k,tol,rows,cols,minrep,cnds);
+    Reporting_Moving_Flag_Continuation
+      (file,n,k,tol,rows,cols,verify,minrep,cnds);
   end Reporting_Moving_Flag_Continuation;
 
   procedure Reporting_Moving_Flag_Continuation
               ( file : in file_type; tune : in boolean;
                 n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 sols : out Standard_Complex_Solutions.Solution_List;
                 fsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -774,7 +794,7 @@ package body Drivers_for_Schubert_Induction is
     flags := Random_Flags(n,cnds'last);
     tstart(timer);
     Checker_Poset_Deformations.Track_All_Paths_in_Poset
-      (file,n,k,ps,minrep,cnds.all,flags,tol,sols);
+      (file,n,k,ps,verify,minrep,cnds.all,flags,tol,sols);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"tracking all paths");
@@ -785,7 +805,7 @@ package body Drivers_for_Schubert_Induction is
               ( file : in file_type;
                 n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     sols : Standard_Complex_Solutions.Solution_List;
@@ -794,7 +814,7 @@ package body Drivers_for_Schubert_Induction is
 
   begin
     Reporting_Moving_Flag_Continuation
-      (file,true,n,k,tol,rows,cols,minrep,cnds,sols,fsys,flgs);
+      (file,true,n,k,tol,rows,cols,verify,minrep,cnds,sols,fsys,flgs);
   end Reporting_Moving_Flag_Continuation;
 
   procedure Run_Moving_Flag_Continuation ( n,k : in integer32 ) is
@@ -806,7 +826,8 @@ package body Drivers_for_Schubert_Induction is
     happy : boolean;
     tol : constant double_float := 1.0E-5;
     ans : character;
-    minrep : boolean;
+    verify,minrep : boolean;
+    outlvl : natural32;
 
   begin
     new_line;
@@ -823,11 +844,13 @@ package body Drivers_for_Schubert_Induction is
     cnds := new Standard_Natural_VecVecs.VecVec(1..1);
     cnds(1) := new Standard_Natural_Vectors.Vector'(cond);
     skip_line; -- skip enter symbol
+    outlvl := Prompt_for_Output_Level;
+    verify := (outlvl = 2);
     new_line;
     put("Use an efficient problem formulation ? (y/n) ");
     Ask_Yes_or_No(ans);
     minrep := (ans = 'y');
-    Reporting_Moving_Flag_Continuation(n,k,tol,rows,cols,minrep,cnds);
+    Reporting_Moving_Flag_Continuation(n,k,tol,rows,cols,verify,minrep,cnds);
   end Run_Moving_Flag_Continuation;
 
   procedure Set_Symbol_Table
@@ -1174,7 +1197,8 @@ package body Drivers_for_Schubert_Induction is
     use Standard_Solution_Posets;
     use Intersection_Posets;
 
-    monitor,report,minrep : boolean;
+    monitor,report,verify,minrep : boolean;
+    outlvl : natural32 := 0;
     ans : character;
     nbc : constant integer32 := cnd'last;
     ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
@@ -1210,11 +1234,9 @@ package body Drivers_for_Schubert_Induction is
       put(file,flags(i).all);
       new_line(file);
     end loop;
-    new_line;
-    put("Monitor Littlewood-Richardson homotopies"
-      & " in each checker game ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    monitor := (ans = 'y');
+    outlvl := Prompt_for_Output_Level;
+    monitor := (outlvl > 0);
+    verify := (outlvl = 2);
     new_line;
     put("Use an efficient problem formulation ? (y/n) ");
     Ask_Yes_or_No(ans);
@@ -1226,7 +1248,12 @@ package body Drivers_for_Schubert_Induction is
     end if;
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
-    Resolve(file,monitor,report,n,k,tol,ips,sps,minrep,conds,flags,sols);
+    if outlvl = 0 then
+      Resolve(n,k,tol,ips,sps,minrep,conds,flags,sols);
+    else
+      Resolve(file,monitor,report,n,k,tol,ips,sps,verify,minrep,
+              conds,flags,sols);
+    end if;
     tstop(timer);
     Write_Results(file,n,k,q,rows,cols,minrep,link2conds,flags,sols,fsys);
     new_line(file);
@@ -1246,7 +1273,8 @@ package body Drivers_for_Schubert_Induction is
     use DoblDobl_Solution_Posets;
     use Intersection_Posets;
 
-    monitor,report,minrep : boolean;
+    monitor,report,verify,minrep : boolean;
+    outlvl : natural32 := 0;
     ans : character;
     nbc : constant integer32 := cnd'last;
     ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
@@ -1282,11 +1310,9 @@ package body Drivers_for_Schubert_Induction is
       put(file,flags(i).all);
       new_line(file);
     end loop;
-    new_line;
-    put("Monitor Littlewood-Richardson homotopies"
-      & " in each checker game ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    monitor := (ans = 'y');
+    outlvl := Prompt_for_Output_Level;
+    monitor := (outlvl > 0);
+    verify := (outlvl = 2);
     new_line;
     put("Use an efficient problem formulation ? (y/n) ");
     Ask_Yes_or_No(ans);
@@ -1298,7 +1324,12 @@ package body Drivers_for_Schubert_Induction is
     end if;
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
-    Resolve(file,monitor,report,n,k,tol,ips,sps,minrep,conds,flags,sols);
+    if outlvl = 0 then
+      Resolve(n,k,tol,ips,sps,minrep,conds,flags,sols);
+    else
+      Resolve(file,monitor,report,n,k,tol,ips,sps,verify,minrep,
+              conds,flags,sols);
+    end if;
     tstop(timer);
     Write_Results(file,n,k,q,rows,cols,minrep,link2conds,flags,sols,fsys);
     new_line(file);
@@ -1318,7 +1349,8 @@ package body Drivers_for_Schubert_Induction is
     use QuadDobl_Solution_Posets;
     use Intersection_Posets;
 
-    monitor,report,minrep : boolean;
+    monitor,report,verify,minrep : boolean;
+    outlvl : natural32 := 0;
     ans : character;
     nbc : constant integer32 := cnd'last;
     ips : Intersection_Poset(nbc-1) := Process_Conditions(n,k,nbc,cnd);
@@ -1354,11 +1386,9 @@ package body Drivers_for_Schubert_Induction is
       put(file,flags(i).all);
       new_line(file);
     end loop;
-    new_line;
-    put("Monitor Littlewood-Richardson homotopies"
-      & " in each checker game ? (y/n) ");
-    Ask_Yes_or_No(ans);
-    monitor := (ans = 'y');
+    outlvl := Prompt_for_Output_Level;
+    monitor := (outlvl > 0);
+    verify := (outlvl = 2);
     new_line;
     put("Use an efficient problem formulation ? (y/n) ");
     Ask_Yes_or_No(ans);
@@ -1370,7 +1400,12 @@ package body Drivers_for_Schubert_Induction is
     end if;
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
-    Resolve(file,monitor,report,n,k,tol,ips,sps,minrep,conds,flags,sols);
+    if outlvl = 0 then
+      Resolve(n,k,tol,ips,sps,minrep,conds,flags,sols);
+    else
+      Resolve(file,monitor,report,n,k,tol,ips,sps,verify,minrep,
+              conds,flags,sols);
+    end if;
     tstop(timer);
     Write_Results(file,n,k,q,rows,cols,minrep,link2conds,flags,sols,fsys);
     new_line(file);

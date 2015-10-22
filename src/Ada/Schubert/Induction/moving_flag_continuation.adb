@@ -1278,7 +1278,7 @@ package body Moving_Flag_Continuation is
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -1322,8 +1322,10 @@ package body Moving_Flag_Continuation is
       put(file,ctr,1); put_line(file,".");
       Checker_Homotopies.Trivial_Stay_Coordinates
         (file,n,k,ctr,q,p,qr,qc,pr,pc,ls.v);
-      put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      if verify then
+        put_line(file,"Verifying after coordinate changes ...");
+        Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      end if;
     end if;
     Standard_Complex_Poly_Systems.Clear(gh);
   end Trivial_Stay;
@@ -1331,7 +1333,7 @@ package body Moving_Flag_Continuation is
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
@@ -1377,8 +1379,10 @@ package body Moving_Flag_Continuation is
       put(file,ctr,1); put_line(file,".");
       Checker_Homotopies.Trivial_Stay_Coordinates
         (file,n,k,ctr,q,p,qr,qc,pr,pc,ls.v);
-      put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      if verify then
+        put_line(file,"Verifying after coordinate changes ...");
+        Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      end if;
     end if;
     DoblDobl_Complex_Poly_Systems.Clear(gh);
   end Trivial_Stay;
@@ -1386,7 +1390,7 @@ package body Moving_Flag_Continuation is
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
@@ -1432,8 +1436,10 @@ package body Moving_Flag_Continuation is
       put(file,ctr,1); put_line(file,".");
       Checker_Homotopies.Trivial_Stay_Coordinates
         (file,n,k,ctr,q,p,qr,qc,pr,pc,ls.v);
-      put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      if verify then
+        put_line(file,"Verifying after coordinate changes ...");
+        Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      end if;
     end if;
     QuadDobl_Complex_Poly_Systems.Clear(gh);
   end Trivial_Stay;
@@ -1441,7 +1447,7 @@ package body Moving_Flag_Continuation is
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -1465,7 +1471,7 @@ package body Moving_Flag_Continuation is
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
@@ -1481,15 +1487,17 @@ package body Moving_Flag_Continuation is
     put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     Checker_Homotopies.Trivial_Stay_Coordinates
       (file,n,k,ctr,q,p,qr,qc,pr,pc,sols);
-    put_line(file,"Verifying after coordinate changes ...");
-    Verify_Intersection_Conditions
-      (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+    if verify then
+      put_line(file,"Verifying after coordinate changes ...");
+      Verify_Intersection_Conditions
+        (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+    end if;
   end Trivial_Stay;
 
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
@@ -1505,9 +1513,11 @@ package body Moving_Flag_Continuation is
     put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     Checker_Homotopies.Trivial_Stay_Coordinates
       (file,n,k,ctr,q,p,qr,qc,pr,pc,sols);
-    put_line(file,"Verifying after coordinate changes ...");
-    Verify_Intersection_Conditions
-      (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+    if verify then
+      put_line(file,"Verifying after coordinate changes ...");
+      Verify_Intersection_Conditions
+        (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+    end if;
   end Trivial_Stay;
 
   procedure Trivial_Stay
@@ -1555,7 +1565,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
@@ -1595,8 +1605,10 @@ package body Moving_Flag_Continuation is
       put(file,ctr,1); put_line(file,".");
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (file,n,k,ctr,q,qr,qc,mf,xpm,ls.v);
-      put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      if verify then
+        put_line(file,"Verifying after coordinate changes ...");
+        Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      end if;
     end if;
     Standard_Complex_Poly_Matrices.Clear(xp);
     Standard_Complex_Poly_Matrices.Clear(xpm);
@@ -1608,7 +1620,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
@@ -1648,8 +1660,10 @@ package body Moving_Flag_Continuation is
       put(file,ctr,1); put_line(file,".");
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (file,n,k,ctr,q,qr,qc,mf,xpm,ls.v);
-      put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      if verify then
+        put_line(file,"Verifying after coordinate changes ...");
+        Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      end if;
     end if;
     DoblDobl_Complex_Poly_Matrices.Clear(xp);
     DoblDobl_Complex_Poly_Matrices.Clear(xpm);
@@ -1661,7 +1675,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
@@ -1701,8 +1715,10 @@ package body Moving_Flag_Continuation is
       put(file,ctr,1); put_line(file,".");
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (file,n,k,ctr,q,qr,qc,mf,xpm,ls.v);
-      put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      if verify then
+        put_line(file,"Verifying after coordinate changes ...");
+        Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      end if;
     end if;
     QuadDobl_Complex_Poly_Matrices.Clear(xp);
     QuadDobl_Complex_Poly_Matrices.Clear(xpm);
@@ -1714,7 +1730,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
@@ -1751,9 +1767,11 @@ package body Moving_Flag_Continuation is
       put(file,ctr,1); put_line(file,".");
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (file,n,k,ctr,q,qr,qc,mf,xpm,sols);
-      put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions
-        (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+      if verify then
+        put_line(file,"Verifying after coordinate changes ...");
+        Verify_Intersection_Conditions
+          (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+      end if;
     end if;
     Standard_Complex_Poly_Matrices.Clear(xp);
     Standard_Complex_Poly_Matrices.Clear(xpm);
@@ -1765,7 +1783,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
@@ -1802,9 +1820,11 @@ package body Moving_Flag_Continuation is
       put(file,ctr,1); put_line(file,".");
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (file,n,k,ctr,q,qr,qc,mf,xpm,sols);
-      put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions
-        (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+      if verify then
+        put_line(file,"Verifying after coordinate changes ...");
+        Verify_Intersection_Conditions
+          (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+      end if;
     end if;
     DoblDobl_Complex_Poly_Matrices.Clear(xp);
     DoblDobl_Complex_Poly_Matrices.Clear(xpm);
@@ -1816,7 +1836,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
@@ -1853,9 +1873,11 @@ package body Moving_Flag_Continuation is
       put(file,ctr,1); put_line(file,".");
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (file,n,k,ctr,q,qr,qc,mf,xpm,sols);
-      put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions
-        (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+      if verify then
+        put_line(file,"Verifying after coordinate changes ...");
+        Verify_Intersection_Conditions
+          (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+      end if;
     end if;
     QuadDobl_Complex_Poly_Matrices.Clear(xp);
     QuadDobl_Complex_Poly_Matrices.Clear(xpm);
@@ -1982,7 +2004,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -2025,8 +2047,10 @@ package body Moving_Flag_Continuation is
        else Checker_Homotopies.Second_Swap_Coordinates
               (file,n,k,ctr,s,q,qr,qc,mf,xpm,ls.v);
       end if;
-      put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      if verify then
+        put_line(file,"Verifying after coordinate changes ...");
+        Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      end if;
     end if;
     Standard_Complex_Poly_Systems.Clear(gh);
     Standard_Complex_Poly_Matrices.Clear(xp);
@@ -2038,7 +2062,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
@@ -2081,8 +2105,10 @@ package body Moving_Flag_Continuation is
        else Checker_Homotopies.Second_Swap_Coordinates
               (file,n,k,ctr,s,q,qr,qc,mf,xpm,ls.v);
       end if;
-      put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      if verify then
+        put_line(file,"Verifying after coordinate changes ...");
+        Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      end if;
     end if;
     DoblDobl_Complex_Poly_Systems.Clear(gh);
     DoblDobl_Complex_Poly_Matrices.Clear(xp);
@@ -2091,11 +2117,10 @@ package body Moving_Flag_Continuation is
     when others => put_line("exception in Swap_Homotopy"); raise;
   end Swap_Homotopy;
 
-
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
@@ -2138,8 +2163,10 @@ package body Moving_Flag_Continuation is
        else Checker_Homotopies.Second_Swap_Coordinates
               (file,n,k,ctr,s,q,qr,qc,mf,xpm,ls.v);
       end if;
-      put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      if verify then
+        put_line(file,"Verifying after coordinate changes ...");
+        Verify_Intersection_Conditions(file,n,k,q,qr,qc,minrep,cond,mf,vf,ls.v);
+      end if;
     end if;
     QuadDobl_Complex_Poly_Systems.Clear(gh);
     QuadDobl_Complex_Poly_Matrices.Clear(xp);
@@ -2151,7 +2178,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -2191,9 +2218,11 @@ package body Moving_Flag_Continuation is
        else Checker_Homotopies.Second_Swap_Coordinates
               (file,n,k,ctr,s,q,qr,qc,mf,xpm,sols);
       end if;
-      put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions
-        (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+      if verify then
+        put_line(file,"Verifying after coordinate changes ...");
+        Verify_Intersection_Conditions
+          (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+      end if;
     end if;
     Standard_Complex_Poly_Systems.Clear(gh);
     Standard_Complex_Poly_Matrices.Clear(xp);
@@ -2205,7 +2234,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
@@ -2245,9 +2274,11 @@ package body Moving_Flag_Continuation is
        else Checker_Homotopies.Second_Swap_Coordinates
               (file,n,k,ctr,s,q,qr,qc,mf,xpm,sols);
       end if;
-      put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions
-        (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+      if verify then
+        put_line(file,"Verifying after coordinate changes ...");
+        Verify_Intersection_Conditions
+          (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+      end if;
     end if;
     DoblDobl_Complex_Poly_Systems.Clear(gh);
     DoblDobl_Complex_Poly_Matrices.Clear(xp);
@@ -2259,7 +2290,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
@@ -2299,9 +2330,11 @@ package body Moving_Flag_Continuation is
        else Checker_Homotopies.Second_Swap_Coordinates
               (file,n,k,ctr,s,q,qr,qc,mf,xpm,sols);
       end if;
-      put_line(file,"Verifying after coordinate changes ...");
-      Verify_Intersection_Conditions
-        (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+      if verify then
+        put_line(file,"Verifying after coordinate changes ...");
+        Verify_Intersection_Conditions
+          (file,n,k,q,qr,qc,minrep,cond,mf,vf,sols,tol,fail);
+      end if;
     end if;
     QuadDobl_Complex_Poly_Systems.Clear(gh);
     QuadDobl_Complex_Poly_Matrices.Clear(xp);

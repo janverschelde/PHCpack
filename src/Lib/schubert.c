@@ -36,19 +36,20 @@ int resolve_Schubert_conditions
 }
 
 int Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets, int verbose, 
+ ( int n, int k, int c, int *brackets, int verbose, int verify,
    int nbchar, char *filename, int *r, double *flags )
 {
    int fail,i;
    int size = 2*(c-2)*n*n+1;
    double rc[size]; /* filename on input, count & flags on return */
-   int dim[5];
+   int dim[6];
 
    dim[0] = n;
    dim[1] = k;
    dim[2] = c;
    dim[3] = verbose;
-   dim[4] = nbchar;
+   dim[4] = verify;
+   dim[5] = nbchar;
 
    for(i=0; i<nbchar; i++) rc[i] = (double) filename[i];
 

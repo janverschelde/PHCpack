@@ -9,7 +9,7 @@ extern void adainit();
 extern void adafinal();
 
 int call_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets, int verbose, int *r );
+ ( int n, int k, int c, int *brackets, int verbose, int verify, int *r );
 /*
  * DESCRIPTION :
  *   Tests the call to the Littlewood-Richardson homotopies.
@@ -19,6 +19,7 @@ int call_Littlewood_Richardson_homotopies
  *   k         dimension of the solution planes;
  *   c         number of intersection conditions;
  *   brackets  contains c*k integer numbers with the intersection conditions;
+ *   verify    1 if diagnostic verification is needed, 0 if no;
  *   verbose   1 if intermediate output is needed, 0 to be silent.
  *
  * ON RETURN :
@@ -29,6 +30,7 @@ int main ( int argc, char *argv[] )
    int fail,n,k,c,i,j,r;
    int *brackets;
    int verbose=0;
+   int verify=0;
    char ans;
 
    printf("\nresolving a general Schubert intersection condition ...\n");
@@ -61,7 +63,8 @@ int main ( int argc, char *argv[] )
    if(ans != 'y')
       fail = resolve_Schubert_conditions(n,k,c,brackets,verbose,&r);
    else
-      fail = call_Littlewood_Richardson_homotopies(n,k,c,brackets,verbose,&r);
+      fail = call_Littlewood_Richardson_homotopies
+               (n,k,c,brackets,verbose,verify,&r);
 
    printf("The formal root count : %d\n",r);
 
@@ -71,7 +74,7 @@ int main ( int argc, char *argv[] )
 }
 
 int call_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets, int verbose, int *r )
+ ( int n, int k, int c, int *brackets, int verbose, int verify, int *r )
 {
    const int size = 2*(c-2)*n*n;
    double flags[size]; /* real + imaginary parts stored rowwise */
@@ -87,7 +90,7 @@ int call_Littlewood_Richardson_homotopies
    printf("Number of characters in %s is %d\n",filename,nbname);
 
    fail = Littlewood_Richardson_homotopies
-            (n,k,c,brackets,verbose,nbname,filename,r,flags);
+            (n,k,c,brackets,verbose,verify,nbname,filename,r,flags);
 
    printf("\nThe coefficients of the fixed flag :");
    for(i=0; i<size; i++)

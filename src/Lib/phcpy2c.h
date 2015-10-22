@@ -2780,7 +2780,7 @@ static PyObject *py2c_schubert_littlewood_richardson_homotopies
  *   The polynomial system that was solved is in the container for
  *   systems with coefficients in standard double precision and the
  *   corresponding solutions are in the standard solutions container.
- *   On entry are six integers and two strings, in the following order:
+ *   On entry are seven integers and two strings, in the following order:
  *   1) n, the ambient dimension, where the k-planes live;
  *   2) k, the dimension of the solution planes;
  *   3) c,the number of intersection conditions;
@@ -2788,9 +2788,11 @@ static PyObject *py2c_schubert_littlewood_richardson_homotopies
  *   5) brackets is a string representation of c brackets, where the numbers
  *   in each bracket are separated by spaces;
  *   6) the flag verbose: when 0, no intermediate output is written,
- *   when 1, then the resolution is dispayed on screen;
- *   7) nbchar, the number of characters in the string filename;
- *   8) filename is the name of the output file.
+ *      when 1, then the resolution is dispayed on screen;
+ *   7) the flag verify: when 0, no diagnostic output is written to file,
+ *      when 1, then diagnostic output is written to file;
+ *   8) nbchar, the number of characters in the string filename;
+ *   9) filename is the name of the output file.
  *   The function returns a tuple of an integer and a string:
  *   0) r is the formal root count as the number of k-planes
  *   for conditions imposed by the brackets for general flags;

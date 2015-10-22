@@ -42,7 +42,7 @@ int resolve_Schubert_conditions
  *            for conditions imposed by the brackets for general flags. */
 
 int Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets, int verbose, 
+ ( int n, int k, int c, int *brackets, int verbose, int verify,
    int nbchar, char *filename, int *r, double *flags );
 /*
  * In n-space for k-planes subject to c general Schubert intersection
@@ -58,6 +58,8 @@ int Littlewood_Richardson_homotopies
  *   c        the number of intersection conditions;
  *   brackets is an array of k*c integer numbers with the conditions
  *            imposed by the flags on the k-plane;
+ *   verify   when 0, no diagnostic verification is done,
+ *            when 1, diagnostic verification output is written to file;
  *   verbose  when 0, no intermediate output is written,
  *            when 1, then the resolution is dispayed on screen;
  *   nbchar   number of characters in the string filename;

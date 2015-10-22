@@ -1,5 +1,10 @@
 Thu 22 Oct 2015 : adding standard_ in front of bracket_polynomials changed
   symbolic_schubert_conditions.ads and numeric_schubert_conditions
+  Silent version of resolve in resolve_schubert_problems, with adjusted
+  prompting for level of output in drivers_for_schubert_induction.
+  Added extra boolean parameter in moving_flag_continuation, which
+  changed checker_poset_deformations, resolve_schubert_problems,
+  and drivers_for_schubert_induction.
 
 Wed 21 Oct 2015 : updated ts_flagcond.adb with tests in double double
   and quad double precision.

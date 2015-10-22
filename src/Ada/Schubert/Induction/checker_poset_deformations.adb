@@ -25,7 +25,7 @@ package body Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
@@ -89,13 +89,13 @@ package body Checker_Poset_Deformations is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,mf,vf,ls,fail);
+            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,mf,vf,ls,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
+          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
                         vf,mf,start_mf,ls,tol,fail);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
+          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
                         mf,start_mf,vf,ls,tol,fail);
         end if;
         if fail then
@@ -110,7 +110,7 @@ package body Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf : in out DoblDobl_Complex_Matrices.Matrix;
@@ -174,13 +174,13 @@ package body Checker_Poset_Deformations is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,mf,vf,ls,fail);
+            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,mf,vf,ls,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
+          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
                         vf,mf,start_mf,ls,tol,fail);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
+          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
                         mf,start_mf,vf,ls,tol,fail);
         end if;
         if fail then
@@ -195,7 +195,7 @@ package body Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf : in out QuadDobl_Complex_Matrices.Matrix;
@@ -259,13 +259,13 @@ package body Checker_Poset_Deformations is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,mf,vf,ls,fail);
+            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,mf,vf,ls,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
+          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
                         vf,mf,start_mf,ls,tol,fail);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
+          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
                         mf,start_mf,vf,ls,tol,fail);
         end if;
         if fail then
@@ -280,7 +280,7 @@ package body Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
@@ -356,13 +356,14 @@ package body Checker_Poset_Deformations is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,mf,vf,sols,tol,fail);
+            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
+             mf,vf,sols,tol,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
+          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
                         vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
+          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
                         mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
@@ -378,7 +379,7 @@ package body Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf : in out DoblDobl_Complex_Matrices.Matrix;
@@ -454,13 +455,14 @@ package body Checker_Poset_Deformations is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,mf,vf,sols,tol,fail);
+            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
+             mf,vf,sols,tol,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
+          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
                         vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
+          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
                         mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
@@ -476,7 +478,7 @@ package body Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf : in out QuadDobl_Complex_Matrices.Matrix;
@@ -552,13 +554,14 @@ package body Checker_Poset_Deformations is
         ind := i-path'first-1; -- ind = 0 signals start solution
         if homtp = 0 then
           Trivial_Stay
-            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,mf,vf,sols,tol,fail);
+            (file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
+             mf,vf,sols,tol,fail);
         elsif homtp = 1 then
-          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
+          Stay_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
                         vf,mf,start_mf,sols,tol,fail);
         else -- homtp = 2
           Setup_Flag_Homotopies.Add_t_Symbol;
-          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,minrep,cond,
+          Swap_Homotopy(file,n,k,ctr,ind,q,p,qr,qc,pr,pc,verify,minrep,cond,
                         mf,start_mf,vf,sols,tol,fail);
         end if;
         if fail then
@@ -777,7 +780,7 @@ package body Checker_Poset_Deformations is
 
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -796,7 +799,8 @@ package body Checker_Poset_Deformations is
 
     begin
       cnt := cnt + 1;
-      Track_Path_in_Poset(file,n,k,ps,nds,cnt,minrep,cond,vf,mf,ls,tol,fail);
+      Track_Path_in_Poset
+        (file,n,k,ps,nds,cnt,verify,minrep,cond,vf,mf,ls,tol,fail);
       if not fail
        then Append(sols,sols_last,ls.all);
       end if;
@@ -810,7 +814,7 @@ package body Checker_Poset_Deformations is
 
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -829,7 +833,8 @@ package body Checker_Poset_Deformations is
 
     begin
       cnt := cnt + 1;
-      Track_Path_in_Poset(file,n,k,ps,nds,cnt,minrep,cond,vf,mf,ls,tol,fail);
+      Track_Path_in_Poset
+        (file,n,k,ps,nds,cnt,verify,minrep,cond,vf,mf,ls,tol,fail);
       if not fail
        then Append(sols,sols_last,ls.all);
       end if;
@@ -843,7 +848,7 @@ package body Checker_Poset_Deformations is
 
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -862,7 +867,8 @@ package body Checker_Poset_Deformations is
 
     begin
       cnt := cnt + 1;
-      Track_Path_in_Poset(file,n,k,ps,nds,cnt,minrep,cond,vf,mf,ls,tol,fail);
+      Track_Path_in_Poset
+        (file,n,k,ps,nds,cnt,verify,minrep,cond,vf,mf,ls,tol,fail);
       if not fail
        then Append(sols,sols_last,ls.all);
       end if;
@@ -877,7 +883,7 @@ package body Checker_Poset_Deformations is
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -908,7 +914,7 @@ package body Checker_Poset_Deformations is
       else
         put(file," match at path "); put(file,cnt,1); new_line(file);
         Track_Path_in_Poset
-          (file,n,k,ps,nds,cnt,minrep,cond,vf,mf,start,pp_sols,tol,fail);
+          (file,n,k,ps,nds,cnt,verify,minrep,cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
@@ -924,7 +930,7 @@ package body Checker_Poset_Deformations is
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -955,7 +961,7 @@ package body Checker_Poset_Deformations is
       else
         put(file," match at path "); put(file,cnt,1); new_line(file);
         Track_Path_in_Poset
-          (file,n,k,ps,nds,cnt,minrep,cond,vf,mf,start,pp_sols,tol,fail);
+          (file,n,k,ps,nds,cnt,verify,minrep,cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
@@ -971,7 +977,7 @@ package body Checker_Poset_Deformations is
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -1002,7 +1008,7 @@ package body Checker_Poset_Deformations is
       else
         put(file," match at path "); put(file,cnt,1); new_line(file);
         Track_Path_in_Poset
-          (file,n,k,ps,nds,cnt,minrep,cond,vf,mf,start,pp_sols,tol,fail);
+          (file,n,k,ps,nds,cnt,verify,minrep,cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;

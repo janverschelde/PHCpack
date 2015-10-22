@@ -59,10 +59,46 @@ package Resolve_Schubert_Problems is
 
   -- DESCRIPTION :
   --   Initializes the nodes with the start solutions, computed
-  --   in standard double, double double, or quad double precision.
+  --   in standard double, double double, or quad double precision,
+  --   with diagnostic output written to file.
 
   -- ON ENTRY :
   --   file     for diagnostic output;
+  --   n        ambient dimension;
+  --   k        dimension of the solution planes;
+  --   conds    intersection conditions;
+  --   flags    generic flags in n-space;
+  --   nodes    list of solution nodes.
+
+  -- ON RETURN :
+  --   nodes    initialized with start solutions;
+  --   res      sum of all residuals.
+
+  procedure Initialize_Solution_Nodes
+              ( n,k : in integer32;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in Standard_Complex_VecMats.VecMat;
+                nodes : in out Standard_Solution_Posets.Solnode_List;
+                res : out double_float );
+  procedure Initialize_Solution_Nodes
+              ( n,k : in integer32;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in DoblDobl_Complex_VecMats.VecMat;
+                nodes : in out DoblDobl_Solution_Posets.Solnode_List;
+                res : out double_double );
+  procedure Initialize_Solution_Nodes
+              ( n,k : in integer32;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in QuadDobl_Complex_VecMats.VecMat;
+                nodes : in out QuadDobl_Solution_Posets.Solnode_List;
+                res : out quad_double );
+
+  -- DESCRIPTION :
+  --   Initializes the nodes with the start solutions, computed
+  --   in standard double, double double, or quad double precision,
+  --   without diagnostic output written to file.
+
+  -- ON ENTRY :
   --   n        ambient dimension;
   --   k        dimension of the solution planes;
   --   conds    intersection conditions;
@@ -105,6 +141,53 @@ package Resolve_Schubert_Problems is
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
+  --   n        the ambient dimension;
+  --   k        dimension of the solution plane;
+  --   conds    conditions on the solution planes meeting the flags in vf;
+  --   flags    fixed flags for setting up the intersection conditions;
+  --   snd      a solution node.
+
+  -- ON RETURN :
+  --   snd      if not fail, the solution node contains a start solution;
+  --   fail     true if the residual is higher than the 1.0e-8 threshold;
+  --   x        the computed solution vector;
+  --   res      the residual as the two norm of the solution evaluated
+  --            at the polynomial equations that express the intersection
+  --            conditions imposed by the brackets in the poset,
+  --            the brackets in cond and the fixed flags.
+
+  procedure Start_Solution 
+              ( n,k : in integer32;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in Standard_Complex_VecMats.VecMat;
+                snd : in out Standard_Solution_Posets.Link_to_Solution_Node;
+                fail : out boolean; res : out double_float );
+  procedure Start_Solution 
+              ( n,k : in integer32;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in DoblDobl_Complex_VecMats.VecMat;
+                snd : in out DoblDobl_Solution_Posets.Link_to_Solution_Node;
+                fail : out boolean; res : out double_double );
+  procedure Start_Solution 
+              ( n,k : in integer32;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in QuadDobl_Complex_VecMats.VecMat;
+                snd : in out QuadDobl_Solution_Posets.Link_to_Solution_Node;
+                fail : out boolean; res : out quad_double );
+
+  -- DESCRIPTION :
+  --   Computes the start solution at a solution node,
+  --   in standard double, double double, or quad double precision,
+  --   positioned at the leaves of the intersection poset,
+  --   as the analogue to the Initialize_Leaves from above.
+  --   These versions are silent: they produce no output.
+
+  -- REQUIRED :
+  --   The solution node comes with a valid checker poset.
+  --   Assumed is that there conditions turn into a linear system
+  --   and there is at most only one solution.
+
+  -- ON ENTRY :
   --   n        the ambient dimension;
   --   k        dimension of the solution plane;
   --   conds    conditions on the solution planes meeting the flags in vf;
@@ -266,7 +349,7 @@ package Resolve_Schubert_Problems is
                 snd : in Standard_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Standard_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat );
   procedure Connect_Checker_Posets_to_Track
@@ -276,7 +359,7 @@ package Resolve_Schubert_Problems is
                 snd : in DoblDobl_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in DoblDobl_Complex_Matrices.Link_to_Matrix;
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat );
   procedure Connect_Checker_Posets_to_Track
@@ -286,7 +369,7 @@ package Resolve_Schubert_Problems is
                 snd : in QuadDobl_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in QuadDobl_Complex_Matrices.Link_to_Matrix;
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat );
 
@@ -305,6 +388,7 @@ package Resolve_Schubert_Problems is
   --   snd      solution node that contains the poset of the child;
   --   tmfo     transformation for use at start solution if not null;
   --   sps      solution poset constructed up to the proper level;
+  --   verify   flag to indicate whether diagnostic verification is needed;
   --   minrep   to use a more efficient problem formulation;
   --   conds    conditions on the current fixed flags;
   --   flags    current fixed flags.
@@ -340,7 +424,7 @@ package Resolve_Schubert_Problems is
                 n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out Standard_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
                 sols : out Standard_Complex_Solutions.Solution_List );
@@ -349,7 +433,7 @@ package Resolve_Schubert_Problems is
                 n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat;
                 sols : out DoblDobl_Complex_Solutions.Solution_List );
@@ -358,7 +442,7 @@ package Resolve_Schubert_Problems is
                 n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat;
                 sols : out QuadDobl_Complex_Solutions.Solution_List );
@@ -366,7 +450,8 @@ package Resolve_Schubert_Problems is
   -- DESCRIPTION :
   --   Applies the Littlewood-Richardson homotopies running in
   --   standard double, double double, or quad double precision,
-  --   to resolve a sequence of intersection conditions.
+  --   to resolve a sequence of intersection conditions,
+  --   with diagnostic output written to file.
 
   -- REQUIRED :
   --   The intersection conditions are processed into an intersection poset,
@@ -374,6 +459,64 @@ package Resolve_Schubert_Problems is
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
+  --   extopt   extra output about monitoring the Littlewood-Richardson
+  --            homotopies in each and every checker game;
+  --   repcon   true for the path trackers to run in reporting version,
+  --            false if the path trackers have to stay mute;
+  --   n        the ambient dimension;
+  --   k        dimension of the solution plane;
+  --   tol      tolerance on residual to decide failure in checker games;
+  --   ips      an intersection poset built to resolve Schubert conditions;
+  --   sps      an initialized solution poset corresponding to ips;
+  --   verify   flag to indicate whether diagnostic verification is needed;
+  --   minrep   to use a more efficient problem formulation;
+  --   conds    intersection conditions on the fixed flags;
+  --   flags    generic complex matrices that represented nested linear
+  --            space for use in the homotopies.
+
+  -- ON RETURN :
+  --   ips      intersection poset with Littlewood-Richardson coefficients,
+  --            computed from the bottom leaves to the top root;
+  --   sps      solution poset with at each level the corresponding solutions;
+  --   sols     solutions to the Schubert problem, the length of
+  --            this list must equal the formal root count.
+
+  procedure Resolve
+              ( n,k : in integer32; tol : in double_float;
+                ips : in out Intersection_Poset;
+                sps : in out Standard_Solution_Posets.Solution_Poset;
+                minrep : in boolean;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in Standard_Complex_VecMats.VecMat;
+                sols : out Standard_Complex_Solutions.Solution_List );
+  procedure Resolve
+              ( n,k : in integer32; tol : in double_float;
+                ips : in out Intersection_Poset;
+                sps : in out DoblDobl_Solution_Posets.Solution_Poset;
+                minrep : in boolean;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in DoblDobl_Complex_VecMats.VecMat;
+                sols : out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Resolve
+              ( n,k : in integer32; tol : in double_float;
+                ips : in out Intersection_Poset;
+                sps : in out QuadDobl_Solution_Posets.Solution_Poset;
+                minrep : in boolean;
+                conds : in Standard_Natural_VecVecs.VecVec;
+                flags : in QuadDobl_Complex_VecMats.VecMat;
+                sols : out QuadDobl_Complex_Solutions.Solution_List );
+ 
+  -- DESCRIPTION :
+  --   Applies the Littlewood-Richardson homotopies running in
+  --   standard double, double double, or quad double precision,
+  --   to resolve a sequence of intersection conditions,
+  --   without writing any diagnostic output to file.
+
+  -- REQUIRED :
+  --   The intersection conditions are processed into an intersection poset,
+  --   given in ips on entry.  Moreover, conds'range = flags'range.
+
+  -- ON ENTRY :
   --   extopt   extra output about monitoring the Littlewood-Richardson
   --            homotopies in each and every checker game;
   --   repcon   true for the path trackers to run in reporting version,
@@ -394,5 +537,5 @@ package Resolve_Schubert_Problems is
   --   sps      solution poset with at each level the corresponding solutions;
   --   sols     solutions to the Schubert problem, the length of
   --            this list must equal the formal root count.
- 
+
 end Resolve_Schubert_Problems;

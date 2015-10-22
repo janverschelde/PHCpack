@@ -57,18 +57,19 @@ function use_c2lrhom ( job : integer32;
 
   procedure Get_Dimensions2
               ( a : C_intarrs.Pointer; n,k,c,nchar : out integer32;
-                verbose : out boolean ) is
+                verbose,verify : out boolean ) is
 
   -- DESCRIPTION :
   --   Extracts the dimensions (n,k,c) from the array a,
   --   where n is the ambient dimension, k the dimension of the solution
-  --   planes, c the number of intersection conditions, and verbose flags
-  --   whether addition output should be written during the resolution.
+  --   planes, c the number of intersection conditions, and verbose flag
+  --   whether addition output should be written during the resolution,
+  --   followed by the verify flag, whether diagnostic verification is needed.
   --   The last value in a is the number of characters in the string
   --   for the output file.
 
-    v : constant C_Integer_Array(0..4)
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(5));
+    v : constant C_Integer_Array(0..5)
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(6));
 
   begin
     n := integer32(v(0));
@@ -78,7 +79,11 @@ function use_c2lrhom ( job : integer32;
      then verbose := true;
      else verbose := false;
     end if;
-    nchar := integer32(v(4));
+    if integer32(v(4)) = 1
+     then verify := true;
+     else verify := false;
+    end if;
+    nchar := integer32(v(5));
   end Get_Dimensions2;
 
   function Get_Conditions
@@ -208,14 +213,15 @@ function use_c2lrhom ( job : integer32;
   function Job1 return integer32 is -- Littlewood-Richardson homotopies
 
     n,k,nbc,nbchar : integer32;
-    otp : boolean;
+    otp,verify : boolean;
     rc : Natural_Number;
     nrc : natural32;
     tol : constant double_float := 1.0E-5;
     minrep : boolean := true;
 
   begin
-    Get_Dimensions2(a,n,k,nbc,nbchar,otp);
+    Get_Dimensions2(a,n,k,nbc,nbchar,otp,verify);
+    verify := false;
    -- new_line;
    -- put_line("The dimensions : ");
    -- put("  n = "); put(n,1);
@@ -263,7 +269,8 @@ function use_c2lrhom ( job : integer32;
       Count_Roots(file,ips,rc);
       put("the root count : "); put(rc,1); new_line;
       tstart(timer);
-      Resolve(file,monitor,otp,n,k,tol,ips,sps,minrep,cnds.all,flgs,sols);
+      Resolve(file,monitor,otp,n,k,tol,ips,sps,verify,minrep,
+              cnds.all,flgs,sols);
       tstop(timer);
       Write_Results(file,n,k,q,rows,cols,minrep,cnds,flgs,sols,fsys);
       Standard_PolySys_Container.Initialize(fsys.all);

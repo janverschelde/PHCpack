@@ -332,7 +332,7 @@ package Moving_Flag_Continuation is
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -341,7 +341,7 @@ package Moving_Flag_Continuation is
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
@@ -350,7 +350,7 @@ package Moving_Flag_Continuation is
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
@@ -375,6 +375,7 @@ package Moving_Flag_Continuation is
   --   qc       position of the columns of the white checkers with q;
   --   pr       position of the rows of the white checkers with p;
   --   pc       position of the columns of the white checkers with p;
+  --   verify   if verification is needed after coordinate transformation;
   --   minrep   to use the more efficient representation for the problem;
   --   cond     intersection conditions for the general fixed flags;
   --   mf       coordinates of the moving flag;
@@ -441,7 +442,7 @@ package Moving_Flag_Continuation is
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -450,7 +451,7 @@ package Moving_Flag_Continuation is
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
@@ -459,7 +460,7 @@ package Moving_Flag_Continuation is
   procedure Trivial_Stay
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
@@ -485,6 +486,7 @@ package Moving_Flag_Continuation is
   --   qc       position of the columns of the white checkers with q;
   --   pr       position of the rows of the white checkers with p;
   --   pc       position of the columns of the white checkers with p;
+  --   verify   flag to indicate if diagnostic verification is needed;
   --   minrep   to use a more efficient representation of the problem;
   --   cond     intersection conditions for the general fixed flags;
   --   mf       coordinates of the moving flag;
@@ -499,7 +501,7 @@ package Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
@@ -508,7 +510,7 @@ package Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
@@ -517,7 +519,7 @@ package Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
@@ -542,6 +544,7 @@ package Moving_Flag_Continuation is
   --   qc       position of the columns of the white checkers with q;
   --   pr       position of the rows of the white checkers with p;
   --   pc       position of the columns of the white checkers with p;
+  --   verify   flag to indicate if diagnostic verification is needed;
   --   minrep   to use a more efficient representation for the problem;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
@@ -615,7 +618,7 @@ package Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
@@ -624,7 +627,7 @@ package Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
@@ -633,7 +636,7 @@ package Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
@@ -658,6 +661,7 @@ package Moving_Flag_Continuation is
   --   qc       position of the columns of the white checkers with q;
   --   pr       position of the rows of the white checkers with p;
   --   pc       position of the columns of the white checkers with p;
+  --   verify   flag to indicate if diagnostic verification is needed;
   --   minrep   to use a more efficient representation for the problem,
   --            only for checking with intermediate output;
   --   cond     intersection conditions for the general fixed flags;
@@ -674,7 +678,7 @@ package Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -683,7 +687,7 @@ package Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
@@ -692,7 +696,7 @@ package Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
@@ -717,9 +721,10 @@ package Moving_Flag_Continuation is
   --   qc       position of the columns of the white checkers with q;
   --   pr       position of the rows of the white checkers with p;
   --   pc       position of the columns of the white checkers with p;
+  --   verify   flag to indicate if diagnostic verification is needed;
   --   minrep   to use a more efficient representation for the problem;
   --   cond     intersection conditions for the general fixed flags;
-   --  mf       coordinates of the moving flag;
+  --   mf       coordinates of the moving flag;
   --   start_mf is the moving flag at the start of the homotopy;
   --   vf       coordinates of general flags to keep fixed;
   --   ls       link to the current solution;
@@ -792,7 +797,7 @@ package Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -801,7 +806,7 @@ package Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
@@ -810,7 +815,7 @@ package Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
@@ -836,6 +841,7 @@ package Moving_Flag_Continuation is
   --   qc       position of the columns of the white checkers with q;
   --   pr       position of the rows of the white checkers with p;
   --   pc       position of the columns of the white checkers with p;
+  --   verify   flag to indicate if diagnostic verification is needed;
   --   minrep   to use a more efficient representation for the problem;
   --   cond     intersection conditions for the general fixed flags;
   --   mf       coordinates of the moving flag;

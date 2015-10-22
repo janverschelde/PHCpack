@@ -195,6 +195,14 @@ package Drivers_for_Schubert_Induction is
   --   or to input those m flags, either from standard input,
   --   or to be read from file.
 
+  function Prompt_for_Output_Level return natural32;
+
+  -- DESCRIPTION :
+  --   Displays the menu with output levels in the running of the
+  --   Littlewood-Richardson homotopies, and returns 0, 1, or 2,
+  --   depending whether no output, monitoring the progress, or
+  --   monitoring with extra diagnostics is wanted.
+
   procedure Run_Moving_Flag_Continuation ( n,k : in integer32 );
 
   -- DESCRIPTION :
@@ -205,7 +213,7 @@ package Drivers_for_Schubert_Induction is
   procedure Reporting_Moving_Flag_Continuation
               ( n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec );
 
   -- DESCRIPTION :
@@ -219,6 +227,7 @@ package Drivers_for_Schubert_Induction is
   --   tol      tolerance on the residual of the original problem;
   --   rows     row positions for white checkers;
   --   cols     columns of white checkers of resolved condition;
+  --   verify   flag to indicate whether diagnostic verification is needed;
   --   minrep   if an efficient problem formulation is to be used;
   --   cnds     conditions kept fixed during flag continuation.
 
@@ -226,7 +235,7 @@ package Drivers_for_Schubert_Induction is
               ( file : in file_type;
                 n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec );
 
   -- DESCRIPTION :
@@ -241,6 +250,7 @@ package Drivers_for_Schubert_Induction is
   --   tol      tolerance on the residual of the original problem;
   --   rows     row positions for white checkers;
   --   cols     columns of white checkers of resolved condition;
+  --   verify   flag to indicate if diagnostic verification is needed;
   --   minrep   if an efficient problem formulation is to be used;
   --   cnds     conditions kept fixed during flag continuation.
 
@@ -248,7 +258,7 @@ package Drivers_for_Schubert_Induction is
               ( file : in file_type; tune : in boolean;
                 n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                verify,minrep : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 sols : out Standard_Complex_Solutions.Solution_list;
                 fsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -267,6 +277,7 @@ package Drivers_for_Schubert_Induction is
   --   k        dimension of the solution planes;
   --   rows     row positions for white checkers
   --   cols     columns of white checkers of resolved condition;
+  --   verify   flag to indicate whether diagnostic verification is needed;
   --   minrep   if an efficient problem formulation is to be used;
   --   cnds     conditions kept fixed during flag continuation.
 
