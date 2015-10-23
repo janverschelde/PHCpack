@@ -108,10 +108,10 @@ def ade_double_track(target, start, sols, gamma=0, verbose=1):
         from random import uniform
         from cmath import exp, pi
         angle = uniform(0, 2*pi)
-        gamma = exp(angle*complex(0,1))
+        gamma = exp(angle*complex(0, 1))
         if(verbose > 0):
             print 'random gamma constant :', gamma
-    fail = py2c_ade_manypaths_d(verbose,gamma.real,gamma.imag)
+    fail = py2c_ade_manypaths_d(verbose, gamma.real, gamma.imag)
     if(fail == 0):
         if(verbose > 0):
             print 'Path tracking with AD was a success!'
@@ -149,10 +149,10 @@ def gpu_double_track(target, start, sols, gamma=0, verbose=1):
         from random import uniform
         from cmath import exp, pi
         angle = uniform(0, 2*pi)
-        gamma = exp(angle*complex(0,1))
+        gamma = exp(angle*complex(0, 1))
         if(verbose > 0):
             print 'random gamma constant :', gamma
-    fail = py2c_gpu_manypaths_d(2,verbose,gamma.real,gamma.imag)
+    fail = py2c_gpu_manypaths_d(2, verbose, gamma.real, gamma.imag)
     if(fail == 0):
         if(verbose > 0):
             print 'Path tracking on the GPU was a success!'
@@ -232,10 +232,10 @@ def ade_double_double_track(target, start, sols, gamma=0, verbose=1):
         from random import uniform
         from cmath import exp, pi
         angle = uniform(0, 2*pi)
-        gamma = exp(angle*complex(0,1))
+        gamma = exp(angle*complex(0, 1))
         if(verbose > 0):
             print 'random gamma constant :', gamma
-    fail = py2c_ade_manypaths_dd(verbose,gamma.real,gamma.imag)
+    fail = py2c_ade_manypaths_dd(verbose, gamma.real, gamma.imag)
     if(fail == 0):
         if(verbose > 0):
             print 'Path tracking with AD was a success!'
@@ -273,10 +273,10 @@ def gpu_double_double_track(target, start, sols, gamma=0, verbose=1):
         from random import uniform
         from cmath import exp, pi
         angle = uniform(0, 2*pi)
-        gamma = exp(angle*complex(0,1))
+        gamma = exp(angle*complex(0, 1))
         if(verbose > 0):
             print 'random gamma constant :', gamma
-    fail = py2c_gpu_manypaths_dd(2,verbose,gamma.real,gamma.imag)
+    fail = py2c_gpu_manypaths_dd(2, verbose, gamma.real, gamma.imag)
     if(fail == 0):
         if(verbose > 0):
             print 'Path tracking on the GPU was a success!'
@@ -356,10 +356,10 @@ def ade_quad_double_track(target, start, sols, gamma=0, verbose=1):
         from random import uniform
         from cmath import exp, pi
         angle = uniform(0, 2*pi)
-        gamma = exp(angle*complex(0,1))
+        gamma = exp(angle*complex(0, 1))
         if(verbose > 0):
             print 'random gamma constant :', gamma
-    fail = py2c_ade_manypaths_qd(verbose,gamma.real,gamma.imag)
+    fail = py2c_ade_manypaths_qd(verbose, gamma.real, gamma.imag)
     if(fail == 0):
         if(verbose > 0):
             print 'Path tracking with AD was a success!'
@@ -397,10 +397,10 @@ def gpu_quad_double_track(target, start, sols, gamma=0, verbose=1):
         from random import uniform
         from cmath import exp, pi
         angle = uniform(0, 2*pi)
-        gamma = exp(angle*complex(0,1))
+        gamma = exp(angle*complex(0, 1))
         if(verbose > 0):
             print 'random gamma constant :', gamma
-    fail = py2c_gpu_manypaths_qd(2,verbose,gamma.real,gamma.imag)
+    fail = py2c_gpu_manypaths_qd(2, verbose, gamma.real, gamma.imag)
     if(fail == 0):
         if(verbose > 0):
             print 'Path tracking on the GPU was a success!'
