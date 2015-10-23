@@ -17,12 +17,14 @@ def random_trinomials():
     on the complex unit circle.
     """
     from random import randint as r
-    exponents = [(r(0, 5), r(0, 5)) for i in range(0, 6)]
-    monomials = map(lambda e: 'x^%d*y^%d' % e, exponents)
+    exponents = [(r(0, 5), r(0, 5)) for _ in range(0, 6)]
+    makemonf = lambda e: 'x^%d*y^%d' % e
+    monomials = [makemonf(e) for e in exponents]
     from random import uniform as u
     from math import cos, sin, pi
-    angles = [u(0, 2*pi) for i in range(0, 6)]
-    cff = map(lambda a: '(' + str(cos(a)) + '%+.14f' % sin(a) + '*i)', angles)
+    angles = [u(0, 2*pi) for _ in range(0, 6)]
+    makecff = lambda a: '(' + str(cos(a)) + '%+.14f' % sin(a) + '*i)'
+    cff = [makecff(a) for a in angles]
     one = '+'.join(cff[i] + '*' + monomials[i] for i in range(0, 3)) + ';'
     two = '+'.join(cff[i] + '*' + monomials[i] for i in range(3, 6)) + ';'
     return [one, two]

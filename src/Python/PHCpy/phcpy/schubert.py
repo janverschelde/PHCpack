@@ -48,7 +48,7 @@ def resolve_schubert_conditions(ndim, kdim, brackets, verbose=True):
     return roco
 
 def standard_littlewood_richardson_homotopies(ndim, kdim, brackets, \
-    verbose=True, verify=False, outputfilename='/tmp/output'):
+    verbose=True, vrfcnd=False, outputfilename='/tmp/output'):
     """
     In n-dimensional space we consider k-dimensional planes,
     subject to intersection conditions represented by brackets.
@@ -79,7 +79,7 @@ def standard_littlewood_richardson_homotopies(ndim, kdim, brackets, \
             cds = cds + ' ' + str(num)
     # print 'the condition string :', cds
     (roco, sflags) = stlrhom(ndim, kdim, nbc, len(cds), cds, int(verbose), \
-        int(verify), len(outputfilename), outputfilename)
+        int(vrfcnd), len(outputfilename), outputfilename)
     rflags = eval(sflags)
     flgs = []
     for k in range(len(rflags)/2):
@@ -89,7 +89,7 @@ def standard_littlewood_richardson_homotopies(ndim, kdim, brackets, \
     return (roco, flgs, fsys, sols)
 
 def dobldobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
-    verbose=True, verify=False, outputfilename='/tmp/output'):
+    verbose=True, vrfcnd=False, outputfilename='/tmp/output'):
     """
     In n-dimensional space we consider k-dimensional planes,
     subject to intersection conditions represented by brackets.
@@ -120,7 +120,7 @@ def dobldobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
             cds = cds + ' ' + str(num)
     # print 'the condition string :', cds
     (roco, sflags) = ddlrhom(ndim, kdim, nbc, len(cds), cds, int(verbose), \
-        int(verify), len(outputfilename), outputfilename)
+        int(vrfcnd), len(outputfilename), outputfilename)
     rflags = eval(sflags)
     flgs = []
     for k in range(len(rflags)/4):
@@ -130,7 +130,7 @@ def dobldobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
     return (roco, flgs, fsys, sols)
 
 def quaddobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
-    verbose=True, verify=False, outputfilename='/tmp/output'):
+    verbose=True, vrfcnd=False, outputfilename='/tmp/output'):
     """
     In n-dimensional space we consider k-dimensional planes,
     subject to intersection conditions represented by brackets.
@@ -161,7 +161,7 @@ def quaddobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
             cds = cds + ' ' + str(num)
     # print 'the condition string :', cds
     (roco, sflags) = qdlrhom(ndim, kdim, nbc, len(cds), cds, int(verbose), \
-        int(verify), len(outputfilename), outputfilename)
+        int(vrfcnd), len(outputfilename), outputfilename)
     rflags = eval(sflags)
     flgs = []
     for k in range(len(rflags)/8):
@@ -171,7 +171,7 @@ def quaddobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
     return (roco, flgs, fsys, sols)
 
 def littlewood_richardson_homotopies(ndim, kdim, brackets, \
-    verbose=True, verify=False, precision='d', \
+    verbose=True, vrfcnd=False, precision='d', \
     outputfilename='/tmp/output'):
     """
     In n-dimensional space we consider k-dimensional planes,
@@ -191,13 +191,13 @@ def littlewood_richardson_homotopies(ndim, kdim, brackets, \
     """
     if(precision == 'd'):
         return standard_littlewood_richardson_homotopies(ndim, kdim, \
-                  brackets, verbose, verify, outputfilename)
+                  brackets, verbose, vrfcnd, outputfilename)
     elif(precision == 'dd'):
         return dobldobl_littlewood_richardson_homotopies(ndim, kdim, \
-                  brackets, verbose, verify, outputfilename)
+                  brackets, verbose, vrfcnd, outputfilename)
     elif(precision == 'qd'):
         return quaddobl_littlewood_richardson_homotopies(ndim, kdim, \
-                  brackets, verbose, verify, outputfilename)
+                  brackets, verbose, vrfcnd, outputfilename)
     else:
         print 'wrong level of precision, use d, dd, or qd'
 
@@ -211,12 +211,9 @@ def random_complex_matrix(nbrows, nbcols):
     from random import uniform as u
     result = []
     for i in range(0, nbrows):
-        row = []
-        for j in range(0, nbcols):
-            angle = u(0, 2*pi)
-            cff = complex(cos(angle), sin(angle))
-            row.append(cff)
-        result.append(row)
+        angles = [u(0, 2*pi) for _ in range(nbcols)]
+        cols = [complex(cos(a), sin(a)) for a in angles]
+        result.append(cols)
     return result
 
 def random_complex_matrices(nbr, nbrows, nbcols):
@@ -380,7 +377,7 @@ def cheater(mdim, pdim, qdeg, start, startsols):
     the Pieri system in start, at the solutions in startsols.
     """
     dim = mdim*pdim + qdeg*(mdim+pdim)
-    planes = [random_complex_matrix(mdim+pdim, mdim) for k in range(0, dim)]
+    planes = [random_complex_matrix(mdim+pdim, mdim) for _ in range(0, dim)]
     pols = make_pieri_system(mdim, pdim, qdeg, planes)
     from trackers import track
     print 'cheater homotopy with %d paths' % len(startsols)
@@ -453,7 +450,7 @@ def test_pieri():
     if(qdeg == 0):
         osculating_input(mdim, pdim, qdeg, system, sols)
 
-if __name__ == "__main__":
+def main():
     """
     Tests the Pieri homotopies and the Littlewood-Richardson homotopies.
     """
@@ -461,3 +458,6 @@ if __name__ == "__main__":
     test_pieri()
     print "\nTesting the Littlewood-Richardson homotopies ..."
     test_lrhom()
+
+if __name__ == "__main__":
+    main()

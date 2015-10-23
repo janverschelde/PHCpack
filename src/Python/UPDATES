@@ -1,3 +1,6 @@
+Fri 23 Oct 2015 : in schubert.py, changed parameter verify into vrfcnd
+  for pylint warnings; improved random_trinomials() in solver.py.
+
 Thu 22 Oct 2015 : extended schubert.py to run L-R homotopies in double double
   and quad double precision.  
   For version 0.3.2, updated setup.py, __init__.py, and conf.py.
