@@ -6,7 +6,7 @@ The path trackers in this directory rely on natural parameter homotopies.
 ------------------------------------------------------------------------------
 file name                        : short description
 ------------------------------------------------------------------------------
-solutions_with_parameters        : selecting and joining variables
+standard_parameter_solutions     : selecting and joining variables
 standard_parameter_systems       : definition of parameter homotopy + i/o
 parameter_homotopy_continuation  : drivers to path tracking
 ts_parcon                        : stand-alone calling program

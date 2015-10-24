@@ -21,7 +21,7 @@ with Standard_IncFix_Continuation;      use Standard_IncFix_Continuation;
 with Drivers_for_Poly_Continuation;     use Drivers_for_Poly_Continuation;
 with Standard_Root_Refiners;            use Standard_Root_Refiners;
 with Standard_Parameter_Systems;        use Standard_Parameter_Systems;
-with Solutions_with_Parameters;         use Solutions_with_Parameters;
+with Standard_Parameter_Solutions;      use Standard_Parameter_Solutions;
 with Standard_Quad_Parameters;
 with Standard_Quad_Turn_Points_io;      use Standard_Quad_Turn_Points_io;
 with Standard_Quad_Sweepers;            use Standard_Quad_Sweepers;

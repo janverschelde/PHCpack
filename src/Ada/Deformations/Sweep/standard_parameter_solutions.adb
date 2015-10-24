@@ -1,4 +1,4 @@
-package body Solutions_with_Parameters is
+package body Standard_Parameter_Solutions is
 
   function Select_Variables
               ( s : Solution; nv : integer32;
@@ -81,4 +81,4 @@ package body Solutions_with_Parameters is
     return res;
   end Join_Variables;
 
-end Solutions_with_Parameters; 
+end Standard_Parameter_Solutions; 

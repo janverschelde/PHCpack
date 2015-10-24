@@ -3,7 +3,7 @@ with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 
-package Solutions_with_Parameters is
+package Standard_Parameter_Solutions is
 
 -- DESCRIPTION :
 --   The two major operations specific to solutions of systems with
@@ -52,4 +52,4 @@ package Solutions_with_Parameters is
   --   Joins the solutions and values for the parameters into a
   --   list of solutions.
 
-end Solutions_with_Parameters;
+end Standard_Parameter_Solutions;
