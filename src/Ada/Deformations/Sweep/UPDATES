@@ -3,6 +3,7 @@ Sat 24 Oct 2015 : updated parameter_homotopy_continuation to make room for
   into standard_parameter_systems changed parameter_homotopy_continuation.adb
   and ts_parcon.  Renamed solutions_with_parameters into standard_parameter_
   solutions, which caused parameter_homotopy_continuation.adb to change.
+  New packages {dobldobl,quaddobl}_parameter_systems, tested by ts_parcon.
 
 Wed 26 Jun 2013 : updated parameter_homotopy_continuation.adb for
   Increment_and_Fix_Continuation name change.  Also updated

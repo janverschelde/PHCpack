@@ -8,6 +8,8 @@ file name                        : short description
 ------------------------------------------------------------------------------
 standard_parameter_solutions     : selecting and joining variables
 standard_parameter_systems       : definition of parameter homotopy + i/o
+dobldobl_parameter_systems       : parameter homotopy with double doubles
+quaddobl_parameter_systems       : parameter homotopy with quad doubles
 parameter_homotopy_continuation  : drivers to path tracking
 ts_parcon                        : stand-alone calling program
 ------------------------------------------------------------------------------
