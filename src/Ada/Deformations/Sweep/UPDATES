@@ -1,0 +1,10 @@
+Sat 24 Oct 2015 : updated parameter_homotopy_continuation to make room for
+  double double and quad double versions.
+
+Wed 26 Jun 2013 : updated parameter_homotopy_continuation.adb for
+  Increment_and_Fix_Continuation name change.  Also updated
+  systems_with_parameters, solutions_with_parameters,
+  parameter_homotopy_continuation and ts_parcon.adb.
+
+Mon 21 Jan 2013 : creation of this directory, moving code involving sweep
+  and parameter continuation from Continuation to this new directory Sweep.

@@ -1,7 +1,7 @@
 with text_io;                           use text_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_Polynomials;
@@ -11,7 +11,7 @@ with Standard_Floating_Jaco_Matrices;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;
-with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
+with Standard_Complex_Solutions;
 
 package Parameter_Homotopy_Continuation is
 
@@ -54,7 +54,8 @@ package Parameter_Homotopy_Continuation is
   --   The _Real_ omits the imaginary parts.
 
   procedure Determine_Parameter_Values
-              ( file : in file_type; sols : in Solution_List;
+              ( file : in file_type;
+                sols : in Standard_Complex_Solutions.Solution_List;
                 par : in Standard_Integer_Vectors.Vector;
                 isreal : in out boolean;
                 start,target : out Standard_Complex_Vectors.Vector );
@@ -77,7 +78,7 @@ package Parameter_Homotopy_Continuation is
   --   target   target values for the parameters, will be real if isreal.
 
   function Interpolate ( a,b : Standard_Complex_Vectors.Vector;
-                         t : Complex_Number )
+                         t : Standard_Complex_Numbers.Complex_Number )
                        return Standard_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
@@ -85,7 +86,7 @@ package Parameter_Homotopy_Continuation is
   --   default to use in the instantiation of Parameter_Continuation.
 
   function Circulate ( a,b : Standard_Complex_Vectors.Vector;
-                       gamma,t : Complex_Number )
+                       gamma,t : Standard_Complex_Numbers.Complex_Number )
                      return Standard_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
@@ -101,19 +102,22 @@ package Parameter_Homotopy_Continuation is
   --   instantiation of Parameter_Continuation.
 
   generic
-    with function Evaluate_Parameters ( t : Complex_Number )
-           return Standard_Complex_Vectors.Vector;
+    with function Evaluate_Parameters 
+                    ( t : Standard_Complex_Numbers.Complex_Number )
+                    return Standard_Complex_Vectors.Vector;
     -- returns value of parameters at t
-    with function Differentiate_Parameters ( t : Complex_Number )
-           return Standard_Complex_Vectors.Vector;
+    with function Differentiate_Parameters
+                    ( t : Standard_Complex_Numbers.Complex_Number )
+                    return Standard_Complex_Vectors.Vector;
     -- returns derivatives of parameters with respect to t
-  procedure Parameter_Continuation
+  procedure Standard_Parameter_Continuation
               ( file : in file_type;
                 n : in integer32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 pars : in Standard_Integer_Vectors.Vector;
                 vars : in Standard_Integer_Vectors.Vector;
-		sols : in out Solution_List; output : in boolean );
+		sols : in out Standard_Complex_Solutions.Solution_List;
+                output : in boolean );
 
   -- DESCRIPTION :
   --   Executes the parameter continuation for the homotopy defined by
@@ -134,7 +138,7 @@ package Parameter_Homotopy_Continuation is
   procedure Coefficient_Parameter_Homotopy_Continuation
               ( file : in file_type;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                sols : in Solution_List;
+                sols : in Standard_Complex_Solutions.Solution_List;
                 nb_equ,nb_unk,nb_par : in integer32 );
 
   -- DESCRIPTION :
@@ -153,7 +157,8 @@ package Parameter_Homotopy_Continuation is
   --   nb_par   number of parameters: nb_unk - nb_equ.
 
   function Complex_Sweep_Line
-              ( n,k : integer32; start,target : Complex_Number )
+              ( n,k : integer32;
+                start,target : Standard_Complex_Numbers.Complex_Number )
               return Standard_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
@@ -165,26 +170,26 @@ package Parameter_Homotopy_Continuation is
               ( file : in file_type; output : in boolean;
                 k,nq,nv : in natural32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                s : in Link_to_Solution );
+                s : in Standard_Complex_Solutions.Link_to_Solution );
   procedure Run_Complex_Sweep
               ( file : in file_type; output : in boolean;
                 k,nq,nv : in natural32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 f : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
-                s : in Link_to_Solution );
+                s : in Standard_Complex_Solutions.Link_to_Solution );
   procedure Run_Real_Sweep
               ( file : in file_type; output : in boolean;
                 k,nq,nv : in natural32;
                 h : in Standard_Floating_Poly_Systems.Poly_Sys;
-                s : in Link_to_Solution );
+                s : in Standard_Complex_Solutions.Link_to_Solution );
   procedure Run_Real_Sweep
               ( file : in file_type; output : in boolean;
                 k,nq,nv : in natural32;
                 h : in Standard_Floating_Poly_Systems.Poly_Sys;
                 f : in Standard_Floating_Poly_SysFun.Eval_Poly_Sys;
                 jf : in Standard_Floating_Jaco_Matrices.Eval_Jaco_Mat;
-                s : in Link_to_Solution );
+                s : in Standard_Complex_Solutions.Link_to_Solution );
 
   -- DESCRIPTION :
   --   Does a sweep in complex or real arithmetic till the target
@@ -212,7 +217,7 @@ package Parameter_Homotopy_Continuation is
   procedure Sweep
               ( file : in file_type; isreal : in out boolean;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                sols : in Solution_List;
+                sols : in Standard_Complex_Solutions.Solution_List;
                 nb_equ,nb_unk,nb_par : in integer32 );
 
   -- DESCRIPTION :

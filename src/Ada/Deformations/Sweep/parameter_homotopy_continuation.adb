@@ -8,7 +8,7 @@ with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with Numbers_io;                        use Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Floating_Vectors;
-with Standard_Complex_Matrices;         use Standard_Complex_Matrices;
+with Standard_Complex_Matrices;
 with Standard_Complex_Norms_Equals;     use Standard_Complex_Norms_Equals;
 with Symbol_Table,Symbol_Table_io;      use Symbol_Table;
 with Standard_Floating_Polynomials;
@@ -58,7 +58,7 @@ package body Parameter_Homotopy_Continuation is
       put(" : ");
       Read_Double_Float(rv);
       Read_Double_Float(iv);
-      res(i) := Create(rv,iv);
+      res(i) := Standard_Complex_Numbers.Create(rv,iv);
     end loop;
     return res;
   end Define_Complex_Target;
@@ -77,7 +77,7 @@ package body Parameter_Homotopy_Continuation is
       Symbol_Table_io.put(Symbol_Table.Get(natural32(ip(i))));
       put(" : ");
       Read_Double_Float(f);
-      res(i) := Create(f);
+      res(i) := Standard_Complex_Numbers.Create(f);
     end loop;
     return res;
   end Define_Real_Target;
@@ -105,16 +105,21 @@ package body Parameter_Homotopy_Continuation is
       put(file," ");
       Symbol_Table_io.put(file,Symbol_Table.Get(natural32(labels(i))));
       put(file," : ");
-      put(file,REAL_PART(values(i)));
+      put(file,Standard_Complex_Numbers.REAL_PART(values(i)));
       new_line(file);
     end loop;
   end Write_Real_Parameter_Values;
 
   procedure Determine_Parameter_Values
-              ( file : in file_type; sols : in Solution_List;
+              ( file : in file_type;
+                sols : in Standard_Complex_Solutions.Solution_List;
                 par : in Standard_Integer_Vectors.Vector;
                 isreal : in out boolean;
                 start,target : out Standard_Complex_Vectors.Vector ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
+
   begin
     start := Define_Start(Head_Of(sols).v,par);
     if isreal then
@@ -151,8 +156,10 @@ package body Parameter_Homotopy_Continuation is
   end Determine_Parameter_Values;
 
   function Interpolate ( a,b : Standard_Complex_Vectors.Vector;
-                         t : Complex_Number )
+                         t : Standard_Complex_Numbers.Complex_Number )
                        return Standard_Complex_Vectors.Vector is
+
+    use Standard_Complex_Numbers;
 
     res : Standard_Complex_Vectors.Vector(a'range);
     zero : constant Complex_Number := Create(0.0);
@@ -173,8 +180,10 @@ package body Parameter_Homotopy_Continuation is
   end Interpolate;
 
   function Circulate ( a,b : Standard_Complex_Vectors.Vector;
-                       gamma,t : Complex_Number )
+                       gamma,t : Standard_Complex_Numbers.Complex_Number )
                      return Standard_Complex_Vectors.Vector is
+
+    use Standard_Complex_Numbers;
 
     s : constant Complex_Number := t + gamma*t*(Create(1.0)-t);
 
@@ -192,22 +201,26 @@ package body Parameter_Homotopy_Continuation is
     return res;
   end Differentiate;
 
-  procedure Parameter_Continuation
+  procedure Standard_Parameter_Continuation
               ( file : in file_type;
                 n : in integer32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 pars : in Standard_Integer_Vectors.Vector;
                 vars : in Standard_Integer_Vectors.Vector;
-		sols : in out Solution_List; output : in boolean ) is
+		sols : in out Standard_Complex_Solutions.Solution_List;
+                output : in boolean ) is
 
+    use Standard_Complex_Numbers;
     use Standard_Complex_Poly_SysFun;
     use Standard_Complex_Jaco_Matrices;
+    use Standard_Complex_Solutions;
+
     ep : Eval_Poly_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..n) := Create(p);
     ejm : Eval_Jaco_Mat(p'range,1..n) := Create(jm);
   
     function xvt ( x : Standard_Complex_Vectors.Vector;
-                   t : Complex_Number )
+                   t : Standard_Complex_Numbers.Complex_Number )
                  return Standard_Complex_Vectors.Vector is
 
     -- DESCRIPTION :
@@ -229,7 +242,7 @@ package body Parameter_Homotopy_Continuation is
     end xvt;
 
     function Eval ( x : Standard_Complex_Vectors.Vector;
-                    t : Complex_Number )
+                    t : Standard_Complex_Numbers.Complex_Number )
                   return Standard_Complex_Vectors.Vector is
 
       z : constant Standard_Complex_Vectors.Vector(1..n) := xvt(x,t);
@@ -239,9 +252,10 @@ package body Parameter_Homotopy_Continuation is
     end Eval;
 
     function Diff ( x : Standard_Complex_Vectors.Vector;
-                    t : Complex_Number ) return Matrix is
+                    t : Standard_Complex_Numbers.Complex_Number )
+                  return Standard_Complex_Matrices.Matrix is
 
-      res : Matrix(p'range,x'range);
+      res : Standard_Complex_Matrices.Matrix(p'range,x'range);
       z : constant Standard_Complex_Vectors.Vector(1..n) := xvt(x,t);
 
     begin
@@ -254,7 +268,7 @@ package body Parameter_Homotopy_Continuation is
     end Diff;
 
     function Diff_t ( x : Standard_Complex_Vectors.Vector;
-                      t : Complex_Number )
+                      t : Standard_Complex_Numbers.Complex_Number )
                     return Standard_Complex_Vectors.Vector is
 
       res : Standard_Complex_Vectors.Vector(p'range)
@@ -307,12 +321,12 @@ package body Parameter_Homotopy_Continuation is
      else Sil_Cont(sols,false,Create(1.0));
     end if;
     Clear(ep); Clear(jm); Clear(ejm);
-  end Parameter_Continuation;
+  end Standard_Parameter_Continuation;
 
   procedure Call_Standard_Root_Refiner
                ( file : in file_type;
                  p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                 sols : in out Solution_List ) is
+                 sols : in out Standard_Complex_Solutions.Solution_List ) is
 
     epsxa,epsfa,tolsing : double_float;
     numit : natural32 := 0;
@@ -343,8 +357,11 @@ package body Parameter_Homotopy_Continuation is
   procedure Coefficient_Parameter_Homotopy_Continuation
               ( file : in file_type;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                sols : in Solution_List;
+                sols : in Standard_Complex_Solutions.Solution_List;
                 nb_equ,nb_unk,nb_par : in integer32 ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
 
     ind_par : constant Standard_Integer_Vectors.Vector
             := Define_Parameters(nb_equ,nb_unk,nb_par);
@@ -375,7 +392,8 @@ package body Parameter_Homotopy_Continuation is
       return Differentiate(start_pars,target_pars);
     end Diff_Pars;
 
-    procedure Par_Con is new Parameter_Continuation(Eval_Pars,Diff_Pars);
+    procedure Par_Con is
+      new Standard_Parameter_Continuation(Eval_Pars,Diff_Pars);
 
   begin
     Determine_Parameter_Values
@@ -412,6 +430,7 @@ package body Parameter_Homotopy_Continuation is
   function Create_Term
              ( n,k : natural32 ) return Standard_Complex_Polynomials.Poly is
 
+    use Standard_Complex_Numbers;
     use Standard_Complex_Polynomials;
 
     t : Term;
@@ -426,10 +445,13 @@ package body Parameter_Homotopy_Continuation is
   end Create_Term;
 
   function Complex_Sweep_Line
-             ( n,k : integer32; start,target : Complex_Number )
+             ( n,k : integer32;
+               start,target : Standard_Complex_Numbers.Complex_Number )
              return Standard_Complex_Polynomials.Poly is
 
+    use Standard_Complex_Numbers;
     use Standard_Complex_Polynomials;
+
     t : Term;
     res : Poly;
 
@@ -466,7 +488,7 @@ package body Parameter_Homotopy_Continuation is
               ( file : in file_type; output : in boolean;
                 k,nq,nv : in natural32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                s : in Link_to_Solution ) is
+                s : in Standard_Complex_Solutions.Link_to_Solution ) is
 
     ep : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(h'range)
        := Standard_Complex_Poly_SysFun.Create(h);
@@ -487,7 +509,7 @@ package body Parameter_Homotopy_Continuation is
               ( file : in file_type; output : in boolean;
                 k,nq,nv : in natural32;
                 h : in Standard_Floating_Poly_Systems.Poly_Sys;
-                s : in Link_to_Solution ) is
+                s : in Standard_Complex_Solutions.Link_to_Solution ) is
 
     ep : Standard_Floating_Poly_SysFun.Eval_Poly_Sys(h'range)
        := Standard_Floating_Poly_SysFun.Create(h);
@@ -507,7 +529,9 @@ package body Parameter_Homotopy_Continuation is
   function Hyperplane ( dx,x : Standard_Complex_Vectors.Vector )
                       return Standard_Complex_Polynomials.Poly is
 
+    use Standard_Complex_Numbers;
     use Standard_Complex_Polynomials;
+
     res : Poly := Null_Poly;
     t : Term;
     y : Complex_Number := Create(0.0);
@@ -532,7 +556,9 @@ package body Parameter_Homotopy_Continuation is
   function Hyperplane ( dx,x : Standard_Floating_Vectors.Vector )
                       return Standard_Floating_Polynomials.Poly is
 
+    use Standard_Complex_Numbers;
     use Standard_Floating_Polynomials;
+
     res : Poly := Null_Poly;
     t : Term;
     y : double_float := 0.0;
@@ -560,13 +586,15 @@ package body Parameter_Homotopy_Continuation is
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 f : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
-                s : in Link_to_Solution ) is
+                s : in Standard_Complex_Solutions.Link_to_Solution ) is
+
+    use Standard_Complex_Numbers;
 
     x,dx : Standard_Complex_Vectors.Vector(1..integer32(nv));
    -- st : Standard_Complex_Poly_Systems.Poly_Sys(1..h'last+1);
    -- sols : Solution_List;
    -- nb : natural := 0;
-   -- ls : Link_to_Solution;
+   -- ls : Standard_Complex_Solutions.Link_to_Solution;
 
   begin
     for i in s.v'range loop
@@ -611,7 +639,9 @@ package body Parameter_Homotopy_Continuation is
                 h : in Standard_Floating_Poly_Systems.Poly_Sys;
                 f : in Standard_Floating_Poly_SysFun.Eval_Poly_Sys;
                 jf : in Standard_Floating_Jaco_Matrices.Eval_Jaco_Mat;
-                s : in Link_to_Solution ) is
+                s : in Standard_Complex_Solutions.Link_to_Solution ) is
+
+    use Standard_Complex_Numbers;
 
     x,dx : Standard_Floating_Vectors.Vector(1..integer32(nv));
     evl : constant boolean := false;
@@ -619,7 +649,7 @@ package body Parameter_Homotopy_Continuation is
    -- cst : Standard_Complex_Poly_Systems.Poly_Sys(1..h'last+1);
    -- sols : Solution_List;
    -- nb : natural := 0;
-   -- ls : Link_to_Solution;
+   -- ls : Standard_Complex_Solutions.Link_to_Solution;
 
   begin
     for i in s.v'range loop
@@ -664,8 +694,11 @@ package body Parameter_Homotopy_Continuation is
 
   procedure Sweep ( file : in file_type; isreal : in out boolean;
                     p : in Standard_Complex_Poly_Systems.Poly_Sys;
-                    sols : in Solution_List;
+                    sols : in Standard_Complex_Solutions.Solution_List;
                     nb_equ,nb_unk,nb_par : in integer32 ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Solutions;
 
     timer : Timing_Widget;
     par : Standard_Integer_Vectors.Vector(1..nb_par);
