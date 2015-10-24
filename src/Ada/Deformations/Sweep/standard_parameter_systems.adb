@@ -8,9 +8,7 @@ with Symbol_Table,Symbol_Table_io;      use Symbol_Table;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 
-package body Systems_with_Parameters is
-
--- AUXILIARY :
+package body Standard_Parameter_Systems is
 
   procedure Sort ( v : in out Standard_Integer_Vectors.Vector ) is
 
@@ -37,8 +35,6 @@ package body Systems_with_Parameters is
       end if;
     end loop;
   end Sort;
-
--- TARGET ROUTINES :
 
   procedure Read_Solution_Parameters
               ( infile : in file_type; outfile : out file_type;
@@ -222,4 +218,4 @@ package body Systems_with_Parameters is
     return res;
   end Substitute;
 
-end Systems_with_Parameters; 
+end Standard_Parameter_Systems; 

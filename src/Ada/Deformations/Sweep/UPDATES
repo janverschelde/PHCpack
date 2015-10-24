@@ -1,5 +1,7 @@
 Sat 24 Oct 2015 : updated parameter_homotopy_continuation to make room for
-  double double and quad double versions.
+  double double and quad double versions.  Renaming of system_with_parameters
+  into standard_parameter_systems changed parameter_homotopy_continuation.adb
+  and ts_parcon.
 
 Wed 26 Jun 2013 : updated parameter_homotopy_continuation.adb for
   Increment_and_Fix_Continuation name change.  Also updated

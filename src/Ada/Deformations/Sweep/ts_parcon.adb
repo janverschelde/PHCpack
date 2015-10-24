@@ -3,7 +3,7 @@ with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Complex_to_Real_Poly;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
-with Systems_with_Parameters;           use Systems_with_Parameters;
+with Standard_Parameter_Systems;        use Standard_Parameter_Systems;
 with Parameter_Homotopy_Continuation;   use Parameter_Homotopy_Continuation;
 
 procedure ts_parcon is

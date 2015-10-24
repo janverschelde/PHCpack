@@ -25,7 +25,7 @@ with Multprec_Complex_Solutions;
 with Projective_Transformations;         use Projective_Transformations;
 with Standard_Root_Refiners;             use Standard_Root_Refiners;
 with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
-with Systems_with_Parameters;            use Systems_with_Parameters;
+with Standard_Parameter_Systems;         use Standard_Parameter_Systems;
 with Parameter_Homotopy_Continuation;    use Parameter_Homotopy_Continuation;
 with Multitasking_Continuation;
 with Write_Seed_Number;

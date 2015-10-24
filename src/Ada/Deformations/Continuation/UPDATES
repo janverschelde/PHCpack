@@ -1,3 +1,6 @@
+Sat 24 Oct 2015 : changed mainpoco.adb for renaming of systems_with_parameters
+  into standard_parameter_systems.
+
 Sat 10 Oct 2015 : called the multitasking root refiners in the packages
   {dobldobl,quaddobl}_blackbox_continuations.adb.
 

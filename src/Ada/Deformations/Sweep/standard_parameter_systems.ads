@@ -6,7 +6,7 @@ with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 
-package Systems_with_Parameters is
+package Standard_Parameter_Systems is
 
 -- DESCRIPTION :
 --   Any system with parameters is a coefficient-parameter homotopy.
@@ -15,6 +15,12 @@ package Systems_with_Parameters is
 --   Once the system has been solved for particular values of the
 --   parameters, we need to substitute the parameters by these values
 --   for root refinement.
+
+  procedure Sort ( v : in out Standard_Integer_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   The labels of the parameters must be sorted in increasing order,
+  --   otherwise, the substitute will not work.
 
   procedure Read_Solution_Parameters
               ( infile : in file_type; outfile : out file_type;
@@ -92,13 +98,18 @@ package Systems_with_Parameters is
                 vals : Standard_Complex_Vectors.Vector )
               return Standard_Complex_Polynomials.Poly;
 
+  -- DESCRIPTION :
+  --   Replaces the parameters defined by the indices in pars
+  --   by the values in vals in the polynomial p.
+
   function Substitute
-               ( p : Standard_Complex_Poly_Systems.Poly_Sys;
-                 pars : Standard_Integer_Vectors.Vector;
-                 vals : Standard_Complex_Vectors.Vector )
-               return Standard_Complex_Poly_Systems.Poly_Sys;
+              ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+                pars : Standard_Integer_Vectors.Vector;
+                vals : Standard_Complex_Vectors.Vector )
+              return Standard_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
-  --   Replaces the parameters in p by given values.
+  --   Replaces the parameters defined by the indices in pars
+  --   by the values in vals in the polynomial p.
 
-end Systems_with_Parameters;
+end Standard_Parameter_Systems;
