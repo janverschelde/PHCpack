@@ -1,3 +1,5 @@
+Sun 25 Oct 2015 :
+
 Sat 24 Oct 2015 : updated parameter_homotopy_continuation to make room for
   double double and quad double versions.  Renaming of system_with_parameters
   into standard_parameter_systems changed parameter_homotopy_continuation.adb

@@ -7,6 +7,8 @@ The path trackers in this directory rely on natural parameter homotopies.
 file name                        : short description
 ------------------------------------------------------------------------------
 standard_parameter_solutions     : selecting and joining variables
+dobldobl_parameter_solutions     : parameter solutions with double doubles
+quaddobl_parameter_solutions     : parameter solutions with quad doubles
 standard_parameter_systems       : definition of parameter homotopy + i/o
 dobldobl_parameter_systems       : parameter homotopy with double doubles
 quaddobl_parameter_systems       : parameter homotopy with quad doubles
