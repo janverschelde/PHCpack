@@ -1,4 +1,4 @@
-Basic number definitions, coefficient rings and fields for PHCv2.3.98
+Basic number definitions, coefficient rings and fields for PHCv2.4.04
 
 This directory was established in release 2 of PHCpack and was upgraded
 for efficiency in later versions.  In v2.3, only the i/o of multiprecision
