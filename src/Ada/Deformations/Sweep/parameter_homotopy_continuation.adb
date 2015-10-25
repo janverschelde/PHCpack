@@ -7,11 +7,13 @@ with Double_Double_Numbers;             use Double_Double_Numbers;
 with Double_Double_Numbers_io;          use Double_Double_Numbers_io;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;            use Quad_Double_Numbers_io;
-with Standard_Random_Numbers;           use Standard_Random_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
 with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
 with Numbers_io;                        use Numbers_io;
+with Standard_Random_Numbers;           use Standard_Random_Numbers;
+with DoblDobl_Random_Numbers;           use DoblDobl_Random_Numbers;
+with QuadDobl_Random_Numbers;           use QuadDobl_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Complex_Matrices;
@@ -23,18 +25,28 @@ with QuadDobl_Complex_Vector_Norms;     use QuadDobl_Complex_Vector_Norms;
 with Symbol_Table,Symbol_Table_io;      use Symbol_Table;
 with Standard_Floating_Polynomials;
 with Standard_Complex_to_Real_Poly;
+with DoblDobl_Complex_to_Real_Poly;
+with QuadDobl_Complex_to_Real_Poly;
 with Standard_Complex_Poly_Functions;
 with DoblDobl_Complex_Poly_Functions;
 with QuadDobl_Complex_Poly_Functions;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems_io;  use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with Standard_Solution_Diagnostics;
 with Standard_IncFix_Continuation;
 with DoblDobl_IncFix_Continuation;
 with QuadDobl_IncFix_Continuation;
 with Drivers_for_Poly_Continuation;     use Drivers_for_Poly_Continuation;
-with Standard_Root_Refiners;            use Standard_Root_Refiners;
-with Standard_Parameter_Systems;        use Standard_Parameter_Systems;
+with Standard_Root_Refiners;
+with DoblDobl_Root_Refiners;
+with QuadDobl_Root_Refiners;
+with Standard_Parameter_Systems;
+with DoblDobl_Parameter_Systems;
+with QuadDobl_Parameter_Systems;
 with Standard_Parameter_Solutions;
 with DoblDobl_Parameter_Solutions;
 with QuadDobl_Parameter_Solutions;
@@ -896,6 +908,12 @@ package body Parameter_Homotopy_Continuation is
                  p : in Standard_Complex_Poly_Systems.Poly_Sys;
                  sols : in out Standard_Complex_Solutions.Solution_List ) is
 
+  -- DESCRIPTION :
+  --   Wrapper function to refine solutions with Newton's method
+  --   in standard double precision arithmetic.
+
+    use Standard_Root_Refiners;
+
     epsxa,epsfa,tolsing : double_float;
     numit : natural32 := 0;
     max : constant natural32 := 5;
@@ -908,6 +926,50 @@ package body Parameter_Homotopy_Continuation is
     Reporting_Root_Refiner
       (file,p,sols,epsxa,epsfa,tolsing,numit,max,deflate,false);
   end Call_Standard_Root_Refiner;
+
+  procedure Call_DoblDobl_Root_Refiner
+               ( file : in file_type;
+                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Wrapper function to refine solutions with Newton's method
+  --   in double double precision arithmetic.
+
+    use DoblDobl_Root_Refiners;
+
+    epsxa,epsfa,tolsing : double_float;
+    numit : natural32 := 0;
+    max : constant natural32 := 5;
+
+  begin
+    epsxa := 1.0E-14;
+    epsfa := 1.0E-14;
+    tolsing := 1.0E-08;
+    Reporting_Root_Refiner(file,p,sols,epsxa,epsfa,tolsing,numit,max,false);
+  end Call_DoblDobl_Root_Refiner;
+
+  procedure Call_QuadDobl_Root_Refiner
+               ( file : in file_type;
+                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Wrapper function to refine solutions with Newton's method
+  --   in quad double precision arithmetic.
+
+    use QuadDobl_Root_Refiners;
+
+    epsxa,epsfa,tolsing : double_float;
+    numit : natural32 := 0;
+    max : constant natural32 := 5;
+
+  begin
+    epsxa := 1.0E-14;
+    epsfa := 1.0E-14;
+    tolsing := 1.0E-08;
+    Reporting_Root_Refiner(file,p,sols,epsxa,epsfa,tolsing,numit,max,false);
+  end Call_QuadDobl_Root_Refiner;
 
   function Select_Symbols ( s : Array_of_Symbols;
                             v : Standard_Integer_Vectors.Vector ) 
@@ -930,6 +992,7 @@ package body Parameter_Homotopy_Continuation is
 
     use Standard_Complex_Numbers;
     use Standard_Complex_Solutions;
+    use Standard_Parameter_Systems;
     use Standard_Parameter_Solutions;
 
     ind_par : constant Standard_Integer_Vectors.Vector
@@ -988,6 +1051,158 @@ package body Parameter_Homotopy_Continuation is
     put_line(file,"THE TARGET SYSTEM :");
     put(file,natural32(sp'last),sp);
     Call_Standard_Root_Refiner(file,sp,var_sols);
+    new_sols := Join_Variables(var_sols,nb_unk,ind_var,ind_par,target_pars);
+    Symbol_Table.Clear;
+    Symbol_Table.Init(s);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS : (with target values of parameters)");
+    put(file,Length_Of(new_sols),natural32(Head_Of(new_sols).n),new_sols);
+  end Coefficient_Parameter_Homotopy_Continuation;
+
+  procedure Coefficient_Parameter_Homotopy_Continuation
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                nb_equ,nb_unk,nb_par : in integer32 ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Parameter_Systems;
+    use DoblDobl_Parameter_Solutions;
+
+    ind_par : constant Standard_Integer_Vectors.Vector
+            := Define_Parameters(nb_equ,nb_unk,nb_par);
+   -- nb_var : constant integer32 := nb_unk - nb_par;
+    ind_var : constant Standard_Integer_Vectors.Vector
+            := Complement(nb_unk,ind_par);
+    start_pars : DoblDobl_Complex_Vectors.Vector(ind_par'range);
+    target_pars : DoblDobl_Complex_Vectors.Vector(ind_par'range);
+    var_sols,new_sols : Solution_List;
+    gamma : constant Complex_Number := Random1;
+    oc : natural32;
+    output : boolean;
+    s : constant Array_of_Symbols := Symbol_Table.Content;
+    sv : constant Array_of_Symbols := Select_Symbols(s,ind_var);
+    sp : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+    isreal : boolean := DoblDobl_Complex_to_Real_Poly.Is_Real(p);
+
+    function Eval_Pars ( t : Complex_Number )
+                       return DoblDobl_Complex_Vectors.Vector is
+    begin
+     -- return Interpolate(start_pars,target_pars,t);
+      return Circulate(start_pars,target_pars,gamma,t);
+    end Eval_Pars;
+
+    function Diff_Pars ( t : Complex_Number )
+                       return DoblDobl_Complex_Vectors.Vector is
+    begin
+      return Differentiate(start_pars,target_pars);
+    end Diff_Pars;
+
+    procedure Par_Con is
+      new DoblDobl_Parameter_Continuation(Eval_Pars,Diff_Pars);
+
+  begin
+    Determine_Parameter_Values
+      (file,sols,ind_par,isreal,start_pars,target_pars);
+    var_sols := Select_Variables(sols,nb_equ,ind_var);
+    Symbol_Table.Clear;
+    Symbol_Table.Init(sv);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS : (after selecting variables)");
+    put(file,Length_Of(var_sols),natural32(Head_Of(var_sols).n),var_sols);
+    new_line;
+    Driver_for_Continuation_Parameters(file);
+    new_line;
+    Driver_for_Process_io(file,oc);
+    output := (oc > 0);
+    new_line;
+    put_line("Starting parameter continuation...");
+    put_line("See the output file for results.");
+    new_line;
+    Par_Con(file,nb_unk,p,ind_par,ind_var,var_sols,output);
+    sp := Substitute(p,ind_par,target_pars);
+    new_line(file);
+    put_line(file,"THE TARGET SYSTEM :");
+   -- put(file,natural32(sp'last),sp);
+    put(file,sp);
+    Call_DoblDobl_Root_Refiner(file,sp,var_sols);
+    new_sols := Join_Variables(var_sols,nb_unk,ind_var,ind_par,target_pars);
+    Symbol_Table.Clear;
+    Symbol_Table.Init(s);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS : (with target values of parameters)");
+    put(file,Length_Of(new_sols),natural32(Head_Of(new_sols).n),new_sols);
+  end Coefficient_Parameter_Homotopy_Continuation;
+
+  procedure Coefficient_Parameter_Homotopy_Continuation
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                nb_equ,nb_unk,nb_par : in integer32 ) is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Parameter_Systems;
+    use QuadDobl_Parameter_Solutions;
+
+    ind_par : constant Standard_Integer_Vectors.Vector
+            := Define_Parameters(nb_equ,nb_unk,nb_par);
+   -- nb_var : constant integer32 := nb_unk - nb_par;
+    ind_var : constant Standard_Integer_Vectors.Vector
+            := Complement(nb_unk,ind_par);
+    start_pars : QuadDobl_Complex_Vectors.Vector(ind_par'range);
+    target_pars : QuadDobl_Complex_Vectors.Vector(ind_par'range);
+    var_sols,new_sols : Solution_List;
+    gamma : constant Complex_Number := Random1;
+    oc : natural32;
+    output : boolean;
+    s : constant Array_of_Symbols := Symbol_Table.Content;
+    sv : constant Array_of_Symbols := Select_Symbols(s,ind_var);
+    sp : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+    isreal : boolean := QuadDobl_Complex_to_Real_Poly.Is_Real(p);
+
+    function Eval_Pars ( t : Complex_Number )
+                       return QuadDobl_Complex_Vectors.Vector is
+    begin
+     -- return Interpolate(start_pars,target_pars,t);
+      return Circulate(start_pars,target_pars,gamma,t);
+    end Eval_Pars;
+
+    function Diff_Pars ( t : Complex_Number )
+                       return QuadDobl_Complex_Vectors.Vector is
+    begin
+      return Differentiate(start_pars,target_pars);
+    end Diff_Pars;
+
+    procedure Par_Con is
+      new QuadDobl_Parameter_Continuation(Eval_Pars,Diff_Pars);
+
+  begin
+    Determine_Parameter_Values
+      (file,sols,ind_par,isreal,start_pars,target_pars);
+    var_sols := Select_Variables(sols,nb_equ,ind_var);
+    Symbol_Table.Clear;
+    Symbol_Table.Init(sv);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS : (after selecting variables)");
+    put(file,Length_Of(var_sols),natural32(Head_Of(var_sols).n),var_sols);
+    new_line;
+    Driver_for_Continuation_Parameters(file);
+    new_line;
+    Driver_for_Process_io(file,oc);
+    output := (oc > 0);
+    new_line;
+    put_line("Starting parameter continuation...");
+    put_line("See the output file for results.");
+    new_line;
+    Par_Con(file,nb_unk,p,ind_par,ind_var,var_sols,output);
+    sp := Substitute(p,ind_par,target_pars);
+    new_line(file);
+    put_line(file,"THE TARGET SYSTEM :");
+   -- put(file,natural32(sp'last),sp);
+    put(file,sp);
+    Call_QuadDobl_Root_Refiner(file,sp,var_sols);
     new_sols := Join_Variables(var_sols,nb_unk,ind_var,ind_par,target_pars);
     Symbol_Table.Clear;
     Symbol_Table.Init(s);
@@ -1268,6 +1483,7 @@ package body Parameter_Homotopy_Continuation is
 
     use Standard_Complex_Numbers;
     use Standard_Complex_Solutions;
+    use Standard_Parameter_Systems;
 
     timer : Timing_Widget;
     par : Standard_Integer_Vectors.Vector(1..nb_par);

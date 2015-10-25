@@ -269,9 +269,20 @@ package Parameter_Homotopy_Continuation is
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 nb_equ,nb_unk,nb_par : in integer32 );
+  procedure Coefficient_Parameter_Homotopy_Continuation
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                nb_equ,nb_unk,nb_par : in integer32 );
+  procedure Coefficient_Parameter_Homotopy_Continuation
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                nb_equ,nb_unk,nb_par : in integer32 );
 
   -- DESCRIPTION :
-  --   Interactive set up a coefficient-parameter homotopy 
+  --   Interactive set up a coefficient-parameter homotopy,
+  --   in standard double, double double, or quad double precision,
   --   and calls then the path trackers.
 
   -- REQUIRED :
