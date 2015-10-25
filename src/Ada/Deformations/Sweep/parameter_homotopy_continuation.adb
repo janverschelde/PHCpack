@@ -3,38 +3,81 @@ with Timing_Package;                    use Timing_Package;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Double_Double_Numbers_io;          use Double_Double_Numbers_io;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;            use Quad_Double_Numbers_io;
 with Standard_Random_Numbers;           use Standard_Random_Numbers;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
+with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
+with QuadDobl_Complex_Numbers_io;       use QuadDobl_Complex_Numbers_io;
 with Numbers_io;                        use Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Complex_Matrices;
 with Standard_Complex_Norms_Equals;     use Standard_Complex_Norms_Equals;
+with DoblDobl_Complex_Matrices;
+with DoblDobl_Complex_Vector_Norms;     use DoblDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_Matrices;
+with QuadDobl_Complex_Vector_Norms;     use QuadDobl_Complex_Vector_Norms;
 with Symbol_Table,Symbol_Table_io;      use Symbol_Table;
 with Standard_Floating_Polynomials;
 with Standard_Complex_to_Real_Poly;
-with Standard_Complex_Poly_Functions;   use Standard_Complex_Poly_Functions;
+with Standard_Complex_Poly_Functions;
+with DoblDobl_Complex_Poly_Functions;
+with QuadDobl_Complex_Poly_Functions;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Standard_Solution_Diagnostics;
-with Standard_IncFix_Continuation;      use Standard_IncFix_Continuation;
+with Standard_IncFix_Continuation;
+with DoblDobl_IncFix_Continuation;
+with QuadDobl_IncFix_Continuation;
 with Drivers_for_Poly_Continuation;     use Drivers_for_Poly_Continuation;
 with Standard_Root_Refiners;            use Standard_Root_Refiners;
 with Standard_Parameter_Systems;        use Standard_Parameter_Systems;
-with Standard_Parameter_Solutions;      use Standard_Parameter_Solutions;
+with Standard_Parameter_Solutions;
+with DoblDobl_Parameter_Solutions;
+with QuadDobl_Parameter_Solutions;
 with Standard_Quad_Parameters;
 with Standard_Quad_Turn_Points_io;      use Standard_Quad_Turn_Points_io;
 with Standard_Quad_Sweepers;            use Standard_Quad_Sweepers;
 
 package body Parameter_Homotopy_Continuation is
 
--- TARGET ROUTINES :
-
-  function Define_Start ( v : Standard_Complex_Vectors.Vector;
-                          ip : Standard_Integer_Vectors.Vector )
-                        return Standard_Complex_Vectors.Vector is
+  function Define_Start
+             ( v : Standard_Complex_Vectors.Vector;
+               ip : Standard_Integer_Vectors.Vector )
+             return Standard_Complex_Vectors.Vector is
 
     res : Standard_Complex_Vectors.Vector(ip'range);
+
+  begin
+    for i in ip'range loop
+      res(i) := v(integer32(ip(i)));
+    end loop;
+    return res;
+  end Define_Start;
+
+  function Define_Start
+             ( v : DoblDobl_Complex_Vectors.Vector;
+               ip : Standard_Integer_Vectors.Vector )
+             return DoblDobl_Complex_Vectors.Vector is
+
+    res : DoblDobl_Complex_Vectors.Vector(ip'range);
+
+  begin
+    for i in ip'range loop
+      res(i) := v(integer32(ip(i)));
+    end loop;
+    return res;
+  end Define_Start;
+
+  function Define_Start
+             ( v : QuadDobl_Complex_Vectors.Vector;
+               ip : Standard_Integer_Vectors.Vector )
+             return QuadDobl_Complex_Vectors.Vector is
+
+    res : QuadDobl_Complex_Vectors.Vector(ip'range);
 
   begin
     for i in ip'range loop
@@ -63,6 +106,46 @@ package body Parameter_Homotopy_Continuation is
     return res;
   end Define_Complex_Target;
 
+  function Define_Complex_Target
+             ( ip : Standard_Integer_Vectors.Vector )
+             return DoblDobl_Complex_Vectors.Vector is
+
+    res : DoblDobl_Complex_Vectors.Vector(ip'range);
+    rv,iv : double_double;
+
+  begin
+    put_line("Reading complex target values for the parameters...");
+    for i in res'range loop
+      put(" ");
+      Symbol_Table_io.put(Symbol_Table.Get(natural32(ip(i))));
+      put(" : ");
+      Read_Double_Double(rv);
+      Read_Double_Double(iv);
+      res(i) := DoblDobl_Complex_Numbers.Create(rv,iv);
+    end loop;
+    return res;
+  end Define_Complex_Target;
+
+  function Define_Complex_Target
+             ( ip : Standard_Integer_Vectors.Vector )
+             return QuadDobl_Complex_Vectors.Vector is
+
+    res : QuadDobl_Complex_Vectors.Vector(ip'range);
+    rv,iv : quad_double;
+
+  begin
+    put_line("Reading complex target values for the parameters...");
+    for i in res'range loop
+      put(" ");
+      Symbol_Table_io.put(Symbol_Table.Get(natural32(ip(i))));
+      put(" : ");
+      Read_Quad_Double(rv);
+      Read_Quad_Double(iv);
+      res(i) := QuadDobl_Complex_Numbers.Create(rv,iv);
+    end loop;
+    return res;
+  end Define_Complex_Target;
+
   function Define_Real_Target
              ( ip : Standard_Integer_Vectors.Vector )
              return Standard_Complex_Vectors.Vector is
@@ -82,10 +165,76 @@ package body Parameter_Homotopy_Continuation is
     return res;
   end Define_Real_Target;
 
+  function Define_Real_Target
+             ( ip : Standard_Integer_Vectors.Vector )
+             return DoblDobl_Complex_Vectors.Vector is
+
+    res : DoblDobl_Complex_Vectors.Vector(ip'range);
+    f : double_double;
+
+  begin
+    put_line("Reading real target values for the parameters...");
+    for i in res'range loop
+      put(" ");
+      Symbol_Table_io.put(Symbol_Table.Get(natural32(ip(i))));
+      put(" : ");
+      Read_Double_Double(f);
+      res(i) := DoblDobl_Complex_Numbers.Create(f);
+    end loop;
+    return res;
+  end Define_Real_Target;
+
+  function Define_Real_Target
+             ( ip : Standard_Integer_Vectors.Vector )
+             return QuadDobl_Complex_Vectors.Vector is
+
+    res : QuadDobl_Complex_Vectors.Vector(ip'range);
+    f : quad_double;
+
+  begin
+    put_line("Reading real target values for the parameters...");
+    for i in res'range loop
+      put(" ");
+      Symbol_Table_io.put(Symbol_Table.Get(natural32(ip(i))));
+      put(" : ");
+      Read_Quad_Double(f);
+      res(i) := QuadDobl_Complex_Numbers.Create(f);
+    end loop;
+    return res;
+  end Define_Real_Target;
+
   procedure Write_Complex_Parameter_Values
              ( file : in file_type;
                labels : in Standard_Integer_Vectors.Vector;
                values : in Standard_Complex_Vectors.Vector ) is
+  begin
+    for i in labels'range loop
+      put(file," ");
+      Symbol_Table_io.put(file,Symbol_Table.Get(natural32(labels(i))));
+      put(file," : ");
+      put(file,values(i));
+      new_line(file);
+    end loop;
+  end Write_Complex_Parameter_Values;
+
+  procedure Write_Complex_Parameter_Values
+             ( file : in file_type;
+               labels : in Standard_Integer_Vectors.Vector;
+               values : in DoblDobl_Complex_Vectors.Vector ) is
+  begin
+    for i in labels'range loop
+      put(file," ");
+      Symbol_Table_io.put(file,Symbol_Table.Get(natural32(labels(i))));
+      put(file," : ");
+      put(file,values(i));
+      new_line(file);
+    end loop;
+  end Write_Complex_Parameter_Values;
+
+  procedure Write_Complex_Parameter_Values
+             ( file : in file_type;
+               labels : in Standard_Integer_Vectors.Vector;
+               values : in QuadDobl_Complex_Vectors.Vector ) is
   begin
     for i in labels'range loop
       put(file," ");
@@ -110,6 +259,34 @@ package body Parameter_Homotopy_Continuation is
     end loop;
   end Write_Real_Parameter_Values;
 
+  procedure Write_Real_Parameter_Values
+             ( file : in file_type;
+               labels : in Standard_Integer_Vectors.Vector;
+               values : in DoblDobl_Complex_Vectors.Vector ) is
+  begin
+    for i in labels'range loop
+      put(file," ");
+      Symbol_Table_io.put(file,Symbol_Table.Get(natural32(labels(i))));
+      put(file," : ");
+      put(file,DoblDobl_Complex_Numbers.REAL_PART(values(i)));
+      new_line(file);
+    end loop;
+  end Write_Real_Parameter_Values;
+
+  procedure Write_Real_Parameter_Values
+             ( file : in file_type;
+               labels : in Standard_Integer_Vectors.Vector;
+               values : in QuadDobl_Complex_Vectors.Vector ) is
+  begin
+    for i in labels'range loop
+      put(file," ");
+      Symbol_Table_io.put(file,Symbol_Table.Get(natural32(labels(i))));
+      put(file," : ");
+      put(file,QuadDobl_Complex_Numbers.REAL_PART(values(i)));
+      new_line(file);
+    end loop;
+  end Write_Real_Parameter_Values;
+
   procedure Determine_Parameter_Values
               ( file : in file_type;
                 sols : in Standard_Complex_Solutions.Solution_List;
@@ -125,6 +302,100 @@ package body Parameter_Homotopy_Continuation is
     if isreal then
       for i in start'range loop
         isreal := IMAG_PART(start(i)) = 0.0;
+        exit when not isreal;
+      end loop;
+    end if;
+    if isreal then
+      put_line("Real start values for the parameters :");
+      Write_Real_Parameter_Values(Standard_Output,par,start);
+      new_line(file);
+      put_line(file,"REAL START VALUES FOR THE PARAMETERS :");
+      Write_Real_Parameter_Values(file,par,start);
+      target := Define_Real_Target(par);
+      put_line("Real target values for the parameters :");
+      Write_Real_Parameter_Values(Standard_Output,par,target);
+      new_line(file);
+      put_line(file,"REAL TARGET VALUES FOR THE PARAMETERS :");
+      Write_Real_Parameter_Values(file,par,target);
+    else
+      put_line("Complex start values for the parameters :");
+      Write_Complex_Parameter_Values(Standard_Output,par,start);
+      new_line(file);
+      put_line(file,"Complex START VALUES FOR THE PARAMETERS :");
+      Write_Complex_Parameter_Values(file,par,start);
+      target := Define_Complex_Target(par);
+      put_line("Complex target values for the parameters :");
+      Write_Complex_Parameter_Values(Standard_Output,par,target);
+      new_line(file);
+      put_line(file,"COMPLEX TARGET VALUES FOR THE PARAMETERS :");
+      Write_Complex_Parameter_Values(file,par,target);
+    end if;
+  end Determine_Parameter_Values;
+
+  procedure Determine_Parameter_Values
+              ( file : in file_type;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                par : in Standard_Integer_Vectors.Vector;
+                isreal : in out boolean;
+                start,target : out DoblDobl_Complex_Vectors.Vector ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Solutions;
+
+    zero : constant double_double := create(0.0);
+
+  begin
+    start := Define_Start(Head_Of(sols).v,par);
+    if isreal then
+      for i in start'range loop
+        isreal := (IMAG_PART(start(i)) = zero);
+        exit when not isreal;
+      end loop;
+    end if;
+    if isreal then
+      put_line("Real start values for the parameters :");
+      Write_Real_Parameter_Values(Standard_Output,par,start);
+      new_line(file);
+      put_line(file,"REAL START VALUES FOR THE PARAMETERS :");
+      Write_Real_Parameter_Values(file,par,start);
+      target := Define_Real_Target(par);
+      put_line("Real target values for the parameters :");
+      Write_Real_Parameter_Values(Standard_Output,par,target);
+      new_line(file);
+      put_line(file,"REAL TARGET VALUES FOR THE PARAMETERS :");
+      Write_Real_Parameter_Values(file,par,target);
+    else
+      put_line("Complex start values for the parameters :");
+      Write_Complex_Parameter_Values(Standard_Output,par,start);
+      new_line(file);
+      put_line(file,"Complex START VALUES FOR THE PARAMETERS :");
+      Write_Complex_Parameter_Values(file,par,start);
+      target := Define_Complex_Target(par);
+      put_line("Complex target values for the parameters :");
+      Write_Complex_Parameter_Values(Standard_Output,par,target);
+      new_line(file);
+      put_line(file,"COMPLEX TARGET VALUES FOR THE PARAMETERS :");
+      Write_Complex_Parameter_Values(file,par,target);
+    end if;
+  end Determine_Parameter_Values;
+
+  procedure Determine_Parameter_Values
+              ( file : in file_type;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                par : in Standard_Integer_Vectors.Vector;
+                isreal : in out boolean;
+                start,target : out QuadDobl_Complex_Vectors.Vector ) is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Solutions;
+
+    zero : constant quad_double := create(0.0);
+
+  begin
+    start := Define_Start(Head_Of(sols).v,par);
+    if isreal then
+      for i in start'range loop
+        isreal := (IMAG_PART(start(i)) = zero);
         exit when not isreal;
       end loop;
     end if;
@@ -179,6 +450,54 @@ package body Parameter_Homotopy_Continuation is
     return res;
   end Interpolate;
 
+  function Interpolate ( a,b : DoblDobl_Complex_Vectors.Vector;
+                         t : DoblDobl_Complex_Numbers.Complex_Number )
+                       return DoblDobl_Complex_Vectors.Vector is
+
+    use DoblDobl_Complex_Numbers;
+
+    res : DoblDobl_Complex_Vectors.Vector(a'range);
+    zero : constant Complex_Number := Create(integer(0));
+    one : Complex_Number := Create(integer(1));
+
+  begin
+    if t = zero then
+       res := a;
+    elsif t = one then
+       res := b;
+    else
+       one := one - t;
+       for i in a'range loop
+         res(i) := one*a(i) + t*b(i);  
+       end loop;
+    end if;
+    return res;
+  end Interpolate;
+
+  function Interpolate ( a,b : QuadDobl_Complex_Vectors.Vector;
+                         t : QuadDobl_Complex_Numbers.Complex_Number )
+                       return QuadDobl_Complex_Vectors.Vector is
+
+    use QuadDobl_Complex_Numbers;
+
+    res : QuadDobl_Complex_Vectors.Vector(a'range);
+    zero : constant Complex_Number := Create(integer(0));
+    one : Complex_Number := Create(integer(1));
+
+  begin
+    if t = zero then
+       res := a;
+    elsif t = one then
+       res := b;
+    else
+       one := one - t;
+       for i in a'range loop
+         res(i) := one*a(i) + t*b(i);  
+       end loop;
+    end if;
+    return res;
+  end Interpolate;
+
   function Circulate ( a,b : Standard_Complex_Vectors.Vector;
                        gamma,t : Standard_Complex_Numbers.Complex_Number )
                      return Standard_Complex_Vectors.Vector is
@@ -191,10 +510,57 @@ package body Parameter_Homotopy_Continuation is
     return Interpolate(a,b,s);
   end Circulate;
 
+  function Circulate ( a,b : DoblDobl_Complex_Vectors.Vector;
+                       gamma,t : DoblDobl_Complex_Numbers.Complex_Number )
+                     return DoblDobl_Complex_Vectors.Vector is
+
+    use DoblDobl_Complex_Numbers;
+
+    s : constant Complex_Number := t + gamma*t*(Create(1.0)-t);
+
+  begin
+    return Interpolate(a,b,s);
+  end Circulate;
+
+  function Circulate ( a,b : QuadDobl_Complex_Vectors.Vector;
+                       gamma,t : QuadDobl_Complex_Numbers.Complex_Number )
+                     return QuadDobl_Complex_Vectors.Vector is
+
+    use QuadDobl_Complex_Numbers;
+
+    s : constant Complex_Number := t + gamma*t*(Create(1.0)-t);
+
+  begin
+    return Interpolate(a,b,s);
+  end Circulate;
+
   function Differentiate ( a,b : Standard_Complex_Vectors.Vector )
                          return Standard_Complex_Vectors.Vector is
 
     use Standard_Complex_Vectors;
+
+    res : constant Vector(a'range) := b-a;
+
+  begin
+    return res;
+  end Differentiate;
+
+  function Differentiate ( a,b : DoblDobl_Complex_Vectors.Vector )
+                         return DoblDobl_Complex_Vectors.Vector is
+
+    use DoblDobl_Complex_Vectors;
+
+    res : constant Vector(a'range) := b-a;
+
+  begin
+    return res;
+  end Differentiate;
+
+  function Differentiate ( a,b : QuadDobl_Complex_Vectors.Vector )
+                         return QuadDobl_Complex_Vectors.Vector is
+
+    use QuadDobl_Complex_Vectors;
+
     res : constant Vector(a'range) := b-a;
 
   begin
@@ -211,9 +577,11 @@ package body Parameter_Homotopy_Continuation is
                 output : in boolean ) is
 
     use Standard_Complex_Numbers;
+    use Standard_Complex_Poly_Functions;
     use Standard_Complex_Poly_SysFun;
     use Standard_Complex_Jaco_Matrices;
     use Standard_Complex_Solutions;
+    use Standard_IncFix_Continuation;
 
     ep : Eval_Poly_Sys(p'range) := Create(p);
     jm : Jaco_Mat(p'range,1..n) := Create(p);
@@ -323,6 +691,206 @@ package body Parameter_Homotopy_Continuation is
     Clear(ep); Clear(jm); Clear(ejm);
   end Standard_Parameter_Continuation;
 
+  procedure DoblDobl_Parameter_Continuation
+              ( file : in file_type;
+                n : in integer32;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                pars : in Standard_Integer_Vectors.Vector;
+                vars : in Standard_Integer_Vectors.Vector;
+		sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                output : in boolean ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Poly_Functions;
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_Jaco_Matrices;
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_IncFix_Continuation;
+
+    ep : Eval_Poly_Sys(p'range) := Create(p);
+    jm : Jaco_Mat(p'range,1..n) := Create(p);
+    ejm : Eval_Jaco_Mat(p'range,1..n) := Create(jm);
+  
+    function xvt ( x : DoblDobl_Complex_Vectors.Vector;
+                   t : DoblDobl_Complex_Numbers.Complex_Number )
+                 return DoblDobl_Complex_Vectors.Vector is
+
+    -- DESCRIPTION :
+    --   Returns the value of all variables and parameters at
+    --   the current value of the continuation parameter t.
+
+      z : DoblDobl_Complex_Vectors.Vector(1..n);
+      v : constant DoblDobl_Complex_Vectors.Vector(pars'range)
+        := Evaluate_Parameters(t);
+
+    begin
+      for i in pars'range loop
+        z(integer32(pars(i))) := v(i);
+      end loop;
+      for i in vars'range loop
+        z(integer32(vars(i))) := x(i);
+      end loop;
+      return z;
+    end xvt;
+
+    function Eval ( x : DoblDobl_Complex_Vectors.Vector;
+                    t : DoblDobl_Complex_Numbers.Complex_Number )
+                  return DoblDobl_Complex_Vectors.Vector is
+
+      z : constant DoblDobl_Complex_Vectors.Vector(1..n) := xvt(x,t);
+
+    begin
+      return Eval(ep,z);
+    end Eval;
+
+    function Diff ( x : DoblDobl_Complex_Vectors.Vector;
+                    t : DoblDobl_Complex_Numbers.Complex_Number )
+                  return DoblDobl_Complex_Matrices.Matrix is
+
+      res : DoblDobl_Complex_Matrices.Matrix(p'range,x'range);
+      z : constant DoblDobl_Complex_Vectors.Vector(1..n) := xvt(x,t);
+
+    begin
+      for i in p'range loop
+        for j in x'range loop
+          res(i,j) := Eval(ejm(i,integer32(vars(j))),z);
+        end loop;
+      end loop;
+      return res;
+    end Diff;
+
+    function Diff_t ( x : DoblDobl_Complex_Vectors.Vector;
+                      t : DoblDobl_Complex_Numbers.Complex_Number )
+                    return DoblDobl_Complex_Vectors.Vector is
+
+      res : DoblDobl_Complex_Vectors.Vector(p'range)
+          := (p'range => Create(integer(0)));
+      z : constant DoblDobl_Complex_Vectors.Vector(1..n) := xvt(x,t);
+      d : constant DoblDobl_Complex_Vectors.Vector
+        := Differentiate_Parameters(t);
+
+    begin
+      for i in p'range loop
+        for j in pars'range loop
+          res(i) := res(i) + Eval(ejm(i,integer32(pars(j))),z)*d(j);
+        end loop;
+      end loop;
+      return res;
+    end Diff_t;
+
+    procedure Sil_Cont is
+      new Silent_Continue(Max_Norm,Eval,Diff_t,Diff);
+    procedure Rep_Cont is
+      new Reporting_Continue(Max_Norm,Eval,Diff_t,Diff);
+
+  begin
+    if output
+     then Rep_Cont(file,sols,Create(integer(1)));
+     else Sil_Cont(sols,Create(integer(1)));
+    end if;
+    Clear(ep); Clear(jm); Clear(ejm);
+  end DoblDobl_Parameter_Continuation;
+
+  procedure QuadDobl_Parameter_Continuation
+              ( file : in file_type;
+                n : in integer32;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                pars : in Standard_Integer_Vectors.Vector;
+                vars : in Standard_Integer_Vectors.Vector;
+		sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                output : in boolean ) is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Poly_Functions;
+    use QuadDobl_Complex_Poly_SysFun;
+    use QuadDobl_Complex_Jaco_Matrices;
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_IncFix_Continuation;
+
+    ep : Eval_Poly_Sys(p'range) := Create(p);
+    jm : Jaco_Mat(p'range,1..n) := Create(p);
+    ejm : Eval_Jaco_Mat(p'range,1..n) := Create(jm);
+  
+    function xvt ( x : QuadDobl_Complex_Vectors.Vector;
+                   t : QuadDobl_Complex_Numbers.Complex_Number )
+                 return QuadDobl_Complex_Vectors.Vector is
+
+    -- DESCRIPTION :
+    --   Returns the value of all variables and parameters at
+    --   the current value of the continuation parameter t.
+
+      z : QuadDobl_Complex_Vectors.Vector(1..n);
+      v : constant QuadDobl_Complex_Vectors.Vector(pars'range)
+        := Evaluate_Parameters(t);
+
+    begin
+      for i in pars'range loop
+        z(integer32(pars(i))) := v(i);
+      end loop;
+      for i in vars'range loop
+        z(integer32(vars(i))) := x(i);
+      end loop;
+      return z;
+    end xvt;
+
+    function Eval ( x : QuadDobl_Complex_Vectors.Vector;
+                    t : QuadDobl_Complex_Numbers.Complex_Number )
+                  return QuadDobl_Complex_Vectors.Vector is
+
+      z : constant QuadDobl_Complex_Vectors.Vector(1..n) := xvt(x,t);
+
+    begin
+      return Eval(ep,z);
+    end Eval;
+
+    function Diff ( x : QuadDobl_Complex_Vectors.Vector;
+                    t : QuadDobl_Complex_Numbers.Complex_Number )
+                  return QuadDobl_Complex_Matrices.Matrix is
+
+      res : QuadDobl_Complex_Matrices.Matrix(p'range,x'range);
+      z : constant QuadDobl_Complex_Vectors.Vector(1..n) := xvt(x,t);
+
+    begin
+      for i in p'range loop
+        for j in x'range loop
+          res(i,j) := Eval(ejm(i,integer32(vars(j))),z);
+        end loop;
+      end loop;
+      return res;
+    end Diff;
+
+    function Diff_t ( x : QuadDobl_Complex_Vectors.Vector;
+                      t : QuadDobl_Complex_Numbers.Complex_Number )
+                    return QuadDobl_Complex_Vectors.Vector is
+
+      res : QuadDobl_Complex_Vectors.Vector(p'range)
+          := (p'range => Create(integer(0)));
+      z : constant QuadDobl_Complex_Vectors.Vector(1..n) := xvt(x,t);
+      d : constant QuadDobl_Complex_Vectors.Vector
+        := Differentiate_Parameters(t);
+
+    begin
+      for i in p'range loop
+        for j in pars'range loop
+          res(i) := res(i) + Eval(ejm(i,integer32(pars(j))),z)*d(j);
+        end loop;
+      end loop;
+      return res;
+    end Diff_t;
+
+    procedure Sil_Cont is
+      new Silent_Continue(Max_Norm,Eval,Diff_t,Diff);
+    procedure Rep_Cont is
+      new Reporting_Continue(Max_Norm,Eval,Diff_t,Diff);
+
+  begin
+    if output
+     then Rep_Cont(file,sols,Create(integer(1)));
+     else Sil_Cont(sols,Create(integer(1)));
+    end if;
+    Clear(ep); Clear(jm); Clear(ejm);
+  end QuadDobl_Parameter_Continuation;
+
   procedure Call_Standard_Root_Refiner
                ( file : in file_type;
                  p : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -362,6 +930,7 @@ package body Parameter_Homotopy_Continuation is
 
     use Standard_Complex_Numbers;
     use Standard_Complex_Solutions;
+    use Standard_Parameter_Solutions;
 
     ind_par : constant Standard_Integer_Vectors.Vector
             := Define_Parameters(nb_equ,nb_unk,nb_par);

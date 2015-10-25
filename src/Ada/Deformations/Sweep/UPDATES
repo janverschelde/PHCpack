@@ -1,4 +1,7 @@
-Sun 25 Oct 2015 :
+Sun 25 Oct 2015 : new packages {dobldobl,quaddobl}_parameter_solutions,
+  for use in parameter_homotopy_continuation, updated with wrappers for a
+  convex-parameter homotopy continuation in double double or quad double
+  precision.
 
 Sat 24 Oct 2015 : updated parameter_homotopy_continuation to make room for
   double double and quad double versions.  Renaming of system_with_parameters

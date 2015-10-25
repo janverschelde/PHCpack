@@ -2,8 +2,12 @@ with text_io;                           use text_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Standard_Complex_Polynomials;
 with Standard_Floating_Poly_Systems;
 with Standard_Floating_Poly_SysFun;
@@ -11,7 +15,15 @@ with Standard_Floating_Jaco_Matrices;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_SysFun;
+with DoblDobl_Complex_Jaco_Matrices;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_SysFun;
+with QuadDobl_Complex_Jaco_Matrices;
 with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Parameter_Homotopy_Continuation is
 
@@ -22,36 +34,87 @@ package Parameter_Homotopy_Continuation is
 --   This interpolation may be seen as the default function to instantiate
 --   the general parameter continuation routine with.
 
-  function Define_Start ( v : Standard_Complex_Vectors.Vector;
-                          ip : Standard_Integer_Vectors.Vector )
-                        return Standard_Complex_Vectors.Vector;
+  function Define_Start
+             ( v : Standard_Complex_Vectors.Vector;
+               ip : Standard_Integer_Vectors.Vector )
+             return Standard_Complex_Vectors.Vector;
+  function Define_Start
+             ( v : DoblDobl_Complex_Vectors.Vector;
+               ip : Standard_Integer_Vectors.Vector )
+             return DoblDobl_Complex_Vectors.Vector;
+  function Define_Start
+             ( v : QuadDobl_Complex_Vectors.Vector;
+               ip : Standard_Integer_Vectors.Vector )
+             return QuadDobl_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
-  --   Returns the elements in v indexed by the parameters in ip.
+  --   Returns the elements in v indexed by the parameters in ip, for
+  --   vectors v in standard double, double double, or quad double precision.
 
   function Define_Complex_Target
               ( ip : Standard_Integer_Vectors.Vector )
               return Standard_Complex_Vectors.Vector;
-  function Define_Real_Target
+  function Define_Complex_Target
               ( ip : Standard_Integer_Vectors.Vector )
-              return Standard_Complex_Vectors.Vector;
+              return DoblDobl_Complex_Vectors.Vector;
+  function Define_Complex_Target
+              ( ip : Standard_Integer_Vectors.Vector )
+              return QuadDobl_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Given the indices to the parameters, this function prompts the
-  --   user for complex or real target values of the parameters.
+  --   user for complex target values of the parameters,
+  --   in standard double, double double, or quad double precision.
+
+  function Define_Real_Target
+              ( ip : Standard_Integer_Vectors.Vector )
+              return Standard_Complex_Vectors.Vector;
+  function Define_Real_Target
+              ( ip : Standard_Integer_Vectors.Vector )
+              return DoblDobl_Complex_Vectors.Vector;
+  function Define_Real_Target
+              ( ip : Standard_Integer_Vectors.Vector )
+              return QuadDobl_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Given the indices to the parameters, this function prompts the
+  --   user for real target values of the parameters,
+  --   in standard double, double double, or quad double precision.
 
   procedure Write_Complex_Parameter_Values
+              ( file : in file_type;
+                labels : in Standard_Integer_Vectors.Vector;
+                values : in Standard_Complex_Vectors.Vector );
+  procedure Write_Complex_Parameter_Values
+              ( file : in file_type;
+                labels : in Standard_Integer_Vectors.Vector;
+                values : in DoblDobl_Complex_Vectors.Vector );
+  procedure Write_Complex_Parameter_Values
+              ( file : in file_type;
+                labels : in Standard_Integer_Vectors.Vector;
+                values : in QuadDobl_Complex_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Writes the values for the parameters in a nice format to file,
+  --   for standard double, double double and quad double precision.
+  --
+  procedure Write_Real_Parameter_Values
               ( file : in file_type;
                 labels : in Standard_Integer_Vectors.Vector;
                 values : in Standard_Complex_Vectors.Vector );
   procedure Write_Real_Parameter_Values
               ( file : in file_type;
                 labels : in Standard_Integer_Vectors.Vector;
-                values : in Standard_Complex_Vectors.Vector );
+                values : in DoblDobl_Complex_Vectors.Vector );
+  procedure Write_Real_Parameter_Values
+              ( file : in file_type;
+                labels : in Standard_Integer_Vectors.Vector;
+                values : in QuadDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
-  --   Writes the values for the parameters in a nice format to file.
-  --   The _Real_ omits the imaginary parts.
+  --   Writes the values for the parameters in a nice format to file,
+  --   omitting the imaginary parts of the complex numbers,
+  --   in standard double, double double, and quad double precision.
 
   procedure Determine_Parameter_Values
               ( file : in file_type;
@@ -59,9 +122,22 @@ package Parameter_Homotopy_Continuation is
                 par : in Standard_Integer_Vectors.Vector;
                 isreal : in out boolean;
                 start,target : out Standard_Complex_Vectors.Vector );
+  procedure Determine_Parameter_Values
+              ( file : in file_type;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                par : in Standard_Integer_Vectors.Vector;
+                isreal : in out boolean;
+                start,target : out DoblDobl_Complex_Vectors.Vector );
+  procedure Determine_Parameter_Values
+              ( file : in file_type;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                par : in Standard_Integer_Vectors.Vector;
+                isreal : in out boolean;
+                start,target : out QuadDobl_Complex_Vectors.Vector );
 
   -- DESCRIPTION :
-  --   Determines the values for the parameters.
+  --   Determines the values for the parameters,
+  --   in standard double, double double, or quad double precision.
 
   -- REQUIRED : all solutions have the same value for the parameters.
 
@@ -80,6 +156,12 @@ package Parameter_Homotopy_Continuation is
   function Interpolate ( a,b : Standard_Complex_Vectors.Vector;
                          t : Standard_Complex_Numbers.Complex_Number )
                        return Standard_Complex_Vectors.Vector;
+  function Interpolate ( a,b : DoblDobl_Complex_Vectors.Vector;
+                         t : DoblDobl_Complex_Numbers.Complex_Number )
+                       return DoblDobl_Complex_Vectors.Vector;
+  function Interpolate ( a,b : QuadDobl_Complex_Vectors.Vector;
+                         t : QuadDobl_Complex_Numbers.Complex_Number )
+                       return QuadDobl_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Returns (1-t)*a + t*b, for t between 0 and 1.  Is the 1st
@@ -88,16 +170,28 @@ package Parameter_Homotopy_Continuation is
   function Circulate ( a,b : Standard_Complex_Vectors.Vector;
                        gamma,t : Standard_Complex_Numbers.Complex_Number )
                      return Standard_Complex_Vectors.Vector;
+  function Circulate ( a,b : DoblDobl_Complex_Vectors.Vector;
+                       gamma,t : DoblDobl_Complex_Numbers.Complex_Number )
+                     return DoblDobl_Complex_Vectors.Vector;
+  function Circulate ( a,b : QuadDobl_Complex_Vectors.Vector;
+                       gamma,t : QuadDobl_Complex_Numbers.Complex_Number )
+                     return QuadDobl_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
   --   Returns (1-s)*a + s*b, for s = t + gamma*t*(1-t).  This move
-  --   through the parameter space ensures complex arithmetic.
+  --   through the parameter space ensures complex arithmetic,
+  --   in standard double, double double, or quad double arithmetic.
 
   function Differentiate ( a,b : Standard_Complex_Vectors.Vector )
                          return Standard_Complex_Vectors.Vector;
+  function Differentiate ( a,b : DoblDobl_Complex_Vectors.Vector )
+                         return DoblDobl_Complex_Vectors.Vector;
+  function Differentiate ( a,b : QuadDobl_Complex_Vectors.Vector )
+                         return QuadDobl_Complex_Vectors.Vector;
 
   -- DESCRIPTION :
-  --   Just returns b-a as this is the derivative of the interpolate
+  --   Just returns b-a, in standard double, double double, or quad
+  --   double precision, as this is the derivative of the Interpolate
   --   function of the parameters.  Is the 2nd default to use in the
   --   instantiation of Parameter_Continuation.
 
@@ -118,10 +212,45 @@ package Parameter_Homotopy_Continuation is
                 vars : in Standard_Integer_Vectors.Vector;
 		sols : in out Standard_Complex_Solutions.Solution_List;
                 output : in boolean );
+  generic
+    with function Evaluate_Parameters 
+                    ( t : DoblDobl_Complex_Numbers.Complex_Number )
+                    return DoblDobl_Complex_Vectors.Vector;
+    -- returns value of parameters at t
+    with function Differentiate_Parameters
+                    ( t : DoblDobl_Complex_Numbers.Complex_Number )
+                    return DoblDobl_Complex_Vectors.Vector;
+    -- returns derivatives of parameters with respect to t
+  procedure DoblDobl_Parameter_Continuation
+              ( file : in file_type;
+                n : in integer32;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                pars : in Standard_Integer_Vectors.Vector;
+                vars : in Standard_Integer_Vectors.Vector;
+		sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                output : in boolean );
+  generic
+    with function Evaluate_Parameters 
+                    ( t : QuadDobl_Complex_Numbers.Complex_Number )
+                    return QuadDobl_Complex_Vectors.Vector;
+    -- returns value of parameters at t
+    with function Differentiate_Parameters
+                    ( t : QuadDobl_Complex_Numbers.Complex_Number )
+                    return QuadDobl_Complex_Vectors.Vector;
+    -- returns derivatives of parameters with respect to t
+  procedure QuadDobl_Parameter_Continuation
+              ( file : in file_type;
+                n : in integer32;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                pars : in Standard_Integer_Vectors.Vector;
+                vars : in Standard_Integer_Vectors.Vector;
+		sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                output : in boolean );
 
   -- DESCRIPTION :
   --   Executes the parameter continuation for the homotopy defined by
-  --   the system p and for parameters defined by the generics functions.
+  --   the system p and for parameters defined by the generics functions,
+  --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
