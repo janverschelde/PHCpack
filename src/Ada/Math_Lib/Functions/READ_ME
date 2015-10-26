@@ -1,4 +1,4 @@
-Polynomial evaluation and differentiation algorithms in PHCv2.3.98.
+Polynomial evaluation and differentiation algorithms in PHCv2.4.04.
 
 This directory was created new in v2.3.69, collecting the former nested 
 Horner scheme algorithms of the directory polynomials, and with the new
@@ -28,10 +28,12 @@ standard_complex_laur_functions   : generic_laur_poly_functions instantiated
 standard_complex_poly_sysfun      : generic_poly_system_function instantiated
 standard_floating_poly_sysfun     : systems of real polynomial functions
 double_double_poly_functions      : double double polynomial functions
+double_double_poly_sysfun         : systems of double double poly functions
 dobldobl_complex_poly_functions   : complex double double polynomial functions
 dobldobl_complex_laur_functions   : complex double double Laurent functions
 dobldobl_complex_laur_sysfun      : double double Laurent system functions
 quad_double_poly_functions        : quad double polynomial functions
+quad_double_poly_sysfun           : systems of quad double polynomial functions
 quaddobl_complex_poly_functions   : complex quad double polynomial functions
 quaddobl_complex_poly_sysfun      : quad double polynomial system functions
 quaddobl_complex_laur_functions   : complex quad double Laurent functions

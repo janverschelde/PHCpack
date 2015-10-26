@@ -1,3 +1,5 @@
+Mon 26 Oct 2015 : instantiated {double, quad}_double_poly_sysfun.
+
 Tue 23 Jun 2015 : changed ts_perfeval.adb for a change in the specification
   of standard_jacobian_evaluations.
 
