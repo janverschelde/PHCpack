@@ -1,4 +1,4 @@
-Multivariate polynomials and polynomial systems over rings in PHCv2.4.03
+Multivariate polynomials and polynomial systems over rings in PHCv2.4.04
 
 New in release 2 is the availability of multiprecision numbers.
 The data structures are entirely redefined using Ada 95 concepts.
@@ -79,7 +79,9 @@ dobldobl_complex_poly_matrices    : generic_matrices(dobldobl complex poly)
 dobldobl_complex_poly_matrices_io : generic_matrices_io(dobldobl complex poly)
 double_double_polynomials         : polynomials with double double coefficients
 double_double_poly_systems        : systems of double double polynomials
+double_double_poly_systems_io     : i/o of double double polynomial systems
 double_double_jaco_matrices       : Jacobian matrices of double doubles
+dobldobl_complex_to_real_poly     : converting dd complex to real polynomials
 dobldobl_complex_polynomials      : polynomials over complex double doubles
 dobldobl_complex_polynomials_io   : basic output for dobldobl complex poly
 dobldobl_complex_term_lists       : list of terms with dobldobl complex coeffs
@@ -100,7 +102,9 @@ dobldobl_complex_laur_randomizers : randomize coeffs of dobldobl polynomials
 dobldobl_polynomial_convertors    : standard poly <-> double double poly
 quad_double_polynomials           : polynomials with quad double coefficients
 quad_double_poly_systems          : quad double polynomial systems
-quad_double_jaco_systems          : Jacobian matrices of double doubles
+quad_double_poly_systems_io       : i/o of quad double polynomial systems
+quad_double_jaco_matrices         : Jacobian matrices of double doubles
+quaddobl_complex_to_real_poly     : converting qd complex to real polynomials
 quaddobl_complex_poly_ring        : abstract_ring(quaddobl complex poly)
 quaddobl_complex_poly_ring_io     : abstract_ring_io(quaddobl complex poly)
 quaddobl_complex_poly_vectors     : generic_vectors(quaddobl complex poly)
