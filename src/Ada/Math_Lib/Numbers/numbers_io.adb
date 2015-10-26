@@ -118,4 +118,22 @@ package body Numbers_io is
     end loop;
   end Read_Positive_Float;
 
+  procedure Read_Positive_Double_Double ( f : in out double_double ) is
+  begin
+    loop
+      Read_Double_Double(f);
+      exit when f > 0.0;
+      put("Zero or negative value not allowed, please try again : ");
+    end loop;
+  end Read_Positive_Double_Double;
+
+  procedure Read_Positive_Quad_Double ( f : in out quad_double ) is
+  begin
+    loop
+      Read_Quad_Double(f);
+      exit when f > 0.0;
+      put("Zero or negative value not allowed, please try again : ");
+    end loop;
+  end Read_Positive_Quad_Double;
+
 end Numbers_io;

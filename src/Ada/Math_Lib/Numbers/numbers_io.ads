@@ -30,6 +30,8 @@ package Numbers_io is
   --   This is useful for formatted output.
 
   procedure Read_Positive_Float ( f : in out double_float );
+  procedure Read_Positive_Double_Double ( f : in out double_double );
+  procedure Read_Positive_Quad_Double ( f : in out quad_double );
 
   -- DESCRIPTION :
   --   Reads a float and forces the user to enter again

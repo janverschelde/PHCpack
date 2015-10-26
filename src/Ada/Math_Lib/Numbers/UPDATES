@@ -1,3 +1,6 @@
+Mon 26 Oct 2015 : added to numbers_io procedures to interactively read
+  positive double double and quad doubles.
+
 Sun 25 Oct 2015 : extended numbers_io with procedures to read double doubles
   and quad doubles with a user friendly exception handler.
 
