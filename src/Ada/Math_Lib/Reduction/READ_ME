@@ -1,4 +1,4 @@
-Numerical Linear Algebra in PHCv2.4.02
+Numerical Linear Algebra in PHCv2.4.04
 
 This "Reduction" directory implements "row reduction" on linear systems
 of floating-point number of various precisions: double, double double,
@@ -21,6 +21,8 @@ dobldobl_complex_vector_norms      : vector norms for double double complex
 quad_double_vector_norms           : norms of vectors of quad doubles
 quaddobl_complex_vector_norms      : vector norms for quad double complex
 standard_floating_two_norms        : Euclidean norms for standard floating vecs
+double_double_two_norms            : 2-norms in double double precision
+quad_double_two_norms              : 2-norms in quad double precision
 -------------------------------------------------------------------------------
 generic_norms_equals               : norms and equality routines
 standard_floating_norms_equals     : norms/equals for standard floating numbers
@@ -76,6 +78,8 @@ multprec_complex_singular_values   : SVD in multiprecision arithmetic
 ts_svd                             : test singular value decomposition
 -------------------------------------------------------------------------------
 standard_floating_eigenvalues      : eigenvalues of floating-point matrices
+double_double_eigenvalues          : eigenvalues in double double precision
+quad_double_eigenvalues            : eigenvalues in quad double precision
 ts_eigval                          : test on eigenvalue computation
 -------------------------------------------------------------------------------
 varbprec_complex_linear_solvers    : variable precision linear system solvers

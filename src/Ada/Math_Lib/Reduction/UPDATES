@@ -1,3 +1,7 @@
+Sun 25 Oct 2015 : new packages {double, quad}_double_two_norms and
+  {double, quad}_double_eigenvales, tested by ts_eigval, to compute eigenvalues
+  and eigenvectors of real matrices in double double and quad double precision.
+
 Tue 6 Oct 2015 : used sqr() in {dobldobl,quaddobl}_complex_singular_values,
   in {double,quad}_double_qr_least_squares and
   in {dobldobl,quaddobl}_complex_qr_least_squares. 
