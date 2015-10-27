@@ -5,12 +5,13 @@ with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
 
-package Black_Box_Poly_Continuations is
+package Standard_BlackBox_Continuations is
 
 -- DESCRIPTION :
 --   This package provides two procedure for performing polynomial
 --   continuation in blackbox mode.  They mainly differ by the fact
 --   that the homotopy might be already provided in the input parameter.
+--   Calculations are performed in standard hardware double arithmetic.
 
 -- ALL INPUT IS SCANNED FROM FILES :
 
@@ -204,4 +205,4 @@ package Black_Box_Poly_Continuations is
   --   sols      solutions of p, obtained from sols;
   --   pocotime  elapsed user cpu time for polyhedral continuation.
 
-end Black_Box_Poly_Continuations;
+end Standard_BlackBox_Continuations;

@@ -1,3 +1,6 @@
+Tue 27 Oct 2015 : because of the renaming of black_box_poly_continuations,
+  homotopy_cascade_filter.adb and drivers_to_cascade_filtering.adb changed.
+
 Wed 5 Nov 2014 : renamed and exported procedures to square and embed
   polynomial systems in drivers_to_cascade_filtering, for use in the
   phcpy.sets.embed method.

@@ -26,7 +26,7 @@ with Standard_Root_Refiners;             use Standard_Root_Refiners;
 with Multitasking_Continuation;          use Multitasking_Continuation;
 with Multitasking_Root_Refiners;         use Multitasking_Root_Refiners;
 
-package body Black_Box_Poly_Continuations is
+package body Standard_BlackBox_Continuations is
 
 -- AUXILIARY ROUTINES :
 
@@ -966,4 +966,4 @@ package body Black_Box_Poly_Continuations is
     Standard_Laurent_Homotopy.Clear;
   end Black_Box_Polynomial_Continuation;
 
-end Black_Box_Poly_Continuations;
+end Standard_BlackBox_Continuations;

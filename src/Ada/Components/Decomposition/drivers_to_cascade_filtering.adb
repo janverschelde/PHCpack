@@ -20,7 +20,7 @@ with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_Solution_Splitters;        use Standard_Solution_Splitters;
 with Standard_Scaling;                   use Standard_Scaling;
 with Black_Box_Root_Counters;            use Black_Box_Root_Counters;
-with Black_Box_Poly_Continuations;       use Black_Box_Poly_Continuations;
+with Standard_BlackBox_Continuations;    use Standard_BlackBox_Continuations;
 with Black_Box_Solvers;
 with Witness_Sets,Witness_Sets_io;       use Witness_Sets,Witness_Sets_io;
 with Standard_Irreducible_Decomp;

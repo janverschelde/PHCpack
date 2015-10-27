@@ -9,7 +9,7 @@ with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_Solution_Filters;          use Standard_Solution_Filters;
 with Standard_Solution_Splitters;        use Standard_Solution_Splitters;
 with Witness_Sets;                       use Witness_Sets;
-with Black_Box_Poly_Continuations;       use Black_Box_Poly_Continuations;
+with Standard_BlackBox_Continuations;    use Standard_BlackBox_Continuations;
 with Filtered_Points;
 
 package body Homotopy_Cascade_Filter is

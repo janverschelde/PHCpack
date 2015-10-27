@@ -1,3 +1,6 @@
+Tue 27 Oct 2015 : mainphc.adb and black_box_solvers.adb changed for the 
+  renaming of the package black_box_poly_continuations.
+
 Thu 22 Oct 2015 : version 2.4.03 is announced in greeting_banners.
 
 Tue 7 Oct 2015 : adjusted greeting_banners for version 2.4.02.

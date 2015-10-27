@@ -36,7 +36,7 @@ with QuadDobl_Monomial_Maps;
 with Black_Box_Binomial_Solvers;         use Black_Box_Binomial_Solvers;
 with Black_Box_Factorization;            use Black_Box_Factorization;
 with Black_Box_Root_Counters;            use Black_Box_Root_Counters;
-with Black_Box_Poly_Continuations;       use Black_Box_Poly_Continuations;
+with Standard_BlackBox_Continuations;    use Standard_BlackBox_Continuations;
 with DoblDobl_Blackbox_Continuations;    use DoblDobl_Blackbox_Continuations;
 with QuadDobl_Blackbox_Continuations;    use QuadDobl_Blackbox_Continuations;
 with Greeting_Banners;

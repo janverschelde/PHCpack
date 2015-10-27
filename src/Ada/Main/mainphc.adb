@@ -29,7 +29,7 @@ with Drivers_for_Root_Counts;            use Drivers_for_Root_Counts;
 with Drivers_for_Homotopy_Creation;      use Drivers_for_Homotopy_Creation;
 with Driver_for_Root_Refining;
 with String_System_Readers;
-with Black_Box_Poly_Continuations;       use Black_Box_Poly_Continuations;
+with Standard_BlackBox_Continuations;    use Standard_BlackBox_Continuations;
 with Greeting_Banners;
 --with Bye_Bye_Message;
 

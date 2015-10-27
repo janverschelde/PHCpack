@@ -51,7 +51,7 @@ drivers_for_poly_continuation    : menu-driver for polynomial continuation
 ts_poco                          : calls the polynomial continuation driver
 ------------------------------------------------------------------------------
 scanners_for_continuation        : scans the continuation parameters
-black_box_poly_continuations     : black-box polynomial continuation
+standard_blackbox_continuations  : black-box polynomial continuation
 dobldobl_blackbox_continuations  : blackbox continuation with double doubles
 quaddobl_blackbox_continuations  : blackbox continuation with quad doubles
 ts_bbpoco                        : calls the blackbox continuation 

@@ -23,9 +23,9 @@ with DoblDobl_System_and_Solutions_io;   use DoblDobl_System_and_Solutions_io;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with QuadDobl_System_and_Solutions_io;   use QuadDobl_System_and_Solutions_io;
-with Black_Box_Poly_Continuations;       use Black_Box_Poly_Continuations;
-with DoblDobl_Blackbox_Continuations;    use DoblDobl_Blackbox_Continuations;
-with QuadDobl_Blackbox_Continuations;    use QuadDobl_Blackbox_Continuations;
+with Standard_BlackBox_Continuations;    use Standard_BlackBox_Continuations;
+with DoblDobl_BlackBox_Continuations;    use DoblDobl_BlackBox_Continuations;
+with QuadDobl_BlackBox_Continuations;    use QuadDobl_BlackBox_Continuations;
 
 procedure ts_bbpoco is
 
