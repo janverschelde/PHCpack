@@ -1,33 +1,33 @@
 with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
-with DoblDobl_Complex_Numbers_io;        use DoblDobl_Complex_Numbers_io;
-with Double_Double_Vectors_io;           use Double_Double_Vectors_io;
-with Double_Double_Two_Norms;            use Double_Double_Two_Norms;
-with Double_Double_Linear_Solvers;       use Double_Double_Linear_Solvers;
-with DoblDobl_Complex_Vectors_io;        use DoblDobl_Complex_Vectors_io;
-with DoblDobl_Complex_Vector_Norms;      use DoblDobl_Complex_Vector_Norms;
-with DoblDobl_Complex_VecVecs_io;        use DoblDobl_Complex_VecVecs_io;
-with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
-with Double_Double_Eigenvalues;          use Double_Double_Eigenvalues;
-with DoblDobl_Quad_Parameters;
-with DoblDobl_Quad_Turn_Points_io;       use DoblDobl_Quad_Turn_Points_io;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
+with QuadDobl_Complex_Numbers_io;        use QuadDobl_Complex_Numbers_io;
+with Quad_Double_Vectors_io;             use Quad_Double_Vectors_io;
+with Quad_Double_Two_Norms;              use Quad_Double_Two_Norms;
+with Quad_Double_Linear_Solvers;         use Quad_Double_Linear_Solvers;
+with QuadDobl_Complex_Vectors_io;        use QuadDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vector_Norms;      use QuadDobl_Complex_Vector_Norms;
+with QuadDobl_Complex_VecVecs_io;        use QuadDobl_Complex_VecVecs_io;
+with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
+with Quad_Double_Eigenvalues;            use Quad_Double_Eigenvalues;
+with QuadDobl_Quad_Parameters;
+with QuadDobl_Quad_Turn_Points_io;       use QuadDobl_Quad_Turn_Points_io;
 
-package body DoblDobl_Quad_Turn_Points is
+package body QuadDobl_Quad_Turn_Points is
 
 -- I. STEP SIZE CONTROL and CORRECTOR METHODS :
 
   procedure Set_Step_Size
-               ( h : in out double_double; flag : in integer32 ) is
+               ( h : in out quad_double; flag : in integer32 ) is
 
-    reduction : constant double_double
-              := DoblDobl_Quad_Parameters.reduction_multiplier;
-    expansion : constant double_double
-              := DoblDobl_Quad_Parameters.expansion_multiplier;
+    reduction : constant quad_double
+              := QuadDobl_Quad_Parameters.reduction_multiplier;
+    expansion : constant quad_double
+              := QuadDobl_Quad_Parameters.expansion_multiplier;
     threshold : constant natural32
-              := DoblDobl_Quad_Parameters.expansion_threshold;
-    max_step : constant double_double := DoblDobl_Quad_Parameters.max_step_size;
+              := QuadDobl_Quad_Parameters.expansion_threshold;
+    max_step : constant quad_double := QuadDobl_Quad_Parameters.max_step_size;
 
   begin
     if flag < 0 then
@@ -43,7 +43,7 @@ package body DoblDobl_Quad_Turn_Points is
   end Set_Step_Size;
 
   procedure Step_Size_Control
-               ( h : in out double_double; flag : in integer32 ) is
+               ( h : in out quad_double; flag : in integer32 ) is
   begin
    -- put("flag : "); put(flag,1); put(" step :"); put(h,3);
     Set_Step_Size(h,flag);
@@ -52,7 +52,7 @@ package body DoblDobl_Quad_Turn_Points is
 
   procedure Step_Size_Control
                ( file : in file_type;
-                 h : in out double_double; flag : in integer32 ) is
+                 h : in out quad_double; flag : in integer32 ) is
   begin
     put(file,"flag : "); put(file,flag,1); 
     put(file," step :"); put(file,h,3);
@@ -63,7 +63,7 @@ package body DoblDobl_Quad_Turn_Points is
   procedure Step_Size_Control 
                ( h : in out Complex_Number; flag : in integer32 ) is
 
-    rh : double_double := REAL_PART(h);
+    rh : quad_double := REAL_PART(h);
 
   begin
     Step_Size_Control(rh,flag);
@@ -74,7 +74,7 @@ package body DoblDobl_Quad_Turn_Points is
                ( file : in file_type;
                  h : in out Complex_Number; flag : in integer32 ) is
 
-    rh : double_double := REAL_PART(h);
+    rh : quad_double := REAL_PART(h);
 
   begin
     Step_Size_Control(file,rh,flag);
@@ -82,20 +82,20 @@ package body DoblDobl_Quad_Turn_Points is
   end Step_Size_Control;
 
   procedure One_Corrector_Step
-              ( p : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
-                jm : in Double_Double_Jaco_Matrices.Eval_Jaco_mat;
-                t : in Double_Double_Vectors.Vector;
-                x,y : in out Double_Double_Vectors.Vector;
-                err,res : out double_double ) is
+              ( p : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                jm : in Quad_Double_Jaco_Matrices.Eval_Jaco_mat;
+                t : in Quad_Double_Vectors.Vector;
+                x,y : in out Quad_Double_Vectors.Vector;
+                err,res : out quad_double ) is
 
-    m : Double_Double_Matrices.Matrix(jm'range(1),jm'range(2))
-      := Double_Double_Jaco_Matrices.Eval(jm,x);
-    A : Double_Double_Matrices.Matrix(x'range,x'range);
-    b : Double_Double_Vectors.Vector(x'range);
+    m : Quad_Double_Matrices.Matrix(jm'range(1),jm'range(2))
+      := Quad_Double_Jaco_Matrices.Eval(jm,x);
+    A : Quad_Double_Matrices.Matrix(x'range,x'range);
+    b : Quad_Double_Vectors.Vector(x'range);
     piv : Standard_Integer_Vectors.Vector(b'range);
     info : integer32;
 
-    use Double_Double_Vectors;
+    use Quad_Double_Vectors;
 
   begin
     for i in jm'range(1) loop
@@ -110,27 +110,27 @@ package body DoblDobl_Quad_Turn_Points is
     b(b'last(1)) := create(0.0);
     lufac(A,A'last(1),piv,info);
     lusolve(A,A'last(1),piv,b);
-    Double_Double_Vectors.Add(x,b);
-    y := Double_Double_Poly_SysFun.Eval(p,x);
-    err := Double_Double_Two_Norms.Norm2(b);
-    res := Double_Double_Two_Norms.Norm2(y);
+    Quad_Double_Vectors.Add(x,b);
+    y := Quad_Double_Poly_SysFun.Eval(p,x);
+    err := Quad_Double_Two_Norms.Norm2(b);
+    res := Quad_Double_Two_Norms.Norm2(y);
   end One_Corrector_Step;
 
   procedure One_Corrector_Step
-              ( p : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
-                t : in DoblDobl_Complex_Vectors.Vector;
-                x,y : in out DoblDobl_Complex_Vectors.Vector;
-                err,res : out double_double ) is
+              ( p : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
+                t : in QuadDobl_Complex_Vectors.Vector;
+                x,y : in out QuadDobl_Complex_Vectors.Vector;
+                err,res : out quad_double ) is
 
-    m : constant DoblDobl_Complex_Matrices.Matrix(jm'range(1),jm'range(2))
-      := DoblDobl_Complex_Jaco_Matrices.Eval(jm,x);
-    A : DoblDobl_Complex_Matrices.Matrix(x'range,x'range);
-    b : DoblDobl_Complex_Vectors.Vector(x'range);
+    m : constant QuadDobl_Complex_Matrices.Matrix(jm'range(1),jm'range(2))
+      := QuadDobl_Complex_Jaco_Matrices.Eval(jm,x);
+    A : QuadDobl_Complex_Matrices.Matrix(x'range,x'range);
+    b : QuadDobl_Complex_Vectors.Vector(x'range);
     piv : Standard_Integer_Vectors.Vector(b'range);
     info : integer32;
 
-    use DoblDobl_Complex_Vectors;
+    use QuadDobl_Complex_Vectors;
 
   begin
     for i in jm'range(1) loop
@@ -145,31 +145,31 @@ package body DoblDobl_Quad_Turn_Points is
     b(b'last(1)) := Create(integer(0));
     lufac(A,A'last(1),piv,info);
     lusolve(A,A'last(1),piv,b);
-    DoblDobl_Complex_Vectors.Add(x,b);
-    y := DoblDobl_Complex_Poly_SysFun.Eval(p,x);
+    QuadDobl_Complex_Vectors.Add(x,b);
+    y := QuadDobl_Complex_Poly_SysFun.Eval(p,x);
     err := Norm2(b);
     res := Norm2(y);
   end One_Corrector_Step;
 
   procedure One_Corrector_Step
-              ( p : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
-                jm : in Double_Double_Jaco_Matrices.Eval_Jaco_mat;
-                x,y : in out Double_Double_Vectors.Vector;
-                A : out Double_Double_Matrices.Matrix;
+              ( p : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                jm : in Quad_Double_Jaco_Matrices.Eval_Jaco_mat;
+                x,y : in out Quad_Double_Vectors.Vector;
+                A : out Quad_Double_Matrices.Matrix;
                 piv : out Standard_Integer_Vectors.Vector;
-                err,res : out double_double ) is
+                err,res : out quad_double ) is
 
   -- DESCRIPTION :
   --   Auxiliary internal routine to the exported One_Corrector_Step
   --   procedure that returns the LU factored Jacobian matrix to
   --   compute the determinant off, along with the pivoting info.
 
-    m : Double_Double_Matrices.Matrix(jm'range(1),jm'range(2))
-      := Double_Double_Jaco_Matrices.Eval(jm,x);
-    b : Double_Double_Vectors.Vector(x'range);
+    m : Quad_Double_Matrices.Matrix(jm'range(1),jm'range(2))
+      := Quad_Double_Jaco_Matrices.Eval(jm,x);
+    b : Quad_Double_Vectors.Vector(x'range);
     info : integer32;
 
-    use Double_Double_Vectors;
+    use Quad_Double_Vectors;
 
   begin
     for i in jm'range(1) loop
@@ -185,19 +185,19 @@ package body DoblDobl_Quad_Turn_Points is
     b(b'last(1)) := create(integer(0));
     lufac(A,A'last(1),piv,info);
     lusolve(A,A'last(1),piv,b);
-    Double_Double_Vectors.Add(x,b);
-    y := Double_Double_Poly_SysFun.Eval(p,x);
-    err := Double_Double_Two_Norms.Norm2(b);
-    res := Double_Double_Two_Norms.Norm2(y);
+    Quad_Double_Vectors.Add(x,b);
+    y := Quad_Double_Poly_SysFun.Eval(p,x);
+    err := Quad_Double_Two_Norms.Norm2(b);
+    res := Quad_Double_Two_Norms.Norm2(y);
   end One_Corrector_Step;
 
   procedure One_Corrector_Step
-              ( p : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
-                jm : in Double_Double_Jaco_Matrices.Eval_Jaco_mat;
-                x,y : in out Double_Double_Vectors.Vector;
-                err,res : out double_double ) is
+              ( p : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                jm : in Quad_Double_Jaco_Matrices.Eval_Jaco_mat;
+                x,y : in out Quad_Double_Vectors.Vector;
+                err,res : out quad_double ) is
 
-    A : Double_Double_Matrices.Matrix(x'range,x'range);
+    A : Quad_Double_Matrices.Matrix(x'range,x'range);
     piv : Standard_Integer_Vectors.Vector(x'range);
 
   begin
@@ -205,12 +205,12 @@ package body DoblDobl_Quad_Turn_Points is
   end One_Corrector_Step;
 
   procedure One_Corrector_Step
-              ( p : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
-                jm : in Double_Double_Jaco_Matrices.Eval_Jaco_mat;
-                x,y : in out Double_Double_Vectors.Vector;
-                err,res,det : out double_double ) is
+              ( p : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                jm : in Quad_Double_Jaco_Matrices.Eval_Jaco_mat;
+                x,y : in out Quad_Double_Vectors.Vector;
+                err,res,det : out quad_double ) is
 
-    A : Double_Double_Matrices.Matrix(x'range,x'range);
+    A : Quad_Double_Matrices.Matrix(x'range,x'range);
     piv : Standard_Integer_Vectors.Vector(x'range);
 
   begin
@@ -219,24 +219,24 @@ package body DoblDobl_Quad_Turn_Points is
   end One_Corrector_Step;
 
   procedure One_Corrector_Step
-              ( p : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
-                x,y : in out DoblDobl_Complex_Vectors.Vector;
-                A : out DoblDobl_Complex_Matrices.Matrix;
+              ( p : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
+                x,y : in out QuadDobl_Complex_Vectors.Vector;
+                A : out QuadDobl_Complex_Matrices.Matrix;
                 piv : out Standard_Integer_Vectors.Vector;
-                err,res : out double_double ) is
+                err,res : out quad_double ) is
 
   -- DESCRIPTION :
   --   Internal auxiliary routine to the exported One_Corrector_Step
   --   procedure to return in addition the LU factored Jacobian matrix at x,
   --   along with the pivoting information for an eventual determinant.
 
-    m : constant DoblDobl_Complex_Matrices.Matrix(jm'range(1),jm'range(2))
-      := DoblDobl_Complex_Jaco_Matrices.Eval(jm,x);
-    b : DoblDobl_Complex_Vectors.Vector(x'range);
+    m : constant QuadDobl_Complex_Matrices.Matrix(jm'range(1),jm'range(2))
+      := QuadDobl_Complex_Jaco_Matrices.Eval(jm,x);
+    b : QuadDobl_Complex_Vectors.Vector(x'range);
     info : integer32;
 
-    use DoblDobl_Complex_Vectors;
+    use QuadDobl_Complex_Vectors;
 
   begin
     for i in jm'range(1) loop
@@ -252,19 +252,19 @@ package body DoblDobl_Quad_Turn_Points is
     b(b'last(1)) := Create(integer(0));
     lufac(A,A'last(1),piv,info);
     lusolve(A,A'last(1),piv,b);
-    DoblDobl_Complex_Vectors.Add(x,b);
-    y := DoblDobl_Complex_Poly_SysFun.Eval(p,x);
+    QuadDobl_Complex_Vectors.Add(x,b);
+    y := QuadDobl_Complex_Poly_SysFun.Eval(p,x);
     err := Norm2(b);
     res := Norm2(y);
   end One_Corrector_Step;
 
   procedure One_Corrector_Step
-              ( p : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
-                x,y : in out DoblDobl_Complex_Vectors.Vector;
-                err,res : out double_double ) is
+              ( p : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
+                x,y : in out QuadDobl_Complex_Vectors.Vector;
+                err,res : out quad_double ) is
 
-    A : DoblDobl_Complex_Matrices.Matrix(x'range,x'range);
+    A : QuadDobl_Complex_Matrices.Matrix(x'range,x'range);
     piv : Standard_Integer_Vectors.Vector(x'range);
 
   begin
@@ -272,12 +272,12 @@ package body DoblDobl_Quad_Turn_Points is
   end One_Corrector_Step;
 
   procedure One_Corrector_Step
-              ( p : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
-                x,y : in out DoblDobl_Complex_Vectors.Vector;
-                err,res,det : out double_double ) is
+              ( p : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
+                x,y : in out QuadDobl_Complex_Vectors.Vector;
+                err,res,det : out quad_double ) is
 
-    A : DoblDobl_Complex_Matrices.Matrix(x'range,x'range);
+    A : QuadDobl_Complex_Matrices.Matrix(x'range,x'range);
     piv : Standard_Integer_Vectors.Vector(x'range);
 
   begin
@@ -286,18 +286,18 @@ package body DoblDobl_Quad_Turn_Points is
   end One_Corrector_Step;
 
   procedure Interactive_Correct_Solution
-              ( p : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
-                jm : in Double_Double_Jaco_Matrices.Eval_Jaco_mat;
-                t : in Double_Double_Vectors.Vector;
-                x : in out Double_Double_Vectors.Vector ) is
+              ( p : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                jm : in Quad_Double_Jaco_Matrices.Eval_Jaco_mat;
+                t : in Quad_Double_Vectors.Vector;
+                x : in out Quad_Double_Vectors.Vector ) is
 
-    y : Double_Double_Vectors.Vector(p'range);
-    err,res : double_double;
+    y : Quad_Double_Vectors.Vector(p'range);
+    err,res : quad_double;
     ans : character;
 
   begin
     put_line("correcting the solution ...");
-    y := Double_Double_Poly_SysFun.Eval(p,x);
+    y := Quad_Double_Poly_SysFun.Eval(p,x);
     loop
       One_Corrector_Step(p,jm,t,x,y,err,res);
       Write_Corrector_Information(x,y,err,res);
@@ -309,18 +309,18 @@ package body DoblDobl_Quad_Turn_Points is
   end Interactive_Correct_Solution;
 
   procedure Interactive_Correct_Solution
-              ( p : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
-                t : in DoblDobl_Complex_Vectors.Vector;
-                x : in out DoblDobl_Complex_Vectors.Vector ) is
+              ( p : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
+                t : in QuadDobl_Complex_Vectors.Vector;
+                x : in out QuadDobl_Complex_Vectors.Vector ) is
 
-    y : DoblDobl_Complex_Vectors.Vector(p'range);
-    err,res : double_double;
+    y : QuadDobl_Complex_Vectors.Vector(p'range);
+    err,res : quad_double;
     ans : character;
 
   begin
     put_line("correcting the solution ...");
-    y := DoblDobl_Complex_Poly_SysFun.Eval(p,x);
+    y := QuadDobl_Complex_Poly_SysFun.Eval(p,x);
     loop
       One_Corrector_Step(p,jm,t,x,y,err,res);
       Write_Corrector_Information(x,err,res);
@@ -352,19 +352,19 @@ package body DoblDobl_Quad_Turn_Points is
   end Write_Corrector_Diagnostics;
 
   procedure Correct_Solution
-              ( p : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
-                jm : in Double_Double_Jaco_Matrices.Eval_Jaco_mat;
-                t : in Double_Double_Vectors.Vector;
-                x : in out Double_Double_Vectors.Vector;
-                tol_err,tol_res : in double_double; fail : out boolean;
+              ( p : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                jm : in Quad_Double_Jaco_Matrices.Eval_Jaco_mat;
+                t : in Quad_Double_Vectors.Vector;
+                x : in out Quad_Double_Vectors.Vector;
+                tol_err,tol_res : in quad_double; fail : out boolean;
                 nbrit : out natural32; maxit : in natural32 ) is
 
-    y : Double_Double_Vectors.Vector(p'range);
-    err,prev_err,res,prev_res : double_double;
+    y : Quad_Double_Vectors.Vector(p'range);
+    err,prev_err,res,prev_res : quad_double;
     converge : boolean := true;
 
   begin
-    y := Double_Double_Poly_SysFun.Eval(p,x);
+    y := Quad_Double_Poly_SysFun.Eval(p,x);
     fail := true; nbrit := 0;
     while converge and fail and (nbrit < maxit) loop
       One_Corrector_Step(p,jm,t,x,y,err,res);
@@ -385,20 +385,20 @@ package body DoblDobl_Quad_Turn_Points is
 
   procedure Correct_Solution
               ( file : in file_type;
-                p : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
-                jm : in Double_Double_Jaco_Matrices.Eval_Jaco_mat;
-                t : in Double_Double_Vectors.Vector;
-                x : in out Double_Double_Vectors.Vector;
-                tol_err,tol_res : in double_double; fail : out boolean;
+                p : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                jm : in Quad_Double_Jaco_Matrices.Eval_Jaco_mat;
+                t : in Quad_Double_Vectors.Vector;
+                x : in out Quad_Double_Vectors.Vector;
+                tol_err,tol_res : in quad_double; fail : out boolean;
                 nbrit : out natural32; maxit : in natural32 ) is
 
-    y : Double_Double_Vectors.Vector(p'range);
-    err,prev_err,res,prev_res : double_double;
+    y : Quad_Double_Vectors.Vector(p'range);
+    err,prev_err,res,prev_res : quad_double;
     converge : boolean := true;
 
   begin
     put_line(file,"correcting the solution ...");
-    y := Double_Double_Poly_SysFun.Eval(p,x);
+    y := Quad_Double_Poly_SysFun.Eval(p,x);
     fail := true; nbrit := 0;
     while converge and fail and (nbrit < maxit) loop
       One_Corrector_Step(p,jm,t,x,y,err,res);
@@ -421,19 +421,19 @@ package body DoblDobl_Quad_Turn_Points is
   end Correct_Solution;
 
   procedure Correct_Solution
-              ( p : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
-                t : in DoblDobl_Complex_Vectors.Vector;
-                x : in out DoblDobl_Complex_Vectors.Vector;
-                tol_err,tol_res : in double_double; fail : out boolean;
+              ( p : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
+                t : in QuadDobl_Complex_Vectors.Vector;
+                x : in out QuadDobl_Complex_Vectors.Vector;
+                tol_err,tol_res : in quad_double; fail : out boolean;
                 nbrit : out natural32; maxit : in natural32 ) is
 
-    y : DoblDobl_Complex_Vectors.Vector(p'range);
-    err,prev_err,res,prev_res : double_double;
+    y : QuadDobl_Complex_Vectors.Vector(p'range);
+    err,prev_err,res,prev_res : quad_double;
     converge : boolean := true;
 
   begin
-    y := DoblDobl_Complex_Poly_SysFun.Eval(p,x);
+    y := QuadDobl_Complex_Poly_SysFun.Eval(p,x);
     fail := true; nbrit := 0;
     while converge and fail and (nbrit < maxit) loop
       One_Corrector_Step(p,jm,t,x,y,err,res);
@@ -454,20 +454,20 @@ package body DoblDobl_Quad_Turn_Points is
 
   procedure Correct_Solution
               ( file : in file_type;
-                p : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
-                t : in DoblDobl_Complex_Vectors.Vector;
-                x : in out DoblDobl_Complex_Vectors.Vector;
-                tol_err,tol_res : in double_double; fail : out boolean;
+                p : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
+                t : in QuadDobl_Complex_Vectors.Vector;
+                x : in out QuadDobl_Complex_Vectors.Vector;
+                tol_err,tol_res : in quad_double; fail : out boolean;
                 nbrit : out natural32; maxit : in natural32 ) is
 
-    y : DoblDobl_Complex_Vectors.Vector(p'range);
-    err,prev_err,res,prev_res : double_double;
+    y : QuadDobl_Complex_Vectors.Vector(p'range);
+    err,prev_err,res,prev_res : quad_double;
     converge : boolean := true;
 
   begin
     put_line(file,"correcting the solution ...");
-    y := DoblDobl_Complex_Poly_SysFun.Eval(p,x);
+    y := QuadDobl_Complex_Poly_SysFun.Eval(p,x);
     fail := true; nbrit := 0;
     while converge and fail and (nbrit < maxit) loop
       One_Corrector_Step(p,jm,t,x,y,err,res);
@@ -490,20 +490,20 @@ package body DoblDobl_Quad_Turn_Points is
   end Correct_Solution;
 
   procedure Target_Correction
-               ( p : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
-                 jm : in Double_Double_Jaco_Matrices.Eval_Jaco_mat;
-                 target : in double_double;
-                 x : in out Double_Double_Vectors.Vector;
-                 tol_err,tol_res : in double_double; fail : out boolean;
+               ( p : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                 jm : in Quad_Double_Jaco_Matrices.Eval_Jaco_mat;
+                 target : in quad_double;
+                 x : in out Quad_Double_Vectors.Vector;
+                 tol_err,tol_res : in quad_double; fail : out boolean;
                  nbrit : out natural32; maxit : in natural32 ) is
 
-     y : Double_Double_Vectors.Vector(p'range);
-     err,res,det : double_double;
+     y : Quad_Double_Vectors.Vector(p'range);
+     err,res,det : quad_double;
 
   begin
     fail := true; nbrit := 0;
     x(x'last) := target;
-    y := Double_Double_Poly_SysFun.Eval(p,x);
+    y := Quad_Double_Poly_SysFun.Eval(p,x);
     for i in 1..maxit loop
       One_Corrector_Step(p,jm,x,y,err,res,det);
       if (err < tol_err) and (res < tol_res)
@@ -515,21 +515,21 @@ package body DoblDobl_Quad_Turn_Points is
 
   procedure Target_Correction
                ( file : in file_type;
-                 p : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
-                 jm : in Double_Double_Jaco_Matrices.Eval_Jaco_mat;
-                 target : in double_double;
-                 x : in out Double_Double_Vectors.Vector;
-                 tol_err,tol_res : in double_double; fail : out boolean;
+                 p : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                 jm : in Quad_Double_Jaco_Matrices.Eval_Jaco_mat;
+                 target : in quad_double;
+                 x : in out Quad_Double_Vectors.Vector;
+                 tol_err,tol_res : in quad_double; fail : out boolean;
                  nbrit : out natural32; maxit : in natural32 ) is
 
-     y : Double_Double_Vectors.Vector(p'range);
-     err,res,det : double_double;
+     y : Quad_Double_Vectors.Vector(p'range);
+     err,res,det : quad_double;
 
   begin
     put_line(file,"correcting solution back to target...");
     fail := true; nbrit := 0;
     x(x'last) := target;
-    y := Double_Double_Poly_SysFun.Eval(p,x);
+    y := Quad_Double_Poly_SysFun.Eval(p,x);
     for i in 1..maxit loop
       One_Corrector_Step(p,jm,x,y,err,res,det);
       Write_Corrector_Information(file,x,y,err,res,det);
@@ -541,20 +541,20 @@ package body DoblDobl_Quad_Turn_Points is
   end Target_Correction;
 
   procedure Target_Correction
-               ( p : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                 jm : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
-                 target : in double_double;
-                 x : in out DoblDobl_Complex_Vectors.Vector;
-                 tol_err,tol_res : in double_double; fail : out boolean;
+               ( p : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                 jm : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
+                 target : in quad_double;
+                 x : in out QuadDobl_Complex_Vectors.Vector;
+                 tol_err,tol_res : in quad_double; fail : out boolean;
                  nbrit : out natural32; maxit : in natural32 ) is
 
-     y : DoblDobl_Complex_Vectors.Vector(p'range);
-     err,res,det : double_double;
+     y : QuadDobl_Complex_Vectors.Vector(p'range);
+     err,res,det : quad_double;
 
   begin
     fail := true; nbrit := 0;
     x(x'last) := Create(target);
-    y := DoblDobl_Complex_Poly_SysFun.Eval(p,x);
+    y := QuadDobl_Complex_Poly_SysFun.Eval(p,x);
     for i in 1..maxit loop
       One_Corrector_Step(p,jm,x,y,err,res,det);
       if (err < tol_err) and (res < tol_res)
@@ -566,21 +566,21 @@ package body DoblDobl_Quad_Turn_Points is
 
   procedure Target_Correction
                ( file : in file_type;
-                 p : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                 jm : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
-                 target : in double_double;
-                 x : in out DoblDobl_Complex_Vectors.Vector;
-                 tol_err,tol_res : in double_double; fail : out boolean;
+                 p : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                 jm : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
+                 target : in quad_double;
+                 x : in out QuadDobl_Complex_Vectors.Vector;
+                 tol_err,tol_res : in quad_double; fail : out boolean;
                  nbrit : out natural32; maxit : in natural32 ) is
 
-     y : DoblDobl_Complex_Vectors.Vector(p'range);
-     err,res,det : double_double;
+     y : QuadDobl_Complex_Vectors.Vector(p'range);
+     err,res,det : quad_double;
 
   begin
     put_line(file,"correcting solution back to target...");
     fail := true; nbrit := 0;
     x(x'last) := Create(target);
-    y := DoblDobl_Complex_Poly_SysFun.Eval(p,x);
+    y := QuadDobl_Complex_Poly_SysFun.Eval(p,x);
     for i in 1..maxit loop
       One_Corrector_Step(p,jm,x,y,err,res,det);
       Write_Corrector_Information(file,x,err,res,det);
@@ -593,7 +593,7 @@ package body DoblDobl_Quad_Turn_Points is
 
 -- II. COMPUTING TANGENTS, DETERMINANTS, and OTHER MONITORING INFO :
 
-  function Inner_Product ( x,y : DoblDobl_Complex_Vectors.Vector )
+  function Inner_Product ( x,y : QuadDobl_Complex_Vectors.Vector )
                          return Complex_Number is
 
     res : Complex_Number := Create(integer(0));
@@ -605,15 +605,15 @@ package body DoblDobl_Quad_Turn_Points is
     return res;
   end Inner_Product;
 
-  function Tangent ( jm : Double_Double_Jaco_Matrices.Eval_Jaco_Mat;
-                     x : Double_Double_Vectors.Vector )
-                   return Double_Double_Vectors.Vector is
+  function Tangent ( jm : Quad_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                     x : Quad_Double_Vectors.Vector )
+                   return Quad_Double_Vectors.Vector is
 
-    t : Double_Double_Vectors.Vector(x'range);
-    m : Double_Double_Matrices.Matrix(jm'range(1),jm'range(2))
-      := Double_Double_Jaco_Matrices.Eval(jm,x);
-    A : Double_Double_Matrices.Matrix(jm'range(1),jm'range(1));
-    b : Double_Double_Vectors.Vector(jm'range(1));
+    t : Quad_Double_Vectors.Vector(x'range);
+    m : Quad_Double_Matrices.Matrix(jm'range(1),jm'range(2))
+      := Quad_Double_Jaco_Matrices.Eval(jm,x);
+    A : Quad_Double_Matrices.Matrix(jm'range(1),jm'range(1));
+    b : Quad_Double_Vectors.Vector(jm'range(1));
     piv : Standard_Integer_Vectors.Vector(b'range);
     info : integer32;
 
@@ -628,21 +628,21 @@ package body DoblDobl_Quad_Turn_Points is
     lusolve(A,A'last(1),piv,b);
     t(b'range) := b;
     t(t'last) := create(1.0);
-    Double_Double_Two_Norms.Normalize(t);
+    Quad_Double_Two_Norms.Normalize(t);
     return t;
   end Tangent;
 
-  function Tangent ( jm : DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
-                     x : DoblDobl_Complex_Vectors.Vector )
-                   return DoblDobl_Complex_Vectors.Vector is
+  function Tangent ( jm : QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                     x : QuadDobl_Complex_Vectors.Vector )
+                   return QuadDobl_Complex_Vectors.Vector is
 
-    t : DoblDobl_Complex_Vectors.Vector(x'range);
-    m : constant DoblDobl_Complex_Matrices.Matrix(jm'range(1),jm'range(2))
-      := DoblDobl_Complex_Jaco_Matrices.Eval(jm,x);
-    A : DoblDobl_Complex_Matrices.Matrix(jm'range(1),jm'range(1));
-    b : DoblDobl_Complex_Vectors.Vector(jm'range(1));
+    t : QuadDobl_Complex_Vectors.Vector(x'range);
+    m : constant QuadDobl_Complex_Matrices.Matrix(jm'range(1),jm'range(2))
+      := QuadDobl_Complex_Jaco_Matrices.Eval(jm,x);
+    A : QuadDobl_Complex_Matrices.Matrix(jm'range(1),jm'range(1));
+    b : QuadDobl_Complex_Vectors.Vector(jm'range(1));
     piv : Standard_Integer_Vectors.Vector(b'range);
-    nrm : double_double;
+    nrm : quad_double;
     info : integer32;
 
   begin
@@ -657,16 +657,16 @@ package body DoblDobl_Quad_Turn_Points is
     t(b'range) := b;
     t(t'last) := Create(integer(1));
     nrm := Norm2(t);
-    DoblDobl_Complex_Vectors.Mul(t,Create(1.0/nrm));
+    QuadDobl_Complex_Vectors.Mul(t,Create(1.0/nrm));
     return t;
   end Tangent;
 
   function Determinant_after_LU
-              ( A : Double_Double_Matrices.Matrix;
+              ( A : Quad_Double_Matrices.Matrix;
                 piv : Standard_Integer_Vectors.Vector )
-              return double_double is
+              return quad_double is
 
-    res : double_double := create(1.0);
+    res : quad_double := create(1.0);
 
   begin
     for i in A'range(1) loop
@@ -681,7 +681,7 @@ package body DoblDobl_Quad_Turn_Points is
   end Determinant_after_LU;
 
   function Determinant_after_LU
-              ( A : DoblDobl_Complex_Matrices.Matrix;
+              ( A : QuadDobl_Complex_Matrices.Matrix;
                 piv : Standard_Integer_Vectors.Vector )
               return Complex_Number is
 
@@ -700,15 +700,15 @@ package body DoblDobl_Quad_Turn_Points is
   end Determinant_after_LU;
 
   procedure Tangent_and_Determinant
-              ( jm : in Double_Double_Jaco_Matrices.Eval_Jaco_Mat;
-                x : in Double_Double_Vectors.Vector;
-                t : out Double_Double_Vectors.Vector;
-                d : out double_double ) is
+              ( jm : in Quad_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in Quad_Double_Vectors.Vector;
+                t : out Quad_Double_Vectors.Vector;
+                d : out quad_double ) is
 
-    m : Double_Double_Matrices.Matrix(jm'range(1),jm'range(2))
-      := Double_Double_Jaco_Matrices.Eval(jm,x);
-    A : Double_Double_Matrices.Matrix(jm'range(1),jm'range(1));
-    b : Double_Double_Vectors.Vector(jm'range(1));
+    m : Quad_Double_Matrices.Matrix(jm'range(1),jm'range(2))
+      := Quad_Double_Jaco_Matrices.Eval(jm,x);
+    A : Quad_Double_Matrices.Matrix(jm'range(1),jm'range(1));
+    b : Quad_Double_Vectors.Vector(jm'range(1));
     piv : Standard_Integer_Vectors.Vector(b'range);
     info : integer32;
 
@@ -727,23 +727,23 @@ package body DoblDobl_Quad_Turn_Points is
       lusolve(A,A'last(1),piv,b);
       t(b'range) := b;
       t(t'last) := create(integer(1));
-      Double_Double_Two_Norms.Normalize(t);
+      Quad_Double_Two_Norms.Normalize(t);
     end if;
   end Tangent_and_Determinant;
 
   procedure Tangent_and_Determinant
-              ( jm : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
-                x : in DoblDobl_Complex_Vectors.Vector;
-                t : out DoblDobl_Complex_Vectors.Vector;
+              ( jm : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in QuadDobl_Complex_Vectors.Vector;
+                t : out QuadDobl_Complex_Vectors.Vector;
                 d : out Complex_Number ) is
 
-    m : constant DoblDobl_Complex_Matrices.Matrix(jm'range(1),jm'range(2))
-      := DoblDobl_Complex_Jaco_Matrices.Eval(jm,x);
-    A : DoblDobl_Complex_Matrices.Matrix(jm'range(1),jm'range(1));
-    b : DoblDobl_Complex_Vectors.Vector(jm'range(1));
+    m : constant QuadDobl_Complex_Matrices.Matrix(jm'range(1),jm'range(2))
+      := QuadDobl_Complex_Jaco_Matrices.Eval(jm,x);
+    A : QuadDobl_Complex_Matrices.Matrix(jm'range(1),jm'range(1));
+    b : QuadDobl_Complex_Vectors.Vector(jm'range(1));
     piv : Standard_Integer_Vectors.Vector(b'range);
     info : integer32;
-    nrm : double_double;
+    nrm : quad_double;
 
   begin
     for i in A'range(1) loop
@@ -761,17 +761,17 @@ package body DoblDobl_Quad_Turn_Points is
       t(b'range) := b;
       t(t'last) := Create(integer(1));
       nrm := Norm2(t);
-      DoblDobl_Complex_Vectors.Mul(t,Create(1.0/nrm));
+      QuadDobl_Complex_Vectors.Mul(t,Create(1.0/nrm));
     end if;
   end Tangent_and_Determinant;
 
   function Maximal_Minors
-              ( evjm : Double_Double_Matrices.Matrix )
-              return Double_Double_Vectors.Vector is
+              ( evjm : Quad_Double_Matrices.Matrix )
+              return Quad_Double_Vectors.Vector is
 
     n : constant integer32 := evjm'last(1) - 1;
-    res : Double_Double_Vectors.Vector(1..n+1);
-    sA : Double_Double_Matrices.Matrix(1..n,1..n);
+    res : Quad_Double_Vectors.Vector(1..n+1);
+    sA : Quad_Double_Matrices.Matrix(1..n,1..n);
     sp : Standard_Integer_Vectors.Vector(1..n);
     info : integer32;
 
@@ -801,11 +801,11 @@ package body DoblDobl_Quad_Turn_Points is
     return res;
   end Maximal_Minors;
 
-  procedure Eigenvalues ( evjm : in Double_Double_Matrices.Matrix;
-                          L : out DoblDobl_Complex_Vectors.Vector ) is
+  procedure Eigenvalues ( evjm : in Quad_Double_Matrices.Matrix;
+                          L : out QuadDobl_Complex_Vectors.Vector ) is
 
     n : constant integer32 := evjm'last(1) - 1;
-    sA : Double_Double_Matrices.Matrix(1..n,1..n);
+    sA : Quad_Double_Matrices.Matrix(1..n,1..n);
     ierr : integer32;
 
   begin
@@ -817,12 +817,12 @@ package body DoblDobl_Quad_Turn_Points is
     Eigenvalues(sA,ierr,L);
   end Eigenvalues;
 
-  procedure Eigenvectors ( evjm : in Double_Double_Matrices.Matrix;
-                            L : out DoblDobl_Complex_Vectors.Vector;
-                            v : out DoblDobl_Complex_VecVecs.VecVec ) is
+  procedure Eigenvectors ( evjm : in Quad_Double_Matrices.Matrix;
+                            L : out QuadDobl_Complex_Vectors.Vector;
+                            v : out QuadDobl_Complex_VecVecs.VecVec ) is
 
     n : constant integer32 := evjm'last(1) - 1;
-    sA : Double_Double_Matrices.Matrix(1..n,1..n);
+    sA : Quad_Double_Matrices.Matrix(1..n,1..n);
     ierr : integer32;
 
   begin
@@ -835,14 +835,14 @@ package body DoblDobl_Quad_Turn_Points is
   end Eigenvectors;
 
   procedure Tangent_and_Minors
-              ( jm : in Double_Double_Jaco_Matrices.Eval_Jaco_Mat;
-                x : in Double_Double_Vectors.Vector;
-                t,d : out Double_Double_Vectors.Vector ) is
+              ( jm : in Quad_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in Quad_Double_Vectors.Vector;
+                t,d : out Quad_Double_Vectors.Vector ) is
 
-    m : Double_Double_Matrices.Matrix(jm'range(1),jm'range(2))
-      := Double_Double_Jaco_Matrices.Eval(jm,x);
-    A : Double_Double_Matrices.Matrix(jm'range(1),jm'range(1));
-    b : Double_Double_Vectors.Vector(jm'range(1));
+    m : Quad_Double_Matrices.Matrix(jm'range(1),jm'range(2))
+      := Quad_Double_Jaco_Matrices.Eval(jm,x);
+    A : Quad_Double_Matrices.Matrix(jm'range(1),jm'range(1));
+    b : Quad_Double_Vectors.Vector(jm'range(1));
     piv : Standard_Integer_Vectors.Vector(b'range);
     info : integer32;
 
@@ -862,21 +862,21 @@ package body DoblDobl_Quad_Turn_Points is
       lusolve(A,A'last(1),piv,b);
       t(b'range) := b;
       t(t'last) := create(1.0);
-      Double_Double_Two_Norms.Normalize(t);
+      Quad_Double_Two_Norms.Normalize(t);
       d := Maximal_Minors(m);
     end if;
   end Tangent_and_Minors;
 
   procedure Tangent_Minors_and_Eigenvalues
-              ( jm : in Double_Double_Jaco_Matrices.Eval_Jaco_Mat;
-                x : in Double_Double_Vectors.Vector;
-                t,d : out Double_Double_Vectors.Vector;
-                L : out DoblDobl_Complex_Vectors.Vector ) is
+              ( jm : in Quad_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in Quad_Double_Vectors.Vector;
+                t,d : out Quad_Double_Vectors.Vector;
+                L : out QuadDobl_Complex_Vectors.Vector ) is
 
-    m : Double_Double_Matrices.Matrix(jm'range(1),jm'range(2))
-      := Double_Double_Jaco_Matrices.Eval(jm,x);
-    A : Double_Double_Matrices.Matrix(jm'range(1),jm'range(1));
-    b : Double_Double_Vectors.Vector(jm'range(1));
+    m : Quad_Double_Matrices.Matrix(jm'range(1),jm'range(2))
+      := Quad_Double_Jaco_Matrices.Eval(jm,x);
+    A : Quad_Double_Matrices.Matrix(jm'range(1),jm'range(1));
+    b : Quad_Double_Vectors.Vector(jm'range(1));
     piv : Standard_Integer_Vectors.Vector(b'range);
     info : integer32;
 
@@ -896,23 +896,23 @@ package body DoblDobl_Quad_Turn_Points is
       lusolve(A,A'last(1),piv,b);
       t(b'range) := b;
       t(t'last) := create(1.0);
-      Double_Double_Two_Norms.Normalize(t);
+      Quad_Double_Two_Norms.Normalize(t);
       d := Maximal_Minors(m);
       Eigenvalues(m,L);
     end if;
   end Tangent_Minors_and_Eigenvalues;
 
   procedure Tangent_Minors_and_Eigenvectors
-              ( jm : in Double_Double_Jaco_Matrices.Eval_Jaco_Mat;
-                x : in Double_Double_Vectors.Vector;
-                t,d : out Double_Double_Vectors.Vector;
-                L : out DoblDobl_Complex_Vectors.Vector;
-                v : out DoblDobl_Complex_VecVecs.VecVec ) is
+              ( jm : in Quad_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in Quad_Double_Vectors.Vector;
+                t,d : out Quad_Double_Vectors.Vector;
+                L : out QuadDobl_Complex_Vectors.Vector;
+                v : out QuadDobl_Complex_VecVecs.VecVec ) is
 
-    m : Double_Double_Matrices.Matrix(jm'range(1),jm'range(2))
-      := Double_Double_Jaco_Matrices.Eval(jm,x);
-    A : Double_Double_Matrices.Matrix(jm'range(1),jm'range(1));
-    b : Double_Double_Vectors.Vector(jm'range(1));
+    m : Quad_Double_Matrices.Matrix(jm'range(1),jm'range(2))
+      := Quad_Double_Jaco_Matrices.Eval(jm,x);
+    A : Quad_Double_Matrices.Matrix(jm'range(1),jm'range(1));
+    b : Quad_Double_Vectors.Vector(jm'range(1));
     piv : Standard_Integer_Vectors.Vector(b'range);
     info : integer32;
 
@@ -932,7 +932,7 @@ package body DoblDobl_Quad_Turn_Points is
       lusolve(A,A'last(1),piv,b);
       t(b'range) := b;
       t(t'last) := create(1.0);
-      Double_Double_Two_Norms.Normalize(t);
+      Quad_Double_Two_Norms.Normalize(t);
       d := Maximal_Minors(m);
       Eigenvectors(m,L,v);
     end if;
@@ -940,9 +940,9 @@ package body DoblDobl_Quad_Turn_Points is
 
   procedure Report_Minors_and_Eigenvectors
               ( file : in file_type;
-                m : in Double_Double_Vectors.Vector;
-                L : in DoblDobl_Complex_Vectors.Vector;
-                v : in DoblDobl_Complex_VecVecs.VecVec ) is
+                m : in Quad_Double_Vectors.Vector;
+                L : in QuadDobl_Complex_Vectors.Vector;
+                v : in QuadDobl_Complex_VecVecs.VecVec ) is
   begin
     put(file,"Minors :");
     for k in m'range loop
@@ -956,19 +956,19 @@ package body DoblDobl_Quad_Turn_Points is
 -- III. COMPUTING QUADRATIC TURNING POINTS :
 
   procedure Seek_Turn
-              ( p : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
-                jm : in Double_Double_Jaco_Matrices.Eval_Jaco_mat;
-                x1,t1,x2,t2 : in out Double_Double_Vectors.Vector;
-                step : in double_double ) is
+              ( p : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                jm : in Quad_Double_Jaco_Matrices.Eval_Jaco_mat;
+                x1,t1,x2,t2 : in out Quad_Double_Vectors.Vector;
+                step : in quad_double ) is
 
-    x3,t3 : Double_Double_Vectors.vector(x1'range);
-    det : Double_Double_Vectors.Vector(p'range);
-    h : double_double := step;
+    x3,t3 : Quad_Double_Vectors.vector(x1'range);
+    det : Quad_Double_Vectors.Vector(p'range);
+    h : quad_double := step;
     ans : character;
     nb : natural32;
     fail : boolean;
 
-    use Double_Double_Vectors;
+    use Quad_Double_Vectors;
 
   begin
     put_line("The solution and its tangent before the turn :");
@@ -993,20 +993,20 @@ package body DoblDobl_Quad_Turn_Points is
   end Seek_Turn;
 
   procedure Seek_Turn
-              ( p : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
-                x1,t1,x2,t2 : in out DoblDobl_Complex_Vectors.Vector;
+              ( p : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
+                x1,t1,x2,t2 : in out QuadDobl_Complex_Vectors.Vector;
                 step : in Complex_Number ) is
 
-    x3,t3 : DoblDobl_Complex_Vectors.vector(x1'range);
+    x3,t3 : QuadDobl_Complex_Vectors.vector(x1'range);
     h : Complex_Number := step;
     orientation : Complex_Number;
     ans : character;
     nb : natural32;
     fail : boolean;
-    two : constant double_double := create(2.0);
+    two : constant quad_double := create(2.0);
 
-    use DoblDobl_Complex_Vectors;
+    use QuadDobl_Complex_Vectors;
 
   begin
     put_line("The solution and its tangent before the turn :");
@@ -1032,19 +1032,19 @@ package body DoblDobl_Quad_Turn_Points is
   end Seek_Turn;
 
   procedure Interactive_Shoot_Turn
-              ( p : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
-                jm : in Double_Double_Jaco_Matrices.Eval_Jaco_mat;
-                x1,t1,x2,t2 : in out Double_Double_Vectors.Vector;
-                step : in double_double ) is
+              ( p : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                jm : in Quad_Double_Jaco_Matrices.Eval_Jaco_mat;
+                x1,t1,x2,t2 : in out Quad_Double_Vectors.Vector;
+                step : in quad_double ) is
 
-    x3,t3 : Double_Double_Vectors.vector(x1'range);
-    det : Double_Double_Vectors.Vector(p'range);
-    h : double_double := step;
+    x3,t3 : Quad_Double_Vectors.vector(x1'range);
+    det : Quad_Double_Vectors.Vector(p'range);
+    h : quad_double := step;
     ans : character;
     nb : natural32;
     fail : boolean;
 
-    use Double_Double_Vectors;
+    use Quad_Double_Vectors;
 
   begin
     put_line("The solution and its tangent before the turn :");
@@ -1073,19 +1073,19 @@ package body DoblDobl_Quad_Turn_Points is
   end Interactive_Shoot_Turn;
 
   procedure Interactive_Shoot_Turn
-              ( p : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
-                x1,t1,x2,t2 : in out DoblDobl_Complex_Vectors.Vector;
+              ( p : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
+                x1,t1,x2,t2 : in out QuadDobl_Complex_Vectors.Vector;
                 step : in Complex_Number ) is
 
-    x3,t3 : DoblDobl_Complex_Vectors.vector(x1'range);
+    x3,t3 : QuadDobl_Complex_Vectors.vector(x1'range);
     h : Complex_Number := step;
     orientation : Complex_Number;
     ans : character;
     nb : natural32;
     fail : boolean;
 
-    use DoblDobl_Complex_Vectors;
+    use QuadDobl_Complex_Vectors;
 
   begin
     put_line("The solution and its tangent before the turn :");
@@ -1115,17 +1115,17 @@ package body DoblDobl_Quad_Turn_Points is
   end Interactive_Shoot_Turn;
 
   procedure Shoot_Turn
-              ( p : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
-                jm : in Double_Double_Jaco_Matrices.Eval_Jaco_mat;
-                x1,t1,x2,t2 : in out Double_Double_Vectors.Vector;
-                step,tol_step : in double_double; max : in natural ) is
+              ( p : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                jm : in Quad_Double_Jaco_Matrices.Eval_Jaco_mat;
+                x1,t1,x2,t2 : in out Quad_Double_Vectors.Vector;
+                step,tol_step : in quad_double; max : in natural ) is
 
-    x3,t3 : Double_Double_Vectors.vector(x1'range);
-    h : double_double := step;
+    x3,t3 : Quad_Double_Vectors.vector(x1'range);
+    h : quad_double := step;
     nb : natural32;
     fail : boolean;
 
-    use Double_Double_Vectors;
+    use Quad_Double_Vectors;
 
   begin
     for i in 1..max loop
@@ -1142,18 +1142,18 @@ package body DoblDobl_Quad_Turn_Points is
   end Shoot_Turn;
 
   procedure Shoot_Turn
-              ( p : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                jm : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
-                x1,t1,x2,t2 : in out DoblDobl_Complex_Vectors.Vector;
+              ( p : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jm : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_mat;
+                x1,t1,x2,t2 : in out QuadDobl_Complex_Vectors.Vector;
                 step,tol_step : in Complex_Number; max : in natural ) is
 
-    x3,t3 : DoblDobl_Complex_Vectors.vector(x1'range);
+    x3,t3 : QuadDobl_Complex_Vectors.vector(x1'range);
     h : Complex_Number := step;
     orientation : Complex_Number;
     nb : natural32;
     fail : boolean;
 
-    use DoblDobl_Complex_Vectors;
+    use QuadDobl_Complex_Vectors;
 
   begin
     for i in 1..max loop
@@ -1174,8 +1174,8 @@ package body DoblDobl_Quad_Turn_Points is
 
   procedure Quadratic_Interpolation
                ( file : in file_type;
-                 x,y : in Double_Double_Vectors.Vector;
-                 p,q : out double_double ) is
+                 x,y : in Quad_Double_Vectors.Vector;
+                 p,q : out quad_double ) is
   begin
     p := x(1)*x(1)*(y(2)-y(3))
        + x(2)*x(2)*(y(3)-y(1))
@@ -1190,19 +1190,19 @@ package body DoblDobl_Quad_Turn_Points is
   end Quadratic_Interpolation;
 
   procedure Quadratic_Interpolation
-               ( x,y : in Double_Double_Vectors.Vector;
-                 p,q : out double_double ) is
+               ( x,y : in Quad_Double_Vectors.Vector;
+                 p,q : out quad_double ) is
 
   begin
     Quadratic_Interpolation(standard_output,x,y,p,q);
   end Quadratic_Interpolation;
 
   procedure Monitor_Determinants
-               ( x,y : in out Double_Double_Vectors.Vector;
-                 i : in out integer32; t,d : in double_double;
-                 crit : out natural32; z : out double_double ) is
+               ( x,y : in out Quad_Double_Vectors.Vector;
+                 i : in out integer32; t,d : in quad_double;
+                 crit : out natural32; z : out quad_double ) is
 
-    p,q : double_double;
+    p,q : quad_double;
 
   begin
     if i < x'last then
@@ -1244,11 +1244,11 @@ package body DoblDobl_Quad_Turn_Points is
 
   procedure Monitor_Determinants
                ( file : in file_type; 
-                 x,y : in out Double_Double_Vectors.Vector;
-                 i : in out integer32; t,d : in double_double;
-                 crit : out natural32; z : out double_double ) is
+                 x,y : in out Quad_Double_Vectors.Vector;
+                 i : in out integer32; t,d : in quad_double;
+                 crit : out natural32; z : out quad_double ) is
 
-    p,q : double_double;
+    p,q : quad_double;
 
   begin
     if i < x'last then
@@ -1296,17 +1296,17 @@ package body DoblDobl_Quad_Turn_Points is
 
   procedure Bisection_Singularity
                  ( file : in file_type;
-                   t1,t2,d1,d2 : in out double_double;
-                   f : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
-                   jf : Double_Double_Jaco_Matrices.Eval_Jaco_Mat;
-                   x : in out Double_Double_Vectors.Vector;
-                   tol_err,tol_res,tol_det : in double_double;
+                   t1,t2,d1,d2 : in out quad_double;
+                   f : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                   jf : Quad_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                   x : in out Quad_Double_Vectors.Vector;
+                   tol_err,tol_res,tol_det : in quad_double;
                    max : in natural32; fail,critical : out boolean;
                    nit : out natural32 ) is
 
-     y : Double_Double_Vectors.Vector(f'range);
-     err,res,det : double_double;
-     mt : double_double;
+     y : Quad_Double_Vectors.Vector(f'range);
+     err,res,det : quad_double;
+     mt : quad_double;
 
   begin
     put(file,"Bisection to Singularity d1 = ");
@@ -1318,7 +1318,7 @@ package body DoblDobl_Quad_Turn_Points is
       put(file,"stage "); put(file,i,1); put_line(file," of bisection :");
       mt := (t1 + t2)/2.0; x(x'last) := mt;
       put(file,"new value for t : "); put(file,mt); new_line(file);
-      y := Double_Double_Poly_SysFun.Eval(f,x);
+      y := Quad_Double_Poly_SysFun.Eval(f,x);
       fail := true;
       for i in 1..max loop
         One_Corrector_Step(f,jf,x,y,err,res,det);
@@ -1338,19 +1338,19 @@ package body DoblDobl_Quad_Turn_Points is
 
   procedure Parabolic_Minimization
                  ( file : in file_type;
-                   vt,dt : in Double_Double_Vectors.Vector;
-                   zt : in double_double;
-                   f : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
-                   jf : Double_Double_Jaco_Matrices.Eval_Jaco_Mat;
-                   x : in out Double_Double_Vectors.Vector;
-                   tol_err,tol_res,tol_det : in double_double;
+                   vt,dt : in Quad_Double_Vectors.Vector;
+                   zt : in quad_double;
+                   f : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                   jf : Quad_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                   x : in out Quad_Double_Vectors.Vector;
+                   tol_err,tol_res,tol_det : in quad_double;
                    max : in natural32; fail,critical : out boolean;
                    nit : out natural32 ) is
 
-    y : Double_Double_Vectors.Vector(f'range);
-    err,res,det,p,q,z : double_double;
-    nvt : Double_Double_Vectors.Vector(vt'range) := vt;
-    ndt : Double_Double_Vectors.Vector(vt'range) := dt;
+    y : Quad_Double_Vectors.Vector(f'range);
+    err,res,det,p,q,z : quad_double;
+    nvt : Quad_Double_Vectors.Vector(vt'range) := vt;
+    ndt : Quad_Double_Vectors.Vector(vt'range) := dt;
 
   begin
     put(file,"Parabolic Minimization starts at t = ");
@@ -1358,7 +1358,7 @@ package body DoblDobl_Quad_Turn_Points is
     z := zt;
     for i in 1..max loop
       put(file,"stage "); put(file,i,1); put_line(file," of minimization :");
-      y := Double_Double_Poly_SysFun.Eval(f,x);
+      y := Quad_Double_Poly_SysFun.Eval(f,x);
       fail := true; nit := max;
       for i in 1..max loop
         One_Corrector_Step(f,jf,x,y,err,res,det);
@@ -1398,21 +1398,21 @@ package body DoblDobl_Quad_Turn_Points is
 
   procedure Monitor_Singularity
                ( file : in file_type; output : in boolean;
-                 nd : in double_double;
-                 vt,dt : in out Double_Double_Vectors.Vector;
+                 nd : in quad_double;
+                 vt,dt : in out Quad_Double_Vectors.Vector;
                  i : in out integer32;
-                 f : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
-                 jf : Double_Double_Jaco_Matrices.Eval_Jaco_Mat;
-                 x : in out Double_Double_Vectors.Vector;
-                 px,pt,dx : in Double_Double_Vectors.Vector;
-                 tol_err,tol_res,tol_det : in double_double;
+                 f : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                 jf : Quad_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                 x : in out Quad_Double_Vectors.Vector;
+                 px,pt,dx : in Quad_Double_Vectors.Vector;
+                 tol_err,tol_res,tol_det : in quad_double;
                  max : in natural32; fail : out boolean;
                  nit,crtp : out natural32 ) is
 
-    orientation,zt,t1,t2,d1,d2 : double_double;
+    orientation,zt,t1,t2,d1,d2 : quad_double;
     critical : boolean;
 
-    use Double_Double_Vectors;
+    use Quad_Double_Vectors;
 
   begin
     if output then
@@ -1456,17 +1456,17 @@ package body DoblDobl_Quad_Turn_Points is
   procedure Monitor_Singularity
                ( file : in file_type; output : in boolean;
                  nd : in Complex_Number;
-                 vt,dt : in out Double_Double_Vectors.Vector;
+                 vt,dt : in out Quad_Double_Vectors.Vector;
                  i : in out integer32;
-                 f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
-                 jf : DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
-                 x : in out DoblDobl_Complex_Vectors.Vector;
-                 px,pt,dx : in DoblDobl_Complex_Vectors.Vector;
-                 tol_err,tol_res,tol_det : in double_double;
+                 f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                 jf : QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                 x : in out QuadDobl_Complex_Vectors.Vector;
+                 px,pt,dx : in QuadDobl_Complex_Vectors.Vector;
+                 tol_err,tol_res,tol_det : in quad_double;
                  max : in natural32; fail : out boolean;
                  nit,crtp : out natural32 ) is
 
-    t,vnd,zt : double_double;
+    t,vnd,zt : quad_double;
     orientation : Complex_Number;
  
   begin
@@ -1493,4 +1493,4 @@ package body DoblDobl_Quad_Turn_Points is
     end if;
   end Monitor_Singularity;
 
-end DoblDobl_Quad_Turn_Points;
+end QuadDobl_Quad_Turn_Points;

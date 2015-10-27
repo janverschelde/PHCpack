@@ -16,6 +16,8 @@ with DoblDobl_Random_Numbers;           use DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;           use QuadDobl_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Floating_Vectors;
+with Double_Double_Vectors;
+with Quad_Double_Vectors;
 with Standard_Complex_Matrices;
 with Standard_Complex_Norms_Equals;     use Standard_Complex_Norms_Equals;
 with DoblDobl_Complex_Matrices;
@@ -24,6 +26,8 @@ with QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_Vector_Norms;     use QuadDobl_Complex_Vector_Norms;
 with Symbol_Table,Symbol_Table_io;      use Symbol_Table;
 with Standard_Floating_Polynomials;
+with Double_Double_Polynomials;
+with Quad_Double_Polynomials;
 with Standard_Complex_to_Real_Poly;
 with DoblDobl_Complex_to_Real_Poly;
 with QuadDobl_Complex_to_Real_Poly;
@@ -37,6 +41,8 @@ with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with Standard_Solution_Diagnostics;
+with DoblDobl_Solution_Diagnostics;
+with QuadDobl_Solution_Diagnostics;
 with Standard_IncFix_Continuation;
 with DoblDobl_IncFix_Continuation;
 with QuadDobl_IncFix_Continuation;
@@ -52,7 +58,15 @@ with DoblDobl_Parameter_Solutions;
 with QuadDobl_Parameter_Solutions;
 with Standard_Quad_Parameters;
 with Standard_Quad_Turn_Points_io;      use Standard_Quad_Turn_Points_io;
-with Standard_Quad_Sweepers;            use Standard_Quad_Sweepers;
+with DoblDobl_Quad_Parameters;
+with DoblDobl_Quad_Turn_Points;
+with DoblDobl_Quad_Turn_Points_io;      use DoblDobl_Quad_Turn_Points_io;
+with QuadDobl_Quad_Parameters;
+with QuadDobl_Quad_Turn_Points;
+with QuadDobl_Quad_Turn_Points_io;      use QuadDobl_Quad_Turn_Points_io;
+with Standard_Quad_Sweepers;
+with DoblDobl_Quad_Sweepers;
+with QuadDobl_Quad_Sweepers;
 
 package body Parameter_Homotopy_Continuation is
 
@@ -1254,6 +1268,58 @@ package body Parameter_Homotopy_Continuation is
     return res;
   end Complex_Sweep_Line;
 
+  function Complex_Sweep_Line
+             ( n,k : integer32;
+               start,target : DoblDobl_Complex_Numbers.Complex_Number )
+             return DoblDobl_Complex_Polynomials.Poly is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Polynomials;
+
+    t : Term;
+    res : Poly;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..n+1 => 0);
+    t.cf := -start;
+    res := Create(t);
+    t.cf := Create(integer(1));
+    t.dg(k) := 1;
+    Add(res,t);
+    t.dg(k) := 0;
+    t.dg(n+1) := 1;
+    t.cf := start-target;
+    Add(res,t);
+    Clear(t);
+    return res;
+  end Complex_Sweep_Line;
+
+  function Complex_Sweep_Line
+             ( n,k : integer32;
+               start,target : QuadDobl_Complex_Numbers.Complex_Number )
+             return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Polynomials;
+
+    t : Term;
+    res : Poly;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..n+1 => 0);
+    t.cf := -start;
+    res := Create(t);
+    t.cf := Create(integer(1));
+    t.dg(k) := 1;
+    Add(res,t);
+    t.dg(k) := 0;
+    t.dg(n+1) := 1;
+    t.cf := start-target;
+    Add(res,t);
+    Clear(t);
+    return res;
+  end Complex_Sweep_Line;
+
   procedure Add_Symbol_for_Continuation_Parameter is
 
   -- DESCRIPTION :
@@ -1289,6 +1355,48 @@ package body Parameter_Homotopy_Continuation is
     Standard_Complex_Jaco_Matrices.Clear(ejm);
   end Run_Complex_Sweep;
 
+  procedure Run_Complex_Sweep
+              ( file : in file_type; output : in boolean;
+                k,nq,nv : in natural32;
+                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in DoblDobl_Complex_Solutions.Link_to_Solution ) is
+
+    ep : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(h'range)
+       := DoblDobl_Complex_Poly_SysFun.Create(h);
+    jm : DoblDobl_Complex_Jaco_Matrices.Jaco_Mat(h'range,1..integer32(nv))
+       := DoblDobl_Complex_Jaco_Matrices.Create(h);
+    ejm : DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat
+            (h'range,1..integer32(nv))
+        := DoblDobl_Complex_Jaco_Matrices.Create(jm);
+
+  begin
+    Run_Complex_Sweep(file,output,k,nq,nv,h,ep,ejm,s);
+    DoblDobl_Complex_Poly_SysFun.Clear(ep);
+    DoblDobl_Complex_Jaco_Matrices.Clear(jm);
+    DoblDobl_Complex_Jaco_Matrices.Clear(ejm);
+  end Run_Complex_Sweep;
+
+  procedure Run_Complex_Sweep
+              ( file : in file_type; output : in boolean;
+                k,nq,nv : in natural32;
+                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in QuadDobl_Complex_Solutions.Link_to_Solution ) is
+
+    ep : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(h'range)
+       := QuadDobl_Complex_Poly_SysFun.Create(h);
+    jm : QuadDobl_Complex_Jaco_Matrices.Jaco_Mat(h'range,1..integer32(nv))
+       := QuadDobl_Complex_Jaco_Matrices.Create(h);
+    ejm : QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat
+            (h'range,1..integer32(nv))
+        := QuadDobl_Complex_Jaco_Matrices.Create(jm);
+
+  begin
+    Run_Complex_Sweep(file,output,k,nq,nv,h,ep,ejm,s);
+    QuadDobl_Complex_Poly_SysFun.Clear(ep);
+    QuadDobl_Complex_Jaco_Matrices.Clear(jm);
+    QuadDobl_Complex_Jaco_Matrices.Clear(ejm);
+  end Run_Complex_Sweep;
+
   procedure Run_Real_Sweep
               ( file : in file_type; output : in boolean;
                 k,nq,nv : in natural32;
@@ -1310,6 +1418,48 @@ package body Parameter_Homotopy_Continuation is
     Standard_Floating_Jaco_Matrices.Clear(ejm);
   end Run_Real_Sweep;
 
+  procedure Run_Real_Sweep
+              ( file : in file_type; output : in boolean;
+                k,nq,nv : in natural32;
+                h : in Double_Double_Poly_Systems.Poly_Sys;
+                s : in DoblDobl_Complex_Solutions.Link_to_Solution ) is
+
+    ep : Double_Double_Poly_SysFun.Eval_Poly_Sys(h'range)
+       := Double_Double_Poly_SysFun.Create(h);
+    jm : Double_Double_Jaco_Matrices.Jaco_Mat(h'range,1..integer32(nv))
+       := Double_Double_Jaco_Matrices.Create(h);
+    ejm : Double_Double_Jaco_Matrices.Eval_Jaco_Mat
+            (h'range,1..integer32(nv))
+        := Double_Double_Jaco_Matrices.Create(jm);
+
+  begin
+    Run_Real_Sweep(file,output,k,nq,nv,h,ep,ejm,s);
+    Double_Double_Poly_SysFun.Clear(ep);
+    Double_Double_Jaco_Matrices.Clear(jm);
+    Double_Double_Jaco_Matrices.Clear(ejm);
+  end Run_Real_Sweep;
+
+  procedure Run_Real_Sweep
+              ( file : in file_type; output : in boolean;
+                k,nq,nv : in natural32;
+                h : in Quad_Double_Poly_Systems.Poly_Sys;
+                s : in QuadDobl_Complex_Solutions.Link_to_Solution ) is
+
+    ep : Quad_Double_Poly_SysFun.Eval_Poly_Sys(h'range)
+       := Quad_Double_Poly_SysFun.Create(h);
+    jm : Quad_Double_Jaco_Matrices.Jaco_Mat(h'range,1..integer32(nv))
+       := Quad_Double_Jaco_Matrices.Create(h);
+    ejm : Quad_Double_Jaco_Matrices.Eval_Jaco_Mat
+            (h'range,1..integer32(nv))
+        := Quad_Double_Jaco_Matrices.Create(jm);
+
+  begin
+    Run_Real_Sweep(file,output,k,nq,nv,h,ep,ejm,s);
+    Quad_Double_Poly_SysFun.Clear(ep);
+    Quad_Double_Jaco_Matrices.Clear(jm);
+    Quad_Double_Jaco_Matrices.Clear(ejm);
+  end Run_Real_Sweep;
+
   function Hyperplane ( dx,x : Standard_Complex_Vectors.Vector )
                       return Standard_Complex_Polynomials.Poly is
 
@@ -1324,6 +1474,62 @@ package body Parameter_Homotopy_Continuation is
     t.dg := new Standard_Natural_Vectors.Vector'(1..dx'last => 0);
     for i in 1..dx'last loop
       if dx(i) /= Create(0.0) then
+        t.dg(i) := 1;
+        t.cf := dx(i);
+        Add(res,t);
+        t.dg(i) := 0;
+        y := x(i)*dx(i);
+      end if;
+    end loop;
+    t.cf := -y;
+    Add(res,t);
+    Clear(t);
+    return res;
+  end Hyperplane;
+
+  function Hyperplane ( dx,x : DoblDobl_Complex_Vectors.Vector )
+                      return DoblDobl_Complex_Polynomials.Poly is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Polynomials;
+
+    res : Poly := Null_Poly;
+    t : Term;
+    zero : constant Complex_Number := Create(integer(0));
+    y : Complex_Number := zero;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..dx'last => 0);
+    for i in 1..dx'last loop
+      if dx(i) /= zero then
+        t.dg(i) := 1;
+        t.cf := dx(i);
+        Add(res,t);
+        t.dg(i) := 0;
+        y := x(i)*dx(i);
+      end if;
+    end loop;
+    t.cf := -y;
+    Add(res,t);
+    Clear(t);
+    return res;
+  end Hyperplane;
+
+  function Hyperplane ( dx,x : QuadDobl_Complex_Vectors.Vector )
+                      return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Polynomials;
+
+    res : Poly := Null_Poly;
+    t : Term;
+    zero : constant Complex_Number := Create(integer(0));
+    y : Complex_Number := zero;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..dx'last => 0);
+    for i in 1..dx'last loop
+      if dx(i) /= zero then
         t.dg(i) := 1;
         t.cf := dx(i);
         Add(res,t);
@@ -1364,6 +1570,62 @@ package body Parameter_Homotopy_Continuation is
     return res;
   end Hyperplane;
 
+  function Hyperplane ( dx,x : Double_Double_Vectors.Vector )
+                      return Double_Double_Polynomials.Poly is
+
+    use DoblDobl_Complex_Numbers;
+    use Double_Double_Polynomials;
+
+    res : Poly := Null_Poly;
+    t : Term;
+    zero : constant double_double := create(0.0);
+    y : double_double := zero;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..dx'last => 0);
+    for i in 1..dx'last loop
+      if dx(i) /= zero then
+        t.dg(i) := 1;
+        t.cf := dx(i);
+        Add(res,t);
+        t.dg(i) := 0;
+        y := x(i)*dx(i);
+      end if;
+    end loop;
+    t.cf := -y;
+    Add(res,t);
+    Clear(t);
+    return res;
+  end Hyperplane;
+
+  function Hyperplane ( dx,x : Quad_Double_Vectors.Vector )
+                      return Quad_Double_Polynomials.Poly is
+
+    use QuadDobl_Complex_Numbers;
+    use Quad_Double_Polynomials;
+
+    res : Poly := Null_Poly;
+    t : Term;
+    zero : constant quad_double := create(0.0);
+    y : quad_double := zero;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..dx'last => 0);
+    for i in 1..dx'last loop
+      if dx(i) /= zero then
+        t.dg(i) := 1;
+        t.cf := dx(i);
+        Add(res,t);
+        t.dg(i) := 0;
+        y := x(i)*dx(i);
+      end if;
+    end loop;
+    t.cf := -y;
+    Add(res,t);
+    Clear(t);
+    return res;
+  end Hyperplane;
+
   procedure Run_Complex_Sweep
               ( file : in file_type; output : in boolean;
                 k,nq,nv : in natural32;
@@ -1373,6 +1635,7 @@ package body Parameter_Homotopy_Continuation is
                 s : in Standard_Complex_Solutions.Link_to_Solution ) is
 
     use Standard_Complex_Numbers;
+    use Standard_Quad_Sweepers;
 
     x,dx : Standard_Complex_Vectors.Vector(1..integer32(nv));
    -- st : Standard_Complex_Poly_Systems.Poly_Sys(1..h'last+1);
@@ -1417,6 +1680,114 @@ package body Parameter_Homotopy_Continuation is
    -- s.t := ls.v(ls.v'last);
   end Run_Complex_Sweep;
 
+  procedure Run_Complex_Sweep
+              ( file : in file_type; output : in boolean;
+                k,nq,nv : in natural32;
+                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                s : in DoblDobl_Complex_Solutions.Link_to_Solution ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Quad_Sweepers;
+
+    x,dx : DoblDobl_Complex_Vectors.Vector(1..integer32(nv));
+   -- st : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..h'last+1);
+   -- sols : Solution_List;
+   -- nb : natural := 0;
+   -- ls : DoblDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    for i in s.v'range loop
+      x(i) := s.v(i);
+    end loop;
+    x(integer32(nv)) := Create(integer(0));
+    new_line(file);
+    put(file,"Starting the complex sweep at solution ");
+    put(file,k,1); put_line(file," :");
+    Write_Vector(file,x);
+    new_line(file);
+   -- if output
+   --  then
+    Start_Complex_Sweep(file,output,nq,nv,create(1.0),f,jf,x,dx);
+   --  else Start_Complex_Sweep(nq,nv,create(1.0),f,jf,x,dx);
+   -- end if;
+    put_line(file,"The solution and its tangent at the end");
+    Write_Vector_and_its_Tangent(file,x,dx);
+    s.t := x(x'last);
+    for i in s.v'range loop
+      s.v(i) := x(i);
+    end loop;
+   -- st(h'range) := h;
+   -- st(st'last) := Hyperplane(dx,x);
+   -- put_line(file,"The system used to refine : "); put(file,st);
+   -- ls := new Solution(nv);
+   -- ls.t := s.t;
+   -- ls.m := s.m;
+   -- ls.v := x;
+   -- Construct(ls,sols);
+   -- Reporting_Root_Refiner
+   --   (file,st,sols,1.0E-12,1.0E-12,1.0E-8,nb,5,true,false);
+   -- Standard_Complex_Polynomials.Clear(st(st'last));
+   -- ls := Head_Of(sols);
+   -- s.v := ls.v(s.v'range);
+   -- s.t := ls.v(ls.v'last);
+  end Run_Complex_Sweep;
+
+  procedure Run_Complex_Sweep
+              ( file : in file_type; output : in boolean;
+                k,nq,nv : in natural32;
+                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                s : in QuadDobl_Complex_Solutions.Link_to_Solution ) is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Quad_Sweepers;
+
+    x,dx : QuadDobl_Complex_Vectors.Vector(1..integer32(nv));
+   -- st : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..h'last+1);
+   -- sols : Solution_List;
+   -- nb : natural := 0;
+   -- ls : QuadDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    for i in s.v'range loop
+      x(i) := s.v(i);
+    end loop;
+    x(integer32(nv)) := Create(integer(0));
+    new_line(file);
+    put(file,"Starting the complex sweep at solution ");
+    put(file,k,1); put_line(file," :");
+    Write_Vector(file,x);
+    new_line(file);
+   -- if output
+   --  then
+    Start_Complex_Sweep(file,output,nq,nv,create(1.0),f,jf,x,dx);
+   --  else Start_Complex_Sweep(nq,nv,create(1.0),f,jf,x,dx);
+   -- end if;
+    put_line(file,"The solution and its tangent at the end");
+    Write_Vector_and_its_Tangent(file,x,dx);
+    s.t := x(x'last);
+    for i in s.v'range loop
+      s.v(i) := x(i);
+    end loop;
+   -- st(h'range) := h;
+   -- st(st'last) := Hyperplane(dx,x);
+   -- put_line(file,"The system used to refine : "); put(file,st);
+   -- ls := new Solution(nv);
+   -- ls.t := s.t;
+   -- ls.m := s.m;
+   -- ls.v := x;
+   -- Construct(ls,sols);
+   -- Reporting_Root_Refiner
+   --   (file,st,sols,1.0E-12,1.0E-12,1.0E-8,nb,5,true,false);
+   -- Standard_Complex_Polynomials.Clear(st(st'last));
+   -- ls := Head_Of(sols);
+   -- s.v := ls.v(s.v'range);
+   -- s.t := ls.v(ls.v'last);
+  end Run_Complex_Sweep;
+
   procedure Run_Real_Sweep
               ( file : in file_type; output : in boolean;
                 k,nq,nv : in natural32;
@@ -1426,6 +1797,7 @@ package body Parameter_Homotopy_Continuation is
                 s : in Standard_Complex_Solutions.Link_to_Solution ) is
 
     use Standard_Complex_Numbers;
+    use Standard_Quad_Sweepers;
 
     x,dx : Standard_Floating_Vectors.Vector(1..integer32(nv));
     evl : constant boolean := false;
@@ -1449,6 +1821,126 @@ package body Parameter_Homotopy_Continuation is
    --  then
     Start_Real_Sweep(file,output,evl,nq,nv,1.0,f,jf,x,dx);
    --  else Start_Real_Sweep(evl,nq,nv,1.0,f,jf,x,dx);
+   -- end if;
+    put_line(file,"The solution and its tangent at the end");
+    Write_Vector_and_its_Tangent(file,x,dx);
+    s.t := Create(x(x'last));
+    for i in s.v'range loop
+      s.v(i) := Create(x(i));
+    end loop;
+   -- st(h'range) := h;
+   -- st(st'last) := Hyperplane(dx,x);   
+   -- put_line(file,"the system used to refine : "); put(file,st);
+   -- cst := Standard_Complex_to_Real_Poly.Convert_Real_to_Complex(st);
+   -- ls := new Solution(nv);
+   -- ls.t := s.t;
+   -- ls.m := s.m;
+   -- for i in x'range loop
+   --   ls.v(i) := Create(x(i));
+   -- end loop;
+   -- Construct(ls,sols);
+   -- Reporting_Root_Refiner
+   --   (file,cst,sols,1.0E-12,1.0E-12,1.0E-8,nb,5,true,false);
+   -- Standard_Floating_Polynomials.Clear(st(st'last));
+   -- Standard_Complex_Poly_Systems.Clear(cst);
+   -- ls := Head_Of(sols);
+   -- s.v := ls.v(s.v'range);
+   -- s.t := ls.v(ls.v'last);
+  end Run_Real_Sweep;
+
+  procedure Run_Real_Sweep
+              ( file : in file_type; output : in boolean;
+                k,nq,nv : in natural32;
+                h : in Double_Double_Poly_Systems.Poly_Sys;
+                f : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
+                jf : in Double_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                s : in DoblDobl_Complex_Solutions.Link_to_Solution ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Quad_Sweepers;
+
+    x,dx : Double_Double_Vectors.Vector(1..integer32(nv));
+    evl : constant boolean := false;
+   -- st : Double_Double_Poly_Systems.Poly_Sys(1..h'last+1);
+   -- cst : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..h'last+1);
+   -- sols : Solution_List;
+   -- nb : natural := 0;
+   -- ls : DoblDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    for i in s.v'range loop
+      x(i) := REAL_PART(s.v(i));
+    end loop;
+    x(integer32(nv)) := create(0.0);
+    new_line(file);
+    put(file,"Starting the real sweep at solution ");
+    put(file,k,1); put_line(file," :");
+    Write_Vector(file,x);
+    new_line(file);
+   -- if output
+   --  then
+    Start_Real_Sweep(file,output,evl,nq,nv,create(1.0),f,jf,x,dx);
+   --  else Start_Real_Sweep(evl,nq,nv,create(1.0),f,jf,x,dx);
+   -- end if;
+    put_line(file,"The solution and its tangent at the end");
+    Write_Vector_and_its_Tangent(file,x,dx);
+    s.t := Create(x(x'last));
+    for i in s.v'range loop
+      s.v(i) := Create(x(i));
+    end loop;
+   -- st(h'range) := h;
+   -- st(st'last) := Hyperplane(dx,x);   
+   -- put_line(file,"the system used to refine : "); put(file,st);
+   -- cst := Standard_Complex_to_Real_Poly.Convert_Real_to_Complex(st);
+   -- ls := new Solution(nv);
+   -- ls.t := s.t;
+   -- ls.m := s.m;
+   -- for i in x'range loop
+   --   ls.v(i) := Create(x(i));
+   -- end loop;
+   -- Construct(ls,sols);
+   -- Reporting_Root_Refiner
+   --   (file,cst,sols,1.0E-12,1.0E-12,1.0E-8,nb,5,true,false);
+   -- Standard_Floating_Polynomials.Clear(st(st'last));
+   -- Standard_Complex_Poly_Systems.Clear(cst);
+   -- ls := Head_Of(sols);
+   -- s.v := ls.v(s.v'range);
+   -- s.t := ls.v(ls.v'last);
+  end Run_Real_Sweep;
+
+  procedure Run_Real_Sweep
+              ( file : in file_type; output : in boolean;
+                k,nq,nv : in natural32;
+                h : in Quad_Double_Poly_Systems.Poly_Sys;
+                f : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                jf : in Quad_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                s : in QuadDobl_Complex_Solutions.Link_to_Solution ) is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Quad_Sweepers;
+
+    x,dx : Quad_Double_Vectors.Vector(1..integer32(nv));
+    evl : constant boolean := false;
+   -- st : Quad_Double_Poly_Systems.Poly_Sys(1..h'last+1);
+   -- cst : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..h'last+1);
+   -- sols : Solution_List;
+   -- nb : natural := 0;
+   -- ls : QuadDobl_Complex_Solutions.Link_to_Solution;
+
+  begin
+    for i in s.v'range loop
+      x(i) := REAL_PART(s.v(i));
+    end loop;
+    x(integer32(nv)) := create(0.0);
+    new_line(file);
+    put(file,"Starting the real sweep at solution ");
+    put(file,k,1); put_line(file," :");
+    Write_Vector(file,x);
+    new_line(file);
+   -- if output
+   --  then
+    Start_Real_Sweep(file,output,evl,nq,nv,create(1.0),f,jf,x,dx);
+   --  else Start_Real_Sweep(evl,nq,nv,create(1.0),f,jf,x,dx);
    -- end if;
     put_line(file,"The solution and its tangent at the end");
     Write_Vector_and_its_Tangent(file,x,dx);
@@ -1562,6 +2054,210 @@ package body Parameter_Homotopy_Continuation is
       Standard_Floating_Poly_SysFun.Clear(rpf);
       Standard_Floating_Jaco_Matrices.Clear(rjm);
       Standard_Floating_Jaco_Matrices.Clear(rjf);
+    end if;
+    tstop(timer);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS at the end of the sweep :");
+    put(file,len,natural32(nb_unk),sols);
+    Write_Sweep_Summary(file,sols);
+    new_line(file);
+    print_times(file,timer,"running a sweep");
+    if not Is_Null(sols) then
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    end if;
+  end Sweep;
+
+  procedure Sweep ( file : in file_type; isreal : in out boolean;
+                    p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                    sols : in DoblDobl_Complex_Solutions.Solution_List;
+                    nb_equ,nb_unk,nb_par : in integer32 ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Parameter_Systems;
+
+    timer : Timing_Widget;
+    par : Standard_Integer_Vectors.Vector(1..nb_par);
+   -- nb_var : constant natural := nb_unk-nb_par;
+   -- var : Standard_Integer_Vectors.Vector(1..nb_var);
+    start : DoblDobl_Complex_Vectors.Vector(par'range);
+    target : DoblDobl_Complex_Vectors.Vector(par'range);
+    n : constant natural32 := natural32(nb_unk);
+    spf : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys(p'range);
+    sjm : DoblDobl_Complex_Jaco_Matrices.Jaco_Mat(p'range,1..integer32(n));
+    sjf : DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat
+            (p'range,1..integer32(n));
+    rp : Double_Double_Poly_Systems.Poly_Sys(p'range);
+    rpf : Double_Double_Poly_SysFun.Eval_Poly_Sys(p'range);
+    rjm : Double_Double_Jaco_Matrices.Jaco_Mat(p'range,1..integer32(n));
+    rjf : Double_Double_Jaco_Matrices.Eval_Jaco_Mat
+            (p'range,1..integer32(n));
+    tmp : Solution_List;
+    ls : Link_to_Solution;
+    len : constant natural32 := Length_Of(sols);
+    ans : character;
+    output : boolean;
+
+  begin
+    par := Define_Parameters(nb_equ,nb_unk,nb_par);
+   -- var := Complement(nb_unk,par);
+    Determine_Parameter_Values(file,sols,par,isreal,start,target);
+    new_line;
+    put("Starting sweep at "); put(len,1); put_line(" solutions.");
+    new_line;
+    put("Do you want intermediate output along the paths ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    output := (ans = 'y');
+    new_line;
+    DoblDobl_Quad_Parameters.Tune;
+    new_line;
+    put_line("See the output file for results...");
+    new_line;
+    tstart(timer);
+   -- Add_Symbol_for_Continuation_Parameter;
+   -- for i in p'range loop
+   --   sp(i) := Standard_Embed_Polynomials.Add_Variables(p(i),1); 
+   -- end loop;
+   -- for i in 1..nb_par loop
+   --   sp(p'last+i) := Complex_Sweep_Line(nb_unk,par(i),start(i),target(i));
+   -- end loop;
+    spf := DoblDobl_Complex_Poly_SysFun.Create(p);
+    sjm := DoblDobl_Complex_Jaco_Matrices.Create(p);
+    sjf := DoblDobl_Complex_Jaco_Matrices.Create(sjm);
+    if isreal then
+      rp := DoblDobl_Complex_to_Real_Poly.Convert_Complex_to_Real(p);
+      rpf := Double_Double_Poly_SysFun.Create(rp);
+      rjm := Double_Double_Jaco_Matrices.Create(rp);
+      rjf := Double_Double_Jaco_Matrices.Create(rjm);
+    end if;
+    new_line(file);
+    put_line(file,"THE SWEEP HOMOTOPY :");
+   -- put(file,natural32(p'last),n,p);
+    put(file,p);
+    tmp := sols;
+    for i in 1..len loop
+      ls := Head_Of(tmp);
+      ls.t := Create(integer(0));
+      if DoblDobl_Solution_Diagnostics.Is_Real(ls.all,1.0E-14) then
+        if isreal then
+          Run_Real_Sweep(file,output,i,natural32(rp'last),n,rp,rpf,rjf,ls);
+        else
+          Run_Complex_Sweep(file,output,i,natural32(p'last),n,p,spf,sjf,ls);
+        end if;
+      else
+        Run_Complex_Sweep(file,output,i,natural32(p'last),n,p,spf,sjf,ls);
+      end if;
+      tmp := Tail_Of(tmp);
+    end loop;
+    if isreal then
+      Double_Double_Poly_Systems.Clear(rp);
+      Double_Double_Poly_SysFun.Clear(rpf);
+      Double_Double_Jaco_Matrices.Clear(rjm);
+      Double_Double_Jaco_Matrices.Clear(rjf);
+    end if;
+    tstop(timer);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS at the end of the sweep :");
+    put(file,len,natural32(nb_unk),sols);
+    Write_Sweep_Summary(file,sols);
+    new_line(file);
+    print_times(file,timer,"running a sweep");
+    if not Is_Null(sols) then
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    end if;
+  end Sweep;
+
+  procedure Sweep ( file : in file_type; isreal : in out boolean;
+                    p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                    sols : in QuadDobl_Complex_Solutions.Solution_List;
+                    nb_equ,nb_unk,nb_par : in integer32 ) is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Parameter_Systems;
+
+    timer : Timing_Widget;
+    par : Standard_Integer_Vectors.Vector(1..nb_par);
+   -- nb_var : constant natural := nb_unk-nb_par;
+   -- var : Standard_Integer_Vectors.Vector(1..nb_var);
+    start : QuadDobl_Complex_Vectors.Vector(par'range);
+    target : QuadDobl_Complex_Vectors.Vector(par'range);
+    n : constant natural32 := natural32(nb_unk);
+    spf : QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys(p'range);
+    sjm : QuadDobl_Complex_Jaco_Matrices.Jaco_Mat(p'range,1..integer32(n));
+    sjf : QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat
+            (p'range,1..integer32(n));
+    rp : Quad_Double_Poly_Systems.Poly_Sys(p'range);
+    rpf : Quad_Double_Poly_SysFun.Eval_Poly_Sys(p'range);
+    rjm : Quad_Double_Jaco_Matrices.Jaco_Mat(p'range,1..integer32(n));
+    rjf : Quad_Double_Jaco_Matrices.Eval_Jaco_Mat
+            (p'range,1..integer32(n));
+    tmp : Solution_List;
+    ls : Link_to_Solution;
+    len : constant natural32 := Length_Of(sols);
+    ans : character;
+    output : boolean;
+
+  begin
+    par := Define_Parameters(nb_equ,nb_unk,nb_par);
+   -- var := Complement(nb_unk,par);
+    Determine_Parameter_Values(file,sols,par,isreal,start,target);
+    new_line;
+    put("Starting sweep at "); put(len,1); put_line(" solutions.");
+    new_line;
+    put("Do you want intermediate output along the paths ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    output := (ans = 'y');
+    new_line;
+    QuadDobl_Quad_Parameters.Tune;
+    new_line;
+    put_line("See the output file for results...");
+    new_line;
+    tstart(timer);
+   -- Add_Symbol_for_Continuation_Parameter;
+   -- for i in p'range loop
+   --   sp(i) := Standard_Embed_Polynomials.Add_Variables(p(i),1); 
+   -- end loop;
+   -- for i in 1..nb_par loop
+   --   sp(p'last+i) := Complex_Sweep_Line(nb_unk,par(i),start(i),target(i));
+   -- end loop;
+    spf := QuadDobl_Complex_Poly_SysFun.Create(p);
+    sjm := QuadDobl_Complex_Jaco_Matrices.Create(p);
+    sjf := QuadDobl_Complex_Jaco_Matrices.Create(sjm);
+    if isreal then
+      rp := QuadDobl_Complex_to_Real_Poly.Convert_Complex_to_Real(p);
+      rpf := Quad_Double_Poly_SysFun.Create(rp);
+      rjm := Quad_Double_Jaco_Matrices.Create(rp);
+      rjf := Quad_Double_Jaco_Matrices.Create(rjm);
+    end if;
+    new_line(file);
+    put_line(file,"THE SWEEP HOMOTOPY :");
+   -- put(file,natural32(p'last),n,p);
+    put(file,p);
+    tmp := sols;
+    for i in 1..len loop
+      ls := Head_Of(tmp);
+      ls.t := Create(integer(0));
+      if QuadDobl_Solution_Diagnostics.Is_Real(ls.all,1.0E-14) then
+        if isreal then
+          Run_Real_Sweep(file,output,i,natural32(rp'last),n,rp,rpf,rjf,ls);
+        else
+          Run_Complex_Sweep(file,output,i,natural32(p'last),n,p,spf,sjf,ls);
+        end if;
+      else
+        Run_Complex_Sweep(file,output,i,natural32(p'last),n,p,spf,sjf,ls);
+      end if;
+      tmp := Tail_Of(tmp);
+    end loop;
+    if isreal then
+      Quad_Double_Poly_Systems.Clear(rp);
+      Quad_Double_Poly_SysFun.Clear(rpf);
+      Quad_Double_Jaco_Matrices.Clear(rjm);
+      Quad_Double_Jaco_Matrices.Clear(rjf);
     end if;
     tstop(timer);
     new_line(file);

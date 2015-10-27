@@ -8,16 +8,24 @@ with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
-with Standard_Complex_Polynomials;
 with Standard_Floating_Poly_Systems;
 with Standard_Floating_Poly_SysFun;
 with Standard_Floating_Jaco_Matrices;
+with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;
+with Double_Double_Poly_Systems;
+with Double_Double_Poly_SysFun;
+with Double_Double_Jaco_Matrices;
+with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_SysFun;
 with DoblDobl_Complex_Jaco_Matrices;
+with Quad_Double_Poly_Systems;
+with Quad_Double_Poly_SysFun;
+with Quad_Double_Jaco_Matrices;
+with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Jaco_Matrices;
@@ -300,9 +308,18 @@ package Parameter_Homotopy_Continuation is
               ( n,k : integer32;
                 start,target : Standard_Complex_Numbers.Complex_Number )
               return Standard_Complex_Polynomials.Poly;
+  function Complex_Sweep_Line
+              ( n,k : integer32;
+                start,target : DoblDobl_Complex_Numbers.Complex_Number )
+              return DoblDobl_Complex_Polynomials.Poly;
+  function Complex_Sweep_Line
+              ( n,k : integer32;
+                start,target : QuadDobl_Complex_Numbers.Complex_Number )
+              return QuadDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
-  --   Returns a polynomial in n+1 variables where the k-th
+  --   Returns a polynomial in n+1 variables, in standard double,
+  --   double double, or quad double precision,  where the k-th
   --   parameter moves from start to target as the (n+1)-th
   --   continuation parameter moves from 0 to 1.
 
@@ -314,15 +331,116 @@ package Parameter_Homotopy_Continuation is
   procedure Run_Complex_Sweep
               ( file : in file_type; output : in boolean;
                 k,nq,nv : in natural32;
+                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in DoblDobl_Complex_Solutions.Link_to_Solution );
+  procedure Run_Complex_Sweep
+              ( file : in file_type; output : in boolean;
+                k,nq,nv : in natural32;
+                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in QuadDobl_Complex_Solutions.Link_to_Solution );
+
+  -- DESCRIPTION :
+  --   Does a sweep in complex arithmetic, in standard double,
+  --   double double, or quad double precision,  till the target
+  --   at t = 1 is reached or till a singularity is encountered,
+  --   starting at the given solution.
+
+  -- ON ENTRY :
+  --   file     output file for intermediate diagnostics and results;
+  --   output   if intermediate output along a path is needed;
+  --   k        index of the solution that is swept (for output);
+  --   nq       number of equations in the homotopy h;
+  --   nv       number of variables in the homotopy h;
+  --   h        a sweeping homotopy with as many sweeping lines
+  --            as the total number of parameters;
+  --   s        values for variables and parameters at t = 0.
+
+  -- ON RETURN :
+  --   s        updated values for the solution, either at t = 1,
+  --            or in case t < 1, close to a singular solution.
+
+  procedure Run_Complex_Sweep
+              ( file : in file_type; output : in boolean;
+                k,nq,nv : in natural32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
                 f : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 s : in Standard_Complex_Solutions.Link_to_Solution );
+  procedure Run_Complex_Sweep
+              ( file : in file_type; output : in boolean;
+                k,nq,nv : in natural32;
+                h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                s : in DoblDobl_Complex_Solutions.Link_to_Solution );
+  procedure Run_Complex_Sweep
+              ( file : in file_type; output : in boolean;
+                k,nq,nv : in natural32;
+                h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                s : in QuadDobl_Complex_Solutions.Link_to_Solution );
+
+  -- DESCRIPTION :
+  --   Does a sweep in complex arithmetic, in standard double,
+  --   double double, or quad double precision,  till the target
+  --   at t = 1 is reached or till a singularity is encountered,
+  --   starting at the given solution.
+
+  -- ON ENTRY :
+  --   file     output file for intermediate diagnostics and results;
+  --   output   if intermediate output along a path is needed;
+  --   k        index of the solution that is swept (for output);
+  --   nq       number of equations in the homotopy h;
+  --   nv       number of variables in the homotopy h;
+  --   h        a sweeping homotopy with as many sweeping lines
+  --            as the total number of parameters;
+  --   f        homotopy in evaluable form;
+  --   jf       evaluable Jacobi map for the homotopy;
+  --   s        values for variables and parameters at t = 0.
+
+  -- ON RETURN :
+  --   s        updated values for the solution, either at t = 1,
+  --            or in case t < 1, close to a singular solution.
+
   procedure Run_Real_Sweep
               ( file : in file_type; output : in boolean;
                 k,nq,nv : in natural32;
                 h : in Standard_Floating_Poly_Systems.Poly_Sys;
                 s : in Standard_Complex_Solutions.Link_to_Solution );
+  procedure Run_Real_Sweep
+              ( file : in file_type; output : in boolean;
+                k,nq,nv : in natural32;
+                h : in Double_Double_Poly_Systems.Poly_Sys;
+                s : in DoblDobl_Complex_Solutions.Link_to_Solution );
+  procedure Run_Real_Sweep
+              ( file : in file_type; output : in boolean;
+                k,nq,nv : in natural32;
+                h : in Quad_Double_Poly_Systems.Poly_Sys;
+                s : in QuadDobl_Complex_Solutions.Link_to_Solution );
+
+  -- DESCRIPTION :
+  --   Does a sweep in real arithmetic, in standard double,
+  --   double double or quad double precision, till the target
+  --   at t = 1 is reached or till a singularity is encountered,
+  --   starting at the given solution.
+
+  -- REQUIRED : s.v is real because this is a real sweep.
+
+  -- ON ENTRY :
+  --   file     output file for intermediate diagnostics and results;
+  --   output   if intermediate output along a path is needed;
+  --   k        index of the solution that is swept (for output);
+  --   nq       number of equations in the homotopy h;
+  --   nv       number of variables in the homotopy h;
+  --   h        a sweeping homotopy with as many sweeping lines
+  --            as the total number of parameters;
+  --   s        values for variables and parameters at t = 0.
+
+  -- ON RETURN :
+  --   s        updated values for the solution, either at t = 1,
+  --            or in case t < 1, close to a singular solution.
+
   procedure Run_Real_Sweep
               ( file : in file_type; output : in boolean;
                 k,nq,nv : in natural32;
@@ -330,13 +448,28 @@ package Parameter_Homotopy_Continuation is
                 f : in Standard_Floating_Poly_SysFun.Eval_Poly_Sys;
                 jf : in Standard_Floating_Jaco_Matrices.Eval_Jaco_Mat;
                 s : in Standard_Complex_Solutions.Link_to_Solution );
+  procedure Run_Real_Sweep
+              ( file : in file_type; output : in boolean;
+                k,nq,nv : in natural32;
+                h : in Double_Double_Poly_Systems.Poly_Sys;
+                f : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
+                jf : in Double_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                s : in DoblDobl_Complex_Solutions.Link_to_Solution );
+  procedure Run_Real_Sweep
+              ( file : in file_type; output : in boolean;
+                k,nq,nv : in natural32;
+                h : in Quad_Double_Poly_Systems.Poly_Sys;
+                f : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                jf : in Quad_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                s : in QuadDobl_Complex_Solutions.Link_to_Solution );
 
   -- DESCRIPTION :
-  --   Does a sweep in complex or real arithmetic till the target
+  --   Does a sweep in real arithmetic, in standard double,
+  --   double double or quad double precision, till the target
   --   at t = 1 is reached or till a singularity is encountered,
   --   starting at the given solution.
 
-  -- REQUIRED : s.v is real in a real sweep.
+  -- REQUIRED : s.v is real because this is a real sweep.
 
   -- ON ENTRY :
   --   file     output file for intermediate diagnostics and results;
@@ -359,10 +492,21 @@ package Parameter_Homotopy_Continuation is
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 nb_equ,nb_unk,nb_par : in integer32 );
+  procedure Sweep
+              ( file : in file_type; isreal : in out boolean;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                nb_equ,nb_unk,nb_par : in integer32 );
+  procedure Sweep
+              ( file : in file_type; isreal : in out boolean;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                nb_equ,nb_unk,nb_par : in integer32 );
 
   -- DESCRIPTION :
   --   Determines the start and target values for the parameters
-  --   and then calls the path trackers to do a sweep.
+  --   and then calls the path trackers to do a sweep,
+  --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   file     for writing values of parameters to output file

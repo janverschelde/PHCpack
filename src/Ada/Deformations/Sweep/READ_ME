@@ -17,10 +17,15 @@ ts_parcon                        : stand-alone calling program
 ------------------------------------------------------------------------------
 standard_quad_parameters         : manages sweep numerical parameters
 dobldobl_quad_parameters         : numerical parameters as double doubles
+quaddobl_quad_parameters         : numerical parameters as quad doubles
 standard_quad_turn_points        : location of quadratic turning points
 dobldobl_quad_turn_points        : location in double double precision
+quaddobl_quad_turn_points        : location in quad double precision
 standard_quad_turn_points_io     : some input and output routines
 dobldobl_quad_turn_points_io     : i/o for the double double version
+quaddobl_quad_turn_points_io     : i/o for the quad double version
 standard_quad_sweepers           : sweeper for singularities along a path
+dobldobl_quad_sweepers           : double double sweeper for singularities
+quaddobl_quad_sweepers           : quad double sweeper for singularities
 ts_realcont                      : development of real path tracking
 ------------------------------------------------------------------------------

@@ -1,5 +1,10 @@
 Mon 26 Oct 2015 : new packages dobldobl_quad_{parameters, turn_points}_{io}
   to sweep a real curve in double double precision for singularities.
+  Extended computation of quadratic turning points and the sweeping for
+  singular points to quad double precision, with new packages
+  quaddobl_quad_{parameters, turn_points, turn_points_io},
+  and {dobldobl, quaddobl}_quad_sweepers, called in the procedures of
+  the package parameter_homotopy_continuation.
 
 Sun 25 Oct 2015 : new packages {dobldobl,quaddobl}_parameter_solutions,
   for use in parameter_homotopy_continuation, updated with wrappers for a
