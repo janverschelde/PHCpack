@@ -5,6 +5,8 @@ with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
 with Standard_Complex_to_Real_Poly;
+with DoblDobl_Complex_to_Real_Poly;
+with QuadDobl_Complex_to_Real_Poly;
 with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
@@ -65,7 +67,7 @@ procedure ts_parcon is
     sols : Solution_List;
     nb_equ,nb_unk,nb_par : integer32;
     ans : character;
-   -- isreal : boolean;
+    isreal : boolean;
 
   begin
     new_line;
@@ -74,6 +76,13 @@ procedure ts_parcon is
     if ans = '1' then
       put_line("Running coefficient-parameter homotopy continuation...");
       Read_Parameter_Homotopy(file,lp,sols,nb_equ,nb_unk,nb_par);
+      Coefficient_Parameter_Homotopy_Continuation
+        (file,lp.all,sols,nb_equ,nb_unk,nb_par);
+    else
+      put_line("Running real sweep to target or first singularity...");
+      Read_Parameter_Homotopy(file,lp,sols,nb_equ,nb_unk,nb_par);
+      isreal := DoblDobl_Complex_to_Real_Poly.Is_Real(lp.all);
+      Sweep(file,isreal,lp.all,sols,nb_equ,nb_unk,nb_par);
     end if;
   end DoblDobl_Main;
 
@@ -91,7 +100,7 @@ procedure ts_parcon is
     sols : Solution_List;
     nb_equ,nb_unk,nb_par : integer32;
     ans : character;
-   -- isreal : boolean;
+    isreal : boolean;
 
   begin
     new_line;
@@ -100,6 +109,13 @@ procedure ts_parcon is
     if ans = '1' then
       put_line("Running coefficient-parameter homotopy continuation...");
       Read_Parameter_Homotopy(file,lp,sols,nb_equ,nb_unk,nb_par);
+      Coefficient_Parameter_Homotopy_Continuation
+        (file,lp.all,sols,nb_equ,nb_unk,nb_par);
+    else
+      put_line("Running real sweep to target or first singularity...");
+      Read_Parameter_Homotopy(file,lp,sols,nb_equ,nb_unk,nb_par);
+      isreal := quadDobl_Complex_to_Real_Poly.Is_Real(lp.all);
+      Sweep(file,isreal,lp.all,sols,nb_equ,nb_unk,nb_par);
     end if;
   end QuadDobl_Main;
 

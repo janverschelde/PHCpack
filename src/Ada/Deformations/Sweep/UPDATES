@@ -1,3 +1,7 @@
+Tue 27 Oct 2015 : completed ts_parcon and ts_realcont with the proper calls to 
+  the double double and quad ouble versions of the test procedures.
+  Removed a redundant message from parameter_homotopy_continuation.adb.
+
 Mon 26 Oct 2015 : new packages dobldobl_quad_{parameters, turn_points}_{io}
   to sweep a real curve in double double precision for singularities.
   Extended computation of quadratic turning points and the sweeping for

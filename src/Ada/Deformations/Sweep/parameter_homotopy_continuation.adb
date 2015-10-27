@@ -1056,7 +1056,6 @@ package body Parameter_Homotopy_Continuation is
     Driver_for_Process_io(file,oc);
     output := (oc > 0);
     new_line;
-    put_line("Starting parameter continuation...");
     put_line("See the output file for results.");
     new_line;
     Par_Con(file,nb_unk,p,ind_par,ind_var,var_sols,output);
@@ -1131,7 +1130,6 @@ package body Parameter_Homotopy_Continuation is
     Driver_for_Process_io(file,oc);
     output := (oc > 0);
     new_line;
-    put_line("Starting parameter continuation...");
     put_line("See the output file for results.");
     new_line;
     Par_Con(file,nb_unk,p,ind_par,ind_var,var_sols,output);
@@ -1207,7 +1205,6 @@ package body Parameter_Homotopy_Continuation is
     Driver_for_Process_io(file,oc);
     output := (oc > 0);
     new_line;
-    put_line("Starting parameter continuation...");
     put_line("See the output file for results.");
     new_line;
     Par_Con(file,nb_unk,p,ind_par,ind_var,var_sols,output);
