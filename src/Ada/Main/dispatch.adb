@@ -1,3 +1,6 @@
+with Standard_Natural_Numbers_io;
+ use Standard_Natural_Numbers_io;
+
 with text_io;                            use text_io;
 with Unix_Command_Line;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
@@ -10,6 +13,7 @@ with mainroco,bablroco;       -- general root counting
 with mainsmvc,babldmvc;       -- mixed-volume computation
 with maintrack;               -- path tracking
 with mainpoco,bablpoco;       -- polynomial continuation
+with bablpoco2,bablpoco4;     -- double double and quad double continuation
 with mainphc,bablphc;         -- main phc driver + blackbox
 with bablphc2,bablphc4;       -- blackbox in double double and quad double
 with mainvali,bablvali;       -- validation tool
@@ -234,6 +238,31 @@ procedure Dispatch is
     return res;
   end BlackBox_Precision;
 
+  function Continuation_Precision return natural32 is
+
+  -- DESCRIPTION :
+  --   Returns the precision of the blackbox polynomial continuation.
+  --   1 : the -p is followed by a space (or nothing);
+  --   2 : double double precision, as we have -p2 at the command line;
+  --   4 : quad double precision is given as -p4 at the command line.
+
+    res : natural32 := 1;
+
+  begin
+    for i in 1..Unix_Command_Line.Number_of_Arguments loop
+      declare
+        s : constant string := Unix_Command_Line.Argument(i);
+      begin
+        if s(2) = 'p' then
+          if s'last > 2 
+           then res := Convert(s(3..s'last)); exit;
+          end if;
+        end if;
+      end;
+    end loop;
+    return res;
+  end Continuation_Precision;
+
   function Find_Seed return natural32 is
 
   -- DESCRIPTION :
@@ -284,6 +313,7 @@ procedure Dispatch is
   --   second option and calls the appropriate main driver.
 
     bbprc : constant natural32 := BlackBox_Precision;
+    contprc : constant natural32 := Continuation_Precision;
 
   begin
    -- put("The blackbox precision : "); put(bbprc,1); new_line;
@@ -300,7 +330,14 @@ procedure Dispatch is
           when 't' => babldmvc(Number_of_Tasks,file1,file2);
           when others => babldmvc(0,file1,file2);
         end case;
-      when 'p'    => bablpoco(file1,file2,file3);
+      when 'p' =>
+        if bbprc = 2 or contprc = 2 then
+          bablpoco2(file1,file2,file3);
+        elsif bbprc = 4 or contprc = 4 then
+          bablpoco4(file1,file2,file3);
+        else
+          bablpoco(file1,file2,file3);
+        end if;
       when 'v'    => bablvali(file1,file2);
       when 'e'    => bablenum(file1,file2);
       when 't'    => 
@@ -407,9 +444,20 @@ procedure Dispatch is
   -- DESCRIPTION :
   --   Invokes the path trackers in PHCpack.
 
+    contprc : constant natural32 := Continuation_Precision;
+    bbprc : constant natural32 := BlackBox_Precision;
+
   begin
     case o2 is
-      when 'b' => bablpoco(file1,file2,file3);
+      when 'b' =>
+        put("The value of contprc : "); put(contprc,1); new_line;
+        if contprc = 2 or bbprc = 2 then
+          bablpoco2(file1,file2,file3);
+        elsif contprc = 4 or bbprc = 4 then
+          bablpoco4(file1,file2,file3);
+        else
+          bablpoco(file1,file2,file3);
+        end if;
       when 't'
         => declare
             -- nt : constant natural := Number_of_Tasks(2);

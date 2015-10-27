@@ -1,5 +1,7 @@
 Tue 27 Oct 2015 : mainphc.adb and black_box_solvers.adb changed for the 
-  renaming of the package black_box_poly_continuations.
+  renaming of the package black_box_poly_continuations.  Added calls to
+  bablpoco2 and bablpoco4 in dispatch.adb so phc -b -p2 and phc -b -p4
+  call the blackbox continuation in double double and quad double precision.
 
 Thu 22 Oct 2015 : version 2.4.03 is announced in greeting_banners.
 
