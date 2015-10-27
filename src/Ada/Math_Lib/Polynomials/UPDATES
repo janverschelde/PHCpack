@@ -1,4 +1,5 @@
-Mon 26 Oct 2015 : new packages {double, quad}_double_poly_systems_io.
+Mon 26 Oct 2015 : new packages {double, quad}_double_poly_systems_io, with
+  a later fix in the name of quad_double_poly_systems_io.adb.
 
 Sun 25 Oct 2015 : new packages {dobldobl, quaddobl}_complex_to_real_poly.
 
