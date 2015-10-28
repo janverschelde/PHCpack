@@ -5,9 +5,9 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
-with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
+with Standard_Complex_Polynomials;
 with Standard_Complex_to_Real_Poly;
-with Standard_Complex_Poly_Systems;    --  use Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;       use Standard_Complex_Poly_SysFun;
 with Standard_Complex_Laurentials;       use Standard_Complex_Laurentials;
@@ -15,17 +15,29 @@ with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Laur_Poly_Convertors;
 with Standard_System_Readers;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_to_Real_Poly;
+with DoblDobl_Complex_Poly_Strings;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_to_Real_Poly;
+with QuadDobl_Complex_Poly_Strings;
 with String_System_Readers;
 with Symbol_Table;
 with Standard_Complex_Laur_Strings;
 with Standard_Homotopy;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Multprec_Complex_Solutions;
 with Projective_Transformations;         use Projective_Transformations;
 with Standard_Root_Refiners;             use Standard_Root_Refiners;
 with Drivers_for_Poly_Continuation;      use Drivers_for_Poly_Continuation;
 with Standard_Parameter_Systems;         use Standard_Parameter_Systems;
+with DoblDobl_Parameter_Systems;         use DoblDobl_Parameter_Systems;
+with QuadDobl_Parameter_Systems;         use QuadDobl_Parameter_Systems;
 with Parameter_Homotopy_Continuation;    use Parameter_Homotopy_Continuation;
 with Multitasking_Continuation;
 with Write_Seed_Number;
@@ -38,7 +50,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
               ( outft : in file_type;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 target : in Complex_Number;
-                sols,refsols : in out Solution_List;
+                sols,refsols : in out Standard_Complex_Solutions.Solution_List;
                 solsfile : in boolean ) is
 
     epsxa,epsfa,tolsing : constant double_float := 10.0**(-8);
@@ -46,6 +58,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
     deflate : boolean := false;
 
     use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
   begin
     if Head_Of(sols).n > p'last
@@ -81,6 +94,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
   -- DESCRIPTION :
   --   Creates the output file and reads start system and start solutions
   --   for an artificial parameter homotopy for polynomial systems.
+
+    use Standard_Complex_Solutions;
 
     solsft,outft : file_type;
     sols,refsols : Solution_List;
@@ -128,6 +143,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
   --   Creates the output file and reads start system and start solutions
   --   for an artificial parameter homotopy for Laurent systems.
 
+    use Standard_Complex_Solutions;
+
     solsft,outft : file_type;
     sols,refsols : Solution_List;
    -- mpsols : Multprec_Complex_Solutions.Solution_List;
@@ -172,10 +189,44 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
                 p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
-  --   Dispatches to the coefficient parameter polynomial continuation.
+  --   Defines a setup for a parameter homotopy in standard double precision.
 
     outfile : file_type;
-    sols : Solution_List;
+    sols : Standard_Complex_Solutions.Solution_List;
+    nb_equ,nb_unk,nb_par : integer32;
+
+  begin
+    Read_Solution_Parameters(infile,outfile,p,sols,nb_equ,nb_unk,nb_par);
+    Coefficient_Parameter_Homotopy_Continuation
+      (outfile,p,sols,nb_equ,nb_unk,nb_par);
+  end Parameter_Homotopy;
+
+  procedure Parameter_Homotopy
+              ( infile : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Defines a setup for a parameter homotopy in double double precision.
+
+    outfile : file_type;
+    sols : DoblDobl_Complex_Solutions.Solution_List;
+    nb_equ,nb_unk,nb_par : integer32;
+
+  begin
+    Read_Solution_Parameters(infile,outfile,p,sols,nb_equ,nb_unk,nb_par);
+    Coefficient_Parameter_Homotopy_Continuation
+      (outfile,p,sols,nb_equ,nb_unk,nb_par);
+  end Parameter_Homotopy;
+
+  procedure Parameter_Homotopy
+              ( infile : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Defines a setup for a parameter homotopy in quad double precision.
+
+    outfile : file_type;
+    sols : QuadDobl_Complex_Solutions.Solution_List;
     nb_equ,nb_unk,nb_par : integer32;
 
   begin
@@ -189,12 +240,49 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
                 p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
-  --   Dispatches to the sweep homotopy.
+  --   Sets the parameters and runs the sweep homotopy
+  --   in standard double precision.
 
     outfile : file_type;
-    sols : Solution_List;
+    sols : Standard_Complex_Solutions.Solution_List;
     nb_equ,nb_unk,nb_par : integer32;
     isreal : boolean := Standard_Complex_to_Real_Poly.Is_Real(p);
+
+  begin
+    Read_Solution_Parameters(infile,outfile,p,sols,nb_equ,nb_unk,nb_par);
+    Sweep(outfile,isreal,p,sols,nb_equ,nb_unk,nb_par);
+  end Sweep_Homotopy;
+
+  procedure Sweep_Homotopy
+              ( infile : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Sets the parameters and runs the sweep homotopy
+  --   in double double precision.
+
+    outfile : file_type;
+    sols : DoblDobl_Complex_Solutions.Solution_List;
+    nb_equ,nb_unk,nb_par : integer32;
+    isreal : boolean := DoblDobl_Complex_to_Real_Poly.Is_Real(p);
+
+  begin
+    Read_Solution_Parameters(infile,outfile,p,sols,nb_equ,nb_unk,nb_par);
+    Sweep(outfile,isreal,p,sols,nb_equ,nb_unk,nb_par);
+  end Sweep_Homotopy;
+
+  procedure Sweep_Homotopy
+              ( infile : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+  -- DESCRIPTION :
+  --   Sets the parameters and runs the sweep homotopy
+  --   in quad double precision.
+
+    outfile : file_type;
+    sols : QuadDobl_Complex_Solutions.Solution_List;
+    nb_equ,nb_unk,nb_par : integer32;
+    isreal : boolean := QuadDobl_Complex_to_Real_Poly.Is_Real(p);
 
   begin
     Read_Solution_Parameters(infile,outfile,p,sols,nb_equ,nb_unk,nb_par);
@@ -205,6 +293,11 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
                ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                  ls : in Link_to_Array_of_Strings;
                  nt : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Calls the multitasking path trackers on the system p.
+  --   The string representation of the system p is in ls.
+  --   The number of tasks equals nt.
 
     outft : file_type;
 
@@ -217,12 +310,85 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
                ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
                  nt : in natural32 ) is
 
+  -- DESCRIPTION :
+  --   Multitasking for Laurent systems is not yet supported ?!
+
     outft : file_type;
 
   begin
     Create_Output_File(outft,outfilename);
+    new_line(outft);
+    put_line(outft,
+      "Multitasking path tracking not supported for Laurent systems.");
    -- Driver_to_Path_Tracker(outft,p,nt);
   end Multitasking_Secant_Homotopy;
+
+  function Prompt_for_Precision return character is
+
+  -- DESCRIPTION :
+  --   Shows the menu for the user to select the working precision
+  --   and returns '0', '1', or '2', respectively for
+  --    standard double, double double, or quad double precision.
+
+    res : character;
+
+  begin
+    new_line;
+    put_line("MENU for the working precision :");
+    put_line("  0. standard double precision;");
+    put_line("  1. double double precision; or");
+    put_line("  2. quad double precision.");
+    put("Type 0, 1, or 2 to select the working precision : ");
+    Ask_Alternative(res,"012");
+    return res;
+  end Prompt_for_Precision;
+
+  procedure Parameter_or_Sweep_Homotopy
+              ( inft : in out file_type;
+                lp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                ls : in Link_to_Array_of_Strings ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the type of homotopy: parameter or sweep,
+  --   and asks for the level of precision.
+
+    pos : constant character := Parameter_Homotopy_Continuation.Show_Menu;
+    prc : constant character := Prompt_for_Precision;
+
+  begin
+    case prc is 
+      when '0' =>
+        if pos = '1'
+         then Parameter_Homotopy(inft,lp.all);
+         else Sweep_Homotopy(inft,lp.all);
+        end if;
+      when '1' =>
+        declare
+          nvr : constant natural32 
+              := Standard_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
+          ddp : DoblDobl_Complex_Poly_Systems.Poly_Sys(lp'range)
+              := DoblDobl_Complex_Poly_Strings.Parse(nvr,ls.all);
+        begin
+          if pos = '1'
+           then Parameter_Homotopy(inft,ddp);
+           else Sweep_Homotopy(inft,ddp);
+          end if;
+        end;
+      when '2' =>
+        declare
+          nvr : constant natural32 
+              := Standard_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
+          qdp : QuadDobl_Complex_Poly_Systems.Poly_Sys(lp'range)
+              := QuadDobl_Complex_Poly_Strings.Parse(nvr,ls.all);
+        begin
+          if pos = '1'
+           then Parameter_Homotopy(inft,qdp);
+           else Sweep_Homotopy(inft,qdp);
+          end if;
+        end;
+      when others => null;
+    end case;
+  end Parameter_or_Sweep_Homotopy;
 
   procedure Polynomial_Tracker
               ( inft : in out file_type;
@@ -234,11 +400,10 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
   --   on a regular polynomial system.
 
     nva,neq : natural32;
-    ans : character;
 
   begin
     neq := natural32(lp'last);
-    nva := Number_of_Unknowns(lp(lp'first));
+    nva := Standard_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
     if nt = 0 then
       if nva = neq then
         close(inft);
@@ -250,11 +415,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
         if nva < neq then
           put_line("Refuse to do homotopy on overdetermined system.");
         else
-          ans := Parameter_Homotopy_Continuation.Show_Menu;
-          if ans = '1'
-           then Parameter_Homotopy(inft,lp.all);
-           else Sweep_Homotopy(inft,lp.all);
-          end if;
+          new_line;
+          Parameter_or_Sweep_Homotopy(inft,lp,ls);
         end if;
       end if;
     else

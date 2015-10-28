@@ -1,7 +1,8 @@
 Tue 27 Oct 2015 : for consistency, renamed black_box_poly_continuations into
   standard_blackbox_continuation, which changed bablpoco and ts_bbpoco.
   New bablpoco2 and bablpoco4 for blackbox continuation in double double
-  and quad double precision.
+  and quad double precision.  Extended mainpoco.adb so that phc -p can do
+  a parameter or a sweep homotopy with double doubles and quad doubles.
 
 Sat 24 Oct 2015 : changed mainpoco.adb for renaming of systems_with_parameters
   into standard_parameter_systems.
