@@ -1436,6 +1436,10 @@ ts_use_giftwrap:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_use_giftwrap.adb \
               -o $(BIN)/ts_use_giftwrap
 
+ts_use_sweep:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_use_sweep.adb \
+              -o $(BIN)/ts_use_sweep
+
 # files in feedback :
 
 lib.a:$(PHCAda)/../Feedback/*.c $(PHCAda)/../Feedback/*.h
