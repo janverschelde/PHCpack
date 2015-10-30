@@ -38,3 +38,26 @@ function use_sweep ( job : integer32;
 --                  an upper bound on the length of the string to store
 --                  the sequence of symbols (separated by one space);
 --          =   7 : clears the definition of the parameters in the sweep.
+--          =   8 : sets the start or target values of the parameters,
+--                  in standard double, double double, or quad double
+--                  precision, on input are
+--                  in a[0] : the precision level, 0, 1, or 2 for standard
+--                  double, double double, or quad double respectively,
+--                  in a[0] : 0 or 1, for start or target respectively,
+--                  in b[0] : the number of coefficients to store the values
+--                  real and imaginary parts of the start or target,
+--                  irrespective the precision (d, dd, or qd), and
+--                  in c : the values of the start or target parameters;
+--          =   9 : gets the start or target values of the parameters,
+--                  in standard double, double double, or quad double
+--                  precision, on input are
+--                  in a[0] : the precision level, 0, 1, or 2 for standard
+--                  double, double double, or quad double respectively,
+--                  in a[0] : 0 or 1, for start or target respectively,
+--                  in b[0] : the number of coefficients to store the values
+--                  real and imaginary parts of the start or target,
+--                  irrespective the precision (d, dd, or qd), and
+--                  on return in c are the values of the start or target.
+
+-- ON RETURN :
+--   0 if all went well.

@@ -6,6 +6,9 @@ with Symbol_Table;
 -- with Symbol_Table_io;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_Integer_Vectors;
+with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Parameter_Homotopy_State;
 
 function use_sweep ( job : integer32;
@@ -169,6 +172,126 @@ function use_sweep ( job : integer32;
     return 0;
   end Job7;
 
+  function Job8 return integer32 is -- set start or target parameter values
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    precision : constant natural32 := natural32(v_a(v_a'first));
+    startortarget : constant natural32 := natural32(v_a(v_a'first+1));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    dim : constant integer32 := integer32(v_b(v_b'first));
+
+  begin
+    if precision = 0 then
+      declare
+        cff : Standard_Complex_Vectors.Vector(1..dim);
+      begin
+        Assign(natural32(2*dim),c,cff);
+        if startortarget = 0 then
+          Parameter_Homotopy_State.Set_Start(cff);
+        elsif startortarget = 1 then
+          Parameter_Homotopy_State.Set_Target(cff);
+        else
+          return 8;
+        end if;
+      end;
+    elsif precision = 1 then
+      declare
+        cff : DoblDobl_Complex_Vectors.Vector(1..dim);
+      begin
+        Assign(natural32(4*dim),c,cff);
+        if startortarget = 0 then
+          Parameter_Homotopy_State.Set_Start(cff);
+        elsif startortarget = 1 then
+          Parameter_Homotopy_State.Set_Target(cff);
+        else
+          return 8;
+        end if;
+      end;
+    elsif precision = 2 then
+      declare
+        cff : QuadDobl_Complex_Vectors.Vector(1..dim);
+      begin
+        Assign(natural32(8*dim),c,cff);
+        if startortarget = 0 then
+          Parameter_Homotopy_State.Set_Start(cff);
+        elsif startortarget = 1 then
+          Parameter_Homotopy_State.Set_Target(cff);
+        else
+          return 8;
+        end if;
+      end;
+    else
+      return 8;
+    end if;
+    return 0;
+  end Job8;
+
+  function Job9 return integer32 is -- get start or target parameter values
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    precision : constant natural32 := natural32(v_a(v_a'first));
+    startortarget : constant natural32 := natural32(v_a(v_a'first+1));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    dim : constant integer32 := integer32(v_b(v_b'first));
+
+    use Standard_Complex_Vectors;
+    use DoblDobl_Complex_Vectors;
+    use QuadDobl_Complex_Vectors;
+
+  begin
+    if precision = 0 then
+      declare
+        lnkcff : Standard_Complex_Vectors.Link_to_Vector;
+      begin
+        if startortarget = 0 then
+          lnkcff := Parameter_Homotopy_State.Get_Start;
+        elsif startortarget = 1 then
+          lnkcff := Parameter_Homotopy_State.Get_Target;
+        else
+          return 9;
+        end if;
+        if lnkcff /= null
+         then Assign(lnkcff.all,c); 
+        end if;
+      end;
+    elsif precision = 1 then
+      declare
+        lnkcff : DoblDobl_Complex_Vectors.Link_to_Vector;
+      begin
+        if startortarget = 0 then
+          lnkcff := Parameter_Homotopy_State.Get_Start;
+        elsif startortarget = 1 then
+          lnkcff := Parameter_Homotopy_State.Get_Target;
+        else
+          return 9;
+        end if;
+        if lnkcff /= null
+         then Assign(lnkcff.all,c); 
+        end if;
+      end;
+    elsif precision = 2 then
+      declare
+        lnkcff : QuadDobl_Complex_Vectors.Link_to_Vector;
+      begin
+        if startortarget = 0 then
+          lnkcff := Parameter_Homotopy_State.Get_Start;
+        elsif startortarget = 1 then
+          lnkcff := Parameter_Homotopy_State.Get_Target;
+        else
+          return 9;
+        end if;
+        if lnkcff /= null
+         then Assign(lnkcff.all,c); 
+        end if;
+      end;
+    else
+      return 9;
+    end if;
+    return 0;
+  end Job9;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -180,6 +303,8 @@ function use_sweep ( job : integer32;
       when 5 => return Job5; -- return parameters numerically
       when 6 => return Job6; -- return parameters symbolically
       when 7 => return Job7; -- clear parameter definitions
+      when 8 => return Job8; -- set start or target parameter values
+      when 9 => return Job9; -- get start or target parameter values
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   end Handle_Jobs;
