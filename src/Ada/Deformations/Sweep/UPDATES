@@ -1,5 +1,6 @@
 Fri 30 Oct 2015 : factored out code of parameter_homotopy_continuation into
-  the new package complex_convex_continuation.
+  the new package complex_convex_continuation.  Added silent versions to
+  the procedures in complex_convex_continuation.
 
 Tue 27 Oct 2015 : completed ts_parcon and ts_realcont with the proper calls to 
   the double double and quad ouble versions of the test procedures.

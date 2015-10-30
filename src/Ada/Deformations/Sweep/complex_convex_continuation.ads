@@ -81,7 +81,7 @@ package Complex_Convex_Continuation is
                     ( t : Standard_Complex_Numbers.Complex_Number )
                     return Standard_Complex_Vectors.Vector;
     -- returns derivatives of parameters with respect to t
-  procedure Standard_Parameter_Continuation
+  procedure Standard_Reporting_Parameter_Continuation
               ( file : in file_type;
                 n : in integer32;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -98,7 +98,7 @@ package Complex_Convex_Continuation is
                     ( t : DoblDobl_Complex_Numbers.Complex_Number )
                     return DoblDobl_Complex_Vectors.Vector;
     -- returns derivatives of parameters with respect to t
-  procedure DoblDobl_Parameter_Continuation
+  procedure DoblDobl_Reporting_Parameter_Continuation
               ( file : in file_type;
                 n : in integer32;
                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -115,7 +115,7 @@ package Complex_Convex_Continuation is
                     ( t : QuadDobl_Complex_Numbers.Complex_Number )
                     return QuadDobl_Complex_Vectors.Vector;
     -- returns derivatives of parameters with respect to t
-  procedure QuadDobl_Parameter_Continuation
+  procedure QuadDobl_Reporting_Parameter_Continuation
               ( file : in file_type;
                 n : in integer32;
                 p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
@@ -128,9 +128,74 @@ package Complex_Convex_Continuation is
   --   Executes the parameter continuation for the homotopy defined by
   --   the system p and for parameters defined by the generics functions,
   --   in standard double, double double, or quad double precision.
+  --   The reporting versions allow for the writing of diagnostics
+  --   to file, depending on the setting of the output code level.
 
   -- ON ENTRY :
   --   file     for intermediate output and diagnostics;
+  --   n        number of unknowns and parameters in p.
+  --   p        polynomial system with parameters;
+  --   pars     indices to the parameter variables in p;
+  --   vars     indices to the unknown variables in p;
+  --   sols     start solutions for start values of parameters;
+  --   output   true if intermediate output during continuation.
+
+  -- ON RETURN :
+  --   sols     solutions for target values of parameters.
+
+  generic
+    with function Evaluate_Parameters 
+                    ( t : Standard_Complex_Numbers.Complex_Number )
+                    return Standard_Complex_Vectors.Vector;
+    -- returns value of parameters at t
+    with function Differentiate_Parameters
+                    ( t : Standard_Complex_Numbers.Complex_Number )
+                    return Standard_Complex_Vectors.Vector;
+    -- returns derivatives of parameters with respect to t
+  procedure Standard_Silent_Parameter_Continuation
+              ( n : in integer32;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                pars : in Standard_Integer_Vectors.Vector;
+                vars : in Standard_Integer_Vectors.Vector;
+		sols : in out Standard_Complex_Solutions.Solution_List );
+  generic
+    with function Evaluate_Parameters 
+                    ( t : DoblDobl_Complex_Numbers.Complex_Number )
+                    return DoblDobl_Complex_Vectors.Vector;
+    -- returns value of parameters at t
+    with function Differentiate_Parameters
+                    ( t : DoblDobl_Complex_Numbers.Complex_Number )
+                    return DoblDobl_Complex_Vectors.Vector;
+    -- returns derivatives of parameters with respect to t
+  procedure DoblDobl_Silent_Parameter_Continuation
+              ( n : in integer32;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                pars : in Standard_Integer_Vectors.Vector;
+                vars : in Standard_Integer_Vectors.Vector;
+		sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  generic
+    with function Evaluate_Parameters 
+                    ( t : QuadDobl_Complex_Numbers.Complex_Number )
+                    return QuadDobl_Complex_Vectors.Vector;
+    -- returns value of parameters at t
+    with function Differentiate_Parameters
+                    ( t : QuadDobl_Complex_Numbers.Complex_Number )
+                    return QuadDobl_Complex_Vectors.Vector;
+    -- returns derivatives of parameters with respect to t
+  procedure QuadDobl_Silent_Parameter_Continuation
+              ( n : in integer32;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                pars : in Standard_Integer_Vectors.Vector;
+                vars : in Standard_Integer_Vectors.Vector;
+		sols : in out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Executes the parameter continuation for the homotopy defined by
+  --   the system p and for parameters defined by the generics functions,
+  --   in standard double, double double, or quad double precision.
+  --   The silent versions do not write any output to file or screen.
+
+  -- ON ENTRY :
   --   n        number of unknowns and parameters in p.
   --   p        polynomial system with parameters;
   --   pars     indices to the parameter variables in p;
