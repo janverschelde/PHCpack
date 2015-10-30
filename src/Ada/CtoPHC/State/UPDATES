@@ -2,6 +2,7 @@ Thu 29 Oct 2015 : extended parameter_homotopy_state with management of the
   values for start and target values at various level of precision.
   Extended use_sweep with operations to set and get the start and target
   values for the parameters, tested by ts_use_sweep.
+  Added the ten jobs of use_sweep to use_c2phc.
 
 Wed 28 Oct 2015 : new package parameter_homotopy_state and C gateway
   function use_sweep, tested by ts_use_sweep.

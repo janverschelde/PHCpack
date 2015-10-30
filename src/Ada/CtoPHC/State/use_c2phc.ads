@@ -1570,6 +1570,53 @@ function use_c2phc ( job : integer32;
 --                 note that n/8 is the dimension of the complex vector,
 --                 and n/8 is then also the dimension of the solutions;
 --
+--  Operating a sweep homotopy :
+--
+--   job =   610 : defines the indices of the variables that serve
+--                 as parameters in the sweep homotopy numerically, given 
+--                 in a[0] the number of equations,
+--                 in a[1] the total number of variables,
+--                 in a[2] the number m of parameters,
+--                 in b a list of m integers with indices
+--                 in the range 1..n defining the parameters;
+--       =   611 : defines the parameters in the sweep homotopy symbolically,
+--                 given in a[0] the number of equations,
+--                 in a[1] the total number of variables,
+--                 in a[2] the number m of parameters, and
+--                 in a[3] the number of characters stored in b,
+--                 the symbols in b are separated by one space,
+--                 and the symbol table must be initialized properly
+--                 so it contains all the symbols listed in b;
+--       =   612 : returns in a the number of equations;
+--       =   613 : returns in a the number of variables;
+--       =   614 : returns in a the number of parameters;
+--       =   615 : returns the indices of the parameters in a;
+--       =   616 : returns in b the string representations of the
+--                 parameters in the sweep homotopy, given on input in a
+--                 an upper bound on the length of the string to store
+--                 the sequence of symbols (separated by one space);
+--       =   617 : clears the definition of the parameters in the sweep.
+--       =   618 : sets the start or target values of the parameters,
+--                 in standard double, double double, or quad double
+--                 precision, on input are
+--                 in a[0] : the precision level, 0, 1, or 2 for standard
+--                 double, double double, or quad double respectively,
+--                 in a[0] : 0 or 1, for start or target respectively,
+--                 in b[0] : the number of coefficients to store the values
+--                 real and imaginary parts of the start or target,
+--                 irrespective the precision (d, dd, or qd), and
+--                 in c : the values of the start or target parameters;
+--       =   619 : gets the start or target values of the parameters,
+--                 in standard double, double double, or quad double
+--                 precision, on input are
+--                 in a[0] : the precision level, 0, 1, or 2 for standard
+--                 double, double double, or quad double respectively,
+--                 in a[0] : 0 or 1, for start or target respectively,
+--                 in b[0] : the number of coefficients to store the values
+--                 real and imaginary parts of the start or target,
+--                 irrespective the precision (d, dd, or qd), and
+--                 on return in c are the values of the start or target.
+--
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
 --   or job not in the right range.

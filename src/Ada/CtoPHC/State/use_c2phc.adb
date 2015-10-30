@@ -84,7 +84,7 @@ with use_c2pieri,use_c2lrhom;
 with use_c2fac;
 with use_roco;
 with use_celcon;
-with use_track;
+with use_track,use_sweep;
 with use_mapcon;
 with use_nxtsol;
 with unisolve,use_giftwrap;
@@ -2339,6 +2339,8 @@ function use_c2phc ( job : integer32;
       when 590..596 => return use_scaling(job-589,a,b,c);
      -- size limits of string representations of polynomials
       when 600..607 => return use_syscon(job-520,a,b,c);
+     -- run the sweep homotopy :
+      when 610..619 => return use_sweep(job-610,a,b,c);
      -- blackbox solvers in double double and quad double precision
       when 700 => return Job700; -- dobldobl poly system blackbox solver
       when 701 => return Job701; -- dobldobl Laurent poly blackbox solver
