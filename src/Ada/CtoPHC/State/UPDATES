@@ -1,3 +1,6 @@
+Fri 30 Oct 2015 : added call to starting a complex convex continuation in
+  use_sweep and use_c2phc.
+
 Thu 29 Oct 2015 : extended parameter_homotopy_state with management of the
   values for start and target values at various level of precision.
   Extended use_sweep with operations to set and get the start and target

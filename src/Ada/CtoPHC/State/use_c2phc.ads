@@ -1615,7 +1615,20 @@ function use_c2phc ( job : integer32;
 --                 in b[0] : the number of coefficients to store the values
 --                 real and imaginary parts of the start or target,
 --                 irrespective the precision (d, dd, or qd), and
---                 on return in c are the values of the start or target.
+--                 on return in c are the values of the start or target;
+--       =   620 : runs a complex convex-parameter sweep between the
+--                 defined values of the parameter for start and target,
+--                 with on input 
+--                 in a[0] : the precision level, 0, 1, or 2 for standard
+--                 double, double double, or quad double respectively,
+--                 in a[1] : 0, 1, or 2 for the choice of the gamma,
+--                 0: randomly generated gamma, should be the default,
+--                 1: no gamma constant, gamma = 1 (which could fail),
+--                 2: user given gamma, with real and complex part in
+--                 c[0] and c[1] respectively;
+--                 for this to work, the proper systems and solutions
+--                 containers must be initialized, on return, the new
+--                 solutions are stored in the solutions container.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
