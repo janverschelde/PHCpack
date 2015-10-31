@@ -1,4 +1,4 @@
-PHCpack as a library of C functions with a state machine in PHCv2.4.03
+PHCpack as a library of C functions with a state machine in PHCv2.4.04
 
 This directory collects header files and definitions of C which bind the
 operations of PHCpack as a state machine in a systematic manner.
@@ -79,6 +79,9 @@ ts_list2str          : interactive test on conversion
 ------------------------------------------------------------------------------
 scalers.c            : scale systems and solutions
 lib_scale.c          : test on the scaling methods
+------------------------------------------------------------------------------
+sweep.c              : interface to the sweep homotopy
+lib_sweep.c          : test on the sweep
 ------------------------------------------------------------------------------
 adepath_d            : algorithmic diff in trackers with doubles
 adepath_dd           : algorithmic diff in trackers with double doubles

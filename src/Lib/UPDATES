@@ -1,3 +1,6 @@
+Fri 30 Oct 2015 : new module sweep, tested by lib_sweep.c, currently only
+  for the definitions of the parameters in a sweep homotopy.
+
 Thu 22 Oct 2015 : extra verify parameter in use_c2lrhom changed the
   schubert.h, schubert.c, and lib_lrhom.c.  Also updated phcpy2c.h
   and phcpy2.c for the extra verification parameter.
