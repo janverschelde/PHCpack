@@ -2579,6 +2579,21 @@ lib_nxtsol_cpp:
                     next_track.o lib_nxtsol.o -o $(BIN)/lib_nxtsol \
                  --LINK=g++
 
+lib_sweep:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gcc -c -O2 $(PHCLib)/sweep.c
+	gcc -c -O2 $(PHCLib)/lib_sweep.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc sweep.o lib_sweep.o -o $(BIN)/lib_sweep
+
+lib_sweep_cpp:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/sweep.c
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/lib_sweep.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc sweep.o lib_sweep.o -o $(BIN)/lib_sweep \
+                 --LINK=g++
+
 lib_pieri:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2pieri.adb
 	gcc -c -O2 $(PHCLib)/lib_pieri.c
