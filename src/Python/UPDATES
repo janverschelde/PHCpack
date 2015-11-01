@@ -1,3 +1,6 @@
+Sun 1 Nov 2015 : added skeleton for a new module sweepers.py, updating
+  setup.py, to track paths defined by a sweep homotopy.
+
 Fri 23 Oct 2015 : in schubert.py, changed parameter verify into vrfcnd
   for pylint warnings; improved random_trinomials() in solver.py.
   Some small changes in trackers.py for pylint warnings.

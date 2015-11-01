@@ -20,8 +20,8 @@ setup(
     version = '0.3.2' ,
     packages = ['phcpy'] ,
     py_modules = ['phcpy/interface', 'phcpy/solver', 'phcpy/solutions', \
-                  'phcpy/trackers', 'phcpy/sets', 'phcpy/maps', \
-                  'phcpy/schubert' , 'phcpy/polytopes', \
+                  'phcpy/trackers', 'phcpy/sweepers', 'phcpy/sets', \
+                  'phcpy/maps', 'phcpy/schubert' , 'phcpy/polytopes', \
                   'phcpy/examples', 'phcpy/families' ] ,
     license = 'GNU GENERAL PUBLIC LICENSE version 2 or higher' ,
     data_files = [(get_python_lib()+'/phcpy', ['phcpy/phcpy2c.so'])] ,
