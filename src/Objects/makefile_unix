@@ -2870,6 +2870,7 @@ phcpy2c.so:
 	gcc -static -c -fPIC -O2 $(PHCLib)/lists_and_strings.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/celcon.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/scalers.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/sweep.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/witset.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/unisolvers.c
 	gcc -static -c -fPIC -O2 $(PHCLib)/giftwrappers.c
@@ -2884,6 +2885,7 @@ phcpy2c.so:
 	gnatlink -shared -C use_c2phc syscon.o solcon.o product.o celcon.o \
             lists_and_strings.o phcpack.o witset.o schubert.o mapcon.o \
             next_track.o phcpy2c.o unisolvers.o giftwrappers.o scalers.o \
+            sweep.o \
             -o ../Python/PHCpy/phcpy/phcpy2c.so -lm
 
 phcpy2c.a:
