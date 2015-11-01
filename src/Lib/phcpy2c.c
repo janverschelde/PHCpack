@@ -13,6 +13,7 @@
 #include "lists_and_strings.h"
 #include "celcon.h"
 #include "scalers.h"
+#include "sweep.h"
 #include "witset.h"
 #include "mapcon.h"
 #include "next_track.h"
@@ -3699,6 +3700,423 @@ static PyObject *py2c_scale_quaddobl_solutions
    return Py_BuildValue("i",fail);
 }
 
+/* wrapping functions to the sweep homotopies */
+
+static PyObject *py2c_sweep_define_parameters_numerically
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nq,nv,np,cnt;
+   char *strpars;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiis",&nq,&nv,&np,&strpars)) return NULL;
+
+   cnt = itemcount(strpars);
+   {
+      int pars[cnt];
+
+      str2intlist(cnt,strpars,pars);
+      fail = sweep_define_parameters_numerically(nq,nv,np,pars);
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_sweep_define_parameters_symbolically
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nq,nv,np,nc;
+   char *pars;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiis",&nq,&nv,&np,&nc,&pars)) return NULL;
+
+   fail = sweep_define_parameters_symbolically(nq,nv,np,nc,pars);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_sweep_get_number_of_equations
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nb;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+
+   fail = sweep_get_number_of_equations(&nb);
+
+   return Py_BuildValue("i",nb);
+}
+
+static PyObject *py2c_sweep_get_number_of_variables
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nb;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+
+   fail = sweep_get_number_of_variables(&nb);
+
+   return Py_BuildValue("i",nb);
+}
+
+static PyObject *py2c_sweep_get_number_of_parameters
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nb;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+
+   fail = sweep_get_number_of_parameters(&nb);
+
+   return Py_BuildValue("i",nb);
+}
+
+static PyObject *py2c_sweep_get_indices_numerically
+ ( PyObject *self, PyObject *args )
+{
+   int fail,np,nc;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+
+   fail = sweep_get_number_of_parameters(&np);
+   {
+      int idx[np];
+      char stridx[np*10];
+
+      fail = sweep_get_indices_numerically(idx);
+
+      nc = intlist2str(np,idx,stridx);
+
+      return Py_BuildValue("s",stridx);
+   }
+}
+
+static PyObject *py2c_sweep_get_indices_symbolically
+ ( PyObject *self, PyObject *args )
+{
+   int fail,np,nc;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+
+   fail = sweep_get_number_of_parameters(&np);
+   {
+      char buf[np*20]; /* assumes no more than 20 characters per symbol */
+
+      fail = sweep_get_indices_symbolically(&nc,buf);
+
+      buf[nc] = '\0';
+
+      return Py_BuildValue("s",buf);
+   }
+}
+
+static PyObject *py2c_sweep_clear_definitions
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = sweep_clear_definitions();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_sweep_set_standard_start
+ ( PyObject *self, PyObject *args )
+{
+   int fail,m;
+   char *strvals;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&m,&strvals)) return NULL;
+   {
+      const int n = 2*m;
+      double vals[n];
+
+      str2dbllist(n,strvals,vals);
+
+      fail = sweep_set_standard_start(n,vals);
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_sweep_set_standard_target
+ ( PyObject *self, PyObject *args )
+{
+   int fail,m;
+   char *strvals;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&m,&strvals)) return NULL;
+   {
+      const int n = 2*m;
+      double vals[n];
+
+      str2dbllist(n,strvals,vals);
+
+      fail = sweep_set_standard_target(n,vals);
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_sweep_set_dobldobl_start
+ ( PyObject *self, PyObject *args )
+{
+   int fail,m;
+   char *strvals;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&m,&strvals)) return NULL;
+   {
+      const int n = 4*m;
+      double vals[n];
+
+      str2dbllist(n,strvals,vals);
+
+      fail = sweep_set_dobldobl_start(n,vals);
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_sweep_set_dobldobl_target
+ ( PyObject *self, PyObject *args )
+{
+   int fail,m;
+   char *strvals;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&m,&strvals)) return NULL;
+   {
+      const int n = 4*m;
+      double vals[n];
+
+      str2dbllist(n,strvals,vals);
+
+      fail = sweep_set_dobldobl_target(n,vals);
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_sweep_set_quaddobl_start
+ ( PyObject *self, PyObject *args )
+{
+   int fail,m;
+   char *strvals;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&m,&strvals)) return NULL;
+   {
+      const int n = 8*m;
+      double vals[n];
+
+      str2dbllist(n,strvals,vals);
+
+      fail = sweep_set_quaddobl_start(n,vals);
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_sweep_set_quaddobl_target
+ ( PyObject *self, PyObject *args )
+{
+   int fail,m;
+   char *strvals;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&m,&strvals)) return NULL;
+   {
+      const int n = 8*m;
+      double vals[n];
+
+      str2dbllist(n,strvals,vals);
+
+      fail = sweep_set_quaddobl_target(n,vals);
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_sweep_get_standard_start
+ ( PyObject *self, PyObject *args )
+{
+   int fail,n,nc;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&n)) return NULL;
+   {
+      double cff[n];
+      char strcff[n*25];
+
+      fail = sweep_get_standard_start(n,cff);
+
+      nc = dbllist2str(n,cff,strcff);
+
+      return Py_BuildValue("s",strcff);
+   }
+}
+
+static PyObject *py2c_sweep_get_standard_target
+ ( PyObject *self, PyObject *args )
+{
+   int fail,n,nc;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&n)) return NULL;
+   {
+      double cff[n];
+      char strcff[n*25];
+
+      fail = sweep_get_standard_target(n,cff);
+
+      nc = dbllist2str(n,cff,strcff);
+
+      return Py_BuildValue("s",strcff);
+   }
+}
+
+static PyObject *py2c_sweep_get_dobldobl_start
+ ( PyObject *self, PyObject *args )
+{
+   int fail,n,nc;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&n)) return NULL;
+   {
+      double cff[n];
+      char strcff[n*25];
+
+      fail = sweep_get_dobldobl_start(n,cff);
+
+      nc = dbllist2str(n,cff,strcff);
+
+      return Py_BuildValue("s",strcff);
+   }
+}
+
+static PyObject *py2c_sweep_get_dobldobl_target
+ ( PyObject *self, PyObject *args )
+{
+   int fail,n,nc;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&n)) return NULL;
+   {
+      double cff[n];
+      char strcff[n*25];
+
+      fail = sweep_get_dobldobl_target(n,cff);
+
+      nc = dbllist2str(n,cff,strcff);
+
+      return Py_BuildValue("s",strcff);
+   }
+}
+
+static PyObject *py2c_sweep_get_quaddobl_start
+ ( PyObject *self, PyObject *args )
+{
+   int fail,n,nc;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&n)) return NULL;
+   {
+      double cff[n];
+      char strcff[n*25];
+
+      fail = sweep_get_quaddobl_start(n,cff);
+
+      nc = dbllist2str(n,cff,strcff);
+
+      return Py_BuildValue("s",strcff);
+   }
+}
+
+static PyObject *py2c_sweep_get_quaddobl_target
+ ( PyObject *self, PyObject *args )
+{
+   int fail,n,nc;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&n)) return NULL;
+   {
+      double cff[n];
+      char strcff[n*25];
+
+      fail = sweep_get_quaddobl_target(n,cff);
+
+      nc = dbllist2str(n,cff,strcff);
+
+      return Py_BuildValue("s",strcff);
+   }
+}
+
+static PyObject *py2c_sweep_standard_run
+ ( PyObject *self, PyObject *args )
+{
+   int fail,choice;
+   double g_re,g_im;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"idd",&choice,&g_re,&g_im)) return NULL;   
+
+   fail = sweep_standard_run(choice,&g_re,&g_im);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_sweep_dobldobl_run
+ ( PyObject *self, PyObject *args )
+{
+   int fail,choice;
+   double g_re,g_im;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"idd",&choice,&g_re,&g_im)) return NULL;   
+   {
+      if(choice < 2)
+         fail = sweep_dobldobl_run(choice,&g_re,&g_im);
+      else
+      {
+         double regamma[2];
+         double imgamma[2];
+         regamma[0] = g_re; regamma[1] = 0.0;
+         imgamma[0] = g_im; imgamma[1] = 0.0;
+         fail = sweep_dobldobl_run(choice,regamma,imgamma);
+      }
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_sweep_quaddobl_run
+ ( PyObject *self, PyObject *args )
+{
+   int fail,choice;
+   double g_re,g_im;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"idd",&choice,&g_re,&g_im)) return NULL;   
+   {
+      if(choice < 2)
+         fail = sweep_dobldobl_run(choice,&g_re,&g_im);
+      else
+      {
+         double regamma[4];
+         double imgamma[4];
+         regamma[0] = g_re; regamma[1] = 0.0;
+         regamma[2] = 0.0;  regamma[3] = 0.0;
+         imgamma[0] = g_im; imgamma[1] = 0.0;
+         imgamma[2] = 0.0;  imgamma[3] = 0.0;
+         fail = sweep_quaddobl_run(choice,regamma,imgamma);
+      }
+   }
+   return Py_BuildValue("i",fail);
+}
+
 /* wrapping functions to manipulate algebraic sets */
 
 static PyObject *py2c_embed_system ( PyObject *self, PyObject *args )
@@ -5542,6 +5960,75 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_scale_quaddobl_solutions",
      py2c_scale_quaddobl_solutions, METH_VARARGS,
     "Replaces the solutions in the quaddobl solutions container with\n the scaled solutions, scaled with quad double precision arithmetic,\n using the given scaling coefficients.\n On entry are two parameters: an integer and a string.\n The integer contains the number of elements in the list\n of scaling coefficients (doubles) stored in the string.\n The format of the string is the Python string representation\n of a list of doubles, i.e.: starting with [ and ending with ]."},
+   {"py2c_sweep_define_parameters_numerically",
+     py2c_sweep_define_parameters_numerically, METH_VARARGS,
+    "Defines the indices to the variables that serve as parameters\n numerically, that is: via integer indices.\n On entry are three integer numbers and a string.\n The string is a string representation of a Python list of integers,\n The three integers are the number of equations, the number of variables,\n and the number of parameters.  The number of variables m includes the\n number of parameters.  Then there should be as many as m indices in\n the list of integers to define which of the variables are parameters."},
+   {"py2c_sweep_define_parameters_symbolically",
+     py2c_sweep_define_parameters_symbolically, METH_VARARGS,
+    "Defines the indices to the variables that serve as parameters\n symbolically, that is, as names of variables.\n For this to work, the symbol table must be initialized.\n On entry are four integer numbers and a string.\n The four integers are the number of equations, the number of variables,\n the number of parameters (the number of variables m includes the\n number of parameters), and the number of characters in the string.\n The string contains the names of the parameters, separated by one comma.\n For this to work, the symbol table must be initialized, e.g.:\n via the reading of a polynomial system."},
+   {"py2c_sweep_get_number_of_equations",
+     py2c_sweep_get_number_of_equations, METH_VARARGS,
+    "Returns the number of equations in the sweep homotopy."},
+   {"py2c_sweep_get_number_of_variables",
+     py2c_sweep_get_number_of_variables, METH_VARARGS,
+    "Returns the number of variables in the sweep homotopy."},
+   {"py2c_sweep_get_number_of_parameters",
+     py2c_sweep_get_number_of_parameters, METH_VARARGS,
+    "Returns the number of parameters in the sweep homotopy."},
+   {"py2c_sweep_get_indices_numerically",
+     py2c_sweep_get_indices_numerically, METH_VARARGS,
+    "Returns the indices of the variables that are parameters,\n as the string representation of a Python list of integers."},
+   {"py2c_sweep_get_indices_symbolically",
+     py2c_sweep_get_indices_symbolically, METH_VARARGS,
+    "Returns a string with the names of the parameters,\n each separated by one space."},
+   {"py2c_sweep_clear_definitions",
+     py2c_sweep_clear_definitions, METH_VARARGS,
+    "Clears the definitions in the sweep homotopy."},
+   {"py2c_sweep_set_standard_start",
+     py2c_sweep_set_standard_start, METH_VARARGS,
+    "Sets the start values for the m parameters in standard double precision,\n giving on input an integer m and 2*m doubles, with the consecutive\n real and imaginary parts for the start values of all m parameters.\n The doubles are given in a string representation of a Python\n list of doubles."},
+   {"py2c_sweep_set_standard_target",
+     py2c_sweep_set_standard_target, METH_VARARGS,
+    "Sets the target values for the m parameters in standard double precision,\n giving on input an integer m and 2*m doubles, with the consecutive\n real and imaginary parts for the target values of all m parameters."},
+   {"py2c_sweep_set_dobldobl_start",
+     py2c_sweep_set_dobldobl_start, METH_VARARGS,
+    "Sets the start values for the m parameters in double double precision,\n giving on input an integer m and 4*m doubles, with the consecutive\n real and imaginary parts for the start values of all m parameters."},
+   {"py2c_sweep_set_dobldobl_target",
+     py2c_sweep_set_dobldobl_target, METH_VARARGS,
+    "Sets the target values for the m parameters in double double precision,\n giving on input an integer m and 4*m doubles, with the consecutive\n real and imaginary parts for the target values of all m parameters."},
+   {"py2c_sweep_set_quaddobl_start",
+     py2c_sweep_set_quaddobl_start, METH_VARARGS,
+    "Sets the start values for the m parameters in quad double precision,\n giving on input an integer m and 8*m doubles, with the consecutive\n real and imaginary parts for the start values of all m parameters."},
+   {"py2c_sweep_set_quaddobl_target",
+     py2c_sweep_set_quaddobl_target, METH_VARARGS,
+    "Sets the target values for the m parameters in quad double precision,\n giving on input an integer m and 8*m doubles, with the consecutive\n real and imaginary parts for the target values of all m parameters."},
+   {"py2c_sweep_get_standard_start",
+     py2c_sweep_get_standard_start, METH_VARARGS,
+    "Gets the start values for the parameters in standard double precision,\n giving on input the number n of doubles that need to be returned.\n On return will be n doubles, for the consecutive real and imaginary\n parts for the start values of all parameters,\n stored in the string representation of a Python list of doubles."},
+   {"py2c_sweep_get_standard_target",
+     py2c_sweep_get_standard_target, METH_VARARGS,
+    "Gets the target values for the parameters in standard double precision,\n giving on input the number n of doubles that need to be returned.\n On return will be n doubles, for the consecutive real and imaginary\n parts for the target values of all parameters,\n stored in the string representation of a Python list of doubles."},
+   {"py2c_sweep_get_dobldobl_start",
+     py2c_sweep_get_dobldobl_start, METH_VARARGS,
+    "Gets the start values for the parameters in double double precision,\n giving on input the number n of doubles that need to be returned.\n On return will be n doubles, for the consecutive real and imaginary\n parts for the start values of all parameters,\n stored in the string representation of a Python list of doubles."},
+   {"py2c_sweep_get_dobldobl_target",
+     py2c_sweep_get_dobldobl_target, METH_VARARGS,
+    "Gets the target values for the parameters in double double precision,\n giving on input the number n of doubles that need to be returned.\n On return will be n doubles, for the consecutive real and imaginary\n parts for the target values of all parameters,\n stored in the string representation of a Python list of doubles."},
+   {"py2c_sweep_get_quaddobl_start",
+     py2c_sweep_get_quaddobl_start, METH_VARARGS,
+    "Gets the start values for the parameters in quad double precision,\n giving on input the number n of doubles that need to be returned.\n On return will be n doubles, for the consecutive real and imaginary\n parts for the start values of all parameters,\n stored in the string representation of a Python list of doubles."},
+   {"py2c_sweep_get_quaddobl_target",
+     py2c_sweep_get_quaddobl_target, METH_VARARGS,
+    "Returns the target values for the parameters in quad double precision,\n giving on input the number n of doubles that need to be returned.\n On return will be n doubles, for the consecutive real and imaginary\n parts for the target values of all parameters,\n stored in the string representation of a Python list of doubles."},
+   {"py2c_sweep_standard_run",
+     py2c_sweep_standard_run, METH_VARARGS,
+    "Starts the trackers in a complex convex parameter homotopy,\n in standard double precision, where the indices to the parameters,\n start and target values are already defined.  Moreover, the containers\n of systems and solutions in standard double precision have been\n initialized with a parametric systems and start solutions.\n The first input parameter is 0, 1, or 2, for respectively\n a randomly generated gamma (0), or no gamma (1), or a user given\n gamma with real and imaginary parts given in 2 pointers to doubles."},
+   {"py2c_sweep_dobldobl_run",
+     py2c_sweep_dobldobl_run, METH_VARARGS,
+    "Starts the trackers in a complex convex parameter homotopy,\n in double double precision, where the indices to the parameters,\n start and target values are already defined.  Moreover, the containers\n of systems and solutions in double double precision have been\n initialized with a parametric systems and start solutions.\n The first input parameter is 0, 1, or 2, for respectively\n a randomly generated gamma (0), or no gamma (1), or a user given\n gamma with real and imaginary parts given in 2 pointers to doubles."},
+   {"py2c_sweep_quaddobl_run",
+     py2c_sweep_quaddobl_run, METH_VARARGS,
+    "Starts the trackers in a complex convex parameter homotopy,\n in quad double precision, where the indices to the parameters,\n start and target values are already defined.  Moreover, the containers\n of systems and solutions in quad double precision have been\n initialized with a parametric systems and start solutions.\n The first input parameter is 0, 1, or 2, for respectively\n a randomly generated gamma (0), or no gamma (1), or a user given\n gamma with real and imaginary parts given in 2 pointers to doubles."},
    {"py2c_embed_system", py2c_embed_system, METH_VARARGS,
     "Replaces the system with coefficients in standard double precision\n in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_standard_cascade_homotopy", py2c_standard_cascade_homotopy,

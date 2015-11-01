@@ -1,4 +1,5 @@
 Sat 31 Oct 2015 : sweep.h and sweep.c give access to all of use_sweep.
+  Added the functions to phcpy2c.
 
 Fri 30 Oct 2015 : new module sweep, tested by lib_sweep.c, currently only
   for the definitions of the parameters in a sweep homotopy.

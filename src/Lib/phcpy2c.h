@@ -2506,6 +2506,223 @@ static PyObject *py2c_scale_quaddobl_solutions
  *   The format of the string is the Python string representation
  *   of a list of doubles, i.e.: starting with '[' and ending with ']'. */
 
+/* wrapping functions for the sweep homotopies */
+
+static PyObject *py2c_sweep_define_parameters_numerically
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Defines the indices to the variables that serve as parameters
+ *   numerically, that is: via integer indices.
+ *   On entry are three integer numbers and a string.
+ *   The string is a string representation of a Python list of integers,
+ *   The three integers are the number of equations, the number of variables,
+ *   and the number of parameters.  The number of variables m includes the
+ *   number of parameters.  Then there should be as many as m indices in
+ *   the list of integers to define which of the variables are parameters. */
+
+static PyObject *py2c_sweep_define_parameters_symbolically
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Defines the indices to the variables that serve as parameters
+ *   symbolically, that is, as names of variables.
+ *   For this to work, the symbol table must be initialized.
+ *   On entry are four integer numbers and a string.
+ *   The four integers are the number of equations, the number of variables,
+ *   the number of parameters (the number of variables m includes the
+ *   number of parameters), and the number of characters in the string.
+ *   The string contains the names of the parameters, separated by one comma.
+ *   For this to work, the symbol table must be initialized, e.g.:
+ *   via the reading of a polynomial system. */
+
+static PyObject *py2c_sweep_get_number_of_equations
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of equations. */
+
+static PyObject *py2c_sweep_get_number_of_variables
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of variables. */
+
+static PyObject *py2c_sweep_get_number_of_parameters
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of parameters. */
+
+static PyObject *py2c_sweep_get_indices_numerically
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the indices of the variables that are parameters,
+ *   as the string representation of a Python list of integers. */
+
+static PyObject *py2c_sweep_get_indices_symbolically
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns a string with the names of the parameters,
+ *   each separated by one space. */
+
+static PyObject *py2c_sweep_clear_definitions
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Clears the definitions of the parameters. */
+
+static PyObject *py2c_sweep_set_standard_start
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Sets the start values for the m parameters in standard double precision,
+ *   giving on input an integer m and 2*m doubles, with the consecutive 
+ *   real and imaginary parts for the start values of all m parameters.
+ *   The doubles are given in a string representation of a Python
+ *   list of doubles. */
+
+static PyObject *py2c_sweep_set_standard_target
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Sets the target values for the m parameters in standard double precision,
+ *   giving on input an integer m and 2*m doubles, with the consecutive
+ *   real and imaginary parts for the target values of all m parameters. */
+
+static PyObject *py2c_sweep_set_dobldobl_start
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Sets the start values for the m parameters in double double precision,
+ *   giving on input an integer m and 4*m doubles, with the consecutive
+ *   real and imaginary parts for the start values of all m parameters. */
+
+static PyObject *py2c_sweep_set_dobldobl_target
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Sets the target values for the m parameters in double double precision,
+ *   giving on input an integer m and 4*m doubles, with the consecutive
+ *   real and imaginary parts for the target values of all m parameters. */
+
+static PyObject *py2c_sweep_set_quaddobl_start
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Sets the start values for the m parameters in quad double precision,
+ *   giving on input an integer m and 8*m doubles, with the consecutive
+ *   real and imaginary parts for the start values of all m parameters. */
+
+static PyObject *py2c_sweep_set_quaddobl_target
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Sets the target values for the m parameters in quad double precision,
+ *   giving on input an integer m and 8*m doubles, with the consecutive
+ *   real and imaginary parts for the target values of all m parameters. */
+
+static PyObject *py2c_sweep_get_standard_start
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Gets the start values for the parameters in standard double precision,
+ *   giving on input the number n of doubles that need to be returned.
+ *   On return will be n doubles, for the consecutive real and imaginary
+ *   parts for the start values of all parameters,
+ *   stored in the string representation of a Python list of doubles. */
+
+static PyObject *py2c_sweep_get_standard_target
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Gets the target values for the parameters in standard double precision,
+ *   giving on input the number n of doubles that need to be returned.
+ *   On return will be n doubles, for the consecutive real and imaginary
+ *   parts for the target values of all parameters,
+ *   stored in the string representation of a Python list of doubles. */
+
+static PyObject *py2c_sweep_get_dobldobl_start
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Gets the start values for the parameters in double double precision,
+ *   giving on input the number n of doubles that need to be returned.
+ *   On return will be n doubles, for the consecutive real and imaginary
+ *   parts for the start values of all parameters,
+ *   stored in the string representation of a Python list of doubles. */
+
+static PyObject *py2c_sweep_get_dobldobl_target
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Gets the target values for the parameters in double double precision,
+ *   giving on input the number n of doubles that need to be returned.
+ *   On return will be n doubles, for the consecutive real and imaginary
+ *   parts for the target values of all parameters,
+ *   stored in the string representation of a Python list of doubles. */
+
+static PyObject *py2c_sweep_get_quaddobl_start
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Gets the start values for the parameters in quad double precision,
+ *   giving on input the number n of doubles that need to be returned.
+ *   On return will be n doubles, for the consecutive real and imaginary
+ *   parts for the start values of all parameters,
+ *   stored in the string representation of a Python list of doubles. */
+
+static PyObject *py2c_sweep_get_quaddobl_target
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the target values for the parameters in quad double precision,
+ *   giving on input the number n of doubles that need to be returned.
+ *   On return will be n doubles, for the consecutive real and imaginary
+ *   parts for the target values of all parameters,
+ *   stored in the string representation of a Python list of doubles. */
+
+static PyObject *py2c_sweep_standard_run
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Starts the trackers in a complex convex parameter homotopy,
+ *   in standard double precision, where the indices to the parameters,
+ *   start and target values are already defined.  Moreover, the containers
+ *   of systems and solutions in standard double precision have been
+ *   initialized with a parametric systems and start solutions.
+ *   The first input parameter is 0, 1, or 2, for respectively
+ *   a randomly generated gamma (0), or no gamma (1), or a user given
+ *   gamma with real and imaginary parts given in 2 pointers to doubles. */
+
+static PyObject *py2c_sweep_dobldobl_run
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Starts the trackers in a complex convex parameter homotopy,
+ *   in double double precision, where the indices to the parameters,
+ *   start and target values are already defined.  Moreover, the containers
+ *   of systems and solutions in double double precision have been
+ *   initialized with a parametric systems and start solutions.
+ *   The first input parameter is 0, 1, or 2, for respectively
+ *   a randomly generated gamma (0), or no gamma (1), or a user given
+ *   gamma with real and imaginary parts given in 2 pointers to doubles. */
+
+static PyObject *py2c_sweep_quaddobl_run
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Starts the trackers in a complex convex parameter homotopy,
+ *   in quad double precision, where the indices to the parameters,
+ *   start and target values are already defined.  Moreover, the containers
+ *   of systems and solutions in quad double precision have been
+ *   initialized with a parametric systems and start solutions.
+ *   The first input parameter is 0, 1, or 2, for respectively
+ *   a randomly generated gamma (0), or no gamma (1), or a user given
+ *   gamma with real and imaginary parts given in 2 pointers to doubles. */
+
 /* wrapping functions to manipulate algebraic sets */
 
 static PyObject *py2c_embed_system ( PyObject *self, PyObject *args );
