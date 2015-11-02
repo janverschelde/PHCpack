@@ -1,3 +1,7 @@
+Mon 2 Nov 2015 : updates in use_sweep for the bug fix that now allows to
+  store systems with a different number of variables, different from the
+  number of equations.
+
 Sun 1 Nov 2015 : some ad hoc changes in use_sweep because the systems
   containers are not set up for underdetermined systems, and the select
   and join of solutions use the number of variables as input parameter

@@ -349,7 +349,7 @@ function use_sweep ( job : integer32;
     indpar : constant Standard_Integer_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Indices;
     indvar : constant Standard_Integer_Vectors.Vector
-           := Standard_Parameter_Systems.Complement(nb_equ,indpar.all);
+           := Standard_Parameter_Systems.Complement(nb_var,indpar.all);
     nv : constant integer32 := indvar'last;
     vrsols : Standard_Complex_Solutions.Solution_List
            := Standard_Parameter_Solutions.Select_Variables(sols,nv,indvar);
@@ -382,7 +382,15 @@ function use_sweep ( job : integer32;
     use Standard_Complex_Solutions;
 
   begin
-    Par_Con(nb_var,lp(1..nb_var-nb_par),indpar.all,indvar,vrsols);
+  -- put("The number of equations : "); put(nb_equ,1); new_line;
+  -- put("The number of variables : "); put(nb_var,1); new_line;
+  -- put("The number of parameters : "); put(nb_par,1); new_line;
+  -- put("The solution list on input :");
+  -- put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+  -- put("After selection of the variables in the solution list on input :");
+  -- put(standard_output,Length_Of(vrsols),natural32(Head_Of(vrsols).n),vrsols);
+  -- Par_Con(nb_var,lp(1..nb_var-nb_par),indpar.all,indvar,vrsols);
+    Par_Con(nb_var,lp.all,indpar.all,indvar,vrsols);
     newsols := Standard_Parameter_Solutions.Join_Variables
                  (vrsols,nb_var,indvar,indpar.all,target.all);
     Standard_Solutions_Container.Clear;
@@ -414,7 +422,7 @@ function use_sweep ( job : integer32;
     indpar : constant Standard_Integer_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Indices;
     indvar : constant Standard_Integer_Vectors.Vector
-           := Standard_Parameter_Systems.Complement(nb_equ,indpar.all);
+           := Standard_Parameter_Systems.Complement(nb_var,indpar.all);
     nv : constant integer32 := indvar'last;
     vrsols : DoblDobl_Complex_Solutions.Solution_List
            := DoblDobl_Parameter_Solutions.Select_Variables(sols,nv,indvar);
@@ -445,7 +453,8 @@ function use_sweep ( job : integer32;
       new DoblDobl_Silent_Parameter_Continuation(Eval_Pars,Diff_Pars);
 
   begin
-    Par_Con(nb_var,lp(1..nb_var-nb_par),indpar.all,indvar,vrsols);
+    -- Par_Con(nb_var,lp(1..nb_var-nb_par),indpar.all,indvar,vrsols);
+    Par_Con(nb_var,lp.all,indpar.all,indvar,vrsols);
     newsols := DoblDobl_Parameter_Solutions.Join_Variables
                  (vrsols,nb_var,indvar,indpar.all,target.all);
     DoblDobl_Solutions_Container.Clear;
@@ -477,7 +486,7 @@ function use_sweep ( job : integer32;
     indpar : constant Standard_Integer_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Indices;
     indvar : constant Standard_Integer_Vectors.Vector
-           := Standard_Parameter_Systems.Complement(nb_equ,indpar.all);
+           := Standard_Parameter_Systems.Complement(nb_var,indpar.all);
     nv : constant integer32 := indvar'last;
     vrsols : QuadDobl_Complex_Solutions.Solution_List
            := QuadDobl_Parameter_Solutions.Select_Variables(sols,nv,indvar);
@@ -508,8 +517,8 @@ function use_sweep ( job : integer32;
       new QuadDobl_Silent_Parameter_Continuation(Eval_Pars,Diff_Pars);
 
   begin
-    put_line("before the call to Par_Con ...");
-    Par_Con(nb_var,lp(1..nb_var-nb_par),indpar.all,indvar,vrsols);
+    -- Par_Con(nb_var,lp(1..nb_var-nb_par),indpar.all,indvar,vrsols);
+    Par_Con(nb_var,lp.all,indpar.all,indvar,vrsols);
     newsols := QuadDobl_Parameter_Solutions.Join_Variables
                  (vrsols,nb_var,indvar,indpar.all,target.all);
     QuadDobl_Solutions_Container.Clear;
