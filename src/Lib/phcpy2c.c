@@ -4102,7 +4102,7 @@ static PyObject *py2c_sweep_quaddobl_run
    if(!PyArg_ParseTuple(args,"idd",&choice,&g_re,&g_im)) return NULL;   
    {
       if(choice < 2)
-         fail = sweep_dobldobl_run(choice,&g_re,&g_im);
+         fail = sweep_quaddobl_run(choice,&g_re,&g_im);
       else
       {
          double regamma[4];

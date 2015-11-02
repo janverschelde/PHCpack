@@ -1,3 +1,5 @@
+Sun 1 Nov 2015 : fixed call in phcpy2c.c to the sweep with quad doubles.
+
 Sat 31 Oct 2015 : sweep.h and sweep.c give access to all of use_sweep.
   Added the functions to phcpy2c.
 
