@@ -1,6 +1,7 @@
 Mon 2 Nov 2015 : in interface.py, added an optional argument nbvar to store
   systems that are not square with the parameter number of variables, in case
-  that is different from the number of equations.
+  that is different from the number of equations.  Adjusted sweepers.py
+  so no trick is needed when storing the family of polynomial systems.
 
 Sun 1 Nov 2015 : added skeleton for a new module sweepers.py, updating
   setup.py, to track paths defined by a sweep homotopy.
