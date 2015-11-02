@@ -1,3 +1,8 @@
+Sun 1 Nov 2015 : some ad hoc changes in use_sweep because the systems
+  containers are not set up for underdetermined systems, and the select
+  and join of solutions use the number of variables as input parameter
+  in a different manner.
+
 Fri 30 Oct 2015 : added call to starting a complex convex continuation in
   use_sweep and use_c2phc.
 
