@@ -4,11 +4,15 @@ The user gives as input string representations of polynomials or solutions
 to the interface functions which store the data.
 """
 
-def store_standard_system(polsys):
+def store_standard_system(polsys, **nbvar):
     """
-    Stores the polynomials represented by the list of
-    strings in polsys into the container for systems
-    with coefficients in standard double precision.
+    Stores the polynomials represented by the list of strings in polsys into
+    the container for systems with coefficients in standard double precision.
+    The number of variables is an optional argument given in nbvar.
+    If nbvar is omitted, then the system is assumed to be square.
+    Otherwise, suppose the number of variables equals 2 and pols is the list
+    of polynomials, then the call store_standard_system(pols, nbvar=2)
+    will store the polynomials in pols in the standard systems container.
     """
     from phcpy2c import py2c_syscon_clear_standard_system
     from phcpy2c import py2c_syscon_initialize_number_of_standard_polynomials
@@ -19,15 +23,24 @@ def store_standard_system(polsys):
     for cnt in range(0, dim):
         pol = polsys[cnt]
         nchar = len(pol)
-        fail = py2c_syscon_store_standard_polynomial(nchar, dim, cnt+1, pol)
+        if(len(nbvar) == 0):
+            fail = py2c_syscon_store_standard_polynomial(nchar, dim, cnt+1, pol)
+        else:
+            nvr = nbvar.values()[0]
+            fail = py2c_syscon_store_standard_polynomial(nchar, nvr, cnt+1, pol)
         if(fail != 0):
             break
     return fail
 
-def store_dobldobl_system(polsys):
+def store_dobldobl_system(polsys, **nbvar):
     """
     Stores the polynomials represented by the list of strings in polsys
     into the systems container for double double arithmetic.
+    The number of variables is an optional argument given in nbvar.
+    If nbvar is omitted, then the system is assumed to be square.
+    Otherwise, suppose the number of variables equals 2 and pols is the list
+    of polynomials, then the call store_dobldobl_system(pols, nbvar=2)
+    will store the polynomials in pols in the dobldobl systems container.
     """
     from phcpy2c import py2c_syscon_clear_dobldobl_system
     from phcpy2c import py2c_syscon_initialize_number_of_dobldobl_polynomials
@@ -38,15 +51,24 @@ def store_dobldobl_system(polsys):
     for cnt in range(0, dim):
         pol = polsys[cnt]
         nchar = len(pol)
-        fail = py2c_syscon_store_dobldobl_polynomial(nchar, dim, cnt+1, pol)
+        if(len(nbvar) == 0):
+            fail = py2c_syscon_store_dobldobl_polynomial(nchar, dim, cnt+1, pol)
+        else:
+            nvr = nbvar.values()[0]
+            fail = py2c_syscon_store_dobldobl_polynomial(nchar, nvr, cnt+1, pol)
         if(fail != 0):
             break
     return fail
 
-def store_quaddobl_system(polsys):
+def store_quaddobl_system(polsys, **nbvar):
     """
     Stores the polynomials represented by the list of strings in polsys
     into the systems container for quad double arithmetic.
+    The number of variables is an optional argument given in nbvar.
+    If nbvar is omitted, then the system is assumed to be square.
+    Otherwise, suppose the number of variables equals 2 and pols is the list
+    of polynomials, then the call store_quaddobl_system(pols, nbvar=2)
+    will store the polynomials in pols in the quaddobl systems container.
     """
     from phcpy2c import py2c_syscon_clear_quaddobl_system
     from phcpy2c import py2c_syscon_initialize_number_of_quaddobl_polynomials
@@ -57,17 +79,26 @@ def store_quaddobl_system(polsys):
     for cnt in range(0, dim):
         pol = polsys[cnt]
         nchar = len(pol)
-        fail = py2c_syscon_store_quaddobl_polynomial(nchar, dim, cnt+1, pol)
+        if(len(nbvar) == 0):
+            fail = py2c_syscon_store_quaddobl_polynomial(nchar, dim, cnt+1, pol)
+        else:
+            nvr = nbvar.values()[0]
+            fail = py2c_syscon_store_quaddobl_polynomial(nchar, nvr, cnt+1, pol)
         if(fail != 0):
             break
     return fail
 
-def store_multprec_system(polsys, decimals):
+def store_multprec_system(polsys, decimals, **nbvar):
     """
     Stores the polynomials represented by the list of strings in polsys
     into the systems container for multiprecision arithmetic.
     The parameter decimals equals the number of decimal places
     in the working precision for the parsing of the strings in polsys.
+    The number of variables is an optional argument given in nbvar.
+    If nbvar is omitted, then the system is assumed to be square.
+    Otherwise, suppose the number of variables equals 2 and pols is the list of
+    polynomials, then the call store_multprec_system(pols, nbvar=2)
+    will store the polynomials in pols in the multiprecision systems container.
     """
     from phcpy2c import py2c_syscon_clear_multprec_system
     from phcpy2c import py2c_syscon_initialize_number_of_multprec_polynomials
@@ -78,8 +109,13 @@ def store_multprec_system(polsys, decimals):
     for cnt in range(0, dim):
         pol = polsys[cnt]
         nchar = len(pol)
-        fail = py2c_syscon_store_multprec_polynomial\
-                   (nchar, dim, cnt+1, decimals, pol)
+        if(len(nbvar) == 0):
+            fail = py2c_syscon_store_multprec_polynomial\
+                       (nchar, dim, cnt+1, decimals, pol)
+        else:
+            nvr = nbvar.values()[0]
+            fail = py2c_syscon_store_multprec_polynomial\
+                       (nchar, nvr, cnt+1, decimals, pol)
         if(fail != 0):
             break
     return fail
@@ -352,11 +388,13 @@ def load_standard_solutions():
     py2c_solcon_retrieve_next_standard_initialize()
     while True:
         lns = py2c_solcon_length_current_standard_solution_string()
-        if(lns == 0): break
+        if(lns == 0):
+            break
         sol = py2c_solcon_write_current_standard_solution_string(lns)
         result.append(sol)
         ind = py2c_solcon_move_current_standard_to_next()
-        if(ind == 0): break
+        if(ind == 0):
+            break
     return result
 
 def load_dobldobl_solutions():
@@ -372,11 +410,13 @@ def load_dobldobl_solutions():
     py2c_solcon_retrieve_next_dobldobl_initialize()
     while True:
         lns = py2c_solcon_length_current_dobldobl_solution_string()
-        if(lns == 0): break
+        if(lns == 0):
+            break
         sol = py2c_solcon_write_current_dobldobl_solution_string(lns)
         result.append(sol)
         ind = py2c_solcon_move_current_dobldobl_to_next()
-        if(ind == 0): break
+        if(ind == 0):
+            break
     return result
 
 def load_quaddobl_solutions():
@@ -392,11 +432,13 @@ def load_quaddobl_solutions():
     py2c_solcon_retrieve_next_quaddobl_initialize()
     while True:
         lns = py2c_solcon_length_current_quaddobl_solution_string()
-        if(lns == 0): break
+        if(lns == 0):
+            break
         sol = py2c_solcon_write_current_quaddobl_solution_string(lns)
         result.append(sol)
         ind = py2c_solcon_move_current_quaddobl_to_next()
-        if(ind == 0): break
+        if(ind == 0):
+            break
     return result
 
 def load_multprec_solutions():
@@ -412,9 +454,11 @@ def load_multprec_solutions():
     py2c_solcon_retrieve_next_multprec_initialize()
     while True:
         lns = py2c_solcon_length_current_multprec_solution_string()
-        if(lns == 0): break
+        if(lns == 0):
+            break
         sol = py2c_solcon_write_current_multprec_solution_string(lns)
         result.append(sol)
         ind = py2c_solcon_move_current_multprec_to_next()
-        if(ind == 0): break
+        if(ind == 0):
+            break
     return result
