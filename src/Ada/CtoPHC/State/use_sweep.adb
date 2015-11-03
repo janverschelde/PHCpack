@@ -327,7 +327,7 @@ function use_sweep ( job : integer32;
     return 0;
   end Job9;
 
-  function Standard_Run ( x,y : double_float ) return integer32 is
+  function Standard_Complex_Sweep ( x,y : double_float ) return integer32 is
 
   -- DESCRIPTION :
   --   Runs a complex convex parameter continuation with real and
@@ -398,9 +398,9 @@ function use_sweep ( job : integer32;
     return 0;
   exception
     when others => return 10;
-  end Standard_Run;
+  end Standard_Complex_Sweep;
 
-  function DoblDobl_Run ( x,y : double_float ) return integer32 is
+  function DoblDobl_Complex_Sweep ( x,y : double_float ) return integer32 is
 
   -- DESCRIPTION :
   --   Runs a complex convex parameter continuation with real and
@@ -462,9 +462,9 @@ function use_sweep ( job : integer32;
     return 0;
   exception
     when others => return 10;
-  end DoblDobl_Run;
+  end DoblDobl_Complex_Sweep;
 
-  function QuadDobl_Run ( x,y : double_float ) return integer32 is
+  function QuadDobl_Complex_Sweep ( x,y : double_float ) return integer32 is
 
   -- DESCRIPTION :
   --   Runs a complex convex parameter continuation with real and
@@ -526,7 +526,7 @@ function use_sweep ( job : integer32;
     return 0;
   exception
     when others => return 10;
-  end QuadDobl_Run;
+  end QuadDobl_Complex_Sweep;
 
   function Job10 return integer32 is -- complex convex-parameter sweep
 
@@ -540,9 +540,9 @@ function use_sweep ( job : integer32;
    -- put("precision = "); put(precision,1); new_line;
     if randgamma < 2 then -- no user given gamma
       case precision is
-        when 0 => return Standard_Run(0.0,0.0);
-        when 1 => return DoblDobl_Run(0.0,0.0);
-        when 2 => return QuadDobl_Run(0.0,0.0);
+        when 0 => return Standard_Complex_Sweep(0.0,0.0);
+        when 1 => return DoblDobl_Complex_Sweep(0.0,0.0);
+        when 2 => return QuadDobl_Complex_Sweep(0.0,0.0);
         when others => null;
       end case;
     else -- extract the user given gamma from c
@@ -555,9 +555,9 @@ function use_sweep ( job : integer32;
                 := double_float(v_c(v_c'first+1));
       begin
         case precision is
-          when 0 => return Standard_Run(regamma,imgamma);
-          when 1 => return DoblDobl_Run(regamma,imgamma);
-          when 2 => return QuadDobl_Run(regamma,imgamma);
+          when 0 => return Standard_Complex_Sweep(regamma,imgamma);
+          when 1 => return DoblDobl_Complex_Sweep(regamma,imgamma);
+          when 2 => return QuadDobl_Complex_Sweep(regamma,imgamma);
           when others => null;
         end case;
       end;
@@ -566,6 +566,66 @@ function use_sweep ( job : integer32;
   exception
     when others => return 10;
   end Job10;
+
+  function Standard_Real_Sweep return integer32 is
+
+  -- DESCRIPTION :
+  --   Runs through the container for the solution in standard double
+  --   precision and runs a natural-parameter sweep defined by the
+  --   family of polynomial systems in the standard systems container.
+  --   The sweep runs from the start to the target values of the
+  --   parameters, or until a singularity is encountered.
+
+    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+       := Standard_PolySys_Container.Retrieve;
+    sols : Standard_Complex_Solutions.Solution_List
+         := Standard_Solutions_Container.Retrieve;
+    nb_equ : constant integer32
+           := Parameter_Homotopy_State.Get_Number_of_Equations;
+    nb_var : constant integer32
+           := Parameter_Homotopy_State.Get_Number_of_Variables;
+    nb_par : constant integer32
+           := Parameter_Homotopy_State.Get_Number_of_Parameters;
+    indpar : constant Standard_Integer_Vectors.Link_to_Vector
+           := Parameter_Homotopy_State.Get_Indices;
+    indvar : constant Standard_Integer_Vectors.Vector
+           := Standard_Parameter_Systems.Complement(nb_var,indpar.all);
+    nv : constant integer32 := indvar'last;
+    startv : Standard_Complex_Vectors.Link_to_Vector
+           := Parameter_Homotopy_State.Get_Start;
+    target : Standard_Complex_Vectors.Link_to_Vector
+           := Parameter_Homotopy_State.Get_Target;
+    t : double_float;
+    x,dx : Standard_Complex_Vectors.Vector(1..integer32(nv));
+
+    use Standard_Complex_Solutions;
+    tmp : Solution_List := sols;
+    ls : Link_to_Solution;
+
+  begin
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      x := ls.v;
+      tmp := Tail_Of(tmp);
+    end loop;
+    return 0;
+  end Standard_Real_Sweep;
+
+  function Job11 return integer32 is -- real natural-parameter sweep
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    precision : constant natural32 := natural32(v_a(v_a'first));
+
+  begin
+    case precision is
+      when 0 => return Standard_Real_Sweep;
+      when others => null;
+    end case;
+    return 0;
+  exception
+    when others => return 11;
+  end Job11;
 
   function Handle_Jobs return integer32 is
   begin
@@ -581,6 +641,7 @@ function use_sweep ( job : integer32;
       when 8 => return Job8;   -- set start or target parameter values
       when 9 => return Job9;   -- get start or target parameter values
       when 10 => return Job10; -- complex convex-parameter sweep
+      when 11 => return Job11; -- real natural-parameter sweep
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   end Handle_Jobs;

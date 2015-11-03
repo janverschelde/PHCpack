@@ -1,3 +1,6 @@
+Wed 3 Nov 2015 : provides skeleton for the real sweep in use_sweep, adding
+  a new job number that is also available in use_c2phc.
+
 Mon 2 Nov 2015 : updates in use_sweep for the bug fix that now allows to
   store systems with a different number of variables, different from the
   number of equations.

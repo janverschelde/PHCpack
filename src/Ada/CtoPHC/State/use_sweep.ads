@@ -70,6 +70,14 @@ function use_sweep ( job : integer32;
 --                  c[0] and c[1] respectively;
 --                  for this to work, the proper systems and solutions
 --                  containers must be initialized, on return, the new
+--                  solutions are stored in the solutions container;
+--          =  11 : runs a real natural parameter sweep between the
+--                  defined values of the parameter for start and target,
+--                  with on input 
+--                  in a : the precision level, 0, 1, or 2 for standard
+--                  double, double double, or quad double respectively,
+--                  for this to work, the proper systems and solutions
+--                  containers must be initialized, on return, the new
 --                  solutions are stored in the solutions container.
 
 -- ON RETURN :

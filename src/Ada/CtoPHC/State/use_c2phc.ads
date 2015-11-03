@@ -1629,6 +1629,14 @@ function use_c2phc ( job : integer32;
 --                 for this to work, the proper systems and solutions
 --                 containers must be initialized, on return, the new
 --                 solutions are stored in the solutions container.
+--       =   621 : runs a real natural parameter sweep between the
+--                 defined values of the parameter for start and target,
+--                 with on input 
+--                 in a : the precision level, 0, 1, or 2 for standard
+--                 double, double double, or quad double respectively,
+--                 for this to work, the proper systems and solutions
+--                 containers must be initialized, on return, the new
+--                 solutions are stored in the solutions container.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
