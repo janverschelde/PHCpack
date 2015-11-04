@@ -1,3 +1,6 @@
+Wed 4 Nov 2015 : in sweepers.py adjusted the names to the calls of the 
+  functions that run the sweep, as they got changed in phcpy2c.
+
 Mon 2 Nov 2015 : in interface.py, added an optional argument nbvar to store
   systems that are not square with the parameter number of variables, in case
   that is different from the number of equations.  Adjusted sweepers.py

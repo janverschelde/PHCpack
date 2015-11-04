@@ -166,7 +166,8 @@ int sweep_get_quaddobl_target ( int n, double *c );
  *   On return in c will be n doubles, for the consecutive real and imaginary
  *   parts for the target values of all parameters. */
 
-int sweep_standard_run ( int gchoice, double *regamma, double *imgamma );
+int sweep_standard_complex_run
+ ( int gchoice, double *regamma, double *imgamma );
 /*
  * DESCRIPTION :
  *   Starts the trackers in a complex convex parameter homotopy,
@@ -178,7 +179,8 @@ int sweep_standard_run ( int gchoice, double *regamma, double *imgamma );
  *   a randomly generated gamma (0), or no gamma (1), or a user given
  *   gamma with real and imaginary parts in regamma and imgamma. */
 
-int sweep_dobldobl_run ( int gchoice, double *regamma, double *imgamma );
+int sweep_dobldobl_complex_run
+ ( int gchoice, double *regamma, double *imgamma );
 /*
  * DESCRIPTION :
  *   Starts the trackers in a complex convex parameter homotopy,
@@ -191,7 +193,8 @@ int sweep_dobldobl_run ( int gchoice, double *regamma, double *imgamma );
  *   gamma with real and imaginary parts in regamma and imgamma.
  *   For gchoice == 2, regamma and imgamma are double doubles. */
 
-int sweep_quaddobl_run ( int gchoice, double *regamma, double *imgamma );
+int sweep_quaddobl_complex_run
+ ( int gchoice, double *regamma, double *imgamma );
 /*
  * DESCRIPTION :
  *   Starts the trackers in a complex convex parameter homotopy,

@@ -2684,7 +2684,7 @@ static PyObject *py2c_sweep_get_quaddobl_target
  *   parts for the target values of all parameters,
  *   stored in the string representation of a Python list of doubles. */
 
-static PyObject *py2c_sweep_standard_run
+static PyObject *py2c_sweep_standard_complex_run
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -2697,7 +2697,7 @@ static PyObject *py2c_sweep_standard_run
  *   a randomly generated gamma (0), or no gamma (1), or a user given
  *   gamma with real and imaginary parts given in 2 pointers to doubles. */
 
-static PyObject *py2c_sweep_dobldobl_run
+static PyObject *py2c_sweep_dobldobl_complex_run
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -2710,7 +2710,7 @@ static PyObject *py2c_sweep_dobldobl_run
  *   a randomly generated gamma (0), or no gamma (1), or a user given
  *   gamma with real and imaginary parts given in 2 pointers to doubles. */
 
-static PyObject *py2c_sweep_quaddobl_run
+static PyObject *py2c_sweep_quaddobl_complex_run
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :

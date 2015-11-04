@@ -4055,7 +4055,7 @@ static PyObject *py2c_sweep_get_quaddobl_target
    }
 }
 
-static PyObject *py2c_sweep_standard_run
+static PyObject *py2c_sweep_standard_complex_run
  ( PyObject *self, PyObject *args )
 {
    int fail,choice;
@@ -4064,12 +4064,12 @@ static PyObject *py2c_sweep_standard_run
    initialize();
    if(!PyArg_ParseTuple(args,"idd",&choice,&g_re,&g_im)) return NULL;   
 
-   fail = sweep_standard_run(choice,&g_re,&g_im);
+   fail = sweep_standard_complex_run(choice,&g_re,&g_im);
 
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_sweep_dobldobl_run
+static PyObject *py2c_sweep_dobldobl_complex_run
  ( PyObject *self, PyObject *args )
 {
    int fail,choice;
@@ -4079,20 +4079,20 @@ static PyObject *py2c_sweep_dobldobl_run
    if(!PyArg_ParseTuple(args,"idd",&choice,&g_re,&g_im)) return NULL;   
    {
       if(choice < 2)
-         fail = sweep_dobldobl_run(choice,&g_re,&g_im);
+         fail = sweep_dobldobl_complex_run(choice,&g_re,&g_im);
       else
       {
          double regamma[2];
          double imgamma[2];
          regamma[0] = g_re; regamma[1] = 0.0;
          imgamma[0] = g_im; imgamma[1] = 0.0;
-         fail = sweep_dobldobl_run(choice,regamma,imgamma);
+         fail = sweep_dobldobl_complex_run(choice,regamma,imgamma);
       }
    }
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_sweep_quaddobl_run
+static PyObject *py2c_sweep_quaddobl_complex_run
  ( PyObject *self, PyObject *args )
 {
    int fail,choice;
@@ -4102,7 +4102,7 @@ static PyObject *py2c_sweep_quaddobl_run
    if(!PyArg_ParseTuple(args,"idd",&choice,&g_re,&g_im)) return NULL;   
    {
       if(choice < 2)
-         fail = sweep_quaddobl_run(choice,&g_re,&g_im);
+         fail = sweep_quaddobl_complex_run(choice,&g_re,&g_im);
       else
       {
          double regamma[4];
@@ -4111,7 +4111,7 @@ static PyObject *py2c_sweep_quaddobl_run
          regamma[2] = 0.0;  regamma[3] = 0.0;
          imgamma[0] = g_im; imgamma[1] = 0.0;
          imgamma[2] = 0.0;  imgamma[3] = 0.0;
-         fail = sweep_quaddobl_run(choice,regamma,imgamma);
+         fail = sweep_quaddobl_complex_run(choice,regamma,imgamma);
       }
    }
    return Py_BuildValue("i",fail);
@@ -6020,14 +6020,14 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_sweep_get_quaddobl_target",
      py2c_sweep_get_quaddobl_target, METH_VARARGS,
     "Returns the target values for the parameters in quad double precision,\n giving on input the number n of doubles that need to be returned.\n On return will be n doubles, for the consecutive real and imaginary\n parts for the target values of all parameters,\n stored in the string representation of a Python list of doubles."},
-   {"py2c_sweep_standard_run",
-     py2c_sweep_standard_run, METH_VARARGS,
+   {"py2c_sweep_standard_complex_run",
+     py2c_sweep_standard_complex_run, METH_VARARGS,
     "Starts the trackers in a complex convex parameter homotopy,\n in standard double precision, where the indices to the parameters,\n start and target values are already defined.  Moreover, the containers\n of systems and solutions in standard double precision have been\n initialized with a parametric systems and start solutions.\n The first input parameter is 0, 1, or 2, for respectively\n a randomly generated gamma (0), or no gamma (1), or a user given\n gamma with real and imaginary parts given in 2 pointers to doubles."},
-   {"py2c_sweep_dobldobl_run",
-     py2c_sweep_dobldobl_run, METH_VARARGS,
+   {"py2c_sweep_dobldobl_complex_run",
+     py2c_sweep_dobldobl_complex_run, METH_VARARGS,
     "Starts the trackers in a complex convex parameter homotopy,\n in double double precision, where the indices to the parameters,\n start and target values are already defined.  Moreover, the containers\n of systems and solutions in double double precision have been\n initialized with a parametric systems and start solutions.\n The first input parameter is 0, 1, or 2, for respectively\n a randomly generated gamma (0), or no gamma (1), or a user given\n gamma with real and imaginary parts given in 2 pointers to doubles."},
-   {"py2c_sweep_quaddobl_run",
-     py2c_sweep_quaddobl_run, METH_VARARGS,
+   {"py2c_sweep_quaddobl_complex_run",
+     py2c_sweep_quaddobl_complex_run, METH_VARARGS,
     "Starts the trackers in a complex convex parameter homotopy,\n in quad double precision, where the indices to the parameters,\n start and target values are already defined.  Moreover, the containers\n of systems and solutions in quad double precision have been\n initialized with a parametric systems and start solutions.\n The first input parameter is 0, 1, or 2, for respectively\n a randomly generated gamma (0), or no gamma (1), or a user given\n gamma with real and imaginary parts given in 2 pointers to doubles."},
    {"py2c_embed_system", py2c_embed_system, METH_VARARGS,
     "Replaces the system with coefficients in standard double precision\n in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},

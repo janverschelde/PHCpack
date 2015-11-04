@@ -39,7 +39,7 @@ def standard_complex_sweep(pols, sols, nvar, pars, start, target):
     import py2c_sweep_set_standard_start as set_start
     from phcpy.phcpy2c \
     import py2c_sweep_set_standard_target as set_target
-    from phcpy.phcpy2c import py2c_sweep_standard_run as run
+    from phcpy.phcpy2c import py2c_sweep_standard_complex_run as run
     (nbq, nbp) = (len(pols), len(pars))
     parnames = ' '.join(pars)
     nbc = len(parnames)
@@ -77,7 +77,7 @@ def dobldobl_complex_sweep(pols, sols, nvar, pars, start, target):
     import py2c_sweep_set_dobldobl_start as set_start
     from phcpy.phcpy2c \
     import py2c_sweep_set_dobldobl_target as set_target
-    from phcpy.phcpy2c import py2c_sweep_dobldobl_run as run
+    from phcpy.phcpy2c import py2c_sweep_dobldobl_complex_run as run
     (nbq, nbp) = (len(pols), len(pars))
     parnames = ' '.join(pars)
     nbc = len(parnames)
@@ -115,7 +115,7 @@ def quaddobl_complex_sweep(pols, sols, nvar, pars, start, target):
     import py2c_sweep_set_quaddobl_start as set_start
     from phcpy.phcpy2c \
     import py2c_sweep_set_quaddobl_target as set_target
-    from phcpy.phcpy2c import py2c_sweep_quaddobl_run as run
+    from phcpy.phcpy2c import py2c_sweep_quaddobl_complex_run as run
     (nbq, nbp) = (len(pols), len(pars))
     parnames = ' '.join(pars)
     nbc = len(parnames)

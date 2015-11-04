@@ -1,3 +1,6 @@
+Wed 4 Nov 2015 : consistent with the naming of the Ada procedures in use_sweep,
+  adjusted the names of the sweep runners in libraries sweep and phcpy2c.
+
 Sun 1 Nov 2015 : fixed call in phcpy2c.c to the sweep with quad doubles.
 
 Sat 31 Oct 2015 : sweep.h and sweep.c give access to all of use_sweep.

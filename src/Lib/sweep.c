@@ -246,7 +246,8 @@ int sweep_get_quaddobl_target ( int n, double *c )
    return fail;
 }
 
-int sweep_standard_run ( int gchoice, double *regamma, double *imgamma )
+int sweep_standard_complex_run
+ ( int gchoice, double *regamma, double *imgamma )
 {
    int fail;
    int pg[2];
@@ -265,7 +266,8 @@ int sweep_standard_run ( int gchoice, double *regamma, double *imgamma )
    return fail;
 }
 
-int sweep_dobldobl_run ( int gchoice, double *regamma, double *imgamma )
+int sweep_dobldobl_complex_run
+ ( int gchoice, double *regamma, double *imgamma )
 {
    int fail;
    int pg[2];
@@ -284,7 +286,8 @@ int sweep_dobldobl_run ( int gchoice, double *regamma, double *imgamma )
    return fail;
 }
 
-int sweep_quaddobl_run ( int gchoice, double *regamma, double *imgamma )
+int sweep_quaddobl_complex_run
+ ( int gchoice, double *regamma, double *imgamma )
 {
    int fail;
    int pg[2];
