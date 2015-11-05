@@ -307,3 +307,36 @@ int sweep_quaddobl_complex_run
 
    return fail;
 }
+
+int sweep_standard_real_run ( void )
+{
+   int fail,*b;
+   double *c;
+   int precision = 0;
+
+   fail = _ada_use_c2phc(621,&precision,b,c);
+
+   return fail;
+}
+
+int sweep_dobldobl_real_run ( void )
+{
+   int fail,*b;
+   double *c;
+   int precision = 1;
+
+   fail = _ada_use_c2phc(621,&precision,b,c);
+
+   return fail;
+}
+
+int sweep_quaddobl_real_run ( void )
+{
+   int fail,*b;
+   double *c;
+   int precision = 2;
+
+   fail = _ada_use_c2phc(621,&precision,b,c);
+
+   return fail;
+}

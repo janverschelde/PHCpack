@@ -4117,6 +4117,42 @@ static PyObject *py2c_sweep_quaddobl_complex_run
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_sweep_standard_real_run
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = sweep_standard_real_run();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_sweep_dobldobl_real_run
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = sweep_dobldobl_real_run();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_sweep_quaddobl_real_run
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = sweep_quaddobl_real_run();
+
+   return Py_BuildValue("i",fail);
+}
+
 /* wrapping functions to manipulate algebraic sets */
 
 static PyObject *py2c_embed_system ( PyObject *self, PyObject *args )
@@ -6029,6 +6065,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_sweep_quaddobl_complex_run",
      py2c_sweep_quaddobl_complex_run, METH_VARARGS,
     "Starts the trackers in a complex convex parameter homotopy,\n in quad double precision, where the indices to the parameters,\n start and target values are already defined.  Moreover, the containers\n of systems and solutions in quad double precision have been\n initialized with a parametric systems and start solutions.\n The first input parameter is 0, 1, or 2, for respectively\n a randomly generated gamma (0), or no gamma (1), or a user given\n gamma with real and imaginary parts given in 2 pointers to doubles."},
+   {"py2c_sweep_standard_real_run",
+     py2c_sweep_standard_real_run, METH_VARARGS, 
+    "There are no input arguments to this routine.\n Starts a sweep with a natural parameter in a family of n equations\n in n+1 variables, where the last variable is the artificial parameter s\n that moves the one natural parameter from a start to target value.\n The last equation is of the form (1-s)*(A - v[0]) + s*(A - v[1]),\n where A is the natural parameter, going from the start value v[0]\n to the target value v[1].\n This family must be stored in the systems container in standard double\n precision and the corresponding start solutions in the standard solutions\n container, where every solution has the value v[0] for the A variable.\n The sweep stops when s reaches the value v[1], or when a singularity\n is encountered on the path."},
+   {"py2c_sweep_dobldobl_real_run",
+     py2c_sweep_dobldobl_real_run, METH_VARARGS, 
+    "There are no input arguments to this routine.\n Starts a sweep with a natural parameter in a family of n equations\n in n+1 variables, where the last variable is the artificial parameter s\n that moves the one natural parameter from a start to target value.\n The last equation is of the form (1-s)*(A - v[0]) + s*(A - v[1]),\n where A is the natural parameter, going from the start value v[0]\n to the target value v[1].\n This family must be stored in the systems container in double double\n precision and the corresponding start solutions in the dobldobl solutions\n container, where every solution has the value v[0] for the A variable.\n The sweep stops when s reaches the value v[1], or when a singularity\n is encountered on the path."},
+   {"py2c_sweep_quaddobl_real_run",
+     py2c_sweep_quaddobl_real_run, METH_VARARGS, 
+    "There are no input arguments to this routine.\n Starts a sweep with a natural parameter in a family of n equations\n in n+1 variables, where the last variable is the artificial parameter s\n that moves the one natural parameter from a start to target value.\n The last equation is of the form (1-s)*(A - v[0]) + s*(A - v[1]),\n where A is the natural parameter, going from the start value v[0]\n to the target value v[1].\n This family must be stored in the systems container in quad double\n precision and the corresponding start solutions in the quaddobl solutions\n container, where every solution has the value v[0] for the A variable.\n The sweep stops when s reaches the value v[1], or when a singularity\n is encountered on the path."},
    {"py2c_embed_system", py2c_embed_system, METH_VARARGS,
     "Replaces the system with coefficients in standard double precision\n in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_standard_cascade_homotopy", py2c_standard_cascade_homotopy,

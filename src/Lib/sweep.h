@@ -207,4 +207,49 @@ int sweep_quaddobl_complex_run
  *   gamma with real and imaginary parts in regamma and imgamma.
  *   For gchoice == 2, regamma and imgamma are quad doubles. */
 
+int sweep_standard_real_run ( void );
+/*
+ * DESCRIPTION :
+ *   Starts a sweep with a natural parameter in a family of n equations
+ *   in n+1 variables, where the last variable is the artificial parameter s
+ *   that moves the one natural parameter from a start to target value.
+ *   The last equation is of the form (1-s)*(A - v[0]) + s*(A - v[1]),
+ *   where A is the natural parameter, going from the start value v[0]
+ *   to the target value v[1].
+ *   This family must be stored in the systems container in standard double
+ *   precision and the corresponding start solutions in the standard solutions
+ *   container, where every solution has the value v[0] for the A variable.
+ *   The sweep stops when s reaches the value v[1], or when a singularity
+ *   is encountered on the path. */
+
+int sweep_dobldobl_real_run ( void );
+/*
+ * DESCRIPTION :
+ *   Starts a sweep with a natural parameter in a family of n equations
+ *   in n+1 variables, where the last variable is the artificial parameter s
+ *   that moves the one natural parameter from a start to target value.
+ *   The last equation is of the form (1-s)*(A - v[0]) + s*(A - v[1]),
+ *   where A is the natural parameter, going from the start value v[0]
+ *   to the target value v[1].
+ *   This family must be stored in the systems container in double double
+ *   precision and the corresponding start solutions in the dobldobl solutions
+ *   container, where every solution has the value v[0] for the A variable.
+ *   The sweep stops when s reaches the value v[1], or when a singularity
+ *   is encountered on the path. */
+
+int sweep_quaddobl_real_run ( void );
+/*
+ * DESCRIPTION :
+ *   Starts a sweep with a natural parameter in a family of n equations
+ *   in n+1 variables, where the last variable is the artificial parameter s
+ *   that moves the one natural parameter from a start to target value.
+ *   The last equation is of the form (1-s)*(A - v[0]) + s*(A - v[1]),
+ *   where A is the natural parameter, going from the start value v[0]
+ *   to the target value v[1].
+ *   This family must be stored in the systems container in quad double
+ *   precision and the corresponding start solutions in the quaddobl solutions
+ *   container, where every solution has the value v[0] for the A variable.
+ *   The sweep stops when s reaches the value v[1], or when a singularity
+ *   is encountered on the path. */
+
 #endif
