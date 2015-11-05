@@ -772,8 +772,7 @@ function use_sweep ( job : integer32;
           rx(i) := REAL_PART(ls.v(i));
           rdx(i) := create(0.0);
         end loop;
-       -- Silent_Real_Sweep
-        Start_Real_Sweep
+        Silent_Real_Sweep
           (true,natural32(nb_equ),natural32(nb_var),one,rpf,rjf,rx,rdx);
         for i in rx'range loop
           ls.v(i) := Create(rx(i));
@@ -875,8 +874,7 @@ function use_sweep ( job : integer32;
           rx(i) := REAL_PART(ls.v(i));
           rdx(i) := create(0.0);
         end loop;
-       -- Silent_Real_Sweep
-        Start_Real_Sweep
+        Silent_Real_Sweep
           (true,natural32(nb_equ),natural32(nb_var),one,rpf,rjf,rx,rdx);
         for i in rx'range loop
           ls.v(i) := Create(rx(i));
