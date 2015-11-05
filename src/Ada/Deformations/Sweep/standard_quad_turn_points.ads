@@ -503,6 +503,32 @@ package Standard_Quad_Turn_Points is
 
 -- IV. PARABOLIC MINIMIZATION OF DETERMINANTS :
 
+  procedure Silent_Monitor_Determinants
+               ( x,y : in out Standard_Floating_Vectors.Vector;
+                 i : in out integer32; t,d : in double_float;
+                 crit : out natural32; z : out double_float );
+
+  -- DESCRIPTION :
+  --   Monitors three consecutive values of determinants,
+  --   without intermediate output to screen.
+
+  -- ON ENTRY :
+  --   x         window of 3 consecutive values for t;
+  --   y         data values corresponding to x;
+  --   i         index to last element in x;
+  --   t         current value of the continuation parameter;
+  --   d         new incoming value for the determinant.
+
+  -- ON RETURN :
+  --   x         updated window of 3 t-values;
+  --   y         updated window of data values;
+  --   i         updated index in the window;
+  --   crit      type of critical point:
+  --               0 if no critical point,
+  --               3 if change in sign of determinant is detected,
+  --               4 if parabolic interpolation hints at backup;
+  --   z         if crit /= 0, then z is backup value for t.
+  --
   procedure Monitor_Determinants
                ( x,y : in out Standard_Floating_Vectors.Vector;
                  i : in out integer32; t,d : in double_float;
@@ -514,7 +540,8 @@ package Standard_Quad_Turn_Points is
                  crit : out natural32; z : out double_float );
 
   -- DESCRIPTION :
-  --   Monitors three consecutive values of determinants.
+  --   Monitors three consecutive values of determinants,
+  --   with intermediate output to screen or to file.
 
   -- ON ENTRY :
   --   file      for intermediate output if provided;
@@ -533,6 +560,38 @@ package Standard_Quad_Turn_Points is
   --               3 if change in sign of determinant is detected,
   --               4 if parabolic interpolation hints at backup;
   --   z         if crit /= 0, then z is backup value for t.
+
+  procedure Silent_Bisection_Singularity
+               ( t1,t2,d1,d2 : in out double_float;
+                 f : in Standard_Floating_Poly_SysFun.Eval_Poly_Sys;
+                 jf : Standard_Floating_Jaco_Matrices.Eval_Jaco_Mat;
+                 x : in out Standard_Floating_Vectors.Vector;
+                 tol_err,tol_res,tol_det : in double_float;
+                 max : in natural32; fail,critical : out boolean;
+                 nit : out natural32 );
+
+  -- DESCRIPTION :
+  --   Applies the bisection method to locate a singular solution,
+  --   without intermediate output to screen or to file.
+
+  -- REQUIRED : d1*d2 < 0.
+
+  -- ON ENTRY :
+  --   t1,t2     two consecutive values for the continuation parameter;
+  --   d1,d2     corresponding values for the determinant;
+  --   f         polynomial system to evaluate the homotopy;          
+  --   jf        Jacobi matrix of the homotopy;
+  --   x         initial starting point for the solution;
+  --   tol_err   tolerance for increment to update the solution;
+  --   tol_res   tolerance for the residual;
+  --   tol_det   tolerance for the determinant;
+  --   max       maximal number of Newton iterators.
+
+  -- ON RETURN :
+  --   x         corrected solution;
+  --   fail      true if desired accuracy not met within max iterations;
+  --   critical  true if the determinant is less than tol_det;
+  --   nit       number of iterations done on the solution.
 
   procedure Bisection_Singularity
                ( file : in file_type;
@@ -580,6 +639,38 @@ package Standard_Quad_Turn_Points is
   --   of the parabola passing through the data points (x,y).
   --   The value of the critical t is p/q.
 
+  procedure Silent_Parabolic_Minimization
+               ( vt,dt : in Standard_Floating_Vectors.Vector;
+                 zt : in double_float;
+                 f : in Standard_Floating_Poly_SysFun.Eval_Poly_Sys;
+                 jf : Standard_Floating_Jaco_Matrices.Eval_Jaco_Mat;
+                 x : in out Standard_Floating_Vectors.Vector;
+                 tol_err,tol_res,tol_det : in double_float;
+                 max : in natural32; fail,critical : out boolean;
+                 nit : out natural32 );
+
+  -- DESCRIPTION :
+  --   Backup to a suspected critical value of the continuation parameter,
+  --   without intermediate output to screen or to file.
+
+  -- ON ENTRY :
+  --   vt        3 consecutive values of the continuation parameter;
+  --   dt        values of determinants, corresponding to the vt's;
+  --   zt        suspected critical value;
+  --   f         polynomial system to evaluate the homotopy;          
+  --   jf        Jacobi matrix of the homotopy;
+  --   x         initial starting point for the solution;
+  --   tol_err   tolerance for increment to update the solution;
+  --   tol_res   tolerance for the residual;
+  --   tol_det   tolerance for the determinant;
+  --   max       maximal number of Newton iterators.
+
+  -- ON RETURN :
+  --   x         corrected solution;
+  --   fail      true if desired accuracy not met within max iterations;
+  --   critical  true if the determinant is less than tol_det;
+  --   nit       number of iterations done on the solution.
+
   procedure Parabolic_Minimization
                ( file : in file_type;
                  vt,dt : in Standard_Floating_Vectors.Vector;
@@ -612,6 +703,64 @@ package Standard_Quad_Turn_Points is
   --   fail      true if desired accuracy not met within max iterations;
   --   critical  true if the determinant is less than tol_det;
   --   nit       number of iterations done on the solution.
+
+  procedure Silent_Monitor_Singularity
+               ( nd : in double_float;
+                 vt,dt : in out Standard_Floating_Vectors.Vector;
+                 i : in out integer32;
+                 f : in Standard_Floating_Poly_SysFun.Eval_Poly_Sys;
+                 jf : Standard_Floating_Jaco_Matrices.Eval_Jaco_Mat;
+                 x : in out Standard_Floating_Vectors.Vector;
+                 px,pt,dx : in Standard_Floating_Vectors.Vector;
+                 tol_err,tol_res,tol_det : in double_float;
+                 max : in natural32; fail : out boolean;
+                 nit,crtp : out natural32 );
+  procedure Silent_Monitor_Singularity
+               ( nd : in Complex_Number;
+                 vt,dt : in out Standard_Floating_Vectors.Vector;
+                 i : in out integer32;
+                 f : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                 jf : Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                 x : in out Standard_Complex_Vectors.Vector;
+                 px,pt,dx : in Standard_Complex_Vectors.Vector;
+                 tol_err,tol_res,tol_det : in double_float;
+                 max : in natural32; fail : out boolean;
+                 nit,crtp : out natural32 );
+
+  -- DESCRIPTION :
+  --   Monitors determinant, orientation of tangent, and consecutive
+  --   values of determinant for possible singularities,
+  --   without extra output to file or screen.
+
+  -- ON ENTRY :
+  --   nd        new value for determinant for t = x(x'last);
+  --   vt        3 consecutive values of the continuation parameter;
+  --   dt        values of determinants, corresponding to the vt's;
+  --   i         index to last element in vt;
+  --   f         polynomial system to evaluate the homotopy;          
+  --   jf        Jacobi matrix of the homotopy;
+  --   x         initial starting point for the solution;
+  --   px        previous value along the solution path;
+  --   pt        previous tangent vector;
+  --   dx        current tangent vector;
+  --   tol_err   tolerance for increment to update the solution;
+  --   tol_res   tolerance for the residual;
+  --   tol_det   tolerance for the determinant;
+  --   max       maximal number of Newton iterators.
+
+  -- ON RETURN :
+  --   vt        updated consecutive values of continuation parameter;
+  --   dt        updated consecutive determinant values;
+  --   i         updated index in window for (vt,dt);
+  --   x         corrected solution;
+  --   fail      true if desired accuracy not met within max iterations;
+  --   nit       number of iterations done on the solution;
+  --   crtp      type of critical point:
+  --               0 if no singularity,
+  --               1 if determinant is zero,
+  --               2 if orientation of the tangent flipped,
+  --               3 if sign of determinant flipped,
+  --               4 if minimum of parabola lies inside.
 
   procedure Monitor_Singularity
                ( file : in file_type; output : in boolean;

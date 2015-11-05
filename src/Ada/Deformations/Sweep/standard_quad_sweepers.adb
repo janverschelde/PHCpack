@@ -229,6 +229,74 @@ package body Standard_Quad_Sweepers is
     Standard_Floating_Jaco_Matrices.Clear(ejm);
   end Interactive_Real_Sweep;
 
+  procedure Silent_Real_Sweep
+               ( eigval : in boolean;
+                 nq,nv : in natural32; t : in double_float;
+                 f : in Standard_Floating_Poly_SysFun.Eval_Poly_Sys;
+                 jf : in Standard_Floating_Jaco_Matrices.Eval_Jaco_Mat;
+                 x : in out Standard_Floating_Vectors.Vector;
+                 dx : out Standard_Floating_Vectors.Vector ) is
+
+    pt,px,x0 : Standard_Floating_Vectors.Vector(1..integer32(nv));
+    det : Standard_Floating_Vectors.Vector(1..integer32(nq));
+    xt,yd : Standard_Floating_Vectors.Vector(1..3);
+    wi : integer32 := 0;
+    L : Standard_Complex_Vectors.Vector(1..integer32(nq-1));
+    v : Standard_Complex_VecVecs.VecVec(1..integer32(nq-1));
+    max : constant natural32 := Standard_Quad_Parameters.max_predictor_steps;
+    step : double_float := Standard_Quad_Parameters.max_step_size;
+    step_cnt : integer32;
+    tol_err : constant double_float
+            := Standard_Quad_Parameters.increment_tolerance;
+    tol_res : constant double_float
+            := Standard_Quad_Parameters.residual_tolerance;
+    tol_det : constant double_float
+            := Standard_Quad_Parameters.determinant_tolerance;
+    maxits : constant natural32
+           := Standard_Quad_Parameters.max_corrector_steps;
+    nb,crtp : natural32;
+    fail : boolean := false;
+    critical : boolean := false;
+    nd : double_float;
+
+    use Standard_Floating_Vectors;
+    use Standard_Floating_Poly_SysFun;
+
+  begin
+    px := x;
+    pt := (pt'range => 0.0); pt(pt'last) := 1.0;
+    Step_Size_Control(step,-1); step_cnt := 0;
+    for k in 1..max loop
+      if not fail then
+        if eigval then
+          Tangent_Minors_and_Eigenvectors(jf,x,dx,det,L,v);
+          nd := det(det'last);
+        else
+          Tangent_and_Determinant(jf,x,dx,nd);
+        end if;
+        Silent_Monitor_Singularity(nd,xt,yd,wi,f,jf,x,px,pt,dx,
+          tol_err,tol_res,tol_det,maxits,fail,nb,crtp);
+        critical := (crtp > 0);
+        exit when critical;
+      end if;
+      x0 := x; x := x + step*dx;
+      Correct_Solution(f,jf,dx,x,tol_err,tol_res,fail,nb,maxits);
+      exit when (x(x'last) >= t);
+      if not fail
+       then px := x0; pt := dx; step_cnt := step_cnt + 1;
+       else x := x0;  dx := pt; step_cnt := 0;
+      end if;
+      Step_Size_Control(step,step_cnt);
+    end loop;
+    if crtp = 0 then
+      if x(x'last) > t
+       then Target_Correction(f,jf,t,x,tol_err,tol_res,fail,nb,maxits);
+      end if;
+    elsif crtp = 2 then
+      Shoot_Turn(f,jf,px,pt,x,dx,step,1.0E-10,4);
+    end if;
+  end Silent_Real_Sweep;
+
   procedure Start_Real_Sweep
                ( eigval : in boolean;
                  nq,nv : in natural32; t : in double_float;
