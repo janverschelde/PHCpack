@@ -132,16 +132,18 @@ def quaddobl_complex_sweep(pols, sols, nvar, pars, start, target):
 
 def standard_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     """
-    A real sweep homotopy is given as a family of n equations in n+1 variables,
-    where one of the variables serves as the artificial parameter s which moves
+    A real sweep homotopy is a family of n equations in n+1 variables,
+    where one of the variables is the artificial parameter s which moves
     from 0.0 to 1.0.  The last equation can then be of the form
-    (1 - s)*(lambda - L[0]) + s*(lambda - L[1]) = 0 so that
+    (1 - s)*(lambda - L[0]) + s*(lambda - L[1]) = 0 so that,
     at s = 0, the natural parameter lambda has the value L[0], and
     at s = 1, the natural parameter lambda has the value L[1].
+    Thus: as s moves from 0 to 1, lambda goes from L[0] to L[1].
     All solutions in the list sols must have then the value L[0]
     for the variable lambda.
     The sweep stops when the target value for s is reached
     or when a singular solution is encountered.
+    Computations happend in standard double precision.
     """
     from phcpy.interface import store_standard_solutions as storesols
     from phcpy.interface import store_standard_system as storesys
@@ -163,6 +165,88 @@ def standard_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     set_start(nbp, str([start, 0.0]))
     set_target(nbp, str([target, 0.0]))
     from phcpy.phcpy2c import py2c_sweep_standard_real_run as run
+    run()
+    result = loadsols()
+    return result
+
+def dobldobl_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
+    """
+    A real sweep homotopy is a family of n equations in n+1 variables,
+    where one of the variables is the artificial parameter s which moves
+    from 0.0 to 1.0.  The last equation can then be of the form
+    (1 - s)*(lambda - L[0]) + s*(lambda - L[1]) = 0 so that,
+    at s = 0, the natural parameter lambda has the value L[0], and
+    at s = 1, the natural parameter lambda has the value L[1].
+    Thus: as s moves from 0 to 1, lambda goes from L[0] to L[1].
+    All solutions in the list sols must have then the value L[0]
+    for the variable lambda.
+    The sweep stops when the target value for s is reached
+    or when a singular solution is encountered.
+    Computations happen in double double precision.
+    """
+    from phcpy.interface import store_dobldobl_solutions as storesols
+    from phcpy.interface import store_dobldobl_system as storesys
+    nvar = len(pols) + 1
+    storesys(pols, nbvar=nvar)
+    storesols(nvar, sols)
+    print 'done storing system and solutions ...'
+    from phcpy.interface import load_dobldobl_solutions as loadsols
+    from phcpy.phcpy2c \
+    import py2c_sweep_define_parameters_symbolically as define
+    from phcpy.phcpy2c \
+    import py2c_sweep_set_dobldobl_start as set_start
+    from phcpy.phcpy2c \
+    import py2c_sweep_set_dobldobl_target as set_target
+    (nbq, nbp) = (len(pols), 1)
+    pars = [par]
+    parnames = ' '.join(pars)
+    nbc = len(parnames)
+    print 'defining the parameters ...'
+    define(nbq, nvar, nbp, nbc, parnames)
+    set_start(nbp, str([start, 0.0, 0.0, 0.0]))  # double doubles !
+    set_target(nbp, str([target, 0.0, 0.0, 0.0]))
+    from phcpy.phcpy2c import py2c_sweep_dobldobl_real_run as run
+    run()
+    result = loadsols()
+    return result
+
+def quaddobl_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
+    """
+    A real sweep homotopy is a family of n equations in n+1 variables,
+    where one of the variables is the artificial parameter s which moves
+    from 0.0 to 1.0.  The last equation can then be of the form
+    (1 - s)*(lambda - L[0]) + s*(lambda - L[1]) = 0 so that,
+    at s = 0, the natural parameter lambda has the value L[0], and
+    at s = 1, the natural parameter lambda has the value L[1].
+    Thus: as s moves from 0 to 1, lambda goes from L[0] to L[1].
+    All solutions in the list sols must have then the value L[0]
+    for the variable lambda.
+    The sweep stops when the target value for s is reached
+    or when a singular solution is encountered.
+    Computations happen in quad double precision.
+    """
+    from phcpy.interface import store_quaddobl_solutions as storesols
+    from phcpy.interface import store_quaddobl_system as storesys
+    nvar = len(pols) + 1
+    storesys(pols, nbvar=nvar)
+    storesols(nvar, sols)
+    print 'done storing system and solutions ...'
+    from phcpy.interface import load_quaddobl_solutions as loadsols
+    from phcpy.phcpy2c \
+    import py2c_sweep_define_parameters_symbolically as define
+    from phcpy.phcpy2c \
+    import py2c_sweep_set_quaddobl_start as set_start
+    from phcpy.phcpy2c \
+    import py2c_sweep_set_quaddobl_target as set_target
+    (nbq, nbp) = (len(pols), 1)
+    pars = [par]
+    parnames = ' '.join(pars)
+    nbc = len(parnames)
+    print 'defining the parameters ...'
+    define(nbq, nvar, nbp, nbc, parnames)
+    set_start(nbp, str([start, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]))
+    set_target(nbp, str([target, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]))
+    from phcpy.phcpy2c import py2c_sweep_quaddobl_real_run as run
     run()
     result = loadsols()
     return result
@@ -215,7 +299,14 @@ def real_sweep_test(precision='d'):
     rfirst = makesol(['x', 'y', 's'], [1, 0, 0])
     rsecond = makesol(['x', 'y', 's'], [-1, 0, 0])
     rstartsols = [rfirst, rsecond]
-    rnewsols = standard_real_sweep(rcircle, rstartsols)
+    if(precision == 'd'):
+       rnewsols = standard_real_sweep(rcircle, rstartsols)
+    elif(precision == 'dd'):
+       rnewsols = dobldobl_real_sweep(rcircle, rstartsols)
+    elif(precision == 'qd'):
+       rnewsols = quaddobl_real_sweep(rcircle, rstartsols)
+    else:
+       print 'wrong precision given as input parameter to test'
     print 'after the sweep that started at real solutions :'
     for sol in rnewsols:
         print sol
@@ -226,13 +317,20 @@ def real_sweep_test(precision='d'):
     cfirst = makesol(['x', 'y', 's'], [complex(0,2), sqrt5, 0])
     csecond = makesol(['x', 'y', 's'], [complex(0,-2), sqrt5, 0])
     cstartsols = [cfirst, csecond]
-    cnewsols = standard_real_sweep(ccircle, cstartsols)
+    if(precision == 'd'):
+        cnewsols = standard_real_sweep(ccircle, cstartsols)
+    elif(precision == 'dd'):
+        cnewsols = dobldobl_real_sweep(ccircle, cstartsols)
+    elif(precision == 'qd'):
+        cnewsols = quaddobl_real_sweep(ccircle, cstartsols)
+    else:
+        print 'wrong precision given as input parameter to test'
     print 'after the sweep that started at complex solutions :'
     for sol in cnewsols:
         print sol
 
 if __name__ == "__main__":
-    real_sweep_test()
+    real_sweep_test('qd')
     #complex_sweep_test('d')
     #complex_sweep_test('dd')
     #complex_sweep_test('qd')
