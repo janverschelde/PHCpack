@@ -13,6 +13,10 @@ In a complex sweep, with a randomly generated gamma we avoid singularities
 along the solution paths, in a complex convex combination between the
 start and target values for the parameters.  This complex sweep is
 applicable only when the parameter space is convex.
+The algorithms applied in this module are described in the paper by
+Kathy Piret and Jan Verschelde: Sweeping Algebraic Curves for Singular 
+Solutions.  Journal of Computational and Applied Mathematics,
+volume 234, number 4, pages 1228-1237, 2010. 
 """
 
 def standard_complex_sweep(pols, sols, nvar, pars, start, target):
@@ -126,36 +130,6 @@ def quaddobl_complex_sweep(pols, sols, nvar, pars, start, target):
     result = loadsols()
     return result
 
-def complex_sweep_test(precision='d'):
-    """
-    Runs a complex sweep on two points on the unit circle.
-    """
-    from solutions import make_solution as makesol
-    circle = ['x^2 + y^2 - 1;']
-    first = makesol(['x', 'y'], [0, 1])
-    second = makesol(['x', 'y'], [0, -1])
-    startsols = [first, second]
-    xpar = ['x']
-    if(precision == 'd'):
-        ststart = [0, 0]  # real and imaginary parts of the start value
-        sttarget = [2, 0]
-        newsols = standard_complex_sweep(circle, startsols, 2, xpar, \
-                                         ststart, sttarget)
-    elif(precision == 'dd'):
-        ddstart = [0, 0, 0, 0]  # double doubles
-        ddtarget = [2, 0, 0, 0]
-        newsols = dobldobl_complex_sweep(circle, startsols, 2, xpar, \
-                                         ddstart, ddtarget)
-    elif(precision == 'qd'):
-        qdstart = [0, 0, 0, 0, 0, 0, 0, 0]  # quad doubles
-        qdtarget = [2, 0, 0, 0, 0, 0, 0, 0]
-        newsols = quaddobl_complex_sweep(circle, startsols, 2, xpar, \
-                                         qdstart, qdtarget)
-    else:
-        print 'wrong precision given as input parameter to test'
-    for sol in newsols:
-        print sol
-
 def standard_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     """
     A real sweep homotopy is given as a family of n equations in n+1 variables,
@@ -188,10 +162,77 @@ def standard_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     define(nbq, nvar, nbp, nbc, parnames)
     set_start(nbp, str([start, 0.0]))
     set_target(nbp, str([target, 0.0]))
+    from phcpy.phcpy2c import py2c_sweep_standard_real_run as run
+    run()
     result = loadsols()
     return result
 
+def complex_sweep_test(precision='d'):
+    """
+    Runs a complex sweep on two points on the unit circle.
+    Although we start at two points with real coordinates
+    and we end at two points that have nonzero imaginary parts,
+    the sweep does not encounter a singularity because of
+    the random complex gamma constant.
+    """
+    from solutions import make_solution as makesol
+    circle = ['x^2 + y^2 - 1;']
+    first = makesol(['x', 'y'], [0, 1])
+    second = makesol(['x', 'y'], [0, -1])
+    startsols = [first, second]
+    xpar = ['x']
+    if(precision == 'd'):
+        ststart = [0, 0]  # real and imaginary parts of the start value
+        sttarget = [2, 0]
+        newsols = standard_complex_sweep(circle, startsols, 2, xpar, \
+                                         ststart, sttarget)
+    elif(precision == 'dd'):
+        ddstart = [0, 0, 0, 0]  # double doubles
+        ddtarget = [2, 0, 0, 0]
+        newsols = dobldobl_complex_sweep(circle, startsols, 2, xpar, \
+                                         ddstart, ddtarget)
+    elif(precision == 'qd'):
+        qdstart = [0, 0, 0, 0, 0, 0, 0, 0]  # quad doubles
+        qdtarget = [2, 0, 0, 0, 0, 0, 0, 0]
+        newsols = quaddobl_complex_sweep(circle, startsols, 2, xpar, \
+                                         qdstart, qdtarget)
+    else:
+        print 'wrong precision given as input parameter to test'
+    for sol in newsols:
+        print sol
+
+def real_sweep_test(precision='d'):
+    """
+    Runs a real sweep on two points on the unit circle: (1,0), (-1,0),
+    moving the second coordinate from 0 to 2.
+    The sweep will stop at the quadratic turning point: (0,1).
+    We can also run the sweep starting at two complex points:
+    (2*j, sqrt(5)) and (-2*j, sqrt(5)), moving the second coordinate
+    from sqrt(5) to 0.  This sweep will also stop at (0,1).
+    """
+    from solutions import make_solution as makesol
+    rcircle = ['x^2 + y^2 - 1;', 'y*(1-s) + (y-2)*s;']
+    rfirst = makesol(['x', 'y', 's'], [1, 0, 0])
+    rsecond = makesol(['x', 'y', 's'], [-1, 0, 0])
+    rstartsols = [rfirst, rsecond]
+    rnewsols = standard_real_sweep(rcircle, rstartsols)
+    print 'after the sweep that started at real solutions :'
+    for sol in rnewsols:
+        print sol
+    from math import sqrt
+    sqrt5 = sqrt(5)
+    sweepline = '(y - %.15e)*(1-s) + y*s;' % sqrt5
+    ccircle = ['x^2 + y^2 - 1;', sweepline]
+    cfirst = makesol(['x', 'y', 's'], [complex(0,2), sqrt5, 0])
+    csecond = makesol(['x', 'y', 's'], [complex(0,-2), sqrt5, 0])
+    cstartsols = [cfirst, csecond]
+    cnewsols = standard_real_sweep(ccircle, cstartsols)
+    print 'after the sweep that started at complex solutions :'
+    for sol in cnewsols:
+        print sol
+
 if __name__ == "__main__":
-    complex_sweep_test('d')
-    complex_sweep_test('dd')
-    complex_sweep_test('qd')
+    real_sweep_test()
+    #complex_sweep_test('d')
+    #complex_sweep_test('dd')
+    #complex_sweep_test('qd')
