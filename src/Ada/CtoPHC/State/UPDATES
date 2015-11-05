@@ -1,5 +1,6 @@
-Thu 5 Nov 2015 : use_sweep calls the proper routines to run a sweep,
+Thu 5 Nov 2015 : use_sweep.adb calls the proper routines to run a sweep,
   with a silent version in case polynomials and solutions are real.
+  Add double double and quad double versions to use_sweep.adb.
 
 Wed 4 Nov 2015 : provides skeleton for the real sweep in use_sweep, adding
   a new job number that is also available in use_c2phc.
