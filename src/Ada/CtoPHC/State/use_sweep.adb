@@ -13,16 +13,25 @@ with Symbol_Table;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_Integer_Vectors;
 with Standard_Complex_Vectors;
+with Standard_Floating_Vectors;
 with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
 with Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_SysFun;
+with Standard_Complex_Jaco_Matrices;
+with Standard_Complex_to_Real_Poly;
+with Standard_Floating_Poly_Systems;
+with Standard_Floating_Poly_SysFun;
+with Standard_Floating_Jaco_Matrices;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
+with Standard_Solution_Diagnostics;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Standard_Parameter_Systems;
 with Standard_Parameter_Solutions;
+with Standard_Quad_Sweepers;
 with DoblDobl_Parameter_Systems;
 with DoblDobl_Parameter_Solutions;
 with QuadDobl_Parameter_Systems;
@@ -37,8 +46,8 @@ with QuadDobl_PolySys_Container;
 with QuadDobl_Solutions_Container;
 -- output for debugging purposes:
 --with Symbol_Table_io;
---with Standard_Natural_Numbers_io; use Standard_Natural_Numbers_io;
---with Standard_Integer_Numbers_io; use Standard_Integer_Numbers_io;
+with Standard_Natural_Numbers_io; use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers_io; use Standard_Integer_Numbers_io;
 --with Standard_Integer_Vectors_io; use Standard_Integer_Vectors_io;
 --with Standard_Complex_Solutions_io; use Standard_Complex_Solutions_io;
 
@@ -588,26 +597,82 @@ function use_sweep ( job : integer32;
            := Parameter_Homotopy_State.Get_Number_of_Parameters;
     indpar : constant Standard_Integer_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Indices;
-    indvar : constant Standard_Integer_Vectors.Vector
-           := Standard_Parameter_Systems.Complement(nb_var,indpar.all);
-    nv : constant integer32 := indvar'last;
     startv : Standard_Complex_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Start;
     target : Standard_Complex_Vectors.Link_to_Vector
            := Parameter_Homotopy_State.Get_Target;
-    t : double_float;
-    x,dx : Standard_Complex_Vectors.Vector(1..integer32(nv));
+    dx : Standard_Complex_Vectors.Vector(1..nb_var);
+    rx,rdx : Standard_Floating_Vectors.Vector(1..nb_var);
 
+    use Standard_Complex_Numbers;
     use Standard_Complex_Solutions;
+    use Standard_Quad_Sweepers;
+
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
+    isreal : constant boolean := Standard_Complex_to_Real_Poly.Is_Real(lp.all);
+    realvals : boolean; -- true if everything is real
+
+    spf : Standard_Complex_Poly_SysFun.Eval_Poly_Sys(lp'range);
+    sjm : Standard_Complex_Jaco_Matrices.Jaco_Mat(lp'range,1..nb_var);
+    sjf : Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat(lp'range,1..nb_var);
+    rp : Standard_Floating_Poly_Systems.Poly_Sys(lp'range);
+    rpf : Standard_Floating_Poly_SysFun.Eval_Poly_Sys(lp'range);
+    rjm : Standard_Floating_Jaco_Matrices.Jaco_Mat(lp'range,1..nb_var);
+    rjf : Standard_Floating_Jaco_Matrices.Eval_Jaco_Mat(lp'range,1..nb_var);
 
   begin
+    spf := Standard_Complex_Poly_SysFun.Create(lp.all);
+    sjm := Standard_Complex_Jaco_Matrices.Create(lp.all);
+    sjf := Standard_Complex_Jaco_Matrices.Create(sjm);
+    if isreal then
+      rp := Standard_Complex_to_Real_Poly.Convert_Complex_to_Real(lp.all);
+      rpf := Standard_Floating_Poly_SysFun.Create(rp);
+      rjm := Standard_Floating_Jaco_Matrices.Create(rp);
+      rjf := Standard_Floating_Jaco_Matrices.Create(rjm);
+    end if;
     while not Is_Null(tmp) loop
       ls := Head_Of(tmp);
-      x := ls.v;
+      ls.t := Create(0.0);
+      if not isreal then
+        realvals := false;
+      else
+        if(IMAG_Part(startv(startv'first)) /= 0.0) then
+          realvals := false;
+        elsif(IMAG_Part(target(target'first)) /= 0.0) then
+          realvals := false;
+        else
+          realvals := Standard_Solution_Diagnostics.Is_Real(ls.all,1.0E-14);
+        end if;
+      end if;
+      if realvals then
+        for i in ls.v'range loop
+          rx(i) := REAL_PART(ls.v(i));
+          rdx(i) := 0.0;
+        end loop;
+        Silent_Real_Sweep
+          (true,natural32(nb_equ),natural32(nb_var),1.0,rpf,rjf,rx,rdx);
+        for i in rx'range loop
+          ls.v(i) := Create(rx(i));
+        end loop;
+      else
+        for i in ls.v'range loop
+          dx(i) := Create(0.0);
+        end loop;
+        Start_Complex_Sweep
+          (natural32(nb_equ),natural32(nb_var),1.0,spf,sjf,ls.v,dx);
+      end if;
       tmp := Tail_Of(tmp);
     end loop;
+    Standard_Complex_Poly_SysFun.Clear(spf);
+    Standard_Complex_Jaco_Matrices.Clear(sjm);
+    Standard_Complex_Jaco_Matrices.Clear(sjf);
+    if isreal then
+      Standard_Floating_Poly_Systems.Clear(rp);
+      Standard_Floating_Poly_SysFun.Clear(rpf);
+      Standard_Floating_Jaco_Matrices.Clear(rjm);
+      Standard_Floating_Jaco_Matrices.Clear(rjf);
+    end if;
     return 0;
   end Standard_Real_Sweep;
 
