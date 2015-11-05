@@ -231,6 +231,75 @@ package body QuadDobl_Quad_Sweepers is
     Quad_Double_Jaco_Matrices.Clear(ejm);
   end Interactive_Real_Sweep;
 
+  procedure Silent_Real_Sweep
+               ( eigval : in boolean;
+                 nq,nv : in natural32; t : in quad_double;
+                 f : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                 jf : in Quad_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                 x : in out Quad_Double_Vectors.Vector;
+                 dx : out Quad_Double_Vectors.Vector ) is
+
+    pt,px,x0 : Quad_Double_Vectors.Vector(1..integer32(nv));
+    det : Quad_Double_Vectors.Vector(1..integer32(nq));
+    xt,yd : Quad_Double_Vectors.Vector(1..3);
+    wi : integer32 := 0;
+    L : QuadDobl_Complex_Vectors.Vector(1..integer32(nq-1));
+    v : QuadDobl_Complex_VecVecs.VecVec(1..integer32(nq-1));
+    max : constant natural32 := QuadDobl_Quad_Parameters.max_predictor_steps;
+    step : quad_double := QuadDobl_Quad_Parameters.max_step_size;
+    step_cnt : integer32;
+    tol_err : constant quad_double
+            := QuadDobl_Quad_Parameters.increment_tolerance;
+    tol_res : constant quad_double
+            := QuadDobl_Quad_Parameters.residual_tolerance;
+    tol_det : constant quad_double
+            := QuadDobl_Quad_Parameters.determinant_tolerance;
+    maxits : constant natural32
+           := QuadDobl_Quad_Parameters.max_corrector_steps;
+    nb,crtp : natural32;
+    fail : boolean := false;
+    critical : boolean := false;
+    nd : quad_double;
+
+    use Quad_Double_Vectors;
+    use Quad_Double_Poly_SysFun;
+
+  begin
+    px := x;
+    pt := (pt'range => create(0.0));
+    pt(pt'last) := create(1.0);
+    Step_Size_Control(step,-1); step_cnt := 0;
+    for k in 1..max loop
+      if not fail then
+        if eigval then
+          Tangent_Minors_and_Eigenvectors(jf,x,dx,det,L,v);
+          nd := det(det'last);
+        else
+          Tangent_and_Determinant(jf,x,dx,nd);
+        end if;
+        Silent_Monitor_Singularity(nd,xt,yd,wi,f,jf,x,px,pt,dx,
+          tol_err,tol_res,tol_det,maxits,fail,nb,crtp);
+        critical := (crtp > 0);
+        exit when critical;
+      end if;
+      x0 := x; x := x + step*dx;
+      Correct_Solution(f,jf,dx,x,tol_err,tol_res,fail,nb,maxits);
+      exit when (x(x'last) >= t);
+      if not fail
+       then px := x0; pt := dx; step_cnt := step_cnt + 1;
+       else x := x0;  dx := pt; step_cnt := 0;
+      end if;
+      Step_Size_Control(step,step_cnt);
+    end loop;
+    if crtp = 0 then
+      if x(x'last) > t
+       then Target_Correction(f,jf,t,x,tol_err,tol_res,fail,nb,maxits);
+      end if;
+    elsif crtp = 2 then
+      Shoot_Turn(f,jf,px,pt,x,dx,step,create(1.0E-10),4);
+    end if;
+  end Silent_Real_Sweep;
+
   procedure Start_Real_Sweep
                ( eigval : in boolean;
                  nq,nv : in natural32; t : in quad_double;

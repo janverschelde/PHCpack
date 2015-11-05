@@ -54,6 +54,36 @@ package DoblDobl_Quad_Sweepers is
   -- ON RETURN :
   --   repsols  solutions along path recorded by user.
 
+  procedure Silent_Real_Sweep
+              ( eigval : in boolean;
+                nq,nv : in natural32; t : in double_double;
+                f : in Double_Double_Poly_SysFun.Eval_Poly_Sys;
+                jf : in Double_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out Double_Double_Vectors.Vector;
+                dx : out Double_Double_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Performs a sweep starting at the given solution, till either
+  --   a singularity is encountered, or till the target value for the
+  --   parameter is reached, or till the number of steps is exhausted,
+  --   without intermediate output to file or screen.
+
+  -- ON ENTRY :
+  --   output   for intermediate diagnostics during continuation;
+  --   eigval   flag for eigenvalue computations;
+  --   nq       number of equations in p;
+  --   nv       number of variables, parameter t included;
+  --   t        target value for x(x'last);
+  --   f        a real system with nq equations in nv variables;
+  --   jf       Jacobian matrix of f, also in evaluable format;
+  --   x        current regular solution along a path.
+
+  -- ON RETURN :
+  --   x        solution at end is either a singularity, or
+  --            corresponding to t, or somewhere along a path
+  --            that required max number of steps;
+  --   dx       tangent vector corresponding to the solution.
+  --
   procedure Start_Real_Sweep
               ( eigval : in boolean;
                 nq,nv : in natural32; t : in double_double;
@@ -103,7 +133,6 @@ package DoblDobl_Quad_Sweepers is
   --            corresponding to t, or somewhere along a path
   --            that required max number of steps;
   --   dx       tangent vector corresponding to the solution.
-
 
 -- DRIVER ROUTINES :
 

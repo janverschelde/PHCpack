@@ -1197,6 +1197,43 @@ package body QuadDobl_Quad_Turn_Points is
     Quadratic_Interpolation(standard_output,x,y,p,q);
   end Quadratic_Interpolation;
 
+  procedure Silent_Monitor_Determinants
+               ( x,y : in out Quad_Double_Vectors.Vector;
+                 i : in out integer32; t,d : in quad_double;
+                 crit : out natural32; z : out quad_double ) is
+
+    p,q : quad_double;
+
+  begin
+    if i < x'last then
+      i := i + 1;
+    else -- i = t'last, shift window
+      x(1) := x(2); x(2) := x(3);
+      y(1) := y(2); y(2) := y(3);
+    end if;
+    x(i) := t; y(i) := d;
+    if i < x'last then
+      if i < x'last - 1 then
+        crit := 0;
+      elsif (y(1)*y(2) < 0.0) then
+        crit := 3;
+      else
+        crit := 0;
+      end if;
+    else
+      if y(2)*y(3) < 0.0 then
+        crit := 3;
+        z := (x(2) + x(3))/2.0;
+      else
+        Quadratic_Interpolation(x,y,p,q); z := p/q;
+        if (z >= x(1) and z <= x(3))
+         then crit := 4;
+         else crit := 0;
+        end if;
+      end if;
+    end if;
+  end Silent_Monitor_Determinants;
+
   procedure Monitor_Determinants
                ( x,y : in out Quad_Double_Vectors.Vector;
                  i : in out integer32; t,d : in quad_double;
@@ -1294,6 +1331,40 @@ package body QuadDobl_Quad_Turn_Points is
                    crit := 4;
   end Monitor_Determinants;
 
+  procedure Silent_Bisection_Singularity
+                 ( t1,t2,d1,d2 : in out quad_double;
+                   f : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                   jf : Quad_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                   x : in out Quad_Double_Vectors.Vector;
+                   tol_err,tol_res,tol_det : in quad_double;
+                   max : in natural32; fail,critical : out boolean;
+                   nit : out natural32 ) is
+
+     y : Quad_Double_Vectors.Vector(f'range);
+     err,res,det : quad_double;
+     mt : quad_double;
+
+  begin
+    critical := true; nit := 0;
+    for i in 1..10*max loop
+      mt := (t1 + t2)/2.0; x(x'last) := mt;
+      y := Quad_Double_Poly_SysFun.Eval(f,x);
+      fail := true;
+      for i in 1..max loop
+        One_Corrector_Step(f,jf,x,y,err,res,det);
+        if (err < tol_err) and (res < tol_res)
+         then fail := false; nit := i;
+        end if;
+        exit when not fail;
+      end loop;
+      if d1*det < 0.0 then
+        t2 := mt; d2 := det;
+      else
+        t1 := mt; d1 := det;
+      end if;
+    end loop;
+  end Silent_Bisection_Singularity;
+
   procedure Bisection_Singularity
                  ( file : in file_type;
                    t1,t2,d1,d2 : in out quad_double;
@@ -1335,6 +1406,49 @@ package body QuadDobl_Quad_Turn_Points is
       end if;
     end loop;
   end Bisection_Singularity;
+
+  procedure Silent_Parabolic_Minimization
+                 ( vt,dt : in Quad_Double_Vectors.Vector;
+                   zt : in quad_double;
+                   f : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                   jf : Quad_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                   x : in out Quad_Double_Vectors.Vector;
+                   tol_err,tol_res,tol_det : in quad_double;
+                   max : in natural32; fail,critical : out boolean;
+                   nit : out natural32 ) is
+
+    y : Quad_Double_Vectors.Vector(f'range);
+    err,res,det,p,q,z : quad_double;
+    nvt : Quad_Double_Vectors.Vector(vt'range) := vt;
+    ndt : Quad_Double_Vectors.Vector(vt'range) := dt;
+
+  begin
+    z := zt;
+    for i in 1..max loop
+      y := Quad_Double_Poly_SysFun.Eval(f,x);
+      fail := true; nit := max;
+      for i in 1..max loop
+        One_Corrector_Step(f,jf,x,y,err,res,det);
+        if (err < tol_err) and (res < tol_res)
+         then fail := false; nit := i;
+        end if;
+        exit when not fail;
+      end loop;
+      if z < nvt(2) then -- drop (nvt(3),ndt(3))
+        nvt(3) := nvt(2); nvt(2) := z;  
+        ndt(3) := ndt(2); ndt(2) := det; 
+      else -- drop (nvt(1),ndt(1))
+        nvt(1) := nvt(2); nvt(2) := z;
+        ndt(1) := ndt(2); ndt(2) := det;
+      end if;
+      Quadratic_Interpolation(nvt,ndt,p,q); z := p/q;
+      if z < nvt(1) or z > nvt(3) then
+        exit; -- not critical because outside the interval
+      end if;
+      x(x'last) := z;
+    end loop;
+    critical := (abs(det) < tol_det);
+  end Silent_Parabolic_Minimization;
 
   procedure Parabolic_Minimization
                  ( file : in file_type;
@@ -1453,6 +1567,54 @@ package body QuadDobl_Quad_Turn_Points is
     end if;
   end Monitor_Singularity;
 
+  procedure Silent_Monitor_Singularity
+               ( nd : in quad_double;
+                 vt,dt : in out Quad_Double_Vectors.Vector;
+                 i : in out integer32;
+                 f : in Quad_Double_Poly_SysFun.Eval_Poly_Sys;
+                 jf : Quad_Double_Jaco_Matrices.Eval_Jaco_Mat;
+                 x : in out Quad_Double_Vectors.Vector;
+                 px,pt,dx : in Quad_Double_Vectors.Vector;
+                 tol_err,tol_res,tol_det : in quad_double;
+                 max : in natural32; fail : out boolean;
+                 nit,crtp : out natural32 ) is
+
+    orientation,zt,t1,t2,d1,d2 : quad_double;
+    critical : boolean;
+
+    use Quad_Double_Vectors;
+
+  begin
+    crtp := 0;
+    if (abs(nd) < tol_det) then
+      crtp := 1;
+    else
+      orientation := pt*dx;
+      if (orientation < 0.0) then
+        crtp := 2;
+      else
+        Silent_Monitor_Determinants(vt,dt,i,x(x'last),nd,crtp,zt);
+        if crtp = 3 then
+          if i < vt'last then
+            t1 := vt(1); t2 := vt(2); d1 := dt(1); d2 := dt(2);
+          else
+            t1 := vt(2); t2 := vt(3); d1 := dt(2); d2 := dt(3);
+          end if;
+          x := px; x(x'last) := t1;
+          Silent_Bisection_Singularity(t1,t2,d1,d2,f,jf,x,
+            tol_err,tol_res,tol_det,max,fail,critical,nit);
+        elsif crtp = 4 then
+          x := px; x(x'last) := zt;
+          Silent_Parabolic_Minimization(vt,dt,zt,f,jf,x,
+            tol_err,tol_res,tol_det,max,fail,critical,nit);
+        end if;
+        if not critical then
+          crtp := 0;
+        end if;
+      end if;
+    end if;
+  end Silent_Monitor_Singularity;
+
   procedure Monitor_Singularity
                ( file : in file_type; output : in boolean;
                  nd : in Complex_Number;
@@ -1492,5 +1654,37 @@ package body QuadDobl_Quad_Turn_Points is
       end if;
     end if;
   end Monitor_Singularity;
+
+  procedure Silent_Monitor_Singularity
+               ( nd : in Complex_Number;
+                 vt,dt : in out Quad_Double_Vectors.Vector;
+                 i : in out integer32;
+                 f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                 jf : QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                 x : in out QuadDobl_Complex_Vectors.Vector;
+                 px,pt,dx : in QuadDobl_Complex_Vectors.Vector;
+                 tol_err,tol_res,tol_det : in quad_double;
+                 max : in natural32; fail : out boolean;
+                 nit,crtp : out natural32 ) is
+
+    t,vnd,zt : quad_double;
+    orientation : Complex_Number;
+ 
+  begin
+    fail := false; nit := 0;
+    crtp := 0;
+    vnd := AbsVal(nd);
+    if vnd < tol_det then
+      crtp := 1;
+    else 
+      orientation := Inner_Product(dx,pt);
+      if (REAL_PART(orientation) < 0.0) then
+        crtp := 2;
+      else
+        t := REAL_PART(x(x'last));
+        Silent_Monitor_Determinants(vt,dt,i,t,vnd,crtp,zt);
+      end if;
+    end if;
+  end Silent_Monitor_Singularity;
 
 end QuadDobl_Quad_Turn_Points;
