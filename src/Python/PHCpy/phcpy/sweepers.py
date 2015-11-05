@@ -1,5 +1,5 @@
 """
-The module sweepers exports the definition of sweep homotopies and 
+The module sweepers exports the definition of sweep homotopies and
 the tracking of solution paths defined by sweep homotopies.
 A sweep homotopy is a polynomial system where some of the variables
 are considered as parameters.  Given solutions for some parameters
@@ -43,13 +43,12 @@ def standard_complex_sweep(pols, sols, nvar, pars, start, target):
     (nbq, nbp) = (len(pols), len(pars))
     parnames = ' '.join(pars)
     nbc = len(parnames)
-    print 'defining the parameters in the sweep homotopy ...'
-    define(nbq, nvar, nbp, nbc, parnames)  
+    define(nbq, nvar, nbp, nbc, parnames)
     print 'setting the start and the target ...'
-    set_start(nbp, str(start));
-    set_target(nbp, str(target));
+    set_start(nbp, str(start))
+    set_target(nbp, str(target))
     print 'calling run in standard double precision ...'
-    run(0, 0.0, 0.0);
+    run(0, 0.0, 0.0)
     result = loadsols()
     return result
 
@@ -81,13 +80,12 @@ def dobldobl_complex_sweep(pols, sols, nvar, pars, start, target):
     (nbq, nbp) = (len(pols), len(pars))
     parnames = ' '.join(pars)
     nbc = len(parnames)
-    print 'defining the parameters in the sweep homotopy ...'
-    define(nbq, nvar, nbp, nbc, parnames)  
+    define(nbq, nvar, nbp, nbc, parnames)
     print 'setting the start and the target ...'
-    set_start(nbp, str(start));
-    set_target(nbp, str(target));
+    set_start(nbp, str(start))
+    set_target(nbp, str(target))
     print 'calling run in double double precision ...'
-    run(0, 0.0, 0.0);
+    run(0, 0.0, 0.0)
     result = loadsols()
     return result
 
@@ -119,19 +117,18 @@ def quaddobl_complex_sweep(pols, sols, nvar, pars, start, target):
     (nbq, nbp) = (len(pols), len(pars))
     parnames = ' '.join(pars)
     nbc = len(parnames)
-    print 'defining the parameters in the sweep homotopy ...'
-    define(nbq, nvar, nbp, nbc, parnames)  
+    define(nbq, nvar, nbp, nbc, parnames)
     print 'setting the start and the target ...'
-    set_start(nbp, str(start));
-    set_target(nbp, str(target));
+    set_start(nbp, str(start))
+    set_target(nbp, str(target))
     print 'calling run in quad double precision ...'
-    run(0, 0.0, 0.0);
+    run(0, 0.0, 0.0)
     result = loadsols()
     return result
 
-def test(precision='d'):
+def complex_sweep_test(precision='d'):
     """
-    Runs a sweep on two points on the unit circle.
+    Runs a complex sweep on two points on the unit circle.
     """
     from solutions import make_solution as makesol
     circle = ['x^2 + y^2 - 1;']
@@ -146,7 +143,7 @@ def test(precision='d'):
                                          ststart, sttarget)
     elif(precision == 'dd'):
         ddstart = [0, 0, 0, 0]  # double doubles
-        ddtarget = [2, 0, 0, 0] 
+        ddtarget = [2, 0, 0, 0]
         newsols = dobldobl_complex_sweep(circle, startsols, 2, xpar, \
                                          ddstart, ddtarget)
     elif(precision == 'qd'):
@@ -159,7 +156,42 @@ def test(precision='d'):
     for sol in newsols:
         print sol
 
+def standard_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
+    """
+    A real sweep homotopy is given as a family of n equations in n+1 variables,
+    where one of the variables serves as the artificial parameter s which moves
+    from 0.0 to 1.0.  The last equation can then be of the form
+    (1 - s)*(lambda - L[0]) + s*(lambda - L[1]) = 0 so that
+    at s = 0, the natural parameter lambda has the value L[0], and
+    at s = 1, the natural parameter lambda has the value L[1].
+    All solutions in the list sols must have then the value L[0]
+    for the variable lambda.
+    The sweep stops when the target value for s is reached
+    or when a singular solution is encountered.
+    """
+    from phcpy.interface import store_standard_solutions as storesols
+    from phcpy.interface import store_standard_system as storesys
+    nvar = len(pols) + 1
+    storesys(pols, nbvar=nvar)
+    storesols(nvar, sols)
+    from phcpy.interface import load_standard_solutions as loadsols
+    from phcpy.phcpy2c \
+    import py2c_sweep_define_parameters_symbolically as define
+    from phcpy.phcpy2c \
+    import py2c_sweep_set_standard_start as set_start
+    from phcpy.phcpy2c \
+    import py2c_sweep_set_standard_target as set_target
+    (nbq, nbp) = (len(pols), 1)
+    pars = [par]
+    parnames = ' '.join(pars)
+    nbc = len(parnames)
+    define(nbq, nvar, nbp, nbc, parnames)
+    set_start(nbp, str([start, 0.0]))
+    set_target(nbp, str([target, 0.0]))
+    result = loadsols()
+    return result
+
 if __name__ == "__main__":
-    test('d')
-    test('dd')
-    test('qd')
+    complex_sweep_test('d')
+    complex_sweep_test('dd')
+    complex_sweep_test('qd')
