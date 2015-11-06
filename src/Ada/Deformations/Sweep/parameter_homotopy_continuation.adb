@@ -573,7 +573,7 @@ package body Parameter_Homotopy_Continuation is
     end Diff_Pars;
 
     procedure Par_Con is
-      new Standard_Parameter_Continuation(Eval_Pars,Diff_Pars);
+      new Standard_Reporting_Parameter_Continuation(Eval_Pars,Diff_Pars);
 
   begin
     Determine_Parameter_Values
@@ -648,7 +648,7 @@ package body Parameter_Homotopy_Continuation is
     end Diff_Pars;
 
     procedure Par_Con is
-      new DoblDobl_Parameter_Continuation(Eval_Pars,Diff_Pars);
+      new DoblDobl_Reporting_Parameter_Continuation(Eval_Pars,Diff_Pars);
 
   begin
     Determine_Parameter_Values
@@ -724,7 +724,7 @@ package body Parameter_Homotopy_Continuation is
     end Diff_Pars;
 
     procedure Par_Con is
-      new QuadDobl_Parameter_Continuation(Eval_Pars,Diff_Pars);
+      new QuadDobl_Reporting_Parameter_Continuation(Eval_Pars,Diff_Pars);
 
   begin
     Determine_Parameter_Values
