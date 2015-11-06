@@ -1,3 +1,5 @@
+Fri 6 Nov 2015 : adjusted greeting_banners for version 2.4.04.
+
 Tue 27 Oct 2015 : mainphc.adb and black_box_solvers.adb changed for the 
   renaming of the package black_box_poly_continuations.  Added calls to
   bablpoco2 and bablpoco4 in dispatch.adb so phc -b -p2 and phc -b -p4
