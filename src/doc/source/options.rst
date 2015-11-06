@@ -383,6 +383,44 @@ there is support for complex parameter continuation
 and real pseudo arc length path tracking with detection of singularities
 using the determinant of the Jacobian along the solution path.
 
+To run pseudo arc length continuation, the user has to submit a system
+that has fewer equations than variables.  
+For example, for a *real* sweep of the unit circle, the input would be 
+
+::
+
+  2 3
+   x^2 + y^2 - 1;
+   y*(1-s) + (y-2)*s;
+
+where the last equation moves the line \ :math:`y=0` to \ :math:`y=2`.
+The sweep will stop at the first singularity it encounters on the
+solution path, which in this case is the quadratic turning point
+at \ :math:`(0, 1)`.
+
+The corresponding list of solutions should then contain the following:
+
+::
+
+  2 3
+  ===========================================================================
+  solution 1 :
+  t :  0.00000000000000E+00   0.00000000000000E+00
+  m : 1
+  the solution for t :
+   x : -1.00000000000000E+00   0.00000000000000E+00
+   y :  0.00000000000000E+00   0.00000000000000E+00
+   s :  0.00000000000000E+00   0.00000000000000E+00
+  == err :  0.000E+00 = rco :  1.863E-01 = res :  0.000E+00 ==
+  solution 2 :
+  t :  0.00000000000000E+00   0.00000000000000E+00
+  m : 1
+  the solution for t :
+   x :  1.00000000000000E+00   0.00000000000000E+00
+   y :  0.00000000000000E+00   0.00000000000000E+00
+   s :  0.00000000000000E+00   0.00000000000000E+00
+  == err :  0.000E+00 = rco :  1.863E-01 = res :  0.000E+00 ==
+
 phc -q : Tracking Solution Paths with incremental read/write   
 ------------------------------------------------------------
 

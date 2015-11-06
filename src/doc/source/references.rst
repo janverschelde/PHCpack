@@ -36,28 +36,39 @@ References
    edited by A. Iglesias and N. Takayama,
    pages 354-360, Springer-Verlag, 2006. 
 
-7. A. J. Sommese, J. Verschelde, and C. W. Wampler.
+7. K. Piret and J. Verschelde:
+   **Sweeping Algebraic Curves for Singular Solutions.**
+   *Journal of Computational and Applied Mathematics*,
+   234(4): 1228-1237, 2010. 
+
+8. A. J. Sommese, J. Verschelde, and C. W. Wampler.
    **Numerical irreducible decomposition using PHCpack.**
    In *Algebra, Geometry, and Software Systems*, 
    edited by M. Joswig and N. Takayama,
    pages 109-130. Springer-Verlag, 2003.
 
-8. J. Verschelde:
+9. J. Verschelde:
    **Algorithm 795: PHCpack: A general-purpose solver for polynomial
    systems by homotopy continuation.**
    *ACM Transactions on Mathematical Software*, 25(2):251--276, 1999.
 
-9. J. Verschelde:
-   **Polynomial homotopy continuation with PHCpack.**
-   *ACM Communications in Computer Algebra*, 44(4):217-220, 2010.
-
 10. J. Verschelde:
+    **Polynomial homotopy continuation with PHCpack.**
+    *ACM Communications in Computer Algebra*, 44(4):217-220, 2010.
+
+11. J. Verschelde:
     **Modernizing PHCpack through phcpy.**
     In Proceedings of the 6th European Conference on Python in Science
     (EuroSciPy 2013), edited by Pierre de Buyl and Nelle Varoquaux,
     pages 71-76, 2014, available at
     <http://arxiv.org/abs/1310.0056>.
 
-11. J. Verschelde and X. Yu:
+12. J. Verschelde and G. Yoffe.
+    **Polynomial homotopies on multicore workstations.**
+    In M.M. Maza and J.-L. Roch, editors, *Proceedings of the 4th
+    International Workshop on Parallel Symbolic Computation (PASCO 2010),
+    July 21-23 2010, Grenoble, France*, pages 131--140. ACM, 2010.
+
+13. J. Verschelde and X. Yu:
     **Polynomial Homotopy Continuation on GPUs.**
     *ACM Communications in Computer Algebra*, to appear.
