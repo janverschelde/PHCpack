@@ -16,6 +16,7 @@ phcpy Documentation Contents
    solsrep
    interface
    pathtrack
+   sweep
    intexs
    somefams
    numschub

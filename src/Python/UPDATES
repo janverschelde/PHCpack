@@ -1,5 +1,7 @@
 Thu 5 Nov 2015 : extended sweepers.py with tests on the real sweep,
   and with double double and quad double versions for the real sweep.
+  Started writing documentation on the sweepers module, with a new
+  sweep.rst and a picture in circles.png.
 
 Wed 4 Nov 2015 : in sweepers.py adjusted the names to the calls of the 
   functions that run the sweep, as they got changed in phcpy2c.
