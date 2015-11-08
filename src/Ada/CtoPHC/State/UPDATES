@@ -1,3 +1,6 @@
+Sun 8 Nov 2015 : added to use_track and use_c2phc jobs to double the number
+  of symbols to write the target system to start the diagonal cascade.
+
 Sat 7 Nov 2015 : removed output written to screen in phcpack_operations
   when excuting the start_diagonal_cascade_solutions operation.
 

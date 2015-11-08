@@ -14,7 +14,7 @@ with QuadDobl_Complex_Numbers;
 with Multprec_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Floating_Vectors;
-with Symbol_Table;
+with Symbol_Table,Symbol_Table_io;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Strings;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
@@ -33,6 +33,7 @@ with QuadDobl_Continuation_Data_io;
 with Multprec_Homotopy;
 with Witness_Sets,Witness_Sets_io;
 with Extrinsic_Diagonal_Homotopies;
+with Extrinsic_Diagonal_Homotopies_io;  use Extrinsic_Diagonal_Homotopies_io;
 with Extrinsic_Diagonal_Solvers;
 with Hypersurface_Witness_Sets_io;      use Hypersurface_Witness_Sets_io;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
@@ -759,6 +760,75 @@ function use_track ( job : integer32;
       return 271;
   end Job41;
 
+  procedure Write_Symbols ( s : in Symbol_Table.Array_of_Symbols ) is
+
+  -- DESCRIPTION :
+  --   Writes the symbols in s to screen, useful for checking.
+
+  begin
+    for i in s'range loop
+      put(" "); Symbol_Table_io.put(s(i));
+    end loop;
+    new_line;
+  end Write_Symbols;
+
+  function Job42 return integer32 is -- diagonal symbols doubler
+
+    use Symbol_Table;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(3));
+    n : constant integer32 := integer32(v_a(v_a'first));
+    d : constant natural32 := natural32(v_a(v_a'first+1));
+    nc : constant integer := integer(v_a(v_a'first+2));
+    nc1 : constant Interfaces.C.size_t := Interfaces.C.size_t(nc-1);
+    v_b : constant C_Integer_Array(0..nc1)
+        := C_Intarrs.Value(b,Interfaces.C.ptrdiff_t(nc));
+    s : constant String(1..nc) := C_Integer_Array_to_String(natural32(nc),v_b);
+    sa1 : Array_of_Symbols(1..n);
+    nb2 : constant natural32 := Symbol_Table.Number;
+    sa2e : Array_of_Symbols(1..integer32(nb2)) := Symbol_Table.Content;
+    sa2 : constant Array_of_Symbols := Remove_Embed_Symbols(sa2e);
+    s11 : Array_of_Symbols(sa1'range);
+    s22 : constant Array_of_Symbols(sa2'range) := Add_Suffix(sa2,'2');
+    ind : integer := 0;
+
+  begin
+   -- put_line("The string of names in Ada : " & s); 
+    for i in 1..n loop
+      declare
+        sb : Symbol;
+        ksb : integer;
+      begin
+        sb := (sb'range => ' ');
+        ind := ind + 1;
+        ksb := sb'first-1;
+        while ind <= s'last loop
+          exit when s(ind) = ' ';
+          ksb := ksb + 1;
+          sb(ksb) := s(ind);
+          ind := ind + 1;
+        end loop;
+        sa1(i) := sb;
+      end;
+    end loop;
+    s11 := Add_Suffix(sa1,'1');
+   -- put("The symbols in the first array of symbols :");
+   -- Write_Symbols(sa1);
+   -- put("The symbols in the second array of symbols :");
+   -- Write_Symbols(sa2);
+   -- put("The first suffixed symbols :"); Write_Symbols(s11);
+   -- put("The second suffixed symbols :"); Write_Symbols(s22);
+    Symbol_Table.Clear;
+    Assign_Symbol_Table(s11,s22);
+    Witness_Sets_io.Add_Embed_Symbols(d);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised when doubling the symbols for diagonal.");
+      return 230;
+  end Job42;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -806,6 +876,7 @@ function use_track ( job : integer32;
      -- redefining diagonal homotopies ...
       when 40 => return Job40; -- witness set of hypersurface
       when 41 => return Job41; -- solutions to start diagonal cascade
+      when 42 => return Job42; -- diagonal symbols doubler
      -- multiprecision versions to create homotopy :
       when 52 => PHCpack_Operations.Create_Multprec_Homotopy; return 0;
       when 53 => return Job53; -- multiprecision homotopy with given gamma
