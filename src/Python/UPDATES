@@ -1,3 +1,6 @@
+Sat 7 Nov 2015 : fixed bugs in sets.py with the standard_double_cascade_steps
+  and started introduction of diagonal homotopies.
+
 Fri 6 Nov 2015 : updated __init__.py, setup.py, and conf.py for version 0.3.3
   of phcpy.
 
