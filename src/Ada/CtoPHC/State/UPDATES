@@ -1,3 +1,6 @@
+Sat 7 Nov 2015 : removed output written to screen in phcpack_operations
+  when excuting the start_diagonal_cascade_solutions operation.
+
 Thu 5 Nov 2015 : use_sweep.adb calls the proper routines to run a sweep,
   with a silent version in case polynomials and solutions are real.
   Add double double and quad double versions to use_sweep.adb.

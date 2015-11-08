@@ -858,18 +858,18 @@ package body PHCpack_Operations is
     embsols : Solution_List;
 
   begin
-    put_line("inside start_diagonal_cascade_solutions ...");
-    put("length of sols1 : "); put(Length_Of(sols1),1); new_line;
-    put("length of sols2 : "); put(Length_Of(sols2),1); new_line;
-    put("number of product solutions : "); put(Length_Of(sols),1); new_line;
+   -- put_line("inside start_diagonal_cascade_solutions ...");
+   -- put("length of sols1 : "); put(Length_Of(sols1),1); new_line;
+   -- put("length of sols2 : "); put(Length_Of(sols2),1); new_line;
+   -- put("number of product solutions : "); put(Length_Of(sols),1); new_line;
     if a+b < k
      then embsols := Witness_Sets.Add_Embedding(sols,b);
      else embsols := Witness_Sets.Add_Embedding(sols,k-a);
     end if;
     Clear(st_start_sols); Clear(st_target_sols);
     st_start_sols := embsols;
-    put("number of start solutions : ");
-    put(Length_Of(st_start_sols),1); new_line;
+   -- put("number of start solutions : ");
+   -- put(Length_Of(st_start_sols),1); new_line;
   end Start_Diagonal_Cascade_Solutions;
 
   procedure Silent_Path_Tracker 
