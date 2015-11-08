@@ -4537,6 +4537,19 @@ static PyObject *py2c_extrinsic_top_diagonal_dimension
       return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_diagonal_symbols_doubler 
+ ( PyObject *self, PyObject *args )
+{
+   int fail,n,d,nc;
+   char *s;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiis",&n,&d,&nc,&s)) return NULL;
+   fail = diagonal_symbols_doubler(n,d,nc,s);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_collapse_diagonal ( PyObject *self, PyObject *args )
 {
    int fail,k,d;
@@ -6142,6 +6155,9 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_extrinsic_top_diagonal_dimension",
      py2c_extrinsic_top_diagonal_dimension, METH_VARARGS,
     "Returns the dimension of the start and target system to\n start the extrinsic cascade to intersect two witness sets,\n respectively of dimensions a and b, with ambient dimensions\n respectively equal to n1 and n2.\n There are four integers as parameters on input: n1, n2, a and b."},
+   {"py2c_diagonal_symbols_doubler",
+     py2c_diagonal_symbols_doubler, METH_VARARGS, 
+    "Doubles the number of symbols in the symbol table to enable the\n writing of the target system to string properly when starting the\n cascade of a diagonal homotopy in extrinsic coordinates.\n On input are three integers, n, d, nc, and one string s.\n On input are n, the ambient dimension = #variables before the embedding,\n d is the number of slack variables, or the dimension of the first set,\n and in s (nc characters) are the symbols for the first witness set.\n This function takes the symbols in s and combines those symbols with\n those in the current symbol table for the second witness set stored\n in the standard systems container.  On return, the symbol table\n contains then all symbols to write the top system in the cascade\n to start the diagonal homotopy."},
    {"py2c_collapse_diagonal", py2c_collapse_diagonal, METH_VARARGS,
     "Eliminates the extrinsic diagonal for the system and solutions\n in the containers.  On input are two integers:\n 1) k, the current number of slack variables in the embedding;\n 2) d, the number of slack variables to add to the final embedding.\n The system in the container has its diagonal eliminated and is\n embedded with k+d slack variables.  The solutions corresponding\n to this system are in the solutions container.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_schubert_pieri_count", py2c_schubert_pieri_count, METH_VARARGS,

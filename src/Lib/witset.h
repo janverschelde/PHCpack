@@ -150,6 +150,22 @@ int witness_set_of_hypersurface ( int nv, int nc, char *p );
  *   nc      the number of characters in the string p;
  *   p       string representation of a polynomials, terminates with ';'. */
 
+int diagonal_symbols_doubler ( int n, int d, int nc, char *s );
+/*
+ * DESCRIPTION :
+ *   Doubles the number of symbols in the symbol table to enable the
+ *   writing of the target system to string properly when starting the
+ *   cascade of a diagonal homotopy in extrinsic coordinates.
+ *   On input are n, the ambient dimension = #variables before the embedding,
+ *   d is the number of slack variables, or the dimension of the first set,
+ *   nc contains the number of characters in the string s, 
+ *   and in s are the symbols for the first witness set.
+ *   This function takes the symbols in s and combines those symbols with
+ *   those in the current symbol table for the second witness set stored
+ *   in the standard systems container.  On return, the symbol table
+ *   contains then all symbols to write the top system in the cascade
+ *   to start the diagonal homotopy. */
+
 int collapse_diagonal ( int k, int d );
 /*
  * DESCRIPTION :

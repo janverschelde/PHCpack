@@ -180,6 +180,24 @@ int witness_set_of_hypersurface ( int nv, int nc, char *p )
    return fail;
 }
 
+int diagonal_symbols_doubler ( int n, int d, int nc, char *s )
+{
+   int k,fail = 0;
+   int a[3];
+   int b[nc];
+   double *c;
+
+   a[0] = n;
+   a[1] = d;
+   a[2] = nc;
+
+   for(k=0; k<nc; k++) b[k] = (int) s[k];
+ 
+   fail = _ada_use_c2phc(230,a,b,c);
+
+   return fail;
+}
+
 int collapse_diagonal ( int k, int d )
 {
    int a[2],*b,fail;

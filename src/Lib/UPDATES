@@ -1,3 +1,6 @@
+Sun 8 Nov 2015 : updated witset and phcpy2c with a function to double the
+  number of symbols to write the system at the start of the diagonal cascade.
+
 Wed 4 Nov 2015 : consistent with the naming of the Ada procedures in use_sweep,
   adjusted the names of the sweep runners in libraries sweep and phcpy2c.
   Added to sweep and phcpy2c functions that call the real sweep.

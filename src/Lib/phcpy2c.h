@@ -2994,6 +2994,23 @@ static PyObject *py2c_extrinsic_top_diagonal_dimension
  *   respectively equal to n1 and n2.
  *   There are four integers as parameters on input: n1, n2, a and b. */
 
+static PyObject *py2c_diagonal_symbols_doubler 
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Doubles the number of symbols in the symbol table to enable the
+ *   writing of the target system to string properly when starting the
+ *   cascade of a diagonal homotopy in extrinsic coordinates.
+ *   On input are three integers, n, d, nc, and one string s.
+ *   On input are n, the ambient dimension = #variables before the embedding,
+ *   d is the number of slack variables, or the dimension of the first set,
+ *   and in s (nc characters) are the symbols for the first witness set.
+ *   This function takes the symbols in s and combines those symbols with
+ *   those in the current symbol table for the second witness set stored
+ *   in the standard systems container.  On return, the symbol table
+ *   contains then all symbols to write the top system in the cascade
+ *   to start the diagonal homotopy. */
+
 static PyObject *py2c_collapse_diagonal ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
