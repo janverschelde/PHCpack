@@ -49,6 +49,7 @@ with QuadDobl_IncFix_Continuation;
 with Multprec_IncFix_Continuation;
 with Standard_Root_Refiners;
 with Witness_Sets,Witness_Sets_io;
+with Standard_Diagonal_Solutions;        use Standard_Diagonal_Solutions;
 with Extrinsic_Diagonal_Homotopies;      use Extrinsic_Diagonal_Homotopies;
 with Multitasking_Continuation;          use Multitasking_Continuation;
 

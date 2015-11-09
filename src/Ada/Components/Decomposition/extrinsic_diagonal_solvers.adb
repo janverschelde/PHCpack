@@ -15,6 +15,8 @@ with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Permutations,Permute_Operations;   use Permutations,Permute_Operations;
 with Witness_Sets,Witness_Sets_io;      use Witness_Sets,Witness_Sets_io;
+with Standard_Diagonal_Polynomials;     use Standard_Diagonal_Polynomials;
+with Standard_Diagonal_Solutions;       use Standard_Diagonal_Solutions;
 with Extrinsic_Diagonal_Homotopies;     use Extrinsic_Diagonal_Homotopies;
 with Extrinsic_Diagonal_Homotopies_io;  use Extrinsic_Diagonal_Homotopies_io;
 

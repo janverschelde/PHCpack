@@ -7,7 +7,7 @@ with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Solution_Splitters;        use Standard_Solution_Splitters;
 with Standard_Scaling;                   use Standard_Scaling;
 with Black_Box_Root_Counters;            use Black_Box_Root_Counters;
-with Black_Box_Poly_Continuations;       use Black_Box_Poly_Continuations;
+with Standard_BlackBox_Continuations;    use Standard_BlackBox_Continuations;
 with Witness_Sets,Witness_Sets_io;       use Witness_Sets,Witness_Sets_io;
 
 package body Witness_Generate_and_Classify is
