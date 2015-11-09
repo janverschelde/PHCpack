@@ -1,3 +1,5 @@
+Sun 8 Nov 2015 : added the function standard_diagonal_solver to sets.py.
+
 Sat 7 Nov 2015 : fixed bugs in sets.py with the standard_double_cascade_steps
   and started introduction of diagonal homotopies.
 

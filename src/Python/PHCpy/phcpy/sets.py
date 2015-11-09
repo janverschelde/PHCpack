@@ -349,7 +349,14 @@ def standard_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
     from phcpy.phcpy2c import py2c_copy_standard_container_to_start_system
     from phcpy.phcpy2c import py2c_copy_standard_container_to_start_solutions
     from phcpy.phcpy2c import py2c_create_diagonal_homotopy
+    from phcpy.phcpy2c import py2c_syscon_number_of_symbols
+    from phcpy.phcpy2c import py2c_syscon_string_of_symbols
+    from phcpy.phcpy2c import py2c_diagonal_symbols_doubler
     storesys(sys1)
+    symbols = py2c_syscon_string_of_symbols()
+    nbsymbs = py2c_syscon_number_of_symbols()
+    print 'number of symbols :', nbsymbs
+    print 'names of variables :', symbols
     storesols(len(sys1), esols1)
     if(dim1 >= dim2):
         py2c_copy_standard_container_to_target_system()
@@ -369,6 +376,7 @@ def standard_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
         py2c_create_diagonal_homotopy(dim1, dim2)
     else:
         py2c_create_diagonal_homotopy(dim2, dim1)
+    py2c_diagonal_symbols_doubler(nbsymbs-dim1,dim1,len(symbols),symbols)
 
 def standard_diagonal_cascade_solutions(dim1, dim2):
     """
@@ -397,26 +405,56 @@ def standard_start_diagonal_cascade(gamma=0, tasks=0):
     from phcpy.phcpy2c import py2c_create_standard_homotopy_with_gamma
     from phcpy.phcpy2c import py2c_solve_by_standard_homotopy_continuation
     from phcpy.phcpy2c import py2c_solcon_clear_standard_solutions
-    # from phcpy.phcpy2c import py2c_syscon_clear_standard_system
+    from phcpy.phcpy2c import py2c_syscon_clear_standard_system
     from phcpy.phcpy2c import py2c_copy_standard_target_solutions_to_container
     from phcpy.phcpy2c import py2c_copy_standard_target_system_to_container
     from phcpy.interface import load_standard_solutions
-    # from phcpy.interface import load_standard_system
+    from phcpy.interface import load_standard_system
     if(gamma == 0):
         py2c_create_standard_homotopy()
     else:
         py2c_create_standard_homotopy_with_gamma(gamma.real, gamma.imag)
     py2c_solve_by_standard_homotopy_continuation(tasks)
     py2c_solcon_clear_standard_solutions()
-    # py2c_syscon_clear_standard_system()
+    py2c_syscon_clear_standard_system()
     py2c_copy_standard_target_solutions_to_container()
-    # from phcpy.phcpy2c import py2c_write_standard_target_system
-    # print 'the standard target system :'
-    # py2c_write_standard_target_system()
+    from phcpy.phcpy2c import py2c_write_standard_target_system
+    print 'the standard target system :'
+    py2c_write_standard_target_system()
     py2c_copy_standard_target_system_to_container()
-    # tsys = load_standard_system()
+    tsys = load_standard_system()
     sols = load_standard_solutions()
-    return sols
+    return (tsys, sols)
+
+def standard_diagonal_solver(dim1, sys1, sols1, dim2, sys2, sols2):
+    """
+    Runs the diagonal homotopies to intersect two witness sets 
+    stored in (sys1, sols1) and (sys2, sols2), of respective
+    dimensions dim1 and dim2.
+    """
+    from phcpy.phcpy2c import py2c_collapse_diagonal
+    from phcpy.interface import store_standard_solutions as storesols
+    from phcpy.interface import load_standard_solutions as loadsols
+    from phcpy.interface import load_standard_system as loadsys
+    standard_diagonal_homotopy(dim1, sys1, sols1, dim2, sys2, sols2)
+    print 'defining the start solutions'
+    standard_diagonal_cascade_solutions(dim1, dim2)
+    print 'starting the diagonal cascade'
+    (topsys, startsols) = standard_start_diagonal_cascade()
+    print 'the system solved in the start of the cascade :'
+    for pol in topsys:
+        print pol
+    print 'the solutions after starting the diagonal cascade :'
+    for sol in startsols:
+        print sol
+    endsols = standard_double_cascade_step(topsys, startsols)
+    print 'after running one cascade step :'
+    for sol in endsols:
+        print sol
+    storesols(len(topsys), endsols)
+    py2c_collapse_diagonal(dim1,0)
+    result = (loadsys(), loadsols())
+    return result
 
 def test_diaghom():
     """
@@ -436,17 +474,12 @@ def test_diaghom():
         print pol
     for sol in w2sols:
         print sol
-    print 'defining the diagonal homotopy'
-    standard_diagonal_homotopy(1, w1sys, w1sols, 1, w2sys, w2sols)
-    print 'defining the start solutions'
-    standard_diagonal_cascade_solutions(1, 1)
-    print 'starting the diagonal cascade'
-    startsols = standard_start_diagonal_cascade()
-    # print 'the system solved in the start of the cascade :'
-    # for pol in topsys:
-    #     print pol
-    print 'the solutions after starting the diagonal cascade :'
-    for sol in startsols:
+    (sys, sols) = standard_diagonal_solver(1, w1sys, w1sols, 1, w2sys, w2sols)
+    print 'the end system :'
+    for pol in sys:
+        print pol
+    print 'the solutions of the diagonal solver :'
+    for sol in sols:
         print sol
 
 def test():
