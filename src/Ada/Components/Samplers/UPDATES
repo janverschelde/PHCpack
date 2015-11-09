@@ -1,3 +1,6 @@
+Mon 9 Nov 2015 : added operations to witness_sets as needed for the double
+  double and quad double versions of extrinsic diagonal homotopies.
+
 Thu 1 Oct 2015 : changed {dobldob,quaddobl}_sampling_machine.adb for
   changed type of tolerances in the root refiners.
 

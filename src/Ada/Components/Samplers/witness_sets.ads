@@ -11,7 +11,9 @@ with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Witness_Sets is
 
@@ -249,6 +251,12 @@ package Witness_Sets is
   function Complete ( n,k : natural32;
                       p : Standard_Complex_Poly_Systems.Poly_Sys )
                     return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Complete ( n,k : natural32;
+                      p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
+                    return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Complete ( n,k : natural32;
+                      p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
+                    return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   When p is not a complete intersection, random multiples of the
@@ -265,41 +273,76 @@ package Witness_Sets is
 
 -- OPERATIONS ON SOLUTION LISTS :
 
-  function Add_Component ( s : Solution;
-                           c : Standard_Complex_Numbers.Complex_Number )
-                         return Solution;
+  function Add_Component
+             ( s : Standard_Complex_Solutions.Solution;
+               c : Standard_Complex_Numbers.Complex_Number )
+             return Standard_Complex_Solutions.Solution;
  
   -- DESCRIPTION :
   --   Add c as last component to the solution vector.
 
-  function Add_Component ( sols : Solution_List;
-                           c : Standard_Complex_Numbers.Complex_Number )
-                         return Solution_List;
+  function Add_Component
+             ( sols : Standard_Complex_Solutions.Solution_List;
+               c : Standard_Complex_Numbers.Complex_Number )
+             return Standard_Complex_Solutions.Solution_List;
  
   -- DESCRIPTION :
   --   Add c as last component to the solution vectors in the list.
 
-  function Add_Embedding ( s : Solution; k : natural32 ) return Solution;
-  function Add_Embedding ( sols : Solution_List; k : natural32 )
-                         return Solution_List;
+  function Add_Embedding
+             ( s : Standard_Complex_Solutions.Solution; k : natural32 )
+             return Standard_Complex_Solutions.Solution;
+  function Add_Embedding
+             ( s : DoblDobl_Complex_Solutions.Solution; k : natural32 )
+             return DoblDobl_Complex_Solutions.Solution;
+  function Add_Embedding
+             ( s : QuadDobl_Complex_Solutions.Solution; k : natural32 )
+             return QuadDobl_Complex_Solutions.Solution;
 
   -- DESCRIPTION :
-  --   Adds k zeros to every solution.
+  --   Adds k zeros to every solution,
+  --   in standard double, double double, or quad double precision.
 
-  function Remove_Component ( s : Solution ) return Solution;
+  function Add_Embedding
+             ( sols : Standard_Complex_Solutions.Solution_List;
+               k : natural32 )
+             return Standard_Complex_Solutions.Solution_List;
+  function Add_Embedding
+             ( sols : DoblDobl_Complex_Solutions.Solution_List;
+               k : natural32 )
+             return DoblDobl_Complex_Solutions.Solution_List;
+  function Add_Embedding
+             ( sols : QuadDobl_Complex_Solutions.Solution_List;
+               k : natural32 )
+             return QuadDobl_Complex_Solutions.Solution_List;
+
+  -- DESCRIPTION :
+  --   Adds k zeros to every solution,
+  --   in standard double, double double, or quad double precision.
+
+  function Remove_Component
+             ( s : Standard_Complex_Solutions.Solution )
+             return Standard_Complex_Solutions.Solution;
  
   -- DESCRIPTION :
   --   Removes the last component from the solution vector.
 
-  procedure Remove_Component ( sols : in out Solution_List );
-  function  Remove_Component ( sols : Solution_List ) return Solution_List;
+  procedure Remove_Component
+              ( sols : in out Standard_Complex_Solutions.Solution_List );
+  function  Remove_Component
+              ( sols : Standard_Complex_Solutions.Solution_List )
+              return Standard_Complex_Solutions.Solution_List;
  
   -- DESCRIPTION :
   --   Removes the last component from the solution vectors in the list.
 
-  function Remove_Embedding ( s : Solution; k : natural32 ) return Solution;
-  function Remove_Embedding ( sols : Solution_List; k : natural32 )
-                            return Solution_List;
+  function Remove_Embedding
+             ( s : Standard_Complex_Solutions.Solution; k : natural32 )
+             return Standard_Complex_Solutions.Solution;
+  function Remove_Embedding
+             ( sols : Standard_Complex_Solutions.Solution_List;
+               k : natural32 )
+             return Standard_Complex_Solutions.Solution_List;
 
   -- DESCRIPTION :
   --   Removes the last k components from the solution.

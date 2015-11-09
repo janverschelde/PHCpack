@@ -917,12 +917,76 @@ package body Witness_Sets is
     return res;
   end Complete;
 
+  function Complete ( n,k : natural32;
+                      p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
+                    return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(n-k));
+    use DoblDobl_Complex_Polynomials;
+
+  begin
+    if p'last = integer32(n-k) then
+      DoblDobl_Complex_Poly_Systems.Copy(p,res);
+    else
+      declare
+        rnd : DoblDobl_Complex_Numbers.Complex_Number;
+        extra : Poly;
+      begin
+        for i in 1..integer32(n-k) loop
+          Copy(p(i),res(i));
+        end loop;
+        for i in integer32(n-k)+1..p'last loop
+          for j in res'range loop
+            rnd := DoblDobl_Random_Numbers.Random1;
+            extra := rnd*p(i);
+            Add(res(j),extra);
+            Clear(extra);
+          end loop;
+        end loop;
+      end;
+    end if;
+    return res;
+  end Complete;
+
+  function Complete ( n,k : natural32;
+                      p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
+                    return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..integer32(n-k));
+    use QuadDobl_Complex_Polynomials;
+
+  begin
+    if p'last = integer32(n-k) then
+      QuadDobl_Complex_Poly_Systems.Copy(p,res);
+    else
+      declare
+        rnd : QuadDobl_Complex_Numbers.Complex_Number;
+        extra : Poly;
+      begin
+        for i in 1..integer32(n-k) loop
+          Copy(p(i),res(i));
+        end loop;
+        for i in integer32(n-k)+1..p'last loop
+          for j in res'range loop
+            rnd := QuadDobl_Random_Numbers.Random1;
+            extra := rnd*p(i);
+            Add(res(j),extra);
+            Clear(extra);
+          end loop;
+        end loop;
+      end;
+    end if;
+    return res;
+  end Complete;
+
 -- OPERATIONS ON SOLUTION LISTS :
 
-  function Add_Component ( s : Solution;
-                           c : Standard_Complex_Numbers.Complex_Number )
-                         return Solution is
+  function Add_Component
+             ( s : Standard_Complex_Solutions.Solution;
+               c : Standard_Complex_Numbers.Complex_Number )
+             return Standard_Complex_Solutions.Solution is
 
+    use Standard_Complex_Solutions;
     res : Solution(s.n+1);
 
   begin
@@ -936,10 +1000,12 @@ package body Witness_Sets is
     return res;
   end Add_Component;
  
-  function Add_Component ( sols : Solution_List;
-                           c : Standard_Complex_Numbers.Complex_Number )
-                         return Solution_List is
+  function Add_Component
+             ( sols : Standard_Complex_Solutions.Solution_List;
+               c : Standard_Complex_Numbers.Complex_Number )
+             return Standard_Complex_Solutions.Solution_List is
 
+    use Standard_Complex_Solutions;
     res,res_last,tmp : Solution_List;
 
   begin
@@ -951,9 +1017,11 @@ package body Witness_Sets is
     return res;
   end Add_Component;
 
-  function Add_Embedding ( s : Solution; k : natural32 )
-                         return Solution is
+  function Add_Embedding
+             ( s : Standard_Complex_Solutions.Solution; k : natural32 )
+             return Standard_Complex_Solutions.Solution is
 
+    use Standard_Complex_Solutions;
     res : Solution(s.n+integer32(k));
 
   begin
@@ -968,10 +1036,53 @@ package body Witness_Sets is
     end loop;
     return res;
   end Add_Embedding;
- 
-  function Add_Embedding ( sols : Solution_List; k : natural32 )
-                         return Solution_List is
 
+  function Add_Embedding
+             ( s : DoblDobl_Complex_Solutions.Solution; k : natural32 )
+             return DoblDobl_Complex_Solutions.Solution is
+
+    use DoblDobl_Complex_Solutions;
+    res : Solution(s.n+integer32(k));
+
+  begin
+    res.t := s.t;
+    res.m := s.m;
+    res.err := s.err;
+    res.rco := s.rco;
+    res.res := s.res;
+    res.v(s.v'range) := s.v;
+    for i in s.n+1..res.n loop
+      res.v(i) := DoblDobl_Complex_Numbers.Create(integer(0));
+    end loop;
+    return res;
+  end Add_Embedding;
+
+  function Add_Embedding
+             ( s : QuadDobl_Complex_Solutions.Solution; k : natural32 )
+             return QuadDobl_Complex_Solutions.Solution is
+
+    use QuadDobl_Complex_Solutions;
+    res : Solution(s.n+integer32(k));
+
+  begin
+    res.t := s.t;
+    res.m := s.m;
+    res.err := s.err;
+    res.rco := s.rco;
+    res.res := s.res;
+    res.v(s.v'range) := s.v;
+    for i in s.n+1..res.n loop
+      res.v(i) := QuadDobl_Complex_Numbers.Create(integer(0));
+    end loop;
+    return res;
+  end Add_Embedding;
+ 
+  function Add_Embedding
+             ( sols : Standard_Complex_Solutions.Solution_List;
+               k : natural32 )
+             return Standard_Complex_Solutions.Solution_List is
+
+    use Standard_Complex_Solutions;
     res,res_last,tmp : Solution_List;
 
   begin
@@ -983,8 +1094,45 @@ package body Witness_Sets is
     return res;
   end Add_Embedding;
  
-  function Remove_Component ( s : Solution ) return Solution is
+  function Add_Embedding
+             ( sols : DoblDobl_Complex_Solutions.Solution_List;
+               k : natural32 )
+             return DoblDobl_Complex_Solutions.Solution_List is
 
+    use DoblDobl_Complex_Solutions;
+    res,res_last,tmp : Solution_List;
+
+  begin
+    tmp := sols;
+    while not Is_Null(tmp) loop
+      Append(res,res_last,Add_Embedding(Head_Of(tmp).all,k));
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Add_Embedding;
+ 
+  function Add_Embedding
+             ( sols : QuadDobl_Complex_Solutions.Solution_List;
+               k : natural32 )
+             return QuadDobl_Complex_Solutions.Solution_List is
+
+    use QuadDobl_Complex_Solutions;
+    res,res_last,tmp : Solution_List;
+
+  begin
+    tmp := sols;
+    while not Is_Null(tmp) loop
+      Append(res,res_last,Add_Embedding(Head_Of(tmp).all,k));
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Add_Embedding;
+ 
+  function Remove_Component
+             ( s : Standard_Complex_Solutions.Solution )
+             return Standard_Complex_Solutions.Solution is
+
+    use Standard_Complex_Solutions;
     res : Solution(s.n-1);
 
   begin
@@ -997,8 +1145,10 @@ package body Witness_Sets is
     return res;
   end Remove_Component;
 
-  procedure Remove_Component ( sols : in out Solution_List ) is
+  procedure Remove_Component
+              ( sols : in out Standard_Complex_Solutions.Solution_List ) is
 
+    use Standard_Complex_Solutions;
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
 
@@ -1016,8 +1166,11 @@ package body Witness_Sets is
     end loop;
   end Remove_Component;
  
-  function Remove_Component ( sols : Solution_List ) return Solution_List is
+  function Remove_Component
+             ( sols : Standard_Complex_Solutions.Solution_List )
+             return Standard_Complex_Solutions.Solution_List is
 
+    use Standard_Complex_Solutions;
     res,res_last,tmp : Solution_List;
 
   begin
@@ -1029,8 +1182,12 @@ package body Witness_Sets is
     return res;
   end Remove_Component;
 
-  function Remove_Embedding ( s : Solution; k : natural32 ) return Solution is
+  function Remove_Embedding
+             ( s : Standard_Complex_Solutions.Solution;
+               k : natural32 )
+             return Standard_Complex_Solutions.Solution is
 
+    use Standard_Complex_Solutions;
     res : Solution(s.n-integer32(k));
 
   begin
@@ -1043,9 +1200,12 @@ package body Witness_Sets is
     return res;
   end Remove_Embedding;
 
-  function Remove_Embedding ( sols : Solution_List; k : natural32 )
-                            return Solution_List is
-
+  function Remove_Embedding
+             ( sols : Standard_Complex_Solutions.Solution_List;
+               k : natural32 )
+             return Standard_Complex_Solutions.Solution_List is
+   
+    use Standard_Complex_Solutions;
     res,res_last,tmp : Solution_List;
     ls : Link_to_Solution;
 
