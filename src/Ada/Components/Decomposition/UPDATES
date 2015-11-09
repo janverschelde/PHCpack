@@ -3,7 +3,9 @@ Mon 9 Nov 2015 : factored out code from extrinsic_diagonal_homotopies
   This changed of course extrinsic_diagonal_homotopies, but also
   diagonal_homotopy_continuation.adb and extrinsic_diagonal_solvers.adb.
   Updated witness_generate_and_classify.adb to refer to the new
-  standard_blackbox_continuations.
+  standard_blackbox_continuations.  New packages {dobldobl, quaddobl}_
+  diagonal_{polynomials, solutions} used in the definition of the double
+  double and quad double versions in extrinsic_diagonal_homotopies.
 
 Tue 27 Oct 2015 : because of the renaming of black_box_poly_continuations,
   homotopy_cascade_filter.adb and drivers_to_cascade_filtering.adb changed.

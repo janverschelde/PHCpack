@@ -22,7 +22,11 @@ standard_affine_planes           : intrinsic <-> extrinsic affine planes
 standard_affine_solutions        : intrinsic <-> extrinsic solutions
 multihomogeneous_solutions       : representing multi-homogeneous solutions
 standard_diagonal_polynomials    : polynomials in diagonal homotopies
+dobldobl_diagonal_polynomials    : dd polynomials in diagonal homotopies
+quaddobl_diagonal_polynomials    : qd polynomials in diagonal homotopies
 standard_diagonal_solutions      : solutions in diagonal homotopies
+dobldobl_diagonal_solutions      : dd solutions in diagonal homotopies
+quaddobl_diagonal_solutions      : qd solutions in diagonal homotopies
 extrinsic_diagonal_homotopies    : extrinsic version of diagonal homotopies 
 extrinsic_diagonal_homotopies_io : tools to double symbol table
 extrinsic_diagonal_solvers       : drivers for extrinsic diagonal homotopies
