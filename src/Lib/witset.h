@@ -204,11 +204,41 @@ int diagonal_symbols_doubler ( int n, int d, int nc, char *s );
  *   contains then all symbols to write the top system in the cascade
  *   to start the diagonal homotopy. */
 
-int collapse_diagonal ( int k, int d );
+int standard_collapse_diagonal ( int k, int d );
 /*
  * DESCRIPTION :
  *   Eliminates the extrinsic diagonal for the system and solutions
- *   in the containers.
+ *   in the containers for standard double precision.
+ *
+ * ON ENTRY :
+ *   k        current number of slack variables in the embedding;
+ *   d        number of slack variables to add to the final embedding.
+ * 
+ * ON RETURN :
+ *   The system in the container has its diagonal eliminated and is
+ *   embedded with k+d slack variables.  The solutions corresponding
+ *   to this system are in the solutions container. */
+
+int dobldobl_collapse_diagonal ( int k, int d );
+/*
+ * DESCRIPTION :
+ *   Eliminates the extrinsic diagonal for the system and solutions
+ *   in the containers for double double precision.
+ *
+ * ON ENTRY :
+ *   k        current number of slack variables in the embedding;
+ *   d        number of slack variables to add to the final embedding.
+ * 
+ * ON RETURN :
+ *   The system in the container has its diagonal eliminated and is
+ *   embedded with k+d slack variables.  The solutions corresponding
+ *   to this system are in the solutions container. */
+
+int quaddobl_collapse_diagonal ( int k, int d );
+/*
+ * DESCRIPTION :
+ *   Eliminates the extrinsic diagonal for the system and solutions
+ *   in the containers for quad double precision.
  *
  * ON ENTRY :
  *   k        current number of slack variables in the embedding;

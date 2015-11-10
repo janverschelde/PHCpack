@@ -1372,7 +1372,7 @@ void collapse(int cnt_stage, int stages,
          
    add = *expected-dim; 
    printf("add=%d\n", add);
-   fail = collapse_diagonal(dim,add);
+   fail = standard_collapse_diagonal(dim,add);
    fail = write_witness_set_to_file((int)strlen(outfile),outfile);
      
    /* update the value of num_vars in the state table */

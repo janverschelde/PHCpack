@@ -3087,11 +3087,38 @@ static PyObject *py2c_diagonal_symbols_doubler
  *   contains then all symbols to write the top system in the cascade
  *   to start the diagonal homotopy. */
 
-static PyObject *py2c_collapse_diagonal ( PyObject *self, PyObject *args );
+static PyObject *py2c_standard_collapse_diagonal
+ ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Eliminates the extrinsic diagonal for the system and solutions
- *   in the containers.  On input are two integers:
+ *   in the containers for standard doubles.  On input are two integers:
+ *   1) k, the current number of slack variables in the embedding;
+ *   2) d, the number of slack variables to add to the final embedding.
+ *   The system in the container has its diagonal eliminated and is
+ *   embedded with k+d slack variables.  The solutions corresponding
+ *   to this system are in the solutions container.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_dobldobl_collapse_diagonal
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Eliminates the extrinsic diagonal for the system and solutions
+ *   in the containers for double doubles.  On input are two integers:
+ *   1) k, the current number of slack variables in the embedding;
+ *   2) d, the number of slack variables to add to the final embedding.
+ *   The system in the container has its diagonal eliminated and is
+ *   embedded with k+d slack variables.  The solutions corresponding
+ *   to this system are in the solutions container.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_quaddobl_collapse_diagonal
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Eliminates the extrinsic diagonal for the system and solutions
+ *   in the containers for quad doubles.  On input are two integers:
  *   1) k, the current number of slack variables in the embedding;
  *   2) d, the number of slack variables to add to the final embedding.
  *   The system in the container has its diagonal eliminated and is

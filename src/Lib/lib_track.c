@@ -580,7 +580,7 @@ int collapse_extrinsic_diagonal ( void )
    printf("\nThe current number of slack variables : %d\n",dim);
    printf("Give number of slack variables to add : ");
    scanf("%d",&add);
-   fail = collapse_diagonal(dim,add);
+   fail = standard_collapse_diagonal(dim,add);
    fail = write_witness_set_to_file(m2,outfile);
 
    return fail;

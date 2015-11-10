@@ -4646,13 +4646,38 @@ static PyObject *py2c_diagonal_symbols_doubler
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_collapse_diagonal ( PyObject *self, PyObject *args )
+static PyObject *py2c_standard_collapse_diagonal
+ ( PyObject *self, PyObject *args )
 {
    int fail,k,d;
 
    initialize();
    if(!PyArg_ParseTuple(args,"ii",&k,&d)) return NULL;
-   fail = collapse_diagonal(k,d);
+   fail = standard_collapse_diagonal(k,d);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_dobldobl_collapse_diagonal
+ ( PyObject *self, PyObject *args )
+{
+   int fail,k,d;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&k,&d)) return NULL;
+   fail = dobldobl_collapse_diagonal(k,d);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_quaddobl_collapse_diagonal
+ ( PyObject *self, PyObject *args )
+{
+   int fail,k,d;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&k,&d)) return NULL;
+   fail = quaddobl_collapse_diagonal(k,d);
 
    return Py_BuildValue("i",fail);
 }
@@ -6278,8 +6303,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_diagonal_symbols_doubler",
      py2c_diagonal_symbols_doubler, METH_VARARGS, 
     "Doubles the number of symbols in the symbol table to enable the\n writing of the target system to string properly when starting the\n cascade of a diagonal homotopy in extrinsic coordinates.\n On input are three integers, n, d, nc, and one string s.\n On input are n, the ambient dimension = #variables before the embedding,\n d is the number of slack variables, or the dimension of the first set,\n and in s (nc characters) are the symbols for the first witness set.\n This function takes the symbols in s and combines those symbols with\n those in the current symbol table for the second witness set stored\n in the standard systems container.  On return, the symbol table\n contains then all symbols to write the top system in the cascade\n to start the diagonal homotopy."},
-   {"py2c_collapse_diagonal", py2c_collapse_diagonal, METH_VARARGS,
-    "Eliminates the extrinsic diagonal for the system and solutions\n in the containers.  On input are two integers:\n 1) k, the current number of slack variables in the embedding;\n 2) d, the number of slack variables to add to the final embedding.\n The system in the container has its diagonal eliminated and is\n embedded with k+d slack variables.  The solutions corresponding\n to this system are in the solutions container.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_standard_collapse_diagonal",
+     py2c_standard_collapse_diagonal, METH_VARARGS,
+    "Eliminates the extrinsic diagonal for the system and solutions\n in the containers for standard doubles.  On input are two integers:\n 1) k, the current number of slack variables in the embedding;\n 2) d, the number of slack variables to add to the final embedding.\n The system in the container has its diagonal eliminated and is\n embedded with k+d slack variables.  The solutions corresponding\n to this system are in the solutions container.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_dobldobl_collapse_diagonal",
+     py2c_dobldobl_collapse_diagonal, METH_VARARGS,
+    "Eliminates the extrinsic diagonal for the system and solutions\n in the containers for double doubles.  On input are two integers:\n 1) k, the current number of slack variables in the embedding;\n 2) d, the number of slack variables to add to the final embedding.\n The system in the container has its diagonal eliminated and is\n embedded with k+d slack variables.  The solutions corresponding\n to this system are in the solutions container.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_quaddobl_collapse_diagonal",
+     py2c_quaddobl_collapse_diagonal, METH_VARARGS,
+    "Eliminates the extrinsic diagonal for the system and solutions\n in the containers for quad doubles.  On input are two integers:\n 1) k, the current number of slack variables in the embedding;\n 2) d, the number of slack variables to add to the final embedding.\n The system in the container has its diagonal eliminated and is\n embedded with k+d slack variables.  The solutions corresponding\n to this system are in the solutions container.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_schubert_pieri_count", py2c_schubert_pieri_count, METH_VARARGS,
     "Returns the number of p-plane producing curves of degree q\n that meet m*p + q*(m+p) given general m-planes.\n On input are three integer numbers:\n 1) m, the dimension of the input planes;\n 2) p, the dimension of the output planes; and\n 3) q, the degree of the curve that produces p-planes.\n The dimension of the ambient space of this Pieri problem is m+p."},
    {"py2c_schubert_resolve_conditions", py2c_schubert_resolve_conditions,

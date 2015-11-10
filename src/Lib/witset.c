@@ -230,13 +230,35 @@ int diagonal_symbols_doubler ( int n, int d, int nc, char *s )
    return fail;
 }
 
-int collapse_diagonal ( int k, int d )
+int standard_collapse_diagonal ( int k, int d )
 {
    int a[2],*b,fail;
    double *c;
 
    a[0] = k; a[1] = d;
    fail = _ada_use_c2phc(170,a,b,c);
+
+   return fail;
+}
+
+int dobldobl_collapse_diagonal ( int k, int d )
+{
+   int a[2],*b,fail;
+   double *c;
+
+   a[0] = k; a[1] = d;
+   fail = _ada_use_c2phc(299,a,b,c);
+
+   return fail;
+}
+
+int quaddobl_collapse_diagonal ( int k, int d )
+{
+   int a[2],*b,fail;
+   double *c;
+
+   a[0] = k; a[1] = d;
+   fail = _ada_use_c2phc(312,a,b,c);
 
    return fail;
 }
