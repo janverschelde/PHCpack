@@ -470,14 +470,40 @@ def standard_diagonal_cascade_solutions(dim1, dim2):
     """
     Defines the start solutions in the cascade to start the diagonal
     homotopy to intersect a set of dimension dim1 with another set
-    of dimension dim2.  For this to work, the previous function
+    of dimension dim2, in standard double precision.  For this to work, 
     standard_diagonal_homotopy must have been executed successfully.
     """
-    from phcpy.phcpy2c import py2c_start_diagonal_cascade_solutions
+    from phcpy.phcpy2c import py2c_standard_diagonal_cascade_solutions
     if(dim1 >= dim2):
-        py2c_start_diagonal_cascade_solutions(dim1, dim2)
+        py2c_standard_diagonal_cascade_solutions(dim1, dim2)
     else:
-        py2c_start_diagonal_cascade_solutions(dim2, dim1)
+        py2c_standard_diagonal_cascade_solutions(dim2, dim1)
+
+def dobldobl_diagonal_cascade_solutions(dim1, dim2):
+    """
+    Defines the start solutions in the cascade to start the diagonal
+    homotopy to intersect a set of dimension dim1 with another set
+    of dimension dim2, in double double precision.  For this to work, 
+    dobldobl_diagonal_homotopy must have been executed successfully.
+    """
+    from phcpy.phcpy2c import py2c_dobldobl_diagonal_cascade_solutions
+    if(dim1 >= dim2):
+        py2c_dobldobl_diagonal_cascade_solutions(dim1, dim2)
+    else:
+        py2c_dobldobl_diagonal_cascade_solutions(dim2, dim1)
+
+def quaddobl_diagonal_cascade_solutions(dim1, dim2):
+    """
+    Defines the start solutions in the cascade to start the diagonal
+    homotopy to intersect a set of dimension dim1 with another set
+    of dimension dim2, in quad double precision.  For this to work, 
+    quaddobl_diagonal_homotopy must have been executed successfully.
+    """
+    from phcpy.phcpy2c import py2c_quaddobl_diagonal_cascade_solutions
+    if(dim1 >= dim2):
+        py2c_quaddobl_diagonal_cascade_solutions(dim1, dim2)
+    else:
+        py2c_quaddobl_diagonal_cascade_solutions(dim2, dim1)
 
 def standard_start_diagonal_cascade(gamma=0, tasks=0):
     """
@@ -514,13 +540,85 @@ def standard_start_diagonal_cascade(gamma=0, tasks=0):
     sols = load_standard_solutions()
     return (tsys, sols)
 
-def standard_diagonal_solver(dim1, sys1, sols1, dim2, sys2, sols2):
+def dobldobl_start_diagonal_cascade(gamma=0, tasks=0):
     """
-    Runs the diagonal homotopies to intersect two witness sets 
-    stored in (sys1, sols1) and (sys2, sols2), of respective
-    dimensions dim1 and dim2.
+    Does the path tracking to start a diagonal cascade in double double
+    precision.  For this to work, the functions dobldobl_diagonal_homotopy
+    and dobldobl_diagonal_cascade_solutions must be executed successfully.
+    If gamma equals 0 on input, then a random gamma constant is generated,
+    otherwise, the given complex gamma will be used in the homotopy.
+    Multitasking is available, and activated by the tasks parameter.
+    Returns the target (system and its corresponding) solutions.
     """
-    from phcpy.phcpy2c import py2c_collapse_diagonal
+    from phcpy.phcpy2c import py2c_create_dobldobl_homotopy
+    from phcpy.phcpy2c import py2c_create_dobldobl_homotopy_with_gamma
+    from phcpy.phcpy2c import py2c_solve_by_dobldobl_homotopy_continuation
+    from phcpy.phcpy2c import py2c_solcon_clear_dobldobl_solutions
+    from phcpy.phcpy2c import py2c_syscon_clear_dobldobl_system
+    from phcpy.phcpy2c import py2c_copy_dobldobl_target_solutions_to_container
+    from phcpy.phcpy2c import py2c_copy_dobldobl_target_system_to_container
+    from phcpy.interface import load_dobldobl_solutions
+    from phcpy.interface import load_dobldobl_system
+    if(gamma == 0):
+        py2c_create_dobldobl_homotopy()
+    else:
+        py2c_create_dobldobl_homotopy_with_gamma(gamma.real, gamma.imag)
+    py2c_solve_by_dobldobl_homotopy_continuation(tasks)
+    py2c_solcon_clear_dobldobl_solutions()
+    py2c_syscon_clear_dobldobl_system()
+    py2c_copy_dobldobl_target_solutions_to_container()
+    from phcpy.phcpy2c import py2c_write_dobldobl_target_system
+    # print 'the dobldobl target system :'
+    # py2c_write_dobldobl_target_system()
+    py2c_copy_dobldobl_target_system_to_container()
+    tsys = load_dobldobl_system()
+    sols = load_dobldobl_solutions()
+    return (tsys, sols)
+
+def quaddobl_start_diagonal_cascade(gamma=0, tasks=0):
+    """
+    Does the path tracking to start a diagonal cascade in quad double
+    precision.  For this to work, the functions quaddobl_diagonal_homotopy
+    and quaddobl_diagonal_cascade_solutions must be executed successfully.
+    If gamma equals 0 on input, then a random gamma constant is generated,
+    otherwise, the given complex gamma will be used in the homotopy.
+    Multitasking is available, and is activated by the tasks parameter.
+    Returns the target (system and its corresponding) solutions.
+    """
+    from phcpy.phcpy2c import py2c_create_quaddobl_homotopy
+    from phcpy.phcpy2c import py2c_create_quaddobl_homotopy_with_gamma
+    from phcpy.phcpy2c import py2c_solve_by_quaddobl_homotopy_continuation
+    from phcpy.phcpy2c import py2c_solcon_clear_quaddobl_solutions
+    from phcpy.phcpy2c import py2c_syscon_clear_quaddobl_system
+    from phcpy.phcpy2c import py2c_copy_quaddobl_target_solutions_to_container
+    from phcpy.phcpy2c import py2c_copy_quaddobl_target_system_to_container
+    from phcpy.interface import load_quaddobl_solutions
+    from phcpy.interface import load_quaddobl_system
+    if(gamma == 0):
+        py2c_create_quaddobl_homotopy()
+    else:
+        py2c_create_quaddobl_homotopy_with_gamma(gamma.real, gamma.imag)
+    py2c_solve_by_quaddobl_homotopy_continuation(tasks)
+    py2c_solcon_clear_quaddobl_solutions()
+    py2c_syscon_clear_quaddobl_system()
+    py2c_copy_quaddobl_target_solutions_to_container()
+    from phcpy.phcpy2c import py2c_write_quaddobl_target_system
+    # print 'the quaddobl target system :'
+    # py2c_write_quaddobl_target_system()
+    py2c_copy_quaddobl_target_system_to_container()
+    tsys = load_quaddobl_system()
+    sols = load_quaddobl_solutions()
+    return (tsys, sols)
+
+def standard_diagonal_solver(dim1, sys1, sols1, dim2, sys2, sols2, tasks=0):
+    """
+    Runs the diagonal homotopies in standard double precision 
+    to intersect two witness sets stored in (sys1, sols1) and 
+    (sys2, sols2), of respective dimensions dim1 and dim2.
+    Multitasking is available, and is activated by the tasks parameter.
+    Returns the last system in the cascade and its solutions.
+    """
+    from phcpy.phcpy2c import py2c_standard_collapse_diagonal
     from phcpy.interface import store_standard_solutions as storesols
     from phcpy.interface import load_standard_solutions as loadsols
     from phcpy.interface import load_standard_system as loadsys
@@ -540,9 +638,96 @@ def standard_diagonal_solver(dim1, sys1, sols1, dim2, sys2, sols2):
     for sol in endsols:
         print sol
     storesols(len(topsys), endsols)
-    py2c_collapse_diagonal(dim1,0)
+    py2c_standard_collapse_diagonal(dim1,0)
     result = (loadsys(), loadsols())
     return result
+
+def dobldobl_diagonal_solver(dim1, sys1, sols1, dim2, sys2, sols2, tasks=0):
+    """
+    Runs the diagonal homotopies in double double precision 
+    to intersect two witness sets stored in (sys1, sols1) and 
+    (sys2, sols2), of respective dimensions dim1 and dim2.
+    Multitasking is available, and is activated by the tasks parameter.
+    Returns the last system in the cascade and its solutions.
+    """
+    from phcpy.phcpy2c import py2c_dobldobl_collapse_diagonal
+    from phcpy.interface import store_dobldobl_solutions as storesols
+    from phcpy.interface import load_dobldobl_solutions as loadsols
+    from phcpy.interface import load_dobldobl_system as loadsys
+    dobldobl_diagonal_homotopy(dim1, sys1, sols1, dim2, sys2, sols2)
+    print 'defining the start solutions'
+    dobldobl_diagonal_cascade_solutions(dim1, dim2)
+    print 'starting the diagonal cascade'
+    (topsys, startsols) = dobldobl_start_diagonal_cascade()
+    print 'the system solved in the start of the cascade :'
+    for pol in topsys:
+        print pol
+    print 'the solutions after starting the diagonal cascade :'
+    for sol in startsols:
+        print sol
+    endsols = double_double_cascade_step(topsys, startsols)
+    print 'after running one cascade step :'
+    for sol in endsols:
+        print sol
+    storesols(len(topsys), endsols)
+    py2c_dobldobl_collapse_diagonal(dim1,0)
+    result = (loadsys(), loadsols())
+    return result
+
+def quaddobl_diagonal_solver(dim1, sys1, sols1, dim2, sys2, sols2, tasks=0):
+    """
+    Runs the diagonal homotopies in quad double precision 
+    to intersect two witness sets stored in (sys1, sols1) and 
+    (sys2, sols2), of respective dimensions dim1 and dim2.
+    Multitasking is available, and is activated by the tasks parameter.
+    Returns the last system in the cascade and its solutions.
+    """
+    from phcpy.phcpy2c import py2c_quaddobl_collapse_diagonal
+    from phcpy.interface import store_quaddobl_solutions as storesols
+    from phcpy.interface import load_quaddobl_solutions as loadsols
+    from phcpy.interface import load_quaddobl_system as loadsys
+    quaddobl_diagonal_homotopy(dim1, sys1, sols1, dim2, sys2, sols2)
+    print 'defining the start solutions'
+    quaddobl_diagonal_cascade_solutions(dim1, dim2)
+    print 'starting the diagonal cascade'
+    (topsys, startsols) = quaddobl_start_diagonal_cascade()
+    print 'the system solved in the start of the cascade :'
+    for pol in topsys:
+        print pol
+    print 'the solutions after starting the diagonal cascade :'
+    for sol in startsols:
+        print sol
+    endsols = quad_double_cascade_step(topsys, startsols)
+    print 'after running one cascade step :'
+    for sol in endsols:
+        print sol
+    storesols(len(topsys), endsols)
+    py2c_quaddobl_collapse_diagonal(dim1,0)
+    result = (loadsys(), loadsols())
+    return result
+
+def diagonal_solver(dim1, sys1, sols1, dim2, sys2, sols2, tasks=0, prc='d'):
+    """
+    Runs the diagonal homotopies to intersect two witness sets stored in
+    (sys1, sols1) and (sys2, sols2), of respective dimensions dim1 and dim2.
+    Multitasking is available, and is activated by the tasks parameter.
+    The precision is set by the parameter prc, which takes the default
+    value 'd' for standard double, 'dd' for double double, or 'qd' for
+    quad double precision.
+    Returns the last system in the cascade and its solutions.
+    """
+    if(prc == 'd'):
+        return standard_diagonal_solver\
+                   (dim1, sys1, sols1, dim2, sys2, sols2, tasks)
+    elif(prc == 'dd'):
+        return dobldobl_diagonal_solver\
+                   (dim1, sys1, sols1, dim2, sys2, sols2, tasks)
+    elif(prc == 'qd'):
+        return quaddobl_diagonal_solver\
+                   (dim1, sys1, sols1, dim2, sys2, sols2, tasks)
+    else:
+        print 'wrong argument for precision'
+        return None
 
 def test_diaghom():
     """
@@ -562,7 +747,7 @@ def test_diaghom():
         print pol
     for sol in w2sols:
         print sol
-    (sys, sols) = standard_diagonal_solver(1, w1sys, w1sols, 1, w2sys, w2sols)
+    (sys, sols) = diagonal_solver(1, w1sys, w1sols, 1, w2sys, w2sols, 0, 'dd')
     print 'the end system :'
     for pol in sys:
         print pol
