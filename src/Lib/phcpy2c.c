@@ -258,6 +258,30 @@ static PyObject *py2c_write_standard_target_system
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_write_dobldobl_target_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = write_dobldobl_target_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_write_quaddobl_target_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = write_quaddobl_target_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_write_standard_start_system
  ( PyObject *self, PyObject *args )
 {
@@ -266,6 +290,30 @@ static PyObject *py2c_write_standard_start_system
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
    fail = write_standard_start_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_write_dobldobl_start_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = write_dobldobl_start_system();
+   
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_write_quaddobl_start_system
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = write_quaddobl_start_system();
    
    return Py_BuildValue("i",fail);
 }
@@ -5299,9 +5347,21 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_write_standard_target_system",
      py2c_write_standard_target_system, METH_VARARGS, 
     "Writes the target system as stored in standard double precision\n to screen or to the defined output file."},
+   {"py2c_write_dobldobl_target_system",
+     py2c_write_dobldobl_target_system, METH_VARARGS, 
+    "Writes the target system as stored in double double precision\n to screen or to the defined output file."},
+   {"py2c_write_quaddobl_target_system",
+     py2c_write_quaddobl_target_system, METH_VARARGS, 
+    "Writes the target system as stored in quad double precision\n to screen or to the defined output file."},
    {"py2c_write_standard_start_system",
      py2c_write_standard_start_system, METH_VARARGS,
     "Writes the start system as stored in standard double precision\n to screen or to the defined output file."},
+   {"py2c_write_dobldobl_start_system",
+     py2c_write_dobldobl_start_system, METH_VARARGS,
+    "Writes the start system as stored in double double precision\n to screen or to the defined output file."},
+   {"py2c_write_quaddobl_start_system",
+     py2c_write_quaddobl_start_system, METH_VARARGS,
+    "Writes the start system as stored in quad double precision\n to screen or to the defined output file."},
    {"py2c_write_start_solutions", py2c_write_start_solutions, METH_VARARGS,
     "Writes the start solutions in standard double precision either to\n the screen (standard output) or to the defined output file.\n On return is the failure code, which is zero if all is well."},
    {"py2c_copy_standard_target_system_to_container",

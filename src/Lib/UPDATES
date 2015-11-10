@@ -1,5 +1,6 @@
 Wed 10 Nov 2015 : functions in witset and phcpy2c to make the solutions to
   start the diagonal cascade in double double and quad double precision.
+  Added write_{dobldobl, quaddobl}_{start, target}_system to phcpy2c.
 
 Mon 9 Nov 2015 : mpi2track.c changed because of the renaming of
   create_diagonal_homotopy into standard_diagonal_homotopy.

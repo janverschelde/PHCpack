@@ -160,11 +160,39 @@ static PyObject *py2c_write_standard_target_system
  *   Writes the target system as stored in standard double precision
  *   to screen or to the defined output file. */
 
+static PyObject *py2c_write_dobldobl_target_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the target system as stored in double double precision
+ *   to screen or to the defined output file. */
+
+static PyObject *py2c_write_quaddobl_target_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the target system as stored in quad double precision
+ *   to screen or to the defined output file. */
+
 static PyObject *py2c_write_standard_start_system
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Writes the start system as stored in standard double precision
+ *   to screen or to the defined output file. */
+
+static PyObject *py2c_write_dobldobl_start_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the start system as stored in double double precision
+ *   to screen or to the defined output file. */
+
+static PyObject *py2c_write_quaddobl_start_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Writes the start system as stored in double double precision
  *   to screen or to the defined output file. */
 
 /* Copying systems from and to containers. */
