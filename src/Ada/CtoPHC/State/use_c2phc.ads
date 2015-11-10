@@ -1034,7 +1034,18 @@ function use_c2phc ( job : integer32;
 --                   a[1] : number of characters in the string b;
 --                   b : characters of the name of the output file.
 --         = 170 : eliminates the extrinsic diagonal for the system
---                 and the solutions in the container, on entry are
+--                 and the solutions in the container,
+--                 in standard double precision, on entry are
+--                   a[0] : current number of slack variables,
+--                   a[1] : number of slack variables to be added.
+--         = 299 : eliminates the extrinsic diagonal for the system
+--                 and the solutions in the container,
+--                 in double double precision, on entry are
+--                   a[0] : current number of slack variables,
+--                   a[1] : number of slack variables to be added.
+--         = 312 : eliminates the extrinsic diagonal for the system
+--                 and the solutions in the container,
+--                 in quad double precision, on entry are
 --                   a[0] : current number of slack variables,
 --                   a[1] : number of slack variables to be added.
 --         = 171 : removes the last slack variable for the system

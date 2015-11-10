@@ -81,7 +81,8 @@ function use_track ( job : integer32;
 --                    a[1] : number of characters in the string b;
 --                    b : characters of the name of the output file.
 --          =  20 : eliminates the extrinsic diagonal for the system
---                  and the solutions in the container, on entry are
+--                  and the solutions in the container,
+--                  in standard double precision, on entry are
 --                    a[0] : current number of slack variables,
 --                    a[1] : number of slack variables to be added.
 --          =  21 : removes the last slack variable for the system
@@ -168,7 +169,17 @@ function use_track ( job : integer32;
 --                  in double double precision;
 --          =  46 : makes the solutions to start the cascade to intersect
 --                  two witness sets of dimensions in a[0] and b[0],
---                  in quad double precision.
+--                  in quad double precision;
+--          =  47 : eliminates the extrinsic diagonal for the system
+--                  and the solutions in the container,
+--                  in double double precision, on entry are
+--                    a[0] : current number of slack variables,
+--                    a[1] : number of slack variables to be added;
+--          =  48 : eliminates the extrinsic diagonal for the system
+--                  and the solutions in the container,
+--                  in quad double precision, on entry are
+--                    a[0] : current number of slack variables,
+--                    a[1] : number of slack variables to be added.
 --
 -- multiprecision versions to create homotopy :
 --

@@ -17,7 +17,9 @@ with Standard_Floating_Vectors;
 with Symbol_Table,Symbol_Table_io;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Strings;
-with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
 with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;    use Standard_Complex_Jaco_Matrices;
 with Standard_Complex_Solutions;
@@ -40,6 +42,10 @@ with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Assignments_of_Solutions;          use Assignments_of_Solutions;
 with Standard_PolySys_Container;
 with Standard_Solutions_Container;
+with DoblDobl_PolySys_Container;
+with DoblDobl_Solutions_Container;
+with QuadDobl_PolySys_Container;
+with QuadDobl_Solutions_Container;
 with PHCpack_Operations;
 with PHCpack_Operations_io;
 
@@ -50,7 +56,8 @@ function use_track ( job : integer32;
  
   function JobM1 return integer32 is -- refine solution with Newton
 
-    ls : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    ls : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+       := Standard_PolySys_Container.Retrieve;
     ep : constant Link_to_Eval_Poly_Sys
        := Standard_PolySys_Container.Evaluator;
     jf : constant Link_to_Eval_Jaco_Mat
@@ -652,7 +659,8 @@ function use_track ( job : integer32;
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
     k : constant integer32 := integer32(v_a(v_a'first));
     n : constant integer := integer(v_a(v_a'first+1));
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+       := Standard_PolySys_Container.Retrieve;
     n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
     v_b : constant C_Integer_Array(0..n1)
         := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
@@ -682,17 +690,18 @@ function use_track ( job : integer32;
       return 19;
   end Job19;
 
-  function Job20 return integer32 is -- collapses extrinsic diagonal
+  function Job20 return integer32 is -- standard collapse extrinsic diagonal
 
     v_a : constant C_Integer_Array
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
     k : constant natural32 := natural32(v_a(v_a'first));
     d : constant natural32 := natural32(v_a(v_a'first+1));
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+       := Standard_PolySys_Container.Retrieve;
     sols : constant Standard_Complex_Solutions.Solution_List
          := Standard_Solutions_Container.Retrieve;
     clps : Standard_Complex_Solutions.Solution_List;
-    cp : Link_to_Poly_Sys;
+    cp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
 
   begin
    -- put("#equations in systems container : "); put(lp'last,1); new_line;
@@ -707,19 +716,80 @@ function use_track ( job : integer32;
     return 0;
   exception 
      when others =>
-       put_line("Exception raised at collapsing of extrinsic diagonal.");
+       put_line("Exception at collapsing of standard extrinsic diagonal.");
        return 20;
   end Job20;
+
+  function Job47 return integer32 is -- dobldobl collapse extrinsic diagonal
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    d : constant natural32 := natural32(v_a(v_a'first+1));
+    lp : constant DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := DoblDobl_PolySys_Container.Retrieve;
+    sols : constant DoblDobl_Complex_Solutions.Solution_List
+         := DoblDobl_Solutions_Container.Retrieve;
+    clps : DoblDobl_Complex_Solutions.Solution_List;
+    cp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+   -- put("#equations in systems container : "); put(lp'last,1); new_line;
+   -- put("#solutions in solutions container : ");
+   -- put(Length_Of(sols),1); new_line;
+    DoblDobl_Complex_Solutions.Copy(sols,clps);
+    Extrinsic_Diagonal_Solvers.Collapse_System(lp.all,clps,k,d,cp);
+    DoblDobl_PolySys_Container.Clear;
+    DoblDobl_PolySys_Container.Initialize(cp.all);
+    DoblDobl_Solutions_Container.Clear;
+    DoblDobl_Solutions_Container.Initialize(clps);
+    return 0;
+  exception 
+     when others =>
+       put_line("Exception at collapsing of dobldobl extrinsic diagonal.");
+       return 47;
+  end Job47;
+
+  function Job48 return integer32 is -- quaddobl collapse extrinsic diagonal
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    k : constant natural32 := natural32(v_a(v_a'first));
+    d : constant natural32 := natural32(v_a(v_a'first+1));
+    lp : constant QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys
+       := QuadDobl_PolySys_Container.Retrieve;
+    sols : constant QuadDobl_Complex_Solutions.Solution_List
+         := QuadDobl_Solutions_Container.Retrieve;
+    clps : QuadDobl_Complex_Solutions.Solution_List;
+    cp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  begin
+   -- put("#equations in systems container : "); put(lp'last,1); new_line;
+   -- put("#solutions in solutions container : ");
+   -- put(Length_Of(sols),1); new_line;
+    QuadDobl_Complex_Solutions.Copy(sols,clps);
+    Extrinsic_Diagonal_Solvers.Collapse_System(lp.all,clps,k,d,cp);
+    QuadDobl_PolySys_Container.Clear;
+    QuadDobl_PolySys_Container.Initialize(cp.all);
+    QuadDobl_Solutions_Container.Clear;
+    QuadDobl_Solutions_Container.Initialize(clps);
+    return 0;
+  exception 
+     when others =>
+       put_line("Exception at collapsing of dobldobl extrinsic diagonal.");
+       return 47;
+  end Job48;
 
   function Job21 return integer32 is -- remove last slack variable
 
     v_a : constant C_Integer_Array
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     k : constant natural := natural(v_a(v_a'first));
-    lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
+    lp : constant Standard_Complex_Poly_Systems.Link_to_Poly_Sys
+       := Standard_PolySys_Container.Retrieve;
     sols : Standard_Complex_Solutions.Solution_List
          := Standard_Solutions_Container.Retrieve;
-    np : Poly_Sys(lp'first..lp'last-1);
+    np : Standard_Complex_Poly_Systems.Poly_Sys(lp'first..lp'last-1);
 
   begin
    -- put("#equations in systems container : "); put(lp'last,1); new_line;
@@ -946,6 +1016,8 @@ function use_track ( job : integer32;
       when 44 => return Job44; -- quad double diagonal homotopy
       when 45 => return Job45; -- dobldobl startsols in diagonal cascade
       when 46 => return Job46; -- quaddobl startsols in diagonal cascade
+      when 47 => return Job47; -- dobldobl collapse extrinsic diagonal
+      when 48 => return Job48; -- quaddobl collapse extrinsic diagonal
      -- multiprecision versions to create homotopy :
       when 52 => PHCpack_Operations.Create_Multprec_Homotopy; return 0;
       when 53 => return Job53; -- multiprecision homotopy with given gamma
