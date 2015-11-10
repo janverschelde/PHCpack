@@ -1,3 +1,9 @@
+Tue 10 Nov 2015 : extended sets.py with function to define the diagonal
+  homotopies in double double and quad double precision.
+
+Mon 9 Nov 2015 : modified sets.py for py2c_standard_diagonal_homotopy,
+  renamed from the old py2c_create_diagonal_homotopy.
+
 Sun 8 Nov 2015 : added the function standard_diagonal_solver to sets.py.
 
 Sat 7 Nov 2015 : fixed bugs in sets.py with the standard_double_cascade_steps

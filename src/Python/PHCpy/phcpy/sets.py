@@ -348,7 +348,7 @@ def standard_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
     from phcpy.phcpy2c import py2c_copy_standard_container_to_target_solutions
     from phcpy.phcpy2c import py2c_copy_standard_container_to_start_system
     from phcpy.phcpy2c import py2c_copy_standard_container_to_start_solutions
-    from phcpy.phcpy2c import py2c_create_diagonal_homotopy
+    from phcpy.phcpy2c import py2c_standard_diagonal_homotopy
     from phcpy.phcpy2c import py2c_syscon_number_of_symbols
     from phcpy.phcpy2c import py2c_syscon_string_of_symbols
     from phcpy.phcpy2c import py2c_diagonal_symbols_doubler
@@ -373,9 +373,97 @@ def standard_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
         py2c_copy_standard_container_to_target_system()
         py2c_copy_standard_container_to_target_solutions()
     if(dim1 >= dim2):
-        py2c_create_diagonal_homotopy(dim1, dim2)
+        py2c_standard_diagonal_homotopy(dim1, dim2)
     else:
-        py2c_create_diagonal_homotopy(dim2, dim1)
+        py2c_standard_diagonal_homotopy(dim2, dim1)
+    py2c_diagonal_symbols_doubler(nbsymbs-dim1,dim1,len(symbols),symbols)
+
+def dobldobl_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
+    """
+    Defines a diagonal homotopy to intersect the witness sets defined
+    by (sys1, esols1) and (sys2, esols2), respectively of dimensions
+    dim1 and dim2.  The systems sys1 and sys2 are assumed to be square
+    and with as many slack variables as the dimension of the solution sets.
+    The data is stored in double double precision.
+    """
+    from phcpy.interface import store_dobldobl_system as storesys
+    from phcpy.interface import store_dobldobl_solutions as storesols
+    from phcpy.phcpy2c import py2c_copy_dobldobl_container_to_target_system
+    from phcpy.phcpy2c import py2c_copy_dobldobl_container_to_target_solutions
+    from phcpy.phcpy2c import py2c_copy_dobldobl_container_to_start_system
+    from phcpy.phcpy2c import py2c_copy_dobldobl_container_to_start_solutions
+    from phcpy.phcpy2c import py2c_dobldobl_diagonal_homotopy
+    from phcpy.phcpy2c import py2c_syscon_number_of_symbols
+    from phcpy.phcpy2c import py2c_syscon_string_of_symbols
+    from phcpy.phcpy2c import py2c_diagonal_symbols_doubler
+    storesys(sys1)
+    symbols = py2c_syscon_string_of_symbols()
+    nbsymbs = py2c_syscon_number_of_symbols()
+    print 'number of symbols :', nbsymbs
+    print 'names of variables :', symbols
+    storesols(len(sys1), esols1)
+    if(dim1 >= dim2):
+        py2c_copy_dobldobl_container_to_target_system()
+        py2c_copy_dobldobl_container_to_target_solutions()
+    else:
+        py2c_copy_dobldobl_container_to_start_system()
+        py2c_copy_dobldobl_container_to_start_solutions()
+    storesys(sys2)
+    storesols(len(sys2), esols2)
+    if(dim1 >= dim2):
+        py2c_copy_dobldobl_container_to_start_system()
+        py2c_copy_dobldobl_container_to_start_solutions()
+    else:
+        py2c_copy_dobldobl_container_to_target_system()
+        py2c_copy_dobldobl_container_to_target_solutions()
+    if(dim1 >= dim2):
+        py2c_dobldobl_diagonal_homotopy(dim1, dim2)
+    else:
+        py2c_dobldobl_diagonal_homotopy(dim2, dim1)
+    py2c_diagonal_symbols_doubler(nbsymbs-dim1,dim1,len(symbols),symbols)
+
+def quaddobl_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
+    """
+    Defines a diagonal homotopy to intersect the witness sets defined
+    by (sys1, esols1) and (sys2, esols2), respectively of dimensions
+    dim1 and dim2.  The systems sys1 and sys2 are assumed to be square
+    and with as many slack variables as the dimension of the solution sets.
+    The data is stored in quad double precision.
+    """
+    from phcpy.interface import store_quaddobl_system as storesys
+    from phcpy.interface import store_quaddobl_solutions as storesols
+    from phcpy.phcpy2c import py2c_copy_quaddobl_container_to_target_system
+    from phcpy.phcpy2c import py2c_copy_quaddobl_container_to_target_solutions
+    from phcpy.phcpy2c import py2c_copy_quaddobl_container_to_start_system
+    from phcpy.phcpy2c import py2c_copy_quaddobl_container_to_start_solutions
+    from phcpy.phcpy2c import py2c_quaddobl_diagonal_homotopy
+    from phcpy.phcpy2c import py2c_syscon_number_of_symbols
+    from phcpy.phcpy2c import py2c_syscon_string_of_symbols
+    from phcpy.phcpy2c import py2c_diagonal_symbols_doubler
+    storesys(sys1)
+    symbols = py2c_syscon_string_of_symbols()
+    nbsymbs = py2c_syscon_number_of_symbols()
+    print 'number of symbols :', nbsymbs
+    print 'names of variables :', symbols
+    storesols(len(sys1), esols1)
+    if(dim1 >= dim2):
+        py2c_copy_quaddobl_container_to_target_system()
+        py2c_copy_quaddobl_container_to_target_solutions()
+    else:
+        py2c_copy_quaddobl_container_to_start_system()
+        py2c_copy_quaddobl_container_to_start_solutions()
+    storesys(sys2)
+    storesols(len(sys2), esols2)
+    if(dim1 >= dim2):
+        py2c_copy_quaddobl_container_to_start_system()
+        py2c_copy_quaddobl_container_to_start_solutions()
+    else:
+        py2c_copy_quaddobl_container_to_target_system()
+        py2c_copy_quaddobl_container_to_target_solutions()
+    if(dim1 >= dim2):
+        py2c_quaddobl_diagonal_homotopy(dim1, dim2)
+    else:
+        py2c_quaddobl_diagonal_homotopy(dim2, dim1)
     py2c_diagonal_symbols_doubler(nbsymbs-dim1,dim1,len(symbols),symbols)
 
 def standard_diagonal_cascade_solutions(dim1, dim2):
@@ -419,8 +507,8 @@ def standard_start_diagonal_cascade(gamma=0, tasks=0):
     py2c_syscon_clear_standard_system()
     py2c_copy_standard_target_solutions_to_container()
     from phcpy.phcpy2c import py2c_write_standard_target_system
-    print 'the standard target system :'
-    py2c_write_standard_target_system()
+    # print 'the standard target system :'
+    # py2c_write_standard_target_system()
     py2c_copy_standard_target_system_to_container()
     tsys = load_standard_system()
     sols = load_standard_solutions()
