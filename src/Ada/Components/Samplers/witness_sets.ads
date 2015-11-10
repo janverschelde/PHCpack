@@ -340,11 +340,31 @@ package Witness_Sets is
              ( s : Standard_Complex_Solutions.Solution; k : natural32 )
              return Standard_Complex_Solutions.Solution;
   function Remove_Embedding
+             ( s : DoblDobl_Complex_Solutions.Solution; k : natural32 )
+             return DoblDobl_Complex_Solutions.Solution;
+  function Remove_Embedding
+             ( s : QuadDobl_Complex_Solutions.Solution; k : natural32 )
+             return QuadDobl_Complex_Solutions.Solution;
+
+  -- DESCRIPTION :
+  --   Removes the last k components from the solution,
+  --   in standard double, double double, or quad double precision.
+
+  function Remove_Embedding
              ( sols : Standard_Complex_Solutions.Solution_List;
                k : natural32 )
              return Standard_Complex_Solutions.Solution_List;
+  function Remove_Embedding
+             ( sols : DoblDobl_Complex_Solutions.Solution_List;
+               k : natural32 )
+             return DoblDobl_Complex_Solutions.Solution_List;
+  function Remove_Embedding
+             ( sols : QuadDobl_Complex_Solutions.Solution_List;
+               k : natural32 )
+             return QuadDobl_Complex_Solutions.Solution_List;
 
   -- DESCRIPTION :
-  --   Removes the last k components from the solution.
+  --   Removes the last k components from each solution in the list,
+  --   in standard double, double double, or quad double precision.
 
 end Witness_Sets;

@@ -1201,11 +1201,85 @@ package body Witness_Sets is
   end Remove_Embedding;
 
   function Remove_Embedding
+             ( s : DoblDobl_Complex_Solutions.Solution;
+               k : natural32 )
+             return DoblDobl_Complex_Solutions.Solution is
+
+    use DoblDobl_Complex_Solutions;
+    res : Solution(s.n-integer32(k));
+
+  begin
+    res.m := s.m;
+    res.t := s.t;
+    res.err := s.err;
+    res.rco := s.rco;
+    res.res := s.res;
+    res.v(1..s.n-integer32(k)) := s.v(1..s.n-integer32(k));
+    return res;
+  end Remove_Embedding;
+
+  function Remove_Embedding
+             ( s : QuadDobl_Complex_Solutions.Solution;
+               k : natural32 )
+             return QuadDobl_Complex_Solutions.Solution is
+
+    use QuadDobl_Complex_Solutions;
+    res : Solution(s.n-integer32(k));
+
+  begin
+    res.m := s.m;
+    res.t := s.t;
+    res.err := s.err;
+    res.rco := s.rco;
+    res.res := s.res;
+    res.v(1..s.n-integer32(k)) := s.v(1..s.n-integer32(k));
+    return res;
+  end Remove_Embedding;
+
+  function Remove_Embedding
              ( sols : Standard_Complex_Solutions.Solution_List;
                k : natural32 )
              return Standard_Complex_Solutions.Solution_List is
    
     use Standard_Complex_Solutions;
+    res,res_last,tmp : Solution_List;
+    ls : Link_to_Solution;
+
+  begin
+    tmp := sols;
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Append(res,res_last,Remove_Embedding(ls.all,k));
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Remove_Embedding;
+
+  function Remove_Embedding
+             ( sols : DoblDobl_Complex_Solutions.Solution_List;
+               k : natural32 )
+             return DoblDobl_Complex_Solutions.Solution_List is
+   
+    use DoblDobl_Complex_Solutions;
+    res,res_last,tmp : Solution_List;
+    ls : Link_to_Solution;
+
+  begin
+    tmp := sols;
+    while not Is_Null(tmp) loop
+      ls := Head_Of(tmp);
+      Append(res,res_last,Remove_Embedding(ls.all,k));
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Remove_Embedding;
+
+  function Remove_Embedding
+             ( sols : QuadDobl_Complex_Solutions.Solution_List;
+               k : natural32 )
+             return QuadDobl_Complex_Solutions.Solution_List is
+   
+    use QuadDobl_Complex_Solutions;
     res,res_last,tmp : Solution_List;
     ls : Link_to_Solution;
 
