@@ -1,3 +1,6 @@
+Tue 10 Nov 2015 : extended extrinsic_diagonal_solvers with procedures to
+  collapse the diagonal in double double and quad double precision.
+
 Mon 9 Nov 2015 : factored out code from extrinsic_diagonal_homotopies
   into standard_diagonal_polynomials and standard_diagonal_solutions.
   This changed of course extrinsic_diagonal_homotopies, but also

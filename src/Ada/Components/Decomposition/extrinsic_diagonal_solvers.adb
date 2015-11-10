@@ -10,6 +10,9 @@ with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;          use Standard_Complex_VecVecs;
 with Symbol_Table;                      use Symbol_Table;
+with Standard_Complex_Polynomials;
+with DoblDobl_Complex_Polynomials;
+with QuadDobl_Complex_Polynomials;
 with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
@@ -17,6 +20,10 @@ with Permutations,Permute_Operations;   use Permutations,Permute_Operations;
 with Witness_Sets,Witness_Sets_io;      use Witness_Sets,Witness_Sets_io;
 with Standard_Diagonal_Polynomials;     use Standard_Diagonal_Polynomials;
 with Standard_Diagonal_Solutions;       use Standard_Diagonal_Solutions;
+with DoblDobl_Diagonal_Polynomials;     use DoblDobl_Diagonal_Polynomials;
+with DoblDobl_Diagonal_Solutions;       use DoblDobl_Diagonal_Solutions;
+with QuadDobl_Diagonal_Polynomials;     use QuadDobl_Diagonal_Polynomials;
+with QuadDobl_Diagonal_Solutions;       use QuadDobl_Diagonal_Solutions;
 with Extrinsic_Diagonal_Homotopies;     use Extrinsic_Diagonal_Homotopies;
 with Extrinsic_Diagonal_Homotopies_io;  use Extrinsic_Diagonal_Homotopies_io;
 
@@ -24,12 +31,14 @@ package body Extrinsic_Diagonal_Solvers is
 
 -- UTILITIES TO SET UP THE DIAGONAL HOMOTOPIES :
 
-  function Is_Dummy ( p : Poly; k : integer32 ) return boolean is
+  function Is_Dummy ( p : Standard_Complex_Polynomials.Poly;
+                      k : integer32 ) return boolean is
 
   -- DESCRIPTION :
   --   Returns true if the polynomial has only one term that is linear
   --   and where the occurring variables are among the k last ones.
 
+    use Standard_Complex_Polynomials;
     n : constant integer32 := integer32(Number_of_Unknowns(p));
 
   begin
@@ -48,7 +57,8 @@ package body Extrinsic_Diagonal_Solvers is
   end Is_Dummy;
 
   function Number_of_Dummies
-             ( p : Poly_Sys; k : integer32 ) return natural32 is
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+               k : integer32 ) return natural32 is
 
   -- DESCRIPTION :
   --   Returns the number of equations that turn the slack variables
@@ -67,11 +77,15 @@ package body Extrinsic_Diagonal_Solvers is
  
 -- UTILITIES TO SAVE THE RESULTS :
 
-  procedure Test_Solutions ( file : in file_type;
-                             p : in Poly_Sys; s : in Solution_List ) is
+  procedure Test_Solutions
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                s : in Standard_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
   --   Evaluates p at the solutions in s.
+
+    use Standard_Complex_Solutions;
 
     y : Standard_Complex_Vectors.Vector(p'range);
     t : Solution_List := s;
@@ -89,11 +103,15 @@ package body Extrinsic_Diagonal_Solvers is
     end loop;
   end Test_Solutions;
 
-  procedure Save_Start_System ( p : in Poly_Sys; s : in Solution_List ) is
+  procedure Save_Start_System
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                s : in Standard_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
   --   The user is prompted for a file name to save the start system
   --   in the homotopy to start the diagonal cascade.
+
+    use Standard_Complex_Solutions;
 
     file : file_type;
 
@@ -107,7 +125,8 @@ package body Extrinsic_Diagonal_Solvers is
     put(file,Length_Of(s),natural32(p'last),s);
   end Save_Start_System;
 
-  procedure Save_Target_System ( p : in Poly_Sys ) is
+  procedure Save_Target_System
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
 
   -- DESCRIPTION :
   --   The user is prompted for a file name to save the target system
@@ -125,6 +144,9 @@ package body Extrinsic_Diagonal_Solvers is
 -- MAIN DRIVERS :
 
   procedure Randomize_System is
+
+    use Standard_Complex_Polynomials;
+    use Standard_Complex_Poly_Systems;
 
     lp : Link_to_Poly_Sys;
     k : natural32 := 0;
@@ -146,8 +168,9 @@ package body Extrinsic_Diagonal_Solvers is
 
   procedure Build_Cascade_Homotopy
               ( file : in file_type;
-                p1e,p2e : in Poly_Sys; dim1,dim2 : in natural32;
-                sols1e,sols2e : in Solution_List;
+                p1e,p2e : in Standard_Complex_Poly_Systems.Poly_Sys;
+                dim1,dim2 : in natural32;
+                sols1e,sols2e : in Standard_Complex_Solutions.Solution_List;
                 s1e,s2e : in Array_of_Symbols ) is
 
   -- DESCRIPTION :
@@ -164,6 +187,10 @@ package body Extrinsic_Diagonal_Solvers is
   --   sols1e   witness points on the 2nd solution component;
   --   s1e      symbols used in the 1st polynomial system;
   --   s2e      symbols used in the 2nd polynomial system.
+
+    use Standard_Complex_Polynomials;
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     dim : constant natural32 := Cascade_Dimension(p1e,p2e,dim1,dim2);
     k : constant natural32 := Number_of_Unknowns(p1e(p1e'first))-dim1;
@@ -202,10 +229,60 @@ package body Extrinsic_Diagonal_Solvers is
     Test_Solutions(file,ch_start,embsols);
   end Build_Cascade_Homotopy;
 
-  procedure Permute ( p : in Permutation; sols : in out Solution_List ) is
+  procedure Permute
+              ( p : in Permutation;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
   --   Permutes the vectors in the solution list with the permutation p.
+
+    use Standard_Complex_Solutions;
+
+    tmp : Solution_List := sols;
+
+  begin
+    while not Is_Null(tmp) loop
+      declare
+        ls : constant Link_to_Solution := Head_Of(tmp);
+      begin
+        ls.v := p*ls.v;
+        Set_Head(tmp,ls);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Permute;
+
+  procedure Permute
+              ( p : in Permutation;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Permutes the vectors in the solution list with the permutation p.
+
+    use DoblDobl_Complex_Solutions;
+
+    tmp : Solution_List := sols;
+
+  begin
+    while not Is_Null(tmp) loop
+      declare
+        ls : constant Link_to_Solution := Head_Of(tmp);
+      begin
+        ls.v := p*ls.v;
+        Set_Head(tmp,ls);
+      end;
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Permute;
+
+  procedure Permute
+              ( p : in Permutation;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+  -- DESCRIPTION :
+  --   Permutes the vectors in the solution list with the permutation p.
+
+    use QuadDobl_Complex_Solutions;
 
     tmp : Solution_List := sols;
 
@@ -222,8 +299,9 @@ package body Extrinsic_Diagonal_Solvers is
   end Permute;
 
   procedure Permute_by_Symbols
-              ( file : in file_type; p2e : in out Poly_Sys;
-                sols2e : in out Solution_List;
+              ( file : in file_type;
+                p2e : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                sols2e : in out Standard_Complex_Solutions.Solution_List;
                 s1,s2 : in out Array_of_Symbols;
                 dim1,dim2 : in natural32 ) is
 
@@ -264,6 +342,9 @@ package body Extrinsic_Diagonal_Solvers is
   end Permute_by_Symbols;
 
   procedure Build_Diagonal_Cascade is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
  
     file : file_type;
     lp1,lp2 : Link_to_Poly_Sys;
@@ -341,13 +422,70 @@ package body Extrinsic_Diagonal_Solvers is
 --    Clear(dt);
 --  end Replace_with_Dummies;
 
-  procedure Add_Embedding ( p : in out Poly; n,k : in natural32;
-                            nbdumb : in out natural32 ) is
+  procedure Add_Embedding
+              ( p : in out Standard_Complex_Polynomials.Poly;
+                n,k : in natural32; nbdumb : in out natural32 ) is
 
   -- DESCRIPTION :
   --   Adds an embedding with k extra variables to a polynomial p
   --   in n variables, where p may be an empty polynomial.
   --   The variable nbdumb keeps track of the empty polynomials.
+
+    use Standard_Complex_Polynomials;
+
+    newcp : Poly;
+
+  begin
+    if Number_of_Unknowns(p) < n+k then
+      if p = Null_Poly then
+        nbdumb := nbdumb + 1;
+        if nbdumb <= k
+         then p := Add_Dummy(n,k,nbdumb);
+        end if;
+      else
+        newcp := Add_Embedding(p,k);
+        Copy(newcp,p); Clear(newcp);
+      end if;
+    end if;
+  end Add_Embedding;
+
+  procedure Add_Embedding
+              ( p : in out DoblDobl_Complex_Polynomials.Poly;
+                n,k : in natural32; nbdumb : in out natural32 ) is
+
+  -- DESCRIPTION :
+  --   Adds an embedding with k extra variables to a polynomial p
+  --   in n variables, where p may be an empty polynomial.
+  --   The variable nbdumb keeps track of the empty polynomials.
+
+    use DoblDobl_Complex_Polynomials;
+
+    newcp : Poly;
+
+  begin
+    if Number_of_Unknowns(p) < n+k then
+      if p = Null_Poly then
+        nbdumb := nbdumb + 1;
+        if nbdumb <= k
+         then p := Add_Dummy(n,k,nbdumb);
+        end if;
+      else
+        newcp := Add_Embedding(p,k);
+        Copy(newcp,p); Clear(newcp);
+      end if;
+    end if;
+  end Add_Embedding;
+
+  procedure Add_Embedding
+              ( p : in out QuadDobl_Complex_Polynomials.Poly;
+                n,k : in natural32; nbdumb : in out natural32 ) is
+
+  -- DESCRIPTION :
+  --   Adds an embedding with k extra variables to a polynomial p
+  --   in n variables, where p may be an empty polynomial.
+  --   The variable nbdumb keeps track of the empty polynomials.
+
+    use QuadDobl_Complex_Polynomials;
 
     newcp : Poly;
 
@@ -366,12 +504,14 @@ package body Extrinsic_Diagonal_Solvers is
   end Add_Embedding;
 
   procedure Collapse_System
-             ( p : in Poly_Sys; sols : in out Solution_List;
-               dim,add2dim : in natural32; r : out Link_to_Poly_Sys ) is
+             ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+               sols : in out Standard_Complex_Solutions.Solution_List;
+               dim,add2dim : in natural32;
+               r : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
 
-  -- DESCRIPTION :
-  --   Removes the duplicate variables from p and sols,
-  --   embedding the result as a component of dimension dim+add2dim.
+    use Standard_Complex_Polynomials;
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     nb : constant natural32 := Symbol_Table.Number;
     n : constant integer32 := integer32(nb-dim)/2;
@@ -459,7 +599,124 @@ package body Extrinsic_Diagonal_Solvers is
     r := new Poly_Sys'(res);
   end Collapse_System;
 
+  procedure Collapse_System
+             ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+               sols : in out DoblDobl_Complex_Solutions.Solution_List;
+               dim,add2dim : in natural32;
+               r : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use DoblDobl_Complex_Polynomials;
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    nb : constant natural32 := Symbol_Table.Number;
+    n : constant integer32 := integer32(nb-dim)/2;
+    s1,s2 : Array_of_Symbols(1..n);
+    p1,p2,prm : Permutation(1..n);
+    cbp : Permutation(1..integer32(nb));
+    pp,cp : Poly_Sys(p'range);
+    res : Poly_Sys(1..n+integer32(add2dim+dim));
+    tsols : Solution_List;
+    ind : integer32 := res'first;
+    cnt : natural32 := 0;
+
+  begin
+    Retrieve_Suffixed_Symbols(n,'1',s1,p1);
+    Retrieve_Suffixed_Symbols(n,'2',s2,p2);
+    prm := Matching_Permutation(s1,s2);
+    cbp := Combine_Permutations(n,integer32(dim),p1,p2,prm);
+    pp := p*cbp;
+    Permute(cbp,sols);
+    cp := Collapse(pp,n);
+    for i in s1'range loop
+      s1(i) := Remove_Suffix(s1(i));
+    end loop;
+    Assign_Symbol_Table(s1);
+    Add_Embed_Symbols(dim+add2dim);
+    if dim + add2dim > 0 then
+      for i in cp'range loop
+        Add_Embedding(cp(i),natural32(n),dim+add2dim,cnt);
+        if cp(i) /= Null_Poly then
+          res(ind) := cp(i);
+          ind := ind + 1;
+        end if;
+      end loop;
+    else
+      for i in res'range loop
+        res(i) := cp(i);
+      end loop;
+    end if;
+    tsols := Truncate(sols,n);
+    Clear(sols);
+    if dim + add2dim > 0
+     then sols := Add_Embedding(tsols,dim+add2dim); Clear(tsols);
+     else sols := tsols;
+    end if;
+    Clear(pp);
+    r := new Poly_Sys'(res);
+  end Collapse_System;
+
+  procedure Collapse_System
+             ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+               sols : in out QuadDobl_Complex_Solutions.Solution_List;
+               dim,add2dim : in natural32;
+               r : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use QuadDobl_Complex_Polynomials;
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    nb : constant natural32 := Symbol_Table.Number;
+    n : constant integer32 := integer32(nb-dim)/2;
+    s1,s2 : Array_of_Symbols(1..n);
+    p1,p2,prm : Permutation(1..n);
+    cbp : Permutation(1..integer32(nb));
+    pp,cp : Poly_Sys(p'range);
+    res : Poly_Sys(1..n+integer32(add2dim+dim));
+    tsols : Solution_List;
+    ind : integer32 := res'first;
+    cnt : natural32 := 0;
+
+  begin
+    Retrieve_Suffixed_Symbols(n,'1',s1,p1);
+    Retrieve_Suffixed_Symbols(n,'2',s2,p2);
+    prm := Matching_Permutation(s1,s2);
+    cbp := Combine_Permutations(n,integer32(dim),p1,p2,prm);
+    pp := p*cbp;
+    Permute(cbp,sols);
+    cp := Collapse(pp,n);
+    for i in s1'range loop
+      s1(i) := Remove_Suffix(s1(i));
+    end loop;
+    Assign_Symbol_Table(s1);
+    Add_Embed_Symbols(dim+add2dim);
+    if dim + add2dim > 0 then
+      for i in cp'range loop
+        Add_Embedding(cp(i),natural32(n),dim+add2dim,cnt);
+        if cp(i) /= Null_Poly then
+          res(ind) := cp(i);
+          ind := ind + 1;
+        end if;
+      end loop;
+    else
+      for i in res'range loop
+        res(i) := cp(i);
+      end loop;
+    end if;
+    tsols := Truncate(sols,n);
+    Clear(sols);
+    if dim + add2dim > 0
+     then sols := Add_Embedding(tsols,dim+add2dim); Clear(tsols);
+     else sols := tsols;
+    end if;
+    Clear(pp);
+    r := new Poly_Sys'(res);
+  end Collapse_System;
+
   procedure Collapse_Diagonal_System is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     file : file_type;
     lp : Link_to_Poly_Sys;

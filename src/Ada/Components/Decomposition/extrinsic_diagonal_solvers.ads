@@ -1,7 +1,10 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
-with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
-with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
+with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Extrinsic_Diagonal_Solvers is
 
@@ -26,11 +29,24 @@ package Extrinsic_Diagonal_Solvers is
   --   of the intersection of two components.
 
   procedure Collapse_System
-              ( p : in Poly_Sys; sols : in out Solution_List;
-                dim,add2dim : in natural32; r : out Link_to_Poly_Sys );
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                dim,add2dim : in natural32;
+                r : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Collapse_System
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                dim,add2dim : in natural32;
+                r : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Collapse_System
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                dim,add2dim : in natural32;
+                r : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRIPTION :
   --   Removes the duplicate variables from p and sols,
+  --   in standard double, double double, or quad double precision,
   --   embedding the result as a component of dimension dim+addtodim.
 
   -- ON ENTRY :
