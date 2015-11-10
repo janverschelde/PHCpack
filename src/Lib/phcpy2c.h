@@ -2996,12 +2996,37 @@ static PyObject *py2c_quaddobl_diagonal_homotopy
  *   in quad double precision, define the witness sets for these
  *   two solution sets. */
 
-static PyObject *py2c_start_diagonal_cascade_solutions
+static PyObject *py2c_standard_diagonal_cascade_solutions
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Makes the start solutions to start the cascade homotopy to
- *   intersect two solution sets of dimensions a and b, where a >= b.
+ *   intersect two solution sets of dimensions a and b, where a >= b,
+ *   in standard double precision.
+ *   The dimensions a and b are given as input parameters.
+ *   The systems stored as target and start system in the container
+ *   define the witness sets for these two solution sets.
+ *   On return is the failure code, which equals zero when all went well. */
+
+static PyObject *py2c_dobldobl_diagonal_cascade_solutions
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Makes the start solutions to start the cascade homotopy to
+ *   intersect two solution sets of dimensions a and b, where a >= b,
+ *   in double double precision.
+ *   The dimensions a and b are given as input parameters.
+ *   The systems stored as target and start system in the container
+ *   define the witness sets for these two solution sets.
+ *   On return is the failure code, which equals zero when all went well. */
+
+static PyObject *py2c_quaddobl_diagonal_cascade_solutions
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Makes the start solutions to start the cascade homotopy to
+ *   intersect two solution sets of dimensions a and b, where a >= b,
+ *   in quad double precision.
  *   The dimensions a and b are given as input parameters.
  *   The systems stored as target and start system in the container
  *   define the witness sets for these two solution sets.

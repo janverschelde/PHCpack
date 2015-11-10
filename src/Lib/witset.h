@@ -127,11 +127,30 @@ int quaddobl_diagonal_homotopy ( int a, int b );
  *   in quad double precision define the witness sets for these
  *   two solution sets. */
 
-int start_diagonal_cascade_solutions ( int a, int b );
+int standard_diagonal_cascade_solutions ( int a, int b );
 /*
  * DESCRIPTION :
  *   Makes the start solutions to start the cascade homotopy to
- *   intersect two solution sets of dimensions a and b, where a >= b.
+ *   intersect two solution sets of dimensions a and b, where a >= b,
+ *   in standard double precision.
+ *   The systems stored as target and start system in the container
+ *   define the witness sets for these two solution sets. */
+
+int dobldobl_diagonal_cascade_solutions ( int a, int b );
+/*
+ * DESCRIPTION :
+ *   Makes the start solutions to start the cascade homotopy to
+ *   intersect two solution sets of dimensions a and b, where a >= b,
+ *   in double double precision.
+ *   The systems stored as target and start system in the container
+ *   define the witness sets for these two solution sets. */
+
+int quaddobl_diagonal_cascade_solutions ( int a, int b );
+/*
+ * DESCRIPTION :
+ *   Makes the start solutions to start the cascade homotopy to
+ *   intersect two solution sets of dimensions a and b, where a >= b,
+ *   in quad double precision.
  *   The systems stored as target and start system in the container
  *   define the witness sets for these two solution sets. */
 

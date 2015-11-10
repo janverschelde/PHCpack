@@ -143,11 +143,27 @@ int quaddobl_diagonal_homotopy ( int a, int b )
    return fail;
 }
 
-int start_diagonal_cascade_solutions ( int a, int b )
+int standard_diagonal_cascade_solutions ( int a, int b )
 {
    int fail;
    double *c;
    fail = _ada_use_c2phc(271,&a,&b,c);
+   return fail;
+}
+
+int dobldobl_diagonal_cascade_solutions ( int a, int b )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(297,&a,&b,c);
+   return fail;
+}
+
+int quaddobl_diagonal_cascade_solutions ( int a, int b )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(298,&a,&b,c);
    return fail;
 }
 

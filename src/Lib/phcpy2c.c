@@ -4534,14 +4534,38 @@ static PyObject *py2c_quaddobl_diagonal_homotopy
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_start_diagonal_cascade_solutions
+static PyObject *py2c_standard_diagonal_cascade_solutions
  ( PyObject *self, PyObject *args )
 {
    int fail,a,b;
 
    initialize();
    if(!PyArg_ParseTuple(args,"ii",&a,&b)) return NULL;
-   fail = start_diagonal_cascade_solutions(a,b);
+   fail = standard_diagonal_cascade_solutions(a,b);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_dobldobl_diagonal_cascade_solutions
+ ( PyObject *self, PyObject *args )
+{
+   int fail,a,b;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&a,&b)) return NULL;
+   fail = dobldobl_diagonal_cascade_solutions(a,b);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_quaddobl_diagonal_cascade_solutions
+ ( PyObject *self, PyObject *args )
+{
+   int fail,a,b;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&a,&b)) return NULL;
+   fail = quaddobl_diagonal_cascade_solutions(a,b);
 
    return Py_BuildValue("i",fail);
 }
@@ -6179,9 +6203,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_quaddobl_diagonal_homotopy", py2c_quaddobl_diagonal_homotopy,
      METH_VARARGS,
     "Creates a diagonal homotopy to intersect two solution sets of\n dimensions a and b respectively, where a >= b.\n The two input parameters are values for a and b.\n The systems stored as target and start system in the container,\n in quad double precision, define the witness sets for\n these two solution sets."},
-   {"py2c_start_diagonal_cascade_solutions",
-     py2c_start_diagonal_cascade_solutions, METH_VARARGS,
-    "Makes the start solutions to start the cascade homotopy to\n intersect two solution sets of dimensions a and b, where a >= b.\n The dimensions a and b are given as input parameters.\n The systems stored as target and start system in the container\n define the witness sets for these two solution sets.\n On return is the failure code, which equals zero when all went well."},
+   {"py2c_standard_diagonal_cascade_solutions",
+     py2c_standard_diagonal_cascade_solutions, METH_VARARGS,
+    "Makes the start solutions to start the cascade homotopy to\n intersect two solution sets of dimensions a and b, where a >= b,\n in standard double precision.\n The dimensions a and b are given as input parameters.\n The systems stored as target and start system in the container\n define the witness sets for these two solution sets.\n On return is the failure code, which equals zero when all went well."},
+   {"py2c_dobldobl_diagonal_cascade_solutions",
+     py2c_dobldobl_diagonal_cascade_solutions, METH_VARARGS,
+    "Makes the start solutions to start the cascade homotopy to\n intersect two solution sets of dimensions a and b, where a >= b,\n in double double precision.\n The dimensions a and b are given as input parameters.\n The systems stored as target and start system in the container\n define the witness sets for these two solution sets.\n On return is the failure code, which equals zero when all went well."},
+   {"py2c_quaddobl_diagonal_cascade_solutions",
+     py2c_quaddobl_diagonal_cascade_solutions, METH_VARARGS,
+    "Makes the start solutions to start the cascade homotopy to\n intersect two solution sets of dimensions a and b, where a >= b,\n in quad double precision.\n The dimensions a and b are given as input parameters.\n The systems stored as target and start system in the container\n define the witness sets for these two solution sets.\n On return is the failure code, which equals zero when all went well."},
    {"py2c_extrinsic_top_diagonal_dimension",
      py2c_extrinsic_top_diagonal_dimension, METH_VARARGS,
     "Returns the dimension of the start and target system to\n start the extrinsic cascade to intersect two witness sets,\n respectively of dimensions a and b, with ambient dimensions\n respectively equal to n1 and n2.\n There are four integers as parameters on input: n1, n2, a and b."},
