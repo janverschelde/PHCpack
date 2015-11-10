@@ -1284,7 +1284,8 @@ function use_c2phc ( job : integer32;
 --                 places a witness set in the systems and solutions
 --                 container for the polynomial stored in b.
 --         = 271 : makes the solutions to start the cascade to intersect
---                 two witness sets of dimensions in a[0] and b[0].
+--                 two witness sets of dimensions in a[0] and b[0],
+--                 in standard double precision;
 --         = 230 : doubles the number of symbols in the symbol table
 --                 needed to write the target system solved to start the
 --                 cascade of diagonal homotopies in extrinsic coordinates,
@@ -1293,7 +1294,13 @@ function use_c2phc ( job : integer32;
 --                       in a[2] the number of characters stored in b,
 --                 where b stores the names of the symbols in the first set,
 --                 on a successful return, the symbol table will contain the
---                 suffixed symbols to write the target system properly.
+--                 suffixed symbols to write the target system properly;
+--         = 297 : makes the solutions to start the cascade to intersect
+--                 two witness sets of dimensions in a[0] and b[0],
+--                 in double double precision;
+--         = 298 : makes the solutions to start the cascade to intersect
+--                 two witness sets of dimensions in a[0] and b[0],
+--                 in quad double precision.
 --
 -- univariate root finders :
 --

@@ -2255,6 +2255,9 @@ function use_c2phc ( job : integer32;
       when 294 => return Job294; -- writes the symbols to screen
       when 295 => return Job295; -- returns string of symbols
       when 296 => return Job296; -- removes symbol by name
+     -- interface to diagonal homotopies continued
+      when 297 => return use_track(45,a,b,c); -- dobldobl diagonal startsols
+      when 298 => return use_track(46,a,b,c); -- quaddobl diagonal startsols
       when 300..305 => return use_syspool(job-300,a,b,c);
       when 306..311 => return use_syscon(job-294,a,b,c);
       when 320..325 => return use_solpool(job-320,a,b,c);

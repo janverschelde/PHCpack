@@ -50,6 +50,8 @@ with Multprec_IncFix_Continuation;
 with Standard_Root_Refiners;
 with Witness_Sets,Witness_Sets_io;
 with Standard_Diagonal_Solutions;        use Standard_Diagonal_Solutions;
+with DoblDobl_Diagonal_Solutions;        use DoblDobl_Diagonal_Solutions;
+with QuadDobl_Diagonal_Solutions;        use QuadDobl_Diagonal_Solutions;
 with Extrinsic_Diagonal_Homotopies;      use Extrinsic_Diagonal_Homotopies;
 with Multitasking_Continuation;          use Multitasking_Continuation;
 
@@ -943,7 +945,7 @@ package body PHCpack_Operations is
     PHCpack_Operations.Create_QuadDobl_Homotopy(gamma);
   end QuadDobl_Diagonal_Homotopy;
 
-  procedure Start_Diagonal_Cascade_Solutions ( a,b : in natural32 ) is
+  procedure Standard_Diagonal_Cascade_Solutions ( a,b : in natural32 ) is
 
     use Standard_Complex_Polynomials,Standard_Complex_Solutions;
 
@@ -969,7 +971,63 @@ package body PHCpack_Operations is
     st_start_sols := embsols;
    -- put("number of start solutions : ");
    -- put(Length_Of(st_start_sols),1); new_line;
-  end Start_Diagonal_Cascade_Solutions;
+  end Standard_Diagonal_Cascade_Solutions;
+
+  procedure DoblDobl_Diagonal_Cascade_Solutions ( a,b : in natural32 ) is
+
+    use DoblDobl_Complex_Polynomials,DoblDobl_Complex_Solutions;
+
+    k : constant natural32
+      := Number_of_Unknowns(dd_target_sys(dd_target_sys'first)) - a;
+    sols1 : constant Solution_List
+          := Witness_Sets.Remove_Embedding(dd_target_sols,a);
+    sols2 : constant Solution_List
+          := Witness_Sets.Remove_Embedding(dd_start_sols,b);
+    sols : constant Solution_List := Product(sols1,sols2);
+    embsols : Solution_List;
+
+  begin
+   -- put_line("inside start_diagonal_cascade_solutions ...");
+   -- put("length of sols1 : "); put(Length_Of(sols1),1); new_line;
+   -- put("length of sols2 : "); put(Length_Of(sols2),1); new_line;
+   -- put("number of product solutions : "); put(Length_Of(sols),1); new_line;
+    if a+b < k
+     then embsols := Witness_Sets.Add_Embedding(sols,b);
+     else embsols := Witness_Sets.Add_Embedding(sols,k-a);
+    end if;
+    Clear(dd_start_sols); Clear(dd_target_sols);
+    dd_start_sols := embsols;
+   -- put("number of start solutions : ");
+   -- put(Length_Of(st_start_sols),1); new_line;
+  end DoblDobl_Diagonal_Cascade_Solutions;
+
+  procedure QuadDobl_Diagonal_Cascade_Solutions ( a,b : in natural32 ) is
+
+    use QuadDobl_Complex_Polynomials,QuadDobl_Complex_Solutions;
+
+    k : constant natural32
+      := Number_of_Unknowns(qd_target_sys(qd_target_sys'first)) - a;
+    sols1 : constant Solution_List
+          := Witness_Sets.Remove_Embedding(qd_target_sols,a);
+    sols2 : constant Solution_List
+          := Witness_Sets.Remove_Embedding(qd_start_sols,b);
+    sols : constant Solution_List := Product(sols1,sols2);
+    embsols : Solution_List;
+
+  begin
+   -- put_line("inside start_diagonal_cascade_solutions ...");
+   -- put("length of sols1 : "); put(Length_Of(sols1),1); new_line;
+   -- put("length of sols2 : "); put(Length_Of(sols2),1); new_line;
+   -- put("number of product solutions : "); put(Length_Of(sols),1); new_line;
+    if a+b < k
+     then embsols := Witness_Sets.Add_Embedding(sols,b);
+     else embsols := Witness_Sets.Add_Embedding(sols,k-a);
+    end if;
+    Clear(qd_start_sols); Clear(qd_target_sols);
+    qd_start_sols := embsols;
+   -- put("number of start solutions : ");
+   -- put(Length_Of(st_start_sols),1); new_line;
+  end QuadDobl_Diagonal_Cascade_Solutions;
 
   procedure Silent_Path_Tracker 
                ( ls : in Standard_Complex_Solutions.Link_to_Solution;

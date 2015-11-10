@@ -776,7 +776,7 @@ function use_track ( job : integer32;
       return 270;
   end Job40;
 
-  function Job41 return integer32 is -- solutions to start diagonal cascade
+  function Job41 return integer32 is -- standard startsols in diagonal cascade
 
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     v_b : constant C_Integer_Array := C_intarrs.Value(b);
@@ -784,13 +784,45 @@ function use_track ( job : integer32;
     b_dim : constant natural32 := natural32(v_b(v_b'first));
 
   begin
-    PHCpack_Operations.Start_Diagonal_Cascade_Solutions(a_dim,b_dim);
+    PHCpack_Operations.Standard_Diagonal_Cascade_Solutions(a_dim,b_dim);
     return 0;
   exception
     when others =>
-      put_line("Exception raised when making solutions to start a cascade.");
+      put_line("Exception in making standard solutions to start a cascade.");
       return 271;
   end Job41;
+
+  function Job45 return integer32 is -- dobldobl startsols in diagonal cascade
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    a_dim : constant natural32 := natural32(v_a(v_a'first));
+    b_dim : constant natural32 := natural32(v_b(v_b'first));
+
+  begin
+    PHCpack_Operations.DoblDobl_Diagonal_Cascade_Solutions(a_dim,b_dim);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception in making dobldobl solutions to start a cascade.");
+      return 297;
+  end Job45;
+
+  function Job46 return integer32 is -- quaddobl startsols in diagonal cascade
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    a_dim : constant natural32 := natural32(v_a(v_a'first));
+    b_dim : constant natural32 := natural32(v_b(v_b'first));
+
+  begin
+    PHCpack_Operations.QuadDobl_Diagonal_Cascade_Solutions(a_dim,b_dim);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception in making quaddobl solutions to start a cascade.");
+      return 298;
+  end Job46;
 
   procedure Write_Symbols ( s : in Symbol_Table.Array_of_Symbols ) is
 
@@ -912,6 +944,8 @@ function use_track ( job : integer32;
      -- diagonal homotopy in double double and quad double precision
       when 43 => return Job43; -- double double diagonal homotopy
       when 44 => return Job44; -- quad double diagonal homotopy
+      when 45 => return Job45; -- dobldobl startsols in diagonal cascade
+      when 46 => return Job46; -- quaddobl startsols in diagonal cascade
      -- multiprecision versions to create homotopy :
       when 52 => PHCpack_Operations.Create_Multprec_Homotopy; return 0;
       when 53 => return Job53; -- multiprecision homotopy with given gamma

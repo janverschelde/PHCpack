@@ -188,12 +188,15 @@ package PHCpack_Operations is
   --   The start system is the system to start the cascade and
   --   the target system is the system read to perform a cascade on.
 
-  procedure Start_Diagonal_Cascade_Solutions ( a,b : in natural32 );
+  procedure Standard_Diagonal_Cascade_Solutions ( a,b : in natural32 );
+  procedure DoblDobl_Diagonal_Cascade_Solutions ( a,b : in natural32 );
+  procedure QuadDobl_Diagonal_Cascade_Solutions ( a,b : in natural32 );
 
   -- DESCRIPTION :
   --   Makes the start solutions to start the cascade homotopy to
   --   intersect the witness sets stored in target and start system
-  --   with corresponding witness points in target and start solutions.
+  --   with corresponding witness points in target and start solutions,
+  --   in standard double, double double, or quad double precision.
 
   -- REQUIRED :
   --   The target and start system stored represent witness sets

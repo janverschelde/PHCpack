@@ -144,7 +144,8 @@ function use_track ( job : integer32;
 --                  places a witness set in the systems and solutions
 --                  container for the polynomial stored in b.
 --          =  41 : makes the solutions to start the cascade to intersect
---                  two witness sets of dimensions in a[0] and b[0].
+--                  two witness sets of dimensions in a[0] and b[0],
+--                  in standard double precision;
 --          =  42 : doubles the number of symbols in the symbol table
 --                  needed to write the target system solved to start the
 --                  cascade of diagonal homotopies in extrinsic coordinates,
@@ -161,7 +162,13 @@ function use_track ( job : integer32;
 --          =  44 : create a diagonal homotopy from the systems stored
 --                  as target and start systems in quad double precision,
 --                  the input parameters a and b are the dimensions of 
---                  the witness sets.
+--                  the witness sets;
+--          =  45 : makes the solutions to start the cascade to intersect
+--                  two witness sets of dimensions in a[0] and b[0],
+--                  in double double precision;
+--          =  46 : makes the solutions to start the cascade to intersect
+--                  two witness sets of dimensions in a[0] and b[0],
+--                  in quad double precision.
 --
 -- multiprecision versions to create homotopy :
 --

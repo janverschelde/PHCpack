@@ -1,3 +1,7 @@
+Tue 10 Nov 2015 : renaming some procedures in phcpack_operations and
+  extending with double double and quad double versions, made available
+  through use_track and use_c2phc.
+
 Mon 9 Nov 2015 : updated phcpack_operations.adb for a new package
   standard_diagonal_solutions, factored out of extrinsic_diagional_homotopies.
   Extended PHCpack_operations with procedures to make diagonal homotopies
