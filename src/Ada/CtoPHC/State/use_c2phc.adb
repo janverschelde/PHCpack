@@ -2245,6 +2245,9 @@ function use_c2phc ( job : integer32;
       when 286 => return Job286; -- copy container to target solutions
       when 287 => return Job287; -- copy start solutions to container
       when 288 => return Job288; -- copy container to start solutions
+     -- diagonal homotopy in double double and quad double precision
+      when 289 => return use_track(43,a,b,c); -- dobldobl diagonal homotopy
+      when 290 => return use_track(44,a,b,c); -- quaddobl diagonal homotopy
      -- manipulation of symbols
       when 291 => return Job291; -- remove a symbol from the table
       when 292 => return Job292; -- sort the embed symbols and permute

@@ -523,13 +523,45 @@ function use_track ( job : integer32;
     b_dim : constant natural32 := natural32(v_b(v_b'first));
 
   begin
-    PHCpack_Operations.Create_Diagonal_Homotopy(a_dim,b_dim);
+    PHCpack_Operations.Standard_Diagonal_Homotopy(a_dim,b_dim);
     return 0;
   exception
     when others =>
       put_line("Exception raised when creating a diagonal homotopy.");
       return 15;
   end Job15;
+
+  function Job43 return integer32 is -- dobldobl diagonal homotopy
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    a_dim : constant natural32 := natural32(v_a(v_a'first));
+    b_dim : constant natural32 := natural32(v_b(v_b'first));
+
+  begin
+    PHCpack_Operations.DoblDobl_Diagonal_Homotopy(a_dim,b_dim);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when creating a dobldobl diagonal homotopy.");
+      return 43;
+  end Job43;
+
+  function Job44 return integer32 is -- quaddobl diagonal homotopy
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    a_dim : constant natural32 := natural32(v_a(v_a'first));
+    b_dim : constant natural32 := natural32(v_b(v_b'first));
+
+  begin
+    PHCpack_Operations.QuadDobl_Diagonal_Homotopy(a_dim,b_dim);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when creating a quaddobl diagonal homotopy.");
+      return 44;
+  end Job44;
 
   function Job16 return integer32 is -- read a witness set
 
@@ -849,7 +881,7 @@ function use_track ( job : integer32;
       when 11 => return Job11; -- file name to read target system
       when 12 => return Job12; -- file name to read start system
       when 13 => return Job13; -- file name to read linear-product system
-      when 14 => PHCpack_Operations.Create_Cascade_Homotopy; return 0;
+      when 14 => PHCpack_Operations.Standard_Cascade_Homotopy; return 0;
       when 15 => return Job15; -- create a diagonal homotopy
       when 16 => return Job16; -- read a witness set
       when 17 => return Job17; -- reset input file for witness set k
@@ -864,7 +896,7 @@ function use_track ( job : integer32;
       when 25 => return Job25; -- track one path silently
       when 26 => return Job26; -- track one path with reporting
       when 27 => return Job27; -- write solution with diagnostics
-      when 28 => PHCpack_Operations.Create_DoblDobl_Cascade_Homotopy; return 0;
+      when 28 => PHCpack_Operations.DoblDobl_Cascade_Homotopy; return 0;
      -- tracking in quad double precision :
       when 32 => PHCpack_Operations.Create_QuadDobl_Homotopy; return 0;
       when 33 => return Job33; -- quad double homotopy with given gamma
@@ -872,11 +904,14 @@ function use_track ( job : integer32;
       when 35 => return Job35; -- track one path silently
       when 36 => return Job36; -- track one path with reporting
       when 37 => return Job37; -- write solution with diagnostics
-      when 38 => PHCpack_Operations.Create_QuadDobl_Cascade_Homotopy; return 0;
+      when 38 => PHCpack_Operations.QuadDobl_Cascade_Homotopy; return 0;
      -- redefining diagonal homotopies ...
       when 40 => return Job40; -- witness set of hypersurface
       when 41 => return Job41; -- solutions to start diagonal cascade
       when 42 => return Job42; -- diagonal symbols doubler
+     -- diagonal homotopy in double double and quad double precision
+      when 43 => return Job43; -- double double diagonal homotopy
+      when 44 => return Job44; -- quad double diagonal homotopy
      -- multiprecision versions to create homotopy :
       when 52 => PHCpack_Operations.Create_Multprec_Homotopy; return 0;
       when 53 => return Job53; -- multiprecision homotopy with given gamma

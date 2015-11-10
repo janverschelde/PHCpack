@@ -682,7 +682,7 @@ package body PHCpack_Operations is
     Witness_Sets_io.Sort_Embed_Symbols(nvar,nvar-nslk,nslk,p);
   end Swap_Embed_Symbols;
 
-  procedure Create_Cascade_Homotopy is
+  procedure Standard_Cascade_Homotopy is
 
     use Standard_Complex_Poly_Systems;
 
@@ -718,9 +718,9 @@ package body PHCpack_Operations is
         := new Poly_Sys'(Witness_Sets.Remove_Slice(st_start_sys.all));
       PHCpack_Operations.Create_Standard_Homotopy(gamma);
     end if;
-  end Create_Cascade_Homotopy;
+  end Standard_Cascade_Homotopy;
 
-  procedure Create_DoblDobl_Cascade_Homotopy is
+  procedure DoblDobl_Cascade_Homotopy is
 
     use DoblDobl_Complex_Poly_Systems;
 
@@ -756,9 +756,9 @@ package body PHCpack_Operations is
         := new Poly_Sys'(Witness_Sets.Remove_Slice(dd_start_sys.all));
       PHCpack_Operations.Create_DoblDobl_Homotopy(gamma);
     end if;
-  end Create_DoblDobl_Cascade_Homotopy;
+  end DoblDobl_Cascade_Homotopy;
 
-  procedure Create_QuadDobl_Cascade_Homotopy is
+  procedure QuadDobl_Cascade_Homotopy is
 
     use QuadDobl_Complex_Poly_Systems;
 
@@ -794,9 +794,9 @@ package body PHCpack_Operations is
         := new Poly_Sys'(Witness_Sets.Remove_Slice(qd_start_sys.all));
       PHCpack_Operations.Create_QuadDobl_Homotopy(gamma);
     end if;
-  end Create_QuadDobl_Cascade_Homotopy;
+  end QuadDobl_Cascade_Homotopy;
 
-  procedure Create_Diagonal_Homotopy ( a,b : in natural32 ) is
+  procedure Standard_Diagonal_Homotopy ( a,b : in natural32 ) is
 
     use Standard_Complex_Poly_Systems;
 
@@ -843,7 +843,105 @@ package body PHCpack_Operations is
       end;
     end if;
     PHCpack_Operations.Create_Standard_Homotopy(gamma);
-  end Create_Diagonal_Homotopy;
+  end Standard_Diagonal_Homotopy;
+
+  procedure DoblDobl_Diagonal_Homotopy ( a,b : in natural32 ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+
+    cd : natural32;
+    gamma : constant DoblDobl_Complex_Numbers.Complex_Number
+          := DoblDobl_Complex_Numbers.Create(integer(1));
+
+  begin
+   -- new_line;
+   -- put("Intersecting sets of dimension ");
+   -- put(a,1); put(" and "); put(b,1); put_line(".");
+    if a >= b then
+      cd := Cascade_Dimension(dd_target_sys.all,dd_start_sys.all,a,b);
+     -- put("The dimension of the cascade : "); put(cd,1); new_line;
+     -- put("target system :" ); put(dd_target_sys.all);
+     -- put("start system :" ); put(dd_start_sys.all);
+      declare
+        start,target : Poly_Sys(1..integer32(cd));
+      begin
+       -- put_line("before extrinsic cascade homotopy...");
+        Extrinsic_Cascade_Homotopy
+          (dd_target_sys.all,dd_start_sys.all,a,b,start,target);
+       -- put_line("after extrinsic cascade : ");
+       -- put_line("start system : "); put(start);
+       -- put_line("target system : "); put(target);
+        declare
+        begin
+          Clear(dd_start_sys); dd_start_sys := new Poly_Sys'(start);
+          Clear(dd_target_sys); dd_target_sys := new Poly_Sys'(target);
+        exception 
+          when others =>
+            put_line("exception raised in clear"); raise;
+        end;
+      end;
+    else
+      cd := Cascade_Dimension(dd_start_sys.all,dd_target_sys.all,b,a);
+      declare
+        start,target : Poly_Sys(1..integer32(cd));
+      begin
+        Extrinsic_Cascade_Homotopy
+          (dd_start_sys.all,dd_target_sys.all,b,a,start,target);
+        Clear(dd_start_sys); dd_start_sys := new Poly_Sys'(start);
+        Clear(dd_target_sys); dd_target_sys := new Poly_Sys'(target);
+      end;
+    end if;
+    PHCpack_Operations.Create_DoblDobl_Homotopy(gamma);
+  end DoblDobl_Diagonal_Homotopy;
+
+  procedure QuadDobl_Diagonal_Homotopy ( a,b : in natural32 ) is
+
+    use QuadDobl_Complex_Poly_Systems;
+
+    cd : natural32;
+    gamma : constant QuadDobl_Complex_Numbers.Complex_Number
+          := QuadDobl_Complex_Numbers.Create(integer(1));
+
+  begin
+   -- new_line;
+   -- put("Intersecting sets of dimension ");
+   -- put(a,1); put(" and "); put(b,1); put_line(".");
+    if a >= b then
+      cd := Cascade_Dimension(qd_target_sys.all,qd_start_sys.all,a,b);
+     -- put("The dimension of the cascade : "); put(cd,1); new_line;
+     -- put("target system :" ); put(qd_target_sys.all);
+     -- put("start system :" ); put(qd_start_sys.all);
+      declare
+        start,target : Poly_Sys(1..integer32(cd));
+      begin
+       -- put_line("before extrinsic cascade homotopy...");
+        Extrinsic_Cascade_Homotopy
+          (qd_target_sys.all,qd_start_sys.all,a,b,start,target);
+       -- put_line("after extrinsic cascade : ");
+       -- put_line("start system : "); put(start);
+       -- put_line("target system : "); put(target);
+        declare
+        begin
+          Clear(qd_start_sys); qd_start_sys := new Poly_Sys'(start);
+          Clear(qd_target_sys); qd_target_sys := new Poly_Sys'(target);
+        exception 
+          when others =>
+            put_line("exception raised in clear"); raise;
+        end;
+      end;
+    else
+      cd := Cascade_Dimension(qd_start_sys.all,qd_target_sys.all,b,a);
+      declare
+        start,target : Poly_Sys(1..integer32(cd));
+      begin
+        Extrinsic_Cascade_Homotopy
+          (qd_start_sys.all,qd_target_sys.all,b,a,start,target);
+        Clear(qd_start_sys); qd_start_sys := new Poly_Sys'(start);
+        Clear(qd_target_sys); qd_target_sys := new Poly_Sys'(target);
+      end;
+    end if;
+    PHCpack_Operations.Create_QuadDobl_Homotopy(gamma);
+  end QuadDobl_Diagonal_Homotopy;
 
   procedure Start_Diagonal_Cascade_Solutions ( a,b : in natural32 ) is
 

@@ -1002,8 +1002,17 @@ function use_c2phc ( job : integer32;
 --                 is given in b, in a is the number of characters;
 --         = 164 : create a cascade homotopy from the stored systems;
 --         = 165 : create a diagonal homotopy from the systems stored
---                 as target and start systems, the input parameters
---                 a and b are the dimensions of the witness sets;
+--                 as target and start systems in standard double precision,
+--                 the input parameters a and b are the dimensions of the
+--                 witness sets;
+--         = 289 : create a diagonal homotopy from the systems stored
+--                 as target and start systems in double double precision,
+--                 the input parameters a and b are the dimensions of 
+--                 the witness sets;
+--         = 290 : create a diagonal homotopy from the systems stored
+--                 as target and start systems in quad double precision,
+--                 the input parameters a and b are the dimensions of 
+--                 the witness sets.
 --         = 166 : reads first or second witness set from file,
 --                 depending on whether the value of a equals 1 or 2,
 --                 and returns in a the dimension of the ambient space

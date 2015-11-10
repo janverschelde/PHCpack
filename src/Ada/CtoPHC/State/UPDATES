@@ -1,5 +1,7 @@
 Mon 9 Nov 2015 : updated phcpack_operations.adb for a new package
   standard_diagonal_solutions, factored out of extrinsic_diagional_homotopies.
+  Extended PHCpack_operations with procedures to make diagonal homotopies
+  in double double and quad double precision, called in use_{track, c2phc}.
 
 Sun 8 Nov 2015 : added to use_track and use_c2phc jobs to double the number
   of symbols to write the target system to start the diagonal cascade.

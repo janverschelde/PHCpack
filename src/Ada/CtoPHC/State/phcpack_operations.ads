@@ -152,13 +152,14 @@ package PHCpack_Operations is
   -- DESCRIPTION :
   --   Allocated memory for the linear homotopy is cleared.
 
-  procedure Create_Cascade_Homotopy;
-  procedure Create_DoblDobl_Cascade_Homotopy;
-  procedure Create_QuadDobl_Cascade_Homotopy;
+  procedure Standard_Cascade_Homotopy;
+  procedure DoblDobl_Cascade_Homotopy;
+  procedure QuadDobl_Cascade_Homotopy;
 
   -- DESCRIPTION :
   --   Creates the homotopy to go down one level in the cascade
-  --   to remove one slice from the start system.
+  --   to remove one slice from the start system,
+  --   in standard double, double double, or quad double precision.
 
   -- REQUIRED :
   --   The start system has been stored and contains at least one
@@ -166,11 +167,14 @@ package PHCpack_Operations is
   --   Otherwise, if there is no start system yet, then the stored 
   --   target system will be used as start system.
 
-  procedure Create_Diagonal_Homotopy ( a,b : in natural32 );
+  procedure Standard_Diagonal_Homotopy ( a,b : in natural32 );
+  procedure DoblDobl_Diagonal_Homotopy ( a,b : in natural32 );
+  procedure QuadDobl_Diagonal_Homotopy ( a,b : in natural32 );
 
   -- DESCRIPTION :
   --   Creates the homotopy to start the cascade in a diagonal homotopy
-  --   to intersect two positive dimensional solution sets.
+  --   to intersect two positive dimensional solution sets,
+  --   in standard double, double double, or quad double precision.
 
   -- REQUIRED :
   --   The target and start system stored internally have their symbols
