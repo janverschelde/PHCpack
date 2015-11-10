@@ -92,6 +92,38 @@ package body Witness_Sets is
     return res;
   end Add_Dummy;
 
+  function Add_Dummy ( n,k,i : natural32 )
+                     return DoblDobl_Complex_Polynomials.Poly is
+
+    use DoblDobl_Complex_Numbers,DoblDobl_Complex_Polynomials;
+    res : Poly := Null_Poly;
+    t : Term;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..integer32(n+k) => 0);
+    t.cf := Create(integer(1));
+    t.dg(integer32(n+i)) := 1;
+    Add(res,t);
+    Clear(t);
+    return res;
+  end Add_Dummy;
+
+  function Add_Dummy ( n,k,i : natural32 )
+                     return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Numbers,QuadDobl_Complex_Polynomials;
+    res : Poly := Null_Poly;
+    t : Term;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..integer32(n+k) => 0);
+    t.cf := Create(integer(1));
+    t.dg(integer32(n+i)) := 1;
+    Add(res,t);
+    Clear(t);
+    return res;
+  end Add_Dummy;
+
   function Add_Dummies
              ( n,k : natural32 ) return Standard_Complex_Polynomials.Poly is
 

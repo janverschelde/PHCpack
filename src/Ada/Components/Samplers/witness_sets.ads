@@ -48,6 +48,10 @@ package Witness_Sets is
 
   function Add_Dummy ( n,k,i : natural32 )
                      return Standard_Complex_Polynomials.Poly;
+  function Add_Dummy ( n,k,i : natural32 )
+                     return DoblDobl_Complex_Polynomials.Poly;
+  function Add_Dummy ( n,k,i : natural32 )
+                     return QuadDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Returns one monomial: "zzi", where i is the number of slack
