@@ -119,11 +119,27 @@ int create_quaddobl_cascade_homotopy ( void )
 
 /* OPERATIONS to intersect witness sets */
 
-int create_diagonal_homotopy ( int a, int b )
+int standard_diagonal_homotopy ( int a, int b )
 {
    int fail;
    double *c;
    fail = _ada_use_c2phc(165,&a,&b,c);
+   return fail;
+}
+
+int dobldobl_diagonal_homotopy ( int a, int b )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(289,&a,&b,c);
+   return fail;
+}
+
+int quaddobl_diagonal_homotopy ( int a, int b )
+{
+   int fail;
+   double *c;
+   fail = _ada_use_c2phc(290,&a,&b,c);
    return fail;
 }
 

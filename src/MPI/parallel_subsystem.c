@@ -1148,7 +1148,7 @@ void start_a_diagonal_homotopy(int myid, int numbprocs, char *name_1,
      
      fail = define_output_file_with_string ((int)strlen(outfile), outfile);
      
-     fail = create_diagonal_homotopy(dim1,dim2);
+     fail = standard_diagonal_homotopy(dim1,dim2);
      if(fail == 0)
      {
       fail = write_standard_target_system();

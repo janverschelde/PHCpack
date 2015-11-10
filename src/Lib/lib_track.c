@@ -294,7 +294,7 @@ int create_the_diagonal_homotopy ( int a, int b )
 {
    int fail;
 
-   fail = create_diagonal_homotopy(a,b);
+   fail = standard_diagonal_homotopy(a,b);
    if(fail == 0)
    {
       fail = write_standard_target_system();

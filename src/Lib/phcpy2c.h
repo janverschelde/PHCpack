@@ -2963,15 +2963,38 @@ static PyObject *py2c_witness_set_of_hypersurface
  *   3) p, string representation of a polynomial, terminates with ';'.
  *   On return is the failure code, which equals zero if all went well. */
 
-static PyObject *py2c_create_diagonal_homotopy
+static PyObject *py2c_standard_diagonal_homotopy
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Creates a diagonal homotopy to intersect two solution sets of
  *   dimensions a and b respectively, where a >= b.
  *   The two input parameters are values for a and b.
- *   The systems stored as target and start system in the container
- *   define the witness sets for these two solution sets. */
+ *   The systems stored as target and start system in the container,
+ *   in standard double precision, define the witness sets for these
+ *   two solution sets. */
+
+static PyObject *py2c_dobldobl_diagonal_homotopy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Creates a diagonal homotopy to intersect two solution sets of
+ *   dimensions a and b respectively, where a >= b.
+ *   The two input parameters are values for a and b.
+ *   The systems stored as target and start system in the container,
+ *   in double double precision, define the witness sets for these
+ *   two solution sets. */
+
+static PyObject *py2c_quaddobl_diagonal_homotopy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Creates a diagonal homotopy to intersect two solution sets of
+ *   dimensions a and b respectively, where a >= b.
+ *   The two input parameters are values for a and b.
+ *   The systems stored as target and start system in the container,
+ *   in quad double precision, define the witness sets for these
+ *   two solution sets. */
 
 static PyObject *py2c_start_diagonal_cascade_solutions
  ( PyObject *self, PyObject *args );
@@ -3508,7 +3531,7 @@ static PyObject *py2c_witness_set_of_hypersurface
  *   3) p, string representation of a polynomial, terminates with ';'.
  *   On return is the failure code, which equals zero if all went well. */
 
-static PyObject *py2c_create_diagonal_homotopy
+static PyObject *py2c_standard_diagonal_homotopy
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :

@@ -195,7 +195,7 @@ int main ( int argc, char *argv[] )
       if(kind == 5)
       {
          fail = read_two_witness_sets(&n1,&n2,&dim1,&dim2,&deg1,&deg2,&cd);
-         fail = create_diagonal_homotopy(dim1,dim2);
+         fail = standard_diagonal_homotopy(dim1,dim2);
          n = cd;
          nbsols = deg1*deg2;
       }

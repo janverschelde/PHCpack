@@ -4498,14 +4498,38 @@ static PyObject *py2c_witness_set_of_hypersurface
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_create_diagonal_homotopy
+static PyObject *py2c_standard_diagonal_homotopy
  ( PyObject *self, PyObject *args )
 {
    int fail,a,b;
 
    initialize();
    if(!PyArg_ParseTuple(args,"ii",&a,&b)) return NULL;
-   fail = create_diagonal_homotopy(a,b);
+   fail = standard_diagonal_homotopy(a,b);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_dobldobl_diagonal_homotopy
+ ( PyObject *self, PyObject *args )
+{
+   int fail,a,b;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&a,&b)) return NULL;
+   fail = dobldobl_diagonal_homotopy(a,b);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_quaddobl_diagonal_homotopy
+ ( PyObject *self, PyObject *args )
+{
+   int fail,a,b;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&a,&b)) return NULL;
+   fail = quaddobl_diagonal_homotopy(a,b);
 
    return Py_BuildValue("i",fail);
 }
@@ -6146,9 +6170,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_witness_set_of_hypersurface", py2c_witness_set_of_hypersurface,
      METH_VARARGS,
     "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container on\n return contain a witness set for the hypersurface defined by p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of a polynomial, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},
-   {"py2c_create_diagonal_homotopy", py2c_create_diagonal_homotopy,
+   {"py2c_standard_diagonal_homotopy", py2c_standard_diagonal_homotopy,
      METH_VARARGS,
-    "Creates a diagonal homotopy to intersect two solution sets of\n dimensions a and b respectively, where a >= b.\n The two input parameters are values for a and b.\n The systems stored as target and start system in the container\n define the witness sets for these two solution sets."},
+    "Creates a diagonal homotopy to intersect two solution sets of\n dimensions a and b respectively, where a >= b.\n The two input parameters are values for a and b.\n The systems stored as target and start system in the container,\n in standard double precision, define the witness sets for\n these two solution sets."},
+   {"py2c_dobldobl_diagonal_homotopy", py2c_dobldobl_diagonal_homotopy,
+     METH_VARARGS,
+    "Creates a diagonal homotopy to intersect two solution sets of\n dimensions a and b respectively, where a >= b.\n The two input parameters are values for a and b.\n The systems stored as target and start system in the container,\n in double double precision, define the witness sets for\n these two solution sets."},
+   {"py2c_quaddobl_diagonal_homotopy", py2c_quaddobl_diagonal_homotopy,
+     METH_VARARGS,
+    "Creates a diagonal homotopy to intersect two solution sets of\n dimensions a and b respectively, where a >= b.\n The two input parameters are values for a and b.\n The systems stored as target and start system in the container,\n in quad double precision, define the witness sets for\n these two solution sets."},
    {"py2c_start_diagonal_cascade_solutions",
      py2c_start_diagonal_cascade_solutions, METH_VARARGS,
     "Makes the start solutions to start the cascade homotopy to\n intersect two solution sets of dimensions a and b, where a >= b.\n The dimensions a and b are given as input parameters.\n The systems stored as target and start system in the container\n define the witness sets for these two solution sets.\n On return is the failure code, which equals zero when all went well."},

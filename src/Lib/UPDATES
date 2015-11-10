@@ -1,3 +1,7 @@
+Mon 9 Nov 2015 : renamed create_diagonal_homotopy to standard_diagonal_homotopy
+  in witset and phcpy2c.  This changed lib_track.c.  Added dobldobl and
+  quaddobl versions to create a diagonal homotopy.
+
 Sun 8 Nov 2015 : updated witset and phcpy2c with a function to double the
   number of symbols to write the system at the start of the diagonal cascade.
 
