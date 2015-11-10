@@ -7,10 +7,12 @@ with DoblDobl_Complex_Vectors;
 with QuadDobl_Complex_Vectors;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Laurentials;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
+with Standard_Complex_Poly_Systems;
 with Standard_Complex_Laur_Systems;      use Standard_Complex_Laur_Systems;
 with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Poly_Systems;
 with Permutations;                       use Permutations;
 
 package Permute_Operations is
@@ -84,23 +86,60 @@ package Permute_Operations is
   function "*" ( p : Permutation; t : QuadDobl_Complex_Polynomials.Term )
 	       return QuadDobl_Complex_Polynomials.Term;
 
+  -- DESCRIPTION :
+  --   Permutes the unknowns in the term t according to the permutation p,
+  --   in standard double, double double or quad double precision.
+
   function "*" ( p : Permutation; s : Standard_Complex_Polynomials.Poly )
 	       return Standard_Complex_Polynomials.Poly;
+  function "*" ( p : Permutation; s : DoblDobl_Complex_Polynomials.Poly )
+	       return DoblDobl_Complex_Polynomials.Poly;
+  function "*" ( p : Permutation; s : QuadDobl_Complex_Polynomials.Poly )
+	       return QuadDobl_Complex_Polynomials.Poly;
+
+  -- DESCRIPTION :
+  --   Permutes the unknowns in s according to the permutation p,
+  --   in standard double, double double or quad double precision.
 
   function "*" ( p : Permutation; t : Standard_Complex_Laurentials.Term )
 	       return Standard_Complex_Laurentials.Term;
-
   function "*" ( p : Permutation; s : Standard_Complex_Laurentials.Poly )
                return Standard_Complex_Laurentials.Poly;
 
   -- DESCRIPTION :
-  --   permutes the unknowns in the term t or the polynonomial s,
-  --   according to the permuation p.
+  --   Permutes the unknowns in the term t or the polynonomial s,
+  --   according to the permutation p.
 
-  function "*" ( s : Poly_Sys; p : Permutation ) return Poly_Sys;
+  function "*" ( s : Standard_Complex_Poly_Systems.Poly_Sys;
+                 p : Permutation )
+               return Standard_Complex_Poly_Systems.Poly_Sys;
+  function "*" ( s : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 p : Permutation )
+               return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function "*" ( s : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 p : Permutation )
+               return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+
+  -- DESCRIPTION :
+  --   s*p permutes the unknowns in the individual polynomials,
+  --   in standard double, double double, or quad double precision.
+
+  function "*" ( p : Permutation;
+                 s : Standard_Complex_Poly_Systems.Poly_Sys )
+               return Standard_Complex_Poly_Systems.Poly_Sys;
+  function "*" ( p : Permutation;
+                 s : DoblDobl_Complex_Poly_Systems.Poly_Sys )
+               return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function "*" ( p : Permutation;
+                 s : QuadDobl_Complex_Poly_Systems.Poly_Sys )
+               return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+
+  -- DESCRIPTION :
+  --   p*s permutes the equations in the system,
+  --   in standard double, double double, or quad double precision.
+  --   Watch out for sharing by this second type of operation!
+
   function "*" ( s : Laur_Sys; p : Permutation ) return Laur_Sys;
-
-  function "*" ( p : Permutation; s : Poly_Sys ) return Poly_Sys;
   function "*" ( p : Permutation; s : Laur_Sys ) return Laur_Sys;
 
   -- DESCRIPTION :

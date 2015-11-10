@@ -570,6 +570,46 @@ package body Permute_Operations is
     return res;
   end "*";
 
+  function "*" ( p : Permutation; s : DoblDobl_Complex_Polynomials.Poly )
+               return DoblDobl_Complex_Polynomials.Poly is
+
+    use DoblDobl_Complex_Polynomials;
+    res : Poly := Null_Poly;
+
+    procedure Permute_Term ( t : in Term; continue : out boolean ) is
+      tt : Term := p*t;
+    begin
+      Add(res,tt);
+      Clear(tt);
+      continue := true;
+    end Permute_Term;
+    procedure Permute_Terms is new Visiting_Iterator(Permute_Term);
+
+  begin
+    Permute_Terms(s);
+    return res;
+  end "*";
+
+  function "*" ( p : Permutation; s : QuadDobl_Complex_Polynomials.Poly )
+               return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Polynomials;
+    res : Poly := Null_Poly;
+
+    procedure Permute_Term ( t : in Term; continue : out boolean ) is
+      tt : Term := p*t;
+    begin
+      Add(res,tt);
+      Clear(tt);
+      continue := true;
+    end Permute_Term;
+    procedure Permute_Terms is new Visiting_Iterator(Permute_Term);
+
+  begin
+    Permute_Terms(s);
+    return res;
+  end "*";
+
   function "*" ( p : Permutation; t : Standard_Complex_Laurentials.Term )
                return Standard_Complex_Laurentials.Term is
 
@@ -612,9 +652,37 @@ package body Permute_Operations is
     return res;
   end "*";
 
-  function "*" ( s : Poly_Sys; p : Permutation ) return Poly_Sys is
+  function "*" ( s : Standard_Complex_Poly_Systems.Poly_Sys;
+                 p : Permutation )
+               return Standard_Complex_Poly_Systems.Poly_Sys is
 
-    res : Poly_Sys(s'range);
+    res : Standard_Complex_Poly_Systems.Poly_Sys(s'range);
+
+  begin
+    for k in res'range loop
+      res(k) := p*s(k);
+    end loop;
+    return res;
+  end "*";
+
+  function "*" ( s : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 p : Permutation )
+               return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : DoblDobl_Complex_Poly_Systems.Poly_Sys(s'range);
+
+  begin
+    for k in res'range loop
+      res(k) := p*s(k);
+    end loop;
+    return res;
+  end "*";
+
+  function "*" ( s : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 p : Permutation )
+               return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : QuadDobl_Complex_Poly_Systems.Poly_Sys(s'range);
 
   begin
     for k in res'range loop
@@ -634,10 +702,46 @@ package body Permute_Operations is
     return res;
   end "*";
 
-  function "*" ( p : Permutation; s : Poly_Sys ) return Poly_Sys is
+  function "*" ( p : Permutation;
+                 s : Standard_Complex_Poly_Systems.Poly_Sys )
+               return Standard_Complex_Poly_Systems.Poly_Sys is
 
-    r : Poly_Sys(s'range);
+    r : Standard_Complex_Poly_Systems.Poly_Sys(s'range);
     use Standard_Complex_Polynomials;
+
+  begin
+    for i in p'range loop
+      if p(i) >= 0
+       then Copy(s(p(i)),r(i));
+       else r(i) := -s(-p(i));
+      end if;
+    end loop;
+    return r;
+  end "*";
+
+  function "*" ( p : Permutation;
+                 s : DoblDobl_Complex_Poly_Systems.Poly_Sys )
+               return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+    r : DoblDobl_Complex_Poly_Systems.Poly_Sys(s'range);
+    use DoblDobl_Complex_Polynomials;
+
+  begin
+    for i in p'range loop
+      if p(i) >= 0
+       then Copy(s(p(i)),r(i));
+       else r(i) := -s(-p(i));
+      end if;
+    end loop;
+    return r;
+  end "*";
+
+  function "*" ( p : Permutation;
+                 s : QuadDobl_Complex_Poly_Systems.Poly_Sys )
+               return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+    r : QuadDobl_Complex_Poly_Systems.Poly_Sys(s'range);
+    use QuadDobl_Complex_Polynomials;
 
   begin
     for i in p'range loop
