@@ -1,9 +1,13 @@
 with text_io;                           use text_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Vectors;
+with DoblDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Witness_Sets_Formats is
 
@@ -56,10 +60,19 @@ package Witness_Sets_Formats is
               ( n : integer32;
                 b,v,sol : Standard_Complex_Vectors.Vector )
               return Standard_Complex_Solutions.Solution_List;
+  function Embedded_Extrinsic_Solutions
+              ( n : integer32;
+                b,v,sol : DoblDobl_Complex_Vectors.Vector )
+              return DoblDobl_Complex_Solutions.Solution_List;
+  function Embedded_Extrinsic_Solutions
+              ( n : integer32;
+                b,v,sol : QuadDobl_Complex_Vectors.Vector )
+              return QuadDobl_Complex_Solutions.Solution_List;
 
   -- DESCRIPTION :
   --   Returns the solutions on the line b + t*v in extrinsic format,
-  --   embedded with n-1 slack variables with zero value.
+  --   embedded with n-1 slack variables with zero value,
+  --   in standard double, double double, or quad double precision.
 
   function Embedded_Extrinsic_Solutions
               ( n,k : integer32;

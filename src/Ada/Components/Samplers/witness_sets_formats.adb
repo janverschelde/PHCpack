@@ -1,6 +1,10 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io; 
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Random_Numbers;           use Standard_Random_Numbers;
 with Standard_Natural_Vectors;
 with Symbol_Table;
@@ -10,8 +14,6 @@ with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Witness_Sets_io;                   use Witness_Sets_io;
 with Standard_Embed_Polynomials;        use Standard_Embed_Polynomials;
 with Planes_and_Polynomials;            use Planes_and_Polynomials;
---with Standard_Affine_Planes;            use Standard_Affine_Planes;
---with Standard_Affine_Solutions;         use Standard_Affine_Solutions;
 with Standard_Plane_Representations;    use Standard_Plane_Representations;
 
 package body Witness_Sets_Formats is
@@ -22,6 +24,7 @@ package body Witness_Sets_Formats is
                 p : Standard_Complex_Poly_Systems.Poly_Sys )
               return Standard_Complex_Poly_Systems.Poly_Sys is
 
+    use Standard_Complex_Numbers;
     use Standard_Complex_Vectors;
     use Standard_Complex_VecVecs;
     use Standard_Complex_Poly_Systems;
@@ -66,6 +69,7 @@ package body Witness_Sets_Formats is
                 p : Standard_Complex_Poly_Systems.Poly_Sys )
               return Standard_Complex_Poly_Systems.Poly_Sys is
 
+    use Standard_Complex_Numbers;
     use Standard_Complex_Vectors;
     use Standard_Complex_VecVecs;
     use Standard_Complex_Poly_Systems;
@@ -108,6 +112,7 @@ package body Witness_Sets_Formats is
                 b,v,sol : Standard_Complex_Vectors.Vector )
               return Standard_Complex_Solutions.Solution_List is
 
+    use Standard_Complex_Numbers;
     use Standard_Complex_Vectors;
     use Standard_Complex_Solutions;
 
@@ -136,12 +141,79 @@ package body Witness_Sets_Formats is
   end Embedded_Extrinsic_Solutions;
 
   function Embedded_Extrinsic_Solutions
+              ( n : integer32;
+                b,v,sol : DoblDobl_Complex_Vectors.Vector )
+              return DoblDobl_Complex_Solutions.Solution_List is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Vectors;
+    use DoblDobl_Complex_Solutions;
+
+    res,res_last : Solution_List;
+
+  begin
+    for i in sol'range loop
+      declare
+        s : Solution(2*n-1);
+      begin
+        s.t := Create(integer(1));
+        s.m := 1;
+        for j in 1..n loop
+          s.v(j) := b(j) + sol(i)*v(j);
+        end loop;
+        for j in n+1..s.v'last loop
+          s.v(j) := Create(integer(0));
+        end loop;
+        s.err := create(0.0);
+        s.rco := create(1.0);
+        s.res := create(0.0);
+        Append(res,res_last,s);
+      end;
+    end loop;
+    return res;
+  end Embedded_Extrinsic_Solutions;
+
+  function Embedded_Extrinsic_Solutions
+              ( n : integer32;
+                b,v,sol : QuadDobl_Complex_Vectors.Vector )
+              return QuadDobl_Complex_Solutions.Solution_List is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Vectors;
+    use QuadDobl_Complex_Solutions;
+
+    res,res_last : Solution_List;
+
+  begin
+    for i in sol'range loop
+      declare
+        s : Solution(2*n-1);
+      begin
+        s.t := Create(integer(1));
+        s.m := 1;
+        for j in 1..n loop
+          s.v(j) := b(j) + sol(i)*v(j);
+        end loop;
+        for j in n+1..s.v'last loop
+          s.v(j) := Create(integer(0));
+        end loop;
+        s.err := create(0.0);
+        s.rco := create(1.0);
+        s.res := create(0.0);
+        Append(res,res_last,s);
+      end;
+    end loop;
+    return res;
+  end Embedded_Extrinsic_Solutions;
+
+  function Embedded_Extrinsic_Solutions
               ( n,k : integer32;
                 b : Standard_Complex_Vectors.Vector;
                 v : Standard_Complex_VecVecs.VecVec;
                 sols : Standard_Complex_Solutions.Solution_List )
               return Standard_Complex_Solutions.Solution_List is
 
+    use Standard_Complex_Numbers;
     use Standard_Complex_Vectors;
     use Standard_Complex_Solutions;
 

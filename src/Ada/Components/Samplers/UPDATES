@@ -1,3 +1,7 @@
+Wed 11 Nov 2015 : added operations for double double and quad double numbers
+  to witness_sets_formats, as needed in the computation of a witness set
+  for a hypersurface in double double and quad double precision.
+
 Tue 10 Nov 2015 : more operations added to witness_sets for the double
   double and quad double versions of extrinsic diagonal homotopies.
   For the same reasons, provided Add_Dummy in witness_sets.
