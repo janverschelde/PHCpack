@@ -1,6 +1,8 @@
 Wed 11 Nov 2015 : refactored code from standard_hypersurface_witsets_io into
   the new package standard_hypersurface_witdrivers, tested by ts_hypwit.
-  This changed hypersurfaces_and_filters.adb.
+  This changed hypersurfaces_and_filters.adb.  Made dobldobl and quaddobl
+  versions of the *hypersurface_witsets*, io and drivers, and extended
+  the tests in ts_hypwit.adb.
 
 Tue 10 Nov 2015 : renamed hypersurface_witness_sets and its _io into
   standard_hypersurface_witsets and its _io.

@@ -1,13 +1,13 @@
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
-with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
-with Standard_Complex_Numbers_Polar;    use Standard_Complex_Numbers_Polar;
-with Standard_Random_Numbers;           use Standard_Random_Numbers;
-with Standard_Random_Vectors;           use Standard_Random_Vectors;
-with Standard_Complex_Norms_Equals;     use Standard_Complex_Norms_Equals;
+with Double_Double_Numbers_io;          use Double_Double_Numbers_io;
+with DoblDobl_Complex_Numbers_io;       use DoblDobl_Complex_Numbers_io;
+with DoblDobl_Complex_Numbers_Polar;    use DoblDobl_Complex_Numbers_Polar;
+with DoblDobl_Random_Numbers;           use DoblDobl_Random_Numbers;
+with DoblDobl_Random_Vectors;           use DoblDobl_Random_Vectors;
+with DoblDobl_Complex_Vector_Norms;     use DoblDobl_Complex_Vector_Norms;
 
-package body Standard_Hypersurface_Witsets is
+package body DoblDobl_Hypersurface_Witsets is
 
 -- PART I : the primitives in the Durand-Kerner method (aka Weierstrass)
 
@@ -23,7 +23,7 @@ package body Standard_Hypersurface_Witsets is
   function Roots_of_Unity ( d : natural32 ) return Vector is
 
     res : Vector(1..integer32(d));
-    one : Complex_Number := Create(1.0);
+    one : Complex_Number := Create(integer(1));
 
   begin
     for i in 1..d loop
@@ -37,7 +37,7 @@ package body Standard_Hypersurface_Witsets is
     res : Complex_Number;
 
   begin
-    res := Create(1.0);
+    res := Create(integer(1));
     for j in a'range loop
       if j /= i
        then res := res*(a(i)-a(j));
@@ -48,7 +48,7 @@ package body Standard_Hypersurface_Witsets is
 
   procedure Write ( file : in file_type; z,err,res : in Vector ) is
 
-    f : double_float;
+    f : double_double;
 
   begin
     for i in z'range loop
@@ -63,9 +63,9 @@ package body Standard_Hypersurface_Witsets is
 -- PART II : generic procedures for the root finders
 
   procedure Silent_Root_Finder0
-              ( degree : in natural32; eps : in double_float;
+              ( degree : in natural32; eps : in double_double;
                 max_it : in natural32; fail : out boolean;
-                b,v : in Vector; t : out Vector; nrm : out double_float ) is
+                b,v : in Vector; t : out Vector; nrm : out double_double ) is
 
     err,res : Vector(1..integer32(degree));
 
@@ -76,17 +76,17 @@ package body Standard_Hypersurface_Witsets is
   end Silent_Root_Finder0;
 
   procedure Silent_Root_Finder1
-              ( degree : in natural32; eps : in double_float;
+              ( degree : in natural32; eps : in double_double;
                 max_it : in natural32; fail : out boolean;
                 b,v : in Vector; t,err,res : out Vector;
-                nrm : out double_float ) is
+                nrm : out double_double ) is
 
   -- IMPLEMENTATION NOTE :
   --   The iteration stops before the maximal allowed number
   --   if the desired accuracy is reached and the method is
   --   no longer converging.
 
-    previous_nrm : double_float;
+    previous_nrm : double_double;
     z : Vector(1..integer32(degree)) := Roots_of_Unity(degree);
     pts,dvd : Vector(0..integer32(degree));
     lc : Complex_Number;
@@ -129,7 +129,7 @@ package body Standard_Hypersurface_Witsets is
     end DK;
 
   begin
-    pts(0) := Create(0.0);
+    pts(0) := Create(integer(0));
     dvd(0) := Eval(b,v,pts(0));
     for i in 1..dvd'last loop
       pts(i) := z(i);
@@ -137,7 +137,7 @@ package body Standard_Hypersurface_Witsets is
     end loop;
     Divided_Differences(pts,dvd);
     lc := dvd(dvd'last);
-    previous_nrm := 1.0E+8;
+    previous_nrm := create(1.0E+8);
     fail := true;
     for k in 1..max_it loop
       DK(b,v,lc,z,err,res);
@@ -150,9 +150,9 @@ package body Standard_Hypersurface_Witsets is
 
   procedure Reporting_Root_Finder0
               ( file : in file_type;
-                degree : in natural32; eps : in double_float;
+                degree : in natural32; eps : in double_double;
                 max_it : in natural32; fail : out boolean;
-                b,v : in Vector; t : out Vector; nrm : out double_float ) is
+                b,v : in Vector; t : out Vector; nrm : out double_double ) is
 
     err,res : Vector(1..integer32(degree));
 
@@ -164,17 +164,17 @@ package body Standard_Hypersurface_Witsets is
 
   procedure Reporting_Root_Finder1
               ( file : in file_type;
-                degree : in natural32; eps : in double_float;
+                degree : in natural32; eps : in double_double;
                 max_it : in natural32; fail : out boolean;
                 b,v : in Vector; t,err,res : out Vector;
-                nrm : out double_float ) is
+                nrm : out double_double ) is
 
   -- IMPLEMENTATION NOTE :
   --   The iteration stops before the maximal allowed number
   --   if the desired accuracy is reached and the method is
   --   no longer converging.
 
-    previous_nrm : double_float;
+    previous_nrm : double_double;
     z : Vector(1..integer32(degree)) := Roots_of_Unity(degree);
     pts,dvd : Vector(0..integer32(degree));
     lc : Complex_Number;
@@ -218,7 +218,7 @@ package body Standard_Hypersurface_Witsets is
 
   begin
    -- put_line("Entered Reporting_Root_Finder1...");
-    pts(0) := Create(0.0);
+    pts(0) := Create(integer(0));
     dvd(0) := Eval(b,v,pts(0));
     for i in z'range loop
       pts(i) := z(i);
@@ -228,7 +228,7 @@ package body Standard_Hypersurface_Witsets is
     Divided_Differences(pts,dvd);
    -- put_line("... done with Divided_Differences.");
     lc := dvd(dvd'last);
-    previous_nrm := 1.0E+8;
+    previous_nrm := create(1.0E+8);
     fail := true;
     for k in 1..max_it loop
       DK(b,v,lc,z,err,res);
@@ -245,4 +245,4 @@ package body Standard_Hypersurface_Witsets is
     t := z;
   end Reporting_Root_Finder1;
 
-end Standard_Hypersurface_Witsets;
+end DoblDobl_Hypersurface_Witsets;

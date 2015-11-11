@@ -1,16 +1,16 @@
 with text_io;                         use text_io;
 with Standard_Natural_Numbers;        use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;        use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;       use Standard_Floating_Numbers;
-with Standard_Complex_Numbers;        use Standard_Complex_Numbers;
-with Standard_Complex_Vectors;        use Standard_Complex_Vectors;
+with Quad_Double_Numbers;             use Quad_Double_Numbers;
+with QuadDobl_Complex_Numbers;        use QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Vectors;        use QuadDobl_Complex_Vectors;
 
-package Standard_Hypersurface_Witsets is
+package QuadDobl_Hypersurface_Witsets is
 
 -- DESCRIPTION :
 --   This package offers generic procedures to compute a witness set for
 --   a hypersurface defined by one polynomial in several variables,
---   in standard double precision.
+--   in quad double precision.
 
 -- PART I : the primitives in the Durand-Kerner method (aka Weierstrass)
 
@@ -46,9 +46,9 @@ package Standard_Hypersurface_Witsets is
     -- returns the value of the polynomial at the point x
 
   procedure Silent_Root_Finder0
-              ( degree : in natural32; eps : in double_float;
+              ( degree : in natural32; eps : in quad_double;
                 max_it : in natural32; fail : out boolean;
-                b,v : in Vector; t : out Vector; nrm : out double_float );
+                b,v : in Vector; t : out Vector; nrm : out quad_double );
 
   generic
 
@@ -56,10 +56,10 @@ package Standard_Hypersurface_Witsets is
     -- returns the value of the polynomial at the point x
 
   procedure Silent_Root_Finder1
-              ( degree : in natural32; eps : in double_float;
+              ( degree : in natural32; eps : in quad_double;
                 max_it : in natural32; fail : out boolean;
                 b,v : in Vector; t,err,res : out Vector;
-                nrm : out double_float );
+                nrm : out quad_double );
 
   -- DESCRIPTION :
   --   Returns as many t's as the degree: f(x+t*v) = 0, modulo eps.
@@ -88,9 +88,9 @@ package Standard_Hypersurface_Witsets is
 
   procedure Reporting_Root_Finder0
               ( file : in file_type;
-                degree : in natural32; eps : in double_float;
+                degree : in natural32; eps : in quad_double;
                 max_it : in natural32; fail : out boolean;
-                b,v : in Vector; t : out Vector; nrm : out double_float );
+                b,v : in Vector; t : out Vector; nrm : out quad_double );
 
   generic
 
@@ -99,10 +99,10 @@ package Standard_Hypersurface_Witsets is
 
   procedure Reporting_Root_Finder1
               ( file : in file_type;
-                degree : in natural32; eps : in double_float;
+                degree : in natural32; eps : in quad_double;
                 max_it : in natural32; fail : out boolean;
                 b,v : in Vector; t,err,res : out Vector;
-                nrm : out double_float );
+                nrm : out quad_double );
 
   -- DESCRIPTION :
   --   Returns as many t's as the degree: f(x+t*v) = 0, modulo eps.
@@ -125,4 +125,4 @@ package Standard_Hypersurface_Witsets is
   --   res      residual vector for all components of t;
   --   nrm      maximum norm of the residual vector res.
 
-end Standard_Hypersurface_Witsets;
+end QuadDobl_Hypersurface_Witsets;

@@ -10,7 +10,14 @@ file name                        : short description
 standard_hypersurface_witsets    : witness set for a hypersurface
 standard_hypersurface_witsets_io : writing a witness set for one polynomial
 standard_hypersurface_witdrivers : drivers to witness set for one polynomial
+dobldobl_hypersurface_witsets    : double double hypersurface witness set
+dobldobl_hypersurface_witsets_io : writing a double double hypersurface set
+dobldobl_hypersurface_witdrivers : drivers to double double hypersurface set
+quaddobl_hypersurface_witsets    : quad double hypersurface witness set
+quaddobl_hypersurface_witsets_io : writing a quad double hypersurface set
+quaddobl_hypersurface_witdrivers : drivers to quad double hypersurface set
 ts_hypwit                        : test on hypersurface witness sets
+-----------------------------------------------------------------------------
 shuffle_polynomials              : utilities to rearrange the order
 hypersurfaces_and_filters        : hypersurface representations and filters
 equation_by_equation_solvers     : solve equation by equation
