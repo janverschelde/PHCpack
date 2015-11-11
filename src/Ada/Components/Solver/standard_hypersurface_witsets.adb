@@ -1,13 +1,14 @@
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with Standard_Complex_Numbers_Polar;    use Standard_Complex_Numbers_Polar;
 with Standard_Random_Numbers;           use Standard_Random_Numbers;
+with Standard_Random_Vectors;           use Standard_Random_Vectors;
+with Standard_Natural_Vectors;
 with Standard_Complex_Norms_Equals;     use Standard_Complex_Norms_Equals;
 
-package body Hypersurface_Witness_Sets is
+package body Standard_Hypersurface_Witsets is
 
 -- UTILITIES needed in method of Durand-Kerner
 
@@ -17,19 +18,8 @@ package body Hypersurface_Witness_Sets is
   --   Computes in f the divided differences using the points in x.
 
   begin
-   -- put_line("Entered Divided_Differences...");
-   -- put_line(" x = ");
-   -- for i in x'range loop
-   --   put(x(i)); new_line;
-   -- end loop;
-   -- put_line(" f = ");
-   -- for i in x'range loop
-   --   put(f(i)); new_line;
-   -- end loop;
     for i in 1..f'last loop
       for j in 0..i-1 loop
-       -- put("x("); put(i,1); put(")-x("); put(j,1); put(") :");
-       -- put(x(i)-x(j)); new_line;
         f(i) := (f(i)-f(j))/(x(i)-x(j));
       end loop;
     end loop;
@@ -272,4 +262,4 @@ package body Hypersurface_Witness_Sets is
     t := z;
   end Reporting_Root_Finder1;
 
-end Hypersurface_Witness_Sets;
+end Standard_Hypersurface_Witsets;

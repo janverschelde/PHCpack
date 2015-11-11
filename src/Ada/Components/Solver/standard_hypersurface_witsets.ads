@@ -1,14 +1,16 @@
 with text_io;                         use text_io;
 with Standard_Natural_Numbers;        use Standard_Natural_Numbers;
+with Standard_Integer_Numbers;        use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;       use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;        use Standard_Complex_Numbers;
 with Standard_Complex_Vectors;        use Standard_Complex_Vectors;
 
-package Hypersurface_Witness_Sets is
+package Standard_Hypersurface_Witsets is
 
 -- DESCRIPTION :
 --   This package offers generic procedures to compute a witness set for
---   a hypersurface defined by one polynomial in several variables.
+--   a hypersurface defined by one polynomial in several variables,
+--   in standard double precision.
 
   generic
 
@@ -95,4 +97,4 @@ package Hypersurface_Witness_Sets is
   --   res      residual vector for all components of t;
   --   nrm      maximum norm of the residual vector res.
 
-end Hypersurface_Witness_Sets;
+end Standard_Hypersurface_Witsets;

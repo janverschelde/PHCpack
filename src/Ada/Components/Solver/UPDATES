@@ -1,3 +1,10 @@
+Wed 11 Nov 2015 : refactored code from standard_hypersurface_witsets_io into
+  the new package standard_hypersurface_witdrivers, tested by ts_hypwit.
+  This changed hypersurfaces_and_filters.adb.
+
+Tue 10 Nov 2015 : renamed hypersurface_witness_sets and its _io into
+  standard_hypersurface_witsets and its _io.
+
 Thu 27 Jun 2013 : worked on the rest of the directory so all ts_ programs
   compile with the new 32-bit data types.
 

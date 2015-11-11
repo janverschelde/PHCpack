@@ -1,16 +1,17 @@
-with text_io;                           use text_io;
-with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Complex_Vectors;          use Standard_Complex_Vectors;
-with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
-with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
-with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
+with text_io;                         use text_io;
+with Standard_Integer_Numbers;        use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;       use Standard_Floating_Numbers;
+with Standard_Complex_Vectors;        use Standard_Complex_Vectors;
+with Standard_Complex_Polynomials;    use Standard_Complex_Polynomials;
+with Standard_Complex_Poly_Systems;   use Standard_Complex_Poly_Systems;
+with Standard_Complex_Solutions;      use Standard_Complex_Solutions;
 
-package Hypersurface_Witness_Sets_io is
+package Standard_Hypersurface_Witdrivers is
 
 -- DESCRIPTION :
---   This package collects the function to compute and write a witness set
---   for one polynomial in several variables.
+--   This package provides the drivers to compute a witness set of
+--   a hypersurface defined by one polynomial in several variables,
+--   in standard double precision.
 
   function Embedded_System 
                ( n : in integer32; p : in Poly; b,v,t : in Vector )
@@ -19,17 +20,6 @@ package Hypersurface_Witness_Sets_io is
   -- DESCRIPTION :
   --   Returns the embedded system in the extrinsic format,
   --   converting the intrinsic line x = b + t*v.
-
-  procedure Write_Witness_Set
-               ( n : in integer32; p : in Poly; b,v,t : in Vector );
-  procedure Write_Witness_Set
-               ( file : in file_type;
-                 n : in integer32; p : in Poly; b,v,t : in Vector );
-
-  -- DESCRIPTION :
-  --   Writes the witness set for p given intrinsically as b + t*v
-  --   in extrinsic format to file.
-  --   Prompts the user to provide a file name if file is not provided.
 
   procedure Call_Root_Finder ( p : in Poly );
 
@@ -70,4 +60,4 @@ package Hypersurface_Witness_Sets_io is
   --   e         embedded polynomial system;
   --   esols     witness points.
 
-end Hypersurface_Witness_Sets_io;
+end Standard_Hypersurface_Witdrivers;

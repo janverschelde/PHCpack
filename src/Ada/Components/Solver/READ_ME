@@ -1,4 +1,4 @@
-A new and progressive equation-by-equation solver with PHCv2.3.80
+A new and progressive equation-by-equation solver with PHCv2.4.05
 
 This directory was created for release 2.3 of PHCpack.
 The straight-line versions to run the nine-point problem
@@ -7,8 +7,9 @@ The straight-line versions to run the nine-point problem
 ------------------------------------------------------------------------------
 file name                        : short description
 ------------------------------------------------------------------------------
-hypersurface_witness_sets        : witness set for hypersurface
-hypersurface_witness_sets_io     : drivers to witness set for one polynomial
+standard_hypersurface_witsets    : witness set for a hypersurface
+standard_hypersurface_witsets_io : writing a witness set for one polynomial
+standard_hypersurface_witdrivers : drivers to witness set for one polynomial
 ts_hypwit                        : test on hypersurface witness sets
 shuffle_polynomials              : utilities to rearrange the order
 hypersurfaces_and_filters        : hypersurface representations and filters

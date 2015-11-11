@@ -4,7 +4,7 @@ with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Point_Coordinates;         use Standard_Point_Coordinates;
-with Hypersurface_Witness_Sets;          use Hypersurface_Witness_Sets;
+with Standard_Hypersurface_Witsets;      use Standard_Hypersurface_Witsets;
 
 package body Hypersurfaces_and_Filters is
 
