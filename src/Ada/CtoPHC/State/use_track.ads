@@ -143,7 +143,8 @@ function use_track ( job : integer32;
 --                        in a[1] the number of characters stored in b,
 --                  where b represents a polynomial in n variables,
 --                  places a witness set in the systems and solutions
---                  container for the polynomial stored in b.
+--                  container in standard double precision for the polynomial
+--                  stored in b;
 --          =  41 : makes the solutions to start the cascade to intersect
 --                  two witness sets of dimensions in a[0] and b[0],
 --                  in standard double precision;
@@ -179,7 +180,19 @@ function use_track ( job : integer32;
 --                  and the solutions in the container,
 --                  in quad double precision, on entry are
 --                    a[0] : current number of slack variables,
---                    a[1] : number of slack variables to be added.
+--                    a[1] : number of slack variables to be added;
+--          =  49 : given in a[0] the number n of variables, 
+--                        in a[1] the number of characters stored in b,
+--                  where b represents a polynomial in n variables,
+--                  places a witness set in the systems and solutions
+--                  container in double double precision for the polynomial
+--                  stored in b;
+--          =  50 : given in a[0] the number n of variables, 
+--                        in a[1] the number of characters stored in b,
+--                  where b represents a polynomial in n variables,
+--                  places a witness set in the systems and solutions
+--                  container in quad double precision for the polynomial
+--                  stored in b;
 --
 -- multiprecision versions to create homotopy :
 --

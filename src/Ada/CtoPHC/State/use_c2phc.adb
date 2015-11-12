@@ -2214,6 +2214,8 @@ function use_c2phc ( job : integer32;
       when 256 => return Job256; -- copy container to target solutions
       when 257 => return Job257; -- copy start solutions to container
       when 258 => return Job258; -- copy container to start solutions
+     -- double double witness set for a hypersurface
+      when 259 => return use_track(49,a,b,c);
      -- quad double versions for jobs 1 to 8
       when 261 => return Job261; -- copy target system to container
       when 262 => return Job262; -- copy target system from container
@@ -2223,8 +2225,10 @@ function use_c2phc ( job : integer32;
       when 266 => return Job266; -- copy container to target solutions
       when 267 => return Job267; -- copy start solutions to container
       when 268 => return Job268; -- copy container to start solutions
+     -- quad double witness set for a hypersurface
+      when 269 => return use_track(50,a,b,c);
      -- interface to diagonal homotopies ...
-      when 270 => return use_track(40,a,b,c); -- witness set of hypersurface
+      when 270 => return use_track(40,a,b,c); -- standard witset of hypersurface
       when 271 => return use_track(41,a,b,c); -- start diagonal cascade sols
      -- univariate polynomial solvers
       when 272 => return unisolve(1,a,b,c); -- standard double precision
