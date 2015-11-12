@@ -196,7 +196,7 @@ int hypersurface_witness_set ( int k, int n, char *s )
    return fail;
 }
 
-int witness_set_of_hypersurface ( int nv, int nc, char *p )
+int standard_witset_of_hypersurface ( int nv, int nc, char *p )
 {
    int i,fail,a[2],b[nc];
    double *c;
@@ -208,6 +208,38 @@ int witness_set_of_hypersurface ( int nv, int nc, char *p )
    for(i=0; i<nc; i++) b[i] = (int) p[i];
 
    fail = _ada_use_c2phc(270,a,b,c);
+
+   return fail;
+}
+
+int dobldobl_witset_of_hypersurface ( int nv, int nc, char *p )
+{
+   int i,fail,a[2],b[nc];
+   double *c;
+
+   /* printf("nv = %d, nc = %d\n",nv,nc); */
+   /* printf("p = %s\n",p); */
+   a[0] = nv;
+   a[1] = nc;
+   for(i=0; i<nc; i++) b[i] = (int) p[i];
+
+   fail = _ada_use_c2phc(259,a,b,c);
+
+   return fail;
+}
+
+int quaddobl_witset_of_hypersurface ( int nv, int nc, char *p )
+{
+   int i,fail,a[2],b[nc];
+   double *c;
+
+   /* printf("nv = %d, nc = %d\n",nv,nc); */
+   /* printf("p = %s\n",p); */
+   a[0] = nv;
+   a[1] = nc;
+   for(i=0; i<nc; i++) b[i] = (int) p[i];
+
+   fail = _ada_use_c2phc(269,a,b,c);
 
    return fail;
 }

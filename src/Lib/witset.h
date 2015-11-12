@@ -176,12 +176,39 @@ int hypersurface_witness_set ( int k, int n, char *s );
  *   n       number of characters in the string s;
  *   s       name of the output file. */
 
-int witness_set_of_hypersurface ( int nv, int nc, char *p );
+int standard_witset_of_hypersurface ( int nv, int nc, char *p );
 /*
  * DESCRIPTION :
  *   Given in the string p of nc characters a polynomial in nv variables,
- *   terminated by a semicolon, the systems and solutions container on
- *   return contain a witness set for the hypersurface defined by p.
+ *   terminated by a semicolon, the systems and solutions container in
+ *   standard double precision on return contain a witness set for the
+ *   hypersurface defined by p.
+ *
+ * ON ENTRY :
+ *   nv      the number of variables of the polynomials;
+ *   nc      the number of characters in the string p;
+ *   p       string representation of a polynomials, terminates with ';'. */
+
+int dobldobl_witset_of_hypersurface ( int nv, int nc, char *p );
+/*
+ * DESCRIPTION :
+ *   Given in the string p of nc characters a polynomial in nv variables,
+ *   terminated by a semicolon, the systems and solutions container in
+ *   double double precision on return contain a witness set for the
+ *   hypersurface defined by p.
+ *
+ * ON ENTRY :
+ *   nv      the number of variables of the polynomials;
+ *   nc      the number of characters in the string p;
+ *   p       string representation of a polynomials, terminates with ';'. */
+
+int quaddobl_witset_of_hypersurface ( int nv, int nc, char *p );
+/*
+ * DESCRIPTION :
+ *   Given in the string p of nc characters a polynomial in nv variables,
+ *   terminated by a semicolon, the systems and solutions container in
+ *   quad double precision on return contain a witness set for the
+ *   hypersurface defined by p.
  *
  * ON ENTRY :
  *   nv      the number of variables of the polynomials;

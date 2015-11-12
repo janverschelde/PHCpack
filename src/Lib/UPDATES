@@ -1,3 +1,7 @@
+Thu 12 Nov 2015 : added functions in witset and phcpy2c to compute a witness
+  set for a hypersurface in double double and quad double precision.
+  Edited phcpy2c.h and phcpy2c.c to make function definitions uniform.
+
 Tue 10 Nov 2015 : functions in witset and phcpy2c to make the solutions to
   start the diagonal cascade in double double and quad double precision.
   Added write_{dobldobl, quaddobl}_{start, target}_system to phcpy2c.

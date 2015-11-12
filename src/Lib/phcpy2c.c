@@ -45,9 +45,10 @@ void finalize ( void )
    }
 }
 
-/* The wrapping functions in phcpack.h starts from here. */
+/* The wrapping of functions in phcpack.h starts from here. */
 
-static PyObject *py2c_PHCpack_version_string ( PyObject *self, PyObject *args )
+static PyObject *py2c_PHCpack_version_string
+ ( PyObject *self, PyObject *args )
 {
    int fail;
    int size = 40;
@@ -61,7 +62,8 @@ static PyObject *py2c_PHCpack_version_string ( PyObject *self, PyObject *args )
    return Py_BuildValue("s",s);
 }
 
-static PyObject *py2c_set_seed( PyObject *self, PyObject *args )
+static PyObject *py2c_set_seed
+ ( PyObject *self, PyObject *args )
 {
    int fail,seed;
 
@@ -73,7 +75,8 @@ static PyObject *py2c_set_seed( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_get_seed( PyObject *self, PyObject *args )
+static PyObject *py2c_get_seed
+ ( PyObject *self, PyObject *args )
 {
    int fail,seed;
 
@@ -235,7 +238,8 @@ static PyObject *py2c_read_quaddobl_start_system_from_file
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_define_output_file ( PyObject *self, PyObject *args )
+static PyObject *py2c_define_output_file
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
@@ -318,7 +322,7 @@ static PyObject *py2c_write_quaddobl_start_system
    return Py_BuildValue("i",fail);
 }
 
-/* moving systems from and to containers */
+/* The wrapping of copying systems from and to containers starts here. */
 
 static PyObject *py2c_copy_standard_target_system_to_container
  ( PyObject *self, PyObject *args )
@@ -589,7 +593,6 @@ static PyObject *py2c_create_quaddobl_homotopy_with_gamma
    return Py_BuildValue("i",fail);
 }
 
-
 static PyObject *py2c_create_multprec_homotopy
  ( PyObject *self, PyObject *args )
 {
@@ -663,7 +666,8 @@ static PyObject *py2c_clear_multprec_homotopy
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_write_start_solutions ( PyObject *self, PyObject *args )
+static PyObject *py2c_write_start_solutions
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
@@ -796,7 +800,7 @@ static PyObject *py2c_solve_by_multprec_homotopy_continuation
    return Py_BuildValue("i",fail);
 }
 
-/* copying solutions from and to containers */
+/* The wrrapping of copying solutions from and to containers starts here. */
 
 static PyObject *py2c_copy_standard_target_solutions_to_container
  ( PyObject *self, PyObject *args )
@@ -976,7 +980,8 @@ static PyObject *py2c_copy_multprec_container_to_start_solutions
 
 /* black box solver, mixed volume calculator, and Newton step */
 
-static PyObject *py2c_solve_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_solve_system
+ ( PyObject *self, PyObject *args )
 {
    int fail,rc,nbtasks = 0;
 
@@ -986,7 +991,8 @@ static PyObject *py2c_solve_system ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",rc);
 }
 
-static PyObject *py2c_solve_dobldobl_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_solve_dobldobl_system
+ ( PyObject *self, PyObject *args )
 {
    int fail,rc,nbtasks = 0;
 
@@ -996,7 +1002,8 @@ static PyObject *py2c_solve_dobldobl_system ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",rc);
 }
 
-static PyObject *py2c_solve_quaddobl_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_solve_quaddobl_system
+ ( PyObject *self, PyObject *args )
 {
    int fail,rc,nbtasks = 0;
 
@@ -1006,7 +1013,8 @@ static PyObject *py2c_solve_quaddobl_system ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",rc);
 }
 
-static PyObject *py2c_solve_Laurent_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_solve_Laurent_system
+ ( PyObject *self, PyObject *args )
 {
    int silent,fail,rc,nbtasks = 0;
 
@@ -1038,7 +1046,8 @@ static PyObject *py2c_solve_quaddobl_Laurent_system
    return Py_BuildValue("i",rc);
 }
 
-static PyObject *py2c_mixed_volume ( PyObject *self, PyObject *args )
+static PyObject *py2c_mixed_volume
+ ( PyObject *self, PyObject *args )
 {
    int stable,fail,mv,smv;
 
@@ -1056,7 +1065,8 @@ static PyObject *py2c_mixed_volume ( PyObject *self, PyObject *args )
    }
 }
 
-static PyObject *py2c_standard_deflate ( PyObject *self, PyObject *args )
+static PyObject *py2c_standard_deflate
+ ( PyObject *self, PyObject *args )
 {
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
@@ -1066,7 +1076,8 @@ static PyObject *py2c_standard_deflate ( PyObject *self, PyObject *args )
    }
 }
 
-static PyObject *py2c_dobldobl_deflate ( PyObject *self, PyObject *args )
+static PyObject *py2c_dobldobl_deflate
+ ( PyObject *self, PyObject *args )
 {
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
@@ -1076,7 +1087,8 @@ static PyObject *py2c_dobldobl_deflate ( PyObject *self, PyObject *args )
    }
 }
 
-static PyObject *py2c_quaddobl_deflate ( PyObject *self, PyObject *args )
+static PyObject *py2c_quaddobl_deflate
+ ( PyObject *self, PyObject *args )
 {
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
@@ -1086,7 +1098,8 @@ static PyObject *py2c_quaddobl_deflate ( PyObject *self, PyObject *args )
    }
 }
 
-static PyObject *py2c_standard_Newton_step ( PyObject *self, PyObject *args )
+static PyObject *py2c_standard_Newton_step
+ ( PyObject *self, PyObject *args )
 {
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
@@ -1096,7 +1109,8 @@ static PyObject *py2c_standard_Newton_step ( PyObject *self, PyObject *args )
    }
 }
 
-static PyObject *py2c_dobldobl_Newton_step ( PyObject *self, PyObject *args )
+static PyObject *py2c_dobldobl_Newton_step
+ ( PyObject *self, PyObject *args )
 {
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
@@ -1106,7 +1120,8 @@ static PyObject *py2c_dobldobl_Newton_step ( PyObject *self, PyObject *args )
    }
 }
 
-static PyObject *py2c_quaddobl_Newton_step ( PyObject *self, PyObject *args )
+static PyObject *py2c_quaddobl_Newton_step
+ ( PyObject *self, PyObject *args )
 {
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
@@ -1116,7 +1131,8 @@ static PyObject *py2c_quaddobl_Newton_step ( PyObject *self, PyObject *args )
    }
 }
 
-static PyObject *py2c_multprec_Newton_step ( PyObject *self, PyObject *args )
+static PyObject *py2c_multprec_Newton_step
+ ( PyObject *self, PyObject *args )
 {
    int fail,decimals;
 
@@ -1188,9 +1204,10 @@ static PyObject *py2c_varbprec_Newton_Laurent_steps
    return Py_BuildValue("i",fail);
 }
 
-/* wrapping functions in unisolvers.h starts from here */
+/* The wrapping of the functions in unisolvers.h starts from here */
 
-static PyObject *py2c_usolve_standard ( PyObject *self, PyObject *args )
+static PyObject *py2c_usolve_standard
+ ( PyObject *self, PyObject *args )
 {
    int fail,max,nit;
    double eps;
@@ -1202,7 +1219,8 @@ static PyObject *py2c_usolve_standard ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",nit);
 }
 
-static PyObject *py2c_usolve_dobldobl ( PyObject *self, PyObject *args )
+static PyObject *py2c_usolve_dobldobl
+ ( PyObject *self, PyObject *args )
 {
    int fail,max,nit;
    double eps;
@@ -1214,7 +1232,8 @@ static PyObject *py2c_usolve_dobldobl ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",nit);
 }
 
-static PyObject *py2c_usolve_quaddobl ( PyObject *self, PyObject *args )
+static PyObject *py2c_usolve_quaddobl
+ ( PyObject *self, PyObject *args )
 {
    int fail,max,nit;
    double eps;
@@ -1226,7 +1245,8 @@ static PyObject *py2c_usolve_quaddobl ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",nit);
 }
 
-static PyObject *py2c_usolve_multprec ( PyObject *self, PyObject *args )
+static PyObject *py2c_usolve_multprec
+ ( PyObject *self, PyObject *args )
 {
    int fail,dcp,max,nit;
    double eps;
@@ -1238,9 +1258,10 @@ static PyObject *py2c_usolve_multprec ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",nit);
 }
 
-/* wrapping functions in giftwrappers.h starts from here */
+/* The wrapping of the functions in giftwrappers.h starts from here. */
 
-static PyObject *py2c_giftwrap_planar ( PyObject *self, PyObject *args )
+static PyObject *py2c_giftwrap_planar
+ ( PyObject *self, PyObject *args )
 {
    int fail,nbc_pts;
    char *pts;
@@ -1259,7 +1280,8 @@ static PyObject *py2c_giftwrap_planar ( PyObject *self, PyObject *args )
    }
 }
 
-static PyObject *py2c_giftwrap_convex_hull ( PyObject *self, PyObject *args )
+static PyObject *py2c_giftwrap_convex_hull
+ ( PyObject *self, PyObject *args )
 {
    int fail,nbc_pts;
    char *pts;
@@ -1366,7 +1388,6 @@ static PyObject *py2c_giftwrap_clear_support_string
    return Py_BuildValue("i",fail);
 }
 
-
 static PyObject *py2c_giftwrap_initial_form
  ( PyObject *self, PyObject *args )
 {
@@ -1381,7 +1402,7 @@ static PyObject *py2c_giftwrap_initial_form
    return Py_BuildValue("i",fail);
 }
 
-/* wrapping functions in syscon.h starts from here */
+/* The wrapping of the functions in syscon.h starts from here. */
 
 static PyObject *py2c_syscon_read_standard_system
  ( PyObject *self, PyObject *args )
@@ -1395,7 +1416,7 @@ static PyObject *py2c_syscon_read_standard_system
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_read_standard_Laurent_system 
+static PyObject *py2c_syscon_read_standard_Laurent_system
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -1407,7 +1428,7 @@ static PyObject *py2c_syscon_read_standard_Laurent_system
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_read_dobldobl_system 
+static PyObject *py2c_syscon_read_dobldobl_system
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -1419,7 +1440,7 @@ static PyObject *py2c_syscon_read_dobldobl_system
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_read_dobldobl_Laurent_system 
+static PyObject *py2c_syscon_read_dobldobl_Laurent_system
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -1431,7 +1452,7 @@ static PyObject *py2c_syscon_read_dobldobl_Laurent_system
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_read_quaddobl_system 
+static PyObject *py2c_syscon_read_quaddobl_system
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -1443,7 +1464,7 @@ static PyObject *py2c_syscon_read_quaddobl_system
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_read_quaddobl_Laurent_system 
+static PyObject *py2c_syscon_read_quaddobl_Laurent_system
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -1455,7 +1476,7 @@ static PyObject *py2c_syscon_read_quaddobl_Laurent_system
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_read_multprec_system 
+static PyObject *py2c_syscon_read_multprec_system
  ( PyObject *self, PyObject *args )
 {
    int fail,deci;
@@ -1467,7 +1488,7 @@ static PyObject *py2c_syscon_read_multprec_system
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_read_multprec_Laurent_system 
+static PyObject *py2c_syscon_read_multprec_Laurent_system
  ( PyObject *self, PyObject *args )
 {
    int fail,deci;
@@ -1479,7 +1500,8 @@ static PyObject *py2c_syscon_read_multprec_Laurent_system
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_syscon_random_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_syscon_random_system
+ ( PyObject *self, PyObject *args )
 {
    int fail,n,m,d,c;
 
@@ -1992,7 +2014,8 @@ static PyObject *py2c_syscon_degree_of_multprec_polynomial
    return Py_BuildValue("i",deg);
 }
 
-static PyObject *py2c_syscon_number_of_terms ( PyObject *self, PyObject *args )
+static PyObject *py2c_syscon_number_of_terms
+ ( PyObject *self, PyObject *args )
 {
    int fail,i,number;
 
@@ -2017,7 +2040,8 @@ static PyObject *py2c_syscon_number_of_Laurent_terms
    return Py_BuildValue("i",number);
 }
 
-static PyObject *py2c_syscon_retrieve_term ( PyObject *self, PyObject *args )
+static PyObject *py2c_syscon_retrieve_term
+ ( PyObject *self, PyObject *args )
 {
    int fail, *exp;
    int i,j,n,k;
@@ -2034,8 +2058,8 @@ static PyObject *py2c_syscon_retrieve_term ( PyObject *self, PyObject *args )
      
    a = Py_BuildValue("i", fail);	 
    
-   free (exp);
-   free (c);
+   free(exp);
+   free(c);
 
    return a;           
 }
@@ -2288,7 +2312,8 @@ static PyObject *py2c_syscon_load_multprec_Laurential
    }
 }
 
-static PyObject *py2c_syscon_total_degree ( PyObject *self, PyObject *args )
+static PyObject *py2c_syscon_total_degree
+ ( PyObject *self, PyObject *args )
 {
    int fail,totdeg;
                  
@@ -2374,7 +2399,7 @@ static PyObject *py2c_syscon_quaddobl_drop_variable_by_name
    return Py_BuildValue("i",fail);
 }
 
-/* wrapping functions in solcon.h starts from here */
+/* The wrapping of the functions in solcon.h starts from here. */
 
 static PyObject *py2c_solcon_read_standard_solutions
  ( PyObject *self, PyObject *args )
@@ -3078,7 +3103,7 @@ static PyObject *py2c_solcon_quaddobl_drop_coordinate_by_name
    return Py_BuildValue("i",fail);
 }
 
-/* wrapping functions in product.h starts here */
+/* The wrapping of functions with prototypes in product.h starts here. */
 
 static PyObject *py2c_product_supporting_set_structure 
  ( PyObject *self, PyObject *args )
@@ -3264,7 +3289,8 @@ static PyObject *py2c_celcon_set_type_of_mixture
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_celcon_type_of_mixture ( PyObject *self, PyObject *args )
+static PyObject *py2c_celcon_type_of_mixture
+ ( PyObject *self, PyObject *args )
 {
    int fail,r,nbc;
    int mix[64];
@@ -3328,7 +3354,8 @@ static PyObject *py2c_celcon_mixed_volume_of_supports
    return Py_BuildValue("i",mv);
 }
 
-static PyObject *py2c_celcon_number_of_cells ( PyObject *self, PyObject *args )
+static PyObject *py2c_celcon_number_of_cells
+ ( PyObject *self, PyObject *args )
 {
    int fail,length;
 
@@ -3603,9 +3630,10 @@ static PyObject *py2c_celcon_clear_container
    return Py_BuildValue("i",fail);
 }
 
-/* wrapping functions to scale polynomial systems and solutions */
+/* The wrapping of the functions with prototypes in scale.h starts here. */
 
-static PyObject *py2c_scale_standard_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_scale_standard_system
+ ( PyObject *self, PyObject *args )
 {
    int fail,mode,dim,i;
 
@@ -3635,7 +3663,8 @@ static PyObject *py2c_scale_standard_system ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_scale_dobldobl_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_scale_dobldobl_system
+ ( PyObject *self, PyObject *args )
 {
    int fail,mode,dim,i;
 
@@ -3665,7 +3694,8 @@ static PyObject *py2c_scale_dobldobl_system ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_scale_quaddobl_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_scale_quaddobl_system
+ ( PyObject *self, PyObject *args )
 {
    int fail,mode,dim,i;
 
@@ -3748,7 +3778,7 @@ static PyObject *py2c_scale_quaddobl_solutions
    return Py_BuildValue("i",fail);
 }
 
-/* wrapping functions to the sweep homotopies */
+/* The wrapping of the functions with prototypes in sweep.h starts here. */
 
 static PyObject *py2c_sweep_define_parameters_numerically
  ( PyObject *self, PyObject *args )
@@ -4201,9 +4231,10 @@ static PyObject *py2c_sweep_quaddobl_real_run
    return Py_BuildValue("i",fail);
 }
 
-/* wrapping functions to manipulate algebraic sets */
+/* The wrapping of the functions with prototypes in sets.h starts here. */
 
-static PyObject *py2c_embed_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_embed_system
+ ( PyObject *self, PyObject *args )
 {
    int d,fail;
 
@@ -4250,7 +4281,8 @@ static PyObject *py2c_quaddobl_cascade_homotopy
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_set_to_mute ( PyObject *self, PyObject *args )
+static PyObject *py2c_factor_set_to_mute
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
@@ -4274,7 +4306,8 @@ static PyObject *py2c_factor_define_output_file_with_string
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_assign_labels ( PyObject *self, PyObject *args )
+static PyObject *py2c_factor_assign_labels
+ ( PyObject *self, PyObject *args )
 {
    int n,nbsols,fail;
 
@@ -4348,7 +4381,8 @@ static PyObject *py2c_factor_restore_solutions
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_track_paths ( PyObject *self, PyObject *args )
+static PyObject *py2c_factor_track_paths
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
@@ -4359,7 +4393,8 @@ static PyObject *py2c_factor_track_paths ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_swap_slices ( PyObject *self, PyObject *args )
+static PyObject *py2c_factor_swap_slices
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
@@ -4370,7 +4405,8 @@ static PyObject *py2c_factor_swap_slices ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_new_slices ( PyObject *self, PyObject *args )
+static PyObject *py2c_factor_new_slices
+ ( PyObject *self, PyObject *args )
 {
    int k,n,fail;
 
@@ -4403,7 +4439,8 @@ static PyObject *py2c_factor_set_trace_slice
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_store_gammas ( PyObject *self, PyObject *args )
+static PyObject *py2c_factor_store_gammas
+ ( PyObject *self, PyObject *args )
 {
    int n,i,fail;
 
@@ -4533,7 +4570,7 @@ static PyObject *py2c_factor_trace_sum_difference
    return Py_BuildValue("d",tsd);
 }
 
-static PyObject *py2c_witness_set_of_hypersurface
+static PyObject *py2c_standard_witset_of_hypersurface
  ( PyObject *self, PyObject *args )
 {
    int fail,nv,nc;
@@ -4541,7 +4578,33 @@ static PyObject *py2c_witness_set_of_hypersurface
                  
    initialize();
    if(!PyArg_ParseTuple(args,"iis",&nv,&nc,&p)) return NULL;
-   fail = witness_set_of_hypersurface(nv,nc,p);
+   fail = standard_witset_of_hypersurface(nv,nc,p);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_dobldobl_witset_of_hypersurface
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nv,nc;
+   char *p;   
+                 
+   initialize();
+   if(!PyArg_ParseTuple(args,"iis",&nv,&nc,&p)) return NULL;
+   fail = dobldobl_witset_of_hypersurface(nv,nc,p);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_quaddobl_witset_of_hypersurface
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nv,nc;
+   char *p;   
+                 
+   initialize();
+   if(!PyArg_ParseTuple(args,"iis",&nv,&nc,&p)) return NULL;
+   fail = quaddobl_witset_of_hypersurface(nv,nc,p);
 
    return Py_BuildValue("i",fail);
 }
@@ -4682,9 +4745,10 @@ static PyObject *py2c_quaddobl_collapse_diagonal
    return Py_BuildValue("i",fail);
 }
 
-/* wrapping of Pieri and Littlewood-Richardson homotopies */
+/* The wrapping of functions with prototypes in schubert.h starts here. */
 
-static PyObject *py2c_schubert_pieri_count ( PyObject *self, PyObject *args )
+static PyObject *py2c_schubert_pieri_count
+ ( PyObject *self, PyObject *args )
 {
    int fail,m,p,q,r;
 
@@ -4953,7 +5017,8 @@ static PyObject *py2c_schubert_osculating_planes
    }
 }
 
-static PyObject *py2c_schubert_pieri_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_schubert_pieri_system
+ ( PyObject *self, PyObject *args )
 {
    int fail,m,p,q,nc,r;
    char *A;
@@ -4965,9 +5030,10 @@ static PyObject *py2c_schubert_pieri_system ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-/* wrapping functions in mapcon.h starts from here */
+/* The wrapping of the functions with prototypes in mapcon.h starts here. */
 
-static PyObject *py2c_mapcon_solve_system ( PyObject *self, PyObject *args )
+static PyObject *py2c_mapcon_solve_system
+ ( PyObject *self, PyObject *args )
 {
    int fail,puretopdim;
 
@@ -4978,7 +5044,8 @@ static PyObject *py2c_mapcon_solve_system ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_mapcon_write_maps ( PyObject *self, PyObject *args )
+static PyObject *py2c_mapcon_write_maps
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
@@ -4989,7 +5056,8 @@ static PyObject *py2c_mapcon_write_maps ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_mapcon_clear_maps ( PyObject *self, PyObject *args )
+static PyObject *py2c_mapcon_clear_maps
+ ( PyObject *self, PyObject *args )
 {
    int fail;
 
@@ -5000,7 +5068,8 @@ static PyObject *py2c_mapcon_clear_maps ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_mapcon_top_dimension ( PyObject *self, PyObject *args )
+static PyObject *py2c_mapcon_top_dimension
+ ( PyObject *self, PyObject *args )
 {
    int fail,topdim;
 
@@ -5011,7 +5080,8 @@ static PyObject *py2c_mapcon_top_dimension ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",topdim);
 }
 
-static PyObject *py2c_mapcon_number_of_maps ( PyObject *self, PyObject *args )
+static PyObject *py2c_mapcon_number_of_maps
+ ( PyObject *self, PyObject *args )
 {
    int fail,dim,nbmaps;
 
@@ -5022,7 +5092,8 @@ static PyObject *py2c_mapcon_number_of_maps ( PyObject *self, PyObject *args )
    return Py_BuildValue("i",nbmaps);
 }
 
-static PyObject *py2c_mapcon_degree_of_map ( PyObject *self, PyObject *args )
+static PyObject *py2c_mapcon_degree_of_map
+ ( PyObject *self, PyObject *args )
 {
    int fail,dim,ind,deg;
 
@@ -5086,7 +5157,7 @@ static PyObject *py2c_mapcon_exponents_of_map
    return result;
 }
 
-/* wrapping functions in next_track starts below */
+/* The wrapping of the functions with prototypes in next_track.h starts. */
 
 static PyObject *py2c_initialize_standard_homotopy
  ( PyObject *self, PyObject *args )
@@ -6276,9 +6347,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_trace_sum_difference", py2c_factor_trace_sum_difference,
      METH_VARARGS,
     "Returns the difference between the actual sum at the samples\n defined by the labels to the generic points in the factor,\n and the trace sum.\n On entry are three integer numbers and one string:\n 1) d, the number of points in the witness set;\n 2) k, the dimension of the solution set;\n 3) nc, the number of characters in the string;\n 4) ws, the string representing the labels of the witness set."},
-   {"py2c_witness_set_of_hypersurface", py2c_witness_set_of_hypersurface,
+   {"py2c_standard_witset_of_hypersurface", py2c_standard_witset_of_hypersurface,
      METH_VARARGS,
-    "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container on\n return contain a witness set for the hypersurface defined by p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of a polynomial, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},
+    "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container\n in standard double precision on return contain a witness set for\n the hypersurface defined by p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of a polynomial, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_dobldobl_witset_of_hypersurface", py2c_dobldobl_witset_of_hypersurface,
+     METH_VARARGS,
+    "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container\n in double double precision on return contain a witness set for\n the hypersurface defined by p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of a polynomial, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_quaddobl_witset_of_hypersurface", py2c_quaddobl_witset_of_hypersurface,
+     METH_VARARGS,
+    "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container\n in quad double precision on return contain a witness set for\n the hypersurface defined by p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of a polynomial, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_standard_diagonal_homotopy", py2c_standard_diagonal_homotopy,
      METH_VARARGS,
     "Creates a diagonal homotopy to intersect two solution sets of\n dimensions a and b respectively, where a >= b.\n The two input parameters are values for a and b.\n The systems stored as target and start system in the container,\n in standard double precision, define the witness sets for\n these two solution sets."},
