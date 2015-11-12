@@ -36,7 +36,7 @@ def embed(nvar, topdim, pols):
         result.append(py2c_syscon_load_standard_polynomial(i))
     return result
 
-def witness_set_of_hypersurface(nvar, hpol):
+def witness_set_of_hypersurface(nvar, hpol, precision='d'):
     """
     Given in hpol the string representation of a polynomial
     in nvar variables (ending with a semicolon),
@@ -44,13 +44,30 @@ def witness_set_of_hypersurface(nvar, hpol):
     which represents a witness set for hpol.
     The number of solutions on return should equal
     the degree of the polynomial in hpol.
+    Three different precisions are supported, by default double ('d'),
+    or otherwise double double ('dd') or quad double ('qd').
     """
-    from phcpy.phcpy2c import py2c_witness_set_of_hypersurface
-    py2c_witness_set_of_hypersurface(nvar, len(hpol), hpol)
-    from phcpy.interface import load_standard_system, load_standard_solutions
-    pols = load_standard_system()
-    sols = load_standard_solutions()
-    return (pols, sols)
+    if(precision == 'd'):
+        from phcpy.phcpy2c import py2c_standard_witset_of_hypersurface
+        from phcpy.interface import load_standard_system
+        from phcpy.interface import load_standard_solutions
+        py2c_standard_witset_of_hypersurface(nvar, len(hpol), hpol)
+        return (load_standard_system(), load_standard_solutions())
+    elif(precision == 'dd'):
+        from phcpy.phcpy2c import py2c_dobldobl_witset_of_hypersurface
+        from phcpy.interface import load_dobldobl_system
+        from phcpy.interface import load_dobldobl_solutions
+        py2c_dobldobl_witset_of_hypersurface(nvar, len(hpol), hpol)
+        return (load_dobldobl_system(), load_dobldobl_solutions())
+    elif(precision == 'qd'):
+        from phcpy.phcpy2c import py2c_quaddobl_witset_of_hypersurface
+        from phcpy.interface import load_quaddobl_system
+        from phcpy.interface import load_quaddobl_solutions
+        py2c_quaddobl_witset_of_hypersurface(nvar, len(hpol), hpol)
+        return (load_quaddobl_system(), load_quaddobl_solutions())
+    else:
+        print 'wrong argument for precision'
+        return None
 
 def drop_variable_from_polynomials(pols, svar):
     """
@@ -729,25 +746,26 @@ def diagonal_solver(dim1, sys1, sols1, dim2, sys2, sols2, tasks=0, prc='d'):
         print 'wrong argument for precision'
         return None
 
-def test_diaghom():
+def test_diaghom(precision='d'):
     """
     Test on the diagonal homotopy.
     """
     hyp1 = 'x1*x2;'
     hyp2 = 'x1 - x2;'
-    (w1sys, w1sols) = witness_set_of_hypersurface(2, hyp1)
+    (w1sys, w1sols) = witness_set_of_hypersurface(2, hyp1, precision)
     print 'the witness sets for', hyp1
     for pol in w1sys:
         print pol
     for sol in w1sols:
         print sol
-    (w2sys, w2sols) = witness_set_of_hypersurface(2, hyp2)
+    (w2sys, w2sols) = witness_set_of_hypersurface(2, hyp2, precision)
     print 'the witness sets for', hyp2
     for pol in w2sys:
         print pol
     for sol in w2sols:
         print sol
-    (sys, sols) = diagonal_solver(1, w1sys, w1sols, 1, w2sys, w2sols, 0, 'dd')
+    (sys, sols) = diagonal_solver\
+        (1, w1sys, w1sols, 1, w2sys, w2sols, 0, precision)
     print 'the end system :'
     for pol in sys:
         print pol
@@ -763,7 +781,7 @@ def test():
     py2c_set_seed(234798272)
     # test_cascade()
     # test_monodromy()
-    test_diaghom()
+    test_diaghom('dd')
 
 if __name__ == "__main__":
     test()

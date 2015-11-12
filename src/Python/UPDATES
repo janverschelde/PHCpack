@@ -1,3 +1,6 @@
+Thu 12 Nov 2015 : updated witness_set_of_hypersurface in sets.py with an
+  extra argument to select the precision.
+
 Tue 10 Nov 2015 : extended sets.py with function to define the diagonal
   homotopies in double double and quad double precision.
   Versions of the diagonal solver in sets.py are available for double double
