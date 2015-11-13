@@ -1,21 +1,33 @@
-with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
 with Numbers_io;                        use Numbers_io;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;          use Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs;          use Standard_Complex_VecVecs;
-with Symbol_Table;                      use Symbol_Table;
+with DoblDobl_Complex_Vectors;
+with DoblDobl_Complex_Vectors_io;       use DoblDobl_Complex_Vectors_io;
+with QuadDobl_Complex_Vectors;
+with QuadDobl_Complex_Vectors_io;       use QuadDobl_Complex_Vectors_io;
 with Standard_Complex_Polynomials;
-with DoblDobl_Complex_Polynomials;
-with QuadDobl_Complex_Polynomials;
-with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Poly_SysFun;
+with Standard_Complex_Poly_Systems_io;  use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Poly_SysFun;
+with DoblDobl_Complex_Poly_Systems_io;  use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Poly_SysFun;
+with QuadDobl_Complex_Poly_Systems_io;  use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with Permutations,Permute_Operations;   use Permutations,Permute_Operations;
 with Witness_Sets,Witness_Sets_io;      use Witness_Sets,Witness_Sets_io;
 with Standard_Diagonal_Polynomials;     use Standard_Diagonal_Polynomials;
@@ -82,9 +94,6 @@ package body Extrinsic_Diagonal_Solvers is
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 s : in Standard_Complex_Solutions.Solution_List ) is
 
-  -- DESCRIPTION :
-  --   Evaluates p at the solutions in s.
-
     use Standard_Complex_Solutions;
 
     y : Standard_Complex_Vectors.Vector(p'range);
@@ -103,15 +112,93 @@ package body Extrinsic_Diagonal_Solvers is
     end loop;
   end Test_Solutions;
 
+  procedure Test_Solutions
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    y : DoblDobl_Complex_Vectors.Vector(p'range);
+    t : Solution_List := s;
+    ls : Link_to_Solution;
+    ind : natural32 := 0;
+
+  begin
+    while not Is_Null(t) loop
+      ind := ind + 1;
+      ls := Head_Of(t);
+      y := DoblDobl_Complex_Poly_SysFun.Eval(p,ls.v);
+      put(file,"Value at solution : "); put(file,ind,1);
+      put_line(file," :"); put_line(file,y);
+      t := Tail_Of(t);
+    end loop;
+  end Test_Solutions;
+
+  procedure Test_Solutions
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    y : QuadDobl_Complex_Vectors.Vector(p'range);
+    t : Solution_List := s;
+    ls : Link_to_Solution;
+    ind : natural32 := 0;
+
+  begin
+    while not Is_Null(t) loop
+      ind := ind + 1;
+      ls := Head_Of(t);
+      y := QuadDobl_Complex_Poly_SysFun.Eval(p,ls.v);
+      put(file,"Value at solution : "); put(file,ind,1);
+      put_line(file," :"); put_line(file,y);
+      t := Tail_Of(t);
+    end loop;
+  end Test_Solutions;
+
   procedure Save_Start_System
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 s : in Standard_Complex_Solutions.Solution_List ) is
 
-  -- DESCRIPTION :
-  --   The user is prompted for a file name to save the start system
-  --   in the homotopy to start the diagonal cascade.
-
     use Standard_Complex_Solutions;
+
+    file : file_type;
+
+  begin
+    new_line;
+    put_line("Reading the name of the file to save the start system.");
+    Read_Name_and_Create_File(file);
+    put_line(file,p);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(s),natural32(p'last),s);
+  end Save_Start_System;
+
+  procedure Save_Start_System
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    file : file_type;
+
+  begin
+    new_line;
+    put_line("Reading the name of the file to save the start system.");
+    Read_Name_and_Create_File(file);
+    put_line(file,p);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(s),natural32(p'last),s);
+  end Save_Start_System;
+
+  procedure Save_Start_System
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Solutions;
 
     file : file_type;
 
@@ -128,9 +215,29 @@ package body Extrinsic_Diagonal_Solvers is
   procedure Save_Target_System
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys ) is
 
-  -- DESCRIPTION :
-  --   The user is prompted for a file name to save the target system
-  --   in the homotopy to start the diagonal cascade.
+    file : file_type;
+
+  begin
+    new_line;
+    put_line("Reading the name of the file to save the target system.");
+    Read_Name_and_Create_File(file);
+    put_line(file,p);
+  end Save_Target_System;
+
+  procedure Save_Target_System
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+    file : file_type;
+
+  begin
+    new_line;
+    put_line("Reading the name of the file to save the target system.");
+    Read_Name_and_Create_File(file);
+    put_line(file,p);
+  end Save_Target_System;
+
+  procedure Save_Target_System
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
 
     file : file_type;
 
@@ -143,7 +250,22 @@ package body Extrinsic_Diagonal_Solvers is
 
 -- MAIN DRIVERS :
 
-  procedure Randomize_System is
+  function Prompt_for_Precision return character is
+
+    res : character;
+
+  begin
+    new_line;
+    put_line("MENU to select the working precision :");
+    put_line("  0. standard double precision;");
+    put_line("  1. double double precision;");
+    put_line("  2. quad double precision.");
+    put("Type 0, 1, or 2 to select the precision : ");
+    Ask_Alternative(res,"012");
+    return res;
+  end Prompt_for_Precision;
+
+  procedure Standard_Randomize_System is
 
     use Standard_Complex_Polynomials;
     use Standard_Complex_Poly_Systems;
@@ -164,6 +286,65 @@ package body Extrinsic_Diagonal_Solvers is
     begin
       Save_Target_System(rp);
     end;
+  end Standard_Randomize_System;
+
+  procedure DoblDobl_Randomize_System is
+
+    use DoblDobl_Complex_Polynomials;
+    use DoblDobl_Complex_Poly_Systems;
+
+    lp : Link_to_Poly_Sys;
+    k : natural32 := 0;
+ 
+  begin
+    new_line;
+    put_line("Reading the polynomial system...");
+    get(lp);
+    new_line;
+    put("Give the dimension of the solution component : ");
+    get(k); skip_line;
+    declare 
+      n : constant natural32 := Number_of_Unknowns(lp(lp'first));
+      rp : constant Poly_Sys := Complete(n,k,lp.all);
+    begin
+      Save_Target_System(rp);
+    end;
+  end DoblDobl_Randomize_System;
+
+  procedure QuadDobl_Randomize_System is
+
+    use QuadDobl_Complex_Polynomials;
+    use QuadDobl_Complex_Poly_Systems;
+
+    lp : Link_to_Poly_Sys;
+    k : natural32 := 0;
+ 
+  begin
+    new_line;
+    put_line("Reading the polynomial system...");
+    get(lp);
+    new_line;
+    put("Give the dimension of the solution component : ");
+    get(k); skip_line;
+    declare 
+      n : constant natural32 := Number_of_Unknowns(lp(lp'first));
+      rp : constant Poly_Sys := Complete(n,k,lp.all);
+    begin
+      Save_Target_System(rp);
+    end;
+  end QuadDobl_Randomize_System;
+
+  procedure Randomize_System is
+
+    p : constant character := Prompt_for_Precision;
+
+  begin
+    case p is
+      when '0' => Standard_Randomize_System;
+      when '1' => DoblDobl_Randomize_System;
+      when '2' => QuadDobl_Randomize_System;
+      when others => null;
+    end case;
   end Randomize_System;
 
   procedure Build_Cascade_Homotopy
@@ -173,21 +354,7 @@ package body Extrinsic_Diagonal_Solvers is
                 sols1e,sols2e : in Standard_Complex_Solutions.Solution_List;
                 s1e,s2e : in Array_of_Symbols ) is
 
-  -- DESCRIPTION :
-  --   Builds the homotopy to start the cascade for all components of
-  --   the intersection of two solution components (of dimensions dim1
-  --   and dim2) defined by the embedded systems ep1 and ep2.
-
-  -- ON ENTRY :
-  --   p1e      1st embedded polynomial system;
-  --   p2e      2nd embedded polynomial system;
-  --   dim1     dimension of the component defined by the 1st system;
-  --   dim2     dimension of the component defined by the 2nd system;
-  --   sols1e   witness points on the 1st solution component;
-  --   sols1e   witness points on the 2nd solution component;
-  --   s1e      symbols used in the 1st polynomial system;
-  --   s2e      symbols used in the 2nd polynomial system.
-
+    use Standard_Complex_Numbers;
     use Standard_Complex_Polynomials;
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -225,6 +392,106 @@ package body Extrinsic_Diagonal_Solvers is
     Add_Embed_Symbols(dim2);
     Save_Target_System(ch_target);
     Set_Continuation_Parameter(embsols,Create(0.0));
+    Save_Start_System(ch_start,embsols);
+    Test_Solutions(file,ch_start,embsols);
+  end Build_Cascade_Homotopy;
+
+  procedure Build_Cascade_Homotopy
+              ( file : in file_type;
+                p1e,p2e : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                dim1,dim2 : in natural32;
+                sols1e,sols2e : in DoblDobl_Complex_Solutions.Solution_List;
+                s1e,s2e : in Array_of_Symbols ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Polynomials;
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    dim : constant natural32 := Cascade_Dimension(p1e,p2e,dim1,dim2);
+    k : constant natural32 := Number_of_Unknowns(p1e(p1e'first))-dim1;
+    ch_start,ch_target : Poly_Sys(1..integer32(dim));
+    sols1 : constant Solution_List := Remove_Embedding(sols1e,dim1);
+    sols2 : constant Solution_List := Remove_Embedding(sols2e,dim2);
+    sols : constant Solution_List := Product(sols1,sols2);
+    embsols : Solution_List;
+    s1 : constant Array_of_Symbols := Remove_Embed_Symbols(s1e);
+    s11 : constant Array_of_Symbols(s1'range) := Add_Suffix(s1,'1');
+    s2 : constant Array_of_Symbols := Remove_Embed_Symbols(s2e);
+    s22 : constant Array_of_Symbols(s1'range) := Add_Suffix(s2,'2');
+    zero : constant double_double := create(0.0);
+ 
+  begin
+    new_line(file);
+    put_line(file,"Building the homotopy to start the cascade...");
+    put(file,"k : "); put(file,k,1);
+    put(file,"  a : "); put(file,dim1,1);
+    put(file,"  b : "); put(file,dim2,1); new_line(file);
+    put(file,"cascade dimension : "); put(file,dim,1); new_line(file);
+    if dim1+dim2 < k then
+      put_line(file,"calling Extrinsic_Diagonal_Homotopies.Cascade1");
+      Cascade1(p1e,p2e,dim1,dim2,ch_start,ch_target);
+      embsols := Add_Embedding(sols,dim2);
+    else
+      put_line(file,"calling Extrinsic_Diagonal_Homotopies.Cascade2");
+      Cascade2(p1e,p2e,dim1,dim2,ch_start,ch_target);
+      embsols := Add_Embedding(sols,k-dim1);
+    end if;
+    Symbol_Table.Clear;
+    Assign_Symbol_Table(s11,s22);
+    Add_Embed_Symbols(dim2);
+    Save_Target_System(ch_target);
+    Set_Continuation_Parameter(embsols,Create(zero));
+    Save_Start_System(ch_start,embsols);
+    Test_Solutions(file,ch_start,embsols);
+  end Build_Cascade_Homotopy;
+
+  procedure Build_Cascade_Homotopy
+              ( file : in file_type;
+                p1e,p2e : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                dim1,dim2 : in natural32;
+                sols1e,sols2e : in QuadDobl_Complex_Solutions.Solution_List;
+                s1e,s2e : in Array_of_Symbols ) is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Polynomials;
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    dim : constant natural32 := Cascade_Dimension(p1e,p2e,dim1,dim2);
+    k : constant natural32 := Number_of_Unknowns(p1e(p1e'first))-dim1;
+    ch_start,ch_target : Poly_Sys(1..integer32(dim));
+    sols1 : constant Solution_List := Remove_Embedding(sols1e,dim1);
+    sols2 : constant Solution_List := Remove_Embedding(sols2e,dim2);
+    sols : constant Solution_List := Product(sols1,sols2);
+    embsols : Solution_List;
+    s1 : constant Array_of_Symbols := Remove_Embed_Symbols(s1e);
+    s11 : constant Array_of_Symbols(s1'range) := Add_Suffix(s1,'1');
+    s2 : constant Array_of_Symbols := Remove_Embed_Symbols(s2e);
+    s22 : constant Array_of_Symbols(s1'range) := Add_Suffix(s2,'2');
+    zero : constant quad_double := create(0.0);
+ 
+  begin
+    new_line(file);
+    put_line(file,"Building the homotopy to start the cascade...");
+    put(file,"k : "); put(file,k,1);
+    put(file,"  a : "); put(file,dim1,1);
+    put(file,"  b : "); put(file,dim2,1); new_line(file);
+    put(file,"cascade dimension : "); put(file,dim,1); new_line(file);
+    if dim1+dim2 < k then
+      put_line(file,"calling Extrinsic_Diagonal_Homotopies.Cascade1");
+      Cascade1(p1e,p2e,dim1,dim2,ch_start,ch_target);
+      embsols := Add_Embedding(sols,dim2);
+    else
+      put_line(file,"calling Extrinsic_Diagonal_Homotopies.Cascade2");
+      Cascade2(p1e,p2e,dim1,dim2,ch_start,ch_target);
+      embsols := Add_Embedding(sols,k-dim1);
+    end if;
+    Symbol_Table.Clear;
+    Assign_Symbol_Table(s11,s22);
+    Add_Embed_Symbols(dim2);
+    Save_Target_System(ch_target);
+    Set_Continuation_Parameter(embsols,Create(zero));
     Save_Start_System(ch_start,embsols);
     Test_Solutions(file,ch_start,embsols);
   end Build_Cascade_Homotopy;
@@ -713,7 +980,7 @@ package body Extrinsic_Diagonal_Solvers is
     r := new Poly_Sys'(res);
   end Collapse_System;
 
-  procedure Collapse_Diagonal_System is
+  procedure Standard_Collapse_Diagonal_System is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -744,6 +1011,85 @@ package body Extrinsic_Diagonal_Solvers is
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(cp'last),sols);
     end;
+  end Standard_Collapse_Diagonal_System;
+
+  procedure DoblDobl_Collapse_Diagonal_System is
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    file : file_type;
+    lp : Link_to_Poly_Sys;
+    sols : Solution_List;
+    dim,addtodim : natural32 := 0;
+
+  begin
+    new_line;
+    put("Reading the diagonal system...");
+    DoblDobl_Read_Embedding(lp,sols,dim);
+    new_line;
+    put_line("Reading the name of the file to save the collapsed system.");
+    Read_Name_and_Create_File(file);
+    new_line;
+    put("The dimension is "); put(dim,1); new_line;
+    put("Give a natural number to add to the dimension : ");
+    Read_Natural(addtodim);
+   -- Write_Symbol_Table;
+    declare
+      cp : Link_to_Poly_Sys;
+    begin
+      Collapse_System(lp.all,sols,dim,addtodim,cp);
+      put_line(file,cp.all);
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,Length_Of(sols),natural32(cp'last),sols);
+    end;
+  end DoblDobl_Collapse_Diagonal_System;
+
+  procedure QuadDobl_Collapse_Diagonal_System is
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    file : file_type;
+    lp : Link_to_Poly_Sys;
+    sols : Solution_List;
+    dim,addtodim : natural32 := 0;
+
+  begin
+    new_line;
+    put("Reading the diagonal system...");
+    QuadDobl_Read_Embedding(lp,sols,dim);
+    new_line;
+    put_line("Reading the name of the file to save the collapsed system.");
+    Read_Name_and_Create_File(file);
+    new_line;
+    put("The dimension is "); put(dim,1); new_line;
+    put("Give a natural number to add to the dimension : ");
+    Read_Natural(addtodim);
+   -- Write_Symbol_Table;
+    declare
+      cp : Link_to_Poly_Sys;
+    begin
+      Collapse_System(lp.all,sols,dim,addtodim,cp);
+      put_line(file,cp.all);
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,Length_Of(sols),natural32(cp'last),sols);
+    end;
+  end QuadDobl_Collapse_Diagonal_System;
+
+  procedure Collapse_Diagonal_System is
+
+    p : constant character := Prompt_for_Precision;
+
+  begin
+    case p is
+      when '0' => Standard_Collapse_Diagonal_System; 
+      when '1' => DoblDobl_Collapse_Diagonal_System; 
+      when '2' => QuadDobl_Collapse_Diagonal_System; 
+      when others => null;
+    end case;
   end Collapse_Diagonal_System;
 
 end Extrinsic_Diagonal_Solvers;

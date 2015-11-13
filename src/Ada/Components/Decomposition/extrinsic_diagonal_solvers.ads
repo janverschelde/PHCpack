@@ -1,4 +1,6 @@
+with text_io;                           use text_io;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Symbol_Table;                      use Symbol_Table;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
@@ -14,12 +16,105 @@ package Extrinsic_Diagonal_Solvers is
 --   Note that the routines in this package do not solve, but provide the
 --   homotopies on which standard continuation can be applied directly.
 
-  procedure Randomize_System;
+  function Prompt_for_Precision return character;
+
+  -- DESCRIPTION :
+  --   Prompts the user for the working precision and returns '0'
+  --   for standard double, '1' for double double, or '2' for quad double.
+
+  procedure Save_Target_System
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys );
+  procedure Save_Target_System
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure Save_Target_System
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys );
+
+  -- DESCRIPTION :
+  --   The user is prompted for a file name to save the target system,
+  --   in standard double, double double, or quad double precision,
+  --   in the homotopy to start the diagonal cascade.
+
+  procedure Save_Start_System
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                s : in Standard_Complex_Solutions.Solution_List );
+  procedure Save_Start_System
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in DoblDobl_Complex_Solutions.Solution_List );
+  procedure Save_Start_System
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   The user is prompted for a file name to save the start system,
+  --   in standard double, double double, or quad double precision,
+  --   in the homotopy to start the diagonal cascade.
+
+  procedure Test_Solutions
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                s : in Standard_Complex_Solutions.Solution_List );
+  procedure Test_Solutions
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in DoblDobl_Complex_Solutions.Solution_List );
+  procedure Test_Solutions
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Evaluates the solutions in s at the system p.
+
+  procedure Standard_Randomize_System;
+  procedure DoblDobl_Randomize_System;
+  procedure QuadDobl_Randomize_System;
 
   -- DESCRIPTION :
   --   Interactive driver to randomize a system so that the number
-  --   of equations equals the co-dimension of the solution component
-  --   which is to be sampled.
+  --   of equations equals the co-dimension of the solution componen,
+  --   in standard double, double double, or quad double precision.
+
+  procedure Randomize_System;
+
+  -- DESCRIPTION :
+  --   Prompts the user for the precision (d, dd, or qd), and then
+  --   calls the proper randomization procedure so that the system
+  --   has the right number of equations with respect to the solutions.
+
+  procedure Build_Cascade_Homotopy
+              ( file : in file_type;
+                p1e,p2e : in Standard_Complex_Poly_Systems.Poly_Sys;
+                dim1,dim2 : in natural32;
+                sols1e,sols2e : in Standard_Complex_Solutions.Solution_List;
+                s1e,s2e : in Array_of_Symbols );
+  procedure Build_Cascade_Homotopy
+              ( file : in file_type;
+                p1e,p2e : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                dim1,dim2 : in natural32;
+                sols1e,sols2e : in DoblDobl_Complex_Solutions.Solution_List;
+                s1e,s2e : in Array_of_Symbols );
+  procedure Build_Cascade_Homotopy
+              ( file : in file_type;
+                p1e,p2e : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                dim1,dim2 : in natural32;
+                sols1e,sols2e : in QuadDobl_Complex_Solutions.Solution_List;
+                s1e,s2e : in Array_of_Symbols );
+
+  -- DESCRIPTION :
+  --   Builds the homotopy to start the cascade for all components of
+  --   the intersection of two solution components (of dimensions dim1
+  --   and dim2) defined by the embedded systems ep1 and ep2,
+  --   in standard double, double double, and quad double precision.
+
+  -- ON ENTRY :
+  --   p1e      1st embedded polynomial system;
+  --   p2e      2nd embedded polynomial system;
+  --   dim1     dimension of the component defined by the 1st system;
+  --   dim2     dimension of the component defined by the 2nd system;
+  --   sols1e   witness points on the 1st solution component;
+  --   sols1e   witness points on the 2nd solution component;
+  --   s1e      symbols used in the 1st polynomial system;
+  --   s2e      symbols used in the 2nd polynomial system.
 
   procedure Build_Diagonal_Cascade;
 
@@ -60,11 +155,19 @@ package Extrinsic_Diagonal_Solvers is
   --   r        system with the diagonal removed, embedded with
   --            as many as dim + add2dim slack variables.
 
-  procedure Collapse_Diagonal_System;
+  procedure Standard_Collapse_Diagonal_System;
+  procedure DoblDobl_Collapse_Diagonal_System;
+  procedure QuadDobl_Collapse_Diagonal_System;
 
   -- DESCRIPTION :
   --   Once the target system in the diagonal homotopy has been solved,
-  --   we want to return to the original set of coordinates.
-  --   This is what this interactive driver does.
+  --   this procedure transforms the problem to the original coordinates,
+  --   in standard double, double double, or quad double precision.
+
+  procedure Collapse_Diagonal_System;
+
+  -- DESCRIPTION :
+  --   Prompts the user for the precision and then calls the proper
+  --   procedure to collapse the problem onto the original coordinates.
 
 end Extrinsic_Diagonal_Solvers;
