@@ -2,8 +2,8 @@ with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
-with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
+with Standard_Complex_Poly_Systems;
+with Standard_Complex_Solutions;
 
 package Drivers_to_Cascade_Filtering is
 
@@ -29,9 +29,10 @@ package Drivers_to_Cascade_Filtering is
   --   This operation undoes the squaring and embedding.
 
   procedure Witness_Generate
-               ( outfile,resfile : in file_type; ep : in Poly_Sys;
-                 sols : in Solution_List; k : in natural32;
-                 zerotol : in double_float );
+               ( outfile,resfile : in file_type;
+                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                 sols : in Standard_Complex_Solutions.Solution_List;
+                 k : in natural32; zerotol : in double_float );
 
   -- DESCRIPTION :
   --   Calculates candidate witness points on every component,
@@ -50,7 +51,8 @@ package Drivers_to_Cascade_Filtering is
 
   procedure Witness_Generate
                ( name : in string; outfile : in file_type;
-                 ep : in Poly_Sys; sols : in Solution_List;
+                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                 sols : in Standard_Complex_Solutions.Solution_List;
                  k : in natural32; zerotol : in double_float );
 
   -- DESCRIPTION :
@@ -71,8 +73,10 @@ package Drivers_to_Cascade_Filtering is
   --   Interactive driver to call the Witness_Generate procedure.
 
   procedure Black_Box_Solver
-               ( file : in file_type; sys : in Poly_Sys;
-                 deg : in boolean; sols : out Solution_List;
+               ( file : in file_type;
+                 sys : in Standard_Complex_Poly_Systems.Poly_Sys;
+                 deg : in boolean;
+                 sols : out Standard_Complex_Solutions.Solution_List;
                  rc : out natural32; totaltime : out duration );
  
   -- DESCRIPTION :
@@ -94,7 +98,9 @@ package Drivers_to_Cascade_Filtering is
   --   totaltime is the total cpu time used in computing the results.
 
   procedure Driver_for_Cascade_Filter
-               ( file : in file_type; p : in Poly_Sys; k : in integer32 );
+               ( file : in file_type;
+                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                 k : in integer32 );
   
   -- DESCRIPTION :
   --   Performs a cascade of homotopies to find generic points on
@@ -102,8 +108,10 @@ package Drivers_to_Cascade_Filtering is
   --   All results are written to the file.
 
   procedure Interactive_Embed_Square_System 
-              ( file : in file_type; p : in Poly_Sys;
-                embsys : out Link_to_Poly_Sys; topdim : out natural32 );
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                embsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                topdim : out natural32 );
 
   -- DESCRIPTION :
   --   Prompts the user to enter the expected top dimension, 
@@ -113,8 +121,9 @@ package Drivers_to_Cascade_Filtering is
   --   in case the given polynomial system is square.
 
   procedure Embed_Square_System 
-              ( p : in Poly_Sys; topdim : in natural32;
-                embsys : out Link_to_Poly_Sys );
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                topdim : in natural32;
+                embsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRIPTION :
   --   Noninteractive version of the previous procedure.
@@ -129,25 +138,29 @@ package Drivers_to_Cascade_Filtering is
   --            symbols for the slack variables as the value of topdim.
 
   function Full_Embed_Nonsquare_System
-               ( p : Poly_Sys; nq,nv,k : natural32 ) return Poly_Sys;
+              ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+                nq,nv,k : natural32 )
+              return Standard_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Constructs an embedding of a nonsquare system,
   --   using slices not restricted to any particular subspace.
 
   -- ON ENTRY :
-  --   p         nonsquare polynomial system;
-  --   nq        number of equations;
-  --   nv        number of variables;
-  --   k         number of slices to be added to the system.
+  --   p        nonsquare polynomial system;
+  --   nq       number of equations;
+  --   nv       number of variables;
+  --   k        number of slices to be added to the system.
 
   -- ON RETURN :
   --   Square polynomial system with k additional linear equations.
 
   procedure Interactive_Embed_Nonsquare_System
-              ( file : in file_type; p : in Poly_Sys;
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 nbequ,nbunk : in natural32;
-                embsys : out Link_to_Poly_Sys; topdim : out natural32 );
+                embsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                topdim : out natural32 );
 
   -- DESCRIPTION :
   --   Constructs an embedding of a nonsquare system with number of
@@ -158,16 +171,18 @@ package Drivers_to_Cascade_Filtering is
   --   The embedded system is written to file.
 
   procedure Embed_Nonsquare_System
-              ( p : in Poly_Sys;
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 nbequ,nbunk,topdim : in natural32;
-                embsys : out Link_to_Poly_Sys );
+                embsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRIPTION :
   --   Noninteractive version of the above procedure.
 
   procedure Interactive_Square_and_Embed
-              ( file : in file_type; p : in Poly_Sys;
-                ep : out Link_to_Poly_Sys; k : out natural32 );
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                ep : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                k : out natural32 );
 
   -- DESCRIPTION :
   --   The embedding of nonsquare systems involves the addition of
@@ -185,8 +200,9 @@ package Drivers_to_Cascade_Filtering is
   --   k        the dimension as entered by the user.
 
   procedure Square_and_Embed
-              ( p : in Poly_Sys; topdim : in natural32;
-                ep : out Link_to_Poly_Sys );
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                topdim : in natural32;
+                ep : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRIPTION :
   --   Noninteractive version of the procedure above,

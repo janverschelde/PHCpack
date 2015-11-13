@@ -92,13 +92,17 @@ package body Drivers_to_Cascade_Filtering is
   end Maximum;
 
   procedure Interactive_Embed_Square_System 
-              ( file : in file_type; p : in Poly_Sys;
-                embsys : out Link_to_Poly_Sys; topdim : out natural32 ) is
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                embsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                topdim : out natural32 ) is
 
   -- DESCRIPTION :
   --   Prompts the user to enter the expected top dimension, 
   --   which is returned in topdim,
   --   creates the embedded system and writes it on file.
+
+    use Standard_Complex_Poly_Systems;
 
     k,m : natural32 := 0;
     ans : character;
@@ -132,8 +136,12 @@ package body Drivers_to_Cascade_Filtering is
   end Interactive_Embed_Square_System;
 
   procedure Embed_Square_System 
-              ( p : in Poly_Sys; topdim : in natural32;
-                embsys : out Link_to_Poly_Sys ) is
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                topdim : in natural32;
+                embsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
+
   begin
     Add_Embed_Symbols(topdim);
     declare
@@ -145,20 +153,24 @@ package body Drivers_to_Cascade_Filtering is
   end Embed_Square_System;
 
   function Full_Embed_Nonsquare_System
-               ( p : Poly_Sys; nq,nv,k : natural32 ) return Poly_Sys is
+              ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+                nq,nv,k : natural32 )
+              return Standard_Complex_Poly_Systems.Poly_Sys is
 
   -- DESCRIPTION :
   --   Constructs an embedding of a nonsquare system,
   --   using slices not restricted to any particular subspace.
 
   -- ON ENTRY :
-  --   p         nonsquare polynomial system;
-  --   nq        number of equations;
-  --   nv        number of variables;
-  --   k         number of slices to be added to the system.
+  --   p        nonsquare polynomial system;
+  --   nq       number of equations;
+  --   nv       number of variables;
+  --   k        number of slices to be added to the system.
 
   -- ON RETURN :
   --   Square polynomial system with k additional linear equations.
+
+    use Standard_Complex_Poly_Systems;
  
     embedded : Poly_Sys(p'first..p'last+integer32(k));
     d : constant integer32 := integer32(nv - nq);
@@ -186,9 +198,11 @@ package body Drivers_to_Cascade_Filtering is
   end Full_Embed_Nonsquare_System;
 
   procedure Interactive_Embed_Nonsquare_System
-              ( file : in file_type; p : in Poly_Sys;
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 nbequ,nbunk : in natural32;
-                embsys : out Link_to_Poly_Sys; topdim : out natural32 ) is
+                embsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                topdim : out natural32 ) is
 
   -- DESCRIPTION :
   --   Constructs an embedding of a nonsquare system with number of
@@ -197,6 +211,8 @@ package body Drivers_to_Cascade_Filtering is
   --   Slack variables are added for overdetermined systems.
   --   Dummy variables are added for underdetermined systems.
   --   The embedded system is written to file.
+
+    use Standard_Complex_Poly_Systems;
 
     max : constant natural32 := Maximum(nbequ,nbunk);
     sp : constant Poly_Sys(1..integer32(max)) := Square(p);
@@ -252,9 +268,11 @@ package body Drivers_to_Cascade_Filtering is
   end Interactive_Embed_Nonsquare_System;
 
   procedure Embed_Nonsquare_System
-              ( p : in Poly_Sys;
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 nbequ,nbunk,topdim : in natural32;
-                embsys : out Link_to_Poly_Sys ) is
+                embsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use Standard_Complex_Poly_Systems;
 
     max : constant natural32 := Maximum(nbequ,nbunk);
     sp : constant Poly_Sys(1..integer32(max)) := Square(p);
@@ -280,8 +298,10 @@ package body Drivers_to_Cascade_Filtering is
   end Embed_Nonsquare_System;
 
   procedure Interactive_Square_and_Embed
-              ( file : in file_type; p : in Poly_Sys;
-                ep : out Link_to_Poly_Sys; k : out natural32 ) is
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                ep : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                k : out natural32 ) is
 
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
@@ -296,8 +316,9 @@ package body Drivers_to_Cascade_Filtering is
   end Interactive_Square_and_Embed;
 
   procedure Square_and_Embed
-              ( p : in Poly_Sys; topdim : in natural32;
-                ep : out Link_to_Poly_Sys ) is
+              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                topdim : in natural32;
+                ep : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
 
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
@@ -312,6 +333,8 @@ package body Drivers_to_Cascade_Filtering is
   end Square_and_Embed;
 
   procedure Driver_to_Square_and_Embed is
+
+    use Standard_Complex_Poly_Systems;
 
     lp,ep : Link_to_Poly_Sys;
     file : file_type;
@@ -331,14 +354,15 @@ package body Drivers_to_Cascade_Filtering is
   end Driver_to_Square_and_Embed;
 
   function Remove_Last_Variables
-             ( p : Poly_Sys; n : natural32 ) return Poly_Sys is
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys; n : natural32 )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
 
   -- DESCRIPTION :
   --   Removes the last n variables of the system p.
 
   -- REQUIRED : n >= Number_of_Unknowns(p(i)), for i in p'range.
 
-    res : Poly_Sys(p'range);
+    res : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
 
   begin
     for i in p'range loop
@@ -347,7 +371,9 @@ package body Drivers_to_Cascade_Filtering is
     return res;
   end Remove_Last_Variables;
 
-  procedure Remove_Last_Variables ( p : in out Poly_Sys; n : in natural32 ) is
+  procedure Remove_Last_Variables
+              ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                n : in natural32 ) is
 
   -- DESCRIPTION :
   --   Removes the last n variables of the system p.
@@ -364,7 +390,9 @@ package body Drivers_to_Cascade_Filtering is
   end Remove_Last_Variables;
 
   function Remove_Embedding
-             ( p : Poly_Sys; dim,ns : natural32 ) return Poly_Sys is
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+               dim,ns : natural32 )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
 
   -- DESCRIPTION :
   --   Removes the embedding and extra slack variables from the system p.
@@ -377,6 +405,7 @@ package body Drivers_to_Cascade_Filtering is
   -- REQUIRED :
   --   All slack variables are located as last variables in p.
 
+    use Standard_Complex_Poly_Systems;
     res : Poly_Sys(p'range);
 
   begin
@@ -399,6 +428,9 @@ package body Drivers_to_Cascade_Filtering is
   end Remove_Embedding;
 
   procedure Driver_to_Remove_Embedding is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     lp : Link_to_Poly_Sys;
     sols : Solution_List;
@@ -443,7 +475,11 @@ package body Drivers_to_Cascade_Filtering is
   end Driver_to_Remove_Embedding;
 
   procedure Write_Witness_Points
-               ( file : in file_type; sols : in Solution_List ) is
+              ( file : in file_type;
+                sols : in Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Solutions;
+
   begin
     if not Is_Null(sols) then
       new_line(file);
@@ -455,13 +491,16 @@ package body Drivers_to_Cascade_Filtering is
   procedure Down_Continuation
               ( file : in file_type;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
-                level : in natural32; sols : in out Solution_List;
+                level : in natural32;
+                sols : in out Standard_Complex_Solutions.Solution_List;
                 pocotime : out duration ) is
 
   -- DESCRIPTION :
   --   Performs a continuation to remove the slice from the embedded system.
   --   On entry, sols contains the start solutions, on return, the
   --   computed solutions are in the list sols.
+
+    use Standard_Complex_Solutions;
 
     target : constant Standard_Complex_Poly_Systems.Poly_Sys(embsys'range)
            := Remove_Slice(embsys);
@@ -477,9 +516,14 @@ package body Drivers_to_Cascade_Filtering is
   end Down_Continuation;
 
   procedure Witness_Generate
-               ( outfile,resfile : in file_type; ep : in Poly_Sys;
-                 sols : in Solution_List; k : in natural32;
-                 zerotol : in double_float ) is
+              ( outfile,resfile : in file_type;
+                ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                k : in natural32;
+                zerotol : in double_float ) is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
@@ -544,8 +588,10 @@ package body Drivers_to_Cascade_Filtering is
   end Append_ck;
 
   procedure Write_Witness_Superset
-               ( name : in string; p : in Poly_Sys;
-                 sols : in Solution_List; k : in natural32 ) is
+              ( name : in string;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                k : in natural32 ) is
 
   -- DESCRIPTION :
   --   Writes the embedded polynomial system along with its
@@ -563,9 +609,13 @@ package body Drivers_to_Cascade_Filtering is
   end Write_Witness_Superset;
 
   procedure Witness_Generate
-               ( name : in string; outfile : in file_type;
-                 ep : in Poly_Sys; sols : in Solution_List;
-                 k : in natural32; zerotol : in double_float ) is
+              ( name : in string; outfile : in file_type;
+                ep : in Standard_Complex_Poly_Systems.Poly_Sys;
+                sols : in Standard_Complex_Solutions.Solution_List;
+                k : in natural32; zerotol : in double_float ) is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     timer : Timing_Widget;
     wsols,sols0,sols1 : Solution_List;
@@ -616,6 +666,9 @@ package body Drivers_to_Cascade_Filtering is
   end Witness_Generate;
 
   procedure Driver_to_Witness_Generate is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     infile,outfile : file_type;
     lp : Link_to_Poly_Sys;
@@ -678,9 +731,14 @@ package body Drivers_to_Cascade_Filtering is
   end Timing_Summary;
 
   procedure Black_Box_Solver
-               ( file : in file_type; sys : in Poly_Sys;
-                 deg : in boolean; sols : out Solution_List;
-                 rc : out natural32; totaltime : out duration ) is
+              ( file : in file_type;
+                sys : in Standard_Complex_Poly_Systems.Poly_Sys;
+                deg : in boolean;
+                sols : out Standard_Complex_Solutions.Solution_List;
+                rc : out natural32; totaltime : out duration ) is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     timer : Timing_Widget;
     q : Poly_Sys(sys'range);
@@ -849,7 +907,11 @@ package body Drivers_to_Cascade_Filtering is
   end Write_Classify_Summary;
 
   procedure Driver_for_Cascade_Filter
-              ( file : in file_type; p : in Poly_Sys; k : in integer32 ) is
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                k : in integer32 ) is
+
+    use Standard_Complex_Poly_Systems;
 
     nbequ : constant natural32 := natural32(p'length);
     nbunk : constant natural32 := Number_of_Unknowns(p(p'first));
@@ -954,6 +1016,8 @@ package body Drivers_to_Cascade_Filtering is
     --   size     size of the numbers;
     --   itp      interpolator type;
     --   deg      if true, only degree based root counting, otherwise full;
+
+      use Standard_Complex_Solutions;
 
       k : constant integer32 := embp'last;
       sols,sols0,sols1 : Solution_List;
@@ -1088,6 +1152,9 @@ package body Drivers_to_Cascade_Filtering is
   end Driver_for_Cascade_Filter;
 
   procedure Embed_and_Cascade is
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     lp,ep : Link_to_Poly_Sys;
     file : file_type;
