@@ -87,4 +87,18 @@ package body QuadDobl_Complex_Poly_Systems_io is
     end loop;
   end put_line;
 
+  procedure put ( p : in Poly_Sys; s : in Array_of_Symbols ) is
+  begin
+    put(standard_output,p,s);
+  end put;
+
+  procedure put ( file : in file_type;
+                  p : in Poly_Sys; s : in Array_of_Symbols ) is
+  begin
+    for i in p'range loop
+      put(file,p(i),s);
+      new_line(file);
+    end loop;
+  end put;
+
 end QuadDobl_Complex_Poly_Systems_io;

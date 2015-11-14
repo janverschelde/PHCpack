@@ -133,4 +133,15 @@ package body DoblDobl_Complex_Polynomials_io is
     put_line(file,";");
   end put_line;
 
+  procedure put ( p : in Poly; s : in Array_of_Symbols ) is
+  begin
+    put(standard_output,p,s);
+  end put;
+
+  procedure put ( file : in file_type;
+                  p : in Poly; s : in Array_of_Symbols ) is
+  begin
+    put(file,p); -- ignoring s
+  end put;
+
 end DoblDobl_Complex_Polynomials_io;

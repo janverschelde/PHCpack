@@ -1,4 +1,5 @@
 with text_io;                           use text_io;
+with Symbol_Table;                      use Symbol_Table;
 with QuadDobl_Complex_Poly_Systems;     use QuadDobl_Complex_Poly_Systems;
 
 package QuadDobl_Complex_Poly_Systems_io is
@@ -28,5 +29,14 @@ package QuadDobl_Complex_Poly_Systems_io is
 
   -- DESCRIPTION :
   --   A new line is started for each new monomial.
+
+  procedure put ( p : in Poly_Sys; s : in Array_of_Symbols );
+  procedure put ( file : in file_type;
+                  p : in Poly_Sys; s : in Array_of_Symbols );
+
+  -- DESCRIPTION :
+  --   Writes the polynomial system p to standard output or to file,
+  --   using the array of symbols as the symbols for the variables
+  --   instead of the symbols stored in the symbol table.
 
 end QuadDobl_Complex_Poly_Systems_io;
