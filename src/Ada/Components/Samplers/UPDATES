@@ -1,3 +1,6 @@
+Sun 15 Nov 2015 : updated intrinsic_witness_sets_io with write procedures
+  for double double and quad double precision, needed for phc -l2 and -l4.
+
 Wed 11 Nov 2015 : added operations for double double and quad double numbers
   to witness_sets_formats, as needed in the computation of a witness set
   for a hypersurface in double double and quad double precision.

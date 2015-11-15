@@ -67,9 +67,20 @@ package Intrinsic_Witness_Sets_io is
                 f : in Standard_Complex_Poly_Systems.Poly_Sys;
                 s : in Standard_Complex_Solutions.Solution_List;
                 p : in Standard_Complex_Matrices.Matrix );
+  procedure Write_Witness_Set
+              ( file : in file_type; nv,d : in natural32;
+                f : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in DoblDobl_Complex_Solutions.Solution_List;
+                p : in DoblDobl_Complex_Matrices.Matrix );
+  procedure Write_Witness_Set
+              ( file : in file_type; nv,d : in natural32;
+                f : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in QuadDobl_Complex_Solutions.Solution_List;
+                p : in QuadDobl_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
-  --   Writes the witness set defined by f, s, and p to file.
+  --   Writes the witness set defined by f, s, and p to file,
+  --   in standard double, double double, or quad double precision.
 
   procedure Write_Recentered_Witness_Set
               ( file : in file_type; nv,d : in natural32;
@@ -113,18 +124,49 @@ package Intrinsic_Witness_Sets_io is
   --   witness set to file, calling Write_Recentered_Witness_Set.
 
   procedure Write_Witness_Set
-              ( file : in file_type; filename : in string; nv,d : in natural32;
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
                 s : in Standard_Complex_Solutions.Solution_List;
                 p : in Standard_Complex_Matrices.Matrix );
   procedure Write_Witness_Set
-              ( file : in file_type; filename : in string; nv,d : in natural32;
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
+                s : in DoblDobl_Complex_Solutions.Solution_List;
+                p : in DoblDobl_Complex_Matrices.Matrix );
+  procedure Write_Witness_Set
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
+                s : in QuadDobl_Complex_Solutions.Solution_List;
+                p : in QuadDobl_Complex_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Writes the solutions in a witness set to file with name in filename
+  --   concatenated with _wd, where d is the dimension of the set,
+  --   in standard double, double double, or quad double precision.
+
+  procedure Write_Witness_Set
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
                 f : in Standard_Complex_Poly_Systems.Poly_Sys;
                 s : in Standard_Complex_Solutions.Solution_List;
                 p : in Standard_Complex_Matrices.Matrix );
+  procedure Write_Witness_Set
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
+                f : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in DoblDobl_Complex_Solutions.Solution_List;
+                p : in DoblDobl_Complex_Matrices.Matrix );
+  procedure Write_Witness_Set
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
+                f : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in QuadDobl_Complex_Solutions.Solution_List;
+                p : in QuadDobl_Complex_Matrices.Matrix );
 
   -- DESCRIPTION :
   --   Writes a witness set to file with name given in filename
-  --   concatenated with _wd, where d is the dimension of the set.
+  --   concatenated with _wd, where d is the dimension of the set,
+  --   in standard double, double double, or quad double precision.
 
 -- OUTPUT OF AN ARRAY OF WITNESS SETS :
 

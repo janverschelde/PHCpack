@@ -31,6 +31,8 @@ with Standard_Plane_Representations;     use Standard_Plane_Representations;
 with DoblDobl_Plane_Representations;     use DoblDobl_Plane_Representations;
 with QuadDobl_Plane_Representations;     use QuadDobl_Plane_Representations;
 with Standard_Intrinsic_Solutions;
+with DoblDobl_Intrinsic_Solutions;
+with QuadDobl_Intrinsic_Solutions;
 
 -- for testing Recentered version:
 --with Standard_Complex_Vectors_io;  use Standard_Complex_Vectors_io;
@@ -462,12 +464,57 @@ package body Intrinsic_Witness_Sets_io is
 -- OUTPUT OF ONE WITNESS SET :
 
   procedure Write_Witness_Set
-              ( file : in file_type; filename : in string; nv,d : in natural32;
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
                 s : in Standard_Complex_Solutions.Solution_List;
                 p : in Standard_Complex_Matrices.Matrix ) is
 
     use Standard_Complex_Solutions;
     use Standard_Intrinsic_Solutions;
+
+    witfile : file_type;
+    witname : constant string := Append_wd(filename,d);
+    esols : Solution_List := Expand(s,p);
+
+  begin
+    put(file,"See the file " & witname & " for solutions of dimension ");
+    put(file,d,1); put(" in "); put(nv,1); put_line(file,"-space.");
+    create(witfile,out_file,witname);
+    put(witfile,Length_Of(esols),natural32(Head_Of(esols).n),esols);
+    close(witfile);
+    Clear(esols);
+  end Write_Witness_Set;
+
+  procedure Write_Witness_Set
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
+                s : in DoblDobl_Complex_Solutions.Solution_List;
+                p : in DoblDobl_Complex_Matrices.Matrix ) is
+
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Intrinsic_Solutions;
+
+    witfile : file_type;
+    witname : constant string := Append_wd(filename,d);
+    esols : Solution_List := Expand(s,p);
+
+  begin
+    put(file,"See the file " & witname & " for solutions of dimension ");
+    put(file,d,1); put(" in "); put(nv,1); put_line(file,"-space.");
+    create(witfile,out_file,witname);
+    put(witfile,Length_Of(esols),natural32(Head_Of(esols).n),esols);
+    close(witfile);
+    Clear(esols);
+  end Write_Witness_Set;
+
+  procedure Write_Witness_Set
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
+                s : in QuadDobl_Complex_Solutions.Solution_List;
+                p : in QuadDobl_Complex_Matrices.Matrix ) is
+
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Intrinsic_Solutions;
 
     witfile : file_type;
     witname : constant string := Append_wd(filename,d);
@@ -503,6 +550,72 @@ package body Intrinsic_Witness_Sets_io is
      then Add_Embed_Symbols(d);
     end if;
     put(file,natural32(sys'last),sys);
+    new_line(file);
+    put(file,"TITLE : witness set of dimension "); 
+    put(file,d,1); new_line(file);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    new_line(file);
+    put(file,Length_Of(esols),natural32(Head_Of(esols).n),esols);
+    Clear(wsols); Clear(esols);
+  end Write_Witness_Set;
+
+  procedure Write_Witness_Set
+              ( file : in file_type; nv,d : in natural32;
+                f : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in DoblDobl_Complex_Solutions.Solution_List;
+                p : in DoblDobl_Complex_Matrices.Matrix ) is
+
+    use DoblDobl_Complex_Matrices;
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Intrinsic_Solutions;
+
+    wsols : Solution_List := Expand(s,p);
+    esols : Solution_List := Add_Embedding(wsols,d);
+    slices : constant Matrix(1..integer32(d),0..integer32(nv)) := Equations(p);
+    sys : constant Poly_Sys(1..integer32(nv+d)) := Embed_System(f,nv,d,slices);
+
+  begin
+    if Symbol_Table.Number < nv+d
+     then Add_Embed_Symbols(d);
+    end if;
+   -- put(file,natural32(sys'last),sys);
+    put(file,natural32(sys'last),1); new_line(file);
+    put(file,sys);
+    new_line(file);
+    put(file,"TITLE : witness set of dimension "); 
+    put(file,d,1); new_line(file);
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    new_line(file);
+    put(file,Length_Of(esols),natural32(Head_Of(esols).n),esols);
+    Clear(wsols); Clear(esols);
+  end Write_Witness_Set;
+
+  procedure Write_Witness_Set
+              ( file : in file_type; nv,d : in natural32;
+                f : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in QuadDobl_Complex_Solutions.Solution_List;
+                p : in QuadDobl_Complex_Matrices.Matrix ) is
+
+    use QuadDobl_Complex_Matrices;
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Intrinsic_Solutions;
+
+    wsols : Solution_List := Expand(s,p);
+    esols : Solution_List := Add_Embedding(wsols,d);
+    slices : constant Matrix(1..integer32(d),0..integer32(nv)) := Equations(p);
+    sys : constant Poly_Sys(1..integer32(nv+d)) := Embed_System(f,nv,d,slices);
+
+  begin
+    if Symbol_Table.Number < nv+d
+     then Add_Embed_Symbols(d);
+    end if;
+   -- put(file,natural32(sys'last),sys);
+    put(file,natural32(sys'last),1); new_line(file);
+    put(file,sys);
     new_line(file);
     put(file,"TITLE : witness set of dimension "); 
     put(file,d,1); new_line(file);
@@ -712,7 +825,8 @@ package body Intrinsic_Witness_Sets_io is
   end Write_Witness_Set_to_File;
 
   procedure Write_Witness_Set
-              ( file : in file_type; filename : in string; nv,d : in natural32;
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
                 f : in Standard_Complex_Poly_Systems.Poly_Sys;
                 s : in Standard_Complex_Solutions.Solution_List;
                 p : in Standard_Complex_Matrices.Matrix ) is
@@ -755,8 +869,122 @@ package body Intrinsic_Witness_Sets_io is
     put(witfile,natural32(sys'last),sys);
     new_line(witfile);
     put(witfile,"TITLE : witness set of dimension "); 
-    put(witfile,d,1);
-    put_line(witfile,", see " & filename & " for diagnostics."); 
+    put(witfile,d,1); new_line(witfile);
+   -- put_line(witfile,", see " & filename & " for diagnostics."); 
+    new_line(witfile);
+    put_line(witfile,"THE SOLUTIONS :");
+    new_line(witfile);
+    put(witfile,Length_Of(esols),natural32(Head_Of(esols).n),esols);
+    close(witfile);
+    Clear(wsols); Clear(esols);
+  end Write_Witness_Set;
+
+  procedure Write_Witness_Set
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
+                f : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in DoblDobl_Complex_Solutions.Solution_List;
+                p : in DoblDobl_Complex_Matrices.Matrix ) is
+
+    use DoblDobl_Complex_Matrices;
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Intrinsic_Solutions;
+
+    witname : constant string := Append_wd(filename,d);
+    witfile : file_type;
+    wsols : Solution_List := Expand(s,p);
+    esols : Solution_List := Add_Embedding(wsols,d);
+    slices : constant Matrix(1..integer32(d),0..integer32(nv)) := Equations(p);
+    sys : constant Poly_Sys(1..integer32(nv+d)) := Embed_System(f,nv,d,slices);
+
+  begin
+    declare
+    begin
+      Create(witfile,out_file,witname);
+      put(file,"See the file " & witname & " for solutions of dimension ");
+      put(file,d,1); put_line(file,".");
+    exception
+      when others =>
+         put_line("Could not create the file " & witname & "...");
+         declare
+           pin : integer32 := Standard_Random_Numbers.Random(1000,9999);
+           new_witname : constant string := Append_wd(witname,natural32(pin));
+         begin
+           Create(witfile,out_file,new_witname);
+           put(file,"See the file " & new_witname
+                  & " for solutions of dimension ");
+           put(file,d,1); put_line(file,".");
+           put_line("...created the file " & new_witname & " instead.");
+         end;
+    end;
+    if Symbol_Table.Number < nv+d
+     then Add_Embed_Symbols(d);
+    end if;
+   -- put(witfile,natural32(sys'last),sys);
+    put(witfile,natural32(sys'last),1); new_line(file);
+    put(witfile,sys);
+    new_line(witfile);
+    put(witfile,"TITLE : witness set of dimension "); 
+    put(witfile,d,1); new_line(witfile);
+   -- put_line(witfile,", see " & filename & " for diagnostics."); 
+    new_line(witfile);
+    put_line(witfile,"THE SOLUTIONS :");
+    new_line(witfile);
+    put(witfile,Length_Of(esols),natural32(Head_Of(esols).n),esols);
+    close(witfile);
+    Clear(wsols); Clear(esols);
+  end Write_Witness_Set;
+
+  procedure Write_Witness_Set
+              ( file : in file_type; filename : in string;
+                nv,d : in natural32;
+                f : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in QuadDobl_Complex_Solutions.Solution_List;
+                p : in QuadDobl_Complex_Matrices.Matrix ) is
+
+    use QuadDobl_Complex_Matrices;
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Intrinsic_Solutions;
+
+    witname : constant string := Append_wd(filename,d);
+    witfile : file_type;
+    wsols : Solution_List := Expand(s,p);
+    esols : Solution_List := Add_Embedding(wsols,d);
+    slices : constant Matrix(1..integer32(d),0..integer32(nv)) := Equations(p);
+    sys : constant Poly_Sys(1..integer32(nv+d)) := Embed_System(f,nv,d,slices);
+
+  begin
+    declare
+    begin
+      Create(witfile,out_file,witname);
+      put(file,"See the file " & witname & " for solutions of dimension ");
+      put(file,d,1); put_line(file,".");
+    exception
+      when others =>
+         put_line("Could not create the file " & witname & "...");
+         declare
+           pin : integer32 := Standard_Random_Numbers.Random(1000,9999);
+           new_witname : constant string := Append_wd(witname,natural32(pin));
+         begin
+           Create(witfile,out_file,new_witname);
+           put(file,"See the file " & new_witname
+                  & " for solutions of dimension ");
+           put(file,d,1); put_line(file,".");
+           put_line("...created the file " & new_witname & " instead.");
+         end;
+    end;
+    if Symbol_Table.Number < nv+d
+     then Add_Embed_Symbols(d);
+    end if;
+   -- put(witfile,natural32(sys'last),sys);
+    put(witfile,natural32(sys'last),1); new_line(witfile);
+    put(witfile,sys);
+    new_line(witfile);
+    put(witfile,"TITLE : witness set of dimension "); 
+    put(witfile,d,1); new_line(witfile);
+   -- put_line(witfile,", see " & filename & " for diagnostics."); 
     new_line(witfile);
     put_line(witfile,"THE SOLUTIONS :");
     new_line(witfile);
