@@ -1,5 +1,7 @@
 Fri 13 Nov 2015 : edited drivers_to_cascade_filtering to make room for
   versions in double double and quad double precision.
+  Added versions to make the homotopy at the start of the diagonal cascade
+  for double double and quad double precision in extrinsic_diagonal_solvers.
 
 Thu 12 Nov 2015 : more procedures to extrinsic_diagonal_solvers added in
   double double and quad double precision.

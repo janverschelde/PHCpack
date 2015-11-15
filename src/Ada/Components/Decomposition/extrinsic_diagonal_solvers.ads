@@ -116,12 +116,22 @@ package Extrinsic_Diagonal_Solvers is
   --   s1e      symbols used in the 1st polynomial system;
   --   s2e      symbols used in the 2nd polynomial system.
 
-  procedure Build_Diagonal_Cascade;
+  procedure Standard_Diagonal_Cascade;
+  procedure DoblDobl_Diagonal_Cascade;
+  procedure QuadDobl_Diagonal_Cascade;
 
   -- DESCRIPTION :
   --   Interactive driver to build a homotopy to start a cascade
   --   of homotopies to compute all positive dimensional components
-  --   of the intersection of two components.
+  --   of the intersection of two components,
+  --   in standard double, double double, or quad double precision.
+
+  procedure Build_Diagonal_Cascade;
+
+  -- DESCRIPTION :
+  --   Prompts the user for the precision and then calls then
+  --   Standard_Diagonal_Cascade, DoblDobl_Diagonal_Cascade,
+  --   or QuadDobl_Diagonal_Cascade, depending on th precision.
 
   procedure Collapse_System
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;

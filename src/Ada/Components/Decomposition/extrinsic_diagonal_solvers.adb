@@ -68,8 +68,96 @@ package body Extrinsic_Diagonal_Solvers is
     end if;
   end Is_Dummy;
 
+  function Is_Dummy ( p : DoblDobl_Complex_Polynomials.Poly;
+                      k : integer32 ) return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if the polynomial has only one term that is linear
+  --   and where the occurring variables are among the k last ones.
+
+    use DoblDobl_Complex_Polynomials;
+    n : constant integer32 := integer32(Number_of_Unknowns(p));
+
+  begin
+    if Number_of_Terms(p) > 1 then
+      return false;
+    elsif Degree(p) > 1 then
+      return false;
+    else
+      for i in 1..n-k loop
+        if Degree(p,i) = 1
+         then return false;
+        end if;
+      end loop;
+      return true;
+    end if;
+  end Is_Dummy;
+
+  function Is_Dummy ( p : QuadDobl_Complex_Polynomials.Poly;
+                      k : integer32 ) return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if the polynomial has only one term that is linear
+  --   and where the occurring variables are among the k last ones.
+
+    use QuadDobl_Complex_Polynomials;
+    n : constant integer32 := integer32(Number_of_Unknowns(p));
+
+  begin
+    if Number_of_Terms(p) > 1 then
+      return false;
+    elsif Degree(p) > 1 then
+      return false;
+    else
+      for i in 1..n-k loop
+        if Degree(p,i) = 1
+         then return false;
+        end if;
+      end loop;
+      return true;
+    end if;
+  end Is_Dummy;
+
   function Number_of_Dummies
              ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+               k : integer32 ) return natural32 is
+
+  -- DESCRIPTION :
+  --   Returns the number of equations that turn the slack variables
+  --   into dummies.
+
+    res : natural32 := 0;
+
+  begin
+    for i in p'range loop
+      if Is_Dummy(p(i),k)
+       then res := res + 1;
+      end if;
+    end loop;
+    return res;
+  end Number_of_Dummies;
+
+  function Number_of_Dummies
+             ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+               k : integer32 ) return natural32 is
+
+  -- DESCRIPTION :
+  --   Returns the number of equations that turn the slack variables
+  --   into dummies.
+
+    res : natural32 := 0;
+
+  begin
+    for i in p'range loop
+      if Is_Dummy(p(i),k)
+       then res := res + 1;
+      end if;
+    end loop;
+    return res;
+  end Number_of_Dummies;
+
+  function Number_of_Dummies
+             ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
                k : integer32 ) return natural32 is
 
   -- DESCRIPTION :
@@ -608,7 +696,93 @@ package body Extrinsic_Diagonal_Solvers is
     Permute(inv_prm,sols2e);
   end Permute_by_Symbols;
 
-  procedure Build_Diagonal_Cascade is
+  procedure Permute_by_Symbols
+              ( file : in file_type;
+                p2e : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols2e : in out DoblDobl_Complex_Solutions.Solution_List;
+                s1,s2 : in out Array_of_Symbols;
+                dim1,dim2 : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   While the polynomial systems should have all their variables
+  --   in common, they may have occurred at different places.
+  --   This procedure permutes the variables in the system if needed.
+
+    os1 : constant Array_of_Symbols := s1(s1'first..s1'last-integer32(dim1));
+    os2 : Array_of_Symbols(s2'first..s2'last-integer32(dim2))
+        := s2(s2'first..s2'last-integer32(dim2));
+    prm : constant Permutation(os1'range) := Match_Symbols(os1,os2);
+    full_prm,inv_prm : Permutation(s2'range);
+
+  begin
+    put(file,"The symbols from the 1st system : "); Write(file,s1);
+    put(file,"The symbols from the 2nd system : "); Write(file,s2);
+    put(file,"The original first symbols  : "); Write(file,os1);
+    put(file,"The original second symbols : "); Write(file,os2);
+    put(file,"The matching permutation : ");
+    put(file,Standard_Integer_Vectors.Vector(prm)); new_line(file);
+    Permute(prm,os2);
+    s2(os2'range) := os2;
+    put(file,"The permuted second symbols : "); Write(file,os2);
+    full_prm(prm'range) := prm;
+    for i in prm'last+1..full_prm'last loop
+      full_prm(i) := i;
+    end loop;
+    put(file,"The full matching permutation : ");
+    put(file,Standard_Integer_Vectors.Vector(full_prm)); new_line(file);
+    inv_prm := inv(full_prm);
+    put(file,"Inverse of full permutation   : ");
+    put(file,Standard_Integer_Vectors.Vector(inv_prm)); new_line(file);
+    p2e := p2e*inv_prm;
+    Assign_Symbol_Table(s2);
+    put(file,"The permuted second system : "); put(file,p2e);
+    Permute(inv_prm,sols2e);
+  end Permute_by_Symbols;
+
+  procedure Permute_by_Symbols
+              ( file : in file_type;
+                p2e : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols2e : in out QuadDobl_Complex_Solutions.Solution_List;
+                s1,s2 : in out Array_of_Symbols;
+                dim1,dim2 : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   While the polynomial systems should have all their variables
+  --   in common, they may have occurred at different places.
+  --   This procedure permutes the variables in the system if needed.
+
+    os1 : constant Array_of_Symbols := s1(s1'first..s1'last-integer32(dim1));
+    os2 : Array_of_Symbols(s2'first..s2'last-integer32(dim2))
+        := s2(s2'first..s2'last-integer32(dim2));
+    prm : constant Permutation(os1'range) := Match_Symbols(os1,os2);
+    full_prm,inv_prm : Permutation(s2'range);
+
+  begin
+    put(file,"The symbols from the 1st system : "); Write(file,s1);
+    put(file,"The symbols from the 2nd system : "); Write(file,s2);
+    put(file,"The original first symbols  : "); Write(file,os1);
+    put(file,"The original second symbols : "); Write(file,os2);
+    put(file,"The matching permutation : ");
+    put(file,Standard_Integer_Vectors.Vector(prm)); new_line(file);
+    Permute(prm,os2);
+    s2(os2'range) := os2;
+    put(file,"The permuted second symbols : "); Write(file,os2);
+    full_prm(prm'range) := prm;
+    for i in prm'last+1..full_prm'last loop
+      full_prm(i) := i;
+    end loop;
+    put(file,"The full matching permutation : ");
+    put(file,Standard_Integer_Vectors.Vector(full_prm)); new_line(file);
+    inv_prm := inv(full_prm);
+    put(file,"Inverse of full permutation   : ");
+    put(file,Standard_Integer_Vectors.Vector(inv_prm)); new_line(file);
+    p2e := p2e*inv_prm;
+    Assign_Symbol_Table(s2);
+    put(file,"The permuted second system : "); put(file,p2e);
+    Permute(inv_prm,sols2e);
+  end Permute_by_Symbols;
+
+  procedure Standard_Diagonal_Cascade is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -660,6 +834,127 @@ package body Extrinsic_Diagonal_Solvers is
    -- Assign_Symbol_Table(lsym2.all);
     Build_Cascade_Homotopy
       (file,lp1.all,lp2.all,dim1,dim2,sols1e,sols2e,lsym1.all,lsym2.all);
+  end Standard_Diagonal_Cascade;
+
+  procedure DoblDobl_Diagonal_Cascade is
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+ 
+    file : file_type;
+    lp1,lp2 : Link_to_Poly_Sys;
+    sols1e,sols2e : Solution_List;
+    dim1,dum1,dim2,dum2 : natural32;
+    lsym1,lsym2 : Link_to_Array_of_Symbols;
+
+  begin
+    new_line;
+    put_line("Reading the first embedded polynomial system...");
+    DoblDobl_Read_Embedding(lp1,sols1e,dim1);
+    dum1 := Number_of_Dummies(lp1.all,integer32(dim1));
+    lsym1 := Get_Link_to_Symbols;
+    new_line;
+    put_line("Reading the second embedded polynomial system...");
+    DoblDobl_Read_Embedding(lp2,sols2e,dim2);
+    dum2 := Number_of_Dummies(lp2.all,integer32(dim2));
+    if dim1 < dim2 then
+      new_line;
+      put("WARNING:");
+      put(" dim(component-1) = "); put(dim1,1);
+      put(", dim(component-2) = "); put(dim2,1);
+      put(", and "); put(dim1,1); put("<"); put(dim2,1); put_line(".");
+      put_line("This will cause too many variables in the homotopies.");
+      put_line("Be advised to stop program and switch order of systems.");
+    end if;
+    new_line;
+    put_line("Reading the name of the output file...");
+    Read_Name_and_Create_File(file);
+    put_line(file,"The first polynomial system :");
+    put(file,lp1.all,lsym1.all);
+    put(file,"Dimension of component 1  : ");
+    put(file,dim1,1); new_line(file);
+    put(file,"Number of dummy slackvars : ");
+    put(file,dum1,1); new_line(file);
+    put_line(file,"The second polynomial system :"); put(file,lp2.all);
+    put(file,"Dimension of component 2  : ");
+    put(file,dim2,1); new_line(file);
+    put(file,"Number of dummy slackvars : ");
+    put(file,dum2,1); new_line(file);
+    lsym2 := Get_Link_to_Symbols;
+    put(file,"2nd Symbols :"); Write(file,lsym2.all);
+    Permute_by_Symbols(file,lp2.all,sols2e,lsym1.all,lsym2.all,dim1,dim2);
+    put(file,"1st Symbols :"); Write(file,lsym1.all);
+    put(file,"2nd Symbols :"); Write(file,lsym2.all);
+   -- Assign_Symbol_Table(lsym2.all);
+    Build_Cascade_Homotopy
+      (file,lp1.all,lp2.all,dim1,dim2,sols1e,sols2e,lsym1.all,lsym2.all);
+  end DoblDobl_Diagonal_Cascade;
+
+  procedure QuadDobl_Diagonal_Cascade is
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+ 
+    file : file_type;
+    lp1,lp2 : Link_to_Poly_Sys;
+    sols1e,sols2e : Solution_List;
+    dim1,dum1,dim2,dum2 : natural32;
+    lsym1,lsym2 : Link_to_Array_of_Symbols;
+
+  begin
+    new_line;
+    put_line("Reading the first embedded polynomial system...");
+    QuadDobl_Read_Embedding(lp1,sols1e,dim1);
+    dum1 := Number_of_Dummies(lp1.all,integer32(dim1));
+    lsym1 := Get_Link_to_Symbols;
+    new_line;
+    put_line("Reading the second embedded polynomial system...");
+    QuadDobl_Read_Embedding(lp2,sols2e,dim2);
+    dum2 := Number_of_Dummies(lp2.all,integer32(dim2));
+    if dim1 < dim2 then
+      new_line;
+      put("WARNING:");
+      put(" dim(component-1) = "); put(dim1,1);
+      put(", dim(component-2) = "); put(dim2,1);
+      put(", and "); put(dim1,1); put("<"); put(dim2,1); put_line(".");
+      put_line("This will cause too many variables in the homotopies.");
+      put_line("Be advised to stop program and switch order of systems.");
+    end if;
+    new_line;
+    put_line("Reading the name of the output file...");
+    Read_Name_and_Create_File(file);
+    put_line(file,"The first polynomial system :");
+    put(file,lp1.all,lsym1.all);
+    put(file,"Dimension of component 1  : ");
+    put(file,dim1,1); new_line(file);
+    put(file,"Number of dummy slackvars : ");
+    put(file,dum1,1); new_line(file);
+    put_line(file,"The second polynomial system :"); put(file,lp2.all);
+    put(file,"Dimension of component 2  : ");
+    put(file,dim2,1); new_line(file);
+    put(file,"Number of dummy slackvars : ");
+    put(file,dum2,1); new_line(file);
+    lsym2 := Get_Link_to_Symbols;
+    put(file,"2nd Symbols :"); Write(file,lsym2.all);
+    Permute_by_Symbols(file,lp2.all,sols2e,lsym1.all,lsym2.all,dim1,dim2);
+    put(file,"1st Symbols :"); Write(file,lsym1.all);
+    put(file,"2nd Symbols :"); Write(file,lsym2.all);
+   -- Assign_Symbol_Table(lsym2.all);
+    Build_Cascade_Homotopy
+      (file,lp1.all,lp2.all,dim1,dim2,sols1e,sols2e,lsym1.all,lsym2.all);
+  end QuadDobl_Diagonal_Cascade;
+
+  procedure Build_Diagonal_Cascade is
+
+    p : constant character := Prompt_for_Precision;
+
+  begin
+    case p is
+      when '0' => Standard_Diagonal_Cascade;
+      when '1' => DoblDobl_Diagonal_Cascade;
+      when '2' => QuadDobl_Diagonal_Cascade;
+      when others => null;
+    end case;
   end Build_Diagonal_Cascade;
 
 --  procedure Replace_with_Dummies 
