@@ -30,4 +30,6 @@ bablsolve                        : call by blackbox solver of PHCpack
 mainsolve                        : call by main dispatcher of PHCpack
 mainwit                          : witness set intersection main driver
 mainhyp                          : witness set creation for hypersurface
+mainhyp2                         : double double version of mainhyp
+mainhyp4                         : quad double version of mainhyp
 ------------------------------------------------------------------------------

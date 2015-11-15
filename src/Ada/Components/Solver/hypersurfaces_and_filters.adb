@@ -4,13 +4,22 @@ with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Point_Coordinates;         use Standard_Point_Coordinates;
-with Standard_Hypersurface_Witsets;      use Standard_Hypersurface_Witsets;
+with Standard_Hypersurface_Witsets;
+with DoblDobl_Hypersurface_Witsets;
+with QuadDobl_Hypersurface_Witsets;
 
 package body Hypersurfaces_and_Filters is
 
   procedure RG_Hypersurface_Witness_Set
-              ( file : in file_type; n,d : in natural32; b,v : in Vector;
-                s : out Solution_List; res : out double_float ) is
+              ( file : in file_type; n,d : in natural32;
+                b,v : in Standard_Complex_Vectors.Vector;
+                s : out Standard_Complex_Solutions.Solution_List;
+                res : out double_float ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Solutions;
+    use Standard_Hypersurface_Witsets;
 
     sols,sols_last : Solution_List;
     t,err,resid : Vector(1..integer32(d));
@@ -41,10 +50,96 @@ package body Hypersurfaces_and_Filters is
     res := nrm;
   end RG_Hypersurface_Witness_Set;
 
+  procedure RG_DoblDobl_Hypersurface_Witness_Set
+              ( file : in file_type; n,d : in natural32;
+                b,v : in DoblDobl_Complex_Vectors.Vector;
+                s : out DoblDobl_Complex_Solutions.Solution_List;
+                res : out double_double ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Vectors;
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Hypersurface_Witsets;
+
+    sols,sols_last : Solution_List;
+    t,err,resid : Vector(1..integer32(d));
+    eps : constant double_double := create(1.0E-16);
+    nrm : double_double;
+    fail : boolean;
+
+    procedure Root_Finder is new Reporting_Root_Finder1(f);
+
+  begin
+   -- put_line("Calling Root_Finder...");
+    Root_Finder(file,d,eps,10*d,fail,b,v,t,err,resid,nrm);
+   -- put_line("...done with Root_Finder.");
+    for i in t'range loop
+      declare
+        s : Solution(1);
+      begin
+        s.m := 1;
+        s.t := Create(integer(1));
+        s.v(1) := t(i);
+        s.err := AbsVal(err(i)); 
+        s.rco := create(1.0); 
+        s.res := AbsVal(resid(i)); 
+        Append(sols,sols_last,s);
+      end;
+    end loop;
+    s := sols;
+    res := nrm;
+  end RG_DoblDobl_Hypersurface_Witness_Set;
+
+  procedure RG_QuadDobl_Hypersurface_Witness_Set
+              ( file : in file_type; n,d : in natural32;
+                b,v : in QuadDobl_Complex_Vectors.Vector;
+                s : out QuadDobl_Complex_Solutions.Solution_List;
+                res : out quad_double ) is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Vectors;
+    use QuadDobl_Complex_Solutions;
+    use QuadDobl_Hypersurface_Witsets;
+
+    sols,sols_last : Solution_List;
+    t,err,resid : Vector(1..integer32(d));
+    eps : constant quad_double := create(1.0E-20);
+    nrm : quad_double;
+    fail : boolean;
+
+    procedure Root_Finder is new Reporting_Root_Finder1(f);
+
+  begin
+   -- put_line("Calling Root_Finder...");
+    Root_Finder(file,d,eps,10*d,fail,b,v,t,err,resid,nrm);
+   -- put_line("...done with Root_Finder.");
+    for i in t'range loop
+      declare
+        s : Solution(1);
+      begin
+        s.m := 1;
+        s.t := Create(integer(1));
+        s.v(1) := t(i);
+        s.err := AbsVal(err(i)); 
+        s.rco := create(1.0); 
+        s.res := AbsVal(resid(i)); 
+        Append(sols,sols_last,s);
+      end;
+    end loop;
+    s := sols;
+    res := nrm;
+  end RG_QuadDobl_Hypersurface_Witness_Set;
+
   procedure RP_Hypersurface_Witness_Set
               ( file : in file_type; n,d : in natural32;
-                p : in Eval_Poly; b,v : in Vector;
-                s : out Solution_List; res : out double_float ) is
+                p : in Standard_Complex_Poly_Functions.Eval_Poly;
+                b,v : in Standard_Complex_Vectors.Vector;
+                s : out Standard_Complex_Solutions.Solution_List;
+                res : out double_float ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Poly_Functions;
 
     function Eval ( x : Vector ) return Complex_Number is
     begin
@@ -58,9 +153,62 @@ package body Hypersurfaces_and_Filters is
    -- put_line("... done with Find_Roots.");
   end RP_Hypersurface_Witness_Set;
 
+  procedure RP_Hypersurface_Witness_Set
+              ( file : in file_type; n,d : in natural32;
+                p : in DoblDobl_Complex_Poly_Functions.Eval_Poly;
+                b,v : in DoblDobl_Complex_Vectors.Vector;
+                s : out DoblDobl_Complex_Solutions.Solution_List;
+                res : out double_double ) is
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Complex_Vectors;
+    use DoblDobl_Complex_Poly_Functions;
+
+    function Eval ( x : Vector ) return Complex_Number is
+    begin
+      return Eval(p,x);
+    end Eval;
+    procedure Find_Roots is new RG_DoblDobl_Hypersurface_Witness_Set(Eval);
+
+  begin
+   -- put_line("Calling Find_Roots ...");
+    Find_Roots(file,n,d,b,v,s,res);
+   -- put_line("... done with Find_Roots.");
+  end RP_Hypersurface_Witness_Set;
+
+  procedure RP_Hypersurface_Witness_Set
+              ( file : in file_type; n,d : in natural32;
+                p : in QuadDobl_Complex_Poly_Functions.Eval_Poly;
+                b,v : in QuadDobl_Complex_Vectors.Vector;
+                s : out QuadDobl_Complex_Solutions.Solution_List;
+                res : out quad_double ) is
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Complex_Vectors;
+    use QuadDobl_Complex_Poly_Functions;
+
+    function Eval ( x : Vector ) return Complex_Number is
+    begin
+      return Eval(p,x);
+    end Eval;
+    procedure Find_Roots is new RG_QuadDobl_Hypersurface_Witness_Set(Eval);
+
+  begin
+   -- put_line("Calling Find_Roots ...");
+    Find_Roots(file,n,d,b,v,s,res);
+   -- put_line("... done with Find_Roots.");
+  end RP_Hypersurface_Witness_Set;
+
   procedure SG_Hypersurface_Witness_Set
-              ( n,d : in natural32; b,v : in Vector;
-                s : out Solution_List; res : out double_float ) is
+              ( n,d : in natural32;
+                b,v : in Standard_Complex_Vectors.Vector;
+                s : out Standard_Complex_Solutions.Solution_List;
+                res : out double_float ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Solutions;
+    use Standard_Hypersurface_Witsets;
 
     sols,sols_last : Solution_List;
     t,err,resid : Vector(1..integer32(d));
@@ -91,8 +239,14 @@ package body Hypersurfaces_and_Filters is
 
   procedure SP_Hypersurface_Witness_Set
               ( n,d : in natural32;
-                p : in Eval_Poly; b,v : in Vector;
-                s : out Solution_List; res : out double_float ) is
+                p : in Standard_Complex_Poly_Functions.Eval_Poly;
+                b,v : in Standard_Complex_Vectors.Vector;
+                s : out Standard_Complex_Solutions.Solution_List;
+                res : out double_float ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Poly_Functions;
 
     function Eval ( x : Vector ) return Complex_Number is
     begin
@@ -104,9 +258,15 @@ package body Hypersurfaces_and_Filters is
     Find_Roots(n,d,b,v,s,res);
   end SP_Hypersurface_Witness_Set;
 
-  procedure RG_Filter ( file : in file_type; ne : in natural32;
-                        sols : in out Solution_List;
-                        b,v : in Vector; tol : in double_float ) is
+  procedure RG_Filter
+              ( file : in file_type; ne : in natural32;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                b,v : in Standard_Complex_Vectors.Vector;
+                tol : in double_float ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Solutions;
 
     res,res_last : Solution_List;
     tmp : Solution_List := sols;
@@ -146,9 +306,17 @@ package body Hypersurfaces_and_Filters is
     sols := res;
   end RG_Filter;
 
-  procedure RP_Filter ( file : in file_type; sols : in out Solution_List;
-                        p : in Eval_Poly_Sys; b,v : in Vector;
-                        tol : in double_float ) is
+  procedure RP_Filter
+              ( file : in file_type;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                b,v : in Standard_Complex_Vectors.Vector;
+                tol : in double_float ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Poly_Functions;
+    use Standard_Complex_Solutions;
 
     res,res_last : Solution_List;
     tmp : Solution_List := sols;
@@ -189,8 +357,15 @@ package body Hypersurfaces_and_Filters is
     sols := res;
   end RP_Filter;
 
-  procedure SG_Filter ( ne : in natural32; sols : in out Solution_List;
-                        b,v : in Vector; tol : in double_float ) is
+  procedure SG_Filter
+              ( ne : in natural32;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                b,v : in Standard_Complex_Vectors.Vector;
+                tol : in double_float ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Solutions;
 
     res,res_last : Solution_List;
     tmp : Solution_List := sols;
@@ -223,9 +398,16 @@ package body Hypersurfaces_and_Filters is
     sols := res;
   end SG_Filter;
 
-  procedure SP_Filter ( sols : in out Solution_List;
-                        p : in Eval_Poly_Sys; b,v : in Vector;
-                        tol : in double_float ) is
+  procedure SP_Filter
+              ( sols : in out Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                b,v : in Standard_Complex_Vectors.Vector;
+                tol : in double_float ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Poly_Functions;
+    use Standard_Complex_Solutions;
 
     res,res_last : Solution_List;
     tmp : Solution_List := sols;
@@ -261,9 +443,14 @@ package body Hypersurfaces_and_Filters is
   end SP_Filter;
 
   procedure RG_Split_Filter
-               ( file : in file_type; tol : in double_float;
-                 p_sols : in out Solution_List; q_sols : out Solution_List;
-                 plane : in Matrix ) is
+              ( file : in file_type; tol : in double_float;
+                p_sols : in out Standard_Complex_Solutions.Solution_List;
+                q_sols : out Standard_Complex_Solutions.Solution_List;
+                plane : in Standard_Complex_Matrices.Matrix ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Solutions;
 
     q,q_last,w,w_last : Solution_List;
     tmp : Solution_List := p_sols;
@@ -297,9 +484,17 @@ package body Hypersurfaces_and_Filters is
   end RG_Split_Filter;
 
   procedure RP_Split_Filter
-               ( file : in file_type; p : in Eval_Poly; tol : in double_float;
-                 p_sols : in out Solution_List; q_sols : out Solution_List;
-                 plane : in Matrix ) is
+              ( file : in file_type;
+                p : in Standard_Complex_Poly_Functions.Eval_Poly;
+                tol : in double_float;
+                p_sols : in out Standard_Complex_Solutions.Solution_List;
+                q_sols : out Standard_Complex_Solutions.Solution_List;
+                plane : in Standard_Complex_Matrices.Matrix ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Poly_Functions;
+    use Standard_Complex_Solutions;
 
     q,q_last,w,w_last : Solution_List;
     tmp : Solution_List := p_sols;
@@ -333,24 +528,14 @@ package body Hypersurfaces_and_Filters is
   end RP_Split_Filter;
 
   procedure SG_Split_Filter
-               ( tol : in double_float;
-                 p_sols : in out Solution_List; q_sols : out Solution_List;
-                 plane : in Matrix ) is
+              ( tol : in double_float;
+                p_sols : in out Standard_Complex_Solutions.Solution_List;
+                q_sols : out Standard_Complex_Solutions.Solution_List;
+                plane : in Standard_Complex_Matrices.Matrix ) is
 
-  -- DESCRIPTION :
-  --   Splits the given solution list into two lists: those which satisfy
-  --   p and those which do not, with respect to the given tolerance.
-  --   This is a silent version without any output.
-
-  -- ON ENTRY :
-  --   p         polynomial function, to evaluate a new hypersurface;
-  --   tol       tolerance to decide whether number is zero;
-  --   p_sols    a witness set for previous equations;
-  --   plane     plane which cuts out p_sols.
-
-  -- ON RETURN :
-  --   p_sols    witness set which satisfies p;
-  --   q_sols    solutions which do not satisfy p become start solutions.
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Solutions;
 
     q,q_last,w,w_last : Solution_List;
     tmp : Solution_List := p_sols;
@@ -376,24 +561,16 @@ package body Hypersurfaces_and_Filters is
   end SG_Split_Filter;
 
   procedure SP_Split_Filter
-               ( p : in Eval_Poly; tol : in double_float;
-                 p_sols : in out Solution_List; q_sols : out Solution_List;
-                 plane : in Matrix ) is
+              ( p : in Standard_Complex_Poly_Functions.Eval_Poly;
+                tol : in double_float;
+                p_sols : in out Standard_Complex_Solutions.Solution_List;
+                q_sols : out Standard_Complex_Solutions.Solution_List;
+                plane : in Standard_Complex_Matrices.Matrix ) is
 
-  -- DESCRIPTION :
-  --   Splits the given solution list into two lists: those which satisfy
-  --   p and those which do not, with respect to the given tolerance.
-  --   This is a silent version without any output.
-
-  -- ON ENTRY :
-  --   p         polynomial function, to evaluate a new hypersurface;
-  --   tol       tolerance to decide whether number is zero;
-  --   p_sols    a witness set for previous equations;
-  --   plane     plane which cuts out p_sols.
-
-  -- ON RETURN :
-  --   p_sols    witness set which satisfies p;
-  --   q_sols    solutions which do not satisfy p become start solutions.
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Poly_Functions;
+    use Standard_Complex_Solutions;
 
     q,q_last,w,w_last : Solution_List;
     tmp : Solution_List := p_sols;
@@ -418,8 +595,14 @@ package body Hypersurfaces_and_Filters is
     q_sols := q;
   end SP_Split_Filter;
 
-  procedure QSG_Filter ( s : in out Solution_List;
-                         p : in Matrix; tol : in double_float ) is
+  procedure QSG_Filter
+              ( s : in out Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Matrices.Matrix;
+                tol : in double_float ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Solutions;
 
     res,res_last : Solution_List;
     tmp : Solution_List := s;
@@ -450,8 +633,15 @@ package body Hypersurfaces_and_Filters is
     s := res;
   end QSG_Filter;
 
-  procedure QRG_Filter ( file : in file_type; s : in out Solution_List;
-                         p : in Matrix; tol : in double_float ) is
+  procedure QRG_Filter
+              ( file : in file_type;
+                s : in out Standard_Complex_Solutions.Solution_List;
+                p : in Standard_Complex_Matrices.Matrix;
+                tol : in double_float ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Vectors;
+    use Standard_Complex_Solutions;
 
     res,res_last : Solution_List;
     tmp : Solution_List := s;
