@@ -28,6 +28,7 @@ with mainwit;                 -- witness set intersection
 with maingood;                -- to test if a system is good
 with mainsymb;                -- to get the symbol table contents
 with mainhyp;                 -- witness set for hypersurface
+with mainhyp2,mainhyp4;       -- double double and quad double versions
 -- NOTE (added for pieri_solver.ali) :
 with Interfaces.C;
 with Complex_Polynomial_Matrices;        use Complex_Polynomial_Matrices;
@@ -213,13 +214,13 @@ procedure Dispatch is
     return res;
   end Number_of_Tasks;
 
-  function BlackBox_Precision return natural32 is
+  function Scan_Precision ( opt : character ) return natural32 is
 
   -- DESCRIPTION :
-  --   Returns the precision of the blackbox solver:
-  --   1 : the -b is followed by a space (or nothing);
-  --   2 : double double precision, as we have -b2 at the command line;
-  --   4 : quad double precision is given as -b4 at the command line.
+  --   Returns the precision of the option defined by the charactor opt.
+  --   1 : the -opt is followed by a space (or nothing);
+  --   2 : double double precision, as we have -opt2 at the command line;
+  --   4 : quad double precision is given as -opt4 at the command line.
 
     res : natural32 := 1;
 
@@ -228,7 +229,7 @@ procedure Dispatch is
       declare
         s : constant string := Unix_Command_Line.Argument(i);
       begin
-        if s(2) = 'b' then
+        if s(2) = opt then
           if s'last > 2 
            then res := Convert(s(3..s'last)); exit;
           end if;
@@ -236,32 +237,7 @@ procedure Dispatch is
       end;
     end loop;
     return res;
-  end BlackBox_Precision;
-
-  function Continuation_Precision return natural32 is
-
-  -- DESCRIPTION :
-  --   Returns the precision of the blackbox polynomial continuation.
-  --   1 : the -p is followed by a space (or nothing);
-  --   2 : double double precision, as we have -p2 at the command line;
-  --   4 : quad double precision is given as -p4 at the command line.
-
-    res : natural32 := 1;
-
-  begin
-    for i in 1..Unix_Command_Line.Number_of_Arguments loop
-      declare
-        s : constant string := Unix_Command_Line.Argument(i);
-      begin
-        if s(2) = 'p' then
-          if s'last > 2 
-           then res := Convert(s(3..s'last)); exit;
-          end if;
-        end if;
-      end;
-    end loop;
-    return res;
-  end Continuation_Precision;
+  end Scan_Precision;
 
   function Find_Seed return natural32 is
 
@@ -312,8 +288,8 @@ procedure Dispatch is
   --   When the first option is 'b', then this routine handles the
   --   second option and calls the appropriate main driver.
 
-    bbprc : constant natural32 := BlackBox_Precision;
-    contprc : constant natural32 := Continuation_Precision;
+    bbprc : constant natural32 := Scan_Precision('b');
+    contprc : constant natural32 := Scan_Precision('p');
 
   begin
    -- put("The blackbox precision : "); put(bbprc,1); new_line;
@@ -444,8 +420,8 @@ procedure Dispatch is
   -- DESCRIPTION :
   --   Invokes the path trackers in PHCpack.
 
-    contprc : constant natural32 := Continuation_Precision;
-    bbprc : constant natural32 := BlackBox_Precision;
+    contprc : constant natural32 := Scan_Precision('p');
+    bbprc : constant natural32 := Scan_Precision('b');
 
   begin
     case o2 is
@@ -530,7 +506,7 @@ procedure Dispatch is
    -- nt : constant natural := Number_of_Tasks(1);
     nt : constant natural32 := Number_of_Tasks;
     ns : constant string := Convert(integer32(nt));
-    bbprc : constant natural32 := BlackBox_Precision;
+    bbprc : constant natural32 := Scan_Precision('b');
 
   begin
     case o2 is
@@ -575,13 +551,21 @@ procedure Dispatch is
               ( polyfile,logfile : in string ) is
 
   -- DESCRIPTION :
-  --   Creation of witness set for hypersurface.
+  --   Scans the command line arguments for the precision
+  --   and then makes a witness set for a hypersurface.
+
+    precision : constant natural32 := Scan_Precision('l');
 
   begin
     if polyfile = "" or logfile = ""
      then put_line(welcome); put_line(hypban);
     end if;
-    mainhyp(polyfile,logfile);
+    case precision is
+      when 1 => mainhyp(polyfile,logfile);
+      when 2 => mainhyp2(polyfile,logfile);
+      when 4 => mainhyp4(polyfile,logfile);
+      when others => null;
+    end case;
   end Witness_Set_for_Hypersurface_Dispatcher;
 
   procedure Test_if_System_is_Good ( infile,outfile : in string ) is

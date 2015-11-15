@@ -1,3 +1,6 @@
+Sun 15 Nov 2015 : updated dispatch.adb for options phc -l2 and phc -l4 for
+  a witness set of a hypersurface in double double and quad double precision.
+
 Fri 6 Nov 2015 : adjusted greeting_banners for version 2.4.04.
 
 Tue 27 Oct 2015 : mainphc.adb and black_box_solvers.adb changed for the 
