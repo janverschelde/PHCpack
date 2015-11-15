@@ -1,4 +1,4 @@
-Multivariate polynomials and polynomial systems over rings in PHCv2.4.04
+Multivariate polynomials and polynomial systems over rings in PHCv2.4.05
 
 New in release 2 is the availability of multiprecision numbers.
 The data structures are entirely redefined using Ada 95 concepts.
@@ -30,6 +30,7 @@ symbol_table                      : management of table of symbols
 symbol_table_io                   : input/output of symbols
 parse_polynomial_exceptions       : defines exceptions for parsing polynomials
 line_breaks                       : counts number of characters to break lines
+write_factors                     : writing one pure power in a factor
 -------------------------------------------------------------------------------
 standard_complex_polynomials      : polynomials over standard complex numbers
 standard_complex_poly_terms       : list of terms with standard complex coeffs

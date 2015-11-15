@@ -11,6 +11,7 @@ with Multprec_Parse_Numbers;             use Multprec_Parse_Numbers;
 with Multprec_Write_Numbers;             use Multprec_Write_Numbers;
 with Standard_Natural_Vectors;           use Standard_Natural_Vectors;
 with Symbol_Table_io;
+with Write_Factors;                      use Write_Factors;
 with Standard_Complex_Polynomials_io;
 with Parse_Polynomial_Exceptions;        use Parse_Polynomial_Exceptions;
 
@@ -387,27 +388,11 @@ package body Multprec_Complex_Polynomials_io is
 
   procedure Write ( file : in file_type; d : in Degrees;
                     standard : in boolean; pow : in Power ) is
-
-    sb : Symbol;
-
   begin
     for i in d'range loop
       if d(i) /= 0 then
         put(file,"*");
-        if standard then
-          put(file,'x');
-          put(file,i,1);
-        else
-          sb := Symbol_Table.get(natural32(i));
-          Symbol_Table_io.put(file,sb);
-        end if;
-        if d(i) /= 1 then
-          if pow = '^'
-           then put(file,"^");
-           else put(file,"**");
-          end if;
-          put(file,d(i),1);
-        end if;
+        Write_Factor(file,d(i),natural32(i),standard,pow);
       end if;
     end loop;
   end Write;
@@ -418,14 +403,7 @@ package body Multprec_Complex_Polynomials_io is
     for i in d'range loop
       if d(i) /= 0 then
         put(file,"*");
-        Symbol_Table_io.put(file,s(i));
-        if d(i) /= 1 then
-          if pow = '^'
-           then put(file,"^");
-           else put(file,"**");
-          end if;
-          put(file,d(i),1);
-        end if;
+        Write_Factor(file,d(i),s(i),pow);
       end if;
     end loop;
   end Write;

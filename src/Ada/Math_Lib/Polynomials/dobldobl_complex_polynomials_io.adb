@@ -4,6 +4,7 @@ with Double_Double_Numbers;             use Double_Double_Numbers;
 with Double_Double_Numbers_io;          use Double_Double_Numbers_io;
 with DoblDobl_Complex_Numbers;          use DoblDobl_Complex_Numbers;
 with Symbol_Table,Symbol_Table_io;
+with Write_Factors;                     use Write_Factors;
 with DoblDobl_Polynomial_Convertors;    use DoblDobl_Polynomial_Convertors;
 with Multprec_Complex_Polynomials;
 with Multprec_Complex_Polynomials_io;
@@ -45,36 +46,6 @@ package body DoblDobl_Complex_Polynomials_io is
     put(file,im);
     put(file,"*I)");
   end Write_Number;
-
-  procedure Write_Factor ( file : in file_type; d,i : in natural32;
-                           standard : in boolean; pow : in character ) is
-
-  -- DESCRIPTION :
-  --   Writes the factor corresponding with the ith unknown on file.
-
-    sb : Symbol_Table.Symbol;
-
-  begin
-    if standard then
-      put(file,'x');
-      if i < 10
-       then put(file,i,1);
-       else put(file,i,2);
-      end if;
-    else 
-      sb := Symbol_Table.get(i); Symbol_Table_io.put(file,sb);
-    end if;
-    if d > 1 then
-      if pow = '^'
-       then put(file,'^');
-       else put(file,"**");
-      end if;
-      if d < 10
-       then put(file,d,1);
-       else put(file,d,2);
-      end if;
-    end if;
-  end Write_Factor;
 
 -- THE OUTPUT OPERATIONS :
 
@@ -133,6 +104,39 @@ package body DoblDobl_Complex_Polynomials_io is
     put_line(file,";");
   end put_line;
 
+  procedure put_line ( p : in Poly; s : in Array_of_Symbols ) is
+  begin
+    put_line(standard_output,p,s);
+  end put_line;
+
+  procedure put_line ( file : in file_type; p : in Poly;
+                       s : in Array_of_Symbols ) is
+
+    procedure Write_Term ( t : in Term; continue : out boolean ) is
+ 
+    -- DESCRIPTION : 
+    --   Writes a term to file.
+
+    begin
+      new_line(file);
+      Write_Number(file,t.cf);
+      if Sum(t.dg) /= 0 then
+        for i in t.dg'range loop
+          if t.dg(i) > 0 then
+            put(file,'*');
+            Write_Factor(file,t.dg(i),s(i),'^');
+          end if;
+        end loop;
+      end if;
+      continue := true;
+    end Write_Term;
+    procedure Write_Terms is new Visiting_Iterator(Write_Term);
+
+  begin
+    Write_Terms(p);
+    put_line(file,";");
+  end put_line;
+
   procedure put ( p : in Poly; s : in Array_of_Symbols ) is
   begin
     put(standard_output,p,s);
@@ -141,7 +145,7 @@ package body DoblDobl_Complex_Polynomials_io is
   procedure put ( file : in file_type;
                   p : in Poly; s : in Array_of_Symbols ) is
   begin
-    put(file,p); -- ignoring s
+    put_line(file,p,s);
   end put;
 
 end DoblDobl_Complex_Polynomials_io;

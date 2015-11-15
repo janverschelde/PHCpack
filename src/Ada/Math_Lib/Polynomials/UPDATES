@@ -1,3 +1,9 @@
+Sat 14 Nov 2015 : factored out the writing of a pure power out of the
+  standard_complex_polynomials_io.adb into the new write_factors package.
+  Also multprec_complex_polynomials_io.adb uses write_factors.
+  Completed {dobldobl, quaddobl}_complex_polynomials_io to write polynomials
+  with a given array of symbols for the variable names.
+
 Mon 26 Oct 2015 : new packages {double, quad}_double_poly_systems_io, with
   a later fix in the name of quad_double_poly_systems_io.adb.
 

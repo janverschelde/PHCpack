@@ -9,6 +9,7 @@ with Standard_Natural_Vectors;
 with Symbol_Table_io;
 with Line_Breaks;                        use Line_Breaks;
 with Parse_Polynomial_Exceptions;        use Parse_Polynomial_Exceptions;
+with Write_Factors;                      use Write_Factors;
 
 package body Standard_Complex_Polynomials_io is
 
@@ -368,58 +369,6 @@ package body Standard_Complex_Polynomials_io is
     end if;
     get(file,p);
   end get;
-
--- AUXILIARIES FOR OUTPUT ROUTINES :
-
-  procedure Write_Factor ( file : in file_type; d,i : in natural32;
-                           standard : in boolean; pow : in power ) is
-
-  -- DESCRIPTION :
-  --   Writes the factor corresponding with the ith unknown on file.
-
-    sb : Symbol;
-
-  begin
-    if standard then
-      put(file,'x');
-      if i < 10
-       then put(file,i,1);
-       else put(file,i,2);
-      end if;
-    else 
-      sb := Symbol_Table.get(i); Symbol_Table_io.put(file,sb);
-    end if;
-    if d > 1 then
-      if pow = '^'
-       then put(file,'^');
-       else put(file,"**");
-      end if;
-      if d < 10
-       then put(file,d,1);
-       else put(file,d,2);
-      end if;
-    end if;
-  end Write_Factor;
-
-  procedure Write_Factor ( file : in file_type; d : in natural32;
-                           sb : in Symbol; pow : in power ) is
-
-  -- DESCRIPTION :
-  --   Writes the factor corresponding with the ith unknown on file.
-
-  begin
-    Symbol_Table_io.put(file,sb);
-    if d > 1 then
-      if pow = '^'
-       then put(file,'^');
-       else put(file,"**");
-      end if;
-      if d < 10
-       then put(file,d,1);
-       else put(file,d,2);
-      end if;
-    end if;
-  end Write_Factor;
 
 -- THE OUTPUT OPERATIONS :
 
