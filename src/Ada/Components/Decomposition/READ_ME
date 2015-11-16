@@ -42,29 +42,28 @@ ts_jmpdia                        : jumpstarting diagonal homotopies
 ------------------------------------------------------------------------------
 maindeco                         : dispatcher calls decomposition (all dim)
 ------------------------------------------------------------------------------
-ts_dimred                          : test on dimension determination
+ts_dimred                        : test on dimension determination
 ------------------------------------------------------------------------------
-the remaining part is no longer actively maintained :
+standard_membership_tests        : membership for point in component or not
+standard_breakup_components      : component interpolation in standard arith
+multprec_membership_tests        : membership for point in component or not
+multprec_breakup_components      : component interpolation in multprec arith
 ------------------------------------------------------------------------------
-standard_membership_tests          : membership for point in component or not
-standard_breakup_components        : component interpolation in standard arith
-multprec_membership_tests          : membership for point in component or not
-multprec_breakup_components        : component interpolation in multprec arith
+drivers_to_breakup_components    : drivers to construct interpolators
+ts_breakup                       : test on breaking up components
 ------------------------------------------------------------------------------
-drivers_to_breakup_components      : drivers to construct interpolators
-ts_breakup                         : test on breaking up components
-------------------------------------------------------------------------------
-standard_irreducible_decomp        : data structure for solution components
-standard_irreducible_decomp_io     : output of hypersurfaces and components
-multprec_irreducible_decomp        : data structure for solution components
-multprec_irreducible_decomp_io     : output of hypersurfaces and components
-homotopy_cascade_filter            : witness generate + classify
-drivers_to_cascade_filtering       : drivers to cascade of homotopies 
-ts_cascade                         : calls the cascade routine
+standard_irreducible_decomp      : data structure for solution components
+standard_irreducible_decomp_io   : output of hypersurfaces and components
+multprec_irreducible_decomp      : data structure for solution components
+multprec_irreducible_decomp_io   : output of hypersurfaces and components
+homotopy_cascade_filter          : witness generate + classify
+square_and_embed_systems         : squaring and embedding systems
+drivers_to_cascade_filtering     : drivers to cascade of homotopies 
+ts_cascade                       : calls the cascade routine
 ------------------------------------------------------------------------------
 Positive dimensional components of solutions are represented in the
 package Standard/Multprec_Irreducible_Decomp by means of a list of
 generic points, projection operators, and interpolating hypersurfaces.
 The cascade of homotopies runs from the top dimensional components
-down to the isolated solutions.  The multi-precision facilities are
+down to the isolated solutions.  The multiprecision facilities are
 needed to deal with curves and surfaces of high degree.

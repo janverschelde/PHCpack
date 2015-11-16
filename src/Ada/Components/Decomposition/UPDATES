@@ -1,3 +1,6 @@
+Mon 16 Nov 2016 : new package square_and_embed_systems with code factored
+  out of drivers_to_cascade_filtering.
+
 Fri 13 Nov 2015 : edited drivers_to_cascade_filtering to make room for
   versions in double double and quad double precision.
   Added versions to make the homotopy at the start of the diagonal cascade
