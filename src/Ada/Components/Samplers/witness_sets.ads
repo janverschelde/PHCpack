@@ -2,7 +2,9 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Complex_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
+with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_VecVecs;
+with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_VecVecs;
 with Multprec_Complex_VecVecs;
 with Standard_Complex_Polynomials;
@@ -105,6 +107,12 @@ package Witness_Sets is
   function Add_Slice ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                        hyp : Standard_Complex_Vectors.Vector )
                      return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Add_Slice ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                       hyp : DoblDobl_Complex_Vectors.Vector )
+                     return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Add_Slice ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                       hyp : QuadDobl_Complex_Vectors.Vector )
+                     return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Adds the hyperplane to the polynomial system p.  The coefficients of
@@ -136,27 +144,46 @@ package Witness_Sets is
 
   function Embed ( p : Standard_Complex_Poly_Systems.Poly_Sys )
                  return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Embed ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
+                 return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Embed ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
+                 return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Augments the number of variables in the polynomials with one,
+  --   in standar double, double double, and quad double precision,
   --   every monomial is multiplied with z^0.
 
   function Embed ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                    gamma : Standard_Complex_Vectors.Vector )
                  return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Embed ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                   gamma : DoblDobl_Complex_Vectors.Vector )
+                 return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Embed ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                   gamma : QuadDobl_Complex_Vectors.Vector )
+                 return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
-  --   To every polynomial in p the term gamma(i)*z is added, where
-  --   z is a new variable.
+  --   To every polynomial in p the term gamma(i)*z is added,
+  --   in standard double, double double, and quad double precision,
+  --   where z is a new variable.
 
   function Slice_and_Embed ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                              k : natural32 )
                            return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Slice_and_Embed ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                             k : natural32 )
+                           return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Slice_and_Embed ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                             k : natural32 )
+                           return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
-  --   Adds k slices and k slack variables to the system p.
-  -- REQUIRED :
-  --   p is a square system.
+  --   Adds k slices and k slack variables to the system p,
+  --   in standard double, double double, and quad double precision.
+
+  -- REQUIRED : p is a square system.
 
   function Embed_with_Dummies ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                                 k : natural32 )

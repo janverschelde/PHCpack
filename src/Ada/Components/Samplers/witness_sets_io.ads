@@ -206,6 +206,17 @@ package Witness_Sets_io is
   procedure Determine_Order
                ( p : in out Standard_Complex_Poly_Systems.Poly_Sys );
   procedure Determine_Order
+               ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys );
+  procedure Determine_Order
+               ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys );
+
+  -- DESCRIPTION :
+  --   The user can interactively determine the order of the variables.
+  --   The effect of this routine is that the symbol table and the
+  --   internal presentation of the polynomial system is changed.
+  --   The external representation of the system does not change.
+
+  procedure Determine_Order
                ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  sols : in out Standard_Complex_Solutions.Solution_List );
 

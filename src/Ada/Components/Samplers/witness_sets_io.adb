@@ -1412,6 +1412,54 @@ package body Witness_Sets_io is
   end Determine_Order;
 
   procedure Determine_Order
+               ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+    use DoblDobl_Complex_Polynomials;
+    use DoblDobl_Complex_Poly_Systems;
+ 
+    nbunk : constant natural32 := Number_of_Unknowns(p(p'first));
+    perm : Standard_Integer_Vectors.Vector(1..integer32(nbunk));
+    pp : Poly_Sys(p'range);
+    ans : character;
+ 
+  begin
+    put("There are "); put(nbunk,1); put(" unknowns, ordered as ");
+    Write_Symbol_Table(Standard_Output);
+    put("Do you wish to determine a new order ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      perm := Interactive_Read_Permutation(nbunk);
+      pp := p*Permutation(perm);
+      Permute_Symbol_Table(Permutation(perm));
+      Clear(p); p := pp;
+    end if;
+  end Determine_Order;
+
+  procedure Determine_Order
+               ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys ) is
+
+    use QuadDobl_Complex_Polynomials;
+    use QuadDobl_Complex_Poly_Systems;
+ 
+    nbunk : constant natural32 := Number_of_Unknowns(p(p'first));
+    perm : Standard_Integer_Vectors.Vector(1..integer32(nbunk));
+    pp : Poly_Sys(p'range);
+    ans : character;
+ 
+  begin
+    put("There are "); put(nbunk,1); put(" unknowns, ordered as ");
+    Write_Symbol_Table(Standard_Output);
+    put("Do you wish to determine a new order ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      perm := Interactive_Read_Permutation(nbunk);
+      pp := p*Permutation(perm);
+      Permute_Symbol_Table(Permutation(perm));
+      Clear(p); p := pp;
+    end if;
+  end Determine_Order;
+
+  procedure Determine_Order
                ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  sols : in out Standard_Complex_Solutions.Solution_List ) is
 
