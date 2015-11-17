@@ -338,21 +338,6 @@ package body Extrinsic_Diagonal_Solvers is
 
 -- MAIN DRIVERS :
 
-  function Prompt_for_Precision return character is
-
-    res : character;
-
-  begin
-    new_line;
-    put_line("MENU to select the working precision :");
-    put_line("  0. standard double precision;");
-    put_line("  1. double double precision;");
-    put_line("  2. quad double precision.");
-    put("Type 0, 1, or 2 to select the precision : ");
-    Ask_Alternative(res,"012");
-    return res;
-  end Prompt_for_Precision;
-
   procedure Standard_Randomize_System is
 
     use Standard_Complex_Polynomials;

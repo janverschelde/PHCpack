@@ -1,4 +1,4 @@
-OS dependent features and general utilities in PHCv2.3.97
+OS dependent features and general utilities in PHCv2.4.05
 
 New in the second release is the inclusion of test programs (prefix "ts_").
 A timer interfacing with C was needed for the Windows platform and Itanium

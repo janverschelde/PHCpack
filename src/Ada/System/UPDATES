@@ -1,3 +1,6 @@
+Tue 17 Nov 2015 : moved the prompt_for_precision function from the
+  extrinsic_diagonal_solvers.adb into communications_with_user.
+
 Mon 5 Jan 2015 : added function to count occurrences of delimiter in string
   to the package string_splitters.
 

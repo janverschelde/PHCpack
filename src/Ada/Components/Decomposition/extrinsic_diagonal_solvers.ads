@@ -16,12 +16,6 @@ package Extrinsic_Diagonal_Solvers is
 --   Note that the routines in this package do not solve, but provide the
 --   homotopies on which standard continuation can be applied directly.
 
-  function Prompt_for_Precision return character;
-
-  -- DESCRIPTION :
-  --   Prompts the user for the working precision and returns '0'
-  --   for standard double, '1' for double double, or '2' for quad double.
-
   procedure Save_Target_System
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys );
   procedure Save_Target_System

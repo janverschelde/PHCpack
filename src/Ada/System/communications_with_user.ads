@@ -111,4 +111,10 @@ package Communications_with_User is
   --   the given name.  If case of failure, the interactive procedure
   --   `Read_Name_and_Append_File' will be invoked.
 
+  function Prompt_for_Precision return character;
+
+  -- DESCRIPTION :
+  --   Prompts the user for the working precision and returns '0'
+  --   for standard double, '1' for double double, or '2' for quad double.
+
 end Communications_with_User;

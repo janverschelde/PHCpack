@@ -1,4 +1,7 @@
-Mon 16 Nov 2016 : new package square_and_embed_systems with code factored
+Tue 17 Nov 2015 : moved the function prompt_for_precision from the package
+  extrinsic_diagonal_solvers into communications_with_user.
+
+Mon 16 Nov 2015 : new package square_and_embed_systems with code factored
   out of drivers_to_cascade_filtering.  Added more code to those packages
   with versions of operations in double double and quad double precision.
 
