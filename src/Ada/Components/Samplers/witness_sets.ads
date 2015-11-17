@@ -169,15 +169,18 @@ package Witness_Sets is
   --   in standard double, double double, and quad double precision,
   --   where z is a new variable.
 
-  function Slice_and_Embed ( p : Standard_Complex_Poly_Systems.Poly_Sys;
-                             k : natural32 )
-                           return Standard_Complex_Poly_Systems.Poly_Sys;
-  function Slice_and_Embed ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                             k : natural32 )
-                           return DoblDobl_Complex_Poly_Systems.Poly_Sys;
-  function Slice_and_Embed ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                             k : natural32 )
-                           return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+  function Slice_and_Embed
+              ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+                k : natural32 )
+              return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Slice_and_Embed
+              ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                k : natural32 )
+              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Slice_and_Embed
+              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                k : natural32 )
+              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Adds k slices and k slack variables to the system p,
@@ -185,9 +188,18 @@ package Witness_Sets is
 
   -- REQUIRED : p is a square system.
 
-  function Embed_with_Dummies ( p : Standard_Complex_Poly_Systems.Poly_Sys;
-                                k : natural32 )
-                              return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Embed_with_Dummies
+              ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+                k : natural32 )
+              return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Embed_with_Dummies
+              ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                k : natural32 )
+              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Embed_with_Dummies
+              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                k : natural32 )
+              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Adds k dummy slack variables with k extra equations setting those
@@ -233,6 +245,10 @@ package Witness_Sets is
 
   function Square ( p : Standard_Complex_Poly_Systems.Poly_Sys )
                   return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Square ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
+                  return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Square ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
+                  return QUadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   The system on return is square, has as many equations as unknowns.

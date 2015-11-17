@@ -739,9 +739,10 @@ package body Witness_Sets is
     return res;
   end Slice_and_Embed;
 
-  function Embed_with_Dummies ( p : Standard_Complex_Poly_Systems.Poly_Sys;
-                                k : natural32 )
-                              return Standard_Complex_Poly_Systems.Poly_Sys is
+  function Embed_with_Dummies
+              ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+                k : natural32 )
+              return Standard_Complex_Poly_Systems.Poly_Sys is
 
     use Standard_Complex_Polynomials;
     nvars : constant integer32 := p'length+integer32(k);
@@ -753,6 +754,54 @@ package body Witness_Sets is
   begin
     t.dg := new Standard_Natural_Vectors.Vector'(1..nvars => 0);
     t.cf := Standard_Complex_Numbers.Create(1.0);
+    for i in 0..integer32(k)-1 loop
+      t.dg(nvars-i) := 1;
+      Clear(res(p'last-i));
+      res(p'last-i) := Create(t);
+      t.dg(nvars-i) := 0;
+    end loop;
+    return res;
+  end Embed_with_Dummies;
+
+  function Embed_with_Dummies
+              ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                k : natural32 )
+              return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+    use DoblDobl_Complex_Polynomials;
+    nvars : constant integer32 := p'length+integer32(k);
+    res : DoblDobl_Complex_Poly_Systems.Poly_Sys
+            (p'first..p'last+integer32(k))
+        := Slice_and_Embed(p,k);
+    t : Term;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..nvars => 0);
+    t.cf := DoblDobl_Complex_Numbers.Create(integer(1));
+    for i in 0..integer32(k)-1 loop
+      t.dg(nvars-i) := 1;
+      Clear(res(p'last-i));
+      res(p'last-i) := Create(t);
+      t.dg(nvars-i) := 0;
+    end loop;
+    return res;
+  end Embed_with_Dummies;
+
+  function Embed_with_Dummies
+              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                k : natural32 )
+              return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+    use QuadDobl_Complex_Polynomials;
+    nvars : constant integer32 := p'length+integer32(k);
+    res : QuadDobl_Complex_Poly_Systems.Poly_Sys
+            (p'first..p'last+integer32(k))
+        := Slice_and_Embed(p,k);
+    t : Term;
+
+  begin
+    t.dg := new Standard_Natural_Vectors.Vector'(1..nvars => 0);
+    t.cf := QuadDobl_Complex_Numbers.Create(integer(1));
     for i in 0..integer32(k)-1 loop
       t.dg(nvars-i) := 1;
       Clear(res(p'last-i));
@@ -908,6 +957,94 @@ package body Witness_Sets is
           for j in 1..integer32(k) loop
             t.dg(m+j) := 1; 
             t.cf := Standard_Random_Numbers.Random1;
+            Add(res(i),t);
+            t.dg(m+j) := 0;
+          end loop;
+        end loop;
+        Clear(t);
+        return res;
+      end;
+    else
+      return p;
+    end if;
+  end Square;
+
+  function Square ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys )
+                  return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+    use DoblDobl_Complex_Polynomials,DoblDobl_Complex_Poly_Systems;
+    n : constant integer32 := p'length;
+    m : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
+
+  begin
+    if n < m then
+      declare
+        res : Poly_Sys(1..m);
+        hyp : DoblDobl_Complex_Vectors.Vector(0..m);
+      begin
+        res(1..n) := p;
+        for i in 1..m-n loop
+          hyp := Random_Vector(0,m);
+          res(n+i) := Hyperplane(hyp);
+        end loop;
+        return res;
+      end;
+    elsif n > m then
+      declare
+        res : Poly_Sys(1..n);
+        k : constant natural32 := natural32(n-m);
+        t : Term;
+      begin
+        t.dg := new Standard_Natural_Vectors.Vector'(1..n => 0);
+        for i in 1..n loop
+          res(i) := Add_Variables(p(i),k);
+          for j in 1..integer32(k) loop
+            t.dg(m+j) := 1; 
+            t.cf := DoblDobl_Random_Numbers.Random1;
+            Add(res(i),t);
+            t.dg(m+j) := 0;
+          end loop;
+        end loop;
+        Clear(t);
+        return res;
+      end;
+    else
+      return p;
+    end if;
+  end Square;
+
+  function Square ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys )
+                  return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+    use QuadDobl_Complex_Polynomials,QuadDobl_Complex_Poly_Systems;
+    n : constant integer32 := p'length;
+    m : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
+
+  begin
+    if n < m then
+      declare
+        res : Poly_Sys(1..m);
+        hyp : QuadDobl_Complex_Vectors.Vector(0..m);
+      begin
+        res(1..n) := p;
+        for i in 1..m-n loop
+          hyp := Random_Vector(0,m);
+          res(n+i) := Hyperplane(hyp);
+        end loop;
+        return res;
+      end;
+    elsif n > m then
+      declare
+        res : Poly_Sys(1..n);
+        k : constant natural32 := natural32(n-m);
+        t : Term;
+      begin
+        t.dg := new Standard_Natural_Vectors.Vector'(1..n => 0);
+        for i in 1..n loop
+          res(i) := Add_Variables(p(i),k);
+          for j in 1..integer32(k) loop
+            t.dg(m+j) := 1; 
+            t.cf := QuadDobl_Random_Numbers.Random1;
             Add(res(i),t);
             t.dg(m+j) := 0;
           end loop;
