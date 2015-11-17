@@ -1,5 +1,6 @@
 Mon 16 Nov 2016 : new package square_and_embed_systems with code factored
-  out of drivers_to_cascade_filtering.
+  out of drivers_to_cascade_filtering.  Added more code to those packages
+  with versions of operations in double double and quad double precision.
 
 Fri 13 Nov 2015 : edited drivers_to_cascade_filtering to make room for
   versions in double double and quad double precision.

@@ -3,7 +3,11 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 
 package Drivers_to_Cascade_Filtering is
 
@@ -27,6 +31,31 @@ package Drivers_to_Cascade_Filtering is
   -- DESCRIPTION :
   --   Removes embed and slack variables from the system read on input.
   --   This operation undoes the squaring and embedding.
+
+  procedure Down_Continuation
+              ( file : in file_type;
+                embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
+                level : in natural32;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                pocotime : out duration );
+  procedure Down_Continuation
+              ( file : in file_type;
+                embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                level : in natural32;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                pocotime : out duration );
+  procedure Down_Continuation
+              ( file : in file_type;
+                embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                level : in natural32;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                pocotime : out duration );
+
+  -- DESCRIPTION :
+  --   Performs a continuation to remove the slice from the embedded system.
+  --   On entry, sols contains the start solutions, on return, the
+  --   computed solutions are in the list sols,
+  --   in standard double, double double, or quad double precision.
 
   procedure Witness_Generate
                ( outfile,resfile : in file_type;

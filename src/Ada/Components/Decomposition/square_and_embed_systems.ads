@@ -3,6 +3,10 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Polynomials;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Polynomials;
+with QuadDobl_Complex_Poly_Systems;
 
 package Square_and_Embed_Systems is
 
@@ -14,28 +18,53 @@ package Square_and_Embed_Systems is
   function Restrict ( t : Standard_Complex_Polynomials.Term;
                       m,k : integer32 )
                     return Standard_Complex_Polynomials.Term;
+  function Restrict ( t : DoblDobl_Complex_Polynomials.Term;
+                      m,k : integer32 )
+                    return DoblDobl_Complex_Polynomials.Term;
+  function Restrict ( t : QuadDobl_Complex_Polynomials.Term;
+                      m,k : integer32 )
+                    return QuadDobl_Complex_Polynomials.Term;
 
   -- DESCRIPTION :
-  --   Only the first m variables and the last k variables remain.
+  --   Only the first m variables and the last k variables remain,
+  --   in standard double, double double, or quad double precision.
 
   function Restrict ( p : Standard_Complex_Polynomials.Poly;
                       m,k : integer32 )
                     return Standard_Complex_Polynomials.Poly;
+  function Restrict ( p : DoblDobl_Complex_Polynomials.Poly;
+                      m,k : integer32 )
+                    return DoblDobl_Complex_Polynomials.Poly;
+  function Restrict ( p : QuadDobl_Complex_Polynomials.Poly;
+                      m,k : integer32 )
+                    return QuadDobl_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
   --   Restricts the polynomial to an m-dimensional subspace, spanned
-  --   by the first m variables, leaving the k last slack variables intact.
+  --   by the first m variables, leaving the k last slack variables intact,
+  --   in standard double, double double, or quad double precision.
 
   procedure Interactive_Embed_Square_System 
               ( file : in file_type;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 embsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 topdim : out natural32 );
+  procedure Interactive_Embed_Square_System 
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                embsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                topdim : out natural32 );
+  procedure Interactive_Embed_Square_System 
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                embsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                topdim : out natural32 );
 
   -- DESCRIPTION :
   --   Prompts the user to enter the expected top dimension, 
-  --   which is returned in topdim,
-  --   creates the embedded system and writes it on file.
+  --   which is returned in topdim, creates the embedded system 
+  --   and writes it on file, in standard double, double double,
+  --   and quad double precision.
   --   This procedure is called by Interactive_Square_and_Embed,
   --   in case the given polynomial system is square.
 
@@ -43,9 +72,18 @@ package Square_and_Embed_Systems is
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 topdim : in natural32;
                 embsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Embed_Square_System 
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                topdim : in natural32;
+                embsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Embed_Square_System 
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                topdim : in natural32;
+                embsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRIPTION :
-  --   Noninteractive version of the previous procedure.
+  --   Noninteractive version of the previous procedure,
+  --   in standard double, double double, and quad double precision.
 
   -- ON ENTRY :
   --   p        system with as many equations as variables;

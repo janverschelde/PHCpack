@@ -4,6 +4,8 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Natural_Vectors;
 with Symbol_Table;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Witness_Sets,Witness_Sets_io;       use Witness_Sets,Witness_Sets_io;
 
 package body Square_and_Embed_Systems is
@@ -25,11 +27,93 @@ package body Square_and_Embed_Systems is
     return rt;
   end Restrict;
 
+  function Restrict ( t : DoblDobl_Complex_Polynomials.Term;
+                      m,k : integer32 )
+                    return DoblDobl_Complex_Polynomials.Term is
+
+    use DoblDobl_Complex_Polynomials;
+
+    rt : Term;
+
+  begin
+    rt.cf := t.cf;
+    rt.dg := new Standard_Natural_Vectors.Vector'(t.dg.all);
+    for i in m+1..rt.dg'last-k loop
+      rt.dg(i) := 0;
+    end loop;
+    return rt;
+  end Restrict;
+
+  function Restrict ( t : QuadDobl_Complex_Polynomials.Term;
+                      m,k : integer32 )
+                    return QuadDobl_Complex_Polynomials.Term is
+
+    use QuadDobl_Complex_Polynomials;
+
+    rt : Term;
+
+  begin
+    rt.cf := t.cf;
+    rt.dg := new Standard_Natural_Vectors.Vector'(t.dg.all);
+    for i in m+1..rt.dg'last-k loop
+      rt.dg(i) := 0;
+    end loop;
+    return rt;
+  end Restrict;
+
   function Restrict ( p : Standard_Complex_Polynomials.Poly;
                       m,k : integer32 )
                     return Standard_Complex_Polynomials.Poly is
 
     use Standard_Complex_Polynomials;
+
+    res : Poly := Null_Poly;
+
+    procedure Restrict_Term ( t : in Term; continue : out boolean ) is
+
+      rt : Term := Restrict(t,m,k);
+
+    begin
+      Add(res,rt);
+      Clear(rt);
+      continue := true;
+    end Restrict_Term;
+    procedure Restrict_Terms is new Visiting_Iterator(Restrict_Term);      
+
+  begin
+    Restrict_Terms(p);
+    return res;
+  end Restrict;
+
+  function Restrict ( p : DoblDobl_Complex_Polynomials.Poly;
+                      m,k : integer32 )
+                    return DoblDobl_Complex_Polynomials.Poly is
+
+    use DoblDobl_Complex_Polynomials;
+
+    res : Poly := Null_Poly;
+
+    procedure Restrict_Term ( t : in Term; continue : out boolean ) is
+
+      rt : Term := Restrict(t,m,k);
+
+    begin
+      Add(res,rt);
+      Clear(rt);
+      continue := true;
+    end Restrict_Term;
+    procedure Restrict_Terms is new Visiting_Iterator(Restrict_Term);      
+
+  begin
+    Restrict_Terms(p);
+    return res;
+  end Restrict;
+
+  function Restrict ( p : QuadDobl_Complex_Polynomials.Poly;
+                      m,k : integer32 )
+                    return QuadDobl_Complex_Polynomials.Poly is
+
+    use QuadDobl_Complex_Polynomials;
 
     res : Poly := Null_Poly;
 
@@ -101,12 +185,126 @@ package body Square_and_Embed_Systems is
     end;
   end Interactive_Embed_Square_System;
 
+  procedure Interactive_Embed_Square_System 
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                embsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                topdim : out natural32 ) is
+
+    use DoblDobl_Complex_Polynomials;
+    use DoblDobl_Complex_Poly_Systems;
+
+    k,m : natural32 := 0;
+    ans : character;
+
+  begin
+    put("Give the expected top dimension : "); Read_Natural(k);
+    Add_Embed_Symbols(k); topdim := k;
+    declare
+      ep : Poly_Sys(p'first..p'last+integer32(k));
+    begin
+      ep := Slice_and_Embed(p,k);
+      put("Should the slices be restricted to a subspace ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        put("Give the dimension of the subspace : "); Read_Natural(m);
+        put("The first "); put(m,1);
+        put_line(" variables span the subspace...");
+        Determine_Order(ep);
+        for i in ep'last-integer32(k)+1..ep'last loop
+          declare
+            rp : constant Poly := Restrict(ep(i),integer32(m),integer32(k));
+          begin
+            Clear(ep(i));
+            ep(i) := rp;
+          end;
+        end loop;
+      end if;
+      put_line(file,ep);
+      embsys := new Poly_Sys'(ep);
+    end;
+  end Interactive_Embed_Square_System;
+
+  procedure Interactive_Embed_Square_System 
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                embsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                topdim : out natural32 ) is
+
+    use QuadDobl_Complex_Polynomials;
+    use QuadDobl_Complex_Poly_Systems;
+
+    k,m : natural32 := 0;
+    ans : character;
+
+  begin
+    put("Give the expected top dimension : "); Read_Natural(k);
+    Add_Embed_Symbols(k); topdim := k;
+    declare
+      ep : Poly_Sys(p'first..p'last+integer32(k));
+    begin
+      ep := Slice_and_Embed(p,k);
+      put("Should the slices be restricted to a subspace ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        put("Give the dimension of the subspace : "); Read_Natural(m);
+        put("The first "); put(m,1);
+        put_line(" variables span the subspace...");
+        Determine_Order(ep);
+        for i in ep'last-integer32(k)+1..ep'last loop
+          declare
+            rp : constant Poly := Restrict(ep(i),integer32(m),integer32(k));
+          begin
+            Clear(ep(i));
+            ep(i) := rp;
+          end;
+        end loop;
+      end if;
+      put_line(file,ep);
+      embsys := new Poly_Sys'(ep);
+    end;
+  end Interactive_Embed_Square_System;
+
   procedure Embed_Square_System 
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 topdim : in natural32;
                 embsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys ) is
 
     use Standard_Complex_Poly_Systems;
+
+  begin
+    Add_Embed_Symbols(topdim);
+    declare
+      ep : Poly_Sys(p'first..p'last+integer32(topdim));
+    begin
+      ep := Slice_and_Embed(p,topdim);
+      embsys := new Poly_Sys'(ep);
+    end;
+  end Embed_Square_System;
+
+  procedure Embed_Square_System 
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                topdim : in natural32;
+                embsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+
+  begin
+    Add_Embed_Symbols(topdim);
+    declare
+      ep : Poly_Sys(p'first..p'last+integer32(topdim));
+    begin
+      ep := Slice_and_Embed(p,topdim);
+      embsys := new Poly_Sys'(ep);
+    end;
+  end Embed_Square_System;
+
+  procedure Embed_Square_System 
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                topdim : in natural32;
+                embsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use QuadDobl_Complex_Poly_Systems;
 
   begin
     Add_Embed_Symbols(topdim);
