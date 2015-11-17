@@ -15,7 +15,9 @@ package Drivers_to_Cascade_Filtering is
 --   This package contains procedures to set up the sequence of
 --   homotopies to compute generic points on all components.
 
-  procedure Driver_to_Square_and_Embed;
+  procedure Standard_Square_and_Embed;
+  procedure DoblDobl_Square_and_Embed;
+  procedure QuadDobl_Square_and_Embed;
 
   -- DESCRIPTION :
   --   A system is made square by
@@ -24,13 +26,29 @@ package Drivers_to_Cascade_Filtering is
   --   The embedding to capture k dimensional components is executed
   --   by adding k random hyperplanes and k slack variables.
   --   This interactive routine reads in a system and creates a new
-  --   square and embedded polynomial system.
+  --   square and embedded polynomial system,
+  --   in standard double, double double, or quad double precision.
+
+  procedure Driver_to_Square_and_Embed;
+
+  -- DESCRIPTION :
+  --   Prompts the user for the level of precision and then calls
+  --   the proper driver procedure.
+
+  procedure Standard_Remove_Embedding;
+  procedure DoblDobl_Remove_Embedding;
+  procedure QuadDobl_Remove_Embedding;
+
+  -- DESCRIPTION :
+  --   Removes embed and slack variables from the system read on input.
+  --   This operation undoes the squaring and embedding,
+  --   in standard double, double double, or quad double precision.
 
   procedure Driver_to_Remove_Embedding;
 
   -- DESCRIPTION :
-  --   Removes embed and slack variables from the system read on input.
-  --   This operation undoes the squaring and embedding.
+  --   Prompts the user for the level of precision and then calls
+  --   the proper driver procedure.
 
   procedure Down_Continuation
               ( file : in file_type;

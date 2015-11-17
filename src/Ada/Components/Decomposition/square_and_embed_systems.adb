@@ -348,6 +348,70 @@ package body Square_and_Embed_Systems is
     return embedded;
   end Full_Embed_Nonsquare_System;
 
+  function Full_Embed_Nonsquare_System
+              ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                nq,nv,k : natural32 )
+              return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+    use DoblDobl_Complex_Poly_Systems;
+ 
+    embedded : Poly_Sys(p'first..p'last+integer32(k));
+    d : constant integer32 := integer32(nv - nq);
+
+  begin
+    if nv < nq then
+      declare
+        sp : constant Poly_Sys := Square(p);
+      begin
+        embedded := Slice_and_Embed(sp,k);
+      end;
+    else
+      if integer32(k) <= d then
+        embedded := Embed_with_Dummies(p,k);
+      else
+        declare
+          aux : Poly_Sys(p'first..p'last+d);
+        begin
+          aux := Embed_with_Dummies(p,natural32(d));
+          embedded := Slice_and_Embed(aux,k-natural32(d));
+        end;
+      end if;
+    end if;
+    return embedded;
+  end Full_Embed_Nonsquare_System;
+
+  function Full_Embed_Nonsquare_System
+              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                nq,nv,k : natural32 )
+              return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+    use QuadDobl_Complex_Poly_Systems;
+ 
+    embedded : Poly_Sys(p'first..p'last+integer32(k));
+    d : constant integer32 := integer32(nv - nq);
+
+  begin
+    if nv < nq then
+      declare
+        sp : constant Poly_Sys := Square(p);
+      begin
+        embedded := Slice_and_Embed(sp,k);
+      end;
+    else
+      if integer32(k) <= d then
+        embedded := Embed_with_Dummies(p,k);
+      else
+        declare
+          aux : Poly_Sys(p'first..p'last+d);
+        begin
+          aux := Embed_with_Dummies(p,natural32(d));
+          embedded := Slice_and_Embed(aux,k-natural32(d));
+        end;
+      end if;
+    end if;
+    return embedded;
+  end Full_Embed_Nonsquare_System;
+
   procedure Interactive_Embed_Nonsquare_System
               ( file : in file_type;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -357,6 +421,132 @@ package body Square_and_Embed_Systems is
 
     use Standard_Complex_Polynomials;
     use Standard_Complex_Poly_Systems;
+
+    max : constant natural32 := Maximum(nbequ,nbunk);
+    sp : constant Poly_Sys(1..integer32(max)) := Square(p);
+    m,ns : natural32;
+    k,a : integer32 := 0;
+    ans : character;
+
+  begin
+    if nbequ > nbunk
+     then Add_Slack_Symbols(nbequ-nbunk);
+    end if;
+    put("Give the expected top dimension : "); Read_Integer(k);
+    ns := Symbol_Table.Number;
+    if ns < nbunk
+     then Add_Extra_Symbols(nbunk-ns);
+    end if;
+    Add_Embed_Symbols(natural32(k));
+    topdim := natural32(k);
+    declare
+      ep : Poly_Sys(sp'first..sp'last+k)
+         := Full_Embed_Nonsquare_System(sp,nbequ,nbunk,natural32(k));
+    begin
+      put("Should the slices be restricted to a subspace ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        put("Give the dimension of the subspace : "); Read_Natural(m);
+        put("The first "); put(m,1);
+        put_line(" variables span the subspace...");
+        Determine_Order(ep);
+        for i in ep'last-k+1..ep'last loop
+          declare
+            rp : constant Poly := Restrict(ep(i),integer32(m),k);
+          begin
+            Clear(ep(i));
+            ep(i) := rp;
+          end;
+        end loop;
+        a := integer32(nbunk - nbequ) - k;
+        if a > 0 then
+          for i in ep'last-2*k-a+1..ep'last-2*k loop
+            declare
+              rp : constant Poly := Restrict(ep(i),integer32(m),k);
+            begin
+              Clear(ep(i));
+              ep(i) := rp;
+            end;
+          end loop;
+        end if; 
+      end if;
+      put_line(file,ep);
+      embsys := new Poly_Sys'(ep);
+    end;
+  end Interactive_Embed_Nonsquare_System;
+
+  procedure Interactive_Embed_Nonsquare_System
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                nbequ,nbunk : in natural32;
+                embsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                topdim : out natural32 ) is
+
+    use DoblDobl_Complex_Polynomials;
+    use DoblDobl_Complex_Poly_Systems;
+
+    max : constant natural32 := Maximum(nbequ,nbunk);
+    sp : constant Poly_Sys(1..integer32(max)) := Square(p);
+    m,ns : natural32;
+    k,a : integer32 := 0;
+    ans : character;
+
+  begin
+    if nbequ > nbunk
+     then Add_Slack_Symbols(nbequ-nbunk);
+    end if;
+    put("Give the expected top dimension : "); Read_Integer(k);
+    ns := Symbol_Table.Number;
+    if ns < nbunk
+     then Add_Extra_Symbols(nbunk-ns);
+    end if;
+    Add_Embed_Symbols(natural32(k));
+    topdim := natural32(k);
+    declare
+      ep : Poly_Sys(sp'first..sp'last+k)
+         := Full_Embed_Nonsquare_System(sp,nbequ,nbunk,natural32(k));
+    begin
+      put("Should the slices be restricted to a subspace ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        put("Give the dimension of the subspace : "); Read_Natural(m);
+        put("The first "); put(m,1);
+        put_line(" variables span the subspace...");
+        Determine_Order(ep);
+        for i in ep'last-k+1..ep'last loop
+          declare
+            rp : constant Poly := Restrict(ep(i),integer32(m),k);
+          begin
+            Clear(ep(i));
+            ep(i) := rp;
+          end;
+        end loop;
+        a := integer32(nbunk - nbequ) - k;
+        if a > 0 then
+          for i in ep'last-2*k-a+1..ep'last-2*k loop
+            declare
+              rp : constant Poly := Restrict(ep(i),integer32(m),k);
+            begin
+              Clear(ep(i));
+              ep(i) := rp;
+            end;
+          end loop;
+        end if; 
+      end if;
+      put_line(file,ep);
+      embsys := new Poly_Sys'(ep);
+    end;
+  end Interactive_Embed_Nonsquare_System;
+
+  procedure Interactive_Embed_Nonsquare_System
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                nbequ,nbunk : in natural32;
+                embsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                topdim : out natural32 ) is
+
+    use QuadDobl_Complex_Polynomials;
+    use QuadDobl_Complex_Poly_Systems;
 
     max : constant natural32 := Maximum(nbequ,nbunk);
     sp : constant Poly_Sys(1..integer32(max)) := Square(p);
@@ -441,6 +631,66 @@ package body Square_and_Embed_Systems is
     end;
   end Embed_Nonsquare_System;
 
+  procedure Embed_Nonsquare_System
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                nbequ,nbunk,topdim : in natural32;
+                embsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+
+    max : constant natural32 := Maximum(nbequ,nbunk);
+    sp : constant Poly_Sys(1..integer32(max)) := Square(p);
+    ns : natural32;
+
+  begin
+    if nbequ > nbunk then
+      Add_Slack_Symbols(nbequ-nbunk);
+     -- put("added "); put(nbequ - nbunk,1); put_line(" slack variables");
+    end if;
+   -- put_line("The squared polynomial system :"); put_line(sp);
+    ns := Symbol_Table.Number;
+    if ns < nbunk
+     then Add_Extra_Symbols(nbunk-ns);
+    end if;
+    Add_Embed_Symbols(topdim);
+    declare
+      ep : Poly_Sys(sp'first..sp'last+integer32(topdim))
+         := Full_Embed_Nonsquare_System(sp,nbequ,nbunk,topdim);
+    begin
+      embsys := new Poly_Sys'(ep);
+    end;
+  end Embed_Nonsquare_System;
+
+  procedure Embed_Nonsquare_System
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                nbequ,nbunk,topdim : in natural32;
+                embsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use QuadDobl_Complex_Poly_Systems;
+
+    max : constant natural32 := Maximum(nbequ,nbunk);
+    sp : constant Poly_Sys(1..integer32(max)) := Square(p);
+    ns : natural32;
+
+  begin
+    if nbequ > nbunk then
+      Add_Slack_Symbols(nbequ-nbunk);
+     -- put("added "); put(nbequ - nbunk,1); put_line(" slack variables");
+    end if;
+   -- put_line("The squared polynomial system :"); put_line(sp);
+    ns := Symbol_Table.Number;
+    if ns < nbunk
+     then Add_Extra_Symbols(nbunk-ns);
+    end if;
+    Add_Embed_Symbols(topdim);
+    declare
+      ep : Poly_Sys(sp'first..sp'last+integer32(topdim))
+         := Full_Embed_Nonsquare_System(sp,nbequ,nbunk,topdim);
+    begin
+      embsys := new Poly_Sys'(ep);
+    end;
+  end Embed_Nonsquare_System;
+
   procedure Interactive_Square_and_Embed
               ( file : in file_type;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -448,6 +698,46 @@ package body Square_and_Embed_Systems is
                 k : out natural32 ) is
 
     use Standard_Complex_Polynomials;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+
+  begin
+    put("The number of equations : "); put(nq,1); new_line;
+    put("The number of variables : "); put(nv,1); new_line;
+    if nq /= nv
+     then Interactive_Embed_Nonsquare_System(file,p,nq,nv,ep,k);
+     else Interactive_Embed_Square_System(file,p,ep,k);
+    end if;
+  end Interactive_Square_and_Embed;
+
+  procedure Interactive_Square_and_Embed
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                ep : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                k : out natural32 ) is
+
+    use DoblDobl_Complex_Polynomials;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+
+  begin
+    put("The number of equations : "); put(nq,1); new_line;
+    put("The number of variables : "); put(nv,1); new_line;
+    if nq /= nv
+     then Interactive_Embed_Nonsquare_System(file,p,nq,nv,ep,k);
+     else Interactive_Embed_Square_System(file,p,ep,k);
+    end if;
+  end Interactive_Square_and_Embed;
+
+  procedure Interactive_Square_and_Embed
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                ep : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                k : out natural32 ) is
+
+    use QuadDobl_Complex_Polynomials;
 
     nq : constant natural32 := natural32(p'last);
     nv : constant natural32 := Number_of_Unknowns(p(p'first));
@@ -480,37 +770,78 @@ package body Square_and_Embed_Systems is
     end if;
   end Square_and_Embed;
 
-  procedure Driver_to_Square_and_Embed is
+  procedure Square_and_Embed
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                topdim : in natural32;
+                ep : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
 
-    use Standard_Complex_Poly_Systems;
+    use DoblDobl_Complex_Polynomials;
 
-    lp,ep : Link_to_Poly_Sys;
-    file : file_type;
-    k : natural32;
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
 
   begin
-    new_line;
-    get(lp);
-    new_line;
-    put_line("Reading the name of the output file.");
-    Read_Name_and_Create_File(file);
-    new_line;
-    Interactive_Square_and_Embed(file,lp.all,ep,k);
-    new_line;
-    put_line("See the output file for results...");
-    new_line;
-  end Driver_to_Square_and_Embed;
+   -- put("The number of equations : "); put(nq,1); new_line;
+   -- put("The number of variables : "); put(nv,1); new_line;
+    if nq /= nv
+     then Embed_Nonsquare_System(p,nq,nv,topdim,ep);
+     else Embed_Square_System(p,topdim,ep);
+    end if;
+  end Square_and_Embed;
+
+  procedure Square_and_Embed
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                topdim : in natural32;
+                ep : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys ) is
+
+    use QuadDobl_Complex_Polynomials;
+
+    nq : constant natural32 := natural32(p'last);
+    nv : constant natural32 := Number_of_Unknowns(p(p'first));
+
+  begin
+   -- put("The number of equations : "); put(nq,1); new_line;
+   -- put("The number of variables : "); put(nv,1); new_line;
+    if nq /= nv
+     then Embed_Nonsquare_System(p,nq,nv,topdim,ep);
+     else Embed_Square_System(p,topdim,ep);
+    end if;
+  end Square_and_Embed;
 
   function Remove_Last_Variables
-             ( p : Standard_Complex_Poly_Systems.Poly_Sys; n : natural32 )
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+               n : natural32 )
              return Standard_Complex_Poly_Systems.Poly_Sys is
 
-  -- DESCRIPTION :
-  --   Removes the last n variables of the system p.
-
-  -- REQUIRED : n >= Number_of_Unknowns(p(i)), for i in p'range.
-
     res : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := Remove_Embedding(p(i),n);
+    end loop;
+    return res;
+  end Remove_Last_Variables;
+
+  function Remove_Last_Variables
+             ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+               n : natural32 )
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := Remove_Embedding(p(i),n);
+    end loop;
+    return res;
+  end Remove_Last_Variables;
+
+  function Remove_Last_Variables
+             ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+               n : natural32 )
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range);
 
   begin
     for i in p'range loop
@@ -523,12 +854,35 @@ package body Square_and_Embed_Systems is
               ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                 n : in natural32 ) is
 
-  -- DESCRIPTION :
-  --   Removes the last n variables of the system p.
-
-  -- REQUIRED : n >= Number_of_Unknowns(p(i)), for i in p'range.
-
     use Standard_Complex_Polynomials;
+    res : Poly;
+
+  begin
+    for i in p'range loop
+      res := Remove_Embedding(p(i),n);
+      Copy(res,p(i)); Clear(res);
+    end loop;
+  end Remove_Last_Variables;
+
+  procedure Remove_Last_Variables
+              ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                n : in natural32 ) is
+
+    use DoblDobl_Complex_Polynomials;
+    res : Poly;
+
+  begin
+    for i in p'range loop
+      res := Remove_Embedding(p(i),n);
+      Copy(res,p(i)); Clear(res);
+    end loop;
+  end Remove_Last_Variables;
+
+  procedure Remove_Last_Variables
+              ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                n : in natural32 ) is
+
+    use QuadDobl_Complex_Polynomials;
     res : Poly;
 
   begin
@@ -543,18 +897,61 @@ package body Square_and_Embed_Systems is
                dim,ns : natural32 )
              return Standard_Complex_Poly_Systems.Poly_Sys is
 
-  -- DESCRIPTION :
-  --   Removes the embedding and extra slack variables from the system p.
-
-  -- ON ENTRY :
-  --   p       an embedded polynomial system;
-  --   dim     dimension of the solution set used in the embedding;
-  --   ns      number of extra slack variables which need to be removed.
-
-  -- REQUIRED :
-  --   All slack variables are located as last variables in p.
-
     use Standard_Complex_Poly_Systems;
+    res : Poly_Sys(p'range);
+
+  begin
+    if dim > 0 then
+      declare
+        wrk : constant Poly_Sys := Remove_Embedding1(p,dim);
+        nz : constant natural32 := Number_of_Zero_Equations(wrk);
+        res1 : Poly_Sys(1..wrk'last-integer32(nz))
+             := wrk(1..wrk'last-integer32(nz));
+      begin
+        if ns > 0 then
+          Remove_Last_Variables(res1,ns);
+        end if;
+        return res1;
+      end;
+    elsif ns > 0 then
+      res := Remove_Last_Variables(p,ns);
+    end if;
+    return res;
+  end Remove_Embedding;
+
+  function Remove_Embedding
+             ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+               dim,ns : natural32 )
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+    use DoblDobl_Complex_Poly_Systems;
+    res : Poly_Sys(p'range);
+
+  begin
+    if dim > 0 then
+      declare
+        wrk : constant Poly_Sys := Remove_Embedding1(p,dim);
+        nz : constant natural32 := Number_of_Zero_Equations(wrk);
+        res1 : Poly_Sys(1..wrk'last-integer32(nz))
+             := wrk(1..wrk'last-integer32(nz));
+      begin
+        if ns > 0 then
+          Remove_Last_Variables(res1,ns);
+        end if;
+        return res1;
+      end;
+    elsif ns > 0 then
+      res := Remove_Last_Variables(p,ns);
+    end if;
+    return res;
+  end Remove_Embedding;
+
+  function Remove_Embedding
+             ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+               dim,ns : natural32 )
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+    use QuadDobl_Complex_Poly_Systems;
     res : Poly_Sys(p'range);
 
   begin

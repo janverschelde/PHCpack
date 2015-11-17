@@ -12,15 +12,19 @@ with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
 with Standard_Complex_VecVecs;           use Standard_Complex_VecVecs;
-with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
+with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Standard_to_Multprec_Convertors;    use Standard_to_Multprec_Convertors;
 with Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_Solution_Splitters;        use Standard_Solution_Splitters;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Standard_Scaling;                   use Standard_Scaling;
 with Black_Box_Root_Counters;            use Black_Box_Root_Counters;
 with Standard_BlackBox_Continuations;    use Standard_BlackBox_Continuations;
@@ -41,7 +45,7 @@ with Drivers_to_Breakup_Components;      use Drivers_to_Breakup_Components;
 
 package body Drivers_to_Cascade_Filtering is
 
-  procedure Driver_to_Square_and_Embed is
+  procedure Standard_Square_and_Embed is
 
     use Standard_Complex_Poly_Systems;
 
@@ -60,84 +64,66 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     put_line("See the output file for results...");
     new_line;
+  end Standard_Square_and_Embed;
+
+  procedure DoblDobl_Square_and_Embed is
+
+    use DoblDobl_Complex_Poly_Systems;
+
+    lp,ep : Link_to_Poly_Sys;
+    file : file_type;
+    k : natural32;
+
+  begin
+    new_line;
+    get(lp);
+    new_line;
+    put_line("Reading the name of the output file.");
+    Read_Name_and_Create_File(file);
+    new_line;
+    Interactive_Square_and_Embed(file,lp.all,ep,k);
+    new_line;
+    put_line("See the output file for results...");
+    new_line;
+  end DoblDobl_Square_and_Embed;
+
+  procedure QuadDobl_Square_and_Embed is
+
+    use QuadDobl_Complex_Poly_Systems;
+
+    lp,ep : Link_to_Poly_Sys;
+    file : file_type;
+    k : natural32;
+
+  begin
+    new_line;
+    get(lp);
+    new_line;
+    put_line("Reading the name of the output file.");
+    Read_Name_and_Create_File(file);
+    new_line;
+    Interactive_Square_and_Embed(file,lp.all,ep,k);
+    new_line;
+    put_line("See the output file for results...");
+    new_line;
+  end QuadDobl_Square_and_Embed;
+
+  procedure Driver_to_Square_and_Embed is
+
+    p : constant character := Prompt_for_Precision;
+
+  begin
+    case p is
+      when '0' => Standard_Square_and_Embed;
+      when '1' => DoblDobl_Square_and_Embed;
+      when '2' => QuadDobl_Square_and_Embed;
+      when others => null;
+    end case;
   end Driver_to_Square_and_Embed;
 
-  function Remove_Last_Variables
-             ( p : Standard_Complex_Poly_Systems.Poly_Sys; n : natural32 )
-             return Standard_Complex_Poly_Systems.Poly_Sys is
+  procedure Standard_Remove_Embedding is
 
-  -- DESCRIPTION :
-  --   Removes the last n variables of the system p.
-
-  -- REQUIRED : n >= Number_of_Unknowns(p(i)), for i in p'range.
-
-    res : Standard_Complex_Poly_Systems.Poly_Sys(p'range);
-
-  begin
-    for i in p'range loop
-      res(i) := Remove_Embedding(p(i),n);
-    end loop;
-    return res;
-  end Remove_Last_Variables;
-
-  procedure Remove_Last_Variables
-              ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
-                n : in natural32 ) is
-
-  -- DESCRIPTION :
-  --   Removes the last n variables of the system p.
-
-  -- REQUIRED : n >= Number_of_Unknowns(p(i)), for i in p'range.
-
-    res : Poly;
-
-  begin
-    for i in p'range loop
-      res := Remove_Embedding(p(i),n);
-      Copy(res,p(i)); Clear(res);
-    end loop;
-  end Remove_Last_Variables;
-
-  function Remove_Embedding
-             ( p : Standard_Complex_Poly_Systems.Poly_Sys;
-               dim,ns : natural32 )
-             return Standard_Complex_Poly_Systems.Poly_Sys is
-
-  -- DESCRIPTION :
-  --   Removes the embedding and extra slack variables from the system p.
-
-  -- ON ENTRY :
-  --   p       an embedded polynomial system;
-  --   dim     dimension of the solution set used in the embedding;
-  --   ns      number of extra slack variables which need to be removed.
-
-  -- REQUIRED :
-  --   All slack variables are located as last variables in p.
-
-    use Standard_Complex_Poly_Systems;
-    res : Poly_Sys(p'range);
-
-  begin
-    if dim > 0 then
-      declare
-        wrk : constant Poly_Sys := Remove_Embedding1(p,dim);
-        nz : constant natural32 := Number_of_Zero_Equations(wrk);
-        res1 : Poly_Sys(1..wrk'last-integer32(nz))
-             := wrk(1..wrk'last-integer32(nz));
-      begin
-        if ns > 0 then
-          Remove_Last_Variables(res1,ns);
-        end if;
-        return res1;
-      end;
-    elsif ns > 0 then
-      res := Remove_Last_Variables(p,ns);
-    end if;
-    return res;
-  end Remove_Embedding;
-
-  procedure Driver_to_Remove_Embedding is
-
+    use Standard_Complex_Polynomials;
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
 
@@ -181,6 +167,113 @@ package body Drivers_to_Cascade_Filtering is
       put(file,Length_Of(rsols),natural32(Head_Of(rsols).n),rsols);
     end;
     Close(file);
+  end Standard_Remove_Embedding;
+
+  procedure DoblDobl_Remove_Embedding is
+
+    use DoblDobl_Complex_Polynomials;
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    lp : Link_to_Poly_Sys;
+    sols : Solution_List;
+    file : file_type;
+    k,ns : natural32 := 0;
+
+  begin
+    new_line;
+    put_line("Removing an Embedding of a Polynomial System.");
+    DoblDobl_Read_Embedding(lp,sols,k,ns);
+    new_line;
+    put_line("Reading the name of the output file.");
+    Read_Name_and_Create_File(file);
+    new_line;
+    put("Number of embed variables in the system : ");
+    put(k,1); new_line;
+    put("Number of extra slack variables to remove : ");
+    put(ns,1); new_line;
+    new_line;
+    put_line("See the output file for the system...");
+    new_line;
+    declare
+      rp : constant Poly_Sys := Remove_Embedding(lp.all,k,ns);
+      nq : constant natural32 := natural32(rp'last);
+      nv : constant natural32 := Number_of_Unknowns(rp(rp'first));
+      rsols : Solution_List;
+    begin
+      if k + ns > 0
+       then rsols := Remove_Embedding(sols,k+ns);
+       else rsols := sols;
+      end if;
+      put(file,nq,1);
+      put(file," ");
+      put(file,nv,1);
+      new_line(file);
+      put(file,rp);
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,Length_Of(rsols),natural32(Head_Of(rsols).n),rsols);
+    end;
+    Close(file);
+  end DoblDobl_Remove_Embedding;
+
+  procedure QuadDobl_Remove_Embedding is
+
+    use QuadDobl_Complex_Polynomials;
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    lp : Link_to_Poly_Sys;
+    sols : Solution_List;
+    file : file_type;
+    k,ns : natural32 := 0;
+
+  begin
+    new_line;
+    put_line("Removing an Embedding of a Polynomial System.");
+    QuadDobl_Read_Embedding(lp,sols,k,ns);
+    new_line;
+    put_line("Reading the name of the output file.");
+    Read_Name_and_Create_File(file);
+    new_line;
+    put("Number of embed variables in the system : ");
+    put(k,1); new_line;
+    put("Number of extra slack variables to remove : ");
+    put(ns,1); new_line;
+    new_line;
+    put_line("See the output file for the system...");
+    new_line;
+    declare
+      rp : constant Poly_Sys := Remove_Embedding(lp.all,k,ns);
+      nq : constant natural32 := natural32(rp'last);
+      nv : constant natural32 := Number_of_Unknowns(rp(rp'first));
+      rsols : Solution_List;
+    begin
+      if k + ns > 0
+       then rsols := Remove_Embedding(sols,k+ns);
+       else rsols := sols;
+      end if;
+      put(file,nq,1);
+      put(file," ");
+      put(file,nv,1);
+      new_line(file);
+      put(file,rp);
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,Length_Of(rsols),natural32(Head_Of(rsols).n),rsols);
+    end;
+    Close(file);
+  end QuadDobl_Remove_Embedding;
+
+  procedure Driver_to_Remove_Embedding is
+
+    p : constant character := Prompt_for_Precision;
+
+  begin
+    case p is
+      when '0' => Standard_Remove_Embedding;
+      when others => null;
+    end case;
   end Driver_to_Remove_Embedding;
 
   procedure Write_Witness_Points
@@ -662,6 +755,7 @@ package body Drivers_to_Cascade_Filtering is
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 k : in integer32 ) is
 
+    use Standard_Complex_Polynomials;
     use Standard_Complex_Poly_Systems;
 
     nbequ : constant natural32 := natural32(p'length);
@@ -683,13 +777,17 @@ package body Drivers_to_Cascade_Filtering is
     end Max_Dim;
 
     function Eliminate_Slices
-                ( sqp : Poly_Sys; m : natural32 ) return Poly_Sys is
+                ( sqp : Standard_Complex_Poly_Systems.Poly_Sys;
+                  m : natural32 )
+                return Standard_Complex_Poly_Systems.Poly_Sys is
 
     -- DESCRIPTION :
     --   Given is a polynomial system sqp that is the result of making
     --   p square with nbunk - nbequ additional slices.  The system on
     --   return will have min(nbunk-nbequ-2,m) slices and variables less.
     --   The last two slices remain.
+
+      use Standard_Complex_Polynomials;
 
       res : Poly_Sys(sqp'range);
       cnt : natural32 := nbunk - nbequ;

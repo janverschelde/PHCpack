@@ -14,6 +14,8 @@ package Square_and_Embed_Systems is
 --   This package contains procedures to embed a polynomial system
 --   adding slack variables and/or extra random hyperplanes, needed
 --   to set up homotopies to compute generic points on all components.
+--   Versions are provided to support three levels of precision:
+--   standard double, double double, and quad double precision.
 
   function Restrict ( t : Standard_Complex_Polynomials.Term;
                       m,k : integer32 )
@@ -98,10 +100,19 @@ package Square_and_Embed_Systems is
               ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                 nq,nv,k : natural32 )
               return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Full_Embed_Nonsquare_System
+              ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                nq,nv,k : natural32 )
+              return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Full_Embed_Nonsquare_System
+              ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                nq,nv,k : natural32 )
+              return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Constructs an embedding of a nonsquare system,
-  --   using slices not restricted to any particular subspace.
+  --   using slices not restricted to any particular subspace,
+  --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   p        nonsquare polynomial system;
@@ -118,10 +129,23 @@ package Square_and_Embed_Systems is
                 nbequ,nbunk : in natural32;
                 embsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 topdim : out natural32 );
+  procedure Interactive_Embed_Nonsquare_System
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                nbequ,nbunk : in natural32;
+                embsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                topdim : out natural32 );
+  procedure Interactive_Embed_Nonsquare_System
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                nbequ,nbunk : in natural32;
+                embsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                topdim : out natural32 );
 
   -- DESCRIPTION :
   --   Constructs an embedding of a nonsquare system with number of
-  --   equations in nbequ and number of unknowns in nbunk.
+  --   equations in nbequ and number of unknowns in nbunk,
+  --   in standard double, double double, or quad double precision.
   --   The user is prompted for the expected top dimension.
   --   Slack variables are added for overdetermined systems.
   --   Dummy variables are added for underdetermined systems.
@@ -131,9 +155,18 @@ package Square_and_Embed_Systems is
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 nbequ,nbunk,topdim : in natural32;
                 embsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Embed_Nonsquare_System
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                nbequ,nbunk,topdim : in natural32;
+                embsys : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Embed_Nonsquare_System
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                nbequ,nbunk,topdim : in natural32;
+                embsys : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRIPTION :
-  --   Noninteractive version of the above procedure.
+  --   Noninteractive version of the above procedure,
+  --   in standard double, double double, or quad double precision.
   --   To a system p with a number of equations equal to nbequ
   --   and a number of variables equal to nbunk, sufficiently many slack
   --   variables and random linear equations will be added corresponding
@@ -144,6 +177,16 @@ package Square_and_Embed_Systems is
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 ep : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
                 k : out natural32 );
+  procedure Interactive_Square_and_Embed
+              ( file : in file_type;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                ep : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                k : out natural32 );
+  procedure Interactive_Square_and_Embed
+              ( file : in file_type;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                ep : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+                k : out natural32 );
 
   -- DESCRIPTION :
   --   Distinguishes between systems that are square and not square.
@@ -151,7 +194,8 @@ package Square_and_Embed_Systems is
   --   extra slack variables (in case the system is overdetermined)
   --   or the use of dummy variables (for underdetermined systems).
   --   Therefore the embedding for square systems is treated separately
-  --   from the embedding of the nonsquare systems.
+  --   from the embedding of the nonsquare systems.  Versions are
+  --   for standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   file     for output;
@@ -165,6 +209,14 @@ package Square_and_Embed_Systems is
               ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 topdim : in natural32;
                 ep : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Square_and_Embed
+              ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                topdim : in natural32;
+                ep : out DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
+  procedure Square_and_Embed
+              ( p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                topdim : in natural32;
+                ep : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRIPTION : 
   --   Noninteractive version of the procedure above,
@@ -174,20 +226,37 @@ package Square_and_Embed_Systems is
   --   the top dimension topdim.
 
   function Remove_Last_Variables
-             ( p : Standard_Complex_Poly_Systems.Poly_Sys; n : natural32 )
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+               n : natural32 )
              return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Remove_Last_Variables
+             ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+               n : natural32 )
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Remove_Last_Variables
+             ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+               n : natural32 )
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
-  --   Removes the last n variables of the system p.
+  --   Removes the last n variables of the system p, with functions
+  --   in standard double, double double, or quad double precision.
 
   -- REQUIRED : n >= Number_of_Unknowns(p(i)), for i in p'range.
 
   procedure Remove_Last_Variables
               ( p : in out Standard_Complex_Poly_Systems.Poly_Sys;
                 n : in natural32 );
+  procedure Remove_Last_Variables
+              ( p : in out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                n : in natural32 );
+  procedure Remove_Last_Variables
+              ( p : in out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                n : in natural32 );
 
   -- DESCRIPTION :
-  --   Removes the last n variables of the system p.
+  --   Removes the last n variables of the system p, with procedures
+  --   in standard double, double double, or quad double precision.
 
   -- REQUIRED : n >= Number_of_Unknowns(p(i)), for i in p'range.
 
@@ -195,9 +264,18 @@ package Square_and_Embed_Systems is
              ( p : Standard_Complex_Poly_Systems.Poly_Sys;
                dim,ns : natural32 )
              return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Remove_Embedding
+             ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+               dim,ns : natural32 )
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Remove_Embedding
+             ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+               dim,ns : natural32 )
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
-  --   Removes the embedding and extra slack variables from the system p.
+  --   Removes the embedding and extra slack variables from the system p,
+  --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   p       an embedded polynomial system;
@@ -205,6 +283,6 @@ package Square_and_Embed_Systems is
   --   ns      number of extra slack variables which need to be removed.
 
   -- REQUIRED :
-  --   All slack variables are located as last variables in p.
+  --   All slack variables are located as the last variables in p.
 
 end Square_and_Embed_Systems;
