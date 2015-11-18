@@ -24,6 +24,8 @@ with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_Solution_Splitters;        use Standard_Solution_Splitters;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
+with DoblDobl_Solution_Splitters;        use DoblDobl_Solution_Splitters;
+with QuadDobl_Solution_Splitters;        use QuadDobl_Solution_Splitters;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with Standard_Scaling;                   use Standard_Scaling;
 with Black_Box_Root_Counters;            use Black_Box_Root_Counters;
@@ -290,6 +292,34 @@ package body Drivers_to_Cascade_Filtering is
     end if;
   end Write_Witness_Points;
 
+  procedure Write_Witness_Points
+              ( file : in file_type;
+                sols : in DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Solutions;
+
+  begin
+    if not Is_Null(sols) then
+      new_line(file);
+      put_line(file,"THE SOLUTIONS with zz = 0 :");
+      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    end if;
+  end Write_Witness_Points;
+
+  procedure Write_Witness_Points
+              ( file : in file_type;
+                sols : in QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Solutions;
+
+  begin
+    if not Is_Null(sols) then
+      new_line(file);
+      put_line(file,"THE SOLUTIONS with zz = 0 :");
+      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    end if;
+  end Write_Witness_Points;
+
   procedure Down_Continuation
               ( file : in file_type;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
@@ -420,6 +450,128 @@ package body Drivers_to_Cascade_Filtering is
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
   end Witness_Generate;
 
+  procedure Witness_Generate
+              ( outfile,resfile : in file_type;
+                ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                k : in natural32;
+                zerotol : in double_float ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    timer : Timing_Widget;
+    wsols,sols0,sols1 : Solution_List;
+    n : constant natural32 := natural32(ep'last)-k;
+    pocotime : duration;
+    embsys : Array_of_Poly_Sys(0..integer32(k));
+
+  begin
+    tstart(timer);
+    embsys(integer32(k)) := new Poly_Sys'(ep);
+    for i in 0..k-1 loop
+      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,k-i));
+    end loop;
+    Filter_and_Split_Solutions
+      (outfile,sols,integer32(n),integer32(k),zerotol,sols0,sols1);
+    put_line(resfile,ep);
+    Write_Witness_Points(resfile,sols0);
+    if not Is_Null(sols1) then
+      Copy(sols1,wsols);
+      for i in reverse 1..integer32(k) loop
+        Down_Continuation(outfile,embsys(i).all,natural32(i),wsols,pocotime);
+        Clear(sols0); Clear(sols1);
+        Filter_and_Split_Solutions
+          (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        new_line(resfile);
+        put_line(resfile,embsys(i-1).all);
+        if i = 1 then
+          if not Is_Null(sols1) then
+            declare
+              rsols1 : constant Solution_List := Remove_Component(sols1);
+            begin
+              Write_Witness_Points(resfile,rsols1);
+            end;
+          end if;
+        elsif not Is_Null(sols0) then
+          declare
+            rsols0 : constant Solution_List := Remove_Component(sols0);
+          begin
+            Write_Witness_Points(resfile,rsols0);
+          end;
+        end if;
+        Clear(wsols);
+        exit when Is_Null(sols1);
+        wsols := Remove_Component(sols1);
+      end loop;
+      Clear(sols0);
+    end if;
+    tstop(timer);
+    new_line(outfile);
+    print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
+  end Witness_Generate;
+
+  procedure Witness_Generate
+              ( outfile,resfile : in file_type;
+                ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                k : in natural32;
+                zerotol : in double_float ) is
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    timer : Timing_Widget;
+    wsols,sols0,sols1 : Solution_List;
+    n : constant natural32 := natural32(ep'last)-k;
+    pocotime : duration;
+    embsys : Array_of_Poly_Sys(0..integer32(k));
+
+  begin
+    tstart(timer);
+    embsys(integer32(k)) := new Poly_Sys'(ep);
+    for i in 0..k-1 loop
+      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,k-i));
+    end loop;
+    Filter_and_Split_Solutions
+      (outfile,sols,integer32(n),integer32(k),zerotol,sols0,sols1);
+    put_line(resfile,ep);
+    Write_Witness_Points(resfile,sols0);
+    if not Is_Null(sols1) then
+      Copy(sols1,wsols);
+      for i in reverse 1..integer32(k) loop
+        Down_Continuation(outfile,embsys(i).all,natural32(i),wsols,pocotime);
+        Clear(sols0); Clear(sols1);
+        Filter_and_Split_Solutions
+          (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        new_line(resfile);
+        put_line(resfile,embsys(i-1).all);
+        if i = 1 then
+          if not Is_Null(sols1) then
+            declare
+              rsols1 : constant Solution_List := Remove_Component(sols1);
+            begin
+              Write_Witness_Points(resfile,rsols1);
+            end;
+          end if;
+        elsif not Is_Null(sols0) then
+          declare
+            rsols0 : constant Solution_List := Remove_Component(sols0);
+          begin
+            Write_Witness_Points(resfile,rsols0);
+          end;
+        end if;
+        Clear(wsols);
+        exit when Is_Null(sols1);
+        wsols := Remove_Component(sols1);
+      end loop;
+      Clear(sols0);
+    end if;
+    tstop(timer);
+    new_line(outfile);
+    print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
+  end Witness_Generate;
+
   function Append_ck ( name : string; k : natural32 ) return string is
 
   -- DESCRIPTION :
@@ -435,6 +587,48 @@ package body Drivers_to_Cascade_Filtering is
               ( name : in string;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
+                k : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Writes the embedded polynomial system along with its
+  --   candidate witness points on the file name_ck.
+
+    filename : constant string := Append_ck(name,k);
+    file : file_type;
+
+  begin
+   -- put_line("Writing to file" & filename);
+    create(file,out_file,filename);
+    put_line(file,p);
+    Write_Witness_Points(file,sols);
+    close(file);
+  end Write_Witness_Superset;
+
+  procedure Write_Witness_Superset
+              ( name : in string;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                k : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Writes the embedded polynomial system along with its
+  --   candidate witness points on the file name_ck.
+
+    filename : constant string := Append_ck(name,k);
+    file : file_type;
+
+  begin
+   -- put_line("Writing to file" & filename);
+    create(file,out_file,filename);
+    put_line(file,p);
+    Write_Witness_Points(file,sols);
+    close(file);
+  end Write_Witness_Superset;
+
+  procedure Write_Witness_Superset
+              ( name : in string;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
                 k : in natural32 ) is
 
   -- DESCRIPTION :
@@ -509,7 +703,121 @@ package body Drivers_to_Cascade_Filtering is
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
   end Witness_Generate;
 
-  procedure Driver_to_Witness_Generate is
+  procedure Witness_Generate
+              ( name : in string; outfile : in file_type;
+                ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in DoblDobl_Complex_Solutions.Solution_List;
+                k : in natural32; zerotol : in double_float ) is
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    timer : Timing_Widget;
+    wsols,sols0,sols1 : Solution_List;
+    n : constant natural32 := natural32(ep'last)-k;
+    pocotime : duration;
+    embsys : Array_of_Poly_Sys(0..integer32(k));
+
+  begin
+    tstart(timer);
+    embsys(integer32(k)) := new Poly_Sys'(ep);
+    for i in 0..k-1 loop
+      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,k-i));
+    end loop;
+    Filter_and_Split_Solutions
+      (outfile,sols,integer32(n),integer32(k),zerotol,sols0,sols1);
+    Write_Witness_Superset(name,ep,sols0,k);
+    if not Is_Null(sols1) then
+      Copy(sols1,wsols);
+      for i in reverse 1..integer32(k) loop
+        Down_Continuation(outfile,embsys(i).all,natural32(i),wsols,pocotime);
+        Clear(sols0); Clear(sols1);
+        Filter_and_Split_Solutions
+          (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        if i = 1 then
+          if not Is_Null(sols1) then
+            declare
+              rsols1 : constant Solution_List := Remove_Component(sols1);
+            begin
+              Write_Witness_Superset(name,embsys(i-1).all,rsols1,0);
+            end;
+          end if;
+        elsif not Is_Null(sols0) then
+          declare
+            rsols0 : constant Solution_List := Remove_Component(sols0);
+          begin
+            Write_Witness_Superset(name,embsys(i-1).all,rsols0,natural32(i-1));
+          end;
+        end if;
+        Clear(wsols);
+        exit when Is_Null(sols1);
+        wsols := Remove_Component(sols1);
+      end loop;
+      Clear(sols0);
+    end if;
+    tstop(timer);
+    new_line(outfile);
+    print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
+  end Witness_Generate;
+
+  procedure Witness_Generate
+              ( name : in string; outfile : in file_type;
+                ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                sols : in QuadDobl_Complex_Solutions.Solution_List;
+                k : in natural32; zerotol : in double_float ) is
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    timer : Timing_Widget;
+    wsols,sols0,sols1 : Solution_List;
+    n : constant natural32 := natural32(ep'last)-k;
+    pocotime : duration;
+    embsys : Array_of_Poly_Sys(0..integer32(k));
+
+  begin
+    tstart(timer);
+    embsys(integer32(k)) := new Poly_Sys'(ep);
+    for i in 0..k-1 loop
+      embsys(integer32(i)) := new Poly_Sys'(Remove_Embedding1(ep,k-i));
+    end loop;
+    Filter_and_Split_Solutions
+      (outfile,sols,integer32(n),integer32(k),zerotol,sols0,sols1);
+    Write_Witness_Superset(name,ep,sols0,k);
+    if not Is_Null(sols1) then
+      Copy(sols1,wsols);
+      for i in reverse 1..integer32(k) loop
+        Down_Continuation(outfile,embsys(i).all,natural32(i),wsols,pocotime);
+        Clear(sols0); Clear(sols1);
+        Filter_and_Split_Solutions
+          (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
+        if i = 1 then
+          if not Is_Null(sols1) then
+            declare
+              rsols1 : constant Solution_List := Remove_Component(sols1);
+            begin
+              Write_Witness_Superset(name,embsys(i-1).all,rsols1,0);
+            end;
+          end if;
+        elsif not Is_Null(sols0) then
+          declare
+            rsols0 : constant Solution_List := Remove_Component(sols0);
+          begin
+            Write_Witness_Superset(name,embsys(i-1).all,rsols0,natural32(i-1));
+          end;
+        end if;
+        Clear(wsols);
+        exit when Is_Null(sols1);
+        wsols := Remove_Component(sols1);
+      end loop;
+      Clear(sols0);
+    end if;
+    tstop(timer);
+    new_line(outfile);
+    print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
+  end Witness_Generate;
+
+  procedure Standard_Witness_Generate is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -541,6 +849,87 @@ package body Drivers_to_Cascade_Filtering is
      -- Witness_Generate(outfile,infile,lp.all,sols,dim,1.0E-8);
       Witness_Generate(name,outfile,lp.all,sols,dim,1.0E-8);
     end;
+  end Standard_Witness_Generate;
+
+  procedure DoblDobl_Witness_Generate is
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    infile,outfile : file_type;
+    lp : Link_to_Poly_Sys;
+    sols : Solution_List;
+    dim : natural32;
+
+  begin
+    new_line;
+    put_line("Reading the name of the file with the embedding...");
+    declare
+      name : constant string := Read_String;
+    begin
+      Open_Input_File(infile,name);
+      DoblDobl_Read_Embedding(infile,lp,sols,dim);
+      new_line;
+      put_line("Reading the name of the output file.");
+      Read_Name_and_Create_File(outfile);
+      new_line;
+      Continuation_Parameters.Tune(0);
+      Driver_for_Continuation_Parameters(outfile);
+      new_line;
+      put_line("See the input and output file for results...");
+      new_line;
+      close(infile);
+     -- open(infile,out_file,name);
+     -- Witness_Generate(outfile,infile,lp.all,sols,dim,1.0E-8);
+      Witness_Generate(name,outfile,lp.all,sols,dim,1.0E-8);
+    end;
+  end DoblDobl_Witness_Generate;
+
+  procedure QuadDobl_Witness_Generate is
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    infile,outfile : file_type;
+    lp : Link_to_Poly_Sys;
+    sols : Solution_List;
+    dim : natural32;
+
+  begin
+    new_line;
+    put_line("Reading the name of the file with the embedding...");
+    declare
+      name : constant string := Read_String;
+    begin
+      Open_Input_File(infile,name);
+      QuadDobl_Read_Embedding(infile,lp,sols,dim);
+      new_line;
+      put_line("Reading the name of the output file.");
+      Read_Name_and_Create_File(outfile);
+      new_line;
+      Continuation_Parameters.Tune(0);
+      Driver_for_Continuation_Parameters(outfile);
+      new_line;
+      put_line("See the input and output file for results...");
+      new_line;
+      close(infile);
+     -- open(infile,out_file,name);
+     -- Witness_Generate(outfile,infile,lp.all,sols,dim,1.0E-8);
+      Witness_Generate(name,outfile,lp.all,sols,dim,1.0E-8);
+    end;
+  end QuadDobl_Witness_Generate;
+
+  procedure Driver_to_Witness_Generate is
+
+    p : constant character := Prompt_for_Precision;
+
+  begin
+    case p is
+      when '0' => Standard_Witness_Generate;
+      when '1' => DoblDobl_Witness_Generate;
+      when '2' => QuadDobl_Witness_Generate;
+      when others => null;
+    end case;
   end Driver_to_Witness_Generate;
 
 -- OLD CODE FOR WITNESS GENERATE + CLASSIFY:

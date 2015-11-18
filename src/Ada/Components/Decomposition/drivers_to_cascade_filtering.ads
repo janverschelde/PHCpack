@@ -80,10 +80,21 @@ package Drivers_to_Cascade_Filtering is
                  ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                  sols : in Standard_Complex_Solutions.Solution_List;
                  k : in natural32; zerotol : in double_float );
+  procedure Witness_Generate
+               ( outfile,resfile : in file_type;
+                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 sols : in DoblDobl_Complex_Solutions.Solution_List;
+                 k : in natural32; zerotol : in double_float );
+  procedure Witness_Generate
+               ( outfile,resfile : in file_type;
+                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 sols : in QuadDobl_Complex_Solutions.Solution_List;
+                 k : in natural32; zerotol : in double_float );
 
   -- DESCRIPTION :
   --   Calculates candidate witness points on every component,
-  --   starting at the component of dimension k.
+  --   starting at the component of dimension k,
+  --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   outfile   file for intermediate results and diagnostics;
@@ -101,9 +112,20 @@ package Drivers_to_Cascade_Filtering is
                  ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                  sols : in Standard_Complex_Solutions.Solution_List;
                  k : in natural32; zerotol : in double_float );
+  procedure Witness_Generate
+               ( name : in string; outfile : in file_type;
+                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 sols : in DoblDobl_Complex_Solutions.Solution_List;
+                 k : in natural32; zerotol : in double_float );
+  procedure Witness_Generate
+               ( name : in string; outfile : in file_type;
+                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                 sols : in QuadDobl_Complex_Solutions.Solution_List;
+                 k : in natural32; zerotol : in double_float );
 
   -- DESCRIPTION :
-  --   This witness generate writes the witness supersets to files.
+  --   This witness generate writes the witness supersets to files,
+  --   in standard double, double double, or quad double precision.
 
   -- ON ENTRY :
   --   name      file name for the top embedded system;
@@ -114,10 +136,19 @@ package Drivers_to_Cascade_Filtering is
   --             equals the top dimension of the solution sets;
   --   zerotol   tolerance to decide whether a number is zero or not.
 
+  procedure Standard_Witness_Generate;
+  procedure DoblDobl_Witness_Generate;
+  procedure QuadDobl_Witness_Generate;
+
+  -- DESCRIPTION :
+  --   Interactive driver to call the Witness_Generate procedure,
+  --   in standard double, double double, or quad double precision.
+
   procedure Driver_to_Witness_Generate;
 
   -- DESCRIPTION :
-  --   Interactive driver to call the Witness_Generate procedure.
+  --   Prompts the user for the level of the working precision and
+  --   then calls the Standard, DoblDobl, or QuadDobl_Witness_Generate.
 
   procedure Black_Box_Solver
                ( file : in file_type;
