@@ -1,4 +1,4 @@
-Solutions of systems and homotopies in PHCv2.4.02
+Solutions of systems and homotopies in PHCv2.4.05
 
 The second release introduced the solution vectors with multiprecision.
 Version 2.3 has an improved Maple interface.
@@ -42,6 +42,8 @@ standard_solution_filters          : filters solutions subject to criteria
 dobldobl_solution_filters          : filters of double double solutions
 quaddobl_solution_filters          : filters of quad double solutions
 standard_solution_splitters        : splits solution lists in two
+dobldobl_solution_splitters        : double double version of solution splitters
+quaddobl_solution_splitters        : quad double version of solution splitters
 drivers_to_solution_filters        : drivers to filter solution lists
 ts_solfilt                         : calls the solution filters
 ts_grepsols                        : selects specific solutions
