@@ -370,18 +370,36 @@ package Witness_Sets is
   function Remove_Component
              ( s : Standard_Complex_Solutions.Solution )
              return Standard_Complex_Solutions.Solution;
+  function Remove_Component
+             ( s : DoblDobl_Complex_Solutions.Solution )
+             return DoblDobl_Complex_Solutions.Solution;
+  function Remove_Component
+             ( s : QuadDobl_Complex_Solutions.Solution )
+             return QuadDobl_Complex_Solutions.Solution;
  
   -- DESCRIPTION :
-  --   Removes the last component from the solution vector.
+  --   Removes the last component from the solution vector,
+  --   in standard double, double double, or quad double precision.
 
   procedure Remove_Component
               ( sols : in out Standard_Complex_Solutions.Solution_List );
-  function  Remove_Component
-              ( sols : Standard_Complex_Solutions.Solution_List )
-              return Standard_Complex_Solutions.Solution_List;
  
   -- DESCRIPTION :
   --   Removes the last component from the solution vectors in the list.
+
+  function Remove_Component
+              ( sols : Standard_Complex_Solutions.Solution_List )
+              return Standard_Complex_Solutions.Solution_List;
+  function Remove_Component
+              ( sols : DoblDobl_Complex_Solutions.Solution_List )
+              return DoblDobl_Complex_Solutions.Solution_List;
+  function Remove_Component
+              ( sols : QuadDobl_Complex_Solutions.Solution_List )
+              return QuadDobl_Complex_Solutions.Solution_List;
+ 
+  -- DESCRIPTION :
+  --   Removes the last component from the solution vectors in the list,
+  --   in standard double, double double, or quad double precision.
 
   function Remove_Embedding
              ( s : Standard_Complex_Solutions.Solution; k : natural32 )

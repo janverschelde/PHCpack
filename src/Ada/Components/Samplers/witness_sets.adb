@@ -1543,6 +1543,40 @@ package body Witness_Sets is
     res.v(s.v'first..s.v'last-1) := s.v(s.v'first..s.v'last-1);
     return res;
   end Remove_Component;
+ 
+  function Remove_Component
+             ( s : DoblDobl_Complex_Solutions.Solution )
+             return DoblDobl_Complex_Solutions.Solution is
+
+    use DoblDobl_Complex_Solutions;
+    res : Solution(s.n-1);
+
+  begin
+    res.t := s.t;
+    res.m := s.m;
+    res.err := s.err;
+    res.rco := s.rco;
+    res.res := s.res;
+    res.v(s.v'first..s.v'last-1) := s.v(s.v'first..s.v'last-1);
+    return res;
+  end Remove_Component;
+ 
+  function Remove_Component
+             ( s : QuadDobl_Complex_Solutions.Solution )
+             return QuadDobl_Complex_Solutions.Solution is
+
+    use QuadDobl_Complex_Solutions;
+    res : Solution(s.n-1);
+
+  begin
+    res.t := s.t;
+    res.m := s.m;
+    res.err := s.err;
+    res.rco := s.rco;
+    res.res := s.res;
+    res.v(s.v'first..s.v'last-1) := s.v(s.v'first..s.v'last-1);
+    return res;
+  end Remove_Component;
 
   procedure Remove_Component
               ( sols : in out Standard_Complex_Solutions.Solution_List ) is
@@ -1570,6 +1604,38 @@ package body Witness_Sets is
              return Standard_Complex_Solutions.Solution_List is
 
     use Standard_Complex_Solutions;
+    res,res_last,tmp : Solution_List;
+
+  begin
+    tmp := sols;
+    while not Is_Null(tmp) loop
+      Append(res,res_last,Remove_Component(Head_Of(tmp).all));
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Remove_Component;
+ 
+  function Remove_Component
+             ( sols : DoblDobl_Complex_Solutions.Solution_List )
+             return DoblDobl_Complex_Solutions.Solution_List is
+
+    use DoblDobl_Complex_Solutions;
+    res,res_last,tmp : Solution_List;
+
+  begin
+    tmp := sols;
+    while not Is_Null(tmp) loop
+      Append(res,res_last,Remove_Component(Head_Of(tmp).all));
+      tmp := Tail_Of(tmp);
+    end loop;
+    return res;
+  end Remove_Component;
+ 
+  function Remove_Component
+             ( sols : QuadDobl_Complex_Solutions.Solution_List )
+             return QuadDobl_Complex_Solutions.Solution_List is
+
+    use QuadDobl_Complex_Solutions;
     res,res_last,tmp : Solution_List;
 
   begin
