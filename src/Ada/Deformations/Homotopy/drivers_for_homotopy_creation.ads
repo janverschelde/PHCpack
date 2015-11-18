@@ -50,7 +50,7 @@ package Drivers_for_Homotopy_Creation is
                  ls : in String_Splitters.Link_to_Array_of_Strings;
                  p,q : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols : in out Solution_List; target : out Complex_Number;
-                 deci : out natural32 );
+                 deci : in out natural32 );
   procedure Driver_for_Homotopy_Construction
                ( file : in file_type;
                  p,q : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -66,7 +66,7 @@ package Drivers_for_Homotopy_Creation is
   procedure Driver_for_Homotopy_Construction
                ( file : in file_type; p,q : in out Laur_Sys;
                 -- qsols : in out Solution_List;
-                 target : out Complex_Number; deci : out natural32 );
+                 target : out Complex_Number; deci : in out natural32 );
 
   -- DESCRIPTION :
   --   This is an interactive driver for the construction of an artificial
@@ -80,7 +80,8 @@ package Drivers_for_Homotopy_Creation is
   --   file      for output of the settings of the homotopy;
   --   p         target system;
   --   q         start system;
-  --   qsols     solutions of the start system q.
+  --   qsols     solutions of the start system q;
+  --   deci      may have a preset value (if different from zero).
 
   -- ON RETURN :
   --   p         target system, eventually with projective transformation;

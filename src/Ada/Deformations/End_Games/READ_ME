@@ -1,4 +1,4 @@
-Polyhedral end games for polynomial homotopies in PHCv2.3.80
+Polyhedral end games for polynomial homotopies in PHCv2.4.05
 
 This directory was isolated in version 2.3.75 for clarity.
 New in release 2.3 is Newton's method with deflation for singularities
@@ -24,6 +24,7 @@ directions_of_standard_paths     : routines for polyhedral end game
 directions_of_dobldobl_paths     : polyhedral end game with double doubles
 directions_of_quaddobl_paths     : polyhedral end game with quad doubles
 ------------------------------------------------------------------------------
+driver_for_winding_numbers       : driver for winding number calculations
 valipoco                         : validation of computed path directions
 postpoco                         : stand-alone routine for polyhedral end game
 ------------------------------------------------------------------------------

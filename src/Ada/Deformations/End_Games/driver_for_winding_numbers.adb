@@ -32,7 +32,7 @@ procedure Driver_for_Winding_Numbers
   proj : boolean := false;
   target : Complex_Number;
   ans : character;
-  oc,deci,max_wc : natural32;
+  oc,deci,max_wc : natural32 := 0;
 
   procedure Write_Statistics_and_Condition
                 ( file : in file_type; i : in integer32;

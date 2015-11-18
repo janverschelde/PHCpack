@@ -1,0 +1,13 @@
+Wed 18 Nov 2015 : in driver_for_winding_numbers, initialized deci to zero
+  as unpreset value of the precision in the creation of the homotopy.
+
+Thu 27 Jun 2013 : updated driver_for_winding_numbers.adb as needed for phc.
+
+Wed 12 Jun 2013 : changed more than half of the files in this directory
+  because of the introduction of natural32 and integer32 types.
+
+Fri 8 Feb 2013 : change in driver_for_winding_numbers.adb
+  for extra parameters "ls" in drivers_for_homotopy_creation.
+
+Mon 21 Jan 2013 : creation of this directory, moving all code involving
+  end games from Continuation to this new directory End_Games.

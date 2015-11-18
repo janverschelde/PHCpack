@@ -172,9 +172,11 @@ package body Drivers_for_Homotopy_Creation is
     new_line;
     put_line("MENU with settings for homotopy :");
     put("  number of decimal places : "); put(d,2);
-    if d = 32 then
+    if d <= 16 then
+      put(" (standard double precision)");
+    elsif d <= 32 then
       put(" (double double precision)");
-    elsif d = 64 then
+    elsif d <= 64 then
       put(" (quad double precision)");
     end if;
     new_line;
@@ -202,9 +204,11 @@ package body Drivers_for_Homotopy_Creation is
     new_line;
     put_line("MENU with settings for homotopy :");
     put("  number of decimal places : "); put(d,2);
-    if d = 32 then
+    if d <= 16 then
+      put(" (standard double precision)");
+    elsif d <= 32 then
       put(" (double double precision)");
-    elsif d = 64 then
+    elsif d <= 64 then
       put(" (quad double precision)");
     end if;
     new_line;
@@ -255,9 +259,11 @@ package body Drivers_for_Homotopy_Creation is
     new_line(file);
     put_line(file,"HOMOTOPY PARAMETERS :");
     put(file,"  d : "); put(file,d,2);
-    if d = 32 then
+    if d <= 16 then
+      put(file," (standard double precision)");
+    elsif d <= 32 then
       put(file," (double double precision)");
-    elsif d = 64 then
+    elsif d <= 64 then
       put(file," (quad double precision)");
     end if;
     new_line(file);
@@ -281,9 +287,11 @@ package body Drivers_for_Homotopy_Creation is
     new_line(file);
     put_line(file,"HOMOTOPY PARAMETERS :");
     put(file,"  d : "); put(file,d,2);
-    if d = 32 then
+    if d <= 16 then
+      put(file," (standard double precision)");
+    elsif d <= 32 then
       put(file," (double double precision)");
-    elsif d = 64 then
+    elsif d <= 64 then
       put(file," (quad double precision)");
     end if;
     new_line(file);
@@ -434,7 +442,7 @@ package body Drivers_for_Homotopy_Creation is
                  ls : in String_Splitters.Link_to_Array_of_Strings;
                  p,q : in out Standard_Complex_Poly_Systems.Poly_Sys;
                  qsols : in out Solution_List; target : out Complex_Number;
-                 deci : out natural32 ) is
+                 deci : in out natural32 ) is
 
     use Standard_Complex_Poly_Systems;
     a,t : Complex_Number;
@@ -443,6 +451,9 @@ package body Drivers_for_Homotopy_Creation is
 
   begin
     Default_Homotopy_Settings(d,k,a,t,prt);
+    if deci > 0
+     then d := deci; -- respect the preset value of the precision
+    end if;
     Menu_for_Homotopy_Settings(file,d,k,a,t,prt);
     target := t;
     if d <= 16 then
@@ -570,7 +581,7 @@ package body Drivers_for_Homotopy_Creation is
   procedure Driver_for_Homotopy_Construction
                ( file : in file_type; p,q : in out Laur_Sys;
                 -- qsols : in out Solution_List;
-                 target : out Complex_Number; deci : out natural32 ) is
+                 target : out Complex_Number; deci : in out natural32 ) is
 
     k,d : natural32;
     a,t : Complex_Number;
@@ -579,6 +590,9 @@ package body Drivers_for_Homotopy_Creation is
 
   begin
     Default_Homotopy_Settings(d,k,a,t,prt);
+    if deci /= 0   
+     then d := deci; -- respect the preset value of the precision
+    end if;
     Menu_for_Homotopy_Settings(file,d,k,a,t,prt);
     target := t;
     if d <= 16 then
