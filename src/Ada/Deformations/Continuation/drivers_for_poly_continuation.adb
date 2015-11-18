@@ -336,7 +336,7 @@ package body Drivers_for_Poly_Continuation is
     nb : natural32 := 0;
 
   begin
-    Continuation_Parameters.Tune(0,precision);
+    Continuation_Parameters.Tune(0); -- ,precision); -- leave default
     loop
       Begin_Banner(Standard_Output);
       Continuation_Parameters_io.put;
@@ -820,6 +820,7 @@ package body Drivers_for_Poly_Continuation is
   procedure Driver_for_Polynomial_Continuation 
                 ( file : in file_type;
                   p : in Standard_Complex_Poly_Systems.Poly_Sys; 
+                  prclvl : in natural32;
                   ls : in String_Splitters.Link_to_Array_of_Strings;
                   sols : out Standard_Complex_Solutions.Solution_List;
                   mpsols : out Multprec_Complex_Solutions.Solution_List;
@@ -838,6 +839,13 @@ package body Drivers_for_Poly_Continuation is
   begin
     Read_Start_System(file,q,qsols);
     Copy(p,pp);
+    if prclvl = 1 then
+      deci := 16;
+    elsif prclvl = 2 then
+      deci := 32;
+    else
+      deci := 64;
+    end if;
     Driver_for_Homotopy_Construction(file,ls,pp,q,qsols,t,deci);
     proj := (Number_of_Unknowns(q(q'first)) > natural32(q'last));
     if proj
@@ -885,7 +893,7 @@ package body Drivers_for_Poly_Continuation is
     qsols : Solution_List;
    -- mqsols : Multprec_Complex_Solutions.Solution_List;
     proj : boolean;
-    deci : natural32;
+    deci : natural32 := 0;
    -- size : natural;
 
   begin
@@ -1063,7 +1071,7 @@ package body Drivers_for_Poly_Continuation is
 
   begin
     new_line;
-    Continuation_Parameters.Tune(0,deci);
+    Continuation_Parameters.Tune(0); -- ,deci); -- just leave default ...
     Driver_for_Continuation_Parameters(file);
     new_line;
     Driver_for_Process_io(file,oc);
@@ -1086,7 +1094,7 @@ package body Drivers_for_Poly_Continuation is
 
   begin
     new_line;
-    Continuation_Parameters.Tune(0,32);
+    Continuation_Parameters.Tune(0); -- ,32); -- too severe !!!
     Driver_for_Continuation_Parameters(file);
     new_line;
     Driver_for_Process_io(file,oc);
@@ -1109,7 +1117,7 @@ package body Drivers_for_Poly_Continuation is
 
   begin
     new_line;
-    Continuation_Parameters.Tune(0,64);
+    Continuation_Parameters.Tune(0); -- ,64); -- too severe !!!
     Driver_for_Continuation_Parameters(file);
     new_line;
     Driver_for_Process_io(file,oc);

@@ -441,11 +441,11 @@ procedure Dispatch is
              ns : constant string := Convert(integer32(nt));
            begin
              put_line(welcome); put_line(pocoban & ", with " & ns & " tasks");
-             mainpoco(nt,file1,file2);
+             mainpoco(nt,file1,file2,contprc);
            end;
       when others
         => put_line(welcome); put_line(pocoban & ", no multitasking");
-           mainpoco(0,file1,file2);
+           mainpoco(0,file1,file2,contprc);
     end case;
   end Continuation_Dispatcher;
 
@@ -507,6 +507,7 @@ procedure Dispatch is
     nt : constant natural32 := Number_of_Tasks;
     ns : constant string := Convert(integer32(nt));
     bbprc : constant natural32 := Scan_Precision('b');
+    contprc : constant natural32 := Scan_Precision('p');
 
   begin
     case o2 is
@@ -519,7 +520,7 @@ procedure Dispatch is
         end case;
       when 'p' =>
         put_line(welcome); put_line(pocoban & ", with " & ns & " tasks");
-        mainpoco(nt,infile,outfile);
+        mainpoco(nt,infile,outfile,contprc);
       when 'b' =>
         case o3 is
           when 'm' => babldmvc(nt,infile,outfile);

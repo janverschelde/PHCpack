@@ -1,5 +1,9 @@
 Wed 18 Nov 2015 : updated mainpoco.adb so prompting for precision calls the
-  function in communications_with_user.
+  function in communications_with_user.  Added extra argument to take into
+  account the precision level set at the command line of phc -p, e.g. as
+  in phc -p2 or phc -p4.  In drivers_for_poly_continuation, restored the
+  default tuning of the continuation parameters (regardless of precision)
+  and took the preset value of the precision level into account.
 
 Tue 27 Oct 2015 : for consistency, renamed black_box_poly_continuations into
   standard_blackbox_continuation, which changed bablpoco and ts_bbpoco.

@@ -44,7 +44,8 @@ with Write_Seed_Number;
 with Greeting_Banners;
 --with Bye_Bye_Message;
 
-procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
+procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
+                     prclvl : in natural32 ) is
 
   procedure Refine_Solutions
               ( outft : in file_type;
@@ -118,7 +119,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
     else
       solsfile := false;
     end if;
-    Driver_for_Polynomial_Continuation(outft,p,ls,sols,mpsols,target);
+    Driver_for_Polynomial_Continuation(outft,p,prclvl,ls,sols,mpsols,target);
     if Length_Of(sols) > 0
      then Refine_Solutions(outft,p,target,sols,refsols,solsfile);
     end if;
@@ -330,12 +331,21 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
 
   -- DESCRIPTION :
   --   Prompts the user for the type of homotopy: parameter or sweep,
-  --   and asks for the level of precision.
+  --   and asks for the level of precision, but only if prclvl = 1.
 
     pos : constant character := Parameter_Homotopy_Continuation.Show_Menu;
-    prc : constant character := Prompt_for_Precision;
+    prc : character;
 
   begin
+    if prclvl = 1 then
+      prc := Prompt_for_Precision;
+    elsif prclvl = 2 then
+      prc := '1';
+    elsif prclvl = 4 then
+      prc := '2';
+    else
+      prc := Prompt_for_Precision;
+    end if;
     case prc is 
       when '0' =>
         if pos = '1'

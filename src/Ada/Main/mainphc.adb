@@ -90,7 +90,7 @@ procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
 
     q,scalp,projp : Poly_Sys(p'range);
     target : Complex_Number;
-    basis,roco,deci,size : natural32;
+    basis,roco,deci,size : natural32 := 0;
     scalvec : Link_to_Vector;
     sols : Solution_List;
     ddsols : DoblDobl_Complex_Solutions.Solution_List;

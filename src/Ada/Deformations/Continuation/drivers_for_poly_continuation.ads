@@ -74,6 +74,7 @@ package Drivers_for_Poly_Continuation is
   procedure Driver_for_Polynomial_Continuation
                 ( file : in file_type;
                   p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                  prclvl : in natural32;
                   ls : in String_Splitters.Link_to_Array_of_Strings;
                   sols : out Standard_Complex_Solutions.Solution_list;
                   mpsols : out Multprec_Complex_Solutions.Solution_list;
@@ -93,6 +94,8 @@ package Drivers_for_Poly_Continuation is
   -- ON ENTRY :
   --   file       to write diagnostics and results on;
   --   p          a polynomial system;
+  --   prclvl     preset precision level, is either 1, 2, or 4,
+  --              for double, double double, or quad double precision;
   --   ls         string representations of the input polynomials.
 
   -- ON RETURN :
