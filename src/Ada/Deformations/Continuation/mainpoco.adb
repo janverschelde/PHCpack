@@ -323,26 +323,6 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string ) is
    -- Driver_to_Path_Tracker(outft,p,nt);
   end Multitasking_Secant_Homotopy;
 
-  function Prompt_for_Precision return character is
-
-  -- DESCRIPTION :
-  --   Shows the menu for the user to select the working precision
-  --   and returns '0', '1', or '2', respectively for
-  --    standard double, double double, or quad double precision.
-
-    res : character;
-
-  begin
-    new_line;
-    put_line("MENU for the working precision :");
-    put_line("  0. standard double precision;");
-    put_line("  1. double double precision; or");
-    put_line("  2. quad double precision.");
-    put("Type 0, 1, or 2 to select the working precision : ");
-    Ask_Alternative(res,"012");
-    return res;
-  end Prompt_for_Precision;
-
   procedure Parameter_or_Sweep_Homotopy
               ( inft : in out file_type;
                 lp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
