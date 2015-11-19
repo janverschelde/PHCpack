@@ -14,6 +14,4 @@ PHCpack Documentation Contents
    welcome
    tutorial
    options
-   phcpy
-   references
-   acknowledgments
+   about
