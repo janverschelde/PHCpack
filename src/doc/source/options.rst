@@ -246,6 +246,20 @@ results in the creation of the file ``sphere_w2`` which contains
 a witness set of dimension two for the unit sphere.
 The output file ``sphere.out`` contains diagnostics about the computation.
 
+For hypersurfaces of higher degree, the double precision as provided
+by the hardware may turn out to be insufficient to compute as many
+generic points as the degree of the hypersurface.
+Therefore, the options ``l2`` and ``l4`` perform the computations
+respectively in double double and quad double precision.
+To continue the example from above, typing at the command prompt
+
+::
+
+   phc -l4 sphere sphere.qd
+
+will give two generic points on the sphere,
+computed in quad double precision.
+
 phc -m : Mixed-Volume Computation via lift+prune and MixedVol  
 -------------------------------------------------------------
 
@@ -420,6 +434,21 @@ The corresponding list of solutions should then contain the following:
    y :  0.00000000000000E+00   0.00000000000000E+00
    s :  0.00000000000000E+00   0.00000000000000E+00
   == err :  0.000E+00 = rco :  1.863E-01 = res :  0.000E+00 ==
+
+After launching the program as ``phc -p`` the user can determine the
+working precision.  This happens differently for the two types of
+homotopies, depending on whether the parameter is natural or artificial:
+
+1. For a natural parameter homotopy like the sweep,
+   the user will be prompted explicitly to choose between double, 
+   double double, or quad double precision. 
+
+2. For an artificial parameter homotopy, the user can determine the
+   working precision at the construction of the homotopy.
+
+In both types of homotopies, natural parameter and aritificial parameter,
+the user can preset the working precision respectively to double double
+or quad double, calling the program as ``phc -p2`` or as ``phc -p4``.
 
 phc -q : Tracking Solution Paths with incremental read/write   
 ------------------------------------------------------------
