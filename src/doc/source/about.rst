@@ -173,7 +173,7 @@ Users
 -----
 
 To demonstrate the relevance of the software, PHCpack was released
-with a collection of about eight different polynomial systems,
+with a collection of about eighty different polynomial systems,
 collected from the literature.
 
 The papers listed below report the use of PHCpack in the fields of
