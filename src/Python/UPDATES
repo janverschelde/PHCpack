@@ -1,3 +1,6 @@
+Fri 20 Nov 2015 : modified the diagonal solvers in sets.py to use the top
+  dimension as needed in the collapsing of the diagonal.
+
 Thu 12 Nov 2015 : updated witness_set_of_hypersurface in sets.py with an
   extra argument to select the precision.
 
