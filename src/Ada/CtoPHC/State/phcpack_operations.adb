@@ -949,8 +949,10 @@ package body PHCpack_Operations is
 
     use Standard_Complex_Polynomials,Standard_Complex_Solutions;
 
-    k : constant natural32
-      := Number_of_Unknowns(st_target_sys(st_target_sys'first)) - a;
+   -- k : constant natural32
+   --   := Number_of_Unknowns(st_target_sys(st_target_sys'first)) - a;
+   -- The target system may not correspond to st_target_sols!
+    k : constant natural32 := natural32(Head_Of(st_target_sols).n) - a;
     sols1 : constant Solution_List
           := Witness_Sets.Remove_Embedding(st_target_sols,a);
     sols2 : constant Solution_List
@@ -960,6 +962,9 @@ package body PHCpack_Operations is
 
   begin
    -- put_line("inside start_diagonal_cascade_solutions ...");
+   -- put("  a = "); put(a,1);
+   -- put("  b = "); put(b,1);
+   -- put("  k = "); put(k,1); new_line;
    -- put("length of sols1 : "); put(Length_Of(sols1),1); new_line;
    -- put("length of sols2 : "); put(Length_Of(sols2),1); new_line;
    -- put("number of product solutions : "); put(Length_Of(sols),1); new_line;
@@ -977,8 +982,10 @@ package body PHCpack_Operations is
 
     use DoblDobl_Complex_Polynomials,DoblDobl_Complex_Solutions;
 
-    k : constant natural32
-      := Number_of_Unknowns(dd_target_sys(dd_target_sys'first)) - a;
+   -- k : constant natural32
+   --   := Number_of_Unknowns(dd_target_sys(dd_target_sys'first)) - a;
+   -- The dd_target_sys may no longer correspond to dd_target_sols!
+    k : constant natural32 := natural32(Head_Of(dd_target_sols).n) - a;
     sols1 : constant Solution_List
           := Witness_Sets.Remove_Embedding(dd_target_sols,a);
     sols2 : constant Solution_List
@@ -1005,8 +1012,10 @@ package body PHCpack_Operations is
 
     use QuadDobl_Complex_Polynomials,QuadDobl_Complex_Solutions;
 
-    k : constant natural32
-      := Number_of_Unknowns(qd_target_sys(qd_target_sys'first)) - a;
+   -- k : constant natural32
+   --   := Number_of_Unknowns(qd_target_sys(qd_target_sys'first)) - a;
+   -- The qd_target_sys may no longer correspond to qd_target_sols!
+    k : constant natural32 := natural32(Head_Of(qd_target_sols).n) - a;
     sols1 : constant Solution_List
           := Witness_Sets.Remove_Embedding(qd_target_sols,a);
     sols2 : constant Solution_List
