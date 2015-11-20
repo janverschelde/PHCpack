@@ -45,7 +45,7 @@ Version 2.3 was quickly followed by a bug release 2.3.01
 and subsequently by many more quick releases.
 The introduction of the fast mixed volume calculator MixedVol in 2.3.13
 was followed by capabilities to compute stable mixed volumes in 2.3.31,
-and an upgrade of the blackbox solver in version 2.3.31.
+and an upgrade of the blackbox solver in version 2.3.34.
 
 Shared memory multitasking provided the option -t,
 followed by the number of tasks, to speedup the path tracking.
@@ -172,9 +172,12 @@ Pointers to the literature are mentioned below.
 Users
 -----
 
-To demonstrate the relevance of the software, PHCpack was released
-with a collection of about eighty different polynomial systems,
-collected from the literature.
+To demonstrate the relevance of the software, the first version
+of the software was released with a collection of about eighty 
+different polynomial systems, collected from the literature. 
+This section points to a different collection of problems,
+problems that have been solved by users of the software,
+without intervention of its developers.
 
 The papers listed below report the use of PHCpack in the fields of
 algebraic statistics, communication networks,
