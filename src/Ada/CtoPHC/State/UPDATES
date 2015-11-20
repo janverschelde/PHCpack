@@ -1,3 +1,6 @@
+Thu 19 Nov 2015 : use_c2phc.adb uses square_and_embed_systems instead of
+  drivers_to_cascade_filtering.
+
 Wed 11 Nov 2015 : use_track.adb changed because of the renaming of
   hypersurface_witness_sets and its io with a new drivers package
   standard_hypersurface_witdrivers.  Extended use_track and use_c2phc
