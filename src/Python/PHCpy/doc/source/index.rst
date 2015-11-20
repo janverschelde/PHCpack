@@ -25,7 +25,5 @@ phcpy Documentation Contents
    newtopes
    phcbwulf
    modphcpy2c
-   history
-   references
-   acknowledgments
+   about
    indices
