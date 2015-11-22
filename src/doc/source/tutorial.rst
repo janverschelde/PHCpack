@@ -28,6 +28,14 @@ can be typed at the command prompt:
 If all went well, typing ``./phc`` at the command prompt should bring
 up the welcome message and the screen with available options.
 
+The source code is under version control at github, at
+<https://github.com/janverschelde/PHCpack>.
+To compile the source code, the gnu-ada compiler is needed.
+Free binary versions of the gnu-ada compiler are available at
+<http://libre.adacore.com>.  The directory ``Objects`` in the
+source code provides makefiles for Linux, Mac OS X, and Windows
+operating systems.
+
 Input formats
 -------------
 
