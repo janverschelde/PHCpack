@@ -14,7 +14,6 @@ phcpy Documentation Contents
    welcome
    blackbox
    solsrep
-   interface
    pathtrack
    sweep
    intexs
@@ -24,6 +23,7 @@ phcpy Documentation Contents
    monmaps
    newtopes
    phcbwulf
+   interface
    modphcpy2c
    about
    indices
