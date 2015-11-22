@@ -6,6 +6,24 @@ for the C interface to PHCpack.  Below is the list of all
 functions exported by the shared object file phcpy2c.so.
 The source code provides more detailed documentation.
 
+design of the Python to C interface
+-----------------------------------
+
+The design of phcpy depends on PHClib, a library of various
+collections of C functions, originally developed for message passing
+with the MPI library.  This design is sketched in the figure below:
+
+.. image:: ./figdesign.png
+
+PHClib interfaces to the Ada routines through one single
+Ada procedure ``use_c2phc.adb``.
+The collection of parallel distibuted memory programs (MPI2phc)
+using message passing (MPI) depends on PHClib.
+All C functions that are exported to the Python interface have
+their prototypes in the header file ``phcpy2c.h``
+while the definitions in ``phcpy2c.c`` call the proper routines
+in PHClib.
+
 wrappers to the C interface to PHCpack
 --------------------------------------
 
