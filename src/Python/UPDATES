@@ -1,3 +1,6 @@
+Sat 21 Nov 2015 : added an illustration of cascade_step to posdimsols.rst,
+  on the illustrative example of a sphere, twisted cubic, and a point.
+
 Fri 20 Nov 2015 : modified the diagonal solvers in sets.py to use the top
   dimension as needed in the collapsing of the diagonal.
 

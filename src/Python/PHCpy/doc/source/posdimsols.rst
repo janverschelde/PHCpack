@@ -77,6 +77,106 @@ to make overdetermined polynomial systems *square*,
 that is: having as many equations as unknowns.
 Only solutions with zero slack variables matter.
 
+cascade of homotopies
+---------------------
+
+With a cascade of homotopies, we separate generic points on one
+equidimensional component from another equidimensional component
+of the solution set.  A cascade starts at the top dimension.
+We consider an illustrative example:
+
+::
+
+   pols = ['(x^2 + y^2 + z^2 - 1)*(y - x^2)*(x - 0.5);', \
+           '(x^2 + y^2 + z^2 - 1)*(z - x^3)*(y - 0.5);', \
+           '(x^2 + y^2 + z^2 - 1)*(z - x*y)*(z - 0.5);']
+
+The polynomials in ``pols`` are defined in factored form
+so for this illustrative example we may read of the equidimensional
+components of the solution set, which contain the two dimensional
+sphere, the one dimensional twisted cubic, and the isolated point
+``(0.5, 0.5, 0.5)``.
+
+To initialize the cascade, we must have solved an embedded polynomial system.
+With ``embed(3, 2, pols)`` we make an embedding of the 3-dimensional
+system in ``pols`` adding two linear equations with random complex
+coefficients.  Two slack variables ``zz1`` and ``zz2`` are added to
+make this overdetermined system square.
+
+::
+
+   from phcpy.sets import embed
+   topemb = embed(3, 2, pols)
+   from phcpy.solver import solve
+   topsols = solve(topemb, silent=True)
+
+The list ``topsols`` contains two types of solutions:
+those with nonzero values for the slack variables, and
+those with zero slack variables, which thus satisfy the original
+equations in ``pols`` and the two added linear equations with random
+complex coefficients.  The solutions with zero values for the slack
+variables define generic points on the two dimensional solution set.
+We filter the solutions, as follows:
+
+::
+
+
+   from phcpy.solutions import filter_zero_coordinates as filter
+   topsols0 = filter(topsols, 'zz2', 1.0e-8, 'select')
+   topsols1 = filter(topsols, 'zz2', 1.0e-8, 'remove')
+   print 'generic points on the two dimensional surface :'
+   for sol in topsols0:
+       print sol
+
+The solutions with nonzero values for the slack variables are
+called *nonsolutions*.  These solutions are regular and serve
+as start solutions in a cascade to compute generic points on 
+the lower dimensional components of the solution set.
+
+::
+
+   from phcpy.sets import cascade_step
+   lvl1sols = cascade_step(topemb, topsols1)
+
+After the filtering, we must drop variables, coordinates,
+and hyperplane for the next level in the cascade.
+
+::
+
+   from phcpy.sets import drop_variable_from_polynomials as drop1poly
+   from phcpy.sets import drop_coordinate_from_solutions as drop1sols
+   lvl1emb = drop1poly(topemb, 'zz2')
+   lvl1emb = lvl1emb[:-1]  # dropping the last polynomial
+   lvl1solsdrop = drop1sols(lvl1sols, len(topemb), 'zz2')
+   lvl1sols0 = filter(lvl1solsdrop, 'zz1', 1.0e-8, 'select') 
+   lvl1sols1 = filter(lvl1solsdrop, 'zz1', 1.0e-8, 'remove') 
+
+Among the solutions at the end of the paths defined by the cascade
+homotopy are solutions that belong to the two dimensional sphere.
+These solutions are singular and we filter then away based on
+threshold for the estimate of the inverse condition number.
+
+::
+
+   from phcpy.solutions import filter_regular as regfilt
+   reglvl1sols0 = regfilt(lvl1sols0, 1.0e-8, 'select')
+   for sol in reglvl1sols0:
+       print sol
+
+To find the isolated solutions, another cascade homotopy is applied,
+tracking the paths starting at the nonsolutions at the end of the
+previous cascade.
+
+::
+
+   lvl2sols = cascade_step(lvl1emb, lvl1sols1)
+   lvl2solsdrop = drop1sols(lvl2sols, len(lvl1emb), 'zz1')
+   for sol in reglvl2solsdrop:
+       print sol
+
+To perform the filtering of the solutions properly, we apply
+a membership test.
+
 functions in the module
 -----------------------
 
