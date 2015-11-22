@@ -744,3 +744,11 @@ Their names, titles of PhD dissertation, and year of PhD are listed below:
 8. Xiangcheng Yu:
    *Accelerating Polynomial Homotopy Continuation
    on Graphics Processing Units*, 2015.
+
+Anton Leykin contributed to the application of message passing 
+in a parallel implementation of monodromy to decompose an equidimensional
+solution set into irreducible components.  
+The Maple interface ``PHCmaple`` was written jointly with Anton Leykin.
+The work of Anton Leykin also paved the way for the Macaulay2 interface,
+which was further developed into ``PHCpack.m2`` in joint work with
+Elizabeth Gross and Sonja Petrovic.
