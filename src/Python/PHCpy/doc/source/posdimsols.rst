@@ -177,6 +177,49 @@ previous cascade.
 To perform the filtering of the solutions properly, we apply
 a membership test.
 
+diagonal homotopies
+-------------------
+
+Given two witness sets, with diagonal homotopies we can compute 
+generic points on the intersection of the algebraic sets represented
+by the witness sets, and thus obtain a witness set of the intersection.
+This section illustrates the intersection of the unit sphere with
+a cylinder.  This intersection defines a quartic curve.
+
+We start with equations for the unit sphere and a cylinder:
+
+::
+
+   sph = 'x^2 + y^2 + z^2 - 1;'
+   cyl = 'x^2 + y - y + (z - 0.5)^2 - 1;'
+
+Observe the ``+ y - y`` line in the assignment to ``cyl``.
+With this trick we initialize the symbol table for the witness set
+computation, ensuring that ``y`` is present.
+
+Next, we compute a witness sets for the sphere and the cylinder:
+
+::
+
+   from phcpy.sets import witness_set_of_hypersurface as witsurf
+   sphwit = witsurf(3, sph)
+   spheqs, sphpts = sphwit
+   cylwit = witsurf(3, cyl)
+   cyleqs, cylpts = cylwit
+
+Once we have two witness sets, we call the ``diagonal_solver``
+method to compute a witness set for the intersection:
+
+::
+
+   from phcpy.sets import diagonal_solver as diagsolve
+   quawit = diagsolve(3, 2, spheqs, sphpts, 2, cyleqs, cylpts)
+   quaeqs, quapts = quawit
+   for pol in quaeqs:
+       print pol
+   for sol in quapts:
+       print sol
+
 functions in the module
 -----------------------
 
