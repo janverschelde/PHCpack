@@ -16,8 +16,7 @@ phcpy Documentation Contents
    solsrep
    pathtrack
    sweep
-   intexs
-   somefams
+   examfams
    numschub
    posdimsols
    monmaps
