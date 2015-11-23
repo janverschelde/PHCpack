@@ -1,3 +1,6 @@
+Mon 23 Nov 2015 : for version 0.3.4, updated setup.py, __init__.py and the
+  conf.py in the documentation.
+
 Sun 22 Nov 2015 : updated the documentation of positive dimensional solutions
   with a simple illustration of diagonal homotopies.  Added a picture about
   the design of phcpy to modphcpy2c.rst.  Documentation about the interface
