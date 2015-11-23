@@ -1,3 +1,5 @@
+Mon 23 Nov 2015 : prepared greeting_banners for version 2.4.05.
+
 Wed 18 Nov 2015 : adjusted mainphc.adb for the preset level of the precision
   in the construction of the homotopy and updated dispatch.adb for the
   options phc -p2 and phc -p4 for double double and quad double precision.
