@@ -71,24 +71,57 @@ def initial_form(pols, normal):
         result.append(py2c_syscon_load_standard_Laurential(i+1))
     return result
 
-def planar_convex_hull(points):
+def convex_hull_checkin(dim, points):
+    """
+    Checks whether the input arguments satisfy the requirements:
+    points is a list of tuples that each contain as many integer
+    numbers as the value of dim.
+    Returns True if the requirements are satisfied,
+    returns False otherwise.
+    """
+    if not isinstance(points, list):
+        print 'the argument points is not a list'
+        return False
+    else:
+        tup = [isinstance(x, tuple) for x in points]
+        if(sum(tup) != len(points)):
+            print 'not every element in points is a tuple'
+        else:
+           for point in points:
+               if(len(point) != dim):
+                   print 'the point', point, 'is not of length', dim
+               else:
+                   coord = [isinstance(x, int) for x in point]
+                   if(sum(coord) != dim):
+                       print point, 'contains non integer values'
+    return True;
+
+def planar_convex_hull(points, checkin=True):
     """
     The convex hull of a point configuration in the plane
     consists of an ordered list of vertex points, ordered
     such that any two consecutive points span an edge,
     with the list of corresponding inner normals.
+    If checkin (by default), the type of the input is checked.
     """
+    if checkin:
+        if not convex_hull_checkin(2, points):
+            return None
     from phcpy2c import py2c_giftwrap_planar
     strpoints = str(points)
     strhull = py2c_giftwrap_planar(len(strpoints), strpoints)
     hull = eval(strhull)
     return hull
 
-def convex_hull(dim, points):
+def convex_hull(dim, points, checkin=True):
     """
     Returns the list of facets of the convex hull of the points,
     given in points.  The dimension of the ambient space is in dim.
+    If checkin (by default), the type of the input is checked.
     """
+    if checkin:
+        if not convex_hull_checkin(dim, points):
+            return None
     from phcpy2c import py2c_giftwrap_convex_hull
     from phcpy2c import py2c_giftwrap_number_of_facets
     from phcpy2c import py2c_giftwrap_retrieve_facet
