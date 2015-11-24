@@ -1,5 +1,6 @@
 Tue 24 Nov 2015 : added a function to polytopes.py to check the input type
-  of the arguments to the convex hull function.
+  of the arguments to the convex hull function.  Fixed errors in polytopes.py
+  reported by pylint and added a function 'initial_support'.
 
 Mon 23 Nov 2015 : for version 0.3.4, updated setup.py, __init__.py and the
   conf.py in the documentation.

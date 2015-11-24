@@ -10,8 +10,8 @@ def random_points(dim, nbr, low, upp):
     """
     from random import randint
     result = []
-    for i in range(nbr):
-        coords = [randint(low, upp) for k in range(dim)]
+    for _ in range(nbr):
+        coords = [randint(low, upp) for _ in range(dim)]
         point = tuple(coords)
         result.append(point)
     return result
@@ -20,25 +20,26 @@ def support(nvr, pol):
     """
     The support of a multivariate polynomial is a set of exponents
     of the monomials that appear with nonzero coefficient.
-    Given in nvr the number of variables and in pol a string 
+    Given in nvr the number of variables and in pol a string
     representation of a polynomial in nvr variables,
     returns the support of the polynomial as a list of tuples.
     """
-    from phcpy2c import py2c_syscon_clear_Laurent_system
-    from phcpy2c import py2c_syscon_initialize_number_of_Laurentials
-    from phcpy2c import py2c_syscon_store_Laurential
-    py2c_syscon_clear_Laurent_system()
-    py2c_syscon_initialize_number_of_Laurentials(nvr)
+    from phcpy.phcpy2c import py2c_syscon_clear_standard_Laurent_system
+    from phcpy.phcpy2c \
+    import py2c_syscon_initialize_number_of_standard_Laurentials
+    from phcpy.phcpy2c import py2c_syscon_store_standard_Laurential
+    py2c_syscon_clear_standard_Laurent_system()
+    py2c_syscon_initialize_number_of_standard_Laurentials(nvr)
     nchar = len(pol)
-    fail = py2c_syscon_store_Laurential(nchar, nvr, 1, pol)
+    fail = py2c_syscon_store_standard_Laurential(nchar, nvr, 1, pol)
     if(fail != 0):
         return fail
     else:
-        from phcpy2c import py2c_syscon_number_of_Laurent_terms
-        from phcpy2c import py2c_giftwrap_support_size
-        from phcpy2c import py2c_giftwrap_support_string
-        from phcpy2c import py2c_giftwrap_clear_support_string
-        ntm = py2c_syscon_number_of_Laurent_terms(1)
+        # from phcpy.phcpy2c import py2c_syscon_number_of_Laurent_terms
+        from phcpy.phcpy2c import py2c_giftwrap_support_size
+        from phcpy.phcpy2c import py2c_giftwrap_support_string
+        from phcpy.phcpy2c import py2c_giftwrap_clear_support_string
+        # ntm = py2c_syscon_number_of_Laurent_terms(1)
         # print 'number of terms : %d' % ntm
         size = py2c_giftwrap_support_size()
         # print 'size of support :', size
@@ -53,23 +54,38 @@ def initial_form(pols, normal):
     Returns the initial form of the polynomials in pols
     with respect to the inner normal with coordinates in normal.
     """
-    from phcpy2c import py2c_syscon_clear_Laurent_system
-    from phcpy2c import py2c_syscon_initialize_number_of_Laurentials
-    from phcpy2c import py2c_syscon_store_Laurential
-    from phcpy2c import py2c_syscon_load_standard_Laurential
-    from phcpy2c import py2c_giftwrap_initial_form
-    py2c_syscon_clear_Laurent_system()
+    from phcpy.phcpy2c import py2c_syscon_clear_standard_Laurent_system
+    from phcpy.phcpy2c \
+    import py2c_syscon_initialize_number_of_standard_Laurentials
+    from phcpy.phcpy2c import py2c_syscon_store_standard_Laurential
+    from phcpy.phcpy2c import py2c_syscon_load_standard_Laurential
+    from phcpy.phcpy2c import py2c_giftwrap_initial_form
+    py2c_syscon_clear_standard_Laurent_system()
     dim = max(len(pols), len(normal))
-    py2c_syscon_initialize_number_of_Laurentials(dim)
+    py2c_syscon_initialize_number_of_standard_Laurentials(dim)
     for i in range(len(pols)):
         nchar = len(pols[i])
-        fail = py2c_syscon_store_Laurential(nchar, dim, i+1, pols[i])
+        fail = py2c_syscon_store_standard_Laurential(nchar, dim, i+1, pols[i])
     strnrm = str(tuple(normal))
     fail = py2c_giftwrap_initial_form(len(normal), len(strnrm), strnrm)
     result = []
     for i in range(len(pols)):
         result.append(py2c_syscon_load_standard_Laurential(i+1))
     return result
+
+def initial_support(points, normal):
+    """
+    Returns the list of elements in points that make the minimal inner
+    product with the given normal, as the second element in a tuple.
+    The first element is the value of that minimal inner product.
+    Every tuple in points must have the same length as normal.
+    """
+    inprod = lambda x, y: sum([a*b for (a, b) in zip(x, y)])
+    vals = [inprod(point, normal) for point in points]
+    minv = min(vals)
+    idx = [ind for ind in range(len(vals)) if vals[ind] == minv]
+    result = [points[ind] for ind in idx]
+    return (minv, result)
 
 def convex_hull_checkin(dim, points):
     """
@@ -87,14 +103,14 @@ def convex_hull_checkin(dim, points):
         if(sum(tup) != len(points)):
             print 'not every element in points is a tuple'
         else:
-           for point in points:
-               if(len(point) != dim):
-                   print 'the point', point, 'is not of length', dim
-               else:
-                   coord = [isinstance(x, int) for x in point]
-                   if(sum(coord) != dim):
-                       print point, 'contains non integer values'
-    return True;
+            for point in points:
+                if(len(point) != dim):
+                    print 'the point', point, 'is not of length', dim
+                else:
+                    coord = [isinstance(x, int) for x in point]
+                    if(sum(coord) != dim):
+                        print point, 'contains non integer values'
+    return True
 
 def planar_convex_hull(points, checkin=True):
     """
@@ -107,7 +123,7 @@ def planar_convex_hull(points, checkin=True):
     if checkin:
         if not convex_hull_checkin(2, points):
             return None
-    from phcpy2c import py2c_giftwrap_planar
+    from phcpy.phcpy2c import py2c_giftwrap_planar
     strpoints = str(points)
     strhull = py2c_giftwrap_planar(len(strpoints), strpoints)
     hull = eval(strhull)
@@ -122,11 +138,9 @@ def convex_hull(dim, points, checkin=True):
     if checkin:
         if not convex_hull_checkin(dim, points):
             return None
-    from phcpy2c import py2c_giftwrap_convex_hull
-    from phcpy2c import py2c_giftwrap_number_of_facets
-    from phcpy2c import py2c_giftwrap_retrieve_facet
-    from phcpy2c import py2c_giftwrap_clear_3d_facets
-    from phcpy2c import py2c_giftwrap_clear_3d_facets
+    from phcpy.phcpy2c import py2c_giftwrap_convex_hull
+    from phcpy.phcpy2c import py2c_giftwrap_number_of_facets
+    from phcpy.phcpy2c import py2c_giftwrap_retrieve_facet
     strpoints = str(points)
     fail = py2c_giftwrap_convex_hull(len(strpoints), strpoints)
     nbrfacets = py2c_giftwrap_number_of_facets(dim)
@@ -137,10 +151,10 @@ def convex_hull(dim, points, checkin=True):
         facet = eval(strfacet)
         result.append(facet)
     if(dim == 3):
-        from phcpy2c import py2c_giftwrap_clear_3d_facets
+        from phcpy.phcpy2c import py2c_giftwrap_clear_3d_facets
         fail = py2c_giftwrap_clear_3d_facets()
     if(dim == 4):
-        from phcpy2c import py2c_giftwrap_clear_4d_facets
+        from phcpy.phcpy2c import py2c_giftwrap_clear_4d_facets
         fail = py2c_giftwrap_clear_4d_facets()
     return result
 
