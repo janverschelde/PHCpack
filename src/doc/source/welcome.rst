@@ -11,7 +11,8 @@ to solve polynomial systems by homotopy continuation methods.
 
 On input is a sequence of polynomials in several variables,
 on output are the solutions to the polynomial system given on input.
-The computational complexity of this problem is #P-hard because of
+The computational :index:`complexity`
+of this problem is #P-hard because of
 the exponential growth of the number of solutions as the number of
 input polynomials increases.  For example, ten polynomials of degree two
 may intersect in 1,024 isolated points (that is two to the power ten).
@@ -26,7 +27,8 @@ of polynomial systems, connecting the system we want to solve with an
 easier to solve system, which is called the start system.
 Numerical continuation methods track the solution paths starting at
 known solutions of an easier system to the system we want to solve.
-We say that a homotopy is optimal if every path leads to a solution.
+We have an :index:`optimal homotopy`
+if every path leads to a solution, that is: there are no divergent paths.
 
 PHCpack offers optimal homotopies for systems that resemble 
 linear-product structures, for geometric problems in enumerative geometry,
@@ -41,8 +43,9 @@ but a the same time still very interesting.
 
 Version 1.0 of PHCpack was archived as Algorithm 795
 by ACM Transactions on Mathematical Software.  
-PHCpack is open source and free software 
+PHCpack is open source and :index:`free software`
 which gives any user the same rights as in free speech.
 You can redistribute PHCpack and/or modify it under the terms of 
-the GNU General Public License as published by the Free Software Foundation; 
+the GNU General Public :index:`License`
+as published by the Free Software Foundation; 
 either version 2 of the License, or (at your option) any later version.

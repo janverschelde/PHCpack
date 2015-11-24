@@ -9,13 +9,14 @@ Executable versions of the program for various machine architectures
 and operating systems are available via
 <http://www.math.uic.edu/~jan/download.html>.
 
-For Windows operating systems, the 
+For :index:`Windows` operating systems, the 
 executable version of phc is in the file ``phc.exe``
 and is available for download in its uncompressed format.
 Using the plain version of phc on a Windows system 
 requires the opening of a command prompt window.
 
-For Mac OS X and Linux versions, the executable is tarred and gzipped.
+For :index:`Mac OS X` and :index:`Linux` versions, 
+the executable is tarred and gzipped.
 If the downloaded file is saved as ``x_phcv2_4.p.tar.gz``,
 then the following commands to unzip and untar the downloaded file 
 can be typed at the command prompt:
@@ -28,11 +29,13 @@ can be typed at the command prompt:
 If all went well, typing ``./phc`` at the command prompt should bring
 up the welcome message and the screen with available options.
 
-The source code is under version control at github, at
-<https://github.com/janverschelde/PHCpack>.
+The :index:`source code` is under :index:`version control` 
+at :index:`github`,
+at <https://github.com/janverschelde/PHCpack>.
 To compile the source code, the gnu-ada compiler is needed.
-Free binary versions of the gnu-ada compiler are available at
-<http://libre.adacore.com>.  The directory ``Objects`` in the
+Free binary versions of the :index:`gnu-ada compiler`
+are available at <http://libre.adacore.com>.
+The directory ``Objects`` in the
 source code provides makefiles for Linux, Mac OS X, and Windows
 operating systems.
 
@@ -60,11 +63,12 @@ Observe that every polynomial terminates with a semicolon.
 The exponentiation may also be denoted by a hat instead of
 a double asterix. 
 
-Symbols that are forbidden to denote names of variables are
-i and I, because they both represent the square root of -1.
+The :index:`forbidden symbols`
+to denote names of variables are i and I, because they 
+both represent the square root of -1.
 Also forbidden are e and E because they are used in
-the scientific notation of floating-point numbers, like
-0.01 = 1.0e-2 = 1.0E-2.
+the scientific notation of floating-point numbers,
+like 0.01 = 1.0e-2 = 1.0E-2.
 
 The equations defining the adjacent 2-by-2 minors of
 a general 2-by-4 matrix are represented as
@@ -100,7 +104,8 @@ A very simple Maple interface
 
 The software is developed for command line interactions.
 Because there is no interpreter provided with PHCpack,
-there are interfaces to computer algebra systems like Maple.
+there are interfaces to :index:`computer algebra` systems
+such as for example Maple.
 
 From the web site mentioned above we can download the Maple procedure
 run_phc and an example worksheet on how to use this procedure.
@@ -109,6 +114,8 @@ in the name of the executable version of the program, and a list of
 polynomials.  This procedure sets up the input file for phc, calls
 the blackbox solver and returns the list of approximate solutions.
 This list is returned in Maple format.
+
+.. index:: Octave, MATLAB, Sage, Macaulay2, Maple
 
 Other interfaces are PHClab (for Octave and MATLAB),
 phc.py (for Sage), and PHCpack.m2 (for Macaulay 2).

@@ -10,8 +10,8 @@ phc -0 : random numbers with fixed seed for repeatable runs
 
 Many homotopy algorithms generate random constants.
 With each run, the current time is used to generate
-another seed for the random number generator, leading
-to different random constants in each run.
+another seed for the :index:`random number` generator,
+leading to different random constants in each run.
 As different random values give different random start systems,
 this may cause differences in the solution paths and fluctuations
 in the executation time.  Another notable effect of generating a
@@ -20,7 +20,7 @@ solutions in the list may differ.  Although the same solutions
 should be found with each run, a solution that appears first
 in one run may turn out last in another run.
 
-With the option -0, a fixed seed is used in each run.
+With the option -0, a :index:`fixed seed` is used in each run.
 This option can be combined with the blackbox solver (phc -b),
 e.g.: phc -b -0 or phc -0 -b.
 
@@ -31,7 +31,8 @@ number generator with the seed 89348224.
 Just calling phc as phc -0 will still result in using the same
 fixed seed as before in each run.
 
-To reproduce a run with any seed (when the option -0 was not used),
+To :index:`reproduce`
+a run with any seed (when the option -0 was not used),
 we can look at the output file, for the line
 
 ::
@@ -43,7 +44,7 @@ Running phc -b -0407 on the same input file as before
 will generate the same sequences of random numbers
 and thus the same output.
 
-A homotopy is a family of polynomial systems.
+A :index:`homotopy` is a family of polynomial systems.
 In an artificial parameter homotopy there is one parameter \ :math:`t` 
 usually going from 0 to 1.  
 If we want to solve the system \ :math:`f({\bf x}) = {\bf 0}`
@@ -62,7 +63,7 @@ for \ :math:`t` the homotopy \ :math:`h({\bf x},t) = {\bf 0}` has
 singular solutions.  
 But since we consider \ :math:`t \in [0,1]` and since the values
 for \ :math:`t` for which \ :math:`h({\bf x},t) = {\bf 0}` are complex,
-the interval \ :math:`[0,1(` will with probability one not contain
+the interval \ :math:`[0,1(` will with :index:`probability one` not contain
 any of the bad complex values for \ :math:`t` and therefore no
 singular solutions for \ :math:`t \in [0,1(` will occur.
 
@@ -108,7 +109,8 @@ Through the options -s, -r, -p, and -v,
 the user can go through the stages separately.
 
 New since version 2.4.02 are the options -b2 and -b4 to run the
-blackbox solver respectively in double double and quad double precision,
+blackbox solver respectively in :index:`double double` 
+and :index:`quad double` precision,
 for example as
 
 ::
@@ -269,7 +271,7 @@ with as many equations as unknowns, the mixed volume of the Newton
 polytopes gives a generically sharp upper bound on the number of
 isolated solutions with coordinates different from zero.
 
-The mixed volume of a tuple of Newton polytopes
+The mixed volume :index:`mixed volume` of a tuple of Newton polytopes
 if defined as the coefficient in the expansion of the volume
 of a linear combination of Newton polytopes.
 For example, for a 3-tuple of Newton polytopes:
@@ -293,8 +295,10 @@ and \ :math:`V(\cdot)` is the mixed volume.
 For the tuple \ :math:`(P_1, P_2, P_3)`, its mixed volume
 is \ :math:`V(P_1,P_2,P_3)` in the expansion above.
 
-The polynomial above can be called the *Minkowski polynomial*
-and with the Cayley trick we can compute all its coefficients.
+The polynomial above can be called 
+the :index:`Minkowski polynomial`
+and with the :index:`Cayley trick`
+we can compute all its coefficients.
 This is implemented with the dynamic lifting algorithm.
 
 The menu of phc -m offers 5 different algorithms:
@@ -330,9 +334,9 @@ The menu of phc -m offers 5 different algorithms:
    distributed under the terms of the GNU General Public License as
    published by the Free Software Foundation.
 
-   Stable mixed volumes count all affine solutions
-   (not only those with nonzero coordinates) 
-   and lead to polyhedral homotopies that compute all affine solutions.
+   With the :index:`stable mixed volume` we count *all* affine 
+   solutions (not only those with nonzero coordinates) and then
+   and obtain polyhedral homotopies that compute all affine solutions.
 
 phc -o : writes the contents of the symbol table of an input system
 -------------------------------------------------------------------
@@ -392,9 +396,11 @@ that define how close the numerical approximations have to stay
 along a solution path.  Another application of phc -p is to rerun
 a selection of solution paths.
 
-In addition to the artificial parameter increment-and-fix continuation,
+In addition to the :index:`artificial parameter`
+increment-and-fix continuation,
 there is support for complex parameter continuation
-and real pseudo arc length path tracking with detection of singularities
+and real pseudo :index:`arc length`
+path tracking with detection of singularities
 using the determinant of the Jacobian along the solution path.
 
 To run pseudo arc length continuation, the user has to submit a system
@@ -409,8 +415,8 @@ For example, for a *real* sweep of the unit circle, the input would be
 
 where the last equation moves the line \ :math:`y=0` to \ :math:`y=2`.
 The sweep will stop at the first singularity it encounters on the
-solution path, which in this case is the quadratic turning point
-at \ :math:`(0, 1)`.
+solution path, which in this case is the
+:index:`quadratic turning point` at \ :math:`(0, 1)`.
 
 The corresponding list of solutions should then contain the following:
 
@@ -439,9 +445,9 @@ After launching the program as ``phc -p`` the user can determine the
 working precision.  This happens differently for the two types of
 homotopies, depending on whether the parameter is natural or artificial:
 
-1. For a natural parameter homotopy like the sweep,
-   the user will be prompted explicitly to choose between double, 
-   double double, or quad double precision. 
+1. For a :index:`natural parameter` homotopy
+   like the sweep, the user will be prompted explicitly to choose 
+   between double, double double, or quad double precision. 
 
 2. For an artificial parameter homotopy, the user can determine the
    working precision at the construction of the homotopy.
@@ -473,10 +479,12 @@ phc -s : Equation and variable Scaling on system and solutions
 
 We distinguish two types of scaling:
 
-1. Equation scaling: multiplying every coefficient in the same equation
-   by the same constant.
+1. :index:`equation scaling`:
+   multiply every coefficient in the same equation by the same constant; 
+   and
 
-2. Variable scaling: multiplying variables with constants.
+2. :index:`variable scaling`:
+   multiply variables by constants.
 
 Chapter 5 of the book of Alexander Morgan on
 *Solving Polynomial Systems Using Continuation for Engineering
@@ -557,7 +565,7 @@ phc -t : Tasking for tracking paths using multiple threads
 ----------------------------------------------------------
 
 The option -t allows the user to take advantage
-of multicore processors.
+of :index:`multicore processors`.
 For example, typing at the command prompt.
 
 ::
@@ -606,7 +614,7 @@ is interesting, consider the following sequence of runs:
    user    0m13.034s
    sys     0m0.010s
 
-With 16 tasks we get about a tenfold speedup,
+With 16 tasks we get about a tenfold :index:`speedup`,
 but what if we ask to double the precision?
 
 ::
@@ -621,7 +629,8 @@ We see that with 16 tasks in double precision, the elapsed time
 equals 4.107 seconds, whereas the time without tasking was 9.337 seconds.
 This means that with 16 tasks, for this example, we can double the
 working precision and still finish the computation is less than half
-of the time without tasking.
+of the time without tasking.  
+We call this :index:`quality up`.
 
 For quad double precision, more than 16 tasks are needed to offset
 the overhead caused by the quad double arithmetic:
