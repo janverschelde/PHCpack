@@ -87,6 +87,47 @@ def initial_support(points, normal):
     result = [points[ind] for ind in idx]
     return (minv, result)
 
+def planar_hull_checkout(vertices, normals, verbose=True):
+    """
+    Given a list of vertices and a list of normals as output
+    of a convex hull algorithm in the plane, this function checks
+    whether the initial support of every normal consists of
+    exactly two points that appear with consecutive indices
+    (modulo the length of the list) in the list of vertices.
+    Return True if the checks pass, False otherwise.
+    """
+    allpts = []
+    for normal in normals:
+        (val, inisup) = initial_support(vertices, normal)
+        if verbose:
+            print 'normal', normal, 'has value', val
+            print '  supports', inisup
+        if(len(inisup) != 2):
+            print 'normal', normal, 'does not define an edge'
+            return False
+        else:
+            adx = vertices.index(inisup[0])
+            bdx = vertices.index(inisup[1])
+            if(adx > bdx):
+                (adx, bdx) = (bdx, adx)
+            if verbose:
+                print '  indices of support :', adx, bdx
+            if(adx + 1 != bdx):
+                if(adx != 0):
+                    print 'indices', adx, bdx, 'are not consecutive'
+                    return False
+                elif(bdx != len(vertices)-1):
+                    print 'indices', adx, bdx, 'are not consecutive'
+                    return False
+            allpts.append(adx)
+            allpts.append(bdx)
+    if(len(allpts) == 2*len(vertices)):
+        return True
+    else:
+        print 'points on edges :', allpts
+        print 'not all vertices are edges'
+        return False
+
 def convex_hull_checkin(dim, points):
     """
     Checks whether the input arguments satisfy the requirements:
@@ -112,7 +153,7 @@ def convex_hull_checkin(dim, points):
                         print point, 'contains non integer values'
     return True
 
-def planar_convex_hull(points, checkin=True):
+def planar_convex_hull(points, checkin=True, checkout=True):
     """
     The convex hull of a point configuration in the plane
     consists of an ordered list of vertex points, ordered
@@ -122,11 +163,15 @@ def planar_convex_hull(points, checkin=True):
     """
     if checkin:
         if not convex_hull_checkin(2, points):
+            print 'the input is not correct'
             return None
     from phcpy.phcpy2c import py2c_giftwrap_planar
     strpoints = str(points)
     strhull = py2c_giftwrap_planar(len(strpoints), strpoints)
     hull = eval(strhull)
+    if checkout:
+        if not planar_hull_checkout(hull[0], hull[1]):
+            print 'the output is not correct'
     return hull
 
 def convex_hull(dim, points, checkin=True):
