@@ -228,25 +228,33 @@ def mixed_volume(mixture, points):
             applft(len(lpt), k+1, str(lpt))
     return mixvol()
 
-def test_planar_hull():
+def test_planar_hull(nbr=7, size=9):
     """
     Generates a random point configuration in the plane
     and then computes its convex hull.
+    By default, the number of points equals 7,
+    in general it is the value of the parameter nbr.
+    The range of the coordinates in the point is defined
+    by the value of size, as -size..size.
     """
-    pts = random_points(2, 7, -9, 9)
+    pts = random_points(2, nbr, -size, size)
     print 'the points :', pts
     (vertices, normals) = planar_convex_hull(pts)
     print 'the vertices :', vertices
     print 'inner normals :', normals
 
-def test_convex_hull():
+def test_convex_hull(dim=3, nbr=10, size=9):
     """
-    Generates a random point configuration in 3-space
-    and then computes its convex hull.
+    Generates a random point configuration in 3-space by default
+    (although also dim = 4 works) and then computes its convex hull.
+    By default, 10 points are generated, while in general,
+    the number of points in the configurations equals nbr.
+    The range of the coordinates in the point is defined
+    by the value of size, as -size..size.
     """
-    pts = random_points(3, 10, -9, 9)
+    pts = random_points(dim, nbr, -size, size)
     print 'the points :', pts
-    facets = convex_hull(3, pts)
+    facets = convex_hull(dim, pts)
     print 'the facets :'
     for facet in facets:
         print facet
