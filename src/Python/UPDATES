@@ -1,3 +1,6 @@
+Thu 26 Nov 2015 : added a checkout function to polytopes.py to check the
+  correctness of the computed inner normals to the facets.
+
 Wed 25 Nov 2015 : a checkout function is added to check the correctness of
   the planar convex hull function, in polytopes.py.  Added dim as argument
   to the test_convex_hull().  Also added parameters for the number of points

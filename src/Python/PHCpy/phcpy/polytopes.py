@@ -153,6 +153,40 @@ def convex_hull_checkin(dim, points):
                         print point, 'contains non integer values'
     return True
 
+def convex_hull_checkout(dim, points, facets, verbose=True):
+    """
+    Checks whether for each facet in the list of facets,
+    the facet is supported on the points defined by the
+    computed inner normal and the minimal value.
+    Returns True if the check passes, returns False otherwise.
+    """
+    for facet in facets:
+        if verbose:
+            print 'checking facet', facet
+        (calval, normal) = (facet[0], facet[1])
+        (chkval, inisup) = initial_support(points, normal)
+        if verbose:
+            print '  supports :', inisup
+            print '  checked value :', chkval
+        if(calval != chkval):
+            print 'checked value', chkval, '!=', calval 
+            return False
+        else:
+            idx = [1 + points.index(x) for x in inisup]
+            if verbose:
+                print '  indices of support :', idx, '?=', facet[2]
+            idx.sort()
+            from copy import deepcopy
+            srtidx = facet[2]
+            srtidx.sort()
+            chksum = sum([x == y for (x, y) in zip(idx, srtidx)])
+            if verbose:
+                print '  checked equalities :', chksum
+            if(chksum != len(idx)):
+                print 'checked indices do not agree'
+                return False
+    return True
+
 def planar_convex_hull(points, checkin=True, checkout=True):
     """
     The convex hull of a point configuration in the plane
@@ -174,7 +208,7 @@ def planar_convex_hull(points, checkin=True, checkout=True):
             print 'the output is not correct'
     return hull
 
-def convex_hull(dim, points, checkin=True):
+def convex_hull(dim, points, checkin=True, checkout=True):
     """
     Returns the list of facets of the convex hull of the points,
     given in points.  The dimension of the ambient space is in dim.
@@ -201,6 +235,9 @@ def convex_hull(dim, points, checkin=True):
     if(dim == 4):
         from phcpy.phcpy2c import py2c_giftwrap_clear_4d_facets
         fail = py2c_giftwrap_clear_4d_facets()
+    if checkout:
+        if not convex_hull_checkout(dim, points, result):
+            print 'the list of facets is not correct'
     return result
 
 def mixed_volume(mixture, points):
