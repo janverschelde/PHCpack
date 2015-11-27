@@ -22,7 +22,6 @@ with Standard_Integer64_Linear_Solvers;
 with Standard_Complex_Linear_Solvers;
 with DoblDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_Linear_Solvers;
-with Standard_Floating_VecVecs;
 with Lists_of_Floating_Vectors;          use Lists_of_Floating_Vectors;
 with Arrays_of_Integer_Vector_Lists;
 with Standard_Complex_Laur_Functions;
@@ -62,6 +61,105 @@ with Polyhedral_Start_Systems;           use Polyhedral_Start_Systems;
 
 package body Multitasking_Polyhedral_Trackers is
 
+  procedure Track_Path
+               ( mxt : in Standard_Integer_Vectors.Vector;
+                 lft : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                 nor : in Standard_Floating_Vectors.Link_to_Vector;
+                 cff : in Standard_Complex_VecVecs.VecVec;
+                 dpw : in Standard_Floating_VecVecs.Link_to_VecVec;
+                 cft : in Standard_Complex_VecVecs.Link_to_VecVec;
+                 epv : in Exponent_Vectors.Exponent_Vectors_Array;
+                 hom : in Standard_Complex_Laur_SysFun.Eval_Coeff_Laur_Sys;
+                 ejf : in Standard_Complex_Laur_JacoMats.Eval_Coeff_Jaco_Mat;
+                 jmf : in Standard_Complex_Laur_JacoMats.Mult_Factors;
+                 sol : in Standard_Complex_Solutions.Link_to_Solution ) is
+
+    use Standard_Complex_Numbers;
+    use Standard_Complex_Norms_Equals;
+    use Standard_Complex_Laur_SysFun;
+    use Standard_Complex_Laur_JacoMats;
+    use Standard_Complex_Solutions;
+    use Standard_Continuation_Data;
+    use Standard_Path_Trackers;
+    use Polyhedral_Coefficient_Homotopies;
+
+    function Eval ( x : Standard_Complex_Vectors.Vector;
+                    t : Complex_Number )
+                  return Standard_Complex_Vectors.Vector is
+    begin
+      Eval(cff,REAL_PART(t),dpw.all,cft.all);
+      return Eval(hom,cft.all,x);
+    end Eval;
+
+    function dHt ( x : Standard_Complex_Vectors.Vector;
+                   t : Standard_Complex_Numbers.Complex_Number )
+                 return Standard_Complex_Vectors.Vector is
+
+      res : Standard_Complex_Vectors.Vector(hom'range);
+      xtl : constant integer32 := x'last+1;
+
+    begin
+      Eval(cff,REAL_PART(t),dpw.all,cft.all);
+      for k in res'range loop
+        res(k) := Eval(ejf(k,xtl),jmf(k,xtl).all,cft(k).all,x);
+      end loop;
+      return res;
+    end dHt;
+
+    function dHx ( x : Standard_Complex_Vectors.Vector;
+                   t : Complex_Number )
+                 return Standard_Complex_Matrices.Matrix is
+
+      mt : Standard_Complex_Matrices.Matrix(x'range,x'range);
+
+    begin
+      Eval(cff,REAL_PART(t),dpw.all,cft.all);
+      for k in mt'range(1) loop
+        for L in mt'range(2) loop
+          mt(k,L) := Eval(ejf(k,L),jmf(k,L).all,cft(k).all,x);
+        end loop;
+      end loop;
+      return mt;
+    end dHx;
+
+    procedure Track_Path_along_Path is
+      new Linear_Single_Normal_Silent_Continue(Max_Norm,Eval,dHt,dHx);
+    procedure Track_Path_at_End is
+      new Linear_Single_Conditioned_Silent_Continue(Max_Norm,Eval,dHt,dHx);
+
+    procedure Main is
+
+      t1 : constant Complex_Number := Create(1.0);
+      tol : constant double_float := 1.0E-12;
+      pp1 : Continuation_Parameters.Pred_Pars
+          := Continuation_Parameters.Create_for_Path;
+      pp2 : constant Continuation_Parameters.Pred_Pars
+          := Continuation_Parameters.Create_End_Game;
+      cp1 : constant Continuation_Parameters.Corr_Pars
+          := Continuation_Parameters.Create_for_Path;
+      cp2 : constant Continuation_Parameters.Corr_Pars
+          := Continuation_Parameters.Create_End_Game;
+
+    begin
+      Power_Transform(epv,lft,mxt,nor.all,dpw.all);
+      Polyhedral_Coefficient_Homotopies.Scale(dpw.all);
+      sol.t := Create(0.0);
+      declare
+        s : Solu_Info := Shallow_Create(sol);
+        v : Standard_Floating_Vectors.Link_to_Vector;
+        e : double_float := 0.0;
+      begin
+        pp1.dist_target := 0.0;
+        Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
+        Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
+        sol.err := s.cora; sol.rco := s.rcond; sol.res := s.resa;
+      end;
+    end Main;
+
+  begin
+    Main;
+  end Track_Path;
+
   procedure Silent_Multitasking_Path_Tracker
               ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
                 nt,n,r : in integer32;
@@ -76,25 +174,12 @@ package body Multitasking_Polyhedral_Trackers is
                 sols : out Standard_Complex_Solutions.Solution_List ) is
 
     use Standard_Complex_Numbers,Standard_Complex_Solutions;
-    use Standard_Complex_Laur_SysFun,Standard_Complex_Laur_JacoMats;
 
     cell_ptr : Mixed_Subdivision := mcc;
-    first : boolean := true;
     s_sols : Semaphore.Lock;
     sols_ptr : Solution_List;
     dpow : Standard_Floating_VecVecs.Array_of_VecVecs(1..nt);
     dctm : Standard_Complex_VecVecs.Array_of_VecVecs(1..nt);
-    t1 : constant Complex_Number := Create(1.0);
-    tol : constant double_float := 1.0E-12;
-   -- tol_zero : constant double_float := 1.0E-8;
-    pp1 : Continuation_Parameters.Pred_Pars
-        := Continuation_Parameters.Create_for_Path;
-    pp2 : constant Continuation_Parameters.Pred_Pars
-        := Continuation_Parameters.Create_End_Game;
-    cp1 : constant Continuation_Parameters.Corr_Pars
-        := Continuation_Parameters.Create_for_Path;
-    cp2 : constant Continuation_Parameters.Corr_Pars
-        := Continuation_Parameters.Create_End_Game;
 
     procedure Next_Cell ( task_id,nb_tasks : in integer32 ) is
 
@@ -114,78 +199,6 @@ package body Multitasking_Polyhedral_Trackers is
       pdetU : natural32 := 0;
       mysols,mysols_ptr : Solution_List;
       ls : Link_to_Solution;
-
-      procedure Call_Path_Tracker is
-
-      -- DESCRIPTION :
-      --   Calls the path tracker on the solution ls points to.
-
-        use Standard_Complex_Norms_Equals;
-        use Standard_Continuation_Data;
-        use Standard_Path_Trackers;
-        use Polyhedral_Coefficient_Homotopies;
-
-        function Eval ( x : Standard_Complex_Vectors.Vector;
-                        t : Complex_Number )
-                      return Standard_Complex_Vectors.Vector is
-        begin
-          Eval(c,REAL_PART(t),dpow(task_id).all,dctm(task_id).all);
-          return Eval(h,dctm(task_id).all,x);
-        end Eval;
-
-        function dHt ( x : Standard_Complex_Vectors.Vector;
-                       t : Standard_Complex_Numbers.Complex_Number )
-                     return Standard_Complex_Vectors.Vector is
-
-          res : Standard_Complex_Vectors.Vector(h'range);
-          xtl : constant integer32 := x'last+1;
-
-        begin
-          Eval(c,REAL_PART(t),dpow(task_id).all,dctm(task_id).all);
-          for k in wrk'range loop
-            res(k) := Eval(j(k,xtl),mf(k,xtl).all,dctm(task_id)(k).all,x);
-          end loop;
-          return res;
-        end dHt;
-
-        function dHx ( x : Standard_Complex_Vectors.Vector;
-                       t : Complex_Number )
-                     return Standard_Complex_Matrices.Matrix is
-
-          mt : Standard_Complex_Matrices.Matrix(x'range,x'range);
-
-        begin
-          Eval(c,REAL_PART(t),dpow(task_id).all,dctm(task_id).all);
-          for k in mt'range(1) loop
-            for L in mt'range(2) loop
-              mt(k,L) := Eval(j(k,L),mf(k,L).all,dctm(task_id)(k).all,x);
-            end loop;
-          end loop;
-          return mt;
-        end dHx;
-
-        procedure Track_Path_along_Path is
-          new Linear_Single_Normal_Silent_Continue(Max_Norm,Eval,dHt,dHx);
-
-        procedure Track_Path_at_End is
-           new Linear_Single_Conditioned_Silent_Continue
-                 (Max_Norm,Eval,dHt,dHx);
-
-      begin
-        Power_Transform(e,lif,mix,mic.nor.all,dpow(task_id).all);
-        Polyhedral_Coefficient_Homotopies.Scale(dpow(task_id).all);
-        ls.t := Create(0.0);
-        declare
-          s : Solu_Info := Shallow_Create(ls);
-          v : Standard_Floating_Vectors.Link_to_Vector;
-          e : double_float := 0.0;
-        begin
-          pp1.dist_target := 0.0;
-          Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
-          Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
-          ls.err := s.cora; ls.rco := s.rcond; ls.res := s.resa;
-        end;
-      end Call_Path_Tracker;
 
     begin
       loop
@@ -224,7 +237,7 @@ package body Multitasking_Polyhedral_Trackers is
           Standard_Binomial_Systems.Eval(M,ls.v,wrk);
           ls.v := wrk;
           Standard_Radial_Solvers.Multiply(ls.v,e10x);
-          Call_Path_Tracker;
+          Track_Path(mix,lif,mic.nor,c,dpow(task_id),dctm(task_id),e,h,j,mf,ls);
           mysols_ptr := Tail_Of(mysols_ptr);
         end loop;
       end loop;
@@ -274,7 +287,6 @@ package body Multitasking_Polyhedral_Trackers is
                 sols : out Standard_Complex_Solutions.Solution_List ) is
 
     use Standard_Complex_Numbers,Standard_Complex_Solutions;
-    use Standard_Complex_Laur_SysFun,Standard_Complex_Laur_JacoMats;
 
     cell_ptr : Mixed_Subdivision := mcc;
     cell_ind : integer32 := 0;
@@ -282,17 +294,6 @@ package body Multitasking_Polyhedral_Trackers is
     sols_ptr : Solution_List;
     dpow : Standard_Floating_VecVecs.Array_of_VecVecs(1..nt);
     dctm : Standard_Complex_VecVecs.Array_of_VecVecs(1..nt);
-    t1 : constant Complex_Number := Create(1.0);
-    tol : constant double_float := 1.0E-12;
-   -- tol_zero : constant double_float := 1.0E-8;
-    pp1 : Continuation_Parameters.Pred_Pars
-        := Continuation_Parameters.Create_for_Path;
-    pp2 : constant Continuation_Parameters.Pred_Pars
-        := Continuation_Parameters.Create_End_Game;
-    cp1 : constant Continuation_Parameters.Corr_Pars
-        := Continuation_Parameters.Create_for_Path;
-    cp2 : constant Continuation_Parameters.Corr_Pars
-        := Continuation_Parameters.Create_End_Game;
 
     procedure Next_Cell ( task_id,nb_tasks : integer32 ) is
 
@@ -313,78 +314,6 @@ package body Multitasking_Polyhedral_Trackers is
       pdetU : natural32 := 0;
       mysols,mysols_ptr : Solution_List;
       ls : Link_to_Solution;
-
-      procedure Call_Path_Tracker is
-
-      -- DESCRIPTION :
-      --   Calls the path tracker on the solution ls points to.
-
-        use Standard_Complex_Norms_Equals;
-        use Standard_Continuation_Data;
-        use Standard_Path_Trackers;
-        use Polyhedral_Coefficient_Homotopies;
-
-        function Eval ( x : Standard_Complex_Vectors.Vector;
-                        t : Complex_Number )
-                      return Standard_Complex_Vectors.Vector is
-        begin
-          Eval(c,REAL_PART(t),dpow(task_id).all,dctm(task_id).all);
-          return Eval(h,dctm(task_id).all,x);
-        end Eval;
-
-        function dHt ( x : Standard_Complex_Vectors.Vector;
-                       t : Complex_Number )
-                     return Standard_Complex_Vectors.Vector is
-
-          res : Standard_Complex_Vectors.Vector(h'range);
-          xtl : constant integer32 := x'last+1;
-
-        begin
-          Eval(c,REAL_PART(t),dpow(task_id).all,dctm(task_id).all);
-          for k in wrk'range loop
-            res(k) := Eval(j(k,xtl),mf(k,xtl).all,dctm(task_id)(k).all,x);
-          end loop;
-          return res;
-        end dHt;
-
-        function dHx ( x : Standard_Complex_Vectors.Vector;
-                       t : Complex_Number )
-                     return Standard_Complex_Matrices.Matrix is
-
-          mt : Standard_Complex_Matrices.Matrix(x'range,x'range);
-
-        begin
-          Eval(c,REAL_PART(t),dpow(task_id).all,dctm(task_id).all);
-          for k in mt'range(1) loop
-            for L in mt'range(2) loop
-              mt(k,L) := Eval(j(k,L),mf(k,L).all,dctm(task_id)(k).all,x);
-            end loop;
-          end loop;
-          return mt;
-        end dHx;
-
-        procedure Track_Path_along_Path is
-          new Linear_Single_Normal_Silent_Continue(Max_Norm,Eval,dHt,dHx);
-
-        procedure Track_Path_at_End is
-           new Linear_Single_Conditioned_Silent_Continue
-                 (Max_Norm,Eval,dHt,dHx);
-
-      begin
-        Power_Transform(e,lif,mix,mic.nor.all,dpow(task_id).all);
-        Polyhedral_Coefficient_Homotopies.Scale(dpow(task_id).all);
-        ls.t := Create(0.0);
-        declare
-          s : Solu_Info := Shallow_Create(ls);
-          v : Standard_Floating_Vectors.Link_to_Vector;
-          e : double_float := 0.0;
-        begin
-          pp1.dist_target := 0.0;
-          Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
-          Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
-          ls.err := s.cora; ls.rco := s.rcond; ls.res := s.resa;
-        end;
-      end Call_Path_Tracker;
 
     --  procedure Check_Solution is
     --
@@ -453,7 +382,7 @@ package body Multitasking_Polyhedral_Trackers is
           ls.v := wrk;
           Standard_Radial_Solvers.Multiply(ls.v,e10x);
          -- Check_Solution;
-          Call_Path_Tracker;
+          Track_Path(mix,lif,mic.nor,c,dpow(task_id),dctm(task_id),e,h,j,mf,ls);
           mysols_ptr := Tail_Of(mysols_ptr);
         end loop;
         put_line("task " & Multitasking.to_string(natural32(task_id))
