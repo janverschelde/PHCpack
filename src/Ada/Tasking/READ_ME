@@ -51,6 +51,7 @@ multitasking_volume_computation   : computing mixed volumes with threads
 ts_mtvol                          : test on multitasking volume computation
 polyhedral_start_systems          : inline binomial solvers
 multitasking_polyhedral_starters  : test to start up polyhedral homotopies
+mixed_cells_queue                 : thread safe queue for mixed cells
 multitasking_polyhedral_trackers  : multithreaded polyhedral continuation
 ts_mtvolcon                       : test on polyhedral path trackers
 multitasking_root_refiners        : root refinement by multiple tasks

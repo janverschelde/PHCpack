@@ -51,6 +51,7 @@ with Floating_Integer_Convertors;
 with Floating_Lifting_Utilities;
 with Polyhedral_Coefficient_Homotopies;
 with Multitasking,Semaphore;
+with Mixed_Cells_Queue;
 with Multitasking_Volume_Computation;    use Multitasking_Volume_Computation;
 with Polyhedral_Start_Systems;           use Polyhedral_Start_Systems;
 -- added for Check_Solution :
@@ -79,7 +80,7 @@ package body Multitasking_Polyhedral_Trackers is
 
     cell_ptr : Mixed_Subdivision := mcc;
     first : boolean := true;
-    s_cell,s_sols : Semaphore.Lock;
+    s_sols : Semaphore.Lock;
     sols_ptr : Solution_List;
     dpow : Standard_Floating_VecVecs.Array_of_VecVecs(1..nt);
     dctm : Standard_Complex_VecVecs.Array_of_VecVecs(1..nt);
@@ -188,16 +189,7 @@ package body Multitasking_Polyhedral_Trackers is
 
     begin
       loop
-        Semaphore.Request(s_cell);  -- request new cell
-        if first then
-          first := false;
-        else
-          if not Is_Null(cell_ptr)
-           then cell_ptr := Tail_Of(cell_ptr);
-          end if;
-        end if;
-        mycell_ptr := cell_ptr;
-        Semaphore.Release(s_cell);  -- end of first critical section
+        mycell_ptr := Mixed_Cells_Queue.Next;
         exit when Is_Null(mycell_ptr);
         mic := Head_Of(mycell_ptr);
         if r = n then
@@ -256,6 +248,7 @@ package body Multitasking_Polyhedral_Trackers is
           dctm(t)(k) := new Standard_Complex_Vectors.Vector(c(k)'range);
         end loop;
       end loop;
+      Mixed_Cells_Queue.Initialize(mcc);
       do_jobs(nt);
       for t in 1..nt loop
         Standard_Floating_VecVecs.Deep_Clear(dpow(t));
@@ -285,7 +278,7 @@ package body Multitasking_Polyhedral_Trackers is
 
     cell_ptr : Mixed_Subdivision := mcc;
     cell_ind : integer32 := 0;
-    s_cell,s_sols : Semaphore.Lock;
+    s_sols : Semaphore.Lock;
     sols_ptr : Solution_List;
     dpow : Standard_Floating_VecVecs.Array_of_VecVecs(1..nt);
     dctm : Standard_Complex_VecVecs.Array_of_VecVecs(1..nt);
@@ -419,19 +412,9 @@ package body Multitasking_Polyhedral_Trackers is
     begin
       put_line("hello from task " & Multitasking.to_string(natural32(task_id)));
       loop
-        Semaphore.Request(s_cell);   -- take next cell
-        if cell_ind = 0 then
-          cell_ind := 1;
-        else
-          cell_ind := cell_ind + 1;
-          if not Is_Null(cell_ptr)
-           then cell_ptr := Tail_Of(cell_ptr);
-          end if;
-        end if;
-        mycell_ptr := cell_ptr;
-        myjob := natural32(cell_ind);
-        Semaphore.Release(s_cell);   -- end of first critical section
+        mycell_ptr := Mixed_Cells_Queue.Next;
         exit when Is_Null(mycell_ptr);
+        myjob := natural32(Mixed_Cells_Queue.Next_Counter);
         put_line("task " & Multitasking.to_string(natural32(task_id))
                          & " computes cell "
                          & Multitasking.to_string(myjob));
@@ -508,6 +491,7 @@ package body Multitasking_Polyhedral_Trackers is
       new_line;
       put_line("launching tasks ...");
       new_line;
+      Mixed_Cells_Queue.Initialize(mcc);
       do_jobs(nt);
       for t in 1..nt loop
         Standard_Floating_VecVecs.Deep_Clear(dpow(t));
@@ -537,7 +521,7 @@ package body Multitasking_Polyhedral_Trackers is
 
     cell_ptr : Mixed_Subdivision := mcc;
     first : boolean := true;
-    s_cell,s_sols : Semaphore.Lock;
+    s_sols : Semaphore.Lock;
     sols_ptr : Solution_List;
     dpow : Standard_Floating_VecVecs.Array_of_VecVecs(1..nt);
     dctm : DoblDobl_Complex_VecVecs.Array_of_VecVecs(1..nt);
@@ -678,16 +662,7 @@ package body Multitasking_Polyhedral_Trackers is
 
     begin
       loop
-        Semaphore.Request(s_cell);  -- request new cell
-        if first then
-          first := false;
-        else
-          if not Is_Null(cell_ptr)
-           then cell_ptr := Tail_Of(cell_ptr);
-          end if;
-        end if;
-        mycell_ptr := cell_ptr;
-        Semaphore.Release(s_cell);  -- end of first critical section
+        mycell_ptr := Mixed_Cells_Queue.Next;
         exit when Is_Null(mycell_ptr);
         mic := Head_Of(mycell_ptr);
         if r = n then
@@ -746,6 +721,7 @@ package body Multitasking_Polyhedral_Trackers is
           dctm(t)(k) := new DoblDobl_Complex_Vectors.Vector(c(k)'range);
         end loop;
       end loop;
+      Mixed_Cells_Queue.Initialize(mcc);
       do_jobs(nt);
       for t in 1..nt loop
         Standard_Floating_VecVecs.Deep_Clear(dpow(t));
@@ -775,7 +751,7 @@ package body Multitasking_Polyhedral_Trackers is
 
     cell_ptr : Mixed_Subdivision := mcc;
     cell_ind : integer32 := 0;
-    s_cell,s_sols : Semaphore.Lock;
+    s_sols : Semaphore.Lock;
     sols_ptr : Solution_List;
     dpow : Standard_Floating_VecVecs.Array_of_VecVecs(1..nt);
     dctm : DoblDobl_Complex_VecVecs.Array_of_VecVecs(1..nt);
@@ -913,19 +889,9 @@ package body Multitasking_Polyhedral_Trackers is
     begin
       put_line("hello from task " & Multitasking.to_string(natural32(task_id)));
       loop
-        Semaphore.Request(s_cell);   -- take next cell
-        if cell_ind = 0 then
-          cell_ind := 1;
-        else
-          cell_ind := cell_ind + 1;
-          if not Is_Null(cell_ptr)
-           then cell_ptr := Tail_Of(cell_ptr);
-          end if;
-        end if;
-        mycell_ptr := cell_ptr;
-        myjob := natural32(cell_ind);
-        Semaphore.Release(s_cell);   -- end of first critical section
+        mycell_ptr := Mixed_Cells_Queue.Next;
         exit when Is_Null(mycell_ptr);
+        myjob := natural32(Mixed_Cells_Queue.Next_Counter);
         put_line("task " & Multitasking.to_string(natural32(task_id))
                          & " computes cell "
                          & Multitasking.to_string(myjob));
@@ -1000,6 +966,7 @@ package body Multitasking_Polyhedral_Trackers is
       new_line;
       put_line("launching tasks ...");
       new_line;
+      Mixed_Cells_Queue.Initialize(mcc);
       do_jobs(nt);
       for t in 1..nt loop
         Standard_Floating_VecVecs.Deep_Clear(dpow(t));
@@ -1029,7 +996,7 @@ package body Multitasking_Polyhedral_Trackers is
 
     cell_ptr : Mixed_Subdivision := mcc;
     first : boolean := true;
-    s_cell,s_sols : Semaphore.Lock;
+    s_sols : Semaphore.Lock;
     sols_ptr : Solution_List;
     dpow : Standard_Floating_VecVecs.Array_of_VecVecs(1..nt);
     dctm : QuadDobl_Complex_VecVecs.Array_of_VecVecs(1..nt);
@@ -1142,16 +1109,7 @@ package body Multitasking_Polyhedral_Trackers is
 
     begin
       loop
-        Semaphore.Request(s_cell);  -- request new cell
-        if first then
-          first := false;
-        else
-          if not Is_Null(cell_ptr)
-           then cell_ptr := Tail_Of(cell_ptr);
-          end if;
-        end if;
-        mycell_ptr := cell_ptr;
-        Semaphore.Release(s_cell);  -- end of first critical section
+        mycell_ptr := Mixed_Cells_Queue.Next;
         exit when Is_Null(mycell_ptr);
         mic := Head_Of(mycell_ptr);
         if r = n then
@@ -1209,6 +1167,7 @@ package body Multitasking_Polyhedral_Trackers is
           dctm(t)(k) := new QuadDobl_Complex_Vectors.Vector(c(k)'range);
         end loop;
       end loop;
+      Mixed_Cells_Queue.Initialize(mcc);
       do_jobs(nt);
       for t in 1..nt loop
         Standard_Floating_VecVecs.Deep_Clear(dpow(t));
@@ -1238,7 +1197,7 @@ package body Multitasking_Polyhedral_Trackers is
 
     cell_ptr : Mixed_Subdivision := mcc;
     cell_ind : integer32 := 0;
-    s_cell,s_sols : Semaphore.Lock;
+    s_sols : Semaphore.Lock;
     sols_ptr : Solution_List;
     dpow : Standard_Floating_VecVecs.Array_of_VecVecs(1..nt);
     dctm : QuadDobl_Complex_VecVecs.Array_of_VecVecs(1..nt);
@@ -1376,19 +1335,9 @@ package body Multitasking_Polyhedral_Trackers is
     begin
       put_line("hello from task " & Multitasking.to_string(natural32(task_id)));
       loop
-        Semaphore.Request(s_cell);   -- take next cell
-        if cell_ind = 0 then
-          cell_ind := 1;
-        else
-          cell_ind := cell_ind + 1;
-          if not Is_Null(cell_ptr)
-           then cell_ptr := Tail_Of(cell_ptr);
-          end if;
-        end if;
-        mycell_ptr := cell_ptr;
-        myjob := natural32(cell_ind);
-        Semaphore.Release(s_cell);   -- end of first critical section
+        mycell_ptr := Mixed_Cells_Queue.Next;
         exit when Is_Null(mycell_ptr);
+        myjob := natural32(Mixed_Cells_Queue.Next_Counter);
         put_line("task " & Multitasking.to_string(natural32(task_id))
                          & " computes cell "
                          & Multitasking.to_string(myjob));
@@ -1463,6 +1412,7 @@ package body Multitasking_Polyhedral_Trackers is
       new_line;
       put_line("launching tasks ...");
       new_line;
+      Mixed_Cells_Queue.Initialize(mcc);
       do_jobs(nt);
       for t in 1..nt loop
         Standard_Floating_VecVecs.Deep_Clear(dpow(t));
