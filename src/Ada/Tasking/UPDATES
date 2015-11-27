@@ -1,4 +1,5 @@
-Fri 27 Nov 2015 : refactored code in multitasking_polyhedral_trackers.
+Fri 27 Nov 2015 : refactored code in multitasking_polyhedral_trackers;
+  also for double double and quad double precision.
 
 Thu 26 Nov 2015 : factored out queues out of multitasking_continuation
   in the new packages {standard,dobldobl,quaddobl}_solutions_queue.

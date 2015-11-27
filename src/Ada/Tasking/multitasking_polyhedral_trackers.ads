@@ -43,6 +43,30 @@ package Multitasking_Polyhedral_Trackers is
                  ejf : in Standard_Complex_Laur_JacoMats.Eval_Coeff_Jaco_Mat;
                  jmf : in Standard_Complex_Laur_JacoMats.Mult_Factors;
                  sol : in Standard_Complex_Solutions.Link_to_Solution );
+  procedure Track_Path
+               ( mxt : in Standard_Integer_Vectors.Vector;
+                 lft : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                 nor : in Standard_Floating_Vectors.Link_to_Vector;
+                 cff : in DoblDobl_Complex_VecVecs.VecVec;
+                 dpw : in Standard_Floating_VecVecs.Link_to_VecVec;
+                 cft : in DoblDobl_Complex_VecVecs.Link_to_VecVec;
+                 epv : in Exponent_Vectors.Exponent_Vectors_Array;
+                 hom : in DoblDobl_Complex_Laur_SysFun.Eval_Coeff_Laur_Sys;
+                 ejf : in DoblDobl_Complex_Laur_JacoMats.Eval_Coeff_Jaco_Mat;
+                 jmf : in DoblDobl_Complex_Laur_JacoMats.Mult_Factors;
+                 sol : in DoblDobl_Complex_Solutions.Link_to_Solution );
+  procedure Track_Path
+               ( mxt : in Standard_Integer_Vectors.Vector;
+                 lft : in Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                 nor : in Standard_Floating_Vectors.Link_to_Vector;
+                 cff : in QuadDobl_Complex_VecVecs.VecVec;
+                 dpw : in Standard_Floating_VecVecs.Link_to_VecVec;
+                 cft : in QuadDobl_Complex_VecVecs.Link_to_VecVec;
+                 epv : in Exponent_Vectors.Exponent_Vectors_Array;
+                 hom : in QuadDobl_Complex_Laur_SysFun.Eval_Coeff_Laur_Sys;
+                 ejf : in QuadDobl_Complex_Laur_JacoMats.Eval_Coeff_Jaco_Mat;
+                 jmf : in QuadDobl_Complex_Laur_JacoMats.Mult_Factors;
+                 sol : in QuadDobl_Complex_Solutions.Link_to_Solution );
 
   -- DESCRIPTION :
   --   Calls the path tracker on the solution sol.
