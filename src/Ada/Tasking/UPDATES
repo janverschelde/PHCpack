@@ -1,3 +1,6 @@
+Thu 26 Nov 2015 : factored out queues out of multitasking_continuation
+  in the new packages {standard,dobldobl,quaddobl}_solutions_queue.
+
 Fri 9 Oct 2015 : extended multitasking_root_refiners with procedures in
   double double and quad double precision, tested by ts_mtverify.
 

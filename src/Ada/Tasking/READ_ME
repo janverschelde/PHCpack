@@ -1,4 +1,4 @@
-Multitasking linear algebra, evaluation and path tracking in PHCv2.4.03
+Multitasking linear algebra, evaluation and path tracking in PHCv2.4.06
 
 This directory is entirely new in release 2.3.45 of PHCpack.
 Tasks in Ada are mapped to kernel threads.
@@ -39,6 +39,9 @@ ts_mtstref                        : multitasking solution refinement
 ts_mtddref                        : multitasking refiner with dd cmplx numbers
 ts_mtqdref                        : multitasking refiner with qd cmplx numbers
 ts_mtsharp                        : multitasking multiprecision refinement
+standard_solutions_queue          : thread safe queue for standard solutions
+dobldobl_solutions_queue          : thread safe queue for dobldobl solutions
+quaddobl_solutions_queue          : thread safe queue for quaddobl solutions
 multitasking_continuation         : path trackers with multiple tasks
 ts_mtcont                         : test on multitasking continuation
 multitasking_sampling             : sampling solution sets with tasks
