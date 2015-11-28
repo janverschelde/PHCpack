@@ -175,17 +175,31 @@ def convex_hull_checkout(dim, points, facets, verbose=True):
             idx = [1 + points.index(x) for x in inisup]
             if verbose:
                 print '  indices of support :', idx, '?=', facet[2]
-            idx.sort()
-            from copy import deepcopy
-            srtidx = facet[2]
-            srtidx.sort()
-            chksum = sum([x == y for (x, y) in zip(idx, srtidx)])
+            okay = True  # careful: not all points are vertices
+            for fpt in facet[2]:
+                if(not(fpt in idx)):
+                    okay = False
+                if(not okay):
+                    break
             if verbose:
-                print '  checked equalities :', chksum
-            if(chksum != len(idx)):
+                print '  checked equalities :', okay
+            if(not okay):
                 print 'checked indices do not agree'
                 return False
     return True
+
+def vertices_in_facets(facets):
+    """
+    Given the list of facets, returns the list of indices
+    to the vertices, to the points that span the facets.
+    """
+    result = []
+    for facet in facets:
+        pts = facet[2]
+        for idx in pts:
+            if(not (idx in result)):
+                result.append(idx)
+    return result
 
 def planar_convex_hull(points, checkin=True, checkout=True):
     """
@@ -292,6 +306,7 @@ def test_convex_hull(dim=3, nbr=10, size=9):
     pts = random_points(dim, nbr, -size, size)
     print 'the points :', pts
     facets = convex_hull(dim, pts)
+    print 'vertices :', vertices_in_facets(facets)
     print 'the facets :'
     for facet in facets:
         print facet
