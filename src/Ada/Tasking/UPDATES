@@ -1,3 +1,6 @@
+Sun 29 Nov 2015 : new test procedure ts_mtmva to develop an interlacing of
+  the producing of mixed cells with the processing of the mixed cells.
+
 Fri 27 Nov 2015 : refactored code in multitasking_polyhedral_trackers;
   also for double double and quad double precision.
 
