@@ -1845,6 +1845,9 @@ ts_mtverify:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtverify.adb \
               -o $(BIN)/ts_mtverify
 
+ts_mtmva:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_mtmva.adb -o $(BIN)/ts_mtmva
+
 # Test programs for the Main interactive drivers :
 
 ts_drivroco:
