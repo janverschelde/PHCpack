@@ -1,4 +1,4 @@
-The MixedVol Algorithm for fast mixed volume computation in PHCv2.4.01
+The MixedVol Algorithm for fast mixed volume computation in PHCv2.4.06
 
 This directory is the main feature in release v2.3.13 of PHCpack.
 Since v2.3.31, support for stable mixed volumes was added.

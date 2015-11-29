@@ -598,6 +598,60 @@ package body MixedVol_Algorithm is
     return res;
   end Supports_of_Mixed_Cell;
 
+  function Labels_to_Mixed_Cell
+             ( nVar,nSpt : in integer32;
+               SptType : in Standard_Integer_Vectors.Link_to_Vector;
+               labels : in Standard_Integer_Vectors.Link_to_Vector;
+               Vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
+               lft : in Standard_Floating_Vectors.Link_to_Vector )
+             return Mixed_Cell is
+
+    use Arrays_of_Floating_Vector_Lists;
+
+    res : Mixed_Cell;
+    pts : constant Array_of_Lists(1..nSpt)
+        := Supports_of_Mixed_Cell(nVar,nSpt,SptType,labels,Vtx,lft);
+    normal : constant Standard_Floating_Vectors.Vector(0..nVar-1)
+           := Inner_Normal(nVar,nSpt,SptType,labels,Vtx,lft);
+
+  begin
+    res.nor := new Standard_Floating_Vectors.Vector(1..nVar+1);
+    for i in normal'range loop
+      res.nor(i+1) := normal(i);
+    end loop;
+    res.nor(nVar+1) := 1.0;
+    res.pts := new Array_of_Lists'(pts);
+    res.sub := null;
+    return res;
+  end Labels_to_Mixed_Cell;
+
+  function Labels_to_Mixed_Cell
+             ( nVar,nSpt : in integer32;
+               SptType,perm : in Standard_Integer_Vectors.Link_to_Vector;
+               labels : in Standard_Integer_Vectors.Link_to_Vector;
+               Vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
+               lft : in Standard_Floating_Vectors.Link_to_Vector )
+             return Mixed_Cell is
+
+    use Arrays_of_Floating_Vector_Lists;
+
+    res : Mixed_Cell;
+    pts : constant Array_of_Lists(1..nSpt)
+        := Supports_of_Mixed_Cell(nVar,nSpt,SptType,perm,labels,Vtx,lft);
+    normal : constant Standard_Floating_Vectors.Vector(0..nVar-1)
+           := Inner_Normal(nVar,nSpt,SptType,labels,Vtx,lft);
+
+  begin
+    res.nor := new Standard_Floating_Vectors.Vector(1..nVar+1);
+    for i in normal'range loop
+      res.nor(i+1) := normal(i);
+    end loop;
+    res.nor(nVar+1) := 1.0;
+    res.pts := new Array_of_Lists'(pts);
+    res.sub := null;
+    return res;
+  end Labels_to_Mixed_Cell;
+
   procedure Create_Mixed_Cell_Configuration
                ( nVar,nSpt,CellSize,nbCells : in integer32;
                  SptType : in Standard_Integer_Vectors.Link_to_Vector;
@@ -606,29 +660,16 @@ package body MixedVol_Algorithm is
                  cells : in out CellStack; sub : out Mixed_Subdivision ) is
 
     labels : Standard_Integer_Vectors.Link_to_Vector;
-    normal : Standard_Floating_Vectors.Vector(0..nVar-1);
     last : Mixed_Subdivision;
-
-    use Arrays_of_Floating_Vector_Lists;
 
   begin
     for k in 1..nbCells loop
       labels := Cs_Cur(cells);
-     -- put("cell "); put(k,1); put(" has labels ");
-     -- put(labels); new_line;
-      normal := Inner_Normal(nVar,nSpt,SptType,labels,Vtx,lft);
+     -- put("cell "); put(k,1); put(" has labels "); put(labels); new_line;
       declare
-        mic : Mixed_Cell;
-        pts : constant Array_of_Lists(1..nSpt)
-            := Supports_of_Mixed_Cell(nVar,nSpt,SptType,labels,Vtx,lft);
+        mic : constant Mixed_Cell
+            := Labels_to_Mixed_Cell(nVar,nSpt,SptType,labels,Vtx,lft);
       begin
-        mic.nor := new Standard_Floating_Vectors.Vector(1..nVar+1);
-        for i in normal'range loop
-          mic.nor(i+1) := normal(i);
-        end loop;
-        mic.nor(nVar+1) := 1.0;
-        mic.pts := new Array_of_Lists'(pts);
-        mic.sub := null;
         Append(sub,last,mic);
       end;
       if k /= nbCells
@@ -645,30 +686,17 @@ package body MixedVol_Algorithm is
                  cells : in out CellStack; sub : out Mixed_Subdivision ) is
 
     labels : Standard_Integer_Vectors.Link_to_Vector;
-    normal : Standard_Floating_Vectors.Vector(0..nVar-1);
     last : Mixed_Subdivision;
-
-    use Arrays_of_Floating_Vector_Lists;
 
   begin
    -- put_line("inside MixedVol_Algorithm.create_mcc with perm ...");
     for k in 1..nbCells loop
       labels := Cs_Cur(cells);
-     -- put("cell "); put(k,1); put(" has labels ");
-     -- put(labels); new_line;
-      normal := Inner_Normal(nVar,nSpt,SptType,labels,Vtx,lft);
+     -- put("cell "); put(k,1); put(" has labels "); put(labels); new_line;
       declare
-        mic : Mixed_Cell;
-        pts : constant Array_of_Lists(1..nSpt)
-            := Supports_of_Mixed_Cell(nVar,nSpt,SptType,perm,labels,Vtx,lft);
+        mic : constant Mixed_Cell
+            := Labels_to_Mixed_Cell(nVar,nSpt,SptType,perm,labels,Vtx,lft);
       begin
-        mic.nor := new Standard_Floating_Vectors.Vector(1..nVar+1);
-        for i in normal'range loop
-          mic.nor(i+1) := normal(i);
-        end loop;
-        mic.nor(nVar+1) := 1.0;
-        mic.pts := new Array_of_Lists'(pts);
-        mic.sub := null;
         Append(sub,last,mic);
       end;
       if k /= nbCells

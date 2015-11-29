@@ -282,6 +282,33 @@ package MixedVol_Algorithm is
   --   Vtx       complete vertex set of all supports;
   --   lft       lifting values for all points in Vtx.
 
+  function Labels_to_Mixed_Cell
+               ( nVar,nSpt : in integer32;
+                 SptType : in Standard_Integer_Vectors.Link_to_Vector;
+                 labels : in Standard_Integer_Vectors.Link_to_Vector;
+                 Vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
+                 lft : in Standard_Floating_Vectors.Link_to_Vector )
+               return Mixed_Cell;
+  function Labels_to_Mixed_Cell
+               ( nVar,nSpt : in integer32;
+                 SptType,perm : in Standard_Integer_Vectors.Link_to_Vector;
+                 labels : in Standard_Integer_Vectors.Link_to_Vector;
+                 Vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
+                 lft : in Standard_Floating_Vectors.Link_to_Vector )
+               return Mixed_Cell;
+
+  -- DESCRIPTION :
+  --   Returns the mixed cell defined by the labels of indices to the points.
+
+  -- ON ENTRY :
+  --   nVar      number of variables, dimension before the lifting;
+  --   nSpt      number of different supports;
+  --   SptType   type of mixture of the supports;
+  --   perm      permutation of the original support sets;
+  --   labels    indices to the point in the mixed cell;
+  --   Vtx       complete vertex set of all supports;
+  --   lft       lifting values for all points in Vtx.
+
   procedure Create_Mixed_Cell_Configuration
                ( nVar,nSpt,CellSize,nbCells : in integer32;
                  SptType : in Standard_Integer_Vectors.Link_to_Vector;
