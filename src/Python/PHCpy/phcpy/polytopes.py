@@ -201,6 +201,27 @@ def vertices_in_facets(facets):
                 result.append(idx)
     return result
 
+def edges_in_facets(facets):
+    """
+    Given the the list of facets, returns the list of tuples
+    of indices to the point that span the edges of the facets. 
+    """
+    result = []
+    for facet in facets:
+        pts = facet[2]
+        for idx in range(len(pts)-1):
+            edge = [pts[idx], pts[idx+1]]
+            edge.sort()
+            tuped = tuple(edge)
+            if(not(tuped in result)):
+                result.append(tuped)
+        edge = [pts[len(pts)-1], pts[0]]
+        edge.sort()
+        tuped = tuple(edge)
+        if(not(tuped in result)):
+            result.append(tuped)
+    return result
+
 def planar_convex_hull(points, checkin=True, checkout=True):
     """
     The convex hull of a point configuration in the plane
@@ -307,6 +328,7 @@ def test_convex_hull(dim=3, nbr=10, size=9):
     print 'the points :', pts
     facets = convex_hull(dim, pts)
     print 'vertices :', vertices_in_facets(facets)
+    print 'edges :', edges_in_facets(facets)
     print 'the facets :'
     for facet in facets:
         print facet

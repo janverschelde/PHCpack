@@ -1,5 +1,6 @@
 Sat 28 Nov 2015 : adjusted the checkout function for the convex hulls of
   polytopes in polytopes.py for points that are not vertices.
+  Added a function to collect the edges of the facets.
 
 Thu 26 Nov 2015 : added a checkout function to polytopes.py to check the
   correctness of the computed inner normals to the facets.
