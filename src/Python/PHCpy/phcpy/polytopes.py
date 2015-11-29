@@ -327,11 +327,21 @@ def test_convex_hull(dim=3, nbr=10, size=9):
     pts = random_points(dim, nbr, -size, size)
     print 'the points :', pts
     facets = convex_hull(dim, pts)
-    print 'vertices :', vertices_in_facets(facets)
-    print 'edges :', edges_in_facets(facets)
+    vertices = vertices_in_facets(facets)
+    edges = edges_in_facets(facets)
+    print 'vertices :', vertices
+    print 'edges :', edges
     print 'the facets :'
     for facet in facets:
         print facet
+    if(dim == 3):
+        eultup = (len(facets), len(edges), len(vertices))
+        eulsum = len(facets) - len(edges) + len(vertices)
+        streul = '#facets - #edges + #vertices = ' \
+               + '%d - %d + %d' % eultup \
+               + ' = %d' % eulsum
+        print streul
+        
 
 def test_mixed_volume():
     """
