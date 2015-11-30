@@ -158,6 +158,35 @@ package MixedVol_Algorithm is
   --   cells     stack of mixed cells;
   --   mixvol    mixed volume of the polytopes spanned by the supports,
   --             note that this is the total mixed volume, if stlb /= 0.0.
+
+  procedure mv_upto_pre4mv
+               ( nVar,nPts : in integer32;
+                 ind,cnt,sup : in Standard_Integer_Vectors.Vector;
+                 nSpt : out integer32;
+                 SptType,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                 VtxIdx : out Standard_Integer_Vectors.Link_to_Vector;
+                 Vtx : out Standard_Integer_VecVecs.Link_to_VecVec );
+
+  -- DESCRIPTION :
+  --   Executes the same code as in mv_with_callback upto the 'pre4mv'
+  --   procedure which computes the number of different supports,
+  --   the type of mixture, and a permutation of the original supports. 
+  --   This information is needed to process the cells returned by
+  --   the callback procedure next_cell in mv_with_callback.
+
+  -- ON ENTRY :
+  --   nVar      ambient dimension, length of the vectors in supports;
+  --   nPts      total number of points in the supports;
+  --   ind       ind(i) is the start of the i-th support;
+  --   cnt       cnt(i) counts the length of the i-th support;
+  --   sup       coordinates of the points in the supports.
+
+  -- ON RETURN :
+  --   nSpt      number of different supports;
+  --   SptType   type of each support;
+  --   perm      permutation of the original supports;
+  --   VtxIdx    index vector to the vertex set;
+  --   Vtx       vertices of the supports.
  
   procedure mv_with_callback
                ( nVar,nPts : in integer32;

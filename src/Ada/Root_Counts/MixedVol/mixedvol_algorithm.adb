@@ -350,6 +350,52 @@ package body MixedVol_Algorithm is
     mixvol := MVol;
   end mv;
 
+  procedure mv_upto_pre4mv
+               ( nVar,nPts : in integer32;
+                 ind,cnt,sup : in Standard_Integer_Vectors.Vector;
+                 nSpt : out integer32;
+                 SptType,perm : out Standard_Integer_Vectors.Link_to_Vector;
+                 VtxIdx : out Standard_Integer_Vectors.Link_to_Vector;
+                 Vtx : out Standard_Integer_VecVecs.Link_to_VecVec ) is
+
+    SptIdx : Standard_Integer_Vectors.Link_to_Vector
+           := new Standard_Integer_Vectors.Vector(0..nVar);
+    Spt : Standard_Integer_VecVecs.Link_to_VecVec
+        := new Standard_Integer_VecVecs.VecVec(0..(nPts-1));
+    NuIdx2OldIdx : Standard_Integer_Vectors.Link_to_Vector;
+    idx : integer32;
+
+  begin
+   -- put("The vector cnt : "); put(cnt); new_line;
+    for i in 0..(nVar-1) loop
+      SptIdx(i) := cnt(i+1);
+    end loop;
+    SptIdx(nVar) := nPts;
+    for i in reverse 0..nVar-1 loop
+      SptIdx(i) := SptIdx(i+1) - SptIdx(i);
+    end loop;
+    idx := 0;
+    for i in Spt'range loop
+      Spt(i) := new Standard_Integer_Vectors.Vector(0..(nVar-1));
+      for j in 0..(nVar-1) loop
+        idx := idx + 1;
+        Spt(i)(j) := sup(idx);
+      end loop;
+    end loop;
+    if quick_return = 1 -- quick_return(nVar,SptIdx,Spt) = 1
+     then nSpt := 0; return;
+    end if;
+    SptType := new Standard_Integer_Vectors.Vector(0..(nVar-1));
+    VtxIdx := new Standard_Integer_Vectors.Vector(0..nVar);
+    Vtx := new Standard_Integer_VecVecs.VecVec(0..(nPts-1));
+    for i in 0..(nPts-1) loop
+      Vtx(i) := new Standard_Integer_Vectors.Vector(0..(nVar-1));
+    end loop;
+    NuIdx2OldIdx := new Standard_Integer_Vectors.Vector(0..(nPts-1));
+    nSpt := nVar;
+    Pre4MV(nVar,nSpt,nSpt,SptType,Spt,SptIdx,Vtx,VtxIdx,NuIdx2OldIdx,perm);
+  end mv_upto_pre4mv;
+
   procedure mv_with_callback
                ( nVar,nPts : in integer32;
                  ind,cnt,sup : in Standard_Integer_Vectors.Vector;
