@@ -1,3 +1,6 @@
+Tue 1 Dec 2015 : new package single_polyhedral_trackers to track one path,
+  factored out from the multitasking_polyhedral_trackers.
+
 Mon 30 Nov 2015 : added 'stopped' function to mixed_labels_queue.
   In ts_mtmva, the production of the labels to the mixed cells can happen
   in parallel with the making of the mixed cells.

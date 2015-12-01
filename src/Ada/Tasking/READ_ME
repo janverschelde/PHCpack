@@ -52,6 +52,7 @@ ts_mtvol                          : test on multitasking volume computation
 polyhedral_start_systems          : inline binomial solvers
 multitasking_polyhedral_starters  : test to start up polyhedral homotopies
 mixed_cells_queue                 : thread safe queue for mixed cells
+single_polyhedral_trackers        : track one path in polyhedral homotopy
 multitasking_polyhedral_trackers  : multithreaded polyhedral continuation
 ts_mtvolcon                       : test on polyhedral path trackers
 mixed_labels_queue                : thread safe queue of labels to mixed cells
