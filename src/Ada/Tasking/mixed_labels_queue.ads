@@ -35,6 +35,11 @@ package Mixed_Labels_Queue is
   -- DESCRIPTION :
   --   Returns the counter of the labels currently processed.
 
+  function Stopped return boolean;
+
+  -- DESCRIPTION :
+  --   Returns true if the production of labels has stopped.
+
   procedure Clear;
 
   -- DESCRIPTION :

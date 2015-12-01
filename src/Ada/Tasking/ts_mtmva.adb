@@ -16,6 +16,7 @@ with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Floating_Mixed_Subdivisions;       use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;    use Floating_Mixed_Subdivisions_io;
 with Cell_Stack;                        use Cell_Stack;
+with Mixed_Volume;
 with MixedVol_Algorithm;                use MixedVol_Algorithm;
 with Mixed_Labels_Queue;
 with Multitasking;
@@ -141,10 +142,10 @@ procedure ts_mtmva is
   --   sub      a mixed cell configuration for a random lifting.
 
     stlb : constant double_float := 0.0;
-    size,nb : integer32;
+    nb,size : integer32;
     mixvol : natural32;
-    idx : Standard_Integer_Vectors.Link_to_Vector;
-    vtx : Standard_Integer_VecVecs.Link_to_VecVec;
+    idx,sdx,ndx : Standard_Integer_Vectors.Link_to_Vector;
+    vtx,spt : Standard_Integer_VecVecs.Link_to_VecVec;
     lft : Standard_Floating_Vectors.Link_to_Vector;
     cells : CellStack;
     cellcnt : natural32 := 0;
@@ -159,18 +160,24 @@ procedure ts_mtmva is
     end write_labels;
 
   begin
-    mv_with_callback
-      (nbequ,nbpts,ind,cnt,support.all,stlb,r,mtype,perm,idx,vtx,lft,
-       size,nb,cells,mixvol,false,write_labels'access);
+    mv_upto_pre4mv
+      (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
+    mv_lift(nbequ,nbpts,ind,cnt,support.all,stlb,r,idx,vtx,lft);
+    size := Mixed_Volume.cell_size(r,mtype);
+    Cs_Init(cells,size);
+    Mixed_Volume.MixedVol_with_Callback
+      (nbequ,r,size,mtype,idx,vtx,lft,nb,cells,mixvol,false,
+       write_labels'access);
     put("The mixed volume is "); put(mixvol,1); put_line(".");
     put("There are "); put(nb,1); put_line(" mixed cells.");
     Mixed_Cell_Configuration(nbequ,r,size,nb,mtype,perm,Vtx,lft,labels,sub);
   end Sequential_Mixed_Volume_Computation;
 
   procedure Produce_Cells
-              ( nbequ,nbpts : in integer32;
-                ind,cnt : in Standard_Integer_Vectors.Vector;
-                support : in Standard_Integer_Vectors.Link_to_Vector ) is
+              ( nbequ,nbpts,r : in integer32;
+                mtype,idx : in Standard_Integer_Vectors.Link_to_Vector;
+                vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
+                lft : in Standard_Floating_Vectors.Link_to_Vector ) is
 
   -- DESCRIPTION :
   --   This code calls the mixedvol algorithm with a callback function.
@@ -180,37 +187,103 @@ procedure ts_mtmva is
   -- ON ENTRY :
   --   nbequ    the number of equations in the input Laurent system;
   --   nbpts    the total number of points in the supports;
-  --   ind      ind(k) marks the beginning of the k-th support;
-  --   cnt      cnt(k) counts the number of points in the k-th support;
-  --   support  vector range 1..nbequ*nbpts with the coordinates of
-  --            all points in the supports.
+  --   r        number of different supports;
+  --   mtype    type of mixture;
+  --   idx      index to the vertex set;
+  --   vtx      vertex points;
+  --   lft      lifting values for the vertex points.
 
-    stlb : constant double_float := 0.0;
-    r,size,nb : integer32;
-    mixvol : natural32;
-    mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
-    idx : Standard_Integer_Vectors.Link_to_Vector;
-    vtx : Standard_Integer_VecVecs.Link_to_VecVec;
-    lft : Standard_Floating_Vectors.Link_to_Vector;
     cells : CellStack;
     cellcnt : natural32 := 0;
+    CellSize : constant integer32 := Mixed_Volume.cell_size(r,mtype);
+    nbcells : integer32 := 0;
+    mixvol : natural32;
 
     procedure write_labels ( pts : Standard_Integer_Vectors.Link_to_Vector ) is
     begin
       cellcnt := cellcnt + 1;
-      put("Cell "); put(cellcnt,1); put(" is spanned by ");
-      put(pts.all); new_line;
+      put_line("Appending cell " & Multitasking.to_string(cellcnt)
+                                 & " to the queue");
       Mixed_Labels_Queue.Append(pts);
     end write_labels;
 
   begin
-    mv_with_callback
-      (nbequ,nbpts,ind,cnt,support.all,stlb,r,mtype,perm,idx,vtx,lft,
-       size,nb,cells,mixvol,false,write_labels'access);
+    put_line("starting the cell production ...");
+    Cs_Init(cells,CellSize);
+    Mixed_Volume.MixedVol_with_Callback
+      (nbequ,r,CellSize,mtype,idx,vtx,lft,nbcells,cells,mixvol,false,
+       write_labels'access);
     Mixed_Labels_Queue.Stop;
-    put("The mixed volume is "); put(mixvol,1); put_line(".");
-    put("There are "); put(nb,1); put_line(" mixed cells.");
+    put_line("The mixed volume is " & Multitasking.to_string(mixvol) & ".");
+    put("There are " & Multitasking.to_string(nbcells) & " mixed cells.");
+    Cs_Del(cells);
   end Produce_Cells;
+
+  procedure Process_Cells 
+              ( idtask,nbequ,nbpts,r : in integer32;
+                mtype,perm : in Standard_Integer_Vectors.Link_to_Vector;
+                vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
+                lft : in Standard_Floating_Vectors.Link_to_Vector;
+                mcc : in out Mixed_Subdivision ) is
+
+  -- DESCRIPTION :
+  --   This code is executed by task with identification number
+  --   equal to idtask.  The labels to the mixed cells are converted
+  --   into mixed cells and stored in a mixed cell configuration.
+
+  -- ON ENTRY :
+  --   idtask   identification number of the task;
+  --   nbequ    the number of equations in the input Laurent system;
+  --   nbpts    the total number of points in the supports;
+  --   r        the number of distinct supports;
+  --   mtype    type of mixture;
+  --   perm     permutation used to permute the supports;
+  --   vtx      coordinates of the vertex points;
+  --   lft      lifting values for the vertex points.
+
+  -- ON RETURN :
+  --   mcc      the mixed cells processed by task with id idtask.
+
+    labels : Standard_Integer_Vectors.Link_to_Vector;
+    mcc_last : Mixed_Subdivision;
+    stop : boolean := false;
+    cnt : natural32 := 0;
+
+    use Standard_Integer_Vectors;
+
+  begin
+    while not stop loop
+      labels := Mixed_Labels_Queue.Next;
+      if labels = null then -- check if all labels are produced
+        if Mixed_Labels_Queue.Stopped     -- production stopped
+         then stop := true;   -- all labels have been processed
+        end if;
+      else
+        cnt := cnt + 1;
+        put_line("Task " & Multitasking.to_string(idtask)
+                         & " processes cell "
+                         & Multitasking.to_string(cnt));
+        if r < nbequ then
+          declare
+            mic : constant Mixed_Cell
+                := Labels_to_Mixed_Cell(nbequ,r,mtype,labels,Vtx,lft);
+          begin
+            Append(mcc,mcc_last,mic);
+          end;
+        else
+          declare
+            mic : constant Mixed_Cell
+                := Labels_to_Mixed_Cell(nbequ,r,mtype,perm,labels,Vtx,lft);
+          begin
+            Append(mcc,mcc_last,mic);
+          end;
+        end if;
+      end if;
+    end loop;
+    put_line("Task " & Multitasking.to_string(idtask) & " processed "
+                     & Multitasking.to_string(Length_Of(mcc))
+                     & " mixed cells.");
+  end Process_Cells;
 
   procedure Multitasked_Mixed_Volume_Computation
               ( ntasks,nbequ,nbpts : in integer32;
@@ -240,17 +313,38 @@ procedure ts_mtmva is
   --   perm     permutation of the supports;
   --   sub      a mixed cell configuration for a random lifting.
 
+    stlb : constant double_float := 0.0; -- no stable mv for now...
+    mcc : array(2..ntasks) of Mixed_Subdivision;
+    idx,sdx,ndx : Standard_Integer_Vectors.Link_to_Vector;
+    vtx,spt : Standard_Integer_VecVecs.Link_to_VecVec;
+    lft : Standard_Floating_Vectors.Link_to_Vector;
+    sub_last : Mixed_Subdivision;
+
     procedure do_job ( i,n : in integer32 ) is
     begin
+      put_line("In do_job with task " & Multitasking.to_string(i));
       if i = 1
-       then Produce_Cells(nbequ,nbpts,ind,cnt,support);
+       then Produce_Cells(nbequ,nbpts,r,mtype,idx,vtx,lft);
+       else Process_Cells(i,nbequ,nbpts,r,mtype,perm,vtx,lft,mcc(i));
       end if;
     end do_job;
     procedure do_jobs is new Multitasking.Reporting_Workers(do_job);
 
   begin
     Mixed_Labels_Queue.Start;
+    mv_upto_pre4mv
+      (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
+    mv_lift(nbequ,nbpts,ind,cnt,support.all,stlb,r,idx,vtx,lft);
     do_jobs(ntasks);
+    for i in mcc'range loop
+      Concat(sub,sub_last,mcc(i));
+    end loop;
+    Standard_Integer_Vectors.Clear(idx);
+    Standard_Integer_Vectors.Clear(sdx);
+    Standard_Integer_Vectors.Clear(ndx);
+    Standard_Floating_Vectors.Clear(lft);
+    Standard_Integer_VecVecs.Deep_Clear(vtx);
+    Standard_Integer_VecVecs.Deep_Clear(spt);
   end Multitasked_Mixed_Volume_Computation;
 
   procedure Mixed_Volume_Calculation

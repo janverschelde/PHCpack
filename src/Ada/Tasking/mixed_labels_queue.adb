@@ -62,6 +62,11 @@ package body Mixed_Labels_Queue is
     return nxtcnt;
   end Next_Counter;
 
+  function Stopped return boolean is
+  begin
+    return done;
+  end Stopped;
+
   procedure Clear is
   begin
     Deep_Clear(labels);

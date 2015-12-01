@@ -1,3 +1,7 @@
+Mon 30 Nov 2015 : added 'stopped' function to mixed_labels_queue.
+  In ts_mtmva, the production of the labels to the mixed cells can happen
+  in parallel with the making of the mixed cells.
+
 Sun 29 Nov 2015 : new test procedure ts_mtmva to develop an interlacing of
   the producing of mixed cells with the processing of the mixed cells.
   New package mixed_labels_queue with thread safe queue for ts_mtmva.
