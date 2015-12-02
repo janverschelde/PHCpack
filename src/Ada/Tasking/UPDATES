@@ -1,3 +1,6 @@
+Wed 2 Dec 2015 : new package pipelined_labeled_cells, with code from
+  the ts_mtmva test procedure.
+
 Tue 1 Dec 2015 : new package single_polyhedral_trackers to track one path,
   factored out from the multitasking_polyhedral_trackers.
 
