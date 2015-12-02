@@ -15,7 +15,7 @@ with Multitasking;
 package body Pipelined_Labeled_Cells is
 
   procedure Produce_Cells
-              ( nbequ,nbpts,r : in integer32;
+              ( nbequ,nbpts,r : in integer32; otp : in boolean;
                 mtype,idx : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector ) is
@@ -26,28 +26,34 @@ package body Pipelined_Labeled_Cells is
     nbcells : integer32 := 0;
     mixvol : natural32;
 
-    procedure write_labels ( pts : Standard_Integer_Vectors.Link_to_Vector ) is
+    procedure append ( pts : Standard_Integer_Vectors.Link_to_Vector ) is
     begin
       cellcnt := cellcnt + 1;
-      put_line("Appending cell " & Multitasking.to_string(cellcnt)
-                                 & " to the queue");
+      if otp then
+        put_line("Appending cell " & Multitasking.to_string(cellcnt)
+                                   & " to the queue");
+      end if;
       Mixed_Labels_Queue.Append(pts);
-    end write_labels;
+    end append;
 
   begin
-    put_line("starting the cell production ...");
+    if otp
+     then put_line("starting the cell production ...");
+    end if;
     Cs_Init(cells,CellSize);
     Mixed_Volume.MixedVol_with_Callback
       (nbequ,r,CellSize,mtype,idx,vtx,lft,nbcells,cells,mixvol,false,
-       write_labels'access);
+       append'access);
     Mixed_Labels_Queue.Stop;
-    put_line("The mixed volume is " & Multitasking.to_string(mixvol) & ".");
-    put("There are " & Multitasking.to_string(nbcells) & " mixed cells.");
+    if otp then
+      put_line("The mixed volume is " & Multitasking.to_string(mixvol) & ".");
+      put("There are " & Multitasking.to_string(nbcells) & " mixed cells.");
+    end if;
     Cs_Del(cells);
   end Produce_Cells;
 
   procedure Process_Cells 
-              ( idtask,nbequ,nbpts,r : in integer32;
+              ( idtask,nbequ,nbpts,r : in integer32; otp : in boolean;
                 mtype,perm : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
@@ -69,9 +75,11 @@ package body Pipelined_Labeled_Cells is
         end if;
       else
         cnt := cnt + 1;
-        put_line("Task " & Multitasking.to_string(idtask)
-                         & " processes cell "
-                         & Multitasking.to_string(cnt));
+        if otp then
+          put_line("Task " & Multitasking.to_string(idtask)
+                           & " processes cell "
+                           & Multitasking.to_string(cnt));
+        end if;
         if r < nbequ then
           declare
             mic : constant Mixed_Cell
@@ -89,13 +97,15 @@ package body Pipelined_Labeled_Cells is
         end if;
       end if;
     end loop;
-    put_line("Task " & Multitasking.to_string(idtask) & " processed "
-                     & Multitasking.to_string(Length_Of(mcc))
-                     & " mixed cells.");
+    if otp then
+      put_line("Task " & Multitasking.to_string(idtask) & " processed "
+                       & Multitasking.to_string(Length_Of(mcc))
+                       & " mixed cells.");
+    end if;
   end Process_Cells;
 
   procedure Pipelined_Mixed_Cells
-              ( ntasks,nbequ,nbpts : in integer32;
+              ( ntasks,nbequ,nbpts : in integer32; otp : in boolean;
                 ind,cnt : in Standard_Integer_Vectors.Vector;
                 support : in Standard_Integer_Vectors.Link_to_Vector;
                 r : out integer32;
@@ -111,20 +121,26 @@ package body Pipelined_Labeled_Cells is
 
     procedure do_job ( i,n : in integer32 ) is
     begin
-      put_line("In do_job with task " & Multitasking.to_string(i));
+      if otp
+       then put_line("In do_job with task " & Multitasking.to_string(i));
+      end if;
       if i = 1
-       then Produce_Cells(nbequ,nbpts,r,mtype,idx,vtx,lft);
-       else Process_Cells(i,nbequ,nbpts,r,mtype,perm,vtx,lft,mcc(i));
+       then Produce_Cells(nbequ,nbpts,r,otp,mtype,idx,vtx,lft);
+       else Process_Cells(i,nbequ,nbpts,r,otp,mtype,perm,vtx,lft,mcc(i));
       end if;
     end do_job;
-    procedure do_jobs is new Multitasking.Reporting_Workers(do_job);
+    procedure rep_do_jobs is new Multitasking.Reporting_Workers(do_job);
+    procedure sil_do_jobs is new Multitasking.Silent_Workers(do_job);
 
   begin
     Mixed_Labels_Queue.Start;
     mv_upto_pre4mv
       (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
     mv_lift(nbequ,nbpts,ind,cnt,support.all,stlb,r,idx,vtx,lft);
-    do_jobs(ntasks);
+    if otp
+     then rep_do_jobs(ntasks);
+     else sil_do_jobs(ntasks);
+    end if;
     for i in mcc'range loop
       Concat(sub,sub_last,mcc(i));
     end loop;

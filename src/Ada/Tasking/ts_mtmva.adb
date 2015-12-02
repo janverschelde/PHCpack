@@ -186,6 +186,8 @@ procedure ts_mtmva is
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup,mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc : Mixed_Subdivision;
+    ans : character;
+    otp : boolean;
 
   begin
     put("Give the number of tasks : "); get(nt);
@@ -194,7 +196,11 @@ procedure ts_mtmva is
       Sequential_Mixed_Volume_Computation
         (nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc);
     else
-      Pipelined_Mixed_Cells(nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc);
+      new_line;
+      put("Monitor the progress of the computations ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      otp := (ans = 'y');
+      Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,r,mtype,perm,mcc);
     end if;
     Write_Mixed_Cells(file,nbequ,r,mtype,mcc);
   end Mixed_Volume_Calculation;

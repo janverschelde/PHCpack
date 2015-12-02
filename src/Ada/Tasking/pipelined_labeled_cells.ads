@@ -12,7 +12,7 @@ package Pipelined_Labeled_Cells is
 --   The other tasks are processing the cells.
 
   procedure Produce_Cells
-              ( nbequ,nbpts,r : in integer32;
+              ( nbequ,nbpts,r : in integer32; otp : in boolean;
                 mtype,idx : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector );
@@ -26,13 +26,14 @@ package Pipelined_Labeled_Cells is
   --   nbequ    the number of equations in the input Laurent system;
   --   nbpts    the total number of points in the supports;
   --   r        number of different supports;
+  --   otp      flag for intermediate output to screen;
   --   mtype    type of mixture;
   --   idx      index to the vertex set;
   --   vtx      vertex points;
   --   lft      lifting values for the vertex points.
 
   procedure Process_Cells 
-              ( idtask,nbequ,nbpts,r : in integer32;
+              ( idtask,nbequ,nbpts,r : in integer32; otp : in boolean;
                 mtype,perm : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
@@ -47,6 +48,7 @@ package Pipelined_Labeled_Cells is
   --   idtask   identification number of the task;
   --   nbequ    the number of equations in the input Laurent system;
   --   nbpts    the total number of points in the supports;
+  --   otp      flag for intermediate output to screen;
   --   r        the number of distinct supports;
   --   mtype    type of mixture;
   --   perm     permutation used to permute the supports;
@@ -57,7 +59,7 @@ package Pipelined_Labeled_Cells is
   --   mcc      the mixed cells processed by task with id idtask.
 
   procedure Pipelined_Mixed_Cells
-              ( ntasks,nbequ,nbpts : in integer32;
+              ( ntasks,nbequ,nbpts : in integer32; otp : in boolean;
                 ind,cnt : in Standard_Integer_Vectors.Vector;
                 support : in Standard_Integer_Vectors.Link_to_Vector;
                 r : out integer32;
@@ -73,6 +75,7 @@ package Pipelined_Labeled_Cells is
   --   ntasks   the number of tasks;
   --   nbequ    the number of equations in the input Laurent system;
   --   nbpts    the total number of points in the supports;
+  --   otp      flag for intermediate output to screen;
   --   ind      ind(k) marks the beginning of the k-th support;
   --   cnt      cnt(k) counts the number of points in the k-th support;
   --   support  vector range 1..nbequ*nbpts with the coordinates of
