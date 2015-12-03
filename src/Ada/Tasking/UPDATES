@@ -1,6 +1,8 @@
 Wed 2 Dec 2015 : new package pipelined_labeled_cells, with code from
   the ts_mtmva test procedure.  Added output flag to the producer and
   consumer in pipelined_labeled_cells, also ts_mtmva.adb changed.
+  Added callback function process in pipeline_labeled_cells,
+  tested by ts_mtmva.adb.
 
 Tue 1 Dec 2015 : new package single_polyhedral_trackers to track one path,
   factored out from the multitasking_polyhedral_trackers.

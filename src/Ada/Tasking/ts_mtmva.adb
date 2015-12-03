@@ -15,10 +15,12 @@ with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Floating_Mixed_Subdivisions;       use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;    use Floating_Mixed_Subdivisions_io;
+with Mixed_Volume_Computation;
 with Cell_Stack;                        use Cell_Stack;
 with Mixed_Volume;
 with MixedVol_Algorithm;                use MixedVol_Algorithm;
 with Mixed_Labels_Queue;
+with Semaphore;
 with Multitasking;
 with Pipelined_Labeled_Cells;           use Pipelined_Labeled_Cells;
 
@@ -27,6 +29,23 @@ procedure ts_mtmva is
 -- DESCRIPTION :
 --   Running the MixedVol algorithm with a callback function
 --   from within a single task.
+
+  function Mixture ( r : integer32;
+                     mtype : in Standard_Integer_Vectors.Link_to_Vector )
+                   return Standard_Integer_Vectors.Vector is
+
+  -- DESCRIPTION :
+  --   Returns the type of mixture as a vector where the entries
+  --   start the count at one, instead of at zero as in mtype.
+
+    res : Standard_Integer_Vectors.Vector(1..r);
+
+  begin
+    for i in 1..r loop
+      res(i) := mtype(i-1);
+    end loop;
+    return res;
+  end Mixture;
 
   procedure Write_Mixed_Cells 
               ( file : in file_type; nbequ,r : in integer32;
@@ -43,12 +62,9 @@ procedure ts_mtmva is
   --   mtype    type of mixture of the supports;
   --   mcc      mixed cells.
 
-    mix : Standard_Integer_Vectors.Vector(1..r);
+    mix : constant Standard_Integer_Vectors.Vector := Mixture(r,mtype);
 
   begin
-    for i in 1..r loop
-      mix(i) := mtype(i-1);
-    end loop;
     put(file,natural32(nbequ),mix,mcc);
   end Write_Mixed_Cells;
 
@@ -188,6 +204,35 @@ procedure ts_mtmva is
     mcc : Mixed_Subdivision;
     ans : character;
     otp : boolean;
+   -- sem : Semaphore.Lock;
+   -- celcnt : natural32 := 0;
+   -- sumvol : natural32 := 0;
+
+    procedure Write_Mixed_Volume
+                ( r : in integer32;
+                  mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                  mic : in out Mixed_Cell ) is
+
+    -- DESCRIPTION :
+    --   Writes the mixed volume of the cell mic with type of mixture
+    --   defined in r and mtype to screen, to test the callback procedure
+    --   in the pipelined production of the mixed cells.
+
+      mix : constant Standard_Integer_Vectors.Vector := Mixture(r,mtype);
+      vol : natural32;
+
+    begin
+      Mixed_Volume_Computation.Mixed_Volume(r,mix,mic,vol);
+     -- Semaphore.Request(sem);
+     -- celcnt := celcnt + 1;
+     -- sumvol := sumvol + vol;
+     -- Semaphore.Release(sem);
+     -- put_line("the mixed volume of cell " 
+     --          & Multitasking.to_string(celcnt) & " is "
+     --          & Multitasking.to_string(vol));
+      put_line("the mixed volume of a cell : "
+               & Multitasking.to_string(vol));
+    end Write_Mixed_Volume;
 
   begin
     put("Give the number of tasks : "); get(nt);
@@ -200,7 +245,14 @@ procedure ts_mtmva is
       put("Monitor the progress of the computations ? (y/n) ");
       Ask_Yes_or_No(ans);
       otp := (ans = 'y');
-      Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,r,mtype,perm,mcc);
+      if otp then
+        Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,r,mtype,perm,mcc,
+          Write_Mixed_Volume'access);
+      else
+        Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,r,mtype,perm,mcc);
+      end if;
+     -- put("The sum of the volumes of all cells : ");
+     -- put(sumvol,1); new_line;
     end if;
     Write_Mixed_Cells(file,nbequ,r,mtype,mcc);
   end Mixed_Volume_Calculation;

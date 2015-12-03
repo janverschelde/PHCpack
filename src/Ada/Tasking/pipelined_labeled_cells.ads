@@ -37,7 +37,11 @@ package Pipelined_Labeled_Cells is
                 mtype,perm : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
-                mcc : in out Mixed_Subdivision );
+                mcc : in out Mixed_Subdivision;
+                process : access procedure
+                  ( r : in integer32;
+                    mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                    mic : in out Mixed_Cell ) := null );
 
   -- DESCRIPTION :
   --   This code is executed by task with identification number
@@ -56,7 +60,9 @@ package Pipelined_Labeled_Cells is
   --   lft      lifting values for the vertex points.
 
   -- ON RETURN :
-  --   mcc      the mixed cells processed by task with id idtask.
+  --   mcc      the mixed cells processed by task with id idtask;
+  --   process  optional callback procedure to process each mixed
+  --            cell as soon as it is computed.
 
   procedure Pipelined_Mixed_Cells
               ( ntasks,nbequ,nbpts : in integer32; otp : in boolean;
@@ -64,7 +70,11 @@ package Pipelined_Labeled_Cells is
                 support : in Standard_Integer_Vectors.Link_to_Vector;
                 r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
-                sub : out Mixed_Subdivision );
+                sub : out Mixed_Subdivision;
+                process : access procedure
+                  ( r : in integer32;
+                    mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                    mic : in out Mixed_Cell) := null );
 
   -- DESCRIPTION :
   --   Constructs a regular mixed cell configuration for the support.
@@ -79,7 +89,9 @@ package Pipelined_Labeled_Cells is
   --   ind      ind(k) marks the beginning of the k-th support;
   --   cnt      cnt(k) counts the number of points in the k-th support;
   --   support  vector range 1..nbequ*nbpts with the coordinates of
-  --            all points in the supports.
+  --            all points in the supports;
+  --   process  optional callback procedure to process each mixed
+  --            cell as soon as it is computed.
 
   -- ON RETURN :
   --   r        number of distinct supports;

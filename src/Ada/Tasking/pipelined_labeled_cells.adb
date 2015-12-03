@@ -49,7 +49,7 @@ package body Pipelined_Labeled_Cells is
       put_line("The mixed volume is " & Multitasking.to_string(mixvol) & ".");
       put("There are " & Multitasking.to_string(nbcells) & " mixed cells.");
     end if;
-    Cs_Del(cells);
+   -- Cs_Del(cells); -- This causes troubles for the processors!
   end Produce_Cells;
 
   procedure Process_Cells 
@@ -57,7 +57,11 @@ package body Pipelined_Labeled_Cells is
                 mtype,perm : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
-                mcc : in out Mixed_Subdivision ) is
+                mcc : in out Mixed_Subdivision;
+                process : access procedure
+                  ( r : in integer32;
+                    mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                    mic : in out Mixed_Cell) := null ) is
 
     labels : Standard_Integer_Vectors.Link_to_Vector;
     mcc_last : Mixed_Subdivision;
@@ -82,17 +86,23 @@ package body Pipelined_Labeled_Cells is
         end if;
         if r < nbequ then
           declare
-            mic : constant Mixed_Cell
+            mic : Mixed_Cell
                 := Labels_to_Mixed_Cell(nbequ,r,mtype,labels,Vtx,lft);
           begin
             Append(mcc,mcc_last,mic);
+            if process /= null
+             then process(r,mtype,mic);
+            end if;
           end;
         else
           declare
-            mic : constant Mixed_Cell
+            mic : Mixed_Cell
                 := Labels_to_Mixed_Cell(nbequ,r,mtype,perm,labels,Vtx,lft);
           begin
             Append(mcc,mcc_last,mic);
+            if process /= null
+             then process(r,mtype,mic);
+            end if;
           end;
         end if;
       end if;
@@ -110,7 +120,11 @@ package body Pipelined_Labeled_Cells is
                 support : in Standard_Integer_Vectors.Link_to_Vector;
                 r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
-                sub : out Mixed_Subdivision ) is
+                sub : out Mixed_Subdivision;
+                process : access procedure
+                  ( r : in integer32;
+                    mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                    mic : in out Mixed_Cell) := null ) is
 
     stlb : constant double_float := 0.0; -- no stable mv for now...
     mcc : array(2..ntasks) of Mixed_Subdivision;
@@ -124,9 +138,12 @@ package body Pipelined_Labeled_Cells is
       if otp
        then put_line("In do_job with task " & Multitasking.to_string(i));
       end if;
-      if i = 1
-       then Produce_Cells(nbequ,nbpts,r,otp,mtype,idx,vtx,lft);
-       else Process_Cells(i,nbequ,nbpts,r,otp,mtype,perm,vtx,lft,mcc(i));
+      if i = 1 then
+        Produce_Cells(nbequ,nbpts,r,otp,mtype,idx,vtx,lft);
+      elsif process /= null then
+        Process_Cells(i,nbequ,nbpts,r,otp,mtype,perm,vtx,lft,mcc(i),process);
+      else
+        Process_Cells(i,nbequ,nbpts,r,otp,mtype,perm,vtx,lft,mcc(i));
       end if;
     end do_job;
     procedure rep_do_jobs is new Multitasking.Reporting_Workers(do_job);
