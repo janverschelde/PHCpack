@@ -10,8 +10,7 @@ package body Mixed_Labels_Queue is
   done : boolean;     -- state of the production
   appcnt : integer32; -- counts the number of appends
   nxtcnt : integer32; -- counts the number of next
-  appsem : Semaphore.Lock; -- semaphore to append
-  nxtsem : Semaphore.Lock; -- semaphore to next
+  sem : Semaphore.Lock; -- semaphore to append and next
 
   procedure Start is
   begin
@@ -22,10 +21,10 @@ package body Mixed_Labels_Queue is
 
   procedure Append ( idx : in Standard_Integer_Vectors.Link_to_Vector ) is
   begin
-    Semaphore.Request(appsem);
+    Semaphore.Request(sem);
     appcnt := appcnt + 1;
     Append(labels,labels_last,idx.all);
-    Semaphore.Release(appsem);
+    Semaphore.Release(sem);
   end Append;
 
   procedure Stop is
@@ -38,7 +37,7 @@ package body Mixed_Labels_Queue is
     res : Standard_Integer_Vectors.Link_to_Vector := null;
 
   begin
-    Semaphore.Request(nxtsem);
+    Semaphore.Request(sem);
     if nxtcnt = 0
      then current := labels;
     end if;
@@ -53,7 +52,7 @@ package body Mixed_Labels_Queue is
       previous := current;          -- current may point to the last label
       current := Tail_Of(previous);
     end if;
-    Semaphore.Release(nxtsem);
+    Semaphore.Release(sem);
     return res;
   end Next;
 
