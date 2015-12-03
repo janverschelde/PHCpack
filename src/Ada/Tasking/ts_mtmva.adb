@@ -204,9 +204,9 @@ procedure ts_mtmva is
     mcc : Mixed_Subdivision;
     ans : character;
     otp : boolean;
-   -- sem : Semaphore.Lock;
-   -- celcnt : natural32 := 0;
-   -- sumvol : natural32 := 0;
+    sem : Semaphore.Lock;
+    celcnt : natural32 := 0;
+    sumvol : natural32 := 0;
 
     procedure Write_Mixed_Volume
                 ( r : in integer32;
@@ -223,15 +223,15 @@ procedure ts_mtmva is
 
     begin
       Mixed_Volume_Computation.Mixed_Volume(r,mix,mic,vol);
-     -- Semaphore.Request(sem);
-     -- celcnt := celcnt + 1;
-     -- sumvol := sumvol + vol;
-     -- Semaphore.Release(sem);
-     -- put_line("the mixed volume of cell " 
-     --          & Multitasking.to_string(celcnt) & " is "
-     --          & Multitasking.to_string(vol));
-      put_line("the mixed volume of a cell : "
+      Semaphore.Request(sem);
+      celcnt := celcnt + 1;
+      sumvol := sumvol + vol;
+      Semaphore.Release(sem);
+      put_line("the mixed volume of cell " 
+               & Multitasking.to_string(celcnt) & " is "
                & Multitasking.to_string(vol));
+     -- put_line("the mixed volume of a cell : "
+     --          & Multitasking.to_string(vol));
     end Write_Mixed_Volume;
 
   begin
@@ -251,8 +251,8 @@ procedure ts_mtmva is
       else
         Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,r,mtype,perm,mcc);
       end if;
-     -- put("The sum of the volumes of all cells : ");
-     -- put(sumvol,1); new_line;
+      put("The sum of the volumes of all cells : ");
+      put(sumvol,1); new_line;
     end if;
     Write_Mixed_Cells(file,nbequ,r,mtype,mcc);
   end Mixed_Volume_Calculation;
