@@ -7,18 +7,21 @@ with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
-with Lists_of_Integer_Vectors;          use Lists_of_Integer_Vectors;
+with Lists_of_Integer_Vectors;
+with Lists_of_Floating_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
 with Standard_Integer_VecVecs;
+with Standard_Integer64_Matrices;
+with Standard_Integer64_Linear_Solvers; use Standard_Integer64_Linear_Solvers;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Floating_Mixed_Subdivisions;       use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;    use Floating_Mixed_Subdivisions_io;
-with Mixed_Volume_Computation;
 with Cell_Stack;                        use Cell_Stack;
 with Mixed_Volume;
 with MixedVol_Algorithm;                use MixedVol_Algorithm;
+with Polyhedral_Start_Systems;
 with Mixed_Labels_Queue;
 with Semaphore;
 with Multitasking;
@@ -73,7 +76,8 @@ procedure ts_mtmva is
                 mtype,perm : in Standard_Integer_Vectors.Link_to_Vector;
                 Vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
-                labels : in List; sub : out Mixed_Subdivision ) is
+                labels : in Lists_of_Integer_Vectors.List;
+                sub : out Mixed_Subdivision ) is
 
   -- DESCRIPTION :
   --   Takes the cells in the cell stack and converts the cells into
@@ -93,6 +97,8 @@ procedure ts_mtmva is
 
   -- ON RETURN :
   --   sub      a mixed cell configuration.
+
+    use Lists_of_Integer_Vectors;
 
     last : Mixed_Subdivision;
     tmp : List := labels;
@@ -158,6 +164,8 @@ procedure ts_mtmva is
   --   perm     permutation of the supports;
   --   sub      a mixed cell configuration for a random lifting.
 
+    use Lists_of_Integer_Vectors;
+
     stlb : constant double_float := 0.0;
     nb,size : integer32;
     mixvol : natural32;
@@ -190,6 +198,39 @@ procedure ts_mtmva is
     Mixed_Cell_Configuration(nbequ,r,size,nb,mtype,perm,Vtx,lft,labels,sub);
   end Sequential_Mixed_Volume_Computation;
 
+  function Extract_Exponent_Vectors
+              ( dim : integer32; mic : Mixed_Cell )
+              return Standard_Integer64_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Returns the matrix with the exponent vectors defined
+  --   by the points in the mixed cell mic.
+  --   The dimension of the square matrix is determined by dim,
+  --   the dimension before the lifting is applied to the points.
+
+    use Lists_of_Floating_Vectors;
+
+    res : Standard_Integer64_Matrices.Matrix(1..dim,1..dim);
+    tmp : List;
+    first,ptr : Standard_Floating_Vectors.Link_to_Vector;
+    row : integer32 := 0;
+
+  begin
+    for i in mic.pts'range loop
+      first := Head_Of(mic.pts(i));
+      tmp := Tail_Of(mic.pts(i));
+      while not Is_Null(tmp) loop
+        ptr := Head_Of(tmp);
+        row := row + 1;
+        for col in 1..dim loop
+          res(row,col) := integer64(ptr(col)) - integer64(first(col));
+        end loop;
+        tmp := Tail_Of(tmp);
+      end loop;
+    end loop;
+    return res;
+  end Extract_Exponent_Vectors;
+
   procedure Mixed_Volume_Calculation
               ( file : in file_type; p : in Laur_Sys ) is
 
@@ -206,7 +247,8 @@ procedure ts_mtmva is
     otp : boolean;
     sem : Semaphore.Lock;
     celcnt : natural32 := 0;
-    sumvol : natural32 := 0;
+    sumvol : natural64 := 0;
+    mat : Standard_Integer64_Matrices.Matrix(1..nbequ,1..nbequ);
 
     procedure Write_Mixed_Volume
                 ( r : in integer32;
@@ -218,18 +260,19 @@ procedure ts_mtmva is
     --   defined in r and mtype to screen, to test the callback procedure
     --   in the pipelined production of the mixed cells.
 
-      mix : constant Standard_Integer_Vectors.Vector := Mixture(r,mtype);
-      vol : natural32;
+      vol : natural64;
 
     begin
-      Mixed_Volume_Computation.Mixed_Volume(r,mix,mic,vol);
+      mat := Extract_Exponent_Vectors(nbequ,mic);
+      Upper_Triangulate(mat);
+      vol := Polyhedral_Start_Systems.Volume_of_Diagonal(mat);
       Semaphore.Request(sem);
       celcnt := celcnt + 1;
       sumvol := sumvol + vol;
       Semaphore.Release(sem);
-      put_line("the mixed volume of cell " 
-               & Multitasking.to_string(celcnt) & " is "
-               & Multitasking.to_string(vol));
+     put_line("the mixed volume of cell " 
+              & Multitasking.to_string(celcnt) & " is "
+              & Multitasking.to_string(integer32(vol)));
      -- put_line("the mixed volume of a cell : "
      --          & Multitasking.to_string(vol));
     end Write_Mixed_Volume;
@@ -248,11 +291,11 @@ procedure ts_mtmva is
       if otp then
         Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,r,mtype,perm,mcc,
           Write_Mixed_Volume'access);
+        put("The sum of the volumes of all cells : ");
+        put(sumvol,1); new_line;
       else
         Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,r,mtype,perm,mcc);
       end if;
-      put("The sum of the volumes of all cells : ");
-      put(sumvol,1); new_line;
     end if;
     Write_Mixed_Cells(file,nbequ,r,mtype,mcc);
   end Mixed_Volume_Calculation;

@@ -1,3 +1,6 @@
+Fri 4 Dec 2015 : made the mixed volume computation of the cells in ts_mtmva
+  thread safe, avoiding type conversions.
+
 Thu 3 Dec 2015 : use only one semaphore in mixed_labels_queue.adb.
 
 Wed 2 Dec 2015 : new package pipelined_labeled_cells, with code from
