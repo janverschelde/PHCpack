@@ -1,12 +1,10 @@
 with text_io;                           use text_io;
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Floating_Vectors;
 with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
-with Cell_Stack;                        use Cell_Stack;
 with Mixed_Volume;
 with MixedVol_Algorithm;                use MixedVol_Algorithm;
 with Mixed_Labels_Queue;
@@ -18,13 +16,12 @@ package body Pipelined_Labeled_Cells is
               ( nbequ,nbpts,r : in integer32; otp : in boolean;
                 mtype,idx : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
-                lft : in Standard_Floating_Vectors.Link_to_Vector ) is
+                lft : in Standard_Floating_Vectors.Link_to_Vector;
+                cells : out CellStack; nbcells : out integer32;
+                mixvol : out natural32 ) is
 
-    cells : CellStack;
     cellcnt : natural32 := 0;
     CellSize : constant integer32 := Mixed_Volume.cell_size(r,mtype);
-    nbcells : integer32 := 0;
-    mixvol : natural32;
 
     procedure append ( pts : Standard_Integer_Vectors.Link_to_Vector ) is
     begin
@@ -37,6 +34,8 @@ package body Pipelined_Labeled_Cells is
     end append;
 
   begin
+    nbcells := 0;
+    mixvol := 0;
     if otp
      then put_line("starting the cell production ...");
     end if;
@@ -120,7 +119,7 @@ package body Pipelined_Labeled_Cells is
                 support : in Standard_Integer_Vectors.Link_to_Vector;
                 r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
-                sub : out Mixed_Subdivision;
+                sub : out Mixed_Subdivision; mv : out natural32;
                 process : access procedure
                   ( r : in integer32;
                     mtype : in Standard_Integer_Vectors.Link_to_Vector;
@@ -131,6 +130,8 @@ package body Pipelined_Labeled_Cells is
     idx,sdx,ndx : Standard_Integer_Vectors.Link_to_Vector;
     vtx,spt : Standard_Integer_VecVecs.Link_to_VecVec;
     lft : Standard_Floating_Vectors.Link_to_Vector;
+    cells : CellStack;
+    nbc : integer32;
     sub_last : Mixed_Subdivision;
 
     procedure do_job ( i,n : in integer32 ) is
@@ -139,7 +140,7 @@ package body Pipelined_Labeled_Cells is
        then put_line("In do_job with task " & Multitasking.to_string(i));
       end if;
       if i = 1 then
-        Produce_Cells(nbequ,nbpts,r,otp,mtype,idx,vtx,lft);
+        Produce_Cells(nbequ,nbpts,r,otp,mtype,idx,vtx,lft,cells,nbc,mv);
       elsif process /= null then
         Process_Cells(i,nbequ,nbpts,r,otp,mtype,perm,vtx,lft,mcc(i),process);
       else
@@ -167,6 +168,7 @@ package body Pipelined_Labeled_Cells is
     Standard_Floating_Vectors.Clear(lft);
     Standard_Integer_VecVecs.Deep_Clear(vtx);
     Standard_Integer_VecVecs.Deep_Clear(spt);
+    Cs_Del(cells);
   end Pipelined_Mixed_Cells;
 
 end Pipelined_Labeled_Cells;

@@ -1,3 +1,5 @@
+Sat 5 Dec 2015 : improved pipelined_labeled_cells, tested by ts_mtmva.
+
 Fri 4 Dec 2015 : made the mixed volume computation of the cells in ts_mtmva
   thread safe, avoiding type conversions.
 

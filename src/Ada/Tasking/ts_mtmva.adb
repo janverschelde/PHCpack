@@ -243,6 +243,7 @@ procedure ts_mtmva is
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup,mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc : Mixed_Subdivision;
+    mv : natural32;
     ans : character;
     otp : boolean;
     sem : Semaphore.Lock;
@@ -289,14 +290,16 @@ procedure ts_mtmva is
       Ask_Yes_or_No(ans);
       otp := (ans = 'y');
       if otp then
-        Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,r,mtype,perm,mcc,
-          Write_Mixed_Volume'access);
+        Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,r,mtype,perm,
+          mcc,mv,Write_Mixed_Volume'access);
         put("The sum of the volumes of all cells : ");
         put(sumvol,1); new_line;
       else
-        Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,r,mtype,perm,mcc);
+        Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,r,mtype,perm,
+          mcc,mv);
       end if;
     end if;
+    put("The mixed volume : "); put(mv,1); new_line;
     Write_Mixed_Cells(file,nbequ,r,mtype,mcc);
   end Mixed_Volume_Calculation;
 
