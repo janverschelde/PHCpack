@@ -14,7 +14,7 @@ package Pipelined_Labeled_Cells is
 --   The other tasks are processing the cells.
 
   procedure Produce_Cells
-              ( nbequ,nbpts,r : in integer32; otp : in boolean;
+              ( nbequ,r : in integer32; otp : in boolean;
                 mtype,idx : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
@@ -28,7 +28,6 @@ package Pipelined_Labeled_Cells is
 
   -- ON ENTRY :
   --   nbequ    the number of equations in the input Laurent system;
-  --   nbpts    the total number of points in the supports;
   --   r        number of different supports;
   --   otp      flag for intermediate output to screen;
   --   mtype    type of mixture;
@@ -42,7 +41,7 @@ package Pipelined_Labeled_Cells is
   --   mixvol   the mixed volume.
 
   procedure Process_Cells 
-              ( idtask,nbequ,nbpts,r : in integer32; otp : in boolean;
+              ( idtask,nbequ,r : in integer32; otp : in boolean;
                 mtype,perm : in Standard_Integer_Vectors.Link_to_Vector;
                 vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
@@ -60,7 +59,6 @@ package Pipelined_Labeled_Cells is
   -- ON ENTRY :
   --   idtask   identification number of the task;
   --   nbequ    the number of equations in the input Laurent system;
-  --   nbpts    the total number of points in the supports;
   --   otp      flag for intermediate output to screen;
   --   r        the number of distinct supports;
   --   mtype    type of mixture;
@@ -74,6 +72,43 @@ package Pipelined_Labeled_Cells is
   --            cell as soon as it is computed.
 
   procedure Pipelined_Mixed_Cells
+              ( ntasks,nbequ : in integer32; otp : in boolean;
+                r : in integer32;
+                mtype,perm,idx : in Standard_Integer_Vectors.Link_to_Vector;
+                vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
+                lft : in Standard_Floating_Vectors.Link_to_Vector;
+                sub : out Mixed_Subdivision; mv : out natural32;
+                process : access procedure
+                  ( r : in integer32;
+                    mtype : in Standard_Integer_Vectors.Link_to_Vector;
+                    mic : in out Mixed_Cell ) := null );
+
+  -- DESCRIPTION :
+  --   Constructs a regular mixed cell configuration for the support,
+  --   for a given lifting for the vertex set.
+  --   The production of the labels to the mixed cells is interlaced
+  --   with the processing of the labels into a mixed cell format.
+  --   This procedure is called after the preprocessing and the lifting
+  --   done by up_pre4mv and mv_lift for the MixedVol Algorithm.
+
+  -- ON ENTRY :
+  --   ntasks   the number of tasks;
+  --   nbequ    the number of equations in the input Laurent system;
+  --   otp      flag for intermediate output to screen;
+  --   r        number of distinct supports;
+  --   mtype    the type of mixture of the supports;
+  --   perm     permutation of the supports;
+  --   idx      indices to the vertex points in vtx;
+  --   vtx      coordinates of the vertex points;
+  --   lft      lifting values for the vertices in vtx;
+  --   process  optional callback procedure to process each mixed
+  --            cell as soon as it is computed.
+
+  -- ON RETURN :
+  --   sub      a mixed cell configuration for a random lifting;
+  --   mv       the mixed volume computed via sub.
+
+  procedure Pipelined_Mixed_Cells
               ( ntasks,nbequ,nbpts : in integer32; otp : in boolean;
                 ind,cnt : in Standard_Integer_Vectors.Vector;
                 support : in Standard_Integer_Vectors.Link_to_Vector;
@@ -83,12 +118,14 @@ package Pipelined_Labeled_Cells is
                 process : access procedure
                   ( r : in integer32;
                     mtype : in Standard_Integer_Vectors.Link_to_Vector;
-                    mic : in out Mixed_Cell) := null );
+                    mic : in out Mixed_Cell ) := null );
 
   -- DESCRIPTION :
   --   Constructs a regular mixed cell configuration for the support.
   --   The production of the labels to the mixed cells is interlaced
   --   with the processing of the labels into a mixed cell format.
+  --   This procedure executes mv_upto_pre4mv and mv_lift to do the
+  --   preprocessing and the lifting for the MixedVol Algorithm.
 
   -- ON ENTRY :
   --   ntasks   the number of tasks;
@@ -106,6 +143,7 @@ package Pipelined_Labeled_Cells is
   --   r        number of distinct supports;
   --   mtype    the type of mixture of the supports;
   --   perm     permutation of the supports;
-  --   sub      a mixed cell configuration for a random lifting.
+  --   sub      a mixed cell configuration for a random lifting;
+  --   mv       the mixed volume computed via sub.
 
 end Pipelined_Labeled_Cells;
