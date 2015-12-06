@@ -12,6 +12,19 @@ with Multitasking;
 
 package body Pipelined_Labeled_Cells is
 
+  function Mixture ( r : integer32;
+                     mtype : in Standard_Integer_Vectors.Link_to_Vector )
+                   return Standard_Integer_Vectors.Vector is
+
+    res : Standard_Integer_Vectors.Vector(1..r);
+
+  begin
+    for i in 1..r loop
+      res(i) := mtype(i-1);
+    end loop;
+    return res;
+  end Mixture;
+
   procedure Produce_Cells
               ( nbequ,r : in integer32; otp : in boolean;
                 mtype,idx : in Standard_Integer_Vectors.Link_to_Vector;
@@ -57,7 +70,7 @@ package body Pipelined_Labeled_Cells is
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
                 mcc : in out Mixed_Subdivision;
                 process : access procedure
-                  ( r : in integer32;
+                  ( idtask,r : in integer32;
                     mtype : in Standard_Integer_Vectors.Link_to_Vector;
                     mic : in out Mixed_Cell ) := null ) is
 
@@ -89,7 +102,7 @@ package body Pipelined_Labeled_Cells is
           begin
             Append(mcc,mcc_last,mic);
             if process /= null
-             then process(r,mtype,mic);
+             then process(idtask,r,mtype,mic);
             end if;
           end;
         else
@@ -99,7 +112,7 @@ package body Pipelined_Labeled_Cells is
           begin
             Append(mcc,mcc_last,mic);
             if process /= null
-             then process(r,mtype,mic);
+             then process(idtask,r,mtype,mic);
             end if;
           end;
         end if;
@@ -120,7 +133,7 @@ package body Pipelined_Labeled_Cells is
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
                 sub : out Mixed_Subdivision; mv : out natural32;
                 process : access procedure
-                  ( r : in integer32;
+                  ( idtask,r : in integer32;
                     mtype : in Standard_Integer_Vectors.Link_to_Vector;
                     mic : in out Mixed_Cell ) := null ) is
 
@@ -165,7 +178,7 @@ package body Pipelined_Labeled_Cells is
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
                 sub : out Mixed_Subdivision; mv : out natural32;
                 process : access procedure
-                  ( r : in integer32;
+                  ( idtask,r : in integer32;
                     mtype : in Standard_Integer_Vectors.Link_to_Vector;
                     mic : in out Mixed_Cell ) := null ) is
 

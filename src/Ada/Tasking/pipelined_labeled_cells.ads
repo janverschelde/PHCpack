@@ -13,6 +13,14 @@ package Pipelined_Labeled_Cells is
 --   the MixedVol Algorithm with a callback function by one tasks.
 --   The other tasks are processing the cells.
 
+  function Mixture ( r : integer32;
+                     mtype : in Standard_Integer_Vectors.Link_to_Vector )
+                   return Standard_Integer_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the type of mixture as a vector where the entries
+  --   start the count at one, instead of at zero as in mtype.
+
   procedure Produce_Cells
               ( nbequ,r : in integer32; otp : in boolean;
                 mtype,idx : in Standard_Integer_Vectors.Link_to_Vector;
@@ -47,7 +55,7 @@ package Pipelined_Labeled_Cells is
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
                 mcc : in out Mixed_Subdivision;
                 process : access procedure
-                  ( r : in integer32;
+                  ( idtask,r : in integer32;
                     mtype : in Standard_Integer_Vectors.Link_to_Vector;
                     mic : in out Mixed_Cell ) := null );
 
@@ -79,7 +87,7 @@ package Pipelined_Labeled_Cells is
                 lft : in Standard_Floating_Vectors.Link_to_Vector;
                 sub : out Mixed_Subdivision; mv : out natural32;
                 process : access procedure
-                  ( r : in integer32;
+                  ( idtask,r : in integer32;
                     mtype : in Standard_Integer_Vectors.Link_to_Vector;
                     mic : in out Mixed_Cell ) := null );
 
@@ -116,7 +124,7 @@ package Pipelined_Labeled_Cells is
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
                 sub : out Mixed_Subdivision; mv : out natural32;
                 process : access procedure
-                  ( r : in integer32;
+                  ( idtask,r : in integer32;
                     mtype : in Standard_Integer_Vectors.Link_to_Vector;
                     mic : in out Mixed_Cell ) := null );
 

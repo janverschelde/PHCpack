@@ -1,6 +1,7 @@
 Sat 5 Dec 2015 : improved pipelined_labeled_cells, tested by ts_mtmva.
   Split pipelined procedure into two: one before and one after the
-  preprocessing and lifting.
+  preprocessing and lifting.  Added idtask as parameter to argument of the
+  process procedure in the pipelined_labeled_cells.
 
 Fri 4 Dec 2015 : made the mixed volume computation of the cells in ts_mtmva
   thread safe, avoiding type conversions.
