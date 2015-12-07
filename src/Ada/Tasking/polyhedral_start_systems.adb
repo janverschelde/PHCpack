@@ -26,12 +26,15 @@ with Standard_Complex_Linear_Solvers;
 with DoblDobl_Complex_Linear_Solvers;
 with QuadDobl_Complex_Linear_Solvers;
 with Lists_of_Floating_Vectors;          use Lists_of_Floating_Vectors;
+with Standard_Complex_Laur_Functions;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Complex_Laur_SysFun;
 with Standard_Tableau_Formats;
+with DoblDobl_Complex_Laur_Functions;
 with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 with DoblDobl_Complex_Laur_SysFun;
 with DoblDobl_Tableau_Formats;
+with QuadDobl_Complex_Laur_Functions;
 with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with QuadDobl_Complex_Laur_SysFun;
 with QuadDobl_Tableau_Formats;
@@ -50,6 +53,66 @@ with QuadDobl_Binomial_Solvers;
 package body Polyhedral_Start_Systems is
 
 -- (1) TABLEAU DATA STRUCTURES FOR START SYSTEM SELECTION :
+
+  function Coeff ( q : Standard_Complex_Laur_Systems.Laur_Sys )
+                 return Standard_Complex_VecVecs.VecVec is
+
+    res : Standard_Complex_VecVecs.VecVec(q'range);
+
+  begin
+    for i in q'range loop
+      declare
+        cff : constant Standard_Complex_Vectors.Vector
+            := Standard_Complex_Laur_Functions.Coeff(q(i));
+      begin
+        res(i) := new Standard_Complex_Vectors.Vector(cff'range);
+        for k in cff'range loop
+          res(i)(k) := cff(k);
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Coeff;
+
+  function Coeff ( q : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                 return DoblDobl_Complex_VecVecs.VecVec is
+
+    res : DoblDobl_Complex_VecVecs.VecVec(q'range);
+
+  begin
+    for i in q'range loop
+      declare
+        cff : constant DoblDobl_Complex_Vectors.Vector
+            := DoblDobl_Complex_Laur_Functions.Coeff(q(i));
+      begin
+        res(i) := new DoblDobl_Complex_Vectors.Vector(cff'range);
+        for k in cff'range loop
+          res(i)(k) := cff(k);
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Coeff;
+
+  function Coeff ( q : QuadDobl_Complex_Laur_Systems.Laur_Sys )
+                 return QuadDobl_Complex_VecVecs.VecVec is
+
+    res : QuadDobl_Complex_VecVecs.VecVec(q'range);
+
+  begin
+    for i in q'range loop
+      declare
+        cff : constant QuadDobl_Complex_Vectors.Vector
+            := QuadDobl_Complex_Laur_Functions.Coeff(q(i));
+      begin
+        res(i) := new QuadDobl_Complex_Vectors.Vector(cff'range);
+        for k in cff'range loop
+          res(i)(k) := cff(k);
+        end loop;
+      end;
+    end loop;
+    return res;
+  end Coeff;
 
   function Is_Equal
              ( x : Standard_Integer_Vectors.Link_to_Vector;
@@ -1512,5 +1575,55 @@ package body Polyhedral_Start_Systems is
       tmp := Tail_Of(tmp);
     end loop;
   end Check_Solutions;
+
+-- (3) ALLOCATING WORK SPACE FOR EXPONENTS AND COEFFICIENTS :
+
+  procedure Allocate_Workspace_for_Exponents
+              ( epv : in Exponent_Vectors.Exponent_Vectors_Array;
+                dpw : in out Standard_Floating_VecVecs.Array_of_VecVecs ) is
+  begin
+    for i in dpw'range loop
+      dpw(i) := new Standard_Floating_VecVecs.VecVec(epv'range);
+      for k in dpw(i)'range loop
+        dpw(i)(k) := new Standard_Floating_Vectors.Vector(epv(k)'range);
+      end loop;
+    end loop;
+  end Allocate_Workspace_for_Exponents;
+
+  procedure Allocate_Workspace_for_Coefficients
+              ( cff : in Standard_Complex_VecVecs.VecVec;
+                cft : in out Standard_Complex_VecVecs.Array_of_VecVecs ) is
+  begin
+    for i in cft'range loop
+      cft(i) := new Standard_Complex_VecVecs.VecVec(cff'range);
+      for k in cft(i)'range loop
+        cft(i)(k) := new Standard_Complex_Vectors.Vector(cff(k)'range);
+      end loop;
+    end loop;
+  end Allocate_Workspace_for_Coefficients;
+
+  procedure Allocate_Workspace_for_Coefficients
+              ( cff : in DoblDobl_Complex_VecVecs.VecVec;
+                cft : in out DoblDobl_Complex_VecVecs.Array_of_VecVecs ) is
+  begin
+    for i in cft'range loop
+      cft(i) := new DoblDobl_Complex_VecVecs.VecVec(cff'range);
+      for k in cft(i)'range loop
+        cft(i)(k) := new DoblDobl_Complex_Vectors.Vector(cff(k)'range);
+      end loop;
+    end loop;
+  end Allocate_Workspace_for_Coefficients;
+
+  procedure Allocate_Workspace_for_Coefficients
+              ( cff : in QuadDobl_Complex_VecVecs.VecVec;
+                cft : in out QuadDobl_Complex_VecVecs.Array_of_VecVecs ) is
+  begin
+    for i in cft'range loop
+      cft(i) := new QuadDobl_Complex_VecVecs.VecVec(cff'range);
+      for k in cft(i)'range loop
+        cft(i)(k) := new QuadDobl_Complex_Vectors.Vector(cff(k)'range);
+      end loop;
+    end loop;
+  end Allocate_Workspace_for_Coefficients;
 
 end Polyhedral_Start_Systems;

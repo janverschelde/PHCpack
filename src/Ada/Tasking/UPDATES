@@ -1,5 +1,6 @@
 Mon 7 Dec 2015 : pipelined_polyhedral_trackers.adb simulate path tracking
-  through a multitasked mixed volume count.
+  through a multitasked mixed volume count.  Refactored code from
+  multitasking_polyhedral_trackers into polyhedral_start_systems.
 
 Sun 6 Dec 2015 : minor change in documentation in pipelined_labeled_cells.ads.
   New packaged pipelined_polyhedral_trackers contain specifications to apply

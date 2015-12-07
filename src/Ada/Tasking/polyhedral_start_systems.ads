@@ -6,6 +6,7 @@ with QuadDobl_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_VecVecs;
 with Standard_Floating_Vectors;
+with Standard_Floating_VecVecs;
 with Double_Double_Vectors;
 with Quad_Double_Vectors;
 with Standard_Complex_Vectors;
@@ -36,10 +37,21 @@ package Polyhedral_Start_Systems is
 --   parallel computers with threads, we need to be more careful about
 --   memory allocation and deallocation.  Therefore, this package offers
 --   (1) tableau data structure for selection of start systems;
---   (2) inplace binomial system solvers for start solutions.
+--   (2) inplace binomial system solvers for start solutions;
+--   (3) allocating work space for exponents and coefficients.
 
 -- (1) TABLEAU DATA STRUCTURES FOR START SYSTEM SELECTION :
 
+  function Coeff ( q : Standard_Complex_Laur_Systems.Laur_Sys )
+                 return Standard_Complex_VecVecs.VecVec;
+  function Coeff ( q : DoblDobl_Complex_Laur_Systems.Laur_Sys )
+                 return DoblDobl_Complex_VecVecs.VecVec;
+  function Coeff ( q : QuadDobl_Complex_Laur_Systems.Laur_Sys )
+                 return QuadDobl_Complex_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Returns the coefficient arrays of the polynomials in q.
+  
   function Is_Equal
              ( x : Standard_Integer_Vectors.Link_to_Vector;
                y : Standard_Floating_Vectors.Link_to_Vector )
@@ -404,5 +416,31 @@ package Polyhedral_Start_Systems is
 
   -- ON RETURN :
   --   res      res(i) contains the sum of all residuals for sols(i).
+
+-- (3) ALLOCATING WORK SPACE FOR EXPONENTS AND COEFFICIENTS :
+
+  procedure Allocate_Workspace_for_Exponents
+              ( epv : in Exponent_Vectors.Exponent_Vectors_Array;
+                dpw : in out Standard_Floating_VecVecs.Array_of_VecVecs );
+
+  -- DESCRIPTION :
+  --   Allocates space for the powers dpw in the polyhedral homotopy,
+  --   using the dimensions of the exponent vectors array epv.
+  --   The array of vecvecs gives every task its own work space.
+
+  procedure Allocate_Workspace_for_Coefficients
+              ( cff : in Standard_Complex_VecVecs.VecVec;
+                cft : in out Standard_Complex_VecVecs.Array_of_VecVecs );
+  procedure Allocate_Workspace_for_Coefficients
+              ( cff : in DoblDobl_Complex_VecVecs.VecVec;
+                cft : in out DoblDobl_Complex_VecVecs.Array_of_VecVecs );
+  procedure Allocate_Workspace_for_Coefficients
+              ( cff : in QuadDobl_Complex_VecVecs.VecVec;
+                cft : in out QuadDobl_Complex_VecVecs.Array_of_VecVecs );
+
+  -- DESCRIPTION :
+  --   Allocates space for the coefficients cft in the polyhedral homotopy,
+  --   using the dimensions of the coefficients in cff.
+  --   The array of vecvecs gives every task its own work space.
 
 end Polyhedral_Start_Systems;

@@ -153,14 +153,8 @@ package body Multitasking_Polyhedral_Trackers is
       Silent_Static_Multithreaded_Mixed_Volume(nt,n,cell_ptr,vol,mixvol);
       sols := Create(n,integer32(mixvol));
       sols_ptr := sols;
-      for t in 1..nt loop
-        dpow(t) := new Standard_Floating_VecVecs.VecVec(e'range);
-        dctm(t) := new Standard_Complex_VecVecs.VecVec(c'range);
-        for k in dpow(t)'range loop
-          dpow(t)(k) := new Standard_Floating_Vectors.Vector(e(k)'range);
-          dctm(t)(k) := new Standard_Complex_Vectors.Vector(c(k)'range);
-        end loop;
-      end loop;
+      Allocate_Workspace_for_Exponents(e,dpow);
+      Allocate_Workspace_for_Coefficients(c,dctm);
       Mixed_Cells_Queue.Initialize(mcc);
       do_jobs(nt);
       for t in 1..nt loop
@@ -307,15 +301,9 @@ package body Multitasking_Polyhedral_Trackers is
       new_line;
       put_line("allocating solution lists and other data...");
       sols := Create(n,integer32(mixvol));
-      for t in 1..nt loop
-        dpow(t) := new Standard_Floating_VecVecs.VecVec(e'range);
-        dctm(t) := new Standard_Complex_VecVecs.VecVec(c'range);
-        for k in dpow(t)'range loop
-          dpow(t)(k) := new Standard_Floating_Vectors.Vector(e(k)'range);
-          dctm(t)(k) := new Standard_Complex_Vectors.Vector(c(k)'range);
-        end loop;
-      end loop;
       sols_ptr := sols;
+      Allocate_Workspace_for_Exponents(e,dpow);
+      Allocate_Workspace_for_Coefficients(c,dctm);
       new_line;
       put_line("launching tasks ...");
       new_line;
@@ -452,14 +440,8 @@ package body Multitasking_Polyhedral_Trackers is
       Silent_Static_Multithreaded_Mixed_Volume(nt,n,cell_ptr,vol,mixvol);
       sols := Create(n,integer32(mixvol));
       sols_ptr := sols;
-      for t in 1..nt loop
-        dpow(t) := new Standard_Floating_VecVecs.VecVec(e'range);
-        dctm(t) := new DoblDobl_Complex_VecVecs.VecVec(c'range);
-        for k in dpow(t)'range loop
-          dpow(t)(k) := new Standard_Floating_Vectors.Vector(e(k)'range);
-          dctm(t)(k) := new DoblDobl_Complex_Vectors.Vector(c(k)'range);
-        end loop;
-      end loop;
+      Allocate_Workspace_for_Exponents(e,dpow);
+      Allocate_Workspace_for_Coefficients(c,dctm);
       Mixed_Cells_Queue.Initialize(mcc);
       do_jobs(nt);
       for t in 1..nt loop
@@ -604,15 +586,9 @@ package body Multitasking_Polyhedral_Trackers is
       new_line;
       put_line("allocating solution lists and other data...");
       sols := Create(n,integer32(mixvol));
-      for t in 1..nt loop
-        dpow(t) := new Standard_Floating_VecVecs.VecVec(e'range);
-        dctm(t) := new DoblDobl_Complex_VecVecs.VecVec(c'range);
-        for k in dpow(t)'range loop
-          dpow(t)(k) := new Standard_Floating_Vectors.Vector(e(k)'range);
-          dctm(t)(k) := new DoblDobl_Complex_Vectors.Vector(c(k)'range);
-        end loop;
-      end loop;
       sols_ptr := sols;
+      Allocate_Workspace_for_Exponents(e,dpow);
+      Allocate_Workspace_for_Coefficients(c,dctm);
       new_line;
       put_line("launching tasks ...");
       new_line;
@@ -720,14 +696,8 @@ package body Multitasking_Polyhedral_Trackers is
       Silent_Static_Multithreaded_Mixed_Volume(nt,n,cell_ptr,vol,mixvol);
       sols := Create(n,integer32(mixvol));
       sols_ptr := sols;
-      for t in 1..nt loop
-        dpow(t) := new Standard_Floating_VecVecs.VecVec(e'range);
-        dctm(t) := new QuadDobl_Complex_VecVecs.VecVec(c'range);
-        for k in dpow(t)'range loop
-          dpow(t)(k) := new Standard_Floating_Vectors.Vector(e(k)'range);
-          dctm(t)(k) := new QuadDobl_Complex_Vectors.Vector(c(k)'range);
-        end loop;
-      end loop;
+      Allocate_Workspace_for_Exponents(e,dpow);
+      Allocate_Workspace_for_Coefficients(c,dctm);
       Mixed_Cells_Queue.Initialize(mcc);
       do_jobs(nt);
       for t in 1..nt loop
@@ -872,15 +842,9 @@ package body Multitasking_Polyhedral_Trackers is
       new_line;
       put_line("allocating solution lists and other data...");
       sols := Create(n,integer32(mixvol));
-      for t in 1..nt loop
-        dpow(t) := new Standard_Floating_VecVecs.VecVec(e'range);
-        dctm(t) := new QuadDobl_Complex_VecVecs.VecVec(c'range);
-        for k in dpow(t)'range loop
-          dpow(t)(k) := new Standard_Floating_Vectors.Vector(e(k)'range);
-          dctm(t)(k) := new QuadDobl_Complex_Vectors.Vector(c(k)'range);
-        end loop;
-      end loop;
       sols_ptr := sols;
+      Allocate_Workspace_for_Exponents(e,dpow);
+      Allocate_Workspace_for_Coefficients(c,dctm);
       new_line;
       put_line("launching tasks ...");
       new_line;
@@ -909,7 +873,7 @@ package body Multitasking_Polyhedral_Trackers is
     pts : Arrays_of_Floating_Vector_Lists.Array_of_Lists(q'range);
     lif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     h : constant Eval_Coeff_Laur_Sys(q'range) := Create(q);
-    c : Standard_Complex_VecVecs.VecVec(h'range);
+    c : Standard_Complex_VecVecs.VecVec(q'range) := Coeff(q);
     e : Exponent_Vectors.Exponent_Vectors_Array(h'range);
     j : Eval_Coeff_Jaco_Mat(h'range,h'first..h'last+1);
     mf : Mult_Factors(j'range(1),j'range(2));
@@ -918,17 +882,6 @@ package body Multitasking_Polyhedral_Trackers is
     sup := Supports_of_Polynomial_Systems.Create(q);
     pts := Floating_Integer_Convertors.Convert(sup);
     lif := Floating_Lifting_Utilities.Occurred_Lifting(n,mix,pts,mcc);
-    for i in c'range loop
-      declare
-        coeff_lq : constant Standard_Complex_Vectors.Vector
-                 := Standard_Complex_Laur_Functions.Coeff(q(i));
-      begin
-        c(i) := new Standard_Complex_Vectors.Vector(coeff_lq'range);
-        for k in coeff_lq'range loop
-          c(i)(k) := coeff_lq(k);
-        end loop;
-      end;
-    end loop;
     e := Exponent_Vectors.Create(q);
     Create(q,j,mf);
     Silent_Multitasking_Path_Tracker(q,nt,n,m,mix,lif,mcc,h,c,e,j,mf,sols);
@@ -948,7 +901,7 @@ package body Multitasking_Polyhedral_Trackers is
     pts : Arrays_of_Floating_Vector_Lists.Array_of_Lists(q'range);
     lif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     h : constant Eval_Coeff_Laur_Sys(q'range) := Create(q);
-    c : Standard_Complex_VecVecs.VecVec(h'range);
+    c : Standard_Complex_VecVecs.VecVec(q'range) := Coeff(q);
     e : Exponent_Vectors.Exponent_Vectors_Array(h'range);
     j : Eval_Coeff_Jaco_Mat(h'range,h'first..h'last+1);
     mf : Mult_Factors(j'range(1),j'range(2));
@@ -957,17 +910,6 @@ package body Multitasking_Polyhedral_Trackers is
     sup := Supports_of_Polynomial_Systems.Create(q);
     pts := Floating_Integer_Convertors.Convert(sup);
     lif := Floating_Lifting_Utilities.Occurred_Lifting(n,mix,pts,mcc);
-    for i in c'range loop
-      declare
-        coeff_lq : constant Standard_Complex_Vectors.Vector
-                 := Standard_Complex_Laur_Functions.Coeff(q(i));
-      begin
-        c(i) := new Standard_Complex_Vectors.Vector(coeff_lq'range);
-        for k in coeff_lq'range loop
-          c(i)(k) := coeff_lq(k);
-        end loop;
-      end;
-    end loop;
     e := Exponent_Vectors.Create(q);
     Create(q,j,mf);
     new_line(file);
@@ -989,7 +931,7 @@ package body Multitasking_Polyhedral_Trackers is
     pts : Arrays_of_Floating_Vector_Lists.Array_of_Lists(q'range);
     lif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     h : constant Eval_Coeff_Laur_Sys(q'range) := Create(q);
-    c : DoblDobl_Complex_VecVecs.VecVec(h'range);
+    c : DoblDobl_Complex_VecVecs.VecVec(q'range) := Coeff(q);
     e : Exponent_Vectors.Exponent_Vectors_Array(h'range);
     j : Eval_Coeff_Jaco_Mat(h'range,h'first..h'last+1);
     mf : Mult_Factors(j'range(1),j'range(2));
@@ -998,17 +940,6 @@ package body Multitasking_Polyhedral_Trackers is
     sup := Supports_of_Polynomial_Systems.Create(q);
     pts := Floating_Integer_Convertors.Convert(sup);
     lif := Floating_Lifting_Utilities.Occurred_Lifting(n,mix,pts,mcc);
-    for i in c'range loop
-      declare
-        coeff_lq : constant DoblDobl_Complex_Vectors.Vector
-                 := DoblDobl_Complex_Laur_Functions.Coeff(q(i));
-      begin
-        c(i) := new DoblDobl_Complex_Vectors.Vector(coeff_lq'range);
-        for k in coeff_lq'range loop
-          c(i)(k) := coeff_lq(k);
-        end loop;
-      end;
-    end loop;
     e := Exponent_Vectors.Create(q);
     Create(q,j,mf);
     Silent_Multitasking_Path_Tracker(q,nt,n,m,mix,lif,mcc,h,c,e,j,mf,sols);
@@ -1028,7 +959,7 @@ package body Multitasking_Polyhedral_Trackers is
     pts : Arrays_of_Floating_Vector_Lists.Array_of_Lists(q'range);
     lif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     h : constant Eval_Coeff_Laur_Sys(q'range) := Create(q);
-    c : DoblDobl_Complex_VecVecs.VecVec(h'range);
+    c : DoblDobl_Complex_VecVecs.VecVec(q'range) := Coeff(q);
     e : Exponent_Vectors.Exponent_Vectors_Array(h'range);
     j : Eval_Coeff_Jaco_Mat(h'range,h'first..h'last+1);
     mf : Mult_Factors(j'range(1),j'range(2));
@@ -1037,17 +968,6 @@ package body Multitasking_Polyhedral_Trackers is
     sup := Supports_of_Polynomial_Systems.Create(q);
     pts := Floating_Integer_Convertors.Convert(sup);
     lif := Floating_Lifting_Utilities.Occurred_Lifting(n,mix,pts,mcc);
-    for i in c'range loop
-      declare
-        coeff_lq : constant DoblDobl_Complex_Vectors.Vector
-                 := DoblDobl_Complex_Laur_Functions.Coeff(q(i));
-      begin
-        c(i) := new DoblDobl_Complex_Vectors.Vector(coeff_lq'range);
-        for k in coeff_lq'range loop
-          c(i)(k) := coeff_lq(k);
-        end loop;
-      end;
-    end loop;
     e := Exponent_Vectors.Create(q);
     Create(q,j,mf);
     new_line(file);
@@ -1069,7 +989,7 @@ package body Multitasking_Polyhedral_Trackers is
     pts : Arrays_of_Floating_Vector_Lists.Array_of_Lists(q'range);
     lif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     h : constant Eval_Coeff_Laur_Sys(q'range) := Create(q);
-    c : QuadDobl_Complex_VecVecs.VecVec(h'range);
+    c : QuadDobl_Complex_VecVecs.VecVec(q'range) := Coeff(q);
     e : Exponent_Vectors.Exponent_Vectors_Array(h'range);
     j : Eval_Coeff_Jaco_Mat(h'range,h'first..h'last+1);
     mf : Mult_Factors(j'range(1),j'range(2));
@@ -1078,17 +998,6 @@ package body Multitasking_Polyhedral_Trackers is
     sup := Supports_of_Polynomial_Systems.Create(q);
     pts := Floating_Integer_Convertors.Convert(sup);
     lif := Floating_Lifting_Utilities.Occurred_Lifting(n,mix,pts,mcc);
-    for i in c'range loop
-      declare
-        coeff_lq : constant QuadDobl_Complex_Vectors.Vector
-                 := QuadDobl_Complex_Laur_Functions.Coeff(q(i));
-      begin
-        c(i) := new QuadDobl_Complex_Vectors.Vector(coeff_lq'range);
-        for k in coeff_lq'range loop
-          c(i)(k) := coeff_lq(k);
-        end loop;
-      end;
-    end loop;
     e := Exponent_Vectors.Create(q);
     Create(q,j,mf);
     Silent_Multitasking_Path_Tracker(q,nt,n,m,mix,lif,mcc,h,c,e,j,mf,sols);
@@ -1108,7 +1017,7 @@ package body Multitasking_Polyhedral_Trackers is
     pts : Arrays_of_Floating_Vector_Lists.Array_of_Lists(q'range);
     lif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     h : constant Eval_Coeff_Laur_Sys(q'range) := Create(q);
-    c : QuadDobl_Complex_VecVecs.VecVec(h'range);
+    c : QuadDobl_Complex_VecVecs.VecVec(q'range) := Coeff(q);
     e : Exponent_Vectors.Exponent_Vectors_Array(h'range);
     j : Eval_Coeff_Jaco_Mat(h'range,h'first..h'last+1);
     mf : Mult_Factors(j'range(1),j'range(2));
@@ -1117,17 +1026,6 @@ package body Multitasking_Polyhedral_Trackers is
     sup := Supports_of_Polynomial_Systems.Create(q);
     pts := Floating_Integer_Convertors.Convert(sup);
     lif := Floating_Lifting_Utilities.Occurred_Lifting(n,mix,pts,mcc);
-    for i in c'range loop
-      declare
-        coeff_lq : constant QuadDobl_Complex_Vectors.Vector
-                 := QuadDobl_Complex_Laur_Functions.Coeff(q(i));
-      begin
-        c(i) := new QuadDobl_Complex_Vectors.Vector(coeff_lq'range);
-        for k in coeff_lq'range loop
-          c(i)(k) := coeff_lq(k);
-        end loop;
-      end;
-    end loop;
     e := Exponent_Vectors.Create(q);
     Create(q,j,mf);
     new_line(file);
