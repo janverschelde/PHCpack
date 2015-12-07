@@ -97,7 +97,7 @@ package Pipelined_Labeled_Cells is
   --   The production of the labels to the mixed cells is interlaced
   --   with the processing of the labels into a mixed cell format.
   --   This procedure is called after the preprocessing and the lifting
-  --   done by up_pre4mv and mv_lift for the MixedVol Algorithm.
+  --   done by mv_upto_pre4mv and mv_lift for the MixedVol Algorithm.
 
   -- ON ENTRY :
   --   ntasks   the number of tasks;

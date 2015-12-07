@@ -1,3 +1,5 @@
+Sun 6 Dec 2015 : minor change in documentation in pipelined_labeled_cells.ads.
+
 Sat 5 Dec 2015 : improved pipelined_labeled_cells, tested by ts_mtmva.
   Split pipelined procedure into two: one before and one after the
   preprocessing and lifting.  Added idtask as parameter to argument of the
