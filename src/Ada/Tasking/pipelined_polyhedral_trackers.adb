@@ -1,5 +1,9 @@
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
+with Standard_Integer_VecVecs_io;       use Standard_Integer_VecVecs_io;
+with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
+with Standard_Complex_VecVecs_io;       use Standard_Complex_VecVecs_io;
+with Floating_Mixed_Subdivisions_io;    use Floating_Mixed_Subdivisions_io;
 
 with Standard_Natural_NUmbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
@@ -150,10 +154,18 @@ package body Pipelined_Polyhedral_Trackers is
     brd,logbrd,logx,e10x : Standard_Floating_Vectors.Vector(b'range);
     bsc : Standard_Complex_Vectors.Vector(b'range);
     ls : Standard_Complex_Solutions.Link_to_Solution;
+    ptr : Standard_Complex_Solutions.Solution_List;
 
   begin
     if r = n then
+     -- put_line("The Coefficients : "); put(cff);
+     -- put("The exponent vectors array : ");
+     -- for i in epv'range loop
+     --   put(epv(i));
+     -- end loop;
+     -- put_line("The mixed cell : "); put(natural32(n),mix,mic);
       Select_Coefficients(cff,epv,mic.pts.all,s_c);
+     -- put_line("The selected coefficients : "); put_line(s_c);
       Fully_Mixed_To_Binomial_Format(s_c,mic.pts.all,A,b);
     else
       Select_Subsystem_to_Matrix_Format(cff,epv,mix,mic.pts.all,A,CC,b);
@@ -163,69 +175,31 @@ package body Pipelined_Polyhedral_Trackers is
     U := A;
     Standard_Integer_Linear_Solvers.Upper_Triangulate(M,U);
     pdetU := Volume_of_Diagonal(U);
-   -- Track_Path(mix,lif,mic.nor,cff,dpw,cft,epv,hom,ejf,jmf,ls);
-   -- Standard_Complex_Solutions.Append(sols,last,ls);
+    Semaphore.Request(sem);
+    ptr := last;
+    Allocate(sols,last,n,integer32(pdetU));
+    if Standard_Complex_Solutions.Is_Null(ptr)
+     then ptr := sols;
+     else ptr := Standard_Complex_Solutions.Tail_Of(ptr);
+    end if;
+    brd := Standard_Radial_Solvers.Radii(b);
+    bsc := Standard_Radial_Solvers.Scale(b,brd);
+    Standard_Binomial_Solvers.Solve_Upper_Square(U,bsc,ptr);
+    Semaphore.Release(sem);
+    logbrd := Standard_Radial_Solvers.Log10(brd);
+    logx := Standard_Radial_Solvers.Radial_Upper_Solve(U,logbrd);
+    logx := Standard_Radial_Solvers.Multiply(M,logx);
+    e10x := Standard_Radial_Solvers.Exp10(logx);
+    for i in 1..pdetU loop
+      ls := Standard_Complex_Solutions.Head_Of(ptr);
+      Standard_Binomial_Systems.Eval(M,ls.v,wrk);
+      ls.v := wrk;
+      Standard_Radial_Solvers.Multiply(ls.v,e10x);
+      Track_Path(mix,lif,mic.nor,cff,dpw,cft,epv,hom,ejf,jmf,ls);
+      ptr := Standard_Complex_Solutions.Tail_Of(ptr);
+    end loop;
     tmv := tmv + pdetU;
   end Track_Cell;
-
-  procedure Allocate_Workspace_for_Exponents
-              ( epv : in Exponent_Vectors.Exponent_Vectors_Array;
-                dpw : in out Standard_Floating_VecVecs.Array_of_VecVecs ) is
-
-  -- DESCRIPTION :
-  --   Allocates space for the powers dpw in the polyhedral homotopy,
-  --   using the dimensions of the exponent vectors array epv.
-  --   The array of vecvecs gives every task its own work space.
-
-  begin
-    for i in dpw'range loop
-      dpw(i) := new Standard_Floating_VecVecs.VecVec(epv'range);
-      for k in dpw(i)'range loop
-        dpw(i)(k) := new Standard_Floating_Vectors.Vector(epv(k)'range);
-      end loop;
-    end loop;
-  end Allocate_Workspace_for_Exponents;
-
-  procedure Allocate_Workspace_for_Coefficients
-              ( cff : in Standard_Complex_VecVecs.VecVec;
-                cft : in out Standard_Complex_VecVecs.Array_of_VecVecs ) is
-
-  -- DESCRIPTION :
-  --   Allocates space for the coefficients cft in the polyhedral homotopy,
-  --   using the dimensions of the coefficients in cff.
-  --   The array of vecvecs gives every task its own work space.
-
-  begin
-    for i in cft'range loop
-      cft(i) := new Standard_Complex_VecVecs.VecVec(cff'range);
-      for k in cff(i)'range loop
-        cft(i)(k) := new Standard_Complex_Vectors.Vector(cff(k)'range);
-      end loop;
-    end loop;
-  end Allocate_Workspace_for_Coefficients;
-
-  function Coeff ( q : Standard_Complex_Laur_Systems.Laur_Sys )
-                 return Standard_Complex_VecVecs.VecVec is
-
-  -- DESCRIPTION :
-  --   Returns the coefficient arrays of the polynomials in q.
-  
-    res : Standard_Complex_VecVecs.VecVec(q'range);
-
-  begin
-    for i in q'range loop
-      declare
-        cff : constant Standard_Complex_Vectors.Vector
-            := Standard_Complex_Laur_Functions.Coeff(q(i));
-      begin
-        res(i) := new Standard_Complex_Vectors.Vector(cff'range);
-        for k in cff'range loop
-          res(i)(k) := cff(k);
-        end loop;
-      end;
-    end loop;
-    return res;
-  end Coeff;
 
   procedure Reporting_Multitasking_Tracker
               ( file : in file_type;
@@ -271,6 +245,7 @@ package body Pipelined_Polyhedral_Trackers is
     Floating_Mixed_Subdivisions_io.put(file,lif);
     cff := Coeff(q);
     epv := Exponent_Vectors.Create(q);
+    hom := Create(q);
     Create(q,ejf,jmf);
     Allocate_Workspace_for_Exponents(epv,dpw);
     Allocate_Workspace_for_Coefficients(cff,cft);

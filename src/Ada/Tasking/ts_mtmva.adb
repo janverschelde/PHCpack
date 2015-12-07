@@ -18,6 +18,7 @@ with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
 with Standard_Complex_Laur_Randomizers;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
+with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 with Floating_Mixed_Subdivisions;       use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;    use Floating_Mixed_Subdivisions_io;
 with Cell_Stack;                        use Cell_Stack;
@@ -313,6 +314,9 @@ procedure ts_mtmva is
     Reporting_Multitasking_Tracker
       (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
     put("The mixed volume : "); put(mv,1); new_line;
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
   end Random_Coefficient_System;
 
   procedure Main is

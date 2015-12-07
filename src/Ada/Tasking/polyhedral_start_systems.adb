@@ -779,6 +779,33 @@ package body Polyhedral_Start_Systems is
     return res;
   end Create;
 
+  procedure Allocate
+              ( first,last : in out Standard_Complex_Solutions.Solution_List;
+                n,m : in integer32 ) is
+  begin
+    for i in 1..m loop
+      Standard_Complex_Solutions.Append(first,last,Create(n));
+    end loop;
+  end Allocate;
+
+  procedure Allocate
+              ( first,last : in out DoblDobl_Complex_Solutions.Solution_List;
+                n,m : in integer32 ) is
+  begin
+    for i in 1..m loop
+      DoblDobl_Complex_Solutions.Append(first,last,Create(n));
+    end loop;
+  end Allocate;
+
+  procedure Allocate
+              ( first,last : in out QuadDobl_Complex_Solutions.Solution_List;
+                n,m : in integer32 ) is
+  begin
+    for i in 1..m loop
+      QuadDobl_Complex_Solutions.Append(first,last,Create(n));
+    end loop;
+  end Allocate;
+
   function Product_of_Diagonal
              ( A : Standard_Integer_Matrices.Matrix ) return integer32 is
 

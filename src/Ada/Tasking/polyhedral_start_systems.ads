@@ -254,6 +254,8 @@ package Polyhedral_Start_Systems is
 -- (2) INPLACE BINOMIAL SYSTEM SOLVERS FOR START SOLUTIONS :
 
   function Create ( n : integer32 ) return Standard_Complex_Solutions.Solution;
+  function Create ( n : integer32 ) return DoblDobl_Complex_Solutions.Solution;
+  function Create ( n : integer32 ) return QuadDobl_Complex_Solutions.Solution;
 
   -- DESCRIPTION :
   --   Creates an n-dimensional solution vector.
@@ -267,6 +269,20 @@ package Polyhedral_Start_Systems is
 
   -- DESCRIPTION :
   --   Returns a list of m solutions of dimension n.
+
+  procedure Allocate
+              ( first,last : in out Standard_Complex_Solutions.Solution_List;
+                n,m : in integer32 );
+  procedure Allocate
+              ( first,last : in out DoblDobl_Complex_Solutions.Solution_List;
+                n,m : in integer32 );
+  procedure Allocate
+              ( first,last : in out QuadDobl_Complex_Solutions.Solution_List;
+                n,m : in integer32 );
+
+  -- DESCRIPTION :
+  --   Appends to the list with head first and tail last m solutions
+  --   of dimension n.
 
   function Product_of_Diagonal
              ( A : Standard_Integer_Matrices.Matrix ) return integer32;
