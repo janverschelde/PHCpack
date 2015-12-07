@@ -56,7 +56,8 @@ single_polyhedral_trackers        : track one path in polyhedral homotopy
 multitasking_polyhedral_trackers  : multithreaded polyhedral continuation
 ts_mtvolcon                       : test on polyhedral path trackers
 mixed_labels_queue                : thread safe queue of labels to mixed cells
-pipelined_labeled_cells           : pipeline production of mixed cells
+pipelined_labeled_cells           : pipelined production of mixed cells
+pipelined_polyhedral_trackers     : pipelining polyhedral continuation
 ts_mtmva                          : interlace cell production with processing
 multitasking_root_refiners        : root refinement by multiple tasks
 ts_mtverify                       : test on multitasked root refinement

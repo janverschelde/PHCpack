@@ -16,6 +16,8 @@ with Standard_Integer64_Matrices;
 with Standard_Integer64_Linear_Solvers; use Standard_Integer64_Linear_Solvers;
 with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
+with Standard_Complex_Laur_Randomizers;
+with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 with Floating_Mixed_Subdivisions;       use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;    use Floating_Mixed_Subdivisions_io;
 with Cell_Stack;                        use Cell_Stack;
@@ -26,29 +28,13 @@ with Mixed_Labels_Queue;
 with Semaphore;
 with Multitasking;
 with Pipelined_Labeled_Cells;           use Pipelined_Labeled_Cells;
+with Pipelined_Polyhedral_Trackers;     use Pipelined_Polyhedral_Trackers;
 
 procedure ts_mtmva is
 
 -- DESCRIPTION :
 --   Running the MixedVol algorithm with a callback function
 --   from within a single task.
-
-  function Mixture ( r : integer32;
-                     mtype : in Standard_Integer_Vectors.Link_to_Vector )
-                   return Standard_Integer_Vectors.Vector is
-
-  -- DESCRIPTION :
-  --   Returns the type of mixture as a vector where the entries
-  --   start the count at one, instead of at zero as in mtype.
-
-    res : Standard_Integer_Vectors.Vector(1..r);
-
-  begin
-    for i in 1..r loop
-      res(i) := mtype(i-1);
-    end loop;
-    return res;
-  end Mixture;
 
   procedure Write_Mixed_Cells 
               ( file : in file_type; nbequ,r : in integer32;
@@ -232,14 +218,16 @@ procedure ts_mtmva is
   end Extract_Exponent_Vectors;
 
   procedure Mixed_Volume_Calculation
-              ( file : in file_type; p : in Laur_Sys ) is
+              ( file : in file_type;
+                nt : in integer32; p : in Laur_Sys ) is
 
   -- DESCRIPTION :
   --   Extracts the supports of the polynomial system and computes
   --   its mixed volume.  A mixed subdivision is written to file.
+ --    The number of tasks equals nt.
 
     nbequ : constant integer32 := p'last;
-    nbpts,nt,r : integer32 := 0;
+    nbpts,r : integer32 := 0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup,mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc : Mixed_Subdivision;
@@ -252,7 +240,7 @@ procedure ts_mtmva is
     mat : Standard_Integer64_Matrices.Matrix(1..nbequ,1..nbequ);
 
     procedure Write_Mixed_Volume
-                ( r : in integer32;
+                ( idtask,r : in integer32;
                   mtype : in Standard_Integer_Vectors.Link_to_Vector;
                   mic : in out Mixed_Cell ) is
 
@@ -271,15 +259,14 @@ procedure ts_mtmva is
       celcnt := celcnt + 1;
       sumvol := sumvol + vol;
       Semaphore.Release(sem);
-     put_line("the mixed volume of cell " 
-              & Multitasking.to_string(celcnt) & " is "
-              & Multitasking.to_string(integer32(vol)));
+      put_line("the mixed volume of cell " 
+               & Multitasking.to_string(celcnt) & " is "
+               & Multitasking.to_string(integer32(vol)));
      -- put_line("the mixed volume of a cell : "
      --          & Multitasking.to_string(vol));
     end Write_Mixed_Volume;
 
   begin
-    put("Give the number of tasks : "); get(nt);
     Extract_Supports(nbequ,p,nbpts,ind,cnt,sup);
     if nt < 2 then
       Sequential_Mixed_Volume_Computation
@@ -303,6 +290,31 @@ procedure ts_mtmva is
     Write_Mixed_Cells(file,nbequ,r,mtype,mcc);
   end Mixed_Volume_Calculation;
 
+  procedure Random_Coefficient_System
+              ( file : in file_type;
+                nt : in integer32; p : in Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Extracts the supports of the polynomial system p and computes
+  --   its mixed volume and solves a random coefficient system.
+  --   The number of tasks equals nt.
+
+    q : Laur_Sys(p'range);
+    nbequ : constant integer32 := p'last;
+    nbpts,r : integer32 := 0;
+    cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
+    sup,mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mcc : Mixed_Subdivision;
+    mv : natural32;
+    sols : Solution_List;
+
+  begin
+    Extract_Supports(nbequ,p,nbpts,ind,cnt,sup);
+    Reporting_Multitasking_Tracker
+      (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+    put("The mixed volume : "); put(mv,1); new_line;
+  end Random_Coefficient_System;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -311,6 +323,8 @@ procedure ts_mtmva is
 
     lp : Link_to_Laur_Sys;
     file : file_type;
+    nt : integer32 := 0;
+    ans : character;
 
   begin
     new_line;
@@ -319,7 +333,14 @@ procedure ts_mtmva is
     put_line("Reading the name of the output file...");
     Read_Name_and_Create_File(file);
     new_line;
-    Mixed_Volume_Calculation(file,lp.all);
+    put("Give the number of tasks : "); get(nt);
+    new_line;
+    put("Do you want a random coefficient system ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Random_Coefficient_System(file,nt,lp.all);
+     else Mixed_Volume_Calculation(file,nt,lp.all);
+    end if;
   end Main;
 
 begin
