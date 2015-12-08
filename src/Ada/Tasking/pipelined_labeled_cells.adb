@@ -83,13 +83,15 @@ package body Pipelined_Labeled_Cells is
 
   begin
     while not stop loop
-      labels := Mixed_Labels_Queue.Next;
+      if otp
+       then Mixed_Labels_Queue.Next(labels,cnt);
+       else labels := Mixed_Labels_Queue.Next;
+      end if;
       if labels = null then -- check if all labels are produced
         if Mixed_Labels_Queue.Stopped     -- production stopped
          then stop := true;   -- all labels have been processed
         end if;
       else
-        cnt := cnt + 1;
         if otp then
           put_line("Task " & Multitasking.to_string(idtask)
                            & " processes cell "

@@ -1,3 +1,4 @@
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
 
@@ -34,6 +35,14 @@ package Mixed_Labels_Queue is
 
   -- DESCRIPTION :
   --   Returns the counter of the labels currently processed.
+
+  procedure Next ( cell : out Standard_Integer_Vectors.Link_to_Vector;
+                   counter : out natural32 );
+
+  -- DESCRIPTION :
+  --   Returns the pointer to the next cell and the corresponding counter,
+  --   which is useful for monitoring the progress of the processor.
+  --   If cell = null on return, then counter = 0 as well.
 
   function Stopped return boolean;
 
