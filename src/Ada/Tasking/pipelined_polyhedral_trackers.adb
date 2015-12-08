@@ -217,8 +217,9 @@ package body Pipelined_Polyhedral_Trackers is
 
     sem : Semaphore.Lock;
     mix : constant Standard_Integer_Vectors.Vector := Mixture(r,mtype);
-    lif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
-        := Lifted_Supports(nbequ,r,mix,idx,vtx,lft);
+    permlif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range)
+            := Lifted_Supports(nbequ,r,mix,idx,vtx,lft);
+    lif : Arrays_of_Floating_Vector_Lists.Array_of_Lists(mix'range);
     hom : Eval_Coeff_Laur_Sys(1..nbequ);
     cff : Standard_Complex_VecVecs.VecVec(hom'range);
     epv : Exponent_Vectors.Exponent_Vectors_Array(hom'range);
@@ -239,9 +240,10 @@ package body Pipelined_Polyhedral_Trackers is
     end Track;
 
   begin
-    permq := Random_Coefficient_Systems.Create(natural32(nbequ),mix,lif);
+    permq := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
     for i in perm'range loop
       q(perm(i)+1) := permq(i+1);
+      lif(perm(i)+1) := permlif(i+1);
     end loop;
     put_line(file,q);
     new_line(file);
