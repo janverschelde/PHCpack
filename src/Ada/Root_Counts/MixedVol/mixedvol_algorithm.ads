@@ -195,8 +195,7 @@ package MixedVol_Algorithm is
   --   NuIdx2OldIdx relates new to old indices.
 
   procedure mv_lift
-               ( nVar,nPts : in integer32;
-                 ind,cnt,sup : in Standard_Integer_Vectors.Vector;
+               ( nVar : in integer32;
                  stlb : in double_float; nSpt : in integer32;
                  VtxIdx : in out Standard_Integer_Vectors.Link_to_Vector;
                  Vtx : in out Standard_Integer_VecVecs.Link_to_VecVec;
@@ -208,10 +207,6 @@ package MixedVol_Algorithm is
 
   -- ON ENTRY :
   --   nVar      ambient dimension, length of the vectors in supports;
-  --   nPts      total number of points in the supports;
-  --   ind       ind(i) is the start of the i-th support;
-  --   cnt       cnt(i) counts the length of the i-th support;
-  --   sup       coordinates of the points in the supports;
   --   stlb      lifting bound for stable mixed volumes,
   --             equals 0.0 if no stable mixed volumes are needed.
   --   nSpt      number of different supports;

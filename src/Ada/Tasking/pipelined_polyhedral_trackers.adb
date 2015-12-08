@@ -228,6 +228,7 @@ package body Pipelined_Polyhedral_Trackers is
     dpw : Standard_Floating_VecVecs.Array_of_VecVecs(2..nt);
     cft : Standard_Complex_VecVecs.Array_of_VecVecs(2..nt);
     tasksols,lastsols : Array_of_Solution_Lists(2..nt);
+    permq : Standard_Complex_Laur_Systems.Laur_Sys(1..nbequ);
 
     procedure Track ( idtask,r : in integer32; 
                       mtype : in Standard_Integer_Vectors.Link_to_Vector;
@@ -238,7 +239,10 @@ package body Pipelined_Polyhedral_Trackers is
     end Track;
 
   begin
-    q := Random_Coefficient_Systems.Create(natural32(nbequ),mix,lif);
+    permq := Random_Coefficient_Systems.Create(natural32(nbequ),mix,lif);
+    for i in perm'range loop
+      q(perm(i)+1) := permq(i+1);
+    end loop;
     put_line(file,q);
     new_line(file);
     put_line(file,"THE LIFTED SUPPORTS :");
@@ -283,7 +287,11 @@ package body Pipelined_Polyhedral_Trackers is
     put("idx = "); put(idx); new_line;
     put("sdx = "); put(sdx); new_line;
     put("ndx = "); put(ndx); new_line;
-    mv_lift(nbequ,nbpts,ind,cnt,support.all,stlb,r,idx,vtx,lft);
+    put_line("The permutation : ");
+    for i in perm'range loop
+      put(i,1); put(" : "); put(perm(i),1); new_line;
+    end loop;
+    mv_lift(nbequ,stlb,r,idx,vtx,lft);
     Reporting_Multitasking_Tracker
       (file,nt,nbequ,r,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
     Standard_Integer_Vectors.Clear(idx);

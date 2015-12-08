@@ -1,3 +1,5 @@
+Tue 8 Dec 2015 : mv_lift had too many parameters on input.
+
 Mon 30 Nov 2015 : new procedure in mixedvol_algorithm to split off the
   prepare for mixed volume computation stage for the callback procedure.
   Also the lifting is split off and the callback procedure is refactored.

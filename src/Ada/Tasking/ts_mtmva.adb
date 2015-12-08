@@ -174,7 +174,7 @@ procedure ts_mtmva is
   begin
     mv_upto_pre4mv
       (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
-    mv_lift(nbequ,nbpts,ind,cnt,support.all,stlb,r,idx,vtx,lft);
+    mv_lift(nbequ,stlb,r,idx,vtx,lft);
     size := Mixed_Volume.cell_size(r,mtype);
     Cs_Init(cells,size);
     Mixed_Volume.MixedVol_with_Callback

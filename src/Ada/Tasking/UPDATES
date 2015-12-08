@@ -1,6 +1,8 @@
 Tue 8 Dec 2015 : to mixed_labels_queue added a Next procedure that returns
   both the labels and the counter, which is useful to track the progress
   of the processor in the monitored version of pipelined_labeled_cells.adb.
+  Changed pipelined_labeled_cells.adb, pipelined_polyhedral_trackers.adb,
+  and ts_mtmva.adb for shortened parameter list to mv_lift.
 
 Mon 7 Dec 2015 : pipelined_polyhedral_trackers.adb simulate path tracking
   through a multitasked mixed volume count.  Refactored code from

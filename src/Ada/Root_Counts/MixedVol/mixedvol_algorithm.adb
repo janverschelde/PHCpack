@@ -397,8 +397,7 @@ package body MixedVol_Algorithm is
   end mv_upto_pre4mv;
 
   procedure mv_lift
-              ( nVar,nPts : in integer32;
-                ind,cnt,sup : in Standard_Integer_Vectors.Vector;
+              ( nVar : in integer32;
                 stlb : in double_float; nSpt : in integer32;
                 VtxIdx : in out Standard_Integer_Vectors.Link_to_Vector;
                 Vtx : in out Standard_Integer_VecVecs.Link_to_VecVec;
@@ -457,7 +456,7 @@ package body MixedVol_Algorithm is
     mv_upto_pre4mv
       (nVar,nPts,ind,cnt,sup,nSpt,SptType,perm,VtxIdx,Vtx,
        SptIdx,Spt,NuIDX2OldIdx);
-    mv_lift(nVar,nPts,ind,cnt,sup,stlb,nSpt,VtxIdx,Vtx,lft);
+    mv_lift(nVar,stlb,nSpt,VtxIdx,Vtx,lft);
     CellSize := cell_size(nSpt,SptType);
     Cs_Init(cells,CellSize);
     MixedVol_with_Callback

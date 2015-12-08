@@ -192,7 +192,7 @@ package body Pipelined_Labeled_Cells is
   begin
     mv_upto_pre4mv
       (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
-    mv_lift(nbequ,nbpts,ind,cnt,support.all,stlb,r,idx,vtx,lft);
+    mv_lift(nbequ,stlb,r,idx,vtx,lft);
     Pipelined_Mixed_Cells
       (ntasks,nbequ,otp,r,mtype,perm,idx,vtx,lft,sub,mv,process);
     Standard_Integer_Vectors.Clear(idx);
