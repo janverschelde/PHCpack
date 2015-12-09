@@ -3,6 +3,7 @@ with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Integer_VecVecs_io;       use Standard_Integer_VecVecs_io;
 with Standard_Complex_Vectors_io;       use Standard_Complex_Vectors_io;
 with Standard_Complex_VecVecs_io;       use Standard_Complex_VecVecs_io;
+with Standard_Complex_Matrices_io;      use Standard_Complex_Matrices_io;
 with Floating_Mixed_Subdivisions_io;    use Floating_Mixed_Subdivisions_io;
 
 with Standard_Natural_NUmbers_io;       use Standard_Natural_Numbers_io;
@@ -94,14 +95,14 @@ package body Pipelined_Polyhedral_Trackers is
     idxlft : integer32 := lft'first-1;
 
   begin
-    put("mix = "); put(mix); new_line;
-    put("idx = "); put(idx.all); new_line;
+   -- put("mix = "); put(mix); new_line;
+   -- put("idx = "); put(idx.all); new_line;
     for k in 1..r loop
       ind := ind + 1;
-      put("support "); put(ind,1); put_line(" :");
+     -- put("support "); put(ind,1); put_line(" :");
       for i in idx(k-1)..(idx(k)-1) loop
         vpt := vtx(i);
-        put(vpt); new_line;
+       -- put(vpt); new_line;
         declare
           lpt : Standard_Floating_Vectors.Vector(1..n+1);
           ilp : integer32 := 0;
@@ -186,14 +187,7 @@ package body Pipelined_Polyhedral_Trackers is
 
   begin
     if r = n then
-     -- put_line("The Coefficients : "); put(cff);
-     -- put("The exponent vectors array : ");
-     -- for i in epv'range loop
-     --   put(epv(i));
-     -- end loop;
-     -- put_line("The mixed cell : "); put(natural32(n),mix,mic);
       Select_Coefficients(cff,epv,mic.pts.all,s_c);
-     -- put_line("The selected coefficients : "); put_line(s_c);
       Fully_Mixed_To_Binomial_Format(s_c,mic.pts.all,A,b);
     else
       Select_Subsystem_to_Matrix_Format(cff,epv,mix,mic.pts.all,A,CC,b);
@@ -295,14 +289,7 @@ package body Pipelined_Polyhedral_Trackers is
 
   begin
     if r = n then
-     -- put_line("The Coefficients : "); put(cff);
-     -- put("The exponent vectors array : ");
-     -- for i in epv'range loop
-     --   put(epv(i));
-     -- end loop;
-     -- put_line("The mixed cell : "); put(natural32(n),mix,mic);
       Select_Coefficients(cff,epv,mic.pts.all,s_c);
-     -- put_line("The selected coefficients : "); put_line(s_c);
       Fully_Mixed_To_Binomial_Format(s_c,mic.pts.all,A,b);
     else
       Select_Subsystem_to_Matrix_Format(cff,epv,mix,mic.pts.all,A,CC,b);
@@ -404,14 +391,7 @@ package body Pipelined_Polyhedral_Trackers is
 
   begin
     if r = n then
-     -- put_line("The Coefficients : "); put(cff);
-     -- put("The exponent vectors array : ");
-     -- for i in epv'range loop
-     --   put(epv(i));
-     -- end loop;
-     -- put_line("The mixed cell : "); put(natural32(n),mix,mic);
       Select_Coefficients(cff,epv,mic.pts.all,s_c);
-     -- put_line("The selected coefficients : "); put_line(s_c);
       Fully_Mixed_To_Binomial_Format(s_c,mic.pts.all,A,b);
     else
       Select_Subsystem_to_Matrix_Format(cff,epv,mix,mic.pts.all,A,CC,b);
@@ -487,11 +467,16 @@ package body Pipelined_Polyhedral_Trackers is
     end Track;
 
   begin
-    permq := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
-    for i in perm'range loop
-      q(perm(i)+1) := permq(i+1);
-      lif(perm(i)+1) := permlif(i+1);
-    end loop;
+    if r < nbequ then
+      q := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      lif := permlif;
+    else
+      permq := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      for i in perm'range loop
+        q(perm(i)+1) := permq(i+1);
+        lif(perm(i)+1) := permlif(i+1);
+      end loop;
+    end if;
     put_line(file,q);
     new_line(file);
     put_line(file,"THE LIFTED SUPPORTS :");
@@ -551,11 +536,16 @@ package body Pipelined_Polyhedral_Trackers is
     end Track;
 
   begin
-    permq := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
-    for i in perm'range loop
-      q(perm(i)+1) := permq(i+1);
-      lif(perm(i)+1) := permlif(i+1);
-    end loop;
+    if r < nbequ then
+      q := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      lif := permlif;
+    else
+      permq := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      for i in perm'range loop
+        q(perm(i)+1) := permq(i+1);
+        lif(perm(i)+1) := permlif(i+1);
+      end loop;
+    end if;
     put_line(file,q);
     new_line(file);
     put_line(file,"THE LIFTED SUPPORTS :");
@@ -615,11 +605,16 @@ package body Pipelined_Polyhedral_Trackers is
     end Track;
 
   begin
-    permq := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
-    for i in perm'range loop
-      q(perm(i)+1) := permq(i+1);
-      lif(perm(i)+1) := permlif(i+1);
-    end loop;
+    if r < nbequ then
+      q := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      lif := permlif;
+    else
+      permq := Random_Coefficient_Systems.Create(natural32(nbequ),mix,permlif);
+      for i in perm'range loop
+        q(perm(i)+1) := permq(i+1);
+        lif(perm(i)+1) := permlif(i+1);
+      end loop;
+    end if;
     put_line(file,q);
     new_line(file);
     put_line(file,"THE LIFTED SUPPORTS :");
@@ -658,16 +653,6 @@ package body Pipelined_Polyhedral_Trackers is
   begin
     mv_upto_pre4mv
       (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
-    put("ind = "); put(ind); new_line;
-    put("cnt = "); put(cnt); new_line;
-    put("perm = "); put(perm); new_line;
-    put("idx = "); put(idx); new_line;
-    put("sdx = "); put(sdx); new_line;
-    put("ndx = "); put(ndx); new_line;
-    put_line("The permutation : ");
-    for i in perm'range loop
-      put(i,1); put(" : "); put(perm(i),1); new_line;
-    end loop;
     mv_lift(nbequ,stlb,r,idx,vtx,lft);
     Reporting_Multitasking_Tracker
       (file,nt,nbequ,r,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
@@ -697,16 +682,6 @@ package body Pipelined_Polyhedral_Trackers is
   begin
     mv_upto_pre4mv
       (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
-    put("ind = "); put(ind); new_line;
-    put("cnt = "); put(cnt); new_line;
-    put("perm = "); put(perm); new_line;
-    put("idx = "); put(idx); new_line;
-    put("sdx = "); put(sdx); new_line;
-    put("ndx = "); put(ndx); new_line;
-    put_line("The permutation : ");
-    for i in perm'range loop
-      put(i,1); put(" : "); put(perm(i),1); new_line;
-    end loop;
     mv_lift(nbequ,stlb,r,idx,vtx,lft);
     Reporting_Multitasking_Tracker
       (file,nt,nbequ,r,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
@@ -736,16 +711,6 @@ package body Pipelined_Polyhedral_Trackers is
   begin
     mv_upto_pre4mv
       (nbequ,nbpts,ind,cnt,support.all,r,mtype,perm,idx,vtx,sdx,spt,ndx);
-    put("ind = "); put(ind); new_line;
-    put("cnt = "); put(cnt); new_line;
-    put("perm = "); put(perm); new_line;
-    put("idx = "); put(idx); new_line;
-    put("sdx = "); put(sdx); new_line;
-    put("ndx = "); put(ndx); new_line;
-    put_line("The permutation : ");
-    for i in perm'range loop
-      put(i,1); put(" : "); put(perm(i),1); new_line;
-    end loop;
     mv_lift(nbequ,stlb,r,idx,vtx,lft);
     Reporting_Multitasking_Tracker
       (file,nt,nbequ,r,mtype,perm,idx,vtx,lft,mcc,mv,q,sols);
