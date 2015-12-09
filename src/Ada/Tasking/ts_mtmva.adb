@@ -14,11 +14,20 @@ with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
 with Standard_Integer_VecVecs;
 with Standard_Integer64_Matrices;
 with Standard_Integer64_Linear_Solvers; use Standard_Integer64_Linear_Solvers;
-with Standard_Complex_Laur_Systems;     use Standard_Complex_Laur_Systems;
+with Standard_Complex_Laur_Systems;
 with Standard_Complex_Laur_Systems_io;  use Standard_Complex_Laur_Systems_io;
-with Standard_Complex_Laur_Randomizers;
-with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
+with DoblDobl_Complex_Laur_Systems;
+with DoblDobl_Complex_Laur_Systems_io;  use DoblDobl_Complex_Laur_Systems_io;
+with DoblDobl_Polynomial_Convertors;
+with QuadDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Laur_Systems_io;  use QuadDobl_Complex_Laur_Systems_io;
+with QuadDobl_Polynomial_Convertors;
+with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Solutions;
+with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
+with QuadDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
 with Floating_Mixed_Subdivisions;       use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;    use Floating_Mixed_Subdivisions_io;
 with Cell_Stack;                        use Cell_Stack;
@@ -219,8 +228,8 @@ procedure ts_mtmva is
   end Extract_Exponent_Vectors;
 
   procedure Mixed_Volume_Calculation
-              ( file : in file_type;
-                nt : in integer32; p : in Laur_Sys ) is
+              ( file : in file_type; nt : in integer32;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
 
   -- DESCRIPTION :
   --   Extracts the supports of the polynomial system and computes
@@ -292,13 +301,16 @@ procedure ts_mtmva is
   end Mixed_Volume_Calculation;
 
   procedure Random_Coefficient_System
-              ( file : in file_type;
-                nt : in integer32; p : in Laur_Sys ) is
+              ( file : in file_type; nt : in integer32;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
 
   -- DESCRIPTION :
   --   Extracts the supports of the polynomial system p and computes
   --   its mixed volume and solves a random coefficient system.
   --   The number of tasks equals nt.
+
+    use Standard_Complex_Laur_Systems;
+    use Standard_Complex_Solutions;
 
     q : Laur_Sys(p'range);
     nbequ : constant integer32 := p'last;
@@ -319,13 +331,84 @@ procedure ts_mtmva is
     put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
   end Random_Coefficient_System;
 
-  procedure Main is
+  procedure Random_Coefficient_System
+              ( file : in file_type; nt : in integer32;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Extracts the supports of the polynomial system p and computes
+  --   its mixed volume and solves a random coefficient system.
+  --   The number of tasks equals nt.
+
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Polynomial_Convertors;
+    use DoblDobl_Complex_Solutions;
+
+    stp : Standard_Complex_Laur_Systems.Laur_Sys(p'range)
+        := DoblDobl_Complex_to_Standard_Laur_Sys(p);
+    q : Laur_Sys(p'range);
+    nbequ : constant integer32 := p'last;
+    nbpts,r : integer32 := 0;
+    cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
+    sup,mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mcc : Mixed_Subdivision;
+    mv : natural32;
+    sols : Solution_List;
+
+  begin
+    Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
+    Reporting_Multitasking_Tracker
+      (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+    put("The mixed volume : "); put(mv,1); new_line;
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+  end Random_Coefficient_System;
+
+
+  procedure Random_Coefficient_System
+              ( file : in file_type; nt : in integer32;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Extracts the supports of the polynomial system p and computes
+  --   its mixed volume and solves a random coefficient system.
+  --   The number of tasks equals nt.
+
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Polynomial_Convertors;
+    use QuadDobl_Complex_Solutions;
+
+    stp : Standard_Complex_Laur_Systems.Laur_Sys(p'range)
+        := QuadDobl_Complex_to_Standard_Laur_Sys(p);
+    q : Laur_Sys(p'range);
+    nbequ : constant integer32 := p'last;
+    nbpts,r : integer32 := 0;
+    cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
+    sup,mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
+    mcc : Mixed_Subdivision;
+    mv : natural32;
+    sols : Solution_List;
+
+  begin
+    Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
+    Reporting_Multitasking_Tracker
+      (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+    put("The mixed volume : "); put(mv,1); new_line;
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+  end Random_Coefficient_System;
+
+  procedure Standard_Main is
 
   -- DESCRIPTION :
   --   Prompts the user for a polynomial system, computes its supports,
-  --   and then calls the routine to compute the mixed volume.
+  --   and then calls the routine to compute the mixed volume,
+  --   or to solve a random coefficient system with polyhedral homotopies
+  --   in double double precision.
 
-    lp : Link_to_Laur_Sys;
+    lp : Standard_Complex_Laur_Systems.Link_to_Laur_Sys;
     file : file_type;
     nt : integer32 := 0;
     ans : character;
@@ -345,6 +428,97 @@ procedure ts_mtmva is
      then Random_Coefficient_System(file,nt,lp.all);
      else Mixed_Volume_Calculation(file,nt,lp.all);
     end if;
+  end Standard_Main;
+
+  procedure DoblDobl_Main is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system, computes its supports,
+  --   and then calls the routine to compute the mixed volume,
+  --   or to solve a random coefficient system with polyhedral homotopies
+  --   in double double precision.
+
+    lp : DoblDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    file : file_type;
+    nt : integer32 := 0;
+    ans : character;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ..."); get(lp);
+    new_line;
+    put_line("Reading the name of the output file...");
+    Read_Name_and_Create_File(file);
+    new_line;
+    put("Give the number of tasks : "); get(nt);
+    new_line;
+    put("Do you want a random coefficient system ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Random_Coefficient_System(file,nt,lp.all);
+    else
+      declare
+        use DoblDobl_Polynomial_Convertors;
+        stp : Standard_Complex_Laur_Systems.Laur_Sys(lp'range)
+            := DoblDobl_Complex_to_Standard_Laur_Sys(lp.all);
+      begin
+        Mixed_Volume_Calculation(file,nt,stp);
+      end;
+    end if;
+  end DoblDobl_Main;
+
+  procedure QuadDobl_Main is
+
+  -- DESCRIPTION :
+  --   Prompts the user for a polynomial system, computes its supports,
+  --   and then calls the routine to compute the mixed volume,
+  --   or to solve a random coefficient system with polyhedral homotopies
+  --   in quad double precision.
+
+    lp : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
+    file : file_type;
+    nt : integer32 := 0;
+    ans : character;
+
+  begin
+    new_line;
+    put_line("Reading a polynomial system ..."); get(lp);
+    new_line;
+    put_line("Reading the name of the output file...");
+    Read_Name_and_Create_File(file);
+    new_line;
+    put("Give the number of tasks : "); get(nt);
+    new_line;
+    put("Do you want a random coefficient system ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      Random_Coefficient_System(file,nt,lp.all);
+    else
+      declare
+        use QuadDobl_Polynomial_Convertors;
+        stp : Standard_Complex_Laur_Systems.Laur_Sys(lp'range)
+            := QuadDobl_Complex_to_Standard_Laur_Sys(lp.all);
+      begin
+        Mixed_Volume_Calculation(file,nt,stp);
+      end;
+    end if;
+  end QuadDobl_Main;
+
+  procedure Main is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the level of the precision
+  --   and then calls the proper driver.
+
+    precision : constant character := Prompt_for_Precision;
+
+  begin
+    case precision is
+      when '0' => Standard_Main;
+      when '1' => DoblDobl_Main;
+      when '2' => QuadDobl_Main;
+      when others => null;
+    end case;
   end Main;
 
 begin
