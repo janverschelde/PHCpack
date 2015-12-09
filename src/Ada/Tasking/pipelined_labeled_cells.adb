@@ -1,7 +1,6 @@
 with text_io;                           use text_io;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Integer_Vectors_io;       use Standard_Integer_Vectors_io;
 with Standard_Floating_Vectors;
 with Standard_Floating_Vectors_io;      use Standard_Floating_Vectors_io;
@@ -176,7 +175,7 @@ package body Pipelined_Labeled_Cells is
               ( ntasks,nbequ,nbpts : in integer32; otp : in boolean;
                 ind,cnt : in Standard_Integer_Vectors.Vector;
                 support : in Standard_Integer_Vectors.Link_to_Vector;
-                r : out integer32;
+                stlb : in double_float; r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
                 sub : out Mixed_Subdivision; mv : out natural32;
                 process : access procedure
@@ -184,7 +183,6 @@ package body Pipelined_Labeled_Cells is
                     mtype : in Standard_Integer_Vectors.Link_to_Vector;
                     mic : in out Mixed_Cell ) := null ) is
 
-    stlb : constant double_float := 0.0; -- no stable mv for now...
     idx,sdx,ndx : Standard_Integer_Vectors.Link_to_Vector;
     vtx,spt : Standard_Integer_VecVecs.Link_to_VecVec;
     lft : Standard_Floating_Vectors.Link_to_Vector;

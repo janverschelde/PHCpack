@@ -28,6 +28,7 @@ with DoblDobl_Complex_Solutions;
 with DoblDobl_Complex_Solutions_io;     use DoblDobl_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions_io;     use QuadDobl_Complex_Solutions_io;
+with Floating_Lifting_Functions;
 with Floating_Mixed_Subdivisions;       use Floating_Mixed_Subdivisions;
 with Floating_Mixed_Subdivisions_io;    use Floating_Mixed_Subdivisions_io;
 with Cell_Stack;                        use Cell_Stack;
@@ -104,7 +105,7 @@ procedure ts_mtmva is
     put("Permutation of the supports : "); put(perm); new_line;
     put_line("Creating a regular mixed-cell configuration ...");
     new_line;
-    put_line("See the output file for the mixed subdivision...");
+    put_line("See the output file for the mixed-cell configuration ...");
     new_line;
     if r < nbequ then
       while not Is_Null(tmp) loop
@@ -131,13 +132,91 @@ procedure ts_mtmva is
     end if;
   end Mixed_Cell_Configuration;
 
+  procedure Mixed_Cell_Configuration
+              ( nbequ,r,size,nb : in integer32; stlb : in double_float;
+                mtype,perm : in Standard_Integer_Vectors.Link_to_Vector;
+                Vtx : in Standard_Integer_VecVecs.Link_to_VecVec;
+                lft : in Standard_Floating_Vectors.Link_to_Vector;
+                labels : in Lists_of_Integer_Vectors.List;
+                sub,mcc,stbmcc : out Mixed_Subdivision ) is
+
+  -- DESCRIPTION :
+  --   Takes the cells in the cell stack and converts the cells into
+  --   a mixed cell configuraiton, classifying the cells into the
+  --   original ones (without artificial origins) and stable ones.
+
+  -- ON ENTRY :
+  --   nbequ    number of equations in the input Laurent system,
+  --            or alternatively, the number of variables;
+  --   r        number of different supports
+  --   size     the number of labels in a mixed cell;
+  --   nb       total number of cells;
+  --   stlb     lifting bound for stable mixed cells;
+  --   mtype    type of mixture of the supports;
+  --   perm     permutation on the supports;
+  --   Vtx      vertex set of all supports;
+  --   lft      lifting values for all points in Vtx;
+  --   labels   labels to the coordinates of the mixed cells.
+
+  -- ON RETURN :
+  --   sub      a mixed cell configuration, all mixed cells;
+  --   mcc      mixed cells without artificial origin;
+  --   stbmcc   stable mixed cells with artificial origin.
+
+    use Lists_of_Integer_Vectors;
+
+    last,mcclast,stbmcclast : Mixed_Subdivision;
+    tmp : List := labels;
+    lbl : Standard_Integer_Vectors.Link_to_Vector;
+
+  begin
+    put("Permutation of the supports : "); put(perm); new_line;
+    put_line("Creating a regular mixed-cell configuration ...");
+    new_line;
+    put_line("See the output file for the mixed-cell configuration ...");
+    new_line;
+    if r < nbequ then
+      while not Is_Null(tmp) loop
+        lbl := Head_Of(tmp);
+        declare
+          mic : constant Mixed_Cell
+              := Labels_to_Mixed_Cell(nbequ,r,mtype,lbl,Vtx,lft);
+        begin
+          Append(sub,last,mic);
+          if Is_Original(mic,stlb) then
+            Append(mcc,mcclast,mic);
+          elsif Is_Stable(mic.nor.all,stlb,mic.pts.all) then
+            Append(stbmcc,stbmcclast,mic);
+          end if;
+        end;
+        tmp := Tail_Of(tmp);
+      end loop;
+    else
+      while not Is_Null(tmp) loop
+        lbl := Head_Of(tmp);
+        declare
+          mic : constant Mixed_Cell
+              := Labels_to_Mixed_Cell(nbequ,r,mtype,perm,lbl,Vtx,lft);
+        begin
+          Append(sub,last,mic);
+          if Is_Original(mic,stlb) then
+            Append(mcc,mcclast,mic);
+          elsif Is_Stable(mic.nor.all,stlb,mic.pts.all) then
+            Append(stbmcc,stbmcclast,mic);
+          end if;
+        end;
+        tmp := Tail_Of(tmp);
+      end loop;
+    end if;
+  end Mixed_Cell_Configuration;
+
   procedure Sequential_Mixed_Volume_Computation
               ( nbequ,nbpts : in integer32;
                 ind,cnt : in Standard_Integer_Vectors.Vector;
                 support : in Standard_Integer_Vectors.Link_to_Vector;
-                r : out integer32;
+                stlb : in double_float; r : out integer32;
                 mtype,perm : out Standard_Integer_Vectors.Link_to_Vector;
-                sub : out Mixed_Subdivision ) is
+                sub,mcc,stbmcc : out Mixed_Subdivision ) is
 
   -- DESCRIPTION :
   --   Extracts the supports of the polynomial system and computes
@@ -152,7 +231,9 @@ procedure ts_mtmva is
   --   ind      ind(k) marks the beginning of the k-th support;
   --   cnt      cnt(k) counts the number of points in the k-th support;
   --   support  vector range 1..nbequ*nbpts with the coordinates of
-  --            all points in the supports.
+  --            all points in the supports;
+  --   stlb     lifting bound to use for stable mixed volumes,
+  --            equals 0.0 if no stable mixed volumes are requested.
 
   -- ON RETURN :
   --   r        number of distinct supports;
@@ -162,7 +243,6 @@ procedure ts_mtmva is
 
     use Lists_of_Integer_Vectors;
 
-    stlb : constant double_float := 0.0;
     nb,size : integer32;
     mixvol : natural32;
     idx,sdx,ndx : Standard_Integer_Vectors.Link_to_Vector;
@@ -191,7 +271,17 @@ procedure ts_mtmva is
        write_labels'access);
     put("The mixed volume is "); put(mixvol,1); put_line(".");
     put("There are "); put(nb,1); put_line(" mixed cells.");
-    Mixed_Cell_Configuration(nbequ,r,size,nb,mtype,perm,Vtx,lft,labels,sub);
+    if stlb = 0.0 then
+      Mixed_Cell_Configuration(nbequ,r,size,nb,mtype,perm,Vtx,lft,labels,sub);
+    else
+      Mixed_Cell_Configuration
+       (nbequ,r,size,nb,stlb,mtype,perm,Vtx,lft,labels,sub,mcc,stbmcc);
+      put("Total number of mixed cells : "); put(Length_Of(sub),1); new_line;
+      put("Mixed cells of original supports : ");
+      put(Length_Of(mcc),1); new_line;
+      put("Stable mixed cells with artificial origins : ");
+      put(Length_Of(stbmcc),1); new_line;
+    end if;
   end Sequential_Mixed_Volume_Computation;
 
   function Extract_Exponent_Vectors
@@ -228,7 +318,7 @@ procedure ts_mtmva is
   end Extract_Exponent_Vectors;
 
   procedure Mixed_Volume_Calculation
-              ( file : in file_type; nt : in integer32;
+              ( file : in file_type; nt : in integer32; stable : in boolean;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
 
   -- DESCRIPTION :
@@ -238,15 +328,17 @@ procedure ts_mtmva is
 
     nbequ : constant integer32 := p'last;
     nbpts,r : integer32 := 0;
+    stlb : double_float := 0.0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup,mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
-    mcc : Mixed_Subdivision;
+    sub,mcc,stbmcc : Mixed_Subdivision;
     mv : natural32;
     ans : character;
     otp : boolean;
     sem : Semaphore.Lock;
     celcnt : natural32 := 0;
     sumvol : natural64 := 0;
+    stabmv : natural64 := 0;
     mat : Standard_Integer64_Matrices.Matrix(1..nbequ,1..nbequ);
 
     procedure Write_Mixed_Volume
@@ -258,45 +350,87 @@ procedure ts_mtmva is
     --   Writes the mixed volume of the cell mic with type of mixture
     --   defined in r and mtype to screen, to test the callback procedure
     --   in the pipelined production of the mixed cells.
+    --   If the stable mixed volume is wanted, then the classification
+    --   of the cell is written to screen as well.
 
-      vol : natural64;
+      vol,stabvol : natural64;
+      stablecell : boolean := false;
+      originalcell : boolean := true;
 
     begin
       mat := Extract_Exponent_Vectors(nbequ,mic);
       Upper_Triangulate(mat);
       vol := Polyhedral_Start_Systems.Volume_of_Diagonal(mat);
+      if stable then
+        stablecell := Is_Stable(mic.nor.all,stlb,mic.pts.all);
+        originalcell := Is_Original(mic,stlb);
+        if stablecell
+         then stabvol := vol;
+         else stabvol := 0;
+        end if;
+      end if;
       Semaphore.Request(sem);
       celcnt := celcnt + 1;
-      sumvol := sumvol + vol;
+      if originalcell
+       then sumvol := sumvol + vol;
+      end if;
+      if stable
+       then stabmv := stabmv + stabvol;
+      end if;
       Semaphore.Release(sem);
-      put_line("the mixed volume of cell " 
-               & Multitasking.to_string(celcnt) & " is "
-               & Multitasking.to_string(integer32(vol)));
-     -- put_line("the mixed volume of a cell : "
-     --          & Multitasking.to_string(vol));
+      if not stable then
+        put_line("the mixed volume of cell " 
+                 & Multitasking.to_string(celcnt) & " is "
+                 & Multitasking.to_string(integer32(vol)));
+      else
+        if Is_Original(mic,stlb) then
+          put_line("the mixed volume of cell " 
+                   & Multitasking.to_string(celcnt) & " is "
+                   & Multitasking.to_string(integer32(vol)) & " original");
+        elsif stablecell then
+          put_line("the mixed volume of cell " 
+                   & Multitasking.to_string(celcnt) & " is "
+                   & Multitasking.to_string(integer32(vol)) & " stable");
+        else
+          put_line("the mixed volume of cell " 
+                   & Multitasking.to_string(celcnt) & " is "
+                   & Multitasking.to_string(integer32(vol)) & " other");
+        end if;
+      end if;
     end Write_Mixed_Volume;
 
   begin
+    if stable
+     then stlb := Floating_Lifting_Functions.Lifting_Bound(p);
+    end if;
     Extract_Supports(nbequ,p,nbpts,ind,cnt,sup);
     if nt < 2 then
       Sequential_Mixed_Volume_Computation
-        (nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc);
+        (nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,sub,mcc,stbmcc);
     else
       new_line;
       put("Monitor the progress of the computations ? (y/n) ");
       Ask_Yes_or_No(ans);
       otp := (ans = 'y');
       if otp then
-        Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,r,mtype,perm,
-          mcc,mv,Write_Mixed_Volume'access);
-        put("The sum of the volumes of all cells : ");
+        Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,stlb,
+          r,mtype,perm,mcc,mv,Write_Mixed_Volume'access);
+        if stable
+         then put("The sum of the volumes of original cells : ");
+         else put("The sum of the volumes of all cells : ");
+        end if;
         put(sumvol,1); new_line;
       else
-        Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,r,mtype,perm,
-          mcc,mv);
+        Pipelined_Mixed_Cells(nt,nbequ,nbpts,otp,ind,cnt,sup,stlb,
+          r,mtype,perm,mcc,mv);
+      end if;
+      if stable then
+        put("The total mixed volume : "); put(mv,1); new_line;
+        put("The stable mixed volume : "); put(stabmv,1); new_line;
+      else
+        put("The mixed volume : "); put(stabmv,1); new_line;
       end if;
     end if;
-    put("The mixed volume : "); put(mv,1); new_line;
     Write_Mixed_Cells(file,nbequ,r,mtype,mcc);
   end Mixed_Volume_Calculation;
 
@@ -450,6 +584,7 @@ procedure ts_mtmva is
     file : file_type;
     nt : integer32 := 0;
     ans : character;
+    stable : boolean;
 
   begin
     new_line;
@@ -460,11 +595,15 @@ procedure ts_mtmva is
     new_line;
     put("Give the number of tasks : "); get(nt);
     new_line;
+    put("Do you want stable mixed volumes ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    stable := (ans = 'y');
+    new_line;
     put("Do you want a random coefficient system ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y'
      then Random_Coefficient_System(file,nt,lp.all);
-     else Mixed_Volume_Calculation(file,nt,lp.all);
+     else Mixed_Volume_Calculation(file,nt,stable,lp.all);
     end if;
   end Standard_Main;
 
@@ -480,6 +619,7 @@ procedure ts_mtmva is
     file : file_type;
     nt : integer32 := 0;
     ans : character;
+    stable : boolean;
 
   begin
     new_line;
@@ -489,6 +629,10 @@ procedure ts_mtmva is
     Read_Name_and_Create_File(file);
     new_line;
     put("Give the number of tasks : "); get(nt);
+    new_line;
+    put("Do you want stable mixed volumes ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    stable := (ans = 'y');
     new_line;
     put("Do you want a random coefficient system ? (y/n) ");
     Ask_Yes_or_No(ans);
@@ -500,7 +644,7 @@ procedure ts_mtmva is
         stp : Standard_Complex_Laur_Systems.Laur_Sys(lp'range)
             := DoblDobl_Complex_to_Standard_Laur_Sys(lp.all);
       begin
-        Mixed_Volume_Calculation(file,nt,stp);
+        Mixed_Volume_Calculation(file,nt,stable,stp);
       end;
     end if;
   end DoblDobl_Main;
@@ -517,6 +661,7 @@ procedure ts_mtmva is
     file : file_type;
     nt : integer32 := 0;
     ans : character;
+    stable : boolean;
 
   begin
     new_line;
@@ -526,6 +671,10 @@ procedure ts_mtmva is
     Read_Name_and_Create_File(file);
     new_line;
     put("Give the number of tasks : "); get(nt);
+    new_line;
+    put("Do you want stable mixed volumes ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    stable := (ans = 'y');
     new_line;
     put("Do you want a random coefficient system ? (y/n) ");
     Ask_Yes_or_No(ans);
@@ -537,7 +686,7 @@ procedure ts_mtmva is
         stp : Standard_Complex_Laur_Systems.Laur_Sys(lp'range)
             := QuadDobl_Complex_to_Standard_Laur_Sys(lp.all);
       begin
-        Mixed_Volume_Calculation(file,nt,stp);
+        Mixed_Volume_Calculation(file,nt,stable,stp);
       end;
     end if;
   end QuadDobl_Main;
