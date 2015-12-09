@@ -1,6 +1,7 @@
 Wed 9 Dec 2015 : fixed lifted_supports of pipelined_polyhedral_trackers.adb
   so that it works for already sorted semi-mixed inputs as well.
   No permutations have to be applied for the general semi-mixed case.
+  Silent versions in pipelined_polyhedral_trackers are tested by ts_mtmva.
 
 Tue 8 Dec 2015 : to mixed_labels_queue added a Next procedure that returns
   both the labels and the counter, which is useful to track the progress

@@ -320,12 +320,25 @@ procedure ts_mtmva is
     mcc : Mixed_Subdivision;
     mv : natural32;
     sols : Solution_List;
+    reporting : character;
 
   begin
+    new_line;
+    put("Do you want intermediate output ? (y/n) ");
+    Ask_Yes_or_No(reporting);
     Extract_Supports(nbequ,p,nbpts,ind,cnt,sup);
-    Reporting_Multitasking_Tracker
-      (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+    if reporting = 'y' then
+      Reporting_Multitasking_Tracker
+        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+    else
+      Silent_Multitasking_Tracker
+        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+      put(file,q'last,1); new_line(file);
+      put(file,q);
+    end if;
+    new_line;
     put("The mixed volume : "); put(mv,1); new_line;
+    new_line;
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
@@ -354,17 +367,29 @@ procedure ts_mtmva is
     mcc : Mixed_Subdivision;
     mv : natural32;
     sols : Solution_List;
+    reporting : character;
 
   begin
+    new_line;
+    put("Do you want intermediate output ? (y/n) ");
+    Ask_Yes_or_No(reporting);
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
-    Reporting_Multitasking_Tracker
-      (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+    if reporting = 'y' then
+      Reporting_Multitasking_Tracker
+        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+    else
+      Silent_Multitasking_Tracker
+        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+      put(file,q'last,1); new_line(file);
+      put(file,q);
+    end if;
+    new_line;
     put("The mixed volume : "); put(mv,1); new_line;
+    new_line;
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
   end Random_Coefficient_System;
-
 
   procedure Random_Coefficient_System
               ( file : in file_type; nt : in integer32;
@@ -389,12 +414,25 @@ procedure ts_mtmva is
     mcc : Mixed_Subdivision;
     mv : natural32;
     sols : Solution_List;
+    reporting : character;
 
   begin
+    new_line;
+    put("Do you want intermediate output ? (y/n) ");
+    Ask_Yes_or_No(reporting);
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
-    Reporting_Multitasking_Tracker
-      (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+    if reporting = 'y' then
+      Reporting_Multitasking_Tracker
+        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+    else
+      Silent_Multitasking_Tracker
+        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+      put(file,q'last,1); new_line(file);
+      put(file,q);
+    end if;
+    new_line;
     put("The mixed volume : "); put(mv,1); new_line;
+    new_line;
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
     put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
