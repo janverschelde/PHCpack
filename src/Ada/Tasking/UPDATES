@@ -1,3 +1,6 @@
+Wed 9 Dec 2015 : fixed lifted_supports of pipelined_polyhedral_trackers.adb
+  so that it works for already sorted semi-mixed inputs as well.
+
 Tue 8 Dec 2015 : to mixed_labels_queue added a Next procedure that returns
   both the labels and the counter, which is useful to track the progress
   of the processor in the monitored version of pipelined_labeled_cells.adb.

@@ -96,11 +96,12 @@ package body Pipelined_Polyhedral_Trackers is
   begin
     put("mix = "); put(mix); new_line;
     put("idx = "); put(idx.all); new_line;
-    for k in 1..idx'last loop
+    for k in 1..r loop
       ind := ind + 1;
       put("support "); put(ind,1); put_line(" :");
       for i in idx(k-1)..(idx(k)-1) loop
         vpt := vtx(i);
+        put(vpt); new_line;
         declare
           lpt : Standard_Floating_Vectors.Vector(1..n+1);
           ilp : integer32 := 0;
