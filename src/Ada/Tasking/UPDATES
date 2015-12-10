@@ -1,3 +1,6 @@
+Thu 10 Dec 2015 : new package pipelined_polyhedral_drivers, tested by
+  ts_mtmva, with drivers to call the pipelined polyhedral trackers.
+
 Wed 9 Dec 2015 : fixed lifted_supports of pipelined_polyhedral_trackers.adb
   so that it works for already sorted semi-mixed inputs as well.
   No permutations have to be applied for the general semi-mixed case.

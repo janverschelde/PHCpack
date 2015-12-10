@@ -40,6 +40,7 @@ with Semaphore;
 with Multitasking;
 with Pipelined_Labeled_Cells;           use Pipelined_Labeled_Cells;
 with Pipelined_Polyhedral_Trackers;     use Pipelined_Polyhedral_Trackers;
+with Pipelined_Polyhedral_Drivers;
 
 procedure ts_mtmva is
 
@@ -434,14 +435,134 @@ procedure ts_mtmva is
     Write_Mixed_Cells(file,nbequ,r,mtype,mcc);
   end Mixed_Volume_Calculation;
 
+  procedure Pipelined_Polyhedral_Driver
+              ( file : in file_type; nt : in integer32;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Extracts the supports of the polynomial system p and computes
+  --   its mixed volume and solves a random coefficient system,
+  --   in standard double precision. The number of tasks equals nt.
+  --   Calls the driver in Pipelined_Polyhedral_Drivers.
+
+    use Standard_Complex_Laur_Systems;
+    use Standard_Complex_Solutions;
+    use Pipelined_Polyhedral_Drivers;
+
+    cfile,qfile : file_type;
+    q : Laur_Sys(p'range);
+    mv : natural32;
+    sols : Solution_List;
+    ans : character;
+    mfi,rep : boolean;
+
+  begin
+    new_line;
+    put_line("Reading the file name to write the start system ...");
+    Read_Name_and_Create_File(qfile);
+    new_line;
+    put("Do you want the mixed cell configuration on file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    mfi := (ans = 'y');
+    if mfi then
+      put_line("Reading the file name to write the cell configuration ...");
+      Read_Name_and_Create_File(cfile);
+    end if;
+    new_line;
+    put("Do you want intermediate output ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    rep := (ans = 'y');
+    Pipelined_Polyhedral_Homotopies(file,cfile,qfile,nt,mfi,rep,p,mv,q,sols);
+  end Pipelined_Polyhedral_Driver;
+
+  procedure Pipelined_Polyhedral_Driver
+              ( file : in file_type; nt : in integer32;
+                p : in DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Extracts the supports of the polynomial system p and computes
+  --   its mixed volume and solves a random coefficient system,
+  --   in double double precision. The number of tasks equals nt.
+  --   Calls the driver in Pipelined_Polyhedral_Drivers.
+
+    use DoblDobl_Complex_Laur_Systems;
+    use DoblDobl_Complex_Solutions;
+    use Pipelined_Polyhedral_Drivers;
+
+    cfile,qfile : file_type;
+    q : Laur_Sys(p'range);
+    mv : natural32;
+    sols : Solution_List;
+    ans : character;
+    mfi,rep : boolean;
+
+  begin
+    new_line;
+    put_line("Reading the file name to write the start system ...");
+    Read_Name_and_Create_File(qfile);
+    new_line;
+    put("Do you want the mixed cell configuration on file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    mfi := (ans = 'y');
+    if mfi then
+      put_line("Reading the file name to write the cell configuration ...");
+      Read_Name_and_Create_File(cfile);
+    end if;
+    new_line;
+    put("Do you want intermediate output ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    rep := (ans = 'y');
+    Pipelined_Polyhedral_Homotopies(file,cfile,qfile,nt,mfi,rep,p,mv,q,sols);
+  end Pipelined_Polyhedral_Driver;
+
+  procedure Pipelined_Polyhedral_Driver
+              ( file : in file_type; nt : in integer32;
+                p : in QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
+
+  -- DESCRIPTION :
+  --   Extracts the supports of the polynomial system p and computes
+  --   its mixed volume and solves a random coefficient system,
+  --   in quad double precision. The number of tasks equals nt.
+  --   Calls the driver in Pipelined_Polyhedral_Drivers.
+
+    use QuadDobl_Complex_Laur_Systems;
+    use QuadDobl_Complex_Solutions;
+    use Pipelined_Polyhedral_Drivers;
+
+    cfile,qfile : file_type;
+    q : Laur_Sys(p'range);
+    mv : natural32;
+    sols : Solution_List;
+    ans : character;
+    mfi,rep : boolean;
+
+  begin
+    new_line;
+    put_line("Reading the file name to write the start system ...");
+    Read_Name_and_Create_File(qfile);
+    new_line;
+    put("Do you want the mixed cell configuration on file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    mfi := (ans = 'y');
+    if mfi then
+      put_line("Reading the file name to write the cell configuration ...");
+      Read_Name_and_Create_File(cfile);
+    end if;
+    new_line;
+    put("Do you want intermediate output ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    rep := (ans = 'y');
+    Pipelined_Polyhedral_Homotopies(file,cfile,qfile,nt,mfi,rep,p,mv,q,sols);
+  end Pipelined_Polyhedral_Driver;
+
   procedure Random_Coefficient_System
               ( file : in file_type; nt : in integer32; stable : in boolean;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
 
   -- DESCRIPTION :
   --   Extracts the supports of the polynomial system p and computes
-  --   its mixed volume and solves a random coefficient system.
-  --   The number of tasks equals nt.
+  --   its mixed volume and solves a random coefficient system,
+  --   in standard double precision.  The number of tasks equals nt.
 
     use Standard_Complex_Laur_Systems;
     use Standard_Complex_Solutions;
@@ -455,17 +576,24 @@ procedure ts_mtmva is
     mcc : Mixed_Subdivision;
     mv : natural32;
     sols : Solution_List;
-    reporting : character;
+    ans : character;
 
   begin
-    if stable
-     then stlb := Floating_Lifting_Functions.Lifting_Bound(p);
+    if stable then
+      stlb := Floating_Lifting_Functions.Lifting_Bound(p);
+    else
+      put("Test the pipelined driver ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        Pipelined_Polyhedral_Driver(file,nt,p);
+        return;
+      end if;
     end if;
     new_line;
     put("Do you want intermediate output ? (y/n) ");
-    Ask_Yes_or_No(reporting);
+    Ask_Yes_or_No(ans);
     Extract_Supports(nbequ,p,nbpts,ind,cnt,sup);
-    if reporting = 'y' then
+    if ans = 'y' then
       Reporting_Multitasking_Tracker
         (file,nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,sols);
     else
@@ -488,8 +616,8 @@ procedure ts_mtmva is
 
   -- DESCRIPTION :
   --   Extracts the supports of the polynomial system p and computes
-  --   its mixed volume and solves a random coefficient system.
-  --   The number of tasks equals nt.
+  --   its mixed volume and solves a random coefficient system,
+  --   in double double precision.  The number of tasks equals nt.
 
     use DoblDobl_Complex_Laur_Systems;
     use DoblDobl_Polynomial_Convertors;
@@ -506,17 +634,24 @@ procedure ts_mtmva is
     mcc : Mixed_Subdivision;
     mv : natural32;
     sols : Solution_List;
-    reporting : character;
+    ans : character;
 
   begin
-    if stable
-     then stlb := Floating_Lifting_Functions.Lifting_Bound(stp);
+    if stable then
+      stlb := Floating_Lifting_Functions.Lifting_Bound(stp);
+    else
+      put("Test the pipelined driver ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        Pipelined_Polyhedral_Driver(file,nt,p);
+        return;
+      end if;
     end if;
     new_line;
     put("Do you want intermediate output ? (y/n) ");
-    Ask_Yes_or_No(reporting);
+    Ask_Yes_or_No(ans);
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
-    if reporting = 'y' then
+    if ans = 'y' then
       Reporting_Multitasking_Tracker
         (file,nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,sols);
     else
@@ -539,8 +674,8 @@ procedure ts_mtmva is
 
   -- DESCRIPTION :
   --   Extracts the supports of the polynomial system p and computes
-  --   its mixed volume and solves a random coefficient system.
-  --   The number of tasks equals nt.
+  --   its mixed volume and solves a random coefficient system,
+  --   in quad double precision.  The number of tasks equals nt.
 
     use QuadDobl_Complex_Laur_Systems;
     use QuadDobl_Polynomial_Convertors;
@@ -557,17 +692,24 @@ procedure ts_mtmva is
     mcc : Mixed_Subdivision;
     mv : natural32;
     sols : Solution_List;
-    reporting : character;
+    ans : character;
 
   begin
-    if stable
-     then stlb := Floating_Lifting_Functions.Lifting_Bound(stp);
+    if stable then
+      stlb := Floating_Lifting_Functions.Lifting_Bound(stp);
+    else
+      put("Test the pipelined driver ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y' then
+        Pipelined_Polyhedral_Driver(file,nt,p);
+        return;
+      end if;
     end if;
     new_line;
     put("Do you want intermediate output ? (y/n) ");
-    Ask_Yes_or_No(reporting);
+    Ask_Yes_or_No(ans);
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
-    if reporting = 'y' then
+    if ans = 'y' then
       Reporting_Multitasking_Tracker
         (file,nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,sols);
     else
