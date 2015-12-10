@@ -50,6 +50,12 @@ package Drivers_for_Static_Lifting is
                  mv : out natural32;
                  multprec_hermite : in boolean := false );
   procedure Floating_Volume_Computation
+              ( file : in file_type; n : in integer32;
+                mix : in Standard_Integer_Vectors.Vector;
+                mixsub : in out Floating_Mixed_Subdivisions.Mixed_Subdivision;
+                mv : out natural32;
+                multprec_hermite : in boolean := false );
+  procedure Floating_Volume_Computation
                ( n : in integer32; stlb : in double_float;
                  mix : in Standard_Integer_Vectors.Vector;
                  mixsub : in out Floating_Mixed_Subdivisions.Mixed_Subdivision;

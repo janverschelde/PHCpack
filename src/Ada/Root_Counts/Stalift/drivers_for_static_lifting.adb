@@ -345,6 +345,33 @@ package body Drivers_for_Static_Lifting is
   end Floating_Volume_Computation;
 
   procedure Floating_Volume_Computation
+              ( file : in file_type; n : in integer32;
+                mix : in Standard_Integer_Vectors.Vector;
+                mixsub : in out Floating_Mixed_Subdivisions.Mixed_Subdivision;
+                mv : out natural32;
+                multprec_hermite : in boolean := false ) is
+
+  -- DESCRIPTION :
+  --   Wraps a timer around the computation of the volumes of all cells.
+  --   In case stlb is nonzero, the stable mixed volume is also computed.
+
+    timer : timing_widget;
+
+  begin
+    new_line(file);
+    put_line(file,"THE MIXED SUBDIVISION : ");
+    new_line(file);
+    tstart(timer);
+    Floating_Mixed_Subdivisions_io.put
+      (file,natural32(n),mix,mixsub,mv,multprec_hermite);
+    tstop(timer);
+    put(file,"the mixed volume : ");
+    put(file,mv,1); new_line(file);
+    new_line(file);
+    print_times(file,timer,"Volume computation of mixed cells");
+  end Floating_Volume_Computation;
+
+  procedure Floating_Volume_Computation
               ( n : in integer32; stlb : in double_float;
                 mix : in Standard_Integer_Vectors.Vector;
                 mixsub : in out Floating_Mixed_Subdivisions.Mixed_Subdivision;
