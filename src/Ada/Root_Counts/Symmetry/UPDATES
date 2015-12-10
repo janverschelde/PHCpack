@@ -1,3 +1,5 @@
+Thu 10 Dec 2015 : added time stamp to mainsmvc.adb.
+
 Tue 10 Nov 2015 : extended permute_operations with operations needed for the
   double double and quad double extrinsic diagonal homotopy solvers.
 

@@ -1,5 +1,7 @@
+with Ada.Calendar;                       use Ada.Calendar;
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
+with Time_Stamps;                        use Time_Stamps;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
@@ -23,6 +25,9 @@ with Write_Seed_Number;
 with Greeting_Banners;
 
 procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
+
+  start_moment : constant Time := Clock;
+  ended_moment : Time;
 
   procedure Read_System
               ( filename : in string;
@@ -213,6 +218,11 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
       end;
     end if;
     new_line(outft);
+    ended_moment := Clock;
+    put(outft,"phc -m ran from "); Write_Time_Stamp(outft,start_moment);
+    put(outft," till "); Write_Time_Stamp(outft,ended_moment);
+    put_line(outft,".");
+    Write_Elapsed_Time(outft,start_moment,ended_moment);
     Write_Seed_Number(outft);
     put_line(outft,Greeting_Banners.Version);
     Close(outft);
