@@ -435,7 +435,7 @@ procedure ts_mtmva is
   end Mixed_Volume_Calculation;
 
   procedure Random_Coefficient_System
-              ( file : in file_type; nt : in integer32;
+              ( file : in file_type; nt : in integer32; stable : in boolean;
                 p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
 
   -- DESCRIPTION :
@@ -449,6 +449,7 @@ procedure ts_mtmva is
     q : Laur_Sys(p'range);
     nbequ : constant integer32 := p'last;
     nbpts,r : integer32 := 0;
+    stlb : double_float := 0.0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup,mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc : Mixed_Subdivision;
@@ -457,16 +458,19 @@ procedure ts_mtmva is
     reporting : character;
 
   begin
+    if stable
+     then stlb := Floating_Lifting_Functions.Lifting_Bound(p);
+    end if;
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(reporting);
     Extract_Supports(nbequ,p,nbpts,ind,cnt,sup);
     if reporting = 'y' then
       Reporting_Multitasking_Tracker
-        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+        (file,nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,sols);
     else
       Silent_Multitasking_Tracker
-        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+        (nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,sols);
       put(file,q'last,1); new_line(file);
       put(file,q);
     end if;
@@ -479,7 +483,7 @@ procedure ts_mtmva is
   end Random_Coefficient_System;
 
   procedure Random_Coefficient_System
-              ( file : in file_type; nt : in integer32;
+              ( file : in file_type; nt : in integer32; stable : in boolean;
                 p : in DoblDobl_Complex_Laur_Systems.Laur_Sys ) is
 
   -- DESCRIPTION :
@@ -496,6 +500,7 @@ procedure ts_mtmva is
     q : Laur_Sys(p'range);
     nbequ : constant integer32 := p'last;
     nbpts,r : integer32 := 0;
+    stlb : double_float := 0.0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup,mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc : Mixed_Subdivision;
@@ -504,16 +509,19 @@ procedure ts_mtmva is
     reporting : character;
 
   begin
+    if stable
+     then stlb := Floating_Lifting_Functions.Lifting_Bound(stp);
+    end if;
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(reporting);
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
     if reporting = 'y' then
       Reporting_Multitasking_Tracker
-        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+        (file,nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,sols);
     else
       Silent_Multitasking_Tracker
-        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+        (nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,sols);
       put(file,q'last,1); new_line(file);
       put(file,q);
     end if;
@@ -526,7 +534,7 @@ procedure ts_mtmva is
   end Random_Coefficient_System;
 
   procedure Random_Coefficient_System
-              ( file : in file_type; nt : in integer32;
+              ( file : in file_type; nt : in integer32; stable : in boolean;
                 p : in QuadDobl_Complex_Laur_Systems.Laur_Sys ) is
 
   -- DESCRIPTION :
@@ -543,6 +551,7 @@ procedure ts_mtmva is
     q : Laur_Sys(p'range);
     nbequ : constant integer32 := p'last;
     nbpts,r : integer32 := 0;
+    stlb : double_float := 0.0;
     cnt,ind : Standard_Integer_Vectors.Vector(1..nbequ);
     sup,mtype,perm : Standard_Integer_Vectors.Link_to_Vector;
     mcc : Mixed_Subdivision;
@@ -551,16 +560,19 @@ procedure ts_mtmva is
     reporting : character;
 
   begin
+    if stable
+     then stlb := Floating_Lifting_Functions.Lifting_Bound(stp);
+    end if;
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(reporting);
     Extract_Supports(nbequ,stp,nbpts,ind,cnt,sup);
     if reporting = 'y' then
       Reporting_Multitasking_Tracker
-        (file,nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+        (file,nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,sols);
     else
       Silent_Multitasking_Tracker
-        (nt,nbequ,nbpts,ind,cnt,sup,r,mtype,perm,mcc,mv,q,sols);
+        (nt,nbequ,nbpts,ind,cnt,sup,stlb,r,mtype,perm,mcc,mv,q,sols);
       put(file,q'last,1); new_line(file);
       put(file,q);
     end if;
@@ -602,7 +614,7 @@ procedure ts_mtmva is
     put("Do you want a random coefficient system ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y'
-     then Random_Coefficient_System(file,nt,lp.all);
+     then Random_Coefficient_System(file,nt,stable,lp.all);
      else Mixed_Volume_Calculation(file,nt,stable,lp.all);
     end if;
   end Standard_Main;
@@ -637,7 +649,7 @@ procedure ts_mtmva is
     put("Do you want a random coefficient system ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
-      Random_Coefficient_System(file,nt,lp.all);
+      Random_Coefficient_System(file,nt,stable,lp.all);
     else
       declare
         use DoblDobl_Polynomial_Convertors;
@@ -679,7 +691,7 @@ procedure ts_mtmva is
     put("Do you want a random coefficient system ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y' then
-      Random_Coefficient_System(file,nt,lp.all);
+      Random_Coefficient_System(file,nt,stable,lp.all);
     else
       declare
         use QuadDobl_Polynomial_Convertors;
