@@ -78,6 +78,8 @@ procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
       put_line(o(i));
     end loop;
     put_line("Options may be combined, e.g.: phc -b -0 or phc -0 -b.");
+    put_line("To run the blackbox solver with 8 threads, do phc -b -t8.");
+    put_line("Use -b2 or -b4 for double double or quad double precision.");
   end Display_Options;
 
   procedure Main_Polynomial_Solver 
