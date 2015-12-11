@@ -1,3 +1,6 @@
+Fri 11 Dec 2015 : for version 0.3.5, adjusted setup.py, __init__.py and
+  the conf.py in the documentation.
+
 Sat 28 Nov 2015 : adjusted the checkout function for the convex hulls of
   polytopes in polytopes.py for points that are not vertices.
   Added a function to collect the edges of the facets.

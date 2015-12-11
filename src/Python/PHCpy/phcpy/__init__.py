@@ -43,6 +43,9 @@ families
 schubert
    exports the hypersurface and quantum Pieri homotopies to compute
    isolated solutions to problems in enumerative geometry.
+polytopes
+   functions to work with Newton polytopes, to compute mixed volumes
+   of Newton polytopes, given by tuples of support sets.
 phcwulf
    defines a simple client/server interaction to solve random trinomials.
 
@@ -89,4 +92,4 @@ except:
     print 'Is the phcpy2c.so not suited for this platform?'
 
 # The version number is defined as a data attribute.
-__version__ = '0.3.4'
+__version__ = '0.3.5'
