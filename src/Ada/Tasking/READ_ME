@@ -14,9 +14,17 @@ of a polynomial system and all its derivatives can be performed much faster
 than when evaluated as separated polynomials (even with nested Horner).
 In v2.3.69, this code was moved to the new directory Functions.
 
-Release 2.3.78 offered a new multithreaded implementation
-of polyhedral homotopies.  New in release 2.3.79 are the
-multitasking root refiners.
+Release 2.3.78 offered a new multithreaded implementation of polyhedral 
+homotopies.  New in release 2.3.79 are the multitasking root refiners.
+
+Pipelined polyhedral trackers were introduced in version 2.4.06.
+The pipelined solving a random coefficient system by polyhedral homotopies
+applies a heterogeneous multitasking.  The first task runs MixedVol with
+a callback function.  Each time a new mixed cell is computed, other tasks
+process that cell by tracking the new paths originating at the initial
+form system determined by the inner normal to that new mixed cell.
+With this pipelining, the tracking of the paths is interlaced with the
+mixed volume computation.
 
 -------------------------------------------------------------------------------
 file name                         : short description

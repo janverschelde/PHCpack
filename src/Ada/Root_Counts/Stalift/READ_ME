@@ -17,6 +17,10 @@ This library features integer-valued and floating-point lifting functions.
 The implementation of integer static lifting typically induces nested
 subdivisions, with non-fine cells recursively refined by subdivisions.
 
+In version 2.4.06, the application of heterogeneous multitasking 
+makes that the MixedVol algorithm runs in parallel with the polyhedral
+path trackers to solve a random coefficient system.
+
 There are four parts in this library:
 
 1. Integer-valued lifting, mixed subdivisions and polyhedral continuation
