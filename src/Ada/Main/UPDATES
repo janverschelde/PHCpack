@@ -1,3 +1,5 @@
+Fri 11 Dec 2015 : adjusted greeting_banners for version 2.4.06.
+
 Thu 10 Dec 2015 : added two lines to mainphc.adb to inform the user of the
   multitasking and the -b2 and -b4 options.
 
