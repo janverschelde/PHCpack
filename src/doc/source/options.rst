@@ -338,6 +338,14 @@ The menu of phc -m offers 5 different algorithms:
    solutions (not only those with nonzero coordinates) and then
    and obtain polyhedral homotopies that compute all affine solutions.
 
+On multicore computers, the solution of a random coefficient system
+with :index:`polyhedral homotopies` runs in parallel when calling phc with
+the option ``-t``.  For example, ``phc -m -t8`` will run the
+polyhedral path trackers with 8 tasks.  Since version 2.4.06,
+the mixed volume computation by the MixedVol algorithm
+(option 4 of ``phc -m``) is interlaced with the path tracking 
+in a heterogenous pipelined application of :index:`multitasking`.
+
 phc -o : writes the contents of the symbol table of an input system
 -------------------------------------------------------------------
 
