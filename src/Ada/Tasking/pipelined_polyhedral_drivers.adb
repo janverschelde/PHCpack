@@ -3,9 +3,15 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Integer_Vectors;           use Standard_Integer_Vectors;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
-with DoblDobl_Polynomial_Convertors;
+with Standard_Laur_Poly_Convertors;
+with Standard_Poly_Laur_Convertors;
 with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
+with DoblDobl_Polynomial_Convertors;
+with DoblDobl_Laur_Poly_Convertors;
+with DoblDobl_Poly_Laur_Convertors;
 with QuadDobl_Polynomial_Convertors;
+with QuadDobl_Laur_Poly_Convertors;
+with QuadDobl_Poly_Laur_Convertors;
 with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
@@ -18,6 +24,72 @@ with Pipelined_Labeled_Cells;
 with Pipelined_Polyhedral_Trackers;      use Pipelined_Polyhedral_Trackers;
 
 package body Pipelined_Polyhedral_Drivers is
+
+  procedure Pipelined_Polyhedral_Homotopies
+              ( file,cfile,qfile : in file_type; nt : in integer32;
+                misufile,contrep : in boolean;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                mv : out natural32;
+                q : out Standard_Complex_Poly_Systems.Poly_Sys;
+                qsols : out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Poly_Laur_Convertors;
+    use Standard_Laur_Poly_Convertors;
+
+    lp,lq : Standard_Complex_Laur_Systems.Laur_Sys(p'range);
+
+  begin
+    lp := Polynomial_to_Laurent_System(p);
+    Pipelined_Polyhedral_Homotopies
+      (file,cfile,qfile,nt,misufile,contrep,lp,mv,lq,qsols);
+    q := Laurent_to_Polynomial_System(lq);
+    Standard_Complex_Laur_Systems.Clear(lp);
+    Standard_Complex_Laur_Systems.Clear(lq);
+  end Pipelined_Polyhedral_Homotopies;
+
+  procedure Pipelined_Polyhedral_Homotopies
+              ( file,cfile,qfile : in file_type; nt : in integer32;
+                misufile,contrep : in boolean;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                mv : out natural32;
+                q : out DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                qsols : out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Poly_Laur_Convertors;
+    use DoblDobl_Laur_Poly_Convertors;
+
+    lp,lq : DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+
+  begin
+    lp := Polynomial_to_Laurent_System(p);
+    Pipelined_Polyhedral_Homotopies
+      (file,cfile,qfile,nt,misufile,contrep,lp,mv,lq,qsols);
+    q := Laurent_to_Polynomial_System(lq);
+    DoblDobl_Complex_Laur_Systems.Clear(lp);
+    DoblDobl_Complex_Laur_Systems.Clear(lq);
+  end Pipelined_Polyhedral_Homotopies;
+
+  procedure Pipelined_Polyhedral_Homotopies
+              ( file,cfile,qfile : in file_type; nt : in integer32;
+                misufile,contrep : in boolean;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                mv : out natural32;
+                q : out QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                qsols : out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Poly_Laur_Convertors;
+    use QuadDobl_Laur_Poly_Convertors;
+
+    lp,lq : QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range);
+
+  begin
+    lp := Polynomial_to_Laurent_System(p);
+    Pipelined_Polyhedral_Homotopies
+      (file,cfile,qfile,nt,misufile,contrep,lp,mv,lq,qsols);
+    q := Laurent_to_Polynomial_System(lq);
+    QuadDobl_Complex_Laur_Systems.Clear(lp);
+    QuadDobl_Complex_Laur_Systems.Clear(lq);
+  end Pipelined_Polyhedral_Homotopies;
 
   procedure Pipelined_Polyhedral_Homotopies
               ( file,cfile,qfile : in file_type; nt : in integer32;

@@ -1,3 +1,6 @@
+Fri 11 Dec 2015 : to pipelined_polyhedral_drivers, added wrappers to deal
+  with ordinary polynomial systems.
+
 Thu 10 Dec 2015 : new package pipelined_polyhedral_drivers, tested by
   ts_mtmva, with drivers to call the pipelined polyhedral trackers.
 
