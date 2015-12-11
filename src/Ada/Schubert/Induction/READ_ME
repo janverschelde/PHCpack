@@ -1,4 +1,4 @@
-Numerical Schubert Calculus defining Schubert Induction with PHCv2.4.03
+Numerical Schubert Calculus defining Schubert Induction with PHCv2.4.06
 
 This directory is entirely new in release 2.2 of PHCpack,
 it implements a geometric Littlewood-Richardson rule.

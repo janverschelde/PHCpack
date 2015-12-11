@@ -1,3 +1,5 @@
+Fri 11 Dec 2015 : fixed ts_lrhom.adb, for the Resolve was missing an option.
+
 Thu 22 Oct 2015 : adding standard_ in front of bracket_polynomials changed
   symbolic_schubert_conditions.ads and numeric_schubert_conditions
   Silent version of resolve in resolve_schubert_problems, with adjusted

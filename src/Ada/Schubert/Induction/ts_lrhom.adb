@@ -322,7 +322,7 @@ procedure ts_lrhom is
     sols : Solution_List;
     tol : constant double_float := 1.0E-6;
     ans : character;
-    monitor_games,report,minrep : boolean;
+    monitor_games,report,verify,minrep : boolean;
     timer : Timing_Widget;
 
   begin
@@ -339,6 +339,10 @@ procedure ts_lrhom is
     put("Use an efficient problem formulation ? (y/n) ");
     Ask_Yes_or_No(ans);
     minrep := (ans = 'y');
+    new_line;
+    put("Diagnostic verification needed ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    verify := (ans = 'y');
     top_roco := Final_Sum(ips);
     put("The formal root count : "); put(top_roco); new_line;
     put_line("... running the root counting from the bottom up ...");
@@ -359,7 +363,8 @@ procedure ts_lrhom is
    -- new_line;
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
-    Resolve(file,monitor_games,report,n,k,tol,ips,sps,minrep,conds,flags,sols);
+    Resolve(file,monitor_games,report,n,k,tol,ips,sps,
+            verify,minrep,conds,flags,sols);
     tstop(timer);
     Write_Results(file,n,k,q,rows,cols,minrep,link2conds,flags,sols,fsys);
     new_line(file);
