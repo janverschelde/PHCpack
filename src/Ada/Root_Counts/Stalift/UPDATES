@@ -1,3 +1,6 @@
+Fri 11 Dec 2015 : added drivers to the pipelined polyhedral trackers to
+  drivers_for_mixedvol_algorithm.adb.
+
 Thu 10 Dec 2015 : to drivers_for_static_lifting, added a volume computation
   procedure that writes the mixed-cell configuration in a nice format.
 

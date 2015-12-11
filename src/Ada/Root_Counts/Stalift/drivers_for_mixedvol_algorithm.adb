@@ -47,6 +47,7 @@ with Drivers_for_Static_Lifting;         use Drivers_for_Static_Lifting;
 with Cell_Stack;                         use Cell_Stack;
 with MixedVol_Algorithm;                 use MixedVol_Algorithm;
 with Multitasking_Polyhedral_Trackers;   use Multitasking_Polyhedral_Trackers;
+with Pipelined_Polyhedral_Drivers;       use Pipelined_Polyhedral_Drivers;
 
 package body Drivers_for_mixedvol_algorithm is
 
@@ -1908,13 +1909,18 @@ package body Drivers_for_mixedvol_algorithm is
     if byebye 
      then put_line("See the output file(s) for results ..."); new_line;
     end if;
-    Polyhedral_Homotopies
-      (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
-       p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
-    if ranstart then
-      new_line(file);
-      put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
-      Standard_System_and_Solutions_io.put_line(file,q,qsols);
+    if((not stable) and (nt > 1)) then
+      Pipelined_Polyhedral_Homotopies  -- multitasking remains silent
+        (file,cellfile,startfile,nt,misufile,false,p,mv,q,qsols);
+    else
+      Polyhedral_Homotopies
+        (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
+         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
+      if ranstart then
+        new_line(file);
+        put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
+        Standard_System_and_Solutions_io.put_line(file,q,qsols);
+      end if;
     end if;
   end Driver_for_MixedVol_Algorithm;
 
@@ -1954,13 +1960,18 @@ package body Drivers_for_mixedvol_algorithm is
     if byebye 
      then put_line("See the output file(s) for results ..."); new_line;
     end if;
-    Polyhedral_Homotopies
-      (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
-       p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
-    if ranstart then
-      new_line(file);
-      put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
-      DoblDobl_System_and_Solutions_io.put_line(file,q,qsols);
+    if((not stable) and (nt > 1)) then
+      Pipelined_Polyhedral_Homotopies  -- multitasking remains silent
+        (file,cellfile,startfile,nt,misufile,false,p,mv,q,qsols);
+    else
+      Polyhedral_Homotopies
+        (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
+         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
+      if ranstart then
+        new_line(file);
+        put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
+        DoblDobl_System_and_Solutions_io.put_line(file,q,qsols);
+      end if;
     end if;
   end Driver_for_MixedVol_Algorithm;
 
@@ -2000,13 +2011,18 @@ package body Drivers_for_mixedvol_algorithm is
     if byebye 
      then put_line("See the output file(s) for results ..."); new_line;
     end if;
-    Polyhedral_Homotopies
-      (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
-       p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
-    if ranstart then
-      new_line(file);
-      put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
-      QuadDobl_System_and_Solutions_io.put_line(file,q,qsols);
+    if((not stable) and (nt > 1)) then
+      Pipelined_Polyhedral_Homotopies  -- multitasking remains silent
+        (file,cellfile,startfile,nt,misufile,false,p,mv,q,qsols);
+    else
+      Polyhedral_Homotopies
+        (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
+         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
+      if ranstart then
+        new_line(file);
+        put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
+        QuadDobl_System_and_Solutions_io.put_line(file,q,qsols);
+      end if;
     end if;
   end Driver_for_MixedVol_Algorithm;
 
@@ -2047,13 +2063,18 @@ package body Drivers_for_mixedvol_algorithm is
      then put_line("See the output file(s) for results ..."); new_line;
     end if;
    -- put_line("calling polyhedral homotopies ...");
-    Polyhedral_Homotopies
-      (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
-       p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
-    if ranstart then
-      new_line(file);
-      put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
-      Standard_System_and_Solutions_io.put_line(file,q,qsols);
+    if((not stable) and (nt > 1)) then
+      Pipelined_Polyhedral_Homotopies  -- multitasking remains silent
+        (file,cellfile,startfile,nt,misufile,false,p,mv,q,qsols);
+    else
+      Polyhedral_Homotopies
+        (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
+         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
+      if ranstart then
+        new_line(file);
+        put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
+        Standard_System_and_Solutions_io.put_line(file,q,qsols);
+      end if;
     end if;
   end Driver_for_MixedVol_Algorithm;
 
@@ -2094,13 +2115,18 @@ package body Drivers_for_mixedvol_algorithm is
     if byebye 
      then put_line("See the output file(s) for results ..."); new_line;
     end if;
-    Polyhedral_Homotopies
-      (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
-       p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
-    if ranstart then
-      new_line(file);
-      put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
-      DoblDobl_System_and_Solutions_io.put_line(file,q,qsols);
+    if((not stable) and (nt > 1)) then
+      Pipelined_Polyhedral_Homotopies  -- multitasking remains silent
+        (file,cellfile,startfile,nt,misufile,false,p,mv,q,qsols);
+    else
+      Polyhedral_Homotopies
+        (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
+         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
+      if ranstart then
+        new_line(file);
+        put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
+        DoblDobl_System_and_Solutions_io.put_line(file,q,qsols);
+      end if;
     end if;
   end Driver_for_MixedVol_Algorithm;
 
@@ -2142,13 +2168,18 @@ package body Drivers_for_mixedvol_algorithm is
      then put_line("See the output file(s) for results ..."); new_line;
     end if;
    -- put_line("calling polyhedral homotopies ...");
-    Polyhedral_Homotopies
-      (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
-       p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
-    if ranstart then
-      new_line(file);
-      put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
-      QuadDobl_System_and_Solutions_io.put_line(file,q,qsols);
+    if((not stable) and (nt > 1)) then
+      Pipelined_Polyhedral_Homotopies  -- multitasking remains silent
+        (file,cellfile,startfile,nt,misufile,false,p,mv,q,qsols);
+    else
+      Polyhedral_Homotopies
+        (file,cellfile,startfile,nt,stable,misufile,ranstart,contrep,
+         p,mv,smv,tmv,q,qsols,qsols0,multprec_hermite);
+      if ranstart then
+        new_line(file);
+        put_line(file,"THE RANDOM COEFFICIENT START SYSTEM :");
+        QuadDobl_System_and_Solutions_io.put_line(file,q,qsols);
+      end if;
     end if;
   end Driver_for_MixedVol_Algorithm;
 
