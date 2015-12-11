@@ -1,3 +1,5 @@
+Fri 11 Dec 2015 : fixed ts_poco.adb, for preset precision level in driver.
+
 Wed 18 Nov 2015 : updated mainpoco.adb so prompting for precision calls the
   function in communications_with_user.  Added extra argument to take into
   account the precision level set at the command line of phc -p, e.g. as

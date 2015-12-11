@@ -46,7 +46,7 @@ procedure ts_poco is
     new_line;
     put_line("Reading the name of the output file.");
     Read_Name_and_Create_File(file);
-    Driver_for_Polynomial_Continuation(file,lp.all,ls,sols,mpsols,target);
+    Driver_for_Polynomial_Continuation(file,lp.all,0,ls,sols,mpsols,target);
   end Standard_Continuation;
 
   procedure DoblDobl_Continuation is
