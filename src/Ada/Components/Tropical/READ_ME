@@ -1,4 +1,4 @@
-Tropicalization of witness sets with PHCv2.3.97
+Tropicalization of witness sets with PHCv2.4.06
 
 This directory is new since release 2.3.48.  The asymptotics of witness sets
 have tropical interpretations.  Via the computation of tropisms we develop

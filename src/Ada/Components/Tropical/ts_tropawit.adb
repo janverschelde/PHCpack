@@ -8,7 +8,7 @@ with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;    use Standard_Complex_Polynomials_io;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;         use Standard_Complex_Solutions;
-with Black_Box_Poly_Continuations;       use Black_Box_Poly_Continuations;
+with Standard_Blackbox_Continuations;    use Standard_Blackbox_Continuations;
 with Planes_and_Polynomials;
 with Witness_Sets_io;                    use Witness_Sets_io;
 

@@ -1,3 +1,6 @@
+Fri 11 Dec 2015 : updated ts_tropawit.adb for standard_blackbox_continuations,
+  a package name change from black_box_poly_continuations.
+
 Thu 26 Mar 2015 : extended point_lists_and_strings with parse operation
   of a string representation of a Python tuple into an integer vector.
 
