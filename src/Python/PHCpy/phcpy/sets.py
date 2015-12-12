@@ -271,11 +271,14 @@ def decomposition(deg):
         result.append((eval(compnt), tsd))
     return result
 
-def monodromy_breakup(embsys, esols, dim):
+def monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     """
     Applies the monodromy breakup algorithm to factor
     the d-dimensional algebraic set represented by the
     embedded system e and its solutions esols.
+    If verbose is False, then no output is written.
+    If nbloops equals zero, then the user is prompted to give
+    the maximum number of loops.
     """
     from phcpy.phcpy2c import py2c_factor_set_to_mute
     from phcpy.phcpy2c import py2c_factor_assign_labels
@@ -293,20 +296,24 @@ def monodromy_breakup(embsys, esols, dim):
     from phcpy.phcpy2c import py2c_factor_update_decomposition
     from phcpy.phcpy2c import py2c_solcon_clear_standard_solutions
     from phcpy.interface import store_standard_solutions
-    print '... applying monodromy factorization ...'
+    if(verbose):
+        print '... applying monodromy factorization ...'
     py2c_factor_set_to_mute()
     deg = len(esols)
     nvar = len(embsys)
-    print 'dim =', dim
+    if(verbose):
+        print 'dim =', dim
     store_standard_solutions(nvar, esols)
     py2c_factor_assign_labels(nvar, deg)
     # py2c_solcon_write_solutions()
     py2c_factor_initialize_sampler(dim)
-    strnbloops = raw_input('give the maximum number of loops : ')
-    nbloops = int(strnbloops)
+    if(nbloops == 0):
+        strnbloops = raw_input('give the maximum number of loops : ')
+        nbloops = int(strnbloops)
     py2c_factor_initialize_monodromy(nbloops, deg, dim)
     py2c_factor_store_solutions()
-    print '... initializing the grid ...'
+    if(verbose):
+        print '... initializing the grid ...'
     for i in range(1, 3):
         py2c_factor_set_trace_slice(i)
         py2c_factor_store_gammas(nvar)
@@ -315,7 +322,8 @@ def monodromy_breakup(embsys, esols, dim):
         py2c_factor_restore_solutions()
         py2c_factor_swap_slices()
     for i in range(1, nbloops+1):
-        print '... starting loop %d ...' % i
+        if(verbose):
+            print '... starting loop %d ...' % i
         py2c_factor_new_slices(dim, nvar)
         py2c_factor_store_gammas(nvar)
         py2c_factor_track_paths()
@@ -324,16 +332,28 @@ def monodromy_breakup(embsys, esols, dim):
         py2c_factor_track_paths()
         py2c_factor_store_solutions()
         sprm = py2c_factor_permutation_after_loop(deg)
-        perm = eval(sprm)
-        print 'the permutation :', perm
+        if(verbose):
+            perm = eval(sprm)
+            print 'the permutation :', perm
         nb0 = py2c_factor_number_of_components()
         done = py2c_factor_update_decomposition(deg, len(sprm), sprm)
         nb1 = py2c_factor_number_of_components()
-        print 'number of factors : %d -> %d' % (nb0, nb1)
-        print 'decomposition :', decomposition(deg)
+        if(verbose):
+            print 'number of factors : %d -> %d' % (nb0, nb1)
+            print 'decomposition :', decomposition(deg)
         if(done == 1):
             break
         py2c_factor_restore_solutions()
+
+def factor(dim, witsys, witsols, verbose=True, nbloops=20):
+    """
+    Applies monodromy to factor an equidimensional algebraic set,
+    given as a witness sets, with the embedded polynomials in witsys,
+    and corresponding generic points in witsols.
+    The dimension of the algebraic set is given in dim.
+    """
+    monodromy_breakup(witsys, witsols, dim, verbose, nbloops)
+    return decomposition(len(witsols))
 
 def test_monodromy():
     """
@@ -350,6 +370,15 @@ def test_monodromy():
     # for sol in sols: print sol
     print 'the degree is', len(sols)
     monodromy_breakup(embsys, sols, 1)
+
+def test_factor():
+    """
+    Simple test on the factor method.
+    """
+    hyp = '(x+1)*(x^2 + y^2 + 1);'
+    (wsys, wsols) = witness_set_of_hypersurface(2, hyp)
+    fac = factor(1, wsys, wsols)
+    print fac
 
 def standard_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
     """
@@ -393,7 +422,7 @@ def standard_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
         py2c_standard_diagonal_homotopy(dim1, dim2)
     else:
         py2c_standard_diagonal_homotopy(dim2, dim1)
-    py2c_diagonal_symbols_doubler(nbsymbs-dim1,dim1,len(symbols),symbols)
+    py2c_diagonal_symbols_doubler(nbsymbs-dim1, dim1, len(symbols), symbols)
 
 def dobldobl_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
     """
@@ -437,7 +466,7 @@ def dobldobl_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
         py2c_dobldobl_diagonal_homotopy(dim1, dim2)
     else:
         py2c_dobldobl_diagonal_homotopy(dim2, dim1)
-    py2c_diagonal_symbols_doubler(nbsymbs-dim1,dim1,len(symbols),symbols)
+    py2c_diagonal_symbols_doubler(nbsymbs-dim1, dim1, len(symbols), symbols)
 
 def quaddobl_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
     """
@@ -481,13 +510,13 @@ def quaddobl_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
         py2c_quaddobl_diagonal_homotopy(dim1, dim2)
     else:
         py2c_quaddobl_diagonal_homotopy(dim2, dim1)
-    py2c_diagonal_symbols_doubler(nbsymbs-dim1,dim1,len(symbols),symbols)
+    py2c_diagonal_symbols_doubler(nbsymbs-dim1, dim1, len(symbols), symbols)
 
 def standard_diagonal_cascade_solutions(dim1, dim2):
     """
     Defines the start solutions in the cascade to start the diagonal
     homotopy to intersect a set of dimension dim1 with another set
-    of dimension dim2, in standard double precision.  For this to work, 
+    of dimension dim2, in standard double precision.  For this to work,
     standard_diagonal_homotopy must have been executed successfully.
     """
     from phcpy.phcpy2c import py2c_standard_diagonal_cascade_solutions
@@ -500,7 +529,7 @@ def dobldobl_diagonal_cascade_solutions(dim1, dim2):
     """
     Defines the start solutions in the cascade to start the diagonal
     homotopy to intersect a set of dimension dim1 with another set
-    of dimension dim2, in double double precision.  For this to work, 
+    of dimension dim2, in double double precision.  For this to work,
     dobldobl_diagonal_homotopy must have been executed successfully.
     """
     from phcpy.phcpy2c import py2c_dobldobl_diagonal_cascade_solutions
@@ -513,7 +542,7 @@ def quaddobl_diagonal_cascade_solutions(dim1, dim2):
     """
     Defines the start solutions in the cascade to start the diagonal
     homotopy to intersect a set of dimension dim1 with another set
-    of dimension dim2, in quad double precision.  For this to work, 
+    of dimension dim2, in quad double precision.  For this to work,
     quaddobl_diagonal_homotopy must have been executed successfully.
     """
     from phcpy.phcpy2c import py2c_quaddobl_diagonal_cascade_solutions
@@ -629,8 +658,8 @@ def quaddobl_start_diagonal_cascade(gamma=0, tasks=0):
 
 def standard_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
     """
-    Runs the diagonal homotopies in standard double precision 
-    to intersect two witness sets stored in (sys1, sols1) and 
+    Runs the diagonal homotopies in standard double precision
+    to intersect two witness sets stored in (sys1, sols1) and
     (sys2, sols2), of respective dimensions dm1 and dm2.
     The ambient dimension equals dim.
     Multitasking is available, and is activated by the tasks parameter.
@@ -641,7 +670,7 @@ def standard_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
     from phcpy.interface import load_standard_solutions as loadsols
     from phcpy.interface import load_standard_system as loadsys
     from phcpy.phcpy2c import py2c_extrinsic_top_diagonal_dimension
-    topdim = py2c_extrinsic_top_diagonal_dimension(dim+dm1, dim+dm2, dm1, dm2) 
+    topdim = py2c_extrinsic_top_diagonal_dimension(dim+dm1, dim+dm2, dm1, dm2)
     print 'the top dimension :', topdim
     standard_diagonal_homotopy(dm1, sys1, sols1, dm2, sys2, sols2)
     print 'defining the start solutions'
@@ -665,8 +694,8 @@ def standard_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
 
 def dobldobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
     """
-    Runs the diagonal homotopies in double double precision 
-    to intersect two witness sets stored in (sys1, sols1) and 
+    Runs the diagonal homotopies in double double precision
+    to intersect two witness sets stored in (sys1, sols1) and
     (sys2, sols2), of respective dimensions dm1 and dm2.
     The ambient dimension equals dim.
     Multitasking is available, and is activated by the tasks parameter.
@@ -677,7 +706,7 @@ def dobldobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
     from phcpy.interface import load_dobldobl_solutions as loadsols
     from phcpy.interface import load_dobldobl_system as loadsys
     from phcpy.phcpy2c import py2c_extrinsic_top_diagonal_dimension
-    topdim = py2c_extrinsic_top_diagonal_dimension(dim+dm1, dim+dm2, dm1, dm2) 
+    topdim = py2c_extrinsic_top_diagonal_dimension(dim+dm1, dim+dm2, dm1, dm2)
     print 'the top dimension :', topdim
     dobldobl_diagonal_homotopy(dm1, sys1, sols1, dm2, sys2, sols2)
     print 'defining the start solutions'
@@ -701,8 +730,8 @@ def dobldobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
 
 def quaddobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
     """
-    Runs the diagonal homotopies in quad double precision 
-    to intersect two witness sets stored in (sys1, sols1) and 
+    Runs the diagonal homotopies in quad double precision
+    to intersect two witness sets stored in (sys1, sols1) and
     (sys2, sols2), of respective dimensions dm1 and dm2.
     The ambient dimension equals dim.
     Multitasking is available, and is activated by the tasks parameter.
@@ -713,7 +742,7 @@ def quaddobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
     from phcpy.interface import load_quaddobl_solutions as loadsols
     from phcpy.interface import load_quaddobl_system as loadsys
     from phcpy.phcpy2c import py2c_extrinsic_top_diagonal_dimension
-    topdim = py2c_extrinsic_top_diagonal_dimension(dim+dm1, dim+dm2, dm1, dm2) 
+    topdim = py2c_extrinsic_top_diagonal_dimension(dim+dm1, dim+dm2, dm1, dm2)
     print 'the top dimension :', topdim
     quaddobl_diagonal_homotopy(dm1, sys1, sols1, dm2, sys2, sols2)
     print 'defining the start solutions'
