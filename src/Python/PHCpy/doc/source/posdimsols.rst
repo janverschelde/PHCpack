@@ -177,6 +177,61 @@ previous cascade.
 To perform the filtering of the solutions properly, we apply
 a membership test.
 
+factoring into irreducibles
+---------------------------
+
+A witness set consists of two parts.
+The first part of a witness set is a polynomial system with as many added
+linear equations with random coefficients as the dimension.
+The number of slack variables (variables that start with the name ``zz``)
+equals the dimension of the witness set.
+The second part of a witness set is a list of solutions of the first part.
+Because the added linear equations have random coefficients,
+the solutions are generic points on the positive dimensional algebraic set.
+
+Given a witness set, applying monodromy loops those points in a witness set
+that lie on the same irreducible factor are joined.
+The application of monodromy is a probabilistic method with unknown
+probability of failure because it relies on the unknown distribution
+of the singular solutions.
+
+Below is a simple example, given already in factored form:
+
+::
+
+    p = '(x+1)*(x^2 + y^2 + 1);'
+
+To construct a witness set we import
+``witness_set_of_hypersurface`` from ``phcpy.sets``:
+
+::
+
+   from phcpy.sets import witness_set_of_hypersurface as wh
+   (w, s) = wh(2, p)
+   len(s)
+
+Because the degree of ``p`` is three,
+we see ``3`` as the outcome of ``len(s)``.
+
+::
+
+   from phcpy.sets import factor
+   f = factor(1, w, s)
+   f
+
+The result in ``f`` is a a list of tuples:
+
+::
+
+   [([1, 2], 8.537360146292391e-15), ([3], 2.1316282072803006e-14)]
+
+The factorization joined the first two solutions of `s` 
+as they represent the quadratic factor.
+A generic point for the linear factor is in the second tuple.
+The second floating point number in each tuple is the residual
+obtained via the linear trace test, used as stop criterion in
+the running of monodromy loops.
+
 diagonal homotopies
 -------------------
 

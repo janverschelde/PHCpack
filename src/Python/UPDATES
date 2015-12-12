@@ -1,5 +1,6 @@
 Sat 12 Dec 2015 : added factor method to sets.py, which calls the
   methods monodromy_breakup and decomposition, tested by test_factor().
+  In the phcpy documentation, added a subsection to posdimsols.rst
 
 Fri 11 Dec 2015 : for version 0.3.5, adjusted setup.py, __init__.py and
   the conf.py in the documentation.
