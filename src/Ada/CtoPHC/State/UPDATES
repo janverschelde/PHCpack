@@ -1,3 +1,6 @@
+Sun 13 Dec 2015 : added jobs to use_c2phc to embed systems in double double
+  and quad double precision.
+
 Fri 20 Nov 2015 : bug fix in phcpack_operations.adb with the computation
   of the start solutions to start the extrinsic diagonal cascade.
 

@@ -16,12 +16,14 @@ with Symbol_Table,Symbol_Table_io;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Laurentials;
 with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_SysFun;
 with DoblDobl_Complex_Jaco_Matrices;
 with DoblDobl_Complex_Laur_Systems;
 with DoblDobl_Complex_Laur_SysFun;
 with DoblDobl_Complex_Laur_JacoMats;
+with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_SysFun;
 with QuadDobl_Complex_Jaco_Matrices;
@@ -1523,23 +1525,17 @@ function use_c2phc ( job : integer32;
     return 0;
   end Job250;
 
-  function Job66 return integer32 is
+  function Job66 return integer32 is -- embed standard double system
 
+    use Standard_Complex_Polynomials;
     use Standard_Complex_Poly_Systems;
+
     v_a : constant C_Integer_Array := C_intarrs.Value(a);
     dim : constant natural32 := natural32(v_a(v_a'first));
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
-   -- lplast : integer32 := lp'last;
-    use Standard_Complex_Polynomials;
     ep : Link_to_Poly_Sys;
 
   begin
-   -- put("Embedding the system in the container with dimension = ");
-   -- put(dim,1); new_line;
-   -- while lp(lplast) = Null_Poly loop
-   --   lplast := lplast-1;
-   -- end loop;
-   -- e := Witness_Sets.Slice_and_Embed(lp(lp'first..lplast),dim);
     Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
     Standard_PolySys_Container.Clear;
     Standard_PolySys_Container.Initialize(ep.all);
@@ -1548,6 +1544,46 @@ function use_c2phc ( job : integer32;
   exception
     when others => return 66;
   end Job66;
+
+  function Job129 return integer32 is -- embed double double system
+
+    use DoblDobl_Complex_Polynomials;
+    use DoblDobl_Complex_Poly_Systems;
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
+    ep : Link_to_Poly_Sys;
+
+  begin
+    Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
+    DoblDobl_PolySys_Container.Clear;
+    DoblDobl_PolySys_Container.Initialize(ep.all);
+    Witness_Sets_io.Add_Embed_Symbols(dim);
+    return 0;
+  exception
+    when others => return 129;
+  end Job129;
+
+  function Job260 return integer32 is -- embed quad double system
+
+    use QuadDobl_Complex_Polynomials;
+    use QuadDobl_Complex_Poly_Systems;
+
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant natural32 := natural32(v_a(v_a'first));
+    lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
+    ep : Link_to_Poly_Sys;
+
+  begin
+    Square_and_Embed_Systems.Square_and_Embed(lp.all,dim,ep);
+    QuadDobl_PolySys_Container.Clear;
+    QuadDobl_PolySys_Container.Initialize(ep.all);
+    Witness_Sets_io.Add_Embed_Symbols(dim);
+    return 0;
+  exception
+    when others => return 260;
+  end Job260;
 
   function Job70 return integer32 is -- interactive tuning of parameters
   begin
@@ -2141,7 +2177,7 @@ function use_c2phc ( job : integer32;
       when 30..38 => return use_solcon(job-30,a,b,c);
       when 39 => return use_c2fac(28,a,b,c); -- set state to silent
       when 40..65 => return use_c2fac(job-40,a,b,c);
-      when 66 => return Job66; -- return embedded system
+      when 66 => return Job66; -- return embedded standard double system 
       when 67 => return use_syscon(67,a,b,c); -- load polynomial as string
       when 68 => return use_c2fac(job-42,a,b,c); -- return #factors
       when 69 => return use_c2fac(job-42,a,b,c); -- return irreducible factor
@@ -2165,6 +2201,7 @@ function use_c2phc ( job : integer32;
      -- operations on Laurent systems :
       when 120..127 => return use_syscon(job-20,a,b,c);
       when 128 => return use_syscon(77,a,b,c); -- load standard Laur as string
+      when 129 => return Job129; -- embed double double system
       when 130..145 => return use_solcon(job-120,a,b,c);
       when 146 => return use_solcon(9,a,b,c); -- drop coordinate by name
       when 147 => return use_syscon(10,a,b,c);
@@ -2216,6 +2253,7 @@ function use_c2phc ( job : integer32;
       when 258 => return Job258; -- copy container to start solutions
      -- double double witness set for a hypersurface
       when 259 => return use_track(49,a,b,c);
+      when 260 => return Job260; -- embed quad double system
      -- quad double versions for jobs 1 to 8
       when 261 => return Job261; -- copy target system to container
       when 262 => return Job262; -- copy target system from container

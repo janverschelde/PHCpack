@@ -532,16 +532,22 @@ function use_c2phc ( job : integer32;
 --                          and number of characters in the string on return,
 --                   b : characters in the string representation of
 --                       the k-th polynomial in the container,
---                 this is the reverse of operation 76,
+--                 this is the reverse of operation 76;
 --         =  68 : returns in a the number of irreducible factors in
---                 the current irreducible decomposition.
+--                 the current irreducible decomposition;
 --         =  69 : given in a an index k to an irreducible component,
 --                 returns in a the degree of the k-th component and
 --                 in b the labels of the points that span the k-th
---                 component in the current irreducible decomposition.
---
--- ON RETURN :
---   0 if the operation was successful, otherwise something went wrong,
+--                 component in the current irreducible decomposition;
+--         =  66 : given in a[0] the dimension of the embedding,
+--                 replaces the system in container for systems in standard
+--                 double precision by the embedded system.
+--         = 129 : given in a[0] the dimension of the embedding,
+--                 replaces the system in container for systems in double
+--                 double precision by the embedded system.
+--         = 260 : given in a[0] the dimension of the embedding,
+--                 replaces the system in container for systems in quad
+--                 double precision by the embedded system.
 --
 -- tuning continuation parameters and setting output level :
 --
