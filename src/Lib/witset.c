@@ -9,13 +9,44 @@
 
 /* some basic OPERATIONS on witness sets */
 
-int embed_system ( int d )
+int embed_system ( int d, int precision )
+{
+   int fail;
+
+   if(precision == 0) fail = embed_standard_system(d);
+   if(precision == 1) fail = embed_dobldobl_system(d);
+   if(precision == 2) fail = embed_quaddobl_system(d);
+
+   return fail;
+}
+
+int embed_standard_system ( int d )
 {
    int fail;
    int *b;
    double *c;
 
    fail = _ada_use_c2phc(66,&d,b,c);
+   return fail;
+}
+
+int embed_dobldobl_system ( int d )
+{
+   int fail;
+   int *b;
+   double *c;
+
+   fail = _ada_use_c2phc(129,&d,b,c);
+   return fail;
+}
+
+int embed_quaddobl_system ( int d )
+{
+   int fail;
+   int *b;
+   double *c;
+
+   fail = _ada_use_c2phc(260,&d,b,c);
    return fail;
 }
 

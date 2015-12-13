@@ -4240,7 +4240,7 @@ static PyObject *py2c_embed_system
 
    initialize();
    if(!PyArg_ParseTuple(args,"i",&d)) return NULL;
-   fail = embed_system(d);
+   fail = embed_system(d,0);
 
    return Py_BuildValue("i",fail);
 }

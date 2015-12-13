@@ -18,11 +18,30 @@ extern void adafinal( void );
 
 /* some basic OPERATIONS on witness sets */
 
-int embed_system ( int d );
+int embed_system ( int d, int precision );
 /*
  * DESCRIPTION :
- *   Replaces the system in the container
- *   with its embedding of dimension d. */
+ *   Replaces the system in the container with its embedding of 
+ *   dimension d in double, double double, or quad double precision,
+ *   depending whether precision equals 0, 1, or 2. */
+
+int embed_standard_system ( int d );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the container for systems in standard double
+ *   precision with its embedding of dimension d. */
+
+int embed_dobldobl_system ( int d );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the container for systems in double double
+ *   precision with its embedding of dimension d. */
+
+int embed_quaddobl_system ( int d );
+/*
+ * DESCRIPTION :
+ *   Replaces the system in the container for systems in quad double
+ *   precision with its embedding of dimension d. */
 
 int read_witness_set ( int *n, int *dim, int *deg );
 /*
