@@ -1,3 +1,5 @@
+Mon 14 Dec 2015 : name changes in solcon changed ada_test.cpp.
+
 Tue 22 Sep 2015 : name changes in syscon caused change in ada_test.cpp.
 
 Wed 19 Aug 2015 : extended write_sols of ada_test_{dd,qd}.cpp.

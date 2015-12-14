@@ -98,7 +98,7 @@ void ada_read_sols ( PolySys& start_sys, PolySolSet& sols )
 {
    int fail, len;
 
-   fail = solcon_number_of_solutions(&len);
+   fail = solcon_number_of_standard_solutions(&len);
    // printf("Number of start solutions : %d\n",len);
    int dim = start_sys.dim;
    sols.dim = dim;
@@ -127,7 +127,7 @@ void ada_read_sols ( PolySys& start_sys, PolySolSet& sols )
 
 void ada_write_sols ( PolySolSet& sols )
 {
-   int fail = solcon_clear_solutions();
+   int fail = solcon_clear_standard_solutions();
    if(fail != 0)
       std::cout << "failed to clear the solutions" << std::endl;
    int dim = sols.dim;
@@ -151,7 +151,7 @@ void ada_write_sols ( PolySolSet& sols )
       csol[2*dim+2] = 0.0;
       csol[2*dim+3] = 0.0;
       csol[2*dim+4] = 0.0;
-      fail = solcon_append_solution(dim,1,csol);
+      fail = solcon_append_standard_solution(dim,1,csol);
       if(fail != 0)
          std::cout << "failed to append the solution" << std::endl;
    }
