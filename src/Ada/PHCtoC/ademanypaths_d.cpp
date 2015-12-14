@@ -33,7 +33,7 @@ extern "C" int ademanypaths_d ( int verbose, double regamma, double imgamma )
            << regamma << " + i* " << imgamma << endl;
       fail = syscon_number_of_standard_polynomials(&dim);
       cout << "number of polynomials : " << dim << endl;
-      fail = solcon_number_of_solutions(&len);
+      fail = solcon_number_of_standard_solutions(&len);
       cout << "number of solutions : " << len << endl;
    }
 
@@ -79,7 +79,7 @@ int manytrack
       }
    }
    int fail,n_path;
-   fail = solcon_number_of_solutions(&n_path);
+   fail = solcon_number_of_standard_solutions(&n_path);
 
    alpha = CT(regamma,imgamma);
    cpu_inst_hom.init(p,q,p.dim,p.n_eq,1,alpha,verbose);

@@ -1,3 +1,6 @@
+Mon 14 Dec 2015 : name changes in solcon changed {ade,gpu}newton_d.cpp,
+  {ada,gpu}onepath_d.cpp, and {ade,gpu}manypaths_d.cpp.
+
 Tue 22 Sep 2015 : name changes in syscon caused updates in adenewton_d.cpp,
   adeonepath_d.cpp, ademanypaths_d.cpp, gpunewton_d.cp, gpuonepath_d.cpp,
   gpumanypaths_d.cpp; also modified adenewton_dd.cpp, adenewton_qd.cpp,

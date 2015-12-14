@@ -1,4 +1,4 @@
-GPU acceleration of Newton's method and path tracking in PHCv2.4
+GPU acceleration of Newton's method and path tracking in PHCv2.4.07
 
 This directory is newly created in release 2.3.90 of PHCpack.
 At this point it consists of a collection of test programs to 

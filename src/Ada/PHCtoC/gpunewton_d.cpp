@@ -28,7 +28,7 @@ extern "C" int gpunewton_d ( int mode, int verbose )
       cout << "Mode of execution : " << mode << endl;
       fail = syscon_number_of_standard_polynomials(&dim);
       cout << "number of polynomials : " << dim << endl;
-      fail = solcon_number_of_solutions(&len);
+      fail = solcon_number_of_standard_solutions(&len);
       cout << "number of solutions : " << len << endl;
    }
 

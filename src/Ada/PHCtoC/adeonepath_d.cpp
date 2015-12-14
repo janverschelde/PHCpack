@@ -33,7 +33,7 @@ extern "C" int adeonepath_d ( int verbose, double regamma, double imgamma )
            << regamma << " + i* " << imgamma << endl;
       fail = syscon_number_of_standard_polynomials(&dim);
       cout << "number of polynomials : " << dim << endl;
-      fail = solcon_number_of_solutions(&len);
+      fail = solcon_number_of_standard_solutions(&len);
       cout << "number of solutions : " << len << endl;
    }
 

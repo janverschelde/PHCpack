@@ -36,7 +36,7 @@ extern "C" int gpumanypaths_d
       cout << "Mode of execution : " << mode << endl;
       fail = syscon_number_of_standard_polynomials(&dim);
       cout << "number of polynomials : " << dim << endl;
-      fail = solcon_number_of_solutions(&len);
+      fail = solcon_number_of_standard_solutions(&len);
       cout << "number of solutions : " << len << endl;
    }
 
@@ -83,7 +83,7 @@ int manytrack
       }
    }
    int fail,n_path;
-   fail = solcon_number_of_solutions(&n_path);
+   fail = solcon_number_of_standard_solutions(&n_path);
 
    alpha = CT(1.0,0);
    cpu_inst_hom.init(p,q,p.dim,p.n_eq,1,alpha,verbose);
