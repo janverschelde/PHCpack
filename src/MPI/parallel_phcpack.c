@@ -91,7 +91,7 @@ int start_system_broadcast ( int myid, int n, int *nbsols )
       fail = syscon_clear_standard_system(); /* clear system container */
    }
    else
-      fail = solcon_number_of_solutions(nbsols);
+      fail = solcon_number_of_standard_solutions(nbsols);
 
    return fail;
 }
@@ -233,16 +233,16 @@ void solutions_broadcast ( int myid, int nbsols, int n )
    int s = 2*n+5;
    double sol[s];
 
-   if(myid != 0) fail = solcon_clear_solutions();
+   if(myid != 0) fail = solcon_clear_standard_solutions();
 
    if(myid == 0) printf("Broadcasting");
    for(i=1; i<= nbsols; i++)
    {
-      if(myid == 0) fail = solcon_retrieve_solution(n,i,&m,sol);
+      if(myid == 0) fail = solcon_retrieve_standard_solution(n,i,&m,sol);
       MPI_Bcast(&m,1,MPI_INT,0,MPI_COMM_WORLD);
       if(myid == 0) printf(" %d",m);
       MPI_Bcast(sol,s,MPI_DOUBLE,0,MPI_COMM_WORLD);
-      if(myid != 0) fail = solcon_append_solution(n,m,sol);
+      if(myid != 0) fail = solcon_append_standard_solution(n,m,sol);
    }
    if(myid == 0) printf("\n");
 }
@@ -260,7 +260,7 @@ void solutions_distribute ( int myid, int nbsols, int n, int nprocs,
       {
          dest = k%(nprocs-1);
          if(dest == 0) dest=nprocs-1;    
-         fail = solcon_retrieve_solution(n,k,&m,sol);
+         fail = solcon_retrieve_standard_solution(n,k,&m,sol);
          m = k;       /* multiplicity field labels solution ID */
          MPI_Send(&m,1,MPI_INT,dest,SEND_SMUL,MPI_COMM_WORLD);
          MPI_Send(sol,2*n+5,MPI_DOUBLE,dest,SEND_SSOL,MPI_COMM_WORLD);
@@ -275,7 +275,7 @@ void solutions_distribute ( int myid, int nbsols, int n, int nprocs,
       {
          MPI_Recv(&m,1,MPI_INT,0,SEND_SMUL,MPI_COMM_WORLD,&status);
          MPI_Recv(sol,2*n+5,MPI_DOUBLE,0,SEND_SSOL,MPI_COMM_WORLD,&status); 
-         fail = solcon_append_solution(n,m,sol);
+         fail = solcon_append_standard_solution(n,m,sol);
          if(v>0) printf("Node %d receives solution %d.\n",myid,m); 
       }
    }
@@ -288,13 +288,13 @@ void solutions_collect ( int myid, int nbsols, int n,
    double sol[2*n+6];  /* very important to send "m" along with "sol" */
    MPI_Status status;
 
-   if(myid == 0) fail = solcon_clear_solutions(); 
+   if(myid == 0) fail = solcon_clear_standard_solutions(); 
 
    if(myid != 0)
    {
       for(k=1; k<=mysolnum; k++)
       {
-         fail = solcon_retrieve_solution(n,k,&m,sol);
+         fail = solcon_retrieve_standard_solution(n,k,&m,sol);
          sol[2*n+5] = (double) m;  /* m is last entry of array sol */
          MPI_Send(sol,2*n+6,MPI_DOUBLE,0,SEND_TSOL,MPI_COMM_WORLD);
       }
@@ -306,7 +306,7 @@ void solutions_collect ( int myid, int nbsols, int n,
          MPI_Recv(sol,2*n+6,MPI_DOUBLE,MPI_ANY_SOURCE,SEND_TSOL,
                   MPI_COMM_WORLD,&status);
          m = (int) sol[2*n+5];
-         fail = solcon_append_solution(n,m,sol);
+         fail = solcon_append_standard_solution(n,m,sol);
       }
    }
   
@@ -316,7 +316,7 @@ void solutions_collect ( int myid, int nbsols, int n,
       fail = solcon_write_solutions();
    }
 
-   if(myid != 0) fail = solcon_clear_solutions();
+   if(myid != 0) fail = solcon_clear_standard_solutions();
 }
 
 void print_monomials ( void ) 
@@ -360,7 +360,7 @@ void print_solutions ( int myid )
    double *c;
 
    printf("Node %d has in its container the solutions :\n",myid);
-   fail = solcon_write_solutions();
+   fail = solcon_write_standard_solutions();
 }
 
 void print_time ( double *time, int numprocs )

@@ -16,7 +16,7 @@
 #define SEND_MUL 103 /* tag for sending mulplicity of the solution */
 #define SEND_SOL 104 /* tag for sending solution */
 
-#define v 2  /* verbose flag:
+#define v 0  /* verbose flag:
                   0 no output during the computations,
                   1 only one line messages on progress of computations
                   2 display of data, like systems and solutions */
@@ -203,13 +203,14 @@ void distribute_cells ( int myid, int np, int nspt, int dim, int *mysolnb )
                     {  m[0]=nbcell;  m[1]=i-nbcell+1; }
               else {  m[0]=0; m[1]=0; }
               MPI_Send(m,2,MPI_INT,dest,SEND_CELL,com);
-	      printf("root sends %d paths of cell %d to worker %d\n",m[1],m[0],dest);
+	      if(v>0) printf("root sends %d paths of cell %d to worker %d\n",
+                              m[1],m[0],dest);
               if(i<nbcell+lastcellpath && R!=0)
               {
                  celcon_retrieve_mixed_cell(dim,nspt,i,labels,normal);
                  MPI_Send(labels,labSize,MPI_INT,dest,SEND_SUPP,com);
                  MPI_Send(normal,dim,MPI_DOUBLE,dest,SEND_NORMAL,com);
-		 printf("root send label to worker %d\n",dest);
+		 if(v>0) printf("root sends label to worker %d\n",dest);
               }
               if(R==0) R=1;
               for(j=0; j<R; j++)
@@ -250,9 +251,9 @@ void distribute_cells ( int myid, int np, int nspt, int dim, int *mysolnb )
               st++;
             
            fail = celcon_track_solution_path(sn,m[1],0);
-           fail = solcon_clear_solutions();
+           fail = solcon_clear_standard_solutions();
            fail = celcon_copy_target_solution_to_container(sn,st);
-           fail = solcon_retrieve_solution(n,1,&mult,sol);
+           fail = solcon_retrieve_standard_solution(n,1,&mult,sol);
            MPI_Send(&mult,1,MPI_INT,0,SEND_MUL,com);
            MPI_Send(sol,2*n+5,MPI_DOUBLE,0,SEND_SOL,com);
             
@@ -266,14 +267,14 @@ void distribute_cells ( int myid, int np, int nspt, int dim, int *mysolnb )
         while(1) 
         {
            MPI_Recv(m,2,MPI_INT,0,SEND_CELL,com,&status);
-           printf("worker %d receive cell %d\n",myid,m[0]);
+           if(v>0) printf("worker %d receives cell %d\n",myid,m[0]);
            if(m[0]==0) break;
            if(m[0]!=mold)
            {
               sn++; mold=m[0];
               MPI_Recv(labels,labSize,MPI_INT,0,SEND_SUPP,com,&status) ;
               MPI_Recv(normal,dim,MPI_DOUBLE,0,SEND_NORMAL,com,&status) ;
-              printf("Work %d receive label\n",myid);
+              if(v>0) printf("worker %d receives label\n",myid);
               fail = celcon_append_mixed_cell(dim,nspt,labSize,labels,normal);
               fail = celcon_create_polyhedral_homotopy();
               fail = celcon_solve_start_system(sn,&R);
@@ -284,9 +285,9 @@ void distribute_cells ( int myid, int np, int nspt, int dim, int *mysolnb )
               for(j=1;j<=m[1];j++)
               {
                  fail = celcon_track_solution_path(sn,j,0);
-                 fail = solcon_clear_solutions();  
+                 fail = solcon_clear_standard_solutions();  
                  fail = celcon_copy_target_solution_to_container(sn,j);
-                 fail = solcon_retrieve_solution(n,1,&mult,sol);
+                 fail = solcon_retrieve_standard_solution(n,1,&mult,sol);
                  MPI_Send(&mult,1,MPI_INT,0,SEND_MUL,MPI_COMM_WORLD);
                  MPI_Send(sol,2*n+5,MPI_DOUBLE,0,SEND_SOL,MPI_COMM_WORLD);
               } 
@@ -295,9 +296,9 @@ void distribute_cells ( int myid, int np, int nspt, int dim, int *mysolnb )
 	   {
               R=0; st++;
               fail = celcon_track_solution_path(sn,m[1],0);
-              fail = solcon_clear_solutions();
+              fail = solcon_clear_standard_solutions();
               fail = celcon_copy_target_solution_to_container(sn,st);
-              fail = solcon_retrieve_solution(n,1,&mult,sol);
+              fail = solcon_retrieve_standard_solution(n,1,&mult,sol);
               MPI_Send(&mult,1,MPI_INT,0,SEND_MUL,MPI_COMM_WORLD);
               MPI_Send(sol,2*n+5,MPI_DOUBLE,0,SEND_SOL,MPI_COMM_WORLD);
            }

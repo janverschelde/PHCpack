@@ -295,9 +295,9 @@ void distribute_cells ( int myid, int np, int nspt, int dim, int *nbpaths )
             for(j=m[2]; j<m[1]+m[2]; j++)
             {          
                fail = celcon_track_solution_path(m[0],j,0);
-               fail = solcon_clear_solutions();
+               fail = solcon_clear_standard_solutions();
                fail = celcon_copy_target_solution_to_container(m[0],j-m[2]+1);
-               fail = solcon_retrieve_solution(n,1,&A[1],sol);
+               fail = solcon_retrieve_standard_solution(n,1,&A[1],sol);
                MPI_Send(&A[1],1,MPI_INT,0,SEND_MUL,MPI_COMM_WORLD);
                MPI_Send(sol,2*n+5,MPI_DOUBLE,0,SEND_SOL,MPI_COMM_WORLD);
             }

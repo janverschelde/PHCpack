@@ -131,7 +131,7 @@ int monodromy_breakup ( int myid, int n, int dim, int deg, int nbloops,
       if(myid == 0)
       {
          if(v>1) print_solutions(myid);
-         solcon_clear_solutions();
+         solcon_clear_standard_solutions();
       }
       gamma_broadcast(myid,n);
       f_track_paths(myid,deg,n,numprocs,mysolnum,trackwtime);
@@ -140,7 +140,7 @@ int monodromy_breakup ( int myid, int n, int dim, int deg, int nbloops,
          if(v>1) print_solutions(myid);
          fail = store_solutions();
          fail = monodromy_permutation(deg,&done);
-         solcon_clear_solutions();
+         solcon_clear_standard_solutions();
       }
 
       MPI_Bcast(&done,1,MPI_INT,0,MPI_COMM_WORLD);

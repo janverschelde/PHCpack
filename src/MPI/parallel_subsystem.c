@@ -501,7 +501,7 @@ void mainloop_initialize(WSET* ws, int NUM_GROUP, int stages, int numbprocs, cha
         fail = read_witness_set_from_file((int)strlen(name),name,&n,&dim,&deg);
         if(fail>0) printf("failed to read a witness set.\n");
         printf("  n = %d  dimension = %d  degree = %d\n",n,dim,deg);
-        fail = solcon_clear_solutions();
+        fail = solcon_clear_standard_solutions();
         fail = syscon_clear_standard_system( ); 
         make_ws(ws_p,1,n,deg,dim);
         ws_p->source[0] = r+1;
@@ -564,7 +564,7 @@ void slave_initialize(int id, int NUM_GROUP, char filename[50])
      }
      MPI_Send(eqn_pack,cnt_eqns,MPI_INT,0,EQN_TAG,MPI_COMM_WORLD);
      /* clean the system and solution container */
-     fail = solcon_clear_solutions( );  
+     fail = solcon_clear_standard_solutions( );  
      if(fail>0) printf("fail to clear solution container.\n");
      fail = syscon_clear_standard_system( );
      if(fail>0) printf("fail to clear system container.\n");
@@ -785,7 +785,7 @@ void run_slave(int id)
      if(count==-1) 
       {
        quit_flag=1; 
-       fail = solcon_clear_solutions( );  
+       fail = solcon_clear_standard_solutions( );  
        if(fail>0) printf("fail to clear solution container.\n");
        fail = syscon_clear_standard_system( );
        if(fail>0) printf("fail to clear system container.\n");
@@ -1210,13 +1210,13 @@ void start_a_diagonal_homotopy(int myid, int numbprocs, char *name_1,
      if(fail>0) printf("fail to close witness set 1.\n");
      fail = solcon_close_solution_input_file(2); 
      if(fail>0) printf("fail to close witness set 2.\n");
-     fail = solcon_clear_solutions( );  
+     fail = solcon_clear_standard_solutions( );  
      if(fail>0) printf("fail to clear solution container.\n");
      fail = close_output_file();
      if(fail>0) printf("fail to close output file. \n"); 
      fail = read_witness_set_from_file((int)strlen(outfile),
                                        outfile,&n,dim,&deg); 
-     fail = solcon_clear_solutions();
+     fail = solcon_clear_standard_solutions();
      fail = syscon_clear_standard_system( );
      printf("end of start_a_diagonal_homotopy\n");
      fflush;
@@ -1331,7 +1331,7 @@ void cascade_one_level_down(int myid, int numbprocs, char *infile,
       if(fail>0) printf("manager fail to clear data.\n"); fflush;
       fail = solcon_close_solution_input_file(0);
       if(fail>0) printf("fail to close solution input file.\n");
-      fail = solcon_clear_solutions( );  
+      fail = solcon_clear_standard_solutions( );  
       if(fail>0) printf("fail to clear solution container.\n");
       fail = close_output_file();
       if(fail>0) printf("fail to close output file. \n");
@@ -1354,7 +1354,7 @@ int remove_last_slack_variable(char *infile, char *outfile)
    printf("\nThe current number of slack variables : %d\n",dim);
    fail = remove_last_slack(dim);
    fail = write_witness_set_to_file((int)strlen(outfile),outfile);
-   fail = solcon_clear_solutions();
+   fail = solcon_clear_standard_solutions();
    fail = syscon_clear_standard_system( ); 
    return fail;
 }
