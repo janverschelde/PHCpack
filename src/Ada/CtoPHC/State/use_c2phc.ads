@@ -543,6 +543,35 @@ function use_c2phc ( job : integer32;
 --                 returns in a the degree of the k-th component and
 --                 in b the labels of the points that span the k-th
 --                 component in the current irreducible decomposition;
+--
+-- ANALOGUE OPERATIONS FOR DOUBLE DOUBLE AND QUAD DOUBLE PRECISION :
+--
+--   job   = 631 : prompts for a witness set in double double precision
+--                 stores the system in the dobldobl systems container,
+--                 and its solutions in the dobldobl solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set.
+--   job   = 632 : takes the system and the solutions from the containers
+--                 for double double precision
+--                 and initializes the sampling machine, on input,
+--                 the dimension of the witness set must be in a.
+--
+--   job   = 661 : prompts for a witness set in quad double precision
+--                 stores the system in the quaddobl systems container,
+--                 and its solutions in the quaddobl solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set.
+--   job   = 662 : takes the system and the solutions from the containers
+--                 for quad double precision
+--                 and initializes the sampling machine, on input,
+--                 the dimension of the witness set must be in a.
+--
+-- EMBEDDING A POLYNOMIAL SYSTEM :
+--
 --         =  66 : given in a[0] the dimension of the embedding,
 --                 replaces the system in container for systems in standard
 --                 double precision by the embedded system.

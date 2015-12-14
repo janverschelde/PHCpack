@@ -32,6 +32,7 @@ systems_pool                     : pool of systems and associated structures
 ts_syspool                       : test on the systems pool
 use_syspool                      : Ada gateway to the systems pool
 ts_use_syspool.c                 : C routine calls the Ada gateway
+------------------------------------------------------------------------------
 standard_solutions_container     : management of Ada solution lists
 dobldobl_solutions_container     : solutions with double doubles
 quaddobl_solutions_container     : solutions with quad doubles
@@ -59,6 +60,8 @@ use_c2lrhom                      : calls Littlewood-Richardson homotopies
 ------------------------------------------------------------------------------
 monodromy_permutations           : computes permutations by monodromy
 sampling_operations              : provides access to the sampling machine
+dobldobl_sampling_operations     : supports monodromy with double doubles
+quaddobl_sampling_operations     : supports monodromy with quad doubles
 use_c2fac                        : Ada gateway to factorization in PHCpack
 ts_use_c2fac                     : C testing operations in use_c2fac
 ------------------------------------------------------------------------------

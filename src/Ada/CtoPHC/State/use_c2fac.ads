@@ -14,14 +14,15 @@ function use_c2fac ( job : integer32;
 
 -- ON ENTRY :
 --   job    =  0 : display the menu of all available options;
---   job    =  1 : prompts the user for a witness set,
---                 stores the system in the systems container,
---                 and its solutions in the solutions container,
+--   job    =  1 : prompts for a witness set in standard double precision,
+--                 stores the system in the standard systems container,
+--                 and its solutions in the standard solutions container,
 --                 and returns in a the dimension of the ambient space
 --                 and in b the following two numbers:
 --                   b[0] : dimension of the solution set;
 --                   b[1] : degree of the solution set.
 --   job    =  2 : takes the system and the solutions from the containers
+--                 in standard double precision,
 --                 and initializes the sampling machine, on input,
 --                 the dimension of the witness set must be in a;
 --   job    =  3 : assigns the coefficient c[0] + c[1]*I to the
@@ -90,6 +91,32 @@ function use_c2fac ( job : integer32;
 --                 returns in a the degree of the k-th component and
 --                 in b the labels of the points that span the k-th
 --                 component in the current irreducible decomposition.
+--
+-- ANALOGUE OPERATIONS FOR DOUBLE DOUBLE AND QUAD DOUBLE PRECISION :
+--
+--   job    = 31 : prompts for a witness set in double double precision
+--                 stores the system in the dobldobl systems container,
+--                 and its solutions in the dobldobl solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set.
+--   job    = 32 : takes the system and the solutions from the containers
+--                 for double double precision
+--                 and initializes the sampling machine, on input,
+--                 the dimension of the witness set must be in a.
+--
+--   job    = 61 : prompts for a witness set in quad double precision
+--                 stores the system in the quaddobl systems container,
+--                 and its solutions in the quaddobl solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set.
+--   job    = 62 : takes the system and the solutions from the containers
+--                 for quad double precision
+--                 and initializes the sampling machine, on input,
+--                 the dimension of the witness set must be in a.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

@@ -2,23 +2,32 @@ with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
 with Standard_Floating_Vectors;
 with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
-with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
-with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
-with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
+with Standard_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems;
+with Standard_Complex_Solutions;
+with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions;
 with Standard_System_and_Solutions_io;
 with Sampling_Machine;
 with Witness_Sets_io;                   use Witness_Sets_io;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_PolySys_Container;
 with Standard_Solutions_Container;
+with DoblDobl_PolySys_Container;
+with DoblDobl_Solutions_Container;
+with QuadDobl_PolySys_Container;
+with QuadDobl_Solutions_Container;
 with PHCpack_Operations;
 with Sampling_Operations;
+with DoblDobl_Sampling_Operations;
+with QuadDobl_Sampling_Operations;
 with Monodromy_Partitions;
 with Monodromy_Permutations;
 
@@ -78,7 +87,7 @@ function use_c2fac ( job : integer32;
         hyp : Standard_Complex_Vectors.Vector(0..n);
       begin
         for j in 0..n loop
-          hyp(j) := Create(v(ind),v(ind+1));
+          hyp(j) := Standard_Complex_Numbers.Create(v(ind),v(ind+1));
           ind := ind+2;
         end loop;
         res(i) := new Standard_Complex_Vectors.Vector'(hyp);
@@ -103,14 +112,17 @@ function use_c2fac ( job : integer32;
     for i in v'range loop
       lv := v(i);
       for j in lv'range loop
-        ind := ind + 1; res(ind) := REAL_PART(lv(j));
-        ind := ind + 1; res(ind) := IMAG_PART(lv(j));
+        ind := ind + 1; res(ind) := Standard_Complex_Numbers.REAL_PART(lv(j));
+        ind := ind + 1; res(ind) := Standard_Complex_Numbers.IMAG_PART(lv(j));
       end loop;
     end loop;
     return res;
   end Convert_to_Coefficients;
 
-  function Job1 return integer32 is -- prompts user for a witness set
+  function Job1 return integer32 is -- prompts for a standard witness set
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     p : Link_to_Poly_Sys;
     sols : Solution_List;
@@ -135,7 +147,66 @@ function use_c2fac ( job : integer32;
       return 41;
   end Job1;
 
-  function Job2 return integer32 is -- initializes sampling machine
+  function Job31 return integer32 is -- prompts for a dobldobl witness set
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    p : Link_to_Poly_Sys;
+    sols : Solution_List;
+    dim : natural32;
+    data : Standard_Natural_Vectors.Vector(1..2);
+
+  begin
+    DoblDobl_Read_Embedding(p,sols,dim);
+    DoblDobl_PolySys_Container.Initialize(p.all);
+    DoblDobl_Solutions_Container.Initialize(sols);
+   -- Sampling_Operations.Initialize(p.all,sols,dim);
+    data(1) := dim;
+    data(2) := Length_Of(sols);
+   -- put("The dimension is "); put(data(1),1); new_line;
+   -- put("The degree is "); put(data(2),1); new_line;
+    Assign(p'last,a);
+    Assign(data,b);
+    return 0;
+  exception 
+    when others =>
+      put_line("Exception raised when reading witness set.");
+      return 631;
+  end Job31;
+
+  function Job61 return integer32 is -- prompts for a quaddobl witness set
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    p : Link_to_Poly_Sys;
+    sols : Solution_List;
+    dim : natural32;
+    data : Standard_Natural_Vectors.Vector(1..2);
+
+  begin
+    QuadDobl_Read_Embedding(p,sols,dim);
+    QuadDobl_PolySys_Container.Initialize(p.all);
+    QuadDobl_Solutions_Container.Initialize(sols);
+   -- Sampling_Operations.Initialize(p.all,sols,dim);
+    data(1) := dim;
+    data(2) := Length_Of(sols);
+   -- put("The dimension is "); put(data(1),1); new_line;
+   -- put("The degree is "); put(data(2),1); new_line;
+    Assign(p'last,a);
+    Assign(data,b);
+    return 0;
+  exception 
+    when others =>
+      put_line("Exception raised when reading witness set.");
+      return 661;
+  end Job61;
+
+  function Job2 return integer32 is -- initializes standard sampling machine
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
@@ -153,7 +224,51 @@ function use_c2fac ( job : integer32;
       return 42;
   end Job2;
 
+  function Job32 return integer32 is -- initializes dobldobl sampling machine
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
+    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant integer32 := integer32(va(va'first));
+
+  begin
+   -- put("initializing sampler with #solutions = ");
+   -- put(Length_Of(sols),1); new_line;
+    DoblDobl_Sampling_Operations.Initialize(lp.all,sols,dim);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised when initializing sampling machine.");
+      return 632;
+  end Job32;
+
+  function Job62 return integer32 is -- initializes quaddobl sampling machine
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
+    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    dim : constant integer32 := integer32(va(va'first));
+
+  begin
+   -- put("initializing sampler with #solutions = ");
+   -- put(Length_Of(sols),1); new_line;
+    QuadDobl_Sampling_Operations.Initialize(lp.all,sols,dim);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised when initializing sampling machine.");
+      return 662;
+  end Job62;
+
   function Job3 return integer32 is -- assign gamma constant
+
+    use Standard_Complex_Numbers;
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     vb : constant C_Integer_Array := C_intarrs.Value(b);
@@ -176,6 +291,8 @@ function use_c2fac ( job : integer32;
 
   function Job4 return integer32 is -- storing gamma constant
 
+    use Standard_Complex_Numbers;
+
     va : constant C_Integer_Array := C_intarrs.Value(a);
     vc : constant C_Double_Array
        := C_DblArrs.Value(c,Interfaces.C.ptrdiff_t(2));
@@ -195,6 +312,8 @@ function use_c2fac ( job : integer32;
 
   function Job7 return integer32 is -- copy from sampler to container
 
+     use Standard_Complex_Poly_Systems;
+
      p : constant Poly_Sys := Sampling_Machine.Embedded_System;
 
   begin
@@ -207,6 +326,8 @@ function use_c2fac ( job : integer32;
   end Job7;
 
   function Job8 return integer32 is -- copy first solutions to container
+
+    use Standard_Complex_Solutions;
 
     s : constant Solution_List := Sampling_Operations.Retrieve_First_Solutions;
 
@@ -221,6 +342,8 @@ function use_c2fac ( job : integer32;
   end Job8;
 
   function Job9 return integer32 is -- solutions from grid to container
+
+    use Standard_Complex_Solutions;
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     i : constant integer32 := integer32(va(va'first));
@@ -261,6 +384,8 @@ function use_c2fac ( job : integer32;
   end Job10;
 
   function Job11 return integer32 is -- solutions to Monodromy_Permutations
+
+    use Standard_Complex_Solutions;
 
     sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
 
@@ -358,6 +483,8 @@ function use_c2fac ( job : integer32;
   end Job15;
 
   function Job16 return integer32 is -- return trace grid diagnostics
+
+    use Standard_Complex_Numbers;
 
     err,dis : double_float;
     ada_c : Complex_Number;
@@ -486,6 +613,8 @@ function use_c2fac ( job : integer32;
 
   function Job23 return integer32 is -- completes one sampling loop
 
+    use Standard_Complex_Solutions;
+
     va : constant C_Integer_Array
        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
     vb : constant C_Integer_Array := C_intarrs.Value(b);
@@ -520,6 +649,9 @@ function use_c2fac ( job : integer32;
   end Job23;
 
   function Job24 return integer32 is -- reads witness set from file
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     v_a : constant C_Integer_Array
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
@@ -556,6 +688,9 @@ function use_c2fac ( job : integer32;
   end Job24;
 
   function Job25 return integer32 is -- write witness set to file
+
+    use Standard_Complex_Poly_Systems;
+    use Standard_Complex_Solutions;
 
     v_a : constant C_Integer_Array
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
@@ -622,8 +757,8 @@ function use_c2fac ( job : integer32;
   begin
     case job is
       when 0 => Write_Menu; return 0;
-      when 1 => return Job1; -- read witness set
-      when 2 => return Job2; -- initialize sampling machine
+      when 1 => return Job1; -- read witness set in double precision
+      when 2 => return Job2; -- initialize standard sampling machine
       when 3 => return Job3; -- assigning gamma constant
       when 4 => return Job4; -- storing gamma constant
       when 5 => Sampling_Operations.Sample; return 0;
@@ -650,6 +785,10 @@ function use_c2fac ( job : integer32;
       when 26 => return Job26; -- returns current number of factors
       when 27 => return Job27; -- returns labels of points in component
       when 28 => return Job28; -- state of monodromy permutations to silent
+      when 31 => return Job31; -- read witness set in double double precision
+      when 32 => return Job32; -- initialize dobldobl sampling machine
+      when 61 => return Job61; -- read witness set in quad double precision
+      when 62 => return Job62; -- initialize quaddobl sampling machine
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   end Handle_Jobs;
