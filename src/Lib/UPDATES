@@ -1,5 +1,6 @@
 Sun 13 Dec 2015 : added functions in witset to embed a system in double
   double and quad double precision, with a minor change in phcpy2c.c.
+  Then added the corresponding new functions to phcpy2c.h and phcpy2c.c.
 
 Thu 12 Nov 2015 : added functions in witset and phcpy2c to compute a witness
   set for a hypersurface in double double and quad double precision.

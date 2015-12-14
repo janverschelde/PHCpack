@@ -4231,16 +4231,52 @@ static PyObject *py2c_sweep_quaddobl_real_run
    return Py_BuildValue("i",fail);
 }
 
-/* The wrapping of the functions with prototypes in sets.h starts here. */
+/* The wrapping of the functions with prototypes in witset.h starts here. */
 
 static PyObject *py2c_embed_system
+ ( PyObject *self, PyObject *args )
+{
+   int d,prc,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&d,&prc)) return NULL;
+   fail = embed_system(d,prc);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_embed_standard_system
  ( PyObject *self, PyObject *args )
 {
    int d,fail;
 
    initialize();
    if(!PyArg_ParseTuple(args,"i",&d)) return NULL;
-   fail = embed_system(d,0);
+   fail = embed_standard_system(d);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_embed_dobldobl_system
+ ( PyObject *self, PyObject *args )
+{
+   int d,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&d)) return NULL;
+   fail = embed_dobldobl_system(d);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_embed_quaddobl_system
+ ( PyObject *self, PyObject *args )
+{
+   int d,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&d)) return NULL;
+   fail = embed_quaddobl_system(d);
 
    return Py_BuildValue("i",fail);
 }
@@ -6292,7 +6328,13 @@ static PyMethodDef phcpy2c_methods[] =
      py2c_sweep_quaddobl_real_run, METH_VARARGS, 
     "There are no input arguments to this routine.\n Starts a sweep with a natural parameter in a family of n equations\n in n+1 variables, where the last variable is the artificial parameter s\n that moves the one natural parameter from a start to target value.\n The last equation is of the form (1-s)*(A - v[0]) + s*(A - v[1]),\n where A is the natural parameter, going from the start value v[0]\n to the target value v[1].\n This family must be stored in the systems container in quad double\n precision and the corresponding start solutions in the quaddobl solutions\n container, where every solution has the value v[0] for the A variable.\n The sweep stops when s reaches the value v[1], or when a singularity\n is encountered on the path."},
    {"py2c_embed_system", py2c_embed_system, METH_VARARGS,
+    "Replaces the system in the container with its embedding of dimension d.\n The dimension d is given as the first integer parameter on input.\n The second integer parameter indicates the precision, either 0, 1, or 2,\n respectively for double, double double, or quad double precision.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_embed_standard_system", py2c_embed_standard_system, METH_VARARGS,
     "Replaces the system with coefficients in standard double precision\n in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_embed_dobldobl_system", py2c_embed_dobldobl_system, METH_VARARGS,
+    "Replaces the system with coefficients in double double precision\n in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_embed_quaddobl_system", py2c_embed_quaddobl_system, METH_VARARGS,
+    "Replaces the system with coefficients in quad double precision\n in the container with its embedding of dimension d.\n The dimension d is given as an integer parameter on input.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_standard_cascade_homotopy", py2c_standard_cascade_homotopy,
      METH_VARARGS,
     "Creates a homotopy in standard double precision using the stored\n systems to go one level down the cascade, removing one slice.\n On return is the failure code, which equals zero if all went well."},

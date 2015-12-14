@@ -2831,13 +2831,41 @@ static PyObject *py2c_sweep_quaddobl_real_run
  *   The sweep stops when s reaches the value v[1], or when a singularity
  *   is encountered on the path. */
 
-/* The wrapping of functions with prototypes in sets.h starts here. */
+/* The wrapping of functions with prototypes in witset.h starts here. */
 
 static PyObject *py2c_embed_system
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
+ *   Replaces the system in the container with its embedding of dimension d.
+ *   The dimension d is given as the first integer parameter on input.
+ *   The second integer parameter indicates the precision, either 0, 1, or 2,
+ *   respectively for double, double double, or quad double precision.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_embed_standard_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
  *   Replaces the system with coefficients in standard double precision
+ *   in the container with its embedding of dimension d.
+ *   The dimension d is given as an integer parameter on input.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_embed_dobldobl_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the system with coefficients in double double precision
+ *   in the container with its embedding of dimension d.
+ *   The dimension d is given as an integer parameter on input.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_embed_quaddobl_system
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Replaces the system with coefficients in quad double precision
  *   in the container with its embedding of dimension d.
  *   The dimension d is given as an integer parameter on input.
  *   On return is the failure code, which equals zero if all went well. */

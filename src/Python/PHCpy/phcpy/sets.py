@@ -3,21 +3,20 @@ This module exports routines of PHCpack to manipulate
 positive dimensional solution sets of polynomial systems.
 """
 
-def embed(nvar, topdim, pols):
+def standard_embed(nvar, topdim, pols):
     """
-    Given in pols a list of strings that represent
-    polynomials in nvar variables, this function
-    returns an embedding of pols of dimension topdim.
-    The topdim abbreviates the top dimension which
-    equals the expected highest dimension of a component
-    of the solution set of the system of polynomials.
+    Given in pols a list of strings representing polynomials in nvar
+    variables, with coefficients in standard double precision,
+    this function returns an embedding of pols of dimension topdim.
+    The topdim is the top dimension which equals the expected highest
+    dimension of a component of the solution set of the system of polynomials.
     """
     from phcpy.phcpy2c import py2c_syscon_clear_standard_system
     from phcpy.phcpy2c \
     import py2c_syscon_initialize_number_of_standard_polynomials
     from phcpy.phcpy2c import py2c_syscon_store_standard_polynomial
     from phcpy.phcpy2c import py2c_syscon_load_standard_polynomial
-    from phcpy.phcpy2c import py2c_embed_system
+    from phcpy.phcpy2c import py2c_embed_standard_system
     py2c_syscon_clear_standard_system()
     nequ = len(pols)
     if nequ > nvar:
@@ -29,12 +28,93 @@ def embed(nvar, topdim, pols):
     for i in range(0, nequ):
         nchar = len(pols[i])
         py2c_syscon_store_standard_polynomial(nchar, nvar, i+1, pols[i])
-    py2c_embed_system(topdim)
-    # py2c_syscon_write_system()
+    py2c_embed_standard_system(topdim)
     result = []
     for i in range(1, nbres+topdim+1):
         result.append(py2c_syscon_load_standard_polynomial(i))
     return result
+
+def dobldobl_embed(nvar, topdim, pols):
+    """
+    Given in pols a list of strings that represent polynomials in nvar
+    variables, with coefficients in double double precision,
+    this function returns an embedding of pols of dimension topdim.
+    The topdim is the top dimension which equals the expected highest
+    dimension of a component of the solution set of the system of polynomials.
+    """
+    from phcpy.phcpy2c import py2c_syscon_clear_dobldobl_system
+    from phcpy.phcpy2c \
+    import py2c_syscon_initialize_number_of_dobldobl_polynomials
+    from phcpy.phcpy2c import py2c_syscon_store_dobldobl_polynomial
+    from phcpy.phcpy2c import py2c_syscon_load_dobldobl_polynomial
+    from phcpy.phcpy2c import py2c_embed_dobldobl_system
+    py2c_syscon_clear_dobldobl_system()
+    nequ = len(pols)
+    if nequ > nvar:
+        py2c_syscon_initialize_number_of_dobldobl_polynomials(nequ)
+        nbres = nequ
+    else:
+        py2c_syscon_initialize_number_of_dobldobl_polynomials(nvar)
+        nbres = nvar
+    for i in range(0, nequ):
+        nchar = len(pols[i])
+        py2c_syscon_store_dobldobl_polynomial(nchar, nvar, i+1, pols[i])
+    py2c_embed_dobldobl_system(topdim)
+    result = []
+    for i in range(1, nbres+topdim+1):
+        result.append(py2c_syscon_load_dobldobl_polynomial(i))
+    return result
+
+def quaddobl_embed(nvar, topdim, pols):
+    """
+    Given in pols a list of strings that represent polynomials in nvar
+    variables, with coefficients in quad double precision,
+    this function returns an embedding of pols of dimension topdim.
+    The topdim is the top dimension which equals the expected highest
+    dimension of a component of the solution set of the system of polynomials.
+    """
+    from phcpy.phcpy2c import py2c_syscon_clear_quaddobl_system
+    from phcpy.phcpy2c \
+    import py2c_syscon_initialize_number_of_quaddobl_polynomials
+    from phcpy.phcpy2c import py2c_syscon_store_quaddobl_polynomial
+    from phcpy.phcpy2c import py2c_syscon_load_quaddobl_polynomial
+    from phcpy.phcpy2c import py2c_embed_quaddobl_system
+    py2c_syscon_clear_quaddobl_system()
+    nequ = len(pols)
+    if nequ > nvar:
+        py2c_syscon_initialize_number_of_quaddobl_polynomials(nequ)
+        nbres = nequ
+    else:
+        py2c_syscon_initialize_number_of_quaddobl_polynomials(nvar)
+        nbres = nvar
+    for i in range(0, nequ):
+        nchar = len(pols[i])
+        py2c_syscon_store_quaddobl_polynomial(nchar, nvar, i+1, pols[i])
+    py2c_embed_quaddobl_system(topdim)
+    result = []
+    for i in range(1, nbres+topdim+1):
+        result.append(py2c_syscon_load_quaddobl_polynomial(i))
+    return result
+
+def embed(nvar, topdim, pols, precision='d'):
+    """
+    Given in pols a list of strings that represent polynomials in nvar
+    variables, this function returns an embedding of pols of dimension topdim.
+    The topdim is the top dimension which equals the expected highest
+    dimension of a component of the solution set of the system of polynomials.
+    The default precision of the coefficients is 'd', for standard double
+    precision.  For double double and quad double precision, set the value
+    of precision to 'dd' or 'qd' respectively.
+    """
+    if(precision == 'd'):
+        return standard_embed(nvar, topdim, pols)
+    elif(precision == 'dd'):
+        return dobldobl_embed(nvar, topdim, pols)
+    elif(precision == 'qd'):
+        return quaddobl_embed(nvar, topdim, pols)
+    else:
+        print 'wrong argument for precision'
+        return None
 
 def witness_set_of_hypersurface(nvar, hpol, precision='d'):
     """

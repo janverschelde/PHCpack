@@ -1,3 +1,6 @@
+Sun 13 Dec 2015 : added functions to sets.py to embed systems with coefficients
+  in double double and quad double precision.
+
 Sat 12 Dec 2015 : added factor method to sets.py, which calls the
   methods monodromy_breakup and decomposition, tested by test_factor().
   In the phcpy documentation, added a subsection to posdimsols.rst
