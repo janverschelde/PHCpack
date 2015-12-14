@@ -65,11 +65,11 @@ void test_newton ( void )
    fail = copy_start_solutions_to_container();
    fail = syscon_number_of_standard_polynomials(&dim);
    printf("The system container has %d polynomials.\n",dim);
-   fail = solcon_number_of_solutions(&len);
+   fail = solcon_number_of_standard_solutions(&len);
    printf("The solution container has size %d.\n",len);
    fail = ade_newton_d(1);
    printf("The solutions after Newton's method :\n");
-   fail = solcon_write_solutions();
+   fail = solcon_write_standard_solutions();
 }
 
 void test_onepath ( void )
@@ -80,11 +80,11 @@ void test_onepath ( void )
    fail = read_standard_target_system();
    fail = read_standard_start_system();
    fail = copy_start_solutions_to_container();
-   fail = solcon_number_of_solutions(&len);
+   fail = solcon_number_of_standard_solutions(&len);
    printf("The solution container has size %d.\n",len);
    fail = ade_onepath_d(1,1.0,0.0);
    printf("The solutions after Newton's method :\n");
-   fail = solcon_write_solutions();
+   fail = solcon_write_standard_solutions();
 }
 
 void test_manypaths ( void )
@@ -95,9 +95,9 @@ void test_manypaths ( void )
    fail = read_standard_target_system();
    fail = read_standard_start_system();
    fail = copy_start_solutions_to_container();
-   fail = solcon_number_of_solutions(&len);
+   fail = solcon_number_of_standard_solutions(&len);
    printf("The solution container has size %d.\n",len);
    fail = ade_manypaths_d(1,1.0,0.0);
    printf("The solutions after Newton's method :\n");
-   fail = solcon_write_solutions();
+   fail = solcon_write_standard_solutions();
 }

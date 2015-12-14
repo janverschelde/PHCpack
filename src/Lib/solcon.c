@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "solcon.h"
 
-int solcon_read_solutions ( void )
+int solcon_read_standard_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -36,7 +36,7 @@ int solcon_read_multprec_solutions ( void )
    return fail;
 }
 
-int solcon_write_solutions ( void )
+int solcon_write_standard_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -68,7 +68,7 @@ int solcon_write_multprec_solutions ( void )
    return fail;
 }
 
-int solcon_number_of_solutions ( int *length )
+int solcon_number_of_standard_solutions ( int *length )
 {
    int *a,fail;
    double *c;
@@ -100,7 +100,7 @@ int solcon_number_of_multprec_solutions ( int *length )
    return fail;
 }
 
-int solcon_dimension_of_solutions ( int *dimension )
+int solcon_dimension_of_standard_solutions ( int *dimension )
 {
    int *a,fail;
    double *c;
@@ -132,7 +132,7 @@ int solcon_dimension_of_multprec_solutions ( int *dimension )
    return fail;
 }
 
-int solcon_retrieve_solution ( int n, int k, int *m, double *sol )
+int solcon_retrieve_standard_solution ( int n, int k, int *m, double *sol )
 {
    int fail;
    fail = _ada_use_c2phc(34,&k,m,sol);
@@ -364,7 +364,7 @@ int solcon_write_current_multprec_solution_string ( int *k, int n, char *s )
    return fail;
 }
 
-int solcon_replace_solution ( int n, int k, int m, double *sol )
+int solcon_replace_standard_solution ( int n, int k, int m, double *sol )
 {
    int b[2],fail;
    b[0] = n;
@@ -391,7 +391,7 @@ int solcon_replace_quaddobl_solution ( int n, int k, int m, double *sol )
    return fail;
 }
 
-int solcon_append_solution ( int n, int m, double *sol )
+int solcon_append_standard_solution ( int n, int m, double *sol )
 {
    int *a,fail;
    int b[2];
@@ -421,7 +421,7 @@ int solcon_append_quaddobl_solution ( int n, int m, double *sol )
    return fail;
 }
 
-int solcon_clear_solutions ( void )
+int solcon_clear_standard_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
@@ -684,7 +684,7 @@ int solcon_close_solution_output_file ( void )
    return fail;
 }
 
-int solcon_length_solution_string ( int k, int *n )
+int solcon_length_standard_solution_string ( int k, int *n )
 {
    int fail;
    double *c;
@@ -716,7 +716,7 @@ int solcon_length_multprec_solution_string ( int k, int *n )
    return fail;
 }
 
-int solcon_write_solution_string ( int k, int n, char *s )
+int solcon_write_standard_solution_string ( int k, int n, char *s )
 {
    int a[2],b[n],fail,i;
    double *c;
@@ -817,7 +817,7 @@ int solcon_write_solution_diagnostics ( int k, int n, char *s )
    return fail;
 }
 
-int solcon_append_solution_string ( int nv, int nc, char *s )
+int solcon_append_standard_solution_string ( int nv, int nc, char *s )
 {
    int a[2], b[nc],fail,i;
    double *c;

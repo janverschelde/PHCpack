@@ -125,7 +125,7 @@ void retrieve_and_write ( int n, int k )
    int i,m,fail;
    double sol[2*n+5];
 
-   fail = solcon_retrieve_solution(n,k,&m,sol);
+   fail = solcon_retrieve_standard_solution(n,k,&m,sol);
 
    if (fail == 1)
       printf("some failure occurred...\n");
@@ -163,7 +163,7 @@ void test_replace_solution ( int n )
    sol[2*n+4] = 5.555; 
    for(i=0; i<2*n; i++) sol[2+i] = i;
 
-   fail = solcon_replace_solution(n,k,m,sol);
+   fail = solcon_replace_standard_solution(n,k,m,sol);
 
    if (fail == 1)
       printf("some failure occurred...\n");
@@ -227,7 +227,7 @@ LIST *test_retrievals ( int len, int n )
 
    for(k=1; k<=len; k++)
    {
-      fail = solcon_retrieve_solution(n,k,&m,sol);
+      fail = solcon_retrieve_standard_solution(n,k,&m,sol);
       printf("Solution %d :\n", k);
       err = sol[2*n+2];
       rco = sol[2*n+3];
@@ -254,7 +254,7 @@ void test_additions ( int n, LIST *l )
       sol[2*n+2] = p->err;
       sol[2*n+3] = p->rco;
       sol[2*n+4] = p->res;
-      fail = solcon_append_solution(n,m,sol);
+      fail = solcon_append_standard_solution(n,m,sol);
    }
 }
 
@@ -264,22 +264,22 @@ void test_solution_container ( void )
    double *c;
    LIST *l;
 
-   fail = solcon_read_solutions();
+   fail = solcon_read_standard_solutions();
    printf("The solution list :\n");
-   fail = solcon_write_solutions();
-   fail = solcon_number_of_solutions(&len);
+   fail = solcon_write_standard_solutions();
+   fail = solcon_number_of_standard_solutions(&len);
    printf("Number of solutions : %d\n",len);
-   fail = solcon_dimension_of_solutions(&n);
+   fail = solcon_dimension_of_standard_solutions(&n);
    printf("Dimension of vectors : %d\n",n);
    test_solution_retrieval(n);
    test_replace_solution(n);
    l = test_retrievals(len,n);
    printf("The solution list is reverse order : \n");
    write_solution_list(l,n);
-   fail = solcon_clear_solutions();
+   fail = solcon_clear_standard_solutions();
    test_additions(n,l);   
    printf("The reconstructed list in reverse order :\n");
-   fail = solcon_write_solutions(); 
+   fail = solcon_write_standard_solutions(); 
 }
 
 void test_incremental_read_and_write ( void )
@@ -316,18 +316,18 @@ void test_solution_strings ( void )
 {
    int len,fail,k,n,n0,n1,n2;
 
-   fail = solcon_read_solutions();
-   fail = solcon_number_of_solutions(&len);
+   fail = solcon_read_standard_solutions();
+   fail = solcon_number_of_standard_solutions(&len);
    printf("Number of solutions : %d\n",len);
    printf("Give solution number : "); scanf("%d",&k);
-   fail = solcon_length_solution_string(k,&n);
+   fail = solcon_length_standard_solution_string(k,&n);
    fail = solcon_length_solution_intro(k,&n0);
    fail = solcon_length_solution_vector(k,&n1);
    fail = solcon_length_solution_diagnostics(k,&n2);
    printf("Length of solution %d : %d = %d + %d + %d\n",k,n,n0,n1,n2);
    {
       char s[n+1],s0[n0+1],s1[n1+1],s2[n2+1];
-      fail = solcon_write_solution_string(k,n,s);
+      fail = solcon_write_standard_solution_string(k,n,s);
       printf("Solution %d as string :\n%s\n",k,s);
       fail = solcon_write_solution_intro(k,n0,s0);
       printf("introduction to solution %d :\n%s",k,s0);
@@ -346,9 +346,9 @@ void parse_solution_strings ( void )
 {
    int fail,len,dim;
 
-   fail = solcon_read_solutions();
-   fail = solcon_number_of_solutions(&len);
-   fail = solcon_dimension_of_solutions(&dim);
+   fail = solcon_read_standard_solutions();
+   fail = solcon_number_of_standard_solutions(&len);
+   fail = solcon_dimension_of_standard_solutions(&dim);
    {
       char* solutions[len];
       int nc[len];
@@ -356,9 +356,10 @@ void parse_solution_strings ( void )
 
       for(k=0; k<len; k++)
       {
-         fail = solcon_length_solution_string(k+1,&nc[k]);
+         fail = solcon_length_standard_solution_string(k+1,&nc[k]);
          solutions[k] = (char*)calloc(nc[k]+1,sizeof(char));
-         fail = solcon_write_solution_string(k+1,nc[k]+1,solutions[k]);
+         fail = solcon_write_standard_solution_string
+                  (k+1,nc[k]+1,solutions[k]);
       }
       printf("\nCheck for all solution strings ...\n");
       do
@@ -369,12 +370,13 @@ void parse_solution_strings ( void )
          printf("Solution %d :\n%s\n",k,solutions[k-1]);
       } while (k > 0);
       printf("\nClearing the solution container ...\n");
-      solcon_clear_solutions();
+      solcon_clear_standard_solutions();
       printf("\nAppending the solution strings to the container ...\n");
       for(k=0; k<len; k++)
-         fail = solcon_append_solution_string(dim,nc[k]+1,solutions[k]);
+         fail = solcon_append_standard_solution_string
+                   (dim,nc[k]+1,solutions[k]);
       printf("\nThe solutions in the container :\n");
-      solcon_write_solutions();
+      solcon_write_standard_solutions();
    }
 }
 
@@ -491,8 +493,8 @@ void test_multprec_container ( void )
 void standard_next_retrievals ( void )
 {
    int dim,len,fail;
-   fail = solcon_dimension_of_solutions(&dim);
-   fail = solcon_number_of_solutions(&len);
+   fail = solcon_dimension_of_standard_solutions(&dim);
+   fail = solcon_number_of_standard_solutions(&len);
    printf("The container has %d solutions of dimension %d.\n",len,dim);
    {
       int i,k,m;
@@ -515,15 +517,15 @@ void standard_next_retrievals ( void )
 
 void test_standard_next_retrievals ( void )
 {
-   int fail = solcon_read_solutions();
+   int fail = solcon_read_standard_solutions();
    standard_next_retrievals();
 }
 
 void retrieve_all_standard_solution_strings ( void )
 {
    int dim,len,fail;
-   fail = solcon_dimension_of_solutions(&dim);
-   fail = solcon_number_of_solutions(&len);
+   fail = solcon_dimension_of_standard_solutions(&dim);
+   fail = solcon_number_of_standard_solutions(&len);
    printf("The container has %d solutions of dimension %d.\n",len,dim);
    {
       int k,len;
@@ -546,6 +548,6 @@ void retrieve_all_standard_solution_strings ( void )
 
 void test_retrieve_all_standard_solution_strings ( void )
 {
-   int fail = solcon_read_solutions();
+   int fail = solcon_read_standard_solutions();
    retrieve_all_standard_solution_strings();
 }

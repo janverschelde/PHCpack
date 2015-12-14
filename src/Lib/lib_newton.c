@@ -119,14 +119,14 @@ void test_standard_Newton_step ( void )
    fail = syscon_read_standard_system();
    fail = syscon_number_of_standard_polynomials(&dim);
    printf("The system container has %d polynomials.\n",dim);
-   fail = solcon_read_solutions();
-   fail = solcon_number_of_solutions(&len);
+   fail = solcon_read_standard_solutions();
+   fail = solcon_number_of_standard_solutions(&len);
    printf("The solution container has size %d.\n",len);
-   fail = solcon_dimension_of_solutions(&dim);
+   fail = solcon_dimension_of_standard_solutions(&dim);
    printf("The solutions in the container have dimension %d.\n",dim);
    fail = standard_Newton_step();
    printf("The solutions after the Newton step :\n");
-   fail = solcon_write_solutions();
+   fail = solcon_write_standard_solutions();
 }
 
 void test_standard_Newton_Laurent_step ( void )
@@ -137,14 +137,14 @@ void test_standard_Newton_Laurent_step ( void )
    fail = syscon_read_standard_Laurent_system();
    fail = syscon_number_of_standard_Laurentials(&dim);
    printf("The system container has %d Laurent polynomials.\n",dim);
-   fail = solcon_read_solutions();
-   fail = solcon_number_of_solutions(&len);
+   fail = solcon_read_standard_solutions();
+   fail = solcon_number_of_standard_solutions(&len);
    printf("The solution container has size %d.\n",len);
-   fail = solcon_dimension_of_solutions(&dim);
+   fail = solcon_dimension_of_standard_solutions(&dim);
    printf("The solutions in the container have dimension %d.\n",dim);
    fail = standard_Newton_Laurent_step();
    printf("The solutions after the Newton step :\n");
-   fail = solcon_write_solutions();
+   fail = solcon_write_standard_solutions();
 }
 
 void test_dobldobl_Newton_step ( void )
@@ -269,11 +269,11 @@ void test_deflate ( void )
    fail = copy_start_solutions_to_container();
    fail = syscon_number_of_standard_polynomials(&dim);
    printf("The system container has %d polynomials.\n",dim);
-   fail = solcon_number_of_solutions(&len);
+   fail = solcon_number_of_standard_solutions(&len);
    printf("The solution container has size %d.\n",len);
    fail = standard_deflate();
    printf("The solutions after deflation :\n");
-   fail = solcon_write_solutions();
+   fail = solcon_write_standard_solutions();
 }
 
 void test_varbprec_Newton_Laurent_step ( void )

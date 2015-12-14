@@ -101,7 +101,7 @@ int input_output_on_files ( int precision )
       fail = solve_system(&rc,nbtasks);
       printf("\nThe root count : %d\n",rc);
       printf("\nThe solutions :\n");
-      fail = solcon_write_solutions();
+      fail = solcon_write_standard_solutions();
    }
    else if(precision == 1)
    {
@@ -142,7 +142,7 @@ int Laurent_input_output_on_files ( int precision )
       fail = solve_Laurent_system(&rc,0,nbtasks); /* not silent by default */
       printf("\nThe root count : %d\n",rc);
       printf("\nThe solutions :\n");
-      fail = solcon_write_solutions();
+      fail = solcon_write_standard_solutions();
    }
    else if(precision == 1)
    {
@@ -196,17 +196,17 @@ int standard_interactive_input_output ( void )
    fail = solve_system(&rc,nbtasks);
    printf("\nThe root count : %d\n",rc);
    /* printf("\nThe solutions :\n");
-   fail = solcon_write_solutions(); */
+   fail = solcon_write_standard_solutions(); */
    printf("interactive selection of solutions... \n");
    do
    {
       printf("\nGive an index to a solution (-1 to exit) : ");
       scanf("%d",&k);
       if(k < 0) break;
-      fail = solcon_length_solution_string(k,&len);
+      fail = solcon_length_standard_solution_string(k,&len);
       {
          char s[len];
-         fail = solcon_write_solution_string(k,len,s);
+         fail = solcon_write_standard_solution_string(k,len,s);
          printf("\nSolution %d : \n%s",k,s);
       } 
    } while (k >= 0);
@@ -341,17 +341,17 @@ int standard_interactive_Laurent_input_output ( void )
    fail = solve_Laurent_system(&rc,0,nbtasks); /* not silent by default */
    printf("\nThe root count : %d\n",rc);
    /* printf("\nThe solutions :\n");
-   fail = solcon_write_solutions(); */
+   fail = solcon_write_standard_solutions(); */
    printf("interactive selection of solutions... \n");
    do
    {
       printf("\nGive an index to a solution (-1 to exit) : ");
       scanf("%d",&k);
       if(k < 0) break;
-      fail = solcon_length_solution_string(k,&len);
+      fail = solcon_length_standard_solution_string(k,&len);
       {
          char s[len];
-         fail = solcon_write_solution_string(k,len,s);
+         fail = solcon_write_standard_solution_string(k,len,s);
          printf("\nSolution %d : \n%s",k,s);
       } 
    } while (k >= 0);

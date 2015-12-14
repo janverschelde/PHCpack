@@ -449,7 +449,7 @@ void solve_standard_start_system ( int len )
    }
    printf("writing random coefficient system and its solutions to file ...\n");
    fail = celcon_write_random_coefficient_system();
-   fail = solcon_write_solutions();
+   fail = solcon_write_standard_solutions();
 }
 
 void solve_dobldobl_start_system ( int len ) 

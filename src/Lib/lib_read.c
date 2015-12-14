@@ -115,7 +115,7 @@ int named_input_files ( void )
       fail = read_standard_start_system_from_file(n, inputfile);
       fail = copy_container_to_start_system();
       printf("\nThe system read :\n"); fail = write_standard_start_system();
-      fail = solcon_number_of_solutions(&len);
+      fail = solcon_number_of_standard_solutions(&len);
       printf("\nNumber of start solutions in container : %d\n", len);
    }
    else if(mode == 5)

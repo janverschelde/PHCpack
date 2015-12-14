@@ -135,7 +135,7 @@ int monodromy_breakup ( int nbloops, int n, int k, int d )
       fail = new_slices(k,n);
       fail = store_gammas(n);
       fail = track_paths();     /* swapping slices happens here */
-      fail = solcon_clear_solutions();
+      fail = solcon_clear_standard_solutions();
       fail = store_gammas(n);
       fail = track_paths();
       fail = store_solutions();

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include "solcon.h"
 #include "witset.h"
 
 #define v 0 /* verbose flag */
@@ -411,9 +412,9 @@ int standard_assign_labels ( int n, int nbsols )
 
    for(i=1; i<=nbsols; i++)
    {
-      fail = solcon_retrieve_solution(n,i,&m,x);
+      fail = solcon_retrieve_standard_solution(n,i,&m,x);
       m = i;
-      fail = solcon_replace_solution(n,i,m,x);
+      fail = solcon_replace_standard_solution(n,i,m,x);
    }
 
    return fail;

@@ -17,7 +17,7 @@ extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
 extern void adafinal( void );
 #endif
 
-int solcon_read_solutions ( void );
+int solcon_read_standard_solutions ( void );
 /* 
  * DESCRIPTION :
  *   Prompts the user for a file, reads solutions from file, and puts the
@@ -44,7 +44,7 @@ int solcon_read_multprec_solutions ( void );
  *   and puts the solutions in the multiprecision container;
  *   returns 0 if okay, otherwise fail value. */
 
-int solcon_write_solutions ( void );
+int solcon_write_standard_solutions ( void );
 /*
  * DESCRIPTION :
  *   Writes the solutions in the container to screen. */
@@ -64,7 +64,7 @@ int solcon_write_multprec_solutions ( void );
  * DESCRIPTION :
  *   Writes the solutions in the multiprecision container to screen. */
 
-int solcon_number_of_solutions ( int *length );
+int solcon_number_of_standard_solutions ( int *length );
 /*
  * DESCRIPTION :
  *   Returns in length the number of the solutions in the container. */
@@ -87,7 +87,7 @@ int solcon_number_of_multprec_solutions ( int *length );
  *   Returns in length the number of the solutions
  *   in the multiprecision solutions container. */
 
-int solcon_dimension_of_solutions ( int *dimension );
+int solcon_dimension_of_standard_solutions ( int *dimension );
 /*
  * DESCRIPTION :
  *   Returns in dimension the length of the vectors in the container. */
@@ -110,7 +110,7 @@ int solcon_dimension_of_multprec_solutions ( int *dimension );
  *   Returns in dimension the length of the vectors in 
  *   the container for quad double solutions. */
 
-int solcon_retrieve_solution ( int n, int k, int *m, double *sol );
+int solcon_retrieve_standard_solution ( int n, int k, int *m, double *sol );
 /* 
  * DESCRIPTION :
  *   Returns the k-th solution n-vector in the container in m and sol.
@@ -366,7 +366,7 @@ int solcon_write_current_multprec_solution_string ( int *k, int n, char *s );
  *   The value of k is the place of the solution in the container,
  *   if k equals zero, then there is no current solution. */
 
-int solcon_replace_solution ( int n, int k, int m, double *sol );
+int solcon_replace_standard_solution ( int n, int k, int m, double *sol );
 /*
  * DESCRIPTION :
  *   Replaces the k-th solution n-vector in the container by m and sol,
@@ -426,7 +426,7 @@ int solcon_replace_quaddobl_solution ( int n, int k, int m, double *sol );
  *               the inverse of the estimate for the condition number;
  *               the norm of the residual vector. */
 
-int solcon_append_solution ( int n, int m, double *sol );
+int solcon_append_standard_solution ( int n, int m, double *sol );
 /*
  * DESCRIPTION :
  *   Appends a solution n-vector to the container with m and sol.
@@ -484,7 +484,7 @@ int solcon_append_quaddobl_solution ( int n, int m, double *sol );
  *               the inverse of the estimate for the condition number;
  *               the norm of the residual vector. */
 
-int solcon_clear_solutions ( void );
+int solcon_clear_standard_solutions ( void );
 /*
  * DESCRIPTION :
  *   Clears the content of the solution container. */
@@ -771,7 +771,7 @@ int solcon_close_solution_output_file ( void );
  * DESCRIPTION :
  *   The solution output file is close for any more writing. */
 
-int solcon_length_solution_string ( int k, int *n );
+int solcon_length_standard_solution_string ( int k, int *n );
 /*
  * DESCRIPTION :
  *   Returns in n the number of characters in the string
@@ -795,7 +795,7 @@ int solcon_length_multprec_solution_string ( int k, int *n );
  *   Returns in n the number of characters in the string
  *   representation of the k-th multiprecision solution in the container. */
 
-int solcon_write_solution_string ( int k, int n, char *s );
+int solcon_write_standard_solution_string ( int k, int n, char *s );
 /*
  * DESCRIPTION :
  *   Writes the k-th solution in the solution container to the
@@ -855,7 +855,7 @@ int solcon_write_solution_diagnostics ( int k, int n, char *s );
  *   Writes the diagnostics of the k-th solution in the solution container
  *   to the string s of n+1 characters.  The last character is \0. */
 
-int solcon_append_solution_string ( int nv, int nc, char *s );
+int solcon_append_standard_solution_string ( int nv, int nc, char *s );
 /*
  * DESCRIPTION :
  *   Appends a solution to the container, using the information in the

@@ -2408,7 +2408,7 @@ static PyObject *py2c_solcon_read_standard_solutions
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = solcon_read_solutions();
+   fail = solcon_read_standard_solutions();
               
    return Py_BuildValue("i",fail);
 }
@@ -2456,7 +2456,7 @@ static PyObject *py2c_solcon_write_standard_solutions
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = solcon_write_solutions();
+   fail = solcon_write_standard_solutions();
               
    return Py_BuildValue("i",fail);
 }
@@ -2504,7 +2504,7 @@ static PyObject *py2c_solcon_clear_standard_solutions
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;   
-   fail = solcon_clear_solutions();
+   fail = solcon_clear_standard_solutions();
               
    return Py_BuildValue("i",fail);
 }
@@ -2564,7 +2564,7 @@ static PyObject *py2c_solcon_length_standard_solution_string
 
    initialize();
    if(!PyArg_ParseTuple(args,"i",&i)) return NULL;
-   fail = solcon_length_solution_string(i,&number);
+   fail = solcon_length_standard_solution_string(i,&number);
 
    return Py_BuildValue("i",number);
 }
@@ -2616,7 +2616,7 @@ static PyObject *py2c_solcon_write_standard_solution_string
    initialize();
    if(!PyArg_ParseTuple(args,"ii",&n,&k)) return NULL;
    p = (char*)malloc((k+1)*sizeof(char));
-   fail = solcon_write_solution_string(n,k,p);
+   fail = solcon_write_standard_solution_string(n,k,p);
                  
    a = Py_BuildValue("s",p);
 
@@ -2925,7 +2925,7 @@ static PyObject *py2c_solcon_append_standard_solution_string
 
    /* printf("Calling solcon_append_solution_string ...\n"); */
 
-   fail = solcon_append_solution_string(n,k,p);
+   fail = solcon_append_standard_solution_string(n,k,p);
 
    if(fail != 0) printf("Failed to append solution %s.\n",p);
 
@@ -2987,7 +2987,7 @@ static PyObject *py2c_solcon_number_of_standard_solutions
 
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
-   result = solcon_number_of_solutions(&n);
+   result = solcon_number_of_standard_solutions(&n);
                  
    return Py_BuildValue("i",n);
 }

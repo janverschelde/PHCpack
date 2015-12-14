@@ -182,7 +182,7 @@ int call_initialize_standard_homotopy ( int *index )
    fail = read_target_system_without_solutions();
    fail = read_standard_start_system();
    fail = copy_start_solutions_to_container();
-   fail = solcon_number_of_solutions(&len);
+   fail = solcon_number_of_standard_solutions(&len);
    printf("Number of start solutions : %d\n",len);
    printf("-> give index of solution : "); scanf("%d",index);
    printf("Fixed gamma constant ? (1 = yes/0 = no) "); scanf("%d",&fixed);
@@ -315,11 +315,11 @@ int write_standard_solution ( int index )
 {
    int fail,nb;
 
-   fail = solcon_length_solution_string(index,&nb);
+   fail = solcon_length_standard_solution_string(index,&nb);
    {
       char solution[nb];
 
-      fail = solcon_write_solution_string(index,nb,solution);
+      fail = solcon_write_standard_solution_string(index,nb,solution);
       printf("\nsolution %d :\n%s\n",index,solution);
    }
 

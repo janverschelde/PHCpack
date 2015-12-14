@@ -72,7 +72,7 @@ void standard_test ( void )
    fail = solve_with_standard_doubles(max,eps,&nit);
 
    printf("\nNumber of iterations : %d\n",nit);
-   fail = solcon_write_solutions();
+   fail = solcon_write_standard_solutions();
 }
 
 void dobldobl_test ( void )

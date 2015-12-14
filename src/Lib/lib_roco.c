@@ -132,8 +132,8 @@ int compute_m_homogeneous_Bezout_number ( int *b )
 
    fail = solve_linear_product_system();
    printf("\nThe solutions : \n");
-   fail = solcon_write_solutions();
-   fail = solcon_number_of_solutions(&nbsols);
+   fail = solcon_write_standard_solutions();
+   fail = solcon_number_of_standard_solutions(&nbsols);
    if(mbz == nbsols)
       printf("\nComputed %d solutions, as many as the root count.\n",nbsols);
    else
@@ -153,8 +153,8 @@ int construct_start_system ( int r )
    fail = syscon_write_standard_system();
    fail = solve_linear_product_system();
    printf("\nThe solutions : \n");
-   fail = solcon_write_solutions();
-   fail = solcon_number_of_solutions(&nbsols);
+   fail = solcon_write_standard_solutions();
+   fail = solcon_number_of_standard_solutions(&nbsols);
    if(r == nbsols)
       printf("\nComputed %d solutions, as many as the root count.\n",nbsols);
    else
