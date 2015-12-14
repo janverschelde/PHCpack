@@ -369,7 +369,8 @@ int solcon_write_current_multprec_solution_string ( int *k, int n, char *s );
 int solcon_replace_solution ( int n, int k, int m, double *sol );
 /*
  * DESCRIPTION :
- *   Replaces the k-th solution n-vector in the container by m and sol.
+ *   Replaces the k-th solution n-vector in the container by m and sol,
+ *   given in standard double precision.
  *   The function returns 0 if okay, otherwise it returns the fail value.
  *
  * ON ENTRY:
@@ -381,6 +382,46 @@ int solcon_replace_solution ( int n, int k, int m, double *sol );
  *            2) the real and imaginary parts of the coefficients
  *               of the solution vector are in the next 2*n doubles;
  *            3) the last three doubles are respectively
+ *               the norm of the last Newton update on the solution;
+ *               the inverse of the estimate for the condition number;
+ *               the norm of the residual vector. */
+
+int solcon_replace_dobldobl_solution ( int n, int k, int m, double *sol );
+/*
+ * DESCRIPTION :
+ *   Replaces the k-th solution n-vector in the container by m and sol,
+ *   given in double double precision.
+ *   The function returns 0 if okay, otherwise it returns the fail value.
+ *
+ * ON ENTRY:
+ *   n        the dimension of the solution vector;
+ *   k        the position of the solution in the list.
+ *   m        the multiplicity label of the k-th solution;
+ *   sol      4*n+10 doubles, with the following meaning:
+ *            1) the complex continuation parameter t is sol[0]+sol[1]*I;
+ *            2) the real and imaginary parts of the coefficients
+ *               of the solution vector are in the next 4*n doubles;
+ *            3) the last three double doubles are respectively
+ *               the norm of the last Newton update on the solution;
+ *               the inverse of the estimate for the condition number;
+ *               the norm of the residual vector. */
+
+int solcon_replace_quaddobl_solution ( int n, int k, int m, double *sol );
+/*
+ * DESCRIPTION :
+ *   Replaces the k-th solution n-vector in the container by m and sol,
+ *   given in quad double precision.
+ *   The function returns 0 if okay, otherwise it returns the fail value.
+ *
+ * ON ENTRY:
+ *   n        the dimension of the solution vector;
+ *   k        the position of the solution in the list.
+ *   m        the multiplicity label of the k-th solution;
+ *   sol      8*n+20 doubles, with the following meaning:
+ *            1) the complex continuation parameter t is sol[0]+sol[1]*I;
+ *            2) the real and imaginary parts of the coefficients
+ *               of the solution vector are in the next 4*n doubles;
+ *            3) the last three quad doubles are respectively
  *               the norm of the last Newton update on the solution;
  *               the inverse of the estimate for the condition number;
  *               the norm of the residual vector. */

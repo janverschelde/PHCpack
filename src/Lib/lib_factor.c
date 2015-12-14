@@ -11,12 +11,6 @@
 
 #define v 0 /* verbose flag */
 
-int assign_labels ( int n, int nbsols );
-/* 
- * DESCRIPTION :
- *   Assigns a unique label between 1 and nbsols for each solution in the
- *   solutions container, using the multiplicity field of the solution. */
-
 int set_trace_slice ( int first );
 /*
  * DESCRIPTION :
@@ -69,7 +63,7 @@ int main ( int argc, char *argv[] )
       }
    }
 
-   fail = assign_labels(n,deg);
+   fail = assign_labels(n,deg,0);
 
    printf("\nGive the number of loops : ");
    scanf("%d",&nbloops);
@@ -81,21 +75,6 @@ int main ( int argc, char *argv[] )
    adafinal();
 
    return 0;
-}
-
-int assign_labels ( int n, int nbsols )
-{
-   int i,j,m,fail;
-   double x[2*n+5];
-
-   for(i=1; i<=nbsols; i++)
-   {
-      fail = solcon_retrieve_solution(n,i,&m,x);
-      m = i;
-      fail = solcon_replace_solution(n,i,m,x);
-   }
-
-   return fail;
 }
 
 int set_trace_slice ( int first )

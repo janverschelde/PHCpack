@@ -341,6 +341,32 @@ int set_state_to_silent ( void );
  * DESCRIPTION :
  *   Sets the state of monodromy permutations to silent. */
 
+int assign_labels ( int n, int nbsols, int precision );
+/* 
+ * DESCRIPTION :
+ *   Assigns a unique label between 1 and nbsols for each solution in the
+ *   solutions container, using the multiplicity field of the solution.
+ *   The precision is determined by the value of precision, which is
+ *   either 0 for double, 1 for double double, or 2 for quad double. */
+
+int standard_assign_labels ( int n, int nbsols );
+/* 
+ * DESCRIPTION :
+ *   Assigns a unique label between 1 and nbsols to the multiplicity field
+ *   for each solution in the standard double solutions container. */
+
+int dobldobl_assign_labels ( int n, int nbsols );
+/* 
+ * DESCRIPTION :
+ *   Assigns a unique label between 1 and nbsols to the multiplicity field
+ *   for each solution in the double double solutions container. */
+
+int quaddobl_assign_labels ( int n, int nbsols );
+/* 
+ * DESCRIPTION :
+ *   Assigns a unique label between 1 and nbsols to the multiplicity field
+ *   for each solution in the quad double solutions container. */
+
 int initialize_sampler ( int dim );
 /*
  * DESCRIPTION :

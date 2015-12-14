@@ -395,6 +395,60 @@ int set_state_to_silent ( void )
    return fail;
 }
 
+int assign_labels ( int n, int nbsols, int precision )
+{
+   if(precision == 0) return standard_assign_labels(n,nbsols);
+   if(precision == 1) return dobldobl_assign_labels(n,nbsols);
+   if(precision == 2) return quaddobl_assign_labels(n,nbsols);
+
+   return -1;
+}
+
+int standard_assign_labels ( int n, int nbsols )
+{
+   int i,j,m,fail;
+   double x[2*n+5];
+
+   for(i=1; i<=nbsols; i++)
+   {
+      fail = solcon_retrieve_solution(n,i,&m,x);
+      m = i;
+      fail = solcon_replace_solution(n,i,m,x);
+   }
+
+   return fail;
+}
+
+int dobldobl_assign_labels ( int n, int nbsols )
+{
+   int i,j,m,fail;
+   double x[4*n+10];
+
+   for(i=1; i<=nbsols; i++)
+   {
+      fail = solcon_retrieve_dobldobl_solution(n,i,&m,x);
+      m = i;
+      fail = solcon_replace_dobldobl_solution(n,i,m,x);
+   }
+
+   return fail;
+}
+
+int quaddobl_assign_labels ( int n, int nbsols )
+{
+   int i,j,m,fail;
+   double x[8*n+20];
+
+   for(i=1; i<=nbsols; i++)
+   {
+      fail = solcon_retrieve_quaddobl_solution(n,i,&m,x);
+      m = i;
+      fail = solcon_replace_quaddobl_solution(n,i,m,x);
+   }
+
+   return fail;
+}
+
 int initialize_sampler ( int dim )
 {
    int *b,fail;

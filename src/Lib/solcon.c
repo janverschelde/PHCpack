@@ -373,6 +373,24 @@ int solcon_replace_solution ( int n, int k, int m, double *sol )
    return fail;
 }
 
+int solcon_replace_dobldobl_solution ( int n, int k, int m, double *sol )
+{
+   int b[2],fail;
+   b[0] = n;
+   b[1] = m;
+   fail = _ada_use_c2phc(345,&k,b,sol);
+   return fail;
+}
+
+int solcon_replace_quaddobl_solution ( int n, int k, int m, double *sol )
+{
+   int b[2],fail;
+   b[0] = n;
+   b[1] = m;
+   fail = _ada_use_c2phc(395,&k,b,sol);
+   return fail;
+}
+
 int solcon_append_solution ( int n, int m, double *sol )
 {
    int *a,fail;
