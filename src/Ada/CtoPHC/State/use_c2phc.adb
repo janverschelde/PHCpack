@@ -2313,15 +2313,13 @@ function use_c2phc ( job : integer32;
      -- operations on double double system container
       when 330..339 => return use_syscon(job-130,a,b,c);
      -- operations on double double solution container
-      when 340..344 => return use_solcon(job-300,a,b,c);
-      when 346..349 => return use_solcon(job-300,a,b,c);
+      when 340..349 => return use_solcon(job-300,a,b,c);
       when 370..371 => return use_solcon(job-300,a,b,c);
       when 378 => return use_solcon(job-300,a,b,c);
      -- operations on quad double system container
       when 380..389 => return use_syscon(job-170,a,b,c);
      -- operations on quad double solution container
-      when 390..394 => return use_solcon(job-310,a,b,c);
-      when 396..399 => return use_solcon(job-310,a,b,c);
+      when 390..399 => return use_solcon(job-310,a,b,c);
       when 420..421 => return use_solcon(job-310,a,b,c);
       when 428 => return use_solcon(job-310,a,b,c);
      -- operations on monomial maps as solutions to binomial systems

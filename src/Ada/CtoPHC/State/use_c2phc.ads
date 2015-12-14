@@ -303,6 +303,8 @@ function use_c2phc ( job : integer32;
 --                 one double double for the norm of last Newton update,
 --                 one double double for the inverse of condition# estimate,
 --                 one double double for the norm of the residual;
+--         = 345 : changes the double double solution with data in b and c,
+--                 as the double double equivalent to job 35;
 --         = 346 : appends the solution with data in b  = (n,m) and
 --                 (also see job = 344 for info) to the container;
 --         = 347 : clears all solutions from the container;
@@ -335,6 +337,8 @@ function use_c2phc ( job : integer32;
 --                 one quad double for the norm of last Newton update,
 --                 one quad double for the inverse of condition# estimate,
 --                 one quad double for the norm of the residual;
+--         = 395 : changes the quad double solution with data in b and c,
+--                 as the quad double equivalent to job 35;
 --         = 396 : appends the solution with data in b  = (n,m) and
 --                 (also see job = 394 for info) to the container;
 --         = 397 : clears all solutions from the container;

@@ -208,7 +208,7 @@ function use_solcon ( job : integer32;
     end if;
   end Job84;
 
-  function Job5 return integer32 is -- change solution in container
+  function Job5 return integer32 is -- change standard solution in container
 
     use Standard_Complex_Solutions;
     ls : Link_to_Solution := Convert_to_Solution(b,c);
@@ -225,7 +225,41 @@ function use_solcon ( job : integer32;
     end if;
   end Job5;
 
-  function Job6 return integer32 is -- append solution to container
+  function Job45 return integer32 is -- change dobldobl solution in container
+
+    use DoblDobl_Complex_Solutions;
+    ls : Link_to_Solution := Convert_to_Solution(b,c);
+    v : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant natural32 := natural32(v(v'first));
+    fail : boolean;
+
+  begin
+    DoblDobl_Solutions_Container.Replace(k,ls.all,fail);
+    Clear(ls);
+    if fail
+     then return 345;
+     else return 0;
+    end if;
+  end Job45;
+
+  function Job85 return integer32 is -- change quaddobl solution in container
+
+    use QuadDobl_Complex_Solutions;
+    ls : Link_to_Solution := Convert_to_Solution(b,c);
+    v : constant C_Integer_Array := C_intarrs.Value(a);
+    k : constant natural32 := natural32(v(v'first));
+    fail : boolean;
+
+  begin
+    QuadDobl_Solutions_Container.Replace(k,ls.all,fail);
+    Clear(ls);
+    if fail
+     then return 395;
+     else return 0;
+    end if;
+  end Job85;
+
+  function Job6 return integer32 is -- append standard solution to container
 
     use Standard_Complex_Solutions;
     ls : constant Link_to_Solution := Convert_to_Solution(b,c);
@@ -235,7 +269,7 @@ function use_solcon ( job : integer32;
     return 0;
   end Job6;
 
-  function Job46 return integer32 is -- append solution to container
+  function Job46 return integer32 is -- append dobldobl solution to container
 
     use DoblDobl_Complex_Solutions;
     ls : constant Link_to_Solution := Convert_to_Solution(b,c);
@@ -245,7 +279,7 @@ function use_solcon ( job : integer32;
     return 0;
   end Job46;
 
-  function Job86 return integer32 is -- append solution to container
+  function Job86 return integer32 is -- append quaddobl solution to container
 
     use QuadDobl_Complex_Solutions;
     ls : constant Link_to_Solution := Convert_to_Solution(b,c);
@@ -1600,9 +1634,9 @@ function use_solcon ( job : integer32;
         Assign(integer32(Standard_Solutions_Container.Length),b); return 0;
       when 3 =>
         Assign(integer32(Standard_Solutions_Container.Dimension),b); return 0;
-      when 4 => return Job4; -- return solution in container
-      when 5 => return Job5; -- change solution in container
-      when 6 => return Job6; -- append solution to container
+      when 4 => return Job4; -- return standard solution in container
+      when 5 => return Job5; -- change standard solution in container
+      when 6 => return Job6; -- append standard solution to container
       when 7 => Standard_Solutions_Container.Clear; return 0;
       when 8 => return Job8;   -- drop coordinate by index from solutions
       when 9 => return Job9;   -- drop coordinate by name from solutions
@@ -1639,8 +1673,9 @@ function use_solcon ( job : integer32;
         Assign(integer32(DoblDobl_Solutions_Container.Length),b); return 0;
       when 43 =>
         Assign(integer32(DoblDobl_Solutions_Container.Dimension),b); return 0;
-      when 44 => return Job44; -- return solution in container
-      when 46 => return Job46; -- append solution to container
+      when 44 => return Job44; -- return dobldobl solution in container
+      when 45 => return Job45; -- change dobldobl solution in container
+      when 46 => return Job46; -- append dobldobl solution to container
       when 47 => DoblDobl_Solutions_Container.Clear; return 0;
       when 48 => return Job48; -- drop coordinate by index from solutions
       when 49 => return Job49; -- drop coordinate by name from solutions
@@ -1654,8 +1689,9 @@ function use_solcon ( job : integer32;
         Assign(integer32(QuadDobl_Solutions_Container.Length),b); return 0;
       when 83 =>
         Assign(integer32(QuadDobl_Solutions_Container.Dimension),b); return 0;
-      when 84 => return Job84; -- return solution in container
-      when 86 => return Job86; -- append solution to container
+      when 84 => return Job84; -- return quaddobl solution in container
+      when 85 => return Job85; -- change quaddobl solution in container
+      when 86 => return Job86; -- append quaddobl solution to container
       when 87 => QuadDobl_Solutions_Container.Clear; return 0;
       when 88 => return Job88; -- drop coordinate by index from solutions
       when 89 => return Job89; -- drop coordinate by name from solutions

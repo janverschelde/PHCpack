@@ -117,6 +117,8 @@ function use_solcon ( job : integer32;
 --                   one double double for the norm of last Newton update,
 --                   one double double for the inverse of condition# estimate,
 --                   one double double for the norm of the residual;
+--           =  45 : changes the double double solution with data in b and c,
+--                   as the double double equivalent to job 5;
 --           =  46 : appends the solution with data in b  = (n,m) and
 --                   (also see job = 44 for info) to the container;
 --           =  47 : clears all solutions from the container;
@@ -166,6 +168,8 @@ function use_solcon ( job : integer32;
 --                   one quad double for the norm of last Newton update,
 --                   one quad double for the inverse of condition# estimate,
 --                   one quad double for the norm of the residual;
+--           =  85 : changes the quad double solution with data in b and c,
+--                   as the quad double equivalent to job 5;
 --           =  86 : appends the solution with data in b  = (n,m) and
 --                   (also see job = 84 for info) to the container;
 --           =  87 : clears all solutions from the container;
