@@ -29,8 +29,8 @@ function use_c2fac ( job : integer32;
 --                 b-th coefficient of the a-th slice;
 --   job    =  4 : stores the c[0] + c[1]*I as random gamma constant
 --                 for the a-th equation;
---   job    =  5 : compute a new witness set on the new slices;
---   job    =  6 : swaps slices and solution sets to turn back;
+--   job    =  5 : compute a new standard witness set on the new slices;
+--   job    =  6 : swaps standard slices and solution sets to turn back;
 --   job    =  7 : copy embedded system from sampler to systems container;
 --   job    =  8 : copy first solution list to container;
 --   job    =  9 : put solutions with index in a from monodromy grid
@@ -105,6 +105,11 @@ function use_c2fac ( job : integer32;
 --                 for double double precision
 --                 and initializes the sampling machine, on input,
 --                 the dimension of the witness set must be in a.
+--   job    = 33 : assigns the double double coefficient, stored in the first
+--                 four doubles in c, the real and imaginary parts, to the
+--                 b-th coefficient of the a-th slice;
+--   job    = 35 : compute a new dobldobl witness set on the new slices;
+--   job    = 36 : swaps dobldobl slices and solution sets to turn back;
 --
 --   job    = 61 : prompts for a witness set in quad double precision
 --                 stores the system in the quaddobl systems container,
@@ -117,6 +122,11 @@ function use_c2fac ( job : integer32;
 --                 for quad double precision
 --                 and initializes the sampling machine, on input,
 --                 the dimension of the witness set must be in a.
+--   job    = 63 : assigns the quad double coefficient, stored in the first
+--                 eight doubles in c, the real and imaginary parts, to the
+--                 b-th coefficient of the a-th slice;
+--   job    = 65 : compute a new quaddobl witness set on the new slices;
+--   job    = 66 : swaps quaddobl slices and solution sets to turn back;
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

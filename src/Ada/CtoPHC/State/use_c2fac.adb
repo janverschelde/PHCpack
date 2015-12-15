@@ -2,7 +2,11 @@ with text_io;                           use text_io;
 with Interfaces.C;
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
 with Standard_Floating_Vectors;
@@ -266,28 +270,86 @@ function use_c2fac ( job : integer32;
       return 662;
   end Job62;
 
-  function Job3 return integer32 is -- assign gamma constant
+  function Job3 return integer32 is -- assign standard coefficient
 
     use Standard_Complex_Numbers;
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     vb : constant C_Integer_Array := C_intarrs.Value(b);
+    i : constant integer32 := integer32(va(va'first));
+    j : constant integer32 := integer32(vb(vb'first));
     vc : constant C_Double_Array
        := C_DblArrs.Value(c,Interfaces.C.ptrdiff_t(2));
     re : constant double_float := double_float(vc(0));
     im : constant double_float := double_float(vc(1));
     cf : constant Complex_Number := Create(re,im);
-    i : constant integer32 := integer32(va(va'first));
-    j : constant integer32 := integer32(vb(va'first));
 
   begin
     Sampling_Operations.Assign_Slice(cf,i,j);
     return 0;
   exception
     when others =>
-      put_line("Exception raised when assigning gamma constant.");
+      put_line("Exception raised when assigning standard coefficient.");
       return 43;
   end Job3;
+
+  function Job33 return integer32 is -- assign dobldobl coefficient
+
+    use DoblDobl_Complex_Numbers;
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    vb : constant C_Integer_Array := C_intarrs.Value(b);
+    i : constant integer32 := integer32(va(va'first));
+    j : constant integer32 := integer32(vb(vb'first));
+    vc : constant C_Double_Array
+       := C_DblArrs.Value(c,Interfaces.C.ptrdiff_t(4));
+    re_hi : constant double_float := double_float(vc(0));
+    re_lo : constant double_float := double_float(vc(1));
+    im_hi : constant double_float := double_float(vc(2));
+    im_lo : constant double_float := double_float(vc(3));
+    re : constant double_double := Create(re_hi,re_lo);
+    im : constant double_double := Create(im_hi,im_lo);
+    cf : constant Complex_Number := Create(re,im);
+
+  begin
+    DoblDobl_Sampling_Operations.Assign_Slice(cf,i,j);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised when assigning dobldobl coefficient.");
+      return 633;
+  end Job33;
+
+  function Job63 return integer32 is -- assign quaddobl coefficient
+
+    use QuadDobl_Complex_Numbers;
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    vb : constant C_Integer_Array := C_intarrs.Value(b);
+    i : constant integer32 := integer32(va(va'first));
+    j : constant integer32 := integer32(vb(vb'first));
+    vc : constant C_Double_Array
+       := C_DblArrs.Value(c,Interfaces.C.ptrdiff_t(8));
+    re_hihi : constant double_float := double_float(vc(0));
+    re_lohi : constant double_float := double_float(vc(1));
+    re_hilo : constant double_float := double_float(vc(2));
+    re_lolo : constant double_float := double_float(vc(3));
+    im_hihi : constant double_float := double_float(vc(4));
+    im_lohi : constant double_float := double_float(vc(5));
+    im_hilo : constant double_float := double_float(vc(6));
+    im_lolo : constant double_float := double_float(vc(7));
+    re : constant quad_double := Create(re_hihi,re_lohi,re_hilo,re_lolo);
+    im : constant quad_double := Create(im_hihi,im_lohi,im_hilo,im_lolo);
+    cf : constant Complex_Number := Create(re,im);
+
+  begin
+    QuadDobl_Sampling_Operations.Assign_Slice(cf,i,j);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised when assigning quaddobl coefficient.");
+      return 633;
+  end Job63;
 
   function Job4 return integer32 is -- storing gamma constant
 
@@ -759,7 +821,7 @@ function use_c2fac ( job : integer32;
       when 0 => Write_Menu; return 0;
       when 1 => return Job1; -- read witness set in double precision
       when 2 => return Job2; -- initialize standard sampling machine
-      when 3 => return Job3; -- assigning gamma constant
+      when 3 => return Job3; -- assigning standard coefficient of slice
       when 4 => return Job4; -- storing gamma constant
       when 5 => Sampling_Operations.Sample; return 0;
       when 6 => Sampling_Operations.Swap_Slices; return 0;
@@ -787,8 +849,14 @@ function use_c2fac ( job : integer32;
       when 28 => return Job28; -- state of monodromy permutations to silent
       when 31 => return Job31; -- read witness set in double double precision
       when 32 => return Job32; -- initialize dobldobl sampling machine
+      when 33 => return Job33; -- assign dobldobl coefficient of slice
+      when 35 => DoblDobl_Sampling_Operations.Sample; return 0;
+      when 36 => DoblDobl_Sampling_Operations.Swap_Slices; return 0;
       when 61 => return Job61; -- read witness set in quad double precision
       when 62 => return Job62; -- initialize quaddobl sampling machine
+      when 63 => return Job63; -- assign quaddobl coefficient of slice
+      when 65 => QuadDobl_Sampling_Operations.Sample; return 0;
+      when 66 => QuadDobl_Sampling_Operations.Swap_Slices; return 0;
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   end Handle_Jobs;
