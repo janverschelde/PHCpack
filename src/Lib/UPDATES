@@ -1,3 +1,6 @@
+Tue 15 Dec 2015 : in witset, provided wrappers to new jobs for the monodromy
+  breakup in double double and quad double precision.
+
 Mon 14 Dec 2015 : standardized naming in solcon: inserted _standard_ in the
   name of a function whenever there is dobldobl and quaddobl version.
   This changed lib_solcon.c, phcpy2c.c, witset.c, lib_read.c, lib_newton.c,

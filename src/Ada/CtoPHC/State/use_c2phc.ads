@@ -556,7 +556,12 @@ function use_c2phc ( job : integer32;
 --   job   = 632 : takes the system and the solutions from the containers
 --                 for double double precision
 --                 and initializes the sampling machine, on input,
---                 the dimension of the witness set must be in a.
+--                 the dimension of the witness set must be in a;
+--   job   = 633 : assigns the double double coefficient, stored in the first
+--                 four doubles in c, the real and imaginary parts, to the
+--                 b-th coefficient of the a-th slice;
+--   job   = 635 : compute a new dobldobl witness set on the new slices;
+--   job   = 636 : swaps dobldobl slices and solution sets to turn back;
 --
 --   job   = 661 : prompts for a witness set in quad double precision
 --                 stores the system in the quaddobl systems container,
@@ -564,11 +569,16 @@ function use_c2phc ( job : integer32;
 --                 and returns in a the dimension of the ambient space
 --                 and in b the following two numbers:
 --                   b[0] : dimension of the solution set;
---                   b[1] : degree of the solution set.
+--                   b[1] : degree of the solution set;
 --   job   = 662 : takes the system and the solutions from the containers
 --                 for quad double precision
 --                 and initializes the sampling machine, on input,
 --                 the dimension of the witness set must be in a.
+--   job   = 663 : assigns the quad double coefficient, stored in the first
+--                 eight doubles in c, the real and imaginary parts, to the
+--                 b-th coefficient of the a-th slice;
+--   job   = 665 : compute a new quaddobl witness set on the new slices;
+--   job   = 666 : swaps quaddobl slices and solution sets to turn back;
 --
 -- EMBEDDING A POLYNOMIAL SYSTEM :
 --

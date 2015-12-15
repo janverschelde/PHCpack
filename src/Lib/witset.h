@@ -457,6 +457,20 @@ int assign_coefficient_of_slice ( int i, int j, double *r );
  * DESCRIPTION :
  *   Assigns r[0] + r[1]*I as j-th coefficient of slice i. */
 
+int assign_dobldobl_coefficient_of_slice ( int i, int j, double *r );
+/*
+ * DESCRIPTION :
+ *   Assigns (r[0], r[1]) + (r[2], r[3])*I as the j-th coefficient
+ *   of the i-th slice, where r contains the real and imaginary
+ *   parts of a complex number in double double precision. */
+
+int assign_quaddobl_coefficient_of_slice ( int i, int j, double *r );
+/*
+ * DESCRIPTION :
+ *   Assigns (r[0..3] + r[4..7])*I as j-th coefficient
+ *   of the i-th slice, where r contains the real and imaginary
+ *   parts of a complex number in quad double precision. */
+
 int initialize_hyperplane_sections ( int m );
 /*
  * DESCRIPTION :
@@ -504,7 +518,19 @@ int swap_slices ( void );
 /* 
  * DESCRIPTION :
  *   Swaps the current slices with new slices and takes new solutions
- *   as start to turn back. */
+ *   as start to turn back, in standard double precision. */
+
+int swap_dobldobl_slices ( void );
+/* 
+ * DESCRIPTION :
+ *   Swaps the current slices with new slices and takes new solutions
+ *   as start to turn back, in double double precision. */
+
+int swap_quaddobl_slices ( void );
+/* 
+ * DESCRIPTION :
+ *   Swaps the current slices with new slices and takes new solutions
+ *   as start to turn back, in quad double precision. */
 
 int store_solutions ( void );
 /* 
@@ -534,7 +560,20 @@ int in_slice ( int label, int slice, int *position );
 int sample_to_new_slices ( void );
 /* 
  * DESCRIPTION :
- *   The sampler computes a new witness set for new slices. */
+ *   The sampler computes a new witness set for new slices,
+ *   in standard double precision. */
+
+int dobldobl_sample_to_new_slices ( void );
+/* 
+ * DESCRIPTION :
+ *   The sampler computes a new witness set for new slices,
+ *   in double double precision. */
+
+int quaddobl_sample_to_new_slices ( void );
+/* 
+ * DESCRIPTION :
+ *   The sampler computes a new witness set for new slices,
+ *   in quad double precision. */
 
 int track_paths ( void );
 /* 

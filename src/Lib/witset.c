@@ -585,6 +585,20 @@ int assign_coefficient_of_slice ( int i, int j, double *r )
    return fail;
 }
 
+int assign_dobldobl_coefficient_of_slice ( int i, int j, double *r )
+{
+   int fail;
+   fail = _ada_use_c2phc(633,&i,&j,r);
+   return fail;
+}
+
+int assign_quaddobl_coefficient_of_slice ( int i, int j, double *r )
+{
+   int fail;
+   fail = _ada_use_c2phc(663,&i,&j,r);
+   return fail;
+}
+
 int initialize_hyperplane_sections ( int m )
 {
    int *b,fail;
@@ -640,6 +654,22 @@ int swap_slices ( void )
    return fail;
 }
 
+int swap_dobldobl_slices ( void )
+{
+   double *c;
+   int fail,*a,*b;
+   fail = _ada_use_c2phc(636,a,b,c); /* swap start with new slices */
+   return fail;
+}
+
+int swap_quaddobl_slices ( void )
+{
+   double *c;
+   int fail,*a,*b;
+   fail = _ada_use_c2phc(666,a,b,c); /* swap start with new slices */
+   return fail;
+}
+
 int store_solutions ( void )
 {
    int *a,*b,fail;
@@ -681,6 +711,22 @@ int sample_to_new_slices ( void )
    int *a,*b,fail;
    double *c;
    fail = _ada_use_c2phc(45,a,b,c);   /* track paths */
+   return fail;
+}
+
+int dobldobl_sample_to_new_slices ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(635,a,b,c);   /* track paths */
+   return fail;
+}
+
+int quaddobl_sample_to_new_slices ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(665,a,b,c);   /* track paths */
    return fail;
 }
 
