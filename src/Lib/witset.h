@@ -46,7 +46,39 @@ int embed_quaddobl_system ( int d );
 int read_witness_set ( int *n, int *dim, int *deg );
 /*
  * DESCRIPTION :
- *   The user is prompted to give an embedded system with solutions.
+ *   The user is prompted to give an embedded system with solutions,
+ *   which will be parsed into standard double precision.
+ *   If all goes well, on return, the standard systems container
+ *   holds an embedded system with corresponding solutions in the
+ *   standard solutions container.
+ *
+ * ON RETURN :
+ *   n        ambient dimension, i.e.: total number of variables;
+ *   dim      dimension of the solution set;
+ *   deg      degree of the solution set.  */
+
+int read_dobldobl_witness_set ( int *n, int *dim, int *deg );
+/*
+ * DESCRIPTION :
+ *   The user is prompted to give an embedded system with solutions,
+ *   which will be parsed into double double precision.
+ *   If all goes well, on return, the dobldobl systems container
+ *   holds an embedded system with corresponding solutions in the
+ *   dobldobl solutions container.
+ *
+ * ON RETURN :
+ *   n        ambient dimension, i.e.: total number of variables;
+ *   dim      dimension of the solution set;
+ *   deg      degree of the solution set.  */
+
+int read_quaddobl_witness_set ( int *n, int *dim, int *deg );
+/*
+ * DESCRIPTION :
+ *   The user is prompted to give an embedded system with solutions,
+ *   which will be parsed into quad double precision.
+ *   If all goes well, on return, the quaddobl systems container
+ *   holds an embedded system with corresponding solutions in the
+ *   quaddobl solutions container.
  *
  * ON RETURN :
  *   n        ambient dimension, i.e.: total number of variables;
@@ -370,7 +402,26 @@ int quaddobl_assign_labels ( int n, int nbsols );
 int initialize_sampler ( int dim );
 /*
  * DESCRIPTION :
- *   Initializes the sampling machine with a witness set.
+ *   Initializes the sampling machine with a witness set,
+ *   in standard double precision.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the witness set.  */
+
+int initialize_dobldobl_sampler ( int dim );
+/*
+ * DESCRIPTION :
+ *   Initializes the sampling machine with a witness set,
+ *   in double double precision.
+ *
+ * ON ENTRY :
+ *   dim      dimension of the witness set.  */
+
+int initialize_quaddobl_sampler ( int dim );
+/*
+ * DESCRIPTION :
+ *   Initializes the sampling machine with a witness set,
+ *   in quad double precision.
  *
  * ON ENTRY :
  *   dim      dimension of the witness set.  */

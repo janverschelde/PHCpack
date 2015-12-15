@@ -66,12 +66,62 @@ int read_witness_set ( int *n, int *dim, int *deg )
    if(v>1)
    {
       printf("The embedded system :\n");
-      fail = _ada_use_c2phc(21,n,d,c); /* write system in container */
+      fail = syscon_write_standard_system();
    }
    if(v>1)
    {
       printf("The following solutions are in container :\n");
-      fail = _ada_use_c2phc(31,n,d,c); /* write solutions in container */
+      fail = solcon_write_standard_solutions();
+   }
+   return fail;
+}
+
+int read_dobldobl_witness_set ( int *n, int *dim, int *deg )
+{
+   int fail,m;
+   double *c;   
+   int d[2];
+
+   fail = _ada_use_c2phc(631,n,d,c);    /* read the witness set */
+   *dim = d[0];
+   *deg = d[1];
+   if(v>0) printf("The ambient dimension is %d.\n", *n); 
+   if(v>0) printf("The dimension of the solution set is %d.\n", d[0]); 
+   if(v>0) printf("The degree of the solution set is %d.\n", d[1]); 
+   if(v>1)
+   {
+      printf("The embedded system :\n");
+      fail = syscon_write_dobldobl_system();
+   }
+   if(v>1)
+   {
+      printf("The following solutions are in container :\n");
+      fail = solcon_write_dobldobl_solutions();
+   }
+   return fail;
+}
+
+int read_quaddobl_witness_set ( int *n, int *dim, int *deg )
+{
+   int fail,m;
+   double *c;   
+   int d[2];
+
+   fail = _ada_use_c2phc(661,n,d,c);    /* read the witness set */
+   *dim = d[0];
+   *deg = d[1];
+   if(v>0) printf("The ambient dimension is %d.\n", *n); 
+   if(v>0) printf("The dimension of the solution set is %d.\n", d[0]); 
+   if(v>0) printf("The degree of the solution set is %d.\n", d[1]); 
+   if(v>1)
+   {
+      printf("The embedded system :\n");
+      fail = syscon_write_quaddobl_system();
+   }
+   if(v>1)
+   {
+      printf("The following solutions are in container :\n");
+      fail = solcon_write_quaddobl_solutions();
    }
    return fail;
 }
@@ -456,6 +506,26 @@ int initialize_sampler ( int dim )
    double *c;
 
    fail = _ada_use_c2phc(42,&dim,b,c);        /* initialize sampler */
+
+   return fail;
+}
+
+int initialize_dobldobl_sampler ( int dim )
+{
+   int *b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(632,&dim,b,c);        /* initialize sampler */
+
+   return fail;
+}
+
+int initialize_quaddobl_sampler ( int dim )
+{
+   int *b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(662,&dim,b,c);        /* initialize sampler */
 
    return fail;
 }

@@ -3,6 +3,8 @@ Mon 14 Dec 2015 : standardized naming in solcon: inserted _standard_ in the
   This changed lib_solcon.c, phcpy2c.c, witset.c, lib_read.c, lib_newton.c,
   lib_roco, lib_celcon, lib_nxtsol, lib_factor, lib_usolve, phc_solve, 
   lib_adepath_d, and lib_gpupath_d.
+  Added functions to witset to read a witness set in double double and
+  quad double precision and to initialize the corresponding samplers.
 
 Sun 13 Dec 2015 : added functions in witset to embed a system in double
   double and quad double precision, with a minor change in phcpy2c.c.
