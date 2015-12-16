@@ -110,10 +110,15 @@ function use_c2fac ( job : integer32;
 --                 four doubles in c, the real and imaginary parts, to the
 --                 b-th coefficient of the a-th slice;
 --   job    = 35 : compute a new dobldobl witness set on the new slices;
---   job    = 36 : swaps dobldobl slices and solution sets to turn back;
---   job    = 37 : copy embedded system from sampler to systems container,
+--          = 36 : swaps dobldobl slices and solution sets to turn back;
+--          = 37 : copy embedded system from sampler to systems container,
 --                 for coefficients in double double precision;
 --   job    = 38 : copy first dobldobl solution list to container;
+--          = 39 : put solutions with index in a from monodromy grid
+--                 in the dobldobl solutions container (companion to job = 11);
+--          = 40 : init DoblDobl_Monodromy_Permutations with two numbers:
+--                   a[0] : number of monodromy loops,
+--                   b[0] : degree of the solution component to factor;
 --
 --   job    = 61 : prompts for a witness set in quad double precision
 --                 stores the system in the quaddobl systems container,
@@ -134,6 +139,11 @@ function use_c2fac ( job : integer32;
 --   job    = 67 : copy embedded system from sampler to systems container,
 --                 for coefficients in quad double precision;
 --   job    = 68 : copy first quaddobl solution list to container;
+--          = 69 : put solutions with index in a from monodromy grid
+--                 in the quaddobl solutions container (companion to job = 11);
+--          = 70 : init QuadDobl_Monodromy_Permutations with two numbers:
+--                   a[0] : number of monodromy loops,
+--                   b[0] : degree of the solution component to factor;
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

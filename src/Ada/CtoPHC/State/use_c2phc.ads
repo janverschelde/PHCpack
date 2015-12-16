@@ -478,7 +478,7 @@ function use_c2phc ( job : integer32;
 --         =  45 : compute a new witness set on the new slices;
 --         =  46 : swaps slices and solution sets to turn back;
 --         =  47 : copy embedded system from sampler to systems container;
---         =  48 : copy first solution list to container;
+--         =  48 : copy first standard solution list to container;
 --         =  49 : put solutions with index in a from monodromy grid
 --                 in the solutions container (companion to job = 11);
 --         =  50 : initializes Monodromy_Permutations with two numbers:
@@ -561,10 +561,15 @@ function use_c2phc ( job : integer32;
 --                 four doubles in c, the real and imaginary parts, to the
 --                 b-th coefficient of the a-th slice;
 --   job   = 635 : compute a new dobldobl witness set on the new slices;
---   job   = 636 : swaps dobldobl slices and solution sets to turn back;
---   job   = 637 : copy embedded system from sampler to systems container,
+--         = 636 : swaps dobldobl slices and solution sets to turn back;
+--         = 637 : copy embedded system from sampler to systems container,
 --                 for coefficients in double double precision;
 --   job   = 638 : copy first dobldobl solution list to container;
+--         = 639 : put solutions with index in a from monodromy grid
+--                 in the dobldobl solutions container (companion to job = 11);
+--         = 640 : init DoblDobl_Monodromy_Permutations with two numbers:
+--                   a[0] : number of monodromy loops,
+--                   b[0] : degree of the solution component to factor;
 --
 --   job   = 661 : prompts for a witness set in quad double precision
 --                 stores the system in the quaddobl systems container,
@@ -581,10 +586,15 @@ function use_c2phc ( job : integer32;
 --                 eight doubles in c, the real and imaginary parts, to the
 --                 b-th coefficient of the a-th slice;
 --   job   = 665 : compute a new quaddobl witness set on the new slices;
---   job   = 666 : swaps quaddobl slices and solution sets to turn back;
---   job   = 667 : copy embedded system from sampler to systems container,
+--         = 666 : swaps quaddobl slices and solution sets to turn back;
+--         = 667 : copy embedded system from sampler to systems container,
 --                 for coefficients in quad double precision;
 --   job   = 668 : copy first quaddobl solution list to container;
+--         = 669 : put solutions with index in a from monodromy grid
+--                 in the quaddobl solutions container (companion to job = 11);
+--         = 670 : init QuadDobl_Monodromy_Permutations with two numbers:
+--                   a[0] : number of monodromy loops,
+--                   b[0] : degree of the solution component to factor;
 --
 -- EMBEDDING A POLYNOMIAL SYSTEM :
 --

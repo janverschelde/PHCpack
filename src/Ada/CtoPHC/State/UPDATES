@@ -1,3 +1,6 @@
+Wed 16 Dec 2015 : new packages {dobldobl,quaddobl}_monodromy_permutations
+  to manage data for monodromy breakup with double doubles and quad doubles.
+
 Tue 15 Dec 2015 : documented the new job codes in use_c2phc.ads for the
   monodromy breakup in double double and quad double precision.
   Two new jobs for monodromy breakup in double double and quad double

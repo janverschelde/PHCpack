@@ -36,6 +36,8 @@ with DoblDobl_Sampling_Operations;
 with QuadDobl_Sampling_Operations;
 with Monodromy_Partitions;
 with Monodromy_Permutations;
+with DoblDobl_Monodromy_Permutations;
+with QuadDobl_Monodromy_Permutations;
 
 function use_c2fac ( job : integer32;
                      a : C_intarrs.Pointer;
@@ -469,7 +471,7 @@ function use_c2fac ( job : integer32;
       return 668;
   end Job68;
 
-  function Job9 return integer32 is -- solutions from grid to container
+  function Job9 return integer32 is -- standard sols from grid to container
 
     use Standard_Complex_Solutions;
 
@@ -485,9 +487,51 @@ function use_c2fac ( job : integer32;
     return 0;
   exception
     when others =>
-      put_line("Exception when copying from grid to container.");
+      put_line("Exception when standard copying from grid to container.");
       return 59;
   end Job9;
+
+  function Job39 return integer32 is -- dobldobl sols from grid to container
+
+    use DoblDobl_Complex_Solutions;
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    i : constant integer32 := integer32(va(va'first));
+    s : constant Solution_List
+      := DoblDobl_Monodromy_Permutations.Retrieve(i);
+    cp_s : Solution_List;  -- will be a copy of s
+
+  begin -- since this will be traffic on the same node
+    Copy(s,cp_s); -- we better make a copy
+    DoblDobl_Solutions_Container.Clear;
+    DoblDobl_Solutions_Container.Initialize(cp_s);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when dobldobl copying from grid to container.");
+      return 639;
+  end Job39;
+
+  function Job69 return integer32 is -- quaddobl sols from grid to container
+
+    use QuadDobl_Complex_Solutions;
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    i : constant integer32 := integer32(va(va'first));
+    s : constant Solution_List
+      := QuadDobl_Monodromy_Permutations.Retrieve(i);
+    cp_s : Solution_List;  -- will be a copy of s
+
+  begin -- since this will be traffic on the same node
+    Copy(s,cp_s); -- we better make a copy
+    QuadDobl_Solutions_Container.Clear;
+    QuadDobl_Solutions_Container.Initialize(cp_s);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when quaddobl copying from grid to container.");
+      return 669;
+  end Job69;
 
   function Job10 return integer32 is
 
@@ -507,9 +551,53 @@ function use_c2fac ( job : integer32;
     return 0;
   exception
     when others =>
-      put_line("Exception when initializing Monodromy_Permutations.");
+      put_line("Exception at init of Monodromy_Permutations.");
       return 50;
   end Job10;
+
+  function Job40 return integer32 is -- init dobldobl monodromy permutations
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    vb : constant C_Integer_Array
+       := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
+    n : constant integer32 := integer32(va(va'first));
+    d : constant integer32 := integer32(vb(0));
+    k : constant integer32 := integer32(vb(1));
+
+  begin
+    -- put("initializing monodromy_permutations with ");
+    -- put("  n = "); put(n,1);
+    -- put("  d = "); put(d,1);
+    -- put("  k = "); put(k,1); new_line;
+    DoblDobl_Monodromy_Permutations.Initialize(n,d,k);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at init of DoblDobl_Monodromy_Permutations.");
+      return 640;
+  end Job40;
+
+  function Job70 return integer32 is -- init quaddobl monodromy permutations
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    vb : constant C_Integer_Array
+       := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(2));
+    n : constant integer32 := integer32(va(va'first));
+    d : constant integer32 := integer32(vb(0));
+    k : constant integer32 := integer32(vb(1));
+
+  begin
+    -- put("initializing monodromy_permutations with ");
+    -- put("  n = "); put(n,1);
+    -- put("  d = "); put(d,1);
+    -- put("  k = "); put(k,1); new_line;
+    QuadDobl_Monodromy_Permutations.Initialize(n,d,k);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at init of QuadDobl_Monodromy_Permutations.");
+      return 670;
+  end Job70;
 
   function Job11 return integer32 is -- solutions to Monodromy_Permutations
 
@@ -893,7 +981,7 @@ function use_c2fac ( job : integer32;
       when 6 => Sampling_Operations.Swap_Slices; return 0;
       when 7 => return Job7; -- copy from standard sampler to container
       when 8 => return Job8; -- copy first standard solutions to container
-      when 9 => return Job9; -- solutions from grid to container
+      when 9 => return Job9; -- standard solutions from grid to container
       when 10 => return Job10; -- initializing Monodromy_Permutations
       when 11 => return Job11; -- solutions to Monodromy_Permutations
       when 12 => return Job12; -- compute monodromy permutation
@@ -920,6 +1008,8 @@ function use_c2fac ( job : integer32;
       when 36 => DoblDobl_Sampling_Operations.Swap_Slices; return 0;
       when 37 => return Job37; -- copy from dobldobl sampler to container
       when 38 => return Job38; -- copy first dobldobl solutions to container
+      when 39 => return Job39; -- dobldobl solutions from grid to container
+      when 40 => return Job40; -- initialize dobldobl monodromy permutations
       when 61 => return Job61; -- read witness set in quad double precision
       when 62 => return Job62; -- initialize quaddobl sampling machine
       when 63 => return Job63; -- assign quaddobl coefficient of slice
@@ -927,7 +1017,9 @@ function use_c2fac ( job : integer32;
       when 66 => QuadDobl_Sampling_Operations.Swap_Slices; return 0;
       when 67 => return Job67; -- copy from quaddobl sampler to container
       when 68 => return Job68; -- copy first quaddobl solutions to container
-      when others => put_line("  Sorry.  Invalid operation."); return 1;
+      when 69 => return Job69; -- quaddobl solutions from grid to container
+      when 70 => return Job70; -- initialize quaddobl monodromy permutations
+      when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   end Handle_Jobs;
 
