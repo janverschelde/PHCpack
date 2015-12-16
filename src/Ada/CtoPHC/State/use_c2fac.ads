@@ -39,7 +39,8 @@ function use_c2fac ( job : integer32;
 --   job    = 10 : initializes Monodromy_Permutations with two numbers:
 --                   a[0] : number of monodromy loops,
 --                   b[0] : degree of the solution component to factor;
---   job    = 11 : store solutions in container to Monodromy_Permutations;
+--   job    = 11 : store solutions in container in standard double
+--                 precision to Monodromy_Permutations;
 --   job    = 12 : compute permutation by last stored solution list,
 --                 and return this new permutation in b;
 --   job    = 13 : updates decomposition with a new permutation,
@@ -116,9 +117,11 @@ function use_c2fac ( job : integer32;
 --   job    = 38 : copy first dobldobl solution list to container;
 --          = 39 : put solutions with index in a from monodromy grid
 --                 in the dobldobl solutions container (companion to job = 11);
---          = 40 : init DoblDobl_Monodromy_Permutations with two numbers:
+--   job    = 40 : init DoblDobl_Monodromy_Permutations with two numbers:
 --                   a[0] : number of monodromy loops,
 --                   b[0] : degree of the solution component to factor;
+--   job    = 41 : store solutions in container in double double
+--                 precision to DoblDobl_Monodromy_Permutations;
 --
 --   job    = 61 : prompts for a witness set in quad double precision
 --                 stores the system in the quaddobl systems container,
@@ -141,9 +144,11 @@ function use_c2fac ( job : integer32;
 --   job    = 68 : copy first quaddobl solution list to container;
 --          = 69 : put solutions with index in a from monodromy grid
 --                 in the quaddobl solutions container (companion to job = 11);
---          = 70 : init QuadDobl_Monodromy_Permutations with two numbers:
+--   job    = 70 : init QuadDobl_Monodromy_Permutations with two numbers:
 --                   a[0] : number of monodromy loops,
 --                   b[0] : degree of the solution component to factor;
+--   job    = 71 : store solutions in container in quad double
+--                 precision to QuadDobl_Monodromy_Permutations;
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

@@ -5,11 +5,12 @@ with Standard_Natural_Vectors;          use Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;          use Standard_Natural_VecVecs;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 
-package Monodromy_Permutations is
+package Standard_Monodromy_Permutations is
 
 -- DESCRIPTION :
 --   This package manages solution lists and slices
---   to determine permutations computed by monodromy.
+--   to determine permutations computed by monodromy,
+--   in standard double precision.
 
   stay_silent : boolean := false;  -- no intermediate output if stay_silent
 
@@ -129,4 +130,4 @@ package Monodromy_Permutations is
   -- DESCRIPTION :
   --   Destruction of all internal data structures.
 
-end Monodromy_Permutations;
+end Standard_Monodromy_Permutations;

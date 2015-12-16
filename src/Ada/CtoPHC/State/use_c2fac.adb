@@ -23,6 +23,7 @@ with Sampling_Machine;
 with DoblDobl_Sampling_Machine;
 with QuadDobl_Sampling_Machine;
 with Witness_Sets_io;                   use Witness_Sets_io;
+with Monodromy_Partitions;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_PolySys_Container;
 with Standard_Solutions_Container;
@@ -31,11 +32,10 @@ with DoblDobl_Solutions_Container;
 with QuadDobl_PolySys_Container;
 with QuadDobl_Solutions_Container;
 with PHCpack_Operations;
-with Sampling_Operations;
+with Standard_Sampling_Operations;
 with DoblDobl_Sampling_Operations;
 with QuadDobl_Sampling_Operations;
-with Monodromy_Partitions;
-with Monodromy_Permutations;
+with Standard_Monodromy_Permutations;
 with DoblDobl_Monodromy_Permutations;
 with QuadDobl_Monodromy_Permutations;
 
@@ -141,11 +141,8 @@ function use_c2fac ( job : integer32;
     Standard_Read_Embedding(p,sols,dim);
     Standard_PolySys_Container.Initialize(p.all);
     Standard_Solutions_Container.Initialize(sols);
-   -- Sampling_Operations.Initialize(p.all,sols,dim);
     data(1) := dim;
     data(2) := Length_Of(sols);
-   -- put("The dimension is "); put(data(1),1); new_line;
-   -- put("The degree is "); put(data(2),1); new_line;
     Assign(p'last,a);
     Assign(data,b);
     return 0;
@@ -169,11 +166,8 @@ function use_c2fac ( job : integer32;
     DoblDobl_Read_Embedding(p,sols,dim);
     DoblDobl_PolySys_Container.Initialize(p.all);
     DoblDobl_Solutions_Container.Initialize(sols);
-   -- Sampling_Operations.Initialize(p.all,sols,dim);
     data(1) := dim;
     data(2) := Length_Of(sols);
-   -- put("The dimension is "); put(data(1),1); new_line;
-   -- put("The degree is "); put(data(2),1); new_line;
     Assign(p'last,a);
     Assign(data,b);
     return 0;
@@ -197,11 +191,8 @@ function use_c2fac ( job : integer32;
     QuadDobl_Read_Embedding(p,sols,dim);
     QuadDobl_PolySys_Container.Initialize(p.all);
     QuadDobl_Solutions_Container.Initialize(sols);
-   -- Sampling_Operations.Initialize(p.all,sols,dim);
     data(1) := dim;
     data(2) := Length_Of(sols);
-   -- put("The dimension is "); put(data(1),1); new_line;
-   -- put("The degree is "); put(data(2),1); new_line;
     Assign(p'last,a);
     Assign(data,b);
     return 0;
@@ -222,9 +213,7 @@ function use_c2fac ( job : integer32;
     dim : constant integer32 := integer32(va(va'first));
 
   begin
-   -- put("initializing sampler with #solutions = ");
-   -- put(Length_Of(sols),1); new_line;
-    Sampling_Operations.Initialize(lp.all,sols,dim);
+    Standard_Sampling_Operations.Initialize(lp.all,sols,dim);
     return 0;
   exception
     when others =>
@@ -243,8 +232,6 @@ function use_c2fac ( job : integer32;
     dim : constant integer32 := integer32(va(va'first));
 
   begin
-   -- put("initializing sampler with #solutions = ");
-   -- put(Length_Of(sols),1); new_line;
     DoblDobl_Sampling_Operations.Initialize(lp.all,sols,dim);
     return 0;
   exception
@@ -264,8 +251,6 @@ function use_c2fac ( job : integer32;
     dim : constant integer32 := integer32(va(va'first));
 
   begin
-   -- put("initializing sampler with #solutions = ");
-   -- put(Length_Of(sols),1); new_line;
     QuadDobl_Sampling_Operations.Initialize(lp.all,sols,dim);
     return 0;
   exception
@@ -289,7 +274,7 @@ function use_c2fac ( job : integer32;
     cf : constant Complex_Number := Create(re,im);
 
   begin
-    Sampling_Operations.Assign_Slice(cf,i,j);
+    Standard_Sampling_Operations.Assign_Slice(cf,i,j);
     return 0;
   exception
     when others =>
@@ -368,7 +353,7 @@ function use_c2fac ( job : integer32;
     i : constant integer32 := integer32(va(va'first));
 
   begin
-    Sampling_Operations.Store_Gamma(gamma,i);
+    Standard_Sampling_Operations.Store_Gamma(gamma,i);
     return 0;
   exception
     when others =>
@@ -425,7 +410,8 @@ function use_c2fac ( job : integer32;
 
     use Standard_Complex_Solutions;
 
-    s : constant Solution_List := Sampling_Operations.Retrieve_First_Solutions;
+    s : constant Solution_List
+      := Standard_Sampling_Operations.Retrieve_First_Solutions;
 
   begin
     Standard_Solutions_Container.Clear;
@@ -477,7 +463,8 @@ function use_c2fac ( job : integer32;
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     i : constant integer32 := integer32(va(va'first));
-    s : constant Solution_List := Monodromy_Permutations.Retrieve(i);
+    s : constant Solution_List
+      := Standard_Monodromy_Permutations.Retrieve(i);
     cp_s : Solution_List;  -- will be a copy of s
 
   begin -- since this will be traffic on the same node
@@ -543,11 +530,7 @@ function use_c2fac ( job : integer32;
     k : constant integer32 := integer32(vb(1));
 
   begin
-    -- put("initializing monodromy_permutations with ");
-    -- put("  n = "); put(n,1);
-    -- put("  d = "); put(d,1);
-    -- put("  k = "); put(k,1); new_line;
-    Monodromy_Permutations.Initialize(n,d,k);
+    Standard_Monodromy_Permutations.Initialize(n,d,k);
     return 0;
   exception
     when others =>
@@ -565,10 +548,6 @@ function use_c2fac ( job : integer32;
     k : constant integer32 := integer32(vb(1));
 
   begin
-    -- put("initializing monodromy_permutations with ");
-    -- put("  n = "); put(n,1);
-    -- put("  d = "); put(d,1);
-    -- put("  k = "); put(k,1); new_line;
     DoblDobl_Monodromy_Permutations.Initialize(n,d,k);
     return 0;
   exception
@@ -587,10 +566,6 @@ function use_c2fac ( job : integer32;
     k : constant integer32 := integer32(vb(1));
 
   begin
-    -- put("initializing monodromy_permutations with ");
-    -- put("  n = "); put(n,1);
-    -- put("  d = "); put(d,1);
-    -- put("  k = "); put(k,1); new_line;
     QuadDobl_Monodromy_Permutations.Initialize(n,d,k);
     return 0;
   exception
@@ -599,34 +574,57 @@ function use_c2fac ( job : integer32;
       return 670;
   end Job70;
 
-  function Job11 return integer32 is -- solutions to Monodromy_Permutations
+  function Job11 return integer32 is -- standard sols to Monodromy_Permutations
 
     use Standard_Complex_Solutions;
 
     sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
 
   begin
-   -- put("storing "); put(Length_Of(sols),1);
-   -- put_line(" into Monodromy_Permutations ...");
-    Monodromy_Permutations.Store(sols);
+    Standard_Monodromy_Permutations.Store(sols);
     return 0;
   exception 
     when others =>
-      put_line("Exception when storing solutions to Monodromy_Permutations.");
+      put_line("Exception at standard solutions to Monodromy_Permutations.");
       return 51;
   end Job11;
+
+  function Job41 return integer32 is -- dobldobl sols to Monodromy_Permutations
+
+    use DoblDobl_Complex_Solutions;
+
+    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
+
+  begin
+    DoblDobl_Monodromy_Permutations.Store(sols);
+    return 0;
+  exception 
+    when others =>
+      put_line("Exception at dobldobl solutions to Monodromy_Permutations.");
+      return 641;
+  end Job41;
+
+  function Job71 return integer32 is -- quaddobl sols to Monodromy_Permutations
+
+    use QuadDobl_Complex_Solutions;
+
+    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
+
+  begin
+    QuadDobl_Monodromy_Permutations.Store(sols);
+    return 0;
+  exception 
+    when others =>
+      put_line("Exception at quaddobl solutions to Monodromy_Permutations.");
+      return 671;
+  end Job71;
 
   function Job12 return integer32 is -- compute monodromy permutation
 
     perm : constant Standard_Natural_Vectors.Vector
-         := Monodromy_Permutations.Permutation;
+         := Standard_Monodromy_Permutations.Permutation;
 
   begin
-   -- put("Ada permutation : ");
-   -- for i in perm'range loop
-   --   put(" "); put(perm(i),1);
-   -- end loop;
-   -- new_line;
     Assign(perm,b);
     return 0;
   exception
@@ -644,13 +642,7 @@ function use_c2fac ( job : integer32;
 
   begin
     Assign(natural32(n),b,p);
-   -- put("Processing");
-   -- for i in p'range loop
-   --   put(" "); put(p(i),1);
-   -- end loop;
-    Monodromy_Permutations.Update_Decomposition(p,nf(1),nf(2));
-   -- put(" : "); put(nf(1),1); put(" -> "); put(nf(2),1);
-   -- new_line;
+    Standard_Monodromy_Permutations.Update_Decomposition(p,nf(1),nf(2));
     Assign(nf,a);
     return 0;
   exception
@@ -662,7 +654,7 @@ function use_c2fac ( job : integer32;
   function Job14 return integer32 is -- writes the decomposition
 
     deco : constant Standard_Natural_VecVecs.Link_to_VecVec
-         := Monodromy_Permutations.Decomposition;
+         := Standard_Monodromy_Permutations.Decomposition;
     use Standard_Natural_VecVecs;
 
   begin
@@ -684,7 +676,7 @@ function use_c2fac ( job : integer32;
   function Job15 return integer32 is -- applies linear trace test
 
     done : constant boolean
-         := Monodromy_Permutations.Certify_with_Linear_Trace;
+         := Standard_Monodromy_Permutations.Certify_with_Linear_Trace;
 
   begin
     if done
@@ -706,7 +698,7 @@ function use_c2fac ( job : integer32;
     ada_c : Complex_Number;
 
   begin
-    Monodromy_Permutations.Trace_Grid_Diagnostics(err,dis);
+    Standard_Monodromy_Permutations.Trace_Grid_Diagnostics(err,dis);
     ada_c := Create(err,dis);  -- a complex number is an array
     Assign(ada_c,c);
     return 0;
@@ -725,7 +717,7 @@ function use_c2fac ( job : integer32;
 
   begin
     Assign(natural32(n),b,f);
-    d := Monodromy_Permutations.Trace_Sum_Difference(f);
+    d := Standard_Monodromy_Permutations.Trace_Sum_Difference(f);
     Assign(d,c);
     return 0;
   exception
@@ -743,7 +735,7 @@ function use_c2fac ( job : integer32;
     result : integer32;
 
   begin
-    result := Monodromy_Permutations.In_Slice(label,slice);
+    result := Standard_Monodromy_Permutations.In_Slice(label,slice);
     Assign(result,b);
     return 0;
   exception
@@ -758,7 +750,7 @@ function use_c2fac ( job : integer32;
     nb : constant integer32 := integer32(va(va'first));
 
   begin
-    Sampling_Operations.Initialize_Slices(nb);
+    Standard_Sampling_Operations.Initialize_Slices(nb);
     return 0;
   exception
     when others =>
@@ -779,7 +771,7 @@ function use_c2fac ( job : integer32;
   begin
     Assign(natural32(nb_cff),c,cff);
     v := Convert_to_Hyperplanes(cff,k,n);
-    Sampling_Operations.Add_Slices(v);
+    Standard_Sampling_Operations.Add_Slices(v);
     return 0;
   exception
     when others =>
@@ -801,7 +793,7 @@ function use_c2fac ( job : integer32;
     use Standard_Complex_VecVecs;
 
   begin
-    v := Sampling_Operations.Retrieve_Slices(i);
+    v := Standard_Sampling_Operations.Retrieve_Slices(i);
     if v /= null then
       cff := Convert_to_Coefficients(nb_cff,v.all);
       Assign(cff,c);
@@ -819,7 +811,7 @@ function use_c2fac ( job : integer32;
     i : constant integer32 := integer32(va(va'first));
 
   begin
-    Sampling_Operations.Set_Target_Slices(i);
+    Standard_Sampling_Operations.Set_Target_Slices(i);
     return 0;
   exception
     when others =>
@@ -843,18 +835,23 @@ function use_c2fac ( job : integer32;
 
   begin
     if start_slice = 0 then
-      sls := Monodromy_Permutations.Retrieve(start_label,start_slice);
+      sls := Standard_Monodromy_Permutations.Retrieve
+               (start_label,start_slice);
     else
-      sls := Monodromy_Permutations.Retrieve(start_label,start_slice+2);
+      sls := Standard_Monodromy_Permutations.Retrieve
+               (start_label,start_slice+2);
                          -- +2 for trace grid
     end if;
    -- put_line("The retrieved start solution :");
    -- put(sls.all);
-    tls := Sampling_Operations.Sample_Loop(start_slice,target_slice,sls);
+    tls := Standard_Sampling_Operations.Sample_Loop
+             (start_slice,target_slice,sls);
     if target_slice = 0 then
-      target_label := Monodromy_Permutations.Match(tls,target_slice,tol);
+      target_label := Standard_Monodromy_Permutations.Match
+                        (tls,target_slice,tol);
     else
-      target_label := Monodromy_Permutations.Match(tls,target_slice+2,tol);
+      target_label := Standard_Monodromy_Permutations.Match
+                        (tls,target_slice+2,tol);
     end if;
     Assign(target_label,b);
     return 0;
@@ -888,11 +885,8 @@ function use_c2fac ( job : integer32;
     Standard_Read_Embedding(file,p,sols,dim);
     Standard_PolySys_Container.Initialize(p.all);
     Standard_Solutions_Container.Initialize(sols);
-   -- Sampling_Operations.Initialize(p.all,sols,dim);
     data(1) := dim;
     data(2) := Length_Of(sols);
-   -- put("The dimension is "); put(data(1),1); new_line;
-   -- put("The degree is "); put(data(2),1); new_line;
     Assign(p'last,a);
     Assign(data,b);
     Close(file);
@@ -934,7 +928,7 @@ function use_c2fac ( job : integer32;
   function Job26 return integer32 is -- returns current #factors
 
     f : constant natural32
-      := Monodromy_Permutations.Number_of_Irreducible_Factors;
+      := Standard_Monodromy_Permutations.Number_of_Irreducible_Factors;
 
   begin
     Assign(integer32(f),a);
@@ -951,7 +945,7 @@ function use_c2fac ( job : integer32;
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
     k : constant integer32 := integer32(v_a(v_a'first));
     f : constant Standard_Natural_Vectors.Link_to_Vector
-      := Monodromy_Permutations.Component(k);
+      := Standard_Monodromy_Permutations.Component(k);
 
   begin
     Assign(f'last,a);
@@ -965,7 +959,7 @@ function use_c2fac ( job : integer32;
 
   function Job28 return integer32 is -- set state to silent
   begin
-    Monodromy_Permutations.stay_silent := true;
+    Standard_Monodromy_Permutations.stay_silent := true;
     return 0;
   end Job28;
 
@@ -977,13 +971,13 @@ function use_c2fac ( job : integer32;
       when 2 => return Job2; -- initialize standard sampling machine
       when 3 => return Job3; -- assigning standard coefficient of slice
       when 4 => return Job4; -- storing gamma constant
-      when 5 => Sampling_Operations.Sample; return 0;
-      when 6 => Sampling_Operations.Swap_Slices; return 0;
+      when 5 => Standard_Sampling_Operations.Sample; return 0;
+      when 6 => Standard_Sampling_Operations.Swap_Slices; return 0;
       when 7 => return Job7; -- copy from standard sampler to container
       when 8 => return Job8; -- copy first standard solutions to container
       when 9 => return Job9; -- standard solutions from grid to container
       when 10 => return Job10; -- initializing Monodromy_Permutations
-      when 11 => return Job11; -- solutions to Monodromy_Permutations
+      when 11 => return Job11; -- standard solutions to Monodromy_Permutations
       when 12 => return Job12; -- compute monodromy permutation
       when 13 => return Job13; -- update with permutation
       when 14 => return Job14; -- writes the decomposition
@@ -1010,6 +1004,7 @@ function use_c2fac ( job : integer32;
       when 38 => return Job38; -- copy first dobldobl solutions to container
       when 39 => return Job39; -- dobldobl solutions from grid to container
       when 40 => return Job40; -- initialize dobldobl monodromy permutations
+      when 41 => return Job41; -- dobldobl solutions to Monodromy_Permutations
       when 61 => return Job61; -- read witness set in quad double precision
       when 62 => return Job62; -- initialize quaddobl sampling machine
       when 63 => return Job63; -- assign quaddobl coefficient of slice
@@ -1019,6 +1014,7 @@ function use_c2fac ( job : integer32;
       when 68 => return Job68; -- copy first quaddobl solutions to container
       when 69 => return Job69; -- quaddobl solutions from grid to container
       when 70 => return Job70; -- initialize quaddobl monodromy permutations
+      when 71 => return Job71; -- quaddobl solutions to Monodromy_Permutations
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   end Handle_Jobs;

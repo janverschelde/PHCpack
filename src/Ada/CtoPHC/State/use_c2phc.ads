@@ -567,9 +567,11 @@ function use_c2phc ( job : integer32;
 --   job   = 638 : copy first dobldobl solution list to container;
 --         = 639 : put solutions with index in a from monodromy grid
 --                 in the dobldobl solutions container (companion to job = 11);
---         = 640 : init DoblDobl_Monodromy_Permutations with two numbers:
+--   job   = 640 : init DoblDobl_Monodromy_Permutations with two numbers:
 --                   a[0] : number of monodromy loops,
 --                   b[0] : degree of the solution component to factor;
+--   job   = 641 : store solutions in container in double double
+--                 precision to DoblDobl_Monodromy_Permutations;
 --
 --   job   = 661 : prompts for a witness set in quad double precision
 --                 stores the system in the quaddobl systems container,
@@ -592,9 +594,11 @@ function use_c2phc ( job : integer32;
 --   job   = 668 : copy first quaddobl solution list to container;
 --         = 669 : put solutions with index in a from monodromy grid
 --                 in the quaddobl solutions container (companion to job = 11);
---         = 670 : init QuadDobl_Monodromy_Permutations with two numbers:
+--   job   = 670 : init QuadDobl_Monodromy_Permutations with two numbers:
 --                   a[0] : number of monodromy loops,
 --                   b[0] : degree of the solution component to factor;
+--   job   = 671 : store solutions in container in quad double
+--                 precision to QuadDobl_Monodromy_Permutations;
 --
 -- EMBEDDING A POLYNOMIAL SYSTEM :
 --

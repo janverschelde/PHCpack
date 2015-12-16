@@ -58,10 +58,12 @@ use_c2pieri                      : Ada routine as gateway to Pieri machine
 ts_use_c2pieri                   : C test on the interactive operations
 use_c2lrhom                      : calls Littlewood-Richardson homotopies
 ------------------------------------------------------------------------------
-monodromy_permutations           : computes permutations by monodromy
-sampling_operations              : provides access to the sampling machine
+standard_sampling_operations     : provides access to the sampling machine
 dobldobl_sampling_operations     : supports monodromy with double doubles
 quaddobl_sampling_operations     : supports monodromy with quad doubles
+standard_monodromy_permutations  : computes permutations by monodromy
+dobldobl_monodromy_permutations  : permutations on double double data
+quaddobl_monodromy_permutations  : permutations on quad double data
 use_c2fac                        : Ada gateway to factorization in PHCpack
 ts_use_c2fac                     : C testing operations in use_c2fac
 ------------------------------------------------------------------------------

@@ -4,11 +4,12 @@ with Standard_Complex_VecVecs;            use Standard_Complex_VecVecs;
 with Standard_Complex_Poly_Systems;       use Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;          use Standard_Complex_Solutions;
 
-package Sampling_Operations is
+package Standard_Sampling_Operations is
 
 -- DESCRIPTION :
 --   This is the analogue to PHCpack_Operations to guide the path
---   tracking needed in the monodromy breakup algorithm.
+--   tracking needed in the monodromy breakup algorithm,
+--   in standard double precision.
 
   procedure Initialize ( p : in Poly_Sys; sols : in Solution_List;
                          k : in integer32 );
@@ -95,4 +96,4 @@ package Sampling_Operations is
   -- DESCRIPTION :
   --   All internal data structures managed by this package are destroyed.
 
-end Sampling_Operations;
+end Standard_Sampling_Operations;

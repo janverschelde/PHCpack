@@ -5,7 +5,7 @@ with Witness_Sets;                      use Witness_Sets;
 with Sampling_Machine;
 with Standard_Solutions_Container;
 
-package body Sampling_Operations is
+package body Standard_Sampling_Operations is
 
 -- INTERNAL DATA :
 
@@ -209,4 +209,4 @@ package body Sampling_Operations is
     dimension := 0;
   end Clear;
 
-end Sampling_Operations;
+end Standard_Sampling_Operations;

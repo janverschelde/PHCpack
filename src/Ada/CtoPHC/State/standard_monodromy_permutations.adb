@@ -12,14 +12,14 @@ with Rectangular_Sample_Grids;
 with Monodromy_Component_Breakup;
 with PHCpack_Operations;
 with Monodromy_Partitions;              use Monodromy_Partitions;
-with Sampling_Operations;
+with Standard_Sampling_Operations;
 
 with text_io;                           use text_io;
 with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with Standard_Complex_Vectors;
 with Standard_Complex_Solutions_io;     use Standard_Complex_Solutions_io;
 
-package body Monodromy_Permutations is
+package body Standard_Monodromy_Permutations is
 
 -- INTERNAL DATA :
 
@@ -143,7 +143,7 @@ package body Monodromy_Permutations is
   --   the i-th solution list lies on slice i-2, for i >= 3
 
     v : constant Standard_Complex_VecVecs.Link_to_VecVec
-      := Sampling_Operations.Retrieve_Slices(i-2);
+      := Standard_Sampling_Operations.Retrieve_Slices(i-2);
 
     use Standard_Complex_VecVecs;
 
@@ -171,7 +171,7 @@ package body Monodromy_Permutations is
    -- put(standard_output,Length_Of(sols),Head_Of(sols).n,sols);
     if ind < 3 then
      -- put("storing trace grid for slice "); put(ind,1); new_line;
-      sli := Sampling_Operations.Retrieve_Start_Slices;
+      sli := Standard_Sampling_Operations.Retrieve_Start_Slices;
      -- put_line("the retrieved slices :"); put(sli);
      -- On_Slice(sols,sli(1).all);
       declare
@@ -477,4 +477,4 @@ package body Monodromy_Permutations is
     Standard_Natural_VecVecs.Deep_Clear(deco);
   end Clear;
 
-end Monodromy_Permutations;
+end Standard_Monodromy_Permutations;
