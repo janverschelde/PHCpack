@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include "syscon.h"
 #include "solcon.h"
 #include "witset.h"
 

@@ -1,3 +1,5 @@
+Wed 16 Dec 2015 : witset.c, for g++, needs an explicit #include "syscon.h".
+
 Tue 15 Dec 2015 : in witset, provided wrappers to new jobs for the monodromy
   breakup in double double and quad double precision.
 
