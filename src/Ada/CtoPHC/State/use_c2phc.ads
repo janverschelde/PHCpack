@@ -562,6 +562,9 @@ function use_c2phc ( job : integer32;
 --                 b-th coefficient of the a-th slice;
 --   job   = 635 : compute a new dobldobl witness set on the new slices;
 --   job   = 636 : swaps dobldobl slices and solution sets to turn back;
+--   job   = 637 : copy embedded system from sampler to systems container,
+--                 for coefficients in double double precision;
+--   job   = 638 : copy first dobldobl solution list to container;
 --
 --   job   = 661 : prompts for a witness set in quad double precision
 --                 stores the system in the quaddobl systems container,
@@ -579,6 +582,9 @@ function use_c2phc ( job : integer32;
 --                 b-th coefficient of the a-th slice;
 --   job   = 665 : compute a new quaddobl witness set on the new slices;
 --   job   = 666 : swaps quaddobl slices and solution sets to turn back;
+--   job   = 667 : copy embedded system from sampler to systems container,
+--                 for coefficients in quad double precision;
+--   job   = 668 : copy first quaddobl solution list to container;
 --
 -- EMBEDDING A POLYNOMIAL SYSTEM :
 --

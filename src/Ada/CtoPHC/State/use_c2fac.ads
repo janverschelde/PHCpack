@@ -31,8 +31,9 @@ function use_c2fac ( job : integer32;
 --                 for the a-th equation;
 --   job    =  5 : compute a new standard witness set on the new slices;
 --   job    =  6 : swaps standard slices and solution sets to turn back;
---   job    =  7 : copy embedded system from sampler to systems container;
---   job    =  8 : copy first solution list to container;
+--   job    =  7 : copy embedded system from sampler to systems container,
+--                 for coefficients in standard double precision;
+--   job    =  8 : copy first standard solution list to container;
 --   job    =  9 : put solutions with index in a from monodromy grid
 --                 in the solutions container (companion to job = 11);
 --   job    = 10 : initializes Monodromy_Permutations with two numbers:
@@ -110,6 +111,9 @@ function use_c2fac ( job : integer32;
 --                 b-th coefficient of the a-th slice;
 --   job    = 35 : compute a new dobldobl witness set on the new slices;
 --   job    = 36 : swaps dobldobl slices and solution sets to turn back;
+--   job    = 37 : copy embedded system from sampler to systems container,
+--                 for coefficients in double double precision;
+--   job    = 38 : copy first dobldobl solution list to container;
 --
 --   job    = 61 : prompts for a witness set in quad double precision
 --                 stores the system in the quaddobl systems container,
@@ -127,6 +131,9 @@ function use_c2fac ( job : integer32;
 --                 b-th coefficient of the a-th slice;
 --   job    = 65 : compute a new quaddobl witness set on the new slices;
 --   job    = 66 : swaps quaddobl slices and solution sets to turn back;
+--   job    = 67 : copy embedded system from sampler to systems container,
+--                 for coefficients in quad double precision;
+--   job    = 68 : copy first quaddobl solution list to container;
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

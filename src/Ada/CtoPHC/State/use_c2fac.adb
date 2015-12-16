@@ -20,6 +20,8 @@ with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Standard_System_and_Solutions_io;
 with Sampling_Machine;
+with DoblDobl_Sampling_Machine;
+with QuadDobl_Sampling_Machine;
 with Witness_Sets_io;                   use Witness_Sets_io;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 with Standard_PolySys_Container;
@@ -372,7 +374,7 @@ function use_c2fac ( job : integer32;
       return 44;
   end Job4;
 
-  function Job7 return integer32 is -- copy from sampler to container
+  function Job7 return integer32 is -- copy from standard sampler to container
 
      use Standard_Complex_Poly_Systems;
 
@@ -383,11 +385,41 @@ function use_c2fac ( job : integer32;
     return 0;
   exception
     when others =>
-      put_line("Exception raised when copying from sampler to container.");
+      put_line("Exception when copying from standard sampler to container.");
       return 47;
   end Job7;
 
-  function Job8 return integer32 is -- copy first solutions to container
+  function Job37 return integer32 is -- copy from dobldobl sampler to container
+
+     use DoblDobl_Complex_Poly_Systems;
+
+     p : constant Poly_Sys := DoblDobl_Sampling_Machine.Embedded_System;
+
+  begin
+    DoblDobl_PolySys_Container.Initialize(p);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when copying from dobldobl sampler to container.");
+      return 637;
+  end Job37;
+
+  function Job67 return integer32 is -- copy from quaddobl sampler to container
+
+     use QuadDobl_Complex_Poly_Systems;
+
+     p : constant Poly_Sys := QuadDobl_Sampling_Machine.Embedded_System;
+
+  begin
+    QuadDobl_PolySys_Container.Initialize(p);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when copying from quaddobl sampler to container.");
+      return 667;
+  end Job67;
+
+  function Job8 return integer32 is -- copy standard 1st solutions to container
 
     use Standard_Complex_Solutions;
 
@@ -399,9 +431,43 @@ function use_c2fac ( job : integer32;
     return 0;
   exception
     when others =>
-      put_line("Exception raised when copying first solutions to container.");
+      put_line("Exception when copying standard 1st solutions to container.");
       return 48;
   end Job8;
+
+  function Job38 return integer32 is -- copy dobldobl 1st solutions to container
+
+    use DoblDobl_Complex_Solutions;
+
+    s : constant Solution_List
+      := DoblDobl_Sampling_Operations.Retrieve_First_Solutions;
+
+  begin
+    DoblDobl_Solutions_Container.Clear;
+    DoblDobl_Solutions_Container.Initialize(s);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when copying dobldobl 1st solutions to container.");
+      return 638;
+  end Job38;
+
+  function Job68 return integer32 is -- copy quaddobl 1st solutions to container
+
+    use QuadDobl_Complex_Solutions;
+
+    s : constant Solution_List
+      := QuadDobl_Sampling_Operations.Retrieve_First_Solutions;
+
+  begin
+    QuadDobl_Solutions_Container.Clear;
+    QuadDobl_Solutions_Container.Initialize(s);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when copying quaddobl 1st solutions to container.");
+      return 668;
+  end Job68;
 
   function Job9 return integer32 is -- solutions from grid to container
 
@@ -825,8 +891,8 @@ function use_c2fac ( job : integer32;
       when 4 => return Job4; -- storing gamma constant
       when 5 => Sampling_Operations.Sample; return 0;
       when 6 => Sampling_Operations.Swap_Slices; return 0;
-      when 7 => return Job7; -- copy from sampler to container
-      when 8 => return Job8; -- copy first solutions to container
+      when 7 => return Job7; -- copy from standard sampler to container
+      when 8 => return Job8; -- copy first standard solutions to container
       when 9 => return Job9; -- solutions from grid to container
       when 10 => return Job10; -- initializing Monodromy_Permutations
       when 11 => return Job11; -- solutions to Monodromy_Permutations
@@ -852,11 +918,15 @@ function use_c2fac ( job : integer32;
       when 33 => return Job33; -- assign dobldobl coefficient of slice
       when 35 => DoblDobl_Sampling_Operations.Sample; return 0;
       when 36 => DoblDobl_Sampling_Operations.Swap_Slices; return 0;
+      when 37 => return Job37; -- copy from dobldobl sampler to container
+      when 38 => return Job38; -- copy first dobldobl solutions to container
       when 61 => return Job61; -- read witness set in quad double precision
       when 62 => return Job62; -- initialize quaddobl sampling machine
       when 63 => return Job63; -- assign quaddobl coefficient of slice
       when 65 => QuadDobl_Sampling_Operations.Sample; return 0;
       when 66 => QuadDobl_Sampling_Operations.Swap_Slices; return 0;
+      when 67 => return Job67; -- copy from quaddobl sampler to container
+      when 68 => return Job68; -- copy first quaddobl solutions to container
       when others => put_line("  Sorry.  Invalid operation."); return 1;
     end case;
   end Handle_Jobs;

@@ -1,5 +1,7 @@
 Tue 15 Dec 2015 : documented the new job codes in use_c2phc.ads for the
   monodromy breakup in double double and quad double precision.
+  Two new jobs for monodromy breakup in double double and quad double
+  precision in use_c2fac and use_c2phc. 
 
 Mon 14 Dec 2015 : new packages {dobldobl,quaddobl}_sampling_operations,
   for use in use_c2fac to export the monodromy in double double and
