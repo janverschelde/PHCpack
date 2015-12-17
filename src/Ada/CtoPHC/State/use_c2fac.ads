@@ -51,11 +51,12 @@ function use_c2fac ( job : integer32;
 --   job    = 16 : returns in c the diagnostics of the trace grid;
 --          = 17 : returns in c difference between trace and actual sum.
 --          = 18 : finds the index of a solution label in a slice,
+--                 in standard double precision,
 --                 on entry: a[0] is label to a solution,
 --                           a[1] is the number of a slice;
 --                 on return: b is index to solution if label occurs,
 --                            otherwise, b is zero;
---   job    = 19 : initialize number of slices in Sampling_Operations
+--   job    = 19 : initialize number of slices in Standard_Sampling_Operations
 --                 with the content of a;
 --   job    = 20 : adds a new slice to Sampling_Operations, 
 --                 where a[0] = total number of doubles in the slices;
@@ -125,6 +126,14 @@ function use_c2fac ( job : integer32;
 --                 precision to DoblDobl_Monodromy_Permutations;
 --   job    = 45 : applies the linear trace to certify the decomposition,
 --                 in double double precision;
+--   job    = 48 : finds the index of a solution label in a slice,
+--                 in double double precision,
+--                 on entry: a[0] is label to a solution,
+--                           a[1] is the number of a slice;
+--                 on return: b is index to solution if label occurs,
+--                            otherwise, b is zero;
+--   job    = 49 : initialize number of slices in DoblDobl_Sampling_Operations
+--                 with the content of a;
 --   job    = 52 : sets the target slices to the a-th slice stored 
 --                 in DoblDobl_Sampling_Operations.
 --   job    = 56 : returns in a the number of irreducible factors in the
@@ -162,6 +171,14 @@ function use_c2fac ( job : integer32;
 --                 precision to QuadDobl_Monodromy_Permutations;
 --   job    = 75 : applies the linear trace to certify the decomposition,
 --                 in quad double precision;
+--   job    = 78 : finds the index of a solution label in a slice,
+--                 in quad double precision,
+--                 on entry: a[0] is label to a solution,
+--                           a[1] is the number of a slice;
+--                 on return: b is index to solution if label occurs,
+--                            otherwise, b is zero;
+--   job    = 79 : initialize number of slices in QuadDobl_Sampling_Operations
+--                 with the content of a;
 --   job    = 82 : sets the target slices to the a-th slice stored 
 --                 in QuadDobl_Sampling_Operations.
 --   job    = 86 : returns in a the number of irreducible factors in the

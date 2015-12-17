@@ -2394,12 +2394,14 @@ function use_c2phc ( job : integer32;
       when 631..633 => return use_c2fac(job-600,a,b,c);
       when 635..641 => return use_c2fac(job-600,a,b,c);
       when 645 => return use_c2fac(job-600,a,b,c);
+      when 648..649 => return use_c2fac(job-600,a,b,c);
       when 652 => return use_c2fac(job-600,a,b,c);
       when 656..657 => return use_c2fac(job-600,a,b,c);
      -- monodromy breakup in quad double precision :
       when 661..663 => return use_c2fac(job-600,a,b,c);
       when 665..671 => return use_c2fac(job-600,a,b,c);
       when 675 => return use_c2fac(job-600,a,b,c);
+      when 678..679 => return use_c2fac(job-600,a,b,c);
       when 682 => return use_c2fac(job-600,a,b,c);
       when 686..687 => return use_c2fac(job-600,a,b,c);
      -- blackbox solvers in double double and quad double precision

@@ -1,3 +1,5 @@
+Thu 17 Dec 2015 : added two jobs to use_c2fac and use_c2phc.
+
 Wed 16 Dec 2015 : new packages {dobldobl,quaddobl}_monodromy_permutations
   to manage data for monodromy breakup with double doubles and quad doubles.
   Standardized naming of packages, added to sampling_operations and

@@ -760,7 +760,7 @@ function use_c2fac ( job : integer32;
       return 57;
   end Job17;
 
-  function Job18 return integer32 is -- finding index of solution label
+  function Job18 return integer32 is -- index of standard solution label
 
     va : constant C_Integer_Array
        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
@@ -778,6 +778,42 @@ function use_c2fac ( job : integer32;
       return 58;
   end Job18;
 
+  function Job48 return integer32 is -- index of dobldobl solution label
+
+    va : constant C_Integer_Array
+       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    label : constant integer32 := integer32(va(0));
+    slice : constant integer32 := integer32(va(1));
+    result : integer32;
+
+  begin
+    result := DoblDobl_Monodromy_Permutations.In_Slice(label,slice);
+    Assign(result,b);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when finding index of a solution label.");
+      return 648;
+  end Job48;
+
+  function Job78 return integer32 is -- index of quaddobl solution label
+
+    va : constant C_Integer_Array
+       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    label : constant integer32 := integer32(va(0));
+    slice : constant integer32 := integer32(va(1));
+    result : integer32;
+
+  begin
+    result := QuadDobl_Monodromy_Permutations.In_Slice(label,slice);
+    Assign(result,b);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when finding index of a solution label.");
+      return 678;
+  end Job78;
+
   function Job19 return integer32 is
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
@@ -788,9 +824,37 @@ function use_c2fac ( job : integer32;
     return 0;
   exception
     when others =>
-      put_line("Exception when initializing slices in Sampling_Operations");
+      put_line("Exception at init slices in Standard_Sampling_Operations");
       return 59;
   end Job19;
+
+  function Job49 return integer32 is
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    nb : constant integer32 := integer32(va(va'first));
+
+  begin
+    DoblDobl_Sampling_Operations.Initialize_Slices(nb);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at init slices in DoblDobl_Sampling_Operations");
+      return 649;
+  end Job49;
+
+  function Job79 return integer32 is
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    nb : constant integer32 := integer32(va(va'first));
+
+  begin
+    QuadDobl_Sampling_Operations.Initialize_Slices(nb);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at init slices in QuadDobl_Sampling_Operations");
+      return 679;
+  end Job79;
 
   function Job20 return integer32 is -- add new slice to Sampling_Operations
 
@@ -1111,7 +1175,7 @@ function use_c2fac ( job : integer32;
       when 16 => return Job16; -- return trace grid diagnostics
       when 17 => return Job17; -- comparing trace sum differences
       when 18 => return Job18; -- finding index of solution label
-      when 19 => return Job19; -- initializing slices in Sampling_Operations
+      when 19 => return Job19; -- init slices in Standard_Sampling_Operations
       when 20 => return Job20; -- adding new slice to Sampling_Operations
       when 21 => return Job21; -- returning coefficients of a slice
       when 22 => return Job22; -- setting standard target slices
@@ -1132,6 +1196,8 @@ function use_c2fac ( job : integer32;
       when 40 => return Job40; -- initialize dobldobl monodromy permutations
       when 41 => return Job41; -- dobldobl solutions to Monodromy_Permutations
       when 45 => return Job45; -- apply dobldobl linear trace test
+      when 48 => return Job48; -- index of dobldobl solution label
+      when 49 => return Job49; -- init slices in DoblDobl_Sampling_Operations
       when 52 => return Job52; -- setting dobldobl target slices
       when 56 => return Job56; -- returns number of dobldobl factors
       when 57 => return Job57; -- returns labels in dobldobl component
@@ -1146,6 +1212,8 @@ function use_c2fac ( job : integer32;
       when 70 => return Job70; -- initialize quaddobl monodromy permutations
       when 71 => return Job71; -- quaddobl solutions to Monodromy_Permutations
       when 75 => return Job75; -- apply quaddobl linear trace test
+      when 78 => return Job78; -- index of quaddobl solution label
+      when 79 => return Job79; -- init slices in QuadDobl_Sampling_Operations
       when 82 => return Job82; -- setting quaddobl target slices
       when 86 => return Job86; -- returns number of quaddobl factors
       when 87 => return Job87; -- returns labels in quaddobl component

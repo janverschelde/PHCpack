@@ -492,14 +492,15 @@ function use_c2phc ( job : integer32;
 --   job   =  54 : writes the current decomposition;
 --         =  55 : applies the linear trace to certify the decomposition,
 --                 in standard double precision;
---         =  56 : returns in c the diagnostics of the trace grid;
+--   job   =  56 : returns in c the diagnostics of the trace grid;
 --         =  57 : returns in c difference between trace and actual sum.
 --         =  58 : finds the index of a solution label in a slice,
+--                 in standard double precision;
 --                 on entry: a[0] is label to a solution,
 --                           a[1] is the number of a slice;
 --                 on return: b is index to solution if label occurs,
 --                            otherwise, b is zero.
---         =  59 : initialize number of slices in Sampling_Operations
+--   job   =  59 : initialize number of slices in Standard_Sampling_Operations
 --                 with the content of a;
 --         =  60 : adds a new slice to Sampling_Operations, 
 --                 where a[0] = total number of doubles in the slices;
@@ -575,6 +576,14 @@ function use_c2phc ( job : integer32;
 --                 precision to DoblDobl_Monodromy_Permutations;
 --   job   = 645 : applies the linear trace to certify the decomposition,
 --                 in double double precision;
+--   job   = 648 : finds the index of a solution label in a slice,
+--                 in double double precision,
+--                 on entry: a[0] is label to a solution,
+--                           a[1] is the number of a slice;
+--                 on return: b is index to solution if label occurs,
+--                            otherwise, b is zero;
+--   job   = 649 : initialize number of slices in DoblDobl_Sampling_Operations
+--                 with the content of a;
 --   job   = 652 : sets the target slices to the a-th slice stored 
 --                 in DoblDobl_Sampling_Operations.
 --   job   = 656 : returns in a the number of irreducible factors in the
@@ -612,6 +621,14 @@ function use_c2phc ( job : integer32;
 --                 precision to QuadDobl_Monodromy_Permutations;
 --   job   = 675 : applies the linear trace to certify the decomposition,
 --                 in quad double precision;
+--   job   = 678 : finds the index of a solution label in a slice,
+--                 in quad double precision,
+--                 on entry: a[0] is label to a solution,
+--                           a[1] is the number of a slice;
+--                 on return: b is index to solution if label occurs,
+--                            otherwise, b is zero;
+--   job   = 679 : initialize number of slices in QuadDobl_Sampling_Operations
+--                 with the content of a;
 --   job   = 682 : sets the target slices to the a-th slice stored 
 --                 in QuadDobl_Sampling_Operations.
 --   job   = 686 : returns in a the number of irreducible factors in the
