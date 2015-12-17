@@ -487,16 +487,19 @@ function use_c2phc ( job : integer32;
 --                   b[0] : degree of the solution component to factor;
 --   job   =  51 : store solutions in container in standard double precision
 --                 to Standard_Monodromy_Permutations;
---         =  52 : compute permutation by last stored solution list,
+--   job   =  52 : compute permutation by last stored solution list,
+--                 in standard double precision,
 --                 and return this new permutation in b;
 --   job   =  53 : updates decomposition with a new permutation,
+--                 computed on data in standard double precision,
 --                 a[0] must contain the dimension and b the permutation;
---   job   =  54 : writes the current decomposition;
+--   job   =  54 : writes the current standard precision decomposition;
 --         =  55 : applies the linear trace to certify the decomposition,
 --                 in standard double precision;
---   job   =  56 : returns in c the diagnostics of the trace grid;
---         =  57 : returns in c difference between trace and actual sum.
---         =  58 : finds the index of a solution label in a slice,
+--   job   =  56 : returns in c the diagnostics of the standard trace grid;
+--         =  57 : returns in c difference between trace and actual sum,
+--                 computed in standard double precision;
+--   job   =  58 : finds the index of a solution label in a slice,
 --                 in standard double precision;
 --                 on entry: a[0] is label to a solution,
 --                           a[1] is the number of a slice;
@@ -576,8 +579,18 @@ function use_c2phc ( job : integer32;
 --                   b[0] : degree of the solution component to factor;
 --   job   = 641 : store solutions in container in double double
 --                 precision to DoblDobl_Monodromy_Permutations;
---   job   = 645 : applies the linear trace to certify the decomposition,
+--   job   = 642 : compute permutation by last stored solution list,
+--                 in double double precision,
+--                 and return this new permutation in b;
+--   job   = 643 : updates decomposition with a new permutation,
+--                 computed on data in double double precision,
+--                 a[0] must contain the dimension and b the permutation;
+--   job   = 644 : writes the double double precision decomposition;
+--         = 645 : applies the linear trace to certify the decomposition,
 --                 in double double precision;
+--   job   = 646 : returns in c the diagnostics of the dobldobl trace grid;
+--         = 647 : returns in c difference between trace and actual sum,
+--                 computed in double double precision;
 --   job   = 648 : finds the index of a solution label in a slice,
 --                 in double double precision,
 --                 on entry: a[0] is label to a solution,
@@ -641,8 +654,18 @@ function use_c2phc ( job : integer32;
 --                   b[0] : degree of the solution component to factor;
 --   job   = 671 : store solutions in container in quad double
 --                 precision to QuadDobl_Monodromy_Permutations;
+--   job   = 672 : compute permutation by last stored solution list,
+--                 in quad double precision,
+--                 and return this new permutation in b;
+--   job   = 673 : updates decomposition with a new permutation,
+--                 computed on data in quad double precision,
+--                 a[0] must contain the dimension and b the permutation;
+--   job   = 674 : writes the quad double precision decomposition;
 --   job   = 675 : applies the linear trace to certify the decomposition,
 --                 in quad double precision;
+--   job   = 676 : returns in c the diagnostics of the quaddobl trace grid;
+--         = 677 : returns in c difference between trace and actual sum,
+--                 computed in quad double precision;
 --   job   = 678 : finds the index of a solution label in a slice,
 --                 in quad double precision,
 --                 on entry: a[0] is label to a solution,

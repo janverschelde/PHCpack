@@ -621,7 +621,7 @@ function use_c2fac ( job : integer32;
       return 671;
   end Job71;
 
-  function Job12 return integer32 is -- compute monodromy permutation
+  function Job12 return integer32 is -- standard monodromy permutation
 
     perm : constant Standard_Natural_Vectors.Vector
          := Standard_Monodromy_Permutations.Permutation;
@@ -631,11 +631,39 @@ function use_c2fac ( job : integer32;
     return 0;
   exception
     when others =>
-      put_line("Exception when computing a monodromy permutation.");
+      put_line("Exception at a standard double monodromy permutation.");
       return 52;
   end Job12;
 
-  function Job13 return integer32 is -- update with permutation
+  function Job42 return integer32 is -- dobldobl monodromy permutation
+
+    perm : constant Standard_Natural_Vectors.Vector
+         := DoblDobl_Monodromy_Permutations.Permutation;
+
+  begin
+    Assign(perm,b);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at a double double monodromy permutation.");
+      return 642;
+  end Job42;
+
+  function Job72 return integer32 is -- quaddobl monodromy permutation
+
+    perm : constant Standard_Natural_Vectors.Vector
+         := QuadDobl_Monodromy_Permutations.Permutation;
+
+  begin
+    Assign(perm,b);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at a double double monodromy permutation.");
+      return 672;
+  end Job72;
+
+  function Job13 return integer32 is -- update with standard permutation
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     n : constant integer32 := integer32(va(va'first));
@@ -649,11 +677,47 @@ function use_c2fac ( job : integer32;
     return 0;
   exception
     when others =>
-      put_line("Exception raised when updating with permutation");
+      put_line("Exception at update with standard double permutation");
       return 53;
   end Job13;
 
-  function Job14 return integer32 is -- writes the decomposition
+  function Job43 return integer32 is -- update with dobldobl permutation
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    n : constant integer32 := integer32(va(va'first));
+    p : Standard_Natural_Vectors.Vector(1..n);
+    nf : Standard_Natural_Vectors.Vector(1..2);
+
+  begin
+    Assign(natural32(n),b,p);
+    DoblDobl_Monodromy_Permutations.Update_Decomposition(p,nf(1),nf(2));
+    Assign(nf,a);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at update with double double permutation");
+      return 643;
+  end Job43;
+
+  function Job73 return integer32 is -- update with quaddobl permutation
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    n : constant integer32 := integer32(va(va'first));
+    p : Standard_Natural_Vectors.Vector(1..n);
+    nf : Standard_Natural_Vectors.Vector(1..2);
+
+  begin
+    Assign(natural32(n),b,p);
+    QuadDobl_Monodromy_Permutations.Update_Decomposition(p,nf(1),nf(2));
+    Assign(nf,a);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at update with quad double permutation");
+      return 673;
+  end Job73;
+
+  function Job14 return integer32 is -- writes the standard decomposition
 
     deco : constant Standard_Natural_VecVecs.Link_to_VecVec
          := Standard_Monodromy_Permutations.Decomposition;
@@ -671,9 +735,53 @@ function use_c2fac ( job : integer32;
     return 0;
   exception
     when others =>
-      put_line("Exception raised when writing the decomposition.");
+      put_line("Exception when writing the standard decomposition.");
       return 54;
   end Job14;
+
+  function Job44 return integer32 is -- writes the dobldobl decomposition
+
+    deco : constant Standard_Natural_VecVecs.Link_to_VecVec
+         := DoblDobl_Monodromy_Permutations.Decomposition;
+    use Standard_Natural_VecVecs;
+
+  begin
+    if deco /= null then
+      if PHCpack_Operations.Is_File_Defined then
+        Monodromy_Partitions.Write_Factors
+          (PHCpack_Operations.output_file,deco.all);
+      else
+        Monodromy_Partitions.Write_Factors(standard_output,deco.all);
+      end if;
+    end if;
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when writing the dobldobl decomposition.");
+      return 644;
+  end Job44;
+
+  function Job74 return integer32 is -- writes the quaddobl decomposition
+
+    deco : constant Standard_Natural_VecVecs.Link_to_VecVec
+         := QuadDobl_Monodromy_Permutations.Decomposition;
+    use Standard_Natural_VecVecs;
+
+  begin
+    if deco /= null then
+      if PHCpack_Operations.Is_File_Defined then
+        Monodromy_Partitions.Write_Factors
+          (PHCpack_Operations.output_file,deco.all);
+      else
+        Monodromy_Partitions.Write_Factors(standard_output,deco.all);
+      end if;
+    end if;
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when writing the quaddobl decomposition.");
+      return 674;
+  end Job74;
 
   function Job15 return integer32 is -- standard linear trace test
 
@@ -726,7 +834,7 @@ function use_c2fac ( job : integer32;
       return 675;
   end Job75;
 
-  function Job16 return integer32 is -- return trace grid diagnostics
+  function Job16 return integer32 is -- standard trace grid diagnostics
 
     use Standard_Complex_Numbers;
 
@@ -740,11 +848,53 @@ function use_c2fac ( job : integer32;
     return 0;
   exception
     when others =>
-      put_line("Exception when returning diagnostics from trace grid.");
+      put_line("Exception at diagnostics from standard trace grid.");
       return 56;
   end Job16;
 
-  function Job17 return integer32 is -- compare trace sum differences
+  function Job46 return integer32 is -- dobldobl trace grid diagnostics
+
+    use Standard_Complex_Numbers; -- return hi_parts of double doubles
+
+    dd_err,dd_dis : double_double;
+    st_err,st_dis : double_float;
+    ada_c : Complex_Number;
+
+  begin
+    DoblDobl_Monodromy_Permutations.Trace_Grid_Diagnostics(dd_err,dd_dis);
+    st_err := to_double(dd_err);
+    st_dis := to_double(dd_dis);
+    ada_c := Create(st_err,st_dis);  -- a complex number is an array
+    Assign(ada_c,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at diagnostics from dobldobl trace grid.");
+      return 646;
+  end Job46;
+
+  function Job76 return integer32 is -- quaddobl trace grid diagnostics
+
+    use Standard_Complex_Numbers; -- return hi_parts of quad doubles
+
+    qd_err,qd_dis : quad_double;
+    st_err,st_dis : double_float;
+    ada_c : Complex_Number;
+
+  begin
+    QuadDobl_Monodromy_Permutations.Trace_Grid_Diagnostics(qd_err,qd_dis);
+    st_err := to_double(qd_err);
+    st_dis := to_double(qd_dis);
+    ada_c := Create(st_err,st_dis);  -- a complex number is an array
+    Assign(ada_c,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at diagnostics from quaddobl trace grid.");
+      return 676;
+  end Job76;
+
+  function Job17 return integer32 is -- standard trace sum differences
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     n : constant integer32 := integer32(va(va'first));
@@ -758,9 +908,49 @@ function use_c2fac ( job : integer32;
     return 0;
   exception
     when others =>
-      put_line("Exception when comparing trace sum differences.");
+      put_line("Exception when comparing standard trace sum differences.");
       return 57;
   end Job17;
+
+  function Job47 return integer32 is -- dobldobl trace sum differences
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    n : constant integer32 := integer32(va(va'first));
+    f : Standard_Natural_Vectors.Vector(1..n);
+    dd_d : double_double;
+    st_d : double_float;
+
+  begin
+    Assign(natural32(n),b,f);
+    dd_d := DoblDobl_Monodromy_Permutations.Trace_Sum_Difference(f);
+    st_d := to_double(dd_d);
+    Assign(st_d,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when comparing dobldobl trace sum differences.");
+      return 647;
+  end Job47;
+
+  function Job77 return integer32 is -- quaddobl trace sum differences
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    n : constant integer32 := integer32(va(va'first));
+    f : Standard_Natural_Vectors.Vector(1..n);
+    qd_d : quad_double;
+    st_d : double_float;
+
+  begin
+    Assign(natural32(n),b,f);
+    qd_d := QuadDobl_Monodromy_Permutations.Trace_Sum_Difference(f);
+    st_d := to_double(qd_d);
+    Assign(st_d,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when comparing quaddobl trace sum differences.");
+      return 677;
+  end Job77;
 
   function Job18 return integer32 is -- index of standard solution label
 
@@ -1376,12 +1566,12 @@ function use_c2fac ( job : integer32;
       when  9 => return Job9; -- standard solutions from grid to container
       when 10 => return Job10; -- initializing Monodromy_Permutations
       when 11 => return Job11; -- standard solutions to Monodromy_Permutations
-      when 12 => return Job12; -- compute monodromy permutation
-      when 13 => return Job13; -- update with permutation
-      when 14 => return Job14; -- writes the decomposition
+      when 12 => return Job12; -- compute standard monodromy permutation
+      when 13 => return Job13; -- update with standard permutation
+      when 14 => return Job14; -- writes the standard decomposition
       when 15 => return Job15; -- apply standard linear trace test
-      when 16 => return Job16; -- return trace grid diagnostics
-      when 17 => return Job17; -- comparing trace sum differences
+      when 16 => return Job16; -- return standard trace grid diagnostics
+      when 17 => return Job17; -- comparing standard trace sum differences
       when 18 => return Job18; -- finding index of solution label
       when 19 => return Job19; -- init slices in Standard_Sampling_Operations
       when 20 => return Job20; -- adding new slice to Sampling_Operations
@@ -1403,7 +1593,12 @@ function use_c2fac ( job : integer32;
       when 39 => return Job39; -- dobldobl solutions from grid to container
       when 40 => return Job40; -- initialize dobldobl monodromy permutations
       when 41 => return Job41; -- dobldobl solutions to Monodromy_Permutations
+      when 42 => return Job42; -- compute dobldobl monodromy permutation
+      when 43 => return Job43; -- update with dobldobl permutation
+      when 44 => return Job44; -- writes the dobldobl decomposition
       when 45 => return Job45; -- apply dobldobl linear trace test
+      when 46 => return Job46; -- return dobldobl trace grid diagnostics
+      when 47 => return Job47; -- comparing dobldobl trace sum differences
       when 48 => return Job48; -- index of dobldobl solution label
       when 49 => return Job49; -- init slices in DoblDobl_Sampling_Operations
       when 52 => return Job52; -- setting dobldobl target slices
@@ -1422,7 +1617,12 @@ function use_c2fac ( job : integer32;
       when 69 => return Job69; -- quaddobl solutions from grid to container
       when 70 => return Job70; -- initialize quaddobl monodromy permutations
       when 71 => return Job71; -- quaddobl solutions to Monodromy_Permutations
+      when 72 => return Job72; -- compute quaddobl monodromy permutation
+      when 73 => return Job73; -- update with quaddobl permutation
+      when 74 => return Job74; -- writes the quaddobl decomposition
       when 75 => return Job75; -- apply quaddobl linear trace test
+      when 76 => return Job76; -- return quaddobl trace grid diagnostics
+      when 77 => return Job77; -- comparing quaddobl trace sum differences
       when 78 => return Job78; -- index of quaddobl solution label
       when 79 => return Job79; -- init slices in QuadDobl_Sampling_Operations
       when 82 => return Job82; -- setting quaddobl target slices

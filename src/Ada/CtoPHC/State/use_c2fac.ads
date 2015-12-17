@@ -40,17 +40,20 @@ function use_c2fac ( job : integer32;
 --                   a[0] : number of monodromy loops,
 --                   b[0] : degree of the solution component to factor;
 --   job    = 11 : store solutions in container in standard double
---                 precision to Monodromy_Permutations;
+--                 precision to Standard_Monodromy_Permutations;
 --   job    = 12 : compute permutation by last stored solution list,
+--                 in standard double precision,
 --                 and return this new permutation in b;
 --   job    = 13 : updates decomposition with a new permutation,
+--                 computed on data in standard double precision,
 --                 a[0] must contain the dimension and b the permutation;
---   job    = 14 : writes the current decomposition;
+--   job    = 14 : writes the standard double precision decomposition;
 --          = 15 : applies the linear trace to certify the decomposition,
 --                 in standard double precision;
---   job    = 16 : returns in c the diagnostics of the trace grid;
---          = 17 : returns in c difference between trace and actual sum.
---          = 18 : finds the index of a solution label in a slice,
+--   job    = 16 : returns in c the diagnostics of the standard trace grid;
+--          = 17 : returns in c difference between trace and actual sum,
+--                 computed in standard double precision;
+--   job    = 18 : finds the index of a solution label in a slice,
 --                 in standard double precision,
 --                 on entry: a[0] is label to a solution,
 --                           a[1] is the number of a slice;
@@ -125,8 +128,18 @@ function use_c2fac ( job : integer32;
 --                   b[0] : degree of the solution component to factor;
 --   job    = 41 : store solutions in container in double double
 --                 precision to DoblDobl_Monodromy_Permutations;
---   job    = 45 : applies the linear trace to certify the decomposition,
+--   job    = 42 : compute permutation by last stored solution list,
+--                 in double double precision,
+--                 and return this new permutation in b;
+--   job    = 43 : updates decomposition with a new permutation,
+--                 computed on data in double double precision,
+--                 a[0] must contain the dimension and b the permutation;
+--   job    = 44 : writes the double double precision decomposition;
+--          = 45 : applies the linear trace to certify the decomposition,
 --                 in double double precision;
+--   job    = 46 : returns in c the diagnostics of the dobldobl trace grid;
+--          = 47 : returns in c difference between trace and actual sum,
+--                 computed in double double precision;
 --   job    = 48 : finds the index of a solution label in a slice,
 --                 in double double precision,
 --                 on entry: a[0] is label to a solution,
@@ -190,8 +203,18 @@ function use_c2fac ( job : integer32;
 --                   b[0] : degree of the solution component to factor;
 --   job    = 71 : store solutions in container in quad double
 --                 precision to QuadDobl_Monodromy_Permutations;
+--   job    = 72 : compute permutation by last stored solution list,
+--                 in quad double precision,
+--                 and return this new permutation in b;
+--   job    = 73 : updates decomposition with a new permutation,
+--                 computed on data in quad double precision,
+--                 a[0] must contain the dimension and b the permutation;
+--   job    = 74 : writes the quad double precision decomposition;
 --   job    = 75 : applies the linear trace to certify the decomposition,
 --                 in quad double precision;
+--   job    = 76 : returns in c the diagnostics of the quaddobl trace grid;
+--          = 77 : returns in c difference between trace and actual sum,
+--                 computed in quad double precision;
 --   job    = 78 : finds the index of a solution label in a slice,
 --                 in quad double precision,
 --                 on entry: a[0] is label to a solution,
