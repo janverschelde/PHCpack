@@ -481,10 +481,12 @@ function use_c2phc ( job : integer32;
 --         =  48 : copy first standard solution list to container;
 --         =  49 : put solutions with index in a from monodromy grid
 --                 in the solutions container (companion to job = 11);
---   job   =  50 : initializes Monodromy_Permutations with two numbers:
+--   job   =  50 : initializes Standard_Monodromy_Permutations
+--                 with two numbers:
 --                   a[0] : number of monodromy loops,
 --                   b[0] : degree of the solution component to factor;
---   job   =  51 : store solutions in container to Monodromy_Permutations;
+--   job   =  51 : store solutions in container in standard double precision
+--                 to Standard_Monodromy_Permutations;
 --         =  52 : compute permutation by last stored solution list,
 --                 and return this new permutation in b;
 --   job   =  53 : updates decomposition with a new permutation,
@@ -586,6 +588,26 @@ function use_c2phc ( job : integer32;
 --                 with the content of a;
 --   job   = 652 : sets the target slices to the a-th slice stored 
 --                 in DoblDobl_Sampling_Operations.
+--   job   = 653 : completes one loop, sampling from one solution,
+--                 in double double precision,
+--                 where a[0] = index for the starting hyperplane sections;
+--                       a[1] = index for the target hyperplanes sections;
+--                   and b = label of the start solution;
+--                 on return b contains the label of the matching solution
+--                 in the list at the target hyperplane sections.
+--   job   = 654 : reads a witness set in double double precision from file,
+--                 on input in b is the file name, and in a the
+--                          number of characters in the file name,
+--                 stores the system in the systems container,
+--                 and its solutions in the solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set;
+--   job   = 655 : writes a witness set in double double precision to file,
+--                 on input in b is the file name, and in a the
+--                          number of characters in the file name,
+--                 the system and the solutions are taken from containers.
 --   job   = 656 : returns in a the number of irreducible factors in the
 --                 the irreducible decomposition, in double double preicsion;
 --   job   = 657 : given in a an index k to an irreducible component,
@@ -631,6 +653,26 @@ function use_c2phc ( job : integer32;
 --                 with the content of a;
 --   job   = 682 : sets the target slices to the a-th slice stored 
 --                 in QuadDobl_Sampling_Operations.
+--   job   = 683 : completes one loop, sampling from one solution,
+--                 in quad double precision,
+--                 where a[0] = index for the starting hyperplane sections;
+--                       a[1] = index for the target hyperplanes sections;
+--                   and b = label of the start solution;
+--                 on return b contains the label of the matching solution
+--                 in the list at the target hyperplane sections.
+--   job   = 684 : reads a witness set in quad double precision from file,
+--                 on input in b is the file name, and in a the
+--                          number of characters in the file name,
+--                 stores the system in the systems container,
+--                 and its solutions in the solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set;
+--   job   = 685 : writes a witness set in quad double precision to file,
+--                 on input in b is the file name, and in a the
+--                          number of characters in the file name,
+--                 the system and the solutions are taken from containers.
 --   job   = 686 : returns in a the number of irreducible factors in the
 --                 the irreducible decomposition, in quad double preicsion;
 --   job   = 687 : given in a an index k to an irreducible component,

@@ -19,6 +19,8 @@ with Standard_Complex_Solutions;
 with DoblDobl_Complex_Solutions;
 with QuadDobl_Complex_Solutions;
 with Standard_System_and_Solutions_io;
+with DoblDobl_System_and_Solutions_io;
+with QuadDobl_System_and_Solutions_io;
 with Sampling_Machine;
 with DoblDobl_Sampling_Machine;
 with QuadDobl_Sampling_Machine;
@@ -945,7 +947,7 @@ function use_c2fac ( job : integer32;
       return 682;
   end Job82;
 
-  function Job23 return integer32 is -- completes one sampling loop
+  function Job23 return integer32 is -- one standard sampling loop
 
     use Standard_Complex_Solutions;
 
@@ -968,8 +970,6 @@ function use_c2fac ( job : integer32;
                (start_label,start_slice+2);
                          -- +2 for trace grid
     end if;
-   -- put_line("The retrieved start solution :");
-   -- put(sls.all);
     tls := Standard_Sampling_Operations.Sample_Loop
              (start_slice,target_slice,sls);
     if target_slice = 0 then
@@ -987,7 +987,87 @@ function use_c2fac ( job : integer32;
       return 63;
   end Job23;
 
-  function Job24 return integer32 is -- reads witness set from file
+  function Job53 return integer32 is -- one dobldobl sampling loop
+
+    use DoblDobl_Complex_Solutions;
+
+    va : constant C_Integer_Array
+       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    vb : constant C_Integer_Array := C_intarrs.Value(b);
+    start_slice : constant integer32 := integer32(va(0));
+    target_slice : constant integer32 := integer32(va(1));
+    start_label : constant integer32 := integer32(vb(vb'first));
+    target_label : integer32;
+    tol : constant double_float := 1.0E-8;
+    sls,tls : Link_to_Solution;
+
+  begin
+    if start_slice = 0 then
+      sls := DoblDobl_Monodromy_Permutations.Retrieve
+               (start_label,start_slice);
+    else
+      sls := DoblDobl_Monodromy_Permutations.Retrieve
+               (start_label,start_slice+2);
+                         -- +2 for trace grid
+    end if;
+    tls := DoblDobl_Sampling_Operations.Sample_Loop
+             (start_slice,target_slice,sls);
+    if target_slice = 0 then
+      target_label := DoblDobl_Monodromy_Permutations.Match
+                        (tls,target_slice,tol);
+    else
+      target_label := DoblDobl_Monodromy_Permutations.Match
+                        (tls,target_slice+2,tol);
+    end if;
+    Assign(target_label,b);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at sampling one loop in dobldobl precision.");
+      return 653;
+  end Job53;
+
+  function Job83 return integer32 is -- one quaddobl sampling loop
+
+    use QuadDobl_Complex_Solutions;
+
+    va : constant C_Integer_Array
+       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    vb : constant C_Integer_Array := C_intarrs.Value(b);
+    start_slice : constant integer32 := integer32(va(0));
+    target_slice : constant integer32 := integer32(va(1));
+    start_label : constant integer32 := integer32(vb(vb'first));
+    target_label : integer32;
+    tol : constant double_float := 1.0E-8;
+    sls,tls : Link_to_Solution;
+
+  begin
+    if start_slice = 0 then
+      sls := QuadDobl_Monodromy_Permutations.Retrieve
+               (start_label,start_slice);
+    else
+      sls := QuadDobl_Monodromy_Permutations.Retrieve
+               (start_label,start_slice+2);
+                         -- +2 for trace grid
+    end if;
+    tls := QuadDobl_Sampling_Operations.Sample_Loop
+             (start_slice,target_slice,sls);
+    if target_slice = 0 then
+      target_label := QuadDobl_Monodromy_Permutations.Match
+                        (tls,target_slice,tol);
+    else
+      target_label := QuadDobl_Monodromy_Permutations.Match
+                        (tls,target_slice+2,tol);
+    end if;
+    Assign(target_label,b);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at sampling one loop in quaddobl precision.");
+      return 683;
+  end Job83;
+
+  function Job24 return integer32 is -- reads standard witness set from file
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -1019,11 +1099,83 @@ function use_c2fac ( job : integer32;
     return 0;
   exception 
     when others =>
-      put_line("Exception when reading witness set from file.");
+      put_line("Exception when reading standard witness set from file.");
       return 64;
   end Job24;
 
-  function Job25 return integer32 is -- write witness set to file
+  function Job54 return integer32 is -- reads dobldobl witness set from file
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    n : constant natural32 := natural32(v_a(v_a'first));
+    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
+    v_b : constant C_Integer_Array(0..n1)
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
+    filename : constant String(1..integer(n))
+             := C_Integer_Array_to_String(n,v_b);
+    file : file_type;
+    p : Link_to_Poly_Sys;
+    sols : Solution_List;
+    dim : natural32;
+    data : Standard_Natural_Vectors.Vector(1..2);
+
+  begin
+    Open(file,in_file,filename);
+    DoblDobl_Read_Embedding(file,p,sols,dim);
+    DoblDobl_PolySys_Container.Initialize(p.all);
+    DoblDobl_Solutions_Container.Initialize(sols);
+    data(1) := dim;
+    data(2) := Length_Of(sols);
+    Assign(p'last,a);
+    Assign(data,b);
+    Close(file);
+    return 0;
+  exception 
+    when others =>
+      put_line("Exception when reading dobldobl witness set from file.");
+      return 654;
+  end Job54;
+
+  function Job84 return integer32 is -- reads quaddobl witness set from file
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    n : constant natural32 := natural32(v_a(v_a'first));
+    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
+    v_b : constant C_Integer_Array(0..n1)
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
+    filename : constant String(1..integer(n))
+             := C_Integer_Array_to_String(n,v_b);
+    file : file_type;
+    p : Link_to_Poly_Sys;
+    sols : Solution_List;
+    dim : natural32;
+    data : Standard_Natural_Vectors.Vector(1..2);
+
+  begin
+    Open(file,in_file,filename);
+    QuadDobl_Read_Embedding(file,p,sols,dim);
+    QuadDobl_PolySys_Container.Initialize(p.all);
+    QuadDobl_Solutions_Container.Initialize(sols);
+    data(1) := dim;
+    data(2) := Length_Of(sols);
+    Assign(p'last,a);
+    Assign(data,b);
+    Close(file);
+    return 0;
+  exception 
+    when others =>
+      put_line("Exception when reading quaddobl witness set from file.");
+      return 684;
+  end Job84;
+
+  function Job25 return integer32 is -- write standard witness set to file
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -1047,9 +1199,65 @@ function use_c2fac ( job : integer32;
     return 0;
   exception 
     when others =>
-      put_line("Exception when writing witness set to file.");
+      put_line("Exception when writing a standard witness set to file.");
       return 65;
   end Job25;
+
+  function Job55 return integer32 is -- write dobldobl witness set to file
+
+    use DoblDobl_Complex_Poly_Systems;
+    use DoblDobl_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    n : constant natural32 := natural32(v_a(v_a'first));
+    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
+    v_b : constant C_Integer_Array(0..n1)
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
+    filename : constant String(1..integer(n))
+             := C_Integer_Array_to_String(n,v_b);
+    file : file_type;
+    lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
+    sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
+
+  begin
+    Create(file,out_file,filename);
+    DoblDobl_System_and_Solutions_io.put(file,lp.all,sols);
+    Close(file);
+    return 0;
+  exception 
+    when others =>
+      put_line("Exception when writing a dobldobl witness set to file.");
+      return 655;
+  end Job55;
+
+  function Job85 return integer32 is -- write quaddobl witness set to file
+
+    use QuadDobl_Complex_Poly_Systems;
+    use QuadDobl_Complex_Solutions;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    n : constant natural32 := natural32(v_a(v_a'first));
+    n1 : constant Interfaces.C.size_t := Interfaces.C.size_t(n-1);
+    v_b : constant C_Integer_Array(0..n1)
+        := C_intarrs.Value(b,Interfaces.C.ptrdiff_t(n));
+    filename : constant String(1..integer(n))
+             := C_Integer_Array_to_String(n,v_b);
+    file : file_type;
+    lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
+    sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
+
+  begin
+    Create(file,out_file,filename);
+    QuadDobl_System_and_Solutions_io.put(file,lp.all,sols);
+    Close(file);
+    return 0;
+  exception 
+    when others =>
+      put_line("Exception when writing a quaddobl witness set to file.");
+      return 685;
+  end Job85;
 
   function Job26 return integer32 is -- number of standard factors
 
@@ -1156,16 +1364,16 @@ function use_c2fac ( job : integer32;
   function Handle_Jobs return integer32 is
   begin
     case job is
-      when 0 => Write_Menu; return 0;
-      when 1 => return Job1; -- read witness set in double precision
-      when 2 => return Job2; -- initialize standard sampling machine
-      when 3 => return Job3; -- assigning standard coefficient of slice
-      when 4 => return Job4; -- storing gamma constant
-      when 5 => Standard_Sampling_Operations.Sample; return 0;
-      when 6 => Standard_Sampling_Operations.Swap_Slices; return 0;
-      when 7 => return Job7; -- copy from standard sampler to container
-      when 8 => return Job8; -- copy first standard solutions to container
-      when 9 => return Job9; -- standard solutions from grid to container
+      when  0 => Write_Menu; return 0;
+      when  1 => return Job1; -- read witness set in double precision
+      when  2 => return Job2; -- initialize standard sampling machine
+      when  3 => return Job3; -- assigning standard coefficient of slice
+      when  4 => return Job4; -- storing gamma constant
+      when  5 => Standard_Sampling_Operations.Sample; return 0;
+      when  6 => Standard_Sampling_Operations.Swap_Slices; return 0;
+      when  7 => return Job7; -- copy from standard sampler to container
+      when  8 => return Job8; -- copy first standard solutions to container
+      when  9 => return Job9; -- standard solutions from grid to container
       when 10 => return Job10; -- initializing Monodromy_Permutations
       when 11 => return Job11; -- standard solutions to Monodromy_Permutations
       when 12 => return Job12; -- compute monodromy permutation
@@ -1179,9 +1387,9 @@ function use_c2fac ( job : integer32;
       when 20 => return Job20; -- adding new slice to Sampling_Operations
       when 21 => return Job21; -- returning coefficients of a slice
       when 22 => return Job22; -- setting standard target slices
-      when 23 => return Job23; -- completes one sampling loop
-      when 24 => return Job24; -- reads witness set from file
-      when 25 => return Job25; -- writes witness set to file
+      when 23 => return Job23; -- one sampling loop in double precision
+      when 24 => return Job24; -- reads standard witness set from file
+      when 25 => return Job25; -- writes standard witness set to file
       when 26 => return Job26; -- returns number of standard factors
       when 27 => return Job27; -- returns labels in standard component
       when 28 => return Job28; -- state of monodromy permutations to silent
@@ -1199,6 +1407,9 @@ function use_c2fac ( job : integer32;
       when 48 => return Job48; -- index of dobldobl solution label
       when 49 => return Job49; -- init slices in DoblDobl_Sampling_Operations
       when 52 => return Job52; -- setting dobldobl target slices
+      when 53 => return Job53; -- one sampling loop in dobldobl precision
+      when 54 => return Job54; -- reads dobldobl witness set from file
+      when 55 => return Job55; -- writes dobldobl witness set to file
       when 56 => return Job56; -- returns number of dobldobl factors
       when 57 => return Job57; -- returns labels in dobldobl component
       when 61 => return Job61; -- read witness set in quad double precision
@@ -1215,6 +1426,9 @@ function use_c2fac ( job : integer32;
       when 78 => return Job78; -- index of quaddobl solution label
       when 79 => return Job79; -- init slices in QuadDobl_Sampling_Operations
       when 82 => return Job82; -- setting quaddobl target slices
+      when 83 => return Job23; -- one sampling loop in quaddobl precision
+      when 84 => return Job84; -- reads quaddobl witness set from file
+      when 85 => return Job85; -- writes quaddobl witness set to file
       when 86 => return Job86; -- returns number of quaddobl factors
       when 87 => return Job87; -- returns labels in quaddobl component
       when others => put_line("  Sorry.  Invalid operation."); return -1;

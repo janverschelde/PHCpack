@@ -71,12 +71,13 @@ function use_c2fac ( job : integer32;
 --   job    = 22 : sets the target slices to the a-th slice stored 
 --                 in Standard_Sampling_Operations.
 --   job    = 23 : completes one loop, sampling from one solution,
+--                 in standard double precision,
 --                 where a[0] = index for the starting hyperplane sections;
 --                       a[1] = index for the target hyperplanes sections;
 --                   and b = label of the start solution;
 --                 on return b contains the label of the matching solution
 --                 in the list at the target hyperplane sections.
---   job    = 24 : reads a witness set from file,
+--   job    = 24 : reads a witness set in standard double precision from file,
 --                 on input in b is the file name, and in a the
 --                          number of characters in the file name,
 --                 stores the system in the systems container,
@@ -84,8 +85,8 @@ function use_c2fac ( job : integer32;
 --                 and returns in a the dimension of the ambient space
 --                 and in b the following two numbers:
 --                   b[0] : dimension of the solution set;
---                   b[1] : degree of the solution set.
---   job    = 25 : reads a witness set to file,
+--                   b[1] : degree of the solution set;
+--   job    = 25 : writes a witness set in standard double precision to file,
 --                 on input in b is the file name, and in a the
 --                          number of characters in the file name,
 --                 the system and the solutions are taken from containers.
@@ -136,6 +137,26 @@ function use_c2fac ( job : integer32;
 --                 with the content of a;
 --   job    = 52 : sets the target slices to the a-th slice stored 
 --                 in DoblDobl_Sampling_Operations.
+--   job    = 53 : completes one loop, sampling from one solution,
+--                 in double double precision,
+--                 where a[0] = index for the starting hyperplane sections;
+--                       a[1] = index for the target hyperplanes sections;
+--                   and b = label of the start solution;
+--                 on return b contains the label of the matching solution
+--                 in the list at the target hyperplane sections.
+--   job    = 54 : reads a witness set in double double precision from file,
+--                 on input in b is the file name, and in a the
+--                          number of characters in the file name,
+--                 stores the system in the systems container,
+--                 and its solutions in the solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set;
+--   job    = 55 : writes a witness set in double double precision to file,
+--                 on input in b is the file name, and in a the
+--                          number of characters in the file name,
+--                 the system and the solutions are taken from containers.
 --   job    = 56 : returns in a the number of irreducible factors in the
 --                 the irreducible decomposition, in double double preicsion;
 --   job    = 57 : given in a an index k to an irreducible component,
@@ -181,6 +202,26 @@ function use_c2fac ( job : integer32;
 --                 with the content of a;
 --   job    = 82 : sets the target slices to the a-th slice stored 
 --                 in QuadDobl_Sampling_Operations.
+--   job    = 83 : completes one loop, sampling from one solution,
+--                 in quad double precision,
+--                 where a[0] = index for the starting hyperplane sections;
+--                       a[1] = index for the target hyperplanes sections;
+--                   and b = label of the start solution;
+--                 on return b contains the label of the matching solution
+--                 in the list at the target hyperplane sections.
+--   job    = 84 : reads a witness set in quad double precision from file,
+--                 on input in b is the file name, and in a the
+--                          number of characters in the file name,
+--                 stores the system in the systems container,
+--                 and its solutions in the solutions container,
+--                 and returns in a the dimension of the ambient space
+--                 and in b the following two numbers:
+--                   b[0] : dimension of the solution set;
+--                   b[1] : degree of the solution set;
+--   job    = 85 : writes a witness set in quad double precision to file,
+--                 on input in b is the file name, and in a the
+--                          number of characters in the file name,
+--                 the system and the solutions are taken from containers.
 --   job    = 86 : returns in a the number of irreducible factors in the
 --                 the irreducible decomposition, in quad double preicsion;
 --   job    = 87 : given in a an index k to an irreducible component,
