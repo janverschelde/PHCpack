@@ -89,7 +89,39 @@ int read_witness_set_from_file ( int m, char *s, int *n, int *dim, int *deg );
 /*
  * DESCRIPTION :
  *   Reads a witness set from file, stores the witness set in the
- *   systems container and solutions container.
+ *   standard double precision systems container and solutions container.
+ *
+ * ON ENTRY :
+ *   m        number of characters in the string s;
+ *   s        name of the file where the witness set is stored.
+ *
+ * ON RETURN :
+ *   n        ambient dimension, i.e.: total number of variables;
+ *   dim      dimension of the solution set;
+ *   deg      degree of the solution set. */
+
+int read_dobldobl_witness_set_from_file
+ ( int m, char *s, int *n, int *dim, int *deg );
+/*
+ * DESCRIPTION :
+ *   Reads a witness set from file, stores the witness set in the
+ *   double double precision systems container and solutions container.
+ *
+ * ON ENTRY :
+ *   m        number of characters in the string s;
+ *   s        name of the file where the witness set is stored.
+ *
+ * ON RETURN :
+ *   n        ambient dimension, i.e.: total number of variables;
+ *   dim      dimension of the solution set;
+ *   deg      degree of the solution set. */
+
+int read_quaddobl_witness_set_from_file
+ ( int m, char *s, int *n, int *dim, int *deg );
+/*
+ * DESCRIPTION :
+ *   Reads a witness set from file, stores the witness set in the
+ *   quad double precision systems container and solutions container.
  *
  * ON ENTRY :
  *   m        number of characters in the string s;
@@ -103,7 +135,32 @@ int read_witness_set_from_file ( int m, char *s, int *n, int *dim, int *deg );
 int write_witness_set_to_file ( int m, char *s );
 /*
  * DESCRIPTION :
- *   Writes the system and solutions in the container to file.
+ *   Writes the system and solutions in the container in standard
+ *   double precision to the file with the given name.
+ *
+ * REQUIRED : the symbol table is properly arranged.
+ *
+ * ON ENTRY :
+ *   m        number of characters in the string s;
+ *   s        name of the output file to write the witness set to. */
+
+int write_dobldobl_witness_set_to_file ( int m, char *s );
+/*
+ * DESCRIPTION :
+ *   Writes the system and solutions in the container in double
+ *   double precision to the file with the given name.
+ *
+ * REQUIRED : the symbol table is properly arranged.
+ *
+ * ON ENTRY :
+ *   m        number of characters in the string s;
+ *   s        name of the output file to write the witness set to. */
+
+int write_quaddobl_witness_set_to_file ( int m, char *s );
+/*
+ * DESCRIPTION :
+ *   Writes the system and solutions in the container in quad
+ *   double precision to the file with the given name.
  *
  * REQUIRED : the symbol table is properly arranged.
  *
@@ -584,43 +641,151 @@ int sample_loop ( int start_slice, int target_slice,
                   int start_label, int *target_label );
 /*
  * DESCRIPTION :
- *   Tracks one path, starting at the solution with label start_label,
- *   at hyperplane sections indexed by start_slice, going to the
- *   hyperplane sections index by target_slice.  On return is in
- *   target_label the label of the solution on the target slice,
- *   matching with the end of the path. */
+ *   Tracks one path, in standard double precision,
+ *   starting at the solution with label start_label,
+ *   at hyperplane sections indexed by start_slice,
+ *   going to the hyperplane sections index by target_slice. 
+ *   On return is in target_label the label of the solution 
+ *   on the target slice, matching with the end of the path. */
+
+int dobldobl_sample_loop
+ ( int start_slice, int target_slice,
+   int start_label, int *target_label );
+/*
+ * DESCRIPTION :
+ *   Tracks one path, in double double precision,
+ *   starting at the solution with label start_label,
+ *   at hyperplane sections indexed by start_slice,
+ *   going to the hyperplane sections index by target_slice. 
+ *   On return is in target_label the label of the solution 
+ *   on the target slice, matching with the end of the path. */
+
+int quaddobl_sample_loop
+ ( int start_slice, int target_slice,
+   int start_label, int *target_label );
+/*
+ * DESCRIPTION :
+ *   Tracks one path, in quad double precision,
+ *   starting at the solution with label start_label,
+ *   at hyperplane sections indexed by start_slice,
+ *   going to the hyperplane sections index by target_slice. 
+ *   On return is in target_label the label of the solution 
+ *   on the target slice, matching with the end of the path. */
 
 int trace_sum_difference ( int n, int *f, double *d );
 /*
  * DESCRIPTION :
  *   Returns in d the difference between the actual sum at the samples
  *   defined by the labels to the generic points in f (f is of dimension n),
- *   and the trace sum. */
+ *   and the trace sum, in standard double precision. */
+
+int dobldobl_trace_sum_difference ( int n, int *f, double *d );
+/*
+ * DESCRIPTION :
+ *   Returns in d the difference between the actual sum at the samples
+ *   defined by the labels to the generic points in f (f is of dimension n),
+ *   and the trace sum, in double double precision. */
+
+int quaddobl_trace_sum_difference ( int n, int *f, double *d );
+/*
+ * DESCRIPTION :
+ *   Returns in d the difference between the actual sum at the samples
+ *   defined by the labels to the generic points in f (f is of dimension n),
+ *   and the trace sum, in quad double precision. */
 
 int number_of_irreducible_factors ( int *nf );
 /*
  * DESCRIPTION :
- *   Returns in nf the number of irreducible factors in the current
- *   decomposition of the witness set. */
+ *   Returns in nf the number of irreducible factors in the standard
+ *   double precision decomposition of the witness set. */
+
+int number_of_dobldobl_factors ( int *nf );
+/*
+ * DESCRIPTION :
+ *   Returns in nf the number of irreducible factors in the double
+ *   double precision decomposition of the witness set. */
+
+int number_of_quaddobl_factors ( int *nf );
+/*
+ * DESCRIPTION :
+ *   Returns in nf the number of irreducible factors in the quad
+ *   double precision decomposition of the witness set. */
 
 int witness_points_of_irreducible_factor ( int k, int *d, int *w );
 /*
  * DESCRIPTION :
  *   Given in k an index of an irreducible component,
+ *   computed in standard double precision,
+ *   returns in d the degree of that component and in w 
+ *   d labels of witness points that span the component. */
+
+int witness_points_of_dobldobl_factor ( int k, int *d, int *w );
+/*
+ * DESCRIPTION :
+ *   Given in k an index of an irreducible component,
+ *   computed in double double precision,
+ *   returns in d the degree of that component and in w 
+ *   d labels of witness points that span the component. */
+
+int witness_points_of_quaddobl_factor ( int k, int *d, int *w );
+/*
+ * DESCRIPTION :
+ *   Given in k an index of an irreducible component,
+ *   computed in quad double precision,
  *   returns in d the degree of that component and in w 
  *   d labels of witness points that span the component. */
 
 int permutation_after_loop ( int d, int *permutation );
 /*
  * DESCRIPTION :
- *   For a solution set of degree d, computes the permutation using the
- *   solutions most recently stored, after a loop.  The permutation is
- *   an array of d integers, returned in the variable "permutation." */
+ *   For a set of degree d, computes the permutation using the solutions
+ *   most recently stored, after a loop in standard double precision.
+ *   The permutation is an array of d integers,
+ *   returned in the variable permutation. */
+
+int permutation_after_dobldobl_loop ( int d, int *permutation );
+/*
+ * DESCRIPTION :
+ *   For a set of degree d, computes the permutation using the solutions
+ *   most recently stored, after a loop in double double precision.
+ *   The permutation is an array of d integers,
+ *   returned in the variable permutation. */
+
+int permutation_after_quaddobl_loop ( int d, int *permutation );
+/*
+ * DESCRIPTION :
+ *   For a set of degree d, computes the permutation using the solutions
+ *   most recently stored, after a loop in quad double precision.
+ *   The permutation is an array of d integers,
+ *   returned in the variable permutation. */
 
 int update_decomposition ( int d, int *permutation, int *nf, int *done );
 /*
  * DESCRIPTION :
- *   Updates the decomposition with the given permutation of d elements.
+ *   Updates the decomposition with the given permutation of d elements,
+ *   computed in standard double precision.
+ *   On return in nf are the previous number of factors in nf[0]
+ *   and the current number of factors in nf[1].
+ *   If the current decomposition is certified, then done == 1 on return,
+ *   otherwise done == 0. */
+
+int update_dobldobl_decomposition
+ ( int d, int *permutation, int *nf, int *done );
+/*
+ * DESCRIPTION :
+ *   Updates the decomposition with the given permutation of d elements,
+ *   computed in double double precision.
+ *   On return in nf are the previous number of factors in nf[0]
+ *   and the current number of factors in nf[1].
+ *   If the current decomposition is certified, then done == 1 on return,
+ *   otherwise done == 0. */
+
+int update_quaddobl_decomposition
+ ( int d, int *permutation, int *nf, int *done );
+/*
+ * DESCRIPTION :
+ *   Updates the decomposition with the given permutation of d elements,
+ *   computed in quad double precision.
  *   On return in nf are the previous number of factors in nf[0]
  *   and the current number of factors in nf[1].
  *   If the current decomposition is certified, then done == 1 on return,
@@ -630,6 +795,25 @@ int monodromy_permutation ( int d, int *done );
 /*
  * DESCRIPTION :
  *   Computes the permutation by last stored solution,
+ *   computed in standard double precision, where
+ *   d is the number of solutions or the degree of the set,
+ *   if *done == 1 on return, then the linear trace test has certified
+ *   the current monodromy breakup, otherwise we are not done yet. */
+
+int dobldobl_monodromy_permutation ( int d, int *done );
+/*
+ * DESCRIPTION :
+ *   Computes the permutation by last stored solution,
+ *   computed in double double precision, where
+ *   d is the number of solutions or the degree of the set,
+ *   if *done == 1 on return, then the linear trace test has certified
+ *   the current monodromy breakup, otherwise we are not done yet. */
+
+int quaddobl_monodromy_permutation ( int d, int *done );
+/*
+ * DESCRIPTION :
+ *   Computes the permutation by last stored solution,
+ *   computed in quad double precision, where
  *   d is the number of solutions or the degree of the set,
  *   if *done == 1 on return, then the linear trace test has certified
  *   the current monodromy breakup, otherwise we are not done yet. */

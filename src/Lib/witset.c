@@ -142,6 +142,38 @@ int read_witness_set_from_file ( int m, char *s, int *n, int *dim, int *deg )
    return fail;
 }
 
+int read_dobldobl_witness_set_from_file
+ ( int m, char *s, int *n, int *dim, int *deg )
+{
+   int b[m],i,fail;
+   double *c;
+
+   for (i=0; i<m; i++) b[i] = (int) s[i];
+
+   *n = m;
+   fail = _ada_use_c2phc(654,n,b,c);
+   *dim = b[0];
+   *deg = b[1];
+
+   return fail;
+}
+
+int read_quaddobl_witness_set_from_file
+ ( int m, char *s, int *n, int *dim, int *deg )
+{
+   int b[m],i,fail;
+   double *c;
+
+   for (i=0; i<m; i++) b[i] = (int) s[i];
+
+   *n = m;
+   fail = _ada_use_c2phc(684,n,b,c);
+   *dim = b[0];
+   *deg = b[1];
+
+   return fail;
+}
+
 int write_witness_set_to_file ( int m, char *s )
 {
    int b[m],i,fail;
@@ -150,6 +182,30 @@ int write_witness_set_to_file ( int m, char *s )
    for (i=0; i<m; i++) b[i] = (int) s[i];
 
    fail = _ada_use_c2phc(65,&m,b,c);
+
+   return fail;
+}
+
+int write_dobldobl_witness_set_to_file ( int m, char *s )
+{
+   int b[m],i,fail;
+   double *c;
+
+   for (i=0; i<m; i++) b[i] = (int) s[i];
+
+   fail = _ada_use_c2phc(655,&m,b,c);
+
+   return fail;
+}
+
+int write_quaddobl_witness_set_to_file ( int m, char *s )
+{
+   int b[m],i,fail;
+   double *c;
+
+   for (i=0; i<m; i++) b[i] = (int) s[i];
+
+   fail = _ada_use_c2phc(685,&m,b,c);
 
    return fail;
 }
@@ -761,10 +817,54 @@ int sample_loop ( int start_slice, int target_slice,
    return fail;
 }
 
+int dobldobl_sample_loop
+ ( int start_slice, int target_slice,
+   int start_label, int *target_label )
+{
+   int a[2],fail;
+   double *c;
+
+   a[0] = start_slice;
+   a[1] = target_slice;
+   *target_label = start_label;
+   fail = _ada_use_c2phc(653,a,target_label,c);  /* calls sample loop */
+
+   return fail;
+}
+
+int quaddobl_sample_loop
+ ( int start_slice, int target_slice,
+   int start_label, int *target_label )
+{
+   int a[2],fail;
+   double *c;
+
+   a[0] = start_slice;
+   a[1] = target_slice;
+   *target_label = start_label;
+   fail = _ada_use_c2phc(683,a,target_label,c);  /* calls sample loop */
+
+   return fail;
+}
+
 int trace_sum_difference ( int n, int *f, double *d )
 {
    int fail;
    fail = _ada_use_c2phc(57,&n,f,d);
+   return fail;
+}
+
+int dobldobl_trace_sum_difference ( int n, int *f, double *d )
+{
+   int fail;
+   fail = _ada_use_c2phc(647,&n,f,d);
+   return fail;
+}
+
+int quaddobl_trace_sum_difference ( int n, int *f, double *d )
+{
+   int fail;
+   fail = _ada_use_c2phc(677,&n,f,d);
    return fail;
 }
 
@@ -774,6 +874,26 @@ int number_of_irreducible_factors ( int *nf )
    double *c;
 
    fail = _ada_use_c2phc(68,nf,b,c);
+
+   return fail;
+}
+
+int number_of_dobldobl_factors ( int *nf )
+{
+   int *b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(656,nf,b,c);
+
+   return fail;
+}
+
+int number_of_quaddobl_factors ( int *nf )
+{
+   int *b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(686,nf,b,c);
 
    return fail;
 }
@@ -789,12 +909,54 @@ int witness_points_of_irreducible_factor ( int k, int *d, int *w )
    return fail;
 }
 
+int witness_points_of_dobldobl_factor ( int k, int *d, int *w )
+{
+   int fail;
+   double *c;
+
+   *d = k;
+   fail = _ada_use_c2phc(657,d,w,c);
+
+   return fail;
+}
+
+int witness_points_of_quaddobl_factor ( int k, int *d, int *w )
+{
+   int fail;
+   double *c;
+
+   *d = k;
+   fail = _ada_use_c2phc(687,d,w,c);
+
+   return fail;
+}
+
 int permutation_after_loop ( int d, int *permutation )
 {
    int *a,fail;
    double *c;
 
    fail = _ada_use_c2phc(52,a,permutation,c);   /* compute permutation */
+
+   return fail;
+}
+
+int permutation_after_dobldobl_loop ( int d, int *permutation )
+{
+   int *a,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(642,a,permutation,c);   /* compute permutation */
+
+   return fail;
+}
+
+int permutation_after_quaddobl_loop ( int d, int *permutation )
+{
+   int *a,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(672,a,permutation,c);   /* compute permutation */
 
    return fail;
 }
@@ -808,6 +970,34 @@ int update_decomposition ( int d, int *permutation, int *nf, int *done )
    nf[0] = d; nf[1] = 0;
    fail = _ada_use_c2phc(53,nf,permutation,c);
    fail = _ada_use_c2phc(55,done,b,c);
+
+   return fail;
+}
+
+int update_dobldobl_decomposition
+ ( int d, int *permutation, int *nf, int *done )
+{
+   int fail;
+   int *b;
+   double *c;
+
+   nf[0] = d; nf[1] = 0;
+   fail = _ada_use_c2phc(643,nf,permutation,c);
+   fail = _ada_use_c2phc(645,done,b,c);
+
+   return fail;
+}
+
+int update_quaddobl_decomposition
+ ( int d, int *permutation, int *nf, int *done )
+{
+   int fail;
+   int *b;
+   double *c;
+
+   nf[0] = d; nf[1] = 0;
+   fail = _ada_use_c2phc(673,nf,permutation,c);
+   fail = _ada_use_c2phc(675,done,b,c);
 
    return fail;
 }
@@ -831,6 +1021,52 @@ int monodromy_permutation ( int d, int *done )
    if(v>0) printf(" : %d -> %d\n",nf[0],nf[1]);
    fail = _ada_use_c2phc(55,done,b,c);          /* apply linear trace */
    /* fail = _ada_use_c2phc(54,a,b,c); */       /* write decomposition */
+
+   return fail;
+}
+
+int dobldobl_monodromy_permutation ( int d, int *done )
+{
+   int *a,*b,fail,i;
+   int permutation[d];
+   int nf[2];
+   double *c;
+
+   fail = _ada_use_c2phc(642,a,permutation,c);   /* compute permutation */
+   if(v>0)
+   {
+      printf("the permutation :");
+      for (i=0; i<d; i++) printf(" %d",permutation[i]);
+   }
+   nf[0] = d;
+   nf[1] = 0;
+   fail = _ada_use_c2phc(643,nf,permutation,c);  /* update decomposition */
+   if(v>0) printf(" : %d -> %d\n",nf[0],nf[1]);
+   fail = _ada_use_c2phc(645,done,b,c);          /* apply linear trace */
+   /* fail = _ada_use_c2phc(644,a,b,c); */       /* write decomposition */
+
+   return fail;
+}
+
+int quaddobl_monodromy_permutation ( int d, int *done )
+{
+   int *a,*b,fail,i;
+   int permutation[d];
+   int nf[2];
+   double *c;
+
+   fail = _ada_use_c2phc(672,a,permutation,c);   /* compute permutation */
+   if(v>0)
+   {
+      printf("the permutation :");
+      for (i=0; i<d; i++) printf(" %d",permutation[i]);
+   }
+   nf[0] = d;
+   nf[1] = 0;
+   fail = _ada_use_c2phc(673,nf,permutation,c);  /* update decomposition */
+   if(v>0) printf(" : %d -> %d\n",nf[0],nf[1]);
+   fail = _ada_use_c2phc(675,done,b,c);          /* apply linear trace */
+   /* fail = _ada_use_c2phc(674,a,b,c); */       /* write decomposition */
 
    return fail;
 }

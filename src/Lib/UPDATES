@@ -1,3 +1,6 @@
+Thu 17 Dec 2015 : added double double and quad double versions of functions
+  in witset for the monodromy breakup.
+
 Wed 16 Dec 2015 : witset.c, for g++, needs an explicit #include "syscon.h".
 
 Tue 15 Dec 2015 : in witset, provided wrappers to new jobs for the monodromy
