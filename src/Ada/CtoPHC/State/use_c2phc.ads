@@ -468,29 +468,30 @@ function use_c2phc ( job : integer32;
 --                 and in b the following two numbers:
 --                   b[0] : dimension of the solution set;
 --                   b[1] : degree of the solution set.
---         =  42 : takes the system and the solutions from the containers
+--   job   =  42 : takes the system and the solutions from the containers
 --                 and initializes the sampling machine, on input,
 --                 the dimension of the witness set must be in a;
---         =  43 : assigns the coefficient c[0] + c[1]*I to the
+--   job   =  43 : assigns the coefficient c[0] + c[1]*I to the
 --                 b-th coefficient of the a-th slice;
---         =  44 : stores the c[0] + c[1]*I as random gamma constant
+--   job   =  44 : stores the c[0] + c[1]*I as random gamma constant
 --                 for the a-th equation;
---         =  45 : compute a new witness set on the new slices;
+--   job   =  45 : compute a new witness set on the new slices;
 --         =  46 : swaps slices and solution sets to turn back;
 --         =  47 : copy embedded system from sampler to systems container;
 --         =  48 : copy first standard solution list to container;
 --         =  49 : put solutions with index in a from monodromy grid
 --                 in the solutions container (companion to job = 11);
---         =  50 : initializes Monodromy_Permutations with two numbers:
+--   job   =  50 : initializes Monodromy_Permutations with two numbers:
 --                   a[0] : number of monodromy loops,
 --                   b[0] : degree of the solution component to factor;
---         =  51 : store solutions in container to Monodromy_Permutations;
+--   job   =  51 : store solutions in container to Monodromy_Permutations;
 --         =  52 : compute permutation by last stored solution list,
 --                 and return this new permutation in b;
---         =  53 : updates decomposition with a new permutation,
+--   job   =  53 : updates decomposition with a new permutation,
 --                 a[0] must contain the dimension and b the permutation;
---         =  54 : writes the current decomposition;
---         =  55 : applies the linear trace to certify the decomposition;
+--   job   =  54 : writes the current decomposition;
+--         =  55 : applies the linear trace to certify the decomposition,
+--                 in standard double precision;
 --         =  56 : returns in c the diagnostics of the trace grid;
 --         =  57 : returns in c difference between trace and actual sum.
 --         =  58 : finds the index of a solution label in a slice,
@@ -511,7 +512,7 @@ function use_c2phc ( job : integer32;
 --                       a[2] = the ambient dimension;
 --                 the index to the slice is in b.
 --         =  62 : sets the target slices to the a-th slice stored 
---                 in Sampling_Operations.
+--                 in Standard_Sampling_Operations.
 --         =  63 : completes one loop, sampling from one solution,
 --                 where a[0] = index for the starting hyperplane sections;
 --                       a[1] = index for the target hyperplanes sections;
@@ -542,7 +543,7 @@ function use_c2phc ( job : integer32;
 --         =  69 : given in a an index k to an irreducible component,
 --                 returns in a the degree of the k-th component and
 --                 in b the labels of the points that span the k-th
---                 component in the current irreducible decomposition;
+--                 component in the standard irreducible decomposition.
 --
 -- ANALOGUE OPERATIONS FOR DOUBLE DOUBLE AND QUAD DOUBLE PRECISION :
 --
@@ -572,6 +573,16 @@ function use_c2phc ( job : integer32;
 --                   b[0] : degree of the solution component to factor;
 --   job   = 641 : store solutions in container in double double
 --                 precision to DoblDobl_Monodromy_Permutations;
+--   job   = 645 : applies the linear trace to certify the decomposition,
+--                 in double double precision;
+--   job   = 652 : sets the target slices to the a-th slice stored 
+--                 in DoblDobl_Sampling_Operations.
+--   job   = 656 : returns in a the number of irreducible factors in the
+--                 the irreducible decomposition, in double double preicsion;
+--   job   = 657 : given in a an index k to an irreducible component,
+--                 returns in a the degree of the k-th component and
+--                 in b the labels of the points that span the k-th
+--                 component in the dobldobl irreducible decomposition.
 --
 --   job   = 661 : prompts for a witness set in quad double precision
 --                 stores the system in the quaddobl systems container,
@@ -599,10 +610,20 @@ function use_c2phc ( job : integer32;
 --                   b[0] : degree of the solution component to factor;
 --   job   = 671 : store solutions in container in quad double
 --                 precision to QuadDobl_Monodromy_Permutations;
+--   job   = 675 : applies the linear trace to certify the decomposition,
+--                 in quad double precision;
+--   job   = 682 : sets the target slices to the a-th slice stored 
+--                 in QuadDobl_Sampling_Operations.
+--   job   = 686 : returns in a the number of irreducible factors in the
+--                 the irreducible decomposition, in quad double preicsion;
+--   job   = 687 : given in a an index k to an irreducible component,
+--                 returns in a the degree of the k-th component and
+--                 in b the labels of the points that span the k-th
+--                 component in the quaddobl irreducible decomposition.
 --
 -- EMBEDDING A POLYNOMIAL SYSTEM :
 --
---         =  66 : given in a[0] the dimension of the embedding,
+--   job   =  66 : given in a[0] the dimension of the embedding,
 --                 replaces the system in container for systems in standard
 --                 double precision by the embedded system.
 --         = 129 : given in a[0] the dimension of the embedding,
@@ -621,7 +642,7 @@ function use_c2phc ( job : integer32;
 --         = 189 : given in a[0] an integer in the range 1..34,
 --                 returns in c the value of the corresponding continuation
 --                 parameter with index equal to a[0];
---         = 190 : given in a[0] an integer in the range 1..34, and
+--   job   = 190 : given in a[0] an integer in the range 1..34, and
 --                 given in c[0] the value of the corresponding continuation
 --                 parameter with index equal to a[0], sets the value of
 --                 that continuation parameter to the value of c[0];

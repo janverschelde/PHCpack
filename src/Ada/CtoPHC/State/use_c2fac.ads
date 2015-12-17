@@ -46,10 +46,11 @@ function use_c2fac ( job : integer32;
 --   job    = 13 : updates decomposition with a new permutation,
 --                 a[0] must contain the dimension and b the permutation;
 --   job    = 14 : writes the current decomposition;
---   job    = 15 : applies the linear trace to certify the decomposition;
+--          = 15 : applies the linear trace to certify the decomposition,
+--                 in standard double precision;
 --   job    = 16 : returns in c the diagnostics of the trace grid;
---   job    = 17 : returns in c difference between trace and actual sum.
---   job    = 18 : finds the index of a solution label in a slice,
+--          = 17 : returns in c difference between trace and actual sum.
+--          = 18 : finds the index of a solution label in a slice,
 --                 on entry: a[0] is label to a solution,
 --                           a[1] is the number of a slice;
 --                 on return: b is index to solution if label occurs,
@@ -67,7 +68,7 @@ function use_c2fac ( job : integer32;
 --                       a[2] = the ambient dimension;
 --                 the index to the slice is in b;
 --   job    = 22 : sets the target slices to the a-th slice stored 
---                 in Sampling_Operations.
+--                 in Standard_Sampling_Operations.
 --   job    = 23 : completes one loop, sampling from one solution,
 --                 where a[0] = index for the starting hyperplane sections;
 --                       a[1] = index for the target hyperplanes sections;
@@ -87,12 +88,12 @@ function use_c2fac ( job : integer32;
 --                 on input in b is the file name, and in a the
 --                          number of characters in the file name,
 --                 the system and the solutions are taken from containers.
---   job    = 26 : returns in a the number of irreducible factors in
---                 the current irreducible decomposition.
+--   job    = 26 : returns in a the number of irreducible factors in the
+--                 the irreducible decomposition, in standard double preicsion;
 --   job    = 27 : given in a an index k to an irreducible component,
 --                 returns in a the degree of the k-th component and
 --                 in b the labels of the points that span the k-th
---                 component in the current irreducible decomposition.
+--                 component in the standard irreducible decomposition.
 --
 -- ANALOGUE OPERATIONS FOR DOUBLE DOUBLE AND QUAD DOUBLE PRECISION :
 --
@@ -122,6 +123,16 @@ function use_c2fac ( job : integer32;
 --                   b[0] : degree of the solution component to factor;
 --   job    = 41 : store solutions in container in double double
 --                 precision to DoblDobl_Monodromy_Permutations;
+--   job    = 45 : applies the linear trace to certify the decomposition,
+--                 in double double precision;
+--   job    = 52 : sets the target slices to the a-th slice stored 
+--                 in DoblDobl_Sampling_Operations.
+--   job    = 56 : returns in a the number of irreducible factors in the
+--                 the irreducible decomposition, in double double preicsion;
+--   job    = 57 : given in a an index k to an irreducible component,
+--                 returns in a the degree of the k-th component and
+--                 in b the labels of the points that span the k-th
+--                 component in the dobldobl irreducible decomposition.
 --
 --   job    = 61 : prompts for a witness set in quad double precision
 --                 stores the system in the quaddobl systems container,
@@ -149,6 +160,16 @@ function use_c2fac ( job : integer32;
 --                   b[0] : degree of the solution component to factor;
 --   job    = 71 : store solutions in container in quad double
 --                 precision to QuadDobl_Monodromy_Permutations;
+--   job    = 75 : applies the linear trace to certify the decomposition,
+--                 in quad double precision;
+--   job    = 82 : sets the target slices to the a-th slice stored 
+--                 in QuadDobl_Sampling_Operations.
+--   job    = 86 : returns in a the number of irreducible factors in the
+--                 the irreducible decomposition, in quad double preicsion;
+--   job    = 87 : given in a an index k to an irreducible component,
+--                 returns in a the degree of the k-th component and
+--                 in b the labels of the points that span the k-th
+--                 component in the quaddobl irreducible decomposition.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

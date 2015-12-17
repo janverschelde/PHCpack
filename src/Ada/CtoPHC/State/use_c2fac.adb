@@ -673,7 +673,7 @@ function use_c2fac ( job : integer32;
       return 54;
   end Job14;
 
-  function Job15 return integer32 is -- applies linear trace test
+  function Job15 return integer32 is -- standard linear trace test
 
     done : constant boolean
          := Standard_Monodromy_Permutations.Certify_with_Linear_Trace;
@@ -686,9 +686,43 @@ function use_c2fac ( job : integer32;
     return 0;
   exception
     when others =>
-      put_line("Exception raised when applying linear trace test.");
+      put_line("Exception at applying linear trace test with doubles.");
       return 55;
   end Job15;
+
+  function Job45 return integer32 is -- dobldobl linear trace test
+
+    done : constant boolean
+         := DoblDobl_Monodromy_Permutations.Certify_with_Linear_Trace;
+
+  begin
+    if done
+     then Assign(1,a);
+     else Assign(0,a);
+    end if;
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at linear trace test with double doubles.");
+      return 645;
+  end Job45;
+
+  function Job75 return integer32 is -- quaddobl linear trace test
+
+    done : constant boolean
+         := QuadDobl_Monodromy_Permutations.Certify_with_Linear_Trace;
+
+  begin
+    if done
+     then Assign(1,a);
+     else Assign(0,a);
+    end if;
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at linear trace test with quad doubles.");
+      return 675;
+  end Job75;
 
   function Job16 return integer32 is -- return trace grid diagnostics
 
@@ -805,7 +839,7 @@ function use_c2fac ( job : integer32;
       return 61;
   end Job21;
 
-  function Job22 return integer32 is -- set target slices
+  function Job22 return integer32 is -- set target standard slices
 
     va : constant C_Integer_Array := C_intarrs.Value(a);
     i : constant integer32 := integer32(va(va'first));
@@ -818,6 +852,34 @@ function use_c2fac ( job : integer32;
       put_line("Exception raised when setting target slices.");
       return 62;
   end Job22;
+
+  function Job52 return integer32 is -- set target dobldobl slices
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    i : constant integer32 := integer32(va(va'first));
+
+  begin
+    DoblDobl_Sampling_Operations.Set_Target_Slices(i);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised when setting dobldobl target slices.");
+      return 652;
+  end Job52;
+
+  function Job82 return integer32 is -- set target quaddobl slices
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    i : constant integer32 := integer32(va(va'first));
+
+  begin
+    QuadDobl_Sampling_Operations.Set_Target_Slices(i);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception raised when setting quaddobl target slices.");
+      return 682;
+  end Job82;
 
   function Job23 return integer32 is -- completes one sampling loop
 
@@ -925,7 +987,7 @@ function use_c2fac ( job : integer32;
       return 65;
   end Job25;
 
-  function Job26 return integer32 is -- returns current #factors
+  function Job26 return integer32 is -- number of standard factors
 
     f : constant natural32
       := Standard_Monodromy_Permutations.Number_of_Irreducible_Factors;
@@ -935,11 +997,39 @@ function use_c2fac ( job : integer32;
     return 0;
   exception
     when others =>
-      put_line("Exception when retrieving number of irreducible factors.");
+      put_line("Exception at number of standard irreducible factors.");
       return 68;
   end Job26;
 
-  function Job27 return integer32 is -- returns irreducible factor
+  function Job56 return integer32 is -- number of dobldobl factors
+
+    f : constant natural32
+      := DoblDobl_Monodromy_Permutations.Number_of_Irreducible_Factors;
+
+  begin
+    Assign(integer32(f),a);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at number of dobldobl irreducible factors.");
+      return 656;
+  end Job56;
+
+  function Job86 return integer32 is -- number of quaddobl factors
+
+    f : constant natural32
+      := QuadDobl_Monodromy_Permutations.Number_of_Irreducible_Factors;
+
+  begin
+    Assign(integer32(f),a);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at number of quaddobl irreducible factors.");
+      return 686;
+  end Job86;
+
+  function Job27 return integer32 is -- standard irreducible factor
 
     v_a : constant C_Integer_Array
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
@@ -956,6 +1046,42 @@ function use_c2fac ( job : integer32;
       put_line("Exception when retrieving an irreducible factor.");
       return 69;
   end Job27;
+
+  function Job57 return integer32 is -- dobldobl irreducible factor
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    k : constant integer32 := integer32(v_a(v_a'first));
+    f : constant Standard_Natural_Vectors.Link_to_Vector
+      := DoblDobl_Monodromy_Permutations.Component(k);
+
+  begin
+    Assign(f'last,a);
+    Assign(f.all,b);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at retrieving a dobldobl irreducible factor.");
+      return 657;
+  end Job57;
+
+  function Job87 return integer32 is -- quaddobl irreducible factor
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(1));
+    k : constant integer32 := integer32(v_a(v_a'first));
+    f : constant Standard_Natural_Vectors.Link_to_Vector
+      := QuadDobl_Monodromy_Permutations.Component(k);
+
+  begin
+    Assign(f'last,a);
+    Assign(f.all,b);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at retrieving a quaddobl irreducible factor.");
+      return 687;
+  end Job87;
 
   function Job28 return integer32 is -- set state to silent
   begin
@@ -981,19 +1107,19 @@ function use_c2fac ( job : integer32;
       when 12 => return Job12; -- compute monodromy permutation
       when 13 => return Job13; -- update with permutation
       when 14 => return Job14; -- writes the decomposition
-      when 15 => return Job15; -- apply linear trace test
+      when 15 => return Job15; -- apply standard linear trace test
       when 16 => return Job16; -- return trace grid diagnostics
       when 17 => return Job17; -- comparing trace sum differences
       when 18 => return Job18; -- finding index of solution label
       when 19 => return Job19; -- initializing slices in Sampling_Operations
       when 20 => return Job20; -- adding new slice to Sampling_Operations
       when 21 => return Job21; -- returning coefficients of a slice
-      when 22 => return Job22; -- setting target slices
+      when 22 => return Job22; -- setting standard target slices
       when 23 => return Job23; -- completes one sampling loop
       when 24 => return Job24; -- reads witness set from file
       when 25 => return Job25; -- writes witness set to file
-      when 26 => return Job26; -- returns current number of factors
-      when 27 => return Job27; -- returns labels of points in component
+      when 26 => return Job26; -- returns number of standard factors
+      when 27 => return Job27; -- returns labels in standard component
       when 28 => return Job28; -- state of monodromy permutations to silent
       when 31 => return Job31; -- read witness set in double double precision
       when 32 => return Job32; -- initialize dobldobl sampling machine
@@ -1005,6 +1131,10 @@ function use_c2fac ( job : integer32;
       when 39 => return Job39; -- dobldobl solutions from grid to container
       when 40 => return Job40; -- initialize dobldobl monodromy permutations
       when 41 => return Job41; -- dobldobl solutions to Monodromy_Permutations
+      when 45 => return Job45; -- apply dobldobl linear trace test
+      when 52 => return Job52; -- setting dobldobl target slices
+      when 56 => return Job56; -- returns number of dobldobl factors
+      when 57 => return Job57; -- returns labels in dobldobl component
       when 61 => return Job61; -- read witness set in quad double precision
       when 62 => return Job62; -- initialize quaddobl sampling machine
       when 63 => return Job63; -- assign quaddobl coefficient of slice
@@ -1015,6 +1145,10 @@ function use_c2fac ( job : integer32;
       when 69 => return Job69; -- quaddobl solutions from grid to container
       when 70 => return Job70; -- initialize quaddobl monodromy permutations
       when 71 => return Job71; -- quaddobl solutions to Monodromy_Permutations
+      when 75 => return Job75; -- apply quaddobl linear trace test
+      when 82 => return Job82; -- setting quaddobl target slices
+      when 86 => return Job86; -- returns number of quaddobl factors
+      when 87 => return Job87; -- returns labels in quaddobl component
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   end Handle_Jobs;
