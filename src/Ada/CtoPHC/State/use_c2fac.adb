@@ -345,7 +345,7 @@ function use_c2fac ( job : integer32;
       return 633;
   end Job63;
 
-  function Job4 return integer32 is -- storing gamma constant
+  function Job4 return integer32 is -- storing standard gamma constant
 
     use Standard_Complex_Numbers;
 
@@ -362,9 +362,63 @@ function use_c2fac ( job : integer32;
     return 0;
   exception
     when others =>
-      put_line("Exception raised when storing gamma constant.");
+      put_line("Exception when storing standard double gamma constant.");
       return 44;
   end Job4;
+
+  function Job34 return integer32 is -- storing dobldobl gamma constant
+
+    use DoblDobl_Complex_Numbers;
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    vc : constant C_Double_Array
+       := C_DblArrs.Value(c,Interfaces.C.ptrdiff_t(4));
+    re_hi : constant double_float := double_float(vc(0));
+    re_lo : constant double_float := double_float(vc(1));
+    im_hi : constant double_float := double_float(vc(2));
+    im_lo : constant double_float := double_float(vc(3));
+    re : constant double_double := create(re_hi,re_lo);
+    im : constant double_double := create(im_hi,im_lo);
+    gamma : constant Complex_Number := Create(re,im);
+    i : constant integer32 := integer32(va(va'first));
+
+  begin
+    DoblDobl_Sampling_Operations.Store_Gamma(gamma,i);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when storing double double gamma constant.");
+      return 634;
+  end Job34;
+
+  function Job64 return integer32 is -- storing quaddobl gamma constant
+
+    use QuadDobl_Complex_Numbers;
+
+    va : constant C_Integer_Array := C_intarrs.Value(a);
+    vc : constant C_Double_Array
+       := C_DblArrs.Value(c,Interfaces.C.ptrdiff_t(8));
+    re_hihi : constant double_float := double_float(vc(0));
+    re_lohi : constant double_float := double_float(vc(1));
+    re_hilo : constant double_float := double_float(vc(2));
+    re_lolo : constant double_float := double_float(vc(3));
+    im_hihi : constant double_float := double_float(vc(4));
+    im_lohi : constant double_float := double_float(vc(5));
+    im_hilo : constant double_float := double_float(vc(6));
+    im_lolo : constant double_float := double_float(vc(7));
+    re : constant quad_double := create(re_hihi,re_lohi,re_hilo,re_lolo);
+    im : constant quad_double := create(im_hihi,im_lohi,im_hilo,im_lolo);
+    gamma : constant Complex_Number := Create(re,im);
+    i : constant integer32 := integer32(va(va'first));
+
+  begin
+    QuadDobl_Sampling_Operations.Store_Gamma(gamma,i);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception when storing quad double gamma constant.");
+      return 664;
+  end Job64;
 
   function Job7 return integer32 is -- copy from standard sampler to container
 
@@ -1603,7 +1657,7 @@ function use_c2fac ( job : integer32;
       when  1 => return Job1; -- read witness set in double precision
       when  2 => return Job2; -- initialize standard sampling machine
       when  3 => return Job3; -- assigning standard coefficient of slice
-      when  4 => return Job4; -- storing gamma constant
+      when  4 => return Job4; -- store standard double gamma constant
       when  5 => Standard_Sampling_Operations.Sample; return 0;
       when  6 => Standard_Sampling_Operations.Swap_Slices; return 0;
       when  7 => return Job7; -- copy from standard sampler to container
@@ -1632,6 +1686,7 @@ function use_c2fac ( job : integer32;
       when 31 => return Job31; -- read witness set in double double precision
       when 32 => return Job32; -- initialize dobldobl sampling machine
       when 33 => return Job33; -- assign dobldobl coefficient of slice
+      when 34 => return Job34; -- store double double gamma constant
       when 35 => DoblDobl_Sampling_Operations.Sample; return 0;
       when 36 => DoblDobl_Sampling_Operations.Swap_Slices; return 0;
       when 37 => return Job37; -- copy from dobldobl sampler to container
@@ -1657,6 +1712,7 @@ function use_c2fac ( job : integer32;
       when 61 => return Job61; -- read witness set in quad double precision
       when 62 => return Job62; -- initialize quaddobl sampling machine
       when 63 => return Job63; -- assign quaddobl coefficient of slice
+      when 64 => return Job64; -- store quaddobl gamma constant
       when 65 => QuadDobl_Sampling_Operations.Sample; return 0;
       when 66 => QuadDobl_Sampling_Operations.Swap_Slices; return 0;
       when 67 => return Job67; -- copy from quaddobl sampler to container

@@ -1,3 +1,6 @@
+Fri 18 Dec 2015 : jobs added to use_c2fac and use_c2phc to store random
+  complex double double and quad double constants for the monodromy breakup.
+
 Thu 17 Dec 2015 : added two jobs to use_c2fac and use_c2phc, then some more,
   and then still more.  Added jobs to generate random complex numbers in
   double double and quad double precision to use_c2fac and use_c2phc.

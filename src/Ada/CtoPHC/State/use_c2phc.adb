@@ -2392,13 +2392,11 @@ function use_c2phc ( job : integer32;
      -- run the sweep homotopy :
       when 610..621 => return use_sweep(job-610,a,b,c);
      -- monodromy breakup in double double precision :
-      when 631..633 => return use_c2fac(job-600,a,b,c);
-      when 635..649 => return use_c2fac(job-600,a,b,c);
+      when 631..649 => return use_c2fac(job-600,a,b,c);
       when 652..657 => return use_c2fac(job-600,a,b,c);
       when 659 => return use_c2fac(job-600,a,b,c); -- dobldobl random complex
      -- monodromy breakup in quad double precision :
-      when 661..663 => return use_c2fac(job-600,a,b,c);
-      when 665..679 => return use_c2fac(job-600,a,b,c);
+      when 661..679 => return use_c2fac(job-600,a,b,c);
       when 682..687 => return use_c2fac(job-600,a,b,c);
       when 689 => return use_c2fac(job-600,a,b,c); -- quaddobl random complex
      -- blackbox solvers in double double and quad double precision

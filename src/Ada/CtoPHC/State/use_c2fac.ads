@@ -28,7 +28,7 @@ function use_c2fac ( job : integer32;
 --   job    =  3 : assigns the coefficient c[0] + c[1]*I to the
 --                 b-th coefficient of the a-th slice;
 --   job    =  4 : stores the c[0] + c[1]*I as random gamma constant
---                 for the a-th equation;
+--                 for the a-th equation, in standard double precision;
 --   job    =  5 : compute a new standard witness set on the new slices;
 --   job    =  6 : swaps standard slices and solution sets to turn back;
 --   job    =  7 : copy embedded system from sampler to systems container,
@@ -120,6 +120,8 @@ function use_c2fac ( job : integer32;
 --   job    = 33 : assigns the double double coefficient, stored in the first
 --                 four doubles in c, the real and imaginary parts, to the
 --                 b-th coefficient of the a-th slice;
+--   job    = 34 : uses the data in c to store the random gamma constant
+--                 for the a-th equation, in double double precision;
 --   job    = 35 : compute a new dobldobl witness set on the new slices;
 --          = 36 : swaps dobldobl slices and solution sets to turn back;
 --          = 37 : copy embedded system from sampler to systems container,
@@ -195,6 +197,8 @@ function use_c2fac ( job : integer32;
 --   job    = 63 : assigns the quad double coefficient, stored in the first
 --                 eight doubles in c, the real and imaginary parts, to the
 --                 b-th coefficient of the a-th slice;
+--   job    = 64 : uses the data in c to store the random gamma constant
+--                 for the a-th equation, in quad double precision;
 --   job    = 65 : compute a new quaddobl witness set on the new slices;
 --   job    = 66 : swaps quaddobl slices and solution sets to turn back;
 --   job    = 67 : copy embedded system from sampler to systems container,
