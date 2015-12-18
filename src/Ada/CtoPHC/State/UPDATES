@@ -1,5 +1,6 @@
 Thu 17 Dec 2015 : added two jobs to use_c2fac and use_c2phc, then some more,
-  and then still more.
+  and then still more.  Added jobs to generate random complex numbers in
+  double double and quad double precision to use_c2fac and use_c2phc.
 
 Wed 16 Dec 2015 : new packages {dobldobl,quaddobl}_monodromy_permutations
   to manage data for monodromy breakup with double doubles and quad doubles.

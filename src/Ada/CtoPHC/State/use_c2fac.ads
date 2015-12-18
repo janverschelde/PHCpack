@@ -98,7 +98,11 @@ function use_c2fac ( job : integer32;
 --   job    = 27 : given in a an index k to an irreducible component,
 --                 returns in a the degree of the k-th component and
 --                 in b the labels of the points that span the k-th
---                 component in the standard irreducible decomposition.
+--                 component in the standard irreducible decomposition;
+--   job    = 28 : set the state of the factorization to silent.
+--   job    = 29 : returns in c the real and imaginary parts of
+--                 a randomly generated complex number of modulus one,
+--                 generated in standard double precision.
 --
 -- ANALOGUE OPERATIONS FOR DOUBLE DOUBLE AND QUAD DOUBLE PRECISION :
 --

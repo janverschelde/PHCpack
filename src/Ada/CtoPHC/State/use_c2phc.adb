@@ -2278,6 +2278,7 @@ function use_c2phc ( job : integer32;
       when 277 => return use_solcon(277,a,b,c); -- next double double solution
       when 278 => return use_solcon(278,a,b,c); -- next quad double solution
       when 279 => return use_solcon(279,a,b,c); -- next multprec initialize
+      when 280 => return use_c2fac(29,a,b,c); -- standard random complex number
      -- multiprecision versions for jobs 1 to 8
       when 281 => return Job281; -- copy target system to container
       when 282 => return Job282; -- copy target system from container
@@ -2394,10 +2395,12 @@ function use_c2phc ( job : integer32;
       when 631..633 => return use_c2fac(job-600,a,b,c);
       when 635..649 => return use_c2fac(job-600,a,b,c);
       when 652..657 => return use_c2fac(job-600,a,b,c);
+      when 659 => return use_c2fac(job-600,a,b,c); -- dobldobl random complex
      -- monodromy breakup in quad double precision :
       when 661..663 => return use_c2fac(job-600,a,b,c);
       when 665..679 => return use_c2fac(job-600,a,b,c);
       when 682..687 => return use_c2fac(job-600,a,b,c);
+      when 689 => return use_c2fac(job-600,a,b,c); -- quaddobl random complex
      -- blackbox solvers in double double and quad double precision
       when 700 => return Job700; -- dobldobl poly system blackbox solver
       when 701 => return Job701; -- dobldobl Laurent poly blackbox solver

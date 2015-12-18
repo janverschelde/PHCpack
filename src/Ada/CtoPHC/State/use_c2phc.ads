@@ -550,6 +550,9 @@ function use_c2phc ( job : integer32;
 --                 returns in a the degree of the k-th component and
 --                 in b the labels of the points that span the k-th
 --                 component in the standard irreducible decomposition.
+--   job   = 280 : returns in c the real and imaginary parts of
+--                 a randomly generated complex number of modulus one,
+--                 generated in standard double precision.
 --
 -- ANALOGUE OPERATIONS FOR DOUBLE DOUBLE AND QUAD DOUBLE PRECISION :
 --
@@ -627,6 +630,9 @@ function use_c2phc ( job : integer32;
 --                 returns in a the degree of the k-th component and
 --                 in b the labels of the points that span the k-th
 --                 component in the dobldobl irreducible decomposition.
+--   job   = 659 : returns in c the real and imaginary parts of
+--                 a randomly generated complex number of modulus one,
+--                 generated in double double precision.
 --
 --   job   = 661 : prompts for a witness set in quad double precision
 --                 stores the system in the quaddobl systems container,
@@ -702,6 +708,9 @@ function use_c2phc ( job : integer32;
 --                 returns in a the degree of the k-th component and
 --                 in b the labels of the points that span the k-th
 --                 component in the quaddobl irreducible decomposition.
+--   job   = 689 : returns in c the real and imaginary parts of
+--                 a randomly generated complex number of modulus one,
+--                 generated in quad double precision.
 --
 -- EMBEDDING A POLYNOMIAL SYSTEM :
 --

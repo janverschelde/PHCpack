@@ -7,6 +7,9 @@ with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with Standard_Random_Numbers;
+with DoblDobl_Random_Numbers;
+with QuadDobl_Random_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_VecVecs;
 with Standard_Floating_Vectors;
@@ -1551,6 +1554,48 @@ function use_c2fac ( job : integer32;
     return 0;
   end Job28;
 
+  function Job29 return integer32 is -- standard random complex number
+
+    use Standard_Complex_Numbers;
+    res : constant Complex_Number := Standard_Random_Numbers.Random1;
+
+  begin
+    Assign(res,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at generating standard random complex number.");
+      return 280;
+  end Job29;
+
+  function Job59 return integer32 is -- dobldobl random complex number
+
+    use DoblDobl_Complex_Numbers;
+    res : constant Complex_Number := DoblDobl_Random_Numbers.Random1;
+
+  begin
+    Assign(res,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at generating dobldobl random complex number.");
+      return 659;
+  end Job59;
+
+  function Job89 return integer32 is -- quaddobl random complex number
+
+    use QuadDobl_Complex_Numbers;
+    res : constant Complex_Number := QuadDobl_Random_Numbers.Random1;
+
+  begin
+    Assign(res,c);
+    return 0;
+  exception
+    when others =>
+      put_line("Exception at generating quaddobl random complex number.");
+      return 689;
+  end Job89;
+
   function Handle_Jobs return integer32 is
   begin
     case job is
@@ -1583,6 +1628,7 @@ function use_c2fac ( job : integer32;
       when 26 => return Job26; -- returns number of standard factors
       when 27 => return Job27; -- returns labels in standard component
       when 28 => return Job28; -- state of monodromy permutations to silent
+      when 29 => return Job29; -- standard random complex number
       when 31 => return Job31; -- read witness set in double double precision
       when 32 => return Job32; -- initialize dobldobl sampling machine
       when 33 => return Job33; -- assign dobldobl coefficient of slice
@@ -1607,6 +1653,7 @@ function use_c2fac ( job : integer32;
       when 55 => return Job55; -- writes dobldobl witness set to file
       when 56 => return Job56; -- returns number of dobldobl factors
       when 57 => return Job57; -- returns labels in dobldobl component
+      when 59 => return Job59; -- random dobldobl complex number
       when 61 => return Job61; -- read witness set in quad double precision
       when 62 => return Job62; -- initialize quaddobl sampling machine
       when 63 => return Job63; -- assign quaddobl coefficient of slice
@@ -1631,6 +1678,7 @@ function use_c2fac ( job : integer32;
       when 85 => return Job85; -- writes quaddobl witness set to file
       when 86 => return Job86; -- returns number of quaddobl factors
       when 87 => return Job87; -- returns labels in quaddobl component
+      when 89 => return Job89; -- random quaddobl complex number
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   end Handle_Jobs;
