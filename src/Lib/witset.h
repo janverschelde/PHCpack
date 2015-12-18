@@ -502,7 +502,35 @@ int trace_grid_diagnostics ( double *err, double *dis );
 void random_complex ( double *re, double *im );
 /* 
  * DESCRIPTION :
- *   Generates a random complex number on the unit circle. */
+ *   Generates a random complex number on the unit circle,
+ *   with the C standard math library in standard double precision. */
+
+int random_standard_complex ( double *re, double *im );
+/* 
+ * DESCRIPTION :
+ *   Generates a random complex number on the unit circle,
+ *   in standard double precision.
+ *   On return is the failure code of the call to the Ada code. */
+
+int random_dobldobl_complex ( double *re, double *im );
+/* 
+ * DESCRIPTION :
+ *   Generates a random complex number on the unit circle,
+ *   in double double precision.  The parameters re and im
+ *   must have been allocated to hold each two doubles.
+ *   The two doubles for re and im store the high and low
+ *   part of a double double number.
+ *   On return is the failure code of the call to the Ada code. */
+
+int random_quaddobl_complex ( double *re, double *im );
+/* 
+ * DESCRIPTION :
+ *   Generates a random complex number on the unit circle,
+ *   in quad double precision.  The parameters re and im
+ *   must have been allocated to hold each four doubles.
+ *   The four doubles for re and im store the parts of a
+ *   quad double number, in the order from high to low.
+ *   On return is the failure code of the call to the Ada code. */
 
 int store_gamma ( int n, double *re_gamma, double *im_gamma );
 /*

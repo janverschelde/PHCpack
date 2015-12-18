@@ -1,3 +1,6 @@
+Fri 18 Dec 2015 : wrapped the generation of random complex numbers in double
+  double and quad double precision in witset.
+
 Thu 17 Dec 2015 : added double double and quad double versions of functions
   in witset for the monodromy breakup.
 

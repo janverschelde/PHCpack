@@ -619,6 +619,42 @@ void random_complex ( double *re, double *im )
    *im = sin(angle);
 }
 
+int random_standard_complex ( double *re, double *im )
+{
+   int *a,*b,fail;
+   double c[2];
+   
+   fail = _ada_use_c2phc(280,a,b,c);
+   *re = c[0];
+   *im = c[1];
+
+   return fail;
+}
+
+int random_dobldobl_complex ( double *re, double *im )
+{
+   int *a,*b,fail;
+   double c[4];
+   
+   fail = _ada_use_c2phc(659,a,b,c);
+   re[0] = c[0]; re[1] = c[1];
+   im[0] = c[2]; im[1] = c[3];
+
+   return fail;
+}
+
+int random_quaddobl_complex ( double *re, double *im )
+{
+   int *a,*b,fail;
+   double c[8];
+   
+   fail = _ada_use_c2phc(689,a,b,c);
+   re[0] = c[0]; re[1] = c[1]; re[2] = c[2]; re[3] = c[3];
+   im[0] = c[4]; im[1] = c[5]; im[2] = c[6]; im[3] = c[7];
+
+   return fail;
+}
+
 int store_gamma ( int n, double *re_gamma, double *im_gamma )
 {
    int fail,i;
