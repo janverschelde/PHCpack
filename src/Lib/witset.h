@@ -186,7 +186,19 @@ int witness_set_to_system_container ( void );
 /*
  * DESCRIPTION :
  *   Copies the embedded system of the witness set from the sampler
- *   to the systems container. */
+ *   to the systems container in standard double precision. */
+
+int dobldobl_witness_set_to_system_container ( void );
+/*
+ * DESCRIPTION :
+ *   Copies the embedded system of the witness set from the sampler
+ *   to the systems container in double double precision. */
+
+int quaddobl_witness_set_to_system_container ( void );
+/*
+ * DESCRIPTION :
+ *   Copies the embedded system of the witness set from the sampler
+ *   to the systems container in quad double precision. */
 
 int create_cascade_homotopy ( void );
 /*
@@ -663,7 +675,20 @@ int quaddobl_sample_to_new_slices ( void );
 int track_paths ( void );
 /* 
  * DESCRIPTION :
- *   Tracks as many paths as defined by witness set. */
+ *   Tracks as many paths as defined by witness set,
+ *   in standard double precision. */
+
+int dobldobl_track_paths ( void );
+/* 
+ * DESCRIPTION :
+ *   Tracks as many paths as defined by witness set,
+ *   in double double precision. */
+
+int quaddobl_track_paths ( void );
+/* 
+ * DESCRIPTION :
+ *   Tracks as many paths as defined by witness set,
+ *   in quad double precision. */
 
 int sample_loop ( int start_slice, int target_slice,
                   int start_label, int *target_label );

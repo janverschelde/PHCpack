@@ -232,6 +232,22 @@ int witness_set_to_system_container ( void )
    return fail;
 }
 
+int dobldobl_witness_set_to_system_container ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(637,a,b,c);   /* copy system to container */
+   return fail;
+}
+
+int quaddobl_witness_set_to_system_container ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(667,a,b,c);   /* copy system to container */
+   return fail;
+}
+
 int create_cascade_homotopy ( void )
 {
    int *a,*b,fail;
@@ -825,16 +841,47 @@ int quaddobl_sample_to_new_slices ( void )
 
 int track_paths ( void )
 {
+   int fail;
+
+   fail = sample_to_new_slices();            /* do path tracking */
+   if(v>0) printf("Done tracking.\n");
+   if(v>1) printf("Solutions computed :\n");
+   if(v>1) fail = solcon_write_standard_solutions();
+   fail = swap_slices();                     /* swap start with new slices */
+   fail = witness_set_to_system_container();
+   fail = validate_solutions();
+
+   return fail;
+}
+
+int dobldobl_track_paths ( void )
+{
    int *a,*b,fail;
    double *c;
 
-   fail = _ada_use_c2phc(45,a,b,c);          /* do path tracking */
+   fail = dobldobl_sample_to_new_slices();   /* do path tracking */
    if(v>0) printf("Done tracking.\n");
    if(v>1) printf("Solutions computed :\n");
-   if(v>1) fail = _ada_use_c2phc(31,a,b,c);  /* write solutions container */
-   fail = _ada_use_c2phc(46,a,b,c);          /* swap start with new slices */
-   fail = _ada_use_c2phc(47,a,b,c);          /* copy target system */
-   fail = _ada_use_c2phc(9,a,b,c);           /* validate the solutions */
+   if(v>1) fail = solcon_write_dobldobl_solutions();
+   fail = swap_dobldobl_slices();            /* swap start with new slices */
+   fail = dobldobl_witness_set_to_system_container();
+   fail = dobldobl_Newton_step();
+
+   return fail;
+}
+
+int quaddobl_track_paths ( void )
+{
+   int *a,*b,fail;
+   double *c;
+
+   fail = quaddobl_sample_to_new_slices();   /* do path tracking */
+   if(v>0) printf("Done tracking.\n");
+   if(v>1) printf("Solutions computed :\n");
+   if(v>1) fail = solcon_write_quaddobl_solutions();
+   fail = swap_quaddobl_slices();            /* swap start with new slices */
+   fail = quaddobl_witness_set_to_system_container();
+   fail = quaddobl_Newton_step();
 
    return fail;
 }
