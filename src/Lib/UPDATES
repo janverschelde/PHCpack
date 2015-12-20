@@ -1,3 +1,6 @@
+Sat 19 Dec 2015 : extended witset with functions to store gamma constants in
+  double double and quad double precision, modified lib_factor.c.
+
 Fri 18 Dec 2015 : wrapped the generation of random complex numbers in double
   double and quad double precision in witset.  Extended witset with a version
   of the function track_paths for double double and quad double precision.

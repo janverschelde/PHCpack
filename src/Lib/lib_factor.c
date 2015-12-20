@@ -17,10 +17,10 @@ int set_trace_slice ( int first );
  *   Sets the coefficient of the slice used in the linear trace,
  *   when called for the first time, first must have the value 1. */
 
-int store_gammas ( int n );
+int store_standard_gammas ( int n );
 /*
  * DESCRIPTION :
- *   Generates n random complex coefficients
+ *   Generates n random complex coefficients in standard double precision
  *   and stores these coefficients into the monodromy breakup machine. */
 
 int monodromy_breakup ( int nbloops, int n, int k, int d );
@@ -95,7 +95,7 @@ int set_trace_slice ( int first )
    return fail;
 }
 
-int store_gammas ( int n )
+int store_standard_gammas ( int n )
 {
    double re_gamma[n];
    double im_gamma[n];
@@ -103,7 +103,7 @@ int store_gammas ( int n )
     
    for(i=0; i<n; i++)
       random_complex(&re_gamma[i],&im_gamma[i]);
-   store_gamma(n,re_gamma,im_gamma);
+   store_standard_gamma(n,re_gamma,im_gamma);
 }
 
 int monodromy_breakup ( int nbloops, int n, int k, int d )
@@ -120,8 +120,8 @@ int monodromy_breakup ( int nbloops, int n, int k, int d )
    printf("... initializing the grid ...\n");
    for(i=1; i<=2; i++)        /* initialize grid for trace validation */
    {
-      fail = set_trace_slice(i);  /* fix constant coefficient of slice */
-      fail = store_gammas(n);     /* generate random gamma constants */
+      fail = set_trace_slice(i);      /* fix constant coefficient of slice */
+      fail = store_standard_gammas(n);  /* generate random gamma constants */
       fail = track_paths();
       fail = store_solutions();   /* store solutions in the grid */
       fail = restore_solutions(); /* use original solutions at start */
@@ -133,10 +133,10 @@ int monodromy_breakup ( int nbloops, int n, int k, int d )
    {
       printf("... starting loop #\%d ...\n",i);
       fail = new_slices(k,n);
-      fail = store_gammas(n);
+      fail = store_standard_gammas(n);
       fail = track_paths();     /* swapping slices happens here */
       fail = solcon_clear_standard_solutions();
-      fail = store_gammas(n);
+      fail = store_standard_gammas(n);
       fail = track_paths();
       fail = store_solutions();
       {

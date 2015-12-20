@@ -671,17 +671,51 @@ int random_quaddobl_complex ( double *re, double *im )
    return fail;
 }
 
-int store_gamma ( int n, double *re_gamma, double *im_gamma )
+int store_standard_gamma ( int n, double *re_gamma, double *im_gamma )
 {
    int fail,i;
    int *b;
    double r[2];
 
-   for (i=0; i<n; i++)
+   for(i=0; i<n; i++)
    {
       r[0] = re_gamma[i];
       r[1] = im_gamma[i];
       fail = _ada_use_c2phc(44,&i,b,r);  /* store gamma */
+   }
+
+   return fail;
+}
+
+int store_dobldobl_gamma ( int n, double *re_gamma, double *im_gamma )
+{
+   int fail,i;
+   int *b;
+   double r[4];
+
+   for(i=0; i<n; i++)
+   {
+      r[0] = re_gamma[2*i]; r[1] = re_gamma[2*i+1];
+      r[2] = im_gamma[2*i]; r[3] = im_gamma[2*i+1];
+      fail = _ada_use_c2phc(634,&i,b,r);  /* store gamma */
+   }
+
+   return fail;
+}
+
+int store_quaddobl_gamma ( int n, double *re_gamma, double *im_gamma )
+{
+   int fail,i;
+   int *b;
+   double r[8];
+
+   for(i=0; i<n; i++)
+   {
+      r[0] = re_gamma[4*i];   r[1] = re_gamma[4*i+1];
+      r[2] = re_gamma[4*i+2]; r[3] = re_gamma[4*i+3];
+      r[4] = im_gamma[4*i];   r[5] = im_gamma[4*i+1];
+      r[6] = im_gamma[4*i+2]; r[7] = im_gamma[4*i+3];
+      fail = _ada_use_c2phc(664,&i,b,r);  /* store gamma */
    }
 
    return fail;

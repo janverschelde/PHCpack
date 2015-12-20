@@ -544,10 +544,26 @@ int random_quaddobl_complex ( double *re, double *im );
  *   quad double number, in the order from high to low.
  *   On return is the failure code of the call to the Ada code. */
 
-int store_gamma ( int n, double *re_gamma, double *im_gamma );
+int store_standard_gamma ( int n, double *re_gamma, double *im_gamma );
 /*
  * DESCRIPTION :
- *   Stores n gamma's, gamma = re_gamma + im_gamma*I into the sampler. */
+ *   Stores n gamma's, in standard double precision,
+ *   gamma = re_gamma + im_gamma*I into the sampler.
+ *   The parameters re_gamma and im_gamma point to n doubles. */
+
+int store_dobldobl_gamma ( int n, double *re_gamma, double *im_gamma );
+/*
+ * DESCRIPTION :
+ *   Stores n gamma's, in double double precision,
+ *   gamma = re_gamma + im_gamma*I into the sampler.
+ *   The parameters re_gamma and im_gamma point to 2*n doubles. */
+
+int store_quaddobl_gamma ( int n, double *re_gamma, double *im_gamma );
+/*
+ * DESCRIPTION :
+ *   Stores n gamma's, in double double precision,
+ *   gamma = re_gamma + im_gamma*I into the sampler.
+ *   The parameters re_gamma and im_gamma point to 4*n doubles. */
 
 int assign_coefficient_of_slice ( int i, int j, double *r );
 /*
