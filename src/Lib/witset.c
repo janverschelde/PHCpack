@@ -616,6 +616,32 @@ int initialize_monodromy ( int n, int d, int k )
    return fail;
 }
 
+int initialize_dobldobl_monodromy ( int n, int d, int k )
+{
+   int fail;
+   double *c;
+   int dk[2];
+
+   dk[0] = d;
+   dk[1] = k;
+   fail = _ada_use_c2phc(640,&n,dk,c);
+
+   return fail;
+}
+
+int initialize_quaddobl_monodromy ( int n, int d, int k )
+{
+   int fail;
+   double *c;
+   int dk[2];
+
+   dk[0] = d;
+   dk[1] = k;
+   fail = _ada_use_c2phc(670,&n,dk,c);
+
+   return fail;
+}
+
 int trace_grid_diagnostics ( double *err, double *dis )
 {
    int *a,*b,fail;
@@ -789,6 +815,36 @@ int new_slices ( int k, int n )
    return fail;
 }
 
+int new_dobldobl_slices ( int k, int n )
+{
+   int i,j,fail;
+   double r[4];
+
+   for(i=0; i<k; i++)
+      for(j=0; j<n+1; j++)
+      {
+          random_dobldobl_complex(&r[0],&r[2]);
+          fail = _ada_use_c2phc(633,&i,&j,r);  /* assign coefficient */
+      }
+
+   return fail;
+}
+
+int new_quaddobl_slices ( int k, int n )
+{
+   int i,j,fail;
+   double r[8];
+
+   for(i=0; i<k; i++)
+      for(j=0; j<n+1; j++)
+      {
+          random_quaddobl_complex(&r[0],&r[3]);
+          fail = _ada_use_c2phc(663,&i,&j,r);  /* assign coefficient */
+      }
+
+   return fail;
+}
+
 int swap_slices ( void )
 {
    double *c;
@@ -817,7 +873,23 @@ int store_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(51,a,b,c);   /* move solutions to permutations */
+   fail = _ada_use_c2phc(51,a,b,c);   /* standard sols to permutations */
+   return fail;
+}
+
+int store_dobldobl_solutions ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(641,a,b,c);  /* dobldobl sols to permutations */
+   return fail;
+}
+
+int store_quaddobl_solutions ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(671,a,b,c);  /* quaddobl sols to permutations */
    return fail;
 }
 
@@ -826,6 +898,22 @@ int restore_solutions ( void )
    int *a,*b,fail;
    double *c;
    fail = _ada_use_c2phc(48,a,b,c);   /* first solutions to container */ 
+   return fail;
+}
+
+int restore_dobldobl_solutions ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(638,a,b,c);  /* first dobldobl sols to container */ 
+   return fail;
+}
+
+int restore_quaddobl_solutions ( void )
+{
+   int *a,*b,fail;
+   double *c;
+   fail = _ada_use_c2phc(678,a,b,c);  /* first quaddobl sols to container */ 
    return fail;
 }
 

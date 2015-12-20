@@ -498,7 +498,19 @@ int initialize_quaddobl_sampler ( int dim );
 int initialize_monodromy ( int n, int d, int k );
 /* 
  * DESCRIPTION :
- *   Initialize the package Monodromy_Permutations for n loops,
+ *   Initialize the package Standard_Monodromy_Permutations for n loops,
+ *   to factor a k-dimensional solution component of degree d.  */
+
+int initialize_dobldobl_monodromy ( int n, int d, int k );
+/* 
+ * DESCRIPTION :
+ *   Initialize the package DoblDobl_Monodromy_Permutations for n loops,
+ *   to factor a k-dimensional solution component of degree d.  */
+
+int initialize_quaddobl_monodromy ( int n, int d, int k );
+/* 
+ * DESCRIPTION :
+ *   Initialize the package QuadDobl_Monodromy_Permutations for n loops,
  *   to factor a k-dimensional solution component of degree d.  */
 
 int trace_grid_diagnostics ( double *err, double *dis );
@@ -625,7 +637,20 @@ int set_target_hyperplane_sections ( int i );
 int new_slices ( int k, int n );
 /*
  * DESCRIPTION :
- *   generates k random slides in n-space. */
+ *   Generates k random hyperplanes in standard double precision
+ *   in n-space. */
+
+int new_dobldobl_slices ( int k, int n );
+/*
+ * DESCRIPTION :
+ *   Generates k random hyperplanes in double double precision
+ *   in n-space. */
+
+int new_quaddobl_slices ( int k, int n );
+/*
+ * DESCRIPTION :
+ *   Generates k random hyperplanes in quad double precision
+ *   in n-space. */
 
 int swap_slices ( void );
 /* 
@@ -648,12 +673,38 @@ int swap_quaddobl_slices ( void );
 int store_solutions ( void );
 /* 
  * DESCRIPTION :
- *   Stores the solutions in the container to the Monodromy_Permutations. */
+ *   Stores the solutions in the container to the data maintained
+ *   by the package Standard_Monodromy_Permutations. */
+
+int store_dobldobl_solutions ( void );
+/* 
+ * DESCRIPTION :
+ *   Stores the solutions in the container to the data maintained
+ *   by the package DoblDobl_Monodromy_Permutations. */
+
+int store_quaddobl_solutions ( void );
+/* 
+ * DESCRIPTION :
+ *   Stores the solutions in the container to the data maintained
+ *   by the package QuadDobl_Monodromy_Permutations. */
 
 int restore_solutions ( void );
 /*
  * DESCRIPTION :
- *   Restores first initialized solutions from sampler to the container. */
+ *   Restores first initialized solutions in standard double precision
+ *   from sampler to the container. */
+
+int restore_dobldobl_solutions ( void );
+/*
+ * DESCRIPTION :
+ *   Restores first initialized solutions in double double precision
+ *   from sampler to the container. */
+
+int restore_quaddobl_solutions ( void );
+/*
+ * DESCRIPTION :
+ *   Restores first initialized solutions in quad double precision
+ *   from sampler to the container. */
 
 int retrieve_solutions_on_grid ( int i );
 /*

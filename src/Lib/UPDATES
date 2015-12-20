@@ -1,3 +1,6 @@
+Sun 20 Dec 2015 : witset contains all functions needed for the monodromy
+  breakup in double double and quad double precision.
+
 Sat 19 Dec 2015 : extended witset with functions to store gamma constants in
   double double and quad double precision, modified lib_factor.c.
 
