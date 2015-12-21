@@ -7,7 +7,7 @@
 #include "solcon.h"
 #include "witset.h"
 
-#define v 0 /* verbose flag */
+#define verbose 0 /* verbose flag */
 
 /* some basic OPERATIONS on witness sets */
 
@@ -61,15 +61,15 @@ int read_witness_set ( int *n, int *dim, int *deg )
    fail = _ada_use_c2phc(41,n,d,c);    /* read the witness set */
    *dim = d[0];
    *deg = d[1];
-   if(v>0) printf("The ambient dimension is %d.\n", *n); 
-   if(v>0) printf("The dimension of the solution set is %d.\n", d[0]); 
-   if(v>0) printf("The degree of the solution set is %d.\n", d[1]); 
-   if(v>1)
+   if(verbose>0) printf("The ambient dimension is %d.\n", *n); 
+   if(verbose>0) printf("The dimension of the solution set is %d.\n", d[0]); 
+   if(verbose>0) printf("The degree of the solution set is %d.\n", d[1]); 
+   if(verbose>1)
    {
       printf("The embedded system :\n");
       fail = syscon_write_standard_system();
    }
-   if(v>1)
+   if(verbose>1)
    {
       printf("The following solutions are in container :\n");
       fail = solcon_write_standard_solutions();
@@ -86,15 +86,15 @@ int read_dobldobl_witness_set ( int *n, int *dim, int *deg )
    fail = _ada_use_c2phc(631,n,d,c);    /* read the witness set */
    *dim = d[0];
    *deg = d[1];
-   if(v>0) printf("The ambient dimension is %d.\n", *n); 
-   if(v>0) printf("The dimension of the solution set is %d.\n", d[0]); 
-   if(v>0) printf("The degree of the solution set is %d.\n", d[1]); 
-   if(v>1)
+   if(verbose>0) printf("The ambient dimension is %d.\n", *n); 
+   if(verbose>0) printf("The dimension of the solution set is %d.\n", d[0]); 
+   if(verbose>0) printf("The degree of the solution set is %d.\n", d[1]); 
+   if(verbose>1)
    {
       printf("The embedded system :\n");
       fail = syscon_write_dobldobl_system();
    }
-   if(v>1)
+   if(verbose>1)
    {
       printf("The following solutions are in container :\n");
       fail = solcon_write_dobldobl_solutions();
@@ -111,15 +111,15 @@ int read_quaddobl_witness_set ( int *n, int *dim, int *deg )
    fail = _ada_use_c2phc(661,n,d,c);    /* read the witness set */
    *dim = d[0];
    *deg = d[1];
-   if(v>0) printf("The ambient dimension is %d.\n", *n); 
-   if(v>0) printf("The dimension of the solution set is %d.\n", d[0]); 
-   if(v>0) printf("The degree of the solution set is %d.\n", d[1]); 
-   if(v>1)
+   if(verbose>0) printf("The ambient dimension is %d.\n", *n); 
+   if(verbose>0) printf("The dimension of the solution set is %d.\n", d[0]); 
+   if(verbose>0) printf("The degree of the solution set is %d.\n", d[1]); 
+   if(verbose>1)
    {
       printf("The embedded system :\n");
       fail = syscon_write_quaddobl_system();
    }
-   if(v>1)
+   if(verbose>1)
    {
       printf("The following solutions are in container :\n");
       fail = solcon_write_quaddobl_solutions();
@@ -913,7 +913,7 @@ int restore_quaddobl_solutions ( void )
 {
    int *a,*b,fail;
    double *c;
-   fail = _ada_use_c2phc(678,a,b,c);  /* first quaddobl sols to container */ 
+   fail = _ada_use_c2phc(668,a,b,c);  /* first quaddobl sols to container */ 
    return fail;
 }
 
@@ -966,9 +966,9 @@ int track_paths ( void )
    int fail;
 
    fail = sample_to_new_slices();            /* do path tracking */
-   if(v>0) printf("Done tracking.\n");
-   if(v>1) printf("Solutions computed :\n");
-   if(v>1) fail = solcon_write_standard_solutions();
+   if(verbose>0) printf("Done tracking.\n");
+   if(verbose>1) printf("Solutions computed :\n");
+   if(verbose>1) fail = solcon_write_standard_solutions();
    fail = swap_slices();                     /* swap start with new slices */
    fail = witness_set_to_system_container();
    fail = validate_solutions();
@@ -982,9 +982,9 @@ int dobldobl_track_paths ( void )
    double *c;
 
    fail = dobldobl_sample_to_new_slices();   /* do path tracking */
-   if(v>0) printf("Done tracking.\n");
-   if(v>1) printf("Solutions computed :\n");
-   if(v>1) fail = solcon_write_dobldobl_solutions();
+   if(verbose>0) printf("Done tracking.\n");
+   if(verbose>1) printf("Solutions computed :\n");
+   if(verbose>1) fail = solcon_write_dobldobl_solutions();
    fail = swap_dobldobl_slices();            /* swap start with new slices */
    fail = dobldobl_witness_set_to_system_container();
    fail = dobldobl_Newton_step();
@@ -998,9 +998,9 @@ int quaddobl_track_paths ( void )
    double *c;
 
    fail = quaddobl_sample_to_new_slices();   /* do path tracking */
-   if(v>0) printf("Done tracking.\n");
-   if(v>1) printf("Solutions computed :\n");
-   if(v>1) fail = solcon_write_quaddobl_solutions();
+   if(verbose>0) printf("Done tracking.\n");
+   if(verbose>1) printf("Solutions computed :\n");
+   if(verbose>1) fail = solcon_write_quaddobl_solutions();
    fail = swap_quaddobl_slices();            /* swap start with new slices */
    fail = quaddobl_witness_set_to_system_container();
    fail = quaddobl_Newton_step();
@@ -1215,7 +1215,7 @@ int monodromy_permutation ( int d, int *done )
    double *c;
 
    fail = _ada_use_c2phc(52,a,permutation,c);   /* compute permutation */
-   if(v>0)
+   if(verbose>0)
    {
       printf("the permutation :");
       for (i=0; i<d; i++) printf(" %d",permutation[i]);
@@ -1223,7 +1223,7 @@ int monodromy_permutation ( int d, int *done )
    nf[0] = d;
    nf[1] = 0;
    fail = _ada_use_c2phc(53,nf,permutation,c);  /* update decomposition */
-   if(v>0) printf(" : %d -> %d\n",nf[0],nf[1]);
+   if(verbose>0) printf(" : %d -> %d\n",nf[0],nf[1]);
    fail = _ada_use_c2phc(55,done,b,c);          /* apply linear trace */
    /* fail = _ada_use_c2phc(54,a,b,c); */       /* write decomposition */
 
@@ -1238,7 +1238,7 @@ int dobldobl_monodromy_permutation ( int d, int *done )
    double *c;
 
    fail = _ada_use_c2phc(642,a,permutation,c);   /* compute permutation */
-   if(v>0)
+   if(verbose>0)
    {
       printf("the permutation :");
       for (i=0; i<d; i++) printf(" %d",permutation[i]);
@@ -1246,7 +1246,7 @@ int dobldobl_monodromy_permutation ( int d, int *done )
    nf[0] = d;
    nf[1] = 0;
    fail = _ada_use_c2phc(643,nf,permutation,c);  /* update decomposition */
-   if(v>0) printf(" : %d -> %d\n",nf[0],nf[1]);
+   if(verbose>0) printf(" : %d -> %d\n",nf[0],nf[1]);
    fail = _ada_use_c2phc(645,done,b,c);          /* apply linear trace */
    /* fail = _ada_use_c2phc(644,a,b,c); */       /* write decomposition */
 
@@ -1261,7 +1261,7 @@ int quaddobl_monodromy_permutation ( int d, int *done )
    double *c;
 
    fail = _ada_use_c2phc(672,a,permutation,c);   /* compute permutation */
-   if(v>0)
+   if(verbose>0)
    {
       printf("the permutation :");
       for (i=0; i<d; i++) printf(" %d",permutation[i]);
@@ -1269,7 +1269,7 @@ int quaddobl_monodromy_permutation ( int d, int *done )
    nf[0] = d;
    nf[1] = 0;
    fail = _ada_use_c2phc(673,nf,permutation,c);  /* update decomposition */
-   if(v>0) printf(" : %d -> %d\n",nf[0],nf[1]);
+   if(verbose>0) printf(" : %d -> %d\n",nf[0],nf[1]);
    fail = _ada_use_c2phc(675,done,b,c);          /* apply linear trace */
    /* fail = _ada_use_c2phc(674,a,b,c); */       /* write decomposition */
 
