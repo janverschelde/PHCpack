@@ -2153,12 +2153,13 @@ lib_lrhom_cpp:
 lib_factor:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/syscon.c
 	gcc -c $(PHCLib)/solcon.c
 	gcc -c $(PHCLib)/witset.c
 	gcc -c $(PHCLib)/lib_factor.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc phcpack.o solcon.o witset.o lib_factor.o \
-                 -o $(BIN)/lib_factor -lm
+	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o witset.o \
+                              lib_factor.o -o $(BIN)/lib_factor -lm
 
 lib_factor_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
