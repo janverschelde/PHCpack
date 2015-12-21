@@ -4349,7 +4349,31 @@ static PyObject *py2c_factor_assign_labels
 
    initialize();
    if(!PyArg_ParseTuple(args,"ii",&n,&nbsols)) return NULL;
-   fail = assign_labels(n,nbsols,0);
+   fail = standard_assign_labels(n,nbsols);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_dobldobl_assign_labels
+ ( PyObject *self, PyObject *args )
+{
+   int n,nbsols,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&n,&nbsols)) return NULL;
+   fail = dobldobl_assign_labels(n,nbsols);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_quaddobl_assign_labels
+ ( PyObject *self, PyObject *args )
+{
+   int n,nbsols,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&n,&nbsols)) return NULL;
+   fail = quaddobl_assign_labels(n,nbsols);
 
    return Py_BuildValue("i",fail);
 }
@@ -4366,6 +4390,30 @@ static PyObject *py2c_factor_initialize_sampler
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_factor_initialize_dobldobl_sampler
+ ( PyObject *self, PyObject *args )
+{
+   int k,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
+   fail = initialize_dobldobl_sampler(k);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_initialize_quaddobl_sampler
+ ( PyObject *self, PyObject *args )
+{
+   int k,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&k)) return NULL;
+   fail = initialize_quaddobl_sampler(k);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_factor_initialize_monodromy
  ( PyObject *self, PyObject *args )
 {
@@ -4374,6 +4422,30 @@ static PyObject *py2c_factor_initialize_monodromy
    initialize();
    if(!PyArg_ParseTuple(args,"iii",&n,&d,&k)) return NULL;
    fail = initialize_monodromy(n,d,k);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_initialize_dobldobl_monodromy
+ ( PyObject *self, PyObject *args )
+{
+   int n,d,k,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&n,&d,&k)) return NULL;
+   fail = initialize_dobldobl_monodromy(n,d,k);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_initialize_quaddobl_monodromy
+ ( PyObject *self, PyObject *args )
+{
+   int n,d,k,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&n,&d,&k)) return NULL;
+   fail = initialize_quaddobl_monodromy(n,d,k);
 
    return Py_BuildValue("i",fail);
 }
@@ -4390,6 +4462,30 @@ static PyObject *py2c_factor_store_solutions
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_factor_store_dobldobl_solutions
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = store_dobldobl_solutions();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_store_quaddobl_solutions
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = store_quaddobl_solutions();
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_factor_restore_solutions
  ( PyObject *self, PyObject *args )
 {
@@ -4398,6 +4494,31 @@ static PyObject *py2c_factor_restore_solutions
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
    fail = restore_solutions();
+
+   return Py_BuildValue("i",fail);
+}
+
+
+static PyObject *py2c_factor_restore_dobldobl_solutions
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = restore_dobldobl_solutions();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_restore_quaddobl_solutions
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = restore_quaddobl_solutions();
 
    return Py_BuildValue("i",fail);
 }
@@ -4474,7 +4595,7 @@ static PyObject *py2c_factor_store_gammas
     
       for(i=0; i<n; i++)
          random_complex(&re_gamma[i],&im_gamma[i]);
-      fail = store_gamma(n,re_gamma,im_gamma);
+      fail = store_standard_gamma(n,re_gamma,im_gamma);
    }
 
    return Py_BuildValue("i",fail);
@@ -6337,17 +6458,47 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_assign_labels", py2c_factor_assign_labels,
      METH_VARARGS,
     "Assigns labels, replacing the multiplicity field of each solution\n in standard double precision stored in the container.\n On entry are two integers:\n 1) n, the number of coordinates of the solutions;\n 2) nbsols, the number of solutions in the container.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_factor_dobldobl_assign_labels",
+     py2c_factor_dobldobl_assign_labels, METH_VARARGS,
+    "Assigns labels, replacing the multiplicity field of each solution\n in double double precision stored in the container.\n On entry are two integers:\n 1) n, the number of coordinates of the solutions;\n 2) nbsols, the number of solutions in the container.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_factor_quaddobl_assign_labels",
+     py2c_factor_quaddobl_assign_labels, METH_VARARGS,
+    "Assigns labels, replacing the multiplicity field of each solution\n in quad double precision stored in the container.\n On entry are two integers:\n 1) n, the number of coordinates of the solutions;\n 2) nbsols, the number of solutions in the container.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_factor_initialize_sampler", py2c_factor_initialize_sampler,
      METH_VARARGS,
-    "Initializes the sampling machine with a witness set.\n On entry is the dimension or the number of hyperplanes\n to slide the positive dimensional solution set."},
+    "Initializes the sampling machine with a witness set,\n in standard double precision.\n On entry is the dimension or the number of hyperplanes\n to slide the positive dimensional solution set."},
+   {"py2c_factor_initialize_dobldobl_sampler",
+     py2c_factor_initialize_dobldobl_sampler, METH_VARARGS,
+    "Initializes the sampling machine with a witness set,\n in double double precision.\n On entry is the dimension or the number of hyperplanes\n to slide the positive dimensional solution set."},
+   {"py2c_factor_initialize_quaddobl_sampler",
+     py2c_factor_initialize_quaddobl_sampler, METH_VARARGS,
+    "Initializes the sampling machine with a witness set,\n in quad double precision.\n On entry is the dimension or the number of hyperplanes\n to slide the positive dimensional solution set."},
    {"py2c_factor_initialize_monodromy", py2c_factor_initialize_monodromy,
      METH_VARARGS,
-    "Initializes the internal data structures for n loops,\n to factor a k-dimensional solution component of degree d.\n There are three integers on input, in the following order:\n 1) n, the number of loops;\n 2) d, the degree of the solution set;\n 3) k, the dimensional of the solution set.\n On return is the failure code, which equals zero when all went well."},
+    "Initializes the internal data structures for n loops,\n to factor a k-dimensional solution component of degree d,\n in standard double precision.\n There are three integers on input, in the following order:\n 1) n, the number of loops;\n 2) d, the degree of the solution set;\n 3) k, the dimensional of the solution set.\n On return is the failure code, which equals zero when all went well."},
+   {"py2c_factor_initialize_dobldobl_monodromy",
+     py2c_factor_initialize_dobldobl_monodromy, METH_VARARGS,
+    "Initializes the internal data structures for n loops,\n to factor a k-dimensional solution component of degree d,\n in double double precision.\n There are three integers on input, in the following order:\n 1) n, the number of loops;\n 2) d, the degree of the solution set;\n 3) k, the dimensional of the solution set.\n On return is the failure code, which equals zero when all went well."},
+   {"py2c_factor_initialize_quaddobl_monodromy",
+     py2c_factor_initialize_quaddobl_monodromy, METH_VARARGS,
+    "Initializes the internal data structures for n loops,\n to factor a k-dimensional solution component of degree d,\n in quad double precision.\n There are three integers on input, in the following order:\n 1) n, the number of loops;\n 2) d, the degree of the solution set;\n 3) k, the dimensional of the solution set.\n On return is the failure code, which equals zero when all went well."},
    {"py2c_factor_store_solutions", py2c_factor_store_solutions, METH_VARARGS,
-    "Stores the solutions in the container to the data for monodromy loops."},
+    "Stores the solutions in the container, in standard double precision,\n to the data for monodromy loops."},
+   {"py2c_factor_store_dobldobl_solutions",
+     py2c_factor_store_dobldobl_solutions, METH_VARARGS,
+    "Stores the solutions in the container, in double double precision,\n to the data for monodromy loops."},
+   {"py2c_factor_store_quaddobl_solutions",
+     py2c_factor_store_quaddobl_solutions, METH_VARARGS,
+    "Stores the solutions in the container, in quad double precision,\n to the data for monodromy loops."},
    {"py2c_factor_restore_solutions", py2c_factor_restore_solutions,
      METH_VARARGS,
-    "Restores the first initialized solutions from sampler to the container."},
+    "Restores the first initialized solutions, in standard double precision,\n from sampler to the container."},
+   {"py2c_factor_restore_dobldobl_solutions",
+     py2c_factor_restore_dobldobl_solutions, METH_VARARGS,
+    "Restores the first initialized solutions, in double double precision,\n from sampler to the container."},
+   {"py2c_factor_restore_quaddobl_solutions",
+     py2c_factor_restore_quaddobl_solutions, METH_VARARGS,
+    "Restores the first initialized solutions, in quad double precision,\n from sampler to the container."},
    {"py2c_factor_track_paths", py2c_factor_track_paths, METH_VARARGS,
     "Tracks as many paths as defined by witness set.\n On return is the failure code, which is zero when all went well."},
    {"py2c_factor_swap_slices", py2c_factor_swap_slices, METH_VARARGS,

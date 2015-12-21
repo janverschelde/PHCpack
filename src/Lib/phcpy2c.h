@@ -2921,20 +2921,88 @@ static PyObject *py2c_factor_assign_labels
  *   2) nbsols, the number of solutions in the container.
  *   On return is the failure code, which equals zero if all went well. */
 
+static PyObject *py2c_factor_dobldobl_assign_labels
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Assigns labels, replacing the multiplicity field of each solution
+ *   in double double precision stored in the container.
+ *   On entry are two integers:
+ *   1) n, the number of coordinates of the solutions;
+ *   2) nbsols, the number of solutions in the container.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_factor_quaddobl_assign_labels
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Assigns labels, replacing the multiplicity field of each solution
+ *   in quad double precision stored in the container.
+ *   On entry are two integers:
+ *   1) n, the number of coordinates of the solutions;
+ *   2) nbsols, the number of solutions in the container.
+ *   On return is the failure code, which equals zero if all went well. */
+
 static PyObject *py2c_factor_initialize_sampler
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Initializes the sampling machine with a witness set.
+ *   Initializes the sampling machine with a witness set,
+ *   in standard double precision.
  *   On entry is the dimension or the number of hyperplanes
- *   to slide the positive dimensional solution set. */
+ *   to intersect the positive dimensional solution set with. */
+
+static PyObject *py2c_factor_initialize_dobldobl_sampler
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the sampling machine with a witness set,
+ *   in double double precision.
+ *   On entry is the dimension or the number of hyperplanes
+ *   to intersect the positive dimensional solution set with. */
+
+static PyObject *py2c_factor_initialize_quaddobl_sampler
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the sampling machine with a witness set,
+ *   in quad double precision.
+ *   On entry is the dimension or the number of hyperplanes
+ *   to intersect the positive dimensional solution set with. */
 
 static PyObject *py2c_factor_initialize_monodromy
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
  *   Initializes the internal data structures for n loops,
- *   to factor a k-dimensional solution component of degree d.
+ *   to factor a k-dimensional solution component of degree d,
+ *   in standard double precision.
+ *   There are three integers on input, in the following order:
+ *   1) n, the number of loops;
+ *   2) d, the degree of the solution set;
+ *   3) k, the dimensional of the solution set.
+ *   On return is the failure code, which equals zero when all went well. */
+
+static PyObject *py2c_factor_initialize_dobldobl_monodromy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the internal data structures for n loops,
+ *   to factor a k-dimensional solution component of degree d,
+ *   in double double precision.
+ *   There are three integers on input, in the following order:
+ *   1) n, the number of loops;
+ *   2) d, the degree of the solution set;
+ *   3) k, the dimensional of the solution set.
+ *   On return is the failure code, which equals zero when all went well. */
+
+static PyObject *py2c_factor_initialize_quaddobl_monodromy
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the internal data structures for n loops,
+ *   to factor a k-dimensional solution component of degree d,
+ *   in quad double precision.
  *   There are three integers on input, in the following order:
  *   1) n, the number of loops;
  *   2) d, the degree of the solution set;
@@ -2945,13 +3013,43 @@ static PyObject *py2c_factor_store_solutions
  ( PyObject *self, PyObject *args );
 /* 
  * DESCRIPTION :
- *   Stores the solutions in the container to the data for monodromy loops. */
+ *   Stores the solutions in the container, in standard double precision,
+ *   to the data for monodromy loops. */
+
+static PyObject *py2c_factor_store_dobldobl_solutions
+ ( PyObject *self, PyObject *args );
+/* 
+ * DESCRIPTION :
+ *   Stores the solutions in the container, in double double precision,
+ *   to the data for monodromy loops. */
+
+static PyObject *py2c_factor_store_quaddobl_solutions
+ ( PyObject *self, PyObject *args );
+/* 
+ * DESCRIPTION :
+ *   Stores the solutions in the container, in quad double precision,
+ *   to the data for monodromy loops. */
 
 static PyObject *py2c_factor_restore_solutions
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Restores the first initialized solutions from sampler to the container. */
+ *   Restores the first initialized solutions, in standard double precision,
+ *   from sampler to the container. */
+
+static PyObject *py2c_factor_restore_dobldobl_solutions
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Restores the first initialized solutions, in double double precision,
+ *   from sampler to the container. */
+
+static PyObject *py2c_factor_restore_quaddobl_solutions
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Restores the first initialized solutions, in quad double precision,
+ *   from sampler to the container. */
 
 static PyObject *py2c_factor_track_paths
  ( PyObject *self, PyObject *args );
