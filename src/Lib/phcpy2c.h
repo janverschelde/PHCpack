@@ -3055,7 +3055,24 @@ static PyObject *py2c_factor_track_paths
  ( PyObject *self, PyObject *args );
 /* 
  * DESCRIPTION :
- *   Tracks as many paths as defined by witness set.
+ *   Tracks as many paths as defined by witness set,
+ *   in standard double precision.
+ *   On return is the failure code, which is zero when all went well. */
+
+static PyObject *py2c_factor_dobldobl_track_paths
+ ( PyObject *self, PyObject *args );
+/* 
+ * DESCRIPTION :
+ *   Tracks as many paths as defined by witness set,
+ *   in double double precision.
+ *   On return is the failure code, which is zero when all went well. */
+
+static PyObject *py2c_factor_quaddobl_track_paths
+ ( PyObject *self, PyObject *args );
+/* 
+ * DESCRIPTION :
+ *   Tracks as many paths as defined by witness set,
+ *   in quad double precision.
  *   On return is the failure code, which is zero when all went well. */
 
 static PyObject *py2c_factor_swap_slices
@@ -3063,14 +3080,46 @@ static PyObject *py2c_factor_swap_slices
 /* 
  * DESCRIPTION :
  *   Swaps the current slices with new slices and takes new solutions
- *   as start to turn back.
+ *   as start to turn back, in standard double precision.
+ *   On return is the failure code, which is zero when all went well. */
+
+static PyObject *py2c_factor_swap_dobldobl_slices
+ ( PyObject *self, PyObject *args );
+/* 
+ * DESCRIPTION :
+ *   Swaps the current slices with new slices and takes new solutions
+ *   as start to turn back, in double double precision.
+ *   On return is the failure code, which is zero when all went well. */
+
+static PyObject *py2c_factor_swap_quaddobl_slices
+ ( PyObject *self, PyObject *args );
+/* 
+ * DESCRIPTION :
+ *   Swaps the current slices with new slices and takes new solutions
+ *   as start to turn back, in quad double precision.
  *   On return is the failure code, which is zero when all went well. */
 
 static PyObject *py2c_factor_new_slices
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Generates k random slides in n-space.
+ *   Generates k random slides in n-space in standard double precision.
+ *   The k and the n are the two input parameters.
+ *   On return is the failure code, which is zero when all went well. */
+
+static PyObject *py2c_factor_new_dobldobl_slices
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Generates k random slides in n-space in double double precision.
+ *   The k and the n are the two input parameters.
+ *   On return is the failure code, which is zero when all went well. */
+
+static PyObject *py2c_factor_new_quaddobl_slices
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Generates k random slides in n-space in quad double precision.
  *   The k and the n are the two input parameters.
  *   On return is the failure code, which is zero when all went well. */
 
@@ -3078,7 +3127,26 @@ static PyObject *py2c_factor_set_trace_slice
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Assigns the constant coefficient of the first slice.
+ *   Assigns the constant coefficient of the first slice,
+ *   in standard double precision.
+ *   On entry is a flag to indicate if it was the first time or not.
+ *   On return is the failure code, which is zero if all went well. */
+
+static PyObject *py2c_factor_set_dobldobl_trace_slice
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Assigns the constant coefficient of the first slice,
+ *   in double double precision.
+ *   On entry is a flag to indicate if it was the first time or not.
+ *   On return is the failure code, which is zero if all went well. */
+
+static PyObject *py2c_factor_set_quaddobl_trace_slice
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Assigns the constant coefficient of the first slice,
+ *   in quad double precision.
  *   On entry is a flag to indicate if it was the first time or not.
  *   On return is the failure code, which is zero if all went well. */
 
@@ -3086,7 +3154,26 @@ static PyObject *py2c_factor_store_gammas
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Stores the gamma constants for the sampler in the monodromy loops.
+ *   Stores the gamma constants in standard double precision
+ *   for the sampler in the monodromy loops.
+ *   Generates as many random complex constants as the value on input.
+ *   On return is the failure code, which is zero if all went well. */
+
+static PyObject *py2c_factor_store_dobldobl_gammas
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Stores the gamma constants in double double precision
+ *   for the sampler in the monodromy loops.
+ *   Generates as many random complex constants as the value on input.
+ *   On return is the failure code, which is zero if all went well. */
+
+static PyObject *py2c_factor_store_quaddobl_gammas
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Stores the gamma constants in quad double precision
+ *   for the sampler in the monodromy loops.
  *   Generates as many random complex constants as the value on input.
  *   On return is the failure code, which is zero if all went well. */
 
@@ -3094,8 +3181,26 @@ static PyObject *py2c_factor_permutation_after_loop
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   For a solution set of degree d, computes the permutation using the
- *   solutions most recently stored, after a loop. 
+ *   For a set of degree d, computes the permutation using the solutions
+ *   most recently stored, after a loop in standard double precision.
+ *   The number d is the input parameter of this function.
+ *   On return is the string representation of the permutation. */
+
+static PyObject *py2c_factor_permutation_after_dobldobl_loop
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   For a set of degree d, computes the permutation using the solutions
+ *   most recently stored, after a loop in double double precision.
+ *   The number d is the input parameter of this function.
+ *   On return is the string representation of the permutation. */
+
+static PyObject *py2c_factor_permutation_after_quaddobl_loop
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   For a set of degree d, computes the permutation using the solutions
+ *   most recently stored, after a loop in quad double precision.
  *   The number d is the input parameter of this function.
  *   On return is the string representation of the permutation. */
 
@@ -3103,7 +3208,34 @@ static PyObject *py2c_factor_update_decomposition
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Updates the decomposition with the given permutation of d elements.
+ *   Updates the decomposition with the given permutation of d elements,
+ *   computed in standard double precision.
+ *   On entry are two integers and one string:
+ *   1) d, the number of elements in the permutation;
+ *   2) nc, the number of characters in the string;
+ *   3) p, the string representation of the permutation.
+ *   Returns one if the current decomposition is certified,
+ *   otherwise returns zero. */
+
+static PyObject *py2c_factor_update_dobldobl_decomposition
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Updates the decomposition with the given permutation of d elements,
+ *   computed in double double precision.
+ *   On entry are two integers and one string:
+ *   1) d, the number of elements in the permutation;
+ *   2) nc, the number of characters in the string;
+ *   3) p, the string representation of the permutation.
+ *   Returns one if the current decomposition is certified,
+ *   otherwise returns zero. */
+
+static PyObject *py2c_factor_update_quaddobl_decomposition
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Updates the decomposition with the given permutation of d elements,
+ *   computed in quad double precision.
  *   On entry are two integers and one string:
  *   1) d, the number of elements in the permutation;
  *   2) nc, the number of characters in the string;
@@ -3115,14 +3247,49 @@ static PyObject *py2c_factor_number_of_components
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Returns the number of irreducible factors in the current
- *   decomposition of the witness set. */
+ *   Returns the number of irreducible factors in the standard double
+ *   precision decomposition of the witness set. */
+
+static PyObject *py2c_factor_number_of_dobldobl_components
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of irreducible factors in the double double
+ *   precision decomposition of the witness set. */
+
+static PyObject *py2c_factor_number_of_quaddobl_components
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of irreducible factors in the quad double
+ *   precision decomposition of the witness set. */
 
 static PyObject *py2c_factor_witness_points_of_component
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Returns a string which represents an irreducible component.
+ *   Returns a string which represents an irreducible component,
+ *   computed in standard double precision.
+ *   On entry are two integers:
+ *   1) the sum of the degrees of all components;
+ *   2) the index of the component. */
+
+static PyObject *py2c_factor_witness_points_of_dobldobl_component
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns a string which represents an irreducible component,
+ *   computed in double double precision.
+ *   On entry are two integers:
+ *   1) the sum of the degrees of all components;
+ *   2) the index of the component. */
+
+static PyObject *py2c_factor_witness_points_of_quaddobl_component
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns a string which represents an irreducible component,
+ *   computed in quad double precision.
  *   On entry are two integers:
  *   1) the sum of the degrees of all components;
  *   2) the index of the component. */
@@ -3133,7 +3300,33 @@ static PyObject *py2c_factor_trace_sum_difference
  * DESCRIPTION :
  *   Returns the difference between the actual sum at the samples
  *   defined by the labels to the generic points in the factor,
- *   and the trace sum.
+ *   and the trace sum, in standard double precision.
+ *   On entry are three integer numbers and one string:
+ *   1) d, the number of points in the witness set;
+ *   2) k, the dimension of the solution set;
+ *   3) nc, the number of characters in the string;
+ *   4) ws, the string representing the labels of the witness set. */
+
+static PyObject *py2c_factor_dobldobl_trace_sum_difference
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the difference between the actual sum at the samples
+ *   defined by the labels to the generic points in the factor,
+ *   and the trace sum, in double double precision.
+ *   On entry are three integer numbers and one string:
+ *   1) d, the number of points in the witness set;
+ *   2) k, the dimension of the solution set;
+ *   3) nc, the number of characters in the string;
+ *   4) ws, the string representing the labels of the witness set. */
+
+static PyObject *py2c_factor_quaddobl_trace_sum_difference
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the difference between the actual sum at the samples
+ *   defined by the labels to the generic points in the factor,
+ *   and the trace sum, in quad double precision.
  *   On entry are three integer numbers and one string:
  *   1) d, the number of points in the witness set;
  *   2) k, the dimension of the solution set;

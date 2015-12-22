@@ -4535,6 +4535,30 @@ static PyObject *py2c_factor_track_paths
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_factor_dobldobl_track_paths
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = dobldobl_track_paths();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_quaddobl_track_paths
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = quaddobl_track_paths();
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_factor_swap_slices
  ( PyObject *self, PyObject *args )
 {
@@ -4543,6 +4567,30 @@ static PyObject *py2c_factor_swap_slices
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
    fail = swap_slices();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_swap_dobldobl_slices
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = swap_dobldobl_slices();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_swap_quaddobl_slices
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = swap_quaddobl_slices();
 
    return Py_BuildValue("i",fail);
 }
@@ -4559,6 +4607,30 @@ static PyObject *py2c_factor_new_slices
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_factor_new_dobldobl_slices
+ ( PyObject *self, PyObject *args )
+{
+   int k,n,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&k,&n)) return NULL;
+   fail = new_dobldobl_slices(k,n);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_new_quaddobl_slices
+ ( PyObject *self, PyObject *args )
+{
+   int k,n,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&k,&n)) return NULL;
+   fail = new_quaddobl_slices(k,n);
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_factor_set_trace_slice
  ( PyObject *self, PyObject *args )
 {
@@ -4568,15 +4640,54 @@ static PyObject *py2c_factor_set_trace_slice
    initialize();
    if(!PyArg_ParseTuple(args,"i",&first)) return NULL;
 
+   r[1] = 0.0;
    if(first == 1)                  /* determine constant coefficient */
-   { 
-      r[0] = -1.0; r[1] = 0.0;
-   }
+      r[0] = -1.0;
    else
-   {
-      r[0] = +1.0; r[1] = 0.0;
-   }
+      r[0] = +1.0;
+
    fail = assign_coefficient_of_slice(0,0,r);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_set_dobldobl_trace_slice
+ ( PyObject *self, PyObject *args )
+{
+   int first,fail;
+   double r[4];
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&first)) return NULL;
+
+   r[1] = 0.0; r[2] = 0.0; r[3] = 0.0;
+   if(first == 1)                  /* determine constant coefficient */
+      r[0] = -1.0;
+   else
+      r[0] = +1.0;
+
+   fail = assign_dobldobl_coefficient_of_slice(0,0,r);
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_set_quaddobl_trace_slice
+ ( PyObject *self, PyObject *args )
+{
+   int first,fail;
+   double r[8];
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&first)) return NULL;
+
+   r[1] = 0.0; r[2] = 0.0; r[3] = 0.0; r[4] = 0.0;
+   r[5] = 0.0; r[6] = 0.0; r[7] = 0.0;
+   if(first == 1)                  /* determine constant coefficient */
+      r[0] = -1.0;
+   else
+      r[0] = +1.0;
+
+   fail = assign_quaddobl_coefficient_of_slice(0,0,r);
 
    return Py_BuildValue("i",fail);
 }
@@ -4601,6 +4712,46 @@ static PyObject *py2c_factor_store_gammas
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_factor_store_dobldobl_gammas
+ ( PyObject *self, PyObject *args )
+{
+   int n,i,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&n)) return NULL;
+
+   {
+      double re_gamma[2*n];
+      double im_gamma[2*n];
+    
+      for(i=0; i<n; i++)
+         random_dobldobl_complex(&re_gamma[2*i],&im_gamma[2*i]);
+      fail = store_dobldobl_gamma(n,re_gamma,im_gamma);
+   }
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_store_quaddobl_gammas
+ ( PyObject *self, PyObject *args )
+{
+   int n,i,fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&n)) return NULL;
+
+   {
+      double re_gamma[4*n];
+      double im_gamma[4*n];
+    
+      for(i=0; i<n; i++)
+         random_quaddobl_complex(&re_gamma[4*i],&im_gamma[4*i]);
+      fail = store_quaddobl_gamma(n,re_gamma,im_gamma);
+   }
+
+   return Py_BuildValue("i",fail);
+}
+
 static PyObject *py2c_factor_permutation_after_loop
  ( PyObject *self, PyObject *args )
 {
@@ -4614,6 +4765,56 @@ static PyObject *py2c_factor_permutation_after_loop
       char s[d*10];
 
       fail = permutation_after_loop(d,permutation);
+   /* printf("the permutation :");
+      for(i=0; i<d; i++) printf(" %d",permutation[i]);
+      printf("\n"); */
+
+      nb = list2str(d,permutation,s);
+      result = (char*)calloc(nb,sizeof(char));
+      for(i=0; i<nb; i++) result[i] = s[i];
+   }
+   /* printf("the resulting string : %s\n",result); */
+   return Py_BuildValue("s",result);
+}
+
+static PyObject *py2c_factor_permutation_after_dobldobl_loop
+ ( PyObject *self, PyObject *args )
+{
+   int d,fail,nb;
+   char *result;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&d)) return NULL;
+   {
+      int i,permutation[d];
+      char s[d*10];
+
+      fail = permutation_after_dobldobl_loop(d,permutation);
+   /* printf("the permutation :");
+      for(i=0; i<d; i++) printf(" %d",permutation[i]);
+      printf("\n"); */
+
+      nb = list2str(d,permutation,s);
+      result = (char*)calloc(nb,sizeof(char));
+      for(i=0; i<nb; i++) result[i] = s[i];
+   }
+   /* printf("the resulting string : %s\n",result); */
+   return Py_BuildValue("s",result);
+}
+
+static PyObject *py2c_factor_permutation_after_quaddobl_loop
+ ( PyObject *self, PyObject *args )
+{
+   int d,fail,nb;
+   char *result;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&d)) return NULL;
+   {
+      int i,permutation[d];
+      char s[d*10];
+
+      fail = permutation_after_quaddobl_loop(d,permutation);
    /* printf("the permutation :");
       for(i=0; i<d; i++) printf(" %d",permutation[i]);
       printf("\n"); */
@@ -4654,6 +4855,62 @@ static PyObject *py2c_factor_update_decomposition
    return Py_BuildValue("i",done);
 }
 
+static PyObject *py2c_factor_update_dobldobl_decomposition
+ ( PyObject *self, PyObject *args )
+{
+   int fail,i,d,nc;
+   char *permutation;
+   int done = 0;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iis",&d,&nc,&permutation)) return NULL;
+   {
+      int nb,perm[d],nf[2];
+
+   /* printf("updating with ");
+      for(i=0; i<nc; i++) printf("%c",permutation[i]);
+      printf("\n"); */
+
+      nb = str2list(nc,permutation,perm);
+
+   /* printf("after str2list :");
+      for(i=0; i<nb; i++) printf(" %d",perm[i]);
+      printf("\n"); */
+
+      fail = update_dobldobl_decomposition(d,perm,nf,&done);
+   /* printf("number of factors : %d -> %d\n",nf[0],nf[1]); */
+   }
+   return Py_BuildValue("i",done);
+}
+
+static PyObject *py2c_factor_update_quaddobl_decomposition
+ ( PyObject *self, PyObject *args )
+{
+   int fail,i,d,nc;
+   char *permutation;
+   int done = 0;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iis",&d,&nc,&permutation)) return NULL;
+   {
+      int nb,perm[d],nf[2];
+
+   /* printf("updating with ");
+      for(i=0; i<nc; i++) printf("%c",permutation[i]);
+      printf("\n"); */
+
+      nb = str2list(nc,permutation,perm);
+
+   /* printf("after str2list :");
+      for(i=0; i<nb; i++) printf(" %d",perm[i]);
+      printf("\n"); */
+
+      fail = update_quaddobl_decomposition(d,perm,nf,&done);
+   /* printf("number of factors : %d -> %d\n",nf[0],nf[1]); */
+   }
+   return Py_BuildValue("i",done);
+}
+
 static PyObject *py2c_factor_number_of_components
  ( PyObject *self, PyObject *args )
 {
@@ -4663,6 +4920,32 @@ static PyObject *py2c_factor_number_of_components
    if(!PyArg_ParseTuple(args,"")) return NULL;
 
    fail = number_of_irreducible_factors(&nf);
+
+   return Py_BuildValue("i",nf);
+}
+
+static PyObject *py2c_factor_number_of_dobldobl_components
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nf;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+
+   fail = number_of_dobldobl_factors(&nf);
+
+   return Py_BuildValue("i",nf);
+}
+
+static PyObject *py2c_factor_number_of_quaddobl_components
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nf;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+
+   fail = number_of_quaddobl_factors(&nf);
 
    return Py_BuildValue("i",nf);
 }
@@ -4689,6 +4972,50 @@ static PyObject *py2c_factor_witness_points_of_component
    return Py_BuildValue("s",result);
 }
 
+static PyObject *py2c_factor_witness_points_of_dobldobl_component
+ ( PyObject *self, PyObject *args )
+{
+   int fail,totdeg,k;
+   char *result;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&totdeg,&k)) return NULL;
+   {
+      int deg,nb,i;
+      int w[totdeg];
+      char s[10*totdeg];
+
+      fail = witness_points_of_dobldobl_factor(k,&deg,w);
+
+      nb = list2str(deg,w,s);
+      result = (char*)calloc(nb,sizeof(char));
+      for(i=0; i<nb; i++) result[i] = s[i];
+   }
+   return Py_BuildValue("s",result);
+}
+
+static PyObject *py2c_factor_witness_points_of_quaddobl_component
+ ( PyObject *self, PyObject *args )
+{
+   int fail,totdeg,k;
+   char *result;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&totdeg,&k)) return NULL;
+   {
+      int deg,nb,i;
+      int w[totdeg];
+      char s[10*totdeg];
+
+      fail = witness_points_of_quaddobl_factor(k,&deg,w);
+
+      nb = list2str(deg,w,s);
+      result = (char*)calloc(nb,sizeof(char));
+      for(i=0; i<nb; i++) result[i] = s[i];
+   }
+   return Py_BuildValue("s",result);
+}
+
 static PyObject *py2c_factor_trace_sum_difference
  ( PyObject *self, PyObject *args )
 {
@@ -4707,6 +5034,52 @@ static PyObject *py2c_factor_trace_sum_difference
       printf("\n"); */
 
       fail = trace_sum_difference(nb,witset,&tsd);
+   /* printf("trace sum difference : %.3e\n",tsd); */
+   }
+   return Py_BuildValue("d",tsd);
+}
+
+static PyObject *py2c_factor_dobldobl_trace_sum_difference
+ ( PyObject *self, PyObject *args )
+{
+   int d,k,nc,fail;
+   char *ws;
+   double tsd;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiis",&d,&k,&nc,&ws)) return NULL;
+   {
+      int i,nb,witset[d];
+
+      nb = str2list(nc,ws,witset);
+   /* printf("the witness points :");
+      for(i=0; i<nb; i++) printf(" %d",witset[i]);
+      printf("\n"); */
+
+      fail = dobldobl_trace_sum_difference(nb,witset,&tsd);
+   /* printf("trace sum difference : %.3e\n",tsd); */
+   }
+   return Py_BuildValue("d",tsd);
+}
+
+static PyObject *py2c_factor_quaddobl_trace_sum_difference
+ ( PyObject *self, PyObject *args )
+{
+   int d,k,nc,fail;
+   char *ws;
+   double tsd;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiis",&d,&k,&nc,&ws)) return NULL;
+   {
+      int i,nb,witset[d];
+
+      nb = str2list(nc,ws,witset);
+   /* printf("the witness points :");
+      for(i=0; i<nb; i++) printf(" %d",witset[i]);
+      printf("\n"); */
+
+      fail = quaddobl_trace_sum_difference(nb,witset,&tsd);
    /* printf("trace sum difference : %.3e\n",tsd); */
    }
    return Py_BuildValue("d",tsd);
@@ -6500,31 +6873,90 @@ static PyMethodDef phcpy2c_methods[] =
      py2c_factor_restore_quaddobl_solutions, METH_VARARGS,
     "Restores the first initialized solutions, in quad double precision,\n from sampler to the container."},
    {"py2c_factor_track_paths", py2c_factor_track_paths, METH_VARARGS,
-    "Tracks as many paths as defined by witness set.\n On return is the failure code, which is zero when all went well."},
+    "Tracks as many paths as defined by witness set,\n in standard double precision.\n On return is the failure code, which is zero when all went well."},
+   {"py2c_factor_dobldobl_track_paths",
+     py2c_factor_dobldobl_track_paths, METH_VARARGS,
+    "Tracks as many paths as defined by witness set,\n in double double precision.\n On return is the failure code, which is zero when all went well."},
+   {"py2c_factor_quaddobl_track_paths",
+     py2c_factor_quaddobl_track_paths, METH_VARARGS,
+    "Tracks as many paths as defined by witness set,\n in quad double precision.\n On return is the failure code, which is zero when all went well."},
    {"py2c_factor_swap_slices", py2c_factor_swap_slices, METH_VARARGS,
-    "Swaps the current slices with new slices and takes new solutions\n as start to turn back.\n On return is the failure code, which is zero when all went well."},
+    "Swaps the current slices with new slices and takes new solutions\n as start to turn back, in standard double precision.\n On return is the failure code, which is zero when all went well."},
+   {"py2c_factor_swap_dobldobl_slices",
+     py2c_factor_swap_dobldobl_slices, METH_VARARGS,
+    "Swaps the current slices with new slices and takes new solutions\n as start to turn back, in double double precision.\n On return is the failure code, which is zero when all went well."},
+   {"py2c_factor_swap_quaddobl_slices",
+     py2c_factor_swap_quaddobl_slices, METH_VARARGS,
+    "Swaps the current slices with new slices and takes new solutions\n as start to turn back, in quad double precision.\n On return is the failure code, which is zero when all went well."},
    {"py2c_factor_new_slices", py2c_factor_new_slices, METH_VARARGS,
-    "Generates k random slides in n-space.\n The k and the n are the two input parameters.\n On return is the failure code, which is zero when all went well."},
+    "Generates k random slides in n-space, in standard double precision.\n The k and the n are the two input parameters.\n On return is the failure code, which is zero when all went well."},
+   {"py2c_factor_new_dobldobl_slices",
+     py2c_factor_new_dobldobl_slices, METH_VARARGS,
+    "Generates k random slides in n-space, in double double precision.\n The k and the n are the two input parameters.\n On return is the failure code, which is zero when all went well."},
+   {"py2c_factor_new_quaddobl_slices",
+     py2c_factor_new_quaddobl_slices, METH_VARARGS,
+    "Generates k random slides in n-space, in quad double precision.\n The k and the n are the two input parameters.\n On return is the failure code, which is zero when all went well."},
    {"py2c_factor_set_trace_slice", py2c_factor_set_trace_slice, METH_VARARGS,
-    "Assigns the constant coefficient of the first slice.\n On entry is a flag to indicate if it was the first time or not.\n On return is the failure code, which is zero if all went well."},
+    "Assigns the constant coefficient of the first slice,\n in standard double precision.\n On entry is a flag to indicate if it was the first time or not.\n On return is the failure code, which is zero if all went well."},
+   {"py2c_factor_set_dobldobl_trace_slice",
+     py2c_factor_set_dobldobl_trace_slice, METH_VARARGS,
+    "Assigns the constant coefficient of the first slice,\n in double double precision.\n On entry is a flag to indicate if it was the first time or not.\n On return is the failure code, which is zero if all went well."},
+   {"py2c_factor_set_quaddobl_trace_slice",
+     py2c_factor_set_quaddobl_trace_slice, METH_VARARGS,
+    "Assigns the constant coefficient of the first slice,\n in quad double precision.\n On entry is a flag to indicate if it was the first time or not.\n On return is the failure code, which is zero if all went well."},
    {"py2c_factor_store_gammas", py2c_factor_store_gammas, METH_VARARGS,
-    "Stores the gamma constants for the sampler in the monodromy loops.\n Generates as many random complex constants as the value on input.\n On return is the failure code, which is zero if all went well."},
-   {"py2c_factor_permutation_after_loop", py2c_factor_permutation_after_loop,
-     METH_VARARGS,
-    "For a solution set of degree d, computes the permutation using the\n solutions most recently stored, after a loop.\n The number d is the input parameter of this function.\n On return is the string representation of the permutation."},
-   {"py2c_factor_update_decomposition", py2c_factor_update_decomposition,
-     METH_VARARGS,
-    "Updates the decomposition with the given permutation of d elements.\n On entry are two integers and one string:\n 1) d, the number of elements in the permutation;\n 2) nc, the number of characters in the string;\n 3) p, the string representation of the permutation.\n Returns one if the current decomposition is certified,\n otherwise returns zero."},
-   {"py2c_factor_number_of_components", py2c_factor_number_of_components,
-     METH_VARARGS,
-    "Returns the number of irreducible factors in the current\n decomposition of the witness set."},
+    "Stores the gamma constants in standard double precision\n for the sampler in the monodromy loops.\n Generates as many random complex constants as the value on input.\n On return is the failure code, which is zero if all went well."},
+   {"py2c_factor_store_dobldobl_gammas",
+     py2c_factor_store_dobldobl_gammas, METH_VARARGS,
+    "Stores the gamma constants in double double precision\n for the sampler in the monodromy loops.\n Generates as many random complex constants as the value on input.\n On return is the failure code, which is zero if all went well."},
+   {"py2c_factor_store_quaddobl_gammas",
+     py2c_factor_store_quaddobl_gammas, METH_VARARGS,
+    "Stores the gamma constants in quad double precision\n for the sampler in the monodromy loops.\n Generates as many random complex constants as the value on input.\n On return is the failure code, which is zero if all went well."},
+   {"py2c_factor_permutation_after_loop",
+     py2c_factor_permutation_after_loop, METH_VARARGS,
+    "For a set of degree d, computes the permutation using the solutions\n most recently stored, after a loop in standard double precision.\n The number d is the input parameter of this function.\n On return is the string representation of the permutation."},
+   {"py2c_factor_permutation_after_dobldobl_loop",
+     py2c_factor_permutation_after_dobldobl_loop, METH_VARARGS,
+    "For a set of degree d, computes the permutation using the solutions\n most recently stored, after a loop in double double precision.\n The number d is the input parameter of this function.\n On return is the string representation of the permutation."},
+   {"py2c_factor_permutation_after_quaddobl_loop",
+     py2c_factor_permutation_after_quaddobl_loop, METH_VARARGS,
+    "For a set of degree d, computes the permutation using the solutions\n most recently stored, after a loop in quad double precision.\n The number d is the input parameter of this function.\n On return is the string representation of the permutation."},
+   {"py2c_factor_update_decomposition",
+     py2c_factor_update_decomposition, METH_VARARGS,
+    "Updates the decomposition with the given permutation of d elements,\n computed in standard double precision.\n On entry are two integers and one string:\n 1) d, the number of elements in the permutation;\n 2) nc, the number of characters in the string;\n 3) p, the string representation of the permutation.\n Returns one if the current decomposition is certified,\n otherwise returns zero."},
+   {"py2c_factor_update_dobldobl_decomposition",
+     py2c_factor_update_dobldobl_decomposition, METH_VARARGS,
+    "Updates the decomposition with the given permutation of d elements,\n computed in double double precision.\n On entry are two integers and one string:\n 1) d, the number of elements in the permutation;\n 2) nc, the number of characters in the string;\n 3) p, the string representation of the permutation.\n Returns one if the current decomposition is certified,\n otherwise returns zero."},
+   {"py2c_factor_update_quaddobl_decomposition",
+     py2c_factor_update_quaddobl_decomposition, METH_VARARGS,
+    "Updates the decomposition with the given permutation of d elements,\n computed in quad double precision.\n On entry are two integers and one string:\n 1) d, the number of elements in the permutation;\n 2) nc, the number of characters in the string;\n 3) p, the string representation of the permutation.\n Returns one if the current decomposition is certified,\n otherwise returns zero."},
+   {"py2c_factor_number_of_components",
+     py2c_factor_number_of_components, METH_VARARGS,
+    "Returns the number of irreducible factors in the current standard double\n precision decomposition of the witness set."},
+   {"py2c_factor_number_of_dobldobl_components",
+     py2c_factor_number_of_dobldobl_components, METH_VARARGS,
+    "Returns the number of irreducible factors in the current double double\n precision decomposition of the witness set."},
+   {"py2c_factor_number_of_quaddobl_components",
+     py2c_factor_number_of_quaddobl_components, METH_VARARGS,
+    "Returns the number of irreducible factors in the current quad double\n precision decomposition of the witness set."},
    {"py2c_factor_witness_points_of_component",
-     py2c_factor_witness_points_of_component,
-     METH_VARARGS,
-    "Returns a string which represents an irreducible component.\n On entry are two integers:\n 1) the sum of the degrees of all components;\n 2) the index of the component."},
-   {"py2c_factor_trace_sum_difference", py2c_factor_trace_sum_difference,
-     METH_VARARGS,
-    "Returns the difference between the actual sum at the samples\n defined by the labels to the generic points in the factor,\n and the trace sum.\n On entry are three integer numbers and one string:\n 1) d, the number of points in the witness set;\n 2) k, the dimension of the solution set;\n 3) nc, the number of characters in the string;\n 4) ws, the string representing the labels of the witness set."},
+     py2c_factor_witness_points_of_component, METH_VARARGS,
+    "Returns a string which represents an irreducible component,\n computed in standard double precision.\n On entry are two integers:\n 1) the sum of the degrees of all components;\n 2) the index of the component."},
+   {"py2c_factor_witness_points_of_dobldobl_component",
+     py2c_factor_witness_points_of_dobldobl_component, METH_VARARGS,
+    "Returns a string which represents an irreducible component,\n computed in double double precision.\n On entry are two integers:\n 1) the sum of the degrees of all components;\n 2) the index of the component."},
+   {"py2c_factor_witness_points_of_quaddobl_component",
+     py2c_factor_witness_points_of_quaddobl_component, METH_VARARGS,
+    "Returns a string which represents an irreducible component,\n computed in quad double precision.\n On entry are two integers:\n 1) the sum of the degrees of all components;\n 2) the index of the component."},
+   {"py2c_factor_trace_sum_difference",
+     py2c_factor_trace_sum_difference, METH_VARARGS,
+    "Returns the difference between the actual sum at the samples\n defined by the labels to the generic points in the factor,\n and the trace sum, computed in standard double precision.\n On entry are three integer numbers and one string:\n 1) d, the number of points in the witness set;\n 2) k, the dimension of the solution set;\n 3) nc, the number of characters in the string;\n 4) ws, the string representing the labels of the witness set."},
+   {"py2c_factor_dobldobl_trace_sum_difference",
+     py2c_factor_dobldobl_trace_sum_difference, METH_VARARGS,
+    "Returns the difference between the actual sum at the samples\n defined by the labels to the generic points in the factor,\n and the trace sum, computed in double double precision.\n On entry are three integer numbers and one string:\n 1) d, the number of points in the witness set;\n 2) k, the dimension of the solution set;\n 3) nc, the number of characters in the string;\n 4) ws, the string representing the labels of the witness set."},
+   {"py2c_factor_quaddobl_trace_sum_difference",
+     py2c_factor_quaddobl_trace_sum_difference, METH_VARARGS,
+    "Returns the difference between the actual sum at the samples\n defined by the labels to the generic points in the factor,\n and the trace sum, computed in quad double precision.\n On entry are three integer numbers and one string:\n 1) d, the number of points in the witness set;\n 2) k, the dimension of the solution set;\n 3) nc, the number of characters in the string;\n 4) ws, the string representing the labels of the witness set."},
    {"py2c_standard_witset_of_hypersurface", py2c_standard_witset_of_hypersurface,
      METH_VARARGS,
     "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container\n in standard double precision on return contain a witness set for\n the hypersurface defined by p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of a polynomial, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},
