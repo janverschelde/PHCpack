@@ -573,6 +573,26 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
             break
         py2c_factor_restore_quaddobl_solutions()
 
+def monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0, prc='d'):
+    """
+    Applies the monodromy breakup algorithm to factor the d-dimensional
+    set represented by the embedded system e and its solutions esols.
+    If verbose is False, then no output is written.
+    If nbloops equals zero, then the user is prompted to give
+    the maximum number of loops.
+    Three different levels of precision are supported: double precision 'd'
+    (for the value for prc) is the default, the two other precisions are
+    double double precision 'dd' and quad double precision 'qd'.
+    """
+    if(prc == 'd'):
+        standard_monodromy_breakup(embsys, esols, dim, verbose, nbloops)
+    elif(prc == 'dd'):
+        dobldobl_monodromy_breakup(embsys, esols, dim, verbose, nbloops)
+    elif(prc == 'dd'):
+        quaddobl_monodromy_breakup(embsys, esols, dim, verbose, nbloops)
+    else:
+        print 'wrong argument for precision'
+
 def factor(dim, witsys, witsols, verbose=True, nbloops=20):
     """
     Applies monodromy to factor an equidimensional algebraic set,
@@ -583,21 +603,21 @@ def factor(dim, witsys, witsols, verbose=True, nbloops=20):
     standard_monodromy_breakup(witsys, witsols, dim, verbose, nbloops)
     return decomposition(len(witsols))
 
-def test_monodromy():
+def test_monodromy(prc='d'):
     """
     Runs a test on applying monodromy loops
     to factor a curve into irreducible components.
     """
     from phcpy.solver import solve
     pols = ['(x^2 - y)*(x-y);', 'x^3 - z;']
-    embsys = embed(3, 1, pols)
+    embsys = embed(3, 1, pols, prc)
     # patch : make sure zz1 is last symbol!
     embsys[0] = 'x - x + y - y + z - z + ' + embsys[0]
     print embsys
-    sols = solve(embsys, silent=True)
+    sols = solve(embsys, silent=True, precision=prc)
     # for sol in sols: print sol
     print 'the degree is', len(sols)
-    monodromy_breakup(embsys, sols, 1)
+    monodromy_breakup(embsys, sols, 1, prc)
 
 def test_factor():
     """
