@@ -1,3 +1,6 @@
+Mon 21 Dec 2015 : added functions to sets.py to run the monodromy_breakup
+  in double double and quad double precision.
+
 Sun 13 Dec 2015 : added functions to sets.py to embed systems with coefficients
   in double double and quad double precision.
 

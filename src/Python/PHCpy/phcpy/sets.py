@@ -351,10 +351,10 @@ def decomposition(deg):
         result.append((eval(compnt), tsd))
     return result
 
-def monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
+def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     """
-    Applies the monodromy breakup algorithm to factor
-    the d-dimensional algebraic set represented by the
+    Applies the monodromy breakup algorithm in standard double precision
+    to factor the d-dimensional algebraic set represented by the
     embedded system e and its solutions esols.
     If verbose is False, then no output is written.
     If nbloops equals zero, then the user is prompted to give
@@ -425,6 +425,154 @@ def monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
             break
         py2c_factor_restore_solutions()
 
+def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
+    """
+    Applies the monodromy breakup algorithm in double double precision 
+    to factor the d-dimensional algebraic set represented by the embedded
+    system e and its solutions esols.
+    If verbose is False, then no output is written.
+    If nbloops equals zero, then the user is prompted to give
+    the maximum number of loops.
+    """
+    from phcpy.phcpy2c import py2c_factor_set_to_mute
+    from phcpy.phcpy2c import py2c_factor_dobldobl_assign_labels
+    from phcpy.phcpy2c import py2c_factor_initialize_dobldobl_monodromy
+    from phcpy.phcpy2c import py2c_factor_initialize_dobldobl_sampler
+    from phcpy.phcpy2c import py2c_factor_set_dobldobl_trace_slice
+    from phcpy.phcpy2c import py2c_factor_store_dobldobl_gammas
+    from phcpy.phcpy2c import py2c_factor_dobldobl_track_paths
+    from phcpy.phcpy2c import py2c_factor_store_dobldobl_solutions
+    from phcpy.phcpy2c import py2c_factor_restore_dobldobl_solutions
+    from phcpy.phcpy2c import py2c_factor_new_dobldobl_slices
+    from phcpy.phcpy2c import py2c_factor_swap_dobldobl_slices
+    from phcpy.phcpy2c import py2c_factor_permutation_after_dobldobl_loop
+    from phcpy.phcpy2c import py2c_factor_number_of_dobldobl_components
+    from phcpy.phcpy2c import py2c_factor_update_dobldobl_decomposition
+    from phcpy.phcpy2c import py2c_solcon_clear_dobldobl_solutions
+    from phcpy.interface import store_dobldobl_solutions
+    if(verbose):
+        print '... applying monodromy factorization ...'
+    py2c_factor_set_to_mute()
+    deg = len(esols)
+    nvar = len(embsys)
+    if(verbose):
+        print 'dim =', dim
+    store_dobldobl_solutions(nvar, esols)
+    py2c_factor_dobldobl_assign_labels(nvar, deg)
+    # py2c_solcon_write_dobldobl_solutions()
+    py2c_factor_initialize_dobldobl_sampler(dim)
+    if(nbloops == 0):
+        strnbloops = raw_input('give the maximum number of loops : ')
+        nbloops = int(strnbloops)
+    py2c_factor_initialize_dobldobl_monodromy(nbloops, deg, dim)
+    py2c_factor_store_dobldobl_solutions()
+    if(verbose):
+        print '... initializing the grid ...'
+    for i in range(1, 3):
+        py2c_factor_set_dobldobl_trace_slice(i)
+        py2c_factor_store_dobldobl_gammas(nvar)
+        py2c_factor_dobldobl_track_paths()
+        py2c_factor_store_dobldobl_solutions()
+        py2c_factor_restore_dobldobl_solutions()
+        py2c_factor_swap_dobldobl_slices()
+    for i in range(1, nbloops+1):
+        if(verbose):
+            print '... starting loop %d ...' % i
+        py2c_factor_new_dobldobl_slices(dim, nvar)
+        py2c_factor_store_dobldobl_gammas(nvar)
+        py2c_factor_dobldobl_track_paths()
+        py2c_solcon_clear_dobldobl_solutions()
+        py2c_factor_store_dobldobl_gammas(nvar)
+        py2c_factor_dobldobl_track_paths()
+        py2c_factor_store_dobldobl_solutions()
+        sprm = py2c_factor_permutation_after_dobldobl_loop(deg)
+        if(verbose):
+            perm = eval(sprm)
+            print 'the permutation :', perm
+        nb0 = py2c_factor_number_of_dobldobl_components()
+        done = py2c_factor_update_dobldobl_decomposition(deg, len(sprm), sprm)
+        nb1 = py2c_factor_number_of_dobldobl_components()
+        if(verbose):
+            print 'number of factors : %d -> %d' % (nb0, nb1)
+            print 'decomposition :', decomposition(deg)
+        if(done == 1):
+            break
+        py2c_factor_restore_dobldobl_solutions()
+
+def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
+    """
+    Applies the monodromy breakup algorithm in quad double precision 
+    to factor the d-dimensional algebraic set represented by the embedded
+    system e and its solutions esols.
+    If verbose is False, then no output is written.
+    If nbloops equals zero, then the user is prompted to give
+    the maximum number of loops.
+    """
+    from phcpy.phcpy2c import py2c_factor_set_to_mute
+    from phcpy.phcpy2c import py2c_factor_quaddobl_assign_labels
+    from phcpy.phcpy2c import py2c_factor_initialize_quaddobl_monodromy
+    from phcpy.phcpy2c import py2c_factor_initialize_quaddobl_sampler
+    from phcpy.phcpy2c import py2c_factor_set_quaddobl_trace_slice
+    from phcpy.phcpy2c import py2c_factor_store_quaddobl_gammas
+    from phcpy.phcpy2c import py2c_factor_quaddobl_track_paths
+    from phcpy.phcpy2c import py2c_factor_store_quaddobl_solutions
+    from phcpy.phcpy2c import py2c_factor_restore_quaddobl_solutions
+    from phcpy.phcpy2c import py2c_factor_new_quaddobl_slices
+    from phcpy.phcpy2c import py2c_factor_swap_quaddobl_slices
+    from phcpy.phcpy2c import py2c_factor_permutation_after_quaddobl_loop
+    from phcpy.phcpy2c import py2c_factor_number_of_quaddobl_components
+    from phcpy.phcpy2c import py2c_factor_update_quaddobl_decomposition
+    from phcpy.phcpy2c import py2c_solcon_clear_quaddobl_solutions
+    from phcpy.interface import store_quaddobl_solutions
+    if(verbose):
+        print '... applying monodromy factorization ...'
+    py2c_factor_set_to_mute()
+    deg = len(esols)
+    nvar = len(embsys)
+    if(verbose):
+        print 'dim =', dim
+    store_quaddobl_solutions(nvar, esols)
+    py2c_factor_quaddobl_assign_labels(nvar, deg)
+    # py2c_solcon_write_quaddobl_solutions()
+    py2c_factor_initialize_quaddobl_sampler(dim)
+    if(nbloops == 0):
+        strnbloops = raw_input('give the maximum number of loops : ')
+        nbloops = int(strnbloops)
+    py2c_factor_initialize_quaddobl_monodromy(nbloops, deg, dim)
+    py2c_factor_store_quaddobl_solutions()
+    if(verbose):
+        print '... initializing the grid ...'
+    for i in range(1, 3):
+        py2c_factor_set_quaddobl_trace_slice(i)
+        py2c_factor_store_quaddobl_gammas(nvar)
+        py2c_factor_quaddobl_track_paths()
+        py2c_factor_store_quaddobl_solutions()
+        py2c_factor_restore_quaddobl_solutions()
+        py2c_factor_swap_quaddobl_slices()
+    for i in range(1, nbloops+1):
+        if(verbose):
+            print '... starting loop %d ...' % i
+        py2c_factor_new_quaddobl_slices(dim, nvar)
+        py2c_factor_store_quaddobl_gammas(nvar)
+        py2c_factor_quaddobl_track_paths()
+        py2c_solcon_clear_quaddobl_solutions()
+        py2c_factor_store_quaddobl_gammas(nvar)
+        py2c_factor_quaddobl_track_paths()
+        py2c_factor_store_quaddobl_solutions()
+        sprm = py2c_factor_permutation_after_quaddobl_loop(deg)
+        if(verbose):
+            perm = eval(sprm)
+            print 'the permutation :', perm
+        nb0 = py2c_factor_number_of_quaddobl_components()
+        done = py2c_factor_update_quaddobl_decomposition(deg, len(sprm), sprm)
+        nb1 = py2c_factor_number_of_quaddobl_components()
+        if(verbose):
+            print 'number of factors : %d -> %d' % (nb0, nb1)
+            print 'decomposition :', decomposition(deg)
+        if(done == 1):
+            break
+        py2c_factor_restore_quaddobl_solutions()
+
 def factor(dim, witsys, witsols, verbose=True, nbloops=20):
     """
     Applies monodromy to factor an equidimensional algebraic set,
@@ -432,7 +580,7 @@ def factor(dim, witsys, witsols, verbose=True, nbloops=20):
     and corresponding generic points in witsols.
     The dimension of the algebraic set is given in dim.
     """
-    monodromy_breakup(witsys, witsols, dim, verbose, nbloops)
+    standard_monodromy_breakup(witsys, witsols, dim, verbose, nbloops)
     return decomposition(len(witsols))
 
 def test_monodromy():
