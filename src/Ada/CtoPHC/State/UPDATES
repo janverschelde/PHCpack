@@ -1,3 +1,5 @@
+Tue 22 Dec 2015 : improved exception handler messages in use_c2fac.adb.
+
 Fri 18 Dec 2015 : jobs added to use_c2fac and use_c2phc to store random
   complex double double and quad double constants for the monodromy breakup.
 

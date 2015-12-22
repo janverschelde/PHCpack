@@ -222,7 +222,7 @@ function use_c2fac ( job : integer32;
     return 0;
   exception
     when others =>
-      put_line("Exception raised when initializing sampling machine.");
+      put_line("Exception at initializing standard sampling machine.");
       return 42;
   end Job2;
 
@@ -241,7 +241,7 @@ function use_c2fac ( job : integer32;
     return 0;
   exception
     when others =>
-      put_line("Exception raised when initializing sampling machine.");
+      put_line("Exception at initializing dobldobl sampling machine.");
       return 632;
   end Job32;
 
@@ -260,7 +260,7 @@ function use_c2fac ( job : integer32;
     return 0;
   exception
     when others =>
-      put_line("Exception raised when initializing sampling machine.");
+      put_line("Exception at initializing quaddobl sampling machine.");
       return 662;
   end Job62;
 
