@@ -517,10 +517,33 @@ int trace_grid_diagnostics ( double *err, double *dis );
 /*
  * DESCRIPTION :
  *   Returns the maximal error on the samples in the trace grid
- *   and the minimal distance between the samples in the trace grid.
+ *   and the minimal distance between the samples in the trace grid,
+ *   computed in standard double precision.
  *
  * REQUIRED :
  *   The operation "store_solutions()" must have been invoked at
+ *   least three times before the numbers on return have a meaning. */
+
+int dobldobl_trace_grid_diagnostics ( double *err, double *dis );
+/*
+ * DESCRIPTION :
+ *   Returns the maximal error on the samples in the trace grid
+ *   and the minimal distance between the samples in the trace grid,
+ *   computed in double double precision.
+ *
+ * REQUIRED :
+ *   The operation "store_dobldobl_solutions()" must have been invoked at
+ *   least three times before the numbers on return have a meaning. */
+
+int quaddobl_trace_grid_diagnostics ( double *err, double *dis );
+/*
+ * DESCRIPTION :
+ *   Returns the maximal error on the samples in the trace grid
+ *   and the minimal distance between the samples in the trace grid,
+ *   computed in quad double precision.
+ *
+ * REQUIRED :
+ *   The operation "store_quaddobl_solutions()" must have been invoked at
  *   least three times before the numbers on return have a meaning. */
 
 void random_complex ( double *re, double *im );

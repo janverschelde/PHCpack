@@ -1,6 +1,7 @@
 /* The main program prompts the user for a witness set and then runs the
    basic version of the monodromy loop algorithm to decompose the witness
-   set into irreducible factors. */
+   set into irreducible factors.  Double double and quad double versions
+   of the monodromy breakup method are provided as well. */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -76,9 +77,12 @@ int main ( int argc, char *argv[] )
 {
    char ans;
    int precision,fail;
+   int seed = time(NULL);
 
    adainit();
-   srand(time(NULL));
+   srand(seed); /* monodromy loops are probabilistic ! */
+
+   printf("Seed for the random number generators : %d.\n",seed);
 
    printf("\nMENU for the working precision :\n");
    printf("  0. standard double precision;\n");
@@ -188,6 +192,7 @@ int store_quaddobl_gammas ( int n )
 int standard_monodromy_breakup ( int nbloops, int n, int k, int d )
 {
    int fail,i,j,done;
+   double err,dis;
 
    fail = initialize_sampler(k);
    fail = initialize_monodromy(nbloops,d,k);
@@ -206,6 +211,10 @@ int standard_monodromy_breakup ( int nbloops, int n, int k, int d )
       fail = restore_solutions(); /* use original solutions at start */
       fail = swap_slices();       /* go back to original slices */
    }
+   fail = trace_grid_diagnostics(&err,&dis);
+   printf("Trace grid diagnostics : \n");
+   printf("  largest error of the samples : %.3e\n", err);
+   printf("  smallest distance between samples : %.3e\n", dis);
    done = 0;
    for(i=1; (i<=nbloops) && (done==0); i++)  /* perform monodromy loops */
    {
@@ -242,9 +251,9 @@ int standard_monodromy_breakup ( int nbloops, int n, int k, int d )
       fail = restore_solutions();
    }
    if(done==1)
-     printf("Found factorization using %d loops.\n", i-1);
+      printf("Found factorization using %d loops.\n", i-1);
    else
-     printf("Failed to factor using %d loops.\n", i-1);
+      printf("Failed to factor using %d loops.\n", i-1);
 
    return fail;
 }
@@ -252,6 +261,7 @@ int standard_monodromy_breakup ( int nbloops, int n, int k, int d )
 int dobldobl_monodromy_breakup ( int nbloops, int n, int k, int d )
 {
    int fail,i,j,done;
+   double err,dis;
 
    fail = initialize_dobldobl_sampler(k);
    fail = initialize_dobldobl_monodromy(nbloops,d,k);
@@ -270,6 +280,10 @@ int dobldobl_monodromy_breakup ( int nbloops, int n, int k, int d )
       fail = restore_dobldobl_solutions(); /* use original sols at start */
       fail = swap_dobldobl_slices();       /* go back to original slices */
    }
+   fail = dobldobl_trace_grid_diagnostics(&err,&dis);
+   printf("Trace grid diagnostics : \n");
+   printf("  largest error of the samples : %.3e\n", err);
+   printf("  smallest distance between samples : %.3e\n", dis);
    done = 0;
    for(i=1; (i<=nbloops) && (done==0); i++)  /* perform monodromy loops */
    {
@@ -308,9 +322,9 @@ int dobldobl_monodromy_breakup ( int nbloops, int n, int k, int d )
       fail = restore_dobldobl_solutions();
    }
    if(done==1)
-     printf("Found factorization using %d loops.\n", i-1);
+      printf("Found factorization using %d loops.\n", i-1);
    else
-     printf("Failed to factor using %d loops.\n", i-1);
+      printf("Failed to factor using %d loops.\n", i-1);
 
    return fail;
 }
@@ -318,6 +332,7 @@ int dobldobl_monodromy_breakup ( int nbloops, int n, int k, int d )
 int quaddobl_monodromy_breakup ( int nbloops, int n, int k, int d )
 {
    int fail,i,j,done;
+   double err,dis;
 
    fail = initialize_quaddobl_sampler(k);
    fail = initialize_quaddobl_monodromy(nbloops,d,k);
@@ -336,6 +351,10 @@ int quaddobl_monodromy_breakup ( int nbloops, int n, int k, int d )
       fail = restore_quaddobl_solutions(); /* use original sols at start */
       fail = swap_quaddobl_slices();       /* go back to original slices */
    }
+   fail = quaddobl_trace_grid_diagnostics(&err,&dis);
+   printf("Trace grid diagnostics : \n");
+   printf("  largest error of the samples : %.3e\n", err);
+   printf("  smallest distance between samples : %.3e\n", dis);
    done = 0;
    for(i=1; (i<=nbloops) && (done==0); i++)  /* perform monodromy loops */
    {
@@ -374,9 +393,9 @@ int quaddobl_monodromy_breakup ( int nbloops, int n, int k, int d )
       fail = restore_quaddobl_solutions();
    }
    if(done==1)
-     printf("Found factorization using %d loops.\n", i-1);
+      printf("Found factorization using %d loops.\n", i-1);
    else
-     printf("Failed to factor using %d loops.\n", i-1);
+      printf("Failed to factor using %d loops.\n", i-1);
 
    return fail;
 }

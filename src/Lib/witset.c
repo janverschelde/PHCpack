@@ -7,7 +7,7 @@
 #include "solcon.h"
 #include "witset.h"
 
-#define verbose 0 /* verbose flag */
+#define verbose 2 /* verbose flag */
 
 /* some basic OPERATIONS on witness sets */
 
@@ -648,6 +648,30 @@ int trace_grid_diagnostics ( double *err, double *dis )
    double c[2];
 
    fail = _ada_use_c2phc(56,a,b,c);
+   *err = c[0];
+   *dis = c[1];
+
+   return fail;
+}
+
+int dobldobl_trace_grid_diagnostics ( double *err, double *dis )
+{
+   int *a,*b,fail;
+   double c[2];
+
+   fail = _ada_use_c2phc(646,a,b,c);
+   *err = c[0];
+   *dis = c[1];
+
+   return fail;
+}
+
+int quaddobl_trace_grid_diagnostics ( double *err, double *dis )
+{
+   int *a,*b,fail;
+   double c[2];
+
+   fail = _ada_use_c2phc(676,a,b,c);
    *err = c[0];
    *dis = c[1];
 

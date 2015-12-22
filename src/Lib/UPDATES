@@ -1,3 +1,6 @@
+Tue 22 Dec 2015 : new functions in witset for the trace grid diagnostics
+  in double double and quad double precision, tested by lib_factor.
+
 Mon 21 Dec 2015 : added jobs to phcpy2c with minor change in witset.h.
   All functions to factor in double double and quad double precision have
   been added to phcpy2c.
