@@ -1,3 +1,5 @@
+Wed 23 Dec 2015 : extended functionality of the monodromy breakup in sets.py.
+
 Tue 22 Dec 2015 : improved tests on the monodromy in sets.py.
 
 Mon 21 Dec 2015 : added functions to sets.py to run the monodromy_breakup
