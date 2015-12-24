@@ -503,7 +503,7 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     from phcpy.interface import store_dobldobl_solutions
     if(verbose):
         print '... applying monodromy factorization with double doubles ...'
-    # py2c_factor_set_to_mute()
+    py2c_factor_set_to_mute()
     deg = len(esols)
     nvar = len(embsys)
     if(verbose):
@@ -683,7 +683,6 @@ def test_monodromy(prc='d'):
     sols = solve(embsys, silent=True, precision=prc)
     # for sol in sols: print sol
     print 'the degree is', len(sols)
-    print 'prc = ', prc
     monodromy_breakup(embsys, sols, 1, prec=prc)
 
 def test_factor():

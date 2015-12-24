@@ -7,7 +7,7 @@
 #include "solcon.h"
 #include "witset.h"
 
-#define verbose 2 /* verbose flag */
+#define verbose 0 /* verbose flag */
 
 /* some basic OPERATIONS on witness sets */
 
