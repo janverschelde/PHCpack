@@ -1,4 +1,5 @@
 Thu 24 Dec 2015 : changes in sets.py for renamed functions in phcpy2c.
+  More changes in sets.py for muting the monodromy breakup.
 
 Wed 23 Dec 2015 : extended functionality of the monodromy breakup in sets.py
   Made some small change for the verbosity.  Added the reporting of the

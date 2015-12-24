@@ -440,7 +440,20 @@ int str2list ( int n, char *s, int *d );
 int set_state_to_silent ( void );
 /*
  * DESCRIPTION :
- *   Sets the state of monodromy permutations to silent. */
+ *   Sets the state of monodromy permutations in standard double
+ *   precision to silent. */
+
+int set_dobldobl_state_to_silent ( void );
+/*
+ * DESCRIPTION :
+ *   Sets the state of monodromy permutations in double double
+ *   precision to silent. */
+
+int set_quaddobl_state_to_silent ( void );
+/*
+ * DESCRIPTION :
+ *   Sets the state of monodromy permutations in quad double
+ *   precision to silent. */
 
 int assign_labels ( int n, int nbsols, int precision );
 /* 

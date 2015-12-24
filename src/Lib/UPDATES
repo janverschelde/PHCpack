@@ -1,5 +1,7 @@
 Thu 24 Dec 2015 : standardized the naming of the functions in phcpy2c
   for the monodromy breakup in stanard double precision.
+  Added functions to witset and phcpy2c to make the monodromy go mute
+  in double double and quad double precision.
 
 Wed 23 Dec 2015 : adjusted verbose flag in witset.c to zero.
   Added functions to phcpy2c to report the diagnostics of the trace grid

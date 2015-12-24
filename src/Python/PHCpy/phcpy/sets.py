@@ -408,7 +408,7 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     If nbloops equals zero, then the user is prompted to give
     the maximum number of loops.
     """
-    from phcpy.phcpy2c import py2c_factor_set_to_mute
+    from phcpy.phcpy2c import py2c_factor_set_standard_to_mute
     from phcpy.phcpy2c import py2c_factor_standard_assign_labels
     from phcpy.phcpy2c import py2c_factor_initialize_standard_monodromy
     from phcpy.phcpy2c import py2c_factor_initialize_standard_sampler
@@ -428,7 +428,8 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     from phcpy.interface import store_standard_solutions
     if(verbose):
         print '... applying monodromy factorization with standard doubles ...'
-    py2c_factor_set_to_mute()
+    else:
+        py2c_factor_set_standard_to_mute()
     deg = len(esols)
     nvar = len(embsys)
     if(verbose):
@@ -475,7 +476,8 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
         nb1 = py2c_factor_number_of_standard_components()
         if(verbose):
             print 'number of factors : %d -> %d' % (nb0, nb1)
-            print 'decomposition :', decomposition(deg)
+            deco = decomposition(deg)
+            print 'decomposition :', deco
         if(done == 1):
             break
         py2c_factor_restore_standard_solutions()
@@ -489,7 +491,7 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     If nbloops equals zero, then the user is prompted to give
     the maximum number of loops.
     """
-    from phcpy.phcpy2c import py2c_factor_set_to_mute
+    from phcpy.phcpy2c import py2c_factor_set_dobldobl_to_mute
     from phcpy.phcpy2c import py2c_factor_dobldobl_assign_labels
     from phcpy.phcpy2c import py2c_factor_initialize_dobldobl_monodromy
     from phcpy.phcpy2c import py2c_factor_initialize_dobldobl_sampler
@@ -509,7 +511,8 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     from phcpy.interface import store_dobldobl_solutions
     if(verbose):
         print '... applying monodromy factorization with double doubles ...'
-    py2c_factor_set_to_mute()
+    else:
+        py2c_factor_set_dobldobl_to_mute()
     deg = len(esols)
     nvar = len(embsys)
     if(verbose):
@@ -556,7 +559,8 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
         nb1 = py2c_factor_number_of_dobldobl_components()
         if(verbose):
             print 'number of factors : %d -> %d' % (nb0, nb1)
-            print 'decomposition :', decomposition(deg, 'dd')
+            deco = decomposition(deg, 'dd')
+            print 'decomposition :', deco
         if(done == 1):
             break
         py2c_factor_restore_dobldobl_solutions()
@@ -570,7 +574,7 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     If nbloops equals zero, then the user is prompted to give
     the maximum number of loops.
     """
-    from phcpy.phcpy2c import py2c_factor_set_to_mute
+    from phcpy.phcpy2c import py2c_factor_set_quaddobl_to_mute
     from phcpy.phcpy2c import py2c_factor_quaddobl_assign_labels
     from phcpy.phcpy2c import py2c_factor_initialize_quaddobl_monodromy
     from phcpy.phcpy2c import py2c_factor_initialize_quaddobl_sampler
@@ -590,7 +594,8 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     from phcpy.interface import store_quaddobl_solutions
     if(verbose):
         print '... applying monodromy factorization with quad doubles ...'
-    py2c_factor_set_to_mute()
+    else:
+        py2c_factor_set_quaddobl_to_mute()
     deg = len(esols)
     nvar = len(embsys)
     if(verbose):
@@ -637,7 +642,8 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
         nb1 = py2c_factor_number_of_quaddobl_components()
         if(verbose):
             print 'number of factors : %d -> %d' % (nb0, nb1)
-            print 'decomposition :', decomposition(deg, 'qd')
+            deco = decomposition(deg, 'qd')
+            print 'decomposition :', deco
         if(done == 1):
             break
         py2c_factor_restore_quaddobl_solutions()

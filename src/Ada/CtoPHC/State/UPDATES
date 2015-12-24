@@ -1,3 +1,6 @@
+Thu 24 Dec 2015 : added jobs to use_c2fac and use_c2phc to make the 
+  factorization go mute in double double and quad double precision.
+
 Tue 22 Dec 2015 : improved exception handler messages in use_c2fac.adb.
 
 Fri 18 Dec 2015 : jobs added to use_c2fac and use_c2phc to store random

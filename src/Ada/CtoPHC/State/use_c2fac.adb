@@ -1602,11 +1602,23 @@ function use_c2fac ( job : integer32;
       return 687;
   end Job87;
 
-  function Job28 return integer32 is -- set state to silent
+  function Job28 return integer32 is -- set state of standard to silent
   begin
     Standard_Monodromy_Permutations.stay_silent := true;
     return 0;
   end Job28;
+
+  function Job58 return integer32 is -- set state of dobldobl to silent
+  begin
+    DoblDobl_Monodromy_Permutations.stay_silent := true;
+    return 0;
+  end Job58;
+
+  function Job88 return integer32 is -- set state of quaddobl to silent
+  begin
+    QuadDobl_Monodromy_Permutations.stay_silent := true;
+    return 0;
+  end Job88;
 
   function Job29 return integer32 is -- standard random complex number
 
@@ -1681,7 +1693,7 @@ function use_c2fac ( job : integer32;
       when 25 => return Job25; -- writes standard witness set to file
       when 26 => return Job26; -- returns number of standard factors
       when 27 => return Job27; -- returns labels in standard component
-      when 28 => return Job28; -- state of monodromy permutations to silent
+      when 28 => return Job28; -- make standard monodromy permutations silent
       when 29 => return Job29; -- standard random complex number
       when 31 => return Job31; -- read witness set in double double precision
       when 32 => return Job32; -- initialize dobldobl sampling machine
@@ -1708,6 +1720,7 @@ function use_c2fac ( job : integer32;
       when 55 => return Job55; -- writes dobldobl witness set to file
       when 56 => return Job56; -- returns number of dobldobl factors
       when 57 => return Job57; -- returns labels in dobldobl component
+      when 58 => return Job58; -- make dobldobl monodromy permutations silent
       when 59 => return Job59; -- random dobldobl complex number
       when 61 => return Job61; -- read witness set in quad double precision
       when 62 => return Job62; -- initialize quaddobl sampling machine
@@ -1734,6 +1747,7 @@ function use_c2fac ( job : integer32;
       when 85 => return Job85; -- writes quaddobl witness set to file
       when 86 => return Job86; -- returns number of quaddobl factors
       when 87 => return Job87; -- returns labels in quaddobl component
+      when 88 => return Job88; -- make quaddobl monodromy permutations silent
       when 89 => return Job89; -- random quaddobl complex number
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;

@@ -2894,11 +2894,26 @@ static PyObject *py2c_quaddobl_cascade_homotopy
  *   systems to go one level down the cascade, removing one slice.
  *   On return is the failure code, which equals zero if all went well. */
 
-static PyObject *py2c_factor_set_to_mute
+static PyObject *py2c_factor_set_standard_to_mute
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Sets the state of monodromy permutations to silent. */
+ *   Sets the state of monodromy permutations in standard double
+ *   precision to silent. */
+
+static PyObject *py2c_factor_set_dobldobl_to_mute
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Sets the state of monodromy permutations in double double
+ *   precision to silent. */
+
+static PyObject *py2c_factor_set_quaddobl_to_mute
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Sets the state of monodromy permutations in quad double
+ *   precision to silent. */
 
 static PyObject *py2c_factor_define_output_file_with_string
  ( PyObject *self, PyObject *args );

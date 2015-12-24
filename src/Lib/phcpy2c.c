@@ -4317,7 +4317,7 @@ static PyObject *py2c_quaddobl_cascade_homotopy
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_set_to_mute
+static PyObject *py2c_factor_set_standard_to_mute
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -4325,6 +4325,30 @@ static PyObject *py2c_factor_set_to_mute
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
    fail = set_state_to_silent();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_set_dobldobl_to_mute
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = set_dobldobl_state_to_silent();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_factor_set_quaddobl_to_mute
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = set_quaddobl_state_to_silent();
 
    return Py_BuildValue("i",fail);
 }
@@ -6862,8 +6886,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_quaddobl_cascade_homotopy", py2c_quaddobl_cascade_homotopy,
      METH_VARARGS,
     "Creates a homotopy in quad double precision using the stored\n systems to go one level down the cascade, removing one slice.\n On return is the failure code, which equals zero if all went well."},
-   {"py2c_factor_set_to_mute", py2c_factor_set_to_mute, METH_VARARGS,
-    "Sets the state to monodromy permutations to silent."},
+   {"py2c_factor_set_standard_to_mute",
+     py2c_factor_set_standard_to_mute, METH_VARARGS,
+    "Sets the state of monodromy permutations in standard double\n precision to silent."},
+   {"py2c_factor_set_dobldobl_to_mute",
+     py2c_factor_set_dobldobl_to_mute, METH_VARARGS,
+    "Sets the state of monodromy permutations in double double\n precision to silent."},
+   {"py2c_factor_set_quaddobl_to_mute",
+     py2c_factor_set_quaddobl_to_mute, METH_VARARGS,
+    "Sets the state of monodromy permutations in quad double\n precision to silent."},
    {"py2c_factor_define_output_file_with_string",
      py2c_factor_define_output_file_with_string, METH_VARARGS,
     "Defines the output file for the factorization.\n On input are an integer and a string:\n 1) the integer equals the number of characters in the string; and\n 2) the string contains the name of a file.\n On return is the failure code, which equals zero if all went well."},

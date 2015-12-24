@@ -459,7 +459,7 @@ function use_c2phc ( job : integer32;
 --
 -- the operations of the monodromy factorization :
 --
---   job   =  39 : set state of monodromy permutations to silent;
+--   job    = 39 : makes the factorization with standard doubles go silent;
 --         =  40 : display the menu of all available options;
 --         =  41 : prompts the user for a witness set,
 --                 stores the system in the systems container,
@@ -632,6 +632,7 @@ function use_c2phc ( job : integer32;
 --                 returns in a the degree of the k-th component and
 --                 in b the labels of the points that span the k-th
 --                 component in the dobldobl irreducible decomposition.
+--   job   = 658 : makes the factorization with double doubles go silent;
 --   job   = 659 : returns in c the real and imaginary parts of
 --                 a randomly generated complex number of modulus one,
 --                 generated in double double precision.
@@ -712,6 +713,7 @@ function use_c2phc ( job : integer32;
 --                 returns in a the degree of the k-th component and
 --                 in b the labels of the points that span the k-th
 --                 component in the quaddobl irreducible decomposition.
+--   job   = 688 : makes the factorization with quad doubles go silent;
 --   job   = 689 : returns in c the real and imaginary parts of
 --                 a randomly generated complex number of modulus one,
 --                 generated in quad double precision.

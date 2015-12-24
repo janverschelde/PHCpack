@@ -99,7 +99,7 @@ function use_c2fac ( job : integer32;
 --                 returns in a the degree of the k-th component and
 --                 in b the labels of the points that span the k-th
 --                 component in the standard irreducible decomposition;
---   job    = 28 : set the state of the factorization to silent.
+--   job    = 28 : makes the factorization with standard doubles go silent;
 --   job    = 29 : returns in c the real and imaginary parts of
 --                 a randomly generated complex number of modulus one,
 --                 generated in standard double precision.
@@ -182,6 +182,10 @@ function use_c2fac ( job : integer32;
 --                 returns in a the degree of the k-th component and
 --                 in b the labels of the points that span the k-th
 --                 component in the dobldobl irreducible decomposition.
+--   job    = 58 : makes the factorization with double doubles go silent;
+--   job    = 59 : returns in c the real and imaginary parts of
+--                 a randomly generated complex number of modulus one,
+--                 generated in double double precision.
 --
 --   job    = 61 : prompts for a witness set in quad double precision
 --                 stores the system in the quaddobl systems container,
@@ -259,6 +263,10 @@ function use_c2fac ( job : integer32;
 --                 returns in a the degree of the k-th component and
 --                 in b the labels of the points that span the k-th
 --                 component in the quaddobl irreducible decomposition.
+--   job    = 88 : makes the factorization with quad doubles go silent;
+--   job    = 89 : returns in c the real and imaginary parts of
+--                 a randomly generated complex number of modulus one,
+--                 generated in quad double precision.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
