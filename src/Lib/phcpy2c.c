@@ -4342,7 +4342,7 @@ static PyObject *py2c_factor_define_output_file_with_string
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_assign_labels
+static PyObject *py2c_factor_standard_assign_labels
  ( PyObject *self, PyObject *args )
 {
    int n,nbsols,fail;
@@ -4378,7 +4378,7 @@ static PyObject *py2c_factor_quaddobl_assign_labels
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_initialize_sampler
+static PyObject *py2c_factor_initialize_standard_sampler
  ( PyObject *self, PyObject *args )
 {
    int k,fail;
@@ -4414,7 +4414,7 @@ static PyObject *py2c_factor_initialize_quaddobl_sampler
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_initialize_monodromy
+static PyObject *py2c_factor_initialize_standard_monodromy
  ( PyObject *self, PyObject *args )
 {
    int n,d,k,fail;
@@ -4489,7 +4489,7 @@ static PyObject *py2c_factor_quaddobl_trace_grid_diagnostics
    return Py_BuildValue("(d,d)",err,dis);
 }
 
-static PyObject *py2c_factor_store_solutions
+static PyObject *py2c_factor_store_standard_solutions
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -4525,7 +4525,7 @@ static PyObject *py2c_factor_store_quaddobl_solutions
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_restore_solutions
+static PyObject *py2c_factor_restore_standard_solutions
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -4562,7 +4562,7 @@ static PyObject *py2c_factor_restore_quaddobl_solutions
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_track_paths
+static PyObject *py2c_factor_standard_track_paths
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -4598,7 +4598,7 @@ static PyObject *py2c_factor_quaddobl_track_paths
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_swap_slices
+static PyObject *py2c_factor_swap_standard_slices
  ( PyObject *self, PyObject *args )
 {
    int fail;
@@ -4634,7 +4634,7 @@ static PyObject *py2c_factor_swap_quaddobl_slices
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_new_slices
+static PyObject *py2c_factor_new_standard_slices
  ( PyObject *self, PyObject *args )
 {
    int k,n,fail;
@@ -4670,7 +4670,7 @@ static PyObject *py2c_factor_new_quaddobl_slices
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_set_trace_slice
+static PyObject *py2c_factor_set_standard_trace_slice
  ( PyObject *self, PyObject *args )
 {
    int first,fail;
@@ -4731,7 +4731,7 @@ static PyObject *py2c_factor_set_quaddobl_trace_slice
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_store_gammas
+static PyObject *py2c_factor_store_standard_gammas
  ( PyObject *self, PyObject *args )
 {
    int n,i,fail;
@@ -4791,7 +4791,7 @@ static PyObject *py2c_factor_store_quaddobl_gammas
    return Py_BuildValue("i",fail);
 }
 
-static PyObject *py2c_factor_permutation_after_loop
+static PyObject *py2c_factor_permutation_after_standard_loop
  ( PyObject *self, PyObject *args )
 {
    int d,fail,nb;
@@ -4866,7 +4866,7 @@ static PyObject *py2c_factor_permutation_after_quaddobl_loop
    return Py_BuildValue("s",result);
 }
 
-static PyObject *py2c_factor_update_decomposition
+static PyObject *py2c_factor_update_standard_decomposition
  ( PyObject *self, PyObject *args )
 {
    int fail,i,d,nc;
@@ -4950,7 +4950,7 @@ static PyObject *py2c_factor_update_quaddobl_decomposition
    return Py_BuildValue("i",done);
 }
 
-static PyObject *py2c_factor_number_of_components
+static PyObject *py2c_factor_number_of_standard_components
  ( PyObject *self, PyObject *args )
 {
    int fail,nf;
@@ -4989,7 +4989,7 @@ static PyObject *py2c_factor_number_of_quaddobl_components
    return Py_BuildValue("i",nf);
 }
 
-static PyObject *py2c_factor_witness_points_of_component
+static PyObject *py2c_factor_witness_points_of_standard_component
  ( PyObject *self, PyObject *args )
 {
    int fail,totdeg,k;
@@ -5055,7 +5055,7 @@ static PyObject *py2c_factor_witness_points_of_quaddobl_component
    return Py_BuildValue("s",result);
 }
 
-static PyObject *py2c_factor_trace_sum_difference
+static PyObject *py2c_factor_standard_trace_sum_difference
  ( PyObject *self, PyObject *args )
 {
    int d,k,nc,fail;
@@ -6867,8 +6867,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_define_output_file_with_string",
      py2c_factor_define_output_file_with_string, METH_VARARGS,
     "Defines the output file for the factorization.\n On input are an integer and a string:\n 1) the integer equals the number of characters in the string; and\n 2) the string contains the name of a file.\n On return is the failure code, which equals zero if all went well."},
-   {"py2c_factor_assign_labels", py2c_factor_assign_labels,
-     METH_VARARGS,
+   {"py2c_factor_standard_assign_labels",
+     py2c_factor_standard_assign_labels, METH_VARARGS,
     "Assigns labels, replacing the multiplicity field of each solution\n in standard double precision stored in the container.\n On entry are two integers:\n 1) n, the number of coordinates of the solutions;\n 2) nbsols, the number of solutions in the container.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_factor_dobldobl_assign_labels",
      py2c_factor_dobldobl_assign_labels, METH_VARARGS,
@@ -6876,8 +6876,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_quaddobl_assign_labels",
      py2c_factor_quaddobl_assign_labels, METH_VARARGS,
     "Assigns labels, replacing the multiplicity field of each solution\n in quad double precision stored in the container.\n On entry are two integers:\n 1) n, the number of coordinates of the solutions;\n 2) nbsols, the number of solutions in the container.\n On return is the failure code, which equals zero if all went well."},
-   {"py2c_factor_initialize_sampler", py2c_factor_initialize_sampler,
-     METH_VARARGS,
+   {"py2c_factor_initialize_standard_sampler",
+     py2c_factor_initialize_standard_sampler, METH_VARARGS,
     "Initializes the sampling machine with a witness set,\n in standard double precision.\n On entry is the dimension or the number of hyperplanes\n to slide the positive dimensional solution set."},
    {"py2c_factor_initialize_dobldobl_sampler",
      py2c_factor_initialize_dobldobl_sampler, METH_VARARGS,
@@ -6885,8 +6885,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_initialize_quaddobl_sampler",
      py2c_factor_initialize_quaddobl_sampler, METH_VARARGS,
     "Initializes the sampling machine with a witness set,\n in quad double precision.\n On entry is the dimension or the number of hyperplanes\n to slide the positive dimensional solution set."},
-   {"py2c_factor_initialize_monodromy", py2c_factor_initialize_monodromy,
-     METH_VARARGS,
+   {"py2c_factor_initialize_standard_monodromy",
+     py2c_factor_initialize_standard_monodromy, METH_VARARGS,
     "Initializes the internal data structures for n loops,\n to factor a k-dimensional solution component of degree d,\n in standard double precision.\n There are three integers on input, in the following order:\n 1) n, the number of loops;\n 2) d, the degree of the solution set;\n 3) k, the dimensional of the solution set.\n On return is the failure code, which equals zero when all went well."},
    {"py2c_factor_initialize_dobldobl_monodromy",
      py2c_factor_initialize_dobldobl_monodromy, METH_VARARGS,
@@ -6903,7 +6903,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_quaddobl_trace_grid_diagnostics",
      py2c_factor_quaddobl_trace_grid_diagnostics, METH_VARARGS,
     "Returns a tuple of two doubles with the diagnostics on the\n trace grid computed in quad double precision.\n The first double is the largest error of the samples.\n The second double is the smallest distance between two samples."},
-   {"py2c_factor_store_solutions", py2c_factor_store_solutions, METH_VARARGS,
+   {"py2c_factor_store_standard_solutions",
+     py2c_factor_store_standard_solutions, METH_VARARGS,
     "Stores the solutions in the container, in standard double precision,\n to the data for monodromy loops."},
    {"py2c_factor_store_dobldobl_solutions",
      py2c_factor_store_dobldobl_solutions, METH_VARARGS,
@@ -6911,8 +6912,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_store_quaddobl_solutions",
      py2c_factor_store_quaddobl_solutions, METH_VARARGS,
     "Stores the solutions in the container, in quad double precision,\n to the data for monodromy loops."},
-   {"py2c_factor_restore_solutions", py2c_factor_restore_solutions,
-     METH_VARARGS,
+   {"py2c_factor_restore_standard_solutions",
+     py2c_factor_restore_standard_solutions, METH_VARARGS,
     "Restores the first initialized solutions, in standard double precision,\n from sampler to the container."},
    {"py2c_factor_restore_dobldobl_solutions",
      py2c_factor_restore_dobldobl_solutions, METH_VARARGS,
@@ -6920,7 +6921,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_restore_quaddobl_solutions",
      py2c_factor_restore_quaddobl_solutions, METH_VARARGS,
     "Restores the first initialized solutions, in quad double precision,\n from sampler to the container."},
-   {"py2c_factor_track_paths", py2c_factor_track_paths, METH_VARARGS,
+   {"py2c_factor_standard_track_paths",
+     py2c_factor_standard_track_paths, METH_VARARGS,
     "Tracks as many paths as defined by witness set,\n in standard double precision.\n On return is the failure code, which is zero when all went well."},
    {"py2c_factor_dobldobl_track_paths",
      py2c_factor_dobldobl_track_paths, METH_VARARGS,
@@ -6928,7 +6930,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_quaddobl_track_paths",
      py2c_factor_quaddobl_track_paths, METH_VARARGS,
     "Tracks as many paths as defined by witness set,\n in quad double precision.\n On return is the failure code, which is zero when all went well."},
-   {"py2c_factor_swap_slices", py2c_factor_swap_slices, METH_VARARGS,
+   {"py2c_factor_swap_standard_slices",
+     py2c_factor_swap_standard_slices, METH_VARARGS,
     "Swaps the current slices with new slices and takes new solutions\n as start to turn back, in standard double precision.\n On return is the failure code, which is zero when all went well."},
    {"py2c_factor_swap_dobldobl_slices",
      py2c_factor_swap_dobldobl_slices, METH_VARARGS,
@@ -6936,7 +6939,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_swap_quaddobl_slices",
      py2c_factor_swap_quaddobl_slices, METH_VARARGS,
     "Swaps the current slices with new slices and takes new solutions\n as start to turn back, in quad double precision.\n On return is the failure code, which is zero when all went well."},
-   {"py2c_factor_new_slices", py2c_factor_new_slices, METH_VARARGS,
+   {"py2c_factor_new_standard_slices",
+     py2c_factor_new_standard_slices, METH_VARARGS,
     "Generates k random slides in n-space, in standard double precision.\n The k and the n are the two input parameters.\n On return is the failure code, which is zero when all went well."},
    {"py2c_factor_new_dobldobl_slices",
      py2c_factor_new_dobldobl_slices, METH_VARARGS,
@@ -6944,7 +6948,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_new_quaddobl_slices",
      py2c_factor_new_quaddobl_slices, METH_VARARGS,
     "Generates k random slides in n-space, in quad double precision.\n The k and the n are the two input parameters.\n On return is the failure code, which is zero when all went well."},
-   {"py2c_factor_set_trace_slice", py2c_factor_set_trace_slice, METH_VARARGS,
+   {"py2c_factor_set_standard_trace_slice",
+     py2c_factor_set_standard_trace_slice, METH_VARARGS,
     "Assigns the constant coefficient of the first slice,\n in standard double precision.\n On entry is a flag to indicate if it was the first time or not.\n On return is the failure code, which is zero if all went well."},
    {"py2c_factor_set_dobldobl_trace_slice",
      py2c_factor_set_dobldobl_trace_slice, METH_VARARGS,
@@ -6952,7 +6957,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_set_quaddobl_trace_slice",
      py2c_factor_set_quaddobl_trace_slice, METH_VARARGS,
     "Assigns the constant coefficient of the first slice,\n in quad double precision.\n On entry is a flag to indicate if it was the first time or not.\n On return is the failure code, which is zero if all went well."},
-   {"py2c_factor_store_gammas", py2c_factor_store_gammas, METH_VARARGS,
+   {"py2c_factor_store_standard_gammas",
+     py2c_factor_store_standard_gammas, METH_VARARGS,
     "Stores the gamma constants in standard double precision\n for the sampler in the monodromy loops.\n Generates as many random complex constants as the value on input.\n On return is the failure code, which is zero if all went well."},
    {"py2c_factor_store_dobldobl_gammas",
      py2c_factor_store_dobldobl_gammas, METH_VARARGS,
@@ -6960,8 +6966,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_store_quaddobl_gammas",
      py2c_factor_store_quaddobl_gammas, METH_VARARGS,
     "Stores the gamma constants in quad double precision\n for the sampler in the monodromy loops.\n Generates as many random complex constants as the value on input.\n On return is the failure code, which is zero if all went well."},
-   {"py2c_factor_permutation_after_loop",
-     py2c_factor_permutation_after_loop, METH_VARARGS,
+   {"py2c_factor_permutation_after_standard_loop",
+     py2c_factor_permutation_after_standard_loop, METH_VARARGS,
     "For a set of degree d, computes the permutation using the solutions\n most recently stored, after a loop in standard double precision.\n The number d is the input parameter of this function.\n On return is the string representation of the permutation."},
    {"py2c_factor_permutation_after_dobldobl_loop",
      py2c_factor_permutation_after_dobldobl_loop, METH_VARARGS,
@@ -6969,8 +6975,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_permutation_after_quaddobl_loop",
      py2c_factor_permutation_after_quaddobl_loop, METH_VARARGS,
     "For a set of degree d, computes the permutation using the solutions\n most recently stored, after a loop in quad double precision.\n The number d is the input parameter of this function.\n On return is the string representation of the permutation."},
-   {"py2c_factor_update_decomposition",
-     py2c_factor_update_decomposition, METH_VARARGS,
+   {"py2c_factor_update_standard_decomposition",
+     py2c_factor_update_standard_decomposition, METH_VARARGS,
     "Updates the decomposition with the given permutation of d elements,\n computed in standard double precision.\n On entry are two integers and one string:\n 1) d, the number of elements in the permutation;\n 2) nc, the number of characters in the string;\n 3) p, the string representation of the permutation.\n Returns one if the current decomposition is certified,\n otherwise returns zero."},
    {"py2c_factor_update_dobldobl_decomposition",
      py2c_factor_update_dobldobl_decomposition, METH_VARARGS,
@@ -6978,8 +6984,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_update_quaddobl_decomposition",
      py2c_factor_update_quaddobl_decomposition, METH_VARARGS,
     "Updates the decomposition with the given permutation of d elements,\n computed in quad double precision.\n On entry are two integers and one string:\n 1) d, the number of elements in the permutation;\n 2) nc, the number of characters in the string;\n 3) p, the string representation of the permutation.\n Returns one if the current decomposition is certified,\n otherwise returns zero."},
-   {"py2c_factor_number_of_components",
-     py2c_factor_number_of_components, METH_VARARGS,
+   {"py2c_factor_number_of_standard_components",
+     py2c_factor_number_of_standard_components, METH_VARARGS,
     "Returns the number of irreducible factors in the current standard double\n precision decomposition of the witness set."},
    {"py2c_factor_number_of_dobldobl_components",
      py2c_factor_number_of_dobldobl_components, METH_VARARGS,
@@ -6987,8 +6993,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_number_of_quaddobl_components",
      py2c_factor_number_of_quaddobl_components, METH_VARARGS,
     "Returns the number of irreducible factors in the current quad double\n precision decomposition of the witness set."},
-   {"py2c_factor_witness_points_of_component",
-     py2c_factor_witness_points_of_component, METH_VARARGS,
+   {"py2c_factor_witness_points_of_standard_component",
+     py2c_factor_witness_points_of_standard_component, METH_VARARGS,
     "Returns a string which represents an irreducible component,\n computed in standard double precision.\n On entry are two integers:\n 1) the sum of the degrees of all components;\n 2) the index of the component."},
    {"py2c_factor_witness_points_of_dobldobl_component",
      py2c_factor_witness_points_of_dobldobl_component, METH_VARARGS,
@@ -6996,8 +7002,8 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_witness_points_of_quaddobl_component",
      py2c_factor_witness_points_of_quaddobl_component, METH_VARARGS,
     "Returns a string which represents an irreducible component,\n computed in quad double precision.\n On entry are two integers:\n 1) the sum of the degrees of all components;\n 2) the index of the component."},
-   {"py2c_factor_trace_sum_difference",
-     py2c_factor_trace_sum_difference, METH_VARARGS,
+   {"py2c_factor_standard_trace_sum_difference",
+     py2c_factor_standard_trace_sum_difference, METH_VARARGS,
     "Returns the difference between the actual sum at the samples\n defined by the labels to the generic points in the factor,\n and the trace sum, computed in standard double precision.\n On entry are three integer numbers and one string:\n 1) d, the number of points in the witness set;\n 2) k, the dimension of the solution set;\n 3) nc, the number of characters in the string;\n 4) ws, the string representing the labels of the witness set."},
    {"py2c_factor_dobldobl_trace_sum_difference",
      py2c_factor_dobldobl_trace_sum_difference, METH_VARARGS,

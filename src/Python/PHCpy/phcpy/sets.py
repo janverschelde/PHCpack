@@ -340,14 +340,14 @@ def standard_decomposition(deg):
     Returns the decomposition as a list of labels of witness points
     on the components, computed in standard double precision.
     """
-    from phcpy.phcpy2c import py2c_factor_number_of_components
-    from phcpy.phcpy2c import py2c_factor_witness_points_of_component
-    from phcpy.phcpy2c import py2c_factor_trace_sum_difference
-    nbcmp = py2c_factor_number_of_components()
+    from phcpy.phcpy2c import py2c_factor_number_of_standard_components
+    from phcpy.phcpy2c import py2c_factor_witness_points_of_standard_component
+    from phcpy.phcpy2c import py2c_factor_standard_trace_sum_difference as stf
+    nbcmp = py2c_factor_number_of_standard_components()
     result = []
     for i in range(1, nbcmp+1):
-        compnt = py2c_factor_witness_points_of_component(deg, i)
-        tsd = py2c_factor_trace_sum_difference(deg, i, len(compnt), compnt)
+        compnt = py2c_factor_witness_points_of_standard_component(deg, i)
+        tsd = stf(deg, i, len(compnt), compnt)
         result.append((eval(compnt), tsd))
     return result
 
@@ -409,49 +409,49 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     the maximum number of loops.
     """
     from phcpy.phcpy2c import py2c_factor_set_to_mute
-    from phcpy.phcpy2c import py2c_factor_assign_labels
-    from phcpy.phcpy2c import py2c_factor_initialize_monodromy
-    from phcpy.phcpy2c import py2c_factor_initialize_sampler
+    from phcpy.phcpy2c import py2c_factor_standard_assign_labels
+    from phcpy.phcpy2c import py2c_factor_initialize_standard_monodromy
+    from phcpy.phcpy2c import py2c_factor_initialize_standard_sampler
     from phcpy.phcpy2c import py2c_factor_standard_trace_grid_diagnostics
-    from phcpy.phcpy2c import py2c_factor_set_trace_slice
-    from phcpy.phcpy2c import py2c_factor_store_gammas
-    from phcpy.phcpy2c import py2c_factor_track_paths
-    from phcpy.phcpy2c import py2c_factor_store_solutions
-    from phcpy.phcpy2c import py2c_factor_restore_solutions
-    from phcpy.phcpy2c import py2c_factor_new_slices
-    from phcpy.phcpy2c import py2c_factor_swap_slices
-    from phcpy.phcpy2c import py2c_factor_permutation_after_loop
-    from phcpy.phcpy2c import py2c_factor_number_of_components
-    from phcpy.phcpy2c import py2c_factor_update_decomposition
+    from phcpy.phcpy2c import py2c_factor_set_standard_trace_slice
+    from phcpy.phcpy2c import py2c_factor_store_standard_gammas
+    from phcpy.phcpy2c import py2c_factor_standard_track_paths
+    from phcpy.phcpy2c import py2c_factor_store_standard_solutions
+    from phcpy.phcpy2c import py2c_factor_restore_standard_solutions
+    from phcpy.phcpy2c import py2c_factor_new_standard_slices
+    from phcpy.phcpy2c import py2c_factor_swap_standard_slices
+    from phcpy.phcpy2c import py2c_factor_permutation_after_standard_loop
+    from phcpy.phcpy2c import py2c_factor_number_of_standard_components
+    from phcpy.phcpy2c import py2c_factor_update_standard_decomposition
     from phcpy.phcpy2c import py2c_solcon_write_standard_solutions
     from phcpy.phcpy2c import py2c_solcon_clear_standard_solutions
     from phcpy.interface import store_standard_solutions
     if(verbose):
-        print '... applying monodromy factorization ...'
+        print '... applying monodromy factorization with standard doubles ...'
     py2c_factor_set_to_mute()
     deg = len(esols)
     nvar = len(embsys)
     if(verbose):
         print 'dim =', dim
     store_standard_solutions(nvar, esols)
-    py2c_factor_assign_labels(nvar, deg)
+    py2c_factor_standard_assign_labels(nvar, deg)
     if(verbose):
         py2c_solcon_write_standard_solutions()
-    py2c_factor_initialize_sampler(dim)
+    py2c_factor_initialize_standard_sampler(dim)
     if(nbloops == 0):
         strnbloops = raw_input('give the maximum number of loops : ')
         nbloops = int(strnbloops)
-    py2c_factor_initialize_monodromy(nbloops, deg, dim)
-    py2c_factor_store_solutions()
+    py2c_factor_initialize_standard_monodromy(nbloops, deg, dim)
+    py2c_factor_store_standard_solutions()
     if(verbose):
         print '... initializing the grid in standard double precision ...'
     for i in range(1, 3):
-        py2c_factor_set_trace_slice(i)
-        py2c_factor_store_gammas(nvar)
-        py2c_factor_track_paths()
-        py2c_factor_store_solutions()
-        py2c_factor_restore_solutions()
-        py2c_factor_swap_slices()
+        py2c_factor_set_standard_trace_slice(i)
+        py2c_factor_store_standard_gammas(nvar)
+        py2c_factor_standard_track_paths()
+        py2c_factor_store_standard_solutions()
+        py2c_factor_restore_standard_solutions()
+        py2c_factor_swap_standard_slices()
     (err, dis) = py2c_factor_standard_trace_grid_diagnostics()
     print 'The diagnostics of the trace grid :'
     print '  largest error on the samples :', err
@@ -459,26 +459,26 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     for i in range(1, nbloops+1):
         if(verbose):
             print '... starting loop %d ...' % i
-        py2c_factor_new_slices(dim, nvar)
-        py2c_factor_store_gammas(nvar)
-        py2c_factor_track_paths()
+        py2c_factor_new_standard_slices(dim, nvar)
+        py2c_factor_store_standard_gammas(nvar)
+        py2c_factor_standard_track_paths()
         py2c_solcon_clear_standard_solutions()
-        py2c_factor_store_gammas(nvar)
-        py2c_factor_track_paths()
-        py2c_factor_store_solutions()
-        sprm = py2c_factor_permutation_after_loop(deg)
+        py2c_factor_store_standard_gammas(nvar)
+        py2c_factor_standard_track_paths()
+        py2c_factor_store_standard_solutions()
+        sprm = py2c_factor_permutation_after_standard_loop(deg)
         if(verbose):
             perm = eval(sprm)
             print 'the permutation :', perm
-        nb0 = py2c_factor_number_of_components()
-        done = py2c_factor_update_decomposition(deg, len(sprm), sprm)
-        nb1 = py2c_factor_number_of_components()
+        nb0 = py2c_factor_number_of_standard_components()
+        done = py2c_factor_update_standard_decomposition(deg, len(sprm), sprm)
+        nb1 = py2c_factor_number_of_standard_components()
         if(verbose):
             print 'number of factors : %d -> %d' % (nb0, nb1)
             print 'decomposition :', decomposition(deg)
         if(done == 1):
             break
-        py2c_factor_restore_solutions()
+        py2c_factor_restore_standard_solutions()
 
 def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     """

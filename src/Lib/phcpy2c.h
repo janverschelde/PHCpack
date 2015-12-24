@@ -2910,7 +2910,7 @@ static PyObject *py2c_factor_define_output_file_with_string
  *   2) the string contains the name of a file.
  *   On return is the failure code, which equals zero if all went well. */
 
-static PyObject *py2c_factor_assign_labels
+static PyObject *py2c_factor_standard_assign_labels
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -2943,7 +2943,7 @@ static PyObject *py2c_factor_quaddobl_assign_labels
  *   2) nbsols, the number of solutions in the container.
  *   On return is the failure code, which equals zero if all went well. */
 
-static PyObject *py2c_factor_initialize_sampler
+static PyObject *py2c_factor_initialize_standard_sampler
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -2970,7 +2970,7 @@ static PyObject *py2c_factor_initialize_quaddobl_sampler
  *   On entry is the dimension or the number of hyperplanes
  *   to intersect the positive dimensional solution set with. */
 
-static PyObject *py2c_factor_initialize_monodromy
+static PyObject *py2c_factor_initialize_standard_monodromy
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -3036,7 +3036,7 @@ static PyObject *py2c_factor_quaddobl_trace_grid_diagnostics
  *   The first double is the largest error of the samples.
  *   The second double is the smallest distance between two samples. */
 
-static PyObject *py2c_factor_store_solutions
+static PyObject *py2c_factor_store_standard_solutions
  ( PyObject *self, PyObject *args );
 /* 
  * DESCRIPTION :
@@ -3057,7 +3057,7 @@ static PyObject *py2c_factor_store_quaddobl_solutions
  *   Stores the solutions in the container, in quad double precision,
  *   to the data for monodromy loops. */
 
-static PyObject *py2c_factor_restore_solutions
+static PyObject *py2c_factor_restore_standard_solutions
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -3078,7 +3078,7 @@ static PyObject *py2c_factor_restore_quaddobl_solutions
  *   Restores the first initialized solutions, in quad double precision,
  *   from sampler to the container. */
 
-static PyObject *py2c_factor_track_paths
+static PyObject *py2c_factor_standard_track_paths
  ( PyObject *self, PyObject *args );
 /* 
  * DESCRIPTION :
@@ -3102,7 +3102,7 @@ static PyObject *py2c_factor_quaddobl_track_paths
  *   in quad double precision.
  *   On return is the failure code, which is zero when all went well. */
 
-static PyObject *py2c_factor_swap_slices
+static PyObject *py2c_factor_swap_standard_slices
  ( PyObject *self, PyObject *args );
 /* 
  * DESCRIPTION :
@@ -3126,7 +3126,7 @@ static PyObject *py2c_factor_swap_quaddobl_slices
  *   as start to turn back, in quad double precision.
  *   On return is the failure code, which is zero when all went well. */
 
-static PyObject *py2c_factor_new_slices
+static PyObject *py2c_factor_new_standard_slices
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -3150,7 +3150,7 @@ static PyObject *py2c_factor_new_quaddobl_slices
  *   The k and the n are the two input parameters.
  *   On return is the failure code, which is zero when all went well. */
 
-static PyObject *py2c_factor_set_trace_slice
+static PyObject *py2c_factor_set_standard_trace_slice
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -3177,7 +3177,7 @@ static PyObject *py2c_factor_set_quaddobl_trace_slice
  *   On entry is a flag to indicate if it was the first time or not.
  *   On return is the failure code, which is zero if all went well. */
 
-static PyObject *py2c_factor_store_gammas
+static PyObject *py2c_factor_store_standard_gammas
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -3204,7 +3204,7 @@ static PyObject *py2c_factor_store_quaddobl_gammas
  *   Generates as many random complex constants as the value on input.
  *   On return is the failure code, which is zero if all went well. */
 
-static PyObject *py2c_factor_permutation_after_loop
+static PyObject *py2c_factor_permutation_after_standard_loop
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -3231,7 +3231,7 @@ static PyObject *py2c_factor_permutation_after_quaddobl_loop
  *   The number d is the input parameter of this function.
  *   On return is the string representation of the permutation. */
 
-static PyObject *py2c_factor_update_decomposition
+static PyObject *py2c_factor_update_standard_decomposition
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -3270,7 +3270,7 @@ static PyObject *py2c_factor_update_quaddobl_decomposition
  *   Returns one if the current decomposition is certified,
  *   otherwise returns zero. */
 
-static PyObject *py2c_factor_number_of_components
+static PyObject *py2c_factor_number_of_standard_components
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -3291,7 +3291,7 @@ static PyObject *py2c_factor_number_of_quaddobl_components
  *   Returns the number of irreducible factors in the quad double
  *   precision decomposition of the witness set. */
 
-static PyObject *py2c_factor_witness_points_of_component
+static PyObject *py2c_factor_witness_points_of_standard_component
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
@@ -3321,7 +3321,7 @@ static PyObject *py2c_factor_witness_points_of_quaddobl_component
  *   1) the sum of the degrees of all components;
  *   2) the index of the component. */
 
-static PyObject *py2c_factor_trace_sum_difference
+static PyObject *py2c_factor_standard_trace_sum_difference
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
