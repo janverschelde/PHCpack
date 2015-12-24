@@ -1,4 +1,4 @@
-The public distribution for PHCpack version 2.4.06 contains
+The public distribution for PHCpack version 2.4.07 contains
 
   Ada        Ada sources
   bin        binary versions of phc
@@ -22,11 +22,12 @@ This code is distributed under the GNU GENERAL PUBLIC LICENSE,
 see the file COPYING.txt for version 3 of this license.
 
 The date of the latest major release 2.3 was Independence Day 2005 (4 July).
-Since then, releases occurred more frequently, as in agile software.
+Since then, releases occurred frequently, applying agile software development.
 For each release, a single one line description gives a title to the release.
 While 2.4 could be viewed as another major release, marking it as 2.4.00
 simply continues the process of frequent releases.
 
+release 2.4.07 on 2015-12-24 : monodromy breakup in dd/qd for phcpy 0.3.6
 release 2.4.06 on 2015-12-11 : pipelined polyhedral trackers in phc -m
 release 2.4.05 on 2015-11-23 : diagonal homotopies in phcpy, better docs
 release 2.4.04 on 2015-11-06 : sweep in dd/qd, and new sweepers.py module

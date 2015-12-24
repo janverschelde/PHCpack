@@ -1,4 +1,4 @@
-An interface to call PHCpack from C functions in PHCv2.4
+An interface to call PHCpack from C functions in PHCv2.4.07
 
 This directory was created in release 2.1 to call the Pieri homotopies
 from C programs and for parallel implementations of the path trackers.
