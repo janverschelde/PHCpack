@@ -232,6 +232,19 @@ The second floating point number in each tuple is the residual
 obtained via the linear trace test, used as stop criterion in
 the running of monodromy loops.
 
+For polynomials of higher degrees, double double or even quad double
+could be required to obtain accurate results.
+The following two commands illustrate how to apply monodromy
+respectively in double double and quad double precision:
+
+::
+
+    f = factor(1, w, s, precision='dd')
+    f = factor(1, w, s, precision='qd')
+
+The witness set ``(w, s)`` should also have been computed in
+double double and quad double precision.
+
 diagonal homotopies
 -------------------
 

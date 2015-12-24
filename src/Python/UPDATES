@@ -1,6 +1,9 @@
 Thu 24 Dec 2015 : changes in sets.py for renamed functions in phcpy2c.
   More changes in sets.py for muting the monodromy breakup.
   Still more changes in sets.py for making the monodromy breakup verbose.
+  Added a paragraph to posdimsols.rst about the factor method in
+  double double and quad double precision, updated conf.py, __init__.py,
+  and setup.py for version 0.3.6 of phcpy.
 
 Wed 23 Dec 2015 : extended functionality of the monodromy breakup in sets.py
   Made some small change for the verbosity.  Added the reporting of the
