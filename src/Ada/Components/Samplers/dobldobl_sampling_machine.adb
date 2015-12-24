@@ -649,13 +649,13 @@ package body DoblDobl_Sampling_Machine is
 
   procedure Default_Tune_Sampler ( level : in natural32 ) is
   begin
-    Continuation_Parameters.Tune(level,32);
+    Continuation_Parameters.Tune(level); -- ,32); -- too restrictive
   end Default_Tune_Sampler;
 
   procedure Default_Tune_Sampler
               ( file : in file_type; level : in natural32 ) is
   begin
-    Continuation_Parameters.Tune(level,32);
+    Continuation_Parameters.Tune(level); -- ,32);
     Continuation_Parameters_io.put;
   end Default_Tune_Sampler;
 

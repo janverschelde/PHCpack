@@ -1,3 +1,6 @@
+Wed 23 Dec 2015 : eased up on the restrictive settings in the samplers,
+  changing {dobldobl,quaddobl}_sampling_machine.adb.
+
 Tue 17 Nov 2015 : again more extensions in witness_sets for double double
   and quad double precision as needed in cascading homotopies.
   And then once again more extensions...
