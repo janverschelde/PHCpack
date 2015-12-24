@@ -552,7 +552,8 @@ function use_c2phc ( job : integer32;
 --                 component in the standard irreducible decomposition.
 --   job   = 280 : returns in c the real and imaginary parts of
 --                 a randomly generated complex number of modulus one,
---                 generated in standard double precision.
+--                 generated in standard double precision;
+--   job   = 630 : makes the factorization with standard doubles go verbose.
 --
 -- ANALOGUE OPERATIONS FOR DOUBLE DOUBLE AND QUAD DOUBLE PRECISION :
 --
@@ -635,7 +636,8 @@ function use_c2phc ( job : integer32;
 --   job   = 658 : makes the factorization with double doubles go silent;
 --   job   = 659 : returns in c the real and imaginary parts of
 --                 a randomly generated complex number of modulus one,
---                 generated in double double precision.
+--                 generated in double double precision;
+--   job   = 660 : makes the factorization with double doubles go verbose.
 --
 --   job   = 661 : prompts for a witness set in quad double precision
 --                 stores the system in the quaddobl systems container,
@@ -716,7 +718,8 @@ function use_c2phc ( job : integer32;
 --   job   = 688 : makes the factorization with quad doubles go silent;
 --   job   = 689 : returns in c the real and imaginary parts of
 --                 a randomly generated complex number of modulus one,
---                 generated in quad double precision.
+--                 generated in quad double precision;
+--   job   = 690 : makes the factorization with quad doubles go verbose.
 --
 -- EMBEDDING A POLYNOMIAL SYSTEM :
 --

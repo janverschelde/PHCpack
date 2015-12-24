@@ -2915,6 +2915,27 @@ static PyObject *py2c_factor_set_quaddobl_to_mute
  *   Sets the state of monodromy permutations in quad double
  *   precision to silent. */
 
+static PyObject *py2c_factor_set_standard_to_verbose
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Sets the state of monodromy permutations in standard double
+ *   precision to verbose. */
+
+static PyObject *py2c_factor_set_dobldobl_to_verbose
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Sets the state of monodromy permutations in double double
+ *   precision to verbose. */
+
+static PyObject *py2c_factor_set_quaddobl_to_verbose
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Sets the state of monodromy permutations in quad double
+ *   precision to verbose. */
+
 static PyObject *py2c_factor_define_output_file_with_string
  ( PyObject *self, PyObject *args );
 /*

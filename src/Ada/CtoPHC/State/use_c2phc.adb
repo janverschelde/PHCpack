@@ -2391,12 +2391,14 @@ function use_c2phc ( job : integer32;
       when 600..607 => return use_syscon(job-520,a,b,c);
      -- run the sweep homotopy :
       when 610..621 => return use_sweep(job-610,a,b,c);
+     -- make standard monodromy breakup verbose
+      when 630 => return use_c2fac(30,a,b,c);
      -- monodromy breakup in double double precision :
       when 631..649 => return use_c2fac(job-600,a,b,c);
-      when 652..659 => return use_c2fac(job-600,a,b,c);
+      when 652..660 => return use_c2fac(job-600,a,b,c);
      -- monodromy breakup in quad double precision :
       when 661..679 => return use_c2fac(job-600,a,b,c);
-      when 682..689 => return use_c2fac(job-600,a,b,c);
+      when 682..690 => return use_c2fac(job-600,a,b,c);
      -- blackbox solvers in double double and quad double precision
       when 700 => return Job700; -- dobldobl poly system blackbox solver
       when 701 => return Job701; -- dobldobl Laurent poly blackbox solver

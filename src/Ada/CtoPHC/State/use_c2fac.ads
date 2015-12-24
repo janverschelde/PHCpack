@@ -103,6 +103,7 @@ function use_c2fac ( job : integer32;
 --   job    = 29 : returns in c the real and imaginary parts of
 --                 a randomly generated complex number of modulus one,
 --                 generated in standard double precision.
+--   job    = 30 : makes the factorization with standard doubles go verbose.
 --
 -- ANALOGUE OPERATIONS FOR DOUBLE DOUBLE AND QUAD DOUBLE PRECISION :
 --
@@ -185,7 +186,8 @@ function use_c2fac ( job : integer32;
 --   job    = 58 : makes the factorization with double doubles go silent;
 --   job    = 59 : returns in c the real and imaginary parts of
 --                 a randomly generated complex number of modulus one,
---                 generated in double double precision.
+--                 generated in double double precision;
+--   job    = 60 : makes the factorization with double doubles go verbose.
 --
 --   job    = 61 : prompts for a witness set in quad double precision
 --                 stores the system in the quaddobl systems container,
@@ -266,7 +268,8 @@ function use_c2fac ( job : integer32;
 --   job    = 88 : makes the factorization with quad doubles go silent;
 --   job    = 89 : returns in c the real and imaginary parts of
 --                 a randomly generated complex number of modulus one,
---                 generated in quad double precision.
+--                 generated in quad double precision;
+--   job    = 90 : makes the factorization with quad doubles go verbose.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

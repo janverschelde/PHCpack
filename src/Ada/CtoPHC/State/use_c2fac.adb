@@ -1620,6 +1620,24 @@ function use_c2fac ( job : integer32;
     return 0;
   end Job88;
 
+  function Job30 return integer32 is -- set state of standard to verbose
+  begin
+    Standard_Monodromy_Permutations.stay_silent := false;
+    return 0;
+  end Job30;
+
+  function Job60 return integer32 is -- set state of dobldobl to verbose
+  begin
+    DoblDobl_Monodromy_Permutations.stay_silent := false;
+    return 0;
+  end Job60;
+
+  function Job90 return integer32 is -- set state of quaddobl to verbose
+  begin
+    QuadDobl_Monodromy_Permutations.stay_silent := false;
+    return 0;
+  end Job90;
+
   function Job29 return integer32 is -- standard random complex number
 
     use Standard_Complex_Numbers;
@@ -1695,6 +1713,7 @@ function use_c2fac ( job : integer32;
       when 27 => return Job27; -- returns labels in standard component
       when 28 => return Job28; -- make standard monodromy permutations silent
       when 29 => return Job29; -- standard random complex number
+      when 30 => return Job30; -- make standard monodromy permutations verbose 
       when 31 => return Job31; -- read witness set in double double precision
       when 32 => return Job32; -- initialize dobldobl sampling machine
       when 33 => return Job33; -- assign dobldobl coefficient of slice
@@ -1722,6 +1741,7 @@ function use_c2fac ( job : integer32;
       when 57 => return Job57; -- returns labels in dobldobl component
       when 58 => return Job58; -- make dobldobl monodromy permutations silent
       when 59 => return Job59; -- random dobldobl complex number
+      when 60 => return Job60; -- make dobldobl monodromy permutations verbose 
       when 61 => return Job61; -- read witness set in quad double precision
       when 62 => return Job62; -- initialize quaddobl sampling machine
       when 63 => return Job63; -- assign quaddobl coefficient of slice
@@ -1749,6 +1769,7 @@ function use_c2fac ( job : integer32;
       when 87 => return Job87; -- returns labels in quaddobl component
       when 88 => return Job88; -- make quaddobl monodromy permutations silent
       when 89 => return Job89; -- random quaddobl complex number
+      when 90 => return Job90; -- make quaddobl monodromy permutations verbose 
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   end Handle_Jobs;

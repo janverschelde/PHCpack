@@ -539,6 +539,36 @@ int set_quaddobl_state_to_silent ( void )
    return fail;
 }
 
+int set_standard_state_to_verbose ( void )
+{
+   int *a,*b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(630,a,b,c);
+
+   return fail;
+}
+
+int set_dobldobl_state_to_verbose ( void )
+{
+   int *a,*b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(660,a,b,c);
+
+   return fail;
+}
+
+int set_quaddobl_state_to_verbose ( void )
+{
+   int *a,*b,fail;
+   double *c;
+
+   fail = _ada_use_c2phc(690,a,b,c);
+
+   return fail;
+}
+
 int assign_labels ( int n, int nbsols, int precision )
 {
    if(precision == 0) return standard_assign_labels(n,nbsols);

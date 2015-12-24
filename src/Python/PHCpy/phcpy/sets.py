@@ -409,6 +409,7 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     the maximum number of loops.
     """
     from phcpy.phcpy2c import py2c_factor_set_standard_to_mute
+    from phcpy.phcpy2c import py2c_factor_set_standard_to_verbose
     from phcpy.phcpy2c import py2c_factor_standard_assign_labels
     from phcpy.phcpy2c import py2c_factor_initialize_standard_monodromy
     from phcpy.phcpy2c import py2c_factor_initialize_standard_sampler
@@ -428,6 +429,7 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     from phcpy.interface import store_standard_solutions
     if(verbose):
         print '... applying monodromy factorization with standard doubles ...'
+        py2c_factor_set_standard_to_verbose()
     else:
         py2c_factor_set_standard_to_mute()
     deg = len(esols)
@@ -492,6 +494,7 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     the maximum number of loops.
     """
     from phcpy.phcpy2c import py2c_factor_set_dobldobl_to_mute
+    from phcpy.phcpy2c import py2c_factor_set_dobldobl_to_verbose
     from phcpy.phcpy2c import py2c_factor_dobldobl_assign_labels
     from phcpy.phcpy2c import py2c_factor_initialize_dobldobl_monodromy
     from phcpy.phcpy2c import py2c_factor_initialize_dobldobl_sampler
@@ -511,6 +514,7 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     from phcpy.interface import store_dobldobl_solutions
     if(verbose):
         print '... applying monodromy factorization with double doubles ...'
+        py2c_factor_set_dobldobl_to_verbose()
     else:
         py2c_factor_set_dobldobl_to_mute()
     deg = len(esols)
@@ -575,6 +579,7 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     the maximum number of loops.
     """
     from phcpy.phcpy2c import py2c_factor_set_quaddobl_to_mute
+    from phcpy.phcpy2c import py2c_factor_set_quaddobl_to_verbose
     from phcpy.phcpy2c import py2c_factor_quaddobl_assign_labels
     from phcpy.phcpy2c import py2c_factor_initialize_quaddobl_monodromy
     from phcpy.phcpy2c import py2c_factor_initialize_quaddobl_sampler
@@ -594,6 +599,7 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     from phcpy.interface import store_quaddobl_solutions
     if(verbose):
         print '... applying monodromy factorization with quad doubles ...'
+        py2c_factor_set_quaddobl_to_verbose()
     else:
         py2c_factor_set_quaddobl_to_mute()
     deg = len(esols)

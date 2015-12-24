@@ -455,6 +455,24 @@ int set_quaddobl_state_to_silent ( void );
  *   Sets the state of monodromy permutations in quad double
  *   precision to silent. */
 
+int set_standard_state_to_verbose ( void );
+/*
+ * DESCRIPTION :
+ *   Sets the state of monodromy permutations in standard double
+ *   precision to verbose. */
+
+int set_dobldobl_state_to_verbose ( void );
+/*
+ * DESCRIPTION :
+ *   Sets the state of monodromy permutations in double double
+ *   precision to verbose. */
+
+int set_quaddobl_state_to_verbose ( void );
+/*
+ * DESCRIPTION :
+ *   Sets the state of monodromy permutations in quad double
+ *   precision to verbose. */
+
 int assign_labels ( int n, int nbsols, int precision );
 /* 
  * DESCRIPTION :
