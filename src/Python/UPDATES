@@ -1,5 +1,6 @@
 Wed 23 Dec 2015 : extended functionality of the monodromy breakup in sets.py
-  Made some small change for the verbosity.
+  Made some small change for the verbosity.  Added the reporting of the
+  trace grid diagnostics in the monodromy breakup method.
 
 Tue 22 Dec 2015 : improved tests on the monodromy in sets.py.
 

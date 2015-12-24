@@ -1,4 +1,6 @@
 Wed 23 Dec 2015 : adjusted verbose flag in witset.c to zero.
+  Added functions to phcpy2c to report the diagnostics of the trace grid
+  computed in double double and quad double precision.
 
 Tue 22 Dec 2015 : new functions in witset for the trace grid diagnostics
   in double double and quad double precision, tested by lib_factor.

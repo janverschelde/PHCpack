@@ -412,6 +412,7 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     from phcpy.phcpy2c import py2c_factor_assign_labels
     from phcpy.phcpy2c import py2c_factor_initialize_monodromy
     from phcpy.phcpy2c import py2c_factor_initialize_sampler
+    from phcpy.phcpy2c import py2c_factor_standard_trace_grid_diagnostics
     from phcpy.phcpy2c import py2c_factor_set_trace_slice
     from phcpy.phcpy2c import py2c_factor_store_gammas
     from phcpy.phcpy2c import py2c_factor_track_paths
@@ -443,7 +444,7 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     py2c_factor_initialize_monodromy(nbloops, deg, dim)
     py2c_factor_store_solutions()
     if(verbose):
-        print '... initializing the grid ...'
+        print '... initializing the grid in standard double precision ...'
     for i in range(1, 3):
         py2c_factor_set_trace_slice(i)
         py2c_factor_store_gammas(nvar)
@@ -451,6 +452,10 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
         py2c_factor_store_solutions()
         py2c_factor_restore_solutions()
         py2c_factor_swap_slices()
+    (err, dis) = py2c_factor_standard_trace_grid_diagnostics()
+    print 'The diagnostics of the trace grid :'
+    print '  largest error on the samples :', err
+    print '  smallest distance between the samples :', dis
     for i in range(1, nbloops+1):
         if(verbose):
             print '... starting loop %d ...' % i
@@ -488,6 +493,7 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     from phcpy.phcpy2c import py2c_factor_dobldobl_assign_labels
     from phcpy.phcpy2c import py2c_factor_initialize_dobldobl_monodromy
     from phcpy.phcpy2c import py2c_factor_initialize_dobldobl_sampler
+    from phcpy.phcpy2c import py2c_factor_dobldobl_trace_grid_diagnostics
     from phcpy.phcpy2c import py2c_factor_set_dobldobl_trace_slice
     from phcpy.phcpy2c import py2c_factor_store_dobldobl_gammas
     from phcpy.phcpy2c import py2c_factor_dobldobl_track_paths
@@ -527,6 +533,10 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
         py2c_factor_store_dobldobl_solutions()
         py2c_factor_restore_dobldobl_solutions()
         py2c_factor_swap_dobldobl_slices()
+    (err, dis) = py2c_factor_dobldobl_trace_grid_diagnostics()
+    print 'The diagnostics of the trace grid :'
+    print '  largest error on the samples :', err
+    print '  smallest distance between the samples :', dis
     for i in range(1, nbloops+1):
         if(verbose):
             print '... starting loop %d ...' % i
@@ -564,6 +574,7 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     from phcpy.phcpy2c import py2c_factor_quaddobl_assign_labels
     from phcpy.phcpy2c import py2c_factor_initialize_quaddobl_monodromy
     from phcpy.phcpy2c import py2c_factor_initialize_quaddobl_sampler
+    from phcpy.phcpy2c import py2c_factor_quaddobl_trace_grid_diagnostics
     from phcpy.phcpy2c import py2c_factor_set_quaddobl_trace_slice
     from phcpy.phcpy2c import py2c_factor_store_quaddobl_gammas
     from phcpy.phcpy2c import py2c_factor_quaddobl_track_paths
@@ -603,6 +614,10 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
         py2c_factor_store_quaddobl_solutions()
         py2c_factor_restore_quaddobl_solutions()
         py2c_factor_swap_quaddobl_slices()
+    (err, dis) = py2c_factor_quaddobl_trace_grid_diagnostics()
+    print 'The diagnostics of the trace grid :'
+    print '  largest error on the samples :', err
+    print '  smallest distance between the samples :', dis
     for i in range(1, nbloops+1):
         if(verbose):
             print '... starting loop %d ...' % i

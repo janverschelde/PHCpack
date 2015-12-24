@@ -3009,6 +3009,33 @@ static PyObject *py2c_factor_initialize_quaddobl_monodromy
  *   3) k, the dimensional of the solution set.
  *   On return is the failure code, which equals zero when all went well. */
 
+static PyObject *py2c_factor_standard_trace_grid_diagnostics
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns a tuple of two doubles with the diagnostics on the
+ *   trace grid computed in standard double precision.
+ *   The first double is the largest error of the samples.
+ *   The second double is the smallest distance between two samples. */
+
+static PyObject *py2c_factor_dobldobl_trace_grid_diagnostics
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns a tuple of two doubles with the diagnostics on the
+ *   trace grid computed in double double precision.
+ *   The first double is the largest error of the samples.
+ *   The second double is the smallest distance between two samples. */
+
+static PyObject *py2c_factor_quaddobl_trace_grid_diagnostics
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns a tuple of two doubles with the diagnostics on the
+ *   trace grid computed in quad double precision.
+ *   The first double is the largest error of the samples.
+ *   The second double is the smallest distance between two samples. */
+
 static PyObject *py2c_factor_store_solutions
  ( PyObject *self, PyObject *args );
 /* 

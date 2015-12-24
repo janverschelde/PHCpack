@@ -4450,6 +4450,45 @@ static PyObject *py2c_factor_initialize_quaddobl_monodromy
    return Py_BuildValue("i",fail);
 }
 
+static PyObject *py2c_factor_standard_trace_grid_diagnostics
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double err,dis;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = trace_grid_diagnostics(&err,&dis);
+
+   return Py_BuildValue("(d,d)",err,dis);
+}
+
+static PyObject *py2c_factor_dobldobl_trace_grid_diagnostics
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double err,dis;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = dobldobl_trace_grid_diagnostics(&err,&dis);
+
+   return Py_BuildValue("(d,d)",err,dis);
+}
+
+static PyObject *py2c_factor_quaddobl_trace_grid_diagnostics
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+   double err,dis;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = quaddobl_trace_grid_diagnostics(&err,&dis);
+
+   return Py_BuildValue("(d,d)",err,dis);
+}
+
 static PyObject *py2c_factor_store_solutions
  ( PyObject *self, PyObject *args )
 {
@@ -6855,6 +6894,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_initialize_quaddobl_monodromy",
      py2c_factor_initialize_quaddobl_monodromy, METH_VARARGS,
     "Initializes the internal data structures for n loops,\n to factor a k-dimensional solution component of degree d,\n in quad double precision.\n There are three integers on input, in the following order:\n 1) n, the number of loops;\n 2) d, the degree of the solution set;\n 3) k, the dimensional of the solution set.\n On return is the failure code, which equals zero when all went well."},
+   {"py2c_factor_standard_trace_grid_diagnostics",
+     py2c_factor_standard_trace_grid_diagnostics, METH_VARARGS,
+    "Returns a tuple of two doubles with the diagnostics on the\n trace grid computed in standard double precision.\n The first double is the largest error of the samples.\n The second double is the smallest distance between two samples."},
+   {"py2c_factor_dobldobl_trace_grid_diagnostics",
+     py2c_factor_dobldobl_trace_grid_diagnostics, METH_VARARGS,
+    "Returns a tuple of two doubles with the diagnostics on the\n trace grid computed in double double precision.\n The first double is the largest error of the samples.\n The second double is the smallest distance between two samples."},
+   {"py2c_factor_quaddobl_trace_grid_diagnostics",
+     py2c_factor_quaddobl_trace_grid_diagnostics, METH_VARARGS,
+    "Returns a tuple of two doubles with the diagnostics on the\n trace grid computed in quad double precision.\n The first double is the largest error of the samples.\n The second double is the smallest distance between two samples."},
    {"py2c_factor_store_solutions", py2c_factor_store_solutions, METH_VARARGS,
     "Stores the solutions in the container, in standard double precision,\n to the data for monodromy loops."},
    {"py2c_factor_store_dobldobl_solutions",
