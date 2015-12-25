@@ -2164,12 +2164,37 @@ lib_factor:
 lib_factor_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	g++ -Dcompilewgpp -c $(PHCLib)/phcpack.c
+	g++ -Dcompilewgpp -c $(PHCLib)/syscon.c
 	g++ -Dcompilewgpp -c $(PHCLib)/solcon.c
 	g++ -Dcompilewgpp -c $(PHCLib)/witset.c
 	g++ -Dcompilewgpp -c $(PHCLib)/lib_factor.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc phcpack.o solcon.o witset.o lib_factor.o \
+	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o witset.o \
+                    lib_factor.o \
                  -o $(BIN)/lib_factor -lm --LINK=g++
+
+lib_member:
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/syscon.c
+	gcc -c $(PHCLib)/solcon.c
+	gcc -c $(PHCLib)/witset.c
+	gcc -c $(PHCLib)/lib_member.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o witset.o \
+                    lib_member.o -o $(BIN)/lib_member -lm
+
+lib_member_cpp:
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	g++ -Dcompilewgpp -c $(PHCLib)/phcpack.c
+	g++ -Dcompilewgpp -c $(PHCLib)/syscon.c
+	g++ -Dcompilewgpp -c $(PHCLib)/solcon.c
+	g++ -Dcompilewgpp -c $(PHCLib)/witset.c
+	g++ -Dcompilewgpp -c $(PHCLib)/lib_member.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o witset.o \
+                    lib_member.o \
+                 -o $(BIN)/lib_member -lm --LINK=g++
 
 lib_usolve:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
