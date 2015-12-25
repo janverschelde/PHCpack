@@ -155,13 +155,22 @@ procedure ts_mbthom is
     dim : natural32;
     restol : constant double_float := 1.0E-10;
     homtol : constant double_float := 1.0E-6;
+    out2file : boolean;
     ans : character;
 
   begin
     Standard_Read_Embedding(lp,genpts,dim);
     new_line;
-    put_line("Reading the name of the output file.");
-    Read_Name_and_Create_File(file);
+    put("Do you want the output to a file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans /= 'y' then
+      out2file := false;
+    else
+      out2file := true;
+      new_line;
+      put_line("Reading the name of the output file.");
+      Read_Name_and_Create_File(file);
+    end if;
     new_line;
     put_line("MENU for test points : ");
     put_line("  0. generate a random point on the solution set; or");
@@ -177,7 +186,10 @@ procedure ts_mbthom is
     new_line;
     put_line("See the output file for results...");
     new_line;
-    Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+    if out2file
+     then Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+     else Homotopy_Membership_Test(true,lp.all,dim,genpts,sols,restol,homtol);
+    end if;
   end Standard_Membership;
 
   procedure DoblDobl_Membership is
@@ -193,13 +205,22 @@ procedure ts_mbthom is
     dim : natural32;
     restol : constant double_float := 1.0E-10;
     homtol : constant double_float := 1.0E-6;
+    out2file : boolean;
     ans : character;
 
   begin
     DoblDobl_Read_Embedding(lp,genpts,dim);
     new_line;
-    put_line("Reading the name of the output file.");
-    Read_Name_and_Create_File(file);
+    put("Do you want the output to a file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans /= 'y' then
+      out2file := false;
+    else
+      out2file := true;
+      new_line;
+      put_line("Reading the name of the output file.");
+      Read_Name_and_Create_File(file);
+    end if;
     new_line;
     put_line("MENU for test points : ");
     put_line("  0. generate a random point on the solution set; or");
@@ -215,7 +236,10 @@ procedure ts_mbthom is
     new_line;
     put_line("See the output file for results...");
     new_line;
-    Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+    if out2file
+     then Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+     else Homotopy_Membership_Test(true,lp.all,dim,genpts,sols,restol,homtol);
+    end if;
   end DoblDobl_Membership;
 
   procedure QuadDobl_Membership is
@@ -231,13 +255,22 @@ procedure ts_mbthom is
     dim : natural32;
     restol : constant double_float := 1.0E-10;
     homtol : constant double_float := 1.0E-6;
+    out2file : boolean;
     ans : character;
 
   begin
     QuadDobl_Read_Embedding(lp,genpts,dim);
     new_line;
-    put_line("Reading the name of the output file.");
-    Read_Name_and_Create_File(file);
+    put("Do you want the output to a file ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans /= 'y' then
+      out2file := false;
+    else
+      out2file := true;
+      new_line;
+      put_line("Reading the name of the output file.");
+      Read_Name_and_Create_File(file);
+    end if;
     new_line;
     put_line("MENU for test points : ");
     put_line("  0. generate a random point on the solution set; or");
@@ -253,7 +286,10 @@ procedure ts_mbthom is
     new_line;
     put_line("See the output file for results...");
     new_line;
-    Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+    if out2file
+     then Homotopy_Membership_Test(file,lp.all,dim,genpts,sols,restol,homtol);
+     else Homotopy_Membership_Test(true,lp.all,dim,genpts,sols,restol,homtol);
+    end if;
   end QuadDobl_Membership;
 
   procedure Main is

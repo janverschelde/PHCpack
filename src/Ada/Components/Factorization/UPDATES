@@ -1,3 +1,7 @@
+Fri 25 Dec 2015 : changed mainfac.adb to explain the input in the membership
+  test of phc -f.  Added extra procedures to homotopy_membership_tests,
+  tested by ts_mbthom.adb.
+
 Sun 20 Sep 2015 : extended black_box_factorization into a package with versions
   for double double and quad double precision.
 

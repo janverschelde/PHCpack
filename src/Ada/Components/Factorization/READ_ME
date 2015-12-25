@@ -1,4 +1,4 @@
-Factorization into Irreducible Components with PHCv2.4.01
+Factorization into Irreducible Components with PHCv2.4.08
 
 This directory is entirely new in release 2.1.  Changes in release 2.2:
 * random polynomials are now in Math_Lib/Polynomials;

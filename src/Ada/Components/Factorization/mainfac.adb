@@ -202,6 +202,7 @@ procedure mainfac ( infilename,outfilename : in string ) is
   begin
     Standard_Read_Embedding(lp,genpts,dim);
     new_line;
+    put_line("The input format of the test points is the solutions format.");
     Read(sols);
     new_line;
     put_line("Reading the name of the output file.");
@@ -230,6 +231,7 @@ procedure mainfac ( infilename,outfilename : in string ) is
   begin
     DoblDobl_Read_Embedding(lp,genpts,dim);
     new_line;
+    put_line("The input format of the test points is the solutions format.");
     Read(sols);
     new_line;
     put_line("Reading the name of the output file.");
@@ -258,6 +260,7 @@ procedure mainfac ( infilename,outfilename : in string ) is
   begin
     QuadDobl_Read_Embedding(lp,genpts,dim);
     new_line;
+    put_line("The input format of the test points is the solutions format.");
     Read(sols);
     new_line;
     put_line("Reading the name of the output file.");
