@@ -1,3 +1,6 @@
+Wed 25 Dec 2015 : new test program lib_member.c to test the C interface
+  to the homotopy membership test.
+
 Thu 24 Dec 2015 : standardized the naming of the functions in phcpy2c
   for the monodromy breakup in stanard double precision.
   Added functions to witset and phcpy2c to make the monodromy go mute
