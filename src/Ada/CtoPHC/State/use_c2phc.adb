@@ -83,7 +83,7 @@ with use_syscon,use_syspool;
 with use_solcon,use_solpool;
 with use_scaling;
 with use_c2pieri,use_c2lrhom;
-with use_c2fac;
+with use_c2fac,use_c2mbt;
 with use_roco;
 with use_celcon;
 with use_track,use_sweep;
@@ -2370,6 +2370,10 @@ function use_c2phc ( job : integer32;
       when 534 => return use_solcon(309,a,b,c);
       when 535 => return use_solcon(310,a,b,c);
       when 536 => return use_solcon(311,a,b,c);
+     -- homotopy membership tests
+      when 537 => return use_c2mbt(0,a,b,c); -- standard membership test
+      when 538 => return use_c2mbt(1,a,b,c); -- dobldobl membership test
+      when 539 => return use_c2mbt(2,a,b,c); -- quaddobl membership test
      -- operations to read systems into the containers
       when 540..543 => return use_syscon(job,a,b,c);
      -- operations to read systems and solutions into the containers

@@ -1,3 +1,6 @@
+Fri 25 Dec 2015 : new use_c2mbt for the homotopy membership test, with three
+  new jobs in use_c2phc.
+
 Thu 24 Dec 2015 : added jobs to use_c2fac and use_c2phc to make the 
   factorization go mute in double double and quad double precision.
   Add jobs to use_c2fac and use_c2phc for a verbose monodromy breakup.

@@ -1,4 +1,4 @@
-Calling PHCpack from C as a state machine in PHCv2.4.07
+Calling PHCpack from C as a state machine in PHCv2.4.08
 
 This directory was created in release 2.3 as subdirectory to CtoPHC.
 The idea for using PHCpack as a state machine originated from the need
@@ -66,6 +66,7 @@ dobldobl_monodromy_permutations  : permutations on double double data
 quaddobl_monodromy_permutations  : permutations on quad double data
 use_c2fac                        : Ada gateway to factorization in PHCpack
 ts_use_c2fac                     : C testing operations in use_c2fac
+use_c2mbt                        : homotopy membership test jobs for in C
 ------------------------------------------------------------------------------
 cells_container                  : manages mixed-cell configurations
 ts_celcon                        : tests the cells container
