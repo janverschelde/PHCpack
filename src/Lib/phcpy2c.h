@@ -3396,6 +3396,84 @@ static PyObject *py2c_factor_quaddobl_trace_sum_difference
  *   3) nc, the number of characters in the string;
  *   4) ws, the string representing the labels of the witness set. */
 
+static PyObject *py2c_witset_standard_membertest
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Executes the homotopy membership test for a point to belong to
+ *   a witness set in standard double precision.
+ *   The containers in standard double precision must contain the
+ *   embedded system and its corresponding solutions for the winess set
+ *   of a positive dimensional solution set.
+ *   On entry are the seven parameters, the first four are integers:
+ *   1) vrb, an integer flag (0 or 1) for the verbosity of the test,
+ *   2) nvr, the ambient dimension, number of coordinates of the point,
+ *   3) dim, the dimension of the witness set,
+ *   4) nbc, the number of characters in the string representing the point;
+ *   the next two parameters are two doubles:
+ *   5) restol, tolerance on the residual for the valuation of the point,
+ *   6) homtol, tolerance on the homotopy membership test for the point;
+ *   and the last parameter is a string:
+ *   7) tpt, the string representation of the point as a list with as
+ *   many as 2*nvr doubles for the real and imaginary parts of the
+ *   standard double precision coordinates of the test point.
+ *   On return are three 0/1 integers, to be interpreted as booleans:
+ *   1) fail, the failure code of the procedure,
+ *   2) onsys, 0 if the evaluation test failed, 1 if success,
+ *   3) onset, 0 if not a member of the witness set, 1 if a member. */
+
+static PyObject *py2c_witset_dobldobl_membertest
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Executes the homotopy membership test for a point to belong to
+ *   a witness set in double double precision.
+ *   The containers in double double precision must contain the
+ *   embedded system and its corresponding solutions for the winess set
+ *   of a positive dimensional solution set.
+ *   On entry are the seven parameters, the first four are integers:
+ *   1) vrb, an integer flag (0 or 1) for the verbosity of the test,
+ *   2) nvr, the ambient dimension, number of coordinates of the point,
+ *   3) dim, the dimension of the witness set,
+ *   4) nbc, the number of characters in the string representing the point;
+ *   the next two parameters are two doubles:
+ *   5) restol, tolerance on the residual for the valuation of the point,
+ *   6) homtol, tolerance on the homotopy membership test for the point;
+ *   and the last parameter is a string:
+ *   7) tpt, the string representation of the point as a list with as
+ *   many as 4*nvr doubles for the real and imaginary parts of the
+ *   double double precision coordinates of the test point.
+ *   On return are three 0/1 integers, to be interpreted as booleans:
+ *   1) fail, the failure code of the procedure,
+ *   2) onsys, 0 if the evaluation test failed, 1 if success,
+ *   3) onset, 0 if not a member of the witness set, 1 if a member. */
+
+static PyObject *py2c_witset_quaddobl_membertest
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Executes the homotopy membership test for a point to belong to
+ *   a witness set in quad double precision.
+ *   The containers in quad double precision must contain the
+ *   embedded system and its corresponding solutions for the winess set
+ *   of a positive dimensional solution set.
+ *   On entry are the seven parameters, the first four are integers:
+ *   1) vrb, an integer flag (0 or 1) for the verbosity of the test,
+ *   2) nvr, the ambient dimension, number of coordinates of the point,
+ *   3) dim, the dimension of the witness set,
+ *   4) nbc, the number of characters in the string representing the point;
+ *   the next two parameters are two doubles:
+ *   5) restol, tolerance on the residual for the valuation of the point,
+ *   6) homtol, tolerance on the homotopy membership test for the point;
+ *   and the last parameter is a string:
+ *   7) tpt, the string representation of the point as a list with as
+ *   many as 8*nvr doubles for the real and imaginary parts of the
+ *   quad double precision coordinates of the test point.
+ *   On return are three 0/1 integers, to be interpreted as booleans:
+ *   1) fail, the failure code of the procedure,
+ *   2) onsys, 0 if the evaluation test failed, 1 if success,
+ *   3) onset, 0 if not a member of the witness set, 1 if a member. */
+
 static PyObject *py2c_standard_witset_of_hypersurface
  ( PyObject *self, PyObject *args );
 /*

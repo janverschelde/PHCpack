@@ -5184,6 +5184,63 @@ static PyObject *py2c_factor_quaddobl_trace_sum_difference
    return Py_BuildValue("d",tsd);
 }
 
+static PyObject *py2c_witset_standard_membertest
+ ( PyObject *self, PyObject *args )
+{
+   int v,n,d,m,fail,onp,ins;
+   double r,h;
+   char *p;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   {
+      const int dim = 2*n;
+      double tpt[dim];
+
+      str2dbllist(dim,p,tpt);
+      fail = standard_homotopy_membership_test(v,n,d,r,h,tpt,&onp,&ins);
+   }
+   return Py_BuildValue("(i,i,i)",fail,onp,ins);
+}
+
+static PyObject *py2c_witset_dobldobl_membertest
+ ( PyObject *self, PyObject *args )
+{
+   int v,n,d,m,fail,onp,ins;
+   double r,h;
+   char *p;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   {
+      const int dim = 4*n;
+      double tpt[dim];
+
+      str2dbllist(dim,p,tpt);
+      fail = dobldobl_homotopy_membership_test(v,n,d,r,h,tpt,&onp,&ins);
+   }
+   return Py_BuildValue("(i,i,i)",fail,onp,ins);
+}
+
+static PyObject *py2c_witset_quaddobl_membertest
+ ( PyObject *self, PyObject *args )
+{
+   int v,n,d,m,fail,onp,ins;
+   double r,h;
+   char *p;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiiidds",&v,&n,&d,&m,&r,&h,&p)) return NULL;
+   {
+      const int dim = 8*n;
+      double tpt[dim];
+
+      str2dbllist(dim,p,tpt);
+      fail = quaddobl_homotopy_membership_test(v,n,d,r,h,tpt,&onp,&ins);
+   }
+   return Py_BuildValue("(i,i,i)",fail,onp,ins);
+}
+
 static PyObject *py2c_standard_witset_of_hypersurface
  ( PyObject *self, PyObject *args )
 {
@@ -7087,6 +7144,15 @@ static PyMethodDef phcpy2c_methods[] =
    {"py2c_factor_quaddobl_trace_sum_difference",
      py2c_factor_quaddobl_trace_sum_difference, METH_VARARGS,
     "Returns the difference between the actual sum at the samples\n defined by the labels to the generic points in the factor,\n and the trace sum, computed in quad double precision.\n On entry are three integer numbers and one string:\n 1) d, the number of points in the witness set;\n 2) k, the dimension of the solution set;\n 3) nc, the number of characters in the string;\n 4) ws, the string representing the labels of the witness set."},
+   {"py2c_witset_standard_membertest",
+     py2c_witset_standard_membertest, METH_VARARGS,
+    "Executes the homotopy membership test for a point to belong to\n a witness set in standard double precision.\n The containers in standard double precision must contain the\n embedded system and its corresponding solutions for the winess set\n of a positive dimensional solution set.\n On entry are the seven parameters, the first four are integers:\n 1) vrb, an integer flag (0 or 1) for the verbosity of the test,\n 2) nvr, the ambient dimension, number of coordinates of the point,\n 3) dim, the dimension of the witness set,\n 4) nbc, the number of characters in the string representing the point;\n the next two parameters are two doubles:\n 5) restol, tolerance on the residual for the valuation of the point,\n 6) homtol, tolerance on the homotopy membership test for the point;\n and the last parameter is a string:\n 7) tpt, the string representation of the point as a list with as\n many as 2*nvr doubles for the real and imaginary parts of the\n standard double precision coordinates of the test point.\n On return are three 0/1 integers, to be interpreted as booleans:\n 1) fail, the failure code of the procedure,\n 2) onsys, 0 if the evaluation test failed, 1 if success,\n 3) onset, 0 if not a member of the witness set, 1 if a member."},
+   {"py2c_witset_dobldobl_membertest",
+     py2c_witset_dobldobl_membertest, METH_VARARGS,
+    "Executes the homotopy membership test for a point to belong to\n a witness set in double double precision.\n The containers in double double precision must contain the\n embedded system and its corresponding solutions for the winess set\n of a positive dimensional solution set.\n On entry are the seven parameters, the first four are integers:\n 1) vrb, an integer flag (0 or 1) for the verbosity of the test,\n 2) nvr, the ambient dimension, number of coordinates of the point,\n 3) dim, the dimension of the witness set,\n 4) nbc, the number of characters in the string representing the point;\n the next two parameters are two doubles:\n 5) restol, tolerance on the residual for the valuation of the point,\n 6) homtol, tolerance on the homotopy membership test for the point;\n and the last parameter is a string:\n 7) tpt, the string representation of the point as a list with as\n many as 4*nvr doubles for the real and imaginary parts of the\n double double precision coordinates of the test point.\n On return are three 0/1 integers, to be interpreted as booleans:\n 1) fail, the failure code of the procedure,\n 2) onsys, 0 if the evaluation test failed, 1 if success,\n 3) onset, 0 if not a member of the witness set, 1 if a member."},
+   {"py2c_witset_quaddobl_membertest",
+     py2c_witset_quaddobl_membertest, METH_VARARGS,
+    "Executes the homotopy membership test for a point to belong to\n a witness set in quad double precision.\n The containers in quad double precision must contain the\n embedded system and its corresponding solutions for the winess set\n of a positive dimensional solution set.\n On entry are the seven parameters, the first four are integers:\n 1) vrb, an integer flag (0 or 1) for the verbosity of the test,\n 2) nvr, the ambient dimension, number of coordinates of the point,\n 3) dim, the dimension of the witness set,\n 4) nbc, the number of characters in the string representing the point;\n the next two parameters are two doubles:\n 5) restol, tolerance on the residual for the valuation of the point,\n 6) homtol, tolerance on the homotopy membership test for the point;\n and the last parameter is a string:\n 7) tpt, the string representation of the point as a list with as\n many as 8*nvr doubles for the real and imaginary parts of the\n quad double precision coordinates of the test point.\n On return are three 0/1 integers, to be interpreted as booleans:\n 1) fail, the failure code of the procedure,\n 2) onsys, 0 if the evaluation test failed, 1 if success,\n 3) onset, 0 if not a member of the witness set, 1 if a member."},
    {"py2c_standard_witset_of_hypersurface", py2c_standard_witset_of_hypersurface,
      METH_VARARGS,
     "Given in the string p of nc characters a polynomial in nv variables,\n terminated by a semicolon, the systems and solutions container\n in standard double precision on return contain a witness set for\n the hypersurface defined by p.\n On entry are two integers and one string, in the following order:\n 1) nv, the number of variables of the polynomials;\n 2) nc, the number of characters in the string p;\n 3) p, string representation of a polynomial, terminates with a semicolon.\n On return is the failure code, which equals zero if all went well."},

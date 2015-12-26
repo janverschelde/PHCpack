@@ -1,5 +1,6 @@
 Sat 26 Dec 2015 : to witset, added homotopy membership test functions in
   standard double, double double, and quad double precision.
+  Added wrappers for the membership test to the module phcpy2c.
 
 Fri 25 Dec 2015 : new test program lib_member.c to test the C interface
   to the homotopy membership test.
