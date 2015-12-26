@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include "phcpack.h"
 #include "syscon.h"
 #include "solcon.h"
 #include "witset.h"
@@ -1346,6 +1347,66 @@ int quaddobl_monodromy_permutation ( int d, int *done )
    if(verbose>0) printf(" : %d -> %d\n",nf[0],nf[1]);
    fail = _ada_use_c2phc(675,done,b,c);          /* apply linear trace */
    /* fail = _ada_use_c2phc(674,a,b,c); */       /* write decomposition */
+
+   return fail;
+}
+
+int standard_homotopy_membership_test
+ ( int vrb, int nvr, int dim, double restol, double homtol,
+   double *tpt, int *onsys, int *onset )
+{
+   int fail,k,idx;
+   int dims[2];
+   double cffs[2+2*nvr];
+
+   dims[0] = nvr;
+   dims[1] = dim;
+   cffs[0] = restol;
+   cffs[1] = homtol;
+   idx = 2;
+   for(k=0; k<2*nvr; k++) cffs[idx++] = tpt[k];
+
+   fail = _ada_use_c2phc(537,&vrb,dims,cffs);
+
+   return fail;
+}
+
+int dobldobl_homotopy_membership_test
+ ( int vrb, int nvr, int dim, double restol, double homtol,
+   double *tpt, int *onsys, int *onset )
+{
+   int fail,k,idx;
+   int dims[2];
+   double cffs[2+4*nvr];
+
+   dims[0] = nvr;
+   dims[1] = dim;
+   cffs[0] = restol;
+   cffs[1] = homtol;
+   idx = 2;
+   for(k=0; k<4*nvr; k++) cffs[idx++] = tpt[k];
+
+   fail = _ada_use_c2phc(538,&vrb,dims,cffs);
+
+   return fail;
+}
+
+int quaddobl_homotopy_membership_test
+ ( int vrb, int nvr, int dim, double restol, double homtol,
+   double *tpt, int *onsys, int *onset )
+{
+   int fail,k,idx;
+   int dims[2];
+   double cffs[2+8*nvr];
+
+   dims[0] = nvr;
+   dims[1] = dim;
+   cffs[0] = restol;
+   cffs[1] = homtol;
+   idx = 2;
+   for(k=0; k<8*nvr; k++) cffs[idx++] = tpt[k];
+
+   fail = _ada_use_c2phc(539,&vrb,dims,cffs);
 
    return fail;
 }

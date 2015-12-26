@@ -1,4 +1,7 @@
-Wed 25 Dec 2015 : new test program lib_member.c to test the C interface
+Sat 26 Dec 2015 : to witset, added homotopy membership test functions in
+  standard double, double double, and quad double precision.
+
+Fri 25 Dec 2015 : new test program lib_member.c to test the C interface
   to the homotopy membership test.
 
 Thu 24 Dec 2015 : standardized the naming of the functions in phcpy2c
