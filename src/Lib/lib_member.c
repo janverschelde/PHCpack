@@ -7,6 +7,24 @@
 
 #define verbose 1 /* verbose flag */
 
+void standard_read_point ( int n, double *x );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for 2*n doubles, for the real and imaginary parts
+ *   of the standard double precision coordinates of the point x. */
+
+void dobldobl_read_point ( int n, double *x );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for 4*n doubles, for the real and imaginary parts
+ *   of the double double precision coordinates of the point x. */
+
+void quaddobl_read_point ( int n, double *x );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for 8*n doubles, for the real and imaginary parts
+ *   of the quad double precision coordinates of the point x. */
+
 int standard_membership_test ( void );
 /*
  * DESCRIPTION :
@@ -54,13 +72,79 @@ int main ( int argc, char *argv[] )
    return 0;
 }
 
+void standard_read_point ( int n, double *x )
+{
+   int k;
+
+   for(k=0; k<n; k++)
+   {
+      printf("Give the real part for x[%d] : ",k);
+      scanf("%lf",&x[2*k]);
+      printf("Give the imaginary part for x[%d] : ",k);
+      scanf("%lf",&x[2*k+1]);
+   }
+   if(verbose>0)
+   {
+      printf("The coordinates of the point :\n");
+      for(k=0; k<n; k++)
+         printf("x[%d] = %.15e  %.15e\n",k,x[2*k],x[2*k+1]);
+   }
+}
+
+void dobldobl_read_point ( int n, double *x )
+{
+   int k;
+
+   for(k=0; k<n; k++)
+   {
+      printf("Give the real part for x[%d] : ",k);
+      scanf("%lf",&x[4*k]);
+      scanf("%lf",&x[4*k+1]);
+      printf("Give the imaginary part for x[%d] : ",k);
+      scanf("%lf",&x[4*k+2]);
+      scanf("%lf",&x[4*k+3]);
+   }
+   if(verbose>0)
+   {
+      printf("The coordinates of the point :\n");
+      for(k=0; k<n; k++)
+         printf("x[%d] = %.15e  %.15e  %.15e  %.15e\n",
+                    k,x[4*k],x[4*k+1],x[4*k+2],x[4*k+3]);
+   }
+}
+
+void quaddobl_read_point ( int n, double *x )
+{
+   int k;
+
+   for(k=0; k<n; k++)
+   {
+      printf("Give the real part for x[%d] : ",k);
+      scanf("%lf",&x[8*k]); scanf("%lf",&x[8*k+1]);
+      scanf("%lf",&x[8*k+2]); scanf("%lf",&x[8*k+3]);
+      printf("Give the imaginary part for x[%d] : ",k);
+      scanf("%lf",&x[8*k+4]); scanf("%lf",&x[8*k+5]);
+      scanf("%lf",&x[8*k+6]); scanf("%lf",&x[8*k+7]);
+   }
+   if(verbose>0)
+   {
+      printf("The coordinates of the point :\n");
+      for(k=0; k<n; k++)
+         printf(
+            "x[%d] = %.15e  %.15e  %.15e  %.15e %.15e  %.15e  %.15e  %.15e\n",
+                k, x[4*k],x[4*k+1],x[4*k+2],x[4*k+3],
+                   x[4*k+4],x[4*k+5],x[4*k+6],x[4*k+7]);
+   }
+}
+
 int standard_membership_test ( void )
 {
-   int fail,n,dim,deg;
+   int fail,n,dim,deg,nv;
    char ans;
 
    printf("\nReading a witness set ...\n");
    fail = read_witness_set(&n,&dim,&deg);
+   nv = n - dim;
 
    if(verbose>0)  /* only in verbose mode */
    {
@@ -84,17 +168,28 @@ int standard_membership_test ( void )
       }
       scanf("%c",&ans); /* skip end of line character */
    }
+   {
+      int fail,onsys,onset;
+      double tpt[2*nv];
+      const double restol = 1.0e-6;
+      const double homtol = 1.0e-10;
+      printf("\nReading the coordinates of the test point x ...\n");
+      standard_read_point(nv,tpt);
+      fail = standard_homotopy_membership_test
+               (1,nv,dim,restol,homtol,tpt,&onsys,&onset);
+   }
 
    return 0;
 }
 
 int dobldobl_membership_test ( void )
 {
-   int fail,n,dim,deg;
+   int fail,n,dim,deg,nv;
    char ans;
 
    printf("\nReading a witness set ...\n");
    fail = read_dobldobl_witness_set(&n,&dim,&deg);
+   nv = n - dim;
 
    if(verbose>0)  /* only in verbose mode */
    {
@@ -118,17 +213,28 @@ int dobldobl_membership_test ( void )
       }
       scanf("%c",&ans); /* skip end of line character */
    }
+   {
+      int fail,onsys,onset;
+      double tpt[4*nv];
+      const double restol = 1.0e-6;
+      const double homtol = 1.0e-10;
+      printf("\nReading the coordinates of the test point x ...\n");
+      dobldobl_read_point(nv,tpt);
+      fail = dobldobl_homotopy_membership_test
+               (1,nv,dim,restol,homtol,tpt,&onsys,&onset);
+   }
 
    return 0;
 }
 
 int quaddobl_membership_test ( void )
 {
-   int fail,n,dim,deg;
+   int fail,n,dim,deg,nv;
    char ans;
 
    printf("\nReading a witness set ...\n");
    fail = read_quaddobl_witness_set(&n,&dim,&deg);
+   nv = n - dim;
 
    if(verbose>0)  /* only in verbose mode */
    {
@@ -152,6 +258,17 @@ int quaddobl_membership_test ( void )
       }
       scanf("%c",&ans); /* skip end of line character */
    }
+   {
+      int fail,onsys,onset;
+      double tpt[8*nv];
+      const double restol = 1.0e-6;
+      const double homtol = 1.0e-10;
+      printf("\nReading the coordinates of the test point x ...\n");
+      quaddobl_read_point(nv,tpt);
+      fail = quaddobl_homotopy_membership_test
+               (1,nv,dim,restol,homtol,tpt,&onsys,&onset);
+   }
+
 
    return 0;
 }
