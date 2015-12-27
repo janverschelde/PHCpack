@@ -1,3 +1,5 @@
+Sat 26 Dec 2015 : bug fixes in use_c2mbt.adb.
+
 Fri 25 Dec 2015 : new use_c2mbt for the homotopy membership test, with three
   new jobs in use_c2phc.
 
