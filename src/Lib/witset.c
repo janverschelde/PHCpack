@@ -1368,6 +1368,9 @@ int standard_homotopy_membership_test
 
    fail = _ada_use_c2phc(537,&vrb,dims,cffs);
 
+   *onsys = vrb;
+   *onset = dims[0];
+
    return fail;
 }
 
@@ -1388,6 +1391,9 @@ int dobldobl_homotopy_membership_test
 
    fail = _ada_use_c2phc(538,&vrb,dims,cffs);
 
+   *onsys = vrb;
+   *onset = dims[0];
+
    return fail;
 }
 
@@ -1407,6 +1413,9 @@ int quaddobl_homotopy_membership_test
    for(k=0; k<8*nvr; k++) cffs[idx++] = tpt[k];
 
    fail = _ada_use_c2phc(539,&vrb,dims,cffs);
+
+   *onsys = vrb;
+   *onset = dims[0];
 
    return fail;
 }
