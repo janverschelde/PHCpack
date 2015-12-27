@@ -335,6 +335,117 @@ def test_cascade():
     for sol in ws1f2:
         print sol
 
+def standard_membertest(wsys, gpts, dim, point, verbose=True):
+    """
+    Applies the homotopy membership test for a point to belong to
+    a witness set of dimension dim, given by an embedding polynomial
+    system in wsys, with corresponding generic points in gpts.
+    The coordinates of the test point are given in the list point,
+    as a list of doubles, with the real and imaginary part of each
+    coordinate of the point.  By default, verbose is True.
+    Calculations happen in standard double precision.
+    """
+    from phcpy.interface import store_standard_system as storesys
+    from phcpy.interface import store_standard_solutions as storesols
+    from phcpy.phcpy2c import py2c_witset_standard_membertest as membtest
+    storesys(wsys)
+    storesols(len(wsys), gpts)
+    nvr = len(point)/2
+    strpt = str(point)
+    nbc = len(strpt)
+    result = membtest(int(verbose), nvr, dim, nbc, 1.0e-6, 1.0e-10, strpt)
+    return (result[2] == 1)
+
+def dobldobl_membertest(wsys, gpts, dim, point, verbose=True):
+    """
+    Applies the homotopy membership test for a point to belong to
+    a witness set of dimension dim, given by an embedding polynomial
+    system in wsys, with corresponding generic points in gpts.
+    The coordinates of the test point are given in the list point,
+    as a list of doubles, with the real and imaginary part of each
+    coordinate of the point.  By default, verbose is True.
+    Calculations happen in double double precision.
+    """
+    from phcpy.interface import store_dobldobl_system as storesys
+    from phcpy.interface import store_dobldobl_solutions as storesols
+    from phcpy.phcpy2c import py2c_witset_dobldobl_membertest as membtest
+    storesys(wsys)
+    storesols(len(wsys), gpts)
+    nvr = len(point)/4
+    strpt = str(point)
+    nbc = len(strpt)
+    result = membtest(int(verbose), nvr, dim, nbc, 1.0e-6, 1.0e-10, strpt)
+    return (result[2] == 1)
+
+def quaddobl_membertest(wsys, gpts, dim, point, verbose=True):
+    """
+    Applies the homotopy membership test for a point to belong to
+    a witness set of dimension dim, given by an embedding polynomial
+    system in wsys, with corresponding generic points in gpts.
+    The coordinates of the test point are given in the list point,
+    as a list of doubles, with the real and imaginary part of each
+    coordinate of the point.  By default, verbose is True.
+    Calculations happen in quad double precision.
+    """
+    from phcpy.interface import store_quaddobl_system as storesys
+    from phcpy.interface import store_quaddobl_solutions as storesols
+    from phcpy.phcpy2c import py2c_witset_quaddobl_membertest as membtest
+    storesys(wsys)
+    storesols(len(wsys), gpts)
+    nvr = len(point)/8
+    strpt = str(point)
+    nbc = len(strpt)
+    result = membtest(int(verbose), nvr, dim, nbc, 1.0e-6, 1.0e-10, strpt)
+    return (result[2] == 1)
+
+def membertest(wsys, gpts, dim, point, verbose=True, precision='d'):
+    """
+    Applies the homotopy membership test for a point to belong to
+    a witness set of dimension dim, given by an embedding polynomial
+    system in wsys, with corresponding generic points in gpts.
+    The coordinates of the test point are given in the list point,
+    as a list of doubles, with the real and imaginary part of each
+    coordinate of the point.  By default, verbose is True, and the
+    working precision is double 'd'.  Other levels of precision are
+    double double precision 'dd' and quad double precision 'qd'.
+    """
+    if(precision == 'd'):
+        return standard_membertest(wsys, gpts, dim, point, verbose)
+    elif(precision == 'dd'):
+        return dobldobl_membertest(wsys, gpts, dim, point, verbose)
+    elif(precision == 'qd'):
+        return quaddobl_membertest(wsys, gpts, dim, point, verbose)
+    else:
+        print 'wrong argument for precision'
+        return None
+
+def test_member(prc='d'):
+    """
+    To test the membership, we take the twisted cubic.
+    """
+    twisted = ['x^2 - y;', 'x^3 - z;']
+    twiste1 = embed(3, 1, twisted)
+    twiste1[0] = 'x + y + z - x - y - z + ' + twiste1[0]
+    from phcpy.solver import solve
+    twtsols = solve(twiste1,precision=prc)
+    for sol in twtsols:
+        print sol
+    if(prc == 'd'):
+       inpoint = [1, 0, 1, 0, 1, 0]
+       outpoint = [1, 0, 1, 0, 2, 0]
+    elif(prc == 'dd'):
+       inpoint = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]
+       outpoint = [1, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0]
+    elif(prc == 'qd'):
+       inpoint = [1, 0, 0, 0, 0, 0, 0, 0, \
+                  1, 0, 0, 0, 0, 0, 0, 0, \
+                  1, 0, 0, 0, 0, 0, 0, 0]
+       outpoint = [1, 0, 0, 0, 0, 0, 0, 0, \
+                   1, 0, 0, 0, 0, 0, 0, 0, \
+                   2, 0, 0, 00, 0, 0, 0, ]
+    print membertest(twiste1, twtsols, 1, inpoint, precision=prc)
+    print membertest(twiste1, twtsols, 1, outpoint, precision=prc)
+
 def standard_decomposition(deg):
     """
     Returns the decomposition as a list of labels of witness points
