@@ -442,7 +442,7 @@ def test_member(prc='d'):
                   1, 0, 0, 0, 0, 0, 0, 0]
        outpoint = [1, 0, 0, 0, 0, 0, 0, 0, \
                    1, 0, 0, 0, 0, 0, 0, 0, \
-                   2, 0, 0, 00, 0, 0, 0, ]
+                   2, 0, 0, 0, 0, 0, 0, 0, ]
     print membertest(twiste1, twtsols, 1, inpoint, precision=prc)
     print membertest(twiste1, twtsols, 1, outpoint, precision=prc)
 

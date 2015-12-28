@@ -1,4 +1,5 @@
 Sun 27 Dec 2015 : added functions for membership tests to sets.py.
+  Fixed type error in the test_member() function of sets.py.
 
 Thu 24 Dec 2015 : changes in sets.py for renamed functions in phcpy2c.
   More changes in sets.py for muting the monodromy breakup.
