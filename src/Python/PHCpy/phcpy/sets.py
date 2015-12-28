@@ -335,7 +335,8 @@ def test_cascade():
     for sol in ws1f2:
         print sol
 
-def standard_membertest(wsys, gpts, dim, point, verbose=True):
+def standard_membertest(wsys, gpts, dim, point, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     """
     Applies the homotopy membership test for a point to belong to
     a witness set of dimension dim, given by an embedding polynomial
@@ -344,6 +345,9 @@ def standard_membertest(wsys, gpts, dim, point, verbose=True):
     as a list of doubles, with the real and imaginary part of each
     coordinate of the point.  By default, verbose is True.
     Calculations happen in standard double precision.
+    The default values for the evaluation (evatol) and the membership
+    (memtol) allow for singular values at the end points of the paths
+    in the homotopy membership test.
     """
     from phcpy.interface import store_standard_system as storesys
     from phcpy.interface import store_standard_solutions as storesols
@@ -353,10 +357,11 @@ def standard_membertest(wsys, gpts, dim, point, verbose=True):
     nvr = len(point)/2
     strpt = str(point)
     nbc = len(strpt)
-    result = membtest(int(verbose), nvr, dim, nbc, 1.0e-6, 1.0e-10, strpt)
+    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, strpt)
     return (result[2] == 1)
 
-def dobldobl_membertest(wsys, gpts, dim, point, verbose=True):
+def dobldobl_membertest(wsys, gpts, dim, point, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     """
     Applies the homotopy membership test for a point to belong to
     a witness set of dimension dim, given by an embedding polynomial
@@ -365,6 +370,9 @@ def dobldobl_membertest(wsys, gpts, dim, point, verbose=True):
     as a list of doubles, with the real and imaginary part of each
     coordinate of the point.  By default, verbose is True.
     Calculations happen in double double precision.
+    The default values for the evaluation (evatol) and the membership
+    (memtol) allow for singular values at the end points of the paths
+    in the homotopy membership test.
     """
     from phcpy.interface import store_dobldobl_system as storesys
     from phcpy.interface import store_dobldobl_solutions as storesols
@@ -374,10 +382,11 @@ def dobldobl_membertest(wsys, gpts, dim, point, verbose=True):
     nvr = len(point)/4
     strpt = str(point)
     nbc = len(strpt)
-    result = membtest(int(verbose), nvr, dim, nbc, 1.0e-6, 1.0e-10, strpt)
+    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, strpt)
     return (result[2] == 1)
 
-def quaddobl_membertest(wsys, gpts, dim, point, verbose=True):
+def quaddobl_membertest(wsys, gpts, dim, point, \
+    evatol=1.0e-6, memtol=1.0e-6, verbose=True):
     """
     Applies the homotopy membership test for a point to belong to
     a witness set of dimension dim, given by an embedding polynomial
@@ -386,6 +395,9 @@ def quaddobl_membertest(wsys, gpts, dim, point, verbose=True):
     as a list of doubles, with the real and imaginary part of each
     coordinate of the point.  By default, verbose is True.
     Calculations happen in quad double precision.
+    The default values for the evaluation (evatol) and the membership
+    (memtol) allow for singular values at the end points of the paths
+    in the homotopy membership test.
     """
     from phcpy.interface import store_quaddobl_system as storesys
     from phcpy.interface import store_quaddobl_solutions as storesols
@@ -395,10 +407,11 @@ def quaddobl_membertest(wsys, gpts, dim, point, verbose=True):
     nvr = len(point)/8
     strpt = str(point)
     nbc = len(strpt)
-    result = membtest(int(verbose), nvr, dim, nbc, 1.0e-6, 1.0e-10, strpt)
+    result = membtest(int(verbose), nvr, dim, nbc, evatol, memtol, strpt)
     return (result[2] == 1)
 
-def membertest(wsys, gpts, dim, point, verbose=True, precision='d'):
+def membertest(wsys, gpts, dim, point, evatol=1.0e-6, memtol=1.0e-6, \
+    verbose=True, precision='d'):
     """
     Applies the homotopy membership test for a point to belong to
     a witness set of dimension dim, given by an embedding polynomial
@@ -408,13 +421,24 @@ def membertest(wsys, gpts, dim, point, verbose=True, precision='d'):
     coordinate of the point.  By default, verbose is True, and the
     working precision is double 'd'.  Other levels of precision are
     double double precision 'dd' and quad double precision 'qd'.
+    There are two tolerances: evatol is the tolerance on the residual
+    of the evaluation of the polynomial equations at the test point.
+    If the residual of the evalution is not less than evatol,
+    then the membertest returns False.  Otherwise, the homotopy
+    membership test is called and the memtol is used to compare
+    the coordinates of the point with the newly computed generic points.
+    If there is a match between the coordinates within the given
+    tolerance memtol, then True is returned.
     """
     if(precision == 'd'):
-        return standard_membertest(wsys, gpts, dim, point, verbose)
+        return standard_membertest(wsys, gpts, dim, point, \
+                                   evatol, memtol, verbose)
     elif(precision == 'dd'):
-        return dobldobl_membertest(wsys, gpts, dim, point, verbose)
+        return dobldobl_membertest(wsys, gpts, dim, point, \
+                                   evatol, memtol, verbose)
     elif(precision == 'qd'):
-        return quaddobl_membertest(wsys, gpts, dim, point, verbose)
+        return quaddobl_membertest(wsys, gpts, dim, point, \
+                                   evatol, memtol, verbose)
     else:
         print 'wrong argument for precision'
         return None
@@ -427,22 +451,22 @@ def test_member(prc='d'):
     twiste1 = embed(3, 1, twisted)
     twiste1[0] = 'x + y + z - x - y - z + ' + twiste1[0]
     from phcpy.solver import solve
-    twtsols = solve(twiste1,precision=prc)
+    twtsols = solve(twiste1, precision=prc)
     for sol in twtsols:
         print sol
     if(prc == 'd'):
-       inpoint = [1, 0, 1, 0, 1, 0]
-       outpoint = [1, 0, 1, 0, 2, 0]
+        inpoint = [1, 0, 1, 0, 1, 0]
+        outpoint = [1, 0, 1, 0, 2, 0]
     elif(prc == 'dd'):
-       inpoint = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]
-       outpoint = [1, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0]
+        inpoint = [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]
+        outpoint = [1, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0]
     elif(prc == 'qd'):
-       inpoint = [1, 0, 0, 0, 0, 0, 0, 0, \
-                  1, 0, 0, 0, 0, 0, 0, 0, \
-                  1, 0, 0, 0, 0, 0, 0, 0]
-       outpoint = [1, 0, 0, 0, 0, 0, 0, 0, \
+        inpoint = [1, 0, 0, 0, 0, 0, 0, 0, \
                    1, 0, 0, 0, 0, 0, 0, 0, \
-                   2, 0, 0, 0, 0, 0, 0, 0, ]
+                   1, 0, 0, 0, 0, 0, 0, 0]
+        outpoint = [1, 0, 0, 0, 0, 0, 0, 0, \
+                    1, 0, 0, 0, 0, 0, 0, 0, \
+                    2, 0, 0, 0, 0, 0, 0, 0, ]
     print membertest(twiste1, twtsols, 1, inpoint, precision=prc)
     print membertest(twiste1, twtsols, 1, outpoint, precision=prc)
 
@@ -597,7 +621,7 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
 
 def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     """
-    Applies the monodromy breakup algorithm in double double precision 
+    Applies the monodromy breakup algorithm in double double precision
     to factor the d-dimensional algebraic set represented by the embedded
     system e and its solutions esols.
     If verbose is False, then no output is written.
@@ -682,7 +706,7 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
 
 def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     """
-    Applies the monodromy breakup algorithm in quad double precision 
+    Applies the monodromy breakup algorithm in quad double precision
     to factor the d-dimensional algebraic set represented by the embedded
     system e and its solutions esols.
     If verbose is False, then no output is written.
@@ -1030,7 +1054,7 @@ def standard_start_diagonal_cascade(gamma=0, tasks=0):
     py2c_solcon_clear_standard_solutions()
     py2c_syscon_clear_standard_system()
     py2c_copy_standard_target_solutions_to_container()
-    from phcpy.phcpy2c import py2c_write_standard_target_system
+    # from phcpy.phcpy2c import py2c_write_standard_target_system
     # print 'the standard target system :'
     # py2c_write_standard_target_system()
     py2c_copy_standard_target_system_to_container()
@@ -1065,7 +1089,7 @@ def dobldobl_start_diagonal_cascade(gamma=0, tasks=0):
     py2c_solcon_clear_dobldobl_solutions()
     py2c_syscon_clear_dobldobl_system()
     py2c_copy_dobldobl_target_solutions_to_container()
-    from phcpy.phcpy2c import py2c_write_dobldobl_target_system
+    # from phcpy.phcpy2c import py2c_write_dobldobl_target_system
     # print 'the dobldobl target system :'
     # py2c_write_dobldobl_target_system()
     py2c_copy_dobldobl_target_system_to_container()
@@ -1100,7 +1124,7 @@ def quaddobl_start_diagonal_cascade(gamma=0, tasks=0):
     py2c_solcon_clear_quaddobl_solutions()
     py2c_syscon_clear_quaddobl_system()
     py2c_copy_quaddobl_target_solutions_to_container()
-    from phcpy.phcpy2c import py2c_write_quaddobl_target_system
+    # from phcpy.phcpy2c import py2c_write_quaddobl_target_system
     # print 'the quaddobl target system :'
     # py2c_write_quaddobl_target_system()
     py2c_copy_quaddobl_target_system_to_container()

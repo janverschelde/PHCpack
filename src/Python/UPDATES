@@ -1,3 +1,6 @@
+Mon 28 Dec 2015 : made the tolerances in the membertest in sets.py
+  explicit arguments with large default values.
+
 Sun 27 Dec 2015 : added functions for membership tests to sets.py.
   Fixed type error in the test_member() function of sets.py.
   Started the documentation in posdimsols.rst a section on the
