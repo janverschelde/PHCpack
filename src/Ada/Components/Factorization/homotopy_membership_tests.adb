@@ -220,7 +220,7 @@ package body Homotopy_Membership_Tests is
         found := true;
         if verbose then
           put("    match with generic point "); put(i,1);
-          put(", as difference is");
+          put(", as difference is ");
           put(diff,3); put(" <="); put(homtol,3); new_line;
         end if;
       else
@@ -269,7 +269,7 @@ package body Homotopy_Membership_Tests is
         found := true;
         if verbose then
           put("    match with generic point "); put(i,1);
-          put(", as difference is");
+          put(", as difference is ");
           put(diff,3); put(" <="); put(homtol,3); new_line;
         end if;
       else
@@ -355,7 +355,7 @@ package body Homotopy_Membership_Tests is
       diff := Max_Norm(difference);
       if diff <= homtol then
         put(file,"    match with generic point "); put(file,i,1);
-        put(file,", as difference is");
+        put(file,", as difference is ");
         put(file,diff,3); put(file," <="); put(file,homtol,3);
         new_line(file);
         found := true;
@@ -399,7 +399,7 @@ package body Homotopy_Membership_Tests is
       diff := Max_Norm(difference);
       if diff <= homtol then
         put(file,"    match with generic point "); put(file,i,1);
-        put(file,", as difference is");
+        put(file,", as difference is ");
         put(file,diff,3); put(file," <="); put(file,homtol,3);
         new_line(file);
         found := true;

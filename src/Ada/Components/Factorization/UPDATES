@@ -1,3 +1,5 @@
+Mon 28 Dec 2015 : minor improvement in homotopy_membership_tests.adb.
+
 Fri 25 Dec 2015 : changed mainfac.adb to explain the input in the membership
   test of phc -f.  Added extra procedures to homotopy_membership_tests,
   tested by ts_mbthom.adb.
