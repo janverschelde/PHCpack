@@ -77,6 +77,32 @@ to make overdetermined polynomial systems *square*,
 that is: having as many equations as unknowns.
 Only solutions with zero slack variables matter.
 
+homotopy membership test
+------------------------
+
+Given a witness set and a point, with a homotopy we can decide
+whether the point belongs to the algebraic set represented by
+the given witness set.  We illustrate this membership test on
+the cyclic 4-roots problem.  First we compute a witness set.
+
+::
+
+   from phcpy.families import cyclic
+   c4 = cyclic(4)
+   from phcpy.sets import embed
+   c4e1 = embed(4, 1, c4)
+   from phcpy.solver import solve
+   sols = solve(c4e1)
+   from phcpy.solutions import filter_zero_coordinates as filter
+   genpts = filter(sols, 'zz1', 1.0e-8, 'select')
+   print 'generic points :'
+   for sol in genpts:
+       print sol
+
+Because there are four solutions that satisfy the original cyclic 4-roots
+problem and a hyperplane with randomly generated coefficients,
+there is a one dimensional solution set of cyclic 4-roots.
+
 cascade of homotopies
 ---------------------
 
