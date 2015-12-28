@@ -1,4 +1,4 @@
-phcpy 0.3.6 offers a simple Python interface to PHCv2.4.07
+phcpy 0.3.7 offers a simple Python interface to PHCv2.4.08
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -26,6 +26,9 @@ path trackers in the trackers module of phcpy.
 See the setup.py file for the specific shared object modules needed
 to install for the specific precision levels.
 
+Version 0.3.7 provided the key tools to compute a numerical
+irreducible decomposition.
+
 The package phcpy is defined in the directory PHCpy.
 
 ------------------------------------------------------------------------------
@@ -50,6 +53,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.3.7 : 2015-12-29 : homotopy membership test in sets.py
 0.3.6 : 2015-12-24 : monodromy breakup with double doubles and quad doubles
 0.3.5 : 2015-12-11 : checkin/checkout functions in polytopes.py
 0.3.4 : 2015-11-23 : diagonal homotopies and improved documentation

@@ -36,6 +36,9 @@ to the first version of the GPU accelerated path trackers.
 Sweep homotopies to explore the parameter space with detection and
 location of singularities along the solution paths were exported
 in the module sweepers.py in version 0.3.3 of phcpy.
+With the addition of a homotopy membership test in verion 0.3.7,
+the sets.py module provides the key ingredients for a numerical
+irreducible decomposition.
 
 References
 ----------

@@ -4,6 +4,35 @@ positive dimensional solution sets
 The module sets.py provides some functionality of PHCpack
 to work with positive dimensional solution sets.
 
+For isolated solutions, the main outcome of the numerical solver is 
+a list of points, given as tuples of values for the coordinates.
+For positive dimensional solutions, with numerical homotopy continuation
+methods we can compute a *numerical irreducible decomposition*
+of the solution set.  Such a decomposition has two layers:
+
+1. For every dimension of the solution set,
+   we have as many :index:`generic points` as the degree 
+   of the solution set of that dimension.
+
+2. For every dimension of the solution set,
+   those generic points that belong to the same irreducible factor
+   are stored in the same list.
+
+A *generic point* on a *d*-dimensional solution set is computed
+as a solution of the given system of polynomial equations, augmented
+with *d* linear equations with randomly generated complex coefficients.
+
+Generic points occur as solutions in the data structure that is
+called a witness set.  With embeddings and cascades, we define
+homotopies in a top down calculation of a numerical irreducible
+decomposition.  Diagonal homotopies define a bottom up construction
+of a :index:`numerical irreducible decomposition`.
+The application of monodromy loops leads to a factorization of a pure
+dimensional solution set into irreducible components.
+Even without having explicit equations for the irreducible factors,
+with a homotopy membership test we can determine whether any given
+point belongs to any given factor in the decomposition.
+
 witness sets
 ------------
 
@@ -87,21 +116,117 @@ the cyclic 4-roots problem.  First we compute a witness set.
 
 ::
 
-   from phcpy.families import cyclic
-   c4 = cyclic(4)
-   from phcpy.sets import embed
-   c4e1 = embed(4, 1, c4)
-   from phcpy.solver import solve
-   sols = solve(c4e1)
-   from phcpy.solutions import filter_zero_coordinates as filter
-   genpts = filter(sols, 'zz1', 1.0e-8, 'select')
-   print 'generic points :'
-   for sol in genpts:
-       print sol
+   >>> from phcpy.families import cyclic
+   >>> c4 = cyclic(4)
+   >>> from phcpy.sets import embed
+   >>> c4e1 = embed(4, 1, c4)
+   >>> from phcpy.solver import solve
+   >>> sols = solve(c4e1)
+   >>> from phcpy.solutions import filter_zero_coordinates as filter
+   >>> genpts = filter(sols, 'zz1', 1.0e-8, 'select')
+   >>> for sol in genpts:
+   ...     print sol
 
 Because there are four solutions that satisfy the original cyclic 4-roots
 problem and a hyperplane with randomly generated coefficients,
 there is a one dimensional solution set of cyclic 4-roots.
+
+The function ``membertest`` takes as input the witness set,
+represented by the polynomials in ``c4e1`` 
+and the generic points in ``genpts``, and a point.
+The point is given as a list of doubles, with the real and imaginary
+parts of all coordinates.  The point ``(1, -1, 1, -1)`` is thus
+given as the list ``[1, 0, -1, 0, 1, 0, -1, 0]``.  The four extra
+zeroes are the zero imaginary parts of the four coordinates.
+
+::
+
+   >>> point = [1, 0, -1, 0, 1, 0, -1, 0]
+   >>> from phcpy.sets import membertest
+   >>> membertest(c4e1, genpts, 1, point)
+   residual is  4.00000000000000E+00
+     point does not lie on the component, as residual >  1.000E-06
+   False
+
+The function ``membertest`` returns ``False`` as the residual of
+the evaluation of the point at the equations does not satisfy the
+default tolerance. 
+
+Testing the point ``(-1, -1, 0, 0)`` proceeds as follows.
+The ``...`` below stands for omitted output.
+
+::
+
+   >>> point = [-1, 0, -1, 0, 1, 0, 1, 0]
+   >>> membertest(c4e1, genpts, 1, point)
+   residual is  0.00000000000000E+00
+     point satisfies the equations, as residual <=  1.000E-06
+   ===========================================================================
+   == 1 =  #step :  48 #fail :  0 #iter :  61 = regular solution ==
+   t :  1.00000000000000E+00   0.00000000000000E+00
+   m : 1                  Length of path :  3.20529115248889E-02
+   the solution for t : 
+    x0 : -9.99999989106364E-01   7.42569305742753E-09
+    x1 : -1.00000001089364E+00  -7.42569325135928E-09
+    x2 :  1.00000000001044E+00   7.19523989696616E-12
+    x3 :  9.99999999989557E-01  -7.19544395567596E-12
+    zz1 : -3.89859685757465E-16  -1.56365136224798E-16
+   == err :  2.235E-08 = rco :  2.239E-09 = res :  1.079E-15 ==
+   ...
+       match with generic point 1, as difference is  1.074E-08 <=  1.000E-06
+     Point lies on a solution component.
+   True
+
+The point passes the residual test.  The test continues
+with the computation of new generic points for a hyperplane
+that passes through the test point.  If the test point is among
+the new generic points, then the test point belongs to the
+positive dimensional solution set represented by the witness set.
+For this example we see that the point ``(-1, -1, 1, 1)`` is
+a singular point on the curve, as can be seen from the estimate
+for the inverse condition number, ``rco :  2.239E-09``.
+The default tolerance of ``1.0e-6`` is high enough in this case
+for the point to satisfy the membership test.
+
+If the tolerance ``1.0e-6`` is deemed too sloppy,
+then we can allow for a stronger tolerance and execute
+the homotopy membership test in double double precision.
+More zeroes must be inserted in the test point for the second part
+(the least significant double) in the double double representation
+for the real and imaginary parts of the coordinates:
+
+::
+
+   >>> ddpoint = [-1, 0, 0, 0, -1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0]
+
+Instead of ``1.0e-6``, the new tolerance is ``1.0e-12``:
+
+::
+
+   >>> membertest(c4e1, genpts, 1, ddpoint, memtol=1.e-12, precision='dd')
+   residual is 0.00000000000000000000000000000000E+00
+     point satisfies the equations, as residual <=  1.000E-06
+   ...
+   == 3 =  #step :  43 #fail :  9 #iter : 119 = singular solution
+   t : 1.00000000000000000000000000000000E+00  0.00000000000000000000000000000000E+00
+   m : 1                  Length of path :  2.58366452243257E+01
+   the solution for t : 
+    x0 : -1.00000000000000000000460097514793E+00  -5.03546515557825836758428944198701E-21
+    x1 : -9.99999999999999999995399044465921E-01  5.03544121195596798412885036927768E-21
+    x2 : 9.99999999999999999999995602319048E-01  -4.84887236589678161814305345115216E-24
+    x3 : 1.00000000000000000000000441729480E+00  4.87281598848246759732685155434612E-24
+    zz1 : 3.21588798303478472454372240227796E-34  -4.61270682182747444272903697352050E-34
+   == err :   1.525E-13 = rco :   1.343E-14 = res :   8.687E-26 ==
+   ...
+       match with generic point 3, as difference is 4.183E-17 <=  1.000E-12
+     Point lies on a solution component.
+   True
+
+In double double precision, the condition number estimate for the
+inverse condition number drops to ``1.343E-14`` (see the ``rco`` field).
+
+To perform the membership test in quad double precision,
+invoke ``membertest`` with ``precision='qd'``.
 
 cascade of homotopies
 ---------------------
@@ -113,9 +238,9 @@ We consider an illustrative example:
 
 ::
 
-   pols = ['(x^2 + y^2 + z^2 - 1)*(y - x^2)*(x - 0.5);', \
-           '(x^2 + y^2 + z^2 - 1)*(z - x^3)*(y - 0.5);', \
-           '(x^2 + y^2 + z^2 - 1)*(z - x*y)*(z - 0.5);']
+   >>> pols = ['(x^2 + y^2 + z^2 - 1)*(y - x^2)*(x - 0.5);', \
+               '(x^2 + y^2 + z^2 - 1)*(z - x^3)*(y - 0.5);', \
+               '(x^2 + y^2 + z^2 - 1)*(z - x*y)*(z - 0.5);']
 
 The polynomials in ``pols`` are defined in factored form
 so for this illustrative example we may read of the equidimensional
@@ -131,10 +256,10 @@ make this overdetermined system square.
 
 ::
 
-   from phcpy.sets import embed
-   topemb = embed(3, 2, pols)
-   from phcpy.solver import solve
-   topsols = solve(topemb, silent=True)
+   >>> from phcpy.sets import embed
+   >>> topemb = embed(3, 2, pols)
+   >>> from phcpy.solver import solve
+   >>> topsols = solve(topemb, silent=True)
 
 The list ``topsols`` contains two types of solutions:
 those with nonzero values for the slack variables, and
@@ -147,12 +272,12 @@ We filter the solutions, as follows:
 ::
 
 
-   from phcpy.solutions import filter_zero_coordinates as filter
-   topsols0 = filter(topsols, 'zz2', 1.0e-8, 'select')
-   topsols1 = filter(topsols, 'zz2', 1.0e-8, 'remove')
-   print 'generic points on the two dimensional surface :'
-   for sol in topsols0:
-       print sol
+   >>> from phcpy.solutions import filter_zero_coordinates as filter
+   >>> topsols0 = filter(topsols, 'zz2', 1.0e-8, 'select')
+   >>> topsols1 = filter(topsols, 'zz2', 1.0e-8, 'remove')
+   >>> print 'generic points on the two dimensional surface :'
+   >>> for sol in topsols0:
+   ...     print sol
 
 The solutions with nonzero values for the slack variables are
 called *nonsolutions*.  These solutions are regular and serve
@@ -161,21 +286,21 @@ the lower dimensional components of the solution set.
 
 ::
 
-   from phcpy.sets import cascade_step
-   lvl1sols = cascade_step(topemb, topsols1)
+   >>> from phcpy.sets import cascade_step
+   >>> lvl1sols = cascade_step(topemb, topsols1)
 
 After the filtering, we must drop variables, coordinates,
 and hyperplane for the next level in the cascade.
 
 ::
 
-   from phcpy.sets import drop_variable_from_polynomials as drop1poly
-   from phcpy.sets import drop_coordinate_from_solutions as drop1sols
-   lvl1emb = drop1poly(topemb, 'zz2')
-   lvl1emb = lvl1emb[:-1]  # dropping the last polynomial
-   lvl1solsdrop = drop1sols(lvl1sols, len(topemb), 'zz2')
-   lvl1sols0 = filter(lvl1solsdrop, 'zz1', 1.0e-8, 'select') 
-   lvl1sols1 = filter(lvl1solsdrop, 'zz1', 1.0e-8, 'remove') 
+   >>> from phcpy.sets import drop_variable_from_polynomials as drop1poly
+   >>> from phcpy.sets import drop_coordinate_from_solutions as drop1sols
+   >>> lvl1emb = drop1poly(topemb, 'zz2')
+   >>> lvl1emb = lvl1emb[:-1]  # dropping the last polynomial
+   >>> lvl1solsdrop = drop1sols(lvl1sols, len(topemb), 'zz2')
+   >>> lvl1sols0 = filter(lvl1solsdrop, 'zz1', 1.0e-8, 'select') 
+   >>> lvl1sols1 = filter(lvl1solsdrop, 'zz1', 1.0e-8, 'remove') 
 
 Among the solutions at the end of the paths defined by the cascade
 homotopy are solutions that belong to the two dimensional sphere.
@@ -184,10 +309,10 @@ threshold for the estimate of the inverse condition number.
 
 ::
 
-   from phcpy.solutions import filter_regular as regfilt
-   reglvl1sols0 = regfilt(lvl1sols0, 1.0e-8, 'select')
-   for sol in reglvl1sols0:
-       print sol
+   >>> from phcpy.solutions import filter_regular as regfilt
+   >>> reglvl1sols0 = regfilt(lvl1sols0, 1.0e-8, 'select')
+   >>> for sol in reglvl1sols0:
+   ...     print sol
 
 To find the isolated solutions, another cascade homotopy is applied,
 tracking the paths starting at the nonsolutions at the end of the
@@ -195,10 +320,10 @@ previous cascade.
 
 ::
 
-   lvl2sols = cascade_step(lvl1emb, lvl1sols1)
-   lvl2solsdrop = drop1sols(lvl2sols, len(lvl1emb), 'zz1')
-   for sol in reglvl2solsdrop:
-       print sol
+   >>> lvl2sols = cascade_step(lvl1emb, lvl1sols1)
+   >>> lvl2solsdrop = drop1sols(lvl2sols, len(lvl1emb), 'zz1')
+   >>> for sol in reglvl2solsdrop:
+   ...     print sol
 
 To perform the filtering of the solutions properly, we apply
 a membership test.
@@ -225,25 +350,25 @@ Below is a simple example, given already in factored form:
 
 ::
 
-    p = '(x+1)*(x^2 + y^2 + 1);'
+    >>> p = '(x+1)*(x^2 + y^2 + 1);'
 
 To construct a witness set we import
 ``witness_set_of_hypersurface`` from ``phcpy.sets``:
 
 ::
 
-   from phcpy.sets import witness_set_of_hypersurface as wh
-   (w, s) = wh(2, p)
-   len(s)
+   >>> from phcpy.sets import witness_set_of_hypersurface as wh
+   >>> (w, s) = wh(2, p)
+   >>> len(s)
 
 Because the degree of ``p`` is three,
 we see ``3`` as the outcome of ``len(s)``.
 
 ::
 
-   from phcpy.sets import factor
-   f = factor(1, w, s)
-   f
+   >>> from phcpy.sets import factor
+   >>> f = factor(1, w, s)
+   >>> f
 
 The result in ``f`` is a a list of tuples:
 
@@ -265,8 +390,8 @@ respectively in double double and quad double precision:
 
 ::
 
-    f = factor(1, w, s, precision='dd')
-    f = factor(1, w, s, precision='qd')
+    >>> f = factor(1, w, s, precision='dd')
+    >>> f = factor(1, w, s, precision='qd')
 
 The witness set ``(w, s)`` should also have been computed in
 double double and quad double precision.
@@ -284,8 +409,8 @@ We start with equations for the unit sphere and a cylinder:
 
 ::
 
-   sph = 'x^2 + y^2 + z^2 - 1;'
-   cyl = 'x^2 + y - y + (z - 0.5)^2 - 1;'
+   >>> sph = 'x^2 + y^2 + z^2 - 1;'
+   >>> cyl = 'x^2 + y - y + (z - 0.5)^2 - 1;'
 
 Observe the ``+ y - y`` line in the assignment to ``cyl``.
 With this trick we initialize the symbol table for the witness set
@@ -295,24 +420,24 @@ Next, we compute a witness sets for the sphere and the cylinder:
 
 ::
 
-   from phcpy.sets import witness_set_of_hypersurface as witsurf
-   sphwit = witsurf(3, sph)
-   spheqs, sphpts = sphwit
-   cylwit = witsurf(3, cyl)
-   cyleqs, cylpts = cylwit
+   >>> from phcpy.sets import witness_set_of_hypersurface as witsurf
+   >>> sphwit = witsurf(3, sph)
+   >>> spheqs, sphpts = sphwit
+   >>> cylwit = witsurf(3, cyl)
+   >>> cyleqs, cylpts = cylwit
 
 Once we have two witness sets, we call the ``diagonal_solver``
 method to compute a witness set for the intersection:
 
 ::
 
-   from phcpy.sets import diagonal_solver as diagsolve
-   quawit = diagsolve(3, 2, spheqs, sphpts, 2, cyleqs, cylpts)
-   quaeqs, quapts = quawit
-   for pol in quaeqs:
-       print pol
-   for sol in quapts:
-       print sol
+   >>> from phcpy.sets import diagonal_solver as diagsolve
+   >>> quawit = diagsolve(3, 2, spheqs, sphpts, 2, cyleqs, cylpts)
+   >>> quaeqs, quapts = quawit
+   >>> for pol in quaeqs:
+   ...     print pol
+   >>> for sol in quapts:
+   ...     print sol
 
 functions in the module
 -----------------------
