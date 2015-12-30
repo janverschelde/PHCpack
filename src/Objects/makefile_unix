@@ -5,6 +5,7 @@
 # The makefile works on RHEL 6.6, with python2.6, openmpi, and GNATGPL 2014.
 
 PYTHON=/usr/include/python2.6
+PYTHON3=/usr/local/include/python3.5m
 # MPI_HOME=/usr/lib64/openmpi
 MPI_HOME=/usr/local/mpi/gcc/openmpi-1.4.3
 
@@ -2914,6 +2915,30 @@ phcpy2c.so:
             next_track.o phcpy2c.o unisolvers.o giftwrappers.o scalers.o \
             sweep.o \
             -o ../Python/PHCpy/phcpy/phcpy2c.so -lm
+
+phcpy2c3.so:
+	gcc -static -c -fPIC -O2 $(PHCLib)/syscon.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/solcon.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/product.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/lists_and_strings.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/celcon.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/scalers.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/sweep.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/witset.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/unisolvers.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/giftwrappers.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/phcpack.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/schubert.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/mapcon.c
+	gcc -static -c -fPIC -O2 $(PHCLib)/next_track.c
+	gcc -static -c -fPIC -I$(PYTHON3) $(PHCLib)/phcpy2c3.c
+	gnatmake -static -c -fPIC $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gnatbind -n -shared use_c2phc
+	gnatlink -shared -C use_c2phc syscon.o solcon.o product.o celcon.o \
+            lists_and_strings.o phcpack.o witset.o schubert.o mapcon.o \
+            next_track.o phcpy2c3.o unisolvers.o giftwrappers.o scalers.o \
+            sweep.o \
+            -o ../Python/PHCpy/phcpy/phcpy2c3.so -lm
 
 phcpy2c.a:
 	gcc -static -c -fPIC -O2 $(PHCLib)/syscon.c

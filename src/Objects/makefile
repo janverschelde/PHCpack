@@ -19,6 +19,8 @@ phc:
 phcpy2c.so:
 	make -f $(MAKEFILE) phcpy2c.so
 
+# for phcpy on Python 3.5, make phcpy2c3.so
+
 phcpy2c3.so:
 	make -f $(MAKEFILE) phcpy2c3.so
 
