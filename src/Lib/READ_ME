@@ -1,4 +1,4 @@
-PHCpack as a library of C functions with a state machine in PHCv2.4.08
+PHCpack as a library of C functions with a state machine in PHCv2.4.09
 
 This directory collects header files and definitions of C which bind the
 operations of PHCpack as a state machine in a systematic manner.
@@ -20,6 +20,9 @@ Files starting with the prefix lib_ are test files.
 
 The main upgrade in version 2.4 is the integration of the Path library
 of Xiangcheng Yu.
+
+In 2.4.09, the phcpy2c3.c defines the code of the phcpy2c3 extension
+module for use with Python 3.5.
 
 ------------------------------------------------------------------------------
 file name            : short description
@@ -97,7 +100,8 @@ lib_gpupath_dd       : test on functions in gpupath_dd
 lib_gpupath_qd       : test on functions in gpupath_qd
 ------------------------------------------------------------------------------
 phc_solve.c          : test on the blackbox solver in PHCpack
-phcpy2c.c            : C extension module for Python
+phcpy2c.c            : C extension module for Python 2.6 and 2.7
 phcpy2cadepath_d.cpp : C++ extension of phcpy2c with Path (CPU) for doubles 
 phcpy2cpath_d.cpp    : C++ extension of phcpy2c with Path (GPU) for doubles 
+phcpy2c3.c           : C extension module for Python 3.5
 ------------------------------------------------------------------------------

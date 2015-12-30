@@ -1,3 +1,6 @@
+Wed 30 Dec 2015 : new phcpy2c3.c defines the phcpy2c3 extension module 
+  for Python 3.5.
+
 Sun 27 Dec 2015 : bug fix in witset.c, forgot to assign the return values
   as the boolean results of the membership tests.
 
