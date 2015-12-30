@@ -19,6 +19,9 @@ phc:
 phcpy2c.so:
 	make -f $(MAKEFILE) phcpy2c.so
 
+phcpy2c3.so:
+	make -f $(MAKEFILE) phcpy2c3.so
+
 phcpy2c.a:
 	make -f $(MAKEFILE) phcpy2c.a
 

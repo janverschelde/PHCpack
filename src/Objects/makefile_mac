@@ -6,6 +6,8 @@
 # Python bindings and the use of MPI.
 
 PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
+PYTHON3=/Library/Frameworks/Python.framework/Versions/3.5/include/python3.5m
+PYTHON3lib=/Library/Frameworks/Python.framework/Versions/3.5/lib
 MPI_HOME=/usr/local
 
 QD_ROOT=/usr/local/qd-2.3.14
@@ -2163,11 +2165,11 @@ lib_factor:
 
 lib_factor_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
-	g++ -Dcompilewgpp -c $(PHCLib)/phcpack.c
-	g++ -Dcompilewgpp -c $(PHCLib)/syscon.c
-	g++ -Dcompilewgpp -c $(PHCLib)/solcon.c
-	g++ -Dcompilewgpp -c $(PHCLib)/witset.c
-	g++ -Dcompilewgpp -c $(PHCLib)/lib_factor.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/witset.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_factor.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o witset.o \
                     lib_factor.o \
@@ -2186,11 +2188,11 @@ lib_member:
 
 lib_member_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
-	g++ -Dcompilewgpp -c $(PHCLib)/phcpack.c
-	g++ -Dcompilewgpp -c $(PHCLib)/syscon.c
-	g++ -Dcompilewgpp -c $(PHCLib)/solcon.c
-	g++ -Dcompilewgpp -c $(PHCLib)/witset.c
-	g++ -Dcompilewgpp -c $(PHCLib)/lib_member.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/solcon.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/witset.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_member.c
 	gnatbind -n use_c2phc
 	gnatlink -C use_c2phc phcpack.o syscon.o solcon.o witset.o \
                     lib_member.o \
@@ -2354,6 +2356,32 @@ phcpy2c.so:
             solcon.o product.o lists_and_strings.o celcon.o scalers.o \
             sweep.o schubert.o \
                  -o ../Python/PHCpy/phcpy/phcpy2c.so -framework Python
+
+phcpy2c3.so:
+	gcc -c -O2 $(PHCLib)/syscon.c
+	gcc -c -O2 $(PHCLib)/solcon.c
+	gcc -c -O2 $(PHCLib)/product.c
+	gcc -c -O2 $(PHCLib)/lists_and_strings.c
+	gcc -c -O2 $(PHCLib)/celcon.c
+	gcc -c -O2 $(PHCLib)/scalers.c
+	gcc -c -O2 $(PHCLib)/sweep.c
+	gcc -c -O2 $(PHCLib)/witset.c
+	gcc -c -O2 $(PHCLib)/schubert.c
+	gcc -c -O2 $(PHCLib)/unisolvers.c
+	gcc -c -O2 $(PHCLib)/giftwrappers.c
+	gcc -c -O2 $(PHCLib)/phcpack.c
+	gcc -c -O2 $(PHCLib)/mapcon.c
+	gcc -c -O2 $(PHCLib)/next_track.c
+	$(MCC) -c -I$(PYTHON3) -I$(PYTHON3)/Include $(PHCLib)/phcpy2c3.c
+	#gcc -c -I$(PYTHON3) -I$(PYTHON3)/Include $(PHCLib)/phcpy2c.c
+	gnatmake -c -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gnatbind -n use_c2phc
+	gnatlink -dynamiclib -C use_c2phc phcpy2c3.o phcpack.o syscon.o \
+            witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
+            solcon.o product.o lists_and_strings.o celcon.o scalers.o \
+            sweep.o schubert.o \
+                 -o ../Python/PHCpy/phcpy/phcpy2c3.so \
+                 $(PYTHON3lib)/libpython3.5m.dylib
 
 phcpy2c.a:
 	gcc -static -c -O2 $(PHCLib)/syscon.c
