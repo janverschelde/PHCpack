@@ -215,7 +215,7 @@ def test():
     solves it, converts the solutions,
     and then sums the multiplicities.
     """
-    from . import solver
+    from phcpy import solver
     pols = solver.random_trinomials()
     sols = solver.solve(pols)
     dsols = [strsol2dict(sol) for sol in sols]

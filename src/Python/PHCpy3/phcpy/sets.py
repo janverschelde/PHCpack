@@ -11,12 +11,12 @@ def standard_embed(nvar, topdim, pols):
     The topdim is the top dimension which equals the expected highest
     dimension of a component of the solution set of the system of polynomials.
     """
-    from phcpy.phcpy2c import py2c_syscon_clear_standard_system
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c3 import py2c_syscon_clear_standard_system
+    from phcpy.phcpy2c3 \
     import py2c_syscon_initialize_number_of_standard_polynomials
-    from phcpy.phcpy2c import py2c_syscon_store_standard_polynomial
-    from phcpy.phcpy2c import py2c_syscon_load_standard_polynomial
-    from phcpy.phcpy2c import py2c_embed_standard_system
+    from phcpy.phcpy2c3 import py2c_syscon_store_standard_polynomial
+    from phcpy.phcpy2c3 import py2c_syscon_load_standard_polynomial
+    from phcpy.phcpy2c3 import py2c_embed_standard_system
     py2c_syscon_clear_standard_system()
     nequ = len(pols)
     if nequ > nvar:
@@ -42,12 +42,12 @@ def dobldobl_embed(nvar, topdim, pols):
     The topdim is the top dimension which equals the expected highest
     dimension of a component of the solution set of the system of polynomials.
     """
-    from phcpy.phcpy2c import py2c_syscon_clear_dobldobl_system
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c3 import py2c_syscon_clear_dobldobl_system
+    from phcpy.phcpy2c3 \
     import py2c_syscon_initialize_number_of_dobldobl_polynomials
-    from phcpy.phcpy2c import py2c_syscon_store_dobldobl_polynomial
-    from phcpy.phcpy2c import py2c_syscon_load_dobldobl_polynomial
-    from phcpy.phcpy2c import py2c_embed_dobldobl_system
+    from phcpy.phcpy2c3 import py2c_syscon_store_dobldobl_polynomial
+    from phcpy.phcpy2c3 import py2c_syscon_load_dobldobl_polynomial
+    from phcpy.phcpy2c3 import py2c_embed_dobldobl_system
     py2c_syscon_clear_dobldobl_system()
     nequ = len(pols)
     if nequ > nvar:
@@ -73,12 +73,12 @@ def quaddobl_embed(nvar, topdim, pols):
     The topdim is the top dimension which equals the expected highest
     dimension of a component of the solution set of the system of polynomials.
     """
-    from phcpy.phcpy2c import py2c_syscon_clear_quaddobl_system
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c3 import py2c_syscon_clear_quaddobl_system
+    from phcpy.phcpy2c3 \
     import py2c_syscon_initialize_number_of_quaddobl_polynomials
-    from phcpy.phcpy2c import py2c_syscon_store_quaddobl_polynomial
-    from phcpy.phcpy2c import py2c_syscon_load_quaddobl_polynomial
-    from phcpy.phcpy2c import py2c_embed_quaddobl_system
+    from phcpy.phcpy2c3 import py2c_syscon_store_quaddobl_polynomial
+    from phcpy.phcpy2c3 import py2c_syscon_load_quaddobl_polynomial
+    from phcpy.phcpy2c3 import py2c_embed_quaddobl_system
     py2c_syscon_clear_quaddobl_system()
     nequ = len(pols)
     if nequ > nvar:
@@ -128,19 +128,19 @@ def witness_set_of_hypersurface(nvar, hpol, precision='d'):
     or otherwise double double ('dd') or quad double ('qd').
     """
     if(precision == 'd'):
-        from phcpy.phcpy2c import py2c_standard_witset_of_hypersurface
+        from phcpy.phcpy2c3 import py2c_standard_witset_of_hypersurface
         from phcpy.interface import load_standard_system
         from phcpy.interface import load_standard_solutions
         py2c_standard_witset_of_hypersurface(nvar, len(hpol), hpol)
         return (load_standard_system(), load_standard_solutions())
     elif(precision == 'dd'):
-        from phcpy.phcpy2c import py2c_dobldobl_witset_of_hypersurface
+        from phcpy.phcpy2c3 import py2c_dobldobl_witset_of_hypersurface
         from phcpy.interface import load_dobldobl_system
         from phcpy.interface import load_dobldobl_solutions
         py2c_dobldobl_witset_of_hypersurface(nvar, len(hpol), hpol)
         return (load_dobldobl_system(), load_dobldobl_solutions())
     elif(precision == 'qd'):
-        from phcpy.phcpy2c import py2c_quaddobl_witset_of_hypersurface
+        from phcpy.phcpy2c3 import py2c_quaddobl_witset_of_hypersurface
         from phcpy.interface import load_quaddobl_system
         from phcpy.interface import load_quaddobl_solutions
         py2c_quaddobl_witset_of_hypersurface(nvar, len(hpol), hpol)
@@ -155,8 +155,8 @@ def drop_variable_from_polynomials(pols, svar):
     from the list pols of strings that represented
     polynomials in several variables.
     """
-    from phcpy.phcpy2c import py2c_syscon_standard_drop_variable_by_name
-    from phcpy.phcpy2c import py2c_syscon_remove_symbol_name
+    from phcpy.phcpy2c3 import py2c_syscon_standard_drop_variable_by_name
+    from phcpy.phcpy2c3 import py2c_syscon_remove_symbol_name
     from phcpy.interface import store_standard_system, load_standard_system
     store_standard_system(pols)
     py2c_syscon_standard_drop_variable_by_name(len(svar), svar)
@@ -169,9 +169,9 @@ def drop_coordinate_from_solutions(sols, nbvar, svar):
     from the list sols of strings that represent solutions
     in nbvar variables.
     """
-    from phcpy.phcpy2c import py2c_syscon_clear_symbol_table
-    from phcpy.phcpy2c import py2c_solcon_standard_drop_coordinate_by_name
-    from phcpy.phcpy2c import py2c_syscon_remove_symbol_name
+    from phcpy.phcpy2c3 import py2c_syscon_clear_symbol_table
+    from phcpy.phcpy2c3 import py2c_solcon_standard_drop_coordinate_by_name
+    from phcpy.phcpy2c3 import py2c_syscon_remove_symbol_name
     from phcpy.interface import store_standard_solutions
     from phcpy.interface import load_standard_solutions
     py2c_syscon_clear_symbol_table()
@@ -189,12 +189,12 @@ def standard_double_cascade_step(embsys, esols, tasks=0):
     The list on return contains witness points on
     lower dimensional solution components.
     """
-    from phcpy.phcpy2c import py2c_copy_standard_container_to_start_system
-    from phcpy.phcpy2c import py2c_copy_standard_container_to_start_solutions
-    from phcpy.phcpy2c import py2c_standard_cascade_homotopy
-    from phcpy.phcpy2c import py2c_solve_by_standard_homotopy_continuation
-    from phcpy.phcpy2c import py2c_solcon_clear_standard_solutions
-    from phcpy.phcpy2c import py2c_copy_standard_target_solutions_to_container
+    from phcpy.phcpy2c3 import py2c_copy_standard_container_to_start_system
+    from phcpy.phcpy2c3 import py2c_copy_standard_container_to_start_solutions
+    from phcpy.phcpy2c3 import py2c_standard_cascade_homotopy
+    from phcpy.phcpy2c3 import py2c_solve_by_standard_homotopy_continuation
+    from phcpy.phcpy2c3 import py2c_solcon_clear_standard_solutions
+    from phcpy.phcpy2c3 import py2c_copy_standard_target_solutions_to_container
     from phcpy.interface import store_standard_system
     from phcpy.interface import store_standard_solutions
     from phcpy.interface import load_standard_solutions
@@ -217,12 +217,12 @@ def double_double_cascade_step(embsys, esols, tasks=0):
     The list on return contains witness points on
     lower dimensional solution components.
     """
-    from phcpy.phcpy2c import py2c_copy_dobldobl_container_to_start_system
-    from phcpy.phcpy2c import py2c_copy_dobldobl_container_to_start_solutions
-    from phcpy.phcpy2c import py2c_dobldobl_cascade_homotopy
-    from phcpy.phcpy2c import py2c_solve_by_dobldobl_homotopy_continuation
-    from phcpy.phcpy2c import py2c_solcon_clear_dobldobl_solutions
-    from phcpy.phcpy2c import py2c_copy_dobldobl_target_solutions_to_container
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_container_to_start_system
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_container_to_start_solutions
+    from phcpy.phcpy2c3 import py2c_dobldobl_cascade_homotopy
+    from phcpy.phcpy2c3 import py2c_solve_by_dobldobl_homotopy_continuation
+    from phcpy.phcpy2c3 import py2c_solcon_clear_dobldobl_solutions
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_target_solutions_to_container
     from phcpy.interface import store_dobldobl_system
     from phcpy.interface import store_dobldobl_solutions
     from phcpy.interface import load_dobldobl_solutions
@@ -245,12 +245,12 @@ def quad_double_cascade_step(embsys, esols, tasks=0):
     The list on return contains witness points on
     lower dimensional solution components.
     """
-    from phcpy.phcpy2c import py2c_copy_quaddobl_container_to_start_system
-    from phcpy.phcpy2c import py2c_copy_quaddobl_container_to_start_solutions
-    from phcpy.phcpy2c import py2c_quaddobl_cascade_homotopy
-    from phcpy.phcpy2c import py2c_solve_by_quaddobl_homotopy_continuation
-    from phcpy.phcpy2c import py2c_solcon_clear_quaddobl_solutions
-    from phcpy.phcpy2c import py2c_copy_quaddobl_target_solutions_to_container
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_container_to_start_system
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_container_to_start_solutions
+    from phcpy.phcpy2c3 import py2c_quaddobl_cascade_homotopy
+    from phcpy.phcpy2c3 import py2c_solve_by_quaddobl_homotopy_continuation
+    from phcpy.phcpy2c3 import py2c_solcon_clear_quaddobl_solutions
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_target_solutions_to_container
     from phcpy.interface import store_quaddobl_system
     from phcpy.interface import store_quaddobl_solutions
     from phcpy.interface import load_quaddobl_solutions
@@ -351,7 +351,7 @@ def standard_membertest(wsys, gpts, dim, point, \
     """
     from phcpy.interface import store_standard_system as storesys
     from phcpy.interface import store_standard_solutions as storesols
-    from phcpy.phcpy2c import py2c_witset_standard_membertest as membtest
+    from phcpy.phcpy2c3 import py2c_witset_standard_membertest as membtest
     storesys(wsys)
     storesols(len(wsys), gpts)
     nvr = len(point)/2
@@ -376,7 +376,7 @@ def dobldobl_membertest(wsys, gpts, dim, point, \
     """
     from phcpy.interface import store_dobldobl_system as storesys
     from phcpy.interface import store_dobldobl_solutions as storesols
-    from phcpy.phcpy2c import py2c_witset_dobldobl_membertest as membtest
+    from phcpy.phcpy2c3 import py2c_witset_dobldobl_membertest as membtest
     storesys(wsys)
     storesols(len(wsys), gpts)
     nvr = len(point)/4
@@ -401,7 +401,7 @@ def quaddobl_membertest(wsys, gpts, dim, point, \
     """
     from phcpy.interface import store_quaddobl_system as storesys
     from phcpy.interface import store_quaddobl_solutions as storesols
-    from phcpy.phcpy2c import py2c_witset_quaddobl_membertest as membtest
+    from phcpy.phcpy2c3 import py2c_witset_quaddobl_membertest as membtest
     storesys(wsys)
     storesols(len(wsys), gpts)
     nvr = len(point)/8
@@ -475,9 +475,9 @@ def standard_decomposition(deg):
     Returns the decomposition as a list of labels of witness points
     on the components, computed in standard double precision.
     """
-    from phcpy.phcpy2c import py2c_factor_number_of_standard_components
-    from phcpy.phcpy2c import py2c_factor_witness_points_of_standard_component
-    from phcpy.phcpy2c import py2c_factor_standard_trace_sum_difference as stf
+    from phcpy.phcpy2c3 import py2c_factor_number_of_standard_components
+    from phcpy.phcpy2c3 import py2c_factor_witness_points_of_standard_component
+    from phcpy.phcpy2c3 import py2c_factor_standard_trace_sum_difference as stf
     nbcmp = py2c_factor_number_of_standard_components()
     result = []
     for i in range(1, nbcmp+1):
@@ -491,9 +491,9 @@ def dobldobl_decomposition(deg):
     Returns the decomposition as a list of labels of witness points
     on the components, computed in double double precision.
     """
-    from phcpy.phcpy2c import py2c_factor_number_of_dobldobl_components
-    from phcpy.phcpy2c import py2c_factor_witness_points_of_dobldobl_component
-    from phcpy.phcpy2c import py2c_factor_dobldobl_trace_sum_difference as dtf
+    from phcpy.phcpy2c3 import py2c_factor_number_of_dobldobl_components
+    from phcpy.phcpy2c3 import py2c_factor_witness_points_of_dobldobl_component
+    from phcpy.phcpy2c3 import py2c_factor_dobldobl_trace_sum_difference as dtf
     nbcmp = py2c_factor_number_of_dobldobl_components()
     result = []
     for i in range(1, nbcmp+1):
@@ -507,9 +507,9 @@ def quaddobl_decomposition(deg):
     Returns the decomposition as a list of labels of witness points
     on the components, computed in quad double precision.
     """
-    from phcpy.phcpy2c import py2c_factor_number_of_quaddobl_components
-    from phcpy.phcpy2c import py2c_factor_witness_points_of_quaddobl_component
-    from phcpy.phcpy2c import py2c_factor_quaddobl_trace_sum_difference as qtf
+    from phcpy.phcpy2c3 import py2c_factor_number_of_quaddobl_components
+    from phcpy.phcpy2c3 import py2c_factor_witness_points_of_quaddobl_component
+    from phcpy.phcpy2c3 import py2c_factor_quaddobl_trace_sum_difference as qtf
     nbcmp = py2c_factor_number_of_quaddobl_components()
     result = []
     for i in range(1, nbcmp+1):
@@ -543,24 +543,24 @@ def standard_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     If nbloops equals zero, then the user is prompted to give
     the maximum number of loops.
     """
-    from phcpy.phcpy2c import py2c_factor_set_standard_to_mute
-    from phcpy.phcpy2c import py2c_factor_set_standard_to_verbose
-    from phcpy.phcpy2c import py2c_factor_standard_assign_labels
-    from phcpy.phcpy2c import py2c_factor_initialize_standard_monodromy
-    from phcpy.phcpy2c import py2c_factor_initialize_standard_sampler
-    from phcpy.phcpy2c import py2c_factor_standard_trace_grid_diagnostics
-    from phcpy.phcpy2c import py2c_factor_set_standard_trace_slice
-    from phcpy.phcpy2c import py2c_factor_store_standard_gammas
-    from phcpy.phcpy2c import py2c_factor_standard_track_paths
-    from phcpy.phcpy2c import py2c_factor_store_standard_solutions
-    from phcpy.phcpy2c import py2c_factor_restore_standard_solutions
-    from phcpy.phcpy2c import py2c_factor_new_standard_slices
-    from phcpy.phcpy2c import py2c_factor_swap_standard_slices
-    from phcpy.phcpy2c import py2c_factor_permutation_after_standard_loop
-    from phcpy.phcpy2c import py2c_factor_number_of_standard_components
-    from phcpy.phcpy2c import py2c_factor_update_standard_decomposition
-    from phcpy.phcpy2c import py2c_solcon_write_standard_solutions
-    from phcpy.phcpy2c import py2c_solcon_clear_standard_solutions
+    from phcpy.phcpy2c3 import py2c_factor_set_standard_to_mute
+    from phcpy.phcpy2c3 import py2c_factor_set_standard_to_verbose
+    from phcpy.phcpy2c3 import py2c_factor_standard_assign_labels
+    from phcpy.phcpy2c3 import py2c_factor_initialize_standard_monodromy
+    from phcpy.phcpy2c3 import py2c_factor_initialize_standard_sampler
+    from phcpy.phcpy2c3 import py2c_factor_standard_trace_grid_diagnostics
+    from phcpy.phcpy2c3 import py2c_factor_set_standard_trace_slice
+    from phcpy.phcpy2c3 import py2c_factor_store_standard_gammas
+    from phcpy.phcpy2c3 import py2c_factor_standard_track_paths
+    from phcpy.phcpy2c3 import py2c_factor_store_standard_solutions
+    from phcpy.phcpy2c3 import py2c_factor_restore_standard_solutions
+    from phcpy.phcpy2c3 import py2c_factor_new_standard_slices
+    from phcpy.phcpy2c3 import py2c_factor_swap_standard_slices
+    from phcpy.phcpy2c3 import py2c_factor_permutation_after_standard_loop
+    from phcpy.phcpy2c3 import py2c_factor_number_of_standard_components
+    from phcpy.phcpy2c3 import py2c_factor_update_standard_decomposition
+    from phcpy.phcpy2c3 import py2c_solcon_write_standard_solutions
+    from phcpy.phcpy2c3 import py2c_solcon_clear_standard_solutions
     from phcpy.interface import store_standard_solutions
     if(verbose):
         print('... applying monodromy factorization with standard doubles ...')
@@ -628,24 +628,24 @@ def dobldobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     If nbloops equals zero, then the user is prompted to give
     the maximum number of loops.
     """
-    from phcpy.phcpy2c import py2c_factor_set_dobldobl_to_mute
-    from phcpy.phcpy2c import py2c_factor_set_dobldobl_to_verbose
-    from phcpy.phcpy2c import py2c_factor_dobldobl_assign_labels
-    from phcpy.phcpy2c import py2c_factor_initialize_dobldobl_monodromy
-    from phcpy.phcpy2c import py2c_factor_initialize_dobldobl_sampler
-    from phcpy.phcpy2c import py2c_factor_dobldobl_trace_grid_diagnostics
-    from phcpy.phcpy2c import py2c_factor_set_dobldobl_trace_slice
-    from phcpy.phcpy2c import py2c_factor_store_dobldobl_gammas
-    from phcpy.phcpy2c import py2c_factor_dobldobl_track_paths
-    from phcpy.phcpy2c import py2c_factor_store_dobldobl_solutions
-    from phcpy.phcpy2c import py2c_factor_restore_dobldobl_solutions
-    from phcpy.phcpy2c import py2c_factor_new_dobldobl_slices
-    from phcpy.phcpy2c import py2c_factor_swap_dobldobl_slices
-    from phcpy.phcpy2c import py2c_factor_permutation_after_dobldobl_loop
-    from phcpy.phcpy2c import py2c_factor_number_of_dobldobl_components
-    from phcpy.phcpy2c import py2c_factor_update_dobldobl_decomposition
-    from phcpy.phcpy2c import py2c_solcon_write_dobldobl_solutions
-    from phcpy.phcpy2c import py2c_solcon_clear_dobldobl_solutions
+    from phcpy.phcpy2c3 import py2c_factor_set_dobldobl_to_mute
+    from phcpy.phcpy2c3 import py2c_factor_set_dobldobl_to_verbose
+    from phcpy.phcpy2c3 import py2c_factor_dobldobl_assign_labels
+    from phcpy.phcpy2c3 import py2c_factor_initialize_dobldobl_monodromy
+    from phcpy.phcpy2c3 import py2c_factor_initialize_dobldobl_sampler
+    from phcpy.phcpy2c3 import py2c_factor_dobldobl_trace_grid_diagnostics
+    from phcpy.phcpy2c3 import py2c_factor_set_dobldobl_trace_slice
+    from phcpy.phcpy2c3 import py2c_factor_store_dobldobl_gammas
+    from phcpy.phcpy2c3 import py2c_factor_dobldobl_track_paths
+    from phcpy.phcpy2c3 import py2c_factor_store_dobldobl_solutions
+    from phcpy.phcpy2c3 import py2c_factor_restore_dobldobl_solutions
+    from phcpy.phcpy2c3 import py2c_factor_new_dobldobl_slices
+    from phcpy.phcpy2c3 import py2c_factor_swap_dobldobl_slices
+    from phcpy.phcpy2c3 import py2c_factor_permutation_after_dobldobl_loop
+    from phcpy.phcpy2c3 import py2c_factor_number_of_dobldobl_components
+    from phcpy.phcpy2c3 import py2c_factor_update_dobldobl_decomposition
+    from phcpy.phcpy2c3 import py2c_solcon_write_dobldobl_solutions
+    from phcpy.phcpy2c3 import py2c_solcon_clear_dobldobl_solutions
     from phcpy.interface import store_dobldobl_solutions
     if(verbose):
         print('... applying monodromy factorization with double doubles ...')
@@ -713,24 +713,24 @@ def quaddobl_monodromy_breakup(embsys, esols, dim, verbose=True, nbloops=0):
     If nbloops equals zero, then the user is prompted to give
     the maximum number of loops.
     """
-    from phcpy.phcpy2c import py2c_factor_set_quaddobl_to_mute
-    from phcpy.phcpy2c import py2c_factor_set_quaddobl_to_verbose
-    from phcpy.phcpy2c import py2c_factor_quaddobl_assign_labels
-    from phcpy.phcpy2c import py2c_factor_initialize_quaddobl_monodromy
-    from phcpy.phcpy2c import py2c_factor_initialize_quaddobl_sampler
-    from phcpy.phcpy2c import py2c_factor_quaddobl_trace_grid_diagnostics
-    from phcpy.phcpy2c import py2c_factor_set_quaddobl_trace_slice
-    from phcpy.phcpy2c import py2c_factor_store_quaddobl_gammas
-    from phcpy.phcpy2c import py2c_factor_quaddobl_track_paths
-    from phcpy.phcpy2c import py2c_factor_store_quaddobl_solutions
-    from phcpy.phcpy2c import py2c_factor_restore_quaddobl_solutions
-    from phcpy.phcpy2c import py2c_factor_new_quaddobl_slices
-    from phcpy.phcpy2c import py2c_factor_swap_quaddobl_slices
-    from phcpy.phcpy2c import py2c_factor_permutation_after_quaddobl_loop
-    from phcpy.phcpy2c import py2c_factor_number_of_quaddobl_components
-    from phcpy.phcpy2c import py2c_factor_update_quaddobl_decomposition
-    from phcpy.phcpy2c import py2c_solcon_write_quaddobl_solutions
-    from phcpy.phcpy2c import py2c_solcon_clear_quaddobl_solutions
+    from phcpy.phcpy2c3 import py2c_factor_set_quaddobl_to_mute
+    from phcpy.phcpy2c3 import py2c_factor_set_quaddobl_to_verbose
+    from phcpy.phcpy2c3 import py2c_factor_quaddobl_assign_labels
+    from phcpy.phcpy2c3 import py2c_factor_initialize_quaddobl_monodromy
+    from phcpy.phcpy2c3 import py2c_factor_initialize_quaddobl_sampler
+    from phcpy.phcpy2c3 import py2c_factor_quaddobl_trace_grid_diagnostics
+    from phcpy.phcpy2c3 import py2c_factor_set_quaddobl_trace_slice
+    from phcpy.phcpy2c3 import py2c_factor_store_quaddobl_gammas
+    from phcpy.phcpy2c3 import py2c_factor_quaddobl_track_paths
+    from phcpy.phcpy2c3 import py2c_factor_store_quaddobl_solutions
+    from phcpy.phcpy2c3 import py2c_factor_restore_quaddobl_solutions
+    from phcpy.phcpy2c3 import py2c_factor_new_quaddobl_slices
+    from phcpy.phcpy2c3 import py2c_factor_swap_quaddobl_slices
+    from phcpy.phcpy2c3 import py2c_factor_permutation_after_quaddobl_loop
+    from phcpy.phcpy2c3 import py2c_factor_number_of_quaddobl_components
+    from phcpy.phcpy2c3 import py2c_factor_update_quaddobl_decomposition
+    from phcpy.phcpy2c3 import py2c_solcon_write_quaddobl_solutions
+    from phcpy.phcpy2c3 import py2c_solcon_clear_quaddobl_solutions
     from phcpy.interface import store_quaddobl_solutions
     if(verbose):
         print('... applying monodromy factorization with quad doubles ...')
@@ -866,14 +866,14 @@ def standard_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
     """
     from phcpy.interface import store_standard_system as storesys
     from phcpy.interface import store_standard_solutions as storesols
-    from phcpy.phcpy2c import py2c_copy_standard_container_to_target_system
-    from phcpy.phcpy2c import py2c_copy_standard_container_to_target_solutions
-    from phcpy.phcpy2c import py2c_copy_standard_container_to_start_system
-    from phcpy.phcpy2c import py2c_copy_standard_container_to_start_solutions
-    from phcpy.phcpy2c import py2c_standard_diagonal_homotopy
-    from phcpy.phcpy2c import py2c_syscon_number_of_symbols
-    from phcpy.phcpy2c import py2c_syscon_string_of_symbols
-    from phcpy.phcpy2c import py2c_diagonal_symbols_doubler
+    from phcpy.phcpy2c3 import py2c_copy_standard_container_to_target_system
+    from phcpy.phcpy2c3 import py2c_copy_standard_container_to_target_solutions
+    from phcpy.phcpy2c3 import py2c_copy_standard_container_to_start_system
+    from phcpy.phcpy2c3 import py2c_copy_standard_container_to_start_solutions
+    from phcpy.phcpy2c3 import py2c_standard_diagonal_homotopy
+    from phcpy.phcpy2c3 import py2c_syscon_number_of_symbols
+    from phcpy.phcpy2c3 import py2c_syscon_string_of_symbols
+    from phcpy.phcpy2c3 import py2c_diagonal_symbols_doubler
     storesys(sys1)
     symbols = py2c_syscon_string_of_symbols()
     nbsymbs = py2c_syscon_number_of_symbols()
@@ -910,14 +910,14 @@ def dobldobl_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
     """
     from phcpy.interface import store_dobldobl_system as storesys
     from phcpy.interface import store_dobldobl_solutions as storesols
-    from phcpy.phcpy2c import py2c_copy_dobldobl_container_to_target_system
-    from phcpy.phcpy2c import py2c_copy_dobldobl_container_to_target_solutions
-    from phcpy.phcpy2c import py2c_copy_dobldobl_container_to_start_system
-    from phcpy.phcpy2c import py2c_copy_dobldobl_container_to_start_solutions
-    from phcpy.phcpy2c import py2c_dobldobl_diagonal_homotopy
-    from phcpy.phcpy2c import py2c_syscon_number_of_symbols
-    from phcpy.phcpy2c import py2c_syscon_string_of_symbols
-    from phcpy.phcpy2c import py2c_diagonal_symbols_doubler
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_container_to_target_system
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_container_to_target_solutions
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_container_to_start_system
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_container_to_start_solutions
+    from phcpy.phcpy2c3 import py2c_dobldobl_diagonal_homotopy
+    from phcpy.phcpy2c3 import py2c_syscon_number_of_symbols
+    from phcpy.phcpy2c3 import py2c_syscon_string_of_symbols
+    from phcpy.phcpy2c3 import py2c_diagonal_symbols_doubler
     storesys(sys1)
     symbols = py2c_syscon_string_of_symbols()
     nbsymbs = py2c_syscon_number_of_symbols()
@@ -954,14 +954,14 @@ def quaddobl_diagonal_homotopy(dim1, sys1, esols1, dim2, sys2, esols2):
     """
     from phcpy.interface import store_quaddobl_system as storesys
     from phcpy.interface import store_quaddobl_solutions as storesols
-    from phcpy.phcpy2c import py2c_copy_quaddobl_container_to_target_system
-    from phcpy.phcpy2c import py2c_copy_quaddobl_container_to_target_solutions
-    from phcpy.phcpy2c import py2c_copy_quaddobl_container_to_start_system
-    from phcpy.phcpy2c import py2c_copy_quaddobl_container_to_start_solutions
-    from phcpy.phcpy2c import py2c_quaddobl_diagonal_homotopy
-    from phcpy.phcpy2c import py2c_syscon_number_of_symbols
-    from phcpy.phcpy2c import py2c_syscon_string_of_symbols
-    from phcpy.phcpy2c import py2c_diagonal_symbols_doubler
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_container_to_target_system
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_container_to_target_solutions
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_container_to_start_system
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_container_to_start_solutions
+    from phcpy.phcpy2c3 import py2c_quaddobl_diagonal_homotopy
+    from phcpy.phcpy2c3 import py2c_syscon_number_of_symbols
+    from phcpy.phcpy2c3 import py2c_syscon_string_of_symbols
+    from phcpy.phcpy2c3 import py2c_diagonal_symbols_doubler
     storesys(sys1)
     symbols = py2c_syscon_string_of_symbols()
     nbsymbs = py2c_syscon_number_of_symbols()
@@ -995,7 +995,7 @@ def standard_diagonal_cascade_solutions(dim1, dim2):
     of dimension dim2, in standard double precision.  For this to work,
     standard_diagonal_homotopy must have been executed successfully.
     """
-    from phcpy.phcpy2c import py2c_standard_diagonal_cascade_solutions
+    from phcpy.phcpy2c3 import py2c_standard_diagonal_cascade_solutions
     if(dim1 >= dim2):
         py2c_standard_diagonal_cascade_solutions(dim1, dim2)
     else:
@@ -1008,7 +1008,7 @@ def dobldobl_diagonal_cascade_solutions(dim1, dim2):
     of dimension dim2, in double double precision.  For this to work,
     dobldobl_diagonal_homotopy must have been executed successfully.
     """
-    from phcpy.phcpy2c import py2c_dobldobl_diagonal_cascade_solutions
+    from phcpy.phcpy2c3 import py2c_dobldobl_diagonal_cascade_solutions
     if(dim1 >= dim2):
         py2c_dobldobl_diagonal_cascade_solutions(dim1, dim2)
     else:
@@ -1021,7 +1021,7 @@ def quaddobl_diagonal_cascade_solutions(dim1, dim2):
     of dimension dim2, in quad double precision.  For this to work,
     quaddobl_diagonal_homotopy must have been executed successfully.
     """
-    from phcpy.phcpy2c import py2c_quaddobl_diagonal_cascade_solutions
+    from phcpy.phcpy2c3 import py2c_quaddobl_diagonal_cascade_solutions
     if(dim1 >= dim2):
         py2c_quaddobl_diagonal_cascade_solutions(dim1, dim2)
     else:
@@ -1037,13 +1037,13 @@ def standard_start_diagonal_cascade(gamma=0, tasks=0):
     Multitasking is available, and activated by the tasks parameter.
     Returns the target (system and its corresponding) solutions.
     """
-    from phcpy.phcpy2c import py2c_create_standard_homotopy
-    from phcpy.phcpy2c import py2c_create_standard_homotopy_with_gamma
-    from phcpy.phcpy2c import py2c_solve_by_standard_homotopy_continuation
-    from phcpy.phcpy2c import py2c_solcon_clear_standard_solutions
-    from phcpy.phcpy2c import py2c_syscon_clear_standard_system
-    from phcpy.phcpy2c import py2c_copy_standard_target_solutions_to_container
-    from phcpy.phcpy2c import py2c_copy_standard_target_system_to_container
+    from phcpy.phcpy2c3 import py2c_create_standard_homotopy
+    from phcpy.phcpy2c3 import py2c_create_standard_homotopy_with_gamma
+    from phcpy.phcpy2c3 import py2c_solve_by_standard_homotopy_continuation
+    from phcpy.phcpy2c3 import py2c_solcon_clear_standard_solutions
+    from phcpy.phcpy2c3 import py2c_syscon_clear_standard_system
+    from phcpy.phcpy2c3 import py2c_copy_standard_target_solutions_to_container
+    from phcpy.phcpy2c3 import py2c_copy_standard_target_system_to_container
     from phcpy.interface import load_standard_solutions
     from phcpy.interface import load_standard_system
     if(gamma == 0):
@@ -1054,7 +1054,7 @@ def standard_start_diagonal_cascade(gamma=0, tasks=0):
     py2c_solcon_clear_standard_solutions()
     py2c_syscon_clear_standard_system()
     py2c_copy_standard_target_solutions_to_container()
-    # from phcpy.phcpy2c import py2c_write_standard_target_system
+    # from phcpy.phcpy2c3 import py2c_write_standard_target_system
     # print 'the standard target system :'
     # py2c_write_standard_target_system()
     py2c_copy_standard_target_system_to_container()
@@ -1072,13 +1072,13 @@ def dobldobl_start_diagonal_cascade(gamma=0, tasks=0):
     Multitasking is available, and activated by the tasks parameter.
     Returns the target (system and its corresponding) solutions.
     """
-    from phcpy.phcpy2c import py2c_create_dobldobl_homotopy
-    from phcpy.phcpy2c import py2c_create_dobldobl_homotopy_with_gamma
-    from phcpy.phcpy2c import py2c_solve_by_dobldobl_homotopy_continuation
-    from phcpy.phcpy2c import py2c_solcon_clear_dobldobl_solutions
-    from phcpy.phcpy2c import py2c_syscon_clear_dobldobl_system
-    from phcpy.phcpy2c import py2c_copy_dobldobl_target_solutions_to_container
-    from phcpy.phcpy2c import py2c_copy_dobldobl_target_system_to_container
+    from phcpy.phcpy2c3 import py2c_create_dobldobl_homotopy
+    from phcpy.phcpy2c3 import py2c_create_dobldobl_homotopy_with_gamma
+    from phcpy.phcpy2c3 import py2c_solve_by_dobldobl_homotopy_continuation
+    from phcpy.phcpy2c3 import py2c_solcon_clear_dobldobl_solutions
+    from phcpy.phcpy2c3 import py2c_syscon_clear_dobldobl_system
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_target_solutions_to_container
+    from phcpy.phcpy2c3 import py2c_copy_dobldobl_target_system_to_container
     from phcpy.interface import load_dobldobl_solutions
     from phcpy.interface import load_dobldobl_system
     if(gamma == 0):
@@ -1089,7 +1089,7 @@ def dobldobl_start_diagonal_cascade(gamma=0, tasks=0):
     py2c_solcon_clear_dobldobl_solutions()
     py2c_syscon_clear_dobldobl_system()
     py2c_copy_dobldobl_target_solutions_to_container()
-    # from phcpy.phcpy2c import py2c_write_dobldobl_target_system
+    # from phcpy.phcpy2c3 import py2c_write_dobldobl_target_system
     # print 'the dobldobl target system :'
     # py2c_write_dobldobl_target_system()
     py2c_copy_dobldobl_target_system_to_container()
@@ -1107,13 +1107,13 @@ def quaddobl_start_diagonal_cascade(gamma=0, tasks=0):
     Multitasking is available, and is activated by the tasks parameter.
     Returns the target (system and its corresponding) solutions.
     """
-    from phcpy.phcpy2c import py2c_create_quaddobl_homotopy
-    from phcpy.phcpy2c import py2c_create_quaddobl_homotopy_with_gamma
-    from phcpy.phcpy2c import py2c_solve_by_quaddobl_homotopy_continuation
-    from phcpy.phcpy2c import py2c_solcon_clear_quaddobl_solutions
-    from phcpy.phcpy2c import py2c_syscon_clear_quaddobl_system
-    from phcpy.phcpy2c import py2c_copy_quaddobl_target_solutions_to_container
-    from phcpy.phcpy2c import py2c_copy_quaddobl_target_system_to_container
+    from phcpy.phcpy2c3 import py2c_create_quaddobl_homotopy
+    from phcpy.phcpy2c3 import py2c_create_quaddobl_homotopy_with_gamma
+    from phcpy.phcpy2c3 import py2c_solve_by_quaddobl_homotopy_continuation
+    from phcpy.phcpy2c3 import py2c_solcon_clear_quaddobl_solutions
+    from phcpy.phcpy2c3 import py2c_syscon_clear_quaddobl_system
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_target_solutions_to_container
+    from phcpy.phcpy2c3 import py2c_copy_quaddobl_target_system_to_container
     from phcpy.interface import load_quaddobl_solutions
     from phcpy.interface import load_quaddobl_system
     if(gamma == 0):
@@ -1124,7 +1124,7 @@ def quaddobl_start_diagonal_cascade(gamma=0, tasks=0):
     py2c_solcon_clear_quaddobl_solutions()
     py2c_syscon_clear_quaddobl_system()
     py2c_copy_quaddobl_target_solutions_to_container()
-    # from phcpy.phcpy2c import py2c_write_quaddobl_target_system
+    # from phcpy.phcpy2c3 import py2c_write_quaddobl_target_system
     # print 'the quaddobl target system :'
     # py2c_write_quaddobl_target_system()
     py2c_copy_quaddobl_target_system_to_container()
@@ -1141,11 +1141,11 @@ def standard_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
     Multitasking is available, and is activated by the tasks parameter.
     Returns the last system in the cascade and its solutions.
     """
-    from phcpy.phcpy2c import py2c_standard_collapse_diagonal
+    from phcpy.phcpy2c3 import py2c_standard_collapse_diagonal
     from phcpy.interface import store_standard_solutions as storesols
     from phcpy.interface import load_standard_solutions as loadsols
     from phcpy.interface import load_standard_system as loadsys
-    from phcpy.phcpy2c import py2c_extrinsic_top_diagonal_dimension
+    from phcpy.phcpy2c3 import py2c_extrinsic_top_diagonal_dimension
     topdim = py2c_extrinsic_top_diagonal_dimension(dim+dm1, dim+dm2, dm1, dm2)
     print('the top dimension :', topdim)
     standard_diagonal_homotopy(dm1, sys1, sols1, dm2, sys2, sols2)
@@ -1177,11 +1177,11 @@ def dobldobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
     Multitasking is available, and is activated by the tasks parameter.
     Returns the last system in the cascade and its solutions.
     """
-    from phcpy.phcpy2c import py2c_dobldobl_collapse_diagonal
+    from phcpy.phcpy2c3 import py2c_dobldobl_collapse_diagonal
     from phcpy.interface import store_dobldobl_solutions as storesols
     from phcpy.interface import load_dobldobl_solutions as loadsols
     from phcpy.interface import load_dobldobl_system as loadsys
-    from phcpy.phcpy2c import py2c_extrinsic_top_diagonal_dimension
+    from phcpy.phcpy2c3 import py2c_extrinsic_top_diagonal_dimension
     topdim = py2c_extrinsic_top_diagonal_dimension(dim+dm1, dim+dm2, dm1, dm2)
     print('the top dimension :', topdim)
     dobldobl_diagonal_homotopy(dm1, sys1, sols1, dm2, sys2, sols2)
@@ -1213,11 +1213,11 @@ def quaddobl_diagonal_solver(dim, dm1, sys1, sols1, dm2, sys2, sols2, tasks=0):
     Multitasking is available, and is activated by the tasks parameter.
     Returns the last system in the cascade and its solutions.
     """
-    from phcpy.phcpy2c import py2c_quaddobl_collapse_diagonal
+    from phcpy.phcpy2c3 import py2c_quaddobl_collapse_diagonal
     from phcpy.interface import store_quaddobl_solutions as storesols
     from phcpy.interface import load_quaddobl_solutions as loadsols
     from phcpy.interface import load_quaddobl_system as loadsys
-    from phcpy.phcpy2c import py2c_extrinsic_top_diagonal_dimension
+    from phcpy.phcpy2c3 import py2c_extrinsic_top_diagonal_dimension
     topdim = py2c_extrinsic_top_diagonal_dimension(dim+dm1, dim+dm2, dm1, dm2)
     print('the top dimension :', topdim)
     quaddobl_diagonal_homotopy(dm1, sys1, sols1, dm2, sys2, sols2)
@@ -1295,7 +1295,7 @@ def test():
     """
     Runs a test on algebraic sets.
     """
-    from phcpy.phcpy2c import py2c_set_seed
+    from phcpy.phcpy2c3 import py2c_set_seed
     py2c_set_seed(234798272)
     # test_cascade()
     # test_monodromy()

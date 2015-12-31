@@ -152,9 +152,9 @@ def pieri_problem(mdim, pdim, real=True):
     Frank Sottile: Real Solutions to Equations from Geometry,
     volume 57 of University Lecture Series, AMS, 2011.
     """
-    from .schubert import make_pieri_system
-    from .schubert import real_osculating_planes
-    from .schubert import random_complex_matrices
+    from phcpy.schubert import make_pieri_system
+    from phcpy.schubert import real_osculating_planes
+    from phcpy.schubert import random_complex_matrices
     if real:
         planes = real_osculating_planes(mdim, pdim, 0)
     else:

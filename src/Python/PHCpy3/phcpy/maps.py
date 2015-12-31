@@ -9,8 +9,8 @@ def is_binomial_system(silent=True):
     if not silent, then the number of terms in each Laurent
     polynomial is written to screen.
     """
-    from phcpy2c import py2c_syscon_number_of_standard_Laurentials
-    from phcpy2c import py2c_syscon_number_of_Laurent_terms
+    from phcpy.phcpy2c3 import py2c_syscon_number_of_standard_Laurentials
+    from phcpy.phcpy2c3 import py2c_syscon_number_of_Laurent_terms
     nbequ = py2c_syscon_number_of_standard_Laurentials()
     if not silent:
         print('checking if binomial system ...')
@@ -32,9 +32,10 @@ def store_laurent_system(nbvar, pols):
     Given in pols a list of string representing Laurent polynomials
     into the systems container.  The number of variables equals nbvar.
     """
-    from phcpy2c import py2c_syscon_clear_standard_Laurent_system
-    from phcpy2c import py2c_syscon_initialize_number_of_standard_Laurentials
-    from phcpy2c import py2c_syscon_store_standard_Laurential
+    from phcpy.phcpy2c3 import py2c_syscon_clear_standard_Laurent_system
+    from phcpy.phcpy2c3 \
+        import py2c_syscon_initialize_number_of_standard_Laurentials
+    from phcpy.phcpy2c3 import py2c_syscon_store_standard_Laurential
     py2c_syscon_clear_standard_Laurent_system()
     nbequ = len(pols)
     py2c_syscon_initialize_number_of_standard_Laurentials(nbequ)
@@ -50,9 +51,9 @@ def monomial_map_strings(dim, ind, nbvar):
     the monomial map of dimension dim, with index ind, and
     where the number of variables equals nbvar.
     """
-    from phcpy2c import py2c_mapcon_coefficients_of_map
-    from phcpy2c import py2c_mapcon_exponents_of_map
-    from phcpy2c import py2c_syscon_string_of_symbols
+    from phcpy.phcpy2c3 import py2c_mapcon_coefficients_of_map
+    from phcpy.phcpy2c3 import py2c_mapcon_exponents_of_map
+    from phcpy.phcpy2c3 import py2c_syscon_string_of_symbols
     sym = py2c_syscon_string_of_symbols()
     symvars = sym.split(' ')
     # py2c_mapcon_write_maps may have inserted t-varables
@@ -96,9 +97,9 @@ def monomial_map_solutions(nbvar, with_degree=True):
     stored in the container.
     The number of variables equals nbvar.
     """
-    from phcpy2c import py2c_mapcon_top_dimension
-    from phcpy2c import py2c_mapcon_number_of_maps
-    from phcpy2c import py2c_mapcon_degree_of_map
+    from phcpy.phcpy2c3 import py2c_mapcon_top_dimension
+    from phcpy.phcpy2c3 import py2c_mapcon_number_of_maps
+    from phcpy.phcpy2c3 import py2c_mapcon_degree_of_map
     result = []
     topdim = py2c_mapcon_top_dimension()
     for dim in range(topdim, -1, -1):
@@ -116,9 +117,9 @@ def write_monomial_maps(nbvar):
     """
     Writes the maps stored in the container.
     """
-    from phcpy2c import py2c_mapcon_top_dimension
-    from phcpy2c import py2c_mapcon_number_of_maps
-    from phcpy2c import py2c_mapcon_degree_of_map
+    from phcpy.phcpy2c3 import py2c_mapcon_top_dimension
+    from phcpy.phcpy2c3 import py2c_mapcon_number_of_maps
+    from phcpy.phcpy2c3 import py2c_mapcon_degree_of_map
     topdim = py2c_mapcon_top_dimension()
     print('the top dimension :', topdim)
     for dim in range(topdim, -1, -1):
@@ -143,10 +144,10 @@ def solve_binomials(nbvar, pols, silent=True, puretopdim=False):
     The expected top dimension equals the number of variables minus
     the number of equations.
     """
-    from phcpy2c import py2c_syscon_write_standard_Laurent_system
-    from phcpy2c import py2c_mapcon_solve_system
-    from phcpy2c import py2c_mapcon_write_maps
-    from phcpy2c import py2c_mapcon_clear_maps
+    from phcpy.phcpy2c3 import py2c_syscon_write_standard_Laurent_system
+    from phcpy.phcpy2c3 import py2c_mapcon_solve_system
+    from phcpy.phcpy2c3 import py2c_mapcon_write_maps
+    from phcpy.phcpy2c3 import py2c_mapcon_clear_maps
     store_laurent_system(nbvar, pols)
     if not silent:
         print('the polynomials on input :')

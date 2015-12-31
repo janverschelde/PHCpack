@@ -24,10 +24,10 @@ def support(nvr, pol):
     representation of a polynomial in nvr variables,
     returns the support of the polynomial as a list of tuples.
     """
-    from phcpy.phcpy2c import py2c_syscon_clear_standard_Laurent_system
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c3 import py2c_syscon_clear_standard_Laurent_system
+    from phcpy.phcpy2c3 \
     import py2c_syscon_initialize_number_of_standard_Laurentials
-    from phcpy.phcpy2c import py2c_syscon_store_standard_Laurential
+    from phcpy.phcpy2c3 import py2c_syscon_store_standard_Laurential
     py2c_syscon_clear_standard_Laurent_system()
     py2c_syscon_initialize_number_of_standard_Laurentials(nvr)
     nchar = len(pol)
@@ -35,10 +35,10 @@ def support(nvr, pol):
     if(fail != 0):
         return fail
     else:
-        # from phcpy.phcpy2c import py2c_syscon_number_of_Laurent_terms
-        from phcpy.phcpy2c import py2c_giftwrap_support_size
-        from phcpy.phcpy2c import py2c_giftwrap_support_string
-        from phcpy.phcpy2c import py2c_giftwrap_clear_support_string
+        # from phcpy.phcpy2c3 import py2c_syscon_number_of_Laurent_terms
+        from phcpy.phcpy2c3 import py2c_giftwrap_support_size
+        from phcpy.phcpy2c3 import py2c_giftwrap_support_string
+        from phcpy.phcpy2c3 import py2c_giftwrap_clear_support_string
         # ntm = py2c_syscon_number_of_Laurent_terms(1)
         # print 'number of terms : %d' % ntm
         size = py2c_giftwrap_support_size()
@@ -54,12 +54,12 @@ def initial_form(pols, normal):
     Returns the initial form of the polynomials in pols
     with respect to the inner normal with coordinates in normal.
     """
-    from phcpy.phcpy2c import py2c_syscon_clear_standard_Laurent_system
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c3 import py2c_syscon_clear_standard_Laurent_system
+    from phcpy.phcpy2c3 \
     import py2c_syscon_initialize_number_of_standard_Laurentials
-    from phcpy.phcpy2c import py2c_syscon_store_standard_Laurential
-    from phcpy.phcpy2c import py2c_syscon_load_standard_Laurential
-    from phcpy.phcpy2c import py2c_giftwrap_initial_form
+    from phcpy.phcpy2c3 import py2c_syscon_store_standard_Laurential
+    from phcpy.phcpy2c3 import py2c_syscon_load_standard_Laurential
+    from phcpy.phcpy2c3 import py2c_giftwrap_initial_form
     py2c_syscon_clear_standard_Laurent_system()
     dim = max(len(pols), len(normal))
     py2c_syscon_initialize_number_of_standard_Laurentials(dim)
@@ -234,7 +234,7 @@ def planar_convex_hull(points, checkin=True, checkout=True):
         if not convex_hull_checkin(2, points):
             print('the input is not correct')
             return None
-    from phcpy.phcpy2c import py2c_giftwrap_planar
+    from phcpy.phcpy2c3 import py2c_giftwrap_planar
     strpoints = str(points)
     strhull = py2c_giftwrap_planar(len(strpoints), strpoints)
     hull = eval(strhull)
@@ -252,9 +252,9 @@ def convex_hull(dim, points, checkin=True, checkout=True):
     if checkin:
         if not convex_hull_checkin(dim, points):
             return None
-    from phcpy.phcpy2c import py2c_giftwrap_convex_hull
-    from phcpy.phcpy2c import py2c_giftwrap_number_of_facets
-    from phcpy.phcpy2c import py2c_giftwrap_retrieve_facet
+    from phcpy.phcpy2c3 import py2c_giftwrap_convex_hull
+    from phcpy.phcpy2c3 import py2c_giftwrap_number_of_facets
+    from phcpy.phcpy2c3 import py2c_giftwrap_retrieve_facet
     strpoints = str(points)
     fail = py2c_giftwrap_convex_hull(len(strpoints), strpoints)
     nbrfacets = py2c_giftwrap_number_of_facets(dim)
@@ -265,10 +265,10 @@ def convex_hull(dim, points, checkin=True, checkout=True):
         facet = eval(strfacet)
         result.append(facet)
     if(dim == 3):
-        from phcpy.phcpy2c import py2c_giftwrap_clear_3d_facets
+        from phcpy.phcpy2c3 import py2c_giftwrap_clear_3d_facets
         fail = py2c_giftwrap_clear_3d_facets()
     if(dim == 4):
-        from phcpy.phcpy2c import py2c_giftwrap_clear_4d_facets
+        from phcpy.phcpy2c3 import py2c_giftwrap_clear_4d_facets
         fail = py2c_giftwrap_clear_4d_facets()
     if checkout:
         if not convex_hull_checkout(dim, points, result):
@@ -286,10 +286,10 @@ def mixed_volume(mixture, points):
     of the unknowns in the Minkowski polynomial of which the computed
     mixed volume is its coefficient.
     """
-    from phcpy.phcpy2c import py2c_celcon_initialize_supports as init
-    from phcpy.phcpy2c import py2c_celcon_set_type_of_mixture as setmix
-    from phcpy.phcpy2c import py2c_celcon_append_lifted_point as applft
-    from phcpy.phcpy2c import py2c_celcon_mixed_volume_of_supports as mixvol
+    from phcpy.phcpy2c3 import py2c_celcon_initialize_supports as init
+    from phcpy.phcpy2c3 import py2c_celcon_set_type_of_mixture as setmix
+    from phcpy.phcpy2c3 import py2c_celcon_append_lifted_point as applft
+    from phcpy.phcpy2c3 import py2c_celcon_mixed_volume_of_supports as mixvol
     nbr = len(mixture)
     init(nbr)
     setmix(nbr, str(mixture))

@@ -62,7 +62,7 @@ def random_system(dim, nbrmon, deg, cff):
     if 2, then coefficients are floats in [-1,+1].
     """
     from phcpy.phcpy2c3 import py2c_syscon_random_system
-    from .interface import load_standard_system
+    from phcpy.interface import load_standard_system
     py2c_syscon_random_system(dim, nbrmon, deg, cff)
     return load_standard_system()
 
@@ -106,7 +106,7 @@ def dobldobl_solve(pols, silent=False, tasks=0):
     from phcpy.phcpy2c3 import py2c_syscon_store_dobldobl_Laurential
     from phcpy.phcpy2c3 import py2c_solcon_clear_dobldobl_solutions
     from phcpy.phcpy2c3 import py2c_solve_dobldobl_Laurent_system
-    from .interface import load_dobldobl_solutions
+    from phcpy.interface import load_dobldobl_solutions
     py2c_syscon_clear_dobldobl_Laurent_system()
     py2c_solcon_clear_dobldobl_solutions()
     dim = len(pols)
@@ -176,32 +176,36 @@ def newton_step(system, solutions, precision='d', decimals=100):
     in the working precision is determined by decimals.
     """
     if(precision == 'd'):
-        from .interface import store_standard_system
-        from .interface import store_standard_solutions, load_standard_solutions
+        from phcpy.interface import store_standard_system
+        from phcpy.interface import store_standard_solutions
+        from phcpy.interface import load_standard_solutions
         store_standard_system(system)
         store_standard_solutions(len(system), solutions)
         from phcpy.phcpy2c3 import py2c_standard_Newton_step
         py2c_standard_Newton_step()
         result = load_standard_solutions()
     elif(precision == 'dd'):
-        from .interface import store_dobldobl_system
-        from .interface import store_dobldobl_solutions, load_dobldobl_solutions
+        from phcpy.interface import store_dobldobl_system
+        from phcpy.interface import store_dobldobl_solutions
+        from phcpy.interface import load_dobldobl_solutions
         store_dobldobl_system(system)
         store_dobldobl_solutions(len(system), solutions)
         from phcpy.phcpy2c3 import py2c_dobldobl_Newton_step
         py2c_dobldobl_Newton_step()
         result = load_dobldobl_solutions()
     elif(precision == 'qd'):
-        from .interface import store_quaddobl_system
-        from .interface import store_quaddobl_solutions, load_quaddobl_solutions
+        from phcpy.interface import store_quaddobl_system
+        from phcpy.interface import store_quaddobl_solutions
+        from phcpy.interface import load_quaddobl_solutions
         store_quaddobl_system(system)
         store_quaddobl_solutions(len(system), solutions)
         from phcpy.phcpy2c3 import py2c_quaddobl_Newton_step
         py2c_quaddobl_Newton_step()
         result = load_quaddobl_solutions()
     elif(precision == 'mp'):
-        from .interface import store_multprec_system
-        from .interface import store_multprec_solutions, load_multprec_solutions
+        from phcpy.interface import store_multprec_system
+        from phcpy.interface import store_multprec_solutions
+        from phcpy.interface import load_multprec_solutions
         store_multprec_system(system, decimals)
         store_multprec_solutions(len(system), solutions)
         from phcpy.phcpy2c3 import py2c_multprec_Newton_step
@@ -227,32 +231,36 @@ def newton_laurent_step(system, solutions, precision='d', decimals=100):
     in the working precision is determined by decimals.
     """
     if(precision == 'd'):
-        from .interface import store_standard_laurent_system
-        from .interface import store_standard_solutions, load_standard_solutions
+        from phcpy.interface import store_standard_laurent_system
+        from phcpy.interface import store_standard_solutions
+        from phcpy.interface import load_standard_solutions
         store_standard_laurent_system(system)
         store_standard_solutions(len(system), solutions)
         from phcpy.phcpy2c3 import py2c_standard_Newton_Laurent_step
         py2c_standard_Newton_Laurent_step()
         result = load_standard_solutions()
     elif(precision == 'dd'):
-        from .interface import store_dobldobl_laurent_system
-        from .interface import store_dobldobl_solutions, load_dobldobl_solutions
+        from phcpy.interface import store_dobldobl_laurent_system
+        from phcpy.interface import store_dobldobl_solutions
+        from phcpy.interface import load_dobldobl_solutions
         store_dobldobl_laurent_system(system)
         store_dobldobl_solutions(len(system), solutions)
         from phcpy.phcpy2c3 import py2c_dobldobl_Newton_Laurent_step
         py2c_dobldobl_Newton_Laurent_step()
         result = load_dobldobl_solutions()
     elif(precision == 'qd'):
-        from .interface import store_quaddobl_laurent_system
-        from .interface import store_quaddobl_solutions, load_quaddobl_solutions
+        from phcpy.interface import store_quaddobl_laurent_system
+        from phcpy.interface import store_quaddobl_solutions
+        from phcpy.interface import load_quaddobl_solutions
         store_quaddobl_laurent_system(system)
         store_quaddobl_solutions(len(system), solutions)
         from phcpy.phcpy2c3 import py2c_quaddobl_Newton_Laurent_step
         py2c_quaddobl_Newton_Laurent_step()
         result = load_quaddobl_solutions()
     elif(precision == 'mp'):
-        from .interface import store_multprec_laurent_system
-        from .interface import store_multprec_solutions, load_multprec_solutions
+        from phcpy.interface import store_multprec_laurent_system
+        from phcpy.interface import store_multprec_solutions
+        from phcpy.interface import load_multprec_solutions
         store_multprec_laurent_system(system, decimals)
         store_multprec_solutions(len(system), solutions)
         from phcpy.phcpy2c3 import py2c_multprec_Newton_Laurent_step
@@ -298,8 +306,9 @@ def standard_deflate(system, solutions):
     the new approximate solutions are returned.
     """
     from phcpy.phcpy2c3 import py2c_standard_deflate
-    from .interface import store_standard_system
-    from .interface import store_standard_solutions, load_standard_solutions
+    from phcpy.interface import store_standard_system
+    from phcpy.interface import store_standard_solutions
+    from phcpy.interface import load_standard_solutions
     store_standard_system(system)
     store_standard_solutions(len(system), solutions)
     py2c_standard_deflate()
@@ -316,8 +325,9 @@ def dobldobl_deflate(system, solutions):
     the new approximate solutions are returned.
     """
     from phcpy.phcpy2c3 import py2c_dobldobl_deflate
-    from .interface import store_dobldobl_system
-    from .interface import store_dobldobl_solutions, load_dobldobl_solutions
+    from phcpy.interface import store_dobldobl_system
+    from phcpy.interface import store_dobldobl_solutions
+    from phcpy.interface import load_dobldobl_solutions
     store_dobldobl_system(system)
     store_dobldobl_solutions(len(system), solutions)
     py2c_dobldobl_deflate()
@@ -334,8 +344,9 @@ def quaddobl_deflate(system, solutions):
     the new approximate solutions are returned.
     """
     from phcpy.phcpy2c3 import py2c_quaddobl_deflate
-    from .interface import store_quaddobl_system
-    from .interface import store_quaddobl_solutions, load_quaddobl_solutions
+    from phcpy.interface import store_quaddobl_system
+    from phcpy.interface import store_quaddobl_solutions
+    from phcpy.interface import load_quaddobl_solutions
     store_quaddobl_system(system)
     store_quaddobl_solutions(len(system), solutions)
     py2c_quaddobl_deflate()
@@ -350,7 +361,7 @@ def total_degree(pols):
     isolated solutions of the polynomial system.
     """
     from phcpy.phcpy2c3 import py2c_syscon_total_degree
-    from .interface import store_standard_system
+    from phcpy.interface import store_standard_system
     store_standard_system(pols)
     return py2c_syscon_total_degree()
 
@@ -362,7 +373,7 @@ def total_degree_start_system(pols):
     from phcpy.phcpy2c3 import py2c_syscon_number_of_standard_polynomials
     from phcpy.phcpy2c3 import py2c_syscon_string_of_symbols
     from phcpy.phcpy2c3 import py2c_syscon_degree_of_standard_polynomial
-    from .interface import store_standard_system
+    from phcpy.interface import store_standard_system
     store_standard_system(pols)
     dim = py2c_syscon_number_of_standard_polynomials()
     svars = py2c_syscon_string_of_symbols()
@@ -419,8 +430,8 @@ def m_homogeneous_start_system(pols, partition):
     """
     from phcpy.phcpy2c3 import py2c_product_m_homogeneous_start_system
     from phcpy.phcpy2c3 import py2c_product_solve_linear_product_system
-    from .interface import store_standard_system, load_standard_system
-    from .interface import load_standard_solutions
+    from phcpy.interface import store_standard_system, load_standard_system
+    from phcpy.interface import load_standard_solutions
     store_standard_system(pols)
     py2c_product_m_homogeneous_start_system(len(partition), partition)
     result = load_standard_system()
@@ -438,7 +449,7 @@ def linear_product_root_count(pols, silent=False):
     from phcpy.phcpy2c3 import py2c_product_supporting_set_structure
     from phcpy.phcpy2c3 import py2c_product_write_set_structure
     from phcpy.phcpy2c3 import py2c_product_linear_product_root_count
-    from .interface import store_standard_system
+    from phcpy.interface import store_standard_system
     store_standard_system(pols)
     py2c_product_supporting_set_structure()
     if not silent:
@@ -516,7 +527,7 @@ def standard_random_coefficient_system(silent=False):
     import py2c_celcon_copy_target_standard_solution_to_container
     py2c_celcon_standard_random_coefficient_system()
     py2c_celcon_copy_into_standard_systems_container()
-    from .interface import load_standard_system, load_standard_solutions
+    from phcpy.interface import load_standard_system, load_standard_solutions
     # py2c_syscon_write_system()
     result = load_standard_system()
     # print result
@@ -553,7 +564,7 @@ def dobldobl_random_coefficient_system(silent=False):
     from phcpy.phcpy2c3 import py2c_celcon_track_dobldobl_solution_path
     from phcpy.phcpy2c3 \
         import py2c_celcon_copy_target_dobldobl_solution_to_container
-    from .interface import load_dobldobl_system, load_dobldobl_solutions
+    from phcpy.interface import load_dobldobl_system, load_dobldobl_solutions
     py2c_celcon_dobldobl_random_coefficient_system()
     py2c_celcon_copy_into_dobldobl_systems_container()
     # py2c_syscon_write_dobldobl_system()
@@ -592,7 +603,7 @@ def quaddobl_random_coefficient_system(silent=False):
     from phcpy.phcpy2c3 import py2c_celcon_track_quaddobl_solution_path
     from phcpy.phcpy2c3 \
         import py2c_celcon_copy_target_quaddobl_solution_to_container
-    from .interface import load_quaddobl_system, load_quaddobl_solutions
+    from phcpy.interface import load_quaddobl_system, load_quaddobl_solutions
     py2c_celcon_quaddobl_random_coefficient_system()
     py2c_celcon_copy_into_quaddobl_systems_container()
     # py2c_syscon_write_dobldobl_system()
@@ -661,7 +672,7 @@ def permute_quaddobl_system(pols):
     along the permutation used in the mixed volume computation.
     """
     from phcpy.phcpy2c3 import py2c_celcon_permute_quaddobl_system
-    from .interface import store_quaddobl_system, load_quaddobl_system
+    from phcpy.interface import store_quaddobl_system, load_quaddobl_system
     store_quaddobl_system(pols)
     py2c_celcon_permute_quaddobl_system()
     return load_quaddobl_system()
@@ -674,7 +685,7 @@ def standard_usolve(pol, mxi, eps):
     the requirement on the accuracy in eps.
     """
     from phcpy.phcpy2c3 import py2c_usolve_standard
-    from .interface import store_standard_system, load_standard_solutions
+    from phcpy.interface import store_standard_system, load_standard_solutions
     store_standard_system([pol])
     nit = py2c_usolve_standard(mxi, eps)
     rts = load_standard_solutions()
@@ -688,7 +699,7 @@ def dobldobl_usolve(pol, mxi, eps):
     the requirement on the accuracy in eps.
     """
     from phcpy.phcpy2c3 import py2c_usolve_dobldobl
-    from .interface import store_dobldobl_system, load_dobldobl_solutions
+    from phcpy.interface import store_dobldobl_system, load_dobldobl_solutions
     store_dobldobl_system([pol])
     nit = py2c_usolve_dobldobl(mxi, eps)
     rts = load_dobldobl_solutions()
@@ -702,7 +713,7 @@ def quaddobl_usolve(pol, mxi, eps):
     the requirement on the accuracy in eps.
     """
     from phcpy.phcpy2c3 import py2c_usolve_quaddobl
-    from .interface import store_quaddobl_system, load_quaddobl_solutions
+    from phcpy.interface import store_quaddobl_system, load_quaddobl_solutions
     store_quaddobl_system([pol])
     nit = py2c_usolve_quaddobl(mxi, eps)
     rts = load_quaddobl_solutions()
@@ -717,7 +728,7 @@ def multprec_usolve(pol, mxi, eps, decimals):
     the requirement on the accuracy in eps.
     """
     from phcpy.phcpy2c3 import py2c_usolve_multprec
-    from .interface import store_multprec_system, load_multprec_solutions
+    from phcpy.interface import store_multprec_system, load_multprec_solutions
     store_multprec_system([pol], decimals)
     nit = py2c_usolve_multprec(decimals, mxi, eps)
     rts = load_multprec_solutions()

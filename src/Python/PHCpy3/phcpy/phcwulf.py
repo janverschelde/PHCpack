@@ -57,7 +57,7 @@ def solve_system(pols):
     Returns the solution found.
     """
     if len(pols) > 0:
-        from . import solver
+        from phcpy import solver
         return solver.solve(pols)
     else:
         return []
@@ -150,7 +150,7 @@ def client():
         print('could not connect to server')
         return
     print('connected to server')
-    from . import solver
+    from phcpy import solver
     while True:
         pols = recv_strings(sock, BUFSIZE)
         print('received ', pols)
@@ -169,7 +169,7 @@ def main():
     if clorsv == 'c':
         client()
     else:
-        from . import solver
+        from phcpy import solver
         if clorsv == 's':
             nbsys = eval(input('-> how many systems ? '))
             probs = [solver.random_trinomials() for i in range(0, nbsys)]
