@@ -2938,7 +2938,7 @@ phcpy2c3.so:
             lists_and_strings.o phcpack.o witset.o schubert.o mapcon.o \
             next_track.o phcpy2c3.o unisolvers.o giftwrappers.o scalers.o \
             sweep.o \
-            -o ../Python/PHCpy/phcpy/phcpy2c3.so -lm
+            -o ../Python/PHCpy3/phcpy/phcpy2c3.so -lm
 
 phcpy2c.a:
 	gcc -static -c -fPIC -O2 $(PHCLib)/syscon.c
