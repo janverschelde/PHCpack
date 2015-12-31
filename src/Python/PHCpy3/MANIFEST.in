@@ -1,0 +1,2 @@
+include *.txt
+include phcpy/phcpy2c3.so

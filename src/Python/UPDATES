@@ -1,3 +1,6 @@
+Thu 31 Dec 2015 : new directory PHCpy3 with the version of phcpy for
+  Python 3.5.
+
 Mon 28 Dec 2015 : made the tolerances in the membertest in sets.py
   explicit arguments with large default values.  Improved posdimsols.rst,
   modified about.rst, conf.py, __init__.py, and setup.py for 0.3.7.

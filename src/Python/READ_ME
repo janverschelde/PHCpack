@@ -1,4 +1,4 @@
-phcpy 0.3.7 offers a simple Python interface to PHCv2.4.08
+phcpy 0.3.7 offers a simple Python interface to PHCv2.4.09
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -30,6 +30,7 @@ Version 0.3.7 provided the key tools to compute a numerical
 irreducible decomposition.
 
 The package phcpy is defined in the directory PHCpy.
+The directory PHCpy3 contains the version of phcpy for Python 3.5.
 
 ------------------------------------------------------------------------------
 file name               : short description
