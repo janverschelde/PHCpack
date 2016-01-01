@@ -28,8 +28,8 @@ def str2complex(scn):
     """
     stripped = scn.strip()
     realimag = stripped.split(' ')
-    realpart = realimag[0].replace('E','e')
-    imagpart = realimag[len(realimag)-1].replace('E','e')
+    realpart = realimag[0].replace('E', 'e')
+    imagpart = realimag[len(realimag)-1].replace('E', 'e')
     return complex(eval(realpart), eval(imagpart))
 
 def coordinates(sol):
@@ -104,9 +104,9 @@ def evaluate_polynomial(pol, dsol):
     """
     varsd = variables(dsol)
     rpol = pol
-    rpol = rpol.replace('i','j')
-    rpol = rpol.replace('E','e')
-    rpol = rpol.replace('^','**')
+    rpol = rpol.replace('i', 'j')
+    rpol = rpol.replace('E', 'e')
+    rpol = rpol.replace('^', '**')
     j = complex(0, 1) # j is used in eval(result)
     for varname in varsd:
         xre = '%+.17f' % dsol[varname].real
@@ -139,7 +139,7 @@ def make_solution(sol, vals):
     on input to make_solution.
     """
     result = 't : 0.0 0.0\nm : 1\n'
-    result =  result + 'the solution for t :\n'
+    result = result + 'the solution for t :\n'
     for k in range(len(sol)):
         result = result + ' ' + sol[k] + ' : '
         if isinstance(vals[k], complex):
@@ -224,7 +224,7 @@ def test():
     print 'variables :', variables(s0d)
     print evaluate(pols, s0d)
     for sol in dsols:
-        mult  = mult + sol['m']
+        mult = mult + sol['m']
     print 'sum of multiplicities :', mult
     print 'sum of values at the solutions :'
     for sol in dsols:
