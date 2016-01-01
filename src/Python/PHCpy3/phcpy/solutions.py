@@ -8,15 +8,16 @@ def diagnostics(sol):
     from the PHCpack string solution in sol and
     returns a triplet of three floats.
     """
+    from ast import literal_eval
     banner = sol.split("==")
     data = banner[1]
     diag = data.split("=")
     str_err = diag[0].split(':')
     str_rco = diag[1].split(':')
     str_res = diag[2].split(':')
-    val_err = eval(str_err[1])
-    val_rco = eval(str_rco[1])
-    val_res = eval(str_res[1])
+    val_err = literal_eval(str_err[1].lstrip())
+    val_rco = literal_eval(str_rco[1].lstrip())
+    val_res = literal_eval(str_res[1].lstrip())
     # print 'err =', val_err, 'rco =', val_rco, 'res =', val_res
     return (val_err, val_rco, val_res)
 
@@ -26,11 +27,12 @@ def str2complex(scn):
     the real and imaginary part separated by spaces.
     On return is the Python complex number.
     """
+    from ast import literal_eval
     stripped = scn.strip()
     realimag = stripped.split(' ')
     realpart = realimag[0].replace('E', 'e')
     imagpart = realimag[len(realimag)-1].replace('E', 'e')
-    return complex(eval(realpart), eval(imagpart))
+    return complex(literal_eval(realpart), literal_eval(imagpart))
 
 def coordinates(sol):
     """
@@ -57,13 +59,14 @@ def endmultiplicity(sol):
     and the multiplicity as (t,m)
     for the PHCpack solution string sol.
     """
+    from ast import literal_eval
     data = sol.split("the solution for t :")
     tstr = data[0]
     line = tstr.split('\n')
     tstr = line[0].split(':')
     tval = tstr[1]
     mstr = line[1].split(':')
-    mval = eval(mstr[1])
+    mval = literal_eval(mstr[1].lstrip())
     return (tval, mval)
 
 def strsol2dict(sol):
@@ -102,12 +105,13 @@ def evaluate_polynomial(pol, dsol):
     Evaluates the polynomial pol at the solution
     dictionary dsol by string substitution.
     """
+    from ast import literal_eval
     varsd = variables(dsol)
     rpol = pol
     rpol = rpol.replace('i', 'j')
     rpol = rpol.replace('E', 'e')
     rpol = rpol.replace('^', '**')
-    j = complex(0, 1) # j is used in eval(result)
+    j = complex(0, 1) # j is used in literal_eval(result)
     for varname in varsd:
         xre = '%+.17f' % dsol[varname].real
         xim = '%+.17f' % dsol[varname].imag

@@ -1,5 +1,6 @@
 Fri 1 Jan 2016 : minor formatting changes in solutions.py both for PHCpy/phcpy
-  and PHCpy3/phcpy.
+  and PHCpy3/phcpy.  As recommended by pylint, used ast.literal_eval() in
+  the module solutions.py.
 
 Thu 31 Dec 2015 : new directory PHCpy3 with the version of phcpy for
   Python 3.5.
