@@ -2355,7 +2355,7 @@ phcpy2c.so:
             witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
             solcon.o product.o lists_and_strings.o celcon.o scalers.o \
             sweep.o schubert.o \
-                 -o ../Python/PHCpy/phcpy/phcpy2c.so -framework Python
+                 -o ../Python/PHCpy2/phcpy/phcpy2c.so -framework Python
 
 phcpy2c3.so:
 	gcc -c -O2 $(PHCLib)/syscon.c
