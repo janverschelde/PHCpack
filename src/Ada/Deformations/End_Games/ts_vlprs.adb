@@ -393,7 +393,7 @@ procedure ts_vlprs is
   begin
     put("exact leading exponent : "); put(r); new_line;
     put("the extrapolated value : "); put(estle); new_line;
-    put("  with estimated error :");  put(esterr,3);
+    put("  with estimated error : ");  put(esterr,3);
     if esterr < tol_zero
      then put_line("  okay.");
      else put_line("  at risk!!!");
@@ -431,7 +431,7 @@ procedure ts_vlprs is
   begin
     put("exact leading exponent : "); put(r); new_line;
     put("the extrapolated value : "); put(estle); new_line;
-    put("  with estimated error :");  put(esterr,3);
+    put("  with estimated error : ");  put(esterr,3);
     if esterr < tol_zero
      then put_line("  okay.");
      else put_line("  at risk!!!");
@@ -512,14 +512,14 @@ procedure ts_vlprs is
   begin
     prev_w := create(0.0);
     for i in v'range loop
-      put(v(i),3); put(l(i),3); 
+      put(v(i),3); put(" "); put(l(i),3); 
       w := v(i)/l(i); put(" "); put(w);
       esterr := abs(w-prev_w);
       dd_m := create(double_float(m));
       dd_w := create(double_float(winding));
       r := dd_m/dd_w;
       err := abs(w - r);
-      put(err,3); new_line;
+      put(" "); put(err,3); new_line;
       prev_w := w;
     end loop;
     DoblDobl_Conclude(w,esterr,m,winding);
@@ -536,14 +536,14 @@ procedure ts_vlprs is
   begin
     prev_w := create(0.0);
     for i in v'range loop
-      put(v(i),3); put(l(i),3); 
+      put(v(i),3); put(" "); put(l(i),3); 
       w := v(i)/l(i); put(" "); put(w);
       esterr := abs(w-prev_w);
       qd_m := create(double_float(m));
       qd_w := create(double_float(winding));
       r := qd_m/qd_w;
       err := abs(w - r);
-      put(err,3); new_line;
+      put(" "); put(err,3); new_line;
       prev_w := w;
     end loop;
     QuadDobl_Conclude(w,esterr,m,winding);
@@ -868,11 +868,11 @@ procedure ts_vlprs is
       prev_estle := v(r)/l(r);
       for i in r+1..m-1 loop
         vLpRs_pipe(s(i),logs(i),logx(i),srp,dsp,p,l,v,rt1,rt2);
-        put(v(r),3); put(l(r),3);
+        put(v(r),3); put(" "); put(l(r),3);
         estle := v(r)/l(r); put(" "); put(estle);
         esterr := abs(estle - prev_estle);
         err := abs(estle - Double_Double_Numbers.create(double_float(le)));
-        put(err,3); new_line;
+        put(" "); put(err,3); new_line;
         prev_estle := estle;
       end loop;
       DoblDobl_Conclude(estle,esterr,le,1);
@@ -921,11 +921,11 @@ procedure ts_vlprs is
       prev_estle := v(r)/l(r);
       for i in r+1..m-1 loop
         vLpRs_pipe(s(i),logs(i),logx(i),srp,dsp,p,l,v,rt1,rt2);
-        put(v(r),3); put(l(r),3);
+        put(v(r),3); put(" "); put(l(r),3);
         estle := v(r)/l(r); put(" "); put(estle);
         esterr := abs(estle - prev_estle);
         err := abs(estle - Quad_Double_Numbers.create(double_float(le)));
-        put(err,3); new_line;
+        put(" "); put(err,3); new_line;
         prev_estle := estle;
       end loop;
       QuadDobl_Conclude(estle,esterr,le,1);
