@@ -1,4 +1,5 @@
-Sat 2 Jan 2016 : renamed the directory PHCpy into PHCpy2.
+Sat 2 Jan 2016 : renamed the directory PHCpy into PHCpy2.  Prepared setup.py,
+  __init__.py, and conf.py for version 0.3.8 of phcpy.
 
 Fri 1 Jan 2016 : minor formatting changes in solutions.py both for PHCpy/phcpy
   and PHCpy3/phcpy.  As recommended by pylint, used ast.literal_eval() in
