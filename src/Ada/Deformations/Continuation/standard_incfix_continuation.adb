@@ -1239,6 +1239,9 @@ package body Standard_IncFix_Continuation is
       Write_Bar(file);
       for i in s'range loop
         LCont1(file,s(i),target,tol,proj,p1,c_path);
+        new_line(file);
+        put(file,"running polyhedral end game on path ");
+        put(file,i,1); put_line(file," :");
         LCont2(file,s(i),target,tol,proj,rtoric,v(i),errv(i),p2,c_end);
         Write_Statistics(file,i,s(i).nstep,s(i).nfail,s(i).niter,s(i).nsyst);
         Write_Diagnostics(file,s,c_end,tol,i,proj,

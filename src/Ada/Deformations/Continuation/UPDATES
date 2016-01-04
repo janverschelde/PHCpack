@@ -1,5 +1,7 @@
 Mon 4 Jan 2015 : in continuation_parameters.adb, fixed setting of the
   predictor type in case of a polyhedral end game.
+  Added print statements in standard_incfix_continuation.adb to mark 
+  the beginning of the polyhedral end game for a particular path.
 
 Fri 11 Dec 2015 : fixed ts_poco.adb, for preset precision level in driver.
 
