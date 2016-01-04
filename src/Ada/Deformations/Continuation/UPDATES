@@ -1,3 +1,6 @@
+Mon 4 Jan 2015 : in continuation_parameters.adb, fixed setting of the
+  predictor type in case of a polyhedral end game.
+
 Fri 11 Dec 2015 : fixed ts_poco.adb, for preset precision level in driver.
 
 Wed 18 Nov 2015 : updated mainpoco.adb so prompting for precision calls the

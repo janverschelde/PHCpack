@@ -73,10 +73,11 @@ package body Continuation_Parameters is
       max_endg_step_size := 0.01/(double_float(condition+1));
       success_endg_steps := 3 + condition;
     else
-      if predictor_path_type <= 2
-       then predictor_endg_type := 2;
-       else predictor_endg_type := 5;
-      end if;
+     -- if predictor_path_type <= 2
+     --  then 
+      predictor_endg_type := 2; -- no tangent predictor
+     --  else predictor_endg_type := 5;
+     -- end if;
       min_endg_step_size := min_path_step_size;
       max_endg_step_size := 0.5;
       reduction_endg_factor := 0.5;
