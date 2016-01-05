@@ -1,3 +1,6 @@
+Tue 5 Jan 2016 : moved specifications from directions_of_standard_paths.adb
+  into directions_of_standard_paths.ads.
+
 Sun 3 Jan 2016 : improved output for double double and quad double precision
   in ts_vlprs.adb.
 
