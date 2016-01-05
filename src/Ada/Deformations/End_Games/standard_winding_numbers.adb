@@ -6,10 +6,6 @@ package body Standard_Winding_Numbers is
 
   function Consecutive_Differences ( logx : in Vector ) return Vector is
 
-  -- DESCRIPTION :
-  --   Returns the vector of consecutive differences of the logarithms
-  --   in logx.  The vector on return has range logx'first..logx'last-1.
-
     res : Vector(logx'first..logx'last-1);
 
   begin
@@ -20,11 +16,6 @@ package body Standard_Winding_Numbers is
   end Consecutive_Differences;
 
   function Consecutive_Errors ( difs : in Vector ) return Vector is
-
-  -- DESCRIPTION :
-  --   Given the vector of consecutive differences, on return is
-  --   the vector of errors on these consecutive differences.
-  --   The vector on return has range difs'first..difs'last-1.
 
     res : Vector(difs'first..difs'last-1);
 
@@ -39,10 +30,6 @@ package body Standard_Winding_Numbers is
               ( file : in file_type; e : in Vector;
                 log10h : in double_float; ew : in integer32 ) is
 
-  -- DESCRIPTION :
-  --   Writes the estimate for m along with the errors
-  --   at the end of the extrapolation process.
-
     w,error : double_float;
 
   begin
@@ -55,7 +42,7 @@ package body Standard_Winding_Numbers is
     end loop;
   end Write_Extrapolation_Errors;
 
--- TARGET PROCEDURES :
+-- DRIVER PROCEDURES :
 
   procedure Extrapolate_on_Errors_full
               ( logx : in Vector; h,log10h : in double_float;

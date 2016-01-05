@@ -57,7 +57,7 @@ package body QuadDobl_Winding_Numbers is
     end loop;
   end Write_Extrapolation_Errors;
 
--- TARGET PROCEDURES :
+-- DRIVER PROCEDURES :
 
   procedure Extrapolate_on_Errors_full
               ( logx : in Vector; h,log10h : in quad_double;

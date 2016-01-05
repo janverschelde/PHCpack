@@ -7,11 +7,6 @@ package body Multprec_Winding_Numbers is
 
   function Consecutive_Errors ( logx : in Vector ) return Vector is
 
-  -- DESCRIPTION :
-  --   Computes the vector of errors on consecutive differences
-  --   of the logarithms in logx.  If logx has range 0..r,
-  --   then the vector on return has range 0..r-2.
-
     dif : Multprec_Floating_Vectors.Vector(logx'first..logx'last-1);
     res : Multprec_Floating_Vectors.Vector(logx'first..logx'last-2);
     acc : Floating_Number;
@@ -32,10 +27,6 @@ package body Multprec_Winding_Numbers is
               ( file : in file_type; e : in Vector;
                 log10h : in Floating_Number; ew : in integer32 ) is
 
-  -- DESCRIPTION :
-  --   Writes the estimate for m along with the errors
-  --   at the end of the extrapolation process.
-
     w,ewf,error : Floating_Number;
 
   begin
@@ -49,6 +40,8 @@ package body Multprec_Winding_Numbers is
       new_line(file);
     end loop;
   end Write_Extrapolation_Errors;
+
+-- DRIVER PROCEDURES :
 
   procedure Extrapolate_on_Errors
                  ( logx : in Vector; h : in Floating_Number;

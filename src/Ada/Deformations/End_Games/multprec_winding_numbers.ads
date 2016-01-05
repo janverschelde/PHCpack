@@ -13,6 +13,23 @@ package Multprec_Winding_Numbers is
 --   decreasing geometrically at a fixed rate.
 --   The procedures work with multiprecision arithmetic.
 
+  function Consecutive_Errors ( logx : in Vector ) return Vector;
+
+  -- DESCRIPTION :
+  --   Computes the vector of errors on consecutive differences
+  --   of the logarithms in logx.  If logx has range 0..r,
+  --   then the vector on return has range 0..r-2.
+
+  procedure Write_Extrapolation_Errors
+              ( file : in file_type; e : in Vector;
+                log10h : in Floating_Number; ew : in integer32 );
+
+  -- DESCRIPTION :
+  --   Writes the estimate for m along with the errors
+  --   at the end of the extrapolation process.
+
+-- DRIVER PROCEDURES :
+
   procedure Extrapolate_on_Errors
               ( logx : in Vector; h : in Floating_Number;
                 ew : out integer32; error : out Floating_Number );

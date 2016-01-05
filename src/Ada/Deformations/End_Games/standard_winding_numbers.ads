@@ -11,7 +11,30 @@ package Standard_Winding_Numbers is
 --   the logarithms of the absolute values of the power series
 --   evaluated at a decreasing sequence of values for s,
 --   decreasing geometrically at a fixed rate.
---   All calculations are done with standard arithmetic.
+--   All calculations are done with standard double arithmetic.
+
+  function Consecutive_Differences ( logx : in Vector ) return Vector;
+
+  -- DESCRIPTION :
+  --   Returns the vector of consecutive differences of the logarithms
+  --   in logx.  The vector on return has range logx'first..logx'last-1.
+
+  function Consecutive_Errors ( difs : in Vector ) return Vector;
+
+  -- DESCRIPTION :
+  --   Given the vector of consecutive differences, on return is
+  --   the vector of errors on these consecutive differences.
+  --   The vector on return has range difs'first..difs'last-1.
+
+  procedure Write_Extrapolation_Errors
+              ( file : in file_type; e : in Vector;
+                log10h : in double_float; ew : in integer32 );
+
+  -- DESCRIPTION :
+  --   Writes the estimate for m along with the errors
+  --   at the end of the extrapolation process.
+
+-- DRIVER PROCEDURES :
 
   procedure Extrapolate_on_Errors_full
               ( logx : in Vector; h,log10h : in double_float;
