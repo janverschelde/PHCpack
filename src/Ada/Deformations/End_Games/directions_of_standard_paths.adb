@@ -206,33 +206,32 @@ package body Directions_of_Standard_Paths is
   procedure Frequency_of_Estimate
                ( newest : in integer32; max : in natural32;
                  m,estm : in out integer32; cnt : in out natural32; 
-                 eps : in double_float; newm : out boolean ) is
+                 newm : out boolean ) is
   begin
-    if cnt = 0 then                                       -- initial estimate
+    newm := false;
+    if cnt = 0 then                                     -- initial estimate
       estm := newest;
       cnt := 1;
-    elsif newest = estm then         -- update frequency for current estimate
+    elsif newest = estm then       -- update frequency for current estimate
       cnt := cnt + 1;
     else 
-      cnt := 1;                                 -- new estimate found
+      cnt := 1;                                       -- new estimate found
       estm := newest;
     end if;
-    if estm /= m then        -- look for modification of current cycle number
-      if (cnt >= max) --and (eps <= 0.1)
-       then m := estm; newm := true;
-       else newm := false;
+    if estm /= m then         -- look for modification of the winding number
+      if (cnt >= max) then
+        m := estm;
+        newm := true;
       end if;
-     else newm := false;
     end if;
   end Frequency_of_Estimate;
 
   procedure Extrapolate_on_Errors
-               ( file : in file_type;
-                 r : in integer32; h : in double_float;
+               ( r : in integer32; h : in double_float;
                  err : in Standard_Floating_Vectors.Vector;
-                 estm : out double_float ) is
+                 estm : out Standard_Floating_Vectors.Vector ) is
 
-    em,hm,exterr : Standard_Floating_Vectors.Vector(1..r+1);
+    hm,exterr : Standard_Floating_Vectors.Vector(1..r+1);
     dlog : constant double_float := log10(h);
     f : double_float;
 
@@ -240,30 +239,59 @@ package body Directions_of_Standard_Paths is
     for j in exterr'range loop
       exterr(j) := log10(err(j-1)) - log10(err(j));
     end loop;
-    em(1) := dlog/exterr(1);                           -- 0th order estimate
+    estm(1) := dlog/exterr(1);                         -- 0th order estimate
    -- if (m(1) < 0.0001) or (m(1) > 1000.0)              -- avoid divergence
    --  then m(r+1) := m(1);
    --  else 
-          hm(1) := h**(1.0/em(1));
+          hm(1) := h**(1.0/estm(1));
           for k in 1..r loop
             f := hm(k) - 1.0;
             for j in 1..r-k+1 loop
               exterr(j) := exterr(j+1) + (exterr(j+1) - exterr(j))/f;
             end loop;
-            em(k+1) := dlog/exterr(1);
+            estm(k+1) := dlog/exterr(1);
    --  exit when ((m(k+1) < 0.0001) or (m(k+1) > 1000.0));
-            hm(k+1) := h**(double_float(k+1)/em(k+1));
+            hm(k+1) := h**(double_float(k+1)/estm(k+1));
           end loop;
    -- end if;
-    estm := em(r+1);
-    put(file,"em(0.."); put(file,r,1); put(file,") : ");
-    for i in em'range loop
-      put(file,em(i),3,3,3);
-    end loop;
-    new_line(file);
   exception
     when others => null;
   end Extrapolate_on_Errors;
+
+  procedure Accuracy_of_Estimates
+               ( estm : in Standard_Floating_Vectors.Vector;
+                 success : out boolean; k : out integer32;
+                 estwin : out integer32; eps : out double_float ) is
+
+    res,wrk : integer32;
+    best_eps,prev_eps : double_float;
+
+  begin
+    k := estm'first-1;                -- take zero order as the best
+    res := integer32(estm(estm'first));
+    eps := abs(estm(estm'first) - double_float(res));
+    best_eps := eps;
+    success := true;                  -- assume extrapolation worked
+    for i in estm'first+1..estm'last loop
+      wrk := integer32(estm(i));
+      eps := abs(estm(i) - double_float(wrk));
+      for j in estm'first..i-1 loop   -- compare with previous estimates
+        prev_eps := abs(estm(j) - double_float(wrk));
+        if prev_eps > eps
+         then success := false;       -- extrapolation failed
+        end if;
+        exit when (not success);
+      end loop;
+      exit when (not success);
+      if eps < best_eps then
+        res := wrk;                   -- update the result
+        k := i-1;                     -- its order
+        best_eps := eps;              -- and its accuracy
+      end if;
+    end loop;
+    estwin := res;
+    eps := best_eps;
+  end Accuracy_of_Estimates;
 
   procedure Estimate0
                ( r : in integer32; max : in natural32;
@@ -283,34 +311,44 @@ package body Directions_of_Standard_Paths is
     if res = 0
      then res := 1;
     end if;
-    Frequency_of_Estimate(res,max,m,estm,cnt,accuracy,newm);
+    Frequency_of_Estimate(res,max,m,estm,cnt,newm);
     rat := ratio; eps := accuracy;
   end Estimate0;
 
-  procedure Estimate
+  procedure Estimate_Winding_Number
                ( file : in file_type; r : in integer32;
                  max : in natural32; m,estm : in out integer32;
                  cnt : in out natural32; h : in double_float;
                  diferr : in Standard_Floating_Vectors.Vector;
                  rat,eps : out double_float; newm : out boolean ) is
 
-    res : integer32;
-    fltestm,accuracy : double_float;
+    res,order : integer32;
+    accuracy : double_float;
+    esm : Standard_Floating_Vectors.Vector(1..r+1);
+    estgood : boolean;
 
   begin
-   -- if r < dt'last
-   --  then Extrapolate_on_Errors(file,r-1,h,diferr(0..r),fltestm);
-   --  else
-    Extrapolate_on_Errors(file,r,h,diferr(0..r+1),fltestm);
-   -- end if;
-    res := integer32(fltestm);
-    if res <= 0
-     then res := 1;
+    Extrapolate_on_Errors(r,h,diferr(0..r+1),esm);
+    put(file,"estm(0.."); put(file,r,1); put(file,") : ");
+    for i in esm'range loop
+      put(file,esm(i),3,3,3);
+    end loop;
+    Accuracy_of_Estimates(esm,estgood,order,res,accuracy);
+    if res <= 0 then
+      put_line(file,"  wrong result.");
+      res := m; -- keep the current value for the winding number
+    else
+      if estgood then
+        put_line(file,"  extrapolation succeeded.");
+      else
+        put(file,"  extrapolation failed, order = ");
+        put(file,order,1); new_line(file);
+      end if;
+      Frequency_of_Estimate(res,max,m,estm,cnt,newm);
     end if;
-    accuracy := abs(double_float(res) - fltestm);
-    Frequency_of_Estimate(res,max,m,estm,cnt,accuracy,newm);
-    rat := fltestm; eps := accuracy;
-  end Estimate;
+    rat := esm(order+1);
+    eps := accuracy;
+  end Estimate_Winding_Number;
 
 -- APPLYING THE vLpRs-Algorithm :
 
@@ -484,8 +522,8 @@ package body Directions_of_Standard_Paths is
     end if;
     if er >= 1 and (diferr(0) < diferr(1)) then
      -- Estimate0(r,thresm,m,estm,cntm,diferr(1),diferr(0),rat,eps,newm);
-      Estimate(file,er,thresm,m,estm,cntm,dt(r)/dt(r-1),
-               diferr,rat,eps,newm);
+      Estimate_Winding_Number
+         (file,er,thresm,m,estm,cntm,dt(r)/dt(r-1),diferr,rat,eps,newm);
       put(file,"Ratio for m : "); put(file,rat,3,3,3);
       put(file," and accuracy : "); put(file,eps,3,3,3); new_line(file);
       if newm then

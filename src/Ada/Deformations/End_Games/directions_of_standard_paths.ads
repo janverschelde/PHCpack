@@ -87,46 +87,67 @@ package Directions_of_Standard_Paths is
   procedure Frequency_of_Estimate
                ( newest : in integer32; max : in natural32;
                  m,estm : in out integer32; cnt : in out natural32; 
-                 eps : in double_float; newm : out boolean );
+                 newm : out boolean );
 
   -- DESCRIPTION :
-  --   This procedure manages the frequencies of the estimated values for m.
-  --   Only after the same estimate has been found a certain number of
-  --   times, the new estimate will be accepted.
-  --   The current version does not take the accuracy eps into account.
+  --   Given a new estimate for the winding number, the procedure updates
+  --   the count of the number of times newest equals estm.
+  --   This procedure delays the assignment of the estimate estm to m,
+  --   until the counter cnt reaches the threshold max.
 
   -- ON ENTRY :
   --   newest    newly computed estimate for m;
   --   max       threshold on cnt before estm is returned;
-  --   m         current value of m;
-  --   estm      previous estimate;
-  --   cnt       number of consecutive guesses that yielded estm;
-  --   eps       accuracy of the current estimate.
+  --   m         current value of the winding number;
+  --   estm      previous estimate of the winding number,
+  --             for use of comparing against newest;
+  --   cnt       number of consecutive estimates that yielded estm.
 
   -- ON RETURN :
-  --   m         new value of m;
-  --   estm      new estimate;
-  --   cnt       updated number of consecutive guesses that yielded estm;
-  --   newm      true if m has changed.
+  --   m         updated current value for the winding number;
+  --   estm      updated estimate for the winding number;
+  --   cnt       updated number of consecutive estimates that yielded estm;
+  --   newm      true if m has changed, false otherwise.
 
   procedure Extrapolate_on_Errors
-               ( file : in file_type;
-                 r : in integer32; h : in double_float;
+               ( r : in integer32; h : in double_float;
                  err : in Standard_Floating_Vectors.Vector;
-                 estm : out double_float );
+                 estm : out Standard_Floating_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Performs an rth-order extrapolation on the errors.
 
+  -- REQUIRED : estm'range = 1..r+1.
+
   -- ON ENTRY :
-  --   file      to write intermediate results on;
   --   r         order of the extrapolation method;
   --   h         ratio in geometric sequence;
   --   err       vector of range 0..r+1 with differences of estimates for
   --             the outer normal, the most recent error is err(0).
 
   -- ON RETURN :
-  --   extm      estimated value for m.
+  --   estm      estimated value for m, consecutively obtained by
+  --             application of higher orders of extrapolation.
+
+  procedure Accuracy_of_Estimates
+               ( estm : in Standard_Floating_Vectors.Vector;
+                 success : out boolean; k : out integer32;
+                 estwin : out integer32; eps : out double_float );
+
+  -- DESCRIPTION :
+  --   Determines the estimate for the winding number based on the
+  --   approximations obtained by consecutive higher order of extrapolation.
+
+  -- ON ENTRY :
+  --   estm      approximations obtained by consecutive extrapolations,
+  --             which has range 1..r+1, where r is the order.
+
+  -- ON RETURN :
+  --   success   true if the sequence of approximations improved in
+  --             accuracy, i.e.: the extrapolation worked, false otherwise;
+  --   k         the order of best value: integer32(estm(k-1)) = estwin;
+  --   estwin    the estimated value for the winding number;
+  --   eps       the accuracy of the winding number.
 
   procedure Estimate0
                ( r : in integer32; max : in natural32;
@@ -156,7 +177,7 @@ package Directions_of_Standard_Paths is
   --   eps       accuracy of the rounding value for m;
   --   newm      true if m has changed.
 
-  procedure Estimate
+  procedure Estimate_Winding_Number
                ( file : in file_type; r : in integer32;
                  max : in natural32; m,estm : in out integer32;
                  cnt : in out natural32; h : in double_float;
@@ -164,9 +185,26 @@ package Directions_of_Standard_Paths is
                  rat,eps : out double_float; newm : out boolean );
 
   -- DESCRIPTION :
-  --   Estimates m by extrapolation on consecutvie differences of errors,
-  --   stored in the parameter diferr.  For the specfication of the other
-  --   parameters, see the procedure Estimate0.
+  --   Estimates m by extrapolation of order r.
+
+  -- ON ENTRY :
+  --   r         extrapolation order;
+  --   max       threshold on cnt before estm is returned;
+  --   m         current value of m;
+  --   estm      previous estimate;
+  --   cnt       number of consecutive estimates that yielded estm;
+  --   h
+  --   diferr    consecutive differences of errors;
+  --   err       previous error;
+  --   newerr    current error.
+
+  -- ON RETURN :
+  --   m         new value of m;
+  --   estm      new estimate;
+  --   cnt       updated number of consecutive guesses that yielded estm;
+  --   rat       ratio used to estimate m;
+  --   eps       accuracy of the rounding value for m;
+  --   newm      true if m has changed.
 
 -- APPLYING THE vLpRs-Algorithm :
 
