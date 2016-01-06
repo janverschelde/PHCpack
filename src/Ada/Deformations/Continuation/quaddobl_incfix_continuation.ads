@@ -1,6 +1,8 @@
 with text_io;                            use text_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with QuadDobl_Complex_Numbers;           use QuadDobl_Complex_Numbers;
+with Quad_Double_Vectors;
+with Quad_Double_VecVecs;
 with QuadDobl_Complex_Vectors;           use QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Matrices;          use QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_Solutions;         use QuadDobl_Complex_Solutions;
@@ -111,5 +113,52 @@ package QuadDobl_IncFix_Continuation is
  
   -- ON RETURN :
   --   sols      the computed solutions.
+
+-- WITH THE ESTIMATION OF THE PATH DIRECTIONS :
+
+  generic
+
+    with function Norm ( x : Vector ) return quad_double;
+    with function H  ( x : Vector; t : Complex_Number ) return Vector;
+    with function dH ( x : Vector; t : Complex_Number ) return Vector;
+    with function dH ( x : Vector; t : Complex_Number ) return Matrix;
+
+  procedure Silent_Toric_Continue
+               ( sols : in out Solution_List; proj : in boolean;
+                 v : in out Quad_Double_VecVecs.VecVec;
+                 errv : in out Quad_Double_Vectors.Vector;
+                 target : in Complex_Number := Create(integer(1)) );
+
+  generic
+
+    with function Norm ( x : Vector ) return quad_double;
+    with function H  ( x : Vector; t : Complex_Number ) return Vector;
+    with function dH ( x : Vector; t : Complex_Number ) return Vector;
+    with function dH ( x : Vector; t : Complex_Number ) return Matrix;
+
+  procedure Reporting_Toric_Continue
+               ( file : in file_type; sols : in out Solution_List;
+                 proj : in boolean;
+                 v : in out Quad_Double_VecVecs.VecVec;
+                 errv : in out Quad_Double_Vectors.Vector;
+                 target : in Complex_Number := Create(integer(1)) );
+
+  -- DESCRIPTION :
+  --   This routine implements the continuation strategy with the estimation
+  --   of the directions of the solution paths at the end.
+
+  -- ON ENTRY :
+  --   file      to write intermediate results on (if Reporting_);
+  --   sols      the start solutions;
+  --   proj      for projective-perpendicular path following;
+  --   v         v must be initialized with zero vectors
+  --             and v'range is 1..Length_Of(sols);
+  --   errv      errors on the computed directions;
+  --   target    value for the continuation parameter at the end.
+
+  -- ON RETURN :
+  --   sols      the computed solutions;
+  --   v         directions of the solution paths;
+  --   errv      errors on the computed directions.
 
 end QuadDobl_IncFix_Continuation;

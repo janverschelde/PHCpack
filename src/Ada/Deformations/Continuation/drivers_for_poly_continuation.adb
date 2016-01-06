@@ -15,8 +15,12 @@ with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Multprec_Complex_Numbers;
 with Multprec_Complex_Number_Tools;      use Multprec_Complex_Number_Tools;
 with Numbers_io;                         use Numbers_io;
-with Standard_Floating_Vectors;          use Standard_Floating_Vectors;
-with Standard_Floating_VecVecs;          use Standard_Floating_VecVecs;
+with Standard_Floating_Vectors;
+with Standard_Floating_VecVecs;
+with Double_Double_Vectors;
+with Double_Double_VecVecs;
+with Quad_Double_Vectors;
+with Quad_Double_VecVecs;
 with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
 with DoblDobl_Complex_Vector_Norms;      use DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Vector_Norms;      use QuadDobl_Complex_Vector_Norms;
@@ -1015,8 +1019,8 @@ package body Drivers_for_Poly_Continuation is
     report : boolean;
     n : constant natural32 := natural32(Head_Of(sols).n);
     nv : constant natural32 := Length_Of(sols);
-    v : Link_to_VecVec;
-    errv : Link_to_Vector;
+    v : Standard_Floating_VecVecs.Link_to_VecVec;
+    errv : Standard_Floating_Vectors.Link_to_Vector;
 
   begin
     new_line;
@@ -1030,10 +1034,11 @@ package body Drivers_for_Poly_Continuation is
     new_line;
     put_line("No more input expected.  See output file for results.");
     new_line;
-    if Continuation_Parameters.endext_order > 0
-     then Toric_Continue(file,sols,proj,report,v.all,errv.all,target);
-          Write_Directions(file,v.all,errv.all);
-     else Continue(file,sols,proj,report,target);
+    if Continuation_Parameters.endext_order > 0 then
+      Toric_Continue(file,sols,proj,report,v.all,errv.all,target);
+      Write_Directions(file,v.all,errv.all);
+    else
+      Continue(file,sols,proj,report,target);
     end if;
   end Driver_for_Standard_Continuation;
 
@@ -1087,22 +1092,36 @@ package body Drivers_for_Poly_Continuation is
                   sols : in out DoblDobl_Complex_Solutions.Solution_List;
                   target : Complex_Number := Create(1.0) ) is
 
+    use DoblDobl_Complex_Solutions;
+
     oc : natural32;
     report : boolean;
     dd_targ : constant DoblDobl_Complex_Numbers.Complex_Number
             := Standard_to_DoblDobl_Complex(target);
+    n : constant natural32 := natural32(Head_Of(sols).n);
+    nv : constant natural32 := Length_Of(sols);
+    v : Double_Double_VecVecs.Link_to_VecVec;
+    errv : Double_Double_Vectors.Link_to_Vector;
 
   begin
     new_line;
     Continuation_Parameters.Tune(0); -- ,32); -- too severe !!!
     Driver_for_Continuation_Parameters(file);
+    if Continuation_Parameters.endext_order > 0
+     then Init_Path_Directions(n,nv,v,errv);
+    end if;
     new_line;
     Driver_for_Process_io(file,oc);
     report := (oc /= 0);
     new_line;
     put_line("No more input expected.  See output file for results.");
     new_line;
-    Continue(file,sols,report,dd_targ);
+    if Continuation_Parameters.endext_order > 0 then
+      Toric_Continue(file,sols,false,report,v.all,errv.all,dd_targ);
+      Write_Directions(file,v.all,errv.all);
+    else
+      Continue(file,sols,report,dd_targ);
+    end if;
   end Driver_for_DoblDobl_Continuation;
 
   procedure Driver_for_QuadDobl_Continuation
@@ -1110,22 +1129,36 @@ package body Drivers_for_Poly_Continuation is
                   sols : in out QuadDobl_Complex_Solutions.Solution_List;
                   target : Complex_Number := Create(1.0) ) is
 
+    use QuadDobl_Complex_Solutions;
+
     oc : natural32;
     report : boolean;
     qd_targ : constant QuadDobl_Complex_Numbers.Complex_Number
              := Standard_to_QuadDobl_Complex(target);
+    n : constant natural32 := natural32(Head_Of(sols).n);
+    nv : constant natural32 := Length_Of(sols);
+    v : Quad_Double_VecVecs.Link_to_VecVec;
+    errv : Quad_Double_Vectors.Link_to_Vector;
 
   begin
     new_line;
     Continuation_Parameters.Tune(0); -- ,64); -- too severe !!!
     Driver_for_Continuation_Parameters(file);
+    if Continuation_Parameters.endext_order > 0
+     then Init_Path_Directions(n,nv,v,errv);
+    end if;
     new_line;
     Driver_for_Process_io(file,oc);
     report := (oc /= 0);
     new_line;
     put_line("No more input expected.  See output file for results.");
     new_line;
-    Continue(file,sols,report,qd_targ);
+    if Continuation_Parameters.endext_order > 0 then
+      Toric_Continue(file,sols,false,report,v.all,errv.all,qd_targ);
+      Write_Directions(file,v.all,errv.all);
+    else
+      Continue(file,sols,report,qd_targ);
+    end if;
   end Driver_for_QuadDobl_Continuation;
 
 end Drivers_for_Poly_Continuation;
