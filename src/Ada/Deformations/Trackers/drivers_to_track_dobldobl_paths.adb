@@ -74,6 +74,7 @@ package body Drivers_to_Track_DoblDobl_Paths is
     t1 : constant Complex_Number := Create(integer(1));
     tol : constant double_float := 1.0E-14;
     tol_zero : constant double_float := 1.0E-20;
+    w : integer32 := 1;
     v : Double_Double_Vectors.Link_to_Vector;
     e : double_double := create(0.0);
    -- order : constant natural := Continuation_Parameters.endext_order;
@@ -98,7 +99,7 @@ package body Drivers_to_Track_DoblDobl_Paths is
       ls.t := Create(integer(0));
       s := Shallow_Create(ls);
       Track_along_Path(file,s,t1,tol,false,pp1,cp1,f);
-      Track_End_Game(file,s,t1,tol,false,0,v,e,pp2,cp2,f);
+      Track_End_Game(file,s,t1,tol,false,0,w,v,e,pp2,cp2,f);
       cnt := ind-1;
       Write_Next_Solution
         (file,cnt,s,tol_zero,tol_zero,nbfail,nbregu,nbsing,kind);

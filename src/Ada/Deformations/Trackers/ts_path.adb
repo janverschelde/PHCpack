@@ -184,6 +184,7 @@ procedure ts_path is
     endcp : constant Continuation_Parameters.Corr_Pars
           := Continuation_Parameters.Create_End_Game;
     pathdir : Standard_Floating_Vectors.Link_to_Vector;
+    wnd : integer32 := 1;
     errv : double_float := 0.0;
     order : constant integer32 
           := integer32(Continuation_Parameters.endext_order);
@@ -207,7 +208,7 @@ procedure ts_path is
       begin
         Continue_along_Path(file,s,Create(1.0),tol,false,patpp,patcp);
         Continue_in_End_Game(file,s,Create(1.0),tol,false,
-                             order,pathdir,errv,endpp,endcp);
+                             order,wnd,pathdir,errv,endpp,endcp);
       end;
       tmp := Tail_Of(tmp);
     end loop;
@@ -236,6 +237,7 @@ procedure ts_path is
           := Continuation_Parameters.Create_for_Path;
     endcp : constant Continuation_Parameters.Corr_Pars
           := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     pathdir : Double_Double_Vectors.Link_to_Vector;
     errv : double_double := create(0.0);
     order : constant integer32
@@ -261,7 +263,7 @@ procedure ts_path is
       begin
         Continue_along_Path(file,s,target,tol,false,patpp,patcp);
         Continue_in_End_Game(file,s,target,tol,false,
-                             order,pathdir,errv,endpp,endcp);
+                             order,w,pathdir,errv,endpp,endcp);
         ls := Shallow_Create(s);
         Set_Head(tmp,ls);
       end;
@@ -292,6 +294,7 @@ procedure ts_path is
           := Continuation_Parameters.Create_for_Path;
     endcp : constant Continuation_Parameters.Corr_Pars
           := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     pathdir : Quad_Double_Vectors.Link_to_Vector;
     errv : quad_double := create(0.0);
     order : constant integer32
@@ -317,7 +320,7 @@ procedure ts_path is
       begin
         Continue_along_Path(file,s,target,tol,false,patpp,patcp);
         Continue_in_End_Game(file,s,target,tol,false,
-                             order,pathdir,errv,endpp,endcp);
+                             order,w,pathdir,errv,endpp,endcp);
         ls := Shallow_Create(s);
         Set_Head(tmp,ls);
       end;

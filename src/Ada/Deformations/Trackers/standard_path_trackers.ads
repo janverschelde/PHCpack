@@ -81,7 +81,7 @@ package Standard_Path_Trackers is
   procedure Linear_Single_Conditioned_Silent_Continue
                 ( s : in out Solu_Info; target : in Complex_Number;
                   tol : in double_float; proj : in boolean;
-                  rtoric : in integer32;
+                  rtoric : in integer32; w : in out integer32;
                   v : in out Standard_Floating_Vectors.Link_to_Vector;
                   errorv : in out double_float;
                   p : in Pred_Pars; c : in Corr_Pars;
@@ -98,6 +98,7 @@ package Standard_Path_Trackers is
                 ( file : in file_type; s : in out Solu_Info;
                   target : in Complex_Number; tol : in double_float;
                   proj : in boolean; rtoric : in integer32;
+                  w : in out integer32;
                   v : in out Standard_Floating_Vectors.Link_to_Vector;
                   errorv : in out double_float;
                   p : in Pred_Pars; c : in Corr_Pars;
@@ -115,6 +116,7 @@ package Standard_Path_Trackers is
   --   tol        tolerance to decide when two double_floats are the same;
   --   proj       when perpendicular-projective corrector has to be used;
   --   rtoric     order of extrapolation for computation of path directions;
+  --   w          estimate for the winding number, initialized to one;
   --   v          direction of toric compactificiation, null when (rtoric = 0);
   --   errorv     error on the current direction;
   --   p          parameters for the predictor;
@@ -124,6 +126,7 @@ package Standard_Path_Trackers is
 
   -- ON RETURN :
   --   s          the computed solution of H(x,t) = 0;
+  --   w          estimated winding number;
   --   v          direction of the compactification, when rtoric > 0;
   --   errorv     difference with previously computed direction.
 

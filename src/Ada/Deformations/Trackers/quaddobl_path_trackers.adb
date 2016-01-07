@@ -193,7 +193,7 @@ package body QuadDobl_Path_Trackers is
   procedure Linear_Single_Conditioned_Silent_Continue
               ( s : in out Solu_Info; target : in Complex_Number;
                 tol : in double_float; proj : in boolean;
-                rtoric : in integer32; 
+                rtoric : in integer32; w : in out integer32;
                 v : in out Quad_Double_Vectors.Link_to_Vector;
                 errorv : in out quad_double;
                 p : in Pred_Pars; c : in Corr_Pars;
@@ -305,9 +305,10 @@ package body QuadDobl_Path_Trackers is
   end Linear_Single_Conditioned_Silent_Continue;
 
   procedure Linear_Single_Conditioned_Reporting_Continue
-              ( file : in file_type; s : in out Solu_Info;
-                target : in Complex_Number; tol : in double_float;
-                proj : in boolean; rtoric : in integer32;
+              ( file : in file_type;
+                s : in out Solu_Info; target : in Complex_Number;
+                tol : in double_float; proj : in boolean; 
+                rtoric : in integer32; w : in out integer32;
                 v : in out Quad_Double_Vectors.Link_to_Vector;
                 errorv : in out quad_double;
                 p : in Pred_Pars; c : in Corr_Pars;

@@ -1068,6 +1068,7 @@ package body PHCpack_Operations is
         := Continuation_Parameters.Create_for_Path;
     cp2 : constant Continuation_Parameters.Corr_Pars
         := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     v : Standard_Floating_Vectors.Link_to_Vector;
     e : double_float := 0.0;
     s : Standard_Continuation_Data.Solu_Info;
@@ -1076,7 +1077,7 @@ package body PHCpack_Operations is
     ls.t := Create(0.0);
     s := Standard_Continuation_Data.Shallow_Create(ls);
     Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
-    Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
+    Track_Path_at_End(s,t1,tol,false,0,w,v,e,pp2,cp2);
     ls.t := Create(REAL_PART(ls.t),s.length_path);
     ls.err := s.cora; ls.rco := s.rcond; ls.res := s.resa;
     length := s.length_path;
@@ -1117,6 +1118,7 @@ package body PHCpack_Operations is
         := Continuation_Parameters.Create_for_Path;
     cp2 : constant Continuation_Parameters.Corr_Pars
         := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     v : Double_Double_Vectors.Link_to_Vector;
     e : double_double := create(0.0);
     s : DoblDobl_Continuation_Data.Solu_Info;
@@ -1126,7 +1128,7 @@ package body PHCpack_Operations is
     ls.t := Create(integer(0));
     s := DoblDobl_Continuation_Data.Shallow_Create(ls);
     Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
-    Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
+    Track_Path_at_End(s,t1,tol,false,0,w,v,e,pp2,cp2);
     len := Double_Double_Numbers.create(s.length_path);
     ls.t := DoblDobl_Complex_Numbers.Create(REAL_PART(ls.t),len);
     ls.err := create(s.cora);
@@ -1170,6 +1172,7 @@ package body PHCpack_Operations is
         := Continuation_Parameters.Create_for_Path;
     cp2 : constant Continuation_Parameters.Corr_Pars
         := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     v : Quad_Double_Vectors.Link_to_Vector;
     e : quad_double := create(0.0);
     s : QuadDobl_Continuation_Data.Solu_Info;
@@ -1180,7 +1183,7 @@ package body PHCpack_Operations is
     ls.t := Create(integer(0));
     s := QuadDobl_Continuation_Data.Shallow_Create(ls);
     Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
-    Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
+    Track_Path_at_End(s,t1,tol,false,0,w,v,e,pp2,cp2);
     dd_len := Double_Double_Numbers.create(s.length_path);
     qd_len := Quad_Double_Numbers.create(dd_len);
     ls.t := QuadDobl_Complex_Numbers.Create(REAL_PART(ls.t),qd_len);
@@ -1225,6 +1228,7 @@ package body PHCpack_Operations is
         := Continuation_Parameters.Create_for_Path;
     cp2 : constant Continuation_Parameters.Corr_Pars
         := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     v : Standard_Floating_Vectors.Link_to_Vector;
     e : double_float := 0.0;
     s : Standard_Continuation_Data.Solu_Info;
@@ -1233,7 +1237,7 @@ package body PHCpack_Operations is
     ls.t := Create(0.0);
     s := Standard_Continuation_Data.Shallow_Create(ls);
     Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
-    Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
+    Track_Path_at_End(s,t1,tol,false,0,w,v,e,pp2,cp2);
     ls.t := Create(REAL_PART(ls.t),s.length_path);
     ls.err := s.cora; ls.rco := s.rcond; ls.res := s.resa;
     length := s.length_path;
@@ -1276,6 +1280,7 @@ package body PHCpack_Operations is
         := Continuation_Parameters.Create_for_Path;
     cp2 : constant Continuation_Parameters.Corr_Pars
         := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     v : Double_Double_Vectors.Link_to_Vector;
     e : double_double := create(0.0);
     s : DoblDobl_Continuation_Data.Solu_Info;
@@ -1285,7 +1290,7 @@ package body PHCpack_Operations is
     ls.t := Create(zero);
     s := DoblDobl_Continuation_Data.Shallow_Create(ls);
     Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
-    Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
+    Track_Path_at_End(s,t1,tol,false,0,w,v,e,pp2,cp2);
     dd_len := create(s.length_path);
     ls.t := Create(REAL_PART(ls.t),dd_len);
     ls.err := create(s.cora);
@@ -1331,6 +1336,7 @@ package body PHCpack_Operations is
         := Continuation_Parameters.Create_for_Path;
     cp2 : constant Continuation_Parameters.Corr_Pars
         := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     v : Quad_Double_Vectors.Link_to_Vector;
     e : quad_double := create(0.0);
     s : QuadDobl_Continuation_Data.Solu_Info;
@@ -1341,7 +1347,7 @@ package body PHCpack_Operations is
     ls.t := Create(zero);
     s := QuadDobl_Continuation_Data.Shallow_Create(ls);
     Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
-    Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
+    Track_Path_at_End(s,t1,tol,false,0,w,v,e,pp2,cp2);
     dd_len := create(s.length_path);
     qd_len := create(dd_len);
     ls.t := Create(REAL_PART(ls.t),qd_len);
@@ -1386,6 +1392,7 @@ package body PHCpack_Operations is
         := Continuation_Parameters.Create_for_Path;
     cp2 : constant Continuation_Parameters.Corr_Pars
         := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     v : Standard_Floating_Vectors.Link_to_Vector;
     e : double_float := 0.0;
     s : Standard_Continuation_Data.Solu_Info;
@@ -1395,10 +1402,10 @@ package body PHCpack_Operations is
     s := Standard_Continuation_Data.Shallow_Create(ls);
     if file_okay then
       Track_Path_along_Path(output_file,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(output_file,s,t1,tol,false,0,v,e,pp2,cp2);
+      Track_Path_at_End(output_file,s,t1,tol,false,0,w,v,e,pp2,cp2);
     else
       Track_Path_along_Path(standard_output,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(standard_output,s,t1,tol,false,0,v,e,pp2,cp2);
+      Track_Path_at_End(standard_output,s,t1,tol,false,0,w,v,e,pp2,cp2);
     end if;
     ls.t := Create(REAL_PART(ls.t),s.length_path);
     ls.err := s.cora; ls.rco := s.rcond; ls.res := s.resa;
@@ -1440,6 +1447,7 @@ package body PHCpack_Operations is
         := Continuation_Parameters.Create_for_Path;
     cp2 : constant Continuation_Parameters.Corr_Pars
         := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     v : Double_Double_Vectors.Link_to_Vector;
     e : double_double := create(0.0);
     s : DoblDobl_Continuation_Data.Solu_Info;
@@ -1450,10 +1458,10 @@ package body PHCpack_Operations is
     s := DoblDobl_Continuation_Data.Shallow_Create(ls);
     if file_okay then
       Track_Path_along_Path(output_file,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(output_file,s,t1,tol,false,0,v,e,pp2,cp2);
+      Track_Path_at_End(output_file,s,t1,tol,false,0,w,v,e,pp2,cp2);
     else
       Track_Path_along_Path(standard_output,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(standard_output,s,t1,tol,false,0,v,e,pp2,cp2);
+      Track_Path_at_End(standard_output,s,t1,tol,false,0,w,v,e,pp2,cp2);
     end if;
     len := Double_Double_Numbers.create(s.length_path);
     ls.t := DoblDobl_Complex_Numbers.Create(REAL_PART(ls.t),len);
@@ -1498,6 +1506,7 @@ package body PHCpack_Operations is
         := Continuation_Parameters.Create_for_Path;
     cp2 : constant Continuation_Parameters.Corr_Pars
         := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     v : Quad_Double_Vectors.Link_to_Vector;
     e : quad_double := create(0.0);
     s : QuadDobl_Continuation_Data.Solu_Info;
@@ -1509,10 +1518,10 @@ package body PHCpack_Operations is
     s := QuadDobl_Continuation_Data.Shallow_Create(ls);
     if file_okay then
       Track_Path_along_Path(output_file,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(output_file,s,t1,tol,false,0,v,e,pp2,cp2);
+      Track_Path_at_End(output_file,s,t1,tol,false,0,w,v,e,pp2,cp2);
     else
       Track_Path_along_Path(standard_output,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(standard_output,s,t1,tol,false,0,v,e,pp2,cp2);
+      Track_Path_at_End(standard_output,s,t1,tol,false,0,w,v,e,pp2,cp2);
     end if;
     dd_len := Double_Double_Numbers.create(s.length_path);
     qd_len := Quad_Double_Numbers.create(dd_len);
@@ -1558,6 +1567,7 @@ package body PHCpack_Operations is
         := Continuation_Parameters.Create_for_Path;
     cp2 : constant Continuation_Parameters.Corr_Pars
         := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     v : Standard_Floating_Vectors.Link_to_Vector;
     e : double_float := 0.0;
     s : Standard_Continuation_Data.Solu_Info;
@@ -1567,10 +1577,10 @@ package body PHCpack_Operations is
     s := Standard_Continuation_Data.Shallow_Create(ls);
     if file_okay then
       Track_Path_along_Path(output_file,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(output_file,s,t1,tol,false,0,v,e,pp2,cp2);
+      Track_Path_at_End(output_file,s,t1,tol,false,0,w,v,e,pp2,cp2);
     else
       Track_Path_along_Path(standard_output,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(standard_output,s,t1,tol,false,0,v,e,pp2,cp2);
+      Track_Path_at_End(standard_output,s,t1,tol,false,0,w,v,e,pp2,cp2);
     end if;
     ls.t := Create(REAL_PART(ls.t),s.length_path);
     ls.err := s.cora; ls.rco := s.rcond; ls.res := s.resa;
@@ -1614,6 +1624,7 @@ package body PHCpack_Operations is
         := Continuation_Parameters.Create_for_Path;
     cp2 : constant Continuation_Parameters.Corr_Pars
         := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     v : Double_Double_Vectors.Link_to_Vector;
     e : double_double := zero;
     s : DoblDobl_Continuation_Data.Solu_Info;
@@ -1624,10 +1635,10 @@ package body PHCpack_Operations is
     s := DoblDobl_Continuation_Data.Shallow_Create(ls);
     if file_okay then
       Track_Path_along_Path(output_file,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(output_file,s,t1,tol,false,0,v,e,pp2,cp2);
+      Track_Path_at_End(output_file,s,t1,tol,false,0,w,v,e,pp2,cp2);
     else
       Track_Path_along_Path(standard_output,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(standard_output,s,t1,tol,false,0,v,e,pp2,cp2);
+      Track_Path_at_End(standard_output,s,t1,tol,false,0,w,v,e,pp2,cp2);
     end if;
     dd_len := create(s.length_path);
     ls.t := Create(REAL_PART(ls.t),dd_len);
@@ -1674,6 +1685,7 @@ package body PHCpack_Operations is
         := Continuation_Parameters.Create_for_Path;
     cp2 : constant Continuation_Parameters.Corr_Pars
         := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     v : Quad_Double_Vectors.Link_to_Vector;
     e : quad_double := zero;
     s : QuadDobl_Continuation_Data.Solu_Info;
@@ -1685,10 +1697,10 @@ package body PHCpack_Operations is
     s := QuadDobl_Continuation_Data.Shallow_Create(ls);
     if file_okay then
       Track_Path_along_Path(output_file,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(output_file,s,t1,tol,false,0,v,e,pp2,cp2);
+      Track_Path_at_End(output_file,s,t1,tol,false,0,w,v,e,pp2,cp2);
     else
       Track_Path_along_Path(standard_output,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(standard_output,s,t1,tol,false,0,v,e,pp2,cp2);
+      Track_Path_at_End(standard_output,s,t1,tol,false,0,w,v,e,pp2,cp2);
     end if;
     dd_len := create(s.length_path);
     qd_len := create(dd_len);

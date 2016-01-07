@@ -1,3 +1,8 @@
+Thu 7 Jan 2016 : modifications in standard_path_trackers with the addition
+  of the winding number as argument for the polyhedral end games.
+  This changed drivers_to_track_standard_paths.adb and ts_path.adb.
+  Did the same for dobldobl_path_trackers and quaddobl_path_trackers.
+
 Tue 6 Oct 2015 : change in dobldobl_predictors.adb for exponentiation of
   double double with 64-bit integers.
 

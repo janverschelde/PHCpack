@@ -112,12 +112,13 @@ package body Single_Polyhedral_Trackers is
       sol.t := Create(0.0);
       declare
         s : Solu_Info := Shallow_Create(sol);
+        w : integer32 := 1;
         v : Standard_Floating_Vectors.Link_to_Vector;
         e : double_float := 0.0;
       begin
         pp1.dist_target := 0.0;
         Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
-        Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
+        Track_Path_at_End(s,t1,tol,false,0,w,v,e,pp2,cp2);
         sol.err := s.cora; sol.rco := s.rcond; sol.res := s.resa;
       end;
     end Main;
@@ -213,12 +214,13 @@ package body Single_Polyhedral_Trackers is
       sol.t := Create(zero);
       declare
         s : Solu_Info := Shallow_Create(sol);
+        w : integer32 := 1;
         v : Double_Double_Vectors.Link_to_Vector;
         e : double_double := create(0.0);
       begin
         pp1.dist_target := 0.0;
         Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
-        Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
+        Track_Path_at_End(s,t1,tol,false,0,w,v,e,pp2,cp2);
         sol.err := create(s.cora);
         sol.rco := create(s.rcond);
         sol.res := create(s.resa);
@@ -316,12 +318,13 @@ package body Single_Polyhedral_Trackers is
       sol.t := Create(zero);
       declare
         s : Solu_Info := Shallow_Create(sol);
+        w : integer32 := 1;
         v : Quad_Double_Vectors.Link_to_Vector;
         e : quad_double := create(0.0);
       begin
         pp1.dist_target := 0.0;
         Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
-        Track_Path_at_End(s,t1,tol,false,0,v,e,pp2,cp2);
+        Track_Path_at_End(s,t1,tol,false,0,w,v,e,pp2,cp2);
         sol.err := create(s.cora);
         sol.rco := create(s.rcond);
         sol.res := create(s.resa);

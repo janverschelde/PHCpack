@@ -23,6 +23,7 @@ package body DoblDobl_IncFix_Continuation is
     endpp : constant Pred_Pars := Continuation_Parameters.Create_End_Game;
     patcp : constant Corr_Pars := Continuation_Parameters.Create_for_Path;
     endcp : constant Corr_Pars := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     pathdir : Double_Double_Vectors.Link_to_Vector;
     errv : double_double;
     order : constant integer32
@@ -41,7 +42,7 @@ package body DoblDobl_IncFix_Continuation is
         s : Solu_Info := Deep_Create(ls.all);
       begin
         Continue_along_Path(s,target,tol,false,patpp,patcp);
-        Continue_End_Game(s,target,tol,false,order,pathdir,errv,endpp,endcp);
+        Continue_End_Game(s,target,tol,false,order,w,pathdir,errv,endpp,endcp);
         Append(res,res_last,Deep_Create(s));
       end;
       tmp := Tail_Of(tmp);
@@ -59,6 +60,7 @@ package body DoblDobl_IncFix_Continuation is
     endpp : constant Pred_Pars := Continuation_Parameters.Create_End_Game;
     patcp : constant Corr_Pars := Continuation_Parameters.Create_for_Path;
     endcp : constant Corr_Pars := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     pathdir : Double_Double_Vectors.Link_to_Vector;
     errv : double_double;
     order : constant integer32
@@ -77,7 +79,7 @@ package body DoblDobl_IncFix_Continuation is
         s : Solu_Info := Deep_Create(ls.all);
       begin
         Continue_along_Path(s,target,tol,false,patpp,patcp);
-        Continue_End_Game(s,target,tol,false,order,pathdir,errv,endpp,endcp);
+        Continue_End_Game(s,target,tol,false,order,w,pathdir,errv,endpp,endcp);
         Append(res,res_last,Deep_Create(s));
         exit when Stop_Test(s.sol.all);
       end;
@@ -96,6 +98,7 @@ package body DoblDobl_IncFix_Continuation is
     endpp : constant Pred_Pars := Continuation_Parameters.Create_End_Game;
     patcp : constant Corr_Pars := Continuation_Parameters.Create_for_Path;
     endcp : constant Corr_Pars := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     pathdir : Double_Double_Vectors.Link_to_Vector;
     tol_zero : constant double_float := endcp.epsaf;
     errv : double_double;
@@ -123,7 +126,7 @@ package body DoblDobl_IncFix_Continuation is
       begin
         Continue_along_Path(file,s,target,tol,false,patpp,patcp);
         Continue_End_Game(file,s,target,tol,false,
-                          order,pathdir,errv,endpp,endcp);
+                          order,w,pathdir,errv,endpp,endcp);
         Write_Next_Solution
           (file,cnt,s,tol_zero,tol_zero,nbfail,nbregu,nbsing,kind);
         text_io.flush(file);
@@ -151,6 +154,7 @@ package body DoblDobl_IncFix_Continuation is
     endpp : constant Pred_Pars := Continuation_Parameters.Create_End_Game;
     patcp : constant Corr_Pars := Continuation_Parameters.Create_for_Path;
     endcp : constant Corr_Pars := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     pathdir : Double_Double_Vectors.Link_to_Vector;
     tol_zero : constant double_float := endcp.epsaf;
     errv : double_double;
@@ -178,7 +182,7 @@ package body DoblDobl_IncFix_Continuation is
       begin
         Continue_along_Path(file,s,target,tol,false,patpp,patcp);
         Continue_End_Game(file,s,target,tol,false,
-                          order,pathdir,errv,endpp,endcp);
+                          order,w,pathdir,errv,endpp,endcp);
         Write_Next_Solution
           (file,cnt,s,tol_zero,tol_zero,nbfail,nbregu,nbsing,kind);
         text_io.flush(file);

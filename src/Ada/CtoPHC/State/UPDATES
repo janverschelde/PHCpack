@@ -1,3 +1,6 @@
+Thu 7 Jan 2016 : updates in phcpack_operations.adb and pieri_homotopy.adb 
+  for the added winding number in the polyhedral end games.
+
 Sat 26 Dec 2015 : bug fixes in use_c2mbt.adb.
 
 Fri 25 Dec 2015 : new use_c2mbt for the homotopy membership test, with three

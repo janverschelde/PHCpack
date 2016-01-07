@@ -213,6 +213,7 @@ package body Pieri_Homotopy is
     s : Solu_Info; 
     tol : constant double_float := 1.0E-12;
     err : double_float := 1.0;
+    w : integer32 := 1;
     dum : Standard_Floating_Vectors.Link_to_Vector;
     pp1,pp2 : Continuation_Parameters.Pred_Pars;
     cp1,cp2 : Continuation_Parameters.Corr_Pars;
@@ -231,7 +232,7 @@ package body Pieri_Homotopy is
     cp1 := Continuation_Parameters.Create_for_Path;
     cp2 := Continuation_Parameters.Create_End_Game;
     Sil_Cont1(s,Create(1.0),tol,false,pp1,cp1);
-    Sil_Cont2(s,Create(1.0),tol,false,0,dum,err,pp2,cp2);
+    Sil_Cont2(s,Create(1.0),tol,false,0,w,dum,err,pp2,cp2);
     x(x'first..x'last-1) := s.sol.v;
     x(x'last) := s.sol.t;
     Clear(s);
@@ -257,6 +258,7 @@ package body Pieri_Homotopy is
     sol : Solution(x'last-1);
     s : Solu_Info; 
     tol : constant double_float := 1.0E-12;
+    w : integer32 := 1;
     err : double_float := 1.0;
     dum : Standard_Floating_Vectors.Link_to_Vector;
     pp1,pp2 : Continuation_Parameters.Pred_Pars;
@@ -277,7 +279,7 @@ package body Pieri_Homotopy is
     cp2 := Continuation_Parameters.Create_End_Game;
     Process_io.Set_Output_Code(spc);
     Rep_Cont1(file,s,Create(1.0),tol,false,pp1,cp1);
-    Rep_Cont2(file,s,Create(1.0),tol,false,0,dum,err,pp2,cp2);
+    Rep_Cont2(file,s,Create(1.0),tol,false,0,w,dum,err,pp2,cp2);
     x(x'first..x'last-1) := s.sol.v;
     x(x'last) := s.sol.t;
     Clear(s);

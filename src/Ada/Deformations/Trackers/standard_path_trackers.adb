@@ -192,7 +192,7 @@ package body Standard_Path_Trackers is
   procedure Linear_Single_Conditioned_Silent_Continue
               ( s : in out Solu_Info; target : in Complex_Number;
                 tol : in double_float; proj : in boolean;
-                rtoric : in integer32; 
+                rtoric : in integer32;  w : in out integer32;
                 v : in out Standard_Floating_Vectors.Link_to_Vector;
                 errorv : in out double_float;
                 p : in Pred_Pars; c : in Corr_Pars;
@@ -301,9 +301,10 @@ package body Standard_Path_Trackers is
   end Linear_Single_Conditioned_Silent_Continue;
 
   procedure Linear_Single_Conditioned_Reporting_Continue
-              ( file : in file_type; s : in out Solu_Info;
-                target : in Complex_Number; tol : in double_float;
-                proj : in boolean; rtoric : in integer32;
+              ( file : in file_type;
+                s : in out Solu_Info; target : in Complex_Number;
+                tol : in double_float; proj : in boolean;
+                rtoric : in integer32; w : in out integer32;
                 v : in out Standard_Floating_Vectors.Link_to_Vector;
                 errorv : in out double_float;
                 p : in Pred_Pars; c : in Corr_Pars;

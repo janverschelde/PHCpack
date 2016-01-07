@@ -1,3 +1,6 @@
+Thu 7 Jan 2016 : change single_polyhedral_trackers.adb in the call to the
+  path trackers with the extra parameter for the estimated winding number.
+
 Fri 11 Dec 2015 : to pipelined_polyhedral_drivers, added wrappers to deal
   with ordinary polynomial systems.
 

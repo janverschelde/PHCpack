@@ -63,6 +63,7 @@ package body Drivers_to_Track_Standard_Paths is
         := Continuation_Parameters.Create_for_Path;
     cp2 : constant Continuation_Parameters.Corr_Pars
         := Continuation_Parameters.Create_End_Game;
+    w : integer32 := 1;
     v : Standard_Floating_Vectors.Link_to_Vector;
     e : double_float := 0.0;
     s : Solu_Info;
@@ -89,7 +90,7 @@ package body Drivers_to_Track_Standard_Paths is
       ls.t := Create(0.0);
       s := Shallow_Create(ls);
       Track_Path_along_Path(file,s,t1,tol,false,pp1,cp1,f);
-      Track_Path_at_End(file,s,t1,tol,false,0,v,e,pp2,cp2,f);
+      Track_Path_at_End(file,s,t1,tol,false,0,w,v,e,pp2,cp2,f);
       cnt := ind-1;
       Write_Next_Solution
         (file,cnt,s,tol_zero,tol_zero,nbfail,nbregu,nbsing,kind);

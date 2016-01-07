@@ -265,6 +265,7 @@ package body Standard_IncFix_Continuation is
     ppa,pen : Pred_Pars;
     cpa,cen : Corr_Pars;
     tol : constant double_float := 10.0**(-10);
+    w : integer32 := 1;
     dumv : Standard_Floating_Vectors.Link_to_Vector := null;
     err : double_float := 0.0;
 
@@ -304,7 +305,7 @@ package body Standard_IncFix_Continuation is
     begin
       for i in s'range loop
         LCont1(s(i),target,tol,proj,p1,c_path);
-        LCont2(s(i),target,tol,proj,0,dumv,err,p2,c_end);
+        LCont2(s(i),target,tol,proj,0,w,dumv,err,p2,c_end);
         Diagnostics(s,c_end,tol,i,proj,
                     ninfi,nregu,nsing,nclus,nfail,sols,clusols);
       end loop;
@@ -326,7 +327,7 @@ package body Standard_IncFix_Continuation is
 
     begin
       for i in s'range loop
-        LCont2(s(i),target,tol,proj,0,dumv,err,p,c);
+        LCont2(s(i),target,tol,proj,0,w,dumv,err,p,c);
       end loop;
       for i in s'range loop
         Diagnostics(s,c,tol,i,proj,ninfi,nregu,nsing,nclus,nfail,sols,clusols);
@@ -387,7 +388,8 @@ package body Standard_IncFix_Continuation is
     tmp : Solu_Info_Array_List := sials;
     ppa,pen : Pred_Pars;
     cpa,cen : Corr_Pars;
-    tol : constant double_float := 10.0**(-10);
+    tol : constant double_float := 1.0E-10;
+    w : integer32 := 1;
     dumv : Standard_Floating_Vectors.Link_to_Vector := null;
     err : double_float := 0.0;
 
@@ -427,7 +429,7 @@ package body Standard_IncFix_Continuation is
     begin
       for i in s'range loop
         LCont1(s(i),target,tol,proj,p1,c_path);
-        LCont2(s(i),target,tol,proj,0,dumv,err,p2,c_end);
+        LCont2(s(i),target,tol,proj,0,w,dumv,err,p2,c_end);
         Diagnostics(s,c_end,tol,i,proj,
                     ninfi,nregu,nsing,nclus,nfail,sols,clusols);
       end loop;
@@ -449,7 +451,7 @@ package body Standard_IncFix_Continuation is
 
     begin
       for i in s'range loop
-        LCont2(s(i),target,tol,proj,0,dumv,err,p,c);
+        LCont2(s(i),target,tol,proj,0,w,dumv,err,p,c);
       end loop;
       for i in s'range loop
         Diagnostics(s,c,tol,i,proj,ninfi,nregu,nsing,nclus,nfail,sols,clusols);
@@ -520,7 +522,8 @@ package body Standard_IncFix_Continuation is
     sia : Solu_Info_Array(1..integer32(Length_Of(sols))) := Deep_Create(sols);
     ppa,pen : Pred_Pars;
     cpa,cen : Corr_Pars;
-    tol : constant double_float := 10.0**(-10);
+    tol : constant double_float := 1.0E-10;
+    w : integer32 := 1;
     dumv : Standard_Floating_Vectors.Link_to_Vector := null;
     err : double_float := 0.0;
 
@@ -560,7 +563,7 @@ package body Standard_IncFix_Continuation is
     begin
       for i in s'range loop
         LCont1(s(i),target,tol,proj,p1,c_path);
-        LCont2(s(i),target,tol,proj,0,dumv,err,p2,c_end);
+        LCont2(s(i),target,tol,proj,0,w,dumv,err,p2,c_end);
         Diagnostics(s,c_end,tol,i,proj,
                     ninfi,nregu,nsing,nclus,nfail,sols,clusols);
         exit when Stop_Test(s(i).sol.all);
@@ -583,7 +586,7 @@ package body Standard_IncFix_Continuation is
 
     begin
       for i in s'range loop
-        LCont2(s(i),target,tol,proj,0,dumv,err,p,c);
+        LCont2(s(i),target,tol,proj,0,w,dumv,err,p,c);
       end loop;
       for i in s'range loop
         Diagnostics(s,c,tol,i,proj,ninfi,nregu,nsing,nclus,nfail,sols,clusols);
@@ -644,7 +647,8 @@ package body Standard_IncFix_Continuation is
     sia : Solu_Info_Array(1..integer32(Length_Of(sols))) := Deep_Create(sols);
     ppa,pen : Pred_Pars;
     cpa,cen : Corr_Pars;
-    tol : constant double_float := 10.0**(-10);
+    tol : constant double_float := 1.0E-10;
+    w : integer32 := 1;
     dumv : Standard_Floating_Vectors.Link_to_Vector := null;
     err : double_float := 0.0;
 
@@ -687,7 +691,7 @@ package body Standard_IncFix_Continuation is
       Write_Bar(file);
       for i in s'range loop
         LCont1(file,s(i),target,tol,proj,p1,c_path);
-        LCont2(file,s(i),target,tol,proj,0,dumv,err,p2,c_end);
+        LCont2(file,s(i),target,tol,proj,0,w,dumv,err,p2,c_end);
         Write_Statistics(file,i,s(i).nstep,s(i).nfail,s(i).niter,s(i).nsyst);
         Write_Diagnostics(file,s,c_end,tol,i,proj,
                           ninfi,nregu,nsing,nclus,nfail,sols,clusols);
@@ -709,7 +713,7 @@ package body Standard_IncFix_Continuation is
 
     begin
       for i in s'range loop
-        LCont2(file,s(i),target,tol,proj,0,dumv,err,p,c);
+        LCont2(file,s(i),target,tol,proj,0,w,dumv,err,p,c);
       end loop;
       Write_Bar(file);
       for i in s'range loop
@@ -783,6 +787,7 @@ package body Standard_IncFix_Continuation is
     ppa,pen : Pred_Pars;
     cpa,cen : Corr_Pars;
     tol : constant double_float := 1.0E-10;
+    w : integer32 := 1;
     dumv : Standard_Floating_Vectors.Link_to_Vector := null;
     err : double_float := 0.0;
 
@@ -825,7 +830,7 @@ package body Standard_IncFix_Continuation is
       Write_Bar(file);
       for i in s'range loop
         LCont1(file,s(i),target,tol,proj,p1,c_path);
-        LCont2(file,s(i),target,tol,proj,0,dumv,err,p2,c_end);
+        LCont2(file,s(i),target,tol,proj,0,w,dumv,err,p2,c_end);
         Write_Statistics(file,i,s(i).nstep,s(i).nfail,s(i).niter,s(i).nsyst);
         Write_Diagnostics(file,s,c_end,tol,i,proj,
                           ninfi,nregu,nsing,nclus,nfail,sols,clusols);
@@ -850,7 +855,7 @@ package body Standard_IncFix_Continuation is
 
     begin
       for i in s'range loop
-        LCont2(file,s(i),target,tol,proj,0,dumv,err,p,c);
+        LCont2(file,s(i),target,tol,proj,0,w,dumv,err,p,c);
       end loop;
       Write_Bar(file);
       for i in s'range loop
@@ -934,7 +939,8 @@ package body Standard_IncFix_Continuation is
     sia : Solu_Info_Array(1..integer32(Length_Of(sols))) := Deep_Create(sols);
     ppa,pen : Pred_Pars;
     cpa,cen : Corr_Pars;
-    tol : constant double_float := 10.0**(-10);
+    tol : constant double_float := 1.0E-10;
+    w : integer32 := 1;
     dumv : Standard_Floating_Vectors.Link_to_Vector := null;
     err : double_float := 0.0;
 
@@ -977,7 +983,7 @@ package body Standard_IncFix_Continuation is
       Write_Bar(file);
       for i in s'range loop
         LCont1(file,s(i),target,tol,proj,p1,c_path);
-        LCont2(file,s(i),target,tol,proj,0,dumv,err,p2,c_end);
+        LCont2(file,s(i),target,tol,proj,0,w,dumv,err,p2,c_end);
         Write_Statistics(file,i,s(i).nstep,s(i).nfail,s(i).niter,s(i).nsyst);
         Write_Diagnostics(file,s,c_end,tol,i,proj,
                           ninfi,nregu,nsing,nclus,nfail,sols,clusols);
@@ -1000,7 +1006,7 @@ package body Standard_IncFix_Continuation is
 
     begin
       for i in s'range loop
-        LCont2(file,s(i),target,tol,proj,0,dumv,err,p,c);
+        LCont2(file,s(i),target,tol,proj,0,w,dumv,err,p,c);
       end loop;
       Write_Bar(file);
       for i in s'range loop
@@ -1116,7 +1122,7 @@ package body Standard_IncFix_Continuation is
     begin
       for i in s'range loop
         LCont1(s(i),target,tol,proj,p1,c_path);
-        LCont2(s(i),target,tol,proj,rtoric,v(i),errv(i),p2,c_end);
+        LCont2(s(i),target,tol,proj,rtoric,w(i),v(i),errv(i),p2,c_end);
         Diagnostics(s,c_end,tol,i,proj,
                     ninfi,nregu,nsing,nclus,nfail,sols,clusols);
       end loop;
@@ -1135,7 +1141,7 @@ package body Standard_IncFix_Continuation is
 
     begin
       for i in s'range loop
-        LCont2(s(i),target,tol,proj,rtoric,v(i),errv(i),p,c);
+        LCont2(s(i),target,tol,proj,rtoric,w(i),v(i),errv(i),p,c);
       end loop;
       for i in s'range loop
         Diagnostics(s,c,tol,i,proj,ninfi,nregu,nsing,nclus,nfail,sols,clusols);
@@ -1245,7 +1251,7 @@ package body Standard_IncFix_Continuation is
         new_line(file);
         put(file,"running polyhedral end game on path ");
         put(file,i,1); put_line(file," :");
-        LCont2(file,s(i),target,tol,proj,rtoric,v(i),errv(i),p2,c_end);
+        LCont2(file,s(i),target,tol,proj,rtoric,w(i),v(i),errv(i),p2,c_end);
         Write_Statistics(file,i,s(i).nstep,s(i).nfail,s(i).niter,s(i).nsyst);
         Write_Diagnostics(file,s,c_end,tol,i,proj,
                           ninfi,nregu,nsing,nclus,nfail,sols,clusols);
@@ -1267,7 +1273,7 @@ package body Standard_IncFix_Continuation is
 
     begin
       for i in s'range loop
-        LCont2(file,s(i),target,tol,proj,rtoric,v(i),errv(i),p,c);
+        LCont2(file,s(i),target,tol,proj,rtoric,w(i),v(i),errv(i),p,c);
       end loop;
       Write_Bar(file);
       for i in s'range loop
