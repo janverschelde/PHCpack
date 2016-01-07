@@ -1,6 +1,9 @@
 Wed 6 Jan 2015 : extended {dobldobl,quaddobl}_incfix_continuation with
   procedures to compute the directions of the paths.
   Updated drivers_for_poly_continuation.adb with those procedures.
+  Added extra parameter for the estimated winding numbers in the
+  {standard,dobldobl,quaddobl}_incfix_continuation packages called 
+  in drivers_for_poly_continuation.adb.
 
 Mon 4 Jan 2015 : in continuation_parameters.adb, fixed setting of the
   predictor type in case of a polyhedral end game.

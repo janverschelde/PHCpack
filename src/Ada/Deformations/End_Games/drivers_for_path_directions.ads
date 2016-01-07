@@ -7,6 +7,7 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
+with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
 with Double_Double_Vectors;
@@ -52,6 +53,7 @@ package Drivers_for_Path_Directions is
                ( file : in file_type;
                  sols : in out Standard_Complex_Solutions.Solution_List;
                  proj,report : in boolean;
+                 w : in out Standard_Integer_Vectors.Vector;
                  v : in out Standard_Floating_VecVecs.VecVec;
                  errv : in out Standard_Floating_Vectors.Vector;
                  target : in Standard_Complex_Numbers.Complex_Number );
@@ -59,6 +61,7 @@ package Drivers_for_Path_Directions is
                ( file : in file_type;
                  sols : in out DoblDobl_Complex_Solutions.Solution_List;
                  proj,report : in boolean;
+                 w : in out Standard_Integer_Vectors.Vector;
                  v : in out Double_Double_VecVecs.VecVec;
                  errv : in out Double_Double_Vectors.Vector;
                  target : in DoblDobl_Complex_Numbers.Complex_Number );
@@ -66,6 +69,7 @@ package Drivers_for_Path_Directions is
                ( file : in file_type;
                  sols : in out QuadDobl_Complex_Solutions.Solution_List;
                  proj,report : in boolean;
+                 w : in out Standard_Integer_Vectors.Vector;
                  v : in out Quad_Double_VecVecs.VecVec;
                  errv : in out Quad_Double_Vectors.Vector;
                  target : in QuadDobl_Complex_Numbers.Complex_Number );
@@ -75,38 +79,43 @@ package Drivers_for_Path_Directions is
   --   in standard double, double double, or quad double precision.
 
   procedure Write_Direction
-               ( file : in file_type;
+               ( file : in file_type; w : in integer32;
                  v : in Standard_Floating_Vectors.Vector;
-                 error : in double_float; i : integer32 );
+                 error : in double_float; i : in integer32 );
   procedure Write_Direction
-               ( file : in file_type;
+               ( file : in file_type; w : in integer32;
                  v : in Double_Double_Vectors.Vector;
-                 error : in double_double; i : integer32 );
+                 error : in double_double; i : in integer32 );
   procedure Write_Direction
-               ( file : in file_type;
+               ( file : in file_type; w : in integer32;
                  v : in Quad_Double_Vectors.Vector;
-                 error : in quad_double; i : integer32 );
+                 error : in quad_double; i : in integer32 );
 
   -- DESCRIPTION :
   --   Defines the output format to write a direction v,
-  --   with the estimated error for the i-th path,
+  --   with the estimated winding number w
+  --   and the estimated error for the i-th path,
   --   in standard double, double double, or quad double precision.
 
   procedure Write_Directions 
                ( file : in file_type;
+                 w : in Standard_Integer_Vectors.Vector;
                  v : in Standard_Floating_VecVecs.VecVec;
                  errv : in Standard_Floating_Vectors.Vector );
   procedure Write_Directions 
                ( file : in file_type;
+                 w : in Standard_Integer_Vectors.Vector;
                  v : in Double_Double_VecVecs.VecVec;
                  errv : in Double_Double_Vectors.Vector );
   procedure Write_Directions 
                ( file : in file_type;
+                 w : in Standard_Integer_Vectors.Vector;
                  v : in Quad_Double_VecVecs.VecVec;
                  errv : in Quad_Double_Vectors.Vector );
 
   -- DESCRIPTION :
-  --   Writes the directions of the paths with their errors to the file,
+  --   Writes the directions of the paths in v with corresponding
+  --   estimated winding numbers in w and their errors to the file,
   --   in standard double, double double, or quad double precision.
 
 end Drivers_for_Path_Directions;

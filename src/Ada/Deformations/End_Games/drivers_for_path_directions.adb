@@ -146,6 +146,7 @@ package body Drivers_for_Path_Directions is
                ( file : in file_type;
                  sols : in out Standard_Complex_Solutions.Solution_List;
                  proj,report : in boolean;
+                 w : in out Standard_Integer_Vectors.Vector;
                  v : in out Standard_Floating_VecVecs.VecVec;
                  errv : in out Standard_Floating_Vectors.Vector;
                  target : in Standard_Complex_Numbers.Complex_Number ) is
@@ -163,8 +164,8 @@ package body Drivers_for_Path_Directions is
   begin
     tstart(timer);
     if report
-     then Rep_Cont(file,sols,proj,v,errv,target);
-     else Sil_Cont(sols,proj,v,errv,target);
+     then Rep_Cont(file,sols,proj,w,v,errv,target);
+     else Sil_Cont(sols,proj,w,v,errv,target);
     end if;
     tstop(timer);
     new_line(file);
@@ -175,6 +176,7 @@ package body Drivers_for_Path_Directions is
                ( file : in file_type;
                  sols : in out DoblDobl_Complex_Solutions.Solution_List;
                  proj,report : in boolean;
+                 w : in out Standard_Integer_Vectors.Vector;
                  v : in out Double_Double_VecVecs.VecVec;
                  errv : in out Double_Double_Vectors.Vector;
                  target : in DoblDobl_Complex_Numbers.Complex_Number ) is
@@ -192,8 +194,8 @@ package body Drivers_for_Path_Directions is
   begin
     tstart(timer);
     if report
-     then Rep_Cont(file,sols,proj,v,errv,target);
-     else Sil_Cont(sols,proj,v,errv,target);
+     then Rep_Cont(file,sols,proj,w,v,errv,target);
+     else Sil_Cont(sols,proj,w,v,errv,target);
     end if;
     tstop(timer);
     new_line(file);
@@ -204,6 +206,7 @@ package body Drivers_for_Path_Directions is
                ( file : in file_type;
                  sols : in out QuadDobl_Complex_Solutions.Solution_List;
                  proj,report : in boolean;
+                 w : in out Standard_Integer_Vectors.Vector;
                  v : in out Quad_Double_VecVecs.VecVec;
                  errv : in out Quad_Double_Vectors.Vector;
                  target : in QuadDobl_Complex_Numbers.Complex_Number ) is
@@ -221,8 +224,8 @@ package body Drivers_for_Path_Directions is
   begin
     tstart(timer);
     if report
-     then Rep_Cont(file,sols,proj,v,errv,target);
-     else Sil_Cont(sols,proj,v,errv,target);
+     then Rep_Cont(file,sols,proj,w,v,errv,target);
+     else Sil_Cont(sols,proj,w,v,errv,target);
     end if;
     tstop(timer);
     new_line(file);
@@ -230,62 +233,71 @@ package body Drivers_for_Path_Directions is
   end Toric_Continue;
 
   procedure Write_Direction
-               ( file : in file_type;
+               ( file : in file_type; w : in integer32;
                  v : in Standard_Floating_Vectors.Vector;
-                 error : in double_float; i : integer32 ) is
+                 error : in double_float; i : in integer32 ) is
   begin
     put(file,"Computed direction of path ");
     put(file,i,1); put_line(file," :"); put_line(file,v);
-    put(file,"with error : "); put(file,error); new_line(file);
+    put(file,"with estimated winding number : ");
+    put(file,w,1); new_line(file);
+    put(file,"and error : "); put(file,error); new_line(file);
   end Write_Direction;
 
   procedure Write_Direction
-               ( file : in file_type;
+               ( file : in file_type; w : in integer32;
                  v : in Double_Double_Vectors.Vector;
-                 error : in double_double; i : integer32 ) is
+                 error : in double_double; i : in integer32 ) is
   begin
     put(file,"Computed direction of path ");
     put(file,i,1); put_line(file," :"); put_line(file,v);
-    put(file,"with error : "); put(file,error); new_line(file);
+    put(file,"with estimated winding number : ");
+    put(file,w,1); new_line(file);
+    put(file,"and error : "); put(file,error); new_line(file);
   end Write_Direction;
 
   procedure Write_Direction
-               ( file : in file_type;
+               ( file : in file_type; w : in integer32;
                  v : in Quad_Double_Vectors.Vector;
-                 error : in quad_double; i : integer32 ) is
+                 error : in quad_double; i : in integer32 ) is
   begin
     put(file,"Computed direction of path ");
     put(file,i,1); put_line(file," :"); put_line(file,v);
-    put(file,"with error : "); put(file,error); new_line(file);
+    put(file,"with estimated winding number : ");
+    put(file,w,1); new_line(file);
+    put(file,"and error : "); put(file,error); new_line(file);
   end Write_Direction;
 
   procedure Write_Directions 
                ( file : in file_type;
+                 w : in Standard_Integer_Vectors.Vector;
                  v : in Standard_Floating_VecVecs.VecVec;
                  errv : in Standard_Floating_Vectors.Vector ) is
   begin
     for i in v'range loop
-      Write_Direction(file,v(i).all,errv(i),i);
+      Write_Direction(file,w(i),v(i).all,errv(i),i);
     end loop;
   end Write_Directions;
 
   procedure Write_Directions 
                ( file : in file_type;
+                 w : in Standard_Integer_Vectors.Vector;
                  v : in Double_Double_VecVecs.VecVec;
                  errv : in Double_Double_Vectors.Vector ) is
   begin
     for i in v'range loop
-      Write_Direction(file,v(i).all,errv(i),i);
+      Write_Direction(file,w(i),v(i).all,errv(i),i);
     end loop;
   end Write_Directions;
 
   procedure Write_Directions 
                ( file : in file_type;
+                 w : in Standard_Integer_Vectors.Vector;
                  v : in Quad_Double_VecVecs.VecVec;
                  errv : in Quad_Double_Vectors.Vector ) is
   begin
     for i in v'range loop
-      Write_Direction(file,v(i).all,errv(i),i);
+      Write_Direction(file,w(i),v(i).all,errv(i),i);
     end loop;
   end Write_Directions;
 

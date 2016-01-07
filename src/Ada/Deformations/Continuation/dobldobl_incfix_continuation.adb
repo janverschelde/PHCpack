@@ -199,6 +199,7 @@ package body DoblDobl_IncFix_Continuation is
 
   procedure Silent_Toric_Continue
                ( sols : in out Solution_List; proj : in boolean;
+                 w : in out Standard_Integer_Vectors.Vector;
                  v : in out Double_Double_VecVecs.VecVec;
                  errv : in out Double_Double_Vectors.Vector;
                  target : in Complex_Number := Create(integer(1)) ) is
@@ -209,6 +210,7 @@ package body DoblDobl_IncFix_Continuation is
   procedure Reporting_Toric_Continue
                ( file : in file_type; sols : in out Solution_List;
                  proj : in boolean;
+                 w : in out Standard_Integer_Vectors.Vector;
                  v : in out Double_Double_VecVecs.VecVec;
                  errv : in out Double_Double_Vectors.Vector;
                  target : in Complex_Number := Create(integer(1)) ) is

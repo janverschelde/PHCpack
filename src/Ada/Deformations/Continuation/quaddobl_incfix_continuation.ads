@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with QuadDobl_Complex_Numbers;           use QuadDobl_Complex_Numbers;
+with Standard_Integer_Vectors;
 with Quad_Double_Vectors;
 with Quad_Double_VecVecs;
 with QuadDobl_Complex_Vectors;           use QuadDobl_Complex_Vectors;
@@ -125,6 +126,7 @@ package QuadDobl_IncFix_Continuation is
 
   procedure Silent_Toric_Continue
                ( sols : in out Solution_List; proj : in boolean;
+                 w : in out Standard_Integer_Vectors.Vector;
                  v : in out Quad_Double_VecVecs.VecVec;
                  errv : in out Quad_Double_Vectors.Vector;
                  target : in Complex_Number := Create(integer(1)) );
@@ -137,8 +139,9 @@ package QuadDobl_IncFix_Continuation is
     with function dH ( x : Vector; t : Complex_Number ) return Matrix;
 
   procedure Reporting_Toric_Continue
-               ( file : in file_type; sols : in out Solution_List;
-                 proj : in boolean;
+               ( file : in file_type;
+                 sols : in out Solution_List; proj : in boolean;
+                 w : in out Standard_Integer_Vectors.Vector;
                  v : in out Quad_Double_VecVecs.VecVec;
                  errv : in out Quad_Double_Vectors.Vector;
                  target : in Complex_Number := Create(integer(1)) );
@@ -151,6 +154,8 @@ package QuadDobl_IncFix_Continuation is
   --   file      to write intermediate results on (if Reporting_);
   --   sols      the start solutions;
   --   proj      for projective-perpendicular path following;
+  --   w         values for the winding numbers, initialized at one,
+  --             w'range must be 1..Length_Of(sols);
   --   v         v must be initialized with zero vectors
   --             and v'range is 1..Length_Of(sols);
   --   errv      errors on the computed directions;
@@ -158,6 +163,7 @@ package QuadDobl_IncFix_Continuation is
 
   -- ON RETURN :
   --   sols      the computed solutions;
+  --   w         estimated values for the winding numbers of the paths;
   --   v         directions of the solution paths;
   --   errv      errors on the computed directions.
 

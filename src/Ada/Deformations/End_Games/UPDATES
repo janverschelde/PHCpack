@@ -1,5 +1,6 @@
 Wed 6 Jan 2016 : updated drivers_for_path_directions with routines in
-  double double and quad double precision.
+  double double and quad double precision.  Added extra parameter for the
+  estimated winding numbers in drivers_for_path_directions.
 
 Tue 5 Jan 2016 : moved specifications from directions_of_standard_paths.adb
   into directions_of_standard_paths.ads, likewise did the same for

@@ -1068,7 +1068,8 @@ package body Standard_IncFix_Continuation is
 
   procedure Silent_Toric_Continue
                ( sols : in out Solution_List; proj : in boolean;
-                 v : in out VecVec;
+                 w : in out Standard_Integer_Vectors.Vector;
+                 v : in out Standard_Floating_VecVecs.VecVec;
                  errv : in out Standard_Floating_Vectors.Vector;
                  target : in Complex_Number := Create(1.0) ) is
 
@@ -1098,7 +1099,7 @@ package body Standard_IncFix_Continuation is
       Continuation_Parameters.Tune(condition);
       max_reruns := oldmax - 1;
       block_size := Length_Of(clusols);
-      Silent_Toric_Continue(clusols,proj,v,errv,target);
+      Silent_Toric_Continue(clusols,proj,w,v,errv,target);
       block_size := oldblk;
       Merge_Clustered(s,clusols);
       Deep_Clear(clusols);
@@ -1189,7 +1190,9 @@ package body Standard_IncFix_Continuation is
 
   procedure Reporting_Toric_Continue
                ( file : in file_type; sols : in out Solution_List;
-                 proj : in boolean; v : in out VecVec;
+                 proj : in boolean;
+                 w : in out Standard_Integer_Vectors.Vector;
+                 v : in out Standard_Floating_VecVecs.VecVec;
                  errv : in out Standard_Floating_Vectors.Vector;
                  target : in Complex_Number := Create(1.0) ) is
 
@@ -1221,7 +1224,7 @@ package body Standard_IncFix_Continuation is
       Continuation_Parameters.Tune(condition);
       max_reruns := oldmax - 1;
       block_size := Length_Of(clusols);
-      Reporting_Toric_Continue(file,clusols,proj,v,errv,target);
+      Reporting_Toric_Continue(file,clusols,proj,w,v,errv,target);
       block_size := oldblk;
       Merge_Clustered(s,clusols);
       Deep_Clear(clusols);

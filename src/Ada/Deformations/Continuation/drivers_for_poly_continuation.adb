@@ -15,6 +15,7 @@ with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Multprec_Complex_Numbers;
 with Multprec_Complex_Number_Tools;      use Multprec_Complex_Number_Tools;
 with Numbers_io;                         use Numbers_io;
+with Standard_Integer_Vectors;
 with Standard_Floating_Vectors;
 with Standard_Floating_VecVecs;
 with Double_Double_Vectors;
@@ -1019,6 +1020,7 @@ package body Drivers_for_Poly_Continuation is
     report : boolean;
     n : constant natural32 := natural32(Head_Of(sols).n);
     nv : constant natural32 := Length_Of(sols);
+    w : Standard_Integer_Vectors.Vector(1..integer32(nv));
     v : Standard_Floating_VecVecs.Link_to_VecVec;
     errv : Standard_Floating_Vectors.Link_to_Vector;
 
@@ -1035,8 +1037,9 @@ package body Drivers_for_Poly_Continuation is
     put_line("No more input expected.  See output file for results.");
     new_line;
     if Continuation_Parameters.endext_order > 0 then
-      Toric_Continue(file,sols,proj,report,v.all,errv.all,target);
-      Write_Directions(file,v.all,errv.all);
+      w := (w'range => 1);
+      Toric_Continue(file,sols,proj,report,w,v.all,errv.all,target);
+      Write_Directions(file,w,v.all,errv.all);
     else
       Continue(file,sols,proj,report,target);
     end if;
@@ -1100,6 +1103,7 @@ package body Drivers_for_Poly_Continuation is
             := Standard_to_DoblDobl_Complex(target);
     n : constant natural32 := natural32(Head_Of(sols).n);
     nv : constant natural32 := Length_Of(sols);
+    w : Standard_Integer_Vectors.Vector(1..integer32(nv));
     v : Double_Double_VecVecs.Link_to_VecVec;
     errv : Double_Double_Vectors.Link_to_Vector;
 
@@ -1117,8 +1121,9 @@ package body Drivers_for_Poly_Continuation is
     put_line("No more input expected.  See output file for results.");
     new_line;
     if Continuation_Parameters.endext_order > 0 then
-      Toric_Continue(file,sols,false,report,v.all,errv.all,dd_targ);
-      Write_Directions(file,v.all,errv.all);
+      w := (w'range => 1);
+      Toric_Continue(file,sols,false,report,w,v.all,errv.all,dd_targ);
+      Write_Directions(file,w,v.all,errv.all);
     else
       Continue(file,sols,report,dd_targ);
     end if;
@@ -1137,6 +1142,7 @@ package body Drivers_for_Poly_Continuation is
              := Standard_to_QuadDobl_Complex(target);
     n : constant natural32 := natural32(Head_Of(sols).n);
     nv : constant natural32 := Length_Of(sols);
+    w : Standard_Integer_Vectors.Vector(1..integer32(nv));
     v : Quad_Double_VecVecs.Link_to_VecVec;
     errv : Quad_Double_Vectors.Link_to_Vector;
 
@@ -1154,8 +1160,9 @@ package body Drivers_for_Poly_Continuation is
     put_line("No more input expected.  See output file for results.");
     new_line;
     if Continuation_Parameters.endext_order > 0 then
-      Toric_Continue(file,sols,false,report,v.all,errv.all,qd_targ);
-      Write_Directions(file,v.all,errv.all);
+      w := (w'range => 1);
+      Toric_Continue(file,sols,false,report,w,v.all,errv.all,qd_targ);
+      Write_Directions(file,w,v.all,errv.all);
     else
       Continue(file,sols,report,qd_targ);
     end if;
