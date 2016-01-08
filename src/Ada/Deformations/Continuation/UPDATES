@@ -1,3 +1,6 @@
+Fri 8 Jan 2015 : populated the stubs in dobldobl_incfix_continuation.adb
+  and quaddobl_incfix_continuation.adb with code.
+
 Thu 7 Jan 2015 : changed standard_incfix_continuation.adb for the addition
   of the estimated winding number as extra argument.  Did the same for
   dobldobl_incfix_continuation.adb and quaddobl_incfix_continuation.adb.
