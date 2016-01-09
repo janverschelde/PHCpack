@@ -329,7 +329,7 @@ package body Directions_of_QuadDobl_Paths is
     estm := em(r+1);
     put(file,"em(0.."); put(file,r,1); put(file,") : ");
     for i in em'range loop
-      put(file,em(i),3);
+      put(file," "); put(file,em(i),3);
     end loop;
     new_line(file);
   exception
@@ -510,7 +510,7 @@ package body Directions_of_QuadDobl_Paths is
       for j in 1..r loop
         wvl1(j)(i) := v(j)/l(j);
         error(j) := abs(wvl1(j)(i)-wvl0(j)(i));
-        put(file,error(j),3);
+        put(file," "); put(file,error(j),3);
       end loop;
       new_line(file);
     end loop;

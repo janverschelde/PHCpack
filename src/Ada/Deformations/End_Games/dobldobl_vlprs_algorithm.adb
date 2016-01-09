@@ -22,7 +22,7 @@ package body DoblDobl_vLpRs_Algorithm is
     d_w := create(w);
     err := abs(tmp - create(d_w));
     put(file,s(0),3); new_line(file);
-    put(file,s(1),3); put(file,err,3); new_line(file);
+    put(file,s(1),3); put(file," "); put(file,err,3); new_line(file);
   end Write_Init;
 
   procedure Write ( file : in file_type; k : in integer32; 
@@ -45,7 +45,7 @@ package body DoblDobl_vLpRs_Algorithm is
      -- err := abs(tmp-w); -- 
       d_w := create(w);
       err := abs(tmp - create(d_w));
-      put(file,err,3);
+      put(file," "); put(file,err,3);
     end loop;
     new_line(file);
   end Write;

@@ -1,3 +1,7 @@
+Fri 8 Jan 2016 : in directions_of_{dobldobl,quaddobl}_paths.adb, improved 
+  the output of the estimated winding numbers.  Made similar improvements
+  in {dobldobl,quaddobl}_vlprs_algorithm.adb.
+
 Wed 6 Jan 2016 : updated drivers_for_path_directions with routines in
   double double and quad double precision.  Added extra parameter for the
   estimated winding numbers in drivers_for_path_directions.
