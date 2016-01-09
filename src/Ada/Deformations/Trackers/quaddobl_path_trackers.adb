@@ -257,6 +257,7 @@ package body QuadDobl_Path_Trackers is
          then Update_Direction
                 (proj,fcnt,defer,r,s.sol.m,estm,cntm,thresm,er,s.sol.t,target,
                  s.sol.v,dt,ds,logs,logx,wvl0,wvl1,wvl2,v.all,errv,errorv);
+              w := s.sol.m;
          else er := -2;
         end if;
       end if;
@@ -376,6 +377,7 @@ package body QuadDobl_Path_Trackers is
          then Update_Direction(file,
                  proj,fcnt,defer,r,s.sol.m,estm,cntm,thresm,er,s.sol.t,target,
                  s.sol.v,dt,ds,logs,logx,wvl0,wvl1,wvl2,v.all,errv,errorv);
+              w := s.sol.m;
          else er := -2;
         end if;
       end if;
