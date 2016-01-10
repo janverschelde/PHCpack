@@ -5,7 +5,7 @@ with Double_Double_Numbers;              use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;           use DoblDobl_Complex_Numbers;
 with Double_Double_Vectors;
 with DoblDobl_Complex_Vectors;
-with Double_Double_VecVecs;              use Double_Double_VecVecs;
+with Double_Double_VecVecs;
 
 package Directions_of_DoblDobl_Paths is
 
@@ -13,6 +13,197 @@ package Directions_of_DoblDobl_Paths is
 --   This package provides some routines to estimate numerically the direction
 --   of a solution path diverging to a solution of a face system,
 --   using double double complex arithmetic.
+
+-- APPLICATION OF EXTRAPOLATION :
+
+  procedure Shift_Up ( v : in out Double_Double_Vectors.Vector;
+                       x : in double_double );
+
+  -- DESCRIPTION :
+  --   Puts x at v(v'first) after a shift-up: v(i+1) := v(i).
+
+  procedure Extrapolation_Window
+                ( r,m : in integer32; t,target : in Complex_Number;
+                  x : in DoblDobl_Complex_Vectors.Vector;
+                  dt,s,logs : in out Double_Double_Vectors.Vector;
+                  logx : in out Double_Double_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   The data (dt,s,logs and logx) are stored as in a window: when
+  --   full at the incoming of a new element, all elements are shifted 
+  --   and the oldest element drops off.
+
+  procedure Refresh_Window
+                ( r,m : in integer32;
+                  dt : in Double_Double_Vectors.Vector;
+                  s,logs : in out Double_Double_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Recomputes s and logs, after m has been changed.
+
+  procedure Write_Update_Information
+                ( file : in file_type;
+                  r,m : in integer32; s,logs : in double_double;
+                  logx : in Double_Double_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Writes r, s, log(s) and log|x(s)| on file.
+  --   The current version only writes a banner with r and m.
+
+  procedure Affine_Update_Extrapolation_Data
+                ( r,m : in integer32; t,target : in Complex_Number;
+                  x : in DoblDobl_Complex_Vectors.Vector;
+                  dt,s,logs : in out Double_Double_Vectors.Vector;
+                  logx,wvl0,wvl1,wvltmp : in out Double_Double_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Updates the data needed to extrapolate in the affine case.
+
+  procedure Projective_Update_Extrapolation_Data
+                ( r,m : in integer32; t,target : in Complex_Number;
+                  x : in DoblDobl_Complex_Vectors.Vector;
+                  dt,s,logs : in out Double_Double_Vectors.Vector;
+                  logx : in out Double_Double_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Updates the data needed to extrapolate in the projective case,
+  --   under the assumption that the homogenization variable appears lastly.
+
+  procedure Update_Errors
+                ( r : in integer32;
+                  errorv : in out Double_Double_Vectors.Vector;
+                  error : out double_double;
+                  wvl0,wvl1,wvltmp : in out Double_Double_VecVecs.VecVec );
+
+  -- DESCRIPTION :
+  --   Updates the error computation after the extrapolation.
+
+  -- REQUIRED : r >= 1.
+
+-- ESTIMATING THE WINDING NUMBER :
+
+  procedure Frequency_of_Estimate
+               ( newest : in integer32; max : in natural32;
+                 m,estm : in out integer32; cnt : in out natural32;
+                 eps : in double_double; newm : out boolean );
+
+  -- DESCRIPTION :
+  --   This procedure manages the frequencies of the estimated values for m.
+  --   Only after the same estimate has been found a certain number of
+  --   times, the new estimate will be accepted.
+  --   The current version does not take the accuracy eps into account.
+
+  -- ON ENTRY :
+  --   newest    newly computed estimate for m;
+  --   max       threshold on cnt before estm is returned;
+  --   m         current value of m;
+  --   estm      previous estimate;
+  --   cnt       number of consecutive guesses that yielded estm;
+  --   eps       accuracy of the current estimate.
+
+  -- ON RETURN :
+  --   m         new value of m;
+  --   estm      new estimate;
+  --   cnt       updated number of consecutive guesses that yielded estm;
+  --   newm      true if m has changed.
+
+  procedure Extrapolate_on_Errors
+               ( file : in file_type;
+                 r : in integer32; h : in double_double;
+                 err : in Double_Double_Vectors.Vector;
+                 estm : out double_double );
+
+  -- DESCRIPTION :
+  --   Performs an rth-order extrapolation on the errors.
+
+  -- ON ENTRY :
+  --   file      to write intermediate results on;
+  --   r         order of the extrapolation method;
+  --   h         ratio in geometric sequence;
+  --   err       vector of range 0..r+1 with differences of estimates for
+  --             the outer normal, the most recent error is err(0).
+
+  -- ON RETURN :
+  --   extm      estimated value for m.
+
+  procedure Estimate0
+               ( r : in integer32; max : in natural32;
+                 m,estm : in out integer32; cnt : in out natural32; 
+                 dt : in Double_Double_Vectors.Vector;
+                 err,newerr : in double_double; rat,eps : out double_double;
+                 newm : out boolean );
+
+  -- DESCRIPTION :
+  --   Returns an 0th-order estimate of the cycle number m.
+  
+  -- ON ENTRY :
+  --   r         extrapolation order;
+  --   max       threshold on cnt before estm is returned;
+  --   m         current value of m;
+  --   estm      previous estimate;
+  --   cnt       number of consecutive guesses that yielded estm;
+  --   dt        consecutive distances to the target;
+  --   err       previous error;
+  --   newerr    current error.
+
+  -- ON RETURN :
+  --   m         new value of m;
+  --   estm      new estimate;
+  --   cnt       updated number of consecutive guesses that yielded estm;
+  --   rat       ratio used to estimate m;
+  --   eps       accuracy of the rounding value for m;
+  --   newm      true if m has changed.
+
+  procedure Estimate
+               ( file : in file_type; r : in integer32;
+                 max : in natural32; m,estm : in out integer32;
+                 cnt : in out natural32; h : in double_double;
+                 diferr : in Double_Double_Vectors.Vector;
+                 rat,eps : out double_double; newm : out boolean );
+
+  -- DESCRIPTION :
+  --   Estimates m by extrapolation on consecutvie differences of errors,
+  --   stored in the parameter diferr.  For the specfication of the other
+  --   parameters, see the procedure Estimate0.
+
+-- APPLYING THE vLpRs-Algorithm :
+
+  function vLpRs_Extrapolate
+                ( r : integer32;
+                  s,logs : Double_Double_Vectors.Vector;
+                  logx : Double_Double_VecVecs.VecVec )
+                return Double_Double_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Higher-order extrapolation is based on vLpRs-Algorithm.
+
+  -- REQUIRED : r >= 1.
+
+  function vLpRs_Extrapolate
+                ( file : file_type; r : integer32;
+                  s,logs : Double_Double_Vectors.Vector;
+                  logx : Double_Double_VecVecs.VecVec )
+                return Double_Double_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Higher-order extrapolation based on vLpRs-Algorithm.
+
+  -- REQUIRED : r >= 1.
+
+  procedure vLpRs_Extrapolate
+                ( file : in file_type; r : in integer32;
+                  s,logs : in Double_Double_Vectors.Vector;
+                  logx,wvl0 : in Double_Double_VecVecs.VecVec;
+                  wvl1 : in out Double_Double_VecVecs.VecVec;
+                  w,wv,wl : out Double_Double_Vectors.Vector );
+
+  -- DESCRIPTION :
+  --   Higher-order extrapolation based on vLpRs-Algorithm,
+  --   writes an error table on file.
+
+  -- REQUIRED : r >= 1.
+
+-- FIRST ORDER APPROXIMATION (no extrapolation) :
 
   procedure Affine_Update_Direction
                 ( t,prev_t,target : in Complex_Number;
@@ -48,13 +239,15 @@ package Directions_of_DoblDobl_Paths is
   -- REQUIRED : 
   --   The homogenization variable is the last element of the solution vector.
 
+-- HIGHER ORDER EXTRAPOLATION (driver procedures) :
+
   procedure Affine_Update_Direction
                 ( r,m,estm : in out integer32;
                   cntm : in out natural32; thresm : in natural32;
                   er : in out integer32; t,target : in Complex_Number;
                   x : in DoblDobl_Complex_Vectors.Vector;
                   dt,s,logs : in out Double_Double_Vectors.Vector;
-                  logx,wvl0,wvl1,wvltmp : in out VecVec;
+                  logx,wvl0,wvl1,wvltmp : in out Double_Double_VecVecs.VecVec;
                   v,diferr : in out Double_Double_Vectors.Vector;
                   error : in out double_double );
 
@@ -65,7 +258,7 @@ package Directions_of_DoblDobl_Paths is
                   er : in out integer32; t,target : in Complex_Number;
                   x : in DoblDobl_Complex_Vectors.Vector;
                   dt,s,logs : in out Double_Double_Vectors.Vector;
-                  logx,wvl0,wvl1,wvltmp : in out VecVec;
+                  logx,wvl0,wvl1,wvltmp : in out Double_Double_VecVecs.VecVec;
                   v,diferr : in out Double_Double_Vectors.Vector;
                   error : in out double_double );
 
@@ -115,7 +308,7 @@ package Directions_of_DoblDobl_Paths is
                   er : in out integer32; t,target : in Complex_Number;
                   x : in DoblDobl_Complex_Vectors.Vector;
                   dt,s,logs : in out Double_Double_Vectors.Vector;
-                  logx : in out VecVec;
+                  logx : in out Double_Double_VecVecs.VecVec;
                   prevv,v : in out Double_Double_Vectors.Vector;
                   error : in out double_double );
 
@@ -126,7 +319,7 @@ package Directions_of_DoblDobl_Paths is
                   er : in out integer32; t,target : in Complex_Number;
                   x : in DoblDobl_Complex_Vectors.Vector;
                   dt,s,logs : in out Double_Double_Vectors.Vector;
-                  logx : in out VecVec;
+                  logx : in out Double_Double_VecVecs.VecVec;
                   prevv,v : in out Double_Double_Vectors.Vector;
                   error : in out double_double );
 

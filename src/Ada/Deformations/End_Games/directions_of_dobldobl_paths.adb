@@ -1,37 +1,11 @@
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Double_Double_Vectors_io;           use Double_Double_Vectors_io;
+with Double_Double_Vector_Norms;         use Double_Double_Vector_Norms;
 with Double_Double_Matrices;             use Double_Double_Matrices;
 with DoblDobl_vLpRs_Algorithm;           use DoblDobl_vLpRs_Algorithm;
 
 package body Directions_of_DoblDobl_Paths is
-
--- AUXILIARY :
-
-  function Norm1 ( x : Double_Double_Vectors.Vector )
-                 return double_double is
-
-    res : double_double := create(0.0);
-
-  begin
-    for i in x'range loop
-      res := res + abs(x(i));
-    end loop;
-    return res;
-  end Norm1;
-
-  procedure Shift_Up ( v : in out Double_Double_Vectors.Vector;
-                       x : in double_double ) is
-
-  -- DESCRIPTION :
-  --   Puts x at v(v'first) after a shift-up: v(i+1) := v(i).
-
-  begin
-    for i in reverse v'first..(v'last-1) loop
-      v(i+1) := v(i);
-    end loop;
-    v(v'first) := x;
-  end Shift_Up;
 
 -- FIRST ORDER EXTRAPOLATION  :
 
@@ -94,16 +68,20 @@ package body Directions_of_DoblDobl_Paths is
 
 -- DATA MANAGEMENT FOR HIGHER-ORDER EXTRAPOLATION :
 
+  procedure Shift_Up ( v : in out Double_Double_Vectors.Vector;
+                       x : in double_double ) is
+  begin
+    for i in reverse v'first..(v'last-1) loop
+      v(i+1) := v(i);
+    end loop;
+    v(v'first) := x;
+  end Shift_Up;
+
   procedure Extrapolation_Window
                 ( r,m : in integer32; t,target : in Complex_Number;
                   x : in DoblDobl_Complex_Vectors.Vector;
                   dt,s,logs : in out Double_Double_Vectors.Vector;
-                  logx : in out VecVec ) is
-
-  -- DESCRIPTION :
-  --   The data (dt,s,logs and logx) are stored as in a window: when
-  --   full at the incoming of a new element, all elements are shifted 
-  --   and the oldest element drops off.
+                  logx : in out Double_Double_VecVecs.VecVec ) is
 
     use Double_Double_Vectors;
 
@@ -122,12 +100,9 @@ package body Directions_of_DoblDobl_Paths is
   end Extrapolation_Window;
 
   procedure Refresh_Window
-              ( r,m : in integer32; dt : in Double_Double_Vectors.Vector;
+              ( r,m : in integer32;
+                dt : in Double_Double_Vectors.Vector;
                 s,logs : in out Double_Double_Vectors.Vector ) is
-
-  -- DESCRIPTION :
-  --   Recomputes s and logs, after m has been changed.
-
   begin
     for i in s'first..r loop
       s(i) := (dt(i))**(1.0/Double_Double_Numbers.create(m));
@@ -136,14 +111,9 @@ package body Directions_of_DoblDobl_Paths is
   end Refresh_Window;
 
   procedure Write_Update_Information
-                ( file : in file_type; r,m : in integer32;
-                  s,logs : in double_double;
+                ( file : in file_type;
+                  r,m : in integer32; s,logs : in double_double;
                   logx : in Double_Double_Vectors.Vector ) is
-
-  -- DESCRIPTION :
-  --   Writes r, s, log(s) and log|x(s)| on file.
-  --   The current version only writes a banner with r and m.
-
   begin
     put(file,"extrapolation with r = "); put(file,r,1);
     put(file," and m = "); put(file,m,1); --put_line(file," : ");
@@ -161,10 +131,8 @@ package body Directions_of_DoblDobl_Paths is
                 ( r,m : in integer32; t,target : in Complex_Number;
                   x : in DoblDobl_Complex_Vectors.Vector;
                   dt,s,logs : in out Double_Double_Vectors.Vector;
-                  logx,wvl0,wvl1,wvltmp : in out VecVec ) is
-
-  -- DESCRIPTION :
-  --   Updates the data needed to extrapolate in the affine case.
+                  logx,wvl0,wvl1,wvltmp
+                    : in out Double_Double_VecVecs.VecVec ) is
 
     use Double_Double_Vectors;
 
@@ -189,11 +157,7 @@ package body Directions_of_DoblDobl_Paths is
                 ( r,m : in integer32; t,target : in Complex_Number;
                   x : in DoblDobl_Complex_Vectors.Vector;
                   dt,s,logs : in out Double_Double_Vectors.Vector;
-                  logx : in out VecVec ) is
-
-  -- DESCRIPTION :
-  --   Updates the data needed to extrapolate in the projective case,
-  --   under the assumption that the homogenization variable appears lastly.
+                  logx : in out Double_Double_VecVecs.VecVec ) is
 
     use Double_Double_Vectors;
 
@@ -211,13 +175,7 @@ package body Directions_of_DoblDobl_Paths is
               ( r : in integer32;
                 errorv : in out Double_Double_Vectors.Vector;
                 error : out double_double;
-                wvl0,wvl1,wvltmp : in out VecVec ) is
-
-  -- DESCRIPTION :
-  --   Updates the error computation after the extrapolation.
-
-  -- REQUIRED : r >= 1.
-
+                wvl0,wvl1,wvltmp : in out Double_Double_VecVecs.VecVec ) is
   begin
     if r = 1 then
       for i in errorv'range loop
@@ -228,40 +186,19 @@ package body Directions_of_DoblDobl_Paths is
         errorv(i) := abs(wvltmp(r-1)(i) - wvl1(r-1)(i));
       end loop;
     end if;
-    error := Norm1(errorv);
+    error := Sum_Norm(errorv);
     for i in 1..r loop
       wvl0(i).all := wvl1(i).all;
       wvl1(i).all := wvltmp(i).all;
     end loop;
   end Update_Errors;
 
--- ESTIMATING THE CYCLE NUMBER :
+-- ESTIMATING THE WINDING NUMBER :
 
   procedure Frequency_of_Estimate
                ( newest : in integer32; max : in natural32;
                  m,estm : in out integer32; cnt : in out natural32;
                  eps : in double_double; newm : out boolean ) is
-
-  -- DESCRIPTION :
-  --   This procedure manages the frequencies of the estimated values for m.
-  --   Only after the same estimate has been found a certain number of
-  --   times, the new estimate will be accepted.
-  --   The current version does not take the accuracy eps into account.
-
-  -- ON ENTRY :
-  --   newest    newly computed estimate for m;
-  --   max       threshold on cnt before estm is returned;
-  --   m         current value of m;
-  --   estm      previous estimate;
-  --   cnt       number of consecutive guesses that yielded estm;
-  --   eps       accuracy of the current estimate.
-
-  -- ON RETURN :
-  --   m         new value of m;
-  --   estm      new estimate;
-  --   cnt       updated number of consecutive guesses that yielded estm;
-  --   newm      true if m has changed.
-
   begin
     if cnt = 0 then                                       -- initial estimate
       estm := newest;
@@ -286,19 +223,6 @@ package body Directions_of_DoblDobl_Paths is
                  r : in integer32; h : in double_double;
                  err : in Double_Double_Vectors.Vector;
                  estm : out double_double ) is
-
-  -- DESCRIPTION :
-  --   Performs an rth-order extrapolation on the errors.
-
-  -- ON ENTRY :
-  --   file      to write intermediate results on;
-  --   r         order of the extrapolation method;
-  --   h         ratio in geometric sequence;
-  --   err       vector of range 0..r+1 with differences of estimates for
-  --             the outer normal, the most recent error is err(0).
-
-  -- ON RETURN :
-  --   extm      estimated value for m.
 
     em,hm,exterr : Double_Double_Vectors.Vector(1..r+1);
     dlog : constant double_double := log10(h);
@@ -340,27 +264,6 @@ package body Directions_of_DoblDobl_Paths is
                  err,newerr : in double_double; rat,eps : out double_double;
                  newm : out boolean ) is
 
-  -- DESCRIPTION :
-  --   Returns an 0th-order estimate of the cycle number m.
-  
-  -- ON ENTRY :
-  --   r         extrapolation order;
-  --   max       threshold on cnt before estm is returned;
-  --   m         current value of m;
-  --   estm      previous estimate;
-  --   cnt       number of consecutive guesses that yielded estm;
-  --   dt        consecutive distances to the target;
-  --   err       previous error;
-  --   newerr    current error.
-
-  -- ON RETURN :
-  --   m         new value of m;
-  --   estm      new estimate;
-  --   cnt       updated number of consecutive guesses that yielded estm;
-  --   rat       ratio used to estimate m;
-  --   eps       accuracy of the rounding value for m;
-  --   newm      true if m has changed.
-
     dferr : constant double_double := log10(newerr) - log10(err);
     h : constant double_double := dt(r)/dt(r-1);
     dfsr1 : constant double_double := log10(h);
@@ -384,11 +287,6 @@ package body Directions_of_DoblDobl_Paths is
                  diferr : in Double_Double_Vectors.Vector;
                  rat,eps : out double_double; newm : out boolean ) is
 
-  -- DESCRIPTION :
-  --   Estimates m by extrapolation on consecutvie differences of errors,
-  --   stored in the parameter diferr.  For the specfication of the other
-  --   parameters, see the procedure Estimate0.
-
     res : integer32;
     fltestm,accuracy : double_double;
 
@@ -410,14 +308,10 @@ package body Directions_of_DoblDobl_Paths is
 -- APPLYING THE vLpRs-Algorithm :
 
   function vLpRs_Extrapolate
-                ( r : integer32; s,logs : Double_Double_Vectors.Vector;
-                  logx : VecVec )
+                ( r : integer32;
+                  s,logs : Double_Double_Vectors.Vector;
+                  logx : Double_Double_VecVecs.VecVec )
                 return Double_Double_Vectors.Vector is
-
-  -- DESCRIPTION :
-  --   Higher-order extrapolation is based on vLpRs-Algorithm.
-
-  -- REQUIRED : r >= 1.
 
     res : Double_Double_Vectors.Vector(logx(r).all'range);
     logx1 : Double_Double_Vectors.Vector(0..r);
@@ -440,13 +334,9 @@ package body Directions_of_DoblDobl_Paths is
 
   function vLpRs_Extrapolate
                 ( file : file_type; r : integer32;
-                  s,logs : Double_Double_Vectors.Vector; logx : VecVec )
+                  s,logs : Double_Double_Vectors.Vector;
+                  logx : Double_Double_VecVecs.VecVec )
                 return Double_Double_Vectors.Vector is
-
-  -- DESCRIPTION :
-  --   Higher-order extrapolation based on vLpRs-Algorithm.
-
-  -- REQUIRED : r >= 1.
 
     res : Double_Double_Vectors.Vector(logx(r).all'range);
     logx1 : Double_Double_Vectors.Vector(0..r);
@@ -474,14 +364,9 @@ package body Directions_of_DoblDobl_Paths is
   procedure vLpRs_Extrapolate
                 ( file : in file_type; r : in integer32;
                   s,logs : in Double_Double_Vectors.Vector;
-                  logx,wvl0 : in VecVec; wvl1 : in out VecVec;
+                  logx,wvl0 : in Double_Double_VecVecs.VecVec;
+                  wvl1 : in out Double_Double_VecVecs.VecVec;
                   w,wv,wl : out Double_Double_Vectors.Vector ) is
-
-  -- DESCRIPTION :
-  --   Higher-order extrapolation based on vLpRs-Algorithm,
-  --   writes an error table on file.
-
-  -- REQUIRED : r >= 1.
 
     n : constant integer32 := logx(r)'length;
     logx1 : Double_Double_Vectors.Vector(0..r);
@@ -514,7 +399,7 @@ package body Directions_of_DoblDobl_Paths is
     wv := v; wl := l;
   end vLpRs_Extrapolate;
 
--- HIGHER-ORDER EXTRAPOLATION (target routines) :
+-- HIGHER ORDER EXTRAPOLATION (driver procedures) :
 
   procedure Affine_Update_Direction
                 ( r,m,estm : in out integer32;
@@ -522,7 +407,7 @@ package body Directions_of_DoblDobl_Paths is
                   er : in out integer32; t,target : in Complex_Number;
                   x : in DoblDobl_Complex_Vectors.Vector;
                   dt,s,logs : in out Double_Double_Vectors.Vector;
-                  logx,wvl0,wvl1,wvltmp : in out VecVec;
+                  logx,wvl0,wvl1,wvltmp : in out Double_Double_VecVecs.VecVec;
                   v,diferr : in out Double_Double_Vectors.Vector;
                   error : in out double_double ) is
 
@@ -537,7 +422,7 @@ package body Directions_of_DoblDobl_Paths is
       (r,m,t,target,x,dt,s,logs,logx,wvl0,wvl1,wvltmp);
     if r >= 1 then
       res := vLpRs_Extrapolate(r,s,logs,logx);
-      newerr := Norm1(res-v);
+      newerr := Sum_Norm(res-v);
     end if;
     if r < s'last
      then r := r+1;
@@ -546,7 +431,7 @@ package body Directions_of_DoblDobl_Paths is
       --Estimate(r,r,thresm,m,estm,cntm,dt,s,logs,error,newerr,eps,newm);
       if newm then
         res := vLpRs_Extrapolate(r,s,logs,logx);
-        newerr := Norm1(res-v);
+        newerr := Sum_Norm(res-v);
       end if;
     end if;
     if r >= 1
@@ -561,7 +446,7 @@ package body Directions_of_DoblDobl_Paths is
                   er : in out integer32; t,target : in Complex_Number;
                   x : in DoblDobl_Complex_Vectors.Vector;
                   dt,s,logs : in out Double_Double_Vectors.Vector;
-                  logx,wvl0,wvl1,wvltmp : in out VecVec;
+                  logx,wvl0,wvl1,wvltmp : in out Double_Double_VecVecs.VecVec;
                   v,diferr : in out Double_Double_Vectors.Vector;
                   error : in out double_double ) is
 
@@ -585,7 +470,7 @@ package body Directions_of_DoblDobl_Paths is
       for i in errorv'range loop
         errorv(i) := abs(wvltmp(ind)(i) - wvl1(ind)(i));
       end loop;
-      Shift_Up(diferr,Norm1(errorv));
+      Shift_Up(diferr,Sum_Norm(errorv));
       if er < diferr'last-1 then er := er+1; end if;
     end if;
     if er >= 1 and (diferr(0) < diferr(1)) then
@@ -601,7 +486,7 @@ package body Directions_of_DoblDobl_Paths is
         for i in errorv'range loop
           errorv(i) := abs(wvltmp(ind)(i) - wvl1(ind)(i));
         end loop;
-        Shift_Up(diferr,Norm1(errorv)); er := -2;
+        Shift_Up(diferr,Sum_Norm(errorv)); er := -2;
         put(file,"old direction : "); put(file,v); new_line(file);
         put(file,"new direction : "); put(file,res); new_line(file);
       end if;
@@ -619,7 +504,7 @@ package body Directions_of_DoblDobl_Paths is
                   er : in out integer32; t,target : in Complex_Number;
                   x : in DoblDobl_Complex_Vectors.Vector;
                   dt,s,logs : in out Double_Double_Vectors.Vector;
-                  logx : in out VecVec;
+                  logx : in out Double_Double_VecVecs.VecVec;
                   prevv,v : in out Double_Double_Vectors.Vector;
                   error : in out double_double ) is
 
@@ -633,7 +518,8 @@ package body Directions_of_DoblDobl_Paths is
     Projective_Update_Extrapolation_Data(r,m,t,target,x,dt,s,logs,logx);
     if r >= 1 then
       res := vLpRs_Extrapolate(r,s,logs,logx);
-      error := Norm1(res-prevv); newerr := Norm1(res-v);
+      error := Sum_Norm(res-prevv);
+      newerr := Sum_Norm(res-v);
       prevv := v;
       v := res;
     end if;
@@ -653,7 +539,7 @@ package body Directions_of_DoblDobl_Paths is
                   er : in out integer32; t,target : in Complex_Number;
                   x : in DoblDobl_Complex_Vectors.Vector;
                   dt,s,logs : in out Double_Double_Vectors.Vector;
-                  logx : in out VecVec;
+                  logx : in out Double_Double_VecVecs.VecVec;
                   prevv,v : in out Double_Double_Vectors.Vector;
                   error : in out double_double ) is
 
@@ -668,8 +554,8 @@ package body Directions_of_DoblDobl_Paths is
     Write_Update_Information(file,r,m,s(r),logs(r),logx(r).all);
     if r >= 1 then
       res := vLpRs_Extrapolate(file,r,s,logs,logx);
-      error := Norm1(res-prevv);
-      newerr := Norm1(res-v);
+      error := Sum_Norm(res-prevv);
+      newerr := Sum_Norm(res-v);
       prevv := v;
       v := res;
     end if;
