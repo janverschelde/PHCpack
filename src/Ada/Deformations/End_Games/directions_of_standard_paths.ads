@@ -115,7 +115,7 @@ package Directions_of_Standard_Paths is
                  estm : out Standard_Floating_Vectors.Vector );
 
   -- DESCRIPTION :
-  --   Performs an rth-order extrapolation on the errors.
+  --   Performs an r-th order extrapolation on the errors.
 
   -- REQUIRED : estm'range = 1..r+1.
 
@@ -126,7 +126,7 @@ package Directions_of_Standard_Paths is
   --             the outer normal, the most recent error is err(0).
 
   -- ON RETURN :
-  --   estm      estimated value for m, consecutively obtained by
+  --   estm      estimated values for m, consecutively obtained by
   --             application of higher orders of extrapolation.
 
   procedure Accuracy_of_Estimates

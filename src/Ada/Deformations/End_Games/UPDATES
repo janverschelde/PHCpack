@@ -1,3 +1,6 @@
+Sun 10 Jan 2016 : improved directions_of_{dobldobl,quaddobl}_paths and
+  directions_of_standard_paths.ads.
+
 Sat 9 Jan 2016 : move specs in directions_of_{dobldobl,quaddobl}_paths,
   from the .adb to the .ads file.
 

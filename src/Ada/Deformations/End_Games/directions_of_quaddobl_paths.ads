@@ -85,27 +85,27 @@ package Directions_of_QuadDobl_Paths is
   procedure Frequency_of_Estimate
                ( newest : in integer32; max : in natural32;
                  m,estm : in out integer32; cnt : in out natural32;
-                 eps : in quad_double; newm : out boolean );
+                 newm : out boolean );
 
   -- DESCRIPTION :
-  --   This procedure manages the frequencies of the estimated values for m.
-  --   Only after the same estimate has been found a certain number of
-  --   times, the new estimate will be accepted.
-  --   The current version does not take the accuracy eps into account.
+  --   Given a new estimate for the winding number, the procedure updates
+  --   the count of the number of times newest equals estm.
+  --   This procedure delays the assignment of the estimate estm to m,
+  --   until the counter cnt reaches the threshold max.
 
   -- ON ENTRY :
   --   newest    newly computed estimate for m;
   --   max       threshold on cnt before estm is returned;
-  --   m         current value of m;
-  --   estm      previous estimate;
-  --   cnt       number of consecutive guesses that yielded estm;
-  --   eps       accuracy of the current estimate.
+  --   m         current value of the winding number;
+  --   estm      previous estimate of the winding number,
+  --             for use of comparing against newest;
+  --   cnt       number of consecutive guesses that yielded estm.
 
   -- ON RETURN :
-  --   m         new value of m;
-  --   estm      new estimate;
-  --   cnt       updated number of consecutive guesses that yielded estm;
-  --   newm      true if m has changed.
+  --   m         updated current value for the winding number;
+  --   estm      updated estimate for the winding number;
+  --   cnt       updated number of consecutive estimates that yielded estm;
+  --   newm      true if m has changed, false otherwise.
 
   procedure Extrapolate_on_Errors
                ( file : in file_type;
@@ -125,6 +125,26 @@ package Directions_of_QuadDobl_Paths is
 
   -- ON RETURN :
   --   extm      estimated value for m.
+
+  procedure Accuracy_of_Estimates
+               ( estm : in Quad_Double_Vectors.Vector;
+                 success : out boolean; k : out integer32;
+                 estwin : out integer32; eps : out quad_double );
+
+  -- DESCRIPTION :
+  --   Determines the estimate for the winding number based on the
+  --   approximations obtained by consecutive higher order of extrapolation.
+
+  -- ON ENTRY :
+  --   estm      approximations obtained by consecutive extrapolations,
+  --             which has range 1..r+1, where r is the order.
+
+  -- ON RETURN :
+  --   success   true if the sequence of approximations improved in
+  --             accuracy, i.e.: the extrapolation worked, false otherwise;
+  --   k         the order of best value: integer32(estm(k-1)) = estwin;
+  --   estwin    the estimated value for the winding number;
+  --   eps       the accuracy of the winding number.
 
   procedure Estimate0
                ( r : in integer32; max : in natural32;

@@ -202,7 +202,7 @@ package body Directions_of_QuadDobl_Paths is
   procedure Frequency_of_Estimate
                ( newest : in integer32; max : in natural32;
                  m,estm : in out integer32; cnt : in out natural32;
-                 eps : in quad_double; newm : out boolean ) is
+                 newm : out boolean ) is
   begin
     if cnt = 0 then                                       -- initial estimate
       estm := newest;
@@ -210,7 +210,7 @@ package body Directions_of_QuadDobl_Paths is
     elsif newest = estm then         -- update frequency for current estimate
       cnt := cnt + 1;
     else 
-      cnt := 1;                                 -- new estimate found
+      cnt := 1;                                         -- new estimate found
       estm := newest;
     end if;
     if estm /= m then        -- look for modification of current cycle number
@@ -261,6 +261,41 @@ package body Directions_of_QuadDobl_Paths is
     when others => null;
   end Extrapolate_on_Errors;
 
+  procedure Accuracy_of_Estimates
+               ( estm : in Quad_Double_Vectors.Vector;
+                 success : out boolean; k : out integer32;
+                 estwin : out integer32; eps : out quad_double ) is
+
+    res,wrk : integer32;
+    best_eps,prev_eps : quad_double;
+
+  begin
+    k := estm'first-1;                -- take zero order as the best
+    res := integer32(hihi_part(estm(estm'first)));
+    eps := abs(estm(estm'first) - Quad_Double_Numbers.create(res));
+    best_eps := eps;
+    success := true;                  -- assume extrapolation worked
+    for i in estm'first+1..estm'last loop
+      wrk := integer32(hihi_part(estm(i)));
+      eps := abs(estm(i) - Quad_Double_Numbers.create(wrk));
+      for j in estm'first..i-1 loop   -- compare with previous estimates
+        prev_eps := abs(estm(j) - Quad_Double_Numbers.create(wrk));
+        if prev_eps > eps
+         then success := false;       -- extrapolation failed
+        end if;
+        exit when (not success);
+      end loop;
+      exit when (not success);
+      if eps < best_eps then
+        res := wrk;                   -- update the result
+        k := i-1;                     -- its order
+        best_eps := eps;              -- and its accuracy
+      end if;
+    end loop;
+    estwin := res;
+    eps := best_eps;
+  end Accuracy_of_Estimates;
+
   procedure Estimate0
                ( r : in integer32; max : in natural32;
                  m,estm : in out integer32; cnt : in out natural32;
@@ -280,7 +315,7 @@ package body Directions_of_QuadDobl_Paths is
     if res = 0
      then res := 1;
     end if;
-    Frequency_of_Estimate(res,max,m,estm,cnt,accuracy,newm);
+    Frequency_of_Estimate(res,max,m,estm,cnt,newm);
     rat := ratio; eps := accuracy;
   end Estimate0;
 
@@ -305,7 +340,7 @@ package body Directions_of_QuadDobl_Paths is
      then res := 1;
     end if;
     accuracy := abs(Quad_Double_Numbers.create(res) - fltestm);
-    Frequency_of_Estimate(res,max,m,estm,cnt,accuracy,newm);
+    Frequency_of_Estimate(res,max,m,estm,cnt,newm);
     rat := fltestm; eps := accuracy;
   end Estimate;
 
