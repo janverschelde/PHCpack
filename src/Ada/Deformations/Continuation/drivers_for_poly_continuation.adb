@@ -1124,6 +1124,9 @@ package body Drivers_for_Poly_Continuation is
       w := (w'range => 1);
       Toric_Continue(file,sols,false,report,w,v.all,errv.all,dd_targ);
       Write_Directions(file,w,v.all,errv.all);
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     else
       Continue(file,sols,report,dd_targ);
     end if;
@@ -1163,6 +1166,9 @@ package body Drivers_for_Poly_Continuation is
       w := (w'range => 1);
       Toric_Continue(file,sols,false,report,w,v.all,errv.all,qd_targ);
       Write_Directions(file,w,v.all,errv.all);
+      new_line(file);
+      put_line(file,"THE SOLUTIONS :");
+      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     else
       Continue(file,sols,report,qd_targ);
     end if;

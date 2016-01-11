@@ -1,18 +1,22 @@
-Fri 8 Jan 2015 : populated the stubs in dobldobl_incfix_continuation.adb
+Mon 11 Jan 2016 : modified drivers_to_poly_continuation.adb to write end
+  solutions after the application of polyhedral end games in double double
+  and quad double precision.
+
+Fri 8 Jan 2016 : populated the stubs in dobldobl_incfix_continuation.adb
   and quaddobl_incfix_continuation.adb with code.
 
-Thu 7 Jan 2015 : changed standard_incfix_continuation.adb for the addition
+Thu 7 Jan 2016 : changed standard_incfix_continuation.adb for the addition
   of the estimated winding number as extra argument.  Did the same for
   dobldobl_incfix_continuation.adb and quaddobl_incfix_continuation.adb.
   
-Wed 6 Jan 2015 : extended {dobldobl,quaddobl}_incfix_continuation with
+Wed 6 Jan 2016 : extended {dobldobl,quaddobl}_incfix_continuation with
   procedures to compute the directions of the paths.
   Updated drivers_for_poly_continuation.adb with those procedures.
   Added extra parameter for the estimated winding numbers in the
   {standard,dobldobl,quaddobl}_incfix_continuation packages called 
   in drivers_for_poly_continuation.adb.
 
-Mon 4 Jan 2015 : in continuation_parameters.adb, fixed setting of the
+Mon 4 Jan 2016 : in continuation_parameters.adb, fixed setting of the
   predictor type in case of a polyhedral end game.
   Added print statements in standard_incfix_continuation.adb to mark 
   the beginning of the polyhedral end game for a particular path.
