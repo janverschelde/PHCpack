@@ -122,7 +122,7 @@ package Directions_of_DoblDobl_Paths is
   --             the outer normal, the most recent error is err(0).
 
   -- ON RETURN :
-  --   extm      estimated values for m, consecutively obtained by
+  --   estm      estimated values for m, consecutively obtained by
   --             application of higher orders of extrapolation.
 
   procedure Accuracy_of_Estimates

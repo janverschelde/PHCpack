@@ -1,3 +1,6 @@
+Tue 12 Jan 2016 : small fix in directions_of_dobldobl_paths.ads and updated
+  directions_of_quaddobl_paths.adb.
+
 Sun 10 Jan 2016 : improved directions_of_{dobldobl,quaddobl}_paths and
   directions_of_standard_paths.ads.
 

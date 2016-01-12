@@ -108,23 +108,22 @@ package Directions_of_QuadDobl_Paths is
   --   newm      true if m has changed, false otherwise.
 
   procedure Extrapolate_on_Errors
-               ( file : in file_type;
-                 r : in integer32; h : in quad_double;
+               ( r : in integer32; h : in quad_double;
                  err : in Quad_Double_Vectors.Vector;
-                 estm : out quad_double );
+                 estm : out Quad_Double_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Performs an rth-order extrapolation on the errors.
 
   -- ON ENTRY :
-  --   file      to write intermediate results on;
   --   r         order of the extrapolation method;
   --   h         ratio in geometric sequence;
   --   err       vector of range 0..r+1 with differences of estimates for
   --             the outer normal, the most recent error is err(0).
 
   -- ON RETURN :
-  --   extm      estimated value for m.
+  --   estm      estimated values for m, consecutively obtained by
+  --             application of higher orders of extrapolation.
 
   procedure Accuracy_of_Estimates
                ( estm : in Quad_Double_Vectors.Vector;
@@ -174,7 +173,7 @@ package Directions_of_QuadDobl_Paths is
   --   eps       accuracy of the rounding value for m;
   --   newm      true if m has changed.
 
-  procedure Estimate
+  procedure Estimate_Winding_Number
                ( file : in file_type; r : in integer32;
                  max : in natural32; m,estm : in out integer32;
                  cnt : in out natural32; h : in quad_double;
