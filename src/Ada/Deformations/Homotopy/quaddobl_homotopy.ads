@@ -44,7 +44,43 @@ package QuadDobl_Homotopy is
   --   Given a polynomial system p with dimension n*(n+1) and
   --   k an index, then t = x_k as continuation parameter.
 
--- SELECTOR :
+-- SELECTORS :
+
+  function Relaxation_Power return natural32;
+
+  -- DESCRIPTION :
+  --   Returns the value of the relaxation power k given at creation
+  --   of an artificial-parameter homotopy.  If the homotopy was not
+  --   created, or if the homotopy is a natural-parameter homotopy,
+  --   then zero is returned.
+
+  function Accessibility_Constant return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the value of the accessibility (or gamma) constant a
+  --   given at the creation of an artificial-parameter homotopy.
+  --   If the homotopy is empty or of natural-parameter type,
+  --   then zero is returned.
+
+  function Dimension return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the number of equations in the homotopy or zero
+  --   if there is no homotopy defined.
+
+  function Target_System return Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Returns the target system in an artificial-parameter homotopy.
+
+  -- REQUIRED : Dimension > 0 and the homotopy is artificial parameter.
+
+  function Start_System return Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Returns the start system in an artificial-parameter homotopy.
+
+  -- REQUIRED : Dimension > 0 and the homotopy is artificial parameter.
 
   function Homotopy_System return Poly_Sys;
 

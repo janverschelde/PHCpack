@@ -433,7 +433,71 @@ package body QuadDobl_Homotopy is
     hom := new homdata'(ho);
   end Create;
 
--- SELECTOR :
+-- SELECTORS :
+
+  function Relaxation_Power return natural32 is
+  begin
+    if hom = null then
+      return 0;
+    else
+      declare
+        ho : homdata renames hom.all;
+      begin
+        case ho.ht is
+          when nat => return 0;
+          when art => return ho.k;
+        end case;
+      end;
+    end if;
+  end Relaxation_Power;
+
+  function Accessibility_Constant return Complex_Number is
+
+    zero : constant quad_double := create(0.0);
+
+  begin
+    if hom = null then
+      return Create(zero);
+    else
+      declare
+        ho : homdata renames hom.all;
+      begin
+        case ho.ht is
+          when nat => return Create(zero);
+          when art => return ho.gamma(1);
+        end case;
+      end;
+    end if;
+  end Accessibility_Constant;
+
+  function Dimension return integer32 is
+  begin
+    if hom = null then
+      return 0;
+    else
+      declare
+        ho : homdata renames hom.all;
+      begin
+        return ho.n;
+      end;
+    end if;
+  end Dimension;
+
+  function Target_System return Poly_Sys is
+
+    ho : homdata renames hom.all;
+
+  begin
+    return ho.p;
+  end Target_System;
+
+  function Start_System return Poly_Sys is
+
+    ho : homdata renames hom.all;
+
+  begin
+    return ho.q;
+  end Start_System;
 
   function Homotopy_System return Poly_Sys is
 
