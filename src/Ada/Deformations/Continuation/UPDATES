@@ -1,4 +1,7 @@
-Mon 11 Jan 2016 : modified drivers_to_poly_continuation.adb to write end
+Wed 13 Jan 2016 : to drivers_for_poly_continuation added procedures to
+  redefine the homotopies, resetting the relaxation power to one.
+
+Mon 11 Jan 2016 : modified drivers_for_poly_continuation.adb to write end
   solutions after the application of polyhedral end games in double double
   and quad double precision.
 

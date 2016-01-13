@@ -1006,6 +1006,62 @@ package body Drivers_for_Poly_Continuation is
     sols := qsols;
   end Driver_for_Polynomial_Continuation;
 
+-- REDEFINING ARTIFIICIAL-PARAMETER HOMOTOPIES
+
+  procedure Standard_Redefine_Homotopy is
+
+    gamma : constant Standard_Complex_Numbers.Complex_Number
+          := Standard_Homotopy.Accessibility_Constant;
+    dim : constant integer32 := Standard_Homotopy.Dimension;
+    p : constant Standard_Complex_Poly_Systems.Poly_Sys(1..dim)
+      := Standard_Homotopy.Target_System;
+    q : constant Standard_Complex_Poly_Systems.Poly_Sys(1..dim)
+      := Standard_Homotopy.Start_System;
+    start,target : Standard_Complex_Poly_Systems.Poly_Sys(1..dim);
+
+  begin
+    Standard_Complex_Poly_Systems.Copy(p,target);
+    Standard_Complex_Poly_Systems.Copy(q,start);
+    Standard_Homotopy.Clear;
+    Standard_Homotopy.Create(target,start,1,gamma);
+  end Standard_Redefine_Homotopy;
+
+  procedure DoblDobl_Redefine_Homotopy is
+
+    gamma : constant DoblDobl_Complex_Numbers.Complex_Number
+          := DoblDobl_Homotopy.Accessibility_Constant;
+    dim : constant integer32 := DoblDobl_Homotopy.Dimension;
+    p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..dim)
+      := DoblDobl_Homotopy.Target_System;
+    q : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(1..dim)
+      := DoblDobl_Homotopy.Start_System;
+    start,target : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..dim);
+
+  begin
+    DoblDobl_Complex_Poly_Systems.Copy(p,target);
+    DoblDobl_Complex_Poly_Systems.Copy(q,start);
+    DoblDobl_Homotopy.Clear;
+    DoblDobl_Homotopy.Create(target,start,1,gamma);
+  end DoblDobl_Redefine_Homotopy;
+
+  procedure QuadDobl_Redefine_Homotopy is
+
+    gamma : constant QuadDobl_Complex_Numbers.Complex_Number
+          := QuadDobl_Homotopy.Accessibility_Constant;
+    dim : constant integer32 := QuadDobl_Homotopy.Dimension;
+    p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(1..dim)
+      := QuadDobl_Homotopy.Target_System;
+    q : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(1..dim)
+      := QuadDobl_Homotopy.Start_System;
+    start,target : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..dim);
+
+  begin
+    QuadDobl_Complex_Poly_Systems.Copy(p,target);
+    QuadDobl_Complex_Poly_Systems.Copy(q,start);
+    QuadDobl_Homotopy.Clear;
+    QuadDobl_Homotopy.Create(target,start,1,gamma);
+  end QuadDobl_Redefine_Homotopy;
+
 -- CALLING THE PATH TRACKERS :
 
   procedure Driver_for_Standard_Continuation
@@ -1023,6 +1079,7 @@ package body Drivers_for_Poly_Continuation is
     w : Standard_Integer_Vectors.Vector(1..integer32(nv));
     v : Standard_Floating_VecVecs.Link_to_VecVec;
     errv : Standard_Floating_Vectors.Link_to_Vector;
+    k : natural32;
 
   begin
     new_line;
@@ -1037,6 +1094,13 @@ package body Drivers_for_Poly_Continuation is
     put_line("No more input expected.  See output file for results.");
     new_line;
     if Continuation_Parameters.endext_order > 0 then
+      k := Standard_Homotopy.Relaxation_Power;
+      --put("the original relaxation power : "); put(k,1); new_line;
+      if k /= 1
+       then Standard_Redefine_Homotopy;
+      end if;
+     -- k := Standard_Homotopy.Relaxation_Power;
+     -- put("the redefined relaxation power : "); put(k,1); new_line;
       w := (w'range => 1);
       Toric_Continue(file,sols,proj,report,w,v.all,errv.all,target);
       Write_Directions(file,w,v.all,errv.all);
@@ -1106,6 +1170,7 @@ package body Drivers_for_Poly_Continuation is
     w : Standard_Integer_Vectors.Vector(1..integer32(nv));
     v : Double_Double_VecVecs.Link_to_VecVec;
     errv : Double_Double_Vectors.Link_to_Vector;
+    k : natural32;
 
   begin
     new_line;
@@ -1121,6 +1186,13 @@ package body Drivers_for_Poly_Continuation is
     put_line("No more input expected.  See output file for results.");
     new_line;
     if Continuation_Parameters.endext_order > 0 then
+      k := DoblDobl_Homotopy.Relaxation_Power;
+      --put("the original relaxation power : "); put(k,1); new_line;
+      if k /= 1
+       then DoblDobl_Redefine_Homotopy;
+      end if;
+     -- k := DoblDobl_Homotopy.Relaxation_Power;
+     -- put("the redefined relaxation power : "); put(k,1); new_line;
       w := (w'range => 1);
       Toric_Continue(file,sols,false,report,w,v.all,errv.all,dd_targ);
       Write_Directions(file,w,v.all,errv.all);
@@ -1148,6 +1220,7 @@ package body Drivers_for_Poly_Continuation is
     w : Standard_Integer_Vectors.Vector(1..integer32(nv));
     v : Quad_Double_VecVecs.Link_to_VecVec;
     errv : Quad_Double_Vectors.Link_to_Vector;
+    k : natural32;
 
   begin
     new_line;
@@ -1164,6 +1237,13 @@ package body Drivers_for_Poly_Continuation is
     new_line;
     if Continuation_Parameters.endext_order > 0 then
       w := (w'range => 1);
+      k := QuadDobl_Homotopy.Relaxation_Power;
+      --put("the original relaxation power : "); put(k,1); new_line;
+      if k /= 1
+       then QuadDobl_Redefine_Homotopy;
+      end if;
+     -- k := QuadDobl_Homotopy.Relaxation_Power;
+     -- put("the redefined relaxation power : "); put(k,1); new_line;
       Toric_Continue(file,sols,false,report,w,v.all,errv.all,qd_targ);
       Write_Directions(file,w,v.all,errv.all);
       new_line(file);

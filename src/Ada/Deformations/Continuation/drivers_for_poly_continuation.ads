@@ -155,6 +155,19 @@ package Drivers_for_Poly_Continuation is
   --   sols       the computed solutions;
   --   target     end target value for the continuation parameter.
 
+-- REDEFINING ARTIFIICIAL-PARAMETER HOMOTOPIES
+
+  procedure Standard_Redefine_Homotopy;
+  procedure DoblDobl_Redefine_Homotopy;
+  procedure QuadDobl_Redefine_Homotopy;
+
+  -- DESCRIPTION :
+  --   In case the relaxation power (by default equal to 2) differs
+  --   from one, the homotopy will be redefined when polyhedral end
+  --   games are called in the path trackers.
+  --   The redefinition is provided for artificial-parameter homotopies
+  --   in standard double, double double, and quad double precision.
+
 -- CALLING THE PATH TRACKERS :
 
   procedure Driver_for_Standard_Continuation
