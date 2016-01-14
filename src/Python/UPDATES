@@ -1,5 +1,6 @@
 Thu 14 Jan 2016 : new module tuning with the wrappers from trackers
   to tune the parameters of the continuation in PHCpy2 and PHCpy3.
+  Fixed bug in trackers, caused by standard making of names.
 
 Wed 13 Jan 2016 : started the extension of trackers in PHCpy3/phcpy with
   wrappers to get and set values of the continuation parameters.

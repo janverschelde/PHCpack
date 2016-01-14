@@ -479,14 +479,14 @@ def initialize_standard_tracker(target, start, fixedgamma=True):
     If fixedgamma, then gamma will be a fixed default value,
     otherwise, a random complex constant for gamma is generated.
     """
-    from phcpy.phcpy2c3 import py2c_copy_container_to_target_system
-    from phcpy.phcpy2c3 import py2c_copy_container_to_start_system
+    from phcpy.phcpy2c3 import py2c_copy_standard_container_to_target_system
+    from phcpy.phcpy2c3 import py2c_copy_standard_container_to_start_system
     from phcpy.phcpy2c3 import py2c_initialize_standard_homotopy
     from phcpy.interface import store_standard_system
     store_standard_system(target)
-    py2c_copy_container_to_target_system()
+    py2c_copy_standard_container_to_target_system()
     store_standard_system(start)
-    py2c_copy_container_to_start_system()
+    py2c_copy_standard_container_to_start_system()
     if fixedgamma:
         return py2c_initialize_standard_homotopy(1)
     else:
