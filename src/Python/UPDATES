@@ -1,5 +1,6 @@
 Wed 13 Jan 2016 : started the extension of trackers in PHCpy3/phcpy with
   wrappers to get and set values of the continuation parameters.
+  Did the same thing in the trackers module of PHCpy2/phcpy.
 
 Sat 2 Jan 2016 : renamed the directory PHCpy into PHCpy2.  Prepared setup.py,
   __init__.py, and conf.py for version 0.3.8 of phcpy.
