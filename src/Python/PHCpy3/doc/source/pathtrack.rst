@@ -601,6 +601,15 @@ while the *complex sweep* hopped over this singularity because
 of complex random gamma constant in the convex combination between
 the start and target values of the parameters.
 
+tuning parameters, settings, and tolerances
+-------------------------------------------
+
+The documentation strings of the functions
+exported by the module ``tuning`` of the package phcpy are listed below.
+
+.. automodule:: tuning
+   :members:
+
 functions in the module trackers
 --------------------------------
    
@@ -609,6 +618,7 @@ exported by the module ``trackers`` of the package phcpy are listed below.
 
 .. automodule:: trackers
    :members:
+
 functions in the module sweepers
 --------------------------------
    
