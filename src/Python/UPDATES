@@ -1,3 +1,6 @@
+Fri 15 Jan 2016 : extended the tuning module with wrappers for the parameters
+  and settings for the predictor and the corrector in PHCpy3/phcpy.
+
 Thu 14 Jan 2016 : new module tuning with the wrappers from trackers
   to tune the parameters of the continuation in PHCpy2 and PHCpy3.
   Fixed bug in trackers, caused by standard making of names.
