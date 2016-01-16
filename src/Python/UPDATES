@@ -1,3 +1,6 @@
+Sat 16 Jan 2016 : Copied the new wrappers in tuning.py for python2,
+  in PHCpy2/phcpy.
+
 Fri 15 Jan 2016 : extended the tuning module with wrappers for the parameters
   and settings for the predictor and the corrector in PHCpy3/phcpy.
   Completed the wrappers in tuning.py for python3.
