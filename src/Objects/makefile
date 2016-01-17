@@ -14,10 +14,10 @@ MAKEFILE = makefile_mac
 phc:
 	make -f $(MAKEFILE) phc
 
-# for phcpy, make phcpy2c.so
+# for phcpy for Python 2.6 and 2.7, make phcpy2c2.so
 
-phcpy2c.so:
-	make -f $(MAKEFILE) phcpy2c.so
+phcpy2c2.so:
+	make -f $(MAKEFILE) phcpy2c2.so
 
 # for phcpy on Python 3.5, make phcpy2c3.so
 

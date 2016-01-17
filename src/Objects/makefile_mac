@@ -2332,7 +2332,7 @@ phc_solve_cpp:
 	gnatlink -C use_c2phc syscon.o solcon.o phcpack.o phc_solve.o \
                  -o $(BIN)/phc_solve -lm --LINK=g++
 
-phcpy2c.so:
+phcpy2c2.so:
 	gcc -c -O2 $(PHCLib)/syscon.c
 	gcc -c -O2 $(PHCLib)/solcon.c
 	gcc -c -O2 $(PHCLib)/product.c
@@ -2347,15 +2347,15 @@ phcpy2c.so:
 	gcc -c -O2 $(PHCLib)/phcpack.c
 	gcc -c -O2 $(PHCLib)/mapcon.c
 	gcc -c -O2 $(PHCLib)/next_track.c
-	$(MCC) -c -I$(PYTHON) -I$(PYTHON)/Include $(PHCLib)/phcpy2c.c
-	#gcc -c -I$(PYTHON) -I$(PYTHON)/Include $(PHCLib)/phcpy2c.c
+	$(MCC) -c -I$(PYTHON) -I$(PYTHON)/Include $(PHCLib)/phcpy2c2.c
+	#gcc -c -I$(PYTHON) -I$(PYTHON)/Include $(PHCLib)/phcpy2c2.c
 	gnatmake -c -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n use_c2phc
-	gnatlink -dynamiclib -C use_c2phc phcpy2c.o phcpack.o syscon.o \
+	gnatlink -dynamiclib -C use_c2phc phcpy2c2.o phcpack.o syscon.o \
             witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
             solcon.o product.o lists_and_strings.o celcon.o scalers.o \
             sweep.o schubert.o \
-                 -o ../Python/PHCpy2/phcpy/phcpy2c.so -framework Python
+                 -o ../Python/PHCpy2/phcpy/phcpy2c2.so -framework Python
 
 phcpy2c3.so:
 	gcc -c -O2 $(PHCLib)/syscon.c
@@ -2373,7 +2373,7 @@ phcpy2c3.so:
 	gcc -c -O2 $(PHCLib)/mapcon.c
 	gcc -c -O2 $(PHCLib)/next_track.c
 	$(MCC) -c -I$(PYTHON3) -I$(PYTHON3)/Include $(PHCLib)/phcpy2c3.c
-	#gcc -c -I$(PYTHON3) -I$(PYTHON3)/Include $(PHCLib)/phcpy2c.c
+	#gcc -c -I$(PYTHON3) -I$(PYTHON3)/Include $(PHCLib)/phcpy2c3.c
 	gnatmake -c -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gnatbind -n use_c2phc
 	gnatlink -dynamiclib -C use_c2phc phcpy2c3.o phcpack.o syscon.o \
