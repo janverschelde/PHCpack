@@ -1,4 +1,4 @@
-PHCpack as a library of C functions with a state machine in PHCv2.4.09
+PHCpack as a library of C functions with a state machine in PHCv2.4.10
 
 This directory collects header files and definitions of C which bind the
 operations of PHCpack as a state machine in a systematic manner.
@@ -8,7 +8,7 @@ Thanks to Anton Leykin for suggesting changes in the syntax of functions
 having arrays of parameters.
 
 Jointly with Kathy Piret, we use the library to build a C extension 
-module "phcpy2c.c" for the Python interpreter.
+module "phcpy2c.h" for the Python interpreter.
 
 Support for Laurent systems was added in version 2.3.72.
 New in 2.3.84 are path trackers with generators, available in the files
@@ -100,7 +100,8 @@ lib_gpupath_dd       : test on functions in gpupath_dd
 lib_gpupath_qd       : test on functions in gpupath_qd
 ------------------------------------------------------------------------------
 phc_solve.c          : test on the blackbox solver in PHCpack
-phcpy2c.c            : C extension module for Python 2.6 and 2.7
+phcpy2c.h            : all prototypes for the extension module for Python
+phcpy2c2.c           : C extension module for Python 2.6 and 2.7
 phcpy2cadepath_d.cpp : C++ extension of phcpy2c with Path (CPU) for doubles 
 phcpy2cpath_d.cpp    : C++ extension of phcpy2c with Path (GPU) for doubles 
 phcpy2c3.c           : C extension module for Python 3.5
