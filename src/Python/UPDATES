@@ -1,3 +1,6 @@
+Sun 17 Jan 2016 : changed setup.py and MANIFEST.in in PHCpy2, with also most
+  of the .py files in PHCpy2/phcpy.
+
 Sat 16 Jan 2016 : Copied the new wrappers in tuning.py for python2,
   in PHCpy2/phcpy.
 

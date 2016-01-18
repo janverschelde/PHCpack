@@ -20,9 +20,9 @@ def tune_track_parameters(difficulty=0, digits=16, \
     If silent is False, then the current values of the
     numerical continuation parameters are shown.
     """
-    from phcpy.phcpy2c import py2c_autotune_continuation_parameters
-    from phcpy.phcpy2c import py2c_tune_continuation_parameters
-    from phcpy.phcpy2c import py2c_show_continuation_parameters
+    from phcpy.phcpy2c2 import py2c_autotune_continuation_parameters
+    from phcpy.phcpy2c2 import py2c_tune_continuation_parameters
+    from phcpy.phcpy2c2 import py2c_show_continuation_parameters
     py2c_autotune_continuation_parameters(difficulty, digits)
     if interactive:
         py2c_tune_continuation_parameters()
@@ -35,7 +35,7 @@ def condition_level_get():
     of the homotopy.  The default level equals zero,
     higher values lead to smaller tolerances.
     """
-    from phcpy.phcpy2c import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(1))
 
 def condition_level_set(lvl):
@@ -45,7 +45,7 @@ def condition_level_set(lvl):
     higher values lead to smaller tolerances.
     On return is the failure code, which is zero if all went well.
     """
-    from phcpy.phcpy2c import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(1, lvl)
 
 def track_simultaneously_get():
@@ -56,7 +56,7 @@ def track_simultaneously_get():
     also called path jumping.  This jumping happens when the approximated
     points on one path transition to approximated points on another path.
     """
-    from phcpy.phcpy2c import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(2))
 
 def track_simultaneously_set(nbr):
@@ -69,7 +69,7 @@ def track_simultaneously_set(nbr):
     points on one path transition to approximated points on another path.
     On return in the failure code, which is zero if all went well.
     """
-    from phcpy.phcpy2c import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(2, nbr)
 
 def max_steps_get():
@@ -78,7 +78,7 @@ def max_steps_get():
     to reach the end of a solution path.  For paths that diverge to
     infinity are often truncated beore reaching extreme values.
     """
-    from phcpy.phcpy2c import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(3))
 
 def max_steps_set(mxs):
@@ -88,7 +88,7 @@ def max_steps_set(mxs):
     infinity are often truncated beore reaching extreme values.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(3, mxs)
 
 def distance_to_endgame_get():
@@ -98,7 +98,7 @@ def distance_to_endgame_get():
     solution paths get more interesting near the end.
     The default value is 0.1.
     """
-    from phcpy.phcpy2c import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return get(4)
 
 def distance_to_endgame_set(dst):
@@ -109,7 +109,7 @@ def distance_to_endgame_set(dst):
     The default value is 0.1.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(4, dst)
 
 def order_endgame_extrapolator_get():
@@ -118,7 +118,7 @@ def order_endgame_extrapolator_get():
     in a polyhedral end game. 
     If the order is zero, then no polyhedral end game will be applied.
     """
-    from phcpy.phcpy2c import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(5))
 
 def order_endgame_extrapolator_set(ord):
@@ -128,7 +128,7 @@ def order_endgame_extrapolator_set(ord):
     If the order is zero, then no polyhedral end game will be applied.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(5, ord)
 
 def maxnum_reruns_get():
@@ -138,7 +138,7 @@ def maxnum_reruns_get():
     with more severe values of the tolerances.
     The default value equals one.
     """
-    from phcpy.phcpy2c import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(6))
 
 def maxnum_reruns_set(mrr):
@@ -149,7 +149,7 @@ def maxnum_reruns_set(mrr):
     The default value equals one.
     On return is the failure code, which is zero when all went well.
     """
-    from phcpy.phcpy2c import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(6, mrr)
 
 def predictor_typeonpath_get():
@@ -170,7 +170,7 @@ def predictor_typeonpath_get():
     8 : cubic for x, real for t;
     9 : quartic for x, real for t.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(7))
 
 def predictor_typeonpath_set(predtype):
@@ -192,7 +192,7 @@ def predictor_typeonpath_set(predtype):
     9 : quartic for x, real for t.
     On return is the failure code, which is zero when all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(7, predtype)
 
 def predictor_typeendgame_get():
@@ -213,7 +213,7 @@ def predictor_typeendgame_get():
     8 : cubic for x, real for t;
     9 : quartic for x, real for t.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(8))
 
 def predictor_typeendgame_set(predtype):
@@ -235,7 +235,7 @@ def predictor_typeendgame_set(predtype):
     9 : quartic for x, real for t.
     On return is the failure code, which is zero when all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(8, predtype)
 
 def predictor_minsteponpath_get():
@@ -244,7 +244,7 @@ def predictor_minsteponpath_get():
     end game.  If the step size control cuts the step size to a value
     below this minimum, then the path tracking is aborted.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return get(9)
 
 def predictor_minsteponpath_set(minstep):
@@ -253,7 +253,7 @@ def predictor_minsteponpath_set(minstep):
     to the value of minstep.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(9, minstep)
 
 def predictor_minstependgame_get():
@@ -262,7 +262,7 @@ def predictor_minstependgame_get():
     If the step size control cuts the step size to a value
     below this minimum, then the path tracking is aborted.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return get(10)
 
 def predictor_minstependgame_set(minstep):
@@ -271,7 +271,7 @@ def predictor_minstependgame_set(minstep):
     to the value of minstep.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(10, minstep)
 
 def predictor_maxsteponpath_get():
@@ -280,7 +280,7 @@ def predictor_maxsteponpath_get():
     end game.  The step size control will never increase the step size
     to a value above this maximum.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return get(11)
 
 def predictor_maxsteponpath_set(maxstep):
@@ -289,7 +289,7 @@ def predictor_maxsteponpath_set(maxstep):
     to the value of maxstep.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(11, minstep)
 
 def predictor_maxstependgame_get():
@@ -298,7 +298,7 @@ def predictor_maxstependgame_get():
     The step size control will never increase the step size to a value
     above this maximum.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return get(12)
 
 def predictor_maxtependgame_set(maxstep):
@@ -307,7 +307,7 @@ def predictor_maxtependgame_set(maxstep):
     to the value of maxstep.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(12, maxstep)
 
 def predictor_redfaconpath_get():
@@ -317,7 +317,7 @@ def predictor_redfaconpath_get():
     The reduction factor determines the speed at which the predictor reduces
     its step size when tracking a more difficult portion of the path.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return get(13)
 
 def predictor_redfaconpath_set(redfac):
@@ -327,7 +327,7 @@ def predictor_redfaconpath_set(redfac):
     value of redfac.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(13, redfac)
 
 def predictor_redfacendgame_get():
@@ -337,7 +337,7 @@ def predictor_redfacendgame_get():
     The reduction factor determines the speed at which the predictor reduces
     its step size when tracking a more difficult portion of the path.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return get(14)
 
 def predictor_redfacendgame_set(redfac):
@@ -346,7 +346,7 @@ def predictor_redfacendgame_set(redfac):
     a failed corrector step during the end game, to the value of redfac.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(14, redfac)
 
 def predictor_expfaconpath_get():
@@ -356,7 +356,7 @@ def predictor_expfaconpath_get():
     The expansion factor determines the speed at which the predictor increases
     its step size when tracking an easier portion of the path.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return get(15)
 
 def predictor_expfaconpath_set(expfac):
@@ -366,7 +366,7 @@ def predictor_expfaconpath_set(expfac):
     to the value of expfac.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(15, expfac)
 
 def predictor_expfacendgame_get():
@@ -376,7 +376,7 @@ def predictor_expfacendgame_get():
     The expansion factor determines the speed at which the predictor increases
     its step size when tracking an easier portion of the path.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return get(16)
 
 def predictor_expfacendgame_set(expfac):
@@ -386,7 +386,7 @@ def predictor_expfacendgame_set(expfac):
     to the value of expfac.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(16, expfac)
 
 def predictor_exptrsonpath_get():
@@ -396,7 +396,7 @@ def predictor_exptrsonpath_get():
     The expansion threshold is the number of consecutive successful
     corrector stages that must be met before the step size is increased.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(17))
 
 def predictor_exptrsonpath_set(exptrs):
@@ -407,7 +407,7 @@ def predictor_exptrsonpath_set(exptrs):
     corrector stages that must be met before the step size is increased.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(17, exptrs)
 
 def predictor_exptrsendgame_get():
@@ -417,7 +417,7 @@ def predictor_exptrsendgame_get():
     The expansion threshold is the number of consecutive successful
     corrector stages that must be met before the step size is increased.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(18))
 
 def predictor_exptrsendgame_set(exptrs):
@@ -428,7 +428,7 @@ def predictor_exptrsendgame_set(exptrs):
     corrector stages that must be met before the step size is increased.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(18, exptrs)
 
 def corrector_maxiteronpath_get():
@@ -436,7 +436,7 @@ def corrector_maxiteronpath_get():
     Returns the maximum number of iterations the corrector does along
     a path, before the start of the end game.  The default equals 3.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(19))
 
 def corrector_maxiteronpath_set(maxiter):
@@ -445,7 +445,7 @@ def corrector_maxiteronpath_set(maxiter):
     a path, before the start of the end game, to the value of maxiter.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(19, maxiiter)
 
 def corrector_maxiterendgame_get():
@@ -453,7 +453,7 @@ def corrector_maxiterendgame_get():
     Returns the maximum number of iterations the corrector does along
     a path, during the end game.  The default equals 3.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(20))
 
 def corrector_maxiterendgame_set(maxiter):
@@ -462,7 +462,7 @@ def corrector_maxiterendgame_set(maxiter):
     a path, before the start of the end game, to the value of maxiter.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(20, maxiiter)
 
 def corrector_relresonpath_get():
@@ -470,7 +470,7 @@ def corrector_relresonpath_get():
     Returns the value of the tolerance on the relative residual for
     the corrector along a path, before the end game.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(21))
 
 def corrector_relresonpath_set(tol):
@@ -479,7 +479,7 @@ def corrector_relresonpath_set(tol):
     a path, before the start of the end game, to the value of tol.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(21, tol)
 
 def corrector_relresendgame_get():
@@ -487,7 +487,7 @@ def corrector_relresendgame_get():
     Returns the value of the tolerance on the relative residual for
     the corrector during the end game.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(22))
 
 def corrector_relresendgame_set(tol):
@@ -496,7 +496,7 @@ def corrector_relresendgame_set(tol):
     the end game, to the value of tol.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(22, tol)
 
 def corrector_absresonpath_get():
@@ -504,7 +504,7 @@ def corrector_absresonpath_get():
     Returns the value of the tolerance on the absolute residual for
     the corrector along a path, before the end game.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(23))
 
 def corrector_absresonpath_set(tol):
@@ -513,7 +513,7 @@ def corrector_absresonpath_set(tol):
     a path, before the start of the end game, to the value of tol.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(23, tol)
 
 def corrector_absresendgame_get():
@@ -521,7 +521,7 @@ def corrector_absresendgame_get():
     Returns the value of the tolerance on the absolute residual for
     the corrector during the end game.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(24))
 
 def corrector_absresendgame_set(tol):
@@ -530,7 +530,7 @@ def corrector_absresendgame_set(tol):
     the end game, to the value of tol.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(24, tol)
 
 def corrector_relcoronpath_get():
@@ -538,7 +538,7 @@ def corrector_relcoronpath_get():
     Returns the value of the tolerance on the relative correction for
     the corrector along a path, before the end game.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(25))
 
 def corrector_relcoronpath_set(tol):
@@ -547,7 +547,7 @@ def corrector_relcoronpath_set(tol):
     a path, before the start of the end game, to the value of tol.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(25, tol)
 
 def corrector_relcorendgame_get():
@@ -555,7 +555,7 @@ def corrector_relcorendgame_get():
     Returns the value of the tolerance on the relative correction for
     the corrector during the end game.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(26))
 
 def corrector_relcorendgame_set(tol):
@@ -564,7 +564,7 @@ def corrector_relcorendgame_set(tol):
     the end game, to the value of tol.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(26, tol)
 
 def corrector_abscoronpath_get():
@@ -572,7 +572,7 @@ def corrector_abscoronpath_get():
     Returns the value of the tolerance on the absolute correction for
     the corrector along a path, before the end game.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(27))
 
 def corrector_abscoronpath_set(tol):
@@ -581,7 +581,7 @@ def corrector_abscoronpath_set(tol):
     a path, before the start of the end game, to the value of tol.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(27, tol)
 
 def corrector_abscorendgame_get():
@@ -589,7 +589,7 @@ def corrector_abscorendgame_get():
     Returns the value of the tolerance on the absolute correction for
     the corrector during the end game.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return int(get(28))
 
 def corrector_absresendgame_set(tol):
@@ -598,7 +598,7 @@ def corrector_absresendgame_set(tol):
     the end game, to the value of tol.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(28, tol)
 
 def tolerance_rcondonpath_get():
@@ -607,7 +607,7 @@ def tolerance_rcondonpath_get():
     matrix of a solution along a path, before the end game, to decide
     whether a solution is singular.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return get(29)
 
 def tolerance_rcondonpath_set(tol):
@@ -617,7 +617,7 @@ def tolerance_rcondonpath_set(tol):
     whether a solution is singular, to the value of tol.
     The failure code is returned, which is zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(29, tol)
 
 def tolerance_rcondendgame_get():
@@ -626,7 +626,7 @@ def tolerance_rcondendgame_get():
     matrix of a solution, during the end game, to decide whether a solution
     is singular or not.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return get(30)
 
 def tolerance_rcondendgame_set(tol):
@@ -636,7 +636,7 @@ def tolerance_rcondendgame_set(tol):
     whether a solution is singular, to the value of tol.
     On return is the failure code, which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(30, tol)
 
 def tolerance_clustsolonpath_get():
@@ -644,7 +644,7 @@ def tolerance_clustsolonpath_get():
     Returns the tolerance on the distance between two solutions to decide
     whether two solutions are clustered along a path, before the end game.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return get(31)
 
 def tolerance_clustsolonpath_set(tol):
@@ -654,7 +654,7 @@ def tolerance_clustsolonpath_set(tol):
     to the value of tol.
     On return is the failure code which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(31, tol)
 
 def tolerance_clustsolendgame_get():
@@ -662,7 +662,7 @@ def tolerance_clustsolendgame_get():
     Returns the tolerance on the distance between two solutions to decide
     whether two solutions are clustered during the end game.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return get(32)
 
 def tolerance_clustsolendgame_set(tol):
@@ -672,7 +672,7 @@ def tolerance_clustsolendgame_set(tol):
     to the value of tol.
     On return is the failure code which equals zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(32, tol)
 
 def tolerance_infsolonpath_get():
@@ -680,7 +680,7 @@ def tolerance_infsolonpath_get():
     Returns the tolerance threshold to decide whether a solution path
     diverges to infinity, before the start of the end game.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return get(33)
 
 def tolerance_infsolonpath_set(tol):
@@ -689,7 +689,7 @@ def tolerance_infsolonpath_set(tol):
     diverges to infinity, during the end game, to the value of tol.
     On return is the failure code which is zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(33, tol)
 
 def tolerance_infsolendgame_get():
@@ -697,7 +697,7 @@ def tolerance_infsolendgame_get():
     Returns the tolerance threshold to decide whether a solution path
     diverges to infinity, during the end game.
     """
-    from phcpy.phcpy2c3 import py2c_get_value_of_continuation_parameter as get
+    from phcpy.phcpy2c2 import py2c_get_value_of_continuation_parameter as get
     return get(34)
 
 def tolerance_infsolendgame_set(tol):
@@ -706,7 +706,7 @@ def tolerance_infsolendgame_set(tol):
     diverges to infinity, during the end game, to the value of tol.
     On return is the failure code which is zero if all went well.
     """
-    from phcpy.phcpy2c3 import py2c_set_value_of_continuation_parameter as set
+    from phcpy.phcpy2c2 import py2c_set_value_of_continuation_parameter as set
     return set(34, tol)
 
 def test():

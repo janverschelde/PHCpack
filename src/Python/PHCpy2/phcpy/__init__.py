@@ -86,10 +86,10 @@ The module solutions offers function to evaluate the solutions
 in the polynomials given as strings.
 """
 try:
-    from phcpy2c import py2c_PHCpack_version_string
+    from phcpy2c2 import py2c_PHCpack_version_string
     print py2c_PHCpack_version_string() + ' works!'
 except:
-    print 'Is the phcpy2c.so not suited for this platform?'
+    print 'Is the phcpy2c2.so not suited for this platform?'
 
 # The version number is defined as a data attribute.
 __version__ = '0.3.8'

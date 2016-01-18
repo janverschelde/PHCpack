@@ -27,16 +27,17 @@ def standard_double_track(target, start, sols, gamma=0, tasks=0):
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
-    from phcpy2c import py2c_copy_standard_container_to_target_system
-    from phcpy2c import py2c_copy_standard_container_to_start_system
-    from phcpy2c import py2c_copy_standard_container_to_start_solutions
-    from phcpy2c import py2c_create_standard_homotopy
-    from phcpy2c import py2c_create_standard_homotopy_with_gamma
-    from phcpy2c import py2c_solve_by_standard_homotopy_continuation
-    from phcpy2c import py2c_solcon_clear_standard_solutions
-    from phcpy2c import py2c_copy_standard_target_solutions_to_container
-    from interface import store_standard_system
-    from interface import store_standard_solutions, load_standard_solutions
+    from phcpy.phcpy2c2 import py2c_copy_standard_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_standard_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_copy_standard_container_to_start_solutions
+    from phcpy.phcpy2c2 import py2c_create_standard_homotopy
+    from phcpy.phcpy2c2 import py2c_create_standard_homotopy_with_gamma
+    from phcpy.phcpy2c2 import py2c_solve_by_standard_homotopy_continuation
+    from phcpy.phcpy2c2 import py2c_solcon_clear_standard_solutions
+    from phcpy.phcpy2c2 import py2c_copy_standard_target_solutions_to_container
+    from phcpy.interface import store_standard_system
+    from phcpy.interface import store_standard_solutions
+    from phcpy.interface import load_standard_solutions
     store_standard_system(target)
     py2c_copy_standard_container_to_target_system()
     store_standard_system(start)
@@ -69,11 +70,12 @@ def ade_double_track(target, start, sols, gamma=0, verbose=1):
     If gamma on input equals zero, then a random complex number is generated,
     otherwise the real and imaginary parts of gamma are used.
     """
-    from phcpy2c import py2c_copy_standard_container_to_target_system
-    from phcpy2c import py2c_copy_standard_container_to_start_system
-    from phcpy2c import py2c_ade_manypaths_d
-    from interface import store_standard_system
-    from interface import store_standard_solutions, load_standard_solutions
+    from phcpy.phcpy2c2 import py2c_copy_standard_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_standard_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_ade_manypaths_d
+    from phcpy.interface import store_standard_system
+    from phcpy.interface import store_standard_solutions
+    from phcpy.interface import load_standard_solutions
     store_standard_system(target)
     py2c_copy_standard_container_to_target_system()
     store_standard_system(start)
@@ -110,11 +112,12 @@ def gpu_double_track(target, start, sols, gamma=0, verbose=1):
     If gamma on input equals zero, then a random complex number is generated,
     otherwise the real and imaginary parts of gamma are used.
     """
-    from phcpy2c import py2c_copy_standard_container_to_target_system
-    from phcpy2c import py2c_copy_standard_container_to_start_system
-    from phcpy2c import py2c_gpu_manypaths_d
-    from interface import store_standard_system
-    from interface import store_standard_solutions, load_standard_solutions
+    from phcpy.phcpy2c2 import py2c_copy_standard_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_standard_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_gpu_manypaths_d
+    from phcpy.interface import store_standard_system
+    from phcpy.interface import store_standard_solutions
+    from phcpy.interface import load_standard_solutions
     store_standard_system(target)
     py2c_copy_standard_container_to_target_system()
     store_standard_system(start)
@@ -151,16 +154,17 @@ def double_double_track(target, start, sols, gamma=0, tasks=0):
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
-    from phcpy2c import py2c_copy_dobldobl_container_to_target_system
-    from phcpy2c import py2c_copy_dobldobl_container_to_start_system
-    from phcpy2c import py2c_copy_dobldobl_container_to_start_solutions
-    from phcpy2c import py2c_create_dobldobl_homotopy
-    from phcpy2c import py2c_create_dobldobl_homotopy_with_gamma
-    from phcpy2c import py2c_solve_by_dobldobl_homotopy_continuation
-    from phcpy2c import py2c_solcon_clear_dobldobl_solutions
-    from phcpy2c import py2c_copy_dobldobl_target_solutions_to_container
-    from interface import store_dobldobl_system
-    from interface import store_dobldobl_solutions, load_dobldobl_solutions
+    from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_start_solutions
+    from phcpy.phcpy2c2 import py2c_create_dobldobl_homotopy
+    from phcpy.phcpy2c2 import py2c_create_dobldobl_homotopy_with_gamma
+    from phcpy.phcpy2c2 import py2c_solve_by_dobldobl_homotopy_continuation
+    from phcpy.phcpy2c2 import py2c_solcon_clear_dobldobl_solutions
+    from phcpy.phcpy2c2 import py2c_copy_dobldobl_target_solutions_to_container
+    from phcpy.interface import store_dobldobl_system
+    from phcpy.interface import store_dobldobl_solutions
+    from phcpy.interface import load_dobldobl_solutions
     store_dobldobl_system(target)
     py2c_copy_dobldobl_container_to_target_system()
     store_dobldobl_system(start)
@@ -193,11 +197,12 @@ def ade_double_double_track(target, start, sols, gamma=0, verbose=1):
     If gamma on input equals zero, then a random complex number is generated,
     otherwise the real and imaginary parts of gamma are used.
     """
-    from phcpy2c import py2c_copy_dobldobl_container_to_target_system
-    from phcpy2c import py2c_copy_dobldobl_container_to_start_system
-    from phcpy2c import py2c_ade_manypaths_dd
-    from interface import store_dobldobl_system
-    from interface import store_dobldobl_solutions, load_dobldobl_solutions
+    from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_ade_manypaths_dd
+    from phcpy.interface import store_dobldobl_system
+    from phcpy.interface import store_dobldobl_solutions
+    from phcpy.interface import load_dobldobl_solutions
     store_dobldobl_system(target)
     py2c_copy_dobldobl_container_to_target_system()
     store_dobldobl_system(start)
@@ -234,11 +239,12 @@ def gpu_double_double_track(target, start, sols, gamma=0, verbose=1):
     If gamma on input equals zero, then a random complex number is generated,
     otherwise the real and imaginary parts of gamma are used.
     """
-    from phcpy2c import py2c_copy_dobldobl_container_to_target_system
-    from phcpy2c import py2c_copy_dobldobl_container_to_start_system
-    from phcpy2c import py2c_gpu_manypaths_dd
-    from interface import store_dobldobl_system
-    from interface import store_dobldobl_solutions, load_dobldobl_solutions
+    from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_gpu_manypaths_dd
+    from phcpy.interface import store_dobldobl_system
+    from phcpy.interface import store_dobldobl_solutions
+    from phcpy.interface import load_dobldobl_solutions
     store_dobldobl_system(target)
     py2c_copy_dobldobl_container_to_target_system()
     store_dobldobl_system(start)
@@ -275,16 +281,17 @@ def quad_double_track(target, start, sols, gamma=0, tasks=0):
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
-    from phcpy2c import py2c_copy_quaddobl_container_to_target_system
-    from phcpy2c import py2c_copy_quaddobl_container_to_start_system
-    from phcpy2c import py2c_copy_quaddobl_container_to_start_solutions
-    from phcpy2c import py2c_create_quaddobl_homotopy
-    from phcpy2c import py2c_create_quaddobl_homotopy_with_gamma
-    from phcpy2c import py2c_solve_by_quaddobl_homotopy_continuation
-    from phcpy2c import py2c_solcon_clear_quaddobl_solutions
-    from phcpy2c import py2c_copy_quaddobl_target_solutions_to_container
-    from interface import store_quaddobl_system
-    from interface import store_quaddobl_solutions, load_quaddobl_solutions
+    from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_start_solutions
+    from phcpy.phcpy2c2 import py2c_create_quaddobl_homotopy
+    from phcpy.phcpy2c2 import py2c_create_quaddobl_homotopy_with_gamma
+    from phcpy.phcpy2c2 import py2c_solve_by_quaddobl_homotopy_continuation
+    from phcpy.phcpy2c2 import py2c_solcon_clear_quaddobl_solutions
+    from phcpy.phcpy2c2 import py2c_copy_quaddobl_target_solutions_to_container
+    from phcpy.interface import store_quaddobl_system
+    from phcpy.interface import store_quaddobl_solutions
+    from phcpy.interface import load_quaddobl_solutions
     store_quaddobl_system(target)
     py2c_copy_quaddobl_container_to_target_system()
     store_quaddobl_system(start)
@@ -317,11 +324,12 @@ def ade_quad_double_track(target, start, sols, gamma=0, verbose=1):
     If gamma on input equals zero, then a random complex number is generated,
     otherwise the real and imaginary parts of gamma are used.
     """
-    from phcpy2c import py2c_copy_quaddobl_container_to_target_system
-    from phcpy2c import py2c_copy_quaddobl_container_to_start_system
-    from phcpy2c import py2c_ade_manypaths_qd
-    from interface import store_quaddobl_system
-    from interface import store_quaddobl_solutions, load_quaddobl_solutions
+    from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_ade_manypaths_qd
+    from phcpy.interface import store_quaddobl_system
+    from phcpy.interface import store_quaddobl_solutions
+    from phcpy.interface import load_quaddobl_solutions
     store_quaddobl_system(target)
     py2c_copy_quaddobl_container_to_target_system()
     store_quaddobl_system(start)
@@ -358,11 +366,12 @@ def gpu_quad_double_track(target, start, sols, gamma=0, verbose=1):
     If gamma on input equals zero, then a random complex number is generated,
     otherwise the real and imaginary parts of gamma are used.
     """
-    from phcpy2c import py2c_copy_quaddobl_container_to_target_system
-    from phcpy2c import py2c_copy_quaddobl_container_to_start_system
-    from phcpy2c import py2c_gpu_manypaths_qd
-    from interface import store_quaddobl_system
-    from interface import store_quaddobl_solutions, load_quaddobl_solutions
+    from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_gpu_manypaths_qd
+    from phcpy.interface import store_quaddobl_system
+    from phcpy.interface import store_quaddobl_solutions
+    from phcpy.interface import load_quaddobl_solutions
     store_quaddobl_system(target)
     py2c_copy_quaddobl_container_to_target_system()
     store_quaddobl_system(start)
@@ -401,16 +410,17 @@ def multiprecision_track(target, start, sols, gamma=0, decimals=80):
     On return are the string representations of the solutions
     computed at the end of the paths.
     """
-    from phcpy2c import py2c_copy_multprec_container_to_target_system
-    from phcpy2c import py2c_copy_multprec_container_to_start_system
-    from phcpy2c import py2c_copy_multprec_container_to_start_solutions
-    from phcpy2c import py2c_create_multprec_homotopy
-    from phcpy2c import py2c_create_multprec_homotopy_with_gamma
-    from phcpy2c import py2c_solve_by_multprec_homotopy_continuation
-    from phcpy2c import py2c_solcon_clear_multprec_solutions
-    from phcpy2c import py2c_copy_multprec_target_solutions_to_container
-    from interface import store_multprec_system
-    from interface import store_multprec_solutions, load_multprec_solutions
+    from phcpy.phcpy2c2 import py2c_copy_multprec_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_multprec_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_copy_multprec_container_to_start_solutions
+    from phcpy.phcpy2c2 import py2c_create_multprec_homotopy
+    from phcpy.phcpy2c2 import py2c_create_multprec_homotopy_with_gamma
+    from phcpy.phcpy2c2 import py2c_solve_by_multprec_homotopy_continuation
+    from phcpy.phcpy2c2 import py2c_solcon_clear_multprec_solutions
+    from phcpy.phcpy2c2 import py2c_copy_multprec_target_solutions_to_container
+    from phcpy.interface import store_multprec_system
+    from phcpy.interface import store_multprec_solutions
+    from phcpy.interface import load_multprec_solutions
     store_multprec_system(target, decimals)
     py2c_copy_multprec_container_to_target_system()
     store_multprec_system(start, decimals)
@@ -469,10 +479,10 @@ def initialize_standard_tracker(target, start, fixedgamma=True):
     If fixedgamma, then gamma will be a fixed default value,
     otherwise, a random complex constant for gamma is generated.
     """
-    from phcpy2c import py2c_copy_standard_container_to_target_system
-    from phcpy2c import py2c_copy_standard_container_to_start_system
-    from phcpy2c import py2c_initialize_standard_homotopy
-    from interface import store_standard_system
+    from phcpy.phcpy2c2 import py2c_copy_standard_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_standard_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_initialize_standard_homotopy
+    from phcpy.interface import store_standard_system
     store_standard_system(target)
     py2c_copy_standard_container_to_target_system()
     store_standard_system(start)
@@ -489,10 +499,10 @@ def initialize_dobldobl_tracker(target, start, fixedgamma=True):
     If fixedgamma, then gamma will be a fixed default value,
     otherwise, a random complex constant for gamma is generated.
     """
-    from phcpy2c import py2c_copy_dobldobl_container_to_target_system
-    from phcpy2c import py2c_copy_dobldobl_container_to_start_system
-    from phcpy2c import py2c_initialize_dobldobl_homotopy
-    from interface import store_dobldobl_system
+    from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_dobldobl_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_initialize_dobldobl_homotopy
+    from phcpy.interface import store_dobldobl_system
     store_dobldobl_system(target)
     py2c_copy_dobldobl_container_to_target_system()
     store_dobldobl_system(start)
@@ -509,10 +519,10 @@ def initialize_quaddobl_tracker(target, start, fixedgamma=True):
     If fixedgamma, then gamma will be a fixed default value,
     otherwise, a random complex constant for gamma is generated.
     """
-    from phcpy2c import py2c_copy_quaddobl_container_to_target_system
-    from phcpy2c import py2c_copy_quaddobl_container_to_start_system
-    from phcpy2c import py2c_initialize_quaddobl_homotopy
-    from interface import store_quaddobl_system
+    from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_quaddobl_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_initialize_quaddobl_homotopy
+    from phcpy.interface import store_quaddobl_system
     store_quaddobl_system(target)
     py2c_copy_quaddobl_container_to_target_system()
     store_quaddobl_system(start)
@@ -531,10 +541,10 @@ def initialize_multprec_tracker(target, start, fixedgamma=True, decimals=100):
     If fixedgamma, then gamma will be a fixed default value,
     otherwise, a random complex constant for gamma is generated.
     """
-    from phcpy2c import py2c_copy_multprec_container_to_target_system
-    from phcpy2c import py2c_copy_multprec_container_to_start_system
-    from phcpy2c import py2c_initialize_multprec_homotopy
-    from interface import store_multprec_system
+    from phcpy.phcpy2c2 import py2c_copy_multprec_container_to_target_system
+    from phcpy.phcpy2c2 import py2c_copy_multprec_container_to_start_system
+    from phcpy.phcpy2c2 import py2c_initialize_multprec_homotopy
+    from phcpy.interface import store_multprec_system
     store_multprec_system(target, decimals)
     py2c_copy_multprec_container_to_target_system()
     store_multprec_system(start, decimals)
@@ -552,7 +562,7 @@ def initialize_varbprec_tracker(target, start, fixedgamma=True):
     If fixedgamma, then gamma will be a fixed default value,
     otherwise, a random complex constant for gamma is generated.
     """
-    from phcpy2c import py2c_initialize_varbprec_homotopy
+    from phcpy.phcpy2c2 import py2c_initialize_varbprec_homotopy
     tgtsys = ''
     for pol in target:
         tgtsys = tgtsys + pol
@@ -572,8 +582,8 @@ def initialize_standard_solution(nvar, sol):
     initialized with a start solution sol in a number of
     variables equal to the value of nvar.
     """
-    from phcpy2c import py2c_initialize_standard_solution
-    from interface import store_standard_solutions
+    from phcpy.phcpy2c2 import py2c_initialize_standard_solution
+    from phcpy.interface import store_standard_solutions
     store_standard_solutions(nvar, [sol])
     return py2c_initialize_standard_solution(1)
 
@@ -583,8 +593,8 @@ def initialize_dobldobl_solution(nvar, sol):
     initialized with a start solution sol in a number of
     variables equal to the value of nvar.
     """
-    from phcpy2c import py2c_initialize_dobldobl_solution
-    from interface import store_dobldobl_solutions
+    from phcpy.phcpy2c2 import py2c_initialize_dobldobl_solution
+    from phcpy.interface import store_dobldobl_solutions
     store_dobldobl_solutions(nvar, [sol])
     return py2c_initialize_dobldobl_solution(1)
 
@@ -594,8 +604,8 @@ def initialize_quaddobl_solution(nvar, sol):
     initialized with a start solution sol in a number of
     variables equal to the value of nvar.
     """
-    from phcpy2c import py2c_initialize_quaddobl_solution
-    from interface import store_quaddobl_solutions
+    from phcpy.phcpy2c2 import py2c_initialize_quaddobl_solution
+    from phcpy.interface import store_quaddobl_solutions
     store_quaddobl_solutions(nvar, [sol])
     return py2c_initialize_quaddobl_solution(1)
 
@@ -605,8 +615,8 @@ def initialize_multprec_solution(nvar, sol):
     initialized with a start solution sol in a number of
     variables equal to the value of nvar.
     """
-    from phcpy2c import py2c_initialize_multprec_solution
-    from interface import store_multprec_solutions
+    from phcpy.phcpy2c2 import py2c_initialize_multprec_solution
+    from phcpy.interface import store_multprec_solutions
     store_multprec_solutions(nvar, [sol])
     return py2c_initialize_multprec_solution(1)
 
@@ -616,7 +626,7 @@ def initialize_varbprec_solution(nvar, sol):
     initialized with a start solution sol in a number of
     variables equal to the value of nvar.
     """
-    from phcpy2c import py2c_initialize_varbprec_solution
+    from phcpy.phcpy2c2 import py2c_initialize_varbprec_solution
     return py2c_initialize_varbprec_solution(nvar, len(sol), sol)
 
 def next_standard_solution():
@@ -626,9 +636,9 @@ def next_standard_solution():
     initialize_standard_tracker() and initialize_standard_solution()
     have been executed properly.
     """
-    from phcpy2c import py2c_next_standard_solution
-    from phcpy2c import py2c_solcon_length_standard_solution_string
-    from phcpy2c import py2c_solcon_write_standard_solution_string
+    from phcpy.phcpy2c2 import py2c_next_standard_solution
+    from phcpy.phcpy2c2 import py2c_solcon_length_standard_solution_string
+    from phcpy.phcpy2c2 import py2c_solcon_write_standard_solution_string
     py2c_next_standard_solution(1)
     lns = py2c_solcon_length_standard_solution_string(1)
     sol = py2c_solcon_write_standard_solution_string(1, lns)
@@ -641,9 +651,9 @@ def next_dobldobl_solution():
     initialize_dobldobl_tracker() and initialize_dobldobl_solution()
     have been executed properly.
     """
-    from phcpy2c import py2c_next_dobldobl_solution
-    from phcpy2c import py2c_solcon_length_dobldobl_solution_string
-    from phcpy2c import py2c_solcon_write_dobldobl_solution_string
+    from phcpy.phcpy2c2 import py2c_next_dobldobl_solution
+    from phcpy.phcpy2c2 import py2c_solcon_length_dobldobl_solution_string
+    from phcpy.phcpy2c2 import py2c_solcon_write_dobldobl_solution_string
     py2c_next_dobldobl_solution(1)
     lns = py2c_solcon_length_dobldobl_solution_string(1)
     sol = py2c_solcon_write_dobldobl_solution_string(1, lns)
@@ -656,9 +666,9 @@ def next_quaddobl_solution():
     initialize_quaddobl_tracker() and initialize_quaddobl_solution()
     have been executed properly.
     """
-    from phcpy2c import py2c_next_quaddobl_solution
-    from phcpy2c import py2c_solcon_length_quaddobl_solution_string
-    from phcpy2c import py2c_solcon_write_quaddobl_solution_string
+    from phcpy.phcpy2c2 import py2c_next_quaddobl_solution
+    from phcpy.phcpy2c2 import py2c_solcon_length_quaddobl_solution_string
+    from phcpy.phcpy2c2 import py2c_solcon_write_quaddobl_solution_string
     py2c_next_quaddobl_solution(1)
     lns = py2c_solcon_length_quaddobl_solution_string(1)
     sol = py2c_solcon_write_quaddobl_solution_string(1, lns)
@@ -671,9 +681,9 @@ def next_multprec_solution():
     initialize_multprec_tracker() and initialize_multprec_solution()
     have been executed properly.
     """
-    from phcpy2c import py2c_next_multprec_solution
-    from phcpy2c import py2c_solcon_length_multprec_solution_string
-    from phcpy2c import py2c_solcon_write_multprec_solution_string
+    from phcpy.phcpy2c2 import py2c_next_multprec_solution
+    from phcpy.phcpy2c2 import py2c_solcon_length_multprec_solution_string
+    from phcpy.phcpy2c2 import py2c_solcon_write_multprec_solution_string
     py2c_next_multprec_solution(1)
     lns = py2c_solcon_length_multprec_solution_string(1)
     sol = py2c_solcon_write_multprec_solution_string(1, lns)
@@ -690,7 +700,7 @@ def next_varbprec_solution(wanted, maxprec, maxit, verbose):
     maxit : maximum number of iterations, and
     verbose : flag to indicate if intermediate output is wanted.
     """
-    from phcpy2c import py2c_next_varbprec_solution
+    from phcpy.phcpy2c2 import py2c_next_varbprec_solution
     sol = py2c_next_varbprec_solution(wanted, maxprec, maxit, verbose)
     return sol
 
@@ -705,8 +715,8 @@ def test_track(silent=True, precision='d', decimals=80):
     Because all coefficients are random, the number of
     paths tracked equals the mixed volume of the system.
     """
-    from solver import random_trinomials, real_random_trinomials
-    from solver import solve, mixed_volume, newton_step
+    from phcpy.solver import random_trinomials, real_random_trinomials
+    from phcpy.solver import solve, mixed_volume, newton_step
     pols = random_trinomials()
     real_pols = real_random_trinomials(pols)
     from random import uniform as u
@@ -734,7 +744,7 @@ def test_next_track(precision='d', decimals=80):
     mp : arbitrary multiprecision with as many decimal places
     in the working precision as the value set by decimals.
     """
-    from solver import total_degree_start_system
+    from phcpy.solver import total_degree_start_system
     quadrics = ['x**2 + 4*y**2 - 4;', '2*y**2 - x;']
     (startsys, startsols) = total_degree_start_system(quadrics)
     print 'the first start solution :\n', startsols[0]
@@ -790,7 +800,7 @@ def test_monitored_track():
     from cmath import pi, exp
     angle = uniform(0, 2*pi)
     ourgamma = exp(complex(0, 1)*angle)
-    from solver import total_degree_start_system, newton_step
+    from phcpy.solver import total_degree_start_system, newton_step
     quadrics = ['x**2 + 4*y**2 - 4;', '2*y**2 - x;']
     (startsys, startsols) = total_degree_start_system(quadrics)
     targetsols = []

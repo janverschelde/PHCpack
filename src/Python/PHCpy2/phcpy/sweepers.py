@@ -37,13 +37,13 @@ def standard_complex_sweep(pols, sols, nvar, pars, start, target):
     storesys(pols, nbvar=nvar)
     storesols(nvar, sols)
     from phcpy.interface import load_standard_solutions as loadsols
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_define_parameters_symbolically as define
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_set_standard_start as set_start
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_set_standard_target as set_target
-    from phcpy.phcpy2c import py2c_sweep_standard_complex_run as run
+    from phcpy.phcpy2c2 import py2c_sweep_standard_complex_run as run
     (nbq, nbp) = (len(pols), len(pars))
     parnames = ' '.join(pars)
     nbc = len(parnames)
@@ -74,13 +74,13 @@ def dobldobl_complex_sweep(pols, sols, nvar, pars, start, target):
     storesys(pols, nbvar=nvar)
     storesols(nvar, sols)
     from phcpy.interface import load_dobldobl_solutions as loadsols
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_define_parameters_symbolically as define
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_set_dobldobl_start as set_start
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_set_dobldobl_target as set_target
-    from phcpy.phcpy2c import py2c_sweep_dobldobl_complex_run as run
+    from phcpy.phcpy2c2 import py2c_sweep_dobldobl_complex_run as run
     (nbq, nbp) = (len(pols), len(pars))
     parnames = ' '.join(pars)
     nbc = len(parnames)
@@ -111,13 +111,13 @@ def quaddobl_complex_sweep(pols, sols, nvar, pars, start, target):
     storesys(pols, nbvar=nvar)
     storesols(nvar, sols)
     from phcpy.interface import load_quaddobl_solutions as loadsols
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_define_parameters_symbolically as define
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_set_quaddobl_start as set_start
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_set_quaddobl_target as set_target
-    from phcpy.phcpy2c import py2c_sweep_quaddobl_complex_run as run
+    from phcpy.phcpy2c2 import py2c_sweep_quaddobl_complex_run as run
     (nbq, nbp) = (len(pols), len(pars))
     parnames = ' '.join(pars)
     nbc = len(parnames)
@@ -151,11 +151,11 @@ def standard_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     storesys(pols, nbvar=nvar)
     storesols(nvar, sols)
     from phcpy.interface import load_standard_solutions as loadsols
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_define_parameters_symbolically as define
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_set_standard_start as set_start
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_set_standard_target as set_target
     (nbq, nbp) = (len(pols), 1)
     pars = [par]
@@ -164,7 +164,7 @@ def standard_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     define(nbq, nvar, nbp, nbc, parnames)
     set_start(nbp, str([start, 0.0]))
     set_target(nbp, str([target, 0.0]))
-    from phcpy.phcpy2c import py2c_sweep_standard_real_run as run
+    from phcpy.phcpy2c2 import py2c_sweep_standard_real_run as run
     run()
     result = loadsols()
     return result
@@ -191,11 +191,11 @@ def dobldobl_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     storesols(nvar, sols)
     print 'done storing system and solutions ...'
     from phcpy.interface import load_dobldobl_solutions as loadsols
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_define_parameters_symbolically as define
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_set_dobldobl_start as set_start
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_set_dobldobl_target as set_target
     (nbq, nbp) = (len(pols), 1)
     pars = [par]
@@ -205,7 +205,7 @@ def dobldobl_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     define(nbq, nvar, nbp, nbc, parnames)
     set_start(nbp, str([start, 0.0, 0.0, 0.0]))  # double doubles !
     set_target(nbp, str([target, 0.0, 0.0, 0.0]))
-    from phcpy.phcpy2c import py2c_sweep_dobldobl_real_run as run
+    from phcpy.phcpy2c2 import py2c_sweep_dobldobl_real_run as run
     run()
     result = loadsols()
     return result
@@ -232,11 +232,11 @@ def quaddobl_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     storesols(nvar, sols)
     print 'done storing system and solutions ...'
     from phcpy.interface import load_quaddobl_solutions as loadsols
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_define_parameters_symbolically as define
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_set_quaddobl_start as set_start
-    from phcpy.phcpy2c \
+    from phcpy.phcpy2c2 \
     import py2c_sweep_set_quaddobl_target as set_target
     (nbq, nbp) = (len(pols), 1)
     pars = [par]
@@ -246,7 +246,7 @@ def quaddobl_real_sweep(pols, sols, par='s', start=0.0, target=1.0):
     define(nbq, nvar, nbp, nbc, parnames)
     set_start(nbp, str([start, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]))
     set_target(nbp, str([target, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]))
-    from phcpy.phcpy2c import py2c_sweep_quaddobl_real_run as run
+    from phcpy.phcpy2c2 import py2c_sweep_quaddobl_real_run as run
     run()
     result = loadsols()
     return result

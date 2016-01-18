@@ -19,8 +19,8 @@ def pieri_root_count(mdim, pdim, qdeg):
     Computes the number of pdim-plane producing maps of
     degree qdeg that meet mdim-planes at mdim*pdim + qdeg*(mdim+pdim) points.
     """
-    from phcpy2c import py2c_schubert_pieri_count
-    from phcpy2c import py2c_schubert_localization_poset
+    from phcpy.phcpy2c2 import py2c_schubert_pieri_count
+    from phcpy.phcpy2c2 import py2c_schubert_localization_poset
     root_count = py2c_schubert_pieri_count(mdim, pdim, qdeg)
     print 'Pieri root count for', (mdim, pdim, qdeg), 'is', root_count
     poset = py2c_schubert_localization_poset(mdim, pdim, qdeg)
@@ -37,7 +37,7 @@ def resolve_schubert_conditions(ndim, kdim, brackets, verbose=True):
     and the coordinates of the flags, stored row wise in a list
     of real and imaginary parts.
     """
-    from phcpy2c import py2c_schubert_resolve_conditions as resolve
+    from phcpy.phcpy2c2 import py2c_schubert_resolve_conditions as resolve
     nbc = len(brackets)
     cds = ''
     for bracket in brackets:
@@ -66,11 +66,11 @@ def standard_littlewood_richardson_homotopies(ndim, kdim, brackets, \
     the polynomial system that has been solved and its solutions.
     The length of the list of solution should match the root count.
     """
-    from phcpy2c import py2c_solcon_clear_standard_solutions
-    from phcpy2c \
-       import py2c_schubert_standard_littlewood_richardson_homotopies \
-       as stlrhom
-    from interface import load_standard_solutions, load_standard_system
+    from phcpy.phcpy2c2 import py2c_solcon_clear_standard_solutions
+    from phcpy.phcpy2c2 \
+        import py2c_schubert_standard_littlewood_richardson_homotopies \
+        as stlrhom
+    from phcpy.interface import load_standard_solutions, load_standard_system
     py2c_solcon_clear_standard_solutions()
     nbc = len(brackets)
     cds = ''
@@ -107,11 +107,11 @@ def dobldobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
     the polynomial system that has been solved and its solutions.
     The length of the list of solution should match the root count.
     """
-    from phcpy2c import py2c_solcon_clear_dobldobl_solutions
-    from phcpy2c \
-       import py2c_schubert_dobldobl_littlewood_richardson_homotopies \
-       as ddlrhom
-    from interface import load_dobldobl_solutions, load_dobldobl_system
+    from phcpy.phcpy2c2 import py2c_solcon_clear_dobldobl_solutions
+    from phcpy.phcpy2c2 \
+        import py2c_schubert_dobldobl_littlewood_richardson_homotopies \
+        as ddlrhom
+    from phcpy.interface import load_dobldobl_solutions, load_dobldobl_system
     py2c_solcon_clear_dobldobl_solutions()
     nbc = len(brackets)
     cds = ''
@@ -148,11 +148,11 @@ def quaddobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
     the polynomial system that has been solved and its solutions.
     The length of the list of solution should match the root count.
     """
-    from phcpy2c import py2c_solcon_clear_quaddobl_solutions
-    from phcpy2c \
-       import py2c_schubert_quaddobl_littlewood_richardson_homotopies \
-       as qdlrhom
-    from interface import load_quaddobl_solutions, load_quaddobl_system
+    from phcpy.phcpy2c2 import py2c_solcon_clear_quaddobl_solutions
+    from phcpy.phcpy2c2 \
+        import py2c_schubert_quaddobl_littlewood_richardson_homotopies \
+        as qdlrhom
+    from phcpy.interface import load_quaddobl_solutions, load_quaddobl_system
     py2c_solcon_clear_quaddobl_solutions()
     nbc = len(brackets)
     cds = ''
@@ -262,12 +262,12 @@ def run_pieri_homotopies(mdim, pdim, qdeg, planes, *pts):
     that meet mdim-planes at mdim*pdim + qdeq*(mdim+pdim) points.
     For qdeg = 0, there are no interpolation points.
     """
-    from phcpy2c import py2c_schubert_pieri_count
-    from phcpy2c import py2c_schubert_pieri_homotopies
-    from phcpy2c import py2c_syscon_load_standard_polynomial
-    from phcpy2c import py2c_solcon_number_of_standard_solutions
-    from phcpy2c import py2c_solcon_length_standard_solution_string
-    from phcpy2c import py2c_solcon_write_standard_solution_string
+    from phcpy.phcpy2c2 import py2c_schubert_pieri_count
+    from phcpy.phcpy2c2 import py2c_schubert_pieri_homotopies
+    from phcpy.phcpy2c2 import py2c_syscon_load_standard_polynomial
+    from phcpy.phcpy2c2 import py2c_solcon_number_of_standard_solutions
+    from phcpy.phcpy2c2 import py2c_solcon_length_standard_solution_string
+    from phcpy.phcpy2c2 import py2c_solcon_write_standard_solution_string
     root_count = py2c_schubert_pieri_count(mdim, pdim, qdeg)
     print 'Pieri root count for', (mdim, pdim, qdeg), 'is', root_count
     strplanes = planes_to_string(planes)
@@ -310,7 +310,7 @@ def verify(pols, sols):
     Verifies whether the solutions in sols
     satisfy the polynomials of the system in pols.
     """
-    from solutions import strsol2dict, evaluate
+    from phcpy.solutions import strsol2dict, evaluate
     dictsols = [strsol2dict(sol) for sol in sols]
     checksum = 0
     for sol in dictsols:
@@ -324,7 +324,7 @@ def real_osculating_planes(mdim, pdim, qdeg):
     Returns m*p + qdeg*(m+p) real m-planes osculating
     a rational normal curves.
     """
-    from phcpy2c import py2c_schubert_osculating_planes
+    from phcpy.phcpy2c2 import py2c_schubert_osculating_planes
     dim = mdim*pdim + qdeg*(mdim+pdim)
     from random import uniform as u
     pts = ""
@@ -354,8 +354,8 @@ def make_pieri_system(mdim, pdim, qdeg, planes, is_real=False):
     Makes the polynomial system defined by the mdim-planes
     in the list planes.
     """
-    from phcpy2c import py2c_schubert_pieri_system
-    from phcpy2c import py2c_syscon_load_standard_polynomial
+    from phcpy.phcpy2c2 import py2c_schubert_pieri_system
+    from phcpy.phcpy2c2 import py2c_syscon_load_standard_polynomial
     strplanes = planes_to_string(planes)
     # print 'the string of planes :', strplanes
     if is_real:
@@ -379,7 +379,7 @@ def cheater(mdim, pdim, qdeg, start, startsols):
     dim = mdim*pdim + qdeg*(mdim+pdim)
     planes = [random_complex_matrix(mdim+pdim, mdim) for _ in range(0, dim)]
     pols = make_pieri_system(mdim, pdim, qdeg, planes)
-    from trackers import track
+    from phcpy.trackers import track
     print 'cheater homotopy with %d paths' % len(startsols)
     sols = track(pols, start, startsols)
     for sol in sols:
@@ -401,7 +401,7 @@ def osculating_input(mdim, pdim, qdeg, start, startsols):
     print 'the target system of length %d :' % len(target_system)
     for pol in target_system:
         print pol
-    from trackers import track
+    from phcpy.trackers import track
     target_solutions = track(target_system, start, startsols)
     for sol in target_solutions:
         print sol
@@ -443,7 +443,7 @@ def test_pieri():
         (system, sols) = run_pieri_homotopies(mdim, pdim, qdeg, planes)
     print 'evaluation of the solutions :'
     verify(system, sols)
-    from solver import newton_step
+    from phcpy.solver import newton_step
     print 'verification with one Newton step :'
     newton_step(system, sols)
     # cheater(m, p, qdeg, system, sols)
