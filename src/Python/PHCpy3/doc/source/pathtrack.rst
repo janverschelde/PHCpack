@@ -604,6 +604,15 @@ the start and target values of the parameters.
 tuning parameters, settings, and tolerances
 -------------------------------------------
 
+The default values of the numerical parameters were set based
+on computational experiences on a large, representative collection
+of polynomial systems.  The module ``tuning`` provides functions
+to adjust the parameters, settings, and tolerances.
+The function ``tune_track_parameters`` gives access to the tuning 
+as in ``phc -p``, via an interactive menu.
+The other functions in the module allow to get the values and to
+set the values of each parameter, setting, or tolerance.
+
 The documentation strings of the functions
 exported by the module ``tuning`` of the package phcpy are listed below.
 

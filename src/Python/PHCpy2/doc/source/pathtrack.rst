@@ -1,8 +1,30 @@
-the path trackers
-=================
+path trackers and sweep homotopies
+==================================
 
 Homotopy continuation methods are applied to solve a polynomial system.
 The module **phcpy.trackers** exports the path trackers of PHCpack.
+The functions in this module track paths defined by artificial-parameter
+homotopies, of the form
+
+.. math::
+
+    h(x,t) = \gamma (1-t) g(x) + t f(x) = 0,
+
+where \ :math:`\gamma` is a randomly generated complex constant.
+The artificial parameter \ :math:`t` goes from zero to one,
+from the known solutions of the start system \ :math:`g(x) = 0`
+to the solutions of the target system \ :math:`f(x) = 0`.
+
+The module **phcpy.sweepers** exports the sweep homotopies.
+A sweep homotopy is a natural parameter homotopy.
+Its application is to track solution paths from one set of values
+for the parameters to another set of values for the parameters.
+
+The tracking of solution paths defined by an artificial-parameter homotopy
+apply an increment-and-fix method: the continuation parameter \ :math:`t`
+is incremented by the predictor and remains fixed in the corrector.
+The tracking of solution paths defined by a sweep homotopy apply
+arc length parameter continuation.
 
 a simple example
 ----------------
@@ -21,19 +43,19 @@ of the start system to the solutions of the target system.
    >>> from phcpy.solver import total_degree
    >>> from phcpy.solver import total_degree_start_system
    >>> from phcpy.trackers import track
-   >>> p = ['x^2 + 4*y^2 - 4;','2*y^2 - x;']
+   >>> p = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
    >>> d = total_degree(p)
    >>> d
    4
-   >>> (q,qsols) = total_degree_start_system(p)
+   >>> (q, qsols) = total_degree_start_system(p)
    >>> len(qsols)
    4
    >>> q
    ['x^2 - 1;', 'y^2 - 1;']
-   >>> s = track(p,q,qsols)
+   >>> s = track(p, q, qsols)
    >>> len(s)
    4
-   >>> for sol in s: print sol
+   >>> for sol in s: print(sol)
    ... 
    t :  1.00000000000000E+00   0.00000000000000E+00
    m : 1
@@ -59,7 +81,6 @@ of the start system to the solutions of the target system.
     x : -3.23606797749979E+00   0.00000000000000E+00
     y :  0.00000000000000E+00  -1.27201964951407E+00
    == err :  1.505E-36 = rco :  1.079E-01 = res :  0.000E+00 =
-   >>>
 
 As expected when we intersect two quadratic equations,
 we find four intersection points.  The coordinates of
@@ -84,10 +105,10 @@ For example:
 
    >>> from phcpy.solver import total_degree_start_system
    >>> from phcpy.trackers import track
-   >>> p = ['x^2 + 4*y^2 - 4;','2*y^2 - x;']
+   >>> p = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
    >>> (q,qsols) = total_degree_start_system(p)
-   >>> s1 = track(p,q,[qsols[2]])
-   >>> print s1[0]
+   >>> s1 = track(p, q, [qsols[2]])
+   >>> print(s1[0])
    t :  1.00000000000000E+00   0.00000000000000E+00
    m : 1
    the solution for t :
@@ -95,14 +116,13 @@ For example:
     y :  7.86151377757423E-01   0.00000000000000E+00
    == err :  1.383E-16 = rco :  1.998E-01 = res :  2.220E-16 =
    >>> s2 = track(p,q,[qsols[2]])
-   >>> print s2[0]
+   >>> print(s2[0])
    t :  1.00000000000000E+00   0.00000000000000E+00
    m : 1
    the solution for t :
     x : -3.23606797749979E+00   0.00000000000000E+00
     y :  0.00000000000000E+00   1.27201964951407E+00
    == err :  4.815E-35 = rco :  1.079E-01 = res :  0.000E+00 =
-   >>>
 
 fixing the gamma constant
 -------------------------
@@ -113,15 +133,14 @@ As a continuation of the session from above:
 
 ::
 
-   >>> s3 = track(p,q,[qsols[2]],gamma=complex(0.824372806319,0.56604723848934))
-   >>> print s3[0]
+   >>> s3 = track(p, q, [qsols[2]], gamma=complex(0.824372806319,0.56604723848934))
+   >>> print(s3[0])
    t :  1.00000000000000E+00   0.00000000000000E+00
    m : 1
    the solution for t :
     x : -3.23606797749979E+00   0.00000000000000E+00
     y :  0.00000000000000E+00   1.27201964951407E+00
    == err :  0.000E+00 = rco :  1.079E-01 = res :  0.000E+00 =
-   >>>
 
 If we track all solution paths one after the other,
 each time calling track with the same value for gamma,
@@ -150,35 +169,34 @@ The session below illustrates the use of this generator:
 
    >>> from phcpy.solver import total_degree_start_system
    >>> p = ['x**2 + 4*x**2 - 4;', '2*y**2 - x;']
-   >>> (q,s) = total_degree_start_system(p)
+   >>> (q, s) = total_degree_start_system(p)
    >>> from phcpy.trackers import initialize_standard_tracker
    >>> from phcpy.trackers import initialize_standard_solution
    >>> from phcpy.trackers import next_standard_solution
-   >>> initialize_standard_tracker(p,q)
-   >>> initialize_standard_solution(len(p),s[0])
+   >>> initialize_standard_tracker(p, q)
+   >>> initialize_standard_solution(len(p), s[0])
    >>> s1 = next_standard_solution()
-   >>> print s1
+   >>> print(s1)
    t :  1.00000000000000E-01   0.00000000000000E+00
    m : 1
    the solution for t :
     x :  9.96338438384030E-01   4.70831004481527E-03
     y :  9.96408320626402E-01   4.95310952563875E-03
    == err :  2.375E-05 = rco :  1.000E+00 = res :  3.619E-10 =
-   >>> print next_standard_solution()
+   >>> print(next_standard_solution())
    't :  2.00000000000000E-01   0.00000000000000E+00
     m : 1
     the solution for t :
      x :  9.80919860804043E-01   1.78496473654540E-02
      y :  9.81218221286503E-01   2.32056259678926E-02
    == err :  1.671E-08 = rco :  1.000E+00 = res :  1.424E-16 ='
-   >>> print next_standard_solution()
+   >>> print(next_standard_solution())
    t :  3.00000000000000E-01   0.00000000000000E+00
    m : 1
    the solution for t :
     x :  9.51909891692765E-01   2.71534790078036E-02
     y :  9.42895891640611E-01   5.51080014180090E-02
    == err :  4.812E-09 = rco :  1.000E+00 = res :  1.665E-16 =
-   >>>
 
 In the session above, we see the solutions ``s1`` for t = 0.1,
 and two other solutions for consecutive values 0.2 and 0.3 for t.
@@ -188,12 +206,12 @@ and view all values for ``x`` of the solutions:
 
 ::
 
-   >>> initialize_standard_solution(len(p),s[1])
+   >>> initialize_standard_solution(len(p), s[1])
    >>> points = [next_standard_solution() for i in range(11)]
    >>> from phcpy.solutions import strsol2dict
    >>> dicpts = [strsol2dict(sol) for sol in points]
    >>> xvals = [sol['x'] for sol in dicpts]
-   >>> for x in xvals: print x
+   >>> for x in xvals: print(x)
    ... 
    (0.996338438384+0.00470831004482j)
    (0.980919860804+0.0178496473655j)
@@ -206,7 +224,6 @@ and view all values for ``x`` of the solutions:
    (0.894586634218+0.000224845127444j)
    (0.894427191-2.20881053462e-28j)
    (0.894427191+0j)
-   >>>
 
 We see that the last two values differ little from each other
 because we arrived at the end of the path.  
@@ -223,10 +240,10 @@ The code used to make the plot (using matplotlib) is below:
 ::
 
    p = ['x^2 + y - 3;', 'x + 0.125*y^2 - 1.5;']
-   print 'constructing a total degree start system ...'
+   print('constructing a total degree start system ...')
    from phcpy.solver import total_degree_start_system as tds
    q, qsols = tds(p)
-   print 'number of start solutions :', len(qsols)
+   print('number of start solutions :', len(qsols))
    from phcpy.trackers import initialize_standard_tracker
    from phcpy.trackers import initialize_standard_solution
    from phcpy.trackers import next_standard_solution
@@ -257,7 +274,7 @@ The code used to make the plot (using matplotlib) is below:
            tval = eval(dictsol['t'].lstrip().split(' ')[0])
            if(tval == 1.0):
                break
-       print ns
+       print(ns)
        xre = [point.real for point in xpoints]
        yre = [point.real for point in ypoints]
        axs.set_xlim(min(xre)-0.3, max(xre)+0.3)
@@ -293,14 +310,13 @@ with polyhedral homotopies.
    >>> psols = track(p,q,qsols)
    >>> len(psols)
    11
-   >>> print psols[4]
+   >>> print(psols[4])
    t :  1.00000000000000E+00   0.00000000000000E+00
    m : 1
    the solution for t :
     x : -7.33932797408386E-01  -9.84310202527377E-01
     y : -6.56632351304388E-01   9.90969278772793E-01
    == err :  1.938E-16 = rco :  5.402E-01 = res :  2.102E-15 =
-   >>>
 
 Newton's method at higher precision
 -----------------------------------
@@ -322,7 +338,6 @@ the accuracy of the solutions.  Doubling the precision:
    == err :  4.611E-15 = rco :  5.158E-01 = res :  2.719E-28 =
    == err :  4.306E-15 = rco :  3.778E-01 = res :  3.768E-28 =
    == err :  4.611E-15 = rco :  5.158E-01 = res :  2.719E-28 =
-   >>>
 
 We see that the residual (the parameter *res*) drops for every solution.
 
@@ -357,7 +372,6 @@ Below is an illustration of the use of linear-product start systems:
    == err :  2.332E-15 = rco :  2.877E-01 = res :  2.931E-29 =
    == err :  5.269E-15 = rco :  2.918E-01 = res :  1.374E-28 =
    == err :  6.753E+29 = rco :  5.037E-91 = res :  2.547E+90 =
-   >>> 
 
 Looking at the values for *err* and *res* we see huge values
 for two solutions which are spurious.
@@ -386,7 +400,6 @@ to path tracking.  On the benchmark problem of cyclic 7-roots:
    real    0m3.927s
    user    0m7.640s
    sys     0m0.017s
-   $ 
 
 Observe that the wall clock time (the time following the *real*),
 is cut almost in half when 2 tasks are used.
@@ -417,10 +430,10 @@ The script is below:
    start = load_standard_system()
    fail = py2c_copy_start_solutions_to_container()
    sols = load_standard_solutions()
-   print 'number of start solutions :', py2c_solcon_number_of_solutions()
-   print 'starting the path tracking with', nbtasks, 'task(s) ...'
+   print('number of start solutions :', py2c_solcon_number_of_solutions())
+   print('starting the path tracking with', nbtasks, 'task(s) ...')
    endsols = standard_double_track(target, start, sols, 0, nbtasks)
-   print 'tracked', len(endsols), 'solution paths'
+   print('tracked', len(endsols), 'solution paths')
 
 GPU accelerated path tracking
 -----------------------------
@@ -446,34 +459,181 @@ cyclic 10-roots problem.
    from phcpy.interface import load_standard_system as loadsys
    from phcpy.interface import load_standard_solutions as loadsols
    cyc10 = loadsys()
-   print 'the cyclic 10-roots problem :'
+   print('the cyclic 10-roots problem :')
    for pol in cyc10:
-       print pol
+       print(pol)
    fail = read_start(len(cyc10stafile), cyc10stafile)
    cyc10q = loadsys()
-   print 'a start system for the cyclic 10-roots problem :'
+   print('a start system for the cyclic 10-roots problem :')
    for pol in cyc10q:
-       print pol
+       print(pol)
    cyc10qsols = loadsols()
-   print 'number of start solutions :', len(cyc10qsols)
-   print 'the first solution :'
-   print cyc10qsols[0]
-   print 'calling the path tracker...'
+   print('number of start solutions :', len(cyc10qsols))
+   print('the first solution :')
+   print(cyc10qsols[0])
+   print('calling the path tracker...')
    if(GPU == 0):
        from phcpy.trackers import ade_double_track
        cyc10sols = ade_double_track(cyc10,cyc10q,cyc10qsols,verbose=0)
    else:
        from phcpy.trackers import gpu_double_track
        cyc10sols = gpu_double_track(cyc10,cyc10q,cyc10qsols,verbose=0)
-   print 'number of solutions :', len(cyc10sols)
+   print('number of solutions :', len(cyc10sols))
    for sol in cyc10sols:
-       print sol
-   
-functions in the module
------------------------
+       print(sol)
+
+sweep homotopies
+----------------
+
+A *sweep homotopy* is a family of polynomial systems with a least one
+natural parameter and one artificial parameter.
+As the artificial parameter moves from zero to one, the natural parameter
+changes from a given start value to another given target value.
+By arc length continuation, the solution paths are tracked from the
+given start values for the parameters to the target values.
+
+Consider a simple example: sweeping the circle.
+We consider the unit circle \ :math:`x^2 + y^2 - 1 = 0`,
+intersected by a horizontal line, at the start equal to \ :math:`y = 0`.
+In a Python session, we could define the sweep homotopy that takes
+the line from \ :math:`y = 0` to \ :math:`y = 2`.
+
+::
+
+   >>> circle = ['x^2 + y^2 - 1;', 'y*(1-s) + (y-2)*s;']
+
+For ``s = 0`` there are two solutions,
+with values for ``x`` and ``y`` in the 
+tuples \ :math:`(1, 0)` and \ :math:`(-1,0)`.
+
+Geometrically, as the horizontal line moves up, the two solutions
+(the intersection points on the circle and the line), move closer
+to each other to join at a *quadratic turning point*.
+At the left of the picture below we see the line transversally intersecting
+the circle at a perfect right angle.  At the right, the two distinct
+solutions have merged into one point where the line is tangent to the circle.
+
+.. image:: ./circles.png
+
+The tracking of solution paths in a real sweep homotopy will stop
+at the first singular point it encounters.  
+The continuation of the code with the definition of ``circle``
+to launch this path tracking is listed below:
+
+::
+
+   >>> from phcpy.solutions import make_solution as makesol
+   >>> first = makesol(['x', 'y', 's'], [1, 0, 0])
+   >>> second = makesol(['x', 'y', 's'], [-1, 0, 0])
+   >>> startsols = [first, second]
+   >>> from phcpy.sweepers import standard_real_sweep as sweep
+   >>> newsols = sweep(circle, startsols)
+   >>> print(newsols[0])
+
+and then we see as output of the ``print`` statement:
+
+::
+
+   t :  0.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    x : -2.46519032881566E-32   0.00000000000000E+00
+    y :  1.00000000000000E+00   0.00000000000000E+00
+    s :  5.00000000000000E-01   0.00000000000000E+00
+   == err :  0.000E+00 = rco :  1.000E+00 = res :  0.000E+00 =
+
+The sweep stopped where ``s`` is equal to 0.5,
+with corresponding values for ``x`` and ``y`` in the 
+tuple \ :math:`(0, 1)`.
+
+real versus complex sweeps
+--------------------------
+
+In a *complex sweep*, an addition random gamma constant is generated
+in the convex-linear combination between the sets of start and target
+values for the parameters.  If the solutions for the start values of
+the parameters are regular, then the application of the *gamma trick*
+applies for problems where the parameter space is convex.
+This means that, if the problem formulation makes sense for convex
+combinations of the parameters, then the solution paths will remain
+regular, except for finitely many bad choices of the random gamma constant,
+and except perhaps at the very end of the paths, when the target values
+for the parameters lead to polynomial systems with singular solutions.
+
+Conducting a complex sweep on the circle can be done as follows:
+
+::
+
+    >>> circle = ['x^2 + y^2 - 1;']
+    >>> from phcpy.solutions import make_solution as makesol
+    >>> first = makesol(['x', 'y'], [1, 0])
+    >>> second = makesol(['x', 'y'], [-1, 0])
+    >>> startsols = [first, second]
+    >>> par = ['y']
+    >>> start = [0, 0] 
+    >>> target = [2, 0]
+    >>> from phcpy.sweepers import standard_complex_sweep as sweep
+    >>> newsols = sweep(circle, startsols, 2, par, start, target)
+
+The setup of the homotopy defines ``y`` as the parameter 
+(in the list ``['y']`` assigned to ``par``).
+The parameter \ :math:`y` will move from the complex zero \ :math:`0 + 0 I` 
+(given by the list ``[0, 0]`` assigned to ``start``) 
+to \ :math:`2 + 0 I`
+(given by the list ``[2, 0]`` assigned to ``target``).
+The corresponding start solutions for \ :math:`y = 0` are stored
+in the tuples \ :math:`(1,0)` and \ :math:`(-1,0)`.
+Then, at the end of the sweep, we will find two complex conjugated solutions.
+
+::
+
+    >>> print(newsols[0])
+    t :  1.00000000000000E+00   0.00000000000000E+00
+    m : 1
+    the solution for t :
+     x : -6.27554627321419E-26   1.73205080756888E+00
+     y :  2.00000000000000E+00   0.00000000000000E+00
+    == err :  6.642E-13 = rco :  1.000E+00 = res :  4.441E-16 =
+
+What is now the difference between real versus complex?
+The *real sweep* stopped at the singular solution \ :math:`(0,1)`
+while the *complex sweep* hopped over this singularity because
+of complex random gamma constant in the convex combination between
+the start and target values of the parameters.
+
+tuning parameters, settings, and tolerances
+-------------------------------------------
+
+The default values of the numerical parameters were set based
+on computational experiences on a large, representative collection
+of polynomial systems.  The module ``tuning`` provides functions
+to adjust the parameters, settings, and tolerances.
+The function ``tune_track_parameters`` gives access to the tuning 
+as in ``phc -p``, via an interactive menu.
+The other functions in the module allow to get the values and to
+set the values of each parameter, setting, or tolerance.
+
+The documentation strings of the functions
+exported by the module ``tuning`` of the package phcpy are listed below.
+
+.. automodule:: tuning
+   :members:
+
+functions in the module trackers
+--------------------------------
    
 The documentation strings of the functions
 exported by the module ``trackers`` of the package phcpy are listed below.
 
 .. automodule:: trackers
    :members:
+
+functions in the module sweepers
+--------------------------------
+   
+The documentation strings of the functions
+exported by the module ``sweepers`` of the package phcpy are listed below.
+
+.. automodule:: sweepers
+   :members:
+
