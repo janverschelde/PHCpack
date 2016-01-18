@@ -1,3 +1,6 @@
+Mon 18 Jan 2016 : extra procedures that pass the estimated winding number,
+  path direction, and its error from the polyhedral end games.
+
 Thu 7 Jan 2016 : updates in phcpack_operations.adb and pieri_homotopy.adb 
   for the added winding number in the polyhedral end games.
 

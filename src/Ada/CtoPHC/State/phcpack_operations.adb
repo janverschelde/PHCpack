@@ -14,9 +14,6 @@ with Multprec_Complex_Numbers_io;        use Multprec_Complex_Numbers_io;
 with Standard_Random_Numbers;
 with DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;
-with Standard_Floating_Vectors;
-with Double_Double_Vectors;
-with Quad_Double_Vectors;
 with Standard_Complex_Norms_Equals;
 with DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Vector_Norms;
@@ -1044,6 +1041,23 @@ package body PHCpack_Operations is
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
                  crash : out boolean ) is
 
+    w : integer32 := 1;
+    v : Standard_Floating_Vectors.Link_to_Vector;
+    e : double_float := 0.0;
+
+  begin
+    Silent_Path_Tracker
+      (ls,w,v,e,length,nbstep,nbfail,nbiter,nbsyst,crash);
+  end Silent_Path_Tracker;
+
+  procedure Silent_Path_Tracker 
+               ( ls : in Standard_Complex_Solutions.Link_to_Solution;
+                 wnd : out integer32;
+                 dir : out Standard_Floating_Vectors.Link_to_Vector;
+                 err,length : out double_float;
+                 nbstep,nbfail,nbiter,nbsyst : out natural32;
+                 crash : out boolean ) is
+
     use Standard_Complex_Numbers,Standard_Complex_Norms_Equals;
     use Standard_Path_Trackers;
 
@@ -1074,6 +1088,8 @@ package body PHCpack_Operations is
     s : Standard_Continuation_Data.Solu_Info;
 
   begin
+    wnd := 1;
+    err := 0.0;
     ls.t := Create(0.0);
     s := Standard_Continuation_Data.Shallow_Create(ls);
     Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
@@ -1083,6 +1099,7 @@ package body PHCpack_Operations is
     length := s.length_path;
     nbstep := s.nstep; nbfail := s.nfail;
     nbiter := s.niter; nbsyst := s.nsyst;
+    wnd := w; dir := v; err := e;
     crash := false;
   exception
     when others => crash := true; return;
@@ -1091,6 +1108,23 @@ package body PHCpack_Operations is
   procedure Silent_Path_Tracker 
                ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
+                 nbstep,nbfail,nbiter,nbsyst : out natural32;
+                 crash : out boolean ) is
+
+    w : integer32 := 1;
+    v : Double_Double_Vectors.Link_to_Vector;
+    e : double_float := 0.0;
+
+  begin
+    Silent_Path_Tracker
+      (ls,w,v,e,length,nbstep,nbfail,nbiter,nbsyst,crash);
+  end Silent_Path_Tracker;
+
+  procedure Silent_Path_Tracker 
+               ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
+                 wnd : out integer32;
+                 dir : out Double_Double_Vectors.Link_to_Vector;
+                 err,length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
                  crash : out boolean ) is
 
@@ -1137,6 +1171,7 @@ package body PHCpack_Operations is
     length := s.length_path;
     nbstep := s.nstep; nbfail := s.nfail;
     nbiter := s.niter; nbsyst := s.nsyst;
+    wnd := w; dir := v; err := hi_part(e);
     crash := false;
   exception
     when others => crash := true; return;
@@ -1145,6 +1180,23 @@ package body PHCpack_Operations is
   procedure Silent_Path_Tracker 
                ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
+                 nbstep,nbfail,nbiter,nbsyst : out natural32;
+                 crash : out boolean ) is
+  
+    w : integer32 := 1;
+    v : Quad_Double_Vectors.Link_to_Vector;
+    e : double_float := 0.0;
+
+  begin
+    Silent_Path_Tracker
+      (ls,w,v,e,length,nbstep,nbfail,nbiter,nbsyst,crash);
+  end Silent_Path_Tracker;
+
+  procedure Silent_Path_Tracker 
+               ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution;
+                 wnd : out integer32;
+                 dir : out Quad_Double_Vectors.Link_to_Vector;
+                 err,length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
                  crash : out boolean ) is
 
@@ -1193,6 +1245,7 @@ package body PHCpack_Operations is
     length := s.length_path;
     nbstep := s.nstep; nbfail := s.nfail;
     nbiter := s.niter; nbsyst := s.nsyst;
+    wnd := w; dir := v; err := hihi_part(e);
     crash := false;
   exception
     when others => crash := true; return;
@@ -1368,6 +1421,23 @@ package body PHCpack_Operations is
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
                  crash : out boolean ) is
 
+    w : integer32 := 1;
+    v : Standard_Floating_Vectors.Link_to_Vector;
+    e : double_float := 0.0;
+
+  begin
+    Reporting_Path_Tracker
+      (ls,w,v,e,length,nbstep,nbfail,nbiter,nbsyst,crash);
+  end Reporting_Path_Tracker;
+
+  procedure Reporting_Path_Tracker
+               ( ls : in Standard_Complex_Solutions.Link_to_Solution;
+                 wnd : out integer32;
+                 dir : out Standard_Floating_Vectors.Link_to_Vector;
+                 err,length : out double_float;
+                 nbstep,nbfail,nbiter,nbsyst : out natural32;
+                 crash : out boolean ) is
+
     use Standard_Complex_Numbers,Standard_Complex_Norms_Equals;
     use Standard_Path_Trackers;
 
@@ -1412,6 +1482,7 @@ package body PHCpack_Operations is
     length := s.length_path;
     nbstep := s.nstep; nbfail := s.nfail;
     nbiter := s.niter; nbsyst := s.nsyst;
+    wnd := w; dir := v; err := e;
     crash := false;
   exception
     when others => crash := true;
@@ -1420,6 +1491,23 @@ package body PHCpack_Operations is
   procedure Reporting_Path_Tracker
                ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
+                 nbstep,nbfail,nbiter,nbsyst : out natural32;
+                 crash : out boolean ) is
+
+    w : integer32 := 1;
+    v : Double_Double_Vectors.Link_to_Vector;
+    e : double_float := 0.0;
+
+  begin
+    Reporting_Path_Tracker
+      (ls,w,v,e,length,nbstep,nbfail,nbiter,nbsyst,crash);
+  end Reporting_Path_Tracker;
+
+  procedure Reporting_Path_Tracker
+               ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
+                 wnd : out integer32;
+                 dir : out Double_Double_Vectors.Link_to_Vector;
+                 err,length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
                  crash : out boolean ) is
 
@@ -1471,6 +1559,7 @@ package body PHCpack_Operations is
     length := s.length_path;
     nbstep := s.nstep; nbfail := s.nfail;
     nbiter := s.niter; nbsyst := s.nsyst;
+    wnd := w; dir := v; err := hi_part(e);
     crash := false;
   exception
     when others => crash := true;
@@ -1479,6 +1568,23 @@ package body PHCpack_Operations is
   procedure Reporting_Path_Tracker
                ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
+                 nbstep,nbfail,nbiter,nbsyst : out natural32;
+                 crash : out boolean ) is
+
+    w : integer32 := 1;
+    v : Quad_Double_Vectors.Link_to_Vector;
+    e : double_float := 0.0;
+
+  begin
+    Reporting_Path_Tracker
+      (ls,w,v,e,length,nbstep,nbfail,nbiter,nbsyst,crash);
+  end Reporting_Path_Tracker;
+
+  procedure Reporting_Path_Tracker
+               ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution;
+                 wnd : out integer32;
+                 dir : out Quad_Double_Vectors.Link_to_Vector;
+                 err,length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
                  crash : out boolean ) is
 
@@ -1532,6 +1638,7 @@ package body PHCpack_Operations is
     length := s.length_path;
     nbstep := s.nstep; nbfail := s.nfail;
     nbiter := s.niter; nbsyst := s.nsyst;
+    wnd := w; dir := v; err := hihi_part(e);
     crash := false;
   exception
     when others => crash := true;
