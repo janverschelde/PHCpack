@@ -1,4 +1,6 @@
 Sun 17 Jan 2016 : renamed phcpy2c.c to phcpy2c2.c, for python2.
+  In phcpy2c2.c, the initialization of the module also changes,
+  as the name of the module is now phcpy2c2.
 
 Wed 30 Dec 2015 : new phcpy2c3.c defines the phcpy2c3 extension module 
   for Python 3.5.

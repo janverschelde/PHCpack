@@ -7302,7 +7302,7 @@ static PyMethodDef phcpy2c_methods[] =
  * either through the use of a ".def" file or by a compiler instruction 
  * such as "declspec(export)" */
 
-PyMODINIT_FUNC initphcpy2c(void)
+PyMODINIT_FUNC initphcpy2c2(void)
 {
-   Py_InitModule("phcpy2c", phcpy2c_methods);
+   Py_InitModule("phcpy2c2", phcpy2c_methods);
 }
