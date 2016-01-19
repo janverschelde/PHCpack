@@ -14,6 +14,10 @@ with Multprec_Complex_Numbers_io;        use Multprec_Complex_Numbers_io;
 with Standard_Random_Numbers;
 with DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;
+with Standard_Integer_Vectors;
+with Standard_Floating_VecVecs;
+with Double_Double_VecVecs;
+with Quad_Double_VecVecs;
 with Standard_Complex_Norms_Equals;
 with DoblDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Vector_Norms;
@@ -44,6 +48,8 @@ with Standard_IncFix_Continuation;
 with DoblDobl_IncFix_Continuation;
 with QuadDobl_IncFix_Continuation;
 with Multprec_IncFix_Continuation;
+with Drivers_for_Poly_Continuation;
+with Drivers_for_Path_Directions;
 with Standard_Root_Refiners;
 with Witness_Sets,Witness_Sets_io;
 with Standard_Diagonal_Solutions;        use Standard_Diagonal_Solutions;
@@ -1828,8 +1834,10 @@ package body PHCpack_Operations is
 
     use Standard_Complex_Numbers,Standard_Complex_Norms_Equals;
     use Standard_IncFix_Continuation;
+    use Drivers_for_Poly_Continuation;
+    use Drivers_for_Path_Directions;
 
-    k : constant natural32 := 2;
+    k : natural32 := 2;
     r : Complex_Number; 
     epsxa : constant double_float := 1.0E-13;
     epsfa : constant double_float := 1.0E-13;
@@ -1837,15 +1845,31 @@ package body PHCpack_Operations is
     numit : natural32 := 0;
     max : constant natural32 := 4;
     deflate : boolean := false;
+    n,nbsols : natural32;
+    dirs : Standard_Floating_VecVecs.Link_to_VecVec;
+    errv : Standard_Floating_Vectors.Link_to_Vector;
+    wind : Standard_Integer_Vectors.Link_to_Vector;
     timer : Timing_Widget;
 
     procedure Sil_Cont is
-      new Silent_Continue(Max_Norm,Standard_Homotopy.Eval,
-                          Standard_Homotopy.Diff,Standard_Homotopy.Diff);
+      new Silent_Continue
+            (Max_Norm,Standard_Homotopy.Eval,
+             Standard_Homotopy.Diff,Standard_Homotopy.Diff);
+
+    procedure Sil_Toric_Cont is
+      new Silent_Toric_Continue
+            (Max_Norm,Standard_Homotopy.Eval,
+             Standard_Homotopy.Diff,Standard_Homotopy.Diff);
 
     procedure Rep_Cont is
-      new Reporting_Continue(Max_Norm,Standard_Homotopy.Eval,
-                             Standard_Homotopy.Diff,Standard_Homotopy.Diff);
+      new Reporting_Continue
+            (Max_Norm,Standard_Homotopy.Eval,
+             Standard_Homotopy.Diff,Standard_Homotopy.Diff);
+
+    procedure Rep_Toric_Cont is
+      new Reporting_Toric_Continue
+            (Max_Norm,Standard_Homotopy.Eval,
+             Standard_Homotopy.Diff,Standard_Homotopy.Diff);
 
   begin
     if zero_constant
@@ -1871,10 +1895,27 @@ package body PHCpack_Operations is
     Standard_Complex_Solutions.Copy(st_start_sols,st_target_sols);
     Standard_Complex_Solutions.Set_Continuation_Parameter
       (st_target_sols,Create(0.0));
+    if Continuation_Parameters.endext_order > 0 then
+      n := natural32(Standard_Complex_Solutions.Head_Of(st_target_sols).n);
+      nbsols := Standard_Complex_Solutions.Length_Of(st_target_sols);
+      Init_Path_Directions(n,nbsols,dirs,errv);
+      wind := new Standard_Integer_Vectors.Vector'(1..integer32(nbsols) => 1);
+      k := Standard_Homotopy.Relaxation_Power;
+      if k /= 1
+       then Standard_Redefine_Homotopy;
+      end if;
+    end if;
     if file_okay then
       tstart(timer);
       if number_of_tasks = 0 then
-        Rep_Cont(output_file,st_target_sols,false,Create(1.0));
+        if Continuation_Parameters.endext_order = 0 then
+          Rep_Cont(output_file,st_target_sols,false,Create(1.0));
+        else
+          Rep_Toric_Cont
+            (output_file,st_target_sols,false,
+             wind.all,dirs.all,errv.all,Create(1.0));
+          Write_Directions(output_file,wind.all,dirs.all,errv.all);
+        end if;
       else
         Silent_Multitasking_Path_Tracker
           (st_target_sols,integer32(number_of_tasks));
@@ -1887,7 +1928,13 @@ package body PHCpack_Operations is
       print_times(output_file,timer,"Solving by Homotopy Continuation");
     else
       if number_of_tasks = 0 then
-        Sil_Cont(st_target_sols,false,Create(1.0));
+        if Continuation_Parameters.endext_order = 0 then
+          Sil_Cont(st_target_sols,false,Create(1.0));
+        else
+          Sil_Toric_Cont
+            (st_target_sols,false,
+             wind.all,dirs.all,errv.all,Create(1.0));
+        end if;
       else
         Silent_Multitasking_Path_Tracker
           (st_target_sols,integer32(number_of_tasks));
@@ -1908,8 +1955,10 @@ package body PHCpack_Operations is
 
     use DoblDobl_Complex_Numbers,DoblDobl_Complex_Vector_Norms;
     use DoblDobl_IncFix_Continuation;
+    use Drivers_for_Poly_Continuation;
+    use Drivers_for_Path_Directions;
 
-    k : constant natural32 := 2;
+    k : natural32 := 2;
     r : Complex_Number; 
    -- epsxa : constant double_float := 1.0E-24;
    -- epsfa : constant double_float := 1.0E-24;
@@ -1917,15 +1966,31 @@ package body PHCpack_Operations is
    -- numit : natural := 0;
    -- max : constant natural := 4;
    -- deflate : boolean := false;
+    n,nbsols : natural32;
+    dirs : Double_Double_VecVecs.Link_to_VecVec;
+    errv : Double_Double_Vectors.Link_to_Vector;
+    wind : Standard_Integer_Vectors.Link_to_Vector;
     timer : Timing_Widget;
 
     procedure Sil_Cont is
-      new Silent_Continue(Max_Norm,DoblDobl_Homotopy.Eval,
-                          DoblDobl_Homotopy.Diff,DoblDobl_Homotopy.Diff);
+      new Silent_Continue
+            (Max_Norm,DoblDobl_Homotopy.Eval,
+             DoblDobl_Homotopy.Diff,DoblDobl_Homotopy.Diff);
+
+    procedure Sil_Toric_Cont is
+      new Silent_Toric_Continue
+            (Max_Norm,DoblDobl_Homotopy.Eval,
+             DoblDobl_Homotopy.Diff,DoblDobl_Homotopy.Diff);
 
     procedure Rep_Cont is
-      new Reporting_Continue(Max_Norm,DoblDobl_Homotopy.Eval,
-                             DoblDobl_Homotopy.Diff,DoblDobl_Homotopy.Diff);
+      new Reporting_Continue
+            (Max_Norm,DoblDobl_Homotopy.Eval,
+             DoblDobl_Homotopy.Diff,DoblDobl_Homotopy.Diff);
+
+    procedure Rep_Toric_Cont is
+      new Reporting_Toric_Continue
+            (Max_Norm,DoblDobl_Homotopy.Eval,
+             DoblDobl_Homotopy.Diff,DoblDobl_Homotopy.Diff);
 
   begin
     if zero_dobldobl_constant
@@ -1947,16 +2012,33 @@ package body PHCpack_Operations is
       end if;
     end if;
     if auto_tune
-     then Continuation_Parameters.Tune(0,32);
+     then Continuation_Parameters.Tune(0); -- (0,32) is too severe
     end if;
     DoblDobl_Complex_Solutions.Clear(dd_target_sols);
     DoblDobl_Complex_Solutions.Copy(dd_start_sols,dd_target_sols);
     DoblDobl_Complex_Solutions.Set_Continuation_Parameter
       (dd_target_sols,Create(integer(0)));
+    if Continuation_Parameters.endext_order > 0 then
+      n := natural32(DoblDobl_Complex_Solutions.Head_Of(dd_target_sols).n);
+      nbsols := DoblDobl_Complex_Solutions.Length_Of(dd_target_sols);
+      Init_Path_Directions(n,nbsols,dirs,errv);
+      wind := new Standard_Integer_Vectors.Vector'(1..integer32(nbsols) => 1);
+      k := DoblDobl_Homotopy.Relaxation_Power;
+      if k /= 1
+       then DoblDobl_Redefine_Homotopy;
+      end if;
+    end if;
     if file_okay then
       tstart(timer);
       if number_of_tasks = 0 then
-        Rep_Cont(output_file,dd_target_sols,Create(integer(1)));
+        if Continuation_Parameters.endext_order = 0 then
+          Rep_Cont(output_file,dd_target_sols,Create(integer(1)));
+        else
+          Rep_Toric_Cont
+            (output_file,dd_target_sols,false,
+             wind.all,dirs.all,errv.all,Create(integer(1)));
+          Write_Directions(output_file,wind.all,dirs.all,errv.all);
+        end if;
       else
         Silent_Multitasking_Path_Tracker
           (dd_target_sols,integer32(number_of_tasks));
@@ -1969,7 +2051,13 @@ package body PHCpack_Operations is
       print_times(output_file,timer,"Solving by Homotopy Continuation");
     else
       if number_of_tasks = 0 then
-        Sil_Cont(dd_target_sols,Create(integer(1)));
+        if Continuation_Parameters.endext_order = 0 then
+          Sil_Cont(dd_target_sols,Create(integer(1)));
+        else
+          Sil_Toric_Cont
+            (dd_target_sols,false,
+             wind.all,dirs.all,errv.all,Create(integer(1)));
+        end if;
       else
         Silent_Multitasking_Path_Tracker
           (dd_target_sols,integer32(number_of_tasks));
@@ -1990,8 +2078,10 @@ package body PHCpack_Operations is
 
     use QuadDobl_Complex_Numbers,QuadDobl_Complex_Vector_Norms;
     use QuadDobl_IncFix_Continuation;
+    use Drivers_for_Poly_Continuation;
+    use Drivers_for_Path_Directions;
 
-    k : constant natural32 := 2;
+    k : natural32 := 2;
     r : Complex_Number; 
    -- epsxa : constant double_float := 1.0E-54;
    -- epsfa : constant double_float := 1.0E-54;
@@ -1999,15 +2089,31 @@ package body PHCpack_Operations is
    -- numit : natural := 0;
    -- max : constant natural := 4;
    -- deflate : boolean := false;
+    n,nbsols : natural32;
+    dirs : Quad_Double_VecVecs.Link_to_VecVec;
+    errv : Quad_Double_Vectors.Link_to_Vector;
+    wind : Standard_Integer_Vectors.Link_to_Vector;
     timer : Timing_Widget;
 
     procedure Sil_Cont is
-      new Silent_Continue(Max_Norm,QuadDobl_Homotopy.Eval,
-                          QuadDobl_Homotopy.Diff,QuadDobl_Homotopy.Diff);
+      new Silent_Continue
+            (Max_Norm,QuadDobl_Homotopy.Eval,
+             QuadDobl_Homotopy.Diff,QuadDobl_Homotopy.Diff);
+
+    procedure Sil_Toric_Cont is
+      new Silent_Toric_Continue
+            (Max_Norm,QuadDobl_Homotopy.Eval,
+             QuadDobl_Homotopy.Diff,QuadDobl_Homotopy.Diff);
 
     procedure Rep_Cont is
-      new Reporting_Continue(Max_Norm,QuadDobl_Homotopy.Eval,
-                             QuadDobl_Homotopy.Diff,QuadDobl_Homotopy.Diff);
+      new Reporting_Continue
+            (Max_Norm,QuadDobl_Homotopy.Eval,
+             QuadDobl_Homotopy.Diff,QuadDobl_Homotopy.Diff);
+
+    procedure Rep_Toric_Cont is
+      new Reporting_Toric_Continue
+            (Max_Norm,QuadDobl_Homotopy.Eval,
+             QuadDobl_Homotopy.Diff,QuadDobl_Homotopy.Diff);
 
   begin
     if zero_quaddobl_constant
@@ -2029,16 +2135,33 @@ package body PHCpack_Operations is
       end if;
     end if;
     if auto_tune
-     then Continuation_Parameters.Tune(0,64);
+     then Continuation_Parameters.Tune(0); -- (0, 64) is too severe
     end if;
     QuadDobl_Complex_Solutions.Clear(qd_target_sols);
     QuadDobl_Complex_Solutions.Copy(qd_start_sols,qd_target_sols);
     QuadDobl_Complex_Solutions.Set_Continuation_Parameter
       (qd_target_sols,Create(integer(0)));
+    if Continuation_Parameters.endext_order > 0 then
+      n := natural32(QuadDobl_Complex_Solutions.Head_Of(qd_target_sols).n);
+      nbsols := QuadDobl_Complex_Solutions.Length_Of(qd_target_sols);
+      Init_Path_Directions(n,nbsols,dirs,errv);
+      wind := new Standard_Integer_Vectors.Vector'(1..integer32(nbsols) => 1);
+      k := QuadDobl_Homotopy.Relaxation_Power;
+      if k /= 1
+       then QuadDobl_Redefine_Homotopy;
+      end if;
+    end if;
     if file_okay then
       tstart(timer);
       if number_of_tasks = 0 then
-        Rep_Cont(output_file,qd_target_sols,Create(integer(1)));
+        if Continuation_Parameters.endext_order = 0 then
+          Rep_Cont(output_file,qd_target_sols,Create(integer(1)));
+        else
+          Rep_Toric_Cont
+            (output_file,qd_target_sols,false,
+             wind.all,dirs.all,errv.all,Create(integer(1)));
+          Write_Directions(output_file,wind.all,dirs.all,errv.all);
+        end if;
       else
         Silent_Multitasking_Path_Tracker
           (qd_target_sols,integer32(number_of_tasks));
@@ -2051,7 +2174,13 @@ package body PHCpack_Operations is
       print_times(output_file,timer,"Solving by Homotopy Continuation");
     else
       if number_of_tasks = 0 then
-        Sil_Cont(qd_target_sols,Create(integer(1)));
+        if Continuation_Parameters.endext_order = 0 then
+          Sil_Cont(qd_target_sols,Create(integer(1)));
+        else
+          Sil_Toric_Cont
+            (qd_target_sols,false,
+             wind.all,dirs.all,errv.all,Create(integer(1)));
+        end if;
       else
         Silent_Multitasking_Path_Tracker
           (qd_target_sols,integer32(number_of_tasks));
