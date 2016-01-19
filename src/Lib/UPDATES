@@ -1,3 +1,6 @@
+Tue 19 Jan 2016 : loosened the tuning of the parameters in lib_poco.c
+  for double double and quad double arithmetic.
+
 Sun 17 Jan 2016 : renamed phcpy2c.c to phcpy2c2.c, for python2.
   In phcpy2c2.c, the initialization of the module also changes,
   as the name of the module is now phcpy2c2.

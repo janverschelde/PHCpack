@@ -84,7 +84,7 @@ int run_dobldobl_continuation ( void )
    fail = write_dobldobl_start_system();
    fail = write_dobldobl_start_solutions();
    printf("\n");
-   fail = autotune_continuation_parameters(0,24);
+   fail = autotune_continuation_parameters(0,14); // (0, 24) is too severe
    fail = tune_continuation_parameters();
    printf("\n");
    fail = determine_output_during_continuation();
@@ -109,7 +109,7 @@ int run_quaddobl_continuation ( void )
    fail = write_quaddobl_start_system();
    fail = write_quaddobl_start_solutions();
    printf("\n");
-   fail = autotune_continuation_parameters(0,48);
+   fail = autotune_continuation_parameters(0,14); // (0, 48) is too severe
    fail = tune_continuation_parameters();
    printf("\n");
    fail = determine_output_during_continuation();
