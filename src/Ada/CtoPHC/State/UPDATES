@@ -1,3 +1,6 @@
+Wed 20 Jan 2016 : new package numerical_tropisms_container to manage the
+  data structures for numerically computed tropisms.
+
 Tue 19 Jan 2016 : extended the solve_by_{standard, dobldobl, quaddobl}_
   homotopy_continuation procedures in phcpack_operations.adb with the
   application of polyhedral end games.
