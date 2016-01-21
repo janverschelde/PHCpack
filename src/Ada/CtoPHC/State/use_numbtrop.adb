@@ -239,17 +239,113 @@ function use_numbtrop ( job : integer32;
   end Job6;
 
   function Job7 return integer32 is -- standard retrieve
+
+    w : Standard_Integer_Vectors.Link_to_Vector;
+    v : Standard_Floating_VecVecs.Link_to_VecVec;
+    e : Standard_Floating_Vectors.Link_to_Vector;
+
   begin
+    Numerical_Tropisms_Container.Standard_Retrieve(w,v,e);
+    declare
+      nbt : constant integer32 := w'last;
+      flv : constant Standard_Floating_Vectors.Link_to_Vector := v(v'first);
+      dim : constant integer32 := flv'last;
+      nbd : Standard_Integer_Vectors.Vector(1..2);
+      csz : constant integer32 := (nbt+1)*dim;
+      cff : Standard_Floating_Vectors.Vector(1..csz);
+      idx : integer32 := 0;
+    begin
+      nbd(1) := nbt;
+      nbd(2) := dim;
+      Assign(w.all,b);
+      for i in v'range loop
+        for j in v(i)'range loop
+          idx := idx + 1;
+          cff(idx) := v(i)(j);
+        end loop;
+      end loop;
+      for i in e'range loop
+        idx := idx + 1;
+        cff(idx) := e(i);
+      end loop;
+      Assign(cff,c);
+    end;
     return 0;
   end Job7;
 
   function Job8 return integer32 is -- dobldobl retrieve
+
+    w : Standard_Integer_Vectors.Link_to_Vector;
+    v : Double_Double_VecVecs.Link_to_VecVec;
+    e : Double_Double_Vectors.Link_to_Vector;
+
   begin
+    Numerical_Tropisms_Container.DoblDobl_Retrieve(w,v,e);
+    declare
+      nbt : constant integer32 := w'last;
+      flv : constant Double_Double_Vectors.Link_to_Vector := v(v'first);
+      dim : constant integer32 := flv'last;
+      nbd : Standard_Integer_Vectors.Vector(1..2);
+      csz : constant integer32 := 2*(nbt+1)*dim;
+      cff : Standard_Floating_Vectors.Vector(1..csz);
+      idx : integer32 := 0;
+      hi,lo : double_float;
+    begin
+      nbd(1) := nbt;
+      nbd(2) := dim;
+      Assign(w.all,b);
+      for i in v'range loop
+        for j in v(i)'range loop
+          hi := hi_part(v(i)(j)); idx := idx + 1; cff(idx) := hi;
+          lo := lo_part(v(i)(j)); idx := idx + 1; cff(idx) := lo;
+        end loop;
+      end loop;
+      for i in e'range loop
+        hi := hi_part(e(i)); idx := idx + 1; cff(idx) := hi;
+        lo := lo_part(e(i)); idx := idx + 1; cff(idx) := lo;
+      end loop;
+      Assign(cff,c);
+    end;
     return 0;
   end Job8;
 
   function Job9 return integer32 is -- quaddobl retrieve
+
+    w : Standard_Integer_Vectors.Link_to_Vector;
+    v : Quad_Double_VecVecs.Link_to_VecVec;
+    e : Quad_Double_Vectors.Link_to_Vector;
+
   begin
+    Numerical_Tropisms_Container.QuadDobl_Retrieve(w,v,e);
+    declare
+      nbt : constant integer32 := w'last;
+      flv : constant Quad_Double_Vectors.Link_to_Vector := v(v'first);
+      dim : constant integer32 := flv'last;
+      nbd : Standard_Integer_Vectors.Vector(1..2);
+      csz : constant integer32 := 4*(nbt+1)*dim;
+      cff : Standard_Floating_Vectors.Vector(1..csz);
+      idx : integer32 := 0;
+      dfl : double_float;
+    begin
+      nbd(1) := nbt;
+      nbd(2) := dim;
+      Assign(w.all,b);
+      for i in v'range loop
+        for j in v(i)'range loop
+          dfl := hihi_part(v(i)(j)); idx := idx + 1; cff(idx) := dfl;
+          dfl := lohi_part(v(i)(j)); idx := idx + 1; cff(idx) := dfl;
+          dfl := hilo_part(v(i)(j)); idx := idx + 1; cff(idx) := dfl;
+          dfl := lolo_part(v(i)(j)); idx := idx + 1; cff(idx) := dfl;
+        end loop;
+      end loop;
+      for i in e'range loop
+        dfl := hihi_part(e(i)); idx := idx + 1; cff(idx) := dfl;
+        dfl := lohi_part(e(i)); idx := idx + 1; cff(idx) := dfl;
+        dfl := hilo_part(e(i)); idx := idx + 1; cff(idx) := dfl;
+        dfl := lolo_part(e(i)); idx := idx + 1; cff(idx) := dfl;
+      end loop;
+      Assign(cff,c);
+    end;
     return 0;
   end Job9;
 
@@ -281,17 +377,74 @@ function use_numbtrop ( job : integer32;
   end Job12;
 
   function Job13 return integer32 is -- standard retrieve tropism
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    dim : constant integer32 := integer32(v_a(v_a'first));
+    idx : constant integer32 := integer32(v_a(v_a'first+1));
+    wnd : integer32;
+    dir : Standard_Floating_Vectors.Vector(1..dim);
+    err : double_float;
+    cff : Standard_Floating_Vectors.Vector(1..dim+1);
+
   begin
+    Numerical_Tropisms_Container.Standard_Retrieve_Tropism(idx,wnd,dir,err);
+    Assign(wnd,b);
+    for i in dir'range loop
+      cff(i) := dir(i);
+    end loop;
+    cff(cff'last) := err;
+    Assign(cff,c);
     return 0;
   end Job13;
 
   function Job14 return integer32 is -- dobldobl retrieve tropism
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    dim : constant integer32 := integer32(v_a(v_a'first));
+    idx : constant integer32 := integer32(v_a(v_a'first+1));
+    wnd : integer32;
+    dir : Double_Double_Vectors.Vector(1..dim);
+    err : double_double;
+    cff : Double_Double_Vectors.Vector(1..dim+1);
+
   begin
+    Numerical_Tropisms_Container.DoblDobl_Retrieve_Tropism(idx,wnd,dir,err);
+    Assign(wnd,b);
+    for i in dir'range loop
+      cff(i) := dir(i);
+    end loop;
+    cff(cff'last) := err;
+    Assign(cff,c);
     return 0;
   end Job14;
 
   function Job15 return integer32 is -- quaddobl retrieve tropism
+
+    use Interfaces.C;
+
+    v_a : constant C_Integer_Array
+        := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
+    dim : constant integer32 := integer32(v_a(v_a'first));
+    idx : constant integer32 := integer32(v_a(v_a'first+1));
+    wnd : integer32;
+    dir : Quad_Double_Vectors.Vector(1..dim);
+    err : quad_double;
+    cff : Quad_Double_Vectors.Vector(1..dim+1);
+
   begin
+    Numerical_Tropisms_Container.QuadDobl_Retrieve_Tropism(idx,wnd,dir,err);
+    Assign(wnd,b);
+    for i in dir'range loop
+      cff(i) := dir(i);
+    end loop;
+    cff(cff'last) := err;
+    Assign(cff,c);
     return 0;
   end Job15; 
 

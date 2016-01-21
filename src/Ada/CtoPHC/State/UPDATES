@@ -1,3 +1,5 @@
+Thu 21 Jan 2016 : completed the gateway procedure use_numbtrop.
+
 Wed 20 Jan 2016 : new package numerical_tropisms_container to manage the
   data structures for numerically computed tropisms.  The procedure
   use_numbtrop provides a way to access the numerical_tropisms_container.
