@@ -267,6 +267,7 @@ function use_numbtrop ( job : integer32;
     n : constant integer32 := Numerical_Tropisms_Container.DoblDobl_Size;
 
   begin
+    Assign(n,a);
     return 0;
   end Job11;
 
@@ -275,6 +276,7 @@ function use_numbtrop ( job : integer32;
     n : constant integer32 := Numerical_Tropisms_Container.QuadDobl_Size;
 
   begin
+    Assign(n,a);
     return 0;
   end Job12;
 
