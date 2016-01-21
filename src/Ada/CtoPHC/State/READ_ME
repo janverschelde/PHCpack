@@ -47,6 +47,7 @@ use_solpool                      : Ada gateway to the solutions pool
 ts_use_solpool.c                 : C routine calls the Ada gateway use_solpool
 ------------------------------------------------------------------------------
 numerical_tropisms_container     : manages numerically computed tropisms
+use_numbtrop                     : interface to the tropisms container
 phcpack_operations               : PHCpack as a state machine
 phcpack_operations_io            : input/output of main data of PHCpack
 c_to_phcpack                     : Ada routine as gateway to the machine
