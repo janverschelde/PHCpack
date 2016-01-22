@@ -79,7 +79,7 @@ void generate_errors ( int nbt, double *err )
 
 void standard_test ( int nbt, int dim )
 {
-   int i,j,k,fail;
+   int i,j,k,fail,size;
    int wind[nbt];
    double dir[nbt*dim];
    double err[nbt];
@@ -93,7 +93,7 @@ void standard_test ( int nbt, int dim )
    k = 0;
    for(i=0; i<nbt; i++)
    {
-      printf("  direction %d :",i);
+      printf("  direction %d :",i+1);
       for(j=0; j<dim; j++) printf(" %.3e",dir[k++]);
       printf("\n");
    }
@@ -103,4 +103,18 @@ void standard_test ( int nbt, int dim )
    printf("\n");
 
    fail = standard_initialize(nbt,dim,wind,dir,err);
+   fail = standard_size(&size);
+   printf("The number of tropisms : %d\n",size);
+   {
+      int idx,wnd;
+      double diridx[dim];
+      double erridx;
+      printf("Give an index : "); scanf("%d",&idx);
+      fail = standard_retrieve_tropism(dim,idx,&wnd,diridx,&erridx);
+      printf("The tropism %d has winding number %d.\n",idx,wnd);
+      printf("with coordinates :");
+      for(k=0; k<dim; k++) printf(" %.3e",diridx[k]);
+      printf("\nand error : %.3e\n",erridx);
+   }
+   fail = standard_clear();
 }

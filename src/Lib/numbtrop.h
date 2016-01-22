@@ -33,4 +33,32 @@ int standard_initialize
  * ON RETURN :
  *   The failure code, which equals zero if all went well. */
 
+int standard_size ( int *nbt );
+/*
+ * DESCRIPTION :
+ *   Returns in nbt the number of tropisms, stored in standard double
+ *   precision, in the numerical tropisms container. */
+
+int standard_retrieve_tropism
+ ( int dim, int idx, int *wnd, double *dir, double *err );
+/*
+ * DESCRIPTION :
+ *   Returns one tropisms, stored in standard double precision.
+ *
+ * ON ENTRY :
+ *   dim     the length of the tropism vector;
+ *   idx     the index of the tropism, indexing starts at one,
+ *           and ends at nbt, what is returned by standard_size.
+ *
+ * ON RETURN :
+ *   wnd     estimated winding number;
+ *   dir     coordinates of the tropisms, as many as dim;
+ *   err     the error on the tropism. */
+
+int standard_clear( void );
+/*
+ * DESCRIPTION :
+ *   Deallocates the stored numerically computed tropisms,
+ *   computed in standard double precision. */
+
 #endif
