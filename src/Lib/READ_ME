@@ -76,6 +76,9 @@ lib_unisolve.c       : test on univariate root finders
 giftwrappers.h       : prototypes for the giftwrapping method
 giftwrappers.c       : calls _ada_use_c2phc
 lib_giftwrap.c       : test on convex hull computation
+numbtrop.h           : prototypes for numerical tropisms container
+numbtrop.c           : wrapped calls to the Ada to C gateway procedure
+lib_numbtrop         : tests on randomly generated numbers
 ------------------------------------------------------------------------------
 lists_and_strings    : arrays of numbers <-> strings of lists
 ts_list2str          : interactive test on conversion
