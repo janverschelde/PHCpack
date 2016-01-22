@@ -2706,6 +2706,14 @@ lib_giftwrap_cpp:
 	gnatlink -C use_c2phc giftwrappers.o lib_giftwrap.o \
                  -o $(BIN)/lib_giftwrap -lm --LINK=g++
 
+lib_numbtrop:
+	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gcc -c $(PHCLib)/numbtrop.c
+	gcc -c $(PHCLib)/lib_numbtrop.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc numbtrop.o lib_numbtrop.o \
+                 -o $(BIN)/lib_numbtrop -lm
+
 adepath_d.o: adenewton_d.o adeonepath_d.o ademanypaths_d.o
 	g++ -O2 -Dcompilewgpp=1 -fPIC -I$(PHCAda)/PHCtoC \
             -I$(PHCgpu)/Path/DefineTypesD -I$(PHCgpu)/Path/Poly \
