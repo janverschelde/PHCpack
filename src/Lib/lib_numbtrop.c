@@ -27,6 +27,23 @@ void generate_errors ( int nbt, double *err );
  *   Generates as many random doubles as the value of nbt,
  *   and stores the values in err. */
 
+void standard_generate
+ ( int nbt, int dim, int *wind, double *dir, double *err );
+/*
+ * DESCRIPTION :
+ *   Generates random numbers for nbt tropisms of length dim,
+ *   with coordinates stored in dir, winding numbers in wind,
+ *   and errors in err, in standard double precision.
+ *   Data must have been allocated for wind, dir, and err. */
+
+void standard_operate
+ ( int nbt, int dim, int *wind, double *dir, double *err );
+/*
+ * DESCRIPTION :
+ *   Tests the operations for nbt tropisms of length dim,
+ *   with coordinates in dir, winding numbers in wind, and
+ *   errors in err, in standard double precision. */
+
 void standard_test ( int nbt, int dim );
 /*
  * DESCRIPTION :
@@ -77,12 +94,10 @@ void generate_errors ( int nbt, double *err )
    for(i=0; i<nbt; i++) err[i] = err[i]/1000.0;
 }
 
-void standard_test ( int nbt, int dim )
+void standard_generate
+ ( int nbt, int dim, int *wind, double *dir, double *err )
 {
-   int i,j,k,fail,size;
-   int wind[nbt];
-   double dir[nbt*dim];
-   double err[nbt];
+   int i,j,k;
 
    generate_winding_numbers(nbt,wind);
    printf("The winding numbers :");
@@ -101,20 +116,51 @@ void standard_test ( int nbt, int dim )
    printf("The errors :\n");
    for(k=0; k<nbt; k++) printf(" %.3e",err[k]);
    printf("\n");
+}
+
+void standard_operate
+ ( int nbt, int dim, int *wind, double *dir, double *err )
+{
+   int fail,size,k,idx,wnd;
 
    fail = standard_initialize(nbt,dim,wind,dir,err);
    fail = standard_size(&size);
    printf("The number of tropisms : %d\n",size);
+
+   do
    {
-      int idx,wnd;
       double diridx[dim];
       double erridx;
-      printf("Give an index : "); scanf("%d",&idx);
+
+      printf("Give an index (<= 0 to exit): "); scanf("%d",&idx);
+      if(idx <= 0) break;
       fail = standard_retrieve_tropism(dim,idx,&wnd,diridx,&erridx);
-      printf("The tropism %d has winding number %d.\n",idx,wnd);
+      printf("The tropism %d has winding number %d,\n",idx,wnd);
       printf("with coordinates :");
       for(k=0; k<dim; k++) printf(" %.3e",diridx[k]);
       printf("\nand error : %.3e\n",erridx);
+
+      generate_winding_numbers(1,&wnd);
+      random_doubles(dim,diridx);
+      random_doubles(1,&erridx);
+
+      printf("Changing tropism %d to winding number %d,\n",idx,wnd);
+      printf("with coordinates :");
+      for(k=0; k<dim; k++) printf(" %.3e",diridx[k]);
+      printf("\nand error : %.3e\n",erridx);
+      fail = store_standard_tropism(dim,idx,wnd,diridx,erridx);
    }
+   while(idx > 0);
+
    fail = standard_clear();
+}
+
+void standard_test ( int nbt, int dim )
+{
+   int wind[nbt];
+   double dir[nbt*dim];
+   double err[nbt];
+
+   standard_generate(nbt,dim,wind,dir,err);
+   standard_operate(nbt,dim,wind,dir,err);
 }

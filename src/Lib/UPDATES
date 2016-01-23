@@ -1,3 +1,5 @@
+Sat 23 Jan 2016 : added more wrappers to numbtrop, tested by lib_numbtrop.
+
 Fri 22 Jan 2016 : new library numbtrop, tested by lib_numbtrop.
 
 Tue 19 Jan 2016 : loosened the tuning of the parameters in lib_poco.c
