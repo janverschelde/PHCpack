@@ -11,26 +11,26 @@ function use_numbtrop ( job : integer32;
 --   Gateway to the container to manage numerically computed tropisms.
 
 -- ON ENTRY :
---   job   =   1 : initialize for tropisms in standard double precision,
+--   job   =   1 : initialize the tropisms in standard double precision,
 --                 on input in a[0] are the number of tropisms, and
 --                 in a[1] the length of the tropisms, in b are then
 --                 the winding numbers, as many as the value of a[0],
 --                 in c are all the floating-point coefficients,
---                 as many as (1+a[0])*a[1], for the coordinates of the
+--                 as many as a[0]*(a[1]+1), for the coordinates of the
 --                 tropisms and the errors on the numerical tropisms; 
---             2 : initialize for tropisms in double double precision,
+--             2 : initialize the tropisms in double double precision,
 --                 on input in a[0] are the number of tropisms, and
 --                 in a[1] the length of the tropisms, in b are then
 --                 the winding numbers, as many as the value of a[0],
 --                 in c are all the floating-point coefficients,
---                 as many as 2*(1+a[0])*a[1], for the coordinates of the
+--                 as many as 2*a[0]*(a[1]+1), for the coordinates of the
 --                 tropisms and the errors on the numerical tropisms; 
---             3 : initialize for tropisms in quad double precision,
+--             3 : initialize the tropisms in quad double precision,
 --                 on input in a[0] are the number of tropisms, and
 --                 in a[1] the length of the tropisms, in b are then
 --                 the winding numbers, as many as the value of a[0],
 --                 in c are all the floating-point coefficients,
---                 as many as 4*(1+a[0])*a[1], for the coordinates of the
+--                 as many as 4*a[0](a[1]+1), for the coordinates of the
 --                 tropisms and the errors on the numerical tropisms; 
 --             4 : store a tropism in standard double precision,
 --                 on input in a[0] is the length of the tropism, and
@@ -56,15 +56,18 @@ function use_numbtrop ( job : integer32;
 --             7 : retrieve all tropisms in standard double precision,
 --                 on return in a[0] are the number of tropisms, and
 --                 in a[1] the length of each tropism,
---                 in b are the winding numbers for each tropism,
+--                 in b are the winding numbers for each tropism, and
+--                 in c the a[0]*(a[1]+1) coefficients;
 --             8 : retrieve all tropisms in double double precision,
 --                 on return in a[0] are the number of tropisms, and
 --                 in a[1] the length of each tropism,
---                 in b are the winding numbers for each tropism,
+--                 in b are the winding numbers for each tropism, and
+--                 in c the 2*a[0]*(a[1]+1) coefficients;
 --             9 : retrieve all tropisms in quad double precision,
 --                 on return in a[0] are the number of tropisms, and
 --                 in a[1] the length of each tropism,
---                 in b are the winding numbers for each tropism,
+--                 in b are the winding numbers for each tropism, and
+--                 in c the 4*a[0]*(a[1]+1) coefficients;
 --            10 : the number of tropisms in standard double precision
 --                 is returned in a;
 --            11 : the number of tropisms in double double precision

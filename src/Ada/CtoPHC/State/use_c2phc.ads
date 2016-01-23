@@ -1934,26 +1934,26 @@ function use_c2phc ( job : integer32;
 --
 -- access to the container for numerically computed tropisms :
 --
---   job  =  711 : initialize for tropisms in standard double precision,
+--   job  =  711 : initialize the tropisms in standard double precision,
 --                 on input in a[0] are the number of tropisms, and
 --                 in a[1] the length of the tropisms, in b are then
 --                 the winding numbers, as many as the value of a[0],
 --                 in c are all the floating-point coefficients,
---                 as many as (1+a[0])*a[1], for the coordinates of the
+--                 as many as a[0]*(a[1]+1), for the coordinates of the
 --                 tropisms and the errors on the numerical tropisms; 
---           712 : initialize for tropisms in double double precision,
+--           712 : initialize the tropisms in double double precision,
 --                 on input in a[0] are the number of tropisms, and
 --                 in a[1] the length of the tropisms, in b are then
 --                 the winding numbers, as many as the value of a[0],
 --                 in c are all the floating-point coefficients,
---                 as many as 2*(1+a[0])*a[1], for the coordinates of the
+--                 as many as 2*a[0]*(a[1]+1), for the coordinates of the
 --                 tropisms and the errors on the numerical tropisms; 
---           713 : initialize for tropisms in quad double precision,
+--           713 : initialize the tropisms in quad double precision,
 --                 on input in a[0] are the number of tropisms, and
 --                 in a[1] the length of the tropisms, in b are then
 --                 the winding numbers, as many as the value of a[0],
 --                 in c are all the floating-point coefficients,
---                 as many as 4*(1+a[0])*a[1], for the coordinates of the
+--                 as many as 4*a[0]*(a[1]+1), for the coordinates of the
 --                 tropisms and the errors on the numerical tropisms; 
 --           714 : store a tropism in standard double precision,
 --                 on input in a[0] is the length of the tropism, and
@@ -1979,15 +1979,18 @@ function use_c2phc ( job : integer32;
 --           717 : retrieve all tropisms in standard double precision,
 --                 on return in a[0] are the number of tropisms, and
 --                 in a[1] the length of each tropism,
---                 in b are the winding numbers for each tropism,
+--                 in b are the winding numbers for each tropism, and
+--                 in c are all coefficients, as many as a[0]*(a[1]+1);
 --           718 : retrieve all tropisms in double double precision,
 --                 on return in a[0] are the number of tropisms, and
 --                 in a[1] the length of each tropism,
---                 in b are the winding numbers for each tropism,
+--                 in b are the winding numbers for each tropism, and
+--                 in c are all coefficients, as many as 2*a[0]*(a[1]+1);
 --           719 : retrieve all tropisms in quad double precision,
 --                 on return in a[0] are the number of tropisms, and
 --                 in a[1] the length of each tropism,
---                 in b are the winding numbers for each tropism,
+--                 in b are the winding numbers for each tropism, and
+--                 in c are all coefficients, as many as 4*a[0]*(a[1]+1);
 --           720 : the number of tropisms in standard double precision
 --                 is returned in a;
 --           721 : the number of tropisms in double double precision

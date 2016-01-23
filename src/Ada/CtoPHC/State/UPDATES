@@ -1,3 +1,6 @@
+Sat 23 Jan 2016 : fixed bug in the dimension calculation in use_numbtrop.adb
+  and improved the documentation in use_numbtrop.ads and use_c2phc.ads.
+
 Thu 21 Jan 2016 : completed the gateway procedure use_numbtrop.
   Added 18 jobs in the range 701 to 718 to use_c2phc.
 
