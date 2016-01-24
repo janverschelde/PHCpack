@@ -13,7 +13,7 @@ int standard_initialize
    nd[0] = nbt;
    nd[1] = dim;
    for(k=0; k<nbt*dim; k++) cff[k] = dir[k];
-   for(k=0; k<dim; k++) cff[nbt*dim+k] = err[k];
+   for(k=0; k<nbt; k++) cff[nbt*dim+k] = err[k];
 
    fail = _ada_use_c2phc(711,nd,wnd,cff);
 
@@ -33,7 +33,7 @@ int standard_retrieve
    fail = _ada_use_c2phc(717,nd,wnd,cff);
 
    for(k=0; k<nbt*dim; k++) dir[k] = cff[k];
-   for(k=0; k<dim; k++) err[k] = cff[nbt*dim+k];
+   for(k=0; k<nbt; k++) err[k] = cff[nbt*dim+k];
 
    return fail;
 }
