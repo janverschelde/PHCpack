@@ -1,3 +1,6 @@
+Mon 25 Jan 2016 : added double double and quad double versions of the
+  wrappers to numbtrop.h and numbtrop.c.
+
 Sun 24 Jan 2016 : fixed dimension bug in assignment of errors in numbtrop.c.
 
 Sat 23 Jan 2016 : added more wrappers to numbtrop, tested by lib_numbtrop.
