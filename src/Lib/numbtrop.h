@@ -180,7 +180,7 @@ int numbtrop_standard_retrieve_tropism
  ( int dim, int idx, int *wnd, double *dir, double *err );
 /*
  * DESCRIPTION :
- *   Returns one tropisms, stored in standard double precision.
+ *   Returns one tropism, stored in standard double precision.
  *
  * ON ENTRY :
  *   dim     the length of the tropism vector;
@@ -196,7 +196,7 @@ int numbtrop_dobldobl_retrieve_tropism
  ( int dim, int idx, int *wnd, double *dir, double *err );
 /*
  * DESCRIPTION :
- *   Returns one tropisms, stored in double double precision.
+ *   Returns one tropism, stored in double double precision.
  *
  * ON ENTRY :
  *   dim     the length of the tropism vector;
@@ -212,7 +212,7 @@ int numbtrop_quaddobl_retrieve_tropism
  ( int dim, int idx, int *wnd, double *dir, double *err );
 /*
  * DESCRIPTION :
- *   Returns one tropisms, stored in quad double precision.
+ *   Returns one tropism, stored in quad double precision.
  *
  * ON ENTRY :
  *   dim     the length of the tropism vector;

@@ -2844,6 +2844,8 @@ static PyObject *py2c_numbtrop_standard_initialize
  *   wnd : winding numbers, as many as nbt;
  *   dir : nbt*dim doubles with the coordinates of the tropisms;
  *   err : errors on the tropisms, as many doubles as the value of nbt.
+ *   The numbers in wnd, dir, and err must be given in one string,
+ *   as the string representation of a list of doubles.
  *   On return is the failure code, which equals zero if all went well. */
 
 static PyObject *py2c_numbtrop_dobldobl_initialize
@@ -2857,6 +2859,8 @@ static PyObject *py2c_numbtrop_dobldobl_initialize
  *   wnd : winding numbers, as many as nbt;
  *   dir : 2*nbt*dim doubles with the coordinates of the tropisms;
  *   err : errors on the tropisms, as many doubles as the value of 2*nbt.
+ *   The numbers in wnd, dir, and err must be given in one string,
+ *   as the string representation of a list of doubles.
  *   On return is the the failure code, which equals zero if all went well. */
 
 static PyObject *py2c_numbtrop_quaddobl_initialize
@@ -2870,6 +2874,8 @@ static PyObject *py2c_numbtrop_quaddobl_initialize
  *   wnd : winding numbers, as many as nbt;
  *   dir : 4*nbt*dim doubles with the coordinates of the tropisms;
  *   err : errors on the tropisms, as many doubles as the value of 4*nbt.
+ *   The numbers in wnd, dir, and err must be given in one string,
+ *   as the string representation of a list of doubles.
  *   On return is the the failure code, which equals zero if all went well. */
 
 static PyObject *py2c_numbtrop_standard_retrieve
@@ -2886,6 +2892,8 @@ static PyObject *py2c_numbtrop_standard_retrieve
  *   wnd    winding numbers, as many as nbt;
  *   dir    nbt*dim doubles with the coordinates of the tropisms;
  *   err    errors on the tropisms, as many doubles as the value of nbt.
+ *   All return parameters are in one string,
+ *   the string representation of a list of doubles.
  *   The failure code, which equals zero if all went well. */
 
 static PyObject *py2c_numbtrop_dobldobl_retrieve
@@ -2902,6 +2910,8 @@ static PyObject *py2c_numbtrop_dobldobl_retrieve
  *   wnd    winding numbers, as many as nbt;
  *   dir    2*nbt*dim doubles with the coordinates of the tropisms;
  *   err    errors on the tropisms, as many doubles as the value of 2*nbt.
+ *   All return parameters are in one string,
+ *   the string representation of a list of doubles.
  *   The failure code, which equals zero if all went well. */
 
 static PyObject *py2c_numbtrop_quaddobl_retrieve
@@ -2918,6 +2928,8 @@ static PyObject *py2c_numbtrop_quaddobl_retrieve
  *   wnd    winding numbers, as many as nbt;
  *   dir    4*nbt*dim doubles with the coordinates of the tropisms;
  *   err    errors on the tropisms, as many doubles as the value of 4*nbt.
+ *   All return parameters are in one string,
+ *   the string representation of a list of doubles.
  *   The failure code, which equals zero if all went well. */
 
 static PyObject *py2c_numbtrop_standard_size
@@ -2953,7 +2965,9 @@ static PyObject *py2c_numbtrop_store_standard_tropism
  *           and ends at nbt, what is returned by standard_size.
  *   wnd     estimated winding number;
  *   dir     coordinates of the tropisms, as many as dim;
- *   err     the error on the tropism. */
+ *   err     the error on the tropism.
+ *   All dim+1 doubles are given in one string,
+ *   the string representation of a list of doubles. */
 
 static PyObject *py2c_numbtrop_store_dobldobl_tropism
  ( PyObject *self, PyObject *args );
@@ -2967,7 +2981,9 @@ static PyObject *py2c_numbtrop_store_dobldobl_tropism
  *           and ends at nbt, what is returned by standard_size.
  *   wnd     estimated winding number;
  *   dir     coordinates of the tropisms, as many as 2*dim;
- *   err     the error on the tropism, two doubles. */
+ *   err     the error on the tropism, two doubles.
+ *   All 2*dim+2 doubles are given in one string,
+ *   the string representation of a list of doubles. */
 
 static PyObject *py2c_numbtrop_store_quaddobl_tropism
  ( PyObject *self, PyObject *args );
@@ -2981,13 +2997,15 @@ static PyObject *py2c_numbtrop_store_quaddobl_tropism
  *           and ends at nbt, what is returned by standard_size.
  *   wnd     estimated winding number;
  *   dir     coordinates of the tropisms, as many as 4*dim;
- *   err     the error on the tropism, four doubles. */
+ *   err     the error on the tropism, four doubles.
+ *   All 4*dim+4 doubles are given in one string,
+ *   the string representation of a list of doubles. */
 
 static PyObject *py2c_numbtrop_standard_retrieve_tropism
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Returns one tropisms, stored in standard double precision.
+ *   Returns one tropism, stored in standard double precision.
  *
  * ON ENTRY :
  *   dim     the length of the tropism vector;
@@ -2997,39 +3015,45 @@ static PyObject *py2c_numbtrop_standard_retrieve_tropism
  * ON RETURN :
  *   wnd     estimated winding number;
  *   dir     coordinates of the tropisms, as many as dim;
- *   err     the error on the tropism. */
+ *   err     the error on the tropism.
+ *   All dim+1 doubles are returned in one string,
+ *   the string representation of a list of doubles. */
 
 static PyObject *py2c_numbtrop_dobldobl_retrieve_tropism
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Returns one tropisms, stored in double double precision.
- *
+ *   Returns one tropism, stored in double double precision.
+ * 
  * ON ENTRY :
  *   dim     the length of the tropism vector;
  *   idx     the index of the tropism, indexing starts at one,
- *           and ends at nbt, what is returned by dobldobl_size.
+ *           and ends at nbt, what is returned by numbtrop_dobldobl_size.
  *
  * ON RETURN :
  *   wnd     estimated winding number;
  *   dir     coordinates of the tropisms, as many as 2*dim;
- *   err     the error on the tropism, two doubles. */
+ *   err     the error on the tropism, two doubles.
+ *   All 2*dim+2 doubles are returned in one string,
+ *   the string representation of a list of doubles. */
 
 static PyObject *py2c_numbtrop_quaddobl_retrieve_tropism
  ( PyObject *self, PyObject *args );
 /*
  * DESCRIPTION :
- *   Returns one tropisms, stored in quad double precision.
+ *   Returns one tropism, stored in quad double precision.
  *
  * ON ENTRY :
  *   dim     the length of the tropism vector;
  *   idx     the index of the tropism, indexing starts at one,
- *           and ends at nbt, what is returned by quaddobl_size.
+ *           and ends at nbt, what is returned by numbtrop_quaddobl_size.
  *
  * ON RETURN :
  *   wnd     estimated winding number;
  *   dir     coordinates of the tropisms, as many as 4*dim;
- *   err     the error on the tropism, four doubles. */
+ *   err     the error on the tropism, four doubles.
+ *   All 4*dim+4 doubles are returned in one string,
+ *   the string representation of a list of doubles.*/
 
 static PyObject *py2c_numbtrop_standard_clear
  ( PyObject *self, PyObject *args );

@@ -4238,29 +4238,78 @@ static PyObject *py2c_sweep_quaddobl_real_run
 static PyObject *py2c_numbtrop_standard_initialize
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail,nbt,dim,k;
+   char *data; /* all numbers come in one long string */
 
    initialize();
+   if(!PyArg_ParseTuple(args,"iis",&nbt,&dim,&data)) return NULL;   
+   {
+      const int lendata = nbt*(dim+2);
+      double numbers[lendata];
+      int wnd[nbt];
+      double dir[nbt*dim];
+      double err[nbt];
 
+      str2dbllist(lendata,data,numbers);
+
+      for(k=0; k<nbt; k++) wnd[k] = (int) numbers[k];
+      for(k=0; k<nbt*dim; k++) dir[k] = numbers[nbt+k];
+      for(k=0; k<nbt; k++) err[k] = numbers[nbt*(dim+1)+k];
+
+      fail = numbtrop_standard_initialize(nbt,dim,wnd,dir,err);     
+   }
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_numbtrop_dobldobl_initialize
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail,nbt,dim,k;;
+   char *data; /* all numbers come in one long string */
 
    initialize();
+   if(!PyArg_ParseTuple(args,"iis",&nbt,&dim,&data)) return NULL;   
+   {
+      const int lendata = nbt + 2*nbt*(dim+1);
+      double numbers[lendata];
+      int wnd[nbt];
+      double dir[2*nbt*dim];
+      double err[2*nbt];
 
+      str2dbllist(lendata,data,numbers);
+
+      for(k=0; k<nbt; k++) wnd[k] = (int) numbers[k];
+      for(k=0; k<2*nbt*dim; k++) dir[k] = numbers[nbt+k];
+      for(k=0; k<2*nbt; k++) err[k] = numbers[nbt+2*nbt*dim+k];
+
+      fail = numbtrop_dobldobl_initialize(nbt,dim,wnd,dir,err);     
+   }
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_numbtrop_quaddobl_initialize
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail,nbt,dim,k;
+   char *data; /* all numbers come in one long string */
 
    initialize();
+   if(!PyArg_ParseTuple(args,"iis",&nbt,&dim,&data)) return NULL;   
+   {
+      const int lendata = nbt + 4*nbt*(dim+1);
+      double numbers[lendata];
+      int wnd[nbt];
+      double dir[4*nbt*dim];
+      double err[4*nbt];
+
+      str2dbllist(lendata,data,numbers);
+
+      for(k=0; k<nbt; k++) wnd[k] = (int) numbers[k];
+      for(k=0; k<4*nbt*dim; k++) dir[k] = numbers[nbt+k];
+      for(k=0; k<4*nbt; k++) err[k] = numbers[nbt+4*nbt*dim+k];
+
+      fail = numbtrop_dobldobl_initialize(nbt,dim,wnd,dir,err);     
+   }
 
    return Py_BuildValue("i",fail);
 }
@@ -4268,30 +4317,51 @@ static PyObject *py2c_numbtrop_quaddobl_initialize
 static PyObject *py2c_numbtrop_standard_retrieve
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail,nbt,dim;
 
    initialize();
+   if(!PyArg_ParseTuple(args,"ii",&nbt,&dim)) return NULL;   
+   {
+      int wnd[nbt];
+      double dir[nbt*dim];
+      double err[nbt];
 
+      fail = numbtrop_standard_retrieve(nbt,dim,wnd,dir,err);
+   }
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_numbtrop_dobldobl_retrieve
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail,nbt,dim;
 
    initialize();
+   if(!PyArg_ParseTuple(args,"ii",&nbt,&dim)) return NULL;   
+   {
+      int wnd[nbt];
+      double dir[2*nbt*dim];
+      double err[2*nbt];
 
+      fail = numbtrop_standard_retrieve(nbt,dim,wnd,dir,err);
+   }
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_numbtrop_quaddobl_retrieve
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail,nbt,dim;
 
    initialize();
+   if(!PyArg_ParseTuple(args,"ii",&nbt,&dim)) return NULL;   
+   {
+      int wnd[nbt];
+      double dir[4*nbt*dim];
+      double err[4*nbt];
 
+      fail = numbtrop_standard_retrieve(nbt,dim,wnd,dir,err);
+   }
    return Py_BuildValue("i",fail);
 }
 
@@ -4334,30 +4404,76 @@ static PyObject *py2c_numbtrop_quaddobl_size
 static PyObject *py2c_numbtrop_store_standard_tropism
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail,dim,idx,wnd,k;
+   char *data; /* all double numbers come in one long string */
 
    initialize();
+   if(!PyArg_ParseTuple(args,"iiis",&dim,&idx,&wnd,&data)) return NULL;   
+   {
+      const int lendata = dim+1;
+      double numbers[lendata];
+      double dir[dim];
+      double err;
 
+      str2dbllist(lendata,data,numbers);
+
+      for(k=0; k<dim; k++) dir[k] = numbers[k];
+      err = numbers[dim];
+
+      fail = numbtrop_store_standard_tropism(dim,idx,wnd,dir,err);     
+   }
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_numbtrop_store_dobldobl_tropism
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail,dim,idx,wnd,k;
+   char *data; /* all double numbers come in one long string */
 
    initialize();
+   if(!PyArg_ParseTuple(args,"iiis",&dim,&idx,&wnd,&data)) return NULL;   
+   {
+      const int lendata = 2*dim+2;
+      double numbers[lendata];
+      double dir[2*dim];
+      double err[2];
 
+      str2dbllist(lendata,data,numbers);
+
+      for(k=0; k<2*dim; k++) dir[k] = numbers[k];
+      err[0] = numbers[2*dim];
+      err[1] = numbers[2*dim+1];
+
+      fail = numbtrop_store_dobldobl_tropism(dim,idx,wnd,dir,err);     
+   }
    return Py_BuildValue("i",fail);
 }
 
 static PyObject *py2c_numbtrop_store_quaddobl_tropism
  ( PyObject *self, PyObject *args )
 {
-   int fail;
+   int fail,dim,idx,wnd,k;
+   char *data; /* all double numbers come in one long string */
 
    initialize();
+   if(!PyArg_ParseTuple(args,"iiis",&dim,&idx,&wnd,&data)) return NULL;   
+   {
+      const int lendata = 4*dim+4;
+      double numbers[lendata];
+      double dir[4*dim];
+      double err[4];
 
+      str2dbllist(lendata,data,numbers);
+
+      for(k=0; k<4*dim; k++) dir[k] = numbers[k];
+      err[0] = numbers[4*dim];
+      err[1] = numbers[4*dim+1];
+      err[2] = numbers[4*dim+2];
+      err[3] = numbers[4*dim+3];
+
+      fail = numbtrop_store_dobldobl_tropism(dim,idx,wnd,dir,err);     
+   }
    return Py_BuildValue("i",fail);
 }
 
@@ -7158,6 +7274,54 @@ static PyMethodDef phcpy2c3_methods[] =
    {"py2c_sweep_quaddobl_real_run",
      py2c_sweep_quaddobl_real_run, METH_VARARGS, 
     "There are no input arguments to this routine.\n Starts a sweep with a natural parameter in a family of n equations\n in n+1 variables, where the last variable is the artificial parameter s\n that moves the one natural parameter from a start to target value.\n The last equation is of the form (1-s)*(A - v[0]) + s*(A - v[1]),\n where A is the natural parameter, going from the start value v[0]\n to the target value v[1].\n This family must be stored in the systems container in quad double\n precision and the corresponding start solutions in the quaddobl solutions\n container, where every solution has the value v[0] for the A variable.\n The sweep stops when s reaches the value v[1], or when a singularity\n is encountered on the path."},
+   {"py2c_numbtrop_standard_initialize",
+     py2c_numbtrop_standard_initialize, METH_VARARGS,
+    "Initializes the numerical tropisms container,\n in standard double precision.  The input parameters are\n nbt : number of tropisms;\n dim : length_of_each tropism;\n wnd : winding numbers, as many as nbt;\n dir : nbt*dim doubles with the coordinates of the tropisms;\n err : errors on the tropisms, as many doubles as the value of nbt.\n The numbers in wnd, dir, and err must be given in one string,\n as the string representation of a list of doubles.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_numbtrop_dobldobl_initialize",
+     py2c_numbtrop_dobldobl_initialize, METH_VARARGS,
+    "Initializes the numerical tropisms container,\n in double double precision.  The input parameters are\n nbt : number of tropisms;\n dim : length_of_each tropism;\n wnd : winding numbers, as many as nbt;\n dir : 2*nbt*dim doubles with the coordinates of the tropisms;\n err : errors on the tropisms, as many doubles as the value of 2*nbt.\n The numbers in wnd, dir, and err must be given in one string,\n as the string representation of a list of doubles.\n On return is the the failure code, which equals zero if all went well."},
+   {"py2c_numbtrop_quaddobl_initialize",
+     py2c_numbtrop_quaddobl_initialize, METH_VARARGS,
+    "Initializes the numerical tropisms container,\n in quad double precision.  The input parameters are\n nbt : number of tropisms;\n dim : length_of_each tropism;\n wnd : winding numbers, as many as nbt;\n dir : 4*nbt*dim doubles with the coordinates of the tropisms;\n err : errors on the tropisms, as many doubles as the value of 4*nbt.\n The numbers in wnd, dir, and err must be given in one string,\n as the string representation of a list of doubles.\n On return is the the failure code, which equals zero if all went well."},
+   {"py2c_numbtrop_standard_retrieve",
+     py2c_numbtrop_standard_retrieve, METH_VARARGS,
+    "Retrieves all tropisms stored in standard double precision.\n The input parameters are two integers:\n nbt : number of tropisms;\n dim : length_of_each tropism.\n On return are\n wnd : winding numbers, as many as nbt;\n dir : nbt*dim doubles with the coordinates of the tropisms;\n err : errors on the tropisms, as many doubles as the value of nbt.\n All numbers are returns in one string, as the string representation\n of a list of doubles.\n The failure code, which equals zero if all went well."},
+   {"py2c_numbtrop_dobldobl_retrieve",
+     py2c_numbtrop_dobldobl_retrieve, METH_VARARGS,
+    "Retrieves all tropisms stored in double double precision.\n The input parameters are two integers:\n nbt : number of tropisms;\n dim : length_of_each tropism.\n On return are\n wnd : winding numbers, as many as nbt;\n dir : 2*nbt*dim doubles with the coordinates of the tropisms;\n err : errors on the tropisms, as many doubles as the value of 2*nbt.\n All numbers are returns in one string, as the string representation\n of a list of doubles.\n The failure code, which equals zero if all went well."},
+   {"py2c_numbtrop_quaddobl_retrieve",
+     py2c_numbtrop_quaddobl_retrieve, METH_VARARGS,
+    "Retrieves all tropisms stored in quad double precision.\n The input parameters are two integers:\n nbt : number of tropisms;\n dim : length_of_each tropism.\n On return are\n wnd : winding numbers, as many as nbt;\n dir : 4*nbt*dim doubles with the coordinates of the tropisms;\n err : errors on the tropisms, as many doubles as the value of 4*nbt.\n All numbers are returns in one string, as the string representation\n of a list of doubles.\n The failure code, which equals zero if all went well."},
+   {"py2c_numbtrop_standard_size", py2c_numbtrop_standard_size, METH_VARARGS,
+    "Returns the number of tropisms, stored in standard double\n precision, in the numerical tropisms container."},
+   {"py2c_numbtrop_dobldobl_size", py2c_numbtrop_dobldobl_size, METH_VARARGS,
+    "Returns the number of tropisms, stored in double double\n precision, in the numerical tropisms container."},
+   {"py2c_numbtrop_quaddobl_size", py2c_numbtrop_quaddobl_size, METH_VARARGS,
+    "Returns the number of tropisms, stored in quad double\n precision, in the numerical tropisms container."},
+   {"py2c_numbtrop_store_standard_tropism",
+     py2c_numbtrop_store_standard_tropism, METH_VARARGS,
+    "Stores a tropism given in standard double precision.\n The first three input parmeters are integers:\n dim : the length of the tropism vector;\n idx : the index of the tropism, indexing starts at one,\n and ends at nbt, what is returned by standard_size;\n wnd : estimated winding number;\n The other input parameters are of type double:\n dir : coordinates of the tropisms, as many as dim;\n err : the error on the tropism.\n All dim+1 doubles are given in one string,\n the string representation of a list of doubles."},
+   {"py2c_numbtrop_store_dobldobl_tropism",
+     py2c_numbtrop_store_dobldobl_tropism, METH_VARARGS,
+    "Stores a tropism given in double double precision.\n The first three input parameters are integers:\n dim : the length of the tropism vector;\n idx : the index of the tropism, indexing starts at one,\n and ends at nbt, what is returned by dobldobl_size;\n wnd : estimated winding number;\n The other input parameters are of type double:\n dir : coordinates of the tropisms, as many as 2*dim;\n err : the error on the tropism, two doubles.\n All 2*dim+2 doubles are given in one string,\n the string representatin of a list of doubles."},
+   {"py2c_numbtrop_store_quaddobl_tropism",
+     py2c_numbtrop_store_quaddobl_tropism, METH_VARARGS,
+    "Stores a tropism given in quad double precision.\n The first three input parameters are integers:\n dim : the length of the tropism vector;\n idx : the index of the tropism, indexing starts at one,\n and ends at nbt, what is returned by quaddobl_size;\n The other input parameters are of type double:\n wnd : estimated winding number;\n dir : coordinates of the tropisms, as many as 4*dim;\n err : the error on the tropism, four double\n All 4*dim+4 doubles are given in one string,\n the string representatin of a list of doubles."},
+   {"py2c_numbtrop_standard_retrieve_tropism",
+     py2c_numbtrop_standard_retrieve_tropism, METH_VARARGS,
+    "Returns one tropism, stored in standard double precision.\n The input parameters are two integers:\n dim : the length of the tropism vector;\n idx : the index of the tropism, indexing starts at one,\n and ends at nbt, what is returned by numbtrop_standard_size.\n The first parameter on return is an integer:\n wnd : estimated winding number;\n The other output parameters are of type double:\n dir : coordinates of the tropisms, as many as dim;\n err : the error on the tropism.\n All dim+1 doubles are returned in one string,\n the string representation of a list of doubles."},
+   {"py2c_numbtrop_dobldobl_retrieve_tropism",
+     py2c_numbtrop_dobldobl_retrieve_tropism, METH_VARARGS,
+    "Returns one tropism, stored in double double precision.\n The input parameters are two integers:\n dim : the length of the tropism vector;\n idx : the index of the tropism, indexing starts at one,\n and ends at nbt, what is returned by numbtrop_dobldobl_size.\n The first parameter on return is an integer:\n wnd : estimated winding number;\n The other output parameters are of type double:\n dir : coordinates of the tropisms, as many as 2*dim;\n err : the error on the tropism, two doubles.\n All 2*dim+2 doubles are returned in one string,\n the string representation of a list of doubles."},
+   {"py2c_numbtrop_quaddobl_retrieve_tropism",
+     py2c_numbtrop_quaddobl_retrieve_tropism, METH_VARARGS,
+    "Returns one tropism, stored in quad double precision.\n The input parameters are two integers:\n dim : the length of the tropism vector;\n idx : the index of the tropism, indexing starts at one,\n and ends at nbt, what is returned by numbtrop_quaddobl_size.\n The first parameter on return is an integer:\n wnd : estimated winding number;\n The other output parameters are of type double:\n dir : coordinates of the tropisms, as many as 4*dim;\n err : the error on the tropism, four doubles.\n All 4*dim+4 doubles are returned in one string,\n the string representation of a list of doubles."},
+   {"py2c_numbtrop_standard_clear", py2c_numbtrop_standard_clear, METH_VARARGS,
+    "Deallocates the stored numerically computed tropisms,\n computed in standard double precision."},
+   {"py2c_numbtrop_dobldobl_clear", py2c_numbtrop_dobldobl_clear, METH_VARARGS,
+    "Deallocates the stored numerically computed tropisms,\n computed in double double precision."},
+   {"py2c_numbtrop_quaddobl_clear", py2c_numbtrop_quaddobl_clear, METH_VARARGS,
+    "Deallocates the stored numerically computed tropisms,\n computed in quad double precision."},
    {"py2c_embed_system", py2c_embed_system, METH_VARARGS,
     "Replaces the system in the container with its embedding of dimension d.\n The dimension d is given as the first integer parameter on input.\n The second integer parameter indicates the precision, either 0, 1, or 2,\n respectively for double, double double, or quad double precision.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_embed_standard_system", py2c_embed_standard_system, METH_VARARGS,
