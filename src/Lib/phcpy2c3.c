@@ -15,6 +15,7 @@
 #include "celcon.h"
 #include "scalers.h"
 #include "sweep.h"
+#include "numbtrop.h"
 #include "witset.h"
 #include "mapcon.h"
 #include "next_track.h"
@@ -4228,6 +4229,200 @@ static PyObject *py2c_sweep_quaddobl_real_run
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
    fail = sweep_quaddobl_real_run();
+
+   return Py_BuildValue("i",fail);
+}
+
+/* The wrapping of the numerical tropisms container starts here. */
+
+static PyObject *py2c_numbtrop_standard_initialize
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_dobldobl_initialize
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_quaddobl_initialize
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_standard_retrieve
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_dobldobl_retrieve
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_quaddobl_retrieve
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_standard_size
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbt;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_standard_size(&nbt);
+
+   return Py_BuildValue("i",nbt);
+}
+
+static PyObject *py2c_numbtrop_dobldobl_size
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbt;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_dobldobl_size(&nbt);
+
+   return Py_BuildValue("i",nbt);
+}
+
+static PyObject *py2c_numbtrop_quaddobl_size
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbt;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_quaddobl_size(&nbt);
+
+   return Py_BuildValue("i",nbt);
+}
+
+static PyObject *py2c_numbtrop_store_standard_tropism
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_store_dobldobl_tropism
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_store_quaddobl_tropism
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_standard_retrieve_tropism
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_dobldobl_retrieve_tropism
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_quaddobl_retrieve_tropism
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_standard_clear
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_standard_clear();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_dobldobl_clear
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_dobldobl_clear();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_quaddobl_clear
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_quaddobl_clear();
 
    return Py_BuildValue("i",fail);
 }

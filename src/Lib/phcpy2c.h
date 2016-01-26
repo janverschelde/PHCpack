@@ -2831,6 +2831,227 @@ static PyObject *py2c_sweep_quaddobl_real_run
  *   The sweep stops when s reaches the value v[1], or when a singularity
  *   is encountered on the path. */
 
+/* The wrapping of the numerical tropisms container starts here. */
+
+static PyObject *py2c_numbtrop_standard_initialize
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the numerical tropisms container,
+ *   in standard double precision.  The input parameters are
+ *   nbt : number of tropisms;
+ *   dim : length_of_each tropism;
+ *   wnd : winding numbers, as many as nbt;
+ *   dir : nbt*dim doubles with the coordinates of the tropisms;
+ *   err : errors on the tropisms, as many doubles as the value of nbt.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_numbtrop_dobldobl_initialize
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the numerical tropisms container,
+ *   in double double precision.  The input parameters are
+ *   nbt : number of tropisms;
+ *   dim : length_of_each tropism;
+ *   wnd : winding numbers, as many as nbt;
+ *   dir : 2*nbt*dim doubles with the coordinates of the tropisms;
+ *   err : errors on the tropisms, as many doubles as the value of 2*nbt.
+ *   On return is the the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_numbtrop_quaddobl_initialize
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Initializes the numerical tropisms container,
+ *   in quad double precision.  The input parameters are
+ *   nbt : number of tropisms;
+ *   dim : length_of_each tropism;
+ *   wnd : winding numbers, as many as nbt;
+ *   dir : 4*nbt*dim doubles with the coordinates of the tropisms;
+ *   err : errors on the tropisms, as many doubles as the value of 4*nbt.
+ *   On return is the the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_numbtrop_standard_retrieve
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Retrieves all tropisms stored in standard double precision.
+ *
+ * ON ENTRY :
+ *   nbt    number of tropisms;
+ *   dim    length_of_each tropism.
+ *
+ * ON RETURN :
+ *   wnd    winding numbers, as many as nbt;
+ *   dir    nbt*dim doubles with the coordinates of the tropisms;
+ *   err    errors on the tropisms, as many doubles as the value of nbt.
+ *   The failure code, which equals zero if all went well. */
+
+static PyObject *py2c_numbtrop_dobldobl_retrieve
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Retrieves all tropisms stored in double double precision.
+ *
+ * ON ENTRY :
+ *   nbt    number of tropisms;
+ *   dim    length_of_each tropism.
+ *
+ * ON RETURN :
+ *   wnd    winding numbers, as many as nbt;
+ *   dir    2*nbt*dim doubles with the coordinates of the tropisms;
+ *   err    errors on the tropisms, as many doubles as the value of 2*nbt.
+ *   The failure code, which equals zero if all went well. */
+
+static PyObject *py2c_numbtrop_quaddobl_retrieve
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Retrieves all tropisms stored in quad double precision.
+ *
+ * ON ENTRY :
+ *   nbt    number of tropisms;
+ *   dim    length_of_each tropism.
+ *
+ * ON RETURN :
+ *   wnd    winding numbers, as many as nbt;
+ *   dir    4*nbt*dim doubles with the coordinates of the tropisms;
+ *   err    errors on the tropisms, as many doubles as the value of 4*nbt.
+ *   The failure code, which equals zero if all went well. */
+
+static PyObject *py2c_numbtrop_standard_size
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of tropisms, stored in standard double
+ *   precision, in the numerical tropisms container. */
+
+static PyObject *py2c_numbtrop_dobldobl_size
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of tropisms, stored in double double
+ *   precision, in the numerical tropisms container. */
+
+static PyObject *py2c_numbtrop_quaddobl_size
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the number of tropisms, stored in quad double
+ *   precision, in the numerical tropisms container. */
+
+static PyObject *py2c_numbtrop_store_standard_tropism
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Stores a tropism given in standard double precision.
+ *
+ * ON ENTRY :
+ *   dim     the length of the tropism vector;
+ *   idx     the index of the tropism, indexing starts at one,
+ *           and ends at nbt, what is returned by standard_size.
+ *   wnd     estimated winding number;
+ *   dir     coordinates of the tropisms, as many as dim;
+ *   err     the error on the tropism. */
+
+static PyObject *py2c_numbtrop_store_dobldobl_tropism
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Stores a tropism given in double double precision.
+ *
+ * ON ENTRY :
+ *   dim     the length of the tropism vector;
+ *   idx     the index of the tropism, indexing starts at one,
+ *           and ends at nbt, what is returned by standard_size.
+ *   wnd     estimated winding number;
+ *   dir     coordinates of the tropisms, as many as 2*dim;
+ *   err     the error on the tropism, two doubles. */
+
+static PyObject *py2c_numbtrop_store_quaddobl_tropism
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Stores a tropism given in quad double precision.
+ *
+ * ON ENTRY :
+ *   dim     the length of the tropism vector;
+ *   idx     the index of the tropism, indexing starts at one,
+ *           and ends at nbt, what is returned by standard_size.
+ *   wnd     estimated winding number;
+ *   dir     coordinates of the tropisms, as many as 4*dim;
+ *   err     the error on the tropism, four doubles. */
+
+static PyObject *py2c_numbtrop_standard_retrieve_tropism
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns one tropisms, stored in standard double precision.
+ *
+ * ON ENTRY :
+ *   dim     the length of the tropism vector;
+ *   idx     the index of the tropism, indexing starts at one,
+ *           and ends at nbt, what is returned by standard_size.
+ *
+ * ON RETURN :
+ *   wnd     estimated winding number;
+ *   dir     coordinates of the tropisms, as many as dim;
+ *   err     the error on the tropism. */
+
+static PyObject *py2c_numbtrop_dobldobl_retrieve_tropism
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns one tropisms, stored in double double precision.
+ *
+ * ON ENTRY :
+ *   dim     the length of the tropism vector;
+ *   idx     the index of the tropism, indexing starts at one,
+ *           and ends at nbt, what is returned by dobldobl_size.
+ *
+ * ON RETURN :
+ *   wnd     estimated winding number;
+ *   dir     coordinates of the tropisms, as many as 2*dim;
+ *   err     the error on the tropism, two doubles. */
+
+static PyObject *py2c_numbtrop_quaddobl_retrieve_tropism
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns one tropisms, stored in quad double precision.
+ *
+ * ON ENTRY :
+ *   dim     the length of the tropism vector;
+ *   idx     the index of the tropism, indexing starts at one,
+ *           and ends at nbt, what is returned by quaddobl_size.
+ *
+ * ON RETURN :
+ *   wnd     estimated winding number;
+ *   dir     coordinates of the tropisms, as many as 4*dim;
+ *   err     the error on the tropism, four doubles. */
+
+static PyObject *py2c_numbtrop_standard_clear
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates the stored numerically computed tropisms,
+ *   computed in standard double precision. */
+
+static PyObject *py2c_numbtrop_dobldobl_clear
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates the stored numerically computed tropisms,
+ *   computed in double double precision. */
+
+static PyObject *py2c_numbtrop_quaddobl_clear
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Deallocates the stored numerically computed tropisms,
+ *   computed in quad double precision. */
+
 /* The wrapping of functions with prototypes in witset.h starts here. */
 
 static PyObject *py2c_embed_system
