@@ -3,7 +3,7 @@
 
 #include "numbtrop.h"
 
-int standard_initialize
+int numbtrop_standard_initialize
  ( int nbt, int dim, int *wnd, double *dir, double *err )
 {
    int fail,k;
@@ -20,7 +20,7 @@ int standard_initialize
    return fail;
 }
 
-int dobldobl_initialize
+int numbtrop_dobldobl_initialize
  ( int nbt, int dim, int *wnd, double *dir, double *err )
 {
    int fail,k;
@@ -37,7 +37,7 @@ int dobldobl_initialize
    return fail;
 }
 
-int quaddobl_initialize
+int numbtrop_quaddobl_initialize
  ( int nbt, int dim, int *wnd, double *dir, double *err )
 {
    int fail,k;
@@ -54,7 +54,7 @@ int quaddobl_initialize
    return fail;
 }
 
-int standard_retrieve
+int numbtrop_standard_retrieve
  ( int nbt, int dim, int *wnd, double *dir, double *err )
 {
    int fail,k;
@@ -72,7 +72,7 @@ int standard_retrieve
    return fail;
 }
 
-int dobldobl_retrieve
+int numbtrop_dobldobl_retrieve
  ( int nbt, int dim, int *wnd, double *dir, double *err )
 {
    int fail,k;
@@ -90,7 +90,7 @@ int dobldobl_retrieve
    return fail;
 }
 
-int quaddobl_retrieve
+int numbtrop_quaddobl_retrieve
  ( int nbt, int dim, int *wnd, double *dir, double *err )
 {
    int fail,k;
@@ -108,7 +108,7 @@ int quaddobl_retrieve
    return fail;
 }
 
-int standard_size ( int *nbt )
+int numbtrop_standard_size ( int *nbt )
 {
    int fail,*b;
    double *c;
@@ -118,7 +118,7 @@ int standard_size ( int *nbt )
    return fail;
 }
 
-int dobldobl_size ( int *nbt )
+int numbtrop_dobldobl_size ( int *nbt )
 {
    int fail,*b;
    double *c;
@@ -128,7 +128,7 @@ int dobldobl_size ( int *nbt )
    return fail;
 }
 
-int quaddobl_size ( int *nbt )
+int numbtrop_quaddobl_size ( int *nbt )
 {
    int fail,*b;
    double *c;
@@ -138,7 +138,7 @@ int quaddobl_size ( int *nbt )
    return fail;
 }
 
-int store_standard_tropism
+int numbtrop_store_standard_tropism
  ( int dim, int idx, int wnd, double *dir, double err )
 {
    int fail,k;
@@ -154,7 +154,7 @@ int store_standard_tropism
    return fail;
 }
 
-int store_dobldobl_tropism
+int numbtrop_store_dobldobl_tropism
  ( int dim, int idx, int wnd, double *dir, double *err )
 {
    int fail,k;
@@ -171,7 +171,7 @@ int store_dobldobl_tropism
    return fail;
 }
 
-int store_quaddobl_tropism
+int numbtrop_store_quaddobl_tropism
  ( int dim, int idx, int wnd, double *dir, double *err )
 {
    int fail,k;
@@ -190,7 +190,7 @@ int store_quaddobl_tropism
    return fail;
 }
 
-int standard_retrieve_tropism
+int numbtrop_standard_retrieve_tropism
  ( int dim, int idx, int *wnd, double *dir, double *err )
 {
    int fail,k;
@@ -208,7 +208,7 @@ int standard_retrieve_tropism
    return fail;
 }
 
-int dobldobl_retrieve_tropism
+int numbtrop_dobldobl_retrieve_tropism
  ( int dim, int idx, int *wnd, double *dir, double *err )
 {
    int fail,k;
@@ -227,7 +227,7 @@ int dobldobl_retrieve_tropism
    return fail;
 }
 
-int quaddobl_retrieve_tropism
+int numbtrop_quaddobl_retrieve_tropism
  ( int dim, int idx, int *wnd, double *dir, double *err )
 {
    int fail,k;
@@ -248,7 +248,7 @@ int quaddobl_retrieve_tropism
    return fail;
 }
 
-int standard_clear ( void )
+int numbtrop_standard_clear ( void )
 {
    int fail,*a,*b;
    double *c;
@@ -258,7 +258,7 @@ int standard_clear ( void )
    return fail;
 }
 
-int dobldobl_clear ( void )
+int numbtrop_dobldobl_clear ( void )
 {
    int fail,*a,*b;
    double *c;
@@ -268,7 +268,7 @@ int dobldobl_clear ( void )
    return fail;
 }
 
-int quaddobl_clear ( void )
+int numbtrop_quaddobl_clear ( void )
 {
    int fail,*a,*b;
    double *c;

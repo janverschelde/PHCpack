@@ -123,8 +123,8 @@ void standard_operate
 {
    int fail,size,k,idx,wnd;
 
-   fail = standard_initialize(nbt,dim,wind,dir,err);
-   fail = standard_size(&size);
+   fail = numbtrop_standard_initialize(nbt,dim,wind,dir,err);
+   fail = numbtrop_standard_size(&size);
    printf("The number of tropisms : %d\n",size);
 
    do
@@ -134,7 +134,7 @@ void standard_operate
 
       printf("Give an index (<= 0 to exit): "); scanf("%d",&idx);
       if(idx <= 0) break;
-      fail = standard_retrieve_tropism(dim,idx,&wnd,diridx,&erridx);
+      fail = numbtrop_standard_retrieve_tropism(dim,idx,&wnd,diridx,&erridx);
       printf("The tropism %d has winding number %d,\n",idx,wnd);
       printf("with coordinates :");
       for(k=0; k<dim; k++) printf(" %.3e",diridx[k]);
@@ -148,11 +148,11 @@ void standard_operate
       printf("with coordinates :");
       for(k=0; k<dim; k++) printf(" %.3e",diridx[k]);
       printf("\nand error : %.3e\n",erridx);
-      fail = store_standard_tropism(dim,idx,wnd,diridx,erridx);
+      fail = numbtrop_store_standard_tropism(dim,idx,wnd,diridx,erridx);
    }
    while(idx > 0);
 
-   fail = standard_clear();
+   fail = numbtrop_standard_clear();
 }
 
 void standard_test ( int nbt, int dim )
