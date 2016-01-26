@@ -143,7 +143,7 @@ int numbtrop_store_standard_tropism
  * ON ENTRY :
  *   dim     the length of the tropism vector;
  *   idx     the index of the tropism, indexing starts at one,
- *           and ends at nbt, what is returned by standard_size.
+ *           and ends at nbt, what is returned by numbtrop_standard_size.
  *   wnd     estimated winding number;
  *   dir     coordinates of the tropisms, as many as dim;
  *   err     the error on the tropism. */
@@ -157,7 +157,7 @@ int numbtrop_store_dobldobl_tropism
  * ON ENTRY :
  *   dim     the length of the tropism vector;
  *   idx     the index of the tropism, indexing starts at one,
- *           and ends at nbt, what is returned by standard_size.
+ *           and ends at nbt, what is returned by numbtrop_dobldobl_size.
  *   wnd     estimated winding number;
  *   dir     coordinates of the tropisms, as many as 2*dim;
  *   err     the error on the tropism, two doubles. */
@@ -171,7 +171,7 @@ int numbtrop_store_quaddobl_tropism
  * ON ENTRY :
  *   dim     the length of the tropism vector;
  *   idx     the index of the tropism, indexing starts at one,
- *           and ends at nbt, what is returned by standard_size.
+ *           and ends at nbt, what is returned by numbtrop_quaddobl_size.
  *   wnd     estimated winding number;
  *   dir     coordinates of the tropisms, as many as 4*dim;
  *   err     the error on the tropism, four doubles. */
@@ -185,7 +185,7 @@ int numbtrop_standard_retrieve_tropism
  * ON ENTRY :
  *   dim     the length of the tropism vector;
  *   idx     the index of the tropism, indexing starts at one,
- *           and ends at nbt, what is returned by standard_size.
+ *           and ends at nbt, what is returned by numbtrop_standard_size.
  *
  * ON RETURN :
  *   wnd     estimated winding number;
@@ -201,7 +201,7 @@ int numbtrop_dobldobl_retrieve_tropism
  * ON ENTRY :
  *   dim     the length of the tropism vector;
  *   idx     the index of the tropism, indexing starts at one,
- *           and ends at nbt, what is returned by dobldobl_size.
+ *           and ends at nbt, what is returned by numbtrop_dobldobl_size.
  *
  * ON RETURN :
  *   wnd     estimated winding number;
@@ -217,7 +217,7 @@ int numbtrop_quaddobl_retrieve_tropism
  * ON ENTRY :
  *   dim     the length of the tropism vector;
  *   idx     the index of the tropism, indexing starts at one,
- *           and ends at nbt, what is returned by quaddobl_size.
+ *           and ends at nbt, what is returned by numbtrop_quaddobl_size.
  *
  * ON RETURN :
  *   wnd     estimated winding number;

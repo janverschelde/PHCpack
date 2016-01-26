@@ -1,3 +1,5 @@
+Tue 26 Jan 2016 : clarified the documentation in numbtrop.h.
+
 Mon 25 Jan 2016 : added double double and quad double versions of the
   wrappers to numbtrop.h and numbtrop.c.  Inserted the numbtrop_ prefix
   to all functions in numbtrop.h and numbtrop.c, also changing lib_numbtrop.c.
