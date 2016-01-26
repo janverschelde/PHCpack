@@ -2234,6 +2234,14 @@ lib_giftwrap_cpp:
 	gnatlink -C use_c2phc giftwrappers.o lib_giftwrap.o \
                  -o $(BIN)/lib_giftwrap -lm --LINK=g++
 
+lib_numbtrop:
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gcc -c $(PHCLib)/numbtrop.c
+	gcc -c $(PHCLib)/lib_numbtrop.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc numbtrop.o lib_numbtrop.o \
+                 -o $(BIN)/lib_numbtrop -lm
+
 adepath_d.o: adenewton_d.o adeonepath_d.o ademanypaths_d.o
 	g++ -O2 -Dcompilewgpp=1 -I$(PHCAda)/PHCtoC \
             -I$(PHCgpu)/Path/DefineTypesD -I$(PHCgpu)/Path/Poly \
@@ -2365,6 +2373,7 @@ phcpy2c3.so:
 	gcc -c -O2 $(PHCLib)/celcon.c
 	gcc -c -O2 $(PHCLib)/scalers.c
 	gcc -c -O2 $(PHCLib)/sweep.c
+	gcc -c -O2 $(PHCLib)/numbtrop.c
 	gcc -c -O2 $(PHCLib)/witset.c
 	gcc -c -O2 $(PHCLib)/schubert.c
 	gcc -c -O2 $(PHCLib)/unisolvers.c
@@ -2379,7 +2388,7 @@ phcpy2c3.so:
 	gnatlink -dynamiclib -C use_c2phc phcpy2c3.o phcpack.o syscon.o \
             witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
             solcon.o product.o lists_and_strings.o celcon.o scalers.o \
-            sweep.o schubert.o \
+            sweep.o numbtrop.o schubert.o \
                  -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
                  $(PYTHON3lib)/libpython3.5m.dylib
 
