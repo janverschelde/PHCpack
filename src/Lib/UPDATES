@@ -1,3 +1,6 @@
+Thu 28 Jan 2016 : completed code for all numbtrop_ function in phcpy2c3.c
+  and copied to the phcpy2c2.c for the python2 extension module.
+
 Wed 27 Jan 2016 : more wrappers for numbtrop_ functions defined in phcpy2c3.c.
 
 Tue 26 Jan 2016 : clarified the documentation in numbtrop.h.

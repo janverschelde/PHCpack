@@ -13,6 +13,7 @@
 #include "lists_and_strings.h"
 #include "celcon.h"
 #include "scalers.h"
+#include "numbtrop.h"
 #include "sweep.h"
 #include "witset.h"
 #include "mapcon.h"
@@ -4227,6 +4228,388 @@ static PyObject *py2c_sweep_quaddobl_real_run
    initialize();
    if(!PyArg_ParseTuple(args,"")) return NULL;
    fail = sweep_quaddobl_real_run();
+
+   return Py_BuildValue("i",fail);
+}
+
+/* The wrapping of the numerical tropisms container starts here. */
+
+static PyObject *py2c_numbtrop_standard_initialize
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbt,dim,k;
+   char *data; /* all numbers come in one long string */
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iis",&nbt,&dim,&data)) return NULL;   
+   {
+      const int lendata = nbt*(dim+2);
+      double numbers[lendata];
+      int wnd[nbt];
+      double dir[nbt*dim];
+      double err[nbt];
+
+      str2dbllist(lendata,data,numbers);
+
+      for(k=0; k<nbt; k++) wnd[k] = (int) numbers[k];
+      for(k=0; k<nbt*dim; k++) dir[k] = numbers[nbt+k];
+      for(k=0; k<nbt; k++) err[k] = numbers[nbt*(dim+1)+k];
+
+      fail = numbtrop_standard_initialize(nbt,dim,wnd,dir,err);     
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_dobldobl_initialize
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbt,dim,k;;
+   char *data; /* all numbers come in one long string */
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iis",&nbt,&dim,&data)) return NULL;   
+   {
+      const int lendata = nbt + 2*nbt*(dim+1);
+      double numbers[lendata];
+      int wnd[nbt];
+      double dir[2*nbt*dim];
+      double err[2*nbt];
+
+      str2dbllist(lendata,data,numbers);
+
+      for(k=0; k<nbt; k++) wnd[k] = (int) numbers[k];
+      for(k=0; k<2*nbt*dim; k++) dir[k] = numbers[nbt+k];
+      for(k=0; k<2*nbt; k++) err[k] = numbers[nbt+2*nbt*dim+k];
+
+      fail = numbtrop_dobldobl_initialize(nbt,dim,wnd,dir,err);     
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_quaddobl_initialize
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbt,dim,k;
+   char *data; /* all numbers come in one long string */
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iis",&nbt,&dim,&data)) return NULL;   
+   {
+      const int lendata = nbt + 4*nbt*(dim+1);
+      double numbers[lendata];
+      int wnd[nbt];
+      double dir[4*nbt*dim];
+      double err[4*nbt];
+
+      str2dbllist(lendata,data,numbers);
+
+      for(k=0; k<nbt; k++) wnd[k] = (int) numbers[k];
+      for(k=0; k<4*nbt*dim; k++) dir[k] = numbers[nbt+k];
+      for(k=0; k<4*nbt; k++) err[k] = numbers[nbt+4*nbt*dim+k];
+
+      fail = numbtrop_dobldobl_initialize(nbt,dim,wnd,dir,err);     
+   }
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_standard_retrieve
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbt,dim,k,nbc;
+   char *fltlist;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&nbt,&dim)) return NULL;   
+   {
+      int wnd[nbt];
+      double dir[nbt*dim];
+      double err[nbt];
+      double data[nbt*(dim+2)];
+
+      fail = numbtrop_standard_retrieve(nbt,dim,wnd,dir,err);
+
+      for(k=0; k<nbt; k++) data[k] = (double) wnd[k];
+      for(k=0; k<nbt*dim; k++) data[nbt+k] = dir[k];
+      for(k=0; k<nbt; k++) data[nbt*(dim+1)+k] = err[k];
+
+      fltlist = (char*)calloc(24*nbt*(dim+2), sizeof(char));
+      nbc = dbllist2str(nbt*(dim+2),data,fltlist);
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_dobldobl_retrieve
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbt,dim,k,nbc;
+   char *fltlist;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&nbt,&dim)) return NULL;   
+   {
+      int wnd[nbt];
+      double dir[2*nbt*dim];
+      double err[2*nbt];
+      const int lendata = nbt+2*nbt*(dim+1);
+      double data[lendata];
+
+      fail = numbtrop_standard_retrieve(nbt,dim,wnd,dir,err);
+
+      for(k=0; k<nbt; k++) data[k] = (double) wnd[k];
+      for(k=0; k<2*nbt*dim; k++) data[nbt+k] = dir[k];
+      for(k=0; k<2*nbt; k++) data[nbt+2*nbt*dim+k] = err[k];
+
+      fltlist = (char*)calloc(48*nbt*(dim+2), sizeof(char));
+      nbc = dbllist2str(lendata,data,fltlist);
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_quaddobl_retrieve
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbt,dim,k,nbc;
+   char *fltlist;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&nbt,&dim)) return NULL;   
+   {
+      int wnd[nbt];
+      double dir[4*nbt*dim];
+      double err[4*nbt];
+      const int lendata = nbt+4*nbt*(dim+1);
+      double data[lendata];
+
+      fail = numbtrop_standard_retrieve(nbt,dim,wnd,dir,err);
+
+      for(k=0; k<nbt; k++) data[k] = (double) wnd[k];
+      for(k=0; k<4*nbt*dim; k++) data[nbt+k] = dir[k];
+      for(k=0; k<4*nbt; k++) data[nbt+4*nbt*dim+k] = err[k];
+
+      fltlist = (char*)calloc(72*nbt*(dim+2), sizeof(char));
+      nbc = dbllist2str(lendata,data,fltlist);
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_standard_size
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbt;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_standard_size(&nbt);
+
+   return Py_BuildValue("i",nbt);
+}
+
+static PyObject *py2c_numbtrop_dobldobl_size
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbt;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_dobldobl_size(&nbt);
+
+   return Py_BuildValue("i",nbt);
+}
+
+static PyObject *py2c_numbtrop_quaddobl_size
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbt;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_quaddobl_size(&nbt);
+
+   return Py_BuildValue("i",nbt);
+}
+
+static PyObject *py2c_numbtrop_store_standard_tropism
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim,idx,wnd,k;
+   char *data; /* all double numbers come in one long string */
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiis",&dim,&idx,&wnd,&data)) return NULL;   
+   {
+      const int lendata = dim+1;
+      double numbers[lendata];
+      double dir[dim];
+      double err;
+
+      str2dbllist(lendata,data,numbers);
+
+      for(k=0; k<dim; k++) dir[k] = numbers[k];
+      err = numbers[dim];
+
+      fail = numbtrop_store_standard_tropism(dim,idx,wnd,dir,err);     
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_store_dobldobl_tropism
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim,idx,wnd,k;
+   char *data; /* all double numbers come in one long string */
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiis",&dim,&idx,&wnd,&data)) return NULL;   
+   {
+      const int lendata = 2*dim+2;
+      double numbers[lendata];
+      double dir[2*dim];
+      double err[2];
+
+      str2dbllist(lendata,data,numbers);
+
+      for(k=0; k<2*dim; k++) dir[k] = numbers[k];
+      err[0] = numbers[2*dim];
+      err[1] = numbers[2*dim+1];
+
+      fail = numbtrop_store_dobldobl_tropism(dim,idx,wnd,dir,err);     
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_store_quaddobl_tropism
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim,idx,wnd,k;
+   char *data; /* all double numbers come in one long string */
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"iiis",&dim,&idx,&wnd,&data)) return NULL;   
+   {
+      const int lendata = 4*dim+4;
+      double numbers[lendata];
+      double dir[4*dim];
+      double err[4];
+
+      str2dbllist(lendata,data,numbers);
+
+      for(k=0; k<4*dim; k++) dir[k] = numbers[k];
+      err[0] = numbers[4*dim];
+      err[1] = numbers[4*dim+1];
+      err[2] = numbers[4*dim+2];
+      err[3] = numbers[4*dim+3];
+
+      fail = numbtrop_store_dobldobl_tropism(dim,idx,wnd,dir,err);     
+   }
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_standard_retrieve_tropism
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim,idx,wnd,k,nbc;
+   char *fltlist;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&dim,&idx)) return NULL;   
+   {
+      double dir[dim];
+      double err;
+      double direrr[dim+1];
+
+      fail = numbtrop_standard_retrieve_tropism(dim,idx,&wnd,dir,&err);
+
+      fltlist = (char*)calloc(24*(dim+1), sizeof(char));
+      for(k=0; k<dim; k++) direrr[k] = dir[k];
+      direrr[dim] = err;
+      nbc = dbllist2str(dim+1,direrr,fltlist);
+   }
+   return Py_BuildValue("(i,i,s)",fail,wnd,fltlist);
+}
+
+static PyObject *py2c_numbtrop_dobldobl_retrieve_tropism
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim,idx,wnd,k,nbc;
+   char *fltlist;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&dim,&idx)) return NULL;   
+   {
+      double dir[2*dim];
+      double err[2];
+      double direrr[2*dim+2];
+
+      fail = numbtrop_dobldobl_retrieve_tropism(dim,idx,&wnd,dir,err);
+
+      fltlist = (char*)calloc(48*(dim+1), sizeof(char));
+      for(k=0; k<2*dim; k++) direrr[k] = dir[k];
+      direrr[2*dim] = err[0];
+      direrr[2*dim+1] = err[1];
+      nbc = dbllist2str(2*dim+2,direrr,fltlist);
+   }
+   return Py_BuildValue("(i,i,s)",fail,wnd,fltlist);
+}
+
+static PyObject *py2c_numbtrop_quaddobl_retrieve_tropism
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim,idx,wnd,k,nbc;
+   char *fltlist;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"ii",&dim,&idx)) return NULL;   
+   {
+      double dir[4*dim];
+      double err[4];
+      double direrr[4*dim+4];
+
+      fail = numbtrop_quaddobl_retrieve_tropism(dim,idx,&wnd,dir,err);
+
+      fltlist = (char*)calloc(72*(dim+1), sizeof(char));
+      for(k=0; k<4*dim; k++) direrr[k] = dir[k];
+      direrr[4*dim] = err[0];
+      direrr[4*dim+1] = err[1];
+      direrr[4*dim+2] = err[2];
+      direrr[4*dim+3] = err[3];
+      nbc = dbllist2str(4*dim+4,direrr,fltlist);
+   }
+   return Py_BuildValue("(i,i,s)",fail,wnd,fltlist);
+}
+
+static PyObject *py2c_numbtrop_standard_clear
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_standard_clear();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_dobldobl_clear
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_dobldobl_clear();
+
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_numbtrop_quaddobl_clear
+ ( PyObject *self, PyObject *args )
+{
+   int fail;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_quaddobl_clear();
 
    return Py_BuildValue("i",fail);
 }

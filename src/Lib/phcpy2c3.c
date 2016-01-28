@@ -4317,7 +4317,7 @@ static PyObject *py2c_numbtrop_quaddobl_initialize
 static PyObject *py2c_numbtrop_standard_retrieve
  ( PyObject *self, PyObject *args )
 {
-   int fail,nbt,dim,k;
+   int fail,nbt,dim,k,nbc;
    char *fltlist;
 
    initialize();
@@ -4331,6 +4331,11 @@ static PyObject *py2c_numbtrop_standard_retrieve
       fail = numbtrop_standard_retrieve(nbt,dim,wnd,dir,err);
 
       for(k=0; k<nbt; k++) data[k] = (double) wnd[k];
+      for(k=0; k<nbt*dim; k++) data[nbt+k] = dir[k];
+      for(k=0; k<nbt; k++) data[nbt*(dim+1)+k] = err[k];
+
+      fltlist = (char*)calloc(24*nbt*(dim+2), sizeof(char));
+      nbc = dbllist2str(nbt*(dim+2),data,fltlist);
    }
    return Py_BuildValue("i",fail);
 }
@@ -4338,7 +4343,8 @@ static PyObject *py2c_numbtrop_standard_retrieve
 static PyObject *py2c_numbtrop_dobldobl_retrieve
  ( PyObject *self, PyObject *args )
 {
-   int fail,nbt,dim;
+   int fail,nbt,dim,k,nbc;
+   char *fltlist;
 
    initialize();
    if(!PyArg_ParseTuple(args,"ii",&nbt,&dim)) return NULL;   
@@ -4346,8 +4352,17 @@ static PyObject *py2c_numbtrop_dobldobl_retrieve
       int wnd[nbt];
       double dir[2*nbt*dim];
       double err[2*nbt];
+      const int lendata = nbt+2*nbt*(dim+1);
+      double data[lendata];
 
       fail = numbtrop_standard_retrieve(nbt,dim,wnd,dir,err);
+
+      for(k=0; k<nbt; k++) data[k] = (double) wnd[k];
+      for(k=0; k<2*nbt*dim; k++) data[nbt+k] = dir[k];
+      for(k=0; k<2*nbt; k++) data[nbt+2*nbt*dim+k] = err[k];
+
+      fltlist = (char*)calloc(48*nbt*(dim+2), sizeof(char));
+      nbc = dbllist2str(lendata,data,fltlist);
    }
    return Py_BuildValue("i",fail);
 }
@@ -4355,7 +4370,8 @@ static PyObject *py2c_numbtrop_dobldobl_retrieve
 static PyObject *py2c_numbtrop_quaddobl_retrieve
  ( PyObject *self, PyObject *args )
 {
-   int fail,nbt,dim;
+   int fail,nbt,dim,k,nbc;
+   char *fltlist;
 
    initialize();
    if(!PyArg_ParseTuple(args,"ii",&nbt,&dim)) return NULL;   
@@ -4363,8 +4379,17 @@ static PyObject *py2c_numbtrop_quaddobl_retrieve
       int wnd[nbt];
       double dir[4*nbt*dim];
       double err[4*nbt];
+      const int lendata = nbt+4*nbt*(dim+1);
+      double data[lendata];
 
       fail = numbtrop_standard_retrieve(nbt,dim,wnd,dir,err);
+
+      for(k=0; k<nbt; k++) data[k] = (double) wnd[k];
+      for(k=0; k<4*nbt*dim; k++) data[nbt+k] = dir[k];
+      for(k=0; k<4*nbt; k++) data[nbt+4*nbt*dim+k] = err[k];
+
+      fltlist = (char*)calloc(72*nbt*(dim+2), sizeof(char));
+      nbc = dbllist2str(lendata,data,fltlist);
    }
    return Py_BuildValue("i",fail);
 }
@@ -4496,7 +4521,7 @@ static PyObject *py2c_numbtrop_standard_retrieve_tropism
 
       fail = numbtrop_standard_retrieve_tropism(dim,idx,&wnd,dir,&err);
 
-      fltlist = (char*)calloc(20*(dim+1), sizeof(char));
+      fltlist = (char*)calloc(24*(dim+1), sizeof(char));
       for(k=0; k<dim; k++) direrr[k] = dir[k];
       direrr[dim] = err;
       nbc = dbllist2str(dim+1,direrr,fltlist);
@@ -4519,7 +4544,7 @@ static PyObject *py2c_numbtrop_dobldobl_retrieve_tropism
 
       fail = numbtrop_dobldobl_retrieve_tropism(dim,idx,&wnd,dir,err);
 
-      fltlist = (char*)calloc(40*(dim+1), sizeof(char));
+      fltlist = (char*)calloc(48*(dim+1), sizeof(char));
       for(k=0; k<2*dim; k++) direrr[k] = dir[k];
       direrr[2*dim] = err[0];
       direrr[2*dim+1] = err[1];
@@ -4543,7 +4568,7 @@ static PyObject *py2c_numbtrop_quaddobl_retrieve_tropism
 
       fail = numbtrop_quaddobl_retrieve_tropism(dim,idx,&wnd,dir,err);
 
-      fltlist = (char*)calloc(80*(dim+1), sizeof(char));
+      fltlist = (char*)calloc(72*(dim+1), sizeof(char));
       for(k=0; k<4*dim; k++) direrr[k] = dir[k];
       direrr[4*dim] = err[0];
       direrr[4*dim+1] = err[1];
