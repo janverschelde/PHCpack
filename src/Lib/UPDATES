@@ -1,3 +1,6 @@
+Fri 29 Jan 2016 : forgot to return the data with strings in the retrieval
+  of all data in numbtrop, fixed this in phcpy2c3.c and in phcpy2c2.c.
+
 Thu 28 Jan 2016 : completed code for all numbtrop_ function in phcpy2c3.c
   and copied to the phcpy2c2.c for the python2 extension module.
 

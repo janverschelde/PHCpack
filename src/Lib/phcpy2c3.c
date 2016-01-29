@@ -4337,7 +4337,7 @@ static PyObject *py2c_numbtrop_standard_retrieve
       fltlist = (char*)calloc(24*nbt*(dim+2), sizeof(char));
       nbc = dbllist2str(nbt*(dim+2),data,fltlist);
    }
-   return Py_BuildValue("i",fail);
+   return Py_BuildValue("(i, s)", fail, fltlist);
 }
 
 static PyObject *py2c_numbtrop_dobldobl_retrieve
@@ -4364,7 +4364,7 @@ static PyObject *py2c_numbtrop_dobldobl_retrieve
       fltlist = (char*)calloc(48*nbt*(dim+2), sizeof(char));
       nbc = dbllist2str(lendata,data,fltlist);
    }
-   return Py_BuildValue("i",fail);
+   return Py_BuildValue("(i, s)", fail, fltlist);
 }
 
 static PyObject *py2c_numbtrop_quaddobl_retrieve
@@ -4391,7 +4391,7 @@ static PyObject *py2c_numbtrop_quaddobl_retrieve
       fltlist = (char*)calloc(72*nbt*(dim+2), sizeof(char));
       nbc = dbllist2str(lendata,data,fltlist);
    }
-   return Py_BuildValue("i",fail);
+   return Py_BuildValue("(i, s)", fail, fltlist);
 }
 
 static PyObject *py2c_numbtrop_standard_size
