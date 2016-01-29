@@ -2410,7 +2410,7 @@ function use_c2phc ( job : integer32;
       when 702 => return Job702; -- dobldobl poly system blackbox solver
       when 703 => return Job703; -- dobldobl Laurent poly blackbox solver
      -- container for numerically computed tropisms
-      when 711..728 => return use_numbtrop(job-710,a,b,c);
+      when 711..731 => return use_numbtrop(job-710,a,b,c);
      -- getting, setting the seed and the version string
       when 997 => return Get_Seed;
       when 998 => return Set_Seed;

@@ -152,6 +152,42 @@ package body Numerical_Tropisms_Container is
     end if;
   end QuadDobl_Size;
 
+  function Standard_Dimension return integer32 is
+
+    use Standard_Floating_Vectors;
+    use Standard_Floating_VecVecs;
+
+  begin
+    if st_dir = null
+     then return 0;
+     else return st_dir(st_dir'first)'last;
+    end if;
+  end Standard_Dimension;
+
+  function DoblDobl_Dimension return integer32 is
+
+    use Double_Double_Vectors;
+    use Double_Double_VecVecs;
+
+  begin
+    if dd_dir = null
+     then return 0;
+     else return dd_dir(dd_dir'first)'last;
+    end if;
+  end DoblDobl_Dimension;
+
+  function QuadDobl_Dimension return integer32 is
+
+    use Quad_Double_Vectors;
+    use Quad_Double_VecVecs;
+
+  begin
+    if qd_dir = null
+     then return 0;
+     else return qd_dir(qd_dir'first)'last;
+    end if;
+  end QuadDobl_Dimension;
+
   procedure Standard_Retrieve_Tropism
               ( k : in integer32; w : out integer32;
                 v : out Standard_Floating_Vectors.Vector;

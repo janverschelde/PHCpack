@@ -1,3 +1,7 @@
+Fri 29 Jan 2016 : to the numerical_tropisms_container, added functions that
+  return the dimension of the tropisms, added three jobs to use_numbtrop,
+  and to use_c2phc as well.
+
 Sat 23 Jan 2016 : fixed bug in the dimension calculation in use_numbtrop.adb
   and improved the documentation in use_numbtrop.ads and use_c2phc.ads.
 

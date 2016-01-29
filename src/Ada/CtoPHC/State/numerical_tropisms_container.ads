@@ -111,6 +111,15 @@ package Numerical_Tropisms_Container is
   --   double double, or quad double precision.
   --   Returns 0 if the data structures are cleared or not initialized.
 
+  function Standard_Dimension return integer32;
+  function DoblDobl_Dimension return integer32;
+  function QuadDobl_Dimension return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the length of the numerical tropisms in standard double,
+  --   double double, or quad double precision.
+  --   Returns 0 if the data structures are cleared or not initialized.
+
   procedure Standard_Retrieve_Tropism
               ( k : in integer32; w : out integer32;
                 v : out Standard_Floating_Vectors.Vector;

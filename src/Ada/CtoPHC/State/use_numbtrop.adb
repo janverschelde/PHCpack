@@ -376,6 +376,33 @@ function use_numbtrop ( job : integer32;
     return 0;
   end Job12;
 
+  function Job19 return integer32 is -- dimension of standard tropisms
+
+    n : constant integer32 := Numerical_Tropisms_Container.Standard_Dimension;
+
+  begin
+    Assign(n,a);
+    return 0;
+  end Job19;
+
+  function Job20 return integer32 is -- dimension of dobldobl tropisms
+
+    n : constant integer32 := Numerical_Tropisms_Container.DoblDobl_Dimension;
+
+  begin
+    Assign(n,a);
+    return 0;
+  end Job20;
+
+  function Job21 return integer32 is -- dimension of quaddobl tropisms
+
+    n : constant integer32 := Numerical_Tropisms_Container.QuadDobl_Dimension;
+
+  begin
+    Assign(n,a);
+    return 0;
+  end Job21;
+
   function Job13 return integer32 is -- standard retrieve tropism
 
     use Interfaces.C;
@@ -487,6 +514,9 @@ function use_numbtrop ( job : integer32;
       when 16 => return Job16; -- standard clear
       when 17 => return Job17; -- dobldobl clear
       when 18 => return Job18; -- quaddobl clear
+      when 19 => return Job19; -- dimension of standard double tropisms
+      when 20 => return Job20; -- dimension of double double tropisms
+      when 21 => return Job21; -- dimension of quad double tropisms
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   exception

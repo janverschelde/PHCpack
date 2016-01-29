@@ -2017,7 +2017,13 @@ function use_c2phc ( job : integer32;
 --                 coordinates of the tropism and the error,
 --           726 : clear all tropisms in standard double precision;
 --           727 : clear all tropisms in double double precision;
---           728 : clear all tropisms in quad double precision.
+--           728 : clear all tropisms in quad double precision;
+--           729 : the length of the tropisms in standard double precision
+--                 is returned in a;
+--           730 : the length of the tropisms in double double precision
+--                 is returned in a;
+--           731 : the length of the tropisms in quad double precision
+--                 is returned in a.
 --
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,

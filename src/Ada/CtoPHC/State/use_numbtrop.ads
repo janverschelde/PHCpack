@@ -72,7 +72,7 @@ function use_numbtrop ( job : integer32;
 --                 is returned in a;
 --            11 : the number of tropisms in double double precision
 --                 is returned in a;
---            12 : number of tropisms in quad double precision
+--            12 : the number of tropisms in quad double precision
 --                 is returned in a;
 --            13 : retrieve one tropism in standard double precision,
 --                 on input in a[0] is the length of the tropism, and
@@ -94,7 +94,13 @@ function use_numbtrop ( job : integer32;
 --                 coordinates of the tropism and the error,
 --            16 : clear all tropisms in standard double precision;
 --            17 : clear all tropisms in double double precision;
---            18 : clear all tropisms in quad double precision.
+--            18 : clear all tropisms in quad double precision;
+--            19 : the length of the tropisms in standard double precision
+--                 is returned in a;
+--            20 : the length of the tropisms in double double precision
+--                 is returned in a;
+--            21 : the length of the tropisms in quad double precision
+--                 is returned in a.
 
 -- ON RETURN :
 --   0 if the operation was successful, otherwise something went wrong,
