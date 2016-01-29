@@ -4,6 +4,7 @@
 #include <Python.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "phcpack.h"
 #include "unisolvers.h"
 #include "giftwrappers.h"
@@ -4334,8 +4335,15 @@ static PyObject *py2c_numbtrop_standard_retrieve
       for(k=0; k<nbt*dim; k++) data[nbt+k] = dir[k];
       for(k=0; k<nbt; k++) data[nbt*(dim+1)+k] = err[k];
 
-      fltlist = (char*)calloc(24*nbt*(dim+2), sizeof(char));
+      /* printf("data = \n");
+      for(k=0; k<nbt*(dim+2); k++) printf(" %.14e",data[k]); */
+
+      fltlist = (char*)calloc(25*nbt*(dim+2), sizeof(char));
       nbc = dbllist2str(nbt*(dim+2),data,fltlist);
+      /* printf("\nnbc = %d\n", nbc);
+      printf("25*nbt*(dim+2) = %d\n", 25*nbt*(dim+2));
+      printf("len(fltlist) = %lu\n", strlen(fltlist));
+      printf("\nfltlist = %s\n",fltlist); */
    }
    return Py_BuildValue("(i, s)", fail, fltlist);
 }
@@ -4361,7 +4369,7 @@ static PyObject *py2c_numbtrop_dobldobl_retrieve
       for(k=0; k<2*nbt*dim; k++) data[nbt+k] = dir[k];
       for(k=0; k<2*nbt; k++) data[nbt+2*nbt*dim+k] = err[k];
 
-      fltlist = (char*)calloc(48*nbt*(dim+2), sizeof(char));
+      fltlist = (char*)calloc(50*nbt*(dim+2), sizeof(char));
       nbc = dbllist2str(lendata,data,fltlist);
    }
    return Py_BuildValue("(i, s)", fail, fltlist);
@@ -4388,7 +4396,7 @@ static PyObject *py2c_numbtrop_quaddobl_retrieve
       for(k=0; k<4*nbt*dim; k++) data[nbt+k] = dir[k];
       for(k=0; k<4*nbt; k++) data[nbt+4*nbt*dim+k] = err[k];
 
-      fltlist = (char*)calloc(72*nbt*(dim+2), sizeof(char));
+      fltlist = (char*)calloc(75*nbt*(dim+2), sizeof(char));
       nbc = dbllist2str(lendata,data,fltlist);
    }
    return Py_BuildValue("(i, s)", fail, fltlist);
@@ -4428,6 +4436,43 @@ static PyObject *py2c_numbtrop_quaddobl_size
    fail = numbtrop_quaddobl_size(&nbt);
 
    return Py_BuildValue("i",nbt);
+}
+
+
+static PyObject *py2c_numbtrop_standard_dimension
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_standard_dimension(&dim);
+
+   return Py_BuildValue("i",dim);
+}
+
+static PyObject *py2c_numbtrop_dobldobl_dimension
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_dobldobl_dimension(&dim);
+
+   return Py_BuildValue("i",dim);
+}
+
+static PyObject *py2c_numbtrop_quaddobl_dimension
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_quaddobl_dimension(&dim);
+
+   return Py_BuildValue("i",dim);
 }
 
 static PyObject *py2c_numbtrop_store_standard_tropism
@@ -4521,7 +4566,7 @@ static PyObject *py2c_numbtrop_standard_retrieve_tropism
 
       fail = numbtrop_standard_retrieve_tropism(dim,idx,&wnd,dir,&err);
 
-      fltlist = (char*)calloc(24*(dim+1), sizeof(char));
+      fltlist = (char*)calloc(25*(dim+1), sizeof(char));
       for(k=0; k<dim; k++) direrr[k] = dir[k];
       direrr[dim] = err;
       nbc = dbllist2str(dim+1,direrr,fltlist);
@@ -4544,7 +4589,7 @@ static PyObject *py2c_numbtrop_dobldobl_retrieve_tropism
 
       fail = numbtrop_dobldobl_retrieve_tropism(dim,idx,&wnd,dir,err);
 
-      fltlist = (char*)calloc(48*(dim+1), sizeof(char));
+      fltlist = (char*)calloc(50*(dim+1), sizeof(char));
       for(k=0; k<2*dim; k++) direrr[k] = dir[k];
       direrr[2*dim] = err[0];
       direrr[2*dim+1] = err[1];
@@ -4568,7 +4613,7 @@ static PyObject *py2c_numbtrop_quaddobl_retrieve_tropism
 
       fail = numbtrop_quaddobl_retrieve_tropism(dim,idx,&wnd,dir,err);
 
-      fltlist = (char*)calloc(72*(dim+1), sizeof(char));
+      fltlist = (char*)calloc(75*(dim+1), sizeof(char));
       for(k=0; k<4*dim; k++) direrr[k] = dir[k];
       direrr[4*dim] = err[0];
       direrr[4*dim+1] = err[1];

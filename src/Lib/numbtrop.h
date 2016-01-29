@@ -134,6 +134,24 @@ int numbtrop_quaddobl_size ( int *nbt );
  *   Returns in nbt the number of tropisms, stored in quad double
  *   precision, in the numerical tropisms container. */
 
+int numbtrop_standard_dimension ( int *dim );
+/*
+ * DESCRIPTION :
+ *   Returns in dim the dimension of the tropisms, stored in standard double
+ *   precision, in the numerical tropisms container. */
+
+int numbtrop_dobldobl_dimension ( int *dim );
+/*
+ * DESCRIPTION :
+ *   Returns in dim the dimension of the tropisms, stored in double double
+ *   precision, in the numerical tropisms container. */
+
+int numbtrop_quaddobl_dimension ( int *dim );
+/*
+ * DESCRIPTION :
+ *   Returns in dim the dimension of the tropisms, stored in quad double
+ *   precision, in the numerical tropisms container. */
+
 int numbtrop_store_standard_tropism
  ( int dim, int idx, int wnd, double *dir, double err );
 /*

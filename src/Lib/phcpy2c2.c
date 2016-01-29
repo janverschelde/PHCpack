@@ -4429,6 +4429,42 @@ static PyObject *py2c_numbtrop_quaddobl_size
    return Py_BuildValue("i",nbt);
 }
 
+static PyObject *py2c_numbtrop_standard_dimension
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_standard_dimension(&dim);
+
+   return Py_BuildValue("i",dim);
+}
+
+static PyObject *py2c_numbtrop_dobldobl_dimension
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_dobldobl_dimension(&dim);
+
+   return Py_BuildValue("i",dim);
+}
+
+static PyObject *py2c_numbtrop_quaddobl_dimension
+ ( PyObject *self, PyObject *args )
+{
+   int fail,dim;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;
+   fail = numbtrop_quaddobl_dimension(&dim);
+
+   return Py_BuildValue("i",dim);
+}
+
 static PyObject *py2c_numbtrop_store_standard_tropism
  ( PyObject *self, PyObject *args )
 {

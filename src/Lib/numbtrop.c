@@ -138,6 +138,36 @@ int numbtrop_quaddobl_size ( int *nbt )
    return fail;
 }
 
+int numbtrop_standard_dimension ( int *dim )
+{
+   int fail,*b;
+   double *c;
+
+   fail = _ada_use_c2phc(729,dim,b,c);
+
+   return fail;
+}
+
+int numbtrop_dobldobl_dimension ( int *dim )
+{
+   int fail,*b;
+   double *c;
+
+   fail = _ada_use_c2phc(730,dim,b,c);
+
+   return fail;
+}
+
+int numbtrop_quaddobl_dimension ( int *dim )
+{
+   int fail,*b;
+   double *c;
+
+   fail = _ada_use_c2phc(731,dim,b,c);
+
+   return fail;
+}
+
 int numbtrop_store_standard_tropism
  ( int dim, int idx, int wnd, double *dir, double err )
 {

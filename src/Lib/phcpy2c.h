@@ -2953,6 +2953,27 @@ static PyObject *py2c_numbtrop_quaddobl_size
  *   Returns the number of tropisms, stored in quad double
  *   precision, in the numerical tropisms container. */
 
+static PyObject *py2c_numbtrop_standard_dimension
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the dimension of the tropisms, stored in standard double
+ *   precision, in the numerical tropisms container. */
+
+static PyObject *py2c_numbtrop_dobldobl_dimension
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the dimension of the tropisms, stored in double double
+ *   precision, in the numerical tropisms container. */
+
+static PyObject *py2c_numbtrop_quaddobl_dimension
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the dimension of the tropisms, stored in quad double
+ *   precision, in the numerical tropisms container. */
+
 static PyObject *py2c_numbtrop_store_standard_tropism
  ( PyObject *self, PyObject *args );
 /*

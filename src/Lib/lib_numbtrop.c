@@ -121,11 +121,13 @@ void standard_generate
 void standard_operate
  ( int nbt, int dim, int *wind, double *dir, double *err )
 {
-   int fail,size,k,idx,wnd;
+   int fail,size,k,idx,wnd,retdim;
 
    fail = numbtrop_standard_initialize(nbt,dim,wind,dir,err);
    fail = numbtrop_standard_size(&size);
    printf("The number of tropisms : %d\n",size);
+   fail = numbtrop_standard_dimension(&retdim);
+   printf("The retrieved dimension : %d\n",retdim);
 
    do
    {
