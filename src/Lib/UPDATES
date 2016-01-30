@@ -1,3 +1,6 @@
+Sat 30 Jan 2016 : forgot to update the registration table for the new
+  functions that return the dimension in phcpy2c3.c and phcpy2c2.c.
+
 Fri 29 Jan 2016 : forgot to return the data with strings in the retrieval
   of all data in numbtrop, fixed this in phcpy2c3.c and in phcpy2c2.c.
   Added dimension functions to numbtrop, tested in lib_numbtrop, and
