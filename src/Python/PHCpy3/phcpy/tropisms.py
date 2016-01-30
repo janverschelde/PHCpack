@@ -22,6 +22,20 @@ def standard_initialize(nbt, dim, wnd, dir, err):
     data = wnd + flat + err
     store(nbt, dim, str(data))
 
+def standard_size():
+    """
+    Returns the number of tropisms stored in standard double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_numbtrop_standard_size as get_size
+    return get_size()
+
+def standard_dimension():
+    """
+    Returns the dimension of the tropisms stored in standard double precision.
+    """
+    from phcpy.phcpy2c3 import py2c_numbtrop_standard_dimension as get_dim
+    return get_dim()
+
 def standard_retrieve(nbt, dim):
     """
     Given on input the number of tropisms in nbt and the dimension in dim,
@@ -38,6 +52,22 @@ def standard_retrieve(nbt, dim):
         dirs.append([data[nbt+i*dim+j] for j in range(dim)])
     err = [data[nbt*(dim+1)+k] for k in range(nbt)]
     return (wnd, dirs, err)
+
+def standard_retrieve_tropism(dim, idx):
+    """
+    Returns the winding number, coordinates of the direction, and its error,
+    stored in double precision, of dimensin dim, and index idx.
+    The index must be in the range 1..standard_size().
+    Observe that the index counter starts at one and not at zero.
+    """
+    from ast import literal_eval
+    from phcpy.phcpy2c3 \
+    import py2c_numbtrop_standard_retrieve_tropism as load
+    (fail, wnd, strdata) = load(dim, idx)
+    data = literal_eval(strdata)
+    dir = [data[k] for k in range(dim)]
+    err = data[dim]
+    return (wnd, dir, err)
 
 def test_standard_store_load():
     """
@@ -60,11 +90,23 @@ def test_standard_store_load():
     print('random errors :', errs)
     standard_initialize(nbr, dim, wnd, dirs, errs)
     (retwnd, retdirs, reterrs) = standard_retrieve(nbr, dim)
+    retsize = standard_size()
+    retdim = standard_dimension()
+    print('retrieved number of tropisms :', retsize)
+    print('retrieved dimension of the tropisms :', retdim)
     print('retrieved winding numbers :', retwnd)
     print('retrieved directions :')
     for k in range(len(retdirs)):
         print('direction', k+1, ':', retdirs[k])
     print('retrieved errors :', reterrs)
+    while True:
+       idx = int(input('Give an index (0 to exit): '))
+       if idx < 1:
+           break
+       (idxwnd, idxdir, idxerr) = standard_retrieve_tropism(dim, idx)
+       print('winding number for tropism', idx, ':', idxwnd)
+       print('tropism', idx, 'has coordinates :', idxdir)
+       print('the error :', idx)
 
 def test():
     """
