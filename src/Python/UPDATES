@@ -1,3 +1,5 @@
+Sun 31 Jan 2016 : added python 2 version of tropisms.py.
+
 Sat 30 Jan 2016 : start of code in a new module tropisms.py.
 
 Sun 17 Jan 2016 : changed setup.py and MANIFEST.in in PHCpy2, with also most
