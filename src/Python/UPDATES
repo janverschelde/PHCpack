@@ -1,3 +1,6 @@
+Thu 2 Feb 2016 : updated tropisms.py with a new function to change the values
+  of a stored tropism.
+
 Sun 31 Jan 2016 : added python 2 version of tropisms.py.
 
 Sat 30 Jan 2016 : start of code in a new module tropisms.py.

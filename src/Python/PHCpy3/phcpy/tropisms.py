@@ -53,7 +53,7 @@ def standard_retrieve(nbt, dim):
     err = [data[nbt*(dim+1)+k] for k in range(nbt)]
     return (wnd, dirs, err)
 
-def standard_retrieve_tropism(dim, idx):
+def retrieve_standard_tropism(dim, idx):
     """
     Returns the winding number, coordinates of the direction, and its error,
     stored in double precision, of dimensin dim, and index idx.
@@ -68,6 +68,19 @@ def standard_retrieve_tropism(dim, idx):
     dir = [data[k] for k in range(dim)]
     err = data[dim]
     return (wnd, dir, err)
+
+def store_standard_tropism(dim, idx, wnd, dir, err):
+    """
+    Stores the tropism, given in standard double precision,
+    with dim doubles as coordinates in the list dir, the error in err,
+    and the winding number wnd, at position idx.
+    The index idx must be in the range 1..standard_size().
+    """
+    from phcpy.phcpy2c3 import py2c_numbtrop_store_standard_tropism as store
+    data = [x for x in dir]
+    data.append(err)
+    strdata = str(data)
+    store(dim, idx, wnd, strdata)
 
 def test_standard_store_load():
     """
@@ -100,13 +113,20 @@ def test_standard_store_load():
         print('direction', k+1, ':', retdirs[k])
     print('retrieved errors :', reterrs)
     while True:
-       idx = int(input('Give an index (0 to exit): '))
-       if idx < 1:
-           break
-       (idxwnd, idxdir, idxerr) = standard_retrieve_tropism(dim, idx)
-       print('winding number for tropism', idx, ':', idxwnd)
-       print('tropism', idx, 'has coordinates :', idxdir)
-       print('the error :', idx)
+        idx = int(input('Give an index (0 to exit): '))
+        if idx < 1:
+            break
+        (idxwnd, idxdir, idxerr) = retrieve_standard_tropism(dim, idx)
+        print('-> winding number for tropism', idx, ':', idxwnd)
+        print('-> tropism', idx, 'has coordinates :', idxdir)
+        print('-> the error :', idxerr)
+        ranwnd = randint(1, 9)
+        randir = [u(-1, 1) for _ in range(dim)]
+        ranerr = u(0, 1)/1000.0
+        print('store tropism %d with winding number %d' % (idx,ranwnd))
+        print('with new coordinates :', randir)
+        print('and error', ranerr);
+        store_standard_tropism(dim, idx, ranwnd, randir, ranerr)
 
 def test():
     """
