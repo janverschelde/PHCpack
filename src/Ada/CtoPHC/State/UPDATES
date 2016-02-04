@@ -1,3 +1,5 @@
+Thu 4 Feb 2016 : fixed error message in exception handler, in use_numbtrop.adb.
+
 Fri 29 Jan 2016 : to the numerical_tropisms_container, added functions that
   return the dimension of the tropisms, added three jobs to use_numbtrop,
   and to use_c2phc as well.

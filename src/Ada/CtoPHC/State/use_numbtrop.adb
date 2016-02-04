@@ -520,7 +520,7 @@ function use_numbtrop ( job : integer32;
       when others => put_line("  Sorry.  Invalid operation."); return -1;
     end case;
   exception
-    when others => put("Exception raised in use_giftwrap handling job ");
+    when others => put("Exception raised in use_numbtrop handling job ");
                    put(job,1); put_line(".  Will not ignore."); raise;
   end Handle_Jobs;
 
