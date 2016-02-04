@@ -1,4 +1,7 @@
-Thu 2 Feb 2016 : updated tropisms.py with a new function to change the values
+Thu 4 Feb 2016 : dobldobl and quaddobl versions of functions in tropisms,
+  tested for double double precision with python3.
+
+Tue 2 Feb 2016 : updated tropisms.py with a new function to change the values
   of a stored tropism.
 
 Sun 31 Jan 2016 : added python 2 version of tropisms.py.
