@@ -1,3 +1,6 @@
+Thu 4 Feb 2016 : fixed calls in phcpy2c2.c and phcpy2c3.c for the retrieval
+  of tropisms in double double and quad double precision.
+
 Sat 30 Jan 2016 : forgot to update the registration table for the new
   functions that return the dimension in phcpy2c3.c and phcpy2c2.c.
 

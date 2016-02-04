@@ -4363,7 +4363,7 @@ static PyObject *py2c_numbtrop_dobldobl_retrieve
       const int lendata = nbt+2*nbt*(dim+1);
       double data[lendata];
 
-      fail = numbtrop_standard_retrieve(nbt,dim,wnd,dir,err);
+      fail = numbtrop_dobldobl_retrieve(nbt,dim,wnd,dir,err);
 
       for(k=0; k<nbt; k++) data[k] = (double) wnd[k];
       for(k=0; k<2*nbt*dim; k++) data[nbt+k] = dir[k];
@@ -4390,7 +4390,7 @@ static PyObject *py2c_numbtrop_quaddobl_retrieve
       const int lendata = nbt+4*nbt*(dim+1);
       double data[lendata];
 
-      fail = numbtrop_standard_retrieve(nbt,dim,wnd,dir,err);
+      fail = numbtrop_quaddobl_retrieve(nbt,dim,wnd,dir,err);
 
       for(k=0; k<nbt; k++) data[k] = (double) wnd[k];
       for(k=0; k<4*nbt*dim; k++) data[nbt+k] = dir[k];
