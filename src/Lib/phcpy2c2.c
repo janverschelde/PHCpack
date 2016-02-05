@@ -7403,6 +7403,8 @@ static PyMethodDef phcpy2c_methods[] =
     "Returns the number of tropisms, stored in standard double\n precision, in the numerical tropisms container."},
    {"py2c_numbtrop_dobldobl_size", py2c_numbtrop_dobldobl_size, METH_VARARGS,
     "Returns the number of tropisms, stored in double double\n precision, in the numerical tropisms container."},
+   {"py2c_numbtrop_quaddobl_size", py2c_numbtrop_quaddobl_size, METH_VARARGS,
+    "Returns the number of tropisms, stored in quad double\n precision, in the numerical tropisms container."},
    {"py2c_numbtrop_standard_dimension",
      py2c_numbtrop_standard_dimension, METH_VARARGS,
     "Returns the dimension of the tropisms, stored in standard double\n precision, in the numerical tropisms container."},

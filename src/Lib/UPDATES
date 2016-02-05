@@ -1,3 +1,6 @@
+Fri 5 Feb 2016 : forgot to add numbtrop_quaddobl_size to the registration
+  tables in phcpy2c2.c and phcpy2c3.c.
+
 Thu 4 Feb 2016 : fixed calls in phcpy2c2.c and phcpy2c3.c for the retrieval
   of tropisms in double double and quad double precision.
 
