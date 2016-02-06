@@ -4309,7 +4309,7 @@ static PyObject *py2c_numbtrop_quaddobl_initialize
       for(k=0; k<4*nbt*dim; k++) dir[k] = numbers[nbt+k];
       for(k=0; k<4*nbt; k++) err[k] = numbers[nbt+4*nbt*dim+k];
 
-      fail = numbtrop_dobldobl_initialize(nbt,dim,wnd,dir,err);     
+      fail = numbtrop_quaddobl_initialize(nbt,dim,wnd,dir,err);     
    }
 
    return Py_BuildValue("i",fail);
