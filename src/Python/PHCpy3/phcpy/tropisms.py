@@ -156,7 +156,7 @@ def quaddobl_retrieve(nbt, dim):
 def retrieve_standard_tropism(dim, idx):
     """
     Returns the winding number, coordinates of the direction, and its error,
-    stored in double precision, of dimensin dim, and index idx.
+    stored in double precision, of dimension dim, and index idx.
     The index must be in the range 1..standard_size().
     Observe that the index counter starts at one and not at zero.
     """
@@ -172,7 +172,7 @@ def retrieve_standard_tropism(dim, idx):
 def retrieve_dobldobl_tropism(dim, idx):
     """
     Returns the winding number, coordinates of the direction, and its error,
-    stored in double double precision, of dimensin dim, and index idx.
+    stored in double double precision, of dimension dim, and index idx.
     The index must be in the range 1..dobldobl_size().
     Observe that the index counter starts at one and not at zero.
     """
@@ -188,7 +188,7 @@ def retrieve_dobldobl_tropism(dim, idx):
 def retrieve_quaddobl_tropism(dim, idx):
     """
     Returns the winding number, coordinates of the direction, and its error,
-    stored in quad double precision, of dimensin dim, and index idx.
+    stored in quad double precision, of dimension dim, and index idx.
     The index must be in the range 1..quaddobl_size().
     Observe that the index counter starts at one and not at zero.
     """
@@ -274,7 +274,7 @@ def test_standard_store_load():
     nbr = int(input('Give the number of tropisms : '))
     dim = int(input('Give the dimension : '))
     from random import randint
-    wnd = [randint(1, 10) for _ in range(nbr)]
+    wnd = [randint(10, 99) for _ in range(nbr)]
     from random import uniform as u
     dirs = []
     for _ in range(nbr):
@@ -303,7 +303,7 @@ def test_standard_store_load():
         print('-> winding number for tropism', idx, ':', idxwnd)
         print('-> tropism', idx, 'has coordinates :', idxdir)
         print('-> the error :', idxerr)
-        ranwnd = randint(1, 9)
+        ranwnd = randint(10, 99)
         randir = [u(-1, 1) for _ in range(dim)]
         ranerr = u(0, 1)/1000.0
         print('store tropism %d with winding number %d' % (idx,ranwnd))
@@ -321,7 +321,7 @@ def test_dobldobl_store_load():
     nbr = int(input('Give the number of tropisms : '))
     dim = int(input('Give the dimension : '))
     from random import randint
-    wnd = [randint(1, 10) for _ in range(nbr)]
+    wnd = [randint(10, 99) for _ in range(nbr)]
     from random import uniform as u
     dirs = []
     for _ in range(nbr):
@@ -350,7 +350,7 @@ def test_dobldobl_store_load():
         print('-> winding number for tropism', idx, ':', idxwnd)
         print('-> tropism', idx, 'has coordinates :', idxdir)
         print('-> the error :', idxerr)
-        ranwnd = randint(1, 9)
+        ranwnd = randint(10, 99)
         randir = [u(-1, 1) for _ in range(2*dim)]
         ranerr = [u(0, 1)/1000.0, u(0, 1)/1000.0]
         print('store tropism %d with winding number %d' % (idx,ranwnd))
@@ -359,13 +359,65 @@ def test_dobldobl_store_load():
         store_dobldobl_tropism(dim, idx, ranwnd, randir, ranerr)
     dobldobl_clear()
 
+def test_quaddobl_store_load():
+    """
+    Tests the storing and loading of numerically computed tropisms,
+    in quad double precision.
+    """
+    print('testing storing and loading numerical tropisms...')
+    nbr = int(input('Give the number of tropisms : '))
+    dim = int(input('Give the dimension : '))
+    from random import randint
+    wnd = [randint(10, 99) for _ in range(nbr)]
+    from random import uniform as u
+    dirs = []
+    for _ in range(nbr):
+        dirs.append([u(-1, +1) for _ in range(4*dim)])
+    errs = [u(0,1)/1000.0 for _ in range(4*nbr)]
+    print('random winding numbers :', wnd)
+    for k in range(len(dirs)):
+        print('direction', k+1, ':', dirs[k])
+    print('random errors :', errs)
+    quaddobl_initialize(nbr, dim, wnd, dirs, errs)
+    (retwnd, retdirs, reterrs) = quaddobl_retrieve(nbr, dim)
+    retsize = quaddobl_size()
+    retdim = quaddobl_dimension()
+    print('retrieved number of tropisms :', retsize)
+    print('retrieved dimension of the tropisms :', retdim)
+    print('retrieved winding numbers :', retwnd)
+    print('retrieved directions :')
+    for k in range(len(retdirs)):
+        print('direction', k+1, ':', retdirs[k])
+    print('retrieved errors :', reterrs)
+    while True:
+        idx = int(input('Give an index (0 to exit): '))
+        if idx < 1:
+            break
+        (idxwnd, idxdir, idxerr) = retrieve_quaddobl_tropism(dim, idx)
+        print('-> winding number for tropism', idx, ':', idxwnd)
+        print('-> tropism', idx, 'has coordinates :', idxdir)
+        print('-> the error :', idxerr)
+        ranwnd = randint(10, 99)
+        randir = [u(-1, 1) for _ in range(4*dim)]
+        ranerr = [u(0, 1)/1000.0, u(0, 1)/1000.0]
+        print('store tropism %d with winding number %d' % (idx,ranwnd))
+        print('with new coordinates :', randir)
+        print('and error', ranerr);
+        store_quaddobl_tropism(dim, idx, ranwnd, randir, ranerr)
+    quaddobl_clear()
+
 def test():
     """
     Tests the management of numerically computed tropisms.
     """
     print('testing management of numerical tropisms...')
-    # test_standard_store_load()
-    test_dobldobl_store_load()
+    prc = input('give the precision (d, dd, or qd) : ')
+    if prc == 'd':
+        test_standard_store_load()
+    elif prc == 'dd':
+        test_dobldobl_store_load()
+    else:
+        test_quaddobl_store_load()
 
 if __name__ == "__main__":
     test()
