@@ -4398,6 +4398,8 @@ static PyObject *py2c_numbtrop_quaddobl_retrieve
 
       fltlist = (char*)calloc(75*nbt*(dim+2), sizeof(char));
       nbc = dbllist2str(lendata,data,fltlist);
+      /* printf("fltlist = %s\n",fltlist);
+      printf("lendata = %d, nbc = %d\n", lendata, nbc); */
    }
    return Py_BuildValue("(i, s)", fail, fltlist);
 }
@@ -4530,6 +4532,8 @@ static PyObject *py2c_numbtrop_store_quaddobl_tropism
    int fail,dim,idx,wnd,k;
    char *data; /* all double numbers come in one long string */
 
+   /* printf("inside py2c store quaddobl tropism ...\n"); */
+
    initialize();
    if(!PyArg_ParseTuple(args,"iiis",&dim,&idx,&wnd,&data)) return NULL;   
    {
@@ -4546,8 +4550,10 @@ static PyObject *py2c_numbtrop_store_quaddobl_tropism
       err[2] = numbers[4*dim+2];
       err[3] = numbers[4*dim+3];
 
-      fail = numbtrop_store_dobldobl_tropism(dim,idx,wnd,dir,err);     
+      fail = numbtrop_store_quaddobl_tropism(dim,idx,wnd,dir,err);     
    }
+   /* printf("leaving py2c store quaddobl tropism ...\n"); */
+
    return Py_BuildValue("i",fail);
 }
 
@@ -4604,6 +4610,8 @@ static PyObject *py2c_numbtrop_quaddobl_retrieve_tropism
    int fail,dim,idx,wnd,k,nbc;
    char *fltlist;
 
+   /* printf("inside py2c numbtrop quaddobl retrieve tropism ...\n"); */
+
    initialize();
    if(!PyArg_ParseTuple(args,"ii",&dim,&idx)) return NULL;   
    {
@@ -4620,7 +4628,13 @@ static PyObject *py2c_numbtrop_quaddobl_retrieve_tropism
       direrr[4*dim+2] = err[2];
       direrr[4*dim+3] = err[3];
       nbc = dbllist2str(4*dim+4,direrr,fltlist);
+
+      /* printf("fltlist = %s\n", fltlist);
+      printf("nbc = %d\n", nbc); */
    }
+
+   /* printf("leaving py2c numbtrop quaddobl retrieve tropism ...\n"); */
+
    return Py_BuildValue("(i,i,s)",fail,wnd,fltlist);
 }
 

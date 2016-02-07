@@ -4536,7 +4536,7 @@ static PyObject *py2c_numbtrop_store_quaddobl_tropism
       err[2] = numbers[4*dim+2];
       err[3] = numbers[4*dim+3];
 
-      fail = numbtrop_store_dobldobl_tropism(dim,idx,wnd,dir,err);     
+      fail = numbtrop_store_quaddobl_tropism(dim,idx,wnd,dir,err);     
    }
    return Py_BuildValue("i",fail);
 }

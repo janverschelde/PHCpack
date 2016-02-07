@@ -1,3 +1,6 @@
+Sat 6 Feb 2016 : fixed call to C function in phcpy2c2.c and phcpy2c3.c
+  when storing a tropism in quad double precision.
+
 Fri 5 Feb 2016 : forgot to add numbtrop_quaddobl_size to the registration
   tables in phcpy2c2.c and phcpy2c3.c.  Fixed the initialization of the
   quaddobl numerical tropisms in phcpy2c2.c and phcpy2c3.c.
