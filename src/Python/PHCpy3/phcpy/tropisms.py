@@ -406,7 +406,7 @@ def test_quaddobl_store_load():
         store_quaddobl_tropism(dim, idx, ranwnd, randir, ranerr)
     quaddobl_clear()
 
-def test():
+def management_test():
     """
     Tests the management of numerically computed tropisms.
     """
@@ -418,6 +418,35 @@ def test():
         test_dobldobl_store_load()
     else:
         test_quaddobl_store_load()
+
+def test():
+    """
+    Tests the numerical computation of a tropism.
+    """
+    pols = ['x + x*y + y^2;', 'x;']
+    from phcpy.solver import solve
+    start = ['x + (-5.89219623474258E-02 - 9.98262591883082E-01*i)*y^2' \
+         + ' + ( 5.15275165825429E-01 + 8.57024797472965E-01*i)*x*y;', \
+        'x+(-9.56176913648087E-01 - 2.92789531586119E-01*i);']
+    startsols = solve(start, silent=True)
+    print('computed', len(startsols), 'start solutions')
+    from phcpy.tuning import order_endgame_extrapolator_set as set
+    set(4)
+    from phcpy.trackers import standard_double_track as track
+    sols = track(pols, start, startsols)
+    print('the solutions at the end :')
+    for sol in sols:
+        print(sol)
+    print('size of the tropisms container :', standard_size())
+    (wnd, dirs, errs) = standard_retrieve(len(sols), len(pols))
+    print('the winding numbers :', wnd)
+    print('the directions :')
+    for dir in dirs:
+        print(dir)
+    print('the errors :', errs)
+    # check which tuning parameters were used
+    # from phcpy.tuning import tune_track_parameters as tune
+    # tune(interactive=True)
 
 if __name__ == "__main__":
     test()

@@ -1,5 +1,6 @@
 Tue 9 Feb 2016 : random_coefficient_system in solver.py had no branch for
-  the quad double precision.
+  the quad double precision.  Added test function to tropisms.py that runs
+  a polyhedral end game.
 
 Fri 5 Feb 2016 : testing for quaddobl versions of tropisms.py in python3.
 
