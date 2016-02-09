@@ -632,6 +632,10 @@ def random_coefficient_system(silent=False, precision='d'):
         return standard_random_coefficient_system(silent)
     elif(precision == 'dd'):
         return dobldobl_random_coefficient_system(silent)
+    elif(precision == 'qd'):
+        return quaddobl_random_coefficient_system(silent)
+    else:
+        print 'wrong value for precision'
 
 def permute_standard_system(pols):
     """
