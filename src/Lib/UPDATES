@@ -1,3 +1,6 @@
+Mon 8 Feb 2016 : corrected dimensions of the character arrays when
+  retrieving tropisms in quad double precision, in phcpy2c2.c and phcpy2c3.c.
+
 Sun 7 Feb 2016 : wrote tests for double double and quad double precision
   in lib_numbtrop.c.
 
