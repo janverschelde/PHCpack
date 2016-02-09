@@ -57,6 +57,7 @@ with DoblDobl_Diagonal_Solutions;        use DoblDobl_Diagonal_Solutions;
 with QuadDobl_Diagonal_Solutions;        use QuadDobl_Diagonal_Solutions;
 with Extrinsic_Diagonal_Homotopies;      use Extrinsic_Diagonal_Homotopies;
 with Multitasking_Continuation;          use Multitasking_Continuation;
+with Numerical_Tropisms_Container;       use Numerical_Tropisms_Container;
 
 package body PHCpack_Operations is
 
@@ -1943,6 +1944,10 @@ package body PHCpack_Operations is
         (st_target_sys.all,st_target_sols,epsxa,epsfa,tolsing,
          numit,max,deflate);
     end if;
+    if Continuation_Parameters.endext_order > 0 then
+      Numerical_Tropisms_Container.Standard_Initialize
+        (wind.all,dirs.all,errv.all);
+    end if;
     Copy_Labels;
    -- Standard_Homotopy.Clear;  -- for dynamic load balancing
     return 0;
@@ -2066,6 +2071,10 @@ package body PHCpack_Operations is
      --   (st_target_sys.all,st_target_sols,epsxa,epsfa,
      --    tolsing,numit,max,deflate);
     end if;
+    if Continuation_Parameters.endext_order > 0 then
+      Numerical_Tropisms_Container.DoblDobl_Initialize
+        (wind.all,dirs.all,errv.all);
+    end if;
     Copy_DoblDobl_Labels;
    -- DoblDobl_Homotopy.Clear;  -- for dynamic load balancing
     return 0;
@@ -2188,6 +2197,10 @@ package body PHCpack_Operations is
      -- Standard_Root_Refiners.Silent_Root_Refiner
      --   (st_target_sys.all,st_target_sols,epsxa,epsfa,
      --   tolsing,numit,max,deflate);
+    end if;
+    if Continuation_Parameters.endext_order > 0 then
+      Numerical_Tropisms_Container.QuadDobl_Initialize
+        (wind.all,dirs.all,errv.all);
     end if;
     Copy_QuadDobl_Labels;
    -- QuadDobl_Homotopy.Clear;  -- for dynamic load balancing

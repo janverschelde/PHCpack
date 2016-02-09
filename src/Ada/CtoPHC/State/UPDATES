@@ -1,3 +1,6 @@
+Tue 9 Feb 2016 : added initialization of the numerical tropisms container
+  to phcpack_operations.adb.
+
 Thu 4 Feb 2016 : fixed error message in exception handler, in use_numbtrop.adb.
 
 Fri 29 Jan 2016 : to the numerical_tropisms_container, added functions that
