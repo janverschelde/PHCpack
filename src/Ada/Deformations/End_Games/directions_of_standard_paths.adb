@@ -316,6 +316,29 @@ package body Directions_of_Standard_Paths is
   end Estimate0;
 
   procedure Estimate_Winding_Number
+               ( r : in integer32;
+                 max : in natural32; m,estm : in out integer32;
+                 cnt : in out natural32; h : in double_float;
+                 diferr : in Standard_Floating_Vectors.Vector;
+                 rat,eps : out double_float; newm : out boolean ) is
+
+    res,order : integer32;
+    accuracy : double_float;
+    esm : Standard_Floating_Vectors.Vector(1..r+1);
+    estgood : boolean;
+
+  begin
+    Extrapolate_on_Errors(r,h,diferr(0..r+1),esm);
+    Accuracy_of_Estimates(esm,estgood,order,res,accuracy);
+    if res <= 0
+     then res := m; -- keep the current value for the winding number
+     else Frequency_of_Estimate(res,max,m,estm,cnt,newm);
+    end if;
+    rat := esm(order+1);
+    eps := accuracy;
+  end Estimate_Winding_Number;
+
+  procedure Estimate_Winding_Number
                ( file : in file_type; r : in integer32;
                  max : in natural32; m,estm : in out integer32;
                  cnt : in out natural32; h : in double_float;
@@ -407,6 +430,41 @@ package body Directions_of_Standard_Paths is
   end vLpRs_Extrapolate;
 
   procedure vLpRs_Extrapolate
+                ( r : in integer32;
+                  s,logs : in Standard_Floating_Vectors.Vector;
+                  logx,wvl0 : in Standard_Floating_VecVecs.VecVec;
+                  wvl1 : in out Standard_Floating_VecVecs.VecVec;
+                  w,wv,wl : out Standard_Floating_Vectors.Vector ) is
+
+    n : constant natural := logx(r)'length;
+    logx1 : Standard_Floating_Vectors.Vector(0..r);
+    rt1,rt2 : Matrix(1..r-1,1..r-1);
+    srp,dsp : Standard_Floating_Vectors.Vector(1..r-1) := (1..r-1 => 0.0);
+    p : Standard_Floating_Vectors.Vector(0..r-1) := (0..r-1 => 0.0);
+    l,v : Standard_Floating_Vectors.Vector(0..r) := (0..r => 0.0);
+    error : Standard_Floating_Vectors.Vector(1..r) := (1..r => 0.0);
+
+  begin
+    for i in rt1'range(1) loop
+      for j in rt1'range(2) loop
+        rt1(i,j) := 0.0; rt2(i,j) := 0.0;
+      end loop;
+    end loop;
+    for i in logx(r)'range loop
+      for j in logx1'range loop
+        logx1(j) := logx(j)(i);
+      end loop;
+      vLpRs_pipe(r,s(0..r),logs(0..r),logx1(0..r),srp,dsp,p,l,v,rt1,rt2);
+      w(i) := v(r)/l(r);
+      for j in 1..r loop
+        wvl1(j)(i) := v(j)/l(j);
+        error(j) := abs(wvl1(j)(i)-wvl0(j)(i));
+      end loop;
+    end loop;
+    wv := v; wl := l;
+  end vLpRs_Extrapolate;
+
+  procedure vLpRs_Extrapolate
                 ( file : in file_type; r : in integer32;
                   s,logs : in Standard_Floating_Vectors.Vector;
                   logx,wvl0 : in Standard_Floating_VecVecs.VecVec;
@@ -458,30 +516,42 @@ package body Directions_of_Standard_Paths is
                   error : in out double_float ) is
 
     use Standard_Floating_Vectors;
-    res : Standard_Floating_Vectors.Vector(v'range);
-   -- eps : double_float;
-    newerr : double_float;
+    res,errorv : Standard_Floating_Vectors.Vector(v'range);
+    wv,wl : Standard_Floating_Vectors.Vector(0..r);
+    ind : integer32 := 1;
+    rat,eps : double_float;
     newm : boolean := false;
 
   begin
     Affine_Update_Extrapolation_Data
       (r,m,t,target,x,dt,s,logs,logx,wvl0,wvl1,wvltmp);
     if r >= 1 then
-      res := vLpRs_Extrapolate(r,s,logs,logx);
-      newerr := Sum_Norm(res-v);
+      vLpRs_Extrapolate(r,s,logs,logx,wvl1,wvltmp,res,wv,wl);
+      if r = 1 then diferr(0) := 1.0; end if;
+      for i in errorv'range loop
+        errorv(i) := abs(wvltmp(ind)(i) - wvl1(ind)(i));
+      end loop;
+      Shift_Up(diferr,Sum_Norm(errorv));
+      if er < diferr'last-1 then er := er+1; end if;
+    end if;
+    if er >= 1 and (diferr(0) < diferr(1)) then
+      Estimate_Winding_Number
+         (er,thresm,m,estm,cntm,dt(r)/dt(r-1),diferr,rat,eps,newm);
+      if newm then
+        Refresh_Window(r,m,dt,s,logs);
+        vLpRs_Extrapolate(r,s,logs,logx,wvl1,wvltmp,res,wv,wl);
+        for i in errorv'range loop
+          errorv(i) := abs(wvltmp(ind)(i) - wvl1(ind)(i));
+        end loop;
+        Shift_Up(diferr,Sum_Norm(errorv)); er := -2;
+      end if;
+    end if;
+    if r >= 1 then
+      v := res;
+      Update_Errors(r,errorv,error,wvl0,wvl1,wvltmp);
     end if;
     if r < s'last
      then r := r+1;
-    end if;
-    if r >= 3 and (newerr < error) then
-      --Estimate(r,r,thresm,m,estm,cntm,dt,s,logs,error,newerr,eps,newm);
-      if newm then
-        res := vLpRs_Extrapolate(r,s,logs,logx);
-        newerr := Sum_Norm(res-v);
-      end if;
-    end if;
-    if r >= 1
-     then v := res; error := newerr;
     end if;
   end Affine_Update_Direction;
 

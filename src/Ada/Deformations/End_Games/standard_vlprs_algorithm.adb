@@ -59,6 +59,27 @@ package body Standard_vLpRs_Algorithm is
   end vLpRs_full;
 
   procedure vLpRs_pipe
+              ( r : in integer32;
+                s,logs,logx : in Vector; srp,dsp,p,L,v : in out Vector;
+                rt1,rt2 : in out Matrix ) is
+  begin
+    p(0) := 1.0;                                             -- initialization
+    v(0..1) := logx(0..1);
+    L(0..1) := logs(0..1);
+    L_pipe(l(0..1),p(0..0),logs(1));
+    v_pipe(v(0..1),p(0..0),logx(1));
+    for k in 2..r loop
+      p_full(s(0..k),srp(1..k-1),dsp(1..k-1),p(0..k-1),rt1,rt2);
+      L_pipe(L(0..k),p(0..k-1),logs(k));                        -- extrapolate
+      v_pipe(v(0..k),p(0..k-1),logx(k));
+    end loop;
+    rt1 := rt2;
+    for k in r+1..s'last loop
+      vlprs_pipe(s(k),logs(k),logx(k),srp,dsp,p,L,v,rt1,rt2);
+    end loop;
+  end vLpRs_pipe;
+
+  procedure vLpRs_pipe
               ( file : in file_type; r : in integer32;
                 s,logs,logx : in Vector; srp,dsp,p,L,v : in out Vector;
                 rt1,rt2 : in out Matrix ) is
