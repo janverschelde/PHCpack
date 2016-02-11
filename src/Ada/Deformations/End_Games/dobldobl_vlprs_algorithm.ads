@@ -49,6 +49,9 @@ package DoblDobl_vLpRs_Algorithm is
   --   rt1,rt2    last consecutive R-tables.
 
   procedure vLpRs_pipe
+                ( r : in integer32; s,logs,logx : in Vector;
+                  srp,dsp,p,L,v : in out Vector; rt1,rt2 : in out Matrix );
+  procedure vLpRs_pipe
                 ( file : in file_type;
                   r : in integer32; s,logs,logx : in Vector;
                   srp,dsp,p,L,v : in out Vector; rt1,rt2 : in out Matrix );

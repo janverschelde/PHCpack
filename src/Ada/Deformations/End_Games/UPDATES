@@ -1,5 +1,6 @@
 Wed 10 Feb 2016 : added silent procedure to standard_vlprs_algorithm
   and improved the silent update in directions_of_standard_paths.adb.
+  Did the same for the dobldobl and quaddobl versions.
 
 Tue 12 Jan 2016 : small fix in directions_of_dobldobl_paths.ads and updated
   directions_of_quaddobl_paths.adb.
