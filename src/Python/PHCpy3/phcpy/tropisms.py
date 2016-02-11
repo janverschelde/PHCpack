@@ -419,11 +419,11 @@ def management_test():
     else:
         test_quaddobl_store_load()
 
-def test():
+def test(precision='d'):
     """
     Tests the numerical computation of a tropism.
     """
-    pols = ['x + x*y + y^2;', 'x;']
+    pols = ['x + x*y + y^3;', 'x;']
     from phcpy.solver import solve
     start = ['x + (-5.89219623474258E-02 - 9.98262591883082E-01*i)*y^2' \
          + ' + ( 5.15275165825429E-01 + 8.57024797472965E-01*i)*x*y;', \
@@ -432,13 +432,28 @@ def test():
     print('computed', len(startsols), 'start solutions')
     from phcpy.tuning import order_endgame_extrapolator_set as set
     set(4)
-    from phcpy.trackers import standard_double_track as track
+    if precision == 'd':
+        from phcpy.trackers import standard_double_track as track
+    elif precision == 'dd':
+        from phcpy.trackers import double_double_track as track
+    elif precision == 'qd':
+        from phcpy.trackers import quad_double_track as track
+    else:
+        print('wrong level of precision')
+        return
     sols = track(pols, start, startsols)
     print('the solutions at the end :')
     for sol in sols:
         print(sol)
-    print('size of the tropisms container :', standard_size())
-    (wnd, dirs, errs) = standard_retrieve(len(sols), len(pols))
+    if precision == 'd':
+        print('size of the tropisms container :', standard_size())
+        (wnd, dirs, errs) = standard_retrieve(len(sols), len(pols))
+    elif precision == 'dd':
+        print('size of the tropisms container :', dobldobl_size())
+        (wnd, dirs, errs) = dobldobl_retrieve(len(sols), len(pols))
+    else:
+        print('size of the tropisms container :', quaddobl_size())
+        (wnd, dirs, errs) = quaddobl_retrieve(len(sols), len(pols))
     print('the winding numbers :', wnd)
     print('the directions :')
     for dir in dirs:
@@ -449,4 +464,4 @@ def test():
     # tune(interactive=True)
 
 if __name__ == "__main__":
-    test()
+    test('dd')

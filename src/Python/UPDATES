@@ -1,3 +1,5 @@
+Wed 10 Feb 2016 : updated test in tropisms.py for 'dd' and 'qd'.
+
 Tue 9 Feb 2016 : random_coefficient_system in solver.py had no branch for
   the quad double precision.  Added test function to tropisms.py that runs
   a polyhedral end game.
