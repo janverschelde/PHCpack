@@ -13,16 +13,12 @@ phcpy Documentation Contents
 
    welcome
    blackbox
-   solsrep
    pathtrack
-   sweep
+   posdimsols
    examfams
    numschub
-   posdimsols
-   monmaps
    newtopes
    phcbwulf
-   interface
-   modphcpy2c
+   modphcpy2c2
    about
    indices

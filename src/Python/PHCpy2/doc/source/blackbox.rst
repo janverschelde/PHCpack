@@ -43,7 +43,6 @@ to avoid long swirling lines in the output):
    -0.991457094247+0.13043324065066*i)*x^0*y^5
    -0.0509953121395-0.99869889262970*i)*x^5*y^3
    0.232308584664+0.97264213433887*i)*x^4*y^4;
-   >>>
 
 To solve the system defined by f, we call the blackbox solver:
 
@@ -60,13 +59,99 @@ To solve the system defined by f, we call the blackbox solver:
     x :  7.10290847804173E-01  -4.69841154290980E-01
     y : -1.79580717006598E-01  -7.16541556066137E-01
    == err :  1.986E-16 = rco :  2.676E-01 = res :  1.232E-16 =
-   >>>
 
 The *solve* command returned a list of 15 strings in s,
 each string represents a solution that makes the polynomials in f vanish.
 The module **phcpy.solutions** (documented below)
 offers a function to evaluate the solutions
 in the polynomials given as strings.
+
+representations of solutions of polynomial systems 
+--------------------------------------------------
+
+Solutions of phcpy.solve are returned as lists of PHCpack
+solution strings.  The solutions module contains functions to
+parse a PHCpack solution string into a dictionary.
+
+The solutions module exports operations 
+
+1. to parse strings in the PHCpack solution format into dictionaries;
+
+2. to evaluate these dictionaries into polynomials substituting the
+   values for the variables into the strings representing the polynomials.
+
+The main test in the module solutions is the solution of a small
+trinomial system and the evaluation of the computed solutions
+at the trinomial system.
+
+The information of a solution as a dictionary contains the following:
+
+1. `t` : value of the continuation parameter
+
+   `m` : multiplicity of the solution
+
+2. symbols for the variables are keys in the dictionary,
+   the corresponding values are complex floating-point numbers
+
+3. `err` : magnitude of the last correction term of Newton's method
+   (forward error)
+
+   `rco` : estimate for the inverse of the condition number of
+   the Jacobian matrix at the solution
+
+   `res` : magnitude of the residual (backward error)
+
+The triplet (err, rco, res) measures the numerical quality of the solution.
+The residual `res` is normally interpreted as an estimate of the backward
+error: by how much should we change the original problem such that the
+approximate solution becomes an exact solution of the changed problem.
+The estimate `rco` gives a (sometimes too pessimistic) bound on the
+number of correct decimal places in the approximate solution.
+In particular: `abs(log(rco, 10))` bounds the number of lost decimal
+places in the approximate solution.
+For example, if `rco` equals `1.0E-8`, then the last 8 decimal places
+in the coordinates of the solution could be wrong.
+
+For a solution of the example ``noon3`` from the module examples,
+we convert the PHCpack format solution string to a dictionary as follows:
+
+::
+
+   >>> print s[0]
+   t :  1.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    x1 : -1.65123467890611E-01  -7.61734168646636E-01
+    x2 :  8.98653694263692E-01  -3.48820047576431E-01
+    x3 :  8.98653694263692E-01  -3.48820047576431E-01
+   == err :  3.034E-16 = rco :  2.761E-01 = res :  5.974E-16 =
+   >>> from phcpy.solutions import strsol2dict
+   >>> d = strsol2dict(s[0])
+   >>> d.keys()
+   ['err', 'res', 'm', 'rco', 't', 'x2', 'x3', 'x1']
+   >>> d['x1']
+   (-0.165123467890611-0.761734168646636j)
+
+Note that the values of the dictionary d are evaluated strings,
+parsed into Python objects.
+
+By plain substitution of the values of the dictionary representation
+of the solution into the string representation of the polynomial system
+we can verify that the coordinates of the solution evaluate to numbers
+close to the numerical working precision:
+
+::
+
+   >>> from phcpy.solutions import evaluate
+   >>> e = evaluate(f,d)
+   >>> for x in e: print x
+   ... 
+   (1.11022302463e-15+4.4408920985e-16j)
+   (7.77156117238e-16+9.99200722163e-16j)
+   (7.77156117238e-16+9.99200722163e-16j)
+
+A more elaborate verification of the solution is provided by
+the function **newton_step** of the module ``solver`` of phcpy.
 
 reproducible runs with fixed seeds
 ----------------------------------
@@ -83,7 +168,6 @@ as follows:
    >>> from phcpy.phcpy2c import py2c_set_seed
    >>> py2c_set_seed(2013)
    0
-   >>>
 
 The above session continues as
 
@@ -92,7 +176,6 @@ The above session continues as
    >>> from phcpy.phcpy2c import py2c_get_seed
    >>> py2c_get_seed()
    2013
-   >>> 
 
 To reproduce a computation, we can thus request the seed that was used
 (with ``py2c_get_seed``) and then restart the session setting the seed
@@ -128,7 +211,6 @@ degrees and the mixed volume:
    >>> from phcpy.solver import mixed_volume
    >>> mixed_volume(f, stable=True)
    (14, 18)
-   >>>
 
 The mixed volume is a generically sharp root count for the number of 
 isolated solutions with all coordinates different from zero. 
@@ -203,7 +285,6 @@ of Newton's method:
     x : -4.55355758042535E-25   2.75154683741089E-26
     y :  1.57904709676279E-25  -8.86785799319512E-26
    == err :  5.192E-13 = rco :  5.314E-03 = res :  1.388E-16 =
-   >>>
 
 equation and variable scaling
 -----------------------------
@@ -289,11 +370,23 @@ such as available in the functions
 ``dobldobl_scale_system`` and ``quaddobl_scale_system``,
 respectively with double double and quad double arithmetic.
 
-functions in the module
------------------------
+functions in the module solver
+------------------------------
 
 The documentation strings of the functions
 exported by the module ``solver`` of the package phcpy are listed below.
 
 .. automodule:: solver
    :members:
+
+functions in the module solutions
+---------------------------------
+
+The documentation strings of the functions
+exported by the module ``solutions`` are listed below.
+The script **test()** runs when typing **python solutions.py**
+at the command prompt.
+
+.. automodule:: solutions
+   :members:
+

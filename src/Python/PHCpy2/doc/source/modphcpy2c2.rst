@@ -1,9 +1,9 @@
-the module phcpy.phcpy2c
-========================
+the module phcpy.phcpy2c2
+=========================
 
 The Python scripts in the package phcpy call the wrappers
 for the C interface to PHCpack.  Below is the list of all
-functions exported by the shared object file phcpy2c.so.
+functions exported by the shared object file phcpy2c2.so.
 The source code provides more detailed documentation.
 
 design of the Python to C interface
@@ -21,21 +21,49 @@ The collection of parallel distibuted memory programs (MPI2phc)
 using message passing (MPI) depends on PHClib.
 All C functions that are exported to the Python interface have
 their prototypes in the header file ``phcpy2c.h``
-while the definitions in ``phcpy2c.c`` call the proper routines
+while the definitions in ``phcpy2c2.c`` call the proper routines
 in PHClib.
+
+the interface to PHCpack
+------------------------
+
+The module interface collects the functions that parse the string
+representations for polynomials and solutions to pass their data 
+through the C interface of PHCpack.  The reverse operations return
+the string representations for polynomials and solutions as stored
+internally in PHCpack.
+
+The functions exported by **phcpy.interface** concern the movement
+of data between Python and PHCpack.  The `store_` methods parse strings
+representing polynomials and solutions into the corresponding internal
+data structures.  The corresponding `load_` methods take the internal
+data structures for polynomials and solutions, stored in containers,
+and show their corresponding representations as Python strings.
+For example, consider the session
+
+::
+
+   >>> from phcpy.interface import store_standard_system, load_standard_system
+   >>> store_standard_system(['x^2 - 1/3;'])
+   >>> load_standard_system()
+   ['x^2 - 3.33333333333333E-01;']
+
+The session above illustrates the parsing of a system one could use
+to approximate the square root of 1/3.  With standard double precision,
+the 1/3 is approximated to about 15 decimal places.
 
 wrappers to the C interface to PHCpack
 --------------------------------------
 
-A basic application of the primitive operations in phcpy2c
+A basic application of the primitive operations in phcpy2c2
 is an interactive reading of a polynomial system.
 Assume the file example at /tmp/ contains a polynomial system,
 then we can do the following:
 
 ::
 
-   >>> from phcpy.phcpy2c import py2c_syscon_read_standard_system as readsys
-   >>> from phcpy.phcpy2c import py2c_syscon_write_standard_system as writesys
+   >>> from phcpy.phcpy2c2 import py2c_syscon_read_standard_system as readsys
+   >>> from phcpy.phcpy2c2 import py2c_syscon_write_standard_system as writesys
    >>> readsys()
 
    Reading a polynomial system...
@@ -49,7 +77,7 @@ then we can do the following:
    x^2+4*y^2-4;
    2*y^2-x;
    0
-   >>> from phcpy.phcpy2c import py2c_solve_system as solve
+   >>> from phcpy.phcpy2c2 import py2c_solve_system as solve
    >>> solve(0)
 
    ROOT COUNTS :
@@ -62,7 +90,7 @@ then we can do the following:
    mixed volume : 4
    stable mixed volume : 4
    4
-   >>> from phcpy.phcpy2c import py2c_solcon_write_standard_solutions as writesols
+   >>> from phcpy.phcpy2c2 import py2c_solcon_write_standard_solutions as writesols
    >>> writesols()
    4 2
    ===========================================================================
@@ -97,17 +125,23 @@ then we can do the following:
    0
    >>> 
 
-With these primitive operations in phcpy2c we can bypass the writing
+With these primitive operations in phcpy2c2 we can bypass the writing
 and the parsing to strings.
 
-functions in the module
------------------------
+functions in the module interface
+---------------------------------
 
-The module ``phcpy2c`` wraps the C functions in the C interface to PHCpack.
+.. automodule:: interface
+   :members:
+
+functions in the module phcpy2c2
+--------------------------------
+
+The module ``phcpy2c2`` wraps the C functions in the C interface to PHCpack.
 The C interface to PHCpack was developed in the application of message passing
 (MPI) to run the path trackers on distributed memory multiprocessing computers.
 All functions documented below have their counterpart in C 
 that are therefore then also directly accessible from C programs.
 
-.. automodule:: phcpy2c
+.. automodule:: phcpy2c2
    :members:

@@ -55,7 +55,7 @@ of the start system to the solutions of the target system.
    >>> s = track(p, q, qsols)
    >>> len(s)
    4
-   >>> for sol in s: print(sol)
+   >>> for sol in s: print sol
    ... 
    t :  1.00000000000000E+00   0.00000000000000E+00
    m : 1
@@ -108,7 +108,7 @@ For example:
    >>> p = ['x^2 + 4*y^2 - 4;', '2*y^2 - x;']
    >>> (q,qsols) = total_degree_start_system(p)
    >>> s1 = track(p, q, [qsols[2]])
-   >>> print(s1[0])
+   >>> print s1[0]
    t :  1.00000000000000E+00   0.00000000000000E+00
    m : 1
    the solution for t :
@@ -116,7 +116,7 @@ For example:
     y :  7.86151377757423E-01   0.00000000000000E+00
    == err :  1.383E-16 = rco :  1.998E-01 = res :  2.220E-16 =
    >>> s2 = track(p,q,[qsols[2]])
-   >>> print(s2[0])
+   >>> print s2[0]
    t :  1.00000000000000E+00   0.00000000000000E+00
    m : 1
    the solution for t :
@@ -134,7 +134,7 @@ As a continuation of the session from above:
 ::
 
    >>> s3 = track(p, q, [qsols[2]], gamma=complex(0.824372806319,0.56604723848934))
-   >>> print(s3[0])
+   >>> print s3[0]
    t :  1.00000000000000E+00   0.00000000000000E+00
    m : 1
    the solution for t :
@@ -176,21 +176,21 @@ The session below illustrates the use of this generator:
    >>> initialize_standard_tracker(p, q)
    >>> initialize_standard_solution(len(p), s[0])
    >>> s1 = next_standard_solution()
-   >>> print(s1)
+   >>> print s1
    t :  1.00000000000000E-01   0.00000000000000E+00
    m : 1
    the solution for t :
     x :  9.96338438384030E-01   4.70831004481527E-03
     y :  9.96408320626402E-01   4.95310952563875E-03
    == err :  2.375E-05 = rco :  1.000E+00 = res :  3.619E-10 =
-   >>> print(next_standard_solution())
+   >>> print next_standard_solution()
    't :  2.00000000000000E-01   0.00000000000000E+00
     m : 1
     the solution for t :
      x :  9.80919860804043E-01   1.78496473654540E-02
      y :  9.81218221286503E-01   2.32056259678926E-02
    == err :  1.671E-08 = rco :  1.000E+00 = res :  1.424E-16 ='
-   >>> print(next_standard_solution())
+   >>> print next_standard_solution()
    t :  3.00000000000000E-01   0.00000000000000E+00
    m : 1
    the solution for t :
@@ -211,7 +211,7 @@ and view all values for ``x`` of the solutions:
    >>> from phcpy.solutions import strsol2dict
    >>> dicpts = [strsol2dict(sol) for sol in points]
    >>> xvals = [sol['x'] for sol in dicpts]
-   >>> for x in xvals: print(x)
+   >>> for x in xvals: print x
    ... 
    (0.996338438384+0.00470831004482j)
    (0.980919860804+0.0178496473655j)
@@ -240,10 +240,10 @@ The code used to make the plot (using matplotlib) is below:
 ::
 
    p = ['x^2 + y - 3;', 'x + 0.125*y^2 - 1.5;']
-   print('constructing a total degree start system ...')
+   print 'constructing a total degree start system ...'
    from phcpy.solver import total_degree_start_system as tds
    q, qsols = tds(p)
-   print('number of start solutions :', len(qsols))
+   print 'number of start solutions :', len(qsols)
    from phcpy.trackers import initialize_standard_tracker
    from phcpy.trackers import initialize_standard_solution
    from phcpy.trackers import next_standard_solution
@@ -274,7 +274,7 @@ The code used to make the plot (using matplotlib) is below:
            tval = eval(dictsol['t'].lstrip().split(' ')[0])
            if(tval == 1.0):
                break
-       print(ns)
+       print ns
        xre = [point.real for point in xpoints]
        yre = [point.real for point in ypoints]
        axs.set_xlim(min(xre)-0.3, max(xre)+0.3)
@@ -310,7 +310,7 @@ with polyhedral homotopies.
    >>> psols = track(p,q,qsols)
    >>> len(psols)
    11
-   >>> print(psols[4])
+   >>> print psols[4]
    t :  1.00000000000000E+00   0.00000000000000E+00
    m : 1
    the solution for t :
@@ -430,10 +430,10 @@ The script is below:
    start = load_standard_system()
    fail = py2c_copy_start_solutions_to_container()
    sols = load_standard_solutions()
-   print('number of start solutions :', py2c_solcon_number_of_solutions())
-   print('starting the path tracking with', nbtasks, 'task(s) ...')
+   print 'number of start solutions :', py2c_solcon_number_of_solutions()
+   print 'starting the path tracking with', nbtasks, 'task(s) ...'
    endsols = standard_double_track(target, start, sols, 0, nbtasks)
-   print('tracked', len(endsols), 'solution paths')
+   print 'tracked', len(endsols), 'solution paths'
 
 GPU accelerated path tracking
 -----------------------------
@@ -459,28 +459,28 @@ cyclic 10-roots problem.
    from phcpy.interface import load_standard_system as loadsys
    from phcpy.interface import load_standard_solutions as loadsols
    cyc10 = loadsys()
-   print('the cyclic 10-roots problem :')
+   print 'the cyclic 10-roots problem :'
    for pol in cyc10:
-       print(pol)
+       print pol
    fail = read_start(len(cyc10stafile), cyc10stafile)
    cyc10q = loadsys()
-   print('a start system for the cyclic 10-roots problem :')
+   print 'a start system for the cyclic 10-roots problem :'
    for pol in cyc10q:
-       print(pol)
+       print pol
    cyc10qsols = loadsols()
-   print('number of start solutions :', len(cyc10qsols))
-   print('the first solution :')
-   print(cyc10qsols[0])
-   print('calling the path tracker...')
+   print 'number of start solutions :', len(cyc10qsols)
+   print 'the first solution :'
+   print cyc10qsols[0]
+   print 'calling the path tracker...'
    if(GPU == 0):
        from phcpy.trackers import ade_double_track
        cyc10sols = ade_double_track(cyc10,cyc10q,cyc10qsols,verbose=0)
    else:
        from phcpy.trackers import gpu_double_track
        cyc10sols = gpu_double_track(cyc10,cyc10q,cyc10qsols,verbose=0)
-   print('number of solutions :', len(cyc10sols))
+   print 'number of solutions :', len(cyc10sols)
    for sol in cyc10sols:
-       print(sol)
+       print sol
 
 sweep homotopies
 ----------------
@@ -528,7 +528,7 @@ to launch this path tracking is listed below:
    >>> startsols = [first, second]
    >>> from phcpy.sweepers import standard_real_sweep as sweep
    >>> newsols = sweep(circle, startsols)
-   >>> print(newsols[0])
+   >>> print newsols[0]
 
 and then we see as output of the ``print`` statement:
 
@@ -587,7 +587,7 @@ Then, at the end of the sweep, we will find two complex conjugated solutions.
 
 ::
 
-    >>> print(newsols[0])
+    >>> print newsols[0]
     t :  1.00000000000000E+00   0.00000000000000E+00
     m : 1
     the solution for t :
@@ -613,17 +613,73 @@ as in ``phc -p``, via an interactive menu.
 The other functions in the module allow to get the values and to
 set the values of each parameter, setting, or tolerance.
 
-The documentation strings of the functions
-exported by the module ``tuning`` of the package phcpy are listed below.
+a polyhedral end game
+---------------------
 
-.. automodule:: tuning
-   :members:
+In case the mixed volume is not a sharp root count,
+there are paths diverging to points with coordinates equal to zero,
+or diverging to infinity. 
+The directions of those diverging paths coincide with
+the leading exponents of the Puiseux series expansions of the points
+with coordinates equal to zero and/or at infinity.
+In particular, positive leading exponents occur with coordinates
+going to zero, while for a coordinate at infinity, the corresponding
+leading exponent will be negative.
+
+To activate the polyhedral end game, the extrapolation order needs
+to be nonzero.  We can set this order as follows:
+
+::
+
+   >>> from phcpy.tuning import order_endgame_extrapolator_set as set
+   >>> set(4)
+   0
+
+The ``0`` on return is the failure code, which should equal zero
+if all went well.  To double check, we can get the value of the
+order of the extrapolator in the end game:
+
+::
+
+   >>> from phcpy.tuning import order_endgame_extrapolator_get as get
+   >>> get()
+   4
+
+Let us run a polyhedral end game on a very simple example.
+
+::
+
+   >>> f = ['x + y^3 - 1;', 'x + y^3 + 1;']
+   >>> from phcpy.solver import mixed_volume as mv
+   >>> from phcpy.solver import random_coefficient_system as rcs
+   >>> mv(f)
+   4
+   >>> (g, gsols) = rcs(f)
+   >>> len(gsols)
+   4
+
+Although the mixed volume equals four (and we have four start solutions
+in ``gsols`` of the start system ``g``), we can see that ``f`` has no
+solutions, and all four paths will diverge to infinity.
+
+::
+
+   >>> from phcpy.trackers import standard_double_track as track
+   >>> sols = track(f, g, gsols)
+   >>> from phcpy.tropisms import standard_retrieve as retrieve
+   >>> (w, d, e) = retrieve(len(sols), len(f))
+   >>> w
+   [3, 3, 3, 3]
+
+We see that the winding numbers of the four paths are all equal to 3
+and the numerically computed tropisms are approximations of (-1, -1/3),
+or (-3, -1) when presented in normal form.
 
 functions in the module trackers
 --------------------------------
    
 The documentation strings of the functions
-exported by the module ``trackers`` of the package phcpy are listed below.
+exported by the module ``trackers`` are listed below.
 
 .. automodule:: trackers
    :members:
@@ -632,8 +688,26 @@ functions in the module sweepers
 --------------------------------
    
 The documentation strings of the functions
-exported by the module ``sweepers`` of the package phcpy are listed below.
+exported by the module ``sweepers`` are listed below.
 
 .. automodule:: sweepers
    :members:
 
+functions in the module tuning
+------------------------------
+
+The documentation strings of the functions
+exported by the module ``tuning`` are listed below.
+
+.. automodule:: tuning
+   :members:
+
+functions in the module tropisms
+--------------------------------
+
+The module ``tropisms`` provides access to the numerically computed
+tropisms via a polyhedral end game. 
+The functions exported by the module ``tropisms`` are listed below.
+
+.. automodule:: tropisms
+   :members:

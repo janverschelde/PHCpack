@@ -1,12 +1,19 @@
-Newton polytopes
-================
+Newton polytopes and monomial maps
+==================================
 
 The Newton polytopes of the polynomial system provide important
 information about the structure of the solution sets.
-The module ``polytopes`` provides an interface to the convex hull
+The module **phcpy.polytopes** provides an interface to the convex hull
 methods of PHCpack.  It also provides a directer interface to the
 mixed volume calculator, directer in the sense that the user can enter
 the supports directly, without having to formulate a polynomial system.
+
+Systems that have exactly two monomials with nonzero coefficient
+in every equation are called binomial systems.
+Although such binomial systems are very particular,
+because of their sparse structure, they can be solved much faster.
+The module **phcpy.maps** provides a Python interface to the
+solvers of binomial systems.
 
 convex hulls of lattice polytopes
 ---------------------------------
@@ -27,7 +34,6 @@ The points are generated at random, with coordinates between -9 and +9.
    [(9, 8), (5, 6), (-1, -6), (9, -4)]
    >>> normals
    [(1, -2), (2, -1), (-1, 5), (-1, 0)]
-   >>> 
 
 The output of the convex hull method consists of a tuple of two lists.
 The first list is the list of vertices.  For this particular example,
@@ -94,7 +100,6 @@ consider the example in the session below:
    (-265, [-29, -35, -39], [7, 1, 9], [4, 10, 8])
    (-165, [-19, -10, -4], [1, 8, 9], [11, 8, 9])
    (-429, [3, -26, 42], [5, 8, 1], [1, 10, 2])
-   >>> 
 
 The output of the ``convex_hull`` function returns a list of facets.
 Each facet is represented as a tuple of four items.
@@ -206,10 +211,44 @@ generating another polytope:
    3910
    >>> mv([1, 2],(p1, p2))
    3961
-   >>> 
 
-functions in the module
------------------------
+solving binomial systems
+------------------------
+
+The irreducible components of
+positive dimensional solution sets of binomial systems
+have coordinates that can be represented by maps of monomials 
+in free independent variables.  In this representation, there
+are as many free variables as the dimension of the solution set.
+The module ``maps`` exports a solver for binomial systems.
+
+In the example below, we consider a simple system
+of two binomials in three variables:
+
+::
+
+   >>> f = [ 'x**2*y - z*x;', 'x**2*z - y**2*x;' ]
+   >>> from phcpy.maps import binomial_solver
+   >>> from phcpy.maps import solve_binomials
+   >>> maps = solve_binomials(3,f)
+   >>> for map in maps: print map
+   ... 
+   ['x - 0', 'y - (1+0j)*t1**1', 'z - (1+0j)*t2**1', 'dimension = 2', 'degree = 1']
+   ['x - (1+0j)*t1**1', 'y - (1+0j)*t1**2', 'z - (1+0j)*t1**3', 'dimension = 1', 'degree = 3']
+   ['x - (1+0j)*t1**1', 'y - 0', 'z - 0', 'dimension = 1', 'degree = 1']
+
+In the output above we recognize the twisted cubic,
+the x-axis, and the yz-plane as the three solution sets.
+
+functions in the module polytopes
+---------------------------------
 
 .. automodule:: polytopes
    :members:
+
+functions in the module maps
+----------------------------
+
+.. automodule:: maps
+   :members:
+
