@@ -20,7 +20,7 @@ Ada procedure ``use_c2phc.adb``.
 The collection of parallel distibuted memory programs (MPI2phc)
 using message passing (MPI) depends on PHClib.
 All C functions that are exported to the Python interface have
-their prototypes in the header file ``phcpy2c3.h``
+their prototypes in the header file ``phcpy2c.h``
 while the definitions in ``phcpy2c3.c`` call the proper routines
 in PHClib.
 

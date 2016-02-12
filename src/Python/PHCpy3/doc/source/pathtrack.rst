@@ -613,17 +613,73 @@ as in ``phc -p``, via an interactive menu.
 The other functions in the module allow to get the values and to
 set the values of each parameter, setting, or tolerance.
 
-The documentation strings of the functions
-exported by the module ``tuning`` of the package phcpy are listed below.
+a polyhedral end game
+---------------------
 
-.. automodule:: tuning
-   :members:
+In case the mixed volume is not a sharp root count,
+there are paths diverging to points with coordinates equal to zero,
+or diverging to infinity. 
+The directions of those diverging paths coincide with
+the leading exponents of the Puiseux series expansions of the points
+with coordinates equal to zero and/or at infinity.
+In particular, positive leading exponents occur with coordinates
+going to zero, while for a coordinate at infinity, the corresponding
+leading exponent will be negative.
+
+To activate the polyhedral end game, the extrapolation order needs
+to be nonzero.  We can set this order as follows:
+
+::
+
+   >>> from phcpy.tuning import order_endgame_extrapolator_set as set
+   >>> set(4)
+   0
+
+The ``0`` on return is the failure code, which should equal zero
+if all went well.  To double check, we can get the value of the
+order of the extrapolator in the end game:
+
+::
+
+   >>> from phcpy.tuning import order_endgame_extrapolator_get as get
+   >>> get()
+   4
+
+Let us run a polyhedral end game on a very simple example.
+
+::
+
+   >>> f = ['x + y^3 - 1;', 'x + y^3 + 1;']
+   >>> from phcpy.solver import mixed_volume as mv
+   >>> from phcpy.solver import random_coefficient_system as rcs
+   >>> mv(f)
+   4
+   >>> (g, gsols) = rcs(f)
+   >>> len(gsols)
+   4
+
+Although the mixed volume equals four (and we have four start solutions
+in ``gsols`` of the start system ``g``), we can see that ``f`` has no
+solutions, and all four paths will diverge to infinity.
+
+::
+
+   >>> from phcpy.trackers import standard_double_track as track
+   >>> sols = track(f, g, gsols)
+   >>> from phcpy.tropisms import standard_retrieve as retrieve
+   >>> (w, d, e) = retrieve(len(sols), len(f))
+   >>> w
+   [3, 3, 3, 3]
+
+We see that the winding numbers of the four paths are all equal to 3
+and the numerically computed tropisms are approximations of (-1, -1/3),
+or (-3, -1) when presented in normal form.
 
 functions in the module trackers
 --------------------------------
    
 The documentation strings of the functions
-exported by the module ``trackers`` of the package phcpy are listed below.
+exported by the module ``trackers`` are listed below.
 
 .. automodule:: trackers
    :members:
@@ -632,8 +688,26 @@ functions in the module sweepers
 --------------------------------
    
 The documentation strings of the functions
-exported by the module ``sweepers`` of the package phcpy are listed below.
+exported by the module ``sweepers`` are listed below.
 
 .. automodule:: sweepers
    :members:
 
+functions in the module tuning
+------------------------------
+
+The documentation strings of the functions
+exported by the module ``tuning`` are listed below.
+
+.. automodule:: tuning
+   :members:
+
+functions in the module tropisms
+--------------------------------
+
+The module ``tropisms`` provides access to the numerically computed
+tropisms via a polyhedral end game. 
+The functions exported by the module ``tropisms`` are listed below.
+
+.. automodule:: tropisms
+   :members:
