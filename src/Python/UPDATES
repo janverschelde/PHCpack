@@ -1,3 +1,6 @@
+Fri 12 Feb 2016 : updated __init__.py and setup.py, both in PHCpy2 and
+  PHCpy3 for version 0.4.0 of phcpy.
+
 Thu 11 Feb 2016 : updated the tropisms.py in PHCpy2/phcpy for python2.
 
 Wed 10 Feb 2016 : updated test in tropisms.py for 'dd' and 'qd'.
