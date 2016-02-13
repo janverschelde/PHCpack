@@ -1,3 +1,6 @@
+Sat 13 Feb 2016 : new test program ts_nbrvar to determine the size of the
+  support of a polynomial given as a string.
+
 Sat 14 Nov 2015 : factored out the writing of a pure power out of the
   standard_complex_polynomials_io.adb into the new write_factors package.
   Also multprec_complex_polynomials_io.adb uses write_factors.
