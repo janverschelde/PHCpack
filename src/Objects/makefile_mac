@@ -380,6 +380,10 @@ ts_rwspol:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_rwspol.adb \
               -o $(BIN)/ts_rwspol
 
+ts_nbrvar:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_nbrvar.adb \
+              -o $(BIN)/ts_nbrvar
+
 # Test programs for Math_Lib/Functions :
 
 ts_evaline:
@@ -2347,6 +2351,7 @@ phcpy2c2.so:
 	gcc -c -O2 $(PHCLib)/lists_and_strings.c
 	gcc -c -O2 $(PHCLib)/celcon.c
 	gcc -c -O2 $(PHCLib)/scalers.c
+	gcc -c -O2 $(PHCLib)/numbtrop.c
 	gcc -c -O2 $(PHCLib)/sweep.c
 	gcc -c -O2 $(PHCLib)/witset.c
 	gcc -c -O2 $(PHCLib)/schubert.c
@@ -2362,7 +2367,7 @@ phcpy2c2.so:
 	gnatlink -dynamiclib -C use_c2phc phcpy2c2.o phcpack.o syscon.o \
             witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
             solcon.o product.o lists_and_strings.o celcon.o scalers.o \
-            sweep.o schubert.o \
+            numbtrop.o sweep.o schubert.o \
                  -o ../Python/PHCpy2/phcpy/phcpy2c2.so -framework Python
 
 phcpy2c3.so:
