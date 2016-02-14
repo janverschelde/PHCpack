@@ -1,3 +1,7 @@
+Sun 14 Feb 2016 : new package parse_dimensions to extract the number of symbols
+  used as variables in a string representation of a polynomial system,
+  tested by ts_nbrvar.
+
 Sat 13 Feb 2016 : new test program ts_nbrvar to determine the size of the
   support of a polynomial given as a string.
 
