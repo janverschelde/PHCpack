@@ -1,3 +1,6 @@
+Mon 15 Feb 2016 : added a job to scan a string for the number of symbols
+  used as variables in the string representation for a polynomial system.
+
 Tue 9 Feb 2016 : added initialization of the numerical tropisms container
   to phcpack_operations.adb.
 
