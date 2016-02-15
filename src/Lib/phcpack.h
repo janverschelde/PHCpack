@@ -214,6 +214,17 @@ char *read_equations_from_file
  * ON RETURN :
  *  len       length of the string on return. */
 
+int scan_number_of_variables ( int nc, char *eqs, int *dim );
+/*
+ * DESCRIPTION :
+ *   Given in eqs are as many characters as the value of nc.
+ *   The string eqs contains a number of polynomials,
+ *   each one terminated by a semi colon.
+ *   Scans the string eqs for the total number of symbols
+ *   that occur as variables.  This number is returned in dim.
+ *   The return value of the function is the failure code,
+ *   which equals zero if no exception happened during parsing. */
+
 char *read_polynomials_from_file
  ( int nc, char *name, int *len, int *nq, int *nv, int *fail );
 /*

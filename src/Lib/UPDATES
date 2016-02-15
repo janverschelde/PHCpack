@@ -1,3 +1,7 @@
+Mon 15 Feb 2016 : added function to scan a string representation of a
+  polynomial systems for the number of symbols used as variables to phcpack
+  with a new test program in lib_nbrvar.
+
 Mon 8 Feb 2016 : corrected dimensions of the character arrays when
   retrieving tropisms in quad double precision, in phcpy2c2.c and phcpy2c3.c.
 

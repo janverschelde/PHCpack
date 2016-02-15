@@ -230,6 +230,21 @@ char *read_equations_from_file
    }
 }
 
+int scan_number_of_variables ( int nc, char *eqs, int *dim )
+{
+   int fail = 0;
+   int i,b[nc];
+   double *c;
+
+   for(i=0; i<nc; i++) b[i] = (int) eqs[i];
+
+   *dim = nc;
+
+   fail = _ada_use_c2phc(439,dim,b,c);
+
+   return fail;
+}
+
 char *read_polynomials_from_file
  ( int nc, char *name, int *len, int *nq, int *nv, int *fail )
 {
