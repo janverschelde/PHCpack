@@ -66,6 +66,26 @@ def random_system(dim, nbrmon, deg, cff):
     py2c_syscon_random_system(dim, nbrmon, deg, cff)
     return load_standard_system()
 
+def number_of_symbols(pols):
+    """
+    Returns the number of symbols used as variables in the polynomials
+    in the list pols.  This function helps to determine whether a system
+    is square (that is: has as many equations as unknowns) or not.
+    """
+    from phcpy.phcpy2c3 import py2c_scan_for_symbols
+    inpols = ''.join(pols)
+    return py2c_scan_for_symbols(len(inpols), inpols)
+
+def is_square(pols):
+    """
+    Given in the list pols are string representations of Laurent polynomials.
+    A system is square if it has as many unknowns as equations.
+    Returns True if the system is square, False otherwise.
+    """
+    nbrvar = number_of_symbols(pols)
+    nbreqs = len(pols)
+    return nbrvar == nbreqs
+
 def standard_solve(pols, silent=False, tasks=0):
     """
     Calls the blackbox solver.  On input in pols is a list of strings.

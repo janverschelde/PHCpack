@@ -1,3 +1,6 @@
+Tue 16 Feb 2016 : added functions to the solver module of PHCpy2 and PHCpy3
+  to determine if a polynomial system is square or not.
+
 Fri 12 Feb 2016 : updated __init__.py and setup.py, both in PHCpy2 and
   PHCpy3 for version 0.4.0 of phcpy.
 
