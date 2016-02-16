@@ -2246,6 +2246,30 @@ lib_numbtrop:
 	gnatlink -C use_c2phc numbtrop.o lib_numbtrop.o \
                  -o $(BIN)/lib_numbtrop -lm
 
+lib_numbtrop_cpp:
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/numbtrop.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_numbtrop.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc numbtrop.o lib_numbtrop.o \
+                 -o $(BIN)/lib_numbtrop -lm --LINK=g++
+
+lib_nbrvar:
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	gcc -c $(PHCLib)/phcpack.c
+	gcc -c $(PHCLib)/lib_nbrvar.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o lib_nbrvar.o \
+                 -o $(BIN)/lib_nbrvar -lm
+
+lib_nbrvar_cpp:
+	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
+	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_nbrvar.c
+	gnatbind -n use_c2phc
+	gnatlink -C use_c2phc phcpack.o lib_nbrvar.o \
+                 -o $(BIN)/lib_nbrvar -lm --LINK=g++
+
 adepath_d.o: adenewton_d.o adeonepath_d.o ademanypaths_d.o
 	g++ -O2 -Dcompilewgpp=1 -I$(PHCAda)/PHCtoC \
             -I$(PHCgpu)/Path/DefineTypesD -I$(PHCgpu)/Path/Poly \
