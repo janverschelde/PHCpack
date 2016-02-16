@@ -620,6 +620,17 @@ static PyObject *py2c_solve_system
  *   On return, the container for solutions in standard double precision
  *   contains the solutions to the system in the standard systems container. */
 
+static PyObject *py2c_scan_for_symbols
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Given on input are two arguments: a number and a string.
+ *   The string holds the string representation of a polynomial system,
+ *   where each polynomial is terminated by a semi colon.
+ *   The first argument on input is the number of characters in the string.
+ *   On return is the number of symbols used as variables in the system.
+ *   This function helps to determine whether a system is square or not. */
+
 static PyObject *py2c_solve_dobldobl_system
  ( PyObject *self, PyObject *args );
 /*

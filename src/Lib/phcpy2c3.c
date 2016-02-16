@@ -994,6 +994,20 @@ static PyObject *py2c_solve_system
    return Py_BuildValue("i",rc);
 }
 
+static PyObject *py2c_scan_for_symbols
+ ( PyObject *self, PyObject *args )
+{
+   int fail,nbc,dim;
+   char *polsys;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"is",&nbc,&polsys)) return NULL;
+
+   fail = scan_number_of_variables(nbc,polsys,&dim);
+
+   return Py_BuildValue("i",dim);
+}
+
 static PyObject *py2c_solve_dobldobl_system
  ( PyObject *self, PyObject *args )
 {
@@ -6734,6 +6748,8 @@ static PyMethodDef phcpy2c3_methods[] =
     "Copies the solutions in arbitrary multiprecision from the\n container to the start solutions in arbitrary multiprecision."},
    {"py2c_solve_system", py2c_solve_system, METH_VARARGS,
     "Calls the blackbox solver on the system stored in the container for\n systems with coefficients in standard double precision.\n One integer is expected on input: the number of tasks.\n If that number is zero, then no multitasking is applied.\n On return, the container for solutions in standard double precision\n contains the solutions to the system in the standard systems container."},
+   {"py2c_scan_for_symbols", py2c_scan_for_symbols, METH_VARARGS,
+    "Given on input are two arguments: a number and a string.\n The string holds the string representation of a polynomial system,\n where each polynomial is terminated by a semi colon.\n The first argument on input is the number of characters in the string.\n On return is the number of symbols used as variables in the system.\n This function helps to determine whether a system is square or not."},
    {"py2c_solve_dobldobl_system", py2c_solve_dobldobl_system, METH_VARARGS,
     "Calls the blackbox solver on the system stored in the container for\n systems with coefficients in double double precision.\n One integer is expected on input: the number of tasks.\n If that number is zero, then no multitasking is applied.\n On return, the container for solutions in double double precision\n contains the solutions to the system in the dobldobl systems container."},
    {"py2c_solve_quaddobl_system", py2c_solve_quaddobl_system, METH_VARARGS,
