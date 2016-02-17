@@ -1,3 +1,6 @@
+Wed 17 Feb 2016 : wrote a checkin function for the blackbox solver,
+  for both the python2 and python3 versions.
+
 Tue 16 Feb 2016 : added functions to the solver module of PHCpy2 and PHCpy3
   to determine if a polynomial system is square or not.
 

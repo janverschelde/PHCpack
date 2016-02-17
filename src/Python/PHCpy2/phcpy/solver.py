@@ -72,7 +72,7 @@ def number_of_symbols(pols):
     in the list pols.  This function helps to determine whether a system
     is square (that is: has as many equations as unknowns) or not.
     """
-    from phcpy.phcpy2c3 import py2c_scan_for_symbols
+    from phcpy.phcpy2c2 import py2c_scan_for_symbols
     inpols = ''.join(pols)
     return py2c_scan_for_symbols(len(inpols), inpols)
 
@@ -164,7 +164,23 @@ def quaddobl_solve(pols, silent=False, tasks=0):
     py2c_solve_quaddobl_Laurent_system(silent, tasks)
     return load_quaddobl_solutions()
 
-def solve(pols, silent=False, tasks=0, precision='d'):
+def solve_checkin(pols):
+    """
+    Checks whether the system defined by the list of strings in pols
+    is square.  If so, True is returned.  Otherwise, an error message
+    is printed to help the user.
+    """
+    if is_square(pols):
+        return True
+    else:
+        print 'The blackbox solver accepts only square systems,'
+        dim = number_of_symbols(pols)
+        neq = len(pols)
+        print 'got %d polynomials in %d variables.' % (neq, dim)
+        print 'Either correct the input, or use the module sets'
+        print 'to solve polynomial systems that are not square.'
+
+def solve(pols, silent=False, tasks=0, precision='d', checkin=True):
     """
     Calls the blackbox solver.  On input in pols is a list of strings.
     By default, the solver will print to screen the computed root counts.
@@ -174,7 +190,11 @@ def solve(pols, silent=False, tasks=0, precision='d'):
     d  : standard double precision (1.1e-15 or 2^(-53)),
     dd : double double precision (4.9e-32 or 2^(-104)),
     qd : quad double precision (1.2e-63 or 2^(-209)).
+    If checkin (by default), the input pols is checked for being square.
     """
+    if checkin:
+        if not solve_checkin(pols):
+            return None
     if(precision == 'd'):
         return standard_solve(pols, silent, tasks)
     elif(precision == 'dd'):
