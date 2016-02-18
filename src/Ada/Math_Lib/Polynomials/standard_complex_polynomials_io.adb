@@ -100,8 +100,9 @@ package body Standard_Complex_Polynomials_io is
   --   if the bracket counter bc is nonzero when the delimiter is encountered.
 
     n : constant natural32 := Symbol_Table.Maximal_Size;
-    char,oper : character;
+    char,oper,nextchar : character;
     term,res,acc : Poly := Null_Poly;
+    eol : boolean;
 
   begin
     oper := '+';
@@ -133,8 +134,14 @@ package body Standard_Complex_Polynomials_io is
          -- elsif char = ')' then
          --   bc := bc - 1;
           end if;
-          if char = '^'
-           then Read_Power_Factor(file,char,term);
+          if char = '^' then
+            Read_Power_Factor(file,char,term);
+          elsif char = '*' then  -- look for the **2
+            look_ahead(file,nextchar,eol);
+            if nextchar = '*' then
+              get(file,char);
+              Read_Power_Factor(file,char,term);
+            end if;
           end if;
           case oper is
             when '+' => Add(acc,res); Clear(res); Copy(term,res);
@@ -157,8 +164,14 @@ package body Standard_Complex_Polynomials_io is
             oper := char; get(file,char);  -- skip '*'
             Read_Term(file,bc,char,n,term);
             Skip_Spaces_and_CR(file,char);
-            if char = '^'
-             then Read_Power_Factor(file,char,term);
+            if char = '^' then
+              Read_Power_Factor(file,char,term);
+            elsif char = '*' then
+              look_ahead(file,nextchar,eol);
+              if nextchar = '*' then
+                get(file,char);
+                Read_Power_Factor(file,char,term);
+              end if;
             end if;
             if char /= '(' then
               case oper is

@@ -1,3 +1,6 @@
+Thu 18 Feb 2016 : with look_ahead() in standard_complex_polynomials_io.adb,
+  solved the problem of parsing (x-y)**2.
+
 Sun 14 Feb 2016 : new package parse_dimensions to extract the number of symbols
   used as variables in a string representation of a polynomial system,
   tested by ts_nbrvar.
