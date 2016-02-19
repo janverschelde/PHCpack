@@ -282,7 +282,7 @@ package body Standard_Complex_Poly_Strings is
     bracket : boolean := false;
 
   begin
-    put_line("In Parse_Power_Factor ...");
+   -- put_line("In Parse_Power_Factor ...");
     k := k + 1;                -- skip the '^'
     if k > s'last
      then return;
@@ -350,8 +350,13 @@ package body Standard_Complex_Poly_Strings is
           if s(k) = '(' -- or s(k) = ')'
            then raise BAD_BRACKET;
           end if;
-          if s(k) = '^'
-           then Parse_Power_Factor(s,k,term);
+          if s(k) = '^' then
+            Parse_Power_Factor(s,k,term);
+          elsif s(k) = '*' then
+            if s(k+1) = '*' then
+              k := k+1;
+              Parse_Power_Factor(s,k,term);
+            end if;
           end if;
           case oper is
             when '+' => Add(acc,res); Clear(res); Copy(term,res);
@@ -374,8 +379,13 @@ package body Standard_Complex_Poly_Strings is
             oper := s(k); k := k + 1;  -- skip '*'
             Parse_Term(s,bc,k,n,term);
             Skip_Spaces_and_CR(s,k);
-            if s(k) = '^'
-             then Parse_Power_Factor(s,k,term);
+            if s(k) = '^' then
+              Parse_Power_Factor(s,k,term);
+            elsif s(k) = '*' then
+              if s(k+1) = '*' then
+                k := k+1;
+                Parse_Power_Factor(s,k,term);
+              end if;
             end if;
             if s(k) /= '(' then
               case oper is
@@ -446,8 +456,13 @@ package body Standard_Complex_Poly_Strings is
           if s(k) = '(' -- or s(k) = ')'
            then raise BAD_BRACKET;
           end if;
-          if s(k) = '^'
-           then Parse_Power_Factor(s,k,term,term_last);
+          if s(k) = '^' then
+            Parse_Power_Factor(s,k,term,term_last);
+          elsif s(k) = '*' then
+            if s(k+1) = '*' then
+              k := k + 1;
+              Parse_Power_Factor(s,k,term,term_last);
+            end if;
           end if;
           case oper is
             when '+' => Merge_Concat(acc,acc_last,res); 
@@ -472,8 +487,13 @@ package body Standard_Complex_Poly_Strings is
             oper := s(k); k := k + 1;  -- skip '*'
             Parse_Term(s,bc,k,n,term,term_last);
             Skip_Spaces_and_CR(s,k);
-            if s(k) = '^'
-             then Parse_Power_Factor(s,k,term,term_last);
+            if s(k) = '^' then
+              Parse_Power_Factor(s,k,term,term_last);
+            elsif s(k) = '*' then
+              if s(k+1) = '*' then
+                k := k + 1;
+                Parse_Power_Factor(s,k,term,term_last);
+              end if;
             end if;
             if s(k) /= '(' then
               case oper is
@@ -523,8 +543,13 @@ package body Standard_Complex_Poly_Strings is
       end if;
       Parse_Polynomial(s(p..s'last),bc,p,n,pb);
       Skip_Spaces_and_CR(s,p);
-      if s(p) = '^'
-       then Parse_Power_Factor(s,p,pb);
+      if s(p) = '^' then
+        Parse_Power_Factor(s,p,pb);
+      elsif s(p) = '*' then
+        if s(p+1) = '*' then
+          p := p + 1;
+          Parse_Power_Factor(s,p,pb);
+        end if;
       end if;
       return;
     end if;
@@ -600,8 +625,13 @@ package body Standard_Complex_Poly_Strings is
       end if;
       Parse_Polynomial(s(p..s'last),bc,p,n,pb,pb_last);
       Skip_Spaces_and_CR(s,p);
-      if s(p) = '^'
-       then Parse_Power_Factor(s,p,pb,pb_last);
+      if s(p) = '^' then
+        Parse_Power_Factor(s,p,pb,pb_last);
+      elsif s(p) = '*' then
+        if s(p+1) = '*' then
+          p := p + 1;
+          Parse_Power_Factor(s,p,pb,pb_last);
+        end if;
       end if;
       return;
     end if;
@@ -753,6 +783,11 @@ package body Standard_Complex_Poly_Strings is
             Parse_Factor(s,bc,p,n,d,pb);
           elsif s(p) = '^' then
             Parse_Power_Factor(s,p,res);
+          elsif s(p) = '*' then
+            if s(p+1) = '*' then
+              p := p + 1;
+              Parse_Power_Factor(s,p,res);
+            end if;
           else
             raise ILLEGAL_CHARACTER;
           end if;
@@ -870,6 +905,11 @@ package body Standard_Complex_Poly_Strings is
             Parse_Factor(s,bc,p,n,d,pb,pb_last);
           elsif s(p) = '^' then
             Parse_Power_Factor(s,p,res,res_last);
+          elsif s(p) = '*' then
+            if s(p+1) = '*' then
+              p := p + 1;
+              Parse_Power_Factor(s,p,res,res_last);
+            end if;
           else
             raise ILLEGAL_CHARACTER;
           end if;

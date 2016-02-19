@@ -129,8 +129,13 @@ package body Standard_Complex_Laur_Strings is
           if s(k) = '(' -- or s(k) = ')'
            then raise BAD_BRACKET;
           end if;
-          if s(k) = '^'
-           then Parse_Power_Factor(s,k,term);
+          if s(k) = '^' then
+            Parse_Power_Factor(s,k,term);
+          elsif s(k) = '*' then
+            if s(k+1) = '*' then
+              k := k + 1;
+              Parse_Power_Factor(s,k,term);
+            end if;
           end if;
           case oper is
             when '+' => Add(acc,res); Clear(res); Copy(term,res);
@@ -153,8 +158,13 @@ package body Standard_Complex_Laur_Strings is
             oper := s(k); k := k + 1;  -- skip '*'
             Parse_Term(s,bc,k,n,term);
             Skip_Spaces_and_CR(s,k);
-            if s(k) = '^'
-             then Parse_Power_Factor(s,k,term);
+            if s(k) = '^' then
+              Parse_Power_Factor(s,k,term);
+            elsif s(k) = '*' then
+              if s(k+1) = '*' then
+                k := k + 1;
+                Parse_Power_Factor(s,k,term);
+              end if;
             end if;
             if s(k) /= '(' then
               case oper is

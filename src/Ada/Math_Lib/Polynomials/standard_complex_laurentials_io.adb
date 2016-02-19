@@ -96,8 +96,9 @@ package body Standard_Complex_Laurentials_io is
   --   if the bracket counter bc is nonzero when the delimiter is encountered.
 
     n : constant natural32 := Symbol_Table.Maximal_Size;
-    char,oper : character;
+    char,oper,nextchar : character;
     term,res,acc : Poly := Null_Poly;
+    eol : boolean;
 
   begin
     oper := '+';
@@ -128,8 +129,14 @@ package body Standard_Complex_Laurentials_io is
           if char = '(' -- or char = ')'
            then raise BAD_BRACKET;
           end if;
-          if char = '^'
-           then Read_Power_Factor(file,char,term);
+          if char = '^' then
+            Read_Power_Factor(file,char,term);
+          elsif char = '*' then
+            look_ahead(file,nextchar,eol);
+            if nextchar = '*' then
+              get(file,char);
+              Read_Power_Factor(file,char,term);
+            end if;
           end if;
           case oper is
             when '+' => Add(acc,res); Clear(res); Copy(term,res);

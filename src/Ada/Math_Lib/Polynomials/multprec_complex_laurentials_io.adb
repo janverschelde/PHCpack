@@ -105,8 +105,9 @@ package body Multprec_Complex_Laurentials_io is
   --   if the bracket counter bc is nonzero when the delimiter is encountered.
 
     n : constant natural32 := Symbol_Table.Maximal_Size;
-    char,oper : character;
+    char,oper,nextchar : character;
     term,res,acc : Poly := Null_Poly;
+    eol : boolean;
 
   begin
     oper := '+';
@@ -137,8 +138,14 @@ package body Multprec_Complex_Laurentials_io is
           if char = '(' -- or char = ')'
            then raise BAD_BRACKET;
           end if;
-          if char = '^'
-           then Read_Power_Factor(file,char,term);
+          if char = '^' then
+            Read_Power_Factor(file,char,term);
+          elsif char = '*' then
+            look_ahead(file,nextchar,eol);
+            if nextchar = '*' then
+              get(file,char);
+              Read_Power_Factor(file,char,term);
+            end if;
           end if;
           case oper is
             when '+' => Add(acc,res); Clear(res); Copy(term,res);
@@ -189,7 +196,8 @@ package body Multprec_Complex_Laurentials_io is
     ne,ne2 : natural32 := 0;
     k : integer32;
     expo,expo2 : integer32 := 1;
-    sign : character;
+    sign,nextchar : character;
+    eol : boolean;
  
   begin
     Standard_Parse_Numbers.Skip_Spaces_and_CR(file,char);
@@ -198,8 +206,14 @@ package body Multprec_Complex_Laurentials_io is
       Read_Polynomial(file,bc,pb);
       get(file,char);
       Standard_Parse_Numbers.Skip_Spaces_and_CR(file,char);
-      if char = '^'
-       then Read_Power_Factor(file,char,pb);
+      if char = '^' then
+        Read_Power_Factor(file,char,pb);
+      elsif char = '*' then
+        look_ahead(file,nextchar,eol);
+        if nextchar = '*' then
+          get(file,char);
+          Read_Power_Factor(file,char,pb);
+        end if;
       end if;
       return;
     end if;
@@ -274,6 +288,8 @@ package body Multprec_Complex_Laurentials_io is
     realmin1 : constant Floating_Number := Create(integer(-1));
     compzero : constant Complex_Number := Create(realzero);
     compmin1 : constant Complex_Number := Create(realmin1);
+    nextchar : character;
+    eol : boolean;
 
     procedure Collect_Factor_Polynomial is
     begin
@@ -348,6 +364,12 @@ package body Multprec_Complex_Laurentials_io is
             Read_Factor(file,bc,char,n,d,pb);
           elsif char = '^' then
             Read_Power_Factor(file,char,res);
+          elsif char = '*' then
+            look_ahead(file,nextchar,eol);
+            if nextchar = '*' then
+              get(file,char);
+              Read_Power_Factor(file,char,res);
+            end if;
           else
             raise ILLEGAL_CHARACTER;
           end if;

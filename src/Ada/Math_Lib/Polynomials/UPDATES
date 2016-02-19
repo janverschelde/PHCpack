@@ -1,3 +1,7 @@
+Fri 19 Feb 2016 : fix in {standard,multprec}_complex_{poly,laur}_strings.adb,
+  {standard,multprec}_complex_laurentials_io.adb and
+  multprec_complex_polynomials_io.adb, to solve the (x-y)**2 bug.
+
 Thu 18 Feb 2016 : with look_ahead() in standard_complex_polynomials_io.adb,
   solved the problem of parsing (x-y)**2.
 
