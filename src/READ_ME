@@ -1,4 +1,4 @@
-The public distribution for PHCpack version 2.4.11 contains
+The public distribution for PHCpack version 2.4.12 contains
 
   Ada        Ada sources
   bin        binary versions of phc
@@ -27,6 +27,7 @@ For each release, a single one line description gives a title to the release.
 While 2.4 could be viewed as another major release, marking it as 2.4.00
 simply continues the process of frequent releases.
 
+release 2.4.12 on 2016-02-19 : fix parsing ()**2, checkin in phcpy.solver.solve 
 release 2.4.11 on 2016-02-12 : polyhedral end games in version 0.4.0 of phcpy
 release 2.4.10 on 2016-01-17 : polyhedral end games in dd and qd arithmetic
 release 2.4.09 on 2016-01-02 : phcpy runs with Python 3.5, better documentation
