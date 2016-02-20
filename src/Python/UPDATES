@@ -1,3 +1,6 @@
+Fri 19 Feb 2016 : updated setup.py, __init__.py, and conf.py for 0.4.1
+  of phcpy, both for python2 and python3.
+
 Wed 17 Feb 2016 : wrote a checkin function for the blackbox solver,
   for both the python2 and python3 versions.
 
