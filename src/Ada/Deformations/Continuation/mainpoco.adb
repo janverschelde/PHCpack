@@ -324,6 +324,21 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
    -- Driver_to_Path_Tracker(outft,p,nt);
   end Multitasking_Secant_Homotopy;
 
+  procedure Overdetermined_Homotopy
+              ( inft : in out file_type;
+                lp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+                ls : in Link_to_Array_of_Strings ) is
+
+  -- DESCRIPTION :
+  --   The system on entry has more equations than unknowns.
+  --   Prompts the user for a start system and launches
+  --   the overdetermined path trackers.
+
+  begin
+    new_line;
+    put_line("overdetermined homotopy ...");
+  end Overdetermined_Homotopy;
+
   procedure Parameter_or_Sweep_Homotopy
               ( inft : in out file_type;
                 lp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -403,7 +418,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
         put("Found "); put(neq,1);
         put(" equations in "); put(nva,1); put_line(" unknowns...");
         if nva < neq then
-          put_line("Refuse to do homotopy on overdetermined system.");
+          Overdetermined_Homotopy(inft,lp,ls);
         else
           new_line;
           Parameter_or_Sweep_Homotopy(inft,lp,ls);

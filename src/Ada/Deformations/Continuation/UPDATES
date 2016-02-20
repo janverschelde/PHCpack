@@ -1,3 +1,6 @@
+Sat 20 Feb 2016 : added an extra procedure to prepare for overdetermined
+  path tracking in mainpoco.adb.
+
 Wed 13 Jan 2016 : to drivers_for_poly_continuation added procedures to
   redefine the homotopies, resetting the relaxation power to one.
 
