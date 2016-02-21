@@ -1,3 +1,5 @@
+Sun 21 Feb 2016 : standard_homotopy.adb updated for nonsquare systems.
+
 Tue 12 Jan 2016 : to {standard,dobldobl,quaddobl,multprec}_homotopy added
   selectors, mainly needed in polyhedral end games, to reset k.
 
