@@ -311,12 +311,12 @@ package body Standard_Homotopy is
 
     h : Poly_Sys(p'range);
     tempp,tempq,q_fac,p_fac : Poly;
-    n : constant integer32 := p'length;
+    nv : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
 
   begin
     for i in h'range loop
-      q_fac := Nonlinear_Start_Factor(n,k,a(i));
-      p_fac := Nonlinear_Target_Factor(n,k,b(i));
+      q_fac := Nonlinear_Start_Factor(nv,k,a(i));
+      p_fac := Nonlinear_Target_Factor(nv,k,b(i));
       tempq := Plus_one_Unknown(q(i));
       tempp := Plus_one_Unknown(p(i));
       Mul(tempq,q_fac);
