@@ -333,8 +333,42 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
   --   The system on entry has more equations than unknowns.
   --   Prompts the user for a start system and launches
   --   the overdetermined path trackers.
+  --   Asks for the level of precision, but only if prclvl = 1.
+
+    prc : character;
 
   begin
+    if prclvl = 1 then
+      prc := Prompt_for_Precision;
+    elsif prclvl = 2 then
+      prc := '1';
+    elsif prclvl = 4 then
+      prc := '2';
+    else
+      prc := Prompt_for_Precision;
+    end if;
+    case prc is
+      when '0' => null;
+      when '1' =>
+        declare
+          nvr : constant natural32 
+              := Standard_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
+          ddp : DoblDobl_Complex_Poly_Systems.Poly_Sys(lp'range)
+              := DoblDobl_Complex_Poly_Strings.Parse(nvr,ls.all);
+        begin
+          null;
+        end;
+      when '2' =>
+        declare
+          nvr : constant natural32 
+              := Standard_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
+          qdp : QuadDobl_Complex_Poly_Systems.Poly_Sys(lp'range)
+              := QuadDobl_Complex_Poly_Strings.Parse(nvr,ls.all);
+        begin
+          null;
+        end;
+      when others => null;
+    end case;
     new_line;
     put_line("overdetermined homotopy ...");
   end Overdetermined_Homotopy;
