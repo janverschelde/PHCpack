@@ -8,27 +8,31 @@ with DoblDobl_Complex_Laur_Jacomats;     use DoblDobl_Complex_Laur_Jacomats;
 
 package body DoblDobl_Laurent_Homotopy is
 
--- INTERNAL DATA -- to perform the numeric routines as fast as possible.
+-- INTERNAL DATA -- to store evaluable forms of the polynomials
 
   type homtype is (nat,art);  -- natural or artificial parameter homotopy
 
-  type homdata ( ht : homtype; n,n1 : integer32 ) is record
+  -- In the homdata, the integer parameters are as follows:
+  -- nq : the number of polynomials, nv : the number of variables,
+  -- and nv1 = nv + 1.
 
-    p : Laur_Sys(1..n);                      -- target system
-    pe : Eval_Laur_Sys(1..n);                -- evaluable form of target
-    dh : Jaco_Mat(1..n,1..n1);               -- Jacobian matrix of homotopy
-    dhe : Eval_Jaco_Mat(1..n,1..n1);         -- evaluable form of dh
+  type homdata ( ht : homtype; nq,nv,nv1 : integer32 ) is record
+
+    p : Laur_Sys(1..nq);                      -- target system
+    pe : Eval_Laur_Sys(1..nq);                -- evaluable form of target
+    dh : Jaco_Mat(1..nq,1..nv1);              -- Jacobian matrix of homotopy
+    dhe : Eval_Jaco_Mat(1..nq,1..nv1);        -- evaluable form of dh
 
     case ht is
       when nat =>
-        i : integer32;                       -- which variable is parameter
+        i : integer32;                        -- which variable is parameter
       when art =>
-        q,h : Laur_Sys(1..n);                -- start system and homotopy
-        qe,he : Eval_Laur_Sys(1..n);         -- evaluable form of q and h
-        dpe,dqe : Eval_Jaco_Mat(1..n,1..n);  -- evaluable Jacobians
+        q,h : Laur_Sys(1..nq);                -- start system and homotopy
+        qe,he : Eval_Laur_Sys(1..nq);         -- evaluable form of q and h
+        dpe,dqe : Eval_Jaco_Mat(1..nq,1..nv); -- evaluable Jacobians
         k : natural32;                        -- relaxation power
-        gamma,beta : Vector(1..n);           -- accessibility constants
-        linear : boolean;                    -- linear in t if true
+        gamma,beta : Vector(1..nq);           -- accessibility constants
+        linear : boolean;                     -- linear in t if true
       end case;
 
   end record;
@@ -238,11 +242,11 @@ package body DoblDobl_Laurent_Homotopy is
 
     h : Laur_Sys(p'range);
     tempp,tempq,q_fac,p_fac : Poly;
-    n : constant integer32 := p'length;
+    nv : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
 
   begin
-    q_fac := Linear_Start_Factor(n,k,a);
-    p_fac := Linear_Target_Factor(n,k);
+    q_fac := Linear_Start_Factor(nv,k,a);
+    p_fac := Linear_Target_Factor(nv,k);
     for i in h'range loop
       tempq := Plus_one_Unknown(q(i));
       tempp := Plus_one_Unknown(p(i));
@@ -261,12 +265,12 @@ package body DoblDobl_Laurent_Homotopy is
 
     h : Laur_Sys(p'range);
     tempp,tempq,q_fac,p_fac : Poly;
-    n : constant integer32 := p'length;
+    nv : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
 
   begin
     for i in h'range loop
-      q_fac := Linear_Start_Factor(n,k,a(i));
-      p_fac := Linear_Target_Factor(n,k);
+      q_fac := Linear_Start_Factor(nv,k,a(i));
+      p_fac := Linear_Target_Factor(nv,k);
       tempq := Plus_one_Unknown(q(i));
       tempp := Plus_one_Unknown(p(i));
       Mul(tempq,q_fac);
@@ -284,12 +288,12 @@ package body DoblDobl_Laurent_Homotopy is
 
     h : Laur_Sys(p'range);
     tempp,tempq,q_fac,p_fac : Poly;
-    n : constant integer32 := p'length;
+    nv : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
 
   begin
     for i in h'range loop
-      q_fac := Linear_Start_Factor(n,k,a(i));
-      p_fac := Linear_Target_Factor(n,k,b(i));
+      q_fac := Linear_Start_Factor(nv,k,a(i));
+      p_fac := Linear_Target_Factor(nv,k,b(i));
       tempq := Plus_one_Unknown(q(i));
       tempp := Plus_one_Unknown(p(i));
       Mul(tempq,q_fac);
@@ -307,12 +311,12 @@ package body DoblDobl_Laurent_Homotopy is
 
     h : Laur_Sys(p'range);
     tempp,tempq,q_fac,p_fac : Poly;
-    n : constant integer32 := p'length;
+    nv : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
 
   begin
     for i in h'range loop
-      q_fac := Nonlinear_Start_Factor(n,k,a(i));
-      p_fac := Nonlinear_Target_Factor(n,k,b(i));
+      q_fac := Nonlinear_Start_Factor(nv,k,a(i));
+      p_fac := Nonlinear_Target_Factor(nv,k,b(i));
       tempq := Plus_one_Unknown(q(i));
       tempp := Plus_one_Unknown(p(i));
       Mul(tempq,q_fac);
@@ -327,9 +331,10 @@ package body DoblDobl_Laurent_Homotopy is
   procedure Create ( p,q : in Laur_Sys; k : in natural32;
                      a : in Complex_Number ) is
 
-    n : constant integer32 := p'length;
-    dp, dq : Jaco_Mat(1..n,1..n);
-    ho : homdata(art,n,n+1);
+    nq : constant integer32 := p'length;
+    nv : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
+    dp,dq : Jaco_Mat(1..nq,1..nv);
+    ho : homdata(art,nq,nv,nv+1);
 
   begin
     Copy(p,ho.p); Copy(q,ho.q);
@@ -345,10 +350,10 @@ package body DoblDobl_Laurent_Homotopy is
     ho.dhe := Create(ho.dh);
     Clear(dp); Clear(dq);
     ho.k := k;
-    for i in 1..n loop
+    for i in 1..nq loop
       ho.gamma(i) := a;
     end loop;
-    for i in 1..n loop
+    for i in 1..nq loop
       ho.beta(i) := Create(integer32(1));
     end loop;
     ho.linear := true;
@@ -357,9 +362,10 @@ package body DoblDobl_Laurent_Homotopy is
 
   procedure Create ( p,q : in Laur_Sys; k : in natural32; a : in Vector ) is
 
-    n : constant integer32 := p'length;
-    dp, dq : Jaco_Mat(1..n,1..n);
-    ho : homdata(art,n,n+1);
+    nq : constant integer32 := p'length;
+    nv : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
+    dp,dq : Jaco_Mat(1..nq,1..nv);
+    ho : homdata(art,nq,nv,nv+1);
     one : constant double_double := create(1.0);
 
   begin
@@ -377,7 +383,7 @@ package body DoblDobl_Laurent_Homotopy is
     Clear(dp); Clear(dq);
     ho.k := k;
     ho.gamma := a;
-    for i in 1..n loop
+    for i in 1..nq loop
       ho.beta(i) := Create(one);
     end loop;
     ho.linear := true;
@@ -387,9 +393,10 @@ package body DoblDobl_Laurent_Homotopy is
   procedure Create ( p,q : in Laur_Sys; k : in natural32; a,b : in Vector;
                      linear : in boolean ) is
 
-    n : constant integer32 := p'length;
-    dp, dq : Jaco_Mat(1..n,1..n);
-    ho : homdata(art,n,n+1);
+    nq : constant integer32 := p'length;
+    nv : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
+    dp,dq : Jaco_Mat(1..nq,1..nv);
+    ho : homdata(art,nq,nv,nv+1);
 
   begin
     Copy(p,ho.p); Copy(q,ho.q);
@@ -416,8 +423,9 @@ package body DoblDobl_Laurent_Homotopy is
 
   procedure Create ( p : in Laur_Sys; k : in integer32 ) is
 
-    n : constant integer32 := p'last-p'first+1; 
-    ho : homdata(nat,n,n+1);
+    nq : constant integer32 := p'length; 
+    nv : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
+    ho : homdata(nat,nq,nv,nv+1);
 
   begin
     Copy(p,ho.p);
@@ -455,8 +463,8 @@ package body DoblDobl_Laurent_Homotopy is
         return Eval(ho.p,t,ho.i);
       when art =>  -- compute : a * ((1 - t)^k) * q + (t^k) * p
         declare
-          p_factor,q_factor : Vector(1..ho.n);
-          res,tmp : Laur_Sys(1..ho.n);
+          p_factor,q_factor : Vector(1..ho.nq);
+          res,tmp : Laur_Sys(1..ho.nq);
         begin
           if ho.linear then
             if AbsVal(t) = zero then
@@ -465,7 +473,7 @@ package body DoblDobl_Laurent_Homotopy is
                 and then abs(IMAG_PART(t)) + one= one then
               return Mul(ho.beta,ho.p);
             else
-              for i in 1..ho.n loop
+              for i in 1..ho.nq loop
                 q_factor(i) := ho.gamma(i);
                 p_factor(i) := ho.beta(i);
                 for i in 1..integer32(ho.k) loop
@@ -498,13 +506,13 @@ package body DoblDobl_Laurent_Homotopy is
         return Diff(ho.p,ho.i);
       when art =>  -- compute  - a*k*(1 - t)^(k-1)*q + b*k*t^(k-1)*p
         declare
-          q_factor,p_factor : Vector(1..ho.n);
-          tmp : Laur_Sys(1..ho.n);
-          res : Laur_Sys(1..ho.n);
+          q_factor,p_factor : Vector(1..ho.nq);
+          tmp : Laur_Sys(1..ho.nq);
+          res : Laur_Sys(1..ho.nq);
           ddk : constant double_double := create(ho.k);
         begin
           if ho.linear then
-            for i in 1..ho.n loop
+            for i in 1..ho.nq loop
               q_factor(i) := (-ho.gamma(i)) * Create(ddk);
               p_factor(i) := ho.beta(i) * Create(ddk);
             end loop;
@@ -595,21 +603,22 @@ package body DoblDobl_Laurent_Homotopy is
   function Diff ( x : Vector; t : Complex_Number ) return Matrix is
 
     ho : homdata renames hom.all;
-    n : integer32 renames ho.n;
+    nq : integer32 renames ho.nq;
+    nv : integer32 renames ho.nv;
     one : constant double_double := create(1.0);
 
   begin
     case ho.ht is
       when nat =>
         declare
-          m : Matrix(1..n,1..n);
-          y : Vector(1..n+1);
+          m : Matrix(1..nq,1..nv);
+          y : Vector(1..nv+1);
         begin
           y(1..ho.i-1) := x(1..ho.i-1);
           y(ho.i) := t;
-          y(ho.i+1..n+1) := x(ho.i..n);
-          for i in 1..n loop
-            for j in 1..n loop
+          y(ho.i+1..nv+1) := x(ho.i..nv);
+          for i in 1..nq loop
+            for j in 1..nv loop
               m(i,j) := Eval(ho.dhe(i,j),y);
             end loop;
           end loop;
@@ -618,7 +627,7 @@ package body DoblDobl_Laurent_Homotopy is
       when art =>
         if AbsVal(t) + one = one then
           declare
-            m : constant Matrix(1..n,1..n) := Eval(ho.dqe,x);
+            m : constant Matrix(1..nq,1..nv) := Eval(ho.dqe,x);
           begin
             if ho.linear
              then return Mul(m,ho.gamma);
@@ -628,7 +637,7 @@ package body DoblDobl_Laurent_Homotopy is
         elsif abs( REAL_PART(t) - one ) + one = one
              and then abs(IMAG_PART(t)) + one = one then
           declare
-            m : constant Matrix(1..n,1..n) := Eval(ho.dpe,x);
+            m : constant Matrix(1..nq,1..nv) := Eval(ho.dpe,x);
           begin
             if ho.linear
              then return Mul(m,ho.beta);
@@ -637,13 +646,13 @@ package body DoblDobl_Laurent_Homotopy is
           end;
         else
           declare
-            m : Matrix(1..n,1..n);
-            y : Vector(1..n+1);
+            m : Matrix(1..nq,1..nv);
+            y : Vector(1..nv+1);
           begin
-            y(1..n) := x;
-            y(n+1) := t;
-            for i in 1..n loop
-              for j in 1..n loop
+            y(1..nv) := x;
+            y(nv+1) := t;
+            for i in 1..nq loop
+              for j in 1..nv loop
                 m(i,j) := Eval(ho.dhe(i,j),y);
               end loop;
             end loop;
@@ -657,19 +666,20 @@ package body DoblDobl_Laurent_Homotopy is
                   k : integer32 ) return Vector is
 
     ho : homdata renames hom.all;
-    n : integer32 renames ho.n;
-    y : Vector(1..n+1);
-    res : Vector(1..n);
+    nq : integer32 renames ho.nq;
+    nv : integer32 renames ho.nv;
+    y : Vector(1..nv+1);
+    res : Vector(1..nq);
 
   begin
     case ho.ht is
       when nat => y(1..ho.i-1) := x(1..ho.i-1);
                   y(ho.i) := t;
-                  y(ho.i+1..n+1) := x(ho.i..n);
-      when art => y(1..n) := x;
-                  y(n+1) := t;
+                  y(ho.i+1..nv+1) := x(ho.i..nv);
+      when art => y(1..nv) := x;
+                  y(nv+1) := t;
     end case;
-    for i in 1..n loop
+    for i in 1..nq loop
       res(i) := Eval(ho.dhe(i,k),y);
     end loop;
     return res;
@@ -679,25 +689,26 @@ package body DoblDobl_Laurent_Homotopy is
                   k : integer32 ) return Matrix is
 
     ho : homdata renames hom.all;
-    n : integer32 renames ho.n;
-    y : Vector(1..n+1);
-    res : Matrix(1..n,1..n);
+    nq : integer32 renames ho.nq;
+    nv : integer32 renames ho.nv;
+    y : Vector(1..nv+1);
+    res : Matrix(1..nq,1..nv);
 
   begin
     case ho.ht is
       when nat => y(1..ho.i-1) := x(1..ho.i-1);
                   y(ho.i) := t;
-                  y(ho.i+1..n+1) := x(ho.i..n); 
-      when art => y(1..n) := x;
-                  y(n+1) := t;
+                  y(ho.i+1..nv+1) := x(ho.i..nv); 
+      when art => y(1..nv) := x;
+                  y(nv+1) := t;
     end case;
     for j in 1..(k-1) loop
-      for i in 1..n loop
+      for i in 1..nq loop
         res(i,j) := Eval(ho.dhe(i,j),y);
       end loop;
     end loop;
-    for j in (k+1)..(n+1) loop
-      for i in 1..n loop
+    for j in (k+1)..(nv+1) loop
+      for i in 1..nq loop
         res(i,j-1) := Eval(ho.dhe(i,j),y);
       end loop;
     end loop;
