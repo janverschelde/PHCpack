@@ -27,11 +27,13 @@ method, i.e.: with a generator, for use in phcpy.
 file name                        : short description
 ------------------------------------------------------------------------------
 standard_correctors              : Newton's method as corrector
-standard_orthogonal_correctors   : Gauss-Newton's method as corrector
 dobldobl_correctors              : correctors in double double arithmetic
 quaddobl_correctors              : correctors in quad double arithmetic
 multprec_correctors              : correctors with multiprecision numbers
 ts_correct                       : test on correctors
+standard_orthogonal_correctors   : Gauss-Newton method as corrector
+dobldobl_orthogonal_correctors   : Gauss-Newton in double double arithmetic
+quaddobl_orthogonal_correctors   : Gauss-Newton in quad double arithmetic
 ts_ortocor                       : test on orthogonal correctors
 standard_predictors              : increment t, predict solutions
 dobldobl_predictors              : predictors with double double numbers
