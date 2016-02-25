@@ -1,3 +1,6 @@
+Wed 24 Feb 2016 : new package standard_orthogonal_correctors to apply
+  Gauss-Newton with QRLS or SVD as corrector in an incfix path tracker.
+
 Fri 8 Jan 2016 : assignment of w in {dobldobl,quaddobl}_path_trackers.adb,
   and also in standard_path_trackers.adb.
 
