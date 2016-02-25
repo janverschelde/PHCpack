@@ -30,6 +30,7 @@ package body Standard_Orthogonal_Correctors is
       Add(s.sol.v,dx);
       s.cora := Norm(dx); s.length_path := s.length_path + s.cora;
       y := H(s.sol.v,s.sol.t);
+      s.resa := Norm(y);
       normv := Norm(s.sol.v);
       if normv + 1.0 /= 1.0
        then s.corr := s.cora / normv; s.resr := s.resa / normv;
@@ -67,6 +68,7 @@ package body Standard_Orthogonal_Correctors is
       Add(s.sol.v,dx);
       s.cora := Norm(dx); s.length_path := s.length_path + s.cora;
       y := H(s.sol.v,s.sol.t);
+      s.resa := Norm(y);
       normv := Norm(s.sol.v);
       if normv + 1.0 /= 1.0
        then s.corr := s.cora / normv; s.resr := s.resa / normv;
@@ -102,11 +104,13 @@ package body Standard_Orthogonal_Correctors is
     while nit < c.maxit loop
       jac := dH(s.sol.v,s.sol.t);
       SVD(jac,n,p,sv,e,u,v,job,info);
+      s.rcond := Inverse_Condition_Number(sv);
       Min(y);
       dx := Solve(u,v,sv,y);
       Add(s.sol.v,dx);
       s.cora := Norm(dx); s.length_path := s.length_path + s.cora;
       y := H(s.sol.v,s.sol.t);
+      s.resa := Norm(y);
       normv := Norm(s.sol.v);
       if normv + 1.0 /= 1.0
        then s.corr := s.cora / normv; s.resr := s.resa / normv;
@@ -142,11 +146,13 @@ package body Standard_Orthogonal_Correctors is
     while nit < c.maxit loop
       jac := dH(s.sol.v,s.sol.t);
       SVD(jac,n,p,sv,e,u,v,job,info);
+      s.rcond := Inverse_Condition_Number(sv);
       Min(y);
       dx := Solve(u,v,sv,y);
       Add(s.sol.v,dx);
       s.cora := Norm(dx); s.length_path := s.length_path + s.cora;
       y := H(s.sol.v,s.sol.t);
+      s.resa := Norm(y);
       normv := Norm(s.sol.v);
       if normv + 1.0 /= 1.0
        then s.corr := s.cora / normv; s.resr := s.resa / normv;

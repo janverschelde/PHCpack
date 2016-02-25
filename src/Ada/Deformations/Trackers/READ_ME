@@ -1,4 +1,4 @@
-Predictors, correctors, and path trackers in PHCv2.4.10
+Predictors, correctors, and path trackers in PHCv2.4.13
 
 This directory is newly created in version 2.3.75 to focus on the
 predictors, correctors, and path trackers.  Higher-order extrapolators
@@ -27,10 +27,12 @@ method, i.e.: with a generator, for use in phcpy.
 file name                        : short description
 ------------------------------------------------------------------------------
 standard_correctors              : Newton's method as corrector
+standard_orthogonal_correctors   : Gauss-Newton's method as corrector
 dobldobl_correctors              : correctors in double double arithmetic
 quaddobl_correctors              : correctors in quad double arithmetic
 multprec_correctors              : correctors with multiprecision numbers
 ts_correct                       : test on correctors
+ts_ortocor                       : test on orthogonal correctors
 standard_predictors              : increment t, predict solutions
 dobldobl_predictors              : predictors with double double numbers
 quaddobl_predictors              : predictors with quad double numbers

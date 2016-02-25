@@ -1,3 +1,6 @@
+Thu 25 Feb 2016 : new test procedure ts_ortocor, with a fix in the
+  body of the package standard_orthogonal_correctors.adb.
+
 Wed 24 Feb 2016 : new package standard_orthogonal_correctors to apply
   Gauss-Newton with QRLS or SVD as corrector in an incfix path tracker.
 
