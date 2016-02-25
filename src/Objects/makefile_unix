@@ -642,6 +642,10 @@ ts_correct:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_correct.adb \
               -o $(BIN)/ts_correct
 
+ts_ortocor:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_ortocor.adb \
+              -o $(BIN)/ts_ortocor
+
 ts_path:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_path.adb -o $(BIN)/ts_path
 

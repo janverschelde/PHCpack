@@ -622,13 +622,16 @@ ts_realcont:
 
 # Test programs for the Deformations/Trackers library :
 
-test_trackers: ts_preco ts_correct ts_track ts_path ts_nxtsol
+test_trackers: ts_preco ts_correct ts_ortocor ts_track ts_path ts_nxtsol
 
 ts_preco:
 	make -f $(MAKEFILE) ts_preco
 
 ts_correct:
 	make -f $(MAKEFILE) ts_correct
+
+ts_ortocor:
+	make -f $(MAKEFILE) ts_ortocor
 
 ts_path:
 	make -f $(MAKEFILE) ts_path
