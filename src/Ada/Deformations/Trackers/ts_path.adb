@@ -24,6 +24,7 @@ with Quad_Double_Vectors;
 with QuadDobl_Complex_Vector_Norms;      use QuadDobl_Complex_Vector_Norms;
 with Multprec_Floating_Vectors;
 with Multprec_Complex_Norms_Equals;      use Multprec_Complex_Norms_Equals;
+with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Poly_Systems;
@@ -69,15 +70,19 @@ procedure ts_path is
 
   procedure Standard_Read_Homotopy
               ( lp,lq : in out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-                qsols : in out Standard_Complex_Solutions.Solution_List ) is
+                qsols : in out Standard_Complex_Solutions.Solution_List;
+                nbequ : out integer32 ) is
 
   -- DESCRIPTION :
   --   Reads the target system lp, start system lq and start solutions qsols,
   --   for standard complex numbers.
+  --   The parameter nbequ equals lp'last if Gauss-Newton is needed.
 
     use Standard_Complex_Poly_Systems;
 
     targetfile,startfile : file_type;
+    nbvar : integer32;
+    ans : character;
 
   begin
     new_line;
@@ -89,6 +94,18 @@ procedure ts_path is
     put_line("Reading the name of the file for the start system.");
     Read_Name_and_Open_File(startfile);
     Standard_System_and_Solutions_io.get(startfile,lq,qsols);
+    nbvar := integer32(Number_of_Unknowns(lp(lp'first)));
+    if lp'last > nbvar then
+      nbequ := lp'last;
+    else
+      new_line;
+      put("Apply Gauss-Newton correctors ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      if ans = 'y'
+       then nbequ := lp'last;
+       else nbequ := 0;
+      end if;
+    end if;
     Close(startfile);
   end Standard_Read_Homotopy;
 
@@ -167,7 +184,8 @@ procedure ts_path is
 
   procedure Call_Standard_Path_Trackers
               ( file : in file_type;
-                sols : in out Standard_Complex_Solutions.Solution_List ) is
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                nbequ : in integer32 := 0 ) is
 
     use Standard_Complex_Numbers;
     use Standard_Complex_Solutions;
@@ -204,11 +222,13 @@ procedure ts_path is
     tstart(timer);
     while not Is_Null(tmp) loop
       declare
-        s : Solu_Info := Shallow_Create(Head_Of(tmp));
+        ls : Link_to_Solution := Head_Of(tmp);
+        s : Solu_Info := Shallow_Create(ls);
       begin
-        Continue_along_Path(file,s,Create(1.0),tol,false,patpp,patcp);
+        Continue_along_Path(file,s,Create(1.0),tol,false,patpp,patcp,nbequ);
         Continue_in_End_Game(file,s,Create(1.0),tol,false,
-                             order,wnd,pathdir,errv,endpp,endcp);
+                             order,wnd,pathdir,errv,endpp,endcp,nbequ);
+        ls.err := s.cora; ls.rco := s.rcond; ls.res := s.resa;
       end;
       tmp := Tail_Of(tmp);
     end loop;
@@ -396,12 +416,13 @@ procedure ts_path is
     oc : natural32 := 0;
     lp,lq : Link_to_Poly_Sys;
     qsols : Solution_List;
+    nbequ : integer32;
 
   begin
     new_line;
     put_line("Reading the name of the output file.");
     Read_Name_and_Create_File(file);
-    Standard_Read_Homotopy(lp,lq,qsols);
+    Standard_Read_Homotopy(lp,lq,qsols,nbequ);
     put_line(file,"TARGET SYSTEM : ");
     put(file,natural32(lp'last),lp.all);
     new_line(file);
@@ -421,7 +442,7 @@ procedure ts_path is
       new_line;
       put_line("See the output file for results ...");
       new_line;
-      Call_Standard_Path_Trackers(file,qsols);
+      Call_Standard_Path_Trackers(file,qsols,nbequ);
       new_line(file);
       put_line(file,"THE COMPUTED SOLUTIONS : ");
       put(file,Length_Of(qsols),natural32(Head_Of(qsols).n),qsols);
