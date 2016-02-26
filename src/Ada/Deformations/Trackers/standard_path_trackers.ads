@@ -13,7 +13,8 @@ package Standard_Path_Trackers is
 
 -- DESCRIPTION :
 --   This package offers some routines for tracking solution paths,
---   using an increment-and-fix predictor-corrector method.
+--   using an increment-and-fix predictor-corrector method,
+--   in standard double precision arithmetic.
 
 --   The following options can be made :
 --    (Linear,Circular)
@@ -55,7 +56,7 @@ package Standard_Path_Trackers is
   procedure Linear_Single_Normal_Silent_Continue
                 ( s : in out Solu_Info; target : in Complex_Number;
                   tol : in double_float; proj : in boolean;
-                  p : in Pred_Pars; c : in Corr_Pars;
+                  p : in Pred_Pars; c : in Corr_Pars; nbq : in integer32 := 0;
                   f : access procedure ( s : in Solu_Info ) := null );
  
   generic
@@ -66,9 +67,10 @@ package Standard_Path_Trackers is
     with function dH ( x : Vector; t : Complex_Number ) return Matrix;
 
   procedure Linear_Single_Normal_Reporting_Continue
-                ( file : in file_type; s : in out Solu_Info;
-                  target : in Complex_Number; tol : in double_float;
-                  proj : in boolean; p : in Pred_Pars; c : in Corr_Pars;
+                ( file : in file_type;
+                  s : in out Solu_Info; target : in Complex_Number;
+                  tol : in double_float; proj : in boolean;
+                  p : in Pred_Pars; c : in Corr_Pars; nbq : in integer32 := 0;
                   f : access procedure ( s : in Solu_Info ) := null );
 
   generic
@@ -84,7 +86,7 @@ package Standard_Path_Trackers is
                   rtoric : in integer32; w : in out integer32;
                   v : in out Standard_Floating_Vectors.Link_to_Vector;
                   errorv : in out double_float;
-                  p : in Pred_Pars; c : in Corr_Pars;
+                  p : in Pred_Pars; c : in Corr_Pars; nbq : in integer32 := 0;
                   f : access procedure ( s : in Solu_Info ) := null );
 
   generic
@@ -101,7 +103,7 @@ package Standard_Path_Trackers is
                   w : in out integer32;
                   v : in out Standard_Floating_Vectors.Link_to_Vector;
                   errorv : in out double_float;
-                  p : in Pred_Pars; c : in Corr_Pars;
+                  p : in Pred_Pars; c : in Corr_Pars; nbq : in integer32 := 0;
                   f : access procedure ( s : in Solu_Info ) := null );
 
   -- DESCRIPTION :
@@ -121,6 +123,7 @@ package Standard_Path_Trackers is
   --   errorv     error on the current direction;
   --   p          parameters for the predictor;
   --   c          parameters for the corrector;
+  --   nbq        number of equations for the Gauss-Newton method;
   --   f          a callback function to report the solution after each
   --              correction stage.
 

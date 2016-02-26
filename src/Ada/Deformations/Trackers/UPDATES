@@ -1,3 +1,6 @@
+Fri 26 Feb 2016 : extended stanadard_path_trackers with a new argument for
+  the Gauss-Newton corrector, adjusted drivers_to_track_standard_paths.adb.
+
 Thu 25 Feb 2016 : new test procedure ts_ortocor, with a fix in the
   body of the package standard_orthogonal_correctors.adb.
   New packages {dobldobl, quaddobl}_orthogonal_correctors to correct
