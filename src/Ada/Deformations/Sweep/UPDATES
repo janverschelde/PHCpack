@@ -1,3 +1,6 @@
+Sat 27 Feb 2016 : changes in complex_convex_continuation.adb for changes in
+  the increment-and-fix continuation in standard double precision.
+
 Thu 5 Nov 2015 : added silent version needed for the real sweep in
   standard_quad_turn_points and standard_quad_sweepers.
   Added also silent versions in {dobldobl,quaddobl}_quad_turn_points

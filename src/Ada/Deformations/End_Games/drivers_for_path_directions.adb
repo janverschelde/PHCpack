@@ -164,8 +164,8 @@ package body Drivers_for_Path_Directions is
   begin
     tstart(timer);
     if report
-     then Rep_Cont(file,sols,proj,w,v,errv,target);
-     else Sil_Cont(sols,proj,w,v,errv,target);
+     then Rep_Cont(file,sols,proj,w,v,errv,target=>target);
+     else Sil_Cont(sols,proj,w,v,errv,target=>target);
     end if;
     tstop(timer);
     new_line(file);

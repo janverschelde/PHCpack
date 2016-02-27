@@ -1,3 +1,6 @@
+Sat 27 Feb 2016 : updates in drivers_for_path_directions.adb for changes in
+  increment-and-fix continuation in standard double precision.
+
 Wed 10 Feb 2016 : added silent procedure to standard_vlprs_algorithm
   and improved the silent update in directions_of_standard_paths.adb.
   Did the same for the dobldobl and quaddobl versions.

@@ -1,4 +1,4 @@
-Sweeping for singularities and parameter continuation in PHCv2.4.04
+Sweeping for singularities and parameter continuation in PHCv2.4.13
 
 For clarity, this directory was isolated from Continuation in v2.3.75.
 The path trackers in this directory rely on natural parameter homotopies.

@@ -254,8 +254,8 @@ package body Complex_Convex_Continuation is
 
   begin
     if output
-     then Rep_Cont(file,sols,false,Create(1.0));
-     else Sil_Cont(sols,false,Create(1.0));
+     then Rep_Cont(file,sols,false,target=>Create(1.0));
+     else Sil_Cont(sols,false,target=>Create(1.0));
     end if;
     Clear(ep); Clear(jm); Clear(ejm);
   end Standard_Reporting_Parameter_Continuation;
@@ -549,7 +549,7 @@ package body Complex_Convex_Continuation is
       new Silent_Continue(Max_Norm,Eval,Diff_t,Diff);
 
   begin
-    Sil_Cont(sols,false,Create(1.0));
+    Sil_Cont(sols,false,target=>Create(1.0));
     Clear(ep); Clear(jm); Clear(ejm);
   end Standard_Silent_Parameter_Continuation;
 
@@ -640,8 +640,6 @@ package body Complex_Convex_Continuation is
 
     procedure Sil_Cont is
       new Silent_Continue(Max_Norm,Eval,Diff_t,Diff);
-    procedure Rep_Cont is
-      new Reporting_Continue(Max_Norm,Eval,Diff_t,Diff);
 
   begin
     Sil_Cont(sols,Create(integer(1)));
@@ -735,8 +733,6 @@ package body Complex_Convex_Continuation is
 
     procedure Sil_Cont is
       new Silent_Continue(Max_Norm,Eval,Diff_t,Diff);
-    procedure Rep_Cont is
-      new Reporting_Continue(Max_Norm,Eval,Diff_t,Diff);
 
   begin
     Sil_Cont(sols,Create(integer(1)));
