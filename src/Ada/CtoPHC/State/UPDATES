@@ -1,3 +1,6 @@
+Sat 27 Feb 2016 : changes in phcpack_operations.adb for changes in the
+  increment-and-fix continuation in standard double precision.
+
 Mon 15 Feb 2016 : added a job to scan a string for the number of symbols
   used as variables in the string representation for a polynomial system.
 

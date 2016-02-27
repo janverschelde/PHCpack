@@ -389,8 +389,8 @@ function Pieri_Solver ( m,p,q,nb,output_level : integer32;
     Standard_Homotopy.Create(target,start,1,a,b,true);      -- linear cheater
     Set_Continuation_Parameter(sols,Create(0.0));
     if output_level > 2
-     then Rep_Cont(Standard_Output,sols,false,Create(1.0));
-     else Sil_Cont(sols,false,Create(1.0));
+     then Rep_Cont(Standard_Output,sols,false,target=>Create(1.0));
+     else Sil_Cont(sols,false,target=>Create(1.0));
     end if;
     if output_level > 1 then
       Refine_Roots(Standard_Output,target,sols);

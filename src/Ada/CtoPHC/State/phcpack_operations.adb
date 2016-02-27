@@ -1910,11 +1910,11 @@ package body PHCpack_Operations is
       tstart(timer);
       if number_of_tasks = 0 then
         if Continuation_Parameters.endext_order = 0 then
-          Rep_Cont(output_file,st_target_sols,false,Create(1.0));
+          Rep_Cont(output_file,st_target_sols,false,target=>Create(1.0));
         else
           Rep_Toric_Cont
             (output_file,st_target_sols,false,
-             wind.all,dirs.all,errv.all,Create(1.0));
+             wind.all,dirs.all,errv.all,target=>Create(1.0));
           Write_Directions(output_file,wind.all,dirs.all,errv.all);
         end if;
       else
@@ -1930,11 +1930,11 @@ package body PHCpack_Operations is
     else
       if number_of_tasks = 0 then
         if Continuation_Parameters.endext_order = 0 then
-          Sil_Cont(st_target_sols,false,Create(1.0));
+          Sil_Cont(st_target_sols,false,target=>Create(1.0));
         else
           Sil_Toric_Cont
             (st_target_sols,false,
-             wind.all,dirs.all,errv.all,Create(1.0));
+             wind.all,dirs.all,errv.all,target=>Create(1.0));
         end if;
       else
         Silent_Multitasking_Path_Tracker
