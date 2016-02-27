@@ -1,3 +1,13 @@
+Sat 27 Feb 2016 : updates in drivers_for_sagbi_homotopies.adb for changes in
+  increment-and-fix continuation in standard double precision.
+  
+Thu 22 Oct 2015 : for consistent naming with double double and quad doubles,
+  renamed bracket_polynomials (and its io) into standard_bracket_polynomials
+  and bracket_systems (and its io) into standard_bracket_systems.
+  This changed ts_brackpols, straightening_syzygies.ads, ts_straighten,
+  bracket_expansions.ads, ts_expand, sagbi_homotopies.adb, and
+  bracket_polynomial_convertors.
+
 Wed 21 Oct 2015 : bug fix in bracket_polynomial_convertors.adb, must use
   Frontal_Construct instead of Add when adding terms to a polynomial.
 

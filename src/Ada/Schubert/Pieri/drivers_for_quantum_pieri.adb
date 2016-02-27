@@ -81,8 +81,8 @@ package body Drivers_for_Quantum_Pieri is
                                Standard_Homotopy.Diff,Standard_Homotopy.Diff);
     begin
       if report
-       then Rep_Cont(file,sols,false,Create(1.0));
-       else Sil_Cont(sols,false,Create(1.0));
+       then Rep_Cont(file,sols,false,target=>Create(1.0));
+       else Sil_Cont(sols,false,target=>Create(1.0));
       end if;
     end;
     tstop(timer);

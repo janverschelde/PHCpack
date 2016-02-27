@@ -231,8 +231,8 @@ package body Pieri_Continuation is
                                Standard_Homotopy.Diff,Standard_Homotopy.Diff);
     begin
       if report
-       then Rep_Cont(file,sols,false,Create(1.0));
-       else Sil_Cont(sols,false,Create(1.0));
+       then Rep_Cont(file,sols,false,target=>Create(1.0));
+       else Sil_Cont(sols,false,target=>Create(1.0));
       end if;
     end;
     if square_case then
@@ -278,7 +278,7 @@ package body Pieri_Continuation is
         new Silent_Continue(Max_Norm,Standard_Homotopy.Eval,
                             Standard_Homotopy.Diff,Standard_Homotopy.Diff);
     begin
-      Sil_Cont(sols,false,Create(1.0));
+      Sil_Cont(sols,false,target=>Create(1.0));
     end;
     if square_case then
       thesys := Eval(lochom,Create(1.0),conpar);
@@ -333,8 +333,8 @@ package body Pieri_Continuation is
                                Standard_Homotopy.Diff,Standard_Homotopy.Diff);
     begin
       if report
-       then Rep_Cont(file,sols,false,Create(1.0));
-       else Sil_Cont(sols,false,Create(1.0));
+       then Rep_Cont(file,sols,false,target=>Create(1.0));
+       else Sil_Cont(sols,false,target=>Create(1.0));
       end if;
     end;
     if square_case then

@@ -1,3 +1,7 @@
+Sat 27 Feb 2016 : changes in drivers_for_schubert_induction.adb for extra
+  argument in the increment-and-fix continuation in double precision.
+  Similar changes in wrapped_path_trackers.adb.
+
 Fri 11 Dec 2015 : fixed ts_lrhom.adb, for the Resolve was missing an option.
 
 Thu 22 Oct 2015 : adding standard_ in front of bracket_polynomials changed

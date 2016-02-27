@@ -979,7 +979,7 @@ package body Drivers_for_Schubert_Induction is
     put_line(file,"THE SOLUTIONS :");
     put(file,Length_Of(sols),1); put(file,"  ");
     put(file,Head_Of(sols).n,1); new_line(file);
-    Rep_Cont(file,sols,false,Create(1.0));
+    Rep_Cont(file,sols,false,target=>Create(1.0));
   end Run_Cheater_Continuation;
 
   procedure Run_Cheater

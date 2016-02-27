@@ -372,8 +372,8 @@ package body Drivers_for_Pieri_Homotopies is
   begin
     Set_Continuation_Parameter(sols,Create(0.0));
     if report
-     then Rep_Cont(file,sols,false,Create(1.0));
-     else Sil_Cont(sols,false,Create(1.0));
+     then Rep_Cont(file,sols,false,target=>Create(1.0));
+     else Sil_Cont(sols,false,target=>Create(1.0));
     end if;
   end Continuation;
 
