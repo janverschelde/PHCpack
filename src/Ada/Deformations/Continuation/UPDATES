@@ -1,3 +1,7 @@
+Sat 27 Feb 2016 : extra argument in standard_incfix_continuation,
+  which changed calls in standard_blackbox_continuation.adb and
+  drivers_for_poly_continuation.adb.
+
 Sun 21 Feb 2016 : added more to the stub procedure in mainpoco.adb.
 
 Sat 20 Feb 2016 : added an extra procedure to prepare for overdetermined

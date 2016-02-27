@@ -83,8 +83,8 @@ package body Drivers_for_Poly_Continuation is
   begin
     tstart(timer);
     if report
-     then Rep_Cont(file,sols,proj,target);
-     else Sil_Cont(sols,proj,target);
+     then Rep_Cont(file,sols,proj,target=>target);
+     else Sil_Cont(sols,proj,target=>target);
     end if;
     tstop(timer);
     new_line(file); print_times(file,timer,"continuation");
@@ -118,8 +118,8 @@ package body Drivers_for_Poly_Continuation is
   begin
     tstart(timer);
     if report
-     then Rep_Cont(file,sols,proj,target);
-     else Sil_Cont(sols,proj,target);
+     then Rep_Cont(file,sols,proj,target=>target);
+     else Sil_Cont(sols,proj,target=>target);
     end if;
     tstop(timer);
     new_line(file); print_times(file,timer,"continuation");

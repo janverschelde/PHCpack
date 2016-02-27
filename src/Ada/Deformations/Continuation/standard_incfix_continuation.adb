@@ -259,6 +259,7 @@ package body Standard_IncFix_Continuation is
 
   procedure Silent_Small_Continue
                ( sols : in out Solution_List; proj : in boolean;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(1.0) ) is
 
     sia : Solu_Info_Array(1..integer32(Length_Of(sols))) := Deep_Create(sols);
@@ -288,7 +289,7 @@ package body Standard_IncFix_Continuation is
       Continuation_Parameters.Tune(condition);
       max_reruns := oldmax - 1;
       block_size := Length_Of(clusols);
-      Silent_Small_Continue(clusols,proj,target);
+      Silent_Small_Continue(clusols,proj,nbq,target);
       block_size := oldblk;
       Merge_Clustered(s,clusols);
       Deep_Clear(clusols);
@@ -382,6 +383,7 @@ package body Standard_IncFix_Continuation is
 
   procedure Silent_Continue
                ( sols : in out Solution_List; proj : in boolean;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(1.0) ) is
 
     sials : constant Solu_Info_Array_List := Create(sols,sia_size);
@@ -412,7 +414,7 @@ package body Standard_IncFix_Continuation is
       Continuation_Parameters.Tune(condition);
       max_reruns := oldmax - 1;
       block_size := Length_Of(clusols);
-      Silent_Continue(clusols,proj,target);
+      Silent_Continue(clusols,proj,nbq,target);
       block_size := oldblk;
       Merge_Clustered(s,clusols);
       Deep_Clear(clusols);
@@ -517,6 +519,7 @@ package body Standard_IncFix_Continuation is
 
   procedure Silent_Continue_with_Stop
                ( sols : in out Solution_List; proj : in boolean;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(1.0) ) is
 
     sia : Solu_Info_Array(1..integer32(Length_Of(sols))) := Deep_Create(sols);
@@ -546,7 +549,7 @@ package body Standard_IncFix_Continuation is
       Continuation_Parameters.Tune(condition);
       max_reruns := oldmax - 1;
       block_size := Length_Of(clusols);
-      Silent_Continue_with_Stop(clusols,proj,target);
+      Silent_Continue_with_Stop(clusols,proj,nbq,target);
       block_size := oldblk;
       Merge_Clustered(s,clusols);
       Deep_Clear(clusols);
@@ -641,7 +644,7 @@ package body Standard_IncFix_Continuation is
 
   procedure Reporting_Small_Continue
                ( file : in file_type; sols : in out Solution_List;
-                 proj : in boolean;
+                 proj : in boolean; nbq : in integer32 := 0;
                  target : in Complex_Number := Create(1.0) ) is
 
     sia : Solu_Info_Array(1..integer32(Length_Of(sols))) := Deep_Create(sols);
@@ -673,7 +676,7 @@ package body Standard_IncFix_Continuation is
       Continuation_Parameters.Tune(condition);
       max_reruns := oldmax - 1;
       block_size := Length_Of(clusols);
-      Reporting_Small_Continue(file,clusols,proj,target);
+      Reporting_Small_Continue(file,clusols,proj,nbq,target);
       block_size := oldblk;
       Merge_Clustered(s,clusols);
       Deep_Clear(clusols);
@@ -779,7 +782,7 @@ package body Standard_IncFix_Continuation is
 
   procedure Reporting_Continue
                ( file : in file_type; sols : in out Solution_List;
-                 proj : in boolean;
+                 proj : in boolean; nbq : in integer32 := 0;
                  target : in Complex_Number := Create(1.0) ) is
 
     sials : constant Solu_Info_Array_List := Create(sols,sia_size);
@@ -812,7 +815,7 @@ package body Standard_IncFix_Continuation is
       Continuation_Parameters.Tune(condition);
       max_reruns := oldmax - 1;
       block_size := Length_Of(clusols);
-      Reporting_Continue(file,clusols,proj,target);
+      Reporting_Continue(file,clusols,proj,nbq,target);
       block_size := oldblk;
       Merge_Clustered(s,clusols);
       Deep_Clear(clusols);
@@ -933,7 +936,7 @@ package body Standard_IncFix_Continuation is
 
   procedure Reporting_Continue_with_Stop
                ( file : in file_type; sols : in out Solution_List;
-                 proj : in boolean;
+                 proj : in boolean; nbq : in integer32 := 0;
                  target : in Complex_Number := Create(1.0) ) is
 
     sia : Solu_Info_Array(1..integer32(Length_Of(sols))) := Deep_Create(sols);
@@ -965,7 +968,7 @@ package body Standard_IncFix_Continuation is
       Continuation_Parameters.Tune(condition);
       max_reruns := oldmax - 1;
       block_size := Length_Of(clusols);
-      Reporting_Continue_with_Stop(file,clusols,proj,target);
+      Reporting_Continue_with_Stop(file,clusols,proj,nbq,target);
       block_size := oldblk;
       Merge_Clustered(s,clusols);
       Deep_Clear(clusols);
@@ -1077,6 +1080,7 @@ package body Standard_IncFix_Continuation is
                  w : in out Standard_Integer_Vectors.Vector;
                  v : in out Standard_Floating_VecVecs.VecVec;
                  errv : in out Standard_Floating_Vectors.Vector;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(1.0) ) is
 
     rtoric : constant integer32
@@ -1105,7 +1109,7 @@ package body Standard_IncFix_Continuation is
       Continuation_Parameters.Tune(condition);
       max_reruns := oldmax - 1;
       block_size := Length_Of(clusols);
-      Silent_Toric_Continue(clusols,proj,w,v,errv,target);
+      Silent_Toric_Continue(clusols,proj,w,v,errv,nbq,target);
       block_size := oldblk;
       Merge_Clustered(s,clusols);
       Deep_Clear(clusols);
@@ -1200,6 +1204,7 @@ package body Standard_IncFix_Continuation is
                  w : in out Standard_Integer_Vectors.Vector;
                  v : in out Standard_Floating_VecVecs.VecVec;
                  errv : in out Standard_Floating_Vectors.Vector;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(1.0) ) is
 
     rtoric : constant integer32
@@ -1230,7 +1235,7 @@ package body Standard_IncFix_Continuation is
       Continuation_Parameters.Tune(condition);
       max_reruns := oldmax - 1;
       block_size := Length_Of(clusols);
-      Reporting_Toric_Continue(file,clusols,proj,w,v,errv,target);
+      Reporting_Toric_Continue(file,clusols,proj,w,v,errv,nbq,target);
       block_size := oldblk;
       Merge_Clustered(s,clusols);
       Deep_Clear(clusols);

@@ -323,7 +323,7 @@ package body Standard_BlackBox_Continuations is
     Standard_Coefficient_Homotopy.Create(q.all,p.all,k,a);
     Tune_Continuation_Parameters(outfile);
     tstart(timer);
-    Cont(outfile,sols,proj,target);
+    Cont(outfile,sols,proj,target=>target);
     tstop(timer);
     new_line(outfile);
     print_times(outfile,timer,"continuation");
@@ -369,7 +369,7 @@ package body Standard_BlackBox_Continuations is
     put_line(outfile,"THE SCALED SOLUTIONS :");
     new_line(outfile);
     tstart(timer);
-    Cont(outfile,sols,proj,target);
+    Cont(outfile,sols,proj,target=>target);
     tstop(timer);
     new_line(outfile);
     print_times(outfile,timer,"continuation");
@@ -404,7 +404,7 @@ package body Standard_BlackBox_Continuations is
     Standard_Homotopy.Create(p,q,k,gamma);
     Standard_Coefficient_Homotopy.Create(q,p,k,gamma);
     Add(sols,sol);
-    Cont(sols,proj,target);
+    Cont(sols,proj,target=>target);
     sol := Head_Of(sols).all;
     Deep_Clear(sols);
     Standard_Homotopy.Clear;
@@ -433,7 +433,7 @@ package body Standard_BlackBox_Continuations is
     Standard_Homotopy.Create(p,q,k,gamma);
     Standard_Coefficient_Homotopy.Create(q,p,k,gamma);
     Add(sols,sol);
-    Cont(file,sols,proj,target);
+    Cont(file,sols,proj,target=>target);
     sol := Head_Of(sols).all;
     Deep_Clear(sols);
     Standard_Homotopy.Clear;
@@ -609,7 +609,7 @@ package body Standard_BlackBox_Continuations is
     Standard_Coefficient_Homotopy.Create(q,p,k,gamma);
     Continuation_Parameters.Tune(0);
     tstart(timer);
-    Cont(sols,proj,target);
+    Cont(sols,proj,target=>target);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
     Silent_Black_Box_Refine(p,sols);
@@ -670,7 +670,7 @@ package body Standard_BlackBox_Continuations is
     put(file," "); put(file,Head_Of(sols).n,1);
     new_line(file);
     tstart(timer);
-    Cont(file,sols,proj,target);
+    Cont(file,sols,proj,target=>target);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"continuation");
@@ -892,7 +892,7 @@ package body Standard_BlackBox_Continuations is
     Standard_Laurent_Homotopy.Create(p,q,k,gamma);
     Continuation_Parameters.Tune(0);
     tstart(timer);
-    Cont(sols,proj,target);
+    Cont(sols,proj,target=>target);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
     Silent_Black_Box_Refine(p,sols);
@@ -939,7 +939,7 @@ package body Standard_BlackBox_Continuations is
     Standard_Laurent_Homotopy.Create(p,q,k,gamma);
     Tune_Continuation_Parameters(file);
     tstart(timer);
-    Cont(file,sols,proj,target);
+    Cont(file,sols,proj,target=>target);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
     Reporting_Black_Box_Refine(file,p,sols);
