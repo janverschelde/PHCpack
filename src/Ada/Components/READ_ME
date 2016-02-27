@@ -1,4 +1,4 @@
-Treatment and representation of solution components with PHCv2.3.93
+Treatment and representation of solution components with PHCv2.4.13
 
 This directory was new in release 2.1 and under continueing development.
 Release 2.2 offered a blackbox factorization for multivariate polynomials,

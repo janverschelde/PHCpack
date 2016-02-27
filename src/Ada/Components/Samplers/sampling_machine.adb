@@ -426,7 +426,7 @@ package body Sampling_Machine is
 
   begin
     Standard_Complex_Solutions.Set_Continuation_Parameter(sols,Create(0.0));
-    Cont(sols,false,tt);
+    Cont(sols,false,target=>tt);
   end Silent_Homotopy_Continuation;
 
   procedure Silent_Homotopy_Continuation_with_Stop
@@ -529,7 +529,7 @@ package body Sampling_Machine is
 
   begin
     Standard_Complex_Solutions.Set_Continuation_Parameter(sols,Create(0.0));
-    Cont(sols,false,tt);
+    Cont(sols,false,target=>tt);
   end Silent_Homotopy_Continuation_with_Stop;
 
   procedure Reporting_Homotopy_Continuation
@@ -655,7 +655,7 @@ package body Sampling_Machine is
 
   begin
     Standard_Complex_Solutions.Set_Continuation_Parameter(sols,Create(0.0));
-    Cont(file,sols,false,tt);
+    Cont(file,sols,false,target=>tt);
   end Reporting_Homotopy_Continuation;
 
   procedure Reporting_Homotopy_Continuation_with_Stop
@@ -759,7 +759,7 @@ package body Sampling_Machine is
 
   begin
     Standard_Complex_Solutions.Set_Continuation_Parameter(sols,Create(0.0));
-    Cont(file,sols,false,tt);
+    Cont(file,sols,false,target=>tt);
   end Reporting_Homotopy_Continuation_with_Stop;
 
 -- CORRECTORS :

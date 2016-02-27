@@ -291,8 +291,8 @@ package body Diagonal_Homotopy_Continuation is
     Standard_Homotopy.Create(p,q,1,gamma);
     tstart(timer);
     if report
-     then R_Cont(file,sols,false,target);
-     else S_Cont(sols,false,target);
+     then R_Cont(file,sols,false,target=>target);
+     else S_Cont(sols,false,target=>target);
     end if;
     tstop(timer);
     new_line(file);
