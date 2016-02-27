@@ -8,6 +8,7 @@ with QuadDobl_Complex_Equality_Tests;    use QuadDobl_Complex_Equality_Tests;
 with QuadDobl_Complex_Solutions;         use QuadDobl_Complex_Solutions;
 with QuadDobl_Predictors;                use QuadDobl_Predictors;
 with QuadDobl_Correctors;                use QuadDobl_Correctors;
+with QuadDobl_Orthogonal_Correctors;     use QuadDobl_Orthogonal_Correctors;
 with QuadDobl_Dispatch_Predictors;       use QuadDobl_Dispatch_Predictors;
 with Process_io;                         use Process_io;
 with Directions_of_QuadDobl_Paths;       use Directions_of_QuadDobl_Paths;
@@ -21,7 +22,7 @@ package body QuadDobl_Path_Trackers is
   procedure Linear_Single_Normal_Silent_Continue
               ( s : in out Solu_Info; target : in Complex_Number;
                 tol : in double_float; proj : in boolean;
-                p : in Pred_Pars; c : in Corr_Pars;
+                p : in Pred_Pars; c : in Corr_Pars; nbq : in integer32 := 0;
                 f : access procedure ( s : in Solu_Info ) := null ) is
  
     old_t,prev_t,prev_t2,prev_t1,prev_t0 : Complex_Number;
@@ -39,11 +40,16 @@ package body QuadDobl_Path_Trackers is
         new Affine_Single_Severe_Normal_Silent_Corrector(Norm,H,dH);
       procedure Projective_Corrector is
         new Projective_Single_Severe_Normal_Silent_Corrector(Norm,H,dH);
+      procedure QRLS_Corrector is
+        new Silent_QRLS_Corrector(Norm,H,dH);
 
     begin
-      if proj
-       then Projective_Corrector(s,c);
-       else Affine_Corrector(s,c);
+      if proj then
+        Projective_Corrector(s,c);
+      elsif nbq = 0 then
+        Affine_Corrector(s,c);
+      else
+        QRLS_Corrector(nbq,s,c);
       end if;
     end Corrector;
 
@@ -101,9 +107,10 @@ package body QuadDobl_Path_Trackers is
   end Linear_Single_Normal_Silent_Continue;
 
   procedure Linear_Single_Normal_Reporting_Continue
-              ( file : in file_type; s : in out Solu_Info;
-                target : in Complex_Number; tol : in double_float;
-                proj : in boolean; p : in Pred_Pars; c : in Corr_Pars;
+              ( file : in file_type;
+                s : in out Solu_Info; target : in Complex_Number;
+                tol : in double_float; proj : in boolean;
+                p : in Pred_Pars; c : in Corr_Pars; nbq : in integer32 := 0;
                 f : access procedure ( s : in Solu_Info ) := null ) is
  
     old_t,prev_t,prev_t2,prev_t1,prev_t0 : Complex_Number;
@@ -121,11 +128,16 @@ package body QuadDobl_Path_Trackers is
         new Affine_Single_Severe_Normal_Reporting_Corrector(Norm,H,dH);
       procedure Projective_Corrector is
         new Projective_Single_Severe_Normal_Reporting_Corrector(Norm,H,dH);
+      procedure QRLS_Corrector is
+        new Reporting_QRLS_Corrector(Norm,H,dH);
 
     begin
-      if proj
-       then Projective_Corrector(file,s,c);
-       else Affine_Corrector(file,s,c);
+      if proj then
+        Projective_Corrector(file,s,c);
+      elsif nbq = 0 then
+        Affine_Corrector(file,s,c);
+      else
+        QRLS_Corrector(file,nbq,s,c);
       end if;
     end Corrector;
 
@@ -196,7 +208,7 @@ package body QuadDobl_Path_Trackers is
                 rtoric : in integer32; w : in out integer32;
                 v : in out Quad_Double_Vectors.Link_to_Vector;
                 errorv : in out quad_double;
-                p : in Pred_Pars; c : in Corr_Pars;
+                p : in Pred_Pars; c : in Corr_Pars; nbq : in integer32 := 0;
                 f : access procedure ( s : in Solu_Info ) := null ) is
 
     old_t,prev_t,prev_t2,prev_t1,prev_t0 : Complex_Number;
@@ -231,11 +243,16 @@ package body QuadDobl_Path_Trackers is
         new Affine_Single_Severe_Conditioned_Silent_Corrector(Norm,H,dH);
       procedure Projective_Corrector is
         new Projective_Single_Severe_Conditioned_Silent_Corrector(Norm,H,dH);
+      procedure SVD_Corrector is
+        new Silent_SVD_Corrector(Norm,H,dH);
 
     begin
-      if proj
-       then Projective_Corrector(s,c);
-       else Affine_Corrector(s,c);
+      if proj then
+        Projective_Corrector(s,c);
+      elsif nbq = 0 then
+        Affine_Corrector(s,c);
+      else
+        SVD_Corrector(nbq,s,c);
       end if;
     end Corrector;
 
@@ -312,7 +329,7 @@ package body QuadDobl_Path_Trackers is
                 rtoric : in integer32; w : in out integer32;
                 v : in out Quad_Double_Vectors.Link_to_Vector;
                 errorv : in out quad_double;
-                p : in Pred_Pars; c : in Corr_Pars;
+                p : in Pred_Pars; c : in Corr_Pars; nbq : in integer32 := 0;
                 f : access procedure ( s : in Solu_Info ) := null ) is
 
     old_t,prev_t,prev_t2,prev_t1,prev_t0 : Complex_Number;
@@ -345,11 +362,16 @@ package body QuadDobl_Path_Trackers is
         new Affine_Single_Severe_Conditioned_Reporting_Corrector(Norm,H,dH);
       procedure Projective_Corrector is
         new Projective_Single_Severe_Conditioned_Reporting_Corrector(Norm,H,dH);
+      procedure SVD_Corrector is
+        new Reporting_SVD_Corrector(Norm,H,dH);
 
     begin
-      if proj
-       then Projective_Corrector(file,s,c);
-       else Affine_Corrector(file,s,c);
+      if proj then
+        Projective_Corrector(file,s,c);
+      elsif nbq = 0 then
+        Affine_Corrector(file,s,c);
+      else
+        SVD_Corrector(file,nbq,s,c);
       end if;
     exception
       when others => --put("exception raised in ");

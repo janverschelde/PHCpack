@@ -98,8 +98,8 @@ package body Drivers_to_Track_DoblDobl_Paths is
       exit when (ls = null);
       ls.t := Create(integer(0));
       s := Shallow_Create(ls);
-      Track_along_Path(file,s,t1,tol,false,pp1,cp1,f);
-      Track_End_Game(file,s,t1,tol,false,0,w,v,e,pp2,cp2,f);
+      Track_along_Path(file,s,t1,tol,false,pp1,cp1,f=>f);
+      Track_End_Game(file,s,t1,tol,false,0,w,v,e,pp2,cp2,f=>f);
       cnt := ind-1;
       Write_Next_Solution
         (file,cnt,s,tol_zero,tol_zero,nbfail,nbregu,nbsing,kind);
