@@ -5,10 +5,10 @@ code for end games, sweeps, and path trackers to separate directories.
 The paragraph below describes the historical development of the original
 code in this Continuation directory.
 
-The second release brought multi-precision root refiners and the usage
+The second release brought multiprecision root refiners and the usage
 of QR and Least Squares in the correctors at the end of the paths.
 In version 2.1, this is extended to tracking solution paths with
-multi-precision arithmetic.  Release 2.2 contains the start of
+multiprecision arithmetic.  Release 2.2 contains the start of
 a Newton's method based on numerical differentiation routines and
 supports coefficient parameter homotopy continuation.
 New in release 2.3 is Newton's method with deflation for singularities
@@ -21,6 +21,7 @@ upgrades in v2.3.45.  In v2.3.46, multitasking was added to the blackbox
 polynomial continuation routines.  New in v2.3.58 is the introduction
 of correctors with double double and quad double arithmetic.
 In v2.3.59 we can run entire paths with double double arithmetic.
+Overdetermined homotopies were added in version 2.4.13.
 
 This library of continuation routines is organized in three layers:
 

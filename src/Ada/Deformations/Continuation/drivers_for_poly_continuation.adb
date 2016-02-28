@@ -608,6 +608,7 @@ package body Drivers_for_Poly_Continuation is
 
     infile : file_type;
     readfail : boolean := true;
+    nbvar,nbequ : natural32;
 
     procedure Try_to_Read is
 
@@ -636,8 +637,14 @@ package body Drivers_for_Poly_Continuation is
       Try_to_Read;
       exit when not readfail;
     end loop;
+    nbvar := Number_of_Unknowns(q(q'first));
+    nbequ := natural32(q'last);
     put_line(file,"THE START SYSTEM : ");
-    put(file,natural32(q'last),q); new_line(file);
+    if nbequ = nbvar 
+     then put(file,nbequ,q);
+     else put(file,nbequ,nbvar,q);
+    end if;
+    new_line(file);
     Read_Start_Solutions(infile,file,qsols);
     Close(infile);
   end Read_Start_System;

@@ -89,7 +89,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
   end Refine_Solutions;
 
   procedure Secant_Homotopy
-              ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
+              ( nbequ,nbvar : in natural32;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 ls : in Link_to_Array_of_Strings ) is
 
   -- DESCRIPTION :
@@ -108,7 +109,11 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
   begin
     Create_Output_File(outft,outfilename);
-    put(outft,natural32(p'last),p); new_line(outft);
+    if nbequ = nbvar
+     then put(outft,nbequ,p);
+     else put(outft,nbequ,nbvar,p);
+    end if;
+    new_line(outft);
     new_line;
     put("Do you want the solutions on separate file ? (y/n) ");
     Ask_Yes_or_No(ans);
@@ -120,8 +125,10 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
       solsfile := false;
     end if;
     Driver_for_Polynomial_Continuation(outft,p,prclvl,ls,sols,mpsols,target);
-    if Length_Of(sols) > 0
-     then Refine_Solutions(outft,p,target,sols,refsols,solsfile);
+    if nbequ = nbvar then
+      if Length_Of(sols) > 0
+       then Refine_Solutions(outft,p,target,sols,refsols,solsfile);
+      end if;
     end if;
     new_line(outft);
     Write_Seed_Number(outft);
@@ -324,55 +331,6 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
    -- Driver_to_Path_Tracker(outft,p,nt);
   end Multitasking_Secant_Homotopy;
 
-  procedure Overdetermined_Homotopy
-              ( inft : in out file_type;
-                lp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
-                ls : in Link_to_Array_of_Strings ) is
-
-  -- DESCRIPTION :
-  --   The system on entry has more equations than unknowns.
-  --   Prompts the user for a start system and launches
-  --   the overdetermined path trackers.
-  --   Asks for the level of precision, but only if prclvl = 1.
-
-    prc : character;
-
-  begin
-    if prclvl = 1 then
-      prc := Prompt_for_Precision;
-    elsif prclvl = 2 then
-      prc := '1';
-    elsif prclvl = 4 then
-      prc := '2';
-    else
-      prc := Prompt_for_Precision;
-    end if;
-    case prc is
-      when '0' => null;
-      when '1' =>
-        declare
-          nvr : constant natural32 
-              := Standard_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
-          ddp : DoblDobl_Complex_Poly_Systems.Poly_Sys(lp'range)
-              := DoblDobl_Complex_Poly_Strings.Parse(nvr,ls.all);
-        begin
-          null;
-        end;
-      when '2' =>
-        declare
-          nvr : constant natural32 
-              := Standard_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
-          qdp : QuadDobl_Complex_Poly_Systems.Poly_Sys(lp'range)
-              := QuadDobl_Complex_Poly_Strings.Parse(nvr,ls.all);
-        begin
-          null;
-        end;
-      when others => null;
-    end case;
-    new_line;
-    put_line("overdetermined homotopy ...");
-  end Overdetermined_Homotopy;
-
   procedure Parameter_or_Sweep_Homotopy
               ( inft : in out file_type;
                 lp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -444,19 +402,15 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     neq := natural32(lp'last);
     nva := Standard_Complex_Polynomials.Number_of_Unknowns(lp(lp'first));
     if nt = 0 then
-      if nva = neq then
+      if nva <= neq then
         close(inft);
-        Secant_Homotopy(lp.all,ls);
+        Secant_Homotopy(neq,nva,lp.all,ls);
       else
         new_line;
         put("Found "); put(neq,1);
         put(" equations in "); put(nva,1); put_line(" unknowns...");
-        if nva < neq then
-          Overdetermined_Homotopy(inft,lp,ls);
-        else
-          new_line;
-          Parameter_or_Sweep_Homotopy(inft,lp,ls);
-        end if;
+        new_line;
+        Parameter_or_Sweep_Homotopy(inft,lp,ls);
       end if;
     else
       Multitasking_Secant_Homotopy(lp.all,ls,nt);
