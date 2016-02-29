@@ -1,3 +1,6 @@
+Mon 29 Feb 2016 : changes in dobldobl_sampling_machine for added parameter
+  in dobldobl_incfix_continuation procedures.
+
 Sat 27 Feb 2016 : changes in sampling_machine.adb for extra argument in the
   increment-and-fix continuation in standard double precision.
 

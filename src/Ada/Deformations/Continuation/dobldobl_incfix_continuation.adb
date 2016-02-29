@@ -1,6 +1,5 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Vectors;
@@ -15,6 +14,7 @@ package body DoblDobl_IncFix_Continuation is
 
   procedure Silent_Continue
                ( sols : in out Solution_List;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(integer(1)) ) is
 
     res,res_last : Solution_List;
@@ -41,8 +41,9 @@ package body DoblDobl_IncFix_Continuation is
         ls : constant Link_to_Solution := Head_Of(tmp);
         s : Solu_Info := Deep_Create(ls.all);
       begin
-        Continue_along_Path(s,target,tol,false,patpp,patcp);
-        Continue_End_Game(s,target,tol,false,order,w,pathdir,errv,endpp,endcp);
+        Continue_along_Path(s,target,tol,false,patpp,patcp,nbq);
+        Continue_End_Game
+          (s,target,tol,false,order,w,pathdir,errv,endpp,endcp,nbq);
         Append(res,res_last,Deep_Create(s));
       end;
       tmp := Tail_Of(tmp);
@@ -52,6 +53,7 @@ package body DoblDobl_IncFix_Continuation is
 
   procedure Silent_Continue_with_Stop
                ( sols : in out Solution_List;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(integer(1)) ) is
 
     res,res_last : Solution_List;
@@ -78,8 +80,9 @@ package body DoblDobl_IncFix_Continuation is
         ls : constant Link_to_Solution := Head_Of(tmp);
         s : Solu_Info := Deep_Create(ls.all);
       begin
-        Continue_along_Path(s,target,tol,false,patpp,patcp);
-        Continue_End_Game(s,target,tol,false,order,w,pathdir,errv,endpp,endcp);
+        Continue_along_Path(s,target,tol,false,patpp,patcp,nbq);
+        Continue_End_Game
+          (s,target,tol,false,order,w,pathdir,errv,endpp,endcp,nbq);
         Append(res,res_last,Deep_Create(s));
         exit when Stop_Test(s.sol.all);
       end;
@@ -90,6 +93,7 @@ package body DoblDobl_IncFix_Continuation is
 
   procedure Reporting_Continue
                ( file : in file_type; sols : in out Solution_List;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(integer(1)) ) is
 
     res,res_last : Solution_List;
@@ -124,9 +128,9 @@ package body DoblDobl_IncFix_Continuation is
         ls : constant Link_to_Solution := Head_Of(tmp);
         s : Solu_Info := Deep_Create(ls.all);
       begin
-        Continue_along_Path(file,s,target,tol,false,patpp,patcp);
+        Continue_along_Path(file,s,target,tol,false,patpp,patcp,nbq);
         Continue_End_Game(file,s,target,tol,false,
-                          order,w,pathdir,errv,endpp,endcp);
+                          order,w,pathdir,errv,endpp,endcp,nbq);
         Write_Next_Solution
           (file,cnt,s,tol_zero,tol_zero,nbfail,nbregu,nbsing,kind);
         text_io.flush(file);
@@ -146,6 +150,7 @@ package body DoblDobl_IncFix_Continuation is
 
   procedure Reporting_Continue_with_Stop
                ( file : in file_type; sols : in out Solution_List;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(integer(1)) ) is
 
     res,res_last : Solution_List;
@@ -206,6 +211,7 @@ package body DoblDobl_IncFix_Continuation is
                  w : in out Standard_Integer_Vectors.Vector;
                  v : in out Double_Double_VecVecs.VecVec;
                  errv : in out Double_Double_Vectors.Vector;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(integer(1)) ) is
 
     res,res_last : Solution_List;
@@ -230,9 +236,9 @@ package body DoblDobl_IncFix_Continuation is
         ls : constant Link_to_Solution := Head_Of(tmp);
         s : Solu_Info := Deep_Create(ls.all);
       begin
-        Continue_along_Path(s,target,tol,false,patpp,patcp);
+        Continue_along_Path(s,target,tol,false,patpp,patcp,nbq);
         Continue_End_Game(s,target,tol,false,order,
-                          w(i),v(i),errv(i),endpp,endcp);
+                          w(i),v(i),errv(i),endpp,endcp,nbq);
         Append(res,res_last,Deep_Create(s));
       end;
       tmp := Tail_Of(tmp);
@@ -246,6 +252,7 @@ package body DoblDobl_IncFix_Continuation is
                  w : in out Standard_Integer_Vectors.Vector;
                  v : in out Double_Double_VecVecs.VecVec;
                  errv : in out Double_Double_Vectors.Vector;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(integer(1)) ) is
 
     res,res_last : Solution_List;
@@ -277,9 +284,9 @@ package body DoblDobl_IncFix_Continuation is
         ls : constant Link_to_Solution := Head_Of(tmp);
         s : Solu_Info := Deep_Create(ls.all);
       begin
-        Continue_along_Path(file,s,target,tol,false,patpp,patcp);
+        Continue_along_Path(file,s,target,tol,false,patpp,patcp,nbq);
         Continue_End_Game(file,s,target,tol,false,
-                          order,w(i),v(i),errv(i),endpp,endcp);
+                          order,w(i),v(i),errv(i),endpp,endcp,nbq);
         Write_Next_Solution
           (file,cnt,s,tol_zero,tol_zero,nbfail,nbregu,nbsing,kind);
         text_io.flush(file);

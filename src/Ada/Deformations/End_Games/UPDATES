@@ -1,3 +1,6 @@
+Mon 29 Feb 2016 : drivers_for_path_directions.adb changed for added
+  parameter in dobldobl_incfix_continuation.
+
 Sat 27 Feb 2016 : updates in drivers_for_path_directions.adb for changes in
   increment-and-fix continuation in standard double precision.
 

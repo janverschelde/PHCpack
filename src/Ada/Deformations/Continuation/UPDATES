@@ -1,3 +1,7 @@
+Mon 29 Feb 2016 : added extra parameter to dobldobl_incfix_continuation,
+  which changed drivers_for_poly_continuation.adb and
+  dobldobl_blackbox_continuations.adb.
+
 Sun 28 Feb 2016 : updated mainpoco.adb and drivers_for_poly_continuation.adb
   so that phc -p can handle overdetermined homotopies in double precision.
 

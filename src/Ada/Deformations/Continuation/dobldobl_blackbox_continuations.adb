@@ -323,7 +323,7 @@ package body DoblDobl_BlackBox_Continuations is
     DoblDobl_Coefficient_Homotopy.Create(q.all,p.all,k,a);
     Tune_Continuation_Parameters(outfile);
     tstart(timer);
-    Cont(outfile,sols,target);
+    Cont(outfile,sols,target=>target);
     tstop(timer);
     new_line(outfile);
     print_times(outfile,timer,"continuation");
@@ -369,7 +369,7 @@ package body DoblDobl_BlackBox_Continuations is
     put_line(outfile,"THE SCALED SOLUTIONS :");
     new_line(outfile);
     tstart(timer);
-    Cont(outfile,sols,target);
+    Cont(outfile,sols,target=>target);
     tstop(timer);
     new_line(outfile);
     print_times(outfile,timer,"continuation");
@@ -405,7 +405,7 @@ package body DoblDobl_BlackBox_Continuations is
     DoblDobl_Homotopy.Create(p,q,k,gamma);
     DoblDobl_Coefficient_Homotopy.Create(q,p,k,gamma);
     Add(sols,sol);
-    Cont(sols,target);
+    Cont(sols,target=>target);
     sol := Head_Of(sols).all;
     Deep_Clear(sols);
     DoblDobl_Homotopy.Clear;
@@ -435,7 +435,7 @@ package body DoblDobl_BlackBox_Continuations is
     DoblDobl_Homotopy.Create(p,q,k,gamma);
     DoblDobl_Coefficient_Homotopy.Create(q,p,k,gamma);
     Add(sols,sol);
-    Cont(file,sols,target);
+    Cont(file,sols,target=>target);
     sol := Head_Of(sols).all;
     Deep_Clear(sols);
     DoblDobl_Homotopy.Clear;
@@ -612,7 +612,7 @@ package body DoblDobl_BlackBox_Continuations is
     DoblDobl_Coefficient_Homotopy.Create(q,p,k,gamma);
     Continuation_Parameters.Tune(0); --,32);
     tstart(timer);
-    Cont(sols,target);
+    Cont(sols,target=>target);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
     Silent_Black_Box_Refine(p,sols);
@@ -674,7 +674,7 @@ package body DoblDobl_BlackBox_Continuations is
    -- put(file," "); put(file,Head_Of(sols).n,1);
    -- new_line(file);
     tstart(timer);
-    Cont(file,sols,target);
+    Cont(file,sols,target=>target);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"continuation");
@@ -898,7 +898,7 @@ package body DoblDobl_BlackBox_Continuations is
     DoblDobl_Laurent_Homotopy.Create(p,q,k,gamma);
     Continuation_Parameters.Tune(0); --,32);
     tstart(timer);
-    Cont(sols,target);
+    Cont(sols,target=>target);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
     Silent_Black_Box_Refine(p,sols);
@@ -946,7 +946,7 @@ package body DoblDobl_BlackBox_Continuations is
     DoblDobl_Laurent_Homotopy.Create(p,q,k,gamma);
     Tune_Continuation_Parameters(file);
     tstart(timer);
-    Cont(file,sols,target);
+    Cont(file,sols,target=>target);
     tstop(timer);
     pocotime := Elapsed_User_Time(timer);
     Reporting_Black_Box_Refine(file,p,sols);
