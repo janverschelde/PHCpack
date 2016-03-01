@@ -476,21 +476,22 @@ package body Drivers_for_Homotopy_Creation is
       end if;
     elsif d <= 32 then
       declare
+        nv_p : constant natural32 := Number_of_Unknowns(p(p'first));
         dd_p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range)
-             := DoblDobl_Complex_Poly_Strings.Parse(natural32(p'last),ls.all);
+             := DoblDobl_Complex_Poly_Strings.Parse(nv_p,ls.all);
         dd_q : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(q'range)
              := Standard_Poly_Sys_to_DoblDobl_Complex(q);
          -- assuming the start system has only random coefficients ...
         dd_a : constant DoblDobl_Complex_Numbers.Complex_Number
              := Standard_to_DoblDobl_Complex(a);
       begin
-       -- put("creating dobldobl homotopy with k = "); put(k,1); new_line;
         DoblDobl_Homotopy.Create(dd_p,dd_q,k,dd_a);
       end;
     elsif d <= 64 then
       declare
+        nv_p : constant natural32 := Number_of_Unknowns(p(p'first));
         qd_p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range)
-             := QuadDobl_Complex_Poly_Strings.Parse(natural32(p'last),ls.all);
+             := QuadDobl_Complex_Poly_Strings.Parse(nv_p,ls.all);
         qd_q : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(q'range)
              := Standard_Poly_Sys_to_QuadDobl_Complex(q);
           -- assuming the start system has only random coefficients ...
@@ -503,9 +504,9 @@ package body Drivers_for_Homotopy_Creation is
     else
       size := Multprec_Floating_Numbers.Decimal_to_Size(d);
       declare
+        nv_p : constant natural32 := Number_of_Unknowns(p(p'first));
         mp : Multprec_Complex_Poly_Systems.Poly_Sys(p'range)
-           := Multprec_Complex_Poly_Strings.Parse
-                (natural32(p'last),size,ls.all);
+           := Multprec_Complex_Poly_Strings.Parse(nv_p,size,ls.all);
         mq : Multprec_Complex_Poly_Systems.Poly_Sys(p'range)
            := Convert(q);
          -- assuming the start system has only random coefficients ...

@@ -1,3 +1,7 @@
+Tue 1 Mar 2016 : when parsing target system into double double or quad
+  double precision, must use the correct number of variables in the package
+  drivers_for_homotopy_creation.adb.
+
 Mon 22 Feb 2016 : updates in the homotopies for Laurent systems for nonsquare
   systems, in {standard,dobldobl,quaddobl}_laurent_homotopy.adb.
 
