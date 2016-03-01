@@ -244,7 +244,7 @@ package body QuadDobl_Sampling_Machine is
 
   begin
     QuadDobl_Complex_Solutions.Set_Continuation_Parameter(sols,Create(ddzero));
-    Cont(sols,tt);
+    Cont(sols,target=>tt);
   end Silent_Homotopy_Continuation;
 
   procedure Silent_Homotopy_Continuation_with_Stop
@@ -327,7 +327,7 @@ package body QuadDobl_Sampling_Machine is
 
   begin
     QuadDobl_Complex_Solutions.Set_Continuation_Parameter(sols,Create(ddzero));
-    Cont(sols,tt);
+    Cont(sols,target=>tt);
   end Silent_Homotopy_Continuation_with_Stop;
 
   procedure Reporting_Homotopy_Continuation
@@ -432,7 +432,7 @@ package body QuadDobl_Sampling_Machine is
 
   begin
     QuadDobl_Complex_Solutions.Set_Continuation_Parameter(sols,create(ddzero));
-    Cont(file,sols,tt);
+    Cont(file,sols,target=>tt);
   end Reporting_Homotopy_Continuation;
 
   procedure Reporting_Homotopy_Continuation_with_Stop
@@ -516,7 +516,7 @@ package body QuadDobl_Sampling_Machine is
 
   begin
     QuadDobl_Complex_Solutions.Set_Continuation_Parameter(sols,Create(ddzero));
-    Cont(file,sols,tt);
+    Cont(file,sols,target=>tt);
   end Reporting_Homotopy_Continuation_with_Stop;
 
 -- CORRECTORS :

@@ -1,6 +1,5 @@
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Quad_Double_Vectors;
@@ -15,6 +14,7 @@ package body QuadDobl_IncFix_Continuation is
 
   procedure Silent_Continue
                ( sols : in out Solution_List;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(integer(1)) ) is
 
     res,res_last : Solution_List;
@@ -52,6 +52,7 @@ package body QuadDobl_IncFix_Continuation is
 
   procedure Silent_Continue_with_Stop
                ( sols : in out Solution_List;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(integer(1)) ) is
 
     res,res_last : Solution_List;
@@ -90,6 +91,7 @@ package body QuadDobl_IncFix_Continuation is
 
   procedure Reporting_Continue
                ( file : in file_type; sols : in out Solution_List;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(integer(1)) ) is
 
     res,res_last : Solution_List;
@@ -147,6 +149,7 @@ package body QuadDobl_IncFix_Continuation is
 
   procedure Reporting_Continue_with_Stop
                ( file : in file_type; sols : in out Solution_List;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(integer(1)) ) is
 
     res,res_last : Solution_List;
@@ -208,6 +211,7 @@ package body QuadDobl_IncFix_Continuation is
                  w : in out Standard_Integer_Vectors.Vector;
                  v : in out Quad_Double_VecVecs.VecVec;
                  errv : in out Quad_Double_Vectors.Vector;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(integer(1)) ) is
 
     res,res_last : Solution_List;
@@ -247,6 +251,7 @@ package body QuadDobl_IncFix_Continuation is
                  w : in out Standard_Integer_Vectors.Vector;
                  v : in out Quad_Double_VecVecs.VecVec;
                  errv : in out Quad_Double_Vectors.Vector;
+                 nbq : in integer32 := 0;
                  target : in Complex_Number := Create(integer(1)) ) is
 
     res,res_last : Solution_List;
