@@ -2,7 +2,6 @@ with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
 with File_Scanning;                      use File_Scanning;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
-with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;
@@ -92,7 +91,7 @@ package body Drivers_for_Poly_Continuation is
 
   procedure Continue ( file : in file_type;
                        sols : in out Standard_Complex_Solutions.Solution_List;
-                       proj,report : in boolean;
+                       proj,report : in boolean; nbq : in integer32 := 0;
                        target : in Standard_Complex_Numbers.Complex_Number ) is
 
   -- DESCRIPTION :
@@ -118,8 +117,8 @@ package body Drivers_for_Poly_Continuation is
   begin
     tstart(timer);
     if report
-     then Rep_Cont(file,sols,proj,target=>target);
-     else Sil_Cont(sols,proj,target=>target);
+     then Rep_Cont(file,sols,proj,nbq,target=>target);
+     else Sil_Cont(sols,proj,nbq,target=>target);
     end if;
     tstop(timer);
     new_line(file); print_times(file,timer,"continuation");
@@ -127,7 +126,7 @@ package body Drivers_for_Poly_Continuation is
 
   procedure Continue ( file : in file_type;
                        sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                       report : in boolean;
+                       report : in boolean; nbq : in integer32 := 0;
                        target : in DoblDobl_Complex_Numbers.Complex_Number ) is
 
   -- DESCRIPTION :
@@ -156,7 +155,7 @@ package body Drivers_for_Poly_Continuation is
 
   procedure Continue ( file : in file_type;
                        sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                       report : in boolean;
+                       report : in boolean; nbq : in integer32 := 0;
                        target : in QuadDobl_Complex_Numbers.Complex_Number ) is
 
   -- DESCRIPTION :
@@ -847,9 +846,12 @@ package body Drivers_for_Poly_Continuation is
     mqsols : Multprec_Complex_Solutions.Solution_List;
     proj : boolean;
     deci,size : natural32 := 0;
+    nbequ,nbvar : integer32;
 
   begin
     Read_Start_System(file,q,qsols);
+    nbequ := q'last;
+    nbvar := Head_Of(qsols).n;
     Copy(p,pp);
     if prclvl = 1 then
       deci := 16;
@@ -865,21 +867,27 @@ package body Drivers_for_Poly_Continuation is
     end if;
     new_line;
     if deci <= 16 then
-      Driver_for_Standard_Continuation(file,qsols,proj,t);
+      if nbequ = nbvar
+       then Driver_for_Standard_Continuation(file,qsols,proj,target=>t);
+       else Driver_for_Standard_Continuation(file,qsols,proj,nbequ,target=>t);
+      end if;
       sols := qsols;
     elsif deci <= 32 then
       declare
         dd_qsols : DoblDobl_Complex_Solutions.Solution_List
                  := DoblDobl_Complex_Solutions.Create(qsols);
       begin
-        Driver_for_DoblDobl_Continuation(file,dd_qsols,t);
+        Driver_for_DoblDobl_Continuation(file,dd_qsols,target=>t);
       end;
     elsif deci <= 64 then
       declare
         qd_qsols : QuadDobl_Complex_Solutions.Solution_List
                  := QuadDobl_Complex_Solutions.Create(qsols);
       begin
-        Driver_for_QuadDobl_Continuation(file,qd_qsols,t);
+        if nbequ = nbvar
+         then Driver_for_QuadDobl_Continuation(file,qd_qsols,target=>t);
+         else Driver_for_QuadDobl_Continuation(file,qd_qsols,nbequ,target=>t);
+        end if;
       end;
     else
       mqsols := Multprec_Complex_Solutions.Create(qsols);
@@ -952,7 +960,7 @@ package body Drivers_for_Poly_Continuation is
     put_line(file,"HOMOTOPY PARAMETERS :");
     put(file,"  k : "); put(file,k,2); new_line(file);
     put(file,"  a : "); put(file,target); new_line(file);
-    Driver_for_Standard_Continuation(file,qsols,false,target);
+    Driver_for_Standard_Continuation(file,qsols,false,target=>target);
    -- Homotopy.Clear; --> clearing here creates difficulties for root refiner
     sols := qsols;
   end Driver_for_Parameter_Continuation;
@@ -973,7 +981,7 @@ package body Drivers_for_Poly_Continuation is
   begin
     Read_Start_System(file,q,qsols);
     Driver_for_Homotopy_Construction(file,p,q,target);
-    Driver_for_DoblDobl_Continuation(file,qsols,target);
+    Driver_for_DoblDobl_Continuation(file,qsols,target=>target);
     sols := qsols;
   end Driver_for_Polynomial_Continuation;
 
@@ -991,7 +999,7 @@ package body Drivers_for_Poly_Continuation is
   begin
     Read_Start_System(file,q,qsols);
     Driver_for_Homotopy_Construction(file,p,q,target);
-    Driver_for_QuadDobl_Continuation(file,qsols,target);
+    Driver_for_QuadDobl_Continuation(file,qsols,target=>target);
     sols := qsols;
   end Driver_for_Polynomial_Continuation;
 
@@ -1074,7 +1082,7 @@ package body Drivers_for_Poly_Continuation is
   procedure Driver_for_Standard_Continuation
                 ( file : in file_type;
                   sols : in out Standard_Complex_Solutions.Solution_List;
-                  proj : in boolean;
+                  proj : in boolean; nbq : in integer32 := 0;
                   target : Complex_Number := Create(1.0) ) is
 
     use Standard_Complex_Solutions;
@@ -1112,7 +1120,7 @@ package body Drivers_for_Poly_Continuation is
       Toric_Continue(file,sols,proj,report,w,v.all,errv.all,target);
       Write_Directions(file,w,v.all,errv.all);
     else
-      Continue(file,sols,proj,report,target);
+      Continue(file,sols,proj,report,target=>target);
     end if;
   end Driver_for_Standard_Continuation;
 
@@ -1164,6 +1172,7 @@ package body Drivers_for_Poly_Continuation is
   procedure Driver_for_DoblDobl_Continuation
                 ( file : in file_type;
                   sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                  nbq : in integer32 := 0;
                   target : Complex_Number := Create(1.0) ) is
 
     use DoblDobl_Complex_Solutions;
@@ -1207,13 +1216,14 @@ package body Drivers_for_Poly_Continuation is
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     else
-      Continue(file,sols,report,dd_targ);
+      Continue(file,sols,report,nbq,dd_targ);
     end if;
   end Driver_for_DoblDobl_Continuation;
 
   procedure Driver_for_QuadDobl_Continuation
                 ( file : in file_type;
                   sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                  nbq : in integer32 := 0;
                   target : Complex_Number := Create(1.0) ) is
 
     use QuadDobl_Complex_Solutions;
@@ -1257,7 +1267,7 @@ package body Drivers_for_Poly_Continuation is
       put_line(file,"THE SOLUTIONS :");
       put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
     else
-      Continue(file,sols,report,qd_targ);
+      Continue(file,sols,report,nbq,qd_targ);
     end if;
   end Driver_for_QuadDobl_Continuation;
 
