@@ -113,14 +113,14 @@ procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
        then Set_Continuation_Parameter(sols,Create(0.0));
       end if;
       if deci <= 16 then
-        Driver_for_Standard_Continuation(file,sols,proj,target);
+        Driver_for_Standard_Continuation(file,sols,proj,target=>target);
         Driver_for_Root_Refining(file,scalp,p,basis,scalvec,sols);
       elsif deci <= 32 then
         ddsols := DoblDobl_Complex_Solutions.Create(sols);
-        Driver_for_DoblDobl_Continuation(file,ddsols,target);
+        Driver_for_DoblDobl_Continuation(file,ddsols,target=>target);
       elsif deci <= 64 then
         qdsols := QuadDobl_Complex_Solutions.Create(sols);
-        Driver_for_QuadDobl_Continuation(file,qdsols,target);
+        Driver_for_QuadDobl_Continuation(file,qdsols,target=>target);
       else
         mpsols := Multprec_Complex_Solutions.Create(sols);
         size := Multprec_Floating_Numbers.Decimal_to_Size(deci);

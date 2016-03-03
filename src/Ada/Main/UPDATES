@@ -1,3 +1,6 @@
+Wed 2 Mar 2016 : mainphc.adb changed for extra parameter in the drivers
+  for polynomial continuation.
+
 Fri 19 Feb 2016 : adjusted greeting_banners for version 2.4.12.
 
 Fri 12 Feb 2016 : adjusted greeting_banners for version 2.4.11.
