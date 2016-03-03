@@ -41,8 +41,9 @@ package body QuadDobl_IncFix_Continuation is
         ls : constant Link_to_Solution := Head_Of(tmp);
         s : Solu_Info := Deep_Create(ls.all);
       begin
-        Continue_along_Path(s,target,tol,false,patpp,patcp);
-        Continue_End_Game(s,target,tol,false,order,w,pathdir,errv,endpp,endcp);
+        Continue_along_Path(s,target,tol,false,patpp,patcp,nbq);
+        Continue_End_Game
+          (s,target,tol,false,order,w,pathdir,errv,endpp,endcp,nbq);
         Append(res,res_last,Deep_Create(s));
       end;
       tmp := Tail_Of(tmp);
@@ -79,8 +80,9 @@ package body QuadDobl_IncFix_Continuation is
         ls : constant Link_to_Solution := Head_Of(tmp);
         s : Solu_Info := Deep_Create(ls.all);
       begin
-        Continue_along_Path(s,target,tol,false,patpp,patcp);
-        Continue_End_Game(s,target,tol,false,order,w,pathdir,errv,endpp,endcp);
+        Continue_along_Path(s,target,tol,false,patpp,patcp,nbq);
+        Continue_End_Game
+          (s,target,tol,false,order,w,pathdir,errv,endpp,endcp,nbq);
         Append(res,res_last,Deep_Create(s));
         exit when Stop_Test(s.sol.all);
       end;
@@ -127,9 +129,9 @@ package body QuadDobl_IncFix_Continuation is
         ls : constant Link_to_Solution := Head_Of(tmp);
         s : Solu_Info := Deep_Create(ls.all);
       begin
-        Continue_along_Path(file,s,target,tol,false,patpp,patcp);
-        Continue_End_Game(file,s,target,tol,false,
-                          order,w,pathdir,errv,endpp,endcp);
+        Continue_along_Path(file,s,target,tol,false,patpp,patcp,nbq);
+        Continue_End_Game
+          (file,s,target,tol,false,order,w,pathdir,errv,endpp,endcp,nbq);
         Write_Next_Solution
           (file,cnt,s,tol_zero,tol_zero,nbfail,nbregu,nbsing,kind);
         text_io.flush(file);
@@ -185,9 +187,9 @@ package body QuadDobl_IncFix_Continuation is
         ls : constant Link_to_Solution := Head_Of(tmp);
         s : Solu_Info := Deep_Create(ls.all);
       begin
-        Continue_along_Path(file,s,target,tol,false,patpp,patcp);
-        Continue_End_Game(file,s,target,tol,false,
-                          order,w,pathdir,errv,endpp,endcp);
+        Continue_along_Path(file,s,target,tol,false,patpp,patcp,nbq);
+        Continue_End_Game
+          (file,s,target,tol,false,order,w,pathdir,errv,endpp,endcp,nbq);
         Write_Next_Solution
           (file,cnt,s,tol_zero,tol_zero,nbfail,nbregu,nbsing,kind);
         text_io.flush(file);
@@ -235,9 +237,9 @@ package body QuadDobl_IncFix_Continuation is
         ls : constant Link_to_Solution := Head_Of(tmp);
         s : Solu_Info := Deep_Create(ls.all);
       begin
-        Continue_along_Path(s,target,tol,false,patpp,patcp);
-        Continue_End_Game(s,target,tol,false,order,
-                          w(i),v(i),errv(i),endpp,endcp);
+        Continue_along_Path(s,target,tol,false,patpp,patcp,nbq);
+        Continue_End_Game
+          (s,target,tol,false,order,w(i),v(i),errv(i),endpp,endcp,nbq);
         Append(res,res_last,Deep_Create(s));
       end;
       tmp := Tail_Of(tmp);
@@ -284,9 +286,9 @@ package body QuadDobl_IncFix_Continuation is
         ls : constant Link_to_Solution := Head_Of(tmp);
         s : Solu_Info := Deep_Create(ls.all);
       begin
-        Continue_along_Path(file,s,target,tol,false,patpp,patcp);
-        Continue_End_Game(file,s,target,tol,false,
-                          order,w(i),v(i),errv(i),endpp,endcp);
+        Continue_along_Path(file,s,target,tol,false,patpp,patcp,nbq);
+        Continue_End_Game
+          (file,s,target,tol,false,order,w(i),v(i),errv(i),endpp,endcp,nbq);
         Write_Next_Solution
           (file,cnt,s,tol_zero,tol_zero,nbfail,nbregu,nbsing,kind);
         text_io.flush(file);

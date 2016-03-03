@@ -102,17 +102,17 @@ package body Drivers_for_Poly_Continuation is
     timer : timing_widget;
 
     procedure Sil_Cont is
-     -- new Silent_Continue(Max_Norm,Standard_Homotopy.Eval,
-     --                     Standard_Homotopy.Diff,Standard_Homotopy.Diff);
-      new Silent_Continue(Max_Norm,Standard_Coefficient_Homotopy.Eval,
-                          Standard_Homotopy.Diff,
-                          Standard_Coefficient_Homotopy.Diff);
+      new Silent_Continue(Max_Norm,Standard_Homotopy.Eval,
+                          Standard_Homotopy.Diff,Standard_Homotopy.Diff);
+     -- new Silent_Continue(Max_Norm,Standard_Coefficient_Homotopy.Eval,
+     --                     Standard_Homotopy.Diff,
+     --                     Standard_Coefficient_Homotopy.Diff);
     procedure Rep_Cont is
-     -- new Reporting_Continue(Max_Norm,Standard_Homotopy.Eval,
-     --                        Standard_Homotopy.Diff,Standard_Homotopy.Diff);
-      new Reporting_Continue(Max_Norm,Standard_Coefficient_Homotopy.Eval,
-                             Standard_Homotopy.Diff,
-                             Standard_Coefficient_Homotopy.Diff);
+      new Reporting_Continue(Max_Norm,Standard_Homotopy.Eval,
+                             Standard_Homotopy.Diff,Standard_Homotopy.Diff);
+     -- new Reporting_Continue(Max_Norm,Standard_Coefficient_Homotopy.Eval,
+     --                        Standard_Homotopy.Diff,
+     --                        Standard_Coefficient_Homotopy.Diff);
 
   begin
     tstart(timer);
@@ -146,8 +146,8 @@ package body Drivers_for_Poly_Continuation is
   begin
     tstart(timer);
     if report
-     then Rep_Cont(file,sols,target=>target);
-     else Sil_Cont(sols,target=>target);
+     then Rep_Cont(file,sols,nbq,target=>target);
+     else Sil_Cont(sols,nbq,target=>target);
     end if;
     tstop(timer);
     new_line(file); print_times(file,timer,"continuation");
@@ -175,8 +175,8 @@ package body Drivers_for_Poly_Continuation is
   begin
     tstart(timer);
     if report
-     then Rep_Cont(file,sols,target=>target);
-     else Sil_Cont(sols,target=>target);
+     then Rep_Cont(file,sols,nbq,target=>target);
+     else Sil_Cont(sols,nbq,target=>target);
     end if;
     tstop(timer);
     new_line(file); print_times(file,timer,"continuation");
@@ -877,7 +877,10 @@ package body Drivers_for_Poly_Continuation is
         dd_qsols : DoblDobl_Complex_Solutions.Solution_List
                  := DoblDobl_Complex_Solutions.Create(qsols);
       begin
-        Driver_for_DoblDobl_Continuation(file,dd_qsols,target=>t);
+        if nbequ = nbvar
+         then Driver_for_DoblDobl_Continuation(file,dd_qsols,target=>t);
+         else Driver_for_DoblDobl_Continuation(file,dd_qsols,nbequ,target=>t);
+        end if;
       end;
     elsif deci <= 64 then
       declare
@@ -1120,7 +1123,7 @@ package body Drivers_for_Poly_Continuation is
       Toric_Continue(file,sols,proj,report,w,v.all,errv.all,target);
       Write_Directions(file,w,v.all,errv.all);
     else
-      Continue(file,sols,proj,report,target=>target);
+      Continue(file,sols,proj,report,nbq,target=>target);
     end if;
   end Driver_for_Standard_Continuation;
 

@@ -305,8 +305,8 @@ package body Standard_IncFix_Continuation is
 
     begin
       for i in s'range loop
-        LCont1(s(i),target,tol,proj,p1,c_path);
-        LCont2(s(i),target,tol,proj,0,w,dumv,err,p2,c_end);
+        LCont1(s(i),target,tol,proj,p1,c_path,nbq);
+        LCont2(s(i),target,tol,proj,0,w,dumv,err,p2,c_end,nbq);
         Diagnostics(s,c_end,tol,i,proj,
                     ninfi,nregu,nsing,nclus,nfail,sols,clusols);
       end loop;
@@ -430,8 +430,8 @@ package body Standard_IncFix_Continuation is
 
     begin
       for i in s'range loop
-        LCont1(s(i),target,tol,proj,p1,c_path);
-        LCont2(s(i),target,tol,proj,0,w,dumv,err,p2,c_end);
+        LCont1(s(i),target,tol,proj,p1,c_path,nbq);
+        LCont2(s(i),target,tol,proj,0,w,dumv,err,p2,c_end,nbq);
         Diagnostics(s,c_end,tol,i,proj,
                     ninfi,nregu,nsing,nclus,nfail,sols,clusols);
       end loop;
@@ -565,8 +565,8 @@ package body Standard_IncFix_Continuation is
 
     begin
       for i in s'range loop
-        LCont1(s(i),target,tol,proj,p1,c_path);
-        LCont2(s(i),target,tol,proj,0,w,dumv,err,p2,c_end);
+        LCont1(s(i),target,tol,proj,p1,c_path,nbq);
+        LCont2(s(i),target,tol,proj,0,w,dumv,err,p2,c_end,nbq);
         Diagnostics(s,c_end,tol,i,proj,
                     ninfi,nregu,nsing,nclus,nfail,sols,clusols);
         exit when Stop_Test(s(i).sol.all);
@@ -693,8 +693,8 @@ package body Standard_IncFix_Continuation is
     begin
       Write_Bar(file);
       for i in s'range loop
-        LCont1(file,s(i),target,tol,proj,p1,c_path);
-        LCont2(file,s(i),target,tol,proj,0,w,dumv,err,p2,c_end);
+        LCont1(file,s(i),target,tol,proj,p1,c_path,nbq);
+        LCont2(file,s(i),target,tol,proj,0,w,dumv,err,p2,c_end,nbq);
         Write_Statistics(file,i,s(i).nstep,s(i).nfail,s(i).niter,s(i).nsyst);
         Write_Diagnostics(file,s,c_end,tol,i,proj,
                           ninfi,nregu,nsing,nclus,nfail,sols,clusols);
@@ -832,8 +832,8 @@ package body Standard_IncFix_Continuation is
     begin
       Write_Bar(file);
       for i in s'range loop
-        LCont1(file,s(i),target,tol,proj,p1,c_path);
-        LCont2(file,s(i),target,tol,proj,0,w,dumv,err,p2,c_end);
+        LCont1(file,s(i),target,tol,proj,p1,c_path,nbq);
+        LCont2(file,s(i),target,tol,proj,0,w,dumv,err,p2,c_end,nbq);
         Write_Statistics(file,i,s(i).nstep,s(i).nfail,s(i).niter,s(i).nsyst);
         Write_Diagnostics(file,s,c_end,tol,i,proj,
                           ninfi,nregu,nsing,nclus,nfail,sols,clusols);
@@ -1125,8 +1125,8 @@ package body Standard_IncFix_Continuation is
 
     begin
       for i in s'range loop
-        LCont1(s(i),target,tol,proj,p1,c_path);
-        LCont2(s(i),target,tol,proj,rtoric,w(i),v(i),errv(i),p2,c_end);
+        LCont1(s(i),target,tol,proj,p1,c_path,nbq);
+        LCont2(s(i),target,tol,proj,rtoric,w(i),v(i),errv(i),p2,c_end,nbq);
         Diagnostics(s,c_end,tol,i,proj,
                     ninfi,nregu,nsing,nclus,nfail,sols,clusols);
       end loop;
