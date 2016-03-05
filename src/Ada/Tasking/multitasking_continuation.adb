@@ -21,7 +21,8 @@ with Multitasking;
 package body Multitasking_Continuation is
 
   procedure Silent_Path_Tracker
-               ( ls : in Standard_Complex_Solutions.Link_to_Solution ) is
+               ( ls : in Standard_Complex_Solutions.Link_to_Solution;
+                 nbq : in integer32 := 0 ) is
 
     length : double_float := 0.0;
     nbstep,nbfail,nbiter,nbsyst : natural32 := 0;
@@ -29,11 +30,12 @@ package body Multitasking_Continuation is
 
   begin
     PHCpack_Operations.Silent_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail);
+      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail,nbq);
   end Silent_Path_Tracker;
 
   procedure Silent_Path_Tracker
-               ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution ) is
+               ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
+                 nbq : in integer32 := 0 ) is
 
     length : double_float := 0.0;
     nbstep,nbfail,nbiter,nbsyst : natural32 := 0;
@@ -41,11 +43,12 @@ package body Multitasking_Continuation is
 
   begin
     PHCpack_Operations.Silent_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail);
+      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail,nbq);
   end Silent_Path_Tracker;
 
   procedure Silent_Path_Tracker
-               ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution ) is
+               ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution;
+                 nbq : in integer32 := 0 ) is
 
     length : double_float := 0.0;
     nbstep,nbfail,nbiter,nbsyst : natural32 := 0;
@@ -53,12 +56,13 @@ package body Multitasking_Continuation is
 
   begin
     PHCpack_Operations.Silent_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail);
+      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail,nbq);
   end Silent_Path_Tracker;
 
   procedure Silent_Path_Tracker
                ( id,nb : in integer32;
-                 ls : in Standard_Complex_Solutions.Link_to_Solution ) is
+                 ls : in Standard_Complex_Solutions.Link_to_Solution;
+                 nbq : in integer32 := 0 ) is
 
     length : double_float := 0.0;
     nbstep,nbfail,nbiter,nbsyst : natural32 := 0;
@@ -69,12 +73,13 @@ package body Multitasking_Continuation is
                      & " received solution " 
                      & Multitasking.to_String(natural32(nb)) & ".");
     PHCpack_Operations.Silent_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail);
+      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail,nbq);
   end Silent_Path_Tracker;
 
   procedure Silent_Path_Tracker
                ( id,nb : in integer32;
-                 ls : in DoblDobl_Complex_Solutions.Link_to_Solution ) is
+                 ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
+                 nbq : in integer32 := 0 ) is
 
     length : double_float := 0.0;
     nbstep,nbfail,nbiter,nbsyst : natural32 := 0;
@@ -85,12 +90,13 @@ package body Multitasking_Continuation is
                      & " received solution " 
                      & Multitasking.to_String(natural32(nb)) & ".");
     PHCpack_Operations.Silent_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail);
+      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail,nbq);
   end Silent_Path_Tracker;
 
   procedure Silent_Path_Tracker
                ( id,nb : in integer32;
-                 ls : in QuadDobl_Complex_Solutions.Link_to_Solution ) is
+                 ls : in QuadDobl_Complex_Solutions.Link_to_Solution;
+                 nbq : in integer32 := 0 ) is
 
     length : double_float := 0.0;
     nbstep,nbfail,nbiter,nbsyst : natural32 := 0;
@@ -101,7 +107,7 @@ package body Multitasking_Continuation is
                      & " received solution " 
                      & Multitasking.to_String(natural32(nb)) & ".");
     PHCpack_Operations.Silent_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail);
+      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail,nbq);
   end Silent_Path_Tracker;
 
   procedure Silent_Laurent_Path_Tracker
@@ -190,7 +196,7 @@ package body Multitasking_Continuation is
 
   procedure Silent_Multitasking_Path_Tracker
                ( sols : in out Standard_Complex_Solutions.Solution_List;
-                 n : in integer32 ) is
+                 n : in integer32; nbq : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -208,7 +214,7 @@ package body Multitasking_Continuation is
         myptr := Standard_Solutions_Queue.Next;
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
-        Silent_Path_Tracker(ls);
+        Silent_Path_Tracker(ls,nbq);
       end loop;
     end Next_Solution;
     procedure do_jobs is new Multitasking.Silent_Workers(Next_Solution);
@@ -220,7 +226,7 @@ package body Multitasking_Continuation is
 
   procedure Silent_Multitasking_Path_Tracker
                ( sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                 n : in integer32 ) is
+                 n : in integer32; nbq : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -238,7 +244,7 @@ package body Multitasking_Continuation is
         myptr := DoblDobl_Solutions_Queue.Next;
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
-        Silent_Path_Tracker(ls);
+        Silent_Path_Tracker(ls,nbq);
       end loop;
     end Next_Solution;
     procedure do_jobs is new Multitasking.Silent_Workers(Next_Solution);
@@ -250,7 +256,7 @@ package body Multitasking_Continuation is
 
   procedure Silent_Multitasking_Path_Tracker
                ( sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                 n : in integer32 ) is
+                 n : in integer32; nbq : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -268,7 +274,7 @@ package body Multitasking_Continuation is
         myptr := QuadDobl_Solutions_Queue.Next;
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
-        Silent_Path_Tracker(ls);
+        Silent_Path_Tracker(ls,nbq);
       end loop;
     end Next_Solution;
     procedure do_jobs is new Multitasking.Silent_Workers(Next_Solution);
@@ -280,7 +286,7 @@ package body Multitasking_Continuation is
 
   procedure Reporting_Multitasking_Path_Tracker
                ( sols : in out Standard_Complex_Solutions.Solution_List;
-                 n : in integer32 ) is
+                 n : in integer32; nbq : in integer32 := 0 ) is
 
     use Standard_Complex_Solutions;
 
@@ -300,7 +306,7 @@ package body Multitasking_Continuation is
         exit when Is_Null(myptr);
         myjob := Standard_Solutions_Queue.Next_Counter;
         ls := Head_Of(myptr);
-        Silent_Path_Tracker(i,myjob,ls);
+        Silent_Path_Tracker(i,myjob,ls,nbq);
       end loop;
     end Next_Solution;
     procedure do_jobs is new Multitasking.Reporting_Workers(Next_Solution);
@@ -312,7 +318,7 @@ package body Multitasking_Continuation is
 
   procedure Reporting_Multitasking_Path_Tracker
                ( sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                 n : in integer32 ) is
+                 n : in integer32; nbq : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Solutions;
 
@@ -332,7 +338,7 @@ package body Multitasking_Continuation is
         exit when Is_Null(myptr);
         myjob := DoblDobl_Solutions_Queue.Next_Counter;
         ls := Head_Of(myptr);
-        Silent_Path_Tracker(i,myjob,ls);
+        Silent_Path_Tracker(i,myjob,ls,nbq);
       end loop;
     end Next_Solution;
     procedure do_jobs is new Multitasking.Reporting_Workers(Next_Solution);
@@ -344,7 +350,7 @@ package body Multitasking_Continuation is
 
   procedure Reporting_Multitasking_Path_Tracker
                ( sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                 n : in integer32 ) is
+                 n : in integer32; nbq : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Solutions;
 
@@ -364,7 +370,7 @@ package body Multitasking_Continuation is
         exit when Is_Null(myptr);
         myjob := QuadDobl_Solutions_Queue.Next_Counter;
         ls := Head_Of(myptr);
-        Silent_Path_Tracker(i,myjob,ls);
+        Silent_Path_Tracker(i,myjob,ls,nbq);
       end loop;
     end Next_Solution;
     procedure do_jobs is new Multitasking.Reporting_Workers(Next_Solution);
@@ -599,18 +605,44 @@ package body Multitasking_Continuation is
     if ans = 'y' then
       tstart(timer);
       if deci <= 16 then
-        Reporting_Multitasking_Path_Tracker(st_qsols,n);
+        if nbequ = nbvar
+         then Reporting_Multitasking_Path_Tracker(st_qsols,n);
+         else Reporting_Multitasking_Path_Tracker(st_qsols,n,nbequ);
+        end if;
       elsif deci <= 32 then
         dd_qsols := DoblDobl_Complex_Solutions.Create(st_qsols);
-        Reporting_Multitasking_Path_Tracker(dd_qsols,n);
+        if nbequ = nbvar
+         then Reporting_Multitasking_Path_Tracker(dd_qsols,n);
+         else Reporting_Multitasking_Path_Tracker(dd_qsols,n,nbequ);
+        end if;
       else 
         qd_qsols := QuadDobl_Complex_Solutions.Create(st_qsols);
-        Reporting_Multitasking_Path_Tracker(qd_qsols,n);
+        if nbequ = nbvar
+         then Reporting_Multitasking_Path_Tracker(qd_qsols,n);
+         else Reporting_Multitasking_Path_Tracker(qd_qsols,n,nbequ);
+        end if;
       end if;
       tstop(timer);
     else
       tstart(timer);
-      Silent_Multitasking_Path_Tracker(st_qsols,n);
+      if deci <= 16 then
+        if nbequ = nbvar
+         then Silent_Multitasking_Path_Tracker(st_qsols,n);
+         else Silent_Multitasking_Path_Tracker(st_qsols,n,nbequ);
+        end if;
+      elsif deci <= 32 then
+        dd_qsols := DoblDobl_Complex_Solutions.Create(st_qsols);
+        if nbequ = nbvar
+         then Silent_Multitasking_Path_Tracker(dd_qsols,n);
+         else Silent_Multitasking_Path_Tracker(dd_qsols,n,nbequ);
+        end if;
+      elsif deci <= 64 then
+        qd_qsols := QuadDobl_Complex_Solutions.Create(st_qsols);
+        if nbequ = nbvar
+         then Silent_Multitasking_Path_Tracker(qd_qsols,n);
+         else Silent_Multitasking_Path_Tracker(qd_qsols,n,nbequ);
+        end if;
+      end if;
       tstop(timer);
     end if;
     put_line(file,"THE SOLUTIONS :");

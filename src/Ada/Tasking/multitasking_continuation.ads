@@ -12,28 +12,42 @@ package Multitasking_Continuation is
 --   Offers routines to track all paths using multitasking.
 
   procedure Silent_Path_Tracker
-               ( ls : in Standard_Complex_Solutions.Link_to_Solution );
+               ( ls : in Standard_Complex_Solutions.Link_to_Solution;
+                 nbq : in integer32 := 0 );
   procedure Silent_Path_Tracker
-               ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution );
+               ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
+                 nbq : in integer32 := 0 );
   procedure Silent_Path_Tracker
-               ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution );
+               ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution;
+                 nbq : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   Wrapper to track one path in standard double, double double,
+  --   or quad double precision, starting at the solution in ls.
+  --   There is no intermediate output of any kind.
+  --   If nbq differs from the zero default and equals the number of
+  --   equations, then Gauss-Newton correctors are applied.
 
   procedure Silent_Path_Tracker
                ( id,nb : in integer32;
-                 ls : in Standard_Complex_Solutions.Link_to_Solution );
+                 ls : in Standard_Complex_Solutions.Link_to_Solution;
+                 nbq : in integer32 := 0 );
   procedure Silent_Path_Tracker
                ( id,nb : in integer32;
-                 ls : in DoblDobl_Complex_Solutions.Link_to_Solution );
+                 ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
+                 nbq : in integer32 := 0 );
   procedure Silent_Path_Tracker
                ( id,nb : in integer32;
-                 ls : in QuadDobl_Complex_Solutions.Link_to_Solution );
+                 ls : in QuadDobl_Complex_Solutions.Link_to_Solution;
+                 nbq : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Task with identification number id reports the receipt of
   --   solution with number nb, with data in ls.
-  --   If id and nb are omitted, then Silent_Path_Tracker remains mute,
-  --   otherwise one line is written to screen allowing the user to
-  --   monitor the progress of the computations.
+  --   With id and nb given,  one line is written to screen allowing the 
+  --   user to monitor the progress of the computations.
+  --   If nbq differs from the zero default and equals the number of
+  --   equations, then Gauss-Newton correctors are applied.
 
   procedure Silent_Laurent_Path_Tracker
                ( ls : in Standard_Complex_Solutions.Link_to_Solution );
@@ -41,6 +55,10 @@ package Multitasking_Continuation is
                ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution );
   procedure Silent_Laurent_Path_Tracker
                ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution );
+
+  -- DESCRIPTION :
+  --   Wrapper to track one path defined by a Laurent homotopy in
+  --   standard double, double double, or quad double precision.
 
   procedure Silent_Laurent_Path_Tracker
                ( id,nb : in integer32;
@@ -57,23 +75,40 @@ package Multitasking_Continuation is
 
   procedure Silent_Multitasking_Path_Tracker
                ( sols : in out Standard_Complex_Solutions.Solution_List;
-                 n : in integer32 );
+                 n : in integer32; nbq : in integer32 := 0 );
   procedure Silent_Multitasking_Path_Tracker
                ( sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                 n : in integer32 );
+                 n : in integer32; nbq : in integer32 := 0 );
   procedure Silent_Multitasking_Path_Tracker
                ( sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                 n : in integer32 );
+                 n : in integer32; nbq : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   n tasks will track paths in standard double, double double,
+  --   or quad double precision, paths defined by a polynomial homotopy.
+  --   If nbq differs from the zero default value and equals the number
+  --   of equations in an overdetermined homotopy, then the Gauss-Newton
+  --   correctors are applied to track the paths.
+  --   No intermediate output is written by this silent version.
 
   procedure Reporting_Multitasking_Path_Tracker
                ( sols : in out Standard_Complex_Solutions.Solution_List;
-                 n : in integer32 );
+                 n : in integer32; nbq : in integer32 := 0 );
   procedure Reporting_Multitasking_Path_Tracker
                ( sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                 n : in integer32 );
+                 n : in integer32; nbq : in integer32 := 0 );
   procedure Reporting_Multitasking_Path_Tracker
                ( sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                 n : in integer32 );
+                 n : in integer32; nbq : in integer32 := 0 );
+
+  -- DESCRIPTION :
+  --   n tasks will track paths in standard double, double double,
+  --   or quad double precision, paths defined by a polynomial homotopy.
+  --   If nbq differs from the zero default value and equals the number
+  --   of equations in an overdetermined homotopy, then the Gauss-Newton
+  --   correctors are applied to track the paths.
+  --   Intermediate output is written to screen by this reporting version:
+  --   the user can monitor the progress of the computations.
 
   procedure Silent_Multitasking_Laurent_Path_Tracker
                ( sols : in out Standard_Complex_Solutions.Solution_List;
