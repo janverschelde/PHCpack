@@ -1851,6 +1851,9 @@ package body PHCpack_Operations is
     errv : Standard_Floating_Vectors.Link_to_Vector;
     wind : Standard_Integer_Vectors.Link_to_Vector;
     timer : Timing_Widget;
+    nbequ : constant integer32 := st_target_sys'last;
+    nbvar : constant integer32 
+          := Standard_Complex_Solutions.Head_Of(st_start_sols).n;
 
     procedure Sil_Cont is
       new Silent_Continue
@@ -1910,39 +1913,63 @@ package body PHCpack_Operations is
       tstart(timer);
       if number_of_tasks = 0 then
         if Continuation_Parameters.endext_order = 0 then
-          Rep_Cont(output_file,st_target_sols,false,target=>Create(1.0));
+          if nbequ = nbvar then
+            Rep_Cont(output_file,st_target_sols,false,target=>Create(1.0));
+          else        
+            Rep_Cont
+              (output_file,st_target_sols,false,nbequ,target=>Create(1.0));
+          end if;
         else
-          Rep_Toric_Cont
-            (output_file,st_target_sols,false,
-             wind.all,dirs.all,errv.all,target=>Create(1.0));
+          if nbequ = nbvar then
+            Rep_Toric_Cont
+              (output_file,st_target_sols,false,
+               wind.all,dirs.all,errv.all,target=>Create(1.0));
+          else
+            Rep_Toric_Cont
+              (output_file,st_target_sols,false,
+               wind.all,dirs.all,errv.all,nbequ,target=>Create(1.0));
+          end if;
           Write_Directions(output_file,wind.all,dirs.all,errv.all);
         end if;
       else
         Silent_Multitasking_Path_Tracker
           (st_target_sols,integer32(number_of_tasks));
       end if;
-      Standard_Root_Refiners.Reporting_Root_Refiner
-        (output_file,st_target_sys.all,st_target_sols,epsxa,epsfa,
-         tolsing,numit,max,deflate,false);
+      if nbequ = nbvar then
+        Standard_Root_Refiners.Reporting_Root_Refiner
+          (output_file,st_target_sys.all,st_target_sols,epsxa,epsfa,
+           tolsing,numit,max,deflate,false);
+      end if;
       tstop(timer);
       new_line(output_file);
       print_times(output_file,timer,"Solving by Homotopy Continuation");
     else
       if number_of_tasks = 0 then
         if Continuation_Parameters.endext_order = 0 then
-          Sil_Cont(st_target_sols,false,target=>Create(1.0));
+          if nbequ = nbvar
+           then Sil_Cont(st_target_sols,false,target=>Create(1.0));
+           else Sil_Cont(st_target_sols,false,nbequ,target=>Create(1.0));
+          end if;
         else
-          Sil_Toric_Cont
-            (st_target_sols,false,
-             wind.all,dirs.all,errv.all,target=>Create(1.0));
+          if nbequ = nbvar then
+            Sil_Toric_Cont
+              (st_target_sols,false,
+               wind.all,dirs.all,errv.all,target=>Create(1.0));
+          else
+            Sil_Toric_Cont
+              (st_target_sols,false,
+               wind.all,dirs.all,errv.all,nbequ,target=>Create(1.0));
+          end if;
         end if;
       else
         Silent_Multitasking_Path_Tracker
           (st_target_sols,integer32(number_of_tasks));
       end if;
-      Standard_Root_Refiners.Silent_Root_Refiner
-        (st_target_sys.all,st_target_sols,epsxa,epsfa,tolsing,
-         numit,max,deflate);
+      if nbequ = nbvar then
+        Standard_Root_Refiners.Silent_Root_Refiner
+          (st_target_sys.all,st_target_sols,epsxa,epsfa,tolsing,
+           numit,max,deflate);
+      end if;
     end if;
     if Continuation_Parameters.endext_order > 0 then
       Numerical_Tropisms_Container.Standard_Initialize
@@ -1976,6 +2003,9 @@ package body PHCpack_Operations is
     errv : Double_Double_Vectors.Link_to_Vector;
     wind : Standard_Integer_Vectors.Link_to_Vector;
     timer : Timing_Widget;
+    nbequ : constant integer32 := dd_target_sys'last;
+    nbvar : constant integer32 
+          := DoblDobl_Complex_Solutions.Head_Of(dd_start_sols).n;
 
     procedure Sil_Cont is
       new Silent_Continue
@@ -2037,11 +2067,20 @@ package body PHCpack_Operations is
       tstart(timer);
       if number_of_tasks = 0 then
         if Continuation_Parameters.endext_order = 0 then
-          Rep_Cont(output_file,dd_target_sols,Create(integer(1)));
+          if nbequ = nbvar
+           then Rep_Cont(output_file,dd_target_sols,Create(integer(1)));
+           else Rep_Cont(output_file,dd_target_sols,nbequ,Create(integer(1)));
+          end if;
         else
-          Rep_Toric_Cont
-            (output_file,dd_target_sols,false,
-             wind.all,dirs.all,errv.all,Create(integer(1)));
+          if nbequ = nbvar then
+            Rep_Toric_Cont
+              (output_file,dd_target_sols,false,
+               wind.all,dirs.all,errv.all,Create(integer(1)));
+          else
+            Rep_Toric_Cont
+              (output_file,dd_target_sols,false,
+               wind.all,dirs.all,errv.all,nbequ,Create(integer(1)));
+          end if;
           Write_Directions(output_file,wind.all,dirs.all,errv.all);
         end if;
       else
@@ -2057,11 +2096,20 @@ package body PHCpack_Operations is
     else
       if number_of_tasks = 0 then
         if Continuation_Parameters.endext_order = 0 then
-          Sil_Cont(dd_target_sols,Create(integer(1)));
+          if nbequ = nbvar
+           then Sil_Cont(dd_target_sols,Create(integer(1)));
+           else Sil_Cont(dd_target_sols,nbequ,Create(integer(1)));
+          end if;
         else
-          Sil_Toric_Cont
-            (dd_target_sols,false,
-             wind.all,dirs.all,errv.all,Create(integer(1)));
+          if nbequ = nbvar then
+            Sil_Toric_Cont
+              (dd_target_sols,false,
+               wind.all,dirs.all,errv.all,Create(integer(1)));
+          else
+            Sil_Toric_Cont
+              (dd_target_sols,false,
+               wind.all,dirs.all,errv.all,nbequ,Create(integer(1)));
+          end if;
         end if;
       else
         Silent_Multitasking_Path_Tracker
@@ -2103,6 +2151,9 @@ package body PHCpack_Operations is
     errv : Quad_Double_Vectors.Link_to_Vector;
     wind : Standard_Integer_Vectors.Link_to_Vector;
     timer : Timing_Widget;
+    nbequ : constant integer32 := qd_target_sys'last;
+    nbvar : constant integer32 
+          := QuadDobl_Complex_Solutions.Head_Of(qd_start_sols).n;
 
     procedure Sil_Cont is
       new Silent_Continue
@@ -2164,11 +2215,20 @@ package body PHCpack_Operations is
       tstart(timer);
       if number_of_tasks = 0 then
         if Continuation_Parameters.endext_order = 0 then
-          Rep_Cont(output_file,qd_target_sols,Create(integer(1)));
+          if nbequ = nbvar
+           then Rep_Cont(output_file,qd_target_sols,Create(integer(1)));
+           else Rep_Cont(output_file,qd_target_sols,nbequ,Create(integer(1)));
+          end if;
         else
-          Rep_Toric_Cont
-            (output_file,qd_target_sols,false,
-             wind.all,dirs.all,errv.all,Create(integer(1)));
+          if nbequ = nbvar then
+            Rep_Toric_Cont
+              (output_file,qd_target_sols,false,
+               wind.all,dirs.all,errv.all,Create(integer(1)));
+          else
+            Rep_Toric_Cont
+              (output_file,qd_target_sols,false,
+               wind.all,dirs.all,errv.all,Create(integer(1)));
+          end if;
           Write_Directions(output_file,wind.all,dirs.all,errv.all);
         end if;
       else
@@ -2184,11 +2244,20 @@ package body PHCpack_Operations is
     else
       if number_of_tasks = 0 then
         if Continuation_Parameters.endext_order = 0 then
-          Sil_Cont(qd_target_sols,Create(integer(1)));
+          if nbequ = nbvar
+           then Sil_Cont(qd_target_sols,Create(integer(1)));
+           else Sil_Cont(qd_target_sols,nbequ,Create(integer(1)));
+          end if;
         else
-          Sil_Toric_Cont
-            (qd_target_sols,false,
-             wind.all,dirs.all,errv.all,Create(integer(1)));
+          if nbequ = nbvar then
+            Sil_Toric_Cont
+              (qd_target_sols,false,
+               wind.all,dirs.all,errv.all,Create(integer(1)));
+          else
+            Sil_Toric_Cont
+              (qd_target_sols,false,
+               wind.all,dirs.all,errv.all,nbequ,Create(integer(1)));
+          end if;
         end if;
       else
         Silent_Multitasking_Path_Tracker
