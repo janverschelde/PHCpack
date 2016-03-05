@@ -1,3 +1,6 @@
+Sat 5 Mar 2016 : adjustments in mainpoco.adb for the multitasking path
+  trackers to apply the Gauss-Newton correctors.
+
 Thu 3 Mar 2016 : updates in drivers_for_poly_continuation.adb and
   {standard,quaddobl}_incfix_continuation.adb for overdetermined trackers.
 

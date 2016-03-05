@@ -300,18 +300,24 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
   procedure Multitasking_Secant_Homotopy
                ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                  ls : in Link_to_Array_of_Strings;
-                 nt : in natural32 ) is
+                 nt,nbequ,nbvar : in natural32 ) is
 
   -- DESCRIPTION :
   --   Calls the multitasking path trackers on the system p.
-  --   The string representation of the system p is in ls.
-  --   The number of tasks equals nt.
+
+  -- ON ENTRY :
+  --   p         the system parsed to standard double precision;
+  --   ls        the string representation of the system p;
+  --   nt        the number of tasks;
+  --   nbequ     number of equations;
+  --   nbvar     number of variables.
 
     outft : file_type;
 
   begin
     Create_Output_File(outft,outfilename);
-    Multitasking_Continuation.Driver_to_Path_Tracker(outft,p,ls,integer32(nt));
+    Multitasking_Continuation.Driver_to_Path_Tracker
+      (outft,p,ls,integer32(nt),integer32(nbequ),integer32(nbvar));
   end Multitasking_Secant_Homotopy;
 
   procedure Multitasking_Secant_Homotopy
@@ -413,7 +419,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
         Parameter_or_Sweep_Homotopy(inft,lp,ls);
       end if;
     else
-      Multitasking_Secant_Homotopy(lp.all,ls,nt);
+      Multitasking_Secant_Homotopy(lp.all,ls,nt,neq,nva);
     end if;
   end Polynomial_Tracker;
 

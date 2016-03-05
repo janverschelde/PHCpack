@@ -114,7 +114,7 @@ package Multitasking_Continuation is
                ( file : in file_type;
                  p : in Standard_Complex_Poly_Systems.Poly_Sys;
                  ls : in String_Splitters.Link_to_Array_of_Strings;
-                 n : in integer32 );
+                 n,nbequ,nbvar : in integer32 );
 
   -- DESCRIPTION :
   --   Driver to Multitasking_Path_Tracker, for mainpoco.
@@ -124,6 +124,8 @@ package Multitasking_Continuation is
   --   p         target polynomial system to be solved;
   --   ls        string representation of the polynomials in p,
   --             for conversion to double double or quad double precision;
-  --   n         number of tasks.
+  --   n         number of tasks;
+  --   nbequ     the number of equations;
+  --   nbvar     the number of variables.
 
 end Multitasking_Continuation;

@@ -1,3 +1,6 @@
+Sat 7 Mar 2016 : updates in the driver of multitasking_continuation for
+  the Gauss-Newton correctors on overdetermined homotopies.
+
 Thu 7 Jan 2016 : change single_polyhedral_trackers.adb in the call to the
   path trackers with the extra parameter for the estimated winding number.
 

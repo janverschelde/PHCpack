@@ -563,7 +563,7 @@ package body Multitasking_Continuation is
                ( file : in file_type;
                  p : in Standard_Complex_Poly_Systems.Poly_Sys;
                  ls : in String_Splitters.Link_to_Array_of_Strings;
-                 n : in integer32 ) is
+                 n,nbequ,nbvar : in integer32 ) is
 
     q : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     st_qsols : Standard_Complex_Solutions.Solution_List;
