@@ -1,3 +1,6 @@
+Fri 4 Mar 2016 : updates in trackers.py to run the path trackers on
+  more equations than unknowns.
+
 Tue 23 Feb 2016 : added detailed installation instructions to welcome.rst
   in PHCpy2/doc/source and PHCpy3/doc/source.
 

@@ -38,16 +38,17 @@ def standard_double_track(target, start, sols, gamma=0, tasks=0):
     from phcpy.interface import store_standard_system
     from phcpy.interface import store_standard_solutions
     from phcpy.interface import load_standard_solutions
-    store_standard_system(target)
+    from phcpy.solver import number_of_symbols
+    dim = number_of_symbols(start)
+    store_standard_system(target, nbvar=dim)
     py2c_copy_standard_container_to_target_system()
-    store_standard_system(start)
+    store_standard_system(start, nbvar=dim)
     py2c_copy_standard_container_to_start_system()
     # py2c_clear_standard_homotopy()
     if(gamma == 0):
         py2c_create_standard_homotopy()
     else:
         py2c_create_standard_homotopy_with_gamma(gamma.real, gamma.imag)
-    dim = len(start)
     store_standard_solutions(dim, sols)
     py2c_copy_standard_container_to_start_solutions()
     py2c_solve_by_standard_homotopy_continuation(tasks)
@@ -165,16 +166,18 @@ def double_double_track(target, start, sols, gamma=0, tasks=0):
     from phcpy.interface import store_dobldobl_system
     from phcpy.interface import store_dobldobl_solutions
     from phcpy.interface import load_dobldobl_solutions
-    store_dobldobl_system(target)
+    from phcpy.solver import number_of_symbols
+    dim = number_of_symbols(start)
+    store_dobldobl_system(target, nbvar=dim)
     py2c_copy_dobldobl_container_to_target_system()
-    store_dobldobl_system(start)
+    store_dobldobl_system(start, nbvar=dim)
     py2c_copy_dobldobl_container_to_start_system()
     # py2c_clear_dobldobl_homotopy()
     if(gamma == 0):
         py2c_create_dobldobl_homotopy()
     else:
         py2c_create_dobldobl_homotopy_with_gamma(gamma.real, gamma.imag)
-    dim = len(start)
+    # dim = len(start)
     store_dobldobl_solutions(dim, sols)
     py2c_copy_dobldobl_container_to_start_solutions()
     py2c_solve_by_dobldobl_homotopy_continuation(tasks)
@@ -292,16 +295,17 @@ def quad_double_track(target, start, sols, gamma=0, tasks=0):
     from phcpy.interface import store_quaddobl_system
     from phcpy.interface import store_quaddobl_solutions
     from phcpy.interface import load_quaddobl_solutions
-    store_quaddobl_system(target)
+    from phcpy.solver import number_of_symbols
+    dim = number_of_symbols(start)
+    store_quaddobl_system(target, nbvar=dim)
     py2c_copy_quaddobl_container_to_target_system()
-    store_quaddobl_system(start)
+    store_quaddobl_system(start, nbvar=dim)
     py2c_copy_quaddobl_container_to_start_system()
     # py2c_clear_quaddobl_homotopy()
     if(gamma == 0):
         py2c_create_quaddobl_homotopy()
     else:
         py2c_create_quaddobl_homotopy_with_gamma(gamma.real, gamma.imag)
-    dim = len(start)
     store_quaddobl_solutions(dim, sols)
     py2c_copy_quaddobl_container_to_start_solutions()
     py2c_solve_by_quaddobl_homotopy_continuation(tasks)
