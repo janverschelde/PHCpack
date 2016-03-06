@@ -8,6 +8,7 @@ with QuadDobl_Random_Vectors;            use QuadDobl_Random_Vectors;
 with QuadDobl_Complex_Vector_Norms;      use QuadDobl_Complex_Vector_Norms;
 with QuadDobl_Complex_Matrices;          use QuadDobl_Complex_Matrices;
 with QuadDobl_Complex_Linear_Solvers;    use QuadDobl_Complex_Linear_Solvers;
+with QuadDobl_Complex_Singular_Values;
 with Standard_Complex_Solutions_io;
 with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with QuadDobl_Solution_Diagnostics;      use QuadDobl_Solution_Diagnostics;
@@ -304,7 +305,73 @@ package body QuadDobl_Root_Refiners is
     put(file," |errfa| : "); put(file,res,3); new_line(file);
   end Write_Diagnostics;
 
-  procedure QuadDobl_Newton_Step
+  procedure QuadDobl_SVD_Newton_Step
+              ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out quad_double ) is
+
+    use QuadDobl_Complex_Poly_SysFun;
+    use QuadDobl_Complex_Jaco_Matrices;
+
+    y : QuadDobl_Complex_Vectors.Vector(f'range) := eval(f,x);
+    A : Matrix(f'range,x'range) := eval(jf,x);
+    n : constant integer32 := f'last;
+    p : constant integer32 := x'last;
+    dx : QuadDobl_Complex_Vectors.Vector(1..p);
+    mm : constant integer32 := QuadDobl_Complex_Singular_Values.Min0(n+1,p);
+    sv : QuadDobl_Complex_Vectors.Vector(1..mm);
+    e : QuadDobl_Complex_Vectors.Vector(1..p);
+    u : Matrix(1..n,1..n);
+    v : Matrix(1..p,1..p);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    QuadDobl_Complex_Singular_Values.SVD(A,n,p,sv,e,u,v,job,info);
+    rco := QuadDobl_Complex_Singular_Values.Inverse_Condition_Number(sv);
+    QuadDobl_Complex_Vectors.Min(y);
+    dx := QuadDobl_Complex_Singular_Values.Solve(u,v,sv,y);
+    QuadDobl_Complex_Vectors.Add(x,dx);
+    err := Max_Norm(dx);
+    y := eval(f,x);
+    res := Max_Norm(y);
+  end QuadDobl_SVD_Newton_Step;
+
+  procedure QuadDobl_SVD_Newton_Step
+              ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
+                jf : in QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
+                x : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out quad_double ) is
+
+    use QuadDobl_Complex_Laur_SysFun;
+    use QuadDobl_Complex_Laur_JacoMats;
+
+    y : QuadDobl_Complex_Vectors.Vector(f'range) := eval(f,x);
+    A : Matrix(f'range,x'range) := eval(jf,x);
+    n : constant integer32 := f'last;
+    p : constant integer32 := x'last;
+    dx : QuadDobl_Complex_Vectors.Vector(1..p);
+    mm : constant integer32 := QuadDobl_Complex_Singular_Values.Min0(n+1,p);
+    sv : QuadDobl_Complex_Vectors.Vector(1..mm);
+    e : QuadDobl_Complex_Vectors.Vector(1..p);
+    u : Matrix(1..n,1..n);
+    v : Matrix(1..p,1..p);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    QuadDobl_Complex_Singular_Values.SVD(A,n,p,sv,e,u,v,job,info);
+    rco := QuadDobl_Complex_Singular_Values.Inverse_Condition_Number(sv);
+    QuadDobl_Complex_Vectors.Min(y);
+    dx := QuadDobl_Complex_Singular_Values.Solve(u,v,sv,y);
+    QuadDobl_Complex_Vectors.Add(x,dx);
+    err := Max_Norm(dx);
+    y := eval(f,x);
+    res := Max_Norm(y);
+  end QuadDobl_SVD_Newton_Step;
+
+  procedure QuadDobl_LU_Newton_Step
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys; 
                 jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
@@ -328,9 +395,9 @@ package body QuadDobl_Root_Refiners is
     err := Max_Norm(y);
     y := eval(f,x);
     res := Max_Norm(y);
-  end QuadDobl_Newton_Step;
+  end QuadDobl_LU_Newton_Step;
 
-  procedure QuadDobl_Newton_Step
+  procedure QuadDobl_LU_Newton_Step
               ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys; 
                 jf : in QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out QuadDobl_Complex_Vectors.Vector;
@@ -354,7 +421,7 @@ package body QuadDobl_Root_Refiners is
     err := Max_Norm(y);
     y := eval(f,x);
     res := Max_Norm(y);
-  end QuadDobl_Newton_Step;
+  end QuadDobl_LU_Newton_Step;
 
   procedure QuadDobl_Newton_Step
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys; 
@@ -384,6 +451,34 @@ package body QuadDobl_Root_Refiners is
     y := eval(f,x);
     res := Max_Norm(y);
   end QuadDobl_Newton_Step;
+
+-- WRAPPING ONE NEWTON STEP :
+
+  procedure QuadDobl_Newton_Step
+              ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in QuadDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out quad_double ) is
+  begin
+    if f'last > x'last
+     then QuadDobl_SVD_Newton_Step(f,jf,x,err,rco,res);
+     else QuadDobl_LU_Newton_Step(f,jf,x,err,rco,res);
+    end if;
+  end QuadDobl_Newton_Step;
+
+  procedure QuadDobl_Newton_Step
+              ( f : in QuadDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
+                jf : in QuadDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
+                x : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out quad_double ) is
+  begin
+    if f'last > x'last
+     then QuadDobl_SVD_Newton_Step(f,jf,x,err,rco,res);
+     else QuadDobl_LU_Newton_Step(f,jf,x,err,rco,res);
+    end if;
+  end QuadDobl_Newton_Step;
+
+-- SEVERAL NEWTON STEPS :
 
   procedure Silent_Newton
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
@@ -510,9 +605,10 @@ package body QuadDobl_Root_Refiners is
     use QuadDobl_Complex_Laur_JacoMats;
     use QuadDobl_Complex_Solutions;
 
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     tmp : Solution_List := s;
     ls : Link_to_Solution;
 
@@ -564,16 +660,17 @@ package body QuadDobl_Root_Refiners is
     use QuadDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Poly_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     nb : natural32;
     fail,infty : boolean;
     h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,n);
+       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
     h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,n);
+       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
     pl : Point_List;
 
   begin
@@ -605,17 +702,18 @@ package body QuadDobl_Root_Refiners is
     use QuadDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Poly_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     refs_last : Solution_List;
     nb : natural32;
     fail,infty : boolean;
     h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,n);
+       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
     h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,n);
+       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
     pl : Point_List;
 
   begin
@@ -650,16 +748,17 @@ package body QuadDobl_Root_Refiners is
     use QuadDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     nb : natural32;
     fail,infty : boolean;
     h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,n);
+       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
     h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,n);
+       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
     pl : Point_List;
 
   begin
@@ -691,17 +790,18 @@ package body QuadDobl_Root_Refiners is
     use QuadDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     refs_last : Solution_List;
     nb : natural32;
     fail,infty : boolean;
     h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,n);
+       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
     h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,n);
+       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
     pl : Point_List;
 
   begin
@@ -738,9 +838,10 @@ package body QuadDobl_Root_Refiners is
     use QuadDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Poly_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     nb : natural32;
     nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
@@ -748,16 +849,16 @@ package body QuadDobl_Root_Refiners is
                       := QuadDobl_Condition_Tables.Create(60); 
     fail,infty : boolean;
     h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,n);
+       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
     h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,n);
+       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
     pl : Point_List;
     initres : quad_double;
 
   begin
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
-    put(file,sa'last,1); put(file," "); put(file,n,1); new_line(file);
+    put(file,sa'last,1); put(file," "); put(file,nv,1); new_line(file);
     Standard_Complex_Solutions_io.put_bar(file);
     for i in sa'range loop
       nb := 0;
@@ -804,9 +905,10 @@ package body QuadDobl_Root_Refiners is
     use QuadDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Poly_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     refs_last : Solution_List;
     nb : natural32;
@@ -815,16 +917,16 @@ package body QuadDobl_Root_Refiners is
                       := QuadDobl_Condition_Tables.Create(60); 
     fail,infty : boolean;
     h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,n);
+       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
     h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,n);
+       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
     pl : Point_List;
     initres : quad_double;
 
   begin
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
-    put(file,sa'last,1); put(file," "); put(file,n,1); new_line(file);
+    put(file,sa'last,1); put(file," "); put(file,nv,1); new_line(file);
     Standard_Complex_Solutions_io.put_bar(file);
     for i in sa'range loop
       nb := 0;
@@ -874,9 +976,10 @@ package body QuadDobl_Root_Refiners is
     use QuadDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     nb : natural32;
     nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
@@ -884,16 +987,16 @@ package body QuadDobl_Root_Refiners is
                       := QuadDobl_Condition_Tables.Create(60); 
     fail,infty : boolean;
     h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,n);
+       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
     h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,n);
+       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
     pl : Point_List;
     initres : quad_double;
 
   begin
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
-    put(file,sa'last,1); put(file," "); put(file,n,1); new_line(file);
+    put(file,sa'last,1); put(file," "); put(file,nv,1); new_line(file);
     Standard_Complex_Solutions_io.put_bar(file);
     for i in sa'range loop
       nb := 0;
@@ -940,9 +1043,10 @@ package body QuadDobl_Root_Refiners is
     use QuadDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     refs_last : Solution_List;
     nb : natural32;
@@ -951,16 +1055,16 @@ package body QuadDobl_Root_Refiners is
                       := QuadDobl_Condition_Tables.Create(60); 
     fail,infty : boolean;
     h1 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,n);
+       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
     h2 : constant QuadDobl_Complex_Vectors.Vector
-       := QuadDobl_Random_Vectors.Random_Vector(1,n);
+       := QuadDobl_Random_Vectors.Random_Vector(1,nv);
     pl : Point_List;
     initres : quad_double;
 
   begin
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
-    put(file,sa'last,1); put(file," "); put(file,n,1); new_line(file);
+    put(file,sa'last,1); put(file," "); put(file,nv,1); new_line(file);
     Standard_Complex_Solutions_io.put_bar(file);
     for i in sa'range loop
       nb := 0;

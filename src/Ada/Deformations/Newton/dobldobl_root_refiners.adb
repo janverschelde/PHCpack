@@ -452,7 +452,7 @@ package body DoblDobl_Root_Refiners is
     res := Max_Norm(y);
   end DoblDobl_LU_Newton_Step;
 
--- WRAPPED ONE NEWTON STEP :
+-- WRAPPING ONE NEWTON STEP :
 
   procedure DoblDobl_Newton_Step
               ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;

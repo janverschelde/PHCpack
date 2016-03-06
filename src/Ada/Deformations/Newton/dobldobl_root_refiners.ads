@@ -192,7 +192,7 @@ package DoblDobl_Root_Refiners is
   --   nbsing   number of singular solutions;
   --   nbclus   number of clustered solutions.
 
--- ON NEWTON STEP :
+-- ONE NEWTON STEP :
 
   procedure Write_Diagnostics
               ( file : in file_type; step : natural32;
@@ -225,7 +225,7 @@ package DoblDobl_Root_Refiners is
   --   Does one Newton step in double double complex arithmetic,
   --   using the Singular Value Decomposition to compute the update to x
   --   and for the inverse condition number rco.
-  --   This is the method of Gauss-Newton, valid for f'last >= x'last.
+  --   Applies the method of Gauss-Newton, valid for f'last >= x'last.
 
   -- ON ENTRY :
   --   f        evaluable form of a (Laurent) polynomial system;
