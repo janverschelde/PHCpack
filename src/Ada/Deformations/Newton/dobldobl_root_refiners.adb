@@ -8,6 +8,7 @@ with DoblDobl_Complex_Vector_Norms;      use DoblDobl_Complex_Vector_Norms;
 with DoblDobl_Random_Vectors;
 with DoblDobl_Complex_Matrices;          use DoblDobl_Complex_Matrices;
 with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
+with DoblDobl_Complex_Singular_Values;
 with Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with DoblDobl_Solution_Diagnostics;      use DoblDobl_Solution_Diagnostics;
@@ -304,7 +305,73 @@ package body DoblDobl_Root_Refiners is
     put(file," |errfa| : "); put(file,res,3); new_line(file);
   end Write_Diagnostics;
 
-  procedure DoblDobl_Newton_Step
+  procedure DoblDobl_SVD_Newton_Step
+              ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_double ) is
+
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_Jaco_Matrices;
+
+    y : DoblDobl_Complex_Vectors.Vector(f'range) := eval(f,x);
+    A : Matrix(f'range,x'range) := eval(jf,x);
+    n : constant integer32 := f'last;
+    p : constant integer32 := x'last;
+    dx : DoblDobl_Complex_Vectors.Vector(1..p);
+    mm : constant integer32 := DoblDobl_Complex_Singular_Values.Min0(n+1,p);
+    sv : DoblDobl_Complex_Vectors.Vector(1..mm);
+    e : DoblDobl_Complex_Vectors.Vector(1..p);
+    u : Matrix(1..n,1..n);
+    v : Matrix(1..p,1..p);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    DoblDobl_Complex_Singular_Values.SVD(A,n,p,sv,e,u,v,job,info);
+    rco := DoblDobl_Complex_Singular_Values.Inverse_Condition_Number(sv);
+    DoblDobl_Complex_Vectors.Min(y);
+    dx := DoblDobl_Complex_Singular_Values.Solve(u,v,sv,y);
+    DoblDobl_Complex_Vectors.Add(x,dx);
+    err := Max_Norm(dx);
+    y := eval(f,x);
+    res := Max_Norm(y);
+  end DoblDobl_SVD_Newton_Step;
+
+  procedure DoblDobl_SVD_Newton_Step
+              ( f : in DoblDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
+                jf : in DoblDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
+                x : in out DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_double ) is
+
+    use DoblDobl_Complex_Laur_SysFun;
+    use DoblDobl_Complex_Laur_JacoMats;
+
+    y : DoblDobl_Complex_Vectors.Vector(f'range) := eval(f,x);
+    A : Matrix(f'range,x'range) := eval(jf,x);
+    n : constant integer32 := f'last;
+    p : constant integer32 := x'last;
+    dx : DoblDobl_Complex_Vectors.Vector(1..p);
+    mm : constant integer32 := DoblDobl_Complex_Singular_Values.Min0(n+1,p);
+    sv : DoblDobl_Complex_Vectors.Vector(1..mm);
+    e : DoblDobl_Complex_Vectors.Vector(1..p);
+    u : Matrix(1..n,1..n);
+    v : Matrix(1..p,1..p);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    DoblDobl_Complex_Singular_Values.SVD(A,n,p,sv,e,u,v,job,info);
+    rco := DoblDobl_Complex_Singular_Values.Inverse_Condition_Number(sv);
+    DoblDobl_Complex_Vectors.Min(y);
+    dx := DoblDobl_Complex_Singular_Values.Solve(u,v,sv,y);
+    DoblDobl_Complex_Vectors.Add(x,dx);
+    err := Max_Norm(dx);
+    y := eval(f,x);
+    res := Max_Norm(y);
+  end DoblDobl_SVD_Newton_Step;
+
+  procedure DoblDobl_LU_Newton_Step
               ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out DoblDobl_Complex_Vectors.Vector;
@@ -328,7 +395,7 @@ package body DoblDobl_Root_Refiners is
     err := Max_Norm(y);
     y := eval(f,x);
     res := Max_Norm(y);
-  end DoblDobl_Newton_Step;
+  end DoblDobl_LU_Newton_Step;
 
   procedure DoblDobl_Newton_Step
               ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
@@ -359,7 +426,7 @@ package body DoblDobl_Root_Refiners is
     res := Max_Norm(y);
   end DoblDobl_Newton_Step;
 
-  procedure DoblDobl_Newton_Step
+  procedure DoblDobl_LU_Newton_Step
               ( f : in DoblDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in DoblDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out DoblDobl_Complex_Vectors.Vector;
@@ -383,6 +450,32 @@ package body DoblDobl_Root_Refiners is
     err := Max_Norm(y);
     y := eval(f,x);
     res := Max_Norm(y);
+  end DoblDobl_LU_Newton_Step;
+
+-- WRAPPED ONE NEWTON STEP :
+
+  procedure DoblDobl_Newton_Step
+              ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_double ) is
+  begin
+    if f'last > x'last
+     then DoblDobl_SVD_Newton_Step(f,jf,x,err,rco,res);
+     else DoblDobl_LU_Newton_Step(f,jf,x,err,rco,res);
+    end if;
+  end DoblDobl_Newton_Step;
+
+  procedure DoblDobl_Newton_Step
+              ( f : in DoblDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
+                jf : in DoblDobl_Complex_Laur_JacoMats.Eval_Jaco_Mat;
+                x : in out DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_double ) is
+  begin
+    if f'last > x'last
+     then DoblDobl_SVD_Newton_Step(f,jf,x,err,rco,res);
+     else DoblDobl_LU_Newton_Step(f,jf,x,err,rco,res);
+    end if;
   end DoblDobl_Newton_Step;
 
 -- SEVERAL NEWTON STEPS :
@@ -534,9 +627,10 @@ package body DoblDobl_Root_Refiners is
     use DoblDobl_Complex_Laur_JacoMats;
     use DoblDobl_Complex_Solutions;
 
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     tmp : Solution_List := s;
     ls : Link_to_Solution;
 
@@ -590,9 +684,10 @@ package body DoblDobl_Root_Refiners is
     use DoblDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Poly_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     nb : natural32;
     fail,infty : boolean;
@@ -631,9 +726,10 @@ package body DoblDobl_Root_Refiners is
     use DoblDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Poly_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     refs_last : Solution_List;
     nb : natural32;
@@ -676,16 +772,17 @@ package body DoblDobl_Root_Refiners is
     use DoblDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     nb : natural32;
     fail,infty : boolean;
     h1 : constant DoblDobl_Complex_Vectors.Vector
-       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+       := DoblDobl_Random_Vectors.Random_Vector(1,nv);
     h2 : constant DoblDobl_Complex_Vectors.Vector
-       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+       := DoblDobl_Random_Vectors.Random_Vector(1,nv);
     pl : Point_List;
 
   begin
@@ -717,17 +814,18 @@ package body DoblDobl_Root_Refiners is
     use DoblDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     refs_last : Solution_List;
     nb : natural32;
     fail,infty : boolean;
     h1 : constant DoblDobl_Complex_Vectors.Vector
-       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+       := DoblDobl_Random_Vectors.Random_Vector(1,nv);
     h2 : constant DoblDobl_Complex_Vectors.Vector
-       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+       := DoblDobl_Random_Vectors.Random_Vector(1,nv);
     pl : Point_List;
 
   begin
@@ -764,9 +862,10 @@ package body DoblDobl_Root_Refiners is
     use DoblDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Poly_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     nb : natural32;
     nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
@@ -774,16 +873,16 @@ package body DoblDobl_Root_Refiners is
                       := DoblDobl_Condition_Tables.Create(30); 
     fail,infty : boolean;
     h1 : constant DoblDobl_Complex_Vectors.Vector
-       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+       := DoblDobl_Random_Vectors.Random_Vector(1,nv);
     h2 : constant DoblDobl_Complex_Vectors.Vector
-       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+       := DoblDobl_Random_Vectors.Random_Vector(1,nv);
     pl : Point_List;
     initres : double_double;
 
   begin
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
-    put(file,sa'last,1); put(file," "); put(file,n,1); new_line(file);
+    put(file,sa'last,1); put(file," "); put(file,nv,1); new_line(file);
     Standard_Complex_Solutions_io.put_bar(file);
     for i in sa'range loop
       nb := 0;
@@ -830,9 +929,10 @@ package body DoblDobl_Root_Refiners is
     use DoblDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Poly_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     refs_last : Solution_List;
     nb : natural32;
@@ -841,16 +941,16 @@ package body DoblDobl_Root_Refiners is
                       := DoblDobl_Condition_Tables.Create(30); 
     fail,infty : boolean;
     h1 : constant DoblDobl_Complex_Vectors.Vector
-       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+       := DoblDobl_Random_Vectors.Random_Vector(1,nv);
     h2 : constant DoblDobl_Complex_Vectors.Vector
-       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+       := DoblDobl_Random_Vectors.Random_Vector(1,nv);
     pl : Point_List;
     initres : double_double;
 
   begin
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
-    put(file,sa'last,1); put(file," "); put(file,n,1); new_line(file);
+    put(file,sa'last,1); put(file," "); put(file,nv,1); new_line(file);
     Standard_Complex_Solutions_io.put_bar(file);
     for i in sa'range loop
       nb := 0;
@@ -900,9 +1000,10 @@ package body DoblDobl_Root_Refiners is
     use DoblDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     nb : natural32;
     nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
@@ -910,16 +1011,16 @@ package body DoblDobl_Root_Refiners is
                       := DoblDobl_Condition_Tables.Create(30); 
     fail,infty : boolean;
     h1 : constant DoblDobl_Complex_Vectors.Vector
-       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+       := DoblDobl_Random_Vectors.Random_Vector(1,nv);
     h2 : constant DoblDobl_Complex_Vectors.Vector
-       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+       := DoblDobl_Random_Vectors.Random_Vector(1,nv);
     pl : Point_List;
     initres : double_double;
 
   begin
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
-    put(file,sa'last,1); put(file," "); put(file,n,1); new_line(file);
+    put(file,sa'last,1); put(file," "); put(file,nv,1); new_line(file);
     Standard_Complex_Solutions_io.put_bar(file);
     for i in sa'range loop
       nb := 0;
@@ -966,9 +1067,10 @@ package body DoblDobl_Root_Refiners is
     use DoblDobl_Complex_Solutions;
     
     n : constant integer32 := p'last;
+    nv : constant integer32 := Head_Of(s).n;
     f : Eval_Laur_Sys(p'range) := Create(p);
-    jm : Jaco_Mat(p'range,p'range) := Create(p);
-    jf : Eval_Jaco_Mat(p'range,p'range) := Create(jm);
+    jm : Jaco_Mat(p'range,1..nv) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nv) := Create(jm);
     sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
     refs_last : Solution_List;
     nb : natural32;
@@ -977,16 +1079,16 @@ package body DoblDobl_Root_Refiners is
                       := DoblDobl_Condition_Tables.Create(30); 
     fail,infty : boolean;
     h1 : constant DoblDobl_Complex_Vectors.Vector
-       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+       := DoblDobl_Random_Vectors.Random_Vector(1,nv);
     h2 : constant DoblDobl_Complex_Vectors.Vector
-       := DoblDobl_Random_Vectors.Random_Vector(1,n);
+       := DoblDobl_Random_Vectors.Random_Vector(1,nv);
     pl : Point_List;
     initres : double_double;
 
   begin
     new_line(file);
     put_line(file,"THE SOLUTIONS :");
-    put(file,sa'last,1); put(file," "); put(file,n,1); new_line(file);
+    put(file,sa'last,1); put(file," "); put(file,nv,1); new_line(file);
     Standard_Complex_Solutions_io.put_bar(file);
     for i in sa'range loop
       nb := 0;

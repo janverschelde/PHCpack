@@ -1,3 +1,5 @@
+Sun 6 Mar 2016 : added SVD Gauss-Newton to dobldobl_root_refiners.
+
 Thu 1 Oct 2015 : changed type of tolerance parameters in the root refiners in
   {dobldobl,quaddobl}_root_refiners to double_float.
 
