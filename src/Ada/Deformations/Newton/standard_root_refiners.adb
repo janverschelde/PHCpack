@@ -11,6 +11,7 @@ with Standard_Complex_VecVecs;
 with Standard_Complex_Matrices;          use Standard_Complex_Matrices;
 with Standard_Complex_VecMats;
 with Standard_Complex_Linear_Solvers;    use Standard_Complex_Linear_Solvers;
+with Standard_Complex_Singular_Values;
 with Standard_Complex_Norms_Equals;      use Standard_Complex_Norms_Equals;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_Solution_Diagnostics;      use Standard_Solution_Diagnostics;
@@ -303,7 +304,73 @@ package body Standard_Root_Refiners is
 
 -- ONE NEWTON STEP :
 
-  procedure Standard_Newton_Step
+  procedure Standard_SVD_Newton_Step
+              ( f : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float ) is
+
+    use Standard_Complex_Poly_SysFun;
+    use Standard_Complex_Jaco_Matrices;
+
+    y : Standard_Complex_Vectors.Vector(f'range) := eval(f,x);
+    A : Matrix(f'range,x'range) := eval(jf,x);
+    n : constant integer32 := f'last;
+    p : constant integer32 := x'last;
+    dx : Standard_Complex_Vectors.Vector(1..p);
+    mm : constant integer32 := Standard_Complex_Singular_Values.Min0(n+1,p);
+    sv : Standard_Complex_Vectors.Vector(1..mm);
+    e : Standard_Complex_Vectors.Vector(1..p);
+    u : Matrix(1..n,1..n);
+    v : Matrix(1..p,1..p);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    Standard_Complex_Singular_Values.SVD(A,n,p,sv,e,u,v,job,info);
+    rco := Standard_Complex_Singular_Values.Inverse_Condition_Number(sv);
+    Standard_Complex_Vectors.Min(y);
+    dx := Standard_Complex_Singular_Values.Solve(u,v,sv,y);
+    Standard_Complex_Vectors.Add(x,dx);
+    err := Max_Norm(dx);
+    y := eval(f,x);
+    res := Max_Norm(y);
+  end Standard_SVD_Newton_Step;
+
+  procedure Standard_SVD_Newton_Step
+              ( f : in Standard_Complex_Laur_SysFun.Eval_Laur_Sys;
+                jf : in Standard_Complex_Laur_JacoMats.Eval_Jaco_Mat;
+                x : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float ) is
+
+    use Standard_Complex_Laur_SysFun;
+    use Standard_Complex_Laur_JacoMats;
+
+    y : Standard_Complex_Vectors.Vector(f'range) := eval(f,x);
+    A : Matrix(f'range,x'range) := eval(jf,x);
+    n : constant integer32 := f'last;
+    p : constant integer32 := x'last;
+    dx : Standard_Complex_Vectors.Vector(1..p);
+    mm : constant integer32 := Standard_Complex_Singular_Values.Min0(n+1,p);
+    sv : Standard_Complex_Vectors.Vector(1..mm);
+    e : Standard_Complex_Vectors.Vector(1..p);
+    u : Matrix(1..n,1..n);
+    v : Matrix(1..p,1..p);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    Standard_Complex_Singular_Values.SVD(A,n,p,sv,e,u,v,job,info);
+    rco := Standard_Complex_Singular_Values.Inverse_Condition_Number(sv);
+    Standard_Complex_Vectors.Min(y);
+    dx := Standard_Complex_Singular_Values.Solve(u,v,sv,y);
+    Standard_Complex_Vectors.Add(x,dx);
+    err := Max_Norm(dx);
+    y := eval(f,x);
+    res := Max_Norm(y);
+  end Standard_SVD_Newton_Step;
+
+  procedure Standard_LU_Newton_Step
               ( f : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in  Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
                 x : in out Standard_Complex_Vectors.Vector;
@@ -327,9 +394,9 @@ package body Standard_Root_Refiners is
     err := Max_Norm(y);
     y := eval(f,x);
     res := Max_Norm(y);
-  end Standard_Newton_Step;
+  end Standard_LU_Newton_Step;
 
-  procedure Standard_Newton_Step
+  procedure Standard_LU_Newton_Step
               ( f : in Standard_Complex_Laur_SysFun.Eval_Laur_Sys;
                 jf : in  Standard_Complex_Laur_JacoMats.Eval_Jaco_Mat;
                 x : in out Standard_Complex_Vectors.Vector;
@@ -353,6 +420,32 @@ package body Standard_Root_Refiners is
     err := Max_Norm(y);
     y := eval(f,x);
     res := Max_Norm(y);
+  end Standard_LU_Newton_Step;
+
+-- WRAPPING ONE NEWTON STEP :
+
+  procedure Standard_Newton_Step
+              ( f : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float ) is
+  begin
+    if f'last > x'last
+     then Standard_SVD_Newton_Step(f,jf,x,err,rco,res);
+     else Standard_LU_Newton_Step(f,jf,x,err,rco,res);
+    end if;
+  end Standard_Newton_Step;
+
+  procedure Standard_Newton_Step
+              ( f : in Standard_Complex_Laur_SysFun.Eval_Laur_Sys;
+                jf : in Standard_Complex_Laur_JacoMats.Eval_Jaco_Mat;
+                x : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float ) is
+  begin
+    if f'last > x'last
+     then Standard_SVD_Newton_Step(f,jf,x,err,rco,res);
+     else Standard_LU_Newton_Step(f,jf,x,err,rco,res);
+    end if;
   end Standard_Newton_Step;
 
 -- TARGET ROUTINES, NEWTON's METHOD :

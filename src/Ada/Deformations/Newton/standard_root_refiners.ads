@@ -200,6 +200,61 @@ package Standard_Root_Refiners is
 
 -- ONE NEWTON STEP :
 
+  procedure Standard_SVD_Newton_Step
+              ( f : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float );
+  procedure Standard_SVD_Newton_Step
+              ( f : in Standard_Complex_Laur_SysFun.Eval_Laur_Sys;
+                jf : in Standard_Complex_Laur_JacoMats.Eval_Jaco_Mat;
+                x : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float );
+
+  -- DESCRPTION :
+  --   Does one Newton step in standard double complex arithmetic,
+  --   using the Singular Value Decomposition to compute the update to x
+  --   and for the inverse condition number rco.
+  --   Applies the method of Gauss-Newton, valid for f'last >= x'last.
+
+  -- ON ENTRY :
+  --   f        evaluable form of a (Laurent) polynomial system;
+  --   jf       Jacobian matrix of f;
+  --   x        current approximate solution.
+
+  -- ON RETURN :
+  --   x        updated approximate solution;
+  --   err      norm of the update vector;
+  --   rco      estimate for the inverse condition number;
+  --   res      residual, norm of the function value.
+
+  procedure Standard_LU_Newton_Step
+              ( f : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in  Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                x : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float );
+  procedure Standard_LU_Newton_Step
+              ( f : in Standard_Complex_Laur_SysFun.Eval_Laur_Sys;
+                jf : in  Standard_Complex_Laur_JacoMats.Eval_Jaco_Mat;
+                x : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float );
+
+  -- DESCRIPTION :
+  --   Does one Newton step in standard double complex arithmetic,
+  --   using LU factorization to compute the update to x,
+  --   and to estimate the inverse of the condition number rco.
+
+  -- ON ENTRY :
+  --   f        evaluable form of a (Laurent) polynomial system;
+  --   jf       Jacobian matrix of f;
+  --   x        current approximate solution.
+
+  -- ON RETURN :
+  --   x        updated approximate solution;
+  --   err      norm of the update vector;
+  --   rco      estimate for the inverse condition number;
+  --   res      residual, norm of the function value.
+
   procedure Standard_Newton_Step
               ( f : in Standard_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in  Standard_Complex_Jaco_Matrices.Eval_Jaco_Mat;
@@ -212,7 +267,8 @@ package Standard_Root_Refiners is
                 err,rco,res : out double_float );
 
   -- DESCRIPTION :
-  --   Does one Newton step in standard complex arithmetic.
+  --   Does one Newton step in double double complex arithmetic,
+  --   using LU for f'last = x'last and SVD for f'last > x'last.
 
   -- ON ENTRY :
   --   f        evaluable form of a (Laurent) polynomial system;
