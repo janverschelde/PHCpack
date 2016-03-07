@@ -397,7 +397,7 @@ package body DoblDobl_Root_Refiners is
     res := Max_Norm(y);
   end DoblDobl_LU_Newton_Step;
 
-  procedure DoblDobl_Newton_Step
+  procedure DoblDobl_SVD_Newton_Step
               ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in DoblDobl_Jacobian_Circuits.Circuit;
                 x : in out DoblDobl_Complex_Vectors.Vector;
@@ -408,7 +408,42 @@ package body DoblDobl_Root_Refiners is
     use DoblDobl_Jacobian_Circuits;
 
     y : DoblDobl_Complex_Vectors.Vector(f'range);
-    A : Matrix(f'range,f'range);
+    A : Matrix(f'range,x'range);
+    n : constant integer32 := f'last;
+    p : constant integer32 := x'last;
+    dx : DoblDobl_Complex_Vectors.Vector(1..p);
+    mm : constant integer32 := DoblDobl_Complex_Singular_Values.Min0(n+1,p);
+    sv : DoblDobl_Complex_Vectors.Vector(1..mm);
+    e : DoblDobl_Complex_Vectors.Vector(1..p);
+    u : Matrix(1..n,1..n);
+    v : Matrix(1..p,1..p);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    EvalDiff(jf,x,wrk,y,A);
+    DoblDobl_Complex_Singular_Values.SVD(A,n,p,sv,e,u,v,job,info);
+    rco := DoblDobl_Complex_Singular_Values.Inverse_Condition_Number(sv);
+    DoblDobl_Complex_Vectors.Min(y);
+    dx := DoblDobl_Complex_Singular_Values.Solve(u,v,sv,y);
+    DoblDobl_Complex_Vectors.Add(x,dx);
+    err := Max_Norm(dx);
+    y := eval(f,x);
+    res := Max_Norm(y);
+  end DoblDobl_SVD_Newton_Step;
+
+  procedure DoblDobl_LU_Newton_Step
+              ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in DoblDobl_Jacobian_Circuits.Circuit;
+                x : in out DoblDobl_Complex_Vectors.Vector;
+                wrk : in out DoblDobl_Complex_VecVecs.VecVec;
+                err,rco,res : out double_double ) is
+
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Jacobian_Circuits;
+
+    y : DoblDobl_Complex_Vectors.Vector(f'range);
+    A : Matrix(f'range,x'range);
     ipvt : Standard_Integer_Vectors.Vector(A'range(2));
     info : integer32;
     Anorm : double_double;
@@ -424,7 +459,7 @@ package body DoblDobl_Root_Refiners is
     err := Max_Norm(y);
     y := eval(f,x);
     res := Max_Norm(y);
-  end DoblDobl_Newton_Step;
+  end DoblDobl_LU_Newton_Step;
 
   procedure DoblDobl_LU_Newton_Step
               ( f : in DoblDobl_Complex_Laur_SysFun.Eval_Laur_Sys;
@@ -475,6 +510,19 @@ package body DoblDobl_Root_Refiners is
     if f'last > x'last
      then DoblDobl_SVD_Newton_Step(f,jf,x,err,rco,res);
      else DoblDobl_LU_Newton_Step(f,jf,x,err,rco,res);
+    end if;
+  end DoblDobl_Newton_Step;
+
+  procedure DoblDobl_Newton_Step
+              ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in DoblDobl_Jacobian_Circuits.Circuit;
+                x : in out DoblDobl_Complex_Vectors.Vector;
+                wrk : in out DoblDobl_Complex_VecVecs.VecVec;
+                err,rco,res : out double_double ) is
+  begin
+    if f'last > x'last
+     then DoblDobl_SVD_Newton_Step(f,jf,x,wrk,err,rco,res);
+     else DoblDobl_LU_Newton_Step(f,jf,x,wrk,err,rco,res);
     end if;
   end DoblDobl_Newton_Step;
 

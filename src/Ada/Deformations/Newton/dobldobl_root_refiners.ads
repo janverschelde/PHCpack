@@ -267,15 +267,19 @@ package DoblDobl_Root_Refiners is
   --   rco      estimate for the inverse condition number;
   --   res      residual, norm of the function value.
 
-  procedure DoblDobl_Newton_Step
+  procedure DoblDobl_SVD_Newton_Step
               ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
                 jf : in DoblDobl_Jacobian_Circuits.Circuit;
                 x : in out DoblDobl_Complex_Vectors.Vector;
                 wrk : in out DoblDobl_Complex_VecVecs.VecVec;
                 err,rco,res : out double_double );
 
-  -- DESCRIPTION :
-  --   Does one Newton step using a circuit to evaluate and differentiate.
+  -- DESCRPTION :
+  --   Does one Newton step in double double complex arithmetic,
+  --   using a circuit to evaluate and differentiate,
+  --   using the Singular Value Decomposition to compute the update to x
+  --   and for the inverse condition number rco.
+  --   Applies the method of Gauss-Newton, valid for f'last >= x'last.
 
   -- ON ENTRY :
   --   f        evaluable form of a polynomial system;
@@ -288,6 +292,34 @@ package DoblDobl_Root_Refiners is
   --   err      norm of the update vector;
   --   rco      estimate for the inverse condition number;
   --   res      residual, norm of the function value.
+
+  procedure DoblDobl_LU_Newton_Step
+              ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in DoblDobl_Jacobian_Circuits.Circuit;
+                x : in out DoblDobl_Complex_Vectors.Vector;
+                wrk : in out DoblDobl_Complex_VecVecs.VecVec;
+                err,rco,res : out double_double );
+
+  -- DESCRIPTION :
+  --   Does one Newton step using a circuit to evaluate and differentiate,
+  --   using LU factorization to compute the update to x,
+  --   and to estimate the inverse of the condition number rco.
+
+  -- REQUIRED : f'last = x'last.
+
+  -- ON ENTRY :
+  --   f        evaluable form of a polynomial system;
+  --   jf       Jacobian matrix of f, defined as a circuit;
+  --   x        current approximate solution;
+  --   wrk      work space allocated for evaluated monomials.
+
+  -- ON RETURN :
+  --   x        updated approximate solution;
+  --   err      norm of the update vector;
+  --   rco      estimate for the inverse condition number;
+  --   res      residual, norm of the function value.
+
+-- WRAPPING ONE NEWTON STEP :
 
   procedure DoblDobl_Newton_Step
               ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
@@ -308,6 +340,30 @@ package DoblDobl_Root_Refiners is
   --   f        evaluable form of a (Laurent) polynomial system;
   --   jf       Jacobian matrix of f;
   --   x        current approximate solution.
+
+  -- ON RETURN :
+  --   x        updated approximate solution;
+  --   err      norm of the update vector;
+  --   rco      estimate for the inverse condition number;
+  --   res      residual, norm of the function value.
+
+  procedure DoblDobl_Newton_Step
+              ( f : in DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : in DoblDobl_Jacobian_Circuits.Circuit;
+                x : in out DoblDobl_Complex_Vectors.Vector;
+                wrk : in out DoblDobl_Complex_VecVecs.VecVec;
+                err,rco,res : out double_double );
+
+  -- DESCRIPTION :
+  --   Does one Newton step in double double complex arithmetic,
+  --   using a circuit to evaluate and differentiate, and
+  --   using LU for f'last = x'last and SVD for f'last > x'last.
+
+  -- ON ENTRY :
+  --   f        evaluable form of a (Laurent) polynomial system;
+  --   jf       Jacobian matrix of f;
+  --   x        current approximate solution;
+  --   wrk      work space allocated for evaluated monomials.
 
   -- ON RETURN :
   --   x        updated approximate solution;

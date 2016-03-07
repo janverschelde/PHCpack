@@ -423,7 +423,7 @@ package body QuadDobl_Root_Refiners is
     res := Max_Norm(y);
   end QuadDobl_LU_Newton_Step;
 
-  procedure QuadDobl_Newton_Step
+  procedure QuadDobl_SVD_Newton_Step
               ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys; 
                 jf : in QuadDobl_Jacobian_Circuits.Circuit;
                 x : in out QuadDobl_Complex_Vectors.Vector;
@@ -434,7 +434,42 @@ package body QuadDobl_Root_Refiners is
     use QuadDobl_Jacobian_Circuits;
 
     y : QuadDobl_Complex_Vectors.Vector(f'range);
-    A : Matrix(f'range,f'range);
+    A : Matrix(f'range,x'range);
+    n : constant integer32 := f'last;
+    p : constant integer32 := x'last;
+    dx : QuadDobl_Complex_Vectors.Vector(1..p);
+    mm : constant integer32 := QuadDobl_Complex_Singular_Values.Min0(n+1,p);
+    sv : QuadDobl_Complex_Vectors.Vector(1..mm);
+    e : QuadDobl_Complex_Vectors.Vector(1..p);
+    u : Matrix(1..n,1..n);
+    v : Matrix(1..p,1..p);
+    job : constant integer32 := 11;
+    info : integer32;
+
+  begin
+    EvalDiff(jf,x,wrk,y,A);
+    QuadDobl_Complex_Singular_Values.SVD(A,n,p,sv,e,u,v,job,info);
+    rco := QuadDobl_Complex_Singular_Values.Inverse_Condition_Number(sv);
+    QuadDobl_Complex_Vectors.Min(y);
+    dx := QuadDobl_Complex_Singular_Values.Solve(u,v,sv,y);
+    QuadDobl_Complex_Vectors.Add(x,dx);
+    err := Max_Norm(dx);
+    y := eval(f,x);
+    res := Max_Norm(y);
+  end QuadDobl_SVD_Newton_Step;
+
+  procedure QuadDobl_LU_Newton_Step
+              ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys; 
+                jf : in QuadDobl_Jacobian_Circuits.Circuit;
+                x : in out QuadDobl_Complex_Vectors.Vector;
+                wrk : in out QuadDobl_Complex_VecVecs.VecVec;
+                err,rco,res : out quad_double ) is
+
+    use QuadDobl_Complex_Poly_SysFun;
+    use QuadDobl_Jacobian_Circuits;
+
+    y : QuadDobl_Complex_Vectors.Vector(f'range);
+    A : Matrix(f'range,x'range);
     ipvt : Standard_Integer_Vectors.Vector(A'range(2));
     info : integer32;
     Anorm : quad_double;
@@ -450,7 +485,7 @@ package body QuadDobl_Root_Refiners is
     err := Max_Norm(y);
     y := eval(f,x);
     res := Max_Norm(y);
-  end QuadDobl_Newton_Step;
+  end QuadDobl_LU_Newton_Step;
 
 -- WRAPPING ONE NEWTON STEP :
 
@@ -475,6 +510,19 @@ package body QuadDobl_Root_Refiners is
     if f'last > x'last
      then QuadDobl_SVD_Newton_Step(f,jf,x,err,rco,res);
      else QuadDobl_LU_Newton_Step(f,jf,x,err,rco,res);
+    end if;
+  end QuadDobl_Newton_Step;
+
+  procedure QuadDobl_Newton_Step
+              ( f : in QuadDobl_Complex_Poly_SysFun.Eval_Poly_Sys; 
+                jf : in QuadDobl_Jacobian_Circuits.Circuit;
+                x : in out QuadDobl_Complex_Vectors.Vector;
+                wrk : in out QuadDobl_Complex_VecVecs.VecVec;
+                err,rco,res : out quad_double ) is
+  begin
+    if f'last > x'last
+     then QuadDobl_SVD_Newton_Step(f,jf,x,wrk,err,rco,res);
+     else QuadDobl_LU_Newton_Step(f,jf,x,wrk,err,rco,res);
     end if;
   end QuadDobl_Newton_Step;
 
