@@ -13,9 +13,14 @@ with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Random_Numbers;            use Standard_Random_Numbers;
 with Numbers_io;                         use Numbers_io;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
+with Standard_Complex_Laurentials;       use Standard_Complex_Laurentials;
 with DoblDobl_Complex_Poly_Strings;
+with DoblDobl_Complex_Laur_Systems;
+with DoblDobl_Complex_Laur_Strings;
 with DoblDobl_Polynomial_Convertors;     use DoblDobl_Polynomial_Convertors;
 with QuadDobl_Complex_Poly_Strings;
+with QuadDobl_Complex_Laur_Systems;
+with QuadDobl_Complex_Laur_Strings;
 with QuadDobl_Polynomial_Convertors;     use QuadDobl_Polynomial_Convertors;
 with Multprec_Complex_Poly_Strings;
 with Standard_to_Multprec_Convertors;    use Standard_to_Multprec_Convertors;
@@ -23,7 +28,9 @@ with Standard_Homotopy;
 with Standard_Coefficient_Homotopy;
 with Standard_Laurent_Homotopy;
 with DoblDobl_Homotopy;
+with DoblDobl_Laurent_Homotopy;
 with QuadDobl_Homotopy;
+with QuadDobl_Laurent_Homotopy;
 with Projective_Transformations;         use Projective_Transformations;
 with Homogenization;                     use Homogenization;
 with Multprec_Homotopy;
@@ -439,88 +446,6 @@ package body Drivers_for_Homotopy_Creation is
 
   procedure Driver_for_Homotopy_Construction
                ( file : in file_type;
-                 ls : in String_Splitters.Link_to_Array_of_Strings;
-                 p,q : in out Standard_Complex_Poly_Systems.Poly_Sys;
-                 qsols : in out Solution_List; target : out Complex_Number;
-                 deci : in out natural32 ) is
-
-    use Standard_Complex_Poly_Systems;
-    a,t : Complex_Number;
-    prt : boolean;
-    k,d,size : natural32;
-
-  begin
-    Default_Homotopy_Settings(d,k,a,t,prt);
-    if deci > 0
-     then d := deci; -- respect the preset value of the precision
-    end if;
-    Menu_for_Homotopy_Settings(file,d,k,a,t,prt);
-    target := t;
-    if d <= 16 then
-      if prt then
-        Projective_Transformation(p);
-        Projective_Transformation(q);
-        Projective_Transformation(qsols);
-        declare
-          pp,sysp : Poly_Sys(p'first..p'last+1);
-        begin
-          pp := Add_Random_Hyperplanes(p,1,true);
-          sysp := Add_Standard_Hyperplanes(q,1);
-          Standard_Homotopy.Create(pp,sysp,k,a);
-          Standard_Homotopy.Create(sysp,pp,k,a);
-          Clear(pp); Clear(sysp);
-        end;
-      else
-        Standard_Homotopy.Create(p,q,k,a);
-        Standard_Coefficient_Homotopy.Create(q,p,k,a);
-      end if;
-    elsif d <= 32 then
-      declare
-        nv_p : constant natural32 := Number_of_Unknowns(p(p'first));
-        dd_p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range)
-             := DoblDobl_Complex_Poly_Strings.Parse(nv_p,ls.all);
-        dd_q : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(q'range)
-             := Standard_Poly_Sys_to_DoblDobl_Complex(q);
-         -- assuming the start system has only random coefficients ...
-        dd_a : constant DoblDobl_Complex_Numbers.Complex_Number
-             := Standard_to_DoblDobl_Complex(a);
-      begin
-        DoblDobl_Homotopy.Create(dd_p,dd_q,k,dd_a);
-      end;
-    elsif d <= 64 then
-      declare
-        nv_p : constant natural32 := Number_of_Unknowns(p(p'first));
-        qd_p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range)
-             := QuadDobl_Complex_Poly_Strings.Parse(nv_p,ls.all);
-        qd_q : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(q'range)
-             := Standard_Poly_Sys_to_QuadDobl_Complex(q);
-          -- assuming the start system has only random coefficients ...
-        qd_a : constant QuadDobl_Complex_Numbers.Complex_Number
-             := Standard_to_QuadDobl_Complex(a);
-      begin
-       -- put("creating quaddobl homotopy with k = "); put(k,1); new_line;
-        QuadDobl_Homotopy.Create(qd_p,qd_q,k,qd_a);
-      end;
-    else
-      size := Multprec_Floating_Numbers.Decimal_to_Size(d);
-      declare
-        nv_p : constant natural32 := Number_of_Unknowns(p(p'first));
-        mp : Multprec_Complex_Poly_Systems.Poly_Sys(p'range)
-           := Multprec_Complex_Poly_Strings.Parse(nv_p,size,ls.all);
-        mq : Multprec_Complex_Poly_Systems.Poly_Sys(p'range)
-           := Convert(q);
-         -- assuming the start system has only random coefficients ...
-        aa : constant Multprec_Complex_Numbers.Complex_Number := Create(a);
-      begin
-        Set_Size(mq,size);
-        Multprec_Homotopy.Create(mp,mq,k,aa);
-      end;
-    end if;
-    deci := d;
-  end Driver_for_Homotopy_Construction;
-
-  procedure Driver_for_Homotopy_Construction
-               ( file : in file_type;
                  p,q : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  target : out Complex_Number ) is
 
@@ -624,6 +549,139 @@ package body Drivers_for_Homotopy_Creation is
 --      end;
     end if;
     deci := d;
+  end Driver_for_Homotopy_Construction;
+
+  procedure Driver_for_Homotopy_Construction
+               ( file : in file_type;
+                 ls : in String_Splitters.Link_to_Array_of_Strings;
+                 p,q : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 qsols : in out Solution_List; target : out Complex_Number;
+                 deci : in out natural32 ) is
+
+    use Standard_Complex_Poly_Systems;
+    a,t : Complex_Number;
+    prt : boolean;
+    k,d,size : natural32;
+
+  begin
+    Default_Homotopy_Settings(d,k,a,t,prt);
+    if deci > 0
+     then d := deci; -- respect the preset value of the precision
+    end if;
+    Menu_for_Homotopy_Settings(file,d,k,a,t,prt);
+    target := t;
+    if d <= 16 then
+      if prt then
+        Projective_Transformation(p);
+        Projective_Transformation(q);
+        Projective_Transformation(qsols);
+        declare
+          pp,sysp : Poly_Sys(p'first..p'last+1);
+        begin
+          pp := Add_Random_Hyperplanes(p,1,true);
+          sysp := Add_Standard_Hyperplanes(q,1);
+          Standard_Homotopy.Create(pp,sysp,k,a);
+          Standard_Homotopy.Create(sysp,pp,k,a);
+          Clear(pp); Clear(sysp);
+        end;
+      else
+        Standard_Homotopy.Create(p,q,k,a);
+        Standard_Coefficient_Homotopy.Create(q,p,k,a);
+      end if;
+    elsif d <= 32 then
+      declare
+        nv_p : constant natural32 := Number_of_Unknowns(p(p'first));
+        dd_p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(p'range)
+             := DoblDobl_Complex_Poly_Strings.Parse(nv_p,ls.all);
+        dd_q : constant DoblDobl_Complex_Poly_Systems.Poly_Sys(q'range)
+             := Standard_Poly_Sys_to_DoblDobl_Complex(q);
+         -- assuming the start system has only random coefficients ...
+        dd_a : constant DoblDobl_Complex_Numbers.Complex_Number
+             := Standard_to_DoblDobl_Complex(a);
+      begin
+        DoblDobl_Homotopy.Create(dd_p,dd_q,k,dd_a);
+      end;
+    elsif d <= 64 then
+      declare
+        nv_p : constant natural32 := Number_of_Unknowns(p(p'first));
+        qd_p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(p'range)
+             := QuadDobl_Complex_Poly_Strings.Parse(nv_p,ls.all);
+        qd_q : constant QuadDobl_Complex_Poly_Systems.Poly_Sys(q'range)
+             := Standard_Poly_Sys_to_QuadDobl_Complex(q);
+          -- assuming the start system has only random coefficients ...
+        qd_a : constant QuadDobl_Complex_Numbers.Complex_Number
+             := Standard_to_QuadDobl_Complex(a);
+      begin
+       -- put("creating quaddobl homotopy with k = "); put(k,1); new_line;
+        QuadDobl_Homotopy.Create(qd_p,qd_q,k,qd_a);
+      end;
+    else
+      size := Multprec_Floating_Numbers.Decimal_to_Size(d);
+      declare
+        nv_p : constant natural32 := Number_of_Unknowns(p(p'first));
+        mp : Multprec_Complex_Poly_Systems.Poly_Sys(p'range)
+           := Multprec_Complex_Poly_Strings.Parse(nv_p,size,ls.all);
+        mq : Multprec_Complex_Poly_Systems.Poly_Sys(p'range)
+           := Convert(q);
+         -- assuming the start system has only random coefficients ...
+        aa : constant Multprec_Complex_Numbers.Complex_Number := Create(a);
+      begin
+        Set_Size(mq,size);
+        Multprec_Homotopy.Create(mp,mq,k,aa);
+      end;
+    end if;
+    deci := d;
+  end Driver_for_Homotopy_Construction;
+
+  procedure Driver_for_Homotopy_Construction
+               ( file : in file_type;
+                 ls : in String_Splitters.Link_to_Array_of_Strings;
+                 p,q : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                 qsols : in out Solution_List; target : out Complex_Number;
+                 deci : in out natural32 ) is
+
+    use Standard_Complex_Laur_Systems;
+    a,t : Complex_Number;
+    prt : boolean;
+    k,d : natural32;
+
+  begin
+    Default_Homotopy_Settings(d,k,a,t,prt);
+    if deci > 0
+     then d := deci; -- respect the preset value of the precision
+    end if;
+    Menu_for_Homotopy_Settings(file,d,k,a,t,prt);
+    target := t;
+    if d <= 16 then
+      Standard_Laurent_Homotopy.Create(p,q,k,a);
+    elsif d <= 32 then
+      declare
+        nv_p : constant natural32 := Number_of_Unknowns(p(p'first));
+        dd_p : constant DoblDobl_Complex_Laur_Systems.Laur_Sys(p'range)
+             := DoblDobl_Complex_Laur_Strings.Parse(nv_p,ls.all);
+        dd_q : constant DoblDobl_Complex_Laur_Systems.Laur_Sys(q'range)
+             := Standard_Laur_Sys_to_DoblDobl_Complex(q);
+         -- assuming the start system has only random coefficients ...
+        dd_a : constant DoblDobl_Complex_Numbers.Complex_Number
+             := Standard_to_DoblDobl_Complex(a);
+      begin
+        DoblDobl_Laurent_Homotopy.Create(dd_p,dd_q,k,dd_a);
+      end;
+    elsif d <= 64 then
+      declare
+        nv_p : constant natural32 := Number_of_Unknowns(p(p'first));
+        qd_p : constant QuadDobl_Complex_Laur_Systems.Laur_Sys(p'range)
+             := QuadDobl_Complex_Laur_Strings.Parse(nv_p,ls.all);
+        qd_q : constant QuadDobl_Complex_Laur_Systems.Laur_Sys(q'range)
+             := Standard_Laur_Sys_to_QuadDobl_Complex(q);
+          -- assuming the start system has only random coefficients ...
+        qd_a : constant QuadDobl_Complex_Numbers.Complex_Number
+             := Standard_to_QuadDobl_Complex(a);
+      begin
+       -- put("creating quaddobl homotopy with k = "); put(k,1); new_line;
+        QuadDobl_Laurent_Homotopy.Create(qd_p,qd_q,k,qd_a);
+      end;
+    end if;
   end Driver_for_Homotopy_Construction;
 
 end Drivers_for_Homotopy_Creation;

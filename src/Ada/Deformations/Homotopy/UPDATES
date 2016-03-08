@@ -1,3 +1,6 @@
+Tue 8 Mar 2016 : extended drivers_for_homotopy_creation with a driver for
+  Laurent polynomial systems.
+
 Tue 1 Mar 2016 : when parsing target system into double double or quad
   double precision, must use the correct number of variables in the package
   drivers_for_homotopy_creation.adb.

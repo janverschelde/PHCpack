@@ -47,12 +47,6 @@ package Drivers_for_Homotopy_Creation is
 
   procedure Driver_for_Homotopy_Construction
                ( file : in file_type;
-                 ls : in String_Splitters.Link_to_Array_of_Strings;
-                 p,q : in out Standard_Complex_Poly_Systems.Poly_Sys;
-                 qsols : in out Solution_List; target : out Complex_Number;
-                 deci : in out natural32 );
-  procedure Driver_for_Homotopy_Construction
-               ( file : in file_type;
                  p,q : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  target : out Complex_Number );
   procedure Driver_for_Homotopy_Construction
@@ -65,8 +59,24 @@ package Drivers_for_Homotopy_Creation is
                  target : out Complex_Number );
   procedure Driver_for_Homotopy_Construction
                ( file : in file_type; p,q : in out Laur_Sys;
-                -- qsols : in out Solution_List;
                  target : out Complex_Number; deci : in out natural32 );
+
+  -- DESCRIPTION :
+  --   Drivers to construct polynomial homotopies in double, double double,
+  --   quad double, and arbitrary multiprecision.
+
+  procedure Driver_for_Homotopy_Construction
+               ( file : in file_type;
+                 ls : in String_Splitters.Link_to_Array_of_Strings;
+                 p,q : in out Standard_Complex_Poly_Systems.Poly_Sys;
+                 qsols : in out Solution_List; target : out Complex_Number;
+                 deci : in out natural32 );
+  procedure Driver_for_Homotopy_Construction
+               ( file : in file_type;
+                 ls : in String_Splitters.Link_to_Array_of_Strings;
+                 p,q : in out Standard_Complex_Laur_Systems.Laur_Sys;
+                 qsols : in out Solution_List; target : out Complex_Number;
+                 deci : in out natural32 );
 
   -- DESCRIPTION :
   --   This is an interactive driver for the construction of an artificial
@@ -89,5 +99,6 @@ package Drivers_for_Homotopy_Creation is
   --   qsols     start solutions, eventually with projective transformation;
   --   target    target value of the continuation parameter;
   --   deci      number of decimal places.
+
 
 end Drivers_for_Homotopy_Creation;
