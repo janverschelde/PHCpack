@@ -1,6 +1,5 @@
 with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
-with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
@@ -568,6 +567,7 @@ package body Multitasking_Continuation is
   procedure Driver_to_Path_Tracker
                ( file : in file_type;
                  p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                 prclvl : in natural32;
                  ls : in String_Splitters.Link_to_Array_of_Strings;
                  n,nbequ,nbvar : in integer32 ) is
 
@@ -590,6 +590,13 @@ package body Multitasking_Continuation is
       proj : boolean;
     begin
       Standard_Complex_Poly_Systems.Copy(p,pp);
+      if prclvl = 2 then
+        deci := 32;
+      elsif prclvl = 4 then
+        deci := 64;
+      else
+        deci := 16;
+      end if;
       Driver_for_Homotopy_Construction(file,ls,pp,q.all,st_qsols,t,deci);
       proj := (Number_of_Unknowns(q(q'first)) > natural32(q'last));
       if proj

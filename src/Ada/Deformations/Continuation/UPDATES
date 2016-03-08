@@ -1,3 +1,6 @@
+Tue 8 Mar 2016 : preset precision level passed through drivers to the
+  multitasked path trackers, in mainpoco.adb.
+
 Sat 5 Mar 2016 : adjustments in mainpoco.adb for the multitasking path
   trackers to apply the Gauss-Newton correctors.
 

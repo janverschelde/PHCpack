@@ -317,7 +317,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
   begin
     Create_Output_File(outft,outfilename);
     Multitasking_Continuation.Driver_to_Path_Tracker
-      (outft,p,ls,integer32(nt),integer32(nbequ),integer32(nbvar));
+      (outft,p,prclvl,ls,integer32(nt),integer32(nbequ),integer32(nbvar));
   end Multitasking_Secant_Homotopy;
 
   procedure Multitasking_Secant_Homotopy

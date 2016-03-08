@@ -1,5 +1,6 @@
 with text_io;                           use text_io;
 with String_Splitters;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
@@ -148,6 +149,7 @@ package Multitasking_Continuation is
   procedure Driver_to_Path_Tracker
                ( file : in file_type;
                  p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                 prclvl : in natural32;
                  ls : in String_Splitters.Link_to_Array_of_Strings;
                  n,nbequ,nbvar : in integer32 );
 
@@ -157,6 +159,8 @@ package Multitasking_Continuation is
   -- ON ENTRY :
   --   file      the output file;
   --   p         target polynomial system to be solved;
+  --   prclvl    preset level of precision, 1, 2, 4 respectively for 
+  --             double, double double, or quad double precision;
   --   ls        string representation of the polynomials in p,
   --             for conversion to double double or quad double precision;
   --   n         number of tasks;

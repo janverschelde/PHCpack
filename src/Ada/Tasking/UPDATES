@@ -1,4 +1,7 @@
-Sat 7 Mar 2016 : updates in the driver of multitasking_continuation for
+Tue 8 Mar 2016 : added preset precision level to the input parameters of
+  the drivers to the multitasked path trackers in multitasking_continuation.
+
+Sat 5 Mar 2016 : updates in the driver of multitasking_continuation for
   the Gauss-Newton correctors on overdetermined homotopies.
   More updates in multitasking_continuation to make it work.
 
