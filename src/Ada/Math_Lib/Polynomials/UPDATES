@@ -1,3 +1,6 @@
+Wed 9 Mar 2016 : extended standard_complex_laur_systems_io with put procedures
+  systems that are not square.
+
 Fri 19 Feb 2016 : fix in {standard,multprec}_complex_{poly,laur}_strings.adb,
   {standard,multprec}_complex_laurentials_io.adb and
   multprec_complex_polynomials_io.adb, to solve the (x-y)**2 bug.

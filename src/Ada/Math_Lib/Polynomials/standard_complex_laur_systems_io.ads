@@ -42,20 +42,40 @@ package Standard_Complex_Laur_Systems_io is
 
   procedure put ( p : in Laur_Sys );
   procedure put ( n : in natural32; p : in Laur_Sys );
-  procedure put ( file : in file_type; p : in Laur_Sys );
-  procedure put ( file : in file_type; n : in natural32; p : in Laur_Sys );
+  procedure put ( n,m : in natural32; p : in Laur_Sys );
+  procedure put ( file : in file_type;
+                  p : in Laur_Sys );
+  procedure put ( file : in file_type;
+                  n : in natural32; p : in Laur_Sys );
+  procedure put ( file : in file_type;
+                  n,m : in natural32; p : in Laur_Sys );
   procedure put ( p : in Laur_Sys; s : in Array_of_Symbols );
   procedure put ( n : in natural32; p : in Laur_Sys; s : in Array_of_Symbols );
+  procedure put ( n,m : in natural32;
+                  p : in Laur_Sys; s : in Array_of_Symbols );
   procedure put ( file : in file_type;
                   p : in Laur_Sys; s : in Array_of_Symbols );
   procedure put ( file : in file_type;
                   n : in natural32; p : in Laur_Sys; s : in Array_of_Symbols );
+  procedure put ( file : in file_type;
+                  n,m : in natural32;
+                  p : in Laur_Sys; s : in Array_of_Symbols );
 
   -- DESCRIPTION :
   --   Writes the polynomials to screen or file.   
   --   The polynomials are separated by semicolons and a new line
   --   is started for each new polynomial.
   --   If n is provided, then the value for n will be first written.
+
+  -- ON ENTRY :
+  --   file       file where the output must come,
+  --              if not specified, then standard output is assumed;
+  --   n          the number of equations of p,
+  --              if specified, n will first be written;
+  --   m          the number of unknowns,
+  --              if specified, m will first be written;
+  --   p          a polynomial system;
+  --   s          symbols to be used for the unknowns.
 
   procedure put_line ( p : in Laur_Sys );
   procedure put_line ( file : in file_type; p : in Laur_Sys );

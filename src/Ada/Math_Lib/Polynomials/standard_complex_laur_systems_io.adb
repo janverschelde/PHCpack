@@ -219,7 +219,13 @@ package body Standard_Complex_Laur_Systems_io is
     put(Standard_Output,n,p);
   end put;
 
-  procedure put ( file : in file_type; p : in Laur_Sys ) is
+  procedure put ( n,m : in natural32; p : in Laur_Sys ) is
+  begin
+    put(Standard_Output,n,m,p);
+  end put;
+
+  procedure put ( file : in file_type;
+                  p : in Laur_Sys ) is
   begin
     for i in p'range loop
       put(file,p(i));
@@ -227,9 +233,21 @@ package body Standard_Complex_Laur_Systems_io is
     end loop;
   end put;
 
-  procedure put ( file : in file_type; n : in natural32; p : in Laur_Sys ) is
+  procedure put ( file : in file_type;
+                  n : in natural32; p : in Laur_Sys ) is
   begin
-    put(file,n,1);
+    put(file,n,2);
+    new_line(file);
+    for i in p'range loop
+      put(file,p(i));
+      new_line(file);
+    end loop;
+  end put;
+
+  procedure put ( file : in file_type;
+                  n,m : in natural32; p : in Laur_Sys ) is
+  begin
+    put(file,n,2); put(file," "); put(file,m,2);
     new_line(file);
     for i in p'range loop
       put(file,p(i));
@@ -248,6 +266,12 @@ package body Standard_Complex_Laur_Systems_io is
     put(Standard_Output,n,p,s);
   end put;
 
+  procedure put ( n,m : in natural32;
+                  p : in Laur_Sys; s : in Array_of_Symbols ) is
+  begin
+    put(Standard_Output,n,m,p,s);
+  end put;
+
   procedure put ( file : in file_type;
                   p : in Laur_Sys; s : in Array_of_Symbols ) is
   begin
@@ -260,7 +284,15 @@ package body Standard_Complex_Laur_Systems_io is
   procedure put ( file : in file_type; n : in natural32;
                   p : in Laur_Sys; s : in Array_of_Symbols ) is
   begin
-    put(file,n,1);
+    put(file,n,2);
+    new_line(file);
+    put(file,p,s);
+  end put;
+
+  procedure put ( file : in file_type; n,m : in natural32;
+                  p : in Laur_Sys; s : in Array_of_Symbols ) is
+  begin
+    put(file,n,2); put(file," "); put(file,m,2);
     new_line(file);
     put(file,p,s);
   end put;
