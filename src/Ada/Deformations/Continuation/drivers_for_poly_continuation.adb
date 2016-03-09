@@ -53,6 +53,9 @@ with Multprec_IncFix_Continuation;
 with Process_io;                         use Process_io;
 with Drivers_for_Path_Directions;        use Drivers_for_Path_Directions;
 
+--with Standard_Root_Refiners;
+-- use Standard_Root_Refiners;
+
 package body Drivers_for_Poly_Continuation is
 
 -- AUXILIARIES :
@@ -918,20 +921,22 @@ package body Drivers_for_Poly_Continuation is
     proj : boolean;
     deci : natural32 := 0;
    -- size : natural;
+    rsols : Solution_List;
+    nit : natural32;
 
   begin
     Read_Start_System(file,q,qsols);
     Copy(p,pp);
-    put_line("calling driver for homotopy construction ...");
    -- Driver_for_Homotopy_Construction(file,pp,q,qsols,t,deci);
     Driver_for_Homotopy_Construction(file,pp,q,t,deci);
+   -- Reporting_Root_Refiner(standard_output,q,qsols,rsols,
+   --   1.0e-12,1.0e-12,1.0e-12,nit,3,true);
     proj := (Number_of_Unknowns(q(q'first)) > natural32(q'last));
     if proj
      then Ask_Symbol;
     end if;
     new_line;
    -- if deci <= 16 then
-     -- put_line("calling driver for polynomial continuation ...");
       Driver_for_Standard_Laurent_Continuation(file,qsols,proj,t);
       sols := qsols;
    -- else

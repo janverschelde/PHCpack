@@ -322,19 +322,25 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
   procedure Multitasking_Secant_Homotopy
                ( p : in Standard_Complex_Laur_Systems.Laur_Sys;
-                 nt : in natural32 ) is
+                 ls : in Link_to_Array_of_Strings;
+                 nt,nbequ,nbvar : in natural32 ) is
 
   -- DESCRIPTION :
-  --   Multitasking for Laurent systems is not yet supported ?!
+  --   Calls the multitasking path trackers on the Laurent system p.
+
+  -- ON ENTRY :
+  --   p         the system parsed to standard double precision;
+  --   ls        the string representation of the system p;
+  --   nt        the number of tasks;
+  --   nbequ     number of equations;
+  --   nbvar     number of variables.
 
     outft : file_type;
 
   begin
     Create_Output_File(outft,outfilename);
-    new_line(outft);
-    put_line(outft,
-      "Multitasking path tracking not supported for Laurent systems.");
-   -- Driver_to_Path_Tracker(outft,p,nt);
+    Multitasking_Continuation.Driver_to_Path_Tracker
+      (outft,p,prclvl,ls,integer32(nt),integer32(nbequ),integer32(nbvar));
   end Multitasking_Secant_Homotopy;
 
   procedure Parameter_or_Sweep_Homotopy
@@ -425,7 +431,8 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
   procedure Standard_Laurent_Tracker
               ( inft : in out file_type;
-                p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                ls : in Link_to_Array_of_Strings ) is
 
   -- DESCRIPTION :
   --   Main driver to call the path trackers
@@ -447,7 +454,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
         put_line("Laurent homotopies not yet supported ...");
       end if;
     else
-      Multitasking_Secant_Homotopy(p,nt);
+      Multitasking_Secant_Homotopy(p,ls,nt,neq,nva);
     end if;
   end Standard_Laurent_Tracker;
 
@@ -466,7 +473,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
   begin
     if Standard_Laur_Poly_Convertors.Is_Genuine_Laurent(p) then
-      Standard_Laurent_Tracker(inft,p);
+      Standard_Laurent_Tracker(inft,p,ls);
     else
       declare
         use Standard_Complex_Poly_Systems;
