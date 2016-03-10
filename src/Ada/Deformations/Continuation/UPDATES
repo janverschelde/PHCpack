@@ -1,3 +1,6 @@
+Wed 9 Mar 2016 : updated mainpoco.adb to accept overdetermined Laurent
+  polynomial systems as input of phc -p.
+
 Tue 8 Mar 2016 : preset precision level passed through drivers to the
   multitasked path trackers, in mainpoco.adb.  Added extra tests in
   drivers_for_poly_continuation.adb, mainpoco.adb calls multitasked

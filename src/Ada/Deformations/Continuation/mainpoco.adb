@@ -145,7 +145,9 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
   end Secant_Homotopy;
 
   procedure Secant_Homotopy
-              ( p : in Standard_Complex_Laur_Systems.Laur_Sys ) is
+              ( nbequ,nbvar : in natural32;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                ls : in Link_to_Array_of_Strings ) is
 
   -- DESCRIPTION :
   --   Creates the output file and reads start system and start solutions
@@ -163,7 +165,10 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
   begin
     Create_Output_File(outft,outfilename);
-    put(outft,natural32(p'last),p); new_line(outft);
+    if nbequ = nbvar
+     then put(outft,nbequ,p);
+     else put(outft,nbequ,nbvar,p);
+    end if;
     new_line;
     put("Do you want the solutions on separate file ? (y/n) ");
     Ask_Yes_or_No(ans);
@@ -444,9 +449,9 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     neq := natural32(p'last);
     nva := Number_of_Unknowns(p(p'first));
     if nt = 0 then
-      if nva = neq then
+      if nva <= neq then
         close(inft);
-        Secant_Homotopy(p);
+        Secant_Homotopy(neq,nva,p,ls);
       else
         new_line;
         put("Found "); put(neq,1);
