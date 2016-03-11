@@ -10,6 +10,20 @@ package body QuadDobl_Complex_Laurentials_io is
 
 -- AUXILIARIES FOR OUTPUT ROUTINES :
 
+  function All_Zeroes ( d : Degrees ) return boolean is
+
+  -- DESCRIPTION :
+  --   Returns true if all d(i) = 0, for all i, otherwise false is returned.
+
+  begin
+    for i in d'range loop
+      if d(i) /= 0
+       then return false;
+      end if;
+    end loop;
+    return true;
+  end All_Zeroes;
+
   procedure Write_Number ( file : in file_type; c : in Complex_Number ) is
 
   -- DESCRIPTION :
@@ -88,7 +102,7 @@ package body QuadDobl_Complex_Laurentials_io is
     begin
       new_line(file);
       Write_Number(file,t.cf);
-      if Sum(t.dg) /= 0 then
+      if not All_Zeroes(t.dg) then
         for i in t.dg'range loop
           if t.dg(i) > 0 or t.dg(i) < 0 then
             put(file,'*');

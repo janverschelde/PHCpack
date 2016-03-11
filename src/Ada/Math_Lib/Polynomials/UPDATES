@@ -1,3 +1,6 @@
+Fri 11 Mar 2016 : fixed in writing of terms in Laurent polynomials that
+  have a zero degree, in {dobldobl,quaddobl}_complex_laurentials_io.adb.
+
 Thu 10 Mar 2016 : extended {dobldobl,quaddobl}_laur_systems_io with output
   procedures for nonsquare Laurent polynomial systems.
 
