@@ -1,3 +1,6 @@
+Thu 10 Mar 2016 : drivers_to_dd_qd_root_refiners.adb modified so that the
+  system given to phc -v is also written to the output file.
+
 Mon 7 Mar 2016 : bug fix in the application of circuits to overdetermined
   systems in Gauss-Newton in {dobldobl,quaddobl}_root_refiners.
 

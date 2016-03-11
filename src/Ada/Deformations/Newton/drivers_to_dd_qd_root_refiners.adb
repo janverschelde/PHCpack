@@ -1,13 +1,18 @@
 with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Timing_Package;                     use Timing_Package;
+with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Complex_Laur_Systems;
 with Multprec_Complex_Laurentials_io;
 with Multprec_Complex_Laur_Systems;
 with DoblDobl_Polynomial_Convertors;     use DoblDobl_Polynomial_Convertors;
+with DoblDobl_Complex_Laurentials;       use DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 with DoblDobl_Laur_Poly_Convertors;
+with QuadDobl_Complex_Laurentials;       use QuadDobl_Complex_Laurentials;
+with QuadDobl_Complex_Laur_Systems_io;   use QuadDobl_Complex_Laur_Systems_io;
 with QuadDobl_Polynomial_Convertors;     use QuadDobl_Polynomial_Convertors;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Laur_Poly_Convertors;
@@ -105,6 +110,7 @@ package body Drivers_to_dd_qd_Root_Refiners is
     qd_p : QuadDobl_Complex_Laur_Systems.Link_to_Laur_Sys;
     dd_s : DoblDobl_Complex_Solutions.Solution_List;
     qd_s : QuadDobl_Complex_Solutions.Solution_List;
+    nbeq,nvar : natural32;
 
   begin
     new_line;
@@ -122,6 +128,12 @@ package body Drivers_to_dd_qd_Root_Refiners is
       new_line; put("refining "); 
       put(DoblDobl_Complex_Solutions.Length_Of(dd_s),1);
       put(" solutions ...");
+      nvar := Number_of_Unknowns(dd_p(dd_p'first));
+      nbeq := natural32(dd_p'last);
+      if nbeq = nvar
+       then put(file,nbeq,dd_p.all);
+       else put(file,nbeq,nvar,dd_p.all);
+      end if;
       if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(dd_p.all) then
         tstart(timer);
         DoblDobl_Root_Refiner(dd_p.all,dd_s);
@@ -151,6 +163,12 @@ package body Drivers_to_dd_qd_Root_Refiners is
       new_line; put("refining "); 
       put(QuadDobl_Complex_Solutions.Length_Of(qd_s),1);
       put(" solutions ...");
+      nvar := Number_of_Unknowns(qd_p(qd_p'first));
+      nbeq := natural32(qd_p'last);
+      if nbeq = nvar
+       then put(file,nbeq,qd_p.all);
+       else put(file,nbeq,nvar,qd_p.all);
+      end if;
       if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(qd_p.all) then
         tstart(timer);
         QuadDobl_Root_Refiner(qd_p.all,qd_s);
