@@ -1,3 +1,6 @@
+Thu 10 Mar 2016 : extended {dobldobl,quaddobl}_laur_systems_io with output
+  procedures for nonsquare Laurent polynomial systems.
+
 Wed 9 Mar 2016 : extended standard_complex_laur_systems_io with put procedures
   systems that are not square.
 

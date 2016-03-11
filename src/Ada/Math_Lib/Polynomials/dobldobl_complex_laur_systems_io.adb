@@ -46,8 +46,38 @@ package body DoblDobl_Complex_Laur_Systems_io is
     put(standard_output,p);
   end put;
 
+  procedure put ( n : natural32; p : in Laur_Sys ) is
+  begin
+    put(standard_output,n,p);
+  end put;
+
+  procedure put ( n,m : natural32; p : in Laur_Sys ) is
+  begin
+    put(standard_output,n,m,p);
+  end put;
+
   procedure put ( file : in file_type; p : in Laur_Sys ) is
   begin
+    for i in p'range loop
+      put(file,p(i));
+      new_line(file);
+    end loop;
+  end put;
+
+  procedure put ( file : in file_type; n : in natural32; p : in Laur_Sys ) is
+  begin
+    put(file,n,2); new_line(file);
+    for i in p'range loop
+      put(file,p(i));
+      new_line(file);
+    end loop;
+  end put;
+
+  procedure put ( file : in file_type;
+                  n,m : in natural32; p : in Laur_Sys ) is
+  begin
+    put(file,n,2); put(file," ");
+    put(file,m,2); new_line(file);
     for i in p'range loop
       put(file,p(i));
       new_line(file);

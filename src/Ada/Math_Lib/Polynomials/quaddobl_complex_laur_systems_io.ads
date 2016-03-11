@@ -1,4 +1,5 @@
 with text_io;                           use text_io;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with QuadDobl_Complex_Laur_Systems;     use QuadDobl_Complex_Laur_Systems;
 
 package QuadDobl_Complex_Laur_Systems_io is
@@ -19,6 +20,25 @@ package QuadDobl_Complex_Laur_Systems_io is
 
   -- DESCRIPTION :
   --   Writes the polynomials to screen or file.   
+  --   The polynomials are separated by semicolons and a new line
+  --   is started for each new polynomial.
+
+  procedure put ( n : natural32; p : in Laur_Sys );
+  procedure put ( file : in file_type; n : natural32; p : in Laur_Sys );
+
+  -- DESCRIPTION :
+  --   Writes the polynomials to screen or file,
+  --   after first writing the number n of polynomials in p.
+  --   The polynomials are separated by semicolons and a new line
+  --   is started for each new polynomial.
+
+  procedure put ( n,m : natural32; p : in Laur_Sys );
+  procedure put ( file : in file_type; n,m : natural32; p : in Laur_Sys );
+
+  -- DESCRIPTION :
+  --   Writes the polynomials to screen or file,
+  --   after first writing the number n of polynomials in p,
+  --   and the number m of variables in each polynomial in p.
   --   The polynomials are separated by semicolons and a new line
   --   is started for each new polynomial.
 
