@@ -1,3 +1,6 @@
+Sat 12 Mar 2016 : mainvali.adb updated so that option #1 of phc -v
+  writes nonsquare polynomial systems correctly to file.
+
 Wed 2 Mar 2016 : mainphc.adb changed for extra parameter in the drivers
   for polynomial continuation.
 

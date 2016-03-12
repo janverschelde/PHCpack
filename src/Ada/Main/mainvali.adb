@@ -683,11 +683,17 @@ procedure mainvali ( infilename,outfilename : in string ) is
     g,v : List_of_Permutations;
     sols,refsols: Standard_Complex_Solutions.Solution_List;
     epsxa,epsfa,tolsing : double_float;
+    nbequ,nbvar : natural32;
 
   begin
     Read_System(infile,infilename,lp,sysonfile);
+    nbequ := natural32(lp'last);
+    nbvar := Number_of_Unknowns(lp(lp'first));
     Create_Output_File(outfile,outfilename);
-    put(outfile,natural32(lp'last),lp.all);
+    if nbequ = nbvar
+     then put(outfile,nbequ,lp.all);
+     else put(outfile,nbequ,nbvar,lp.all);
+    end if;
     Read_Solutions(infile,sysonfile,sols);
     new_line;
     put("Is the system invariant under group actions ? (y/n) ");
