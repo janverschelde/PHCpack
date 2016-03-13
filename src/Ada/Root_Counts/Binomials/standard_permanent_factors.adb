@@ -397,9 +397,10 @@ package body Standard_Permanent_Factors is
   
   begin
     Standard_Affine_Binomials.Incidence_Matrix(p,A,fail);
-    if fail then
-      put_line("The system is not binomial!");
-    else
+   -- if fail then
+   --   put_line("The system is not binomial!");
+   -- else
+    if not fail then
       put_line("The incidence matrix : "); put(A); new_line;
       Pruning_Maximum(n,nq,s0_max);
       put("pure dimensional ? (y/n) "); Ask_Yes_or_No(ans);
@@ -443,9 +444,10 @@ package body Standard_Permanent_Factors is
   
   begin
     Standard_Affine_Binomials.Incidence_Matrix(p,A,fail);
-    if fail then
-      put_line("The system is not binomial!");
-    else
+   -- if fail then
+   --   put_line("The system is not binomial!");
+   -- else
+    if not fail then
       put_line("The incidence matrix : "); put(A); new_line;
       Pruning_Maximum(n,nq,s0_max);
       put("pure dimensional ? (y/n) "); Ask_Yes_or_No(ans);

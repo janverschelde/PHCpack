@@ -1,3 +1,6 @@
+Sat 12 Mar 2016 : suppressed output is standard_permanent_factors.adb for
+  when called by the blackbox solver on a general Laurent system.
+
 Thu 1 Oct 2015 : changed black_box_simplex_solvers.adb for changed type
   of the tolerance parameters.
 

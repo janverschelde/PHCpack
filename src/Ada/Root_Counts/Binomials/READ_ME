@@ -1,4 +1,4 @@
-Solvers for binomial and simplex systems in PHCv2.4.02
+Solvers for binomial and simplex systems in PHCv2.4.13
 
 Systems with exactly two monomials in every equation are called "binomial".
 Systems in n variables with no more than n+1 monomials (eventually after 
