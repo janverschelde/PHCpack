@@ -1,3 +1,6 @@
+Sat 12 Mar 2016 : improvements in drivers_for_poly_continuation for the
+  tracking of paths defined by overdetermined Laurent homotopies.
+
 Wed 9 Mar 2016 : updated mainpoco.adb to accept overdetermined Laurent
   polynomial systems as input of phc -p.
 

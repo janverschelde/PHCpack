@@ -31,6 +31,7 @@ with Symbol_Table,Symbol_Table_io;       use Symbol_Table;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_Complex_Laur_Systems_io;   use Standard_Complex_Laur_Systems_io;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
+with DoblDobl_Complex_Polynomials;       use DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Multprec_Complex_Poly_Systems_io;   use Multprec_Complex_Poly_Systems_io;
@@ -62,7 +63,7 @@ package body Drivers_for_Poly_Continuation is
 
   procedure LaurCont ( file : in file_type;
                        sols : in out Standard_Complex_Solutions.Solution_List;
-                       proj,report : in boolean;
+                       proj,report : in boolean; nbq : in integer32 := 0;
                        target : in Standard_Complex_Numbers.Complex_Number ) is
 
   -- DESCRIPTION :
@@ -85,8 +86,8 @@ package body Drivers_for_Poly_Continuation is
   begin
     tstart(timer);
     if report
-     then Rep_Cont(file,sols,proj,target=>target);
-     else Sil_Cont(sols,proj,target=>target);
+     then Rep_Cont(file,sols,proj,nbq,target=>target);
+     else Sil_Cont(sols,proj,nbq,target=>target);
     end if;
     tstop(timer);
     new_line(file); print_times(file,timer,"continuation");
@@ -662,6 +663,7 @@ package body Drivers_for_Poly_Continuation is
 
     infile : file_type;
     readfail : boolean := true;
+   -- nbequ,nbvar : natural32;  
 
     procedure Try_to_Read is
 
@@ -690,8 +692,15 @@ package body Drivers_for_Poly_Continuation is
       Try_to_Read;
       exit when not readfail;
     end loop;
+   -- nbvar := Number_of_Unknowns(q(q'first));
+   -- nbequ := natural32(q'last);
     put_line(file,"THE START SYSTEM : ");
-    put(file,q); new_line(file);
+   -- if nbequ = nbvar
+   --  then
+    put(file,q);
+   --  else put(file,nbequ,nbvar,q);
+   -- end if;
+    new_line(file);
     Read_Start_Solutions(infile,file,qsols);
     Close(infile);
   end Read_Start_System;
@@ -797,6 +806,7 @@ package body Drivers_for_Poly_Continuation is
 
     infile : file_type;
     readfail : boolean := true;
+    nbequ,nbvar : natural32;
 
     procedure Try_to_Read is
 
@@ -826,7 +836,13 @@ package body Drivers_for_Poly_Continuation is
       exit when not readfail;
     end loop;
     put_line(file,"THE START SYSTEM : ");
-    put(file,natural32(q'last),q); new_line(file);
+    nbvar := Number_of_Unknowns(q(q'first));
+    nbequ := natural32(q'last);
+    if nbequ = nbvar
+     then put(file,nbequ,q);
+     else put(file,nbequ,nbvar,q);
+    end if;
+    new_line(file);
     Read_Start_Solutions(infile,file,qsols);
     Close(infile);
   end Read_Start_System;
@@ -923,9 +939,12 @@ package body Drivers_for_Poly_Continuation is
    -- size : natural;
     rsols : Solution_List;
     nit : natural32;
+    nbequ,nbvar : integer32;
 
   begin
     Read_Start_System(file,q,qsols);
+    nbequ := q'last;
+    nbvar := integer32(Number_of_Unknowns(q(q'first)));
     Copy(p,pp);
    -- Driver_for_Homotopy_Construction(file,pp,q,qsols,t,deci);
     Driver_for_Homotopy_Construction(file,pp,q,t,deci);
@@ -937,7 +956,10 @@ package body Drivers_for_Poly_Continuation is
     end if;
     new_line;
    -- if deci <= 16 then
-      Driver_for_Standard_Laurent_Continuation(file,qsols,proj,t);
+    if nbequ = nbvar
+     then Driver_for_Standard_Laurent_Continuation(file,qsols,proj,target=>t);
+     else Driver_for_Standard_Laurent_Continuation(file,qsols,proj,nbequ,t);
+    end if;
       sols := qsols;
    -- else
    --   mqsols := Multprec_Complex_Solutions.Create(qsols);
@@ -1135,7 +1157,7 @@ package body Drivers_for_Poly_Continuation is
   procedure Driver_for_Standard_Laurent_Continuation
                 ( file : in file_type;
                   sols : in out Standard_Complex_Solutions.Solution_List;
-                  proj : in boolean;
+                  proj : in boolean; nbq : in integer32 := 0;
                   target : Complex_Number := Create(1.0) ) is
 
     use Standard_Complex_Solutions;
@@ -1152,7 +1174,7 @@ package body Drivers_for_Poly_Continuation is
     new_line;
     put_line("No more input expected.  See output file for results.");
     new_line;
-    LaurCont(file,sols,proj,report,target);
+    LaurCont(file,sols,proj,report,nbq,target);
   end Driver_for_Standard_Laurent_Continuation;
 
   procedure Driver_for_Multprec_Continuation

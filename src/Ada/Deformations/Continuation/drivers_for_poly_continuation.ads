@@ -174,13 +174,13 @@ package Drivers_for_Poly_Continuation is
   procedure Driver_for_Standard_Continuation
                 ( file : in file_type;
                   sols : in out Standard_Complex_Solutions.Solution_List;
-                  proj : in boolean;
-                  nbq : in integer32 := 0;
+                  proj : in boolean; nbq : in integer32 := 0;
                   target : Complex_Number := Create(1.0) );
   procedure Driver_for_Standard_Laurent_Continuation
                 ( file : in file_type;
                   sols : in out Standard_Complex_Solutions.Solution_List;
-                  proj : in boolean; target : Complex_Number := Create(1.0) );
+                  proj : in boolean; nbq : in integer32 := 0;
+                  target : Complex_Number := Create(1.0) );
   procedure Driver_for_Multprec_Continuation
                 ( file : in file_type;
                   sols : in out Multprec_Complex_Solutions.Solution_List;
