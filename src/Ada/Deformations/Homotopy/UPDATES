@@ -1,3 +1,6 @@
+Sun 13 Mar 2016 : extended ts_homotopy.adb for overdetermined systems,
+  and also for Laurent systems.
+
 Tue 8 Mar 2016 : extended drivers_for_homotopy_creation with a driver for
   Laurent polynomial systems.
 
