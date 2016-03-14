@@ -20,7 +20,7 @@ package body Standard_Laurent_Homotopy is
 
     p : Laur_Sys(1..nq);                      -- target system
     pe : Eval_Laur_Sys(1..nq);                -- evaluable form of target
-    dh : Jaco_Mat(1..nv,1..nv1);              -- Jacobian matrix of homotopy
+    dh : Jaco_Mat(1..nq,1..nv1);              -- Jacobian matrix of homotopy
     dhe : Eval_Jaco_Mat(1..nq,1..nv1);        -- evaluable form of dh
 
     case ht is

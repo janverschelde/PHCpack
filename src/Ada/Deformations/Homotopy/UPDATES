@@ -1,3 +1,6 @@
+Mon 14 Mar 2016 : fixed bug in standard_laurent_homotopy.adb so phc -p
+  works for overdetermined Laurent homotopies in double precision.
+
 Sun 13 Mar 2016 : extended ts_homotopy.adb for overdetermined systems,
   and also for Laurent systems.
 
