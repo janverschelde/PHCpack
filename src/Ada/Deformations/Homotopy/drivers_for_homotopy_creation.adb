@@ -682,6 +682,7 @@ package body Drivers_for_Homotopy_Creation is
         QuadDobl_Laurent_Homotopy.Create(qd_p,qd_q,k,qd_a);
       end;
     end if;
+    deci := d;
   end Driver_for_Homotopy_Construction;
 
 end Drivers_for_Homotopy_Creation;

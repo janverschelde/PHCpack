@@ -1,3 +1,6 @@
+Tue 15 Mar 2016 : in drivers_for_homotopy_creation.adb, fixed setting of
+  the parameter deci when leaving the homotopy creation for Laurent systems.
+
 Mon 14 Mar 2016 : fixed bug in standard_laurent_homotopy.adb so phc -p
   works for overdetermined Laurent homotopies in double precision.
 
