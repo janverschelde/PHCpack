@@ -1029,7 +1029,7 @@ package body Drivers_for_Poly_Continuation is
     else
       deci := 64;
     end if;
-    Driver_for_Homotopy_Construction(file,pp,q,t,deci);
+    Driver_for_Homotopy_Construction(file,ls,pp,q,qsols,t,deci);
     proj := (Number_of_Unknowns(q(q'first)) > natural32(q'last));
     if proj
      then Ask_Symbol;
