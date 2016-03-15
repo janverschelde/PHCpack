@@ -157,7 +157,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
 
     solsft,outft : file_type;
     sols,refsols : Solution_List;
-   -- mpsols : Multprec_Complex_Solutions.Solution_List;
+    mpsols : Multprec_Complex_Solutions.Solution_List;
     solsfile : boolean;
     len : natural32;
     ans : character;
@@ -179,8 +179,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     else
       solsfile := false;
     end if;
-    Driver_for_Laurent_Continuation(outft,p,sols,target);
-   -- Driver_for_Laurent_Continuation(outft,p,sols,mpsols,target);
+    Driver_for_Laurent_Continuation(outft,p,prclvl,ls,sols,mpsols,target);
    -- if Length_Of(sols) > 0
    --  then Refine_Solutions(outft,p,target,sols,refsols,solsfile);
    -- end if;

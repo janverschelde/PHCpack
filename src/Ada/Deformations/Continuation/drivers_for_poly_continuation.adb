@@ -922,10 +922,13 @@ package body Drivers_for_Poly_Continuation is
     target := t;
   end Driver_for_Polynomial_Continuation;
 
-  procedure Driver_for_Laurent_Continuation 
-                ( file : in file_type; p : in Laur_Sys; 
-                  sols : out Standard_Complex_Solutions.Solution_List;
-                 -- mpsols : out Multprec_Complex_Solutions.Solution_List;
+  procedure Driver_for_Laurent_Continuation
+                ( file : in file_type;
+                  p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                  prclvl : in natural32;
+                  ls : in String_Splitters.Link_to_Array_of_Strings;
+                  sols : out Standard_Complex_Solutions.Solution_list;
+                  mpsols : out Multprec_Complex_Solutions.Solution_list;
                   target : out Complex_Number ) is
 
     use Standard_Complex_Solutions;
@@ -938,7 +941,6 @@ package body Drivers_for_Poly_Continuation is
     deci : natural32 := 0;
    -- size : natural;
     rsols : Solution_List;
-    nit : natural32;
     nbequ,nbvar : integer32;
 
   begin

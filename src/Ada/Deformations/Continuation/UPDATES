@@ -1,3 +1,6 @@
+Mon 14 Mar 2016 : made interface in drivers_for_poly_continuation for
+  Laurent systems the same as for regular systems, changed mainpoco.adb.
+
 Sat 12 Mar 2016 : improvements in drivers_for_poly_continuation for the
   tracking of paths defined by overdetermined Laurent homotopies.
 

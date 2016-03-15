@@ -81,9 +81,12 @@ package Drivers_for_Poly_Continuation is
                   mpsols : out Multprec_Complex_Solutions.Solution_list;
                   target : out Complex_Number );
   procedure Driver_for_Laurent_Continuation
-                ( file : in file_type; p : in Laur_Sys;
+                ( file : in file_type;
+                  p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                  prclvl : in natural32;
+                  ls : in String_Splitters.Link_to_Array_of_Strings;
                   sols : out Standard_Complex_Solutions.Solution_list;
-                 -- mpsols : out Multprec_Complex_Solutions.Solution_list;
+                  mpsols : out Multprec_Complex_Solutions.Solution_list;
                   target : out Complex_Number );
 
   -- DESCRIPTION :
