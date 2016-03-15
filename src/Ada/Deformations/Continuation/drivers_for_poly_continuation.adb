@@ -42,7 +42,9 @@ with Standard_Homotopy;
 with Standard_Coefficient_Homotopy;
 with Standard_Laurent_Homotopy;
 with DoblDobl_Homotopy;
+with DoblDobl_Laurent_Homotopy;
 with QuadDobl_Homotopy;
+with QuadDobl_Laurent_Homotopy;
 with Multprec_Homotopy;
 with Drivers_for_Homotopy_Creation;      use Drivers_for_Homotopy_Creation;
 with Continuation_Parameters;
@@ -54,21 +56,19 @@ with Multprec_IncFix_Continuation;
 with Process_io;                         use Process_io;
 with Drivers_for_Path_Directions;        use Drivers_for_Path_Directions;
 
---with Standard_Root_Refiners;
--- use Standard_Root_Refiners;
-
 package body Drivers_for_Poly_Continuation is
 
 -- AUXILIARIES :
 
-  procedure LaurCont ( file : in file_type;
-                       sols : in out Standard_Complex_Solutions.Solution_List;
-                       proj,report : in boolean; nbq : in integer32 := 0;
-                       target : in Standard_Complex_Numbers.Complex_Number ) is
+  procedure LaurCont
+              ( file : in file_type;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                proj,report : in boolean; nbq : in integer32 := 0;
+                target : in Standard_Complex_Numbers.Complex_Number ) is
 
   -- DESCRIPTION :
-  --   Instantiates the path-trackers for standard complex solutions,
-  --   for a homotopy defined for Laurent polynomial systems.
+  --   Instantiates the path trackers for standard complex solutions,
+  --   for Laurent homotopies in standard double precision.
 
     use Standard_IncFix_Continuation;
    
@@ -93,13 +93,81 @@ package body Drivers_for_Poly_Continuation is
     new_line(file); print_times(file,timer,"continuation");
   end LaurCont;
 
-  procedure Continue ( file : in file_type;
-                       sols : in out Standard_Complex_Solutions.Solution_List;
-                       proj,report : in boolean; nbq : in integer32 := 0;
-                       target : in Standard_Complex_Numbers.Complex_Number ) is
+  procedure LaurCont
+              ( file : in file_type;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                report : in boolean; nbq : in integer32 := 0;
+                target : in DoblDobl_Complex_Numbers.Complex_Number ) is
 
   -- DESCRIPTION :
-  --   Instantiates the path-trackers for standard complex solutions.
+  --   Instantiates the path trackers for double double complex solutions,
+  --   for Laurent homotopies in double double precision.
+
+    use DoblDobl_IncFix_Continuation;
+   
+    timer : timing_widget;
+
+    procedure Sil_Cont is
+      new Silent_Continue(Max_Norm,DoblDobl_Laurent_Homotopy.Eval,
+                          DoblDobl_Laurent_Homotopy.Diff,
+                          DoblDobl_Laurent_Homotopy.Diff);
+    procedure Rep_Cont is
+      new Reporting_Continue(Max_Norm,DoblDobl_Laurent_Homotopy.Eval,
+                             DoblDobl_Laurent_Homotopy.Diff,
+                             DoblDobl_Laurent_Homotopy.Diff);
+
+  begin
+    tstart(timer);
+    if report
+     then Rep_Cont(file,sols,nbq,target=>target);
+     else Sil_Cont(sols,nbq,target=>target);
+    end if;
+    tstop(timer);
+    new_line(file); print_times(file,timer,"continuation");
+  end LaurCont;
+
+  procedure LaurCont
+              ( file : in file_type;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                report : in boolean; nbq : in integer32 := 0;
+                target : in QuadDobl_Complex_Numbers.Complex_Number ) is
+
+  -- DESCRIPTION :
+  --   Instantiates the path trackers for quad double complex solutions,
+  --   for Laurent homotopies in quad double precision.
+
+    use QuadDobl_IncFix_Continuation;
+   
+    timer : timing_widget;
+
+    procedure Sil_Cont is
+      new Silent_Continue(Max_Norm,QuadDobl_Laurent_Homotopy.Eval,
+                          QuadDobl_Laurent_Homotopy.Diff,
+                          QuadDobl_Laurent_Homotopy.Diff);
+    procedure Rep_Cont is
+      new Reporting_Continue(Max_Norm,QuadDobl_Laurent_Homotopy.Eval,
+                             QuadDobl_Laurent_Homotopy.Diff,
+                             QuadDobl_Laurent_Homotopy.Diff);
+
+  begin
+    tstart(timer);
+    if report
+     then Rep_Cont(file,sols,nbq,target=>target);
+     else Sil_Cont(sols,nbq,target=>target);
+    end if;
+    tstop(timer);
+    new_line(file); print_times(file,timer,"continuation");
+  end LaurCont;
+
+  procedure Continue
+              ( file : in file_type;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                proj,report : in boolean; nbq : in integer32 := 0;
+                target : in Standard_Complex_Numbers.Complex_Number ) is
+
+  -- DESCRIPTION :
+  --   Instantiates the path trackers for standard complex solutions,
+  --   for polynomial homotopies in standard double precision.
 
     use Standard_IncFix_Continuation;
    
@@ -128,13 +196,15 @@ package body Drivers_for_Poly_Continuation is
     new_line(file); print_times(file,timer,"continuation");
   end Continue;
 
-  procedure Continue ( file : in file_type;
-                       sols : in out DoblDobl_Complex_Solutions.Solution_List;
-                       report : in boolean; nbq : in integer32 := 0;
-                       target : in DoblDobl_Complex_Numbers.Complex_Number ) is
+  procedure Continue
+              ( file : in file_type;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                report : in boolean; nbq : in integer32 := 0;
+                target : in DoblDobl_Complex_Numbers.Complex_Number ) is
 
   -- DESCRIPTION :
-  --   Instantiates the path-trackers for double double complex solutions.
+  --   Instantiates the path trackers for double double complex solutions,
+  --   for polynomial homotopies in double double precision.
 
     use DoblDobl_IncFix_Continuation;
    
@@ -157,13 +227,15 @@ package body Drivers_for_Poly_Continuation is
     new_line(file); print_times(file,timer,"continuation");
   end Continue;
 
-  procedure Continue ( file : in file_type;
-                       sols : in out QuadDobl_Complex_Solutions.Solution_List;
-                       report : in boolean; nbq : in integer32 := 0;
-                       target : in QuadDobl_Complex_Numbers.Complex_Number ) is
+  procedure Continue
+              ( file : in file_type;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                report : in boolean; nbq : in integer32 := 0;
+                target : in QuadDobl_Complex_Numbers.Complex_Number ) is
 
   -- DESCRIPTION :
-  --   Instantiates the path-trackers for quad double complex solutions.
+  --   Instantiates the path trackers for quad double complex solutions,
+  --   for polynomial homotopies in quad double precision.
 
     use QuadDobl_IncFix_Continuation;
    
@@ -186,13 +258,15 @@ package body Drivers_for_Poly_Continuation is
     new_line(file); print_times(file,timer,"continuation");
   end Continue;
 
-  procedure Continue ( file : in file_type;
-                       sols : in out Multprec_Complex_Solutions.Solution_List;
-                       proj,report : in boolean;
-                       target : in Multprec_Complex_Numbers.Complex_Number ) is
+  procedure Continue
+              ( file : in file_type;
+                sols : in out Multprec_Complex_Solutions.Solution_List;
+                proj,report : in boolean;
+                target : in Multprec_Complex_Numbers.Complex_Number ) is
 
   -- DESCRIPTION :
-  --   Instantiates the path-trackers for multiprecision complex solutions.
+  --   Instantiates the path trackers for multiprecision complex solutions,
+  --   for polynomial homotopies in arbitrary multiprecision.
 
     use Multprec_IncFix_Continuation;
 
@@ -948,21 +1022,46 @@ package body Drivers_for_Poly_Continuation is
     nbequ := q'last;
     nbvar := integer32(Number_of_Unknowns(q(q'first)));
     Copy(p,pp);
-   -- Driver_for_Homotopy_Construction(file,pp,q,qsols,t,deci);
+    if prclvl = 1 then
+      deci := 16;
+    elsif prclvl = 2 then
+      deci := 32;
+    else
+      deci := 64;
+    end if;
     Driver_for_Homotopy_Construction(file,pp,q,t,deci);
-   -- Reporting_Root_Refiner(standard_output,q,qsols,rsols,
-   --   1.0e-12,1.0e-12,1.0e-12,nit,3,true);
     proj := (Number_of_Unknowns(q(q'first)) > natural32(q'last));
     if proj
      then Ask_Symbol;
     end if;
     new_line;
-   -- if deci <= 16 then
-    if nbequ = nbvar
-     then Driver_for_Standard_Laurent_Continuation(file,qsols,proj,target=>t);
-     else Driver_for_Standard_Laurent_Continuation(file,qsols,proj,nbequ,t);
+    if deci <= 16 then
+      if nbequ = nbvar
+       then Driver_for_Standard_Laurent_Continuation(file,qsols,proj,target=>t);
+       else Driver_for_Standard_Laurent_Continuation(file,qsols,proj,nbequ,t);
+      end if;
+    elsif deci <= 32 then
+      declare
+        dd_qsols : DoblDobl_Complex_Solutions.Solution_List
+                 := DoblDobl_Complex_Solutions.Create(qsols);
+      begin
+        if nbequ = nbvar
+         then Driver_for_DoblDobl_Laurent_Continuation(file,dd_qsols,target=>t);
+         else Driver_for_DoblDobl_Laurent_Continuation(file,dd_qsols,nbequ,t);
+        end if;
+      end;
+    elsif deci <= 64 then
+      declare
+        qd_qsols : QuadDobl_Complex_Solutions.Solution_List
+                 := QuadDobl_Complex_Solutions.Create(qsols);
+      begin
+        if nbequ = nbvar
+         then Driver_for_QuadDobl_Laurent_Continuation(file,qd_qsols,target=>t);
+         else Driver_for_QuadDobl_Laurent_Continuation(file,qd_qsols,nbequ,t);
+        end if;
+      end;
     end if;
-      sols := qsols;
+    sols := qsols;
    -- else
    --   mqsols := Multprec_Complex_Solutions.Create(qsols);
    --   size := Multprec_Floating_Numbers.Decimal_to_Size(deci);
@@ -1179,11 +1278,61 @@ package body Drivers_for_Poly_Continuation is
     LaurCont(file,sols,proj,report,nbq,target);
   end Driver_for_Standard_Laurent_Continuation;
 
+  procedure Driver_for_DoblDobl_Laurent_Continuation
+              ( file : in file_type;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                nbq : in integer32 := 0;
+                target : Complex_Number := Create(1.0) ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    oc : natural32;
+    report : boolean;
+    dd_target : constant DoblDobl_Complex_Numbers.Complex_Number
+              := Standard_to_DoblDobl_Complex(target);
+
+  begin
+    new_line;
+    Driver_for_Continuation_Parameters(file);
+    new_line;
+    Driver_for_Process_io(file,oc);
+    report := (oc /= 0);
+    new_line;
+    put_line("No more input expected.  See output file for results.");
+    new_line;
+    LaurCont(file,sols,report,nbq,dd_target);
+  end Driver_for_DoblDobl_Laurent_Continuation;
+
+  procedure Driver_for_QuadDobl_Laurent_Continuation
+              ( file : in file_type;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                nbq : in integer32 := 0;
+                target : Complex_Number := Create(1.0) ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    oc : natural32;
+    report : boolean;
+    qd_target : constant QuadDobl_Complex_Numbers.Complex_Number
+              := Standard_to_QuadDobl_Complex(target);
+
+  begin
+    new_line;
+    Driver_for_Continuation_Parameters(file);
+    new_line;
+    Driver_for_Process_io(file,oc);
+    report := (oc /= 0);
+    new_line;
+    put_line("No more input expected.  See output file for results.");
+    new_line;
+    LaurCont(file,sols,report,nbq,qd_target);
+  end Driver_for_QuadDobl_Laurent_Continuation;
+
   procedure Driver_for_Multprec_Continuation
-                ( file : in file_type;
-                  sols : in out Multprec_Complex_Solutions.Solution_List;
-                  proj : in boolean; deci : in natural32;
-                  target : Complex_Number := Create(1.0) ) is
+              ( file : in file_type;
+                sols : in out Multprec_Complex_Solutions.Solution_List;
+                proj : in boolean; deci : in natural32;
+                target : Complex_Number := Create(1.0) ) is
 
     oc : natural32;
     report : boolean;

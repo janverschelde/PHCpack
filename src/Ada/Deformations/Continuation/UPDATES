@@ -1,3 +1,6 @@
+Tue 15 Mar 2016 : updated bodies of drivers_for_poly_continuation with
+  additions to the specifications as well.
+
 Mon 14 Mar 2016 : made interface in drivers_for_poly_continuation for
   Laurent systems the same as for regular systems, changed mainpoco.adb.
 

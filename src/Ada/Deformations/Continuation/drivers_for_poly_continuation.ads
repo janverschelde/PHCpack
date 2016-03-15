@@ -194,7 +194,17 @@ package Drivers_for_Poly_Continuation is
                   sols : in out DoblDobl_Complex_Solutions.Solution_List;
                   nbq : in integer32 := 0;
                   target : Complex_Number := Create(1.0) );
+  procedure Driver_for_DoblDobl_Laurent_Continuation
+                ( file : in file_type;
+                  sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                  nbq : in integer32 := 0;
+                  target : Complex_Number := Create(1.0) );
   procedure Driver_for_QuadDobl_Continuation
+                ( file : in file_type;
+                  sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                  nbq : in integer32 := 0;
+                  target : Complex_Number := Create(1.0) );
+  procedure Driver_for_QuadDobl_Laurent_Continuation
                 ( file : in file_type;
                   sols : in out QuadDobl_Complex_Solutions.Solution_List;
                   nbq : in integer32 := 0;
