@@ -1,5 +1,9 @@
+Wed 16 Mar 2016 : improved the drivers in multitasking_continuation.adb
+  so the start system and start solutions are written correctly to file.
+
 Tue 8 Mar 2016 : added preset precision level to the input parameters of
   the drivers to the multitasked path trackers in multitasking_continuation.
+  Added driver for Laurent systems in multitasking_continuation.
 
 Sat 5 Mar 2016 : updates in the driver of multitasking_continuation for
   the Gauss-Newton correctors on overdetermined homotopies.
