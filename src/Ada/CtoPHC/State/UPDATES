@@ -1,3 +1,6 @@
+Wed 16 Mar 2016 : changes in phcpack_operations for Laurent systems on
+  overdetermined systems.
+
 Sat 5 Mar 2016 : more updates in phcpack_operations for overdetermined systems.
 
 Fri 4 Mar 2016 : adjusted phcpack_operations.adb to call the overdetermined

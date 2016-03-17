@@ -1262,7 +1262,7 @@ package body PHCpack_Operations is
                ( ls : in Standard_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
-                 crash : out boolean ) is
+                 crash : out boolean; nbq : in integer32 := 0 ) is
 
     use Standard_Complex_Numbers,Standard_Complex_Norms_Equals;
     use Standard_Path_Trackers;
@@ -1296,8 +1296,8 @@ package body PHCpack_Operations is
   begin
     ls.t := Create(0.0);
     s := Standard_Continuation_Data.Shallow_Create(ls);
-    Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
-    Track_Path_at_End(s,t1,tol,false,0,w,v,e,pp2,cp2);
+    Track_Path_along_Path(s,t1,tol,false,pp1,cp1,nbq);
+    Track_Path_at_End(s,t1,tol,false,0,w,v,e,pp2,cp2,nbq);
     ls.t := Create(REAL_PART(ls.t),s.length_path);
     ls.err := s.cora; ls.rco := s.rcond; ls.res := s.resa;
     length := s.length_path;
@@ -1312,7 +1312,7 @@ package body PHCpack_Operations is
                ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
-                 crash : out boolean ) is
+                 crash : out boolean; nbq : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Numbers,DoblDobl_Complex_Vector_Norms;
     use DoblDobl_Path_Trackers;
@@ -1349,8 +1349,8 @@ package body PHCpack_Operations is
   begin
     ls.t := Create(zero);
     s := DoblDobl_Continuation_Data.Shallow_Create(ls);
-    Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
-    Track_Path_at_End(s,t1,tol,false,0,w,v,e,pp2,cp2);
+    Track_Path_along_Path(s,t1,tol,false,pp1,cp1,nbq);
+    Track_Path_at_End(s,t1,tol,false,0,w,v,e,pp2,cp2,nbq);
     dd_len := create(s.length_path);
     ls.t := Create(REAL_PART(ls.t),dd_len);
     ls.err := create(s.cora);
@@ -1368,7 +1368,7 @@ package body PHCpack_Operations is
                ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
-                 crash : out boolean ) is
+                 crash : out boolean; nbq : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Numbers,QuadDobl_Complex_Vector_Norms;
     use QuadDobl_Path_Trackers;
@@ -1406,8 +1406,8 @@ package body PHCpack_Operations is
   begin
     ls.t := Create(zero);
     s := QuadDobl_Continuation_Data.Shallow_Create(ls);
-    Track_Path_along_Path(s,t1,tol,false,pp1,cp1);
-    Track_Path_at_End(s,t1,tol,false,0,w,v,e,pp2,cp2);
+    Track_Path_along_Path(s,t1,tol,false,pp1,cp1,nbq);
+    Track_Path_at_End(s,t1,tol,false,0,w,v,e,pp2,cp2,nbq);
     dd_len := create(s.length_path);
     qd_len := create(dd_len);
     ls.t := Create(REAL_PART(ls.t),qd_len);
@@ -1507,7 +1507,7 @@ package body PHCpack_Operations is
 
   begin
     Reporting_Path_Tracker
-      (ls,w,v,e,length,nbstep,nbfail,nbiter,nbsyst,crash);
+      (ls,w,v,e,length,nbstep,nbfail,nbiter,nbsyst,crash,nbq);
   end Reporting_Path_Tracker;
 
   procedure Reporting_Path_Tracker
@@ -1655,7 +1655,7 @@ package body PHCpack_Operations is
                ( ls : in Standard_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
-                 crash : out boolean ) is
+                 crash : out boolean; nbq : in integer32 := 0 ) is
 
     use Standard_Complex_Numbers,Standard_Complex_Norms_Equals;
     use Standard_Path_Trackers;
@@ -1690,11 +1690,11 @@ package body PHCpack_Operations is
     ls.t := Create(0.0);
     s := Standard_Continuation_Data.Shallow_Create(ls);
     if file_okay then
-      Track_Path_along_Path(output_file,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(output_file,s,t1,tol,false,0,w,v,e,pp2,cp2);
+      Track_Path_along_Path(output_file,s,t1,tol,false,pp1,cp1,nbq);
+      Track_Path_at_End(output_file,s,t1,tol,false,0,w,v,e,pp2,cp2,nbq);
     else
-      Track_Path_along_Path(standard_output,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(standard_output,s,t1,tol,false,0,w,v,e,pp2,cp2);
+      Track_Path_along_Path(standard_output,s,t1,tol,false,pp1,cp1,nbq);
+      Track_Path_at_End(standard_output,s,t1,tol,false,0,w,v,e,pp2,cp2,nbq);
     end if;
     ls.t := Create(REAL_PART(ls.t),s.length_path);
     ls.err := s.cora; ls.rco := s.rcond; ls.res := s.resa;
@@ -1710,7 +1710,7 @@ package body PHCpack_Operations is
                ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
-                 crash : out boolean ) is
+                 crash : out boolean; nbq : in integer32 := 0 ) is
 
     use DoblDobl_Complex_Numbers,DoblDobl_Complex_Vector_Norms;
     use DoblDobl_Path_Trackers;
@@ -1748,11 +1748,11 @@ package body PHCpack_Operations is
     ls.t := Create(zero);
     s := DoblDobl_Continuation_Data.Shallow_Create(ls);
     if file_okay then
-      Track_Path_along_Path(output_file,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(output_file,s,t1,tol,false,0,w,v,e,pp2,cp2);
+      Track_Path_along_Path(output_file,s,t1,tol,false,pp1,cp1,nbq);
+      Track_Path_at_End(output_file,s,t1,tol,false,0,w,v,e,pp2,cp2,nbq);
     else
-      Track_Path_along_Path(standard_output,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(standard_output,s,t1,tol,false,0,w,v,e,pp2,cp2);
+      Track_Path_along_Path(standard_output,s,t1,tol,false,pp1,cp1,nbq);
+      Track_Path_at_End(standard_output,s,t1,tol,false,0,w,v,e,pp2,cp2,nbq);
     end if;
     dd_len := create(s.length_path);
     ls.t := Create(REAL_PART(ls.t),dd_len);
@@ -1771,7 +1771,7 @@ package body PHCpack_Operations is
                ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
-                 crash : out boolean ) is
+                 crash : out boolean; nbq : in integer32 := 0 ) is
 
     use QuadDobl_Complex_Numbers,QuadDobl_Complex_Vector_Norms;
     use QuadDobl_Path_Trackers;
@@ -1810,11 +1810,11 @@ package body PHCpack_Operations is
     ls.t := Create(zero);
     s := QuadDobl_Continuation_Data.Shallow_Create(ls);
     if file_okay then
-      Track_Path_along_Path(output_file,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(output_file,s,t1,tol,false,0,w,v,e,pp2,cp2);
+      Track_Path_along_Path(output_file,s,t1,tol,false,pp1,cp1,nbq);
+      Track_Path_at_End(output_file,s,t1,tol,false,0,w,v,e,pp2,cp2,nbq);
     else
-      Track_Path_along_Path(standard_output,s,t1,tol,false,pp1,cp1);
-      Track_Path_at_End(standard_output,s,t1,tol,false,0,w,v,e,pp2,cp2);
+      Track_Path_along_Path(standard_output,s,t1,tol,false,pp1,cp1,nbq);
+      Track_Path_at_End(standard_output,s,t1,tol,false,0,w,v,e,pp2,cp2,nbq);
     end if;
     dd_len := create(s.length_path);
     qd_len := create(dd_len);

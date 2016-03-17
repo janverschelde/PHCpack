@@ -379,32 +379,33 @@ package PHCpack_Operations is
                ( ls : in Standard_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
-                 crash : out boolean );
+                 crash : out boolean; nbq : in integer32 := 0 );
   procedure Silent_Laurent_Path_Tracker
                ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
-                 crash : out boolean );
+                 crash : out boolean; nbq : in integer32 := 0 );
   procedure Silent_Laurent_Path_Tracker
                ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
-                 crash : out boolean );
+                 crash : out boolean; nbq : in integer32 := 0 );
+
   procedure Reporting_Laurent_Path_Tracker
                ( ls : in Standard_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
-                 crash : out boolean );
+                 crash : out boolean; nbq : in integer32 := 0 );
   procedure Reporting_Laurent_Path_Tracker
                ( ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
-                 crash : out boolean );
+                 crash : out boolean; nbq : in integer32 := 0 );
   procedure Reporting_Laurent_Path_Tracker
                ( ls : in QuadDobl_Complex_Solutions.Link_to_Solution;
                  length : out double_float;
                  nbstep,nbfail,nbiter,nbsyst : out natural32;
-                 crash : out boolean );
+                 crash : out boolean; nbq : in integer32 := 0 );
 
   -- DESCRIPTION :
   --   Uses the created homotopy to track one path starting at the
