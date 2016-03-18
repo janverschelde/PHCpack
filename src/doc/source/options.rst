@@ -464,6 +464,11 @@ In both types of homotopies, natural parameter and aritificial parameter,
 the user can preset the working precision respectively to double double
 or quad double, calling the program as ``phc -p2`` or as ``phc -p4``.
 
+Since version 2.4.13, ``phc -p`` provides path tracking for
+overdetermined homotopies, where both target and start system
+are given as overconstrained systems and every convex linear
+combination between target and start system admits solutions.
+
 phc -q : Tracking Solution Paths with incremental read/write   
 ------------------------------------------------------------
 
