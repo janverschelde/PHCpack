@@ -1,5 +1,5 @@
-Fri 4 Mar 2016 : updates in trackers.py to run the path trackers on
-  more equations than unknowns.
+Fri 18 Mar 2016 : updates for version 0.4.2, setup.py, __init__.py and conf.py
+  in the documentation.
 
 Tue 23 Feb 2016 : added detailed installation instructions to welcome.rst
   in PHCpy2/doc/source and PHCpy3/doc/source.
