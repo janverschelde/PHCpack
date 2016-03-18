@@ -121,7 +121,7 @@ package body Multitasking_Continuation is
 
   begin
     PHCpack_Operations.Silent_Laurent_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail);
+      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail,nbq);
   end Silent_Laurent_Path_Tracker;
 
   procedure Silent_Laurent_Path_Tracker
@@ -134,7 +134,7 @@ package body Multitasking_Continuation is
 
   begin
     PHCpack_Operations.Silent_Laurent_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail);
+      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail,nbq);
   end Silent_Laurent_Path_Tracker;
 
   procedure Silent_Laurent_Path_Tracker
@@ -147,7 +147,7 @@ package body Multitasking_Continuation is
 
   begin
     PHCpack_Operations.Silent_Laurent_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail);
+      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail,nbq);
   end Silent_Laurent_Path_Tracker;
 
   procedure Silent_Laurent_Path_Tracker
@@ -164,7 +164,7 @@ package body Multitasking_Continuation is
                      & " received solution " 
                      & Multitasking.to_String(natural32(nb)) & ".");
     PHCpack_Operations.Silent_Laurent_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail);
+      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail,nbq);
   end Silent_Laurent_Path_Tracker;
 
   procedure Silent_Laurent_Path_Tracker
@@ -181,7 +181,7 @@ package body Multitasking_Continuation is
                      & " received solution " 
                      & Multitasking.to_String(natural32(nb)) & ".");
     PHCpack_Operations.Silent_Laurent_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail);
+      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail,nbq);
   end Silent_Laurent_Path_Tracker;
 
   procedure Silent_Laurent_Path_Tracker
@@ -198,7 +198,7 @@ package body Multitasking_Continuation is
                      & " received solution " 
                      & Multitasking.to_String(natural32(nb)) & ".");
     PHCpack_Operations.Silent_Laurent_Path_Tracker
-      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail);
+      (ls,length,nbstep,nbfail,nbiter,nbsyst,fail,nbq);
   end Silent_Laurent_Path_Tracker;
 
   procedure Silent_Multitasking_Path_Tracker
@@ -407,7 +407,7 @@ package body Multitasking_Continuation is
         myptr := Standard_Solutions_Queue.Next;
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
-        Silent_Laurent_Path_Tracker(ls);
+        Silent_Laurent_Path_Tracker(ls,nbq);
       end loop;
     end Next_Solution;
     procedure do_jobs is new Multitasking.Silent_Workers(Next_Solution);
@@ -437,7 +437,7 @@ package body Multitasking_Continuation is
         myptr := DoblDobl_Solutions_Queue.Next;
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
-        Silent_Laurent_Path_Tracker(ls);
+        Silent_Laurent_Path_Tracker(ls,nbq);
       end loop;
     end Next_Solution;
     procedure do_jobs is new Multitasking.Silent_Workers(Next_Solution);
@@ -467,7 +467,7 @@ package body Multitasking_Continuation is
         myptr := QuadDobl_Solutions_Queue.Next;
         exit when Is_Null(myptr);
         ls := Head_Of(myptr);
-        Silent_Laurent_Path_Tracker(ls);
+        Silent_Laurent_Path_Tracker(ls,nbq);
       end loop;
     end Next_Solution;
     procedure do_jobs is new Multitasking.Silent_Workers(Next_Solution);
@@ -499,7 +499,7 @@ package body Multitasking_Continuation is
         exit when Is_Null(myptr);
         myjob := Standard_Solutions_Queue.Next_Counter;
         ls := Head_Of(myptr);
-        Silent_Laurent_Path_Tracker(i,myjob,ls);
+        Silent_Laurent_Path_Tracker(i,myjob,ls,nbq);
       end loop;
     end Next_Solution;
     procedure do_jobs is new Multitasking.Reporting_Workers(Next_Solution);
@@ -531,7 +531,7 @@ package body Multitasking_Continuation is
         exit when Is_Null(myptr);
         myjob := DoblDobl_Solutions_Queue.Next_Counter;
         ls := Head_Of(myptr);
-        Silent_Laurent_Path_Tracker(i,myjob,ls);
+        Silent_Laurent_Path_Tracker(i,myjob,ls,nbq);
       end loop;
     end Next_Solution;
     procedure do_jobs is new Multitasking.Reporting_Workers(Next_Solution);
@@ -563,12 +563,13 @@ package body Multitasking_Continuation is
         exit when Is_Null(myptr);
         myjob := QuadDobl_Solutions_Queue.Next_Counter;
         ls := Head_Of(myptr);
-        Silent_Laurent_Path_Tracker(i,myjob,ls);
+        Silent_Laurent_Path_Tracker(i,myjob,ls,nbq);
       end loop;
     end Next_Solution;
     procedure do_jobs is new Multitasking.Reporting_Workers(Next_Solution);
 
   begin
+    QuadDobl_Solutions_Queue.Initialize(sols);
     do_jobs(n);
   end Reporting_Multitasking_Laurent_Path_Tracker;
 

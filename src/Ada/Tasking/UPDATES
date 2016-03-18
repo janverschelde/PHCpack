@@ -1,3 +1,6 @@
+Fri 18 Mar 2016 : fix in multitasking_continuation.adb so multitasked
+  path tracking works on overdetermined Laurent homotopies.
+
 Wed 16 Mar 2016 : improved the drivers in multitasking_continuation.adb
   so the start system and start solutions are written correctly to file.
 
