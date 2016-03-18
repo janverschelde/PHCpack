@@ -1,3 +1,5 @@
+Fri 18 Mar 2016 : updated greeting_banners for version 2.4.13.
+
 Sat 12 Mar 2016 : mainvali.adb updated so that option #1 of phc -v
   writes nonsquare polynomial systems correctly to file.
 
