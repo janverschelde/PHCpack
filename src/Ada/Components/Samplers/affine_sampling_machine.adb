@@ -254,7 +254,7 @@ package body Affine_Sampling_Machine is
       new Silent_Continue(Max_Norm,Eval,Diff,Diff);
 
   begin
-    Sil_Cont(sols,false,Create(1.0));
+    Sil_Cont(sols,false,target=>Create(1.0));
   end Silent_Affine_Sampler;
 
   procedure Reporting_Affine_Sampler
@@ -287,7 +287,7 @@ package body Affine_Sampling_Machine is
       new Reporting_Continue(Max_Norm,Eval,Diff,Diff);
 
   begin
-    Rep_Cont(file,sols,false,Create(1.0));
+    Rep_Cont(file,sols,false,target=>Create(1.0));
   end Reporting_Affine_Sampler;
 
   procedure Silent_LU_Newton_Refiner

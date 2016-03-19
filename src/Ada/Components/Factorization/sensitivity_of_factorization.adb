@@ -164,7 +164,7 @@ procedure Sensitivity_of_Factorization is
     Start_System(p1,q,qsols);
     Standard_Homotopy.Create(p1,q,2,Random1);
     Continuation_Parameters.Tune(2);
-    Continue(qsols,false,Create(1.0));
+    Continue(qsols,false,target=>Create(1.0));
     Reporting_Root_Refiner
       (file,p1,qsols,epsxa,epsfa,tolsing,numit,max,deflate,false);
     Standard_Homotopy.Clear;

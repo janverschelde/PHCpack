@@ -1,3 +1,6 @@
+Fri 18 Mar 2016 : updated sensitivity_of_factorization.adb for change in
+  driver to the continuation procedures.
+
 Mon 28 Dec 2015 : minor improvement in homotopy_membership_tests.adb.
 
 Fri 25 Dec 2015 : changed mainfac.adb to explain the input in the membership
