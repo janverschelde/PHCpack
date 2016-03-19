@@ -1,3 +1,5 @@
+Fir 18 Mar 2016 : fixed ts_eremenko.adb for updated continuation drivers.
+
 Sat 27 Feb 2016 : updates in drivers_for_sagbi_homotopies.adb for changes in
   increment-and-fix continuation in standard double precision.
   

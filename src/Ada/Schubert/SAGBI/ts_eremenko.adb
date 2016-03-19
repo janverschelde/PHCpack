@@ -62,7 +62,7 @@ procedure ts_eremenko is
   --   This procedure compares the real with the complex generated
   --   matrix in the standard basis.
 
-    s : double_float;
+    s : double_float := 0.0;
     cs : Complex_Number;
     rm : Standard_Floating_Matrices.Matrix(1..integer32(n),1..integer32(d));
     cm : Standard_Complex_Matrices.Matrix(1..integer32(n),1..integer32(d));
@@ -292,7 +292,7 @@ procedure ts_eremenko is
     jac_mat := Create(sh);
     eva_jac := Create(jac_mat);
     Set_Continuation_Parameter(sols,Create(0.0));
-    Sil_Cont(sols,false,Create(1.0));
+    Sil_Cont(sols,false,target=>Create(1.0));
     Clear(sh_eval);
     Clear(jac_mat);
     Clear(eva_jac);
@@ -426,7 +426,7 @@ procedure ts_eremenko is
         new Silent_Continue(Max_Norm,Standard_Homotopy.Eval,
                             Standard_Homotopy.Diff,Standard_Homotopy.Diff);
     begin
-      Sil_Cont(sols,false,Create(1.0));
+      Sil_Cont(sols,false,target=>Create(1.0));
     end;
    -- put_line(file,"The solution of the target system :");
    -- put(file,sols);
