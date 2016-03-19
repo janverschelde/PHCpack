@@ -403,6 +403,31 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
     end case;
   end Parameter_or_Sweep_Homotopy;
 
+  procedure Parameter_or_Sweep_Homotopy
+              ( inft : in out file_type;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                ls : in Link_to_Array_of_Strings ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the type of homotopy: parameter or sweep,
+  --   and asks for the level of precision, but only if prclvl = 1.
+
+    pos : constant character := Parameter_Homotopy_Continuation.Show_Menu;
+    prc : character;
+
+  begin
+    if prclvl = 1 then
+      prc := Prompt_for_Precision;
+    elsif prclvl = 2 then
+      prc := '1';
+    elsif prclvl = 4 then
+      prc := '2';
+    else
+      prc := Prompt_for_Precision;
+    end if;
+    put_line("Laurent homotopies are not yet supported ...");
+  end Parameter_or_Sweep_Homotopy;
+
   procedure Polynomial_Tracker
               ( inft : in out file_type;
                 lp : in Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -455,7 +480,7 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
         new_line;
         put("Found "); put(neq,1);
         put(" equations in "); put(nva,1); put_line(" unknowns...");
-        put_line("Laurent homotopies not yet supported ...");
+        Parameter_or_Sweep_Homotopy(inft,p,ls);
       end if;
     else
       Multitasking_Secant_Homotopy(p,ls,nt,neq,nva);

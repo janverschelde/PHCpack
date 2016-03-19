@@ -1,3 +1,6 @@
+Sat 19 Mar 2016 : placed stub for parameter/sweep homotopies of Laurent
+  polynomial systems somewhat deeper in mainpoco.adb.
+
 Tue 15 Mar 2016 : updated bodies of drivers_for_poly_continuation with
   additions to the specifications as well.  For Laurent systems, called
   the correct driver, so path tracking on overdetermined systems works!
