@@ -1,3 +1,6 @@
+Sun 20 Mar 2016 : added root refiners for overdetermined path tracking
+  in mainpoco.adb.
+
 Sat 19 Mar 2016 : placed stub for parameter/sweep homotopies of Laurent
   polynomial systems somewhat deeper in mainpoco.adb.
 

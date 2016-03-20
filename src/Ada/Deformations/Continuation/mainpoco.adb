@@ -25,6 +25,7 @@ with String_System_Readers;
 with Symbol_Table;
 with Standard_Complex_Laur_Strings;
 with Standard_Homotopy;
+with Standard_Laurent_Homotopy;
 with Standard_Complex_Solutions;
 with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions;
@@ -52,9 +53,12 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
                 p : in Standard_Complex_Poly_Systems.Poly_Sys;
                 target : in Complex_Number;
                 sols,refsols : in out Standard_Complex_Solutions.Solution_List;
-                solsfile : in boolean ) is
+                solsfile : in boolean; nbequ : in natural32 := 0 ) is
 
-    epsxa,epsfa,tolsing : constant double_float := 10.0**(-8);
+  -- DESCRIPTION :
+  --   Calls the standard root refiners or sharpeners in case nbequ > 0.
+
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-8;
     nb : natural32 := 0;
     deflate : boolean := false;
 
@@ -66,23 +70,101 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
      then Affine_Transformation(sols);
     end if;
     if target = Create(1.0) then
-      if solsfile
-       then Reporting_Root_Refiner
-              (outft,p,sols,refsols,epsxa,epsfa,tolsing,nb,5,deflate,false);
-       else Reporting_Root_Refiner
-              (outft,p,sols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+      if solsfile then
+        if nbequ = 0 then
+          Reporting_Root_Refiner
+            (outft,p,sols,refsols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+        else
+          Reporting_Root_Sharpener
+            (outft,p,sols,refsols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+        end if;
+      else
+        if nbequ = 0 then
+          Reporting_Root_Refiner
+            (outft,p,sols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+        else
+          Reporting_Root_Sharpener
+            (outft,p,sols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+        end if;
       end if;
     else
       declare
         pt : Poly_Sys(p'range);
       begin
         pt := Standard_Homotopy.Eval(target);
-        if solsfile 
-         then Reporting_Root_Refiner
-                (outft,pt,sols,refsols,epsxa,epsfa,tolsing,nb,5,deflate,false);
-         else Reporting_Root_Refiner
-                (outft,pt,sols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+        if solsfile then
+          if nbequ = 0 then
+            Reporting_Root_Refiner
+              (outft,pt,sols,refsols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+          else
+            Reporting_Root_Sharpener
+              (outft,pt,sols,refsols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+          end if;
+        else
+          if nbequ = 0 then
+            Reporting_Root_Refiner
+              (outft,pt,sols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+          else
+            Reporting_Root_Sharpener
+              (outft,pt,sols,epsxa,epsfa,tolsing,nb,5,deflate,false);
+          end if;
         end if;
+        Clear(pt);
+      end;
+    end if;
+  end Refine_Solutions;
+
+  procedure Refine_Solutions
+              ( outft : in file_type;
+                p : in Standard_Complex_Laur_Systems.Laur_Sys;
+                target : in Complex_Number;
+                sols,refsols : in out Standard_Complex_Solutions.Solution_List;
+                solsfile : in boolean; nbequ : in natural32 := 0 ) is
+
+  -- DESCRIPTION :
+  --   Calls the standard root refiners or sharpeners in case nbequ > 0.
+
+    epsxa,epsfa,tolsing : constant double_float := 1.0E-8;
+    nb : natural32 := 0;
+    deflate : boolean := false;
+
+    use Standard_Complex_Laur_Systems;
+    use Standard_Complex_Solutions;
+
+  begin
+   -- if Head_Of(sols).n > p'last
+   --  then Affine_Transformation(sols);
+   -- end if;
+    if target = Create(1.0) then
+      --if solsfile
+      -- then
+      if nbequ = 0 then
+        Reporting_Root_Refiner
+          (outft,p,sols,refsols,epsxa,epsfa,tolsing,nb,5,false);
+      else
+        Reporting_Root_Sharpener
+          (outft,p,sols,refsols,epsxa,epsfa,tolsing,nb,5,false);
+      end if;
+      -- else Reporting_Root_Refiner
+      --        (outft,p,sols,epsxa,epsfa,tolsing,nb,5,false);
+      -- end if;
+    else
+      declare
+        pt : Laur_Sys(p'range);
+      begin
+        pt := Standard_Laurent_Homotopy.Eval(target);
+       -- if solsfile 
+       --  then
+        if nbequ = 0 then
+          Reporting_Root_Refiner
+            (outft,pt,sols,refsols,epsxa,epsfa,tolsing,nb,5,false);
+        else
+          Reporting_Root_Sharpener
+            (outft,pt,sols,refsols,epsxa,epsfa,tolsing,nb,5,false);
+        end if;
+       --  else Reporting_Root_Refiner
+       --         (outft,pt,sols,epsxa,epsfa,tolsing,nb,5,false);
+       -- end if;
         Clear(pt);
       end;
     end if;
@@ -125,9 +207,10 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
       solsfile := false;
     end if;
     Driver_for_Polynomial_Continuation(outft,p,prclvl,ls,sols,mpsols,target);
-    if nbequ = nbvar then
-      if Length_Of(sols) > 0
+    if Length_Of(sols) > 0 then
+      if nbequ = nbvar
        then Refine_Solutions(outft,p,target,sols,refsols,solsfile);
+       else Refine_Solutions(outft,p,target,sols,refsols,solsfile,nbequ);
       end if;
     end if;
     new_line(outft);
@@ -180,9 +263,12 @@ procedure mainpoco ( nt : in natural32; infilename,outfilename : in string;
       solsfile := false;
     end if;
     Driver_for_Laurent_Continuation(outft,p,prclvl,ls,sols,mpsols,target);
-   -- if Length_Of(sols) > 0
-   --  then Refine_Solutions(outft,p,target,sols,refsols,solsfile);
-   -- end if;
+    if Length_Of(sols) > 0 then
+      if nbequ = nbvar
+       then Refine_Solutions(outft,p,target,sols,refsols,solsfile);
+       else Refine_Solutions(outft,p,target,sols,refsols,solsfile,nbequ);
+      end if;
+    end if;
     Write_Seed_Number(outft);
     put_line(outft,Greeting_Banners.Version);
    -- put(outft,Bye_Bye_Message);
