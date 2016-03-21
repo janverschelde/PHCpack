@@ -1,3 +1,7 @@
+Mon 21 Mar 2016 : improved drivers_to_dd_qd_root_refiners.adb by refactoring,
+  allowing for interacting parameter tuning and more checks.
+  Added extra procedures to the root_refining_parameters.
+
 Thu 10 Mar 2016 : drivers_to_dd_qd_root_refiners.adb modified so that the
   system given to phc -v is also written to the output file.
 

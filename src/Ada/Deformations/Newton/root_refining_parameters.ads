@@ -12,12 +12,19 @@ package Root_Refining_Parameters is
   procedure Standard_Default_Root_Refining_Parameters
               ( epsxa,epsfa,tolsing : out double_float;
                 maxit : out natural32; deflate,wout : out boolean );
+  procedure DoblDobl_Default_Root_Refining_Parameters
+              ( epsxa,epsfa,tolsing : out double_float;
+                maxit : out natural32; deflate,wout : out boolean );
+  procedure QuadDobl_Default_Root_Refining_Parameters
+              ( epsxa,epsfa,tolsing : out double_float;
+                maxit : out natural32; deflate,wout : out boolean );
   procedure Multprec_Default_Root_Refining_Parameters
               ( epsxa,epsfa,tolsing : out Floating_Number;
                 maxit,deci : out natural32; deflate,wout : out boolean );
 
   -- DESCRIPTION :
-  --  Defines the default values for the root refining parameters.
+  --  Defines the default values for the root refining parameters,
+  --  for double, double double, quad double, and multiprecision arithmetic.
 
   -- ON RETURN :
   --  epsxa     precision for correction on x;

@@ -18,6 +18,30 @@ package body Root_Refining_Parameters is
     wout := false;          -- if intermediate output is wanted
   end Standard_Default_Root_Refining_Parameters;
 
+  procedure DoblDobl_Default_Root_Refining_Parameters
+              ( epsxa,epsfa,tolsing : out double_float;
+                maxit : out natural32; deflate,wout : out boolean ) is
+  begin
+    epsxa := 1.0E-12;       -- precision for correction on x
+    epsfa := 1.0E-12;       -- precision for residual 
+    tolsing := 1.0E-12;     -- tolerance on inverse condition numbers
+    maxit := 3;             -- maximal number of Newton iterations
+    deflate := true;        -- if deflation is wanted
+    wout := false;          -- if intermediate output is wanted
+  end DoblDobl_Default_Root_Refining_Parameters;
+
+  procedure QuadDobl_Default_Root_Refining_Parameters
+              ( epsxa,epsfa,tolsing : out double_float;
+                maxit : out natural32; deflate,wout : out boolean ) is
+  begin
+    epsxa := 1.0E-16;       -- precision for correction on x
+    epsfa := 1.0E-16;       -- precision for residual 
+    tolsing := 1.0E-16;     -- tolerance on inverse condition numbers
+    maxit := 3;             -- maximal number of Newton iterations
+    deflate := true;        -- if deflation is wanted
+    wout := false;          -- if intermediate output is wanted
+  end QuadDobl_Default_Root_Refining_Parameters;
+
   procedure Multprec_Default_Root_Refining_Parameters
               ( epsxa,epsfa,tolsing : out Floating_Number;
                 maxit,deci : out natural32; deflate,wout : out boolean ) is
