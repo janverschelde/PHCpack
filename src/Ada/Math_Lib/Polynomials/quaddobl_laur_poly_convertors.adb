@@ -103,14 +103,17 @@ package body QuadDobl_Laur_Poly_Convertors is
                t : out QuadDobl_Complex_Laurentials.Term; 
                p : out QuadDobl_Complex_Polynomials.Poly ) is
 
-    min : constant QuadDobl_Complex_Laurentials.Degrees 
+    min : QuadDobl_Complex_Laurentials.Degrees 
         := QuadDobl_Complex_Laurentials.Minimal_Degrees(L);
     tt : QuadDobl_Complex_Laurentials.Term;
     one : constant quad_double := create(1.0);
 
   begin
     for i in min'range loop
-      min(i) := -min(i);
+      if min(i) < 0
+       then min(i) := -min(i);  -- only multiply if negative!
+       else min(i) := 0;
+      end if;
     end loop;
     tt.cf := QuadDobl_Complex_Numbers.Create(one);
     tt.dg := min;

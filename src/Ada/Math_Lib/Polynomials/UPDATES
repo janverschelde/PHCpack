@@ -1,5 +1,6 @@
 Tue 22 Mar 2016 : extended {dobldobl,quaddobl}_complex_poly_systems_io
   with procedure to write number of polynomials and variables as well.
+  Bug fix in {standard,dobldobl,quaddobl,multprec}_laur_poly_convertors.adb.
 
 Fri 11 Mar 2016 : fixed in writing of terms in Laurent polynomials that
   have a zero degree, in {dobldobl,quaddobl}_complex_laurentials_io.adb.

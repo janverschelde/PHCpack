@@ -103,14 +103,17 @@ package body DoblDobl_Laur_Poly_Convertors is
                t : out DoblDobl_Complex_Laurentials.Term; 
                p : out DoblDobl_Complex_Polynomials.Poly ) is
 
-    min : constant DoblDobl_Complex_Laurentials.Degrees 
+    min : DoblDobl_Complex_Laurentials.Degrees 
         := DoblDobl_Complex_Laurentials.Minimal_Degrees(L);
     tt : DoblDobl_Complex_Laurentials.Term;
     one : constant double_double := create(1.0);
 
   begin
     for i in min'range loop
-      min(i) := -min(i);
+      if min(i) < 0 
+       then min(i) := -min(i);   -- only multiply if negative!
+       else min(i) := 0;
+      end if;
     end loop;
     tt.cf := DoblDobl_Complex_Numbers.Create(one);
     tt.dg := min;

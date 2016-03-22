@@ -100,13 +100,16 @@ package body Multprec_Laur_Poly_Convertors is
                t : out Multprec_Complex_Laurentials.Term; 
                p : out Multprec_Complex_Polynomials.Poly ) is
 
-    min : constant Multprec_Complex_Laurentials.Degrees 
+    min : Multprec_Complex_Laurentials.Degrees 
         := Multprec_Complex_Laurentials.Minimal_Degrees(l);
     tt : Multprec_Complex_Laurentials.Term;
 
   begin
     for i in min'range loop
-      min(i) := -min(i);
+      if min(i) < 0
+       then min(i) := -min(i);   -- only multiply if negative!
+       else min(i) := 0;
+      end if;
     end loop;
     tt.cf := Create(1);
     tt.dg := min;

@@ -102,13 +102,16 @@ package body Standard_Laur_Poly_Convertors is
                t : out Standard_Complex_Laurentials.Term; 
                p : out Standard_Complex_Polynomials.Poly ) is
 
-    min : constant Standard_Complex_Laurentials.Degrees 
+    min : Standard_Complex_Laurentials.Degrees 
         := Standard_Complex_Laurentials.Minimal_Degrees(L);
     tt : Standard_Complex_Laurentials.Term;
 
   begin
     for i in min'range loop
-      min(i) := -min(i);
+      if min(i) < 0
+       then min(i) := -min(i);  -- only multiply if negative!
+       else min(i) := 0;
+      end if;
     end loop;
     tt.cf := Create(1.0);
     tt.dg := min;
