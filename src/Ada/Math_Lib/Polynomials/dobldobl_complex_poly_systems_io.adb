@@ -1,4 +1,3 @@
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with DoblDobl_Complex_Polynomials;      use DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Polynomials_io;   use DoblDobl_Complex_Polynomials_io;
@@ -63,6 +62,29 @@ package body DoblDobl_Complex_Poly_Systems_io is
       put(file,p(i));
       new_line(file);
     end loop;
+  end put;
+
+  procedure put ( n : in natural32; p : in Poly_Sys ) is
+  begin
+    put(standard_output,n,p);
+  end put;
+
+  procedure put ( file : in file_type; n : in natural32; p : in Poly_Sys ) is
+  begin
+    put(file,n,2); new_line(file);
+    put(file,p);
+  end put;
+
+  procedure put ( n,m : in natural32; p : in Poly_Sys ) is
+  begin
+    put(standard_output,n,m,p);
+  end put;
+
+  procedure put ( file : in file_type;
+                  n,m : in natural32; p : in Poly_Sys ) is
+  begin
+    put(file,n,2); put(file," "); put(file,m,2); new_line(file);
+    put(file,p);
   end put;
 
   procedure put_line ( p : in Poly_Sys ) is

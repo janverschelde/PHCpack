@@ -1,4 +1,5 @@
 with text_io;                           use text_io;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Symbol_Table;                      use Symbol_Table;
 with DoblDobl_Complex_Poly_Systems;     use DoblDobl_Complex_Poly_Systems;
 
@@ -23,6 +24,19 @@ package DoblDobl_Complex_Poly_Systems_io is
   --   Writes the polynomials to screen or file.   
   --   The polynomials are separated by semicolons and a new line
   --   is started for each new polynomial.
+
+  procedure put ( n : in natural32; p : in Poly_Sys );
+  procedure put ( file : in file_type; n : in natural32; p : in Poly_Sys );
+
+  -- DESCRIPTION
+  --   Writes n as the number of equation before writing p.
+
+  procedure put ( n,m : in natural32; p : in Poly_Sys );
+  procedure put ( file : in file_type; n,m : in natural32; p : in Poly_Sys );
+
+  -- DESCRIPTION :
+  --   Writes the number n of polynomials followed by the number m 
+  --   of variables on the same first line before writing p.
 
   procedure put_line ( p : in Poly_Sys );
   procedure put_line ( file : in file_type; p : in Poly_Sys );
