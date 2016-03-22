@@ -42,6 +42,7 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/PHCtoC -I$(PHCAda)/Tasking -I$(PHCAda)/Main
 # flags with full optimization
 GNATFLAGS=-gnatv -O3 -gnatp -gnatf
+GNATOPTFLAGS=-gnatv -O3 -gnatp -gnatf
 # GNATFLAGS=-gnatv -O3 -gnatp -gnatf --GNATBIND="gnatbind -static"
 # flags to turn on all warnings and validity checks
 # GNATFLAGS=-gnatv -gnatwa -gnatVa
@@ -399,6 +400,9 @@ ts_perfeval:
 
 ts_expvec:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_expvec.adb -o $(BIN)/ts_expvec
+
+ts_evddpol:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_evddpol.adb -o $(BIN)/ts_evddpol
 
 # Test programs for Math_Lib/Circuits :
 

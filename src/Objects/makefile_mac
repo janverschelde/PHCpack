@@ -411,6 +411,10 @@ ts_perfeval:
 ts_expvec:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_expvec.adb -o $(BIN)/ts_expvec
 
+ts_evddpol:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_evddpol.adb \
+              -o $(BIN)/ts_evddpol
+
 # Test programs for Math_Lib/Circuits :
 
 ts_cffsup:

@@ -358,7 +358,7 @@ ts_nbrvar:
 # Test programs for Math_Lib/Functions :
 
 test_functions: ts_evaline ts_evalpoly ts_evalform ts_lineva \
-                ts_expvec ts_polyflat ts_perfeval
+                ts_expvec ts_polyflat ts_perfeval ts_evddpol
 
 ts_evaline:
 	make -f $(MAKEFILE) ts_evaline
@@ -380,6 +380,9 @@ ts_perfeval:
 
 ts_expvec:
 	make -f $(MAKEFILE) ts_expvec
+
+ts_evddpol:
+	make -f $(MAKEFILE) ts_evddpol
 
 # Test programs for Math_Lib/Circuits :
 
