@@ -1,3 +1,6 @@
+Tue 22 Mar 2016 : upgraded standard_root_refiners to deflate overdetermined
+  polynomial systems.
+
 Mon 21 Mar 2016 : improved drivers_to_dd_qd_root_refiners.adb by refactoring,
   allowing for interacting parameter tuning and more checks.
   Added extra procedures to the root_refining_parameters.

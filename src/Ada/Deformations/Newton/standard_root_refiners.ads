@@ -503,32 +503,58 @@ package Standard_Root_Refiners is
                ( p : in Poly_Sys; sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in boolean );
+                 deflate : in out boolean );
 
   procedure Silent_Root_Sharpener
                ( p : in Poly_Sys; sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in boolean );
+                 deflate : in out boolean );
 
   procedure Silent_Root_Sharpener
                ( p : in Laur_Sys; sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32 );
 
+  -- DESCRIPTION :
+  --   The list of solutions sols is refined w.r.t. the system p.
+  --   The multiplicity of each solution in sols is determined as follows:
+  --     m = 0 : if the solution is singular and probably non isolated
+  --             or if the solution lies at infinity ( in fact no solution );
+  --     m = 1 : if the solution is regular;
+  --     m > 1 : a multiple solution with multiplicity m.
+  --   The silent version does not write to file.
+
+  -- ON ENTRY :
+  --   p         a polynomial system;
+  --   j         Jacobian matrix of p;
+  --   sols      the start solutions;
+  --   epsxa     maximum absolute error on the zero;
+  --   epsfa     maximum absolute value for the residue;
+  --   tolsing   tolerance on inverse condition number for singular solution;
+  --   numit     the number of iterations, to be initialized with zero;
+  --   max       maximum number of iterations per zero;
+  --   deflate   if true, apply deflation to singular solutions.
+
+  -- ON RETURN :
+  --   sols      a list of computed solutions;
+  --   refsols   only those solutions which satisfy the given accuracy;
+  --   numit     the number of iterations;
+  --   deflate   is set to false if the system is too large.
+
   procedure Reporting_Root_Sharpener
                ( file : in file_type;
                  p : in Poly_Sys; sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate,wout : in boolean );
+                 deflate : in out boolean; wout : in boolean );
 
   procedure Reporting_Root_Sharpener
                ( file : in file_type;
                  p : in Poly_Sys; sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate,wout : in boolean );
+                 deflate : in out boolean; wout : in boolean );
 
   procedure Reporting_Root_Sharpener
                ( file : in file_type;
@@ -544,6 +570,7 @@ package Standard_Root_Refiners is
   --             or if the solution lies at infinity ( in fact no solution );
   --     m = 1 : if the solution is regular;
   --     m > 1 : a multiple solution with multiplicity m.
+  --   The reporting version writes to file.
 
   -- ON ENTRY :
   --   file      file for writing diagnostics on;
@@ -561,6 +588,7 @@ package Standard_Root_Refiners is
   -- ON RETURN :
   --   sols      a list of computed solutions;
   --   refsols   only those solutions which satisfy the given accuracy;
-  --   numit     the number of iterations.
+  --   numit     the number of iterations;
+  --   deflate   is set to true if the system it too large.
 
 end Standard_Root_Refiners;

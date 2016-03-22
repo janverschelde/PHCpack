@@ -1785,45 +1785,90 @@ package body Standard_Root_Refiners is
                ( p : in Poly_Sys; sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in boolean ) is
+                 deflate : in out boolean ) is
 
     use Standard_Complex_Jaco_Matrices;
 
-    nq : constant integer32 := p'last;
-    nv : constant integer32 := Head_Of(sols).n;
-    p_eval : Eval_Poly_Sys(1..nq) := Create(p);
-    jac : Jaco_Mat(1..nq,1..nv) := Create(p);
-    jac_eval : Eval_Jaco_Mat(1..nq,1..nv) := Create(jac);
-    numb : natural32 := 0;
-    tol_rnk : constant double_float := 1.0E-6;
+    nbequ : constant integer32 := p'last;
+    nbvar : constant integer32 := Head_Of(sols).n;
+    p_eval : Eval_Poly_Sys(1..nbequ) := Create(p);
+    jac : Jaco_Mat(1..nbequ,1..nbvar) := Create(p);
+    jac_eval : Eval_Jaco_Mat(1..nbequ,1..nbvar) := Create(jac);
+    numb,nbdef,nit : natural32 := 0;
+   -- tol_rnk : constant double_float := 1.0E-6;
+    tol_rnk : constant double_float := 100.0*tolsing;
+    order : constant integer32 := 3;
+    nv : Standard_Natural_Vectors.Vector(0..order);
+    nq : Standard_Natural_Vectors.Vector(0..order);
+    R1 : Standard_Natural_Vectors.Vector(1..order);
+    monkeys : Standard_Natural64_VecVecs.VecVec(1..order);
+    nd : Link_to_Eval_Node;
+    backup : Solution(nbvar);
+    merge : boolean := false; -- to merge clustered solutions
     fail,infty : boolean;
     sa : Solution_Array(1..integer32(Length_Of(sols))) := Create(sols);
     h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nv);
+       := Standard_Random_Vectors.Random_Vector(1,nbvar);
     h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nv);
+       := Standard_Random_Vectors.Random_Vector(1,nbvar);
     pl : Point_List;
 
   begin
-    if deflate
-     then put_line("Deflation not yet provided for overdetermined systems.");
+    if deflate then
+      declare
+      begin
+        nv(0) := natural32(nbvar);
+        nq(0) := natural32(nbequ); R1(1) := 0;
+        Create_Remember_Derivatives(jac,order,nd);
+        monkeys := Monomial_Keys(natural32(order),nv(0));
+      exception
+        when others =>
+          put_line("The system is too large to apply deflation.");
+          deflate := false;
+      end;
     end if;
     for i in sa'range loop
       numb := 0;
       sa(i).res := Sum_Norm(Eval(p_eval,sa(i).v));
       infty := At_Infinity(sa(i).all,false,1.0E+8);
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
-        Silent_Gauss_Newton
-          (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,numb,max,fail);
+        if deflate then
+          backup := sa(i).all;
+          Silent_Deflate
+            (max,p_eval,jac_eval,sa(i),order,tol_rnk,nd,monkeys,nv,nq,R1,
+             numb,nbdef,fail);
+          Silent_Gauss_Newton
+            (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
+          if fail and backup.res < sa(i).res then
+            sa(i).all := backup;
+            Silent_Gauss_Newton
+              (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
+          end if;
+        else
+          Silent_Gauss_Newton
+            (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,numb,max,fail);
+        end if;
       else
         fail := true;
       end if;
       Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
                    infty,false,tolsing,epsxa);
+      if not fail and then deflate
+       then merge := merge or (sa(i).m > 1);
+      end if;
       numit := numit + numb;
     end loop;
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
-    Clear(jac); Clear(p_eval); Clear(jac_eval);
+    if deflate then
+      Standard_Natural64_VecVecs.Clear(monkeys);
+      if merge
+       then Merge_Multiple_Solutions(sols,tolsing);
+      end if;
+      Standard_Jacobian_Trees.Clear(nd);
+    else
+      Clear(jac); -- otherwise crash after Clear(nd)
+    end if;
+    Clear(p_eval); Clear(jac_eval);
     Clear(pl);
   end Silent_Root_Sharpener;
 
@@ -1831,49 +1876,95 @@ package body Standard_Root_Refiners is
                ( p : in Poly_Sys; sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate : in boolean ) is
+                 deflate : in out boolean ) is
 
     use Standard_Complex_Jaco_Matrices;
 
-    nq : constant integer32 := p'last;
-    nv : constant integer32 := Head_Of(sols).n;
-    p_eval : Eval_Poly_Sys(1..nq) := Create(p);
-    jac : Jaco_Mat(1..nq,1..nv) := Create(p);
-    jac_eval : Eval_Jaco_Mat(1..nq,1..nv) := Create(jac);
-    numb : natural32 := 0;
-    tol_rnk : constant double_float := 1.0E-6;
+    nbequ : constant integer32 := p'last;
+    nbvar : constant integer32 := Head_Of(sols).n;
+    p_eval : Eval_Poly_Sys(1..nbequ) := Create(p);
+    jac : Jaco_Mat(1..nbequ,1..nbvar) := Create(p);
+    jac_eval : Eval_Jaco_Mat(1..nbequ,1..nbvar) := Create(jac);
+    numb,nbdef,nit : natural32 := 0;
+   -- tol_rnk : constant double_float := 1.0E-6;
+    tol_rnk : constant double_float := 100.0*tolsing;
+    order : constant integer32 := 3;
+    nv : Standard_Natural_Vectors.Vector(0..order);
+    nq : Standard_Natural_Vectors.Vector(0..order);
+    R1 : Standard_Natural_Vectors.Vector(1..order);
+    monkeys : Standard_Natural64_VecVecs.VecVec(1..order);
+    nd : Link_to_Eval_Node;
+    backup : Solution(nbvar);
+    merge : boolean := false; -- to merge clustered solutions
     fail,infty : boolean;
     sa : Solution_Array(1..integer32(Length_Of(sols))) := Create(sols);
     refsols_last : Solution_List;
     h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nv);
+       := Standard_Random_Vectors.Random_Vector(1,nbvar);
     h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nv);
+       := Standard_Random_Vectors.Random_Vector(1,nbvar);
     pl : Point_List;
 
   begin
-    if deflate
-     then put_line("Deflation not yet provided for overdetermined systems.");
+    if deflate then
+      declare
+      begin
+        nv(0) := natural32(nbvar);
+        nq(0) := natural32(nbequ); R1(1) := 0;
+        Create_Remember_Derivatives(jac,order,nd);
+        monkeys := Monomial_Keys(natural32(order),nv(0));
+      exception
+        when others =>
+          put_line("The system is too large to apply deflation.");
+          deflate := false;
+      end;
     end if;
     for i in sa'range loop
       numb := 0;
       sa(i).res := Sum_Norm(Eval(p_eval,sa(i).v));
       infty := At_Infinity(sa(i).all,false,1.0E+8);
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
-        Silent_Gauss_Newton
-          (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,numb,max,fail);
+        if deflate then
+          backup := sa(i).all;
+          Silent_Deflate
+            (max,p_eval,jac_eval,sa(i),order,tol_rnk,nd,monkeys,nv,nq,R1,
+             numb,nbdef,fail);
+          Silent_Gauss_Newton
+            (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
+          if fail and backup.res < sa(i).res then
+            sa(i).all := backup;
+            Silent_Gauss_Newton
+              (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
+          end if;
+        else
+          Silent_Gauss_Newton
+            (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,numb,max,fail);
+        end if;
       else
         fail := true;
       end if;
       Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
                    infty,false,tolsing,epsxa);
-      if not fail
-       then Append(refsols,refsols_last,sa(i).all);
+      if not fail then
+        Append(refsols,refsols_last,sa(i).all);
+        if deflate
+         then merge := merge and (sa(i).m > 1);
+        end if;
       end if;
       numit := numit + numb;
     end loop;
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
-    Clear(jac); Clear(p_eval); Clear(jac_eval);
+    if deflate then
+      Standard_Natural64_VecVecs.Clear(monkeys);
+      if merge then
+        Merge_Multiple_Solutions(sols,tolsing);
+        Merge_Multiple_Solutions(refsols,tolsing);
+      end if;
+      Standard_Jacobian_Trees.Clear(nd);
+    else
+      Clear(jac); -- otherwise crash after Clear(nd)
+    end if;
+    Clear(p_eval); Clear(jac_eval);
     Clear(pl);
   end Silent_Root_Sharpener;
 
@@ -1928,17 +2019,17 @@ package body Standard_Root_Refiners is
                  p : in Poly_Sys; sols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate,wout : in boolean ) is
+                 deflate : in out boolean; wout : in boolean ) is
 
     use Standard_Complex_Jaco_Matrices;
 
-    nq : constant integer32 := p'length;
-    nv : constant integer32 := Head_Of(sols).n;
-    p_eval : Eval_Poly_Sys(1..nq) := Create(p);
+    nbequ : constant integer32 := p'length;
+    nbvar : constant integer32 := Head_Of(sols).n;
+    p_eval : Eval_Poly_Sys(1..nbequ) := Create(p);
     eyp : Standard_Complex_Vectors.Vector(p'range);
-    jac : Jaco_Mat(1..nq,1..nv) := Create(p);
-    jac_eval : Eval_Jaco_Mat(1..nq,1..nv) := Create(jac);
-    numb,nbdef : natural32 := 0;
+    jac : Jaco_Mat(1..nbequ,1..nbvar) := Create(p);
+    jac_eval : Eval_Jaco_Mat(1..nbequ,1..nbvar) := Create(jac);
+    numb,nbdef,nit : natural32 := 0;
     nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
     nbtot : constant natural32 := Length_Of(sols);
     fail,infty : boolean;
@@ -1946,21 +2037,40 @@ package body Standard_Root_Refiners is
     initres : Standard_Floating_Vectors.Vector(sa'range);
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..15)
                       := Standard_Condition_Tables.Create(15); 
-    tolrnk : constant double_float := tolsing*100.0;
+   -- tolrnk : constant double_float := tolsing*100.0;
+    tol_rnk : constant double_float := 100.0*tolsing;
+    order : constant integer32 := 3;
+    nv : Standard_Natural_Vectors.Vector(0..order);
+    nq : Standard_Natural_Vectors.Vector(0..order);
+    R1 : Standard_Natural_Vectors.Vector(1..order);
+    monkeys : Standard_Natural64_VecVecs.VecVec(1..order);
+    nd : Link_to_Eval_Node;
+    backup : Solution(nbvar);
+    merge : boolean := false; -- to merge clustered solutions
     h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nv);
+       := Standard_Random_Vectors.Random_Vector(1,nbvar);
     h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nv);
+       := Standard_Random_Vectors.Random_Vector(1,nbvar);
     pl : Point_List;
 
   begin
-    if deflate
-     then put_line("Deflation not yet provided for overdetermined systems.");
+    if deflate then
+      declare
+      begin
+        nv(0) := natural32(nbvar);
+        nq(0) := natural32(nbequ); R1(1) := 0;
+        Create_Remember_Derivatives(jac,order,nd);
+        monkeys := Monomial_Keys(natural32(order),nv(0));
+      exception
+        when others =>
+          put_line("The system is too large to apply deflation.");
+          deflate := false;
+      end;
     end if;
     new_line(file);
     put_line(file,"THE SOLUTIONS :"); new_line(file);
     put(file,nbtot,1); put(file," ");
-    put(file,nv,1); new_line(file);
+    put(file,nbvar,1); new_line(file);
     put_bar(file);
     for i in sa'range loop 
       numb := 0; nbdef := 0;
@@ -1969,18 +2079,38 @@ package body Standard_Root_Refiners is
       initres(i) := sa(i).res;
       infty := At_Infinity(sa(i).all,false,1.0E+8);
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
-        if wout then
+        if deflate then
+          backup := sa(i).all;
+          Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
+                            tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          if wout then
+            Reporting_Gauss_Newton
+              (file,p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,
+               nit,max,fail);
+          else 
+            Silent_Gauss_Newton
+              (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
+          end if;
+          if fail and backup.res < sa(i).res then
+            sa(i).all := backup;
+            Silent_Gauss_Newton
+              (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
+          end if;
+        elsif wout then
           Reporting_Gauss_Newton
-            (file,p_eval,jac_eval,sa(i).all,tolrnk,epsxa,epsfa,numb,max,fail);
+            (file,p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,numb,max,fail);
         else 
           Silent_Gauss_Newton
-            (p_eval,jac_eval,sa(i).all,tolrnk,epsxa,epsfa,numb,max,fail);
+            (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,numb,max,fail);
         end if;
       else
         fail := true;
       end if;
       Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
                    infty,false,tolsing,epsxa);
+      if not fail and then deflate
+       then merge := merge or (sa(i).m > 1);
+      end if;
       Write_Info(file,sa(i).all,initres(i),natural32(i),numb,nbdef,fail,infty);
       Write_Type
         (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
@@ -1993,7 +2123,16 @@ package body Standard_Root_Refiners is
     Write_Global_Info
       (file,nbtot,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
-    Clear(jac); Clear(p_eval); Clear(jac_eval);
+    if deflate then
+      Standard_Natural64_VecVecs.Clear(monkeys);
+      Standard_Jacobian_Trees.Clear(nd);
+      if merge
+       then Merge_Multiple_Solutions(sols,tolsing);
+      end if;
+    else
+      Clear(jac); -- otherwise crash after Clear(nd)
+    end if;
+    Clear(p_eval); Clear(jac_eval);
     Standard_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
     Clear(pl);
   end Reporting_Root_Sharpener;
@@ -2003,17 +2142,17 @@ package body Standard_Root_Refiners is
                  p : in Poly_Sys; sols,refsols : in out Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32;
-                 deflate,wout : in boolean ) is
+                 deflate : in out boolean; wout : in boolean ) is
 
     use Standard_Complex_Jaco_Matrices;
 
-    nq : constant integer32 := p'length;
-    nv : constant integer32 := Head_Of(sols).n;
-    p_eval : Eval_Poly_Sys(1..nq) := Create(p);
+    nbequ : constant integer32 := p'length;
+    nbvar : constant integer32 := Head_Of(sols).n;
+    p_eval : Eval_Poly_Sys(1..nbequ) := Create(p);
     eyp : Standard_Complex_Vectors.Vector(p'range);
-    jac : Jaco_Mat(1..nq,1..nv) := Create(p);
-    jac_eval : Eval_Jaco_Mat(1..nq,1..nv) := Create(jac);
-    numb,nbdef : natural32 := 0;
+    jac : Jaco_Mat(1..nbequ,1..nbvar) := Create(p);
+    jac_eval : Eval_Jaco_Mat(1..nbequ,1..nbvar) := Create(jac);
+    numb,nbdef,nit : natural32 := 0;
     nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
     nbtot : constant natural32 := Length_Of(sols);
     fail,infty : boolean;
@@ -2022,20 +2161,39 @@ package body Standard_Root_Refiners is
     refsols_last : Solution_List;
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..15)
                       := Standard_Condition_Tables.Create(15); 
-    tolrnk : constant double_float := tolsing*100.0;
+   -- tolrnk : constant double_float := tolsing*100.0;
+    tol_rnk : constant double_float := 100.0*tolsing;
+    order : constant integer32 := 3;
+    nv : Standard_Natural_Vectors.Vector(0..order);
+    nq : Standard_Natural_Vectors.Vector(0..order);
+    R1 : Standard_Natural_Vectors.Vector(1..order);
+    monkeys : Standard_Natural64_VecVecs.VecVec(1..order);
+    nd : Link_to_Eval_Node;
+    backup : Solution(nbvar);
+    merge : boolean := false; -- to merge clustered solutions
     h1 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nv);
+       := Standard_Random_Vectors.Random_Vector(1,nbvar);
     h2 : constant Standard_Complex_Vectors.Vector
-       := Standard_Random_Vectors.Random_Vector(1,nv);
+       := Standard_Random_Vectors.Random_Vector(1,nbvar);
     pl : Point_List;
 
   begin
-    if deflate
-     then put_line("Deflation not yet provided for overdetermined systems.");
+    if deflate then
+      declare
+      begin
+        nv(0) := natural32(nbvar);
+        nq(0) := natural32(nbequ); R1(1) := 0;
+        Create_Remember_Derivatives(jac,order,nd);
+        monkeys := Monomial_Keys(natural32(order),nv(0));
+      exception
+        when others =>
+          put_line("The system is too large to apply deflation.");
+          deflate := false;
+      end;
     end if;
     new_line(file);
     put_line(file,"THE SOLUTIONS :"); new_line(file);
-    put(file,nbtot,1); put(file," "); put(file,nv,1); new_line(file);
+    put(file,nbtot,1); put(file," "); put(file,nbvar,1); new_line(file);
     put_bar(file);
     for i in sa'range loop 
       numb := 0; nbdef := 0;
@@ -2044,12 +2202,29 @@ package body Standard_Root_Refiners is
       initres(i) := sa(i).res;
       infty := At_Infinity(sa(i).all,false,1.0E+8);
       if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
-        if wout then
+        if deflate then
+          backup := sa(i).all;
+          Reporting_Deflate(file,wout,max,p_eval,jac_eval,sa(i),order,
+                            tol_rnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          if wout then
+            Reporting_Gauss_Newton
+              (file,p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,
+               nit,max,fail);
+          else 
+            Silent_Gauss_Newton
+              (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
+          end if;
+          if fail and backup.res < sa(i).res then
+            sa(i).all := backup;
+            Silent_Gauss_Newton
+              (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,nit,max,fail);
+          end if;
+        elsif wout then
           Reporting_Gauss_Newton
-            (file,p_eval,jac_eval,sa(i).all,tolrnk,epsxa,epsfa,numb,max,fail);
+            (file,p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,numb,max,fail);
         else 
           Silent_Gauss_Newton
-            (p_eval,jac_eval,sa(i).all,tolrnk,epsxa,epsfa,numb,max,fail);
+            (p_eval,jac_eval,sa(i).all,tol_rnk,epsxa,epsfa,numb,max,fail);
         end if;
       else
         fail := true;
@@ -2060,8 +2235,11 @@ package body Standard_Root_Refiners is
       Write_Type
         (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
          tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
-      if not fail
-       then Append(refsols,refsols_last,sa(i).all);
+      if not fail then
+        Append(refsols,refsols_last,sa(i).all);
+        if deflate
+         then merge := merge and (sa(i).m > 1);
+        end if;
       end if;
       Standard_Condition_Tables.Update_Corrector(t_err,sa(i).all);
       Standard_Condition_Tables.Update_Condition(t_rco,sa(i).all);
@@ -2071,7 +2249,17 @@ package body Standard_Root_Refiners is
     Write_Global_Info
       (file,nbtot,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
     Deep_Clear(sols); sols := Create(sa); Clear(sa);
-    Clear(jac); Clear(p_eval); Clear(jac_eval);
+    if deflate then
+      Standard_Natural64_VecVecs.Clear(monkeys);
+      Standard_Jacobian_Trees.Clear(nd);
+      if merge then
+        Merge_Multiple_Solutions(sols,tolsing);
+        Merge_Multiple_Solutions(refsols,tolsing);
+      end if;
+    else
+      Clear(jac); -- otherwise crash after Clear(nd)
+    end if;
+    Clear(p_eval); Clear(jac_eval);
     Standard_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
     Clear(pl);
   end Reporting_Root_Sharpener;
@@ -2135,8 +2323,8 @@ package body Standard_Root_Refiners is
       Write_Type
        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
-      if not fail
-       then Append(refsols,refsols_last,sa(i).all);
+      if not fail then
+        Append(refsols,refsols_last,sa(i).all);
       end if;
       Standard_Condition_Tables.Update_Corrector(t_err,sa(i).all);
       Standard_Condition_Tables.Update_Condition(t_rco,sa(i).all);
