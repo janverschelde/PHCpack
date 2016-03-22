@@ -11,12 +11,14 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Multprec_Floating_Numbers;          use Multprec_Floating_Numbers;
 with Standard_Complex_Vectors;           use Standard_Complex_Vectors;
 with Symbol_Table;
-with Standard_Complex_Polynomials;       use Standard_Complex_Polynomials;
+with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;      use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
 with Standard_to_Multprec_Convertors;    use Standard_to_Multprec_Convertors;
+with DoblDobl_Complex_Polynomials;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Multprec_Complex_Poly_Systems;      use Multprec_Complex_Poly_Systems;
@@ -671,6 +673,7 @@ procedure mainvali ( infilename,outfilename : in string ) is
   -- DESCRIPTION :
   --   Verifciation by refining the roots and weeding out the solution set.
 
+    use Standard_Complex_Polynomials;
     use Standard_Complex_Solutions;
 
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -931,22 +934,34 @@ procedure mainvali ( infilename,outfilename : in string ) is
 
   procedure Standard_Newton_with_Deflation is
 
+  -- DESCRIPTION :
+  --   Reads the polynomial system in standard double precision
+  --   confirms the output to the file and calls the deflation method.
+
+    use Standard_Complex_Polynomials;
     use Standard_Complex_Solutions;
 
     infile,outfile : file_type;
     sysonfile : boolean;
     lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : Standard_Complex_Solutions.Solution_List;
+    nbequ,nbvar : natural32;
 
   begin
     Read_System(infile,infilename,lp,sysonfile);
+    nbequ := natural32(lp'last);
+    nbvar := Number_of_Unknowns(lp(lp'first));
     if outfilename = "" then
+      new_line;
       put_line("Reading the name of the output file...");
       declare
         new_outfilename : constant string := Read_String;
       begin
         Create_Output_File(outfile,new_outfilename);
-        put(outfile,natural32(lp'last),lp.all);
+        if nbequ = nbvar
+         then put(outfile,nbequ,lp.all);
+         else put(outfile,nbequ,nbvar,lp.all);
+        end if;
         Read_Solutions(infile,sysonfile,sols);
         new_line(outfile);
         put_line(outfile,"the solutions on input :");
@@ -955,7 +970,10 @@ procedure mainvali ( infilename,outfilename : in string ) is
       end;
     else
       Create_Output_File(outfile,outfilename);
-      put(outfile,natural32(lp'last),lp.all);
+      if nbequ = nbvar
+       then put(outfile,nbequ,lp.all);
+       else put(outfile,nbequ,nbvar,lp.all);
+      end if;
       Read_Solutions(infile,sysonfile,sols);
       new_line(outfile);
       put_line(outfile,"the solutions on input :");
@@ -966,22 +984,34 @@ procedure mainvali ( infilename,outfilename : in string ) is
 
   procedure DoblDobl_Newton_with_Deflation is
 
+  -- DESCRIPTION :
+  --   Reads the polynomial system in double double precision
+  --   confirms the output to the file and calls the deflation method.
+
+    use DoblDobl_Complex_Polynomials;
     use DoblDobl_Complex_Solutions;
 
     infile,outfile : file_type;
     sysonfile : boolean;
     lp : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : DoblDobl_Complex_Solutions.Solution_List;
+    nbequ,nbvar : natural32;
 
   begin
     Read_System(infile,infilename,lp,sysonfile);
+    nbequ := natural32(lp'last);
+    nbvar := Number_of_Unknowns(lp(lp'first));
     if outfilename = "" then
+      new_line;
       put_line("Reading the name of the output file...");
       declare
         new_outfilename : constant string := Read_String;
       begin
         Create_Output_File(outfile,new_outfilename);
-        put(outfile,lp.all);
+        if nbequ = nbvar
+         then put(outfile,nbequ,lp.all);
+         else put(outfile,nbequ,nbvar,lp.all);
+        end if;
         Read_Solutions(infile,sysonfile,sols);
         new_line(outfile);
         put_line(outfile,"the solutions on input :");
@@ -990,7 +1020,10 @@ procedure mainvali ( infilename,outfilename : in string ) is
       end;
     else
       Create_Output_File(outfile,outfilename);
-      put(outfile,lp.all);
+      if nbequ = nbvar
+       then put(outfile,nbequ,lp.all);
+       else put(outfile,nbequ,nbvar,lp.all);
+      end if;
       Read_Solutions(infile,sysonfile,sols);
       new_line(outfile);
       put_line(outfile,"the solutions on input :");
@@ -1001,22 +1034,34 @@ procedure mainvali ( infilename,outfilename : in string ) is
 
   procedure QuadDobl_Newton_with_Deflation is
 
+  -- DESCRIPTION :
+  --   Reads the polynomial system in quad double precision
+  --   confirms the output to the file and calls the deflation method.
+
+    use QuadDobl_Complex_Polynomials;
     use QuadDobl_Complex_Solutions;
 
     infile,outfile : file_type;
     sysonfile : boolean;
     lp : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     sols : QuadDobl_Complex_Solutions.Solution_List;
+    nbequ,nbvar : natural32;
 
   begin
     Read_System(infile,infilename,lp,sysonfile);
+    nbequ := natural32(lp'last);
+    nbvar := Number_of_Unknowns(lp(lp'first));
     if outfilename = "" then
+      new_line;
       put_line("Reading the name of the output file...");
       declare
         new_outfilename : constant string := Read_String;
       begin
         Create_Output_File(outfile,new_outfilename);
-        put(outfile,lp.all);
+        if nbequ = nbvar
+         then put(outfile,nbequ,lp.all);
+         else put(outfile,nbequ,nbvar,lp.all);
+        end if;
         Read_Solutions(infile,sysonfile,sols);
         new_line(outfile);
         put_line(outfile,"the solutions on input :");
@@ -1025,7 +1070,10 @@ procedure mainvali ( infilename,outfilename : in string ) is
       end;
     else
       Create_Output_File(outfile,outfilename);
-      put(outfile,lp.all);
+      if nbequ = nbvar
+       then put(outfile,nbequ,lp.all);
+       else put(outfile,nbequ,nbvar,lp.all);
+      end if;
       Read_Solutions(infile,sysonfile,sols);
       new_line(outfile);
       put_line(outfile,"the solutions on input :");
