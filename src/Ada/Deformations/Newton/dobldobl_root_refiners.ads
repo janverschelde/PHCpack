@@ -532,6 +532,31 @@ package DoblDobl_Root_Refiners is
                  s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
                  epsxa,epsfa,tolsing : in double_float;
                  numit : in out natural32; max : in natural32 );
+
+  -- DESCRIPTION :
+  --   Applies Newton's method to refine roots of p in s.
+  --   Stops when one conditions is satisfied:
+  --   (1) numit >= max (reached maximum number of iterations),
+  --   and for solutions x in s:
+  --   (2) x.err < epsxa (update factor to x is less than epsxa),
+  --   (3) x.res < epsfa (residual smaller than epsfa).
+  --   The silent versions write no output.
+
+  -- ON ENTRY :
+  --   p        a polynomial system;
+  --   s        current approximate solutions;
+  --   epsxa    accuracy requirement on update factor;
+  --   epsfa    accuracy requirement on residual;
+  --   tolsing  tolerance on inverse condition number of the Jacobian
+  --            matrix at the root for consideration as singular solution;
+  --   numit    number of iterations, must be zero on entry,
+  --   max      maximum number of iterations allowed.
+
+  -- ON RETURN :
+  --   s        updated approximate solutions;
+  --   refs     list that does not include the path failures;
+  --   numit    number of iterations spent on refining x;
+
   procedure Reporting_Root_Refiner
                ( file : in file_type;
                  p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
@@ -568,6 +593,7 @@ package DoblDobl_Root_Refiners is
   --   and for solutions x in s:
   --   (2) x.err < epsxa (update factor to x is less than epsxa),
   --   (3) x.res < epsfa (residual smaller than epsfa).
+  --   The reporting versions write output to file.
 
   -- ON ENTRY :
   --   file     for writing intermediate output and diagnostics;
@@ -585,6 +611,93 @@ package DoblDobl_Root_Refiners is
   -- ON RETURN :
   --   s        updated approximate solutions;
   --   refs     list that does not include the path failures;
+  --   numit    number of iterations spent on refining x.
+
+-- REFINEMENT with DEFLATION : 
+
+  procedure Silent_Root_Refiner
+               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 s : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa,tolsing : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 deflate : in out boolean );
+  procedure Silent_Root_Refiner
+               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa,tolsing : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 deflate : in out boolean );
+
+  -- DESCRIPTION :
+  --   Applies Newton's method to refine roots of p in s,
+  --   with deflation applied to singular solution if deflate is true.
+  --   Stops when one conditions is satisfied:
+  --   (1) numit >= max (reached maximum number of iterations),
+  --   and for solutions x in s:
+  --   (2) x.err < epsxa (update factor to x is less than epsxa),
+  --   (3) x.res < epsfa (residual smaller than epsfa).
+  --   The silent versions write no output.
+
+  -- ON ENTRY :
+  --   p        a polynomial system;
+  --   s        current approximate solutions;
+  --   epsxa    accuracy requirement on update factor;
+  --   epsfa    accuracy requirement on residual;
+  --   tolsing  tolerance on inverse condition number of the Jacobian
+  --            matrix at the root for consideration as singular solution;
+  --   numit    number of iterations, must be zero on entry,
+  --   max      maximum number of iterations allowed;
+  --   deflate  to ask for deflation of the singular solutions.
+
+  -- ON RETURN :
+  --   s        updated approximate solutions;
+  --   refs     list that does not include the path failures;
   --   numit    number of iterations spent on refining x;
+  --   deflate  set to false if system is too large.
+
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
+                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 s : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa,tolsing : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 deflate : in out boolean; wout : in boolean );
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
+                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa,tolsing : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 deflate : in out boolean; wout : in boolean );
+
+  -- DESCRIPTION :
+  --   Applies Newton's method to refine roots of p in s,
+  --   with deflation applied to singular solution if deflate is true.
+  --   Stops when one conditions is satisfied:
+  --   (1) numit >= max (reached maximum number of iterations),
+  --   and for solutions x in s:
+  --   (2) x.err < epsxa (update factor to x is less than epsxa),
+  --   (3) x.res < epsfa (residual smaller than epsfa).
+  --   The reporting versions write output to file.
+
+  -- ON ENTRY :
+  --   file     for writing intermediate output and diagnostics;
+  --   p        a polynomial system;
+  --   s        current approximate solutions;
+  --   epsxa    accuracy requirement on update factor;
+  --   epsfa    accuracy requirement on residual;
+  --   tolsing  tolerance on inverse condition number of the Jacobian
+  --            matrix at the root for consideration as singular solution;
+  --   numit    number of iterations, must be zero on entry,
+  --   max      maximum number of iterations allowed;
+  --   deflate  to ask for deflation of the singular solutions;
+  --   wout     if true, then information about each Newton update
+  --            is written to file.
+
+  -- ON RETURN :
+  --   s        updated approximate solutions;
+  --   refs     list that does not include the path failures;
+  --   numit    number of iterations spent on refining x;
+  --   deflate  set to false if system is too large.
 
 end DoblDobl_Root_Refiners;

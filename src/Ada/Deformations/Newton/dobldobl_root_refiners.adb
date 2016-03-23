@@ -4,16 +4,24 @@ with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Integer_Vectors;
+with Standard_Natural64_VecVecs;
 with DoblDobl_Complex_Vector_Norms;      use DoblDobl_Complex_Vector_Norms;
 with DoblDobl_Random_Vectors;
 with DoblDobl_Complex_Matrices;          use DoblDobl_Complex_Matrices;
 with DoblDobl_Complex_Linear_Solvers;    use DoblDobl_Complex_Linear_Solvers;
 with DoblDobl_Complex_Singular_Values;
+with DoblDobl_Complex_VecMats;
 with Standard_Complex_Solutions_io;
 with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with DoblDobl_Solution_Diagnostics;      use DoblDobl_Solution_Diagnostics;
 with DoblDobl_Condition_Tables;
 with DoblDobl_Condition_Report;
+with DoblDobl_Multiple_Solutions;
+with Handle_Underflow_Gracefully;
+with Monomial_Hashing;
+with DoblDobl_Jacobian_Trees;
+with DoblDobl_Deflation_Trees_io;
+with DoblDobl_Deflation_Methods;
 
 package body DoblDobl_Root_Refiners is
 
@@ -1171,6 +1179,570 @@ package body DoblDobl_Root_Refiners is
     DoblDobl_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
     Deep_Clear(s); s := Create(sa); Clear(sa);
     Clear(pl); Clear(f); Clear(jm); Clear(jf);
+  end Reporting_Root_Refiner;
+
+-- REFINEMENT WITH DEFLATION :
+
+  procedure Silent_Deflate
+              ( max : in natural32;
+                f : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                ls : in out Link_to_Solution; order : in integer32;
+                tolrnk : in double_float;
+                nd : in DoblDobl_Jacobian_Trees.Link_to_Eval_Node;
+                monkeys : in Standard_Natural64_VecVecs.VecVec;
+                nv,nq,R1 : in out Standard_Natural_Vectors.Vector;
+                nbitr,nbdef : out natural32; fail : out boolean ) is
+
+  -- DECRIPTION :
+  --   Performs deflation on a system with intermediate output.
+
+    use DoblDobl_Complex_Jaco_Matrices;
+    use DoblDobl_Deflation_Methods;
+    use DoblDobl_Deflation_Trees_io;
+
+    k : integer32 := 0;
+    rank,m : natural32;
+    done : boolean := false;
+    B : DoblDobl_Complex_VecMats.VecMat(1..order);
+    h : DoblDobl_Complex_VecVecs.VecVec(1..order);
+    x : DoblDobl_Complex_VecVecs.VecVec(0..order);
+    rsd : double_double;
+
+  begin
+    nbitr := 0;
+    nbdef := 0;
+    loop
+      if k = 0 then
+        Apply_Newton(max,f,jf,ls,tolrnk,rank);
+        done := (integer32(rank) = ls.n);
+        if not done then
+          x(0) := new DoblDobl_Complex_Vectors.Vector'(ls.v);
+        end if;
+        nbitr := 1;
+      else
+        Apply_Newton(max,f,jf,nd,monkeys,k,nv,nq,
+                     R1,B,h,x,ls.err,ls.rco,ls.res,tolrnk,rank);
+        ls.v := x(0).all;
+        done := (rank = nv(k));
+      end if;
+      exit when done or (k >= order);
+      k := k + 1; m := rank + 1;
+      Add_Deflation_Data(k,m,nv,nq,R1,B,h);
+      Add_Multipliers(f,jf,nd,monkeys,k,nv(0..k),
+                      nq(0..k),R1(1..k),B(1..k),h(1..k),x(0..k),rsd);
+      exit when (rsd > 0.1); -- deflation fails
+    end loop;
+    DoblDobl_Complex_Vectors.Clear(x(0));
+    for i in 1..k loop
+      DoblDobl_Complex_Matrices.Clear(B(i)); 
+      DoblDobl_Complex_Vectors.Clear(h(i));
+      DoblDobl_Complex_Vectors.Clear(x(i));
+    end loop;
+    fail := not done;
+    nbdef := natural32(k);
+  exception
+   -- when constraint_error -- same underflow as in Reporting_Newton may occur
+    when others -- 
+       => -- put_line("exception raised in reporting deflate");
+          Handle_Underflow_Gracefully.Underflow_to_Zero(ls.v);
+          ls.rco := Handle_Underflow_Gracefully.Underflow_to_Zero(ls.rco);
+          fail := not done;
+  end Silent_Deflate;
+
+  procedure Reporting_Deflate
+              ( file : in file_type; output : in boolean; 
+                max : in natural32;
+                f : DoblDobl_Complex_Poly_SysFun.Eval_Poly_Sys;
+                jf : DoblDobl_Complex_Jaco_Matrices.Eval_Jaco_Mat;
+                ls : in out Link_to_Solution; order : in integer32;
+                tolrnk : in double_float;
+                nd : in DoblDobl_Jacobian_Trees.Link_to_Eval_Node;
+                monkeys : in Standard_Natural64_VecVecs.VecVec;
+                nv,nq,R1 : in out Standard_Natural_Vectors.Vector;
+                nbitr,nbdef : out natural32; fail : out boolean ) is
+
+  -- DECRIPTION :
+  --   Performs deflation on a system with intermediate output.
+
+    use DoblDobl_Complex_Jaco_Matrices;
+    use DoblDobl_Deflation_Methods;
+    use DoblDobl_Deflation_Trees_io;
+
+    k : integer32 := 0;
+    rank,m : natural32;
+    done : boolean := false;
+    B : DoblDobl_Complex_VecMats.VecMat(1..order);
+    h : DoblDobl_Complex_VecVecs.VecVec(1..order);
+    x : DoblDobl_Complex_VecVecs.VecVec(0..order);
+    rsd : double_double;
+
+  begin
+    nbitr := 0;
+    nbdef := 0;
+    loop
+      if k = 0 then
+        Apply_Newton(file,output,max,f,jf,ls,tolrnk,rank);
+        done := (integer32(rank) = ls.n);
+        if not done then
+          x(0) := new DoblDobl_Complex_Vectors.Vector'(ls.v);
+        end if;
+        nbitr := 1;
+      else
+        Apply_Newton(file,output,max,f,jf,nd,monkeys,k,nv,nq,
+                     R1,B,h,x,ls.err,ls.rco,ls.res,tolrnk,rank);
+        ls.v := x(0).all;
+        done := (rank = nv(k));
+      end if;
+      exit when done or (k >= order);
+      k := k + 1; m := rank + 1;
+      Add_Multiplier_Symbols(natural32(k),m);
+      Add_Deflation_Data(k,m,nv,nq,R1,B,h);
+      Add_Multipliers(file,output,f,jf,nd,monkeys,k,nv(0..k),
+                      nq(0..k),R1(1..k),B(1..k),h(1..k),x(0..k),rsd);
+      exit when (rsd > 0.1); -- deflation fails
+    end loop;
+    DoblDobl_Complex_Vectors.Clear(x(0));
+    for i in 1..k loop
+      DoblDobl_Complex_Matrices.Clear(B(i)); 
+      DoblDobl_Complex_Vectors.Clear(h(i));
+      DoblDobl_Complex_Vectors.Clear(x(i));
+    end loop;
+    fail := not done;
+    nbdef := natural32(k);
+  exception
+   -- when constraint_error -- same underflow as in Reporting_Newton may occur
+    when others -- 
+       => -- put_line("exception raised in reporting deflate");
+          Handle_Underflow_Gracefully.Underflow_to_Zero(ls.v);
+          ls.rco := Handle_Underflow_Gracefully.Underflow_to_Zero(ls.rco);
+          fail := not done;
+  end Reporting_Deflate;
+
+  procedure Silent_Root_Refiner
+               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 s : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa,tolsing : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 deflate : in out boolean ) is
+
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_Jaco_Matrices;
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Multiple_Solutions;
+    use Monomial_Hashing;
+    use DoblDobl_Jacobian_Trees;
+    
+    nbequ : constant integer32 := p'last;
+    nbvar : constant integer32 := Head_Of(s).n;
+    f : Eval_Poly_Sys(p'range) := Create(p);
+    jm : Jaco_Mat(p'range,1..nbvar) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nbvar) := Create(jm);
+    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
+    tolrnk : constant double_float := 100.0*tolsing;
+    order : constant integer32 := 3;
+    nv : Standard_Natural_Vectors.Vector(0..order);
+    nq : Standard_Natural_Vectors.Vector(0..order);
+    R1 : Standard_Natural_Vectors.Vector(1..order);
+    monkeys : Standard_Natural64_VecVecs.VecVec(1..order);
+    nd : Link_to_Eval_Node;
+    backup : Solution(nbvar);
+    merge : boolean := false; -- to merge clustered solutions
+    nb,numb,nbdef : natural32;
+    fail,infty : boolean;
+    h1 : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Random_Vectors.Random_Vector(1,nbvar);
+    h2 : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Random_Vectors.Random_Vector(1,nbvar);
+    pl : Point_List;
+    initres : double_double;
+
+  begin
+    if deflate then
+      declare
+      begin
+        nv(0) := natural32(nbvar); nq(0) := natural32(nbequ); R1(1) := 0;
+        Create_Remember_Derivatives(jm,order,nd);
+        monkeys := Monomial_Keys(natural32(order),nv(0));
+      exception
+        when others =>
+          put_line("The system is too large to apply deflation.");
+          deflate := false;
+      end;
+    end if;
+    for i in sa'range loop
+      nb := 0;
+      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
+      initres := sa(i).res;
+      infty := At_Infinity(sa(i).all,false,1.0E+8);
+      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+        if deflate then
+          backup := sa(i).all;
+          Silent_Deflate(max,f,jf,sa(i),order,
+                         tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+          if fail and backup.res < sa(i).res then
+            sa(i).all := backup;
+            Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+          end if;
+        else
+          Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+        end if;
+        numit := numit + nb;
+      else
+        fail := true;
+      end if;
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,epsxa);
+      if not fail and deflate
+       then merge := merge and (sa(i).m > 1);
+      end if;
+    end loop;
+    Deep_Clear(s); s := Create(sa); Clear(sa);
+    if deflate then
+      Standard_Natural64_VecVecs.Clear(monkeys);
+      DoblDobl_Jacobian_Trees.Clear(nd);
+      if merge then
+        Merge_Multiple_Solutions(s,tolsing);
+      end if;
+    else
+      Clear(jm); -- otherwise crash after Clear(nd)
+    end if;
+    Clear(pl); Clear(f); Clear(jf);
+  end Silent_Root_Refiner;
+
+  procedure Silent_Root_Refiner
+               ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa,tolsing : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 deflate : in out boolean ) is
+
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_Jaco_Matrices;
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Multiple_Solutions;
+    use Monomial_Hashing;
+    use DoblDobl_Jacobian_Trees;
+    
+    nbequ : constant integer32 := p'last;
+    nbvar : constant integer32 := Head_Of(s).n;
+    f : Eval_Poly_Sys(p'range) := Create(p);
+    jm : Jaco_Mat(p'range,1..nbvar) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nbvar) := Create(jm);
+    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
+    tolrnk : constant double_float := 100.0*tolsing;
+    order : constant integer32 := 3;
+    nv : Standard_Natural_Vectors.Vector(0..order);
+    nq : Standard_Natural_Vectors.Vector(0..order);
+    R1 : Standard_Natural_Vectors.Vector(1..order);
+    monkeys : Standard_Natural64_VecVecs.VecVec(1..order);
+    nd : Link_to_Eval_Node;
+    backup : Solution(nbvar);
+    merge : boolean := false; -- to merge clustered solutions
+    refs_last : Solution_List;
+    nb,numb,nbdef : natural32;
+    fail,infty : boolean;
+    h1 : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Random_Vectors.Random_Vector(1,nbvar);
+    h2 : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Random_Vectors.Random_Vector(1,nbvar);
+    pl : Point_List;
+    initres : double_double;
+
+  begin
+    if deflate then
+      declare
+      begin
+        nv(0) := natural32(nbvar); nq(0) := natural32(nbequ); R1(1) := 0;
+        Create_Remember_Derivatives(jm,order,nd);
+        monkeys := Monomial_Keys(natural32(order),nv(0));
+      exception
+        when others =>
+          put_line("The system is too large to apply deflation.");
+          deflate := false;
+      end;
+    end if;
+    for i in sa'range loop
+      nb := 0;
+      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
+      initres := sa(i).res;
+      infty := At_Infinity(sa(i).all,false,1.0E+8);
+      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+        if deflate then
+          backup := sa(i).all;
+          Silent_Deflate(max,f,jf,sa(i),order,
+                         tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+          if fail and backup.res < sa(i).res then
+            sa(i).all := backup;
+            Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+          end if;
+        else
+          Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+        end if;
+        numit := numit + nb;
+      else
+        fail := true;
+      end if;
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,epsxa);
+      if not fail then
+        Append(refs,refs_last,sa(i).all);
+        if deflate
+         then merge := merge and (sa(i).m > 1);
+        end if;
+      end if;
+    end loop;
+    Deep_Clear(s); s := Create(sa); Clear(sa);
+    if deflate then
+      Standard_Natural64_VecVecs.Clear(monkeys);
+      DoblDobl_Jacobian_Trees.Clear(nd);
+      if merge then
+        Merge_Multiple_Solutions(s,tolsing);
+        Merge_Multiple_Solutions(refs,tolsing);
+      end if;
+    else
+      Clear(jm); -- otherwise crash after Clear(nd)
+    end if;
+    Clear(pl); Clear(f); Clear(jf);
+  end Silent_Root_Refiner;
+
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
+                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 s : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa,tolsing : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 deflate : in out boolean; wout : in boolean ) is
+
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_Jaco_Matrices;
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Multiple_Solutions;
+    use Monomial_Hashing;
+    use DoblDobl_Jacobian_Trees;
+    
+    nbequ : constant integer32 := p'last;
+    nbvar : constant integer32 := Head_Of(s).n;
+    f : Eval_Poly_Sys(p'range) := Create(p);
+    jm : Jaco_Mat(p'range,1..nbvar) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nbvar) := Create(jm);
+    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
+    tolrnk : constant double_float := 100.0*tolsing;
+    order : constant integer32 := 3;
+    nv : Standard_Natural_Vectors.Vector(0..order);
+    nq : Standard_Natural_Vectors.Vector(0..order);
+    R1 : Standard_Natural_Vectors.Vector(1..order);
+    monkeys : Standard_Natural64_VecVecs.VecVec(1..order);
+    nd : Link_to_Eval_Node;
+    backup : Solution(nbvar);
+    merge : boolean := false; -- to merge clustered solutions
+    nb,numb,nbdef : natural32;
+    nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
+    t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..30)
+                      := DoblDobl_Condition_Tables.Create(30); 
+    fail,infty : boolean;
+    h1 : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Random_Vectors.Random_Vector(1,nbvar);
+    h2 : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Random_Vectors.Random_Vector(1,nbvar);
+    pl : Point_List;
+    initres : double_double;
+
+  begin
+    if deflate then
+      declare
+      begin
+        nv(0) := natural32(nbvar); nq(0) := natural32(nbequ); R1(1) := 0;
+        Create_Remember_Derivatives(jm,order,nd);
+        monkeys := Monomial_Keys(natural32(order),nv(0));
+      exception
+        when others =>
+          put_line("The system is too large to apply deflation.");
+          deflate := false;
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,sa'last,1); put(file," "); put(file,nbvar,1); new_line(file);
+    Standard_Complex_Solutions_io.put_bar(file);
+    for i in sa'range loop
+      nb := 0;
+      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
+      initres := sa(i).res;
+      infty := At_Infinity(sa(i).all,false,1.0E+8);
+      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+        if deflate then
+          backup := sa(i).all;
+          Reporting_Deflate(file,wout,max,f,jf,sa(i),order,
+                            tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          if wout
+           then Reporting_Newton(file,f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+           else Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+          end if;
+          if fail and backup.res < sa(i).res then
+            sa(i).all := backup;
+            Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+          end if;
+        elsif wout then
+          Reporting_Newton(file,f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+        else
+          Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+        end if;
+        numit := numit + nb;
+      else
+        fail := true;
+      end if;
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,epsxa);
+      Write_Info(file,sa(i).all,initres,natural32(i),nb,0,fail,infty);
+      Write_Type
+        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
+         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+      DoblDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
+      DoblDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
+      DoblDobl_Condition_Tables.Update_Residuals(t_res,sa(i).all);
+      if not fail and deflate
+       then merge := merge and (sa(i).m > 1);
+      end if;
+    end loop;
+    Write_Global_Info
+      (file,natural32(sa'last),
+       nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+    DoblDobl_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
+    Deep_Clear(s); s := Create(sa); Clear(sa);
+    if deflate then
+      Standard_Natural64_VecVecs.Clear(monkeys);
+      DoblDobl_Jacobian_Trees.Clear(nd);
+      if merge then
+        Merge_Multiple_Solutions(s,tolsing);
+      end if;
+    else
+      Clear(jm); -- otherwise crash after Clear(nd)
+    end if;
+    Clear(pl); Clear(f); Clear(jf);
+  end Reporting_Root_Refiner;
+
+  procedure Reporting_Root_Refiner
+               ( file : in file_type;
+                 p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                 s,refs : in out DoblDobl_Complex_Solutions.Solution_List;
+                 epsxa,epsfa,tolsing : in double_float;
+                 numit : in out natural32; max : in natural32;
+                 deflate : in out boolean; wout : in boolean ) is
+
+    use DoblDobl_Complex_Poly_SysFun;
+    use DoblDobl_Complex_Jaco_Matrices;
+    use DoblDobl_Complex_Solutions;
+    use DoblDobl_Multiple_Solutions;
+    use Monomial_Hashing;
+    use DoblDobl_Jacobian_Trees;
+    
+    nbequ : constant integer32 := p'last;
+    nbvar : constant integer32 := Head_Of(s).n;
+    f : Eval_Poly_Sys(p'range) := Create(p);
+    jm : Jaco_Mat(p'range,1..nbvar) := Create(p);
+    jf : Eval_Jaco_Mat(p'range,1..nbvar) := Create(jm);
+    sa : Solution_Array(1..integer32(Length_Of(s))) := Create(s);
+    tolrnk : constant double_float := 100.0*tolsing;
+    order : constant integer32 := 3;
+    nv : Standard_Natural_Vectors.Vector(0..order);
+    nq : Standard_Natural_Vectors.Vector(0..order);
+    R1 : Standard_Natural_Vectors.Vector(1..order);
+    monkeys : Standard_Natural64_VecVecs.VecVec(1..order);
+    nd : Link_to_Eval_Node;
+    backup : Solution(nbvar);
+    merge : boolean := false; -- to merge clustered solutions
+    refs_last : Solution_List;
+    nb,numb,nbdef : natural32;
+    nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
+    t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..30)
+                      := DoblDobl_Condition_Tables.Create(30); 
+    fail,infty : boolean;
+    h1 : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Random_Vectors.Random_Vector(1,nbvar);
+    h2 : constant DoblDobl_Complex_Vectors.Vector
+       := DoblDobl_Random_Vectors.Random_Vector(1,nbvar);
+    pl : Point_List;
+    initres : double_double;
+
+  begin
+    if deflate then
+      declare
+      begin
+        nv(0) := natural32(nbvar); nq(0) := natural32(nbequ); R1(1) := 0;
+        Create_Remember_Derivatives(jm,order,nd);
+        monkeys := Monomial_Keys(natural32(order),nv(0));
+      exception
+        when others =>
+          put_line("The system is too large to apply deflation.");
+          deflate := false;
+      end;
+    end if;
+    new_line(file);
+    put_line(file,"THE SOLUTIONS :");
+    put(file,sa'last,1); put(file," "); put(file,nbvar,1); new_line(file);
+    Standard_Complex_Solutions_io.put_bar(file);
+    for i in sa'range loop
+      nb := 0;
+      sa(i).res := Sum_Norm(Eval(f,sa(i).v));
+      initres := sa(i).res;
+      infty := At_Infinity(sa(i).all,false,1.0E+8);
+      if not infty and sa(i).res < 0.1 and sa(i).err < 0.1 then
+        if deflate then
+          backup := sa(i).all;
+          Reporting_Deflate(file,wout,max,f,jf,sa(i),order,
+                            tolrnk,nd,monkeys,nv,nq,R1,numb,nbdef,fail);
+          if wout
+           then Reporting_Newton(file,f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+           else Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+          end if;
+          if fail and backup.res < sa(i).res then
+            sa(i).all := backup;
+            Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+          end if;
+        elsif wout then
+          Reporting_Newton(file,f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+        else
+          Silent_Newton(f,jf,sa(i).all,epsxa,epsfa,nb,max,fail);
+        end if;
+        numit := numit + nb;
+      else
+        fail := true;
+      end if;
+      Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
+                   infty,false,tolsing,epsxa);
+      Write_Info(file,sa(i).all,initres,natural32(i),nb,0,fail,infty);
+      Write_Type
+        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
+         tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+      DoblDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
+      DoblDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
+      DoblDobl_Condition_Tables.Update_Residuals(t_res,sa(i).all);
+      if not fail then
+        Append(refs,refs_last,sa(i).all);
+        if deflate
+         then merge := merge and (sa(i).m > 1);
+        end if;
+      end if;
+    end loop;
+    Write_Global_Info
+      (file,natural32(sa'last),
+       nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
+    DoblDobl_Condition_Tables.Write_Tables(file,t_err,t_res,t_rco);
+    Deep_Clear(s); s := Create(sa); Clear(sa);
+    if deflate then
+      Standard_Natural64_VecVecs.Clear(monkeys);
+      DoblDobl_Jacobian_Trees.Clear(nd);
+      if merge then
+        Merge_Multiple_Solutions(s,tolsing);
+        Merge_Multiple_Solutions(refs,tolsing);
+      end if;
+    else
+      Clear(jm); -- otherwise crash after Clear(nd)
+    end if;
+    Clear(pl); Clear(f); Clear(jf);
   end Reporting_Root_Refiner;
 
 end DoblDobl_Root_Refiners;

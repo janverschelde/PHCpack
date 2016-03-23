@@ -10,6 +10,7 @@ with Multprec_Complex_Laur_Systems;
 with DoblDobl_Polynomial_Convertors;     use DoblDobl_Polynomial_Convertors;
 with DoblDobl_Complex_Laurentials;       use DoblDobl_Complex_Laurentials;
 with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Laur_Systems_io;   use DoblDobl_Complex_Laur_Systems_io;
 with DoblDobl_Laur_Poly_Convertors;
 with QuadDobl_Complex_Laurentials;       use QuadDobl_Complex_Laurentials;
@@ -139,7 +140,7 @@ package body Drivers_to_dd_qd_Root_Refiners is
     if DoblDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(dd_p.all) then
       tstart(timer);
      -- DoblDobl_Root_Refiner(dd_p.all,dd_s);
-      Reporting_Root_Refiner
+      Reporting_Root_Refiner -- no deflate for Laurent systems yet
         (file,dd_p.all,dd_s,epsxa,epsfa,tolsing,numit,maxit,wout);
       tstop(timer);
     else
@@ -151,7 +152,7 @@ package body Drivers_to_dd_qd_Root_Refiners is
         tstart(timer);
        -- DoblDobl_Root_Refiner(q,dd_s);
         Reporting_Root_Refiner
-          (file,q,dd_s,epsxa,epsfa,tolsing,numit,maxit,wout);
+          (file,q,dd_s,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
         tstop(timer);
       end;
     end if;
@@ -197,7 +198,7 @@ package body Drivers_to_dd_qd_Root_Refiners is
     if QuadDobl_Laur_Poly_Convertors.Is_Genuine_Laurent(qd_p.all) then
       tstart(timer);
      -- QuadDobl_Root_Refiner(qd_p.all,qd_s);
-      Reporting_Root_Refiner
+      Reporting_Root_Refiner  -- no deflation for Laurent systems yet
         (file,qd_p.all,qd_s,epsxa,epsfa,tolsing,numit,maxit,wout);
       tstop(timer);
     else
@@ -209,7 +210,7 @@ package body Drivers_to_dd_qd_Root_Refiners is
         tstart(timer);
        -- QuadDobl_Root_Refiner(q,qd_s);
         Reporting_Root_Refiner
-          (file,q,qd_s,epsxa,epsfa,tolsing,numit,maxit,wout);
+          (file,q,qd_s,epsxa,epsfa,tolsing,numit,maxit,deflate,wout);
         tstop(timer);
       end;
     end if;

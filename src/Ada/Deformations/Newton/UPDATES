@@ -2,7 +2,8 @@ Wed 23 Mar 2016 : updated standard_complex_newton_steps with function to
   guard against all singular values equal to zero.
   Did the same in {dobldobl,quaddobl,multprec}_complex_newton_steps.
   Extended handle_underflow_gracefully with procedures in double double
-  and quad double precision.
+  and quad double precision.  To {dobldobl,quaddobl}_root_refiners,
+  added deflation, updated drivers_to_dd_qd_root_refiners.adb.
 
 Tue 22 Mar 2016 : upgraded standard_root_refiners to deflate overdetermined
   polynomial systems.
