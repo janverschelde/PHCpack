@@ -7,6 +7,24 @@ with Multprec_Numerical_Rank;           use Multprec_Numerical_Rank;
 
 package body Multprec_Complex_Newton_Steps is
 
+  function Inverse_Condition_Number ( s : Vector ) return Floating_Number is
+
+    res : Floating_Number := REAL_PART(s(s'last));
+    den : Floating_Number := REAL_PART(s(s'first));
+    one : Floating_Number := Create(natural32(1));
+    den_one : Floating_Number := one + den;
+
+  begin
+    if Equal(one,den_one) then
+      Clear(res);
+      res := Create(natural32(0));
+    else
+      Div(res,den);
+    end if;
+    Clear(den); Clear(den_one);
+    return res;
+  end Inverse_Condition_Number;
+
   procedure Silent_Newton_Step
                 ( n : in natural32; z : in out Vector; tol : in double_float;
                   err,rco,res : out Floating_Number; rank : out natural32 ) is
@@ -21,13 +39,10 @@ package body Multprec_Complex_Newton_Steps is
     s : Vector(1..m);
     info : integer32;
     dz : Vector(z'range);
-    rtmp : Floating_Number;
 
   begin
     SVD(ejm,integer32(n),p,s,e,u,v,11,info);
-    rco := REAL_PART(s(s'last));
-    rtmp := REAL_PART(s(s'first));
-    Div(rco,rtmp); Clear(rtmp);
+    rco := Inverse_Condition_Number(s);
     rank := Numerical_Rank(s,tol);
     Min(y);
     dz := Solve(u,v,s,y);
@@ -61,9 +76,7 @@ package body Multprec_Complex_Newton_Steps is
     SVD(ejm,integer32(n),p,s,e,u,v,11,info);
     put_line(file,"The singular values : ");
     put_line(file,s);
-    rco := REAL_PART(s(s'last));
-    rtmp := REAL_PART(s(s'first));
-    Div(rco,rtmp); Clear(rtmp);
+    rco := Inverse_Condition_Number(s);
     rank := Numerical_Rank(s,tol);
     Min(y);
     dz := Solve(u,v,s,y);
@@ -94,9 +107,7 @@ package body Multprec_Complex_Newton_Steps is
 
   begin
     SVD(ejm,integer32(n),p,s,e,u,v,11,info);
-    rco := REAL_PART(s(s'last));
-    rtmp := REAL_PART(s(s'first));
-    Div(rco,rtmp); Clear(rtmp);
+    rco := Inverse_Condition_Number(s);
     rank := Numerical_Rank(s,tol);
     Min(y);
     dz := Solve(u,v,s,y);
@@ -130,15 +141,7 @@ package body Multprec_Complex_Newton_Steps is
     SVD(ejm,integer32(n),p,s,e,u,v,11,info);
     put_line(file,"The singular values : ");
     put_line(file,s);
-    declare
-    begin
-      rco := REAL_PART(s(s'last));
-      rtmp := REAL_PART(s(s'first));
-      Div(rco,rtmp); Clear(rtmp);
-    exception
-      when others => put_line("Exception raised in rco computation.");
-                     raise;
-    end;
+    rco := Inverse_Condition_Number(s);
     rank := Numerical_Rank(s,tol);
     Min(y);
     dz := Solve(u,v,s,y);
@@ -149,10 +152,6 @@ package body Multprec_Complex_Newton_Steps is
     y := f(z);
     res := Max_Norm(y);
     Clear(y);
-  exception
-    when others => put_line("Exception raised in "
-                     & "Reporting_Newton_Step_with_Singular_Values");
-                   raise;
   end Reporting_Newton_Step_with_Singular_Values;
 
 end Multprec_Complex_Newton_Steps;

@@ -12,6 +12,14 @@ package Multprec_Complex_Newton_Steps is
 --   of Newton's method, using a singular value decomposition on the
 --   Jacobian matrix, in multiprecision complex floating-point arithmetic.
 
+  function Inverse_Condition_Number ( s : Vector ) return Floating_Number;
+
+  -- DESCRIPTION :
+  --   Given in s the sequence of singular values, the inverse condition
+  --   number is the last number in s divided by the first number in s.
+  --   In case the first number equals zero (with respect to mach eps),
+  --   then zero is returned.
+
   generic
 
     with function f  ( x : Vector ) return Vector;  -- returns function value

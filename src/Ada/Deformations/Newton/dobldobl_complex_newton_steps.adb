@@ -7,6 +7,19 @@ with DoblDobl_Numerical_Rank;           use DoblDobl_Numerical_Rank;
 
 package body DoblDobl_Complex_Newton_Steps is
 
+  function Inverse_Condition_Number ( s : Vector ) return double_double is
+
+    res : double_double := create(0.0);
+    one : constant double_double := create(1.0);
+    den : constant double_double := REAL_PART(s(s'first));
+
+  begin
+    if den + one /= one
+     then res := REAL_PART(s(s'last))/den;
+    end if;
+    return res;
+  end Inverse_Condition_Number;
+
   procedure Silent_Newton_Step
                 ( n : in natural32; z : in out Vector; tol : double_float;
                   err,rco,res : out double_double; rank : out natural32 ) is
@@ -25,7 +38,7 @@ package body DoblDobl_Complex_Newton_Steps is
   begin
     y := f(z); ejm := jm(z);
     SVD(ejm,integer32(n),p,s,e,u,v,11,info);
-    rco := REAL_PART(s(s'last))/REAL_PART(s(s'first));
+    rco := Inverse_Condition_Number(s);
     rank := natural32(Numerical_Rank(s,tol));
     dz := Solve(u,v,s,-y);
     err := Max_Norm(dz);
@@ -55,7 +68,7 @@ package body DoblDobl_Complex_Newton_Steps is
     SVD(ejm,integer32(n),p,s,e,u,v,11,info);
     put_line(file,"The singular values : ");
     put_line(file,s);
-    rco := REAL_PART(s(s'last))/REAL_PART(s(s'first));
+    rco := Inverse_Condition_Number(s);
     rank := natural32(Numerical_Rank(s,tol));
     dz := Solve(u,v,s,-y);
     err := Max_Norm(dz);
@@ -82,7 +95,7 @@ package body DoblDobl_Complex_Newton_Steps is
   begin
     y := f(z); ejm := jm(z);
     SVD(ejm,integer32(n),p,s,e,u,v,11,info);
-    rco := REAL_PART(s(s'last))/REAL_PART(s(s'first));
+    rco := Inverse_Condition_Number(s);
     rank := natural32(Numerical_Rank(s,tol));
     dz := Solve(u,v,s,-y);
     err := Max_Norm(dz);
@@ -112,7 +125,7 @@ package body DoblDobl_Complex_Newton_Steps is
     SVD(ejm,integer32(n),p,s,e,u,v,11,info);
     put_line(file,"The singular values : ");
     put_line(file,s);
-    rco := REAL_PART(s(s'last))/REAL_PART(s(s'first));
+    rco := Inverse_Condition_Number(s);
     rank := natural32(Numerical_Rank(s,tol));
     dz := Solve(u,v,s,-y);
     err := Max_Norm(dz);

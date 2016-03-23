@@ -1,5 +1,6 @@
 Wed 23 Mar 2016 : updated standard_complex_newton_steps with function to
   guard against all singular values equal to zero.
+  Did the same in {dobldobl,quaddobl,multprec}_complex_newton_steps.
 
 Tue 22 Mar 2016 : upgraded standard_root_refiners to deflate overdetermined
   polynomial systems.
@@ -55,7 +56,7 @@ Sat 22 Nov 2014 : changes in varbprec_complex_newton_steps.adb for compiler
 Fri 21 Nov 2014 : updated varbprec_complex_newton_steps with improved
   condition numbers for the evaluation problem for small residuals.
   Added to varbprec_complex_newton_steps versions for Laurent polynomial
-  systems, which cuased changes in verification_of_solutions.adb and
+  systems, which caused changes in verification_of_solutions.adb and
   the test program ts_vmpnewt.adb.  To verification_of_solutions, added
   procedure to work on Laurent polynomial systems, tested by ts_vmpnewt.
 
