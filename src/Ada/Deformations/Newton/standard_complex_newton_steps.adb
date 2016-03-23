@@ -7,6 +7,18 @@ with Standard_Numerical_Rank;           use Standard_Numerical_Rank;
 
 package body Standard_Complex_Newton_Steps is
 
+  function Inverse_Condition_Number ( s : Vector ) return double_float is
+
+    res : double_float := 0.0;
+    den : constant double_float := REAL_PART(s(s'first));
+
+  begin
+    if den + 1.0 /= 1.0
+     then res := REAL_PART(s(s'last))/den;
+    end if;
+    return res;
+  end Inverse_Condition_Number;
+
   procedure Silent_Newton_Step
                 ( n : in natural32; z : in out Vector; tol : double_float;
                   err,rco,res : out double_float; rank : out natural32 ) is
@@ -25,7 +37,7 @@ package body Standard_Complex_Newton_Steps is
   begin
     y := f(z); ejm := jm(z);
     SVD(ejm,integer32(n),p,s,e,u,v,11,info);
-    rco := REAL_PART(s(s'last))/REAL_PART(s(s'first));
+    rco := Inverse_Condition_Number(s);
     rank := natural32(Numerical_Rank(s,tol));
     dz := Solve(u,v,s,-y);
     err := Max_Norm(dz);
@@ -55,7 +67,7 @@ package body Standard_Complex_Newton_Steps is
     SVD(ejm,integer32(n),p,s,e,u,v,11,info);
     put_line(file,"The singular values : ");
     put_line(file,s);
-    rco := REAL_PART(s(s'last))/REAL_PART(s(s'first));
+    rco := Inverse_Condition_Number(s);
     rank := natural32(Numerical_Rank(s,tol));
     dz := Solve(u,v,s,-y);
     err := Max_Norm(dz);
@@ -82,7 +94,7 @@ package body Standard_Complex_Newton_Steps is
   begin
     y := f(z); ejm := jm(z);
     SVD(ejm,integer32(n),p,s,e,u,v,11,info);
-    rco := REAL_PART(s(s'last))/REAL_PART(s(s'first));
+    rco := Inverse_Condition_Number(s);
     rank := natural32(Numerical_Rank(s,tol));
     dz := Solve(u,v,s,-y);
     err := Max_Norm(dz);
@@ -112,7 +124,7 @@ package body Standard_Complex_Newton_Steps is
     SVD(ejm,integer32(n),p,s,e,u,v,11,info);
     put_line(file,"The singular values : ");
     put_line(file,s);
-    rco := REAL_PART(s(s'last))/REAL_PART(s(s'first));
+    rco := Inverse_Condition_Number(s);
     rank := natural32(Numerical_Rank(s,tol));
     dz := Solve(u,v,s,-y);
     err := Max_Norm(dz);

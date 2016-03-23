@@ -1,3 +1,6 @@
+Wed 23 Mar 2016 : updated standard_complex_newton_steps with function to
+  guard against all singular values equal to zero.
+
 Tue 22 Mar 2016 : upgraded standard_root_refiners to deflate overdetermined
   polynomial systems.
 
