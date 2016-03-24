@@ -24,7 +24,7 @@ package body Root_Refining_Parameters is
   begin
     epsxa := 1.0E-12;       -- precision for correction on x
     epsfa := 1.0E-12;       -- precision for residual 
-    tolsing := 1.0E-12;     -- tolerance on inverse condition numbers
+    tolsing := 1.0E-8;     -- tolerance on inverse condition numbers
     maxit := 3;             -- maximal number of Newton iterations
     deflate := true;        -- if deflation is wanted
     wout := false;          -- if intermediate output is wanted
@@ -36,7 +36,7 @@ package body Root_Refining_Parameters is
   begin
     epsxa := 1.0E-16;       -- precision for correction on x
     epsfa := 1.0E-16;       -- precision for residual 
-    tolsing := 1.0E-16;     -- tolerance on inverse condition numbers
+    tolsing := 1.0E-8;     -- tolerance on inverse condition numbers
     maxit := 3;             -- maximal number of Newton iterations
     deflate := true;        -- if deflation is wanted
     wout := false;          -- if intermediate output is wanted

@@ -1,3 +1,6 @@
+Thu 24 Mar 2016 : in {dobldobl,quaddobl}_root_refiners.adb, better reporting
+  of the deflations.  Adjusted defaults in root_refining_parameters.adb
+
 Wed 23 Mar 2016 : updated standard_complex_newton_steps with function to
   guard against all singular values equal to zero.
   Did the same in {dobldobl,quaddobl,multprec}_complex_newton_steps.

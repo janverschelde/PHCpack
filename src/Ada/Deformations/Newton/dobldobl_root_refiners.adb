@@ -1348,7 +1348,7 @@ package body DoblDobl_Root_Refiners is
     nd : Link_to_Eval_Node;
     backup : Solution(nbvar);
     merge : boolean := false; -- to merge clustered solutions
-    nb,numb,nbdef : natural32;
+    nb,numb,nbdef : natural32 := 0;
     fail,infty : boolean;
     h1 : constant DoblDobl_Complex_Vectors.Vector
        := DoblDobl_Random_Vectors.Random_Vector(1,nbvar);
@@ -1393,7 +1393,7 @@ package body DoblDobl_Root_Refiners is
         fail := true;
       end if;
       Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,false,tolsing,epsxa);
+                   infty,deflate,tolsing,epsxa);
       if not fail and deflate
        then merge := merge and (sa(i).m > 1);
       end if;
@@ -1441,7 +1441,7 @@ package body DoblDobl_Root_Refiners is
     backup : Solution(nbvar);
     merge : boolean := false; -- to merge clustered solutions
     refs_last : Solution_List;
-    nb,numb,nbdef : natural32;
+    nb,numb,nbdef : natural32 := 0;
     fail,infty : boolean;
     h1 : constant DoblDobl_Complex_Vectors.Vector
        := DoblDobl_Random_Vectors.Random_Vector(1,nbvar);
@@ -1486,7 +1486,7 @@ package body DoblDobl_Root_Refiners is
         fail := true;
       end if;
       Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,false,tolsing,epsxa);
+                   infty,deflate,tolsing,epsxa);
       if not fail then
         Append(refs,refs_last,sa(i).all);
         if deflate
@@ -1538,7 +1538,7 @@ package body DoblDobl_Root_Refiners is
     nd : Link_to_Eval_Node;
     backup : Solution(nbvar);
     merge : boolean := false; -- to merge clustered solutions
-    nb,numb,nbdef : natural32;
+    nb,numb,nbdef : natural32 := 0;
     nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..30)
                       := DoblDobl_Condition_Tables.Create(30); 
@@ -1595,10 +1595,10 @@ package body DoblDobl_Root_Refiners is
         fail := true;
       end if;
       Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,false,tolsing,epsxa);
-      Write_Info(file,sa(i).all,initres,natural32(i),nb,0,fail,infty);
+                   infty,deflate,tolsing,epsxa);
+      Write_Info(file,sa(i).all,initres,natural32(i),nb,nbdef,fail,infty);
       Write_Type
-        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
+        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,
          tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
       DoblDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
       DoblDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
@@ -1655,7 +1655,7 @@ package body DoblDobl_Root_Refiners is
     backup : Solution(nbvar);
     merge : boolean := false; -- to merge clustered solutions
     refs_last : Solution_List;
-    nb,numb,nbdef : natural32;
+    nb,numb,nbdef : natural32 := 0;
     nbfail,nbinfty,nbreg,nbsing,nbclus,nbreal,nbcomp : natural32 := 0;
     t_err,t_rco,t_res : Standard_Natural_Vectors.Vector(0..30)
                       := DoblDobl_Condition_Tables.Create(30); 
@@ -1712,10 +1712,10 @@ package body DoblDobl_Root_Refiners is
         fail := true;
       end if;
       Multiplicity(h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,
-                   infty,false,tolsing,epsxa);
-      Write_Info(file,sa(i).all,initres,natural32(i),nb,0,fail,infty);
+                   infty,deflate,tolsing,epsxa);
+      Write_Info(file,sa(i).all,initres,natural32(i),nb,nbdef,fail,infty);
       Write_Type
-        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,false,
+        (file,h1,h2,pl,sa(i),natural32(i),sa(sa'first..i),fail,infty,deflate,
          tolsing,epsxa,nbfail,nbinfty,nbreal,nbcomp,nbreg,nbsing,nbclus);
       DoblDobl_Condition_Tables.Update_Corrector(t_err,sa(i).all);
       DoblDobl_Condition_Tables.Update_Condition(t_rco,sa(i).all);
