@@ -1,3 +1,6 @@
+Thu 24 Mar 2016 : adjusted {dobldobl,quaddobl}_blackbox_continuations.adb
+  so deflation is applied in the root refiners.
+
 Sun 20 Mar 2016 : added root refiners for overdetermined path tracking
   in mainpoco.adb.
 
