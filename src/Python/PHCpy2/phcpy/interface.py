@@ -176,11 +176,15 @@ def load_multprec_system():
         result.append(py2c_syscon_load_multprec_polynomial(ind))
     return result
 
-def store_standard_laurent_system(polsys):
+def store_standard_laurent_system(polsys, **nbvar):
     """
     Stores the Laurent polynomials represented by the list of
     strings in polsys into the container for systems
     with coefficients in standard double precision.
+    If nbvar is omitted, then the system is assumed to be square.
+    Otherwise, suppose the number of variables equals 2 and pols is the list
+    of polynomials, then store_standard_Laurent_system(pols, nbvar=2)
+    will store the polynomials in pols in the standard systems container.
     """
     from phcpy.phcpy2c2 import py2c_syscon_clear_standard_Laurent_system
     from phcpy.phcpy2c2 \
@@ -192,16 +196,24 @@ def store_standard_laurent_system(polsys):
     for cnt in range(0, dim):
         pol = polsys[cnt]
         nchar = len(pol)
-        fail = py2c_syscon_store_standard_Laurential(nchar, dim, cnt+1, pol)
+        if(len(nbvar) == 0):
+            fail = py2c_syscon_store_standard_Laurential(nchar, dim, cnt+1, pol)
+        else: 
+            nvr = nbvar.values()[0]
+            fail = py2c_syscon_store_standard_Laurential(nchar, nvr, cnt+1, pol)
         if(fail != 0):
             break
     return fail
 
-def store_dobldobl_laurent_system(polsys):
+def store_dobldobl_laurent_system(polsys, **nbvar):
     """
     Stores the Laurent polynomials represented by the list of
     strings in polsys into the container for systems
     with coefficients in double double precision.
+    If nbvar is omitted, then the system is assumed to be square.
+    Otherwise, suppose the number of variables equals 2 and pols is the list
+    of polynomials, then store_standard_Laurent_system(pols, nbvar=2)
+    will store the polynomials in pols in the standard systems container.
     """
     from phcpy.phcpy2c2 import py2c_syscon_clear_dobldobl_Laurent_system
     from phcpy.phcpy2c2 \
@@ -213,16 +225,24 @@ def store_dobldobl_laurent_system(polsys):
     for cnt in range(0, dim):
         pol = polsys[cnt]
         nchar = len(pol)
-        fail = py2c_syscon_store_dobldobl_Laurential(nchar, dim, cnt+1, pol)
+        if len(nbvar) == 0:
+            fail = py2c_syscon_store_dobldobl_Laurential(nchar, dim, cnt+1, pol)
+        else: 
+            nvr = nbvar.values()[0]
+            fail = py2c_syscon_store_dobldobl_Laurential(nchar, nvr, cnt+1, pol)
         if(fail != 0):
             break
     return fail
 
-def store_quaddobl_laurent_system(polsys):
+def store_quaddobl_laurent_system(polsys, **nbvar):
     """
     Stores the Laurent polynomials represented by the list
     of strings in polsys into the container for systems
     with coefficients in quad double precision.
+    If nbvar is omitted, then the system is assumed to be square.
+    Otherwise, suppose the number of variables equals 2 and pols is the list
+    of polynomials, then store_standard_Laurent_system(pols, nbvar=2)
+    will store the polynomials in pols in the standard systems container.
     """
     from phcpy.phcpy2c2 import py2c_syscon_clear_quaddobl_Laurent_system
     from phcpy.phcpy2c2 \
@@ -234,18 +254,26 @@ def store_quaddobl_laurent_system(polsys):
     for cnt in range(0, dim):
         pol = polsys[cnt]
         nchar = len(pol)
-        fail = py2c_syscon_store_quaddobl_Laurential(nchar, dim, cnt+1, pol)
+        if len(nbvar) == 0:
+            fail = py2c_syscon_store_quaddobl_Laurential(nchar, dim, cnt+1, pol)
+        else: 
+            nvr = nbvar.values()[0]
+            fail = py2c_syscon_store_quaddobl_Laurential(nchar, nvr, cnt+1, pol)
         if(fail != 0):
             break
     return fail
 
-def store_multprec_laurent_system(polsys, decimals):
+def store_multprec_laurent_system(polsys, decimals, **nbvar):
     """
     Stores the Laurent polynomials represented by the list
     of strings in polsys into the container for systems
     with coefficients in multiprecision.
     The parameter decimals equals the number of decimal places
     in the working precision for the parsing of the strings in polsys.
+    If nbvar is omitted, then the system is assumed to be square.
+    Otherwise, suppose the number of variables equals 2 and pols is the list
+    of polynomials, then store_standard_Laurent_system(pols, nbvar=2)
+    will store the polynomials in pols in the standard systems container.
     """
     from phcpy.phcpy2c2 import py2c_syscon_clear_multprec_Laurent_system
     from phcpy.phcpy2c2 \
@@ -257,8 +285,13 @@ def store_multprec_laurent_system(polsys, decimals):
     for cnt in range(0, dim):
         pol = polsys[cnt]
         nchar = len(pol)
-        fail = py2c_syscon_store_multprec_Laurential\
-                   (nchar, dim, cnt+1, decimals, pol)
+        if len(nbvar) == 0:
+            fail = py2c_syscon_store_multprec_Laurential\
+                       (nchar, dim, cnt+1, decimals, pol)
+        else: 
+            nvr = nbvar.values()[0]
+            fail = py2c_syscon_store_multprec_Laurential\
+                       (nchar, nvr, cnt+1, decimals, pol)
         if(fail != 0):
             break
     return fail

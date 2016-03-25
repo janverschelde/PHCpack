@@ -1,3 +1,7 @@
+Fri 25 Mar 2016 : extended the newton_step function in the solver module
+  so it should work for overdetermined polynomial systems.
+  Made updates to the interface module for overdetermined Laurent systems.
+
 Thu 24 Mar 2016 : extended the deflate functions in the solver module
   to work for overdetermined polynomial systems.
 

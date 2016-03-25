@@ -215,12 +215,13 @@ def newton_step(system, solutions, precision='d', decimals=100):
     mp : arbitrary precision, where the number of decimal places
     in the working precision is determined by decimals.
     """
+    dim = number_of_symbols(system)
     if(precision == 'd'):
         from phcpy.interface import store_standard_system
         from phcpy.interface import store_standard_solutions
         from phcpy.interface import load_standard_solutions
-        store_standard_system(system)
-        store_standard_solutions(len(system), solutions)
+        store_standard_system(system, nbvar=dim)
+        store_standard_solutions(dim, solutions)
         from phcpy.phcpy2c3 import py2c_standard_Newton_step
         py2c_standard_Newton_step()
         result = load_standard_solutions()
@@ -228,8 +229,8 @@ def newton_step(system, solutions, precision='d', decimals=100):
         from phcpy.interface import store_dobldobl_system
         from phcpy.interface import store_dobldobl_solutions
         from phcpy.interface import load_dobldobl_solutions
-        store_dobldobl_system(system)
-        store_dobldobl_solutions(len(system), solutions)
+        store_dobldobl_system(system, nbvar=dim)
+        store_dobldobl_solutions(dim, solutions)
         from phcpy.phcpy2c3 import py2c_dobldobl_Newton_step
         py2c_dobldobl_Newton_step()
         result = load_dobldobl_solutions()
@@ -237,8 +238,8 @@ def newton_step(system, solutions, precision='d', decimals=100):
         from phcpy.interface import store_quaddobl_system
         from phcpy.interface import store_quaddobl_solutions
         from phcpy.interface import load_quaddobl_solutions
-        store_quaddobl_system(system)
-        store_quaddobl_solutions(len(system), solutions)
+        store_quaddobl_system(system, nbvar=dim)
+        store_quaddobl_solutions(dim, solutions)
         from phcpy.phcpy2c3 import py2c_quaddobl_Newton_step
         py2c_quaddobl_Newton_step()
         result = load_quaddobl_solutions()
@@ -246,8 +247,8 @@ def newton_step(system, solutions, precision='d', decimals=100):
         from phcpy.interface import store_multprec_system
         from phcpy.interface import store_multprec_solutions
         from phcpy.interface import load_multprec_solutions
-        store_multprec_system(system, decimals)
-        store_multprec_solutions(len(system), solutions)
+        store_multprec_system(system, decimals, nbvar=dim)
+        store_multprec_solutions(dim, solutions)
         from phcpy.phcpy2c3 import py2c_multprec_Newton_step
         py2c_multprec_Newton_step(decimals)
         result = load_multprec_solutions()
@@ -270,12 +271,13 @@ def newton_laurent_step(system, solutions, precision='d', decimals=100):
     mp : arbitrary precision, where the number of decimal places
     in the working precision is determined by decimals.
     """
+    dim = number_of_symbols(system)
     if(precision == 'd'):
         from phcpy.interface import store_standard_laurent_system
         from phcpy.interface import store_standard_solutions
         from phcpy.interface import load_standard_solutions
-        store_standard_laurent_system(system)
-        store_standard_solutions(len(system), solutions)
+        store_standard_laurent_system(system, nbvar=dim)
+        store_standard_solutions(dim, solutions)
         from phcpy.phcpy2c3 import py2c_standard_Newton_Laurent_step
         py2c_standard_Newton_Laurent_step()
         result = load_standard_solutions()
@@ -283,8 +285,8 @@ def newton_laurent_step(system, solutions, precision='d', decimals=100):
         from phcpy.interface import store_dobldobl_laurent_system
         from phcpy.interface import store_dobldobl_solutions
         from phcpy.interface import load_dobldobl_solutions
-        store_dobldobl_laurent_system(system)
-        store_dobldobl_solutions(len(system), solutions)
+        store_dobldobl_laurent_system(system, nbvar=dim)
+        store_dobldobl_solutions(dim, solutions)
         from phcpy.phcpy2c3 import py2c_dobldobl_Newton_Laurent_step
         py2c_dobldobl_Newton_Laurent_step()
         result = load_dobldobl_solutions()
@@ -292,8 +294,8 @@ def newton_laurent_step(system, solutions, precision='d', decimals=100):
         from phcpy.interface import store_quaddobl_laurent_system
         from phcpy.interface import store_quaddobl_solutions
         from phcpy.interface import load_quaddobl_solutions
-        store_quaddobl_laurent_system(system)
-        store_quaddobl_solutions(len(system), solutions)
+        store_quaddobl_laurent_system(system, nbvar=dim)
+        store_quaddobl_solutions(dim, solutions)
         from phcpy.phcpy2c3 import py2c_quaddobl_Newton_Laurent_step
         py2c_quaddobl_Newton_Laurent_step()
         result = load_quaddobl_solutions()
@@ -301,8 +303,8 @@ def newton_laurent_step(system, solutions, precision='d', decimals=100):
         from phcpy.interface import store_multprec_laurent_system
         from phcpy.interface import store_multprec_solutions
         from phcpy.interface import load_multprec_solutions
-        store_multprec_laurent_system(system, decimals)
-        store_multprec_solutions(len(system), solutions)
+        store_multprec_laurent_system(system, decimals, nbvar=dim)
+        store_multprec_solutions(dim, solutions)
         from phcpy.phcpy2c3 import py2c_multprec_Newton_Laurent_step
         py2c_multprec_Newton_Laurent_step(decimals)
         result = load_multprec_solutions()
