@@ -1,3 +1,5 @@
+Fri 25 Mar 2016 : updated greeting_banners for version 2.4.14.
+
 Tue 22 Mar 2016 : updated mainvali.adb so option 6 of phc -v also deflates
   overdetermined polynomial systems.
 
