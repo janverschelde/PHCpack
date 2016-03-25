@@ -1,3 +1,6 @@
+Thu 24 Mar 2016 : extended the deflate functions in the solver module
+  to work for overdetermined polynomial systems.
+
 Fri 18 Mar 2016 : updates for version 0.4.2, setup.py, __init__.py and conf.py
   in the documentation.
 

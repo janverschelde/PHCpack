@@ -341,8 +341,9 @@ def standard_deflate(system, solutions):
     from phcpy.interface import store_standard_system
     from phcpy.interface import store_standard_solutions
     from phcpy.interface import load_standard_solutions
-    store_standard_system(system)
-    store_standard_solutions(len(system), solutions)
+    dim = number_of_symbols(system)
+    store_standard_system(system, nbvar=dim)
+    store_standard_solutions(dim, solutions)
     py2c_standard_deflate()
     result = load_standard_solutions()
     return result
@@ -360,8 +361,9 @@ def dobldobl_deflate(system, solutions):
     from phcpy.interface import store_dobldobl_system
     from phcpy.interface import store_dobldobl_solutions
     from phcpy.interface import load_dobldobl_solutions
-    store_dobldobl_system(system)
-    store_dobldobl_solutions(len(system), solutions)
+    dim = number_of_symbols(system)
+    store_dobldobl_system(system, nbvar=dim)
+    store_dobldobl_solutions(dim, solutions)
     py2c_dobldobl_deflate()
     result = load_dobldobl_solutions()
     return result
@@ -379,8 +381,9 @@ def quaddobl_deflate(system, solutions):
     from phcpy.interface import store_quaddobl_system
     from phcpy.interface import store_quaddobl_solutions
     from phcpy.interface import load_quaddobl_solutions
-    store_quaddobl_system(system)
-    store_quaddobl_solutions(len(system), solutions)
+    dim = number_of_symbols(system)
+    store_quaddobl_system(system, nbvar=dim)
+    store_quaddobl_solutions(dim, solutions)
     py2c_quaddobl_deflate()
     result = load_quaddobl_solutions()
     return result
