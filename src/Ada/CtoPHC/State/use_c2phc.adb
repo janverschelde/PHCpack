@@ -1318,9 +1318,10 @@ function use_c2phc ( job : integer32;
     else
       Copy(sols,work);
       declare
+        dim : constant integer32 := Head_Of(sols).n;
         f : Eval_Poly_Sys(lp'range) := Create(lp.all);
-        jm : Jaco_Mat(lp'range,lp'range) := Create(lp.all);
-        jf : Eval_Jaco_Mat(lp'range,lp'range) := Create(jm);
+        jm : Jaco_Mat(lp'range,1..dim) := Create(lp.all);
+        jf : Eval_Jaco_Mat(lp'range,1..dim) := Create(jm);
         tmp : Solution_List := work;
         ls : Link_to_Solution;
       begin
@@ -1332,6 +1333,8 @@ function use_c2phc ( job : integer32;
         Clear(f); Clear(jm); Clear(jf);
         QuadDobl_Solutions_Container.Clear;
         QuadDobl_Solutions_Container.Initialize(work);
+      exception
+        when others => return 197;
       end;
       return 0;
     end if;
@@ -1354,9 +1357,10 @@ function use_c2phc ( job : integer32;
     else
       Copy(sols,work);
       declare
+        dim : constant integer32 := Head_Of(sols).n;
         f : Eval_Laur_Sys(lp'range) := Create(lp.all);
-        jm : Jaco_Mat(lp'range,lp'range) := Create(lp.all);
-        jf : Eval_Jaco_Mat(lp'range,lp'range) := Create(jm);
+        jm : Jaco_Mat(lp'range,1..dim) := Create(lp.all);
+        jf : Eval_Jaco_Mat(lp'range,1..dim) := Create(jm);
         tmp : Solution_List := work;
         ls : Link_to_Solution;
       begin
@@ -1368,6 +1372,8 @@ function use_c2phc ( job : integer32;
         Clear(f); Clear(jm); Clear(jf);
         QuadDobl_Solutions_Container.Clear;
         QuadDobl_Solutions_Container.Initialize(work);
+      exception
+        when others => return 328;
       end;
       return 0;
     end if;
@@ -1390,9 +1396,10 @@ function use_c2phc ( job : integer32;
     else
       Copy(sols,work);
       declare
+        dim : constant integer32 := Head_Of(sols).n;
         f : Eval_Poly_Sys(lp'range) := Create(lp.all);
-        jm : Jaco_Mat(lp'range,lp'range) := Create(lp.all);
-        jf : Eval_Jaco_Mat(lp'range,lp'range) := Create(jm);
+        jm : Jaco_Mat(lp'range,1..dim) := Create(lp.all);
+        jf : Eval_Jaco_Mat(lp'range,1..dim) := Create(jm);
         tmp : Solution_List := work;
         ls : Link_to_Solution;
       begin
@@ -1404,6 +1411,8 @@ function use_c2phc ( job : integer32;
         Clear(f); Clear(jm); Clear(jf);
         DoblDobl_Solutions_Container.Clear;
         DoblDobl_Solutions_Container.Initialize(work);
+      exception
+        when others => return 198;
       end;
       return 0;
     end if;
@@ -1426,9 +1435,10 @@ function use_c2phc ( job : integer32;
     else
       Copy(sols,work);
       declare
+        dim : constant integer32 := Head_Of(sols).n;
         f : Eval_Laur_Sys(lp'range) := Create(lp.all);
-        jm : Jaco_Mat(lp'range,lp'range) := Create(lp.all);
-        jf : Eval_Jaco_Mat(lp'range,lp'range) := Create(jm);
+        jm : Jaco_Mat(lp'range,1..dim) := Create(lp.all);
+        jf : Eval_Jaco_Mat(lp'range,1..dim) := Create(jm);
         tmp : Solution_List := work;
         ls : Link_to_Solution;
       begin
@@ -1440,6 +1450,8 @@ function use_c2phc ( job : integer32;
         Clear(f); Clear(jm); Clear(jf);
         DoblDobl_Solutions_Container.Clear;
         DoblDobl_Solutions_Container.Initialize(work);
+      exception
+        when others => return 327;
       end;
       return 0;
     end if;
@@ -1459,15 +1471,23 @@ function use_c2phc ( job : integer32;
     else
       Copy(sols,work);
       declare
+        nbequ : constant integer32 := lp'last;
+        nbvar : constant integer32 := Head_Of(sols).n;
         epsxa : constant double_float := 1.0E-12;
         epsfa : constant double_float := 1.0E-12;
         tolsi : constant double_float := 1.0E-8;
         deflate : boolean := false;
         nit : natural32 := 0;
       begin
-        Silent_Root_Refiner(lp.all,work,epsxa,epsfa,tolsi,nit,1,deflate);
+        if nbequ = nbvar then
+          Silent_Root_Refiner(lp.all,work,epsxa,epsfa,tolsi,nit,1,deflate);
+        else
+          Silent_Root_Sharpener(lp.all,work,epsxa,epsfa,tolsi,nit,1,deflate);
+        end if;
         Standard_Solutions_Container.Clear;
         Standard_Solutions_Container.Initialize(work);
+      exception
+        when others => return 199;
       end;
       return 0;
     end if;
@@ -1486,14 +1506,22 @@ function use_c2phc ( job : integer32;
       return 326;             
     else
       declare
+        nbequ : constant integer32 := lp'last;
+        nbvar : constant integer32 := Head_Of(sols).n;
         epsxa : constant double_float := 1.0E-12;
         epsfa : constant double_float := 1.0E-12;
         tolsi : constant double_float := 1.0E-8;
         nit : natural32 := 0;
       begin
-        Silent_Root_Refiner(lp.all,sols,refsols,epsxa,epsfa,tolsi,nit,1);
+        if nbequ = nbvar then
+          Silent_Root_Refiner(lp.all,sols,refsols,epsxa,epsfa,tolsi,nit,1);
+        else
+          Silent_Root_Sharpener(lp.all,sols,refsols,epsxa,epsfa,tolsi,nit,1);
+        end if;
         Standard_Solutions_Container.Clear;
         Standard_Solutions_Container.Initialize(sols);
+      exception
+        when others => return 326;
       end;
       return 0;
     end if;

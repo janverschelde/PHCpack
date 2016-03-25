@@ -1,3 +1,6 @@
+Fri 25 Mar 2016 : modified use_c2phc.adb to enable the application of Newton's
+  method on overdetermined ordinary and Laurent polynomial systems.
+
 Wed 16 Mar 2016 : changes in phcpack_operations for Laurent systems on
   overdetermined systems.
 
