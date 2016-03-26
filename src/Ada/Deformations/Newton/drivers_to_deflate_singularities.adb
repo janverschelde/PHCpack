@@ -185,20 +185,6 @@ package body Drivers_to_Deflate_Singularities is
               ( symbolic,output : out boolean;
                 maxitr,maxdef,nbdgts : out natural32;
 	        tolerr,tolres,tolrnk : out double_float ) is
-
-  -- DESCRIPTION :
-  --   Sets the default values for the deflator parameters.
-
-  -- ON RETURN :
-  --   symbolic is flag for method of evaluation;
-  --   output   flag for intermediate output;
-  --   maxitr   upper bound on #iterations/root;
-  --   maxdef   upper bound on #deflations/root;
-  --   nbdgts   number of decimal places in working precision.
-  --   tolerr   tolerance for error on the root;
-  --   tolres   tolerance for the residual;
-  --   tolrnk   tolerance to decide numerical rank.
-
   begin
     symbolic := false;
     output := false;
@@ -215,10 +201,6 @@ package body Drivers_to_Deflate_Singularities is
                 symbolic,output : in boolean;
                 maxitr,maxdef,nbdgts : in natural32;
 	        tolerr,tolres,tolrnk : in double_float ) is
-
-  -- DESCRIPTION :
-  --   Displays the menu with the current settings of the deflator.
-
   begin
     put_line(file,"MENU with current settings for the deflation method : ");
     if symbolic then

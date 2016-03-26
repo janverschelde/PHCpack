@@ -35,6 +35,33 @@ package Drivers_to_Deflate_Singularities is
   --   Interactive generation of a sequence of deflated systems,
   --   where the user is prompted for the number of multipliers.
 
+  procedure Set_Default_Parameters
+              ( symbolic,output : out boolean;
+                maxitr,maxdef,nbdgts : out natural32;
+	        tolerr,tolres,tolrnk : out double_float );
+
+  -- DESCRIPTION :
+  --   Sets the default values for the deflator parameters.
+
+  -- ON RETURN :
+  --   symbolic is flag for method of evaluation;
+  --   output   flag for intermediate output;
+  --   maxitr   upper bound on #iterations/root;
+  --   maxdef   upper bound on #deflations/root;
+  --   nbdgts   number of decimal places in working precision.
+  --   tolerr   tolerance for error on the root;
+  --   tolres   tolerance for the residual;
+  --   tolrnk   tolerance to decide numerical rank.
+
+  procedure Display_Parameters
+              ( file : in file_type;
+                symbolic,output : in boolean;
+                maxitr,maxdef,nbdgts : in natural32;
+                tolerr,tolres,tolrnk : in double_float );
+
+  -- DESCRIPTION :
+  --   Displays the menu with the current settings of the deflator.
+
   procedure Deflate_Singularities
                ( p : in Standard_Complex_Poly_Systems.Poly_Sys;
                  sols : in out Standard_Complex_Solutions.Solution_List );

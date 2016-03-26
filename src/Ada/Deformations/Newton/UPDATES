@@ -1,3 +1,6 @@
+Sat 26 Mar 2016 : moved documentations of the specifications from adb to ads
+  in drivers_to_deflate_singularities.
+
 Thu 24 Mar 2016 : in {dobldobl,quaddobl}_root_refiners.adb, better reporting
   of the deflations.  Adjusted defaults in root_refining_parameters.adb
 
