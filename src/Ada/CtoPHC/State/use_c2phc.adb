@@ -54,6 +54,9 @@ with Standard_Root_Refiners;
 with DoblDobl_Root_Refiners;
 with QuadDobl_Root_Refiners;
 with Multprec_Root_Refiners;
+with Standard_Deflation_Methods;
+with DoblDobl_Deflation_Methods;
+with QuadDobl_Deflation_Methods;
 with Drivers_to_Deflate_Singularities;
 with Verification_of_Solutions;
 with Floating_Mixed_Subdivisions;
@@ -1535,10 +1538,17 @@ function use_c2phc ( job : integer32;
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
     work : Solution_List;
+    symbolic,output : boolean;
+    maxitr,maxdef,nbdgts : natural32;
+    tolerr,tolres,tolrnk : double_float;
 
   begin
     Copy(sols,work);
-    Deflate_Singularities(lp.all,work);
+   -- Deflate_Singularities(lp.all,work);
+    Set_Default_Parameters
+      (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
+    Standard_Deflation_Methods.Algorithmic_Deflation_and_Clustering
+      (p,sols,maxitr,maxdef,tolerr,tolres,tolrnk);
     Standard_Solutions_Container.Clear;
     Standard_Solutions_Container.Initialize(work);
     return 0;
@@ -1552,10 +1562,17 @@ function use_c2phc ( job : integer32;
     lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
     sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
     work : Solution_List;
+    symbolic,output : boolean;
+    maxitr,maxdef,nbdgts : natural32;
+    tolerr,tolres,tolrnk : double_float;
 
   begin
     Copy(sols,work);
-    Deflate_Singularities(lp.all,work);
+   -- Deflate_Singularities(lp.all,work);
+    Set_Default_Parameters
+      (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
+    DoblDobl_Deflation_Methods.Algorithmic_Deflation_and_Clustering
+      (p,sols,maxitr,maxdef,tolerr,tolres,tolrnk);
     DoblDobl_Solutions_Container.Clear;
     DoblDobl_Solutions_Container.Initialize(work);
     return 0;
@@ -1569,10 +1586,17 @@ function use_c2phc ( job : integer32;
     lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
     sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
     work : Solution_List;
+    symbolic,output : boolean;
+    maxitr,maxdef,nbdgts : natural32;
+    tolerr,tolres,tolrnk : double_float;
 
   begin
     Copy(sols,work);
-    Deflate_Singularities(lp.all,work);
+   -- Deflate_Singularities(lp.all,work);
+    Set_Default_Parameters
+      (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
+    QuadDobl_Deflation_Methods.Algorithmic_Deflation_and_Clustering
+      (p,sols,maxitr,maxdef,tolerr,tolres,tolrnk);
     QuadDobl_Solutions_Container.Clear;
     QuadDobl_Solutions_Container.Initialize(work);
     return 0;
