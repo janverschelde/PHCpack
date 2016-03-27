@@ -330,14 +330,19 @@ def newton_steps(system, solutions, accuracy=8, maxsteps=4, maxprec=256):
     result = load_multprec_solutions()
     return result
 
-def standard_deflate(system, solutions):
+def standard_deflate(system, solutions, maxitr=3, maxdef=3, \
+    tolerr=1.0e-8, tolres=1.0e-8, tolrnk=1.0e-6):
     """
     The deflation method augments the given system with
     derivatives to restore the quadratic convergence of
     Newton's method at isolated singular solutions,
-    in standard double precision.
-    After application of deflation with default settings,
-    the new approximate solutions are returned.
+    in standard double precision.  The numerical parameters are
+    1) maxitr : the maximum number of iterations per root,
+    2) maxdef : the maximum number of deflations per root,
+    3) tolerr : tolerance on the forward error on each root,
+    4) tolres : tolerance on the backward error on each root,
+    5) tolres : tolerance on the numerical rank of the Jacobian matrices.
+    After application of deflation, the new approximations are returned.
     """
     from phcpy.phcpy2c2 import py2c_standard_deflate
     from phcpy.interface import store_standard_system
@@ -346,18 +351,23 @@ def standard_deflate(system, solutions):
     dim = number_of_symbols(system)
     store_standard_system(system, nbvar=dim)
     store_standard_solutions(dim, solutions)
-    py2c_standard_deflate()
+    py2c_standard_deflate(maxitr,maxdef,tolerr,tolres,tolrnk)
     result = load_standard_solutions()
     return result
 
-def dobldobl_deflate(system, solutions):
+def dobldobl_deflate(system, solutions, maxitr=3, maxdef=3, \
+    tolerr=1.0e-8, tolres=1.0e-8, tolrnk=1.0e-6):
     """
     The deflation method augments the given system with
     derivatives to restore the quadratic convergence of
     Newton's method at isolated singular solutions,
-    in double double precision.
-    After application of deflation with default settings,
-    the new approximate solutions are returned.
+    in double double precision.  The numerical parameters are
+    1) maxitr : the maximum number of iterations per root,
+    2) maxdef : the maximum number of deflations per root,
+    3) tolerr : tolerance on the forward error on each root,
+    4) tolres : tolerance on the backward error on each root,
+    5) tolres : tolerance on the numerical rank of the Jacobian matrices.
+    After application of deflation, the new approximations are returned.
     """
     from phcpy.phcpy2c2 import py2c_dobldobl_deflate
     from phcpy.interface import store_dobldobl_system
@@ -366,18 +376,23 @@ def dobldobl_deflate(system, solutions):
     dim = number_of_symbols(system)
     store_dobldobl_system(system, nbvar=dim)
     store_dobldobl_solutions(dim, solutions)
-    py2c_dobldobl_deflate()
+    py2c_dobldobl_deflate(maxitr, maxdef, tolerr, tolres, tolrnk)
     result = load_dobldobl_solutions()
     return result
 
-def quaddobl_deflate(system, solutions):
+def quaddobl_deflate(system, solutions, maxitr=3, maxdef=3, \
+    tolerr=1.0e-8, tolres=1.0e-8, tolrnk=1.0e-6):
     """
     The deflation method augments the given system with
     derivatives to restore the quadratic convergence of
     Newton's method at isolated singular solutions,
-    in quad double precision.
-    After application of deflation with default settings,
-    the new approximate solutions are returned.
+    in quad double precision.  The numerical parameters are
+    1) maxitr : the maximum number of iterations per root,
+    2) maxdef : the maximum number of deflations per root,
+    3) tolerr : tolerance on the forward error on each root,
+    4) tolres : tolerance on the backward error on each root,
+    5) tolres : tolerance on the numerical rank of the Jacobian matrices.
+    After application of deflation, the new approximations are returned.
     """
     from phcpy.phcpy2c2 import py2c_quaddobl_deflate
     from phcpy.interface import store_quaddobl_system
@@ -386,7 +401,7 @@ def quaddobl_deflate(system, solutions):
     dim = number_of_symbols(system)
     store_quaddobl_system(system, nbvar=dim)
     store_quaddobl_solutions(dim, solutions)
-    py2c_quaddobl_deflate()
+    py2c_quaddobl_deflate(maxitr, maxdef, tolerr, tolres, tolrnk)
     result = load_quaddobl_solutions()
     return result
 
