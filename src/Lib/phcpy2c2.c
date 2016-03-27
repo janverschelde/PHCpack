@@ -1083,10 +1083,14 @@ static PyObject *py2c_mixed_volume
 static PyObject *py2c_standard_deflate
  ( PyObject *self, PyObject *args )
 {
+   int mxit,mxdf;
+   double terr,tres,trnk;
+
    initialize();
-   if(!PyArg_ParseTuple(args,"")) return NULL;
+   if(!PyArg_ParseTuple(args,"iiddd",&mxit,&mxdf,&terr,&tres,&trnk))
+      return NULL;
    {
-      int fail = standard_deflate();
+      int fail = standard_deflate(mxit,mxdf,terr,tres,trnk);
       return Py_BuildValue("i",fail);
    }
 }
@@ -1094,10 +1098,14 @@ static PyObject *py2c_standard_deflate
 static PyObject *py2c_dobldobl_deflate
  ( PyObject *self, PyObject *args )
 {
+   int mxit,mxdf;
+   double terr,tres,trnk;
+
    initialize();
-   if(!PyArg_ParseTuple(args,"")) return NULL;
+   if(!PyArg_ParseTuple(args,"iiddd",&mxit,&mxdf,&terr,&tres,&trnk))
+      return NULL;
    {
-      int fail = dobldobl_deflate();
+      int fail = dobldobl_deflate(mxit,mxdf,terr,tres,trnk);
       return Py_BuildValue("i",fail);
    }
 }
@@ -1105,10 +1113,14 @@ static PyObject *py2c_dobldobl_deflate
 static PyObject *py2c_quaddobl_deflate
  ( PyObject *self, PyObject *args )
 {
+   int mxit,mxdf;
+   double terr,tres,trnk;
+
    initialize();
-   if(!PyArg_ParseTuple(args,"")) return NULL;
+   if(!PyArg_ParseTuple(args,"iiddd",&mxit,&mxdf,&terr,&tres,&trnk))
+      return NULL;
    {
-      int fail = quaddobl_deflate();
+      int fail = quaddobl_deflate(mxit,mxdf,terr,tres,trnk);
       return Py_BuildValue("i",fail);
    }
 }

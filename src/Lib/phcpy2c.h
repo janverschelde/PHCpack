@@ -712,6 +712,12 @@ static PyObject *py2c_standard_deflate
  * DESCRIPTION :
  *   Applies deflation in standard double precision to the system and
  *   the solutions stored in the containers.
+ *   There are five parameters, two integers and three doubles:
+ *   1) the maximum number of iterations per root,
+ *   2) the maximum number of deflations per root,
+ *   3) tolerance on the error of each root,
+ *   4) tolerance on the residual of each root,
+ *   5) tolerance on the numerical rank of the Jacobians at each root.
  *   On return is the failure code, which equals zero if all went well. */
 
 static PyObject *py2c_dobldobl_deflate
@@ -720,6 +726,12 @@ static PyObject *py2c_dobldobl_deflate
  * DESCRIPTION :
  *   Applies deflation in double double precision to the system and
  *   the solutions stored in the containers.
+ *   There are five parameters, two integers and three doubles:
+ *   1) the maximum number of iterations per root,
+ *   2) the maximum number of deflations per root,
+ *   3) tolerance on the error of each root,
+ *   4) tolerance on the residual of each root,
+ *   5) tolerance on the numerical rank of the Jacobians at each root.
  *   On return is the failure code, which equals zero if all went well. */
 
 static PyObject *py2c_quaddobl_deflate
@@ -728,6 +740,12 @@ static PyObject *py2c_quaddobl_deflate
  * DESCRIPTION :
  *   Applies deflation in quad double precision to the system and
  *   the solutions stored in the containers.
+ *   There are five parameters, two integers and three doubles:
+ *   1) the maximum number of iterations per root,
+ *   2) the maximum number of deflations per root,
+ *   3) tolerance on the error of each root,
+ *   4) tolerance on the residual of each root,
+ *   5) tolerance on the numerical rank of the Jacobians at each root.
  *   On return is the failure code, which equals zero if all went well. */
 
 static PyObject *py2c_standard_Newton_step
