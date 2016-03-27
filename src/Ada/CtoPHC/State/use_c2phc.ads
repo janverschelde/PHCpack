@@ -1315,7 +1315,12 @@ function use_c2phc ( job : integer32;
 --                 with the updated solutions computed by the Newton step.
 --
 --   job   = 196 : applies deflation on the system and solutions in the
---                 containers with standard precision and default settings;
+--                 containers with standard precision and settings in
+--                 a[0] : the maximum number of iterations per root,
+--                 b[0] : the maximum number of deflations per root,
+--                 c[0] : the tolerance on the error on the root,
+--                 c[1] : the tolerance on the residual on the root,
+--                 c[2] : the tolerance for the numerical rank;
 --         = 195 : does one Newton step with multiprecision arithmetic
 --                 using system and solutions in the containers;
 --         = 197 : does one Newton step with quad double arithmetic
@@ -1324,12 +1329,20 @@ function use_c2phc ( job : integer32;
 --                 using system and solutions in the containers;
 --         = 199 : does one Newton step with standard double arithmetic
 --                 using system and solutions in the containers.
---   job   = 249 : applies deflation on the system and solutions
---                 in the containers with double double precision and 
---                 and default settings;
---         = 250 : applies deflation on the system and solutions
---                 in the containers with double double precision and 
---                 and default settings.
+--   job   = 249 : applies deflation on the system and solutions in the
+--                 containers with double double precision and settings in
+--                 a[0] : the maximum number of iterations per root,
+--                 b[0] : the maximum number of deflations per root,
+--                 c[0] : the tolerance on the error on the root,
+--                 c[1] : the tolerance on the residual on the root,
+--                 c[2] : the tolerance for the numerical rank;
+--         = 250 : applies deflation on the system and solutions in the
+--                 containers with double double precision and settings in
+--                 a[0] : the maximum number of iterations per root,
+--                 b[0] : the maximum number of deflations per root,
+--                 c[0] : the tolerance on the error on the root,
+--                 c[1] : the tolerance on the residual on the root,
+--                 c[2] : the tolerance for the numerical rank.
 --
 -- one Newton step on Laurent systems :
 --

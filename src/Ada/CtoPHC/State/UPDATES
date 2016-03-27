@@ -1,5 +1,6 @@
 Sat 26 Mar 2016 : changed use_c2phc.adb to prepare for passing the numerical
-  tolerances to the deflation methods.
+  tolerances to the deflation methods.  In use_c2phc.ads Updated the 
+  documentation for the parameters and tolerances passed through.
 
 Fri 25 Mar 2016 : modified use_c2phc.adb to enable the application of Newton's
   method on overdetermined ordinary and Laurent polynomial systems.

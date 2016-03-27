@@ -1534,21 +1534,30 @@ function use_c2phc ( job : integer32;
 
     use Standard_Complex_Poly_Systems,Standard_Complex_Solutions;
     use Drivers_to_Deflate_Singularities;
+    use Interfaces.C;
 
     lp : constant Link_to_Poly_Sys := Standard_PolySys_Container.Retrieve;
     sols : constant Solution_List := Standard_Solutions_Container.Retrieve;
     work : Solution_List;
-    symbolic,output : boolean;
-    maxitr,maxdef,nbdgts : natural32;
-    tolerr,tolres,tolrnk : double_float;
+   -- symbolic,output : boolean;
+   -- nbdgts : natural32;
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    maxitr : constant natural32 := natural32(v_a(v_a'first));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    maxdef : constant natural32 := natural32(v_b(v_b'first));
+    v_c : constant C_Double_Array
+        := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(3));
+    tolerr : constant double_float := double_float(v_c(v_c'first));
+    tolres : constant double_float := double_float(v_c(v_c'first+1));
+    tolrnk : constant double_float := double_float(v_c(v_c'first+2));
 
   begin
     Copy(sols,work);
    -- Deflate_Singularities(lp.all,work);
-    Set_Default_Parameters
-      (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
+   -- Set_Default_Parameters
+   --   (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
     Standard_Deflation_Methods.Algorithmic_Deflation_and_Clustering
-      (p,sols,maxitr,maxdef,tolerr,tolres,tolrnk);
+      (lp.all,work,maxitr,maxdef,tolerr,tolres,tolrnk);
     Standard_Solutions_Container.Clear;
     Standard_Solutions_Container.Initialize(work);
     return 0;
@@ -1558,21 +1567,30 @@ function use_c2phc ( job : integer32;
 
     use DoblDobl_Complex_Poly_Systems,DoblDobl_Complex_Solutions;
     use Drivers_to_Deflate_Singularities;
+    use Interfaces.C;
 
     lp : constant Link_to_Poly_Sys := DoblDobl_PolySys_Container.Retrieve;
     sols : constant Solution_List := DoblDobl_Solutions_Container.Retrieve;
     work : Solution_List;
-    symbolic,output : boolean;
-    maxitr,maxdef,nbdgts : natural32;
-    tolerr,tolres,tolrnk : double_float;
+   -- symbolic,output : boolean;
+   -- nbdgts : natural32;
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    maxitr : constant natural32 := natural32(v_a(v_a'first));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    maxdef : constant natural32 := natural32(v_b(v_b'first));
+    v_c : constant C_Double_Array
+        := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(3));
+    tolerr : constant double_float := double_float(v_c(v_c'first));
+    tolres : constant double_float := double_float(v_c(v_c'first+1));
+    tolrnk : constant double_float := double_float(v_c(v_c'first+2));
 
   begin
     Copy(sols,work);
    -- Deflate_Singularities(lp.all,work);
-    Set_Default_Parameters
-      (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
+   -- Set_Default_Parameters
+   --   (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
     DoblDobl_Deflation_Methods.Algorithmic_Deflation_and_Clustering
-      (p,sols,maxitr,maxdef,tolerr,tolres,tolrnk);
+      (lp.all,work,maxitr,maxdef,tolerr,tolres,tolrnk);
     DoblDobl_Solutions_Container.Clear;
     DoblDobl_Solutions_Container.Initialize(work);
     return 0;
@@ -1582,21 +1600,30 @@ function use_c2phc ( job : integer32;
 
     use QuadDobl_Complex_Poly_Systems,QuadDobl_Complex_Solutions;
     use Drivers_to_Deflate_Singularities;
+    use Interfaces.C;
 
     lp : constant Link_to_Poly_Sys := QuadDobl_PolySys_Container.Retrieve;
     sols : constant Solution_List := QuadDobl_Solutions_Container.Retrieve;
     work : Solution_List;
-    symbolic,output : boolean;
-    maxitr,maxdef,nbdgts : natural32;
-    tolerr,tolres,tolrnk : double_float;
+   -- symbolic,output : boolean;
+   -- nbdgts : natural32;
+    v_a : constant C_Integer_Array := C_intarrs.Value(a);
+    maxitr : constant natural32 := natural32(v_a(v_a'first));
+    v_b : constant C_Integer_Array := C_intarrs.Value(b);
+    maxdef : constant natural32 := natural32(v_b(v_b'first));
+    v_c : constant C_Double_Array
+        := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(3));
+    tolerr : constant double_float := double_float(v_c(v_c'first));
+    tolres : constant double_float := double_float(v_c(v_c'first+1));
+    tolrnk : constant double_float := double_float(v_c(v_c'first+2));
 
   begin
     Copy(sols,work);
    -- Deflate_Singularities(lp.all,work);
-    Set_Default_Parameters
-      (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
+   -- Set_Default_Parameters
+   --   (symbolic,output,maxitr,maxdef,nbdgts,tolerr,tolres,tolrnk);
     QuadDobl_Deflation_Methods.Algorithmic_Deflation_and_Clustering
-      (p,sols,maxitr,maxdef,tolerr,tolres,tolrnk);
+      (lp.all,work,maxitr,maxdef,tolerr,tolres,tolrnk);
     QuadDobl_Solutions_Container.Clear;
     QuadDobl_Solutions_Container.Initialize(work);
     return 0;
