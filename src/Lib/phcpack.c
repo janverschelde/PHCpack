@@ -117,27 +117,45 @@ int stable_mixed_volume ( int *mv, int *smv )
    return fail;
 }
 
-int standard_deflate ( void )
+int standard_deflate
+ ( int maxitr, int maxdef, double tolerr, double tolres, double tolrnk )
 {
-   int *a,*b,fail;
-   double *c;
-   fail = _ada_use_c2phc(196,a,b,c);
+   int fail;
+   double tols[3];
+   tols[0] = tolerr;
+   tols[1] = tolres;
+   tols[2] = tolrnk;
+
+   fail = _ada_use_c2phc(196,&maxitr,&maxdef,tols);
+
    return fail;
 }
 
-int dobldobl_deflate ( void )
+int dobldobl_deflate
+ ( int maxitr, int maxdef, double tolerr, double tolres, double tolrnk )
 {
-   int *a,*b,fail;
-   double *c;
-   fail = _ada_use_c2phc(249,a,b,c);
+   int fail;
+   double tols[3];
+   tols[0] = tolerr;
+   tols[1] = tolres;
+   tols[2] = tolrnk;
+
+   fail = _ada_use_c2phc(249,&maxitr,&maxdef,tols);
+
    return fail;
 }
 
-int quaddobl_deflate ( void )
+int quaddobl_deflate
+ ( int maxitr, int maxdef, double tolerr, double tolres, double tolrnk )
 {
-   int *a,*b,fail;
-   double *c;
-   fail = _ada_use_c2phc(250,a,b,c);
+   int fail;
+   double tols[3];
+   tols[0] = tolerr;
+   tols[1] = tolres;
+   tols[2] = tolrnk;
+
+   fail = _ada_use_c2phc(250,&maxitr,&maxdef,tols);
+
    return fail;
 }
 

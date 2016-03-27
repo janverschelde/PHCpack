@@ -262,6 +262,11 @@ void test_multprec_Newton_Laurent_step ( void )
 void test_deflate ( void )
 {
    int fail,dim,len;
+   const int maxitr = 3;
+   const int maxdef = 3;
+   const double tolerr = 1.0e-8;
+   const double tolres = 1.0e-8;
+   const double tolrnk = 1.0e-6;
 
    printf("\nRunning deflation ...\n");
    fail = read_standard_start_system();
@@ -271,7 +276,7 @@ void test_deflate ( void )
    printf("The system container has %d polynomials.\n",dim);
    fail = solcon_number_of_standard_solutions(&len);
    printf("The solution container has size %d.\n",len);
-   fail = standard_deflate();
+   fail = standard_deflate(maxitr,maxdef,tolerr,tolres,tolrnk);
    printf("The solutions after deflation :\n");
    fail = solcon_write_standard_solutions();
 }

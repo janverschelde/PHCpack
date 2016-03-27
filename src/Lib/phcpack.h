@@ -119,23 +119,47 @@ int stable_mixed_volume ( int *mv, int *smv );
  *   return equals the mixed volume.
  *   The regular mixed-cell configuration is in the cells container. */
 
-int standard_deflate ( void );
+int standard_deflate
+ ( int maxitr, int maxdef, double tolerr, double tolres, double tolrnk );
 /*
  * DESCRIPTION :
  *   Applies deflation on the system and solutions in the containers,
- *   in standard double precision and default settings of the parameters. */
+ *   in standard double precision with respect to the parameters.
+ *
+ * ON ENTRY :
+ *  maxitr    upper bound on the number of iterations per root;
+ *  maxdef    upper bound on the number of deflations per root;
+ *  tolerr    tolerance for error on the root;
+ *  tolres    tolerance for the residual;
+ *  tolrnk    tolerance to decide numerical rank.  */
 
-int dobldobl_deflate ( void );
+int dobldobl_deflate
+ ( int maxitr, int maxdef, double tolerr, double tolres, double tolrnk );
 /*
  * DESCRIPTION :
  *   Applies deflation on the system and solutions in the containers,
- *   in double double precision and default settings of the parameters. */
+ *   in double double precision with respect to the parameters.
+ *
+ * ON ENTRY :
+ *  maxitr    upper bound on the number of iterations per root;
+ *  maxdef    upper bound on the number of deflations per root;
+ *  tolerr    tolerance for error on the root;
+ *  tolres    tolerance for the residual;
+ *  tolrnk    tolerance to decide numerical rank.  */
 
-int quaddobl_deflate ( void );
+int quaddobl_deflate
+ ( int maxitr, int maxdef, double tolerr, double tolres, double tolrnk );
 /*
  * DESCRIPTION :
  *   Applies deflation on the system and solutions in the containers,
- *   in quad double precision and default settings of the parameters. */
+ *   in quad double precision with respect to the parameters.
+ *
+ * ON ENTRY :
+ *  maxitr    upper bound on the number of iterations per root;
+ *  maxdef    upper bound on the number of deflations per root;
+ *  tolerr    tolerance for error on the root;
+ *  tolres    tolerance for the residual;
+ *  tolrnk    tolerance to decide numerical rank.  */
 
 int standard_Newton_step ( void );
 /*

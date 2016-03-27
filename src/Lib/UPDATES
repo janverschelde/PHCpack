@@ -1,3 +1,6 @@
+Sat 26 Mar 2016 : added parameters to the deflate function in phcpack,
+  with modifications in lib_newton.c.
+
 Tue 16 Feb 2016 : to phcpy2c.h added function to scan for the symbols in the
   string representation of a system, coded in phcpy2c2.c and phcpy2c3.c.
 
