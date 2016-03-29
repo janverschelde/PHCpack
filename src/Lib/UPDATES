@@ -1,3 +1,6 @@
+Mon 28 Mar 2016 : updated the documentation strings to the deflation functions
+  in phcpy2c2.c and phcpy2c3.c.
+
 Sat 26 Mar 2016 : added parameters to the deflate function in phcpack,
   with modifications in lib_newton.c.  Updated phcpy2c.h, phcpy2c2.c,
   and phcpy2c3.c with new function calls to the deflate functions.
