@@ -1,3 +1,6 @@
+Tue 29 Mar 2016 : updated the documentation of the deflate in blackbox.rst
+  of both PHCpy2 and PHCpy3 to illustrate the tolerance of the rank.
+
 Sat 26 Mar 2016 : updated the deflate functions in the solver module for
   the additional parameters and tolerances, both in PHCpy2 and PHCpy3.
 

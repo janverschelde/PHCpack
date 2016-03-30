@@ -286,6 +286,28 @@ of Newton's method:
     y :  1.57904709676279E-25  -8.86785799319512E-26
    == err :  5.192E-13 = rco :  5.314E-03 = res :  1.388E-16 =
 
+The decision to deflate or not depend on the tolerance to
+decide the numerical rank.  Consider the following session:
+
+::
+
+   from phcpy.solutions import make_solution
+   from phcpy.solver import standard_deflate
+   sol = make_solution(['x', 'y'], [1.0e-6, 1.0e-6])
+   print sol
+   pols = ['x**2;', 'x*y;', 'y**2;']
+   sols = standard_deflate(pols, [sol], tolrnk=1.0e-8)
+   print sols[0]
+   sols = standard_deflate(pols, [sol], tolrnk=1.0e-4)
+   print sols[0]
+
+The default value for ``tolrnk`` equals ``1.0e-6``.
+If we do not want to deflate that soon, we can lower the tolerance
+to ``1.0e-8`` and in that case, there is no deflation when the
+approximation is still as far as ``1.0e-6`` from the exact solution.
+Increasing the value for the tolerance to ``1.0e-4`` leads to the
+deflation at the approximation for the solution.
+
 equation and variable scaling
 -----------------------------
 
