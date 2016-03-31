@@ -1,6 +1,9 @@
 with text_io,integer_io;                use text_io,integer_io;
 with Communications_with_User;          use Communications_with_User;
 with Timing_Package;                    use Timing_Package;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
@@ -16,7 +19,7 @@ procedure ts_mtstref is
 --   Test on multitasking a solution list of a polynomial system.
 
   procedure Refine_Solution
-               ( id,nb : in natural; ls : in Link_to_Solution;
+               ( id,nb : in integer32; ls : in Link_to_Solution;
                  f : in Eval_Poly_Sys; jf : in Eval_Jaco_Mat ) is
 
   -- DESCRIPTION :
@@ -25,14 +28,14 @@ procedure ts_mtstref is
 
     epsxa : constant double_float := 1.0E-16;
     epsfa : constant double_float := 1.0E-16;
-    numit : natural := 0;
-    maxit : constant natural := 3;
+    numit : natural32 := 0;
+    maxit : constant natural32 := 3;
     fail : boolean;
 
   begin
-    put_line("Task " & Multitasking.to_String(id)
+    put_line("Task " & Multitasking.to_String(integer32(id))
                      & " received solution " 
-                     & Multitasking.to_String(nb) & ".");
+                     & Multitasking.to_String(integer32(nb)) & ".");
     Silent_Newton(f,jf,ls.all,epsxa,epsfa,numit,maxit,fail);
   end Refine_Solution;
 
@@ -45,12 +48,13 @@ procedure ts_mtstref is
   --   n threads will be launched to multitask on the solution list.
 
     f : Eval_Poly_Sys(p'range) := Create(p);
-    jf : Jaco_Mat(p'range,p'range) := Create(p);
+    dim : constant integer32 := Head_Of(sols).n;
+    jf : Jaco_Mat(p'range,1..dim) := Create(p);
     ejf : Eval_Jaco_Mat(jf'range(1),jf'range(2)) := Create(jf);
     ptr : Solution_List;
-    cnt : natural := 0;
+    cnt : integer32 := 0;
 
-    procedure Next_Solution ( i,n : in natural ) is
+    procedure Next_Solution ( i,n : in integer32 ) is
 
     -- DESCRIPTION :
     --   The n threads will run through the solution list,
@@ -63,7 +67,7 @@ procedure ts_mtstref is
     --   cnt = Length_Of(sols) + 1 <=> Is_Null(ptr)
 
       s : Semaphore.Lock;
-      myjob : natural;
+      myjob : integer32;
       myptr : Solution_List;
       ls : Link_to_Solution;
 
@@ -90,7 +94,7 @@ procedure ts_mtstref is
     procedure do_jobs is new Multitasking.Reporting_Workers(Next_Solution);
 
   begin
-    do_jobs(n);
+    do_jobs(integer32(n));
     Clear(f); Clear(jf); Clear(ejf);
   end Multitasking_Refinement;
 
@@ -104,7 +108,7 @@ procedure ts_mtstref is
 
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
-    ind : natural := head'first - 1;
+    ind : integer32 := head'first - 1;
 
   begin
     while not Is_Null(tmp) loop
@@ -129,14 +133,14 @@ procedure ts_mtstref is
     jf : Jaco_Mat(p'range,p'range) := Create(p);
     ejf : Eval_Jaco_Mat(jf'range(1),jf'range(2)) := Create(jf);
 
-    procedure Next_Solution ( i,n : in natural ) is
+    procedure Next_Solution ( i,n : in integer32 ) is
 
     -- DESCRIPTION :
     --   The n threads will run through the solution list head(i).
 
       ls : Link_to_Solution;
-      ptr : Solution_List := head(i);
-      cnt : natural := 0;
+      ptr : Solution_List := head(integer32(i));
+      cnt : integer32 := 0;
 
     begin
       while not Is_Null(ptr) loop
@@ -149,7 +153,7 @@ procedure ts_mtstref is
     procedure do_jobs is new Multitasking.Reporting_Workers(Next_Solution);
 
   begin
-    do_jobs(n);
+    do_jobs(integer32(n));
     Clear(f); Clear(jf); Clear(ejf);
   end Static_Multitasking;
 
@@ -159,12 +163,12 @@ procedure ts_mtstref is
   -- DESCRIPTION :
   --   Distributes the solution list first among the threads.
 
-    first,last : Array_of_Solution_Lists(1..n);
+    first,last : Array_of_Solution_Lists(1..integer32(n));
 
   begin
     Distribute_Solutions(first,last,sols);
     put("Distribution counts :");
-    for i in 1..n loop
+    for i in 1..integer32(n) loop
       put(" "); put(Length_Of(first(i)),1);
     end loop;
     new_line;
