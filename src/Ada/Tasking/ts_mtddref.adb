@@ -1,7 +1,11 @@
-with text_io,integer_io;                use text_io,integer_io;
+with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
 with Timing_Package;                    use Timing_Package;
-with Double_Double_Numbers;             use Double_Double_Numbers;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Polynomial_Convertors;    use DoblDobl_Polynomial_Convertors;
@@ -21,7 +25,7 @@ procedure ts_mtddref is
 --   with double double complex arithmetic.
 
   procedure Refine_Solution
-               ( id,nb : in natural; output : in boolean;
+               ( id,nb : in integer32; output : in boolean;
                  ls : in DoblDobl_Complex_Solutions.Link_to_Solution;
                  f : in Eval_Poly_Sys; jf : in Eval_Jaco_Mat ) is
 
@@ -29,10 +33,10 @@ procedure ts_mtddref is
   --   Task with identification number id reports the receipt of
   --   solution with number nb, with data in ls.
 
-    epsxa : constant double_double := create(1.0E-30);
-    epsfa : constant double_double := create(1.0E-30);
-    numit : natural := 0;
-    maxit : constant natural := 3;
+    epsxa : constant double_float := 1.0E-30;
+    epsfa : constant double_float := 1.0E-30;
+    numit : natural32 := 0;
+    maxit : constant natural32 := 3;
     fail : boolean;
 
   begin
@@ -47,7 +51,7 @@ procedure ts_mtddref is
   procedure Multitasking_Refinement
                ( p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                  sols : in DoblDobl_Complex_Solutions.Solution_List; 
-                 n : in natural; output : in boolean ) is
+                 n : in integer32; output : in boolean ) is
 
   -- DESCRIPTION :
   --   Given a polynomial system p with solutions in sols,
@@ -59,9 +63,9 @@ procedure ts_mtddref is
     jf : Jaco_Mat(p'range,p'range) := Create(p);
     ejf : Eval_Jaco_Mat(jf'range(1),jf'range(2)) := Create(jf);
     ptr : Solution_List;
-    cnt : natural := 0;
+    cnt : integer32 := 0;
 
-    procedure Next_Solution ( i,n : in natural ) is
+    procedure Next_Solution ( i,n : in integer32 ) is
 
     -- DESCRIPTION :
     --   The n threads will run through the solution list,
@@ -74,7 +78,7 @@ procedure ts_mtddref is
     --   cnt = Length_Of(sols) + 1 <=> Is_Null(ptr)
 
       s : Semaphore.Lock;
-      myjob : natural;
+      myjob : integer32;
       myptr : Solution_List;
       ls : Link_to_Solution;
 
@@ -105,7 +109,8 @@ procedure ts_mtddref is
     Clear(f); Clear(jf); Clear(ejf);
   end Multitasking_Refinement;
 
-  procedure Refine ( file : in file_type; n : in natural; output : in boolean;
+  procedure Refine ( file : in file_type;
+                     n : in integer32; output : in boolean;
                      p : in Standard_Complex_Poly_Systems.Poly_Sys;
                      s : in Standard_Complex_Solutions.Solution_List ) is
 
@@ -137,7 +142,7 @@ procedure ts_mtddref is
 
     p : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     s : Standard_Complex_Solutions.Solution_List;
-    n : natural;
+    n : integer32 := 0;
     file : file_type;
     ans : character;
 
