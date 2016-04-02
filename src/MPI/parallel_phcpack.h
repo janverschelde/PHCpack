@@ -16,6 +16,18 @@ void dimension_broadcast ( int myid, int *n );
  *   myid     number of the node;
  *   *n       ambient dimension of the problem. */
 
+void dimensions_broadcast ( int myid, int *nbequ, int *nbvar );
+/*
+ * DESCRIPTION :
+ *   After broadcasting the number of equations nbequ
+ *   and the number of variables nbvar,
+ *   every node intializes its system container with nbequ.
+ *
+ * ON ENTRY :
+ *   myid     number of the node;
+ *   *nbequ   number of equations in the system;
+ *   *nbvar   number of variables in the system. */
+
 void monomials_broadcast ( int myid, int n );
 /*
  * DESCRIPTION :

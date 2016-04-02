@@ -1,3 +1,5 @@
+Sat 2 Apr 2016 : added dimensions_broadcast to parallel_phcpack.
+
 Mon 14 Dec 2015 : name changes in solcon changed parallel_phcpack.c,
   parallel_subsystem.c, mpi2cell_s.c, mpi2cell_d.c, and mpi2fac_s.c.
 
