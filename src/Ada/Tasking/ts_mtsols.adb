@@ -1,4 +1,7 @@
-with text_io,integer_io;                use text_io,integer_io;
+with text_io;                           use text_io;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 with Standard_System_and_Solutions_io;  use Standard_System_and_Solutions_io;
@@ -10,7 +13,7 @@ procedure ts_mtsols is
 --   Test on multitasking a solution list of a polynomial system.
 
   procedure Report_Solution
-               ( id,nb : in natural; ls : Link_to_Solution ) is
+               ( id,nb : in integer32; ls : Link_to_Solution ) is
 
   -- DESCRIPTION :
   --   Task with identification number id reports the receipt of
@@ -24,16 +27,17 @@ procedure ts_mtsols is
   end Report_Solution;
 
   procedure Multitask_on_Solutions
-               ( p : in Poly_Sys; sols : in Solution_List; n : in natural ) is
+               ( p : in Poly_Sys; sols : in Solution_List;
+                 n : in integer32 ) is
 
   -- DESCRIPTION :
   --   Given a polynomial system p with solutions in sols,
   --   n threads will be launched to multitask on the solution list.
 
     ptr : Solution_List;
-    cnt : natural := 0;
+    cnt : integer32 := 0;
 
-    procedure Next_Solution ( i,n : in natural ) is
+    procedure Next_Solution ( i,n : in integer32 ) is
 
     -- DESCRIPTION :
     --   The n threads will run through the solution list,
@@ -46,7 +50,7 @@ procedure ts_mtsols is
     --   cnt = Length_Of(sols) + 1 <=> Is_Null(ptr)
 
       s : Semaphore.Lock;
-      myjob : natural;
+      myjob : integer32;
       myptr : Solution_List;
       ls : Link_to_Solution;
 
@@ -80,7 +84,7 @@ procedure ts_mtsols is
 
     p : Link_to_Poly_Sys;
     s : Solution_List;
-    n : natural;
+    n : integer32 := 0;
 
   begin
     new_line;

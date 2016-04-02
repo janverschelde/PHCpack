@@ -1,3 +1,5 @@
+Fri 1 Apr 2016 : fixed ts_mtsols.adb and ts_mtsharps for compilation.
+
 Thu 31 Mar 2016 : fixed ts_mtddref.adb and ts_mtqdref.adb as well.
 
 Wed 30 Mar 2016 : fixed ts_mtstref.adb so it compiles again...

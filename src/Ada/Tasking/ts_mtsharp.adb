@@ -1,6 +1,10 @@
-with text_io,integer_io;                use text_io,integer_io;
+with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
 with Timing_Package;                    use Timing_Package;
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Multprec_Floating_Numbers;         use Multprec_Floating_Numbers;
 with Multprec_Complex_Poly_Systems;     use Multprec_Complex_Poly_Systems;
 with Multprec_Complex_Poly_SysFun;      use Multprec_Complex_Poly_SysFun;
@@ -16,7 +20,7 @@ procedure ts_mtsharp is
 --   Test on multitasking a solution list of a polynomial system.
 
   procedure Refine_Solution
-               ( id,nb : in natural; ls : in Link_to_Solution;
+               ( id,nb : in integer32; ls : in Link_to_Solution;
                  f : in Eval_Poly_Sys; jf : in Eval_Jaco_Mat ) is
 
   -- DESCRIPTION :
@@ -25,8 +29,8 @@ procedure ts_mtsharp is
 
     epsxa : Floating_Number := Create(1.0E-32);
     epsfa : Floating_Number := Create(1.0E-32);
-    numit : natural := 0;
-    maxit : constant natural := 3;
+    numit : natural32 := 0;
+    maxit : constant natural32 := 3;
     fail : boolean;
 
   begin
@@ -38,7 +42,8 @@ procedure ts_mtsharp is
   end Refine_Solution;
 
   procedure Multitask_on_Solutions
-               ( p : in Poly_Sys; sols : in Solution_List; n : in natural ) is
+               ( p : in Poly_Sys; sols : in Solution_List;
+                 n : in integer32 ) is
 
   -- DESCRIPTION :
   --   Given a polynomial system p with solutions in sols,
@@ -48,9 +53,9 @@ procedure ts_mtsharp is
     jf : Jaco_Mat(p'range,p'range) := Create(p);
     ejf : Eval_Jaco_Mat(jf'range(1),jf'range(2)) := Create(jf);
     ptr : Solution_List;
-    cnt : natural := 0;
+    cnt : integer32 := 0;
 
-    procedure Next_Solution ( i,n : in natural ) is
+    procedure Next_Solution ( i,n : in integer32 ) is
 
     -- DESCRIPTION :
     --   The n threads will run through the solution list,
@@ -63,7 +68,7 @@ procedure ts_mtsharp is
     --   cnt = Length_Of(sols) + 1 <=> Is_Null(ptr)
 
       s : Semaphore.Lock;
-      myjob : natural;
+      myjob : integer32;
       myptr : Solution_List;
       ls : Link_to_Solution;
 
@@ -104,7 +109,7 @@ procedure ts_mtsharp is
 
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
-    ind : natural := head'first - 1;
+    ind : integer32 := head'first - 1;
 
   begin
     while not Is_Null(tmp) loop
@@ -120,7 +125,7 @@ procedure ts_mtsharp is
 
   procedure Static_Multitasking
                ( p : in Poly_Sys; head,tail : in Array_of_Solution_Lists;
-                 n : in natural ) is
+                 n : in integer32 ) is
 
   -- DESCRIPTION :
   --   Creates n tasks, the i-th tasks works on the i-th list.
@@ -129,14 +134,14 @@ procedure ts_mtsharp is
     jf : Jaco_Mat(p'range,p'range) := Create(p);
     ejf : Eval_Jaco_Mat(jf'range(1),jf'range(2)) := Create(jf);
 
-    procedure Next_Solution ( i,n : in natural ) is
+    procedure Next_Solution ( i,n : in integer32 ) is
 
     -- DESCRIPTION :
     --   The n threads will run through the solution list head(i).
 
       ls : Link_to_Solution;
       ptr : Solution_List := head(i);
-      cnt : natural := 0;
+      cnt : integer32 := 0;
 
     begin
       while not Is_Null(ptr) loop
@@ -154,7 +159,8 @@ procedure ts_mtsharp is
   end Static_Multitasking;
 
   procedure Static_Multitasking
-               ( p : in Poly_Sys; sols : in Solution_List; n : in natural ) is
+               ( p : in Poly_Sys; sols : in Solution_List;
+                 n : in integer32 ) is
 
   -- DESCRIPTION :
   --   Distributes the solution list first among the threads.
@@ -175,7 +181,7 @@ procedure ts_mtsharp is
 
     p : Link_to_Poly_Sys;
     s : Solution_List;
-    n : natural;
+    n : integer32 := 0;
     file : file_type;
     timer : Timing_Widget;
 
