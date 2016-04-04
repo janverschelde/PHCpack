@@ -1,3 +1,6 @@
+Sun 3 Apr 2016 : added more broadcasts operations to parallel_phcpack
+  for the double double and quad double versions.
+
 Sat 2 Apr 2016 : added dimensions_broadcast to parallel_phcpack.
 
 Mon 14 Dec 2015 : name changes in solcon changed parallel_phcpack.c,

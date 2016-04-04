@@ -10,23 +10,47 @@ void dimension_broadcast ( int myid, int *n );
 /*
  * DESCRIPTION :
  *   After broadcasting the ambient dimension n,
- *   every node intializes its system container with n.
+ *   every node intializes its standard systems container with n.
  *
  * ON ENTRY :
  *   myid     number of the node;
- *   *n       ambient dimension of the problem. */
+ *   n        ambient dimension of the problem. */
 
-void dimensions_broadcast ( int myid, int *nbequ, int *nbvar );
+void standard_dimensions_broadcast ( int myid, int *nbequ, int *nbvar );
 /*
  * DESCRIPTION :
  *   After broadcasting the number of equations nbequ
  *   and the number of variables nbvar,
- *   every node intializes its system container with nbequ.
+ *   every node intializes its standard systems container with nbequ.
  *
  * ON ENTRY :
  *   myid     number of the node;
- *   *nbequ   number of equations in the system;
- *   *nbvar   number of variables in the system. */
+ *   nbequ    number of equations in the system;
+ *   nbvar    number of variables in the system. */
+
+void dobldobl_dimensions_broadcast ( int myid, int *nbequ, int *nbvar );
+/*
+ * DESCRIPTION :
+ *   After broadcasting the number of equations nbequ
+ *   and the number of variables nbvar,
+ *   every node intializes its dobldobl systems container with nbequ.
+ *
+ * ON ENTRY :
+ *   myid     number of the node;
+ *   nbequ    number of equations in the system;
+ *   nbvar    number of variables in the system. */
+
+void quaddobl_dimensions_broadcast ( int myid, int *nbequ, int *nbvar );
+/*
+ * DESCRIPTION :
+ *   After broadcasting the number of equations nbequ
+ *   and the number of variables nbvar,
+ *   every node intializes its quaddobl systems container with nbequ.
+ *
+ * ON ENTRY :
+ *   myid     number of the node;
+ *   nbequ    number of equations in the system;
+ *   nbvar    number of variables in the system. */
 
 void monomials_broadcast ( int myid, int n );
 /*

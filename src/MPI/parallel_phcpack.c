@@ -18,8 +18,7 @@
 
 void dimension_broadcast ( int myid, int *n )
 {
-   int fail,m,*b;
-   double *c;   
+   int fail,m;
 
    if(v>0) printf("Node %d has entered broadcast_dimension.\n", myid);
 
@@ -40,10 +39,9 @@ void dimension_broadcast ( int myid, int *n )
    if(v>0) printf("Node %d is leaving broadcast_dimension.\n", myid);
 }
 
-void dimensions_broadcast ( int myid, int *nbequ, int *nbvar )
+void standard_dimensions_broadcast ( int myid, int *nbequ, int *nbvar )
 {
-   int fail,m,*b;
-   double *c;   
+   int fail,m;
 
    if(v>0) printf("Node %d has entered dimensions_broadcast.\n", myid);
 
@@ -62,6 +60,62 @@ void dimensions_broadcast ( int myid, int *nbequ, int *nbvar )
       if(v>0)
       {  /* get dimension as test */
          fail = syscon_number_of_standard_polynomials(&m);
+         printf("  and initialized container with dimension %d.\n", m);
+      }
+   }
+
+   if(v>0) printf("Node %d is leaving dimensions_broadcast.\n", myid);
+}
+
+void dobldobl_dimensions_broadcast ( int myid, int *nbequ, int *nbvar )
+{
+   int fail,m;
+
+   if(v>0) printf("Node %d has entered dimensions_broadcast.\n", myid);
+
+   MPI_Bcast(nbequ,1,MPI_INT,0,MPI_COMM_WORLD);  
+   MPI_Bcast(nbvar,1,MPI_INT,0,MPI_COMM_WORLD);  
+
+   if(myid != 0)
+   {
+      if(v>0) 
+      {
+          printf("Node %d has the number of equations as %d.\n", myid, *nbequ);
+          printf("Node %d has the number of variables as %d.\n", myid, *nbvar);
+      }
+      /* initialize container */
+      fail = syscon_initialize_number_of_dobldobl_polynomials(*nbequ);
+      if(v>0)
+      {  /* get dimension as test */
+         fail = syscon_number_of_dobldobl_polynomials(&m);
+         printf("  and initialized container with dimension %d.\n", m);
+      }
+   }
+
+   if(v>0) printf("Node %d is leaving dimensions_broadcast.\n", myid);
+}
+
+void quaddobl_dimensions_broadcast ( int myid, int *nbequ, int *nbvar )
+{
+   int fail,m;
+
+   if(v>0) printf("Node %d has entered dimensions_broadcast.\n", myid);
+
+   MPI_Bcast(nbequ,1,MPI_INT,0,MPI_COMM_WORLD);  
+   MPI_Bcast(nbvar,1,MPI_INT,0,MPI_COMM_WORLD);  
+
+   if(myid != 0)
+   {
+      if(v>0) 
+      {
+          printf("Node %d has the number of equations as %d.\n", myid, *nbequ);
+          printf("Node %d has the number of variables as %d.\n", myid, *nbvar);
+      }
+      /* initialize container */
+      fail = syscon_initialize_number_of_quaddobl_polynomials(*nbequ);
+      if(v>0)
+      {  /* get dimension as test */
+         fail = syscon_number_of_quaddobl_polynomials(&m);
          printf("  and initialized container with dimension %d.\n", m);
       }
    }
