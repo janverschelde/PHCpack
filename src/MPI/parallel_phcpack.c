@@ -152,6 +152,64 @@ void monomials_broadcast ( int myid, int n )
    if(v>0) printf("Node %d is about to leave monomials_broadcast.\n", myid);
 }
 
+void dobldobl_monomials_broadcast ( int myid, int n )
+{
+   double cff[4];
+   int i,j,exp[n],mm,fail;
+
+   if(v>0) printf("Node %d has entered monomials_broadcast.\n", myid);
+
+   for(i=1; i<=n; i++)
+   {
+      if(myid == 0)
+      {
+         fail = syscon_number_of_dobldobl_terms(i,&mm); /* get #monomials */
+         if(v>1) printf("Polynomial %d has %d monomials.\n",i,mm);
+      }
+
+      MPI_Bcast(&mm,1,MPI_INT,0,MPI_COMM_WORLD);
+
+      for(j=1; j<=mm; j++)    /* broadcast j-th term of i-th polynomial */
+      {
+         if(myid == 0) fail = syscon_retrieve_dobldobl_term(i,j,n,exp,cff); 
+         MPI_Bcast(cff,4,MPI_DOUBLE,0,MPI_COMM_WORLD); 
+         MPI_Bcast(exp,n,MPI_INT,0,MPI_COMM_WORLD); 
+         if(myid != 0) fail = syscon_add_dobldobl_term(i,n,exp,cff);
+      }
+   }
+
+   if(v>0) printf("Node %d is about to leave monomials_broadcast.\n", myid);
+}
+
+void quaddobl_monomials_broadcast ( int myid, int n )
+{
+   double cff[8];
+   int i,j,exp[n],mm,fail;
+
+   if(v>0) printf("Node %d has entered monomials_broadcast.\n", myid);
+
+   for(i=1; i<=n; i++)
+   {
+      if(myid == 0)
+      {
+         fail = syscon_number_of_quaddobl_terms(i,&mm); /* get #monomials */
+         if(v>1) printf("Polynomial %d has %d monomials.\n",i,mm);
+      }
+
+      MPI_Bcast(&mm,1,MPI_INT,0,MPI_COMM_WORLD);
+
+      for(j=1; j<=mm; j++)    /* broadcast j-th term of i-th polynomial */
+      {
+         if(myid == 0) fail = syscon_retrieve_quaddobl_term(i,j,n,exp,cff); 
+         MPI_Bcast(cff,8,MPI_DOUBLE,0,MPI_COMM_WORLD); 
+         MPI_Bcast(exp,n,MPI_INT,0,MPI_COMM_WORLD); 
+         if(myid != 0) fail = syscon_add_quaddobl_term(i,n,exp,cff);
+      }
+   }
+
+   if(v>0) printf("Node %d is about to leave monomials_broadcast.\n", myid);
+}
+
 int start_system_broadcast ( int myid, int n, int *nbsols )
 {
    int fail;

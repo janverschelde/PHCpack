@@ -61,6 +61,26 @@ void monomials_broadcast ( int myid, int n );
  *   myid     number of the node;
  *   n        ambient dimension. */
 
+void dobldobl_monomials_broadcast ( int myid, int n );
+/*
+ * DESCRIPTION :
+ *   The system container with double double complex coefficients
+ *   at the root node is broadcasted to all nodes.
+ *
+ * ON ENTRY :
+ *   myid     number of the node;
+ *   n        ambient dimension. */
+
+void quaddobl_monomials_broadcast ( int myid, int n );
+/*
+ * DESCRIPTION :
+ *   The system container with quad double complex coefficients
+ *   at the root node is broadcasted to all nodes.
+ *
+ * ON ENTRY :
+ *   myid     number of the node;
+ *   n        ambient dimension. */
+
 int start_system_broadcast ( int myid, int n, int *nbsols );
 /*
  * DESCRIPTION :
