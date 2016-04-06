@@ -2318,6 +2318,12 @@ ts_mtcont:
 ts_mtstref:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtstref.adb -o $(BIN)/ts_mtstref
 
+ts_mtddref:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtddref.adb -o $(BIN)/ts_mtddref
+
+ts_mtqdref:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtqdref.adb -o $(BIN)/ts_mtqdref
+
 ts_mtsharp:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_mtsharp.adb -o $(BIN)/ts_mtsharp
 

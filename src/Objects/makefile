@@ -1419,7 +1419,7 @@ ts_adepath_qd:
 # Test programs for the Tasking:
 
 test_tasking: ts_mutex ts_jobs ts_mtvol ts_mtvolcon ts_mtverify ts_mtcont \
-              ts_mtmva
+              ts_mtmva ts_mtddref ts_mtqdref ts_mtsols ts_mtsharp
 #             ts_mtmatvec ts_mtpolval ts_mtlinsol
 
 ts_mtmatvec:
