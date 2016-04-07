@@ -477,14 +477,27 @@ procedure Dispatch is
     end case;
   end Enumeration_Dispatcher;
 
-  procedure Decomposition_Dispatcher ( infile,outfile : in string ) is
+  procedure Decomposition_Dispatcher 
+              ( o2 : in character; infile,outfile : in string ) is
 
   -- DESCRIPTION :
   --   Witness point generation facilities.
 
   begin
-    put_line(welcome); put_line(compban);
-    maindeco(infile,outfile);
+    case o2 is
+      when 't' =>
+        declare
+          nt : constant natural32 := Number_of_Tasks;
+          ns : constant string := Convert(integer32(nt));
+        begin
+          put_line(welcome);
+          put_line(compban & " with " & ns & " tasks");
+          maindeco(infile,outfile);
+        end;
+      when others =>
+        put_line(welcome); put_line(compban);
+        maindeco(infile,outfile);
+    end case;
   end Decomposition_Dispatcher;
 
   procedure Factorization_Dispatcher ( infile,outfile : in string ) is
@@ -595,7 +608,7 @@ procedure Dispatch is
       when 'a'    => put_line(welcome); put_line(slvban);
                      mainsolve(f1,f2);
       when 'b'    => Black_Box_Dispatcher(o2,o3,f1,f2,f3);
-      when 'c'    => Decomposition_Dispatcher(f1,f2);
+      when 'c'    => Decomposition_Dispatcher(o2,f1,f2);
       when 'd'    => Reduction_Dispatcher(f1,f2);
       when 'e'    => Enumeration_Dispatcher(o2,f1,f2);
       when 'g'    => Test_if_System_is_Good(f1,f2);

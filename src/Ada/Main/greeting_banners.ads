@@ -8,7 +8,7 @@ package Greeting_Banners is
     "Welcome to PHC (Polynomial Homotopy Continuation) v2.4.14 25 Mar 2016";
 
   compban : constant string :=
-    "A numerical irreducible decomposition for the solution components.";
+    "a numerical irreducible decomposition for solution sets";
 
   enumban : constant string :=
     "SAGBI/Pieri homotopies to solve a problem in enumerative geometry.";
