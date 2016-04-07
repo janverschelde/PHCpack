@@ -1389,7 +1389,7 @@ package body Drivers_to_Cascade_Filtering is
     Main_Driver;
   end Driver_for_Cascade_Filter;
 
-  procedure Embed_and_Cascade is
+  procedure Embed_and_Cascade ( nt : in natural32 ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -1398,10 +1398,9 @@ package body Drivers_to_Cascade_Filtering is
     file : file_type;
     timer : timing_widget;
     sols : Solution_List;
-   -- sols0,sols1 : Solution_List;
+    sols0,sols1 : Solution_List;
     tol : constant double_float := 1.0E-8;
-   -- n : natural;
-    k,rc : natural32;
+    n,k,rc : natural32;
     outfilename : Link_to_String;
 
   begin
@@ -1417,13 +1416,15 @@ package body Drivers_to_Cascade_Filtering is
     put_line("See the output file for results...");
     new_line;
     tstart(timer);
+   -- Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
     Black_Box_Solvers.Solve(file,ep.all,rc,sols);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"calling the blackbox solver for the top");
     if not Is_Null(sols) then
-     -- n := Head_Of(sols).n - k;
-     -- Filter_and_Split_Solutions(file,sols,n,k,tol,sols0,sols1);
+     -- n := natural32(Head_Of(sols).n) - k;
+     -- Filter_and_Split_Solutions
+     --   (file,sols,integer32(n),integer32(k),tol,sols0,sols1);
       Witness_Generate(outfilename.all,file,ep.all,sols,k,tol);
     end if;
   end Embed_and_Cascade;

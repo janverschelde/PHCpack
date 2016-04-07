@@ -185,9 +185,13 @@ package Drivers_to_Cascade_Filtering is
   --   the solution set of the system p.  k is the top dimension.
   --   All results are written to the file.
 
-  procedure Embed_and_Cascade;
+  procedure Embed_and_Cascade ( nt : in natural32 );
 
   -- DESCRIPTION :
   --   Does the embedding of the top dimension and runs the cascade.
+
+  -- ON ENTRY :
+--   nt          the number of tasks, if 0 then no multitasking,
+--               otherwise nt tasks will be used to track the paths;
 
 end Drivers_to_Cascade_Filtering;
