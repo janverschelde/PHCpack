@@ -544,6 +544,10 @@ procedure Dispatch is
               when others => bablphc(nt,infile,outfile);
             end case;
         end case;
+      when 'c' =>
+        put_line(welcome);
+        put_line(compban & " with " & ns & " tasks");
+        maindeco(infile,outfile);
       when others => mainphc(nt,infile,outfile);
     end case;
   end Tasking_Dispatcher;
