@@ -492,11 +492,11 @@ procedure Dispatch is
         begin
           put_line(welcome);
           put_line(compban & " with " & ns & " tasks");
-          maindeco(infile,outfile);
+          maindeco(nt,infile,outfile);
         end;
       when others =>
         put_line(welcome); put_line(compban);
-        maindeco(infile,outfile);
+        maindeco(0,infile,outfile);
     end case;
   end Decomposition_Dispatcher;
 
@@ -547,7 +547,7 @@ procedure Dispatch is
       when 'c' =>
         put_line(welcome);
         put_line(compban & " with " & ns & " tasks");
-        maindeco(infile,outfile);
+        maindeco(nt,infile,outfile);
       when others => mainphc(nt,infile,outfile);
     end case;
   end Tasking_Dispatcher;

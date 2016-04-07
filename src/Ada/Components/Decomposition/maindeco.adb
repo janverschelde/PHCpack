@@ -2,7 +2,6 @@ with text_io;                           use text_io;
 with String_Splitters;                  use String_Splitters;
 with Communications_with_User;          use Communications_with_User;
 with Timing_Package;                    use Timing_Package;
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
@@ -29,7 +28,7 @@ with Extrinsic_Diagonal_Solvers;        use Extrinsic_Diagonal_Solvers;
 with Drivers_to_Intersect_Varieties;    use Drivers_to_Intersect_Varieties;
 with Driver_to_Rank_Supports;
 
-procedure maindeco ( infilename,outfilename : in string ) is
+procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
 
   procedure Read_Output_File
               ( file : in out file_type;

@@ -1,10 +1,14 @@
-procedure maindeco ( infilename,outfilename : in string );
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
+
+procedure maindeco ( nt : in natural32; infilename,outfilename : in string );
 
 -- DESCRIPTION :
 --   This routine is called by the central dispatcher of phc,
 --   to perform a numerical irreducible decomposition.
 
 -- ON ENTRY :
+--   nt             the number of tasks, if 0 then no multitasking,
+--                  otherwise nt tasks will be used to track the paths;
 --   infilename     file name for input (a polynomial system),
 --                  if empty, then the user will be prompted to supply
 --                  the name of an input file;
