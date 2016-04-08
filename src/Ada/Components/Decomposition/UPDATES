@@ -1,3 +1,6 @@
+Fri 8 Apr 2016 : added the number of tasks nt as parameter to the interactive
+  drivers in drivers_to_cascade_filtering.
+
 Thu 7 Apr 2016 : added number of tasks nt parameter to the main driver
   to embed a system and run the cascade in drivers_to_cascade_filtering.
 
