@@ -47,7 +47,7 @@ with Drivers_to_Breakup_Components;      use Drivers_to_Breakup_Components;
 
 package body Drivers_to_Cascade_Filtering is
 
-  procedure Standard_Square_and_Embed ( nt : in natural32 ) is
+  procedure Standard_Square_and_Embed is
 
     use Standard_Complex_Poly_Systems;
 
@@ -68,7 +68,7 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
   end Standard_Square_and_Embed;
 
-  procedure DoblDobl_Square_and_Embed ( nt : in natural32 ) is
+  procedure DoblDobl_Square_and_Embed is
 
     use DoblDobl_Complex_Poly_Systems;
 
@@ -89,7 +89,7 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
   end DoblDobl_Square_and_Embed;
 
-  procedure QuadDobl_Square_and_Embed ( nt : in natural32 ) is
+  procedure QuadDobl_Square_and_Embed is
 
     use QuadDobl_Complex_Poly_Systems;
 
@@ -110,15 +110,15 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
   end QuadDobl_Square_and_Embed;
 
-  procedure Driver_to_Square_and_Embed ( nt : in natural32 ) is
+  procedure Driver_to_Square_and_Embed is
 
     p : constant character := Prompt_for_Precision;
 
   begin
     case p is
-      when '0' => Standard_Square_and_Embed(nt);
-      when '1' => DoblDobl_Square_and_Embed(nt);
-      when '2' => QuadDobl_Square_and_Embed(nt);
+      when '0' => Standard_Square_and_Embed;
+      when '1' => DoblDobl_Square_and_Embed;
+      when '2' => QuadDobl_Square_and_Embed;
       when others => null;
     end case;
   end Driver_to_Square_and_Embed;
@@ -321,7 +321,7 @@ package body Drivers_to_Cascade_Filtering is
   end Write_Witness_Points;
 
   procedure Down_Continuation
-              ( file : in file_type;
+              ( file : in file_type; nt : in natural32;
                 embsys : in Standard_Complex_Poly_Systems.Poly_Sys;
                 level : in natural32;
                 sols : in out Standard_Complex_Solutions.Solution_List;
@@ -340,11 +340,12 @@ package body Drivers_to_Cascade_Filtering is
     put(file,"TARGET SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,target);
     Set_Continuation_Parameter(sols,Create(0.0));
-    Black_Box_Polynomial_Continuation(file,target,embsys,sols,pocotime);
+    Black_Box_Polynomial_Continuation
+      (file,integer32(nt),target,embsys,sols,pocotime);
   end Down_Continuation;
 
   procedure Down_Continuation
-              ( file : in file_type;
+              ( file : in file_type; nt : in natural32;
                 embsys : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 level : in natural32;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
@@ -363,11 +364,12 @@ package body Drivers_to_Cascade_Filtering is
     put(file,"TARGET SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,target);
     Set_Continuation_Parameter(sols,Create(integer(0)));
-    Black_Box_Polynomial_Continuation(file,target,embsys,sols,pocotime);
+    Black_Box_Polynomial_Continuation
+      (file,integer32(nt),target,embsys,sols,pocotime);
   end Down_Continuation;
 
   procedure Down_Continuation
-              ( file : in file_type;
+              ( file : in file_type; nt : in natural32;
                 embsys : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 level : in natural32;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
@@ -386,11 +388,12 @@ package body Drivers_to_Cascade_Filtering is
     put(file,"TARGET SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,target);
     Set_Continuation_Parameter(sols,Create(integer(0)));
-    Black_Box_Polynomial_Continuation(file,target,embsys,sols,pocotime);
+    Black_Box_Polynomial_Continuation
+      (file,integer32(nt),target,embsys,sols,pocotime);
   end Down_Continuation;
 
   procedure Witness_Generate
-              ( outfile,resfile : in file_type;
+              ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 k : in natural32;
@@ -418,7 +421,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(k) loop
-        Down_Continuation(outfile,embsys(i).all,natural32(i),wsols,pocotime);
+        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
@@ -451,7 +454,7 @@ package body Drivers_to_Cascade_Filtering is
   end Witness_Generate;
 
   procedure Witness_Generate
-              ( outfile,resfile : in file_type;
+              ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 k : in natural32;
@@ -479,7 +482,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(k) loop
-        Down_Continuation(outfile,embsys(i).all,natural32(i),wsols,pocotime);
+        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
@@ -512,7 +515,7 @@ package body Drivers_to_Cascade_Filtering is
   end Witness_Generate;
 
   procedure Witness_Generate
-              ( outfile,resfile : in file_type;
+              ( outfile,resfile : in file_type; nt : in natural32;
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 k : in natural32;
@@ -540,7 +543,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(k) loop
-        Down_Continuation(outfile,embsys(i).all,natural32(i),wsols,pocotime);
+        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
@@ -648,6 +651,7 @@ package body Drivers_to_Cascade_Filtering is
 
   procedure Witness_Generate
               ( name : in string; outfile : in file_type;
+                nt : in natural32;
                 ep : in Standard_Complex_Poly_Systems.Poly_Sys;
                 sols : in Standard_Complex_Solutions.Solution_List;
                 k : in natural32; zerotol : in double_float ) is
@@ -673,7 +677,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(k) loop
-        Down_Continuation(outfile,embsys(i).all,natural32(i),wsols,pocotime);
+        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
@@ -705,6 +709,7 @@ package body Drivers_to_Cascade_Filtering is
 
   procedure Witness_Generate
               ( name : in string; outfile : in file_type;
+                nt : in natural32;
                 ep : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in DoblDobl_Complex_Solutions.Solution_List;
                 k : in natural32; zerotol : in double_float ) is
@@ -730,7 +735,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(k) loop
-        Down_Continuation(outfile,embsys(i).all,natural32(i),wsols,pocotime);
+        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
@@ -762,6 +767,7 @@ package body Drivers_to_Cascade_Filtering is
 
   procedure Witness_Generate
               ( name : in string; outfile : in file_type;
+                nt : in natural32;
                 ep : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
                 sols : in QuadDobl_Complex_Solutions.Solution_List;
                 k : in natural32; zerotol : in double_float ) is
@@ -787,7 +793,7 @@ package body Drivers_to_Cascade_Filtering is
     if not Is_Null(sols1) then
       Copy(sols1,wsols);
       for i in reverse 1..integer32(k) loop
-        Down_Continuation(outfile,embsys(i).all,natural32(i),wsols,pocotime);
+        Down_Continuation(outfile,nt,embsys(i).all,natural32(i),wsols,pocotime);
         Clear(sols0); Clear(sols1);
         Filter_and_Split_Solutions
           (outfile,wsols,integer32(n),i-1,zerotol,sols0,sols1);
@@ -817,7 +823,7 @@ package body Drivers_to_Cascade_Filtering is
     print_times(outfile,timer,"Witness Generate with Cascade of Homotopies");
   end Witness_Generate;
 
-  procedure Standard_Witness_Generate is
+  procedure Standard_Witness_Generate ( nt : in natural32 ) is
 
     use Standard_Complex_Poly_Systems;
     use Standard_Complex_Solutions;
@@ -847,11 +853,11 @@ package body Drivers_to_Cascade_Filtering is
       close(infile);
      -- open(infile,out_file,name);
      -- Witness_Generate(outfile,infile,lp.all,sols,dim,1.0E-8);
-      Witness_Generate(name,outfile,lp.all,sols,dim,1.0E-8);
+      Witness_Generate(name,outfile,nt,lp.all,sols,dim,1.0E-8);
     end;
   end Standard_Witness_Generate;
 
-  procedure DoblDobl_Witness_Generate is
+  procedure DoblDobl_Witness_Generate ( nt : in natural32 ) is
 
     use DoblDobl_Complex_Poly_Systems;
     use DoblDobl_Complex_Solutions;
@@ -881,11 +887,11 @@ package body Drivers_to_Cascade_Filtering is
       close(infile);
      -- open(infile,out_file,name);
      -- Witness_Generate(outfile,infile,lp.all,sols,dim,1.0E-8);
-      Witness_Generate(name,outfile,lp.all,sols,dim,1.0E-8);
+      Witness_Generate(name,outfile,nt,lp.all,sols,dim,1.0E-8);
     end;
   end DoblDobl_Witness_Generate;
 
-  procedure QuadDobl_Witness_Generate is
+  procedure QuadDobl_Witness_Generate ( nt : in natural32 ) is
 
     use QuadDobl_Complex_Poly_Systems;
     use QuadDobl_Complex_Solutions;
@@ -915,19 +921,19 @@ package body Drivers_to_Cascade_Filtering is
       close(infile);
      -- open(infile,out_file,name);
      -- Witness_Generate(outfile,infile,lp.all,sols,dim,1.0E-8);
-      Witness_Generate(name,outfile,lp.all,sols,dim,1.0E-8);
+      Witness_Generate(name,outfile,nt,lp.all,sols,dim,1.0E-8);
     end;
   end QuadDobl_Witness_Generate;
 
-  procedure Driver_to_Witness_Generate is
+  procedure Driver_to_Witness_Generate ( nt : in natural32 ) is
 
     p : constant character := Prompt_for_Precision;
 
   begin
     case p is
-      when '0' => Standard_Witness_Generate;
-      when '1' => DoblDobl_Witness_Generate;
-      when '2' => QuadDobl_Witness_Generate;
+      when '0' => Standard_Witness_Generate(nt);
+      when '1' => DoblDobl_Witness_Generate(nt);
+      when '2' => QuadDobl_Witness_Generate(nt);
       when others => null;
     end case;
   end Driver_to_Witness_Generate;
@@ -1400,7 +1406,8 @@ package body Drivers_to_Cascade_Filtering is
     sols : Solution_List;
     sols0,sols1 : Solution_List;
     tol : constant double_float := 1.0E-8;
-    n,k,rc : natural32;
+   -- n,
+    k,rc : natural32;
     outfilename : Link_to_String;
 
   begin
@@ -1425,7 +1432,7 @@ package body Drivers_to_Cascade_Filtering is
      -- n := natural32(Head_Of(sols).n) - k;
      -- Filter_and_Split_Solutions
      --   (file,sols,integer32(n),integer32(k),tol,sols0,sols1);
-      Witness_Generate(outfilename.all,file,ep.all,sols,k,tol);
+      Witness_Generate(outfilename.all,file,nt,ep.all,sols,k,tol);
     end if;
   end Embed_and_Cascade;
 

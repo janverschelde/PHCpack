@@ -1,3 +1,7 @@
+Sat 9 Apr 2016 : the interactive drivers have no need for nt, but the
+  witness generate procedures in the cascade can use multitasking.
+  Updated drivers_to_cascade_filtering, which changed maindeco.adb.
+
 Fri 8 Apr 2016 : added the number of tasks nt as parameter to the interactive
   drivers in drivers_to_cascade_filtering.
 

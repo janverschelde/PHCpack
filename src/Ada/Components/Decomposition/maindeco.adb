@@ -358,8 +358,8 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     Ask_Alternative(ans,"0123456789AB");
     case ans is
       when '0' => Embed_and_Cascade(nt);
-      when '1' => Driver_to_Square_and_Embed(nt);
-      when '2' => Driver_to_Witness_Generate;
+      when '1' => Driver_to_Square_and_Embed;
+      when '2' => Driver_to_Witness_Generate(nt);
       when '3' => 
         if infilename /= ""
          then Read_System(infilename,lp);
