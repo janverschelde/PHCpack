@@ -1,3 +1,6 @@
+Thu 14 Apr 2016 : added nt parameter in maindeco.adb to the driver routines
+  for the extrinsic diagonal cascade of homotopies.
+
 Sat 9 Apr 2016 : the interactive drivers have no need for nt, but the
   witness generate procedures in the cascade can use multitasking.
   Updated drivers_to_cascade_filtering, which changed maindeco.adb.

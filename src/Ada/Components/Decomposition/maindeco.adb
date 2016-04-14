@@ -139,7 +139,12 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
     lsym2 := Extrinsic_Diagonal_Homotopies_io.Get_Link_to_Symbols;
   end Read_Two_Witness_Sets;
 
-  procedure Call_Extrinsic_Diagonal_Homotopies is
+  procedure Call_Extrinsic_Diagonal_Homotopies ( nt : in natural32 ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for two witness sets and runs an extrinsic
+  --   cascade of homotopies to compute a witness set representation
+  --   of their intersection.
 
     lp1,lp2 : Link_to_Poly_Sys;
     esols1,esols2,sols1,sols2 : Solution_List;
@@ -376,7 +381,7 @@ procedure maindeco ( nt : in natural32; infilename,outfilename : in string ) is
       when '4' => Driver_to_Remove_Embedding;
       when '5' => Build_Diagonal_Cascade;
       when '6' => Collapse_Diagonal_System;
-      when '7' => Call_Extrinsic_Diagonal_Homotopies;
+      when '7' => Call_Extrinsic_Diagonal_Homotopies(nt);
       when '8' => Call_Intrinsic_Diagonal_Homotopies;
       when '9' => Call_Binomial_Solver;
       when 'A' => Degrees_of_Monomial_Maps;
