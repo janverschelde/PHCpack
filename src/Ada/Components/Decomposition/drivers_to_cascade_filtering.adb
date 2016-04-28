@@ -1419,13 +1419,17 @@ package body Drivers_to_Cascade_Filtering is
     new_line;
     Interactive_Square_and_Embed(file,lp.all,ep,k);
     new_line;
-    put_line("Calling the blackbox solver on the top embedding.");
     put_line("See the output file for results...");
     new_line;
-    tstart(timer);
-   -- Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
-    Black_Box_Solvers.Solve(file,ep.all,rc,sols);
-    tstop(timer);
+    if nt = 0 then
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,ep.all,rc,sols);
+      tstop(timer);
+    else
+      tstart(timer);
+      Black_Box_Solvers.Solve(file,nt,ep.all,rc,sols);
+      tstop(timer);
+    end if;
     new_line(file);
     print_times(file,timer,"calling the blackbox solver for the top");
     if not Is_Null(sols) then
