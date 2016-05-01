@@ -137,6 +137,10 @@ Below is a step-by-step installation procedure.
 about this document
 -------------------
 
-This document arose as an exercise in exploring restructured text
-and Sphinx.  Even with a wonderful tool like Sphinx, this documentation
-is (just as phcpy) very much a work in progress...
+This document arose as an exercise in exploring restructured text and Sphinx.
+All good software document consists of four items: an installation guide,
+a getting started, a tutorial, and a reference manual.
+This document combines all four.
+In its current state, phcpy is a collection of modules, with a focus
+on exporting the functionality of PHCpack.  The design is functional.
+The package does not define nor export an object oriented interface.

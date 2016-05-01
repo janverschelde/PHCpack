@@ -1,3 +1,7 @@
+Sat 30 Apr 2016 : added is_real and filter_real function to the solutions
+  module in PHCpy2 and PHCpy3, with better documentation in welcome.rst
+  and blackbox.rst.  Prepared version 0.4.4 of phcpy.
+
 Tue 29 Mar 2016 : updated the documentation of the deflate in blackbox.rst
   of both PHCpy2 and PHCpy3 to illustrate the tolerance of the rank.
 
