@@ -159,6 +159,42 @@ def make_solution(sol, vals):
     result = result + '== err : 0.0 = rco : 1.0 = res : 0.0 =='
     return result
 
+def is_real(sol, tol):
+    """
+    Returns True if the solution in sol is real with respect
+    to the given tolerance tol: if the absolute value of the imaginary
+    part of all coordinates are less than tol.
+    """
+    (vars, vals) = coordinates(sol)
+    for value in vals:
+        if abs(value.imag) > tol:
+            return False
+    return True
+
+def filter_real(sols, tol, oper):
+    """
+    Filters the real solutions in sols.
+    The input parameters are
+    (1) sols is a list of solution strings in PHCpack format,
+    (2) tol is the tolerance on the absolute value of the
+    imaginary parts of the coordinates of the solution.
+    (3) oper is either 'select' or 'remove'
+    if oper == 'select' then solutions that are considered real
+    are selected and in the list on return,
+    if oper == 'remove' then solutions that are considered real
+    are in the list on return.
+    """
+    result = []
+    for sol in sols:
+        isreal = is_real(sol, tol)
+        if oper == 'select':
+            if isreal:
+                result.append(sol)
+        if oper == 'remove':
+            if not isreal:
+                result.append(sol)
+    return result
+
 def filter_regular(sols, tol, oper):
     """
     Filters solutions in sols for the estimate of
@@ -177,11 +213,11 @@ def filter_regular(sols, tol, oper):
     result = []
     for sol in sols:
         rco = diagnostics(sol)[1]
-        if(oper == 'select'):
-            if(rco > tol):
+        if oper == 'select':
+            if rco > tol:
                 result.append(sol)
-        if(oper == 'remove'):
-            if(rco <= tol):
+        if oper == 'remove':
+            if rco <= tol:
                 result.append(sol)
     return result
 
@@ -205,11 +241,11 @@ def filter_zero_coordinates(sols, varname, tol, oper):
     result = []
     for sol in sols:
         dsol = strsol2dict(sol)
-        if(oper == 'select'):
-            if(abs(dsol[varname]) < tol):
+        if oper == 'select':
+            if abs(dsol[varname]) < tol:
                 result.append(sol)
-        if(oper == 'remove'):
-            if(abs(dsol[varname]) >= tol):
+        if oper == 'remove':
+            if abs(dsol[varname]) >= tol:
                 result.append(sol)
     return result
 

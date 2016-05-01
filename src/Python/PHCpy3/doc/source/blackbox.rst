@@ -49,7 +49,7 @@ To solve the system defined by f, we call the blackbox solver:
 ::
 
    >>> from phcpy.solver import solve
-   >>> s = solve(f,silent=True)
+   >>> s = solve(f, silent=True)
    >>> len(s)
    15
    >>> print(s[2])
@@ -62,9 +62,33 @@ To solve the system defined by f, we call the blackbox solver:
 
 The *solve* command returned a list of 15 strings in s,
 each string represents a solution that makes the polynomials in f vanish.
-The module **phcpy.solutions** (documented below)
+The module **phcpy.solutions** (documented in the next section)
 offers a function to evaluate the solutions
 in the polynomials given as strings.
+
+By default, the option ``silent`` is set to ``False`` and the solver
+prints the computed root counts.  Other options of the solver are
+
+1. **tasks**: the number of tasks for multithreaded path tracking.
+   Solving sufficiently large systems on 4 processor cores may
+   result in a speedup of close to a factor 4 if ``tasks=4`` is
+   given as input argument of ``solve.``
+
+2. **precision**: by default the ``precision`` is set to ``d`` for
+   standard hardware double precision.  While this precision may suffice,
+   the blackbox solver supports two additional levels of precision:
+   ``dd`` for double double preicsion (about 32 decimal places), and
+   ``qd`` for quad double precision (about 64 decimal places).
+   Given ``precision=dd`` as extra input parameter to ``solve``
+   is likely to yield more accurate results, at an extra cost,
+   which may be compensated by multithreading.
+
+3. **checkin**: by default this flag is set to ``True`` to check
+   whether the system given on input has as many polynomials as
+   variables.  The current version of the blackbox solver accepts
+   only square systems.  See the section on positive dimensional
+   solution sets for functions that deal with overdetermined or
+   underdetermined polynomial systems.
 
 representations of solutions of polynomial systems 
 --------------------------------------------------
@@ -152,6 +176,56 @@ close to the numerical working precision:
 
 A more elaborate verification of the solution is provided by
 the function **newton_step** of the module ``solver`` of phcpy.
+
+The module exports function to filter regular solutions, solutions
+with zero coordinates or real solutions.  The filtering of real
+solutions is illustrated in the session below.
+We first define one real solution and another with a coordinate
+that has a nonzero imaginary part.
+
+::
+
+   >>> from phcpy.solutions import make_solution
+   >>> s0 = make_solution(['x', 'y'], [1, complex(0, 1)])
+   >>> print(s0)
+   t : 0.0 0.0
+   m : 1
+   the solution for t :
+    x : 1.000000000000000E+00  0.0
+    y : 0.000000000000000E+00  1.000000000000000E+00
+   == err : 0.0 = rco : 1.0 = res : 0.0 ==
+   >>> s1 = make_solution(['x', 'y'], [2, 3])
+   >>> print(s1)
+   t : 0.0 0.0
+   m : 1
+   the solution for t :
+    x : 2.000000000000000E+00  0.0
+    y : 3.000000000000000E+00  0.0
+   == err : 0.0 = rco : 1.0 = res : 0.0 ==
+
+The filtering of real solutions (with respect to a given tolerance)
+is provided by the functions ``is_real`` (on one solution)
+and ``filter_real`` (on a list of solutions).
+
+::
+
+   >>> from phcpy.solutions import is_real, filter_real
+   >>> is_real(s0, 1.0e-8)
+   False
+   >>> is_real(s1, 1.0e-8)
+   True
+   >>> realsols = filter_real([s0, s1], 1.0e-8, 'select')
+   >>> for sol in realsols: print(sol)
+   ... 
+   t : 0.0 0.0
+   m : 1
+   the solution for t :
+    x : 2.000000000000000E+00  0.0
+    y : 3.000000000000000E+00  0.0
+   == err : 0.0 = rco : 1.0 = res : 0.0 ==
+
+The functions ``filter_regular`` and ``filter_zero_coordinates``
+operate in a manner similar as ``filter_real.``
 
 reproducible runs with fixed seeds
 ----------------------------------
