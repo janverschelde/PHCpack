@@ -1,3 +1,6 @@
+Sun 8 May 2016 : bug fix in quaddobl_blackbox_continuations.adb with
+  the root refiner, to filter the diverging end points at the paths.
+
 Thu 24 Mar 2016 : adjusted {dobldobl,quaddobl}_blackbox_continuations.adb
   so deflation is applied in the root refiners.
 
