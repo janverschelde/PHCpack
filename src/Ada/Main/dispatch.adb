@@ -60,7 +60,7 @@ procedure Dispatch is
 
 -- AVAILABLE OPTIONS :
 
-  options : constant string := "0asdpqmrvbekcxyzftwlgo";
+  options : constant string := "0asdpqmrvbekcxyzftwlgo-";
   -- 0 : zero seed for repeatable runs
   -- a : solve => equation-by-equation solver
   -- b : batch or black box processing
@@ -639,6 +639,37 @@ procedure Dispatch is
     when others => raise; -- put_line("exception in dispatch..."); raise;
   end General_Dispatcher;
 
+  procedure Write_PHCpack_Version is
+
+  -- DESCRIPTION :
+  --   Writes the version string to file if file1 /= ""
+  --   or to screen if file = "".
+
+    arg : constant string := Unix_Command_Line.Argument(1);
+
+  begin
+   -- put_line("arg = " & arg);
+    if arg = "--help" then
+      put_line(arg & " not implemented yet.");
+    elsif arg = "--version" then
+      if argc = 1 then
+        put_line(Greeting_Banners.Version);
+      else
+        declare
+          name : constant string := Unix_Command_Line.Argument(2);
+          file : file_type;
+        begin
+         -- put_line("name = " & name);
+          create(file,out_file,name);
+          put_line(file,Greeting_Banners.Version);
+          close(file);
+        end;
+      end if;
+    else
+      put_line(arg & " is not recognized.");
+    end if;
+  end Write_PHCpack_Version;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -653,6 +684,9 @@ procedure Dispatch is
 
   begin
     Read_Next_Option(posi,options,option1);
+    if option1 = '-'
+     then Write_PHCpack_Version; return;
+    end if;
     if option1 /= ' ' then
       Read_Next_Option(posi,options,option2);
       if option2 /= ' ' then
