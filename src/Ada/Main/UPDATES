@@ -1,3 +1,5 @@
+Mon 9 May 2016 : prepared greeting_banners for version 2.4.16.
+
 Sun 8 May 2016 : phc --version returns the version string or writes it to
   file, as dispatch.adb is modified.
 
