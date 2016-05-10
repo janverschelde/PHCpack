@@ -414,6 +414,27 @@ package body Stable_Polyhedral_Continuation is
     return res;
   end Number_of_Invalid_Supports;
 
+  function Number_of_Invalid_Supports
+              ( s : Arrays_of_Floating_Vector_Lists.Array_of_Lists;
+                mix : Standard_Integer_Vectors.Link_to_Vector )
+              return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the number of supports in s with less than two points.
+  --   The support are counted with the type of mixture,
+  --   provided in mix.
+
+    res : integer32 := 0;
+
+  begin
+    for i in s'range loop
+      if Lists_of_Floating_Vectors.Length_Of(s(i)) < 2
+       then res := res + mix(i);
+      end if;
+    end loop;
+    return res;
+  end Number_of_Invalid_Supports;
+
   procedure Silent_Polyhedral_Continuation
               ( q : in Standard_Complex_Laur_Systems.Laur_Sys;
                 b : in double_float; 
@@ -427,7 +448,7 @@ package body Stable_Polyhedral_Continuation is
     use Standard_Complex_Laur_Systems,Standard_Complex_Laur_SysFun;
     use Standard_Complex_Laur_Jacomats,Standard_Stable_Homotopies;
 
-   -- n : constant natural := q'last;
+    n : constant natural32 := natural32(q'last);
     sq : Laur_Sys(q'range) := Substitute_Zeroes(q,ztp,nbz);
 
   begin
@@ -436,13 +457,14 @@ package body Stable_Polyhedral_Continuation is
    -- else
     if Number_of_Zero_Polynomials(sq) = nbz then
      -- put_line("Nondegenerate subsystem, there are isolated solutions.");
+     -- put("nbz = "); put(nbz,1); new_line;
       declare
         fq : constant Laur_Sys(q'first..q'last-nbz) := Filter(sq);
         smic : constant Mixed_Cell := Substitute_Zeroes(mic,nbz,ztp);
         fmic : constant Mixed_Cell := Filter(smic);
         slif : constant Array_of_Lists(lif'range)
              := Substitute_Zeroes(lif,nbz,ztp);
-        flif : Array_of_Lists(lif'first..lif'last-nbz);
+        flif : constant Array_of_Lists := Filter(slif);
         fmix : Standard_Integer_Vectors.Link_to_Vector;
         h : Eval_Coeff_Laur_Sys(fq'range);
         c : Standard_Complex_VecVecs.VecVec(h'range);
@@ -453,26 +475,25 @@ package body Stable_Polyhedral_Continuation is
       begin
        -- put_line("The original lifted points : "); put(lif);
        -- put_line("After substituting zeroes : "); put(slif);
-        if Number_of_Invalid_Supports(slif) = nbz then
-          flif := Filter(slif);
+        if Number_of_Invalid_Supports(slif,mix) = nbz then
           fmix := Filter(slif,mix);
          -- put_line("The lifted points after substitution : "); put(flif);
          -- put("The new type of mixture : ");
          -- Standard_Integer_Vectors_io.put(fmix.all); new_line;
          -- put_line("The system after substituting zeroes : "); put_line(fq);
          -- put_line("The cell after elimination :"); put(n,mix.all,fmic);
-          if Number_of_Invalid_Supports(flif) = 0 and then
-             Number_of_Zero_Polynomials(fq) = 0 then
-            h := Create(fq); c := Create(fq); e := Create(fq);
-            Create(fq,j,m);
-            Mixed_Solve(fq,flif,h,c,e,j,m,fmix.all,fmic,sols1,sols1_last);
-            sols := Insert_Zeroes(sols1,ztp);
-            if not Is_Null(sols)
-             then Assign_Multiplicity(sols,vol);
-            end if;
-            Deep_Clear(sols1);
-            Clear(h); Clear(j); Clear(m); Clear(e);
-            Standard_Complex_VecVecs.Clear(c);
+          if Number_of_Invalid_Supports(flif,fmix) = 0
+            and then Number_of_Zero_Polynomials(fq) = 0 then
+              h := Create(fq); c := Create(fq); e := Create(fq);
+              Create(fq,j,m);
+              Mixed_Solve(fq,flif,h,c,e,j,m,fmix.all,fmic,sols1,sols1_last);
+              sols := Insert_Zeroes(sols1,ztp);
+              if not Is_Null(sols)
+               then Assign_Multiplicity(sols,vol);
+              end if;
+              Deep_Clear(sols1);
+              Clear(h); Clear(j); Clear(m); Clear(e);
+              Standard_Complex_VecVecs.Clear(c);
           end if;
         end if;
       exception 
@@ -524,7 +545,8 @@ package body Stable_Polyhedral_Continuation is
       begin
        -- put_line("The original lifted points : "); put(lif);
        -- put_line("After substituting zeroes : "); put(slif);
-        if Number_of_Invalid_Supports(slif) = nbz then
+       -- if Number_of_Invalid_Supports(slif) = nbz then
+        if Number_of_Invalid_Supports(slif,mix) = nbz then
           flif := Filter(slif);
           fmix := Filter(slif,mix);
          -- put_line("The lifted points after substitution : "); put(flif);
@@ -532,8 +554,9 @@ package body Stable_Polyhedral_Continuation is
          -- Standard_Integer_Vectors_io.put(fmix.all); new_line;
          -- put_line("The system after substituting zeroes : "); put_line(fq);
          -- put_line("The cell after elimination :"); put(n,mix.all,fmic);
-          if Number_of_Invalid_Supports(flif) = 0 and then
-             Number_of_Zero_Polynomials(fq) = 0 then
+         -- if Number_of_Invalid_Supports(flif) = 0 and then
+          if Number_of_Invalid_Supports(flif,fmix) = 0 and then
+            Number_of_Zero_Polynomials(fq) = 0 then
             h := Create(fq); c := Create(fq); e := Create(fq);
             Create(fq,j,m);
             Mixed_Solve(fq,flif,h,c,e,j,m,fmix.all,fmic,sols1,sols1_last);
@@ -595,7 +618,8 @@ package body Stable_Polyhedral_Continuation is
       begin
        -- put_line("The original lifted points : "); put(lif);
        -- put_line("After substituting zeroes : "); put(slif);
-        if Number_of_Invalid_Supports(slif) = nbz then
+       -- if Number_of_Invalid_Supports(slif) = nbz then
+        if Number_of_Invalid_Supports(slif,mix) = nbz then
           flif := Filter(slif);
           fmix := Filter(slif,mix);
          -- put_line("The lifted points after substitution : "); put(flif);
@@ -603,8 +627,9 @@ package body Stable_Polyhedral_Continuation is
          -- Standard_Integer_Vectors_io.put(fmix.all); new_line;
          -- put_line("The system after substituting zeroes : "); put_line(fq);
          -- put_line("The cell after elimination :"); put(n,mix.all,fmic);
-          if Number_of_Invalid_Supports(flif) = 0 and then
-             Number_of_Zero_Polynomials(fq) = 0 then
+         -- if Number_of_Invalid_Supports(flif) = 0 and then
+          if Number_of_Invalid_Supports(flif,fmix) = 0 and then
+            Number_of_Zero_Polynomials(fq) = 0 then
             h := Create(fq); c := Create(fq); e := Create(fq);
             Create(fq,j,m);
             Mixed_Solve(fq,flif,h,c,e,j,m,fmix.all,fmic,sols1,sols1_last);
@@ -666,11 +691,13 @@ package body Stable_Polyhedral_Continuation is
         m : Mult_Factors(j'range(1),j'range(2));
         sols1,sols1_last : Solution_List;
         nbzp : integer32;
-        nbis : constant integer32 := Number_of_Invalid_Supports(slif);
+        nbis : constant integer32 -- := Number_of_Invalid_Supports(slif);
+             := Number_of_Invalid_Supports(slif,mix);
       begin
         if nbis /= nbz then
-          put_line(file,"The number of invalid supports : ");
-          put(file,nbis,1); put_line(" degenerate case...");
+          put(file,"The number of invalid supports : ");
+          put(file,nbis,1); new_line(file);
+          put_line(" degenerate case...");
         else
           flif := Filter(slif);
           fmix := Filter(slif,mix);
@@ -704,6 +731,11 @@ package body Stable_Polyhedral_Continuation is
       end;
     end if;
     Clear(sq);
+  exception
+    when others =>
+      put_line("Exception raised in Reporting_Polyhedral_Continuation,");
+      put_line("in the package Stable_Polyhedral_Continuation.");
+      raise;
   end Reporting_Polyhedral_Continuation;
 
   procedure Reporting_Polyhedral_Continuation
@@ -745,11 +777,14 @@ package body Stable_Polyhedral_Continuation is
         m : Mult_Factors(j'range(1),j'range(2));
         sols1,sols1_last : Solution_List;
         nbzp : integer32;
-        nbis : constant integer32 := Number_of_Invalid_Supports(slif);
+        nbis : constant integer32 -- := Number_of_Invalid_Supports(slif);
+             := Number_of_Invalid_Supports(slif,mix);
       begin
         if nbis /= nbz then
-          put_line(file,"The number of invalid supports : ");
-          put(file,nbis,1); put_line(" degenerate case...");
+          put(file,"nbz = "); put(file,nbz,1); new_line(file);
+          put(file,"The number of invalid supports : ");
+          put(file,nbis,1); new_line(file);
+          put_line(" degenerate case...");
         else
           flif := Filter(slif);
           fmix := Filter(slif,mix);
@@ -824,7 +859,8 @@ package body Stable_Polyhedral_Continuation is
         m : Mult_Factors(j'range(1),j'range(2));
         sols1,sols1_last : Solution_List;
         nbzp : integer32;
-        nbis : constant integer32 := Number_of_Invalid_Supports(slif);
+        nbis : constant integer32 -- := Number_of_Invalid_Supports(slif);
+             := Number_of_Invalid_Supports(slif,mix);
       begin
         if nbis /= nbz then
           put_line(file,"The number of invalid supports : ");

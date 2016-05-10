@@ -1,3 +1,6 @@
+Tue 10 May 2016 : fixed stable_polyhedral_continuation.adb to track paths
+  defined by semi-mixed stable cells.
+  
 Fri 11 Dec 2015 : added drivers to the pipelined polyhedral trackers to
   drivers_for_mixedvol_algorithm.adb.
 
