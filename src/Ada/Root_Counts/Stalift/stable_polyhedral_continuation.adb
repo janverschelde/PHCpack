@@ -534,7 +534,7 @@ package body Stable_Polyhedral_Continuation is
         fmic : constant Mixed_Cell := Filter(smic);
         slif : constant Array_of_Lists(lif'range)
              := Substitute_Zeroes(lif,nbz,ztp);
-        flif : Array_of_Lists(lif'first..lif'last-nbz);
+        flif : constant Array_of_Lists := Filter(slif);
         fmix : Standard_Integer_Vectors.Link_to_Vector;
         h : Eval_Coeff_Laur_Sys(fq'range);
         c : DoblDobl_Complex_VecVecs.VecVec(h'range);
@@ -547,7 +547,6 @@ package body Stable_Polyhedral_Continuation is
        -- put_line("After substituting zeroes : "); put(slif);
        -- if Number_of_Invalid_Supports(slif) = nbz then
         if Number_of_Invalid_Supports(slif,mix) = nbz then
-          flif := Filter(slif);
           fmix := Filter(slif,mix);
          -- put_line("The lifted points after substitution : "); put(flif);
          -- put("The new type of mixture : ");
@@ -607,7 +606,7 @@ package body Stable_Polyhedral_Continuation is
         fmic : constant Mixed_Cell := Filter(smic);
         slif : constant Array_of_Lists(lif'range)
              := Substitute_Zeroes(lif,nbz,ztp);
-        flif : Array_of_Lists(lif'first..lif'last-nbz);
+        flif : constant Array_of_Lists := Filter(slif);
         fmix : Standard_Integer_Vectors.Link_to_Vector;
         h : Eval_Coeff_Laur_Sys(fq'range);
         c : QuadDobl_Complex_VecVecs.VecVec(h'range);
@@ -620,7 +619,6 @@ package body Stable_Polyhedral_Continuation is
        -- put_line("After substituting zeroes : "); put(slif);
        -- if Number_of_Invalid_Supports(slif) = nbz then
         if Number_of_Invalid_Supports(slif,mix) = nbz then
-          flif := Filter(slif);
           fmix := Filter(slif,mix);
          -- put_line("The lifted points after substitution : "); put(flif);
          -- put("The new type of mixture : ");
@@ -682,7 +680,7 @@ package body Stable_Polyhedral_Continuation is
         fmic : constant Mixed_Cell := Filter(smic);
         slif : constant Array_of_Lists(lif'range)
              := Substitute_Zeroes(lif,nbz,ztp);
-        flif : Array_of_Lists(lif'first..lif'last-nbz);
+        flif : constant Array_of_Lists := Filter(slif);
         fmix : Standard_Integer_Vectors.Link_to_Vector;
         h : Eval_Coeff_Laur_Sys(fq'range);
         c : Standard_Complex_VecVecs.VecVec(h'range);
@@ -696,10 +694,8 @@ package body Stable_Polyhedral_Continuation is
       begin
         if nbis /= nbz then
           put(file,"The number of invalid supports : ");
-          put(file,nbis,1); new_line(file);
-          put_line(" degenerate case...");
+          put(file,nbis,1); put_line(file," degenerate case ...");
         else
-          flif := Filter(slif);
           fmix := Filter(slif,mix);
           put_line(file,"The original lifted points : "); put(file,lif);
           put_line(file,"The lifted points after substitution : ");
@@ -768,7 +764,7 @@ package body Stable_Polyhedral_Continuation is
         fmic : constant Mixed_Cell := Filter(smic);
         slif : constant Array_of_Lists(lif'range)
              := Substitute_Zeroes(lif,nbz,ztp);
-        flif : Array_of_Lists(lif'first..lif'last-nbz);
+        flif : constant Array_of_Lists := Filter(slif);
         fmix : Standard_Integer_Vectors.Link_to_Vector;
         h : Eval_Coeff_Laur_Sys(fq'range);
         c : DoblDobl_Complex_VecVecs.VecVec(h'range);
@@ -783,10 +779,8 @@ package body Stable_Polyhedral_Continuation is
         if nbis /= nbz then
           put(file,"nbz = "); put(file,nbz,1); new_line(file);
           put(file,"The number of invalid supports : ");
-          put(file,nbis,1); new_line(file);
-          put_line(" degenerate case...");
+          put(file,nbis,1); put_line(file," degenerate case ...");
         else
-          flif := Filter(slif);
           fmix := Filter(slif,mix);
           put_line(file,"The original lifted points : "); put(file,lif);
           put_line(file,"The lifted points after substitution : ");
@@ -850,7 +844,7 @@ package body Stable_Polyhedral_Continuation is
         fmic : constant Mixed_Cell := Filter(smic);
         slif : constant Array_of_Lists(lif'range)
              := Substitute_Zeroes(lif,nbz,ztp);
-        flif : Array_of_Lists(lif'first..lif'last-nbz);
+        flif : constant Array_of_Lists := Filter(slif);
         fmix : Standard_Integer_Vectors.Link_to_Vector;
         h : Eval_Coeff_Laur_Sys(fq'range);
         c : QuadDobl_Complex_VecVecs.VecVec(h'range);
@@ -864,9 +858,8 @@ package body Stable_Polyhedral_Continuation is
       begin
         if nbis /= nbz then
           put_line(file,"The number of invalid supports : ");
-          put(file,nbis,1); put_line(" degenerate case...");
+          put(file,nbis,1); put_line(file," degenerate case...");
         else
-          flif := Filter(slif);
           fmix := Filter(slif,mix);
           put_line(file,"The original lifted points : "); put(file,lif);
           put_line(file,"The lifted points after substitution : ");
