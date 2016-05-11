@@ -1,5 +1,4 @@
 -- documentation of the package PHCpack
--- 7 September 2012.
 
 doc ///
   Key 
@@ -8,18 +7,25 @@ doc ///
     a package for Polynomial Homotopy Continuation
   Description
     Text
-      This package provides an interface to the software {\tt PHCpack}, a general-purpose polynomial 
-      system solver that uses homotopy continuation.  The main method is a numerical blackbox solver, 
-      implemented for Laurent systems.  The package also provides a fast mixed volume computation, 
-      ability to filter solutions, extract real solutions, or track homotopy paths. 
+      This package provides an interface to the software {\tt PHCpack}, a
+      general-purpose polynomial system solver that uses homotopy continuation.
+      The main method is a numerical blackbox solver, 
+      implemented for Laurent systems.  The package also provides a fast mixed 
+      volume computation, the ability to filter solutions, extract real 
+      solutions, or track solution paths defined by a polynomial homotopy.
+      For positive dimensional solution sets, we can
+      compute a numerical irreducible decomposition.
       
       The software {\tt PHCpack} itself is available at
       @HREF"http://www.math.uic.edu/~jan/download.html"@.
       This site provides source code and its executable version {\tt phc}.
-      To use the methods from this package, the user must have the executable program {\tt phc} available,
-      preferably in the execution path. The functions in this package call the {\tt phc} executable,
-      behind the scenes, with appropriate input options, and save intermediate output to temporary files.
-      For convenience, the file names are displayed, and the commands that are invoked are documented under "Consequences" for each function.
+      To use the methods from this package, the user must have the executable 
+      program {\tt phc} available, preferably in the execution path. 
+      The functions in this package call the {\tt phc} executable,
+      behind the scenes, with appropriate input options, and save 
+      intermediate output to temporary files.
+      For convenience, the file names are displayed, and the commands that 
+      are invoked are documented under "Consequences" for each function.
       
       Below is a simple example using the most popular function, 
       the numerical blackbox solver.
@@ -30,8 +36,8 @@ doc ///
       solns = solveSystem(system)
       numSolns = #solns
       solns/print
+
     Text
-    
       We see that there are three solutions to the above system. 
       Each solution is of type @TO Point@ and contains diagnostic information 
       about the quality of the solution.    
@@ -68,16 +74,16 @@ doc ///
    on the Macaulay2 web site.
 ///;
 
------------------------------------
--- CASCADE
------------------------------------
+-------------
+-- CASCADE --
+-------------
 
 doc ///
   Key 
     cascade
     (cascade,List)
   Headline
-    runs a cascade of homotopies to get witness sets for each component of the variety
+    runs a cascade of homotopies to get witness sets for the variety
   Usage
     cascade L
   Inputs
@@ -107,7 +113,7 @@ doc ///
       R = CC[x,y,z];
       L = { z*(x+y), z*(x-y) };
       WitSets = cascade(L)
-      W=first WitSets#1
+      W=first WitSets#2
     
     Text
       The function {\tt cascade} extends the ring of the inputted system 
@@ -137,11 +143,14 @@ doc ///
     optional input for cascade and numericalIrreducibleDecomposition
   Description
     Text
-      Optional argument for {\tt cascade} and {\tt numericalIrreducibleDecomposition}.
-      These methods search for positive dimensional components starting at the {\tt StartDimension} 
+      Optional argument for {\tt cascade} 
+      and {\tt numericalIrreducibleDecomposition}.
+      These methods search for positive dimensional components starting 
+      at the {\tt StartDimension} 
       and then considering all the subsequent lower dimensions. 
       
-      The default value for {\tt StartDimension} is the number of variables in the system minus one.
+      The default value for {\tt StartDimension} is the number of variables 
+      in the system minus one.
       
       If the user has a good idea about the top dimension, using a smaller
       {\tt StartDimension} than the default will reduce the computational time.
@@ -159,6 +168,21 @@ doc ///
     cascade(...,StartDimension=>ZZ)
 ///;
 
+doc ///
+  Key
+    [cascade,Verbose]
+  Headline
+    option to specify whether additional output is wanted 
+  Usage
+    cascade(...,Verbose=>Boolean)
+  Description
+    Text
+      Use {\tt Verbose=>true} for additional output which includes the 
+      input and solution file names used by {\tt phc -c}.
+
+      The output file of {\tt phc} contains timings for the stages
+      in the cascade of homotopies.
+///;
 
 doc ///
   Key
@@ -169,10 +193,9 @@ doc ///
     numericalIrreducibleDecompositon(...,StartDimension=>ZZ)
 ///;
 
-
------------------------------------
-----CONSTRUCT EMBEDDING------------
------------------------------------
+-------------------------
+-- CONSTRUCT EMBEDDING --
+-------------------------
 
 doc ///
   Key
@@ -182,6 +205,7 @@ doc ///
     constructs an embedding of a polynomial system
   Usage
     constructEmbedding(f,k)
+    constructEmbedding(f,k,Verbose=>true)
   Inputs
     f:List
       of polynomials
@@ -189,7 +213,8 @@ doc ///
       the expected (top) dimension of the solution set of f
   Outputs
     :List
-      whose entries are polynomials containing the original system with k random linear polynomials and k slack variables
+      entries are polynomials containing the original system with k 
+      random linear polynomials and k slack variables
   Consequences
     Item
       Writes the system to temporary files
@@ -213,10 +238,10 @@ doc ///
       f = { x^2 - y, x^3 - z };
       fe1 = constructEmbedding(f,1);
       toString fe1
+
     Text
       Note that the ring of the original system is extended with
-      k slack variables.  The slack variables start with zz.
-      Solutions of the embedded system with
+      k slack variables.  Solutions of the embedded system with
       zero values for the slack variables are candidate generic points.
 
       If the input system is overdetermined (there are more equations
@@ -232,13 +257,28 @@ doc ///
     Text
     
       In the example above, the system f has four equations in three unknowns,
-      constructEmbedding adds one surplus variable ss1 and one slack variable zz1.
-      Only solutions with zero values for the surplus variable ss1 are relevant.
-///;,
+      constructEmbedding adds one surplus variable and one slack variable.
+      Only solutions with zero values for the surplus variable are relevant.
+///;
 
------------------------------------
------------  FACTOR  --------------
------------------------------------
+-- options for constructEmbedding
+
+doc ///
+  Key
+    [constructEmbedding,Verbose]
+  Headline
+    option to specify whether additional output is wanted 
+  Usage
+    constructEmbedding(...,Verbose=>Boolean)
+  Description
+    Text
+      Use {\tt Verbose=>true} for additional output which includes the 
+      input and solution file names used by {\tt phc -c}.
+///;
+
+------------
+-- FACTOR --
+------------
 
 doc ///
   Key
@@ -256,17 +296,17 @@ doc ///
       a list of witness sets, every element of the list is irreducible
   Consequences
     Item
-      Writes the system to temporary files
+      writes the system to temporary files,
     Item
-      Invokes the command {\tt phc -f} (with option 2)
+      invokes the command {\tt phc -f} (with option 2),
     Item
-      Uses monodromy to factor
+      uses monodromy to factor,
     Item
-      Uses default settings of path trackers 
+      uses default settings of path trackers ,
     Item
-      Stores output of phc in temporary file
+      stores output of phc in temporary file,
     Item
-      Parses and outputs the solutions.
+      parses and outputs the solutions.
   Description
     Text
       A witness set is irreducible if there exists a path between any two of 
@@ -282,12 +322,27 @@ doc ///
       L = factorWitnessSet(w)
     
   SeeAlso
-      numericalIrreducibleDecomposition  
+    numericalIrreducibleDecomposition  
 ///;
 
------------------------------------
--- isCoordinateZero
------------------------------------
+-- options for factorWitnessSet
+
+doc ///
+  Key
+    [factorWitnessSet,Verbose]
+  Headline
+    option to specify whether additional output is wanted 
+  Usage
+    factorWitnessSet(...,Verbose=>Boolean)
+  Description
+    Text
+      Use {\tt Verbose=>true} for additional output which includes the 
+      input and solution file names used by {\tt phc -f}.
+///;
+
+----------------------
+-- isCoordinateZero --
+----------------------
 
 doc ///
   Key 
@@ -306,7 +361,7 @@ doc ///
       tolerance on the absolute value of the k-th coordinate
   Outputs
     :Boolean
-      true if the the k-th coordinate of solution has absolute value less than tol,
+      true if the k-th coordinate of solution has absolute value less than tol,
       false otherwise
   Description
     Text
@@ -332,10 +387,9 @@ doc ///
     nonZeroFilter
 ///;
 
-
------------------------------------
-----IS WITNESS SET MEMBER ---------
------------------------------------
+---------------------------
+-- IS WITNESS SET MEMBER --
+---------------------------
 
 doc ///
   Key
@@ -373,29 +427,19 @@ doc ///
       
 ///;
 
-doc ///
-  Key
-    Verbose
-  Headline
-    request verbose feedback
-  Description
-    Text
-      Option to specify whether additional output is wanted.
-///;
-
---options for isWitnessSetMember
+-- options for isWitnessSetMember
 
 doc ///
   Key
     [isWitnessSetMember,Verbose]
   Headline
-    Option to specify whether additional output is wanted 
+    option to specify whether additional output is wanted 
   Usage
     isWitnessSetMember(...,Verbose=>Boolean)
   Description
     Text
        Use {\tt Verbose=>true} for additional output which includes the 
-       input and solution file names used by {\tt PHCpack}.  
+       input and solution file names used by {\tt phc}.  
 
     Example
       R = CC[x11,x22,x21,x12,x23,x13];
@@ -406,9 +450,9 @@ doc ///
       isWitnessSetMember(W, point{{0,0,0,0,0,0}},Verbose=>true)      
 ///;
 
------------------------------------
--- mixedVolume
------------------------------------
+-----------------
+-- mixedVolume --
+-----------------
 
 doc ///
   Key
@@ -447,9 +491,12 @@ doc ///
     Text
       The mixed volume of a polynomial system $S:=\{f_1,\dots,f_n\}$ 
       is defined as follows:
-      Let $P_1,\dots,P_n$ be the Newton polytopes of $f_1,\dots,f_n$, i.e., $P_i$ is the convex hull of the exponents of the monomials in the support of $f_i$. 
+      Let $P_1,\dots,P_n$ be the Newton polytopes 
+      of $f_1,\dots,f_n$, i.e., $P_i$ is the convex hull of the exponents 
+      of the monomials in the support of $f_i$. 
       The mixed volume of $S$ is 
-      $$ \sum_{1\leq h\leq n} \sum_{1\leq i_1\dots\leq i_h\leq n} (-1)^{n-h}V_n(P_{i_1}+\dots+P_{i_h}),
+      $$ \sum_{1\leq h\leq n} 
+      \sum_{1\leq i_1\dots\leq i_h\leq n} (-1)^{n-h}V_n(P_{i_1}+\dots+P_{i_h}),
       $$
       where $V_n$ denotes the $n$-dimensional Euclidean volume.
       
@@ -499,21 +546,24 @@ doc ///
     optional input for computation of the stable mixed volume
   Description
     Text
-      Put {\tt StableMixedVolume=>true} as an argument in the function @TO mixedVolume@ to count solutions in affine space.
+      Put {\tt StableMixedVolume=>true} as an argument in the 
+      function @TO mixedVolume@ to count solutions in affine space.
 ///;
 
 doc ///
   Key
     StartSystem
   Headline
-    optional input for computation of mixed volume by solving a random coefficient system
+    optional input to construct and solve a random coefficient system
   Description
     Text
-      Put {\tt StartSystem=>true} as an argument in the function @TO mixedVolume@ to tell the method to use polyhedral homotopies. 
-      Polyhedral homotopies solve a system with the same Newton polytopes as the original system and with random complex coefficients.
-      This random coefficient system can serve as a start system to solve the original input system.
+      Put {\tt StartSystem=>true} as an argument in the 
+      function @TO mixedVolume@ to tell the method to use polyhedral 
+      homotopies.  Polyhedral homotopies solve a system with the same Newton 
+      polytopes as the original system and with random complex coefficients.
+      This random coefficient system can serve as a start system to solve the
+      original input system.
 ///;
-
 
 doc ///
   Key
@@ -524,7 +574,6 @@ doc ///
     mixedVolume(...,StartSystem=>Boolean)
 ///;
 
-
 doc ///
   Key
     [mixedVolume, StableMixedVolume]
@@ -534,9 +583,25 @@ doc ///
     mixedVolume(...,StableMixedVolume=>Boolean)
 ///;
 
------------------------------------
--- nonZeroFilter
------------------------------------
+doc ///
+  Key
+    [mixedVolume,Verbose]
+  Headline
+    option to specify whether additional output is wanted 
+  Usage
+    mixedVolume(...,Verbose=>Boolean)
+  Description
+    Text
+      Use {\tt Verbose=>true} for additional output which includes the 
+      input and solution file names used by {\tt phc}.  
+
+      The output file of {\tt phc} contains timings for the mixed volume
+      and provides details about the mixed-cell configuration.
+///;
+
+-------------------
+-- nonZeroFilter --
+-------------------
 
 doc ///
   Key 
@@ -589,10 +654,9 @@ doc ///
     zeroFilter
 ///;
 
-
--------------------------------------
--- numericalIrreducibleDecomposition
--------------------------------------
+---------------------------------------
+-- numericalIrreducibleDecomposition --
+---------------------------------------
 
 doc ///
   Key 
@@ -642,9 +706,9 @@ doc ///
     solveSystem
 ///;
 
------------------------------------
--- refineSolutions
------------------------------------
+---------------------
+-- refineSolutions --
+---------------------
 
 doc ///
   Key 
@@ -654,11 +718,13 @@ doc ///
     refines solutions of a system by increasing working precision
   Usage
     newSols = refineSolutions(f,sols,dp)
+    newSols = refineSolutions(f,sols,dp,Verbose=>true)
   Inputs
     f:List
       a system of polynomials
     sols:List
-      solutions of the sytem f, each of type @TO Point@ (from a previous calculation)
+      solutions of the sytem f, each of type @TO Point@ 
+      (from a previous calculation)
     dp:ZZ
       the number of decimal places in working precision
   Outputs
@@ -667,13 +733,13 @@ doc ///
       precision of {\tt dp} decimal places
   Consequences
     Item
-      Writes a system to a temporary file
+      writes a system to a temporary file,
     Item
-      Invokes the command {\tt phc -v} (with option 3) 
+      invokes the command {\tt phc -v} (with option 3),
     Item 
-      Stores phc output in a termporary file
+      stores phc output in a termporary file,
     Item 
-      Parses and prints the refined solutions.
+      parses and prints the refined solutions.
   Description
     Text
       The user can specify the number of decimal places desired 
@@ -690,9 +756,24 @@ doc ///
       r1 = newRoots#0#Coordinates#1
 ///;
 
------------------------------------
--- solveRationalSystem
------------------------------------
+-- options for refineSolutions
+
+doc ///
+  Key
+    [refineSolutions,Verbose]
+  Headline
+    option to specify whether additional output is wanted 
+  Usage
+    refineSolutions(...,Verbose=>Boolean)
+  Description
+    Text
+      Use {\tt Verbose=>true} for additional output which includes the 
+      input and solution file names used by {\tt phc -v}.
+///;
+
+-------------------------
+-- solveRationalSystem --
+-------------------------
 
 doc ///
   Key 
@@ -710,21 +791,23 @@ doc ///
       containing the solutions of f, each of type @TO Point@
   Consequences
     Item
-      Converts the rational system into a Laurent system, invokes the command {\tt phc -b} and {\tt phc -z}
+      converts the rational system into a Laurent system, invokes the 
+      commands {\tt phc -b} and {\tt phc -z},
     Item
-      Adds slack variables if needed (i.e. if system is overdetermined)
+      adds slack variables if needed (i.e. if system is overdetermined),
     Item
-      Writes the system to temporary file
+      writes the system to temporary file,
     Item
-      Launches the blackbox solver
+      launches the blackbox solver,
     Item
-      Stores output of phc in temporary file
+      stores the output of phc in a temporary file,
     Item
-      Parses and outputs the solutions.
+      parses and outputs the solutions.
   Description
     Text
-      This function returns numerical approximations of all complex solutions of
-      a rational system.  The function converts the system to a Laurent
+      This function returns numerical approximations of all complex 
+      solutions of a rational system.
+      The function converts the system to a Laurent
       polynomial system and then calls {\tt PHCpack}'s blackbox solver.   
     
     Example
@@ -733,9 +816,9 @@ doc ///
       sols = solveRationalSystem(system)
       
     Text
-      
-      The solutions are of type @TO Point@. Each Point comes with diagnostics. For example, 
-      {\tt LastT} is the end value of the continuation parameter; if it equals 1, 
+      The solutions are of type @TO Point@. Each Point comes with 
+      diagnostics. For example, {\tt LastT} is the end value of the 
+      continuation parameter; if it equals 1, 
       then the solver reached the end of the path properly.  
     
     Example  
@@ -744,12 +827,27 @@ doc ///
   SeeAlso
     solveSystem
     toLaurentPolynomial
-      
 ///;
 
------------------------------------
--- solveSystem
------------------------------------
+-- options for solveRationalSystem
+
+doc ///
+  Key
+    [solveRationalSystem,Verbose]
+  Headline
+    option to specify whether additional output is wanted 
+  Usage
+    solveRationalSystem(...,Verbose=>Boolean)
+  Description
+    Text
+      Use {\tt Verbose=>true} for additional output which includes the 
+      input and solution file names used by {\tt phc}.
+///;
+
+
+-----------------
+-- solveSystem --
+-----------------
 
 doc ///
   Key
@@ -759,9 +857,11 @@ doc ///
     a numerical blackbox solver
   Usage
     solveSystem(S)
+    solveSystem(S,Verbose=>true)
   Inputs
     S:List
-      containing a zero-dimensional system of polynomials with complex coefficients
+      contains a zero-dimensional system of polynomials with complex
+      coefficients
       that contains at least as many equations as indeterminates 
   Outputs
     :List 
@@ -824,9 +924,27 @@ doc ///
     
 ///;
 
------------------------------------
--- toLaurentPolynomial
------------------------------------
+-- options for solveSystem
+
+doc ///
+  Key
+    [solveSystem,Verbose]
+  Headline
+    option to specify whether additional output is wanted 
+  Usage
+    solveSystem(...,Verbose=>Boolean)
+  Description
+    Text
+      Use {\tt Verbose=>true} for additional output which includes the 
+      input and solution file names used by {\tt phc}.  
+
+      The output file of {\tt phc} contains timings for the stages
+      in the solver.
+///;
+
+-------------------------
+-- toLaurentPolynomial --
+-------------------------
 
 doc ///
   Key    
@@ -895,9 +1013,9 @@ doc ///
       lift(f,P)
 ///;
 
------------------------------------
--- topWitnessSet
------------------------------------
+-------------------
+-- topWitnessSet --
+-------------------
 
 doc ///
   Key
@@ -919,7 +1037,8 @@ doc ///
       solutions with nonzero value for the slack variable (the nonsolutions)
   Consequences
     Item
-      Constructs an embedding using @TO constructEmbedding@, which calls {\tt phc -c}
+      Constructs an embedding using @TO constructEmbedding@,
+      which calls {\tt phc -c}
     Item
       Solves the system using @TO solveSystem@, which calls {\tt phc -b}
     Item
@@ -929,8 +1048,8 @@ doc ///
   Description
     Text
       The method {\tt topWitnessSet} constructs an embedding 
-      for the given polynomial system with the given dimension, and then computes generic 
-      points on the solution set.  
+      for the given polynomial system with the given dimension,
+      and then computes generic points on the solution set.  
 
       The computation of a witness set for the twisted cubic
       is illustrated below.
@@ -944,8 +1063,8 @@ doc ///
       toString equations(w)
       toString slice(w)
       toString points(w)
+
     Text
-    
       A witness set for the twisted cubic consists of the embedded system,
       a random linear hyperplane to slice the space curve,
       and three generic points.  Observe that the value for the last
@@ -964,8 +1083,8 @@ doc ///
       dim(w)
       degree(w)
       #ns
+
     Text
-    
       The example is constructed to contain not only the twisted cubic,
       but also at least one isolated point (2,2,2).
       This is reflected in the list of nonsolutions.
@@ -978,10 +1097,27 @@ doc ///
     solveSystem    
 ///;
 
+-- options for topWitnessSet
 
------------------------------------
--- trackPaths
------------------------------------
+doc ///
+  Key
+    [topWitnessSet,Verbose]
+  Headline
+    option to specify whether additional output is wanted 
+  Usage
+    topWitnessSet(...,Verbose=>Boolean)
+  Description
+    Text
+      Use {\tt Verbose=>true} for additional output which includes the 
+      input and solution file names used by {\tt phc -c}.  
+
+      The output file of {\tt phc} contains information about the
+      application of the blackbox solver to the embedded system.
+///;
+
+----------------
+-- trackPaths --
+----------------
 
 doc ///
   Key
@@ -1027,6 +1163,9 @@ doc ///
   SeeAlso
     tDegree
     gamma
+    interactive
+    numThreads
+    seeProgress
 ///;
 
 -- options for trackPaths
@@ -1072,18 +1211,6 @@ doc ///
     trackPaths(...,gamma=>CC)
 ///;
 
-
-doc ///
-  Key
-    [trackPaths,tDegree]
-  Headline
-    Option to specify the degree of the continuation parameter
-  Usage
-    trackPaths(...,tDegree=>ZZ)
-///;
-
-
-
 doc ///
   Key
     tDegree
@@ -1100,7 +1227,8 @@ doc ///
       of the form (1-t)^k*q + t^k*f. 
       
       A reason for changing the tDegree would be the following: 
-      higher degree homotopies ensure that the system doesn't change as fast in the beginning and at the end of the homotopy; 
+      higher degree homotopies ensure that the system doesn't change as fast 
+      in the beginning and at the end of the homotopy; 
       that is, they force smaller step sizes in the beginning and end. 
       The default value, 2, is usually sufficient. 
     
@@ -1111,15 +1239,104 @@ doc ///
       fsols = trackPaths(f,q,qsols,tDegree => 1)      
 ///;
 
+doc ///
+  Key
+    [trackPaths,tDegree]
+  Headline
+    Option to specify the degree of the continuation parameter
+  Usage
+    trackPaths(...,tDegree=>ZZ)
+///;
 
+doc ///
+  Key
+    numThreads
+  Headline
+    the number of threads in the path tracker
+  Description
+    Text
+      Tracking many solution paths is a pleasingly parallel computation.
+      A multithreaded path tracker has a number of threads working on
+      a queue of path tracking jobs.  Every path tracking job can be
+      computed without communication overhead.  For sufficiently large
+      problems, the speedup can as large as the number of threads.
+///;
 
+doc ///
+  Key
+    [trackPaths,numThreads]
+  Headline
+    Option to define the number of threads in the path tracker.
+  Usage
+    trackPaths(...,numThreads=>ZZ)
+///;
 
+doc ///
+  Key
+    seeProgress
+  Headline
+    flag to monitor the progress of the multithreaded path tracker
+  Description
+    Text
+      For a long path tracking job, one could check the progress of the
+      computation by checking the end of the output file.
+      A multithreaded path tracker no longer writes the solutions to the
+      output file as soon as they are computed.  For path tracking jobs
+      that take a very long time, the lack of information on the progress
+      can be annoying.  With seeProgess turned on, every thread will write
+      a message to screen for each path tracking job.
+///;
 
+doc ///
+  Key
+    [trackPaths,seeProgress]
+  Headline
+    Option to follow the progress of the multithreaded path tracker.
+  Usage
+    trackPaths(...,seeProgress=>Boolean)
+///;
 
+doc ///
+  Key
+    interactive
+  Headline
+    flag to run phc -p in interactive mode
+  Description
+    Text
+      There are too many options for the path trackers in phc -p
+      to wrap them properly within the trackPaths() method.
+      With interactive turned on, the user can tune all parameters
+      of the path trackers, in the same way as running phc -p.
+///;
 
------------------------------------
--- zeroFilter
------------------------------------
+doc ///
+  Key
+    [trackPaths,interactive]
+  Headline
+    Option to run phc -p in interactive mode.
+  Usage
+    trackPaths(...,interactive=>Boolean)
+///;
+
+doc ///
+  Key
+    [trackPaths,Verbose]
+  Headline
+    option to specify whether additional output is wanted 
+  Usage
+    trackPaths(...,Verbose=>Boolean)
+  Description
+    Text
+      Use {\tt Verbose=>true} for additional output which includes the 
+      input and solution file names used by {\tt phc}.  
+
+      The output file of {\tt phc} contains timings for the path tracker
+      and additional diagnostics for each path.
+///;
+
+----------------
+-- zeroFilter --
+----------------
 
 doc ///
   Key 
@@ -1178,9 +1395,3 @@ doc ///
     refineSolutions
     nonZeroFilter      
 ///;
-
-
-
-
-
-
