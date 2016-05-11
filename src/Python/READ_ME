@@ -1,4 +1,4 @@
-phcpy 0.4.4 offers a simple Python interface to PHCv2.4.15
+phcpy 0.4.5 offers a simple Python interface to PHCv2.4.16
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -55,6 +55,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.4.5 : 2016-05-11 : bug fix for stable semi-mixed cells
 0.4.4 : 2016-04-30 : function to filter real solutions, better documentation
 0.4.3 : 2016-03-25 : improved root refinement for overdetermined systems
 0.4.2 : 2016-03-18 : path tracking for overdetermined convex homotopies
