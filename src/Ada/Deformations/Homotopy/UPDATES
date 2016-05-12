@@ -1,3 +1,6 @@
+Wed 11 May 2016 : fixed bug in {standard, dobldobl, quaddobl}_homotopy.adb
+  in the creation of a natural parameter homotopy.
+
 Tue 15 Mar 2016 : in drivers_for_homotopy_creation.adb, fixed setting of
   the parameter deci when leaving the homotopy creation for Laurent systems.
 

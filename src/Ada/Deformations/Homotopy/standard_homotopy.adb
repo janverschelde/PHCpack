@@ -424,7 +424,8 @@ package body Standard_Homotopy is
 
     nv : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
     nq : constant integer32 := p'length; 
-    ho : homdata(nat,nq,nv,nv+1);
+   -- ho : homdata(nat,nq,nv,nv+1);
+    ho : homdata(nat,nq,nv,nv); -- no extra variable, nv1 must be nv
 
   begin
     Copy(p,ho.p);
