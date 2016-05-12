@@ -139,7 +139,7 @@ package body Wrapped_Path_Trackers is
     sol := Head_Of(sols);
     Standard_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
-    when others => put_line("exception in Call Path Trackers"); raise;
+    when others => put_line("exception in Call Path Trackers 1"); raise;
   end Call_Path_Trackers;
 
   procedure Call_Path_Trackers
@@ -166,7 +166,7 @@ package body Wrapped_Path_Trackers is
     sol := Head_Of(sols);
     DoblDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
-    when others => put_line("exception in Call Path Trackers"); raise;
+    when others => put_line("exception in Call Path Trackers 2"); raise;
   end Call_Path_Trackers;
 
   procedure Call_Path_Trackers
@@ -193,7 +193,7 @@ package body Wrapped_Path_Trackers is
     sol := Head_Of(sols);
     QuadDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
-    when others => put_line("exception in Call Path Trackers"); raise;
+    when others => put_line("exception in Call Path Trackers 3"); raise;
   end Call_Path_Trackers;
 
 -- TRACKING ONE PATH WITH OUTPUT TO FILE :
@@ -221,7 +221,7 @@ package body Wrapped_Path_Trackers is
     sol := Head_Of(sols);
     Standard_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
-    when others => put_line("exception in Call Path Trackers"); raise;
+    when others => put_line("exception in Call Path Trackers 4"); raise;
   end Call_Path_Trackers;
 
   procedure Call_Path_Trackers
@@ -248,7 +248,7 @@ package body Wrapped_Path_Trackers is
     sol := Head_Of(sols);
     DoblDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
-    when others => put_line("exception in Call Path Trackers"); raise;
+    when others => put_line("exception in Call Path Trackers 5"); raise;
   end Call_Path_Trackers;
 
   procedure Call_Path_Trackers
@@ -275,7 +275,7 @@ package body Wrapped_Path_Trackers is
     sol := Head_Of(sols);
     QuadDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
-    when others => put_line("exception in Call Path Trackers"); raise;
+    when others => put_line("exception in Call Path Trackers 6"); raise;
   end Call_Path_Trackers;
 
 -- TRACKING MANY PATHS WITHOUT OUTPUT :
@@ -312,7 +312,7 @@ package body Wrapped_Path_Trackers is
     end loop;
     Standard_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
-    when others => put_line("exception in Call Path Trackers"); raise;
+    when others => put_line("exception in Call Path Trackers 7"); raise;
   end Call_Path_Trackers;
 
   procedure Call_Path_Trackers
@@ -348,7 +348,7 @@ package body Wrapped_Path_Trackers is
     end loop;
     DoblDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
-    when others => put_line("exception in Call Path Trackers"); raise;
+    when others => put_line("exception in Call Path Trackers 8"); raise;
   end Call_Path_Trackers;
 
   procedure Call_Path_Trackers
@@ -384,7 +384,7 @@ package body Wrapped_Path_Trackers is
     end loop;
     QuadDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
-    when others => put_line("exception in Call Path Trackers"); raise;
+    when others => put_line("exception in Call Path Trackers 9"); raise;
   end Call_Path_Trackers;
 
 -- TRACKING MANY PATHS WITH OUTPUT TO FILE :
@@ -426,7 +426,7 @@ package body Wrapped_Path_Trackers is
     end loop;
     Standard_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
-    when others => put_line("exception in Call Path Trackers"); raise;
+    when others => put_line("exception in Call Path Trackers 10"); raise;
   end Call_Path_Trackers;
 
   procedure Call_Path_Trackers
@@ -467,7 +467,7 @@ package body Wrapped_Path_Trackers is
     end loop;
     DoblDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
-    when others => put_line("exception in Call Path Trackers"); raise;
+    when others => put_line("exception in Call Path Trackers 11"); raise;
   end Call_Path_Trackers;
 
   procedure Call_Path_Trackers
@@ -508,7 +508,7 @@ package body Wrapped_Path_Trackers is
     end loop;
     QuadDobl_Homotopy.Clear;
   exception -- adding this exception handler caused no longer exception ...
-    when others => put_line("exception in Call Path Trackers"); raise;
+    when others => put_line("exception in Call Path Trackers 12"); raise;
   end Call_Path_Trackers;
 
 end Wrapped_Path_Trackers;

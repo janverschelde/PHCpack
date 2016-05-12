@@ -1,3 +1,5 @@
+Wed 11 May 2016 : in wrapped_path_trackers.adb numbered exception handlers.
+
 Mon 29 Feb 2016 : updated in wrapped_path_trackers for changes in 
   {dobldobl,quaddobl}_incfix_continuation.adb.
 
