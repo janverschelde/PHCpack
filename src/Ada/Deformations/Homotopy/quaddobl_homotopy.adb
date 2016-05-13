@@ -430,8 +430,7 @@ package body QuadDobl_Homotopy is
 
     nq : constant integer32 := p'last-p'first+1; 
     nv : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
-   -- ho : homdata(nat,nq,nv,nv+1);
-    ho : homdata(nat,nq,nv,nv); -- natural parameter homotopy
+    ho : homdata(nat,nq,nv-1,nv); -- nv = #variables include parameter k
 
   begin
     Copy(p,ho.p);

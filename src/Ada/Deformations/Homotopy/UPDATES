@@ -1,3 +1,6 @@
+Fri 13 May 2016 : refixed bug in {standard, dobldobl, quaddobl}_homotopy.adb
+  in the creation of a natural homotopy, (nv-1,nv) instead of (nv,nv).
+
 Wed 11 May 2016 : fixed bug in {standard, dobldobl, quaddobl}_homotopy.adb
   in the creation of a natural parameter homotopy.
 
