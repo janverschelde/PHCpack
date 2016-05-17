@@ -126,6 +126,7 @@ package body Wrapped_Path_Trackers is
     use Standard_IncFix_Continuation;
 
     sols : Solution_List := Create(xt);
+    nbequ : constant integer32 := h'last;
 
     procedure Track is
       new Silent_Continue(Max_Norm,Standard_Homotopy.Eval,
@@ -133,7 +134,12 @@ package body Wrapped_Path_Trackers is
 
   begin
     Standard_Homotopy.Create(h,n+1);
-    Track(sols,false,target=>Standard_Complex_Numbers.Create(1.0));
+    if nbequ = n then -- square homotopy
+      Track(sols,false,target=>Standard_Complex_Numbers.Create(1.0));
+    else      -- overdetermined homotopy
+      Track(sols,false,nbq=>nbequ,
+            target=>Standard_Complex_Numbers.Create(1.0));
+    end if;
     xt(xt'first..xt'last-1) := Head_Of(sols).v;
     xt(xt'last) := Head_Of(sols).t;
     sol := Head_Of(sols);
@@ -153,6 +159,7 @@ package body Wrapped_Path_Trackers is
 
     sols : Solution_List := Create(xt);
     one : constant double_double := create(1.0);
+    nbequ : constant integer32 := h'last;
 
     procedure Track is
       new Silent_Continue(Max_Norm,DoblDobl_Homotopy.Eval,
@@ -160,7 +167,11 @@ package body Wrapped_Path_Trackers is
 
   begin
     DoblDobl_Homotopy.Create(h,n+1);
-    Track(sols,target=>DoblDobl_Complex_Numbers.Create(one));
+    if nbequ = n then -- square homotopy
+      Track(sols,target=>DoblDobl_Complex_Numbers.Create(one));
+    else      -- overdetermined homotopy
+      Track(sols,nbq=>nbequ,target=>DoblDobl_Complex_Numbers.Create(one));
+    end if;
     xt(xt'first..xt'last-1) := Head_Of(sols).v;
     xt(xt'last) := Head_Of(sols).t;
     sol := Head_Of(sols);
@@ -180,6 +191,7 @@ package body Wrapped_Path_Trackers is
 
     sols : Solution_List := Create(xt);
     one : constant quad_double := create(1.0);
+    nbequ : constant integer32 := h'last;
 
     procedure Track is
       new Silent_Continue(Max_Norm,QuadDobl_Homotopy.Eval,
@@ -187,7 +199,11 @@ package body Wrapped_Path_Trackers is
 
   begin
     QuadDobl_Homotopy.Create(h,n+1);
-    Track(sols,target=>QuadDobl_Complex_Numbers.Create(one));
+    if nbequ = n then -- square homotopy
+      Track(sols,target=>QuadDobl_Complex_Numbers.Create(one));
+    else      -- overdetermined homotopy
+      Track(sols,nbq=>nbequ,target=>QuadDobl_Complex_Numbers.Create(one));
+    end if;
     xt(xt'first..xt'last-1) := Head_Of(sols).v;
     xt(xt'last) := Head_Of(sols).t;
     sol := Head_Of(sols);
@@ -208,6 +224,7 @@ package body Wrapped_Path_Trackers is
     use Standard_IncFix_Continuation;
 
     sols : Solution_List := Create(xt);
+    nbequ : constant integer32 := h'last;
 
     procedure Track is
       new Reporting_Continue(Max_Norm,Standard_Homotopy.Eval,
@@ -215,7 +232,12 @@ package body Wrapped_Path_Trackers is
 
   begin
     Standard_Homotopy.Create(h,n+1);
-    Track(file,sols,false,target=>Standard_Complex_Numbers.Create(1.0));
+    if nbequ = n then -- square homotopy
+      Track(file,sols,false,target=>Standard_Complex_Numbers.Create(1.0));
+    else      -- overdetermined homotopy
+      Track(file,sols,false,nbq=>nbequ,
+            target=>Standard_Complex_Numbers.Create(1.0));
+    end if;
     xt(xt'first..xt'last-1) := Head_Of(sols).v;
     xt(xt'last) := Head_Of(sols).t;
     sol := Head_Of(sols);
@@ -235,6 +257,7 @@ package body Wrapped_Path_Trackers is
 
     sols : Solution_List := Create(xt);
     one : constant double_double := create(1.0);
+    nbequ : constant integer32 := h'last;
 
     procedure Track is
       new Reporting_Continue(Max_Norm,DoblDobl_Homotopy.Eval,
@@ -242,7 +265,11 @@ package body Wrapped_Path_Trackers is
 
   begin
     DoblDobl_Homotopy.Create(h,n+1);
-    Track(file,sols,target=>DoblDobl_Complex_Numbers.Create(one));
+    if nbequ = n then -- square homotopy
+      Track(file,sols,target=>DoblDobl_Complex_Numbers.Create(one));
+    else      -- overdetermined homotopy
+      Track(file,sols,target=>DoblDobl_Complex_Numbers.Create(one));
+    end if;
     xt(xt'first..xt'last-1) := Head_Of(sols).v;
     xt(xt'last) := Head_Of(sols).t;
     sol := Head_Of(sols);
@@ -262,6 +289,7 @@ package body Wrapped_Path_Trackers is
 
     sols : Solution_List := Create(xt);
     one : constant quad_double := create(1.0);
+    nbequ : constant integer32 := h'last;
 
     procedure Track is
       new Reporting_Continue(Max_Norm,QuadDobl_Homotopy.Eval,
@@ -269,7 +297,11 @@ package body Wrapped_Path_Trackers is
 
   begin
     QuadDobl_Homotopy.Create(h,n+1);
-    Track(file,sols,target=>QuadDobl_Complex_Numbers.Create(one));
+    if nbequ = n then -- square homotopy
+      Track(file,sols,target=>QuadDobl_Complex_Numbers.Create(one));
+    else      -- overdetermined homotopy
+      Track(file,sols,nbq=>nbequ,target=>QuadDobl_Complex_Numbers.Create(one));
+    end if;
     xt(xt'first..xt'last-1) := Head_Of(sols).v;
     xt(xt'last) := Head_Of(sols).t;
     sol := Head_Of(sols);
@@ -291,6 +323,7 @@ package body Wrapped_Path_Trackers is
 
     xtp,tmp : Solution_List;
     xtls,ls : Link_to_Solution;
+    nbequ : constant integer32 := h'last;
 
     procedure Track is
       new Silent_Continue(Max_Norm,Standard_Homotopy.Eval,
@@ -298,7 +331,12 @@ package body Wrapped_Path_Trackers is
 
   begin
     Standard_Homotopy.Create(h,n+1);
-    Track(xtsols,false,target=>Standard_Complex_Numbers.Create(1.0));
+    if nbequ = n then -- square homotopy
+      Track(xtsols,false,target=>Standard_Complex_Numbers.Create(1.0));
+    else      -- overdetermined homotopy
+      Track(xtsols,false,nbq=>nbequ,
+            target=>Standard_Complex_Numbers.Create(1.0));
+    end if;
     tmp := sols;
     xtp := xtsols;
     while not Is_Null(xtp) loop
@@ -327,6 +365,7 @@ package body Wrapped_Path_Trackers is
     xtp,tmp : Solution_List;
     xtls,ls : Link_to_Solution;
     one : constant double_double := create(1.0);
+    nbequ : constant integer32 := h'last;
 
     procedure Track is
       new Silent_Continue(Max_Norm,DoblDobl_Homotopy.Eval,
@@ -334,7 +373,11 @@ package body Wrapped_Path_Trackers is
 
   begin
     DoblDobl_Homotopy.Create(h,n+1);
-    Track(xtsols,target=>DoblDobl_Complex_Numbers.Create(one));
+    if nbequ = n then -- square homotopy
+      Track(xtsols,target=>DoblDobl_Complex_Numbers.Create(one));
+    else      -- overdetermined homotopy
+      Track(xtsols,nbq=>nbequ,target=>DoblDobl_Complex_Numbers.Create(one));
+    end if;
     tmp := sols;
     xtp := xtsols;
     while not Is_Null(xtp) loop
@@ -363,6 +406,7 @@ package body Wrapped_Path_Trackers is
     xtp,tmp : Solution_List;
     xtls,ls : Link_to_Solution;
     one : constant quad_double := create(1.0);
+    nbequ : constant integer32 := h'last;
 
     procedure Track is
       new Silent_Continue(Max_Norm,QuadDobl_Homotopy.Eval,
@@ -370,7 +414,11 @@ package body Wrapped_Path_Trackers is
 
   begin
     QuadDobl_Homotopy.Create(h,n+1);
-    Track(xtsols,target=>QuadDobl_Complex_Numbers.Create(one));
+    if nbequ = n then -- square homotopy
+      Track(xtsols,target=>QuadDobl_Complex_Numbers.Create(one));
+    else      -- overdetermined homotopy
+      Track(xtsols,nbq=>nbequ,target=>QuadDobl_Complex_Numbers.Create(one));
+    end if;
     tmp := sols;
     xtp := xtsols;
     while not Is_Null(xtp) loop
@@ -400,6 +448,7 @@ package body Wrapped_Path_Trackers is
 
     xtp,tmp : Solution_List;
     xtls,ls : Link_to_Solution;
+    nbequ : constant integer32 := h'last;
 
     procedure Track is
       new Reporting_Continue(Max_Norm,Standard_Homotopy.Eval,
@@ -407,7 +456,12 @@ package body Wrapped_Path_Trackers is
 
   begin
     Standard_Homotopy.Create(h,n+1);
-    Track(file,xtsols,false,target=>Standard_Complex_Numbers.Create(1.0));
+    if nbequ = n then -- square homotopy
+      Track(file,xtsols,false,target=>Standard_Complex_Numbers.Create(1.0));
+    else      -- overdetermined homotopy
+      Track(file,xtsols,false,nbq=>nbequ,
+            target=>Standard_Complex_Numbers.Create(1.0));
+    end if;
     tmp := sols;
     xtp := xtsols;
    -- put_line(file,"In Call_Path_Trackers ...");
@@ -441,6 +495,7 @@ package body Wrapped_Path_Trackers is
     xtp,tmp : Solution_List;
     xtls,ls : Link_to_Solution;
     one : constant double_double := create(1.0);
+    nbequ : constant integer32 := h'last;
 
     procedure Track is
       new Reporting_Continue(Max_Norm,DoblDobl_Homotopy.Eval,
@@ -448,7 +503,12 @@ package body Wrapped_Path_Trackers is
 
   begin
     DoblDobl_Homotopy.Create(h,n+1);
-    Track(file,xtsols,target=>DoblDobl_Complex_Numbers.Create(one));
+    if nbequ = n then -- square homotopy
+      Track(file,xtsols,target=>DoblDobl_Complex_Numbers.Create(one));
+    else      -- overdetermined homotopy
+      Track(file,xtsols,nbq=>nbequ,
+            target=>DoblDobl_Complex_Numbers.Create(one));
+    end if;
     tmp := sols;
     xtp := xtsols;
    -- put_line(file,"In Call_Path_Trackers ...");
@@ -482,6 +542,7 @@ package body Wrapped_Path_Trackers is
     xtp,tmp : Solution_List;
     xtls,ls : Link_to_Solution;
     one : constant quad_double := create(1.0);
+    nbequ : constant integer32 := h'last;
 
     procedure Track is
       new Reporting_Continue(Max_Norm,QuadDobl_Homotopy.Eval,
@@ -489,7 +550,12 @@ package body Wrapped_Path_Trackers is
 
   begin
     QuadDobl_Homotopy.Create(h,n+1);
-    Track(file,xtsols,target=>QuadDobl_Complex_Numbers.Create(one));
+    if nbequ = n then -- square homotopy
+      Track(file,xtsols,target=>QuadDobl_Complex_Numbers.Create(one));
+    else      -- overdetermined homotopy
+      Track(file,xtsols,nbq=>nbequ,
+            target=>QuadDobl_Complex_Numbers.Create(one));
+    end if;
     tmp := sols;
     xtp := xtsols;
    -- put_line(file,"In Call_Path_Trackers ...");
