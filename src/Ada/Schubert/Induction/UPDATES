@@ -1,5 +1,6 @@
 Wed 18 May 2016 : improved documentation of moving_flag_homotopies.ads
-  and the output in moving_flag_continuation.adb.
+  and the output in moving_flag_continuation.adb.  Added root refinement
+  on the original overdetermined problem in moving_flag_continuation.adb.
 
 Tue 17 May 2016 : prepared wrapped_path_trackers.adb for overdetermined
   homotopies.
