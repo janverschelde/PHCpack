@@ -443,6 +443,8 @@ package body Moving_Flag_Continuation is
       xt(ls.v'range) := ls.v;
       xt(xt'last) := Standard_Complex_Numbers.Create(0.0);
       y := Eval(h,xt);
+      put(file,"The original homotopy has "); put(file,h'last,1);
+      put(file," equations in "); put(file,n,1); put(file," variables.");
       new_line(file);
      -- put_line(file,"Value of the start solution at the original homotopy :");
      -- put_line(file,y);
@@ -454,7 +456,7 @@ package body Moving_Flag_Continuation is
      -- put_line(file,"Value of the start solution at the squared homotopy :");
      -- put_line(file,yh);
       res := Max_Norm(y);
-      put(file,"Residual of the start solution at the squared hootopy : ");
+      put(file,"Residual of the start solution at the squared homotopy : ");
       put(file,res,3); new_line(file);
       fail := fail and (res > tolsing);
       Append(xtsols,xt_sols_last,Create(xt));
