@@ -1,57 +1,571 @@
-On Sat Jun 19, 1999: changed driver_for_pieri_homotopies so that
-  now determinantal cheater for overconstrained systems.
-  Copied to the public distribution directory.
+Wed 18 May 2016 : improved documentation of moving_flag_homotopies.ads.
 
-On Mon Aug 30, 1999: changed deformation_posets.ad* so that now an
-  overview of timings for each level is maintained.
+Tue 17 May 2016 : prepared wrapped_path_trackers.adb for overdetermined
+  homotopies.
 
-On Sat Sep 4, 1999: implemented new root count for general quantum
-  Pieri rule, in the file localization_posets.adb, also updated the
-  testing program ts_posets.adb.  Also localization_posets.ads
-  is slightly modified.
-On Sun Sep 5, 1999: adapted specifications and implementations of
-  deformation_posets.  Expanded the testing program ts_defpos.
-  Changed also the package pieri_homotopies.ads.
-On Mon Sep 6, 1999: changed specialization_of_planes.ads + adb,
-  numerical_minor_equations.ads + adb and determinantal_systems.adb.
-  Also changed are driver_for_pieri_homotopies.adb,
-  ts_org_pieri.adb and pieri_deformations.adb.
+Wed 11 May 2016 : in wrapped_path_trackers.adb numbered exception handlers.
 
-On Thu Sep 16, 1999: copied brackets, localization_posets, ts_posets,
-  deformation_posets, pieri_homotopies, ts_defpos, specialization_of_planes,
-  numeric_minor_equations, determinantal_systems, driver_for_pieri_homotopies,
-  drivers_for_input_planes, driver_for_quantum_pieri, pieri_continuation,
-  pieri_deformations and ts_org_pieri to the public distribution.
+Mon 29 Feb 2016 : updated in wrapped_path_trackers for changes in 
+  {dobldobl,quaddobl}_incfix_continuation.adb.
 
-Wed 31 May, 2000 : due to modified Newton in root refiners, changed
-  driver_for_pieri_homotopies.adb, driver_for_quantum_pieri.adb,
-  driver_for_sagbi_homotopies.adb, and pieri_continuation.adb.
+Sat 27 Feb 2016 : changes in drivers_for_schubert_induction.adb for extra
+  argument in the increment-and-fix continuation in double precision.
+  Similar changes in wrapped_path_trackers.adb.
 
-Thu 30 Nov 2000 : changed driver_for_quantum_pieri.adb, line 284
-  contained "lnd : Link_to_Node" was never assigned a value.
-  pieri_homotopies.adb had empty "Two_General_Quantum_Homotopy",
-  commented that one out.
+Fri 11 Dec 2015 : fixed ts_lrhom.adb, for the Resolve was missing an option.
 
-Wed 2 May 2000 : added the package complex_osculating_planes to test
-  a variant of the Shapiro^2 conjectures, ts_emerenko.adb does a small
-  comparison on the generation of the input planes.
-  Also updated "drivers_for_input_planes.adb".
+Thu 22 Oct 2015 : adding standard_ in front of bracket_polynomials changed
+  symbolic_schubert_conditions.ads and numeric_schubert_conditions
+  Silent version of resolve in resolve_schubert_problems, with adjusted
+  prompting for level of output in drivers_for_schubert_induction.
+  Added extra boolean parameter in moving_flag_continuation, which
+  changed checker_poset_deformations, resolve_schubert_problems,
+  and drivers_for_schubert_induction.
 
-Sat 1 Sep 2001 : created pieri_root_count and ts_piroco to call the
-  combinatorial Pieri root count of the Schubert calculus
+Wed 21 Oct 2015 : updated ts_flagcond.adb with tests in double double
+  and quad double precision.
 
-Tue 13 Nov 2001 : changed drivers_for_input_planes.adb to allow also
-  to give in complex input planes for the Pieri homotopy algorithm
+Tue 20 Oct 2015 : new package checker_poset_deformations with code out of
+  moving_flag_continuation, which changed resolve_schubert_problems.adb
+  and drivers_for_schubert_induction.adb.  Added procedues for double
+  double and quad double precision to checker_poset_deformations.
+  Renamed intersection_solution_posets into standard_solution_posets
+  for the new packages {dobldobl,quaddobl}_solution_posets.
+  This led to changes in checker_poset_deformations.ads,
+  resolve_schubert_problems, and drivers_for_schubert_induction.ads.
+  Also ts_lrhom.adb changed.  Added versions for double doubles and
+  quad double in resolve_schubert_problems and flag_transformations.
+  Changed drivers_for_schubert_induction, ready to start runs in
+  double double and quad double precision ...
 
-Wed 14 Nov 2001 : changes driver_for_pieri_homotopies.adb so that it
-  prints the solutions in matrix format
+Mon 19 Oct 2015 : upgraded moving_flag_homotopies with procedures to make
+  equations for homotopies in double double and quad double precision.
+  Extensions in moving_flag_continuation for double double and quad doubles.
 
-Mon 24 Jun 2002 : deformation_posets has now a silent quantum solver,
-  and pieri_continuation has a silent Quantum_Trace_Paths
-  Moved some routines from driver_for_quantum_pieri into
-  determinantal_systems, needed for the pieri_solver.adb.
+Sun 18 Oct 2015 : numeric_schubert_conditions supports the expansion of
+  minors in double double and quad double precision.
+  Moved code from moving_flag_homotopies.adb to setup_flag_homotopies.
 
-Sun 13 Oct 2002 : quantum Pieri solver has now limit on number of
-  solution maps that need to be computed.
+Sat 17 Oct 2015 : mapping in double double and quad double precision added
+  to checker_localization_patterns.  In checker_homotopies, added procedures
+  in double double and quad double precision.
 
-Thu 27 Mar 2003 : created directories SAGBI and Pieri under Schubert
+Fri 16 Oct 2015 : symbolic_schubert_conditions and remember_symbolic_minors
+  are extended to return matrices of polynomials with coefficients in
+  double double and quad double precision.  Prepared the numerical versions
+  in numeric_schubert_conditions for similar extensions.  The refactoring
+  changed the test programs ts_induce, ts_lrhom, and ts_flagcond.
+  Extended remember_numeric_minors with remember tables for minors in
+  double double and quad double precision, used in numeric_schubert_conditions
+  and in moving_flag_homotopies.  The specifications for the procedures in
+  wrapped_path_trackers.ads were incomplete.  Tracking of paths in double
+  double and quad double precision called in moving_flag_continuation.
+
+Thu 15 Oct 2015 : moving_flag_continuation and resolve_schubrt_problems
+  have the option of using a more efficient problem formulation, deterimined
+  in drivers_for_schubert_induction.adb.  Improved driver procedures in
+  drivers_for_schubert_induction.adb.  In ts_flagcond.adb, the generic
+  point test for the efficient problem formulation is harder to compute...
+  Update in ts_lrhom.adb for the extra option in resolve.
+  Extended flag_transformations for double doubles and quad doubles,
+  which required changes in moving_flag_homotopies, tested by ts_induce.
+  New package wrapped_path_trackers with code factored out of the package
+  moving_flag_continuation, for extension to double doubles and quad doubles.
+  This refactoring changed moving_flag_continuation and the body of
+  drivers_for_schubert_induction.  New packages start_flag_homotopies
+  and setup_flag_homotopies, factored from moving_flag_homotopies.
+  This changed resolve_schubert_problems.adb and
+  drivers_for_schubert_induction.adb.  Updated numeric_schubert_conditions.adb
+  to prepare for double double and quad double precision.
+
+Wed 14 Oct 2015 : extended symbolic_schubert_conditions with a procedure
+  and a function to enumerate and count all brackets not above a bracket,
+  tested in ts_checkers and ts_flagcond.  Added a minimal_expand to
+  numeric_schubert_conditions, for use in moving_flag_homotopies, and
+  tested by ts_flagcond.adb.
+
+Tue 13 Oct 2015 : drivers_for_schubert_condition changed so the user can
+  enter values for the generic flags.
+
+Mon 12 Oct 2015 : updated checker_posets_io and intersection_posets_io
+  with procedures to write to file, in addition to standard output.
+  Added Write_Expansion in drivers_for_schubert_induction.adb when
+  resolving a general Schubert problem.  Separated generation of the random
+  flags off into a separate procedure in drivers_for_schubert_induction.
+
+Sun 11 Oct 2015 : the random seed is written at the end of the output file
+  in drivers_for_schubert_induction.adb.  Improved the documentation of
+  Set_Parameters in moving_flag_continuation.ads.  An extra parameter in the
+  Resolve in resolve_schubert_problems to make the path trackers reporting,
+  which then also changed ts_lrhom.  In drivers_for_schubert_induction.adb,
+  written the random flags at the start as well as the fixed flags at the end.
+
+Fri 31 Oct 2014 : used Random_Flags in the Resolve_Schubert_Problem
+  in drivers_for_schubert_induction.adb.
+
+Thu 30 Oct 2014 : improved output in drivers_for_schubert_induction.adb.
+
+Wed 29 Oct 2014 : constant tol moved to specifications of the procedures
+  in drivers_for_schubert_induction.  Added a verbose option to the resolve
+  in resolve_schubert_problems and adjusted ts_lrhom.adb.
+  Changed checker_moves.adb and checker_homotopies.adb for silent versions.
+  Moved driver routines from ts_lrhom to drivers_for_schubert_induction
+  so phc -e can now handle any number of Schubert intersection conditions.
+
+Tue 28 Oct 2014 : constant tol moved from the body of the procedures in
+  moving_flag_continuation into the specification parameters.
+  This caused changes in drivers_for_schubert_induction.adb
+  and resolve_schubert_problems.adb.
+
+Mon 27 Oct 2014 : resolve_schubert_problems uses stack_of_flags.
+  Bug fix in flag_transformations.adb and increased tolerance 'tolsing'
+  in moving_flag_continuation from 1.0E-8 to 1.0E-6.
+  Added tol parameter to the procedures in moving_flag_continuation.
+
+Sun 26 Oct 2014 : silent versions of connect to track procedures in
+  resolve_schubert_problems.  Added stack_of_flags in flag_transformations
+  and made the call in resolve_schubert_problems.adb.
+
+Sat 25 Oct 2014 : cleaned up flag_transformations and upgraded 
+  resolve_schubert_problems.adb with use of the new transformation procedure.
+  Silent stay and swap homotopy in moving_flag_continuation,
+  track_all_paths_in_poset in moving_flag_continuation has silent version.
+
+Fri 24 Oct 2014 : added procedure to flag_transformations, to transform
+  using only the current flag in a sequence of flags.
+  Added condition in track_all_paths_in_poset of moving_flag_continuation
+  to ensure that leaves of parents are lined up with roots of children.
+  Instead of concatenation, new solutions are pushed to the lists in
+  resolve_schubert_problems.adb.
+
+Thu 23 Oct 2014 : changed Random_Flag in moving_flag_homotopies.adb,
+  so the matrix is now a random dense matrix.  Fixed matching of localization
+  patterns when lining up the solutions from one level to the next in
+  resolve_schubert_problems.adb.  In moving_flag_continuation.ads,
+  exported the utility copy_flags, and in moving_flag_continuation.adb,
+  set the unhappy to true if path tracking is aborted.  The resolution
+  of Schubert problems seems to work now for four conditions.
+  Updated ts_lrhom.adb with writing of the results at the end.
+
+Wed 22 Oct 2014 : added procedure to transform a sequence of flags in
+  flag_transformations.  Applied the transformations to the start solutions
+  in resolve_schubert_problems.  Linked up nodes at the leaves of the parent
+  correctly to the nodes at the roots of the children.
+
+Tue 21 Oct 2014 : bug fix in moving_flag_continuation.adb with extra output
+  diagnostics in checker_homotopies.adb.  Abort track path in poset in
+  moving_flag_continuation.adb if there are no start solutions, so no crash.
+
+Mon 20 Oct 2014 : extended checker_homotopies with inverse transformations
+  on solution lists after the 3 types of Littlewood-Richardson homotopies.
+  Extended moving_flag_continuation to work with lists of solutions,
+  small change in resolve_schubert_problems.adb.
+  Bug fix in moving_flag_continuation.adb.
+
+Sun 19 Oct 2014 : added more checks in moving_flag_continuation and changes
+  in resolve_schubert_problems.adb.  Number of flags given on input to a
+  checker game depends on the level in the intersection poset.
+
+Sat 18 Oct 2014 : added routines in moving_flag_continuation to take the
+  solution nodes at the previous level into account, as called in 
+  resolve_schubert_problems.adb.
+
+Fri 17 Oct 2014 : called Littlewood-Richardson homotopies on one checker
+  game in the resolve_schubert_problems.
+
+Thu 16 Oct 2014 : Debugged procedure to compute solutions at leaves in
+  resolve_schubert_problems, tested by ts_lrhom.adb.
+
+Wed 15 Oct 2014 : extended intersection_solution_posets with retrieval
+  function used in resolve_schubert_problems.adb.
+  Added a procedure to compute start solutions at the leaves and augmented
+  parameter list of the resolve, tested by ts_lrhom.adb.
+
+Tue 14 Oct 2014 : new package intersection_solution_posets, tested by
+  ts_lrhom.  Used the intersection_solution_posets in the resolve
+  of resolve_schubert_problems, also tested by ts_lrhom.
+
+Mon 13 Oct 2014 : removed dead code in moving_flag_continuation with changed
+  specs caused change in drivers_for_schubert_induction.adb.
+  Extended checker_posets_io with an extra write procedure.
+  New package resolve_schubert_conditions, based on the stubbing code from
+  ts_lrhom.adb.
+
+Sun 12 Oct 2014 : added silent versions of the coordinate transformations
+  in checker_homotopies.  Memory management in moving_flag_continuation.adb.
+  Silent path tracker added to moving_flag_continuation.
+
+Sat 11 Oct 2014 : must multiply forgotten variables by x(r+1,s+1) as well
+  in the first_swap_plane of checker_homotopies.adb.
+
+Fri 10 Oct 2014 : clean up unused code in checker_homotopies, removed
+  commented out lines in moving_flag_homotopies.adb.
+
+Thu 9 Oct 2014 : bug fix in checker_homotopies.adb, first_swap_plane.
+  The same bug existed in the second_swap_plane of checker_homotopies.adb.
+
+Wed 8 Oct 2014 : improved transformation of solutions after a swap homotopy
+  in checker_homotopies with new Update_Swap_Column procedure.
+
+Tue 7 Oct 2014 : swap type II homotopies work after changes in 
+  checker_homotopies and moving_flag_continuation.
+  After more updates in checker homotopies and moving_flag_continuation.adb,
+  the case [2 4 6]^3 appears to be solved again correctly.
+  Fixed call to flag_conditions in drivers_for_schubert_induction.adb,
+  after updating moving_flag_homotopies.adb.
+
+Mon 6 Oct 2014 : printing of the moving flag in moving_flag_homotopies and
+  bug fixes in moving_flag_continuation.adb.  Better documentation about
+  the flag transitions in moving_flag_continuation.  In checker_homotopies.adb
+  we must evaluate the computer coordinates to transform the planes,
+  furthermore, matrix inversion is needed in checker_homotopies.
+  Also for swap homotopies, localization maps are multiplied with the
+  current moving flag.
+
+Sun 5 Oct 2014 : improved coordinate transformation in checker_homotopies
+  and changes in moving_flag_continuation.adb for the stay homotopies.
+
+Sat 4 Oct 2014 : cleaning up in checker_homotopies.adb, modifications in
+  moving_flag_{homotopies,continuation}.adb for the stay homotopies.
+
+Fri 3 Oct 2014 : updated moving_flag_{continuation,homotopies} and
+  drivers_for_schubert_induction.adb to get the trivial stay case to work.
+
+Thu 2 Oct 2014 : bug fixes and completed code in checker_homotopies
+  and changes in moving_flag_continuation.adb.
+
+Wed 1 Oct 2014 : updated checker_homotopies with coordinate transformations
+  on the solutions in the cases where there is no homotopy.
+  Applied the coordinate transformation in the Trivial_Stay case.
+
+Tue 30 Sep 2014 : wrapper for the many conditions imposed by many flags
+  for use in a cheater homotopy.
+
+Mon 29 Sep 2014 : updated moving_flag_homotopies with the correct numeric
+  transformation, tested by the first option of ts_induce.
+
+Sun 28 Sep 2014 : stubbing Littlewood-Richardson homotopies in ts_lrhom.adb.
+
+Sat 27 Sep 2014 : extended ts_lrhom.adb with a walk from leaves to root in
+  the intersection poset to resolve intersection conditions.
+  Made the connections between checker posets between root of child and
+  the leaves of the parents in the intersection poset.
+  Extended checker_posets with procedure to add the coefficients from
+  the leaves to the root in the poset, called in ts_lrhom.
+
+Fri 26 Sep 2014 : improved documentation of intersection_posets_io.ads.
+  Changed interface in checker_posets_io.  New ts_lrhom.adb to interactively
+  develop the resolution of general Schubert problems.
+
+Sun 21 Sep 2014 : every procedure in ts_checkers is now documented.
+  Improved interfaces in the package flag_transformations.
+
+Fri 19 Sep 2014 : refactored code from ts_flagcond.adb into the package
+  flag_transformations, with better verification of the solutions.
+  Refactored code from ts_flagcond into numeric_schubert_conditions.
+
+Thu 18 Sep 2014 : moved code for the function "moved_flag" from ts_induce
+  to the package moving_flag_homotopies.  Extended the numerical testing
+  in ts_flagcond.adb.  Upgrades in flag_transformations, tested by ts_induce.
+  Applied the transformations in the numerical test in ts_flagcond.adb.
+
+Wed 17 Sep 2014 : added test on rank on the solutions with respect to the
+  flag and the intersection condition to ts_flagcond.adb.
+
+Sun 15 Jun 2014 : refactored ts_induce.adb into the new package 
+  flag_transformations to transform pair of flags.
+
+Thu 5 Jun 2014 : adjusted drivers_for_schubert_induction to pass the 
+  coefficients of the fixed flags.
+
+Wed 4 Jun 2014 : more changes to drivers_for_schubert_induction, now for
+  the Python interface.
+
+Mon 2 Jun 2014 : changed drivers_for_schubert_induction.
+
+Sun 1 Jun 2014 : updated drivers_for_schubert_induction to prepare for the
+  C interface.
+
+Wed 28 May 2014 : put_line to write of "= 0" in intersection_posets_io.adb
+  and added random_triplet to ts_checkers.adb.
+
+Tue 27 May 2014 : fix in ts_induce.adb for extra "silent" parameter in
+  the intersect of intersection_posets.
+
+Fri 23 May 2014 : updates in drivers_for_schubert_induction for the
+  resolution of a general Schubert problem, with code from ts_checkers.adb.
+  Modifications in intersection_posets to make it silent.
+
+Sat 17 May 2014 : code to transform a pair of flags added to ts_induce.
+
+Wed 14 May 2014 : extra function in ts_checkers.adb to generate a random
+  intersection condition, extra Final_Sum in intersection_posets.
+
+Tue 13 May 2014 : small changes to ts_induce.adb for compiler warnings.
+
+Tue 25 Jun 2012 : updated mainenum.adb for natural32 and integer32.
+
+Wed 19 Jun 2012 : Almost all files changes because of natural32 & integer32.
+
+Thu 9 Jun 2011 : changed moving_flag_continuation.adb for changed
+  specifications of standard_root_refiners.
+
+Wed 1 Jun 2011 : for warnings, changed drivers_for_schubert_induction.adb.
+
+Sun 29 May 2011 : for GNAT GPL 2010 warnings, modified checker_moves.adb
+  and moving_flag_continuation.adb; only 2 warnings left 
+  with moving_flag_homotopies.adb and checker_posets.adb...
+
+Wed 6 Jan 2010 : for GNAT GPL 2009 warnings, modified intersection_posets.adb
+  and intersection_posets_io.adb.  Extended schubert_posets.a*.
+
+Tue 5 Jan 2010 : minor modifications in schubert_posets and ts_flagcond.adb.
+
+Mon 4 Jan 2010 : created schubert_posets, tested by ts_flagcond.adb.
+
+Fri 1 Jan 2010 : updated in ts_flagcond.adb.
+
+Thu 31 Dec 2009 : updates in ts_checkers.adb and ts_flagcond.adb.
+
+Tue 29 Dec 2009 : for GNAT GPL 2009 warnings: change in ts_checkers.adb,
+  numeric_schubert_conditions.a*.  Fixed ts_flagcond.adb, extending
+  drivers_for_schubert_conditions.adb.
+
+Fri 30 Oct 2009 : updates in numeric_schubert_conditions for bug chases,
+  moving_flag_homotopies and drivers_for_schubert_induction to make
+  cheater's homotopy between Schubert problems work.
+  Last minute change to drivers_for_schubert_induction.adb.
+
+Thu 29 Oct 2009 : the fixed flags are written in full by
+  drivers_for_schubert_induction.adb
+
+Wed 28 Oct 2009 : phc -e runs what was in ts_flagcond #5, updated
+  drivers_for_schubert_induction.
+
+Tue 27 Oct 2009 : updated moving_flag_continuation to return also solutions,
+  tested by ts_flagcond.adb.  Added fifth option to mainenum.adb, moved code
+  from ts_flagcond.adb to drivers_for_schubert_induction.
+
+Fri 19 Jun 2009 : updated ts_induce.adb.
+
+Tue 16 Jun 2009 : updated checker_homotopies.a*, ts_flagcond.adb, and
+  moving_flag_continuation.adb.
+
+Mon 15 Jun 2009 : updates in checker_boards_io.a*, checker_posets_io.adb,
+  checker_localization_patterns.adb, moving_flag_homotopies.adb,
+  checker_homotopies.a* and moving_flag_continuation.a*.
+
+Sun 14 Jun 2009 : changes in moving_flag_continuation.adb and
+  checker_homotopies.adb.
+
+Fri 12 Jun 2009 : updates in checker_homotopies.a* and
+  moving_flag_continuation.a*, so finally [2 4]^4 works in ts_flagcond!
+
+Thu 11 Jun 2009 : updates in checker_homotopies.a* and
+  moving_flag_continuation.a* and moving_flag_homotopies.adb.
+
+Wed 10 Jun 2009 : updates in checker_homotopies.a* and
+  moving_flag_continuation.adb.
+
+Tue 9 Jun 2009 : updates in checker_boards.a*, checker_posets_io.adb,
+  checker_localization_patterns.a*, checker_homotopies.a*, ts_checkers.adb,
+  and moving_flag_continuation.adb.
+
+Mon 8 Jun 2009 : updates in checker_homotopies.a*,
+  moving_flag_homotopies.a*, and moving_flag_continuation.adb
+
+Fri 5 Jun 2009 : upgrades in checker_homtopies.a*, moving_flag_homotopie.a*,
+  checker_localization_patterns.a*, moving_flag_continuation.a*.
+
+Thu 4 Jun 2009 : updates in moving_flag_continuation.adb and
+  checker_homotopies.a*
+
+Wed 3 Jun 2009 : updates in moving_flag_homotopies.a*
+  and moving_flag_continuation.a*
+
+Tue 2 Jun 2009 : updates in moving_flag_homotopies.a*
+  and moving_flag_continuation.a*
+
+Mon 1 Jun 2009 : updated ts_induce.adb, moving_flag_homotopies.a*,
+  and moving_flag_continuation.adb.
+
+Thu 28 May 2009 : changes in checker_homotopies.a*, ts_flagcond.adb,
+  moving_flag_homotopies.adb and moving_flag_continuation.a*
+
+Tue 26 May 2009 : changes in moving_flag_continuation.adb and ts_flagcond.adb.
+
+Mon 25 May 2009 : updated moving_flag_{continuation,homotopies},
+  for multiple intersection conditions in ts_flagcond.adb.
+  
+Thu 21 May 2009 : changed moving_flag_homotopies.a*, ts_flagcond.adb,
+  and moving_flag_continuation.adb.
+
+Wed 20 May 2009 : changed moving_flag_homotopies.a*, ts_flagcond.adb,
+  and moving_flag_continuation.adb.
+
+Tue 19 May 2009 : updates in checker_homotopies.a*, ts_induce.adb,
+  and moving_flag_continuation.adb
+
+Mon 18 May 2009 : removed from symbolic_schubert_conditions.adb redundant
+  with/use clauses.  Code from ts_induce.adb into checker_homotopies.
+  Updated checker_moves.a* and moving_flag_continuation.adb.
+
+Tue 31 Mar 2009 : replaced standard_natural_vectors.io.get from the
+  checker_boards_io, changes in ts_flagcond.adb.
+
+Mon 30 Mar 2009 : extended ts_flagcond.adb with previous transformation
+  and localization patterns in option #6.
+
+Thu 26 Mar 2009 : extended checker_boards_io with procedure to write
+  along the localization pattern, used in ts_flagcond.adb.  Also changed
+  are moving_flag_continuation.adb and moving_flag_homotopies.
+  Added inverse symbolic transformation to moving_flag_homotopies.
+
+Wed 25 Mar 2009 : extra function in checker_localization_patterns,
+  updates in moving_flag_homotopies.adb and moving_flag_continuation.adb,
+  tested by ts_flagcond.adb, which has one extra test function.
+
+Tue 24 Mar 2009 : new procedure in moving_flag_continuation.adb,
+  ts_flagcond.adb change documents Random_Flag versus One_Flag.
+
+Tue 27 Jan 2009 : moved code from ts_induce.adb into checker_posets_io,
+  updates in moving_flag_homotopies.adb and moving_flag_continuation,
+  tested by ts_flagcond: now ready to track all moves in a path...
+
+Mon 26 Jan 2009 : added enumeration of all paths to checker_posets,
+  tested by new option #8 in ts_checkers.  The new #6 in ts_induce
+  writes all localizations for all paths in a checker poset.
+
+Tue 13 Jan 2009 : added root refiners and more diagnostics to
+  moving_flag_homotopies.adb and moving_flag_continuation.adb now
+  contains a working path tracker to start the [2 4 6]^3 condition.
+
+Thu 8 Jan 2009 : made moving_flag_continuation.track_game interactive
+  and added function to moving_flag_homotopies.
+
+Thu 11 Dec 2008 : added path trackers to moving_flag_continuation.
+
+Tue 2 Dec 2008 : updates of moving_flag_homotopies, moving_flag_continuation,
+  tested by ts_flagcond.adb, also code from ts_induce.adb is moved.
+
+Fri 28 Nov 2008 : moving_flag_homotopies now contains start_solution,
+  new package moving_flag_continuation, tested by ts_flagcond.adb.
+  Added writing to file routines to checker_boards_io.
+
+Wed 26 Nov 2008 : bug fix in one_flag_homotopy in moving_flag_homotopies.adb,
+  tested by ts_flagcond.adb.
+
+Tue 25 Nov 2008 : added one_flag_homotopy to moving_flag_homotopies.
+
+Mon 24 Nov 2008 : created package moving_flag_homotopies, moving code
+  from ts_induce.adb and ts_flagcond.adb.
+
+Sun 23 Nov 2008 : ts_flagcond.adb shows the effect of transformations
+  on a generalizing moving flag in symbolic form.  The numeric form of
+  the transformations is in ts_induce.adb.
+
+Fri 21 Nov 2008 : update of ts_flagcond.adb with symbolic form of flag.
+
+Thu 20 Nov 2008 : moved pattern for moving flag from checker_boards
+  to checker_localization_patterns and added a transformation routine.
+  Updated checker_boards_io, checker_posets_io.adb, and ts_checkers.adb.
+  Also ts_induce.adb changed and ts_flagcond.adb is updated.
+
+Wed 19 Nov 2008 : started definition of a moving flag homotopy
+  in ts_flagcond.adb.  Updated ts_checkers.adb after additions to
+  checker_moves.a* and checker_posets.a* to see generalizing moves.
+
+Tue 18 Nov 2008 : fixed reporting error in ts_induce.adb.
+  Added to checker_boards* and ts_induced.adb to see pattern of the
+  moving flag in the specializing and generalizing homotopies.
+  Also changed ts_checkers.adb so the moving flag patterns shows.
+
+Thu 13 Nov 2008 : formatting in checker_localization_patterns.adb,
+  checker_moves.adb, checker_posets.adb, checker_posets_io.adb,
+  intersection_posets.adb, intersection_posets_io.adb,
+  symbolic_schubert_conditions.adb, ts_checkers.adb
+
+Fri 14 Dec 2007 : mainenum.ads got copied over from ../Pieri.
+
+Fri 8 Jun 2007 : more updates in numeric_schubert_conditions.a*,
+  so ts_flagcond.adb is now doing the point test on the equations.
+
+Thu 7 Jun 2007 : debugged numeric_schubert_conditions.adb, removed output
+  from remember_symbolic_minors.adb, and now ts_flagcond.adb writes system.
+
+Wed 6 Jun 2007 : updated remember* and {symbolic,numeric}_schubert*,
+  tested by ts_flagcond.adb.
+
+Tue 5 Jun 2007 : created remember_numeric_minors and added "symbolic_"
+  to the minor_table data type in remember_symbolic_minors.
+  Adjusted {symbolic,numeric}_schubert_conditions and ts_flagcond.adb.
+
+Mon 4 Jun 2007 : adjusted (symbolic,numeric}_schubert_conditions and
+  created new remember_symbolic_minors, tested by ts_flagcond.adb.
+
+Thu 24 May 2007 : mv numeric_schubert_conditions evaluate_schubert_conditions
+  and started the specifications of numeric_schubert_conditions.
+
+Tue 3 Apr 2007 : changed checker_posets.a* and checker_posets_io.adb,
+  intersection_posets.adb and intersection_posets_io.adb to work with
+  coefficients of arbitrary length; also fixed ungraceful exit.
+
+Thu 29 mar 2007 : fixed another bug in checker_posets.adb, minor change
+  in ts_checkers.adb.
+
+Tue 27 Mar 2007 : fixed bug in checker_posets, adding new Add_Multiplicity
+  procedure, and a 7th option in ts_checkers.
+
+Mon 26 Mar 2007 : fixed bug in intersection_posets.adb, the .ads changed
+  in the testing process as well.
+
+Fri 23 Mar 2007 : flag_minor_system added to symbolic_schubert_conditions,
+  tested by ts_flagcond.
+
+Tue 20 Mar 2007 : computed the #equations in symbolic_schubert_conditions
+  and also the enumeration of the minors, tested by ts_flagcond.adb.
+
+Fri 9 Mar 2007 : made a modest start at numeric_schubert_conditions.ad*,
+  tested by ts_flagcond.adb.
+
+Thu 8 Mar 2007 : created ts_flagcond.adb to test the operations in
+  {symbolic,numeric}_schubert_conditions.
+
+Fri 17 Nov 2006 : modified Add_Multiplicity in checker_posets, which 
+  fixed a bug in intersection_posets.adb, reported by Frank.
+ 
+Mon 2 Oct 2006 : ts_induce allows to create an intersection poset,
+  fixed typo in intersection_posets.adb.  New operations in checker_posets
+  and intersection_posets_io to allow homotopy navigation in ts_induce.
+
+Thu 28 Sep 2006 : extra procedure "Add_Multiplicity" in checker_posets,
+  changed checker_posets_io.adb and intersection_posets.adb.
+
+Wed 27 Sep 2006 : intersection_posets (+io) replaces checker_poset_trees
+  (+io), ts_chekcers now prints out the complete expansion.
+  Altered the package description in checker_posets.ads.
+
+Tue 26 Sep 2006 : except for checker_boards and its io, every file got
+  changed.  Debugged checker_localization_patterns and created
+  checker_poset_trees + io to combine several intersection conditions.
+
+Mon 25 Sep 2006 : updated checker_moves with debugging option for happiness,
+  added one function to checker_localization_patterns.adb, ts_checkers is
+  modified so that it allows only happy checkers on input.
+
+Fri 15 Sep 2006 : extra parenting functions to checker_posets to make
+  walk in ts_induce.adb with generalizing_homotopies more complete.
+
+Thu 14 Sep 2006 : changed checker_posets and _io, for ts_checkers.adb and
+  ts_induce.adb which now traverses the poset from the leaves to the root.
+
+Wed 13 Sep 2006 : tweaked checker_boards_io.ads and .adb, modified
+  checker_posets.ads and its .adb, also checker_posets_io.adb, and
+  the test program ts_checkers.adb, so posets are now also printed
+  with their interconnectivity information.
+
+Tue 12 Sep 2006 : added comments to "Number_of_Moves" in checker_moves.ads,
+  minor change in checker_moves.adb; extra info in ts_checkers.adb, nicer 
+  output by checker_boards_io, added explanations in checker_boards.ads.
+  New "checker_localization_patterns" package, split off from ts_checkers.
+  Updated ts_induce.

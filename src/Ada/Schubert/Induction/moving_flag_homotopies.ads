@@ -26,6 +26,9 @@ package Moving_Flag_Homotopies is
 -- DESCRIPTION :
 --   A moving flag homotopy introduces new coefficients in a general flag
 --   as defined by a generalizing sequence in a checker game.
+--   Different versions of the procedures with the same name are for
+--   different precision: standard double, double double, or quad double;
+--   and either stay silent or write extra output to file.
 
   procedure One_Flag_Homotopy
              ( n,k : in integer32;
@@ -585,7 +588,7 @@ package Moving_Flag_Homotopies is
                f : out QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys );
 
   -- DESCRIPTION :
-  --   Returns in f all polynonial equations that must be satisfied
+  --   Returns in f all polynomial equations that must be satisfied
   --   to meet all conditions by the brackets in cond,
   --   in standard double, double double, or quad double precision,
   --   for the matrices in start and target.
