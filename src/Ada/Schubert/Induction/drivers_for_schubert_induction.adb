@@ -1256,6 +1256,10 @@ package body Drivers_for_Schubert_Induction is
      then put_line(file,"An efficient problem formulation will be used.");
      else put_line(file,"A less efficient problem formulation will be used.");
     end if;
+    if tosquare
+     then put_line(file,"Overdetermined homotopies will be made square.");
+     else put_line(file,"Gauss-Newton trackers in overdetermined homotopies.");
+    end if;
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     if outlvl = 0 then
@@ -1335,6 +1339,10 @@ package body Drivers_for_Schubert_Induction is
      then put_line(file,"An efficient problem formulation will be used.");
      else put_line(file,"A less efficient problem formulation will be used.");
     end if;
+    if tosquare
+     then put_line(file,"Overdetermined homotopies will be made square.");
+     else put_line(file,"Gauss-Newton trackers in overdetermined homotopies.");
+    end if;
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     if outlvl = 0 then
@@ -1413,6 +1421,10 @@ package body Drivers_for_Schubert_Induction is
     if minrep
      then put_line(file,"An efficient problem formulation will be used.");
      else put_line(file,"A less efficient problem formulation will be used.");
+    end if;
+    if tosquare
+     then put_line(file,"Overdetermined homotopies will be made square.");
+     else put_line(file,"Gauss-Newton trackers in overdetermined homotopies.");
     end if;
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);

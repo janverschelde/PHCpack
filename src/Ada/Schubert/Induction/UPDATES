@@ -3,6 +3,8 @@ Thu 19 May 2016 : added question in drivers_for_schubert_induction.adb
   changed its specification and the packages resolve_schubert_problems
   and checker_poset_deformations.  Used the boolean flag in the trackers
   in moving_flag_continuation, called in checker_poset_deformations.adb.
+  Bug fix in moving_flag_continuation.adb, update in the writing to file
+  in drivers_for_schubert_induction.adb.
 
 Wed 18 May 2016 : improved documentation of moving_flag_homotopies.ads
   and the output in moving_flag_continuation.adb.  Added root refinement

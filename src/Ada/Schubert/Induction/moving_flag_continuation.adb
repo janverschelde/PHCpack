@@ -477,6 +477,8 @@ package body Moving_Flag_Continuation is
     xtsols,xt_sols_last : Solution_List;
     zero : constant Standard_Complex_Numbers.Complex_Number 
          := Standard_Complex_Numbers.Create(0.0);
+    one : constant Standard_Complex_Numbers.Complex_Number 
+        := Standard_Complex_Numbers.Create(1.0);
 
   begin
     while not Is_Null(tmp) loop
@@ -510,13 +512,15 @@ package body Moving_Flag_Continuation is
     if fail then
       put_line(file,"-> residual too high, abort path tracking");
     else
-      sh0 := Eval(sh,zero,n+1);
-      Reporting_Root_Refiner
-        (file,sh0,xtsols,epsxa,epsfa,tolsing,numit,3,deflate,false);
-      put(file,"Number of solutions in xtsols : ");
-      put(file,Length_Of(xtsols),1); new_line(file);
-      put(file,"Number of solutions in sols   : ");
-      put(file,Length_Of(sols),1); new_line(file);
+      if tosqr then
+        sh0 := Eval(sh,zero,n+1);
+        Reporting_Root_Refiner
+          (file,sh0,xtsols,epsxa,epsfa,tolsing,numit,3,deflate,false);
+        put(file,"Number of solutions in xtsols : ");
+        put(file,Length_Of(xtsols),1); new_line(file);
+        put(file,"Number of solutions in sols   : ");
+        put(file,Length_Of(sols),1); new_line(file);
+      end if;
       put_line(file,"Sharpening the roots on the original system ...");
       declare
         h0 : Poly_Sys(h'range) := Eval(h,zero,n+1);
@@ -526,15 +530,21 @@ package body Moving_Flag_Continuation is
         Reporting_Root_Sharpener
           (file,h0fz,xtsols,epsxa,epsfa,tolsing,numit,3,deflate,false);
       end;
-      Call_Path_Trackers(file,n,sh,xtsols,sols);
+      if tosqr then
+        Call_Path_Trackers(file,n,sh,xtsols,sols);
+        Clear(sh0);
+        sh0 := Eval(sh,one,n+1);
+      else
+        Call_Path_Trackers(file,n,h,xtsols,sols);
+      end if;
       tmp := xtsols;
-      Clear(sh0);
-      sh0 := Eval(sh,Standard_Complex_Numbers.Create(1.0),n+1);
       while not Is_Null(tmp) loop
         ls := Head_Of(tmp);
-        put(file,"Residual of the end solution at squared homotopy : ");
-        yh := Eval(sh0,ls.v); res := Max_Norm(yh);
-        put(file,res,3); new_line(file);
+        if tosqr then
+          put(file,"Residual of the end solution at squared homotopy : ");
+          yh := Eval(sh0,ls.v); res := Max_Norm(yh);
+          put(file,res,3); new_line(file);
+        end if;
      -- put_line(file,"Evaluating the end solution at the original homotopy :");
         declare
           xt : Standard_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
@@ -584,6 +594,8 @@ package body Moving_Flag_Continuation is
     xtsols,xt_sols_last : Solution_List;
     zero : constant DoblDobl_Complex_Numbers.Complex_Number
          := DoblDobl_Complex_Numbers.Create(integer(0));
+    one : constant DoblDobl_Complex_Numbers.Complex_Number
+        := DoblDobl_Complex_Numbers.Create(integer(1));
 
   begin
     while not Is_Null(tmp) loop
@@ -617,13 +629,15 @@ package body Moving_Flag_Continuation is
     if fail then
       put_line(file,"-> residual too high, abort path tracking");
     else
-      sh0 := Eval(sh,zero,n+1);
-      Reporting_Root_Refiner
-        (file,sh0,xtsols,epsxa,epsfa,tolsing,numit,3,false);
-      put(file,"Number of solutions in xtsols : ");
-      put(file,Length_Of(xtsols),1); new_line(file);
-      put(file,"Number of solutions in sols   : ");
-      put(file,Length_Of(sols),1); new_line(file);
+      if tosqr then
+        sh0 := Eval(sh,zero,n+1);
+        Reporting_Root_Refiner
+          (file,sh0,xtsols,epsxa,epsfa,tolsing,numit,3,false);
+        put(file,"Number of solutions in xtsols : ");
+        put(file,Length_Of(xtsols),1); new_line(file);
+        put(file,"Number of solutions in sols   : ");
+        put(file,Length_Of(sols),1); new_line(file);
+      end if;
       put_line(file,"Sharpening the roots on the original system ...");
       declare
         h0 : Poly_Sys(h'range) := Eval(h,zero,n+1);
@@ -633,15 +647,21 @@ package body Moving_Flag_Continuation is
         Reporting_Root_Refiner
           (file,h0fz,xtsols,epsxa,epsfa,tolsing,numit,3,false);
       end;
-      Call_Path_Trackers(file,n,sh,xtsols,sols);
+      if tosqr then
+        Call_Path_Trackers(file,n,sh,xtsols,sols);
+        Clear(sh0);
+        sh0 := Eval(sh,one,n+1);
+      else
+        Call_Path_Trackers(file,n,h,xtsols,sols);
+      end if;
       tmp := xtsols;
-      Clear(sh0);
-      sh0 := Eval(sh,DoblDobl_Complex_Numbers.Create(integer(1)),n+1);
       while not Is_Null(tmp) loop
         ls := Head_Of(tmp);
-        put(file,"Residual of the end solution at squared homotopy : ");
-        yh := Eval(sh0,ls.v); res := Max_Norm(yh);
-        put(file,res,3); new_line(file);
+        if tosqr then
+          put(file,"Residual of the end solution at squared homotopy : ");
+          yh := Eval(sh0,ls.v); res := Max_Norm(yh);
+          put(file,res,3); new_line(file);
+        end if;
      -- put_line(file,"Evaluating the end solution at the original homotopy :");
         declare
           xt : DoblDobl_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
@@ -691,6 +711,8 @@ package body Moving_Flag_Continuation is
     xtsols,xt_sols_last : Solution_List;
     zero : constant QuadDobl_Complex_Numbers.Complex_Number
          := QuadDobl_Complex_Numbers.Create(integer(0));
+    one : constant QuadDobl_Complex_Numbers.Complex_Number
+        := QuadDobl_Complex_Numbers.Create(integer(1));
 
   begin
     while not Is_Null(tmp) loop
@@ -724,13 +746,15 @@ package body Moving_Flag_Continuation is
     if fail then
       put_line(file,"-> residual too high, abort path tracking");
     else
-      sh0 := Eval(sh,zero,n+1);
-      Reporting_Root_Refiner
-        (file,sh0,xtsols,epsxa,epsfa,tolsing,numit,3,false);
-      put(file,"Number of solutions in xtsols : ");
-      put(file,Length_Of(xtsols),1); new_line(file);
-      put(file,"Number of solutions in sols   : ");
-      put(file,Length_Of(sols),1); new_line(file);
+      if tosqr then
+        sh0 := Eval(sh,zero,n+1);
+        Reporting_Root_Refiner
+          (file,sh0,xtsols,epsxa,epsfa,tolsing,numit,3,false);
+        put(file,"Number of solutions in xtsols : ");
+        put(file,Length_Of(xtsols),1); new_line(file);
+        put(file,"Number of solutions in sols   : ");
+        put(file,Length_Of(sols),1); new_line(file);
+      end if;
       put_line(file,"Sharpening the roots on the original system ...");
       declare
         h0 : Poly_Sys(h'range) := Eval(h,zero,n+1);
@@ -740,15 +764,21 @@ package body Moving_Flag_Continuation is
         Reporting_Root_Refiner
           (file,h0fz,xtsols,epsxa,epsfa,tolsing,numit,3,false);
       end;
-      Call_Path_Trackers(file,n,sh,xtsols,sols);
+      if tosqr then
+        Call_Path_Trackers(file,n,sh,xtsols,sols);
+        Clear(sh0);
+        sh0 := Eval(sh,one,n+1);
+      else
+        Call_Path_Trackers(file,n,h,xtsols,sols);
+      end if;
       tmp := xtsols;
-      Clear(sh0);
-      sh0 := Eval(sh,QuadDobl_Complex_Numbers.Create(integer(1)),n+1);
       while not Is_Null(tmp) loop
         ls := Head_Of(tmp);
-        put(file,"Residual of the end solution at squared homotopy : ");
-        yh := Eval(sh0,ls.v); res := Max_Norm(yh);
-        put(file,res,3); new_line(file);
+        if tosqr then
+          put(file,"Residual of the end solution at squared homotopy : ");
+          yh := Eval(sh0,ls.v); res := Max_Norm(yh);
+          put(file,res,3); new_line(file);
+        end if;
      -- put_line(file,"Evaluating the end solution at the original homotopy :");
         declare
           xt : QuadDobl_Complex_Vectors.Vector(ls.v'first..ls.v'last+1);
