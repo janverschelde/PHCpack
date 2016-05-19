@@ -29,19 +29,19 @@ package Moving_Flag_Continuation is
   procedure Track_First_Move
               ( file : in file_type; n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sol : in out Standard_Complex_Solutions.Link_to_Solution;
                 fail : out boolean );
   procedure Track_First_Move
               ( file : in file_type; n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sol : in out DoblDobl_Complex_Solutions.Link_to_Solution;
                 fail : out boolean );
   procedure Track_First_Move
               ( file : in file_type; n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sol : in out QuadDobl_Complex_Solutions.Link_to_Solution;
                 fail : out boolean );
 
@@ -55,6 +55,8 @@ package Moving_Flag_Continuation is
   --   file     output file for intermediate results and diagnostics;
   --   n        number of variables in the ambient space;
   --   h        homotopy in n+1 variables;
+  --   tosqr    true if the overdetermined homotopy will be squared up, or
+  --            false if the Gauss-Newton path trackers will be applied;
   --   tol      tolerance on the residual to decide failure;
   --   sol      if not null, then the start solution for the homotopy,
   --            otherwise, the start solution will be computed.
@@ -67,19 +69,19 @@ package Moving_Flag_Continuation is
   procedure Track_Next_Move
               ( file : in file_type; n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sol : in out Standard_Complex_Solutions.Link_to_Solution;
                 fail : out boolean );
   procedure Track_Next_Move
               ( file : in file_type; n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sol : in out DoblDobl_Complex_Solutions.Link_to_Solution;
                 fail : out boolean );
   procedure Track_Next_Move
               ( file : in file_type; n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sol : in out QuadDobl_Complex_Solutions.Link_to_Solution;
                 fail : out boolean );
 
@@ -93,6 +95,8 @@ package Moving_Flag_Continuation is
   --   file     output file for intermediate results and diagnostics;
   --   n        number of variables in the ambient space;
   --   h        homotopy in n+1 variables;
+  --   tosqr    true if the overdetermined homotopy will be squared up, or
+  --            false if the Gauss-Newton path trackers will be applied;
   --   tol      tolerance on the residual to decide failure.
 
   -- ON RETURN :
@@ -103,19 +107,19 @@ package Moving_Flag_Continuation is
   procedure Track_Next_Move
               ( n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 fail : out boolean );
   procedure Track_Next_Move
               ( n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 fail : out boolean );
   procedure Track_Next_Move
               ( n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 fail : out boolean );
 
@@ -128,6 +132,8 @@ package Moving_Flag_Continuation is
   -- ON ENTRY :
   --   n        number of variables in the ambient space;
   --   h        homotopy in n+1 variables;
+  --   tosqr    true if the overdetermined homotopy will be squared up, or
+  --            false if the Gauss-Newton path trackers will be applied;
   --   tol      tolerance on the residual to decide failure;
   --   sols     start solutions for the homotopy.
 
@@ -140,21 +146,21 @@ package Moving_Flag_Continuation is
               ( file : in file_type;
                 n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 fail : out boolean );
   procedure Track_Next_Move
               ( file : in file_type;
                 n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 fail : out boolean );
   procedure Track_Next_Move
               ( file : in file_type;
                 n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 fail : out boolean );
 
@@ -169,6 +175,8 @@ package Moving_Flag_Continuation is
   --            if omitted, then no output is written to file;
   --   n        number of variables in the ambient space;
   --   h        homotopy in n+1 variables;
+  --   tosqr    true if the overdetermined homotopy will be squared up, or
+  --            false if the Gauss-Newton path trackers will be applied;
   --   tol      tolerance on the residual to decide failure;
   --   sols     start solutions for the homotopy.
 

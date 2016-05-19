@@ -52,7 +52,7 @@ package body Moving_Flag_Continuation is
   procedure Track_First_Move
               ( file : in file_type; n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sol : in out Standard_Complex_Solutions.Link_to_Solution;
                 fail : out boolean ) is
 
@@ -64,7 +64,7 @@ package body Moving_Flag_Continuation is
     xt : Standard_Complex_Vectors.Vector(1..n+1);
     y : Standard_Complex_Vectors.Vector(h'range);
     res : double_float;
-    sh : Poly_Sys(1..n) := Square(n,h);
+    sh : Poly_Sys(1..n);
     yh : Standard_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     sols : Solution_List;
@@ -84,9 +84,15 @@ package body Moving_Flag_Continuation is
       put(file,res,3); new_line(file);
       xt(x'range) := x;
       xt(xt'last) := Standard_Complex_Numbers.Create(0.0);
-      yh := Eval(sh,xt);
-      put_line(file,"Value of the start solution at the squared homotopy :");
-      put_line(file,yh);
+      if tosqr then
+        sh := Square(n,h);
+        yh := Eval(sh,xt);
+        put_line(file,"Value of the start solution at the squared homotopy :");
+        put_line(file,yh);
+      end if;
+      y := Eval(h,xt);
+      put_line(file,"Value of the start solution at the original homotopy :");
+      put_line(file,y);
       sols := Create(xt);
       if sol = null then
         put_line(file,"In Track_First_Move, sol is null.");
@@ -106,15 +112,17 @@ package body Moving_Flag_Continuation is
       put(file,res,3); new_line(file); new_line(file);
       fail := (res > epsfa);
     end if;
-    Standard_Complex_Poly_Systems.Clear(sh);
+    if tosqr
+     then Standard_Complex_Poly_Systems.Clear(sh);
+    end if;
   exception
-    when others => put_line("exception in Track_First_Move"); raise;
+    when others => put_line("exception in Track_First_Move 1"); raise;
   end Track_First_Move;
 
   procedure Track_First_Move
               ( file : in file_type; n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sol : in out DoblDobl_Complex_Solutions.Link_to_Solution;
                 fail : out boolean ) is
 
@@ -126,7 +134,7 @@ package body Moving_Flag_Continuation is
     xt : DoblDobl_Complex_Vectors.Vector(1..n+1);
     y : DoblDobl_Complex_Vectors.Vector(h'range);
     res : double_double;
-    sh : Poly_Sys(1..n) := Square(n,h);
+    sh : Poly_Sys(1..n);
     yh : DoblDobl_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     sols : Solution_List;
@@ -145,9 +153,15 @@ package body Moving_Flag_Continuation is
       put(file,res,3); new_line(file);
       xt(x'range) := x;
       xt(xt'last) := DoblDobl_Complex_Numbers.Create(integer(0));
-      yh := Eval(sh,xt);
-      put_line(file,"Value of the start solution at the squared homotopy :");
-      put_line(file,yh);
+      if tosqr then
+        sh := Square(n,h);
+        yh := Eval(sh,xt);
+        put_line(file,"Value of the start solution at the squared homotopy :");
+        put_line(file,yh);
+      end if;
+      y := Eval(h,xt);
+      put_line(file,"Value of the start solution at the original homotopy :");
+      put_line(file,y);
       sols := Create(xt);
       if sol = null then
         put_line(file,"In Track_First_Move, sol is null.");
@@ -167,15 +181,17 @@ package body Moving_Flag_Continuation is
       put(file,res,3); new_line(file); new_line(file);
       fail := (res > epsfa);
     end if;
-    DoblDobl_Complex_Poly_Systems.Clear(sh);
+    if tosqr
+     then DoblDobl_Complex_Poly_Systems.Clear(sh);
+    end if;
   exception
-    when others => put_line("exception in Track_First_Move"); raise;
+    when others => put_line("exception in Track_First_Move 2"); raise;
   end Track_First_Move;
 
   procedure Track_First_Move
               ( file : in file_type; n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sol : in out QuadDobl_Complex_Solutions.Link_to_Solution;
                 fail : out boolean ) is
 
@@ -187,7 +203,7 @@ package body Moving_Flag_Continuation is
     xt : QuadDobl_Complex_Vectors.Vector(1..n+1);
     y : QuadDobl_Complex_Vectors.Vector(h'range);
     res : quad_double;
-    sh : Poly_Sys(1..n) := Square(n,h);
+    sh : Poly_Sys(1..n);
     yh : QuadDobl_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     sols : Solution_List;
@@ -206,9 +222,15 @@ package body Moving_Flag_Continuation is
       put(file,res,3); new_line(file);
       xt(x'range) := x;
       xt(xt'last) := QuadDobl_Complex_Numbers.Create(integer(0));
-      yh := Eval(sh,xt);
-      put_line(file,"Value of the start solution at the squared homotopy :");
-      put_line(file,yh);
+      if tosqr then
+        sh := Square(n,h);
+        yh := Eval(sh,xt);
+        put_line(file,"Value of the start solution at the squared homotopy :");
+        put_line(file,yh);
+      end if;
+      y := Eval(h,xt);
+      put_line(file,"Value of the start solution at the original homotopy :");
+      put_line(file,y);
       sols := Create(xt);
       if sol = null then
         put_line(file,"In Track_First_Move, sol is null.");
@@ -228,15 +250,17 @@ package body Moving_Flag_Continuation is
       put(file,res,3); new_line(file); new_line(file);
       fail := (res > epsfa);
     end if;
-    QuadDobl_Complex_Poly_Systems.Clear(sh);
+    if tosqr
+     then QuadDobl_Complex_Poly_Systems.Clear(sh);
+    end if;
   exception
-    when others => put_line("exception in Track_First_Move"); raise;
+    when others => put_line("exception in Track_First_Move 3"); raise;
   end Track_First_Move;
 
   procedure Track_Next_Move
               ( file : in file_type; n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sol : in out Standard_Complex_Solutions.Link_to_Solution;
                 fail : out boolean ) is
 
@@ -247,7 +271,7 @@ package body Moving_Flag_Continuation is
     xt : Standard_Complex_Vectors.Vector(1..n+1);
     y : Standard_Complex_Vectors.Vector(h'range);
     res : double_float;
-    sh : Poly_Sys(1..n) := Square(n,h);
+    sh : Poly_Sys(1..n);
     yh : Standard_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     sols : Solution_List;
@@ -268,12 +292,15 @@ package body Moving_Flag_Continuation is
     put(file,"Residual of the start solution at original homotopy : ");
     put(file,res,3); new_line(file);
     fail := (res > tolsing);
-    yh := Eval(sh,xt);
-   -- put_line(file,"Value of the start solution at the squared homotopy :");
-   -- put_line(file,yh);
-    res := Max_Norm(y);
-    put(file,"Residual of the start solution at the squared homotopy : ");
-    put(file,res,3); new_line(file);
+    if tosqr then
+      sh := Square(n,h);
+      yh := Eval(sh,xt);
+     -- put_line(file,"Value of the start solution at the squared homotopy :");
+     -- put_line(file,yh);
+      res := Max_Norm(yh);
+      put(file,"Residual of the start solution at the squared homotopy : ");
+      put(file,res,3); new_line(file);
+    end if;
     fail := fail and (res > tolsing);
     if fail then
       put_line(file,"-> residual too high, abort path tracking");
@@ -288,15 +315,17 @@ package body Moving_Flag_Continuation is
       put(file,res,3); new_line(file); new_line(file);
       fail := (res > tolsing);
     end if;
-    Clear(sh); Clear(sh0); --Clear(sols);
+    if tosqr
+     then Clear(sh); Clear(sh0); --Clear(sols);
+    end if;
   exception
-    when others => put_line("exception in Track_Next_Move ..."); raise;
+    when others => put_line("exception in Track_Next_Move 1 ..."); raise;
   end Track_Next_Move;
 
   procedure Track_Next_Move
               ( file : in file_type; n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sol : in out DoblDobl_Complex_Solutions.Link_to_Solution;
                 fail : out boolean ) is
 
@@ -307,7 +336,7 @@ package body Moving_Flag_Continuation is
     xt : DoblDobl_Complex_Vectors.Vector(1..n+1);
     y : DoblDobl_Complex_Vectors.Vector(h'range);
     res : double_double;
-    sh : Poly_Sys(1..n) := Square(n,h);
+    sh : Poly_Sys(1..n);
     yh : DoblDobl_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     sols : Solution_List;
@@ -327,12 +356,15 @@ package body Moving_Flag_Continuation is
     put(file,"Residual of the start solution at the original homotopy : ");
     put(file,res,3); new_line(file);
     fail := (res > tolsing);
-    yh := Eval(sh,xt);
-   -- put_line(file,"Value of the start solution at the squared homotopy :");
-   -- put_line(file,yh);
-    res := Max_Norm(y);
-    put(file,"Residual of the start solution at the squared homotopy : ");
-    put(file,res,3); new_line(file);
+    if tosqr then
+      sh := Square(n,h);
+      yh := Eval(sh,xt);
+     -- put_line(file,"Value of the start solution at the squared homotopy :");
+     -- put_line(file,yh);
+      res := Max_Norm(yh);
+      put(file,"Residual of the start solution at the squared homotopy : ");
+      put(file,res,3); new_line(file);
+    end if;
     fail := fail and (res > tolsing);
     if fail then
       put_line(file,"-> residual too high, abort path tracking");
@@ -347,15 +379,17 @@ package body Moving_Flag_Continuation is
       put(file,res,3); new_line(file); new_line(file);
       fail := (res > tolsing);
     end if;
-    Clear(sh); Clear(sh0); --Clear(sols);
+    if tosqr
+     then Clear(sh); Clear(sh0); --Clear(sols);
+    end if;
   exception
-    when others => put_line("exception in Track_Next_Move ..."); raise;
+    when others => put_line("exception in Track_Next_Move 2 ..."); raise;
   end Track_Next_Move;
 
   procedure Track_Next_Move
               ( file : in file_type; n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sol : in out QuadDobl_Complex_Solutions.Link_to_Solution;
                 fail : out boolean ) is
 
@@ -366,7 +400,7 @@ package body Moving_Flag_Continuation is
     xt : QuadDobl_Complex_Vectors.Vector(1..n+1);
     y : QuadDobl_Complex_Vectors.Vector(h'range);
     res : quad_double;
-    sh : Poly_Sys(1..n) := Square(n,h);
+    sh : Poly_Sys(1..n);
     yh : QuadDobl_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     sols : Solution_List;
@@ -386,12 +420,15 @@ package body Moving_Flag_Continuation is
     put(file,"Residual of the start solution at the original homtopy : ");
     put(file,res,3); new_line(file);
     fail := (res > tolsing);
-    yh := Eval(sh,xt);
-   -- put_line(file,"Value of the start solution at the squared homotopy :");
-   -- put_line(file,yh);
-    res := Max_Norm(y);
-    put(file,"Residual of the start solution at the squared homotopy : ");
-    put(file,res,3); new_line(file);
+    if tosqr then
+      sh := Square(n,h);
+      yh := Eval(sh,xt);
+     -- put_line(file,"Value of the start solution at the squared homotopy :");
+     -- put_line(file,yh);
+      res := Max_Norm(yh);
+      put(file,"Residual of the start solution at the squared homotopy : ");
+      put(file,res,3); new_line(file);
+    end if;
     fail := fail and (res > tolsing);
     if fail then
       put_line(file,"-> residual too high, abort path tracking");
@@ -406,15 +443,17 @@ package body Moving_Flag_Continuation is
       put(file,res,3); new_line(file); new_line(file);
       fail := (res > tolsing);
     end if;
-    Clear(sh); Clear(sh0); --Clear(sols);
+    if tosqr
+     then Clear(sh); Clear(sh0); --Clear(sols);
+    end if;
   exception
-    when others => put_line("exception in Track_Next_Move ..."); raise;
+    when others => put_line("exception in Track_Next_Move 3 ..."); raise;
   end Track_Next_Move;
 
   procedure Track_Next_Move
               ( file : in file_type; n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 fail : out boolean ) is
 
@@ -425,7 +464,7 @@ package body Moving_Flag_Continuation is
     xt : Standard_Complex_Vectors.Vector(1..n+1);
     y : Standard_Complex_Vectors.Vector(h'range);
     res : double_float;
-    sh : Poly_Sys(1..n) := Square(n,h);
+    sh : Poly_Sys(1..n);
     yh : Standard_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     epsxa : constant double_float := 1.0E-12;
@@ -455,12 +494,15 @@ package body Moving_Flag_Continuation is
       put(file,"Residual of the start solution at the original homotopy : ");
       put(file,res,3); new_line(file);
       fail := (res > tolsing);
-      yh := Eval(sh,xt);
-     -- put_line(file,"Value of the start solution at the squared homotopy :");
-     -- put_line(file,yh);
-      res := Max_Norm(y);
-      put(file,"Residual of the start solution at the squared homotopy : ");
-      put(file,res,3); new_line(file);
+      if tosqr then
+        sh := Square(n,h);
+        yh := Eval(sh,xt);
+      -- put_line(file,"Value of the start solution at the squared homotopy :");
+      -- put_line(file,yh);
+        res := Max_Norm(yh);
+        put(file,"Residual of the start solution at the squared homotopy : ");
+        put(file,res,3); new_line(file);
+      end if;
       fail := fail and (res > tolsing);
       Append(xtsols,xt_sols_last,Create(xt));
       tmp := Tail_Of(tmp);
@@ -509,15 +551,17 @@ package body Moving_Flag_Continuation is
         tmp := Tail_Of(tmp);
       end loop;
     end if;
-    Clear(sh); Clear(sh0); --Clear(sols);
+    if tosqr
+     then Clear(sh); Clear(sh0); --Clear(sols);
+    end if;
   exception
-    when others => put_line("exception in Track_Next_Move ..."); raise;
+    when others => put_line("exception in Track_Next_Move 4 ..."); raise;
   end Track_Next_Move;
 
   procedure Track_Next_Move
               ( file : in file_type; n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 fail : out boolean ) is
 
@@ -528,7 +572,7 @@ package body Moving_Flag_Continuation is
     xt : DoblDobl_Complex_Vectors.Vector(1..n+1);
     y : DoblDobl_Complex_Vectors.Vector(h'range);
     res : double_double;
-    sh : Poly_Sys(1..n) := Square(n,h);
+    sh : Poly_Sys(1..n);
     yh : DoblDobl_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     epsxa : constant double_float := 1.0E-12;
@@ -557,12 +601,15 @@ package body Moving_Flag_Continuation is
       put(file,"Residual of the start solution at the original homotopy : ");
       put(file,res,3); new_line(file);
       fail := (res > tolsing);
-      yh := Eval(sh,xt);
+      if tosqr then
+        sh := Square(n,h);
+        yh := Eval(sh,xt);
      -- put_line(file,"Value of the start solution at the squared homotopy :");
      -- put_line(file,yh);
-      res := Max_Norm(y);
-      put(file,"Residual of the start solution at the squared homotopy : ");
-      put(file,res,3); new_line(file);
+        res := Max_Norm(yh);
+        put(file,"Residual of the start solution at the squared homotopy : ");
+        put(file,res,3); new_line(file);
+      end if;
       fail := fail and (res > tolsing);
       Append(xtsols,xt_sols_last,Create(xt));
       tmp := Tail_Of(tmp);
@@ -611,15 +658,17 @@ package body Moving_Flag_Continuation is
         tmp := Tail_Of(tmp);
       end loop;
     end if;
-    Clear(sh); Clear(sh0); --Clear(sols);
+    if tosqr
+     then Clear(sh); Clear(sh0); --Clear(sols);
+    end if;
   exception
-    when others => put_line("exception in Track_Next_Move ..."); raise;
+    when others => put_line("exception in Track_Next_Move 5 ..."); raise;
   end Track_Next_Move;
 
   procedure Track_Next_Move
               ( file : in file_type; n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 fail : out boolean ) is
 
@@ -630,7 +679,7 @@ package body Moving_Flag_Continuation is
     xt : QuadDobl_Complex_Vectors.Vector(1..n+1);
     y : QuadDobl_Complex_Vectors.Vector(h'range);
     res : quad_double;
-    sh : Poly_Sys(1..n) := Square(n,h);
+    sh : Poly_Sys(1..n);
     yh : QuadDobl_Complex_Vectors.Vector(sh'range);
     sh0 : Poly_Sys(sh'range);
     epsxa : constant double_float := 1.0E-12;
@@ -659,12 +708,15 @@ package body Moving_Flag_Continuation is
       put(file,"Residual of the start solution at the original homotopy : ");
       put(file,res,3); new_line(file);
       fail := (res > tolsing);
-      yh := Eval(sh,xt);
+      if tosqr then
+        sh := Square(n,h);
+        yh := Eval(sh,xt);
      -- put_line(file,"Value of the start solution at the squared homotopy :");
      -- put_line(file,yh);
-      res := Max_Norm(y);
-      put(file,"Residual of the start solution at the squared homotopy : ");
-      put(file,res,3); new_line(file);
+        res := Max_Norm(y);
+        put(file,"Residual of the start solution at the squared homotopy : ");
+        put(file,res,3); new_line(file);
+      end if;
       fail := fail and (res > tolsing);
       Append(xtsols,xt_sols_last,Create(xt));
       tmp := Tail_Of(tmp);
@@ -713,15 +765,17 @@ package body Moving_Flag_Continuation is
         tmp := Tail_Of(tmp);
       end loop;
     end if;
-    Clear(sh); Clear(sh0); --Clear(sols);
+    if tosqr
+     then Clear(sh); Clear(sh0); --Clear(sols);
+    end if;
   exception
-    when others => put_line("exception in Track_Next_Move ..."); raise;
+    when others => put_line("exception in Track_Next_Move 6 ..."); raise;
   end Track_Next_Move;
 
   procedure Track_Next_Move
               ( n : in integer32;
                 h : in Standard_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sols : in out Standard_Complex_Solutions.Solution_List;
                 fail : out boolean ) is
 
@@ -729,7 +783,7 @@ package body Moving_Flag_Continuation is
     use Standard_Complex_Solutions;
 
     xt : Standard_Complex_Vectors.Vector(1..n+1);
-    sh : Poly_Sys(1..n) := Square(n,h);
+    sh : Poly_Sys(1..n);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
     xtsols,xt_sols_last : Solution_List;
@@ -745,7 +799,12 @@ package body Moving_Flag_Continuation is
       tmp := Tail_Of(tmp);
     end loop;
     if not fail then
-      Call_Path_Trackers(n,sh,xtsols,sols);
+      if tosqr then
+        sh := Square(n,h);
+        Call_Path_Trackers(n,sh,xtsols,sols);
+      else
+        Call_Path_Trackers(n,h,xtsols,sols);
+      end if;
       tmp := xtsols;
       while not Is_Null(tmp) loop
         ls := Head_Of(tmp);
@@ -759,15 +818,17 @@ package body Moving_Flag_Continuation is
         tmp := Tail_Of(tmp);
       end loop;
     end if;
-    Clear(sh);
+    if tosqr
+     then Clear(sh);
+    end if;
   exception
-    when others => put_line("exception in Track_Next_Move ..."); raise;
+    when others => put_line("exception in Track_Next_Move 7 ..."); raise;
   end Track_Next_Move;
 
   procedure Track_Next_Move
               ( n : in integer32;
                 h : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sols : in out DoblDobl_Complex_Solutions.Solution_List;
                 fail : out boolean ) is
 
@@ -775,7 +836,7 @@ package body Moving_Flag_Continuation is
     use DoblDobl_Complex_Solutions;
 
     xt : DoblDobl_Complex_Vectors.Vector(1..n+1);
-    sh : Poly_Sys(1..n) := Square(n,h);
+    sh : Poly_Sys(1..n);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
     xtsols,xt_sols_last : Solution_List;
@@ -791,7 +852,12 @@ package body Moving_Flag_Continuation is
       tmp := Tail_Of(tmp);
     end loop;
     if not fail then
-      Call_Path_Trackers(n,sh,xtsols,sols);
+      if tosqr then
+        sh := Square(n,h);
+        Call_Path_Trackers(n,sh,xtsols,sols);
+      else
+        Call_Path_Trackers(n,h,xtsols,sols);
+      end if;
       tmp := xtsols;
       while not Is_Null(tmp) loop
         ls := Head_Of(tmp);
@@ -805,15 +871,17 @@ package body Moving_Flag_Continuation is
         tmp := Tail_Of(tmp);
       end loop;
     end if;
-    Clear(sh);
+    if tosqr
+     then Clear(sh);
+    end if;
   exception
-    when others => put_line("exception in Track_Next_Move ..."); raise;
+    when others => put_line("exception in Track_Next_Move 8 ..."); raise;
   end Track_Next_Move;
 
   procedure Track_Next_Move
               ( n : in integer32;
                 h : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-                tol : in double_float;
+                tosqr : in boolean; tol : in double_float;
                 sols : in out QuadDobl_Complex_Solutions.Solution_List;
                 fail : out boolean ) is
 
@@ -821,7 +889,7 @@ package body Moving_Flag_Continuation is
     use QuadDobl_Complex_Solutions;
 
     xt : QuadDobl_Complex_Vectors.Vector(1..n+1);
-    sh : Poly_Sys(1..n) := Square(n,h);
+    sh : Poly_Sys(1..n);
     tmp : Solution_List := sols;
     ls : Link_to_Solution;
     xtsols,xt_sols_last : Solution_List;
@@ -837,7 +905,12 @@ package body Moving_Flag_Continuation is
       tmp := Tail_Of(tmp);
     end loop;
     if not fail then
-      Call_Path_Trackers(n,sh,xtsols,sols);
+      if tosqr then
+        sh := Square(n,h);
+        Call_Path_Trackers(n,sh,xtsols,sols);
+      else
+        Call_Path_Trackers(n,h,xtsols,sols);
+      end if;
       tmp := xtsols;
       while not Is_Null(tmp) loop
         ls := Head_Of(tmp);
@@ -851,9 +924,11 @@ package body Moving_Flag_Continuation is
         tmp := Tail_Of(tmp);
       end loop;
     end if;
-    Clear(sh);
+    if tosqr
+     then Clear(sh);
+    end if;
   exception
-    when others => put_line("exception in Track_Next_Move ..."); raise;
+    when others => put_line("exception in Track_Next_Move 9 ..."); raise;
   end Track_Next_Move;
 
   procedure Initialize_Symbol_Table
@@ -1639,8 +1714,8 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,tol,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,tol,ls,fail);
+     then Track_First_Move(file,dim,gh.all,true,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,true,tol,ls,fail);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -1694,8 +1769,8 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,tol,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,tol,ls,fail);
+     then Track_First_Move(file,dim,gh.all,true,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,true,tol,ls,fail);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -1749,8 +1824,8 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,tol,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,tol,ls,fail);
+     then Track_First_Move(file,dim,gh.all,true,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,true,tol,ls,fail);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -1803,7 +1878,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,tol,sols,fail);
+    Track_Next_Move(file,dim,gh.all,true,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -1856,7 +1931,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,tol,sols,fail);
+    Track_Next_Move(file,dim,gh.all,true,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -1909,7 +1984,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,tol,sols,fail);
+    Track_Next_Move(file,dim,gh.all,true,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -1954,7 +2029,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,tol,sols,fail);
+    Track_Next_Move(dim,gh.all,true,tol,sols,fail);
     if not fail then
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (n,k,ctr,q,qr,qc,mf,xpm,sols);
@@ -1965,7 +2040,6 @@ package body Moving_Flag_Continuation is
   exception
     when others => put_line("exception in Stay_Homotopy"); raise;
   end Stay_Homotopy;
-
 
   procedure Stay_Homotopy
               ( n,k,ctr,ind : in integer32;
@@ -1993,7 +2067,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,tol,sols,fail);
+    Track_Next_Move(dim,gh.all,true,tol,sols,fail);
     if not fail then
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (n,k,ctr,q,qr,qc,mf,xpm,sols);
@@ -2031,7 +2105,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,tol,sols,fail);
+    Track_Next_Move(dim,gh.all,true,tol,sols,fail);
     if not fail then
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (n,k,ctr,q,qr,qc,mf,xpm,sols);
@@ -2077,8 +2151,8 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,tol,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,tol,ls,fail);
+     then Track_First_Move(file,dim,gh.all,true,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,true,tol,ls,fail);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -2135,8 +2209,8 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,tol,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,tol,ls,fail);
+     then Track_First_Move(file,dim,gh.all,true,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,true,tol,ls,fail);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -2193,8 +2267,8 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,tol,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,tol,ls,fail);
+     then Track_First_Move(file,dim,gh.all,true,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,true,tol,ls,fail);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -2250,7 +2324,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,tol,sols,fail);
+    Track_Next_Move(file,dim,gh.all,true,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -2306,7 +2380,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,tol,sols,fail);
+    Track_Next_Move(file,dim,gh.all,true,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -2362,7 +2436,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,tol,sols,fail);
+    Track_Next_Move(file,dim,gh.all,true,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -2414,7 +2488,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,tol,sols,fail);
+    Track_Next_Move(dim,gh.all,true,tol,sols,fail);
     if not fail then
       if big_r > ctr + 1
        then Checker_Homotopies.First_Swap_Coordinates
@@ -2459,7 +2533,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,tol,sols,fail);
+    Track_Next_Move(dim,gh.all,true,tol,sols,fail);
     if not fail then
       if big_r > ctr + 1
        then Checker_Homotopies.First_Swap_Coordinates
@@ -2504,7 +2578,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,tol,sols,fail);
+    Track_Next_Move(dim,gh.all,true,tol,sols,fail);
     if not fail then
       if big_r > ctr + 1
        then Checker_Homotopies.First_Swap_Coordinates
