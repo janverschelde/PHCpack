@@ -1682,7 +1682,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
@@ -1714,8 +1714,8 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,true,tol,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,true,tol,ls,fail);
+     then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -1737,7 +1737,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
@@ -1769,8 +1769,8 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,true,tol,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,true,tol,ls,fail);
+     then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -1792,7 +1792,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
@@ -1824,8 +1824,8 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,true,tol,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,true,tol,ls,fail);
+     then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -1847,7 +1847,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
@@ -1878,7 +1878,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,true,tol,sols,fail);
+    Track_Next_Move(file,dim,gh.all,tosqr,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -1900,7 +1900,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
@@ -1931,7 +1931,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,true,tol,sols,fail);
+    Track_Next_Move(file,dim,gh.all,tosqr,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -1953,7 +1953,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
@@ -1984,7 +1984,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,true,tol,sols,fail);
+    Track_Next_Move(file,dim,gh.all,tosqr,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -2006,7 +2006,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
@@ -2029,7 +2029,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,true,tol,sols,fail);
+    Track_Next_Move(dim,gh.all,tosqr,tol,sols,fail);
     if not fail then
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (n,k,ctr,q,qr,qc,mf,xpm,sols);
@@ -2044,7 +2044,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
@@ -2067,7 +2067,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,true,tol,sols,fail);
+    Track_Next_Move(dim,gh.all,tosqr,tol,sols,fail);
     if not fail then
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (n,k,ctr,q,qr,qc,mf,xpm,sols);
@@ -2082,7 +2082,7 @@ package body Moving_Flag_Continuation is
   procedure Stay_Homotopy
               ( n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
@@ -2105,7 +2105,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,true,tol,sols,fail);
+    Track_Next_Move(dim,gh.all,tosqr,tol,sols,fail);
     if not fail then
       Checker_Homotopies.Homotopy_Stay_Coordinates
         (n,k,ctr,q,qr,qc,mf,xpm,sols);
@@ -2120,7 +2120,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -2151,8 +2151,8 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,true,tol,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,true,tol,ls,fail);
+     then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -2178,7 +2178,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
@@ -2209,8 +2209,8 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,true,tol,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,true,tol,ls,fail);
+     then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -2236,7 +2236,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
@@ -2267,8 +2267,8 @@ package body Moving_Flag_Continuation is
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
     if ind = 0
-     then Track_First_Move(file,dim,gh.all,true,tol,ls,fail);
-     else Track_Next_Move(file,dim,gh.all,true,tol,ls,fail);
+     then Track_First_Move(file,dim,gh.all,tosqr,tol,ls,fail);
+     else Track_Next_Move(file,dim,gh.all,tosqr,tol,ls,fail);
     end if;
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
@@ -2294,7 +2294,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -2324,7 +2324,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,true,tol,sols,fail);
+    Track_Next_Move(file,dim,gh.all,tosqr,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -2350,7 +2350,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
@@ -2380,7 +2380,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,true,tol,sols,fail);
+    Track_Next_Move(file,dim,gh.all,tosqr,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -2406,7 +2406,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( file : in file_type; n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
@@ -2436,7 +2436,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(file,dim,gh.all,true,tol,sols,fail);
+    Track_Next_Move(file,dim,gh.all,tosqr,tol,sols,fail);
     if not fail then
       put(file,"Transforming solution planes with critical row = ");
       put(file,ctr,1); put_line(file,".");
@@ -2462,7 +2462,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in Standard_Complex_Matrices.Matrix;
                 vf : in Standard_Complex_VecMats.VecMat;
@@ -2488,7 +2488,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,true,tol,sols,fail);
+    Track_Next_Move(dim,gh.all,tosqr,tol,sols,fail);
     if not fail then
       if big_r > ctr + 1
        then Checker_Homotopies.First_Swap_Coordinates
@@ -2507,7 +2507,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in DoblDobl_Complex_Matrices.Matrix;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
@@ -2533,7 +2533,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,true,tol,sols,fail);
+    Track_Next_Move(dim,gh.all,tosqr,tol,sols,fail);
     if not fail then
       if big_r > ctr + 1
        then Checker_Homotopies.First_Swap_Coordinates
@@ -2552,7 +2552,7 @@ package body Moving_Flag_Continuation is
   procedure Swap_Homotopy
               ( n,k,ctr,ind : in integer32;
                 q,p,qr,qc,pr,pc : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 mf,start_mf : in QuadDobl_Complex_Matrices.Matrix;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
@@ -2578,7 +2578,7 @@ package body Moving_Flag_Continuation is
      then Minimal_Flag_Conditions(n,k,xpm,cond,vf,gh);
      else Flag_Conditions(n,k,xpm,cond,vf,gh);
     end if;
-    Track_Next_Move(dim,gh.all,true,tol,sols,fail);
+    Track_Next_Move(dim,gh.all,tosqr,tol,sols,fail);
     if not fail then
       if big_r > ctr + 1
        then Checker_Homotopies.First_Swap_Coordinates
