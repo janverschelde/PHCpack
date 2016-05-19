@@ -22,7 +22,7 @@ package Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
@@ -31,7 +31,7 @@ package Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf : in out DoblDobl_Complex_Matrices.Matrix;
@@ -40,7 +40,7 @@ package Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf : in out QuadDobl_Complex_Matrices.Matrix;
@@ -61,6 +61,7 @@ package Checker_Poset_Deformations is
   --   count    number of the path;
   --   verify   flag to indicate if diagnostic verification is needed;
   --   minrep   to use a more efficient problem formulation;
+  --   tosqr    to square the overdetermined homotopies;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
   --   mf       coordinates of the moving flag,
@@ -76,7 +77,7 @@ package Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
@@ -86,7 +87,7 @@ package Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf : in out DoblDobl_Complex_Matrices.Matrix;
@@ -96,7 +97,7 @@ package Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf : in out QuadDobl_Complex_Matrices.Matrix;
@@ -119,6 +120,7 @@ package Checker_Poset_Deformations is
   --   count    number of the path;
   --   verify   flag to indicate is diagnostic verification is needed;
   --   minrep   to use a more efficient problem formulation;
+  --   tosqr    to square the overdetermined homotopies;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
   --   mf       coordinates of the moving flag,
@@ -136,7 +138,7 @@ package Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
@@ -146,7 +148,7 @@ package Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf : in out DoblDobl_Complex_Matrices.Matrix;
@@ -156,7 +158,7 @@ package Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf : in out QuadDobl_Complex_Matrices.Matrix;
@@ -177,6 +179,7 @@ package Checker_Poset_Deformations is
   --   path     path of nodes in the poset;
   --   count    number of the path;
   --   minrep   to use a more efficient problem formulation;
+  --   tosqr    to square the overdetermined homotopies;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
   --   mf       coordinates of the moving flag,
@@ -193,21 +196,21 @@ package Checker_Poset_Deformations is
 
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
                 sols : out Standard_Complex_Solutions.Solution_List );
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
                 sols : out DoblDobl_Complex_Solutions.Solution_List );
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -225,6 +228,7 @@ package Checker_Poset_Deformations is
   --   ps       checker poset for one game;
   --   verify   flag to indicate if diagnostic verification is needed;
   --   minrep   to use a more efficient problem formulation;
+  --   tosqr    to square the overdetermined homotopies;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
   --   tol      tolerance on residuals to decide failure.
@@ -235,7 +239,7 @@ package Checker_Poset_Deformations is
   procedure Track_All_Paths_in_Poset
               ( n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -244,7 +248,7 @@ package Checker_Poset_Deformations is
   procedure Track_All_Paths_in_Poset
               ( n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -253,7 +257,7 @@ package Checker_Poset_Deformations is
   procedure Track_All_Paths_in_Poset
               ( n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -274,6 +278,7 @@ package Checker_Poset_Deformations is
   --   child    conditions on the child for which the start solutions
   --            are provided and which should match leaves of ps;
   --   minrep   to use a more efficient problem formulation;
+  --   tosqr    to square the overdetermined homotopies;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
   --   start    contains solutions of the previous level, transformed
@@ -286,7 +291,7 @@ package Checker_Poset_Deformations is
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -295,7 +300,7 @@ package Checker_Poset_Deformations is
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -304,7 +309,7 @@ package Checker_Poset_Deformations is
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -328,6 +333,7 @@ package Checker_Poset_Deformations is
   --            are provided and which should match leaves of ps;
   --   verify   flag to indicate whether diagnostic verification is needed;
   --   minrep   to use a more efficient problem formulation;
+  --   tosqr    to square the overdetermined homotopies;
   --   cond     intersection conditions for the general fixed flags;
   --   vf       coordinates of general flags to keep fixed;
   --   start    contains solutions of the previous level, transformed

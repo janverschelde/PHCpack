@@ -213,7 +213,7 @@ package Drivers_for_Schubert_Induction is
   procedure Reporting_Moving_Flag_Continuation
               ( n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec );
 
   -- DESCRIPTION :
@@ -229,13 +229,14 @@ package Drivers_for_Schubert_Induction is
   --   cols     columns of white checkers of resolved condition;
   --   verify   flag to indicate whether diagnostic verification is needed;
   --   minrep   if an efficient problem formulation is to be used;
+  --   tosqr    flag to square the overdetermined homotopies;
   --   cnds     conditions kept fixed during flag continuation.
 
   procedure Reporting_Moving_Flag_Continuation
               ( file : in file_type;
                 n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec );
 
   -- DESCRIPTION :
@@ -252,13 +253,14 @@ package Drivers_for_Schubert_Induction is
   --   cols     columns of white checkers of resolved condition;
   --   verify   flag to indicate if diagnostic verification is needed;
   --   minrep   if an efficient problem formulation is to be used;
+  --   tosqr    flag to square the overdetermined homotopies;
   --   cnds     conditions kept fixed during flag continuation.
 
   procedure Reporting_Moving_Flag_Continuation
               ( file : in file_type; tune : in boolean;
                 n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 sols : out Standard_Complex_Solutions.Solution_list;
                 fsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -279,6 +281,7 @@ package Drivers_for_Schubert_Induction is
   --   cols     columns of white checkers of resolved condition;
   --   verify   flag to indicate whether diagnostic verification is needed;
   --   minrep   if an efficient problem formulation is to be used;
+  --   tosqr    flag to square the overdetermined homotopies;
   --   cnds     conditions kept fixed during flag continuation.
 
   -- ON RETURN :

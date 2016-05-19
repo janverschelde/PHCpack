@@ -25,7 +25,7 @@ package body Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
@@ -110,7 +110,7 @@ package body Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf : in out DoblDobl_Complex_Matrices.Matrix;
@@ -195,7 +195,7 @@ package body Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf : in out QuadDobl_Complex_Matrices.Matrix;
@@ -280,7 +280,7 @@ package body Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
@@ -379,7 +379,7 @@ package body Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf : in out DoblDobl_Complex_Matrices.Matrix;
@@ -478,7 +478,7 @@ package body Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf : in out QuadDobl_Complex_Matrices.Matrix;
@@ -577,7 +577,7 @@ package body Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 mf : in out Standard_Complex_Matrices.Matrix;
@@ -645,7 +645,7 @@ package body Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 mf : in out DoblDobl_Complex_Matrices.Matrix;
@@ -713,7 +713,7 @@ package body Checker_Poset_Deformations is
   procedure Track_Path_in_Poset
               ( n,k : in integer32; ps : in Poset;
                 path : in Array_of_Nodes; count : in integer32;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 mf : in out QuadDobl_Complex_Matrices.Matrix;
@@ -780,7 +780,7 @@ package body Checker_Poset_Deformations is
 
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -800,7 +800,7 @@ package body Checker_Poset_Deformations is
     begin
       cnt := cnt + 1;
       Track_Path_in_Poset
-        (file,n,k,ps,nds,cnt,verify,minrep,cond,vf,mf,ls,tol,fail);
+        (file,n,k,ps,nds,cnt,verify,minrep,tosqr,cond,vf,mf,ls,tol,fail);
       if not fail
        then Append(sols,sols_last,ls.all);
       end if;
@@ -814,7 +814,7 @@ package body Checker_Poset_Deformations is
 
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -834,7 +834,7 @@ package body Checker_Poset_Deformations is
     begin
       cnt := cnt + 1;
       Track_Path_in_Poset
-        (file,n,k,ps,nds,cnt,verify,minrep,cond,vf,mf,ls,tol,fail);
+        (file,n,k,ps,nds,cnt,verify,minrep,tosqr,cond,vf,mf,ls,tol,fail);
       if not fail
        then Append(sols,sols_last,ls.all);
       end if;
@@ -848,7 +848,7 @@ package body Checker_Poset_Deformations is
 
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -868,7 +868,7 @@ package body Checker_Poset_Deformations is
     begin
       cnt := cnt + 1;
       Track_Path_in_Poset
-        (file,n,k,ps,nds,cnt,verify,minrep,cond,vf,mf,ls,tol,fail);
+        (file,n,k,ps,nds,cnt,verify,minrep,tosqr,cond,vf,mf,ls,tol,fail);
       if not fail
        then Append(sols,sols_last,ls.all);
       end if;
@@ -883,7 +883,7 @@ package body Checker_Poset_Deformations is
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -914,7 +914,8 @@ package body Checker_Poset_Deformations is
       else
         put(file," match at path "); put(file,cnt,1); new_line(file);
         Track_Path_in_Poset
-          (file,n,k,ps,nds,cnt,verify,minrep,cond,vf,mf,start,pp_sols,tol,fail);
+          (file,n,k,ps,nds,cnt,verify,minrep,tosqr,
+           cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
@@ -930,7 +931,7 @@ package body Checker_Poset_Deformations is
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -961,7 +962,8 @@ package body Checker_Poset_Deformations is
       else
         put(file," match at path "); put(file,cnt,1); new_line(file);
         Track_Path_in_Poset
-          (file,n,k,ps,nds,cnt,verify,minrep,cond,vf,mf,start,pp_sols,tol,fail);
+          (file,n,k,ps,nds,cnt,verify,minrep,tosqr,
+           cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
@@ -977,7 +979,7 @@ package body Checker_Poset_Deformations is
   procedure Track_All_Paths_in_Poset
               ( file : in file_type; n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -1008,7 +1010,8 @@ package body Checker_Poset_Deformations is
       else
         put(file," match at path "); put(file,cnt,1); new_line(file);
         Track_Path_in_Poset
-          (file,n,k,ps,nds,cnt,verify,minrep,cond,vf,mf,start,pp_sols,tol,fail);
+          (file,n,k,ps,nds,cnt,verify,minrep,tosqr,
+           cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
@@ -1024,7 +1027,7 @@ package body Checker_Poset_Deformations is
   procedure Track_All_Paths_in_Poset
               ( n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in Standard_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -1047,7 +1050,7 @@ package body Checker_Poset_Deformations is
       cnt := cnt + 1;
       if Standard_Natural_Vectors.Equal(leaf,child) then
         Track_Path_in_Poset
-          (n,k,ps,nds,cnt,minrep,cond,vf,mf,start,pp_sols,tol,fail);
+          (n,k,ps,nds,cnt,minrep,tosqr,cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
@@ -1063,7 +1066,7 @@ package body Checker_Poset_Deformations is
   procedure Track_All_Paths_in_Poset
               ( n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in DoblDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -1086,7 +1089,7 @@ package body Checker_Poset_Deformations is
       cnt := cnt + 1;
       if Standard_Natural_Vectors.Equal(leaf,child) then
         Track_Path_in_Poset
-          (n,k,ps,nds,cnt,minrep,cond,vf,mf,start,pp_sols,tol,fail);
+          (n,k,ps,nds,cnt,minrep,tosqr,cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;
@@ -1102,7 +1105,7 @@ package body Checker_Poset_Deformations is
   procedure Track_All_Paths_in_Poset
               ( n,k : in integer32; ps : in Poset;
                 child : in Standard_Natural_Vectors.Vector;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 cond : in Standard_Natural_VecVecs.VecVec;
                 vf : in QuadDobl_Complex_VecMats.VecMat;
                 tol : in double_float;
@@ -1125,7 +1128,7 @@ package body Checker_Poset_Deformations is
       cnt := cnt + 1;
       if Standard_Natural_Vectors.Equal(leaf,child) then
         Track_Path_in_Poset
-          (n,k,ps,nds,cnt,minrep,cond,vf,mf,start,pp_sols,tol,fail);
+          (n,k,ps,nds,cnt,minrep,tosqr,cond,vf,mf,start,pp_sols,tol,fail);
         if not fail
          then Concat(sols,sols_last,pp_sols);
         end if;

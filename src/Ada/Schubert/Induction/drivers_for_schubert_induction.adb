@@ -756,8 +756,11 @@ package body Drivers_for_Schubert_Induction is
   procedure Reporting_Moving_Flag_Continuation
               ( n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the name of the output file
 
     file : file_type;
 
@@ -767,14 +770,14 @@ package body Drivers_for_Schubert_Induction is
     Read_Name_and_Create_File(file);
     new_line;
     Reporting_Moving_Flag_Continuation
-      (file,n,k,tol,rows,cols,verify,minrep,cnds);
+      (file,n,k,tol,rows,cols,verify,minrep,tosqr,cnds);
   end Reporting_Moving_Flag_Continuation;
 
   procedure Reporting_Moving_Flag_Continuation
               ( file : in file_type; tune : in boolean;
                 n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec;
                 sols : out Standard_Complex_Solutions.Solution_List;
                 fsys : out Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
@@ -794,7 +797,7 @@ package body Drivers_for_Schubert_Induction is
     flags := Random_Flags(n,cnds'last);
     tstart(timer);
     Checker_Poset_Deformations.Track_All_Paths_in_Poset
-      (file,n,k,ps,verify,minrep,cnds.all,flags,tol,sols);
+      (file,n,k,ps,verify,minrep,tosqr,cnds.all,flags,tol,sols);
     tstop(timer);
     new_line(file);
     print_times(file,timer,"tracking all paths");
@@ -805,7 +808,7 @@ package body Drivers_for_Schubert_Induction is
               ( file : in file_type;
                 n,k : in integer32; tol : in double_float;
                 rows,cols : in Standard_Natural_Vectors.Vector;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 cnds : in Standard_Natural_VecVecs.Link_to_VecVec ) is
 
     sols : Standard_Complex_Solutions.Solution_List;
@@ -814,7 +817,7 @@ package body Drivers_for_Schubert_Induction is
 
   begin
     Reporting_Moving_Flag_Continuation
-      (file,true,n,k,tol,rows,cols,verify,minrep,cnds,sols,fsys,flgs);
+      (file,true,n,k,tol,rows,cols,verify,minrep,tosqr,cnds,sols,fsys,flgs);
   end Reporting_Moving_Flag_Continuation;
 
   procedure Run_Moving_Flag_Continuation ( n,k : in integer32 ) is
@@ -826,7 +829,7 @@ package body Drivers_for_Schubert_Induction is
     happy : boolean;
     tol : constant double_float := 1.0E-5;
     ans : character;
-    verify,minrep : boolean;
+    verify,minrep,tosquare : boolean;
     outlvl : natural32;
 
   begin
@@ -850,7 +853,11 @@ package body Drivers_for_Schubert_Induction is
     put("Use an efficient problem formulation ? (y/n) ");
     Ask_Yes_or_No(ans);
     minrep := (ans = 'y');
-    Reporting_Moving_Flag_Continuation(n,k,tol,rows,cols,verify,minrep,cnds);
+    put("Square the overdetermined homotopies ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    tosquare := (ans = 'y');
+    Reporting_Moving_Flag_Continuation
+      (n,k,tol,rows,cols,verify,minrep,tosquare,cnds);
   end Run_Moving_Flag_Continuation;
 
   procedure Set_Symbol_Table
@@ -1197,7 +1204,7 @@ package body Drivers_for_Schubert_Induction is
     use Standard_Solution_Posets;
     use Intersection_Posets;
 
-    monitor,report,verify,minrep : boolean;
+    monitor,report,verify,minrep,tosquare : boolean;
     outlvl : natural32 := 0;
     ans : character;
     nbc : constant integer32 := cnd'last;
@@ -1241,6 +1248,9 @@ package body Drivers_for_Schubert_Induction is
     put("Use an efficient problem formulation ? (y/n) ");
     Ask_Yes_or_No(ans);
     minrep := (ans = 'y');
+    put("Square the overdetermined homotopies ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    tosquare := (ans = 'y');
     new_line(file);
     if minrep
      then put_line(file,"An efficient problem formulation will be used.");
@@ -1249,9 +1259,9 @@ package body Drivers_for_Schubert_Induction is
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     if outlvl = 0 then
-      Resolve(n,k,tol,ips,sps,minrep,conds,flags,sols);
+      Resolve(n,k,tol,ips,sps,minrep,tosquare,conds,flags,sols);
     else
-      Resolve(file,monitor,report,n,k,tol,ips,sps,verify,minrep,
+      Resolve(file,monitor,report,n,k,tol,ips,sps,verify,minrep,tosquare,
               conds,flags,sols);
     end if;
     tstop(timer);
@@ -1273,7 +1283,7 @@ package body Drivers_for_Schubert_Induction is
     use DoblDobl_Solution_Posets;
     use Intersection_Posets;
 
-    monitor,report,verify,minrep : boolean;
+    monitor,report,verify,minrep,tosquare : boolean;
     outlvl : natural32 := 0;
     ans : character;
     nbc : constant integer32 := cnd'last;
@@ -1317,6 +1327,9 @@ package body Drivers_for_Schubert_Induction is
     put("Use an efficient problem formulation ? (y/n) ");
     Ask_Yes_or_No(ans);
     minrep := (ans = 'y');
+    put("Square the overdetermined homotopies ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    tosquare := (ans = 'y');
     new_line(file);
     if minrep
      then put_line(file,"An efficient problem formulation will be used.");
@@ -1325,9 +1338,9 @@ package body Drivers_for_Schubert_Induction is
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     if outlvl = 0 then
-      Resolve(n,k,tol,ips,sps,minrep,conds,flags,sols);
+      Resolve(n,k,tol,ips,sps,minrep,tosquare,conds,flags,sols);
     else
-      Resolve(file,monitor,report,n,k,tol,ips,sps,verify,minrep,
+      Resolve(file,monitor,report,n,k,tol,ips,sps,verify,minrep,tosquare,
               conds,flags,sols);
     end if;
     tstop(timer);
@@ -1349,7 +1362,7 @@ package body Drivers_for_Schubert_Induction is
     use QuadDobl_Solution_Posets;
     use Intersection_Posets;
 
-    monitor,report,verify,minrep : boolean;
+    monitor,report,verify,minrep,tosquare : boolean;
     outlvl : natural32 := 0;
     ans : character;
     nbc : constant integer32 := cnd'last;
@@ -1393,6 +1406,9 @@ package body Drivers_for_Schubert_Induction is
     put("Use an efficient problem formulation ? (y/n) ");
     Ask_Yes_or_No(ans);
     minrep := (ans = 'y');
+    put("Square the overdetermined homotopies ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    tosquare := (ans = 'y');
     new_line(file);
     if minrep
      then put_line(file,"An efficient problem formulation will be used.");
@@ -1401,9 +1417,9 @@ package body Drivers_for_Schubert_Induction is
     Wrapped_Path_Trackers.Set_Parameters(file,report);
     tstart(timer);
     if outlvl = 0 then
-      Resolve(n,k,tol,ips,sps,minrep,conds,flags,sols);
+      Resolve(n,k,tol,ips,sps,minrep,tosquare,conds,flags,sols);
     else
-      Resolve(file,monitor,report,n,k,tol,ips,sps,verify,minrep,
+      Resolve(file,monitor,report,n,k,tol,ips,sps,verify,minrep,tosquare,
               conds,flags,sols);
     end if;
     tstop(timer);

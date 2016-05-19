@@ -299,7 +299,7 @@ package Resolve_Schubert_Problems is
                 snd : in Standard_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Standard_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat );
   procedure Connect_Checker_Posets_to_Track
@@ -308,7 +308,7 @@ package Resolve_Schubert_Problems is
                 snd : in DoblDobl_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in DoblDobl_Complex_Matrices.Link_to_Matrix;
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat );
   procedure Connect_Checker_Posets_to_Track
@@ -317,7 +317,7 @@ package Resolve_Schubert_Problems is
                 snd : in QuadDobl_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in QuadDobl_Complex_Matrices.Link_to_Matrix;
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat );
 
@@ -336,6 +336,7 @@ package Resolve_Schubert_Problems is
   --   tmfo     transformation for use at start solution if not null;
   --   sps      solution poset constructed up to the proper level;
   --   minrep   to use a more efficient problem formulation;
+  --   tosqr    to square overdetermined homotopies;
   --   conds    conditions on the current fixed flags;
   --   flags    current fixed flags.
 
@@ -349,7 +350,7 @@ package Resolve_Schubert_Problems is
                 snd : in Standard_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Standard_Solution_Posets.Solution_Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat );
   procedure Connect_Checker_Posets_to_Track
@@ -359,7 +360,7 @@ package Resolve_Schubert_Problems is
                 snd : in DoblDobl_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in DoblDobl_Complex_Matrices.Link_to_Matrix;
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat );
   procedure Connect_Checker_Posets_to_Track
@@ -369,7 +370,7 @@ package Resolve_Schubert_Problems is
                 snd : in QuadDobl_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in QuadDobl_Complex_Matrices.Link_to_Matrix;
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat );
 
@@ -390,6 +391,7 @@ package Resolve_Schubert_Problems is
   --   sps      solution poset constructed up to the proper level;
   --   verify   flag to indicate whether diagnostic verification is needed;
   --   minrep   to use a more efficient problem formulation;
+  --   tosqr    to square overdetermined homotopies;
   --   conds    conditions on the current fixed flags;
   --   flags    current fixed flags.
 
@@ -424,7 +426,7 @@ package Resolve_Schubert_Problems is
                 n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out Standard_Solution_Posets.Solution_Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
                 sols : out Standard_Complex_Solutions.Solution_List );
@@ -433,7 +435,7 @@ package Resolve_Schubert_Problems is
                 n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat;
                 sols : out DoblDobl_Complex_Solutions.Solution_List );
@@ -442,7 +444,7 @@ package Resolve_Schubert_Problems is
                 n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat;
                 sols : out QuadDobl_Complex_Solutions.Solution_List );
@@ -470,6 +472,7 @@ package Resolve_Schubert_Problems is
   --   sps      an initialized solution poset corresponding to ips;
   --   verify   flag to indicate whether diagnostic verification is needed;
   --   minrep   to use a more efficient problem formulation;
+  --   tosqr    to square overdetermined homotopies;
   --   conds    intersection conditions on the fixed flags;
   --   flags    generic complex matrices that represented nested linear
   --            space for use in the homotopies.
@@ -485,7 +488,7 @@ package Resolve_Schubert_Problems is
               ( n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out Standard_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
                 sols : out Standard_Complex_Solutions.Solution_List );
@@ -493,7 +496,7 @@ package Resolve_Schubert_Problems is
               ( n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat;
                 sols : out DoblDobl_Complex_Solutions.Solution_List );
@@ -501,7 +504,7 @@ package Resolve_Schubert_Problems is
               ( n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat;
                 sols : out QuadDobl_Complex_Solutions.Solution_List );
@@ -526,7 +529,8 @@ package Resolve_Schubert_Problems is
   --   tol      tolerance on residual to decide failure in checker games;
   --   ips      an intersection poset built to resolve Schubert conditions;
   --   sps      an initialized solution poset corresponding to ips;
-  --   minrep   tu use a more efficient problem formulation;
+  --   minrep   to use a more efficient problem formulation;
+  --   tosqr    to square overdetermined homotopies;
   --   conds    intersection conditions on the fixed flags;
   --   flags    generic complex matrices that represented nested linear
   --            space for use in the homotopies.

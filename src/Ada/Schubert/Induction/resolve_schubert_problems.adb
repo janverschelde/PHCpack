@@ -918,7 +918,7 @@ package body Resolve_Schubert_Problems is
                 snd : in Standard_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Standard_Solution_Posets.Solution_Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat ) is
 
@@ -995,7 +995,7 @@ package body Resolve_Schubert_Problems is
             put(file,"number of flags = ");
             put(file,nbflags,1); put_line(file,".");
             Track_All_Paths_in_Poset
-              (file,n,k,node.ps,childconds,verify,minrep,
+              (file,n,k,node.ps,childconds,verify,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1027,7 +1027,7 @@ package body Resolve_Schubert_Problems is
                 snd : in DoblDobl_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in DoblDobl_Complex_Matrices.Link_to_Matrix;
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat ) is
 
@@ -1104,7 +1104,7 @@ package body Resolve_Schubert_Problems is
             put(file,"number of flags = ");
             put(file,nbflags,1); put_line(file,".");
             Track_All_Paths_in_Poset
-              (file,n,k,node.ps,childconds,verify,minrep,
+              (file,n,k,node.ps,childconds,verify,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1136,7 +1136,7 @@ package body Resolve_Schubert_Problems is
                 snd : in QuadDobl_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in QuadDobl_Complex_Matrices.Link_to_Matrix;
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat ) is
 
@@ -1213,7 +1213,7 @@ package body Resolve_Schubert_Problems is
             put(file,"number of flags = ");
             put(file,nbflags,1); put_line(file,".");
             Track_All_Paths_in_Poset
-              (file,n,k,node.ps,childconds,verify,minrep,
+              (file,n,k,node.ps,childconds,verify,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1244,7 +1244,7 @@ package body Resolve_Schubert_Problems is
                 snd : in Standard_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in Standard_Complex_Matrices.Link_to_Matrix;
                 sps : in out Standard_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat ) is
 
@@ -1297,7 +1297,7 @@ package body Resolve_Schubert_Problems is
             nbflags : constant integer32 := sps.m - level;
           begin
             Track_All_Paths_in_Poset
-              (n,k,node.ps,childconds,minrep,
+              (n,k,node.ps,childconds,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1321,7 +1321,7 @@ package body Resolve_Schubert_Problems is
                 snd : in DoblDobl_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in DoblDobl_Complex_Matrices.Link_to_Matrix;
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat ) is
 
@@ -1374,7 +1374,7 @@ package body Resolve_Schubert_Problems is
             nbflags : constant integer32 := sps.m - level;
           begin
             Track_All_Paths_in_Poset
-              (n,k,node.ps,childconds,minrep,
+              (n,k,node.ps,childconds,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1398,7 +1398,7 @@ package body Resolve_Schubert_Problems is
                 snd : in QuadDobl_Solution_Posets.Link_to_Solution_Node;
                 tmfo : in QuadDobl_Complex_Matrices.Link_to_Matrix;
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat ) is
 
@@ -1451,7 +1451,7 @@ package body Resolve_Schubert_Problems is
             nbflags : constant integer32 := sps.m - level;
           begin
             Track_All_Paths_in_Poset
-              (n,k,node.ps,childconds,minrep,
+              (n,k,node.ps,childconds,minrep,tosqr,
                conds(conds'last-nbflags+1..conds'last),
                flags(flags'last-nbflags+1..flags'last),tol,startsols,sols);
             Push(sols,parent_snd.sols);
@@ -1510,7 +1510,7 @@ package body Resolve_Schubert_Problems is
                 n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out Standard_Solution_Posets.Solution_Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
                 sols : out Standard_Complex_Solutions.Solution_List ) is
@@ -1568,20 +1568,21 @@ package body Resolve_Schubert_Problems is
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
                 (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
-                 verify,minrep,conds,flags);
+                 verify,minrep,tosqr,conds,flags);
             else
               Connect_Checker_Posets_to_Track
                 (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
-                 verify,minrep,conds,workf.all);
+                 verify,minrep,tosqr,conds,workf.all);
             end if;
           else
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
-                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,minrep,conds,flags);
+                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                 minrep,tosqr,conds,flags);
             else
               Connect_Checker_Posets_to_Track
                 (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
-                 minrep,conds,workf.all);
+                 minrep,tosqr,conds,workf.all);
             end if;
           end if;
         end if;
@@ -1608,7 +1609,7 @@ package body Resolve_Schubert_Problems is
                 n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat;
                 sols : out DoblDobl_Complex_Solutions.Solution_List ) is
@@ -1666,20 +1667,21 @@ package body Resolve_Schubert_Problems is
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
                 (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
-                 verify,minrep,conds,flags);
+                 verify,minrep,tosqr,conds,flags);
             else
               Connect_Checker_Posets_to_Track
                 (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
-                 verify,minrep,conds,workf.all);
+                 verify,minrep,tosqr,conds,workf.all);
             end if;
           else
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
-                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,minrep,conds,flags);
+                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                 minrep,tosqr,conds,flags);
             else
               Connect_Checker_Posets_to_Track
                 (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
-                 minrep,conds,workf.all);
+                 minrep,tosqr,conds,workf.all);
             end if;
           end if;
         end if;
@@ -1706,7 +1708,7 @@ package body Resolve_Schubert_Problems is
                 n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
-                verify,minrep : in boolean;
+                verify,minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat;
                 sols : out QuadDobl_Complex_Solutions.Solution_List ) is
@@ -1764,20 +1766,21 @@ package body Resolve_Schubert_Problems is
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
                 (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
-                 verify,minrep,conds,flags);
+                 verify,minrep,tosqr,conds,flags);
             else
               Connect_Checker_Posets_to_Track
                 (file,n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
-                 verify,minrep,conds,workf.all);
+                 verify,minrep,tosqr,conds,workf.all);
             end if;
           else
             if i = 2 then -- use the original flags
               Connect_Checker_Posets_to_Track
-                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,minrep,conds,flags);
+                (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+                 minrep,tosqr,conds,flags);
             else
               Connect_Checker_Posets_to_Track
                 (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
-                 minrep,conds,workf.all);
+                 minrep,tosqr,conds,workf.all);
             end if;
           end if;
         end if;
@@ -1803,7 +1806,7 @@ package body Resolve_Schubert_Problems is
               ( n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out Standard_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in Standard_Complex_VecMats.VecMat;
                 sols : out Standard_Complex_Solutions.Solution_List ) is
@@ -1848,11 +1851,12 @@ package body Resolve_Schubert_Problems is
         if i > 1 then
           if i = 2 then -- use the original flags
             Connect_Checker_Posets_to_Track
-              (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,minrep,conds,flags);
+              (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+               minrep,tosqr,conds,flags);
           else
             Connect_Checker_Posets_to_Track
               (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
-               minrep,conds,workf.all);
+               minrep,tosqr,conds,workf.all);
           end if;
         end if;
         tmp := Tail_Of(tmp);
@@ -1874,7 +1878,7 @@ package body Resolve_Schubert_Problems is
               ( n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out DoblDobl_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in DoblDobl_Complex_VecMats.VecMat;
                 sols : out DoblDobl_Complex_Solutions.Solution_List ) is
@@ -1919,11 +1923,12 @@ package body Resolve_Schubert_Problems is
         if i > 1 then
           if i = 2 then -- use the original flags
             Connect_Checker_Posets_to_Track
-              (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,minrep,conds,flags);
+              (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+               minrep,tosqr,conds,flags);
           else
             Connect_Checker_Posets_to_Track
               (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
-               minrep,conds,workf.all);
+               minrep,tosqr,conds,workf.all);
           end if;
         end if;
         tmp := Tail_Of(tmp);
@@ -1945,7 +1950,7 @@ package body Resolve_Schubert_Problems is
               ( n,k : in integer32; tol : in double_float;
                 ips : in out Intersection_Poset;
                 sps : in out QuadDobl_Solution_Posets.Solution_Poset;
-                minrep : in boolean;
+                minrep,tosqr : in boolean;
                 conds : in Standard_Natural_VecVecs.VecVec;
                 flags : in QuadDobl_Complex_VecMats.VecMat;
                 sols : out QuadDobl_Complex_Solutions.Solution_List ) is
@@ -1990,11 +1995,12 @@ package body Resolve_Schubert_Problems is
         if i > 1 then
           if i = 2 then -- use the original flags
             Connect_Checker_Posets_to_Track
-              (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,minrep,conds,flags);
+              (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
+               minrep,tosqr,conds,flags);
           else
             Connect_Checker_Posets_to_Track
               (n,k,i-1,tol,ips.nodes(i-1),snd,trans,sps,
-               minrep,conds,workf.all);
+               minrep,tosqr,conds,workf.all);
           end if;
         end if;
         tmp := Tail_Of(tmp);
