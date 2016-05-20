@@ -36,7 +36,8 @@ int resolve_Schubert_conditions
 }
 
 int standard_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets, int verbose, int verify,
+ ( int n, int k, int c, int *brackets,
+   int verbose, int verify, int minrep, int tosquare,
    int nbchar, char *filename, int *r, double *flags )
 {
    int fail,i;
@@ -63,7 +64,8 @@ int standard_Littlewood_Richardson_homotopies
 }
 
 int dobldobl_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets, int verbose, int verify,
+ ( int n, int k, int c, int *brackets,
+   int verbose, int verify, int minrep, int tosquare,
    int nbchar, char *filename, int *r, double *flags )
 {
    int fail,i;
@@ -90,7 +92,8 @@ int dobldobl_Littlewood_Richardson_homotopies
 }
 
 int quaddobl_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets, int verbose, int verify,
+ ( int n, int k, int c, int *brackets,
+   int verbose, int verify, int minrep, int tosquare,
    int nbchar, char *filename, int *r, double *flags )
 {
    int fail,i;

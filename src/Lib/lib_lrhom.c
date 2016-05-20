@@ -9,8 +9,9 @@ extern void adainit();
 extern void adafinal();
 
 int call_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets, int verbose, int verify, int size,
-   int *r );
+ ( int n, int k, int c, int *brackets,
+   int verbose, int verify, int minrep, int tosquare,
+   int size, int *r );
 /*
  * DESCRIPTION :
  *   Tests the call to the Littlewood-Richardson homotopies.
@@ -22,6 +23,8 @@ int call_Littlewood_Richardson_homotopies
  *   brackets  contains c*k integer numbers with the intersection conditions;
  *   verify    1 if diagnostic verification is needed, 0 if no;
  *   verbose   1 if intermediate output is needed, 0 to be silent;
+ *   minrep    1 for a minimal problem formulation, 0 for all minors;
+ *   tosquare  1 to square overdetermined systems, 0 for Gauss-Newton;
  *   size      number of doubles in the flags, depends on the precision.
  *
  * ON RETURN :
@@ -33,6 +36,8 @@ int main ( int argc, char *argv[] )
    int *brackets;
    int verbose=0;
    int verify=0;
+   int minrep=1;
+   int tosquare=0;
    char ans;
    int precision,size;
 
@@ -79,7 +84,7 @@ int main ( int argc, char *argv[] )
       if(precision == 2) size = 8*(c-2)*n*n;
 
       fail = call_Littlewood_Richardson_homotopies
-               (n,k,c,brackets,verbose,verify,size,&r);
+               (n,k,c,brackets,verbose,verify,minrep,tosquare,size,&r);
    }
 
    printf("The formal root count : %d\n",r);
@@ -90,7 +95,8 @@ int main ( int argc, char *argv[] )
 }
 
 int call_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets, int verbose, int verify,
+ ( int n, int k, int c, int *brackets,
+   int verbose, int verify, int minrep, int tosquare,
    int size, int *r )
 {
    double flags[size]; /* real + imaginary parts stored rowwise */
@@ -107,13 +113,16 @@ int call_Littlewood_Richardson_homotopies
 
    if(prec == 0)
       fail = standard_Littlewood_Richardson_homotopies
-                (n,k,c,brackets,verbose,verify,nbname,filename,r,flags);
+                (n,k,c,brackets,verbose,verify,minrep,tosquare,
+                 nbname,filename,r,flags);
    if(prec == 1)
       fail = dobldobl_Littlewood_Richardson_homotopies
-                (n,k,c,brackets,verbose,verify,nbname,filename,r,flags);
+                (n,k,c,brackets,verbose,verify,minrep,tosquare,
+                 nbname,filename,r,flags);
    if(prec == 2)
       fail = quaddobl_Littlewood_Richardson_homotopies
-                (n,k,c,brackets,verbose,verify,nbname,filename,r,flags);
+                (n,k,c,brackets,verbose,verify,minrep,tosquare,
+                 nbname,filename,r,flags);
 
    printf("\nThe coefficients of the fixed flag :");
    for(i=0; i<size; i++)

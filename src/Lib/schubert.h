@@ -42,7 +42,8 @@ int resolve_Schubert_conditions
  *            for conditions imposed by the brackets for general flags. */
 
 int standard_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets, int verbose, int verify,
+ ( int n, int k, int c, int *brackets,
+   int verbose, int verify, int minrep, int tosquare, 
    int nbchar, char *filename, int *r, double *flags );
 /*
  * In n-space for k-planes subject to c general Schubert intersection
@@ -58,10 +59,14 @@ int standard_Littlewood_Richardson_homotopies
  *   c        the number of intersection conditions;
  *   brackets is an array of k*c integer numbers with the conditions
  *            imposed by the flags on the k-plane;
- *   verify   when 0, no diagnostic verification is done,
- *            when 1, diagnostic verification output is written to file;
- *   verbose  when 0, no intermediate output is written,
- *            when 1, then the resolution is dispayed on screen;
+ *   verify   if 0, no diagnostic verification is done,
+ *            if 1, diagnostic verification output is written to file;
+ *   verbose  if 0, no intermediate output is written,
+ *            if 1, then the resolution is dispayed on screen;
+ *   minrep   if 0, all minors are used in the problem formulation,
+ *            if 1, a more efficient problem formulation is used;
+ *   tosquare if 0, then the overdetermined homotopies are not squared,
+ *            if 1, then squaring is applied to the overdetermined systems;
  *   nbchar   number of characters in the string filename;
  *   filename is the name of the output file.
  *
@@ -71,7 +76,8 @@ int standard_Littlewood_Richardson_homotopies
  *   flags    coefficients of the general flags. */
 
 int dobldobl_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets, int verbose, int verify,
+ ( int n, int k, int c, int *brackets,
+   int verbose, int verify, int minrep, int tosquare,
    int nbchar, char *filename, int *r, double *flags );
 /*
  * In n-space for k-planes subject to c general Schubert intersection
@@ -87,10 +93,14 @@ int dobldobl_Littlewood_Richardson_homotopies
  *   c        the number of intersection conditions;
  *   brackets is an array of k*c integer numbers with the conditions
  *            imposed by the flags on the k-plane;
- *   verify   when 0, no diagnostic verification is done,
- *            when 1, diagnostic verification output is written to file;
- *   verbose  when 0, no intermediate output is written,
- *            when 1, then the resolution is dispayed on screen;
+ *   verify   if 0, no diagnostic verification is done,
+ *            if 1, diagnostic verification output is written to file;
+ *   verbose  if 0, no intermediate output is written,
+ *            if 1, then the resolution is dispayed on screen;
+ *   minrep   if 0, all minors are used in the problem formulation,
+ *            if 1, a more efficient problem formulation is used;
+ *   tosquare if 0, then the overdetermined homotopies are not squared,
+ *            if 1, then squaring is applied to the overdetermined systems;
  *   nbchar   number of characters in the string filename;
  *   filename is the name of the output file.
  *
@@ -100,7 +110,8 @@ int dobldobl_Littlewood_Richardson_homotopies
  *   flags    coefficients of the general flags. */
 
 int quaddobl_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets, int verbose, int verify,
+ ( int n, int k, int c, int *brackets,
+   int verbose, int verify, int minrep, int tosquare,
    int nbchar, char *filename, int *r, double *flags );
 /*
  * In n-space for k-planes subject to c general Schubert intersection
@@ -116,10 +127,14 @@ int quaddobl_Littlewood_Richardson_homotopies
  *   c        the number of intersection conditions;
  *   brackets is an array of k*c integer numbers with the conditions
  *            imposed by the flags on the k-plane;
- *   verify   when 0, no diagnostic verification is done,
- *            when 1, diagnostic verification output is written to file;
- *   verbose  when 0, no intermediate output is written,
- *            when 1, then the resolution is dispayed on screen;
+ *   verify   if 0, no diagnostic verification is done,
+ *            if 1, diagnostic verification output is written to file;
+ *   verbose  if 0, no intermediate output is written,
+ *            if 1, then the resolution is dispayed on screen;
+ *   minrep   if 0, all minors are used in the problem formulation,
+ *            if 1, a more efficient problem formulation is used;
+ *   tosquare if 0, then the overdetermined homotopies are not squared,
+ *            if 1, then squaring is applied to the overdetermined systems;
  *   nbchar   number of characters in the string filename;
  *   filename is the name of the output file.
  *

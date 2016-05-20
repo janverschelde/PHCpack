@@ -3988,19 +3988,23 @@ static PyObject *py2c_schubert_standard_littlewood_richardson_homotopies
  *   The polynomial system that was solved is in the container for
  *   systems with coefficients in standard double precision and the
  *   corresponding solutions are in the standard solutions container.
- *   On entry are seven integers and two strings, in the following order:
+ *   On entry are nine integers and two strings, in the following order:
  *   1) n, the ambient dimension, where the k-planes live;
  *   2) k, the dimension of the solution planes;
  *   3) c,the number of intersection conditions;
  *   4) nc, the number of characters in the string brackets;
  *   5) brackets is a string representation of c brackets, where the numbers
  *   in each bracket are separated by spaces;
- *   6) the flag verbose: when 0, no intermediate output is written,
- *      when 1, then the resolution is dispayed on screen;
- *   7) the flag verify: when 0, no diagnostic output is written to file,
- *      when 1, then diagnostic output is written to file;
- *   8) nbchar, the number of characters in the string filename;
- *   9) filename is the name of the output file.
+ *   6) the flag verbose: if 0, then no intermediate output is written,
+ *      if 1, then the resolution is dispayed on screen;
+ *   7) the flag verify: if 0, then no diagnostic output is written to file,
+ *      if 1, then diagnostic output is written to file;
+ *   8) the flag minrep: if 0, then all minors are used in the system,
+ *      if 1, then a minimal representation of the problem is used;
+ *   9) the flag tosquare: if 0, then Gauss-Newton path trackers run,
+ *      if 1, then the overdetermined systems are squared;
+ *   10) nbchar, the number of characters in the string filename;
+ *   11) filename is the name of the output file.
  *   The function returns a tuple of an integer and a string:
  *   0) r is the formal root count as the number of k-planes
  *   for conditions imposed by the brackets for general flags;
@@ -4016,19 +4020,23 @@ static PyObject *py2c_schubert_dobldobl_littlewood_richardson_homotopies
  *   The polynomial system that was solved is in the container for
  *   systems with coefficients in double double precision and the
  *   corresponding solutions are in the dobldobl solutions container.
- *   On entry are seven integers and two strings, in the following order:
+ *   On entry are nine integers and two strings, in the following order:
  *   1) n, the ambient dimension, where the k-planes live;
  *   2) k, the dimension of the solution planes;
  *   3) c,the number of intersection conditions;
  *   4) nc, the number of characters in the string brackets;
  *   5) brackets is a string representation of c brackets, where the numbers
  *   in each bracket are separated by spaces;
- *   6) the flag verbose: when 0, no intermediate output is written,
- *      when 1, then the resolution is dispayed on screen;
- *   7) the flag verify: when 0, no diagnostic output is written to file,
- *      when 1, then diagnostic output is written to file;
- *   8) nbchar, the number of characters in the string filename;
- *   9) filename is the name of the output file.
+ *   6) the flag verbose: if 0, then no intermediate output is written,
+ *      if 1, then the resolution is dispayed on screen;
+ *   7) the flag verify: if 0, then no diagnostic output is written to file,
+ *      if 1, then diagnostic output is written to file;
+ *   8) the flag minrep: if 0, then all minors are used in the system,
+ *      if 1, then a minimal representation of the problem is used;
+ *   9) the flag tosquare: if 0, then Gauss-Newton path trackers run,
+ *      if 1, then the overdetermined systems are squared;
+ *   10) nbchar, the number of characters in the string filename;
+ *   11) filename is the name of the output file.
  *   The function returns a tuple of an integer and a string:
  *   0) r is the formal root count as the number of k-planes
  *   for conditions imposed by the brackets for general flags;
@@ -4044,19 +4052,23 @@ static PyObject *py2c_schubert_quaddobl_littlewood_richardson_homotopies
  *   The polynomial system that was solved is in the container for
  *   systems with coefficients in quad double precision and the
  *   corresponding solutions are in the quaddobl solutions container.
- *   On entry are seven integers and two strings, in the following order:
+ *   On entry are nine integers and two strings, in the following order:
  *   1) n, the ambient dimension, where the k-planes live;
  *   2) k, the dimension of the solution planes;
  *   3) c,the number of intersection conditions;
  *   4) nc, the number of characters in the string brackets;
  *   5) brackets is a string representation of c brackets, where the numbers
  *   in each bracket are separated by spaces;
- *   6) the flag verbose: when 0, no intermediate output is written,
+ *   6) the flag verbose: when 0, then no intermediate output is written,
  *      when 1, then the resolution is dispayed on screen;
- *   7) the flag verify: when 0, no diagnostic output is written to file,
+ *   7) the flag verify: when 0, then no diagnostic output is written to file,
  *      when 1, then diagnostic output is written to file;
- *   8) nbchar, the number of characters in the string filename;
- *   9) filename is the name of the output file.
+ *   8) the flag minrep: if 0, then all minors are used in the system,
+ *      if 1, then a minimal representation of the problem is used;
+ *   9) the flag tosquare: if 0, then Gauss-Newton path trackers run,
+ *      if 1, then the overdetermined systems are squared;
+ *   10) nbchar, the number of characters in the string filename;
+ *   11) filename is the name of the output file.
  *   The function returns a tuple of an integer and a string:
  *   0) r is the formal root count as the number of k-planes
  *   for conditions imposed by the brackets for general flags;
