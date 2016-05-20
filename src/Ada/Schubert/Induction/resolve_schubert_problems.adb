@@ -870,6 +870,42 @@ package body Resolve_Schubert_Problems is
   end Transform_Start_Solutions;
 
   procedure Connect_Checker_Posets_to_Count
+              ( pl : in Poset_List; nd : in Poset_Node ) is
+
+    procedure Connect_Parent ( node : in Link_to_Poset_Node ) is
+
+    -- DESCRIPTION :
+    --   Connects the leaf of the parent given on input in node.
+
+      child : constant Checker_Posets.Poset := nd.ps;
+      childnode : constant Checker_Posets.Link_to_Node
+                := child.white(child.white'first);
+      childconds : constant Standard_Natural_Vectors.Vector
+                 := childnode.rows;     -- root
+      gamenode : Checker_Posets.Link_to_Node
+               := node.ps.white(node.ps.white'last);
+      parentconds : constant Standard_Natural_Vectors.Vector
+                  := node.ps.white(node.ps.white'last).cols; -- leaf
+
+      use Checker_Posets;
+
+    begin
+      loop
+        if Standard_Natural_Vectors.Equal(gamenode.cols,childconds) then
+          Add(gamenode.coeff,childnode.coeff);
+        end if;
+        exit when (gamenode.next_sibling = null);
+        gamenode := gamenode.next_sibling;
+      end loop;
+    end Connect_Parent;
+    procedure Connect_Parents is
+      new Intersection_Posets.Enumerate_Parents(Connect_Parent);
+
+  begin
+    Connect_Parents(pl,nd);
+  end Connect_Checker_Posets_to_Count;
+
+  procedure Connect_Checker_Posets_to_Count
               ( file : in file_type;
                 pl : in Poset_List; nd : in Poset_Node ) is
 
@@ -1468,6 +1504,32 @@ package body Resolve_Schubert_Problems is
   begin
     Connect_Parents(pl,nd.all);
   end Connect_Checker_Posets_to_Track;
+
+  procedure Count_Roots
+              ( ips : in out Intersection_Poset;
+                roco : out Natural_Number ) is
+   
+    tmp : Poset_List;
+    lpn : Link_to_Poset_Node;
+
+  begin
+    Initialize_Leaves(ips.nodes(ips.m));
+    for i in 1..ips.m-1 loop
+      Initialize_Nodes(ips.nodes(i));
+    end loop;
+    for i in reverse 1..ips.m loop
+      tmp := ips.nodes(i);
+      for j in 1..Length_Of(ips.nodes(i)) loop
+        lpn := Head_Of(tmp);
+        Checker_Posets.Add_from_Leaves_to_Root(lpn.ps);
+        if i > 1 then
+          Connect_Checker_Posets_to_Count(ips.nodes(i-1),lpn.all);
+        end if;
+        tmp := Tail_Of(tmp);
+      end loop;
+    end loop;
+    Copy(lpn.ps.white(lpn.ps.white'first).coeff,roco);
+  end Count_Roots;
 
   procedure Count_Roots
               ( file : in file_type; ips : in out Intersection_Poset;

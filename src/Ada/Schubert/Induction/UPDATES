@@ -1,3 +1,7 @@
+Fri 20 May 2016 : refactored computation of the solved system into
+  separate functions in drivers_for_schubert_induction.
+  Added silent root count to resolve_schubert_problems.
+
 Thu 19 May 2016 : added question in drivers_for_schubert_induction.adb
   to ask whether to square the overdetermined homotopies, this also then
   changed its specification and the packages resolve_schubert_problems

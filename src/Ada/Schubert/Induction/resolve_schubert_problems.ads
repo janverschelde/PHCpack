@@ -399,6 +399,9 @@ package Resolve_Schubert_Problems is
   --   sps      updated solution poset.
 
   procedure Count_Roots
+              ( ips : in out Intersection_Poset;
+                roco : out Natural_Number );
+  procedure Count_Roots
               ( file : in file_type; ips : in out Intersection_Poset;
                 roco : out Natural_Number );
 

@@ -112,6 +112,42 @@ package Drivers_for_Schubert_Induction is
   --   rows     position of rows of white checkers;
   --   cols     position of columns of white checkers.
 
+  function Standard_System_Solved
+              ( n,k : integer32;
+                q,rows,cols : Standard_Natural_Vectors.Vector;
+                minrep : boolean;
+                cnds : Standard_Natural_VecVecs.Link_to_VecVec;
+                vfs : Standard_Complex_VecMats.VecMat ) 
+              return Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+  function DoblDobl_System_Solved
+              ( n,k : integer32;
+                q,rows,cols : Standard_Natural_Vectors.Vector;
+                minrep : boolean;
+                cnds : Standard_Natural_VecVecs.Link_to_VecVec;
+                vfs : DoblDobl_Complex_VecMats.VecMat ) 
+              return DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+  function QuadDobl_System_Solved
+              ( n,k : integer32;
+                q,rows,cols : Standard_Natural_Vectors.Vector;
+                minrep : boolean;
+                cnds : Standard_Natural_VecVecs.Link_to_VecVec;
+                vfs : QuadDobl_Complex_VecMats.VecMat ) 
+              return QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Returns the polynomial system solved for in standard double,
+  --   double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   n        ambient dimension;
+  --   k        dimension of the solution planes;
+  --   q        permutation defines the location of the black checkers;
+  --   rows     row positions for white checkers
+  --   cols     columns of white checkers of resolved condition;
+  --   minrep   if an efficient problem was use to solve the problem;
+  --   cnds     conditions kept fixed during flag continuation;
+  --   vfs      fixed flags, vfs'range = cnds'range.
+
   procedure Write_Results
               ( file : in file_type; n,k : in integer32;
                 q,rows,cols : in Standard_Natural_Vectors.Vector;

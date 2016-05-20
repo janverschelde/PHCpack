@@ -287,6 +287,75 @@ package body Drivers_for_Schubert_Induction is
     end loop;
   end Read_Intersection_Conditions;
 
+  function Standard_System_Solved
+              ( n,k : integer32;
+                q,rows,cols : Standard_Natural_Vectors.Vector;
+                minrep : boolean;
+                cnds : Standard_Natural_VecVecs.Link_to_VecVec;
+                vfs : Standard_Complex_VecMats.VecMat ) 
+              return Standard_Complex_Poly_Systems.Link_to_Poly_Sys is
+
+    res : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+    mf : constant Standard_Complex_Matrices.Matrix(1..n,1..n)
+       := Setup_Flag_Homotopies.Moved_Flag(n);
+
+  begin
+    if minrep then
+      Moving_Flag_Homotopies.Minimal_Flag_Conditions
+        (n,k,q,rows,cols,cnds.all,mf,vfs,res);
+    else
+      Moving_Flag_Homotopies.Flag_Conditions
+        (n,k,q,rows,cols,cnds.all,mf,vfs,res);
+    end if;
+    return res;
+  end Standard_System_Solved;
+
+  function DoblDobl_System_Solved
+              ( n,k : integer32;
+                q,rows,cols : Standard_Natural_Vectors.Vector;
+                minrep : boolean;
+                cnds : Standard_Natural_VecVecs.Link_to_VecVec;
+                vfs : DoblDobl_Complex_VecMats.VecMat ) 
+              return DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys is
+
+    res : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    mf : constant DoblDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := Setup_Flag_Homotopies.Moved_Flag(n);
+
+  begin
+    if minrep then
+      Moving_Flag_Homotopies.Minimal_Flag_Conditions
+        (n,k,q,rows,cols,cnds.all,mf,vfs,res);
+    else
+      Moving_Flag_Homotopies.Flag_Conditions
+        (n,k,q,rows,cols,cnds.all,mf,vfs,res);
+    end if;
+    return res;
+  end DoblDobl_System_Solved;
+
+  function QuadDobl_System_Solved
+              ( n,k : integer32;
+                q,rows,cols : Standard_Natural_Vectors.Vector;
+                minrep : boolean;
+                cnds : Standard_Natural_VecVecs.Link_to_VecVec;
+                vfs : QuadDobl_Complex_VecMats.VecMat ) 
+              return QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys is
+
+    res : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    mf : constant QuadDobl_Complex_Matrices.Matrix(1..n,1..n)
+       := Setup_Flag_Homotopies.Moved_Flag(n);
+
+  begin
+    if minrep then
+      Moving_Flag_Homotopies.Minimal_Flag_Conditions
+        (n,k,q,rows,cols,cnds.all,mf,vfs,res);
+    else
+      Moving_Flag_Homotopies.Flag_Conditions
+        (n,k,q,rows,cols,cnds.all,mf,vfs,res);
+    end if;
+    return res;
+  end QuadDobl_System_Solved;
+ 
   procedure Write_Results
               ( file : in file_type; n,k : in integer32;
                 q,rows,cols : in Standard_Natural_Vectors.Vector;
@@ -351,13 +420,7 @@ package body Drivers_for_Schubert_Induction is
         tmp := Tail_Of(tmp);
       end loop;
     end if;
-    if minrep then
-      Moving_Flag_Homotopies.Minimal_Flag_Conditions
-        (n,k,q,rows,cols,cnds.all,mf,vfs,f);
-    else
-      Moving_Flag_Homotopies.Flag_Conditions
-        (n,k,q,rows,cols,cnds.all,mf,vfs,f);
-    end if;
+    f := Standard_System_Solved(n,k,q,rows,cols,minrep,cnds,vfs);
     put_line(file,"THE POLYNOMIAL SYSTEM :"); put_line(file,f.all);
     if not Is_Null(sols) then
       new_line(file);
@@ -431,13 +494,7 @@ package body Drivers_for_Schubert_Induction is
         tmp := Tail_Of(tmp);
       end loop;
     end if;
-    if minrep then
-      Moving_Flag_Homotopies.Minimal_Flag_Conditions
-        (n,k,q,rows,cols,cnds.all,mf,vfs,f);
-    else
-      Moving_Flag_Homotopies.Flag_Conditions
-        (n,k,q,rows,cols,cnds.all,mf,vfs,f);
-    end if;
+    f := DoblDobl_System_Solved(n,k,q,rows,cols,minrep,cnds,vfs);
     put_line(file,"THE POLYNOMIAL SYSTEM :"); put_line(file,f.all);
     if not Is_Null(sols) then
       new_line(file);
@@ -511,13 +568,7 @@ package body Drivers_for_Schubert_Induction is
         tmp := Tail_Of(tmp);
       end loop;
     end if;
-    if minrep then
-      Moving_Flag_Homotopies.Minimal_Flag_Conditions
-        (n,k,q,rows,cols,cnds.all,mf,vfs,f);
-    else
-      Moving_Flag_Homotopies.Flag_Conditions
-        (n,k,q,rows,cols,cnds.all,mf,vfs,f);
-    end if;
+    f := QuadDobl_System_Solved(n,k,q,rows,cols,minrep,cnds,vfs);
     put_line(file,"THE POLYNOMIAL SYSTEM :"); put_line(file,f.all);
     if not Is_Null(sols) then
       new_line(file);
