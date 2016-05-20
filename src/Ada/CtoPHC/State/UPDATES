@@ -1,3 +1,6 @@
+Thu 19 May 2016 : updated use_c2lrhom.adb for the extra flag on whether to
+  square overdetermined homotopies or not.
+
 Sat 26 Mar 2016 : changed use_c2phc.adb to prepare for passing the numerical
   tolerances to the deflation methods.  In use_c2phc.ads Updated the 
   documentation for the parameters and tolerances passed through.

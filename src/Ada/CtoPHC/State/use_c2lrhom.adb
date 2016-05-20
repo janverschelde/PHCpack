@@ -317,6 +317,7 @@ function use_c2lrhom ( job : integer32;
 
     n,k,nbc,nbchar : integer32;
     otp,verify : boolean;
+    tosquare : boolean := false;
     rc : Natural_Number;
     nrc : natural32;
     tol : constant double_float := 1.0E-5;
@@ -372,7 +373,7 @@ function use_c2lrhom ( job : integer32;
       Count_Roots(file,ips,rc);
       put("the root count : "); put(rc,1); new_line;
       tstart(timer);
-      Resolve(file,monitor,otp,n,k,tol,ips,sps,verify,minrep,
+      Resolve(file,monitor,otp,n,k,tol,ips,sps,verify,minrep,tosquare,
               cnds.all,flgs,sols);
       tstop(timer);
       Write_Results(file,n,k,q,rows,cols,minrep,cnds,flgs,sols,fsys);
@@ -395,6 +396,7 @@ function use_c2lrhom ( job : integer32;
 
     n,k,nbc,nbchar : integer32;
     otp,verify : boolean;
+    tosquare : boolean := false;
     rc : Natural_Number;
     nrc : natural32;
     tol : constant double_float := 1.0E-5;
@@ -450,7 +452,7 @@ function use_c2lrhom ( job : integer32;
       Count_Roots(file,ips,rc);
       put("the root count : "); put(rc,1); new_line;
       tstart(timer);
-      Resolve(file,monitor,otp,n,k,tol,ips,sps,verify,minrep,
+      Resolve(file,monitor,otp,n,k,tol,ips,sps,verify,minrep,tosquare,
               cnds.all,flgs,sols);
       tstop(timer);
       Write_Results(file,n,k,q,rows,cols,minrep,cnds,flgs,sols,fsys);
@@ -473,6 +475,7 @@ function use_c2lrhom ( job : integer32;
 
     n,k,nbc,nbchar : integer32;
     otp,verify : boolean;
+    tosquare : boolean := false;
     rc : Natural_Number;
     nrc : natural32;
     tol : constant double_float := 1.0E-5;
@@ -528,7 +531,7 @@ function use_c2lrhom ( job : integer32;
       Count_Roots(file,ips,rc);
       put("the root count : "); put(rc,1); new_line;
       tstart(timer);
-      Resolve(file,monitor,otp,n,k,tol,ips,sps,verify,minrep,
+      Resolve(file,monitor,otp,n,k,tol,ips,sps,verify,minrep,tosquare,
               cnds.all,flgs,sols);
       tstop(timer);
       Write_Results(file,n,k,q,rows,cols,minrep,cnds,flgs,sols,fsys);
