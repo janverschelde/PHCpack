@@ -73,7 +73,7 @@ function use_c2lrhom ( job : integer32;
 
   procedure Get_Dimensions2
               ( a : C_intarrs.Pointer; n,k,c,nchar : out integer32;
-                verbose,verify : out boolean ) is
+                verbose,verify,minrep,tosquare : out boolean ) is
 
   -- DESCRIPTION :
   --   Extracts the dimensions (n,k,c) from the array a,
@@ -94,24 +94,24 @@ function use_c2lrhom ( job : integer32;
   --   c        number of intersection conditions;
   --   nchar    number of characters in the name of the output file;
   --   verbose  1 if diagnostic information is needed, 0 otherwise;
-  --   verify   1 if extra verification is required;, 0 otherwise.
+  --   verify   1 if extra verification is required, 0 otherwise;
+  --   minrep   1 if a minimal representation of the problem is used,
+  --            0 if all minor equations are present in the system;
+  --   tosquare 1 if overdetermined systems will be squared,
+  --            0 if Gauss-Newton path trackers will run.
 
-    v : constant C_Integer_Array(0..5)
+    v : constant C_Integer_Array(0..7)
       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(6));
 
   begin
     n := integer32(v(0));
     k := integer32(v(1));
     c := integer32(v(2));
-    if integer32(v(3)) = 1
-     then verbose := true;
-     else verbose := false;
-    end if;
-    if integer32(v(4)) = 1
-     then verify := true;
-     else verify := false;
-    end if;
+    verbose := (integer32(v(3)) = 1);
+    verify := (integer32(v(4)) = 1);
     nchar := integer32(v(5));
+    minrep := (integer32(v(6)) = 1);
+    tosquare := (integer32(v(7)) = 1);
   end Get_Dimensions2;
 
   function Get_Conditions
@@ -159,17 +159,23 @@ function use_c2lrhom ( job : integer32;
   --   Extracts the file name (as many characters as the value of nbchar)
   --   from the input parameter c.
 
-    res : string(1..integer(nbchar)) := (1..integer(nbchar) => ' ');
-    val : constant C_Double_Array(0..Interfaces.C.size_t(nbchar-1))
-        := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(nbchar));
-    ind : Interfaces.C.size_t := 0;
-
   begin
-    for i in res'range loop
-      res(i) := Integer_to_Character(integer32(val(ind)));
-      ind := ind + 1;
-    end loop;
-    return res;
+    if nbchar = 0 then
+      return ""; -- return empty string
+    else
+      declare
+        res : string(1..integer(nbchar)) := (1..integer(nbchar) => ' ');
+        val : constant C_Double_Array(0..Interfaces.C.size_t(nbchar-1))
+            := C_dblarrs.Value(c,Interfaces.C.ptrdiff_t(nbchar));
+        ind : Interfaces.C.size_t := 0;
+      begin
+        for i in res'range loop
+          res(i) := Integer_to_Character(integer32(val(ind)));
+          ind := ind + 1;
+        end loop;
+        return res;
+      end;
+    end if;
   end Get_File_Name;
 
   procedure Assign_Count_and_Flags
@@ -328,16 +334,13 @@ function use_c2lrhom ( job : integer32;
     use Standard_Solution_Posets;
 
     n,k,nbc,nbchar : integer32;
-    otp,verify : boolean;
-    tosquare : boolean := false;
+    otp,verify,minrep,tosquare : boolean;
     rc : Natural_Number;
     nrc : natural32;
     tol : constant double_float := 1.0E-5;
-    minrep : boolean := true;
 
   begin
-    Get_Dimensions2(a,n,k,nbc,nbchar,otp,verify);
-    verify := false;
+    Get_Dimensions2(a,n,k,nbc,nbchar,otp,verify,minrep,tosquare);
    -- new_line;
    -- put_line("The dimensions : ");
    -- put("  n = "); put(n,1);
@@ -365,11 +368,11 @@ function use_c2lrhom ( job : integer32;
       sols : Solution_List;
       fsys : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     begin
-      put_line("The brackets : ");
-      for i in cond'range loop
-        put(cond(i).all);
-      end loop;
-      new_line;
+     -- put_line("The brackets : ");
+     -- for i in cond'range loop
+     --   put(cond(i).all);
+     -- end loop;
+     -- new_line;
       for i in 1..k loop
         rows(i) := cond(1)(i);
         cols(i) := cond(2)(i);
@@ -381,19 +384,30 @@ function use_c2lrhom ( job : integer32;
           cnds(j)(i) := cond(j+2)(i);
         end loop;
       end loop;
-      Communications_with_User.Create_Output_File(file,name);
-      Count_Roots(file,ips,rc);
-      put("the root count : "); put(rc,1); new_line;
+      if nbchar = 0 then
+        Count_Roots(ips,rc);
+      else
+        Communications_with_User.Create_Output_File(file,name);
+        Count_Roots(file,ips,rc);
+      end if;
       tstart(timer);
-      Resolve(file,monitor,otp,n,k,tol,ips,sps,verify,minrep,tosquare,
-              cnds.all,flgs,sols);
+      if nbchar > 0 then
+        Resolve(file,monitor,otp,n,k,tol,ips,sps,verify,minrep,tosquare,
+                cnds.all,flgs,sols);
+      else
+        Resolve(n,k,tol,ips,sps,minrep,tosquare,cnds.all,flgs,sols);
+      end if;
       tstop(timer);
-      Write_Results(file,n,k,q,rows,cols,minrep,cnds,flgs,sols,fsys);
+      if nbchar > 0 then
+        Write_Results(file,n,k,q,rows,cols,minrep,cnds,flgs,sols,fsys);
+        new_line(file);
+        print_times(file,timer,"resolving a Schubert problem");
+        Close(file);
+      else
+        fsys := Standard_System_Solved(n,k,q,rows,cols,minrep,cnds,flgs);
+      end if;
       Standard_PolySys_Container.Initialize(fsys.all);
       Standard_Solutions_Container.Initialize(sols);
-      new_line(file);
-      print_times(file,timer,"resolving a Schubert problem");
-      Close(file);
       nrc := Multprec_Natural_Numbers.Create(rc);
      -- put("The formal root count : "); put(nrc,1); new_line;
       Assign_Count_and_Flags(n,double_float(nrc),flgs,c);
@@ -407,16 +421,13 @@ function use_c2lrhom ( job : integer32;
     use DoblDobl_Solution_Posets;
 
     n,k,nbc,nbchar : integer32;
-    otp,verify : boolean;
-    tosquare : boolean := false;
+    otp,verify,minrep,tosquare : boolean;
     rc : Natural_Number;
     nrc : natural32;
     tol : constant double_float := 1.0E-5;
-    minrep : boolean := true;
 
   begin
-    Get_Dimensions2(a,n,k,nbc,nbchar,otp,verify);
-    verify := false;
+    Get_Dimensions2(a,n,k,nbc,nbchar,otp,verify,minrep,tosquare);
    -- new_line;
    -- put_line("The dimensions : ");
    -- put("  n = "); put(n,1);
@@ -444,11 +455,11 @@ function use_c2lrhom ( job : integer32;
       sols : Solution_List;
       fsys : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     begin
-      put_line("The brackets : ");
-      for i in cond'range loop
-        put(cond(i).all);
-      end loop;
-      new_line;
+     -- put_line("The brackets : ");
+     -- for i in cond'range loop
+     --   put(cond(i).all);
+     -- end loop;
+     -- new_line;
       for i in 1..k loop
         rows(i) := cond(1)(i);
         cols(i) := cond(2)(i);
@@ -460,19 +471,27 @@ function use_c2lrhom ( job : integer32;
           cnds(j)(i) := cond(j+2)(i);
         end loop;
       end loop;
-      Communications_with_User.Create_Output_File(file,name);
-      Count_Roots(file,ips,rc);
-      put("the root count : "); put(rc,1); new_line;
+      if nbchar > 0 then
+        Communications_with_User.Create_Output_File(file,name);
+        Count_Roots(file,ips,rc);
+       -- put("the root count : "); put(rc,1); new_line;
+      end if;
       tstart(timer);
-      Resolve(file,monitor,otp,n,k,tol,ips,sps,verify,minrep,tosquare,
-              cnds.all,flgs,sols);
+      if nbchar > 0 then
+        Resolve(file,monitor,otp,n,k,tol,ips,sps,verify,minrep,tosquare,
+                cnds.all,flgs,sols);
+      else
+        Resolve(n,k,tol,ips,sps,minrep,tosquare,cnds.all,flgs,sols);
+      end if;
       tstop(timer);
-      Write_Results(file,n,k,q,rows,cols,minrep,cnds,flgs,sols,fsys);
+      if nbchar > 0 then
+        Write_Results(file,n,k,q,rows,cols,minrep,cnds,flgs,sols,fsys);
+        new_line(file);
+        print_times(file,timer,"resolving a Schubert problem");
+        Close(file);
+      end if;
       DoblDobl_PolySys_Container.Initialize(fsys.all);
       DoblDobl_Solutions_Container.Initialize(sols);
-      new_line(file);
-      print_times(file,timer,"resolving a Schubert problem");
-      Close(file);
       nrc := Multprec_Natural_Numbers.Create(rc);
      -- put("The formal root count : "); put(nrc,1); new_line;
       Assign_Count_and_Flags(n,double_float(nrc),flgs,c);
@@ -486,16 +505,13 @@ function use_c2lrhom ( job : integer32;
     use QuadDobl_Solution_Posets;
 
     n,k,nbc,nbchar : integer32;
-    otp,verify : boolean;
-    tosquare : boolean := false;
+    otp,verify,minrep,tosquare : boolean;
     rc : Natural_Number;
     nrc : natural32;
     tol : constant double_float := 1.0E-5;
-    minrep : boolean := true;
 
   begin
-    Get_Dimensions2(a,n,k,nbc,nbchar,otp,verify);
-    verify := false;
+    Get_Dimensions2(a,n,k,nbc,nbchar,otp,verify,minrep,tosquare);
    -- new_line;
    -- put_line("The dimensions : ");
    -- put("  n = "); put(n,1);
@@ -523,11 +539,11 @@ function use_c2lrhom ( job : integer32;
       sols : Solution_List;
       fsys : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
     begin
-      put_line("The brackets : ");
-      for i in cond'range loop
-        put(cond(i).all);
-      end loop;
-      new_line;
+     -- put_line("The brackets : ");
+     -- for i in cond'range loop
+     --   put(cond(i).all);
+     -- end loop;
+     -- new_line;
       for i in 1..k loop
         rows(i) := cond(1)(i);
         cols(i) := cond(2)(i);
@@ -539,19 +555,27 @@ function use_c2lrhom ( job : integer32;
           cnds(j)(i) := cond(j+2)(i);
         end loop;
       end loop;
-      Communications_with_User.Create_Output_File(file,name);
-      Count_Roots(file,ips,rc);
-      put("the root count : "); put(rc,1); new_line;
+      if nbchar > 0 then
+        Communications_with_User.Create_Output_File(file,name);
+        Count_Roots(file,ips,rc);
+       -- put("the root count : "); put(rc,1); new_line;
+      end if;
       tstart(timer);
-      Resolve(file,monitor,otp,n,k,tol,ips,sps,verify,minrep,tosquare,
-              cnds.all,flgs,sols);
+      if nbchar > 0 then
+        Resolve(file,monitor,otp,n,k,tol,ips,sps,verify,minrep,tosquare,
+                cnds.all,flgs,sols);
+      else
+        Resolve(n,k,tol,ips,sps,minrep,tosquare,cnds.all,flgs,sols);
+      end if;
       tstop(timer);
-      Write_Results(file,n,k,q,rows,cols,minrep,cnds,flgs,sols,fsys);
+      if nbchar > 0 then
+        Write_Results(file,n,k,q,rows,cols,minrep,cnds,flgs,sols,fsys);
+        new_line(file);
+        print_times(file,timer,"resolving a Schubert problem");
+        Close(file);
+      end if;
       QuadDobl_PolySys_Container.Initialize(fsys.all);
       QuadDobl_Solutions_Container.Initialize(sols);
-      new_line(file);
-      print_times(file,timer,"resolving a Schubert problem");
-      Close(file);
       nrc := Multprec_Natural_Numbers.Create(rc);
      -- put("The formal root count : "); put(nrc,1); new_line;
       Assign_Count_and_Flags(n,double_float(nrc),flgs,c);
