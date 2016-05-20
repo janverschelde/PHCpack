@@ -84,6 +84,18 @@ function use_c2lrhom ( job : integer32;
   --   The last value in a is the number of characters in the string
   --   for the output file.
 
+  -- ON ENTRY :
+  --   a        the first argument of the gateway procedure
+  --            should contain 5 integer numbers.
+
+  -- ON RETURN :
+  --   n        ambient dimension;
+  --   k        dimension of the solution planes;
+  --   c        number of intersection conditions;
+  --   nchar    number of characters in the name of the output file;
+  --   verbose  1 if diagnostic information is needed, 0 otherwise;
+  --   verify   1 if extra verification is required;, 0 otherwise.
+
     v : constant C_Integer_Array(0..5)
       := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(6));
 
