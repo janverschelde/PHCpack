@@ -2630,18 +2630,23 @@ lib_pieri_cpp:
 
 lib_lrhom:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	gcc -c -O2 $(PHCLib)/syscon.c
+	gcc -c -O2 $(PHCLib)/solcon.c
 	gcc -c -O2 $(PHCLib)/schubert.c
 	gcc -c -O2 $(PHCLib)/lib_lrhom.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc schubert.o lib_lrhom.o -o $(BIN)/lib_lrhom -lm
+	gnatlink -C use_c2phc syscon.o solcon.o schubert.o lib_lrhom.o \
+                 -o $(BIN)/lib_lrhom -lm
 
 lib_lrhom_cpp:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/solcon.c
+	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/syscon.c
 	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/schubert.c
 	g++ -Dcompilewgpp=1 -c -O2 $(PHCLib)/lib_lrhom.c
 	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc schubert.o lib_lrhom.o -o $(BIN)/lib_lrhom -lm \
-                 --LINK=g++
+	gnatlink -C use_c2phc syscon.o solcon.o schubert.o lib_lrhom.o \
+                 -o $(BIN)/lib_lrhom -lm --LINK=g++
 
 lib_factor:
 	gnatmake -c $(INCLULIBS) $(GNATFLAGS) use_c2phc.adb

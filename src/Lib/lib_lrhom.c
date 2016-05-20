@@ -3,10 +3,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "syscon.h"
+#include "solcon.h"
 #include "schubert.h"
 
 extern void adainit();
 extern void adafinal();
+
+void prompt_for_options
+ ( int *verify, int *minrep, int *tosquare );
+/*
+ * DESCRIPTION :
+ *   Prompts the user for the options of the Littlewood-Richardson run.
+ *
+ * ON RETURN :
+ *   verify    1 if diagnostic verification is needed, 0 if no;
+ *   minrep    1 for a minimal problem formulation, 0 for all minors;
+ *   tosquare  1 to square overdetermined systems, 0 for Gauss-Newton. */
 
 int call_Littlewood_Richardson_homotopies
  ( int n, int k, int c, int *brackets,
@@ -29,6 +42,12 @@ int call_Littlewood_Richardson_homotopies
  *
  * ON RETURN :
  *   r         the formal root count.  */
+
+void write_results ( int prec );
+/*
+ * DESCRIPTION :
+ *   Writes the contents of the systems and solutions containers,
+ *   for precision level 0, 1, or 2. */
 
 int main ( int argc, char *argv[] )
 {
@@ -83,6 +102,8 @@ int main ( int argc, char *argv[] )
       if(precision == 1) size = 4*(c-2)*n*n;
       if(precision == 2) size = 8*(c-2)*n*n;
 
+      prompt_for_options(&verify,&minrep,&tosquare);
+
       fail = call_Littlewood_Richardson_homotopies
                (n,k,c,brackets,verbose,verify,minrep,tosquare,size,&r);
    }
@@ -92,6 +113,36 @@ int main ( int argc, char *argv[] )
    adafinal();
 
    return 0;
+}
+
+void prompt_for_options
+ ( int *verify, int *minrep, int *tosquare )
+{
+   char ans;
+
+   printf("\nVerify the intersection conditions ? (y/n) ");
+   scanf("%c",&ans); /* skip new line character */
+   scanf("%c",&ans);
+   if(ans == 'y')
+      *verify = 1;
+   else
+      *verify = 0;
+
+   printf("Use a minimal problem formulation ? (y/n) ");
+   scanf("%c",&ans); /* skip new line character */
+   scanf("%c",&ans);
+   if(ans == 'y')
+      *minrep = 1;
+   else
+      *minrep = 0;
+
+   printf("Square the overdetermined systems ? (y/n) ");
+   scanf("%c",&ans); /* skip new line character */
+   scanf("%c",&ans);
+   if(ans == 'y')
+      *tosquare = 1;
+   else
+      *tosquare = 0;
 }
 
 int call_Littlewood_Richardson_homotopies
@@ -104,11 +155,30 @@ int call_Littlewood_Richardson_homotopies
    int i,fail,nbname,prec;
 
    scanf("%c",&ans); /* skip newline symbol */
-   printf("Give the name of the output file : ");
-   scanf("%s",filename);
-   /* scanf("%c",&ans);  skip newline symbol */
 
-   nbname = strlen(filename);
+   if(verify == 1)
+   {
+      ans = 'y';
+      printf("\n");
+   }
+   else
+   {
+      printf("\nOutput to separate file ? (y/n) ? ");
+      scanf("%c",&ans);
+      scanf("%c",&ans); /* skip newline symbol */
+   }
+   if(ans != 'y')
+   {
+      nbname = 0;
+      filename[0] = '\0';  
+   }
+   else
+   {
+      printf("Give the name of the output file : ");
+      scanf("%s",filename);
+      /* scanf("%c",&ans);  skip newline symbol */
+      nbname = strlen(filename);
+   }
    printf("Number of characters in %s is %d\n",filename,nbname);
 
    if(prec == 0)
@@ -131,5 +201,36 @@ int call_Littlewood_Richardson_homotopies
       printf(" %+.1e", flags[i]);
    }
    printf("\n");
+
+   if(nbname > 0)
+      printf("See the file %s for the results.\n",filename);
+   else
+      write_results(prec);
+
    return fail;
+}
+
+void write_results ( int prec ) 
+{
+   if(prec==0)
+   {
+      printf("THE SYSTEM SOLVED :\n");
+      syscon_write_standard_system();
+      printf("THE SOLUTIONS : \n");
+      solcon_write_standard_solutions();
+   }
+   if(prec==1)
+   {
+      printf("THE SYSTEM SOLVED :\n");
+      syscon_write_dobldobl_system();
+      printf("THE SOLUTIONS : \n");
+      solcon_write_dobldobl_solutions();
+   }
+   if(prec==2)
+   {
+      printf("THE SYSTEM SOLVED :\n");
+      syscon_write_quaddobl_system();
+      printf("THE SOLUTIONS : \n");
+      solcon_write_quaddobl_solutions();
+   }
 }
