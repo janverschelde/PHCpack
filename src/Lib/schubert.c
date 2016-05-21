@@ -43,7 +43,7 @@ int standard_Littlewood_Richardson_homotopies
    int fail,i;
    int size = 2*(c-2)*n*n+1;
    double rc[size]; /* filename on input, count & flags on return */
-   int dim[6];
+   int dim[8];
 
    dim[0] = n;
    dim[1] = k;
@@ -51,6 +51,8 @@ int standard_Littlewood_Richardson_homotopies
    dim[3] = verbose;
    dim[4] = verify;
    dim[5] = nbchar;
+   dim[6] = minrep;
+   dim[7] = tosquare;
 
    for(i=0; i<nbchar; i++) rc[i] = (double) filename[i];
 
@@ -71,7 +73,7 @@ int dobldobl_Littlewood_Richardson_homotopies
    int fail,i;
    int size = 4*(c-2)*n*n+1;
    double rc[size]; /* filename on input, count & flags on return */
-   int dim[6];
+   int dim[8];
 
    dim[0] = n;
    dim[1] = k;
@@ -79,6 +81,8 @@ int dobldobl_Littlewood_Richardson_homotopies
    dim[3] = verbose;
    dim[4] = verify;
    dim[5] = nbchar;
+   dim[6] = minrep;
+   dim[7] = tosquare;
 
    for(i=0; i<nbchar; i++) rc[i] = (double) filename[i];
 
@@ -99,7 +103,7 @@ int quaddobl_Littlewood_Richardson_homotopies
    int fail,i;
    int size = 8*(c-2)*n*n+1;
    double rc[size]; /* filename on input, count & flags on return */
-   int dim[6];
+   int dim[8];
 
    dim[0] = n;
    dim[1] = k;
@@ -107,6 +111,8 @@ int quaddobl_Littlewood_Richardson_homotopies
    dim[3] = verbose;
    dim[4] = verify;
    dim[5] = nbchar;
+   dim[6] = minrep;
+   dim[7] = tosquare;
 
    for(i=0; i<nbchar; i++) rc[i] = (double) filename[i];
 

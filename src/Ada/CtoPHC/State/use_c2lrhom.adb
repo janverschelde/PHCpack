@@ -20,6 +20,7 @@ with Standard_Natural_VecVecs;
 with Standard_Complex_VecMats;
 with DoblDobl_Complex_VecMats;
 with QuadDobl_Complex_VecMats;
+with Symbol_Table;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
@@ -101,7 +102,7 @@ function use_c2lrhom ( job : integer32;
   --            0 if Gauss-Newton path trackers will run.
 
     v : constant C_Integer_Array(0..7)
-      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(6));
+      := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(8));
 
   begin
     n := integer32(v(0));
@@ -351,6 +352,18 @@ function use_c2lrhom ( job : integer32;
    --  else put_line("  in silent mode");
    -- end if;
    -- put("Number of characters : "); put(nbchar,1); new_line;
+   -- if verify
+   --  then put_line("  verification wanted.");
+   --  else put_line("  no verification wanted.");
+   -- end if;
+   -- if minrep 
+   --  then put_line("  minimal representation.");
+   --  else put_line("  original formulation.");
+   -- end if;
+   -- if tosquare 
+   --  then put_line("  squaring.");
+   --  else put_line("  no squaring.");
+   -- end if;
     declare
       cond : constant Array_of_Brackets(1..nbc) := Get_Conditions(b,k,nbc);
       q : constant Standard_Natural_Vectors.Vector
@@ -373,6 +386,7 @@ function use_c2lrhom ( job : integer32;
      --   put(cond(i).all);
      -- end loop;
      -- new_line;
+     -- put_line("The output file name : " & name);
       for i in 1..k loop
         rows(i) := cond(1)(i);
         cols(i) := cond(2)(i);
@@ -404,6 +418,7 @@ function use_c2lrhom ( job : integer32;
         print_times(file,timer,"resolving a Schubert problem");
         Close(file);
       else
+        Symbol_Table.Init(Symbol_Table.Standard_Symbols(k));
         fsys := Standard_System_Solved(n,k,q,rows,cols,minrep,cnds,flgs);
       end if;
       Standard_PolySys_Container.Initialize(fsys.all);
@@ -489,6 +504,9 @@ function use_c2lrhom ( job : integer32;
         new_line(file);
         print_times(file,timer,"resolving a Schubert problem");
         Close(file);
+      else
+        Symbol_Table.Init(Symbol_Table.Standard_Symbols(k));
+        fsys := DoblDobl_System_Solved(n,k,q,rows,cols,minrep,cnds,flgs);
       end if;
       DoblDobl_PolySys_Container.Initialize(fsys.all);
       DoblDobl_Solutions_Container.Initialize(sols);
@@ -573,6 +591,9 @@ function use_c2lrhom ( job : integer32;
         new_line(file);
         print_times(file,timer,"resolving a Schubert problem");
         Close(file);
+      else
+        Symbol_Table.Init(Symbol_Table.Standard_Symbols(k));
+        fsys := QuadDobl_System_Solved(n,k,q,rows,cols,minrep,cnds,flgs);
       end if;
       QuadDobl_PolySys_Container.Initialize(fsys.all);
       QuadDobl_Solutions_Container.Initialize(sols);

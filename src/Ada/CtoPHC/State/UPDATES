@@ -1,6 +1,7 @@
 Fri 20 May 2016 : improved documentation in use_c2lrhom.adb, and added
   silent mode of running the Littlewood-Richardson homotopies, which runs
   without output to file.  Options 'minrep' and 'tosquare' recognized.
+  In silent mode, use_c2lrhom.adb must intialize symbol table...
 
 Thu 19 May 2016 : updated use_c2lrhom.adb for the extra flag on whether to
   square overdetermined homotopies or not.

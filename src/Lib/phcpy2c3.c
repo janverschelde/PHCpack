@@ -5939,15 +5939,13 @@ static PyObject *py2c_schubert_resolve_conditions
 static PyObject *py2c_schubert_standard_littlewood_richardson_homotopies
  ( PyObject *self, PyObject *args )
 {
-   int i,n,k,nbc,nc,fail,r,vrb,vrf,szn;
-   int mrp=1;
-   int sqr=0;
+   int i,n,k,nbc,nc,fail,r,vrb,vrf,mrp,sqr,szn;
    char *cond;
    char *name;
 
    initialize();
-   if(!PyArg_ParseTuple
-         (args,"iiiisiiis",&n,&k,&nbc,&nc,&cond,&vrb,&vrf,&szn,&name))
+   if(!PyArg_ParseTuple(args,"iiiisiiiiis",
+       &n,&k,&nbc,&nc,&cond,&vrb,&vrf,&mrp,&sqr,&szn,&name))
       return NULL;
 /*
    printf("name of the output file : %s\n", name);
@@ -5997,15 +5995,13 @@ static PyObject *py2c_schubert_standard_littlewood_richardson_homotopies
 static PyObject *py2c_schubert_dobldobl_littlewood_richardson_homotopies
  ( PyObject *self, PyObject *args )
 {
-   int i,n,k,nbc,nc,fail,r,vrb,vrf,szn;
-   int mrp=1;
-   int sqr=0;
+   int i,n,k,nbc,nc,fail,r,vrb,vrf,mrp,sqr,szn;
    char *cond;
    char *name;
 
    initialize();
-   if(!PyArg_ParseTuple
-         (args,"iiiisiiis",&n,&k,&nbc,&nc,&cond,&vrb,&vrf,&szn,&name))
+   if(!PyArg_ParseTuple(args,"iiiisiiiiis",
+       &n,&k,&nbc,&nc,&cond,&vrb,&vrf,&mrp,&sqr,&szn,&name))
       return NULL;
 /*
    printf("name of the output file : %s\n", name);
@@ -6055,15 +6051,13 @@ static PyObject *py2c_schubert_dobldobl_littlewood_richardson_homotopies
 static PyObject *py2c_schubert_quaddobl_littlewood_richardson_homotopies
  ( PyObject *self, PyObject *args )
 {
-   int i,n,k,nbc,nc,fail,r,vrb,vrf,szn;
-   int mrp=1;
-   int sqr=0;
+   int i,n,k,nbc,nc,fail,r,vrb,vrf,mrp,sqr,szn;
    char *cond;
    char *name;
 
    initialize();
-   if(!PyArg_ParseTuple
-         (args,"iiiisiiis",&n,&k,&nbc,&nc,&cond,&vrb,&vrf,&szn,&name))
+   if(!PyArg_ParseTuple(args,"iiiisiiiiis",
+       &n,&k,&nbc,&nc,&cond,&vrb,&vrf,&mrp,&sqr,&szn,&name))
       return NULL;
 /*
    printf("name of the output file : %s\n", name);
