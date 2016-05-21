@@ -1,5 +1,8 @@
 Fri 20 May 2016 : improved interface to Littlewood-Richardson homotopies
   in python2 version, the file schubert.py in PHCpy2/phcpy.
+  Also fixed the corresponding schubert.py in PHCpy3/phcpy.
+  Prepared version 0.4.6 updating conf.py in doc, __init__.py in phcpy,
+  and setup.py in PHCpy2 and PHCpy3.
 
 Sat 30 Apr 2016 : added is_real and filter_real function to the solutions
   module in PHCpy2 and PHCpy3, with better documentation in welcome.rst
