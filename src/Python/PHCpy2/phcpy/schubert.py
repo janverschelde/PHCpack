@@ -48,7 +48,7 @@ def resolve_schubert_conditions(ndim, kdim, brackets, verbose=True):
     return roco
 
 def standard_littlewood_richardson_homotopies(ndim, kdim, brackets, \
-    verbose=True, vrfcnd=False, outputfilename='/tmp/output'):
+    verbose=True, vrfcnd=False, minrep=True, tosqr=False, outputfilename=''):
     """
     In n-dimensional space we consider k-dimensional planes,
     subject to intersection conditions represented by brackets.
@@ -57,7 +57,11 @@ def standard_littlewood_richardson_homotopies(ndim, kdim, brackets, \
     of as many natural numbers (in the range 1..ndim) as kdim.
     The Littlewood-Richardson homotopies compute k-planes that
     meet the flags at spaces of dimensions prescribed by the brackets,
-    in standard double precision.
+    in standard double precision.  Four options are passed as Booleans:
+    verbose : for adding extra output during computations,
+    vrfcnd : for extra diagnostic verification of Schubert conditions,
+    minrep : for a minimial representation of the problem formulation,
+    tosqr : to square the overdetermined systems.
     On return is a 4-tuple.  The first item of the tuple is the
     formal root count, sharp for general flags, then as second
     item the coordinates of the flags.  The coordinates of the
@@ -78,8 +82,9 @@ def standard_littlewood_richardson_homotopies(ndim, kdim, brackets, \
         for num in bracket:
             cds = cds + ' ' + str(num)
     # print 'the condition string :', cds
-    (roco, sflags) = stlrhom(ndim, kdim, nbc, len(cds), cds, int(verbose), \
-        int(vrfcnd), len(outputfilename), outputfilename)
+    (roco, sflags) = stlrhom(ndim, kdim, nbc, len(cds), cds, \
+        int(verbose), int(vrfcnd), int(minrep), int(tosqr), \
+        len(outputfilename), outputfilename)
     rflags = eval(sflags)
     flgs = []
     for k in range(len(rflags)/2):
@@ -89,7 +94,7 @@ def standard_littlewood_richardson_homotopies(ndim, kdim, brackets, \
     return (roco, flgs, fsys, sols)
 
 def dobldobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
-    verbose=True, vrfcnd=False, outputfilename='/tmp/output'):
+    verbose=True, vrfcnd=False, minrep=True, tosqr=False, outputfilename=''):
     """
     In n-dimensional space we consider k-dimensional planes,
     subject to intersection conditions represented by brackets.
@@ -98,7 +103,11 @@ def dobldobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
     of as many natural numbers (in the range 1..ndim) as kdim.
     The Littlewood-Richardson homotopies compute k-planes that
     meet the flags at spaces of dimensions prescribed by the brackets,
-    in double double precision.
+    in double double precision.  Four options are passed as Booleans:
+    verbose : for adding extra output during computations,
+    vrfcnd : for extra diagnostic verification of Schubert conditions,
+    minrep : for a minimial representation of the problem formulation,
+    tosqr : to square the overdetermined systems.
     On return is a 4-tuple.  The first item of the tuple is the
     formal root count, sharp for general flags, then as second
     item the coordinates of the flags.  The coordinates of the
@@ -119,8 +128,9 @@ def dobldobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
         for num in bracket:
             cds = cds + ' ' + str(num)
     # print 'the condition string :', cds
-    (roco, sflags) = ddlrhom(ndim, kdim, nbc, len(cds), cds, int(verbose), \
-        int(vrfcnd), len(outputfilename), outputfilename)
+    (roco, sflags) = ddlrhom(ndim, kdim, nbc, len(cds), cds, \
+        int(verbose), int(vrfcnd), int(minrep), int(tosqr), \
+        len(outputfilename), outputfilename)
     rflags = eval(sflags)
     flgs = []
     for k in range(len(rflags)/4):
@@ -130,7 +140,7 @@ def dobldobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
     return (roco, flgs, fsys, sols)
 
 def quaddobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
-    verbose=True, vrfcnd=False, outputfilename='/tmp/output'):
+    verbose=True, vrfcnd=False, minrep=True, tosqr=False, outputfilename=''):
     """
     In n-dimensional space we consider k-dimensional planes,
     subject to intersection conditions represented by brackets.
@@ -139,7 +149,11 @@ def quaddobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
     of as many natural numbers (in the range 1..ndim) as kdim.
     The Littlewood-Richardson homotopies compute k-planes that
     meet the flags at spaces of dimensions prescribed by the brackets,
-    in quad double precision.
+    in quad double precision.  Four options are passed as Booleans:
+    verbose : for adding extra output during computations,
+    vrfcnd : for extra diagnostic verification of Schubert conditions,
+    minrep : for a minimial representation of the problem formulation,
+    tosqr : to square the overdetermined systems.
     On return is a 4-tuple.  The first item of the tuple is the
     formal root count, sharp for general flags, then as second
     item the coordinates of the flags.  The coordinates of the
@@ -160,8 +174,9 @@ def quaddobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
         for num in bracket:
             cds = cds + ' ' + str(num)
     # print 'the condition string :', cds
-    (roco, sflags) = qdlrhom(ndim, kdim, nbc, len(cds), cds, int(verbose), \
-        int(vrfcnd), len(outputfilename), outputfilename)
+    (roco, sflags) = qdlrhom(ndim, kdim, nbc, len(cds), cds, \
+        int(verbose), int(vrfcnd), int(minrep), int(tosqr), \
+        len(outputfilename), outputfilename)
     rflags = eval(sflags)
     flgs = []
     for k in range(len(rflags)/8):
@@ -171,8 +186,8 @@ def quaddobl_littlewood_richardson_homotopies(ndim, kdim, brackets, \
     return (roco, flgs, fsys, sols)
 
 def littlewood_richardson_homotopies(ndim, kdim, brackets, \
-    verbose=True, vrfcnd=False, precision='d', \
-    outputfilename='/tmp/output'):
+    verbose=True, vrfcnd=False, minrep=True, tosqr=False, \
+    precision='d', outputfilename=''):
     """
     In n-dimensional space we consider k-dimensional planes,
     subject to intersection conditions represented by brackets.
@@ -181,6 +196,11 @@ def littlewood_richardson_homotopies(ndim, kdim, brackets, \
     of as many natural numbers (in the range 1..ndim) as kdim.
     The Littlewood-Richardson homotopies compute k-planes that
     meet the flags at spaces of dimensions prescribed by the brackets.
+    Four options are passed as Booleans:
+    verbose : for adding extra output during computations,
+    vrfcnd : for extra diagnostic verification of Schubert conditions,
+    minrep : for a minimial representation of the problem formulation,
+    tosqr : to square the overdetermined systems.
     On return is a 4-tuple.  The first item of the tuple is the
     formal root count, sharp for general flags, then as second
     item the coordinates of the flags.  The coordinates of the
@@ -191,13 +211,13 @@ def littlewood_richardson_homotopies(ndim, kdim, brackets, \
     """
     if(precision == 'd'):
         return standard_littlewood_richardson_homotopies(ndim, kdim, \
-                  brackets, verbose, vrfcnd, outputfilename)
+                  brackets, verbose, vrfcnd, minrep, tosqr, outputfilename)
     elif(precision == 'dd'):
         return dobldobl_littlewood_richardson_homotopies(ndim, kdim, \
-                  brackets, verbose, vrfcnd, outputfilename)
+                  brackets, verbose, vrfcnd, minrep, tosqr, outputfilename)
     elif(precision == 'qd'):
         return quaddobl_littlewood_richardson_homotopies(ndim, kdim, \
-                  brackets, verbose, vrfcnd, outputfilename)
+                  brackets, verbose, vrfcnd, minrep, tosqr, outputfilename)
     else:
         print 'wrong level of precision, use d, dd, or qd'
 
@@ -414,6 +434,7 @@ def test_lrhom(prc='d'):
     brk = [[2, 4, 6], [2, 4, 6], [2, 4, 6]]
     (roco, flags, fsys, sols) \
         = littlewood_richardson_homotopies(6, 3, brk, precision=prc)
+    #  outputfilename='/tmp/testlrhomoutput')
     print 'the root count :', roco
     print 'the flags :', flags
     print 'the solutions :'
