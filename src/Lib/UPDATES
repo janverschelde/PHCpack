@@ -1,3 +1,5 @@
+Sat 21 May 2016 : fixed bug in lib_lrhom.c for setting the precision.
+
 Fri 20 May 2016 : updates in interface schubert, which changed lib_lrhom.c,
   phcpy2.h, phcpy2c2.c, and phcpy2c3.c.  Improved C interface recognizes
   the minrep and tosquare options, with silent LR homotopies run.

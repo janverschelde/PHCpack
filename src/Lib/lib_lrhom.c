@@ -22,7 +22,7 @@ void prompt_for_options
  *   tosquare  1 to square overdetermined systems, 0 for Gauss-Newton. */
 
 int call_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets,
+ ( int n, int k, int c, int *brackets, int precision,
    int verbose, int verify, int minrep, int tosquare,
    int size, int *r );
 /*
@@ -34,6 +34,7 @@ int call_Littlewood_Richardson_homotopies
  *   k         dimension of the solution planes;
  *   c         number of intersection conditions;
  *   brackets  contains c*k integer numbers with the intersection conditions;
+ *   precision 0 for standard double, 1 for double double, 2 for quad double;
  *   verify    1 if diagnostic verification is needed, 0 if no;
  *   verbose   1 if intermediate output is needed, 0 to be silent;
  *   minrep    1 for a minimal problem formulation, 0 for all minors;
@@ -105,7 +106,8 @@ int main ( int argc, char *argv[] )
       prompt_for_options(&verify,&minrep,&tosquare);
 
       fail = call_Littlewood_Richardson_homotopies
-               (n,k,c,brackets,verbose,verify,minrep,tosquare,size,&r);
+               (n,k,c,brackets,precision,verbose,verify,minrep,tosquare,
+                size,&r);
    }
 
    printf("The formal root count : %d\n",r);
@@ -146,13 +148,13 @@ void prompt_for_options
 }
 
 int call_Littlewood_Richardson_homotopies
- ( int n, int k, int c, int *brackets,
+ ( int n, int k, int c, int *brackets, int precision,
    int verbose, int verify, int minrep, int tosquare,
    int size, int *r )
 {
    double flags[size]; /* real + imaginary parts stored rowwise */
    char ans,filename[80];
-   int i,fail,nbname,prec;
+   int i,fail,nbname;
 
    scanf("%c",&ans); /* skip newline symbol */
 
@@ -181,15 +183,15 @@ int call_Littlewood_Richardson_homotopies
    }
    printf("Number of characters in %s is %d\n",filename,nbname);
 
-   if(prec == 0)
+   if(precision == 0)
       fail = standard_Littlewood_Richardson_homotopies
                 (n,k,c,brackets,verbose,verify,minrep,tosquare,
                  nbname,filename,r,flags);
-   if(prec == 1)
+   if(precision == 1)
       fail = dobldobl_Littlewood_Richardson_homotopies
                 (n,k,c,brackets,verbose,verify,minrep,tosquare,
                  nbname,filename,r,flags);
-   if(prec == 2)
+   if(precision == 2)
       fail = quaddobl_Littlewood_Richardson_homotopies
                 (n,k,c,brackets,verbose,verify,minrep,tosquare,
                  nbname,filename,r,flags);
@@ -205,7 +207,7 @@ int call_Littlewood_Richardson_homotopies
    if(nbname > 0)
       printf("See the file %s for the results.\n",filename);
    else
-      write_results(prec);
+      write_results(precision);
 
    return fail;
 }
