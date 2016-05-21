@@ -17,10 +17,12 @@ with QuadDobl_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 with Standard_Natural_VecVecs;
+with Standard_Natural_Matrices;
 with Standard_Complex_VecMats;
 with DoblDobl_Complex_VecMats;
 with QuadDobl_Complex_VecMats;
 with Symbol_Table;
+with Matrix_Indeterminates;
 with Standard_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems;
@@ -30,6 +32,7 @@ with QuadDobl_Complex_Solutions;
 with Brackets;                          use Brackets;
 with Brackets_io;                       use Brackets_io;
 with Checker_Moves;
+with Checker_Localization_Patterns;
 with Intersection_Posets;               use Intersection_Posets;
 with Standard_Solution_Posets;
 with DoblDobl_Solution_Posets;
@@ -329,6 +332,34 @@ function use_c2lrhom ( job : integer32;
     return 0;
   end Job0;
 
+  procedure Set_Matrix_Symbols
+              ( n,k : in integer32;
+                q,rows,cols : in Standard_Natural_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Sets the symbol table to suit the localization pattern
+  --   to properly represent the polynomial system solved.
+  --   This is required if no output is written to file.
+
+  -- ON ENTRY :
+  --   n        ambient dimension;
+  --   k        dimension of the solution planes;
+  --   q        the identity permutation;
+  --   rows     rows in the intersection condition;
+  --   cols     columns in the intersection condition.
+
+    locmap : constant Standard_Natural_Matrices.Matrix(1..n,1..k)
+           := Checker_Localization_Patterns.Column_Pattern(n,k,q,rows,cols);
+    dim : constant natural32
+        := Checker_Localization_Patterns.Degree_of_Freedom(locmap);
+
+  begin
+    if not Symbol_Table.Empty
+     then Symbol_Table.Clear;
+    end if;
+    Matrix_Indeterminates.Initialize_Symbols(dim,locmap);
+  end Set_Matrix_Symbols;
+
   function Job1 return integer32 is -- standard double L-R homotopies
 
     use Standard_Complex_Solutions;
@@ -418,7 +449,7 @@ function use_c2lrhom ( job : integer32;
         print_times(file,timer,"resolving a Schubert problem");
         Close(file);
       else
-        Symbol_Table.Init(Symbol_Table.Standard_Symbols(k));
+        Set_Matrix_Symbols(n,k,q,rows,cols);
         fsys := Standard_System_Solved(n,k,q,rows,cols,minrep,cnds,flgs);
       end if;
       Standard_PolySys_Container.Initialize(fsys.all);
@@ -486,7 +517,9 @@ function use_c2lrhom ( job : integer32;
           cnds(j)(i) := cond(j+2)(i);
         end loop;
       end loop;
-      if nbchar > 0 then
+      if nbchar = 0 then
+        Count_Roots(ips,rc);
+      else
         Communications_with_User.Create_Output_File(file,name);
         Count_Roots(file,ips,rc);
        -- put("the root count : "); put(rc,1); new_line;
@@ -505,7 +538,7 @@ function use_c2lrhom ( job : integer32;
         print_times(file,timer,"resolving a Schubert problem");
         Close(file);
       else
-        Symbol_Table.Init(Symbol_Table.Standard_Symbols(k));
+        Set_Matrix_Symbols(n,k,q,rows,cols);
         fsys := DoblDobl_System_Solved(n,k,q,rows,cols,minrep,cnds,flgs);
       end if;
       DoblDobl_PolySys_Container.Initialize(fsys.all);
@@ -573,7 +606,9 @@ function use_c2lrhom ( job : integer32;
           cnds(j)(i) := cond(j+2)(i);
         end loop;
       end loop;
-      if nbchar > 0 then
+      if nbchar = 0 then
+        Count_Roots(ips,rc);
+      else
         Communications_with_User.Create_Output_File(file,name);
         Count_Roots(file,ips,rc);
        -- put("the root count : "); put(rc,1); new_line;
@@ -592,7 +627,7 @@ function use_c2lrhom ( job : integer32;
         print_times(file,timer,"resolving a Schubert problem");
         Close(file);
       else
-        Symbol_Table.Init(Symbol_Table.Standard_Symbols(k));
+        Set_Matrix_Symbols(n,k,q,rows,cols);
         fsys := QuadDobl_System_Solved(n,k,q,rows,cols,minrep,cnds,flgs);
       end if;
       QuadDobl_PolySys_Container.Initialize(fsys.all);

@@ -1,3 +1,5 @@
+Sat 21 May 2016 : defined matrix symbols in use_c2lrhom.adb.
+
 Fri 20 May 2016 : improved documentation in use_c2lrhom.adb, and added
   silent mode of running the Littlewood-Richardson homotopies, which runs
   without output to file.  Options 'minrep' and 'tosquare' recognized.
