@@ -1,3 +1,5 @@
+Sun 22 May 2016 : added lrhomprob.py to the PHCpy3/examples directory.
+
 Fri 20 May 2016 : improved interface to Littlewood-Richardson homotopies
   in python2 version, the file schubert.py in PHCpy2/phcpy.
   Also fixed the corresponding schubert.py in PHCpy3/phcpy.
