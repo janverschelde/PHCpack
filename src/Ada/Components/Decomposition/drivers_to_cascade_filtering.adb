@@ -340,8 +340,13 @@ package body Drivers_to_Cascade_Filtering is
     put(file,"TARGET SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,target);
     Set_Continuation_Parameter(sols,Create(0.0));
-    Black_Box_Polynomial_Continuation
-      (file,integer32(nt),target,embsys,sols,pocotime);
+    if nt = 0 then
+      Black_Box_Polynomial_Continuation
+        (file,target,embsys,sols,pocotime);
+    else
+      Black_Box_Polynomial_Continuation
+        (file,integer32(nt),target,embsys,sols,pocotime);
+    end if;
   end Down_Continuation;
 
   procedure Down_Continuation
@@ -364,8 +369,13 @@ package body Drivers_to_Cascade_Filtering is
     put(file,"TARGET SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,target);
     Set_Continuation_Parameter(sols,Create(integer(0)));
-    Black_Box_Polynomial_Continuation
-      (file,integer32(nt),target,embsys,sols,pocotime);
+    if nt = 0 then
+      Black_Box_Polynomial_Continuation
+        (file,target,embsys,sols,pocotime);
+    else
+      Black_Box_Polynomial_Continuation
+        (file,integer32(nt),target,embsys,sols,pocotime);
+    end if;
   end Down_Continuation;
 
   procedure Down_Continuation
@@ -388,8 +398,13 @@ package body Drivers_to_Cascade_Filtering is
     put(file,"TARGET SYSTEM at level "); put(file,level,1);
     put_line(file," :"); put_line(file,target);
     Set_Continuation_Parameter(sols,Create(integer(0)));
-    Black_Box_Polynomial_Continuation
-      (file,integer32(nt),target,embsys,sols,pocotime);
+    if nt = 0 then
+      Black_Box_Polynomial_Continuation
+        (file,target,embsys,sols,pocotime);
+    else
+      Black_Box_Polynomial_Continuation
+        (file,integer32(nt),target,embsys,sols,pocotime);
+    end if;
   end Down_Continuation;
 
   procedure Witness_Generate
