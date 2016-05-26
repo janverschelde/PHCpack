@@ -1,8 +1,8 @@
 
 newPackage(
   "PHCpack",
-  Version => "1.7", 
-  Date => "8 May 2016",
+  Version => "1.8", 
+  Date => "25 May 2016",
   Authors => {
     {Name => "Elizabeth Gross",
      Email => "egross7@uic.edu",
@@ -20,7 +20,13 @@ newPackage(
     {Name => "Contributing Author: Taylor Brysiewicz",
      HomePage => "http://www.math.tamu.edu/~tbrysiewicz/"},
     {Name => "Contributing Author: Corey Harris",
-     HomePage => "http://www.coreyharris.name/"}
+     HomePage => "http://www.coreyharris.name/"},
+    {Name => "Contributing Author: Diego Cifuentes",
+     HomePage => "http://www.mit.edu/~diegcif/"},
+    {Name => "Contributing Author: Kaie Kubjas",
+     HomePage => "http://www.kaiekubjas.com/"},
+    {Name => "Contributing Author: Anna Seigal",
+     HomePage => "https://math.berkeley.edu/~seigal/"}
   },
   Headline => "Interface to PHCpack",
   Configuration => { 
@@ -81,12 +87,18 @@ export {
   "toLaurentPolynomial",
   "topWitnessSet",
   "trackPaths",
-  "zeroFilter"
+  "zeroFilter",
+  "intersectSlice",
+  "searchDelta",
+  "searchNpoints",
+  "searchTolerance",
+  "realSlice1D",
+  "realSlice2D"
 }
 
 protect ErrorTolerance, protect Iterations,
 protect Bits, protect ResidualTolerance, 
-protect Append 
+protect Append
 
 --##########################################################################--
 -- GLOBAL VARIABLES 
@@ -402,7 +414,7 @@ systemFromFile (String) := (name) -> (
   L := lines(s);
   dimL0 := separate(" ", L_0); -- deal with case of nonsquare systems
   n := value dimL0_0;          -- first is always number of equations
-  if n == null then
+  if not instance(n,ZZ) then
     n = value dimL0_1;         -- deal with leading spaces
   result := {};
   i := 0; j := 1;
@@ -620,11 +632,11 @@ cascade (List) := o -> (system) -> (
     stdio << "writing output to file " << PHCoutputFile << endl;
   
   systemToFile(system,PHCinputFile);
-  s := concatenate("0\ny\n",PHCinputFile);
-  s = concatenate(s,"\n",PHCoutputFile);
+  s := concatenate("0\ny\n",PHCinputFile); -- option 0, system on file
+  s = concatenate(s,"\n",PHCoutputFile);   -- add name of the output file
   s = concatenate(s,"\n");
-  s = concatenate(s,toString(startdim));
-  s = concatenate(s,"\nn\n");
+  s = concatenate(s,toString(startdim));   -- add top dimension
+  s = concatenate(s,"\nn\n");              -- do not restrict slices
   bat := openOut PHCbatchFile;
   bat << s;
   close bat;
@@ -1520,6 +1532,236 @@ zeroFilter (List,ZZ,RR) := (sols,k,tol) -> (
   return select(sols,t->isCoordinateZero(t,k,tol));
 )
 
+--------------------
+-- intersectSlice --
+--------------------
+
+intersectSlice = method(TypicalValue => List)
+intersectSlice (WitnessSet, List) := (w, slcRR) -> (
+  -- IN: w, a witness set;
+  --     slcRR, a list of linear equations.
+  -- OUT: solutions of the equations of the witness set w
+  --      which satisfy the list of linear equations.
+  startSys:=join(equations(w),slice(w));
+  targetSys := equations(w) | slcRR;
+  trackPaths(targetSys,startSys,w.Points)
+)
+
+
+-----------------------------------
+-- line search with golden ratio --
+-----------------------------------
+
+lineSearch = (F,a,b,tol,npoints) -> (
+    delta := (b-a)/(2*npoints);
+    xmin := discretization1D (F, a, b, npoints );
+    a = max( xmin - delta, a);
+    b = min( xmin + delta, b);
+    xmin = goldenSearch (F, a, b, tol);
+    return xmin;
+)
+
+goldenSearch = (F,a,b,tol) -> (
+-- Applies the golden section search method
+-- to minimize a unimodal function F over [a,b].
+-- IN: F, a function in one variable;
+--     a, the left bound of the search interval;
+--     b, the right bound of the search interval;
+--     tol, tolerance on the approximate minimum.
+-- OUT: if F is unimodal (it has a unique minimum),
+--      then the value x on return approximates
+--      the minimum with respect to the tolerance tol.
+-- EXAMPLE: myFunction = (x) -> (1-x)*sin((3*x)^3)
+--          goldenSearch( myFunction, .4, .7, 1.0e-4)
+    gr := (sqrt(5) - 1)/2;
+    c := b - gr * (b - a);
+    d := a + gr * (b - a);
+    while abs(c - d) > tol do (
+        Fc := F(c);
+        Fd := F(d);
+        if Fc < Fd then ( b = d;)
+        else ( a = c;);
+        c = b - gr * (b - a);
+        d = a + gr * (b - a);
+    );
+    return (b + a) / 2;
+)
+
+-----------------------------------------------------------
+-- convert coefficients of matrix to list of polynomials --
+-----------------------------------------------------------
+
+matrix2slice = (slcmat, w) -> (
+-- Given a witness set w and a matrix of coefficients
+-- for a set of hyperplanes, uses the ring of w.Equations
+-- to return the list representation of the hyperplanes
+-- with coefficients in slcmat.
+-- IN: slcmat, a matrix of coefficients of hyperplanes;
+--     w, a witness set.
+-- OUT: a list of linear equations with coefficient
+--      from sclmat and variables from w.Equations.
+    R2 := ring w.Equations;
+    X := transpose (vars(R2) | 1);
+    slc := flatten entries (promote(slcmat,R2) * X);
+    return slc;
+)
+
+-------------------------
+-- the cost of a slice --
+-------------------------
+
+sliceCost = (slcmat, w) -> (
+-- Returns the norm of the imaginary parts of the solutions
+-- that satisfy w.Equations on the slices with coefficient
+-- in the matrix slcmat.
+-- IN: sclmat, a matrix of coefficients of hyperplanes;
+--     w, a witness set.
+-- OUT: sum of the squares of the imaginary parts of the coordinates
+--      of the witness points on the hyperplanes defined by sclmat.
+    slc := matrix2slice(slcmat,w);
+    fsols := intersectSlice(w,slc);
+    cost := sum ( coordinates(fsols_0) / imaginaryPart / (x->x^2) );
+    return cost;
+)
+
+realPartMatrix = (m) -> matrix applyTable (entries m, x->1_CC*realPart x)
+
+rotationOfSlice = (t,startSlice) -> (
+-- Returns a rotation of the coefficients of startSlice
+-- about the angle t.
+-- IN: t, an angle;
+--     startSlice, a matrix with coefficients of the slice.
+-- OUT: new slice, rotated from startSlice with angle t.
+    c := numColumns(startSlice);
+    M1 := id_(CC^c);
+    M2 := mutableMatrix M1;
+    M2_(0,0) = cos(t);
+    M2_(0,1) = -sin(t);
+    M2_(1,0) = sin(t);
+    M2_(1,1) = cos(t);
+    M3 := matrix M2;
+    return startSlice*M3;
+)
+
+rotationMatrix2D = (c,i,j,t)-> (
+-- Returns a general rotation matrix in dimension c,
+-- involving variables i and j and angle t.
+-- IN: c, dimension of the matrix;
+--     i, first variable involved in the rotation matrix;
+--     j, second variable involved in the rotation matrix;
+--     t, angle in the rotation matrix.
+-- OUT: a rotation matrix of dimension c about angle t,
+--      which involves variables i and j.
+    M1 := id_(CC^c);
+    M2 := mutableMatrix M1;
+    M2_(i,i) = cos(t);
+    M2_(i,j) = -sin(t);
+    M2_(j,i) = sin(t);
+    M2_(j,j) = cos(t);
+    M3 := matrix M2;
+    return M3
+)
+
+changeOfSlice2D = (t1,t2,startSlice)-> (
+-- Applies a rotation matrix using angles t1 and t2 on startSlice.
+-- IN: t1, first angle for the first hyperplane in startSlice;
+--     t2, second angle for the second hyperplane in startSlice;
+--     startSlice, coefficients of two hyperplanes.
+-- OUT: coefficients of a rotated startSlice.
+    c := numColumns(startSlice);
+    rotMatrix1 := rotationMatrix2D(c,0,1,t1);
+    rotMatrix2 := rotationMatrix2D(c,1,2,t2);
+    row1 := startSlice^{0}*rotMatrix1;
+    row2 := startSlice^{1}*rotMatrix2;
+    return row1||row2;
+)
+--
+discretization1D = (F,a,b,n) -> (
+-- Evaluates the function F over n+1 equidistant points
+-- in the interval [a,b], including a and b, and returns 
+-- the point where F takes the minimal value.
+-- IN: F, a function in one variable;
+--     a, left bound of the interval [a,b];
+--     b, right bound of the interval [a,b];
+--     n, number of points in the interval [a,b].
+-- OUT: the point in the n equidistant points in [a,b]
+--      where F takes its minimal value.
+    range := for i to n list a+(b-a)*i/n;
+    functionValues := for x in range list F(x);
+    minValue := min(functionValues);
+    minPos := position(functionValues,a->(a==minValue)); 
+    return range_minPos;
+)
+discretization2D = (F,a1,b1,a2,b2,n) -> (
+-- Returns the slice with the largest number of real roots.
+    range1 := for i to n-1 list a1+(b1-a1)*i/n;
+    range2 := for i to n-1 list a2+(b2-a2)*i/n;
+    functionValues := flatten for x in range1 list for y in range2 list F(x,y);
+    minValue := min(functionValues);
+    posInList := position(functionValues,a->(a==minValue));
+    minPos := (posInList//n,posInList%n); 
+    return (range1_(minPos#0),range2_(minPos#1));
+)
+alternatingMinimization = (F,a1,b1,a2,b2,tol) -> (
+-- Applies the method of alternating minimization.
+-- EXAMPLE: myF = (x,y) -> x^2 + y^2
+--          minF = alternatingMinimization(myF,-1,1,-1,1,1.0e-4)
+    cOld := a1;
+    dOld := a2;
+    c:=a1+random(RR)*(b1-a1);
+    d:=a2+random(RR)*(b2-a2);
+    while abs(c - cOld) > tol and abs(d - dOld) > tol do (
+	Fc:=(y)->F(c,y);
+	dOld=d;
+	d=goldenSearch(Fc,a2,b2,tol);
+	Fd:=(x)->F(x,d);
+	cOld=c;
+	c=goldenSearch(Fd,a1,b1,tol);
+	);
+    return (c,d);
+)
+-----------------
+-- realSlice1D --
+-----------------
+realSlice1D = method(TypicalValue => List, 
+  Options => {searchNpoints => 20,
+              searchDelta => 0.1,
+              searchTolerance => 1.0e-4})
+realSlice1D(WitnessSet) := o -> (w) -> (
+-- Starting from the given one dimensional witness set,
+-- applies line search to find a real slice.
+-- IN: w, a witness set;
+--     searchNpoints (optional), number of points in the discretization;
+--     searchDelta (optional), 2*searchDelta is width of search interval;
+--     searchTolerance (optional), tolerance for the line search method.
+-- OUT: a slice where the number of real solutions was maximal.
+    startSlice := realPartMatrix(w.Slice);
+    costfun := (a) -> sliceCost(rotationOfSlice(a,startSlice), w);
+    amin := lineSearch (costfun, 0, 2*pi, o.searchTolerance, o.searchNpoints);
+    slcmin := rotationOfSlice(amin,startSlice);
+    return matrix2slice(slcmin,w)
+)
+-----------------
+-- realSlice2D --
+-----------------
+realSlice2D = method(TypicalValue => List, 
+  Options => {searchNpoints => 5,
+              searchDelta => 0.1,
+              searchTolerance => 1.0e-4})
+realSlice2D(WitnessSet) := o -> (w) -> (
+    startSlice := realPartMatrix(w.Slice);
+    costfun := (a,b) -> sliceCost(changeOfSlice2D(a,b,startSlice),w);
+    (min1,min2) := discretization2D(costfun,0,2*pi,0,2*pi,o.searchNpoints);
+    a1 := min1 - o.searchDelta;
+    b1 := min1 + o.searchDelta;
+    a2 := min2 - o.searchDelta;
+    b2 := min2 + o.searchDelta;
+    tol := o.searchTolerance;
+    (min1,min2) = alternatingMinimization(costfun,a1,b1,a2,b2,tol);
+    slcmin := changeOfSlice2D(min1,min2,startSlice);
+    return matrix2slice(slcmin,w)
+)
+
 --##########################################################################--
 -- DOCUMENTATION
 --##########################################################################--
@@ -1527,10 +1769,6 @@ zeroFilter (List,ZZ,RR) := (sols,k,tol) -> (
 beginDocumentation()
 
 load "./PHCpack/PHCpackDoc.m2";
-
-
-
-
 
 --##########################################################################--
 -- TESTS

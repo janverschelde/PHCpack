@@ -70,8 +70,11 @@ doc ///
       Configuration=>{"path"=>"C:/cygwin/PHC/","PHCexe"=>"./phc"}) 
 
     {\bf 2.} If the package SimpleDoc is not found when 
-   installing {\tt PHCpack.m2}, see questions and answers 6, 7, and 8 
-   on the Macaulay2 web site.
+    installing {\tt PHCpack.m2}, see questions and answers 6, 7, and 8 
+    on the Macaulay2 web site.
+
+    {\bf 3.} The current version 1.8 of PHCpack.m2 was developed with version 
+    1.9 of Macaulay2 and with version 2.4.17 of phc.
 ///;
 
 -------------
@@ -463,8 +466,9 @@ doc ///
   Usage
     mv = mixedVolume(S) 
     (mv,sv) = mixedVolume(S,StableMixedVolume => true)  
-    (mv,q,qsols) = mixedVolume(S,StartSystem => true)     
-    (mv,sv,q,qsols) = mixedVolume(S,StableMixedVolume => true, StartSystem => true)
+    (mv,q,qsols) = mixedVolume(S,StartSystem => true)
+    (mv,sv,q,qsols) = mixedVolume(S,StableMixedVolume => true,StartSystem => true)
+    (mv,q,qsols) = mixedVolume(S,StartSystem => true,numThreads=4)
   Inputs
     S:List
       whose entries are the polynomials of a square system
@@ -537,6 +541,64 @@ doc ///
     StartSystem
 ///;
 
+-- general options
+
+doc ///
+  Key
+    randomSeed
+  Headline
+    seed for the random number generators
+  Description
+    Text
+      To avoid singularities during complex path following,
+      the homotopy methods use a random constant.
+      Different runs with solveSystem, trackPaths,
+      or mixedVolume (with StartSystem set to true) may
+      therefore lead to the solutions listed in a different order.
+      Fixing the value of randomSeed leads to reproducible runs.
+///;
+
+doc ///
+  Key
+    computingPrecision
+  Headline
+    flag to switch to double double or quad double precision
+  Description
+    Text
+      By default, all computations occur in hardward double precision.
+      While this precision could be large enough to obtain accurate
+      results, for larger problems, one may need to increase the
+      precision to double double or to quad double precision.
+      
+      Setting the value of computingPrecision to 2 changes the
+      precision in the path trackers to double double.
+
+      Setting the value of computingPrecision to 4 changes the
+      precision in the path trackers to quad double.
+
+      To compensate for the cost overhead of the higher precision,
+      it is useful to run the multithreaded versions of the path
+      trackers, see the option numThreads.
+///;
+
+doc ///
+  Key
+    interactive
+  Headline
+    flag to run phc -p or phc -m in interactive mode
+  Description
+    Text
+      There are too many options for the path trackers in phc -p
+      to wrap them properly within the trackPaths() method.
+      With interactive turned on, the user can tune all parameters
+      of the path trackers, in the same way as running phc -p.
+
+      The option interactive is also supported to run the
+      polyhedral homotopies to solve random coefficient systems
+      with phc -c, in the mixedVolume function with the option
+      StartSystem set to true.
+///;
+
 -- options for mixedVolume
 
 doc ///
@@ -597,6 +659,27 @@ doc ///
 
       The output file of {\tt phc} contains timings for the mixed volume
       and provides details about the mixed-cell configuration.
+///;
+
+doc ///
+  Key
+    [mixedVolume,numThreads]
+  Headline
+    option to set the number of threads when solving a start system
+  Usage
+    solveSystem(...,StartSystems=>true,numThreads=>ZZ)
+  Description
+    Text
+      Use {\tt numThreads=>4} to run the path trackers with 4 threads.
+///;
+
+doc ///
+  Key
+    [mixedVolume,interactive]
+  Headline
+    option to switch to the interactive mode of phc -m
+  Usage
+    solveSystem(...,interactive=>true)
 ///;
 
 -------------------
@@ -858,6 +941,9 @@ doc ///
   Usage
     solveSystem(S)
     solveSystem(S,Verbose=>true)
+    solveSystem(S,numThreads=>4)
+    solveSystem(S,computingPrecision=>2)
+    solveSystem(S,randomSeed=>12345)
   Inputs
     S:List
       contains a zero-dimensional system of polynomials with complex
@@ -940,6 +1026,44 @@ doc ///
 
       The output file of {\tt phc} contains timings for the stages
       in the solver.
+///;
+
+doc ///
+  Key
+    [solveSystem,computingPrecision]
+  Headline
+    option to specify the working precision
+  Usage
+    solveSystem(...,computingPrecision=>ZZ)
+  Description
+    Text
+      Use {\tt computingPrecision=>2} for double double precision.
+
+      Use {\tt computingPrecision=>4} for quad double precision.
+///;
+
+doc ///
+  Key
+    [solveSystem,numThreads]
+  Headline
+    option to set the number of threads
+  Usage
+    solveSystem(...,numThreads=>ZZ)
+  Description
+    Text
+      Use {\tt numThreads=>4} to run the path trackers with 4 threads.
+///;
+
+doc ///
+  Key
+    [solveSystem,randomSeed]
+  Headline
+    option to set the seed of the random number generators
+  Usage
+    solveSystem(...,randomSeed=>ZZ)
+  Description
+    Text
+      Use {\tt randomSeed=>12345} to set the seed to 12345.
 ///;
 
 -------------------------
@@ -1298,19 +1422,6 @@ doc ///
 
 doc ///
   Key
-    interactive
-  Headline
-    flag to run phc -p in interactive mode
-  Description
-    Text
-      There are too many options for the path trackers in phc -p
-      to wrap them properly within the trackPaths() method.
-      With interactive turned on, the user can tune all parameters
-      of the path trackers, in the same way as running phc -p.
-///;
-
-doc ///
-  Key
     [trackPaths,interactive]
   Headline
     Option to run phc -p in interactive mode.
@@ -1394,4 +1505,210 @@ doc ///
   SeeAlso
     refineSolutions
     nonZeroFilter      
+///;
+
+---------------------
+-- intersectSlice  --
+---------------------
+
+doc ///
+  Key 
+    intersectSlice
+    (intersectSlice,WitnessSet,List)
+  Headline
+    intersects a witness set by a slice
+  Usage
+    fSols = intersectSlice(w, slice)
+  Inputs
+    w:WitnessSet
+      a witness set for a solution set
+    slice:List
+      a list of linear equations
+  Outputs
+    fSols:List
+      solutions that satisfy w.Equations and the equations in the slice
+  Description
+    Text
+      
+      A typical application is to find solutions for slices with
+      real coefficients.
+    
+    Example
+      R=CC[a,b,c,d];
+      M=matrix for i to 2 list for j to 3 list random(1,R)+random(0,R);
+      I=minors(3,M);
+      f=flatten entries gens I;
+      (w,ns) = topWitnessSet(f,2);
+      slcmat = matrix applyTable (entries w.Slice, x->1_CC*realPart x);
+      Rtwo = ring w.Equations;
+      X = transpose matrix {gens Rtwo | {1_CC}};
+      slcRR = flatten entries (promote(slcmat,Rtwo) * X);
+      fsols = intersectSlice(w,slcRR)
+    
+  SeeAlso
+    topWitnessSet
+///;
+
+------------------
+-- realSlice1D  --
+------------------
+
+doc ///
+  Key 
+    realSlice1D
+    (realSlice1D, WitnessSet)
+  Headline
+    computes a real slice for a one dimensional witness set
+  Usage
+    slc = realSlice1D(w)
+  Inputs
+    w:WitnessSet
+      a witness set for a solution set
+  Outputs
+    slc:List
+      list of linear equations with the largest number of real solutions
+  Description
+    Text
+      
+      A real slice is a set of linear equations with the largest number
+      of real solutions of the equations for a given witness set.
+    
+    Example
+      R = CC[x,y,z];
+      twisted = {z^2-y, y*z-x, y^2-x*z};
+      (w, ns) = topWitnessSet(twisted, 1);
+      slc = realSlice1D(w);
+      solsRR = intersectSlice(w,slc)
+      for i to #solsRR-1 do print solsRR_i
+    
+  SeeAlso
+    intersectSlice
+///;
+
+------------------
+-- realSlice2D  --
+------------------
+
+doc ///
+  Key 
+    realSlice2D
+    (realSlice2D, WitnessSet)
+  Headline
+    computes a real slice for a two dimensional witness set
+  Usage
+    slc = realSlice2D(w)
+  Inputs
+    w:WitnessSet
+      a witness set for a solution set
+  Outputs
+    slc:List
+      list of linear equations with the largest number of real solutions
+  Description
+    Text
+      
+      A real slice is a set of linear equations with the largest number
+      of real solutions of the equations for a given witness set.
+    
+    Example
+      R = CC[x,y,z];
+      paraboloid = {z - x^2 - y^2};
+      (w, ns) = topWitnessSet(paraboloid, 2);
+      slc = realSlice2D(w, searchNpoints=>5);
+      solsRR = intersectSlice(w,slc)
+      for i to #solsRR-1 do print solsRR_i
+    
+  SeeAlso
+    intersectSlice
+///;
+
+doc ///
+  Key
+    searchNpoints
+  Headline
+    option of realSlice1D
+  Description
+    Text
+      Before the line search, a discretization of the range of the slices
+      is computed.  The value of searchNpoints sets the number of equidistant
+      points in this range of slices.
+///;
+
+doc ///
+  Key
+    [realSlice1D,searchNpoints]
+  Headline
+    option of realSlice1D
+  Usage
+    realSlice1D(...,searchNpoints=>Number)
+///;
+
+doc ///
+  Key
+    [realSlice2D,searchNpoints]
+  Headline
+    option of realSlice2D
+  Usage
+    realSlice2D(...,searchNpoints=>Number)
+///;
+
+doc ///
+  Key
+    searchDelta
+  Headline
+    option of realSlice1D
+  Description
+    Text
+      In the line search we need to set the width of the search interval.
+      After a discretization, the golden section search method is applied
+      to the interval [p - searchDelta, p + searchDelta], where p is the
+      point where the minimum value after the discretization was found.
+///;
+
+doc ///
+  Key
+    [realSlice1D,searchDelta]
+  Headline
+    option of realSlice1D
+  Usage
+    realSlice1D(...,searchDelta=>Number)
+///;
+
+doc ///
+  Key
+    [realSlice2D,searchDelta]
+  Headline
+    option of realSlice2D
+  Usage
+    realSlice2D(...,searchDelta=>Number)
+///;
+
+doc ///
+  Key
+    searchTolerance
+  Headline
+    option of realSlice1D
+  Description
+    Text
+      The golden section search method stops when the width of the current
+      interval which contains the minimum is smaller than searchTolerance.
+      For unimodal functions, searchTolerance will be the bound on the
+      accuracy of the location of the minimum.
+///;
+
+doc ///
+  Key
+    [realSlice1D,searchTolerance]
+  Headline
+    option of realSlice1D
+  Usage
+    realSlice1D(...,searchTolerance=>Number)
+///;
+
+doc ///
+  Key
+    [realSlice2D,searchTolerance]
+  Headline
+    option of realSlice2D
+  Usage
+    realSlice2D(...,searchTolerance=>Number)
 ///;
