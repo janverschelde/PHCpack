@@ -1,4 +1,4 @@
-phcpy 0.4.6 offers a simple Python interface to PHCv2.4.17
+phcpy 0.4.7 offers a simple Python interface to PHCv2.4.18
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -55,6 +55,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.4.7 : 2016-05-26 : bug fix in cascade of homotopies
 0.4.6 : 2016-05-21 : improved Littlewood-Richardson homotopy interface
 0.4.5 : 2016-05-11 : bug fix for stable semi-mixed cells
 0.4.4 : 2016-04-30 : function to filter real solutions, better documentation
