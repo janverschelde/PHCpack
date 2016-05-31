@@ -369,90 +369,95 @@ global optimization, and computational physics:
     Mechatronics and Automation*, August 5-8, 2007, Harbin, China.
     Pages 2472-2477, 2007.
 
-38. Hamadi Jamali, Tokunbo Ogunfunmi:
+38. Libin Jiao, Bo Dong, Jintao Zhang, and Bo Yu:
+    **Polynomial Homotopy Methods for the Sparse Interpolation Problem 
+    Part I: Equally Spaced Sampling**.
+    *SIAM J. Numer. Anal.* 54(1): 462-480, 2016.
+
+39. Hamadi Jamali, Tokunbo Ogunfunmi:
     **Stationary points of the finite length constant modulus optimization**.
     *Signal Processing* 82(4): 625-641, 2002.
 
-39. Bjorn Johansson, Magnus Oskarsson, and Kalle Astrom:
+40. Bjorn Johansson, Magnus Oskarsson, and Kalle Astrom:
     **Structure and motion estimation from complex features
     in three views**.
     In the Online ICVGIP-2002 Proceedings
     (Indian Conference on Computer Vision, Graphics and Image Processing).
 
-40. M. Kara-Zaitri, D. Arzelier, and C. Louembet:
+41. M. Kara-Zaitri, D. Arzelier, and C. Louembet:
     **Mixed iterative algorithm for solving optimal implusive time-fixed
     rendezvous problem**.
     *American Institute of Aeronautics and Astronautics Guidance, Navigation,
     and Control Conference*, Toronto, Canada, 02-05 August 2010.
 
-41. P.U. Lamalle, A. Messiaen, P. Dumortier, F. Durodie, M. Evrard, F. Louche:
+42. P.U. Lamalle, A. Messiaen, P. Dumortier, F. Durodie, M. Evrard, F. Louche:
     **Study of mutual coupling effects in the antenna array of the ICRH
     plug-in for ITER**. 
     *Fusion Engineering and Design* 74:359-365, 2005.
 
-42. E. Lee and C. Mavroidis:
+43. E. Lee and C. Mavroidis:
     **Solving the Geometric Design Problem of Spatial
     3R Robot Manipulators Using Polynomial Continuation**.
     *Journal of Mechanical Design, Transactions of the ASME* 124(4):652-661,
     2002.
 
-43. E. Lee and C. Mavroidis:
+44. E. Lee and C. Mavroidis:
     **Four Precision Points Geometric Design of Spatial 3R Manipulators**.
     In the *Proceedings of the 11th World Congress in Mechanism and Machine 
     Sciences*, August 18-21, 2003, Tianjin, China.
     China Machinery Press, edited by Tian Huang.
 
-44. E. Lee and C. Mavroidis:
+45. E. Lee and C. Mavroidis:
     **Geometric Design of 3R Manipulators for
     Reaching Four End-Effector Spatial Poses**.
     *International Journal for Robotics Research*, 23(3):247-254, 2004.
 
-45. E. Lee, C. Mavroidis, and J. Morman:
+46. E. Lee, C. Mavroidis, and J. Morman:
     **Geometric Design of Spatial 3R Manipulators**.
     In *Proceedings of the 2002 NSF Design, Service, and
     Manufacturing Grantees and Research Conference*, San Juan, Puerto Rico,
     January 7-10, 2002.
 
-46. Dimitri Leggas and Oleg V. Tsodikov:
+47. Dimitri Leggas and Oleg V. Tsodikov:
     **Determination of small crystal structures from a minimum set of
     diffraction intensities by homotopy continuation**.
     *Acta Crystallographica Section A* 71(3): 319-324, 2015.
 
-47. Dawei Leng and Weidong Sun:
+48. Dawei Leng and Weidong Sun:
     **Finding All the Solutions of PnP Problem**.
     In *IST 2009 - International Workshop on Imaging Systems and Techniques*,
     Shenzhen, China, May 11-12, 2009.  Pages 348-352, IEEE, 2009.
 
-48. Anton Leykin:
+49. Anton Leykin:
     **Numerical Primary Decomposition**.
     In *Proceedings of ISSAC 2008*,
     edited by David Jeffrey, pages 165-164, ACM 2008.
 
-49. Anton Leykin and Frank Sottile:
+50. Anton Leykin and Frank Sottile:
     **Computing Monodromy via Parallel Homotopy Continuation**.
     In *Proceedings of the 2007 International
     Workshop on Parallel Symbolic Computation (PASCO'07)*, 
     pages 97-98, ACM 2007. (on CDROM)
 
-50. Anton Leykin and Frank Sottile:
+51. Anton Leykin and Frank Sottile:
     **Galois groups of Schubert problems via homotopy computation**.
     *Mathematics of Computation* 78: 1749-1765, 2009.
 
-51. Shaobai Li, Srinandan Dasmahapatra, and Koushik Maharatna:
+52. Shaobai Li, Srinandan Dasmahapatra, and Koushik Maharatna:
     **Dynamical System Approach for Edge Detection Using Coupled
     FitzHugh-Naguma Neurons**.
     *IEEE Transactions on Image Processing* 24(12), 5206-5219, 2015.
 
-52. Ross A. Lippert:
+53. Ross A. Lippert:
     **Fixing multiple eigenvalues by a minimal perturbation**.
     *Linear Algebra Appl.* 432(7): 1785-1817, 2010.
 
-53. M. Maniatis and O. Nachtmann:
+54. M. Maniatis and O. Nachtmann:
     **Stability and symmetry breaking in the general three-Higgs-double
     model**.
     *Journal of High Energy Physics* 2015:58, February 2015.
 
-54. Hyosang Moon and Nina P. Robson:
+55. Hyosang Moon and Nina P. Robson:
     **Design of spatial non-anthropomorphic articulated systems based on
     arm joint constraint kinematic data for human interactive robotics
     applications**. DETC2015-46530.  In the *Proceedings of the ASME 2015
@@ -460,7 +465,7 @@ global optimization, and computational physics:
     and Information in Engineering Conference*. IDETC/CIE 2015.
     August 2-5, 2015, Boston Massachusetts.
 
-55. Marc Moreno Maza, Greg Reid, Robin Scott, and Wenyuan Wu:
+56. Marc Moreno Maza, Greg Reid, Robin Scott, and Wenyuan Wu:
     **On Approximate Triangular Decompositions I. Dimension Zero**.
     In the *SNC 2005 Proceedings*.
     International Workshop on Symbolic-Numeric Computation.
@@ -468,158 +473,158 @@ global optimization, and computational physics:
     Edited by Dongming Wang and Lihong Zhi.
     Pages 250-275, 2005.
 
-56. Andrew J. Newell:
+57. Andrew J. Newell:
     **Transition to supermagnetism in chains of magnetosome crystals**.
     *Geochemistry Geophysics Geosystems* 10(11):1-19, 2009.
 
-57. M. Oskarsson, A. Zisserman and K. Astrom:
+58. M. Oskarsson, A. Zisserman and K. Astrom:
     **Minimal Projective Reconstruction for combinations of Points
     and Lines in Three Views**.
     In the *Electronic Proceedings of BMVC2002 - The 13th British Machine
     Vision Conference 2002*, pages 63 - 72.
 
-58. P.A. Parrilo and B. Sturmfels.
+59. P.A. Parrilo and B. Sturmfels.
     **Minimizing polynomial functions**.
     In S. Basu and L. Gonzalez-Vega, editors,
     *Algorithmic and quantitative real algebraic geometry*,
     volume 60 of *DIMACS Series in Discrete Mathematics and 
     Theoretical Computer Science*, pages 83-99. AMS, 2003.
 
-59. Alba Perez and J.M. McCarthy:
+60. Alba Perez and J.M. McCarthy:
     **Dual Quaternion Synthesis of Constrained Robotic Systems**.
     *Journal of Mechanical Design* 126(3): 425-435, 2004.
 
-60. Nina Patarinsky-Robson, J. Michael McCarthy, and Irem Y. Tumer:
+61. Nina Patarinsky-Robson, J. Michael McCarthy, and Irem Y. Tumer:
     **The algebraic synthesis of a spatial TS chain for a prescribed
     acceleration task**.
     *Mechanism and Machine Theory* 43(10): 1268-1280, 2008.
 
-61. Nina Patarinsky-Robson, J. Michael McCarthy, and Irem Y. Tumer:
+62. Nina Patarinsky-Robson, J. Michael McCarthy, and Irem Y. Tumer:
     **Failure Recovery Planning for an Arm Mounted on an
     Exploratory Rover**.
     *IEEE Transactions on Robotics* 25(6):1448-1453, 2009.
 
-62. Jose Israel Rodriguez:
+63. Jose Israel Rodriguez:
     **Combinatorial excess intersection**.
     *Journal of Symbolic Computation* 68(2): 297-307, 2015.
 
-63. Roger E. Sanchez-Alonso, Jose-Joel Gonzalez-Barbosa, Eduardo
+64. Roger E. Sanchez-Alonso, Jose-Joel Gonzalez-Barbosa, Eduardo
     Castilo-Castaneda, and Jaime Gallardo-Alvarado:
     **Kinematic analysis of a novel 2(3-RUS) parallel manipulator**.
     *Robotica*, available on CJO2015.
 
-64. H. Schreiber, K. Meer, and B.J. Schmitt:
+65. H. Schreiber, K. Meer, and B.J. Schmitt:
     **Dimensional synthesis of planar Stephenson mechanisms for motion
     generation using circlepoint search and homotopy methods**.
     *Mechanism and Machine Theory* 37(7):717-737, 2002.
 
-65. Ben Shirt-Ediss, Ricard V. Sole, and Kepa Ruiz-Mirazo:
+66. Ben Shirt-Ediss, Ricard V. Sole, and Kepa Ruiz-Mirazo:
     **Emergent Chemical Behavior in Variable-Volume Protocells**.
     *Life* 5: 181-121, 2015.
 
-66. Frank Sottile:
+67. Frank Sottile:
     **Real Schubert Calculus: Polynomial systems and a conjecture
     of Shapiro and Shapiro**.
     *Experimental Mathematics* 9(2): 161-182, 2000.
 
-67. H. Stewenius and K. Astrom:
+68. H. Stewenius and K. Astrom:
     **Structure and Motion Problems for Multiple Rigidly Moving Cameras**.
     In *Computer Vision - ECCV 2004: 8th European Conference on
     Computer Vision, Prague, Czech Republic, May 11-14, 2004. 
     Proceedings, Part III*.  Edited by T. Pajdla and J. Matas.
     Lecture Notes in Computer Science 3023, pages 252-263, Springer, 2004.
 
-68. H.-J. Su and J.M. McCarthy:
+69. H.-J. Su and J.M. McCarthy:
     **Kinematic Synthesis of RPS Serial Chains**.
     In the *Proceedings of the ASME Design Engineering Technical
     Conferences* (CDROM).
     Paper DETC03/DAC-48813.  Chicago, IL, Sept. 02-06, 2003.
 
-69. H.-J. Su and J.M. McCarthy:
+70. H.-J. Su and J.M. McCarthy:
     **Synthesis of Compliant Mechanisms with Specified Equilibrium 
     Positions**. In the *Proceedings of the ASME International
     Design Engineering Technical Conferences*.
     Paper DETC 2005-85085.  Long Beach, CA, Sept. 24-28 2005.
 
-70. H.-J. Su and J.M. McCarthy:
+71. H.-J. Su and J.M. McCarthy:
     **Kinematic Synthesis of RPS Serial Chains for a Given Set of 
     Task Positions**.
     *Mechanism and Machine Theory* 40(7):757-775, 2005
 
-71. H.-J. Su and J.M. McCarthy:
+72. H.-J. Su and J.M. McCarthy:
     **A Polynomial Homotopy Formulation of the Inverse Static Analysis of
     Planar Compliant Mechanisms**.
     *ASME Journal of Mechanical Design* 128(4): 776-786, 2006.
 
-72. H.-J. Su, C.W. Wampler, and J.M. McCarthy:
+73. H.-J. Su, C.W. Wampler, and J.M. McCarthy:
     **Geometric Design of Cylindric PRS Serial Chains**.
     *ASME Design Engineering Technical Conferences*,
     Chicago, IL, Sep 2-6, 2003.
 
-73. Attila Tanács and Joakim Lindblad and Nataša Sladoje and Zoltan Ka:
+74. Attila Tanács and Joakim Lindblad and Nataša Sladoje and Zoltan Ka:
     **Estimation of linear deformations of 2D and 3D fuzzy objects**.
     *Pattern Recognition* 48(4):1391-1403, 2015.
 
-74. N. Trawny, X.S. Zhou, K.X. Zhou, S.I. Roumeliotis:
+75. N. Trawny, X.S. Zhou, K.X. Zhou, S.I. Roumeliotis:
     **3D Relative Pose Estimation from Distance-Only Measurements**.
     In the *Proceedings of the 2007/IEEE/RSJ International Conference
     on intelligent Robots and Systems*. San Diego, CA, Oct 29-Nov 2, 2007,
     pages 1071-1078, IEEE, 2007.
 
-75. T. Turocy:
+76. T. Turocy:
     **Towards a black-box solver for finite games: Computing all equilibria
     with Gambit and PHCpack**.
     In *Software for Algebraic Geometry*, volume 148 of the IMA
     volumes in Mathematics and its Applications, edited by M.E. Stillman,
     N. Takayama, and J. Verschelde, pages 133-148, Springer-Verlag, 2008.
 
-76. Konstantin Usevich and Ivan Markovsky:
+77. Konstantin Usevich and Ivan Markovsky:
     **Structured low-rank approximation as a rational function
     minimization**.
     In 16th IFAC Symposium on System Identification Brussels, 
     11-13 Jul 2012, pages 722-727.
 
-77. C.W. Wampler:
+78. C.W. Wampler:
     **Isotropic coordinates, circularity and Bezout numbers:
     planar kinematics from a new perspective**.
     In the *Proceedings of the 1996 ASME Design Engineering Technical
     Conference*. Irvine, CA, Aug 18-22, 1996. Available on CD-ROM.
 
-78. Wenyuan Wu and Greg Reid:
+79. Wenyuan Wu and Greg Reid:
     **Symbolic-numeric computation of implicit Riquier bases for PDE**.
     In the *Proceedings of the 2007 International Symposium on Symbolic and
     Algebraic Computation*, edited by C.W. Brown, pages 377-385, ACM 2007.
 
-79. Jonathan Widger and Daniel Grosu:
+80. Jonathan Widger and Daniel Grosu:
     **Parallel Computation of Nash Equilibria in N-Player Games**.
     In the *Proceedings of the 12th IEEE International Conference
     on Computational Science and Engineering (CSE 2009)*,
     August 29-31, 2009, Vancouver, Canada, pages 209-215.
 
-80. F. Xie, G. Reid, and S. Valluri:
+81. F. Xie, G. Reid, and S. Valluri:
     **A numerical method for the
     one dimensional action functional for FBG structures**.
     *Can J. Phys.* 76: 1-21, 2002.
 
-81. Hong Bing Xin, Qiang Huang, and Yueqing Yu:
+82. Hong Bing Xin, Qiang Huang, and Yueqing Yu:
     **Position and Orientation Analyses of Mechanism by PHCpack Solver
     of Homotopy Continuation**.
     *Applied Mechanics and Materials* 152-254: 1779-1784, 2012.
 
-82. K. Yang and R. Orsi:
+83. K. Yang and R. Orsi:
     **Static output feedback pole placement via a trust region approach**.
     *IEEE Transactions on Automatic Control* 52(11): 2146-2150, 2007.
 
-83. Yan Yang, Yao Zhang, Fangxing Li, and Haoyong Chen:
+84. Yan Yang, Yao Zhang, Fangxing Li, and Haoyong Chen:
     **Computing All Nash Equilibria of Multiplayer Games in Electricity
     Markets by Solving Polynomial Equations**.
     *IEEE Transactions on Power Systems* 27(1): 81-91, 2012.
 
-84. Jun Zhang and Mohan Sarovar:
+85. Jun Zhang and Mohan Sarovar:
     **Identification of open quantum systems from observable time traces**.
     *Physical Review A* 91, 052121, 2015.
 
-85. Xun S. Zhou and Stergios I. Roumeliotis:
+86. Xun S. Zhou and Stergios I. Roumeliotis:
     **Determining 3-D Relative Transformations for Any Combination of
     Range and Bearing Measurements.**
     *IEEE Transactions on Robotics* 29(2):458-474, 2013.
@@ -627,71 +632,75 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-86. T. Gao and T.Y. Li:
+87. T. Gao and T.Y. Li:
     **Mixed volume computation via linear programming**.
     *Taiwanese Journal of Mathematics* 4(4): 599-619, 2000.
 
-87. T. Gao and T.Y. Li:
+88. T. Gao and T.Y. Li:
     **Mixed volume computation for semi-mixed systems**.
     *Discrete Comput. Geom.* 29(2):257-277, 2003.
 
-88. L. Granvilliers:
+89. L. Granvilliers:
     **On the Combination of Interval Constraint Solvers**.
     *Reliable Computing* 7(6): 467-483, 2001.
 
-89. S. Kim and M. Kojima:
+90. Jonathan D. Hauenstein, Andrew J. Sommese, and Charles W. Wampler:
+    **Regeneration Homotopies for Solving Systems of Polynomials**
+    *Mathematics of Computation* 80(273): 345-377, 2011.
+
+91. S. Kim and M. Kojima:
     **Numerical Stability of Path Tracing in Polyhedral Homotopy 
     Continuation Methods**.
     *Computing* 73(4): 329-348, 2004.
 
-90. Y. Lebbah, C. Michel, M. Rueher, D. Daney, and J.P. Merlet:
+92. Y. Lebbah, C. Michel, M. Rueher, D. Daney, and J.P. Merlet:
     **Efficient and safe global constraints for handling numerical
     constraint systems**.
     *SIAM J. Numer. Anal.* 42(5):2076-2097, 2005.
 
-91. T.L. Lee, T.Y. Li, and C.H. Tsai:
+93. T.L. Lee, T.Y. Li, and C.H. Tsai:
     **HOM4PS-2.0: a software package for solving polynomial systems
     by the polyhedral homotopy continuation method**.
     *Computing* 83(2-3): 109-133, 2008.
 
-92. Anton Leykin:
+94. Anton Leykin:
     **Numerical Algebraic Geometry**.
     *The Journal of Software for Algebra and Geometry*
     volume 3, pages 5-10, 2011. 
 
-93. T.Y. Li and X. Li:
+95. T.Y. Li and X. Li:
     **Finding Mixed Cells in the Mixed Volume Computation**.
     *Foundations of Computational Mathematics* 1(2): 161-181, 2001.
 
-94. T.Y. Li, X. Wang, and M. Wu:
+96. T.Y. Li, X. Wang, and M. Wu:
     **Numerical Schubert Calculus by the Pieri Homotopy Algorithm**.
     *SIAM J. Numer Anal.* 40(2): 578-600, 2002.
 
-95. J.M. Porta, L. Ros, T. Creemers, and F. Thomas:
+97. J.M. Porta, L. Ros, T. Creemers, and F. Thomas:
     **Box approximations of planar linkage configuration spaces**.
     *Journal of Mechanical Design* 129(4):397-405, 2007.
 
-96. Laurent Sorber, Marc Van Barel, and Lieven De Lathauwer:
+98. Laurent Sorber, Marc Van Barel, and Lieven De Lathauwer:
     **Numerical solution of bivariate and polyanalytic polynomial systems**.
     *SIAM J. Numer. Anal.* 52(4):1551-1572, 2014.
 
-97. Yang Sun, Yu-Hui Tao, Feng-Shan Bai:
+99. Yang Sun, Yu-Hui Tao, Feng-Shan Bai:
     **Incomplete Groebner basis as a preconditioner for polynomial systems**.
     *Journal of Computational and Applied Mathematics* 226(1):2-9, 2009.
 
 PHCpack was used to develop new homotopy algorithms:
 
-98. Bo Dong, Bo Yu, and Yan Yu:
-    **A symmetric and hybrid polynomial system solving method for mixed
-    trigonometric polynomial systems**.
-    *Mathematics of Computation* 83(288): 1847-1868, 2014.
+100. Bo Dong, Bo Yu, and Yan Yu:
+     **A symmetric and hybrid polynomial system solving method for mixed
+     trigonometric polynomial systems**.
+     *Mathematics of Computation* 83(288): 1847-1868, 2014.
 
-99. Bo Yu and Bo Dong:
-    **A hybrid polynomial system solving method for mixed
-    trigonometric polynomial systems**.
-    *SIAM J. Numer. Anal.* 46(3): 1503-1518, 2008.
+101. Bo Yu and Bo Dong:
+     **A hybrid polynomial system solving method for mixed
+     trigonometric polynomial systems**.
+     *SIAM J. Numer. Anal.* 46(3): 1503-1518, 2008.
 
-100. Xuping Zhang, Jintao Zhang, and Bo Yu:
+102. Xuping Zhang, Jintao Zhang, and Bo Yu:
      **Eigenfunction expansion method for multiple solutions
      of semilinear elliptic equations with polynomial nonlinearity**>
      *SIAM J. Numer. Anal.* 51(5): 2680-2699, 2013.
@@ -700,7 +709,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-101. B. Sturmfels:
+103. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 

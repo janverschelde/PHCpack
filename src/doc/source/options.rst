@@ -5,6 +5,13 @@ For many small to moderate size problems,
 the most convenient way to get an answer of phc is to
 call the blackbox solver with the option -b.
 
+phc --version : displays the current version string
+---------------------------------------------------
+
+Typing at the command prompt ``phc --version`` displays
+the :index:`version string` which includes the current :index:`version number`
+and the :index:`release date`.
+
 phc -0 : random numbers with fixed seed for repeatable runs    
 -----------------------------------------------------------
 
