@@ -1,3 +1,5 @@
+Thu 2 Jun 2016 : new module dashboard.py for GUI in PHCpy3, updated setup.py.
+
 Thu 26 May 2016 : prepared version 0.4.7 of phcpy.
 
 Sun 22 May 2016 : added lrhomprob.py to the PHCpy3/examples directory.
