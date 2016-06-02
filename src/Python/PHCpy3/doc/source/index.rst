@@ -18,6 +18,7 @@ phcpy Documentation Contents
    examfams
    numschub
    newtopes
+   dashboard
    phcbwulf
    modphcpy2c3
    about
