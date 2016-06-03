@@ -1,5 +1,6 @@
 Fri 3 Jun 2016 : added a SolveButton to PHCpy3/phcpy/dashboard.py, which 
   provides a very basic GUI to the blackbox solver.  Updated for python2.
+  Added documentation about the GUI to the blackbox solver, with screen shot.
 
 Thu 2 Jun 2016 : new module dashboard.py for GUI in PHCpy3, updated setup.py;
   did the same for PHCpy2, the python2 version of phcpy.
