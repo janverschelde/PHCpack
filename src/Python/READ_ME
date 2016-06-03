@@ -1,4 +1,4 @@
-phcpy 0.4.7 offers a simple Python interface to PHCv2.4.18
+phcpy 0.4.8 offers a simple Python interface to PHCv2.4.19
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -36,6 +36,7 @@ The directory PHCpy3 contains the version of phcpy for Python 3.5.
 file name               : short description
 ------------------------------------------------------------------------------
 examples.py             : some interesting benchmark examples
+dashboard.py            : prototypes a graphical user interface
 families.py             : a couple of families of systems
 interface.py            : load/store data to C interface with PHCpack
 maps.py                 : monomial maps as solutions of binomials
@@ -55,6 +56,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.4.8 : 2016-06-03 : new module dashboard to prototype GUI with Tkinter
 0.4.7 : 2016-05-26 : bug fix in cascade of homotopies
 0.4.6 : 2016-05-21 : improved Littlewood-Richardson homotopy interface
 0.4.5 : 2016-05-11 : bug fix for stable semi-mixed cells

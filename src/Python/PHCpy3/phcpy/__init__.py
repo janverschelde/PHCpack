@@ -46,6 +46,8 @@ schubert
 polytopes
    functions to work with Newton polytopes, to compute mixed volumes
    of Newton polytopes, given by tuples of support sets.
+dashboard
+   prototype of a graphical user interface with Tkinter
 phcwulf
    defines a simple client/server interaction to solve random trinomials.
 
@@ -93,4 +95,4 @@ except:
     print('Is the phcpy2c3.so not suited for this platform?')
 
 # The version number is defined as a data attribute.
-__version__ = '0.4.7'
+__version__ = '0.4.8'
