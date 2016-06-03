@@ -650,7 +650,7 @@ procedure Dispatch is
   begin
    -- put_line("arg = " & arg);
     if arg = "--help" then
-      put_line(arg & " not implemented yet.");
+       Greeting_Banners.show_help;
     elsif arg = "--version" then
       if argc = 1 then
         put_line(Greeting_Banners.Version);
