@@ -12,6 +12,13 @@ Typing at the command prompt ``phc --version`` displays
 the :index:`version string` which includes the current :index:`version number`
 and the :index:`release date`.
 
+phc --help : writes helpful information to screen
+-------------------------------------------------
+
+Typing at the command prompt ``phc --help`` provides some 
+:index:`help` to get started with the quickest use, that is:
+with the blackbox solver.
+
 phc -0 : random numbers with fixed seed for repeatable runs    
 -----------------------------------------------------------
 

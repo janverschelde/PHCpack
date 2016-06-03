@@ -77,6 +77,53 @@ doc ///
     1.9 of Macaulay2 and with version 2.4.17 of phc.
 ///;
 
+-------------------
+-- versionNumber --
+-------------------
+
+doc ///
+  Key
+    versionNumber
+    (versionNumber,Nothing)
+  Headline
+    returns the version number and release date of phc
+  Usage
+    versionNumber(null)
+    versionNumber(,Verbose=>true)
+  Inputs
+    null:Nothing
+  Outputs
+    :Sequence
+      The sequence on return contains two strings.
+      The first string on return is the version number.
+      The second string on return is the release date.
+  Description
+    Text
+      The version number and release date of the executable phc
+      are important for consistency between the methods in this
+      package and preparing the input batch files for the executable phc.
+
+      A successful run of this method verifies whether the location
+      of the executable phc is in the execution path.
+
+    Example
+      v = versionNumber(null)
+      print v_0
+      print v_1
+///;
+
+doc ///
+  Key
+    [versionNumber,Verbose]
+  Headline
+    option to print the output of phc --version to screen
+  Usage
+    cascade(...,Verbose=>Boolean)
+  Description
+    Text
+      Use {\tt Verbose=>true} to see the output of {\tt phc --version}.
+///;
+
 -------------
 -- CASCADE --
 -------------
@@ -194,6 +241,22 @@ doc ///
     Option to specify the dimension to begin searching for positive dimensional components
   Usage
     numericalIrreducibleDecompositon(...,StartDimension=>ZZ)
+///;
+
+doc ///
+  Key
+    [numericalIrreducibleDecomposition,Verbose]
+  Headline
+    option to specify whether additional output is wanted 
+  Usage
+    numericalIrreducibleDecomposition(...,Verbose=>Boolean)
+  Description
+    Text
+      The value of the Verbose option (by default set to false)
+      is passed to the methods cascade and factorWitnessSet.
+
+      The output file of {\tt phc} contains timings for all stages
+      in the numerical irreducible decomposition.
 ///;
 
 -------------------------
@@ -1285,11 +1348,14 @@ doc ///
       (m,q,qsols) = mixedVolume(f,StartSystem=>true);
       fsols = trackPaths(f,q,qsols)
   SeeAlso
-    tDegree
     gamma
     interactive
+    intermediateSolutions
+    loadSettingsPath
+    saveSettingsPath
     numThreads
     seeProgress
+    tDegree
 ///;
 
 -- options for trackPaths
@@ -1443,6 +1509,77 @@ doc ///
 
       The output file of {\tt phc} contains timings for the path tracker
       and additional diagnostics for each path.
+///;
+
+doc ///
+  Key
+    intermediateSolutions
+  Headline
+    option of trackPaths to get all intermediate solutions on a path
+  Description
+    Text
+      By default, when this option is false, on return are only the
+      end points of each solution path.
+
+      With this option set to true, on return are all intermediate
+      solutions along a path.  For large systems and/or complicated
+      solution paths, the list on return can be rather large.
+///;
+
+doc ///
+  Key
+    [trackPaths,intermediateSolutions]
+  Headline
+    option to get all intermediate solutions on a path
+  Usage
+    trackPaths(...,intermediateSolutions=>Boolean)
+///;
+
+doc ///
+  Key
+    saveSettingsPath
+  Headline
+    option of trackPaths to save the settings for a reproducible rerun
+  Description
+    Text
+      By default, this option is set to the empty string.
+
+      If the user provides a string that is not the empty string,
+      then the settings of the path tracker are saved for a rerun.
+      Calling trackPaths, giving the same string to loadSettingsPath,
+      enables a reproducible run.
+///;
+
+doc ///
+  Key
+    [trackPaths,saveSettingsPath]
+  Headline
+    option to save the settings of the path trackers for a reproducible rerun
+  Usage
+    trackPaths(...,saveSettingsPath=>String)
+///;
+
+doc ///
+  Key
+    loadSettingsPath
+  Headline
+    option of trackPaths to load the settings for a reproducible rerun
+  Description
+    Text
+      By default, this option is set to the empty string.
+
+      To apply the option, the user should give as string the argument
+      used for the option saveSettingsPath.
+      With this option, one gets a reproducible run.
+///;
+
+doc ///
+  Key
+    [trackPaths,loadSettingsPath]
+  Headline
+    option to load the settings of the path trackers for a reproducible rerun
+  Usage
+    trackPaths(...,loadSettingsPath=>String)
 ///;
 
 ----------------
