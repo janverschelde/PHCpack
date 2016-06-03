@@ -1,9 +1,9 @@
 """
-This module develops a graphical user interface to phcpy.
+This module prototypes a graphical user interface to phcpy.
 """
 
 from tkinter import Tk, Message, Button, W, E, END, Label
-from tkinter import Entry, INSERT
+from tkinter import Entry, INSERT, Text
 from tkinter.font import Font
 from tkinter import StringVar
 
@@ -83,5 +83,93 @@ def testscroller():
     sols = solve(cyc5, silent=True)
     scrollsols(sols)
 
+def pols2str(pols):
+    """
+    Returns the input string to put into the text input widget 
+    for the string representations of polynomials in pols.
+    """
+    result = str(len(pols)) + '\n'
+    for pol in pols:
+        result = result + pol + '\n'
+    return result
+
+def str2pols(strp):
+    """
+    Returns the list of string representations of the polynomials
+    in the string strp.
+    """
+    data = strp.split('\n')
+    dim = int(data[0])
+    result = [data[k] for k in range(1, dim+1)]
+    return result
+
+class SolveButton(object):
+    """
+    Simple input/output text widget and button
+    graphical user interface to a solver.
+    """
+    def __init__(self, wdw, pols=[]):
+        """
+        The layout consists of two labels,
+        two text widgets and one button.
+        The optional input is the list of polynomials.
+        """
+        wdw.title('solve a polynomial system')
+        self.myft = Font(family="Courier New", size=12, weight="normal")
+        self.inputd = Text(wdw, width=80, height=10, font=self.myft)
+        if pols != []:
+            self.inputd.insert(END, pols2str(pols))
+        self.output = Text(wdw, width=80, height=20, font=self.myft)
+        self.submit = Button(wdw, text="solve the system", \
+            command=self.solve, font=self.myft)
+        self.inlbl = Label(wdw, text="enter a polynomial system:", \
+            font=self.myft)
+        self.outlbl = Label(wdw, text="scroll solutions with up/down arrows", \
+            font=self.myft)
+        self.inlbl.grid(row=0, column=0, sticky=W)
+        self.inputd.grid(row=1, column=0)
+        self.submit.grid(row=2, column=0, sticky=W+E)
+        self.output.grid(row=3, column=0)
+        self.outlbl.grid(row=4, column=0)
+
+    def solve(self):
+        """
+        Takes the data from the input text widget,
+        places the data into a list of polynomials,
+        calls the blackbox solver and displays the
+        solutions in the output text widget.
+        """
+        self.output.delete(1.0, END)
+        data = self.inputd.get(1.0, END)
+        self.output.insert(END, data)
+        psys = str2pols(data)
+        from phcpy.solver import solve
+        sols = solve(psys, silent=True)
+        self.output.insert(END, 'Computed %d solutions.\n\n' % len(sols))
+        cnt = 0
+        for sol in sols:
+            cnt = cnt + 1
+            self.output.insert(END, 'solution %d :\n' % cnt)
+            self.output.insert(END, sol + '\n')
+
+def launchsolver(pols=[]):
+    """
+    Instantiates a Tk object
+    and launches the event loop.
+    """
+    wdw = Tk()
+    SolveButton(wdw, pols)
+    wdw.mainloop()
+
+def testsolvebutton():
+    """
+    Solves the cyclic 5-roots problems
+    and launches the solve button.
+    """
+    from phcpy.families import cyclic
+    cyc5 = cyclic(5)
+    launchsolver(cyc5)
+
 if __name__ == "__main__":
-    testscroller()
+    # testscroller()
+    testsolvebutton()
