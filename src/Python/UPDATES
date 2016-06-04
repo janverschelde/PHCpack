@@ -1,3 +1,6 @@
+Sat 4 Jun 2016 : improved the documentation string of solutions.coordinates.
+  Add a coordinate plot to the dashboard.py.
+
 Fri 3 Jun 2016 : added a SolveButton to PHCpy3/phcpy/dashboard.py, which 
   provides a very basic GUI to the blackbox solver.  Updated for python2.
   Added documentation about the GUI to the blackbox solver, with screen shot.

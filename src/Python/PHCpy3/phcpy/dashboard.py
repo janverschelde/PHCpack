@@ -3,7 +3,7 @@ This module prototypes a graphical user interface to phcpy.
 """
 
 from tkinter import Tk, Message, Button, W, E, END, Label
-from tkinter import Entry, INSERT, Text
+from tkinter import Entry, INSERT, Text, Canvas
 from tkinter.font import Font
 from tkinter import StringVar
 
@@ -163,13 +163,98 @@ def launchsolver(pols=[]):
 
 def testsolvebutton():
     """
-    Solves the cyclic 5-roots problems
+    Solves the cyclic 5-roots problem
     and launches the solve button.
     """
     from phcpy.families import cyclic
     cyc5 = cyclic(5)
     launchsolver(cyc5)
 
+def windowsize(sols, idx):
+    """
+    Returns the minimal and maximal value of the
+    real and imaginary parts of the coordinate with index idx
+    of the list of solutions in sols, as a tuple of 4 values:
+    (realmin, realmax, imagmin, imagmax).
+    """
+    from phcpy.solutions import coordinates
+    (realmin, realmax, imagmin, imagmax) = (0, 0, 0, 0)
+    for sol in sols:
+        (names, values) = coordinates(sol)
+        val = values[idx]
+        if val.real < realmin:
+            realmin = val.real
+        if val.real > realmax:
+            realmax = val.real
+        if val.imag < imagmin:
+            imagmin = val.imag
+        if val.imag > imagmax:
+            imagmax = val.imag
+    return (realmin, realmax, imagmin, imagmax)
+
+class CoordinatePlot(object):
+    """
+    Shows the distribution of one coordinate of
+    a list of solutions in the complex plane.
+    """
+    def __init__(self, wdw, dim, sols, idx):
+        """
+        The layout is just a square canvas, of dimension dim.
+        The canvas represents the complex plane for the plot of
+        the coordinate defined by index idx of the list sols.
+        """
+        wdw.title('complex coordinate plot')
+        self.cnv = Canvas(wdw, width=dim, height=dim)
+        self.cnv.pack()
+        self.sols = sols
+        self.idx = idx
+        self.dim = dim
+        self.plot()
+
+    def plot(self):
+        """
+        Plots a coordinate of the list of solutions.
+        """
+        from phcpy.solutions import coordinates
+        dim = self.dim
+        self.cnv.create_line(0, dim/2, dim, dim/2) # x coordinate axis
+        self.cnv.create_line(dim/2, 0, dim/2, dim) # y coordinate axis
+        (realmin, realmax, imagmin, imagmax) = windowsize(self.sols, self.idx)
+        dimreal = max(abs(realmin), abs(realmax))
+        dimimag = max(abs(imagmin), abs(imagmax))
+        factor = dim/2 - 10 # the origin is at (dim/2, dim/2)
+        for sol in self.sols:
+            (names, values) = coordinates(sol)
+            val = values[self.idx]
+            xpt = dim/2 + (val.real/dimreal)*factor
+            ypt = dim/2 + (val.imag/dimimag)*factor
+            self.cnv.create_oval(xpt-3, ypt-3, \
+                xpt+3, ypt+3, fill='red')
+
+def plotcoordinate(sols, idx):
+    """
+    Instantiates CoordinatePlot with a Tk object
+    and launches the main event loop.
+    """
+    wdw = Tk()
+    CoordinatePlot(wdw, 400, sols, idx)
+    wdw.mainloop()
+
+def testcoordinateplot():
+    """
+    Solves the cyclic 5-roots problem,
+    prompts the user for an index of a coordinate,
+    and launches the plotcoordinate function.
+    """
+    from phcpy.families import cyclic
+    from phcpy.solver import solve
+    print('solving the cyclic 5-roots problem ...')
+    cyc5 = cyclic(5)
+    sols = solve(cyc5, silent=True)
+    idx = int(input('Give an index : '))
+    plotcoordinate(sols, idx)
+
 if __name__ == "__main__":
     # testscroller()
-    testsolvebutton()
+    # testsolvebutton()
+    testcoordinateplot()
