@@ -37,7 +37,12 @@ def str2complex(scn):
 def coordinates(sol):
     """
     Returns the coordinates of the solution
-    in the PHCpack solution string sol.
+    in the PHCpack solution string sol,
+    as a tuple of two lists: (names, values).
+    The list names contains the strings of the variable names.
+    The list values contains the complex values for the
+    coordinates of the solution.  The entries in the list
+    names correspond to the entries in the list values.
     """
     banner = sol.split("==")
     data = banner[0]
