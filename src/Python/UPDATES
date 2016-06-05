@@ -1,5 +1,6 @@
 Sat 4 Jun 2016 : improved the documentation string of solutions.coordinates.
-  Add a coordinate plot to the dashboard.py.
+  Add a coordinate plot to the dashboard.py.  Improved and augmented the
+  documentation in dashboard.rst, with a coordinate plot for cyclic 5-roots.
 
 Fri 3 Jun 2016 : added a SolveButton to PHCpy3/phcpy/dashboard.py, which 
   provides a very basic GUI to the blackbox solver.  Updated for python2.

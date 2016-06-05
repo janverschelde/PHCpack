@@ -49,6 +49,21 @@ the cyclic 5-roots problem.
     >>> from phcpy.dashboard import scrollsols
     >>> scrollsols(sols)
 
+making a coordinate plot of solutions
+-------------------------------------
+
+Solutions have coordinates in the complex plane.
+As in the case of the cyclic 5-roots problem,
+a plot of one of the coordinates in the complex plane
+reveals the pattern of the distribution in the roots:
+
+.. image:: ./c5x0plot.png
+
+The plot appears in a canvas widget, in the GUI launched
+by the function ``plotcoordinate(sols, idx)`` where ``sols``
+is the list of solutions and ``idx`` an index to a coordinate
+of the solutions.
+
 functions in the module dashboard
 ---------------------------------
 
