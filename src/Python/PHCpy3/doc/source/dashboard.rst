@@ -1,9 +1,10 @@
 a graphical user interface
 ==========================
 
-While phcpy is oriented towards command line interactive computing
-and running scripts, Tkinter provides tools for building
-a graphic user interface.  The goal of the module **dashboard**
+As a programmers interface, phcpy was developed in a Terminal window,
+of 80 characters wide and 40 lines long.  Python comes with Tkinter,
+which provides tools for building a graphical user interface.
+The goal of the module **dashboard**
 is to develop a graphical user interface to the methods of phcpy.
 
 solving with a click of a button
@@ -54,6 +55,18 @@ the cyclic 5-roots problem.
     >>> sols = solve(c5, silent=True)
     >>> from phcpy.dashboard import scrollsols
     >>> scrollsols(sols)
+
+The window that then pops up in shown in the figure 
+with caption :ref:`figc5scrollsols`
+Note that, because of different choices of random constants,
+the first solution will most likely be different at each run.
+
+.. _figc5scrollsols:
+
+.. figure:: ./c5scrollsols.png
+    :align: center
+
+    Scrolling the solutions of the cyclic 5-roots system.
 
 making a coordinate plot of solutions
 -------------------------------------
