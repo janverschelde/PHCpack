@@ -1,3 +1,6 @@
+Sun 5 Jun 2016 : improved dashboard.rst with figure (instead of image),
+  with captions and references.
+
 Sat 4 Jun 2016 : improved the documentation string of solutions.coordinates.
   Add a coordinate plot to the dashboard.py.  Improved and augmented the
   documentation in dashboard.rst, with a coordinate plot for cyclic 5-roots.

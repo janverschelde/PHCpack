@@ -14,9 +14,15 @@ of two text widgets: one for the input and another for the output;
 one button for the user to call the blackbox solver, and then two labels
 to document the functionality of the text widgets.
 
-A screen shot of a basic interface to the blackbox solver is shown below.
+A screen shot of a basic interface to the blackbox solver is shown
+in the figure with caption :ref:`figlaunchsolver`
 
-.. image:: ./launchsolver.png
+.. _figlaunchsolver:
+
+.. figure:: ./launchsolver.png
+    :align: center
+
+    Solving cyclic 5-roots with a click of a button.
 
 The code to launch this GUI is as follows.
 
@@ -55,9 +61,16 @@ making a coordinate plot of solutions
 Solutions have coordinates in the complex plane.
 As in the case of the cyclic 5-roots problem,
 a plot of one of the coordinates in the complex plane
-reveals the pattern of the distribution in the roots:
+reveals the pattern of the distribution in the roots,
+see the figure with caption :ref:`figc5x0plot`
 
-.. image:: ./c5x0plot.png
+.. _figc5x0plot:
+
+.. figure:: ./c5x0plot.png
+    :align: center
+
+    The first coordinate of cyclic 5-roots in the complex plane.
+
 
 The plot appears in a canvas widget, in the GUI launched
 by the function ``plotcoordinate(sols, idx)`` where ``sols``
