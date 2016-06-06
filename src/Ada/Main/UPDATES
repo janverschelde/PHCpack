@@ -1,3 +1,6 @@
+Mon 6 Jun 2016 : made a start at populating the -h and --help for the
+  online help on the options, in dispatch.adb and greeting_banners.
+
 Fri 3 Jun 2016 : added show_help to greeting_banners, for use in --help
   in the dispatch.adb.  Updated for version 2.4.19.
 

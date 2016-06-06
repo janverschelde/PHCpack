@@ -1,4 +1,4 @@
-with text_io;
+with text_io;                           use text_io;
 
 package body Greeting_Banners is
 
@@ -11,9 +11,6 @@ package body Greeting_Banners is
   end Version;
 
   procedure show_help is
-
-    use text_io;
-
   begin
     put_line("PHC stands for Polynomial Homotopy Continuation,");
     put_line("to numerically solve systems of polynomial equations.");
@@ -37,5 +34,30 @@ package body Greeting_Banners is
     put_line("To compensate for the higher cost of extended precision,");
     put_line("use multithreading, e.g.: phc -t4, to use 4 threads.");
   end show_help;
+
+  procedure help4eqnbyeqn is
+  begin
+    put_line("phc -a calls an equation-by-equation solver.");
+  end help4eqnbyeqn;
+
+  procedure help4blackbox is
+  begin
+    put_line("phc -b calls the blackbox solver.");
+  end help4blackbox;
+
+  procedure help4components is
+  begin
+    put_line("phc -c provides a numerical irreducible decomposition.");
+  end help4components;
+
+  procedure help4reduction is
+  begin
+    put_line("phc -d attempts to lower the degrees of the polynomials.");
+  end help4reduction;
+
+  procedure help4enumeration is
+  begin
+    put_line("phc -e gives homotopies for numerical Schubert calculus.");
+  end help4enumeration;
 
 end Greeting_Banners;

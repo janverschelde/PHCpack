@@ -60,7 +60,7 @@ procedure Dispatch is
 
 -- AVAILABLE OPTIONS :
 
-  options : constant string := "0asdpqmrvbekcxyzftwlgo-";
+  options : constant string := "0asdpqmrvbekcxyzftwlgo-h";
   -- 0 : zero seed for repeatable runs
   -- a : solve => equation-by-equation solver
   -- b : batch or black box processing
@@ -69,6 +69,7 @@ procedure Dispatch is
   -- e : enum => numerical Schubert calculus
   -- f : fac  => factor pure dimensional solution set into irreducibles
   -- g : good => check if the input is a system in the valid format
+  -- h : help => write information about a certain option
   -- k : feba => dynamic output feedback to control linear systems
   -- l : hyp  => witness set for hypersurface cutting with random line
   -- m : mvc  => mixed-volume computation
@@ -601,6 +602,22 @@ procedure Dispatch is
     when others => raise; -- put_line("exception caught ..."); raise;
   end Test_if_System_is_Good;
 
+  procedure General_Help ( opt : in character ) is
+
+  -- DESCRIPTION :
+  --   Writes general help about an option to screen.
+
+  begin
+    case opt is
+      when 'a' => Greeting_Banners.help4eqnbyeqn;
+      when 'b' => Greeting_Banners.help4blackbox;
+      when 'c' => Greeting_Banners.help4components;
+      when 'd' => Greeting_Banners.help4reduction;
+      when 'e' => Greeting_Banners.help4enumeration;
+      when others => Greeting_Banners.show_help;
+    end case;
+  end General_Help;
+
   procedure General_Dispatcher
               ( o1,o2,o3 : in character; f1,f2,f3 : in string ) is
 
@@ -615,12 +632,13 @@ procedure Dispatch is
       when 'c'    => Decomposition_Dispatcher(o2,f1,f2);
       when 'd'    => Reduction_Dispatcher(f1,f2);
       when 'e'    => Enumeration_Dispatcher(o2,f1,f2);
+      when 'f'    => Factorization_Dispatcher(f1,f2);
       when 'g'    => Test_if_System_is_Good(f1,f2);
+      when 'h'    => General_Help(o2);
       when 'm'    => Mixed_Volume_Dispatcher(o2,o3,f1,f2);
       when 'k'    => mainfeed(f1,f2);
       when 'l'    => Witness_Set_for_Hypersurface_Dispatcher(f1,f2);
       when 's'    => Scaling_Dispatcher(f1,f2);
-      when 'f'    => Factorization_Dispatcher(f1,f2);
       when 'o'    => put_line(welcome); put_line(symbban);
                      mainsymb(f1,f2);
       when 'p'    => Continuation_Dispatcher(o2,f1,f2,f3);
@@ -639,9 +657,10 @@ procedure Dispatch is
     when others => raise; -- put_line("exception in dispatch..."); raise;
   end General_Dispatcher;
 
-  procedure Write_PHCpack_Version is
+  procedure Help_Version_License is
 
   -- DESCRIPTION :
+  --   Deals with the options --help, --version, and --license.
   --   Writes the version string to file if file1 /= ""
   --   or to screen if file = "".
 
@@ -650,7 +669,17 @@ procedure Dispatch is
   begin
    -- put_line("arg = " & arg);
     if arg = "--help" then
-       Greeting_Banners.show_help;
+     -- put("argc = "); put(natural32(argc),1); new_line;
+      if argc = 1 then
+        Greeting_Banners.show_help;
+      else
+        declare
+          opt2 : constant string := Unix_Command_Line.Argument(2);
+        begin
+         -- put("The second option : "); put(opt2); new_line;
+          General_Help(opt2(2));
+        end;
+      end if;
     elsif arg = "--version" then
       if argc = 1 then
         put_line(Greeting_Banners.Version);
@@ -673,7 +702,7 @@ procedure Dispatch is
     else
       put_line(arg & " is not recognized.");
     end if;
-  end Write_PHCpack_Version;
+  end Help_Version_License;
 
   procedure Main is
 
@@ -690,7 +719,7 @@ procedure Dispatch is
   begin
     Read_Next_Option(posi,options,option1);
     if option1 = '-'
-     then Write_PHCpack_Version; return;
+     then Help_Version_License; return;
     end if;
     if option1 /= ' ' then
       Read_Next_Option(posi,options,option2);

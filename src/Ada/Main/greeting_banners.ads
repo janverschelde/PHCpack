@@ -65,4 +65,29 @@ package Greeting_Banners is
   -- DESCRIPTION :
   --   Writes essential information about the use of phc to screen.
 
+  procedure help4eqnbyeqn;
+
+  -- DESCRIPTION :
+  --   Writes information about the equation-by-equation solver.
+
+  procedure help4blackbox;
+
+  -- DESCRIPTION :
+  --   Writes information about the blackbox solver.
+
+  procedure help4components;
+
+  -- DESCRIPTION :
+  --   Writes information about the numerical irreducible decomposition.
+
+  procedure help4reduction;
+
+  -- DESCRIPTION :
+  --   Writes information about degree reduction.
+
+  procedure help4enumeration;
+
+  -- DESCRIPTION :
+  --   Writes information about numerical Schubert calculus.
+
 end Greeting_Banners;
