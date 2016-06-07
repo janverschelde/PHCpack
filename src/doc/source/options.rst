@@ -12,12 +12,23 @@ Typing at the command prompt ``phc --version`` displays
 the :index:`version string` which includes the current :index:`version number`
 and the :index:`release date`.
 
+phc --license : writes the license to screen
+--------------------------------------------
+
+PHCpack is free and open source software.
+You can redistribute the code and/or modify it under
+the GNU General Pulic License as published by
+the Free Software Foundation.
+
 phc --help : writes helpful information to screen
 -------------------------------------------------
 
 Typing at the command prompt ``phc --help`` provides some 
 :index:`help` to get started with the quickest use, that is:
 with the blackbox solver.
+
+To obtain help about the blackbox solver, type ``phc -b --help``
+or ``phc --help -b`` where the ``--help`` may be abbreviated by ``-h``.
 
 phc -0 : random numbers with fixed seed for repeatable runs    
 -----------------------------------------------------------

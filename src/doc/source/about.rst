@@ -80,7 +80,6 @@ PHCpack relies for its fast mixed volume computation on MixedVol
 and on QDlib for its double double and quad double arithmetic.
 Pointers to the literature are mentioned below.
 
-
 1. N. Bliss, J. Sommars, J. Verschelde and X. Yu:
    **Solving polynomial systems in the cloud with polynomial
    homotopy continuation.**
@@ -624,7 +623,11 @@ global optimization, and computational physics:
     **Identification of open quantum systems from observable time traces**.
     *Physical Review A* 91, 052121, 2015.
 
-86. Xun S. Zhou and Stergios I. Roumeliotis:
+86. Shiqiang Zhang, Shufang Zhang, and Yan Wan:
+    **Biorthogonal Wavelet Construction Using Homotopy Method**.
+    *Chinese Journal of Electronics* 24(4), pages 772-775, 2015.
+
+87. Xun S. Zhou and Stergios I. Roumeliotis:
     **Determining 3-D Relative Transformations for Any Combination of
     Range and Bearing Measurements.**
     *IEEE Transactions on Robotics* 29(2):458-474, 2013.
@@ -632,84 +635,84 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-87. T. Gao and T.Y. Li:
+88. T. Gao and T.Y. Li:
     **Mixed volume computation via linear programming**.
     *Taiwanese Journal of Mathematics* 4(4): 599-619, 2000.
 
-88. T. Gao and T.Y. Li:
-    **Mixed volume computation for semi-mixed systems**.
-    *Discrete Comput. Geom.* 29(2):257-277, 2003.
+#. T. Gao and T.Y. Li:
+   **Mixed volume computation for semi-mixed systems**.
+   *Discrete Comput. Geom.* 29(2):257-277, 2003.
 
-89. L. Granvilliers:
-    **On the Combination of Interval Constraint Solvers**.
-    *Reliable Computing* 7(6): 467-483, 2001.
+#. L. Granvilliers:
+   **On the Combination of Interval Constraint Solvers**.
+   *Reliable Computing* 7(6): 467-483, 2001.
 
-90. Jonathan D. Hauenstein, Andrew J. Sommese, and Charles W. Wampler:
-    **Regeneration Homotopies for Solving Systems of Polynomials**
-    *Mathematics of Computation* 80(273): 345-377, 2011.
+#. Jonathan D. Hauenstein, Andrew J. Sommese, and Charles W. Wampler:
+   **Regeneration Homotopies for Solving Systems of Polynomials**
+   *Mathematics of Computation* 80(273): 345-377, 2011.
 
-91. S. Kim and M. Kojima:
-    **Numerical Stability of Path Tracing in Polyhedral Homotopy 
-    Continuation Methods**.
-    *Computing* 73(4): 329-348, 2004.
+#. S. Kim and M. Kojima:
+   **Numerical Stability of Path Tracing in Polyhedral Homotopy 
+   Continuation Methods**.
+   *Computing* 73(4): 329-348, 2004.
 
-92. Y. Lebbah, C. Michel, M. Rueher, D. Daney, and J.P. Merlet:
-    **Efficient and safe global constraints for handling numerical
-    constraint systems**.
-    *SIAM J. Numer. Anal.* 42(5):2076-2097, 2005.
+#. Y. Lebbah, C. Michel, M. Rueher, D. Daney, and J.P. Merlet:
+   **Efficient and safe global constraints for handling numerical
+   constraint systems**.
+   *SIAM J. Numer. Anal.* 42(5):2076-2097, 2005.
 
-93. T.L. Lee, T.Y. Li, and C.H. Tsai:
-    **HOM4PS-2.0: a software package for solving polynomial systems
-    by the polyhedral homotopy continuation method**.
-    *Computing* 83(2-3): 109-133, 2008.
+#. T.L. Lee, T.Y. Li, and C.H. Tsai:
+   **HOM4PS-2.0: a software package for solving polynomial systems
+   by the polyhedral homotopy continuation method**.
+   *Computing* 83(2-3): 109-133, 2008.
 
-94. Anton Leykin:
-    **Numerical Algebraic Geometry**.
-    *The Journal of Software for Algebra and Geometry*
-    volume 3, pages 5-10, 2011. 
+#. Anton Leykin:
+   **Numerical Algebraic Geometry**.
+   *The Journal of Software for Algebra and Geometry*
+   volume 3, pages 5-10, 2011. 
 
-95. T.Y. Li and X. Li:
-    **Finding Mixed Cells in the Mixed Volume Computation**.
-    *Foundations of Computational Mathematics* 1(2): 161-181, 2001.
+#. T.Y. Li and X. Li:
+   **Finding Mixed Cells in the Mixed Volume Computation**.
+   *Foundations of Computational Mathematics* 1(2): 161-181, 2001.
 
-96. T.Y. Li, X. Wang, and M. Wu:
-    **Numerical Schubert Calculus by the Pieri Homotopy Algorithm**.
-    *SIAM J. Numer Anal.* 40(2): 578-600, 2002.
+#. T.Y. Li, X. Wang, and M. Wu:
+   **Numerical Schubert Calculus by the Pieri Homotopy Algorithm**.
+   *SIAM J. Numer Anal.* 40(2): 578-600, 2002.
 
-97. J.M. Porta, L. Ros, T. Creemers, and F. Thomas:
-    **Box approximations of planar linkage configuration spaces**.
-    *Journal of Mechanical Design* 129(4):397-405, 2007.
+#. J.M. Porta, L. Ros, T. Creemers, and F. Thomas:
+   **Box approximations of planar linkage configuration spaces**.
+   *Journal of Mechanical Design* 129(4):397-405, 2007.
 
-98. Laurent Sorber, Marc Van Barel, and Lieven De Lathauwer:
-    **Numerical solution of bivariate and polyanalytic polynomial systems**.
-    *SIAM J. Numer. Anal.* 52(4):1551-1572, 2014.
+#. Laurent Sorber, Marc Van Barel, and Lieven De Lathauwer:
+   **Numerical solution of bivariate and polyanalytic polynomial systems**.
+   *SIAM J. Numer. Anal.* 52(4):1551-1572, 2014.
 
-99. Yang Sun, Yu-Hui Tao, Feng-Shan Bai:
-    **Incomplete Groebner basis as a preconditioner for polynomial systems**.
-    *Journal of Computational and Applied Mathematics* 226(1):2-9, 2009.
+#. Yang Sun, Yu-Hui Tao, Feng-Shan Bai:
+   **Incomplete Groebner basis as a preconditioner for polynomial systems**.
+   *Journal of Computational and Applied Mathematics* 226(1):2-9, 2009.
 
 PHCpack was used to develop new homotopy algorithms:
 
-100. Bo Dong, Bo Yu, and Yan Yu:
+101. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
 
-101. Bo Yu and Bo Dong:
-     **A hybrid polynomial system solving method for mixed
-     trigonometric polynomial systems**.
-     *SIAM J. Numer. Anal.* 46(3): 1503-1518, 2008.
+#. Bo Yu and Bo Dong:
+   **A hybrid polynomial system solving method for mixed
+   trigonometric polynomial systems**.
+   *SIAM J. Numer. Anal.* 46(3): 1503-1518, 2008.
 
-102. Xuping Zhang, Jintao Zhang, and Bo Yu:
-     **Eigenfunction expansion method for multiple solutions
-     of semilinear elliptic equations with polynomial nonlinearity**>
-     *SIAM J. Numer. Anal.* 51(5): 2680-2699, 2013.
+#. Xuping Zhang, Jintao Zhang, and Bo Yu:
+   **Eigenfunction expansion method for multiple solutions
+   of semilinear elliptic equations with polynomial nonlinearity**>
+   *SIAM J. Numer. Anal.* 51(5): 2680-2699, 2013.
 
 Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-103. B. Sturmfels:
+104. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 
@@ -734,28 +737,28 @@ Their names, titles of PhD dissertation, and year of PhD are listed below:
    *Computing Dynamic Output Feedback Laws with Pieri Homotopies on a 
    Parallel Computer*, 2005.
 
-2. Ailing Zhao:
+#. Ailing Zhao:
    *Newton's Method with Deflation for Isolated Singularities
    of Polynomial Systems*, 2007.
 
-3. Yan Zhuang:
+#. Yan Zhuang:
    *Parallel Implementation of Polyhedral Homotopy Methods*, 2007.
 
-4. Kathy Piret:
+#. Kathy Piret:
    *Computing Critical Points of Polynomial Systems
    using PHCpack and Python*, 2008.
 
-5. Yun Guan:
+#. Yun Guan:
    *Numerical Homotopies for Algebraic Sets on a Parallel Computer*, 2010.
 
-6. Genady Yoffe:
+#. Genady Yoffe:
    *Using Parallelism to compensate for Extended Precision in Path 
    Tracking for Polynomial System Solving*, 2012.
 
-7. Danko Adrovic:
+#. Danko Adrovic:
    *Solving Polynomial Systems with Tropical Methods*, 2012.
 
-8. Xiangcheng Yu:
+#. Xiangcheng Yu:
    *Accelerating Polynomial Homotopy Continuation
    on Graphics Processing Units*, 2015.
 
