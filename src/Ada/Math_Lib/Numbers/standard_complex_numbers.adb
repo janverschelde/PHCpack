@@ -160,7 +160,7 @@ package body Standard_Complex_Numbers is
     nrm := y.RE*y.RE + y.IM*y.IM;
     acc := x/nrm;
     res.RE := acc*y.RE;
-    res.IM := acc*y.IM;
+    res.IM := -acc*y.IM;
     return res;
   end "/";
 

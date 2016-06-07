@@ -179,8 +179,8 @@ package body Generic_Complex_Numbers is
     Clear(acc);
     acc := x/nrm;
     res.RE := acc*y.RE;
-    res.IM := acc*y.IM;
-    Clear(nrm);
+    res.IM := acc*y.IM; Min(res.IM);
+    Clear(nrm); Clear(acc);
     return res;
   end "/";
 

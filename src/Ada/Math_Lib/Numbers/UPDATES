@@ -1,3 +1,6 @@
+Tue 7 Jun 2016 : fixed bug in {standard,generic}_complex_numbers.adb,
+  in the division of a double with a complex number.
+
 Mon 26 Oct 2015 : added to numbers_io procedures to interactively read
   positive double double and quad doubles.
 
