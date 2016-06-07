@@ -55,7 +55,7 @@ procedure Dispatch is
   scalban : constant string := Greeting_Banners.scalban;
   slvban  : constant string := Greeting_Banners.slvban;
   trackban : constant string := Greeting_Banners.trackban;
-  valiban : constant string := Greeting_Banners.valiban;
+  veriban : constant string := Greeting_Banners.veriban;
   witban  : constant string := Greeting_Banners.witban;
 
 -- AVAILABLE OPTIONS :
@@ -295,6 +295,7 @@ procedure Dispatch is
   begin
    -- put("The blackbox precision : "); put(bbprc,1); new_line;
     case option2 is
+      when 'h' | '-' => Greeting_Banners.help4blackbox;
       when 's'    => mainscal(file1,file2);
       when 'd'    => mainred(file1,file2);
       when 'r'    =>
@@ -365,6 +366,7 @@ procedure Dispatch is
 
   begin
     case o2 is
+      when 'h' | '-' => Greeting_Banners.help4rootcounts;
       when 'b'    => bablroco(0,infile,outfile);
      -- when 't'    => bablroco(Number_of_Tasks(2),infile,outfile);
       when 't'    => bablroco(Number_of_Tasks,infile,outfile);
@@ -385,6 +387,7 @@ procedure Dispatch is
 
   begin
     case o2 is
+      when 'h' | '-' => Greeting_Banners.help4mixvol;
       when 'b' =>
         case o3 is
           when 't' =>
@@ -426,6 +429,7 @@ procedure Dispatch is
 
   begin
     case o2 is
+      when 'h' | '-' => Greeting_Banners.help4continuation;
       when 'b' =>
         put("The value of contprc : "); put(contprc,1); new_line;
         if contprc = 2 or bbprc = 2 then
@@ -460,7 +464,7 @@ procedure Dispatch is
     case o2 is
       when 'b' => bablvali(infile,outfile);
       when 'h' | '-' => Greeting_Banners.help4verification;
-      when others => put_line(welcome); put_line(valiban);
+      when others => put_line(welcome); put_line(veriban);
                      mainvali(infile,outfile);
     end case;
   end Verification_Dispatcher;
@@ -473,6 +477,7 @@ procedure Dispatch is
 
   begin
     case o2 is
+      when 'h' | '-' => Greeting_Banners.help4enumeration;
       when 'b'    => bablenum(infile,outfile);
       when others => put_line(welcome); put_line(enumban);
                      mainenum;
@@ -487,6 +492,7 @@ procedure Dispatch is
 
   begin
     case o2 is
+      when 'h' | '-' => Greeting_Banners.help4components;
       when 't' =>
         declare
           nt : constant natural32 := Number_of_Tasks;
@@ -526,6 +532,7 @@ procedure Dispatch is
 
   begin
     case o2 is
+      when 'h' | '-' => Greeting_Banners.help4tasking;
       when 'm' =>
         case o3 is
           when 'b' => babldmvc(nt,infile,outfile);
@@ -619,13 +626,19 @@ procedure Dispatch is
       when 'f' => Greeting_Banners.help4factor;
       when 'g' => Greeting_Banners.help4goodformat;
       when 'h' => Greeting_Banners.help4help;
+      when 'k' => Greeting_Banners.help4feedback;
+      when 'l' => Greeting_Banners.help4hypersurface;
       when 'm' => Greeting_Banners.help4mixvol;
+      when 'o' => Greeting_Banners.help4symbols;
       when 'p' => Greeting_Banners.help4continuation;
       when 'q' => Greeting_Banners.help4jumpstart;
+      when 'r' => Greeting_Banners.help4rootcounts;
       when 's' => Greeting_Banners.help4scaling;
+      when 't' => Greeting_Banners.help4tasking;
       when 'v' => Greeting_Banners.help4verification;
       when 'w' => Greeting_Banners.help4witsetinsect;
       when 'x' => Greeting_Banners.help4pythondict;
+      when 'y' => Greeting_Banners.help4sampler;
       when 'z' => Greeting_Banners.help4mapleform;
       when others => Greeting_Banners.show_help;
     end case;
@@ -645,15 +658,12 @@ procedure Dispatch is
                        put_line(welcome); put_line(slvban);
                        mainsolve(f1,f2);
                      end if;
-      when 'b'    => if o2 = 'h' or o2 = '-'
-                      then Greeting_Banners.help4blackbox;
-                      else Black_Box_Dispatcher(o2,o3,f1,f2,f3);
+      when 'b'    => Black_Box_Dispatcher(o2,o3,f1,f2,f3);
+      when 'c'    => Decomposition_Dispatcher(o2,f1,f2);
+      when 'd'    => if o2 = 'h' or o2 = '-'
+                      then Greeting_Banners.help4reduction;
+                      else Reduction_Dispatcher(f1,f2);
                      end if;
-      when 'c'    => if o2 = 'h' or o2 = '-'
-                      then Greeting_Banners.help4components;
-                      else Decomposition_Dispatcher(o2,f1,f2);
-                     end if;
-      when 'd'    => Reduction_Dispatcher(f1,f2);
       when 'e'    => Enumeration_Dispatcher(o2,f1,f2);
       when 'f'    => Factorization_Dispatcher(f1,f2);
       when 'g'    => if o2 = 'h' or o2 = '-'
@@ -661,18 +671,22 @@ procedure Dispatch is
                       else Test_if_System_is_Good(f1,f2);
                      end if;
       when 'h'    => General_Help(o2);
-      when 'k'    => mainfeed(f1,f2);
-      when 'l'    => Witness_Set_for_Hypersurface_Dispatcher(f1,f2);
-      when 'm'    => if o2 = 'h' or o2 = '-'
-                      then Greeting_Banners.help4mixvol;
-                      else Mixed_Volume_Dispatcher(o2,o3,f1,f2);
+      when 'k'    => if o2 = 'h' or o2 = '-'
+                      then Greeting_Banners.help4feedback;
+                      else mainfeed(f1,f2);
                      end if;
-      when 'o'    => put_line(welcome); put_line(symbban);
-                     mainsymb(f1,f2);
-      when 'p'    => if o2 = 'h' or o2 = '-'
-                      then Greeting_Banners.help4continuation;
-                      else Continuation_Dispatcher(o2,f1,f2,f3);
+      when 'l'    => if o2 = 'h' or o2 = '-'
+                      then Greeting_Banners.help4hypersurface;
+                      else Witness_Set_for_Hypersurface_Dispatcher(f1,f2);
                      end if;
+      when 'm'    => Mixed_Volume_Dispatcher(o2,o3,f1,f2);
+      when 'o'    => if o2 = 'h' or o2 = '-' then
+                       Greeting_Banners.help4symbols;
+                     else
+                       put_line(welcome); put_line(symbban);
+                       mainsymb(f1,f2);
+                     end if;
+      when 'p'    => Continuation_Dispatcher(o2,f1,f2,f3);
       when 'q'    => if o2 = 'h' or o2 = '-' then
                        Greeting_Banners.help4jumpstart;
                      else
@@ -694,7 +708,12 @@ procedure Dispatch is
                       then Greeting_Banners.help4pythondict;
                       else maindict(f1,f2);
                      end if;
-      when 'y'    => put_line(welcome); put_line(samban); mainsam(f1,f2);
+      when 'y'    => if o2 = 'h' or o2 = '-' then
+                       Greeting_Banners.help4sampler;
+                     else
+                       put_line(welcome); put_line(samban);
+                       mainsam(f1,f2);
+                     end if;
       when 'z'    => if o2 = 'h' or o2 = '-'
                       then Greeting_Banners.help4mapleform;
                       else mainzip(f1,f2);

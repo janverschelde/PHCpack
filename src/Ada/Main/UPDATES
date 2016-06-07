@@ -1,3 +1,6 @@
+Tue 7 Jun 2016 : all options of phc now have at least one line of help
+  after extending greeting_banners and dispatch.adb.
+
 Mon 6 Jun 2016 : made a start at populating the -h and --help for the
   online help on the options, in dispatch.adb and greeting_banners.
 

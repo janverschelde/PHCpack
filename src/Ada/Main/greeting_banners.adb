@@ -65,6 +65,11 @@ package body Greeting_Banners is
     put_line("phc -e gives homotopies for numerical Schubert calculus.");
   end help4enumeration;
 
+  procedure help4feedback is
+  begin
+    put_line("phc -k computes feedback laws to control linear systems.");
+  end help4feedback;
+
   procedure help4factor is
   begin
     put_line("phc -f factors a solution set into irreducible components.");   
@@ -80,10 +85,20 @@ package body Greeting_Banners is
     put_line("phc -h or phc --help tries to help...");
   end help4help;
 
+  procedure help4hypersurface is
+  begin
+    put_line("phc -l to compute a witness set for a hypersurface.");
+  end help4hypersurface;
+
   procedure help4mixvol is
   begin
     put_line("phc -m computes mixed volumes and runs polyhedral homotopies.");
   end help4mixvol;
+
+  procedure help4symbols is
+  begin
+    put_line("phc -o writes the symbol table after parsing an input system.");
+  end help4symbols;
 
   procedure help4continuation is
   begin
@@ -95,10 +110,20 @@ package body Greeting_Banners is
     put_line("phc -q runs continuation with jump starting for huge systems.");
   end help4jumpstart;
 
+  procedure help4rootcounts is
+  begin
+    put_line("phc -r computes root counts and constructs start systems.");
+  end help4rootcounts;
+
   procedure help4scaling is
   begin
     put_line("phc -s applies equation and variable scaling to a system.");
   end help4scaling;
+
+  procedure help4tasking is
+  begin
+    put_line("phc -t# computes with # tasks, for shared memory parallelism.");
+  end help4tasking;
 
   procedure help4verification is
   begin
@@ -114,6 +139,11 @@ package body Greeting_Banners is
   begin
     put_line("phc -x converts lists of solutions into Python dictionaries.");
   end help4pythondict;
+
+  procedure help4sampler is
+  begin
+    put_line("phc -y samples points on a positive dimensional solution set.");
+  end help4sampler;
 
   procedure help4mapleform is
   begin

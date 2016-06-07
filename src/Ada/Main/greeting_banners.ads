@@ -49,7 +49,7 @@ package Greeting_Banners is
   trackban : constant string :=
     "Tracking Solution Paths with incremental read/write of solutions.";
 
-  valiban : constant string :=
+  veriban : constant string :=
     "Verification, refinement and purification of computed solution lists.";
 
   witban : constant string :=
@@ -100,6 +100,11 @@ package Greeting_Banners is
   -- DESCRIPTION :
   --   Writes help on the factorization into irreducible components.
 
+  procedure help4feedback;
+
+  -- DESCRIPTION :
+  --   Writes help on the computation of feedback laws.
+
   procedure help4goodformat;
 
   -- DESCRIPTION :
@@ -109,6 +114,16 @@ package Greeting_Banners is
 
   -- DESCRIPTION :
   --   Writes help on the help system.
+
+  procedure help4hypersurface;
+
+  -- DESCRIPTION :
+  --   Writes help for a witness set for a hypersurface.
+
+  procedure help4symbols;
+
+  -- DESCRIPTION :
+  --   Writes help on the writing of the symbol table.
 
   procedure help4continuation;
 
@@ -125,10 +140,20 @@ package Greeting_Banners is
   -- DESCRIPTION :
   --   Writes help on the mixed volume computation and polyhedral homotopies.
 
+  procedure help4rootcounts;
+
+  -- DESCRIPTION :
+  --   Writes help on the root counting and start system construction.
+
   procedure help4scaling;
 
   -- DESCRIPTION :
   --   Writes help on equation and variable scaling.
+
+  procedure help4tasking;
+
+  -- DESCRIPTION :
+  --   Writes help on multitasking.
 
   procedure help4verification;
 
@@ -144,6 +169,11 @@ package Greeting_Banners is
 
   -- DESCRIPTION :
   --   Writes help on converting solutions to Python dictionaries.
+
+  procedure help4sampler;
+
+  -- DESCRIPTION :
+  --   Writes help on sampling points on a positive dimensional solution set.
 
   procedure help4mapleform;
 
