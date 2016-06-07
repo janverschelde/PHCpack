@@ -450,7 +450,7 @@ procedure Dispatch is
     end case;
   end Continuation_Dispatcher;
 
-  procedure Validation_Dispatcher
+  procedure Verification_Dispatcher
               ( o2 : in character; infile,outfile : in string ) is
 
   -- DESCRIPTION :
@@ -458,11 +458,12 @@ procedure Dispatch is
 
   begin
     case o2 is
-      when 'b'    => bablvali(infile,outfile);
+      when 'b' => bablvali(infile,outfile);
+      when 'h' | '-' => Greeting_Banners.help4verification;
       when others => put_line(welcome); put_line(valiban);
                      mainvali(infile,outfile);
     end case;
-  end Validation_Dispatcher;
+  end Verification_Dispatcher;
 
   procedure Enumeration_Dispatcher
               ( o2 : in character; infile,outfile : in string ) is
@@ -609,11 +610,23 @@ procedure Dispatch is
 
   begin
     case opt is
+      when '0' => Greeting_Banners.help4setseed;
       when 'a' => Greeting_Banners.help4eqnbyeqn;
       when 'b' => Greeting_Banners.help4blackbox;
       when 'c' => Greeting_Banners.help4components;
       when 'd' => Greeting_Banners.help4reduction;
       when 'e' => Greeting_Banners.help4enumeration;
+      when 'f' => Greeting_Banners.help4factor;
+      when 'g' => Greeting_Banners.help4goodformat;
+      when 'h' => Greeting_Banners.help4help;
+      when 'm' => Greeting_Banners.help4mixvol;
+      when 'p' => Greeting_Banners.help4continuation;
+      when 'q' => Greeting_Banners.help4jumpstart;
+      when 's' => Greeting_Banners.help4scaling;
+      when 'v' => Greeting_Banners.help4verification;
+      when 'w' => Greeting_Banners.help4witsetinsect;
+      when 'x' => Greeting_Banners.help4pythondict;
+      when 'z' => Greeting_Banners.help4mapleform;
       when others => Greeting_Banners.show_help;
     end case;
   end General_Help;
@@ -626,31 +639,66 @@ procedure Dispatch is
 
   begin
     case o1 is
-      when 'a'    => put_line(welcome); put_line(slvban);
-                     mainsolve(f1,f2);
-      when 'b'    => Black_Box_Dispatcher(o2,o3,f1,f2,f3);
-      when 'c'    => Decomposition_Dispatcher(o2,f1,f2);
+      when 'a'    => if o2 = 'h' or o2 = '-' then
+                       Greeting_Banners.help4eqnbyeqn;
+                     else
+                       put_line(welcome); put_line(slvban);
+                       mainsolve(f1,f2);
+                     end if;
+      when 'b'    => if o2 = 'h' or o2 = '-'
+                      then Greeting_Banners.help4blackbox;
+                      else Black_Box_Dispatcher(o2,o3,f1,f2,f3);
+                     end if;
+      when 'c'    => if o2 = 'h' or o2 = '-'
+                      then Greeting_Banners.help4components;
+                      else Decomposition_Dispatcher(o2,f1,f2);
+                     end if;
       when 'd'    => Reduction_Dispatcher(f1,f2);
       when 'e'    => Enumeration_Dispatcher(o2,f1,f2);
       when 'f'    => Factorization_Dispatcher(f1,f2);
-      when 'g'    => Test_if_System_is_Good(f1,f2);
+      when 'g'    => if o2 = 'h' or o2 = '-'
+                      then Greeting_Banners.help4goodformat;
+                      else Test_if_System_is_Good(f1,f2);
+                     end if;
       when 'h'    => General_Help(o2);
-      when 'm'    => Mixed_Volume_Dispatcher(o2,o3,f1,f2);
       when 'k'    => mainfeed(f1,f2);
       when 'l'    => Witness_Set_for_Hypersurface_Dispatcher(f1,f2);
-      when 's'    => Scaling_Dispatcher(f1,f2);
+      when 'm'    => if o2 = 'h' or o2 = '-'
+                      then Greeting_Banners.help4mixvol;
+                      else Mixed_Volume_Dispatcher(o2,o3,f1,f2);
+                     end if;
       when 'o'    => put_line(welcome); put_line(symbban);
                      mainsymb(f1,f2);
-      when 'p'    => Continuation_Dispatcher(o2,f1,f2,f3);
-      when 'q'    => put_line(welcome); put_line(trackban);
-                     maintrack(f1,f2,f3);
-      when 't'    => Tasking_Dispatcher(o2,o3,f1,f2);
-      when 'v'    => Validation_Dispatcher(o2,f1,f2);
+      when 'p'    => if o2 = 'h' or o2 = '-'
+                      then Greeting_Banners.help4continuation;
+                      else Continuation_Dispatcher(o2,f1,f2,f3);
+                     end if;
+      when 'q'    => if o2 = 'h' or o2 = '-' then
+                       Greeting_Banners.help4jumpstart;
+                     else
+                       put_line(welcome); put_line(trackban);
+                       maintrack(f1,f2,f3);
+                     end if;
       when 'r'    => Root_Count_Dispatcher(o2,f1,f2);
-      when 'w'    => Witness_Set_Intersection_Dispatcher(f1,f2,f3);
-      when 'x'    => maindict(f1,f2);
+      when 's'    => if o2 = 'h' or o2 = '-'
+                      then Greeting_Banners.help4scaling;
+                      else Scaling_Dispatcher(f1,f2);
+                     end if;
+      when 't'    => Tasking_Dispatcher(o2,o3,f1,f2);
+      when 'v'    => Verification_Dispatcher(o2,f1,f2);
+      when 'w'    => if o2 = 'h' or o2 = '-'
+                      then Greeting_Banners.help4witsetinsect;
+                      else Witness_Set_Intersection_Dispatcher(f1,f2,f3);
+                     end if;
+      when 'x'    => if o2 = 'h' or o2 = '-'
+                      then Greeting_Banners.help4pythondict;
+                      else maindict(f1,f2);
+                     end if;
       when 'y'    => put_line(welcome); put_line(samban); mainsam(f1,f2);
-      when 'z'    => mainzip(f1,f2);
+      when 'z'    => if o2 = 'h' or o2 = '-'
+                      then Greeting_Banners.help4mapleform;
+                      else mainzip(f1,f2);
+                     end if;
       when others => put_line(welcome); mainphc(0,f1,f2);
     end case;
   exception
@@ -743,11 +791,19 @@ procedure Dispatch is
       put_line("The first two file names are the same.");
       put_line("Will ignore the second file name...");
       if option1 = '0' then
-        Find_and_Set_Seed;
-        General_Dispatcher(option2,option3,option4,file1,"",file3);
+        if option2 = 'h' or option2 = '-' then
+          Greeting_Banners.help4setseed;
+        else
+          Find_and_Set_Seed;
+          General_Dispatcher(option2,option3,option4,file1,"",file3);
+        end if;
       elsif option2 = '0' then
-        Find_and_Set_Seed;
-        General_Dispatcher(option1,option3,option4,file1,"",file3);
+        if option1 = 'h' or option1 = '-' then
+          Greeting_Banners.help4setseed;
+        else
+          Find_and_Set_Seed;
+          General_Dispatcher(option1,option3,option4,file1,"",file3);
+        end if;
       elsif option3 = '0' then
         Find_and_Set_Seed;
         General_Dispatcher(option1,option2,option4,file1,"",file3);
@@ -759,11 +815,19 @@ procedure Dispatch is
       end if;
     else
       if option1 = '0' then
-        Find_and_Set_Seed;
-        General_Dispatcher(option2,option3,option4,file1,file2,file3);
+        if option2 = 'h' or option2 = '-' then
+          Greeting_Banners.help4setseed;
+        else
+          Find_and_Set_Seed;
+          General_Dispatcher(option2,option3,option4,file1,file2,file3);
+        end if;
       elsif option2 = '0' then
-        Find_and_Set_Seed;
-        General_Dispatcher(option1,option3,option4,file1,file2,file3);
+        if option1 = 'h' or option1 = '-' then
+          Greeting_banners.help4setseed;
+        else
+          Find_and_Set_Seed;
+          General_Dispatcher(option1,option3,option4,file1,file2,file3);
+        end if;
       elsif option3 = '0' then
         Find_and_Set_Seed;
         General_Dispatcher(option1,option2,option4,file1,file2,file3);

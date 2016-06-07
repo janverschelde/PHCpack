@@ -35,6 +35,11 @@ package body Greeting_Banners is
     put_line("use multithreading, e.g.: phc -t4, to use 4 threads.");
   end show_help;
 
+  procedure help4setseed is
+  begin
+    put_line("phc -0 fixes the seed in the random number generators.");
+  end help4setseed;
+
   procedure help4eqnbyeqn is
   begin
     put_line("phc -a calls an equation-by-equation solver.");
@@ -59,5 +64,60 @@ package body Greeting_Banners is
   begin
     put_line("phc -e gives homotopies for numerical Schubert calculus.");
   end help4enumeration;
+
+  procedure help4factor is
+  begin
+    put_line("phc -f factors a solution set into irreducible components.");   
+  end help4factor;
+
+  procedure help4goodformat is
+  begin
+    put_line("phc -g checks whether the format of an input system is good.");
+  end help4goodformat;
+
+  procedure help4help is
+  begin
+    put_line("phc -h or phc --help tries to help...");
+  end help4help;
+
+  procedure help4mixvol is
+  begin
+    put_line("phc -m computes mixed volumes and runs polyhedral homotopies.");
+  end help4mixvol;
+
+  procedure help4continuation is
+  begin
+    put_line("phc -p runs continuation with a homotopy in one parameter.");
+  end help4continuation;
+
+  procedure help4jumpstart is
+  begin
+    put_line("phc -q runs continuation with jump starting for huge systems.");
+  end help4jumpstart;
+
+  procedure help4scaling is
+  begin
+    put_line("phc -s applies equation and variable scaling to a system.");
+  end help4scaling;
+
+  procedure help4verification is
+  begin
+    put_line("phc -v filters, verifies, and refines lists of solutions.");
+  end help4verification;
+
+  procedure help4witsetinsect is
+  begin
+    put_line("phc -w for witness set intersection with diagonal homotopies.");
+  end help4witsetinsect;
+
+  procedure help4pythondict is
+  begin
+    put_line("phc -x converts lists of solutions into Python dictionaries.");
+  end help4pythondict;
+
+  procedure help4mapleform is
+  begin
+    put_line("phc -z converts lists of solutions into Maple format.");
+  end help4mapleform;
 
 end Greeting_Banners;

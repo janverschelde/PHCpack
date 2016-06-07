@@ -65,6 +65,11 @@ package Greeting_Banners is
   -- DESCRIPTION :
   --   Writes essential information about the use of phc to screen.
 
+  procedure help4setseed;
+
+  -- DESCRIPTION :
+  --   Writes help on setting the seed in the random number generators.
+
   procedure help4eqnbyeqn;
 
   -- DESCRIPTION :
@@ -89,5 +94,60 @@ package Greeting_Banners is
 
   -- DESCRIPTION :
   --   Writes information about numerical Schubert calculus.
+
+  procedure help4factor;
+
+  -- DESCRIPTION :
+  --   Writes help on the factorization into irreducible components.
+
+  procedure help4goodformat;
+
+  -- DESCRIPTION :
+  --   Writes help on the checking of input formats.
+
+  procedure help4help;
+
+  -- DESCRIPTION :
+  --   Writes help on the help system.
+
+  procedure help4continuation;
+
+  -- DESCRIPTION :
+  --   Writes help on the polynomial continuation.
+
+  procedure help4jumpstart;
+
+  -- DESCRIPTION :
+  --   Writes help on the jumpstarting path tracking.
+
+  procedure help4mixvol;
+
+  -- DESCRIPTION :
+  --   Writes help on the mixed volume computation and polyhedral homotopies.
+
+  procedure help4scaling;
+
+  -- DESCRIPTION :
+  --   Writes help on equation and variable scaling.
+
+  procedure help4verification;
+
+  -- DESCRIPTION :
+  --   Writes help on the verification of lists of solutions.
+
+  procedure help4witsetinsect;
+
+  -- DESCRIPTION :
+  --   Writes help on witness set intersection with diagonal homotopies.
+
+  procedure help4pythondict;
+
+  -- DESCRIPTION :
+  --   Writes help on converting solutions to Python dictionaries.
+
+  procedure help4mapleform;
+
+  -- DESCRIPTION :
+  --   Writes help on converting solutions to Maple format.
 
 end Greeting_Banners;
