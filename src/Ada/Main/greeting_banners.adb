@@ -116,6 +116,23 @@ package body Greeting_Banners is
   procedure help4reduction is
   begin
     put_line("phc -d attempts to lower the degrees of the polynomials.");
+    new_line;
+    put_line("As an example, consider the intersection of two circles:");
+    new_line;
+    put_line("2");
+    put_line(" x^2 + y^2 - 1;");
+    put_line(" (x -  0.5)^2 + y^2 - 1;");
+    new_line;
+    put_line("A simple linear combination of the two polynomials gives:");
+    new_line;
+    put_line("2");
+    put_line(" x^2 + y^2 - 1;");
+    put_line(" x -  2.5E-1;");
+    new_line;
+    put_line("This reduced system has the same solutions, but only two");
+    put_line("instead of four solution paths need to be tracked.");
+    put_line("Nonlinear reduction attempts to replace higher degree");
+    put_line("polynomials in the system by S-polynomials.");
   end help4reduction;
 
   procedure help4enumeration is
@@ -214,6 +231,18 @@ package body Greeting_Banners is
   procedure help4mapleform is
   begin
     put_line("phc -z converts lists of solutions into Maple format.");
+    new_line;
+    put_line("The Maple format of a solution list is a list of lists,");
+    put_line("where each list is enclosed by square brackets.");
+    put_line("The items in a list are separated by commas.");
+    put_line("A solution is represented as a list of equations.");
+    new_line;
+    put_line("At the command line, type 'phc -z input output' where input");
+    put_line("contains a list of solutions, in PHCpack or in Maple format.");
+    put_line("The result of the conversion (from PHCpack into Maple format");
+    put_line("or from Maple to PHCpack format, depending on the input format)");
+    put_line("is written to the file output.");
+    put_line("If output is omitted, then the result is written to screen.");
   end help4mapleform;
 
 end Greeting_Banners;

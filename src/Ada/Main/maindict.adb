@@ -108,4 +108,9 @@ procedure maindict ( infilename,outfilename : in string ) is
 
 begin
   Main;
+exception
+  when others
+    => new_line;
+       put_line("Use as phc -z input output");
+       new_line;
 end maindict;
