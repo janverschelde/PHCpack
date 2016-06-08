@@ -25,6 +25,7 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/Math_Lib/Divisors -I$(PHCAda)/Math_Lib/Reduction \
  -I$(PHCAda)/Math_Lib/Polynomials -I$(PHCAda)/Math_Lib/Functions \
  -I$(PHCAda)/Math_Lib/Supports -I$(PHCAda)/Math_Lib/Circuits \
+ -I$(PHCAda)/Math_Lib/Series \
  -I$(PHCAda)/Deformations/Solutions -I$(PHCAda)/Deformations/Homotopy \
  -I$(PHCAda)/Deformations/Newton -I$(PHCAda)/Deformations/Curves \
  -I$(PHCAda)/Deformations/End_Games -I$(PHCAda)/Deformations/Sweep \
@@ -457,6 +458,11 @@ ts_fvector:
 ts_giftwrap:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_giftwrap.adb \
               -o $(BIN)/ts_giftwrap
+
+# Test programs for the Math_Lib/Series library :
+
+ts_pstrunc:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_pstrunc.adb -o $(BIN)/ts_pstrunc
 
 # Test programs for the Deformations/Solutions library :
 

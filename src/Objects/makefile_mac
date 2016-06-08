@@ -24,6 +24,7 @@ INCLULIBS=-I$(PHCAda)/System -I$(PHCAda)/System/Unix_Timer \
  -I$(PHCAda)/Math_Lib/Divisors -I$(PHCAda)/Math_Lib/Reduction \
  -I$(PHCAda)/Math_Lib/Polynomials -I$(PHCAda)/Math_Lib/Functions \
  -I$(PHCAda)/Math_Lib/Supports -I$(PHCAda)/Math_Lib/Circuits \
+ -I$(PHCAda)/Math_Lib/Series \
  -I$(PHCAda)/Deformations/Solutions -I$(PHCAda)/Deformations/Homotopy \
  -I$(PHCAda)/Deformations/Newton -I$(PHCAda)/Deformations/Curves \
  -I$(PHCAda)/Deformations/End_Games -I$(PHCAda)/Deformations/Sweep \
@@ -463,21 +464,27 @@ ts_lstvec:
 
 ts_fvector:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_fvector.adb \
-                 -o $(BIN)/ts_fvector
+              -o $(BIN)/ts_fvector
 
 ts_giftwrap:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_giftwrap.adb \
-                 -o $(BIN)/ts_giftwrap
+              -o $(BIN)/ts_giftwrap
 
 ts_giftwcon:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_giftwcon.adb \
-                 -o $(BIN)/ts_giftwcon
+              -o $(BIN)/ts_giftwcon
+
+# Test programs for the Math_Lib/Series library :
+
+ts_pstrunc:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_pstrunc.adb \
+              -o $(BIN)/ts_pstrunc
 
 # Test programs for the Deformations/Solutions library :
 
 ts_solfilt:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_solfilt.adb \
-                 -o $(BIN)/ts_solfilt
+              -o $(BIN)/ts_solfilt
 
 ts_sols:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sols.adb -o $(BIN)/ts_sols

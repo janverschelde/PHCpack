@@ -439,6 +439,11 @@ ts_fvector:
 ts_giftwrap:
 	make -f $(MAKEFILE) ts_giftwrap
 
+# Test programs for the Math_Lib/Series library :
+
+ts_pstrunc:
+	make -f $(MAKEFILE) ts_pstrunc
+
 # Test programs for the Deformations library :
 
 test_deformations: test_solutions test_homotopy test_newton test_curves \
