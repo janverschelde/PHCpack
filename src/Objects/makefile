@@ -444,6 +444,9 @@ ts_giftwrap:
 ts_pstrunc:
 	make -f $(MAKEFILE) ts_pstrunc
 
+ts_series:
+	make -f $(MAKEFILE) ts_series
+
 # Test programs for the Deformations library :
 
 test_deformations: test_solutions test_homotopy test_newton test_curves \
