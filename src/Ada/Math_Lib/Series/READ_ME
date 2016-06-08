@@ -8,4 +8,7 @@ file name                        : short description
 ------------------------------------------------------------------------------
 standard_truncated_series        : defines basic operations on power series
 ts_pstrunc                       : tests truncated power series
+standard_dense_series            : dense power series, standard coefficients
+standard_dense_series_io         : basic output of series
+ts_series                        : basic test on standard dense series
 ------------------------------------------------------------------------------

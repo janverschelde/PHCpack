@@ -1,0 +1,3 @@
+Wed 8 Jun 2016 : new package standard_dense_series, with a very basic output
+  in standard_dense_series_io, tested by ts_series, to encapsulate the
+  standard complex vectors data type.
