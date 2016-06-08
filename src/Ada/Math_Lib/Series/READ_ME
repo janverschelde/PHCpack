@@ -1,0 +1,11 @@
+Truncated power series with complex coefficients for PHCv2.4.20
+
+Similar to Taylor series approximations for general functions,
+we can approximate roots of polynomials in a parameter by series.
+
+------------------------------------------------------------------------------
+file name                        : short description
+------------------------------------------------------------------------------
+standard_truncated_series        : defines basic operations on power series
+ts_pstrunc                       : tests truncated power series
+------------------------------------------------------------------------------

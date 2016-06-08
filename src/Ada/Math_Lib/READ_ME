@@ -1,4 +1,4 @@
-Mathematical library in PHCpack version 2.3.98
+Mathematical library in PHCpack version 2.4.20
 
 The mathematical library contains general tools that are not specific
 for polynomial homotopy continuation.
@@ -29,6 +29,7 @@ code for algorithmic differentation.
      |-- Functions     : 1.8. evaluation and differentiation
      |-- Supports      : 1.9. support sets and linear programming
      |-- Circuits      : 1.A. circuits for algorithmic differentation
+     |-- Series        : 1.B. manipulating truncated series
 
 The directory Numbers specifies the coefficient rings and contains
 definitions of floating-point and complex numbers.
