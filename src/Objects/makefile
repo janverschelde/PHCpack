@@ -447,6 +447,9 @@ ts_pstrunc:
 ts_series:
 	make -f $(MAKEFILE) ts_series
 
+ts_servec:
+	make -f $(MAKEFILE) ts_servec
+
 # Test programs for the Deformations library :
 
 test_deformations: test_solutions test_homotopy test_newton test_curves \

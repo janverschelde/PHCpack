@@ -467,6 +467,9 @@ ts_pstrunc:
 ts_series:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_series.adb -o $(BIN)/ts_series
 
+ts_servec:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_servec.adb -o $(BIN)/ts_servec
+
 # Test programs for the Deformations/Solutions library :
 
 ts_solfilt:
