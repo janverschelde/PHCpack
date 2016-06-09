@@ -179,6 +179,28 @@ an equivalent polynomial system (having the same number of affine
 solutions) but with lower degrees.  Reducing polynomials to
 introduce more sparsity may also benefit polyhedral methods.
 
+As an example, consider the intersection of two circles:
+
+::
+
+   2
+    x^2 + y^2 - 1;
+    (x -  0.5)^2 + y^2 - 1;
+
+A simple linear combination of the two polynomials gives:
+
+::
+
+   2
+    x^2 + y^2 - 1;
+    x -  2.5E-1;
+
+This reduced system has the same solutions, but only two
+instead of four solution paths need to be tracked.
+
+Nonlinear reduction attempts to replace higher degree
+polynomials in the system by S-polynomials.
+
 phc -e : SAGBI/Pieri homotopies to intersect linear subspaces  
 -------------------------------------------------------------
 
@@ -217,7 +239,7 @@ available in version 2.0 of PHCpack.
 Since version 2.3.95, a more complete implementation of the 
 Littlewood-Richardson homotopies is available.
 
-phc -f : Factor pure dimensional solution set into irreducibles
+phc -f : factor pure dimensional solution set into irreducibles
 ---------------------------------------------------------------
 
 The -f is the f of factor and filter.
@@ -247,7 +269,7 @@ solve the output pole placement problem in linear systems control.
 The option -k applies the Pieri homotopies to compute feedback laws
 for plants defined by (A,B,C) matrices.
 
-phc -l : Witness Set for Hypersurface cutting with Random Line 
+phc -l : witness set for hypersurface cutting with random line 
 --------------------------------------------------------------
 
 A hypersurface defined by a polynomial in several variables is
@@ -371,8 +393,8 @@ the mixed volume computation by the MixedVol algorithm
 (option 4 of ``phc -m``) is interlaced with the path tracking 
 in a heterogenous pipelined application of :index:`multitasking`.
 
-phc -o : writes the contents of the symbol table of an input system
--------------------------------------------------------------------
+phc -o : writes the symbol table of an input system
+---------------------------------------------------
 
 Running phc -o with as input argument a polynomial system
 writes the symbols for the variables in the order in which they
@@ -417,14 +439,14 @@ a modification of the file /tmp/ex1 could be
 and the first four monomials x + y - x - y will initialize the
 symbol table with the names x and y, in that order.
 
-phc -p : Polynomial Continuation by a homotopy in one parameter
----------------------------------------------------------------
+phc -p : polynomial continuation in one parameter
+-------------------------------------------------
 
-The user of phc -p is prompted for a target system and a start system
+The user of ``phc -p`` is prompted for a target system and a start system
 with start solutions.  This option is useful for solving several systems
 with the same structure but with different coefficients.
 
-With phc -p, the user has full access to all numerical tolerances
+With ``phc -p``, the user has full access to all numerical tolerances
 that define how close the numerical approximations have to stay
 along a solution path.  Another application of phc -p is to rerun
 a selection of solution paths.
@@ -682,15 +704,15 @@ the overhead caused by the quad double arithmetic:
    sys     0m0.248s
 
 
-phc -v : Verification, refinement and purification of solutions
+phc -v : verification, refinement and purification of solutions
 ---------------------------------------------------------------
 
 While solution paths do in general not become singular or diverge,
 at the end of the paths, solutions may turn out to be singular
-and/or at infinity.  With phc -v one can do the following tasks:
+and/or at infinity.  With ``phc -v`` one can do the following tasks:
 
-1. Perform a basic verification of the solutions based on Newton's method
-   and weed out spurious solutions.
+1. Perform a basic :index:`verification` of the solutions based 
+   on Newton's method and weed out spurious solutions.
 
 2. Apply Newton's method with multiprecision arithmetic.
 
@@ -701,7 +723,7 @@ and/or at infinity.  With phc -v one can do the following tasks:
    to meet the wanted number of accurate decimal places in the solutions
    when applying Newton's method.
 
-phc -w : Witness Set Intersection using Diagonal Homotopies    
+phc -w : witness set intersection using diagonal homotopies    
 -----------------------------------------------------------
 
 This option wraps the diagonal homotopies to intersect two witness sets,
@@ -736,9 +758,9 @@ which represents a witness set.
 phc -x : convert solutions from PHCpack into Python dictionary 
 --------------------------------------------------------------
 
-To work with solution lists in Python scripts, the script phc -x
-convert a solution list in PHCpack format to a list of dictionaries.
-Given a Python list of dictionaries, phc -x returns a list of
+To work with solution lists in :index:`Python` scripts, running ``phc -x``
+converts a solution list in PHCpack format to a list of dictionaries.
+Given a Python list of dictionaries, ``phc -x`` returns a list of
 solutions in PHCpack format.  For example:
 
 ::
@@ -751,6 +773,72 @@ dictionaries, ready for processing by a Python script.
 If no output file is given as second argument, then the output
 is written to screen.  The second phc -x writes a solution list
 to PHCpack format, because a list of dictionaries is given on input.
+
+If the second argument of ``phc -x`` is omitted, then the output
+is written to file.  For example, if the file ``/tmp/example`` contains
+
+::
+
+   2
+    x*y + x - 3;
+    x^2 + y - 1;
+
+   THE SOLUTIONS :
+   3 2
+   ===========================================================================
+   solution 1 :
+   t :  1.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    x : -1.89328919630450E+00   0.00000000000000E+00
+    y : -2.58454398084333E+00   0.00000000000000E+00
+   == err :  2.024E-16 = rco :  2.402E-01 = res :  2.220E-16 ==
+   solution 2 :
+   t :  1.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    x :  9.46644598152249E-01  -8.29703552862405E-01
+    y :  7.92271990421665E-01   1.57086877276985E+00
+   == err :  1.362E-16 = rco :  1.693E-01 = res :  2.220E-16 ==
+   solution 3 :
+   t :  1.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    x :  9.46644598152249E-01   8.29703552862405E-01
+    y :  7.92271990421665E-01  -1.57086877276985E+00
+   == err :  1.362E-16 = rco :  1.693E-01 = res :  2.220E-16 ==
+
+then the conversion executed by
+
+::
+
+   phc -x /tmp/example
+
+write to screen the following:
+
+::
+
+   [
+   {'time': 1.00000000000000E+00 +  0.00000000000000E+00*1j, \
+   'multiplicity':1,'x':-1.89328919630450E+00 +  0.00000000000000E+00*1j, \
+   'y':-2.58454398084333E+00 +  0.00000000000000E+00*1j, \
+   'err':  2.024E-16,'rco':  2.402E-01,'res':  2.220E-16}, \
+   {'time': 1.00000000000000E+00 +  0.00000000000000E+00*1j, \
+   'multiplicity':1,'x': 9.46644598152249E-01-8.29703552862405E-01*1j, \
+   'y': 7.92271990421665E-01 +  1.57086877276985E+00*1j, \
+   'err':  1.362E-16,'rco':  1.693E-01,'res':  2.220E-16}, \
+   {'time': 1.00000000000000E+00 +  0.00000000000000E+00*1j, \
+   'multiplicity':1,'x': 9.46644598152249E-01 +  8.29703552862405E-01*1j, \
+   'y': 7.92271990421665E-01-1.57086877276985E+00*1j, \
+   'err':  1.362E-16,'rco':  1.693E-01,'res':  2.220E-16}
+   ]
+
+In the output above, for readabiility, extra line breaks were added,
+after each continuation symbol (the back slash).
+In the output of ``phc -x``, every dictionary is written on one single line.
+
+The keys in the dictionary are the same as the left hand sides in the
+equations in the Maple format, see ``phc -z``.
 
 phc -y : sample points from an algebraic set, given witness set
 ---------------------------------------------------------------
@@ -771,8 +859,15 @@ in the file ``new_sphere_w2``.
 phc -z : strip phc output solution lists into Maple format     
 ----------------------------------------------------------
 
+Parsing solution lists in PHCpack format can be a bit tedious.
+Therefore, the ``phc -z`` defines a simpler format,
+representing a list of solutions as a list of lists,
+where lists are enclosed by square brackets.
+Every solution is a list of equations, using a comma to
+separate the items in the list.
+
 The phc -z commands converts solution lists in PHCpack format
-into Maple lists and converts Maple lists into solutions lists 
+into :index:`Maple` lists and converts Maple lists into solutions lists 
 in PHCpack format.  For example:
 
 ::
@@ -784,5 +879,46 @@ If the file ``cyclic5`` contains the solutions of the cyclic 5-roots
 problem in PHCpack format, then the first command makes the file 
 /tmp/cyclic5.mpl which can be parsed by Maple.  The next command
 has no second argument for output file and the output is written
-directly to screen, converting the solutions in Maple format to
-solution lists is PHCpack format.
+directly to screen, converting the solutions in Maple format into
+solution lists in PHCpack format.
+
+If the output file is omitted, then the output is written to screen.
+For example, if the file ``/tmp/example`` has as content
+
+::
+
+   2
+    x*y + x - 3;
+    x^2 + y - 1;
+
+Then we first can solve the system with the blackbox solver as
+
+::
+
+   phc -b /tmp/example /tmp/example.out
+
+Because ``phc -b`` appends the solution to an input file without solutions,
+we can convert the format of the PHCpack solutions into Maple format
+as follows:
+
+::
+
+   phc -z /tmp/example
+   [[time = 1.0 + 0*I,
+     multiplicity = 1,
+     x = -1.8932891963045 + 0*I,
+     y = -2.58454398084333 + 0*I,
+     err =  2.024E-16,  rco =  2.402E-01,  res =  2.220E-16],
+    [time = 1.0 + 0*I,
+     multiplicity = 1,
+     x = 9.46644598152249E-1 - 8.29703552862405E-1*I,
+     y = 7.92271990421665E-1 + 1.57086877276985*I,
+     err =  1.362E-16,  rco =  1.693E-01,  res =  2.220E-16],
+    [time = 1.0 + 0*I,
+     multiplicity = 1,
+     x = 9.46644598152249E-1 + 8.29703552862405E-1*I,
+     y = 7.92271990421665E-1 - 1.57086877276985*I,
+     err =  1.362E-16,  rco =  1.693E-01,  res =  2.220E-16]];
+
+The left hand sides of the equations are the same as the keys in the
+dictionaries of the Python format, see ``phc -x``.
