@@ -1,3 +1,5 @@
+Thu 9 Jun 2016 : documented phc -x in greeting_banners.adb.
+
 Wed 8 Jun 2016 : added exception handler to mainzip.adb and maindict.adb
   to write a message in case the user does not provide an input file.
   Extended greeting_banners.adb with online help information.

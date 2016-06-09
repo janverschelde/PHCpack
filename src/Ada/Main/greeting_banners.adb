@@ -221,6 +221,22 @@ package body Greeting_Banners is
   procedure help4pythondict is
   begin
     put_line("phc -x converts lists of solutions into Python dictionaries.");
+    new_line;
+    put_line("To work with solution lists in Python scripts, phc -x converts");
+    put_line("a solution list in PHCpack format to a list of dictionaries.");
+    put_line("Given a Python list of dictionaries, phc -x returns a list of");
+    put_line("solutions in PHCpack format.");
+    new_line;
+    put_line("The Python format of a list of solutions is a list, enclosed by");
+    put_line("square brackets.  Every solution is a dictionary.  The names of");
+    put_line("the variables are keys to the values of the coordinates.");
+    new_line;
+    put_line("At the command line, type 'phc -x input output' where 'input'");
+    put_line("contains a list of solutions in PHCpack or in Python format.");
+    put_line("The result of the conversion (from PHCpack into Python format");
+    put_line("or from Python to PHCpack format, depending on the input type)");
+    put_line("is written to the file 'output'.");
+    put_line("If 'output' is omitted, then the result is written to screen.");
   end help4pythondict;
 
   procedure help4sampler is
@@ -237,12 +253,12 @@ package body Greeting_Banners is
     put_line("The items in a list are separated by commas.");
     put_line("A solution is represented as a list of equations.");
     new_line;
-    put_line("At the command line, type 'phc -z input output' where input");
+    put_line("At the command line, type 'phc -z input output' where 'input'");
     put_line("contains a list of solutions, in PHCpack or in Maple format.");
     put_line("The result of the conversion (from PHCpack into Maple format");
     put_line("or from Maple to PHCpack format, depending on the input format)");
-    put_line("is written to the file output.");
-    put_line("If output is omitted, then the result is written to screen.");
+    put_line("is written to the file 'output'.");
+    put_line("If 'output' is omitted, then the result is written to screen.");
   end help4mapleform;
 
 end Greeting_Banners;
