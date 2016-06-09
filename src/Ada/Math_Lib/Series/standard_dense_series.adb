@@ -57,6 +57,21 @@ package body Standard_Dense_Series is
     return res;
   end Create;
 
+  function Create ( c : Standard_Complex_Vectors.Vector ) return Series is
+
+    res : Series;
+
+  begin
+    if c'last <= max_order then
+      res.order := c'last;
+      res.cff(0..c'last) := c;
+    else
+      res.order := max_order;
+      res.cff := c(0..max_order);
+    end if;
+    return res;
+  end Create;
+
   function Create ( s : Series; order : integer32 ) return Series is
 
     res : Series;
@@ -120,6 +135,29 @@ package body Standard_Dense_Series is
 
 -- ARITHMETICAL OPERATORS :
 
+  function "+" ( s : Series; c : Complex_Number ) return Series is
+
+    res : Series := s;
+
+  begin
+    res.cff(0) := s.cff(0) + c;
+    return res;
+  end "+";
+
+  function "+" ( c : Complex_Number; s : Series ) return Series is
+
+    res : Series := s;
+  
+  begin
+    res.cff(0) := c + s.cff(0);
+    return res;
+  end "+";
+
+  procedure Add ( s : in out Series; c : in Complex_Number ) is
+  begin
+    s.cff(0) := s.cff(0) + c;
+  end Add;
+
   function "+" ( s : Series ) return Series is
 
     res : constant Series := s;
@@ -170,6 +208,33 @@ package body Standard_Dense_Series is
       end loop;
     end if;
   end Add;
+
+  function "-" ( s : Series; c : Complex_Number ) return Series is
+
+    res : Series := s;
+
+  begin
+    res.cff(0) := s.cff(0) - c;
+    return res;
+  end "-";
+
+  function "-" ( c : Complex_Number; s : Series ) return Series is
+
+    res : Series;
+
+  begin
+    res.order := s.order;
+    res.cff(0) := c - s.cff(0);
+    for k in 1..res.order loop
+      res.cff(k) := -s.cff(k);
+    end loop;
+    return res;
+  end "-";
+
+  procedure Sub ( s : in out Series; c : in Complex_Number ) is
+  begin
+    s.cff(0) := s.cff(0) - c;
+  end Sub;
 
   function "-" ( s : Series ) return Series is
 
@@ -232,6 +297,37 @@ package body Standard_Dense_Series is
       end loop;
     end if;
   end Sub;
+
+  function "*" ( s : Series; c : Complex_Number ) return Series is
+
+    res : Series;
+
+  begin
+    res.order := s.order;
+    for k in 0..s.order loop
+      res.cff(k) := s.cff(k)*c;
+    end loop;
+    return res;
+  end "*";
+
+  function "*" ( c : Complex_Number; s : Series ) return Series is
+
+    res : Series;
+
+  begin
+    res.order := s.order;
+    for k in 0..s.order loop
+      res.cff(k) := c*s.cff(k);
+    end loop;
+    return res;
+  end "*";
+
+  procedure Mul ( s : in out Series; c : in Complex_Number ) is
+  begin
+    for i in 0..s.order loop
+      s.cff(i) := s.cff(i)*c;
+    end loop;
+  end Mul;
 
   function "*" ( s,t : Series ) return Series is
 
@@ -301,12 +397,33 @@ package body Standard_Dense_Series is
     return res;
   end Inverse;
 
-  function "/" ( s,t : Series ) return Series is
+  function "/" ( s : Series; c : Complex_Number ) return Series is
 
-    invt : constant Series := Inverse(t); 
+    res : Series;
 
   begin
-    return s*invt;
+    res.order := s.order;
+    for k in 0..s.order loop
+      res.cff(k) := s.cff(k)/c;
+    end loop;
+    return res;
+  end "/";
+
+  function "/" ( c : Complex_Number; s : Series ) return Series is
+  begin
+    return c*Inverse(s);
+  end "/";
+
+  procedure Div ( s : in out Series; c : in Complex_Number ) is
+  begin
+    for k in 0..s.order loop
+      s.cff(k) := s.cff(k)/c;
+    end loop;
+  end Div;
+
+  function "/" ( s,t : Series ) return Series is
+  begin
+    return s*Inverse(t);
   end "/";
 
   procedure Div ( s : in out Series; t : in Series ) is
@@ -316,6 +433,58 @@ package body Standard_Dense_Series is
   begin
     Mul(s,invt);
   end Div;
+
+  function "**" ( s : Series; p : integer ) return Series is
+
+    res : Series;
+
+  begin
+    if p = 0 then
+      res := Create(1);
+    elsif p > 0 then
+      res := s;
+      for k in 2..p loop
+        Mul(res,s);
+      end loop;
+    else -- p < 0
+      res := s;
+      for k in 2..(-p) loop
+        Mul(res,s);
+      end loop;
+      res := Inverse(res);
+    end if;
+    return res;
+  end "**";
+
+-- EVALUATORS :
+
+  function Eval ( s : Series; t : double_float ) return Complex_Number is
+
+    res : Complex_Number := s.cff(0);
+    pwt : double_float := t;
+
+  begin
+    for i in 1..(s.order-1) loop
+      res := res + s.cff(i)*pwt;
+      pwt := pwt*t;
+    end loop;
+    res := res + s.cff(s.order)*pwt;
+    return res;
+  end Eval;
+
+  function Eval ( s : Series; t : Complex_Number ) return Complex_Number is
+
+    res : Complex_Number := s.cff(0);
+    pwt : Complex_Number := t;
+
+  begin
+    for i in 1..(s.order-1) loop
+      res := res + s.cff(i)*pwt;
+      pwt := pwt*t;
+    end loop;
+    res := res + s.cff(s.order)*pwt;
+    return res;
+  end Eval;
 
 -- DESTRUCTOR :
 

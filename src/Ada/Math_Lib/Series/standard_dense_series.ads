@@ -27,7 +27,7 @@ package Standard_Dense_Series is
     -- only the coefficients in the range 0..order are used
   end record;
 
--- CREATORS :
+-- CONSTRUCTORS :
 
   function Create ( i : integer ) return Series;
   function Create ( f : double_float ) return Series;
@@ -44,6 +44,17 @@ package Standard_Dense_Series is
   --   Returns a series of the given order where the leading element
   --   at position 0 has the value of i, f, or c.
 
+  -- REQUIRED : order <= max_order.
+
+  function Create ( c : Standard_Complex_Vectors.Vector ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns a series with coefficients in c, with order equal
+  --   to c'last if c'last <= max_order.  If c'last > max_order,
+  --   then the coefficients in c with index > max_order are ignored.
+
+  -- REQUIRED : c'first = 0.
+
   function Create ( s : Series; order : integer32 ) return Series;
 
   -- DESCRIPTION :
@@ -52,6 +63,8 @@ package Standard_Dense_Series is
   --   coefficients of s, padded with zeros.
   --   If order < s'last, then the series on return is a truncation
   --   of the series in s, with only the coefficients in s(0..order).
+
+  -- REQUIRED : order <= max_order.
 
 -- EQUALITY AND COPY :
 
@@ -73,6 +86,23 @@ package Standard_Dense_Series is
 
 -- ARITHMETICAL OPERATORS :
 
+  function "+" ( s : Series; c : Complex_Number ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns a series which is a copy of s,
+  --   but with c added to the constant term of s.
+
+  function "+" ( c : Complex_Number; s : Series ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns a series which is a copy of s,
+  --   but with c added to the constant term of s.
+
+  procedure Add ( s : in out Series; c : in Complex_Number );
+
+  -- DESCRIPTION :
+  --   This is equivalent to s := s + c.
+
   function "+" ( s : Series ) return Series;
 
   -- DESCRIPTION :
@@ -89,6 +119,22 @@ package Standard_Dense_Series is
   -- DESCRIPTION :
   --   Adds the series t to s.  If t.order > s.order,
   --   then the terms of t of index > s.order will be ignored.
+
+  function "-" ( s : Series; c : Complex_Number ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns the series s - c, subtracting c from the constant
+  --   coefficient of s.
+
+  function "-" ( c : Complex_Number; s : Series ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns the series c - s.
+
+  procedure Sub ( s : in out Series; c : in Complex_Number );
+
+  -- DESCRIPTION :
+  --   This is equivalent to s := s - c.
 
   function "-" ( s : Series ) return Series;
 
@@ -112,6 +158,21 @@ package Standard_Dense_Series is
   --   Subtracts the series t from s.  If t.order > s.order,
   --   then the terms of t of index > s.order will be ignored.
 
+  function "*" ( s : Series; c : Complex_Number ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns s*c.
+
+  function "*" ( c : Complex_Number; s : Series ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns c*s.
+
+  procedure Mul ( s : in out Series; c : in Complex_Number );
+
+  -- DESCRIPTION :
+  --   Is equivalent to s := s*c.
+
   function "*" ( s,t : Series ) return Series;
 
   -- DESCRIPTION :
@@ -132,11 +193,36 @@ package Standard_Dense_Series is
 
   -- REQUIRED : s(0) /= 0.
 
+  function "/" ( s : Series; c : Complex_Number ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns the series s/c, where every coefficient of s
+  --   is divided by c.
+
+  -- REQUIRED : c /= 0.
+
+  procedure Div ( s : in out Series; c : in Complex_Number );
+
+  -- DESCRIPTION :
+  --   This is equivalent to s := s/c.
+
+  -- REQUIRED : c /= 0.
+
+  function "/" ( c : Complex_Number; s : Series ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns c/s, obtained by multiplying all coefficient of
+  --   the inverse of s with c.
+
+  -- REQUIRED : s.cff(0) /= 0.
+
   function "/" ( s,t : Series ) return Series;
 
   -- DESCRIPTION :
   --   Returns the series c = s/t.  The order of the series
   --   on return is the maximum of s.order and t.order.
+
+  -- REQUIRED : t.cff(0) /= 0.
 
   procedure Div ( s : in out Series; t : in Series );
 
@@ -144,7 +230,23 @@ package Standard_Dense_Series is
   --   Divides the series s by t.  If t.order > s.order,
   --   then terms in t with index > s.order will be ignored.
 
-  -- REQUIRED : t(0) /= 0.
+  -- REQUIRED : t.cff(0) /= 0.
+
+  function "**" ( s : Series; p : integer ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns s**p, s to the power p.
+
+  -- REQUIRED : if p < 0, then s.cff(0) /= 0.
+
+-- EVALUATORS :
+
+  function Eval ( s : Series; t : double_float ) return Complex_Number;
+  function Eval ( s : Series; t : Complex_Number ) return Complex_Number;
+
+  -- DESCRIPTION :
+  --   Returns the value c(0) + c(1)*t + .. + c(s.order)*t**s.order,
+  --   where c abbreviates the coefficient vector s.cff.
 
 -- DESTRUCTOR :
 
