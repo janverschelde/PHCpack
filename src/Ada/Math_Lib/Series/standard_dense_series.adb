@@ -7,76 +7,73 @@ package body Standard_Dense_Series is
 -- CREATORS :
 
   function Create ( i : integer ) return Series is
-
-    res : Series(0..0);
-
   begin
-    res(0) := Create(i);
-    return res;
+    return Create(i,0);
   end Create;
 
   function Create ( f : double_float ) return Series is
-
-    res : Series(0..0);
-
   begin
-    res(0) := Create(f);
-    return res;
+    return Create(f,0);
   end Create;
 
   function Create ( c : Complex_Number ) return Series is
-
-    res : Series(0..0);
-
   begin
-    res(0) := c;
-    return res;
+    return Create(c,0);
   end Create;
 
   function Create ( i : integer; order : integer32 ) return Series is
 
-    res : Series(0..order);
+    res : Series;
 
   begin
-    res(0) := Create(i);
+    res.order := order;
+    res.cff(0) := Create(i);
+    res.cff(1..order)
+      := Standard_Complex_Vectors.Vector'(1..order => Create(0.0));
     return res;
   end Create;
 
   function Create ( f : double_float; order : integer32 ) return Series is
 
-    res : Series(0..order);
+    res : Series;
 
   begin
-    res(0) := Create(f);
-    res(1..order) := Series'(1..order => Create(0.0));
+    res.order := order;
+    res.cff(0) := Create(f);
+    res.cff(1..order)
+      := Standard_Complex_Vectors.Vector'(1..order => Create(0.0));
     return res;
   end Create;
 
   function Create ( c : Complex_Number; order : integer32 ) return Series is
 
-    res : Series(0..order);
+    res : Series;
 
   begin
-    res(0) := c;
+    res.order := order;
+    res.cff(0) := c;
+    res.cff(1..order)
+      := Standard_Complex_Vectors.Vector'(1..order => Create(0.0));
     return res;
   end Create;
 
   function Create ( s : Series; order : integer32 ) return Series is
 
-    res : Series(0..order);
+    res : Series;
     zero : constant Complex_Number := Create(0.0);
 
   begin
-    if order <= s'last then
-      for i in res'range loop
-        res(i) := s(i);
+    res.order := order;
+    if order <= s.order then
+      for i in 0..res.order loop
+        res.cff(i) := s.cff(i);
       end loop;
     else
-      for i in s'range loop
-        res(i) := s(i);
+      for i in 0..s.order loop
+        res.cff(i) := s.cff(i);
       end loop;
-      for i in s'last+1..order loop
-        res(i) := zero;
+      for i in s.order+1..order loop
+        res.cff(i) := zero;
       end loop;
     end if;
     return res;
@@ -89,14 +86,14 @@ package body Standard_Dense_Series is
     zero : constant Complex_Number := Create(0.0);
 
   begin
-    if s'last <= t'last then
-      for i in s'range loop
-        if not Standard_Complex_Numbers.Equal(s(i),t(i))
+    if s.order <= t.order then
+      for i in 0..s.order loop
+        if not Standard_Complex_Numbers.Equal(s.cff(i),t.cff(i))
          then return false;
         end if;
       end loop;
-      for i in s'last+1..t'last loop
-        if not Standard_Complex_Numbers.Equal(t(i),zero)
+      for i in s.order+1..t.order loop
+        if not Standard_Complex_Numbers.Equal(t.cff(i),zero)
          then return false;
         end if;
       end loop;
@@ -111,95 +108,177 @@ package body Standard_Dense_Series is
     zero : constant Complex_Number := Create(0.0);
 
   begin
-    for i in s'range loop
-      t(i) := s(i);
+    for i in 0..s.order loop
+      t.cff(i) := s.cff(i);
     end loop;
-    if t'last > s'last then
-      for i in s'last+1..t'last loop
-        t(i) := zero;
+    if t.order > s.order then
+      for i in s.order+1..t.order loop
+        t.cff(i) := zero;
       end loop;
     end if;
   end Copy;
 
 -- ARITHMETICAL OPERATORS :
 
-  function "+" ( s,t : Series ) return Series is
+  function "+" ( s : Series ) return Series is
 
-    res : Series(0..s'last);
+    res : constant Series := s;
 
   begin
-    for i in s'range loop
-      res(i) := s(i) + t(i);
-    end loop;
+    return res;
+  end "+";
+
+  function "+" ( s,t : Series ) return Series is
+
+    res : Series;
+
+  begin
+    if s.order = t.order then
+      res.order := s.order;
+      for i in 0..res.order loop
+        res.cff(i) := s.cff(i) + t.cff(i);
+      end loop;
+    elsif s.order < t.order then -- order of result is t.order
+      res.order := t.order;
+      for i in 0..s.order loop
+        res.cff(i) := s.cff(i) + t.cff(i);
+      end loop;
+      for i in s.order+1..t.order loop -- copy remaining terms from t
+        res.cff(i) := t.cff(i);
+      end loop;
+    else -- s.order > t.order and the order of result is s.order
+      res.order := s.order;
+      for i in 0..t.order loop
+        res.cff(i) := s.cff(i) + t.cff(i);
+      end loop;
+      for i in t.order+1..s.order loop -- copy remaining terms from s
+        res.cff(i) := s.cff(i);
+      end loop;
+    end if;
     return res;
   end "+";
 
   procedure Add ( s : in out Series; t : in Series ) is
   begin
-    for i in s'range loop
-      s(i) := s(i) + t(i);
-    end loop;
+    if t.order >= s.order then  -- ignore terms of order > s.order
+      for i in 0..s.order loop
+        s.cff(i) := s.cff(i) + t.cff(i);
+      end loop;
+    else          -- add only the coefficients of index <= t.order
+      for i in 0..t.order loop
+        s.cff(i) := s.cff(i) + t.cff(i);
+      end loop;
+    end if;
   end Add;
 
   function "-" ( s : Series ) return Series is
 
-    res : Series(0..s'last);
+    res : Series;
 
   begin
-    for i in s'range loop
-      res(i) := -s(i);
+    res.order := s.order;
+    for i in 0..res.order loop
+      res.cff(i) := -s.cff(i);
     end loop;
     return res;
   end "-";
 
   procedure Min ( s : in out Series ) is
   begin
-    for i in s'range loop
-      s(i) := -s(i);
+    for i in 0..s.order loop
+      s.cff(i) := -s.cff(i);
     end loop;
   end Min;
 
   function "-" ( s,t : Series ) return Series is
 
-    res : Series(0..s'last);
+    res : Series;
 
   begin
-    for i in s'range loop
-      res(i) := s(i) - t(i);
-    end loop;
+    if s.order = t.order then
+      res.order := s.order;
+      for i in 0..t.order loop
+        res.cff(i) := s.cff(i) - t.cff(i);
+      end loop;
+    elsif s.order < t.order then -- the order of the result is t.order
+      res.order := t.order;
+      for i in 0..s.order loop
+        res.cff(i) := s.cff(i) - t.cff(i);
+      end loop;
+      for i in s.order+1..t.order loop -- copy remaining terms
+        res.cff(i) := -t.cff(i);       -- of t with minus sign
+      end loop;
+    else
+      res.order := s.order;
+      for i in 0..s.order loop
+        res.cff(i) := s.cff(i) - t.cff(i);
+      end loop;
+      for i in t.order+1..s.order loop -- copy remaining terms of s
+        res.cff(i) := s.cff(i);
+      end loop;
+    end if;
     return res;
   end "-";
 
-  procedure Min ( s : in out Series; t : in Series ) is
+  procedure Sub ( s : in out Series; t : in Series ) is
   begin
-    for i in s'range loop
-      s(i) := s(i) - t(i);
-    end loop;
-  end Min;
+    if t.order >= s.order then -- ignore terms of t of index > s.order
+      for i in 0..s.order loop
+        s.cff(i) := s.cff(i) - t.cff(i);
+      end loop;
+    else
+      for i in 0..t.order loop
+        s.cff(i) := s.cff(i) - t.cff(i);
+      end loop;
+    end if;
+  end Sub;
 
   function "*" ( s,t : Series ) return Series is
 
-    res : Series(0..s'last);
+    res : Series;
 
   begin
-    for i in res'range loop
-      res(i) := s(0)*t(i);
-      for j in 1..i loop
-        res(i) := res(i) + s(j)*t(i-j);
+    if s.order = t.order then
+      res.order := s.order;
+      for i in 0..res.order loop
+        res.cff(i) := s.cff(0)*t.cff(i);
+        for j in 1..i loop
+          res.cff(i) := res.cff(i) + s.cff(j)*t.cff(i-j);
+        end loop;
       end loop;
-    end loop;
+    elsif s.order < t.order then
+      res.order := t.order;
+      for i in 0..res.order loop
+        res.cff(i) := s.cff(0)*t.cff(i);
+        for j in 1..i loop
+          exit when j > s.order;
+          res.cff(i) := res.cff(i) + s.cff(j)*t.cff(i-j);
+        end loop;
+      end loop;
+    else -- s.order > t.order, we then flip s and t
+      res.order := s.order;
+      for i in 0..res.order loop
+        res.cff(i) := t.cff(0)*s.cff(i);
+        for j in 1..i loop
+          exit when j > t.order;
+          res.cff(i) := res.cff(i) + t.cff(j)*s.cff(i-j);
+        end loop;
+      end loop;
+    end if;
     return res;
   end "*";
 
   procedure Mul ( s : in out Series; t : in Series ) is
 
-    res : Series(0..s'last);
+    res : Series;
 
   begin
-    for i in res'range loop
-      res(i) := s(0)*t(i);
+    res.order := s.order;
+    for i in 0..res.order loop
+      res.cff(i) := t.cff(0)*s.cff(i);
       for j in 1..i loop
-        res(i) := res(i) + s(j)*t(i-j);
+        exit when j > t.order;
+        res.cff(i) := res.cff(i) + t.cff(j)*s.cff(i-j);
       end loop;
     end loop;
     s := res;
@@ -207,23 +286,24 @@ package body Standard_Dense_Series is
 
   function Inverse ( s : Series ) return Series is
 
-    res : Series(0..s'last);
+    res : Series;
 
   begin
-    res(0) := 1.0/s(0);
-    for i in 1..res'last loop
-      res(i) := -s(1)*res(i-1);
+    res.order := s.order;
+    res.cff(0) := 1.0/s.cff(0);
+    for i in 1..res.order loop
+      res.cff(i) := -s.cff(1)*res.cff(i-1);
       for j in 2..i loop
-        res(i) := res(i) - s(j)*res(i-j);
+        res.cff(i) := res.cff(i) - s.cff(j)*res.cff(i-j);
       end loop;
-      res(i) := res(i)/s(0);
+      res.cff(i) := res.cff(i)/s.cff(0);
     end loop;
     return res;
   end Inverse;
 
   function "/" ( s,t : Series ) return Series is
 
-    invt : constant Series(t'range) := Inverse(t); 
+    invt : constant Series := Inverse(t); 
 
   begin
     return s*invt;
@@ -231,7 +311,7 @@ package body Standard_Dense_Series is
 
   procedure Div ( s : in out Series; t : in Series ) is
 
-    invt : constant Series(t'range) := Inverse(t);
+    invt : constant Series := Inverse(t);
 
   begin
     Mul(s,invt);
@@ -241,8 +321,9 @@ package body Standard_Dense_Series is
 
   procedure Clear ( s : in out Series ) is
   begin
-    for i in s'range loop
-      s(i) := Create(0.0);
+    s.order := 0;
+    for i in s.cff'range loop
+      s.cff(i) := Create(0.0);
     end loop;
   end Clear;
 

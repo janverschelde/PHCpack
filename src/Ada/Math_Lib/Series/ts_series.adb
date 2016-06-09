@@ -16,14 +16,14 @@ procedure ts_series is
   -- DESCRIPTION :
   --   Verifies that 1/(1-t) = 1 + t + t^2 + ...
 
-    s : Series(0..order) := Create(1,order);
-    t : Series(0..order) := s;
-    x,y,z : Series(0..order);
+    s : Series := Create(1,order);
+    t : Series := s;
+    x,y,z : Series;
 
   begin
     put("One as series of order "); put(order,1); put_line(" :");
     put(s);
-    t(1) := Create(-1.0);
+    t.cff(1) := Create(-1.0);
     put_line("The series 1 - t :"); put(t); 
     x := s/t;
     put_line("The series 1/(1-t) : "); put(x);

@@ -14,7 +14,18 @@ package Standard_Dense_Series is
 --   With the definitions and operations in this package,
 --   the Standard_Dense_Series_Ring is defined.
 
-  type Series is new Standard_Complex_Vectors.Vector;
+  max_order : constant integer32 := 16;
+
+-- Because the type of the number in a ring must be a definite type,
+-- we cannot allow truncated series of arbitrary length, but must fix
+-- the order of the series at compile time to some number.
+
+  type Series is record
+    order : integer32; 
+    -- the last exponent in the series, the error is O(t^(order+1))
+    cff : Standard_Complex_Vectors.Vector(0..max_order);
+    -- only the coefficients in the range 0..order are used
+  end record;
 
 -- CREATORS :
 
@@ -62,19 +73,22 @@ package Standard_Dense_Series is
 
 -- ARITHMETICAL OPERATORS :
 
+  function "+" ( s : Series ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns a copy of s.
+
   function "+" ( s,t : Series ) return Series;
 
   -- DESCRIPTION :
-  --   Adds the series s to t.
+  --   Adds the series s to t.  The order of the series
+  --   on return is the maximum of s.order and t.order.
  
-  -- REQUIRED : s'last = t'last.
-
   procedure Add ( s : in out Series; t : in Series );
 
   -- DESCRIPTION :
-  --   Adds the series t to s.
-
-  -- REQUIRED : s'last = t'last.
+  --   Adds the series t to s.  If t.order > s.order,
+  --   then the terms of t of index > s.order will be ignored.
 
   function "-" ( s : Series ) return Series;
 
@@ -83,35 +97,33 @@ package Standard_Dense_Series is
 
   procedure Min ( s : in out Series );
 
-  -- DESCRIPTION : s = -s.
+  -- DESCRIPTION :
+  --   This is equivalent to s := -s.
 
   function "-" ( s,t : Series ) return Series;
 
   -- DESCRIPTION :
-  --   Subtracts the series t from s.
+  --   Subtracts the series t from s.  The order of the series
+  --   on return is the maximum of s.order and t.order.
 
-  -- REQUIRED : s'last = t'last.
-
-  procedure Min ( s : in out Series; t : in Series );
+  procedure Sub ( s : in out Series; t : in Series );
 
   -- DESCRIPTION :
-  --   Subtracts the series t from s.
-
-  -- REQUIRED : s'last = t'last.
+  --   Subtracts the series t from s.  If t.order > s.order,
+  --   then the terms of t of index > s.order will be ignored.
 
   function "*" ( s,t : Series ) return Series;
 
   -- DESCRIPTION :
   --   Returns the multiplication of the series s with t.
+  --   The order of the series on return is the maximum
+  --   of s.order and t.order.
  
-  -- REQUIRED : s'last = t'last.
-
   procedure Mul ( s : in out Series; t : in Series );
 
   -- DESCRIPTION :
-  --   Multiplies the series t with s.
-
-  -- REQUIRED : s'last = t'last.
+  --   Multiplies the series s with t.  If t.order > s.order,
+  --   then terms of t with index > s.order will be ignored.
 
   function Inverse ( s : Series ) return Series;
 
@@ -123,16 +135,16 @@ package Standard_Dense_Series is
   function "/" ( s,t : Series ) return Series;
 
   -- DESCRIPTION :
-  --   Returns the series c = s/t.
-
-  -- REQUIRED : t(0) /= 0 and s'last = t'last.
+  --   Returns the series c = s/t.  The order of the series
+  --   on return is the maximum of s.order and t.order.
 
   procedure Div ( s : in out Series; t : in Series );
 
   -- DESCRIPTION :
-  --   Divides the series s by t.
+  --   Divides the series s by t.  If t.order > s.order,
+  --   then terms in t with index > s.order will be ignored.
 
-  -- REQUIRED : t(0) /= 0 and s'last = t'last.
+  -- REQUIRED : t(0) /= 0.
 
 -- DESTRUCTOR :
 
@@ -140,5 +152,6 @@ package Standard_Dense_Series is
 
   -- DESCRIPTION :
   --   All coefficients of s are set to zero.
+  --   Also the order of s is set to zero.
 
 end Standard_Dense_Series;

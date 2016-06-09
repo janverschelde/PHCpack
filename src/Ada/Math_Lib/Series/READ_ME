@@ -11,4 +11,7 @@ ts_pstrunc                       : tests truncated power series
 standard_dense_series            : dense power series, standard coefficients
 standard_dense_series_io         : basic output of series
 ts_series                        : basic test on standard dense series
+standard_dense_series_ring       : ring of dense power series
+standard_dense_series_vectors    : vectors of dense power series
+ts_servec                        : test on vectors of dense power series
 ------------------------------------------------------------------------------
