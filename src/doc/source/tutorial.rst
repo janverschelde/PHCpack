@@ -1,4 +1,4 @@
-A short tutorial
+A Short Tutorial
 ================
 
 This section provides a quick getting started guide.
@@ -9,7 +9,7 @@ Executable versions of the program for various machine architectures
 and operating systems are available via
 <http://www.math.uic.edu/~jan/download.html>.
 
-For :index:`Windows` operating systems, the 
+For the :index:`Windows` operating systems, the 
 executable version of phc is in the file ``phc.exe``
 and is available for download in its uncompressed format.
 Using the plain version of phc on a Windows system 
@@ -17,14 +17,14 @@ requires the opening of a command prompt window.
 
 For :index:`Mac OS X` and :index:`Linux` versions, 
 the executable is tarred and gzipped.
-If the downloaded file is saved as ``x_phcv2_4.p.tar.gz``,
+If the downloaded file is saved as ``*phcv2_4p.tar.gz``,
 then the following commands to unzip and untar the downloaded file 
 can be typed at the command prompt:
 
 ::
 
-   gunzip x_phcv2_4p.tar.gz
-   tar xpf x_phcv2_4p.tar
+   gunzip *phcv2_4p.tar.gz
+   tar xpf *phcv2_4p.tar
 
 If all went well, typing ``./phc`` at the command prompt should bring
 up the welcome message and the screen with available options.
@@ -43,8 +43,7 @@ Input formats
 -------------
 
 A lot of examples are contained in the database of Demo systems,
-which can be downloaded in zipped and tarred format from the above
-web site.
+which can be downloaded in zipped and tarred format from the above web site.
 
 The input file starts with the number of equations and (optionally,
 but necessary in case of an unequal number) the number of unknowns.
@@ -58,15 +57,15 @@ as follows
      x**108 + 1.1*y**54 - 1.1*y;
      y**108 + 1.1*x**54 - 1.1*x;
 
-For future use, we save this system in the file haas.
+For future use, we save this system in the file ``haas``.
 Observe that every polynomial terminates with a semicolon.
 The exponentiation may also be denoted by a hat instead of
 a double asterix. 
 
 The :index:`forbidden symbols`
-to denote names of variables are i and I, because they 
+to denote names of variables are ``i`` and ``I``, because they 
 both represent the square root of -1.
-Also forbidden are e and E because they are used in
+Also forbidden are ``e`` and ``E`` because they are used in
 the scientific notation of floating-point numbers,
 like 0.01 = 1.0e-2 = 1.0E-2.
 
@@ -81,10 +80,9 @@ a general 2-by-4 matrix are represented as
     x13*x24 - x23*x14;
 
 thus as 3 polynomials in the 8 undeterminates of a general
-2-by-4 matrix.  We save this file as adjmin4.
+2-by-4 matrix.  We save this file as ``adjmin4``.
 
-The program also accepts polynomials in factored form,
-for example,
+The program also accepts polynomials in factored form, for example,
 
 ::
 
@@ -97,7 +95,7 @@ for example,
 
 is a valid input file for phc.
 Note that we replaced the logical e variable by f.
-We save this input in the file with name multilin.
+We save this input in the file with name ``multilin``.
 
 A very simple Maple interface
 -----------------------------
@@ -197,9 +195,9 @@ every question.  At the very end, for the output format, it may be good
 to type in 1 instead of 0, so we can see the progress of the program as
 it adds solution after solution to the output file.
 
-If we look at the output file for the system in multilin,
-then we see that the mixed volume equals the 4-homogeneous Bezout
-number.  Since polyhedral methods (e.g. to compute the mixed volume)
+If we look at the output file for the system in ``multilin``,
+then we see that the mixed volume equals the 4-homogeneous Bezout number.
+Since polyhedral methods (e.g. to compute the mixed volume)
 are computationally more expensive than the solvers based on product
 homotopies, we can solve the same problem faster.
 If we run the program on the system in multilin in full mode,
@@ -218,17 +216,18 @@ Now we continue just as before.
 Running the program in toolbox mode
 -----------------------------------
 
-To avoid the preconditioning stage (scaling and reduction) we can
-compute root counts and construct start systems via the option -r,
-thus calling the program as phc -r.  One important submenu is
-the mixed-volume computation, invoked via phc -m.
+Skipping the preconditioning stage (scaling and reduction),
+we can compute root counts and construct start systems via the option ``-r``,
+thus calling the program as ``phc -r``.  One important submenu is
+the mixed-volume computation, invoked via ``phc -m``.
 
 Once we created an appropriate start system, we can call the path
-trackers via the option -p.  Calling the program as phc -p
-is useful if we have to solve a slightly modified problem.  For instance,
+trackers via the option ``-p``.  Calling the program as ``phc -p``
+is useful if we have to solve a slightly modified problem.
+For instance,
 suppose we change the coefficients of the system in multilin,
 then we can still use multilin_start to solve the system with
-modified coefficients, using the -p option.  In this way we use
+modified coefficients, using the ``-p`` option.  In this way we use
 a cheater's homotopy, performing a kind of coefficient-parameter
 polynomial continuation.
 
@@ -236,12 +235,12 @@ Dealing with components of solutions
 ------------------------------------
 
 Consider the system of adjacent minors, we previously saved 
-as adjmin4.  We first must construct a suitable embedding
+as ``adjmin4``.  We first must construct a suitable embedding
 to get to a system with as many equations as unknowns.
-We call phc -c and type 5 as top dimension.  The system
-the program produces is saved as adjmin4e5.  The blackbox
+We call ``phc -c`` and type 5 as top dimension.  The system
+the program produces is saved as ``adjmin4e5``.  The blackbox
 solver has no difficulty to solve this problem and appends the
-witness points to the file adjmin4e5.  To compute the
+witness points to the file ``adjmin4e5``.  To compute the
 irreducible decomposition, we may use the monodromy breakup
 algorithm, selecting 2 from the menu that comes up when we
-can the program with the option -f.
+can the program with the option ``-f``.

@@ -1,34 +1,9 @@
-Options of the executable phc
+Options of the Executable phc
 =============================
 
 For many small to moderate size problems,
 the most convenient way to get an answer of phc is to
 call the blackbox solver with the option -b.
-
-phc --version : displays the current version string
----------------------------------------------------
-
-Typing at the command prompt ``phc --version`` displays
-the :index:`version string` which includes the current :index:`version number`
-and the :index:`release date`.
-
-phc --license : writes the license to screen
---------------------------------------------
-
-PHCpack is free and open source software.
-You can redistribute the code and/or modify it under
-the GNU General Pulic License as published by
-the Free Software Foundation.
-
-phc --help : writes helpful information to screen
--------------------------------------------------
-
-Typing at the command prompt ``phc --help`` provides some 
-:index:`help` to get started with the quickest use, that is:
-with the blackbox solver.
-
-To obtain help about the blackbox solver, type ``phc -b --help``
-or ``phc --help -b`` where the ``--help`` may be abbreviated by ``-h``.
 
 phc -0 : random numbers with fixed seed for repeatable runs    
 -----------------------------------------------------------
@@ -318,8 +293,8 @@ with as many equations as unknowns, the mixed volume of the Newton
 polytopes gives a generically sharp upper bound on the number of
 isolated solutions with coordinates different from zero.
 
-The mixed volume :index:`mixed volume` of a tuple of Newton polytopes
-if defined as the coefficient in the expansion of the volume
+The :index:`mixed volume` of a tuple of Newton polytopes
+is defined as the coefficient in the expansion of the volume
 of a linear combination of Newton polytopes.
 For example, for a 3-tuple of Newton polytopes:
 
@@ -621,7 +596,7 @@ of the scaled system into the coordinates of the original problem.
 To transform the solutions, choose the third option of the second
 menu of ``phc -s``.
 
-phc -t : Tasking for tracking paths using multiple threads     
+phc -t : tasking for tracking paths using multiple threads     
 ----------------------------------------------------------
 
 The option -t allows the user to take advantage
@@ -709,7 +684,58 @@ phc -v : verification, refinement and purification of solutions
 
 While solution paths do in general not become singular or diverge,
 at the end of the paths, solutions may turn out to be singular
-and/or at infinity.  With ``phc -v`` one can do the following tasks:
+and/or at infinity.
+
+Consider for example the system
+
+::
+
+   2
+    x*y + x - 0.333;
+    x^2 + y - 1000;
+
+where the first solution obtained by some run with ``phc -b`` is
+
+::
+
+   solution 1 :
+   t :  1.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    x :  3.32667332704111E-04  -2.78531008415435E-26
+    y :  9.99999999889332E+02   0.00000000000000E+00
+   == err :  3.374E-09 = rco :  2.326E-06 = res :  3.613E-16 ==
+
+The last three numbers labeled with ``err``, ``rco``, and ``res``
+are indicators for the quality of the solution:
+
+1. ``err`` : the magnitude of the last correction made by Newton's method
+   to the approximate solution.  The ``err`` measures the *forward error*
+   on the solution.  The forward error is the magnitude of the correction
+   we have to make to the approximate solution to obtain the exact solution.
+   As the value of ``err`` is about ``1.0e-9`` we can hope to have about
+   eight correct decimal places in the solution.
+
+2. ``rco`` : an estimate for the inverse of the *condition number* of the
+   Jacobian matrix at the approximation for the solution.
+   A :index:`condition number` measures by how much a solution may change as
+   by a change on the input coefficients.  In the example above, the ``0.333``
+   could be a three digit approximation for ``1/3``, so the error on the
+   input could be as large as ``1.0e-4``.  As ``rco`` is about ``1.0e-6``,
+   the condition number is estimated to be of order ``1.0e+6``.
+   For this example, an error of :math:`10^{-4}` on the input coefficients
+   can result in an error of :math:`10^{-4} \times 10^6 = 10^2`
+   on the solutions.
+
+3. ``res`` : the magnitude of the polynomials in the system evaluated at
+   the approximate solution, the so-called *residual*.
+   For this problem, the :index:`residual` is the *backward error*.
+   Because of numerical representation errors, we have not solved an exact
+   problem, but a nearby problem.  The :index:`backward error` measures
+   by much we should change the input coefficients for the approximate
+   solution to be an exact solution of a nearby problem.
+
+With ``phc -v`` one can do the following tasks:
 
 1. Perform a basic :index:`verification` of the solutions based 
    on Newton's method and weed out spurious solutions.

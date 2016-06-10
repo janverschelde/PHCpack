@@ -13,5 +13,6 @@ PHCpack Documentation Contents
 
    welcome
    tutorial
+   textoptions
    options
    about
