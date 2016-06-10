@@ -1,3 +1,6 @@
+Fri 10 Jun 2016 : new package standard_algebraic_series with the sqrt code
+  from ts_series.
+
 Thu 9 Jun 2016 : rewrote standard_dense_series to use a definite type for
   making the standard_dense_series_ring and standard_dense_series_vectors.
   The test programs are ts_series and ts_servec.  Extended the package

@@ -1,4 +1,5 @@
 with text_io;                            use text_io;
+with Communications_with_User;           use Communications_with_User;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
@@ -8,6 +9,7 @@ with Standard_Complex_Vectors;
 with Standard_Random_Vectors;            use Standard_Random_Vectors;
 with Standard_Dense_Series;              use Standard_Dense_Series;
 with Standard_Dense_Series_io;           use Standard_Dense_Series_io;
+with Standard_Algebraic_Series;
 
 procedure ts_series is
 
@@ -49,31 +51,6 @@ procedure ts_series is
     return Create(cff);
   end Random_Series;
 
-  function sqrt ( c : Series ) return Series is
-
-  -- ALGORITHM : apply Newton's method to x^2 - c = 0,
-  --   compute dx = (x^2 - c)/(2*x), followed by x = x - dx.
-  --   Stops when x.order > c.order.
-
-    x,wrk,dx : Series;
-    fac : constant Complex_Number := Create(0.5);
-
-  begin
-    x.order := 1;
-    x.cff(0) := Standard_Complex_Numbers_Polar.Root(c.cff(0),2,1);
-    x.cff(1) := Create(0.0);
-    loop
-      for k in 1..3+x.order loop
-        wrk := x*x - c;
-        dx := fac*wrk/x;
-        x := x - dx;
-      end loop;
-      exit when x.order >= c.order;
-      x := Create(x,2*x.order);
-    end loop;
-    return x;
-  end sqrt;
-
   procedure Random_Test_sqrt ( order : in integer32 ) is
 
   -- DESCRIPTION :
@@ -81,12 +58,20 @@ procedure ts_series is
   --   and tests the square root computation.
 
     c : constant Series := Random_Series(order);
+    ans : character;
     x,y,z : Series;
  
   begin
+    new_line;
+    put("Extra output during the computation ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    new_line;
     put("A random series c of order "); put(order,1); put_line(" :");
     put(c);
-    x := Sqrt(c);
+    if ans = 'y'
+     then x := Standard_Algebraic_Series.sqrt(c,0,true);
+     else x := Standard_Algebraic_Series.sqrt(c,0);
+    end if;
     put_line("The square root x of the random series :"); put(x);
     y := x*x;
     put_line("The square y of the square root x : "); put(y);
