@@ -456,6 +456,22 @@ package body Standard_Dense_Series is
     return res;
   end "**";
 
+  function "**" ( s : Series; p : natural32 ) return Series is
+
+    res : Series;
+
+  begin
+    if p = 0 then
+      res := Create(1);
+    else
+      res := s;
+      for k in 2..p loop
+        Mul(res,s);
+      end loop;
+    end if;
+    return res;
+  end "**";
+
 -- EVALUATORS :
 
   function Eval ( s : Series; t : double_float ) return Complex_Number is

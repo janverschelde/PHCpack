@@ -1,3 +1,4 @@
+with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
@@ -233,6 +234,7 @@ package Standard_Dense_Series is
   -- REQUIRED : t.cff(0) /= 0.
 
   function "**" ( s : Series; p : integer ) return Series;
+  function "**" ( s : Series; p : natural32 ) return Series;
 
   -- DESCRIPTION :
   --   Returns s**p, s to the power p.

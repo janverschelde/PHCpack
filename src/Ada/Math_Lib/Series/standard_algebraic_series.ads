@@ -17,4 +17,13 @@ package Standard_Algebraic_Series is
   --   The order of the series on return equals c.order.
   --   If verbose, then the Newton updates dx are written to screen.
 
+  function Root ( c : Series; n,i : natural32;
+                  verbose : boolean := false ) return Series;
+
+  -- DESCRIPTION :
+  --   Applies Newton's method to x^n - c = 0,
+  --   starting at the i-th square root of the zero-th order.
+  --   The order of the series on return equals c.order.
+  --   If verbose, then the Newton updates dx are written to screen.
+
 end Standard_Algebraic_Series;
