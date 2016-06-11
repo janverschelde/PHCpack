@@ -323,7 +323,20 @@ and with the :index:`Cayley trick`
 we can compute all its coefficients.
 This is implemented with the dynamic lifting algorithm.
 
-The menu of phc -m offers 5 different algorithms:
+The menu with 5 different lifting strategies is displayed as follows:
+
+::
+
+   MENU with available Lifting Strategies :
+     0. Static lifting     : lift points and prune lower hull.
+     1. Implicit lifting   : based on recursive formula.
+     2. Dynamic lifting    : incrementally add the points.
+     3. Symmetric lifting  : points in same orbit get same lifting.
+     4. MixedVol Algorithm : a faster mixed volume computation.
+   Type 0, 1, 2, 3, or 4 to select, eventually preceded by i for info : 
+
+
+The menu of ``phc -m`` offers 5 different algorithms:
 
 0. Static lifting: a lifting function is applied to the points in the
    support sets of the polynomials in the system and the lower hull
