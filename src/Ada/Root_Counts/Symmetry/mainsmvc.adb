@@ -62,7 +62,7 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
   begin
     loop
       new_line;
-      put_line("MENU with available Lifting Strategies (0 is default) :");
+      put_line("MENU with available Lifting Strategies :");
       put_line("  0. Static lifting     : lift points and prune lower hull.");
       put_line("  1. Implicit lifting   : based on recursive formula.");
       put_line("  2. Dynamic lifting    : incrementally add the points.");
@@ -229,6 +229,11 @@ procedure mainsmvc ( nt : in natural32; infilename,outfilename : in string ) is
   end Ask_and_Dispatch_Lifting_Strategy;
 
   procedure Main is
+
+  -- DESCRIPTION :
+  --   Reads a Laurent polynomial system with complex coefficients
+  --   in standard double precision and then calls the procedure to
+  --   proceed with the menu of different lifting strategies.
 
     use Standard_Complex_Laur_Systems;
     lq : Link_to_Laur_Sys := null;
