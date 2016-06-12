@@ -166,6 +166,33 @@ package body Greeting_Banners is
   procedure help4help is
   begin
     put_line("phc -h or phc --help tries to help...");
+    new_line;
+    put_line("For help on the options, type phc -h followed by");
+    put_line(" -0 : random numbers with fixed seed for repeatable runs");
+    put_line(" -a : solving polynomial systems equation-by-equation");
+    put_line(" -b : batch or black-box processing, the blackbox solver");
+    put_line(" -c : irreducible decomposition for solution components");
+    put_line(" -d : linear and nonlinear reduction w.r.t. the total degree");
+    put_line(" -e : SAGBI/Pieri/Littlewood-Richardson homotopies");
+    put_line(" -f : factor pure dimensional solution set into irreducibles");
+    put_line(" -g : checking whether an input system has the right syntax");
+    put_line(" -k : realization of dynamic output feedback placing poles");
+    put_line(" -l : witness set for hypersurface cutting with random line");
+    put_line(" -m : mixed volume computation via lift+prune and MixedVol");
+    put_line(" -o : write order of symbols after parsing polynomial system");
+    put_line(" -p : polynomial continuation by a homotopy in one parameter");
+    put_line(" -q : tracking solution paths with incremental read/write");  
+    put_line(" -r : root counting and construction of start systems");
+    put_line(" -s : equation and variable scaling on system and solutions");
+    put_line(" -t : tasking for tracking paths using multiple threads");
+    put_line(" -v : verification, refinement and purification of solutions");
+    put_line(" -w : witness set intersection using diagonal homotopies");   
+    put_line(" -x : convert solutions from PHCpack into Python dictionary"); 
+    put_line(" -y : sample points from an algebraic set, given witness set");
+    put_line(" -z : strip phc output solution lists into Maple format");
+    new_line;
+    put_line("For example, typing 'phc -h -z' or 'phc -z -h' (or '--help'");
+    put_line("instead of '-h') displays information about 'phc -z'.");
   end help4help;
 
   procedure help4hypersurface is
@@ -197,6 +224,13 @@ package body Greeting_Banners is
   procedure help4mixvol is
   begin
     put_line("phc -m computes mixed volumes and runs polyhedral homotopies.");
+    new_line;
+    put_line("For polynomial systems with as many equations as unknowns,");
+    put_line("the mixed volume of the Newton polytopes of the polynomials");
+    put_line("gives a generically sharp upper bound on the number of");
+    put_line("isolated solutions with their coordinates different from zero.");
+    put_line("Polyhedral homotopies solve random coefficient start systems,");
+    put_line("tracking as many solution paths as the mixed volume.");
   end help4mixvol;
 
   procedure help4symbols is

@@ -43,7 +43,7 @@ procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
   -- DESCRIPTION :
   --   Displays an overview of all options on screen.
 
-    o : array(0..21) of string(1..65);
+    o : array(0..22) of string(1..65);
 
   begin
     put("Running full mode,");
@@ -53,27 +53,28 @@ procedure mainphc ( nt : in natural32; infilename,outfilename : in string ) is
     end if;
     put_line("  Note also the following options:");
     o(0) := "  phc -0 : random numbers with fixed seed for repeatable runs    ";
-    o(1) := "  phc -a : Solving polynomial systems equation-by-equation       ";
-    o(2) := "  phc -b : Batch or black-box processing                         ";
-    o(3) := "  phc -c : Irreducible decomposition for solution components     ";
-    o(4) := "  phc -d : Linear and nonlinear Reduction w.r.t. the total degree";
-    o(5) := "  phc -e : SAGBI/Pieri homotopies to intersect linear subspaces  ";
-    o(6) := "  phc -f : Factor pure dimensional solution set into irreducibles";
-    o(7) := "  phc -g : Checking whether an input system has the right syntax ";
-    o(8) := "  phc -k : realization of dynamic output feedback placing poles  ";
-    o(9) := "  phc -l : Witness Set for Hypersurface cutting with Random Line ";
-    o(10):= "  phc -m : Mixed-Volume Computation via lift+prune and MixedVol  ";
-    o(11):= "  phc -o : write order of symbols after parsing polynomial system";
-    o(12):= "  phc -p : Polynomial Continuation by a homotopy in one parameter";
-    o(13):= "  phc -q : Tracking Solution Paths with incremental read/write   ";
-    o(14):= "  phc -r : Root counting and Construction of start systems       ";
-    o(15):= "  phc -s : Equation and variable Scaling on system and solutions ";
-    o(16):= "  phc -t : Tasking for tracking paths using multiple threads     ";
-    o(17):= "  phc -v : Verification, refinement and purification of solutions";
-    o(18):= "  phc -w : Witness Set Intersection using Diagonal Homotopies    ";
-    o(19):= "  phc -x : convert solutions from PHCpack into Python dictionary ";
-    o(20):= "  phc -y : sample points from an algebraic set, given witness set";
-    o(21):= "  phc -z : strip phc output solution lists into Maple format     ";
+    o(1) := "  phc -a : solving polynomial systems equation-by-equation       ";
+    o(2) := "  phc -b : batch or black-box processing, the blackbox solver    ";
+    o(3) := "  phc -c : irreducible decomposition for solution components     ";
+    o(4) := "  phc -d : linear and nonlinear reduction w.r.t. the total degree";
+    o(5) := "  phc -e : SAGBI/Pieri/Littlewood-Richardson homotopies          ";
+    o(6) := "  phc -f : factor pure dimensional solution set into irreducibles";
+    o(7) := "  phc -g : checking whether an input system has the right syntax ";
+    o(8) := "  phc -h : displays help, e.g.: phc -h -b or phc -b -h, or --help";
+    o(9) := "  phc -k : realization of dynamic output feedback placing poles  ";
+    o(10):= "  phc -l : witness set for hypersurface cutting with random line ";
+    o(11):= "  phc -m : mixed volume computation via lift+prune and MixedVol  ";
+    o(12):= "  phc -o : write order of symbols after parsing polynomial system";
+    o(13):= "  phc -p : polynomial continuation by a homotopy in one parameter";
+    o(14):= "  phc -q : tracking solution paths with incremental read/write   ";
+    o(15):= "  phc -r : root counting and construction of start systems       ";
+    o(16):= "  phc -s : equation and variable scaling on system and solutions ";
+    o(17):= "  phc -t : tasking for tracking paths using multiple threads     ";
+    o(18):= "  phc -v : verification, refinement and purification of solutions";
+    o(19):= "  phc -w : witness set intersection using diagonal homotopies    ";
+    o(20):= "  phc -x : convert solutions from PHCpack into Python dictionary ";
+    o(21):= "  phc -y : sample points from an algebraic set, given witness set";
+    o(22):= "  phc -z : strip phc output solution lists into Maple format     ";
     for i in o'range loop
       put_line(o(i));
     end loop;

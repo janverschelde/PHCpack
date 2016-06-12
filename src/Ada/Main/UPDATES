@@ -1,5 +1,6 @@
 Sun 12 Jun 2016 : in greeting_banners.adb, added online help for -l, -y, -w,
-  and started the writing for -r.
+  and started the writing for -r.  Updated mainphc.adb, dispatch.adb, and
+  greeting_banners.adb with more help information.
 
 Thu 9 Jun 2016 : documented phc -x in greeting_banners.adb.
 

@@ -625,7 +625,7 @@ procedure Dispatch is
       when 'e' => Greeting_Banners.help4enumeration;
       when 'f' => Greeting_Banners.help4factor;
       when 'g' => Greeting_Banners.help4goodformat;
-      when 'h' => Greeting_Banners.help4help;
+      when 'h' | '-' => Greeting_Banners.help4help;
       when 'k' => Greeting_Banners.help4feedback;
       when 'l' => Greeting_Banners.help4hypersurface;
       when 'm' => Greeting_Banners.help4mixvol;
