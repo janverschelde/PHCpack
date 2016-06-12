@@ -16,4 +16,6 @@ ts_series                        : basic test on standard dense series
 standard_dense_series_ring       : ring of dense power series
 standard_dense_series_vectors    : vectors of dense power series
 ts_servec                        : test on vectors of dense power series
+standard_dense_series_matrices   : matrices of dense power series
+ts_sermat                        : test on matrices of dense power series
 ------------------------------------------------------------------------------

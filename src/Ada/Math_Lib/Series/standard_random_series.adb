@@ -25,4 +25,21 @@ package body Standard_Random_Series is
     return res;
   end Random_Series_Vector;
 
+  function Random_Series_Matrix
+             ( rowfirst,rowlast,columnfirst,columnlast,order : integer32 )
+             return Standard_Dense_Series_Matrices.Matrix is
+
+    use Standard_Dense_Series_Matrices;
+
+    res : Matrix(rowfirst..rowlast,columnfirst..columnlast);
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        res(i,j) := Random_Series(order);
+      end loop;
+    end loop;
+    return res;
+  end Random_Series_Matrix;
+
 end Standard_Random_Series;

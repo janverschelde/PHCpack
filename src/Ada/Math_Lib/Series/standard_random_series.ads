@@ -1,6 +1,7 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Dense_Series;              use Standard_Dense_Series;
 with Standard_Dense_Series_Vectors;
+with Standard_Dense_Series_Matrices;
 
 package Standard_Random_Series is
 
@@ -21,5 +22,13 @@ package Standard_Random_Series is
   -- DESCRIPTION :
   --   Returns a vector of range first..last with random series
   --   of the given order.
+
+  function Random_Series_Matrix
+             ( rowfirst,rowlast,columnfirst,columnlast,order : integer32 )
+             return Standard_Dense_Series_Matrices.Matrix;
+
+  -- DESCRIPTION :
+  --   Returns a matrix of range(1) rowfirst..rowlast and range(2) 
+  --   columnfirst..columnlast with random series of the given order.
 
 end Standard_Random_Series;
