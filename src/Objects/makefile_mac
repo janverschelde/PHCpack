@@ -488,6 +488,10 @@ ts_servec:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_servec.adb \
               -o $(BIN)/ts_servec
 
+ts_sermat:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sermat.adb \
+              -o $(BIN)/ts_sermat
+
 # Test programs for the Deformations/Solutions library :
 
 ts_solfilt:
