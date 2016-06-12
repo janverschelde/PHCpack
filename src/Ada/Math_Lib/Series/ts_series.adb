@@ -8,9 +8,9 @@ with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
 with Standard_Complex_Numbers_Polar;
 with Standard_Complex_Vectors;
-with Standard_Random_Vectors;            use Standard_Random_Vectors;
 with Standard_Dense_Series;              use Standard_Dense_Series;
 with Standard_Dense_Series_io;           use Standard_Dense_Series_io;
+with Standard_Random_Series;             use Standard_Random_Series;
 with Standard_Algebraic_Series;
 
 procedure ts_series is
@@ -39,19 +39,6 @@ procedure ts_series is
     z := t*x;
     put_line("Verifying commutativity : "); put(z);
   end Test_Creation;
-
-  function Random_Series ( order : integer32 ) return Series is
-
-  -- DESCRIPTION :
-  --   Returns a series of the given order, with random coefficient,
-  --   on the unit circle on the complex plane.
-
-    cff : Standard_Complex_Vectors.Vector(0..order)
-        := Random_Vector(0,order);
-
-  begin
-    return Create(cff);
-  end Random_Series;
 
   procedure Random_Test_sqrt ( order : in integer32 ) is
 

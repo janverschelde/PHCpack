@@ -1,3 +1,6 @@
+Sat 11 Jun 2016 : new package standard_random_series with code factored out
+  from the test ts_series.
+
 Fri 10 Jun 2016 : new package standard_algebraic_series with the sqrt code
   from ts_series.  Extended standard_algebraic_series and ts_series with
   code to compute the p-th root of a series.
