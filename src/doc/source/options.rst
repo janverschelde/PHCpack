@@ -514,13 +514,19 @@ and neither does it keep the complete solution list in memory.
 phc -r : Root counting and Construction of start systems       
 --------------------------------------------------------
 
+The :index:`root count` determines the number of solution paths that
+are tracked in a homotopy connecting the input system with
+the :index:`start system` that has as many solutions as the root count.
+We have an :index:`optimal homotopy` to solve a given system if the number
+of solution paths equals the number of solutions of the system.
+
 Methods to bound the number of isolated solutions of a polynomial system
 fall in two classes:
 
 1. Bounds based on the highest degrees of polynomials and variable groupings.
 
 2. Bounds based on the Newton polytopes of the polynomials in the system.
-   See the documentation for phc -m.
+   See the documentation for ``phc -m``.
 
 phc -s : Equation and variable Scaling on system and solutions 
 --------------------------------------------------------------
@@ -766,10 +772,10 @@ phc -w : witness set intersection using diagonal homotopies
 -----------------------------------------------------------
 
 This option wraps the diagonal homotopies to intersect two witness sets,
-see the option -c for more choices in the algorithms.
+see the option ``-c`` for more choices in the algorithms.
 
 For example, to intersect the unit sphere 
-(see the making of ``sphere_w2`` with phc -l) with a cylinder
+(see the making of ``sphere_w2`` with ``phc -l``) with a cylinder
 to form a quartic curve, we first make a witness set for a cylinder,
 putting in the file ``cylinder`` the two lines:
 
@@ -783,7 +789,7 @@ even though the symbol does not appear in the equation of a cylinder
 about the y-axis.  But to intersect this cylinder with the unit sphere
 the symbols of both witness sets must match.
 After executing ``phc -l cylinder cylinder.out`` we get the witness
-set ``cylinder_w2`` and then we intersect with phc -w:
+set ``cylinder_w2`` and then we intersect with ``phc -w``:
 
 ::
 
@@ -807,14 +813,15 @@ solutions in PHCpack format.  For example:
    phc -x cyclic5 /tmp/cyclic5.dic
    phc -x /tmp/cyclic5.dic
 
-The first phc -x writes to the file /tmp/cyclic5.dic a list of
+The first ``phc -x`` writes to the file ``/tmp/cyclic5.dic`` a list of
 dictionaries, ready for processing by a Python script.
 If no output file is given as second argument, then the output
-is written to screen.  The second phc -x writes a solution list
+is written to screen.  The second ``phc -x`` writes a solution list
 to PHCpack format, because a list of dictionaries is given on input.
 
-If the second argument of ``phc -x`` is omitted, then the output
-is written to file.  For example, if the file ``/tmp/example`` contains
+If the second argument of ``phc -x`` is omitted,
+then the output is written to screen.  
+For example, if the file ``/tmp/example`` contains
 
 ::
 
@@ -882,9 +889,15 @@ equations in the Maple format, see ``phc -z``.
 phc -y : sample points from an algebraic set, given witness set
 ---------------------------------------------------------------
 
+The points on a positive dimensional solution set are fixed by
+the position of hyperplanes that define a linear space of the
+dimension equal to the co-dimension of the solution set.
+For example, in 3-space, a 2-dimensional set is cut with
+a line and a 1-dimensional set is cut with a plane.
+
 Given in ``sphere_w2`` a witness set for the unit sphere
-(made with phc -l, see above), we can make a new witness set
-with phc -y, typing at the command prompt:
+(made with ``phc -l``, see above), we can make a new witness set
+with ``phc -y``, typing at the command prompt:
 
 ::
 
@@ -916,7 +929,7 @@ in PHCpack format.  For example:
 
 If the file ``cyclic5`` contains the solutions of the cyclic 5-roots
 problem in PHCpack format, then the first command makes the file 
-/tmp/cyclic5.mpl which can be parsed by Maple.  The next command
+``/tmp/cyclic5.mpl`` which can be parsed by Maple.  The next command
 has no second argument for output file and the output is written
 directly to screen, converting the solutions in Maple format into
 solution lists in PHCpack format.
