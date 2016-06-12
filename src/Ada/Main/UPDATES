@@ -1,3 +1,6 @@
+Sun 12 Jun 2016 : in greeting_banners.adb, added online help for -l, -y, -w,
+  and started the writing for -r.
+
 Thu 9 Jun 2016 : documented phc -x in greeting_banners.adb.
 
 Wed 8 Jun 2016 : added exception handler to mainzip.adb and maindict.adb

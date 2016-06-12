@@ -171,6 +171,27 @@ package body Greeting_Banners is
   procedure help4hypersurface is
   begin
     put_line("phc -l to compute a witness set for a hypersurface.");
+    new_line;
+    put_line("A hypersurface defined by a polynomial in many variables is cut");
+    put_line("with one general line. The number of points on the hypersurface");
+    put_line("and the general line equal the degree of the hypersurface.");
+    put_line("This collection of points on the intersection of a hypersurface");
+    put_line("and a general line form a witness set.");
+    new_line;
+    put_line("For example, if the file 'sphere' contains");
+    new_line;
+    put_line("1 3");
+    put_line(" x^2 + y^2 + z^2 - 1;");
+    new_line;
+    put_line("then typing at the command line 'phc -l sphere output' produces");
+    put_line("the file 'sphere_w2' with a witness set for the sphere.");
+    new_line;
+    put_line("By default, the witness points are computed in double precision");
+    put_line("For double double and quad double precision,");
+    put_line("use 'phc -l2' and 'phc -l4' respectively.");
+    new_line;
+    put_line("Related options are '-w' to intersect witness sets and");
+    put_line("'-c' for more choices to compute witness sets.");
   end help4hypersurface;
 
   procedure help4mixvol is
@@ -196,6 +217,12 @@ package body Greeting_Banners is
   procedure help4rootcounts is
   begin
     put_line("phc -r computes root counts and constructs start systems.");
+    new_line;
+    put_line("The root count determines the number of solution paths that");
+    put_line("are tracked in a homotopy connecting the input system with");
+    put_line("the start system that has as many solutions as the root count.");
+    put_line("A homotopy is optimal to solve a given system if the number of");
+    put_line("solution paths equals the number of solutions of the system.");
   end help4rootcounts;
 
   procedure help4scaling is
@@ -216,6 +243,26 @@ package body Greeting_Banners is
   procedure help4witsetinsect is
   begin
     put_line("phc -w for witness set intersection with diagonal homotopies.");
+    new_line;
+    put_line("This option wraps the diagonal homotopies to intersect two");
+    put_line("positive dimensional solution sets given as witness sets.");
+    new_line;
+    put_line("Consider for example a sphere and a cylinder in 3-space.");
+    put_line("Their intersection defines a quartic, a curve of degree 4.");
+    put_line("If the file sphere_w2 contains a witness set for the sphere");
+    put_line("and if a witness set for the cylinder is contained in the");
+    put_line("file cylinder_w2, then we can compute their intersection as");
+    new_line;
+    put_line("phc -w sphere_w2 cylinder_w2 quartic");
+    new_line;
+    put_line("Note that the symbols in both input files must line up.");
+    put_line("If one of the variables would not be needed in the natural");
+    put_line("formulation of a set, e.g.: such as in 'x^2 + y^2 - 1' for a");
+    put_line("vertical cylinder in the (x, y, z)-space, then the z variable");
+    put_line("must be added in an artificial manner, e.g., adding: 'z - z'.");
+    new_line;
+    put_line("To compute a witness set for a hypersurface, use phc -l.");
+    put_line("For more choices to intersect witness sets, see phc -c.");
   end help4witsetinsect;
 
   procedure help4pythondict is
@@ -242,6 +289,19 @@ package body Greeting_Banners is
   procedure help4sampler is
   begin
     put_line("phc -y samples points on a positive dimensional solution set.");
+    new_line;
+    put_line("The points on a positive dimensional solution set are fixed by");
+    put_line("the position of hyperplanes that define a linear space of the");
+    put_line("dimension equal to the co-dimension of the solution set.");
+    put_line("For example, in 3-space, a 2-dimensional set is cut with");
+    put_line("a line and a 1-dimensional set is cut with a plane.");
+    new_line;
+    put_line("If 'sphere_w2' contains a witness set for a sphere, then");
+    put_line("typing at the command prompt 'phc -y sphere_w2 new_sphere'");
+    put_line("will make a new witness set in the file 'new_sphere_w2'.");
+    new_line;
+    put_line("Use 'phc -c' to compute a first witness set,");
+    put_line("or 'phc -l' for the particular case of a hypersurface.");
   end help4sampler;
 
   procedure help4mapleform is
