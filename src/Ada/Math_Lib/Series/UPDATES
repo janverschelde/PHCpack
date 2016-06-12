@@ -1,5 +1,5 @@
 Sat 11 Jun 2016 : new package standard_random_series with code factored out
-  from the test ts_series.
+  from the test ts_series.  Extended the package with random vectors.
 
 Fri 10 Jun 2016 : new package standard_algebraic_series with the sqrt code
   from ts_series.  Extended standard_algebraic_series and ts_series with

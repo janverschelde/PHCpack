@@ -1,5 +1,6 @@
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Dense_Series;              use Standard_Dense_Series;
+with Standard_Dense_Series_Vectors;
 
 package Standard_Random_Series is
 
@@ -10,7 +11,15 @@ package Standard_Random_Series is
   function Random_Series ( order : integer32 ) return Series;
 
   -- DESCRIPTION :
-  --   Returns a series of the given order, with random coefficient,
+  --   Returns a series of the given order, with random coefficients,
   --   on the unit circle on the complex plane.
+
+  function Random_Series_Vector
+             ( first,last,order : integer32 )
+             return Standard_Dense_Series_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns a vector of range first..last with random series
+  --   of the given order.
 
 end Standard_Random_Series;
