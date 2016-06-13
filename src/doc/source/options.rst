@@ -81,7 +81,7 @@ But reverting the usual order of operations is a bit similar to guessing
 the outcome of a coin toss after the coin toss and not before the coin toss.
 Therefore phc -0 should be used only for debugging purposes.
 
-phc -a : Solving polynomial systems equation-by-equation       
+phc -a : solving polynomial systems equation-by-equation       
 --------------------------------------------------------
 
 The equation-by-equation solver applies the diagonal homotopies
@@ -89,8 +89,8 @@ to intersect the solution set of the current set of polynomials
 with the next polynomial equation.  The user has the possibility
 to shuffle the order of input polynomials.
 
-phc -b : Batch or black-box processing                         
---------------------------------------
+phc -b : batch or blackbox processing                         
+-------------------------------------
 
 The blackbox solver operates in four stages:
 
@@ -107,6 +107,8 @@ The blackbox solver operates in four stages:
 
 Through the options ``-s``, ``-r``, ``-p``, and ``-v``, 
 the user can go through the stages separately.
+See the documentation for ``phc -v`` for a description of the
+quality indicators for the numerically computed solutions.
 
 New since version 2.4.02 are the options ``-b2`` and ``-b4`` to run the
 blackbox solver respectively in :index:`double double` 
@@ -361,11 +363,11 @@ The menu of ``phc -m`` offers 5 different algorithms:
    An implementation of the Cayley trick gives the Minkowski polynomial.
 
 3. Symmetric lifting: many systems have Newton polytopes that are
-   invariant to permutation symmetry.  Even if the original system
+   invariant to :index:`permutation symmetry`.  Even if the original system
    is not symmetric, the construction of the start system could
    benefit from the exploitation of this permutation symmetry.
 
-4. The MixedVol Algorithm is a specific implementation of the
+4. The :index:`MixedVol` Algorithm is a specific implementation of the
    static lifting method, applying a floating random lifting function.
 
    The code offered with this option is a translation of software
@@ -380,7 +382,8 @@ The menu of ``phc -m`` offers 5 different algorithms:
    solutions (not only those with nonzero coordinates) and then
    and obtain polyhedral homotopies that compute all affine solutions.
 
-On multicore computers, the solution of a random coefficient system
+On :index:`multicore` computers, 
+the solution of a random coefficient system
 with :index:`polyhedral homotopies` runs in parallel when calling phc with
 the option ``-t``.  For example, ``phc -m -t8`` will run the
 polyhedral path trackers with 8 tasks.  Since version 2.4.06,
@@ -391,10 +394,10 @@ in a heterogenous pipelined application of :index:`multitasking`.
 phc -o : writes the symbol table of an input system
 ---------------------------------------------------
 
-Running phc -o with as input argument a polynomial system
+Running ``phc -o`` with as input argument a polynomial system
 writes the symbols for the variables in the order in which they
 are stored internally after parsing the system.
-For example, if the file /tmp/ex1 contains the lines
+For example, if the file ``/tmp/ex1`` contains the lines
 
 ::
 
@@ -402,27 +405,27 @@ For example, if the file /tmp/ex1 contains the lines
      y + x + 1;
      x*y - 1;
 
-then running phc -o at the command prompt as
+then running ``phc -o`` at the command prompt as
 
 ::
 
    phc -o /tmp/ex1 /tmp/ex1.out
 
-makes the file /tmp/ex1.out which contains the line
+makes the file ``/tmp/ex1.out`` which contains the line
 
 ::
 
    y x
 
 because in the formulation of the polynomial system,
-the variable with name y occurred before the variable with name x.
+the variable with name ``y`` occurred before the variable with name ``x``.
 Consequently, the order of the coordinates of the solutions will
 then also be stored in the same order as of the occurrence of the
 variable names.  
 If a particular order of variables would be inconvenient,
 then a trick to force an order on the variables is to insert
 a simple polynomial that simplifies to zero.  For example,
-a modification of the file /tmp/ex1 could be
+a modification of the file ``/tmp/ex1`` could be
 
 ::
 
@@ -431,7 +434,7 @@ a modification of the file /tmp/ex1 could be
     y + x + 1;
     x*y - 1;
 
-and the first four monomials x + y - x - y will initialize the
+and the first four monomials ``x + y - x - y`` will initialize the
 symbol table with the names x and y, in that order.
 
 phc -p : polynomial continuation in one parameter
@@ -590,14 +593,14 @@ overdetermined homotopies, where both target and start system
 are given as overconstrained systems and every convex linear
 combination between target and start system admits solutions.
 
-phc -q : Tracking Solution Paths with incremental read/write   
+phc -q : tracking solution Paths with incremental read/write   
 ------------------------------------------------------------
 
 The jumpstarting method for a polynomial homotopy
 does not require the computation of all solutions of the start system
 and neither does it keep the complete solution list in memory.
 
-phc -r : Root counting and Construction of start systems       
+phc -r : root counting and construction of start systems       
 --------------------------------------------------------
 
 The :index:`root count` determines the number of solution paths that
@@ -614,7 +617,64 @@ fall in two classes:
 2. Bounds based on the Newton polytopes of the polynomials in the system.
    See the documentation for ``phc -m``.
 
-phc -s : Equation and variable Scaling on system and solutions 
+The complete menu (called with cyclic 5-roots, with total degree 120)
+is shown below:
+
+::
+
+   MENU with ROOT COUNTS and Methods to Construct START SYSTEMS :
+     0. exit - current root count is based on total degree : 120
+   PRODUCT HOMOTOPIES based on DEGREES ------------------------------
+     1. multi-homogeneous Bezout number               (one partition)
+     2. partitioned linear-product Bezout number    (many partitions)
+     3. general linear-product Bezout number          (set structure)
+     4. symmetric general linear-product Bezout number (group action)
+   POLYHEDRAL HOMOTOPIES based on NEWTON POLYTOPES ------------------
+     5. combination between Bezout and BKK Bound   (implicit lifting)
+     6. mixed-volume computation                     (static lifting)
+     7. incremental mixed-volume computation        (dynamic lifting)
+     8. symmetric mixed-volume computation        (symmetric lifting)
+     9. using MixedVol Algorithm to compute the mixed volume fast (!)
+
+At the start, the current root count is the :index:`total degree`,
+which is the product of the degrees of the polynomials in the system.
+The options 5 to 9 of the menu are also available in ``phc -m``.
+
+Three different generalizations of the total degree are available:
+
+1. For a multi-homogeneous :index:`Bezout number`, 
+   we split the set of variables into a :index:`partition`.
+   A classical example is the eigenvalue problem.
+   When viewed as a polynomial system :math:`\lambda x - A x = 0`
+   we see quadratic equations.  Separating the variable for the
+   eigenvalue :math:`\lambda` from the coordinates :math:`x` of
+   the eigenvectors turns the system into a multilinear problem
+   and provides the correct root count.
+
+2. In a partitioned linear-product Bezout number, we allow that
+   the different partitions of the sets of variables are used
+   for different polynomials in the system.  This may lead to
+   a lower upper bound than the multi-homogeneous Bezout number.
+
+3. A general linear-product Bezout number groups the variables
+   in a collection of sets where each variable occurs at most once
+   in each set.  Every set then corresponds to one linear equation.
+
+Each of these three generalizations leads to 
+a :index:`linear-product start system`.
+Every start solution is the solution of a linear system.
+One can view the construction of a linear-product start system as
+the degeneration of the given polynomial system on input such that
+every input polynomial is degenerated to a product of linear factors.
+
+The fourth option of the ``-r`` allows to take 
+:index:`permutation symmetry`
+into account to construct symmetric start systems.
+If the start system respects the same permutation symmetry as the
+system on input, then one must track only those paths starting at 
+the generators of the set of start solutions.
+
+phc -s : equation and variable scaling on system and solutions 
 --------------------------------------------------------------
 
 We distinguish two types of scaling:

@@ -68,6 +68,9 @@ package body Greeting_Banners is
   begin
     put_line("phc -b calls the blackbox solvers.");
     new_line;
+    put_line("A typical call is 'phc -b input output' where 'input'");
+    put_line("and 'output' are respectively the input and output files.");
+    new_line;
     put_line("For polynomial systems with as many equations as unknowns,");
     put_line("the blackbox solver operates in four stages:");
     put_line("(1) preprocessing with some form of scaling;");
@@ -231,11 +234,53 @@ package body Greeting_Banners is
     put_line("isolated solutions with their coordinates different from zero.");
     put_line("Polyhedral homotopies solve random coefficient start systems,");
     put_line("tracking as many solution paths as the mixed volume.");
+    new_line;
+    put_line("Methods to compute mixed volumes lift the polytopes,");
+    put_line("adding one extra value to the coordinates of each point.");
+    put_line("This extra lifting value will be the power of the continuation");
+    put_line("parameter in the polyhedral homotopy.");
+    new_line;
+    put_line("Several lifting strategies are available :");
+    put_line(" 0. static : lift and compute cells, the user may provide");
+    put_line("    point-by-point lifting values to exploit structure;");
+    put_line(" 1. implicit : based on a recursive formula for mixed volumes;");
+    put_line(" 2. dynamic : points are considered in a sequence and lifting");
+    put_line("    values are generated to preserve already computed cells;");
+    put_line(" 3. symmetric : to exploit permutation symmetry,");
+    put_line("    points in the same orbit receive the same lifting value;");
+    put_line(" 4. MixedVol : a faster mixed volume calculator,");
+    put_line("    which is applied in the blackbox solver.");
+    put_line("For the Cayley trick to compute the Minkowski polynomial,");
+    put_line("the dynamic lifting strategy should be selected.");
+    new_line;
+    put_line("Mixed volumes exclude solutions with zero coordinates.");
+    put_line("With stable mixed volumes we count all affine solutions.");
+    new_line;
+    put_line("A related option is '-r' to compute bounds on the number of");
+    put_line("isolated solutions based on the degrees of the polynomials.");
+    put_line("The random coefficient start system constructed by '-m' can");
+    put_line("be used in '-p' as start system to solve a specific system,");
+    put_line("which has the same Newton polytopes as the start system.");
+    put_line("If combined with '-t', followed by the number of tasks,");
+    put_line("then multithreading is applied to solve the start system.");
   end help4mixvol;
 
   procedure help4symbols is
   begin
     put_line("phc -o writes the symbol table after parsing an input system.");
+    new_line;
+    put_line("The order of the variables appears in the order in which the");
+    put_line("the variables occur in the polynomial system.  For example,");
+    put_line("1 2");
+    put_line("  y + x + 1;");
+    put_line("as saved in the file '/tmp/ex1' will result in the output");
+    put_line("  y x");
+    put_line("when running 'phc -o /tmp/ex1' or as 'phc -o /tmp/ex1 out'.");
+    new_line;
+    put_line("To force a particular order in the symbol table,");
+    put_line("One can add to the first polynomial 'x - x + y - y + ...'");
+    put_line("While 'x - x + y - y' results in zero, its effect is that it");
+    put_line("initializes the symbol table with 'x' and 'y', in that order.");
   end help4symbols;
 
   procedure help4continuation is
