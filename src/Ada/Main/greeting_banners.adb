@@ -241,6 +241,23 @@ package body Greeting_Banners is
   procedure help4continuation is
   begin
     put_line("phc -p runs continuation with a homotopy in one parameter.");
+    new_line;
+    put_line("We have two types of homotopies:");
+    put_line("(1) Using an artificial parameter t in a convex combination");
+    put_line("    between a target and start system; or");
+    put_line("(2) Using a natural parameter, using a variable as parameter,");
+    put_line("    a variable which occurs in the given input system.");
+    new_line;
+    put_line("In an artificial parameter homotopy, the t is incremented");
+    put_line("by the predictor and remains fixed in the corrector.");
+    put_line("In a natural parameter homotopy, arc length continuation");
+    put_line("is applied and the variable used as continuation parameter");
+    put_line("remains a variable in the corrector stage.");
+    new_line;
+    put_line("The start system can be constructed with '-r' or '-m'.");
+    put_line("The working precision can be adjusted in the interactive menu");
+    put_line("or at the command line via '-p2' for double double,");
+    put_line("or via '-p4' for quad double precision.");
   end help4continuation;
 
   procedure help4jumpstart is
@@ -267,11 +284,58 @@ package body Greeting_Banners is
   procedure help4tasking is
   begin
     put_line("phc -t# computes with # tasks, for shared memory parallelism.");
+    new_line;
+    put_line("Because the solution paths in a polynomial homotopy can be");
+    put_line("tracked independently from each other, the problem of tracking");
+    put_line("a number of paths is a pleasingly parallel problem.");
+    put_line("Already on relatively small systems, with a modest number");
+    put_line("of threads, a significant speedup can be obtained.");
+    new_line;
+    put_line("To apply multithreading to the blackbox solver,");
+    put_line("type for example 'phc -b -t8 input output' and 8 tasks will be");
+    put_line("used in the path tracking.  The obtained speedup can offset");
+    put_line("the overhead caused by the cost of higher precision.");
+    put_line("For example, to compensate for the cost of double double");
+    put_line("precision arithmetic, do 'phc -b2 -t16 input output' and");
+    put_line("if sufficiently many cores are available, one may observe");
+    put_line("a 'quality up', obtaining more accurate results faster.");
+    new_line;
+    put_line("The option -t can be added to phc -p and -m to track solution");
+    put_line("path defined by a polynomial homotopy with many threads.");
   end help4tasking;
 
   procedure help4verification is
   begin
     put_line("phc -v filters, verifies, and refines lists of solutions.");
+    new_line;
+    put_line("Every solution terminates with a line such as");
+    put_line("'== err :  3.374E-09 = rco :  2.326E-06 = res :  3.613E-16 =='");
+    put_line("where the quality indicators are as follows:");
+    put_line("* err : the magnitude of the last correction of Newton's method");
+    put_line("is the forward error on the solution, '3E-9' in the example");
+    put_line("above means that we may hope to have 8 correct decimal places;");
+    put_line("* rco : an estimate for the inverse condition number of the");
+    put_line("Jacobian matrix evaluated at the approximate solution, which"); 
+    put_line("measures how sensitive the solution is to changes in the input");
+    put_line("coefficients, '2E-6' in the example, indicated that errors on");
+    put_line("the input can be multiplied by a factor of 10^6;");
+    put_line("* res : the magnitude of the approximate solution evaluated at");
+    put_line("the input polynomials is the backward error, i.e.: by much");
+    put_line("should the input coefficients change so that the approximate");
+    put_line("solution is an exact solution of the changed problem.");
+    new_line;
+    put_line("The main result of a basic verification is the tally of");
+    put_line("good solutions, versus solutions at infinity and/or singular");
+    put_line("solutions.  Solution paths may also have ended at points");
+    put_line("that are clustered at a regular solution so with '-v' we can");
+    put_line("detect some cases of occurrences of path crossing.");
+    put_line("Applying Newton's method in a higher precision may resolve");
+    put_line("the distinction between regular and singular solutions.");
+    put_line("For isolated singular solutions, deflation may restore the");
+    put_line("quadratic convergence of Newton's method.");
+    new_line;
+    put_line("To select solutions from a list subject to certain criteria");
+    put_line("use phc -f.");
   end help4verification;
 
   procedure help4witsetinsect is

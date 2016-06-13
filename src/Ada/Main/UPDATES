@@ -1,3 +1,5 @@
+Mon 13 Jun 2016 : added help for -p, -t, -v in greeting_banners.adb.
+
 Sun 12 Jun 2016 : in greeting_banners.adb, added online help for -l, -y, -w,
   and started the writing for -r.  Updated mainphc.adb, dispatch.adb, and
   greeting_banners.adb with more help information.
