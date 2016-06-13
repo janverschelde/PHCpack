@@ -98,6 +98,10 @@ The blackbox solver operates in four stages:
    handle special cases such as binomial systems.
 
 2. Counting the roots and constructing a start system (``phc -r``).
+   Various root counts, based on the degrees and Newton polytopes,
+   are computed.  The blackbox solver selects the smallest upper
+   bound on the number of isolated solution in the computation of
+   a start system to solve the given polynomial system.
 
 3. Track the solution paths from the solutions of the start system
    to the solutions of the target system (``phc -p``).
@@ -109,6 +113,22 @@ Through the options ``-s``, ``-r``, ``-p``, and ``-v``,
 the user can go through the stages separately.
 See the documentation for ``phc -v`` for a description of the
 quality indicators for the numerically computed solutions.
+
+The blackbox solver recognizes several special cases:
+
+1. one polynomial in one variable;
+
+2. one system of linear equations;
+
+3. a system with exactly two monomials in every equation.
+
+For these special cases, no polynomial continuation is needed.
+
+Polyhedral homotopies can solve :index:`Laurent systems`,
+systems where the exponents of the variables can be negative.
+If the system on input is a Laurent system, then polyhedral
+homotopies (see the documentation for ``-m``) are applied directly
+and no upper bounds based on the degrees are computed.
 
 New since version 2.4.02 are the options ``-b2`` and ``-b4`` to run the
 blackbox solver respectively in :index:`double double` 
@@ -245,6 +265,24 @@ monodromy loops, using the linear trace test as a stop criterion.
 The last option in the menu of ``phc -f`` gives access to a
 tropical method to detect a common factor of two Laurent polynomials.
 
+phc -g : check the format of an input polynomial system
+-------------------------------------------------------
+
+The purpose of ``phc -g`` is to check whether a given input
+system has the right syntax.  A related option is ``phc -o``.
+
+phc -h : writes helpful information to screen
+---------------------------------------------
+
+The information written by ``phc -h`` is the condensed version
+of this document.  For every option, some helpful information
+is defined.  For example, typing ``phc -z -h`` or ``phc -h -z``
+displays information about ``phc -z``.
+
+Typing ``phc -h -h`` displays the list of all available options.
+
+Instead of ``-h``, one can also type ``--help``.
+
 phc -k : realization of dynamic output feedback placing poles  
 -------------------------------------------------------------
 
@@ -293,14 +331,21 @@ To continue the example from above, typing at the command prompt
 will give two generic points on the sphere,
 computed in quad double precision.
 
-phc -m : Mixed-Volume Computation via lift+prune and MixedVol  
+phc -m : mixed volume Computation via lift+prune and MixedVol  
 -------------------------------------------------------------
 
-The options of phc -m are a subset of the options of phc -r.
-The focus on phc -m is on mixed volumes.  For polynomial systems
+The menu choices of ``phc -m`` are a subset of the menu of ``phc -r``.
+The focus on ``phc -m`` is on mixed volumes.  For polynomial systems
 with as many equations as unknowns, the mixed volume of the Newton
 polytopes gives a generically sharp upper bound on the number of
 isolated solutions with coordinates different from zero.
+
+The ability to focus only on solutions with all coordinates different
+from zero stems from the fact that shifting Newton polytopes
+(which corresponds to multiplying the polynomials with one monomial)
+does not increase their volumes.  With polyhedral homotopies,
+we can solve systems of polynomials with negative exponents for 
+the variables, the so-called :index:`Laurent polynomials`.
 
 The :index:`mixed volume` of a tuple of Newton polytopes
 is defined as the coefficient in the expansion of the volume

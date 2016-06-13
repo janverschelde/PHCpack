@@ -88,7 +88,7 @@ package body Greeting_Banners is
     put_line("(1) one polynomial in one variable;");
     put_line("(2) one system of linear equations;");
     put_line("(3) a system with exactly two monomials in every equation.");
-    put_line("For these special, no polynomial continuation is needed.");
+    put_line("For these cases, no polynomial continuation is needed.");
     new_line;
     put_line("By default, phc -b solves in hardware double precision.");
     put_line("With phc -b2, double double arithmetic is applied,");
