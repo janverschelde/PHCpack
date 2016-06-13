@@ -94,21 +94,21 @@ phc -b : Batch or black-box processing
 
 The blackbox solver operates in four stages:
 
-1. Preprocessing: scaling (phc -s), 
+1. Preprocessing: scaling (``phc -s``), 
    handle special cases such as binomial systems.
 
-2. Counting the roots and constructing a start system (phc -r).
+2. Counting the roots and constructing a start system (``phc -r``).
 
 3. Track the solution paths from the solutions of the start system
-   to the solutions of the target system (phc -p).
+   to the solutions of the target system (``phc -p``).
 
 4. Verify whether all end points of the solution paths are distinct,
-   apply Newton's method with deflation on singular solutions (phc -v).
+   apply Newton's method with deflation on singular solutions (``phc -v``).
 
-Through the options -s, -r, -p, and -v, 
+Through the options ``-s``, ``-r``, ``-p``, and ``-v``, 
 the user can go through the stages separately.
 
-New since version 2.4.02 are the options -b2 and -b4 to run the
+New since version 2.4.02 are the options ``-b2`` and ``-b4`` to run the
 blackbox solver respectively in :index:`double double` 
 and :index:`quad double` precision,
 for example as
@@ -123,10 +123,17 @@ path tracking.  Shared memory multitasked path trackers are
 available in the path trackers for both the polyhedral homotopies to solve
 a random coefficient system and for the
 artificial-parameter homotopy towards the target system.
-See the documentation for the option phc -t below.
+See the documentation for the option ``phc -t`` below.
 
-phc -c : Irreducible decomposition for solution components     
+phc -c : irreducible decomposition for solution components     
 ----------------------------------------------------------
+
+In a numerical irreducible decomposition, positive dimensional
+solution sets are represented by a set of generic points that
+satisfy the given system and as many linear equations with
+random coefficients as the dimension of the solution set.
+The number of generic points in that so-called witness set
+then equals the degree of the solution set.
 
 The menu structure for a numerical irreducible decomposition 
 consists of three parts:
@@ -143,7 +150,7 @@ consists of three parts:
 3. Compute monomial maps for the irreducible decomposition
    of binomial systems.
 
-phc -d : Linear and nonlinear Reduction w.r.t. the total degree
+phc -d : linear and nonlinear reduction w.r.t. the total degree
 ---------------------------------------------------------------
 
 Degree bounds for the number of isolated solution often overshoot
@@ -176,8 +183,8 @@ instead of four solution paths need to be tracked.
 Nonlinear reduction attempts to replace higher degree
 polynomials in the system by S-polynomials.
 
-phc -e : SAGBI/Pieri homotopies to intersect linear subspaces  
--------------------------------------------------------------
+phc -e : SAGBI/Pieri/Littlewood-Richardson homotopies  
+-----------------------------------------------------
 
 Numerical Schubert calculus is the development of numerical
 homotopy algorithms to solve Schubert problems.  
@@ -192,7 +199,7 @@ deform the solutions from the special into the generic problem.
 As Schubert calculus is a classical topic in algebraic geometry,
 what seems less well known is that Schubert calculus offers a solution
 to the output pole placement problem in linear systems control.
-The option phc -k offers one particular interface dedicated to the
+The option ``phc -k`` offers one particular interface dedicated to the
 Pieri homotopies to solve the output pole placement problem.
 A related problem that can be solved with Schubert calculus is the 
 completion of a matrix so that the completed matrix has a prescribed 
@@ -217,7 +224,7 @@ Littlewood-Richardson homotopies is available.
 phc -f : factor pure dimensional solution set into irreducibles
 ---------------------------------------------------------------
 
-The -f is the f of factor and filter.
+The ``f`` in ``-f`` is the ``f`` of factor and filter.
 
 The first basic filter allows for example to extract the real
 solutions from a given list.  The second filter implements the
@@ -233,7 +240,7 @@ For small degrees, a combinatorial factorization method
 will be fast.  The second factorization methods applies
 monodromy loops, using the linear trace test as a stop criterion.
 
-The last option in the menu of phc -f gives access to a
+The last option in the menu of ``phc -f`` gives access to a
 tropical method to detect a common factor of two Laurent polynomials.
 
 phc -k : realization of dynamic output feedback placing poles  
@@ -430,14 +437,93 @@ symbol table with the names x and y, in that order.
 phc -p : polynomial continuation in one parameter
 -------------------------------------------------
 
-The user of ``phc -p`` is prompted for a target system and a start system
-with start solutions.  This option is useful for solving several systems
-with the same structure but with different coefficients.
+We distinguish between two types of homotopies.
+In an :index:`artificial parameter homotopy`, the user is 
+prompted for a target system and a start system with start solutions.
+If the input to ``phc -p`` is a polynomial system with one more unknown
+than the number of equations, 
+then we have a :index:`natural parameter homotopy` and the user 
+is then prompted to define one unknown as the continuation parameter.
 
+We first illustrate artificial parameter homotopy continuation.
+In the example below, the artificial parameter is denoted
+by :math:`t` and, as :math:`t` goes from zero to one,
+a simpler polynomial system, the start system, is deformed 
+to the target system, the system we want to solve:
+
+.. math::
+   \gamma (1-t)
+   \left(
+     \left\{
+        \begin{array}{r}
+           x^2 - c_1 = 0 \\
+           y - c_2 = 0 \\
+        \end{array}
+     \right.
+   \right)
+   + t
+   \left(
+     \left\{
+        \begin{array}{r}
+           x^2 + y^2 - 1 = 0 \\
+           x + y - 2 = 0 \\
+        \end{array}
+     \right.
+   \right),
+
+where :math:`\gamma`, :math:`c_1`, and :math:`c_2` are constants,
+generated at random on the unit circle in the complex plane.
+
+For this example, the file with the target system contains
+
+::
+
+   2
+    x^2 + y^2 - 1;
+    x + y - 2;
+
+and the start system is then stored in the file with contents
+
+
+::
+
+   2
+    x^2 +(-7.43124688174374E-01 - 6.69152970422862E-01*i);
+    y +(-7.98423708079157E-01 + 6.02095990999051E-01*i);
+
+   THE SOLUTIONS : 
+   2 2
+   ===========================================================================
+   solution 1 :
+   t :  0.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    x : -9.33575033988799E-01  -3.58381997194074E-01
+    y :  7.98423708079157E-01  -6.02095990999051E-01
+   == err :  0.000E+00 = rco :  1.000E+00 = res :  0.000E+00 ==
+   solution 2 :
+   t :  0.00000000000000E+00   0.00000000000000E+00
+   m : 1
+   the solution for t :
+    x :  9.33575033988799E-01   3.58381997194074E-01
+    y :  7.98423708079157E-01  -6.02095990999051E-01
+   == err :  0.000E+00 = rco :  1.000E+00 = res :  0.000E+00 ==
+
+The start system can be constructed with ``phc -r``.
+   
 With ``phc -p``, the user has full access to all numerical tolerances
 that define how close the numerical approximations have to stay
-along a solution path.  Another application of phc -p is to rerun
-a selection of solution paths.
+along a solution path.   By default, path tracking happens in double
+precision, but the user can increase the precision via the menu of
+the homotopy settings.  
+At the command line, launching ``phc`` with the options ``-p2`` 
+and ``-p4`` will run the path tracking respectively in double double
+and quad double precision.
+
+To rerun a selection of solution paths, the user should submit a start
+system which contains only the start solutions of those paths that need
+to be recomputed.  In a rerun, one must choose the same :math:`\gamma` 
+as in the previous run.
 
 In addition to the :index:`artificial parameter`
 increment-and-fix continuation,
@@ -618,7 +704,11 @@ menu of ``phc -s``.
 phc -t : tasking for tracking paths using multiple threads     
 ----------------------------------------------------------
 
-The option -t allows the user to take advantage
+The problem of tracking a number of solution paths can be viewed
+as a :index:`pleasingly parallel` problem, because the paths can
+be tracked independently from each other.
+
+The option ``-t`` allows the user to take advantage
 of :index:`multicore processors`.
 For example, typing at the command prompt.
 
@@ -697,6 +787,12 @@ the overhead caused by the quad double arithmetic:
    user    11m56.630s
    sys     0m0.248s
 
+To track solution paths in parallel with ``phc -p``,
+for example with 4 threads, one needs to add ``-t4`` to the
+command line and call ``phc`` as ``phc -p -t4``.
+The option ``-t`` can also be added to ``phc -m`` at the command line,
+to solve random coefficient start systems with polyhedral homotopies 
+with multiple tasks.
 
 phc -v : verification, refinement and purification of solutions
 ---------------------------------------------------------------
@@ -758,11 +854,26 @@ With ``phc -v`` one can do the following tasks:
 
 1. Perform a basic :index:`verification` of the solutions based 
    on Newton's method and weed out spurious solutions.
+   The main result of a basic verification is the tally of good
+   solutions, versus solutions at infinity and/or singular solutions.
+   Solution paths may also have ended at points
+   that are clustered at a regular solution so with '-v' we can
+   detect some cases of occurrences of :index:`path crossing`.
+
+   To select solutions subject to given criteria, use ``phc -f``.
 
 2. Apply Newton's method with multiprecision arithmetic.
+   Note that this may require that also the input coefficients
+   are evaluated at a higher precision.
 
-3. For isolated singular solutions, the deflation method may recondition
+3. For isolated singular solutions,
+   the :index:`deflation` method may recondition
    the solutions and restore quadratic convergence.
+   Note that a large condition number may also be due to a bad scaling
+   of the input coefficients.
+
+   With ``phc -s`` one may improve the
+   condition numbers of the solutions.
 
 4. Based on condition number estimates the working precision is set
    to meet the wanted number of accurate decimal places in the solutions
