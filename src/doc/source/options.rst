@@ -92,6 +92,25 @@ to shuffle the order of input polynomials.
 phc -b : batch or blackbox processing                         
 -------------------------------------
 
+As a simple example of the input format for ``phc -b``,
+consider the following three lines
+
+::
+
+   2
+    x**2 + 4*y**2 - 4;
+           2*y**2 - x;
+
+as the content of the file ``input``.
+See the section on ``phc -g`` for a description of the input format.
+
+To run the blackbox solver at the command line,
+type ``phc -b input output``.  The solutions of the system
+are appended to the polynomials in the file ``input``.
+The file ``output`` also contains the solutions, in addition
+to more diagnostics about the solving, such as the root counts,
+start system, execution times.
+
 The blackbox solver operates in four stages:
 
 1. Preprocessing: scaling (``phc -s``), 
@@ -146,6 +165,11 @@ available in the path trackers for both the polyhedral homotopies to solve
 a random coefficient system and for the
 artificial-parameter homotopy towards the target system.
 See the documentation for the option ``phc -t`` below.
+
+The focus on ``-b`` is on isolated solutions.
+For a numerical irreducible decomposition of all solutions,
+including the positive dimensional ones, consider the options
+``-a``, ``-c``, and ``-f``.
 
 phc -c : irreducible decomposition for solution components     
 ----------------------------------------------------------
@@ -290,6 +314,50 @@ phc -g : check the format of an input polynomial system
 
 The purpose of ``phc -g`` is to check whether a given input
 system has the right syntax.  A related option is ``phc -o``.
+
+Use ``-g`` as ``phc -g input output`` where ``input`` and
+``output`` are the names of input and output files respectively.
+If ``output`` is omitted, then the output can be written to screen.
+If both ``input`` and ``output`` are omitted, then the user will
+be prompted to provide the polynomials in the input system.
+
+The input system can be a system of polynomials in several
+variables with complex coefficients.
+The first line on the input file must be the number of polynomials.
+If the number of variables is different from the number of polynomials,
+then the second number on the first line must be the number of variables.
+Variables may have negative exponents, in which case the system
+is recognized as a Laurent polynomial system.
+Working with negative exponents can be useful to exclude solutions
+with zero coordinates, as polyhedral homotopies (see ``phc -m``)
+are capable of avoiding to compute those type of solutions.
+
+The division operator ``/`` may not appear in a monomial,
+e.g.: ``x/y`` is invalid, but may be used in a coefficient,
+such as in ``5/7``.  While ``phc -g`` will parse ``5/7`` in
+double precision, ``phc -v`` will use the proper extended
+precision in its multiprecision root refinement.
+
+The coefficients of the system will be parsed by ``phc -g`` as complex numbers
+in double precision.  There is also no need to declare variables,
+the names of the variables will be added to the symbol table,
+in the order of which they occur in the polynomials in the system.
+A trick to impose an order on the variables is to start the first
+polynomial with the zero polynomial, written as ``x - x + y - y``,
+to ensure that the symbol ``x`` comes prior to ``y``.
+Internally, the terms in a polynomial are ordered in a graded
+lexicographical order.
+
+Names that may not be used as names for variables are ``e``, ``E``
+(because of the scientific format of floating-point numbers)
+and ``i``, ``I`` (because of the imaginary unit :math:`\sqrt{-1}`).
+Every polynomial must be terminated by a semicolon, the ``;`` symbol.
+Starting the name of a variable with ``;`` is in general a bad idea anyway,
+but semicolons are used as terminating symbols in a polynomial.
+
+Round brackets are for grouping the real and imaginary parts of
+complex coefficients, e.g.: ``(1.e-3 + 3/7*I)*x^2*y``
+or for grouping factors, e.g.: ``3.14*(x+y)*(x-1)^4``.
 
 phc -h : writes helpful information to screen
 ---------------------------------------------

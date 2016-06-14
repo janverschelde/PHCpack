@@ -29,6 +29,17 @@ can be typed at the command prompt:
 If all went well, typing ``./phc`` at the command prompt should bring
 up the welcome message and the screen with available options.
 
+The executable ``phc`` gives access to almost all the functionality
+of PHCpack, including the :index:`multitasking` capabilities 
+for :index:`shared memory parallelism` 
+on :index:`multicore processors`.
+For other parallel capabilities, such
+as :index:`distributed memory parallelism` with 
+the :index:`Message Passing Interface (MPI)`
+and massive parallelism on 
+a :index:`Graphics Processing Unit (GPU)`,
+one will need to compile the source code.
+
 The :index:`source code` is under :index:`version control` 
 at :index:`github`,
 at <https://github.com/janverschelde/PHCpack>.

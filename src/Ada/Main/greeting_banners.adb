@@ -180,6 +180,33 @@ package body Greeting_Banners is
   procedure help4goodformat is
   begin
     put_line("phc -g checks whether the format of an input system is good.");
+    new_line;
+    put_line("Use '-g' as 'phc -g input output' where 'input' and 'output'");
+    put_line("are the names of input and output files respectively.");
+    put_line("If 'output' is omitted, then output can be written to screen.");
+    put_line("If both 'input' and 'output' are omitted, then the user");
+    put_line("is prompted to type the polynomials in the input system.");
+    new_line;
+    put_line("The first line of the input must start with the number of");
+    put_line("polynomials in the system.  If the number of variables differs");
+    put_line("from the number of polynomials, then the number of variables");
+    put_line("must occur as the next number on the first line of the input.");
+    new_line;
+    put_line("Every polynomial must end with a semi colon, the ';' symbol.");
+    put_line("Starting the name of variable with ';' is not good anyway,");
+    put_line("other symbols which cannot be variable names are 'e' and 'E'");
+    put_line("for the scientific notation of numbers.  Moreover, 'i' and");
+    put_line("'I' denote the imaginary unit in complex coefficients.");
+    new_line;
+    put_line("Exponentiation is represented both by '^' and '**'");
+    put_line("If negative exponents occur, then the system is parsed as a");
+    put_line("Laurent polynomial system, see phc -m for polyhedral methods.");
+    put_line("The division '/' may not appear in a monomial, e.g.: 'x/y',");
+    put_line("but may be used in a coefficient, such as in '5/7'.");
+    new_line;
+    put_line("Round brackets are for grouping the real and imaginary parts");
+    put_line("of complex coefficients, e.g.: (1.2e-3 + 3/7*I)*x^2*y");
+    put_line("or for grouping factors, e.g.: 3.14*(x+y)*(x-1)^4.");
   end help4goodformat;
 
   procedure help4help is

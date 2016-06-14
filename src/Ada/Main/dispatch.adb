@@ -665,7 +665,10 @@ procedure Dispatch is
                       else Reduction_Dispatcher(f1,f2);
                      end if;
       when 'e'    => Enumeration_Dispatcher(o2,f1,f2);
-      when 'f'    => Factorization_Dispatcher(f1,f2);
+      when 'f'    => if o2 = 'h' or o2 = '-'
+                      then Greeting_Banners.help4factor;
+                      else Factorization_Dispatcher(f1,f2);
+                     end if;
       when 'g'    => if o2 = 'h' or o2 = '-'
                       then Greeting_Banners.help4goodformat;
                       else Test_if_System_is_Good(f1,f2);
