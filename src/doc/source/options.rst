@@ -661,9 +661,40 @@ combination between target and start system admits solutions.
 phc -q : tracking solution paths with incremental read/write   
 ------------------------------------------------------------
 
+For huge polynomial systems, all solutions may not fit in memory.
 The jumpstarting method for a polynomial homotopy
 does not require the computation of all solutions of the start system
 and neither does it keep the complete solution list in memory.
+
+The ``phc -q`` is a byproduct of the distributed memory parallel
+path trackers with developed with the Message Passing Interface (MPI).
+Even if one is not concerned about memory use, ``phc -q`` is an
+example of program inversion.  Instead of first completely solving
+the start system before tracking solution paths to the target system,
+one can ask for the next start solution whenever one wants to compute
+another solution of the target system. 
+
+The menu of types of supported homotopies is
+
+::
+
+  MENU for type of start system or homotopy : 
+    1. start system is based on total degree;
+    2. a linear-product start system will be given;
+    3. start system and start solutions are provided;
+    4. polyhedral continuation on a generic system;
+    5. diagonal homotopy to intersect algebraic sets;
+    6. descend one level down in a cascade of homotopies;
+    7. remove last slack variable in a witness set.
+
+The first four options concern isolated solutions of polynomial systems.
+To construct a start system based on total degree
+or a linear-product start system, use ``phc -r``.
+The polyhedral continuation needs a mixed cell configuration,
+which can be computed with ``phc -m``.
+
+Options 5 and 6 deal with positive dimensional solution sets,
+see ``phc -c``.
 
 phc -r : root counting and construction of start systems       
 --------------------------------------------------------
@@ -738,6 +769,12 @@ into account to construct symmetric start systems.
 If the start system respects the same permutation symmetry as the
 system on input, then one must track only those paths starting at 
 the generators of the set of start solutions.
+
+After the selection of the type of start system, the user has the
+option to delay the calculation of all start solutions.
+All start solutions can be computed at the time when needed by ``phc -q``.
+To use the start system with ``phc -p``, the user must ask to compute
+all start solutions with ``-r``.
 
 phc -s : equation and variable scaling on system and solutions 
 --------------------------------------------------------------

@@ -1,4 +1,5 @@
 Tue 14 Jun 2016 : to greeting_banners.adb, added help for -e and -s. 
+  Documented phc -q and completed -r, improved options.rst.
 
 Mon 13 Jun 2016 : added help for -p, -t, -v in greeting_banners.adb.
   Documented also -o and -m.  Did other small editing changes.

@@ -324,6 +324,24 @@ package body Greeting_Banners is
   procedure help4jumpstart is
   begin
     put_line("phc -q runs continuation with jump starting for huge systems.");
+    new_line;
+    put_line("For huge systems, all solutions may not fit in memory.");
+    put_line("Jump starting a homotopy means that start solutions will be");
+    put_line("computed or retrieved from file when they are needed.");
+    new_line;
+    put_line("The following homotopies are supported :");
+    put_line(" 1. start system based on total degree, see 'phc -r';");
+    put_line(" 2. a linear-product start system, see 'phc -r';");
+    put_line(" 3. cheater: start system and solutions are on file;");
+    put_line(" 4. polyhedral continuation to solve a generic system,");
+    put_line("    given a mixed cell configuration computed with 'phc -m';");
+    put_line(" 5. diagonal homotopies to intersect sets, see 'phc -c';");
+    put_line(" 6. cascade homotopies to compute witness sets, see 'phc -c'.");
+    new_line;
+    put_line("With 'phc -q' we invert the order of solving the start system");
+    put_line("and tracking all paths ('phc -r' followed by 'phc -p'),");
+    put_line("as with '-q' we compute or retrieve a start solution only");
+    put_line("when needed in the tracking of the next solution path.");
   end help4jumpstart;
 
   procedure help4rootcounts is
@@ -335,6 +353,31 @@ package body Greeting_Banners is
     put_line("the start system that has as many solutions as the root count.");
     put_line("A homotopy is optimal to solve a given system if the number of");
     put_line("solution paths equals the number of solutions of the system.");
+    new_line;
+    put_line("For root counts in numerical Schubert calculus, see 'phc -e'.");
+    put_line("Mixed volumes are a subset of 'phc -r', but do 'phc -m -h'");
+    put_line("for a brief overview of the lifting strategies.");
+    new_line;
+    put_line("Based on the degrees, we have four different upper bounds :");
+    put_line(" 0. the product of the degrees of the polynomials in the");
+    put_line("    system corresponds to the classical Bezout bound;");
+    put_line(" 1. a multi-homogeneous Bezout number based on a partition");
+    put_line("    of the set of variables that occur in the system;");
+    put_line(" 2. a partitioned linear-product Bezout number where every");
+    put_line("    polynomial can have a different partition;");
+    put_line(" 3. a general linear-product Bezout number based on a set");
+    put_line("    structure where every set corresponds to a hyperplane.");
+    put_line("Upper bounds 1, 2, and 3 give rise to a linear-product start");
+    put_line("system.  Via an interactive menu, the user can try several");
+    put_line("bounds before settling on a choice of a start system.");
+    new_line;
+    put_line("There is support for a symmetric set structure.");
+    new_line;
+    put_line("The start system can be given as input to 'phc -p' or '-q'");
+    put_line("to compute all isolated solutions of the input system.");
+    put_line("If after selecting the type of start system, the computation");
+    put_line("of all start solutions is delayed, then '-q' must be used.");
+    put_line("To use '-p' all start solutions must be computed by 'phc -r'.");
   end help4rootcounts;
 
   procedure help4scaling is
