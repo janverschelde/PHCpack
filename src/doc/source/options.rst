@@ -210,7 +210,7 @@ phc -e : SAGBI/Pieri/Littlewood-Richardson homotopies
 
 Numerical Schubert calculus is the development of numerical
 homotopy algorithms to solve Schubert problems.  
-A classical problem in Schubert calculus is the problem of four lines:
+A classical problem in Schubert calculus is the problem of four lines.
 Given four lines in three dimensional space, find all lines that meet
 the four given lines in a point.  If the lines are in general position,
 then there are exactly two lines that satisfy the problem specification.
@@ -227,16 +227,36 @@ A related problem that can be solved with Schubert calculus is the
 completion of a matrix so that the completed matrix has a prescribed 
 set of eigenvalues.
 
-There are three types of homotopies in numerical Schubert calculus:
+In numerical Schubert calculus, we have three types of homotopies:
 
-1. SAGBI homotopies solve hypersurface intersection conditions
-   the extrinsic way.
+1. :index:`SAGBI homotopies` solve hypersurface intersection conditions
+   the extrinsic way.  The problem is:
+   in :math:`n`-space, where :math:`n = m+p`, 
+   for :math:`mp` given :math:`m`-planes, compute all 
+   :math:`p`-planes which meet the :math:`m`-planes nontrivially.
 
-2. Pieri homotopies are intrinsically geometric and are better able
+2. :index:`Pieri homotopies` are intrinsically geometric and are better able
    to solve more general problems in enumerate geometry.
+   Pieri homotopies generalize SAGBI homotopies in two ways:
 
-3. Littlewood-Richardson homotopies resolve general Schubert
-   intersection conditions.
+   a. The intersection conditions may require that the planes meet
+      in a space of a dimension higher than one.
+      In addition to the :math:`m`-planes, the intersection conditions
+      contain the dimensions of the spaces of intersection.
+
+   b. The solutions may be curves that produce :math:`p`-planes.
+      The problem may then be formulated as an interpolation problem.
+      Given are :math:`mp + q(m + p)` interpolation points and as
+      many :math:`m`-planes on input.  The solutions are curves of
+      degree :math:`q` that meet the given :math:`m`-planes at the
+      given interpolation points.
+
+3. :index:`Littlewood-Richardson homotopies` solve general Schubert
+   problems.  On input is a sequence of square matrices.
+   With each matrix corresponds a bracket of intersection conditions on
+   :math:`p`-planes.  Each intersection condition is the dimension of
+   the intersection of a solution :math:`p`-plane with a linear space
+   with generators in one of the matrices in the sequence on input.
 
 The earliest instances of SAGBI and Pieri homotopies were already
 available in version 2.0 of PHCpack.  
@@ -331,7 +351,7 @@ To continue the example from above, typing at the command prompt
 will give two generic points on the sphere,
 computed in quad double precision.
 
-phc -m : mixed volume Computation via lift+prune and MixedVol  
+phc -m : mixed volume computation via lift+prune and MixedVol  
 -------------------------------------------------------------
 
 The menu choices of ``phc -m`` are a subset of the menu of ``phc -r``.
@@ -638,7 +658,7 @@ overdetermined homotopies, where both target and start system
 are given as overconstrained systems and every convex linear
 combination between target and start system admits solutions.
 
-phc -q : tracking solution Paths with incremental read/write   
+phc -q : tracking solution paths with incremental read/write   
 ------------------------------------------------------------
 
 The jumpstarting method for a polynomial homotopy
@@ -722,6 +742,15 @@ the generators of the set of start solutions.
 phc -s : equation and variable scaling on system and solutions 
 --------------------------------------------------------------
 
+A system is badly scaled if the difference in magnitude between
+the coefficients is large.  In a badly scaled system we observe
+very small and very large coefficients, often in the same polynomial.
+The solutions in a badly scaled system are ill conditioned:
+small changes in the input coefficients may lead to huge changes
+in the coordinates of the solutions.
+
+Scaling is a form of :index:`preconditioning`.  Before we solve the system,
+we attempt to reformulate the original problem into a better scaled one.
 We distinguish two types of scaling:
 
 1. :index:`equation scaling`:

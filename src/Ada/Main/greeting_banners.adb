@@ -149,6 +149,22 @@ package body Greeting_Banners is
     put_line("solutions is finite in number.  If this is the case,");
     put_line("then SAGBI and Pieri homotopies are optimal homotopies");
     put_line("to solve a Pieri problem: no solution path diverges.");
+    new_line;
+    put_line("Pieri homotopies generalize SAGBI homotopies in two ways :");
+    put_line("(1) the dimensions of the space of intersection may be");
+    put_line("    higher than one, which reduces the number of solutions;");
+    put_line("(2) the solutions may be curves of degree q which meet as");
+    put_line("    many as m*p + q*(m+p) given m-planes at as many points.");
+    new_line;
+    put_line("An application of Pieri homotopies is the output pole place");
+    put_line("placement problem in linear systems control, see phc -k.");
+    new_line;
+    put_line("Littlewood-Richardson homotopies` solve general Schubert");
+    put_line("problems.  On input is a sequence of square matrices.");
+    put_line("With each matrix corresponds a bracket of conditions on");
+    put_line("p-planes.  Each intersection condition is the dimension of");
+    put_line("the intersection of a solution p-plane with a linear space");
+    put_line("with generators in one of the matrices in the input sequence.");
   end help4enumeration;
 
   procedure help4feedback is
@@ -324,6 +340,20 @@ package body Greeting_Banners is
   procedure help4scaling is
   begin
     put_line("phc -s applies equation and variable scaling to a system.");
+    new_line;
+    put_line("A badly scaled system has tiny and huge coefficients.");
+    put_line("Solutions of a badly scaled system are ill conditioned.");
+    new_line;
+    put_line("To transform a badly scaled system into a better one,");
+    put_line("equation scaling multiplies the coefficients in the same");
+    put_line("polynomial by the same factor and variable scaling multiplies");
+    put_line("all occurrences of the same variable by the same factor.");
+    put_line("To center the coefficients and reduce their variability,");
+    put_line("the scaling factors are obtained via an optimization problem.");
+    new_line;
+    put_line("The output are a scaled system and the scaling factors.");
+    put_line("These factors are needed to transform the computed solutions");
+    put_line("back into their original coordinates.");
   end help4scaling;
 
   procedure help4tasking is
