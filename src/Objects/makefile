@@ -453,6 +453,9 @@ ts_servec:
 ts_sermat:
 	make -f $(MAKEFILE) ts_sermat
 
+ts_serpol:
+	make -f $(MAKEFILE) ts_serpol
+
 # Test programs for the Deformations library :
 
 test_deformations: test_solutions test_homotopy test_newton test_curves \
