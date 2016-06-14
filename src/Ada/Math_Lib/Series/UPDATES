@@ -1,3 +1,6 @@
+Tue 14 Jun 2016 : instantiated new standard_series_polynomials,
+  tested by ts_serpol.adb.  In standard_dense_series, fixed copy.
+
 Sun 12 Jun 2016 : defined standard_dense_series_matrices and extended
   standard_random_series with a random_matrix_series function, tested
   by ts_sermat.adb.  New package standard_linear_series_solvers to solve

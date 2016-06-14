@@ -79,11 +79,8 @@ package Standard_Dense_Series is
   procedure Copy ( s : in Series; t : in out Series );
 
   -- DESCRIPTION :
-  --   Copies the coefficients of s to t.
-  --   If the order of t is larger than s,
-  --   the extra coefficients of t are set to zero.
-
-  -- REQUIRED : s'last <= t'last.
+  --   Copies the coefficients of s to t
+  --   and sets the order of t to the order of s.
 
 -- ARITHMETICAL OPERATORS :
 

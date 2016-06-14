@@ -123,14 +123,10 @@ package body Standard_Dense_Series is
     zero : constant Complex_Number := Create(0.0);
 
   begin
+    t.order := s.order;
     for i in 0..s.order loop
       t.cff(i) := s.cff(i);
     end loop;
-    if t.order > s.order then
-      for i in s.order+1..t.order loop
-        t.cff(i) := zero;
-      end loop;
-    end if;
   end Copy;
 
 -- ARITHMETICAL OPERATORS :
