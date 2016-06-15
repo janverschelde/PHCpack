@@ -20,5 +20,6 @@ ts_servec                        : test on vectors of dense power series
 standard_dense_series_matrices   : matrices of dense power series
 ts_sermat                        : test on matrices of dense power series
 standard_series_polynomials      : polynomials with series as coefficients
+series_and_polynomials           : convertor functions
 ts_serpol                        : test on series polynomials
 ------------------------------------------------------------------------------
