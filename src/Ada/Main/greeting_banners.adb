@@ -141,6 +141,25 @@ package body Greeting_Banners is
     put_line("random coefficients as the dimension of the solution set.");
     put_line("The number of generic points in that so-called witness set");
     put_line("then equals the degree of the solution set.");
+    new_line;
+    put_line("The first menus offer a cascade of homotopies to compute");
+    put_line("witness points on each positive dimensional solution set.");
+    put_line("The user is prompted to enter the top dimension, which is");
+    put_line("by default the number of variables minus one.  The cascade");
+    put_line("runs faster if one would know the correct top dimension.");
+    put_line("The output of the cascade needs filtering of points which");
+    put_line("may lie on higher dimensionals set and factoring, see '-f'");
+    new_line;
+    put_line("The second part of the menu provides witness set intersection");
+    put_line("with diagonal homotopies, in extrinsic coordinates (doubling)");
+    put_line("or in intrinsic coordinates which avoids doubling #variables.");
+    put_line("The witness set intersection is wrapped with '-w'.");
+    new_line;
+    put_line("The third functionality provided is the decomposition of the");
+    put_line("solution set of binomial systems.  Solutions sets of a system");
+    put_line("with exactly two monomials with nonzero coefficient in every");
+    put_line("equation are represented by monomial maps, which is much more");
+    put_line("efficient than a witness set data structure.");
   end help4components;
 
   procedure help4reduction is
@@ -202,6 +221,26 @@ package body Greeting_Banners is
   procedure help4factor is
   begin
     put_line("phc -f factors a solution set into irreducible components.");   
+    new_line;
+    put_line("The '-f' also stands for filter.  The first option allows");
+    put_line("for example to extract only the real solutions from a file.");
+    put_line("Other filtering criteria involve for example the residual,");
+    put_line("the estimate of the inverse condition numbers, and a test");
+    put_line("whether a coordinate of a solution is zero or not.");
+    new_line;
+    put_line("The homotopy membership test is needed to process the super");
+    put_line("witness sets produced by 'phc -a' or '-c'.  Given a witness");
+    put_line("set and a point, the test decides whether the point belongs");
+    put_line("to the solution set represented by a witness set.");
+    new_line;
+    put_line("To factor a pure dimensional solution set, given as a witness");
+    put_line("set, two different methods are available.  For small degrees,");
+    put_line("a combinatorial factorization method may be fastest.");
+    put_line("The other factorization run monodromy loops, using the linear");
+    put_line("trace as stop criterion.");
+    new_line;
+    put_line("Another option of '-f' applies a tropical method to detect");
+    put_line("a common factor of two Laurent polynomials.");
   end help4factor;
 
   procedure help4goodformat is

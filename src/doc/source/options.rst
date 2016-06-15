@@ -238,17 +238,40 @@ then equals the degree of the solution set.
 The menu structure for a numerical irreducible decomposition 
 consists of three parts:
 
-1. Embedding and running cascade to compute witness points on
-   all positive dimensional components of a polynomial system.
-   See the option -f to factor a witness set for an pure
-   dimensional solution set into irreducible components.
+1. Running a cascade of homotopies to compute witness points.
 
-2. Intersecting witness sets with extrinsic and intrinsic
-   diagonal homotopies.
-   See the option -w for a wrapper to the diagonal homotopies.
+2. Intersecting witness sets with diagonal homotopies.
 
-3. Compute monomial maps for the irreducible decomposition
-   of binomial systems.
+3. For binomial systems, the irreducible decomposition yields
+   lists of monomial maps.
+
+For the cascade of homotopies, the first choice in the menu
+combines the next two ones.  The user is prompted to enter the
+top dimension (which by default is the ambient dimension minus one)
+and then as many linear equations with random coefficients are
+added to the input system.  In addition, as many slack variables
+are added as the top dimension.  Each stage in the cascade
+removes one linear equation and solutions with nonzero slack
+variables at the start of the homotopy may end at solutions
+of lower dimension.
+
+The classification of the witness points along irreducible factors
+may happen with the third menu choice or, using different methods,
+with ``phc -f``.  The third menu choice of ``phc -c`` applies
+bivariate interpolation methods, while ``phc -f`` offers monodromy
+breakup and a combinatorial factorization procedure.
+
+The intersection of witness sets with diagonal homotopies
+may be performed with extrinsic coordinates, which doubles
+the total number of variables, or in an intrinsic fashion.
+The intersection of witness sets is wrapped in ``phc -w``.
+
+The third block of menu options of ``phc -c`` concerns binomial systems.
+Every polynomial equation in a binomial system has exactly two
+monomials with a nonzero coefficient.  The positive dimensional
+solution sets of such a system can be represented by monomial maps.
+For sparse polynomial systems,
+monomial maps are much more efficient data structures than witness sets.
 
 phc -d : linear and nonlinear reduction w.r.t. the total degree
 ---------------------------------------------------------------
@@ -341,15 +364,22 @@ available in version 2.0 of PHCpack.
 Since version 2.3.95, a more complete implementation of the 
 Littlewood-Richardson homotopies is available.
 
-phc -f : factor pure dimensional solution set into irreducibles
----------------------------------------------------------------
+phc -f : factor a pure dimensional solution set into irreducibles
+-----------------------------------------------------------------
 
 The ``f`` in ``-f`` is the ``f`` of factor and filter.
 
 The first basic filter allows for example to extract the real
-solutions from a given list.  The second filter implements the
-homotopy membership test to decide whether a point belongs to
-a witness set.  Given on input a witness set and a point,
+solutions from a given list.
+Other filtering criteria involve for example the residual,
+the estimate of the inverse condition numbers, and a test
+whether a coordinate of a solution is zero or not.
+
+The second filter implements the homotopy membership test 
+to decide whether a point belongs to a witness set.
+This filter is needed to process the superwitness sets
+computed by ``phc -a`` or ``phc -c``.
+Given on input a witness set and a point,
 this filter runs a homotopy to decide if the point belongs
 to the positive dimensional solution set represented by
 the given witness set.
@@ -357,10 +387,10 @@ the given witness set.
 The factorization method take on input a witness set for
 a pure dimensional solution set of a polynomial system.
 For small degrees, a combinatorial factorization method
-will be fast.  The second factorization methods applies
+will be fast.  The second factorization method applies
 monodromy loops, using the linear trace test as a stop criterion.
 
-The last option in the menu of ``phc -f`` gives access to a
+Another option in the menu of ``phc -f`` gives access to a
 tropical method to detect a common factor of two Laurent polynomials.
 
 phc -g : check the format of an input polynomial system
