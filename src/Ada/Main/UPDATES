@@ -1,6 +1,7 @@
 Wed 15 Jun 2016 : phc -a -h provides help, defined in greeting_banners.adb,
   also updated the corresponding section in options.rst.
   Added more about -c and -f, with editing changes in options.rst.
+  Adjusted greeting_banners for version 2.4.20.
 
 Tue 14 Jun 2016 : to greeting_banners.adb, added help for -e and -s. 
   Documented phc -q and completed -r, improved options.rst.
