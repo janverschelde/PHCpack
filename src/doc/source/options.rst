@@ -89,6 +89,60 @@ to intersect the solution set of the current set of polynomials
 with the next polynomial equation.  The user has the possibility
 to shuffle the order of input polynomials.
 
+Consider for example the following system:
+
+::
+
+  3
+   (x-1)*(x^2 - y)*(x-0.5);
+   (x-1)*(x^3 - z)*(y-0.5);
+   (x-1)*(x*y - z)*(z-0.5);
+
+Because of its factored form, we see that its solution set contains
+
+0. at least one isolated point :math:`(0.5, 0.5, 0.5)`;
+
+1. the twisted cubic :math:`(y = x^2, z = x^3)`; and
+
+2. the two dimensional plane defined by :math:`x-1 = 0`.
+
+The output of ``phc -a`` will produce three files,
+with suffixes ``_w0``, ``_w1``, ``_w2``, respectively
+for the zero dimensional, the one dimensional, 
+and the two dimensional parts of the solution set.
+
+0. a list of candidate isolated points;
+
+1. generic points on the twisted cubic; and
+
+2. one generic point on the plane :math:`x = 1`.
+
+The positive dimensional solution sets are each
+represented by a :index:`witness set`.
+A *witness set* for a *k*-dimensional solution set of a system *f*
+consists of the system *f*, augmented with *k* linear equations with
+random coefficients, and solutions which satisfy the augmented system.
+Because the linear equations have random coefficients, each solution
+of the augmented system is a :index:`generic point`.
+The number of generic points equals the degree of the solution set.
+
+The output of ``phc -a`` gives a list of candidate witness points.
+In the example, the list of candidate isolated points will most
+likely contains points on higher dimensional solution sets.
+Such points can be filtered away with the :index:`homotopy membership test`
+available in ``phc -f``.
+
+After filtering the points on higher dimensional solution sets,
+each pure dimensional solution set may decompose in irreducible
+components.  The factorization methods of ``phc -f`` will partition
+the witness points of a pure dimensional solution set according to
+the irreducible factors.
+
+The equation-by-equation solver gives *bottom up* way to compute
+a numerical irreducible decomposition.  The diagonal homotopies
+can be called explicitly at each level with the option ``-c``.
+The alternative *top down* way is available in ``phc -c`` as well.
+
 phc -b : batch or blackbox processing                         
 -------------------------------------
 

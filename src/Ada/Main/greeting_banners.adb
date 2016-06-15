@@ -62,6 +62,33 @@ package body Greeting_Banners is
   procedure help4eqnbyeqn is
   begin
     put_line("phc -a calls an equation-by-equation solver.");
+    new_line;
+    put_line("Consider for example the system :");
+    put_line("3");
+    put_line(" (x-1)*(x^2 - y)*(x-0.5);");
+    put_line(" (x-1)*(x^3 - z)*(y-0.5);");
+    put_line(" (x-1)*(x*y - z)*(z-0.5);");
+    new_line;
+    put_line("which contains among its solutions a two dimensional plane,");
+    put_line("the twisted cubic, and at least one isolated point.");
+    put_line("Running 'phc -a' will produce three files, with suffixes");
+    put_line("_w0, _w1, _w2 for the three dimensions in the solution set.");
+    new_line;
+    put_line("In a numerical irreducible decomposition, a k-dimensional set");
+    put_line("is represented by a witness set, which consists of the input");
+    put_line("system, augmented with k random linear equations, and the list");
+    put_line("of generic points which satisfy the augmented system.");
+    new_line;
+    put_line("The output of 'phc -a' produces candidate witness sets, which");
+    put_line("may still contains points on higher dimensional sets that need");
+    put_line("filtering by the homotopy membership test in 'phc -f'.");
+    put_line("After filtering, the factorization methods of 'phc -f' can be");
+    put_line("applied to partition the witness points along the irreducible");
+    put_line("factors in a numerical irreducible decomposition.");
+    new_line;
+    put_line("The equation-by-equation solver applies a bottom up method,");
+    put_line("applying diagonal homotopies in 'phc -c'.");
+    put_line("The top down method is available in 'phc -c' as well.");
   end help4eqnbyeqn;
 
   procedure help4blackbox is

@@ -1,3 +1,6 @@
+Wed 15 Jun 2016 : phc -a -h provides help, defined in greeting_banners.adb,
+  also updated the corresponding section in options.rst.
+
 Tue 14 Jun 2016 : to greeting_banners.adb, added help for -e and -s. 
   Documented phc -q and completed -r, improved options.rst.
   Fixed phc -f -h in dispatch.adb, and documented -g.
