@@ -1,3 +1,6 @@
+Wed 15 Jun 2016 : updated setup.py, __init__.py, and conf.py for both PHCpy2
+  and PHCpy3 to prepare for version 0.4.9 of phcpy.
+
 Sun 5 Jun 2016 : improved dashboard.rst with figure (instead of image),
   with captions and references.
 

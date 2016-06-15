@@ -95,4 +95,4 @@ except:
     print('Is the phcpy2c3.so not suited for this platform?')
 
 # The version number is defined as a data attribute.
-__version__ = '0.4.8'
+__version__ = '0.4.9'

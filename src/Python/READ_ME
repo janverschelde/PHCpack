@@ -1,4 +1,4 @@
-phcpy 0.4.8 offers a simple Python interface to PHCv2.4.19
+phcpy 0.4.9 offers a simple Python interface to PHCv2.4.20
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -56,6 +56,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.4.9 : 2016-06-15 : improved documentation for the dashboard module
 0.4.8 : 2016-06-03 : new module dashboard to prototype GUI with Tkinter
 0.4.7 : 2016-05-26 : bug fix in cascade of homotopies
 0.4.6 : 2016-05-21 : improved Littlewood-Richardson homotopy interface
