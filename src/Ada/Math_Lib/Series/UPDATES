@@ -1,3 +1,6 @@
+Thu 16 Jun 2016 : instantiated standard_series_poly_functions, tested by
+  ts_serpol.
+
 Wed 15 Jun 2016 : new package series_and_polynomials to convert polynomials
   with complex coefficients into polynomials with series coefficients, and
   vice versa, tested by ts_serpol.adb.
