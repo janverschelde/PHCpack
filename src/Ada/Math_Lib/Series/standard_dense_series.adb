@@ -194,10 +194,16 @@ package body Standard_Dense_Series is
 
   procedure Add ( s : in out Series; t : in Series ) is
   begin
-    if t.order >= s.order then  -- ignore terms of order > s.order
+    if t.order >= s.order then  -- do not ignore terms of order > s.order!
       for i in 0..s.order loop
         s.cff(i) := s.cff(i) + t.cff(i);
       end loop;
+      if t.order > s.order then 
+        for i in s.order+1..t.order loop -- copy higher order terms
+          s.cff(i) := t.cff(i);
+        end loop;
+        s.order := t.order; -- adjust the order of s
+      end if;
     else          -- add only the coefficients of index <= t.order
       for i in 0..t.order loop
         s.cff(i) := s.cff(i) + t.cff(i);
@@ -283,10 +289,16 @@ package body Standard_Dense_Series is
 
   procedure Sub ( s : in out Series; t : in Series ) is
   begin
-    if t.order >= s.order then -- ignore terms of t of index > s.order
+    if t.order >= s.order then -- do not ignore terms of t of index > s.order!
       for i in 0..s.order loop
         s.cff(i) := s.cff(i) - t.cff(i);
       end loop;
+      if t.order > s.order then
+        for i in s.order+1..t.order loop -- subtract higher order terms
+          s.cff(i) := -t.cff(i);
+        end loop;
+        s.order := t.order; -- s become a series of higher order
+      end if;
     else
       for i in 0..t.order loop
         s.cff(i) := s.cff(i) - t.cff(i);

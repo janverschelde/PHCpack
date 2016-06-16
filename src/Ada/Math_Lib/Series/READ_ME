@@ -1,7 +1,12 @@
-Truncated power series with complex coefficients for PHCv2.4.20
+Truncated power series with complex coefficients for PHCv2.4.21
 
 Similar to Taylor series approximations for general functions,
 we can approximate roots of polynomials in a parameter by series.
+
+The library is divided in three parts:
+(1) the basic arithmetic with truncated power series
+(2) vectors, matrices, and linear solving
+(3) polynomials with coefficients as truncated power series
 
 ------------------------------------------------------------------------------
 file name                        : short description
@@ -18,6 +23,7 @@ standard_dense_series_ring       : ring of dense power series
 standard_dense_series_vectors    : vectors of dense power series
 ts_servec                        : test on vectors of dense power series
 standard_dense_series_matrices   : matrices of dense power series
+standard_linear_series_solvers   : lu factorization for linear systems
 ts_sermat                        : test on matrices of dense power series
 ------------------------------------------------------------------------------
 standard_series_polynomials      : polynomials with series as coefficients
