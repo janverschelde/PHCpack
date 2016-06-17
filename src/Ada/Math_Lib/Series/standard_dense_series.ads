@@ -116,7 +116,7 @@ package Standard_Dense_Series is
 
   -- DESCRIPTION :
   --   Adds the series t to s.  If t.order > s.order,
-  --   then the terms of t of index > s.order will be ignored.
+  --   then the order of s will be upgraded to t.order.
 
   function "-" ( s : Series; c : Complex_Number ) return Series;
 
@@ -154,7 +154,7 @@ package Standard_Dense_Series is
 
   -- DESCRIPTION :
   --   Subtracts the series t from s.  If t.order > s.order,
-  --   then the terms of t of index > s.order will be ignored.
+  --   then the order of s will be upgraded to t.order.
 
   function "*" ( s : Series; c : Complex_Number ) return Series;
 
@@ -182,7 +182,7 @@ package Standard_Dense_Series is
 
   -- DESCRIPTION :
   --   Multiplies the series s with t.  If t.order > s.order,
-  --   then terms of t with index > s.order will be ignored.
+  --   then the order of s will be upgrade to t.order.
 
   function Inverse ( s : Series ) return Series;
 
@@ -226,7 +226,7 @@ package Standard_Dense_Series is
 
   -- DESCRIPTION :
   --   Divides the series s by t.  If t.order > s.order,
-  --   then terms in t with index > s.order will be ignored.
+  --   then the order of the series of s will be upgraded to t.order.
 
   -- REQUIRED : t.cff(0) /= 0.
 

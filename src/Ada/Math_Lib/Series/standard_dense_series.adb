@@ -374,17 +374,9 @@ package body Standard_Dense_Series is
 
   procedure Mul ( s : in out Series; t : in Series ) is
 
-    res : Series;
+    res : constant Series := s*t;
 
   begin
-    res.order := s.order;
-    for i in 0..res.order loop
-      res.cff(i) := t.cff(0)*s.cff(i);
-      for j in 1..i loop
-        exit when j > t.order;
-        res.cff(i) := res.cff(i) + t.cff(j)*s.cff(i-j);
-      end loop;
-    end loop;
     s := res;
   end Mul;
 

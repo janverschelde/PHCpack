@@ -93,7 +93,7 @@ procedure ts_serpol is
   -- REQUIRED : k is in range 1..n.
 
     res : Standard_Series_Polynomials.Poly;
-    one : constant Series := Create(1.0,s.order);
+    one : constant Series := Create(1.0); -- Create(1.0,s.order);
     trm : Standard_Series_Polynomials.Term;
 
   begin

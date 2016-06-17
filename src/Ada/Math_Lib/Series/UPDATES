@@ -1,6 +1,7 @@
 Thu 16 Jun 2016 : instantiated standard_series_poly_functions, tested by
   ts_serpol.  Fixed Add() and Sub() so that order of the series is updated
-  as well in case the other series has a higher order.
+  as well in case the other series has a higher order.  Fixed Mul() as well
+  and updated the specifications, with a modification in ts_serpol.adb.
 
 Wed 15 Jun 2016 : new package series_and_polynomials to convert polynomials
   with complex coefficients into polynomials with series coefficients, and
