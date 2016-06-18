@@ -16,6 +16,7 @@ with Standard_Random_Series;            use Standard_Random_Series;
 with Standard_Series_Polynomials;
 with Standard_Series_Poly_Functions;
 with Series_and_Polynomials;            use Series_and_Polynomials;
+with Series_and_Polynomials_io;
 
 procedure ts_serpol is
 
@@ -157,6 +158,25 @@ procedure ts_serpol is
     end;
   end Test_Evaluation;
 
+  procedure Test_Input_Output is
+
+  -- DESCRIPTION :
+  --   Reads a series in symbolic format and writes the series back.
+
+    s : series;
+
+  begin
+    new_line;
+    put_line("Give a series, terminate with ;");
+    Series_and_Polynomials_io.get(s);
+    new_line;
+    put_line("The coefficients of the series : ");
+    put(s);
+    new_line;
+    put_line("The series : ");
+    Series_and_Polynomials_io.put(s);
+    new_line;
+  end Test_Input_Output;
   
   procedure Main is
 
@@ -171,11 +191,13 @@ procedure ts_serpol is
     put_line("MENU to test polynomials with series coefficients :");
     put_line("  0. test conversion from/to ordinary polynomials;");
     put_line("  1. test evaluation at power series;");
-    put("Type 0 or 1 to select a test : ");
-    Ask_Alternative(ans,"01");
+    put_line("  2. test symbolic input and output;");
+    put("Type 0, 1, or 2 to select a test : ");
+    Ask_Alternative(ans,"012");
     case ans is
       when '0' => Test_Conversion;
       when '1' => Test_Evaluation;
+      when '2' => Test_Input_Output;
       when others => null;
     end case;
   end Main;

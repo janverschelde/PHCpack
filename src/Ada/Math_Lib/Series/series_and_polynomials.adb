@@ -6,15 +6,83 @@ with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
 with Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
-with Standard_Dense_Series;             use Standard_Dense_Series;
 with Standard_Dense_Series_io;          use Standard_Dense_Series_io;
 
 package body Series_and_Polynomials is
+
+  function Series_to_Polynomial
+             ( s : Standard_Dense_Series.Series )
+             return Standard_Complex_Polynomials.Poly is
+
+    res : Standard_Complex_Polynomials.Poly
+        := Standard_Complex_Polynomials.Null_Poly;
+    zero : constant Complex_Number := Create(0.0);
+
+    procedure Add_Term ( k : in integer32; c : in Complex_Number ) is
+
+    -- DESCRIPTION :
+    --   Adds c*t^k to the polynomial res.
+
+      t : Standard_Complex_Polynomials.Term;
+
+    begin
+      t.cf := c;
+      t.dg := new Standard_Natural_Vectors.Vector(1..1);
+      t.dg(1) := natural32(k);
+      Standard_Complex_Polynomials.Add(res,t);
+      Standard_Complex_Polynomials.Clear(t);
+    end Add_Term;
+
+  begin
+    for i in 0..s.order loop
+      if not Equal(s.cff(i),zero)
+       then Add_Term(i,s.cff(i));
+      end if;
+    end loop;
+    return res;
+  end Series_to_Polynomial;
+
+  function Polynomial_to_Series
+             ( p : Standard_Complex_Polynomials.Poly )
+             return Standard_Dense_Series.Series is
+
+    res : Standard_Dense_Series.Series;
+
+    procedure Visit_Term ( t : in Standard_Complex_Polynomials.Term;
+                           c : out boolean ) is
+
+    -- DESCRIPTION :
+    --   Assigns t.cf to the res.cff(t.dg(1))
+    --   and updates the order if needed.
+
+      d : constant integer32 := integer32(t.dg(1));
+
+    begin
+      if d > res.order then
+        for k in res.order+1..d loop -- fill in with zeroes
+          res.cff(k) := Create(0.0);
+        end loop;
+        res.order := d;
+      end if;
+      res.cff(d) := t.cf;
+      c := true;
+    end Visit_Term;
+    procedure Visit_Terms is
+      new Standard_Complex_Polynomials.Visiting_Iterator(Visit_Term);
+
+  begin
+    res.order := 0;
+    res.cff(0) := Create(0.0);
+    Visit_Terms(p);
+    return res;
+  end Polynomial_to_Series;
 
   function Polynomial_to_Series_Polynomial
              ( p : Standard_Complex_Polynomials.Poly;
                verbose : boolean := false )
              return Standard_Series_Polynomials.Poly is
+
+    use Standard_Dense_Series;
 
     res : Standard_Series_Polynomials.Poly
         := Standard_Series_Polynomials.Null_Poly;
@@ -65,6 +133,8 @@ package body Series_and_Polynomials is
              ( s : Standard_Series_Polynomials.Poly;
                verbose : boolean := false )
              return Standard_Complex_Polynomials.Poly is
+
+    use Standard_Dense_Series;
 
     res : Standard_Complex_Polynomials.Poly
         := Standard_Complex_Polynomials.Null_Poly;

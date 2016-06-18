@@ -1,4 +1,6 @@
 Fri 17 Jun 2016 : added basic get to standard_dense_series_io.
+  Added conversion to series_and_polynomials and a new package for the
+  symbolic i/o of series: series_and_polynomials_io, tested by ts_serpol.
 
 Thu 16 Jun 2016 : instantiated standard_series_poly_functions, tested by
   ts_serpol.  Fixed Add() and Sub() so that order of the series is updated
