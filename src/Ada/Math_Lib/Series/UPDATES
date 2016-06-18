@@ -1,3 +1,6 @@
+Sat 18 Jun 2016 : added get/put procedures to series_and_polynomials_io,
+  encapsulating the get/put of ordinary polynomials.
+
 Fri 17 Jun 2016 : added basic get to standard_dense_series_io.
   Added conversion to series_and_polynomials and a new package for the
   symbolic i/o of series: series_and_polynomials_io, tested by ts_serpol.
