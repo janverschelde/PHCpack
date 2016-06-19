@@ -1,5 +1,7 @@
 Sun 19 Jun 2016 : instantiated standard_dense_series_vecvecs and added
   to standard_random_series a function to make a vecvec of random series. 
+  Convertors in series_and_polynomials are more general, test by ts_serpol.
+  Added set_order procedure to series_and_polynomials.
 
 Sat 18 Jun 2016 : added get/put procedures to series_and_polynomials_io,
   encapsulating the get/put of ordinary polynomials.  Instantiated the

@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Dense_Series;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
@@ -33,20 +34,21 @@ package Series_and_Polynomials is
 
   function Polynomial_to_Series_Polynomial
              ( p : Standard_Complex_Polynomials.Poly;
-               verbose : boolean := false )
+               idx : integer32 := 0; verbose : boolean := false )
              return Standard_Series_Polynomials.Poly;
 
   -- DESCRIPTION :
-  --   The first variable in p is considered as the parameter in the
-  --   series of the coefficients in the polynomial on return.
-  --   For example, t^3*x + 2*t*x becomes (2*t + t^3)*x.
-  --   The number of variables in the polynomial on return is one less
-  --   the number of variables in the input polynomial p.
+  --   By default, if idx is zero, then the coefficient of each term in p
+  --   is copied into a series of order zero.  Otherwise, if idx > 0,
+  --   then the variable with that index in p is the series parameter.
+  --   For example, t^3*x + 2*t*x becomes (2*t + t^3)*x, if idx = 1.
+  --   If idx > 0, the number of variables in the polynomial on return is 
+  --   one less than the number of variables in the input polynomial p.
   --   Extra output is written to screen if verbose is true.
 
   function Series_Polynomial_to_Polynomial
              ( s : Standard_Series_Polynomials.Poly;
-               verbose : boolean := false )
+               idx : integer32 := 0; verbose : boolean := false )
              return Standard_Complex_Polynomials.Poly;
 
   -- DESCRIPTION :
@@ -58,7 +60,7 @@ package Series_and_Polynomials is
 
   function System_to_Series_System
              ( p : Standard_Complex_Poly_Systems.Poly_Sys;
-               verbose : boolean := false )
+               idx : integer32 := 0; verbose : boolean := false )
              return Standard_Series_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
@@ -68,11 +70,21 @@ package Series_and_Polynomials is
 
   function Series_System_to_System
              ( s : Standard_Series_Poly_Systems.Poly_Sys;
-               verbose : boolean := false )
+               idx : integer32 := 0; verbose : boolean := false )
              return Standard_Complex_Poly_Systems.Poly_Sys;
 
   -- DESCRIPTION :
   --   Calls the Series_Polynomial_to_Polynomial to each p(i)
   --   and returns the corresponding system of series polynomials.
+
+  procedure Set_Order ( p : in out Standard_Series_Polynomials.Poly;
+                        order : in integer32 );
+  procedure Set_Order ( p : in out Standard_Series_Poly_Systems.Poly_Sys;
+                        order : in integer32 );
+
+  -- DESCRIPTION :
+  --   Sets the order of every term in p to the given order.
+  --   If the given order is larger than the current order,
+  --   then the extra coefficients are set to zero.
 
 end Series_and_Polynomials;

@@ -59,6 +59,7 @@ procedure ts_serpol is
   --   for conversion into a series polynomial.
 
     n : natural32 := 0;
+    i : integer32 := 0;
     p,q : Standard_Complex_Polynomials.Poly;
     s : Standard_Series_Polynomials.Poly;
     ans : character;
@@ -70,16 +71,18 @@ procedure ts_serpol is
     put("Give a polynomial : "); get(p);
     put("> your polynomial : "); put(p); new_line;
     new_line;
+    put("Give the index of the series parameter : "); get(i);
+    new_line;
     put("Extra output during the conversion ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y'
-     then s := Polynomial_to_Series_Polynomial(p,true);
-     else s := Polynomial_to_Series_Polynomial(p);
+     then s := Polynomial_to_Series_Polynomial(p,i,true);
+     else s := Polynomial_to_Series_Polynomial(p,i);
     end if;
     new_line;
     put_line("The series polynomial s :");
     Write(s);
-    q := Series_Polynomial_to_Polynomial(s,ans = 'y');
+    q := Series_Polynomial_to_Polynomial(s,i,ans = 'y');
     put("s as poly : "); put(q); new_line;
   end Test_Conversion;
 
