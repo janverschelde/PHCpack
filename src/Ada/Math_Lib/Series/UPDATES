@@ -4,6 +4,8 @@ Sun 19 Jun 2016 : instantiated standard_dense_series_vecvecs and added
   Added set_order procedure to series_and_polynomials.
   Extended series_and_polynomials_io with index and verbose options,
   and basic input/output of systems of series polynomials.
+  Instantiated standard_series_poly_sysfun and standard_series_jaco_matrices,
+  with a new test procedure ts_sersys.
 
 Sat 18 Jun 2016 : added get/put procedures to series_and_polynomials_io,
   encapsulating the get/put of ordinary polynomials.  Instantiated the
