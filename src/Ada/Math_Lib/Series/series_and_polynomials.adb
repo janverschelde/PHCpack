@@ -184,5 +184,33 @@ package body Series_and_Polynomials is
     Visit_Terms(s);
     return res;
   end Series_Polynomial_to_Polynomial;
+
+  function System_to_Series_System
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+               verbose : boolean := false )
+             return Standard_Series_Poly_Systems.Poly_Sys is
+
+    res : Standard_Series_Poly_Systems.Poly_Sys(p'range);
+
+  begin
+    for i in p'range loop
+      res(i) := Polynomial_to_Series_Polynomial(p(i),verbose);
+    end loop;
+    return res;
+  end System_to_Series_System;
+
+  function Series_System_to_System
+             ( s : Standard_Series_Poly_Systems.Poly_Sys;
+               verbose : boolean := false )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    res : Standard_Complex_Poly_Systems.Poly_Sys(s'range);
+
+  begin
+    for i in s'range loop
+      res(i) := Series_Polynomial_to_Polynomial(s(i),verbose);
+    end loop;
+    return res;
+  end Series_System_to_System;
  
 end Series_and_Polynomials;

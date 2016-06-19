@@ -1,6 +1,8 @@
 with Standard_Dense_Series;
 with Standard_Complex_Polynomials;
+with Standard_Complex_Poly_Systems;
 with Standard_Series_Polynomials;
+with Standard_Series_Poly_Systems;
 
 package Series_and_Polynomials is
 
@@ -53,5 +55,24 @@ package Series_and_Polynomials is
   --   The first variable in the polynomial on return is
   --   the parameter in the series coefficient of s.
   --   Extra output is written to screen if verbose is true.
+
+  function System_to_Series_System
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+               verbose : boolean := false )
+             return Standard_Series_Poly_Systems.Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Calls the Polynomial_to_Series_Polynomial to each p(i)
+  --   and returns the corresponding system of polynomials
+  --   which have as coefficients series with complex coefficients.
+
+  function Series_System_to_System
+             ( s : Standard_Series_Poly_Systems.Poly_Sys;
+               verbose : boolean := false )
+             return Standard_Complex_Poly_Systems.Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Calls the Series_Polynomial_to_Polynomial to each p(i)
+  --   and returns the corresponding system of series polynomials.
 
 end Series_and_Polynomials;
