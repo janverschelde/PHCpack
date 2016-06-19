@@ -3,6 +3,7 @@ with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
 with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;       use Standard_Complex_Numbers_io;
 with Standard_Natural_Vectors;
 with Standard_Natural_Vectors_io;       use Standard_Natural_Vectors_io;
 with Standard_Dense_Series_io;          use Standard_Dense_Series_io;
@@ -223,6 +224,10 @@ package body Series_and_Polynomials is
               for i in (idx+1)..rt.dg'last loop
                 rt.dg(i) := t.dg(i-1);
               end loop;
+              if verbose then
+                put("the new term has degrees "); put(rt.dg.all); new_line;
+                put("and coefficient :"); put(rt.cf); new_line;
+              end if;
               Standard_Complex_Polynomials.Add(res,rt);
               Standard_Complex_Polynomials.Clear(rt);
             end;
