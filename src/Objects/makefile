@@ -441,6 +441,8 @@ ts_giftwrap:
 
 # Test programs for the Math_Lib/Series library :
 
+test_series: ts_pstrunc ts_series ts_servec ts_sermat ts_serpol ts_sersys
+
 ts_pstrunc:
 	make -f $(MAKEFILE) ts_pstrunc
 
@@ -455,6 +457,9 @@ ts_sermat:
 
 ts_serpol:
 	make -f $(MAKEFILE) ts_serpol
+
+ts_sersys:
+	make -f $(MAKEFILE) ts_sersys
 
 # Test programs for the Deformations library :
 

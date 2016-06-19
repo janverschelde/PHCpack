@@ -26,10 +26,10 @@ procedure ts_sersys is
     new_line;
     put("Give the index of the series variable : "); get(ix);
     new_line;
-    Series_and_Polynomials.get(ls,ix);
+    Series_and_Polynomials_io.get(ls,ix);
     new_line;
     put_line("The polynomial system : ");
-    Series_and_Polynomials.put(ls.all,ix);
+    Series_and_Polynomials_io.put(ls.all,ix);
   end Main;
 
 begin

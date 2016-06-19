@@ -476,6 +476,9 @@ ts_sermat:
 ts_serpol:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_serpol.adb -o $(BIN)/ts_serpol
 
+ts_sersys:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_sersys.adb -o $(BIN)/ts_sersys
+
 # Test programs for the Deformations/Solutions library :
 
 ts_solfilt:
