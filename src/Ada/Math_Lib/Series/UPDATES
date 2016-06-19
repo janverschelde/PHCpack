@@ -1,3 +1,6 @@
+Sun 19 Jun 2016 : instantiated standard_dense_series_vecvecs and added
+  to standard_random_series a function to make a vecvec of random series. 
+
 Sat 18 Jun 2016 : added get/put procedures to series_and_polynomials_io,
   encapsulating the get/put of ordinary polynomials.  Instantiated the
   generic_polynomial_systems to define standard_series_poly_systems,

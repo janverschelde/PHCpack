@@ -25,6 +25,24 @@ package body Standard_Random_Series is
     return res;
   end Random_Series_Vector;
 
+  function Random_Series_VecVec
+             ( vvfirst,vvlast,first,last,order : integer32 )
+             return Standard_Dense_Series_VecVecs.VecVec is
+
+    res : Standard_Dense_Series_VecVecs.VecVec(vvfirst..vvlast);
+
+  begin
+    for i in res'range loop
+      declare
+        v : constant Standard_Dense_Series_Vectors.Vector(first..last)
+          := Random_Series_Vector(first,last,order);
+      begin
+        res(i) := new Standard_Dense_Series_Vectors.Vector'(v);
+      end;
+    end loop;
+    return res;
+  end Random_Series_VecVec;
+
   function Random_Series_Matrix
              ( rowfirst,rowlast,columnfirst,columnlast,order : integer32 )
              return Standard_Dense_Series_Matrices.Matrix is
