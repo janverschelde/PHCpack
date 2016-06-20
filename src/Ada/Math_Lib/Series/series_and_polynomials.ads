@@ -22,12 +22,13 @@ package Series_and_Polynomials is
   --   This conversion is useful for symbolic output of a series.
 
   function Polynomial_to_Series
-             ( p : Standard_Complex_Polynomials.Poly )
+             ( p : Standard_Complex_Polynomials.Poly;
+               idx : integer32 := 1 )
              return Standard_Dense_Series.Series;
 
   -- DESCRIPTION :
-  --   Given in p a polynomial in one variable with complex coefficients,
-  --   returns the series representation of p.
+  --   Given in p a polynomial where the series variable has index idx,
+  --   with complex coefficients, returns the series representation of p.
   --   This conversion is useful for symbolic input of a series.
 
   -- REQUIRED : degree(p) <= Standard_Dense_Series.max_order.

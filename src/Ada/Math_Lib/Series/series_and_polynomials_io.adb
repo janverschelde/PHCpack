@@ -1,8 +1,10 @@
+with Standard_Integer_Numbers_io;           use Standard_Integer_Numbers_io;
 with Symbol_Table;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Polynomials_io;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;
+with Standard_Dense_Series_io;              use Standard_Dense_Series_io;
 with Series_and_Polynomials;                use Series_and_Polynomials;
 
 package body Series_and_Polynomials_io is
@@ -37,6 +39,53 @@ package body Series_and_Polynomials_io is
   begin
     Standard_Complex_Polynomials_io.put(file,p);
     Standard_Complex_Polynomials.Clear(p);
+  end put;
+
+  procedure get ( lv : out Standard_Dense_Series_Vectors.Link_to_Vector;
+                  idx : in integer32 := 1; verbose : in boolean := false ) is
+
+    lp : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
+
+    use Standard_Complex_Polynomials;
+
+  begin
+    Standard_Complex_Poly_Systems_io.get(lp);
+    if verbose then
+      put_line("The series as polynomial system :");
+      Standard_Complex_Poly_Systems_io.put(lp.all);
+      put("Number of variables : ");
+      put(integer32(Number_of_Unknowns(lp(lp'first))),1); new_line;
+    end if;
+    lv := new Standard_Dense_Series_Vectors.Vector(lp'range);
+    for i in lp'range loop
+      if verbose 
+       then put("considering series "); put(i,1); put_line(" ...");
+      end if;
+      declare
+        s : constant Series := Polynomial_to_Series(lp(i),idx);
+      begin
+        if verbose
+         then put_line("The series :"); put(s); new_line;
+        end if;
+        lv(i) := s;
+      end;
+    end loop;
+  end get;
+
+  procedure put ( v : in Standard_Dense_Series_Vectors.Vector ) is
+  begin
+    put(standard_output,v);
+  end put;
+
+  procedure put ( file : in file_type;
+                  v : in Standard_Dense_Series_Vectors.Vector ) is
+  begin
+    put(file,v'last,2); put(file,"  ");
+    put_line(file,"1");
+    for i in v'range loop
+      put(file,v(i));
+      new_line(file);
+    end loop;
   end put;
 
   procedure get ( p : out Standard_Series_Polynomials.Poly;

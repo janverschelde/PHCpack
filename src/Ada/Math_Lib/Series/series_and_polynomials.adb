@@ -43,7 +43,8 @@ package body Series_and_Polynomials is
   end Series_to_Polynomial;
 
   function Polynomial_to_Series
-             ( p : Standard_Complex_Polynomials.Poly )
+             ( p : Standard_Complex_Polynomials.Poly;
+               idx : integer32 := 1 )
              return Standard_Dense_Series.Series is
 
     res : Standard_Dense_Series.Series;
@@ -52,10 +53,10 @@ package body Series_and_Polynomials is
                            c : out boolean ) is
 
     -- DESCRIPTION :
-    --   Assigns t.cf to the res.cff(t.dg(1))
+    --   Assigns t.cf to the res.cff(t.dg(idx))
     --   and updates the order if needed.
 
-      d : constant integer32 := integer32(t.dg(1));
+      d : constant integer32 := integer32(t.dg(idx));
 
     begin
       if d > res.order then
