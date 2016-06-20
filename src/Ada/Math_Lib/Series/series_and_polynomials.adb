@@ -329,5 +329,13 @@ package body Series_and_Polynomials is
       Set_Order(p(i),order);
     end loop;
   end Set_Order;
+
+  procedure Filter ( s : in out Standard_Dense_Series_Vectors.Vector;
+                     tol : in double_float ) is
+  begin
+    for i in s'range loop
+      Standard_Dense_Series.Filter(s(i),tol);
+    end loop;
+  end Filter;
  
 end Series_and_Polynomials;

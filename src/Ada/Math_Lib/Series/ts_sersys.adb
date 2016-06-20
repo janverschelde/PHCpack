@@ -2,6 +2,7 @@ with text_io;                           use text_io;
 with Communications_with_User;          use Communications_with_User;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Integer_Vectors;
 with Symbol_Table;
 with Standard_Complex_Poly_Systems;
@@ -109,6 +110,7 @@ procedure ts_sersys is
     order : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..n);
     info : integer32;
+    tol : constant double_float := 1.0e-12;
 
   begin
     Read_Series_Vector(x,n,idx);
@@ -132,12 +134,15 @@ procedure ts_sersys is
       dx := px;
       LUsolve(jm,n,ipvt,dx);
       put_line("The update of the Newton step :");
+      Series_and_Polynomials.Filter(dx,tol);
       Series_and_Polynomials_io.put(dx);
       Standard_Dense_Series_Vectors.Add(x.all,dx);
       put_line("After adding the update to the current series :");
+      Series_and_Polynomials.Filter(x.all,tol);
       Series_and_Polynomials_io.put(x.all);
       px := Standard_Series_Poly_SysFun.Eval(p,x.all);
       put_line("After evaluation in the original system :");
+      Series_and_Polynomials.Filter(px,tol);
       Series_and_Polynomials_io.put(px);
     end if;
   end Test_Newton_Step;

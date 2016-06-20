@@ -502,6 +502,15 @@ package body Standard_Dense_Series is
     return res;
   end Eval;
 
+  procedure Filter ( s : in out Series; tol : in double_float ) is
+  begin
+    for i in 0..s.order loop
+      if AbsVal(s.cff(i)) < tol
+       then s.cff(i) := Create(0.0);
+      end if;
+    end loop;
+  end Filter;
+
 -- DESTRUCTOR :
 
   procedure Clear ( s : in out Series ) is

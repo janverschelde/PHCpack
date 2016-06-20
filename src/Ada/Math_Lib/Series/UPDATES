@@ -3,7 +3,8 @@ Mon 20 Jun 2016 : added input/output of series in series_and_polynomials_io,
   with index, tested evaluation in ts_sersys.  Added set_order procedure
   for vectors of series, used in ts_sersys for more accurate evaluation.
   Added set_order() procedure for matrices to series_and_polynomials,
-  added one Newton step to ts_sersys.
+  added one Newton step to ts_sersys.  To standard_dense_series and
+  series_and_polynomials added Filter procedure, used in ts_sersys.
 
 Sun 19 Jun 2016 : instantiated standard_dense_series_vecvecs and added
   to standard_random_series a function to make a vecvec of random series. 

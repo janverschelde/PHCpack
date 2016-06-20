@@ -1,4 +1,5 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Dense_Series;
@@ -107,5 +108,12 @@ package Series_and_Polynomials is
   --   Sets the order of every term in p to the given order.
   --   If the given order is larger than the current order,
   --   then the extra coefficients are set to zero.
+
+  procedure Filter ( s : in out Standard_Dense_Series_Vectors.Vector;
+                     tol : in double_float );
+
+  -- DESCRIPTION :
+  --   All coefficients in the series of s which are less than tol
+  --   in magnitude are set to zero.
 
 end Series_and_Polynomials;

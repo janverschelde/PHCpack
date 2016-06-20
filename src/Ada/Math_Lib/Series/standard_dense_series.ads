@@ -247,6 +247,12 @@ package Standard_Dense_Series is
   --   Returns the value c(0) + c(1)*t + .. + c(s.order)*t**s.order,
   --   where c abbreviates the coefficient vector s.cff.
 
+  procedure Filter ( s : in out Series; tol : in double_float );
+
+  -- DESCRIPTION :
+  --   All coefficients of s that are less than tol in magnitude 
+  --   are set to zero.
+
 -- DESTRUCTOR :
 
   procedure Clear ( s : in out Series );
