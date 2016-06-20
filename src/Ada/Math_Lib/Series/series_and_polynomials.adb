@@ -78,6 +78,19 @@ package body Series_and_Polynomials is
     return res;
   end Polynomial_to_Series;
 
+  procedure Set_Order ( v : in out Standard_Dense_Series_Vectors.Vector;
+                        order : in integer32 ) is
+  begin
+    for i in v'range loop
+      if v(i).order < order then
+        for k in v(i).order+1..order loop
+          v(i).cff(k) := Create(0.0);
+        end loop;
+      end if;
+      v(i).order := order;
+    end loop;
+  end Set_Order;
+
   function Set_Order ( i : integer32;
                        d : Standard_Complex_Polynomials.Degrees )
                      return integer32 is

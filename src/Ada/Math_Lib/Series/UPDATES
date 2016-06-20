@@ -1,6 +1,7 @@
 Mon 20 Jun 2016 : added input/output of series in series_and_polynomials_io,
   extended convertor operations for series in series_and_polynomials 
-  with index, tested evaluation in ts_sersys.
+  with index, tested evaluation in ts_sersys.  Added set_order procedure
+  for vectors of series, used in ts_sersys for more accurate evaluation.
 
 Sun 19 Jun 2016 : instantiated standard_dense_series_vecvecs and added
   to standard_random_series a function to make a vecvec of random series. 

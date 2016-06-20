@@ -32,6 +32,7 @@ procedure ts_sersys is
     x : Standard_Dense_Series_Vectors.Link_to_Vector;
     v : integer32 := 1;
     y : Standard_Dense_Series_Vectors.Vector(p'range);
+    order : integer32 := 0;
 
   begin
     if idx = 0 then
@@ -43,6 +44,9 @@ procedure ts_sersys is
     Series_and_Polynomials_io.get(x,v);
     put_line("The vector x of series :");
     Series_and_Polynomials_io.put(x.all);
+    new_line;
+    put("Give the order of the evaluation : "); get(order);
+    Series_and_Polynomials.Set_Order(x.all,order);
     put_line("Evaluating the series ...");
     y := Standard_Series_Poly_SysFun.Eval(p,x.all);
     put_line("The value of the system at x :");
