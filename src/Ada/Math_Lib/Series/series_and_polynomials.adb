@@ -91,6 +91,21 @@ package body Series_and_Polynomials is
     end loop;
   end Set_Order;
 
+  procedure Set_Order ( m : in out Standard_Dense_Series_Matrices.Matrix;
+                        order : in integer32 ) is
+  begin
+    for i in m'range(1) loop
+      for j in m'range(2) loop
+        if m(i,j).order < order then
+          for k in m(i,j).order+1..order loop
+            m(i,j).cff(k) := Create(0.0);
+          end loop;
+        end if;
+        m(i,j).order := order;
+      end loop;
+    end loop;
+  end Set_Order;
+
   function Set_Order ( i : integer32;
                        d : Standard_Complex_Polynomials.Degrees )
                      return integer32 is

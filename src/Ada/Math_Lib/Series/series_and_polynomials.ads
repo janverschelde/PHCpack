@@ -3,6 +3,7 @@ with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Dense_Series;
 with Standard_Dense_Series_Vectors;
+with Standard_Dense_Series_Matrices;
 with Standard_Series_Polynomials;
 with Standard_Series_Poly_Systems;
 
@@ -88,6 +89,14 @@ package Series_and_Polynomials is
   --   is larger than the current order.
   --   For evaluation in polynomials, the order must be set high enough
   --   so that the presence of higher degrees is noticed.
+
+  procedure Set_Order ( m : in out Standard_Dense_Series_Matrices.Matrix;
+                        order : in integer32 );
+
+  -- DESCRIPTION :
+  --   Sets every series in the matrix m to the given order,
+  --   filling in with zero coefficients if the given order
+  --   is larger than the current order.
 
   procedure Set_Order ( p : in out Standard_Series_Polynomials.Poly;
                         order : in integer32 );
