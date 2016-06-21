@@ -622,6 +622,9 @@ ts_extrapol:
 ts_extrapts:
 	make -f $(MAKEFILE) ts_extrapts
 
+ts_sernew:
+	make -f $(MAKEFILE) ts_sernew
+
 # Test programs for the Deformations/End_Games library :
 
 test_end_games: ts_vlprs postpoco valipoco
