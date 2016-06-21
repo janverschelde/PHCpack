@@ -1,3 +1,6 @@
+Tue 21 Jun 2016 : updated standard_newton_series with many steps,
+  tested by ts_sernew.
+
 Mon 20 Jun 2016 : new packages standard_newton_series, tested by ts_sernew.
 
 Wed 7 Oct 2015 : fixed call to silent root refiners in ts_extrapts for

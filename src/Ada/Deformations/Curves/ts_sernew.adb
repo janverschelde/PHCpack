@@ -49,7 +49,8 @@ procedure ts_sernew is
                 x : in out Standard_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
-  --  Does one step with Newton's method.
+  --  Does one step with Newton's method on the system p,
+  --  calculating with series x of the given order.
 
     info : integer32;
     tol : constant double_float := 1.0E-12;
@@ -78,6 +79,42 @@ procedure ts_sernew is
     end if;
   end Test_Newton_Step;
 
+  procedure Test_Newton_Steps
+              ( p : in Standard_Series_Poly_Systems.Poly_Sys;
+                order : in out integer32; nbrit : in integer32;
+                x : in out Standard_Dense_Series_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --  Does as many steps with Newton's method on the system p,
+  --  as the value of nbrit, calculating with series x of the given order.
+
+    info : integer32;
+    tol : constant double_float := 1.0E-12;
+    eva : Standard_Dense_Series_Vectors.Vector(p'range);
+    ans : character;
+
+  begin
+    new_line;
+    put("Do you want intermediate output ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    Series_and_Polynomials.Set_Order(x,order);
+    if ans = 'y'
+     then LU_Newton_Steps(standard_output,p,order,nbrit,x,info);
+     else LU_Newton_Steps(p,order,nbrit,x,info);
+    end if;
+    if info /= 0 then
+      put("info = "); put(info,1); new_line;
+    else
+      Series_and_Polynomials.Filter(x,tol);
+      put_line("The updated power series solution :");
+      Series_and_Polynomials_io.put(x);
+      eva := Standard_Series_Poly_SysFun.Eval(p,x);
+      Series_and_Polynomials.Filter(eva,tol);
+      put_line("The evaluated solution :");
+      Series_and_Polynomials_io.put(eva);
+    end if;
+  end Test_Newton_Steps;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -86,9 +123,8 @@ procedure ts_sernew is
 
     ls : Standard_Series_Poly_Systems.Link_to_Poly_Sys;
     sol : Standard_Dense_Series_Vectors.Link_to_Vector;
-    idx : integer32 := 0;
+    idx,order,nbr : integer32 := 0;
     dim : integer32;
-    order : integer32 := 0;
 
     use Standard_Series_Polynomials;
 
@@ -103,8 +139,13 @@ procedure ts_sernew is
     Series_and_Polynomials_io.put(ls.all,idx);
     Read_Series_Vector(sol,dim,idx);
     new_line;
-    put("Give the order of the computations : "); get(order);
-    Test_Newton_Step(ls.all,order,sol.all);
+    put("Give the start order of the computations : "); get(order);
+    new_line;
+    put("Give the number of Newton steps : "); get(nbr);
+    if nbr = 1
+     then Test_Newton_Step(ls.all,order,sol.all);
+     else Test_Newton_Steps(ls.all,order,nbr,sol.all);
+    end if;
   end Main;
 
 begin
