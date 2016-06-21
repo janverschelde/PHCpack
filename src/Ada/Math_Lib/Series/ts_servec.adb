@@ -5,6 +5,7 @@ with Standard_Complex_Numbers;            use Standard_Complex_Numbers;
 with Standard_Dense_Series_io;            use Standard_Dense_Series_io;
 with Standard_Dense_Series_Vectors;
 with Standard_Random_Series;
+with Standard_Series_Vector_Norms;
 
 procedure ts_servec is
 
