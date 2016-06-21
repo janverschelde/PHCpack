@@ -1,4 +1,4 @@
-Univariate solvers and plane algebraic curves in PHCpack version 2.4.02
+Univariate solvers and plane algebraic curves in PHCpack version 2.4.21
 
 The numerical treatment of plane algebraic curves needs the solution of
 polynomial equations in one variable.  To solve univariate polynomials,
@@ -28,4 +28,7 @@ multprec_extrapolators           : extrapolation at any precision
 sample_plane_curves              : tools to compute points on curves
 ts_extrapol                      : test on extrapolation
 ts_extrapts                      : points on skew line
+-------------------------------------------------------------------------------
+standard_newton_series           : Newton's method to compute series solutions
+ts_sernew                        : test on the Newton series package
 -------------------------------------------------------------------------------
