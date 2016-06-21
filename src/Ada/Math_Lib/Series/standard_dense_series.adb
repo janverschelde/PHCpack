@@ -129,6 +129,20 @@ package body Standard_Dense_Series is
     end loop;
   end Copy;
 
+-- COMPLEX CONJUGATE :
+
+  function Conjugate ( s : Series ) return Series is
+
+    res : Series;
+
+  begin
+    res.order := s.order;
+    for i in 0..res.order loop
+      res.cff(i) := Conjugate(s.cff(i));
+    end loop;
+    return res;
+  end Conjugate;
+
 -- ARITHMETICAL OPERATORS :
 
   function "+" ( s : Series; c : Complex_Number ) return Series is

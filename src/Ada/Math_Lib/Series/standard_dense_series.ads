@@ -82,6 +82,14 @@ package Standard_Dense_Series is
   --   Copies the coefficients of s to t
   --   and sets the order of t to the order of s.
 
+-- COMPLEX CONJUGATE :
+
+  function Conjugate ( s : Series ) return Series;
+
+  -- DESCRIPTION :
+  --   The complex conjugate of a series s has as coefficients
+  --   the complex conjugates of the coefficients of s.
+
 -- ARITHMETICAL OPERATORS :
 
   function "+" ( s : Series; c : Complex_Number ) return Series;

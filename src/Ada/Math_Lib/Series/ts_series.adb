@@ -101,6 +101,35 @@ procedure ts_series is
     put_line("The equation x**n - c :"); put(z);
   end Random_Test_root;
 
+  procedure Test_Conjugate ( order : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given order
+  --   and makes the product with its conjugate.
+
+    s : constant Series := Random_Series(order);
+    c : constant Series := Conjugate(s);
+    p,r,n : Series;
+
+  begin
+    new_line;
+    put("A random series of order "); put(order,1); put_line(" :");
+    put(s);
+    put_line("Its conjugate : ");
+    put(c);
+    put_line("Conjugate(s)*s : ");
+    put(c*s);
+    put_line("s*Conjugate(s) : ");
+    put(s*c);
+    p := c*s;
+    r := Standard_Algebraic_Series.sqrt(p,0);
+    put_line("The square root r of Conjugate(s)*s :");
+    put(r);
+    n := s/r;
+    put_line("The normed series s is s/r :");
+    put(n);
+  end Test_Conjugate;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -117,12 +146,14 @@ procedure ts_series is
     put_line("  0. test the computation of 1/(1-t)");
     put_line("  1. square root of a random series");
     put_line("  2. p-th root of a random series");
-    put("Type 0, 1, or 2 to make your choice : ");
-    Ask_Alternative(ans,"012");
+    put_line("  3. test complex conjugate of a series");
+    put("Type 0, 1, 2, or 3 to make your choice : ");
+    Ask_Alternative(ans,"0123");
     case ans is
       when '0' => Test_Creation(order);
       when '1' => Random_Test_sqrt(order);
       when '2' => Random_Test_root(order);
+      when '3' => Test_Conjugate(order);
       when others => null;
     end case;
   end Main;
