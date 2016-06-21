@@ -1,4 +1,5 @@
 Tue 21 Jun 2016 : added conjugate to standard_dense_series, changed ts_series.
+  Verified that the norm of a normalized series equals one.
 
 Mon 20 Jun 2016 : added input/output of series in series_and_polynomials_io,
   extended convertor operations for series in series_and_polynomials 

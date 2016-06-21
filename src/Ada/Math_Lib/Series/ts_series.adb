@@ -109,7 +109,7 @@ procedure ts_series is
 
     s : constant Series := Random_Series(order);
     c : constant Series := Conjugate(s);
-    p,r,n : Series;
+    p,r,n,q,rq : Series;
 
   begin
     new_line;
@@ -126,8 +126,12 @@ procedure ts_series is
     put_line("The square root r of Conjugate(s)*s :");
     put(r);
     n := s/r;
-    put_line("The normed series s is s/r :");
+    put_line("The normalized series s is s/r :");
     put(n);
+    q := Conjugate(n)*n;
+    rq := Standard_Algebraic_Series.sqrt(q,0);
+    put_line("The norm of the normalized series :");
+    put(rq);
   end Test_Conjugate;
 
   procedure Main is
