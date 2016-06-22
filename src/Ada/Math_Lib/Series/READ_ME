@@ -17,6 +17,7 @@ standard_dense_series            : dense power series, standard coefficients
 standard_dense_series_io         : basic output of series
 standard_random_series           : series with random coefficients
 standard_algebraic_series        : series as roots of univariate polynomials
+standard_dense_series_norms      : norms and normalizations of series
 ts_series                        : basic test on standard dense series
 ------------------------------------------------------------------------------
 standard_dense_series_ring       : ring of dense power series

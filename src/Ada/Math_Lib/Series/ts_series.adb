@@ -5,13 +5,16 @@ with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
 with Standard_Complex_Numbers_Polar;
 with Standard_Complex_Vectors;
 with Standard_Dense_Series;              use Standard_Dense_Series;
 with Standard_Dense_Series_io;           use Standard_Dense_Series_io;
 with Standard_Random_Series;             use Standard_Random_Series;
 with Standard_Algebraic_Series;
+with Standard_Dense_Series_Norms;
 
 procedure ts_series is
 
@@ -134,6 +137,58 @@ procedure ts_series is
     put(rq);
   end Test_Conjugate;
 
+  procedure Test_Norm ( order : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given order
+  --   and computes its norm.
+
+    use Standard_Dense_Series_Norms;
+
+    s : constant Series := Random_Series(order);
+    nrm : constant Series := Norm(s);
+    ns : constant Series := Normalize(s);
+    nrm2 : constant Series := Norm(ns);
+  
+  begin
+    new_line;
+    put("A random series of order "); put(order,1); put_line(" :");
+    put(s);
+    put_line("Its norm :"); put(nrm);
+    put("The max-norm of the series : ");
+    put(Max_Norm(s),3); new_line;
+    put_line("The normalized series :"); put(ns);
+    put_line("The norm of the normalized series :"); put(nrm2);
+    put("The max-norm of the normalized series : ");
+    put(Max_Norm(ns),3); new_line;
+  end Test_Norm;
+
+  procedure Test_Division ( order : in integer32 ) is
+
+    a,b,c : Series;
+
+  begin
+    new_line;
+    put("Give "); put(order+1,1);
+    put_line(" complex numbers for the first series : "); 
+    a.order := order;
+    for i in 0..a.order loop
+      get(a.cff(i));
+    end loop;
+    put_line("The first series : "); put(a);
+    new_line;
+    put("Give "); put(order+1,1);
+    put_line(" complex numbers for the second series : "); 
+    b.order := order;
+    for i in 0..b.order loop
+      get(b.cff(i));
+    end loop;
+    put_line("The first series : "); put(b);
+    c := a/b;
+    new_line;
+    put_line("The result of the division "); put(c);
+  end Test_Division;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -151,13 +206,17 @@ procedure ts_series is
     put_line("  1. square root of a random series");
     put_line("  2. p-th root of a random series");
     put_line("  3. test complex conjugate of a series");
-    put("Type 0, 1, 2, or 3 to make your choice : ");
-    Ask_Alternative(ans,"0123");
+    put_line("  4. test the norm of a series");
+    put_line("  5. test division operation");
+    put("Type 0, 1, 2, 3, 4, or 5 to make your choice : ");
+    Ask_Alternative(ans,"012345");
     case ans is
       when '0' => Test_Creation(order);
       when '1' => Random_Test_sqrt(order);
       when '2' => Random_Test_root(order);
       when '3' => Test_Conjugate(order);
+      when '4' => Test_Norm(order);
+      when '5' => Test_Division(order);
       when others => null;
     end case;
   end Main;
