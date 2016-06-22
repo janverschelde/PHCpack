@@ -24,4 +24,19 @@ package Standard_Series_Vector_Norms is
   --   Returns the inner product of the conjugate of v with v.
   --   This defines the square of the norm of the vector.
 
+  function Norm ( v : Vector ) return Series;
+
+  -- DESCRIPTION :
+  --   Returns the square root of the Square_of_Norm(v).
+
+  procedure Normalize ( v : in out Vector );
+
+  -- DESCRIPTION :
+  --   Divides the vector v by Norm(v) so on return Norm(v) = 1.
+
+  function Normalize ( v : Vector ) return Vector;
+
+  -- DESCRIPTION :
+  --   Returns the normalized vector of v.
+
 end Standard_Series_Vector_Norms;

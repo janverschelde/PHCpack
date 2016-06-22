@@ -1,3 +1,5 @@
+with Standard_Algebraic_Series;
+
 package body Standard_Series_Vector_Norms is
 
   function Conjugate ( v : Vector ) return Vector is
@@ -31,5 +33,33 @@ package body Standard_Series_Vector_Norms is
   begin
     return res;
   end Square_of_Norm;
+
+  function Norm ( v : Vector ) return Series is
+
+    sn : constant Series := Square_of_Norm(v);
+    res : constant Series := Standard_Algebraic_Series.sqrt(sn,0);
+
+  begin
+    return res;
+  end Norm;
+
+  procedure Normalize ( v : in out Vector ) is
+
+    sn : constant Series := Norm(v);
+    invsn : constant Series := Inverse(sn);
+
+  begin
+    Mul(v,invsn);
+  end Normalize;
+
+  function Normalize ( v : Vector ) return Vector is
+
+    sn : constant Series := Norm(v);
+    invsn : constant Series := Inverse(sn);
+    res : constant Vector(v'range) := invsn*v;
+
+  begin
+    return res;
+  end Normalize;
   
 end Standard_Series_Vector_Norms;
