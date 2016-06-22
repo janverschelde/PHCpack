@@ -11,6 +11,7 @@ with Standard_Dense_Series_Vectors;
 with Standard_Dense_Series_Matrices;
 with Standard_Random_Series;
 with Standard_Linear_Series_Solvers;      use Standard_Linear_Series_Solvers;
+with Standard_Least_Squares_Series;       use Standard_Least_Squares_Series;
 
 procedure ts_sermat is
 
@@ -66,6 +67,23 @@ procedure ts_sermat is
     rsd := b - A*x;
     put_line("The residual b - A*x :"); Write(rsd);
   end Random_Linear_Solve;
+
+  procedure Random_Least_Squares ( n,order : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random matrix A of dimension n
+  --   with series of the given order.
+
+    A : Standard_Dense_Series_Matrices.Matrix(1..n,1..n)
+      := Standard_Random_Series.Random_Series_Matrix(1,n,1,n,order);
+    wrk : Standard_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
+    ipvt : Standard_Integer_Vectors.Vector(A'range(2));
+    qraux : Standard_Dense_Series_Vectors.Vector(A'range(2));
+
+  begin
+    put_line("The coefficient matrix A :"); Write(A);
+    QRD(wrk,qraux,ipvt,false);
+  end Random_Least_Squares;
 
   procedure Main is
 

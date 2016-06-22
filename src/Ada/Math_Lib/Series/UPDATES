@@ -2,6 +2,8 @@ Wed 22 Jun 2016 : added norm and normalize to standard_series_vector_norms,
   tested by ts_servec.  New package standard_dense_series_norms to define
   the norm and to normalize series, tested by ts_series.
   Added two-norm to standard_dense_series_norms, tested by ts_series.
+  New package standard_least_squares_series for QR decomposition,
+  tested by ts_sermat.
 
 Tue 21 Jun 2016 : added conjugate to standard_dense_series, changed ts_series.
   Verified that the norm of a normalized series equals one.
