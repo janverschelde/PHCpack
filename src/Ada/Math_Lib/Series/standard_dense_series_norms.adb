@@ -1,3 +1,5 @@
+with Standard_Complex_Numbers;
+with Standard_Mathematical_Functions;
 with Standard_Complex_Numbers_Polar;
 with Standard_Algebraic_Series;
 
@@ -45,5 +47,21 @@ package body Standard_Dense_Series_Norms is
     end loop;
     return res;
   end Max_Norm;
+
+  function Two_Norm ( s : Series ) return double_float is
+
+    use Standard_Complex_Numbers;
+
+    c : constant Series := Conjugate(s);
+    p : constant Series := c*s;
+    res,cff : double_float := 0.0;
+
+  begin
+    for i in 0..p.order loop
+      cff := REAL_PART(p.cff(i));
+      res := res + cff*cff;
+    end loop;
+    return Standard_Mathematical_Functions.SQRT(res);
+  end Two_Norm;
 
 end Standard_Dense_Series_Norms;

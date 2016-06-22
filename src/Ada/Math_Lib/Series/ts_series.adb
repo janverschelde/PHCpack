@@ -157,10 +157,14 @@ procedure ts_series is
     put_line("Its norm :"); put(nrm);
     put("The max-norm of the series : ");
     put(Max_Norm(s),3); new_line;
+    put("The two-norm of the series : ");
+    put(Two_Norm(s),3); new_line;
     put_line("The normalized series :"); put(ns);
     put_line("The norm of the normalized series :"); put(nrm2);
     put("The max-norm of the normalized series : ");
     put(Max_Norm(ns),3); new_line;
+    put("The two-norm of the normalized series : ");
+    put(Two_Norm(ns),3); new_line;
   end Test_Norm;
 
   procedure Test_Division ( order : in integer32 ) is

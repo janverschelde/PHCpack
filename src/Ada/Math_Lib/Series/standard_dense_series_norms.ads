@@ -28,4 +28,9 @@ package Standard_Dense_Series_Norms is
   --   The max norm of a series is the absolute value
   --   of the largest coefficient.
 
+  function Two_Norm ( s : Series ) return double_float;
+
+  -- DESCRIPTION :
+  --   The two norm of a series is the 2-norm of Norm(s).
+
 end Standard_Dense_Series_Norms;
