@@ -1,6 +1,7 @@
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;            use Standard_Complex_Numbers;
+with Standard_Mathematical_Functions;     use Standard_Mathematical_Functions;
 with Standard_Dense_Series;               use Standard_Dense_Series;
 with Standard_Dense_Series_Norms;         use Standard_Dense_Series_Norms;
 
@@ -176,8 +177,126 @@ package body Standard_Least_Squares_Series is
                   qraux : in out Standard_Dense_Series_Vectors.Vector;
                   jpvt : in out Standard_Integer_Vectors.Vector;
                   piv : in boolean ) is
+
+    n : constant integer32 := x'length(1);  -- number of rows
+    p : constant integer32 := x'length(2);  -- number of columns
+    work : Standard_Dense_Series_Vectors.Vector(x'range(2));
+    jj,jp,lp1,lup,maxj,pl,pu : integer32;
+    maxnrm,tt : double_float;
+    nrmxl,t : Series;
+    fac : Complex_Number;
+    negj,swapj : boolean;
+    one : constant Series := Create(1.0);
+
   begin
-    null;
+    pl := 1; pu := 0;
+    if piv then
+      for j in x'range(2) loop       -- rearrange columns according to jpvt
+        swapj := (jpvt(j) > 0);
+        negj := (jpvt(j) < 0);
+        jpvt(j) := j;
+        if negj
+         then jpvt(j) := -j;
+        end if;
+        if (swapj and then (j /= pl)) then
+          zswap(x,pl,j);
+          jpvt(j) := jpvt(pl);
+          jpvt(pl) := j;
+          pl := pl + 1;
+        end if;
+      end loop;
+      pu := p;
+      for j in 1..p loop
+        jj := p - j + 1;
+        if jpvt(jj) < 0 then
+          jpvt(jj) := -jpvt(jj);
+          if jj /= pu then
+            zswap(x,pu,jj);
+            jp := jpvt(pu);
+            jpvt(pu) := jpvt(jj);
+            jpvt(jj) := jp;
+          end if;
+          pu := pu - 1;
+        end if;
+      end loop; 
+    end if;
+    for j in pl..pu loop                  -- compute norms of the free columns
+      qraux(j) := Create(znrm2(x,1,j));
+      work(j) := qraux(j);
+    end loop;
+    lup := min0(n,p);                -- perform the householder reduction of x
+    for ell in 1..lup loop
+      if (ell >= pl and ell < pu) then
+        maxnrm := 0.0;                  -- locate column with largest norm and
+        maxj := ell;                         -- bring it in the pivot position
+        for j in ell..pu loop
+          if REAL_PART(qraux(j).cff(0)) > maxnrm
+           then maxnrm := REAL_PART(qraux(j).cff(0)); maxj := j;
+          end if;
+        end loop;
+        if maxj /= ell then
+          zswap(x,ell,maxj);
+          qraux(maxj) := qraux(ell);
+          work(maxj) := work(ell);
+          jp := jpvt(maxj);
+          jpvt(maxj) := jpvt(ell);
+          jpvt(ell) := jp;
+        end if;
+      end if;
+      qraux(ell) := Create(0.0);
+      if ell /= n then
+        nrmxl := Create(znrm2(x,ell,ell));      -- householder transformation
+        if AbsVal(nrmxl.cff(0)) /= 0.0 then                 -- for column ell
+          if cdabs(x(ell,ell)) /= 0.0
+           then nrmxl := csign(nrmxl,x(ell,ell));
+          end if;
+          zscal(x,Inverse(nrmxl),ell,ell);
+          x(ell,ell) := one + x(ell,ell);
+          lp1 := ell + 1;       --  apply the transformation to the remaining
+          for j in lp1..p loop                --  columns, updating the norms
+            t := -zdot(x,ell,ell,j)/x(ell,ell);
+            zaxpy(x,t,ell,ell,j);
+            if (j >= pl) and (j <= pu) and (AbsVal(qraux(j).cff(0)) /= 0.0) then
+              tt := 1.0 - (cdabs(x(ell,j))/REAL_PART(qraux(j).cff(0)))**2;
+              tt := dmax1(tt,0.0);
+              t := Create(tt);
+              tt := 1.0 + 0.05*tt*(REAL_PART(qraux(j).cff(0))/
+                                   REAL_PART(work(j).cff(0)))**2;
+              if tt /= 1.0 then
+                fac := Create(SQRT(REAL_PART(t.cff(0))));
+                qraux(j) := qraux(j)*fac;
+              else 
+                qraux(j) := Create(znrm2(x,ell+1,j));
+                work(j) := qraux(j);
+              end if;
+            end if;
+          end loop;
+          qraux(ell) := x(ell,ell);               -- save the transformation
+          x(ell,ell) := -nrmxl;
+        end if;
+      end if;
+    end loop;
   end QRD;
+
+  procedure Basis ( qr : in out Standard_Dense_Series_Matrices.Matrix;
+                    x : in Standard_Dense_Series_Matrices.Matrix ) is
+
+    sum : Series;
+    wrk : Standard_Dense_Series_Vectors.Vector(qr'range(2));
+
+  begin
+    for j in x'range(2) loop               -- compute jth column of q
+      for i in qr'range(1) loop
+        sum := x(i,j);
+        for k in qr'first(2)..(j-1) loop
+          sum := sum - qr(i,k)*qr(k,j);
+        end loop;
+        wrk(i) := sum/qr(j,j);
+      end loop;
+      for i in qr'range(1) loop
+        qr(i,j) := wrk(i);
+      end loop;
+    end loop;
+  end Basis;
 
 end Standard_Least_Squares_Series;

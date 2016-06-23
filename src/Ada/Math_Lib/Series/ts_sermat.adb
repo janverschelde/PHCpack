@@ -1,4 +1,5 @@
 with text_io;                             use text_io;
+with Communications_with_User;            use Communications_with_User;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
@@ -68,20 +69,29 @@ procedure ts_sermat is
     put_line("The residual b - A*x :"); Write(rsd);
   end Random_Linear_Solve;
 
-  procedure Random_Least_Squares ( n,order : in integer32 ) is
+  procedure Random_Least_Squares ( n,m,order : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a random matrix A of dimension n
-  --   with series of the given order.
+  --   Generates a random n-by-m matrix A with series of the given order.
+  --   A random solution x is generated and then the right hand side
+  --   vector b is A*x.  for n > m this is an overdetermined linear
+  --   system A*x = b, where the solution x is the generated vector.
 
-    A : Standard_Dense_Series_Matrices.Matrix(1..n,1..n)
-      := Standard_Random_Series.Random_Series_Matrix(1,n,1,n,order);
-    wrk : Standard_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
+    use Standard_Dense_Series_Matrices;
+
+    A : Standard_Dense_Series_Matrices.Matrix(1..n,1..m)
+      := Standard_Random_Series.Random_Series_Matrix(1,n,1,m,order);
+    x : Standard_Dense_Series_Vectors.Vector(1..m)
+      := Standard_Random_Series.Random_Series_Vector(1,m,order);
+    b : Standard_Dense_Series_Vectors.Vector(1..n) := A*x;
+    wrk : Standard_Dense_Series_Matrices.Matrix(1..n,1..m) := A;
     ipvt : Standard_Integer_Vectors.Vector(A'range(2));
     qraux : Standard_Dense_Series_Vectors.Vector(A'range(2));
 
   begin
     put_line("The coefficient matrix A :"); Write(A);
+    put_line("The solution x :"); Write(x);
+    put_line("The right hand side vector b :"); Write(b);
     QRD(wrk,qraux,ipvt,false);
   end Random_Least_Squares;
 
@@ -91,12 +101,23 @@ procedure ts_sermat is
   --   Prompts the user for the dimension of the linear system
   --   and the order of the series.
 
-    dim,ord : integer32 := 0;
+    dim,ord,nrows,ncols : integer32 := 0;
+    ans : character;
 
   begin
-    put("Give the dimension : "); get(dim);
+    new_line;
     put("Give the order of the series : "); get(ord);
-    Random_Linear_Solve(dim,ord);
+    new_line;
+    put("Square system ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      put("Give the dimension : "); get(dim);
+      Random_Linear_Solve(dim,ord);
+    else
+      put("Give number number of rows : "); get(nrows);
+      put("Give number number of colums : "); get(ncols);
+      Random_Least_Squares(nrows,ncols,ord);
+    end if;
   end Main;
 
 begin

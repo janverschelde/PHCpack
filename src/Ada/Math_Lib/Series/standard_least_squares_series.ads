@@ -55,4 +55,23 @@ package Standard_Least_Squares_Series is
   --   This Ada Version is a translation of the LINPACK version, dated 08/14/78,
   --   written by G.W. Stewart, University of Maryland, Argonne National Lab.
 
+  procedure Basis ( qr : in out Standard_Dense_Series_Matrices.Matrix;
+                    x : in Standard_Dense_Series_Matrices.Matrix );
+
+  -- DESCRIPTION :
+  --   Retrieves the orthogonal part of the decomposition.
+  --   The columns of qr on output correspond to the column span of x.
+
+  -- IMPORTANT :
+  --   Note that this does not work when pivoting was requested.
+
+  -- REQUIRED : qr'range(1) = qr'range(2) = x'range(1).
+
+  -- ON ENTRY :
+  --   qr         contains output of the routine qrd;
+  --   x          original matrix as part of the input of qrd.
+
+  -- ON RETURN : 
+  --   qr         orthogonal part of the QR-decomposition.
+
 end Standard_Least_Squares_Series;
