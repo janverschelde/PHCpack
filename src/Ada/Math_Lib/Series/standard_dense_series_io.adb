@@ -1,5 +1,4 @@
 with Standard_Integer_Numbers_io;
-with Standard_Complex_Vectors;
 with Standard_Complex_Vectors_io;
 
 package body Standard_Dense_Series_io is
@@ -12,8 +11,8 @@ package body Standard_Dense_Series_io is
   procedure get ( file : in file_type; s : out Series ) is
   begin
     s.order := 0;
-    Standard_Integer_Numbers_io.get(s.order);
-    Standard_Complex_Vectors_io.get(s.cff(0..s.order));
+    Standard_Integer_Numbers_io.get(file,s.order);
+    Standard_Complex_Vectors_io.get(file,s.cff(0..s.order));
   end get;
 
   procedure put ( s : in Series ) is

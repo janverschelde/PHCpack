@@ -1,5 +1,5 @@
 Thu 23 Jun 2016 : added QRLS to standard_least_squares_series,
-  tested by ts_sermat.
+  tested by ts_sermat.  Fixed bug in get of standard_dense_series_io.adb.
 
 Wed 22 Jun 2016 : added norm and normalize to standard_series_vector_norms,
   tested by ts_servec.  New package standard_dense_series_norms to define
