@@ -1,3 +1,6 @@
+Thu 23 Jun 2016 : instead of store_gamma in parallel_monodromy.c,
+  must use store_standard_gamma.
+
 Mon 4 Apr 2016 : added functions to broadcast terms of polynomials in
   double double and quad double precision.
 

@@ -89,7 +89,7 @@ void gamma_broadcast ( int myid, int n )
       for(i=0; i<n; i++)
          if(v>2) printf("Node %d received %.15lf + %.15lf*I\n",
                         myid,re_gamma[i],im_gamma[i]);
-      fail = store_gamma(n,re_gamma,im_gamma);
+      fail = store_standard_gamma(n,re_gamma,im_gamma);
    }
 }
 
