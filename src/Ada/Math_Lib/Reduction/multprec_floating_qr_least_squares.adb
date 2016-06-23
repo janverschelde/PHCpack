@@ -328,7 +328,7 @@ package body Multprec_Floating_QR_Least_Squares is
                     x : in Multprec_Floating_Matrices.Matrix ) is
 
     sum,acc : Floating_Number;
-    wrk : Multprec_Floating_Vectors.Vector(qr'range(2));
+    wrk : Multprec_Floating_Vectors.Vector(qr'range(1));
 
   begin
     for j in x'range(2) loop               -- compute jth column of q

@@ -273,7 +273,7 @@ package body QuadDobl_Complex_QR_Least_Squares is
                     x : in QuadDobl_Complex_Matrices.Matrix ) is
 
     sum : Complex_Number;
-    wrk : QuadDobl_Complex_Vectors.Vector(qr'range(2));
+    wrk : QuadDobl_Complex_Vectors.Vector(qr'range(1));
 
   begin
     for j in x'range(2) loop               -- compute jth column of q

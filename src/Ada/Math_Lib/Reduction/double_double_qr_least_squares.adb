@@ -281,7 +281,7 @@ package body Double_Double_QR_Least_Squares is
                     x : in Double_Double_Matrices.Matrix ) is
 
     sum : double_double;
-    wrk : Double_Double_Vectors.Vector(qr'range(2));
+    wrk : Double_Double_Vectors.Vector(qr'range(1));
 
   begin
     for j in x'range(2) loop               -- compute jth column of q

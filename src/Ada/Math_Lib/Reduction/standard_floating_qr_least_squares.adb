@@ -279,7 +279,7 @@ package body Standard_Floating_QR_Least_Squares is
                     x : in Standard_Floating_Matrices.Matrix ) is
 
     sum : double_float;
-    wrk : Standard_Floating_Vectors.Vector(qr'range(2));
+    wrk : Standard_Floating_Vectors.Vector(qr'range(1));
 
   begin
     for j in x'range(2) loop               -- compute jth column of q

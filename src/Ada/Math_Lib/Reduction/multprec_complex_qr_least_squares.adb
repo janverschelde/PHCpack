@@ -351,7 +351,7 @@ package body Multprec_Complex_QR_Least_Squares is
                     x : in Multprec_Complex_Matrices.Matrix ) is
 
     sum,acc : Complex_Number;
-    wrk : Multprec_Complex_Vectors.Vector(qr'range(2));
+    wrk : Multprec_Complex_Vectors.Vector(qr'range(1));
 
   begin
     for j in x'range(2) loop               -- compute jth column of q
