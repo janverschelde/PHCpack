@@ -2,6 +2,7 @@ with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;            use Standard_Complex_Numbers;
 with Standard_Mathematical_Functions;     use Standard_Mathematical_Functions;
 with Standard_Dense_Series;               use Standard_Dense_Series;
+with Standard_Algebraic_Series;
 with Standard_Dense_Series_Norms;         use Standard_Dense_Series_Norms;
 
 package body Standard_Least_Squares_Series is
@@ -46,8 +47,6 @@ package body Standard_Least_Squares_Series is
   -- DESCRIPTION : translated from
   --       csign(zdum1,zdum2) = cdabs(zdum1)*(zdum2/cdabs(zdum2)) 
 
-    use Standard_Complex_Numbers;
-
     res : Series;
     fac : constant double_float := cdabs(a)/cdabs(b);
     cff : constant Complex_Number := Create(fac);
@@ -85,7 +84,8 @@ package body Standard_Least_Squares_Series is
   end zcopy;
  
   function znrm2 ( a : Standard_Dense_Series_Matrices.Matrix;
-                   row,col : integer32 ) return double_float is
+                   row,col : integer32 ) -- return double_float is
+                 return Series is
 
   -- DESCRIPTION :
   --   Computes the 2-norm of the vector in the column col of the matrix,
@@ -97,7 +97,8 @@ package body Standard_Least_Squares_Series is
     for i in row..a'last(1) loop
       sum := sum + Conjugate(a(i,col))*a(i,col);
     end loop;
-    return Max_Norm(sum); -- SQRT(REAL_PART(sum));
+   -- return Norm(sum); --Two_Norm(sum); -- SQRT(REAL_PART(sum));
+    return Standard_Algebraic_Series.sqrt(sum,0);
   end znrm2;
 
   function zdot ( a : Standard_Dense_Series_Matrices.Matrix;
@@ -220,7 +221,7 @@ package body Standard_Least_Squares_Series is
       end loop; 
     end if;
     for j in pl..pu loop                  -- compute norms of the free columns
-      qraux(j) := Create(znrm2(x,1,j));
+      qraux(j) := znrm2(x,1,j); -- Create(znrm2(x,1,j));
       work(j) := qraux(j);
     end loop;
     lup := min0(n,p);                -- perform the householder reduction of x
@@ -244,7 +245,8 @@ package body Standard_Least_Squares_Series is
       end if;
       qraux(ell) := Create(0.0);
       if ell /= n then
-        nrmxl := Create(znrm2(x,ell,ell));      -- householder transformation
+       -- nrmxl := Create(znrm2(x,ell,ell));   -- householder transformation
+        nrmxl := znrm2(x,ell,ell);
         if AbsVal(nrmxl.cff(0)) /= 0.0 then                 -- for column ell
           if cdabs(x(ell,ell)) /= 0.0
            then nrmxl := csign(nrmxl,x(ell,ell));
@@ -265,7 +267,7 @@ package body Standard_Least_Squares_Series is
                 fac := Create(SQRT(REAL_PART(t.cff(0))));
                 qraux(j) := qraux(j)*fac;
               else 
-                qraux(j) := Create(znrm2(x,ell+1,j));
+                qraux(j) := znrm2(x,ell+1,j); -- Create(znrm2(x,ell+1,j));
                 work(j) := qraux(j);
               end if;
             end if;
@@ -281,7 +283,7 @@ package body Standard_Least_Squares_Series is
                     x : in Standard_Dense_Series_Matrices.Matrix ) is
 
     sum : Series;
-    wrk : Standard_Dense_Series_Vectors.Vector(qr'range(2));
+    wrk : Standard_Dense_Series_Vectors.Vector(qr'range(1));
 
   begin
     for j in x'range(2) loop               -- compute jth column of q

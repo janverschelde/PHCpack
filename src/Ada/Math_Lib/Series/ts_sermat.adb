@@ -2,8 +2,6 @@ with text_io;                             use text_io;
 with Communications_with_User;            use Communications_with_User;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
-with Standard_Complex_Numbers;            use Standard_Complex_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
 with Standard_Dense_Series;               use Standard_Dense_Series;
@@ -11,6 +9,7 @@ with Standard_Dense_Series_io;            use Standard_Dense_Series_io;
 with Standard_Dense_Series_Vectors;
 with Standard_Dense_Series_Matrices;
 with Standard_Random_Series;
+with Standard_Series_Vector_Norms;
 with Standard_Linear_Series_Solvers;      use Standard_Linear_Series_Solvers;
 with Standard_Least_Squares_Series;       use Standard_Least_Squares_Series;
 
@@ -111,6 +110,50 @@ procedure ts_sermat is
     end if;
   end Solve_Normal_Equations;
 
+  procedure Test_Normality
+              ( qr : in Standard_Dense_Series_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Given in qr is the orthogonal part of the QR decomposition,
+  --   this procedures computes the norm of every column in qr.
+
+    use Standard_Dense_Series_Vectors;
+
+    col : Vector(qr'range(1));
+    nrm : Series;
+
+  begin
+    new_line;
+    put_line("Normality test on orthogonal part of QR decomposition ...");
+    for k in qr'range(2) loop
+      put("Testing column "); put(k,1); put_line(" :");
+      for i in col'range loop
+        col(i) := qr(i,k);
+      end loop;
+      nrm := Standard_Series_Vector_Norms.Norm(col);
+      put_line("The norm :"); put(nrm);
+    end loop;
+  end Test_Normality;
+
+  procedure Test_Basis
+              ( wrk,A : in Standard_Dense_Series_Matrices.Matrix ) is
+
+  -- DESCRIPION :
+  --   Given in wrk the output of QRD on A, the orthogonal part of
+  --   the QR decomposition is computed is tested for orthogonality
+  --   and normality.
+
+    use Standard_Dense_Series_Matrices;
+
+    qr : Matrix(wrk'range(1),wrk'range(2)) := wrk;
+
+  begin
+    new_line;
+    put_line("Computing the orthogonal part of the QR decomposition ...");
+    Basis(qr,A);
+    Test_Normality(qr);   
+  end Test_Basis;
+
   procedure QR_Solve_Least_Squares
               ( A : in Standard_Dense_Series_Matrices.Matrix;
                 x,b : in Standard_Dense_Series_Vectors.Vector ) is
@@ -131,9 +174,18 @@ procedure ts_sermat is
     n : constant integer32 := A'last(1);
     m : constant integer32 := A'last(2);
     rsd,dum,dum2,dum3 : Standard_Dense_Series_Vectors.Vector(1..n);
+    ans : character;
 
   begin
     QRD(wrk,qraux,ipvt,false);
+    put_line("The output of QRD :"); Write(wrk);
+    put_line("The matrix A :"); Write(A);
+    new_line;
+    put("Test the orthonormality of the basis ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Test_Basis(wrk,A);
+    end if;
     QRLS(wrk,n,m,qraux,b,dum2,dum3,sol,rsd,dum,110,info);
     if info /= 0 then
       put("info : "); put(info,1); new_line;
@@ -155,11 +207,11 @@ procedure ts_sermat is
 
     use Standard_Dense_Series_Matrices;
 
-    A : Standard_Dense_Series_Matrices.Matrix(1..n,1..m)
+    A : constant Standard_Dense_Series_Matrices.Matrix(1..n,1..m)
       := Standard_Random_Series.Random_Series_Matrix(1,n,1,m,order);
-    x : Standard_Dense_Series_Vectors.Vector(1..m)
+    x : constant Standard_Dense_Series_Vectors.Vector(1..m)
       := Standard_Random_Series.Random_Series_Vector(1,m,order);
-    b : Standard_Dense_Series_Vectors.Vector(1..n) := A*x;
+    b : constant Standard_Dense_Series_Vectors.Vector(1..n) := A*x;
     ans : character;
 
   begin
@@ -199,8 +251,8 @@ procedure ts_sermat is
       put("Give the dimension : "); get(dim);
       Random_Linear_Solve(dim,ord);
     else
-      put("Give number number of rows : "); get(nrows);
-      put("Give number number of colums : "); get(ncols);
+      put("Give number of rows : "); get(nrows);
+      put("Give number of colums : "); get(ncols);
       Random_Least_Squares(nrows,ncols,ord);
     end if;
   end Main;
