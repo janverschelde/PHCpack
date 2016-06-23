@@ -1,4 +1,3 @@
-with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
 with Standard_Complex_Numbers;            use Standard_Complex_Numbers;
 with Standard_Mathematical_Functions;     use Standard_Mathematical_Functions;
@@ -298,5 +297,115 @@ package body Standard_Least_Squares_Series is
       end loop;
     end loop;
   end Basis;
+
+  procedure QRLS ( x : in out Standard_Dense_Series_Matrices.Matrix;
+                   n,k : in integer32;
+                   qraux,y : in Standard_Dense_Series_Vectors.Vector;
+                   qy,qty,b,rsd,xb : out Standard_Dense_Series_Vectors.Vector;
+                   job : in integer32; info : out integer32 ) is
+
+    cb,cqy,cqty,cr,cxb : boolean;
+    jj,ju,kp1 : integer32;
+    t,temp : Series;
+
+  begin
+    info := 0;                                               -- set info flag
+    cqy := (job/10000 /= 0);                     -- determine what to compute
+    cqty := (job mod 10000 /= 0);
+    cb := ((job mod 1000)/100 /= 0);
+    cr := ((job mod 100)/10 /= 0);
+    cxb := ((job mod 10) /= 0);
+    ju := min0(k,n-1);
+    if ju = 0 then                               -- special action when n = 1
+      if cqy then qy(1) := y(1); end if;
+      if cqty then qty(1) := y(1); end if;
+      if cxb then xb(1) := y(1); end if;
+      if cb then
+        if AbsVal(x(1,1).cff(0)) = 0.0
+         then info := 1;
+         else b(1) := y(1)/x(1,1);
+        end if;
+      end if;
+      if cr then rsd(1) := Create(0.0); end if;
+      return;
+    end if;
+    if cqy                                     -- set up to compute qy or qty
+     then zcopy(n,y'first,y,qy);
+    end if;
+    if cqty
+     then zcopy(n,y'first,y,qty);
+    end if;
+    if cqy then                                                -- compute qy
+      for j in 1..ju loop
+        jj := ju - j + 1;
+        if AbsVal(qraux(jj).cff(0)) /= 0.0 then
+          temp := x(jj,jj);
+          x(jj,jj) := qraux(jj);
+          t := -zdotc(jj,x,qy)/x(jj,jj);
+          zaxpy(n-jj+1,jj,jj,t,x,qy);
+          x(jj,jj) := temp;
+        end if;
+      end loop;
+    end if;
+    if cqty then                                        -- compute trans(q)*y
+      for j in 1..ju loop
+        if AbsVal(qraux(j).cff(0)) /= 0.0 then
+          temp := x(j,j);
+          x(j,j) := qraux(j);
+          t := -zdotc(j,x,qty)/x(j,j);
+          zaxpy(n-j+1,j,j,t,x,qty);
+          x(j,j) := temp;
+        end if;
+      end loop;
+    end if;
+    if cb                                   -- set up to compute b,rsd, or xb
+     then zcopy(k,qty'first,qty,b);
+    end if;
+    kp1 := k + 1;
+    if cxb then zcopy(k,qty'first,qty,xb); end if;
+    if (cr and (k < n))
+     then zcopy(n-k,kp1,qty,rsd);
+    end if;
+    if (cxb and (kp1 <= n)) then
+      for i in kp1..n loop
+        xb(i) := Create(0.0);
+      end loop;
+    end if;
+    if cr then
+      for i in 1..k loop
+        rsd(i) := Create(0.0);
+      end loop;
+    end if;
+    if cb then                                                   -- compute b
+      for j in 1..k loop
+        jj := k - j + 1;
+        if AbsVal(x(jj,jj).cff(0)) = 0.0
+         then info := jj; exit;
+        end if;
+        b(jj) := b(jj)/x(jj,jj);
+        if jj /= 1
+         then t := -b(jj); zaxpy(jj-1,1,jj,t,x,b);
+        end if;
+      end loop;
+    end if;
+    if cr or cxb then                        -- compute rsd or xb as requested
+      for j in 1..ju loop
+        jj := ju - j + 1;
+        if AbsVal(qraux(jj).cff(0)) /= 0.0 then
+          temp := x(jj,jj);
+          x(jj,jj) := qraux(jj);
+          if cr then
+            t := -zdotc(jj,x,rsd)/x(jj,jj);
+            zaxpy(n-jj+1,jj,jj,t,x,rsd);
+          end if;
+          if cxb then
+            t := -zdotc(jj,x,xb)/x(jj,jj);
+            zaxpy(n-jj+1,jj,jj,t,x,xb);
+          end if;
+          x(jj,jj) := temp;
+        end if;
+      end loop;
+    end if;
+  end QRLS;
 
 end Standard_Least_Squares_Series;

@@ -1,3 +1,4 @@
+with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Vectors;
 with Standard_Dense_Series_Vectors;
 with Standard_Dense_Series_Matrices;
@@ -73,5 +74,104 @@ package Standard_Least_Squares_Series is
 
   -- ON RETURN : 
   --   qr         orthogonal part of the QR-decomposition.
+
+  procedure QRLS ( x : in out Standard_Dense_Series_Matrices.Matrix;
+                   n,k : in integer32;
+                   qraux,y : in Standard_Dense_Series_Vectors.Vector;
+                   qy,qty,b,rsd,xb : out Standard_Dense_Series_Vectors.Vector;
+                   job : in integer32; info : out integer32 );
+
+  -- DESCRIPTION :
+  --   Applies the output of Standard_Complex_QR_Decomposition.QRD to
+  --   compute coordinate transformations, projections and least quares
+  --   solutions.  For k <= min(n,p), let xk be the matrix
+  --
+  --             xk = (x(jpvt(1)),x(jpvt(2)), ... ,x(jpvt(k)))
+  --
+  --   formed from columnns jpvt(1), ... ,jpvt(k) of the original
+  --   n x p matrix x that was input to dqrdc (if no pivoting was done,
+  --   xk consists of the first k columns of x in their original order).
+  --   QRD produces a factored orthogonal matrix q and an upper triangular
+  --   matrix r such that
+  --                       xk = q * (r)
+  --                                (0)
+  --   this information is contained in coded form in x and qraux.
+
+  -- ON ENTRY :
+  --   x         contains the output of QRD, of size n times p;
+  --   n         number of rows in the matrix xk, must be same as in QRD
+  --   k         number of columns of the matrix xk, k <= min(n,p)
+  --   qraux     contains p entries, auxiliary output from QRD;
+  --   y         n-vector to be manipulated by QRLS;
+  --   job       specifies what is to be computed, job has the decimal
+  --             expansion abcde, with the following meaning :
+  --                  if a /= 0, compute qy,
+  --                  if b,c,d, or e /= 0, compute qty,
+  --                  if c /= 0, compute b,
+  --                  if d /= 0, compute rsd,
+  --                  if e /= 0, compute xb.
+  --             Note that a request to compute b, rsd, or xb
+  --             automatically triggers the computation of qty, for
+  --             which an array must be provided in the calling sequence.
+
+  -- ON RETURN :
+  --   x         may be altered when used as work space;
+  --   qy        qy'length = n,
+  --             qy conntains q*y, if its computation has been requested;
+  --   qty       qty'length = n,
+  --             qty contains trans(q)*y, if its computation has been
+  --             requested;  here trans(q) is the transpose of the matrix q;
+  --   b         b'length = k,
+  --             b contains the solution of the least squares problem
+  --
+  --                    minimize norm2(y - xk*b),
+  --
+  --             if its computation has been requested.  (Note that
+  --             if pivoting was requested in dqrdc, the j-th
+  --             component of b will be associated with column jpvt(j)
+  --             of the original matrix x that was input into dqrdc.)
+  --   rsd       rsd'length = n,
+  --             rsd contains the least squares residual y - xk*b,
+  --             if its computation has been requested;  rsd is also the
+  --             orthogonal projection of y onto the orthogonal complement
+  --             of the column space of xk;
+  --   xb        x'length=n, xb contains the least squares approximation xk*b,
+  --             if its computation has been requested;  xb is also the
+  --             orthogonal projection of y onto the column space of x;
+  --   info      is zero unless the computation of b has been requested
+  --             and r is exactly singular.
+  --             In this case, info is the index of the first zero
+  --             diagonal element of r and b is left unaltered.
+
+  -- The parameters qy, qty, b, rsd, and xb are not referenced
+  -- if their computation is not requested and in this case can be
+  -- replaced by dummy variables in the calling program.
+  -- To save storage, the user may in some cases use the same array
+  -- for different parameters in the calling sequence.
+  -- A frequently occuring example is when one wishes to compute
+  -- any of b, rsd, or xb and does not need y or qty.  In this
+  -- case one may identify y, qty, and one of b, rsd, or xb, while
+  -- providing separate arrays for anything else that is to be computed.
+  -- Thus the calling sequence
+  --
+  --     QRLS(x,n,k,qraux,y,dum,y,b,y,dum,110,info)
+  --
+  -- will result in the computation of b and rsd, with rsd overwriting y.
+  -- More generally, each item in the following list contains groups of
+  -- permissible identifications for a single callinng sequence.
+  --
+  --     1. (y,qty,b) (rsd) (xb) (qy)
+  --     2. (y,qty,rsd) (b) (xb) (qy)
+  --     3. (y,qty,xb) (b) (rsd) (qy)
+  --     4. (y,qy) (qty,b) (rsd) (xb)
+  --     5. (y,qy) (qty,rsd) (b) (xb)
+  --     6. (y,qy) (qty,xb) (b) (rsd)
+  --
+  -- In any group the value returned in the array allocated to the group
+  -- corresponds to the last member of the group.
+
+  -- ACKNOWLEDGMENT :
+  --   This Ada version is a translation of the LINPACK version, dated 08/14/78,
+  --   written by G.W. Stewart, University of Maryland, Argonne National Lab.
 
 end Standard_Least_Squares_Series;
