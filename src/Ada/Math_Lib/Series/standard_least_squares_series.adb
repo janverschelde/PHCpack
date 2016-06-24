@@ -31,17 +31,15 @@ package body Standard_Least_Squares_Series is
     end if;
   end dmax1;
 
-  function cdabs ( s : Series ) return double_float is
+  function cdabs ( s : Series ) return Series is
 
   -- DESCRIPTION :
   --   Computes the 2-norm of the series s.
 
-   -- res : constant double_float := Two_Norm(s);
-    nrm : constant Series := Norm(s);
+    res : constant Series := Norm(s);
 
   begin
-   -- return res;
-    return REAL_PART(nrm.cff(0));
+    return res;
   end cdabs;
 
   function csign ( a,b : Series ) return Series is
@@ -50,11 +48,10 @@ package body Standard_Least_Squares_Series is
   --       csign(zdum1,zdum2) = cdabs(zdum1)*(zdum2/cdabs(zdum2)) 
 
     res : Series;
-    fac : constant double_float := cdabs(a)/cdabs(b);
-    cff : constant Complex_Number := Create(fac);
+    fac : constant Series := cdabs(a)/cdabs(b);
 
   begin
-    res := cff*b;
+    res := fac*b;
     return res;
   end csign;
 
@@ -99,7 +96,6 @@ package body Standard_Least_Squares_Series is
     for i in row..a'last(1) loop
       sum := sum + Conjugate(a(i,col))*a(i,col);
     end loop;
-   -- return Norm(sum); --Two_Norm(sum); -- SQRT(REAL_PART(sum));
     return Standard_Algebraic_Series.sqrt(sum,0);
   end znrm2;
 
@@ -247,10 +243,9 @@ package body Standard_Least_Squares_Series is
       end if;
       qraux(ell) := Create(0.0);
       if ell /= n then
-       -- nrmxl := Create(znrm2(x,ell,ell));   -- householder transformation
-        nrmxl := znrm2(x,ell,ell);
+        nrmxl := znrm2(x,ell,ell);              -- householder transformation
         if AbsVal(nrmxl.cff(0)) /= 0.0 then                 -- for column ell
-          if cdabs(x(ell,ell)) /= 0.0
+          if REAL_PART(cdabs(x(ell,ell)).cff(0)) /= 0.0
            then nrmxl := csign(nrmxl,x(ell,ell));
           end if;
           zscal(x,Inverse(nrmxl),ell,ell);
@@ -259,8 +254,10 @@ package body Standard_Least_Squares_Series is
           for j in lp1..p loop                --  columns, updating the norms
             t := -zdot(x,ell,ell,j)/x(ell,ell);
             zaxpy(x,t,ell,ell,j);
-            if (j >= pl) and (j <= pu) and (AbsVal(qraux(j).cff(0)) /= 0.0) then
-              tt := 1.0 - (cdabs(x(ell,j))/REAL_PART(qraux(j).cff(0)))**2;
+            if (j >= pl) and (j <= pu)
+              and (AbsVal(qraux(j).cff(0)) /= 0.0) then
+              tt := 1.0 - (REAL_PART(cdabs(x(ell,j)).cff(0))/
+                           REAL_PART(qraux(j).cff(0)))**2;
               tt := dmax1(tt,0.0);
               t := Create(tt);
               tt := 1.0 + 0.05*tt*(REAL_PART(qraux(j).cff(0))/
@@ -269,7 +266,7 @@ package body Standard_Least_Squares_Series is
                 fac := Create(SQRT(REAL_PART(t.cff(0))));
                 qraux(j) := qraux(j)*fac;
               else 
-                qraux(j) := znrm2(x,ell+1,j); -- Create(znrm2(x,ell+1,j));
+                qraux(j) := znrm2(x,ell+1,j);
                 work(j) := qraux(j);
               end if;
             end if;

@@ -59,10 +59,10 @@ procedure ts_sermat is
   --   of dimension n and solves the linear system A*x = b.
   --   The series are all of the given order.
 
-    A : Standard_Dense_Series_Matrices.Matrix(1..n,1..n)
+    A : constant Standard_Dense_Series_Matrices.Matrix(1..n,1..n)
       := Standard_Random_Series.Random_Series_Matrix(1,n,1,n,order);
     wrk : Standard_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
-    b : Standard_Dense_Series_Vectors.Vector(1..n)
+    b : constant Standard_Dense_Series_Vectors.Vector(1..n)
       := Standard_Random_Series.Random_Series_Vector(1,n,order);
     x : Standard_Dense_Series_Vectors.Vector(1..n) := b;
     ipvt : Standard_Integer_Vectors.Vector(1..n);
@@ -161,7 +161,7 @@ procedure ts_sermat is
 
   -- DESCRIPTION :
   --   Given in qr is the orthogonal part of the QR decomposition,
-  --   this procedures computes the norm of every column in qr.
+  --   this procedure computes the norm of every column in qr.
 
     use Standard_Dense_Series_Vectors;
 
@@ -181,6 +181,35 @@ procedure ts_sermat is
     end loop;
   end Test_Normality;
 
+  procedure Test_Orthogonality
+              ( qr : in Standard_Dense_Series_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Given in qr is the orthogonal part of the QR decomposition,
+  --   this procedures computes all products of the vectors with
+  --   all other vectors to test whether they are orthogonal.
+
+    u,v : Standard_Dense_Series_Vectors.Vector(qr'range(1));
+    ipr : Series;
+
+  begin
+    new_line;
+    put_line("Orthogonality test on the QR decomposition ...");
+    for i in qr'range(2) loop
+      for k in u'range loop
+        u(k) := qr(k,i);
+      end loop;
+      for j in i+1..qr'last(2) loop
+        for k in v'range loop
+          v(k) := qr(k,j);
+        end loop;
+        ipr := Standard_Series_Vector_Norms.Inner_Product(u,v);
+        put("Inner product of "); put(i,1); put(" with "); put(j,1);
+        put_line(" :"); put(ipr);
+      end loop;
+    end loop;
+  end Test_Orthogonality;
+
   procedure Test_Basis
               ( wrk,A : in Standard_Dense_Series_Matrices.Matrix ) is
 
@@ -192,12 +221,19 @@ procedure ts_sermat is
     use Standard_Dense_Series_Matrices;
 
     qr : Matrix(wrk'range(1),wrk'range(2)) := wrk;
+    ans : character;
 
   begin
     new_line;
     put_line("Computing the orthogonal part of the QR decomposition ...");
     Basis(qr,A);
     Test_Normality(qr);   
+    new_line;
+    put("Continue to the orthogonality test ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Test_Orthogonality(qr);
+    end if;
   end Test_Basis;
 
   procedure QR_Solve_Least_Squares
@@ -238,14 +274,19 @@ procedure ts_sermat is
     if ans = 'y'
      then Test_Basis(wrk,A);
     end if;
-    QRLS(wrk,n,m,qraux,b,dum2,dum3,sol,rsd,dum,110,info);
-    if info /= 0 then
-      put("info : "); put(info,1); new_line;
-    else
-      put_line("The constructed solution x to A*x = b :"); Write(x);
-      put_line("The computed solution x to A*x = b :"); Write(sol);
-      rsd := b - A*sol;
-      put_line("The residual b - A*x :"); Write(rsd);
+    new_line;
+    put("Continue with the least squares solving ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      QRLS(wrk,n,m,qraux,b,dum2,dum3,sol,rsd,dum,110,info);
+      if info /= 0 then
+        put("info : "); put(info,1); new_line;
+      else
+        put_line("The constructed solution x to A*x = b :"); Write(x);
+        put_line("The computed solution x to A*x = b :"); Write(sol);
+        rsd := b - A*sol;
+        put_line("The residual b - A*x :"); Write(rsd);
+      end if;
     end if;
   end QR_Solve_Least_Squares;
 
