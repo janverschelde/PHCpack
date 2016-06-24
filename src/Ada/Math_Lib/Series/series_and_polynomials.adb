@@ -30,7 +30,7 @@ package body Series_and_Polynomials is
       t.dg := new Standard_Natural_Vectors.Vector(1..1);
       t.dg(1) := natural32(k);
       Standard_Complex_Polynomials.Add(res,t);
-      Standard_Complex_Polynomials.Clear(t);
+      Standard_Complex_Polynomials.Clear(t.dg);
     end Add_Term;
 
   begin
@@ -187,7 +187,7 @@ package body Series_and_Polynomials is
         put(" and degrees : "); put(rtm.dg.all); new_line;
       end if;
       Standard_Series_Polynomials.Add(res,rtm);
-      Standard_Series_Polynomials.Clear(rtm);
+      Standard_Series_Polynomials.Clear(rtm.dg);
       c := true;
     end Visit_Term;
     procedure Visit_Terms is
@@ -216,7 +216,7 @@ package body Series_and_Polynomials is
     --   with a nonzero coefficient will contribute one monomial
     --   to the result.
 
-      cffs : Series := t.cf;
+      cffs : constant Series := t.cf;
       zero : constant Complex_Number := Create(0.0);
       rtpc : Complex_Number;
       dim1 : integer32;
@@ -234,7 +234,7 @@ package body Series_and_Polynomials is
           rt.cf := cffs.cff(0);
           rt.dg := new Standard_Natural_Vectors.Vector'(t.dg.all);
           Standard_Complex_Polynomials.Add(res,rt);
-          Standard_Complex_Polynomials.Clear(rt);
+          Standard_Complex_Polynomials.Clear(rt.dg);
         end;
       else -- idx > 0
         dim1 := t.dg'last+1;
@@ -258,7 +258,7 @@ package body Series_and_Polynomials is
                 put("and coefficient :"); put(rt.cf); new_line;
               end if;
               Standard_Complex_Polynomials.Add(res,rt);
-              Standard_Complex_Polynomials.Clear(rt);
+              Standard_Complex_Polynomials.Clear(rt.dg);
             end;
           end if;
         end loop;
@@ -282,6 +282,9 @@ package body Series_and_Polynomials is
 
   begin
     for i in p'range loop
+      if verbose
+       then put("converting polynomial "); put(i,1); put_line(" ...");
+      end if;
       res(i) := Polynomial_to_Series_Polynomial(p(i),idx,verbose);
     end loop;
     return res;
@@ -296,6 +299,9 @@ package body Series_and_Polynomials is
 
   begin
     for i in s'range loop
+      if verbose
+       then put("converting series polynomial "); put(i,1); put_line("...");
+      end if;
       res(i) := Series_Polynomial_to_Polynomial(s(i),idx,verbose);
     end loop;
     return res;

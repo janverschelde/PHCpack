@@ -1,3 +1,6 @@
+Fri 24 Jun 2016 : added QR Newton to standard_newton_series,
+  with added tests in ts_sernew.
+
 Tue 21 Jun 2016 : updated standard_newton_series with many steps,
   tested by ts_sernew.
 

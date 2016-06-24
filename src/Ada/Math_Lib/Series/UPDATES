@@ -3,6 +3,7 @@ Fri 24 Jun 2016 : instantiated standard_dense_series_ring_io, which required
   standard_dense_series_vectors_io, called in ts_servec.
   Modified standard_least_squares_series.adb, tested by ts_sermat:
   the Householder QR decomposition on truncated power series works!
+  Extra output in series_and_polynomials.adb and its _io.adb.
 
 Thu 23 Jun 2016 : added QRLS to standard_least_squares_series,
   tested by ts_sermat.  Fixed bug in get of standard_dense_series_io.adb.
