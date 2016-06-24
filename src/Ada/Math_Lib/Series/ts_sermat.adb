@@ -2,8 +2,12 @@ with text_io;                             use text_io;
 with Communications_with_User;            use Communications_with_User;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
+with Standard_Complex_Numbers_io;         use Standard_Complex_Numbers_io;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
+with Standard_Complex_Vectors;
+with Standard_Complex_Matrices;
+with Standard_Complex_QR_Least_Squares;
 with Standard_Dense_Series;               use Standard_Dense_Series;
 with Standard_Dense_Series_io;            use Standard_Dense_Series_io;
 with Standard_Dense_Series_Vectors;
@@ -33,6 +37,17 @@ procedure ts_sermat is
         put("Component ");
         put(i,1); put(", "); put(j,1); put_line(" :");
         put(A(i,j));
+      end loop;
+    end loop;
+  end Write;
+
+  procedure Write ( A : in Standard_Complex_Matrices.Matrix ) is
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        put("Component ");
+        put(i,1); put(", "); put(j,1); put_line(" :");
+        put(A(i,j)); new_line;
       end loop;
     end loop;
   end Write;
@@ -71,6 +86,37 @@ procedure ts_sermat is
       put_line("The residual b - A*x :"); Write(rsd);
     end if;
   end Random_Linear_Solve;
+
+  function Trunc ( A : Standard_Dense_Series_Matrices.Matrix )
+                 return Standard_Complex_Matrices.Matrix is
+
+  -- DESCRIPTION :
+  --   Takes the zero-th order coefficient of every element in A.
+
+    res : Standard_Complex_Matrices.Matrix(A'range(1),A'range(2));
+
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        res(i,j) := A(i,j).cff(0);
+      end loop;
+    end loop;
+    return res;
+  end Trunc;
+
+  procedure Zero_QRD ( A : Standard_Dense_Series_Matrices.Matrix ) is
+
+  -- DESCRIPTION :
+  --   Shows the QR decomposition of the zero order terms of A.
+
+    B : Standard_Complex_Matrices.Matrix(A'range(1),A'range(2)) := Trunc(A);
+    ipvt : Standard_Integer_Vectors.Vector(A'range(2)) := (A'range(2) => 0);
+    qraux : Standard_Complex_Vectors.Vector(A'range(2));
+
+  begin
+    Standard_Complex_QR_Least_Squares.QRD(B,qraux,ipvt,false);
+    put_line("QRD on zero order terms:"); Write(B);
+  end Zero_QRD;
 
   procedure Solve_Normal_Equations
               ( A : in Standard_Dense_Series_Matrices.Matrix;
@@ -179,7 +225,13 @@ procedure ts_sermat is
   begin
     QRD(wrk,qraux,ipvt,false);
     put_line("The output of QRD :"); Write(wrk);
-    put_line("The matrix A :"); Write(A);
+    new_line;
+    put("View the QRD of the zero order terms ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then Zero_QRD(A);
+    end if;
+   -- put_line("The matrix A :"); Write(A);
     new_line;
     put("Test the orthonormality of the basis ? (y/n) ");
     Ask_Yes_or_No(ans);

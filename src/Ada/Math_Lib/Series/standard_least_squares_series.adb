@@ -36,10 +36,12 @@ package body Standard_Least_Squares_Series is
   -- DESCRIPTION :
   --   Computes the 2-norm of the series s.
 
-    res : constant double_float := Two_Norm(s);
+   -- res : constant double_float := Two_Norm(s);
+    nrm : constant Series := Norm(s);
 
   begin
-    return res;
+   -- return res;
+    return REAL_PART(nrm.cff(0));
   end cdabs;
 
   function csign ( a,b : Series ) return Series is
