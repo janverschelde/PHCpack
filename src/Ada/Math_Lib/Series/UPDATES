@@ -4,6 +4,7 @@ Fri 24 Jun 2016 : instantiated standard_dense_series_ring_io, which required
   Modified standard_least_squares_series.adb, tested by ts_sermat:
   the Householder QR decomposition on truncated power series works!
   Extra output in series_and_polynomials.adb and its _io.adb.
+  Added Safe_Norm() function to standard_least_squares_series.adb.
 
 Thu 23 Jun 2016 : added QRLS to standard_least_squares_series,
   tested by ts_sermat.  Fixed bug in get of standard_dense_series_io.adb.

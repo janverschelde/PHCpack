@@ -31,12 +31,39 @@ package body Standard_Least_Squares_Series is
     end if;
   end dmax1;
 
+  function Safe_Norm ( s : Series ) return Series is
+
+  -- DESCRIPTION :
+  --   Computing the norm with small negative coefficients
+  --   about machine precision generates an exception.
+  --   For series with too small coefficients,
+  --   the zero series is returned.
+
+    res : Series;
+    iszero : boolean := true;
+
+  begin
+    for i in 0..s.order loop
+      if abs(REAL_PART(s.cff(i))) > 1.0E-13 then
+        iszero := false;
+      elsif abs(IMAG_PART(s.cff(i))) > 1.0E-13 then
+        iszero := false;
+      end if;
+      exit when not iszero;
+    end loop;
+    if iszero
+     then res := Create(0.0);
+     else res := Norm(s);
+    end if;
+    return res;
+  end Safe_Norm;
+
   function cdabs ( s : Series ) return Series is
 
   -- DESCRIPTION :
   --   Computes the 2-norm of the series s.
 
-    res : constant Series := Norm(s);
+    res : constant Series := Safe_Norm(s);
 
   begin
     return res;
