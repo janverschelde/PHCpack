@@ -1,4 +1,4 @@
-package body Standard_Dense_Series is
+package body DoblDobl_Dense_Series is
 
 -- CREATORS :
 
@@ -12,6 +12,11 @@ package body Standard_Dense_Series is
     return Create(f,0);
   end Create;
 
+  function Create ( f : double_double ) return Series is
+  begin
+    return Create(f,0);
+  end Create;
+
   function Create ( c : Complex_Number ) return Series is
   begin
     return Create(c,0);
@@ -20,40 +25,57 @@ package body Standard_Dense_Series is
   function Create ( i : integer; order : integer32 ) return Series is
 
     res : Series;
+    zero : constant double_double := create(0.0);
 
   begin
     res.order := order;
     res.cff(0) := Create(i);
     res.cff(1..order)
-      := Standard_Complex_Vectors.Vector'(1..order => Create(0.0));
+      := DoblDobl_Complex_Vectors.Vector'(1..order => Create(zero));
     return res;
   end Create;
 
   function Create ( f : double_float; order : integer32 ) return Series is
 
     res : Series;
+    zero : constant double_double := create(0.0);
+    dd_f : constant double_double := create(f);
+
+  begin
+    res.order := order;
+    res.cff(0) := Create(dd_f);
+    res.cff(1..order)
+      := DoblDobl_Complex_Vectors.Vector'(1..order => Create(zero));
+    return res;
+  end Create;
+
+  function Create ( f : double_double; order : integer32 ) return Series is
+
+    res : Series;
+    zero : constant double_double := create(0.0);
 
   begin
     res.order := order;
     res.cff(0) := Create(f);
     res.cff(1..order)
-      := Standard_Complex_Vectors.Vector'(1..order => Create(0.0));
+      := DoblDobl_Complex_Vectors.Vector'(1..order => Create(zero));
     return res;
   end Create;
 
   function Create ( c : Complex_Number; order : integer32 ) return Series is
 
     res : Series;
+    zero : constant double_double := create(0.0);
 
   begin
     res.order := order;
     res.cff(0) := c;
     res.cff(1..order)
-      := Standard_Complex_Vectors.Vector'(1..order => Create(0.0));
+      := DoblDobl_Complex_Vectors.Vector'(1..order => Create(zero));
     return res;
   end Create;
 
-  function Create ( c : Standard_Complex_Vectors.Vector ) return Series is
+  function Create ( c : DoblDobl_Complex_Vectors.Vector ) return Series is
 
     res : Series;
 
@@ -71,7 +93,8 @@ package body Standard_Dense_Series is
   function Create ( s : Series; order : integer32 ) return Series is
 
     res : Series;
-    zero : constant Complex_Number := Create(0.0);
+    dd_zero : constant double_double := create(0.0);
+    zero : constant Complex_Number := Create(dd_zero);
 
   begin
     res.order := order;
@@ -94,23 +117,24 @@ package body Standard_Dense_Series is
 
   function Equal ( s,t : Series ) return boolean is
 
-    zero : constant Complex_Number := Create(0.0);
+    dd_zero : constant double_double := create(0.0);
+    zero : constant Complex_Number := Create(dd_zero);
 
   begin
     if s.order <= t.order then
       for i in 0..s.order loop
-        if not Standard_Complex_Numbers.Equal(s.cff(i),t.cff(i))
+        if not DoblDobl_Complex_Numbers.Equal(s.cff(i),t.cff(i))
          then return false;
         end if;
       end loop;
       for i in s.order+1..t.order loop
-        if not Standard_Complex_Numbers.Equal(t.cff(i),zero)
+        if not DoblDobl_Complex_Numbers.Equal(t.cff(i),zero)
          then return false;
         end if;
       end loop;
       return true;
     else
-      return Standard_Dense_Series.Equal(t,s);
+      return DoblDobl_Dense_Series.Equal(t,s);
     end if;
   end Equal;
 
@@ -390,10 +414,11 @@ package body Standard_Dense_Series is
   function Inverse ( s : Series ) return Series is
 
     res : Series;
+    one : constant double_double := create(1.0);
 
   begin
     res.order := s.order;
-    res.cff(0) := 1.0/s.cff(0);
+    res.cff(0) := one/s.cff(0);
     for i in 1..res.order loop
       res.cff(i) := -s.cff(1)*res.cff(i-1);
       for j in 2..i loop
@@ -481,10 +506,10 @@ package body Standard_Dense_Series is
 
 -- EVALUATORS :
 
-  function Eval ( s : Series; t : double_float ) return Complex_Number is
+  function Eval ( s : Series; t : double_double ) return Complex_Number is
 
     res : Complex_Number := s.cff(0);
-    pwt : double_float := t;
+    pwt : double_double := t;
 
   begin
     for i in 1..(s.order-1) loop
@@ -510,10 +535,13 @@ package body Standard_Dense_Series is
   end Eval;
 
   procedure Filter ( s : in out Series; tol : in double_float ) is
+
+    zero : constant double_double := create(0.0);
+
   begin
     for i in 0..s.order loop
       if AbsVal(s.cff(i)) < tol
-       then s.cff(i) := Create(0.0);
+       then s.cff(i) := Create(zero);
       end if;
     end loop;
   end Filter;
@@ -521,11 +549,14 @@ package body Standard_Dense_Series is
 -- DESTRUCTOR :
 
   procedure Clear ( s : in out Series ) is
+
+    zero : constant double_double := create(0.0);
+
   begin
     s.order := 0;
     for i in s.cff'range loop
-      s.cff(i) := Create(0.0);
+      s.cff(i) := Create(zero);
     end loop;
   end Clear;
 
-end Standard_Dense_Series;
+end DoblDobl_Dense_Series;

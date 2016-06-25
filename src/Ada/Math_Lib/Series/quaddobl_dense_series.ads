@@ -1,20 +1,22 @@
 with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
-with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
-with Standard_Complex_Vectors;
+with Double_Double_Numbers;             use Double_Double_Numbers;
+with Quad_Double_Numbers;               use Quad_Double_Numbers;
+with QuadDobl_Complex_Numbers;          use QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Vectors;
 
-package Standard_Dense_Series is
+package QuadDobl_Dense_Series is
 
 -- DESCRIPTION :
---   A standard dense series is defined by a coefficient vector x,
+--   A quad double dense series is defined by a coefficient vector x,
 --   which stores the coefficients of a truncated power series,
 --   such as x(0) + x(1)*t + x(2)*t^2 + .. + x(x'last)*t^x'last,
---   in standard double hardware precision.
+--   in quad double precision.
 --   Because the series is dense, the powers of the parameter t
 --   are stored implicitly as the indices in the coefficient vector.
 --   With the definitions and operations in this package,
---   the Standard_Dense_Series_Ring is defined.
+--   the QuadDobl_Dense_Series_Ring is defined.
 
   max_order : constant integer32 := 16;
 
@@ -25,7 +27,7 @@ package Standard_Dense_Series is
   type Series is record
     order : integer32; 
     -- the last exponent in the series, the error is O(t^(order+1))
-    cff : Standard_Complex_Vectors.Vector(0..max_order);
+    cff : QuadDobl_Complex_Vectors.Vector(0..max_order);
     -- only the coefficients in the range 0..order are used
   end record;
 
@@ -33,6 +35,8 @@ package Standard_Dense_Series is
 
   function Create ( i : integer ) return Series;
   function Create ( f : double_float ) return Series;
+  function Create ( f : double_double ) return Series;
+  function Create ( f : quad_double ) return Series;
   function Create ( c : Complex_Number ) return Series;
 
   -- DESCRIPTION :
@@ -40,6 +44,8 @@ package Standard_Dense_Series is
 
   function Create ( i : integer; order : integer32 ) return Series;
   function Create ( f : double_float; order : integer32 ) return Series;
+  function Create ( f : double_double; order : integer32 ) return Series;
+  function Create ( f : quad_double; order : integer32 ) return Series;
   function Create ( c : Complex_Number; order : integer32 ) return Series;
 
   -- DESCRIPTION :
@@ -48,7 +54,7 @@ package Standard_Dense_Series is
 
   -- REQUIRED : order <= max_order.
 
-  function Create ( c : Standard_Complex_Vectors.Vector ) return Series;
+  function Create ( c : QuadDobl_Complex_Vectors.Vector ) return Series;
 
   -- DESCRIPTION :
   --   Returns a series with coefficients in c, with order equal
@@ -249,7 +255,7 @@ package Standard_Dense_Series is
 
 -- EVALUATORS :
 
-  function Eval ( s : Series; t : double_float ) return Complex_Number;
+  function Eval ( s : Series; t : quad_double ) return Complex_Number;
   function Eval ( s : Series; t : Complex_Number ) return Complex_Number;
 
   -- DESCRIPTION :
@@ -270,4 +276,4 @@ package Standard_Dense_Series is
   --   All coefficients of s are set to zero.
   --   Also the order of s is set to zero.
 
-end Standard_Dense_Series;
+end QuadDobl_Dense_Series;

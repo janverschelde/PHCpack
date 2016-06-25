@@ -6,12 +6,20 @@ with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
-with Standard_Complex_Numbers;           use Standard_Complex_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Standard_Complex_Numbers;
 with Standard_Complex_Numbers_io;        use Standard_Complex_Numbers_io;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Complex_Numbers_Polar;
 with Standard_Complex_Vectors;
-with Standard_Dense_Series;              use Standard_Dense_Series;
+with Standard_Dense_Series;
 with Standard_Dense_Series_io;           use Standard_Dense_Series_io;
+with DoblDobl_Dense_Series;
+with DoblDobl_Dense_Series_io;           use DoblDobl_Dense_Series_io;
+with QuadDobl_Dense_Series;
+with QuadDobl_Dense_Series_io;           use QuadDobl_Dense_Series_io;
 with Standard_Random_Series;             use Standard_Random_Series;
 with Standard_Algebraic_Series;
 with Standard_Dense_Series_Norms;
@@ -21,10 +29,15 @@ procedure ts_series is
 -- DESCRIPTION :
 --   Tests the operations on truncated power series.
 
-  procedure Test_Creation ( order : in integer32 ) is
+  procedure Standard_Test_Creation ( order : in integer32 ) is
 
   -- DESCRIPTION :
   --   Verifies that 1/(1-t) = 1 + t + t^2 + ...
+  --   for a truncated power series with coefficients
+  --   in standard double precision.
+
+    use Standard_Complex_Numbers;
+    use Standard_Dense_Series;
 
     s : Series := Create(1,order);
     t : Series := s;
@@ -41,13 +54,71 @@ procedure ts_series is
     put_line("Verifying multiplication with inverse : "); put(y);
     z := t*x;
     put_line("Verifying commutativity : "); put(z);
-  end Test_Creation;
+  end Standard_Test_Creation;
+
+  procedure DoblDobl_Test_Creation ( order : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Verifies that 1/(1-t) = 1 + t + t^2 + ...
+  --   for a truncated power series with coefficients
+  --   in double double precision.
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Dense_Series;
+
+    s : Series := Create(1,order);
+    t : Series := s;
+    x,y,z : Series;
+    minone : constant double_double := create(-1.0);
+
+  begin
+    put("One as series of order "); put(order,1); put_line(" :");
+    put(s);
+    t.cff(1) := Create(minone);
+    put_line("The series 1 - t :"); put(t); 
+    x := s/t;
+    put_line("The series 1/(1-t) : "); put(x);
+    y := x*t;
+    put_line("Verifying multiplication with inverse : "); put(y);
+    z := t*x;
+    put_line("Verifying commutativity : "); put(z);
+  end DoblDobl_Test_Creation;
+
+  procedure QuadDobl_Test_Creation ( order : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Verifies that 1/(1-t) = 1 + t + t^2 + ...
+  --   for a truncated power series with coefficients
+  --   in double double precision.
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Dense_Series;
+
+    s : Series := Create(1,order);
+    t : Series := s;
+    x,y,z : Series;
+    minone : constant quad_double := create(-1.0);
+
+  begin
+    put("One as series of order "); put(order,1); put_line(" :");
+    put(s);
+    t.cff(1) := Create(minone);
+    put_line("The series 1 - t :"); put(t); 
+    x := s/t;
+    put_line("The series 1/(1-t) : "); put(x);
+    y := x*t;
+    put_line("Verifying multiplication with inverse : "); put(y);
+    z := t*x;
+    put_line("Verifying commutativity : "); put(z);
+  end QuadDobl_Test_Creation;
 
   procedure Random_Test_sqrt ( order : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a random series of the given order
   --   and tests the square root computation.
+
+    use Standard_Dense_Series;
 
     c : constant Series := Random_Series(order);
     ans : character;
@@ -76,6 +147,8 @@ procedure ts_series is
   -- DESCRIPTION :
   --   Generates a random series of the given order
   --   and tests the square root computation.
+
+    use Standard_Dense_Series;
 
     c : constant Series := Random_Series(order);
     n,i : natural32 := 0;
@@ -110,6 +183,8 @@ procedure ts_series is
   --   Generates a random series of the given order
   --   and makes the product with its conjugate.
 
+    use Standard_Dense_Series;
+
     s : constant Series := Random_Series(order);
     c : constant Series := Conjugate(s);
     p,r,n,q,rq : Series;
@@ -143,6 +218,7 @@ procedure ts_series is
   --   Generates a random series of the given order
   --   and computes its norm.
 
+    use Standard_Dense_Series;
     use Standard_Dense_Series_Norms;
 
     s : constant Series := Random_Series(order);
@@ -168,6 +244,11 @@ procedure ts_series is
   end Test_Norm;
 
   procedure Test_Division ( order : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Tests the division on random series of the given order.
+
+    use Standard_Dense_Series;
 
     a,b,c : Series;
 
@@ -199,11 +280,9 @@ procedure ts_series is
   --   Prompts the user for the order of the series.
 
     order : integer32 := 0;
-    ans : character;
+    ans,prc : character;
 
   begin
-    new_line;
-    put("Give the order of the series : "); get(order);
     new_line;
     put_line("MENU with testing operations :");
     put_line("  0. test the computation of 1/(1-t)");
@@ -214,8 +293,24 @@ procedure ts_series is
     put_line("  5. test division operation");
     put("Type 0, 1, 2, 3, 4, or 5 to make your choice : ");
     Ask_Alternative(ans,"012345");
+    new_line;
+    put("Give the order of the series : "); get(order);
+    new_line;
+    put_line("MENU for the precision of the coefficients :");
+    put_line("  0. standard double precision");
+    put_line("  1. double double precision");
+    put_line("  2. quad double precision");
+    put("Type 0, 1, or 2 to select the precision : ");
+    Ask_Alternative(prc,"012");
+    new_line;
     case ans is
-      when '0' => Test_Creation(order);
+      when '0' =>
+        case prc is
+          when '0' => Standard_Test_Creation(order);
+          when '1' => DoblDobl_Test_Creation(order);
+          when '2' => QuadDobl_Test_Creation(order);
+          when others => null;
+        end case;
       when '1' => Random_Test_sqrt(order);
       when '2' => Random_Test_root(order);
       when '3' => Test_Conjugate(order);

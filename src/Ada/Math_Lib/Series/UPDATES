@@ -1,3 +1,6 @@
+Sat 25 Jun 2016 : defined {dobldobl,quaddobl}_dense_series with their _io,
+  modified standard_dense_series, added a test to ts_series.
+
 Fri 24 Jun 2016 : instantiated standard_dense_series_ring_io, which required
   a change in standard_dense_series_io, used this instantiation to define
   standard_dense_series_vectors_io, called in ts_servec.
