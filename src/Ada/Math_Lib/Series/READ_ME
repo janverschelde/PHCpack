@@ -40,10 +40,14 @@ dobldobl_dense_series_vectors    : vectors of double double power series
 dobldobl_dense_series_vectors_io : i/o for double double power series vectors
 quaddobl_dense_series_vectors    : vectors of quad double power series
 quaddobl_dense_series_vectors_io : i/o for quad double power series vectors
-standard_dense_series_vecvecs    : vectors of vectors of dense power series
+standard_dense_series_vecvecs    : vectors of vectors of standard power series
+dobldobl_dense_series_vecvecs    : vectors of vectors of dobldobl power series
+quaddobl_dense_series_vecvecs    : vectors of vectors of quaddobl power series
 standard_series_vector_norms     : inner products and norms
 ts_servec                        : test on vectors of dense power series
-standard_dense_series_matrices   : matrices of dense power series
+standard_dense_series_matrices   : matrices of standard double power series
+dobldobl_dense_series_matrices   : matrices of double double power series
+quaddobl_dense_series_matrices   : matrices of quad double power series
 standard_linear_series_solvers   : lu factorization for linear systems
 standard_least_squares_series    : qr decomposition and least squares solving
 ts_sermat                        : test on matrices of dense power series

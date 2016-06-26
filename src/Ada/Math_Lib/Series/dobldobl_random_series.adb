@@ -24,4 +24,37 @@ package body DoblDobl_Random_Series is
     return res;
   end Random_Series_Vector;
 
+  function Random_Series_VecVec
+             ( vvfirst,vvlast,first,last,order : integer32 ) return VecVec is
+
+    res : VecVec(vvfirst..vvlast);
+
+  begin
+    for i in res'range loop
+      declare
+        v : constant Vector(first..last)
+          := Random_Series_Vector(first,last,order);
+      begin
+        res(i) := new Vector'(v);
+      end;
+    end loop;
+    return res;
+  end Random_Series_VecVec;
+
+  function Random_Series_Matrix
+             ( rowfirst,rowlast,columnfirst,columnlast,order : integer32 )
+             return Matrix is
+
+
+    res : Matrix(rowfirst..rowlast,columnfirst..columnlast);
+
+  begin
+    for i in res'range(1) loop
+      for j in res'range(2) loop
+        res(i,j) := Random_Series(order);
+      end loop;
+    end loop;
+    return res;
+  end Random_Series_Matrix;
+
 end DoblDobl_Random_Series;
