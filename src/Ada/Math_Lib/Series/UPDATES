@@ -1,7 +1,8 @@
 Sun 26 Jun 2016 : defined {dobldobl,quaddobl}_dense_series_{vecvecs,matrices},
   for use in {dobldobl,quaddobl}_random_series.  New packages to solve linear
   systems of series, {dobldobl,quaddobl}_linear_series_solvers, in double
-  double and quad double precision, test by ts_sermat.
+  double and quad double precision, test by ts_sermat.  Defined norms of
+  series in double double and quad double precision, tested by ts_series.
 
 Sat 25 Jun 2016 : defined {dobldobl,quaddobl}_dense_series with their _io,
   modified standard_dense_series, added a test to ts_series.
