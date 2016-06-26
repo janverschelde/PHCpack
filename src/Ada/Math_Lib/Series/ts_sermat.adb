@@ -9,12 +9,22 @@ with Standard_Complex_Vectors;
 with Standard_Complex_Matrices;
 with Standard_Complex_QR_Least_Squares;
 with Standard_Dense_Series;               use Standard_Dense_Series;
-with Standard_Dense_Series_io;            use Standard_Dense_Series_io;
+with Standard_Dense_Series_io;
 with Standard_Dense_Series_Vectors;
 with Standard_Dense_Series_Matrices;
+with DoblDobl_Dense_Series_io;
+with DoblDobl_Dense_Series_Vectors;
+with DoblDobl_Dense_Series_Matrices;
+with QuadDobl_Dense_Series_io;
+with QuadDobl_Dense_Series_Vectors;
+with QuadDobl_Dense_Series_Matrices;
 with Standard_Random_Series;
+with DoblDobl_Random_Series;
+with QuadDobl_Random_Series;
 with Standard_Series_Vector_Norms;
-with Standard_Linear_Series_Solvers;      use Standard_Linear_Series_Solvers;
+with Standard_Linear_Series_Solvers;
+with DoblDobl_Linear_Series_Solvers;
+with QuadDobl_Linear_Series_Solvers;
 with Standard_Least_Squares_Series;       use Standard_Least_Squares_Series;
 
 procedure ts_sermat is
@@ -23,10 +33,38 @@ procedure ts_sermat is
 --   Test on matrices of truncated dense power series.
 
   procedure Write ( v : in Standard_Dense_Series_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Basic output of a vector of series in double precision.
+
   begin
     for i in v'range loop
       put("Component "); put(i,1); put_line(" :");
-      put(v(i));
+      Standard_Dense_Series_io.put(v(i));
+    end loop;
+  end Write;
+
+  procedure Write ( v : in DoblDobl_Dense_Series_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Basic output of a vector of series in double double precision.
+
+  begin
+    for i in v'range loop
+      put("Component "); put(i,1); put_line(" :");
+      DoblDobl_Dense_Series_io.put(v(i));
+    end loop;
+  end Write;
+
+  procedure Write ( v : in QuadDobl_Dense_Series_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Basic output of a vector of series in quad double precision.
+
+  begin
+    for i in v'range loop
+      put("Component "); put(i,1); put_line(" :");
+      QuadDobl_Dense_Series_io.put(v(i));
     end loop;
   end Write;
 
@@ -36,7 +74,29 @@ procedure ts_sermat is
       for j in A'range(2) loop
         put("Component ");
         put(i,1); put(", "); put(j,1); put_line(" :");
-        put(A(i,j));
+        Standard_Dense_Series_io.put(A(i,j));
+      end loop;
+    end loop;
+  end Write;
+
+  procedure Write ( A : in DoblDobl_Dense_Series_Matrices.Matrix ) is
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        put("Component ");
+        put(i,1); put(", "); put(j,1); put_line(" :");
+        DoblDobl_Dense_Series_io.put(A(i,j));
+      end loop;
+    end loop;
+  end Write;
+
+  procedure Write ( A : in QuadDobl_Dense_Series_Matrices.Matrix ) is
+  begin
+    for i in A'range(1) loop
+      for j in A'range(2) loop
+        put("Component ");
+        put(i,1); put(", "); put(j,1); put_line(" :");
+        QuadDobl_Dense_Series_io.put(A(i,j));
       end loop;
     end loop;
   end Write;
@@ -52,11 +112,12 @@ procedure ts_sermat is
     end loop;
   end Write;
 
-  procedure Random_Linear_Solve ( n,order : in integer32 ) is
+  procedure Standard_Random_Linear_Solve ( n,order : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a random matrix A and right hand side vector b
-  --   of dimension n and solves the linear system A*x = b.
+  --   of dimension n and solves the linear system A*x = b,
+  --   in standard double precision.
   --   The series are all of the given order.
 
     A : constant Standard_Dense_Series_Matrices.Matrix(1..n,1..n)
@@ -71,6 +132,7 @@ procedure ts_sermat is
 
     use Standard_Dense_Series_Vectors;
     use Standard_Dense_Series_Matrices;
+    use Standard_Linear_Series_Solvers;
 
   begin
     put_line("The coefficient matrix A :"); Write(A);
@@ -85,7 +147,81 @@ procedure ts_sermat is
       rsd := b - A*x;
       put_line("The residual b - A*x :"); Write(rsd);
     end if;
-  end Random_Linear_Solve;
+  end Standard_Random_Linear_Solve;
+
+  procedure DoblDobl_Random_Linear_Solve ( n,order : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random matrix A and right hand side vector b
+  --   of dimension n and solves the linear system A*x = b,
+  --   in double double precision.
+  --   The series are all of the given order.
+
+    A : constant DoblDobl_Dense_Series_Matrices.Matrix(1..n,1..n)
+      := DoblDobl_Random_Series.Random_Series_Matrix(1,n,1,n,order);
+    wrk : DoblDobl_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
+    b : constant DoblDobl_Dense_Series_Vectors.Vector(1..n)
+      := DoblDobl_Random_Series.Random_Series_Vector(1,n,order);
+    x : DoblDobl_Dense_Series_Vectors.Vector(1..n) := b;
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    info : integer32;
+    rsd : DoblDobl_Dense_Series_Vectors.Vector(1..n);
+
+    use DoblDobl_Dense_Series_Vectors;
+    use DoblDobl_Dense_Series_Matrices;
+    use DoblDobl_Linear_Series_Solvers;
+
+  begin
+    put_line("The coefficient matrix A :"); Write(A);
+    put_line("The right hand side vector b :"); Write(b);
+    LUfac(wrk,n,ipvt,info);
+    put("The pivots : "); put(ipvt); new_line;
+    if info /= 0 then
+      put("info = "); put(info,1); new_line;
+    else
+      LUsolve(wrk,n,ipvt,x);
+      put_line("The solution x to A*x = b :"); Write(x);
+      rsd := b - A*x;
+      put_line("The residual b - A*x :"); Write(rsd);
+    end if;
+  end DoblDobl_Random_Linear_Solve;
+
+  procedure QuadDobl_Random_Linear_Solve ( n,order : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random matrix A and right hand side vector b
+  --   of dimension n and solves the linear system A*x = b,
+  --   in double double precision.
+  --   The series are all of the given order.
+
+    A : constant QuadDobl_Dense_Series_Matrices.Matrix(1..n,1..n)
+      := QuadDobl_Random_Series.Random_Series_Matrix(1,n,1,n,order);
+    wrk : QuadDobl_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
+    b : constant QuadDobl_Dense_Series_Vectors.Vector(1..n)
+      := QuadDobl_Random_Series.Random_Series_Vector(1,n,order);
+    x : QuadDobl_Dense_Series_Vectors.Vector(1..n) := b;
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    info : integer32;
+    rsd : QuadDobl_Dense_Series_Vectors.Vector(1..n);
+
+    use QuadDobl_Dense_Series_Vectors;
+    use QuadDobl_Dense_Series_Matrices;
+    use QuadDobl_Linear_Series_Solvers;
+
+  begin
+    put_line("The coefficient matrix A :"); Write(A);
+    put_line("The right hand side vector b :"); Write(b);
+    LUfac(wrk,n,ipvt,info);
+    put("The pivots : "); put(ipvt); new_line;
+    if info /= 0 then
+      put("info = "); put(info,1); new_line;
+    else
+      LUsolve(wrk,n,ipvt,x);
+      put_line("The solution x to A*x = b :"); Write(x);
+      rsd := b - A*x;
+      put_line("The residual b - A*x :"); Write(rsd);
+    end if;
+  end QuadDobl_Random_Linear_Solve;
 
   function Trunc ( A : Standard_Dense_Series_Matrices.Matrix )
                  return Standard_Complex_Matrices.Matrix is
@@ -131,6 +267,7 @@ procedure ts_sermat is
 
     use Standard_Dense_Series_Vectors;
     use Standard_Dense_Series_Matrices;
+    use Standard_Linear_Series_Solvers;
 
     T : constant Matrix(A'range(2),A'range(1)) := Transpose(A);
     TA : constant Matrix(A'range(2),A'range(2)) := T*A;
@@ -163,6 +300,7 @@ procedure ts_sermat is
   --   Given in qr is the orthogonal part of the QR decomposition,
   --   this procedure computes the norm of every column in qr.
 
+    use Standard_Dense_Series_io;
     use Standard_Dense_Series_Vectors;
 
     col : Vector(qr'range(1));
@@ -205,7 +343,7 @@ procedure ts_sermat is
         end loop;
         ipr := Standard_Series_Vector_Norms.Inner_Product(u,v);
         put("Inner product of "); put(i,1); put(" with "); put(j,1);
-        put_line(" :"); put(ipr);
+        put_line(" :"); Standard_Dense_Series_io.put(ipr);
       end loop;
     end loop;
   end Test_Orthogonality;
@@ -325,6 +463,27 @@ procedure ts_sermat is
     end if;
   end Random_Least_Squares;
 
+  function Prompt_for_Precision return character is
+
+  -- DESCRIPTION :
+  --   Displays the menu for the working precision,
+  --   prompts for '0', '1', or '2', depending whether double,
+  --   double double, or quad double precision is selected.
+  --   Returns '0', '1', or '2'.
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU for the working precision :");
+    put_line("  0. standard double precision;");
+    put_line("  1. double double precision; or");
+    put_line("  2. quad double precision.");
+    put("Type 0, 1, or 2 to select the precision : ");
+    Ask_Alternative(ans,"012");
+    return ans;
+  end Prompt_for_Precision;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -332,7 +491,7 @@ procedure ts_sermat is
   --   and the order of the series.
 
     dim,ord,nrows,ncols : integer32 := 0;
-    ans : character;
+    ans,prc : character;
 
   begin
     new_line;
@@ -342,7 +501,13 @@ procedure ts_sermat is
     Ask_Yes_or_No(ans);
     if ans = 'y' then
       put("Give the dimension : "); get(dim);
-      Random_Linear_Solve(dim,ord);
+      prc := Prompt_for_Precision;
+      case prc is
+        when '0' => Standard_Random_Linear_Solve(dim,ord);
+        when '1' => DoblDobl_Random_Linear_Solve(dim,ord);
+        when '2' => QuadDobl_Random_Linear_Solve(dim,ord);
+        when others => null;
+      end case;
     else
       put("Give number of rows : "); get(nrows);
       put("Give number of colums : "); get(ncols);

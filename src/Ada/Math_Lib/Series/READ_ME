@@ -48,7 +48,9 @@ ts_servec                        : test on vectors of dense power series
 standard_dense_series_matrices   : matrices of standard double power series
 dobldobl_dense_series_matrices   : matrices of double double power series
 quaddobl_dense_series_matrices   : matrices of quad double power series
-standard_linear_series_solvers   : lu factorization for linear systems
+standard_linear_series_solvers   : lu factorization for standard linear systems
+dobldobl_linear_series_solvers   : lu factorization for dobldobl linear systems
+quaddobl_linear_series_solvers   : lu factorization for quaddobl linear systems
 standard_least_squares_series    : qr decomposition and least squares solving
 ts_sermat                        : test on matrices of dense power series
 ------------------------------------------------------------------------------
