@@ -55,7 +55,9 @@ quaddobl_dense_series_matrices   : matrices of quad double power series
 standard_linear_series_solvers   : lu factorization for standard linear systems
 dobldobl_linear_series_solvers   : lu factorization for dobldobl linear systems
 quaddobl_linear_series_solvers   : lu factorization for quaddobl linear systems
-standard_least_squares_series    : qr decomposition and least squares solving
+standard_least_squares_series    : standard qr decomposition and least squares
+dobldobl_least_squares_series    : dobldobl qr decomposition and least squares
+quaddobl_least_squares_series    : quaddobl qr decomposition and least squares
 ts_sermat                        : test on matrices of dense power series
 ------------------------------------------------------------------------------
 standard_series_polynomials      : polynomials with series as coefficients
