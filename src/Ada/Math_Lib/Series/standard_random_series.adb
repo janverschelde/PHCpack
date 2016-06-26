@@ -9,14 +9,13 @@ package body Standard_Random_Series is
         := Standard_Random_Vectors.Random_Vector(0,order);
 
   begin
-    return Create(cff);
+    return Standard_Dense_Series.Create(cff);
   end Random_Series;
 
   function Random_Series_Vector
-             ( first,last,order : integer32 )
-             return Standard_Dense_Series_Vectors.Vector is
+             ( first,last,order : integer32 ) return Vector is
 
-    res : Standard_Dense_Series_Vectors.Vector(first..last);
+    res : Vector(first..last);
 
   begin
     for k in res'range loop
@@ -26,18 +25,17 @@ package body Standard_Random_Series is
   end Random_Series_Vector;
 
   function Random_Series_VecVec
-             ( vvfirst,vvlast,first,last,order : integer32 )
-             return Standard_Dense_Series_VecVecs.VecVec is
+             ( vvfirst,vvlast,first,last,order : integer32 ) return VecVec is
 
-    res : Standard_Dense_Series_VecVecs.VecVec(vvfirst..vvlast);
+    res : VecVec(vvfirst..vvlast);
 
   begin
     for i in res'range loop
       declare
-        v : constant Standard_Dense_Series_Vectors.Vector(first..last)
+        v : constant Vector(first..last)
           := Random_Series_Vector(first,last,order);
       begin
-        res(i) := new Standard_Dense_Series_Vectors.Vector'(v);
+        res(i) := new Vector'(v);
       end;
     end loop;
     return res;
@@ -45,9 +43,8 @@ package body Standard_Random_Series is
 
   function Random_Series_Matrix
              ( rowfirst,rowlast,columnfirst,columnlast,order : integer32 )
-             return Standard_Dense_Series_Matrices.Matrix is
+             return Matrix is
 
-    use Standard_Dense_Series_Matrices;
 
     res : Matrix(rowfirst..rowlast,columnfirst..columnlast);
 

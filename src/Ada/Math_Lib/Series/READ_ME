@@ -19,7 +19,9 @@ quaddobl_dense_series            : dense series in quad double precision
 standard_dense_series_io         : basic output of standard series
 dobldobl_dense_series_io         : basic output of dobldobl series
 quaddobl_dense_series_io         : basic output of quaddobl series
-standard_random_series           : series with random coefficients
+standard_random_series           : series with standard random coefficients
+dobldobl_random_series           : series with dobldobl random coefficients
+quaddobl_random_series           : series with quaddobl random coefficients
 standard_algebraic_series        : series as roots of univariate polynomials
 standard_dense_series_norms      : norms and normalizations of series
 standard_dense_series_ring       : the ring of standard power series

@@ -21,6 +21,8 @@ with DoblDobl_Dense_Series_io;           use DoblDobl_Dense_Series_io;
 with QuadDobl_Dense_Series;
 with QuadDobl_Dense_Series_io;           use QuadDobl_Dense_Series_io;
 with Standard_Random_Series;             use Standard_Random_Series;
+with DoblDobl_Random_Series;             use DoblDobl_Random_Series;
+with QuadDobl_Random_Series;             use QuadDobl_Random_Series;
 with Standard_Algebraic_Series;
 with Standard_Dense_Series_Norms;
 
