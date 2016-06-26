@@ -24,6 +24,8 @@ with Standard_Random_Series;             use Standard_Random_Series;
 with DoblDobl_Random_Series;             use DoblDobl_Random_Series;
 with QuadDobl_Random_Series;             use QuadDobl_Random_Series;
 with Standard_Algebraic_Series;
+with DoblDobl_Algebraic_Series;
+with QuadDobl_Algebraic_Series;
 with Standard_Dense_Series_Norms;
 
 procedure ts_series is
@@ -114,11 +116,12 @@ procedure ts_series is
     put_line("Verifying commutativity : "); put(z);
   end QuadDobl_Test_Creation;
 
-  procedure Random_Test_sqrt ( order : in integer32 ) is
+  procedure Standard_Random_Test_sqrt ( order : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a random series of the given order
-  --   and tests the square root computation.
+  --   and tests the square root computation,
+  --   in standard double precision.
 
     use Standard_Dense_Series;
 
@@ -127,7 +130,6 @@ procedure ts_series is
     x,y,z : Series;
  
   begin
-    new_line;
     put("Extra output during the computation ? (y/n) ");
     Ask_Yes_or_No(ans);
     new_line;
@@ -142,7 +144,67 @@ procedure ts_series is
     put_line("The square y of the square root x : "); put(y);
     z := y-c;
     put_line("The equation x*x - c :"); put(z);
-  end Random_Test_sqrt;
+  end Standard_Random_Test_sqrt;
+
+  procedure DoblDobl_Random_Test_sqrt ( order : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given order
+  --   and tests the square root computation,
+  --   in double double precision.
+
+    use DoblDobl_Dense_Series;
+
+    c : constant Series := Random_Series(order);
+    ans : character;
+    x,y,z : Series;
+ 
+  begin
+    put("Extra output during the computation ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    new_line;
+    put("A random series c of order "); put(order,1); put_line(" :");
+    put(c);
+    if ans = 'y'
+     then x := DoblDobl_Algebraic_Series.sqrt(c,0,true);
+     else x := DoblDobl_Algebraic_Series.sqrt(c,0);
+    end if;
+    put_line("The square root x of the random series :"); put(x);
+    y := x*x;
+    put_line("The square y of the square root x : "); put(y);
+    z := y-c;
+    put_line("The equation x*x - c :"); put(z);
+  end DoblDobl_Random_Test_sqrt;
+
+  procedure QuadDobl_Random_Test_sqrt ( order : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Generates a random series of the given order
+  --   and tests the square root computation,
+  --   in quad double precision.
+
+    use QuadDobl_Dense_Series;
+
+    c : constant Series := Random_Series(order);
+    ans : character;
+    x,y,z : Series;
+ 
+  begin
+    put("Extra output during the computation ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    new_line;
+    put("A random series c of order "); put(order,1); put_line(" :");
+    put(c);
+    if ans = 'y'
+     then x := QuadDobl_Algebraic_Series.sqrt(c,0,true);
+     else x := QuadDobl_Algebraic_Series.sqrt(c,0);
+    end if;
+    put_line("The square root x of the random series :"); put(x);
+    y := x*x;
+    put_line("The square y of the square root x : "); put(y);
+    z := y-c;
+    put_line("The equation x*x - c :"); put(z);
+  end QuadDobl_Random_Test_sqrt;
 
   procedure Random_Test_root ( order : in integer32 ) is
 
@@ -313,7 +375,13 @@ procedure ts_series is
           when '2' => QuadDobl_Test_Creation(order);
           when others => null;
         end case;
-      when '1' => Random_Test_sqrt(order);
+      when '1' =>
+        case prc is
+          when '0' => Standard_Random_Test_sqrt(order);
+          when '1' => DoblDobl_Random_Test_sqrt(order);
+          when '2' => QuadDobl_Random_Test_sqrt(order);
+          when others => null;
+        end case;
       when '2' => Random_Test_root(order);
       when '3' => Test_Conjugate(order);
       when '4' => Test_Norm(order);

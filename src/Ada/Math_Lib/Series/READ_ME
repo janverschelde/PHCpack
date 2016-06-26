@@ -22,7 +22,9 @@ quaddobl_dense_series_io         : basic output of quaddobl series
 standard_random_series           : series with standard random coefficients
 dobldobl_random_series           : series with dobldobl random coefficients
 quaddobl_random_series           : series with quaddobl random coefficients
-standard_algebraic_series        : series as roots of univariate polynomials
+standard_algebraic_series        : sqrt and n-th root of standard series
+dobldobl_algebraic_series        : sqrt and n-th root of dobldobl series
+quaddobl_algebraic_series        : sqrt and n-th root of quaddobl series
 standard_dense_series_norms      : norms and normalizations of series
 standard_dense_series_ring       : the ring of standard power series
 standard_dense_series_ring_io    : i/o operations for ring elements

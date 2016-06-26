@@ -3,7 +3,8 @@ Sat 25 Jun 2016 : defined {dobldobl,quaddobl}_dense_series with their _io,
   Defined {dobldobl,quaddobl}_dense_series_ring, and its _io, for the
   instantiation of {dobldobl,quaddobl}_dense_series_vectors and its _io.
   New packages {dobldobl,quaddobl}_random_series, with some changes in
-  standard_random_series.
+  standard_random_series.  New packages {dobldobl,quaddobl}_algebraic_series,
+  tested by ts_series.
 
 Fri 24 Jun 2016 : instantiated standard_dense_series_ring_io, which required
   a change in standard_dense_series_io, used this instantiation to define
