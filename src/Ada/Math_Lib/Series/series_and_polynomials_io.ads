@@ -1,9 +1,17 @@
 with text_io;                           use text_io;
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
-with Standard_Dense_Series;             use Standard_Dense_Series;
+with Standard_Dense_Series;
 with Standard_Dense_Series_Vectors;
 with Standard_Series_Polynomials;
 with Standard_Series_Poly_Systems;
+with DoblDobl_Dense_Series;
+with DoblDobl_Dense_Series_Vectors;
+with DoblDobl_Series_Polynomials;
+with DoblDobl_Series_Poly_Systems;
+with QuadDobl_Dense_Series;
+with QuadDobl_Dense_Series_Vectors;
+with QuadDobl_Series_Polynomials;
+with QuadDobl_Series_Poly_Systems;
 
 package Series_and_Polynomials_io is
 
@@ -11,21 +19,39 @@ package Series_and_Polynomials_io is
 --   Provides symbolic input and output of truncated power series
 --   and polynomials with series coefficients.
 
-  procedure get ( s : out Series );
-  procedure get ( file : in file_type; s : out Series );
+  procedure get ( s : out Standard_Dense_Series.Series );
+  procedure get ( s : out DoblDobl_Dense_Series.Series );
+  procedure get ( s : out QuadDobl_Dense_Series.Series );
+  procedure get ( file : in file_type;
+                  s : out Standard_Dense_Series.Series );
+  procedure get ( file : in file_type;
+                  s : out DoblDobl_Dense_Series.Series );
+  procedure get ( file : in file_type;
+                  s : out QuadDobl_Dense_Series.Series );
 
   -- DESCRIPTION :
   --   Reads a polynomial in one variable and returns the
   --   corresponding series representation.
 
-  procedure put ( s : in Series );
-  procedure put ( file : in file_type; s : in Series );
+  procedure put ( s : in Standard_Dense_Series.Series );
+  procedure put ( s : in DoblDobl_Dense_Series.Series );
+  procedure put ( s : in QuadDobl_Dense_Series.Series );
+  procedure put ( file : in file_type;
+                  s : in Standard_Dense_Series.Series );
+  procedure put ( file : in file_type;
+                  s : in DoblDobl_Dense_Series.Series );
+  procedure put ( file : in file_type;
+                  s : in QuadDobl_Dense_Series.Series );
 
   -- DESCRIPTION :
   --   Writes a polynomial in one variable,
   --   representing the series in s.
 
   procedure get ( lv : out Standard_Dense_Series_Vectors.Link_to_Vector;
+                  idx : in integer32 := 1; verbose : in boolean := false );
+  procedure get ( lv : out DoblDobl_Dense_Series_Vectors.Link_to_Vector;
+                  idx : in integer32 := 1; verbose : in boolean := false );
+  procedure get ( lv : out QuadDobl_Dense_Series_Vectors.Link_to_Vector;
                   idx : in integer32 := 1; verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -37,8 +63,14 @@ package Series_and_Polynomials_io is
   --   of the polynomials read.  Given a value to idx changes this default.
 
   procedure put ( v : in Standard_Dense_Series_Vectors.Vector );
+  procedure put ( v : in DoblDobl_Dense_Series_Vectors.Vector );
+  procedure put ( v : in QuadDobl_Dense_Series_Vectors.Vector );
   procedure put ( file : in file_type;
                   v : in Standard_Dense_Series_Vectors.Vector );
+  procedure put ( file : in file_type;
+                  v : in DoblDobl_Dense_Series_Vectors.Vector );
+  procedure put ( file : in file_type;
+                  v : in QuadDobl_Dense_Series_Vectors.Vector );
 
   -- DESCRIPTION :
   --   Writes the series as a system of v'length univariate polynomials
@@ -47,8 +79,18 @@ package Series_and_Polynomials_io is
 
   procedure get ( p : out Standard_Series_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( p : out DoblDobl_Series_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( p : out QuadDobl_Series_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
   procedure get ( file : in file_type;
                   p : out Standard_Series_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( file : in file_type;
+                  p : out DoblDobl_Series_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( file : in file_type;
+                  p : out QuadDobl_Series_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -59,8 +101,18 @@ package Series_and_Polynomials_io is
 
   procedure put ( p : in Standard_Series_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( p : in DoblDobl_Series_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( p : in QuadDobl_Series_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
   procedure put ( file : in file_type;
                   p : in Standard_Series_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( file : in file_type;
+                  p : in DoblDobl_Series_Polynomials.Poly;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( file : in file_type;
+                  p : in QuadDobl_Series_Polynomials.Poly;
                   idx : in integer32 := 0; verbose : in boolean := false );
 
   -- DESCRIPTION :
@@ -72,6 +124,10 @@ package Series_and_Polynomials_io is
 
   procedure get ( ls : out Standard_Series_Poly_Systems.Link_to_Poly_Sys;
                   idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( ls : out DoblDobl_Series_Poly_Systems.Link_to_Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure get ( ls : out QuadDobl_Series_Poly_Systems.Link_to_Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
 
   -- DESCRIPTION :
   --   First asks the user whether the system is on file.
@@ -82,8 +138,18 @@ package Series_and_Polynomials_io is
 
   procedure put ( s : in Standard_Series_Poly_Systems.Poly_Sys;
                   idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( s : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( s : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
   procedure put ( file : in file_type;
                   s : in Standard_Series_Poly_Systems.Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( file : in file_type;
+                  s : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                  idx : in integer32 := 0; verbose : in boolean := false );
+  procedure put ( file : in file_type;
+                  s : in QuadDobl_Series_Poly_Systems.Poly_Sys;
                   idx : in integer32 := 0; verbose : in boolean := false );
 
   -- DESCRIPTION :
