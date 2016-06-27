@@ -1,3 +1,6 @@
+Mon 27 Jun 2016 : extra test in ts_series, in dobldobl_algebraic_series.adb,
+  also wrote the result of the evaluation in verbose mode.
+
 Sun 26 Jun 2016 : defined {dobldobl,quaddobl}_dense_series_{vecvecs,matrices},
   for use in {dobldobl,quaddobl}_random_series.  New packages to solve linear
   systems of series, {dobldobl,quaddobl}_linear_series_solvers, in double

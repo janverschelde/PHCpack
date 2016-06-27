@@ -15,8 +15,9 @@ package body DoblDobl_Algebraic_Series is
     cpc : Series := c;
     wrk,dx : Series;
     zero : constant double_double := create(0.0);
-    one : constant double_double := create(1.0);
-    two : constant double_double := create(2.0);
+    one : constant double_double := create(integer32(1));
+    two : constant double_double := create(integer32(2));
+    ctwo : constant Complex_Number := create(two);
     half : constant double_double := one/two;
     fac : constant Complex_Number := Create(half);
 
@@ -29,6 +30,8 @@ package body DoblDobl_Algebraic_Series is
       wrk := res*res - cpc;
       dx := fac*wrk/res;
       if verbose then
+        put("evaluation at order = "); put(res.order,1);
+        put_line(" :"); put(wrk);
         put("update dx at order = "); put(res.order,1);
         put_line(" :"); put(dx);
       end if;

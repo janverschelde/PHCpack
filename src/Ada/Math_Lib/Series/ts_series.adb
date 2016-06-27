@@ -47,7 +47,7 @@ procedure ts_series is
     use Standard_Complex_Numbers;
     use Standard_Dense_Series;
 
-    s : Series := Create(1,order);
+    s : constant Series := Create(1,order);
     t : Series := s;
     x,y,z : Series;
 
@@ -74,7 +74,7 @@ procedure ts_series is
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Dense_Series;
 
-    s : Series := Create(1,order);
+    s : constant Series := Create(1,order);
     t : Series := s;
     x,y,z : Series;
     minone : constant double_double := create(-1.0);
@@ -102,7 +102,7 @@ procedure ts_series is
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Dense_Series;
 
-    s : Series := Create(1,order);
+    s : constant Series := Create(1,order);
     t : Series := s;
     x,y,z : Series;
     minone : constant quad_double := create(-1.0);
@@ -603,6 +603,96 @@ procedure ts_series is
     put_line("The result of the division "); put(c);
   end QuadDobl_Test_Division;
 
+  procedure Standard_Test_Arithmetic ( order : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Does a basic test on the arithmetic in standard double precision,
+  --   on random series of the given order.
+
+    use Standard_Dense_Series;
+
+    a,b,c : Series;
+    ans : character;
+
+  begin
+    a := Random_Series(order);
+    put_line("The first random series A :"); put(a);
+    b := Random_Series(order);
+    put_line("The second random series B :"); put(b);
+    c := a+b;
+    put_line("The sum A + B :"); put(c);
+    c := c-a;
+    put_line("The sum A + B - A :"); put(c); 
+    new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      c := a*b;
+      put_line("The product A*B :"); put(c);
+      c := c/a;
+      put_line("The product A*B/A :"); put(c);
+    end if;
+  end Standard_Test_Arithmetic;
+
+  procedure DoblDobl_Test_Arithmetic ( order : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Does a basic test on the arithmetic in double double precision,
+  --   on random series of the given order.
+
+    use DoblDobl_Dense_Series;
+
+    a,b,c : Series;
+    ans : character;
+
+  begin
+    a := Random_Series(order);
+    put_line("The first random series A :"); put(a);
+    b := Random_Series(order);
+    put_line("The second random series B :"); put(b);
+    c := a+b;
+    put_line("The sum A + B :"); put(c);
+    c := c-a;
+    put_line("The sum A + B - A :"); put(c); 
+    new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      c := a*b;
+      put_line("The product A*B :"); put(c);
+      c := c/a;
+      put_line("The product A*B/A :"); put(c);
+    end if;
+  end DoblDobl_Test_Arithmetic;
+
+  procedure QuadDobl_Test_Arithmetic ( order : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Does a basic test on the arithmetic in quad double precision,
+  --   on random series of the given order.
+
+    use QuadDobl_Dense_Series;
+
+    a,b,c : Series;
+    ans : character;
+
+  begin
+    a := Random_Series(order);
+    put_line("The first random series A :"); put(a);
+    b := Random_Series(order);
+    put_line("The second random series B :"); put(b);
+    c := a+b;
+    put_line("The sum A + B :"); put(c);
+    c := c-a;
+    put_line("The sum A + B - A :"); put(c); 
+    new_line;
+    put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      c := a*b;
+      put_line("The product A*B :"); put(c);
+      c := c/a;
+      put_line("The product A*B/A :"); put(c);
+    end if;
+  end QuadDobl_Test_Arithmetic;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -620,8 +710,9 @@ procedure ts_series is
     put_line("  3. test complex conjugate of a series");
     put_line("  4. test the norm of a series");
     put_line("  5. test division operation");
-    put("Type 0, 1, 2, 3, 4, or 5 to make your choice : ");
-    Ask_Alternative(ans,"012345");
+    put_line("  6. test arithmetic");
+    put("Type 0, 1, 2, 3, 4, 5, or 6 to make your choice : ");
+    Ask_Alternative(ans,"0123456");
     new_line;
     put("Give the order of the series : "); get(order);
     new_line;
@@ -673,6 +764,13 @@ procedure ts_series is
           when '0' => Standard_Test_Division(order);
           when '1' => DoblDobl_Test_Division(order);
           when '2' => QuadDobl_Test_Division(order);
+          when others => null;
+        end case;
+      when '6' =>
+        case prc is
+          when '0' => Standard_Test_Arithmetic(order);
+          when '1' => DoblDobl_Test_Arithmetic(order);
+          when '2' => QuadDobl_Test_Arithmetic(order);
           when others => null;
         end case;
       when others => null;
