@@ -69,8 +69,8 @@ package body DoblDobl_Complex_Numbers is
 
   function "<" ( x,y : Complex_Number ) return boolean is
 
-    avx : double_double := AbsVal(x);
-    avy : double_double := AbsVal(y);
+    avx : constant double_double := AbsVal(x);
+    avy : constant double_double := AbsVal(y);
     res : constant boolean := (avx < avy);
 
   begin
@@ -79,8 +79,8 @@ package body DoblDobl_Complex_Numbers is
 
   function ">" ( x,y : Complex_Number ) return boolean is
 
-    avx : double_double := AbsVal(x);
-    avy : double_double := AbsVal(y);
+    avx : constant double_double := AbsVal(x);
+    avy : constant double_double := AbsVal(y);
     res : constant boolean := (avx > avy);
 
   begin
@@ -101,7 +101,7 @@ package body DoblDobl_Complex_Numbers is
 
   function AbsVal ( x : Complex_Number ) return double_double is
 
-    res : double_double := abs(x.RE) + abs(x.IM);
+    res : constant double_double := abs(x.RE) + abs(x.IM);
 
   begin
     return res;
@@ -109,7 +109,7 @@ package body DoblDobl_Complex_Numbers is
 
   function AbsVal ( x : Complex_Number ) return Complex_Number is
 
-    abx : double_double := AbsVal(x);
+    abx : constant double_double := AbsVal(x);
     res : constant Complex_Number := Create(abx);
 
   begin
@@ -170,7 +170,7 @@ package body DoblDobl_Complex_Numbers is
     nrm := y.RE*y.RE + y.IM*y.IM;
     acc := x/nrm;
     res.RE := acc*y.RE;
-    res.IM := acc*y.IM;
+    res.IM := -acc*y.IM;
     return res;
   end "/";
 

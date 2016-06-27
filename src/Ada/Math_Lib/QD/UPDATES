@@ -1,3 +1,6 @@
+Mon 27 Jun 2016 : bug fix in division of double double by complex number
+  in dobldobl_complex_numbers.adb.
+
 Tue 6 Oct 2015 : added to {double,quad}_double_numbers a create function
   for 64-bit natural and integer numbers.  Also added exponentiation for
   64-bit integer numbers to double doubles and quad doubles.
