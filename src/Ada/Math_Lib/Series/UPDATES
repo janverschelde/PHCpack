@@ -3,6 +3,7 @@ Mon 27 Jun 2016 : extra test in ts_series, in dobldobl_algebraic_series.adb,
   Instantiated {dobldobl,quaddobl}_series_polynomials, and the corresponding
   _poly_functions, _poly_systems, and _poly_sysfun packages.
   Extended series_and_polynomials and its _io.
+  Added tests to ts_serpol for double double and quad double precision.
 
 Sun 26 Jun 2016 : defined {dobldobl,quaddobl}_dense_series_{vecvecs,matrices},
   for use in {dobldobl,quaddobl}_random_series.  New packages to solve linear
