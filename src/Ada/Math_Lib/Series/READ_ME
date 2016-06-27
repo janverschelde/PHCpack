@@ -72,7 +72,9 @@ quaddobl_series_polynomials      : polynomials with series as coefficients
 quaddobl_series_poly_functions   : evaluating quaddobl series polynomials
 quaddobl_series_poly_systems     : systems of quaddobl series polynomials
 quaddobl_series_poly_sysfun      : evaluating systems of series polynomials
-standard_series_jaco_matrices    : differentiating series polynomial systems
+standard_series_jaco_matrices    : differentiating standard series systems
+dobldobl_series_jaco_matrices    : differentiating dobldobl series systems
+quaddobl_series_jaco_matrices    : differentiating quaddobl series systems
 series_and_polynomials           : convertor functions
 series_and_polynomials_io        : symbolic i/o of series
 ts_serpol                        : test on series polynomials
