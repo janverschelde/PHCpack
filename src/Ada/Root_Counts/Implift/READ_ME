@@ -1,4 +1,4 @@
-Polyhedral homotopies by implicit lifting in PHCpack version 2.3.90
+Polyhedral homotopies by implicit lifting in PHCpack version 2.4.21
 
 This directory contains software for the computation of mixed volumes,
 according to the recursive formula Bershtein used in his proof.
@@ -38,6 +38,7 @@ transforming_solutions              : transformations on solution lists
 transforming_integer32_vector_lists : transforming lists of integer vectors
 transforming_integer64_vector_lists : transforming lists of 64-bit vectors
 transforming_laurent_systems        : transformations on Laurent systems
+ts_tropelim                         : test on transforming Laurent systems
 -------------------------------------------------------------------------------
 trees_of_vectors                    : data structure to hold outer normals
 trees_of_vectors_io                 : input/output of trees of vectors
