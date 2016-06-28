@@ -1,3 +1,7 @@
+Tue 28 Jun 2016 : writing in standard_complex_polynomials_io.adb crashed
+  at a call to Sum(t.dg) at the input polynomial x + (-1-2*i)*y.
+  Fixed by an explicit loop instead of the call to Sum().
+
 Tue 22 Mar 2016 : extended {dobldobl,quaddobl}_complex_poly_systems_io
   with procedure to write number of polynomials and variables as well.
   Bug fix in {standard,dobldobl,quaddobl,multprec}_laur_poly_convertors.adb.

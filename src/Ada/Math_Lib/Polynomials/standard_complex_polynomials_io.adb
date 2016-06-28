@@ -409,13 +409,17 @@ package body Standard_Complex_Polynomials_io is
       passed : boolean;
       sc : natural32 := 0;
       nc : natural32;
+      degtg : natural32 := 0;
 
     begin
       if first_time 
        then first_time := false;
        else Write_Plus(file,t.cf,nc); sc := sc + nc;
       end if;
-      if Sum(t.dg) = 0 then
+      for i in t.dg'range loop
+        degtg := degtg + t.dg(i);
+      end loop;
+      if degtg = 0 then -- if Sum(t.dg) = 0 then -- crash on x + (-1-2*i)*y;
         Write_Number(file,t.cf,nc); sc := sc + nc;
       else
         Write_Coefficient(file,t.cf,nc); sc := sc + nc;
