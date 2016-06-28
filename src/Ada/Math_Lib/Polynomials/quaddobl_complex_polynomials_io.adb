@@ -1,9 +1,6 @@
-with Standard_Natural_Numbers;          use Standard_Natural_Numbers;
-with Standard_Natural_Numbers_io;       use Standard_Natural_Numbers_io;
 with Quad_Double_Numbers;               use Quad_Double_Numbers;
 with Quad_Double_Numbers_io;            use Quad_Double_Numbers_io;
 with QuadDobl_Complex_Numbers;          use QuadDobl_Complex_Numbers;
-with Symbol_Table,Symbol_Table_io;
 with Write_Factors;                     use Write_Factors;
 with QuadDobl_Polynomial_Convertors;    use QuadDobl_Polynomial_Convertors;
 with Multprec_Complex_Polynomials;
@@ -84,10 +81,15 @@ package body QuadDobl_Complex_Polynomials_io is
     -- DESCRIPTION : 
     --   Writes a term to file.
 
+      sumtdg : natural32 := 0;
+
     begin
       new_line(file);
       Write_Number(file,t.cf);
-      if Sum(t.dg) /= 0 then
+      for i in t.dg'range loop
+        sumtdg := sumtdg + t.dg(i);
+      end loop;
+      if sumtdg /= 0 then -- if Sum(t.dg) /= 0 then
         for i in t.dg'range loop
           if t.dg(i) > 0 then
             put(file,'*');
@@ -117,10 +119,15 @@ package body QuadDobl_Complex_Polynomials_io is
     -- DESCRIPTION : 
     --   Writes a term to file.
 
+      sumtdg : natural32 := 0;
+
     begin
       new_line(file);
       Write_Number(file,t.cf);
-      if Sum(t.dg) /= 0 then
+      for i in t.dg'range loop
+        sumtdg := sumtdg + t.dg(i);
+      end loop;
+      if sumtdg /= 0 then -- if Sum(t.dg) /= 0 then
         for i in t.dg'range loop
           if t.dg(i) > 0 then
             put(file,'*');

@@ -1,6 +1,5 @@
 with Standard_Natural_Numbers_io;        use Standard_Natural_Numbers_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
-with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Characters_and_Numbers;             use Characters_and_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Parse_Numbers;
@@ -432,18 +431,30 @@ package body Multprec_Complex_Polynomials_io is
 
   procedure put ( file : in file_type; t : in Term;
                   standard : in boolean; pow : in Power ) is
+    
+    sumtdg : natural32 := 0;
+
   begin
     Write_Number(file,t.cf);
-    if Sum(t.dg) /= 0
+    for k in t.dg'range loop
+      sumtdg := sumtdg + t.dg(k);
+    end loop;
+    if sumtdg /= 0 -- if Sum(t.dg) /= 0
      then Write(file,t.dg,standard,pow);
     end if;
   end put;
 
   procedure put ( file : in file_type; t : in Term;
                   s : in Array_of_Symbols; pow : in Power ) is
+
+    sumtdg : natural32 := 0;
+
   begin
     Write_Number(file,t.cf);
-    if Sum(t.dg) /= 0
+    for k in t.dg'range loop
+      sumtdg := sumtdg + t.dg(k);
+    end loop;
+    if sumtdg /= 0 -- if Sum(t.dg) /= 0
      then Write(file,t.dg,s,pow);
     end if;
   end put;
