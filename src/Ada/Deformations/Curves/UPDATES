@@ -1,3 +1,6 @@
+Mon 27 Jun 2016 : new packages {dobldobl,quaddobl}_newton_series for double
+  double and quad double Newton on series, tested by ts_sernew.
+
 Fri 24 Jun 2016 : added QR Newton to standard_newton_series,
   with added tests in ts_sernew.
 

@@ -30,5 +30,7 @@ ts_extrapol                      : test on extrapolation
 ts_extrapts                      : points on skew line
 -------------------------------------------------------------------------------
 standard_newton_series           : Newton's method to compute series solutions
-ts_sernew                        : test on the Newton series package
+dobldobl_newton_series           : Newton on series in double double precision
+quaddobl_newton_series           : Newton on series in quad double precision
+ts_sernew                        : test on the Newton series packages
 -------------------------------------------------------------------------------
