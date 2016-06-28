@@ -1,3 +1,4 @@
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with QuadDobl_Dense_Series;              use QuadDobl_Dense_Series;
 with QuadDobl_Dense_Series_Vectors;      use QuadDobl_Dense_Series_Vectors;
 
@@ -38,5 +39,11 @@ package QuadDobl_Series_Vector_Norms is
 
   -- DESCRIPTION :
   --   Returns the normalized vector of v.
+
+  function Max_Norm ( v : Vector ) return quad_double;
+
+  -- DESCRIPTION :
+  --   The max norm of a vector is the maximum over all the max norms
+  --   of its components.  Useful to test if a vector is zero or not.
 
 end QuadDobl_Series_Vector_Norms;

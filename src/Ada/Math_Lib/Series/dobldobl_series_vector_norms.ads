@@ -1,3 +1,4 @@
+with Double_Double_Numbers;              use Double_Double_Numbers;
 with DoblDobl_Dense_Series;              use DoblDobl_Dense_Series;
 with DoblDobl_Dense_Series_Vectors;      use DoblDobl_Dense_Series_Vectors;
 
@@ -38,5 +39,11 @@ package DoblDobl_Series_Vector_Norms is
 
   -- DESCRIPTION :
   --   Returns the normalized vector of v.
+
+  function Max_Norm ( v : Vector ) return double_double;
+
+  -- DESCRIPTION :
+  --   The max norm of a vector is the maximum over all the max norms
+  --   of its components.  Useful to test if a vector is zero or not.
 
 end DoblDobl_Series_Vector_Norms;

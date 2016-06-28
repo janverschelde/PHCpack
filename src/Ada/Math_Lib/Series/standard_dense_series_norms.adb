@@ -40,7 +40,7 @@ package body Standard_Dense_Series_Norms is
 
   begin
     for i in 1..s.order loop
-      rad := Standard_Complex_Numbers_Polar.Radius(s.cff(1));
+      rad := Standard_Complex_Numbers_Polar.Radius(s.cff(i));
       if rad > res
        then res := rad;
       end if;

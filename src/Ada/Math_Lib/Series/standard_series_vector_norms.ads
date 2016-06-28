@@ -1,3 +1,4 @@
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Dense_Series;              use Standard_Dense_Series;
 with Standard_Dense_Series_Vectors;      use Standard_Dense_Series_Vectors;
 
@@ -38,5 +39,11 @@ package Standard_Series_Vector_Norms is
 
   -- DESCRIPTION :
   --   Returns the normalized vector of v.
+
+  function Max_Norm ( v : Vector ) return double_float;
+
+  -- DESCRIPTION :
+  --   The max norm of a vector is the maximum over all the max norms
+  --   of its components.  Useful to test if a vector is zero or not.
 
 end Standard_Series_Vector_Norms;

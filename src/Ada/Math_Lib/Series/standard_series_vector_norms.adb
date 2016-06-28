@@ -1,4 +1,6 @@
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with Standard_Algebraic_Series;
+with Standard_Dense_Series_Norms;
 
 package body Standard_Series_Vector_Norms is
 
@@ -61,5 +63,20 @@ package body Standard_Series_Vector_Norms is
   begin
     return res;
   end Normalize;
+
+  function Max_Norm ( v : Vector ) return double_float is
+
+    res : double_float := Standard_Dense_Series_Norms.Max_Norm(v(v'first));
+    nrm : double_float;
+
+  begin
+    for i in v'first+1..v'last loop
+      nrm := Standard_Dense_Series_Norms.Max_Norm(v(i));
+      if nrm > res
+       then res := nrm;
+      end if;
+    end loop;
+    return res;
+  end Max_Norm;
   
 end Standard_Series_Vector_Norms;

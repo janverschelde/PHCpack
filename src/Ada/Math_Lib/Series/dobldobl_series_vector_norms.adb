@@ -1,4 +1,6 @@
+with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
 with DoblDobl_Algebraic_Series;
+with DoblDobl_Dense_Series_Norms;
 
 package body DoblDobl_Series_Vector_Norms is
 
@@ -61,5 +63,20 @@ package body DoblDobl_Series_Vector_Norms is
   begin
     return res;
   end Normalize;
+
+  function Max_Norm ( v : Vector ) return double_double is
+
+    res : double_double := DoblDobl_Dense_Series_Norms.Max_Norm(v(v'first));
+    nrm : double_double;
+
+  begin
+    for i in v'first+1..v'last loop
+      nrm := DoblDobl_Dense_Series_Norms.Max_Norm(v(i));
+      if nrm > res
+       then res := nrm;
+      end if;
+    end loop;
+    return res;
+  end Max_Norm;
   
 end DoblDobl_Series_Vector_Norms;

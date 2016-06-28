@@ -1,3 +1,6 @@
+Tue 28 Jun 2016 : fixed bug in the Max_Norm of _dense_series_norms.adb,
+  added Max_Norm to _series_vector_norms.
+
 Mon 27 Jun 2016 : extra test in ts_series, in dobldobl_algebraic_series.adb,
   also wrote the result of the evaluation in verbose mode.
   Instantiated {dobldobl,quaddobl}_series_polynomials, and the corresponding
