@@ -775,8 +775,8 @@ ts_unimod:
 
 # Test programs for the Root_Counts/Implift library :
 
-test_implift: ts_supports ts_supspan ts_transfo ts_drivpts ts_impvol \
-              ts_drivimpl
+test_implift: ts_supports ts_supspan ts_transfo ts_tropelim \
+              ts_drivpts ts_impvol ts_drivimpl
 
 ts_supports:
 	make -f $(MAKEFILE) ts_supports
@@ -786,6 +786,9 @@ ts_supspan:
 
 ts_transfo:
 	make -f $(MAKEFILE) ts_transfo
+
+ts_tropelim:
+	make -f $(MAKEFILE) ts_tropelim
 
 ts_drivpts:
 	make -f $(MAKEFILE) ts_drivpts

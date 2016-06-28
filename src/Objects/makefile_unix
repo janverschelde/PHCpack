@@ -801,6 +801,10 @@ ts_transfo:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_transfo.adb \
                  -o $(BIN)/ts_transfo
 
+ts_tropelim:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_tropelim.adb \
+                 -o $(BIN)/ts_tropelim
+
 ts_drivpts:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_drivpts.adb \
                  -o $(BIN)/ts_drivpts
