@@ -168,6 +168,10 @@ package body QuadDobl_Newton_Series is
 
   begin
     px := QuadDobl_Series_Poly_SysFun.Eval(p,x);
+    put_line(file,"The evaluated series :");
+    for i in px'range loop
+      QuadDobl_Dense_Series_io.put(file,px(i)); new_line(file);
+    end loop;
     QuadDobl_Dense_Series_Vectors.Min(px);
     Series_and_Polynomials.Set_Order(px,order);
     jm := QuadDobl_Series_Jaco_Matrices.Eval(jp,x);

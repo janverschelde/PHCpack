@@ -168,6 +168,10 @@ package body DoblDobl_Newton_Series is
 
   begin
     px := DoblDobl_Series_Poly_SysFun.Eval(p,x);
+    put_line(file,"The evaluated series :");
+    for i in px'range loop
+      DoblDobl_Dense_Series_io.put(file,px(i)); new_line(file);
+    end loop;
     DoblDobl_Dense_Series_Vectors.Min(px);
     Series_and_Polynomials.Set_Order(px,order);
     jm := DoblDobl_Series_Jaco_Matrices.Eval(jp,x);
