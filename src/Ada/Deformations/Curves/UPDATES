@@ -1,5 +1,6 @@
 Wed 29 Jun 2016 : new package series_and_solutions, tested by ts_sersol.
   Added tests in double double and quad double precision to ts_sersol.
+  New package power_series_methods with code factored out of ts_sersol.
 
 Tue 28 Jun 2016 : in _newton_series.adb, for QR_Newton, also write the
   result of the polynomial evaluation at the start.

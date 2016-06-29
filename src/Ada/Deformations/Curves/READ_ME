@@ -10,6 +10,9 @@ For plane algebraic curves, no particular homotopy is needed and sampling
 curves provides good development and testing cases for the predictors.
 New in 2.3.79 is the introduction of higher-order extrapolators.
 
+The addition of Newton's method to compute power series solutions
+is entirely new in release 2.4.21.
+
 -------------------------------------------------------------------------------
 file name                        : short description
 -------------------------------------------------------------------------------
@@ -34,5 +37,6 @@ dobldobl_newton_series           : Newton on series in double double precision
 quaddobl_newton_series           : Newton on series in quad double precision
 ts_sernew                        : test on the Newton series packages
 series_and_solutions             : making series from solution vectors
+power_series_methods             : Newton's method on power series solutions
 ts_sersol                        : test on series and solutions
 -------------------------------------------------------------------------------

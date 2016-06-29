@@ -2,7 +2,6 @@ with text_io;                            use text_io;
 with Communications_with_User;           use Communications_with_User;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Complex_Polynomials;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Solutions;
@@ -15,251 +14,20 @@ with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Solutions;
 with QuadDobl_System_and_Solutions_io;
-with Standard_Dense_Series_Vectors;
 with Standard_Dense_Series_VecVecs;
-with DoblDobl_Dense_Series_Vectors;
 with DoblDobl_Dense_Series_VecVecs;
-with QuadDobl_Dense_Series_Vectors;
 with QuadDobl_Dense_Series_VecVecs;
 with Standard_Series_Poly_Systems;
-with Standard_Series_Poly_SysFun;
-with DoblDobl_Series_Poly_SysFun;
 with DoblDobl_Series_Poly_Systems;
-with QuadDobl_Series_Poly_SysFun;
 with QuadDobl_Series_Poly_Systems;
 with Series_and_Polynomials;
-with Series_and_Polynomials_io;
 with Series_and_Solutions;
-with Standard_Newton_Series;
-with DoblDobl_Newton_Series;
-with QuadDobl_Newton_Series;
+with Power_Series_Methods;              use Power_Series_Methods;
 
 procedure ts_sersol is
 
 -- DESCRIPTION :
 --   Test on the development of series as solutions of polynomial systems.
-
-  procedure Run_LU_Newton
-             ( nbrit : in integer32;
-               p : in Standard_Series_Poly_Systems.Poly_Sys;
-               s : in out Standard_Dense_Series_Vectors.Vector;
-               verbose : in boolean := false ) is
-
-  -- DESCRIPTION :
-  --   Applies as many steps with Newton's method as the value of nbrit,
-  --   starting at the solution in s to the system p,
-  --   applying LU factorization to compute the Newton updates,
-  --   in standard double precision.
-
-    use Standard_Newton_Series;
-
-    order : integer32 := 1;
-    info : integer32;
-    tol : constant double_float := 1.0E-12;
-    eva : Standard_Dense_Series_Vectors.Vector(p'range);
-
-  begin
-    if verbose
-     then LU_Newton_Steps(standard_output,p,order,nbrit,s,info);
-     else LU_Newton_Steps(p,order,nbrit,s,info);
-    end if;
-    if info /= 0 then
-      put("info = "); put(info,1); new_line;
-    else
-      Series_and_Polynomials.Filter(s,tol);
-      put_line("The updated power series solution :");
-      Series_and_Polynomials_io.put(s);
-      eva := Standard_Series_Poly_SysFun.Eval(p,s);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line("The evaluated solution :");
-      Series_and_Polynomials_io.put(eva);
-    end if;
-  end Run_LU_Newton;
-
-  procedure Run_LU_Newton
-             ( nbrit : in integer32;
-               p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out DoblDobl_Dense_Series_Vectors.Vector;
-               verbose : in boolean := false ) is
-
-  -- DESCRIPTION :
-  --   Applies as many steps with Newton's method as the value of nbrit,
-  --   starting at the solution in s to the system p,
-  --   applying LU factorization to compute the Newton updates,
-  --   in double double precision.
-
-    use DoblDobl_Newton_Series;
-
-    order : integer32 := 1;
-    info : integer32;
-    tol : constant double_float := 1.0E-24;
-    eva : DoblDobl_Dense_Series_Vectors.Vector(p'range);
-
-  begin
-    if verbose
-     then LU_Newton_Steps(standard_output,p,order,nbrit,s,info);
-     else LU_Newton_Steps(p,order,nbrit,s,info);
-    end if;
-    if info /= 0 then
-      put("info = "); put(info,1); new_line;
-    else
-      Series_and_Polynomials.Filter(s,tol);
-      put_line("The updated power series solution :");
-      Series_and_Polynomials_io.put(s);
-      eva := DoblDobl_Series_Poly_SysFun.Eval(p,s);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line("The evaluated solution :");
-      Series_and_Polynomials_io.put(eva);
-    end if;
-  end Run_LU_Newton;
-
-  procedure Run_LU_Newton
-             ( nbrit : in integer32;
-               p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out QuadDobl_Dense_Series_Vectors.Vector;
-               verbose : in boolean := false ) is
-
-  -- DESCRIPTION :
-  --   Applies as many steps with Newton's method as the value of nbrit,
-  --   starting at the solution in s to the system p,
-  --   applying LU factorization to compute the Newton updates,
-  --   in quad double precision. 
-
-    use QuadDobl_Newton_Series;
-
-    order : integer32 := 1;
-    info : integer32;
-    tol : constant double_float := 1.0E-32;
-    eva : QuadDobl_Dense_Series_Vectors.Vector(p'range);
-
-  begin
-    if verbose
-     then LU_Newton_Steps(standard_output,p,order,nbrit,s,info);
-     else LU_Newton_Steps(p,order,nbrit,s,info);
-    end if;
-    if info /= 0 then
-      put("info = "); put(info,1); new_line;
-    else
-      Series_and_Polynomials.Filter(s,tol);
-      put_line("The updated power series solution :");
-      Series_and_Polynomials_io.put(s);
-      eva := QuadDobl_Series_Poly_SysFun.Eval(p,s);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line("The evaluated solution :");
-      Series_and_Polynomials_io.put(eva);
-    end if;
-  end Run_LU_Newton;
-
-  procedure Run_QR_Newton
-             ( nbrit : in integer32;
-               p : in Standard_Series_Poly_Systems.Poly_Sys;
-               s : in out Standard_Dense_Series_Vectors.Vector;
-               verbose : in boolean := true ) is
-
-  -- DESCRIPTION :
-  --   Applies as many steps with Newton's method as the value of nbrit,
-  --   starting at the solution in s to the system p,
-  --   applying QR decomposition to compute the Newton updates,
-  --   in standard double precision.
-
-    use Standard_Newton_Series;
-
-    order : integer32 := 1;
-    info : integer32;
-    tol : constant double_float := 1.0E-12;
-    eva : Standard_Dense_Series_Vectors.Vector(p'range);
-
-  begin
-    if verbose
-     then QR_Newton_Steps(standard_output,p,order,nbrit,s,info);
-     else QR_Newton_Steps(p,order,nbrit,s,info);
-    end if;
-    if info /= 0 then
-      put("info = "); put(info,1); new_line;
-    else
-      Series_and_Polynomials.Filter(s,tol);
-      put_line("The updated power series solution :");
-      Series_and_Polynomials_io.put(s);
-      eva := Standard_Series_Poly_SysFun.Eval(p,s);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line("The evaluated solution :");
-      Series_and_Polynomials_io.put(eva);
-    end if;
-  end Run_QR_Newton;
-
-  procedure Run_QR_Newton
-             ( nbrit : in integer32;
-               p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out DoblDobl_Dense_Series_Vectors.Vector;
-               verbose : in boolean := true ) is
-
-  -- DESCRIPTION :
-  --   Applies as many steps with Newton's method as the value of nbrit,
-  --   starting at the solution in s to the system p,
-  --   applying QR decomposition to compute the Newton updates,
-  --   in double double precision.
-
-    use DoblDobl_Newton_Series;
-
-    order : integer32 := 1;
-    info : integer32;
-    tol : constant double_float := 1.0E-24;
-    eva : DoblDobl_Dense_Series_Vectors.Vector(p'range);
-
-  begin
-    if verbose
-     then QR_Newton_Steps(standard_output,p,order,nbrit,s,info);
-     else QR_Newton_Steps(p,order,nbrit,s,info);
-    end if;
-    if info /= 0 then
-      put("info = "); put(info,1); new_line;
-    else
-      Series_and_Polynomials.Filter(s,tol);
-      put_line("The updated power series solution :");
-      Series_and_Polynomials_io.put(s);
-      eva := DoblDobl_Series_Poly_SysFun.Eval(p,s);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line("The evaluated solution :");
-      Series_and_Polynomials_io.put(eva);
-    end if;
-  end Run_QR_Newton;
-
-  procedure Run_QR_Newton
-             ( nbrit : in integer32;
-               p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-               s : in out QuadDobl_Dense_Series_Vectors.Vector;
-               verbose : in boolean := true ) is
-
-  -- DESCRIPTION :
-  --   Applies as many steps with Newton's method as the value of nbrit,
-  --   starting at the solution in s to the system p,
-  --   applying QR decomposition to compute the Newton updates,
-  --   in quad double precision.
-
-    use QuadDobl_Newton_Series;
-
-    order : integer32 := 1;
-    info : integer32;
-    tol : constant double_float := 1.0E-24;
-    eva : QuadDobl_Dense_Series_Vectors.Vector(p'range);
-
-  begin
-    if verbose
-     then QR_Newton_Steps(standard_output,p,order,nbrit,s,info);
-     else QR_Newton_Steps(p,order,nbrit,s,info);
-    end if;
-    if info /= 0 then
-      put("info = "); put(info,1); new_line;
-    else
-      Series_and_Polynomials.Filter(s,tol);
-      put_line("The updated power series solution :");
-      Series_and_Polynomials_io.put(s);
-      eva := QuadDobl_Series_Poly_SysFun.Eval(p,s);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line("The evaluated solution :");
-      Series_and_Polynomials_io.put(eva);
-    end if;
-  end Run_QR_Newton;
 
   procedure Run_Newton
              ( nq,idx : in integer32;
@@ -286,7 +54,6 @@ procedure ts_sersol is
     srp : Standard_Series_Poly_Systems.Poly_Sys(p'range)
         := Series_and_Polynomials.System_to_Series_System(p,idx);
     nbrit : integer32 := 0;
-    ans : character;
 
   begin
     new_line;
@@ -296,20 +63,10 @@ procedure ts_sersol is
     get(nbrit); new_line;
     if nq = dim then
       put_line("LU Newton will be applied.");
-      for i in srv'range loop
-        put("Running on solution "); put(i,1); put_line(" ...");
-        Run_LU_Newton(nbrit,srp,srv(i).all);
-        put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
-        exit when (ans /= 'y');
-      end loop;
+      Run_LU_Newton(nbrit,srp,srv,true,true);
     else
       put_line("QR Newton will be applied.");
-      for i in srv'range loop
-        put("Running on solution "); put(i,1); put_line(" ...");
-        Run_QR_Newton(nbrit,srp,srv(i).all);
-        put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
-        exit when (ans /= 'y');
-      end loop;
+      Run_QR_Newton(nbrit,srp,srv,true,true);
     end if;
     Standard_Series_Poly_Systems.Clear(srp);
   end Run_Newton;
@@ -339,7 +96,6 @@ procedure ts_sersol is
     srp : DoblDobl_Series_Poly_Systems.Poly_Sys(p'range)
         := Series_and_Polynomials.System_to_Series_System(p,idx);
     nbrit : integer32 := 0;
-    ans : character;
 
   begin
     new_line;
@@ -349,20 +105,10 @@ procedure ts_sersol is
     get(nbrit); new_line;
     if nq = dim then
       put_line("LU Newton will be applied.");
-      for i in srv'range loop
-        put("Running on solution "); put(i,1); put_line(" ...");
-        Run_LU_Newton(nbrit,srp,srv(i).all);
-        put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
-        exit when (ans /= 'y');
-      end loop;
+      Run_LU_Newton(nbrit,srp,srv,true,true);
     else
       put_line("QR Newton will be applied.");
-      for i in srv'range loop
-        put("Running on solution "); put(i,1); put_line(" ...");
-        Run_QR_Newton(nbrit,srp,srv(i).all);
-        put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
-        exit when (ans /= 'y');
-      end loop;
+      Run_QR_Newton(nbrit,srp,srv,true,true);
     end if;
     DoblDobl_Series_Poly_Systems.Clear(srp);
   end Run_Newton;
@@ -392,7 +138,6 @@ procedure ts_sersol is
     srp : QuadDobl_Series_Poly_Systems.Poly_Sys(p'range)
         := Series_and_Polynomials.System_to_Series_System(p,idx);
     nbrit : integer32 := 0;
-    ans : character;
 
   begin
     new_line;
@@ -402,20 +147,10 @@ procedure ts_sersol is
     get(nbrit); new_line;
     if nq = dim then
       put_line("LU Newton will be applied.");
-      for i in srv'range loop
-        put("Running on solution "); put(i,1); put_line(" ...");
-        Run_LU_Newton(nbrit,srp,srv(i).all);
-        put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
-        exit when (ans /= 'y');
-      end loop;
+      Run_LU_Newton(nbrit,srp,srv,true,true);
     else
       put_line("QR Newton will be applied.");
-      for i in srv'range loop
-        put("Running on solution "); put(i,1); put_line(" ...");
-        Run_QR_Newton(nbrit,srp,srv(i).all);
-        put("Continue ? (y/n) "); Ask_Yes_or_No(ans);
-        exit when (ans /= 'y');
-      end loop;
+      Run_QR_Newton(nbrit,srp,srv,true,true);
     end if;
     QuadDobl_Series_Poly_Systems.Clear(srp);
   end Run_Newton;
