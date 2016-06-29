@@ -29,6 +29,7 @@ with maingood;                -- to test if a system is good
 with mainsymb;                -- to get the symbol table contents
 with mainhyp;                 -- witness set for hypersurface
 with mainhyp2,mainhyp4;       -- double double and quad double versions
+with mainseries;              -- Newton's method for power series solutions
 -- NOTE (added for pieri_solver.ali) :
 with Interfaces.C;
 with Complex_Polynomial_Matrices;        use Complex_Polynomial_Matrices;
@@ -55,12 +56,13 @@ procedure Dispatch is
   scalban : constant string := Greeting_Banners.scalban;
   slvban  : constant string := Greeting_Banners.slvban;
   trackban : constant string := Greeting_Banners.trackban;
+  seriesban : constant string := Greeting_Banners.seriesban;
   veriban : constant string := Greeting_Banners.veriban;
   witban  : constant string := Greeting_Banners.witban;
 
 -- AVAILABLE OPTIONS :
 
-  options : constant string := "0asdpqmrvbekcxyzftwlgo-h";
+  options : constant string := "0asdpqmrvbekcxyzftwlgo-hu";
   -- 0 : zero seed for repeatable runs
   -- a : solve => equation-by-equation solver
   -- b : batch or black box processing
@@ -79,6 +81,7 @@ procedure Dispatch is
   -- r : roco => root counting methods
   -- s : scal => scaling of a polynomial system
   -- t : task => use multitasking
+  -- u : series => Newton's method for power series solutions
   -- v : vali => validation of solutions
   -- w : wit  => intersection of witness sets using diagonal homotopies
   -- x : dix  => Python dictionary output for solutions
@@ -239,6 +242,33 @@ procedure Dispatch is
     end loop;
     return res;
   end Scan_Precision;
+
+  function Scan_Series_Precision ( opt : character ) return natural32 is
+
+  -- DESCRIPTION :
+  --   Returns the precision of the option defined by the charactor opt,
+  --   for the power series solutions with Newton's method.
+  --   0 : the -opt is followed by a space (or nothing);
+  --   1 : standard double precision, as we have -opt1 at the command line;
+  --   2 : double double precision, as we have -opt2 at the command line;
+  --   4 : quad double precision is given as -opt4 at the command line.
+
+    res : natural32 := 0;
+
+  begin
+    for i in 1..Unix_Command_Line.Number_of_Arguments loop
+      declare
+        s : constant string := Unix_Command_Line.Argument(i);
+      begin
+        if s(2) = opt then
+          if s'last > 2 
+           then res := Convert(s(3..s'last)); exit;
+          end if;
+        end if;
+      end;
+    end loop;
+    return res;
+  end Scan_Series_Precision;
 
   function Find_Seed return natural32 is
 
@@ -469,6 +499,27 @@ procedure Dispatch is
     end case;
   end Verification_Dispatcher;
 
+  procedure Series_Dispatcher
+              ( o2 : in character; infile,outfile : in string ) is
+
+  -- DESCRIPTION :
+  --   Applies Newton's method to compute power series solutions.
+
+    prc : constant natural32 := Scan_Series_Precision('u');
+
+  begin
+    case o2 is
+      when 'h' | '-' => Greeting_Banners.help4series;
+      when others => put_line(welcome); put_line(seriesban);
+        case prc is
+          when 1 => mainseries('1',infile,outfile);
+          when 2 => mainseries('2',infile,outfile);
+          when 4 => mainseries('4',infile,outfile);
+          when others => mainseries('0',infile,outfile);
+        end case;
+    end case;
+  end Series_Dispatcher;
+
   procedure Enumeration_Dispatcher
               ( o2 : in character; infile,outfile : in string ) is
 
@@ -635,6 +686,7 @@ procedure Dispatch is
       when 'r' => Greeting_Banners.help4rootcounts;
       when 's' => Greeting_Banners.help4scaling;
       when 't' => Greeting_Banners.help4tasking;
+      when 'u' => Greeting_Banners.help4series;
       when 'v' => Greeting_Banners.help4verification;
       when 'w' => Greeting_Banners.help4witsetinsect;
       when 'x' => Greeting_Banners.help4pythondict;
@@ -702,6 +754,7 @@ procedure Dispatch is
                       else Scaling_Dispatcher(f1,f2);
                      end if;
       when 't'    => Tasking_Dispatcher(o2,o3,f1,f2);
+      when 'u'    => Series_Dispatcher(o2,f1,f2);
       when 'v'    => Verification_Dispatcher(o2,f1,f2);
       when 'w'    => if o2 = 'h' or o2 = '-'
                       then Greeting_Banners.help4witsetinsect;

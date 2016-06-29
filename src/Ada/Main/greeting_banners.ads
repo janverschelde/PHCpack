@@ -49,6 +49,9 @@ package Greeting_Banners is
   trackban : constant string :=
     "Tracking Solution Paths with incremental read/write of solutions.";
 
+  seriesban : constant string :=
+    "Newton's method to compute power series solutions of polynomial systems.";
+
   veriban : constant string :=
     "Verification, refinement and purification of computed solution lists.";
 
@@ -154,6 +157,11 @@ package Greeting_Banners is
 
   -- DESCRIPTION :
   --   Writes help on multitasking.
+
+  procedure help4series;
+
+  -- DESCRIPTION :
+  --   Writes help on Newton's method for power series solutions.
 
   procedure help4verification;
 

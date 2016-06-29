@@ -515,6 +515,11 @@ package body Greeting_Banners is
     put_line("path defined by a polynomial homotopy with many threads.");
   end help4tasking;
 
+  procedure help4series is
+  begin
+    put_line("phc -u applies Newton's method for power series solutions.");
+  end help4series;
+
   procedure help4verification is
   begin
     put_line("phc -v filters, verifies, and refines lists of solutions.");
