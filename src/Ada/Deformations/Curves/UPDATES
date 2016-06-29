@@ -1,3 +1,5 @@
+Wed 29 Jun 2016 : new package series_and_solutions, tested by ts_sersol.
+
 Tue 28 Jun 2016 : in _newton_series.adb, for QR_Newton, also write the
   result of the polynomial evaluation at the start.
   Applied set_order() to the polynomial systems and its Jacobian matrix

@@ -33,4 +33,6 @@ standard_newton_series           : Newton's method to compute series solutions
 dobldobl_newton_series           : Newton on series in double double precision
 quaddobl_newton_series           : Newton on series in quad double precision
 ts_sernew                        : test on the Newton series packages
+series_and_solutions             : making series from solution vectors
+ts_sersol                        : test on series and solutions
 -------------------------------------------------------------------------------
