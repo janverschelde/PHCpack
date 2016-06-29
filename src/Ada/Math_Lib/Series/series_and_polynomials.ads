@@ -11,16 +11,19 @@ with Standard_Dense_Series_Vectors;
 with Standard_Dense_Series_Matrices;
 with Standard_Series_Polynomials;
 with Standard_Series_Poly_Systems;
+with Standard_Series_Jaco_Matrices;
 with DoblDobl_Dense_Series;
 with DoblDobl_Dense_Series_Vectors;
 with DoblDobl_Dense_Series_Matrices;
 with DoblDobl_Series_Polynomials;
 with DoblDobl_Series_Poly_Systems;
+with DoblDobl_Series_Jaco_Matrices;
 with QuadDobl_Dense_Series;
 with QuadDobl_Dense_Series_Vectors;
 with QuadDobl_Dense_Series_Matrices;
 with QuadDobl_Series_Polynomials;
 with QuadDobl_Series_Poly_Systems;
+with QuadDobl_Series_Jaco_Matrices;
 
 package Series_and_Polynomials is
 
@@ -185,9 +188,15 @@ package Series_and_Polynomials is
                         order : in integer32 );
   procedure Set_Order ( p : in out QuadDobl_Series_Poly_Systems.Poly_Sys;
                         order : in integer32 );
+  procedure Set_Order ( jm : in out Standard_Series_Jaco_Matrices.Jaco_Mat;
+                        order : in integer32 );
+  procedure Set_Order ( jm : in out DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
+                        order : in integer32 );
+  procedure Set_Order ( jm : in out QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
+                        order : in integer32 );
 
   -- DESCRIPTION :
-  --   Sets the order of every term in p to the given order.
+  --   Sets the order of every term in p or jm to the given order.
   --   If the given order is larger than the current order,
   --   then the extra coefficients are set to zero.
 

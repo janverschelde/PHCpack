@@ -955,6 +955,37 @@ package body Series_and_Polynomials is
     end loop;
   end Set_Order;
 
+  procedure Set_Order ( jm : in out Standard_Series_Jaco_Matrices.Jaco_Mat;
+                        order : in integer32 ) is
+  begin
+    for i in jm'range(1) loop
+      for j in jm'range(2) loop
+        Set_Order(jm(i,j),order);
+      end loop;
+    end loop;
+  end Set_Order;
+
+  procedure Set_Order ( jm : in out DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
+                        order : in integer32 ) is
+  begin
+    for i in jm'range(1) loop
+      for j in jm'range(2) loop
+        Set_Order(jm(i,j),order);
+      end loop;
+    end loop;
+  end Set_Order;
+
+  procedure Set_Order ( jm : in out QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
+                        order : in integer32 ) is
+  begin
+    for i in jm'range(1) loop
+      for j in jm'range(2) loop
+        Set_Order(jm(i,j),order);
+      end loop;
+    end loop;
+  end Set_Order;
+
+
   procedure Filter ( s : in out Standard_Dense_Series_Vectors.Vector;
                      tol : in double_float ) is
   begin
