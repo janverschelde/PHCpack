@@ -1,10 +1,14 @@
 with Standard_Integer_Numbers_io;       use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;      use Standard_Floating_Numbers_io;
 with Standard_Integer_Vectors;
 with Standard_Dense_Series;
 with Standard_Dense_Series_io;
+with Standard_Series_Vector_Norms;
 with Standard_Dense_Series_Matrices;
 with Standard_Linear_Series_Solvers;    use Standard_Linear_Series_Solvers;
 with Standard_Least_Squares_Series;     use Standard_Least_Squares_Series;
+with Standard_Series_Polynomials;
 with Series_and_Polynomials;
 with Standard_Series_Poly_SysFun;
 
@@ -113,6 +117,7 @@ package body Standard_Newton_Series is
                 x : in out Standard_Dense_Series_Vectors.Vector;
                 info : out integer32 ) is
 
+    wp : Standard_Series_Poly_Systems.Poly_Sys(p'range);
     dx : Standard_Dense_Series_Vectors.Vector(x'range);
     px : Standard_Dense_Series_Vectors.Vector(p'range);
     jm : Standard_Dense_Series_Matrices.Matrix(p'range,x'range);
@@ -121,18 +126,34 @@ package body Standard_Newton_Series is
     n : constant integer32 := jm'last(1);
     m : constant integer32 := jm'last(2);
     rsd,dum,dum2,dum3 : Standard_Dense_Series_Vectors.Vector(1..n);
+    nrm : double_float;
+    tol : constant double_float := 1.0E-13;
+    wjp : Standard_Series_Jaco_Matrices.Jaco_Mat(jp'range(1),jp'range(2));
 
   begin
-    px := Standard_Series_Poly_SysFun.Eval(p,x);
-    Standard_Dense_Series_Vectors.Min(px);
-    Series_and_Polynomials.Set_Order(px,order);
-    jm := Standard_Series_Jaco_Matrices.Eval(jp,x);
-    Series_and_Polynomials.Set_Order(jm,order);
-    QRD(jm,qraux,ipvt,false);
-    QRLS(jm,n,m,qraux,px,dum2,dum3,dx,rsd,dum,110,info);
-    if info = 0
-     then Standard_Dense_Series_Vectors.Add(x,dx);
+    Standard_Series_Poly_Systems.Copy(p,wp);
+    Series_and_Polynomials.Set_Order(wp,order);
+    px := Standard_Series_Poly_SysFun.Eval(wp,x);
+    nrm := Standard_Series_Vector_Norms.Max_Norm(px);
+    if nrm > tol then
+      for i in jp'range(1) loop
+        for j in jp'range(2) loop
+          Standard_Series_Polynomials.Copy(jp(i,j),wjp(i,j));
+        end loop;
+      end loop;
+      Series_and_Polynomials.Set_Order(wjp,order);
+      Standard_Dense_Series_Vectors.Min(px);
+      Series_and_Polynomials.Set_Order(px,order);
+      jm := Standard_Series_Jaco_Matrices.Eval(wjp,x);
+      Series_and_Polynomials.Set_Order(jm,order);
+      QRD(jm,qraux,ipvt,false);
+      QRLS(jm,n,m,qraux,px,dum2,dum3,dx,rsd,dum,110,info);
+      if info = 0
+       then Standard_Dense_Series_Vectors.Add(x,dx);
+      end if;
+      Standard_Series_Jaco_Matrices.Clear(wjp);
     end if;
+    Standard_Series_Poly_Systems.Clear(wp);
   end QR_Newton_Step;
 
   procedure QR_Newton_Step
@@ -157,6 +178,7 @@ package body Standard_Newton_Series is
                 x : in out Standard_Dense_Series_Vectors.Vector;
                 info : out integer32 ) is
 
+    wp : Standard_Series_Poly_Systems.Poly_Sys(p'range);
     dx : Standard_Dense_Series_Vectors.Vector(x'range);
     px : Standard_Dense_Series_Vectors.Vector(p'range);
     jm : Standard_Dense_Series_Matrices.Matrix(p'range,x'range);
@@ -165,29 +187,46 @@ package body Standard_Newton_Series is
     n : constant integer32 := jm'last(1);
     m : constant integer32 := jm'last(2);
     rsd,dum,dum2,dum3 : Standard_Dense_Series_Vectors.Vector(1..n);
+    nrm : double_float;
+    tol : constant double_float := 1.0E-13;
+    wjp : Standard_Series_Jaco_Matrices.Jaco_Mat(jm'range(1),jm'range(2));
 
   begin
-    px := Standard_Series_Poly_SysFun.Eval(p,x);
+    Standard_Series_Poly_Systems.Copy(p,wp);
+    Series_and_Polynomials.Set_Order(wp,order);
+    px := Standard_Series_Poly_SysFun.Eval(wp,x);
     put_line(file,"The evaluated series :");
     for i in px'range loop
       Standard_Dense_Series_io.put(file,px(i)); new_line(file);
     end loop;
-    Standard_Dense_Series_Vectors.Min(px);
-    Standard_Dense_Series_Vectors.Min(px);
-    Series_and_Polynomials.Set_Order(px,order);
-    jm := Standard_Series_Jaco_Matrices.Eval(jp,x);
-    Series_and_Polynomials.Set_Order(jm,order);
-    QRD(jm,qraux,ipvt,false);
-    QRLS(jm,n,m,qraux,px,dum2,dum3,dx,rsd,dum,110,info);
-    if info /= 0 then
-      put(file,"QRLS info : "); put(file,info,1); new_line(file);
-    else
-      put_line(file,"The update to the series :");
-      for i in dx'range loop
-        Standard_Dense_Series_io.put(file,dx(i)); new_line(file);
+    nrm := Standard_Series_Vector_Norms.Max_Norm(px);
+    put(file,"The max norm of the evaluation : ");
+    put(file,nrm,3); new_line(file);
+    if nrm > tol then
+      for i in jp'range(1) loop
+        for j in jp'range(2) loop
+          Standard_Series_Polynomials.Copy(jp(i,j),wjp(i,j));
+        end loop;
       end loop;
-      Standard_Dense_Series_Vectors.Add(x,dx);
+      Series_and_Polynomials.Set_Order(wjp,order);
+      Standard_Dense_Series_Vectors.Min(px);
+      Series_and_Polynomials.Set_Order(px,order);
+      jm := Standard_Series_Jaco_Matrices.Eval(jp,x);
+      Series_and_Polynomials.Set_Order(jm,order);
+      QRD(jm,qraux,ipvt,false);
+      QRLS(jm,n,m,qraux,px,dum2,dum3,dx,rsd,dum,110,info);
+      if info /= 0 then
+        put(file,"QRLS info : "); put(file,info,1); new_line(file);
+      else
+        put_line(file,"The update to the series :");
+        for i in dx'range loop
+          Standard_Dense_Series_io.put(file,dx(i)); new_line(file);
+        end loop;
+        Standard_Dense_Series_Vectors.Add(x,dx);
+      end if;
+      Standard_Series_Jaco_Matrices.Clear(wjp);
     end if;
+    Standard_Series_Poly_Systems.Clear(wp);
   end QR_Newton_Step;
 
   procedure QR_Newton_Step

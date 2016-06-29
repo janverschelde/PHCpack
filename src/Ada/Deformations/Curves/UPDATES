@@ -1,5 +1,7 @@
 Tue 28 Jun 2016 : in _newton_series.adb, for QR_Newton, also write the
   result of the polynomial evaluation at the start.
+  Applied set_order() to the polynomial systems and its Jacobian matrix
+  in standard_newton_series.adb.
 
 Mon 27 Jun 2016 : new packages {dobldobl,quaddobl}_newton_series for double
   double and quad double Newton on series, tested by ts_sernew.
