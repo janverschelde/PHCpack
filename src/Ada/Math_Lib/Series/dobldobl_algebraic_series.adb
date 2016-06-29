@@ -1,6 +1,7 @@
 with text_io;                            use text_io;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Double_Double_Numbers;              use Double_Double_Numbers;
 with DoblDobl_Complex_Numbers;           use DoblDobl_Complex_Numbers;
 with DoblDobl_Complex_Numbers_Polar;
@@ -20,29 +21,35 @@ package body DoblDobl_Algebraic_Series is
     ctwo : constant Complex_Number := create(two);
     half : constant double_double := one/two;
     fac : constant Complex_Number := Create(half);
+    tol : constant double_float := 1.0E-24;
 
   begin
-    res.cff(0) := DoblDobl_Complex_Numbers_Polar.Root(cpc.cff(0),2,i);
-    res.cff(1) := Create(zero);
-    res.order := 1;
-    cpc.order := 1;
-    loop
-      wrk := res*res - cpc;
-      dx := fac*wrk/res;
-      if verbose then
-        put("evaluation at order = "); put(res.order,1);
-        put_line(" :"); put(wrk);
-        put("update dx at order = "); put(res.order,1);
-        put_line(" :"); put(dx);
+    if AbsVal(cpc.cff(0)) < tol then
+      res := Create(0.0);
+      return res;
+    else
+      res.cff(0) := DoblDobl_Complex_Numbers_Polar.Root(cpc.cff(0),2,i);
+      res.cff(1) := Create(zero);
+      res.order := 1;
+      cpc.order := 1;
+      loop
+        wrk := res*res - cpc;
+        dx := fac*wrk/res;
+        if verbose then
+          put("evaluation at order = "); put(res.order,1);
+          put_line(" :"); put(wrk);
+          put("update dx at order = "); put(res.order,1);
+          put_line(" :"); put(dx);
+        end if;
+        res := res - dx;
+        exit when res.order >= c.order;
+        cpc.order := 2*cpc.order;
+        res.order := 2*res.order;
+      end loop;
+      if res.order = c.order
+       then return res;
+       else return Create(res,c.order);
       end if;
-      res := res - dx;
-      exit when res.order >= c.order;
-      cpc.order := 2*cpc.order;
-      res.order := 2*res.order;
-    end loop;
-    if res.order = c.order
-     then return res;
-     else return Create(res,c.order);
     end if;
   end sqrt;
 
@@ -54,7 +61,8 @@ package body DoblDobl_Algebraic_Series is
     wrk,dx : Series;
     zero : constant double_double := create(0.0);
     one : constant double_double := create(1.0);
-    denominator : constant double_double := one/create(n);
+    ddn : constant double_double := create(n);
+    denominator : constant double_double := one/ddn;
     fac : constant Complex_Number := Create(denominator);
 
   begin

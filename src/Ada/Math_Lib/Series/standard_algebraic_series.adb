@@ -15,27 +15,33 @@ package body Standard_Algebraic_Series is
     cpc : Series := c;
     wrk,dx : Series;
     fac : constant Complex_Number := Create(0.5);
+    tol : constant double_float := 1.0E-13;
 
   begin
-    res.cff(0) := Standard_Complex_Numbers_Polar.Root(cpc.cff(0),2,i);
-    res.cff(1) := Create(0.0);
-    res.order := 1;
-    cpc.order := 1;
-    loop
-      wrk := res*res - cpc;
-      dx := fac*wrk/res;
-      if verbose then
-        put("update dx at order = "); put(res.order,1);
-        put_line(" :"); put(dx);
+    if AbsVal(cpc.cff(0)) < tol then
+      res := Create(0.0);
+      return res;
+    else
+      res.cff(0) := Standard_Complex_Numbers_Polar.Root(cpc.cff(0),2,i);
+      res.cff(1) := Create(0.0);
+      res.order := 1;
+      cpc.order := 1;
+      loop
+        wrk := res*res - cpc;
+        dx := fac*wrk/res;
+        if verbose then
+          put("update dx at order = "); put(res.order,1);
+          put_line(" :"); put(dx);
+        end if;
+        res := res - dx;
+        exit when res.order >= c.order;
+        cpc.order := 2*cpc.order;
+        res.order := 2*res.order;
+      end loop;
+      if res.order = c.order
+       then return res;
+       else return Create(res,c.order);
       end if;
-      res := res - dx;
-      exit when res.order >= c.order;
-      cpc.order := 2*cpc.order;
-      res.order := 2*res.order;
-    end loop;
-    if res.order = c.order
-     then return res;
-     else return Create(res,c.order);
     end if;
   end sqrt;
 

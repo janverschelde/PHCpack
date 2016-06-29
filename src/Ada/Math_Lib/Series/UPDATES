@@ -1,6 +1,7 @@
 Tue 28 Jun 2016 : fixed bug in the Max_Norm of _dense_series_norms.adb,
   added Max_Norm to _series_vector_norms.  Added set_order procedure for
-  Jacobian matrices to series_and_polynomials.
+  Jacobian matrices to series_and_polynomials.  Placed guards before the
+  call to _Polar.Root in _algebraic_series.adb.
 
 Mon 27 Jun 2016 : extra test in ts_series, in dobldobl_algebraic_series.adb,
   also wrote the result of the evaluation in verbose mode.
