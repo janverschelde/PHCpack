@@ -39,4 +39,5 @@ ts_sernew                        : test on the Newton series packages
 series_and_solutions             : making series from solution vectors
 power_series_methods             : Newton's method on power series solutions
 ts_sersol                        : test on series and solutions
+mainseries                       : defines the phc -u
 -------------------------------------------------------------------------------
