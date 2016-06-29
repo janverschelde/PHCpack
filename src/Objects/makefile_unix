@@ -642,6 +642,10 @@ ts_sernew:
 	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_sernew.adb \
               -o $(BIN)/ts_sernew
 
+ts_sersol:
+	gnatmake $(INCLULIBS) $(GNATFLAGS) ts_sersol.adb \
+              -o $(BIN)/ts_sersol
+
 # Test programs for the Deformations/End_Games library :
 
 ts_vlprs:
