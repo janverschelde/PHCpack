@@ -21,6 +21,12 @@ function use_syspool ( job : integer32;
 --            = 5 : refines a solution using the k-th system in the container,
 --                  k = a[0], n = a[1], m = b[0] and c contains the floating
 --                  part of the solution.
+--            = 6 : copies the k-th system in the pool to the standard system
+--                  container, where k is given as a[0];
+--            = 7 : copies the k-th system in the pool to the dobldobl system
+--                  container, where k is given as a[0];
+--            = 8 : copies the k-th system in the pool to the quaddobl system
+--                  container, where k is given as a[0];
 -- 
 --   a        memory allocated a natural number, either the size
 --            of the systems pool or the index of a system in the pool;

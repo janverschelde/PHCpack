@@ -1590,6 +1590,12 @@ function use_c2phc ( job : integer32;
 --                 for the k-th system in the pool is created;
 --         = 303 : writes the k-th system, with k = a[0];
 --         = 304 : creates k-th system, k = a[0], from container.
+--   job   = 313 : copies the k-th system in the pool to the standard system
+--                 container, where k is given as a[0];
+--         = 314 : copies the k-th system in the pool to the dobldobl system
+--                 container, where k is given as a[0];
+--         = 315 : copies the k-th system in the pool to the quaddobl system
+--                 container, where k is given as a[0].
 --
 -- operations on the pool of solution lists :
 --
