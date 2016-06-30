@@ -16,11 +16,14 @@ with Series_and_Polynomials;
 with Series_and_Solutions;
 with Power_Series_Methods;                 use Power_Series_Methods;
 with Standard_PolySys_Container;
-with QuadDobl_Complex_Solutions;
-with DoblDobl_PolySys_Container;
-with QuadDobl_PolySys_Container;
+with Standard_Systems_Pool;
 with Standard_Solutions_Container;
+with DoblDobl_PolySys_Container;
+with DoblDobl_Systems_Pool;
 with DoblDobl_Solutions_Container;
+with QuadDobl_PolySys_Container;
+with QuadDobl_Systems_Pool;
+with QuadDobl_Complex_Solutions;
 with QuadDobl_Solutions_Container;
 
 function use_series ( job : integer32;
@@ -50,10 +53,67 @@ function use_series ( job : integer32;
     end if;
   end extract_options;
 
+  procedure Store_Series_Solutions
+              ( s : in Standard_Dense_Series_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Stores the solutions in s in the systems pool,
+  --   after converting every series vector to a polynomial system.
+
+  begin
+    Standard_Systems_Pool.Initialize(s'last);
+    for k in s'range loop
+      declare
+        p : constant Standard_Complex_Poly_Systems.Poly_Sys
+          := Series_and_Polynomials.Series_Vector_to_System(s(k).all);
+      begin
+        Standard_Systems_Pool.Initialize(k,p);
+      end;
+    end loop;
+  end Store_Series_Solutions;
+
+  procedure Store_Series_Solutions
+              ( s : in DoblDobl_Dense_Series_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Stores the solutions in s in the systems pool,
+  --   after converting every series vector to a polynomial system.
+
+  begin
+    DoblDobl_Systems_Pool.Initialize(s'last);
+    for k in s'range loop
+      declare
+        p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+          := Series_and_Polynomials.Series_Vector_to_System(s(k).all);
+      begin
+        DoblDobl_Systems_Pool.Initialize(k,p);
+      end;
+    end loop;
+  end Store_Series_Solutions;
+
+  procedure Store_Series_Solutions
+              ( s : in QuadDobl_Dense_Series_VecVecs.VecVec ) is
+
+  -- DESCRIPTION :
+  --   Stores the solutions in s in the systems pool,
+  --   after converting every series vector to a polynomial system.
+
+  begin
+    QuadDobl_Systems_Pool.Initialize(s'last);
+    for k in s'range loop
+      declare
+        p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+          := Series_and_Polynomials.Series_Vector_to_System(s(k).all);
+      begin
+        QuadDobl_Systems_Pool.Initialize(k,p);
+      end;
+    end loop;
+  end Store_Series_Solutions;
+
   procedure Run_Newton
-             ( nq,idx,dim,nbrit : in integer32; verbose : in boolean;
-               p : in Standard_Complex_Poly_Systems.Poly_Sys;
-               s : in Standard_Complex_Solutions.Solution_List ) is
+              ( nq,idx,dim,nbrit : in integer32; verbose : in boolean;
+                p : in Standard_Complex_Poly_Systems.Poly_Sys;
+                s : in Standard_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
   --   The coordinates of the solution vectors in s are the leading
@@ -61,12 +121,12 @@ function use_series ( job : integer32;
   --   Newton's method is performed in standard double precision.
 
   -- ON ENTRY :
-  --   nq      number of equations in p;
-  --   idx     index to the series parameter;
-  --   dim     the number of coordinates in the series;
-  --   nbrit   the number of Newton steps;
-  --   p       a polynomial of nq equations in nv unknowns;
-  --   s       a list of solutions.
+  --   nq       number of equations in p;
+  --   idx      index to the series parameter;
+  --   dim      the number of coordinates in the series;
+  --   nbrit    the number of Newton steps;
+  --   p        a polynomial of nq equations in nv unknowns;
+  --   s        a list of solutions.
 
     use Standard_Complex_Solutions;
 
@@ -88,13 +148,14 @@ function use_series ( job : integer32;
       end if;
       Run_QR_Newton(nbrit,srp,srv,verbose);
     end if;
+    Store_Series_Solutions(srv);
     Standard_Series_Poly_Systems.Clear(srp);
   end Run_Newton;
 
   procedure Run_Newton
-             ( nq,idx,dim,nbrit : in integer32; verbose : in boolean;
-               p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
-               s : in DoblDobl_Complex_Solutions.Solution_List ) is
+              ( nq,idx,dim,nbrit : in integer32; verbose : in boolean;
+                p : in DoblDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in DoblDobl_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
   --   The coordinates of the solution vectors in s are the leading
@@ -102,12 +163,12 @@ function use_series ( job : integer32;
   --   Newton's method is performed in double double precision.
 
   -- ON ENTRY :
-  --   nq      number of equations in p;
-  --   idx     index to the series parameter;
-  --   dim     the number of coordinates in the series;
-  --   nbrit   the number of Newton steps;
-  --   p       a polynomial of nq equations in nv unknowns;
-  --   s       a list of solutions.
+  --   nq       number of equations in p;
+  --   idx      index to the series parameter;
+  --   dim      the number of coordinates in the series;
+  --   nbrit    the number of Newton steps;
+  --   p        a polynomial of nq equations in nv unknowns;
+  --   s        a list of solutions.
 
     use DoblDobl_Complex_Solutions;
 
@@ -129,13 +190,14 @@ function use_series ( job : integer32;
       end if;
       Run_QR_Newton(nbrit,srp,srv,verbose);
     end if;
+    Store_Series_Solutions(srv);
     DoblDobl_Series_Poly_Systems.Clear(srp);
   end Run_Newton;
 
   procedure Run_Newton
-             ( nq,idx,dim,nbrit : in integer32; verbose : in boolean;
-               p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
-               s : in QuadDobl_Complex_Solutions.Solution_List ) is
+              ( nq,idx,dim,nbrit : in integer32; verbose : in boolean;
+                p : in QuadDobl_Complex_Poly_Systems.Poly_Sys;
+                s : in QuadDobl_Complex_Solutions.Solution_List ) is
 
   -- DESCRIPTION :
   --   The coordinates of the solution vectors in s are the leading
@@ -143,12 +205,12 @@ function use_series ( job : integer32;
   --   Newton's method is performed in double double precision.
 
   -- ON ENTRY :
-  --   nq      number of equations in p;
-  --   idx     index to the series parameter;
-  --   dim     the number of coordinates in the series;
-  --   nbrit   the number of Newton steps;
-  --   p       a polynomial of nq equations in nv unknowns;
-  --   s       a list of solutions.
+  --   nq       number of equations in p;
+  --   idx      index to the series parameter;
+  --   dim      the number of coordinates in the series;
+  --   nbrit    the number of Newton steps;
+  --   p        a polynomial of nq equations in nv unknowns;
+  --   s        a list of solutions.
 
     use QuadDobl_Complex_Solutions;
 
@@ -170,6 +232,7 @@ function use_series ( job : integer32;
       end if;
       Run_QR_Newton(nbrit,srp,srv,verbose);
     end if;
+    Store_Series_Solutions(srv);
     QuadDobl_Series_Poly_Systems.Clear(srp);
   end Run_Newton;
 
