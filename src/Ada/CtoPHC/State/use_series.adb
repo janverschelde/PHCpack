@@ -238,6 +238,7 @@ function use_series ( job : integer32;
       put("Number of equations in the system : "); put(nq,1); new_line;
       put("The dimension of the series : "); put(dim,1); new_line;
     end if;
+    Run_Newton(nq,idx,dim,nbr,verbose,lp.all,sols);
     return 0;
   end Job3;
 
