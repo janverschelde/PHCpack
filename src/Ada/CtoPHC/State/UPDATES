@@ -1,6 +1,7 @@
 Thu 30 Jun 2016 : added call to quaddobl Run_Newton in use_series.adb.
   Renamed systems_pool into standard_systems_pool, which changed use_syspool
-  and ts_syspool.
+  and ts_syspool.  New packages {dobldobl,quaddobl}_systems_pool with
+  added tests to ts_syspool.
 
 Wed 29 Jun 2016 : new procedure use_series to define the gateway of the
   power series Newton method to the C interface, added jobs to use_c2phc.
