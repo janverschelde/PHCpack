@@ -4,7 +4,7 @@ with Standard_Complex_Poly_Systems;     use Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_SysFun;      use Standard_Complex_Poly_SysFun;
 with Standard_Complex_Jaco_Matrices;    use Standard_Complex_Jaco_Matrices;
 
-package Systems_Pool is
+package Standard_Systems_Pool is
 
 -- DESCRIPTION :
 --   Provides storage facility for multiple polynomial systems.
@@ -112,4 +112,4 @@ package Systems_Pool is
   -- DESCRIPTION :
   --   Deallocation of all memory for the n systems.
 
-end Systems_Pool;
+end Standard_Systems_Pool;

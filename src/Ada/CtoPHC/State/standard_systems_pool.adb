@@ -1,7 +1,7 @@
 with unchecked_deallocation;
 with Standard_Complex_Polynomials;      use Standard_Complex_Polynomials;
 
-package body Systems_Pool is
+package body Standard_Systems_Pool is
 
 -- DATA STRUCTURES :
 
@@ -69,7 +69,7 @@ package body Systems_Pool is
       declare
         p : constant Link_to_Poly_Sys := sp(k);
         nv : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
-        m : Jaco_Mat(p'range,1..nv) := Create(p.all);
+        m : constant Jaco_Mat(p'range,1..nv) := Create(p.all);
       begin
         jm(k) := new Jaco_Mat'(m);
       end;
@@ -202,4 +202,4 @@ package body Systems_Pool is
 
 begin
   size_pool := 0;
-end Systems_Pool;
+end Standard_Systems_Pool;

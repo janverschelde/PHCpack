@@ -28,7 +28,7 @@ multprec_laursys_container       : for Laurent systems with multprec coeffs
 ts_syscon                        : tests the systems container
 use_syscon                       : Ada gateway to the systems container
 ts_use_syscon.c                  : C routine calls the Ada gateway use_syscon
-systems_pool                     : pool of systems and associated structures
+standard_systems_pool            : pool of systems and associated structures
 ts_syspool                       : test on the systems pool
 use_syspool                      : Ada gateway to the systems pool
 ts_use_syspool.c                 : C routine calls the Ada gateway

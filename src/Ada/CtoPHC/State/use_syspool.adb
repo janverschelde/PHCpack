@@ -14,7 +14,7 @@ with Standard_Complex_Solutions;        use Standard_Complex_Solutions;
 with Standard_Root_Refiners;            use Standard_Root_Refiners;
 with PHCpack_Operations;                use PHCpack_Operations;
 with Standard_PolySys_Container;
-with Systems_Pool;
+with Standard_Systems_Pool;
 with Solutions_Pool;
 with Assignments_in_Ada_and_C;          use Assignments_in_Ada_and_C;
 
@@ -29,13 +29,13 @@ function use_syspool ( job : integer32;
     n : constant integer32 := integer32(v(v'first));
 
   begin
-    Systems_Pool.Initialize(n);
+    Standard_Systems_Pool.Initialize(n);
     return 0;
   end Job0;
 
   function Job1 return integer32 is -- returns the size of the pool in a[0]
 
-    n : constant natural32 := Systems_Pool.Size;
+    n : constant natural32 := Standard_Systems_Pool.Size;
 
   begin
     Assign(integer32(n),a);
@@ -52,7 +52,7 @@ function use_syspool ( job : integer32;
     new_line;
     put_line("Reading a polynomial system ...");
     get(p);
-    Systems_Pool.Create(k,p.all);
+    Standard_Systems_Pool.Create(k,p.all);
     return 0;
   end Job2;
 
@@ -60,7 +60,7 @@ function use_syspool ( job : integer32;
 
     v : constant C_Integer_Array := C_intarrs.Value(a);
     k : constant integer32 := integer32(v(v'first));
-    p : constant Link_to_Poly_Sys := Systems_Pool.Retrieve(k);
+    p : constant Link_to_Poly_Sys := Standard_Systems_Pool.Retrieve(k);
 
   begin
     if p /= null then
@@ -80,7 +80,7 @@ function use_syspool ( job : integer32;
 
   begin
     if p /= null
-     then Systems_Pool.Create(k,p.all);
+     then Standard_Systems_Pool.Create(k,p.all);
     end if;
     return 0;
   end Job4;
@@ -91,8 +91,9 @@ function use_syspool ( job : integer32;
         := C_intarrs.Value(a,Interfaces.C.ptrdiff_t(2));
     k : constant integer32 := integer32(v_a(v_a'first));
    -- n : constant integer32 := integer32(v_a(v_a'first+1));
-    f : constant Link_to_Eval_Poly_Sys := Systems_Pool.Evaluator(k);
-    jf : constant Link_to_Eval_Jaco_Mat := Systems_Pool.Jacobian_Evaluator(k);
+    f : constant Link_to_Eval_Poly_Sys := Standard_Systems_Pool.Evaluator(k);
+    jf : constant Link_to_Eval_Jaco_Mat
+       := Standard_Systems_Pool.Jacobian_Evaluator(k);
     sols : constant Solution_List := Solutions_Pool.Retrieve(k);
     len : constant natural32 := Solutions_Pool.Length(k);
     tmp : Solution_List;
