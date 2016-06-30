@@ -721,6 +721,31 @@ function use_c2phc ( job : integer32;
 --                 generated in quad double precision;
 --   job   = 690 : makes the factorization with quad doubles go verbose.
 --
+-- POWER SERIES NEWTON METHOD :
+--
+--   Before calling the jobs, the systems and solutions containers
+--   must be initialized properly.  The resulting series are stored in
+--   the systems pool, corresponding to each precision level.
+--
+--   job   = 691 : power series Newton method in standard double precision,
+--                 the input parameters are
+--                 a[0] : the index of the series parameter,
+--                 a[1] : the number of steps in Newton's method,
+--                 b[0] : the verbose flag, 0 for false, 1 for true.
+--                 If verbose, intermediate results are written to screen.
+--   job   = 692 : power series Newton method in double double precision,
+--                 the input parameters are
+--                 a[0] : the index of the series parameter,
+--                 a[1] : the number of steps in Newton's method,
+--                 b[0] : the verbose flag, 0 for false, 1 for true.
+--                 If verbose, intermediate results are written to screen.
+--   job   = 693 : power series Newton method in quad double precision,
+--                 the input parameters are
+--                 a[0] : the index of the series parameter,
+--                 a[1] : the number of steps in Newton's method,
+--                 b[0] : the verbose flag, 0 for false, 1 for true.
+--                 If verbose, intermediate results are written to screen.
+--
 -- EMBEDDING A POLYNOMIAL SYSTEM :
 --
 --   job   =  66 : given in a[0] the dimension of the embedding,

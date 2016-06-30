@@ -1,3 +1,6 @@
+Wed 29 Jun 2016 : new procedure use_series to define the gateway of the
+  power series Newton method to the C interface, added jobs to use_c2phc.
+
 Sat 21 May 2016 : defined matrix symbols in use_c2lrhom.adb.
 
 Fri 20 May 2016 : improved documentation in use_c2lrhom.adb, and added
