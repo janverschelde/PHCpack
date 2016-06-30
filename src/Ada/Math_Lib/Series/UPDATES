@@ -1,3 +1,6 @@
+Thu 30 Jun 2016 : added convertor functions to series_and_polynomials,
+  as needed for the gateway functions to C.
+
 Tue 28 Jun 2016 : fixed bug in the Max_Norm of _dense_series_norms.adb,
   added Max_Norm to _series_vector_norms.  Added set_order procedure for
   Jacobian matrices to series_and_polynomials.  Placed guards before the

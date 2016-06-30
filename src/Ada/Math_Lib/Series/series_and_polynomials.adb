@@ -232,6 +232,222 @@ package body Series_and_Polynomials is
     return res;
   end Polynomial_to_Series;
 
+  function Series_Vector_to_System
+             ( v : Standard_Dense_Series_Vectors.Vector )
+             return Standard_Complex_Poly_Systems.Poly_Sys is
+
+    res : Standard_Complex_Poly_Systems.Poly_Sys(v'range);
+
+  begin
+    for k in v'range loop
+      res(k) := Series_to_Polynomial(v(k));
+    end loop;
+    return res;
+  end Series_Vector_to_System;
+
+  function Series_Vector_to_System
+             ( v : DoblDobl_Dense_Series_Vectors.Vector )
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : DoblDobl_Complex_Poly_Systems.Poly_Sys(v'range);
+
+  begin
+    for k in v'range loop
+      res(k) := Series_to_Polynomial(v(k));
+    end loop;
+    return res;
+  end Series_Vector_to_System;
+
+  function Series_Vector_to_System
+             ( v : QuadDobl_Dense_Series_Vectors.Vector )
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys is
+
+    res : QuadDobl_Complex_Poly_Systems.Poly_Sys(v'range);
+
+  begin
+    for k in v'range loop
+      res(k) := Series_to_Polynomial(v(k));
+    end loop;
+    return res;
+  end Series_Vector_to_System;
+
+  function System_to_Series_Vector
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+               idx : integer32 := 1 )
+             return Standard_Dense_Series_Vectors.Vector is
+
+    res : Standard_Dense_Series_Vectors.Vector(p'range);
+
+  begin
+    for k in p'range loop
+      res(k) := Polynomial_to_Series(p(k),idx);
+    end loop;
+    return res;
+  end System_to_Series_Vector;
+
+  function System_to_Series_Vector
+             ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+               idx : integer32 := 1 )
+             return DoblDobl_Dense_Series_Vectors.Vector is
+
+    res : DoblDobl_Dense_Series_Vectors.Vector(p'range);
+
+  begin
+    for k in p'range loop
+      res(k) := Polynomial_to_Series(p(k),idx);
+    end loop;
+    return res;
+  end System_to_Series_Vector;
+
+  function System_to_Series_Vector
+             ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+               idx : integer32 := 1 )
+             return QuadDobl_Dense_Series_Vectors.Vector is
+
+    res : QuadDobl_Dense_Series_Vectors.Vector(p'range);
+
+  begin
+    for k in p'range loop
+      res(k) := Polynomial_to_Series(p(k),idx);
+    end loop;
+    return res;
+  end System_to_Series_Vector;
+
+  function Series_VecVec_to_System_Array
+             ( v : Standard_Dense_Series_VecVecs.VecVec )
+             return Standard_Complex_Poly_Systems.Array_of_Poly_Sys is
+
+    res : Standard_Complex_Poly_Systems.Array_of_Poly_Sys(v'range);
+
+    use Standard_Dense_Series_Vectors;
+
+  begin
+    for k in v'range loop
+      if v(k) /= null then
+        declare
+          p : constant Standard_Complex_Poly_Systems.Poly_Sys
+            := Series_Vector_to_System(v(k).all);
+        begin
+          res(k) := new Standard_Complex_Poly_Systems.Poly_Sys'(p);
+        end;
+      end if;
+    end loop;
+    return res;
+  end Series_VecVec_to_System_Array;
+
+  function Series_VecVec_to_System_Array
+             ( v : DoblDobl_Dense_Series_VecVecs.VecVec )
+             return DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys is
+
+    res : DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys(v'range);
+
+    use DoblDobl_Dense_Series_Vectors;
+
+  begin
+    for k in v'range loop
+      if v(k) /= null then
+        declare
+          p : constant DoblDobl_Complex_Poly_Systems.Poly_Sys
+            := Series_Vector_to_System(v(k).all);
+        begin
+          res(k) := new DoblDobl_Complex_Poly_Systems.Poly_Sys'(p);
+        end;
+      end if;
+    end loop;
+    return res;
+  end Series_VecVec_to_System_Array;
+
+  function Series_VecVec_to_System_Array
+             ( v : QuadDobl_Dense_Series_VecVecs.VecVec )
+             return QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys is
+
+    res : QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys(v'range);
+
+    use QuadDobl_Dense_Series_Vectors;
+
+  begin
+    for k in v'range loop
+      if v(k) /= null then
+        declare
+          p : constant QuadDobl_Complex_Poly_Systems.Poly_Sys
+            := Series_Vector_to_System(v(k).all);
+        begin
+          res(k) := new QuadDobl_Complex_Poly_Systems.Poly_Sys'(p);
+        end;
+      end if;
+    end loop;
+    return res;
+  end Series_VecVec_to_System_Array;
+
+  function System_Array_to_Series_VecVec
+             ( p : Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
+               idx : integer32 := 1 )
+             return Standard_Dense_Series_VecVecs.VecVec is
+
+    res : Standard_Dense_Series_VecVecs.VecVec(p'range);
+
+    use Standard_Complex_Poly_Systems;
+
+  begin
+    for k in p'range loop
+      if p(k) /= null then
+        declare
+          v : constant Standard_Dense_Series_Vectors.Vector
+            := System_to_Series_Vector(p(k).all,idx);
+        begin
+          res(k) := new Standard_Dense_Series_Vectors.Vector'(v);
+        end;
+      end if;
+    end loop;
+    return res;
+  end System_Array_to_Series_VecVec;
+
+  function System_Array_to_Series_VecVec
+             ( p : DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+               idx : integer32 := 1 )
+             return DoblDobl_Dense_Series_VecVecs.VecVec is
+
+    res : DoblDobl_Dense_Series_VecVecs.VecVec(p'range);
+
+    use DoblDobl_Complex_Poly_Systems;
+
+  begin
+    for k in p'range loop
+      if p(k) /= null then
+        declare
+          v : constant DoblDobl_Dense_Series_Vectors.Vector
+            := System_to_Series_Vector(p(k).all,idx);
+        begin
+          res(k) := new DoblDobl_Dense_Series_Vectors.Vector'(v);
+        end;
+      end if;
+    end loop;
+    return res;
+  end System_Array_to_Series_VecVec;
+
+  function System_Array_to_Series_VecVec
+             ( p : QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+               idx : integer32 := 1 )
+             return QuadDobl_Dense_Series_VecVecs.VecVec is
+
+    res : QuadDobl_Dense_Series_VecVecs.VecVec(p'range);
+
+    use QuadDobl_Complex_Poly_Systems;
+
+  begin
+    for k in p'range loop
+      if p(k) /= null then
+        declare
+          v : constant QuadDobl_Dense_Series_Vectors.Vector
+            := System_to_Series_Vector(p(k).all,idx);
+        begin
+          res(k) := new QuadDobl_Dense_Series_Vectors.Vector'(v);
+        end;
+      end if;
+    end loop;
+    return res;
+  end System_Array_to_Series_VecVec;
+
   function Set_Order ( i : integer32;
                        d : Standard_Natural_Vectors.Link_to_Vector )
                      return integer32 is

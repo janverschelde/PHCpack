@@ -8,18 +8,21 @@ with QuadDobl_Complex_Polynomials;
 with QuadDobl_Complex_Poly_Systems;
 with Standard_Dense_Series;
 with Standard_Dense_Series_Vectors;
+with Standard_Dense_Series_VecVecs;
 with Standard_Dense_Series_Matrices;
 with Standard_Series_Polynomials;
 with Standard_Series_Poly_Systems;
 with Standard_Series_Jaco_Matrices;
 with DoblDobl_Dense_Series;
 with DoblDobl_Dense_Series_Vectors;
+with DoblDobl_Dense_Series_VecVecs;
 with DoblDobl_Dense_Series_Matrices;
 with DoblDobl_Series_Polynomials;
 with DoblDobl_Series_Poly_Systems;
 with DoblDobl_Series_Jaco_Matrices;
 with QuadDobl_Dense_Series;
 with QuadDobl_Dense_Series_Vectors;
+with QuadDobl_Dense_Series_VecVecs;
 with QuadDobl_Dense_Series_Matrices;
 with QuadDobl_Series_Polynomials;
 with QuadDobl_Series_Poly_Systems;
@@ -65,6 +68,80 @@ package Series_and_Polynomials is
 
   -- DESCRIPTION :
   --   Given in p a polynomial where the series variable has index idx,
+  --   with complex coefficients, returns the series representation of p,
+  --   in double, double double, or quad double precision.
+  --   This conversion is useful for symbolic input of a series.
+
+  -- REQUIRED : degree(p) <= Standard_Dense_Series.max_order.
+
+  function Series_Vector_to_System
+             ( v : Standard_Dense_Series_Vectors.Vector )
+             return Standard_Complex_Poly_Systems.Poly_Sys;
+  function Series_Vector_to_System
+             ( v : DoblDobl_Dense_Series_Vectors.Vector )
+             return DoblDobl_Complex_Poly_Systems.Poly_Sys;
+  function Series_Vector_to_System
+             ( v : QuadDobl_Dense_Series_Vectors.Vector )
+             return QuadDobl_Complex_Poly_Systems.Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Returns the representation of all series in v as polynomials
+  --   in one variable with complex coefficients,
+  --   in double, double double, or quad double precision.
+  --   This conversion is useful for symbolic output of a series.
+
+  function System_to_Series_Vector
+             ( p : Standard_Complex_Poly_Systems.Poly_Sys;
+               idx : integer32 := 1 )
+             return Standard_Dense_Series_Vectors.Vector;
+  function System_to_Series_Vector
+             ( p : DoblDobl_Complex_Poly_Systems.Poly_Sys;
+               idx : integer32 := 1 )
+             return DoblDobl_Dense_Series_Vectors.Vector;
+  function System_to_Series_Vector
+             ( p : QuadDobl_Complex_Poly_Systems.Poly_Sys;
+               idx : integer32 := 1 )
+             return QuadDobl_Dense_Series_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Given in p a system where the series variable has index idx,
+  --   with complex coefficients, returns the series representation of p,
+  --   in double, double double, or quad double precision.
+  --   This conversion is useful for symbolic input of a series.
+
+  -- REQUIRED : degree(p(k)) <= Standard_Dense_Series.max_order
+
+  function Series_VecVec_to_System_Array
+             ( v : Standard_Dense_Series_VecVecs.VecVec )
+             return Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
+  function Series_VecVec_to_System_Array
+             ( v : DoblDobl_Dense_Series_VecVecs.VecVec )
+             return DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+  function Series_VecVec_to_System_Array
+             ( v : QuadDobl_Dense_Series_VecVecs.VecVec )
+             return QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+
+  -- DESCRIPTION :
+  --   Returns the representation of all series vectors in v 
+  --   as polynomial systems in one variable with complex coefficients,
+  --   in double, double double, or quad double precision.
+  --   This conversion is useful for symbolic output of a series.
+
+  function System_Array_to_Series_VecVec
+             ( p : Standard_Complex_Poly_Systems.Array_of_Poly_Sys;
+               idx : integer32 := 1 )
+             return Standard_Dense_Series_VecVecs.VecVec;
+  function System_Array_to_Series_VecVec
+             ( p : DoblDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+               idx : integer32 := 1 )
+             return DoblDobl_Dense_Series_VecVecs.VecVec;
+  function System_Array_to_Series_VecVec
+             ( p : QuadDobl_Complex_Poly_Systems.Array_of_Poly_Sys;
+               idx : integer32 := 1 )
+             return QuadDobl_Dense_Series_VecVecs.VecVec;
+
+  -- DESCRIPTION :
+  --   Given in p a system array where the series variable has index idx,
   --   with complex coefficients, returns the series representation of p,
   --   in double, double double, or quad double precision.
   --   This conversion is useful for symbolic input of a series.
