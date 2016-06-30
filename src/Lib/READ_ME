@@ -1,4 +1,4 @@
-PHCpack as a library of C functions with a state machine in PHCv2.4.17
+PHCpack as a library of C functions with a state machine in PHCv2.4.21
 
 This directory collects header files and definitions of C which bind the
 operations of PHCpack as a state machine in a systematic manner.
@@ -79,6 +79,8 @@ lib_giftwrap.c       : test on convex hull computation
 numbtrop.h           : prototypes for numerical tropisms container
 numbtrop.c           : wrapped calls to the Ada to C gateway procedure
 lib_numbtrop         : tests on randomly generated numbers
+series.h             : Newton's method for power series solutions
+lib_series           : test on power series methods
 ------------------------------------------------------------------------------
 lists_and_strings    : arrays of numbers <-> strings of lists
 ts_list2str          : interactive test on conversion

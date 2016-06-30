@@ -1,3 +1,5 @@
+Thu 30 June 2016 : new library series, tested by lib_series.
+
 Sat 21 May 2016 : fixed bug in lib_lrhom.c for setting the precision.
 
 Fri 20 May 2016 : updates in interface schubert, which changed lib_lrhom.c,
