@@ -48,6 +48,8 @@ polytopes
    of Newton polytopes, given by tuples of support sets.
 dashboard
    prototype of a graphical user interface with Tkinter
+series
+   Newton's method to compute truncated power series solutions.
 phcwulf
    defines a simple client/server interaction to solve random trinomials.
 
@@ -95,4 +97,4 @@ except:
     print('Is the phcpy2c3.so not suited for this platform?')
 
 # The version number is defined as a data attribute.
-__version__ = '0.4.9'
+__version__ = '0.5.0'

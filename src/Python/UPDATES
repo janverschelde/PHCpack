@@ -1,3 +1,6 @@
+Fri 1 Jul 2016 : new module series.py in PHCpy2 and PHCpy3, prepared setup.py
+  and __init__.py for version 0.5.0.
+
 Wed 15 Jun 2016 : updated setup.py, __init__.py, and conf.py for both PHCpy2
   and PHCpy3 to prepare for version 0.4.9 of phcpy.
 

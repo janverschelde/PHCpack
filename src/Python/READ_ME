@@ -1,4 +1,4 @@
-phcpy 0.4.9 offers a simple Python interface to PHCv2.4.20
+phcpy 0.5.0 offers a simple Python interface to PHCv2.4.21
 
 This directory was added since release 2.3.41 of PHCpack,
 in collaboration with Kathy Piret.
@@ -48,6 +48,7 @@ solver.py               : use of C extension module phcpy2c
 sweepers.py             : homotopies to sweep through parameter space
 trackers.py             : path trackers
 tropisms.py             : numerically computed tropisms
+series                  : power series solutions with Newton's method
 phcwulf.py              : client/server for beowulf clusters
 ------------------------------------------------------------------------------
 
@@ -56,6 +57,7 @@ by "python examples.py" (regression test), "python solver.py" (tests solver),
 and "python solutions.py" (test on checking the solutions dictionaries).
 
 Release history:
+0.5.0 : 2016-07-01 : series module to run Newton's method on power series
 0.4.9 : 2016-06-15 : improved documentation for the dashboard module
 0.4.8 : 2016-06-03 : new module dashboard to prototype GUI with Tkinter
 0.4.7 : 2016-05-26 : bug fix in cascade of homotopies
