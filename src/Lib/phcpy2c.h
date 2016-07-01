@@ -4204,6 +4204,94 @@ static PyObject *py2c_mapcon_exponents_of_map
  *   3) the number of variables.
  *   On return is a Python list of integers. */
 
+/* The wrapping of functions with prototypes in series.h starts below. */
+
+static PyObject *py2c_standard_Newton_series ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Given in the systems container a polynomial system with coefficients
+ *   in standard double precision, and in the solutions container the
+ *   leading coefficients of the power series, this function runs Newton's
+ *   method to compute power series solutions of the system in the container,
+ *   in standard double precision.  There are three integers on input:
+ *   1) the index of the series parameter;
+ *   2) the number of Newton steps to be done on each solution;
+ *   3) a 0/1-flag to indicate whether additional diagnostic output needs
+ *   to be written to screen.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_dobldobl_Newton_series ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Given in the systems container a polynomial system with coefficients
+ *   in standard double precision, and in the solutions container the
+ *   leading coefficients of the power series, this function runs Newton's
+ *   method to compute power series solutions of the system in the container,
+ *   in double double precision.  There are three integers on input:
+ *   1) the index of the series parameter;
+ *   2) the number of Newton steps to be done on each solution;
+ *   3) a 0/1-flag to indicate whether additional diagnostic output needs
+ *   to be written to screen.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_quaddobl_Newton_series ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Given in the systems container a polynomial system with coefficients
+ *   in standard double precision, and in the solutions container the
+ *   leading coefficients of the power series, this function runs Newton's
+ *   method to compute power series solutions of the system in the container,
+ *   in quad double precision.  There are three integers on input:
+ *   1) the index of the series parameter;
+ *   2) the number of Newton steps to be done on each solution;
+ *   3) a 0/1-flag to indicate whether additional diagnostic output needs
+ *   to be written to screen.
+ *   On return is the failure code, which equals zero if all went well. */
+
+/* The wrapping of functions with prototypes in syspool.h starts below. */
+
+static PyObject *py2c_syspool_standard_size ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the size of the pool for systems in standard double precision. */
+
+static PyObject *py2c_syspool_dobldobl_size ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the size of the pool for systems in double double precision. */
+
+static PyObject *py2c_syspool_quaddobl_size ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Returns the size of the pool for systems in quad double precision. */
+
+static PyObject *py2c_syspool_copy_to_standard_container
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the k-th system in the pool for systems in standard double
+ *   precision to the standard systems container.
+ *   The value for k is given as an integer input parameter.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_syspool_copy_to_dobldobl_container
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the k-th system in the pool for systems in double double
+ *   precision to the dobldobl systems container.
+ *   The value for k is given as an integer input parameter.
+ *   On return is the failure code, which equals zero if all went well. */
+
+static PyObject *py2c_syspool_copy_to_quaddobl_container
+ ( PyObject *self, PyObject *args );
+/*
+ * DESCRIPTION :
+ *   Copies the k-th system in the pool for systems in quad double
+ *   precision to the quaddobl systems container.
+ *   The value for k is given as an integer input parameter.
+ *   On return is the failure code, which equals zero if all went well. */
+
 /* The wrapping of functions with prototypes in next_track.h starts below. */
 
 static PyObject *py2c_initialize_standard_homotopy

@@ -10,6 +10,7 @@
 #include "giftwrappers.h"
 #include "schubert.h"
 #include "syscon.h"
+#include "syspool.h"
 #include "solcon.h"
 #include "product.h"
 #include "lists_and_strings.h"
@@ -19,6 +20,7 @@
 #include "numbtrop.h"
 #include "witset.h"
 #include "mapcon.h"
+#include "series.h"
 #include "next_track.h"
 #include "structmember.h"
 
@@ -6297,7 +6299,104 @@ static PyObject *py2c_mapcon_exponents_of_map
    return result;
 }
 
-/* The wrapping of the functions with prototypes in next_track.h starts. */
+/* The wrapping of functions with prototypes in series.h starts below. */
+
+static PyObject *py2c_standard_Newton_series ( PyObject *self, PyObject *args )
+{
+   int idx,nbr,vrb,fail;
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&idx,&nbr,&vrb)) return NULL;   
+   fail = standard_Newton_series(idx,nbr,vrb);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_dobldobl_Newton_series ( PyObject *self, PyObject *args )
+{
+   int idx,nbr,vrb,fail;
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&idx,&nbr,&vrb)) return NULL;   
+   fail = dobldobl_Newton_series(idx,nbr,vrb);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_quaddobl_Newton_series ( PyObject *self, PyObject *args )
+{
+   int idx,nbr,vrb,fail;
+   initialize();
+   if(!PyArg_ParseTuple(args,"iii",&idx,&nbr,&vrb)) return NULL;   
+   fail = quaddobl_Newton_series(idx,nbr,vrb);
+   return Py_BuildValue("i",fail);
+}
+
+/* The wrapping of functions with prototypes in syspool.h starts below. */
+
+static PyObject *py2c_syspool_standard_size ( PyObject *self, PyObject *args )
+{
+   int fail,nbr;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = syspool_standard_size(&nbr);
+              
+   return Py_BuildValue("i",nbr);
+}
+
+static PyObject *py2c_syspool_dobldobl_size ( PyObject *self, PyObject *args )
+{
+   int fail,nbr;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = syspool_dobldobl_size(&nbr);
+              
+   return Py_BuildValue("i",nbr);
+}
+
+static PyObject *py2c_syspool_quaddobl_size ( PyObject *self, PyObject *args )
+{
+   int fail,nbr;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"")) return NULL;   
+   fail = syspool_quaddobl_size(&nbr);
+              
+   return Py_BuildValue("i",nbr);
+}
+
+static PyObject *py2c_syspool_copy_to_standard_container
+ ( PyObject *self, PyObject *args )
+{
+   int fail,idx;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&idx)) return NULL;
+   fail = syspool_copy_to_standard_container(idx);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syspool_copy_to_dobldobl_container
+ ( PyObject *self, PyObject *args )
+{
+   int fail,idx;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&idx)) return NULL;
+   fail = syspool_copy_to_dobldobl_container(idx);
+   return Py_BuildValue("i",fail);
+}
+
+static PyObject *py2c_syspool_copy_to_quaddobl_container
+ ( PyObject *self, PyObject *args )
+{
+   int fail,idx;
+
+   initialize();
+   if(!PyArg_ParseTuple(args,"i",&idx)) return NULL;
+   fail = syspool_copy_to_quaddobl_container(idx);
+   return Py_BuildValue("i",fail);
+}
+
+/* The wrapping of functions with prototypes in next_track.h starts below. */
 
 static PyObject *py2c_initialize_standard_homotopy
  ( PyObject *self, PyObject *args )
@@ -7765,15 +7864,36 @@ static PyMethodDef phcpy2c3_methods[] =
     "Returns the coefficients of a monomial map stored in the container.\n On entry are three parameters:\n 1) the dimension of the map;\n 2) the index of the map in all maps of that dimension;\n 3) the number of variables.\n On return is a Python list of complex doubles."},
    {"py2c_mapcon_exponents_of_map", py2c_mapcon_exponents_of_map, METH_VARARGS,
     "Returns the exponents of a monomial map stored in the container.\n On entry are three parameters:\n 1) the dimension of the map;\n 2) the index of the map in all maps of that dimension;\n 3) the number of variables.\n On return is a Python list of integers."},
+   {"py2c_standard_Newton_series", py2c_standard_Newton_series, METH_VARARGS,
+    "Given in the systems container a polynomial system with coefficients\n in standard double precision, and in the solutions container the\n leading coefficients of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in standard double precision.  There are three integers on input:\n 1) the index of the series parameter;\n 2) the number of Newton steps to be done on each solution;\n 3) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_dobldobl_Newton_series", py2c_dobldobl_Newton_series, METH_VARARGS,
+    "Given in the systems container a polynomial system with coefficients\n in standard double precision, and in the solutions container the\n leading coefficients of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in double double precision.  There are three integers on input:\n 1) the index of the series parameter;\n 2) the number of Newton steps to be done on each solution;\n 3) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_quaddobl_Newton_series", py2c_quaddobl_Newton_series, METH_VARARGS,
+    "Given in the systems container a polynomial system with coefficients\n in standard double precision, and in the solutions container the\n leading coefficients of the power series, this function runs Newton's\n method to compute power series solutions of the system in the container,\n in quad double precision.  There are three integers on input:\n 1) the index of the series parameter;\n 2) the number of Newton steps to be done on each solution;\n 3) a 0/1-flag to indicate whether additional diagnostic output needs\n to be written to screen.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_syspool_standard_size", py2c_syspool_standard_size, METH_VARARGS,
+    "Returns the size of the pool for systems in standard double precision."},
+   {"py2c_syspool_dobldobl_size", py2c_syspool_dobldobl_size, METH_VARARGS,
+    "Returns the size of the pool for systems in double double precision."},
+   {"py2c_syspool_quaddobl_size", py2c_syspool_quaddobl_size, METH_VARARGS,
+    "Returns the size of the pool for systems in quad double precision."},
+   {"py2c_syspool_copy_to_standard_container",
+     py2c_syspool_copy_to_standard_container, METH_VARARGS,
+    "Copies the k-th system in the pool for systems in standard double\n precision to the standard systems container.\n The value for k is given as an integer input parameter.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_syspool_copy_to_dobldobl_container",
+     py2c_syspool_copy_to_dobldobl_container, METH_VARARGS,
+    "Copies the k-th system in the pool for systems in double double\n precision to the dobldobl systems container.\n The value for k is given as an integer input parameter.\n On return is the failure code, which equals zero if all went well."},
+   {"py2c_syspool_copy_to_quaddobl_container",
+     py2c_syspool_copy_to_quaddobl_container, METH_VARARGS,
+    "Copies the k-th system in the pool for systems in quad double\n precision to the quaddobl systems container.\n The value for k is given as an integer input parameter.\n On return is the failure code, which equals zero if all went well."},
    {"py2c_initialize_standard_homotopy", py2c_initialize_standard_homotopy,
      METH_VARARGS,
-   "Initializes the homotopy to track a path with a generator,\n using standard double precision arithmetic.\n There is one integer number on input to be considered as a boolean,\n as an indicator whether a fixed gamma constant will be used.\n Before calling this routine the target and start system must\n be copied over from the standard systems container."},
+    "Initializes the homotopy to track a path with a generator,\n using standard double precision arithmetic.\n There is one integer number on input to be considered as a boolean,\n as an indicator whether a fixed gamma constant will be used.\n Before calling this routine the target and start system must\n be copied over from the standard systems container."},
    {"py2c_initialize_dobldobl_homotopy", py2c_initialize_dobldobl_homotopy,
      METH_VARARGS,
-   "Initializes the homotopy to track a path with a generator,\n using double double precision arithmetic.\n There is one integer number on input to be considered as a boolean,\n as an indicator whether a fixed gamma constant will be used.\n Before calling this routine the target and start system must\n be copied over from the dobldobl systems container."},
+    "Initializes the homotopy to track a path with a generator,\n using double double precision arithmetic.\n There is one integer number on input to be considered as a boolean,\n as an indicator whether a fixed gamma constant will be used.\n Before calling this routine the target and start system must\n be copied over from the dobldobl systems container."},
    {"py2c_initialize_quaddobl_homotopy", py2c_initialize_quaddobl_homotopy,
      METH_VARARGS,
-   "Initializes the homotopy to track a path with a generator,\n using quad double precision arithmetic.\n There is one integer number on input to be considered as a boolean,\n as an indicator whether a fixed gamma constant will be used.\n Before calling this routine the target and start system must\n be copied over from the quaddobl systems container."},
+    "Initializes the homotopy to track a path with a generator,\n using quad double precision arithmetic.\n There is one integer number on input to be considered as a boolean,\n as an indicator whether a fixed gamma constant will be used.\n Before calling this routine the target and start system must\n be copied over from the quaddobl systems container."},
    {"py2c_initialize_multprec_homotopy", py2c_initialize_multprec_homotopy,
      METH_VARARGS,
     "Initializes the homotopy to track a path with a generator,\n using arbitrary multiprecision arithmetic.\n There is are two integer numbers on input:\n 1) one to be considered as a boolean,\n as an indicator whether a fixed gamma constant will be used; and\n 2) the number of decimal places in the working precision.\n Before calling this routine the target and start system must\n be copied over from the multprec systems container."},
