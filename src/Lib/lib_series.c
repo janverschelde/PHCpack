@@ -66,9 +66,9 @@ void standard_test ( void )
    ask_options(&idx,&nbr,&verbose);
    fail = standard_Newton_series(idx,nbr,verbose);
 
-   printf("\nDone with Newton's method.\n");
-   syspool_size(&nbr);
-   printf("Computed %d solution series.\n",nbr);
+   printf("\nDone with Newton's method.");
+   syspool_standard_size(&nbr);
+   printf("  Computed %d solution series.\n",nbr);
    while(1)
    {
       printf("\nGive index for series you want to see : ");
@@ -93,7 +93,9 @@ void dobldobl_test ( void )
    ask_options(&idx,&nbr,&verbose);
    fail = dobldobl_Newton_series(idx,nbr,verbose);
 
-   printf("\nDone with Newton's method.\n");
+   printf("\nDone with Newton's method.");
+   syspool_dobldobl_size(&nbr);
+   printf("  Computed %d solution series.\n",nbr);
    while(1)
    {
       printf("\nGive index for series you want to see (0 to exit) : ");
@@ -118,7 +120,9 @@ void quaddobl_test ( void )
    ask_options(&idx,&nbr,&verbose);
    fail = quaddobl_Newton_series(idx,nbr,verbose);
 
-   printf("\nDone with Newton's method.\n");
+   printf("\nDone with Newton's method.");
+   syspool_quaddobl_size(&nbr);
+   printf("  Computed %d solution series.\n",nbr);
    while(1)
    {
       printf("\nGive index for series you want to see : ");

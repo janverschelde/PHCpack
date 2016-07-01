@@ -29,7 +29,7 @@ int standard_Newton_series ( int idx, int nbr, int verbose );
  * ON ENTRY :
  *   idx     index of the series parameter;
  *   nbr     number of Newton steps to be done on each solution;
- *   verbose indicates whether addition diagnostic output needs
+ *   verbose is 0 or 1 to indicate whether additional diagnostic output needs
  *           to be written to screen.
  *
  * ON RETURN :
@@ -47,7 +47,7 @@ int dobldobl_Newton_series ( int idx, int nbr, int verbose );
  * ON ENTRY :
  *   idx     index of the series parameter;
  *   nbr     number of Newton steps to be done on each solution;
- *   verbose indicates whether addition diagnostic output needs
+ *   verbose is 0 or 1 to indicate whether additional diagnostic output needs
  *           to be written to screen.
  *
  * ON RETURN :
@@ -65,7 +65,7 @@ int quaddobl_Newton_series ( int idx, int nbr, int verbose );
  * ON ENTRY :
  *   idx     index of the series parameter;
  *   nbr     number of Newton steps to be done on each solution;
- *   verbose indicates whether addition diagnostic output needs
+ *   verbose is 0 or 1 to indicate whether additional diagnostic output needs
  *           to be written to screen.
  *
  * ON RETURN :

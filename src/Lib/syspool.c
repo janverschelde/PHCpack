@@ -5,7 +5,7 @@ extern void adainit( void );
 extern int _ada_use_c2phc ( int task, int *a, int *b, double *c );
 extern void adafinal( void );
 
-int syspool_initialize ( int n )
+int syspool_standard_initialize ( int n )
 {
    int *b,fail;
    double *c;
@@ -13,7 +13,7 @@ int syspool_initialize ( int n )
    return fail;
 }
 
-int syspool_size ( int *n )
+int syspool_standard_size ( int *n )
 {
    int *b,fail;
    double *c;
@@ -21,7 +21,23 @@ int syspool_size ( int *n )
    return fail;
 }
 
-int syspool_read_system ( int k )
+int syspool_dobldobl_size ( int *n )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(316,n,b,c);
+   return fail;
+}
+
+int syspool_quaddobl_size ( int *n )
+{
+   int *b,fail;
+   double *c;
+   fail = _ada_use_c2phc(317,n,b,c);
+   return fail;
+}
+
+int syspool_standard_read_system ( int k )
 {
    int *b,fail;
    double *c;
@@ -29,7 +45,7 @@ int syspool_read_system ( int k )
    return fail;
 }
 
-int syspool_write_system ( int k )
+int syspool_standard_write_system ( int k )
 {
    int *b,fail;
    double *c;
@@ -37,7 +53,7 @@ int syspool_write_system ( int k )
    return fail;
 }
 
-int syspool_create ( int k )
+int syspool_standard_create ( int k )
 {
    int *b,fail;
    double *c;
@@ -45,7 +61,7 @@ int syspool_create ( int k )
    return fail;
 }
 
-int syspool_refine_root ( int k, int n, int *m, double *c )
+int syspool_standard_refiner ( int k, int n, int *m, double *c )
 {
    int fail,a[2];
    a[0] = k;

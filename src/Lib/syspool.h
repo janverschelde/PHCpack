@@ -1,32 +1,37 @@
 /* This file "syspool.h" contains the prototypes of the operations
  * on the systems pool in PHCpack. */
 
-int syspool_initialize ( int n );
+int syspool_standard_initialize ( int n );
 /*
  * DESCRIPTION :
  *   Initializes the system pool with n. */
 
-int syspool_size ( int *n );
+int syspool_standard_size ( int *n );
 /*
  * DESCRIPTION :
- *   Returns in n the size of the systems pool. */
+ *   Returns in n the size of the standard systems pool. */
 
-int syspool_read_system ( int k );
+int syspool_dobldobl_size ( int *n );
+/*
+ * DESCRIPTION :
+ *   Returns in n the size of the dobldobl systems pool. */
+
+int syspool_standard_read_system ( int k );
 /*
  * DESCRIPTION :
  *   Reads the system to create the k-th system in the pool. */
 
-int syspool_write_system ( int k );
+int syspool_standard_write_system ( int k );
 /*
  * DESCRIPTION :
  *   Writes the k-th system in the pool. */
 
-int syspool_create ( int k );
+int syspool_standard_create ( int k );
 /* 
  * DESCRIPTION :
  *   Creates the k-th system in the pool, using the system in the container. */
 
-int syspool_refine_root ( int k, int n, int *m, double *c );
+int syspool_standard_refiner ( int k, int n, int *m, double *c );
 /*
  * DESCRIPTION :
  *   Applies Newton's method to the k-th system in the pool,
