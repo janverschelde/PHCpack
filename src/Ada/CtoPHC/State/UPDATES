@@ -1,3 +1,5 @@
+Fri 1 Jul 2016 : added size jobs to use_syspool and use_c2phc.
+
 Thu 30 Jun 2016 : added call to quaddobl Run_Newton in use_series.adb.
   Renamed systems_pool into standard_systems_pool, which changed use_syspool
   and ts_syspool.  New packages {dobldobl,quaddobl}_systems_pool with

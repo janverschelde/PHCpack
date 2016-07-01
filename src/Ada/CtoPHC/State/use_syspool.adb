@@ -39,7 +39,7 @@ function use_syspool ( job : integer32;
     return 0;
   end Job0;
 
-  function Job1 return integer32 is -- returns the size of the pool in a[0]
+  function Job1 return integer32 is -- size of the standard pool
 
     n : constant natural32 := Standard_Systems_Pool.Size;
 
@@ -47,6 +47,24 @@ function use_syspool ( job : integer32;
     Assign(integer32(n),a);
     return 0;
   end Job1;
+
+  function Job9 return integer32 is -- size of the dobldobl pool
+
+    n : constant natural32 := DoblDobl_Systems_Pool.Size;
+
+  begin
+    Assign(integer32(n),a);
+    return 0;
+  end Job9;
+
+  function Job10 return integer32 is -- size of the quaddobl pool
+
+    n : constant natural32 := QuadDobl_Systems_Pool.Size;
+
+  begin
+    Assign(integer32(n),a);
+    return 0;
+  end Job10;
 
   function Job2 return integer32 is -- read and create k-th system, k = a[0]
 
@@ -187,15 +205,17 @@ function use_syspool ( job : integer32;
   function Handle_Jobs return integer32 is
   begin
     case job is
-      when 0 => return Job0; -- initialize pool with a[0]
-      when 1 => return Job1; -- returns size of pool in a[0]
-      when 2 => return Job2; -- read and create k-th system, k = a[0]
-      when 3 => return Job3; -- write k-th system, k = a[0]
-      when 4 => return Job4; -- creates k-th system from container
-      when 5 => return Job5; -- refine a root with k-th system
-      when 6 => return Job6; -- copy to standard systems container
-      when 7 => return Job7; -- copy to dobldobl systems container
-      when 8 => return Job8; -- copy to quaddobl systems container
+      when  0 => return Job0;  -- initialize pool with a[0]
+      when  1 => return Job1;  -- returns size of standard pool in a[0]
+      when  2 => return Job2;  -- read and create k-th system, k = a[0]
+      when  3 => return Job3;  -- write k-th system, k = a[0]
+      when  4 => return Job4;  -- creates k-th system from container
+      when  5 => return Job5;  -- refine a root with k-th system
+      when  6 => return Job6;  -- copy to standard systems container
+      when  7 => return Job7;  -- copy to dobldobl systems container
+      when  8 => return Job8;  -- copy to quaddobl systems container
+      when  9 => return Job9;  -- returns size of dobldobl pool in a[0]
+      when 10 => return Job10; -- returns size of quaddobl pool in a[0]
       when others => put_line("invalid operation"); return 1;
     end case;
   end Handle_Jobs;

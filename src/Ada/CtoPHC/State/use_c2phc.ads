@@ -1595,7 +1595,9 @@ function use_c2phc ( job : integer32;
 --         = 314 : copies the k-th system in the pool to the dobldobl system
 --                 container, where k is given as a[0];
 --         = 315 : copies the k-th system in the pool to the quaddobl system
---                 container, where k is given as a[0].
+--                 container, where k is given as a[0];
+--         = 316 : the size of the dobldobl systems pool is returned in a[0];
+--         = 317 : the size of the dobldobl systems pool is returned in a[0].
 --
 -- operations on the pool of solution lists :
 --
