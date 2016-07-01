@@ -2497,7 +2497,7 @@ phcpy2c3.so:
 	gnatlink -dynamiclib -C use_c2phc phcpy2c3.o phcpack.o syscon.o \
             witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
             solcon.o product.o lists_and_strings.o celcon.o scalers.o \
-            sweep.o numbtrop.o schubert.o \
+            sweep.o numbtrop.o schubert.o series.o syspool.o \
                  -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
                  $(PYTHON3lib)/libpython3.5m.dylib
 
