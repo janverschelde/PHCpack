@@ -1,4 +1,5 @@
 Thu 30 June 2016 : new library series, tested by lib_series.
+  Added function to syspool as needed by lib_series.
 
 Sat 21 May 2016 : fixed bug in lib_lrhom.c for setting the precision.
 

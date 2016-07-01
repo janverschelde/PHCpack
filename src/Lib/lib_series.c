@@ -6,7 +6,7 @@
 #include <string.h>
 #include "phcpack.h"
 #include "syscon.h"
-#include "solcon.h"
+#include "syspool.h"
 #include "series.h"
 
 void standard_test ( void ); /* test in standard double precision */
@@ -65,6 +65,20 @@ void standard_test ( void )
 
    ask_options(&idx,&nbr,&verbose);
    fail = standard_Newton_series(idx,nbr,verbose);
+
+   printf("\nDone with Newton's method.\n");
+   syspool_size(&nbr);
+   printf("Computed %d solution series.\n",nbr);
+   while(1)
+   {
+      printf("\nGive index for series you want to see : ");
+      scanf("%d",&idx);
+      if(idx <= 0) break;
+      printf("Copying system %d to container ...\n",idx);
+      syspool_copy_to_standard_container(idx);
+      printf("The system in the container :\n");
+      syscon_write_standard_system();
+   }
 }
 
 void dobldobl_test ( void )
@@ -78,6 +92,18 @@ void dobldobl_test ( void )
 
    ask_options(&idx,&nbr,&verbose);
    fail = dobldobl_Newton_series(idx,nbr,verbose);
+
+   printf("\nDone with Newton's method.\n");
+   while(1)
+   {
+      printf("\nGive index for series you want to see (0 to exit) : ");
+      scanf("%d",&idx);
+      if(idx <= 0) break;
+      printf("Copying system %d to container ...\n",idx);
+      syspool_copy_to_dobldobl_container(idx);
+      printf("The system in the container :\n");
+      syscon_write_dobldobl_system();
+   }
 }
 
 void quaddobl_test ( void )
@@ -91,6 +117,18 @@ void quaddobl_test ( void )
 
    ask_options(&idx,&nbr,&verbose);
    fail = quaddobl_Newton_series(idx,nbr,verbose);
+
+   printf("\nDone with Newton's method.\n");
+   while(1)
+   {
+      printf("\nGive index for series you want to see : ");
+      scanf("%d",&idx);
+      if(idx <= 0) break;
+      printf("Copying system %d to container ...\n",idx);
+      syspool_copy_to_quaddobl_container(idx);
+      printf("The system in the container :\n");
+      syscon_write_quaddobl_system();
+   }
 }
 
 void ask_options ( int *idx, int *nbr, int *verbose )
