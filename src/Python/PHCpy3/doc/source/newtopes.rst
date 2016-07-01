@@ -1,5 +1,5 @@
-Newton polytopes and monomial maps
-==================================
+Newton polytopes, monomial maps, and power series
+=================================================
 
 The Newton polytopes of the polynomial system provide important
 information about the structure of the solution sets.
@@ -14,6 +14,12 @@ Although such binomial systems are very particular,
 because of their sparse structure, they can be solved much faster.
 The module **phcpy.maps** provides a Python interface to the
 solvers of binomial systems.
+
+The classical arithmetic can be extended to the field of truncated
+power series.  In this field, Newton's method computes power series
+solutions of polynomial systems.
+The module **phcpy.series** exports functions to compute power series
+with Newton's method.
 
 convex hulls of lattice polytopes
 ---------------------------------
@@ -240,6 +246,15 @@ of two binomials in three variables:
 In the output above we recognize the twisted cubic,
 the x-axis, and the yz-plane as the three solution sets.
 
+power series solutions
+----------------------
+
+Newton's method applies also to systems where the coefficients are
+truncated power series.
+The module ``series`` exports functions to compute power series solutions
+in double, double double, and quad double precision.
+The function ``test()`` of the ``series`` module provides an example.
+
 functions in the module polytopes
 ---------------------------------
 
@@ -250,5 +265,11 @@ functions in the module maps
 ----------------------------
 
 .. automodule:: maps
+   :members:
+
+functions in the module series
+------------------------------
+
+.. automodule:: series
    :members:
 
