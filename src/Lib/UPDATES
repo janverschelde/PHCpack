@@ -1,6 +1,7 @@
 Fri 1 Jul 2016 : added functions to get the size of the pools in syspool,
   for use in lib_series.  Added 9 functions to phcpy2.h, phcpy2c2.c, and
-  phcpy2c3.c for the Python interface.
+  phcpy2c3.c for the Python interface.  Added forgotten declaration for
+  syspool_quaddobl_size() to syspool.h.
 
 Thu 30 Jun 2016 : new library series, tested by lib_series.
   Added function to syspool as needed by lib_series.

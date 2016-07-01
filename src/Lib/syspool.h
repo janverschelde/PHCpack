@@ -16,6 +16,11 @@ int syspool_dobldobl_size ( int *n );
  * DESCRIPTION :
  *   Returns in n the size of the dobldobl systems pool. */
 
+int syspool_quaddobl_size ( int *n );
+/*
+ * DESCRIPTION :
+ *   Returns in n the size of the dobldobl systems pool. */
+
 int syspool_standard_read_system ( int k );
 /*
  * DESCRIPTION :
