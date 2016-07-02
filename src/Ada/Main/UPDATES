@@ -1,3 +1,5 @@
+Sat 2 Jul 2016 : added information about phc -u to greeting_banners.adb.
+
 Fri 1 Jul 2016 : updated greeting_banners for version 2.4.21.
 
 Wed 29 Jun 2016 : added phc -u to dispatch.adb and greeting_banners.

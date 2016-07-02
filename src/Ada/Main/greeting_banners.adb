@@ -518,6 +518,36 @@ package body Greeting_Banners is
   procedure help4series is
   begin
     put_line("phc -u applies Newton's method for power series solutions.");
+    new_line;
+    put_line("A power series solution expresses the coordinates of the");
+    put_line("solution as a truncated power series in one variable.");
+    put_line("That one variable is typically one of the other variables in");
+    put_line("the system.  The system on input defines the polynomials for");
+    put_line("a space curve.  Given any point on the space curve, the power");
+    put_line("series provide an approximation for points along that curve,");
+    put_line("similar to a Taylor series expansion for any function.");
+    new_line;
+    put_line("The input to phc -u is a system and its isolated solutions.");
+    put_line("The format for the input is similar to that of a start system.");
+    put_line("If no solutions are available for the system, then launching");
+    put_line("the blackbox solver phc -b will append solutions to the input.");
+    put_line("The solutions provided should be for a zero value of the one");
+    put_line("variable of the power series.");
+    new_line;
+    put_line("The coefficients of the power series are complex numbers,");
+    put_line("by default in standard double precision.  Also double double");
+    put_line("and quad double power expansions are available, respectively");
+    put_line("by calling phc -u2 and phc -u4.");
+    new_line;
+    put_line("After reading the input file, phc -u prompts the user for the");
+    put_line("index of the series parameter.  This index points to one of");
+    put_line("the variables in the input system.  The next prompt is for the");
+    put_line("number of Newton updates to the solution.  The maximum order of");
+    put_line("the power series is set to 16.  By the quadratic convergence of");
+    put_line("Newton's method, starting at order 1, five stepts will suffice");
+    put_line("to attain that maximum order of the series.");
+    put_line("For a regular solution, the quadratic convergence can be seen");
+    put_line("when answering 'y' to the question on extra diagnostic output.");
   end help4series;
 
   procedure help4verification is
