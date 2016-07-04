@@ -1,6 +1,9 @@
 with text_io;                            use text_io;
+with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
 with Standard_Random_Numbers;
 with Standard_Complex_Poly_Systems;
@@ -30,11 +33,36 @@ procedure ts_serhom is
     s : Standard_Series_Poly_Systems.Poly_Sys(1..nq);
 
   begin
-    new_line;
     put_line("The homotopy system :"); put_line(h);
     s := Series_and_Homotopies.Create(h,nq+1,true);
     put_line("The series system :"); put(s,1);
   end Standard_Test_Creation;
+
+  procedure Standard_Test_Evaluation ( nq : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Given in Standard_Homotopy is a homotopy system of nq equations.
+  --   The user is prompted for a value of t and the evaluated
+  --   polynomial system is shown.
+
+    p : Standard_Complex_Poly_Systems.Poly_Sys(1..nq);
+    h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
+      := Standard_Homotopy.Homotopy_System;
+    s : Standard_Series_Poly_Systems.Poly_Sys(1..nq)
+      := Series_and_Homotopies.Create(h,nq+1);
+    t : double_float := 0.0;
+    ans : character;
+
+  begin
+    loop
+      put("Give a value for t : "); get(t);
+      p := Series_and_Homotopies.Eval(s,t);
+      put_line("The evaluated system :"); put_line(p);
+      put("Continue for other t values ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
+  end Standard_Test_Evaluation;
 
   procedure Main is
 
@@ -45,6 +73,7 @@ procedure ts_serhom is
     k : constant natural32 := 2;
     gamma : constant Standard_Complex_Numbers.Complex_Number
           := Standard_Random_Numbers.Random1;
+    ans : character;
 
   begin
     new_line;
@@ -54,7 +83,18 @@ procedure ts_serhom is
     new_line;
     put_line("Reading the start system ..."); get(start);
     Standard_Homotopy.Create(target.all,start.all,k,gamma);
-    Standard_Test_Creation(target'last);
+    new_line;
+    put_line("MENU of testing operations : ");
+    put_line("  0. test the creation of the series homotopy;");
+    put_line("  1. test the evaluation of the series homotopy.");
+    put("Type 0 or 1 to select a test : ");
+    Ask_Alternative(ans,"01");
+    new_line;
+    case ans is
+      when '0' => Standard_Test_Creation(target'last);
+      when '1' => Standard_Test_Evaluation(target'last);
+      when others => null;
+    end case;
   end Main;
 
 begin

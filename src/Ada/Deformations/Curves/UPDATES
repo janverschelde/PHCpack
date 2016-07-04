@@ -1,3 +1,6 @@
+Mon 4 Jul 2016 : added eval function to series_and_homotopies, tested
+  by ts_serhom.
+
 Sun 3 Jul 2016 : new package series_and_homotopies, tested by ts_serhom.
 
 Wed 29 Jun 2016 : new package series_and_solutions, tested by ts_sersol.
