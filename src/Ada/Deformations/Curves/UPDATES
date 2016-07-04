@@ -1,3 +1,5 @@
+Sun 3 Jul 2016 : new package series_and_homotopies, tested by ts_serhom.
+
 Wed 29 Jun 2016 : new package series_and_solutions, tested by ts_sersol.
   Added tests in double double and quad double precision to ts_sersol.
   New package power_series_methods with code factored out of ts_sersol.
