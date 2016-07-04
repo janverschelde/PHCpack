@@ -565,6 +565,78 @@ package body QuadDobl_Dense_Series is
     end loop;
   end Filter;
 
+-- SHIFT OPERATORS :
+
+  function binomial ( n,k : integer32 ) return integer32 is
+
+  -- DESCRIPTION :
+  --   Returns the binomial coefficient n choose k.
+
+    res : integer32 := 1;
+
+  begin
+    return res;
+  end binomial;
+
+  function Shift ( s : Series; c : quad_double ) return Series is
+
+    res : Series;
+    bcf : quad_double;
+    sgn : integer32;
+
+  begin
+    res.order := s.order;
+    for i in 0..s.order loop
+      res.cff(i) := Create(integer32(0));
+      sgn := 1;
+      for j in 0..i loop
+        bcf := quad_double_numbers.create(sgn*binomial(i,j));
+        bcf := bcf*(c**(natural(i-j)));
+        res.cff(j) := res.cff(j) + s.cff(i)*bcf;
+        sgn := -sgn;
+      end loop;
+    end loop;
+    return res;
+  end Shift;
+
+  function Shift ( s : Series; c : Complex_Number ) return Series is
+
+    res : Series;
+    bcf : quad_double;
+    rcf : Complex_Number;
+    sgn : integer32;
+
+  begin
+    res.order := s.order;
+    for i in 0..s.order loop
+      res.cff(i) := Create(integer32(0));
+      sgn := 1;
+      for j in 0..i loop
+        bcf := quad_double_numbers.create(sgn*binomial(i,j));
+        rcf := bcf*(c**(natural(i-j)));
+        res.cff(j) := res.cff(j) + s.cff(i)*rcf;
+        sgn := -sgn;
+      end loop;
+    end loop;
+    return res;
+  end Shift;
+
+  procedure Shift ( s : in out Series; c : in quad_double ) is
+ 
+    r : constant Series := Shift(s,c);
+   
+  begin
+    s := r;
+  end Shift;
+
+  procedure Shift ( s : in out Series; c : in Complex_Number ) is
+ 
+    r : constant Series := Shift(s,c);
+   
+  begin
+    s := r;
+  end Shift;
+
 -- DESTRUCTOR :
 
   procedure Clear ( s : in out Series ) is

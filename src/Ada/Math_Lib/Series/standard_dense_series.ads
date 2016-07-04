@@ -262,6 +262,21 @@ package Standard_Dense_Series is
   --   All coefficients of s that are less than tol in magnitude 
   --   are set to zero.
 
+-- SHIFT OPERATORS :
+
+  function Shift ( s : Series; c : double_float ) return Series;
+  function Shift ( s : Series; c : Complex_Number ) return Series;
+
+  -- DESCRIPTION :
+  --   The series on return has the coefficients of the series s,
+  --   where the series parameter is replaced by t-c.
+
+  procedure Shift ( s : in out Series; c : in double_float );
+  procedure Shift ( s : in out Series; c : in Complex_Number );
+
+  -- DESCRIPTION :
+  --   On return, s = Shift(s,c).
+
 -- DESTRUCTOR :
 
   procedure Clear ( s : in out Series );

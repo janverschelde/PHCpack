@@ -693,6 +693,107 @@ procedure ts_series is
     end if;
   end QuadDobl_Test_Arithmetic;
 
+  procedure Standard_Test_Shift ( order : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Does a basic test on shifting the series parameter
+  --   on random series of the given order.
+
+    use Standard_Complex_Numbers;
+    use Standard_Dense_Series;
+
+    s : Series := Random_Series(order);
+    rc : double_float := 0.0;
+    shifteds : Series;
+    cc,y,z : Complex_Number;
+
+  begin
+    put_line("Shifting the series parameter ...");
+    put_line("on a random series s :"); put(s);
+    put("Give a real constant for the shift : "); get(rc);
+    shifteds := Shift(s,rc);
+    y := Eval(s,rc);
+    z := Eval(shifteds,0.0);
+    put("s(shift constant) : "); put(y); new_line;
+    put("shifted series(0) : "); put(z); new_line;
+    new_line;
+    put_line("Testing with a complex shift ...");
+    put("Give a complex number for the shift : "); get(cc);
+    shifteds := Shift(s,cc);
+    y := Eval(s,cc);
+    z := Eval(shifteds,0.0);
+    put("s(shift constant) : "); put(y); new_line;
+    put("shifted series(0) : "); put(z); new_line;
+  end Standard_Test_Shift;
+
+  procedure DoblDobl_Test_Shift ( order : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Does a basic test on shifting the series parameter
+  --   on random series of the given order.
+
+    use DoblDobl_Complex_Numbers;
+    use DoblDobl_Dense_Series;
+
+    s : Series := Random_Series(order);
+    zero : constant double_double := create(0.0);
+    rc : double_double := zero;
+    shifteds : Series;
+    cc,y,z : Complex_Number;
+
+  begin
+    put_line("Shifting the series parameter ...");
+    put_line("on a random series s :"); put(s);
+    put("Give a real constant for the shift : "); get(rc);
+    shifteds := Shift(s,rc);
+    y := Eval(s,rc);
+    z := Eval(shifteds,zero);
+    put("s(shift constant) : "); put(y); new_line;
+    put("shifted series(0) : "); put(z); new_line;
+    new_line;
+    put_line("Testing with a complex shift ...");
+    put("Give a complex number for the shift : "); get(cc);
+    shifteds := Shift(s,cc);
+    y := Eval(s,cc);
+    z := Eval(shifteds,zero);
+    put("s(shift constant) : "); put(y); new_line;
+    put("shifted series(0) : "); put(z); new_line;
+  end DoblDobl_Test_Shift;
+
+  procedure QuadDobl_Test_Shift ( order : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Does a basic test on shifting the series parameter
+  --   on random series of the given order.
+
+    use QuadDobl_Complex_Numbers;
+    use QuadDobl_Dense_Series;
+
+    s : Series := Random_Series(order);
+    zero : constant quad_double := create(0.0);
+    rc : quad_double := zero;
+    shifteds : Series;
+    cc,y,z : Complex_Number;
+
+  begin
+    put_line("Shifting the series parameter ...");
+    put_line("on a random series s :"); put(s);
+    put("Give a real constant for the shift : "); get(rc);
+    shifteds := Shift(s,rc);
+    y := Eval(s,rc);
+    z := Eval(shifteds,zero);
+    put("s(shift constant) : "); put(y); new_line;
+    put("shifted series(0) : "); put(z); new_line;
+    new_line;
+    put_line("Testing with a complex shift ...");
+    put("Give a complex number for the shift : "); get(cc);
+    shifteds := Shift(s,cc);
+    y := Eval(s,cc);
+    z := Eval(shifteds,zero);
+    put("s(shift constant) : "); put(y); new_line;
+    put("shifted series(0) : "); put(z); new_line;
+  end QuadDobl_Test_Shift;
+ 
   procedure Main is
 
   -- DESCRIPTION :
@@ -711,8 +812,9 @@ procedure ts_series is
     put_line("  4. test the norm of a series");
     put_line("  5. test division operation");
     put_line("  6. test arithmetic");
-    put("Type 0, 1, 2, 3, 4, 5, or 6 to make your choice : ");
-    Ask_Alternative(ans,"0123456");
+    put_line("  7. test shift of series parameter");
+    put("Type 0, 1, 2, 3, 4, 5, 6, or 7 to make your choice : ");
+    Ask_Alternative(ans,"01234567");
     new_line;
     put("Give the order of the series : "); get(order);
     new_line;
@@ -771,6 +873,13 @@ procedure ts_series is
           when '0' => Standard_Test_Arithmetic(order);
           when '1' => DoblDobl_Test_Arithmetic(order);
           when '2' => QuadDobl_Test_Arithmetic(order);
+          when others => null;
+        end case;
+      when '7' => 
+        case prc is
+          when '0' => Standard_Test_Shift(order);
+          when '1' => DoblDobl_Test_Shift(order);
+          when '2' => QuadDobl_Test_Shift(order);
           when others => null;
         end case;
       when others => null;
