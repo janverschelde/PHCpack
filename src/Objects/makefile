@@ -611,7 +611,7 @@ ts_vmpnewt:
 
 # Test programs for the Deformations/Curves library :
 
-test_curves: ts_durker ts_extrapol ts_extrapts ts_sernew ts_sersol
+test_curves: ts_durker ts_extrapol ts_extrapts ts_sernew ts_sersol ts_serhom
 
 ts_durker:
 	make -f $(MAKEFILE) ts_durker
@@ -627,6 +627,9 @@ ts_sernew:
 
 ts_sersol:
 	make -f $(MAKEFILE) ts_sersol
+
+ts_serhom:
+	make -f $(MAKEFILE) ts_serhom
 
 # Test programs for the Deformations/End_Games library :
 
@@ -1537,6 +1540,7 @@ test_lib: lib_syscon lib_syscon_cpp lib_solcon lib_solcon_cpp \
           lib_sweep lib_sweep_cpp lib_nbrvar lib_nbrvar_cpp \
           lib_factor lib_factor_cpp lib_member lib_member_cpp \
           lib_pieri lib_pieri_cpp lib_numbtrop lib_numbrop_cpp \
+          lib_series lib_series_cpp \
           lib_lrhom lib_lrhom_cpp phc_solve phc_solve_cpp \
           lib_usolve lib_usolve_cpp lib_giftwrap lib_giftwrap_cpp ts_list2str \
           lib_adepath_d lib_adepath_dd lib_adepath_qd
@@ -1663,6 +1667,12 @@ lib_numbtrop:
 
 lib_numbtrop_cpp:
 	make -f $(MAKEFILE) lib_numbtrop_cpp
+
+lib_series:
+	make -f $(MAKEFILE) lib_series
+
+lib_series_cpp:
+	make -f $(MAKEFILE) lib_series_cpp
 
 lib_nbrvar:
 	make -f $(MAKEFILE) lib_nbrvar
