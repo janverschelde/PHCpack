@@ -46,4 +46,42 @@ package Series_and_Homotopies is
   --   On return is the evaluated polynomial system,
   --   with complex coefficients in standard double precision.
 
+  function Shift ( p : Standard_Series_Polynomials.Poly;
+                   c : double_float )
+                 return Standard_Series_Polynomials.Poly;
+  function Shift ( p : Standard_Series_Polynomials.Poly;
+                   c : Standard_Complex_Numbers.Complex_Number )
+                 return Standard_Series_Polynomials.Poly;
+
+  -- DESCRIPTION :
+  --   The series parameter t in the series coefficient of p is
+  --   replaced by t-c, so that: Eval(p,c) = Eval(Shift(p,c),0).
+
+  procedure Shift ( p : in out Standard_Series_Polynomials.Poly;
+                    c : in double_float );
+  procedure Shift ( p : in out Standard_Series_Polynomials.Poly;
+                    c : in Standard_Complex_Numbers.Complex_Number );
+
+  -- DESCRIPTION :
+  --   On return, p = Shift(p,c).
+
+  function Shift ( p : Standard_Series_Poly_Systems.Poly_Sys;
+                   c : double_float )
+                 return Standard_Series_Poly_Systems.Poly_Sys;
+  function Shift ( p : Standard_Series_Poly_Systems.Poly_Sys;
+                   c : Standard_Complex_Numbers.Complex_Number )
+                 return Standard_Series_Poly_Systems.Poly_Sys;
+
+  -- DESCRIPTION :
+  --   The series parameter t in the series coefficient of p is
+  --   replaced by t-c, so that: Eval(p,c) = Eval(Shift(p,c),0).
+
+  procedure Shift ( p : in out Standard_Series_Poly_Systems.Poly_Sys;
+                    c : in double_float );
+  procedure Shift ( p : in out Standard_Series_Poly_Systems.Poly_Sys;
+                    c : in Standard_Complex_Numbers.Complex_Number );
+
+  -- DESCRIPTION :
+  --   On return, p = Shift(p,c).
+
 end Series_and_Homotopies;

@@ -64,6 +64,29 @@ procedure ts_serhom is
     end loop;
   end Standard_Test_Evaluation;
 
+  procedure Standard_Test_Shift ( nq : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Given in Standard_Homotopy is a homotopy system of nq equations.
+  --   The user is prompted for a value of t and the system is shifted.
+
+    h : Standard_Complex_Poly_Systems.Poly_Sys(1..nq)
+      := Standard_Homotopy.Homotopy_System;
+    s : Standard_Series_Poly_Systems.Poly_Sys(1..nq)
+      := Series_and_Homotopies.Create(h,nq+1);
+    c : double_float := 0.0;
+    shifteds : Standard_Series_Poly_Systems.Poly_Sys(1..nq);
+    y,z : Standard_Complex_Poly_Systems.Poly_Sys(1..nq);
+
+  begin
+    put("Give a value for the shift : "); get(c);
+    shifteds := Series_and_Homotopies.Shift(s,c);
+    y := Series_and_Homotopies.Eval(s,c);
+    z := Series_and_Homotopies.Eval(shifteds,0.0);
+    put_line("system(shift value) :"); put_line(y);
+    put_line("shifted system(0.0) :"); put_line(z);
+  end Standard_Test_Shift;
+
   procedure Main is
 
   -- DESCRIPTION :
@@ -86,13 +109,15 @@ procedure ts_serhom is
     new_line;
     put_line("MENU of testing operations : ");
     put_line("  0. test the creation of the series homotopy;");
-    put_line("  1. test the evaluation of the series homotopy.");
-    put("Type 0 or 1 to select a test : ");
-    Ask_Alternative(ans,"01");
+    put_line("  1. test the evaluation of the series homotopy;");
+    put_line("  2. test the shift of the series homotopy.");
+    put("Type 0, 1, or 2 to select a test : ");
+    Ask_Alternative(ans,"012");
     new_line;
     case ans is
       when '0' => Standard_Test_Creation(target'last);
       when '1' => Standard_Test_Evaluation(target'last);
+      when '2' => Standard_Test_Shift(target'last);
       when others => null;
     end case;
   end Main;
