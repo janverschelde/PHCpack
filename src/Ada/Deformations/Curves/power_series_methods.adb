@@ -35,20 +35,21 @@ package body Power_Series_Methods is
     eva : Standard_Dense_Series_Vectors.Vector(p'range);
 
   begin
-    if verbose
-     then LU_Newton_Steps(file,p,order,nbrit,s,info);
-     else LU_Newton_Steps(p,order,nbrit,s,info);
-    end if;
-    if info /= 0 then
-      put(file,"info = "); put(file,info,1); new_line(file);
+    if not verbose then
+      LU_Newton_Steps(p,order,nbrit,s,info);
     else
-      Series_and_Polynomials.Filter(s,tol);
-      put_line(file,"The updated power series solution :");
-      Series_and_Polynomials_io.put(file,s);
-      eva := Standard_Series_Poly_SysFun.Eval(p,s);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line(file,"The evaluated solution :");
-      Series_and_Polynomials_io.put(file,eva);
+      LU_Newton_Steps(file,p,order,nbrit,s,info);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Series_and_Polynomials_io.put(file,s);
+        eva := Standard_Series_Poly_SysFun.Eval(p,s);
+        Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Series_and_Polynomials_io.put(file,eva);
+      end if;
     end if;
   end Run_LU_Newton;
 
@@ -75,20 +76,21 @@ package body Power_Series_Methods is
     eva : DoblDobl_Dense_Series_Vectors.Vector(p'range);
 
   begin
-    if verbose
-     then LU_Newton_Steps(file,p,order,nbrit,s,info);
-     else LU_Newton_Steps(p,order,nbrit,s,info);
-    end if;
-    if info /= 0 then
-      put(file,"info = "); put(file,info,1); new_line(file);
+    if not verbose then
+      LU_Newton_Steps(p,order,nbrit,s,info);
     else
-      Series_and_Polynomials.Filter(s,tol);
-      put_line(file,"The updated power series solution :");
-      Series_and_Polynomials_io.put(file,s);
-      eva := DoblDobl_Series_Poly_SysFun.Eval(p,s);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line(file,"The evaluated solution :");
-      Series_and_Polynomials_io.put(file,eva);
+      LU_Newton_Steps(file,p,order,nbrit,s,info);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Series_and_Polynomials_io.put(file,s);
+        eva := DoblDobl_Series_Poly_SysFun.Eval(p,s);
+        Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Series_and_Polynomials_io.put(file,eva);
+      end if;
     end if;
   end Run_LU_Newton;
 
@@ -115,20 +117,21 @@ package body Power_Series_Methods is
     eva : QuadDobl_Dense_Series_Vectors.Vector(p'range);
 
   begin
-    if verbose
-     then LU_Newton_Steps(file,p,order,nbrit,s,info);
-     else LU_Newton_Steps(p,order,nbrit,s,info);
-    end if;
-    if info /= 0 then
-      put(file,"info = "); put(file,info,1); new_line(file);
+    if not verbose then
+      LU_Newton_Steps(p,order,nbrit,s,info);
     else
-      Series_and_Polynomials.Filter(s,tol);
-      put_line(file,"The updated power series solution :");
-      Series_and_Polynomials_io.put(file,s);
-      eva := QuadDobl_Series_Poly_SysFun.Eval(p,s);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line(file,"The evaluated solution :");
-      Series_and_Polynomials_io.put(file,eva);
+      LU_Newton_Steps(file,p,order,nbrit,s,info);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Series_and_Polynomials_io.put(file,s);
+        eva := QuadDobl_Series_Poly_SysFun.Eval(p,s);
+        Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Series_and_Polynomials_io.put(file,eva);
+      end if;
     end if;
   end Run_LU_Newton;
 
@@ -155,20 +158,21 @@ package body Power_Series_Methods is
     eva : Standard_Dense_Series_Vectors.Vector(p'range);
 
   begin
-    if verbose
-     then QR_Newton_Steps(file,p,order,nbrit,s,info);
-     else QR_Newton_Steps(p,order,nbrit,s,info);
-    end if;
-    if info /= 0 then
-      put(file,"info = "); put(file,info,1); new_line(file);
+    if not verbose then
+      QR_Newton_Steps(p,order,nbrit,s,info);
     else
-      Series_and_Polynomials.Filter(s,tol);
-      put_line(file,"The updated power series solution :");
-      Series_and_Polynomials_io.put(file,s);
-      eva := Standard_Series_Poly_SysFun.Eval(p,s);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line(file,"The evaluated solution :");
-      Series_and_Polynomials_io.put(file,eva);
+      QR_Newton_Steps(file,p,order,nbrit,s,info);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Series_and_Polynomials_io.put(file,s);
+        eva := Standard_Series_Poly_SysFun.Eval(p,s);
+        Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Series_and_Polynomials_io.put(file,eva);
+      end if;
     end if;
   end Run_QR_Newton;
 
@@ -195,20 +199,21 @@ package body Power_Series_Methods is
     eva : DoblDobl_Dense_Series_Vectors.Vector(p'range);
 
   begin
-    if verbose
-     then QR_Newton_Steps(file,p,order,nbrit,s,info);
-     else QR_Newton_Steps(p,order,nbrit,s,info);
-    end if;
-    if info /= 0 then
-      put(file,"info = "); put(file,info,1); new_line(file);
+    if not verbose then
+      QR_Newton_Steps(p,order,nbrit,s,info);
     else
-      Series_and_Polynomials.Filter(s,tol);
-      put_line(file,"The updated power series solution :");
-      Series_and_Polynomials_io.put(file,s);
-      eva := DoblDobl_Series_Poly_SysFun.Eval(p,s);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line(file,"The evaluated solution :");
-      Series_and_Polynomials_io.put(file,eva);
+      QR_Newton_Steps(file,p,order,nbrit,s,info);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Series_and_Polynomials_io.put(file,s);
+        eva := DoblDobl_Series_Poly_SysFun.Eval(p,s);
+        Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Series_and_Polynomials_io.put(file,eva);
+      end if;
     end if;
   end Run_QR_Newton;
 
@@ -235,20 +240,21 @@ package body Power_Series_Methods is
     eva : QuadDobl_Dense_Series_Vectors.Vector(p'range);
 
   begin
-    if verbose
-     then QR_Newton_Steps(file,p,order,nbrit,s,info);
-     else QR_Newton_Steps(p,order,nbrit,s,info);
-    end if;
-    if info /= 0 then
-      put(file,"info = "); put(file,info,1); new_line(file);
+    if not verbose then
+      QR_Newton_Steps(p,order,nbrit,s,info);
     else
-      Series_and_Polynomials.Filter(s,tol);
-      put_line(file,"The updated power series solution :");
-      Series_and_Polynomials_io.put(file,s);
-      eva := QuadDobl_Series_Poly_SysFun.Eval(p,s);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line(file,"The evaluated solution :");
-      Series_and_Polynomials_io.put(file,eva);
+      QR_Newton_Steps(file,p,order,nbrit,s,info);
+      if info /= 0 then
+        put(file,"info = "); put(file,info,1); new_line(file);
+      else
+        Series_and_Polynomials.Filter(s,tol);
+        put_line(file,"The updated power series solution :");
+        Series_and_Polynomials_io.put(file,s);
+        eva := QuadDobl_Series_Poly_SysFun.Eval(p,s);
+        Series_and_Polynomials.Filter(eva,tol);
+        put_line(file,"The evaluated solution :");
+        Series_and_Polynomials_io.put(file,eva);
+      end if;
     end if;
   end Run_QR_Newton;
 
