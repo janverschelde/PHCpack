@@ -12,12 +12,18 @@ package body Series_and_Solutions is
     res : Standard_Dense_Series_Vectors.Vector(1..dim);
 
   begin
-    for k in 1..(idx-1) loop
-      res(k) := Standard_Dense_Series.Create(sol.v(k));
-    end loop;
-    for k in (idx+1)..sol.n loop
-      res(k-1) := Standard_Dense_Series.Create(sol.v(k));
-    end loop;
+    if idx = 0 then
+      for k in res'range loop
+        res(k) := Standard_Dense_Series.Create(sol.v(k));
+      end loop;
+    else
+      for k in 1..(idx-1) loop
+        res(k) := Standard_Dense_Series.Create(sol.v(k));
+      end loop;
+      for k in (idx+1)..sol.n loop
+        res(k-1) := Standard_Dense_Series.Create(sol.v(k));
+      end loop;
+    end if;
     return res;
   end Create;
 
@@ -29,12 +35,18 @@ package body Series_and_Solutions is
     res : DoblDobl_Dense_Series_Vectors.Vector(1..dim);
 
   begin
-    for k in 1..(idx-1) loop
-      res(k) := DoblDobl_Dense_Series.Create(sol.v(k));
-    end loop;
-    for k in (idx+1)..sol.n loop
-      res(k-1) := DoblDobl_Dense_Series.Create(sol.v(k));
-    end loop;
+    if idx = 0 then
+      for k in res'range loop
+        res(k) := DoblDobl_Dense_Series.Create(sol.v(k));
+      end loop;
+    else
+      for k in 1..(idx-1) loop
+        res(k) := DoblDobl_Dense_Series.Create(sol.v(k));
+      end loop;
+      for k in (idx+1)..sol.n loop
+        res(k-1) := DoblDobl_Dense_Series.Create(sol.v(k));
+      end loop;
+    end if;
     return res;
   end Create;
 
@@ -46,12 +58,18 @@ package body Series_and_Solutions is
     res : QuadDobl_Dense_Series_Vectors.Vector(1..dim);
 
   begin
-    for k in 1..(idx-1) loop
-      res(k) := QuadDobl_Dense_Series.Create(sol.v(k));
-    end loop;
-    for k in (idx+1)..sol.n loop
-      res(k-1) := QuadDobl_Dense_Series.Create(sol.v(k));
-    end loop;
+    if idx = 0 then
+      for k in res'range loop
+        res(k) := QuadDobl_Dense_Series.Create(sol.v(k));
+      end loop;
+    else
+      for k in 1..(idx-1) loop
+        res(k) := QuadDobl_Dense_Series.Create(sol.v(k));
+      end loop;
+      for k in (idx+1)..sol.n loop
+        res(k-1) := QuadDobl_Dense_Series.Create(sol.v(k));
+      end loop;
+    end if;
     return res;
   end Create;
 
