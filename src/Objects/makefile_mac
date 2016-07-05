@@ -681,6 +681,10 @@ ts_serhom:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serhom.adb \
                  -o $(BIN)/ts_serhom
 
+ts_serpred:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serpred.adb \
+                 -o $(BIN)/ts_serpred
+
 # Test programs for the Deformations/End_Games library :
 
 ts_vlprs:
