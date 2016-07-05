@@ -1,6 +1,8 @@
 Mon 4 Jul 2016 : added eval function to series_and_homotopies, tested
   by ts_serhom.  Added shift operations to series_and_homotopies,
-  with added test in ts_serhom.
+  with added test in ts_serhom.  DoblDobl and QuadDobl versions of
+  the functions and procedures are added to series_and_homotopies,
+  with corresponding tests in ts_serhom.
 
 Sun 3 Jul 2016 : new package series_and_homotopies, tested by ts_serhom.
 

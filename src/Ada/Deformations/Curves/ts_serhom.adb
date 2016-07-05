@@ -4,12 +4,28 @@ with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Double_Double_Numbers_io;           use Double_Double_Numbers_io;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;             use Quad_Double_Numbers_io;
 with Standard_Complex_Numbers;
+with DoblDobl_Complex_Numbers;
+with QuadDobl_Complex_Numbers;
 with Standard_Random_Numbers;
+with DoblDobl_Random_Numbers;
+with QuadDobl_Random_Numbers;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
+with DoblDobl_Complex_Poly_Systems;
+with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
+with QuadDobl_Complex_Poly_Systems;
+with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with Standard_Homotopy;
+with DoblDobl_Homotopy;
+with QuadDobl_Homotopy;
 with Standard_Series_Poly_Systems;
+with DoblDobl_Series_Poly_Systems;
+with QuadDobl_Series_Poly_Systems;
 with Series_and_Polynomials;
 with Series_and_Polynomials_io;          use Series_and_Polynomials_io;
 with Series_and_Homotopies;
@@ -38,6 +54,44 @@ procedure ts_serhom is
     put_line("The series system :"); put(s,1);
   end Standard_Test_Creation;
 
+  procedure DoblDobl_Test_Creation ( nq : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Test on converting DoblDobl_Homotopy.Homotopy_System of
+  --   range 1..nq to a series system.
+  --   The output of put_line(h) is the same as put(s,1),
+  --   except for that the last variable in h has become
+  --   the first variable in s.
+
+    h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+      := DoblDobl_Homotopy.Homotopy_System;
+    s : DoblDobl_Series_Poly_Systems.Poly_Sys(1..nq);
+
+  begin
+    put_line("The homotopy system :"); put_line(h);
+    s := Series_and_Homotopies.Create(h,nq+1,true);
+    put_line("The series system :"); put(s,1);
+  end DoblDobl_Test_Creation;
+
+  procedure QuadDobl_Test_Creation ( nq : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Test on converting QuadDobl_Homotopy.Homotopy_System of
+  --   range 1..nq to a series system.
+  --   The output of put_line(h) is the same as put(s,1),
+  --   except for that the last variable in h has become
+  --   the first variable in s.
+
+    h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+      := QuadDobl_Homotopy.Homotopy_System;
+    s : QuadDobl_Series_Poly_Systems.Poly_Sys(1..nq);
+
+  begin
+    put_line("The homotopy system :"); put_line(h);
+    s := Series_and_Homotopies.Create(h,nq+1,true);
+    put_line("The series system :"); put(s,1);
+  end QuadDobl_Test_Creation;
+
   procedure Standard_Test_Evaluation ( nq : in integer32 ) is
 
   -- DESCRIPTION :
@@ -64,6 +118,58 @@ procedure ts_serhom is
     end loop;
   end Standard_Test_Evaluation;
 
+  procedure DoblDobl_Test_Evaluation ( nq : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Given in DoblDobl_Homotopy is a homotopy system of nq equations.
+  --   The user is prompted for a value of t and the evaluated
+  --   polynomial system is shown.
+
+    p : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
+    h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+      := DoblDobl_Homotopy.Homotopy_System;
+    s : DoblDobl_Series_Poly_Systems.Poly_Sys(1..nq)
+      := Series_and_Homotopies.Create(h,nq+1);
+    t : double_double := create(0.0);
+    ans : character;
+
+  begin
+    loop
+      put("Give a value for t : "); get(t);
+      p := Series_and_Homotopies.Eval(s,t);
+      put_line("The evaluated system :"); put_line(p);
+      put("Continue for other t values ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
+  end DoblDobl_Test_Evaluation;
+
+  procedure QuadDobl_Test_Evaluation ( nq : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Given in QuadDobl_Homotopy is a homotopy system of nq equations.
+  --   The user is prompted for a value of t and the evaluated
+  --   polynomial system is shown.
+
+    p : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
+    h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+      := QuadDobl_Homotopy.Homotopy_System;
+    s : QuadDobl_Series_Poly_Systems.Poly_Sys(1..nq)
+      := Series_and_Homotopies.Create(h,nq+1);
+    t : quad_double := create(0.0);
+    ans : character;
+
+  begin
+    loop
+      put("Give a value for t : "); get(t);
+      p := Series_and_Homotopies.Eval(s,t);
+      put_line("The evaluated system :"); put_line(p);
+      put("Continue for other t values ? (y/n) ");
+      Ask_Yes_or_No(ans);
+      exit when (ans /= 'y');
+    end loop;
+  end QuadDobl_Test_Evaluation;
+
   procedure Standard_Test_Shift ( nq : in integer32 ) is
 
   -- DESCRIPTION :
@@ -87,10 +193,59 @@ procedure ts_serhom is
     put_line("shifted system(0.0) :"); put_line(z);
   end Standard_Test_Shift;
 
-  procedure Main is
+  procedure DoblDobl_Test_Shift ( nq : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Test on converting a homotopy system to a series system.
+  --   Given in DoblDobl_Homotopy is a homotopy system of nq equations.
+  --   The user is prompted for a value of t and the system is shifted.
+
+    h : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+      := DoblDobl_Homotopy.Homotopy_System;
+    s : DoblDobl_Series_Poly_Systems.Poly_Sys(1..nq)
+      := Series_and_Homotopies.Create(h,nq+1);
+    zero : constant double_double := create(0.0);
+    c : double_double := zero;
+    shifteds : DoblDobl_Series_Poly_Systems.Poly_Sys(1..nq);
+    y,z : DoblDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
+
+  begin
+    put("Give a value for the shift : "); get(c);
+    shifteds := Series_and_Homotopies.Shift(s,c);
+    y := Series_and_Homotopies.Eval(s,c);
+    z := Series_and_Homotopies.Eval(shifteds,zero);
+    put_line("system(shift value) :"); put_line(y);
+    put_line("shifted system(0.0) :"); put_line(z);
+  end DoblDobl_Test_Shift;
+
+  procedure QuadDobl_Test_Shift ( nq : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Given in QuadDobl_Homotopy is a homotopy system of nq equations.
+  --   The user is prompted for a value of t and the system is shifted.
+
+    h : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq)
+      := QuadDobl_Homotopy.Homotopy_System;
+    s : QuadDobl_Series_Poly_Systems.Poly_Sys(1..nq)
+      := Series_and_Homotopies.Create(h,nq+1);
+    zero : constant quad_double := create(0.0);
+    c : quad_double := zero;
+    shifteds : QuadDobl_Series_Poly_Systems.Poly_Sys(1..nq);
+    y,z : QuadDobl_Complex_Poly_Systems.Poly_Sys(1..nq);
+
+  begin
+    put("Give a value for the shift : "); get(c);
+    shifteds := Series_and_Homotopies.Shift(s,c);
+    y := Series_and_Homotopies.Eval(s,c);
+    z := Series_and_Homotopies.Eval(shifteds,zero);
+    put_line("system(shift value) :"); put_line(y);
+    put_line("shifted system(0.0) :"); put_line(z);
+  end QuadDobl_Test_Shift;
+
+  procedure Standard_Main is
+
+  -- DESCRIPTION :
+  --   Test on the operations of a homotopy with series coefficients,
+  --   in standard double precision.
 
     target,start : Standard_Complex_Poly_Systems.Link_to_Poly_Sys;
     k : constant natural32 := 2;
@@ -118,6 +273,102 @@ procedure ts_serhom is
       when '0' => Standard_Test_Creation(target'last);
       when '1' => Standard_Test_Evaluation(target'last);
       when '2' => Standard_Test_Shift(target'last);
+      when others => null;
+    end case;
+  end Standard_Main;
+
+  procedure DoblDobl_Main is
+
+  -- DESCRIPTION :
+  --   Test on the operations of a homotopy with series coefficients,
+  --   in double double precision.
+
+    target,start : DoblDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    k : constant natural32 := 2;
+    gamma : constant DoblDobl_Complex_Numbers.Complex_Number
+          := DoblDobl_Random_Numbers.Random1;
+    ans : character;
+
+  begin
+    new_line;
+    put_line("Testing the creation of a homotopies as a series system ...");
+    new_line;
+    put_line("Reading the target system ..."); get(target);
+    new_line;
+    put_line("Reading the start system ..."); get(start);
+    DoblDobl_Homotopy.Create(target.all,start.all,k,gamma);
+    new_line;
+    put_line("MENU of testing operations : ");
+    put_line("  0. test the creation of the series homotopy;");
+    put_line("  1. test the evaluation of the series homotopy;");
+    put_line("  2. test the shift of the series homotopy.");
+    put("Type 0, 1, or 2 to select a test : ");
+    Ask_Alternative(ans,"012");
+    new_line;
+    case ans is
+      when '0' => DoblDobl_Test_Creation(target'last);
+      when '1' => DoblDobl_Test_Evaluation(target'last);
+      when '2' => DoblDobl_Test_Shift(target'last);
+      when others => null;
+    end case;
+  end DoblDobl_Main;
+
+  procedure QuadDobl_Main is
+
+  -- DESCRIPTION :
+  --   Test on the operations of a homotopy with series coefficients,
+  --   in quad double precision.
+
+    target,start : QuadDobl_Complex_Poly_Systems.Link_to_Poly_Sys;
+    k : constant natural32 := 2;
+    gamma : constant QuadDobl_Complex_Numbers.Complex_Number
+          := QuadDobl_Random_Numbers.Random1;
+    ans : character;
+
+  begin
+    new_line;
+    put_line("Testing the creation of a homotopies as a series system ...");
+    new_line;
+    put_line("Reading the target system ..."); get(target);
+    new_line;
+    put_line("Reading the start system ..."); get(start);
+    QuadDobl_Homotopy.Create(target.all,start.all,k,gamma);
+    new_line;
+    put_line("MENU of testing operations : ");
+    put_line("  0. test the creation of the series homotopy;");
+    put_line("  1. test the evaluation of the series homotopy;");
+    put_line("  2. test the shift of the series homotopy.");
+    put("Type 0, 1, or 2 to select a test : ");
+    Ask_Alternative(ans,"012");
+    new_line;
+    case ans is
+      when '0' => QuadDobl_Test_Creation(target'last);
+      when '1' => QuadDobl_Test_Evaluation(target'last);
+      when '2' => QuadDobl_Test_Shift(target'last);
+      when others => null;
+    end case;
+  end QuadDobl_Main;
+
+  procedure Main is
+
+  -- DESCRIPTION :
+  --   Prompts the user for the working precision
+  --   and then launches the test.
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU for the working precision :");
+    put_line("  0. standard double precision;");
+    put_line("  1. double double precision;");
+    put_line("  2. quad double precision.");
+    put("Type 0, 1, or 2 to select the precision : ");
+    Ask_Alternative(ans,"012");
+    case ans is
+      when '0' => Standard_Main;
+      when '1' => DoblDobl_Main;
+      when '2' => QuadDobl_Main;
       when others => null;
     end case;
   end Main;
