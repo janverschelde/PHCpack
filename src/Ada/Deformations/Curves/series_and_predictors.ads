@@ -5,17 +5,63 @@ with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Dense_Series;
 with Standard_Dense_Series_Vectors;
+with Standard_Series_Poly_Systems;
 with DoblDobl_Complex_Vectors;
 with DoblDobl_Dense_Series;
 with DoblDobl_Dense_Series_Vectors;
+with DoblDobl_Series_Poly_Systems;
 with QuadDobl_Complex_Vectors;
 with QuadDobl_Dense_Series;
 with QuadDobl_Dense_Series_Vectors;
+with QuadDobl_Series_Poly_Systems;
 
 package Series_and_Predictors is
 
 -- DESCRIPTION :
 --   Evaluates power series to predict a solution.
+
+  procedure Newton_Prediction
+              ( nit : in integer32;
+                hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                sol : in Standard_Complex_Vectors.Vector;
+                srv : out Standard_Dense_Series_Vectors.Vector;
+                eva : out Standard_Dense_Series_Vectors.Vector;
+                verbose : in boolean := false );
+  procedure Newton_Prediction
+              ( nit : in integer32;
+                hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                sol : in DoblDobl_Complex_Vectors.Vector;
+                srv : out DoblDobl_Dense_Series_Vectors.Vector;
+                eva : out DoblDobl_Dense_Series_Vectors.Vector;
+                verbose : in boolean := false );
+  procedure Newton_Prediction
+              ( nit : in integer32;
+                hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                sol : in QuadDobl_Complex_Vectors.Vector;
+                srv : out QuadDobl_Dense_Series_Vectors.Vector;
+                eva : out QuadDobl_Dense_Series_Vectors.Vector;
+                verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Applies Newton's method on the homotopy in hom,
+  --   starting at the coordinates of the solution as the leading
+  --   coefficients in the power series,
+  --   in double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   nit      number of iterations with Newton's method;
+  --   hom      a homotopy with coefficients as power series,
+  --            where the series parameter is the continuation parameter;
+  --   sol      solution of the homotopy for t = 0, its coordinates
+  --            contain the leading coefficients of the power series;
+  --   verbose  if true, then additional output is written to screen.
+
+  -- ON RETURN :
+  --   srv      vector of power series, to predict the solution
+  --            for some small positive value of the continuation parameter,
+  --            srv'range = sol'range;
+  --   eva      evaluated series vector srv in the homotopy hom;
+  --            eva'range = hom'range.
 
   function Predicted_Error
              ( evls : Standard_Dense_Series_Vectors.Vector;
@@ -68,6 +114,9 @@ package Series_and_Predictors is
                tolcff,tolres : double_float ) return double_float;
   function Set_Step_Size
              ( v : DoblDobl_Dense_Series_Vectors.Vector;
+               tolcff,tolres : double_float ) return double_float;
+  function Set_Step_Size
+             ( v : QuadDobl_Dense_Series_Vectors.Vector;
                tolcff,tolres : double_float ) return double_float;
 
   -- DESCRIPTION :

@@ -81,8 +81,7 @@ procedure ts_serpred is
   --   in standard double precision.
 
     nit : constant integer32 := 4;
-    srv : Standard_Dense_Series_Vectors.Vector(1..sol.n)
-        := Series_and_Solutions.Create(sol,0);
+    srv : Standard_Dense_Series_Vectors.Vector(1..sol.n);
     eva : Standard_Dense_Series_Vectors.Vector(hom'range);
     step : double_float := 0.0;
     pred_err : double_float;
@@ -93,21 +92,7 @@ procedure ts_serpred is
     ans : character;
 
   begin
-    put_line("The solution :");
-    Standard_Complex_Solutions_io.put(sol);
-    new_line;
-    put_line("The series for the solution :");
-    Standard_Dense_Series_Vectors_io.put(srv);
-    if hom'last = sol.n then
-      put_line("Applying LU Newton ...");
-      Run_LU_Newton(nit,hom,srv);
-    else
-      put_line("Applying QR Newton ...");
-      Run_QR_Newton(nit,hom,srv);
-    end if;
-    eva := Standard_Series_Poly_SysFun.Eval(hom,srv);
-    put_line("The evaluated series : ");
-    Series_and_Polynomials_io.put(eva);
+    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
     loop
       put("Give the step size : "); get(step);
       pred_err := Series_and_Predictors.Predicted_Error(eva,step);
@@ -134,8 +119,7 @@ procedure ts_serpred is
   --   in double double precision.
 
     nit : constant integer32 := 4;
-    srv : DoblDobl_Dense_Series_Vectors.Vector(1..sol.n)
-        := Series_and_Solutions.Create(sol,0);
+    srv : DoblDobl_Dense_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Dense_Series_Vectors.Vector(hom'range);
     step : double_double := create(0.0);
     pred_err : double_double;
@@ -146,21 +130,7 @@ procedure ts_serpred is
     ans : character;
 
   begin
-    put_line("The solution :");
-    DoblDobl_Complex_Solutions_io.put(sol);
-    new_line;
-    put_line("The series for the solution :");
-    DoblDobl_Dense_Series_Vectors_io.put(srv);
-    if hom'last = sol.n then
-      put_line("Applying LU Newton ...");
-      Run_LU_Newton(nit,hom,srv,true);
-    else
-      put_line("Applying QR Newton ...");
-      Run_QR_Newton(nit,hom,srv,true);
-    end if;
-    eva := DoblDobl_Series_Poly_SysFun.Eval(hom,srv);
-    put_line("The evaluated series : ");
-    Series_and_Polynomials_io.put(eva);
+    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
     loop
       put("Give the step size : "); get(step);
       pred_err := Series_and_Predictors.Predicted_Error(eva,step);
@@ -187,8 +157,7 @@ procedure ts_serpred is
   --   in quad double precision.
 
     nit : constant integer32 := 4;
-    srv : QuadDobl_Dense_Series_Vectors.Vector(1..sol.n)
-        := Series_and_Solutions.Create(sol,0);
+    srv : QuadDobl_Dense_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Dense_Series_Vectors.Vector(hom'range);
     step : quad_double := create(0.0);
     pred_err : quad_double;
@@ -199,21 +168,7 @@ procedure ts_serpred is
     ans : character;
 
   begin
-    put_line("The solution :");
-    QuadDobl_Complex_Solutions_io.put(sol);
-    new_line;
-    put_line("The series for the solution :");
-    QuadDobl_Dense_Series_Vectors_io.put(srv);
-    if hom'last = sol.n then
-      put_line("Applying LU Newton ...");
-      Run_LU_Newton(nit,hom,srv,true);
-    else
-      put_line("Applying QR Newton ...");
-      Run_QR_Newton(nit,hom,srv,true);
-    end if;
-    eva := QuadDobl_Series_Poly_SysFun.Eval(hom,srv);
-    put_line("The evaluated series : ");
-    Series_and_Polynomials_io.put(eva);
+    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
     loop
       put("Give the step size : "); get(step);
       pred_err := Series_and_Predictors.Predicted_Error(eva,step);

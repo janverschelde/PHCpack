@@ -1,3 +1,7 @@
+Wed 6 Jul 2016 : extra functions in series_and_solutions to work directly
+  with the coordinate vectors of solutions.  Refactored code from ts_serpred
+  to series_and_predictors, for the first stage of the series predictor.
+
 Tue 5 Jul 2016 : bug fix in series_and_solutions.adb with the create
   in case idx = 0; this special case must have a separate loop.
   Made not verbose versions in power_series_methods.adb silent.

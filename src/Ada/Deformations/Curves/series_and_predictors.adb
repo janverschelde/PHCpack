@@ -1,15 +1,145 @@
+with text_io;                            use text_io;
 with Standard_Mathematical_Functions;
 with Standard_Complex_Numbers;
+with Standard_Complex_Vectors_io;
 with Standard_Complex_Vector_Norms;
+with Standard_Dense_Series_Vectors_io;
 with Standard_Series_Vector_Functions;
+with Standard_Series_Poly_SysFun;
 with DoblDobl_Complex_Numbers;
+with DoblDobl_Complex_Vectors_io;
 with DoblDobl_Complex_Vector_Norms;
+with DoblDobl_Dense_Series_Vectors_io;
 with DoblDobl_Series_Vector_Functions;
+with DoblDobl_Series_Poly_SysFun;
 with QuadDobl_Complex_Numbers;
+with QuadDobl_Complex_Vectors_io;
 with QuadDobl_Complex_Vector_Norms;
+with QuadDobl_Dense_Series_Vectors_io;
 with QuadDobl_Series_Vector_Functions;
+with QuadDobl_Series_Poly_SysFun;
+with Series_and_Polynomials_io;
+with Power_Series_Methods;               use Power_Series_Methods;
+with Series_and_Solutions;
 
 package body Series_and_Predictors is
+
+  procedure Newton_Prediction
+              ( nit : in integer32;
+                hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                sol : in Standard_Complex_Vectors.Vector;
+                srv : out Standard_Dense_Series_Vectors.Vector;
+                eva : out Standard_Dense_Series_Vectors.Vector;
+                verbose : in boolean := false ) is
+
+  begin
+    srv := Series_and_Solutions.Create(sol,0);
+    if verbose then
+      put_line("The solution :");
+      Standard_Complex_Vectors_io.put_line(sol);
+      new_line;
+      put_line("The series for the solution :");
+      Standard_Dense_Series_Vectors_io.put(srv);
+    end if;
+    if hom'last = sol'last then
+      if not verbose then
+        Run_LU_Newton(nit,hom,srv);
+      else
+        put_line("Applying LU Newton ...");
+        Run_LU_Newton(nit,hom,srv,true);
+      end if;
+    else
+      if not verbose then
+        Run_QR_Newton(nit,hom,srv);
+      else
+        put_line("Applying QR Newton ...");
+        Run_QR_Newton(nit,hom,srv,true);
+      end if;
+    end if;
+    eva := Standard_Series_Poly_SysFun.Eval(hom,srv);
+    if verbose then
+      put_line("The evaluated series : ");
+      Series_and_Polynomials_io.put(eva);
+    end if;
+  end Newton_Prediction;
+
+  procedure Newton_Prediction
+              ( nit : in integer32;
+                hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                sol : in DoblDobl_Complex_Vectors.Vector;
+                srv : out DoblDobl_Dense_Series_Vectors.Vector;
+                eva : out DoblDobl_Dense_Series_Vectors.Vector;
+                verbose : in boolean := false ) is
+
+  begin
+    srv := Series_and_Solutions.Create(sol,0);
+    if verbose then
+      put_line("The solution :");
+      DoblDobl_Complex_Vectors_io.put_line(sol);
+      new_line;
+      put_line("The series for the solution :");
+      DoblDobl_Dense_Series_Vectors_io.put(srv);
+    end if;
+    if hom'last = sol'last then
+      if not verbose then
+        Run_LU_Newton(nit,hom,srv);
+      else
+        put_line("Applying LU Newton ...");
+        Run_LU_Newton(nit,hom,srv,true);
+      end if;
+    else
+      if not verbose then
+        Run_QR_Newton(nit,hom,srv);
+      else
+        put_line("Applying QR Newton ...");
+        Run_QR_Newton(nit,hom,srv,true);
+      end if;
+    end if;
+    eva := DoblDobl_Series_Poly_SysFun.Eval(hom,srv);
+    if verbose then
+      put_line("The evaluated series : ");
+      Series_and_Polynomials_io.put(eva);
+    end if;
+  end Newton_Prediction;
+
+  procedure Newton_Prediction
+              ( nit : in integer32;
+                hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                sol : in QuadDobl_Complex_Vectors.Vector;
+                srv : out QuadDobl_Dense_Series_Vectors.Vector;
+                eva : out QuadDobl_Dense_Series_Vectors.Vector;
+                verbose : in boolean := false ) is
+
+  begin
+    srv := Series_and_Solutions.Create(sol,0);
+    if verbose then
+      put_line("The solution :");
+      QuadDobl_Complex_Vectors_io.put_line(sol);
+      new_line;
+      put_line("The series for the solution :");
+      QuadDobl_Dense_Series_Vectors_io.put(srv);
+    end if;
+    if hom'last = sol'last then
+      if not verbose then
+        Run_LU_Newton(nit,hom,srv);
+      else
+        put_line("Applying LU Newton ...");
+        Run_LU_Newton(nit,hom,srv,true);
+      end if;
+    else
+      if not verbose then
+        Run_QR_Newton(nit,hom,srv);
+      else
+        put_line("Applying QR Newton ...");
+        Run_QR_Newton(nit,hom,srv,true);
+      end if;
+    end if;
+    eva := QuadDobl_Series_Poly_SysFun.Eval(hom,srv);
+    if verbose then
+      put_line("The evaluated series : ");
+      Series_and_Polynomials_io.put(eva);
+    end if;
+  end Newton_Prediction;
 
   function Predicted_Error
              ( evls : Standard_Dense_Series_Vectors.Vector;
