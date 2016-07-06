@@ -72,9 +72,107 @@ procedure ts_serpred is
 -- DESCRIPTION :
 --   Test on the application of power series to predict solutions.
 
+  procedure Standard_Check_Prediction
+              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                srv,eva : in Standard_Dense_Series_Vectors.Vector;
+                step : in double_float ) is
+
+  -- DESCRIPTION :
+  --   Checks the quality of the predicted step.
+
+  -- ON ENTRY :
+  --   hom      homotopy with series coefficients, where the parameter
+  --            in the series is the continuation parameter;
+  --   srv      series development for the solution;
+  --   eva      evaluation of hom at srv;
+  --   step     a step size.
+
+    pred_err : double_float;
+    pred_sol : Standard_Complex_Vectors.Vector(srv'range);
+    phm : Standard_Complex_Poly_Systems.Poly_Sys(hom'range);
+    val : Standard_Complex_Vectors.Vector(phm'range);
+    nrm : double_float;
+
+  begin
+    pred_err := Series_and_Predictors.Predicted_Error(eva,step);
+    put("The predicted error : "); put(pred_err,3); new_line;
+    pred_sol := Series_and_Predictors.Predicted_Solution(srv,step);
+    put_line("The predicted solution :"); put_line(pred_sol);
+    phm := Series_and_Homotopies.Eval(hom,step);
+    val := Standard_Complex_Poly_SysFun.Eval(phm,pred_sol);
+    nrm := Standard_Complex_Vector_Norms.Max_Norm(val);
+    put("The actual error : "); put(nrm,3); new_line;
+    Standard_Complex_Poly_Systems.Clear(phm);
+  end Standard_Check_Prediction;
+
+  procedure DoblDobl_Check_Prediction
+              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                srv,eva : in DoblDobl_Dense_Series_Vectors.Vector;
+                step : in double_double ) is
+
+  -- DESCRIPTION :
+  --   Checks the quality of the predicted step.
+
+  -- ON ENTRY :
+  --   hom      homotopy with series coefficients, where the parameter
+  --            in the series is the continuation parameter;
+  --   srv      series development for the solution;
+  --   eva      evaluation of hom at srv;
+  --   step     a step size.
+
+    pred_err : double_double;
+    pred_sol : DoblDobl_Complex_Vectors.Vector(srv'range);
+    phm : DoblDobl_Complex_Poly_Systems.Poly_Sys(hom'range);
+    val : DoblDobl_Complex_Vectors.Vector(phm'range);
+    nrm : double_double;
+
+  begin
+    pred_err := Series_and_Predictors.Predicted_Error(eva,step);
+    put("The predicted error : "); put(pred_err,3); new_line;
+    pred_sol := Series_and_Predictors.Predicted_Solution(srv,step);
+    put_line("The predicted solution :"); put_line(pred_sol);
+    phm := Series_and_Homotopies.Eval(hom,step);
+    val := DoblDobl_Complex_Poly_SysFun.Eval(phm,pred_sol);
+    nrm := DoblDobl_Complex_Vector_Norms.Max_Norm(val);
+    put("The actual error : "); put(nrm,3); new_line;
+    DoblDobl_Complex_Poly_Systems.Clear(phm);
+  end DoblDobl_Check_Prediction;
+
+  procedure QuadDobl_Check_Prediction
+              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                srv,eva : in QuadDobl_Dense_Series_Vectors.Vector;
+                step : in quad_double ) is
+
+  -- DESCRIPTION :
+  --   Checks the quality of the predicted step.
+
+  -- ON ENTRY :
+  --   hom      homotopy with series coefficients, where the parameter
+  --            in the series is the continuation parameter;
+  --   srv      series development for the solution;
+  --   eva      evaluation of hom at srv;
+  --   step     a step size.
+
+    pred_err : quad_double;
+    pred_sol : QuadDobl_Complex_Vectors.Vector(srv'range);
+    phm : QuadDobl_Complex_Poly_Systems.Poly_Sys(hom'range);
+    val : QuadDobl_Complex_Vectors.Vector(phm'range);
+    nrm : quad_double;
+
+  begin
+    pred_err := Series_and_Predictors.Predicted_Error(eva,step);
+    put("The predicted error : "); put(pred_err,3); new_line;
+    pred_sol := Series_and_Predictors.Predicted_Solution(srv,step);
+    put_line("The predicted solution :"); put_line(pred_sol);
+    phm := Series_and_Homotopies.Eval(hom,step);
+    val := QuadDobl_Complex_Poly_SysFun.Eval(phm,pred_sol);
+    nrm := QuadDobl_Complex_Vector_Norms.Max_Norm(val);
+    put("The actual error : "); put(nrm,3); new_line;
+    QuadDobl_Complex_Poly_Systems.Clear(phm);
+  end QuadDobl_Check_Prediction;
+
   procedure Standard_Step_Prediction
               ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
-                sol : in Standard_Complex_Vectors.Vector;
                 srv,eva : in Standard_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -84,31 +182,19 @@ procedure ts_serpred is
   -- ON ENTRY :
   --   hom      homotopy with series coefficients, where the parameter
   --            in the series is the continuation parameter;
-  --   sol      coordinates for the leading coefficients;
-  --   srv      series with leading coefficients in sol;
+  --   srv      series development for the solution;
   --   eva      evaluation of hom at srv.
 
     step : double_float := 0.0;
-    pred_err : double_float;
-    pred_sol : Standard_Complex_Vectors.Vector(sol'range);
-    phm : Standard_Complex_Poly_Systems.Poly_Sys(hom'range);
-    val : Standard_Complex_Vectors.Vector(phm'range);
-    nrm : double_float;
     ans : character;
 
   begin
+    new_line;
+    put_line("Interactive loop to experiment with the step size ...");
     loop
       put("Give the step size : "); get(step);
-      pred_err := Series_and_Predictors.Predicted_Error(eva,step);
-      put("The predicted error : "); put(pred_err,3); new_line;
-      pred_sol := Series_and_Predictors.Predicted_Solution(srv,step);
-      put_line("The predicted solution :"); put_line(pred_sol);
-      phm := Series_and_Homotopies.Eval(hom,step);
-      val := Standard_Complex_Poly_SysFun.Eval(phm,pred_sol);
-      nrm := Standard_Complex_Vector_Norms.Max_Norm(val);
-      put("The actual error : "); put(nrm,3); new_line;
+      Standard_Check_Prediction(hom,srv,eva,step);
       put("Check another step size ? (y/n) ");
-      Standard_Complex_Poly_Systems.Clear(phm);
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
@@ -116,7 +202,6 @@ procedure ts_serpred is
 
   procedure DoblDobl_Step_Prediction
               ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                sol : in DoblDobl_Complex_Vectors.Vector;
                 srv,eva : in DoblDobl_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -126,31 +211,19 @@ procedure ts_serpred is
   -- ON ENTRY :
   --   hom      homotopy with series coefficients, where the parameter
   --            in the series is the continuation parameter;
-  --   sol      coordinates for the leading coefficients;
-  --   srv      series with leading coefficients in sol;
+  --   srv      series development for the solution;
   --   eva      evaluation of hom at srv.
 
     step : double_double := create(0.0);
-    pred_err : double_double;
-    pred_sol : DoblDobl_Complex_Vectors.Vector(sol'range);
-    phm : DoblDobl_Complex_Poly_Systems.Poly_Sys(hom'range);
-    val : DoblDobl_Complex_Vectors.Vector(phm'range);
-    nrm : double_double;
     ans : character;
 
   begin
+    new_line;
+    put_line("Interactive loop to experiment with the step size ...");
     loop
       put("Give the step size : "); get(step);
-      pred_err := Series_and_Predictors.Predicted_Error(eva,step);
-      put("The predicted error : "); put(pred_err,3); new_line;
-      pred_sol := Series_and_Predictors.Predicted_Solution(srv,step);
-      put_line("The predicted solution :"); put_line(pred_sol);
-      phm := Series_and_Homotopies.Eval(hom,step);
-      val := DoblDobl_Complex_Poly_SysFun.Eval(phm,pred_sol);
-      nrm := DoblDobl_Complex_Vector_Norms.Max_Norm(val);
-      put("The actual error : "); put(nrm,3); new_line;
+      DoblDobl_Check_Prediction(hom,srv,eva,step);
       put("Check another step size ? (y/n) ");
-      DoblDobl_Complex_Poly_Systems.Clear(phm);
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
@@ -158,7 +231,6 @@ procedure ts_serpred is
 
   procedure QuadDobl_Step_Prediction
               ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                sol : in QuadDobl_Complex_Vectors.Vector;
                 srv,eva : in QuadDobl_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
@@ -168,31 +240,19 @@ procedure ts_serpred is
   -- ON ENTRY :
   --   hom      homotopy with series coefficients, where the parameter
   --            in the series is the continuation parameter;
-  --   sol      coordinates for the leading coefficients;
-  --   srv      series with leading coefficients in sol;
+  --   srv      series development for the solution;
   --   eva      evaluation of hom at srv.
  
     step : quad_double := create(0.0);
-    pred_err : quad_double;
-    pred_sol : QuadDobl_Complex_Vectors.Vector(sol'range);
-    phm : QuadDobl_Complex_Poly_Systems.Poly_Sys(hom'range);
-    val : QuadDobl_Complex_Vectors.Vector(phm'range);
-    nrm : quad_double;
     ans : character;
 
   begin
+    new_line;
+    put_line("Interactive loop to experiment with the step size ...");
     loop
       put("Give the step size : "); get(step);
-      pred_err := Series_and_Predictors.Predicted_Error(eva,step);
-      put("The predicted error : "); put(pred_err,3); new_line;
-      pred_sol := Series_and_Predictors.Predicted_Solution(srv,step);
-      put_line("The predicted solution :"); put_line(pred_sol);
-      phm := Series_and_Homotopies.Eval(hom,step);
-      val := QuadDobl_Complex_Poly_SysFun.Eval(phm,pred_sol);
-      nrm := QuadDobl_Complex_Vector_Norms.Max_Norm(val);
-      put("The actual error : "); put(nrm,3); new_line;
+      QuadDobl_Check_Prediction(hom,srv,eva,step);
       put("Check another step size ? (y/n) ");
-      QuadDobl_Complex_Poly_Systems.Clear(phm);
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
@@ -216,11 +276,13 @@ procedure ts_serpred is
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
     Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
-    Standard_Step_Prediction(hom,sol.v,srv,eva);
+    Standard_Step_Prediction(hom,srv,eva);
     new_line;
+    put_line("Setting the step size based on the power series ...");
     put("Give the tolerance on the residual : "); get(tolres);
     step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres,true);
     put("The computed step size : "); put(step,3); new_line;
+    Standard_Check_Prediction(hom,srv,eva,step);
   end Standard_Test_Prediction;
 
   procedure DoblDobl_Test_Prediction
@@ -234,13 +296,23 @@ procedure ts_serpred is
     nit : integer32 := 4;
     srv : DoblDobl_Dense_Series_Vectors.Vector(1..sol.n);
     eva : DoblDobl_Dense_Series_Vectors.Vector(hom'range);
+    tolcff : constant double_float := 1.0e-12;
+    tolres,step : double_float := 0.0;
+    dd_step : double_double;
 
   begin
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
     skip_line; -- needed for prompting of double double ...
     Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
-    DoblDobl_Step_Prediction(hom,sol.v,srv,eva);
+    DoblDobl_Step_Prediction(hom,srv,eva);
+    new_line;
+    put_line("Setting the step size based on the power series ...");
+    put("Give the tolerance on the residual : "); get(tolres);
+    step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres,true);
+    put("The computed step size : "); put(step,3); new_line;
+    dd_step := create(step);
+    DoblDobl_Check_Prediction(hom,srv,eva,dd_step);
   end DoblDobl_Test_Prediction;
 
   procedure QuadDobl_Test_Prediction
@@ -254,13 +326,23 @@ procedure ts_serpred is
     nit : integer32 := 4;
     srv : QuadDobl_Dense_Series_Vectors.Vector(1..sol.n);
     eva : QuadDobl_Dense_Series_Vectors.Vector(hom'range);
+    tolcff : constant double_float := 1.0e-12;
+    tolres,step : double_float := 0.0;
+    qd_step : quad_double;
 
   begin
     new_line;
     put("Give the number of Newton iterations : "); get(nit);
     skip_line; -- needed for prompting of quad double ...
     Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
-    QuadDobl_Step_Prediction(hom,sol.v,srv,eva);
+    QuadDobl_Step_Prediction(hom,srv,eva);
+    new_line;
+    put_line("Setting the step size based on the power series ...");
+    put("Give the tolerance on the residual : "); get(tolres);
+    step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres,true);
+    put("The computed step size : "); put(step,3); new_line;
+    qd_step := create(step);
+    QuadDobl_Check_Prediction(hom,srv,eva,qd_step);
   end QuadDobl_Test_Prediction;
 
   procedure Standard_Test_Prediction
