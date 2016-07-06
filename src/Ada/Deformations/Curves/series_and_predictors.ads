@@ -111,13 +111,16 @@ package Series_and_Predictors is
 
   function Set_Step_Size
              ( v : Standard_Dense_Series_Vectors.Vector;
-               tolcff,tolres : double_float ) return double_float;
+               tolcff,tolres : double_float;
+               verbose : boolean := false ) return double_float;
   function Set_Step_Size
              ( v : DoblDobl_Dense_Series_Vectors.Vector;
-               tolcff,tolres : double_float ) return double_float;
+               tolcff,tolres : double_float;
+               verbose : boolean := false ) return double_float;
   function Set_Step_Size
              ( v : QuadDobl_Dense_Series_Vectors.Vector;
-               tolcff,tolres : double_float ) return double_float;
+               tolcff,tolres : double_float;
+               verbose : boolean := false ) return double_float;
 
   -- DESCRIPTION :
   --   Computes a step size so that the residual will be of order tolres.

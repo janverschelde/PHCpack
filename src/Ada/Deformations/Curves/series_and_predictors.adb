@@ -1,4 +1,6 @@
 with text_io;                            use text_io;
+with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Mathematical_Functions;
 with Standard_Complex_Numbers;
 with Standard_Complex_Vectors_io;
@@ -275,28 +277,40 @@ package body Series_and_Predictors is
 
   function Set_Step_Size
              ( v : Standard_Dense_Series_Vectors.Vector;
-               tolcff,tolres : double_float ) return double_float is
+               tolcff,tolres : double_float;
+               verbose : boolean := false ) return double_float is
 
     vk,ord : integer32;
-    res,valcff,pwr : double_float;
+    res,valcff,pwr,arg : double_float;
 
     use Standard_Mathematical_Functions;
 
   begin
     Least_Order(v,tolcff,vk,ord);
     valcff := Standard_Complex_Numbers.AbsVal(v(vk).cff(ord));
-    pwr := 1.0/double_float(ord);
-    res := (tolres/valcff)**pwr;
+    arg := tolres/valcff;
+    if verbose then
+      put("least order : "); put(ord,1);
+      put(" at component : "); put(vk,1);
+      put(" arg = "); put(arg); new_line;
+    end if;
+    if ord = 0 then
+      res := arg;
+    else
+      pwr := 1.0/double_float(ord);
+      res := arg**pwr;
+    end if;
     return res;
   end Set_Step_Size;
 
   function Set_Step_Size
              ( v : DoblDobl_Dense_Series_Vectors.Vector;
-               tolcff,tolres : double_float ) return double_float is
+               tolcff,tolres : double_float;
+               verbose : boolean := false ) return double_float is
 
     vk,ord : integer32;
     dd_valcff : double_double;
-    res,valcff,pwr : double_float;
+    res,valcff,pwr,arg : double_float;
 
     use Standard_Mathematical_Functions;
 
@@ -304,18 +318,29 @@ package body Series_and_Predictors is
     Least_Order(v,tolcff,vk,ord);
     dd_valcff := DoblDobl_Complex_Numbers.AbsVal(v(vk).cff(ord));
     valcff := hi_part(dd_valcff);
-    pwr := 1.0/double_float(ord);
-    res := (tolres/valcff)**pwr;
+    arg := tolres/valcff;
+    if verbose then
+      put("least order : "); put(ord,1);
+      put(" at component : "); put(vk,1);
+      put(" arg = "); put(arg); new_line;
+    end if;
+    if ord = 0 then
+      res := arg;
+    else
+      pwr := 1.0/double_float(ord);
+      res := arg**pwr;
+    end if;
     return res;
   end Set_Step_Size;
 
   function Set_Step_Size
              ( v : QuadDobl_Dense_Series_Vectors.Vector;
-               tolcff,tolres : double_float ) return double_float is
+               tolcff,tolres : double_float;
+               verbose : boolean := false ) return double_float is
 
     vk,ord : integer32;
     qd_valcff : quad_double;
-    res,valcff,pwr : double_float;
+    res,valcff,pwr,arg : double_float;
 
     use Standard_Mathematical_Functions;
 
@@ -323,8 +348,18 @@ package body Series_and_Predictors is
     Least_Order(v,tolcff,vk,ord);
     qd_valcff := QuadDobl_Complex_Numbers.AbsVal(v(vk).cff(ord));
     valcff := hihi_part(qd_valcff);
-    pwr := 1.0/double_float(ord);
-    res := (tolres/valcff)**pwr;
+    arg := tolres/valcff;
+    if verbose then
+      put("least order : "); put(ord,1);
+      put(" at component : "); put(vk,1);
+      put(" arg = "); put(arg); new_line;
+    end if;
+    if ord = 0 then
+      res := arg;
+    else
+      pwr := 1.0/double_float(ord);
+      res := arg**pwr;
+    end if;
     return res;
   end Set_Step_Size;
 

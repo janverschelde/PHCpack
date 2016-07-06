@@ -72,27 +72,31 @@ procedure ts_serpred is
 -- DESCRIPTION :
 --   Test on the application of power series to predict solutions.
 
-  procedure Standard_Test_Prediction
+  procedure Standard_Step_Prediction
               ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
-                sol : in Standard_Complex_Solutions.Solution ) is
+                sol : in Standard_Complex_Vectors.Vector;
+                srv,eva : in Standard_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
-  --   Tests the predictor on the solution in sol for the homotopy hom,
-  --   in standard double precision.
+  --   Tests the determination of the step size interactively
+  --   to gain computational experience with its effectiveness.
 
-    nit : constant integer32 := 4;
-    srv : Standard_Dense_Series_Vectors.Vector(1..sol.n);
-    eva : Standard_Dense_Series_Vectors.Vector(hom'range);
+  -- ON ENTRY :
+  --   hom      homotopy with series coefficients, where the parameter
+  --            in the series is the continuation parameter;
+  --   sol      coordinates for the leading coefficients;
+  --   srv      series with leading coefficients in sol;
+  --   eva      evaluation of hom at srv.
+
     step : double_float := 0.0;
     pred_err : double_float;
-    pred_sol : Standard_Complex_Vectors.Vector(1..sol.n);
+    pred_sol : Standard_Complex_Vectors.Vector(sol'range);
     phm : Standard_Complex_Poly_Systems.Poly_Sys(hom'range);
     val : Standard_Complex_Vectors.Vector(phm'range);
     nrm : double_float;
     ans : character;
 
   begin
-    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
     loop
       put("Give the step size : "); get(step);
       pred_err := Series_and_Predictors.Predicted_Error(eva,step);
@@ -108,29 +112,33 @@ procedure ts_serpred is
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
-  end Standard_Test_Prediction;
+  end Standard_Step_Prediction;
 
-  procedure DoblDobl_Test_Prediction
+  procedure DoblDobl_Step_Prediction
               ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                sol : in DoblDobl_Complex_Solutions.Solution ) is
+                sol : in DoblDobl_Complex_Vectors.Vector;
+                srv,eva : in DoblDobl_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
-  --   Tests the predictor on the solution in sol for the homotopy hom,
-  --   in double double precision.
+  --   Tests the determination of the step size interactively
+  --   to gain computational experience with its effectiveness.
 
-    nit : constant integer32 := 4;
-    srv : DoblDobl_Dense_Series_Vectors.Vector(1..sol.n);
-    eva : DoblDobl_Dense_Series_Vectors.Vector(hom'range);
+  -- ON ENTRY :
+  --   hom      homotopy with series coefficients, where the parameter
+  --            in the series is the continuation parameter;
+  --   sol      coordinates for the leading coefficients;
+  --   srv      series with leading coefficients in sol;
+  --   eva      evaluation of hom at srv.
+
     step : double_double := create(0.0);
     pred_err : double_double;
-    pred_sol : DoblDobl_Complex_Vectors.Vector(1..sol.n);
+    pred_sol : DoblDobl_Complex_Vectors.Vector(sol'range);
     phm : DoblDobl_Complex_Poly_Systems.Poly_Sys(hom'range);
     val : DoblDobl_Complex_Vectors.Vector(phm'range);
     nrm : double_double;
     ans : character;
 
   begin
-    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
     loop
       put("Give the step size : "); get(step);
       pred_err := Series_and_Predictors.Predicted_Error(eva,step);
@@ -146,29 +154,33 @@ procedure ts_serpred is
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
-  end DoblDobl_Test_Prediction;
+  end DoblDobl_Step_Prediction;
 
-  procedure QuadDobl_Test_Prediction
+  procedure QuadDobl_Step_Prediction
               ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                sol : in QuadDobl_Complex_Solutions.Solution ) is
+                sol : in QuadDobl_Complex_Vectors.Vector;
+                srv,eva : in QuadDobl_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
-  --   Tests the predictor on the solution in sol for the homotopy hom,
-  --   in quad double precision.
+  --   Tests the determination of the step size interactively
+  --   to gain computational experience with its effectiveness.
 
-    nit : constant integer32 := 4;
-    srv : QuadDobl_Dense_Series_Vectors.Vector(1..sol.n);
-    eva : QuadDobl_Dense_Series_Vectors.Vector(hom'range);
+  -- ON ENTRY :
+  --   hom      homotopy with series coefficients, where the parameter
+  --            in the series is the continuation parameter;
+  --   sol      coordinates for the leading coefficients;
+  --   srv      series with leading coefficients in sol;
+  --   eva      evaluation of hom at srv.
+ 
     step : quad_double := create(0.0);
     pred_err : quad_double;
-    pred_sol : QuadDobl_Complex_Vectors.Vector(1..sol.n);
+    pred_sol : QuadDobl_Complex_Vectors.Vector(sol'range);
     phm : QuadDobl_Complex_Poly_Systems.Poly_Sys(hom'range);
     val : QuadDobl_Complex_Vectors.Vector(phm'range);
     nrm : quad_double;
     ans : character;
 
   begin
-    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
     loop
       put("Give the step size : "); get(step);
       pred_err := Series_and_Predictors.Predicted_Error(eva,step);
@@ -184,6 +196,71 @@ procedure ts_serpred is
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
     end loop;
+  end QuadDobl_Step_Prediction;
+
+  procedure Standard_Test_Prediction
+              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                sol : in Standard_Complex_Solutions.Solution ) is
+
+  -- DESCRIPTION :
+  --   Tests the predictor on the solution in sol for the homotopy hom,
+  --   in standard double precision.
+
+    nit : integer32 := 4;
+    srv : Standard_Dense_Series_Vectors.Vector(1..sol.n);
+    eva : Standard_Dense_Series_Vectors.Vector(hom'range);
+    tolcff : constant double_float := 1.0e-12;
+    tolres,step : double_float := 0.0;
+
+  begin
+    new_line;
+    put("Give the number of Newton iterations : "); get(nit);
+    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
+    Standard_Step_Prediction(hom,sol.v,srv,eva);
+    new_line;
+    put("Give the tolerance on the residual : "); get(tolres);
+    step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres,true);
+    put("The computed step size : "); put(step,3); new_line;
+  end Standard_Test_Prediction;
+
+  procedure DoblDobl_Test_Prediction
+              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                sol : in DoblDobl_Complex_Solutions.Solution ) is
+
+  -- DESCRIPTION :
+  --   Tests the predictor on the solution in sol for the homotopy hom,
+  --   in double double precision.
+
+    nit : integer32 := 4;
+    srv : DoblDobl_Dense_Series_Vectors.Vector(1..sol.n);
+    eva : DoblDobl_Dense_Series_Vectors.Vector(hom'range);
+
+  begin
+    new_line;
+    put("Give the number of Newton iterations : "); get(nit);
+    skip_line; -- needed for prompting of double double ...
+    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
+    DoblDobl_Step_Prediction(hom,sol.v,srv,eva);
+  end DoblDobl_Test_Prediction;
+
+  procedure QuadDobl_Test_Prediction
+              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                sol : in QuadDobl_Complex_Solutions.Solution ) is
+
+  -- DESCRIPTION :
+  --   Tests the predictor on the solution in sol for the homotopy hom,
+  --   in quad double precision.
+
+    nit : integer32 := 4;
+    srv : QuadDobl_Dense_Series_Vectors.Vector(1..sol.n);
+    eva : QuadDobl_Dense_Series_Vectors.Vector(hom'range);
+
+  begin
+    new_line;
+    put("Give the number of Newton iterations : "); get(nit);
+    skip_line; -- needed for prompting of quad double ...
+    Series_and_Predictors.Newton_Prediction(nit,hom,sol.v,srv,eva);
+    QuadDobl_Step_Prediction(hom,sol.v,srv,eva);
   end QuadDobl_Test_Prediction;
 
   procedure Standard_Test_Prediction
