@@ -165,6 +165,19 @@ package body QuadDobl_Dense_Series is
     end loop;
   end Copy;
 
+-- ORDER :
+
+  function Order ( s : QuadDobl_Dense_Series.Series;
+                   tol : double_float := 0.0 ) return integer32 is
+  begin
+    for k in 0..s.deg loop
+      if QuadDobl_Complex_Numbers.AbsVal(s.cff(k)) > tol
+       then return k;
+      end if;
+    end loop;
+    return s.deg+1;
+  end Order;
+
 -- COMPLEX CONJUGATE :
 
   function Conjugate ( s : Series ) return Series is

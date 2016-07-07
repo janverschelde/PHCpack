@@ -89,6 +89,16 @@ package QuadDobl_Dense_Series is
   --   Copies the coefficients of s to t
   --   and sets the degree of t to the degree of s.
 
+-- ORDER :
+
+  function Order ( s : QuadDobl_Dense_Series.Series;
+                   tol : double_float := 0.0 ) return integer32;
+
+  -- DESCRIPTION :
+  --   Returns the smallest integer k in the range 0..s.deg
+  --   for which AbsVal(s.cff(k)) > tol.
+  --   If all coefficients are less than tol, then s.deg+1 is returned.
+
 -- COMPLEX CONJUGATE :
 
   function Conjugate ( s : Series ) return Series;
