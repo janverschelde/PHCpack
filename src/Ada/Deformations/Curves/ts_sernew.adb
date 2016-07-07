@@ -109,12 +109,12 @@ procedure ts_sernew is
 
   procedure Test_LU_Newton_Step
               ( p : in Standard_Series_Poly_Systems.Poly_Sys;
-                order : in integer32;
+                degree : in integer32;
                 x : in out Standard_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --  Does one step with Newton's method on the system p,
-  --  calculating with series x of the given order,
+  --  calculating with series x of the given degree,
   --  in standard double precision.
 
     info : integer32;
@@ -126,10 +126,10 @@ procedure ts_sernew is
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
-    Series_and_Polynomials.Set_Order(x,order);
+    Series_and_Polynomials.Set_Degree(x,degree);
     if ans = 'y'
-     then LU_Newton_Step(standard_output,p,order,x,info);
-     else LU_Newton_Step(p,order,x,info);
+     then LU_Newton_Step(standard_output,p,degree,x,info);
+     else LU_Newton_Step(p,degree,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -146,12 +146,12 @@ procedure ts_sernew is
 
   procedure Test_LU_Newton_Step
               ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                order : in integer32;
+                degree : in integer32;
                 x : in out DoblDobl_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --  Does one step with Newton's method on the system p,
-  --  calculating with series x of the given order,
+  --  calculating with series x of the given degree,
   --  in double double precision.
 
     info : integer32;
@@ -163,10 +163,10 @@ procedure ts_sernew is
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
-    Series_and_Polynomials.Set_Order(x,order);
+    Series_and_Polynomials.Set_Degree(x,degree);
     if ans = 'y'
-     then LU_Newton_Step(standard_output,p,order,x,info);
-     else LU_Newton_Step(p,order,x,info);
+     then LU_Newton_Step(standard_output,p,degree,x,info);
+     else LU_Newton_Step(p,degree,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -183,12 +183,12 @@ procedure ts_sernew is
 
   procedure Test_LU_Newton_Step
               ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                order : in integer32;
+                degree : in integer32;
                 x : in out QuadDobl_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --  Does one step with Newton's method on the system p,
-  --  calculating with series x of the given order,
+  --  calculating with series x of the given degree,
   --  in quad double precision.
 
     info : integer32;
@@ -200,10 +200,10 @@ procedure ts_sernew is
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
-    Series_and_Polynomials.Set_Order(x,order);
+    Series_and_Polynomials.Set_Degree(x,degree);
     if ans = 'y'
-     then LU_Newton_Step(standard_output,p,order,x,info);
-     else LU_Newton_Step(p,order,x,info);
+     then LU_Newton_Step(standard_output,p,degree,x,info);
+     else LU_Newton_Step(p,degree,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -220,12 +220,12 @@ procedure ts_sernew is
 
   procedure Test_LU_Newton_Steps
               ( p : in Standard_Series_Poly_Systems.Poly_Sys;
-                order : in out integer32; nbrit : in integer32;
+                degree : in out integer32; nbrit : in integer32;
                 x : in out Standard_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --  Does as many steps with Newton's method on the system p,
-  --  as the value of nbrit, calculating with series x of the given order,
+  --  as the value of nbrit, calculating with series x of the given degree,
   --  in standard double precision.
 
     info : integer32;
@@ -237,10 +237,10 @@ procedure ts_sernew is
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
-    Series_and_Polynomials.Set_Order(x,order);
+    Series_and_Polynomials.Set_Degree(x,degree);
     if ans = 'y'
-     then LU_Newton_Steps(standard_output,p,order,nbrit,x,info);
-     else LU_Newton_Steps(p,order,nbrit,x,info);
+     then LU_Newton_Steps(standard_output,p,degree,nbrit,x,info);
+     else LU_Newton_Steps(p,degree,nbrit,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -257,12 +257,12 @@ procedure ts_sernew is
 
   procedure Test_LU_Newton_Steps
               ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                order : in out integer32; nbrit : in integer32;
+                degree : in out integer32; nbrit : in integer32;
                 x : in out DoblDobl_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --  Does as many steps with Newton's method on the system p,
-  --  as the value of nbrit, calculating with series x of the given order,
+  --  as the value of nbrit, calculating with series x of the given degree,
   --  in double double precision.
 
     info : integer32;
@@ -274,10 +274,10 @@ procedure ts_sernew is
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
-    Series_and_Polynomials.Set_Order(x,order);
+    Series_and_Polynomials.Set_Degree(x,degree);
     if ans = 'y'
-     then LU_Newton_Steps(standard_output,p,order,nbrit,x,info);
-     else LU_Newton_Steps(p,order,nbrit,x,info);
+     then LU_Newton_Steps(standard_output,p,degree,nbrit,x,info);
+     else LU_Newton_Steps(p,degree,nbrit,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -294,12 +294,12 @@ procedure ts_sernew is
 
   procedure Test_LU_Newton_Steps
               ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                order : in out integer32; nbrit : in integer32;
+                degree : in out integer32; nbrit : in integer32;
                 x : in out QuadDobl_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --  Does as many steps with Newton's method on the system p,
-  --  as the value of nbrit, calculating with series x of the given order,
+  --  as the value of nbrit, calculating with series x of the given degree,
   --  in quad double precision.
 
     info : integer32;
@@ -311,10 +311,10 @@ procedure ts_sernew is
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
-    Series_and_Polynomials.Set_Order(x,order);
+    Series_and_Polynomials.Set_Degree(x,degree);
     if ans = 'y'
-     then LU_Newton_Steps(standard_output,p,order,nbrit,x,info);
-     else LU_Newton_Steps(p,order,nbrit,x,info);
+     then LU_Newton_Steps(standard_output,p,degree,nbrit,x,info);
+     else LU_Newton_Steps(p,degree,nbrit,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -331,12 +331,12 @@ procedure ts_sernew is
 
   procedure Test_QR_Newton_Step
               ( p : in Standard_Series_Poly_Systems.Poly_Sys;
-                order : in integer32;
+                degree : in integer32;
                 x : in out Standard_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --  Does one step with Newton's method on the system p,
-  --  calculating with series x of the given order,
+  --  calculating with series x of the given degree,
   --  in standard double precision.
 
     info : integer32;
@@ -348,10 +348,10 @@ procedure ts_sernew is
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
-    Series_and_Polynomials.Set_Order(x,order);
+    Series_and_Polynomials.Set_Degree(x,degree);
     if ans = 'y'
-     then QR_Newton_Step(standard_output,p,order,x,info);
-     else QR_Newton_Step(p,order,x,info);
+     then QR_Newton_Step(standard_output,p,degree,x,info);
+     else QR_Newton_Step(p,degree,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -368,12 +368,12 @@ procedure ts_sernew is
 
   procedure Test_QR_Newton_Step
               ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                order : in integer32;
+                degree : in integer32;
                 x : in out DoblDobl_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --  Does one step with Newton's method on the system p,
-  --  calculating with series x of the given order,
+  --  calculating with series x of the given degree,
   --  in double double precision.
 
     info : integer32;
@@ -385,10 +385,10 @@ procedure ts_sernew is
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
-    Series_and_Polynomials.Set_Order(x,order);
+    Series_and_Polynomials.Set_Degree(x,degree);
     if ans = 'y'
-     then QR_Newton_Step(standard_output,p,order,x,info);
-     else QR_Newton_Step(p,order,x,info);
+     then QR_Newton_Step(standard_output,p,degree,x,info);
+     else QR_Newton_Step(p,degree,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -405,12 +405,12 @@ procedure ts_sernew is
 
   procedure Test_QR_Newton_Step
               ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                order : in integer32;
+                degree : in integer32;
                 x : in out QuadDobl_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --  Does one step with Newton's method on the system p,
-  --  calculating with series x of the given order,
+  --  calculating with series x of the given degree,
   --  in quad double precision.
 
     info : integer32;
@@ -422,10 +422,10 @@ procedure ts_sernew is
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
-    Series_and_Polynomials.Set_Order(x,order);
+    Series_and_Polynomials.Set_Degree(x,degree);
     if ans = 'y'
-     then QR_Newton_Step(standard_output,p,order,x,info);
-     else QR_Newton_Step(p,order,x,info);
+     then QR_Newton_Step(standard_output,p,degree,x,info);
+     else QR_Newton_Step(p,degree,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -442,12 +442,12 @@ procedure ts_sernew is
 
   procedure Test_QR_Newton_Steps
               ( p : in Standard_Series_Poly_Systems.Poly_Sys;
-                order : in out integer32; nbrit : in integer32;
+                degree : in out integer32; nbrit : in integer32;
                 x : in out Standard_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --  Does as many steps with Newton's method on the system p,
-  --  as the value of nbrit, calculating with series x of the given order,
+  --  as the value of nbrit, calculating with series x of the given degree,
   --  in standard double precision.
 
     info : integer32;
@@ -459,10 +459,10 @@ procedure ts_sernew is
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
-    Series_and_Polynomials.Set_Order(x,order);
+    Series_and_Polynomials.Set_Degree(x,degree);
     if ans = 'y'
-     then QR_Newton_Steps(standard_output,p,order,nbrit,x,info);
-     else QR_Newton_Steps(p,order,nbrit,x,info);
+     then QR_Newton_Steps(standard_output,p,degree,nbrit,x,info);
+     else QR_Newton_Steps(p,degree,nbrit,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -479,12 +479,12 @@ procedure ts_sernew is
 
   procedure Test_QR_Newton_Steps
               ( p : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                order : in out integer32; nbrit : in integer32;
+                degree : in out integer32; nbrit : in integer32;
                 x : in out DoblDobl_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --  Does as many steps with Newton's method on the system p,
-  --  as the value of nbrit, calculating with series x of the given order,
+  --  as the value of nbrit, calculating with series x of the given degree,
   --  in double double precision.
 
     info : integer32;
@@ -496,10 +496,10 @@ procedure ts_sernew is
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
-    Series_and_Polynomials.Set_Order(x,order);
+    Series_and_Polynomials.Set_Degree(x,degree);
     if ans = 'y'
-     then QR_Newton_Steps(standard_output,p,order,nbrit,x,info);
-     else QR_Newton_Steps(p,order,nbrit,x,info);
+     then QR_Newton_Steps(standard_output,p,degree,nbrit,x,info);
+     else QR_Newton_Steps(p,degree,nbrit,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -516,12 +516,12 @@ procedure ts_sernew is
 
   procedure Test_QR_Newton_Steps
               ( p : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                order : in out integer32; nbrit : in integer32;
+                degree : in out integer32; nbrit : in integer32;
                 x : in out QuadDobl_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --  Does as many steps with Newton's method on the system p,
-  --  as the value of nbrit, calculating with series x of the given order,
+  --  as the value of nbrit, calculating with series x of the given degree,
   --  in quad double precision.
 
     info : integer32;
@@ -533,10 +533,10 @@ procedure ts_sernew is
     new_line;
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
-    Series_and_Polynomials.Set_Order(x,order);
+    Series_and_Polynomials.Set_Degree(x,degree);
     if ans = 'y'
-     then QR_Newton_Steps(standard_output,p,order,nbrit,x,info);
-     else QR_Newton_Steps(p,order,nbrit,x,info);
+     then QR_Newton_Steps(standard_output,p,degree,nbrit,x,info);
+     else QR_Newton_Steps(p,degree,nbrit,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -560,7 +560,7 @@ procedure ts_sernew is
 
     ls : Standard_Series_Poly_Systems.Link_to_Poly_Sys;
     sol : Standard_Dense_Series_Vectors.Link_to_Vector;
-    idx,order,nbr : integer32 := 0;
+    idx,degree,nbr : integer32 := 0;
     dim : integer32;
 
     use Standard_Series_Polynomials;
@@ -576,12 +576,12 @@ procedure ts_sernew is
     Series_and_Polynomials_io.put(ls.all,idx);
     Read_Series_Vector(sol,dim,idx);
     new_line;
-    put("Give the start order of the computations : "); get(order);
+    put("Give the start degree of the computations : "); get(degree);
     new_line;
     put("Give the number of Newton steps : "); get(nbr);
     if nbr = 1
-     then Test_LU_Newton_Step(ls.all,order,sol.all);
-     else Test_LU_Newton_Steps(ls.all,order,nbr,sol.all);
+     then Test_LU_Newton_Step(ls.all,degree,sol.all);
+     else Test_LU_Newton_Steps(ls.all,degree,nbr,sol.all);
     end if;
   end Standard_Test_LU_Newton;
 
@@ -594,7 +594,7 @@ procedure ts_sernew is
 
     ls : DoblDobl_Series_Poly_Systems.Link_to_Poly_Sys;
     sol : DoblDobl_Dense_Series_Vectors.Link_to_Vector;
-    idx,order,nbr : integer32 := 0;
+    idx,degree,nbr : integer32 := 0;
     dim : integer32;
 
     use DoblDobl_Series_Polynomials;
@@ -610,12 +610,12 @@ procedure ts_sernew is
     Series_and_Polynomials_io.put(ls.all,idx);
     Read_Series_Vector(sol,dim,idx);
     new_line;
-    put("Give the start order of the computations : "); get(order);
+    put("Give the start degree of the computations : "); get(degree);
     new_line;
     put("Give the number of Newton steps : "); get(nbr);
     if nbr = 1
-     then Test_LU_Newton_Step(ls.all,order,sol.all);
-     else Test_LU_Newton_Steps(ls.all,order,nbr,sol.all);
+     then Test_LU_Newton_Step(ls.all,degree,sol.all);
+     else Test_LU_Newton_Steps(ls.all,degree,nbr,sol.all);
     end if;
   end DoblDobl_Test_LU_Newton;
 
@@ -628,7 +628,7 @@ procedure ts_sernew is
 
     ls : QuadDobl_Series_Poly_Systems.Link_to_Poly_Sys;
     sol : QuadDobl_Dense_Series_Vectors.Link_to_Vector;
-    idx,order,nbr : integer32 := 0;
+    idx,degree,nbr : integer32 := 0;
     dim : integer32;
 
     use QuadDobl_Series_Polynomials;
@@ -644,12 +644,12 @@ procedure ts_sernew is
     Series_and_Polynomials_io.put(ls.all,idx);
     Read_Series_Vector(sol,dim,idx);
     new_line;
-    put("Give the start order of the computations : "); get(order);
+    put("Give the start degree of the computations : "); get(degree);
     new_line;
     put("Give the number of Newton steps : "); get(nbr);
     if nbr = 1
-     then Test_LU_Newton_Step(ls.all,order,sol.all);
-     else Test_LU_Newton_Steps(ls.all,order,nbr,sol.all);
+     then Test_LU_Newton_Step(ls.all,degree,sol.all);
+     else Test_LU_Newton_Steps(ls.all,degree,nbr,sol.all);
     end if;
   end QuadDobl_Test_LU_Newton;
 
@@ -663,7 +663,7 @@ procedure ts_sernew is
 
     ls : Standard_Series_Poly_Systems.Link_to_Poly_Sys;
     sol : Standard_Dense_Series_Vectors.Link_to_Vector;
-    idx,order,nbr : integer32 := 0;
+    idx,degree,nbr : integer32 := 0;
     dim : integer32;
 
     use Standard_Series_Polynomials;
@@ -680,12 +680,12 @@ procedure ts_sernew is
     Series_and_Polynomials_io.put(ls.all,idx);
     Read_Series_Vector(sol,dim,idx);
     new_line;
-    put("Give the start order of the computations : "); get(order);
+    put("Give the start degree of the computations : "); get(degree);
     new_line;
     put("Give the number of Newton steps : "); get(nbr);
     if nbr = 1
-     then Test_QR_Newton_Step(ls.all,order,sol.all);
-     else Test_QR_Newton_Steps(ls.all,order,nbr,sol.all);
+     then Test_QR_Newton_Step(ls.all,degree,sol.all);
+     else Test_QR_Newton_Steps(ls.all,degree,nbr,sol.all);
     end if;
   end Standard_Test_QR_Newton;
 
@@ -699,7 +699,7 @@ procedure ts_sernew is
 
     ls : DoblDobl_Series_Poly_Systems.Link_to_Poly_Sys;
     sol : DoblDobl_Dense_Series_Vectors.Link_to_Vector;
-    idx,order,nbr : integer32 := 0;
+    idx,degree,nbr : integer32 := 0;
     dim : integer32;
 
     use DoblDobl_Series_Polynomials;
@@ -716,12 +716,12 @@ procedure ts_sernew is
     Series_and_Polynomials_io.put(ls.all,idx);
     Read_Series_Vector(sol,dim,idx);
     new_line;
-    put("Give the start order of the computations : "); get(order);
+    put("Give the start degree of the computations : "); get(degree);
     new_line;
     put("Give the number of Newton steps : "); get(nbr);
     if nbr = 1
-     then Test_QR_Newton_Step(ls.all,order,sol.all);
-     else Test_QR_Newton_Steps(ls.all,order,nbr,sol.all);
+     then Test_QR_Newton_Step(ls.all,degree,sol.all);
+     else Test_QR_Newton_Steps(ls.all,degree,nbr,sol.all);
     end if;
   end DoblDobl_Test_QR_Newton;
 
@@ -735,7 +735,7 @@ procedure ts_sernew is
 
     ls : QuadDobl_Series_Poly_Systems.Link_to_Poly_Sys;
     sol : QuadDobl_Dense_Series_Vectors.Link_to_Vector;
-    idx,order,nbr : integer32 := 0;
+    idx,degree,nbr : integer32 := 0;
     dim : integer32;
 
     use QuadDobl_Series_Polynomials;
@@ -752,12 +752,12 @@ procedure ts_sernew is
     Series_and_Polynomials_io.put(ls.all,idx);
     Read_Series_Vector(sol,dim,idx);
     new_line;
-    put("Give the start order of the computations : "); get(order);
+    put("Give the start degree of the computations : "); get(degree);
     new_line;
     put("Give the number of Newton steps : "); get(nbr);
     if nbr = 1
-     then Test_QR_Newton_Step(ls.all,order,sol.all);
-     else Test_QR_Newton_Steps(ls.all,order,nbr,sol.all);
+     then Test_QR_Newton_Step(ls.all,degree,sol.all);
+     else Test_QR_Newton_Steps(ls.all,degree,nbr,sol.all);
     end if;
   end QuadDobl_Test_QR_Newton;
 

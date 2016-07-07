@@ -90,9 +90,9 @@ package Series_and_Predictors is
              return integer32;
 
   -- DESCRIPTION :
-  --   Returns the smallest integer k in the range 0..s.order
+  --   Returns the smallest integer k in the range 0..s.deg
   --   for which AbsVal(s.cff(k)) > tol.
-  --   If all coefficients are less than tol, then s.order+1 is returned.
+  --   If all coefficients are less than tol, then s.deg+1 is returned.
 
   procedure Least_Order
              ( v : in Standard_Dense_Series_Vectors.Vector;

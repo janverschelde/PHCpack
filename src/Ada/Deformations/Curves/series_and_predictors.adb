@@ -186,36 +186,36 @@ package body Series_and_Predictors is
              ( s : Standard_Dense_Series.Series; tol : double_float )
              return integer32 is
   begin
-    for k in 0..s.order loop
+    for k in 0..s.deg loop
       if Standard_Complex_Numbers.AbsVal(s.cff(k)) > tol
        then return k;
       end if;
     end loop;
-    return s.order+1;
+    return s.deg+1;
   end Least_Order;
 
   function Least_Order
              ( s : DoblDobl_Dense_Series.Series; tol : double_float )
              return integer32 is
   begin
-    for k in 0..s.order loop
+    for k in 0..s.deg loop
       if DoblDobl_Complex_Numbers.AbsVal(s.cff(k)) > tol
        then return k;
       end if;
     end loop;
-    return s.order+1;
+    return s.deg+1;
   end Least_Order;
 
   function Least_Order
              ( s : QuadDobl_Dense_Series.Series; tol : double_float )
              return integer32 is
   begin
-    for k in 0..s.order loop
+    for k in 0..s.deg loop
       if QuadDobl_Complex_Numbers.AbsVal(s.cff(k)) > tol
        then return k;
       end if;
     end loop;
-    return s.order+1;
+    return s.deg+1;
   end Least_Order;
 
   procedure Least_Order
