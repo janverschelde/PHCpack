@@ -37,7 +37,7 @@ procedure ts_series is
 -- DESCRIPTION :
 --   Tests the operations on truncated power series.
 
-  procedure Standard_Test_Creation ( order : in integer32 ) is
+  procedure Standard_Test_Creation ( degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Verifies that 1/(1-t) = 1 + t + t^2 + ...
@@ -47,12 +47,12 @@ procedure ts_series is
     use Standard_Complex_Numbers;
     use Standard_Dense_Series;
 
-    s : constant Series := Create(1,order);
+    s : constant Series := Create(1,degree);
     t : Series := s;
     x,y,z : Series;
 
   begin
-    put("One as series of order "); put(order,1); put_line(" :");
+    put("One as series of degree "); put(degree,1); put_line(" :");
     put(s);
     t.cff(1) := Create(-1.0);
     put_line("The series 1 - t :"); put(t); 
@@ -64,7 +64,7 @@ procedure ts_series is
     put_line("Verifying commutativity : "); put(z);
   end Standard_Test_Creation;
 
-  procedure DoblDobl_Test_Creation ( order : in integer32 ) is
+  procedure DoblDobl_Test_Creation ( degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Verifies that 1/(1-t) = 1 + t + t^2 + ...
@@ -74,13 +74,13 @@ procedure ts_series is
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Dense_Series;
 
-    s : constant Series := Create(1,order);
+    s : constant Series := Create(1,degree);
     t : Series := s;
     x,y,z : Series;
     minone : constant double_double := create(-1.0);
 
   begin
-    put("One as series of order "); put(order,1); put_line(" :");
+    put("One as series of degree "); put(degree,1); put_line(" :");
     put(s);
     t.cff(1) := Create(minone);
     put_line("The series 1 - t :"); put(t); 
@@ -92,7 +92,7 @@ procedure ts_series is
     put_line("Verifying commutativity : "); put(z);
   end DoblDobl_Test_Creation;
 
-  procedure QuadDobl_Test_Creation ( order : in integer32 ) is
+  procedure QuadDobl_Test_Creation ( degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Verifies that 1/(1-t) = 1 + t + t^2 + ...
@@ -102,13 +102,13 @@ procedure ts_series is
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Dense_Series;
 
-    s : constant Series := Create(1,order);
+    s : constant Series := Create(1,degree);
     t : Series := s;
     x,y,z : Series;
     minone : constant quad_double := create(-1.0);
 
   begin
-    put("One as series of order "); put(order,1); put_line(" :");
+    put("One as series of degree "); put(degree,1); put_line(" :");
     put(s);
     t.cff(1) := Create(minone);
     put_line("The series 1 - t :"); put(t); 
@@ -120,16 +120,16 @@ procedure ts_series is
     put_line("Verifying commutativity : "); put(z);
   end QuadDobl_Test_Creation;
 
-  procedure Standard_Random_Test_sqrt ( order : in integer32 ) is
+  procedure Standard_Random_Test_sqrt ( degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a random series of the given order
+  --   Generates a random series of the given degree
   --   and tests the square root computation,
   --   in standard double precision.
 
     use Standard_Dense_Series;
 
-    c : constant Series := Random_Series(order);
+    c : constant Series := Random_Series(degree);
     ans : character;
     x,y,z : Series;
  
@@ -137,7 +137,7 @@ procedure ts_series is
     put("Extra output during the computation ? (y/n) ");
     Ask_Yes_or_No(ans);
     new_line;
-    put("A random series c of order "); put(order,1); put_line(" :");
+    put("A random series c of degree "); put(degree,1); put_line(" :");
     put(c);
     if ans = 'y'
      then x := Standard_Algebraic_Series.sqrt(c,0,true);
@@ -150,16 +150,16 @@ procedure ts_series is
     put_line("The equation x*x - c :"); put(z);
   end Standard_Random_Test_sqrt;
 
-  procedure DoblDobl_Random_Test_sqrt ( order : in integer32 ) is
+  procedure DoblDobl_Random_Test_sqrt ( degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a random series of the given order
+  --   Generates a random series of the given degree
   --   and tests the square root computation,
   --   in double double precision.
 
     use DoblDobl_Dense_Series;
 
-    c : constant Series := Random_Series(order);
+    c : constant Series := Random_Series(degree);
     ans : character;
     x,y,z : Series;
  
@@ -167,7 +167,7 @@ procedure ts_series is
     put("Extra output during the computation ? (y/n) ");
     Ask_Yes_or_No(ans);
     new_line;
-    put("A random series c of order "); put(order,1); put_line(" :");
+    put("A random series c of degree "); put(degree,1); put_line(" :");
     put(c);
     if ans = 'y'
      then x := DoblDobl_Algebraic_Series.sqrt(c,0,true);
@@ -180,16 +180,16 @@ procedure ts_series is
     put_line("The equation x*x - c :"); put(z);
   end DoblDobl_Random_Test_sqrt;
 
-  procedure QuadDobl_Random_Test_sqrt ( order : in integer32 ) is
+  procedure QuadDobl_Random_Test_sqrt ( degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a random series of the given order
+  --   Generates a random series of the given degree
   --   and tests the square root computation,
   --   in quad double precision.
 
     use QuadDobl_Dense_Series;
 
-    c : constant Series := Random_Series(order);
+    c : constant Series := Random_Series(degree);
     ans : character;
     x,y,z : Series;
  
@@ -197,7 +197,7 @@ procedure ts_series is
     put("Extra output during the computation ? (y/n) ");
     Ask_Yes_or_No(ans);
     new_line;
-    put("A random series c of order "); put(order,1); put_line(" :");
+    put("A random series c of degree "); put(degree,1); put_line(" :");
     put(c);
     if ans = 'y'
      then x := QuadDobl_Algebraic_Series.sqrt(c,0,true);
@@ -210,16 +210,16 @@ procedure ts_series is
     put_line("The equation x*x - c :"); put(z);
   end QuadDobl_Random_Test_sqrt;
 
-  procedure Standard_Random_Test_root ( order : in integer32 ) is
+  procedure Standard_Random_Test_root ( degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a random series of the given order
+  --   Generates a random series of the given degree
   --   and tests the square root computation,
   --   in standard double precision.
 
     use Standard_Dense_Series;
 
-    c : constant Series := Random_Series(order);
+    c : constant Series := Random_Series(degree);
     n,i : natural32 := 0;
     ans : character;
     x,y,z : Series;
@@ -231,7 +231,7 @@ procedure ts_series is
     put("Extra output during the computation ? (y/n) ");
     Ask_Yes_or_No(ans);
     new_line;
-    put("A random series c of order "); put(order,1); put_line(" :");
+    put("A random series c of degree "); put(degree,1); put_line(" :");
     put(c);
     if ans = 'y'
      then x := Standard_Algebraic_Series.Root(c,n,i,true);
@@ -245,16 +245,16 @@ procedure ts_series is
     put_line("The equation x**n - c :"); put(z);
   end Standard_Random_Test_root;
 
-  procedure DoblDobl_Random_Test_root ( order : in integer32 ) is
+  procedure DoblDobl_Random_Test_root ( degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a random series of the given order
+  --   Generates a random series of the given degree
   --   and tests the square root computation,
   --   in double double precision.
 
     use DoblDobl_Dense_Series;
 
-    c : constant Series := Random_Series(order);
+    c : constant Series := Random_Series(degree);
     n,i : natural32 := 0;
     ans : character;
     x,y,z : Series;
@@ -266,7 +266,7 @@ procedure ts_series is
     put("Extra output during the computation ? (y/n) ");
     Ask_Yes_or_No(ans);
     new_line;
-    put("A random series c of order "); put(order,1); put_line(" :");
+    put("A random series c of degree "); put(degree,1); put_line(" :");
     put(c);
     if ans = 'y'
      then x := DoblDobl_Algebraic_Series.Root(c,n,i,true);
@@ -280,16 +280,16 @@ procedure ts_series is
     put_line("The equation x**n - c :"); put(z);
   end DoblDobl_Random_Test_root;
 
-  procedure QuadDobl_Random_Test_root ( order : in integer32 ) is
+  procedure QuadDobl_Random_Test_root ( degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a random series of the given order
+  --   Generates a random series of the given degree
   --   and tests the square root computation,
   --   in quad double precision.
 
     use QuadDobl_Dense_Series;
 
-    c : constant Series := Random_Series(order);
+    c : constant Series := Random_Series(degree);
     n,i : natural32 := 0;
     ans : character;
     x,y,z : Series;
@@ -301,7 +301,7 @@ procedure ts_series is
     put("Extra output during the computation ? (y/n) ");
     Ask_Yes_or_No(ans);
     new_line;
-    put("A random series c of order "); put(order,1); put_line(" :");
+    put("A random series c of degree "); put(degree,1); put_line(" :");
     put(c);
     if ans = 'y'
      then x := QuadDobl_Algebraic_Series.Root(c,n,i,true);
@@ -315,21 +315,21 @@ procedure ts_series is
     put_line("The equation x**n - c :"); put(z);
   end QuadDobl_Random_Test_root;
 
-  procedure Standard_Test_Conjugate ( order : in integer32 ) is
+  procedure Standard_Test_Conjugate ( degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a random series of the given order
+  --   Generates a random series of the given degree
   --   and makes the product with its conjugate,
   --   in standard double precision.
 
     use Standard_Dense_Series;
 
-    s : constant Series := Random_Series(order);
+    s : constant Series := Random_Series(degree);
     c : constant Series := Conjugate(s);
     p,r,n,q,rq : Series;
 
   begin
-    put("A random series of order "); put(order,1); put_line(" :");
+    put("A random series of degree "); put(degree,1); put_line(" :");
     put(s);
     put_line("Its conjugate : ");
     put(c);
@@ -350,21 +350,21 @@ procedure ts_series is
     put(rq);
   end Standard_Test_Conjugate;
 
-  procedure DoblDobl_Test_Conjugate ( order : in integer32 ) is
+  procedure DoblDobl_Test_Conjugate ( degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a random series of the given order
+  --   Generates a random series of the given degree
   --   and makes the product with its conjugate,
   --   in double double precision.
 
     use DoblDobl_Dense_Series;
 
-    s : constant Series := Random_Series(order);
+    s : constant Series := Random_Series(degree);
     c : constant Series := Conjugate(s);
     p,r,n,q,rq : Series;
 
   begin
-    put("A random series of order "); put(order,1); put_line(" :");
+    put("A random series of degree "); put(degree,1); put_line(" :");
     put(s);
     put_line("Its conjugate : ");
     put(c);
@@ -385,21 +385,21 @@ procedure ts_series is
     put(rq);
   end DoblDobl_Test_Conjugate;
 
-  procedure QuadDobl_Test_Conjugate ( order : in integer32 ) is
+  procedure QuadDobl_Test_Conjugate ( degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a random series of the given order
+  --   Generates a random series of the given degree
   --   and makes the product with its conjugate,
   --   in quad double precision.
 
     use QuadDobl_Dense_Series;
 
-    s : constant Series := Random_Series(order);
+    s : constant Series := Random_Series(degree);
     c : constant Series := Conjugate(s);
     p,r,n,q,rq : Series;
 
   begin
-    put("A random series of order "); put(order,1); put_line(" :");
+    put("A random series of degree "); put(degree,1); put_line(" :");
     put(s);
     put_line("Its conjugate : ");
     put(c);
@@ -420,22 +420,22 @@ procedure ts_series is
     put(rq);
   end QuadDobl_Test_Conjugate;
 
-  procedure Standard_Test_Norm ( order : in integer32 ) is
+  procedure Standard_Test_Norm ( degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a random series of the given order
+  --   Generates a random series of the given degree
   --   and computes its norm, in standard double precision.
 
     use Standard_Dense_Series;
     use Standard_Dense_Series_Norms;
 
-    s : constant Series := Random_Series(order);
+    s : constant Series := Random_Series(degree);
     nrm : constant Series := Norm(s);
     ns : constant Series := Normalize(s);
     nrm2 : constant Series := Norm(ns);
   
   begin
-    put("A random series of order "); put(order,1); put_line(" :");
+    put("A random series of degree "); put(degree,1); put_line(" :");
     put(s);
     put_line("Its norm :"); put(nrm);
     put("The max-norm of the series : ");
@@ -450,22 +450,22 @@ procedure ts_series is
     put(Two_Norm(ns),3); new_line;
   end Standard_Test_Norm;
 
-  procedure DoblDobl_Test_Norm ( order : in integer32 ) is
+  procedure DoblDobl_Test_Norm ( degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a random series of the given order
+  --   Generates a random series of the given degree
   --   and computes its norm, in double double precision.
 
     use DoblDobl_Dense_Series;
     use DoblDobl_Dense_Series_Norms;
 
-    s : constant Series := Random_Series(order);
+    s : constant Series := Random_Series(degree);
     nrm : constant Series := Norm(s);
     ns : constant Series := Normalize(s);
     nrm2 : constant Series := Norm(ns);
   
   begin
-    put("A random series of order "); put(order,1); put_line(" :");
+    put("A random series of degree "); put(degree,1); put_line(" :");
     put(s);
     put_line("Its norm :"); put(nrm);
     put("The max-norm of the series : ");
@@ -480,22 +480,22 @@ procedure ts_series is
     put(Two_Norm(ns),3); new_line;
   end DoblDobl_Test_Norm;
 
-  procedure QuadDobl_Test_Norm ( order : in integer32 ) is
+  procedure QuadDobl_Test_Norm ( degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a random series of the given order
+  --   Generates a random series of the given degree
   --   and computes its norm, in quad double precision.
 
     use QuadDobl_Dense_Series;
     use QuadDobl_Dense_Series_Norms;
 
-    s : constant Series := Random_Series(order);
+    s : constant Series := Random_Series(degree);
     nrm : constant Series := Norm(s);
     ns : constant Series := Normalize(s);
     nrm2 : constant Series := Norm(ns);
   
   begin
-    put("A random series of order "); put(order,1); put_line(" :");
+    put("A random series of degree "); put(degree,1); put_line(" :");
     put(s);
     put_line("Its norm :"); put(nrm);
     put("The max-norm of the series : ");
@@ -510,10 +510,10 @@ procedure ts_series is
     put(Two_Norm(ns),3); new_line;
   end QuadDobl_Test_Norm;
 
-  procedure Standard_Test_Division ( order : in integer32 ) is
+  procedure Standard_Test_Division ( degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Tests the division on random series of the given order,
+  --   Tests the division on random series of the given degree,
   --   in standard double precision.
 
     use Standard_Dense_Series;
@@ -521,18 +521,18 @@ procedure ts_series is
     a,b,c : Series;
 
   begin
-    put("Give "); put(order+1,1);
+    put("Give "); put(degree+1,1);
     put_line(" complex numbers for the first series : "); 
-    a.order := order;
-    for i in 0..a.order loop
+    a.deg := degree;
+    for i in 0..a.deg loop
       get(a.cff(i));
     end loop;
     put_line("The first series : "); put(a);
     new_line;
-    put("Give "); put(order+1,1);
+    put("Give "); put(degree+1,1);
     put_line(" complex numbers for the second series : "); 
-    b.order := order;
-    for i in 0..b.order loop
+    b.deg := degree;
+    for i in 0..b.deg loop
       get(b.cff(i));
     end loop;
     put_line("The first series : "); put(b);
@@ -541,10 +541,10 @@ procedure ts_series is
     put_line("The result of the division "); put(c);
   end Standard_Test_Division;
 
-  procedure DoblDobl_Test_Division ( order : in integer32 ) is
+  procedure DoblDobl_Test_Division ( degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Tests the division on random series of the given order,
+  --   Tests the division on random series of the given degree,
   --   in double double precision.
 
     use DoblDobl_Dense_Series;
@@ -552,18 +552,18 @@ procedure ts_series is
     a,b,c : Series;
 
   begin
-    put("Give "); put(order+1,1);
+    put("Give "); put(degree+1,1);
     put_line(" complex numbers for the first series : "); 
-    a.order := order;
-    for i in 0..a.order loop
+    a.deg := degree;
+    for i in 0..a.deg loop
       get(a.cff(i));
     end loop;
     put_line("The first series : "); put(a);
     new_line;
-    put("Give "); put(order+1,1);
+    put("Give "); put(degree+1,1);
     put_line(" complex numbers for the second series : "); 
-    b.order := order;
-    for i in 0..b.order loop
+    b.deg := degree;
+    for i in 0..b.deg loop
       get(b.cff(i));
     end loop;
     put_line("The first series : "); put(b);
@@ -572,10 +572,10 @@ procedure ts_series is
     put_line("The result of the division "); put(c);
   end DoblDobl_Test_Division;
 
-  procedure QuadDobl_Test_Division ( order : in integer32 ) is
+  procedure QuadDobl_Test_Division ( degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Tests the division on random series of the given order,
+  --   Tests the division on random series of the given degree,
   --   in quad double precision.
 
     use QuadDobl_Dense_Series;
@@ -583,18 +583,18 @@ procedure ts_series is
     a,b,c : Series;
 
   begin
-    put("Give "); put(order+1,1);
+    put("Give "); put(degree+1,1);
     put_line(" complex numbers for the first series : "); 
-    a.order := order;
-    for i in 0..a.order loop
+    a.deg := degree;
+    for i in 0..a.deg loop
       get(a.cff(i));
     end loop;
     put_line("The first series : "); put(a);
     new_line;
-    put("Give "); put(order+1,1);
+    put("Give "); put(degree+1,1);
     put_line(" complex numbers for the second series : "); 
-    b.order := order;
-    for i in 0..b.order loop
+    b.deg := degree;
+    for i in 0..b.deg loop
       get(b.cff(i));
     end loop;
     put_line("The first series : "); put(b);
@@ -603,11 +603,11 @@ procedure ts_series is
     put_line("The result of the division "); put(c);
   end QuadDobl_Test_Division;
 
-  procedure Standard_Test_Arithmetic ( order : in integer32 ) is
+  procedure Standard_Test_Arithmetic ( degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Does a basic test on the arithmetic in standard double precision,
-  --   on random series of the given order.
+  --   on random series of the given degree.
 
     use Standard_Dense_Series;
 
@@ -615,9 +615,9 @@ procedure ts_series is
     ans : character;
 
   begin
-    a := Random_Series(order);
+    a := Random_Series(degree);
     put_line("The first random series A :"); put(a);
-    b := Random_Series(order);
+    b := Random_Series(degree);
     put_line("The second random series B :"); put(b);
     c := a+b;
     put_line("The sum A + B :"); put(c);
@@ -633,11 +633,11 @@ procedure ts_series is
     end if;
   end Standard_Test_Arithmetic;
 
-  procedure DoblDobl_Test_Arithmetic ( order : in integer32 ) is
+  procedure DoblDobl_Test_Arithmetic ( degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Does a basic test on the arithmetic in double double precision,
-  --   on random series of the given order.
+  --   on random series of the given degree.
 
     use DoblDobl_Dense_Series;
 
@@ -645,9 +645,9 @@ procedure ts_series is
     ans : character;
 
   begin
-    a := Random_Series(order);
+    a := Random_Series(degree);
     put_line("The first random series A :"); put(a);
-    b := Random_Series(order);
+    b := Random_Series(degree);
     put_line("The second random series B :"); put(b);
     c := a+b;
     put_line("The sum A + B :"); put(c);
@@ -663,11 +663,11 @@ procedure ts_series is
     end if;
   end DoblDobl_Test_Arithmetic;
 
-  procedure QuadDobl_Test_Arithmetic ( order : in integer32 ) is
+  procedure QuadDobl_Test_Arithmetic ( degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Does a basic test on the arithmetic in quad double precision,
-  --   on random series of the given order.
+  --   on random series of the given degree.
 
     use QuadDobl_Dense_Series;
 
@@ -675,9 +675,9 @@ procedure ts_series is
     ans : character;
 
   begin
-    a := Random_Series(order);
+    a := Random_Series(degree);
     put_line("The first random series A :"); put(a);
-    b := Random_Series(order);
+    b := Random_Series(degree);
     put_line("The second random series B :"); put(b);
     c := a+b;
     put_line("The sum A + B :"); put(c);
@@ -693,16 +693,16 @@ procedure ts_series is
     end if;
   end QuadDobl_Test_Arithmetic;
 
-  procedure Standard_Test_Shift ( order : in integer32 ) is
+  procedure Standard_Test_Shift ( degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Does a basic test on shifting the series parameter
-  --   on random series of the given order.
+  --   on random series of the given degree.
 
     use Standard_Complex_Numbers;
     use Standard_Dense_Series;
 
-    s : Series := Random_Series(order);
+    s : Series := Random_Series(degree);
     rc : double_float := 0.0;
     shifteds : Series;
     cc,y,z : Complex_Number;
@@ -726,16 +726,16 @@ procedure ts_series is
     put("shifted series(0) : "); put(z); new_line;
   end Standard_Test_Shift;
 
-  procedure DoblDobl_Test_Shift ( order : in integer32 ) is
+  procedure DoblDobl_Test_Shift ( degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Does a basic test on shifting the series parameter
-  --   on random series of the given order.
+  --   on random series of the given degree.
 
     use DoblDobl_Complex_Numbers;
     use DoblDobl_Dense_Series;
 
-    s : Series := Random_Series(order);
+    s : Series := Random_Series(degree);
     zero : constant double_double := create(0.0);
     rc : double_double := zero;
     shifteds : Series;
@@ -760,16 +760,16 @@ procedure ts_series is
     put("shifted series(0) : "); put(z); new_line;
   end DoblDobl_Test_Shift;
 
-  procedure QuadDobl_Test_Shift ( order : in integer32 ) is
+  procedure QuadDobl_Test_Shift ( degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Does a basic test on shifting the series parameter
-  --   on random series of the given order.
+  --   on random series of the given degree.
 
     use QuadDobl_Complex_Numbers;
     use QuadDobl_Dense_Series;
 
-    s : Series := Random_Series(order);
+    s : Series := Random_Series(degree);
     zero : constant quad_double := create(0.0);
     rc : quad_double := zero;
     shifteds : Series;
@@ -797,9 +797,9 @@ procedure ts_series is
   procedure Main is
 
   -- DESCRIPTION :
-  --   Prompts the user for the order of the series.
+  --   Prompts the user for the degree of the series.
 
-    order : integer32 := 0;
+    degree : integer32 := 0;
     ans,prc : character;
 
   begin
@@ -816,7 +816,7 @@ procedure ts_series is
     put("Type 0, 1, 2, 3, 4, 5, 6, or 7 to make your choice : ");
     Ask_Alternative(ans,"01234567");
     new_line;
-    put("Give the order of the series : "); get(order);
+    put("Give the degree of the series : "); get(degree);
     new_line;
     put_line("MENU for the precision of the coefficients :");
     put_line("  0. standard double precision");
@@ -828,58 +828,58 @@ procedure ts_series is
     case ans is
       when '0' =>
         case prc is
-          when '0' => Standard_Test_Creation(order);
-          when '1' => DoblDobl_Test_Creation(order);
-          when '2' => QuadDobl_Test_Creation(order);
+          when '0' => Standard_Test_Creation(degree);
+          when '1' => DoblDobl_Test_Creation(degree);
+          when '2' => QuadDobl_Test_Creation(degree);
           when others => null;
         end case;
       when '1' =>
         case prc is
-          when '0' => Standard_Random_Test_sqrt(order);
-          when '1' => DoblDobl_Random_Test_sqrt(order);
-          when '2' => QuadDobl_Random_Test_sqrt(order);
+          when '0' => Standard_Random_Test_sqrt(degree);
+          when '1' => DoblDobl_Random_Test_sqrt(degree);
+          when '2' => QuadDobl_Random_Test_sqrt(degree);
           when others => null;
         end case;
       when '2' =>
         case prc is
-          when '0' => Standard_Random_Test_root(order);
-          when '1' => DoblDobl_Random_Test_root(order);
-          when '2' => QuadDobl_Random_Test_root(order);
+          when '0' => Standard_Random_Test_root(degree);
+          when '1' => DoblDobl_Random_Test_root(degree);
+          when '2' => QuadDobl_Random_Test_root(degree);
           when others => null;
         end case;
       when '3' =>
         case prc is
-          when '0' => Standard_Test_Conjugate(order);
-          when '1' => DoblDobl_Test_Conjugate(order);
-          when '2' => QuadDobl_Test_Conjugate(order);
+          when '0' => Standard_Test_Conjugate(degree);
+          when '1' => DoblDobl_Test_Conjugate(degree);
+          when '2' => QuadDobl_Test_Conjugate(degree);
           when others => null;
         end case;
       when '4' =>
         case prc is 
-          when '0' => Standard_Test_Norm(order);
-          when '1' => DoblDobl_Test_Norm(order);
-          when '2' => QuadDobl_Test_Norm(order);
+          when '0' => Standard_Test_Norm(degree);
+          when '1' => DoblDobl_Test_Norm(degree);
+          when '2' => QuadDobl_Test_Norm(degree);
           when others => null;
         end case;
       when '5' =>
         case prc is
-          when '0' => Standard_Test_Division(order);
-          when '1' => DoblDobl_Test_Division(order);
-          when '2' => QuadDobl_Test_Division(order);
+          when '0' => Standard_Test_Division(degree);
+          when '1' => DoblDobl_Test_Division(degree);
+          when '2' => QuadDobl_Test_Division(degree);
           when others => null;
         end case;
       when '6' =>
         case prc is
-          when '0' => Standard_Test_Arithmetic(order);
-          when '1' => DoblDobl_Test_Arithmetic(order);
-          when '2' => QuadDobl_Test_Arithmetic(order);
+          when '0' => Standard_Test_Arithmetic(degree);
+          when '1' => DoblDobl_Test_Arithmetic(degree);
+          when '2' => QuadDobl_Test_Arithmetic(degree);
           when others => null;
         end case;
       when '7' => 
         case prc is
-          when '0' => Standard_Test_Shift(order);
-          when '1' => DoblDobl_Test_Shift(order);
-          when '2' => QuadDobl_Test_Shift(order);
+          when '0' => Standard_Test_Shift(degree);
+          when '1' => DoblDobl_Test_Shift(degree);
+          when '2' => QuadDobl_Test_Shift(degree);
           when others => null;
         end case;
       when others => null;

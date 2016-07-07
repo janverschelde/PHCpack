@@ -72,7 +72,7 @@ package Series_and_Polynomials is
   --   in double, double double, or quad double precision.
   --   This conversion is useful for symbolic input of a series.
 
-  -- REQUIRED : degree(p) <= Standard_Dense_Series.max_order.
+  -- REQUIRED : degree(p) <= Standard_Dense_Series.max_deg.
 
   function Series_Vector_to_System
              ( v : Standard_Dense_Series_Vectors.Vector )
@@ -109,7 +109,7 @@ package Series_and_Polynomials is
   --   in double, double double, or quad double precision.
   --   This conversion is useful for symbolic input of a series.
 
-  -- REQUIRED : degree(p(k)) <= Standard_Dense_Series.max_order
+  -- REQUIRED : degree(p(k)) <= Standard_Dense_Series.max_deg_
 
   function Series_VecVec_to_System_Array
              ( v : Standard_Dense_Series_VecVecs.VecVec )
@@ -146,7 +146,7 @@ package Series_and_Polynomials is
   --   in double, double double, or quad double precision.
   --   This conversion is useful for symbolic input of a series.
 
-  -- REQUIRED : degree(p) <= Standard_Dense_Series.max_order.
+  -- REQUIRED : degree(p) <= Standard_Dense_Series.max_deg.
 
   function Polynomial_to_Series_Polynomial
              ( p : Standard_Complex_Polynomials.Poly;
@@ -163,7 +163,7 @@ package Series_and_Polynomials is
 
   -- DESCRIPTION :
   --   By default, if idx is zero, then the coefficient of each term in p
-  --   is copied into a series of order zero.  Otherwise, if idx > 0,
+  --   is copied into a series of degree zero.  Otherwise, if idx > 0,
   --   then the variable with that index in p is the series parameter.
   --   For example, t^3*x + 2*t*x becomes (2*t + t^3)*x, if idx = 1.
   --   If idx > 0, the number of variables in the polynomial on return is 
@@ -227,54 +227,54 @@ package Series_and_Polynomials is
   --   and returns the corresponding system of series polynomials,
   --   in double, double double, and quad double precision.
 
-  procedure Set_Order ( v : in out Standard_Dense_Series_Vectors.Vector;
-                        order : in integer32 );
-  procedure Set_Order ( v : in out DoblDobl_Dense_Series_Vectors.Vector;
-                        order : in integer32 );
-  procedure Set_Order ( v : in out QuadDobl_Dense_Series_Vectors.Vector;
-                        order : in integer32 );
+  procedure Set_Degree ( v : in out Standard_Dense_Series_Vectors.Vector;
+                         degree : in integer32 );
+  procedure Set_Degree ( v : in out DoblDobl_Dense_Series_Vectors.Vector;
+                         degree : in integer32 );
+  procedure Set_Degree ( v : in out QuadDobl_Dense_Series_Vectors.Vector;
+                         degree : in integer32 );
 
   -- DESCRIPTION :
-  --   Sets every series in the vector v to the given order,
-  --   filling in with zero coefficients if the given order
-  --   is larger than the current order.
-  --   For evaluation in polynomials, the order must be set high enough
+  --   Sets every series in the vector v to the given degree,
+  --   filling in with zero coefficients if the given degree
+  --   is larger than the current degree.
+  --   For evaluation in polynomials, the degree must be set high enough
   --   so that the presence of higher degrees is noticed.
 
-  procedure Set_Order ( m : in out Standard_Dense_Series_Matrices.Matrix;
-                        order : in integer32 );
-  procedure Set_Order ( m : in out DoblDobl_Dense_Series_Matrices.Matrix;
-                        order : in integer32 );
-  procedure Set_Order ( m : in out QuadDobl_Dense_Series_Matrices.Matrix;
-                        order : in integer32 );
+  procedure Set_Degree ( m : in out Standard_Dense_Series_Matrices.Matrix;
+                         degree : in integer32 );
+  procedure Set_Degree ( m : in out DoblDobl_Dense_Series_Matrices.Matrix;
+                         degree : in integer32 );
+  procedure Set_Degree ( m : in out QuadDobl_Dense_Series_Matrices.Matrix;
+                         degree : in integer32 );
 
   -- DESCRIPTION :
-  --   Sets every series in the matrix m to the given order,
-  --   filling in with zero coefficients if the given order
-  --   is larger than the current order.
+  --   Sets every series in the matrix m to the given degree,
+  --   filling in with zero coefficients if the given degree
+  --   is larger than the current degree.
 
-  procedure Set_Order ( p : in out Standard_Series_Polynomials.Poly;
-                        order : in integer32 );
-  procedure Set_Order ( p : in out DoblDobl_Series_Polynomials.Poly;
-                        order : in integer32 );
-  procedure Set_Order ( p : in out QuadDobl_Series_Polynomials.Poly;
-                        order : in integer32 );
-  procedure Set_Order ( p : in out Standard_Series_Poly_Systems.Poly_Sys;
-                        order : in integer32 );
-  procedure Set_Order ( p : in out DoblDobl_Series_Poly_Systems.Poly_Sys;
-                        order : in integer32 );
-  procedure Set_Order ( p : in out QuadDobl_Series_Poly_Systems.Poly_Sys;
-                        order : in integer32 );
-  procedure Set_Order ( jm : in out Standard_Series_Jaco_Matrices.Jaco_Mat;
-                        order : in integer32 );
-  procedure Set_Order ( jm : in out DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
-                        order : in integer32 );
-  procedure Set_Order ( jm : in out QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
-                        order : in integer32 );
+  procedure Set_Degree ( p : in out Standard_Series_Polynomials.Poly;
+                         degree : in integer32 );
+  procedure Set_Degree ( p : in out DoblDobl_Series_Polynomials.Poly;
+                         degree : in integer32 );
+  procedure Set_Degree ( p : in out QuadDobl_Series_Polynomials.Poly;
+                         degree : in integer32 );
+  procedure Set_Degree ( p : in out Standard_Series_Poly_Systems.Poly_Sys;
+                         degree : in integer32 );
+  procedure Set_Degree ( p : in out DoblDobl_Series_Poly_Systems.Poly_Sys;
+                         degree : in integer32 );
+  procedure Set_Degree ( p : in out QuadDobl_Series_Poly_Systems.Poly_Sys;
+                         degree : in integer32 );
+  procedure Set_Degree ( jm : in out Standard_Series_Jaco_Matrices.Jaco_Mat;
+                         degree : in integer32 );
+  procedure Set_Degree ( jm : in out DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
+                         degree : in integer32 );
+  procedure Set_Degree ( jm : in out QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
+                         degree : in integer32 );
 
   -- DESCRIPTION :
-  --   Sets the order of every term in p or jm to the given order.
-  --   If the given order is larger than the current order,
+  --   Sets the degree of every term in p or jm to the given degree.
+  --   If the given degree is larger than the current degree,
   --   then the extra coefficients are set to zero.
 
   procedure Filter ( s : in out Standard_Dense_Series_Vectors.Vector;

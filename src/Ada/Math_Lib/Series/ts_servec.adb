@@ -130,45 +130,45 @@ procedure ts_servec is
     put_line("Square of norm of normalized vector :"); put(snv);
   end QuadDobl_Test_Norm;
 
-  procedure Standard_Test ( dim,order : in integer32 ) is
+  procedure Standard_Test ( dim,degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a random vector of range 1..dim,
-  --   with series of the given order, in standard double precision.
+  --   with series of the given degree, in standard double precision.
   --   Tests the computation of the norm and the normalization.
 
     v : Standard_Dense_Series_Vectors.Vector(1..dim)
-      := Standard_Random_Series.Random_Series_Vector(1,dim,order);
+      := Standard_Random_Series.Random_Series_Vector(1,dim,degree);
 
   begin
     Write(v);
     Standard_Test_Norm(v);
   end Standard_Test;
 
-  procedure DoblDobl_Test ( dim,order : in integer32 ) is
+  procedure DoblDobl_Test ( dim,degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a random vector of range 1..dim,
-  --   with series of the given order, in double double precision.
+  --   with series of the given degree, in double double precision.
   --   Tests the computation of the norm and the normalization.
 
     v : DoblDobl_Dense_Series_Vectors.Vector(1..dim)
-      := DoblDobl_Random_Series.Random_Series_Vector(1,dim,order);
+      := DoblDobl_Random_Series.Random_Series_Vector(1,dim,degree);
 
   begin
     Write(v);
     DoblDobl_Test_Norm(v);
   end DoblDobl_Test;
 
-  procedure QuadDobl_Test ( dim,order : in integer32 ) is
+  procedure QuadDobl_Test ( dim,degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a random vector of range 1..dim,
-  --   with series of the given order, in quad double precision.
+  --   with series of the given degree, in quad double precision.
   --   Tests the computation of the norm and the normalization.
 
     v : QuadDobl_Dense_Series_Vectors.Vector(1..dim)
-      := QuadDobl_Random_Series.Random_Series_Vector(1,dim,order);
+      := QuadDobl_Random_Series.Random_Series_Vector(1,dim,degree);
 
   begin
     Write(v);
@@ -178,16 +178,16 @@ procedure ts_servec is
   procedure Main is
 
   -- DESCRIPTION :
-  --   Prompts the user for a dimension, an order
+  --   Prompts the user for a dimension, an degree
   --   and then generates a random vector.
 
-    dim,order : integer32 := 0;
+    dim,degree : integer32 := 0;
     ans : character;
 
   begin
     new_line;
     put("Give the dimension : "); get(dim);
-    put("Give the order : "); get(order);
+    put("Give the degree : "); get(degree);
     new_line;
     put_line("MENU to select the working precision :");
     put_line("  0. standard double precision;");
@@ -197,9 +197,9 @@ procedure ts_servec is
     Ask_Alternative(ans,"012");
     new_line;
     case ans is
-      when '0' => Standard_Test(dim,order);
-      when '1' => DoblDobl_Test(dim,order);
-      when '2' => QuadDobl_Test(dim,order);
+      when '0' => Standard_Test(dim,degree);
+      when '1' => DoblDobl_Test(dim,degree);
+      when '2' => QuadDobl_Test(dim,degree);
       when others => null;
     end case;
   end Main;

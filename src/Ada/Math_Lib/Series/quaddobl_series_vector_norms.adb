@@ -66,12 +66,12 @@ package body QuadDobl_Series_Vector_Norms is
 
   function Max_Norm ( v : Vector ) return quad_double is
 
-    res : quad_double := DoblDobl_Dense_Series_Norms.Max_Norm(v(v'first));
+    res : quad_double := QuadDobl_Dense_Series_Norms.Max_Norm(v(v'first));
     nrm : quad_double;
 
   begin
     for i in v'first+1..v'last loop
-      nrm := DoblDobl_Dense_Series_Norms.Max_Norm(v(i));
+      nrm := QuadDobl_Dense_Series_Norms.Max_Norm(v(i));
       if nrm > res
        then res := nrm;
       end if;

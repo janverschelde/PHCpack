@@ -17,39 +17,39 @@ package body Standard_Dense_Series is
     return Create(c,0);
   end Create;
 
-  function Create ( i : integer; order : integer32 ) return Series is
+  function Create ( i : integer; deg : integer32 ) return Series is
 
     res : Series;
 
   begin
-    res.order := order;
+    res.deg := deg;
     res.cff(0) := Create(i);
-    res.cff(1..order)
-      := Standard_Complex_Vectors.Vector'(1..order => Create(0.0));
+    res.cff(1..deg)
+      := Standard_Complex_Vectors.Vector'(1..deg => Create(0.0));
     return res;
   end Create;
 
-  function Create ( f : double_float; order : integer32 ) return Series is
+  function Create ( f : double_float; deg : integer32 ) return Series is
 
     res : Series;
 
   begin
-    res.order := order;
+    res.deg := deg;
     res.cff(0) := Create(f);
-    res.cff(1..order)
-      := Standard_Complex_Vectors.Vector'(1..order => Create(0.0));
+    res.cff(1..deg)
+      := Standard_Complex_Vectors.Vector'(1..deg => Create(0.0));
     return res;
   end Create;
 
-  function Create ( c : Complex_Number; order : integer32 ) return Series is
+  function Create ( c : Complex_Number; deg : integer32 ) return Series is
 
     res : Series;
 
   begin
-    res.order := order;
+    res.deg := deg;
     res.cff(0) := c;
-    res.cff(1..order)
-      := Standard_Complex_Vectors.Vector'(1..order => Create(0.0));
+    res.cff(1..deg)
+      := Standard_Complex_Vectors.Vector'(1..deg => Create(0.0));
     return res;
   end Create;
 
@@ -58,32 +58,32 @@ package body Standard_Dense_Series is
     res : Series;
 
   begin
-    if c'last <= max_order then
-      res.order := c'last;
+    if c'last <= max_deg then
+      res.deg := c'last;
       res.cff(0..c'last) := c;
     else
-      res.order := max_order;
-      res.cff := c(0..max_order);
+      res.deg := max_deg;
+      res.cff := c(0..max_deg);
     end if;
     return res;
   end Create;
 
-  function Create ( s : Series; order : integer32 ) return Series is
+  function Create ( s : Series; deg : integer32 ) return Series is
 
     res : Series;
     zero : constant Complex_Number := Create(0.0);
 
   begin
-    res.order := order;
-    if order <= s.order then
-      for i in 0..res.order loop
+    res.deg := deg;
+    if deg <= s.deg then
+      for i in 0..res.deg loop
         res.cff(i) := s.cff(i);
       end loop;
     else
-      for i in 0..s.order loop
+      for i in 0..s.deg loop
         res.cff(i) := s.cff(i);
       end loop;
-      for i in s.order+1..order loop
+      for i in s.deg+1..deg loop
         res.cff(i) := zero;
       end loop;
     end if;
@@ -97,13 +97,13 @@ package body Standard_Dense_Series is
     zero : constant Complex_Number := Create(0.0);
 
   begin
-    if s.order <= t.order then
-      for i in 0..s.order loop
+    if s.deg <= t.deg then
+      for i in 0..s.deg loop
         if not Standard_Complex_Numbers.Equal(s.cff(i),t.cff(i))
          then return false;
         end if;
       end loop;
-      for i in s.order+1..t.order loop
+      for i in s.deg+1..t.deg loop
         if not Standard_Complex_Numbers.Equal(t.cff(i),zero)
          then return false;
         end if;
@@ -116,8 +116,8 @@ package body Standard_Dense_Series is
 
   procedure Copy ( s : in Series; t : in out Series ) is
   begin
-    t.order := s.order;
-    for i in 0..s.order loop
+    t.deg := s.deg;
+    for i in 0..s.deg loop
       t.cff(i) := s.cff(i);
     end loop;
   end Copy;
@@ -129,8 +129,8 @@ package body Standard_Dense_Series is
     res : Series;
 
   begin
-    res.order := s.order;
-    for i in 0..res.order loop
+    res.deg := s.deg;
+    for i in 0..res.deg loop
       res.cff(i) := Conjugate(s.cff(i));
     end loop;
     return res;
@@ -174,25 +174,25 @@ package body Standard_Dense_Series is
     res : Series;
 
   begin
-    if s.order = t.order then
-      res.order := s.order;
-      for i in 0..res.order loop
+    if s.deg = t.deg then
+      res.deg := s.deg;
+      for i in 0..res.deg loop
         res.cff(i) := s.cff(i) + t.cff(i);
       end loop;
-    elsif s.order < t.order then -- order of result is t.order
-      res.order := t.order;
-      for i in 0..s.order loop
+    elsif s.deg < t.deg then -- deg of result is t.deg
+      res.deg := t.deg;
+      for i in 0..s.deg loop
         res.cff(i) := s.cff(i) + t.cff(i);
       end loop;
-      for i in s.order+1..t.order loop -- copy remaining terms from t
+      for i in s.deg+1..t.deg loop -- copy remaining terms from t
         res.cff(i) := t.cff(i);
       end loop;
-    else -- s.order > t.order and the order of result is s.order
-      res.order := s.order;
-      for i in 0..t.order loop
+    else -- s.deg > t.deg and the deg of result is s.deg
+      res.deg := s.deg;
+      for i in 0..t.deg loop
         res.cff(i) := s.cff(i) + t.cff(i);
       end loop;
-      for i in t.order+1..s.order loop -- copy remaining terms from s
+      for i in t.deg+1..s.deg loop -- copy remaining terms from s
         res.cff(i) := s.cff(i);
       end loop;
     end if;
@@ -201,18 +201,18 @@ package body Standard_Dense_Series is
 
   procedure Add ( s : in out Series; t : in Series ) is
   begin
-    if t.order >= s.order then  -- do not ignore terms of order > s.order!
-      for i in 0..s.order loop
+    if t.deg >= s.deg then  -- do not ignore terms of deg > s.deg!
+      for i in 0..s.deg loop
         s.cff(i) := s.cff(i) + t.cff(i);
       end loop;
-      if t.order > s.order then 
-        for i in s.order+1..t.order loop -- copy higher order terms
+      if t.deg > s.deg then 
+        for i in s.deg+1..t.deg loop -- copy higher deg terms
           s.cff(i) := t.cff(i);
         end loop;
-        s.order := t.order; -- adjust the order of s
+        s.deg := t.deg; -- adjust the deg of s
       end if;
-    else          -- add only the coefficients of index <= t.order
-      for i in 0..t.order loop
+    else          -- add only the coefficients of index <= t.deg
+      for i in 0..t.deg loop
         s.cff(i) := s.cff(i) + t.cff(i);
       end loop;
     end if;
@@ -232,9 +232,9 @@ package body Standard_Dense_Series is
     res : Series;
 
   begin
-    res.order := s.order;
+    res.deg := s.deg;
     res.cff(0) := c - s.cff(0);
-    for k in 1..res.order loop
+    for k in 1..res.deg loop
       res.cff(k) := -s.cff(k);
     end loop;
     return res;
@@ -250,8 +250,8 @@ package body Standard_Dense_Series is
     res : Series;
 
   begin
-    res.order := s.order;
-    for i in 0..res.order loop
+    res.deg := s.deg;
+    for i in 0..res.deg loop
       res.cff(i) := -s.cff(i);
     end loop;
     return res;
@@ -259,7 +259,7 @@ package body Standard_Dense_Series is
 
   procedure Min ( s : in out Series ) is
   begin
-    for i in 0..s.order loop
+    for i in 0..s.deg loop
       s.cff(i) := -s.cff(i);
     end loop;
   end Min;
@@ -269,25 +269,25 @@ package body Standard_Dense_Series is
     res : Series;
 
   begin
-    if s.order = t.order then
-      res.order := s.order;
-      for i in 0..t.order loop
+    if s.deg = t.deg then
+      res.deg := s.deg;
+      for i in 0..t.deg loop
         res.cff(i) := s.cff(i) - t.cff(i);
       end loop;
-    elsif s.order < t.order then -- the order of the result is t.order
-      res.order := t.order;
-      for i in 0..s.order loop
+    elsif s.deg < t.deg then -- the deg of the result is t.deg
+      res.deg := t.deg;
+      for i in 0..s.deg loop
         res.cff(i) := s.cff(i) - t.cff(i);
       end loop;
-      for i in s.order+1..t.order loop -- copy remaining terms
+      for i in s.deg+1..t.deg loop -- copy remaining terms
         res.cff(i) := -t.cff(i);       -- of t with minus sign
       end loop;
     else
-      res.order := s.order;
-      for i in 0..s.order loop
+      res.deg := s.deg;
+      for i in 0..s.deg loop
         res.cff(i) := s.cff(i) - t.cff(i);
       end loop;
-      for i in t.order+1..s.order loop -- copy remaining terms of s
+      for i in t.deg+1..s.deg loop -- copy remaining terms of s
         res.cff(i) := s.cff(i);
       end loop;
     end if;
@@ -296,18 +296,18 @@ package body Standard_Dense_Series is
 
   procedure Sub ( s : in out Series; t : in Series ) is
   begin
-    if t.order >= s.order then -- do not ignore terms of t of index > s.order!
-      for i in 0..s.order loop
+    if t.deg >= s.deg then -- do not ignore terms of t of index > s.deg!
+      for i in 0..s.deg loop
         s.cff(i) := s.cff(i) - t.cff(i);
       end loop;
-      if t.order > s.order then
-        for i in s.order+1..t.order loop -- subtract higher order terms
+      if t.deg > s.deg then
+        for i in s.deg+1..t.deg loop -- subtract higher deg terms
           s.cff(i) := -t.cff(i);
         end loop;
-        s.order := t.order; -- s become a series of higher order
+        s.deg := t.deg; -- s become a series of higher deg
       end if;
     else
-      for i in 0..t.order loop
+      for i in 0..t.deg loop
         s.cff(i) := s.cff(i) - t.cff(i);
       end loop;
     end if;
@@ -318,8 +318,8 @@ package body Standard_Dense_Series is
     res : Series;
 
   begin
-    res.order := s.order;
-    for k in 0..s.order loop
+    res.deg := s.deg;
+    for k in 0..s.deg loop
       res.cff(k) := s.cff(k)*c;
     end loop;
     return res;
@@ -330,8 +330,8 @@ package body Standard_Dense_Series is
     res : Series;
 
   begin
-    res.order := s.order;
-    for k in 0..s.order loop
+    res.deg := s.deg;
+    for k in 0..s.deg loop
       res.cff(k) := c*s.cff(k);
     end loop;
     return res;
@@ -339,7 +339,7 @@ package body Standard_Dense_Series is
 
   procedure Mul ( s : in out Series; c : in Complex_Number ) is
   begin
-    for i in 0..s.order loop
+    for i in 0..s.deg loop
       s.cff(i) := s.cff(i)*c;
     end loop;
   end Mul;
@@ -349,29 +349,29 @@ package body Standard_Dense_Series is
     res : Series;
 
   begin
-    if s.order = t.order then
-      res.order := s.order;
-      for i in 0..res.order loop
+    if s.deg = t.deg then
+      res.deg := s.deg;
+      for i in 0..res.deg loop
         res.cff(i) := s.cff(0)*t.cff(i);
         for j in 1..i loop
           res.cff(i) := res.cff(i) + s.cff(j)*t.cff(i-j);
         end loop;
       end loop;
-    elsif s.order < t.order then
-      res.order := t.order;
-      for i in 0..res.order loop
+    elsif s.deg < t.deg then
+      res.deg := t.deg;
+      for i in 0..res.deg loop
         res.cff(i) := s.cff(0)*t.cff(i);
         for j in 1..i loop
-          exit when j > s.order;
+          exit when j > s.deg;
           res.cff(i) := res.cff(i) + s.cff(j)*t.cff(i-j);
         end loop;
       end loop;
-    else -- s.order > t.order, we then flip s and t
-      res.order := s.order;
-      for i in 0..res.order loop
+    else -- s.deg > t.deg, we then flip s and t
+      res.deg := s.deg;
+      for i in 0..res.deg loop
         res.cff(i) := t.cff(0)*s.cff(i);
         for j in 1..i loop
-          exit when j > t.order;
+          exit when j > t.deg;
           res.cff(i) := res.cff(i) + t.cff(j)*s.cff(i-j);
         end loop;
       end loop;
@@ -392,9 +392,9 @@ package body Standard_Dense_Series is
     res : Series;
 
   begin
-    res.order := s.order;
+    res.deg := s.deg;
     res.cff(0) := 1.0/s.cff(0);
-    for i in 1..res.order loop
+    for i in 1..res.deg loop
       res.cff(i) := -s.cff(1)*res.cff(i-1);
       for j in 2..i loop
         res.cff(i) := res.cff(i) - s.cff(j)*res.cff(i-j);
@@ -409,8 +409,8 @@ package body Standard_Dense_Series is
     res : Series;
 
   begin
-    res.order := s.order;
-    for k in 0..s.order loop
+    res.deg := s.deg;
+    for k in 0..s.deg loop
       res.cff(k) := s.cff(k)/c;
     end loop;
     return res;
@@ -423,7 +423,7 @@ package body Standard_Dense_Series is
 
   procedure Div ( s : in out Series; c : in Complex_Number ) is
   begin
-    for k in 0..s.order loop
+    for k in 0..s.deg loop
       s.cff(k) := s.cff(k)/c;
     end loop;
   end Div;
@@ -487,11 +487,11 @@ package body Standard_Dense_Series is
     pwt : double_float := t;
 
   begin
-    for i in 1..(s.order-1) loop
+    for i in 1..(s.deg-1) loop
       res := res + s.cff(i)*pwt;
       pwt := pwt*t;
     end loop;
-    res := res + s.cff(s.order)*pwt;
+    res := res + s.cff(s.deg)*pwt;
     return res;
   end Eval;
 
@@ -501,17 +501,17 @@ package body Standard_Dense_Series is
     pwt : Complex_Number := t;
 
   begin
-    for i in 1..(s.order-1) loop
+    for i in 1..(s.deg-1) loop
       res := res + s.cff(i)*pwt;
       pwt := pwt*t;
     end loop;
-    res := res + s.cff(s.order)*pwt;
+    res := res + s.cff(s.deg)*pwt;
     return res;
   end Eval;
 
   procedure Filter ( s : in out Series; tol : in double_float ) is
   begin
-    for i in 0..s.order loop
+    for i in 0..s.deg loop
       if AbsVal(s.cff(i)) < tol
        then s.cff(i) := Create(0.0);
       end if;
@@ -538,8 +538,8 @@ package body Standard_Dense_Series is
     sgn : integer32;
 
   begin
-    res.order := s.order;
-    for i in 0..s.order loop
+    res.deg := s.deg;
+    for i in 0..s.deg loop
       res.cff(i) := Create(0.0);
       sgn := 1;
       for j in 0..i loop
@@ -560,8 +560,8 @@ package body Standard_Dense_Series is
     sgn : integer32;
 
   begin
-    res.order := s.order;
-    for i in 0..s.order loop
+    res.deg := s.deg;
+    for i in 0..s.deg loop
       res.cff(i) := Create(0.0);
       sgn := 1;
       for j in 0..i loop
@@ -594,7 +594,7 @@ package body Standard_Dense_Series is
 
   procedure Clear ( s : in out Series ) is
   begin
-    s.order := 0;
+    s.deg := 0;
     for i in s.cff'range loop
       s.cff(i) := Create(0.0);
     end loop;

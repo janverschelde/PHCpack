@@ -42,7 +42,7 @@ package body Series_and_Polynomials is
     end Add_Term;
 
   begin
-    for i in 0..s.order loop
+    for i in 0..s.deg loop
       if not Equal(s.cff(i),zero)
        then Add_Term(i,s.cff(i));
       end if;
@@ -76,7 +76,7 @@ package body Series_and_Polynomials is
     end Add_Term;
 
   begin
-    for i in 0..s.order loop
+    for i in 0..s.deg loop
       if not Equal(s.cff(i),zero)
        then Add_Term(i,s.cff(i));
       end if;
@@ -110,7 +110,7 @@ package body Series_and_Polynomials is
     end Add_Term;
 
   begin
-    for i in 0..s.order loop
+    for i in 0..s.deg loop
       if not Equal(s.cff(i),zero)
        then Add_Term(i,s.cff(i));
       end if;
@@ -132,16 +132,16 @@ package body Series_and_Polynomials is
 
     -- DESCRIPTION :
     --   Assigns t.cf to the res.cff(t.dg(idx))
-    --   and updates the order if needed.
+    --   and updates the degree if needed.
 
       d : constant integer32 := integer32(t.dg(idx));
 
     begin
-      if d > res.order then
-        for k in res.order+1..d loop -- fill in with zeroes
+      if d > res.deg then
+        for k in res.deg+1..d loop -- fill in with zeroes
           res.cff(k) := Create(0.0);
         end loop;
-        res.order := d;
+        res.deg := d;
       end if;
       res.cff(d) := t.cf;
       c := true;
@@ -150,7 +150,7 @@ package body Series_and_Polynomials is
       new Standard_Complex_Polynomials.Visiting_Iterator(Visit_Term);
 
   begin
-    res.order := 0;
+    res.deg := 0;
     res.cff(0) := Create(0.0);
     Visit_Terms(p);
     return res;
@@ -170,16 +170,16 @@ package body Series_and_Polynomials is
 
     -- DESCRIPTION :
     --   Assigns t.cf to the res.cff(t.dg(idx))
-    --   and updates the order if needed.
+    --   and updates the degree if needed.
 
       d : constant integer32 := integer32(t.dg(idx));
 
     begin
-      if d > res.order then
-        for k in res.order+1..d loop -- fill in with zeroes
+      if d > res.deg then
+        for k in res.deg+1..d loop -- fill in with zeroes
           res.cff(k) := Create(integer(0));
         end loop;
-        res.order := d;
+        res.deg := d;
       end if;
       res.cff(d) := t.cf;
       c := true;
@@ -188,7 +188,7 @@ package body Series_and_Polynomials is
       new DoblDobl_Complex_Polynomials.Visiting_Iterator(Visit_Term);
 
   begin
-    res.order := 0;
+    res.deg := 0;
     res.cff(0) := Create(integer(0));
     Visit_Terms(p);
     return res;
@@ -208,16 +208,16 @@ package body Series_and_Polynomials is
 
     -- DESCRIPTION :
     --   Assigns t.cf to the res.cff(t.dg(idx))
-    --   and updates the order if needed.
+    --   and updates the degree if needed.
 
       d : constant integer32 := integer32(t.dg(idx));
 
     begin
-      if d > res.order then
-        for k in res.order+1..d loop -- fill in with zeroes
+      if d > res.deg then
+        for k in res.deg+1..d loop -- fill in with zeroes
           res.cff(k) := Create(integer(0));
         end loop;
-        res.order := d;
+        res.deg := d;
       end if;
       res.cff(d) := t.cf;
       c := true;
@@ -226,7 +226,7 @@ package body Series_and_Polynomials is
       new QuadDobl_Complex_Polynomials.Visiting_Iterator(Visit_Term);
 
   begin
-    res.order := 0;
+    res.deg := 0;
     res.cff(0) := Create(integer(0));
     Visit_Terms(p);
     return res;
@@ -448,12 +448,12 @@ package body Series_and_Polynomials is
     return res;
   end System_Array_to_Series_VecVec;
 
-  function Set_Order ( i : integer32;
+  function Set_Degree ( i : integer32;
                        d : Standard_Natural_Vectors.Link_to_Vector )
                      return integer32 is
 
   -- DESCRIPTION :
-  --   Returns the order of the coefficient series,
+  --   Returns the degree of the coefficient series,
   --   which is either zero if i = 0, or otherwise d(i).
 
   begin
@@ -461,7 +461,7 @@ package body Series_and_Polynomials is
      then return 0;
      else return integer32(d(i));
     end if;
-  end Set_Order;
+  end Set_Degree;
 
   function Set_Dimension ( i : integer32;
                            d : Standard_Natural_Vectors.Link_to_Vector )
@@ -493,7 +493,7 @@ package body Series_and_Polynomials is
 
     -- DESCRIPTION :
     --   Adds the information in the term of a multivariate polynomial
-    --   as a term of a series polynomial.  If idx = 0, then the order of
+    --   as a term of a series polynomial.  If idx = 0, then the degree of
     --   the series coefficient is zero and the coefficient is copied.
     --   Otherwise, the variable with index idx in t is taken as the
     --   variable in the truncated power series.  The other variables
@@ -501,7 +501,7 @@ package body Series_and_Polynomials is
 
       rtm : Standard_Series_Polynomials.Term;
       ord : constant integer32
-          := Set_Order(idx,Standard_Natural_Vectors.Link_to_Vector(t.dg));
+          := Set_Degree(idx,Standard_Natural_Vectors.Link_to_Vector(t.dg));
       dim : constant integer32
           := Set_Dimension(idx,Standard_Natural_Vectors.Link_to_Vector(t.dg));
       rcf : Series := Create(0.0,ord);
@@ -527,7 +527,7 @@ package body Series_and_Polynomials is
       if verbose then
         put("Adding term "); put(cnt,1); put_line(" with coefficient :");
         put(rtm.cf);
-        put("order : "); put(ord,1);
+        put("degree : "); put(ord,1);
         put(" and degrees : "); put(rtm.dg.all); new_line;
       end if;
       Standard_Series_Polynomials.Add(res,rtm);
@@ -557,7 +557,7 @@ package body Series_and_Polynomials is
 
     -- DESCRIPTION :
     --   Adds the information in the term of a multivariate polynomial
-    --   as a term of a series polynomial.  If idx = 0, then the order of
+    --   as a term of a series polynomial.  If idx = 0, then the degree of
     --   the series coefficient is zero and the coefficient is copied.
     --   Otherwise, the variable with index idx in t is taken as the
     --   variable in the truncated power series.  The other variables
@@ -565,7 +565,7 @@ package body Series_and_Polynomials is
 
       rtm : DoblDobl_Series_Polynomials.Term;
       ord : constant integer32
-          := Set_Order(idx,Standard_Natural_Vectors.Link_to_Vector(t.dg));
+          := Set_Degree(idx,Standard_Natural_Vectors.Link_to_Vector(t.dg));
       dim : constant integer32
           := Set_Dimension(idx,Standard_Natural_Vectors.Link_to_Vector(t.dg));
       rcf : Series := Create(0.0,ord);
@@ -591,7 +591,7 @@ package body Series_and_Polynomials is
       if verbose then
         put("Adding term "); put(cnt,1); put_line(" with coefficient :");
         put(rtm.cf);
-        put("order : "); put(ord,1);
+        put("degree : "); put(ord,1);
         put(" and degrees : "); put(rtm.dg.all); new_line;
       end if;
       DoblDobl_Series_Polynomials.Add(res,rtm);
@@ -621,7 +621,7 @@ package body Series_and_Polynomials is
 
     -- DESCRIPTION :
     --   Adds the information in the term of a multivariate polynomial
-    --   as a term of a series polynomial.  If idx = 0, then the order of
+    --   as a term of a series polynomial.  If idx = 0, then the degree of
     --   the series coefficient is zero and the coefficient is copied.
     --   Otherwise, the variable with index idx in t is taken as the
     --   variable in the truncated power series.  The other variables
@@ -629,7 +629,7 @@ package body Series_and_Polynomials is
 
       rtm : QuadDobl_Series_Polynomials.Term;
       ord : constant integer32
-          := Set_Order(idx,Standard_Natural_Vectors.Link_to_Vector(t.dg));
+          := Set_Degree(idx,Standard_Natural_Vectors.Link_to_Vector(t.dg));
       dim : constant integer32
           := Set_Dimension(idx,Standard_Natural_Vectors.Link_to_Vector(t.dg));
       rcf : Series := Create(0.0,ord);
@@ -655,7 +655,7 @@ package body Series_and_Polynomials is
       if verbose then
         put("Adding term "); put(cnt,1); put_line(" with coefficient :");
         put(rtm.cf);
-        put("order : "); put(ord,1);
+        put("degree : "); put(ord,1);
         put(" and degrees : "); put(rtm.dg.all); new_line;
       end if;
       QuadDobl_Series_Polynomials.Add(res,rtm);
@@ -697,7 +697,7 @@ package body Series_and_Polynomials is
     begin
       if verbose then
         put("term with degrees :"); put(t.dg.all);
-        put(" has series of order "); put(cffs.order,1); new_line;
+        put(" has series of degree "); put(cffs.deg,1); new_line;
         put_line("the series : "); put(cffs);
       end if;
       if idx = 0 then
@@ -711,7 +711,7 @@ package body Series_and_Polynomials is
         end;
       else -- idx > 0
         dim1 := t.dg'last+1;
-        for k in 0..cffs.order loop
+        for k in 0..cffs.deg loop
           rtpc := cffs.cff(k);
           if not Equal(rtpc,zero) then
             declare
@@ -773,7 +773,7 @@ package body Series_and_Polynomials is
     begin
       if verbose then
         put("term with degrees :"); put(t.dg.all);
-        put(" has series of order "); put(cffs.order,1); new_line;
+        put(" has series of degree "); put(cffs.deg,1); new_line;
         put_line("the series : "); put(cffs);
       end if;
       if idx = 0 then
@@ -787,7 +787,7 @@ package body Series_and_Polynomials is
         end;
       else -- idx > 0
         dim1 := t.dg'last+1;
-        for k in 0..cffs.order loop
+        for k in 0..cffs.deg loop
           rtpc := cffs.cff(k);
           if not Equal(rtpc,zero) then
             declare
@@ -849,7 +849,7 @@ package body Series_and_Polynomials is
     begin
       if verbose then
         put("term with degrees :"); put(t.dg.all);
-        put(" has series of order "); put(cffs.order,1); new_line;
+        put(" has series of degree "); put(cffs.deg,1); new_line;
         put_line("the series : "); put(cffs);
       end if;
       if idx = 0 then
@@ -863,7 +863,7 @@ package body Series_and_Polynomials is
         end;
       else -- idx > 0
         dim1 := t.dg'last+1;
-        for k in 0..cffs.order loop
+        for k in 0..cffs.deg loop
           rtpc := cffs.cff(k);
           if not Equal(rtpc,zero) then
             declare
@@ -1000,207 +1000,206 @@ package body Series_and_Polynomials is
     return res;
   end Series_System_to_System;
 
-  procedure Set_Order ( v : in out Standard_Dense_Series_Vectors.Vector;
-                        order : in integer32 ) is
+  procedure Set_Degree ( v : in out Standard_Dense_Series_Vectors.Vector;
+                         degree : in integer32 ) is
   begin
     for i in v'range loop
-      if v(i).order < order then
-        for k in v(i).order+1..order loop
+      if v(i).deg < degree then
+        for k in v(i).deg+1..degree loop
           v(i).cff(k) := Standard_Complex_Numbers.Create(0.0);
         end loop;
       end if;
-      v(i).order := order;
+      v(i).deg := degree;
     end loop;
-  end Set_Order;
+  end Set_Degree;
 
-  procedure Set_Order ( v : in out DoblDobl_Dense_Series_Vectors.Vector;
-                        order : in integer32 ) is
+  procedure Set_Degree ( v : in out DoblDobl_Dense_Series_Vectors.Vector;
+                         degree : in integer32 ) is
   begin
     for i in v'range loop
-      if v(i).order < order then
-        for k in v(i).order+1..order loop
+      if v(i).deg < degree then
+        for k in v(i).deg+1..degree loop
           v(i).cff(k) := DoblDobl_Complex_Numbers.Create(integer(0));
         end loop;
       end if;
-      v(i).order := order;
+      v(i).deg := degree;
     end loop;
-  end Set_Order;
+  end Set_Degree;
 
-  procedure Set_Order ( v : in out QuadDobl_Dense_Series_Vectors.Vector;
-                        order : in integer32 ) is
+  procedure Set_Degree ( v : in out QuadDobl_Dense_Series_Vectors.Vector;
+                         degree : in integer32 ) is
   begin
     for i in v'range loop
-      if v(i).order < order then
-        for k in v(i).order+1..order loop
+      if v(i).deg < degree then
+        for k in v(i).deg+1..degree loop
           v(i).cff(k) := QuadDobl_Complex_Numbers.Create(integer(0));
         end loop;
       end if;
-      v(i).order := order;
+      v(i).deg := degree;
     end loop;
-  end Set_Order;
+  end Set_Degree;
 
-  procedure Set_Order ( m : in out Standard_Dense_Series_Matrices.Matrix;
-                        order : in integer32 ) is
+  procedure Set_Degree ( m : in out Standard_Dense_Series_Matrices.Matrix;
+                         degree : in integer32 ) is
   begin
     for i in m'range(1) loop
       for j in m'range(2) loop
-        if m(i,j).order < order then
-          for k in m(i,j).order+1..order loop
+        if m(i,j).deg < degree then
+          for k in m(i,j).deg+1..degree loop
             m(i,j).cff(k) := Standard_Complex_Numbers.Create(0.0);
           end loop;
         end if;
-        m(i,j).order := order;
+        m(i,j).deg := degree;
       end loop;
     end loop;
-  end Set_Order;
+  end Set_Degree;
 
-  procedure Set_Order ( m : in out DoblDobl_Dense_Series_Matrices.Matrix;
-                        order : in integer32 ) is
+  procedure Set_Degree ( m : in out DoblDobl_Dense_Series_Matrices.Matrix;
+                         degree : in integer32 ) is
   begin
     for i in m'range(1) loop
       for j in m'range(2) loop
-        if m(i,j).order < order then
-          for k in m(i,j).order+1..order loop
+        if m(i,j).deg < degree then
+          for k in m(i,j).deg+1..degree loop
             m(i,j).cff(k) := DoblDobl_Complex_Numbers.Create(integer(0));
           end loop;
         end if;
-        m(i,j).order := order;
+        m(i,j).deg := degree;
       end loop;
     end loop;
-  end Set_Order;
+  end Set_Degree;
 
-  procedure Set_Order ( m : in out QuadDobl_Dense_Series_Matrices.Matrix;
-                        order : in integer32 ) is
+  procedure Set_Degree ( m : in out QuadDobl_Dense_Series_Matrices.Matrix;
+                         degree : in integer32 ) is
   begin
     for i in m'range(1) loop
       for j in m'range(2) loop
-        if m(i,j).order < order then
-          for k in m(i,j).order+1..order loop
+        if m(i,j).deg < degree then
+          for k in m(i,j).deg+1..degree loop
             m(i,j).cff(k) := QuadDobl_Complex_Numbers.Create(integer(0));
           end loop;
         end if;
-        m(i,j).order := order;
+        m(i,j).deg := degree;
       end loop;
     end loop;
-  end Set_Order;
+  end Set_Degree;
 
-  procedure Set_Order ( p : in out Standard_Series_Polynomials.Poly;
-                        order : in integer32 ) is
+  procedure Set_Degree ( p : in out Standard_Series_Polynomials.Poly;
+                         degree : in integer32 ) is
 
-    procedure Change_Order ( t : in out Standard_Series_Polynomials.Term;
-                             c : out boolean ) is
+    procedure Change_Degree ( t : in out Standard_Series_Polynomials.Term;
+                              c : out boolean ) is
     begin
-      if t.cf.order < order then
-        for k in t.cf.order+1..order loop
+      if t.cf.deg < degree then
+        for k in t.cf.deg+1..degree loop
           t.cf.cff(k) := Standard_Complex_Numbers.Create(0.0);
         end loop;
       end if;
-      t.cf.order := order;
+      t.cf.deg := degree;
       c := true;
-    end Change_Order;
-    procedure Change_Orders is
-      new Standard_Series_Polynomials.Changing_Iterator(Change_Order);
+    end Change_Degree;
+    procedure Change_Degrees is
+      new Standard_Series_Polynomials.Changing_Iterator(Change_Degree);
 
   begin
-    Change_Orders(p);
-  end Set_Order;
+    Change_Degrees(p);
+  end Set_Degree;
 
-  procedure Set_Order ( p : in out DoblDobl_Series_Polynomials.Poly;
-                        order : in integer32 ) is
+  procedure Set_Degree ( p : in out DoblDobl_Series_Polynomials.Poly;
+                         degree : in integer32 ) is
 
-    procedure Change_Order ( t : in out DoblDobl_Series_Polynomials.Term;
-                             c : out boolean ) is
+    procedure Change_Degree ( t : in out DoblDobl_Series_Polynomials.Term;
+                              c : out boolean ) is
     begin
-      if t.cf.order < order then
-        for k in t.cf.order+1..order loop
+      if t.cf.deg < degree then
+        for k in t.cf.deg+1..degree loop
           t.cf.cff(k) := DoblDobl_Complex_Numbers.Create(integer(0));
         end loop;
       end if;
-      t.cf.order := order;
+      t.cf.deg := degree;
       c := true;
-    end Change_Order;
-    procedure Change_Orders is
-      new DoblDobl_Series_Polynomials.Changing_Iterator(Change_Order);
+    end Change_Degree;
+    procedure Change_Degrees is
+      new DoblDobl_Series_Polynomials.Changing_Iterator(Change_Degree);
 
   begin
-    Change_Orders(p);
-  end Set_Order;
+    Change_Degrees(p);
+  end Set_Degree;
 
-  procedure Set_Order ( p : in out QuadDobl_Series_Polynomials.Poly;
-                        order : in integer32 ) is
+  procedure Set_Degree ( p : in out QuadDobl_Series_Polynomials.Poly;
+                        degree : in integer32 ) is
 
-    procedure Change_Order ( t : in out QuadDobl_Series_Polynomials.Term;
-                             c : out boolean ) is
+    procedure Change_Degree ( t : in out QuadDobl_Series_Polynomials.Term;
+                              c : out boolean ) is
     begin
-      if t.cf.order < order then
-        for k in t.cf.order+1..order loop
+      if t.cf.deg < degree then
+        for k in t.cf.deg+1..degree loop
           t.cf.cff(k) := QuadDobl_Complex_Numbers.Create(integer(0));
         end loop;
       end if;
-      t.cf.order := order;
+      t.cf.deg := degree;
       c := true;
-    end Change_Order;
-    procedure Change_Orders is
-      new QuadDobl_Series_Polynomials.Changing_Iterator(Change_Order);
+    end Change_Degree;
+    procedure Change_Degrees is
+      new QuadDobl_Series_Polynomials.Changing_Iterator(Change_Degree);
 
   begin
-    Change_Orders(p);
-  end Set_Order;
+    Change_Degrees(p);
+  end Set_Degree;
 
-  procedure Set_Order ( p : in out Standard_Series_Poly_Systems.Poly_Sys;
-                        order : in integer32 ) is
-  begin
-    for i in p'range loop
-      Set_Order(p(i),order);
-    end loop;
-  end Set_Order;
-
-  procedure Set_Order ( p : in out DoblDobl_Series_Poly_Systems.Poly_Sys;
-                        order : in integer32 ) is
+  procedure Set_Degree ( p : in out Standard_Series_Poly_Systems.Poly_Sys;
+                         degree : in integer32 ) is
   begin
     for i in p'range loop
-      Set_Order(p(i),order);
+      Set_Degree(p(i),degree);
     end loop;
-  end Set_Order;
+  end Set_Degree;
 
-  procedure Set_Order ( p : in out QuadDobl_Series_Poly_Systems.Poly_Sys;
-                        order : in integer32 ) is
+  procedure Set_Degree ( p : in out DoblDobl_Series_Poly_Systems.Poly_Sys;
+                         degree : in integer32 ) is
   begin
     for i in p'range loop
-      Set_Order(p(i),order);
+      Set_Degree(p(i),degree);
     end loop;
-  end Set_Order;
+  end Set_Degree;
 
-  procedure Set_Order ( jm : in out Standard_Series_Jaco_Matrices.Jaco_Mat;
-                        order : in integer32 ) is
+  procedure Set_Degree ( p : in out QuadDobl_Series_Poly_Systems.Poly_Sys;
+                         degree : in integer32 ) is
+  begin
+    for i in p'range loop
+      Set_Degree(p(i),degree);
+    end loop;
+  end Set_Degree;
+
+  procedure Set_Degree ( jm : in out Standard_Series_Jaco_Matrices.Jaco_Mat;
+                         degree : in integer32 ) is
   begin
     for i in jm'range(1) loop
       for j in jm'range(2) loop
-        Set_Order(jm(i,j),order);
+        Set_Degree(jm(i,j),degree);
       end loop;
     end loop;
-  end Set_Order;
+  end Set_Degree;
 
-  procedure Set_Order ( jm : in out DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
-                        order : in integer32 ) is
+  procedure Set_Degree ( jm : in out DoblDobl_Series_Jaco_Matrices.Jaco_Mat;
+                         degree : in integer32 ) is
   begin
     for i in jm'range(1) loop
       for j in jm'range(2) loop
-        Set_Order(jm(i,j),order);
+        Set_Degree(jm(i,j),degree);
       end loop;
     end loop;
-  end Set_Order;
+  end Set_Degree;
 
-  procedure Set_Order ( jm : in out QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
-                        order : in integer32 ) is
+  procedure Set_Degree ( jm : in out QuadDobl_Series_Jaco_Matrices.Jaco_Mat;
+                         degree : in integer32 ) is
   begin
     for i in jm'range(1) loop
       for j in jm'range(2) loop
-        Set_Order(jm(i,j),order);
+        Set_Degree(jm(i,j),degree);
       end loop;
     end loop;
-  end Set_Order;
-
+  end Set_Degree;
 
   procedure Filter ( s : in out Standard_Dense_Series_Vectors.Vector;
                      tol : in double_float ) is

@@ -94,7 +94,7 @@ package Series_and_Polynomials_io is
                   idx : in integer32 := 0; verbose : in boolean := false );
 
   -- DESCRIPTION :
-  --   If idx = 0, then all coefficients of p have order zero.
+  --   If idx = 0, then all coefficients of p have degree zero.
   --   If idx > 0, then the variable of that index is taken to
   --   be the series variable.  If verbose, then extra information
   --   is written to screen during the conversions.
@@ -118,7 +118,7 @@ package Series_and_Polynomials_io is
   -- DESCRIPTION :
   --   Converts the series polynomial into a regular polynomial
   --   and writes its representation as an expanded polynomial.
-  --   If idx = 0, the order of coefficients of p is taken as zero.
+  --   If idx = 0, the degree of coefficients of p is taken as zero.
   --   If idx > 0, then the variable with that index is the series variable.
   --   If verbose, then the convertors write extra information to screen.
 
@@ -134,7 +134,7 @@ package Series_and_Polynomials_io is
   --   Reads a polynomial system in several variables, where the variable
   --   with index idx is considered as the series variable if idx > 0.
   --   If idx = 0, then the coefficients of ls on return are series of
-  --   order zero.  If verbose, the convertors write information to screen.
+  --   degree zero.  If verbose, the convertors write information to screen.
 
   procedure put ( s : in Standard_Series_Poly_Systems.Poly_Sys;
                   idx : in integer32 := 0; verbose : in boolean := false );
@@ -155,7 +155,7 @@ package Series_and_Polynomials_io is
   -- DESCRIPTION :
   --   Writes the series polynomials in s as expanded polynomials,
   --   where idx is the index of the series variable, if idx > 0.
-  --   If idx = 0, then the coefficients of s have order zero.
+  --   If idx = 0, then the coefficients of s have degree zero.
   --   If verbose, then the convertors write information to screen.
 
 end Series_and_Polynomials_io;

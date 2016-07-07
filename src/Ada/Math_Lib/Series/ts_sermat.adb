@@ -148,19 +148,19 @@ procedure ts_sermat is
     end loop;
   end Write;
 
-  procedure Standard_Random_Linear_Solve ( n,order : in integer32 ) is
+  procedure Standard_Random_Linear_Solve ( n,degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a random matrix A and right hand side vector b
   --   of dimension n and solves the linear system A*x = b,
   --   in standard double precision.
-  --   The series are all of the given order.
+  --   The series are all of the given degree.
 
     A : constant Standard_Dense_Series_Matrices.Matrix(1..n,1..n)
-      := Standard_Random_Series.Random_Series_Matrix(1,n,1,n,order);
+      := Standard_Random_Series.Random_Series_Matrix(1,n,1,n,degree);
     wrk : Standard_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
     b : constant Standard_Dense_Series_Vectors.Vector(1..n)
-      := Standard_Random_Series.Random_Series_Vector(1,n,order);
+      := Standard_Random_Series.Random_Series_Vector(1,n,degree);
     x : Standard_Dense_Series_Vectors.Vector(1..n) := b;
     ipvt : Standard_Integer_Vectors.Vector(1..n);
     info : integer32;
@@ -185,19 +185,19 @@ procedure ts_sermat is
     end if;
   end Standard_Random_Linear_Solve;
 
-  procedure DoblDobl_Random_Linear_Solve ( n,order : in integer32 ) is
+  procedure DoblDobl_Random_Linear_Solve ( n,degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a random matrix A and right hand side vector b
   --   of dimension n and solves the linear system A*x = b,
   --   in double double precision.
-  --   The series are all of the given order.
+  --   The series are all of the given degree.
 
     A : constant DoblDobl_Dense_Series_Matrices.Matrix(1..n,1..n)
-      := DoblDobl_Random_Series.Random_Series_Matrix(1,n,1,n,order);
+      := DoblDobl_Random_Series.Random_Series_Matrix(1,n,1,n,degree);
     wrk : DoblDobl_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
     b : constant DoblDobl_Dense_Series_Vectors.Vector(1..n)
-      := DoblDobl_Random_Series.Random_Series_Vector(1,n,order);
+      := DoblDobl_Random_Series.Random_Series_Vector(1,n,degree);
     x : DoblDobl_Dense_Series_Vectors.Vector(1..n) := b;
     ipvt : Standard_Integer_Vectors.Vector(1..n);
     info : integer32;
@@ -222,19 +222,19 @@ procedure ts_sermat is
     end if;
   end DoblDobl_Random_Linear_Solve;
 
-  procedure QuadDobl_Random_Linear_Solve ( n,order : in integer32 ) is
+  procedure QuadDobl_Random_Linear_Solve ( n,degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a random matrix A and right hand side vector b
   --   of dimension n and solves the linear system A*x = b,
   --   in double double precision.
-  --   The series are all of the given order.
+  --   The series are all of the given degree.
 
     A : constant QuadDobl_Dense_Series_Matrices.Matrix(1..n,1..n)
-      := QuadDobl_Random_Series.Random_Series_Matrix(1,n,1,n,order);
+      := QuadDobl_Random_Series.Random_Series_Matrix(1,n,1,n,degree);
     wrk : QuadDobl_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
     b : constant QuadDobl_Dense_Series_Vectors.Vector(1..n)
-      := QuadDobl_Random_Series.Random_Series_Vector(1,n,order);
+      := QuadDobl_Random_Series.Random_Series_Vector(1,n,degree);
     x : QuadDobl_Dense_Series_Vectors.Vector(1..n) := b;
     ipvt : Standard_Integer_Vectors.Vector(1..n);
     info : integer32;
@@ -263,7 +263,7 @@ procedure ts_sermat is
                  return Standard_Complex_Matrices.Matrix is
 
   -- DESCRIPTION :
-  --   Takes the zero-th order coefficient of every element in A.
+  --   Takes the zero-th degree coefficient of every element in A.
 
     res : Standard_Complex_Matrices.Matrix(A'range(1),A'range(2));
 
@@ -280,7 +280,7 @@ procedure ts_sermat is
                  return DoblDobl_Complex_Matrices.Matrix is
 
   -- DESCRIPTION :
-  --   Takes the zero-th order coefficient of every element in A.
+  --   Takes the zero-th degree coefficient of every element in A.
 
     res : DoblDobl_Complex_Matrices.Matrix(A'range(1),A'range(2));
 
@@ -297,7 +297,7 @@ procedure ts_sermat is
                  return QuadDobl_Complex_Matrices.Matrix is
 
   -- DESCRIPTION :
-  --   Takes the zero-th order coefficient of every element in A.
+  --   Takes the zero-th degree coefficient of every element in A.
 
     res : QuadDobl_Complex_Matrices.Matrix(A'range(1),A'range(2));
 
@@ -313,7 +313,7 @@ procedure ts_sermat is
   procedure Zero_QRD ( A : Standard_Dense_Series_Matrices.Matrix ) is
 
   -- DESCRIPTION :
-  --   Shows the QR decomposition of the zero order terms of A.
+  --   Shows the QR decomposition of the zero degree terms of A.
 
     B : Standard_Complex_Matrices.Matrix(A'range(1),A'range(2)) := Trunc(A);
     ipvt : Standard_Integer_Vectors.Vector(A'range(2)) := (A'range(2) => 0);
@@ -321,13 +321,13 @@ procedure ts_sermat is
 
   begin
     Standard_Complex_QR_Least_Squares.QRD(B,qraux,ipvt,false);
-    put_line("QRD on zero order terms:"); Write(B);
+    put_line("QRD on zero degree terms:"); Write(B);
   end Zero_QRD;
 
   procedure Zero_QRD ( A : DoblDobl_Dense_Series_Matrices.Matrix ) is
 
   -- DESCRIPTION :
-  --   Shows the QR decomposition of the zero order terms of A.
+  --   Shows the QR decomposition of the zero degree terms of A.
 
     B : DoblDobl_Complex_Matrices.Matrix(A'range(1),A'range(2)) := Trunc(A);
     ipvt : Standard_Integer_Vectors.Vector(A'range(2)) := (A'range(2) => 0);
@@ -335,13 +335,13 @@ procedure ts_sermat is
 
   begin
     DoblDobl_Complex_QR_Least_Squares.QRD(B,qraux,ipvt,false);
-    put_line("QRD on zero order terms:"); Write(B);
+    put_line("QRD on zero degree terms:"); Write(B);
   end Zero_QRD;
 
   procedure Zero_QRD ( A : QuadDobl_Dense_Series_Matrices.Matrix ) is
 
   -- DESCRIPTION :
-  --   Shows the QR decomposition of the zero order terms of A.
+  --   Shows the QR decomposition of the zero degree terms of A.
 
     B : QuadDobl_Complex_Matrices.Matrix(A'range(1),A'range(2)) := Trunc(A);
     ipvt : Standard_Integer_Vectors.Vector(A'range(2)) := (A'range(2) => 0);
@@ -349,7 +349,7 @@ procedure ts_sermat is
 
   begin
     QuadDobl_Complex_QR_Least_Squares.QRD(B,qraux,ipvt,false);
-    put_line("QRD on zero order terms:"); Write(B);
+    put_line("QRD on zero degree terms:"); Write(B);
   end Zero_QRD;
 
   procedure Solve_Normal_Equations
@@ -748,7 +748,7 @@ procedure ts_sermat is
     QRD(wrk,qraux,ipvt,false);
     put_line("The output of QRD :"); Write(wrk);
     new_line;
-    put("View the QRD of the zero order terms ? (y/n) ");
+    put("View the QRD of the zero degree terms ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y'
      then Zero_QRD(A);
@@ -803,7 +803,7 @@ procedure ts_sermat is
     QRD(wrk,qraux,ipvt,false);
     put_line("The output of QRD :"); Write(wrk);
     new_line;
-    put("View the QRD of the zero order terms ? (y/n) ");
+    put("View the QRD of the zero degree terms ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y'
      then Zero_QRD(A);
@@ -858,7 +858,7 @@ procedure ts_sermat is
     QRD(wrk,qraux,ipvt,false);
     put_line("The output of QRD :"); Write(wrk);
     new_line;
-    put("View the QRD of the zero order terms ? (y/n) ");
+    put("View the QRD of the zero degree terms ? (y/n) ");
     Ask_Yes_or_No(ans);
     if ans = 'y'
      then Zero_QRD(A);
@@ -886,10 +886,10 @@ procedure ts_sermat is
     end if;
   end QR_Solve_Least_Squares;
 
-  procedure Standard_Random_Least_Squares ( n,m,order : in integer32 ) is
+  procedure Standard_Random_Least_Squares ( n,m,degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a random n-by-m matrix A with series of the given order.
+  --   Generates a random n-by-m matrix A with series of the given degree.
   --   A random solution x is generated and then the right hand side
   --   vector b is A*x.  for n > m this is an overdetermined linear
   --   system A*x = b, where the solution x is the generated vector.
@@ -898,9 +898,9 @@ procedure ts_sermat is
     use Standard_Dense_Series_Matrices;
 
     A : constant Standard_Dense_Series_Matrices.Matrix(1..n,1..m)
-      := Standard_Random_Series.Random_Series_Matrix(1,n,1,m,order);
+      := Standard_Random_Series.Random_Series_Matrix(1,n,1,m,degree);
     x : constant Standard_Dense_Series_Vectors.Vector(1..m)
-      := Standard_Random_Series.Random_Series_Vector(1,m,order);
+      := Standard_Random_Series.Random_Series_Vector(1,m,degree);
     b : constant Standard_Dense_Series_Vectors.Vector(1..n) := A*x;
     ans : character;
 
@@ -922,10 +922,10 @@ procedure ts_sermat is
     end if;
   end Standard_Random_Least_Squares;
 
-  procedure DoblDobl_Random_Least_Squares ( n,m,order : in integer32 ) is
+  procedure DoblDobl_Random_Least_Squares ( n,m,degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a random n-by-m matrix A with series of the given order.
+  --   Generates a random n-by-m matrix A with series of the given degree.
   --   A random solution x is generated and then the right hand side
   --   vector b is A*x.  for n > m this is an overdetermined linear
   --   system A*x = b, where the solution x is the generated vector.
@@ -934,9 +934,9 @@ procedure ts_sermat is
     use DoblDobl_Dense_Series_Matrices;
 
     A : constant DoblDobl_Dense_Series_Matrices.Matrix(1..n,1..m)
-      := DoblDobl_Random_Series.Random_Series_Matrix(1,n,1,m,order);
+      := DoblDobl_Random_Series.Random_Series_Matrix(1,n,1,m,degree);
     x : constant DoblDobl_Dense_Series_Vectors.Vector(1..m)
-      := DoblDobl_Random_Series.Random_Series_Vector(1,m,order);
+      := DoblDobl_Random_Series.Random_Series_Vector(1,m,degree);
     b : constant DoblDobl_Dense_Series_Vectors.Vector(1..n) := A*x;
     ans : character;
 
@@ -958,10 +958,10 @@ procedure ts_sermat is
     end if;
   end DoblDobl_Random_Least_Squares;
 
-  procedure QuadDobl_Random_Least_Squares ( n,m,order : in integer32 ) is
+  procedure QuadDobl_Random_Least_Squares ( n,m,degree : in integer32 ) is
 
   -- DESCRIPTION :
-  --   Generates a random n-by-m matrix A with series of the given order.
+  --   Generates a random n-by-m matrix A with series of the given degree.
   --   A random solution x is generated and then the right hand side
   --   vector b is A*x.  for n > m this is an overdetermined linear
   --   system A*x = b, where the solution x is the generated vector.
@@ -970,9 +970,9 @@ procedure ts_sermat is
     use QuadDobl_Dense_Series_Matrices;
 
     A : constant QuadDobl_Dense_Series_Matrices.Matrix(1..n,1..m)
-      := QuadDobl_Random_Series.Random_Series_Matrix(1,n,1,m,order);
+      := QuadDobl_Random_Series.Random_Series_Matrix(1,n,1,m,degree);
     x : constant QuadDobl_Dense_Series_Vectors.Vector(1..m)
-      := QuadDobl_Random_Series.Random_Series_Vector(1,m,order);
+      := QuadDobl_Random_Series.Random_Series_Vector(1,m,degree);
     b : constant QuadDobl_Dense_Series_Vectors.Vector(1..n) := A*x;
     ans : character;
 
@@ -1019,14 +1019,14 @@ procedure ts_sermat is
 
   -- DESCRIPTION :
   --   Prompts the user for the dimension of the linear system
-  --   and the order of the series.
+  --   and the degree of the series.
 
     dim,ord,nrows,ncols : integer32 := 0;
     ans,prc : character;
 
   begin
     new_line;
-    put("Give the order of the series : "); get(ord);
+    put("Give the degree of the series : "); get(ord);
     new_line;
     put("Square system ? (y/n) ");
     Ask_Yes_or_No(ans);

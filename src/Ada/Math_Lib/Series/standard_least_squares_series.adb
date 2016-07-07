@@ -43,7 +43,7 @@ package body Standard_Least_Squares_Series is
     iszero : boolean := true;
 
   begin
-    for i in 0..s.order loop
+    for i in 0..s.deg loop
       if abs(REAL_PART(s.cff(i))) > 1.0E-13 then
         iszero := false;
       elsif abs(IMAG_PART(s.cff(i))) > 1.0E-13 then

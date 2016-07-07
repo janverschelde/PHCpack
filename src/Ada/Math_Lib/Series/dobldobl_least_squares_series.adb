@@ -44,7 +44,7 @@ package body DoblDobl_Least_Squares_Series is
     tol : constant double_double := create(1.0E-24);
 
   begin
-    for i in 0..s.order loop
+    for i in 0..s.deg loop
       if abs(REAL_PART(s.cff(i))) > tol then
         iszero := false;
       elsif abs(IMAG_PART(s.cff(i))) > tol then

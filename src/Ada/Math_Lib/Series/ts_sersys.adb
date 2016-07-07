@@ -126,13 +126,13 @@ procedure ts_sersys is
     n : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
     x : Standard_Dense_Series_Vectors.Link_to_Vector;
     y : Standard_Dense_Series_Vectors.Vector(p'range);
-    order : integer32 := 0;
+    degree : integer32 := 0;
 
   begin
     Read_Series_Vector(x,n,idx);
     new_line;
-    put("Give the order of series : "); get(order);
-    Series_and_Polynomials.Set_Order(x.all,order);
+    put("Give the degree of series : "); get(degree);
+    Series_and_Polynomials.Set_Degree(x.all,degree);
     put_line("Evaluating the series ...");
     y := Standard_Series_Poly_SysFun.Eval(p,x.all);
     put_line("The value of the system at the given series :");
@@ -153,13 +153,13 @@ procedure ts_sersys is
     n : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
     x : DoblDobl_Dense_Series_Vectors.Link_to_Vector;
     y : DoblDobl_Dense_Series_Vectors.Vector(p'range);
-    order : integer32 := 0;
+    degree : integer32 := 0;
 
   begin
     Read_Series_Vector(x,n,idx);
     new_line;
-    put("Give the order of series : "); get(order);
-    Series_and_Polynomials.Set_Order(x.all,order);
+    put("Give the degree of series : "); get(degree);
+    Series_and_Polynomials.Set_Degree(x.all,degree);
     put_line("Evaluating the series ...");
     y := DoblDobl_Series_Poly_SysFun.Eval(p,x.all);
     put_line("The value of the system at the given series :");
@@ -180,13 +180,13 @@ procedure ts_sersys is
     n : constant integer32 := integer32(Number_of_Unknowns(p(p'first)));
     x : QuadDobl_Dense_Series_Vectors.Link_to_Vector;
     y : QuadDobl_Dense_Series_Vectors.Vector(p'range);
-    order : integer32 := 0;
+    degree : integer32 := 0;
 
   begin
     Read_Series_Vector(x,n,idx);
     new_line;
-    put("Give the order of series : "); get(order);
-    Series_and_Polynomials.Set_Order(x.all,order);
+    put("Give the degree of series : "); get(degree);
+    Series_and_Polynomials.Set_Degree(x.all,degree);
     put_line("Evaluating the series ...");
     y := QuadDobl_Series_Poly_SysFun.Eval(p,x.all);
     put_line("The value of the system at the given series :");
@@ -253,7 +253,7 @@ procedure ts_sersys is
     jp : constant Standard_Series_Jaco_Matrices.Jaco_Mat(p'range,1..n)
        := Standard_Series_Jaco_Matrices.Create(p);
     jm : Standard_Dense_Series_Matrices.Matrix(p'range,1..n);
-    order : integer32 := 0;
+    degree : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..n);
     info : integer32;
     tol : constant double_float := 1.0e-12;
@@ -261,16 +261,16 @@ procedure ts_sersys is
   begin
     Read_Series_Vector(x,n,idx);
     new_line;
-    put("Give the order of series : "); get(order);
-    Series_and_Polynomials.Set_Order(x.all,order);
+    put("Give the degree of series : "); get(degree);
+    Series_and_Polynomials.Set_Degree(x.all,degree);
     put_line("Evaluating the series ...");
     px := Standard_Series_Poly_SysFun.Eval(p,x.all);
     put_line("The value of the system at the given series :");
     Series_and_Polynomials_io.put(px);
     Standard_Dense_Series_Vectors.Min(px);
-    Series_and_Polynomials.Set_Order(px,order);
+    Series_and_Polynomials.Set_Degree(px,degree);
     jm := Standard_Series_Jaco_Matrices.Eval(jp,x.all);
-    Series_and_Polynomials.Set_Order(jm,order);
+    Series_and_Polynomials.Set_Degree(jm,degree);
     put_line("The Jacobian matrix : ");
     Write(jm);
     LUfac(jm,n,ipvt,info);
@@ -311,7 +311,7 @@ procedure ts_sersys is
     jp : constant DoblDobl_Series_Jaco_Matrices.Jaco_Mat(p'range,1..n)
        := DoblDobl_Series_Jaco_Matrices.Create(p);
     jm : DoblDobl_Dense_Series_Matrices.Matrix(p'range,1..n);
-    order : integer32 := 0;
+    degree : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..n);
     info : integer32;
     tol : constant double_float := 1.0e-20;
@@ -319,16 +319,16 @@ procedure ts_sersys is
   begin
     Read_Series_Vector(x,n,idx);
     new_line;
-    put("Give the order of series : "); get(order);
-    Series_and_Polynomials.Set_Order(x.all,order);
+    put("Give the degree of series : "); get(degree);
+    Series_and_Polynomials.Set_Degree(x.all,degree);
     put_line("Evaluating the series ...");
     px := DoblDobl_Series_Poly_SysFun.Eval(p,x.all);
     put_line("The value of the system at the given series :");
     Series_and_Polynomials_io.put(px);
     DoblDobl_Dense_Series_Vectors.Min(px);
-    Series_and_Polynomials.Set_Order(px,order);
+    Series_and_Polynomials.Set_Degree(px,degree);
     jm := DoblDobl_Series_Jaco_Matrices.Eval(jp,x.all);
-    Series_and_Polynomials.Set_Order(jm,order);
+    Series_and_Polynomials.Set_Degree(jm,degree);
     put_line("The Jacobian matrix : ");
     Write(jm);
     LUfac(jm,n,ipvt,info);
@@ -369,7 +369,7 @@ procedure ts_sersys is
     jp : constant QuadDobl_Series_Jaco_Matrices.Jaco_Mat(p'range,1..n)
        := QuadDobl_Series_Jaco_Matrices.Create(p);
     jm : QuadDobl_Dense_Series_Matrices.Matrix(p'range,1..n);
-    order : integer32 := 0;
+    degree : integer32 := 0;
     ipvt : Standard_Integer_Vectors.Vector(1..n);
     info : integer32;
     tol : constant double_float := 1.0e-20;
@@ -377,16 +377,16 @@ procedure ts_sersys is
   begin
     Read_Series_Vector(x,n,idx);
     new_line;
-    put("Give the order of series : "); get(order);
-    Series_and_Polynomials.Set_Order(x.all,order);
+    put("Give the degree of series : "); get(degree);
+    Series_and_Polynomials.Set_Degree(x.all,degree);
     put_line("Evaluating the series ...");
     px := QuadDobl_Series_Poly_SysFun.Eval(p,x.all);
     put_line("The value of the system at the given series :");
     Series_and_Polynomials_io.put(px);
     QuadDobl_Dense_Series_Vectors.Min(px);
-    Series_and_Polynomials.Set_Order(px,order);
+    Series_and_Polynomials.Set_Degree(px,degree);
     jm := QuadDobl_Series_Jaco_Matrices.Eval(jp,x.all);
-    Series_and_Polynomials.Set_Order(jm,order);
+    Series_and_Polynomials.Set_Degree(jm,degree);
     put_line("The Jacobian matrix : ");
     Write(jm);
     LUfac(jm,n,ipvt,info);

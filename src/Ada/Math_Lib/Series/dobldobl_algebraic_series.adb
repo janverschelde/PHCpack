@@ -30,25 +30,25 @@ package body DoblDobl_Algebraic_Series is
     else
       res.cff(0) := DoblDobl_Complex_Numbers_Polar.Root(cpc.cff(0),2,i);
       res.cff(1) := Create(zero);
-      res.order := 1;
-      cpc.order := 1;
+      res.deg := 1;
+      cpc.deg := 1;
       loop
         wrk := res*res - cpc;
         dx := fac*wrk/res;
         if verbose then
-          put("evaluation at order = "); put(res.order,1);
+          put("evaluation at degree = "); put(res.deg,1);
           put_line(" :"); put(wrk);
-          put("update dx at order = "); put(res.order,1);
+          put("update dx at degree = "); put(res.deg,1);
           put_line(" :"); put(dx);
         end if;
         res := res - dx;
-        exit when res.order >= c.order;
-        cpc.order := 2*cpc.order;
-        res.order := 2*res.order;
+        exit when res.deg >= c.deg;
+        cpc.deg := 2*cpc.deg;
+        res.deg := 2*res.deg;
       end loop;
-      if res.order = c.order
+      if res.deg = c.deg
        then return res;
-       else return Create(res,c.order);
+       else return Create(res,c.deg);
       end if;
     end if;
   end sqrt;
@@ -68,23 +68,23 @@ package body DoblDobl_Algebraic_Series is
   begin
     res.cff(0) := DoblDobl_Complex_Numbers_Polar.Root(cpc.cff(0),n,i);
     res.cff(1) := Create(zero);
-    res.order := 1;
-    cpc.order := 1;
+    res.deg := 1;
+    cpc.deg := 1;
     loop
       wrk := res**n - cpc;
       dx := fac*wrk/(res**(n-1));
       if verbose then
-        put("update dx at order = "); put(res.order,1);
+        put("update dx at degree = "); put(res.deg,1);
         put_line(" :"); put(dx);
       end if;
       res := res - dx;
-      exit when res.order >= c.order;
-      cpc.order := 2*cpc.order;
-      res.order := 2*res.order;
+      exit when res.deg >= c.deg;
+      cpc.deg := 2*cpc.deg;
+      res.deg := 2*res.deg;
     end loop;
-    if res.order = c.order
+    if res.deg = c.deg
      then return res;
-     else return Create(res,c.order);
+     else return Create(res,c.deg);
     end if;
   end Root;
 

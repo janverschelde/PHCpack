@@ -39,7 +39,7 @@ package body QuadDobl_Dense_Series_Norms is
     rad : quad_double;
 
   begin
-    for i in 1..s.order loop
+    for i in 1..s.deg loop
       rad := QuadDobl_Complex_Numbers_Polar.Radius(s.cff(i));
       if rad > res
        then res := rad;
@@ -57,7 +57,7 @@ package body QuadDobl_Dense_Series_Norms is
     res,cff : quad_double := create(0.0);
 
   begin
-    for i in 0..p.order loop
+    for i in 0..p.deg loop
       cff := REAL_PART(p.cff(i));
       res := res + cff*cff;
     end loop;

@@ -14,8 +14,8 @@ package DoblDobl_Algebraic_Series is
 
   -- DESCRIPTION :
   --   Applies Newton's method to x^2 - c = 0,
-  --   starting at the i-th square root of the zero-th order.
-  --   The order of the series on return equals c.order.
+  --   starting at the i-th square root of the zero-th degree.
+  --   The degree of the series on return equals c.deg.
   --   If verbose, then the Newton updates dx are written to screen.
 
   function Root ( c : Series; n,i : natural32;
@@ -23,8 +23,8 @@ package DoblDobl_Algebraic_Series is
 
   -- DESCRIPTION :
   --   Applies Newton's method to x^n - c = 0,
-  --   starting at the i-th square root of the zero-th order.
-  --   The order of the series on return equals c.order.
+  --   starting at the i-th square root of the zero-th degree.
+  --   The degree of the series on return equals c.deg.
   --   If verbose, then the Newton updates dx are written to screen.
 
 end DoblDobl_Algebraic_Series;

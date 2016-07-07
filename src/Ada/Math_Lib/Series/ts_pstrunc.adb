@@ -16,21 +16,21 @@ procedure ts_pstrunc is
 -- DESCRIPTION :
 --   Test on truncated power series.
 
-  procedure One_Test_Inverse ( order : in integer32 ) is
+  procedure One_Test_Inverse ( degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   We have that 1/(1-t) = 1 + t + t^2 + t^3 + ...
   --   This procedure tests this identity.
 
-    c : Standard_Complex_Vectors.Vector(0..order);
-    x,r : Standard_Complex_Vectors.Vector(0..order);
+    c : Standard_Complex_Vectors.Vector(0..degree);
+    x,r : Standard_Complex_Vectors.Vector(0..degree);
 
   begin
     c(0) := Create(1.0);
     c(1) := Create(-1.0);
-    c(2..order) := Standard_Complex_Vectors.Vector'(2..order => Create(0.0));
-    put("Coefficients of a series of order ");
-    put(order,1); put_line(" :");
+    c(2..degree) := Standard_Complex_Vectors.Vector'(2..degree => Create(0.0));
+    put("Coefficients of a series of degree ");
+    put(degree,1); put_line(" :");
     put_line(c);
     x := Inverse(c);
     put_line("Coefficients of its inverse : ");
@@ -43,20 +43,20 @@ procedure ts_pstrunc is
     put_line(r);
   end One_Test_Inverse;
 
-  procedure Random_Test_Inverse ( order : in integer32 ) is
+  procedure Random_Test_Inverse ( degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a truncated series with random coefficients
-  --   of the given order and computes its inverse.
+  --   of the given degree and computes its inverse.
   --   The test succeeds if the product of the first random series
   --   with its computed inverse results in one.
 
-    c : Standard_Complex_Vectors.Vector(0..order) := Random_Vector(0,order);
-    x,r : Standard_Complex_Vectors.Vector(0..order);
+    c : Standard_Complex_Vectors.Vector(0..degree) := Random_Vector(0,degree);
+    x,r : Standard_Complex_Vectors.Vector(0..degree);
 
   begin
-    put("Coefficients of a series of order ");
-    put(order,1); put_line(" :");
+    put("Coefficients of a series of degree ");
+    put(degree,1); put_line(" :");
     put_line(c);
     x := Inverse(c);
     put_line("Coefficients of its inverse : ");
@@ -69,18 +69,18 @@ procedure ts_pstrunc is
     put_line(r);
   end Random_Test_Inverse;
 
-  procedure Random_Test_Sqrt ( order : in integer32 ) is
+  procedure Random_Test_Sqrt ( degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Generates a truncated series with random coefficients
-  --   of the given order and computes its square root.
+  --   of the given degree and computes its square root.
 
-    c : Standard_Complex_Vectors.Vector(0..order) := Random_Vector(0,order);
-    x,y,dyc : Standard_Complex_Vectors.Vector(0..order);
+    c : Standard_Complex_Vectors.Vector(0..degree) := Random_Vector(0,degree);
+    x,y,dyc : Standard_Complex_Vectors.Vector(0..degree);
 
   begin
-    put("Coefficients of a series of order ");
-    put(order,1); put_line(" :");
+    put("Coefficients of a series of degree ");
+    put(degree,1); put_line(" :");
     put_line(c);
     x := Sqrt(c);
     put_line("Coefficients of its square root : ");
@@ -93,25 +93,25 @@ procedure ts_pstrunc is
     put_line(dyc);
   end Random_Test_Sqrt;
 
-  procedure Convergence_Test ( order : in integer32 ) is
+  procedure Convergence_Test ( degree : in integer32 ) is
 
   -- DESCRIPTION :
   --   Consider x^2 - c = 0 for a complex number c,
-  --   and a series solution x of the given order.
+  --   and a series solution x of the given degree.
   --   Evaluation of the series x at t = 0, 0.1, 0.01, etc
-  --   should give accurate solutions for c with error as O(t^order).
+  --   should give accurate solutions for c with error as O(t^degree).
 
-    c : Standard_Complex_Vectors.Vector(0..order) := Random_Vector(0,order);
-    x,y,dyc : Standard_Complex_Vectors.Vector(0..order);
+    c : Standard_Complex_Vectors.Vector(0..degree) := Random_Vector(0,degree);
+    x,y,dyc : Standard_Complex_Vectors.Vector(0..degree);
     zero : constant Complex_Number := Create(0.0);
     t : constant double_float := 0.1;
     xt,ct,yt : Complex_Number;
     dytct : double_float;
 
   begin
-    c(2..order) := Standard_Complex_Vectors.Vector'(2..order => zero);
-    put("Coefficients of a series of order ");
-    put(order,1); put_line(" :");
+    c(2..degree) := Standard_Complex_Vectors.Vector'(2..degree => zero);
+    put("Coefficients of a series of degree ");
+    put(degree,1); put_line(" :");
     put_line(c);
     x := Sqrt(c);
     put_line("Coefficients of its square root : ");
@@ -136,15 +136,15 @@ procedure ts_pstrunc is
   procedure Main is
 
   -- DESCRIPTION :
-  --   Prompts the user for the order of the truncated series
+  --   Prompts the user for the degree of the truncated series
   --   and runs some test on series with random coefficients.
 
-    order : integer32 := 0;
+    degree : integer32 := 0;
     ans : character;
 
   begin
     new_line;
-    put("Give the truncation order : "); get(order);
+    put("Give the truncation degree : "); get(degree);
     new_line;
     put_line("MENU to test truncated power series :");
     put_line("  0. test inverse of 1/(1-t)");
@@ -155,10 +155,10 @@ procedure ts_pstrunc is
     Ask_Alternative(ans,"0123");
     new_line;
     case ans is
-      when '0' => One_Test_Inverse(order);
-      when '1' => Random_Test_Inverse(order);
-      when '2' => Random_Test_Sqrt(order);
-      when '3' => Convergence_Test(order);
+      when '0' => One_Test_Inverse(degree);
+      when '1' => Random_Test_Inverse(degree);
+      when '2' => Random_Test_Sqrt(degree);
+      when '3' => Convergence_Test(degree);
       when others => null;
     end case;
   end Main;

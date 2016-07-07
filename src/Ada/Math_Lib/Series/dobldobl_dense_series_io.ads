@@ -12,8 +12,8 @@ package DoblDobl_Dense_Series_io is
   procedure get ( file : in file_type; s : in out Series );
 
   -- DESCRIPTION :
-  --   Prompts for the order (an integer number),
-  --   followed by as many complex numbers as the order plus one.
+  --   Prompts for the degree (an integer number),
+  --   followed by as many complex numbers as the degree plus one.
 
   procedure put ( s : in Series );
   procedure put ( file : in file_type; s : in Series );

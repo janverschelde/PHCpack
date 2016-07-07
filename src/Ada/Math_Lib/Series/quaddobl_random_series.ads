@@ -8,36 +8,36 @@ package QuadDobl_Random_Series is
 
 -- DESCRIPTION :
 --   Exports functions that return random power series,
---   truncated to the given order, with complex coefficients
+--   truncated to the given degree, with complex coefficients
 --   in double double precision.
 
-  function Random_Series ( order : integer32 ) return Series;
+  function Random_Series ( degree : integer32 ) return Series;
 
   -- DESCRIPTION :
-  --   Returns a series of the given order, with random coefficients,
+  --   Returns a series of the given degree, with random coefficients,
   --   on the unit circle on the complex plane.
 
   function Random_Series_Vector
-             ( first,last,order : integer32 ) return Vector;
+             ( first,last,degree : integer32 ) return Vector;
 
   -- DESCRIPTION :
   --   Returns a vector of range first..last with random series
-  --   of the given order.
+  --   of the given degree.
 
   function Random_Series_VecVec
-             ( vvfirst,vvlast,first,last,order : integer32 ) return VecVec;
+             ( vvfirst,vvlast,first,last,degree : integer32 ) return VecVec;
 
   -- DESCRIPTION :
-  --   Returns a vector of vectors with random series of the given order.
+  --   Returns a vector of vectors with random series of the given degree.
   --   The outer range is vvfirst..vvlast and the inner range of
   --   the vectors is first..last.
 
   function Random_Series_Matrix
-             ( rowfirst,rowlast,columnfirst,columnlast,order : integer32 )
+             ( rowfirst,rowlast,columnfirst,columnlast,degree : integer32 )
              return Matrix;
 
   -- DESCRIPTION :
   --   Returns a matrix of range(1) rowfirst..rowlast and range(2) 
-  --   columnfirst..columnlast with random series of the given order.
+  --   columnfirst..columnlast with random series of the given degree.
 
 end QuadDobl_Random_Series;

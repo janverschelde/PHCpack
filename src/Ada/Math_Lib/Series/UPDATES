@@ -1,3 +1,8 @@
+Thu 7 Jul 2016 : change in termilogy, order is replaced by degree.
+  This changes 40 files: *dense_series.a*, *dense_series_io.a*, *algebraic*,
+  *series_norms.adb, quaddobl_series_vector_norms.adb, *random*, *least*adb,
+  series_and_polynomials, series_and_polynomials_io.ads and ts*.
+
 Tue 5 Jul 2016 : {standard,dobldobl,quaddobl}_dense_series_vector_functions
   is new package to evaluate vectors of power series.
 

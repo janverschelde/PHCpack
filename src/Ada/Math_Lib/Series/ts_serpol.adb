@@ -57,7 +57,7 @@ procedure ts_serpol is
       cnt := cnt + 1;
       put("The coefficient of term "); put(cnt); put_line(" :");
       put(cf);
-      put("has order "); put(cf.order,1);
+      put("has degree "); put(cf.deg,1);
       put(" and degrees : "); put(t.dg.all); new_line;
       c := true;
     end Visit_Term;
@@ -85,7 +85,7 @@ procedure ts_serpol is
       cnt := cnt + 1;
       put("The coefficient of term "); put(cnt); put_line(" :");
       put(cf);
-      put("has order "); put(cf.order,1);
+      put("has degree "); put(cf.deg,1);
       put(" and degrees : "); put(t.dg.all); new_line;
       c := true;
     end Visit_Term;
@@ -113,7 +113,7 @@ procedure ts_serpol is
       cnt := cnt + 1;
       put("The coefficient of term "); put(cnt); put_line(" :");
       put(cf);
-      put("has order "); put(cf.order,1);
+      put("has degree "); put(cf.deg,1);
       put(" and degrees : "); put(t.dg.all); new_line;
       c := true;
     end Visit_Term;
@@ -238,8 +238,8 @@ procedure ts_serpol is
 
   -- DESCRIPTION :
   --   Returns x[k] - s as a polynomial in n variables.
-  --   All coefficients of the polynomial on return have the same order,
-  --   the same as s.order, and are in standard double precision.
+  --   All coefficients of the polynomial on return have the same degree,
+  --   the same as s.deg, and are in standard double precision.
 
   -- REQUIRED : k is in range 1..n.
 
@@ -265,8 +265,8 @@ procedure ts_serpol is
 
   -- DESCRIPTION :
   --   Returns x[k] - s as a polynomial in n variables.
-  --   All coefficients of the polynomial on return have the same order,
-  --   the same as s.order, and are in double double precision.
+  --   All coefficients of the polynomial on return have the same degree,
+  --   the same as s.deg, and are in double double precision.
 
   -- REQUIRED : k is in range 1..n.
 
@@ -292,8 +292,8 @@ procedure ts_serpol is
 
   -- DESCRIPTION :
   --   Returns x[k] - s as a polynomial in n variables.
-  --   All coefficients of the polynomial on return have the same order,
-  --   the same as s.order, and are in quad double precision.
+  --   All coefficients of the polynomial on return have the same degree,
+  --   the same as s.deg, and are in quad double precision.
 
   -- REQUIRED : k is in range 1..n.
 
@@ -376,21 +376,21 @@ procedure ts_serpol is
   procedure Standard_Test_Evaluation is
 
   -- DESCRIPTION :
-  --   Prompts for the number of variables and the order of the series.
+  --   Prompts for the number of variables and the degree of the series.
   --   Then as many random series as the number of variables are generated.
   --   The polynomial is of the product of x[k] - s[k], where k ranges
   --   over the number of variables 'x' and series 's'.
   --   So the evaluation at the series should produce zero.
 
-    order,dim : integer32 := 0;
+    degree,dim : integer32 := 0;
 
   begin
     new_line;
     put("Give the number of variables in the polynomial : "); get(dim);
-    put("Give the order of the power series : "); get(order);
+    put("Give the degree of the power series : "); get(degree);
     declare
       rns : constant Standard_Dense_Series_Vectors.Vector(1..dim)
-          := Random_Series_Vector(1,dim,order);
+          := Random_Series_Vector(1,dim,degree);
       pol : constant Standard_Series_Polynomials.Poly := Product(rns);
       eva : constant Standard_Dense_Series.Series
           := Standard_Series_Poly_Functions.Eval(pol,rns);
@@ -407,21 +407,21 @@ procedure ts_serpol is
   procedure DoblDobl_Test_Evaluation is
 
   -- DESCRIPTION :
-  --   Prompts for the number of variables and the order of the series.
+  --   Prompts for the number of variables and the degree of the series.
   --   Then as many random series as the number of variables are generated.
   --   The polynomial is of the product of x[k] - s[k], where k ranges
   --   over the number of variables 'x' and series 's'.
   --   So the evaluation at the series should produce zero.
 
-    order,dim : integer32 := 0;
+    degree,dim : integer32 := 0;
 
   begin
     new_line;
     put("Give the number of variables in the polynomial : "); get(dim);
-    put("Give the order of the power series : "); get(order);
+    put("Give the degree of the power series : "); get(degree);
     declare
       rns : constant DoblDobl_Dense_Series_Vectors.Vector(1..dim)
-          := Random_Series_Vector(1,dim,order);
+          := Random_Series_Vector(1,dim,degree);
       pol : constant DoblDobl_Series_Polynomials.Poly := Product(rns);
       eva : constant DoblDobl_Dense_Series.Series
           := DoblDobl_Series_Poly_Functions.Eval(pol,rns);
@@ -438,21 +438,21 @@ procedure ts_serpol is
   procedure QuadDobl_Test_Evaluation is
 
   -- DESCRIPTION :
-  --   Prompts for the number of variables and the order of the series.
+  --   Prompts for the number of variables and the degree  of the series.
   --   Then as many random series as the number of variables are generated.
   --   The polynomial is of the product of x[k] - s[k], where k ranges
   --   over the number of variables 'x' and series 's'.
   --   So the evaluation at the series should produce zero.
 
-    order,dim : integer32 := 0;
+    degree,dim : integer32 := 0;
 
   begin
     new_line;
     put("Give the number of variables in the polynomial : "); get(dim);
-    put("Give the order of the power series : "); get(order);
+    put("Give the degree of the power series : "); get(degree);
     declare
       rns : constant QuadDobl_Dense_Series_Vectors.Vector(1..dim)
-          := Random_Series_Vector(1,dim,order);
+          := Random_Series_Vector(1,dim,degree);
       pol : constant QuadDobl_Series_Polynomials.Poly := Product(rns);
       eva : constant QuadDobl_Dense_Series.Series
           := QuadDobl_Series_Poly_Functions.Eval(pol,rns);

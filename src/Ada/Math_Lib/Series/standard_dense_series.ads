@@ -16,17 +16,17 @@ package Standard_Dense_Series is
 --   With the definitions and operations in this package,
 --   the Standard_Dense_Series_Ring is defined.
 
-  max_order : constant integer32 := 16;
+  max_deg : constant integer32 := 16;
 
 -- Because the type of the number in a ring must be a definite type,
 -- we cannot allow truncated series of arbitrary length, but must fix
--- the order of the series at compile time to some number.
+-- the degree of the series at compile time to some number.
 
   type Series is record
-    order : integer32; 
-    -- the last exponent in the series, the error is O(t^(order+1))
-    cff : Standard_Complex_Vectors.Vector(0..max_order);
-    -- only the coefficients in the range 0..order are used
+    deg : integer32; 
+    -- the last exponent in the series, the error is O(t^(deg+1))
+    cff : Standard_Complex_Vectors.Vector(0..max_deg);
+    -- only the coefficients in the range 0..deg are used
   end record;
 
 -- CONSTRUCTORS :
@@ -38,35 +38,35 @@ package Standard_Dense_Series is
   -- DESCRIPTION :
   --   Returns a series with one element, the value of i, f, or c.
 
-  function Create ( i : integer; order : integer32 ) return Series;
-  function Create ( f : double_float; order : integer32 ) return Series;
-  function Create ( c : Complex_Number; order : integer32 ) return Series;
+  function Create ( i : integer; deg : integer32 ) return Series;
+  function Create ( f : double_float; deg : integer32 ) return Series;
+  function Create ( c : Complex_Number; deg : integer32 ) return Series;
 
   -- DESCRIPTION :
-  --   Returns a series of the given order where the leading element
+  --   Returns a series of the given degree where the leading element
   --   at position 0 has the value of i, f, or c.
 
-  -- REQUIRED : order <= max_order.
+  -- REQUIRED : deg <= max_deg.
 
   function Create ( c : Standard_Complex_Vectors.Vector ) return Series;
 
   -- DESCRIPTION :
-  --   Returns a series with coefficients in c, with order equal
-  --   to c'last if c'last <= max_order.  If c'last > max_order,
-  --   then the coefficients in c with index > max_order are ignored.
+  --   Returns a series with coefficients in c, with degree equal
+  --   to c'last if c'last <= max_deg.  If c'last > max_deg,
+  --   then the coefficients in c with index > max_deg are ignored.
 
   -- REQUIRED : c'first = 0.
 
-  function Create ( s : Series; order : integer32 ) return Series;
+  function Create ( s : Series; deg : integer32 ) return Series;
 
   -- DESCRIPTION :
-  --   Returns a series of the given order with coefficients in s.
-  --   If order > s'last, then the series on return has all
+  --   Returns a series of the given degree with coefficients in s.
+  --   If deg > s'last, then the series on return has all
   --   coefficients of s, padded with zeros.
-  --   If order < s'last, then the series on return is a truncation
-  --   of the series in s, with only the coefficients in s(0..order).
+  --   If deg < s'last, then the series on return is a truncation
+  --   of the series in s, with only the coefficients in s(0..deg).
 
-  -- REQUIRED : order <= max_order.
+  -- REQUIRED : deg <= max_deg.
 
 -- EQUALITY AND COPY :
 
@@ -74,14 +74,14 @@ package Standard_Dense_Series is
 
   -- DESCRIPTION :
   --   Returns true if all coefficients are the same.
-  --   If the orders of s and t are different,
+  --   If the degrees of s and t are different,
   --   then the extra coefficients must be zero for equality to hold.
 
   procedure Copy ( s : in Series; t : in out Series );
 
   -- DESCRIPTION :
   --   Copies the coefficients of s to t
-  --   and sets the order of t to the order of s.
+  --   and sets the degree of t to the degree of s.
 
 -- COMPLEX CONJUGATE :
 
@@ -118,14 +118,14 @@ package Standard_Dense_Series is
   function "+" ( s,t : Series ) return Series;
 
   -- DESCRIPTION :
-  --   Adds the series s to t.  The order of the series
-  --   on return is the maximum of s.order and t.order.
+  --   Adds the series s to t.  The degree of the series
+  --   on return is the maximum of s.deg and t.deg.
  
   procedure Add ( s : in out Series; t : in Series );
 
   -- DESCRIPTION :
-  --   Adds the series t to s.  If t.order > s.order,
-  --   then the order of s will be upgraded to t.order.
+  --   Adds the series t to s.  If t.deg > s.deg,
+  --   then the degree of s will be upgraded to t.deg.
 
   function "-" ( s : Series; c : Complex_Number ) return Series;
 
@@ -156,14 +156,14 @@ package Standard_Dense_Series is
   function "-" ( s,t : Series ) return Series;
 
   -- DESCRIPTION :
-  --   Subtracts the series t from s.  The order of the series
-  --   on return is the maximum of s.order and t.order.
+  --   Subtracts the series t from s.  The degree of the series
+  --   on return is the maximum of s.deg and t.deg.
 
   procedure Sub ( s : in out Series; t : in Series );
 
   -- DESCRIPTION :
-  --   Subtracts the series t from s.  If t.order > s.order,
-  --   then the order of s will be upgraded to t.order.
+  --   Subtracts the series t from s.  If t.deg > s.deg,
+  --   then the degree of s will be upgraded to t.deg.
 
   function "*" ( s : Series; c : Complex_Number ) return Series;
 
@@ -184,14 +184,13 @@ package Standard_Dense_Series is
 
   -- DESCRIPTION :
   --   Returns the multiplication of the series s with t.
-  --   The order of the series on return is the maximum
-  --   of s.order and t.order.
+  --   The degree of the series on return is the maximum of s.deg and t.deg.
  
   procedure Mul ( s : in out Series; t : in Series );
 
   -- DESCRIPTION :
-  --   Multiplies the series s with t.  If t.order > s.order,
-  --   then the order of s will be upgrade to t.order.
+  --   Multiplies the series s with t.  If t.deg > s.deg,
+  --   then the degree of s will be upgraded to t.deg.
 
   function Inverse ( s : Series ) return Series;
 
@@ -226,16 +225,16 @@ package Standard_Dense_Series is
   function "/" ( s,t : Series ) return Series;
 
   -- DESCRIPTION :
-  --   Returns the series c = s/t.  The order of the series
-  --   on return is the maximum of s.order and t.order.
+  --   Returns the series c = s/t.  The degree of the series
+  --   on return is the maximum of s.deg and t.deg.
 
   -- REQUIRED : t.cff(0) /= 0.
 
   procedure Div ( s : in out Series; t : in Series );
 
   -- DESCRIPTION :
-  --   Divides the series s by t.  If t.order > s.order,
-  --   then the order of the series of s will be upgraded to t.order.
+  --   Divides the series s by t.  If t.deg > s.deg,
+  --   then the degree of the series of s will be upgraded to t.deg.
 
   -- REQUIRED : t.cff(0) /= 0.
 
@@ -253,7 +252,7 @@ package Standard_Dense_Series is
   function Eval ( s : Series; t : Complex_Number ) return Complex_Number;
 
   -- DESCRIPTION :
-  --   Returns the value c(0) + c(1)*t + .. + c(s.order)*t**s.order,
+  --   Returns the value c(0) + c(1)*t + .. + c(s.deg)*t**s.deg,
   --   where c abbreviates the coefficient vector s.cff.
 
   procedure Filter ( s : in out Series; tol : in double_float );
@@ -283,6 +282,6 @@ package Standard_Dense_Series is
 
   -- DESCRIPTION :
   --   All coefficients of s are set to zero.
-  --   Also the order of s is set to zero.
+  --   Also the degree of s is set to zero.
 
 end Standard_Dense_Series;
