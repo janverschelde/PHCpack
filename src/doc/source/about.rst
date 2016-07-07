@@ -252,6 +252,10 @@ global optimization, and computational physics:
    **Fast Multiresolutive Approximations of Planar Linkage Configuration
    Spaces**. *IEEE 2006 International Conference on Robotics and Automation.*
 
+#. Marc Culler and Nathan M. Dunfield:
+   **Orderability and Dehn filling.**
+   arXiv:1602.03793v2 [math.GT] 17 June 2016.
+
 #. R.S. Datta:
    **Using Computer Algebra To Compute Nash Equilibria**.
    In *Proceedings of the 2003 International Symposium on Symbolic and
@@ -382,6 +386,10 @@ global optimization, and computational physics:
 #. Hamadi Jamali, Tokunbo Ogunfunmi:
    **Stationary points of the finite length constant modulus optimization**.
    *Signal Processing* 82(4): 625-641, 2002.
+
+#. A. Jensen, A. Leykin, and J. Yu:
+   **Computing tropical curves via homotopy continuation.**
+   *Experimental Mathematics* 25(1): 83--93, 2016.
 
 #. Bjorn Johansson, Magnus Oskarsson, and Kalle Astrom:
    **Structure and motion estimation from complex features
@@ -647,7 +655,7 @@ global optimization, and computational physics:
 In addition to the publications listed above, PHCpack was used as a
 benchmark to measure the progress of new algorithms in the following papers:
 
-90. T. Gao and T.Y. Li:
+92. T. Gao and T.Y. Li:
     **Mixed volume computation via linear programming**.
     *Taiwanese Journal of Mathematics* 4(4): 599-619, 2000.
 
@@ -705,7 +713,7 @@ benchmark to measure the progress of new algorithms in the following papers:
 
 PHCpack was used to develop new homotopy algorithms:
 
-103. Bo Dong, Bo Yu, and Yan Yu:
+105. Bo Dong, Bo Yu, and Yan Yu:
      **A symmetric and hybrid polynomial system solving method for mixed
      trigonometric polynomial systems**.
      *Mathematics of Computation* 83(288): 1847-1868, 2014.
@@ -724,7 +732,7 @@ Last, but certainly not least, there is the wonderful book of
 Bernd Sturmfels which contains a section on computing Nash
 equilibria with PHCpack.
 
-106. B. Sturmfels:
+108. B. Sturmfels:
      **Solving Systems of Polynomial Equations**.
      CBMS Regional Conference Series of the AMS, Number 97, 2002.
 
