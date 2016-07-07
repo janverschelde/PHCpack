@@ -79,34 +79,16 @@ package Series_and_Predictors is
   --   return the max norm of the series evls evaluated at step,
   --   in double, double double, or quad double precision.
 
-  function Least_Order
-             ( s : Standard_Dense_Series.Series; tol : double_float )
-             return integer32;
-  function Least_Order
-             ( s : DoblDobl_Dense_Series.Series; tol : double_float )
-             return integer32;
-  function Least_Order
-             ( s : QuadDobl_Dense_Series.Series; tol : double_float )
-             return integer32;
+  procedure Order ( v : in Standard_Dense_Series_Vectors.Vector;
+                    tol : in double_float; vk,ord : out integer32 );
+  procedure Order ( v : in DoblDobl_Dense_Series_Vectors.Vector;
+                    tol : in double_float; vk,ord : out integer32 );
+  procedure Order ( v : in QuadDobl_Dense_Series_Vectors.Vector;
+                    tol : in double_float; vk,ord : out integer32 );
 
   -- DESCRIPTION :
-  --   Returns the smallest integer k in the range 0..s.deg
-  --   for which AbsVal(s.cff(k)) > tol.
-  --   If all coefficients are less than tol, then s.deg+1 is returned.
-
-  procedure Least_Order
-             ( v : in Standard_Dense_Series_Vectors.Vector;
-               tol : in double_float; vk,ord : out integer32 );
-  procedure Least_Order
-             ( v : in DoblDobl_Dense_Series_Vectors.Vector;
-               tol : in double_float; vk,ord : out integer32 );
-  procedure Least_Order
-             ( v : in QuadDobl_Dense_Series_Vectors.Vector;
-               tol : in double_float; vk,ord : out integer32 );
-
-  -- DESCRIPTION :
-  --   For all series s in v, returns in ord the smallest Least_Order(s,tol)
-  --   and in vk the compoent of vk for which ord = Least_Order(v(vk),tol).
+  --   For all series s in v, returns in ord the smallest Order(s,tol)
+  --   and in vk the compoent of vk for which ord = Order(v(vk),tol).
   --   The corresponding coefficient with t^ord is then in v(vk).cff(ord).
 
   function Set_Step_Size

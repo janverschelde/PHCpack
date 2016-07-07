@@ -182,98 +182,59 @@ package body Series_and_Predictors is
     return res;
   end Predicted_Error;
 
-  function Least_Order
-             ( s : Standard_Dense_Series.Series; tol : double_float )
-             return integer32 is
-  begin
-    for k in 0..s.deg loop
-      if Standard_Complex_Numbers.AbsVal(s.cff(k)) > tol
-       then return k;
-      end if;
-    end loop;
-    return s.deg+1;
-  end Least_Order;
+  procedure Order ( v : in Standard_Dense_Series_Vectors.Vector;
+                    tol : in double_float; vk,ord : out integer32 ) is
 
-  function Least_Order
-             ( s : DoblDobl_Dense_Series.Series; tol : double_float )
-             return integer32 is
-  begin
-    for k in 0..s.deg loop
-      if DoblDobl_Complex_Numbers.AbsVal(s.cff(k)) > tol
-       then return k;
-      end if;
-    end loop;
-    return s.deg+1;
-  end Least_Order;
-
-  function Least_Order
-             ( s : QuadDobl_Dense_Series.Series; tol : double_float )
-             return integer32 is
-  begin
-    for k in 0..s.deg loop
-      if QuadDobl_Complex_Numbers.AbsVal(s.cff(k)) > tol
-       then return k;
-      end if;
-    end loop;
-    return s.deg+1;
-  end Least_Order;
-
-  procedure Least_Order
-             ( v : in Standard_Dense_Series_Vectors.Vector;
-               tol : in double_float; vk,ord : out integer32 ) is
-
-    res : integer32 := Least_Order(v(v'first),tol);
+    res : integer32 := Standard_Dense_Series.Order(v(v'first),tol);
     vkord : integer32;
 
   begin
     vk := v'first;
     for k in v'first+1..v'last loop
       exit when (res = 0);
-      vkord := Least_Order(v(k),tol);
+      vkord := Standard_Dense_Series.Order(v(k),tol);
       if vkord < res
        then res := vkord; vk := k;
       end if;
     end loop;
     ord := res;
-  end Least_Order;
+  end Order;
 
-  procedure Least_Order
-             ( v : in DoblDobl_Dense_Series_Vectors.Vector;
-               tol : in double_float; vk,ord : out integer32 ) is
+  procedure Order ( v : in DoblDobl_Dense_Series_Vectors.Vector;
+                    tol : in double_float; vk,ord : out integer32 ) is
 
-    res : integer32 := Least_Order(v(v'first),tol);
+    res : integer32 := DoblDobl_Dense_Series.Order(v(v'first),tol);
     vkord : integer32;
 
   begin
     vk := v'first;
     for k in v'first+1..v'last loop
       exit when (res = 0);
-      vkord := Least_Order(v(k),tol);
+      vkord := DoblDobl_Dense_Series.Order(v(k),tol);
       if vkord < res
        then res := vkord; vk := k;
       end if;
     end loop;
     ord := res;
-  end Least_Order;
+  end Order;
 
-  procedure Least_Order
-             ( v : in QuadDobl_Dense_Series_Vectors.Vector;
-               tol : in double_float; vk,ord : out integer32 ) is
+  procedure Order ( v : in QuadDobl_Dense_Series_Vectors.Vector;
+                    tol : in double_float; vk,ord : out integer32 ) is
 
-    res : integer32 := Least_Order(v(v'first),tol);
+    res : integer32 := QuadDobl_Dense_Series.Order(v(v'first),tol);
     vkord : integer32;
 
   begin
     vk := v'first;
     for k in v'first+1..v'last loop
       exit when (res = 0);
-      vkord := Least_Order(v(k),tol);
+      vkord := QuadDobl_Dense_Series.Order(v(k),tol);
       if vkord < res
        then res := vkord; vk := k;
       end if;
     end loop;
     ord := res;
-  end Least_Order;
+  end Order;
 
   function Set_Step_Size
              ( v : Standard_Dense_Series_Vectors.Vector;
@@ -286,11 +247,11 @@ package body Series_and_Predictors is
     use Standard_Mathematical_Functions;
 
   begin
-    Least_Order(v,tolcff,vk,ord);
+    Order(v,tolcff,vk,ord);
     valcff := Standard_Complex_Numbers.AbsVal(v(vk).cff(ord));
     arg := tolres/valcff;
     if verbose then
-      put("least order : "); put(ord,1);
+      put("order : "); put(ord,1);
       put(" at component : "); put(vk,1);
       put(" arg = "); put(arg); new_line;
     end if;
@@ -315,12 +276,12 @@ package body Series_and_Predictors is
     use Standard_Mathematical_Functions;
 
   begin
-    Least_Order(v,tolcff,vk,ord);
+    Order(v,tolcff,vk,ord);
     dd_valcff := DoblDobl_Complex_Numbers.AbsVal(v(vk).cff(ord));
     valcff := hi_part(dd_valcff);
     arg := tolres/valcff;
     if verbose then
-      put("least order : "); put(ord,1);
+      put("order : "); put(ord,1);
       put(" at component : "); put(vk,1);
       put(" arg = "); put(arg); new_line;
     end if;
@@ -345,12 +306,12 @@ package body Series_and_Predictors is
     use Standard_Mathematical_Functions;
 
   begin
-    Least_Order(v,tolcff,vk,ord);
+    Order(v,tolcff,vk,ord);
     qd_valcff := QuadDobl_Complex_Numbers.AbsVal(v(vk).cff(ord));
     valcff := hihi_part(qd_valcff);
     arg := tolres/valcff;
     if verbose then
-      put("least order : "); put(ord,1);
+      put("order : "); put(ord,1);
       put(" at component : "); put(vk,1);
       put(" arg = "); put(arg); new_line;
     end if;

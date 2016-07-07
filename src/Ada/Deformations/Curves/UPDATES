@@ -1,5 +1,6 @@
 Thu 7 Jul 2016 : replacing order by degree changed *newton_series*,
-  ts_sernew, and series_and_predictors.
+  ts_sernew, and series_and_predictors.  In series_and_predictors,
+  renamed Least_Order() to Order().
 
 Wed 6 Jul 2016 : extra functions in series_and_solutions to work directly
   with the coordinate vectors of solutions.  Refactored code from ts_serpred
