@@ -1154,6 +1154,19 @@ and the file with the homotopy should contain
    z :  2.00000000000000E+00   0.00000000000000E+00
   == err :  0.000E+00 = rco :  3.186E-01 = res :  0.000E+00 ==
 
+The input file can be prepared inserting the ``s=0`` into the homotopy
+and giving to the blackbox solver ``phc -b`` a file with contents:
+
+::
+
+  4
+   s;
+   (1-s)*y + s*(y-1);
+   x^2 + y^2 + z^2 - 4;
+   (x-1)^2 + y^2 - 1;
+
+The output of ``phc -b`` will have the point ``(0,0,2)`` for ``s=0``.
+
 phc -v : verification, refinement and purification of solutions
 ---------------------------------------------------------------
 
