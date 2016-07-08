@@ -1129,6 +1129,31 @@ be considered as a parameter in the series.
 The other input to ``phc -u`` is a list of solution for the zero
 value of the series variable.
 
+Consider for example the intersection of the Viviani curve with a plane,
+as defined in the homotopy:
+
+::
+
+  3 4
+   (1-s)*y + s*(y-1);
+   x^2 + y^2 + z^2 - 4;
+   (x-1)^2 + y^2 - 1;
+
+At ``s=0``, the point ``(0,0,2)`` is a regular solution
+and the file with the homotopy should contain 
+
+::
+
+  solution 1 :
+  t :  1.00000000000000E+00   0.00000000000000E+00
+  m : 1
+  the solution for t :
+   s :  0.00000000000000E+00   0.00000000000000E+00
+   y :  0.00000000000000E+00   0.00000000000000E+00
+   x :  0.00000000000000E+00   0.00000000000000E+00
+   z :  2.00000000000000E+00   0.00000000000000E+00
+  == err :  0.000E+00 = rco :  3.186E-01 = res :  0.000E+00 ==
+
 phc -v : verification, refinement and purification of solutions
 ---------------------------------------------------------------
 
