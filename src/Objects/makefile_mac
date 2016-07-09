@@ -5,7 +5,8 @@
 # This makefile is specific for Mac OS X, mainly because of the
 # Python bindings and the use of MPI.
 
-PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
+# PYTHON=/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7
+PYTHON=/usr/include/python2.7
 PYTHON3=/Library/Frameworks/Python.framework/Versions/3.5/include/python3.5m
 PYTHON3lib=/Library/Frameworks/Python.framework/Versions/3.5/lib
 MPI_HOME=/usr/local
@@ -685,6 +686,10 @@ ts_serpred:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serpred.adb \
                  -o $(BIN)/ts_serpred
 
+ts_serpath:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serpath.adb \
+                 -o $(BIN)/ts_serpath
+
 # Test programs for the Deformations/End_Games library :
 
 ts_vlprs:
@@ -842,10 +847,6 @@ ts_supspan:
 ts_transfo:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_transfo.adb \
                  -o $(BIN)/ts_transfo
-
-ts_tropelim:
-	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_tropelim.adb \
-                 -o $(BIN)/ts_tropelim
 
 ts_drivpts:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_drivpts.adb \
@@ -2314,30 +2315,6 @@ lib_numbtrop_cpp:
 	gnatlink -C use_c2phc numbtrop.o lib_numbtrop.o \
                  -o $(BIN)/lib_numbtrop -lm --LINK=g++
 
-lib_series:
-	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
-	gcc -c $(PHCLib)/phcpack.c
-	gcc -c $(PHCLib)/syscon.c
-	gcc -c $(PHCLib)/syspool.c
-	gcc -c $(PHCLib)/series.c
-	gcc -c $(PHCLib)/lib_series.c
-	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc \
-                    phcpack.o syscon.o syspool.o series.o lib_series.o \
-                 -o $(BIN)/lib_series -lm
-
-lib_series_cpp:
-	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
-	g++ -Dcompilewgpp=1 -c $(PHCLib)/phcpack.c
-	g++ -Dcompilewgpp=1 -c $(PHCLib)/syscon.c
-	g++ -Dcompilewgpp=1 -c $(PHCLib)/syspool.c
-	g++ -Dcompilewgpp=1 -c $(PHCLib)/series.c
-	g++ -Dcompilewgpp=1 -c $(PHCLib)/lib_series.c
-	gnatbind -n use_c2phc
-	gnatlink -C use_c2phc \
-                    phcpack.o syscon.o syspool.o series.o lib_series.o \
-                 -o $(BIN)/lib_series -lm --LINK=g++
-
 lib_nbrvar:
 	gnatmake -c $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
 	gcc -c $(PHCLib)/phcpack.c
@@ -2467,8 +2444,6 @@ phcpy2c2.so:
 	gcc -c -O2 $(PHCLib)/giftwrappers.c
 	gcc -c -O2 $(PHCLib)/phcpack.c
 	gcc -c -O2 $(PHCLib)/mapcon.c
-	gcc -c -O2 $(PHCLib)/series.c
-	gcc -c -O2 $(PHCLib)/syspool.c
 	gcc -c -O2 $(PHCLib)/next_track.c
 	$(MCC) -c -I$(PYTHON) -I$(PYTHON)/Include $(PHCLib)/phcpy2c2.c
 	#gcc -c -I$(PYTHON) -I$(PYTHON)/Include $(PHCLib)/phcpy2c2.c
@@ -2477,7 +2452,7 @@ phcpy2c2.so:
 	gnatlink -dynamiclib -C use_c2phc phcpy2c2.o phcpack.o syscon.o \
             witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
             solcon.o product.o lists_and_strings.o celcon.o scalers.o \
-            numbtrop.o sweep.o schubert.o series.o syspool.o \
+            numbtrop.o sweep.o schubert.o \
                  -o ../Python/PHCpy2/phcpy/phcpy2c2.so -framework Python
 
 phcpy2c3.so:
@@ -2495,8 +2470,6 @@ phcpy2c3.so:
 	gcc -c -O2 $(PHCLib)/giftwrappers.c
 	gcc -c -O2 $(PHCLib)/phcpack.c
 	gcc -c -O2 $(PHCLib)/mapcon.c
-	gcc -c -O2 $(PHCLib)/series.c
-	gcc -c -O2 $(PHCLib)/syspool.c
 	gcc -c -O2 $(PHCLib)/next_track.c
 	$(MCC) -c -I$(PYTHON3) -I$(PYTHON3)/Include $(PHCLib)/phcpy2c3.c
 	#gcc -c -I$(PYTHON3) -I$(PYTHON3)/Include $(PHCLib)/phcpy2c3.c
@@ -2505,7 +2478,7 @@ phcpy2c3.so:
 	gnatlink -dynamiclib -C use_c2phc phcpy2c3.o phcpack.o syscon.o \
             witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
             solcon.o product.o lists_and_strings.o celcon.o scalers.o \
-            sweep.o numbtrop.o schubert.o series.o syspool.o \
+            sweep.o numbtrop.o schubert.o \
                  -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
                  $(PYTHON3lib)/libpython3.5m.dylib
 

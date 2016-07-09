@@ -439,7 +439,7 @@ ts_fvector:
 ts_giftwrap:
 	make -f $(MAKEFILE) ts_giftwrap
 
-# Test programs for the Math_Lib/Series library :
+# Test programs for Math_Lib/Series :
 
 test_series: ts_pstrunc ts_series ts_servec ts_sermat ts_serpol ts_sersys
 
@@ -612,7 +612,7 @@ ts_vmpnewt:
 # Test programs for the Deformations/Curves library :
 
 test_curves: ts_durker ts_extrapol ts_extrapts \
-             ts_sernew ts_sersol ts_serhom ts_serpred
+             ts_sernew ts_sersol ts_serhom ts_serpred ts_serpath
 
 ts_durker:
 	make -f $(MAKEFILE) ts_durker
@@ -634,6 +634,9 @@ ts_serhom:
 
 ts_serpred:
 	make -f $(MAKEFILE) ts_serpred
+
+ts_serpath:
+	make -f $(MAKEFILE) ts_serpath
 
 # Test programs for the Deformations/End_Games library :
 
@@ -785,8 +788,8 @@ ts_unimod:
 
 # Test programs for the Root_Counts/Implift library :
 
-test_implift: ts_supports ts_supspan ts_transfo ts_tropelim \
-              ts_drivpts ts_impvol ts_drivimpl
+test_implift: ts_supports ts_supspan ts_transfo ts_drivpts ts_impvol \
+              ts_drivimpl
 
 ts_supports:
 	make -f $(MAKEFILE) ts_supports
@@ -796,9 +799,6 @@ ts_supspan:
 
 ts_transfo:
 	make -f $(MAKEFILE) ts_transfo
-
-ts_tropelim:
-	make -f $(MAKEFILE) ts_tropelim
 
 ts_drivpts:
 	make -f $(MAKEFILE) ts_drivpts
@@ -1544,7 +1544,6 @@ test_lib: lib_syscon lib_syscon_cpp lib_solcon lib_solcon_cpp \
           lib_sweep lib_sweep_cpp lib_nbrvar lib_nbrvar_cpp \
           lib_factor lib_factor_cpp lib_member lib_member_cpp \
           lib_pieri lib_pieri_cpp lib_numbtrop lib_numbrop_cpp \
-          lib_series lib_series_cpp \
           lib_lrhom lib_lrhom_cpp phc_solve phc_solve_cpp \
           lib_usolve lib_usolve_cpp lib_giftwrap lib_giftwrap_cpp ts_list2str \
           lib_adepath_d lib_adepath_dd lib_adepath_qd
@@ -1671,12 +1670,6 @@ lib_numbtrop:
 
 lib_numbtrop_cpp:
 	make -f $(MAKEFILE) lib_numbtrop_cpp
-
-lib_series:
-	make -f $(MAKEFILE) lib_series
-
-lib_series_cpp:
-	make -f $(MAKEFILE) lib_series_cpp
 
 lib_nbrvar:
 	make -f $(MAKEFILE) lib_nbrvar
