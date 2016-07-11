@@ -45,5 +45,6 @@ series_and_homotopies            : homotopies as systems with series coeffs
 ts_serhom                        : test on series and homotopies
 series_and_predictors            : apply power series to predict solutions
 ts_serpred                       : test on series predictor
+series_and_trackers              : power series predictor in path tracker
 ts_serpath                       : test on series path tracker
 -------------------------------------------------------------------------------

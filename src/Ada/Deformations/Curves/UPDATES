@@ -1,3 +1,5 @@
+Mon 11 Jul 2016 : new package series_and_trackers, with code from ts_serpath.
+
 Sun 10 Jul 2016 : ts_serpath contains a very simple path tracker.
 
 Sat 9 Jul 2016 : new test procedure ts_serpath to develop the path tracking
