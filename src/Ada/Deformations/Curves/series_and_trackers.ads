@@ -1,8 +1,13 @@
+with text_io;                            use text_io;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
+with Double_Double_Numbers;              use Double_Double_Numbers;
+with Quad_Double_Numbers;                use Quad_Double_Numbers;
 with Standard_Complex_Vectors;
 with Standard_Complex_Solutions;
+with DoblDobl_Complex_Vectors;
 with DoblDobl_Complex_Solutions;
+with QuadDobl_Complex_Vectors;
 with QuadDobl_Complex_Solutions;
 with Standard_Series_Poly_Systems;
 with DoblDobl_Series_Poly_Systems;
@@ -13,28 +18,89 @@ package Series_and_Trackers is
 -- DESCRIPTION :
 --   Path trackers with Newton power series predictors are provided
 --   in standard double, double double, or quad double precision.
+--   The versions may be silent or verbose.
 
   procedure Correct
               ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
                 t : in double_float; nit : in natural32;
                 sol : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float );
+  procedure Correct
+              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                t : in double_double; nit : in natural32;
+                sol : in out DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_double );
+  procedure Correct
+              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                t : in quad_double; nit : in natural32;
+                sol : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out quad_double );
+
+  -- DESCRIPTION :
+  --   Applies Newton's method to correct the solution, silent version,
+  --   in standard double, double double, or quad double precision.
+
+  -- ON ENTRY :
+  --   hom      the homotopy with series coefficients;
+  --   t        value for th series parameter to evaluate the series in hom;
+  --   nit      number of steps to do with Newton's method;
+  --   sol      predicted value for the solution.
+
+  -- ON RETURN :
+  --   err      magnitude of the correction term;
+  --   rco      estimate for the inverse condition number;
+  --   res      magnitude of the residual.
+
+  procedure Correct
+              ( file : in file_type;
+                hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                t : in double_float; nit : in natural32;
+                sol : in out Standard_Complex_Vectors.Vector;
+                err,rco,res : out double_float;
+                verbose : in boolean := false );
+  procedure Correct
+              ( file : in file_type;
+                hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                t : in double_double; nit : in natural32;
+                sol : in out DoblDobl_Complex_Vectors.Vector;
+                err,rco,res : out double_double;
+                verbose : in boolean := false );
+  procedure Correct
+              ( file : in file_type;
+                hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                t : in quad_double; nit : in natural32;
+                sol : in out QuadDobl_Complex_Vectors.Vector;
+                err,rco,res : out quad_double;
                 verbose : in boolean := false );
 
   -- DESCRIPTION :
-  --   Applies a couple of Newton iterations to correct the solution sol
-  --   of the system at t, using nit steps.
+  --   Applies Newton's method to correct the solution, verbose version,
+  --   in standard double or double double precision.
+
+  -- ON ENTRY :
+  --   file     for writing extra diagnostic output, if verbose;
+  --   hom      the homotopy with series coefficients;
+  --   t        value for th series parameter to evaluate the series in hom;
+  --   nit      number of steps to do with Newton's method;
+  --   sol      predicted value for the solution;
+  --   verbose  to indicate that extra output is wanted.
+
+  -- ON RETURN :
+  --   err      magnitude of the correction term;
+  --   rco      estimate for the inverse condition number;
+  --   res      magnitude of the residual.
 
   procedure Track_one_Path
               ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
                 verbose : in boolean := false );
   procedure Track_one_Path
-              ( h : in DoblDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out DoblDobl_Complex_Solutions.Solution;
+              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                sol : in out DoblDobl_Complex_Solutions.Solution;
                 verbose : in boolean := false );
   procedure Track_one_Path
-              ( h : in QuadDobl_Series_Poly_Systems.Poly_Sys;
-                s : in out Quaddobl_Complex_Solutions.Solution;
+              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                sol : in out Quaddobl_Complex_Solutions.Solution;
                 verbose : in boolean := false );
 
   -- DESCRIPTION :
