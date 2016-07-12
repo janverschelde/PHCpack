@@ -280,7 +280,8 @@ procedure ts_serpred is
     new_line;
     put_line("Setting the step size based on the power series ...");
     put("Give the tolerance on the residual : "); get(tolres);
-    step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres,true);
+    step := Series_and_Predictors.Set_Step_Size
+              (standard_output,eva,tolcff,tolres,true);
     put("The computed step size : "); put(step,3); new_line;
     Standard_Check_Prediction(hom,srv,eva,step);
   end Standard_Test_Prediction;
@@ -309,7 +310,8 @@ procedure ts_serpred is
     new_line;
     put_line("Setting the step size based on the power series ...");
     put("Give the tolerance on the residual : "); get(tolres);
-    step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres,true);
+    step := Series_and_Predictors.Set_Step_Size
+              (standard_output,eva,tolcff,tolres,true);
     put("The computed step size : "); put(step,3); new_line;
     dd_step := create(step);
     DoblDobl_Check_Prediction(hom,srv,eva,dd_step);
@@ -339,7 +341,8 @@ procedure ts_serpred is
     new_line;
     put_line("Setting the step size based on the power series ...");
     put("Give the tolerance on the residual : "); get(tolres);
-    step := Series_and_Predictors.Set_Step_Size(eva,tolcff,tolres,true);
+    step := Series_and_Predictors.Set_Step_Size
+              (standard_output,eva,tolcff,tolres,true);
     put("The computed step size : "); put(step,3); new_line;
     qd_step := create(step);
     QuadDobl_Check_Prediction(hom,srv,eva,qd_step);

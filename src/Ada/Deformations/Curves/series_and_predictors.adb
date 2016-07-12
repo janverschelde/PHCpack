@@ -1,4 +1,3 @@
-with text_io;                            use text_io;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
 with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Mathematical_Functions;
@@ -31,42 +30,93 @@ package body Series_and_Predictors is
                 hom : in Standard_Series_Poly_Systems.Poly_Sys;
                 sol : in Standard_Complex_Vectors.Vector;
                 srv : out Standard_Dense_Series_Vectors.Vector;
+                eva : out Standard_Dense_Series_Vectors.Vector ) is
+
+  begin
+    srv := Series_and_Solutions.Create(sol,0);
+    if hom'last = sol'last then
+      Run_LU_Newton(nit,hom,srv);
+    else
+      Run_QR_Newton(nit,hom,srv);
+    end if;
+    eva := Standard_Series_Poly_SysFun.Eval(hom,srv);
+  end Newton_Prediction;
+
+  procedure Newton_Prediction
+              ( nit : in integer32;
+                hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                sol : in DoblDobl_Complex_Vectors.Vector;
+                srv : out DoblDobl_Dense_Series_Vectors.Vector;
+                eva : out DoblDobl_Dense_Series_Vectors.Vector ) is
+
+  begin
+    srv := Series_and_Solutions.Create(sol,0);
+    if hom'last = sol'last then
+      Run_LU_Newton(nit,hom,srv);
+    else
+      Run_QR_Newton(nit,hom,srv);
+    end if;
+    eva := DoblDobl_Series_Poly_SysFun.Eval(hom,srv);
+  end Newton_Prediction;
+
+  procedure Newton_Prediction
+              ( nit : in integer32;
+                hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                sol : in QuadDobl_Complex_Vectors.Vector;
+                srv : out QuadDobl_Dense_Series_Vectors.Vector;
+                eva : out QuadDobl_Dense_Series_Vectors.Vector ) is
+
+  begin
+    srv := Series_and_Solutions.Create(sol,0);
+    if hom'last = sol'last then
+      Run_LU_Newton(nit,hom,srv);
+    else
+      Run_QR_Newton(nit,hom,srv);
+    end if;
+    eva := QuadDobl_Series_Poly_SysFun.Eval(hom,srv);
+  end Newton_Prediction;
+
+  procedure Newton_Prediction
+              ( file : in file_type; nit : in integer32;
+                hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                sol : in Standard_Complex_Vectors.Vector;
+                srv : out Standard_Dense_Series_Vectors.Vector;
                 eva : out Standard_Dense_Series_Vectors.Vector;
                 verbose : in boolean := false ) is
 
   begin
     srv := Series_and_Solutions.Create(sol,0);
     if verbose then
-      put_line("The solution :");
-      Standard_Complex_Vectors_io.put_line(sol);
-      new_line;
-      put_line("The series for the solution :");
-      Standard_Dense_Series_Vectors_io.put(srv);
+      put_line(file,"The solution :");
+      Standard_Complex_Vectors_io.put_line(file,sol);
+      new_line(file);
+      put_line(file,"The series for the solution :");
+      Standard_Dense_Series_Vectors_io.put(file,srv);
     end if;
     if hom'last = sol'last then
       if not verbose then
         Run_LU_Newton(nit,hom,srv);
       else
-        put_line("Applying LU Newton ...");
+        put_line(file,"Applying LU Newton ...");
         Run_LU_Newton(nit,hom,srv,true);
       end if;
     else
       if not verbose then
         Run_QR_Newton(nit,hom,srv);
       else
-        put_line("Applying QR Newton ...");
+        put_line(file,"Applying QR Newton ...");
         Run_QR_Newton(nit,hom,srv,true);
       end if;
     end if;
     eva := Standard_Series_Poly_SysFun.Eval(hom,srv);
     if verbose then
-      put_line("The evaluated series : ");
-      Series_and_Polynomials_io.put(eva);
+      put_line(file,"The evaluated series : ");
+      Series_and_Polynomials_io.put(file,eva);
     end if;
   end Newton_Prediction;
 
   procedure Newton_Prediction
-              ( nit : in integer32;
+              ( file : in file_type; nit : in integer32;
                 hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
                 sol : in DoblDobl_Complex_Vectors.Vector;
                 srv : out DoblDobl_Dense_Series_Vectors.Vector;
@@ -76,36 +126,36 @@ package body Series_and_Predictors is
   begin
     srv := Series_and_Solutions.Create(sol,0);
     if verbose then
-      put_line("The solution :");
-      DoblDobl_Complex_Vectors_io.put_line(sol);
-      new_line;
-      put_line("The series for the solution :");
-      DoblDobl_Dense_Series_Vectors_io.put(srv);
+      put_line(file,"The solution :");
+      DoblDobl_Complex_Vectors_io.put_line(file,sol);
+      new_line(file);
+      put_line(file,"The series for the solution :");
+      DoblDobl_Dense_Series_Vectors_io.put(file,srv);
     end if;
     if hom'last = sol'last then
       if not verbose then
         Run_LU_Newton(nit,hom,srv);
       else
-        put_line("Applying LU Newton ...");
+        put_line(file,"Applying LU Newton ...");
         Run_LU_Newton(nit,hom,srv,true);
       end if;
     else
       if not verbose then
         Run_QR_Newton(nit,hom,srv);
       else
-        put_line("Applying QR Newton ...");
+        put_line(file,"Applying QR Newton ...");
         Run_QR_Newton(nit,hom,srv,true);
       end if;
     end if;
     eva := DoblDobl_Series_Poly_SysFun.Eval(hom,srv);
     if verbose then
-      put_line("The evaluated series : ");
-      Series_and_Polynomials_io.put(eva);
+      put_line(file,"The evaluated series : ");
+      Series_and_Polynomials_io.put(file,eva);
     end if;
   end Newton_Prediction;
 
   procedure Newton_Prediction
-              ( nit : in integer32;
+              ( file : in file_type; nit : in integer32;
                 hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
                 sol : in QuadDobl_Complex_Vectors.Vector;
                 srv : out QuadDobl_Dense_Series_Vectors.Vector;
@@ -115,31 +165,31 @@ package body Series_and_Predictors is
   begin
     srv := Series_and_Solutions.Create(sol,0);
     if verbose then
-      put_line("The solution :");
-      QuadDobl_Complex_Vectors_io.put_line(sol);
-      new_line;
-      put_line("The series for the solution :");
-      QuadDobl_Dense_Series_Vectors_io.put(srv);
+      put_line(file,"The solution :");
+      QuadDobl_Complex_Vectors_io.put_line(file,sol);
+      new_line(file);
+      put_line(file,"The series for the solution :");
+      QuadDobl_Dense_Series_Vectors_io.put(file,srv);
     end if;
     if hom'last = sol'last then
       if not verbose then
         Run_LU_Newton(nit,hom,srv);
       else
-        put_line("Applying LU Newton ...");
+        put_line(file,"Applying LU Newton ...");
         Run_LU_Newton(nit,hom,srv,true);
       end if;
     else
       if not verbose then
         Run_QR_Newton(nit,hom,srv);
       else
-        put_line("Applying QR Newton ...");
+        put_line(file,"Applying QR Newton ...");
         Run_QR_Newton(nit,hom,srv,true);
       end if;
     end if;
     eva := QuadDobl_Series_Poly_SysFun.Eval(hom,srv);
     if verbose then
-      put_line("The evaluated series : ");
-      Series_and_Polynomials_io.put(eva);
+      put_line(file,"The evaluated series : ");
+      Series_and_Polynomials_io.put(file,eva);
     end if;
   end Newton_Prediction;
 
@@ -238,6 +288,77 @@ package body Series_and_Predictors is
 
   function Set_Step_Size
              ( v : Standard_Dense_Series_Vectors.Vector;
+               tolcff,tolres : double_float ) return double_float is
+
+    vk,ord : integer32;
+    res,valcff,pwr,arg : double_float;
+
+    use Standard_Mathematical_Functions;
+
+  begin
+    Order(v,tolcff,vk,ord);
+    valcff := Standard_Complex_Numbers.AbsVal(v(vk).cff(ord));
+    arg := tolres/valcff;
+    if ord = 0 then
+      res := arg;
+    else
+      pwr := 1.0/double_float(ord);
+      res := arg**pwr;
+    end if;
+    return res;
+  end Set_Step_Size;
+
+  function Set_Step_Size
+             ( v : DoblDobl_Dense_Series_Vectors.Vector;
+               tolcff,tolres : double_float ) return double_float is
+
+    vk,ord : integer32;
+    dd_valcff : double_double;
+    res,valcff,pwr,arg : double_float;
+
+    use Standard_Mathematical_Functions;
+
+  begin
+    Order(v,tolcff,vk,ord);
+    dd_valcff := DoblDobl_Complex_Numbers.AbsVal(v(vk).cff(ord));
+    valcff := hi_part(dd_valcff);
+    arg := tolres/valcff;
+    if ord = 0 then
+      res := arg;
+    else
+      pwr := 1.0/double_float(ord);
+      res := arg**pwr;
+    end if;
+    return res;
+  end Set_Step_Size;
+
+  function Set_Step_Size
+             ( v : QuadDobl_Dense_Series_Vectors.Vector;
+               tolcff,tolres : double_float ) return double_float is
+
+    vk,ord : integer32;
+    qd_valcff : quad_double;
+    res,valcff,pwr,arg : double_float;
+
+    use Standard_Mathematical_Functions;
+
+  begin
+    Order(v,tolcff,vk,ord);
+    qd_valcff := QuadDobl_Complex_Numbers.AbsVal(v(vk).cff(ord));
+    valcff := hihi_part(qd_valcff);
+    arg := tolres/valcff;
+    if ord = 0 then
+      res := arg;
+    else
+      pwr := 1.0/double_float(ord);
+      res := arg**pwr;
+    end if;
+    return res;
+  end Set_Step_Size;
+
+  function Set_Step_Size
+             ( file : file_type;
+               v : Standard_Dense_Series_Vectors.Vector;
                tolcff,tolres : double_float;
                verbose : boolean := false ) return double_float is
 
@@ -251,9 +372,9 @@ package body Series_and_Predictors is
     valcff := Standard_Complex_Numbers.AbsVal(v(vk).cff(ord));
     arg := tolres/valcff;
     if verbose then
-      put("order : "); put(ord,1);
-      put(" at component : "); put(vk,1);
-      put(" arg = "); put(arg); new_line;
+      put(file,"order : "); put(file,ord,1);
+      put(file," at component : "); put(file,vk,1);
+      put(file," arg = "); put(file,arg); new_line(file);
     end if;
     if ord = 0 then
       res := arg;
@@ -265,7 +386,8 @@ package body Series_and_Predictors is
   end Set_Step_Size;
 
   function Set_Step_Size
-             ( v : DoblDobl_Dense_Series_Vectors.Vector;
+             ( file : file_type;
+               v : DoblDobl_Dense_Series_Vectors.Vector;
                tolcff,tolres : double_float;
                verbose : boolean := false ) return double_float is
 
@@ -281,9 +403,9 @@ package body Series_and_Predictors is
     valcff := hi_part(dd_valcff);
     arg := tolres/valcff;
     if verbose then
-      put("order : "); put(ord,1);
-      put(" at component : "); put(vk,1);
-      put(" arg = "); put(arg); new_line;
+      put(file,"order : "); put(file,ord,1);
+      put(file," at component : "); put(file,vk,1);
+      put(file," arg = "); put(file,arg); new_line(file);
     end if;
     if ord = 0 then
       res := arg;
@@ -295,7 +417,8 @@ package body Series_and_Predictors is
   end Set_Step_Size;
 
   function Set_Step_Size
-             ( v : QuadDobl_Dense_Series_Vectors.Vector;
+             ( file : file_type;
+               v : QuadDobl_Dense_Series_Vectors.Vector;
                tolcff,tolres : double_float;
                verbose : boolean := false ) return double_float is
 
@@ -311,9 +434,9 @@ package body Series_and_Predictors is
     valcff := hihi_part(qd_valcff);
     arg := tolres/valcff;
     if verbose then
-      put("order : "); put(ord,1);
-      put(" at component : "); put(vk,1);
-      put(" arg = "); put(arg); new_line;
+      put(file,"order : "); put(file,ord,1);
+      put(file," at component : "); put(file,vk,1);
+      put(file," arg = "); put(file,arg); new_line(file);
     end if;
     if ord = 0 then
       res := arg;
