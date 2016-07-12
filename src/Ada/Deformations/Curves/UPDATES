@@ -1,5 +1,6 @@
 Tue 12 Jul 2016 : added double double and quad double versions to the
-  series_and_trackers, tested by ts_serpath.
+  series_and_trackers, tested by ts_serpath.  Provided silent and verbose
+  versions in series_and_trackers, for testing by ts_serpath.
 
 Mon 11 Jul 2016 : new package series_and_trackers, with code from ts_serpath.
 

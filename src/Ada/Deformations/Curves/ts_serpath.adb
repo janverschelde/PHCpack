@@ -76,7 +76,7 @@ procedure ts_serpath is
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
-      Series_and_Trackers.Track_One_Path(s,ls.all,verbose);
+      Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,verbose);
       put("Continue to the next path ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
@@ -103,14 +103,19 @@ procedure ts_serpath is
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
     ans : character;
+    verbose : boolean;
 
   begin
     put_line("The homotopy system :"); put_line(h);
     put_line("The series system :"); put(s,1);
+    new_line;
+    put("Verbose?  Want to see extra output ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
-      Series_and_Trackers.Track_One_Path(s,ls.all);
+      Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,verbose);
       put("Continue to the next path ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');
@@ -137,14 +142,19 @@ procedure ts_serpath is
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
     ans : character;
+    verbose : boolean;
 
   begin
     put_line("The homotopy system :"); put_line(h);
     put_line("The series system :"); put(s,1);
+    new_line;
+    put("Verbose?  Want to see extra output ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
-      Series_and_Trackers.Track_One_Path(s,ls.all);
+      Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,verbose);
       put("Continue to the next path ? (y/n) ");
       Ask_Yes_or_No(ans);
       exit when (ans /= 'y');

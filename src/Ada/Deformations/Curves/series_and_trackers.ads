@@ -92,19 +92,38 @@ package Series_and_Trackers is
 
   procedure Track_one_Path
               ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                sol : in out Standard_Complex_Solutions.Solution );
+  procedure Track_one_Path
+              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                sol : in out DoblDobl_Complex_Solutions.Solution );
+  procedure Track_one_Path
+              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                sol : in out Quaddobl_Complex_Solutions.Solution );
+
+  -- DESCRIPTION :
+  --   Tracks one path starting at the solution sol using the homotopy hom,
+  --   in standard double, double double, or quad double precision.
+  --   This version remains silent and does not write any output.
+
+  procedure Track_one_Path
+              ( file : in file_type;
+                hom : in Standard_Series_Poly_Systems.Poly_Sys;
                 sol : in out Standard_Complex_Solutions.Solution;
                 verbose : in boolean := false );
   procedure Track_one_Path
-              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+              ( file : in file_type;
+                hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
                 sol : in out DoblDobl_Complex_Solutions.Solution;
                 verbose : in boolean := false );
   procedure Track_one_Path
-              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+              ( file : in file_type;
+                hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
                 sol : in out Quaddobl_Complex_Solutions.Solution;
                 verbose : in boolean := false );
 
   -- DESCRIPTION :
   --   Tracks one path starting at the solution sol using the homotopy hom,
   --   in standard double, double double, or quad double precision.
+  --   This version is verbose and writes extra diagnostic output to file.
 
 end Series_and_Trackers;
