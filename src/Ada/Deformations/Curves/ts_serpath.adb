@@ -64,22 +64,34 @@ procedure ts_serpath is
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
     ans : character;
-    verbose : boolean;
+    verbose,tofile : boolean;
+    file : file_type;
 
   begin
     put_line("The homotopy system :"); put_line(h);
-    put_line("The series system :"); put(s,1);
-    new_line;
-    put("Verbose?  Want to see extra output ? (y/n) ");
-    Ask_Yes_or_No(ans);
+    put_line("The series system :"); put(s,1); new_line;
+    put("Verbose?  Want to see extra output ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
+    if verbose then
+      put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
+      tofile := (ans = 'y');
+      if tofile then
+        put_line("Reading the name of the output file ...");
+        Read_Name_and_Create_File(file);
+      end if;
+    else
+      tofile := false;
+    end if;
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
-      Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,verbose);
-      put("Continue to the next path ? (y/n) ");
-      Ask_Yes_or_No(ans);
-      exit when (ans /= 'y');
+      if tofile then
+        Series_and_Trackers.Track_One_Path(file,s,ls.all,verbose);
+      else
+        Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,verbose);
+        put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
+        exit when (ans /= 'y');
+      end if;
       tmp := Tail_Of(tmp);
     end loop;
   end Standard_Test;
@@ -103,22 +115,35 @@ procedure ts_serpath is
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
     ans : character;
-    verbose : boolean;
+    verbose,tofile : boolean;
+    file : file_type;
 
   begin
     put_line("The homotopy system :"); put_line(h);
-    put_line("The series system :"); put(s,1);
-    new_line;
-    put("Verbose?  Want to see extra output ? (y/n) ");
-    Ask_Yes_or_No(ans);
+    put_line("The series system :"); put(s,1); new_line;
+    put("Verbose?  Want to see extra output ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
+    if verbose then
+      put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
+      tofile := (ans = 'y');
+      if tofile then
+        put_line("Reading the name of the output file ...");
+        Read_Name_and_Create_File(file);
+      end if;
+    else
+      tofile := false;
+    end if;
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
-      Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,verbose);
-      put("Continue to the next path ? (y/n) ");
-      Ask_Yes_or_No(ans);
-      exit when (ans /= 'y');
+      if tofile then
+        Series_and_Trackers.Track_One_Path(file,s,ls.all,verbose);
+      else
+        Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,verbose);
+        put("Continue to the next path ? (y/n) ");
+        Ask_Yes_or_No(ans);
+        exit when (ans /= 'y');
+      end if;
       tmp := Tail_Of(tmp);
     end loop;
   end DoblDobl_Test;
@@ -142,22 +167,34 @@ procedure ts_serpath is
     len : constant integer32 := integer32(Length_Of(sols));
     ls : Link_to_Solution;
     ans : character;
-    verbose : boolean;
+    verbose,tofile : boolean;
+    file : file_type;
 
   begin
     put_line("The homotopy system :"); put_line(h);
-    put_line("The series system :"); put(s,1);
-    new_line;
-    put("Verbose?  Want to see extra output ? (y/n) ");
-    Ask_Yes_or_No(ans);
+    put_line("The series system :"); put(s,1); new_line;
+    put("Verbose?  Want to see extra output ? (y/n) "); Ask_Yes_or_No(ans);
     verbose := (ans = 'y');
+    if verbose then
+      put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
+      tofile := (ans = 'y');
+      if tofile then
+        put_line("Reading the name of the output file ...");
+        Read_Name_and_Create_File(file);
+      end if;
+    else
+      tofile := false;
+    end if;
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
-      Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,verbose);
-      put("Continue to the next path ? (y/n) ");
-      Ask_Yes_or_No(ans);
-      exit when (ans /= 'y');
+      if tofile then
+        Series_and_Trackers.Track_One_Path(file,s,ls.all,verbose);
+      else
+        Series_and_Trackers.Track_One_Path(standard_output,s,ls.all,verbose);
+        put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
+        exit when (ans /= 'y');
+      end if;
       tmp := Tail_Of(tmp);
     end loop;
   end QuadDobl_Test;
