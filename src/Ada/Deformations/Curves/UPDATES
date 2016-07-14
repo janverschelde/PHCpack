@@ -1,5 +1,5 @@
 Thu 14 Jul 2016 : changed series_and_predictors.adb so output is written
-  to file when in verbose mode.
+  to file when in verbose mode.  Refactored code in ts_serpath to procedure.
 
 Wed 13 Jul 2016 : added prompting for file to ts_serpath.
 

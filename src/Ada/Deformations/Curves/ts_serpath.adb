@@ -45,6 +45,31 @@ procedure ts_serpath is
 -- DESCRIPTION :
 --   Developing path tracers with power series.
 
+  procedure Set_Output
+              ( file : in out file_type; verbose,tofile : out boolean ) is
+
+  -- DESCRIPTION :
+  --   Prompts the user if verbose or not, and if so, whether the output
+  --   should be written to a file or not, which sets tofile to true.
+  --   If tofile, then file is created, ready for output.
+
+    ans : character;
+
+  begin
+    put("Verbose?  Want to see extra output ? (y/n) "); Ask_Yes_or_No(ans);
+    verbose := (ans = 'y');
+    if verbose then
+      put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
+      tofile := (ans = 'y');
+      if tofile then
+        put_line("Reading the name of the output file ...");
+        Read_Name_and_Create_File(file);
+      end if;
+    else
+      tofile := false;
+    end if;
+  end Set_Output;
+
   procedure Standard_Test
               ( nq : in integer32;
                 sols : in out Standard_Complex_Solutions.Solution_List ) is
@@ -70,18 +95,7 @@ procedure ts_serpath is
   begin
     put_line("The homotopy system :"); put_line(h);
     put_line("The series system :"); put(s,1); new_line;
-    put("Verbose?  Want to see extra output ? (y/n) "); Ask_Yes_or_No(ans);
-    verbose := (ans = 'y');
-    if verbose then
-      put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
-      tofile := (ans = 'y');
-      if tofile then
-        put_line("Reading the name of the output file ...");
-        Read_Name_and_Create_File(file);
-      end if;
-    else
-      tofile := false;
-    end if;
+    Set_Output(file,verbose,tofile);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
@@ -121,18 +135,7 @@ procedure ts_serpath is
   begin
     put_line("The homotopy system :"); put_line(h);
     put_line("The series system :"); put(s,1); new_line;
-    put("Verbose?  Want to see extra output ? (y/n) "); Ask_Yes_or_No(ans);
-    verbose := (ans = 'y');
-    if verbose then
-      put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
-      tofile := (ans = 'y');
-      if tofile then
-        put_line("Reading the name of the output file ...");
-        Read_Name_and_Create_File(file);
-      end if;
-    else
-      tofile := false;
-    end if;
+    Set_Output(file,verbose,tofile);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
@@ -173,18 +176,7 @@ procedure ts_serpath is
   begin
     put_line("The homotopy system :"); put_line(h);
     put_line("The series system :"); put(s,1); new_line;
-    put("Verbose?  Want to see extra output ? (y/n) "); Ask_Yes_or_No(ans);
-    verbose := (ans = 'y');
-    if verbose then
-      put("Output to file ? (y/n) "); Ask_Yes_or_No(ans);
-      tofile := (ans = 'y');
-      if tofile then
-        put_line("Reading the name of the output file ...");
-        Read_Name_and_Create_File(file);
-      end if;
-    else
-      tofile := false;
-    end if;
+    Set_Output(file,verbose,tofile);
     for i in 1..len loop
       ls := Head_Of(tmp);
       put("Tracking path "); put(i,1); put_line(" ...");
