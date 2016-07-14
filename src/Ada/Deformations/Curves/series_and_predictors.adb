@@ -98,14 +98,14 @@ package body Series_and_Predictors is
         Run_LU_Newton(nit,hom,srv);
       else
         put_line(file,"Applying LU Newton ...");
-        Run_LU_Newton(nit,hom,srv,true);
+        Run_LU_Newton(file,nit,hom,srv,true);
       end if;
     else
       if not verbose then
         Run_QR_Newton(nit,hom,srv);
       else
         put_line(file,"Applying QR Newton ...");
-        Run_QR_Newton(nit,hom,srv,true);
+        Run_QR_Newton(file,nit,hom,srv,true);
       end if;
     end if;
     eva := Standard_Series_Poly_SysFun.Eval(hom,srv);
@@ -137,14 +137,14 @@ package body Series_and_Predictors is
         Run_LU_Newton(nit,hom,srv);
       else
         put_line(file,"Applying LU Newton ...");
-        Run_LU_Newton(nit,hom,srv,true);
+        Run_LU_Newton(file,nit,hom,srv,true);
       end if;
     else
       if not verbose then
         Run_QR_Newton(nit,hom,srv);
       else
         put_line(file,"Applying QR Newton ...");
-        Run_QR_Newton(nit,hom,srv,true);
+        Run_QR_Newton(file,nit,hom,srv,true);
       end if;
     end if;
     eva := DoblDobl_Series_Poly_SysFun.Eval(hom,srv);
@@ -176,14 +176,14 @@ package body Series_and_Predictors is
         Run_LU_Newton(nit,hom,srv);
       else
         put_line(file,"Applying LU Newton ...");
-        Run_LU_Newton(nit,hom,srv,true);
+        Run_LU_Newton(file,nit,hom,srv,true);
       end if;
     else
       if not verbose then
         Run_QR_Newton(nit,hom,srv);
       else
         put_line(file,"Applying QR Newton ...");
-        Run_QR_Newton(nit,hom,srv,true);
+        Run_QR_Newton(file,nit,hom,srv,true);
       end if;
     end if;
     eva := QuadDobl_Series_Poly_SysFun.Eval(hom,srv);

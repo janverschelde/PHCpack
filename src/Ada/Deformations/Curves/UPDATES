@@ -1,3 +1,6 @@
+Thu 14 Jul 2016 : changed series_and_predictors.adb so output is written
+  to file when in verbose mode.
+
 Wed 13 Jul 2016 : added prompting for file to ts_serpath.
 
 Tue 12 Jul 2016 : added double double and quad double versions to the
