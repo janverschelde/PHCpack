@@ -19,6 +19,8 @@ with QuadDobl_Series_Vector_Norms;
 with Standard_Random_Series;
 with DoblDobl_Random_Series;
 with QuadDobl_Random_Series;
+with Standard_Dense_Vector_Series;
+with Standard_Dense_Vector_Series_io;     use Standard_Dense_Vector_Series_io;
 
 procedure ts_servec is
 
@@ -137,12 +139,15 @@ procedure ts_servec is
   --   with series of the given degree, in standard double precision.
   --   Tests the computation of the norm and the normalization.
 
-    v : Standard_Dense_Series_Vectors.Vector(1..dim)
-      := Standard_Random_Series.Random_Series_Vector(1,dim,degree);
+    sv : Standard_Dense_Series_Vectors.Vector(1..dim)
+       := Standard_Random_Series.Random_Series_Vector(1,dim,degree);
+    vs : Standard_Dense_Vector_Series.Vector
+       := Standard_Dense_Vector_Series.Create(sv);
 
   begin
-    Write(v);
-    Standard_Test_Norm(v);
+    Write(sv);
+    put_line("The coefficients of the vector series :"); put(vs);
+    Standard_Test_Norm(sv);
   end Standard_Test;
 
   procedure DoblDobl_Test ( dim,degree : in integer32 ) is

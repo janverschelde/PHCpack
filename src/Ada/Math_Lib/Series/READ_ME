@@ -38,6 +38,8 @@ ts_series                        : basic test on truncated dense series
 ------------------------------------------------------------------------------
 standard_dense_series_vectors    : vectors of double power series
 standard_dense_series_vectors_io : i/o for double power series vectors
+standard_dense_vector_series     : series with double vectors coefficients
+standard_dense_vector_series_io  : output for double vector series
 dobldobl_dense_series_vectors    : vectors of double double power series
 dobldobl_dense_series_vectors_io : i/o for double double power series vectors
 quaddobl_dense_series_vectors    : vectors of quad double power series
