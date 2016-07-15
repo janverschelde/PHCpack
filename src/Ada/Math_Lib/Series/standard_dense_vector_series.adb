@@ -31,6 +31,9 @@ package body Standard_Dense_Vector_Series is
     res : Standard_Dense_Series_Vectors.Vector(1..dim);
 
   begin
+    for i in res'range loop
+      res(i).deg := v.deg;
+    end loop;
     for i in 0..v.deg loop
       for j in v.cff'range loop
         res(j).cff(i) := v.cff(i)(j);
