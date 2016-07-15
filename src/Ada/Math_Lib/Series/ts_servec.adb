@@ -21,6 +21,10 @@ with DoblDobl_Random_Series;
 with QuadDobl_Random_Series;
 with Standard_Dense_Vector_Series;
 with Standard_Dense_Vector_Series_io;     use Standard_Dense_Vector_Series_io;
+with DoblDobl_Dense_Vector_Series;
+with DoblDobl_Dense_Vector_Series_io;     use DoblDobl_Dense_Vector_Series_io;
+with QuadDobl_Dense_Vector_Series;
+with QuadDobl_Dense_Vector_Series_io;     use QuadDobl_Dense_Vector_Series_io;
 
 procedure ts_servec is
 
@@ -157,12 +161,15 @@ procedure ts_servec is
   --   with series of the given degree, in double double precision.
   --   Tests the computation of the norm and the normalization.
 
-    v : DoblDobl_Dense_Series_Vectors.Vector(1..dim)
-      := DoblDobl_Random_Series.Random_Series_Vector(1,dim,degree);
+    sv : DoblDobl_Dense_Series_Vectors.Vector(1..dim)
+       := DoblDobl_Random_Series.Random_Series_Vector(1,dim,degree);
+    vs : DoblDobl_Dense_Vector_Series.Vector
+       := DoblDobl_Dense_Vector_Series.Create(sv);
 
   begin
-    Write(v);
-    DoblDobl_Test_Norm(v);
+    Write(sv);
+    put_line("The coefficients of the vector series :"); put(vs);
+    DoblDobl_Test_Norm(sv);
   end DoblDobl_Test;
 
   procedure QuadDobl_Test ( dim,degree : in integer32 ) is
@@ -172,12 +179,15 @@ procedure ts_servec is
   --   with series of the given degree, in quad double precision.
   --   Tests the computation of the norm and the normalization.
 
-    v : QuadDobl_Dense_Series_Vectors.Vector(1..dim)
-      := QuadDobl_Random_Series.Random_Series_Vector(1,dim,degree);
+    sv : QuadDobl_Dense_Series_Vectors.Vector(1..dim)
+       := QuadDobl_Random_Series.Random_Series_Vector(1,dim,degree);
+    vs : QuadDobl_Dense_Vector_Series.Vector
+       := QuadDobl_Dense_Vector_Series.Create(sv);
 
   begin
-    Write(v);
-    QuadDobl_Test_Norm(v);
+    Write(sv);
+    put_line("The coefficients of the vector series :"); put(vs);
+    QuadDobl_Test_Norm(sv);
   end QuadDobl_Test;
 
   procedure Main is
