@@ -40,6 +40,12 @@ with QuadDobl_Linear_Series_Solvers;
 with Standard_Least_Squares_Series;
 with DoblDobl_Least_Squares_Series;
 with QuadDobl_Least_Squares_Series;
+with Standard_Dense_Matrix_Series;
+with Standard_Dense_Matrix_Series_io;     use Standard_Dense_Matrix_Series_io;
+with DoblDobl_Dense_Matrix_Series;
+with DoblDobl_Dense_Matrix_Series_io;     use DoblDobl_Dense_Matrix_Series_io;
+with QuadDobl_Dense_Matrix_Series;
+with QuadDobl_Dense_Matrix_Series_io;     use QuadDobl_Dense_Matrix_Series_io;
 
 procedure ts_sermat is
 
@@ -1015,11 +1021,11 @@ procedure ts_sermat is
     return ans;
   end Prompt_for_Precision;
 
-  procedure Main is
+  procedure Test_Solving is
 
   -- DESCRIPTION :
   --   Prompts the user for the dimension of the linear system
-  --   and the degree of the series.
+  --   and the degree of the series, solves a random system.
 
     dim,ord,nrows,ncols : integer32 := 0;
     ans,prc : character;
@@ -1050,6 +1056,101 @@ procedure ts_sermat is
         when others => null;
       end case;
     end if;
+  end Test_Solving;
+
+  procedure Standard_Test_Conversion ( n,m,d : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Converts an n-by-m matrix of series of degree d with standard
+  --   double precision complex coefficients into a matrix series.
+
+    sA : constant Standard_Dense_Series_Matrices.Matrix(1..n,1..m)
+       := Standard_Random_Series.Random_Series_Matrix(1,n,1,m,d);
+    As : constant Standard_Dense_Matrix_Series.Matrix 
+       := Standard_Dense_Matrix_Series.Create(sA); 
+
+  begin
+    Write(sA);
+    put_line("The coefficients of the matrix series :");
+    put(As);
+  end Standard_Test_Conversion;
+
+  procedure DoblDobl_Test_Conversion ( n,m,d : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Converts an n-by-m matrix of series of degree d with double
+  --   double precision complex coefficients into a matrix series.
+
+    sA : constant DoblDobl_Dense_Series_Matrices.Matrix(1..n,1..m)
+       := DoblDobl_Random_Series.Random_Series_Matrix(1,n,1,m,d);
+    As : constant DoblDobl_Dense_Matrix_Series.Matrix 
+       := DoblDobl_Dense_Matrix_Series.Create(sA); 
+
+  begin
+    Write(sA);
+    put_line("The coefficients of the matrix series :");
+    put(As);
+  end DoblDobl_Test_Conversion;
+
+  procedure QuadDobl_Test_Conversion ( n,m,d : in integer32 ) is
+
+  -- DESCRIPTION :
+  --   Converts an n-by-m matrix of series of degree d with double
+  --   double precision complex coefficients into a matrix series.
+
+    sA : constant QuadDobl_Dense_Series_Matrices.Matrix(1..n,1..m)
+       := QuadDobl_Random_Series.Random_Series_Matrix(1,n,1,m,d);
+    As : constant QuadDobl_Dense_Matrix_Series.Matrix 
+       := QuadDobl_Dense_Matrix_Series.Create(sA); 
+
+  begin
+    Write(sA);
+    put_line("The coefficients of the matrix series :");
+    put(As);
+  end QuadDobl_Test_Conversion;
+
+  procedure Test_Conversion is
+
+  -- DESCRIPTION :
+  --   Prompts for the number of rows, the number of columns,
+  --   and the degree of the series.
+
+    nbrows,nbcols,deg : integer32 := 0;
+    prc : character;
+
+  begin
+    new_line;
+    put_line("Converting random series matrix into matrix series ...");
+    put("  Give the number of rows : "); get(nbrows);
+    put("  Give the number of columns : "); get(nbcols);
+    put("  Give the degree of the series : "); get(deg);
+    prc := Prompt_for_Precision;
+    case prc is
+      when '0' => Standard_Test_Conversion(nbrows,nbcols,deg);
+      when '1' => DoblDobl_Test_Conversion(nbrows,nbcols,deg);
+      when '2' => QuadDobl_Test_Conversion(nbrows,nbcols,deg);
+      when others => null;
+    end case;
+  end Test_Conversion;
+
+  procedure Main is
+
+  -- DESCRIPTION :
+  --   Displays the menu of test procedures and runs the selected test.
+
+    ans : character;
+
+  begin
+    new_line;
+    put_line("MENU for testing procedures :");
+    put_line("  0. test solving of a random linear system;");
+    put_line("  1. convert series matrix into matrix series.");
+    put("Type 0 or 1 to select a test : "); Ask_Alternative(ans,"01");
+    case ans is
+      when '0' => Test_Solving;
+      when '1' => Test_Conversion;
+      when others => null;
+    end case;
   end Main;
 
 begin

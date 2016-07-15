@@ -2,6 +2,8 @@ Fri 15 Jul 2016 : defined series that have vectors as coefficients and output
   in standard_dense_vector_series and _io, with added test in ts_servec.
   Defined dobldobl and quaddobl versions of series with vectors as coeffs.
   Added the initialization of the degrees in *vector_series.adb.
+  Defined series with matrix coefficients in *matrix_series* with output,
+  tested by ts_sermat.adb.
 
 Thu 7 Jul 2016 : change in termilogy, order is replaced by degree.
   This changes 40 files: *dense_series.a*, *dense_series_io.a*, *algebraic*,

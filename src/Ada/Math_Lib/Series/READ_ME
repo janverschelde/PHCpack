@@ -59,8 +59,14 @@ dobldobl_series_vector_functions : evaluating vectors of dobldobl power series
 quaddobl_series_vector_functions : evaluating vectors of quaddobl power series
 ts_servec                        : test on vectors of dense power series
 standard_dense_series_matrices   : matrices of standard double power series
+standard_dense_matrix_series     : series with double matrices as coefficients
+standard_dense_matrix_series_io  : basic output for double matrix series
 dobldobl_dense_series_matrices   : matrices of double double power series
+dobldobl_dense_matrix_series     : series with dobldobl matrices as coeffs
+dobldobl_dense_matrix_series_io  : basic output for double double matrix series
 quaddobl_dense_series_matrices   : matrices of quad double power series
+dobldobl_dense_matrix_series     : series with quaddobl matrices as coeffs
+dobldobl_dense_matrix_series_io  : basic output for quad double matrix series
 standard_linear_series_solvers   : lu factorization for standard linear systems
 dobldobl_linear_series_solvers   : lu factorization for dobldobl linear systems
 quaddobl_linear_series_solvers   : lu factorization for quaddobl linear systems
