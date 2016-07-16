@@ -519,4 +519,121 @@ package body Series_and_Trackers is
     QuadDobl_Series_Poly_Systems.Clear(wrk);
   end Track_One_Path;
 
+  procedure Track_Many_Paths
+              ( file : in file_type;
+                hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                verbose : in boolean := false ) is
+
+    use Standard_Complex_Solutions;
+
+    tmp : Solution_List := sols;
+    len : constant integer32 := integer32(Length_Of(sols));
+    ls : Link_to_Solution;
+
+  begin
+    for i in 1..len loop
+      ls := Head_Of(tmp);
+      put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
+      Series_and_Trackers.Track_One_Path(file,hom,ls.all,verbose);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Track_Many_Paths;
+
+  procedure Track_Many_Paths
+              ( file : in file_type;
+                hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                verbose : in boolean := false ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    tmp : Solution_List := sols;
+    len : constant integer32 := integer32(Length_Of(sols));
+    ls : Link_to_Solution;
+
+  begin
+    for i in 1..len loop
+      ls := Head_Of(tmp);
+      put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
+      Series_and_Trackers.Track_One_Path(file,hom,ls.all,verbose);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Track_Many_Paths;
+
+  procedure Track_Many_Paths
+              ( file : in file_type;
+                hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                verbose : in boolean := false ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    tmp : Solution_List := sols;
+    len : constant integer32 := integer32(Length_Of(sols));
+    ls : Link_to_Solution;
+
+  begin
+    for i in 1..len loop
+      ls := Head_Of(tmp);
+      put(file,"Tracking path "); put(file,i,1); put_line(file," ...");
+      Series_and_Trackers.Track_One_Path(file,hom,ls.all,verbose);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Track_Many_Paths;
+
+  procedure Track_Many_Paths
+              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List ) is
+
+    use Standard_Complex_Solutions;
+
+    tmp : Solution_List := sols;
+    len : constant integer32 := integer32(Length_Of(sols));
+    ls : Link_to_Solution;
+
+  begin
+    for i in 1..len loop
+      ls := Head_Of(tmp);
+      Series_and_Trackers.Track_One_Path(hom,ls.all);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Track_Many_Paths;
+
+  procedure Track_Many_Paths
+              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List ) is
+
+    use DoblDobl_Complex_Solutions;
+
+    tmp : Solution_List := sols;
+    len : constant integer32 := integer32(Length_Of(sols));
+    ls : Link_to_Solution;
+
+  begin
+    for i in 1..len loop
+      ls := Head_Of(tmp);
+      Series_and_Trackers.Track_One_Path(hom,ls.all);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Track_Many_Paths;
+
+  procedure Track_Many_Paths
+              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List ) is
+
+    use QuadDobl_Complex_Solutions;
+
+    tmp : Solution_List := sols;
+    len : constant integer32 := integer32(Length_Of(sols));
+    ls : Link_to_Solution;
+
+  begin
+    for i in 1..len loop
+      ls := Head_Of(tmp);
+      Series_and_Trackers.Track_One_Path(hom,ls.all);
+      tmp := Tail_Of(tmp);
+    end loop;
+  end Track_Many_Paths;
+
 end Series_and_Trackers;

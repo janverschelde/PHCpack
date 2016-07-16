@@ -126,4 +126,42 @@ package Series_and_Trackers is
   --   in standard double, double double, or quad double precision.
   --   This version is verbose and writes extra diagnostic output to file.
 
+  procedure Track_Many_Paths
+              ( hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List );
+  procedure Track_Many_Paths
+              ( hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List );
+  procedure Track_Many_Paths
+              ( hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List );
+
+  -- DESCRIPTION :
+  --   Tracks the paths starting at the solutions in the list sols,
+  --   as defined by the homotopy in hom,
+  --   in double, double double, or quad double precision.
+  --   The procedures are silent and do not write any output.
+
+  procedure Track_Many_Paths
+              ( file : in file_type;
+                hom : in Standard_Series_Poly_Systems.Poly_Sys;
+                sols : in out Standard_Complex_Solutions.Solution_List;
+                verbose : in boolean := false );
+  procedure Track_Many_Paths
+              ( file : in file_type;
+                hom : in DoblDobl_Series_Poly_Systems.Poly_Sys;
+                sols : in out DoblDobl_Complex_Solutions.Solution_List;
+                verbose : in boolean := false );
+  procedure Track_Many_Paths
+              ( file : in file_type;
+                hom : in QuadDobl_Series_Poly_Systems.Poly_Sys;
+                sols : in out QuadDobl_Complex_Solutions.Solution_List;
+                verbose : in boolean := false );
+
+  -- DESCRIPTION :
+  --   Tracks the paths starting at the solutions in the list sols,
+  --   as defined by the homotopy in hom,
+  --   in double, double double, or quad double precision.
+  --   If verbose, then extra output is written to file.
+
 end Series_and_Trackers;

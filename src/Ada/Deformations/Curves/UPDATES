@@ -1,3 +1,5 @@
+Sat 16 Jul 2016 : added track_many_paths procedures to series_and_trackers.
+
 Thu 14 Jul 2016 : changed series_and_predictors.adb so output is written
   to file when in verbose mode.  Refactored code in ts_serpath to procedure.
 
