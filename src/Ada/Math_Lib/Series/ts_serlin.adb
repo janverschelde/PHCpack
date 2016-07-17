@@ -42,7 +42,9 @@ procedure ts_serlin is
     else
       put_line("The leading vector series of the solution :");
       put_line(x.cff(0));
-      Solve_Next_by_lusolve(A,b,lwrk,ipvt,x);
+      for k in 1..b.deg loop
+        Solve_Next_by_lusolve(A,b,lwrk,ipvt,x);
+      end loop;
     end if;
   end Solve;
 
@@ -78,10 +80,14 @@ procedure ts_serlin is
     put_line(xs.cff(0));
     put_line("The computed leading vector series of the solution :");
     put_line(ys.cff(0));
-    put_line("The generated 2nd term of the vector series of the solution :");
-    put_line(xs.cff(1));
-    put_line("The computed 2nd term of the vector series of the solution :");
-    put_line(ys.cff(1));
+    for k in 1..bs.deg loop
+      put("The generated term "); put(k,1);
+      put_line(" of the vector series of the solution :");
+      put_line(xs.cff(k));
+      put("The computed term "); put(k,1);
+      put_line(" of the vector series of the solution :");
+      put_line(ys.cff(k));
+    end loop;
   end Standard_Test;
 
   procedure Main is

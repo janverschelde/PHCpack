@@ -37,18 +37,25 @@ package body Standard_Matrix_Series_Solvers is
     use Standard_Complex_Vectors;
     use Standard_Complex_Matrices;
 
-    idx : constant integer32 := x.deg+1;
-    Aidx : constant Standard_Complex_Matrices.Link_to_Matrix := A.cff(idx);
+    idx : integer32 := x.deg+1;
+    Aidx : Standard_Complex_Matrices.Link_to_Matrix := A.cff(idx);
     dim : constant integer32 := Aidx'last(1);
-    wA : constant Standard_Complex_Matrices.Matrix(1..dim,1..dim) := Aidx.all;
+    wA : Standard_Complex_Matrices.Matrix(1..dim,1..dim) := Aidx.all;
     wb : Standard_Complex_Vectors.Vector(1..dim) := b.cff(idx).all;
-    wx : constant Standard_Complex_Vectors.Vector(1..dim) := x.cff(0).all;
+    wx : Standard_Complex_Vectors.Vector(1..dim) := x.cff(0).all;
 
   begin
     wb := wb - wA*wx;
+    for k in 1..x.deg loop
+      idx := idx - 1;
+      Aidx := A.cff(idx);
+      wA := Aidx.all;
+      wx := x.cff(k).all;
+      wb := wb - wA*wx;
+    end loop;
     lusolve(a0lu,dim,ipvt,wb);
-    x.cff(1) := new Standard_Complex_Vectors.Vector'(wb);
-    x.deg := 1;
+    x.deg := x.deg + 1;
+    x.cff(x.deg) := new Standard_Complex_Vectors.Vector'(wb);
   end Solve_Next_by_lusolve;
 
 end Standard_Matrix_Series_Solvers;

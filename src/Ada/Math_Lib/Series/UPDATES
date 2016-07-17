@@ -1,5 +1,7 @@
 Sun 17 Jul 2016 : new package standard_matrix_series_solvers tested by
   ts_serlin to apply linearization to solve a linear system of series.
+  Completed solving with lusolve in standard_matrix_series_solvers.adb,
+  with added test in ts_serlin.
 
 Fri 15 Jul 2016 : defined series that have vectors as coefficients and output
   in standard_dense_vector_series and _io, with added test in ts_servec.
