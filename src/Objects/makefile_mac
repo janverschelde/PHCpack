@@ -501,6 +501,10 @@ ts_sersys:
 	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_sersys.adb \
               -o $(BIN)/ts_sersys
 
+ts_serlin:
+	gnatmake $(INCLULIBS) $(GNATOPTFLAGS) ts_serlin.adb \
+              -o $(BIN)/ts_serlin
+
 # Test programs for the Deformations/Solutions library :
 
 ts_solfilt:
