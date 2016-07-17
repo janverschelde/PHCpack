@@ -74,6 +74,8 @@ standard_least_squares_series    : standard qr decomposition and least squares
 dobldobl_least_squares_series    : dobldobl qr decomposition and least squares
 quaddobl_least_squares_series    : quaddobl qr decomposition and least squares
 ts_sermat                        : test on matrices of dense power series
+standard_matrix_series_solvers   : linearization to solve a system of series
+ts_serlin                        : test on matrix series solver
 ------------------------------------------------------------------------------
 standard_series_polynomials      : polynomials with series as coefficients
 standard_series_poly_functions   : evaluating standard series polynomials
