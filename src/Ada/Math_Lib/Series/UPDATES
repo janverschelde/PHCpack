@@ -1,3 +1,6 @@
+Mon 18 Jul 2016 : defined {dobldobl,quaddobl}_matrix_series_solvers, with
+  added tests in ts_serlin.
+
 Sun 17 Jul 2016 : new package standard_matrix_series_solvers tested by
   ts_serlin to apply linearization to solve a linear system of series.
   Completed solving with lusolve in standard_matrix_series_solvers.adb,
