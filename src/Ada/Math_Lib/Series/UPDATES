@@ -1,3 +1,7 @@
+Tue 19 Jul 2016 : applied lufco in *_matrix_series_solvers, with tests added
+  to ts_serlin.  Added qrls to *_matrix_series_solvers, tested in ts_serlin.
+  Added computation of the max norm of the error to ts_serlin.
+
 Mon 18 Jul 2016 : defined {dobldobl,quaddobl}_matrix_series_solvers, with
   added tests in ts_serlin.
 
