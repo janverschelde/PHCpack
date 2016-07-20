@@ -2,8 +2,14 @@ with text_io;                             use text_io;
 with Communications_with_User;            use Communications_with_User;
 with Standard_Integer_Numbers;            use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;         use Standard_Integer_Numbers_io;
+with Standard_Floating_Numbers;           use Standard_Floating_Numbers;
+with Standard_Floating_Numbers_io;        use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers_io;         use Standard_Complex_Numbers_io;
+with Double_Double_Numbers;               use Double_Double_Numbers;
+with Double_Double_Numbers_io;            use Double_Double_Numbers_io;
 with DoblDobl_Complex_Numbers_io;         use DoblDobl_Complex_Numbers_io;
+with Quad_Double_Numbers;                 use Quad_Double_Numbers;
+with Quad_Double_Numbers_io;              use Quad_Double_Numbers_io;
 with QuadDobl_Complex_Numbers_io;         use QuadDobl_Complex_Numbers_io;
 with Standard_Integer_Vectors;
 with Standard_Integer_Vectors_io;         use Standard_Integer_Vectors_io;
@@ -162,19 +168,21 @@ procedure ts_sermat is
   --   in standard double precision.
   --   The series are all of the given degree.
 
-    A : constant Standard_Dense_Series_Matrices.Matrix(1..n,1..n)
-      := Standard_Random_Series.Random_Series_Matrix(1,n,1,n,degree);
-    wrk : Standard_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
-    b : constant Standard_Dense_Series_Vectors.Vector(1..n)
-      := Standard_Random_Series.Random_Series_Vector(1,n,degree);
-    x : Standard_Dense_Series_Vectors.Vector(1..n) := b;
-    ipvt : Standard_Integer_Vectors.Vector(1..n);
-    info : integer32;
-    rsd : Standard_Dense_Series_Vectors.Vector(1..n);
-
     use Standard_Dense_Series_Vectors;
     use Standard_Dense_Series_Matrices;
     use Standard_Linear_Series_Solvers;
+
+    A : constant Standard_Dense_Series_Matrices.Matrix(1..n,1..n)
+      := Standard_Random_Series.Random_Series_Matrix(1,n,1,n,degree);
+    wrk : Standard_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
+    x : Standard_Dense_Series_Vectors.Vector(1..n)
+      := Standard_Random_Series.Random_Series_Vector(1,n,degree);
+    b : Standard_Dense_Series_Vectors.Vector(1..n) := A*x;
+    y : Standard_Dense_Series_Vectors.Vector(1..n) := b;
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    info : integer32;
+    rsd,err : Standard_Dense_Series_Vectors.Vector(1..n);
+    nrm_rsd,nrm_err : double_float;
 
   begin
     put_line("The coefficient matrix A :"); Write(A);
@@ -184,10 +192,17 @@ procedure ts_sermat is
     if info /= 0 then
       put("info = "); put(info,1); new_line;
     else
-      LUsolve(wrk,n,ipvt,x);
-      put_line("The solution x to A*x = b :"); Write(x);
-      rsd := b - A*x;
+      LUsolve(wrk,n,ipvt,y);
+      put_line("The generated solution x to A*x = b :"); Write(x);
+      put_line("The computed solution x to A*x = b :"); Write(y);
+      rsd := b - A*y; -- backward error
       put_line("The residual b - A*x :"); Write(rsd);
+      err := x - y; -- forward error
+      put_line("The difference between generated and computed :"); Write(err);
+      nrm_rsd := Standard_Series_Vector_Norms.Max_Norm(rsd);
+      nrm_err := Standard_Series_Vector_Norms.Max_Norm(err);
+      put("Max norm of the backward error :"); put(nrm_rsd,3); new_line;
+      put("Max norm of the forward error  :"); put(nrm_err,3); new_line;
     end if;
   end Standard_Random_Linear_Solve;
 
@@ -199,19 +214,21 @@ procedure ts_sermat is
   --   in double double precision.
   --   The series are all of the given degree.
 
-    A : constant DoblDobl_Dense_Series_Matrices.Matrix(1..n,1..n)
-      := DoblDobl_Random_Series.Random_Series_Matrix(1,n,1,n,degree);
-    wrk : DoblDobl_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
-    b : constant DoblDobl_Dense_Series_Vectors.Vector(1..n)
-      := DoblDobl_Random_Series.Random_Series_Vector(1,n,degree);
-    x : DoblDobl_Dense_Series_Vectors.Vector(1..n) := b;
-    ipvt : Standard_Integer_Vectors.Vector(1..n);
-    info : integer32;
-    rsd : DoblDobl_Dense_Series_Vectors.Vector(1..n);
-
     use DoblDobl_Dense_Series_Vectors;
     use DoblDobl_Dense_Series_Matrices;
     use DoblDobl_Linear_Series_Solvers;
+
+    A : constant DoblDobl_Dense_Series_Matrices.Matrix(1..n,1..n)
+      := DoblDobl_Random_Series.Random_Series_Matrix(1,n,1,n,degree);
+    wrk : DoblDobl_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
+    x : DoblDobl_Dense_Series_Vectors.Vector(1..n)
+      := DoblDobl_Random_Series.Random_Series_Vector(1,n,degree);
+    b : DoblDobl_Dense_Series_Vectors.Vector(1..n) := A*x;
+    y : DoblDobl_Dense_Series_Vectors.Vector(1..n) := b;
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    info : integer32;
+    rsd,err : DoblDobl_Dense_Series_Vectors.Vector(1..n);
+    nrm_rsd,nrm_err : double_double;
 
   begin
     put_line("The coefficient matrix A :"); Write(A);
@@ -221,10 +238,17 @@ procedure ts_sermat is
     if info /= 0 then
       put("info = "); put(info,1); new_line;
     else
-      LUsolve(wrk,n,ipvt,x);
-      put_line("The solution x to A*x = b :"); Write(x);
-      rsd := b - A*x;
+      LUsolve(wrk,n,ipvt,y);
+      put_line("The generated solution x to A*x = b :"); Write(x);
+      put_line("The computed solution x to A*x = b :"); Write(y);
+      rsd := b - A*y; -- backward error
       put_line("The residual b - A*x :"); Write(rsd);
+      err := x - y; -- forward error
+      put_line("Difference between generated and computed :"); Write(err);
+      nrm_rsd := DoblDobl_Series_Vector_Norms.Max_Norm(rsd);
+      nrm_err := DoblDobl_Series_Vector_Norms.Max_Norm(err);
+      put("Max norm of the backward error : "); put(nrm_rsd,3); new_line;
+      put("Max norm of the forward error  : "); put(nrm_err,3); new_line;
     end if;
   end DoblDobl_Random_Linear_Solve;
 
@@ -236,19 +260,21 @@ procedure ts_sermat is
   --   in double double precision.
   --   The series are all of the given degree.
 
-    A : constant QuadDobl_Dense_Series_Matrices.Matrix(1..n,1..n)
-      := QuadDobl_Random_Series.Random_Series_Matrix(1,n,1,n,degree);
-    wrk : QuadDobl_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
-    b : constant QuadDobl_Dense_Series_Vectors.Vector(1..n)
-      := QuadDobl_Random_Series.Random_Series_Vector(1,n,degree);
-    x : QuadDobl_Dense_Series_Vectors.Vector(1..n) := b;
-    ipvt : Standard_Integer_Vectors.Vector(1..n);
-    info : integer32;
-    rsd : QuadDobl_Dense_Series_Vectors.Vector(1..n);
-
     use QuadDobl_Dense_Series_Vectors;
     use QuadDobl_Dense_Series_Matrices;
     use QuadDobl_Linear_Series_Solvers;
+
+    A : constant QuadDobl_Dense_Series_Matrices.Matrix(1..n,1..n)
+      := QuadDobl_Random_Series.Random_Series_Matrix(1,n,1,n,degree);
+    wrk : QuadDobl_Dense_Series_Matrices.Matrix(1..n,1..n) := A;
+    x : QuadDobl_Dense_Series_Vectors.Vector(1..n)
+      := QuadDobl_Random_Series.Random_Series_Vector(1,n,degree);
+    b : QuadDobl_Dense_Series_Vectors.Vector(1..n) := A*x;
+    y : QuadDobl_Dense_Series_Vectors.Vector(1..n) := b;
+    ipvt : Standard_Integer_Vectors.Vector(1..n);
+    info : integer32;
+    rsd,err : QuadDobl_Dense_Series_Vectors.Vector(1..n);
+    nrm_rsd,nrm_err : quad_double;
 
   begin
     put_line("The coefficient matrix A :"); Write(A);
@@ -258,10 +284,17 @@ procedure ts_sermat is
     if info /= 0 then
       put("info = "); put(info,1); new_line;
     else
-      LUsolve(wrk,n,ipvt,x);
-      put_line("The solution x to A*x = b :"); Write(x);
-      rsd := b - A*x;
+      LUsolve(wrk,n,ipvt,y);
+      put_line("The generated solution x to A*x = b :"); Write(x);
+      put_line("The computed solution x to A*x = b :"); Write(y);
+      rsd := b - A*y; -- backward error
       put_line("The residual b - A*x :"); Write(rsd);
+      err := x - y; -- forward error
+      put_line("Difference between generated and computed :"); Write(err);
+      nrm_rsd := QuadDobl_Series_Vector_Norms.Max_Norm(rsd);
+      nrm_err := QuadDobl_Series_Vector_Norms.Max_Norm(err);
+      put("Max norm of the backward error : "); put(nrm_rsd,3); new_line;
+      put("Max norm of the forward error  : "); put(nrm_err,3); new_line;
     end if;
   end QuadDobl_Random_Linear_Solve;
 
@@ -747,8 +780,9 @@ procedure ts_sermat is
     info : integer32;
     n : constant integer32 := A'last(1);
     m : constant integer32 := A'last(2);
-    rsd,dum,dum2,dum3 : Standard_Dense_Series_Vectors.Vector(1..n);
+    rsd,dum,dum2,dum3,err : Standard_Dense_Series_Vectors.Vector(1..n);
     ans : character;
+    nrm_rsd,nrm_err : double_float;
 
   begin
     QRD(wrk,qraux,ipvt,false);
@@ -776,8 +810,14 @@ procedure ts_sermat is
       else
         put_line("The constructed solution x to A*x = b :"); Write(x);
         put_line("The computed solution x to A*x = b :"); Write(sol);
-        rsd := b - A*sol;
+        rsd := b - A*sol; -- backward error
         put_line("The residual b - A*x :"); Write(rsd);
+        err := x - sol; -- forward error
+        put("Difference between constructed and computed :"); Write(err);
+        nrm_rsd := Standard_Series_Vector_Norms.Max_Norm(rsd);
+        nrm_err := Standard_Series_Vector_Norms.Max_Norm(err);
+        put("Max norm of backward error : "); put(nrm_rsd,3); new_line;
+        put("Max norm of forward error  : "); put(nrm_err,3); new_line;
       end if;
     end if;
   end QR_Solve_Least_Squares;
@@ -802,8 +842,9 @@ procedure ts_sermat is
     info : integer32;
     n : constant integer32 := A'last(1);
     m : constant integer32 := A'last(2);
-    rsd,dum,dum2,dum3 : DoblDobl_Dense_Series_Vectors.Vector(1..n);
+    rsd,dum,dum2,dum3,err : DoblDobl_Dense_Series_Vectors.Vector(1..n);
     ans : character;
+    nrm_rsd,nrm_err : double_double;
 
   begin
     QRD(wrk,qraux,ipvt,false);
@@ -831,8 +872,14 @@ procedure ts_sermat is
       else
         put_line("The constructed solution x to A*x = b :"); Write(x);
         put_line("The computed solution x to A*x = b :"); Write(sol);
-        rsd := b - A*sol;
+        rsd := b - A*sol; -- backward error
         put_line("The residual b - A*x :"); Write(rsd);
+        err := x - sol; -- forward error
+        put_line("Difference between constructed and computed :"); Write(err);
+        nrm_rsd := DoblDobl_Series_Vector_Norms.Max_Norm(rsd);
+        nrm_err := DoblDobl_Series_Vector_Norms.Max_Norm(err);
+        put("Max norm of backward error : "); put(nrm_rsd,3); new_line;
+        put("Max norm of forward error  : "); put(nrm_err,3); new_line;
       end if;
     end if;
   end QR_Solve_Least_Squares;
@@ -857,8 +904,9 @@ procedure ts_sermat is
     info : integer32;
     n : constant integer32 := A'last(1);
     m : constant integer32 := A'last(2);
-    rsd,dum,dum2,dum3 : QuadDobl_Dense_Series_Vectors.Vector(1..n);
+    rsd,dum,dum2,dum3,err : QuadDobl_Dense_Series_Vectors.Vector(1..n);
     ans : character;
+    nrm_rsd,nrm_err : quad_double;
 
   begin
     QRD(wrk,qraux,ipvt,false);
@@ -886,8 +934,14 @@ procedure ts_sermat is
       else
         put_line("The constructed solution x to A*x = b :"); Write(x);
         put_line("The computed solution x to A*x = b :"); Write(sol);
-        rsd := b - A*sol;
+        rsd := b - A*sol; -- backward error
         put_line("The residual b - A*x :"); Write(rsd);
+        err := x - sol; -- forward error
+        put_line("Difference between constructed and computed :"); Write(err);
+        nrm_rsd := QuadDobl_Series_Vector_Norms.Max_Norm(rsd);
+        nrm_err := QuadDobl_Series_Vector_Norms.Max_Norm(err);
+        put("Max norm of backward error : "); put(nrm_rsd,3); new_line;
+        put("Max norm of forward error  : "); put(nrm_err,3); new_line;
       end if;
     end if;
   end QR_Solve_Least_Squares;

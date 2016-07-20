@@ -1,3 +1,6 @@
+Wed 20 Jul 2016 : added computation of max norm of backward and forward
+  error to ts_sermat.
+
 Tue 19 Jul 2016 : applied lufco in *_matrix_series_solvers, with tests added
   to ts_serlin.  Added qrls to *_matrix_series_solvers, tested in ts_serlin.
   Added computation of the max norm of the error to ts_serlin.
