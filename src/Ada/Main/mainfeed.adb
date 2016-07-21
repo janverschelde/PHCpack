@@ -10,14 +10,15 @@ procedure mainfeed ( infilename,outfilename : in string ) is
     res : integer := 0;
 
   begin
-    if infilename = "" or else outfilename = ""
-     then new_line;
-          put_line("Usage: phc -k input_file output_file");
-          new_line;
-     else put_line("reading from " & infilename);
-          put_line("writing to " & outfilename);
-          put_line("Calling feedback...");
-          res := main_feedback(infilename,outfilename);
+    if infilename = "" or else outfilename = "" then
+      new_line;
+      put_line("Usage: phc -k input_file output_file");
+      new_line;
+    else
+      put_line("reading from " & infilename);
+      put_line("writing to " & outfilename);
+      put_line("Calling feedback...");
+      res := main_feedback(infilename,outfilename);
     end if;
   end Main;
 
