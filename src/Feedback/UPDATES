@@ -1,0 +1,19 @@
+Thu 21 Jul 2016 : formatted code in feedback.c
+
+Sun 19 Dec 2010 : inserted "#include <stdlib.h>"
+  in the file c2ada_poly_matrix.c, dc_matrix.c, pieri_sols.c, poly_hermite.c
+  poly_matrix.c, poly_smith.c, and realization.c because of
+  GNAT GPL 2010 warnings.
+
+Tue 13 Jun 2006 : had to change poly_smith.c, line 285 for gcc 3.4.
+
+Mon 6 Sep 2004 : updated feedback.c, copied files from Yusong's directory,
+  changed the return type of pieri_sols from void to int.  For Mac OS X,
+  changed ts_interpolation.c, ts_poly_inverse.c, and ts_timer.c.
+
+Tue 31 Aug 2004 : created feedback.c to be called by mainfeed from phc -k
+
+Tue 27 Jan 2004
+   pieri_sols.c: semicolons are added after printing out the solution
+                 array for MATLAB input.
+   verify.m: prints out the solution array for each solution verification.
