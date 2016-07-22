@@ -4,7 +4,7 @@ package body Greeting_Banners is
 
   function Version return string is
 
-    res : constant string := "PHCv2.4.21 released 2016-07-01";
+    res : constant string := "PHCv2.4.22 released 2016-07-22";
 
   begin
     return res;
@@ -216,6 +216,18 @@ package body Greeting_Banners is
   procedure help4feedback is
   begin
     put_line("phc -k computes feedback laws to control linear systems.");
+    new_line;
+    put_line("The two command line arguments are respectively the names");
+    put_line("of the input and output files.  For examples of the input,");
+    put_line("see the Feedback/Data folder of the source code.");
+    put_line("The input consists of the (A, B, C) definition of a plant,");
+    put_line("and for dynamic output, a number of poles.");
+    new_line;
+    put_line("The feedback laws in the output file are realized and written");
+    put_line("in a format ready for parsing with MATLAB or Octave.");
+    new_line;
+    put_line("The computation of output feedback laws is an application");
+    put_line("of the Pieri homotopies, available via phc -e.");
   end help4feedback;
 
   procedure help4factor is

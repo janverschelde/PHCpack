@@ -1,5 +1,6 @@
 Fri 22 Jul 2016 : added '\0' character to the strings in mainfeed.adb,
-  before passing the strings to the C code.
+  before passing the strings to the C code.  Added documentation to
+  greeting_banners and adjusted the version number to 2.4.22.
 
 Wed 20 Jul 2016 : changed formatting of code in mainfeed.adb.
 
