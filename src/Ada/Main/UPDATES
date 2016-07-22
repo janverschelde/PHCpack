@@ -1,3 +1,6 @@
+Fri 22 Jul 2016 : added '\0' character to the strings in mainfeed.adb,
+  before passing the strings to the C code.
+
 Wed 20 Jul 2016 : changed formatting of code in mainfeed.adb.
 
 Sat 2 Jul 2016 : added information about phc -u to greeting_banners.adb.
