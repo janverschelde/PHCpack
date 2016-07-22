@@ -1,3 +1,6 @@
+Fri 22 Jul 2016 : fixed bug in phc -k by patching pieri_solver.adb,
+  the conversion of a negative C int to a 32-bit Ada integer number nb.
+
 Sat 27 Feb 2016 : changed pieri_solver.adb for additional argument in the
   increment-and-fix continuation in standard double precision.
 

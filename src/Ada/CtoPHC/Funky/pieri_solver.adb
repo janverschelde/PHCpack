@@ -454,7 +454,7 @@ function Pieri_Solver ( m,p,q,nb,output_level : integer32;
     Continuation_Parameters.Tune(0);
     if output_level > 1
      then Solve(Standard_Output,natural32(m+p),natural32(q),natural32(wnb),
-                deform_poset,root,input,svals, true,true,npaths,timings);
+                deform_poset,root,input,svals,true,true,npaths,timings);
      else Solve(natural32(m+p),natural32(q),natural32(wnb),deform_poset,root,
                 input,svals,npaths,timings);
     end if;
@@ -480,7 +480,9 @@ function Pieri_Solver ( m,p,q,nb,output_level : integer32;
     Count_Roots(level_poset);
     index_poset := Create_Indexed_Poset(level_poset);
     if nb /= 0 then
-      if nb < 0
+      if nb < 0 or nb > 2**16
+      -- the nb > 2**16 is a patch for conversion of a negative integer in C
+      -- to a 32-bit integer in Ada
        then wnb := level_poset(level_poset'last).roco;
        else wnb := nb;
       end if;
@@ -491,21 +493,26 @@ function Pieri_Solver ( m,p,q,nb,output_level : integer32;
     end if;
   end Combinatorial_Root_Count;
 
+  procedure Main is
+  begin
+    tstart(timer);
+    put("The name of the file : "); put(vs); new_line;
+   -- put("The number of coefficients in the points : "); 
+   -- put(dimpts,1); new_line;
+   -- put_line("The coefficients of the interpolation points : ");
+   -- put(dimpts,valpts);
+   -- put("The number of coefficients in the planes : "); 
+   -- put(dimpla,1); new_line;
+   -- put_line("The coefficients of the input planes : ");
+   -- put(dimpla,valpla);
+    Combinatorial_Root_Count;
+    tstop(timer);
+    if output_level > 0
+     then print_times(Standard_Output,timer,"Pieri Solver");
+    end if;
+  end Main;
+
 begin
-  tstart(timer);
-  put("The name of the file : "); put(vs); new_line;
- -- put("The number of coefficients in the points : "); 
- -- put(dimpts,1); new_line;
- -- put_line("The coefficients of the interpolation points : ");
- -- put(dimpts,valpts);
- -- put("The number of coefficients in the planes : "); 
- -- put(dimpla,1); new_line;
- -- put_line("The coefficients of the input planes : ");
- -- put(dimpla,valpla);
-  Combinatorial_Root_Count;
-  tstop(timer);
-  if output_level > 0
-   then print_times(Standard_Output,timer,"Pieri Solver");
-  end if;
+  Main;
   return result;
 end Pieri_Solver;
