@@ -2449,6 +2449,8 @@ phcpy2c2.so:
 	gcc -c -O2 $(PHCLib)/phcpack.c
 	gcc -c -O2 $(PHCLib)/mapcon.c
 	gcc -c -O2 $(PHCLib)/next_track.c
+	gcc -c -O2 $(PHCLib)/syspool.c
+	gcc -c -O2 $(PHCLib)/series.c
 	$(MCC) -c -I$(PYTHON) -I$(PYTHON)/Include $(PHCLib)/phcpy2c2.c
 	#gcc -c -I$(PYTHON) -I$(PYTHON)/Include $(PHCLib)/phcpy2c2.c
 	gnatmake -c -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
@@ -2456,7 +2458,7 @@ phcpy2c2.so:
 	gnatlink -dynamiclib -C use_c2phc phcpy2c2.o phcpack.o syscon.o \
             witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
             solcon.o product.o lists_and_strings.o celcon.o scalers.o \
-            numbtrop.o sweep.o schubert.o \
+            numbtrop.o sweep.o schubert.o syspool.o series.o \
                  -o ../Python/PHCpy2/phcpy/phcpy2c2.so -framework Python
 
 phcpy2c3.so:
@@ -2475,6 +2477,8 @@ phcpy2c3.so:
 	gcc -c -O2 $(PHCLib)/phcpack.c
 	gcc -c -O2 $(PHCLib)/mapcon.c
 	gcc -c -O2 $(PHCLib)/next_track.c
+	gcc -c -O2 $(PHCLib)/syspool.c
+	gcc -c -O2 $(PHCLib)/series.c
 	$(MCC) -c -I$(PYTHON3) -I$(PYTHON3)/Include $(PHCLib)/phcpy2c3.c
 	#gcc -c -I$(PYTHON3) -I$(PYTHON3)/Include $(PHCLib)/phcpy2c3.c
 	gnatmake -c -static $(INCLULIBS) $(GNATOPTFLAGS) use_c2phc.adb
@@ -2482,7 +2486,7 @@ phcpy2c3.so:
 	gnatlink -dynamiclib -C use_c2phc phcpy2c3.o phcpack.o syscon.o \
             witset.o mapcon.o next_track.o unisolvers.o giftwrappers.o \
             solcon.o product.o lists_and_strings.o celcon.o scalers.o \
-            sweep.o numbtrop.o schubert.o \
+            sweep.o numbtrop.o schubert.o syspool.o series.o \
                  -o ../Python/PHCpy3/phcpy/phcpy2c3.so \
                  $(PYTHON3lib)/libpython3.5m.dylib
 
