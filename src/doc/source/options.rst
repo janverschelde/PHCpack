@@ -460,8 +460,15 @@ phc -k : realization of dynamic output feedback placing poles
 
 The homotopies in numerical Schubert calculus (see the option -e)
 solve the output pole placement problem in linear systems control.
-The option -k applies the Pieri homotopies to compute feedback laws
+The option ``-k`` applies the Pieri homotopies to compute feedback laws
 for plants defined by (A,B,C) matrices.
+
+For examples of input, see the ``Feedback/Data`` folder of the source code.
+
+The feedback laws in the output file are realized and written
+in a format ready for parsing with MATLAB or Octave.
+The computation of output feedback laws is an application
+of the Pieri homotopies, available via ``phc -e``.
 
 phc -l : witness set for hypersurface cutting with random line 
 --------------------------------------------------------------
