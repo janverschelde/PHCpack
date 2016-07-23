@@ -1,5 +1,3 @@
-with Standard_Complex_Vectors;
-
 package body Standard_Dense_Vector_Series is
 
 -- CONSTRUCTORS :
@@ -42,9 +40,47 @@ package body Standard_Dense_Vector_Series is
     return res;
   end Create;
 
+-- EVALUATORS :
+
+  function Eval ( v : Standard_Dense_Vector_Series.Vector;
+                  t : double_float )
+                return Standard_Complex_Vectors.Vector is
+
+    dim : constant integer32 := v.cff(v.cff'first)'last;
+    cff : Standard_Complex_Vectors.Link_to_Vector := v.cff(v.deg);
+    res : Standard_Complex_Vectors.Vector(1..dim) := cff.all;
+
+  begin
+    for i in reverse 0..(v.deg-1) loop
+      cff := v.cff(i);
+      for j in 1..dim loop
+        res(j) := res(j)*t + cff(j);
+      end loop;
+    end loop;
+    return res;
+  end Eval;
+
+  function Eval ( v : Standard_Dense_Vector_Series.Vector;
+                  t : Complex_Number )
+                return Standard_Complex_Vectors.Vector is
+
+    dim : constant integer32 := v.cff(v.cff'first)'last;
+    cff : Standard_Complex_Vectors.Link_to_Vector := v.cff(v.deg);
+    res : Standard_Complex_Vectors.Vector(1..dim) := cff.all;
+
+  begin
+    for i in reverse 0..(v.deg-1) loop
+      cff := v.cff(i);
+      for j in 1..dim loop
+        res(j) := res(j)*t + cff(j);
+      end loop;
+    end loop;
+    return res;
+  end Eval;
+
 -- DESTRUCTOR :
 
-  procedure Clear ( v : in out Vector ) is
+  procedure Clear ( v : in out Standard_Dense_Vector_Series.Vector ) is
   begin
     for i in 0..v.deg loop
       Standard_Complex_Vectors.Clear(v.cff(i));

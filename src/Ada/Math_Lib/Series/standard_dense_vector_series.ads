@@ -1,4 +1,7 @@
 with Standard_Integer_Numbers;          use Standard_Integer_Numbers;
+with Standard_Floating_Numbers;         use Standard_Floating_Numbers;
+with Standard_Complex_Numbers;          use Standard_Complex_Numbers;
+with Standard_Complex_Vectors;
 with Standard_Complex_VecVecs;
 with Standard_Dense_Series;
 with Standard_Dense_Series_Vectors;
@@ -48,9 +51,23 @@ package Standard_Dense_Vector_Series is
   --   The degree of v must be at least zero, at least one of
   --   the coefficients in v must be defined.
 
+-- EVALUATORS :
+
+  function Eval ( v : Standard_Dense_Vector_Series.Vector;
+                  t : double_float )
+                return Standard_Complex_Vectors.Vector;
+  function Eval ( v : Standard_Dense_Vector_Series.Vector;
+                  t : Complex_Number )
+                return Standard_Complex_Vectors.Vector;
+
+  -- DESCRIPTION :
+  --   Returns the values of all series in v at t.
+
+  -- REQUIRED : v.deg >= 0 and v.cff(0) is defined.
+
 -- DESTRUCTOR :
 
-  procedure Clear ( v : in out Vector );
+  procedure Clear ( v : in out Standard_Dense_Vector_Series.Vector );
 
   -- DESCRIPTION :
   --   Deallocates all coefficients in the series.

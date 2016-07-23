@@ -1,3 +1,5 @@
+Sat 23 Jul 2016 : eval() functions added to *vector_series.a*.
+
 Wed 20 Jul 2016 : added computation of max norm of backward and forward
   error to ts_sermat.
 
