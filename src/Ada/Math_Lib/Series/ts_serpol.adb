@@ -33,6 +33,7 @@ with DoblDobl_Random_Series;            use DoblDobl_Random_Series;
 with QuadDobl_Random_Series;            use QuadDobl_Random_Series;
 with Series_and_Polynomials;            use Series_and_Polynomials;
 with Series_and_Polynomials_io;
+with Standard_Polynomial_Series;
 
 procedure ts_serpol is
 

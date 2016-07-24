@@ -1,5 +1,7 @@
 Sat 23 Jul 2016 : eval() functions added to *vector_series.a*.
   Fixed type error in documentation of *matrix_series.ads.
+  New package standard_polynomial_series to define series where the
+  coefficients are polynomials in several variables.
 
 Wed 20 Jul 2016 : added computation of max norm of backward and forward
   error to ts_sermat.

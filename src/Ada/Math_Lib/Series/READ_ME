@@ -96,6 +96,7 @@ dobldobl_series_jaco_matrices    : differentiating dobldobl series systems
 quaddobl_series_jaco_matrices    : differentiating quaddobl series systems
 series_and_polynomials           : convertor functions
 series_and_polynomials_io        : symbolic i/o of series
+standard_polynomial_series       : series with polynomials for coefficients
 ts_serpol                        : test on series polynomials
 ts_sersys                        : test systems of series polynomials
 ------------------------------------------------------------------------------
