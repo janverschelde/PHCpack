@@ -13,7 +13,7 @@ package QuadDobl_Dense_Matrix_Series is
 
   type Matrix is record
     deg : integer32; -- the last power in the series
-                     -- the eror is of order deg+1
+                     -- the error is of order deg+1
     cff : QuadDobl_Complex_VecMats.VecMat(0..QuadDobl_Dense_Series.max_deg);
      -- only coefficients in the range 0..deg are defined
      -- all vectors in cff have the same range
