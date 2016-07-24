@@ -1,3 +1,7 @@
+Sun 24 Jul 2016 : new packages {dobldobl,quaddobl}_polynomial_series 
+  define polynomial series for double double and quad double precision,
+  tested by ts_serpol.
+
 Sat 23 Jul 2016 : eval() functions added to *vector_series.a*.
   Fixed type error in documentation of *matrix_series.ads.
   New package standard_polynomial_series to define series where the

@@ -34,6 +34,8 @@ with QuadDobl_Random_Series;            use QuadDobl_Random_Series;
 with Series_and_Polynomials;            use Series_and_Polynomials;
 with Series_and_Polynomials_io;
 with Standard_Polynomial_Series;
+with DoblDobl_Polynomial_Series;
+with QuadDobl_Polynomial_Series;
 
 procedure ts_serpol is
 
@@ -529,6 +531,93 @@ procedure ts_serpol is
     Series_and_Polynomials_io.put(s);
     new_line;
   end QuadDobl_Test_Input_Output;
+
+  procedure Standard_Test_Polynomial_Series is
+
+  -- DESCRIPTION :
+  --   Reads a polynomial in several variables and converts
+  --   the polynomial into a polynomial series, with complex
+  --   coefficients in standard double precision.
+
+    sp : Standard_Series_Polynomials.Poly;
+    ps : Standard_Polynomial_Series.Poly;
+    n : natural32 := 0;
+
+  begin
+    new_line;
+    put("Give the total number of symbols : "); get(n);
+    Symbol_Table.init(n);
+    new_line;
+    put_line("Reading a series polynomial, series parameter comes first.");
+    Series_and_Polynomials_io.get(sp,1);
+    new_line;
+    put_line("Your polynomial :");
+    Series_and_Polynomials_io.put(sp,1);
+    ps := Standard_Polynomial_Series.Create(sp);
+    Standard_Series_Polynomials.Clear(sp);
+    sp := Standard_Polynomial_Series.Create(ps);
+    new_line;
+    put_line("The polynomial from the created polynomial series :");
+    Series_and_Polynomials_io.put(sp,1);
+  end Standard_Test_Polynomial_Series;
+
+  procedure DoblDobl_Test_Polynomial_Series is
+
+  -- DESCRIPTION :
+  --   Reads a polynomial in several variables and converts
+  --   the polynomial into a polynomial series, with complex
+  --   coefficients in double double precision.
+
+    sp : DoblDobl_Series_Polynomials.Poly;
+    ps : DoblDobl_Polynomial_Series.Poly;
+    n : natural32 := 0;
+
+  begin
+    new_line;
+    put("Give the total number of symbols : "); get(n);
+    Symbol_Table.init(n);
+    new_line;
+    put_line("Reading a series polynomial, series parameter comes first.");
+    Series_and_Polynomials_io.get(sp,1);
+    new_line;
+    put_line("Your polynomial :");
+    Series_and_Polynomials_io.put(sp,1);
+    ps := DoblDobl_Polynomial_Series.Create(sp);
+    DoblDobl_Series_Polynomials.Clear(sp);
+    sp := DoblDobl_Polynomial_Series.Create(ps);
+    new_line;
+    put_line("The polynomial from the created polynomial series :");
+    Series_and_Polynomials_io.put(sp,1);
+  end DoblDobl_Test_Polynomial_Series;
+
+  procedure QuadDobl_Test_Polynomial_Series is
+
+  -- DESCRIPTION :
+  --   Reads a polynomial in several variables and converts
+  --   the polynomial into a polynomial series, with complex
+  --   coefficients in double double precision.
+
+    sp : QuadDobl_Series_Polynomials.Poly;
+    ps : QuadDobl_Polynomial_Series.Poly;
+    n : natural32 := 0;
+
+  begin
+    new_line;
+    put("Give the total number of symbols : "); get(n);
+    Symbol_Table.init(n);
+    new_line;
+    put_line("Reading a series polynomial, series parameter comes first.");
+    Series_and_Polynomials_io.get(sp,1);
+    new_line;
+    put_line("Your polynomial :");
+    Series_and_Polynomials_io.put(sp,1);
+    ps := QuadDobl_Polynomial_Series.Create(sp);
+    QuadDobl_Series_Polynomials.Clear(sp);
+    sp := QuadDobl_Polynomial_Series.Create(ps);
+    new_line;
+    put_line("The polynomial from the created polynomial series :");
+    Series_and_Polynomials_io.put(sp,1);
+  end QuadDobl_Test_Polynomial_Series;
   
   procedure Main is
 
@@ -544,8 +633,9 @@ procedure ts_serpol is
     put_line("  0. test conversion from/to ordinary polynomials;");
     put_line("  1. test evaluation at power series;");
     put_line("  2. test symbolic input and output;");
-    put("Type 0, 1, or 2 to select a test : ");
-    Ask_Alternative(ans,"012");
+    put_line("  3. test conversion to polynomial series.");
+    put("Type 0, 1, 2, or 3 to select a test : ");
+    Ask_Alternative(ans,"0123");
     new_line;
     put_line("MENU to select the working precision :");
     put_line("  0. standard double precision;");
@@ -573,6 +663,13 @@ procedure ts_serpol is
           when '0' => Standard_Test_Input_Output;
           when '1' => DoblDobl_Test_Input_Output;
           when '2' => QuadDobl_Test_Input_Output;
+          when others => null;
+        end case;
+      when '3' =>
+        case prc is
+          when '0' => Standard_Test_Polynomial_Series;
+          when '1' => DoblDobl_Test_Polynomial_Series;
+          when '2' => QuadDobl_Test_Polynomial_Series;
           when others => null;
         end case;
       when others => null;
