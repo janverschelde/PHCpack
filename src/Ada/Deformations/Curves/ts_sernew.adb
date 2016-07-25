@@ -10,14 +10,13 @@ with Series_and_Polynomials;
 with Series_and_Polynomials_io;
 with Standard_Series_Poly_Systems;
 with Standard_Series_Poly_SysFun;
-with Standard_Newton_Series;            use Standard_Newton_Series;
-with DoblDobl_Dense_Series;
+with Standard_Newton_Series;
+with Standard_Newton_Matrix_Series;
 with DoblDobl_Dense_Series_Vectors;
 with DoblDobl_Series_Polynomials;
 with DoblDobl_Series_Poly_Systems;
 with DoblDobl_Series_Poly_SysFun;
 with DoblDobl_Newton_Series;            use DoblDobl_Newton_Series;
-with QuadDobl_Dense_Series;
 with QuadDobl_Dense_Series_Vectors;
 with QuadDobl_Series_Polynomials;
 with QuadDobl_Series_Poly_Systems;
@@ -110,7 +109,7 @@ procedure ts_sernew is
   procedure Test_LU_Newton_Step
               ( p : in Standard_Series_Poly_Systems.Poly_Sys;
                 degree : in integer32;
-                x : in out Standard_Dense_Series_Vectors.Vector ) is
+                x : in Standard_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --  Does one step with Newton's method on the system p,
@@ -121,26 +120,59 @@ procedure ts_sernew is
     tol : constant double_float := 1.0E-12;
     eva : Standard_Dense_Series_Vectors.Vector(p'range);
     ans : character;
+    otp : boolean;
+    z : Standard_Dense_Series_Vectors.Vector(x'range);
 
   begin
     new_line;
     put("Do you want intermediate output ? (y/n) ");
+    Ask_Yes_or_No(ans); otp := (ans = 'y');
+    new_line;
+    put("Run on series matrices ? (y/n) ");
     Ask_Yes_or_No(ans);
-    Series_and_Polynomials.Set_Degree(x,degree);
-    if ans = 'y'
-     then LU_Newton_Step(standard_output,p,degree,x,info);
-     else LU_Newton_Step(p,degree,x,info);
+    if ans = 'y' then
+      z := x;
+      Series_and_Polynomials.Set_Degree(z,degree);
+      if otp then
+        Standard_Newton_Series.LU_Newton_Step(standard_output,p,degree,z,info);
+      else
+        Standard_Newton_Series.LU_Newton_Step(p,degree,z,info);
+      end if;
+      if info /= 0 then
+        put("info = "); put(info,1); new_line;
+      else
+        Series_and_Polynomials.Filter(z,tol);
+        put_line("The updated power series solution :");
+        Series_and_Polynomials_io.put(z);
+        eva := Standard_Series_Poly_SysFun.Eval(p,z);
+        Series_and_Polynomials.Filter(eva,tol);
+        put_line("The evaluated solution :");
+        Series_and_Polynomials_io.put(eva);
+      end if;
     end if;
-    if info /= 0 then
-      put("info = "); put(info,1); new_line;
-    else
-      Series_and_Polynomials.Filter(x,tol);
-      put_line("The updated power series solution :");
-      Series_and_Polynomials_io.put(x);
-      eva := Standard_Series_Poly_SysFun.Eval(p,x);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line("The evaluated solution :");
-      Series_and_Polynomials_io.put(eva);
+    new_line;
+    put("Run on matrix series ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      z := x;
+      Series_and_Polynomials.Set_Degree(z,degree);
+      if otp then
+        Standard_Newton_Matrix_Series.LU_Newton_Step
+          (standard_output,p,degree,z,info);
+      else
+        Standard_Newton_Matrix_Series.LU_Newton_Step(p,degree,z,info);
+      end if;
+      if info /= 0 then
+        put("info = "); put(info,1); new_line;
+      else
+        Series_and_Polynomials.Filter(z,tol);
+        put_line("The updated power series solution :");
+        Series_and_Polynomials_io.put(z);
+        eva := Standard_Series_Poly_SysFun.Eval(p,z);
+        Series_and_Polynomials.Filter(eva,tol);
+        put_line("The evaluated solution :");
+        Series_and_Polynomials_io.put(eva);
+      end if;
     end if;
   end Test_LU_Newton_Step;
 
@@ -218,40 +250,114 @@ procedure ts_sernew is
     end if;
   end Test_LU_Newton_Step;
 
+  procedure LU_Newton_on_Series_Matrices
+              ( p : in Standard_Series_Poly_Systems.Poly_Sys;
+                otp : in boolean;
+                degree : in integer32; nbrit : in integer32;
+                x : in Standard_Dense_Series_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method on matrices with series as entries,
+  --   on the system p, starting at x, of the given degree,
+  --   with as many iterations as the value of nbrit,
+  --   in standard double precision.
+  --   If otp, then extra output is written to screen.
+
+    info : integer32;
+    tol : constant double_float := 1.0E-12;
+    eva : Standard_Dense_Series_Vectors.Vector(p'range);
+    deg : integer32 := degree;
+    z : Standard_Dense_Series_Vectors.Vector(x'range) := x;
+
+  begin
+    Series_and_Polynomials.Set_Degree(z,deg);
+    if otp then
+      Standard_Newton_Series.LU_Newton_Steps
+        (standard_output,p,deg,nbrit,z,info);
+    else
+      Standard_Newton_Series.LU_Newton_Steps(p,deg,nbrit,z,info);
+    end if;
+    if info /= 0 then
+      put("info = "); put(info,1); new_line;
+    else
+      Series_and_Polynomials.Filter(z,tol);
+      put_line("The updated power series solution :");
+      Series_and_Polynomials_io.put(z);
+      eva := Standard_Series_Poly_SysFun.Eval(p,z);
+      Series_and_Polynomials.Filter(eva,tol);
+      put_line("The evaluated solution :");
+      Series_and_Polynomials_io.put(eva);
+    end if;
+  end LU_Newton_on_Series_Matrices;
+
+  procedure LU_Newton_on_Matrix_Series
+              ( p : in Standard_Series_Poly_Systems.Poly_Sys;
+                otp : in boolean;
+                degree : in integer32; nbrit : in integer32;
+                x : in Standard_Dense_Series_Vectors.Vector ) is
+
+  -- DESCRIPTION :
+  --   Runs Newton's method on matrix series,
+  --   on the system p, starting at x, of the given degree,
+  --   with as many iterations as the value of nbrit,
+  --   in standard double precision.
+  --   If otp, then extra output is written to screen.
+
+    info : integer32;
+    tol : constant double_float := 1.0E-12;
+    eva : Standard_Dense_Series_Vectors.Vector(p'range);
+    deg : integer32 := degree;
+    z : Standard_Dense_Series_Vectors.Vector(x'range) := x;
+
+  begin
+    Series_and_Polynomials.Set_Degree(z,deg);
+    if otp then
+      Standard_Newton_Matrix_Series.LU_Newton_Steps
+        (standard_output,p,deg,nbrit,z,info);
+    else
+      Standard_Newton_Matrix_Series.LU_Newton_Steps(p,deg,nbrit,z,info);
+    end if;
+    if info /= 0 then
+      put("info = "); put(info,1); new_line;
+    else
+      Series_and_Polynomials.Filter(z,tol);
+      put_line("The updated power series solution :");
+      Series_and_Polynomials_io.put(z);
+      eva := Standard_Series_Poly_SysFun.Eval(p,z);
+      Series_and_Polynomials.Filter(eva,tol);
+      put_line("The evaluated solution :");
+      Series_and_Polynomials_io.put(eva);
+    end if;
+  end LU_Newton_on_Matrix_Series;
+
   procedure Test_LU_Newton_Steps
               ( p : in Standard_Series_Poly_Systems.Poly_Sys;
-                degree : in out integer32; nbrit : in integer32;
-                x : in out Standard_Dense_Series_Vectors.Vector ) is
+                degree : in integer32; nbrit : in integer32;
+                x : in Standard_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --  Does as many steps with Newton's method on the system p,
   --  as the value of nbrit, calculating with series x of the given degree,
   --  in standard double precision.
 
-    info : integer32;
-    tol : constant double_float := 1.0E-12;
-    eva : Standard_Dense_Series_Vectors.Vector(p'range);
     ans : character;
+    otp : boolean;
 
   begin
     new_line;
     put("Do you want intermediate output ? (y/n) ");
+    Ask_Yes_or_No(ans); otp := (ans = 'y');
+    new_line;
+    put("Run on series matrices ? (y/n) ");
     Ask_Yes_or_No(ans);
-    Series_and_Polynomials.Set_Degree(x,degree);
     if ans = 'y'
-     then LU_Newton_Steps(standard_output,p,degree,nbrit,x,info);
-     else LU_Newton_Steps(p,degree,nbrit,x,info);
+     then LU_Newton_on_Series_Matrices(p,otp,degree,nbrit,x);
     end if;
-    if info /= 0 then
-      put("info = "); put(info,1); new_line;
-    else
-      Series_and_Polynomials.Filter(x,tol);
-      put_line("The updated power series solution :");
-      Series_and_Polynomials_io.put(x);
-      eva := Standard_Series_Poly_SysFun.Eval(p,x);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line("The evaluated solution :");
-      Series_and_Polynomials_io.put(eva);
+    new_line;
+    put("Run on matrix series ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y'
+     then LU_Newton_on_Matrix_Series(p,otp,degree,nbrit,x);
     end if;
   end Test_LU_Newton_Steps;
 
@@ -332,7 +438,7 @@ procedure ts_sernew is
   procedure Test_QR_Newton_Step
               ( p : in Standard_Series_Poly_Systems.Poly_Sys;
                 degree : in integer32;
-                x : in out Standard_Dense_Series_Vectors.Vector ) is
+                x : in Standard_Dense_Series_Vectors.Vector ) is
 
   -- DESCRIPTION :
   --  Does one step with Newton's method on the system p,
@@ -343,26 +449,60 @@ procedure ts_sernew is
     tol : constant double_float := 1.0E-12;
     eva : Standard_Dense_Series_Vectors.Vector(p'range);
     ans : character;
+    otp : boolean;
+    z : Standard_Dense_Series_Vectors.Vector(x'range);
 
   begin
     new_line;
     put("Do you want intermediate output ? (y/n) ");
+    Ask_Yes_or_No(ans); otp := (ans = 'y');
+    new_line;
+    put("Run on series matrices ? (y/n) ");
     Ask_Yes_or_No(ans);
-    Series_and_Polynomials.Set_Degree(x,degree);
-    if ans = 'y'
-     then QR_Newton_Step(standard_output,p,degree,x,info);
-     else QR_Newton_Step(p,degree,x,info);
+    if ans = 'y' then
+      z := x;
+      Series_and_Polynomials.Set_Degree(z,degree);
+      if otp then
+        Standard_Newton_Series.QR_Newton_Step
+          (standard_output,p,degree,z,info);
+      else
+        Standard_Newton_Series.QR_Newton_Step(p,degree,z,info);
+      end if;
+      if info /= 0 then
+        put("info = "); put(info,1); new_line;
+      else
+        Series_and_Polynomials.Filter(z,tol);
+        put_line("The updated power series solution :");
+        Series_and_Polynomials_io.put(z);
+        eva := Standard_Series_Poly_SysFun.Eval(p,z);
+        Series_and_Polynomials.Filter(eva,tol);
+        put_line("The evaluated solution :");
+        Series_and_Polynomials_io.put(eva);
+      end if;
     end if;
-    if info /= 0 then
-      put("info = "); put(info,1); new_line;
-    else
-      Series_and_Polynomials.Filter(x,tol);
-      put_line("The updated power series solution :");
-      Series_and_Polynomials_io.put(x);
-      eva := Standard_Series_Poly_SysFun.Eval(p,x);
-      Series_and_Polynomials.Filter(eva,tol);
-      put_line("The evaluated solution :");
-      Series_and_Polynomials_io.put(eva);
+    new_line;
+    put("Run on matrix series ? (y/n) ");
+    Ask_Yes_or_No(ans);
+    if ans = 'y' then
+      z := x;
+      Series_and_Polynomials.Set_Degree(z,degree);
+      if otp then
+        Standard_Newton_Matrix_Series.QR_Newton_Step
+          (standard_output,p,degree,z,info);
+      else
+        Standard_Newton_Matrix_Series.QR_Newton_Step(p,degree,z,info);
+      end if;
+      if info /= 0 then
+        put("info = "); put(info,1); new_line;
+      else
+        Series_and_Polynomials.Filter(z,tol);
+        put_line("The updated power series solution :");
+        Series_and_Polynomials_io.put(z);
+        eva := Standard_Series_Poly_SysFun.Eval(p,z);
+        Series_and_Polynomials.Filter(eva,tol);
+        put_line("The evaluated solution :");
+        Series_and_Polynomials_io.put(eva);
+      end if;
     end if;
   end Test_QR_Newton_Step;
 
@@ -386,9 +526,10 @@ procedure ts_sernew is
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
     Series_and_Polynomials.Set_Degree(x,degree);
-    if ans = 'y'
-     then QR_Newton_Step(standard_output,p,degree,x,info);
-     else QR_Newton_Step(p,degree,x,info);
+    if ans = 'y' then
+      DoblDobl_Newton_Series.QR_Newton_Step(standard_output,p,degree,x,info);
+    else
+      DoblDobl_Newton_Series.QR_Newton_Step(p,degree,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -460,9 +601,11 @@ procedure ts_sernew is
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
     Series_and_Polynomials.Set_Degree(x,degree);
-    if ans = 'y'
-     then QR_Newton_Steps(standard_output,p,degree,nbrit,x,info);
-     else QR_Newton_Steps(p,degree,nbrit,x,info);
+    if ans = 'y' then
+      Standard_Newton_Series.QR_Newton_Steps
+        (standard_output,p,degree,nbrit,x,info);
+    else
+      Standard_Newton_Series.QR_Newton_Steps(p,degree,nbrit,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
