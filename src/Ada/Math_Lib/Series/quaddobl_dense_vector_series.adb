@@ -33,7 +33,7 @@ package body QuadDobl_Dense_Vector_Series is
       res(i).deg := v.deg;
     end loop;
     for i in 0..v.deg loop
-      for j in v.cff'range loop
+      for j in res'range loop
         res(j).cff(i) := v.cff(i)(j);
       end loop;
     end loop;

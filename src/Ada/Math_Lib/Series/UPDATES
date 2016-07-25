@@ -1,3 +1,5 @@
+Mon 25 Jul 2016 : fixed bug in the 2nd create() of *vector_series.adb.
+
 Sun 24 Jul 2016 : new packages {dobldobl,quaddobl}_polynomial_series 
   define polynomial series for double double and quad double precision,
   tested by ts_serpol.
