@@ -16,12 +16,14 @@ with DoblDobl_Dense_Series_Vectors;
 with DoblDobl_Series_Polynomials;
 with DoblDobl_Series_Poly_Systems;
 with DoblDobl_Series_Poly_SysFun;
-with DoblDobl_Newton_Series;            use DoblDobl_Newton_Series;
+with DoblDobl_Newton_Series;
+with DoblDobl_Newton_Matrix_Series;
 with QuadDobl_Dense_Series_Vectors;
 with QuadDobl_Series_Polynomials;
 with QuadDobl_Series_Poly_Systems;
 with QuadDobl_Series_Poly_SysFun;
-with QuadDobl_Newton_Series;            use QuadDobl_Newton_Series;
+with QuadDobl_Newton_Series;
+with QuadDobl_Newton_Matrix_Series;
 
 procedure ts_sernew is
 
@@ -196,9 +198,10 @@ procedure ts_sernew is
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
     Series_and_Polynomials.Set_Degree(x,degree);
-    if ans = 'y'
-     then LU_Newton_Step(standard_output,p,degree,x,info);
-     else LU_Newton_Step(p,degree,x,info);
+    if ans = 'y' then
+      DoblDobl_Newton_Series.LU_Newton_Step(standard_output,p,degree,x,info);
+    else
+      DoblDobl_Newton_Series.LU_Newton_Step(p,degree,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -233,9 +236,10 @@ procedure ts_sernew is
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
     Series_and_Polynomials.Set_Degree(x,degree);
-    if ans = 'y'
-     then LU_Newton_Step(standard_output,p,degree,x,info);
-     else LU_Newton_Step(p,degree,x,info);
+    if ans = 'y' then
+      QuadDobl_Newton_Series.LU_Newton_Step(standard_output,p,degree,x,info);
+    else
+      QuadDobl_Newton_Series.LU_Newton_Step(p,degree,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -381,9 +385,11 @@ procedure ts_sernew is
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
     Series_and_Polynomials.Set_Degree(x,degree);
-    if ans = 'y'
-     then LU_Newton_Steps(standard_output,p,degree,nbrit,x,info);
-     else LU_Newton_Steps(p,degree,nbrit,x,info);
+    if ans = 'y' then
+      DoblDobl_Newton_Series.LU_Newton_Steps
+        (standard_output,p,degree,nbrit,x,info);
+    else
+      DoblDobl_Newton_Series.LU_Newton_Steps(p,degree,nbrit,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -418,9 +424,11 @@ procedure ts_sernew is
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
     Series_and_Polynomials.Set_Degree(x,degree);
-    if ans = 'y'
-     then LU_Newton_Steps(standard_output,p,degree,nbrit,x,info);
-     else LU_Newton_Steps(p,degree,nbrit,x,info);
+    if ans = 'y' then
+      QuadDobl_Newton_Series.LU_Newton_Steps
+        (standard_output,p,degree,nbrit,x,info);
+    else
+      QuadDobl_Newton_Series.LU_Newton_Steps(p,degree,nbrit,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -564,9 +572,10 @@ procedure ts_sernew is
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
     Series_and_Polynomials.Set_Degree(x,degree);
-    if ans = 'y'
-     then QR_Newton_Step(standard_output,p,degree,x,info);
-     else QR_Newton_Step(p,degree,x,info);
+    if ans = 'y' then
+      QuadDobl_Newton_Series.QR_Newton_Step(standard_output,p,degree,x,info);
+    else
+      QuadDobl_Newton_Series.QR_Newton_Step(p,degree,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -640,9 +649,11 @@ procedure ts_sernew is
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
     Series_and_Polynomials.Set_Degree(x,degree);
-    if ans = 'y'
-     then QR_Newton_Steps(standard_output,p,degree,nbrit,x,info);
-     else QR_Newton_Steps(p,degree,nbrit,x,info);
+    if ans = 'y' then
+      DoblDobl_Newton_Series.QR_Newton_Steps
+        (standard_output,p,degree,nbrit,x,info);
+    else
+      DoblDobl_Newton_Series.QR_Newton_Steps(p,degree,nbrit,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;
@@ -677,9 +688,11 @@ procedure ts_sernew is
     put("Do you want intermediate output ? (y/n) ");
     Ask_Yes_or_No(ans);
     Series_and_Polynomials.Set_Degree(x,degree);
-    if ans = 'y'
-     then QR_Newton_Steps(standard_output,p,degree,nbrit,x,info);
-     else QR_Newton_Steps(p,degree,nbrit,x,info);
+    if ans = 'y' then
+      QuadDobl_Newton_Series.QR_Newton_Steps
+        (standard_output,p,degree,nbrit,x,info);
+    else
+      QuadDobl_Newton_Series.QR_Newton_Steps(p,degree,nbrit,x,info);
     end if;
     if info /= 0 then
       put("info = "); put(info,1); new_line;

@@ -1,5 +1,7 @@
 Mon 25 Jul 2016 : new package standard_newton_matrix_series which applies
   linearization for the update in Newton's method, tested by ts_sernew.
+  For double double and quad double precision, Newton with linearization 
+  is defined in the packages {dobldobl,quaddobl}_newton_matrix_series.
 
 Sat 16 Jul 2016 : added track_many_paths procedures to series_and_trackers.
 

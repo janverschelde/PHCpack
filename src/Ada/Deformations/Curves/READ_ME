@@ -35,7 +35,9 @@ ts_extrapts                      : points on skew line
 standard_newton_series           : Newton's method to compute series solutions
 standard_newton_matrix_series    : linearization in Newton on series matrices
 dobldobl_newton_series           : Newton on series in double double precision
+dobldobl_newton_matrix_series    : linearization in Newton with double doubles
 quaddobl_newton_series           : Newton on series in quad double precision
+quaddobl_newton_matrix_series    : linearization in Newton with quad doubles
 ts_sernew                        : test on the Newton series packages
 series_and_solutions             : making series from solution vectors
 power_series_methods             : Newton's method on power series solutions
