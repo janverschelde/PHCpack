@@ -1,4 +1,5 @@
-Tue 26 Jul 2016 : added appolonius.py to PHCpy2/examples.
+Tue 26 Jul 2016 : added appolonius.py to PHCpy2/examples and the version for
+  Python 3 of appolonius.py in PHCpy3/examples.
 
 Fri 22 Jul 2016 : prepared version 0.5.1 for python2 and python3.
 
