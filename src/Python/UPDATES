@@ -1,3 +1,7 @@
+Tue 26 Jul 2016 : added appolonius.py to PHCpy2/examples.
+
+Fri 22 Jul 2016 : prepared version 0.5.1 for python2 and python3.
+
 Fri 1 Jul 2016 : new module series.py in PHCpy2 and PHCpy3, prepared setup.py
   and __init__.py for version 0.5.0.
 
