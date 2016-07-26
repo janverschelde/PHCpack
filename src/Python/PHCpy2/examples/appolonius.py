@@ -1,6 +1,6 @@
 """
 The circle problem of Appolonius has the following input/output specification:
-Given three circles, find all circles that are tangent to the given circles.
+given three circles, find all circles that are tangent to the given circles.
 Without loss of generality, we take the first circle to be the unit circle,
 centered at (0, 0) and with radius 1.  The origin of the second circle lies
 on the first coordinate axis, so its center has coordinates (c2x, 0) and
