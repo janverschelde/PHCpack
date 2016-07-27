@@ -6,9 +6,9 @@ with DoblDobl_Series_Poly_SysFun;
 with QuadDobl_Series_Poly_SysFun;
 with Series_and_Polynomials;
 with Series_and_Polynomials_io;
-with Standard_Newton_Series;
-with DoblDobl_Newton_Series;
-with QuadDobl_Newton_Series;
+with Standard_Newton_Matrix_Series; -- with Standard_Newton_Series;
+with DoblDobl_Newton_Matrix_Series; -- with DoblDobl_Newton_Series;
+with QuadDobl_Newton_Matrix_Series; -- with QuadDobl_Newton_Series;
 
 package body Power_Series_Methods is
 
@@ -27,7 +27,7 @@ package body Power_Series_Methods is
                s : in out Standard_Dense_Series_Vectors.Vector;
                verbose : in boolean := false ) is
 
-    use Standard_Newton_Series;
+    use Standard_Newton_Matrix_Series; -- use Standard_Newton_Series;
 
     order : integer32 := 1;
     info : integer32;
@@ -68,7 +68,7 @@ package body Power_Series_Methods is
                s : in out DoblDobl_Dense_Series_Vectors.Vector;
                verbose : in boolean := false ) is
 
-    use DoblDobl_Newton_Series;
+    use DoblDobl_Newton_Matrix_Series; -- use DoblDobl_Newton_Series;
 
     order : integer32 := 1;
     info : integer32;
@@ -109,7 +109,7 @@ package body Power_Series_Methods is
                s : in out QuadDobl_Dense_Series_Vectors.Vector;
                verbose : in boolean := false ) is
 
-    use QuadDobl_Newton_Series;
+    use QuadDobl_Newton_Matrix_Series; -- use QuadDobl_Newton_Series;
 
     order : integer32 := 1;
     info : integer32;
@@ -150,7 +150,7 @@ package body Power_Series_Methods is
                s : in out Standard_Dense_Series_Vectors.Vector;
                verbose : in boolean := false ) is
 
-    use Standard_Newton_Series;
+    use Standard_Newton_Matrix_Series; -- use Standard_Newton_Series;
 
     order : integer32 := 1;
     info : integer32;
@@ -191,7 +191,7 @@ package body Power_Series_Methods is
                s : in out DoblDobl_Dense_Series_Vectors.Vector;
                verbose : in boolean := false ) is
 
-    use DoblDobl_Newton_Series;
+    use DoblDobl_Newton_Matrix_Series; -- use DoblDobl_Newton_Series;
 
     order : integer32 := 1;
     info : integer32;
@@ -232,7 +232,7 @@ package body Power_Series_Methods is
                s : in out QuadDobl_Dense_Series_Vectors.Vector;
                verbose : in boolean := false ) is
 
-    use QuadDobl_Newton_Series;
+    use QuadDobl_Newton_Matrix_Series; -- use QuadDobl_Newton_Series;
 
     order : integer32 := 1;
     info : integer32;

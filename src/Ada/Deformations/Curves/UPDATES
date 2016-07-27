@@ -1,3 +1,6 @@
+Wed 27 Jul 2016 : used *newton_matrix_series in power_series_methods.adb,
+  which seems to work much better in the path trackers ts_serpath.adb.
+
 Mon 25 Jul 2016 : new package standard_newton_matrix_series which applies
   linearization for the update in Newton's method, tested by ts_sernew.
   For double double and quad double precision, Newton with linearization 
