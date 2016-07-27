@@ -15,38 +15,72 @@ the radii of both circles.  So we arrive at eight polynomial systems.
 This Python 3 script solves the systems with phcpy and then prints those
 solution circles that have a positive radius.
 """
-e1 = 'c2x - 2;'
-e2 = 'r2 - 2/3;'
-e3 = 'c3x - 1;'
-e4 = 'c3y - 1;'
-e5 = 'r3 - 1/3;'
-e6m = 'x^2 + y^2 - (r-1)^2;'
-e6p = 'x^2 + y^2 - (r+1)^2;'
-e7m = '(x-c2x)^2 + y^2 - (r-r2)^2;'
-e7p = '(x-c2x)^2 + y^2 - (r+r2)^2;'
-e8m = '(x-c3x)^2 + (y-c3y)^2 - (r-r3)^2;'
-e8p = '(x-c3x)^2 + (y-c3y)^2 - (r+r3)^2;'
-eqs0 = [e1,e2,e3,e4,e5,e6m,e7m,e8m]
-eqs1 = [e1,e2,e3,e4,e5,e6m,e7m,e8p]
-eqs2 = [e1,e2,e3,e4,e5,e6m,e7p,e8m]
-eqs3 = [e1,e2,e3,e4,e5,e6m,e7p,e8p]
-eqs4 = [e1,e2,e3,e4,e5,e6p,e7m,e8m]
-eqs5 = [e1,e2,e3,e4,e5,e6p,e7m,e8p]
-eqs6 = [e1,e2,e3,e4,e5,e6p,e7p,e8m]
-eqs7 = [e1,e2,e3,e4,e5,e6p,e7p,e8p]
-syst = [eqs0,eqs1,eqs2,eqs3,eqs4,eqs5,eqs6,eqs7]
-from phcpy.solver import solve
-from phcpy.solutions import strsol2dict
-(circle, eqscnt) = (0, 0)
-for eqs in syst:
-    sols = solve(eqs, silent=True)
-    eqscnt = eqscnt + 1
-    print('system', eqscnt, 'has', len(sols), 'solutions')
-    for sol in sols:
-        soldic = strsol2dict(sol)
-        if soldic['r'].real > 0:
-            circle = circle + 1
-            print('solution circle', circle)
-            print('x =', soldic['x'])
-            print('y =', soldic['y'])
-            print('r =', soldic['r'])
+def polynomials():
+    """
+    Returns a list of lists.  Each list contains a polynomial system.
+    Solutions to each polynomial system define center (x, y) and radius r
+    of a circle touching three given circles.
+    """
+    e1 = 'c2x - 2;'
+    e2 = 'r2 - 2/3;'
+    e3 = 'c3x - 1;'
+    e4 = 'c3y - 1;'
+    e5 = 'r3 - 1/3;'
+    e6m = 'x^2 + y^2 - (r-1)^2;'
+    e6p = 'x^2 + y^2 - (r+1)^2;'
+    e7m = '(x-c2x)^2 + y^2 - (r-r2)^2;'
+    e7p = '(x-c2x)^2 + y^2 - (r+r2)^2;'
+    e8m = '(x-c3x)^2 + (y-c3y)^2 - (r-r3)^2;'
+    e8p = '(x-c3x)^2 + (y-c3y)^2 - (r+r3)^2;'
+    eqs0 = [e1,e2,e3,e4,e5,e6m,e7m,e8m]
+    eqs1 = [e1,e2,e3,e4,e5,e6m,e7m,e8p]
+    eqs2 = [e1,e2,e3,e4,e5,e6m,e7p,e8m]
+    eqs3 = [e1,e2,e3,e4,e5,e6m,e7p,e8p]
+    eqs4 = [e1,e2,e3,e4,e5,e6p,e7m,e8m]
+    eqs5 = [e1,e2,e3,e4,e5,e6p,e7m,e8p]
+    eqs6 = [e1,e2,e3,e4,e5,e6p,e7p,e8m]
+    eqs7 = [e1,e2,e3,e4,e5,e6p,e7p,e8p]
+    return [eqs0,eqs1,eqs2,eqs3,eqs4,eqs5,eqs6,eqs7]
+
+def solve4circles(syst, verbose=True):
+    """
+    Given in syst is a list of polynomial systems.
+    Returns a list of tuples.  Each tuple in the list of return
+    consists of the coordinates of the center and the radius of
+    a circle touching the three given circles.
+    """
+    from phcpy.solver import solve
+    from phcpy.solutions import strsol2dict, is_real
+    (circle, eqscnt) = (0, 0)
+    result = []
+    for eqs in syst:
+        sols = solve(eqs, silent=True)
+        eqscnt = eqscnt + 1
+        if verbose:
+            print('system', eqscnt, 'has', len(sols), 'solutions')
+        for sol in sols:
+            if is_real(sol, 1.0e-8):
+                soldic = strsol2dict(sol)
+                if soldic['r'].real > 0:
+                    circle = circle + 1
+                    ctr = (soldic['x'].real, soldic['x'].real)
+                    rad = soldic['r'].real
+                    result.append((ctr, rad))
+                    if verbose:
+                        print('solution circle', circle)
+                        print('center =', ctr)
+                        print('radius =', rad)
+    return result
+
+def main():
+    """
+    Defines a list of polynomial systems, solves each system
+    and extract those real solutions with positive radius.
+    """
+    syst = polynomials()
+    sols = solve4circles(syst)
+    print('the solution list :')
+    print(sols)
+
+if __name__=="__main__":
+    main()
