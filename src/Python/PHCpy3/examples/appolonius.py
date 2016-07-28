@@ -14,6 +14,7 @@ to the center of the given circle is either the difference or the sum of
 the radii of both circles.  So we arrive at eight polynomial systems.
 This Python 3 script solves the systems with phcpy and then prints those
 solution circles that have a positive radius.
+With matplotlib, the given circles and the solutions are plotted.
 """
 def polynomials():
     """
@@ -72,15 +73,58 @@ def solve4circles(syst, verbose=True):
                         print('radius =', rad)
     return result
 
+def makecircles(plt, data, color, disk=False, verbose=True):
+    """
+    Gives in data a list of centers and radii,
+    returns a list of matplotlib objects, using the color as edgecolor,
+    The pyplot in matplotlib is passed as plt.
+    """
+    result = []
+    for (center, radius) in data:
+        if verbose:
+            print('circle with center', center, 'and radius', radius)
+        if disk:
+            crc = plt.Circle(center, radius, edgecolor=color, \
+                 facecolor=color) #, linewidth=2)
+        else:
+            crc = plt.Circle(center, radius, edgecolor=color, \
+                 facecolor='none') # , linewidth=2)
+        result.append(crc)
+    return result
+
+def plotcircles(plt, circles):
+    """
+    Given on input in circles a list of matplotlib objects,
+    the circles are rendered in a figure.
+    The pyplot in matplotlib is passed as plt.
+    """
+    fig = plt.figure()
+    fig.add_subplot(111, aspect='equal')
+    axs = plt.gcf().gca()
+    for circle in circles:
+        axs.add_artist(circle)
+    plt.axis([-3, 11, -3, 8])
+    fig.show()
+    ans = input('hit enter to exit')
+
 def main():
     """
     Defines a list of polynomial systems, solves each system
     and extract those real solutions with positive radius.
+    The given circles are plotted as blue disks,
+    while the eight solution circles are plotted in red.
     """
     syst = polynomials()
     sols = solve4circles(syst)
     print('the solution list :')
     print(sols)
+    ans = input('Continue with matplotlib ? (y/n) ')
+    if ans == 'y':
+        import matplotlib.pyplot as plt
+        crcdata = [((0, 0), 1), ((2, 0), 2.0/3), ((1, 1), 1.0/3)]
+        incircles = makecircles(plt, crcdata, disk=True, color='blue')
+        outcircles = makecircles(plt, sols, color='red')
+        plotcircles(plt, incircles + outcircles)
 
 if __name__=="__main__":
     main()

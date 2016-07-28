@@ -1,5 +1,6 @@
 Wed 27 Jul 2016 : refactored appolonius.py scripts in PHCpy2 and PHCpy3.
   Fixed a bug in the storing the second coordinate of each center.
+  Added matplotlib code to the appolonius.py scripts.
 
 Tue 26 Jul 2016 : added appolonius.py to PHCpy2/examples and the version for
   Python 3 of appolonius.py in PHCpy3/examples.
