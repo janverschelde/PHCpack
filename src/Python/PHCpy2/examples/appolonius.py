@@ -63,7 +63,7 @@ def solve4circles(syst, verbose=True):
                 soldic = strsol2dict(sol)
                 if soldic['r'].real > 0:
                     circle = circle + 1
-                    ctr = (soldic['x'].real, soldic['x'].real)
+                    ctr = (soldic['x'].real, soldic['y'].real)
                     rad = soldic['r'].real
                     result.append((ctr, rad))
                     if verbose:
