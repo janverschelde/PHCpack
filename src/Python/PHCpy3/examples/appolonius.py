@@ -16,31 +16,32 @@ This Python 3 script solves the systems with phcpy and then prints those
 solution circles that have a positive radius.
 With matplotlib, the given circles and the solutions are plotted.
 """
-def polynomials():
+def polynomials(c2x, r2, c3x, c3y, r3):
     """
+    On input are the five parameters of the circle problem of Appolonius:
+    c2x : the x-coordinate of the center of the second circle,
+    r2 : the radius of the second circle,
+    c3x : the x-coordinate of the center of the third circle,
+    c3y : the y-coordinate of the center of the third circle,
+    r3 : the radius of the third circle.
     Returns a list of lists.  Each list contains a polynomial system.
     Solutions to each polynomial system define center (x, y) and radius r
     of a circle touching three given circles.
     """
-    e1 = 'c2x - 2;'
-    e2 = 'r2 - 2/3;'
-    e3 = 'c3x - 1;'
-    e4 = 'c3y - 1;'
-    e5 = 'r3 - 1/3;'
-    e6m = 'x^2 + y^2 - (r-1)^2;'
-    e6p = 'x^2 + y^2 - (r+1)^2;'
-    e7m = '(x-c2x)^2 + y^2 - (r-r2)^2;'
-    e7p = '(x-c2x)^2 + y^2 - (r+r2)^2;'
-    e8m = '(x-c3x)^2 + (y-c3y)^2 - (r-r3)^2;'
-    e8p = '(x-c3x)^2 + (y-c3y)^2 - (r+r3)^2;'
-    eqs0 = [e1,e2,e3,e4,e5,e6m,e7m,e8m]
-    eqs1 = [e1,e2,e3,e4,e5,e6m,e7m,e8p]
-    eqs2 = [e1,e2,e3,e4,e5,e6m,e7p,e8m]
-    eqs3 = [e1,e2,e3,e4,e5,e6m,e7p,e8p]
-    eqs4 = [e1,e2,e3,e4,e5,e6p,e7m,e8m]
-    eqs5 = [e1,e2,e3,e4,e5,e6p,e7m,e8p]
-    eqs6 = [e1,e2,e3,e4,e5,e6p,e7p,e8m]
-    eqs7 = [e1,e2,e3,e4,e5,e6p,e7p,e8p]
+    e1m = 'x^2 + y^2 - (r-1)^2;'
+    e1p = 'x^2 + y^2 - (r+1)^2;'
+    e2m = '(x-%.15f)^2 + y^2 - (r-%.15f)^2;' % (c2x, r2)
+    e2p = '(x-%.15f)^2 + y^2 - (r+%.15f)^2;' % (c2x, r2)
+    e3m = '(x-%.15f)^2 + (y-%.15f)^2 - (r-%.15f)^2;' % (c3x, c3y, r3)
+    e3p = '(x-%.15f)^2 + (y-%.15f)^2 - (r+%.15f)^2;' % (c3x, c3y, r3)
+    eqs0 = [e1m,e2m,e3m]
+    eqs1 = [e1m,e2m,e3p]
+    eqs2 = [e1m,e2p,e3m]
+    eqs3 = [e1m,e2p,e3p]
+    eqs4 = [e1p,e2m,e3m]
+    eqs5 = [e1p,e2m,e3p]
+    eqs6 = [e1p,e2p,e3m]
+    eqs7 = [e1p,e2p,e3p]
     return [eqs0,eqs1,eqs2,eqs3,eqs4,eqs5,eqs6,eqs7]
 
 def solve4circles(syst, verbose=True):
@@ -55,8 +56,12 @@ def solve4circles(syst, verbose=True):
     (circle, eqscnt) = (0, 0)
     result = []
     for eqs in syst:
-        sols = solve(eqs, silent=True)
         eqscnt = eqscnt + 1
+        if verbose:
+            print('solving system', eqscnt, ':')
+            for pol in eqs:
+                print(pol)
+        sols = solve(eqs, silent=True)
         if verbose:
             print('system', eqscnt, 'has', len(sols), 'solutions')
         for sol in sols:
@@ -92,29 +97,32 @@ def makecircles(plt, data, color, disk=False, verbose=True):
         result.append(crc)
     return result
 
-def plotcircles(plt, circles):
+def plotcircles(plt, circles, xa, xb, ya, yb):
     """
     Given on input in circles a list of matplotlib objects,
     the circles are rendered in a figure.
     The pyplot in matplotlib is passed as plt.
+    The range of the axis in the matplotlib plot is defined
+    by the four numbers xa, xb, ya, and yb.
     """
     fig = plt.figure()
     fig.add_subplot(111, aspect='equal')
     axs = plt.gcf().gca()
     for circle in circles:
         axs.add_artist(circle)
-    plt.axis([-3, 11, -3, 8])
-    fig.show()
-    ans = input('hit enter to exit')
+    plt.axis([xa, xb, ya, yb])
+    plt.show()
+    ans = input('hit enter to continue')
 
-def main():
+def solve_general_problem():
     """
+    Solves a general configuration of three circles.
     Defines a list of polynomial systems, solves each system
     and extract those real solutions with positive radius.
     The given circles are plotted as blue disks,
     while the eight solution circles are plotted in red.
     """
-    syst = polynomials()
+    syst = polynomials(2, 2.0/3, 1, 1, 1.0/3)
     sols = solve4circles(syst)
     print('the solution list :')
     print(sols)
@@ -124,7 +132,40 @@ def main():
         crcdata = [((0, 0), 1), ((2, 0), 2.0/3), ((1, 1), 1.0/3)]
         incircles = makecircles(plt, crcdata, disk=True, color='blue')
         outcircles = makecircles(plt, sols, color='red')
-        plotcircles(plt, incircles + outcircles)
+        plotcircles(plt, incircles + outcircles, -3, 11, -3, 8)
+
+def solve_special_problem():
+    """
+    Solves a special configuration of three circles,
+    where the three circles are mutually touching each other.
+    Defines a list of polynomial systems, solves each system
+    and extract those real solutions with positive radius.
+    The given circles are plotted as blue disks,
+    while the solution circles are plotted in red.
+    """
+    from math import sqrt
+    height = sqrt(3)
+    syst = polynomials(2, 1, 1, height, 1)
+    sols = solve4circles(syst)
+    print('the solution list :')
+    print(sols)
+    ans = input('Continue with matplotlib ? (y/n) ')
+    if ans == 'y':
+        import matplotlib.pyplot as plt
+        crcdata = [((0, 0), 1), ((2, 0), 1), ((1, height), 1)]
+        incircles = makecircles(plt, crcdata, disk=True, color='blue')
+        outcircles = makecircles(plt, sols, color='red')
+        plotcircles(plt, incircles + outcircles, -2, 4, -2, 3)
+
+def main():
+    """
+    Solves a general and a special instance of the circle problem
+    of Appolonius.
+    """
+    print('solving a general instance of the Appolonius circle problem')
+    solve_general_problem()
+    print('solving a special instance of the Appolonius circle problem')
+    solve_special_problem()
 
 if __name__=="__main__":
     main()
