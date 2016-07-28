@@ -3,41 +3,35 @@ with Communications_with_User;           use Communications_with_User;
 with Standard_Natural_Numbers;           use Standard_Natural_Numbers;
 with Standard_Integer_Numbers;           use Standard_Integer_Numbers;
 with Standard_Integer_Numbers_io;        use Standard_Integer_Numbers_io;
-with Standard_Floating_Numbers;          use Standard_Floating_Numbers;
-with Standard_Floating_Numbers_io;       use Standard_Floating_Numbers_io;
 with Standard_Complex_Numbers;
 with DoblDobl_Complex_Numbers;
 with QuadDobl_Complex_Numbers;
 with Standard_Random_Numbers;
 with DoblDobl_Random_Numbers;
 with QuadDobl_Random_Numbers;
-with Standard_Complex_Vectors;
-with Standard_Complex_Vectors_io;        use Standard_Complex_Vectors_io;
 with Standard_Complex_Poly_Systems;
 with Standard_Complex_Poly_Systems_io;   use Standard_Complex_Poly_Systems_io;
-with Standard_Complex_Poly_SysFun;
-with Standard_Complex_Jaco_Matrices;
 with Standard_Complex_Solutions;
+with Standard_Complex_Solutions_io;      use Standard_Complex_Solutions_io;
 with Standard_System_and_Solutions_io;
 with DoblDobl_Complex_Poly_Systems;
 with DoblDobl_Complex_Poly_Systems_io;   use DoblDobl_Complex_Poly_Systems_io;
 with DoblDobl_Complex_Solutions;
+with DoblDobl_Complex_Solutions_io;      use DoblDobl_Complex_Solutions_io;
 with DoblDobl_System_and_Solutions_io;
 with QuadDobl_Complex_Poly_Systems;
 with QuadDobl_Complex_Poly_Systems_io;   use QuadDobl_Complex_Poly_Systems_io;
 with QuadDobl_Complex_Solutions;
+with QuadDobl_Complex_Solutions_io;      use QuadDobl_Complex_Solutions_io;
 with QuadDobl_System_and_Solutions_io;
 with Standard_Homotopy;
 with DoblDobl_Homotopy;
 with QuadDobl_Homotopy;
-with Standard_Dense_Series_Vectors;
 with Standard_Series_Poly_Systems;
 with DoblDobl_Series_Poly_Systems;
 with QuadDobl_Series_Poly_Systems;
-with Series_and_Polynomials;
 with Series_and_Polynomials_io;          use Series_and_Polynomials_io;
 with Series_and_Homotopies;
-with Series_and_Predictors;
 with Series_and_Trackers;
 
 procedure ts_serpath is
@@ -106,8 +100,18 @@ procedure ts_serpath is
         put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
         exit when (ans /= 'y');
       end if;
+      Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
     end loop;
+    if tofile then
+      put_line(file,"THE SOLUTIONS :");
+      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    else
+      put_line("THE SOLUTIONS :");
+      put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    end if;
+    Standard_Complex_Poly_Systems.Clear(h);
+    Standard_Series_Poly_Systems.Clear(s);
   end Standard_Test;
 
   procedure DoblDobl_Test
@@ -147,8 +151,18 @@ procedure ts_serpath is
         Ask_Yes_or_No(ans);
         exit when (ans /= 'y');
       end if;
+      Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
     end loop;
+    if tofile then
+      put_line(file,"THE SOLUTIONS :");
+      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    else
+      put_line("THE SOLUTIONS :");
+      put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    end if;
+    DoblDobl_Complex_Poly_Systems.Clear(h);
+    DoblDobl_Series_Poly_Systems.Clear(s);
   end DoblDobl_Test;
 
   procedure QuadDobl_Test
@@ -187,8 +201,18 @@ procedure ts_serpath is
         put("Continue to the next path ? (y/n) "); Ask_Yes_or_No(ans);
         exit when (ans /= 'y');
       end if;
+      Set_Head(tmp,ls);
       tmp := Tail_Of(tmp);
     end loop;
+    if tofile then
+      put_line(file,"THE SOLUTIONS :");
+      put(file,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    else
+      put_line("THE SOLUTIONS :");
+      put(standard_output,Length_Of(sols),natural32(Head_Of(sols).n),sols);
+    end if;
+    QuadDobl_Complex_Poly_Systems.Clear(h);
+    QuadDobl_Series_Poly_Systems.Clear(s);
   end QuadDobl_Test;
 
   procedure Standard_Main is

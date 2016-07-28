@@ -1,3 +1,6 @@
+Thu 28 Jul 2016 : cleaned up ts_serpath.adb, for compiler warnings,
+  and printing of the solution list at the end of the paths.
+
 Wed 27 Jul 2016 : used *newton_matrix_series in power_series_methods.adb,
   which seems to work much better in the path trackers ts_serpath.adb.
 
